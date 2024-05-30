@@ -1,279 +1,135 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA13481A4;
-	Thu, 30 May 2024 17:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC3A45BE4;
+	Thu, 30 May 2024 17:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089083; cv=none; b=OxOGL4T7C0zYhRwTjr+T3ATS605UHU5ML4UVm1xX0WWL0nt3A/aXUnEg22BkhTb0rHn1OTsTu9ak8yl6V6mN2ORlaFuVFjMbP5Bek5rdHUIJyf5Q9D7yg2ecLqW3ao0ocCT7A9b0WZMDCdlgw8vwyj63ZC0CwgDXyjmRlTcpVWU=
+	t=1717089091; cv=none; b=gUdfIh8OT6X+brsgPk2x0c3TdubG9/HbDpT8UpSDJvhh+ofIIw8GTFpnVPkBP8yoyu5kY392HVG9uiLaAlyIup/OWUDnXuu9/FUrNHIGsTqn8yKjadnllQnGn02CGYP16Df0CI3MzGuYtoPCZEMX1yoB3oku19byljw6zlYq0HU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089083; c=relaxed/simple;
-	bh=TIiMG7rdvJx0ekpQZPZ7TQpC6fA3jydiDI3MVkF2thE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jJ4HG+R3iNlgT8tafZEiHNAPAO8SRFSIeDubxmlCnQTIT9shem9VsZN3vQDxt/55phdA761D91wvy8O41bmLj3EQidJCceNJJg6EPaXfovs4ckbmtjS5B3Cqlf6Zjo93KqK5LDcNvmP/ZdBEoknmqiRFEt7qtlAiFYm94MtccYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=a9Qd9jSE; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717089091; c=relaxed/simple;
+	bh=go0cYzcDqydRtutKma5FUwv79zZ3P7zOWhGl/8O+3OI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CkVKFvLxaJsigiQ7RfCmp0CXKIatuPkMJ3ptN6HMGuXul6xUF3h6XZFT1jHUaR6QgZO1oJBnnDcvNGr2MwLexL2u2SSiL3EE1Wb4fjSoNtOt9UZ93vUqwPEym7NshI0Mupmx6sh1vEQm7l5bnukrFtMHSfyCSP2xsoPooxj65Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=pDdrsLN3; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a9Qd9jSE"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44UHB8OX086879;
-	Thu, 30 May 2024 12:11:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717089068;
-	bh=IWekihdqIfQS0JQXYySpsLxbagRojnNBolmKTrHlcMg=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=a9Qd9jSEQM1WNHbZYmoejq5LyLSa+TRyMykW8KjFkn8atJhBOgK6wwOtB8OV6o19y
-	 T/NHUkkTrQ7bnMI8W0Sf3AVm+8EIqzht+Um+DZsiZXomNA23SCkE9F6aQ40xeP/N8q
-	 5JwSesFlHlshu87+CeDnMgZgVi0YqWfacW66pE7c=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44UHB8RX081165
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 30 May 2024 12:11:08 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
- May 2024 12:11:08 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 30 May 2024 12:11:08 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44UHB77K011147;
-	Thu, 30 May 2024 12:11:07 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <ezequiel@vanguardiasur.com.ar>,
-        <p.zabel@pengutronix.de>, <linux-rockchip@lists.infradead.org>
-Subject: [PATCH v10 04/11] media: imagination: Use exported tables from v4l2-jpeg core
-Date: Thu, 30 May 2024 22:41:06 +0530
-Message-ID: <20240530171106.2745809-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240530165925.2715837-1-devarsht@ti.com>
-References: <20240530165925.2715837-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="pDdrsLN3"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Vqt812W1wz6Cnk9F;
+	Thu, 30 May 2024 17:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1717089079; x=1719681080; bh=Ul8tShPV3DUMrLj4E7kNdLyB
+	ZmST2o57Jd5aN0FDWYg=; b=pDdrsLN3JZPbFaUtLRbj37cnYuTv29wYsaoWbWPX
+	0jAfS4sWOekodOat3cJMbqn2RuFn9uq1dvv60rD84RsGZNOhy608uxLLU+fhbyly
+	eKTbCc9wykATpOsmXQs1/utBwypcCkWl3KNU2MCRI5q96GhEKAOJtbitLN7/YNmG
+	3Mn9taXV/EfZN1zWvkxJYjfq7QJgcsxlE8NwOH4KI1q7OAQMt6CrARV53oLIJ5CE
+	jigej7/3tFmHOi5xt9zZPOhIruRk26PiBfPzT3bdqB0Juw5GHorv14poLk5Hg7m/
+	4sx7azLGVHPrQJdDegiabUIRkEKLqqQMji0NKTMLKSNjWA==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id T0Ifl3ssZIoq; Thu, 30 May 2024 17:11:19 +0000 (UTC)
+Received: from [100.96.154.26] (unknown [104.132.0.90])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4Vqt7l6w1zz6Cnk97;
+	Thu, 30 May 2024 17:11:15 +0000 (UTC)
+Message-ID: <abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org>
+Date: Thu, 30 May 2024 10:11:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
+ and request layer.
+To: Nitesh Shetty <nj.shetty@samsung.com>
+Cc: Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+ Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
+ Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ martin.petersen@oracle.com, david@fromorbit.com, hare@suse.de,
+ damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com, joshi.k@samsung.com,
+ nitheshshetty@gmail.com, gost.dev@samsung.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240520102033.9361-1-nj.shetty@samsung.com>
+ <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
+ <20240520102033.9361-3-nj.shetty@samsung.com>
+ <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
+ <20240529061736.rubnzwkkavgsgmie@nj.shetty@samsung.com>
+ <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
+ <a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
+ <665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-Use exported huffman and quantization tables from v4l2-jpeg core library.
+On 5/30/24 00:16, Nitesh Shetty wrote:
+> +static inline bool blk_copy_offload_attempt_combine(struct request_que=
+ue *q,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+struct bio *bio)
+> +{
+> +=C2=A0=C2=A0=C2=A0 struct blk_plug *plug =3D current->plug;
+> +=C2=A0=C2=A0=C2=A0 struct request *rq;
+> +
+> +=C2=A0=C2=A0=C2=A0 if (!plug || rq_list_empty(plug->mq_list))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return false;
+> +
+> +=C2=A0=C2=A0=C2=A0 rq_list_for_each(&plug->mq_list, rq) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rq->q =3D=3D q) {
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if =
+(!blk_copy_offload_combine(rq, bio))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 return true;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Only keep iterating=
+ plug list for combines if we have multiple
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * queues
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!plug->multiple_queues)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bre=
+ak;
+> +=C2=A0=C2=A0=C2=A0 }
+> +=C2=A0=C2=A0=C2=A0 return false;
+> +}
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
-V10: No change
-V1->V9 (No change, patch introduced in V7)
----
- .../platform/imagination/e5010-jpeg-enc.c     | 140 +++---------------
- 1 file changed, 19 insertions(+), 121 deletions(-)
+This new approach has the following two disadvantages:
+* Without plug, REQ_OP_COPY_SRC and REQ_OP_COPY_DST are not combined. The=
+se two
+   operation types are the only operation types for which not using a plu=
+g causes
+   an I/O failure.
+* A loop is required to combine the REQ_OP_COPY_SRC and REQ_OP_COPY_DST o=
+perations.
 
-diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-index a9ad41f54ab6..e701d573a26a 100644
---- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
-+++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-@@ -32,116 +32,6 @@
- #include "e5010-jpeg-enc.h"
- #include "e5010-jpeg-enc-hw.h"
- 
--/* Luma and chroma qp table to achieve 50% compression quality
-- * This is as per example in Annex K.1 of ITU-T.81
-- */
--static const u8 luma_q_table[64] = {
--	16, 11, 10, 16, 24, 40, 51, 61,
--	12, 12, 14, 19, 26, 58, 60, 55,
--	14, 13, 16, 24, 40, 57, 69, 56,
--	14, 17, 22, 29, 51, 87, 80, 62,
--	18, 22, 37, 56, 68, 109, 103, 77,
--	24, 35, 55, 64, 81, 104, 113, 92,
--	49, 64, 78, 87, 103, 121, 120, 101,
--	72, 92, 95, 98, 112, 100, 103, 99
--};
--
--static const u8 chroma_q_table[64] = {
--	17, 18, 24, 47, 99, 99, 99, 99,
--	18, 21, 26, 66, 99, 99, 99, 99,
--	24, 26, 56, 99, 99, 99, 99, 99,
--	47, 66, 99, 99, 99, 99, 99, 99,
--	99, 99, 99, 99, 99, 99, 99, 99,
--	99, 99, 99, 99, 99, 99, 99, 99,
--	99, 99, 99, 99, 99, 99, 99, 99,
--	99, 99, 99, 99, 99, 99, 99, 99
--};
--
--/* Zigzag scan pattern */
--static const u8 zigzag[64] = {
--	0,   1,  8, 16,  9,  2,  3, 10,
--	17, 24, 32, 25, 18, 11,  4,  5,
--	12, 19, 26, 33, 40, 48, 41, 34,
--	27, 20, 13,  6,  7, 14, 21, 28,
--	35, 42, 49, 56, 57, 50, 43, 36,
--	29, 22, 15, 23, 30, 37, 44, 51,
--	58, 59, 52, 45, 38, 31, 39, 46,
--	53, 60, 61, 54, 47, 55, 62, 63
--};
--
--/*
-- * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
-- * stream or an abbreviated format table specification data stream.
-- * Specifies the huffman table used for encoding the luminance DC coefficient differences.
-- * The table represents Table K.3 of ITU-T.81
-- */
--static const u8 luma_dc_table[] = {
--	0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01,
--	0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
--	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
--};
--
--/*
-- * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
-- * stream or an abbreviated format table specification data stream.
-- * Specifies the huffman table used for encoding the luminance AC coefficients.
-- * The table represents Table K.5 of ITU-T.81
-- */
--static const u8 luma_ac_table[] = {
--	0x00, 0x02, 0x01, 0x03, 0x03, 0x02, 0x04, 0x03,
--	0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7D,
--	0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06, 0x13, 0x51, 0x61,
--	0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xA1, 0x08, 0x23, 0x42, 0xB1, 0xC1, 0x15, 0x52,
--	0xD1, 0xF0, 0x24, 0x33, 0x62, 0x72, 0x82, 0x09, 0x0A, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x25,
--	0x26, 0x27, 0x28, 0x29, 0x2A, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44, 0x45,
--	0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63, 0x64,
--	0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x83,
--	0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99,
--	0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6,
--	0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xD2, 0xD3,
--	0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8,
--	0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
--};
--
--/*
-- * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
-- * stream or an abbreviated format table specification data stream.
-- * Specifies the huffman table used for encoding the chrominance DC coefficient differences.
-- * The table represents Table K.4 of ITU-T.81
-- */
--static const u8 chroma_dc_table[] = {
--	0x00, 0x03, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
--	0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00,
--	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B
--};
--
--/*
-- * Contains the data that needs to be sent in the marker segment of an interchange format JPEG
-- * stream or an abbreviated format table specification data stream.
-- * Specifies the huffman table used for encoding the chrominance AC coefficients.
-- * The table represents Table K.6 of ITU-T.81
-- */
--static const u8 chroma_ac_table[] = {
--	0x00, 0x02, 0x01, 0x02, 0x04, 0x04, 0x03, 0x04,
--	0x07, 0x05, 0x04, 0x04, 0x00, 0x01, 0x02, 0x77,
--	0x00, 0x01, 0x02, 0x03, 0x11, 0x04, 0x05, 0x21, 0x31, 0x06, 0x12, 0x41, 0x51, 0x07, 0x61,
--	0x71, 0x13, 0x22, 0x32, 0x81, 0x08, 0x14, 0x42, 0x91, 0xA1, 0xB1, 0xC1, 0x09, 0x23, 0x33,
--	0x52, 0xF0, 0x15, 0x62, 0x72, 0xD1, 0x0A, 0x16, 0x24, 0x34, 0xE1, 0x25, 0xF1, 0x17, 0x18,
--	0x19, 0x1A, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x43, 0x44,
--	0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x63,
--	0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A,
--	0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97,
--	0x98, 0x99, 0x9A, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xB2, 0xB3, 0xB4,
--	0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA,
--	0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7,
--	0xE8, 0xE9, 0xEA, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
--};
--
--#define JPEG_LUM_HT		0x00
--#define JPEG_CHR_HT		0x01
--#define JPEG_DC_HT		0x00
--#define JPEG_AC_HT		0x10
--
- /* forward declarations */
- static const struct of_device_id e5010_of_match[];
- 
-@@ -270,6 +160,9 @@ static void calculate_qp_tables(struct e5010_context *ctx)
- {
- 	long long luminosity, contrast;
- 	int quality, i;
-+	const u8 *luma_q_table, *chroma_q_table;
-+
-+	v4l2_jpeg_get_reference_quantization_tables(&luma_q_table, &chroma_q_table);
- 
- 	quality = 50 - ctx->quality;
- 
-@@ -281,7 +174,7 @@ static void calculate_qp_tables(struct e5010_context *ctx)
- 		contrast *= INCREASE;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(luma_q_table); i++) {
-+	for (i = 0; i < V4L2_JPEG_PIXELS_IN_BLOCK; i++) {
- 		long long delta = chroma_q_table[i] * contrast + luminosity;
- 		int val = (int)(chroma_q_table[i] + delta);
- 
-@@ -927,41 +820,46 @@ static void encode_marker_segment(struct e5010_context *ctx, void *addr, unsigne
- {
- 	u8 *buffer = (u8 *)addr;
- 	int i;
-+	const u8 *luma_dc_table, *chroma_dc_table, *luma_ac_table, *chroma_ac_table, *zigzag;
-+
-+	v4l2_jpeg_get_reference_huffman_tables(&luma_dc_table,  &luma_ac_table, &chroma_dc_table,
-+					       &chroma_ac_table);
-+	v4l2_jpeg_get_zig_zag_scan(&zigzag);
- 
- 	header_write(ctx, buffer, offset, 2, START_OF_IMAGE);
- 	header_write(ctx, buffer, offset, 2, DQT_MARKER);
- 	header_write(ctx, buffer, offset, 3, LQPQ << 4);
--	for (i = 0; i < PELS_IN_BLOCK; i++)
-+	for (i = 0; i < V4L2_JPEG_PIXELS_IN_BLOCK; i++)
- 		header_write(ctx, buffer, offset, 1, ctx->luma_qp[zigzag[i]]);
- 
- 	header_write(ctx, buffer, offset, 2, DQT_MARKER);
- 	header_write(ctx, buffer, offset, 3, (LQPQ << 4) | 1);
--	for (i = 0; i < PELS_IN_BLOCK; i++)
-+	for (i = 0; i < V4L2_JPEG_PIXELS_IN_BLOCK; i++)
- 		header_write(ctx, buffer, offset, 1, ctx->chroma_qp[zigzag[i]]);
- 
- 	/* Huffman tables */
- 	header_write(ctx, buffer, offset, 2, DHT_MARKER);
- 	header_write(ctx, buffer, offset, 2, LH_DC);
--	header_write(ctx, buffer, offset, 1, JPEG_LUM_HT | JPEG_DC_HT);
--	for (i = 0 ; i < ARRAY_SIZE(luma_dc_table); i++)
-+	header_write(ctx, buffer, offset, 1, V4L2_JPEG_LUM_HT | V4L2_JPEG_DC_HT);
-+	for (i = 0 ; i < V4L2_JPEG_REF_HT_DC_LEN; i++)
- 		header_write(ctx, buffer, offset, 1, luma_dc_table[i]);
- 
- 	header_write(ctx, buffer, offset, 2, DHT_MARKER);
- 	header_write(ctx, buffer, offset, 2, LH_AC);
--	header_write(ctx, buffer, offset, 1, JPEG_LUM_HT | JPEG_AC_HT);
--	for (i = 0 ; i < ARRAY_SIZE(luma_ac_table); i++)
-+	header_write(ctx, buffer, offset, 1, V4L2_JPEG_LUM_HT | V4L2_JPEG_AC_HT);
-+	for (i = 0 ; i < V4L2_JPEG_REF_HT_AC_LEN; i++)
- 		header_write(ctx, buffer, offset, 1, luma_ac_table[i]);
- 
- 	header_write(ctx, buffer, offset, 2, DHT_MARKER);
- 	header_write(ctx, buffer, offset, 2, LH_DC);
--	header_write(ctx, buffer, offset, 1, JPEG_CHR_HT | JPEG_DC_HT);
--	for (i = 0 ; i < ARRAY_SIZE(chroma_dc_table); i++)
-+	header_write(ctx, buffer, offset, 1, V4L2_JPEG_CHR_HT | V4L2_JPEG_DC_HT);
-+	for (i = 0 ; i < V4L2_JPEG_REF_HT_DC_LEN; i++)
- 		header_write(ctx, buffer, offset, 1, chroma_dc_table[i]);
- 
- 	header_write(ctx, buffer, offset, 2, DHT_MARKER);
- 	header_write(ctx, buffer, offset, 2, LH_AC);
--	header_write(ctx, buffer, offset, 1, JPEG_CHR_HT | JPEG_AC_HT);
--	for (i = 0 ; i < ARRAY_SIZE(chroma_ac_table); i++)
-+	header_write(ctx, buffer, offset, 1, V4L2_JPEG_CHR_HT | V4L2_JPEG_AC_HT);
-+	for (i = 0 ; i < V4L2_JPEG_REF_HT_AC_LEN; i++)
- 		header_write(ctx, buffer, offset, 1, chroma_ac_table[i]);
- }
- 
--- 
-2.39.1
+Please switch to the approach Hannes suggested, namely bio chaining. Chai=
+ning
+REQ_OP_COPY_SRC and REQ_OP_COPY_DST bios before these are submitted elimi=
+nates the
+two disadvantages mentioned above.
 
+Thanks,
+
+Bart.
