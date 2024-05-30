@@ -1,144 +1,138 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987E414A8E;
-	Thu, 30 May 2024 01:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717032471; cv=fail; b=XcKnyE+GeEAHX1goiEs3EiMv3S794agDmpkp2Ux81R2NjsFOPhMgIK5FP74479NT8EEpvU269WbG2fv+xG2Y9iXUVn19gEfmhmXQFKhgEtS0sz2XzgnE0JYqA5M96LDwP8LAOBSbcwEFFr8ETRj02ZGZTYqPqGxxe0T1viRuMrk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717032471; c=relaxed/simple;
-	bh=MrBAOBJblcK8qcVCIzUqqRLaoZJZzQJQ5B2820quZPA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GWg79o3OoEE/uHiwHmR5DVmeC/0C+1oSsQhzNBoCcdJFFxgR7Ej4xI8LYDmdQSmR7pAXHt3yp7hrpjLIk73LSRgBR8m8YHN68nGmk4DdQs/Rtg+r2zpb1f7/G5Aaz6sfydzkwHFayxx/JHO33RfScpuJE4tt/6SU7rn0yb0CMv8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Q+mgIIVX; arc=fail smtp.client-ip=40.107.93.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Q+mgIIVX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f1G4pVEH1tCeWD1EDnELjzza532eeSal2jPOykZHwBnWz+u142Er5pjWpc/7CkZ5pDrmeI+6vV3IzM0YzMNzs/1HAqi/XXaXaKae9cvvCc4BgWn+BYuEoQrMSyLjsg3nXWR9H1GkfLoRO/P0Xg5JgZLtzp1w/oSC+TUeKC0Q78ohRh1/4vxPXZL04UJspbX6k2M1OsZ25DSKt0eIJOb/M9OZuwWQ/LbZdrV3Q+nK9NBV6+sPbJa60iUQmu04NS3RUGZ220I4uKiV0Qx1WAtR7EaWm6ks0+4GxW5GCIRDxWr/6orq6D/B7i/P9TXpkopTj0pjQAMcf7w5k1OznI/yzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SJRes6ayLFnrb6jczay6SLIKilHAW9pWfNSPG1wkZ+s=;
- b=DmDSNs3NOcgLr03CTwLf6HAsWzpYAf8n8j8PJNEeDYtA+Ivo7kAU3+KUNgYDcosfLM9mNcmgsrrRLVauziriD0vscs9aCNoeffYat5HjicOq7t9bwzxJDj2vzTe6JchpoZghrlii+H26OMRd+YRMGeWEIDwFHGjgAZs3RSl2VasFU4AlESfHIxbbv+N9/vyvdIO2cjtoqHNvadOUDO4N/uDbI4YXBtfSo7l221obORCMX74X4im/ixMuOBR0WOdTID3DnJGP7tr//tcvh5mvfjnl07rAPYab3O9MgTrnT0kki/1d8HDTOuqmoaXsuLjnv7048ay3LcFnZ6SWfjsS7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SJRes6ayLFnrb6jczay6SLIKilHAW9pWfNSPG1wkZ+s=;
- b=Q+mgIIVXLt8J7ksEsSgRJDqZougWPD3GgdNaVVB1mywVJbfSXox2T7WCksMb5zjZpFjA5m120u7LZxXOE8b4vfzhnLxaXnPlen6AVvdI9mWvYfY2QvKfBEf17UqsjVBzeVDgAK2FPsWxxz71D4lUUs4CyCzCIbIV5UAJm5Tr6nWWXp03VpzJBpIO4ZJsFhlta/fc+oGZLcvHiQ6m9WWAAzi3V6Jc8erJR1xk11kEJwBbVkzhy2G0zCuMpp2jjd1UbptTsviwDw+UsjLOTdIJ8uZuA5/9MmP/vg85capMzgIAcrZ5M09tjAxX9nvRt6FDPXc/fMHQaoDDdwH+uS5UNQ==
-Received: from SJ0PR05CA0030.namprd05.prod.outlook.com (2603:10b6:a03:33b::35)
- by MN0PR12MB6078.namprd12.prod.outlook.com (2603:10b6:208:3ca::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Thu, 30 May
- 2024 01:27:40 +0000
-Received: from SJ5PEPF000001EC.namprd05.prod.outlook.com
- (2603:10b6:a03:33b:cafe::ac) by SJ0PR05CA0030.outlook.office365.com
- (2603:10b6:a03:33b::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.19 via Frontend
- Transport; Thu, 30 May 2024 01:27:39 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ5PEPF000001EC.mail.protection.outlook.com (10.167.242.200) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7633.15 via Frontend Transport; Thu, 30 May 2024 01:27:39 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 29 May
- 2024 18:27:29 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 29 May
- 2024 18:27:29 -0700
-Received: from jjang.nvidia.com (10.127.8.12) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 29 May 2024 18:27:28 -0700
-From: Joseph Jang <jjang@nvidia.com>
-To: <shuah@kernel.org>, <jjang@nvidia.com>, <mochs@nvidia.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-CC: <linux-tegra@vger.kernel.org>
-Subject: [PATCH 0/1] selftest: drivers: Add support its msi hwirq checking
-Date: Wed, 29 May 2024 18:27:26 -0700
-Message-ID: <20240530012727.324611-1-jjang@nvidia.com>
-X-Mailer: git-send-email 2.34.1
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8482C8D7
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717032818; cv=none; b=lGU3BgTOF/DfLYvxzYq70BR41A+cW1Yoias8kPznAH/7klqGbjJcvaJLvp0GL91aRagIqXUVO86toQitCklkdsZV/LHXREiAUrP6JuidwSfIozhO7V9JOuhZifP4BQvqWfwHsPrtb0aIIXVa3HoTe5vFczAEaYPmTNES24KG9Ms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717032818; c=relaxed/simple;
+	bh=SYfCwqogxR71al9vzKVI8efU4DSZsT2yjzZtVdDawcM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V69ny2OnYamdWVki3aYSOz/GXf2IbTrcNrhzyI+Hnzhl+8XMNyZ0clrpqedQzzrToMdU3JVgNv/XOZ9XoceEnFPnehubG4uF8dQVm/oHVCxGzBsZsd7G5NHWRPdQyWlBS92tqM+IHw17jqeKJj5Il0C6cfxmY04KL7J+HFuOVB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d6dff70000001748-bc-6657d76941b2
+Date: Thu, 30 May 2024 10:33:24 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20240530013324.GA15492@system.software.com>
+References: <20240510065206.76078-1-byungchul@sk.com>
+ <982317c0-7faa-45f0-82a1-29978c3c9f4d@intel.com>
+ <20240527015732.GA61604@system.software.com>
+ <8734q46jc8.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <44e4f2fd-e76e-445d-b618-17a6ec692812@intel.com>
+ <20240529050046.GB20307@system.software.com>
+ <961f9533-1e0c-416c-b6b0-d46b97127de2@intel.com>
+ <20240530005026.GA47476@system.software.com>
+ <87a5k814tq.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001EC:EE_|MN0PR12MB6078:EE_
-X-MS-Office365-Filtering-Correlation-Id: 733cbcdb-dce3-4766-268e-08dc8047b1bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|36860700004|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Lro8vmWOc6ipVitjtUsbP0hKnp7vQFGL7yhlsofQq6NPE+P5Ln0ZGETlIe8m?=
- =?us-ascii?Q?ZtztJoyytfbHOWRj/a5c9zuO1Ha772jnOdli/lQe8zuDYCxIvtk+rcUALwu8?=
- =?us-ascii?Q?J8nZWcyhbPoCvznQ3vVl6Ykt60qV6UtSbvlVUK/PL2JhNTkGLS1jUzPt0uPW?=
- =?us-ascii?Q?uYCgSWm7SPIu8d0byi083G5EUfscEAWthcpOmk/apzz0OA4NRk/gHfFYPVuZ?=
- =?us-ascii?Q?ZWHbrsmDMLSJ1M8bCgbC07oDrVV/I6ybR+NZE0SAQLDPz6TBIotqFKk7MxyY?=
- =?us-ascii?Q?cEQHn9ndyFifmkqwNOatAiD/Bk2xpEueQhRqe9C/pvtnn3tYPfn+JHe6HWUO?=
- =?us-ascii?Q?8J//YpWSM8ZjTqR0FyhVuy56Rjz8mqPZqN6dEVe/O8bNsWwRa2RzEcEm6Hwf?=
- =?us-ascii?Q?hCTsFKAornuEtf6ZGKocC4d2KT/Lb2FKVR1rZlDnck6WJH+nGn4+Md7FD3N7?=
- =?us-ascii?Q?LLa69D9O7E1wJOWzomIyj3v8SPidFVHObLeTLMiLR58KsB3V3wiFYbzYHRXX?=
- =?us-ascii?Q?qAfKw9Ol6hTwidPIoMuBfGJHSzL8fw4U7f6cZAyBQd53TUN/rRE0ea8a8nGH?=
- =?us-ascii?Q?KbO6RZk731OtNB+8dh0i+y/JRpDgEKw6Ja38pizxYf6n3ZMMOnHHff+v0CYy?=
- =?us-ascii?Q?czp8hBR1NFB+ez+NhDgrEwll2tutxeD+DJhVTtHJ+FaSnbVpcPZgRd1jJC3d?=
- =?us-ascii?Q?fjlCWW1xz8z7M9VQsQOt9ghP9heeimAaGB96/GPSV4KK7fpNRzSx+DB9BxBg?=
- =?us-ascii?Q?fTKFMAwqlEUuOipyWr79slv0CNzTS3+Aeum4XFpx7XBe5qM3WjR4fVM6GOq3?=
- =?us-ascii?Q?H4MApsyH4nOkPtsH7yJlzkgrGdL5oDL/LTF/dIinJ9RET3pGPqFZjFWRrxfV?=
- =?us-ascii?Q?6Xb8DAE0wVX/WKtZSnJgQsEivDPoPAcvkwHE9ueFZseu5tV3VNmCJRabkZPb?=
- =?us-ascii?Q?zbo/t+LuLd4mZCFrDyfCF6ZE9JADhUhmPEy/hz2fwKSJmQhZEiIUFNUtEjtf?=
- =?us-ascii?Q?oc6iQb+Esblt0Lu55YkLXjcs902cBMIJrEmFbzRm01ZOd8no9fGNjKvWmG7S?=
- =?us-ascii?Q?P1QMrNp2UZ6CQpTPIQpuaRaHYg7QEnS7PxPAI3ndKSMTP0oD3U63DHpBcPGq?=
- =?us-ascii?Q?rzZI5QYslt0VkknDCSJXozjZ2QHnfgVtUXhcYQs+6Uqq7L8uy6ulCGotCkNy?=
- =?us-ascii?Q?5zH2TTE9r4iX1emu6iU0/Qw2dc8ifkTrOdIJw5QRs7RrM5Ly1L9LFj/p/sDy?=
- =?us-ascii?Q?zej03EwO1ejlQjPgBtDcx83JNQ2+s676PxZUIIezqy9rCUyiP+n+1V2Q09t6?=
- =?us-ascii?Q?PRkULw5zJFvOhUL6qJEwHleDK10DQXKjECXhXkUwT03/pnPtWDb8+RpXU6NJ?=
- =?us-ascii?Q?4JflyG98pbGpTOMiernLrLLPLJeO?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(376005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 01:27:39.2320
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 733cbcdb-dce3-4766-268e-08dc8047b1bb
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001EC.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a5k814tq.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsXC9ZZnoW7m9fA0g7W3TCzmrF/DZvF5wz82
+	i08vHzBavNjQzmjxdf0vZounn/pYLC7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFsd7DzBZ
+	zL/3mc1i86apzBbHp0xltPj9A6j45KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
+	qpPNY9OnSewe786dY/c4MeM3i8e8k4Ee7/ddZfPY+svOo3HqNTaPz5vkAviiuGxSUnMyy1KL
+	9O0SuDJmHAgoOCFSseHTArYGxnv8XYwcHBICJhJ7ryl3MXKCmduWXmcHCbMIqEr8/xMCEmYT
+	UJe4ceMnM4gtIqAh8WnhcqASLg5mgT5miTWLDzGCJIQFQiSmfVjDBGLzClhITP+whRGkSEjg
+	MLNE35kdUAlBiZMzn7CA2MwCWhI3/r1kAlnGLCAtsfwfB0iYU8BO4tiVKWAzRQWUJQ5sO84E
+	MkdCYBu7xNatH1ghDpWUOLjiBssERoFZSMbOQjJ2FsLYBYzMqxiFMvPKchMzc0z0MirzMiv0
+	kvNzNzEC43FZ7Z/oHYyfLgQfYhTgYFTi4T0gEZ4mxJpYVlyZe4hRgoNZSYT3zKTQNCHelMTK
+	qtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2Ms7iz1D+Ye2+euOHp
+	sX+ylncPeq4+kL/mjsgLrv+GdxKu6Ms+EPsed+HLnZ7/Vm96llWu/rHs7p9bZ/4UaxsdNvqS
+	1jBTTW2ffayVkfVlPW3m3o/poXmTN22az82ssiqyi6MoSWrpjKWfmtlbgl5MvsKwZPXTEMbE
+	8o7Zkj9urVDWeC58sCdXV4mlOCPRUIu5qDgRALZP0F7DAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsXC5WfdrJt5PTzN4OJVTYs569ewWXze8I/N
+	4tPLB4wWLza0M1p8Xf+L2eLppz4Wi8NzT7JaXN41h83i3pr/rBbnd61ltdixdB+TxaUDC5gs
+	jvceYLKYf+8zm8XmTVOZLY5Pmcpo8fsHUPHJWZNZHIQ8vrf2sXjsnHWX3WPBplKPzSu0PBbv
+	ecnksWlVJ5vHpk+T2D3enTvH7nFixm8Wj3knAz3e77vK5rH4xQcmj62/7Dwap15j8/i8SS6A
+	P4rLJiU1J7MstUjfLoErY8aBgIITIhUbPi1ga2C8x9/FyMkhIWAisW3pdfYuRg4OFgFVif9/
+	QkDCbALqEjdu/GQGsUUENCQ+LVwOVMLFwSzQxyyxZvEhRpCEsECIxLQPa5hAbF4BC4npH7Yw
+	ghQJCRxmlug7swMqIShxcuYTFhCbWUBL4sa/l0wgy5gFpCWW/+MACXMK2EkcuzIFbKaogLLE
+	gW3HmSYw8s5C0j0LSfcshO4FjMyrGEUy88pyEzNzTPWKszMq8zIr9JLzczcxAuNrWe2fiTsY
+	v1x2P8QowMGoxMN7QCI8TYg1say4MvcQowQHs5II75lJoWlCvCmJlVWpRfnxRaU5qcWHGKU5
+	WJTEeb3CUxOEBNITS1KzU1MLUotgskwcnFINjHnbT602rlx/pVy9vr5pWXesv/JyxdWSXw8x
+	nGgwC/vvlPappnpma+Fp1oSUeVFFPU/uC4Ts2nDGf4H18fjnM2s+yiZwlTy6nlK2P78kNuxz
+	h1Z7QbmAw5PuNVzMDPtuLWmMerovf2HmzhuuEo/O/Gq5MpVFMsjiupn5oop7UZkZ5yau8TrI
+	rcRSnJFoqMVcVJwIAJL7ZxerAgAA
+X-CFilter-Loop: Reflected
 
-In order to validate ITS-MSI hwirq entry in the /proc/interrupts, we
-have created a shell script to check is there any duplicated ITS-MSI
-hwirq entry.
+On Thu, May 30, 2024 at 09:11:45AM +0800, Huang, Ying wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > On Wed, May 29, 2024 at 09:41:22AM -0700, Dave Hansen wrote:
+> >> On 5/28/24 22:00, Byungchul Park wrote:
+> >> > All the code updating ptes already performs TLB flush needed in a safe
+> >> > way if it's inevitable e.g. munmap.  LUF which controls when to flush in
+> >> > a higer level than arch code, just leaves stale ro tlb entries that are
+> >> > currently supposed to be in use.  Could you give a scenario that you are
+> >> > concering?
+> >> 
+> >> Let's go back this scenario:
+> >> 
+> >>  	fd = open("/some/file", O_RDONLY);
+> >>  	ptr1 = mmap(-1, size, PROT_READ, ..., fd, ...);
+> >>  	foo1 = *ptr1;
+> >> 
+> >> There's a read-only PTE at 'ptr1'.  Right?  The page being pointed to is
+> >> eligible for LUF via the try_to_unmap() paths.  In other words, the page
+> >> might be reclaimed at any time.  If it is reclaimed, the PTE will be
+> >> cleared.
+> >> 
+> >> Then, the user might do:
+> >> 
+> >> 	munmap(ptr1, PAGE_SIZE);
+> >> 
+> >> Which will _eventually_ wind up in the zap_pte_range() loop.  But that
+> >> loop will only see pte_none().  It doesn't do _anything_ to the 'struct
+> >> mmu_gather'.
+> >> 
+> >> The munmap() then lands in tlb_flush_mmu_tlbonly() where it looks at the
+> >> 'struct mmu_gather':
+> >> 
+> >>         if (!(tlb->freed_tables || tlb->cleared_ptes ||
+> >> 	      tlb->cleared_pmds || tlb->cleared_puds ||
+> >> 	      tlb->cleared_p4ds))
+> >>                 return;
+> >> 
+> >> But since there were no cleared PTEs (or anything else) during the
+> >> unmap, this just returns and doesn't flush the TLB.
+> >> 
+> >> We now have an address space with a stale TLB entry at 'ptr1' and not
+> >> even a VMA there.  There's nothing to stop a new VMA from going in,
+> >> installing a *new* PTE, but getting data from the stale TLB entry that
+> >> still hasn't been flushed.
+> >
+> > Thank you for the explanation.  I got you.  I think I could handle the
+> > case through a new flag in vma or something indicating LUF has deferred
+> > necessary TLB flush for it during unmapping so that mmu_gather mechanism
+> > can be aware of it.  Of course, the performance change should be checked
+> > again.  Thoughts?
+> 
+> I suggest you to start with the simple case.  That is, only support page
+> reclaiming and migration.  A TLB flushing can be enforced during unmap
+> with something similar as flush_tlb_batched_pending().
 
-Joseph Jang (1):
-  selftest: drivers: Add support its msi hwirq checking
+Right.  I'm thinking to add a related code to flush_tlb_batched_pending().
 
- tools/testing/selftests/drivers/irq/Makefile  |  5 +++++
- .../selftests/drivers/irq/its-msi-irq-test.sh | 20 +++++++++++++++++++
- 2 files changed, 25 insertions(+)
- create mode 100644 tools/testing/selftests/drivers/irq/Makefile
- create mode 100755 tools/testing/selftests/drivers/irq/its-msi-irq-test.sh
+	Byungchul
 
--- 
-2.34.1
-
+> --
+> Best Regards,
+> Huang, Ying
