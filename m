@@ -1,158 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB531761BF
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0616F318;
+	Thu, 30 May 2024 08:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717058927; cv=none; b=a74lxwUt9cF2ZJQlq+dtxS1VuRonnUJdMaGLhP71whyS5g4ZeMx2VPy9OOnuDSCSjbczmUodRIEC31+tZn9doHzOv4fsXqP57BPWt5ITwluvbQZOyRaC/R79NXl6HGDsDBu44qlKyDsTo6Hi4rQUuWgtuMyDW9BaxDJrQ6l/oeA=
+	t=1717058969; cv=none; b=NEYvJINg4ZQcRW3AJDxbqMiXtW2F0T9o176eljkUmRwh5qWD9J1AAJayfj7tD3uHX3eaS4jGshBlOyqx5Skq/6GbvzcwL4DgEPMzHAx9UW8Ac6/Ou7zJPZfb3Qy1TzQPMApCPxY67gf8kwxEKytRTFAdQcjmuQpFl8ANW3Xnh3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717058927; c=relaxed/simple;
-	bh=K9AYVGqmmTbqc2fz0HuTn2hcwb/UzZwnoV2Z3W2k5k4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XwqHxG+klutKqLuXgOQYpsG+p2oB/mexGUyr3yQ6pRCg1oV8CmaDpNBEvCMMmF/ovtRg8OVS6sTf7jnMqcnZLGM1mbLZxibB+iS67hBd6lWwOyRsBdR/k/3AE8J1P9/IkUkJxXRzBcHIV12R3/9D4d/6mXAESSlm7pbK2zz7Kp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WFHb7A11; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717058969; c=relaxed/simple;
+	bh=RMlDUxJiGobRFguc3DRtHWTv7WiNMiDof+uoZrSLUA8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fi3K37CEiwEN//WMPCmp1dkrGACIzw/0anDGrIKGvqdFkajx0IUvcKFObZF5XCZaTlmoQmD0pfCYMFY01jIlrgENa9kd4/wT+7UcK+7zRbj/3fjOmgxszkRKrXKWOUo0VgwCOMV/pjyOa8zZ5ATm3cUvYuIf415q6ETSVyahsz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBSF5qn6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WFHb7A11"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717058925; x=1748594925;
-  h=date:from:to:cc:subject:message-id;
-  bh=K9AYVGqmmTbqc2fz0HuTn2hcwb/UzZwnoV2Z3W2k5k4=;
-  b=WFHb7A11B9WV59/IPVLquOicTqMaFHkqRu7VIMdgeyzrwSTV91GYvBmu
-   hkKFPnRUVvpJkC5ldqWIdkLymaZS+u4sWC5etCGcnTRiGo7pCsnStkZMc
-   SZ95NUOzGDyxt59iNJ6EGnu0Z/QDo6vPoB2ShMpK/BuDDqz15MZ2yvuF4
-   UWvhtm15DaFOQb8sioSak3VswQfNiws6NOdj2GsJwOCcHCyLt6iFSazUY
-   3UobH/N56KR6s/FOjmp002TISrAW45YpF25+frw5XU+jEn7YBaK+nyt7N
-   wTuKXXrvKeoyqTgEKyfkszKzvTNNCNamWNxv2IMOzY79cvcidg3VLjb1p
-   Q==;
-X-CSE-ConnectionGUID: v7kSifotQaKYVDu+RRKE1A==
-X-CSE-MsgGUID: B/tvK1MJTmu+KRUxStWWuA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13470287"
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="13470287"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 01:48:44 -0700
-X-CSE-ConnectionGUID: 3v9b1s6gRamjGqzAs3IwZQ==
-X-CSE-MsgGUID: +wKLB0EWTxSKxTBKXA7nyw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="35828442"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 30 May 2024 01:48:43 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCbSi-000F2L-1d;
-	Thu, 30 May 2024 08:48:40 +0000
-Date: Thu, 30 May 2024 16:47:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/cc] BUILD SUCCESS
- 3f3d80f505f3d7273f374935558db5188acdd162
-Message-ID: <202405301649.VEKylzRj-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBSF5qn6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF8BC3277B;
+	Thu, 30 May 2024 08:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717058968;
+	bh=RMlDUxJiGobRFguc3DRtHWTv7WiNMiDof+uoZrSLUA8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBSF5qn63ZTxet3h/KgfI84iXyPbcZ7m5UVIGT4Zh94nALn7/QyNuPD566qQJSpK5
+	 +j7sNiyUcFxomJhas0mIMXGD4wU7YBq4nefDAv6hrMcyG6D/I5uulEmMIElQnPrrlw
+	 CPgQOb52Zg3a/Kq0j9RjknhjnLKzCEyUgyPBeEFSZW64HY2+nYJJpCJ2RM1Ro9dY14
+	 3+hqt3XtD4GEqQFHT0v+c4IMSKpJeonXM7jWz6mC3UyEyDovCwxvWajQsz4UlqxkIO
+	 qJR8XxIAf/QhhsBC66Ej7PaXU59n7GQJAfT1ET3FK1KcAb0w4CfmIr6kWZ8eTTR926
+	 rATiKQfQzbyRA==
+Date: Thu, 30 May 2024 10:49:26 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/7] drm/connector: hdmi: accept NULL for Audio
+ Infoframe
+Message-ID: <20240530-daffy-satisfied-sheep-5b9e16@houat>
+References: <20240530-bridge-hdmi-connector-v3-0-a1d184d68fe3@linaro.org>
+ <20240530-bridge-hdmi-connector-v3-1-a1d184d68fe3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="takwrixyv5pp4e4s"
+Content-Disposition: inline
+In-Reply-To: <20240530-bridge-hdmi-connector-v3-1-a1d184d68fe3@linaro.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cc
-branch HEAD: 3f3d80f505f3d7273f374935558db5188acdd162  x86/kexec: Remove spurious unconditional JMP from from identity_mapped()
 
-elapsed time: 986m
+--takwrixyv5pp4e4s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 81
-configs skipped: 149
+Hi,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On Thu, May 30, 2024 at 02:12:24AM GMT, Dmitry Baryshkov wrote:
+> Allow passing NULL as audio infoframe as a way to disable Audio
+> Infoframe generation.
+>=20
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/gpu/drm/display/drm_hdmi_state_helper.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gp=
+u/drm/display/drm_hdmi_state_helper.c
+> index ce96837eea65..5356723d21f5 100644
+> --- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+> +++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+> @@ -681,7 +681,7 @@ EXPORT_SYMBOL(drm_atomic_helper_connector_hdmi_update=
+_infoframes);
+>  /**
+>   * drm_atomic_helper_connector_hdmi_update_audio_infoframe - Update the =
+Audio Infoframe
+>   * @connector: A pointer to the HDMI connector
+> - * @frame: A pointer to the audio infoframe to write
+> + * @frame: A pointer to the audio infoframe to write or NULL to disable =
+sending the frame
+>   *
+>   * This function is meant for HDMI connector drivers to update their
+>   * audio infoframe. It will typically be used in one of the ALSA hooks
+> @@ -704,10 +704,16 @@ drm_atomic_helper_connector_hdmi_update_audio_infof=
+rame(struct drm_connector *co
+> =20
+>  	mutex_lock(&connector->hdmi.infoframes.lock);
+> =20
+> -	memcpy(&infoframe->data, frame, sizeof(infoframe->data));
+> -	infoframe->set =3D true;
+> +	if (frame) {
+> +		memcpy(&infoframe->data, frame, sizeof(infoframe->data));
+> +		infoframe->set =3D true;
+> +
+> +		ret =3D write_infoframe(connector, infoframe);
+> +	} else {
+> +		infoframe->set =3D false;
+> =20
+> -	ret =3D write_infoframe(connector, infoframe);
+> +		ret =3D clear_infoframe(connector, infoframe);
+> +	}
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                          allyesconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240530   gcc  
-i386         buildonly-randconfig-002-20240530   gcc  
-i386         buildonly-randconfig-003-20240530   clang
-i386         buildonly-randconfig-004-20240530   clang
-i386         buildonly-randconfig-005-20240530   clang
-i386         buildonly-randconfig-006-20240530   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240530   gcc  
-i386                  randconfig-002-20240530   clang
-i386                  randconfig-003-20240530   gcc  
-i386                  randconfig-004-20240530   clang
-i386                  randconfig-005-20240530   gcc  
-i386                  randconfig-006-20240530   gcc  
-i386                  randconfig-011-20240530   clang
-i386                  randconfig-012-20240530   gcc  
-i386                  randconfig-013-20240530   clang
-i386                  randconfig-014-20240530   clang
-i386                  randconfig-015-20240530   gcc  
-i386                  randconfig-016-20240530   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-s390                             allyesconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   gcc  
-um                             i386_defconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
+I'm not entirely sure your commit matches your commit log? It looks like
+you follow the same pattern than the other infoframes and call
+write_infoframe if there's one, or clear_infoframe if there isn't.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So we're never passing NULL to disable? clear_infoframe is called.
+
+Maxime
+
+--takwrixyv5pp4e4s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZlg9kQAKCRAnX84Zoj2+
+dk3pAYCbS/9eXzTy0YlUFvQaOXrLJprI9gx8B2mCC+SSaUyqq6oITErczWwScJwQ
+fgXhMFIBgJOU255qv1o/4bocu6tu2hF/D9FGax6f1ae+MKrdPFUmJ0PhyEX/zJY/
+D+quLGMFQg==
+=gGq3
+-----END PGP SIGNATURE-----
+
+--takwrixyv5pp4e4s--
