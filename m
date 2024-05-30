@@ -1,125 +1,128 @@
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BE4186E59;
-	Thu, 30 May 2024 14:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.143.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568FC176248
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717079124; cv=none; b=krUw0QsJNtvvBiHQLAZzX0TbkTvUmCOeeDHlzjialw1zRMYGbsYr32ZfpxhgEPrT9yYnH6rlEWtD/9KhFVqm4jG9Jzz6a+LVI5GC3Gin9kPzJ8ozae4MSJ9TFBGdMlv3q9mRHdg19iorikH2dy7+pOzHSmf2LPPqe1CKz7Q7AK4=
+	t=1717079124; cv=none; b=a9aUchAvjkGx6mxhjusvEj7c0Ift2zf6NkbYWGZnLk2Xe1nh8/ehSkfHQ3SwK1B0g2dfrX8p6MQzGmrSBLYPxVOPkH2Mpb5brzS/iiIyX/htc65crfN6Xj0ojDnHNpU6fPa4lUaDh1qJKTDvnqb1FILWBtERcmB1UD6LcVNpPEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717079124; c=relaxed/simple;
-	bh=lI93q7XNVx+d7jqN8ZADdFt2wY3bkSBhba8PZ5lEbdI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Td7qpvRCmwLlXpm62o37fnnzZB7bIfPjoeW34HbVPMGRvpPOGHaHXRIL+E5IlFKW52PvF1LNuEXWqe1IphO93CRYG3Zd3G1YtV0MeVciBWj0Ek3t7bZLnBqTWN4vUrtSYa/k2+NSobfGWKfZm/DNDsvSyB3b97FN9BuEsjSekVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=DXUjjBvd; arc=none smtp.client-ip=68.232.143.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	bh=g/X45uSF6k+HRkBUhwjSpxSxuIqXtM9kMM336BDvTlw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XnCiM/86UVwl4VwxIh4dCEarAFojeY7L+dPoowNTD+3qLn3Xc6V4UUJiNuqjHsaEWSNkrSM+lflqdnyZT2TlKOJcvK6VE0WThZC0TqyO8SvdsJtfqc/tJZVWzydHLYi47YeHcOLk2VwezzO1sm2J3zAbIoWZvDCJQK2QRZX+kPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RD+Z1RpA; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="DXUjjBvd"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1717079121; x=1748615121;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=lI93q7XNVx+d7jqN8ZADdFt2wY3bkSBhba8PZ5lEbdI=;
-  b=DXUjjBvdx2VKd4TZe0eaiJIZ6klx/Bd7DG0yDRV9YEajAQQThiONQgrt
-   xh/LgSeD/1p/iWqUiMzYXeBpVIVYQxjArUPvdhrY7vWKMekqABoXby6BH
-   Ve8dfJcyXQtpiBJe+BxuNXN7+5FO8llEpGjD4gm9j46d2zl4MUegDWiwc
-   S561hNHZH3lXfmaLFkHfGcEUeC8h1Jkc3nN5LaNt4QN/D0TdWbrAs+xhP
-   uM7MEY/CiLaWUwGvgmI6C6Vitwp2UhSazF7nzJ1NFwXV2RgtIbjMjxDaG
-   SQKIbMmH8tLBvpzFbrwtlxx8ocL+4B61+Ps/0ACX0CjqdpjM9BvNzW/kF
-   A==;
-X-CSE-ConnectionGUID: Dugq8QkmTZC5jZwOoUtRuA==
-X-CSE-MsgGUID: 8xoCSTJQRLiRzgrFQztK+Q==
-X-IronPort-AV: E=Sophos;i="6.08,201,1712592000"; 
-   d="scan'208";a="17740314"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 30 May 2024 22:25:15 +0800
-IronPort-SDR: 66587ea5_3Z2Kl8XGDs9fQ2b9UQTG94faoSRyLE4vBTSyLxh9pkgCGEV
- HYiR1EVbTE5eq0qxvAR9gyG2yEoFGm4zAjAxupQ==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 May 2024 06:27:02 -0700
-WDCIronportException: Internal
-Received: from bxygm33.ad.shared ([10.45.31.229])
-  by uls-op-cesaip01.wdc.com with ESMTP; 30 May 2024 07:25:14 -0700
-From: Avri Altman <avri.altman@wdc.com>
-To: "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	Peter Wang <peter.wang@mediatek.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v7 0/3] scsi: ufs: Allow RTT negotiation
-Date: Thu, 30 May 2024 17:25:06 +0300
-Message-ID: <20240530142510.734-1-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RD+Z1RpA"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7e22af6fed5so4631139f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1717079121; x=1717683921; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Nsdkf/hEokdRbVfsff4bOqv3Tbq/llwdsETViLwX3BI=;
+        b=RD+Z1RpAzQpOdC7U+oHVdomJ6iMeO2XvQo57qkFkRE3lZuzhlcD0OstuzQqPYdcs47
+         G6jY/SqKhOvKL2d+WqHDalzPAy5XSLFvXS2S9il20hED8braufeUBbUNKr7b2VK6O8zf
+         vNj59lLtWXeH0iFIfQvy5CcoKDmguMLLBniek=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717079121; x=1717683921;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nsdkf/hEokdRbVfsff4bOqv3Tbq/llwdsETViLwX3BI=;
+        b=JOywnyrf6K8NUvr/goz4kW6m6i1yE8k+ajBSpz23UhddU1B1Hd/5Hag9s1M0L3YYAo
+         3jOQfOnTV8K6g1iXa8BLHAB2sn2gRwVyH2sA02IJUDrCbg/OBTb62r/bxhWYOXTCOQGt
+         8+P9V5Yelq2VyvbzR+LPIGPVZ+Brk+IpZcUQaU2ZPIIZgKDScAynFVDoMUj19Pj3ad1a
+         KOrFaVWkBujXJEDhxMA1vWtg6R3jZQEJAcOYu6XGR3R+CV1rkqp9jSMOaR4sowg4LXbR
+         IxEgtYvcYHTvdm5xLALyj7xNTHd8sMoj370WEz/toavU/1VVSGv89SIPSvQTnISZYeTX
+         CB5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWaZZaolwgb7tXSNclbjaK6dKRhH0eW9dfYE+hBCZy4Mswc/KoiSQN5H0S+aB3rV9n3+RBrwIq585MD5oC1z4lcSX2L3I7BwAbKHdUM
+X-Gm-Message-State: AOJu0YwNGsP8VKBk5btMsGcSMog/WFLdCFlWaIyupmSBHyKKyQw16MRU
+	Ac9mg1FEgwU7qn7SopMT/L3LeM7tKVDl/5ftJJcFsbxpGvOWK4W8ZH40QAl7B5Eu3a+tXwrBCip
+	B
+X-Google-Smtp-Source: AGHT+IF8O6GPnyWjF5VaTmv02b4u4/S8Ekhuksh/BQkhTKKplAGUx/4CG+uFBabO2++mbMvPZsfKCg==
+X-Received: by 2002:a05:6602:19c9:b0:7e1:8bc8:8228 with SMTP id ca18e2360f4ac-7eaf5b73813mr241539839f.0.1717079120876;
+        Thu, 30 May 2024 07:25:20 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b10cf31917sm1404185173.45.2024.05.30.07.25.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 07:25:20 -0700 (PDT)
+Message-ID: <88c64f5e-4586-4b38-b3c8-0c3af93a71ae@linuxfoundation.org>
+Date: Thu, 30 May 2024 08:25:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests/lib.mk: silence some clang warnings that
+ gcc already ignores
+To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
+Cc: Beau Belgrave <beaub@linux.microsoft.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mark Brown <broonie@kernel.org>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Justin Stitt <justinstitt@google.com>, Bill Wendling <morbo@google.com>,
+ sunliming <sunliming@kylinos.cn>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev,
+ Nathan Chancellor <nathan@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240529020842.127275-1-jhubbard@nvidia.com>
+ <20240529020842.127275-3-jhubbard@nvidia.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240529020842.127275-3-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The rtt-upiu packets precede any data-out upiu packets, thus
-synchronizing the data input to the device: this mostly applies to write
-operations, but there are other operations that requires rtt as well.
+On 5/28/24 20:08, John Hubbard wrote:
+> gcc defaults to silence (off) for the following warnings, but clang
+> defaults to the opposite. These warnings are not useful for kselftests,
+> so silence them for the clang builds as well:
 
-There are several rules binding this rtt - data-out dialog, specifically
-There can be at most outstanding bMaxNumOfRTT such packets.  This might
-have an effect on write performance (sequential write in particular), as
-each data-out upiu must wait for its rtt sibling.
+Please you add more information on why they aren't useful
+for kselftests.
 
-UFSHCI expects bMaxNumOfRTT to be min(bDeviceRTTCap, NORTT). However,
-as of today, there does not appear to be no-one who sets it: not the
-host controller nor the driver.  It wasn't an issue up to now:
-bMaxNumOfRTT is set to 2 after manufacturing, and wasn't limiting the
-write performance.
+> 
+>      -Wno-address-of-packed-member
+>      -Wno-gnu-variable-sized-type-not-at-end
+> 
+> This eliminates warnings for the net/ and user_events/ kselftest
+> subsystems, in these files:
+> 
+>      ./net/af_unix/scm_rights.c
+>      ./net/timestamping.c
+>      ./net/ipsec.c
+>      ./user_events/perf_test.c
+> 
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>   tools/testing/selftests/lib.mk | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+> index 2902787b89b2..41e879f3f8a2 100644
+> --- a/tools/testing/selftests/lib.mk
+> +++ b/tools/testing/selftests/lib.mk
+> @@ -50,6 +50,12 @@ else
+>   CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))
+>   endif # CROSS_COMPILE
+>   
+> +# gcc defaults to silence (off) for the following warnings, but clang defaults
+> +# to the opposite. These warnings are not useful for kselftests, so silence them
+> +# for the clang builds as well.
+> +CFLAGS += -Wno-address-of-packed-member
+> +CFLAGS += -Wno-gnu-variable-sized-type-not-at-end
+> +
+>   CC := $(CLANG) $(CLANG_FLAGS) -fintegrated-as
+>   else
+>   CC := $(CROSS_COMPILE)gcc
 
-UFS4.0, and specifically gear 5 changes this, and requires the device to
-be more attentive.  This doesn't come free - the device has to allocate
-more resources to that end, but the sequential write performance
-improvement is significant. Early measurements shows 25% gain when
-moving from rtt 2 to 9. Therefore, set bMaxNumOfRTT to be
-min(bDeviceRTTCap, NORTT) as UFSHCI expects.
-
-v6 -> v7:
-Some more comments to patches 2 & 3 (Bart)
-
-v5 -> v6:
-Use blk_mq_<un>freeze_queue to drain the queues (Bart)
-Replace the rtt_set() vop by a max_num_rtt constant (Cristoph/Bart)
-
-v4 -> v5:
-Quiesce the queues before writing bMaxNumOfRTT (Bart)
-Make bDeviceRTTCap available in ufshcd_device_params_init() (Bart)
-
-v3 -> v4:
-Allow bMaxNumOfRTT to be configured via sysfs (Bart)
-
-v2 -> v3:
-Allow platform vendors to take precedence having their own rtt
-negotiation mechanism (Peter)
-
-v1 -> v2:
-bMaxNumOfRTT is a Persistent attribute - do not override if it was
-written (Bean)
-
-Avri Altman (3):
-  scsi: ufs: Allow RTT negotiation
-  scsi: ufs: Maximum RTT supported by the host driver
-  scsi: ufs: sysfs: Make max_number_of_rtt read-write
-
- Documentation/ABI/testing/sysfs-driver-ufs | 14 +++--
- drivers/ufs/core/ufs-sysfs.c               | 73 +++++++++++++++++++++-
- drivers/ufs/core/ufshcd.c                  | 41 ++++++++++++
- drivers/ufs/host/ufs-mediatek.c            |  1 +
- drivers/ufs/host/ufs-mediatek.h            |  3 +
- include/ufs/ufs.h                          |  2 +
- include/ufs/ufshcd.h                       |  4 ++
- include/ufs/ufshci.h                       |  1 +
- 8 files changed, 132 insertions(+), 7 deletions(-)
-
--- 
-2.34.1
+thanks,
+-- Shuah
 
