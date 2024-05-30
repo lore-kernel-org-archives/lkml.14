@@ -1,113 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80826F30B
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 21:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB86C84D13;
+	Thu, 30 May 2024 21:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717103128; cv=none; b=oWxfZD6EPhQidqcX1D5NAOBjOBnSzEDhnwZqj0RayC5Gb4qJsD/k4GUCfEsmvz7GScjjjSTl2GT+lm48pUIWKLkjNaDhudO1zugon9mqhudUUFhD7I/vKWKvDWrRmu2SU+ACP+9XJkfLUhm0md0WJYXr692Ckfk/uQtqxTZp9S0=
+	t=1717103254; cv=none; b=u9tJeS6PXnpUOnEMepPSiabCg9cjllS2P03jQL0z8UDZo8CCpiuQBcZXb3dDX921+2BfhpJ8J6XOPRQuz4OpLiViq2RblC+/mWr2/di8jcyKyaNXLeDJru2zn2HZ7N1CijTJlIzB0KHKbSp345Uf3RCpVgQYlLqL0QYnoq72FXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717103128; c=relaxed/simple;
-	bh=Wab1ZpjxSP/0gKB2mRfLQf1QYdy5fhanYyy8leNd0UU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJirDrN7ySC8WoBOdhfuXurH/1eckJ8X84qEeh6vHNKRQJu3prSNM7376DXnVc1v3n4ESLTwwbxbYuzSAnpkMBu9kkrSB4DRrfS806pf7x3emewkIx0d2asBq3z/+GA8SfamEcORZDPAthJ96OM3YUwvCOyta12nApWFFqxY6S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dX6rMLxq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717103254; c=relaxed/simple;
+	bh=VX7MgdwvWo75LHOu/OQNQG0ISrnE2BQomr6o4j/J3Gs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=E2KvRCNoggwjKz1eQrYtjQfDhjXCEBprC9V8khv3FpZ5v8yWvwNTtoRughKZ+0kUagPI3wxKFAkQe8AnhaDm8qLkHx0Ip1OTP3f0oeUUO28/2jPSGZztAVCcrwyB0qxxz5DdrhPaY8/vgrClwm0z9G1N6oPilKaPXyV02E56DPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P24KvUDo; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dX6rMLxq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717103125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q2LCriRFRXLIylgT+gTKyTfxSCc/meDMgzalNC625x8=;
-	b=dX6rMLxqMVfZBxCuOwE9f6acJBT91mY3o8mJ8ayDPEjTEN75Y7bxEQJwpXmMlp73miMbL4
-	RqpyMaEWesYs+2K1Toy4dE9cQBqMNLKPUAWmQ7ot7jrEnCKbK9JJVlyNdCG4FEt7mrKqCY
-	TiyWYEvlVbjJoQSpcANiNpI8UT9l5uU=
-Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
- [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-ajddaNuyMvqmwbAElWVKCw-1; Thu, 30 May 2024 17:05:24 -0400
-X-MC-Unique: ajddaNuyMvqmwbAElWVKCw-1
-Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-24ca35572adso1301745fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:05:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717103123; x=1717707923;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q2LCriRFRXLIylgT+gTKyTfxSCc/meDMgzalNC625x8=;
-        b=xNxN9P2+xtf+VAWGiYR11TPMH4br7tIqDxJqKcewpv8E9k3wAhw/xj4Kt2JpxkaddR
-         xHTTw/SUuKinV2TrQh5wHYKpfvuvTphZAV5LZzPYDm9Tl2V/CRPhTASiPkCcGND0H3hb
-         vzh5G+vEif1G+R2xCobdxHVw9JbGgYMseXprqKC5S0YpvKuZVeH2Chb4NEP+m/iOZq48
-         ST9YpylrmE7DDp/6XVHVMGwAmE+qIr5TOCB/qbMDAHpuiyVV3omV5AhXSGhX/qPZPzPK
-         CqcqlJy+f2Im6G8AyOa/+Y8RgfQJ4UEo/VhyCMq5CixvohKC1w91vwuByY+VBWwrvpkP
-         PkHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdclS5QV/ulBeczUa1V4qyovBvNiafErcXPQL7xNFylRRvlL1gTXst5iAC03229IfyPpSMI9Mi/D9QLS40xfoTcId1Kr+AqyhGGDla
-X-Gm-Message-State: AOJu0Yxst4vKVqXbfOZXNfHLfqkp6FBDQNpZ0FrVm96KZ7OmPjUaEikT
-	QCf+tgN/8NnVZBwDIf3onHRJvgi2ptsLMH+hKAl4TZMGUqVp98fqdgyWNT879urpDIR0NfjnbFj
-	HinuhQUcUw0oJOfT/Hj7lsMoOVcQlJml8tGI3XFbEF0BiEQpTrIFzDccp6/3xIA==
-X-Received: by 2002:a05:6871:2898:b0:24f:ee25:3639 with SMTP id 586e51a60fabf-2508bddc002mr62915fac.26.1717103123401;
-        Thu, 30 May 2024 14:05:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHS43guAvWnbjReVwItT6ybaTTo9jHFyw4D9vxJUSkaNCNMDnbU6q11n3Nb7CVhlCdYsvZ4sQ==
-X-Received: by 2002:a05:6871:2898:b0:24f:ee25:3639 with SMTP id 586e51a60fabf-2508bddc002mr62888fac.26.1717103123035;
-        Thu, 30 May 2024 14:05:23 -0700 (PDT)
-Received: from localhost (ip98-179-76-110.ph.ph.cox.net. [98.179.76.110])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff23fd366sm1747411cf.56.2024.05.30.14.05.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 14:05:22 -0700 (PDT)
-Date: Thu, 30 May 2024 14:05:21 -0700
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: Dimitri Sivanich <sivanich@hpe.com>
-Cc: Yi Zhang <yi.zhang@redhat.com>, "Tian, Kevin" <kevin.tian@intel.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Baolu Lu <baolu.lu@linux.intel.com>, 
-	Joerg Roedel <joro@8bytes.org>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, 
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
-	David Wang <00107082@163.com>, Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, 
-	Russ Anderson <russ.anderson@hpe.com>
-Subject: Re: [PATCH] iommu/amd: Fix panic accessing amd_iommu_enable_faulting
-Message-ID: <hxv32qgpb57yxweldav35evt2e3hyt2n2rmbjsl7biaje7s4tp@4nyanvqd6su5>
-References: <ZljHE/R4KLzGU6vx@hpe.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P24KvUDo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717103253; x=1748639253;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VX7MgdwvWo75LHOu/OQNQG0ISrnE2BQomr6o4j/J3Gs=;
+  b=P24KvUDoWs/bTytODeuGL9A/b+fB2MBE8G0t4zAuTX4FwqejR605uDIf
+   Suz9Jlzfc0DAXM7wT22NckuPvx/j0RuplkxurA8Mpv7qhkL7pVWW6vO4U
+   t1QDpXD4BcbQaA5Wov/7LBlravFuygfRq47yhpKtYHpiGg77ku9QWAeFh
+   g7woTe+iOGhz5kwJcKF19nmQrVVGb95oUSZho9nWtv5xr3KOx0tMdvzof
+   S6O5YAI8a6P5B0lM68Ap6nDuWNzMk9+Q782cTKkCJBeiK81NYe0eBfH+5
+   FOIxY8YWHhPLwn96gBTOhlRtn7VKgkXLAIKXVqcpfSEeWw90iD/PY5FMT
+   A==;
+X-CSE-ConnectionGUID: h2h5g72vSuq8DrZIOrLfag==
+X-CSE-MsgGUID: y6CBRameQSqhJn1uFodG2Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="31117086"
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="31117086"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 14:07:31 -0700
+X-CSE-ConnectionGUID: +fZ4+CpcRh+d5Nz5n/teng==
+X-CSE-MsgGUID: GKMWHHJ0ReWDzqLkkox3sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="35874404"
+Received: from hding1-mobl.ccr.corp.intel.com (HELO rpedgeco-desk4.intel.com) ([10.209.19.65])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 14:07:31 -0700
+From: Rick Edgecombe <rick.p.edgecombe@intel.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	kvm@vger.kernel.org
+Cc: kai.huang@intel.com,
+	dmatlack@google.com,
+	erdemaktas@google.com,
+	isaku.yamahata@gmail.com,
+	linux-kernel@vger.kernel.org,
+	sagis@google.com,
+	yan.y.zhao@intel.com,
+	rick.p.edgecombe@intel.com
+Subject: [PATCH v2 02/15] KVM: x86: Add a VM type define for TDX
+Date: Thu, 30 May 2024 14:07:01 -0700
+Message-Id: <20240530210714.364118-3-rick.p.edgecombe@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240530210714.364118-1-rick.p.edgecombe@intel.com>
+References: <20240530210714.364118-1-rick.p.edgecombe@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZljHE/R4KLzGU6vx@hpe.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 30, 2024 at 01:36:03PM GMT, Dimitri Sivanich wrote:
-> This fixes a bug introduced by commit d74169ceb0d2 ("iommu/vt-d: Allocate
-> DMAR fault interrupts locally").  The panic happens when
-> amd_iommu_enable_faulting is called from CPUHP_AP_ONLINE_DYN context.
-> 
-> Fixes: d74169ceb0d2 ("iommu/vt-d: Allocate DMAR fault interrupts locally")
-> Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
-> Tested-by: Yi Zhang <yi.zhang@redhat.com>
-> ---
+Add a VM type define for TDX.
 
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Future changes will need to lay the ground work for TDX support by
+making some behavior conditional on the VM being a TDX guest.
 
->  drivers/iommu/amd/init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index a18e74878f68..b02b959d12af 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -3353,7 +3353,7 @@ int amd_iommu_reenable(int mode)
->  	return 0;
->  }
->  
-> -int __init amd_iommu_enable_faulting(unsigned int cpu)
-> +int amd_iommu_enable_faulting(unsigned int cpu)
->  {
->  	/* We enable MSI later when PCI is initialized */
->  	return 0;
-> -- 
-> 2.35.3
+Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+---
+TDX MMU Prep:
+ - New patch, split from main series
+---
+ arch/x86/include/uapi/asm/kvm.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+index 988b5204d636..4dea0cfeee51 100644
+--- a/arch/x86/include/uapi/asm/kvm.h
++++ b/arch/x86/include/uapi/asm/kvm.h
+@@ -922,5 +922,6 @@ struct kvm_hyperv_eventfd {
+ #define KVM_X86_SEV_VM		2
+ #define KVM_X86_SEV_ES_VM	3
+ #define KVM_X86_SNP_VM		4
++#define KVM_X86_TDX_VM		5
+ 
+ #endif /* _ASM_X86_KVM_H */
+-- 
+2.34.1
 
