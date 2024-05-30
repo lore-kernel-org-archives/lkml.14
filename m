@@ -1,41 +1,48 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A056F30E;
-	Thu, 30 May 2024 09:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98CCC18396D
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717062125; cv=none; b=IS0qPFOJgmMhvbwK19qi/8G0DFnMJS/pwYTaPixp516KkDyzIaeIb0o/BkNmLbIT6JlgXVLUYF4SfU8OVs8ATJIh4PJ8Roh695sL0CgMfqJ09OKvZVQoh1qeJ7aeUzgOyVRM/0s7MaK1SzI7+Oh8oMt2Ous86r6/33bSpyD5Dp8=
+	t=1717062267; cv=none; b=UXml2hrXbiM++YMzmaLD9AM4MSRHbH0T1V8mPZeZJB+SB5uXkI6XKQTsavWnWMpN5QCnhypKTdxOik0iZBRQxjC17MnxDOOGqiU8aeO11fPBXRb3kOkOJs+Kz3Bl8eZ4v3lzeqBA5QI4ZoBbzDjKp8/eqUy/8FXEbd9QjnXBHGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717062125; c=relaxed/simple;
-	bh=XWOyTPNcAS3edgj78RlRWWnGHomKwyWonS/ztRducKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L2Wb4NTbKLJt1dlsJAZKNCHO/OtnAX1Omb9r3CHn6KAMk7nOE2N+OG3gCDQys0mIxInPhfWzmuURIQZwpcQJYySVnki2bUOABpKKKMIk7PuDXzBRQplYeHO8mJqFBVMzD65ZJL5d/NYUJ9SNfYSBAKa6dnpxp26gEccHz5mHARg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=udMzgw2m; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717062267; c=relaxed/simple;
+	bh=Ah8T+DbZaMK310fcA0Lv4Scw3Ix1e0dohjdOJ3aSqj0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lYKh2YFImuzwKT5pRAAU+7eJ1ns3OJZXRjjKFeAW4Zxm1oMYXTWrKBXX/wizP0xVMVxPzjK+R+Z3YyxG86Yo1lXpmxLb2Bsb8EtbJaTza5q/OyryKWuYO4VVE5pq68LHbafI9/hSK/HAFmSWGnRlylkMWAED7qlyFvg4AEbyTiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XGNk4hJY; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="udMzgw2m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717062046; x=1717666846; i=markus.elfring@web.de;
-	bh=oezbfXsbeaJmwShGUCb+ixc9diIxCFrcJK9McEzg11Q=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=udMzgw2mYVlwtItRnGV35f3oiE0Oyr3q2Wai5rVR1uBx+YWZq6DJmUB0HJFO7gEg
-	 zHtbjKeZbMdYQsvdMYg12nG+ChB1GmTP1PGCuWx+tCMS5rZiC1+duXb/jiHwkzB4j
-	 syiNZ4mlPm2DiiQ8XjEzFyur696yPd4GXRrreI0h/3tcHoAlAFA1sIbSh3Kt6TiAA
-	 D9LJeu9MW5T1g3BLn1VuEErohRJsWwSGlebj9XoGNB0KuJ815IRkZ8rWBx1cMjYYU
-	 hdIoDl2VHExhUzdr+Mva/03BzeBESiNQo93VyYKqajOHhSFQ0saGgjsPwp5aj9MhI
-	 3c9cFdagTRHOvih9Ig==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MP384-1rpSiH3liG-00XcMK; Thu, 30
- May 2024 11:40:46 +0200
-Message-ID: <5a2f7786-bb02-441a-a60e-a7a548a30a79@web.de>
-Date: Thu, 30 May 2024 11:40:21 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XGNk4hJY"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9hplk108023;
+	Thu, 30 May 2024 04:43:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717062231;
+	bh=cVkiqLAx26wTUKDADQCPLftPp08NYweVhmUaWKz3dhg=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=XGNk4hJYYWvoixVg968XV3BYNcrzC1Rp1FBtMC3SKjEkHLykpAOPj8E04/sUg9pRX
+	 iUqKjPgYaGR9YoxtDBeAI3dV4gPq0cf3QJvPwlag8wmEy/4CXKUJgRpwlzpaAErm/N
+	 MRVcmvKohTFWM8lD/QsqhJlrk2GeBdEpx41u1ENY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9hpPf108094
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 30 May 2024 04:43:51 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
+ May 2024 04:43:50 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 30 May 2024 04:43:50 -0500
+Received: from [172.24.227.31] (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9hhQV010017;
+	Thu, 30 May 2024 04:43:43 -0500
+Message-ID: <fa97de63-7657-4810-b5c3-1b9f8512e027@ti.com>
+Date: Thu, 30 May 2024 15:13:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,124 +50,230 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 04/20] pinctrl: starfive: Use scope based of_node_put()
- cleanups
-To: Peng Fan <peng.fan@nxp.com>, "soc@kernel.org" <soc@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Alim Akhtar <alim.akhtar@samsung.com>,
- Andrew Jeffery <andrew@codeconstruct.com.au>,
- Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Chester Lin <chester62515@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Damien Le Moal <dlemoal@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>,
- Dvorkin Dmitry <dvorkin@tibbo.com>, Emil Renner Berthing <kernel@esmil.dk>,
- Fabio Estevam <festevam@gmail.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- "Ghennadi Procopciuc (OSS)" <ghennadi.procopciuc@oss.nxp.com>,
- Hal Feng <hal.feng@starfivetech.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Jacky Bai <ping.bai@nxp.com>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Joel Stanley <joel@jms.id.au>, Jonathan Hunter <jonathanh@nvidia.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Matthias Brugger <mbrugger@suse.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>, Orson Zhai
- <orsonzhai@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Sean Wang <sean.wang@kernel.org>,
- Shawn Guo <shawnguo@kernel.org>,
- Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
- Stephen Warren <swarren@wwwdotorg.org>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Thierry Reding <thierry.reding@gmail.com>, Tony Lindgren <tony@atomide.com>,
- Viresh Kumar <vireshk@kernel.org>, Wells Lu <wellslutw@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-stm32@st-md-mailman.stormreply.com"
- <linux-stm32@st-md-mailman.stormreply.com>,
- "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
- "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
- "kernel@pengutronix.de" <kernel@pengutronix.de>,
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>
-References: <20240504-pinctrl-cleanup-v2-4-26c5f2dc1181@nxp.com>
- <96beb071-ec2c-475f-8fa2-d519a1b1dc28@web.de>
- <DU0PR04MB9417AEB942C1EDC053B3894288F32@DU0PR04MB9417.eurprd04.prod.outlook.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <DU0PR04MB9417AEB942C1EDC053B3894288F32@DU0PR04MB9417.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4W0m5Oq+1MGYjHuLsVFcBf6DSSPzN7CJwWHOWi5gVfVYTRdIR+K
- 2zyPW5XWeC0waA0XG1o0fva/8mCKTm9879lM0GAJSjUGl41hhETK5f8M2ZBMWQ4g0UJlzpD
- 3fzoJQdfd/ogRUeMGCE2UBUF0SSc9vaIDmdgbQa7eO8DVSGbXX57YkoiUskSCwTn3hiAUkG
- zfKWQK47+ptxj3MqnNU5w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Z0q9Az0GyLU=;t4hmcU2AVRjgCjjXk+b3MHwUa7l
- a/pZvuSsug2vebJJV5Mmmf6xKS18ONuBD+gbm/WB8pgHBLJFkYoysMC0IIhx4I0WWI8wizEKj
- wnwngc3K9jAYAXxT3wClh5EI2lIr7usMKJyuXoUcETJI4md3CnMPaiRQG/yVqlAaqCNcnTEWr
- WWVhMuNEPkeDux1iinsdm+TlQNMfJThu1Ed2/Gr+1xeNpKuIWMppANb5SaTJfrRnR4fWhKAje
- H5Ji01z/5jyqznj5BQqSdQN/HIFX+AuFTNeOOmiNL+Fu6rvGsnjOO3Y/SCvMNzBTzPiH9CDir
- A4M1tTHQ9uQvQBsNIgU0qBKLdJQWQkCNz9rGjEjT7hcfvZGYnOb51PQcD02B6X5AFG9H4e81d
- QQyoEcHJ2iww/oZeEqD01ICHR6Xm75yJLFp+FB2L2ollolZJGerIrqkObBT4DKiDqZh9JL7Ge
- bYgdIs3lszUpzViMOTebYrvSUME/DNU00PRb5jIRktRJ68GikIQOSb9GTM4McCY/8YhgSiKHO
- E0ke83cM8aWyw/aFa3MYwYIMoiR6CkR/JHxXPFGPv0ESsQE+1KqicTxlNRxNNeaC44F87DOhi
- QwekBqSRkfFTYVqJ/rYDwDv7k6JeNQKnGlzFplb3elYjtqMJQJuXX4QBFa8hnO27xq8GaJIkm
- oPQAWSWmyUngO8twTu/hiTut+8wfA2nc5zW1Ivh1KxhFHw1LlL2aUdBN27PkhUzfAZ2+2os0h
- eVnu8MCv4H6B/GiPXrkEj/dv4XcqEBaS34YpYNMsylW8LbTBv3fh0B8rT6BKm1GWYO0GYReRx
- tgV6FpjSt5H6LMZ9sBiv3t8DXZ4h0OzcUDX1owYdJOg1k=
+Subject: Re: [PATCH 6/7] drm/bridge: Introduce early_enable and late disable
+To: Maxime Ripard <mripard@kernel.org>
+CC: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Andrzej Hajda
+	<andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert
+ Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Jyri Sarha <jyri.sarha@iki.fi>,
+        Thomas
+ Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>,
+        DRI Development List
+	<dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Thierry
+ Reding <treding@nvidia.com>,
+        Kieran Bingham
+	<kieran.bingham+renesas@ideasonboard.com>,
+        Boris Brezillon
+	<boris.brezillon@bootlin.com>,
+        Nishanth Menon <nm@ti.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar
+	<u-kumar1@ti.com>,
+        Devarsh Thakkar <devarsht@ti.com>,
+        Jayesh Choudhary
+	<j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
+References: <20240511153051.1355825-1-a-bhatia1@ti.com>
+ <20240511153051.1355825-7-a-bhatia1@ti.com>
+ <20240516-bipedal-keen-taipan-eedbe7@penduick>
+ <ba8d0b98-67d2-41e2-b568-a40543a9b0fa@ti.com>
+ <20240521-realistic-imposing-lemur-aac3ad@houat>
+ <1a6b8a83-b378-4869-b536-0fca76e428bf@ti.com>
+ <20240528-encouraging-gray-lionfish-54ca83@houat>
+Content-Language: en-US
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+In-Reply-To: <20240528-encouraging-gray-lionfish-54ca83@houat>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
->> 1. Exception handling is repeated a few times also according to memory
->> allocation failures.
->>    How do you think about to use a corresponding label like "e_nomem"
->>    so that another bit of duplicate source code can be avoided?
->
-> I have no plan to rework this series for non-accepted patches. If you ha=
-ve
-> interest and time, feel free to take it.
+Hi Maxime,
+
+On 28/05/24 17:13, Maxime Ripard wrote:
+> On Fri, May 24, 2024 at 04:38:13PM GMT, Aradhya Bhatia wrote:
+>> Hi Maxime,
 >>
->> https://wiki.se/
->> i.cmu.edu%2Fconfluence%2Fdisplay%2Fc%2FMEM12-
->> C.%2BConsider%2Busing%2Ba%2Bgoto%2Bchain%2Bwhen%2Bleaving%2Ba%
->> 2Bfunction%2Bon%2Berror%2Bwhen%2Busing%2Band%2Breleasing%2Bresou
->> rces&data=3D05%7C02%7Cpeng.fan%40nxp.com%7C293bafdf40524fa4655b08
->> dc7e58f6b2%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63852
->> 4167804502915%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiL
->> CJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata
->> =3DKb5cz6sVxW1TNfQ8MM2F6YLIIztyjvW4wULEJLYKRM8%3D&reserved=3D0
+>> On 21/05/24 18:45, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Thu, May 16, 2024 at 03:10:15PM GMT, Aradhya Bhatia wrote:
+>>>>>>  	/**
+>>>>>>  	 * @pre_enable:
+>>>>>>  	 *
+>>>>>> @@ -285,6 +319,26 @@ struct drm_bridge_funcs {
+>>>>>>  	 */
+>>>>>>  	void (*enable)(struct drm_bridge *bridge);
+>>>>>>  
+>>>>>> +	/**
+>>>>>> +	 * @atomic_early_enable:
+>>>>>> +	 *
+>>>>>> +	 * This callback should enable the bridge. It is called right before
+>>>>>> +	 * the preceding element in the display pipe is enabled. If the
+>>>>>> +	 * preceding element is a bridge this means it's called before that
+>>>>>> +	 * bridge's @atomic_early_enable. If the preceding element is a
+>>>>>> +	 * &drm_crtc it's called right before the crtc's
+>>>>>> +	 * &drm_crtc_helper_funcs.atomic_enable hook.
+>>>>>> +	 *
+>>>>>> +	 * The display pipe (i.e. clocks and timing signals) feeding this bridge
+>>>>>> +	 * will not yet be running when this callback is called. The bridge can
+>>>>>> +	 * enable the display link feeding the next bridge in the chain (if
+>>>>>> +	 * there is one) when this callback is called.
+>>>>>> +	 *
+>>>>>> +	 * The @early_enable callback is optional.
+>>>>>> +	 */
+>>>>>> +	void (*atomic_early_enable)(struct drm_bridge *bridge,
+>>>>>> +				    struct drm_bridge_state *old_bridge_state);
+>>>>>> +
+>>>>>>  	/**
+>>>>>>  	 * @atomic_pre_enable:
+>>>>>>  	 *
+>>>>>> @@ -361,6 +415,21 @@ struct drm_bridge_funcs {
+>>>>>>  	void (*atomic_post_disable)(struct drm_bridge *bridge,
+>>>>>>  				    struct drm_bridge_state *old_bridge_state);
+>>>>>>  
+>>>>>> +	/**
+>>>>>> +	 * @atomic_late_disable:
+>>>>>> +	 *
+>>>>>> +	 * This callback should disable the bridge. It is called right after the
+>>>>>> +	 * preceding element in the display pipe is disabled. If the preceding
+>>>>>> +	 * element is a bridge this means it's called after that bridge's
+>>>>>> +	 * @atomic_late_disable. If the preceding element is a &drm_crtc it's
+>>>>>> +	 * called right after the crtc's &drm_crtc_helper_funcs.atomic_disable
+>>>>>> +	 * hook.
+>>>>>> +	 *
+>>>>>> +	 * The @atomic_late_disable callback is optional.
+>>>>>> +	 */
+>>>>>> +	void (*atomic_late_disable)(struct drm_bridge *bridge,
+>>>>>> +				    struct drm_bridge_state *old_bridge_state);
+>>>>>> +
+>>>>>
+>>>>> But more importantly, I don't quite get the use case you're trying to
+>>>>> solve here.
+>>>>>
+>>>>> If I got the rest of your series, the Cadence DSI bridge needs to be
+>>>>> powered up before its source is started. You can't use atomic_enable or
+>>>>> atomic_pre_enable because it would start the source before the DSI
+>>>>> bridge. Is that correct?
+>>>>>
+>>>>
+>>>> That's right. I cannot use bridge_atomic_pre_enable /
+>>>> bridge_atomic_enable here. But that's because my source is CRTC, which
+>>>> gets enabled via crtc_atomic_enable.
+>>>>
+>>>>
+>>>>> If it is, then how is it different from what
+>>>>> drm_atomic_bridge_chain_pre_enable is doing? The assumption there is
+>>>>> that it starts enabling bridges last to first, to it should be enabled
+>>>>> before anything starts.
+>>>>>
+>>>>> The whole bridge enabling order code starts to be a bit of a mess, so it
+>>>>> would be great if you could list all the order variations we have
+>>>>> currently, and why none work for cdns-dsi.
+>>>>>
+>>>>
+>>>> Of course! I can elaborate on the order.
+>>>>
+>>>> Without my patches (and given there isn't any bridge setting the
+>>>> "pre_enable_prev_first" flag) the order of enable for any single display
+>>>> chain, looks like this -
+>>>>
+>>>> 	crtc_enable
+>>>> 	
+>>>> 	bridge[n]_pre_enable
+>>>> 	---
+>>>> 	bridge[1]_pre_enable
+>>>>
+>>>> 	encoder_enable
+>>>>
+>>>> 	bridge[1]_enable
+>>>> 	---
+>>>> 	bridge[n]_enable
+>>>>
+>>>> The tidss enables at the crtc_enable level, and hence is the first
+>>>> entity with stream on. cdns-dsi doesn't stand a chance with
+>>>> bridge_atmoic_pre_enable / bridge_atmoic_enable hooks. And there is no
+>>>> bridge call happening before crtc currently.
+>>>
+>>> Thanks for filling the blanks :)
+>>>
+>>> I assume that since cdns-dsi is a bridge, and it only has a simple
+>>> encoder implementation, for it to receive some video signal we need to
+>>> enable the CRTC before the bridge.
+>>>
+>>> If so, I think that's the original intent between the bridge pre_enable.
+>>> The original documentation had:
+>>>
+>>>   pre_enable: this contains things needed to be done for the bridge
+>>>   before this contains things needed to be done for the bridge before
+>>>   this contains things needed to be done for the bridge before.
+>>>
+>>> and the current one has:
+>>>
+>>>   The display pipe (i.e. clocks and timing signals) feeding this bridge
+>>>   will not yet be running when this callback is called. The bridge must
+>>>   not enable the display link feeding the next bridge in the chain (if
+>>>   there is one) when this callback is called.
+>>>
+>>> I would say the CRTC is such a source, even more so now that the encoder
+>>> is usually transparent, so I think we should instead move the crtc
+>>> enable call after the bridge pre_enable.
+>>
+>> Hmm, if I understand you right, the newer sequence of calls will look
+>> like this,
+>>
+>> 	bridge[n]_pre_enable
+>> 	---
+>> 	bridge[1]_pre_enable
+>>
+>> 	crtc_enable
+>> 	encoder_enable
+>>
+>> 	bridge[1]_enable
+>> 	---
+>> 	bridge[n]_enable
+> 
+> Yes :)
+> 
+>> I do agree with this. This makes sense. CRTC is indeed such a source,
+>> and should ideally be enabled after the bridges are pre_enabled.
+>>
+>>>
+>>> Would that work?
+>>>
+>>
+>> So, this could potentially work, yes. The cdns-dsi would get pre_enabled
+>> after all bridges after cdns-dsi are pre_enabled. But over a quick test
+>> with BBAI64 + RPi Panel, I don't see any issue.
+>>
+>> However, the one concern that I have right now, is about breaking any
+>> existing (albeit faulty) implementation which relies on CRTC being
+>> enabled before the bridges are pre_enabled. =)
+> 
+> I don't think it'll be a big deal. If there was a proper encoder driver,
+> it was probably gating the signal until it's enabled. If there isn't,
+> then yeah it might disrupt things, but it mostly means that the driver
+> wasn't properly split between pre_enable and enable.
+> 
+> So I think it's worth trying, and we'll see the outcome.
+> 
 
-I became curious how the change acceptance will evolve further
-also according to such a code transformation possibility.
+Alright! =)
 
+Have made the changes as per your suggestions in v2. Thanks!
 
->> 2. Will development interests grow for the usage of a statement like
->> "guard(mutex)(&sfp->mutex);"?
->
-> I have no plan on this.
-
-Other contributors might get attracted by corresponding design adjustments=
-.
-https://elixir.bootlin.com/linux/v6.10-rc1/source/include/linux/cleanup.h#=
-L124
-
-See also:
-Looking at guard usage (with SmPL)
-https://lore.kernel.org/cocci/2dc6a1c7-79bf-42e3-95cc-599a1e154f57@web.de/
-https://sympa.inria.fr/sympa/arc/cocci/2024-05/msg00090.html
-
-Regards,
-Markus
+Regards
+Aradhya
