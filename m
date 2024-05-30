@@ -1,110 +1,111 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBA422F1C;
-	Thu, 30 May 2024 02:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315C51B299
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717037254; cv=none; b=qO//XQQdo7JOYOSbFxKdEWCmFRdLMriIwTd5pEY0RHl+p601cik8gAYWV3+BWwxjd7fDewT/gwFmOfqF1dpcpp3wLM6synE7bN/mJcR2tliKghuyc0jp5sY2+hABL9tGLr4H+xbAfgBR2UaiDkzD7eU7f0wxr5KPgvah4xlqVOc=
+	t=1717037528; cv=none; b=I5iujMbCV8Y21/Gdk+SAtJ/Yv5serxV5zWoL78vNEKR1vqiJ2ZJPmHF343kb/KKEdeb7xjjuYA/+aIAAQIjCLpDxMemSbbevUC/CsLNFcUJCQUZ748zM1j9X5LReG9KTusxZ94tNhpttuvPakDRUYl312L6ywob1d3Y5+VIjNIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717037254; c=relaxed/simple;
-	bh=w8xAIUi83lsZKRL5bpSZiBIuQ3x6BmRhIORMqXVYgZ8=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=XyAYyb+dZEtzAgSxbWl27Z7I4uyI0x2G/46Iyd5zcNkjbhBLqMR/Aqdc0DTgvhKEdTaS+67jq+uguVbK5IskCJDxEgpUq1fNtNft4wNJqX9tk18syzYh8TLZ3dVcrJO5mXATbnFlKvPX8y3WOHk3Qh0gyt0DiYDVgp46417U59E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5BC1D2017F3;
-	Thu, 30 May 2024 04:47:31 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 198462017F2;
-	Thu, 30 May 2024 04:47:31 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id BE4B41820F77;
-	Thu, 30 May 2024 10:47:28 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: p.zabel@pengutronix.de,
-	abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	marex@denx.de,
-	linux-clk@vger.kernel.org,
-	imx@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH v6 5/5] clk: imx: clk-audiomix: Correct parent clock for earc_phy and audpll
-Date: Thu, 30 May 2024 10:31:18 +0800
-Message-Id: <1717036278-3515-6-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1717036278-3515-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1717036278-3515-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1717037528; c=relaxed/simple;
+	bh=L+VwcrUtOg3D0hw2Yq3XaVTSIIofg97YslyP9RS1e+0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WXzbnbs6O28pLHwB6GgyhfJAnXAv7cz0JGBqgo222qODcMUY7tMduHujlHQTxbgi9bPYpCmKsoeZw2iB8sWwJLuOvZkJrwiC7PPuylvgveTCbokCNDQl2Gxz69JwgD9eiQSNP5qQZZ2rid4WHQBecVGd/eRUeqTYakP4GmSyPkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44U2poF8033765;
+	Thu, 30 May 2024 10:51:50 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VqVzk0NfKz2Mx64M;
+	Thu, 30 May 2024 10:48:02 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Thu, 30 May 2024 10:51:48 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki
+	<urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes
+	<lstoakes@gmail.com>, Baoquan He <bhe@redhat.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang <huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [PATCH] mm: fix incorrect vbq reference in purge_fragmented_block
+Date: Thu, 30 May 2024 10:51:44 +0800
+Message-ID: <20240530025144.1570865-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 44U2poF8033765
 
-According to Reference Manual of i.MX8MP
-The parent clock of "earc_phy" is "sai_pll_out_div2",
-The parent clock of "audpll" is "osc_24m".
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Add CLK_GATE_PARENT() macro for usage of specifying parent clock.
+Broken vbq->free reported on a v6.6 based system which is caused
+by invalid vbq->lock protect over vbq->free in purge_fragmented_block.
+This should be introduced by the Fixes below which ignored vbq->lock
+matter.
 
-Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Fixes: fc1e0d980037 ("mm/vmalloc: prevent stale TLBs in fully utilized blocks")
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 ---
- drivers/clk/imx/clk-imx8mp-audiomix.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ mm/vmalloc.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index ad6eceb419cc..d8678b3230e4 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -156,6 +156,15 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
- 		PDM_SEL, 2, 0						\
- 	}
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 22aa63f4ef63..112b50431725 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2614,9 +2614,10 @@ static void free_vmap_block(struct vmap_block *vb)
+ }
  
-+#define CLK_GATE_PARENT(gname, cname, pname)						\
-+	{								\
-+		gname"_cg",						\
-+		IMX8MP_CLK_AUDIOMIX_##cname,				\
-+		{ .fw_name = pname, .name = pname }, NULL, 1,		\
-+		CLKEN0 + 4 * !!(IMX8MP_CLK_AUDIOMIX_##cname / 32),	\
-+		1, IMX8MP_CLK_AUDIOMIX_##cname % 32			\
-+	}
+ static bool purge_fragmented_block(struct vmap_block *vb,
+-		struct vmap_block_queue *vbq, struct list_head *purge_list,
+-		bool force_purge)
++		struct list_head *purge_list, bool force_purge)
+ {
++	struct vmap_block_queue *vbq;
 +
- struct clk_imx8mp_audiomix_sel {
- 	const char			*name;
- 	int				clkid;
-@@ -173,14 +182,14 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
- 	CLK_GATE("earc", EARC_IPG),
- 	CLK_GATE("ocrama", OCRAMA_IPG),
- 	CLK_GATE("aud2htx", AUD2HTX_IPG),
--	CLK_GATE("earc_phy", EARC_PHY),
-+	CLK_GATE_PARENT("earc_phy", EARC_PHY, "sai_pll_out_div2"),
- 	CLK_GATE("sdma2", SDMA2_ROOT),
- 	CLK_GATE("sdma3", SDMA3_ROOT),
- 	CLK_GATE("spba2", SPBA2_ROOT),
- 	CLK_GATE("dsp", DSP_ROOT),
- 	CLK_GATE("dspdbg", DSPDBG_ROOT),
- 	CLK_GATE("edma", EDMA_ROOT),
--	CLK_GATE("audpll", AUDPLL_ROOT),
-+	CLK_GATE_PARENT("audpll", AUDPLL_ROOT, "osc_24m"),
- 	CLK_GATE("mu2", MU2_ROOT),
- 	CLK_GATE("mu3", MU3_ROOT),
- 	CLK_PDM,
+ 	if (vb->free + vb->dirty != VMAP_BBMAP_BITS ||
+ 	    vb->dirty == VMAP_BBMAP_BITS)
+ 		return false;
+@@ -2625,6 +2626,8 @@ static bool purge_fragmented_block(struct vmap_block *vb,
+ 	if (!(force_purge || vb->free < VMAP_PURGE_THRESHOLD))
+ 		return false;
+ 
++	vbq = container_of(addr_to_vb_xa(vb->va->va_start),
++		struct vmap_block_queue, vmap_blocks);
+ 	/* prevent further allocs after releasing lock */
+ 	WRITE_ONCE(vb->free, 0);
+ 	/* prevent purging it again */
+@@ -2664,7 +2667,7 @@ static void purge_fragmented_blocks(int cpu)
+ 			continue;
+ 
+ 		spin_lock(&vb->lock);
+-		purge_fragmented_block(vb, vbq, &purge, true);
++		purge_fragmented_block(vb, &purge, true);
+ 		spin_unlock(&vb->lock);
+ 	}
+ 	rcu_read_unlock();
+@@ -2801,7 +2804,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+ 			 * not purgeable, check whether there is dirty
+ 			 * space to be flushed.
+ 			 */
+-			if (!purge_fragmented_block(vb, vbq, &purge_list, false) &&
++			if (!purge_fragmented_block(vb, &purge_list, false) &&
+ 			    vb->dirty_max && vb->dirty != VMAP_BBMAP_BITS) {
+ 				unsigned long va_start = vb->va->va_start;
+ 				unsigned long s, e;
 -- 
-2.34.1
+2.25.1
 
