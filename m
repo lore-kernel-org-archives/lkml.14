@@ -1,124 +1,170 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7898645BF3;
-	Thu, 30 May 2024 17:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967D045BE4;
+	Thu, 30 May 2024 17:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088849; cv=none; b=bMKvb37jwNeh0kwYeKRHRJ3VjSWI0YPzktYLhoNMlMVEJU/AMLntEfneubaIW8Z0jRFuUR6Fqk8THeFwjzMr63JlGS2eavNsKPwkkuiPNymJD0z5Qf7XqE2OpgXH2sC1s+nRie1U3M4i8kF/5VVo6Hm/77//xBoet9pjRpKn0E0=
+	t=1717088876; cv=none; b=uZCA2Z0vOQgqliflV1//kDIRJWCUOdKtfJ9kWfolGUY0edbDv70hAnL+QH9ikmM5D609sljQx9IDRiTtSoM7aRnKgW1CI4cc3099GLK8UyMWWpju0qNSlAIUwwQg8oZDJiKQKx5Ff9EbNp6vIgGKD7NKEjeqs17GCTDjr++Ny6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088849; c=relaxed/simple;
-	bh=eaWBU/Gs0AVqYWKI7fIzfvj87upg7eVwzFYEt+kQATc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jkyi7ISG5IH16PfTlFK1J7wzLNsLJYHOU/sWILcKv1DvyGHI26xxhqQ4UH7g98sTqDHzdPOvZt8NWLYkVrWkaGccIayQVsMd41sMXp+eRI6susUnR9T8g6/E2sGnem++YuPD12yWgrXz/+MOu0J/nduA53Up/kuO9Fd/VC25kNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=kClFoaZw; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1717088876; c=relaxed/simple;
+	bh=WcBgmLB800gWG14w0nx6MPzcQdMu6AzZ6ketuWKY9+s=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ibOYoVYU2TG/XUstubGx8gBpxRHsFpXoSTtnd1VVnp2VHtJjq5NKgBoKd9gxfcXofniS7YeueiRVofExwN/Pd0w1Z47aBUd65jLMxqx5wcv0Jn39RZajb0WuDtzxIEHQ9STX+Q33PEoehyEq2GzVZj35Hov4ubkuf1sqP9WJ/cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gPSnDGvK; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="kClFoaZw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1717088818; x=1717693618; i=w_armin@gmx.de;
-	bh=eaWBU/Gs0AVqYWKI7fIzfvj87upg7eVwzFYEt+kQATc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=kClFoaZweyHzYDbr0riKqN3XxIn8HiskIzI/mhgGAjaGiChxbjgcDOX2sC3splHX
-	 CLZg9fwq/5e1IqQgTu26KL9nCZ8Ethx6qBEsYeBA7f3K1xHcM0aVOUHxYK3+hUITd
-	 R2soy7QkCdM7/5f5DE/X0KL5BZiLBMSFpW/Vg0zQx2fcYBDC07PxYWHesSJhlilEN
-	 25ldGgt/DusHjcYfY1B5sdLX2a2/qXBJLCma14NdbhjzWm/KoWst2miW8wxrA/eAN
-	 nLbN3VI1YpI+ys9edGoaJUCPXHu7PcX/Vyi4/DXANa5Tht3m7QzGRLYMPFRTkfz3+
-	 ODA+F9omcs0cr5GAnA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MC30Z-1sKgO440gX-00CO0l; Thu, 30
- May 2024 19:06:58 +0200
-Message-ID: <dd3ee875-f6be-40ec-a40e-0733de9b9981@gmx.de>
-Date: Thu, 30 May 2024 19:06:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPSnDGvK"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e95a75a90eso11519951fa.2;
+        Thu, 30 May 2024 10:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717088873; x=1717693673; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=S754fL6eVqgTIUZX2+nFqHKkShFVnRKXXFJgDcc1ZDI=;
+        b=gPSnDGvKQav99DE9NlpcI4PYeaAMSdL8r8Y1cpOJfRm0qNw4EXxaE2ltpfVmiY9NQF
+         pQg3snkuEU/p9i+ylooLVLTAnPZNiGchXduEMxiEOAA18CUsSEDCECT9hVz3erYM7DTl
+         6xCAiEYAsypc3leqHyUq2mmsbS/R3SqbOKbfT+aIOCauT4lKTrn6iX/oLjfnB3ii0aq1
+         OEgpNTCe6Xr0LXI2Y8JRznyIrlZLh6p4llfPAC5DCmJoza/UHWSki1dVokG3fG9bSECX
+         fv6j6uSY3fdXM2rrxy+svePxZqLiWy7ZgvWjZ17i/nejbBxwOcHnvwrG0sPx8ohzpf99
+         J2SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717088873; x=1717693673;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S754fL6eVqgTIUZX2+nFqHKkShFVnRKXXFJgDcc1ZDI=;
+        b=L5s24eHkdTpnb9+euTsS0NLSwiX+/reudZnwIy1jyyJVAsizqSl+57BRiT/BVEqT1a
+         YjBBKOeG5XPOVcmyH7u4oJ+chAVX7OfJPQ1tT7NEYHDf4dpCVlJ9xuqKQDbDGkzHVVxo
+         SSETwOgWmXA30/e5EoY8CkLMF5M9BZQoDBJTEZPc1rkIqEdsqbbKt3DAhNTL0MquSk8r
+         uDNXL+LJKjdwWt1jOdNH2JkC5UE10wbFbHI1WKg/uItSz3FEJvOahtqNtmbOherkeo/c
+         tmsVj/buRKRwY5fk+tMmVSnp7MXqbspjCktSNLYWHRxiLZPZ8/HNqmkGzzI+KHQt+Ag4
+         00YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfMF3jv/MUAo/1OHRcEYh+RX8b0LC57SK4S0H8o/aH6j2EcbbzLoKEJVbxeKLdW98BGmzlTuTioXM1J4QZO0aLIluFe7atH5axhetQ58kPcJ5r0wUUPbXAX86lD+TmIyiXB8id7xP8Do81jorlflfufLdybUKrhN4XuVKseRpsZn29yBzG2Z8oUtZ9mAIn1VuYXOmT824iIIOPHr9UNN7zhg==
+X-Gm-Message-State: AOJu0Yx76JdIMSiL3GRTGMpB7TIqnNLwVtwTUAq5+/zwmm5pYlcIEZ/5
+	zqzikU3QLHA/O3YBXsHOI1aG5M8yTdbV3F6q8XSrvMqTIcTY9ZaB
+X-Google-Smtp-Source: AGHT+IHwjTCFVGR50yNchGzCdFfdFMN0b/atDi7Tr/wiD7aw8w8AAvWmC3KTr7YpU1+nPKK4cCRg1g==
+X-Received: by 2002:a2e:a417:0:b0:2ea:844b:1b16 with SMTP id 38308e7fff4ca-2ea84830962mr16211881fa.34.1717088872356;
+        Thu, 30 May 2024 10:07:52 -0700 (PDT)
+Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421270ad410sm30167835e9.45.2024.05.30.10.07.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 10:07:51 -0700 (PDT)
+Content-Type: multipart/signed;
+ boundary=e8d29550c8c6ecc345e96308e31e05adf5d0599eed8c116befc5ef55e617;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] hwmon: Add support for SPD5118 compliant temperature
- sensors
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc: Hristo Venev <hristo@venev.name>, =?UTF-8?Q?Ren=C3=A9_Rebe?=
- <rene@exactcode.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
-References: <20240529205204.81208-1-linux@roeck-us.net>
- <20240529205204.81208-3-linux@roeck-us.net>
- <fa79f3c2-666f-48b8-b39a-f598107b2293@gmx.de>
- <0dc7a7c6-a426-424a-8321-471569ee6835@roeck-us.net>
- <bd197671-4fef-4cdb-8472-b46151e9008b@roeck-us.net>
- <5b9e47cb-3d9a-4d12-9d48-fc03111a0240@gmx.de>
- <f0b2c682-ce43-426c-92f9-008256f08eff@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <f0b2c682-ce43-426c-92f9-008256f08eff@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Date: Thu, 30 May 2024 19:07:51 +0200
+Message-Id: <D1N57DK5Z2XU.2VP8OXFUMC709@gmail.com>
+Cc: "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@linaro.org>, "Jonathan Corbet" <corbet@lwn.net>, "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>, "Sean Paul" <sean@poorly.run>, "Marijn
+ Suijten" <marijn.suijten@somainline.org>, <workflows@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH] docs: document python version used for compilation
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: "Rob Clark" <robdclark@gmail.com>, "Jani Nikula" <jani.nikula@intel.com>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
+ <878r0ijdh5.fsf@intel.com> <20240510102036.3ea40b37@sal.lan>
+ <87o79ehtbz.fsf@intel.com>
+ <CAF6AEGvTkL=JxGDaOab9XpJ4htWQnBA1dTEOUxBUTAavM0DB4w@mail.gmail.com>
+In-Reply-To: <CAF6AEGvTkL=JxGDaOab9XpJ4htWQnBA1dTEOUxBUTAavM0DB4w@mail.gmail.com>
+
+--e8d29550c8c6ecc345e96308e31e05adf5d0599eed8c116befc5ef55e617
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MB6Iceh72pLeWW7gTfUXGLV5THTLNb6+8pLlsvweBdIRrJvZwv5
- 1ogaC7ErGd5JtWlcMI0FcjN22P9NvuIiLeMLYj3P6UyzSE78TqIuwWON6L0b1RuKzd0Gugb
- +dI7PZXc0fPdxdiNedOEIhe1Prtcd2sle81UP/Zq4BZ3h33wuK2DzWBj0jBLTM8dkf9ub3X
- dckry6Re89HKZACTyuxhQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:s/YkqP0Ujzo=;swc+mr3mQl7ygdI6UwHn9d70FnZ
- FMsnF99Sf1E0xVU2oigKnsnJExPhGh3wO4UOikooOMhNYNLdYqtljmNwPQE1q9kkKQgAb4Sog
- Hl+nndHSoCDCknDHEzHBRXU0rA0FY9LvuCGBu/eNJ3YA+sRkpfoODif9HQ6AJS0Sh0JTawluY
- F7FGvF2ke4/UQ/HI7KKe3xUrEHqF5uUg8mqWWCWiQBURrSGWm3wT7V1tuDHmap9qneI6RJg5J
- Qr88mXqwswGxprPsoajEPcwK3mBRCWgNSOOQov6xi3mouTihQNG+Du+6O7PyO5FD5JQxZj4pC
- fRE9oysM1Nua2qnH90icUVVBVTHSuBNf/o+mFI3KvMUSPqT3d8XQTewUJnerISJ1bAy9ZvrVE
- Sn66liUCe7YYyNw1StMjzPKiEteS728lSQAr0RuZALTAPLq2Yrcr5ecuFTWdv+eVBZ7kXSjzV
- vDJh5BqIa4NWrkBXvfu0xT7mKGlpImgddDT15Ivy+E4L1eJlWWzkuwr67EPNEqmht84f9f+8K
- 1QPSJxzdP6kJHBOZrfSVQ37P4WLANUXYZVbzqnWY5pE0An7HnqnC/BBU1ejgsPdNffTchzHCz
- 2HZjZWkWeGlUkRsRVMGo0nfsqVaNpa3NVJd375O8xzKo0kwAidDfxBmfwkRyCL9wXJ9Jj28BW
- 6H3i73+1lZtaw+Aenl+TNA/jCVCGbpUX93TKcLugXBUqyxqhyl0gu3qxcj+knQ8533H7OI2yo
- zLT2RZwFrLopNSoHIO4oA/FFKW1I/NY3soteyXaTjFXBChczRQNGlhbTLoSnKpG8uCViTRc1d
- D9RQct+v4Ijgv8Tx4MZjNPlaXsiehsJwtN0a2QAazIyac=
+Content-Type: text/plain; charset=UTF-8
 
-Am 30.05.24 um 18:51 schrieb Guenter Roeck:
+On Fri May 10, 2024 at 10:04 PM CEST, Rob Clark wrote:
+> On Fri, May 10, 2024 at 3:09=E2=80=AFAM Jani Nikula <jani.nikula@intel.co=
+m> wrote:
+> >
+> > On Fri, 10 May 2024, Mauro Carvalho Chehab <mchehab@kernel.org> wrote:
+> > > Em Fri, 10 May 2024 11:08:38 +0300
+> > > Jani Nikula <jani.nikula@intel.com> escreveu:
+> > >
+> > >> On Thu, 09 May 2024, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =
+wrote:
+> > >> > The drm/msm driver had adopted using Python3 script to generate re=
+gister
+> > >> > header files instead of shipping pre-generated header files. Docum=
+ent
+> > >> > the minimal Python version supported by the script.
+> > >> >
+> > >> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > >> > ---
+> > >> >  Documentation/process/changes.rst | 1 +
+> > >> >  1 file changed, 1 insertion(+)
+> > >> >
+> > >> > diff --git a/Documentation/process/changes.rst b/Documentation/pro=
+cess/changes.rst
+> > >> > index 5685d7bfe4d0..8d225a9f65a2 100644
+> > >> > --- a/Documentation/process/changes.rst
+> > >> > +++ b/Documentation/process/changes.rst
+> > >> > @@ -63,6 +63,7 @@ cpio                   any              cpio --v=
+ersion
+> > >> >  GNU tar                1.28             tar --version
+> > >> >  gtags (optional)       6.6.5            gtags --version
+> > >> >  mkimage (optional)     2017.01          mkimage --version
+> > >> > +Python (optional)      3.5.x            python3 --version
+> > >>
+> > >> Python 3.5 reached end-of-life 3=C2=BD years ago [1]. What's the poi=
+nt in
+> > >> using anything older than the oldest supported version of Python,
+> > >> i.e. 3.8 at this time?
+> > >
+> > > What's the point of breaking compilation with on older distros?
+> > > The idea of minimal versions here is to specify the absolute minimum
+> > > version that it is required for the build to happen. If 3.5 is
+> > > the minimal one, then be it.
+> >
+> > AFAICT 3.5 was an arbitrary rather than a deliberate choice. We should
+> > at least be aware *why* we'd be sticking to old versions.
+> >
+> > Minimum versions here also means sticking to features available in said
+> > versions, for Python just as well as for GCC or any other tool. That's
+> > not zero cost.
+>
+> At this point, the cost to having a lower minimum version is pretty
+> small, so I'm not worrying too much about it.
+>
+> Maybe once kernel developers discover mako, and start generating more
+> at build time, we'll have to re-evaluate. ;-)
 
-> Hi Armin,
->
-> On 5/30/24 09:45, Armin Wolf wrote:
-> [ ... ]
->>>
->> # i2cdump 1 0x51
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=C2=A0 1=C2=A0 2=C2=A0 3=C2=A0 4=C2=A0 =
-5=C2=A0 6=C2=A0 7=C2=A0 8=C2=A0 9=C2=A0 a=C2=A0 b=C2=A0 c=C2=A0 d=C2=A0 e=
-=C2=A0 f 0123456789abcdef
->> 00: 51 18 0a 86 32 03 32 00 00 00 00 00 ff 3c 00 00 Q???2?2......<..
->> 10: 00 00 00 00 00 00 00 00 00 00 00 00 70 03 00 00 ............p?..
->> 20: 50 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 P?..............
->> 30: 00 c0 01 00 00 00 00 00 00 00 00 00 00 00 00 00 .??.............
->> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> 70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> 80: 30 10 12 02 04 00 40 42 00 00 00 00 b2 12 0d 00 0????.@B....???.
->> 90: 00 00 00 00 a0 01 f2 03 7a 0d 00 00 00 00 80 3e ....????z?....?>
->> a0: 80 3e 80 3e 00 7d 80 bb 30 75 27 01 a0 00 82 00 ?>?>.}??0u'??.?.
->> b0: 00 00 00 00 00 00 d4 00 00 00 d4 00 00 00 d4 00 ......?...?...?.
->> c0: 00 00 d4 00 00 00 88 13 08 88 13 08 20 4e 20 10 ..?...?????? N ?
->> d0: 27 10 1a 41 28 10 27 10 c4 09 04 4c 1d 0c 00 00 '??A(?'????L??..
->> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->>
->
-> Thanks a lot. This is again Montage Technology's M88SPD5118.
-> What is your DDR module vendor ?
->
-> Thanks,
-> Guenter
->
-Kingston Fury KF552C40BBK2-16, a 2x8GB DDR5 5200 kit.
+You're making an interesting point. Does the build dependency here
+denote Python (& standard library) or do we assume that if people have
+Python installed that they can also install arbitrary extra packages?
+Would a Mako dependency need to be explicitly mentioned here?
 
-Thanks,
-Armin Wolf
+Thierry
 
+--e8d29550c8c6ecc345e96308e31e05adf5d0599eed8c116befc5ef55e617
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmZYsmcACgkQ3SOs138+
+s6GwDhAAk7AgMlJlfnIXUZpOj/rOLWcb600MiHHFNHwSQCe4Uth9OdBvDjdFqsUH
+IOsRHerjzQEwlXmSafIOpXa2PZIdyxpGhW5b3regoBNfy9BeGgQLPyFwcQht6qh2
+VI2nrMek6YghkNYEOJgj/mR3pKgPdubbvenIHKRqjoOVO+dviJfnRCWGyBAmD/A7
+vBa21JJQ8xMZ4+uBFmwGfD6z3wzmNJejyeMTrSEspmmWzp1EouxwEy/gtUPv4xKQ
+zC1HEk/hWUEYaFgY0zgsT+HH80QhfpO2A93RM/DhcON8UPG0zkPXjNGy7PR49kAm
+8dHvyVnT42uD2ziXfp6sDAlCw5StvmPNyEDxltCBmZXWlana1DkQZarfNuBpuTBl
+Uf1C2GBc1I9AjH0Dui+jdzBurfBTRi0p5OTMh4xtfTuBKLQnNwCZ+Loc+Ft4uzX1
+ziaoZtR9q2PpElDhruxNAHH19a7DpfB71HYvcnhkrlpCH85ivsFIGditzYlMxuOK
+uoMZchMwVyzqptRpyKHsfgaIYNWffFB/vmLI27m4HrRYGl5qg4tx7te8FK9RP7cC
+mSM7KS36BA/BlJV9dLePmcKHylabI1HgJRKQ5nwFo5TyCHIh00EEpC01k7hcW/N3
+qrVTwB7kDgm0w1udks5zBp0D9+xquWiRWF9uVpwLQOvTfzcp434=
+=RSh3
+-----END PGP SIGNATURE-----
+
+--e8d29550c8c6ecc345e96308e31e05adf5d0599eed8c116befc5ef55e617--
