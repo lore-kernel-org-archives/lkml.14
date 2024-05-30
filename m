@@ -1,140 +1,98 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6417C201;
-	Thu, 30 May 2024 13:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080617C201;
+	Thu, 30 May 2024 13:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717075702; cv=none; b=qBduUiynnJ/WyjDg5mF7lxDiEOxLgst9iCKj3gSiNuwGZX5DbStV89ZvPACBxQMa0VC75kYwOlT5G9Pl32Xs+MNvqzOeWvwOfOyjcRJA6twj7wntjnRou7olm1+r7Z89KU1FH2Rn6Xi8dzqLDMQPcuugXe0CkZZb/GlsPtGlvgc=
+	t=1717075710; cv=none; b=XZzJaA8GQYkO6hxZ6VLlQmRuDrno4X0ZT9dL9gpbqkr7IKiXMdd2UmjP+AeVod+IjiC+mDTJcZObD38Zroq/RAxXwC8DmzVwnw1tB52OnezMVOGn2CcK+DUeKowmhtNfCNBBZNs0aYCuduDSIMV/yoAuts2SyH6muz50B5D/Eug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717075702; c=relaxed/simple;
-	bh=O3BgrCQplvhzyHxO9g26AKv4H545ShPXLbjYP3FXx3E=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=MgrYKgHKr6V1K9U/vEM2vcL6ZI53uLxAicCdZ/PMEC6B8YF8oeauGys9x3/305k9X8D8zsdZGARQ7OSh9ZGVpCaKCX6BgEvQ9ESGqEeWXUS3UItI7CWjjJH/RcrCX6v0AeFJeQ0u2uoC7PhaX5HSy3RWR9wNT2Q58VIV8ZsRf7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aSVCkjnJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Plt2uIiL; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1717075710; c=relaxed/simple;
+	bh=SN+KQQvN1DjuDSNQIMS0RKMVnEHb25UN7zrWuOh5AMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lWMjZNZWFoo++QEsc0s6I5ykVXjRDElHUTrJ9FiA4V0yM2z9/qupCyhQC5AZWCU50v+Hf7BOpwquTufefDCWDgXYRmZCr62DY2Yj1G8zAD3DE/wS/TNWhmvNDFqKQNw0HsasA9/7Zt3URLAo6IMU394TeXSOupPnDqe1lDhPo3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KxSJKp4H; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aSVCkjnJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Plt2uIiL"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id BD19F13800F1;
-	Thu, 30 May 2024 09:28:19 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 30 May 2024 09:28:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1717075699; x=1717162099; bh=+jLxTCnWUt
-	1Hir5+sNhTu9b2ULSOzRhP7WDq2X303Q0=; b=aSVCkjnJmR+ugbr/EoBmBDWeVl
-	G7coT7DjI6MH4KQohhe5nGSeL4kl3L82kYzRaHaK72z206pDnhx7W9FOsvMlP3h3
-	Xzd2uNubWbVlGqsj1/XugNwp8iI9UPsPs7AqrOInfR7KZlY3g8LiEciPgBV14OeZ
-	2hnvZMEFqvzUSXqebeokk2m7HgRXUKVApSkLFOMYa/blLZLwm3oouhzIhawHbTH5
-	Oqvez7tBhpGH+NzU3t0M5UVh61vzbl11RF+GiAjb1cTxSTIlQ1S4NVWpEWDgi94n
-	rt1YCyudsqMrzaQwMk36sO9KnmRHlvW/zzKIijzIr62mmCqzyTw0ZbYUZKew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1717075699; x=1717162099; bh=+jLxTCnWUt1Hir5+sNhTu9b2ULSO
-	zRhP7WDq2X303Q0=; b=Plt2uIiL7fKwDpzwEDVi4jQdDTnh2hOsqmssQEoyn5wd
-	z3nNHZvdzW7cBVPM1ZO7Macpsbq1D1DjEsolEMwZdAXdSfZb00z/5r/mxM2MHI3D
-	GPXOQOc68IndPWs40T/eDEMUwg1iiXAf6hcBbnhcpfAnt442KM6vjh2ztORgDsMX
-	GyV+qI9ZevBRiis445z6Chs60V7f54v5f4nmZMbTqoPbbEILN5DYwcvDIFi+SzUl
-	vCKyfVp0Zf5VNWhsoCW8n1+tVqu/kF9ZvdGgbjIgILhvf5DRd/zH7LcffeqOXjt9
-	IluzhtQ13Pbx/h1dw5snQ9PUisvAgi8BSzZ4CsKmgA==
-X-ME-Sender: <xms:835YZkoRamkLJm4sI8N6D-97S_2rtVeZsrpMQ3lJaelIqpowz4Ejtw>
-    <xme:835YZqr035GYHk2NwTljBucIu4Vky1z4NNk73-PdM3V8z_1K6PO5hdOHBQPFuWknC
-    HB4qVYd4vHuVQy4Qy4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:835YZpNAREJEA7fBndi1XwF1QFzdkF-vhLn9II1mc05Ha7KoQRAIhw>
-    <xmx:835YZr78es8Zn8L8du-gfSH5O-IIr16mgNR37QuXs_teo4FRaJMmTw>
-    <xmx:835YZj4V3NX563qFeStarBvQnFDJ9_AJrgwBT37E3JxpA_oA26xmQA>
-    <xmx:835YZrhb2aNHXtoiTwPi5mFJNG3LYNIJeaHCFlfvnxBER2uFRgFXvA>
-    <xmx:835YZnjM3RpmsO8y_v9ip1_f280I5IUQZ5HlPMf0fISe_2cpSm69XTZo>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 3A9A8B6008D; Thu, 30 May 2024 09:28:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxSJKp4H"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e95a883101so11009541fa.3;
+        Thu, 30 May 2024 06:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717075707; x=1717680507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IJXB1wPIJB9IUh99ijS9KipVqXbv8x01i+Uwc9/wlh0=;
+        b=KxSJKp4HWggGZ8su2LSz2Ud87mqZPEkYAqhg8lRRhxm1oDITbKY76HguXF0sJ4evnT
+         VvLr7pYEvJxqQ3l8ESYYZVbYesXk1qaUJfeaM+yT7AfkOHez6myBLuwXAzn9W5jQo5gb
+         YVUc2syD0Alv67pQov0cZPMQc3uQCcjw+Hao1j/gIXnLrL4mSj66JZdVWku9Rc41zskG
+         tMp3LfN/SQVCjotk2XS4l/Plo6f1E7IeaatMkl7godcRC+qb0mGv3YNklszC0wY8zneh
+         BESf3qCyLOO9MfYsJa/ZN3gaLlmE2JCXKbpGmAvc9czWGNd0bVRcmuaXcIiMXclDlvis
+         PhXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717075707; x=1717680507;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IJXB1wPIJB9IUh99ijS9KipVqXbv8x01i+Uwc9/wlh0=;
+        b=JjKghEGG2MjxXSLWsVNhFh6W+Aw80igB4Rv+4V+exetSGYqNYLAanza4yXQ1F62V8r
+         /lgJbaZ+FVlzTwmlC9Brn/TfpBAWOEipLiKdMkd1o8Ct8N/w4YJolPXBq8CNC5IAbqOD
+         kRb+mY07Wi3J6zY+LxtCO0qF4sK+p02Ttz6PNCtyjIwdOtLe12rsEIt3DxViLWDxmznM
+         AigQP8eI91Sek1bsGmQJWTDXzHRuvxDuky+PbCgNhL+rFAkT8F/3PbHDW7TKOQWaKsmD
+         Z+N+kGNORKJV+AbrhQXnJLU1O/aMzHwxjEcGmq+8As63rY0vJHwHDAwtwrIwLmI6jUs/
+         Afkw==
+X-Forwarded-Encrypted: i=1; AJvYcCV50XC8xbSC3eKzsXpKtUJNR8quiLIyUM0qvNYHcQNX1qjrsw4ncIirBwueK7qHXUd1gvSm7ch5N8qr7pWcLOOiAS9cWcSQ1xTaivk/qLOZlO/kKWtNDclEZd+xphYtRK0NqFPp
+X-Gm-Message-State: AOJu0Yz0m6F4E/3z1/I6VhPZnnfVR3Pqr5XjksPmmWGjxNMNDTSECxSP
+	hMxEQc3+W4KjzbneK1kt9tez9orGaq/jeP8m3RsGjgCbWtHU2S/Z
+X-Google-Smtp-Source: AGHT+IGvOsz1SnMej7/XfLj2txZq8JpOHp8kHZo/N8KHsDxnE8joy9arj1Nc2ImHPzLvxiwmN4tHNQ==
+X-Received: by 2002:a2e:9e4c:0:b0:2e0:c689:f8cd with SMTP id 38308e7fff4ca-2ea847b3714mr14910401fa.29.1717075706546;
+        Thu, 30 May 2024 06:28:26 -0700 (PDT)
+Received: from skbuf ([188.25.55.166])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706c952sm25426715e9.26.2024.05.30.06.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 06:28:25 -0700 (PDT)
+Date: Thu, 30 May 2024 16:28:22 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Xiaolei Wang <xiaolei.wang@windriver.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: linux@armlinux.org.uk, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net v2 PATCH] net: stmmac: Update CBS parameters when speed
+ changes after linking up
+Message-ID: <20240530132822.xv23at32wj73hzfj@skbuf>
+References: <20240530061453.561708-1-xiaolei.wang@windriver.com>
+ <f8b0843f-7900-4ad0-9e70-c16175e893d9@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
-In-Reply-To: <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
-References: 
- <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
- <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
-Date: Thu, 30 May 2024 15:27:58 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Russell King" <linux@armlinux.org.uk>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>
-Cc: "open list" <linux-kernel@vger.kernel.org>,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>, rcu <rcu@vger.kernel.org>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Joel Fernandes" <joel@joelfernandes.org>, eeraj.upadhyay@kernel.org,
- "John Ogness" <john.ogness@linutronix.de>
-Subject: Re: arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4): more
- undefined references to `__bad_cmpxchg' follow
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8b0843f-7900-4ad0-9e70-c16175e893d9@lunn.ch>
 
-On Thu, May 30, 2024, at 14:26, Russell King (Oracle) wrote:
-> On Thu, May 30, 2024 at 05:50:52PM +0530, Naresh Kamboju wrote:
->> The arm builds failed on Linux next with gcc-13 and clang-18.
->> 
->> Config: arm imx_v6_v7_defconfig - failed
->> 
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->> 
->> Build log:
->> -----
->> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
->> `rcu_trc_cmpxchg_need_qs':
->> update.c:(.text+0x348): undefined reference to `__bad_cmpxchg'
->> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
->> `rcu_read_unlock_trace_special':
->> update.c:(.text+0x41c): undefined reference to `__bad_cmpxchg'
->> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function
->> `trc_read_check_handler':
->> update.c:(.text+0x4b0): undefined reference to `__bad_cmpxchg'
->> arm-linux-gnueabihf-ld: kernel/rcu/update.o: in function `trc_inspect_reader':
->> update.c:(.text+0x1518): undefined reference to `__bad_cmpxchg'
->> arm-linux-gnueabihf-ld: update.c:(.text+0x1548): undefined reference
->> to `__bad_cmpxchg'
->> arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4):
->> more undefined references to `__bad_cmpxchg' follow
->> make[3]: *** [/builds/linux/scripts/Makefile.vmlinux:34: vmlinux] Error 1
->
-> You get a reference to __bad_cmpxchg() when someone uses cmpxchg() on
-> a datatype that there are no CPU instructions to perform the atomic
-> compare-and-exchange.
->
-> As we support 8-bit, 16-bit and 32-bit, I would expect that we're now
-> seeing cmpxchg() being used on 64-bit values, which are unsupportable
-> on 32-bit Arm.
+On Thu, May 30, 2024 at 02:50:52PM +0200, Xiaolei Wang wrote:
+> When the port is relinked, if the speed changes, the CBS parameters
+> should be updated, so saving the user transmission parameters so
+> that idle_slope and send_slope can be recalculated after the speed
+> changes after linking up can help reconfigure CBS after the speed
+> changes.
+> 
+> Fixes: 1f705bc61aee ("net: stmmac: Add support for CBS QDISC")
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
+> ---
+> v1 -> v2
+>  - Update CBS parameters when speed changes
 
-A 64-bit cmpxchg() would fail on most 32-bit architectures,
-other than armv6k+ and i686+. Since this one fails on
-an armv6 (non-6k) build, it's probably the added 8-bit
-cmpxchg() that Paul talked about using for RCU, though I
-don't see that in linux-next here.
-
-I htink we need to use the emulated cmpxchg8() in
-__cmpxchg() for this case, just like we do on other
-architectures that only have word size atomics.
-
-      Arnd
+May I ask what is the point of this patch? The bandwidth fraction, as
+IEEE 802.1Q defines it, it a function of idleSlope / portTransmitRate,
+the latter of which is a runtime variant. If the link speed changes at
+runtime, which is entirely possible, I see no alternative than to let
+user space figure out that this happened, and decide what to do. This is
+a consequence of the fact that the tc-cbs UAPI takes the raw idleSlope
+as direct input, rather than something more high level like the desired
+bandwidth for the stream itself, which could be dynamically computed by
+the kernel.
