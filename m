@@ -1,189 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F56A24B26;
-	Thu, 30 May 2024 16:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33F22EE4
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 16:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717086010; cv=none; b=uEV1PAEe1NqEdUG9UQ6ZLhFpZ+QRDm1ETsJ7aWZY6y6PT/znVOjshCpSyAv/O6RM8IuNKP4p0OmoLtN4ULPhAnkwTImigL4eWzxnUPs2awAmYmqFzjogFG64YvgVwwiyHd1MwxixM0O2sMLiBnzjLCEKXjnhqHs23Zq/iiMkIaU=
+	t=1717086049; cv=none; b=niCJM9WnMfbgonr9v495CIQdu07ed+KxgV4Dv/Gr+rAwbIiU5p1XRskAgUe3lzY0BWxw7y4vTCSxMV7nd/uhPlroY1Zjs/YC/fhtUaXTLzQE7HK9a7bGr54HJ41DBLhKEbKbyffFxpZ4fliB+VnbqqsgSUEEZZy73pCxwHhFi/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717086010; c=relaxed/simple;
-	bh=QcLwZcN683rIjeN6WtFPy3xKG9bOoTFn+rH1LUbETws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aoJZqlEqp6dbcwCxltLZrKX+gM9vRh3ZYkEXO96Y33I5imnKlJLIWzLu+aiCVWqs0GYpeBXuT1VQwxBtFZH1fJhNUFJlhzYLkVn5KVHR7ga5xefZrbtk49Hd23LTWEpSCNhduy8niN/azie8upGDvfvOu9cHTjrpwkt/3dD5DL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kEHiA+h1; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717086049; c=relaxed/simple;
+	bh=3B7ZQyZk5/+5h/jcTSOJgwlHgMzpB3t0tzQ4xhvru0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R4MgznIPmWJj0qPElrjnEJWLpGBEWdZnI/GPXapTcKwAR19LkNeJJEBMMAA7kMUPHgeMYILk6P47v81QbScqiYYVbqgXJCjgP+MBdYB7ci7q8oZxoUh+KjzhoBLSc4XGcPwGwWLhhX31oOSMdp6HhWpgzQotQMM0PH3XiD6IBfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WBY2wW0l; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kEHiA+h1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717086008; x=1748622008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QcLwZcN683rIjeN6WtFPy3xKG9bOoTFn+rH1LUbETws=;
-  b=kEHiA+h1buM8wzJybJD62V5pVEInmzWznjmFY8+sK78yWh2QyMbpTkVw
-   21EolXKuoLaSz4tvlYmAA5CXvQCUJP1CPFSONneT2TGq6w7iu+OMvHkB2
-   zCfj5doiBTZHXNCZIdas1EnH7+oxf9OC5fYiJhLJPWy2ojDu2n2Owraw1
-   H0TU0y/nbs/1YJx+qWslbOWHdV9ATIuLBXwclt4fpphABA2iaD0ckskTE
-   jOhXkre9iHr8CUYd0fMYN2QURxeQ5J/sTDVK9XIId7tpJ/soW2Ii4CptG
-   B7xe6u3tvzdjR5/gxKZWoKxKrq1ifeDbbVE1FH/ehS9LB1TqyZHxtcLa5
-   A==;
-X-CSE-ConnectionGUID: TokN2rpXShWcsVwA5BG74Q==
-X-CSE-MsgGUID: /2vIJM60RtyKxT+4ye4yCg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13397356"
-X-IronPort-AV: E=Sophos;i="6.08,201,1712646000"; 
-   d="scan'208";a="13397356"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 09:20:07 -0700
-X-CSE-ConnectionGUID: zPbvAMj+TByFGlipSReLCw==
-X-CSE-MsgGUID: 7sQAvfiIStmwMJTz5JZH2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,201,1712646000"; 
-   d="scan'208";a="59038255"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 30 May 2024 09:20:04 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCiVH-000Fgk-1D;
-	Thu, 30 May 2024 16:19:51 +0000
-Date: Fri, 31 May 2024 00:15:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Martin =?iso-8859-1?Q?Hundeb=F8ll?= <martin@geanix.com>,
-	Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	netdev@vger.kernel.org,
-	Markus Schneider-Pargmann <msp@baylibre.com>,
-	Martin =?iso-8859-1?Q?Hundeb=F8ll?= <martin@geanix.com>,
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] can: m_can: don't enable transceiver when probing
-Message-ID: <202405302307.MKjlGruk-lkp@intel.com>
-References: <20240530105801.3930087-1-martin@geanix.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WBY2wW0l"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a5dcb5a0db4so113920266b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717086046; x=1717690846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kl/GGM9FEQNmC7lNrCDznGozkd6NHwhfF13Ha04rMtw=;
+        b=WBY2wW0l1DDjIzqCJuEBe2r3/DXZMSt9MYNsmIgTSadfdJEpMuommo/bv12yAykeNc
+         Zpkw/fqy5i/5zQZqk6Nbq5Ay/CfnBa+XXW8GVBa8WLRRbfgEzrn/9PsXavoqcSxLSm+e
+         pRbys0CXx3C6EpoRRi+s+sOPiYZ/nXhQRy0eem92YqvBmiW0RyS0FyTR05n0eEzM8fTE
+         /UlVe5abGYvUFftuOH4O/gu48FW/xRpSZ2wJG7lOANDY1R4KAMWJDhnz3n+20GudfEqg
+         DOq02V/xedD5YZuykRD5OtzV1hOrgETVXUaVb1CeVha3jo8CcR00FkkBXdFljvoEtPzG
+         6KYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717086046; x=1717690846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kl/GGM9FEQNmC7lNrCDznGozkd6NHwhfF13Ha04rMtw=;
+        b=kKmyq7hpZKB6oBmT6O13W59ZYmbEzSQaI2lyVkXktiGzWvqTK8zlRc7sNr+f3ct+4t
+         dt9eXHEGVuUb49GuWSWzj94Xdh/rfOiRuR8iZ+mtpqdIjERyorVxowjHekyqOhVgJAOO
+         mzVnDxYFV++mWqhf/ACUkTsI0eyj5crZolN3VOB2QTXN1nFIHQFHw5qndpJwdPsvOd7D
+         Et6R/axjalbSGv6d1EQ+lGPNamAc9yZQ4Qe7QH6ncWVWKCuglqpxCwRk9y+Y1/3nodMl
+         MOOpshNSBrKa+BcDREsMQ612eAWoLbBoACKjYrX9L/I+3tclDhVwXg7v2H/ZOp5XQ6VB
+         DcJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyO0gNVjWAxKZS2UNOTar45nKlbWqmb54NL4zv8O1Kgl6t8WLcvNHUlvdprG+IysE59ecN8JSo3dCrfhWvsn4cHqCRZni13Npe0frB
+X-Gm-Message-State: AOJu0YywMOTYceRkTNj+uyjJepu9Qnyfx4vYgCzuNp/A3R6cJ+K1F3zi
+	re1xOYk5Th1Sr5Lvb3GlYsddKIHfvsB5wUtVwI5VoJhZX11dEdYdbbZHOsKxZkZEmH7BqnYe0/v
+	oAIri7slGYn28GuK6l1PF9sHLtmOdOjCjRkbf
+X-Google-Smtp-Source: AGHT+IE99vKgOVmVQYgmhzEBWXRWfHbQ0PozVSW5DerT4/50qVdSiaudvPuYP6CQetEqvnOnFqyicngxT1Zw39JQ8gI=
+X-Received: by 2002:a17:906:11d2:b0:a59:c62c:212d with SMTP id
+ a640c23a62f3a-a65e8d36768mr160285466b.14.1717086045429; Thu, 30 May 2024
+ 09:20:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530105801.3930087-1-martin@geanix.com>
+References: <20240530102126.357438-1-usamaarif642@gmail.com> <20240530102126.357438-2-usamaarif642@gmail.com>
+In-Reply-To: <20240530102126.357438-2-usamaarif642@gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 30 May 2024 09:20:06 -0700
+Message-ID: <CAJD7tkbn-Nb54aiCKQshb9HjBCQAZ_63FH4vic072kcV+ZxHrA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm: store zero pages to be swapped out in a bitmap
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, nphamcs@gmail.com, 
+	chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kernel-team@meta.com, Ying <ying.huang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Martin,
+On Thu, May 30, 2024 at 3:21=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
+ wrote:
+>
+> Approximately 10-20% of pages to be swapped out are zero pages [1].
+> Rather than reading/writing these pages to flash resulting
+> in increased I/O and flash wear, a bitmap can be used to mark these
+> pages as zero at write time, and the pages can be filled at
+> read time if the bit corresponding to the page is set.
+> With this patch, NVMe writes in Meta server fleet decreased
+> by almost 10% with conventional swap setup (zswap disabled).
 
-kernel test robot noticed the following build warnings:
+Great work. I thought about doing this after my attempt to drop some
+of the same-filled pages handling in zswap, now we can drop all of it
+:)
 
-[auto build test WARNING on mkl-can-next/testing]
-[also build test WARNING on linus/master v6.10-rc1 next-20240529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Make sure to CC other non-zswap folks on next iterations like Ying. I
+see Johannes already did that in his response. I suspect
+get_maintainers will give you a few extra names.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Martin-Hundeb-ll/can-m_can-don-t-enable-transceiver-when-probing/20240530-185906
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git testing
-patch link:    https://lore.kernel.org/r/20240530105801.3930087-1-martin%40geanix.com
-patch subject: [PATCH v3] can: m_can: don't enable transceiver when probing
-config: i386-buildonly-randconfig-003-20240530 (https://download.01.org/0day-ci/archive/20240530/202405302307.MKjlGruk-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240530/202405302307.MKjlGruk-lkp@intel.com/reproduce)
+>
+> [1]https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d=
+1344dde9fce0@epcms5p1/
+>
+> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> ---
+>  include/linux/swap.h |  1 +
+>  mm/page_io.c         | 86 ++++++++++++++++++++++++++++++++++++++++++--
+>  mm/swapfile.c        | 10 ++++++
+>  3 files changed, 95 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index a11c75e897ec..e88563978441 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -299,6 +299,7 @@ struct swap_info_struct {
+>         signed char     type;           /* strange name for an index */
+>         unsigned int    max;            /* extent of the swap_map */
+>         unsigned char *swap_map;        /* vmalloc'ed array of usage coun=
+ts */
+> +       unsigned long *zeromap;         /* vmalloc'ed bitmap to track zer=
+o pages */
+>         struct swap_cluster_info *cluster_info; /* cluster info. Only for=
+ SSD */
+>         struct swap_cluster_list free_clusters; /* free clusters list */
+>         unsigned int lowest_bit;        /* index of first free in swap_ma=
+p */
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index a360857cf75d..ab043b4ad577 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -172,6 +172,77 @@ int generic_swapfile_activate(struct swap_info_struc=
+t *sis,
+>         goto out;
+>  }
+>
+> +static bool is_folio_page_zero_filled(struct folio *folio, int i)
+> +{
+> +       unsigned long *page;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405302307.MKjlGruk-lkp@intel.com/
+I just recently renamed this variable in the zswap version of this
+function because it is very confusing, especially when looking for
+struct page references. 'page' is usually used for struct page. Let's
+use a different name here.
 
-All warnings (new ones prefixed by >>):
+> +       unsigned int pos;
+> +       bool ret =3D false;
+> +
+> +       page =3D kmap_local_folio(folio, i * PAGE_SIZE);
 
->> drivers/net/can/m_can/m_can.c:1725:11: warning: variable 'err' is uninitialized when used here [-Wuninitialized]
-    1725 |                         return err;
-         |                                ^~~
-   drivers/net/can/m_can/m_can.c:1674:24: note: initialize the variable 'err' to silence this warning
-    1674 |         int m_can_version, err, niso;
-         |                               ^
-         |                                = 0
-   1 warning generated.
+In the zswap version, we compare against the end of the page first
+before the loop, in case the page just has a bunch of zeros at its
+beginning. The patch that added it to zswap reported better
+performance in some cases [1].
 
+You can also use memchr_inv() to compare the range against 0 instead
+of the loop.
 
-vim +/err +1725 drivers/net/can/m_can/m_can.c
+[1]https://lore.kernel.org/all/20230205190036.1730134-1-taejoon.song@lge.co=
+m/
 
-  1670	
-  1671	static int m_can_dev_setup(struct m_can_classdev *cdev)
-  1672	{
-  1673		struct net_device *dev = cdev->net;
-  1674		int m_can_version, err, niso;
-  1675	
-  1676		m_can_version = m_can_check_core_release(cdev);
-  1677		/* return if unsupported version */
-  1678		if (!m_can_version) {
-  1679			dev_err(cdev->dev, "Unsupported version number: %2d",
-  1680				m_can_version);
-  1681			return -EINVAL;
-  1682		}
-  1683	
-  1684		if (!cdev->is_peripheral)
-  1685			netif_napi_add(dev, &cdev->napi, m_can_poll);
-  1686	
-  1687		/* Shared properties of all M_CAN versions */
-  1688		cdev->version = m_can_version;
-  1689		cdev->can.do_set_mode = m_can_set_mode;
-  1690		cdev->can.do_get_berr_counter = m_can_get_berr_counter;
-  1691	
-  1692		/* Set M_CAN supported operations */
-  1693		cdev->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
-  1694			CAN_CTRLMODE_LISTENONLY |
-  1695			CAN_CTRLMODE_BERR_REPORTING |
-  1696			CAN_CTRLMODE_FD |
-  1697			CAN_CTRLMODE_ONE_SHOT;
-  1698	
-  1699		/* Set properties depending on M_CAN version */
-  1700		switch (cdev->version) {
-  1701		case 30:
-  1702			/* CAN_CTRLMODE_FD_NON_ISO is fixed with M_CAN IP v3.0.x */
-  1703			err = can_set_static_ctrlmode(dev, CAN_CTRLMODE_FD_NON_ISO);
-  1704			if (err)
-  1705				return err;
-  1706			cdev->can.bittiming_const = &m_can_bittiming_const_30X;
-  1707			cdev->can.data_bittiming_const = &m_can_data_bittiming_const_30X;
-  1708			break;
-  1709		case 31:
-  1710			/* CAN_CTRLMODE_FD_NON_ISO is fixed with M_CAN IP v3.1.x */
-  1711			err = can_set_static_ctrlmode(dev, CAN_CTRLMODE_FD_NON_ISO);
-  1712			if (err)
-  1713				return err;
-  1714			cdev->can.bittiming_const = &m_can_bittiming_const_31X;
-  1715			cdev->can.data_bittiming_const = &m_can_data_bittiming_const_31X;
-  1716			break;
-  1717		case 32:
-  1718		case 33:
-  1719			/* Support both MCAN version v3.2.x and v3.3.0 */
-  1720			cdev->can.bittiming_const = &m_can_bittiming_const_31X;
-  1721			cdev->can.data_bittiming_const = &m_can_data_bittiming_const_31X;
-  1722	
-  1723			niso = m_can_niso_supported(cdev);
-  1724			if (niso < 0)
-> 1725				return err;
-  1726			if (niso)
-  1727				cdev->can.ctrlmode_supported |= CAN_CTRLMODE_FD_NON_ISO;
-  1728			break;
-  1729		default:
-  1730			dev_err(cdev->dev, "Unsupported version number: %2d",
-  1731				cdev->version);
-  1732			return -EINVAL;
-  1733		}
-  1734	
-  1735		/* Forcing standby mode should be redunant, as the chip should be in
-  1736		 * standby after a reset. Write the INIT bit anyways, should the chip
-  1737		 * be configured by previous stage.
-  1738		 */
-  1739		return m_can_cccr_update_bits(cdev, CCCR_INIT, CCCR_INIT);
-  1740	}
-  1741	
+> +       for (pos =3D 0; pos < PAGE_SIZE / sizeof(*page); pos++) {
+> +               if (page[pos] !=3D 0)
+> +                       goto out;
+> +       }
+> +       ret =3D true;
+> +out:
+> +       kunmap_local(page);
+> +       return ret;
+> +}
+> +
+> +static bool is_folio_zero_filled(struct folio *folio)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
+> +               if (!is_folio_page_zero_filled(folio, i))
+> +                       return false;
+> +       }
+> +       return true;
+> +}
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Is there value in splitting this into two functions and having a
+separate loop here? Can we just have a single function that kmaps the
+entire folio and loops over it in one go?
+
+> +
+> +static void folio_page_zero_fill(struct folio *folio, int i)
+> +{
+> +       unsigned long *page;
+> +
+> +       page =3D kmap_local_folio(folio, i * PAGE_SIZE);
+> +       memset_l(page, 0, PAGE_SIZE / sizeof(unsigned long));
+> +       kunmap_local(page);
+> +}
+> +
+> +static void folio_zero_fill(struct folio *folio)
+> +{
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; i < folio_nr_pages(folio); i++)
+> +               folio_page_zero_fill(folio, i);
+
+I think you can just use clear_highpage() here and drop
+folio_page_zero_fill(). It should be more optimized as well in some
+cases.
+
+I don't have further comments about the rest beyond Johannes's comments.
