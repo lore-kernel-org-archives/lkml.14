@@ -1,30 +1,30 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A9A22EED
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067CF21A02
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717034691; cv=none; b=oX6ZHva4eAhG0yFGqF6HmyLekqwxUhIWiUwvdWqOqVK6rXJ8rqGj7qQO/dIMPApV7p1wZATnwJn71Td2UE5zfOcqU76efTF6fBND6A7pvnFDM1GI0IaX2f8D5wve7WI35D6BG6OIpKUMzzLXkJQ26cusvoymW+KbwFkvhP5/Qac=
+	t=1717034689; cv=none; b=fSySAJVarPTtv5h4YX3Nv3frvsuIQQdjlmwQd3hUi7MB5T9w6/kQiSuHTTdSVrNvEbgFk+6hxwKPWayjE8uOLcRTqc30DxMISX7NbF4KM14drx09MyUVWPwbI7mH3WV0VbSo6/t8xWrtZr/YmgWEnoKuUk7Dp3m2V1uly/W0AqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717034691; c=relaxed/simple;
-	bh=DCLpbiumVdaZe+rSZntSUm/RXQvdQ4mbHP4ZLPPiJzY=;
+	s=arc-20240116; t=1717034689; c=relaxed/simple;
+	bh=vEOKBzhXBxbg7Gsl16qi5vNv4ZrlyEgw/DY+iy6p5dI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XhiJcyuwlPs7AlTqdBTTb78217duxwKy1zkFEFxqgNrAlDXQjVwhOBuO+Z790phYy7BsQpMM3v0YZOnmdjC6whCOvf6xJzyNrraf2xWsAwtxP2KPhUi31QXMwq9UhryaSfEo2x3YxyJC93olxPeMf3jX8fgo2VSd2kC0mKufV+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XypK4/JW; arc=none smtp.client-ip=115.124.30.100
+	 MIME-Version; b=Xg63BJ2GUqgG78F5d3e/GbYAkq2EBZyYJlbZE8ycQyEgyenQwYldrkcuucutorbCmBsG1TaxFskKExpnXywtXTV5DcvOBb2Cg6WpMdJ6vjjtXxPOwSwtpQiTDeZeWRmCssKmBwYp8VSYgsWLMRxEBY+Tm+iN/GV732lhVhxtz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IfsJCcvk; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XypK4/JW"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IfsJCcvk"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1717034681; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=OpKbZmXRrURMX+/QsaD7+TkYK79RF0tdTg/q8PuO7h4=;
-	b=XypK4/JWee0Alk9Dp1YxzwUyqWQRv1drfxnEnzpZy50yvbcyg5h+GsSs7+GS6MgxEnFsZkE/Z3ETrncSO+eU8tmO5STBbjQoi0ntP8FL+tNwUG09AVAeVN5On1/2LxgE9YWz6Nq9nI67f+JNzSQyVOwRkkwb/FKHjrH/sZsGoaE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7V1J68_1717034679;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7V1J68_1717034679)
+	t=1717034679; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=YUWj9QiAe2+Mw0VIxQUZVOOdw6pQcRdezcn7a/MnNHI=;
+	b=IfsJCcvkD/c/R/Ubbdj1iIyFJUPRC8xQVH1L2MwmOafNZNOToC8wBSd6VBToWGSAwlV+nHrdXqr3bjx6XXlh4Ed5XQXdhDDomjiRk3j+Y0YNZI3JJq9XgLjE/7g2mylyxNlf3eDABLH2axmr/DeBQ35ofCREwIivy5N1SguoQgs=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7V1J5Y_1717034677;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7V1J5Y_1717034677)
           by smtp.aliyun-inc.com;
-          Thu, 30 May 2024 10:04:39 +0800
+          Thu, 30 May 2024 10:04:37 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com
@@ -42,9 +42,9 @@ Cc: willy@infradead.org,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/6] mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
-Date: Thu, 30 May 2024 10:04:16 +0800
-Message-Id: <4d0b226f2a14f93d156a01855db32ff562547bcc.1717033868.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v3 3/6] mm: shmem: add multi-size THP sysfs interface for anonymous shmem
+Date: Thu, 30 May 2024 10:04:14 +0800
+Message-Id: <716c515156e8c891766d8fd3f1df231d289b2a37.1717033868.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <cover.1717033868.git.baolin.wang@linux.alibaba.com>
 References: <cover.1717033868.git.baolin.wang@linux.alibaba.com>
@@ -56,104 +56,263 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Although the top-level hugepage allocation can be turned off, anonymous shmem
-can still use mTHP by configuring the sysfs interface located at
-'/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled'. Therefore,
-add alignment for mTHP size to provide a suitable alignment address in
-shmem_get_unmapped_area().
+To support the use of mTHP with anonymous shmem, add a new sysfs interface
+'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
+directory for each mTHP to control whether shmem is enabled for that mTHP,
+with a value similar to the top level 'shmem_enabled', which can be set to:
+"always", "inherit (to inherit the top level setting)", "within_size", "advise",
+"never", "deny", "force". These values follow the same semantics as the top
+level, except the 'deny' is equivalent to 'never', and 'force' is equivalent
+to 'always' to keep compatibility.
+
+By default, PMD-sized hugepages have enabled="inherit" and all other hugepage
+sizes have enabled="never" for '/sys/kernel/mm/transparent_hugepage/hugepages-xxkB/shmem_enabled'.
+
+In addition, if top level value is 'force', then only PMD-sized hugepages
+have enabled="inherit", otherwise configuration will be failed and vice versa.
+That means now we will avoid using non-PMD sized THP to override the global
+huge allocation.
 
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Lance Yang <ioworker0@gmail.com>
 ---
- mm/shmem.c | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+ Documentation/admin-guide/mm/transhuge.rst | 29 +++++++
+ include/linux/huge_mm.h                    | 10 +++
+ mm/huge_memory.c                           | 11 +--
+ mm/shmem.c                                 | 96 ++++++++++++++++++++++
+ 4 files changed, 138 insertions(+), 8 deletions(-)
 
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index d414d3f5592a..659459374032 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -332,6 +332,35 @@ deny
+ force
+     Force the huge option on for all - very useful for testing;
+ 
++Anonymous shmem can also use "multi-size THP" (mTHP) by adding a new sysfs knob
++to control mTHP allocation: /sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/shmem_enabled.
++Its value for each mTHP is essentially consistent with the global setting, except
++for the addition of 'inherit' to ensure compatibility with the global settings.
++always
++    Attempt to allocate <size> huge pages every time we need a new page;
++
++inherit
++    Inherit the top-level "shmem_enabled" value. By default, PMD-sized hugepages
++    have enabled="inherit" and all other hugepage sizes have enabled="never";
++
++never
++    Do not allocate <size> huge pages;
++
++within_size
++    Only allocate <size> huge page if it will be fully within i_size.
++    Also respect fadvise()/madvise() hints;
++
++advise
++    Only allocate <size> huge pages if requested with fadvise()/madvise();
++
++deny
++    Has the same semantics as 'never', now mTHP allocation policy is only
++    used for anonymous shmem and no not override tmpfs.
++
++force
++    Has the same semantics as 'always', now mTHP allocation policy is only
++    used for anonymous shmem and no not override tmpfs.
++
+ Need of application restart
+ ===========================
+ 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 020e2344eb86..fac21548c5de 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -6,6 +6,7 @@
+ #include <linux/mm_types.h>
+ 
+ #include <linux/fs.h> /* only for vma_is_dax() */
++#include <linux/kobject.h>
+ 
+ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
+ int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+@@ -63,6 +64,7 @@ ssize_t single_hugepage_flag_show(struct kobject *kobj,
+ 				  struct kobj_attribute *attr, char *buf,
+ 				  enum transparent_hugepage_flag flag);
+ extern struct kobj_attribute shmem_enabled_attr;
++extern struct kobj_attribute thpsize_shmem_enabled_attr;
+ 
+ /*
+  * Mask of all large folio orders supported for anonymous THP; all orders up to
+@@ -265,6 +267,14 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
+ }
+ 
++struct thpsize {
++	struct kobject kobj;
++	struct list_head node;
++	int order;
++};
++
++#define to_thpsize(kobj) container_of(kobj, struct thpsize, kobj)
++
+ enum mthp_stat_item {
+ 	MTHP_STAT_ANON_FAULT_ALLOC,
+ 	MTHP_STAT_ANON_FAULT_FALLBACK,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 8e49f402d7c7..1360a1903b66 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -449,14 +449,6 @@ static void thpsize_release(struct kobject *kobj);
+ static DEFINE_SPINLOCK(huge_anon_orders_lock);
+ static LIST_HEAD(thpsize_list);
+ 
+-struct thpsize {
+-	struct kobject kobj;
+-	struct list_head node;
+-	int order;
+-};
+-
+-#define to_thpsize(kobj) container_of(kobj, struct thpsize, kobj)
+-
+ static ssize_t thpsize_enabled_show(struct kobject *kobj,
+ 				    struct kobj_attribute *attr, char *buf)
+ {
+@@ -517,6 +509,9 @@ static struct kobj_attribute thpsize_enabled_attr =
+ 
+ static struct attribute *thpsize_attrs[] = {
+ 	&thpsize_enabled_attr.attr,
++#ifdef CONFIG_SHMEM
++	&thpsize_shmem_enabled_attr.attr,
++#endif
+ 	NULL,
+ };
+ 
 diff --git a/mm/shmem.c b/mm/shmem.c
-index 493873d7246c..efc093ee7d4d 100644
+index ae358efc397a..d5ab5e211100 100644
 --- a/mm/shmem.c
 +++ b/mm/shmem.c
-@@ -2394,6 +2394,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	unsigned long inflated_len;
- 	unsigned long inflated_addr;
- 	unsigned long inflated_offset;
-+	unsigned long hpage_size;
+@@ -131,6 +131,14 @@ struct shmem_options {
+ #define SHMEM_SEEN_QUOTA 32
+ };
  
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
-@@ -2412,8 +2413,6 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 
- 	if (shmem_huge == SHMEM_HUGE_DENY)
- 		return addr;
--	if (len < HPAGE_PMD_SIZE)
--		return addr;
- 	if (flags & MAP_FIXED)
- 		return addr;
- 	/*
-@@ -2425,8 +2424,11 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (uaddr == addr)
- 		return addr;
- 
-+	hpage_size = HPAGE_PMD_SIZE;
- 	if (shmem_huge != SHMEM_HUGE_FORCE) {
- 		struct super_block *sb;
-+		unsigned long __maybe_unused hpage_orders;
-+		int order = 0;
- 
- 		if (file) {
- 			VM_BUG_ON(file->f_op != &shmem_file_operations);
-@@ -2439,18 +2441,34 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 			if (IS_ERR(shm_mnt))
- 				return addr;
- 			sb = shm_mnt->mnt_sb;
-+
-+			/*
-+			 * Find the highest mTHP order used for anonymous shmem to
-+			 * provide a suitable alignment address.
-+			 */
 +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+			hpage_orders = READ_ONCE(huge_anon_shmem_orders_always);
-+			hpage_orders |= READ_ONCE(huge_anon_shmem_orders_within_size);
-+			hpage_orders |= READ_ONCE(huge_anon_shmem_orders_madvise);
-+			hpage_orders |= READ_ONCE(huge_anon_shmem_orders_inherit);
-+			order = highest_order(hpage_orders);
-+			hpage_size = PAGE_SIZE << order;
++static unsigned long huge_anon_shmem_orders_always __read_mostly;
++static unsigned long huge_anon_shmem_orders_madvise __read_mostly;
++static unsigned long huge_anon_shmem_orders_inherit __read_mostly;
++static unsigned long huge_anon_shmem_orders_within_size __read_mostly;
++static DEFINE_SPINLOCK(huge_anon_shmem_orders_lock);
 +#endif
- 		}
--		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER)
-+		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER && !order)
- 			return addr;
- 	}
- 
--	offset = (pgoff << PAGE_SHIFT) & (HPAGE_PMD_SIZE-1);
--	if (offset && offset + len < 2 * HPAGE_PMD_SIZE)
-+	if (len < hpage_size)
-+		return addr;
 +
-+	offset = (pgoff << PAGE_SHIFT) & (hpage_size - 1);
-+	if (offset && offset + len < 2 * hpage_size)
- 		return addr;
--	if ((addr & (HPAGE_PMD_SIZE-1)) == offset)
-+	if ((addr & (hpage_size - 1)) == offset)
- 		return addr;
+ #ifdef CONFIG_TMPFS
+ static unsigned long shmem_default_max_blocks(void)
+ {
+@@ -4672,6 +4680,12 @@ void __init shmem_init(void)
+ 		SHMEM_SB(shm_mnt->mnt_sb)->huge = shmem_huge;
+ 	else
+ 		shmem_huge = SHMEM_HUGE_NEVER; /* just in case it was patched */
++
++	/*
++	 * Default to setting PMD-sized THP to inherit the global setting and
++	 * disable all other multi-size THPs, when anonymous shmem uses mTHP.
++	 */
++	huge_anon_shmem_orders_inherit = BIT(HPAGE_PMD_ORDER);
+ #endif
+ 	return;
  
--	inflated_len = len + HPAGE_PMD_SIZE - PAGE_SIZE;
-+	inflated_len = len + hpage_size - PAGE_SIZE;
- 	if (inflated_len > TASK_SIZE)
- 		return addr;
- 	if (inflated_len < len)
-@@ -2463,10 +2481,10 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (inflated_addr & ~PAGE_MASK)
- 		return addr;
+@@ -4731,6 +4745,11 @@ static ssize_t shmem_enabled_store(struct kobject *kobj,
+ 			huge != SHMEM_HUGE_NEVER && huge != SHMEM_HUGE_DENY)
+ 		return -EINVAL;
  
--	inflated_offset = inflated_addr & (HPAGE_PMD_SIZE-1);
-+	inflated_offset = inflated_addr & (hpage_size - 1);
- 	inflated_addr += offset - inflated_offset;
- 	if (inflated_offset > offset)
--		inflated_addr += HPAGE_PMD_SIZE;
-+		inflated_addr += hpage_size;
++	/* Do not override huge allocation policy with non-PMD sized mTHP */
++	if (huge == SHMEM_HUGE_FORCE &&
++	    huge_anon_shmem_orders_inherit != BIT(HPAGE_PMD_ORDER))
++		return -EINVAL;
++
+ 	shmem_huge = huge;
+ 	if (shmem_huge > SHMEM_HUGE_DENY)
+ 		SHMEM_SB(shm_mnt->mnt_sb)->huge = shmem_huge;
+@@ -4738,6 +4757,83 @@ static ssize_t shmem_enabled_store(struct kobject *kobj,
+ }
  
- 	if (inflated_addr > TASK_SIZE - len)
- 		return addr;
+ struct kobj_attribute shmem_enabled_attr = __ATTR_RW(shmem_enabled);
++
++static ssize_t thpsize_shmem_enabled_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
++{
++	int order = to_thpsize(kobj)->order;
++	const char *output;
++
++	if (test_bit(order, &huge_anon_shmem_orders_always))
++		output = "[always] inherit within_size advise never deny [force]";
++	else if (test_bit(order, &huge_anon_shmem_orders_inherit))
++		output = "always [inherit] within_size advise never deny force";
++	else if (test_bit(order, &huge_anon_shmem_orders_within_size))
++		output = "always inherit [within_size] advise never deny force";
++	else if (test_bit(order, &huge_anon_shmem_orders_madvise))
++		output = "always inherit within_size [advise] never deny force";
++	else
++		output = "always inherit within_size advise [never] [deny] force";
++
++	return sysfs_emit(buf, "%s\n", output);
++}
++
++static ssize_t thpsize_shmem_enabled_store(struct kobject *kobj,
++					   struct kobj_attribute *attr,
++					   const char *buf, size_t count)
++{
++	int order = to_thpsize(kobj)->order;
++	ssize_t ret = count;
++
++	if (sysfs_streq(buf, "always") || sysfs_streq(buf, "force")) {
++		spin_lock(&huge_anon_shmem_orders_lock);
++		clear_bit(order, &huge_anon_shmem_orders_inherit);
++		clear_bit(order, &huge_anon_shmem_orders_madvise);
++		clear_bit(order, &huge_anon_shmem_orders_within_size);
++		set_bit(order, &huge_anon_shmem_orders_always);
++		spin_unlock(&huge_anon_shmem_orders_lock);
++	} else if (sysfs_streq(buf, "inherit")) {
++		/* Do not override huge allocation policy with non-PMD sized mTHP */
++		if (shmem_huge == SHMEM_HUGE_FORCE &&
++		    order != HPAGE_PMD_ORDER)
++			return -EINVAL;
++
++		spin_lock(&huge_anon_shmem_orders_lock);
++		clear_bit(order, &huge_anon_shmem_orders_always);
++		clear_bit(order, &huge_anon_shmem_orders_madvise);
++		clear_bit(order, &huge_anon_shmem_orders_within_size);
++		set_bit(order, &huge_anon_shmem_orders_inherit);
++		spin_unlock(&huge_anon_shmem_orders_lock);
++	} else if (sysfs_streq(buf, "within_size")) {
++		spin_lock(&huge_anon_shmem_orders_lock);
++		clear_bit(order, &huge_anon_shmem_orders_always);
++		clear_bit(order, &huge_anon_shmem_orders_inherit);
++		clear_bit(order, &huge_anon_shmem_orders_madvise);
++		set_bit(order, &huge_anon_shmem_orders_within_size);
++		spin_unlock(&huge_anon_shmem_orders_lock);
++	} else if (sysfs_streq(buf, "madvise")) {
++		spin_lock(&huge_anon_shmem_orders_lock);
++		clear_bit(order, &huge_anon_shmem_orders_always);
++		clear_bit(order, &huge_anon_shmem_orders_inherit);
++		clear_bit(order, &huge_anon_shmem_orders_within_size);
++		set_bit(order, &huge_anon_shmem_orders_madvise);
++		spin_unlock(&huge_anon_shmem_orders_lock);
++	} else if (sysfs_streq(buf, "never") || sysfs_streq(buf, "deny")) {
++		spin_lock(&huge_anon_shmem_orders_lock);
++		clear_bit(order, &huge_anon_shmem_orders_always);
++		clear_bit(order, &huge_anon_shmem_orders_inherit);
++		clear_bit(order, &huge_anon_shmem_orders_within_size);
++		clear_bit(order, &huge_anon_shmem_orders_madvise);
++		spin_unlock(&huge_anon_shmem_orders_lock);
++	} else {
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++struct kobj_attribute thpsize_shmem_enabled_attr =
++	__ATTR(shmem_enabled, 0644, thpsize_shmem_enabled_show, thpsize_shmem_enabled_store);
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE && CONFIG_SYSFS */
+ 
+ #else /* !CONFIG_SHMEM */
 -- 
 2.39.3
 
