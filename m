@@ -1,124 +1,266 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9C417D881
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+Received: from mecka.net (mecka.net [159.69.159.214])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE4AB17622E;
+	Thu, 30 May 2024 14:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.159.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717079867; cv=none; b=kdSbnLRW1Uc3YG3FRmTYfo//uW5KpwOuPYsTCu5QULbv/ANT0p4mdlG2lt8k6T5sZBXKDswg7tSOhB8j6ISH46BglJVczr4uVPW40eZB9kzAyNqnrPIte2ZLQfrEhGgII+RvSd26+BPfUY4XZFcwf2lsUGdpyHaIPAYC4ITxt4c=
+	t=1717079914; cv=none; b=nO7US6gaEoP1IhPgODZj0CTiY5UAZwMcVR/k5pTfDIsufzhoPlU3CxnauzYSYT1fgIzRzVlJQLLSHuMTpJhJ31PJPBtadCuwGCBNMdhh4LdToy1rPodaNlAfmzgW9tsLc3iia9TTGutXusw+2JWxwNaBOjY9OjtO6a0IeSrFdUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717079867; c=relaxed/simple;
-	bh=Hd/kqSDVWjaerU0649WRAuzQ3rjHR4d2hAZJKd4XRPQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kLVxE4H6Z7vPlpwt1f57mC4F1i/aCYgot7JwmjeQyB+whfecekTZiDcNWNQB25vfG9TiYQs+5oLJ6OzZCUheu0YE6nWM8HjzLF9bQq8G7/TJ7PDtOOc9V+xtwtvtPmJHAMWCd0mMVVy7zFjIBG8TWwPoNAKxFEoY7V0H6oTNNOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=SxP13fgI; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Zt3GU4BX reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1717079914; c=relaxed/simple;
+	bh=K6+4No09oXtThAyF7SAs0grAPbU6KDIyUGLeYA3u5ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E3LOGRGpmDA/FUE1VQmP4LU1m50cx8VrfRCx1UiF0spMH0uO/7K6io6KxVHviVwg2vfPkFpt17B7fXvQetPE4AfmyyxOvIRPISG2xosOIRQF3xfMy83sR1LlXXJQYe0tQfDqU4S3M5DsyJAc52XvMluAOwr4OOW8ik+VZkClkPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net; spf=pass smtp.mailfrom=mecka.net; dkim=fail (0-bit key) header.d=mecka.net header.i=@mecka.net header.b=MiJvQAWI reason="key not found in DNS"; arc=none smtp.client-ip=159.69.159.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mecka.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="SxP13fgI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Zt3GU4BX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1717079864; x=1748615864;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+RNcrHzh6WcQ1ij3/nOnEX9lVFjkLoJCZA6UagyL3GY=;
-  b=SxP13fgI9SB1eRAYHCJcu2m3uRKeblYO9RaKhGE87juZ7kCSPAC2ajdE
-   oruQs/aoWuRZV4k8vYZn8bohHlndPMT9re4qfwbPzdezMoO4mi4qhrNwP
-   z+Rc9euztCDyjXbYumr9JAGFLkDGy9/cW6ifYYloMkNxXjHa8/W9T9MY5
-   tBcyu7SwYzBFqIQ/XW2VBxF3wxhgxKtfUJJ3Dc7pWJbNwK4UdhjYu1jAw
-   k9eRIKBwOPJtXArcRYq9uA6knoWLR1X6nczegeWHJlXQjFRhg86W9fL/L
-   XPOtyEkLzN9h2Bc2d7wKoMa+kNOkmf+ACW9En/3izTmJY48zoi2OLoWC0
-   g==;
-X-CSE-ConnectionGUID: 7tIcQiyWQ2SwyuQ/0ELpnA==
-X-CSE-MsgGUID: /eBcSUNjTae86ULERTy5AA==
-X-IronPort-AV: E=Sophos;i="6.08,201,1712613600"; 
-   d="scan'208";a="37145456"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 30 May 2024 16:37:36 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1B2DE1664CE;
-	Thu, 30 May 2024 16:37:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1717079851; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=+RNcrHzh6WcQ1ij3/nOnEX9lVFjkLoJCZA6UagyL3GY=;
-	b=Zt3GU4BXKdbne7lC9yXfqM3IojJq90MdHrexZzn3tmy21JasnwEhPfjiAZnZtJPjEWazVP
-	+ME6Ymz/4Vhi+B2pRu2hOB3Vhwj4XzLY7QZFDUxvGGZwx6damyfG5vWdVvHChCFg+1LW8y
-	tAN0SWcAfcfTH6gvRxzcRXNFWO/czqflkK9XvadFiFNUiFHBFvRf1KzBDQ0Z2qsMCGx9UX
-	ZVXzH5NVpqNWbsZWg2EkZM8LngAq/mal0HRtfLuTPhe993O0SNmEXMhOFBlXWTW/nNu0N8
-	Wxh8E6VMUyhK5l64eV/axMJaM1YuimXjcbXFSTVbw8sF7kTzswRCT8QuIkW9OQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Russell King <linux@armlinux.org.uk>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] ARM: imx_v6_v7_defconfig: Enable drivers for TQMa7x/MBa7x
-Date: Thu, 30 May 2024 16:37:22 +0200
-Message-Id: <20240530143722.834264-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="MiJvQAWI"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mecka.net; s=2016.11;
+	t=1717079910; bh=K6+4No09oXtThAyF7SAs0grAPbU6KDIyUGLeYA3u5ks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MiJvQAWIJnWeXMXqSte3P6tNx7wtAOewgtfnEg8YlBVHZZt/+dgzHFtZ1gRy5Q68Q
+	 9Eqdoj3CsJeERev9NGsDfpguc2tXRL+7M/2FZnaCS5uWHRHLWrUNRw1Bb9axTsVNYJ
+	 rKKVf+lRzbrh861twvVj8/P5Ingf+iAlB9FQTpkGPvPvdor3r/q+Z/5aC0tSd9z7y5
+	 ERnngyx5nUZW0652/3ey+/le0K582W3LHCGwa6ji5gf4ZGTLu84CoSI6jIbx66ZfZJ
+	 YJ/Dz26wUghglyQiq29G+tfyaRFQ9qeubZOdw+kkFb705QSLGY9ggnD6jQximBgRqv
+	 uezWLSCS6K75A==
+Received: from mecka.net (unknown [185.147.11.134])
+	by mecka.net (Postfix) with ESMTPSA id 7392050C208;
+	Thu, 30 May 2024 16:38:30 +0200 (CEST)
+Date: Thu, 30 May 2024 16:38:29 +0200
+From: Manuel Traut <manut@mecka.net>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+	op-tee@lists.trustedfirmware.org,
+	Shyam Saini <shyamsaini@linux.microsoft.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jerome Forissier <jerome.forissier@linaro.org>,
+	Sumit Garg <sumit.garg@linaro.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: Re: [PATCH v7 0/4] Replay Protected Memory Block (RPMB) subsystem
+Message-ID: <ZliPZWm0oVxLwUSQ@mecka.net>
+References: <20240527121340.3931987-1-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240527121340.3931987-1-jens.wiklander@linaro.org>
 
-Enable drivers for devices/features used on MBa7x.
+Hi Jens,
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- arch/arm/configs/imx_v6_v7_defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+On Mon, May 27, 2024 at 02:13:36PM +0200, Jens Wiklander wrote:
+> Hi,
+> 
+> This patch set introduces a new RPMB subsystem, based on patches from [1],
+> [2], and [3]. The RPMB subsystem aims at providing access to RPMB
+> partitions to other kernel drivers, in particular the OP-TEE driver. A new
+> user space ABI isn't needed, we can instead continue using the already
+> present ABI when writing the RPMB key during production.
+> 
+> I've added and removed things to keep only what is needed by the OP-TEE
+> driver. Since the posting of [3], there has been major changes in the MMC
+> subsystem so "mmc: block: register RPMB partition with the RPMB subsystem"
+> is in practice completely rewritten.
+> 
+> With this OP-TEE can access RPMB during early boot instead of having to
+> wait for user space to become available as in the current design [4].
+> This will benefit the efi variables [5] since we won't rely on userspace as
+> well as some TPM issues [6] that were solved.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 8e93e637ee139..61206ac584088 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -133,6 +133,7 @@ CONFIG_SMSC911X=y
- # CONFIG_NET_VENDOR_STMICRO is not set
- CONFIG_MICREL_PHY=y
- CONFIG_AT803X_PHY=y
-+CONFIG_DP83867_PHY=y
- CONFIG_CAN_FLEXCAN=y
- CONFIG_USB_PEGASUS=m
- CONFIG_USB_RTL8150=m
-@@ -180,6 +181,7 @@ CONFIG_TOUCHSCREEN_SX8654=y
- CONFIG_TOUCHSCREEN_COLIBRI_VF50=y
- CONFIG_INPUT_MISC=y
- CONFIG_INPUT_MMA8450=y
-+CONFIG_INPUT_GPIO_BEEPER=m
- CONFIG_SERIO_SERPORT=m
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_IMX=y
-@@ -211,6 +213,7 @@ CONFIG_GPIO_SIOX=m
- CONFIG_GPIO_VF610=y
- CONFIG_GPIO_MAX732X=y
- CONFIG_GPIO_PCA953X=y
-+CONFIG_GPIO_PCA953X_IRQ=y
- CONFIG_GPIO_PCF857X=y
- CONFIG_GPIO_BD71815=y
- CONFIG_GPIO_STMPE=y
-@@ -226,6 +229,7 @@ CONFIG_RN5T618_POWER=m
- CONFIG_SENSORS_MC13783_ADC=y
- CONFIG_SENSORS_GPIO_FAN=y
- CONFIG_SENSORS_IIO_HWMON=y
-+CONFIG_SENSORS_LM75=m
- CONFIG_SENSORS_PWM_FAN=y
- CONFIG_SENSORS_SY7636A=y
- CONFIG_THERMAL_STATISTICS=y
-@@ -282,6 +286,7 @@ CONFIG_DRM_PANEL_LVDS=y
- CONFIG_DRM_PANEL_SIMPLE=y
- CONFIG_DRM_PANEL_EDP=y
- CONFIG_DRM_PANEL_SEIKO_43WVF1G=y
-+CONFIG_DRM_LVDS_CODEC=m
- CONFIG_DRM_TI_TFP410=y
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
- CONFIG_DRM_DW_HDMI_CEC=y
--- 
-2.34.1
+I applied the patches to 6.10~rc1 today and tried them on a Toradex
+Verdin Board with an i.MX8MM.
+ 
+> The OP-TEE driver finds the correct RPMB device to interact with by
+> iterating over available devices until one is found with a programmed
+> authentication matching the one OP-TEE is using. This enables coexisting
+> users of other RPMBs since the owner can be determined by who knows the
+> authentication key.
 
+The probing does not work for me.
+
+> The corresponding secure world OP-TEE patches are available at [7].
+
+I added some debug prints to see that the optee side properly detected
+the need to reinit in tee_rpmb_init. The rpmb_ctx->key_verified is false
+and the following call of rpmb_probe_reset fails which leads to the
+panic of the TA trying to do a rpmb request.
+
+Same codeflow can be seen earlier during probing the rpmb device but
+without the panic.
+
+I am not sure if I find time to look at it in more detail tomorrow.
+Otherwise next week.
+
+Thanks
+Manuel
+
+> I've put myself as a maintainer for the RPMB subsystem as I have an
+> interest in the OP-TEE driver to keep this in good shape. However, if you'd
+> rather see someone else taking the maintainership that's fine too. I'll
+> help keep the subsystem updated regardless.
+> 
+> [1] https://lore.kernel.org/lkml/20230722014037.42647-1-shyamsaini@linux.microsoft.com/
+> [2] https://lore.kernel.org/lkml/20220405093759.1126835-2-alex.bennee@linaro.org/
+> [3] https://lore.kernel.org/linux-mmc/1478548394-8184-2-git-send-email-tomas.winkler@intel.com/
+> [4] https://optee.readthedocs.io/en/latest/architecture/secure_storage.html#rpmb-secure-storage
+> [5] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c44b6be62e8dd4ee0a308c36a70620613e6fc55f
+> [6] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7269cba53d906cf257c139d3b3a53ad272176bca
+> [7] https://github.com/jenswi-linaro/optee_os/tree/rpmb_probe_v7
+> 
+> Thanks,
+> Jens
+> 
+> Changes since v6:
+> * Add Tested-by: Manuel Traut <manut@mecka.net> provided for the v6
+> * Add a new patch "tee: add tee_device_set_dev_groups()" needed later in
+>   the patch set
+> * Reintroduce the rpmb_class as requested by Greg, this affects the patches
+>   "rpmb: add Replay Protected Memory Block (RPMB) subsystem" and
+>   "optee: probe RPMB device using RPMB subsystem"
+> * "rpmb: add Replay Protected Memory Block (RPMB) subsystem":
+>   - rpmb_interface_{,un}register() are now based on
+>     class_interface_{,un}register()
+>   - Embed a separate device in struct rpmb_dev for life cycle
+>     management etc
+> * "optee: probe RPMB device using RPMB subsystem"
+>   - Add an internal blocking_notifier to deal with the struct
+>     class_interface callback
+>   - Add a rpmb_routing_model variable in sysfs to help integration with
+>     systemd, requested by Mikko Rapeli
+>   - Add an RPMB probe capability flag in the ABI shared with the secure
+>     world, both SMC and FF-A ABI, needed to support the rpmb_routing_model
+>     variable
+>   - optee_rpc_cmd() is strict whether an RPMB RPC request should be
+>     forwarded to tee-supplicant or routed via the RPMB subsystem, depending
+>     on the reported RPMB routing model
+> 
+> Changes since v5:
+> Manuel Traut reported and investigated an error on an i.MX8MM, the root
+> cause was identified as insufficient alignment on frames sent to the RPMB
+> device. Fixed in the OP-TEE driver as described below.
+> * "rpmb: add Replay Protected Memory Block (RPMB) subsystem"
+>   - Adding a missing EXPORT_SYMBOL_GPL()
+> * "optee: probe RPMB device using RPMB subsystem"
+>   - Replacing the old OPTEE_RPC_CMD_RPMB ABI with OPTEE_RPC_CMD_RPMB_FRAMES
+>     to get rid of the small header struct rpmb_req (now removed) causing
+>     the problem.
+>   - Matching changes on the secure side + support for re-initializing
+>     RPMB in case a boot stage has used RPMB, the latter also reported by 
+>     Manuel Traut.
+> 
+> Changes since v4:
+> * "rpmb: add Replay Protected Memory Block (RPMB) subsystem"
+>   - Describing struct rpmb_descr as RPMB description instead of descriptor
+> * "mmc: block: register RPMB partition with the RPMB subsystem"
+>   - Addressing review comments
+>   - Adding more comments for struct rpmb_frame
+>   - Fixing assignment of reliable_wr_count and capacity in mmc_blk_rpmb_add()
+> * "optee: probe RPMB device using RPMB subsystem"
+>   - Updating struct rpmb_dev_info to match changes in "rpmb: add Replay
+>     Protected Memory Block (RPMB) subsystem"
+> 
+> Changes since v3:
+> * Move struct rpmb_frame into the MMC driver since the format of the RPMB
+>   frames depend on the implementation, one format for eMMC, another for
+>   UFS, and so on
+> * "rpmb: add Replay Protected Memory Block (RPMB) subsystem"
+>   - Adding Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>   - Adding more description of the API functions
+>   - Removing the set_dev_info() op from struct rpmb_ops, the needed information
+>     is supplied in the arguments to rpmb_dev_register() instead.
+>   - Getting rid of struct rpmb_ops since only the route_frames() op was
+>     remaining, store that op directly in struct rpmb_dev
+>   - Changed rpmb_interface_register() and rpmb_interface_unregister() to use
+>     notifier_block instead of implementing the same thing ourselves
+> * "mmc: block: register RPMB partition with the RPMB subsystem"
+>   - Moving the call to rpmb_dev_register() to be done at the end of
+>     mmc_blk_probe() when the device is fully available
+> * "optee: probe RPMB device using RPMB subsystem"
+>   - Use IS_REACHABLE(CONFIG_RPMB) to determine if the RPMB subsystem is
+>     available
+>   - Translate TEE_ERROR_STORAGE_NOT_AVAILABLE if encountered in get_devices()
+>     to recognize the error in optee_rpmb_scan()
+>   - Simplified optee_rpmb_scan() and optee_rpmb_intf_rdev()
+> 
+> Changes since v2:
+> * "rpmb: add Replay Protected Memory Block (RPMB) subsystem"
+>   - Fixing documentation issues
+>   - Adding a "depends on MMC" in the Kconfig
+>   - Removed the class-device and the embedded device, struct rpmb_dev now
+>     relies on the parent device for reference counting as requested
+>   - Removed the now unneeded rpmb_ops get_resources() and put_resources()
+>     since references are already taken in mmc_blk_alloc_rpmb_part() before
+>     rpmb_dev_register() is called
+>   - Added rpmb_interface_{,un}register() now that
+>     class_interface_{,un}register() can't be used ay longer
+> * "mmc: block: register RPMB partition with the RPMB subsystem"
+>   - Adding the missing error cleanup in alloc_idata()
+>   - Taking the needed reference to md->disk in mmc_blk_alloc_rpmb_part()
+>     instead of in mmc_rpmb_chrdev_open() and rpmb_op_mmc_get_resources()
+> * "optee: probe RPMB device using RPMB subsystem"
+>   - Registering to get a notification when an RPMB device comes online
+>   - Probes for RPMB devices each time an RPMB device comes online, until
+>     a usable device is found
+>   - When a usable RPMB device is found, call
+>     optee_enumerate_devices(PTA_CMD_GET_DEVICES_RPMB)
+>   - Pass type of rpmb in return value from OPTEE_RPC_CMD_RPMB_PROBE_NEXT
+> 
+> Changes since Shyam's RFC:
+> * Removed the remaining leftover rpmb_cdev_*() function calls
+> * Refactored the struct rpmb_ops with all the previous ops replaced, in
+>   some sense closer to [3] with the route_frames() op
+> * Added rpmb_route_frames()
+> * Added struct rpmb_frame, enum rpmb_op_result, and enum rpmb_type from [3]
+> * Removed all functions not needed in the OP-TEE use case
+> * Added "mmc: block: register RPMB partition with the RPMB subsystem", based
+>   on the commit with the same name in [3]
+> * Added "optee: probe RPMB device using RPMB subsystem" for integration
+>   with OP-TEE
+> * Moved the RPMB driver into drivers/misc/rpmb-core.c
+> * Added my name to MODULE_AUTHOR() in rpmb-core.c
+> * Added an rpmb_mutex to serialize access to the IDA
+> * Removed the target parameter from all rpmb_*() functions since it's
+>   currently unused
+> 
+> 
+> Jens Wiklander (4):
+>   rpmb: add Replay Protected Memory Block (RPMB) subsystem
+>   mmc: block: register RPMB partition with the RPMB subsystem
+>   tee: add tee_device_set_dev_groups()
+>   optee: probe RPMB device using RPMB subsystem
+> 
+>  Documentation/ABI/testing/sysfs-class-tee |  15 ++
+>  MAINTAINERS                               |   8 +
+>  drivers/misc/Kconfig                      |  10 +
+>  drivers/misc/Makefile                     |   1 +
+>  drivers/misc/rpmb-core.c                  | 232 +++++++++++++++++++++
+>  drivers/mmc/core/block.c                  | 241 +++++++++++++++++++++-
+>  drivers/tee/optee/core.c                  |  96 ++++++++-
+>  drivers/tee/optee/device.c                |   7 +
+>  drivers/tee/optee/ffa_abi.c               |  14 ++
+>  drivers/tee/optee/optee_ffa.h             |   2 +
+>  drivers/tee/optee/optee_private.h         |  26 ++-
+>  drivers/tee/optee/optee_rpc_cmd.h         |  35 ++++
+>  drivers/tee/optee/optee_smc.h             |   2 +
+>  drivers/tee/optee/rpc.c                   | 177 ++++++++++++++++
+>  drivers/tee/optee/smc_abi.c               |  14 ++
+>  drivers/tee/tee_core.c                    |  19 +-
+>  include/linux/rpmb.h                      | 123 +++++++++++
+>  include/linux/tee_drv.h                   |  12 ++
+>  18 files changed, 1024 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-tee
+>  create mode 100644 drivers/misc/rpmb-core.c
+>  create mode 100644 include/linux/rpmb.h
+> 
+> -- 
+> 2.34.1
+> 
