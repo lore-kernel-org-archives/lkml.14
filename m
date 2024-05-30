@@ -1,242 +1,153 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBC6A187558;
-	Thu, 30 May 2024 15:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB70F182D2D;
+	Thu, 30 May 2024 15:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717083429; cv=none; b=q6EVOCf5e7eNLGTtYl9Iit6eU3G8/YIcv/FEvLe2LW/ENqda9PYctNYPecWgu2pFmCSXF20sDimbswxfk+AmCS6PYwfN1MKhDIRjgsadCORWGplJLSFTJVGljLcW6QXTYO+Tw7coXOlyaQAKmo7X5OVlNo8kqkIhZyuK9yEPUxU=
+	t=1717083503; cv=none; b=ZWgdGD+5w0o3XKNM9axTNMcmVhaZM7fz3xl1PX7ypjMaCHY40nCWw38rOGSd5uFHF6P+IGRKXKVkg1fMjt8Ep5lW3x5fU5M3CY64x3GRGaKePIgjh7ihi8zxx5reg4ERqupc+/zUYtuccyyjaqjfv5DHu2u22SJ1o9hNa1CE2xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717083429; c=relaxed/simple;
-	bh=ExfIXLMBUM1f2pzxBtViuvAn+rixBWzQ9TdXfr5rOFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lZr3rrwxBtVqnRfVtNFrGgJXBAN45xjZJaHz96WRMt1VFIMGdQgzQLHx06M/0jZ9ot8Py7o3dgpY5fdxLvoBgGfXCFe+Exyl2/U3t1yKawdT8jOxcbi6wPnVodjHqUsDTobbIXn/mZQNAsKjG6pghwVgD5Crgf0ECRUBHQAIFAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 099F4339;
-	Thu, 30 May 2024 08:37:29 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDE783F641;
-	Thu, 30 May 2024 08:37:02 -0700 (PDT)
-Message-ID: <3d4edff4-0052-4996-b8e8-61764988f4dd@arm.com>
-Date: Thu, 30 May 2024 16:37:04 +0100
+	s=arc-20240116; t=1717083503; c=relaxed/simple;
+	bh=kJUgEnnB1j6Tpeo+jUM1Mg4mIz8PPZ73v26DSU8OP/A=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=BSJRMJDsBK3Wb1XlcchCFciTpO7IY2wfX5oi/3Z81mbE17/PQCMBl9lyE6t9AFL8+WQzWefNNFhfL66fy/CsJZAEfMpGtei6+O7vmSlRpi+qSwnGlm/Wzii2/j4/zCT/dpP1x+g/TqXT0LRWUEAUARbQMBodYTzBvAIbQoXXbs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JYxu47Zu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PVycF0Nc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JYxu47Zu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PVycF0Nc"
+Date: Thu, 30 May 2024 15:38:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717083499;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=VB8BVFevT06lKaWEfV21IkEQ1bl6YGSl1ka9f+ApiMM=;
+	b=JYxu47ZuAb/NdDXUDFB5+N+fBV5Rz/B2dT8/433zltXUaufDXiRSt9pP3gi4S7pIOCKDkK
+	BjXKDr9RXSSHdSYnnRU10iWjbodzxeR4HxOaLZOKzD4SMNy1Wivmf76qmSAr/uKlp5UssV
+	dEgPeqhSHrKjJwoyUWb9EXRI48CMC5WadaYcRFgTKSQ6UUiwZXCQVmNBHGHIisx1kE1gSg
+	vVQJs8T510mOW6Auu0vKnKkTuFiBLnURf6U7bAnagof1+hQd+KAWQwfugIDe/wvSgctIDr
+	6vGMh287FtqZxtWKfqc25oAVbxLPQ+d/zDHPaYG4ETlN/QDmqTvg451T48il1w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717083499;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=VB8BVFevT06lKaWEfV21IkEQ1bl6YGSl1ka9f+ApiMM=;
+	b=PVycF0NcgHXIHpSH2tiFTYdCkiefL1iaQaBZmKg3kSZqXXgV3GQ41lqvp+q2kxFXujSOcB
+	nG1LEqRtwRJ3GZDg==
+From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/cpu: Provide default cache line size if not enumerated
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, osmanx@heusipp.de,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core
- PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240525152927.665498-1-irogers@google.com>
- <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev>
- <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <ZlY0F_lmB37g10OK@x1>
- <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com>
- <CAP-5=fV7AGJLCKv0yhcCNSTywBSOiPV8j8aHi5eniXHaRZWA0Q@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fV7AGJLCKv0yhcCNSTywBSOiPV8j8aHi5eniXHaRZWA0Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <171708349914.10875.4285177308487469311.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+The following commit has been merged into the x86/urgent branch of tip:
 
+Commit-ID:     2a38e4ca302280fdcce370ba2bee79bac16c4587
+Gitweb:        https://git.kernel.org/tip/2a38e4ca302280fdcce370ba2bee79bac16=
+c4587
+Author:        Dave Hansen <dave.hansen@linux.intel.com>
+AuthorDate:    Fri, 17 May 2024 13:05:34 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Thu, 30 May 2024 08:29:45 -07:00
 
-On 29/05/2024 18:33, Ian Rogers wrote:
-> On Wed, May 29, 2024 at 7:50 AM James Clark <james.clark@arm.com> wrote:
->>
->> On 28/05/2024 20:51, Ian Rogers wrote:
->>> On Tue, May 28, 2024 at 12:44 PM Arnaldo Carvalho de Melo
->>> <acme@kernel.org> wrote:
->>>>
->>>> On Mon, May 27, 2024 at 10:36:45PM -0700, Ian Rogers wrote:
->>>>> On Mon, May 27, 2024 at 3:58 AM Leo Yan <leo.yan@linux.dev> wrote:
->>>>>> On Sat, May 25, 2024 at 02:14:26PM -0700, Linus Torvalds wrote:
->>>>>>> On Sat, 25 May 2024 at 09:43, Linus Torvalds <torvalds@linux-foundation.org> wrote:
->>>>
->>>>>>>> This makes 'perf record' work for me again.
->>>>
->>>>>>> Oh, wait, no it doesn't.
->>>>
->>>>>>> It makes just the plain "perf record" without any arguments work,
->>>>>>> which was what I was testing because I was lazy.
->>>>
->>>>>>> So now
->>>>
->>>>>>>     $ perf record sleep 1
->>>>
->>>>>>> works fine. But
->>>>
->>>>>>>     $ perf record -e cycles:pp sleep 1
->>>>
->>>>>>> is still completely broken (with or without ":p" and ":pp").
->>>>
->>>>>> Seems to me that this patch fails to check if a PMU is a core-attached
->>>>>> PMU that can support common hardware events. Therefore, we should
->>>>>> consider adding the following check.
->>>>
->>>>>> +++ b/tools/perf/util/parse-events.c
->>>>>> @@ -1594,6 +1594,9 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
->>>>>>         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
->>>>>>                 bool auto_merge_stats;
->>>>>>
->>>>>> +               if (hw_config != PERF_COUNT_HW_MAX && !pmu->is_core)
->>>>>> +                       continue;
->>>>>> +
->>>>>>                 if (parse_events__filter_pmu(parse_state, pmu))
->>>>>>                         continue;
->>>>
->>>>>> To be clear, I only compiled this change but I have no chance to test
->>>>>> it. @Ian, could you confirm this?
->>>>
->>>>> Hi Leo,
->>>>
->>>>> so the code is working as intended. I believe it also agrees with what
->>>>> Arnaldo thinks.
->>>>
->>>>> If you do:
->>>>
->>>>> $ perf stat -e cycles ...
->>>>
->>>>> and you have
->>>>
->>>>> /sys/devices/pmu1/events/cycles
->>>>> /sys/devices/pmu2/events/cycles
->>>>
->>>>> The output of perf stat should contain counts for pmu1 and pmu2. Were
->>>>> the event 'data_read' or 'inst_retired.any' we wouldn't be having the
->>>>
->>>> Sure, what is being asked is to count events and if those two events in
->>>> those two PMUs can count, then do what the user asked.
->>>>
->>>> For 'perf record' we're asking for sampling, if the event has the name
->>>> specified and can't be sampled, skip it, warn the user and even so
->>>> only if verbose mode is asked, something like:
->>>>
->>>>   root@x1:~# perf record -e cycles -a sleep 1
->>>>   [ perf record: Woken up 1 times to write data ]
->>>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples) ]
->>>>   root@x1:~# perf evlist
->>>>   cpu_atom/cycles/
->>>>   cpu_core/cycles/
->>>>   dummy:u
->>>>   root@x1:~#
->>>>
->>>> Cool, there are two 'cycles' events, one in a PMU named 'cpu_atom',
->>>> another in a 'cpu_core' one, both can be sampled, my workload may
->>>> run/use resources on then, I'm interested, sample both.
->>>>
->>>> But if we had some other PMU, to use a name Jiri uses in tests/fake
->>>> PMUs, the 'krava' PMU and it has a 'cycles' event, so 'krava/cycles/'
->>>> and for some reason it doesn't support sampling, skip it, then the
->>>> result should be the same as above.
->>>>
->>>> If the user finds it strange after looking at sysfs that 'krava/cycles/'
->>>> isn't being sampled, the usual workflow is to ask perf for more
->>>> verbosity, using -v (or multiple 'v' letters to get increasing levels of
->>>> verbosity), in which case the user would see:
->>>>
->>>>   root@x1:~# perf record -v -e cycles -a sleep 1
->>>>   WARNING: skipping 'krava/cycles/' event, it doesn't support sampling.
->>>>   [ perf record: Woken up 1 times to write data ]
->>>>   [ perf record: Captured and wrote 1.998 MB perf.data (4472 samples) ]
->>>>   root@x1:~# perf evlist
->>
->> This makes sense to me. I like keeping the old apparent behavior unless
->> -v is used and it will feel like the tool "just works".
->>
->> In the context of the commit summary "perf parse-events: Prefer
->> sysfs/JSON hardware events over legacy":
->>
->> I don't follow why that should be "Prefer, even if it's an event that
->> can't be opened, sysfs/JSON...".
->>
->> Surely it should be "Prefer sysfs/JSON, unless it can't be opened, then
->> use legacy". If all events can be opened, sure go and open them all. If
->> only core events can be opened, do that too. If only uncore events can
->> be opened... etc.
-> 
+x86/cpu: Provide default cache line size if not enumerated
 
-[...]
+tl;dr: CPUs with CPUID.80000008H but without CPUID.01H:EDX[CLFSH]
+will end up reporting cache_line_size()=3D=3D0 and bad things happen.
+Fill in a default on those to avoid the problem.
 
-> So great, ignoring the revert, that fixed everything? Well no. The
-> tool in places was hard coding 'struct perf_event_attr' which is of
-> course broken were things to be hybrid or BIG.little. So the fix for
-> that was to not hard code things. We need a set of 'struct
-> perf_event_attr', ah I know a way to get that let's just use our event
-> parsing logic. So a 'struct perf_event_attr' hard coding type to
-> PERF_TYPE_HARDWARE, the config to PERF_COUNT_HW_CPU_CYCLES and also
-> setting the precision to maximum was changed into parsing the string
-> "cycles:P". Sounds good, no? Well no. Somebody decided to create an
-> ARM event called cycles (Intel's name to avoid conflicts is
-> clockticks) and now that event was getting added to our set. Although
-> the patch sat for weeks (months?) on linux-next nobody had discovered
-> a fairly obvious breakage.
-> 
+Long Story:
 
-We did see the test failure on our Ampere test machine 7 days ago, but
-for some reason only on mainline (I was also on holiday at the same
-time). I'm checking if that machine is running all the branches and will
-make sure it does from now on.
+The kernel dies a horrible death if c->x86_cache_alignment (aka.
+cache_line_size() is 0.  Normally, this value is populated from
+c->x86_clflush_size.
 
-We are running perf-tools-next on other machines and I try to look at
-all the test failures. Just this one had a bit of an obscure combination
-of needing the DSU PMU.
+Right now the code is set up to get c->x86_clflush_size from two
+places.  First, modern CPUs get it from CPUID.  Old CPUs that don't
+have leaf 0x80000008 (or CPUID at all) just get some sane defaults
+from the kernel in get_cpu_address_sizes().
 
-One thing we don't have in CI is any Apple M hardware. I can look into
-it but I wouldn't have high hopes for anything soon.
+The vast majority of CPUs that have leaf 0x80000008 also get
+->x86_clflush_size from CPUID.  But there are oddballs.
 
-[...]
+Intel Quark CPUs[1] and others[2] have leaf 0x80000008 but don't set
+CPUID.01H:EDX[CLFSH], so they skip over filling in ->x86_clflush_size:
 
-> It isn't new behavior for perf to scan all PMUs, it always has, the
-> new behavior is around legacy events. We want multiple PMU scanning
-> for hybrid, we want all PMU scanning for uncore. The legacy changes
-> happened because of the Apple M? PMU with me being complained at by
-> folks at ARM who have now created this mess by their arm_dsu event
-> name. Shouldn't it be a 1 liner fix to change "DSU_EVENT_ATTR(cycles,
-> 0x11)," to "DSU_EVENT_ATTR(clockticks, 0x11),":
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_dsu_pmu.c#n177
-> that's up to ARM but it would make sense to me.
-> 
+	cpuid(0x00000001, &tfms, &misc, &junk, &cap0);
+	if (cap0 & (1<<19))
+		c->x86_clflush_size =3D ((misc >> 8) & 0xff) * 8;
 
-Not sure about that one, that would break anyone's scripts or tools that
-are looking at DSU cycles. And it wouldn't fix the issue in the future
-if there were other reasons the event doesn't open (like non sampling
-core events, or someone's brand new uncore PMU that also has a cycles
-event).
+So they: land in get_cpu_address_sizes() and see that CPUID has level
+0x80000008 and jump into the side of the if() that does not fill in
+c->x86_clflush_size.  That assigns a 0 to c->x86_cache_alignment, and
+hilarity ensues in code like:
 
-It seems like we're converging one something that works though in the
-other threads, but I'm still digesting the problems a bit.
+        buffer =3D kzalloc(ALIGN(sizeof(*buffer), cache_line_size()),
+                         GFP_KERNEL);
 
->> Because the user could always use the defaults (no argument) or -e
->> cycles and historically Perf correctly picked the one that could be
->> opened. Or if they want the DSU one they could specify it. That can all
->> still work _and_ we can support "prefer sysfs/JSON" as long as we don't
->> prefer it when opening the event doesn't work.
-> 
-> Hopefully this is all explained above.
-> 
-> Thanks,
-> Ian
-> 
->> Thanks
->> James
->>
->>> Thanks,
->>> Ian
->>>
->>>> - Arnaldo
+To fix this, always provide a sane value for ->x86_clflush_size.
+
+Big thanks to Andy Shevchenko for finding and reporting this and also
+providing a first pass at a fix. But his fix was only partial and only
+worked on the Quark CPUs.  It would not, for instance, have worked on
+the QEMU config.
+
+1. https://raw.githubusercontent.com/InstLatx64/InstLatx64/master/GenuineInte=
+l/GenuineIntel0000590_Clanton_03_CPUID.txt
+2. You can also get this behavior if you use "-cpu 486,+clzero"
+   in QEMU.
+
+[ dhansen: remove 'vp_bits_from_cpuid' reference in changelog
+	   because bpetkov brutally murdered it recently. ]
+
+Fixes: fbf6449f84bf ("x86/sev-es: Set x86_virt_bits to the correct value stra=
+ight away, instead of a two-phase approach")
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: J=C3=B6rn Heusipp <osmanx@heusipp.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20240516173928.3960193-1-andriy.shevchenko@=
+linux.intel.com/
+Link: https://lore.kernel.org/lkml/5e31cad3-ad4d-493e-ab07-724cfbfaba44@heusi=
+pp.de/
+Link: https://lore.kernel.org/all/20240517200534.8EC5F33E%40davehans-spike.os=
+tc.intel.com
+---
+ arch/x86/kernel/cpu/common.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 2b170da..e31293c 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1075,6 +1075,10 @@ void get_cpu_address_sizes(struct cpuinfo_x86 *c)
+=20
+ 		c->x86_virt_bits =3D (eax >> 8) & 0xff;
+ 		c->x86_phys_bits =3D eax & 0xff;
++
++		/* Provide a sane default if not enumerated: */
++		if (!c->x86_clflush_size)
++			c->x86_clflush_size =3D 32;
+ 	}
+=20
+ 	c->x86_cache_bits =3D c->x86_phys_bits;
