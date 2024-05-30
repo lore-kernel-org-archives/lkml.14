@@ -1,151 +1,144 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA2A17C207;
-	Thu, 30 May 2024 14:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9075C186E57;
+	Thu, 30 May 2024 14:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717078505; cv=none; b=CaVbmyqiUsXzQdA+y0k07S+s+W3tbR70rvIlDVk9K2pLG7IRFQJ74GyM+sCzyaDQsLStb/orqMGLIrgi7vPEidcqekAYQnwK6LMpj1576IHdGtQEN1tqMBlS9ojUV9okDt/2f3QtoPHmeZqgYecchReZOqu2kUZDzgmdHrJWqEQ=
+	t=1717078563; cv=none; b=LWq9d97fDDcP0O2whDJsmct8mCKMl8HFXgEzzWvC9AEJq3GLUZBYm5z4loeJsGip7fGQhsXXYDl6bODndUg1axBLHVy1FQSYd0Mx00U/O1paBIuZxCLdMADTTP1XKVRhP+7M9yJjetysxyz5D0OmO1wdssLhyngjkxNnHaLF37s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717078505; c=relaxed/simple;
-	bh=Pf2Z/gTyeAc/zbqRUitMbkZeeedv69W+XgEHvJ6Hn3c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXfD2LEAjjaHOjtM5z6n/FRDd0lIis4Q3/BjomCm4MkX5heq9MX8RI8tIReSsN2Tc5W4oyHaPInGRpdPKwII9duwEwgG0mCt/nGfKo98bUP+jxSWQN06K+tpoRKUfCZ6CXjRIfOE0ArYj8ISUpMr8KhFF4HnLFBG8KnhJohwUqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=e0uiRQtl; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1717078563; c=relaxed/simple;
+	bh=eYDjkHMzZN4bT1iF4ma6alWdkJjbsBK42F15E8PeHMQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DQ42Hw46OOM5DjcSkBV8RBzBKaveKyF0+mSKHoKsCaZhv8AQHNyfkEAQlqxN0QVOj9dLw761f8EhkOkIF3mHZPVHbZv12azwaojcVxNZOf5S5vbwUCPx0BdA7R0bNn6zCPOrH65+hnTh0+22GbvsBhAHmFU+ejLhqdQqpaf2aZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UcUICF0W; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="e0uiRQtl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+qH09HiYQvWvDHiKxS0mFE3pXiGrTTL8Rn/lk654rI4=; b=e0uiRQtl/oGT1CqdT/HnuaUQNj
-	8hR65B6liVHqr0bs4xqi9jIrlrlW41KRyrNxPcSrGvyoL6f13x7T77WxVH3amOOB2xqB4UYfBGgmI
-	zv9T9NSHroW/ii/1Irx3C42i48zqUndGq3YlDriTlbi4ecjY1EfV6+InbUEE6oBgJeZ4BC6GMVTUI
-	68pudN2jU4sGS94EEKUNOp98pdrZWncFcnl+vssSeT21hO4AG1bXnoC8gou9vwyqy6y4LKzhuSukA
-	bUZc1w0cwL3B14G2ckCJr3aZIHfupadRBRBMYApFqyFhfEvvrWlp+su1xxNnoFf0jjhTKkX/9o2bs
-	DlaMI/AA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44048)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sCgYK-0007TP-35;
-	Thu, 30 May 2024 15:14:49 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sCgYK-0005D7-RF; Thu, 30 May 2024 15:14:48 +0100
-Date: Thu, 30 May 2024 15:14:48 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Xiaolei Wang <xiaolei.wang@windriver.com>, Andrew Lunn <andrew@lunn.ch>,
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, mcoquelin.stm32@gmail.com,
-	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UcUICF0W"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f47f07acd3so8377725ad.0;
+        Thu, 30 May 2024 07:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717078562; x=1717683362; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMkhjE61Vc1NS7D/6XyyeGHdm9O21TTgPnUhmBGVGKE=;
+        b=UcUICF0W+KUqWOod8EtQBCj1Cv6WzHVFqO1wZV5SgehyqUKAd+3neVLwUZeOuqUEKj
+         jjex51rEPEYUe+7y/nsC9ZHntXR/7pbO+OiEkq4N58AQ3zT0/sZt9RWubRYHZq42Z6fQ
+         daj6yRlGKqeMhOrDESl21If/0yXk+QusT3Cc3A6+u+23FiVIdVJ8As7NmxygEnFU+VVn
+         mbB+Gd+Kd2p/wZj+tzv9Ep6564q9ATgpLBlAQR3bHkFDzNqLsduv1vIvKwanIsnPS/My
+         T/hQuVUS5LPwQV9Db6gHC1xFPZmadE0G31yh0XuZzz4ZBBXMtqUCkyB6F6BMv/kjqKm5
+         9sVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717078562; x=1717683362;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VMkhjE61Vc1NS7D/6XyyeGHdm9O21TTgPnUhmBGVGKE=;
+        b=AqRKvlLpho29df/hM8dqXIE4laAhlhLWtu3qA/3wfVCbhFDD+K15ZP5wDWr3xbUNO/
+         LAyY8pbFkMx9ixEkZXVFOVwI4IwK0kgX65gctVJD2JzDAf5nfIxn6/UQoTN/oCLU7+9P
+         VCrtNjT/iAN+rV5fzZWV89pSQ285exkvcgWfHqh5XW5vy7YadPIsTeK1ZGED5UI6FDPY
+         55l4Wwm6SQ4oFDpQ+JNy7LUHRZHnDIoG4DyTco3F27JZzQ4UV2OyI+/sXZWA1cCJG5wO
+         xIR7S/rcTArfq021VZppZdB7S0qMrGCvsXLzlM+liNtF35CJMrTdbcL3TiSGhKdCmhgQ
+         MGwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyPmo8I3iO6h1Aot9ArW5OZfFcVEIhmi6BjlflMTG1SvKQZhNFT/EyVgYFiB/A1AFRCOYuZNlzRbaeVgn6sOnrHSApopOB2NhWcCoe
+X-Gm-Message-State: AOJu0YxTiVBHCNVte1yvbPwurWqmKwTVVA9zdLi7y/+BnEAxiBpg5FO6
+	zfcr+umAocmKrC7BmZHyzyWBlR+F449ocNb2TUuB2eezVo9AHQvpTDsehw==
+X-Google-Smtp-Source: AGHT+IHncuNc74TfFe4Ql+CLOymCt2oA5e2Wx4wpuJpKFtaqRkgkOkjw0olzpWf1tSjWsEUZYNOBgQ==
+X-Received: by 2002:a17:902:ea07:b0:1f4:a6cb:db3d with SMTP id d9443c01a7336-1f61973ac5emr23204175ad.44.1717078561680;
+        Thu, 30 May 2024 07:16:01 -0700 (PDT)
+Received: from carrot.. (i223-217-95-32.s42.a014.ap.plala.or.jp. [223.217.95.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9d89b3sm118848285ad.292.2024.05.30.07.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 07:16:00 -0700 (PDT)
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-nilfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [net v2 PATCH] net: stmmac: Update CBS parameters when speed
- changes after linking up
-Message-ID: <ZliJ2O+bj18jQ0B8@shell.armlinux.org.uk>
-References: <20240530061453.561708-1-xiaolei.wang@windriver.com>
- <f8b0843f-7900-4ad0-9e70-c16175e893d9@lunn.ch>
- <20240530132822.xv23at32wj73hzfj@skbuf>
- <ZliBzo7eETml/+bl@shell.armlinux.org.uk>
- <20240530135335.yanffjb3ketmoo7u@skbuf>
+Subject: [PATCH] nilfs2: fix potential kernel bug due to lack of writeback flag waiting
+Date: Thu, 30 May 2024 23:15:56 +0900
+Message-Id: <20240530141556.4411-1-konishi.ryusuke@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530135335.yanffjb3ketmoo7u@skbuf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 30, 2024 at 04:53:35PM +0300, Vladimir Oltean wrote:
-> On Thu, May 30, 2024 at 02:40:30PM +0100, Russell King (Oracle) wrote:
-> > On Thu, May 30, 2024 at 04:28:22PM +0300, Vladimir Oltean wrote:
-> > > On Thu, May 30, 2024 at 02:50:52PM +0200, Xiaolei Wang wrote:
-> > > > When the port is relinked, if the speed changes, the CBS parameters
-> > > > should be updated, so saving the user transmission parameters so
-> > > > that idle_slope and send_slope can be recalculated after the speed
-> > > > changes after linking up can help reconfigure CBS after the speed
-> > > > changes.
-> > > > 
-> > > > Fixes: 1f705bc61aee ("net: stmmac: Add support for CBS QDISC")
-> > > > Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
-> > > > ---
-> > > > v1 -> v2
-> > > >  - Update CBS parameters when speed changes
-> > > 
-> > > May I ask what is the point of this patch? The bandwidth fraction, as
-> > > IEEE 802.1Q defines it, it a function of idleSlope / portTransmitRate,
-> > > the latter of which is a runtime variant. If the link speed changes at
-> > > runtime, which is entirely possible, I see no alternative than to let
-> > > user space figure out that this happened, and decide what to do. This is
-> > > a consequence of the fact that the tc-cbs UAPI takes the raw idleSlope
-> > > as direct input, rather than something more high level like the desired
-> > > bandwidth for the stream itself, which could be dynamically computed by
-> > > the kernel.
-> > 
-> > So what should be the behaviour here? Refuse setting CBS parameters if
-> > the link is down, and clear the hardware configuration of the CBS
-> > parameters each and every time there is a link-down event? Isn't that
-> > going to make the driver's in-use settings inconsistent with what the
-> > kernel thinks have been set? AFAIK, tc qdisc's don't vanish from the
-> > kernel just because the link went down.
-> > 
-> > I think what you're proposing leads to the hardware being effectively
-> > "de-programmed" for CBS while "tc qdisc show" will probably report
-> > that CBS is active on the interface - which clearly would be absurd.
-> 
-> No, just program to hardware right away the idleSlope, sendSlope,
-> loCredit and hiCredit that were communicated by user space. Those were
-> computed for a specific link speed and it is user space's business to
-> monitor that this link speed is maintained for as long as the streams
-> are necessary (otherwise those parameters are no longer valid).
-> One could even recover the portTransmitRate that the parameters were
-> computed for (it should be idleSlope - sendSlope, in Kbps).
-> 
-> AKA keep the driver as it is.
-> 
-> I don't see why the CBS parameters would need to be de-programmed from
-> hardware on a link down event. Is that some stmmac specific thing?
+Destructive writes to a block device on which nilfs2 is mounted can
+cause a kernel bug in the folio/page writeback start routine or
+writeback end routine (__folio_start_writeback in the log below):
 
-If the driver is having to do computation on the parameters based on
-the link speed, then when the link speed changes, the parameters
-no longer match what the kernel _thinks_ those parameters were
-programmed with.
+ kernel BUG at mm/page-writeback.c:3070!
+ Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+ ...
+ RIP: 0010:__folio_start_writeback+0xbaa/0x10e0
+ Code: 25 ff 0f 00 00 0f 84 18 01 00 00 e8 40 ca c6 ff e9 17 f6 ff ff
+  e8 36 ca c6 ff 4c 89 f7 48 c7 c6 80 c0 12 84 e8 e7 b3 0f 00 90 <0f>
+  0b e8 1f ca c6 ff 4c 89 f7 48 c7 c6 a0 c6 12 84 e8 d0 b3 0f 00
+ ...
+ Call Trace:
+  <TASK>
+  nilfs_segctor_do_construct+0x4654/0x69d0 [nilfs2]
+  nilfs_segctor_construct+0x181/0x6b0 [nilfs2]
+  nilfs_segctor_thread+0x548/0x11c0 [nilfs2]
+  kthread+0x2f0/0x390
+  ret_from_fork+0x4b/0x80
+  ret_from_fork_asm+0x1a/0x30
+  </TASK>
 
-What I'm trying to get over to you is that what you propose causes
-an inconsistency between how the hardware is _programmed_ to behave
-for CBS and what the kernel reports the CBS settings are if the
-link speed changes.
+This is because when the log writer starts a writeback for segment
+summary blocks or a super root block that use the backing device's
+page cache, it does not wait for the ongoing folio/page writeback,
+resulting in an inconsistent writeback state.
 
-For example, if the link was operating at 10G, and the idle slope
-set by userspace is A, and the send slope was B, tc qdisc show
-will report an idle slope of A and send slope of B.
+Fix this issue by waiting for ongoing writebacks when putting
+folios/pages on the backing device into writeback state.
 
-If the link speed now changes to 5G, then, without updating the
-settings in the hardware, the multiplier for the register values
-will have reduced by a factor of two, meaning they're twice as
-large as they should be for values of A and B.
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Fixes: 9ff05123e3bf ("nilfs2: segment constructor")
+Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: stable@vger.kernel.org
+---
+Andrew, please apply this as a bug fix.
 
-However, tc qdisc show continues to report that values of A and B
-are being used, but the hardware is actually using 2 * A and 2 * B.
+This fixes a kernel bug that is reproducible in some destructive testing.
 
-It's all very well saying that userspace should basically reconstruct
-the tc settings when the link changes, but not everyone is aware of
-that. I'm saying it's a problem if one isn't aware of this issue with
-this hardware, and one looks at tc qdisc show output, and assumes
-that reflects what is actually being used when it isn't.
+Thanks,
+Ryusuke Konishi
 
-It's quality of implmentation - as far as I'm concerned, the kernel
-should *not* mislead the user like this.
+ fs/nilfs2/segment.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
+index 60d4f59f7665..6ea81f1d5094 100644
+--- a/fs/nilfs2/segment.c
++++ b/fs/nilfs2/segment.c
+@@ -1652,6 +1652,7 @@ static void nilfs_segctor_prepare_write(struct nilfs_sc_info *sci)
+ 			if (bh->b_folio != bd_folio) {
+ 				if (bd_folio) {
+ 					folio_lock(bd_folio);
++					folio_wait_writeback(bd_folio);
+ 					folio_clear_dirty_for_io(bd_folio);
+ 					folio_start_writeback(bd_folio);
+ 					folio_unlock(bd_folio);
+@@ -1665,6 +1666,7 @@ static void nilfs_segctor_prepare_write(struct nilfs_sc_info *sci)
+ 			if (bh == segbuf->sb_super_root) {
+ 				if (bh->b_folio != bd_folio) {
+ 					folio_lock(bd_folio);
++					folio_wait_writeback(bd_folio);
+ 					folio_clear_dirty_for_io(bd_folio);
+ 					folio_start_writeback(bd_folio);
+ 					folio_unlock(bd_folio);
+@@ -1681,6 +1683,7 @@ static void nilfs_segctor_prepare_write(struct nilfs_sc_info *sci)
+ 	}
+ 	if (bd_folio) {
+ 		folio_lock(bd_folio);
++		folio_wait_writeback(bd_folio);
+ 		folio_clear_dirty_for_io(bd_folio);
+ 		folio_start_writeback(bd_folio);
+ 		folio_unlock(bd_folio);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
