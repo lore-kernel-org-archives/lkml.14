@@ -1,100 +1,93 @@
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410BA18509A
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C54418398D;
+	Thu, 30 May 2024 08:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059520; cv=none; b=grKXdSl50UyzZPjUVqYea+pyXoSLJ+e7lPxVi07J6dbJ9lkoGohHXKqGA/e7Wh5IbNNE1hlxItKNNU5+7HzWqiBy7pvpM/kOxz0Cg3VyGHT3cf5VU5UKhT8WUchTrZFqM16iUmpJkPfCiWT1fc2T0s8msNwBrUmE0hgXIw1aEFM=
+	t=1717059574; cv=none; b=pk4nHeQgs8X4dmIuP6UfsrZy9it378fpaJ0JBTWQLr+/7AnYmS14775MWMh20u7V99ATp3+7S1G88fdsGXyP1WpZUocfUo1LPW6Gx+2kQjmmUyZI8NJXNsQFk8j8D56mD3OVRFWiCkG5c+odDCWL1KvGCaFQhk5j9CQ03PU8aQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059520; c=relaxed/simple;
-	bh=AtdSj8Gi5BjDdlTV9ZqdN7OUIGwv22hj9Vwr0vi/QVA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DyXGDm1UK70cfEHiaS+RPMMHJx73nfYzeDycocO6XfkvtSg2MUgwsJ4JpqJ80WQOuN3fq1qtgZOUq487LyJkhdIAddMH+2rrcRLpAwnrxQI1MM/BUkSYmUmwck+9g2USQfr+eF8X8hpD8uY5+iZyg/CC617NM0U7fzETUpcQ1Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id cd6d5db0-1e62-11ef-8e2e-005056bdf889;
-	Thu, 30 May 2024 11:58:37 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-mips@vger.kernel.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3 11/11] pinctrl: pinmux: Remove unused members from struct function_desc
-Date: Thu, 30 May 2024 11:55:20 +0300
-Message-ID: <20240530085745.1539925-12-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240530085745.1539925-1-andy.shevchenko@gmail.com>
-References: <20240530085745.1539925-1-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1717059574; c=relaxed/simple;
+	bh=SkjjPhyXR+J9ZYzmle2MoX7KnTUMcyGj3vyfwGgqs9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R1to+mjQyMi15Y3cP4Dv1OWdPl+fRVqDDKXxPBLN0z/2AXcmYLWSW42NNtt5P7KRumncNkYs5JX1MtV75Q1Ql+xA3KiplvQvGxZYw9MXvDtlwJ8KH6dVmIXWynZL3rtsdJcrUqUFO9mQQiTdiByngKX++crk5PrBRjT6IXwaduc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Kjmwhpon; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Kjmwhpon"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 754FC40E0241;
+	Thu, 30 May 2024 08:59:28 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YMUaDw39zA_D; Thu, 30 May 2024 08:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717059564; bh=Pu8wGV8ZGkv6P0zbzP8zgR3tDmcR1UHFjCtSjRmEi6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KjmwhponTNFOHCCFSlJMeG0zaEADk5R7bfkr2V3rM9AIbyrbfS2K+wIaml9LPWKfh
+	 PXQbfKtlwlMXeWFYUPZCxDX2I4yR/LcwnZED41BpIg3lPmRGhYU7+VhzDsGv+YwLmV
+	 yx9yB5T1fJTGwn5kPE7zh1hepNa1nFYuwsykDFEPyfnl5IwfX19Phb8bMyLaM4yY18
+	 Cng6+Wtr76GZuDFMRsgnmt6Svpj9jauPYsrCnrFQvaLDxFgiO3xQyN3fPWuGnNyA9a
+	 0xItRKPhrO3v9Rg1E64xDGKTBT0Hp1BG9GgB4UvVSiMCjB625qxooel3+zTYtqqCjh
+	 sLLVu36QvPL6gbB+bP+UrSaxqLgfw/i9DP1znxdJcYBEyosigs9Kqd8y3x3vJ/mr+3
+	 Us2jHSMH8Bif9fhIco5UfKVcJMGCHYSoU70hIIac9RGNbNKA+DqAzrGOIDXQFzx7oq
+	 t8giJYIPPFmnZXFmuOBGmgMrJWppg8yl4OlhtBG9HjqnCx78zEF6wpwARguGF2dBqo
+	 hdJW0Ebc1OiHe9AcEVwPYkGfcI/gSg1gfiWLx6xSvFVXA91q4Wg6H07BLN/k/ybP/v
+	 efgdGnygHE4UJJzLW6dV1cvtAYKNxVjG7R92zFnXRpACmUE0Nh/SSTSdb/W/tRqHbt
+	 uuYgewoT1TmWfXXU6cH9+v+s=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 92DC640E0177;
+	Thu, 30 May 2024 08:59:20 +0000 (UTC)
+Date: Thu, 30 May 2024 10:59:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Christian Heusel <christian@heusel.eu>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [tip: x86/urgent] x86/topology/amd: Evaluate SMT in CPUID leaf
+ 0x8000001e only on family 0x17 and greater
+Message-ID: <20240530085914.GAZlg_4lcZIaa83jVb@fat_crate.local>
+References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
+ <171697474837.10875.6335609575452053884.tip-bot2@tip-bot2>
+ <2gj2lkahha4wzyf2ol6xk2ermrmsxaklznrisixdg4m3ogzten@gbrtiyjebeup>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2gj2lkahha4wzyf2ol6xk2ermrmsxaklznrisixdg4m3ogzten@gbrtiyjebeup>
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Thu, May 30, 2024 at 12:40:50AM +0200, Christian Heusel wrote:
+> it seems like somehow the patch has lost the following two trailers
+> compared to the list variant[0] while being applied:
+> 
+>     Bisected-by: Christian Heusel <christian@heusel.eu>
+>     Cc: regressions@lists.linux.dev
+> 
+> Did that happen on purpose or did some scripts fail?
 
-All drivers are converted to use embedded struct pinfunction.
-Remove unused members from struct function_desc.
+Well, we don't add unknown tags because it was getting unwieldy and
+Bisected-by is not really one we do. I can offer
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/pinctrl/pinmux.h | 9 ---------
- 1 file changed, 9 deletions(-)
+	Reported-by: Christian Heusel <christian@heusel.eu>
 
-diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
-index 9b57c1cc9d50..2965ec20b77f 100644
---- a/drivers/pinctrl/pinmux.h
-+++ b/drivers/pinctrl/pinmux.h
-@@ -134,16 +134,10 @@ static inline void pinmux_init_device_debugfs(struct dentry *devroot,
- /**
-  * struct function_desc - generic function descriptor
-  * @func: generic data of the pin function (name and groups of pins)
-- * @name: name of the function
-- * @group_names: array of pin group names
-- * @num_group_names: number of pin group names
-  * @data: pin controller driver specific data
-  */
- struct function_desc {
- 	struct pinfunction func;
--	const char *name;
--	const char * const *group_names;
--	int num_group_names;
- 	void *data;
- };
- 
-@@ -151,9 +145,6 @@ struct function_desc {
- #define PINCTRL_FUNCTION_DESC(_name, _grps, _num_grps, _data)	\
- (struct function_desc) {					\
- 	.func = PINCTRL_PINFUNCTION(_name, _grps, _num_grps),	\
--	.name = _name,						\
--	.group_names = _grps,					\
--	.num_group_names = _num_grps,				\
- 	.data = _data,						\
- }
- 
+as bisection is important work and it should be documented.
+
+How does that sound?
+
+Thx.
+
 -- 
-2.45.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
