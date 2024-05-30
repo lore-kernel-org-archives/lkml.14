@@ -1,198 +1,182 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s1.sapience.com (s1.sapience.com [72.84.236.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A33F22EE4
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 16:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717086049; cv=none; b=niCJM9WnMfbgonr9v495CIQdu07ed+KxgV4Dv/Gr+rAwbIiU5p1XRskAgUe3lzY0BWxw7y4vTCSxMV7nd/uhPlroY1Zjs/YC/fhtUaXTLzQE7HK9a7bGr54HJ41DBLhKEbKbyffFxpZ4fliB+VnbqqsgSUEEZZy73pCxwHhFi/E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717086049; c=relaxed/simple;
-	bh=3B7ZQyZk5/+5h/jcTSOJgwlHgMzpB3t0tzQ4xhvru0Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R4MgznIPmWJj0qPElrjnEJWLpGBEWdZnI/GPXapTcKwAR19LkNeJJEBMMAA7kMUPHgeMYILk6P47v81QbScqiYYVbqgXJCjgP+MBdYB7ci7q8oZxoUh+KjzhoBLSc4XGcPwGwWLhhX31oOSMdp6HhWpgzQotQMM0PH3XiD6IBfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WBY2wW0l; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F64022EE4;
+	Thu, 30 May 2024 16:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=72.84.236.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717086232; cv=fail; b=nQOM/sB38lSKiaEM9bC3zF8Emd7mxpS4cf4GVPlxsSbcQRUPT/9Tyk/jZiAdkb8Wr1CMlIVEc6zq7HZaRUAVow6+9RcIsCxSBXb8K5aYQQUU+N0KrGxJHeEWJ3XAiR3uOvDBy4sbvk2pRmqbuQkTYY69Kbpcc4cp8inCLABFZ8U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717086232; c=relaxed/simple;
+	bh=pgv/sBueGj0uNKfB+M0Djeywb+8H0C+WrvypBsXAPEM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KXqH7tUxVkwuVzSB1l+bpw1+6nObsCC5x8X81HLD5Ph06vItDoYZ47tEaol7L0SYpwPB0MFQKlzROYTHCMkM+oK91kIZ4PztBwHrHAK9GazTnii9NGGKbMq61+atlI3y1I3IO9A/anWnvUlzUpEuxiD4bQf3xpu9+78+HkJD/8I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com; spf=pass smtp.mailfrom=sapience.com; dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b=/DkbkW7T; dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b=Vti+mgL7; arc=fail smtp.client-ip=72.84.236.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sapience.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sapience.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WBY2wW0l"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a5dcb5a0db4so113920266b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717086046; x=1717690846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kl/GGM9FEQNmC7lNrCDznGozkd6NHwhfF13Ha04rMtw=;
-        b=WBY2wW0l1DDjIzqCJuEBe2r3/DXZMSt9MYNsmIgTSadfdJEpMuommo/bv12yAykeNc
-         Zpkw/fqy5i/5zQZqk6Nbq5Ay/CfnBa+XXW8GVBa8WLRRbfgEzrn/9PsXavoqcSxLSm+e
-         pRbys0CXx3C6EpoRRi+s+sOPiYZ/nXhQRy0eem92YqvBmiW0RyS0FyTR05n0eEzM8fTE
-         /UlVe5abGYvUFftuOH4O/gu48FW/xRpSZ2wJG7lOANDY1R4KAMWJDhnz3n+20GudfEqg
-         DOq02V/xedD5YZuykRD5OtzV1hOrgETVXUaVb1CeVha3jo8CcR00FkkBXdFljvoEtPzG
-         6KYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717086046; x=1717690846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kl/GGM9FEQNmC7lNrCDznGozkd6NHwhfF13Ha04rMtw=;
-        b=kKmyq7hpZKB6oBmT6O13W59ZYmbEzSQaI2lyVkXktiGzWvqTK8zlRc7sNr+f3ct+4t
-         dt9eXHEGVuUb49GuWSWzj94Xdh/rfOiRuR8iZ+mtpqdIjERyorVxowjHekyqOhVgJAOO
-         mzVnDxYFV++mWqhf/ACUkTsI0eyj5crZolN3VOB2QTXN1nFIHQFHw5qndpJwdPsvOd7D
-         Et6R/axjalbSGv6d1EQ+lGPNamAc9yZQ4Qe7QH6ncWVWKCuglqpxCwRk9y+Y1/3nodMl
-         MOOpshNSBrKa+BcDREsMQ612eAWoLbBoACKjYrX9L/I+3tclDhVwXg7v2H/ZOp5XQ6VB
-         DcJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyO0gNVjWAxKZS2UNOTar45nKlbWqmb54NL4zv8O1Kgl6t8WLcvNHUlvdprG+IysE59ecN8JSo3dCrfhWvsn4cHqCRZni13Npe0frB
-X-Gm-Message-State: AOJu0YywMOTYceRkTNj+uyjJepu9Qnyfx4vYgCzuNp/A3R6cJ+K1F3zi
-	re1xOYk5Th1Sr5Lvb3GlYsddKIHfvsB5wUtVwI5VoJhZX11dEdYdbbZHOsKxZkZEmH7BqnYe0/v
-	oAIri7slGYn28GuK6l1PF9sHLtmOdOjCjRkbf
-X-Google-Smtp-Source: AGHT+IE99vKgOVmVQYgmhzEBWXRWfHbQ0PozVSW5DerT4/50qVdSiaudvPuYP6CQetEqvnOnFqyicngxT1Zw39JQ8gI=
-X-Received: by 2002:a17:906:11d2:b0:a59:c62c:212d with SMTP id
- a640c23a62f3a-a65e8d36768mr160285466b.14.1717086045429; Thu, 30 May 2024
- 09:20:45 -0700 (PDT)
+	dkim=permerror (0-bit key) header.d=sapience.com header.i=@sapience.com header.b="/DkbkW7T";
+	dkim=pass (2048-bit key) header.d=sapience.com header.i=@sapience.com header.b="Vti+mgL7"
+Authentication-Results: dkim-srvy7; dkim=pass (Good ed25519-sha256 
+   signature) header.d=sapience.com header.i=@sapience.com 
+   header.a=ed25519-sha256; dkim=pass (Good 2048 bit rsa-sha256 signature) 
+   header.d=sapience.com header.i=@sapience.com header.a=rsa-sha256
+Received: from srv8.sapience.com (srv8.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by s1.sapience.com (Postfix) with ESMTPS id B10AE480A32;
+	Thu, 30 May 2024 12:23:49 -0400 (EDT)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-ed25519-220413; t=1717086229;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=dYO5M/SWP6VTWCO+9ICoA/oxJGt9BK5VSGvf7uIy8bc=;
+ b=/DkbkW7TFBSmFsKekzbJJja6XCq5dkQNCaLQDvp1dWYwANzxAC0716JGFC2K2l8IejIwz
+ d51zu9L9Amb4+cTAw==
+ARC-Seal: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412; t=1717086229;
+	cv=none; b=iB1cd9emc9n5onI2zUhwk8DjlZMTziCi1/Dg9luEFk0NgnW/PrqpdX93atHlebk+woIX9zsrFGgqLwxyTAwdKA58Vb4n6tKN+Wim0e9HQS79XSDjgr6+qc9r+ShjzMhxHBm2pjmWpETTmUT/9PxFoah3RXEqaCmj8yjK7lzbDCFVigviSteDa7nUPwzXFondOGeeDYvIgHhMGq9GacTGb72JFzWqLSebfQldV8IIy3CmJKGtC4c34/MPijKOvR343B/bNbgMjRhgC22E6zfAKpvnW1+EMHrQaJ+3lWjczkwN7wNt8D6eZ40F9K6pVndjiCni9u2K/v9WCBNoJlQP1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=sapience.com; s=arc6-rsa-220412;
+	t=1717086229; c=relaxed/simple;
+	bh=pgv/sBueGj0uNKfB+M0Djeywb+8H0C+WrvypBsXAPEM=;
+	h=DKIM-Signature:DKIM-Signature:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Autocrypt:Content-Type:User-Agent:
+	 MIME-Version; b=IYCYOgQLJx9CCBURcnxT8AQIE3O/hWUgQqL+J3L/4/Ctcy8i5u8pOMHCWthQT51bU4RqcZxwSDmSecv5QcHnd3bJp4ELuayzX48uFXIgCV1v6xbxSJwtuk++DHxH3FAgVLUu+IpeKkQi9KnMatlnT3FMU3vZhrPPIBhzr7Ejk4jcO2pqApcfsjwnvfKqw3bPEAEEIRwvtx6b1C6mCxfAyPMIYHd+oJJCVQv7JgChrT3SHVNxqXhNlrE3mEapG5JHYmiBc4oIK/7y9df3JkXfKjOMxt43qlh8zCwzNmU1H7pLeusiWIoYUWzR+vBiytO6KFa2nK90s+RSSwv3u1ZPJA==
+ARC-Authentication-Results: i=1; arc-srv8.sapience.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sapience.com;
+ i=@sapience.com; q=dns/txt; s=dk-rsa-220413; t=1717086229;
+ h=message-id : subject : from : to : cc : date : in-reply-to :
+ references : content-type : mime-version : from;
+ bh=dYO5M/SWP6VTWCO+9ICoA/oxJGt9BK5VSGvf7uIy8bc=;
+ b=Vti+mgL7eSBgug5ZK5bUA6iNFjXba5Yv3b/txFC9eYAN91R3i3ZO91/tHG/2Cx4DO5NCr
+ Qw1v8ShCt15IzglKOrX3p2rVfmykD85j5Xu5P9s9ui/PSExgFhKwR8J0j8hRylwdUenuqgf
+ MM6/AEe1/DFp0c5jvomDmV6dqWGXK2jIBrfYMSDg0i+r9rLegGZDZLuKf5vznP7AwQNJVwY
+ Iv2gxhVGJ40F2O+iQETVMrwvMqfeK1ih3Ye4Un1m6GgTq/XAPnxFApjsKmAnq/an8W+tlgp
+ eoONbi1eSQ1yoX5MTBYI5j+uF4nyo8Q0xRQXNoa/4OssHTPDJnys+Gv8Mekg==
+Received: from lap7.sapience.com (lap7w.sapience.com [x.x.x.x])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by srv8.sapience.com (Postfix) with ESMTPS id 7C04228004B;
+	Thu, 30 May 2024 12:23:49 -0400 (EDT)
+Message-ID: <73d37ff63ee7cd88772fc0767f4474317b56a0a8.camel@sapience.com>
+Subject: Re: 6.9.3 Hung tasks
+From: Genes Lists <lists@sapience.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, andrew@lunn.ch, 
+ hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org,  pabeni@redhat.com, johanneswueller@gmail.com, Thorsten
+ Leemhuis <linux@leemhuis.info>
+Date: Thu, 30 May 2024 12:23:48 -0400
+In-Reply-To: <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+	 <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+	 <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+Autocrypt: addr=lists@sapience.com; prefer-encrypt=mutual;
+ keydata=mDMEXSY9GRYJKwYBBAHaRw8BAQdAwzFfmp+m0ldl2vgmbtPC/XN7/k5vscpADq3BmRy5R
+ 7y0LU1haWwgTGlzdHMgKEwwIDIwMTkwNzEwKSA8bGlzdHNAc2FwaWVuY2UuY29tPoiWBBMWCAA+Ah
+ sBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE5YMoUxcbEgQOvOMKc+dlCv6PxQAFAmPJfooFCRl
+ vRHEACgkQc+dlCv6PxQAc/wEA/Dbmg91DOGXll0OW1GKaZQGQDl7fHibMOKRGC6X/emoA+wQR5FIz
+ BnV/PrXbao8LS/h0tSkeXgPsYxrzvfZInIAC
+Content-Type: multipart/signed; micalg="pgp-sha384";
+	protocol="application/pgp-signature"; boundary="=-+QEfLFhrShG4Mf1bhoXy"
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530102126.357438-1-usamaarif642@gmail.com> <20240530102126.357438-2-usamaarif642@gmail.com>
-In-Reply-To: <20240530102126.357438-2-usamaarif642@gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 30 May 2024 09:20:06 -0700
-Message-ID: <CAJD7tkbn-Nb54aiCKQshb9HjBCQAZ_63FH4vic072kcV+ZxHrA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: store zero pages to be swapped out in a bitmap
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, nphamcs@gmail.com, 
-	chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	kernel-team@meta.com, Ying <ying.huang@intel.com>
+
+
+--=-+QEfLFhrShG4Mf1bhoXy
+Content-Type: multipart/alternative; boundary="=-2wjINsonf24vl+/OcDje"
+
+--=-2wjINsonf24vl+/OcDje
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 3:21=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
- wrote:
->
-> Approximately 10-20% of pages to be swapped out are zero pages [1].
-> Rather than reading/writing these pages to flash resulting
-> in increased I/O and flash wear, a bitmap can be used to mark these
-> pages as zero at write time, and the pages can be filled at
-> read time if the bit corresponding to the page is set.
-> With this patch, NVMe writes in Meta server fleet decreased
-> by almost 10% with conventional swap setup (zswap disabled).
+On Thu, 2024-05-30 at 15:04 +0100, Russell King (Oracle) wrote:
+> ...
+> And then we get to pid 858. This is in set_device_name(), which
+> was called from led_trigger_set() and led_trigger_register().
+> We know from pid 663 that led_trigger_register() can take a read
+> on leds_list_lock, and indeed it does and then calls
+> led_match_default_trigger(), which then goes on to call
+> led_trigger_set(). Bingo, this is why pid 666 is blocked, which
+> then blocks pid 663. pid 663 takes the rtnl lock, which blocks
+> everything else _and_ also blocks pid 858 in set_device_name().
+>=20
+> Lockdep would've found this... this is a classic AB-BA deadlock
+> between the leds_list_lock rwsem and the rtnl mutex.
+>=20
+> I haven't checked to see how that deadlock got introduced, that's
+> for someone else to do.
+>=20
 
-Great work. I thought about doing this after my attempt to drop some
-of the same-filled pages handling in zswap, now we can drop all of it
-:)
 
-Make sure to CC other non-zswap folks on next iterations like Ying. I
-see Johannes already did that in his response. I suspect
-get_maintainers will give you a few extra names.
+Thank you for the analysis - hopefully someone can track down the
+culprit.
 
->
-> [1]https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d=
-1344dde9fce0@epcms5p1/
->
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> ---
->  include/linux/swap.h |  1 +
->  mm/page_io.c         | 86 ++++++++++++++++++++++++++++++++++++++++++--
->  mm/swapfile.c        | 10 ++++++
->  3 files changed, 95 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index a11c75e897ec..e88563978441 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -299,6 +299,7 @@ struct swap_info_struct {
->         signed char     type;           /* strange name for an index */
->         unsigned int    max;            /* extent of the swap_map */
->         unsigned char *swap_map;        /* vmalloc'ed array of usage coun=
-ts */
-> +       unsigned long *zeromap;         /* vmalloc'ed bitmap to track zer=
-o pages */
->         struct swap_cluster_info *cluster_info; /* cluster info. Only for=
- SSD */
->         struct swap_cluster_list free_clusters; /* free clusters list */
->         unsigned int lowest_bit;        /* index of first free in swap_ma=
-p */
-> diff --git a/mm/page_io.c b/mm/page_io.c
-> index a360857cf75d..ab043b4ad577 100644
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -172,6 +172,77 @@ int generic_swapfile_activate(struct swap_info_struc=
-t *sis,
->         goto out;
->  }
->
-> +static bool is_folio_page_zero_filled(struct folio *folio, int i)
-> +{
-> +       unsigned long *page;
+cc: =C2=A0thorsten
 
-I just recently renamed this variable in the zswap version of this
-function because it is very confusing, especially when looking for
-struct page references. 'page' is usually used for struct page. Let's
-use a different name here.
+--=20
+Gene
 
-> +       unsigned int pos;
-> +       bool ret =3D false;
-> +
-> +       page =3D kmap_local_folio(folio, i * PAGE_SIZE);
 
-In the zswap version, we compare against the end of the page first
-before the loop, in case the page just has a bunch of zeros at its
-beginning. The patch that added it to zswap reported better
-performance in some cases [1].
+--=-2wjINsonf24vl+/OcDje
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-You can also use memchr_inv() to compare the range against 0 instead
-of the loop.
+<html><head><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head><body><div>On Thu, 2024-05-30 at 15:04 +0100, Russell King (=
+Oracle) wrote:</div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; b=
+order-left:2px #729fcf solid;padding-left:1ex"><div>...</div><div>And then =
+we get to pid 858. This is in set_device_name(), which<br></div><div>was ca=
+lled from led_trigger_set() and led_trigger_register().<br></div><div>We kn=
+ow from pid 663 that led_trigger_register() can take a read<br></div><div>o=
+n leds_list_lock, and indeed it does and then calls<br></div><div>led_match=
+_default_trigger(), which then goes on to call<br></div><div>led_trigger_se=
+t(). Bingo, this is why pid 666 is blocked, which<br></div><div>then blocks=
+ pid 663. pid 663 takes the rtnl lock, which blocks<br></div><div>everythin=
+g else _and_ also blocks pid 858 in set_device_name().<br></div><div><br></=
+div><div>Lockdep would've found this... this is a classic AB-BA deadlock<br=
+></div><div>between the leds_list_lock rwsem and the rtnl mutex.<br></div><=
+div><br></div><div>I haven't checked to see how that deadlock got introduce=
+d, that's<br></div><div>for someone else to do.<br></div><div><br></div></b=
+lockquote><div><br></div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8=
+ex; border-left:2px #729fcf solid;padding-left:1ex"></blockquote><div>Thank=
+ you for the analysis - hopefully someone can track down the culprit.</div>=
+<div><br></div><div>cc: &nbsp;thorsten</div><div><br></div><div><span><pre>=
+-- <br></pre><div><span style=3D"background-color: inherit;">Gene</span></d=
+iv><div><br></div></span></div></body></html>
 
-[1]https://lore.kernel.org/all/20230205190036.1730134-1-taejoon.song@lge.co=
-m/
+--=-2wjINsonf24vl+/OcDje--
 
-> +       for (pos =3D 0; pos < PAGE_SIZE / sizeof(*page); pos++) {
-> +               if (page[pos] !=3D 0)
-> +                       goto out;
-> +       }
-> +       ret =3D true;
-> +out:
-> +       kunmap_local(page);
-> +       return ret;
-> +}
-> +
-> +static bool is_folio_zero_filled(struct folio *folio)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < folio_nr_pages(folio); i++) {
-> +               if (!is_folio_page_zero_filled(folio, i))
-> +                       return false;
-> +       }
-> +       return true;
-> +}
+--=-+QEfLFhrShG4Mf1bhoXy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Is there value in splitting this into two functions and having a
-separate loop here? Can we just have a single function that kmaps the
-entire folio and loops over it in one go?
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +static void folio_page_zero_fill(struct folio *folio, int i)
-> +{
-> +       unsigned long *page;
-> +
-> +       page =3D kmap_local_folio(folio, i * PAGE_SIZE);
-> +       memset_l(page, 0, PAGE_SIZE / sizeof(unsigned long));
-> +       kunmap_local(page);
-> +}
-> +
-> +static void folio_zero_fill(struct folio *folio)
-> +{
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < folio_nr_pages(folio); i++)
-> +               folio_page_zero_fill(folio, i);
+iHUEABYJAB0WIQRByXNdQO2KDRJ2iXo5BdB0L6Ze2wUCZlioFAAKCRA5BdB0L6Ze
+2ztUAP9jIfYUH867epX9kme9kL3SIae0lnrtM3DSeYE1axiCawD7BDiTCWFUP3i/
+i0ulDQ52DV3I490ratrq6pxYUlXj1w0=
+=Jxt6
+-----END PGP SIGNATURE-----
 
-I think you can just use clear_highpage() here and drop
-folio_page_zero_fill(). It should be more optimized as well in some
-cases.
-
-I don't have further comments about the rest beyond Johannes's comments.
+--=-+QEfLFhrShG4Mf1bhoXy--
