@@ -1,116 +1,103 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942D117F4FF;
-	Thu, 30 May 2024 12:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E9917C9E5;
+	Thu, 30 May 2024 12:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717073500; cv=none; b=s7Ly0pe5yEwnllDo6aI5mnL243MDYcI/mQVJ8K7w80hRx2kbc9rIpMymuLh2BYE5UXPipDvfuMVC3vAm6Wph1jlEq9f179TtcP7JgdbKECcEcBV7mNlQJLqIgEaPEOPo8wr//mC/UzahUXY2vVIYki4cgXCrmdO64oJiGe+mabo=
+	t=1717073643; cv=none; b=cTvy9mjrK3I8kXq1FI5QhrVvYwptDbI4Gimi6VtmA5t1yqR95B+ngpJnujVSVvTYMd57tJDtbvZ94vGdcbKLMZnN0UFEnbvROvcyXpHtwiz0xBXp9Rz54EFkWQGjPMzamshoubTxzUkOJ5vLldy/KqZBNVNBXW4XyxbPffoZpdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717073500; c=relaxed/simple;
-	bh=1x8OOg2/OeTGKyRzwklJFuBbZGFBhWid9Gvdn+4AK5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AvonA3Ss9UcViAo3dAUOxcQChX9Ijog16wJWCtoYxRTKQE4sNMyDlmNcl+n38iognoZzhpL9yM21dUmUd7p7RdL4pX4y54cQPBBKrq7CkriRc4+v0ECU4HnejWOS/nuTvPqVYl8J3r1huXf/HlGNaRItzWzCOx0P9PRV3mQrPaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfa67a3e702so373320276.1;
-        Thu, 30 May 2024 05:51:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717073497; x=1717678297;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=23ivYbltp3q9wnAhZ1dPoeYx/y3W3kM023z9t4bSaTM=;
-        b=H/INmTncqPVE7FIhwcMbrIHkTtZezmfhdYjqflC2A5wsty3jT9yu4QtEaX+4KcXomx
-         6P8teijfHxbAUlguiT4t7NqeqGFawWbu+5U1Eavr5XIxqvkw1sGf8YmE+PvVKrJtz4hy
-         Pvj1vp1lY+NlYoA59iuBBCr3qaLBt5wp+3FzT4FT0u4t507uax/CDR85CR/+RzXMx0Bq
-         6Fvw600mcaU9RWPj7PKopmSAV0qI5FDtGcxU5Krk3+0wyDGFMGxHUFFEW4tVbIO54/jl
-         k142CTVEd2ZEFv3GktTNZE3Xl7iFBw6yHJJzQghfBobnwsVfIA5E/pa1JhXU9x6WESHr
-         tFfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ2StKItlYMrfLk7Kd2z8Y8qWAIHRc/gpCSWPQ0FUxJ1CR8k2BHzAfFw3jizNow4ac6gcPad2CRs0WtJREpqTUotnEnlcgOL/EjcWnIgTXwDco7pyDLtUS0IXPlNGJQ4pLLEta7jgoSoIWvvDjbAcjxLjK986HhA7tiN75M797peum0ayTz6nrGmOYn4IsvKeIgyaC6F3REPev7Vj+lQE2OXBJ8Kyg1w==
-X-Gm-Message-State: AOJu0YzIL0SWG//NM2Z689oVdF68z5afbwwCvZodW25Uucjh01fx2TXq
-	rHrQ6jMYYxH8BtsjguKgzlnm6DCtb55hS3NNtJEzcZraprGJ/G0DvMPEGS8b
-X-Google-Smtp-Source: AGHT+IH2uTsJBLRME2UDYsGfxCyXaTmvS8DXXIyxtoskx129jYb4XTYmXmIq8t/t4bvbZQZEchgfkw==
-X-Received: by 2002:a25:8485:0:b0:dea:cc08:13f8 with SMTP id 3f1490d57ef6-dfa5a7e1312mr2121359276.43.1717073496981;
-        Thu, 30 May 2024 05:51:36 -0700 (PDT)
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfa48f480b0sm595940276.9.2024.05.30.05.51.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 05:51:36 -0700 (PDT)
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dfa67a3e702so373284276.1;
-        Thu, 30 May 2024 05:51:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVszh8/MLGl0Kfo8H1K/Qgj1+IJrvV64I1AaVLt68ceRqYknX0PqxwIyTUVtt466rFe+Xe9hpss0jy6t2YRBm08ZaPElSHepZn21EKTPZg1EH69fOT8sQI+ZEplleGguA2VAKZVrHrxOwo2rfupfOM7DG3q13zRqF+IFc/7AG6iyXYapmwJWnsvpY6XYMTDFtB/SSNvn/s+JzG/B6IH78KhviY9B28P8A==
-X-Received: by 2002:a25:dcd0:0:b0:dfa:4ad7:19d0 with SMTP id
- 3f1490d57ef6-dfa5a5b7a11mr2270407276.2.1717073495538; Thu, 30 May 2024
- 05:51:35 -0700 (PDT)
+	s=arc-20240116; t=1717073643; c=relaxed/simple;
+	bh=F3lUDpXkkg1u1Y2GeIDaUK3xQK3ttNcJBGHRBMhMWw0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sR4r3cZWZGQN+4nfBtSeHkLiih6Wel38vneT2GtzQVqZS1tt+xRAhuE/JveJk3vP6wDHDtsLedHgk+wo8+Esa7np7WwZnjqeu1iojgLKGyXhT7NfcB1Q4+AC61BD352fubfkY/+PatYdaa/jQirr8izZo4DAY8T4sQLVt2dkwWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GkDUW/Ri; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GkDUW/Ri"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C7B7540006;
+	Thu, 30 May 2024 12:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717073633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f+ttqbsSC7Mf0krLnfeQ88z6eFjeEfepuvZI0uIRmts=;
+	b=GkDUW/RiMVgDGnGgeGDIBqIjxy1uL7fgZXm0U0PQH4UJpW0XPX2hjMuFGP72O6Gq7gELr7
+	uZFQ4E+kBFNGaO73dpNyfsRJjCEL+f5cyXqf55ht+zHvWlYrYVu66JpTjF1BWaZaFiWCBn
+	Nc1goeE88WvTV93c69VmmxsEZPNf0CHc5MiKEYO2uzbNtcmXEVknfpaoWeQSVXyChO9P0f
+	Fi/yuJbpxZpv6T1h+JUF/YMf1XkdEWfGfGJnZbLRQJ4//NS4y1lm1HjHLv6yBRWt1afUr1
+	BYdYq65E/E6gSooj3mU39R+Ws/tdYoXC+ByJdSNEgVJeNPl+CkGfkeg8ltkdig==
+Date: Thu, 30 May 2024 14:53:50 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Sai Krishna Gajula <saikrishnag@marvell.com>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Broadcom internal
+ kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, Radu
+ Pirea <radu-nicolae.pirea@oss.nxp.com>, Jay Vosburgh
+ <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, Nicolas Ferre
+ <nicolas.ferre@microchip.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>, Simon Horman
+ <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Subject: Re:  [PATCH net-next v13 12/14] net: ptp: Move ptp_clock_index() to
+ builtin symbol
+Message-ID: <20240530145350.6341746f@kmaincent-XPS-13-7390>
+In-Reply-To: <BY3PR18MB47074528CBB38F55A3F58A19A0F32@BY3PR18MB4707.namprd18.prod.outlook.com>
+References: <20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com>
+	<20240529-feature_ptp_netnext-v13-12-6eda4d40fa4f@bootlin.com>
+	<BY3PR18MB47074528CBB38F55A3F58A19A0F32@BY3PR18MB4707.namprd18.prod.outlook.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524094603.988-1-paul.barker.ct@bp.renesas.com> <20240524094603.988-3-paul.barker.ct@bp.renesas.com>
-In-Reply-To: <20240524094603.988-3-paul.barker.ct@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 30 May 2024 14:51:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUJsNBw7oYyEYLfyN4JohPGD0ONMv2zrhy3U4MUV4MzQA@mail.gmail.com>
-Message-ID: <CAMuHMdUJsNBw7oYyEYLfyN4JohPGD0ONMv2zrhy3U4MUV4MzQA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] pinctrl: renesas: rzg2l: Refactor pin to OEN bit translation
-To: Paul Barker <paul.barker.ct@bp.renesas.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hi Paul,
+Hello Sai,
 
-On Fri, May 24, 2024 at 11:46=E2=80=AFAM Paul Barker
-<paul.barker.ct@bp.renesas.com> wrote:
-> We currently support setting OEN (Output ENable) bits only for the
-> RZ/G3S SoC and so the functions rzg2l_oen_is_supported() and
-> rzg2l_pin_to_oen_bit() are hardcoded for the RZ/G3S. To prepare for
-> supporting OEN on SoCs in the RZ/G2L family, we need to make this code
-> more flexible.
->
-> So, the rzg2l_oen_is_supported() and rzg2l_pin_to_oen_bit() functions
-> are replaced with a single translation function which is called via a
-> pin_to_oen_bit function pointer and returns an error code if OEN is not
-> supported for the given pin.
->
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+On Thu, 30 May 2024 11:23:10 +0000
+Sai Krishna Gajula <saikrishnag@marvell.com> wrote:
 
-Thanks for your patch!
+> > Move ptp_clock_index() to builtin symbols to prepare for supporting get=
+ and
+> > set hardware timestamps from ethtool, which is builtin.
+> >=20
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -256,6 +256,8 @@ struct rzg2l_pinctrl_data {
->         const struct rzg2l_hwcfg *hwcfg;
->         const struct rzg2l_variable_pin_cfg *variable_pin_cfg;
->         unsigned int n_variable_pin_cfg;
-> +       int (*pin_to_oen_bit)(const struct rzg2l_hwcfg *hwcfg,
-> +                             u32 caps, u32 offset, u8 pin);
->  };
+> >  }
+> > +
+> > +int ptp_clock_index(struct ptp_clock *ptp) {
+> > +	return ptp->index;
+> > +}
+> > +EXPORT_SYMBOL(ptp_clock_index);
+> >  =20
+> Please check the "build_clang - FAILED", "build_32bit - FAILED" build err=
+ors.
 
-This definitely needs synchronization with Prabhakar, as he introduces
-a different set of function pointers to distinguish RZ/G2L (G3S) and
-RZ/V2H.  We really like to end up with something that is consistent,
-and works for all.
+Could you be more explicit? Which config are you using?
+What is the build error?
 
-Gr{oetje,eeting}s,
+I don't really see how this patch can bring a 32bit or clang build error.=20
 
-                        Geert
-
+Regards,
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
