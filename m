@@ -1,93 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5FA339AC;
-	Thu, 30 May 2024 11:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569905337C;
+	Thu, 30 May 2024 12:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717070384; cv=none; b=VxphU/Vn/VwdJTrrlQ/1rANEuuZwUPr/A97mRLQz4eqNzBR8ENc44v8L2PzNZaELxZJu9iYuBTdyl9QpufmHaZ75e3jKxr4nm5BCay040ssF4JfXp0KM46ViaxI2f66RbzpxyNa8tETB6WyK6zQdWduhQrdwhNeEBalVCcdImSA=
+	t=1717070473; cv=none; b=gvyECefIffET0JdmpWV3/0XMh9JSuMhIqzIkTnZm4LELILIMMZxsUkCpB3sanbvHAMSROu414tNE7aNmKp6OYGDWLTkOLNdQvNBxlNH49r9rfaH+E6CjZmph9mv929yoCEZH1W2cF4kubye2OQc15B6c2YhisKYda+HL7+ALpvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717070384; c=relaxed/simple;
-	bh=8kTTWP9KKerLOBH7sOJ6kRkd4l+zeLLm8E8cdaSboqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pj7qrUk4UuS3nHWiDev6yzIYiCr29dwQd4wU5ktywrhg1nuua13BWaIRdH+ZFb9il7hczE8o1D6RmiNt4+tlH93ZybovlS4zy7zkY1FF8AoZ+UVkaypCyOXiJKA//eYM7JOVIkKfavZtmyO2HOwHbZTdxI91uF9LSajvG2SVtvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mqg3IB16; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717070473; c=relaxed/simple;
+	bh=XLJKre9lM4Hdi9pCiyx7IxOa/7RTj7xY1R9XAnRJ+C8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=CBwNrqRUU1kz9gqwRkf8gXnd7k50Hh2o1xp25qJi1TMngzeXbvfUB6DWSZTINBf5lLpbrNTh9T+qHu6s3Ox4cjy2YZJPqHV7LYRNjJDyXIH/MHzijQHpvMCLfXJMy+452By7iH7ePdtiWQiKDPydcXTqal9rNmsbB95WDiZRtbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgmusCt4; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mqg3IB16"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 234A9C2BBFC;
-	Thu, 30 May 2024 11:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717070383;
-	bh=8kTTWP9KKerLOBH7sOJ6kRkd4l+zeLLm8E8cdaSboqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mqg3IB16KCl4iVocK2ANNDet9sKxP/D79issOs52V4nylRTLMcYW5Sadf2dCM89Ea
-	 oe+lEU+VT8Ne+JUOwW78a/nnoTjigbrxhc+G85t00kpKd6qYFCIALfsI7o5rpaowvU
-	 GKK4GnibMg+2ejVQZlQVG9AOA1d6OsVe0oxGqpob+iwjhZrA/dRYbNyd5j+xMtj9MV
-	 XP+RAidre1R6cTdhwoVkuf5gdGCac2GfSM/jTbiHHHE4AvTQ+hu5G+npa7bbxH7fDs
-	 fyE2rtDDApUdFRI/kuSYfr+qnAJXo7lLYpYP0PlYd8UC0Kshzb5ZA18Koo7WAjT3N3
-	 99NH0dFwBvqzg==
-Date: Thu, 30 May 2024 12:59:37 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 13/14] regulator: add pm8008 pmic regulator driver
-Message-ID: <9f126943-2d73-491a-9267-6585e10aea8d@sirena.org.uk>
-References: <20240529162958.18081-1-johan+linaro@kernel.org>
- <20240529162958.18081-14-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgmusCt4"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-421124a04d6so8574765e9.3;
+        Thu, 30 May 2024 05:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717070471; x=1717675271; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WEQrqGnC7qOz5yKXUSVLSaKtdozBtcwCP1LShsXqGBo=;
+        b=TgmusCt46PwBW/2WNE0XYOyqI6/0yIJzy+ZnRBb4dZSrgUHBNRVXd9KaVelFqCMa/3
+         nLc9Q+Na/Nyzs0ALjkp93GuV3WCLuRTsO8YNlaScFOXiQRyiHRTTRFqJi9MurWyiDaw/
+         F35uRxZXyCBWpqGpxZgnKVeGRqJ9OPEqyYOErBEeRUl1T1XG38EuHCv1oWJy6I8YqkPA
+         xDy6tK3QMry/KR8Yh6yHfAceWbUej7zrnUuPAiZwxK6p00sH80OXfJW9UzKGaD0eLqi4
+         Q965AqdurkeUp5iKDWMR4gOCG2lZBFqiSli06yd7cTj4KBJqjRewzv80b4GKWwFVPqlj
+         E+EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717070471; x=1717675271;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WEQrqGnC7qOz5yKXUSVLSaKtdozBtcwCP1LShsXqGBo=;
+        b=G2uLJ7mD0lkoAliPBbAkt0C/raW5G9ZxbhIejRNlEvcnVxk+gpNWdq6tRmofYYCeQ9
+         zOTU2aI9rMOCGrQdJOkNcCx9y01oUztJ/V/kllBcUvNEdfT328N2g649x/+FiMTBakN3
+         dakJF1chfvyBcLXvttPqM/ewn4pLCsGrG5/kNXRy/439ndiroJSU2wZr/bcGJlS71V2X
+         s5KrytcwbksPct3YCVDjRaP5AnKkjRqwN7IBtl8uoCvShzIHj9QXXtWQJW9EGdAVsNfP
+         Dee6gPZd2aZiKs2FdztVKu/zWE3s05shJztbVXAYue8bziHZbBdBA/5nREV2Ij4Bm+US
+         ISqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUjXSMKAJZ6ZVmjICaqd+J3Aq2dx9Z64hoY0kwHYs/pyFKQsgMq/p9NemIY5DWLH2zF1oFHn99JjQwd/6k2hfN2Py7jqgGLh2EGLcJOx9gkJsyEbnUVk+PdEkV1xJS3nl6w+yVY
+X-Gm-Message-State: AOJu0YwKoAGiLdcfzoFqwBtx63EkSdV0BPTL+namGc4vDuRhNAH3/MM6
+	lsKuXZ9u2Q0HOq9MhAnR7f3lw+iWH5dszzCzUa0LaDO5Ro3mbAwEb7CgtnDz
+X-Google-Smtp-Source: AGHT+IHQqtiMBnCHQwIS+myk5eOGoXwO6b/L0RfVeHWUZv+ApdJ5ZPZNJeNe1sB76GA+qbdt6tUmTQ==
+X-Received: by 2002:a5d:60c3:0:b0:355:513:f08b with SMTP id ffacd0b85a97d-35dc0091800mr1260771f8f.27.1717070470393;
+        Thu, 30 May 2024 05:01:10 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:c8da:756f:fe9d:41b5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a09031esm17156567f8f.49.2024.05.30.05.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 05:01:09 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Oleksij Rempel <o.rempel@pengutronix.de>,  Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>,  linux-kernel@vger.kernel.org,
+  netdev@vger.kernel.org,  Dent Project <dentproject@linuxfoundation.org>,
+  kernel@pengutronix.de
+Subject: Re: [PATCH 3/8] netlink: specs: Expand the PSE netlink command with
+ C33 new features
+In-Reply-To: <20240529-feature_poe_power_cap-v1-3-0c4b1d5953b8@bootlin.com>
+	(Kory Maincent's message of "Wed, 29 May 2024 16:09:30 +0200")
+Date: Thu, 30 May 2024 11:31:09 +0100
+Message-ID: <m2o78nd21e.fsf@gmail.com>
+References: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
+	<20240529-feature_poe_power_cap-v1-3-0c4b1d5953b8@bootlin.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0mJZbpVe58dxAH3V"
-Content-Disposition: inline
-In-Reply-To: <20240529162958.18081-14-johan+linaro@kernel.org>
-X-Cookie: To err is human, to moo bovine.
+Content-Type: text/plain
 
+Kory Maincent <kory.maincent@bootlin.com> writes:
 
---0mJZbpVe58dxAH3V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+>
+> Expand the c33 PSE attributes with PSE class, status message and power
+> consumption.
+>
+> ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-get
+> 	     --json '{"header":{"dev-name":"eth0"}}'
+> {'c33-pse-actual-pw': 1800,
+>  'c33-pse-admin-state': 3,
+>  'c33-pse-pw-class': 4,
+>  'c33-pse-pw-d-status': 4,
+>  'c33-pse-pw-status-msg': b'2P Port delivering IEEE.\x00',
+>  'header': {'dev-index': 4, 'dev-name': 'eth0'}}
+>
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+>  Documentation/netlink/specs/ethtool.yaml | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>
+> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
+> index 00dc61358be8..bb51c293435d 100644
+> --- a/Documentation/netlink/specs/ethtool.yaml
+> +++ b/Documentation/netlink/specs/ethtool.yaml
+> @@ -922,6 +922,18 @@ attribute-sets:
+>          name: c33-pse-pw-d-status
+>          type: u32
+>          name-prefix: ethtool-a-
+> +      -
+> +        name: c33-pse-pw-status-msg
+> +        type: binary
 
-On Wed, May 29, 2024 at 06:29:57PM +0200, Johan Hovold wrote:
-> The Qualcomm PM8008 is an I2C-controlled PMIC containing seven LDO
-> regulators.
->=20
-> The driver is based on a driver submitted by Satya Priya, but it has
-> been cleaned up and reworked to match the new devicetree binding which
-> no longer describes each regulator as a separate device.
+Shouldn't this be type: string ?
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---0mJZbpVe58dxAH3V
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZYaigACgkQJNaLcl1U
-h9DPVQf/XpPDBDoyoV/qBv6jdSFnaUIVIhIJ4t3WR8qJ42MxLVJrRWkbEAhgShfN
-vsROxh3DsaBpC64ahrFPKK7Opv61SdIVtfAf6anp/jYW1yxFaHZa8GKyATVvgRYp
-iC+iwOY6AiJKtVjXRc6a4cXbWUclQ1bqDOTgLaGeZ/HkrAB8mAXEOM+vaX4JXqPN
-TAFCxBWMzBdeOFAghdfOukV0024rkqMKNw1BqOFLkdk0IKtzvt+/34eq/6kgD3V7
-2ALbIM/GdGcU+9VRj+YVsh8TOXKPchwSnBNnYPGWBca9X/83i5jgNIz1HpqNfJDd
-0RziAuWoiECj/mAekCSP56G4wjnRVg==
-=VPPI
------END PGP SIGNATURE-----
-
---0mJZbpVe58dxAH3V--
+> +        name-prefix: ethtool-a-
+> +      -
+> +        name: c33-pse-pw-class
+> +        type: u32
+> +        name-prefix: ethtool-a-
+> +      -
+> +        name: c33-pse-actual-pw
+> +        type: u32
+> +        name-prefix: ethtool-a-
+>    -
+>      name: rss
+>      attributes:
+> @@ -1611,6 +1623,9 @@ operations:
+>              - c33-pse-admin-state
+>              - c33-pse-admin-control
+>              - c33-pse-pw-d-status
+> +            - c33-pse-pw-status-msg
+> +            - c33-pse-pw-class
+> +            - c33-pse-actual-pw
+>        dump: *pse-get-op
+>      -
+>        name: pse-set
