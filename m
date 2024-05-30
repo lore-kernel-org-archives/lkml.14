@@ -1,97 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662CD183A87;
-	Thu, 30 May 2024 10:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7FA169AEC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 10:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717064475; cv=none; b=k/ZpVNg1TiwoTWUivhGKYcVS0vupGD9GCmXzx8SINPKJ84b5tcsGKQpkQWbZ4JkTz8JipIouqV6GaDojqO2CuSghHaXCOAiaZKCJztrZdAkFUTgLhbfhwcJx3ZW5nbpHRdWQHGqp5GvrI/h77PyWXUaZ7aVN7PwBwp/Tq8PP/po=
+	t=1717064504; cv=none; b=NTovw2X+F6qcwSgeG0wd0FpRjPYvqZk1+IkivXcn4UcuTCJW04UydgEkaRbNGe0bHe6TK8YQpd4vb71m2gR5ctkAhkQd/Ppyk5vsNjtDHkN+OhYVjwUH6GV0BFn6s+jXN6WvKaiGLXXW19K10ykgcfAapawLhzhpkZF+8fkuoXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717064475; c=relaxed/simple;
-	bh=OQhhkThCCb6XD1WjJ1Qd/C+fkTC4zhTX508I22a4y1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=sawSPlT2AvvTuipSW8//C+tQeWS5E4Ufh4FxxpIInHwlgE1Kx+Ccii6ZyelEOH01/9tnH3U0GR87HKvERFmgFtFKrcEFznA18AHeqGXSat1u4MKrdnVtZsfo2G8DUS/toLC5E8RsBpGZ3GNR1AaIfmJ7I/XAgZY4U5aS+N3GfdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=tRqABsrh; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1717064504; c=relaxed/simple;
+	bh=75IDTlDpPkG3i5GzseSzfyM9B71c3475838AuHuwHvM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NEs3CKITuVX/4e8vvgSMpKxXzvlf+De4YOTX7v19Kzny+r71x4Pno3+nzHDuXhk6RiLHflNCsb8fS0+uMU/iDEuDP/XZWrHcAzDTF/7Sj4RGlRNeIum+vbn971wW7znziJ21XkEvJYPDbF5X+703pJC4g/TZOd+qR5zGsC7rj7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJNXaulG; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="tRqABsrh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=zY0Qu+QJXHc8dveVOi28HDt+6kTfFSXuaXR6SyDV5sM=;
-	t=1717064473; x=1717496473; b=tRqABsrhngFAnpaS10TTwta97E9RwyWF7TIifZyakx6jw0e
-	x/VL1k1qvrsBP8G6WzklZTRYBXqrBuVsx9k82Qpb/ryhcg/ZJZiJ2a52hTCsAnVDcV1+7gtiKs04H
-	i2A/ewVXeL1cYi7Mo0HHgNBr7v8QglrKNYTFXms2SoYSxU4ck4OgMkoBkvqA620IyD9FDpfH4/cUA
-	JE2uGqvXOx7/OqMlM+eZSCBsxzx6s9eo5byVrbY97zee363zGnmNj1B6m0RhDC90Ou2WVQ5RDml9K
-	/oIiwAAncHj3xMMhKnvf5lnMVOgdmzA6289uzFN9oQZL5gjprDH4c6KYABdvbRZw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sCcuE-0008Ss-Jg; Thu, 30 May 2024 12:21:10 +0200
-Message-ID: <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
-Date: Thu, 30 May 2024 12:21:09 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJNXaulG"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c9cc681e4fso355436b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 03:21:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717064502; x=1717669302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BaRUgvIHUgZO6RMmzziKFreAcGVarRuht+4q5gP5AUg=;
+        b=iJNXaulGFoUPHW7V6w7oGnnmnSb+Y3P1JIOy91jGepbCp+S3dWG+I6i3wakRNkLk3V
+         dj6ZpXjtj5j1tm6CoV792h3FKOChswF8Bw02p9Wqc6llsRyWa0HoAwG33+xM7lDdWTbD
+         rzzZzaz0NtP8AD82+cYmouHU5brZyus548KsQ6mnEWEwkUOsWpNPaXf9OO/EqcUt4ang
+         9VGkAtBTTFZvkKZjrY4JVOU2NYAMrJZaKB5Y8Ldq3WvHzQEFe7EadK+bgpj24Iwu1fDH
+         59aR/NZXZmljsmYN/r2pZLyhDyAKO5uK/Qii5BtUNkZoSxu2Hd8q2v3rE4J3ph47dEdv
+         BIBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717064502; x=1717669302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BaRUgvIHUgZO6RMmzziKFreAcGVarRuht+4q5gP5AUg=;
+        b=GEqrYIpHNQ9P5cRNq6I5ZyWWeZ/Kso63o2rLlVapPTAAhk7aev/PJFYKK2wC5Xyn+9
+         QiA+4dvDhrn+y33m6YKIGNW1OsvLvt4gc3RARheVsnaJC/Vqcj76Zj0o0Fso7jxit3KD
+         qKlJRMbexpUEe6QKFaVTJZi9YtSxQCIKrZcYMK1HgVP3WCzXamlt/MKx3p0ik9aPazVF
+         /fkEKAw7L+wt/V+AORvMX4ESfU8XPytRA313i8/VwClnTcSNZ/SGq4/G9Z0eqxt8E0p8
+         P/4vW2EFGs0ulDWw5s9HClsxcCbvuxXvPDLSu/buYUb9ycWecXAboXe8RIsR5v67vmQW
+         2/bg==
+X-Forwarded-Encrypted: i=1; AJvYcCXPGUBwYm8Zxte9V0BTN+JKPkNZgD89eLhq6bz0uFA/iduFxdvJGBDvMZvXzx/s+6ofDl2LJxw1rKnPx2YpOFHoJjvyORb0bG9IVIHH
+X-Gm-Message-State: AOJu0Yz6upjXxYf4Lbck2FExfjIkYh/4rYgSWERXiFZ47LtCXuubobY1
+	6d3tPXjBXsk6IhKxN/sj512l8JWmqDzKYlRWZyEejJd+2C2396Jy
+X-Google-Smtp-Source: AGHT+IH6QryCjy0Djphuea2ESS7I4qOgIlAxePO+g2CzT+eKa0mFtAJBmNKROYRYRX+tvQuk8uYzNg==
+X-Received: by 2002:a05:6808:13c8:b0:3c9:c509:c17 with SMTP id 5614622812f47-3d1dcc9d29amr2381208b6e.11.1717064502309;
+        Thu, 30 May 2024 03:21:42 -0700 (PDT)
+Received: from localhost (fwdproxy-nao-113.fbsv.net. [2a03:2880:23ff:71::face:b00c])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ac070f6897sm62085986d6.64.2024.05.30.03.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 03:21:41 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org,
+	yosryahmed@google.com,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH 0/2] mm: store zero pages to be swapped out in a bitmap
+Date: Thu, 30 May 2024 11:19:06 +0100
+Message-ID: <20240530102126.357438-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Regression, thermal: core: battery reading wrong after wake from S3
- [Was: Bug Report according to thermal_core.c]
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
- <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Cc: "fhortner@yahoo.de" <fhortner@yahoo.de>, linux-pm@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717064473;aef88e0d;
-X-HE-SMSGID: 1sCcuE-0008Ss-Jg
+Content-Transfer-Encoding: 8bit
 
-[adding the culprits author, LKML, and the regression mailing list to
-the list of recipients; changing subject, too]
+As shown in the patchseries that introduced the zswap same-filled
+optimization [1], 10-20% of the pages stored in zswap are same-filled.
+This is also observed across Meta's server fleet.
+By using VM counters in swap_writepage (not included in this
+patchseries) it was found that less than 1% of the same-filled
+pages to be swapped out are non-zero pages.
 
-On 29.05.24 21:52, fhortner@yahoo.de wrote:
-> After bisection I have reported a bug according to thermal_core.c:
-> After "Resume thermal zones asynchronously" commit: Wrong Battery
-> Reading after Wake from S3 Sleep - Lenovo Thinkpad P1 Gen2
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=218881
-> Could you please have a look at it 
-> 
-> I have performed a bisection and the culprit is this commit: Resume
-> thermal zones asynchronously
-> git bisect bad 5a5efdaffda5d23717d9117cf36cda9eafcf2fae
-> # first bad commit: [5a5efdaffda5d23717d9117cf36cda9eafcf2fae] thermal:
-> core: Resume thermal zones asynchronously
-> 
-> I have also verified it by compiling a kernel
+For conventional swap setup (without zswap), rather than reading/writing
+these pages to flash resulting in increased I/O and flash wear, a bitmap
+can be used to mark these pages as zero at write time, and the pages can
+be filled at read time if the bit corresponding to the page is set.
 
-Side note: not critical at all, but would have been good if you had
-specified which kernel version you build.
+When using zswap with swap, this also means that a zswap_entry does not
+need to be allocated for zero filled pages resulting in memory savings
+which would offset the memory used for the bitmap.
 
-> without this commit.
+A similar attempt was made earlier in [2] where zswap would only track
+zero-filled pages instead of same-filled.
+This patchseries adds zero-filled pages optimization to swap
+(hence it can be used even if zswap is disabled) and removes the
+same-filled code from zswap (as only 1% of the same-filled pages are
+non-zero), simplifying code.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+This patchseries is based on mm-unstable.
 
-#regzbot ^introduced 5a5efdaffda5d23717d9117cf36cda9eafcf2
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=218881
-#regzbot title
-#regzbot ignore-activity
+[1] https://lore.kernel.org/all/20171018104832epcms5p1b2232e2236258de3d03d1344dde9fce0@epcms5p1/
+[2] https://lore.kernel.org/lkml/20240325235018.2028408-1-yosryahmed@google.com/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Usama Arif (2):
+  mm: store zero pages to be swapped out in a bitmap
+  mm: remove code to handle same filled pages
+
+ include/linux/swap.h |  1 +
+ mm/page_io.c         | 86 ++++++++++++++++++++++++++++++++++++++++++--
+ mm/swapfile.c        | 10 ++++++
+ mm/zswap.c           | 79 ++++------------------------------------
+ 4 files changed, 102 insertions(+), 74 deletions(-)
+
+-- 
+2.43.0
+
