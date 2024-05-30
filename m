@@ -1,155 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF332481C6;
-	Thu, 30 May 2024 19:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1905580058;
+	Thu, 30 May 2024 19:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717096790; cv=none; b=VYMCKO0H0+q3J6kDgO1wNusrxp5EPRz9Gikj3X7a9hFWvWrQwMJWZ4DpJAnf7xGdJvEtJv+7pFSx3Br4pOz+no5X/K1MZtDPbNer4IbnCaO3egTHw2lZI7GcdD5aNRxq6jSC4bPdX6CYIBSlDv4IFf3BdGeS/7xzcTQcRe+YSY0=
+	t=1717096876; cv=none; b=fAGhi+sqfLzSRpeMl/URG7AF/5Io3kndjO1tWFBMSHuLiSR6moESI8tI9uKJL5udcDBV0SA77Y8PPDMy8Lk29yTCxlnGNzqt21yeQlvWfCcrc9v2w9bukCyrTIJnQzEgfTkdJFIZqlulVSaICmajp52v5rY2QqHG/tN5mmh12j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717096790; c=relaxed/simple;
-	bh=sp3+UKyu7QZRBKVkZbrdlt6UzICleSS/gZ25TAZe1eY=;
+	s=arc-20240116; t=1717096876; c=relaxed/simple;
+	bh=Cw8n9sFkdrnSp+hf2gxi3CiALqLFC0iIHAkCCK3RWpI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBRUVA8YoYcN+l9ML0N2mcxkMeIdc8ufsge6YRBdl29AYAItqsKyqR/o8KRJbsbPImZGGHpytqUxze7EknfaiSq2s12J0WzDdo9om3bU/cOBeUmE5lwYOwIw8ca6AMPMPkCbr2GAFgSL8fJtBnWfbfHwHy4qBJNXOGDKe+sVo84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+c7aIZ7; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WpN8/cwqjyCFkxr7hWLXCmMeNTFzLg5z5Qu+rUZu/WE+LctnyEK0m9C/+Dd3iPRSdK69TtuHX7r5hvXd3b6S7G/e1DZvvynaWN0cora7xsuBBwdqA1mK/z5CsXcddbE14WQMIyQEYInIiI9CavgLv7qGI0s9ee9ZgTqusFvNHOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mUGnaW8y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+c7aIZ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717096789; x=1748632789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sp3+UKyu7QZRBKVkZbrdlt6UzICleSS/gZ25TAZe1eY=;
-  b=i+c7aIZ7v+II/KyZgf9dnaQlfWhydFbjP27ArpVHUiWiS1t+wnlY2YcQ
-   tF6mojyzOMGSa8A3ZW4VGtgKTSDbD0UiEkttmqehu+bf2nKKhFrEhJBG4
-   gzdau0uczVextRjbhF/2l61WzqBc4nd6yBYc9dFIieEubdlmGWhChp7BN
-   PxMW/Gkr6VkkL63crn0Du4M010Zk6i23/c6fndFoAjO8seosj7skgOrTW
-   Xx6x8hJvRlZ6HndEra/Sp6xMa34rFMsa0OWKO+ugEMdl5vgWpuzmhAuSs
-   slDe6/UXgkBksivMo0kMBejqp9csoBySvL4NWNZdCN7Spz8d+cBJ+hHv/
-   Q==;
-X-CSE-ConnectionGUID: SqA9Mi/8Qyyjwzf7vNYWvg==
-X-CSE-MsgGUID: GnF9zCJvR9eZGtRM910pxg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="31140613"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="31140613"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 12:19:48 -0700
-X-CSE-ConnectionGUID: dlisauIEQ164ZcDr/2yrog==
-X-CSE-MsgGUID: 03UwKfwDRxyNWOAbeKQYZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="40826362"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 12:19:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sClJJ-0000000CHRR-2XT4;
-	Thu, 30 May 2024 22:19:37 +0300
-Date: Thu, 30 May 2024 22:19:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.gaignard@collabora.com, sebastian.fricke@collabora.com,
-	akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-	adobriyan@gmail.com, jani.nikula@intel.com, p.zabel@pengutronix.de,
-	airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-	laurent.pinchart@ideasonboard.com, praneeth@ti.com, nm@ti.com,
-	vigneshr@ti.com, a-bhatia1@ti.com, j-luthra@ti.com, b-brnich@ti.com,
-	detheridge@ti.com, p-mantena@ti.com, vijayp@ti.com,
-	andrzej.p@collabora.com, nicolas@ndufresne.ca, davidgow@google.com,
-	dlatypov@google.com
-Subject: Re: [PATCH v10 06/11] math.h: Add macros for rounding to closest
- value
-Message-ID: <ZljRSXtXWdOyCJaB@smile.fi.intel.com>
-References: <20240530165925.2715837-1-devarsht@ti.com>
- <20240530171225.2749312-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mUGnaW8y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7247BC32781;
+	Thu, 30 May 2024 19:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717096876;
+	bh=Cw8n9sFkdrnSp+hf2gxi3CiALqLFC0iIHAkCCK3RWpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mUGnaW8yWgrWo8eF7SIlAJEpzMRH8uRwBqHW9GhFFYgH7ykzfFYQtNpnxfLBDF3tv
+	 2SmM+Mfr4KDq7EpNiXMeZReMzRU11FKTbrpjtOCfy9P/55oITXXczNf3BBEcEugAqN
+	 LjjiXN0HU8tGVrZaVQkJkYaplYgBR0Spb+WP8wPIJ7Coo7A7/nLF4r76pBEHc+tx3S
+	 SYNyDYMQbPBULrnCo4S2i+i1OjBe1kynXN6xrdFrPBiivkj82ZvpZmwhDBKiQDIugN
+	 63y6hkf7jGgL7DLGo/myCxZjzGkpqRixj9NSQyUJ3dMrVeUm+mM9J0vnYDXUxnXLJO
+	 PbizAY47q5btw==
+Date: Thu, 30 May 2024 20:21:12 +0100
+From: Conor Dooley <conor@kernel.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Sam Ravnborg <sam@ravnborg.org>, sparclinux@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: WARN on using default root node
+ #address-cells/#size-cells
+Message-ID: <20240530-surging-sprinkled-f209b2452395@spud>
+References: <20240530185049.2851617-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o3RC6Q1iZAKXXjOs"
+Content-Disposition: inline
+In-Reply-To: <20240530185049.2851617-1-robh@kernel.org>
+
+
+--o3RC6Q1iZAKXXjOs
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240530171225.2749312-1-devarsht@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 10:42:25PM +0530, Devarsh Thakkar wrote:
-> Add below rounding related macros:
-> 
-> round_closest_up(x, y) : Rounds x to closest multiple of y where y is a
-> power of 2, with a preference to round up in case two nearest values are
-> possible.
-> 
-> round_closest_down(x, y) : Rounds x to closest multiple of y where y is a
-> power of 2, with a preference to round down in case two nearest values are
-> possible.
-> 
-> roundclosest(x, y) : Rounds x to closest multiple of y, this macro should
-> generally be used only when y is not multiple of 2 as otherwise
-> round_closest* macros should be used which are much faster.
-> 
-> Examples:
->  * round_closest_up(17, 4) = 16
->  * round_closest_up(15, 4) = 16
->  * round_closest_up(14, 4) = 16
->  * round_closest_down(17, 4) = 16
->  * round_closest_down(15, 4) = 16
->  * round_closest_down(14, 4) = 12
->  * roundclosest(21, 5) = 20
->  * roundclosest(19, 5) = 20
->  * roundclosest(17, 5) = 15
+On Thu, May 30, 2024 at 01:50:48PM -0500, Rob Herring (Arm) wrote:
+> While OpenFirmware originally allowed default values of #address-cells
+> and #size-cells, FDT has long required explicit values. It's been a
+> warning in dtc for the root node since the beginning (2005) and for
+> any parent node since 2007. Of course, not all FDT uses dtc, but that
+> should be the majority by far. The various extracted OF devicetrees I
+> have dating back to the 1990s (various PowerMac, OLPC, PASemi Nemo)
+> all have explicit root node properties.
+>=20
+> I have no idea what exists for Sparc, so disabling the warning for it.
+> If any other platforms hit the warning, then the warning can be
+> disabled for them.
+>=20
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> Sparc folks, If anyone can dump DTs from some Sparc systems it would be
+> helpful.
+> ---
+>  drivers/of/base.c | 2 ++
+>  drivers/of/fdt.c  | 2 ++
+>  2 files changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 61fff13bbee5..6930aa29fec1 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -96,6 +96,7 @@ int of_bus_n_addr_cells(struct device_node *np)
+>  			return cells;
+> =20
+>  	/* No #address-cells property for the root node */
+> +	WARN_ONCE(!IS_ENABLED(CONFIG_SPARC), "Only listed platforms should rely=
+ on default '#address-cells'\n");
 
-...
+I assume "listed platforms" means things in the first parameter of
+WARN_ONCE()? Since that's only SPARC, why not just say it? The error
+message is rather obtuse as-is I think.
 
-> + * Examples :
+--o3RC6Q1iZAKXXjOs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It's inconsistent with the other one below.
+-----BEGIN PGP SIGNATURE-----
 
-> + * 	round_closest_up(17, 4) = 16
-> + *
-> + * 	round_closest_up(15, 4) = 16
-> + *
-> + * 	round_closest_up(14, 4) = 16
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZljRqAAKCRB4tDGHoIJi
+0iAJAP4k8TUjNgnDOrkaQcs4tKHQQ+uHNIjHDX/hmEsUeWCHyQEAiDFnImvrWsQE
+tUUrWkbqwMYUZynPihdkGtIsqQmhNQA=
+=HErS
+-----END PGP SIGNATURE-----
 
-The three have TABs/spaces mixture.
-
-I believe you wanted:
-
- * Examples::
- * * round_closest_up(17, 4) = 16
- * * round_closest_up(15, 4) = 16
- * * round_closest_up(14, 4) = 16
-
-...
-
-> + * Examples:
-> + *
-> + * 	round_closest_down(17, 4) = 16
-> + *
-> + * 	round_closest_down(15, 4) = 16
-> + *
-> + * 	round_closest_down(14, 4) = 12
-
-As per above
-
-...
-
-> + * Examples :
-> + *
-> + * 	roundclosest(21, 5) = 20
-> + *
-> + * 	roundclosest(19, 5) = 20
-> + *
-> + * 	roundclosest(17, 5) = 15
-
-As per above.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--o3RC6Q1iZAKXXjOs--
