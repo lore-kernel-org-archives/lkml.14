@@ -1,85 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D11433CA
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 19:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C2881E;
+	Thu, 30 May 2024 20:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717099115; cv=none; b=fTP0kCTkVO245jUv/sw7lGM9rMFrsSuEtUKvG3m/jUTm5YFIq/K4ETW9vICnxlUmruYpqVmN8TeiMoDEb1kfpG6UobtLn+myhzBOfOr3xZMQln6CaID4t8PW/NRA/nuG8AIHiFoqpvxEyVHlDSXcrN95CG+/QS6QJWPdnytj73E=
+	t=1717099274; cv=none; b=mARYx2MKO5DqhHPzE/cCK7Q6UauHGeHGGljApDG6by2pe32hLADRSq+xCoLElB6/GAj09DjSg6ONdvaG0fwt5Z+W3Pkeq/y+OS4g7nXMu25yrfwXTaYFrM80K7w8C9j1u9dh8RY3ziZS2QXtgkQP4r2KDu9+bvcd5Xh2TR2TbxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717099115; c=relaxed/simple;
-	bh=QQhN3fBeDsJ4TwxAMRYmU9fsJQ0uQBGkrfT06jVyz5o=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=X0Dbhf150xsQ9jwgEI5TPCXE9Doh0hg8fg/CG2f5YI/tocw1zF6PWLptyRdhAeDxEmpmQoWKu8oMoVQ8FK/zWdjAdkuNuZHnA94pikm9HmZvRT9ROSIlYCEqeqyqoqllctlyvkqXf12iUI/ojdZV7NDhK1aN3mi401GBMKUWO6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=If/Yt85F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717099274; c=relaxed/simple;
+	bh=BPyCNlVSH1EfQAKSbDWiHoDPaRYzrLTTMBUjfTP07Y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhK85gD5nnWpm6mveBYixNZcxhih3jPCiCvMXAixx0jJI9cq4nGkdd3iNfc/cDBfWVJBYrLTqQoRCGJtHBmcUnYGtOxSBisaqn/LNLJ/hjnzT9BjlX9Mhgp47Jd+ZTd6BenhTSfW8NOGKuNSduPnpQDs+Xl4TT6McwT05YTrKpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de; spf=pass smtp.mailfrom=t-8ch.de; dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b=F1gYsAVd; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=t-8ch.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-8ch.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="If/Yt85F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A9ECC2BBFC;
-	Thu, 30 May 2024 19:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1717099114;
-	bh=QQhN3fBeDsJ4TwxAMRYmU9fsJQ0uQBGkrfT06jVyz5o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=If/Yt85FbL+jFdwt1w/gf/EevPCse9Y3igXw2uHHogWsSGRxEKO4vXk9UF5qKAsin
-	 CM27YDG+5zkC3k9/bXmaXHmwma0bmMZLZEVlcVrPLt37lPjIAAXZKbjarwyxzTooXI
-	 UVmZahKLlVewfvFCfLjNuH+RSmgffQ7Hd9CtXElM=
-Date: Thu, 30 May 2024 12:58:33 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: hannes@cmpxchg.org, yosryahmed@google.com, nphamcs@gmail.com,
- chengming.zhou@linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: Re: [PATCH 1/2] mm: store zero pages to be swapped out in a bitmap
-Message-Id: <20240530125833.fd5315f80316436e93f91dfb@linux-foundation.org>
-In-Reply-To: <20240530102126.357438-2-usamaarif642@gmail.com>
-References: <20240530102126.357438-1-usamaarif642@gmail.com>
-	<20240530102126.357438-2-usamaarif642@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=t-8ch.de header.i=@t-8ch.de header.b="F1gYsAVd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
+	t=1717099267; bh=BPyCNlVSH1EfQAKSbDWiHoDPaRYzrLTTMBUjfTP07Y0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1gYsAVdp9ngHjNF7c8zTuA2punGS2IlhI7cnHaXrG/anDGpAWA7I4iSH8930uOH6
+	 R8348Eam1Edb6so8Fh4b0LW4dXzh2w4c2vL4wxXsdHInCCJUgYeX9K1ZdjnZu7ia/M
+	 ZNNabBlvbS+ET68togD9+r43M1A8eux9VGHPx2ew=
+Date: Thu, 30 May 2024 22:01:06 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: smbus: Log (LP)DDR5 type specific unimplemented
+ message in `i2c_register_spd()`
+Message-ID: <66acde9a-b453-465d-8b44-2bfc2164cdbb@t-8ch.de>
+References: <20240530183444.9312-2-pmenzel@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240530183444.9312-2-pmenzel@molgen.mpg.de>
 
-On Thu, 30 May 2024 11:19:07 +0100 Usama Arif <usamaarif642@gmail.com> wrote:
+On 2024-05-30 20:34:43+0000, Paul Menzel wrote:
+> On several systems Linux logs:
+> 
+>      i2c i2c-0: Memory type 0x22 not supported yet, not instantiating SPD
+> 
+> 1.  Supermicro Super Server/X13SAE, BIOS 2.0 10/17/2022
+> 2.  Dell Inc. Precision 3660/0PRR48, BIOS 2.9.3 11/22/2023
+> 3.  Dell Inc. OptiPlex SFF Plus 7010/0YGWFV, BIOS 1.7.1 08/11/2023
+> 4.  Run `git grep 'emory type.*supported yet, not instantiating SPD'` in
+>     the repository of dmesg reports for various computers collected by
+>     Linux users at https://linux-hardware.org. [1]
+> 
+> Add 0x22 and 0x23 as memory types for DDR5 according to section 7.18.2
+> (Memory Device — Type), table 78 in *System Management BIOS (SMBIOS)
+> Reference Specification*, version 3.6.0 [2]. These use JEDEC JESD300-5 for
+> SPD, and, currently, no driver exists, so add a specific warning for this
+> case.
 
-> Approximately 10-20% of pages to be swapped out are zero pages [1].
-> Rather than reading/writing these pages to flash resulting
-> in increased I/O and flash wear, a bitmap can be used to mark these
-> pages as zero at write time, and the pages can be filled at
-> read time if the bit corresponding to the page is set.
-> With this patch, NVMe writes in Meta server fleet decreased
-> by almost 10% with conventional swap setup (zswap disabled).
+There is a SPD5118 driver coming up, which will handle DDR5 chips [0].
 
-A little nitlet as you'll be altering the code...
-
-> --- a/mm/page_io.c
-> +++ b/mm/page_io.c
-> @@ -172,6 +172,77 @@ int generic_swapfile_activate(struct swap_info_struct *sis,
->  	goto out;
->  }
->  
-> +static bool is_folio_page_zero_filled(struct folio *folio, int i)
-> +{
-> +	unsigned long *page;
-> +	unsigned int pos;
-> +	bool ret = false;
-> +
-> +	page = kmap_local_folio(folio, i * PAGE_SIZE);
-
-It's rather expected that a local variable called `page' has type
-`struct page *'.  Can we use something like `addr' here?
-
-> +	for (pos = 0; pos < PAGE_SIZE / sizeof(*page); pos++) {
-> +		if (page[pos] != 0)
-> +			goto out;
-> +	}
-> +	ret = true;
-> +out:
-> +	kunmap_local(page);
-> +	return ret;
-> +}
-
+[0] https://lore.kernel.org/lkml/20240529205204.81208-1-linux@roeck-us.net/
