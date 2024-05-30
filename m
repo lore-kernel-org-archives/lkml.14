@@ -1,151 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A710C4F5E6
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 18:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C49C1BDDC
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 18:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717093917; cv=none; b=f/CJ6vQhf3telJCGJUhwOKJCGrLUFO0M3YhCadF205dpXPPY7wVht8pwEgbugN0DQuTVGBfHO39gtd3xxpGZQPdZv0oNp/9OCjP1odWRjWOErPm1su5N2AMN8cPJt5f74S76LMJkHSqo/Vsxlp5KjNDxJpoKJvVFte44LqHATpc=
+	t=1717093976; cv=none; b=UlqJzemGUdOB0zviLCFgGc1Y+xIS0fsVZDq+u+GC8MHFHZbL8rdI8arVZZvgT3jvzUONFJes93XWAE2lw0A74RXoRko77I34MNbqtSbwrb1lzxue/5knHcAeY0shbnKGtnQ3FOIMOQPH1mzp6/MQ4veEVrrdp9U/RjjHgZ2WALw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717093917; c=relaxed/simple;
-	bh=Exa+Vd5MGJ5Z8QN6/iFZfytwsDyCBIhtpCeeCY1v3eI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OqWArIwwkwNQ24sz6/z8IJvr+wkMfcbeXzFRaJiRBj04G3hP+DnwEPaCxwfG+nFBlbbkqXQmZdDRtB3Zu6CGsJl6mHSOsQmYR0r5SGvPQdD+pclqU5SD/5M6bQTmDtfAZXjRCAUzKdwuBQIyd4igqRxfVz8aAbRgOapqam8RjTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igDC0ATH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717093976; c=relaxed/simple;
+	bh=gNqTWo2XHLxvBsJqH+AAZXFzbYlY/JjkMwxPP5WTT94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/dwoAU63eN5WoUQ34m+l+zFVdL4cB4AvsTn2MS24dfKVjCcl4JaopbcaRiD2DqNCO+fBe0n1DvYG5LyTJpofYKt7/vvSQwtJ6YnB1LJvr59B5OcG/l+ivP50L8NmEF87EMnURNMrCDhFv7cWMGI4kYUrEBl04CtYknGXCF1Ioo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAAEJizx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igDC0ATH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F9FEC4AF08
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 18:31:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAAEJizx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EBDC2BBFC;
+	Thu, 30 May 2024 18:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717093917;
-	bh=Exa+Vd5MGJ5Z8QN6/iFZfytwsDyCBIhtpCeeCY1v3eI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=igDC0ATHmElk/YvPxUsp8b7/OXVQmV9chaffZ+IjpIh0Lnjgk8hxN2hhgFZBAinNX
-	 q+gwTamGCvmSYt+NtkUragnLvUekb8Bn7bsv0fSb9E6mdv3b5LyY8N+01Gc5b5pSQ7
-	 NknIfeypTmRe3rfTdOsqX6Bc/GtLR9oI2p5hwER4T+3+mNZi5AHRw8UGddFi8MKTqA
-	 jDmBNkrahy0dB7TcTB0sMRCooA73bCqcdUG2fxVtJmAZjNbl2r1aO8jKodVe8QcqV2
-	 RbPN9WQyUNziE18nvTvcNuQEwUs4VFL+Mt6lbaBotJydThEx5pVusZxFMnq4ssKyh7
-	 1iKhmPe8ZHnlg==
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3747e9f7cceso982125ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 11:31:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTb+IQYUiT/IV4wiAAApGllFAzsOd4FPLb6hdUWBxaurxvrH/3gkHA0n5fsFs6LZjqzOXKj2tyJXEOUuMC+OLUDJSuf8FYyJO7RRJv
-X-Gm-Message-State: AOJu0YwZbgoNSrhQ7iKqKgZdNwruHpdEbHS0e9rb4J5ulbPViZzjDLfy
-	OpdqF9PoQ74HfVFrQ0nyBVqY5/+hExVDhSFqAlJeUtqTw+Pued5qe9pLBmsBcAAAM/vMt4rriXd
-	dY4nx2fGxRFFsFJfoFYyKw2+Cwc0fBb4RyAC+
-X-Google-Smtp-Source: AGHT+IFyhiXVZVJOvERxK1XEwIiQ/eCHWljMIp7VcDvDaSucBm6NPDO9l14qN/4XrsE2buGE40WywlDeGncp8QKLPWk=
-X-Received: by 2002:a05:6e02:b26:b0:374:61ee:57c1 with SMTP id
- e9e14a558f8ab-3747df634a6mr33671855ab.10.1717093916396; Thu, 30 May 2024
- 11:31:56 -0700 (PDT)
+	s=k20201202; t=1717093976;
+	bh=gNqTWo2XHLxvBsJqH+AAZXFzbYlY/JjkMwxPP5WTT94=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mAAEJizxIWZn+AdcqNLKayKsKHntMJb8L/lOEfC8IzjYLoALtSdORxDZf1mGCuOrc
+	 zkmyfbHDWXMtIMIOoKmknVjoq7E+0YnusqyBAeuePnowPj0baYZQQZh5nqo6/qMW4D
+	 jSiECPbmN5wHUAaUyYNqCUt2N5D699AxaX7m/g2MZ4ZOR2YN4Rn0Y5cFu2Oi8as6Ms
+	 Wwy7/yJN0DcLhf45tQvQmByQzixH96XPK0VvaAgJ/pg4x2OrqhFFyEOQy83rbRxeAd
+	 MJ9ChikIN0+VKuCHAdX9qL8UQq60q+15qegKou/bJap1beC8eneufUGPFBaQPLht2n
+	 VV1T9GmWX3yfw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3C588CE075F; Thu, 30 May 2024 11:32:55 -0700 (PDT)
+Date: Thu, 30 May 2024 11:32:55 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, torvalds@linux-foundation.org,
+	rostedt@goodmis.org, mark.rutland@arm.com, juri.lelli@redhat.com,
+	joel@joelfernandes.org, raghavendra.kt@amd.com,
+	sshegde@linux.ibm.com, boris.ostrovsky@oracle.com,
+	konrad.wilk@oracle.com, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v2 16/35] preempt,rcu: warn on PREEMPT_RCU=n, preempt=full
+Message-ID: <b629f8c9-8900-4317-9ea3-08a8dba7d896@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240528003521.979836-1-ankur.a.arora@oracle.com>
+ <20240528003521.979836-17-ankur.a.arora@oracle.com>
+ <20240529081404.GI26599@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524-swap-allocator-v1-0-47861b423b26@kernel.org>
- <CANeU7QkmQ+bJoFnr-ca-xp_dP1XgEKNSwb489MYVqynP_Q8Ddw@mail.gmail.com>
- <87cyp5575y.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAF8kJuN8HWLpv7=abVM2=M247KGZ92HLDxfgxWZD6JS47iZwZA@mail.gmail.com>
- <875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAMgjq7AoCL3yqBiys+ksoKQVZW_AopzhuXk7xzQzSwBxHZumeQ@mail.gmail.com>
-In-Reply-To: <CAMgjq7AoCL3yqBiys+ksoKQVZW_AopzhuXk7xzQzSwBxHZumeQ@mail.gmail.com>
-From: Chris Li <chrisl@kernel.org>
-Date: Thu, 30 May 2024 11:31:44 -0700
-X-Gmail-Original-Message-ID: <CAF8kJuOTR0LVEffLNYxNUp8XK4aBs_1U9erbLJVLveWq+i7L2w@mail.gmail.com>
-Message-ID: <CAF8kJuOTR0LVEffLNYxNUp8XK4aBs_1U9erbLJVLveWq+i7L2w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] mm: swap: mTHP swap allocator base on swap cluster order
-To: Kairui Song <ryncsn@gmail.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Barry Song <baohua@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529081404.GI26599@noisy.programming.kicks-ass.net>
 
-On Thu, May 30, 2024 at 1:08=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
-e:
->
-> On Thu, May 30, 2024 at 10:54=E2=80=AFAM Huang, Ying <ying.huang@intel.co=
-m> wrote:
-> >
-> > Chris Li <chrisl@kernel.org> writes:
-> >
-> > > Hi Ying,
-> > >
-> > > On Wed, May 29, 2024 at 1:57=E2=80=AFAM Huang, Ying <ying.huang@intel=
-.com> wrote:
-> > >>
-> > >> Chris Li <chrisl@kernel.org> writes:
-> > >>
-> > >> > I am spinning a new version for this series to address two issues
-> > >> > found in this series:
-> > >> >
-> > >> > 1) Oppo discovered a bug in the following line:
-> > >> > +               ci =3D si->cluster_info + tmp;
-> > >> > Should be "tmp / SWAPFILE_CLUSTER" instead of "tmp".
-> > >> > That is a serious bug but trivial to fix.
-> > >> >
-> > >> > 2) order 0 allocation currently blindly scans swap_map disregardin=
-g
-> > >> > the cluster->order.
-> > >>
-> > >> IIUC, now, we only scan swap_map[] only if
-> > >> !list_empty(&si->free_clusters) && !list_empty(&si->nonfull_clusters=
-[order]).
-> > >> That is, if you doesn't run low swap free space, you will not do tha=
-t.
-> > >
-> > > You can still swap space in order 0 clusters while order 4 runs out o=
-f
-> > > free_cluster
-> > > or nonfull_clusters[order]. For Android that is a common case.
-> >
-> > When we fail to allocate order 4, we will fallback to order 0.  Still
-> > don't need to scan swap_map[].  But after looking at your below reply, =
-I
-> > realized that the swap space is almost full at most times in your cases=
-.
-> > Then, it's possible that we run into scanning swap_map[].
-> > list_empty(&si->free_clusters) &&
-> > list_empty(&si->nonfull_clusters[order]) will become true, if we put to=
-o
-> > many clusters in si->percpu_cluster.  So, if we want to avoid to scan
-> > swap_map[], we can stop add clusters in si->percpu_cluster when swap
-> > space runs low.  And maybe take clusters out of si->percpu_cluster
-> > sometimes.
->
-> Stop adding when it runs low seems too late, there could still be a
-> free cluster stuck on a CPU, and not getting scanned, right?
+On Wed, May 29, 2024 at 10:14:04AM +0200, Peter Zijlstra wrote:
+> On Mon, May 27, 2024 at 05:35:02PM -0700, Ankur Arora wrote:
+> > The combination of PREEMPT_RCU=n and (PREEMPT_AUTO=y, preempt=full)
+> > works at cross purposes: the RCU read side critical sections disable
+> > preemption, while preempt=full schedules eagerly to minimize
+> > latency.
+> > 
+> > Warn if the user is switching to full preemption with PREEMPT_RCU=n.
+> > 
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Link: https://lore.kernel.org/lkml/842f589e-5ea3-4c2b-9376-d718c14fabf5@paulmck-laptop/
+> > Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+> > ---
+> >  kernel/sched/core.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index d7804e29182d..df8e333f2d8b 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -8943,6 +8943,10 @@ static void __sched_dynamic_update(int mode)
+> >  		break;
+> >  
+> >  	case preempt_dynamic_full:
+> > +		if (!IS_ENABLED(CONFIG_PREEMPT_RCU))
+> > +			pr_warn("%s: preempt=full is not recommended with CONFIG_PREEMPT_RCU=n",
+> > +				PREEMPT_MODE);
+> > +
+> 
+> Yeah, so I don't believe this is a viable strategy.
+> 
+> Firstly, none of these RCU patches are actually about the whole LAZY
+> preempt scheme, they apply equally well (arguably better) to the
+> existing PREEMPT_DYNAMIC thing.
+> 
+> Secondly, esp. with the LAZY thing, you are effectively running FULL at
+> all times. It's just that some of the preemptions, typically those of
+> the normal scheduling class are somewhat delayed. However RT/DL classes
+> are still insta preempt.
+> 
+> Meaning that if you run anything in the realtime classes you're running
+> a fully preemptible kernel. As such, RCU had better be able to deal with
+> it.
+> 
+> So no, I don't believe this is right.
 
-The free clusters stuck on the CPU are a  small number. Only a handful
-of clusters. Preventing low order swap polluting the high order
-cluster is more urgent.
+At one point, lazy preemption selected PREEMPT_COUNT (which I am
+not seeing in this version, perhaps due to blindness on my part).
+Of course, selecting PREEMPT_COUNT would result in !PREEMPT_RCU kernel's
+rcu_read_lock() explicitly disabling preemption, thus avoiding preemption
+(including lazy preemption) in RCU read-side critical sections.
 
->
-> > Another issue is nonfull_cluster[order1] cannot be used for
-> > nonfull_cluster[order2].  In definition, we should not fail order 0
-> > allocation, we need to steal nonfull_cluster[order>0] for order 0
-> > allocation.  This can avoid to scan swap_map[] too.  This may be not
-> > perfect, but it is the simplest first step implementation.  You can
-> > optimize based on it further.
->
-> This can be extended to allow any order < MAX_ORDER to steal from
-> higher order, which might increase fragmentation though.
+Ankur, what am I missing here?
 
-Steal from higher order is a bad thing. Because the value of the
-allocator is able to allocate from higher order.
-High to low is always trivil, the low to high is impossible. See the
-other email having a "knob" to reserve some swap space for high order
-allocations. That is not perfect but more useful.
-
->
-> So this is looking more and more like a buddy allocator, and that
-> should be the long term solution.
->
-In Barry's test case, there is a huge swing of order 0 and order 4
-allocation caused by the low memory killer. Apps get killed and take a
-while for the app to launch and swap out high order entries. The buddy
-allocator will have limited help there because once cluster is used
-for order 0, the fragmentation will prevent higher order allocation.
-Buddy allocator might not be able to help much in this situation. We
-do need a way to swap out large folios using discontiguous swap
-entries. That is the longer term solution to Barry's usage situation.
-
-Chris
+							Thanx, Paul
