@@ -1,156 +1,153 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDC314387F;
-	Thu, 30 May 2024 08:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C645FDDA1;
+	Thu, 30 May 2024 08:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717057240; cv=none; b=Gno7RMyJpqw91sx9y+F0ikofyHsIK15BxMs19wMyRvJF8PmvGrn0jOaY+WYFyrqxn/b9z/OD3hUTluk8vNegSUu1JD4E5/xTpWFQ2LTrHWJwSdeShSf9kEFPiuQDLYmB3R6Y8e9jApqzTqanWcCIr6l8VsKQ17PFIeyEm4T0c/E=
+	t=1717057540; cv=none; b=WN8C4nSB3ZoqPJdIDoK0/kupsoK0WbZPItVQCuJ+Nr1acwwiuLm7zK/fF9aVCeyTrg7AtuMSJUwOVBsjDPU6f5gXFMFXIwH1jlpolRFTOy0LfcrlouwBthuxS4yUeynghzgpvhJRt7xmw+AayOqihF1onqdo1l4QnwG70tF7aHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717057240; c=relaxed/simple;
-	bh=uwAz9qN23oK/OJuve8KxoRRpV5x0vLAL4/ykKXpRrPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SM/uElo1kKWvi/wHK5T5LMpaeXiBvyW26BuPbYGq+Cd2/3CUxWT2qqQtOInQvrkAzzJxH+MPqtt2YtBztb6N+543Rybpq+Ek/jvGzUE6izd1EkyS+HlOoppfrAy/AaLbNuLyJ3n6XMiJZB9L1snOTrBfu5UIFLO2nZO/Q/XgDR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=DI90/Pa2; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1717057540; c=relaxed/simple;
+	bh=YKqNURWS8n2g55ZrdJEWt/gjHie39zpHSbth/z2c/c4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Kj0+iRJYve1roXup+wFx3IFjBPaJ0bT6kvJxaiCA+TnP4OQU/XDe++3dUmhNVEircWs9OIEcgaFPxZK8T0tdt7YmQXvnWkMJScLty7XAcNQFKgJUjCtkbG9Pf7zd2ypwfmlcH58J85fyiHbZqPmC3ZHoshPCBkzVSmfLa/ZW1Dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N1ChtY+M; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DI90/Pa2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bYZIpqrQtzaQ8xIM1w25+g3wQxbpxFEBPyGhVKMCX+U=; b=DI90/Pa2/mK1x3SUUOArogPrUM
-	dp5/8NgdELrTAo7BpeljhBPpniaFtG1h1s+BjONSc/PcKe9W8Ycd+GLgqdwM+jmJkaozyEevoLJDE
-	58nktpsStoHpXLQ5O2wjEj+9BwE1nZlG3nxCEukyxwd9So3LuwsxM1s6Z72vVBYtd5fnR4kxsHkLQ
-	8Q3GqjIPzcEYP3YdhMzyKL6Ris2VlQJOUByvqtUBJb/R+NuRpl1S8rOhFNW8N+4hCHNDjbKWwMS2t
-	XKvQcTgk0wSL1138p/8IrGIlwFzx4jNk+1il4AYmCCSsJ079zFWw2XieoFPPSPX5U6kFfN08+fZjJ
-	wR0+3R0Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56108)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sCb1Q-000752-0x;
-	Thu, 30 May 2024 09:20:28 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sCb1Q-00050Q-OI; Thu, 30 May 2024 09:20:28 +0100
-Date: Thu, 30 May 2024 09:20:28 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Nemanov, Michael" <michael.nemanov@ti.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [EXTERNAL] [PATCH wireless-next 6/8] wifi: wlcore: add pn16
- support
-Message-ID: <Zlg2zGb7s7zu6jb+@shell.armlinux.org.uk>
-References: <ZlWhH4HleGILuUtN@shell.armlinux.org.uk>
- <E1sBsy7-00E8vu-Nc@rmk-PC.armlinux.org.uk>
- <e6ae6dfa-6554-4e88-abb0-31dbbd8df03f@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1ChtY+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717057539; x=1748593539;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=YKqNURWS8n2g55ZrdJEWt/gjHie39zpHSbth/z2c/c4=;
+  b=N1ChtY+MSS33jplzjXDIVeMd7XoNBAA1Esgh/Kx8Jwnxp1wCajpJKR+i
+   mGeRqP3K5P0a/R0c9nsoUT3s1w0XOYsgqa+sK0BIv9WrHaXaFSOKHFB5w
+   VY9gzdVeq/WfkTyPCJXn0m6QpQ55M4kaVQroqHqvxg/j5rYTy6E7IiWSO
+   /jP50JJurzN3kmmLzIGsv7uQagUh1fBykKNQFw6BFF7ifeYD/hJTfwu9q
+   7+AhUHOblFXE3Lz6IPP7yiwzhTkd2YlqpOCP/JfNm635T5P5+j0JYvp4z
+   kaRmLsC3oJFY88agvA4FiRN3eehotmx8DW2rlxIua+O85Oqo/1Oc8pykh
+   w==;
+X-CSE-ConnectionGUID: EB5Dw9BUTmOXChRBrWTYPg==
+X-CSE-MsgGUID: xdA9UZNcTxivVjn4qEekDQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="17358450"
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="17358450"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 01:25:27 -0700
+X-CSE-ConnectionGUID: 2ClqADvBRt6M6ADjJgu1dw==
+X-CSE-MsgGUID: iXQlDffJQPW0rqXEQT8ZBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
+   d="scan'208";a="40183270"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.150])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 01:25:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 30 May 2024 11:25:16 +0300 (EEST)
+To: "Ng, Boon Khai" <boon.khai.ng@intel.com>
+cc: Andrew Lunn <andrew@lunn.ch>, 
+    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+    Jose Abreu <joabreu@synopsys.com>, 
+    "David S . Miller" <davem@davemloft.net>, 
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+    Paolo Abeni <pabeni@redhat.com>, 
+    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+    "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+    "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, 
+    "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "Ang, Tien Sung" <tien.sung.ang@intel.com>, 
+    "G Thomas, Rohan" <rohan.g.thomas@intel.com>, 
+    "Looi, Hong Aun" <hong.aun.looi@intel.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: RE: [Enable Designware XGMAC VLAN Stripping Feature v2 1/1] net:
+ stmmac: dwxgmac2: Add support for HW-accelerated VLAN Stripping
+In-Reply-To: <DM8PR11MB5751194374C75EC5D5889D6AC1F32@DM8PR11MB5751.namprd11.prod.outlook.com>
+Message-ID: <322d8745-7eae-4a68-4606-d9fdb19b4662@linux.intel.com>
+References: <20240527093339.30883-1-boon.khai.ng@intel.com> <20240527093339.30883-2-boon.khai.ng@intel.com> <48176576-e1d2-4c45-967a-91cabb982a21@lunn.ch> <DM8PR11MB5751469FAA2B01EB6CEB7B50C1F12@DM8PR11MB5751.namprd11.prod.outlook.com>
+ <48673551-cada-4194-865f-bc04c1e19c29@lunn.ch> <DM8PR11MB5751194374C75EC5D5889D6AC1F32@DM8PR11MB5751.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e6ae6dfa-6554-4e88-abb0-31dbbd8df03f@ti.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 30, 2024 at 11:06:40AM +0300, Nemanov, Michael wrote:
+On Thu, 30 May 2024, Ng, Boon Khai wrote:
+
+> > It is well know this driver is a mess. I just wanted to check you are not adding
+> > to be mess by simply cut/pasting rather than refactoring code.
 > 
-> On 5/28/2024 12:18 PM, Russell King (Oracle) wrote:
+> Okay sure Andrew, will take note on this.
 > 
-> [...]
+> > static void dwmac4_rx_hw_vlan(struct mac_device_info *hw,
+> >                               struct dma_desc *rx_desc, struct sk_buff *skb) {
+> >         if (hw->desc->get_rx_vlan_valid(rx_desc)) {
+> >                 u16 vid = hw->desc->get_rx_vlan_tci(rx_desc);
+> > 
+> >                 __vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q), vid);
+> >         }
+> > }
+> > 
+> > Looks identical to me.
 > 
-> >    static int wlcore_fw_status(struct wl1271 *wl, struct wl_fw_status *status)
-> >    {
-> > +	struct wl12xx_vif *wlvifsta;
-> > +	struct wl12xx_vif *wlvifap;
-> >    	struct wl12xx_vif *wlvif;
-> >    	u32 old_tx_blk_count = wl->tx_blocks_available;
-> >    	int avail, freed_blocks;
-> > @@ -410,23 +412,100 @@ static int wlcore_fw_status(struct wl1271 *wl, struct wl_fw_status *status)
-> >    		wl->tx_pkts_freed[i] = status->counters.tx_released_pkts[i];
-> >    	}
-> [...]
-> >    	for_each_set_bit(i, wl->links_map, wl->num_links) {
-> > +		u16 diff16, sec_pn16;
-> >    		u8 diff, tx_lnk_free_pkts;
+> Yes, some of the functions are identical, the driver has been divided 
+> into dwmac4_core.c and dwxgmac2_core.c initially, so to enable the
+> rx_hw_vlan, it is porting from dwmac4_core to dwxgmac2_core.
+>   
+> > The basic flow is the same. Lets look at the #defines:
+> > 
+> Right, the basic flow is direct copy and paste, and only the function
+> name is updated from dwmac4 to dwxgmac2.
+
+> > +static inline bool dwxgmac2_wrback_get_rx_vlan_valid(struct dma_desc
+> > +*p) {
+> > +	u32 et_lt;
 > > +
-> >    		lnk = &wl->links[i];
-> >    		/* prevent wrap-around in freed-packets counter */
-> >    		tx_lnk_free_pkts = status->counters.tx_lnk_free_pkts[i];
-> >    		diff = (tx_lnk_free_pkts - lnk->prev_freed_pkts) & 0xff;
-> > -		if (diff == 0)
-> > +		if (diff) {
-> > +			lnk->allocated_pkts -= diff;
-> > +			lnk->prev_freed_pkts = tx_lnk_free_pkts;
-> > +		}
+> > +	et_lt = FIELD_GET(XGMAC_RDES3_ET_LT, le32_to_cpu(p->des3));
 > > +
-> > +		/* Get the current sec_pn16 value if present */
-> > +		if (status->counters.tx_lnk_sec_pn16)
-> > +			sec_pn16 = __le16_to_cpu(status->counters.tx_lnk_sec_pn16[i]);
-> > +		else
-> > +			sec_pn16 = 0;
-> > +		/* prevent wrap-around in pn16 counter */
-> > +		diff16 = (sec_pn16 - lnk->prev_sec_pn16) & 0xffff;
-> > +
-> > +		/* FIXME: since free_pkts is a 8-bit counter of packets that
-> > +		 * rolls over, it can become zero. If it is zero, then we
-> > +		 * omit processing below. Is that really correct?
-> > +		 */
-> > +		if (tx_lnk_free_pkts <= 0)
-> >    			continue;
-> The original code was
->         tx_lnk_free_pkts = status->counters.tx_lnk_free_pkts[i];
->         diff = (tx_lnk_free_pkts - lnk->prev_freed_pkts) & 0xff;
+> > +	return et_lt >= XGMAC_ET_LT_VLAN_STAG &&
+> > +	       et_lt <= XGMAC_ET_LT_DVLAN_STAG_CTAG; }
+> > 
+> > static bool dwmac4_wrback_get_rx_vlan_valid(struct dma_desc *p) {
+> >         return ((le32_to_cpu(p->des3) & RDES3_LAST_DESCRIPTOR) &&
+> >                 (le32_to_cpu(p->des3) & RDES3_RDES0_VALID)); }
+> > 
+> > #define RDES3_RDES0_VALID		BIT(25)
+> > #define RDES3_LAST_DESCRIPTOR		BIT(28)
+> > 
+> > #define XGMAC_RDES3_ET_LT		GENMASK(19, 16)
+> > +#define XGMAC_ET_LT_VLAN_STAG		8
+> > +#define XGMAC_ET_LT_VLAN_CTAG		9
+> > +#define XGMAC_ET_LT_DVLAN_CTAG_CTAG	10
+> > 
+> > This does actually look different.
+> > 
 > 
->         if (diff == 0)
->             continue;
+> Yes, this is the part in the descriptor where dwxgmac2 get the vlan  Valid. 
+> it is described in Designware cores xgmac 10G Ethernet MAC version 3.10a
+> page 1573.
 > 
-> I wonder if comparing tx_lnk_free_pkts to 0 was added intentionally? This is
-> monotonously incremented counter so 0 is not significant, unlike the diff.
-> Have I missed something?
+> > Please take a step back and see if you can help clean up some of the mess in
+> > this driver by refactoring bits of identical code, rather than copy/pasting it.
+> > 
+> 
+> Appreciate if you could help to point out which part that I have to cleanup?
+> Do you mean I should combine the identical part between dwmac4_core.c
+> and dwxgmac2_core.c? or I should update the part that looks different and
+> make them the same?
 
-You are... While you're correct about the original code, your quote is
-somewhat incomplete.
+You should generalize the existing functions into some other file within 
+stmmac/ folder and call those functions from both dwmac4_core and dwxgmac2_core.
+Do the rework of existing function & callers first and add the new bits 
+in another patch in the patch series.
 
-+		if ( (isSta == true) && (i == wlvifSta->sta.hlid) && (test_bit(WLVIF_FLAG_STA_AUTHORIZED, &wlvifSta->flags)) && (status->counters.tx_lnk_free_pkts[i] > 0) )
-...
-+		}
- 
-+		if ( (isAp == true) && (test_bit(i, &wlvifAp->ap.sta_hlid_map[0])) && (test_bit(WLVIF_FLAG_AP_STARTED, &wlvifAp->flags)) && (wlvifAp->inconn_count == 0) && (status->counters.tx_lnk_free_pkts[i] > 0) )
-...
-+		}
- 	}
+Unfortunately, it's hard to catch copy-paste like this from other files 
+when not very familiar with the driver.
 
-Note that both of these if() conditions can only be executed if the final
-condition in each is true. Both check for the same thing, which is:
-
-		status->counters.tx_lnk_free_pkts[i] > 0
-
-In my patch, tx_lnk_free_pkts is status->counters.tx_lnk_free_pkts.
-
-Therefore, there is no point in evaluating either of these excessively
-long if() conditions in the original code when tx_lnk_free_pkts is
-less than zero or zero - and thus the logic between TI's original patch
-and my change is preserved.
-
-Whether that condition in the original patch is correct or not is the
-subject of that FIXME comment - I believe TI's code is incorrect, since
-it is possible that tx_lnk_free_pkts, which is a u8 that is incremented
-by the number of free packets, will hit zero at some point just as a
-matter of one extra packet being freed when the counter was 255.
-
-Moving it out of those two if() statements makes the issue very
-obvious. It would be nice to get a view from TI on whether the original
-patch is actually correct in this regard. I believe TI's original patch
-is buggy.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+ i.
+
