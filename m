@@ -1,112 +1,134 @@
-Received: from forward501c.mail.yandex.net (forward501c.mail.yandex.net [178.154.239.209])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D6013211A;
-	Thu, 30 May 2024 12:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AD18309F
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 12:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717072569; cv=none; b=r9TKcR4EHMdoAVyKDYoTHTQUXcWhaxtvFOhSnLhB7PKdHgsJQxx2d/nEvjFmccIHGL7/vt/nVUh43qEJFdRBfkFZMFUcTsSSVJ7DHSefd6Cxz7M3TyvozB7bUnTO9jKFNG5vCf/f+SAH1DVrj10d7JHaqCyYXufA41cTBXqzDjU=
+	t=1717072946; cv=none; b=dA9bvSXcElUqSv0QUVtApBXGs72Biz/41v9NxyMQSpGlW3hYkT1xXmp7InllxROf8uDmAqj9jUnifEY6/xkE6g6PCRKb3j47mlpObJ2e95gCTIKAqEA2TZ4wpodT3tiPftRmeKfgbsBkR5T4GR+5Pnz8dkIQLuD/3nU/iLNvRAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717072569; c=relaxed/simple;
-	bh=5Ji0Kp2+hJnYpSpWuVr2zcyBsx/hGA6s+ah+weCe7Z4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G7Y0T9FlLNgCqEneSX2vFahQuz1P7TxEqxv6hFE8M+59Vu2xTSPxMwwGG/XXnlXWUOL7psNofNPRGfZR+Futf8HLkf+8RckActO24eu05tDoZqPHoqEFzMuCBNGPpXMk4++CPRr/TO2piA+5RVcWjEiwx+uJ3bJOoQOpFt9MVA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=X/mOYUJ9; arc=none smtp.client-ip=178.154.239.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+	s=arc-20240116; t=1717072946; c=relaxed/simple;
+	bh=UDq5p7N8hM9ghkOXmyXukJe2Fcsshv8WO2RUv36WPVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B5ePolCXFBQpgRwonQGgedJXM82UFM6MmPuJ+53WsY5Z5F0om7BQJrO8wsmH8kJQIpcVvR/uiB7OFaegPoBSlMljwMf/P5qhb+HqEeHxaVV/OzzllCExGQFouiQAY+OB56hJOxglOcamxmJV2A90LjmP2KdR5/Af0eNEPPQLAtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b3KB5WVr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="X/mOYUJ9"
-Received: from mail-nwsmtp-smtp-production-main-17.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-17.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:aa0b:0:640:ea1a:0])
-	by forward501c.mail.yandex.net (Yandex) with ESMTPS id 3010B616B3;
-	Thu, 30 May 2024 15:29:55 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-17.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id qTRBQoRaw8c0-sarTMXQo;
-	Thu, 30 May 2024 15:29:54 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1717072194; bh=5Ji0Kp2+hJnYpSpWuVr2zcyBsx/hGA6s+ah+weCe7Z4=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=X/mOYUJ9i9hwX4dRZ6UQiUXVcp/vCS5joINqe0wnb29TYj71Be8TcWWHMtlv16gfe
-	 wws66E6vQ/D/6g6dIso194cfdcVvDdkSx6nw89hwvHH9s7+RThDd7LozLkZbc+PTn8
-	 F52byYvqsGJtJpaofOiV8qdSYTd+jPelxaHUnzn8=
-Authentication-Results: mail-nwsmtp-smtp-production-main-17.iva.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <137165ef56fe36ad6417adeebbd8ec89e72ea226.camel@maquefel.me>
-Subject: Re: [PATCH RESEND v2 0/4] DONOTMERGE: ep93xx-clk from ep93xx device
- tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette
- <mturquette@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linus Walleij
- <linus.walleij@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>,  Rob Herring <robh@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>
-Date: Thu, 30 May 2024 15:29:53 +0300
-In-Reply-To: <96df565e5821b5dc2b777cba21964d3c0c221983.camel@maquefel.me>
-References: <20240408-ep93xx-clk-v2-0-adcd68c13753@maquefel.me>
-	 <96df565e5821b5dc2b777cba21964d3c0c221983.camel@maquefel.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b3KB5WVr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717072943;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KfFTRNobR6w6r7ulB7ciYohd23NT6TT29URqx7b26wE=;
+	b=b3KB5WVreq7CNsty81IJgNKo4SZQ3xqIXj135SLkvgF7NweeDcVq55Xukn9ooVoqlvHkQW
+	abmGbKOuMYcoico6HKNvdtrDpx3uG2eGAeORUhFLr8/QHwLzD/xSfgNrY2RjiOA8+vUxsr
+	A3MbgDnA7nYKhkHNyaOJnNNu7RkR9jo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-340-8cajHHd6NdCJDfm7qoPCWg-1; Thu, 30 May 2024 08:42:21 -0400
+X-MC-Unique: 8cajHHd6NdCJDfm7qoPCWg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 937898008A4;
+	Thu, 30 May 2024 12:42:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.232])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 97E66286E;
+	Thu, 30 May 2024 12:42:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 30 May 2024 14:40:53 +0200 (CEST)
+Date: Thu, 30 May 2024 14:40:50 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tick/nohz_full: turn tick_do_timer_boot_cpu into
+ boot_cpu_is_nohz_full
+Message-ID: <20240530124032.GA26833@redhat.com>
+References: <20240522151742.GA10400@redhat.com>
+ <20240528122019.GA28794@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528122019.GA28794@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-SGVsbG8gU3RlcGhlbiEKCk9uIEZyaSwgMjAyNC0wNS0xNyBhdCAxMDozOSArMDMwMCwgTmlraXRh
-IFNodWJpbiB3cm90ZToKPiBIZWxsbyBTdGVwaGVuIQo+IAo+IEEgZ2VudGxlIHJlbWFpbmRlciwg
-Y2FuIGkgaG9wZSB5b3UnbGwgbG9vayBpbnRvIG15IGNoYW5nZXMgZm9yIHYyID8KCkNvdWxkIHlv
-dSBwbGVhc2UgbG9vayBpbnRvwqAiY2xrOiBlcDkzeHg6IGFkZCBEVCBzdXBwb3J0IGZvciBDaXJy
-dXMKRVA5M3h4IiA/CgpJdCdzIHRoZSBvbmx5IG9uZSB0aGF0IGhhcyBsZWZ0IG5vdCByZXZpZXdl
-ZC4KCj4gCj4gT24gTW9uLCAyMDI0LTA1LTA2IGF0IDEyOjQ5ICswMzAwLCBOaWtpdGEgU2h1Ymlu
-IHZpYSBCNCBSZWxheSB3cm90ZToKPiA+IFRoZSBnb2FsIGlzIHRvIHJlY2lldmUgQUNLcy4KPiA+
-IAo+ID4gVGhpcyBpcyBhIGZyYWN0aW9uIG9mIHY5ICJlcDkzeHggZGV2aWNlIHRyZWUgY29udmVy
-c2lvbiIgc2VyaWVzOgo+ID4gCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNDAz
-MjYtZXA5M3h4LXY5LTAtMTU2ZTJhZTVkZmM4QG1hcXVlZmVsLm1lLwo+ID4gCj4gPiBUaGUgY2xr
-IGRyaXZlciBmb3IgZXA5M3h4IHdhcyBjb252ZXJ0ZWQgdG8gQVVYIGRldmljZSwgYXMgc3VnZ2Vz
-dGVkCj4gPiBvcmlnaW5hbGx5IGJ5IFN0ZXBoZW4gQm95ZC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1i
-eTogTmlraXRhIFNodWJpbiA8bmlraXRhLnNodWJpbkBtYXF1ZWZlbC5tZT4KPiA+IC0tLQo+ID4g
-Q2hhbmdlcyBpbiB2MjoKPiA+IC0gc29jOiBBZGQgU29DIGRyaXZlciBmb3IgQ2lycnVzIGVwOTN4
-eDoKPiA+IMKgIC0gYWRkZWQgX19pbml0IGZvciBlcDkzeHhfYWRldl9hbGxvYygpLAo+ID4gZXA5
-M3h4X2NvbnRyb2xsZXJfcmVnaXN0ZXIoKQo+ID4gwqAgLSBhZGRlZCBzdGF0aWMsIF9faW5pdGNv
-bnN0IGZvciBwaW5jdHJsX25hbWVzW10KPiA+IMKgIC0gY2xrIHJldmlzaW9uIGZvciBTUEkgaXMg
-bm93IHJlc29sdmVkIGhlcmUgdGhyb3VnaCBkaWZmZXJlbnRseQo+ID4gbmFtZWQKPiA+IMKgwqDC
-oCBjbGsgZGV2aWNlCj4gPiDCoCAtIG1vcmUgdmVyYm9zZSBLY29uZmlnIGRlc2NyaXB0aW9uCj4g
-PiAKPiA+IMKgIE5PVEU6ICJvZiIgaW5jbHVkZXMgYXJlIHJlcXVpcmVkIHVuZm9ydHVuYXRlbHku
-Cj4gPiAKPiA+IC0gY2xrOiBlcDkzeHg6IGFkZCBEVCBzdXBwb3J0IGZvciBDaXJydXMgRVA5M3h4
-Ogo+ID4gwqAgLSBkcm9wcGVkIGluY2x1ZGVzCj4gPiDCoCAtIGRyb3BwZWQgZXA5M3h4X3NvY190
-YWJsZVtdCj4gPiDCoCAtIGFkZCBkaWZmZXJlbnQgbmFtZWQgY2xrIGFuZCBkcm9wcGVkIGludm9s
-dmVkIGluY2x1ZGVzCj4gPiDCoCAtIG1vdmVkIHBsbCdzIGFuZCBmY2xrLCBoY2xrLCBwY2xrIGlu
-aXQgdG8gc2VwYXJhdGUgZnVuY3Rpb24KPiA+IMKgIC0gZml4ZWQgZXA5M3h4X2Nsa19pZHNbXSBl
-eHBsaWNpdCBsaW5lcwo+ID4gCj4gPiDCoCBOT1RFOiBjbGtfaHdfcmVnaXN0ZXJfZGl2KCkgaXMg
-Y2xrLWVwOXh4IGludGVybmFsIGZ1bmN0aW9uIHdoaWNoCj4gPiB1c2VzCj4gPiDCoCBkZXZtLgo+
-ID4gCj4gPiAtLS0KPiA+IE5pa2l0YSBTaHViaW4gKDQpOgo+ID4gwqDCoMKgwqDCoCBBUk06IGVw
-OTN4eDogYWRkIHJlZ21hcCBhdXhfZGV2Cj4gPiDCoMKgwqDCoMKgIGNsazogZXA5M3h4OiBhZGQg
-RFQgc3VwcG9ydCBmb3IgQ2lycnVzIEVQOTN4eAo+ID4gwqDCoMKgwqDCoCBkdC1iaW5kaW5nczog
-c29jOiBBZGQgQ2lycnVzIEVQOTN4eAo+ID4gwqDCoMKgwqDCoCBzb2M6IEFkZCBTb0MgZHJpdmVy
-IGZvciBDaXJydXMgZXA5M3h4Cj4gPiAKPiA+IMKgLi4uL2JpbmRpbmdzL2FybS9jaXJydXMvY2ly
-cnVzLGVwOTMwMS55YW1swqDCoMKgwqDCoMKgwqDCoCB8wqAgMzggKwo+ID4gwqAuLi4vYmluZGlu
-Z3Mvc29jL2NpcnJ1cy9jaXJydXMsZXA5MzAxLXN5c2Nvbi55YW1swqAgfMKgIDk0ICsrKwo+ID4g
-wqBkcml2ZXJzL2Nsay9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgOCArCj4gPiDCoGRyaXZlcnMvY2xrL01h
-a2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHzCoMKgIDEgKwo+ID4gwqBkcml2ZXJzL2Nsay9jbGstZXA5M3h4LmPCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgODM0Cj4gPiAr
-KysrKysrKysrKysrKysrKysrKysKPiA+IMKgZHJpdmVycy9zb2MvS2NvbmZpZ8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKg
-IDEgKwo+ID4gwqBkcml2ZXJzL3NvYy9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCAxICsKPiA+IMKgZHJpdmVy
-cy9zb2MvY2lycnVzL0tjb25maWfCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgfMKgIDE3ICsKPiA+IMKgZHJpdmVycy9zb2MvY2lycnVzL01ha2VmaWxlwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCAyICsKPiA+
-IMKgZHJpdmVycy9zb2MvY2lycnVzL3NvYy1lcDkzeHguY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHwgMjUyICsrKysrKysKPiA+IMKgaW5jbHVkZS9kdC1iaW5kaW5ncy9j
-bG9jay9jaXJydXMsZXA5MzAxLXN5c2Nvbi5owqDCoCB8wqAgNDYgKysKPiA+IMKgaW5jbHVkZS9s
-aW51eC9zb2MvY2lycnVzL2VwOTN4eC5owqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCB8wqAgMjYgKwo+ID4gwqAxMiBmaWxlcyBjaGFuZ2VkLCAxMzIwIGluc2VydGlvbnMoKykKPiA+
-IC0tLQo+ID4gYmFzZS1jb21taXQ6IGZlYzUwZGI3MDMzZWE0Nzg3NzNiMTU5ZTBlMmVmYjEzNTI3
-MGUzYjcKPiA+IGNoYW5nZS1pZDogMjAyNDA0MDgtZXA5M3h4LWNsay02NTdhMTM1N2RlNjcKPiA+
-IAo+ID4gQmVzdCByZWdhcmRzLAo+IAoK
+We don't need to record the cpu number of the nohz_full boot CPU, a simple
+boolean is enough.
+
+We could even kill it along with #ifdef, the "else if" branch could check
+tick_nohz_full_cpu(tick_do_timer_cpu) && !tick_nohz_full_cpu(cpu).
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ kernel/time/tick-common.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
+
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 27d0018c8b05..9829a2cda072 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -49,15 +49,6 @@ ktime_t tick_next_period;
+  *    procedure also covers cpu hotplug.
+  */
+ int tick_do_timer_cpu __read_mostly = TICK_DO_TIMER_BOOT;
+-#ifdef CONFIG_NO_HZ_FULL
+-/*
+- * tick_do_timer_boot_cpu indicates the boot CPU temporarily owns
+- * tick_do_timer_cpu and it should be taken over by an eligible secondary
+- * when one comes online.
+- */
+-static int tick_do_timer_boot_cpu __read_mostly = -1;
+-#endif
+-
+ /*
+  * Debugging: see timer_list.c
+  */
+@@ -178,9 +169,13 @@ void tick_setup_periodic(struct clock_event_device *dev, int broadcast)
+ 	}
+ }
+ 
++#ifdef CONFIG_NO_HZ_FULL
+ /*
+- * Setup the tick device
++ * Iindicates that the boot CPU temporarily owns tick_do_timer_cpu.
+  */
++static bool boot_cpu_is_nohz_full __read_mostly;
++#endif
++
+ static void tick_setup_device(struct tick_device *td,
+ 			      struct clock_event_device *newdev, int cpu,
+ 			      const struct cpumask *cpumask)
+@@ -205,12 +200,9 @@ static void tick_setup_device(struct tick_device *td,
+ 			 * first housekeeping secondary will take do_timer()
+ 			 * from us.
+ 			 */
+-			if (tick_nohz_full_cpu(cpu))
+-				tick_do_timer_boot_cpu = cpu;
+-
+-		} else if (tick_do_timer_boot_cpu != -1 &&
+-						!tick_nohz_full_cpu(cpu)) {
+-			tick_do_timer_boot_cpu = -1;
++			boot_cpu_is_nohz_full = tick_nohz_full_cpu(cpu);
++		} else if (boot_cpu_is_nohz_full && !tick_nohz_full_cpu(cpu)) {
++			boot_cpu_is_nohz_full = false;
+ 			/*
+ 			 * The boot CPU will stay in periodic (NOHZ disabled)
+ 			 * mode until clocksource_done_booting() called after
+-- 
+2.25.1.362.g51ebf55
+
 
