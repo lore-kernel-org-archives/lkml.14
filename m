@@ -1,57 +1,57 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677FC1802B1;
-	Thu, 30 May 2024 22:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EAD184135;
+	Thu, 30 May 2024 22:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717108785; cv=none; b=pUgmO/QjtcVUxi+QPAz9vCEUbFoEkb7lzQ0vKGiREogxPMljjeI/BBhNGu1G+bto0lCnI4J6vKQ4ICPTi3ZjyglJFooi9J79zKsIM+mWeq8zLXgBR5u6iame5ZjDPEmTx6yf2MNh9liTspFlRR+jpEe++wjXDK6yFPKmXKsDobY=
+	t=1717108788; cv=none; b=aqQn0MNKcsP7Hd8AF0fFITpxYDNYTnaridjuBlrW3A/jXF9jcqOKC3R1MTCadCftk8uhdrV4Ini2y80SLuZAGmPu6W6WXAW2AjQCrt7FUVGv8eSUkLK1wtP5XC8Ixxc79Br9gsJ0HM25Pm2q6bWauxu+kbwpYQ2f5PAZ7Lb4Bho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717108785; c=relaxed/simple;
-	bh=ofGw7/Ge7WBz5qMYrDYoKIYc/M2oPcchQzIyC4hEIyA=;
+	s=arc-20240116; t=1717108788; c=relaxed/simple;
+	bh=ObfyRu7oiPBL1J7xJbM/pHFssCtum2gBV4H+0RGWvNw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QqKn0rZRASvNszsfc7BEApVfnqmwYyNTLKWGwh5XZnwAKfx7Sdyynk932RBz8y0KWoBtbc3ewUW4yhNdLlQCHd2FmfEepPHWcWVkZ6NxHeX5wWHZnEfYBQ2fozOpmHLvueYyAvCV065GJKUMK97hpcs3ydMJby5bpA1gldU8eTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mIFzCHa4; arc=none smtp.client-ip=209.85.210.171
+	 MIME-Version; b=JhFDSzKfK0DODNPtL7yTWX90PyVez/jXjQyFkk5G8AZZVt+J9RYI96a4ANvXZQPcsufyIfDFZckHj92U5vkfSlG4TQbi+BoquyxzfoblyVrEwgfVjRe2AISNF82le1LTemScHAmYT/CeEsYniyZsCKvLfWPeT8UmUjJ7TFlQhAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nGr8rYHP; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mIFzCHa4"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7023b6d810bso677145b3a.3;
-        Thu, 30 May 2024 15:39:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGr8rYHP"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7024426c75dso206594b3a.1;
+        Thu, 30 May 2024 15:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717108783; x=1717713583; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717108786; x=1717713586; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AsuGUamW29699gCC/95HWoSSeAKd2RQxA8flwqqR5aw=;
-        b=mIFzCHa4K0odrtrwxPZfofYTIAbYsMaXwFtsFVbgAZm3ahuY+b6+0ruy9gZJXPsKjV
-         eME1fSXbwQSKEMsxUfSreWgR7aP+RevWpBUOtUn8LcRZL5Q3S9EXiW/13O5tD8Jka32e
-         EIg7linulN5XtUmaNZqZjXN6tlJBESEUYeHZf6kgEyCgcDvNcZffSQycS7KUuqcwLpoV
-         8e2PqP0pSvW6hgYEUDo0fZu4c1dctMqTAookjVvCHrC0ElraBKX3Hn5JURyy/SnCgxAh
-         CdMxtimqZo4or8GjdsKkG2ysSu563EJcciAAcXe1rridRdKbmu/dKmFHoeLdIkVxVcG7
-         AO9A==
+        bh=RATLX8vwG5qFLWJv5e+WyDP7UKBpMbaga/mz8MYejto=;
+        b=nGr8rYHPAGJeG5NFK3wWdsisEj9FFzmssIwUu6rCHXot9GW+0tSbSytwGnELjbC8Wq
+         pEgZA63/muyMoQ0+4Al2pFX2+fXRiuz5A3J95+xR8TLBI3EwbNz6rT/cBZ0tlS4LIduN
+         dlHnNzFCHfASEEKkpDsNF4VUPoetxYerAFX7n7M0sSzkvcx4SZD4xyFQwg0osEUC58Fd
+         +upRhrTTUDwodXnTFxrwOeCbpg0NRWts/7w06t/6ya6ChVGQSUMJ6cJgES30MckrnJPS
+         rP4L3tV1Bp+o0buEK+CmBDcoaxB6zHOrwbWhr5FZHYbKd7ngYYsKbue77IhnuO9/ohIX
+         agEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717108783; x=1717713583;
+        d=1e100.net; s=20230601; t=1717108786; x=1717713586;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=AsuGUamW29699gCC/95HWoSSeAKd2RQxA8flwqqR5aw=;
-        b=G+ftxdHy3WOUbNUJxg5bO1nw8CRiWKJ7Z7yuRu90AOG3yw+h/WDhAJqxESapvIIcGV
-         jphIo4X+PPWfL8MweVmXLmo9Zr51f7tsJvvDWxGT9bS1JwWDgO0Fe5uOjSWlFgADlWbM
-         yVAU2EQsHYsGK0JQAaq0gnhLazuaAO2tFNIlzKJWg1tDZ62/j00L56gatP15vSmAuAdW
-         /bn3jmanBmxFK97b1GFQbXWQZMjh+1LFf4y2snLyHTTGKP88XdpvKYxqmgMVXynGm9/2
-         7uV35f0qJTFOt8T7pKztuorIet4i6n3Ip/RJYsdIccO2FjbzyoC3CKgA4cOdBLOwUM3R
-         Oqjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWcXYGX85BbX6YNpMjJqnpD/dclxUXtrg+t9XqQOrmb+T2h+hd0tWWDT6rseIYzDLeHM3ygpGHLVrIWueRz6SA4koRZ/QbhlkkiUIqo
-X-Gm-Message-State: AOJu0YxdffZO9e1MZApBkPslMfKk0JmsHUuPmSdaKH5kd4QGd5CN37dQ
-	AaeUsk/WMEMbVNSGS1TTPSbkiZ7iAUk60VDimBjmZNQHgLMXnJSw4anNMA==
-X-Google-Smtp-Source: AGHT+IHLkX6hrU59wyxmdEs1l16B3BWOYf1k4sF/C3RAMNiNqq5kc6iUwEevdIXBg8ucEPVmTJJUMw==
-X-Received: by 2002:a05:6a00:3cc4:b0:6ed:4a97:5dec with SMTP id d2e1a72fcca58-70247830606mr190592b3a.20.1717108783095;
-        Thu, 30 May 2024 15:39:43 -0700 (PDT)
+        bh=RATLX8vwG5qFLWJv5e+WyDP7UKBpMbaga/mz8MYejto=;
+        b=DpGKaBdVohRu1+NnnHca+RWQ1P9g5F8Cyal2tUJpIlJRfCaSgvSnHX4c9qteHkwyE2
+         E64MXCYYVz+2OA3Fd89Grn+5AwXc0zzhE70uCeYwxMf+ImgBymv3EFEULT07GBsQJsi6
+         4DJ/Tv9KR87Y1vOIMle8pcyHJCRy3XgMGc/4tGIiZIyMci4uSZMoVRzw7UnaC3kvfOu9
+         giq5p4F45QAby75kESwGcNTOWGsdkPLHM9EedxT1cSMMMVaZD3b+9uZCDxOJnipfCNUZ
+         b4+ED42D6wedGHc5Dh/HNfBHkeB7pFeYo6y8UgOqa/4c+cxvyTBHfQJaWR+kuNUHPwgA
+         i1ww==
+X-Forwarded-Encrypted: i=1; AJvYcCUIeFaHhZDQAB6qOW1+gXCE+PWE9DPbenmBf87TlX3X/eqQbk8xeDIbmkoLc8/GynaHTGFBeP9HpTHACdQMQjABRHnHHPLBO+TV9gKr
+X-Gm-Message-State: AOJu0YzTYcACUfYrdkpqG8/XeM+9vvTdyP/dFRs3WFbxvi7mCeVFJ9Rl
+	llsIOXAPJAR3gRWv12o3P+/g28bCWty+bg2iDE3/jcmbZ09yzfAu9Cw/dg==
+X-Google-Smtp-Source: AGHT+IHQl1iqObMs93tbh8ZmfFVhjQn1Q3y0D9ccbNyXE3ce9knFzqcgyPscYR3hQ4UIiXhKiCMP9g==
+X-Received: by 2002:a05:6a00:18a9:b0:6ea:b48a:f971 with SMTP id d2e1a72fcca58-702477bd92fmr255317b3a.2.1717108786156;
+        Thu, 30 May 2024 15:39:46 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c35937a4c5sm173576a12.68.2024.05.30.15.39.42
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702423cce7asm227776b3a.40.2024.05.30.15.39.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 15:39:42 -0700 (PDT)
+        Thu, 30 May 2024 15:39:45 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 From: Guenter Roeck <linux@roeck-us.net>
 To: linux-hwmon@vger.kernel.org
@@ -64,9 +64,9 @@ Cc: devicetree@vger.kernel.org,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	=?UTF-8?q?Ren=C3=A9=20Rebe?= <rene@exactcode.de>,
 	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2 1/3] dt-bindings: hwmon: jedec,spd5118: Add bindings
-Date: Thu, 30 May 2024 15:39:37 -0700
-Message-Id: <20240530223939.1027659-2-linux@roeck-us.net>
+Subject: [PATCH v2 3/3] hwmon: (spd5118) Add suspend/resume support
+Date: Thu, 30 May 2024 15:39:39 -0700
+Message-Id: <20240530223939.1027659-4-linux@roeck-us.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240530223939.1027659-1-linux@roeck-us.net>
 References: <20240530223939.1027659-1-linux@roeck-us.net>
@@ -78,70 +78,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add device tree bindings for the SPD hub present in DDR5 modules.
+Add suspend/resume support to ensure that limit and configuration
+registers are updated and synchronized after a suspend/resume cycle.
 
+Cc: Armin Wolf <W_Armin@gmx.de>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
-v2: Drop pec-enable property
+v2: New patch
 
- .../bindings/hwmon/jedec,spd5118.yaml         | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
+RFT: I tested the patch through a suspend/resume cycle, and it seems
+     to work, but I am not sure if that had any effect because,
+     after all, the memory is still active during suspend/resume.
+     I was unable to test a hibernation cycle with my system.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml b/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
-new file mode 100644
-index 000000000000..05c39f7083db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/jedec,spd5118.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/jedec,spd5118.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ drivers/hwmon/spd5118.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
+index 3c75964a0fba..ea807a77a4ee 100644
+--- a/drivers/hwmon/spd5118.c
++++ b/drivers/hwmon/spd5118.c
+@@ -20,6 +20,7 @@
+ #include <linux/i2c.h>
+ #include <linux/hwmon.h>
+ #include <linux/module.h>
++#include <linux/pm.h>
+ #include <linux/regmap.h>
+ #include <linux/units.h>
+ 
+@@ -432,6 +433,8 @@ static int spd5118_probe(struct i2c_client *client)
+ 	if (!spd5118_vendor_valid(bank, vendor))
+ 		return -ENODEV;
+ 
++	dev_set_drvdata(dev, regmap);
 +
-+title: JEDEC JESD300-5B (SPD5118) compatible DDR5 SPD hub
+ 	hwmon_dev = devm_hwmon_device_register_with_info(dev, "spd5118",
+ 							 regmap, &spd5118_chip_info,
+ 							 NULL);
+@@ -449,6 +452,31 @@ static int spd5118_probe(struct i2c_client *client)
+ 	return 0;
+ }
+ 
++static int spd5118_suspend(struct device *dev)
++{
++	struct regmap *regmap = dev_get_drvdata(dev);
 +
-+maintainers:
-+  - Guenter Roeck <linux@roeck-us.net>
++	regcache_cache_bypass(regmap, true);
++	regmap_update_bits(regmap, SPD5118_REG_TEMP_CONFIG, SPD5118_TS_DISABLE,
++			   SPD5118_TS_DISABLE);
++	regcache_cache_bypass(regmap, false);
 +
-+description: |
-+  JEDEC JESD300-5B.01 SPD5118 Hub and Serial Presence Detect
-+  https://www.jedec.org/standards-documents/docs/jesd300-5b01
++	regcache_cache_only(regmap, true);
++	regcache_mark_dirty(regmap);
 +
-+select:
-+  properties:
-+    compatible:
-+      const: jedec,spd5118
++	return 0;
++}
 +
-+  required:
-+    - compatible
-+    - reg
++static int spd5118_resume(struct device *dev)
++{
++	struct regmap *regmap = dev_get_drvdata(dev);
 +
-+properties:
-+  compatible:
-+    const: jedec,spd5118
++	regcache_cache_only(regmap, false);
++	return regcache_sync(regmap);
++}
 +
-+  reg:
-+    maxItems: 1
++static DEFINE_SIMPLE_DEV_PM_OPS(spd5118_pm_ops, spd5118_suspend, spd5118_resume);
 +
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        temp-sensor@51 {
-+            compatible = "jedec,spd5118";
-+            reg = <0x51>;
-+        };
-+    };
+ static const struct i2c_device_id spd5118_id[] = {
+ 	{ "spd5118", 0 },
+ 	{ }
+@@ -466,6 +494,7 @@ static struct i2c_driver spd5118_driver = {
+ 	.driver = {
+ 		.name	= "spd5118",
+ 		.of_match_table = spd5118_of_ids,
++		.pm = pm_sleep_ptr(&spd5118_pm_ops),
+ 	},
+ 	.probe		= spd5118_probe,
+ 	.id_table	= spd5118_id,
 -- 
 2.39.2
 
