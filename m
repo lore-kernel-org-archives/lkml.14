@@ -1,75 +1,132 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68917F504
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 15:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C247D187562;
+	Thu, 30 May 2024 15:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717083043; cv=none; b=FPf1wNqnVXCgc7Wd6DXNP57XUQ2UhvknZF1WY6pjvjPt2t28UoshtS2BEe90P8QDuobz+2AkM9JpGAOtr6dxkmHHwx90AmvjE0ZkTL5yX8sWEUAzJpClED8YqbECONSVt8pcaiyH0aewlth6QhPVaKADbbDlwphb9r2gOPcLLm4=
+	t=1717083146; cv=none; b=LJd7tfxkcFuLB/gUKnZECG0RLTVMixUjZz26iHKalX6qh1bNW4KBqdHy4zRDGf6MNBl+RbVbP5bzAshxhaV3GhGYasMSrWnO1yKa/NIPrj2Z/q639ShO79CqdnbFNMBZIpFHrH0+unRyJka4+xbByEwSwkLJdRu6ttzH2Q/b3Dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717083043; c=relaxed/simple;
-	bh=PhD8vfWQu0fzYUGcN9chnT6h1Jccukmikqwpa2qBXcI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=tTgZ6fJgjQ/fHvI6lATEPfMBUh+s61aIISDxgxQuI/yNWscM/xmlDdBaRqZXnRm3ouqoKgxKZUWU6zsfDJKjmioxb2nEpvvdBkkgonmA/gMY8qC+EbgbcHPJSWpz+/0xW+zi+HuRJeM3Agnma3s/rmMA+lgDX2uaxsMH5F1JEWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=eAjtpJHp; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1717083146; c=relaxed/simple;
+	bh=xU78c35cySFprEs0gAWdyzNuzHJJhmMy0Bc5xuRB+/4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=g7xEV6uQ391hqoURnNFkpzldNCPM8nvy2dNincREMCC81hkzsBPRiUux0FNr3LoUdIEWMP5CZU1d0nToFwRki1WfpaqGYxE/IDttsPT0Zg3KSZDk3FZwP4NP8KUDMk+3gmDv03CKMN+l0vEAbqsvow0gBhs0MgaK1+3UGvoyyqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bc3mevJp; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="eAjtpJHp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1717082428;
-	bh=PhD8vfWQu0fzYUGcN9chnT6h1Jccukmikqwpa2qBXcI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=eAjtpJHpJYbnCqofA59amrPyn/YQpj9C/4aetzSjTKpYPvskNwTir9HyzdZeaQx1B
-	 i21UfQmlqJ19Z4Bc4L0++cvGtJ2ZZ7Q3OiLvuuMUp0tz3KZ7IHkpu6KlrlE53OfD+Q
-	 b0YjszmZ3lxw6gKLDrGPev9L7nCmauH82W3TH4bM=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 41E0E40A77; Thu, 30 May 2024 08:20:28 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 41008401D5;
-	Thu, 30 May 2024 08:20:28 -0700 (PDT)
-Date: Thu, 30 May 2024 08:20:28 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Chengming Zhou <chengming.zhou@linux.dev>
-cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
-    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Vlastimil Babka <vbabka@suse.cz>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>, 
-    linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-    zhouchengming@bytedance.com
-Subject: Re: [PATCH 1/3] slab: check the return value of
- check_bytes_and_report()
-In-Reply-To: <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
-Message-ID: <4e4d45b5-c684-2d93-49d2-b179a088c2d5@gentwo.org>
-References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev> <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bc3mevJp"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44UFVLIh035363;
+	Thu, 30 May 2024 10:31:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717083081;
+	bh=U5EUOfv2mrP9qldUr1bHrOoxb/sZHG7SQL8d6HDZlBM=;
+	h=Date:Subject:From:To:CC:References:In-Reply-To;
+	b=Bc3mevJpy/5QCSBtAJAItZ+EAWKAFR+p10nDu9Yjm0hgqb4/HqwsZICaYOIuCfHkv
+	 VWdyrEX9HmqjFMoVWO4duSieEA3QLxdQZJOs+X6H+KtL04oYsNc8ZEpEZJnTtj2rRr
+	 6P1+a5t6BYIsZ87OeD16WBxyP9v9RWQXBXWbaNwk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44UFVLYm010838
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 30 May 2024 10:31:21 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
+ May 2024 10:31:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 30 May 2024 10:31:20 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44UFVK6Q118224;
+	Thu, 30 May 2024 10:31:20 -0500
+Message-ID: <223d9482-ede8-4f58-b11a-d82f2556c26b@ti.com>
+Date: Thu, 30 May 2024 10:31:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] arm64: defconfig: Enable TI eQEP Driver
+From: Judith Mendez <jm@ti.com>
+To: Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>
+CC: Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        David Lechner
+	<david@lechnology.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, Vignesh
+ Raghavendra <vigneshr@ti.com>
+References: <20240523231516.545085-1-jm@ti.com>
+ <20240523231516.545085-9-jm@ti.com>
+ <20240524055923.zyfthiwcsbwbjg5k@undecided>
+ <ddcab8c0-3772-4134-a3bb-27729e864627@ti.com>
+Content-Language: en-US
+In-Reply-To: <ddcab8c0-3772-4134-a3bb-27729e864627@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, 28 May 2024, Chengming Zhou wrote:
+Hi Nishanth,
 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0809760cf789..de57512734ac 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1324,9 +1324,10 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
-> 		}
-> 	} else {
-> 		if ((s->flags & SLAB_POISON) && s->object_size < s->inuse) {
-> -			check_bytes_and_report(s, slab, p, "Alignment padding",
-> +			if (!check_bytes_and_report(s, slab, p, "Alignment padding",
-> 				endobject, POISON_INUSE,
-> -				s->inuse - s->object_size);
-> +				s->inuse - s->object_size))
-> +				return 0;
-> 		}
-> 	}
+On 5/24/24 9:13 AM, Judith Mendez wrote:
+> Hi Nishanth,
+> 
+> On 5/24/24 12:59 AM, Nishanth Menon wrote:
+>> On 18:15-20240523, Judith Mendez wrote:
+>>> TI K3 SoC's support eQEP hardware, so enable TI eQEP driver
+>>> to be built as a module.
+>>
+>> All the nodes seem to be only in disabled mode, is there even a single
+>> board that is actually using this? if so, why isn't it enabled?
+> 
+> I will add pinmux and enable in the board level dts file.
 
-This change means we will then skip the rest of the checks in 
-check_object() such as the poison check.
+Question about the above... If I enable eQEP at the board level,
+there will be pinmux conflicts. So, I could:
+1. Leave eQEP disabled
+2. Enable eQEP and disable main_uart1 at the board level dts file
+3. Enable eQEP in an overlay and also disable main_uart1
+
+Let me know which option works for you.
+
+~ Judith
+
+> 
+>>
+>>>
+>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>> ---
+>>> Changes since v1:
+>>> - No change
+>>> ---
+>>>   arch/arm64/configs/defconfig | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>>> index 2c30d617e1802..23d11a1b20195 100644
+>>> --- a/arch/arm64/configs/defconfig
+>>> +++ b/arch/arm64/configs/defconfig
+>>> @@ -1593,6 +1593,7 @@ CONFIG_INTERCONNECT_QCOM_SM8550=y
+>>>   CONFIG_INTERCONNECT_QCOM_SM8650=y
+>>>   CONFIG_INTERCONNECT_QCOM_X1E80100=y
+>>>   CONFIG_COUNTER=m
+>>> +CONFIG_TI_EQEP=m
+>>>   CONFIG_RZ_MTU3_CNT=m
+>>>   CONFIG_HTE=y
+>>>   CONFIG_HTE_TEGRA194=y
+>>> -- 
+>>> 2.45.1
+>>>
+>>
+> 
+> 
+
