@@ -1,106 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680253BB2E;
-	Thu, 30 May 2024 17:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5204446421;
+	Thu, 30 May 2024 17:27:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089916; cv=none; b=QtJgeK0mxPDDv0/9dID8do9XJ6gI/87FdL7od1bu3hbcIJnQ0Jb8NZs0tMMnYtykwIBXVARSesyqVzwbH0NAbhpfJ9S5dkTwUdY4hwhB50zWPLK+DvTwQ6htL2uBs98xLHDRGiMAGen13M/J5H8DNM6AraYrFvptm/Eq9dKz1jg=
+	t=1717090072; cv=none; b=KHKvmAqnLiTZ4K44NaT8MjG5gUEpH31zruUA4aNuSk1P0QmGry3x3NQR5IlZZWA5p5UnFK+7tfQV8ZyQJulpED4vLwComjKR+COLV3LrH5lefpI6pwhiE4YnZK5swm6xeK8QQuMsDpc93U5bcCY2FGeUOILPEfq+l9yXg/i5ZQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089916; c=relaxed/simple;
-	bh=pboA1hBIpcHcKlGoMIXYiUxcorVrN0SMLl0WvkRYb4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CowjV3Dd8nrWlowTktB/te2uB+lsgr7q6KHi81Ft5Bvv6nXstbnkctn6vXukNwfB6HFT07hnAE+ox31exCHqCoh9fZ+XveXqnA2ntA166YB6F7EmARJnffsUShr1GBTF0T1ankCmWvD7iKf0Uq9TJpAm8n+ILmcR0Db7bvwuayg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQUhxd5P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717090072; c=relaxed/simple;
+	bh=EkqPzNjUDQoN8lPfXqwKVpp8+X0/wVz+5NkoJWj35ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Xb8isxAO6+HFq/qkT1WQeTJlTAvHwyN2xabtOEMpvIn/9HcBlat2ysBFOpuH55yu1W4b94EcfPLXeRWhJgVPm2FUUQ5OQNKMnFbFvpKZRusmJgvneTrz5cKNev30XlFTyPm+s+cmbPdLbUEvX/iae8FmE4nerf98t0HSTRtgfcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLERB+W8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQUhxd5P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19598C2BBFC;
-	Thu, 30 May 2024 17:25:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLERB+W8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AACBC2BBFC;
+	Thu, 30 May 2024 17:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717089916;
-	bh=pboA1hBIpcHcKlGoMIXYiUxcorVrN0SMLl0WvkRYb4E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lQUhxd5PNM/15CU7pteQgxbwJLw07SUIwItr650NQrDeK8ct+/gcsW/sdGtrUCVBz
-	 x4DyI0kc6lFyc7Lf7IiV61AnfNkxFYIMHVIQNK/9xbTLEnVnVBpA3lMTGxxKifmGu1
-	 IWnON8+LE08bPC1MY1OCRjic+qeYWVaqm5K7eiXZJq//Ti+FQ3yiCWn5kPUjTY3W0Y
-	 ypa9B+AUYPmi6Nm/IUFtpELH+6LvL66oRxHnBstPZkOcTas0F3Jb85qrMc/I68SD4x
-	 NzsQwQ5M2JL8jSS4kgtDK25CPZLDfblt3nIX/wgUDfqTehwGMZJ/8NqPwvdJCYP1F8
-	 JtYiTyu6tF1sg==
-Date: Thu, 30 May 2024 18:25:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	David Jander <david@protonic.nl>,
-	Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH RFC v2 1/8] spi: dt-bindings: spi-peripheral-props: add
- spi-offloads property
-Message-ID: <20240530-unaltered-thong-a6e52519f101@spud>
-References: <20240514-aspire-ascension-449556da3615@spud>
- <CAMknhBFFpEGcMoLo5gsC11Syv+CwUM0mnq1yDMUzL1uutUtB+Q@mail.gmail.com>
- <20240516-rudder-reburial-dcf300504c0a@spud>
- <CAMknhBF_s0btus4yqPe-T=F3z7Asi9KkRGsGr7FHDFi=k4EQjw@mail.gmail.com>
- <20240519-abreast-haziness-096a57ef57d3@spud>
- <CAMknhBHvEse2FyDoBXR1PvymGpSGq8dotKfm+8XH+0+k+xKtQw@mail.gmail.com>
- <20240522-gullible-ibuprofen-cf9111c25f6f@spud>
- <59df2cc3-5a62-45be-a0aa-5bbff13c2ae4@baylibre.com>
- <20240526-stylized-preaching-d0b15a95fe19@spud>
- <baa286ca-3388-4604-9bc3-233c1fc77c42@baylibre.com>
+	s=k20201202; t=1717090071;
+	bh=EkqPzNjUDQoN8lPfXqwKVpp8+X0/wVz+5NkoJWj35ko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lLERB+W86acD27TYDzKVQXQn1QMtGGWa3wwzsNOnVvZNcpsS+eXwViREODp86cbJI
+	 rSJe96C7mr2uk7xEx2WcAWaFri7i5u7e/PgmXIaWd19TSaJf9xcagmzCgg4hwS09kq
+	 hxySEa23v54kQxPNYOiJ7LK5ZMkwq+6ZXJTI8QFOcKQu0C4DdWnK57+kTEbnmPxQf2
+	 P1waAtfMiozVsWzyLACVBQ6mxVU6MSbvpz1d5y8ZWCELAxxSmkovDqU95WZ8fGpq2K
+	 KWa0Ny/gIzNGzi6NoZo+xzMnoiKxHlfpNyBJ4yfnEAYP0fweLpMy2hOamY7a0KRwEB
+	 MqR2BFyNUnTxQ==
+Date: Thu, 30 May 2024 12:27:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org, Jason Liu <jason.hui.liu@nxp.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v5 00/12] PCI: imx6: Fix\rename\clean up and add lut
+ information for imx95
+Message-ID: <20240530172749.GA552716@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nlIBklSo3KTqCWIO"
-Content-Disposition: inline
-In-Reply-To: <baa286ca-3388-4604-9bc3-233c1fc77c42@baylibre.com>
-
-
---nlIBklSo3KTqCWIO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZldDIabPAa7NEmDQ@lizhi-Precision-Tower-5810>
 
-On Wed, May 29, 2024 at 03:10:54PM -0500, David Lechner wrote:
-> On 5/26/24 10:45 AM, Conor Dooley wrote:
-> > On Thu, May 23, 2024 at 09:28:54AM -0500, David Lechner wrote:
->=20
->=20
-> >> * A is the one we need to figure out. I'm proposing that the PWM consu=
-mer
-> >>   should be whatever kind of composite device node we come up with that
-> >>   also solves the issue described below about where does the CRC check=
-er
-> >>   (or whatever) go. I think we are in agreement here at least on the p=
-oint
-> >>   that it doesn't belong in the SPI controller node?
-> >=20
-> > To be clear, you're saying that we agree that the CRC checker doesnt
-> > belong in the SPI controller node, right?
->=20
-> Yes.=20
+On Wed, May 29, 2024 at 11:00:49AM -0400, Frank Li wrote:
+> On Tue, May 28, 2024 at 05:31:36PM -0500, Bjorn Helgaas wrote:
+> > On Tue, May 28, 2024 at 03:39:13PM -0400, Frank Li wrote:
+> ...
 
-Okay, ye. We're on the same page then about that part.
+> > > Base on linux-pci/controller/imx
+> > 
+> > This applies cleanly to the pci/controller/gpio branch, which has some
+> > minor rework in pci-imx6.c.
+> > 
+> > When we apply this, I think we should do it on a a pci/controller/imx6
+> > branch that is based on "main" (v6.10-rc1).
+> > 
+> > I can resolve the conflicts with pci/controller/gpio when building
+> > pci/next.
+> 
+> Sorry, I forget update this. It should be base on linux-pci/next
+> (e3fca37312892122d73f8c5293c0d1cc8c34500b). 
 
+I prefer patches that are based on -rc1, i.e., the pci/main branch,
+not on the pci/next branch.
 
---nlIBklSo3KTqCWIO
-Content-Type: application/pgp-signature; name="signature.asc"
+If a series *requires* functionality that is already on a topic
+branch, you can base it on that branch instead of on pci/main.
 
------BEGIN PGP SIGNATURE-----
+This series happens to touch some of the same code as
+pci/controller/gpio, but it doesn't require those gpio changes, so it
+does not need to be based on pci/controller/gpio.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZli2dgAKCRB4tDGHoIJi
-0pjHAQCA1My+hayttX0Rfvpc9/Yovyg3HVsBE4YZTTK4+pNrmAEAlmsqE+T4GClt
-SZyq1aNDCiMpi/6NTsWEf1+r0blkpgI=
-=CHF9
------END PGP SIGNATURE-----
+Having this series based on pci/main means that if we update or drop
+the gpio branch for some reason, this series will still make sense.
 
---nlIBklSo3KTqCWIO--
+Bjorn
