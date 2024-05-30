@@ -1,106 +1,266 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC3D208A9;
-	Thu, 30 May 2024 16:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88D620DD2;
+	Thu, 30 May 2024 16:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717085436; cv=none; b=CHOqu3OHhKhgQVI4OMnowTUHKXtH7jvJvbSquOiGhyvrM1YzqU/inXWhdMQM6KkBG4FyKIfvyu3kPa/NLrB2syrAMfZ0JbfkY8bk31A9O2KswG5G3e66rl2erCjXT5+vnZ/ESt+nt/Bugds9cQOJjznuxCJVR498Z1jojzsEj8Y=
+	t=1717085585; cv=none; b=BPO2Gfo9tuL+RdzhWYjNZ301MsCZAJDmE8/RNY0LGAFk7HjkopuUzWJH5cddnTYeBG7KkwhPjkTxMhjL4yPIb3UVuwKTpIiQ0r0KjpsOK+Ub0ZVFhFehHeQhLveqGW4sahEH+R/raK5g4LPSsmBCnjooDSzbXMPJwOO26YtT8lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717085436; c=relaxed/simple;
-	bh=pHKPGCPjt2uo37SjoY0KRiP4a1Nwp/AhknKMdpsA6w8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pppIohFglAZAqm+vSuuvlw5yYYtpHkVwl/vs0HfhcqkljSUedlwr6j4RUeTIE462Kdx5gpTftou4FEUPcwctYwBkfVsXyXO4chSFiW3Wxuziuf2nbeO0apHsVKufe/i7qBQNKeQrn2/8mq5aUufQPaK33n28JXlWqMQi47dhc8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Z5QDZsOS; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1717085585; c=relaxed/simple;
+	bh=9IiQGWNiUF7+dAREDCz4G6Tx/dvE6Ah8nqWUgo5hX5U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=egA6dTlbx6YzdVv/EsUAjW235bWEt84PbKThzkf5TYPVDYviLnP/KndK6zFwvQxRVCZDmKfN+ajGMEIQJTWaGTKsyD6XDvL1gbXy3f0yLz+dLU+s4pkeoiBcc/bXUpT3lwYGHl8QOi6r/yrVyzXIn2RI5tmuRKLl+jUpRIYvLhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=lJwxWxGO; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Z5QDZsOS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RCLB+9a+QfL2sb9yKKFj5QeAyOgyBI8+hlOoPiVSjrE=; b=Z5QDZsOS1ARFi6l5H5n04kuyHE
-	4JdSXvF0ig2Ovj7RnQWzX5ZK2lzDG1+1tkWmA6GaMawx+vY1ca0J/RAPGgSmj3boER3hOwUcOVi0s
-	ADcOfzQwM50O9x9NfTbkJKp6/AGIEnPoidataPzTNMP5TgNmmXTE2wQPHbz+7q0BsyXADX6l/1u/3
-	dKpqtazhhMVcUss/iumrKrhjlE/Q8SVjlodLti4qjYGRcHgLVzrxeaQT/L6rJlY0zsaj2cis0/DUU
-	ioPw9lGTA4JKiIW5SGuR6ewBygc+RHfAWx0+E9lr0UHvkPVYOmUKV5wafaIJIWGfExNcBxU1zzwoG
-	zg9cONcw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:57056)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sCiMB-0007Zb-1D;
-	Thu, 30 May 2024 17:10:23 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sCiM9-0005HH-L4; Thu, 30 May 2024 17:10:21 +0100
-Date: Thu, 30 May 2024 17:10:21 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"dqfext@gmail.com" <dqfext@gmail.com>,
-	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"daniel@makrotopia.org" <daniel@makrotopia.org>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH net-next v5 4/5] net: phy: mediatek: Extend 1G TX/RX link
- pulse time
-Message-ID: <Zlik7TfUsOanlBMV@shell.armlinux.org.uk>
-References: <20240530034844.11176-1-SkyLake.Huang@mediatek.com>
- <20240530034844.11176-5-SkyLake.Huang@mediatek.com>
- <ZlhTtSHRVrjWO0KD@shell.armlinux.org.uk>
- <a6280b885cf1cffa845310e7e565e1dd7421dc66.camel@mediatek.com>
+	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="lJwxWxGO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
+  s=amazon201209; t=1717085584; x=1748621584;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hNuvAZtuVIi0V3AiB2H74/HiKZYSwDR+SkEuIWPH2Vg=;
+  b=lJwxWxGOTL88Rqsg1macOox4f+SJ1/Ps9vWKiuPBabUsLYuZ794+nzvc
+   PjgDqmoYEUz6+S2doTp6PkByYUEYgUKediG1heFNXdiLRP2823bDM2ucI
+   Swfse6RUaoGIu2xsRujcqdznZTZur8Hk4/I3vGoIyhOVNTaTQgMzPtM7H
+   8=;
+X-IronPort-AV: E=Sophos;i="6.08,201,1712620800"; 
+   d="scan'208";a="729387978"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 16:12:56 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:25690]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.23:2525] with esmtp (Farcaster)
+ id d04cab1d-b212-4b36-a5e5-f6bd3f0b265f; Thu, 30 May 2024 16:12:54 +0000 (UTC)
+X-Farcaster-Flow-ID: d04cab1d-b212-4b36-a5e5-f6bd3f0b265f
+Received: from EX19D007EUA003.ant.amazon.com (10.252.50.8) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 30 May 2024 16:12:54 +0000
+Received: from EX19MTAUWB001.ant.amazon.com (10.250.64.248) by
+ EX19D007EUA003.ant.amazon.com (10.252.50.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 30 May 2024 16:12:54 +0000
+Received: from dev-dsk-fgriffo-1c-69b51a13.eu-west-1.amazon.com
+ (10.13.244.152) by mail-relay.amazon.com (10.250.64.254) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28 via Frontend Transport; Thu, 30 May 2024 16:12:52 +0000
+From: Fred Griffoul <fgriffo@amazon.co.uk>
+To: <fgriffo@amazon.co.uk>
+CC: Alex Williamson <alex.williamson@redhat.com>, Kevin Tian
+	<kevin.tian@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, "Eric
+ Auger" <eric.auger@redhat.com>, Christian Brauner <brauner@kernel.org>, Ye
+ Bin <yebin10@huawei.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] vfio/pci: add msi interrupt affinity support
+Date: Thu, 30 May 2024 16:12:37 +0000
+Message-ID: <20240530161239.73245-1-fgriffo@amazon.co.uk>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6280b885cf1cffa845310e7e565e1dd7421dc66.camel@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain
 
-On Thu, May 30, 2024 at 04:01:08PM +0000, SkyLake Huang (黃啟澤) wrote:
-> I'm not going to handle timeout case here. If we can't detect
-> MTK_PHY_FINAL_SPEED_1000 in 1 second, let it go and we'll detect it
-> next round.
+The usual way to configure a device interrupt from userland is to write
+the /proc/irq/<irq>/smp_affinity or smp_affinity_list files. When using
+vfio to implement a device driver or a virtual machine monitor, this may
+not be ideal: the process managing the vfio device interrupts may not be
+granted root privilege, for security reasons. Thus it cannot directly
+control the interrupt affinity and has to rely on an external command.
 
-With this waiting up to one second for MTK_PHY_FINAL_SPEED_1000 to be
-set...
+This patch extends the VFIO_DEVICE_SET_IRQS ioctl() with a new data flag
+to specify the affinity of a vfio pci device interrupt.
 
-> > > +int mtk_gphy_cl22_read_status(struct phy_device *phydev)
-> > > +{
-> > > +int ret;
-> > > +
-> > > +ret = genphy_read_status(phydev);
-> > > +if (ret)
-> > > +return ret;
-> > > +
-> > > +if (phydev->autoneg == AUTONEG_ENABLE && !phydev-
-> > >autoneg_complete) {
+The affinity argument must be a subset of the process cpuset, otherwise
+an error -EPERM is returned.
 
-Are you sure you want this condition like this? When the link is down,
-and 1G speeds are being advertised, it means that you'll call
-extend_an_new_lp_cnt_limit(). If MTK_PHY_FINAL_SPEED_1000 doesn't get
-set, that'll take one second each and every time we poll the PHY for
-its status - which will be done while holding phydev->lock.
+The vfio_irq_set argument shall be set-up in the following way:
 
-This doesn't sound very good.
+- the 'flags' field have the new flag VFIO_IRQ_SET_DATA_AFFINITY set
+as well as VFIO_IRQ_SET_ACTION_TRIGGER.
 
+- the 'start' field is the device interrupt index. Only one interrupt
+can be configured per ioctl().
+
+- the variable-length array consists of one or more CPU index
+encoded as __u32, the number of entries in the array is specified in the
+'count' field.
+
+Signed-off-by: Fred Griffoul <fgriffo@amazon.co.uk>
+---
+ drivers/vfio/pci/vfio_pci_intrs.c | 52 +++++++++++++++++++++++++++++++
+ drivers/vfio/vfio_main.c          | 16 ++++++++--
+ include/uapi/linux/vfio.h         | 12 +++++--
+ 3 files changed, 76 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+index 8382c5834335..2b672e2164dc 100644
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -19,6 +19,7 @@
+ #include <linux/vfio.h>
+ #include <linux/wait.h>
+ #include <linux/slab.h>
++#include <linux/cpuset.h>
+ 
+ #include "vfio_pci_priv.h"
+ 
+@@ -675,6 +676,54 @@ static int vfio_pci_set_intx_trigger(struct vfio_pci_core_device *vdev,
+ 	return 0;
+ }
+ 
++static int vfio_pci_set_msi_affinity(struct vfio_pci_core_device *vdev,
++				     unsigned int ctx_index, unsigned int count,
++				     uint32_t *cpus)
++{
++	struct vfio_pci_irq_ctx *ctx;
++	cpumask_var_t allowed_mask;
++	cpumask_var_t irq_mask;
++	unsigned int i;
++	int err = 0;
++
++	ctx = vfio_irq_ctx_get(vdev, ctx_index);
++	if (!ctx)
++		return -EINVAL;
++
++	if (!alloc_cpumask_var(&allowed_mask, GFP_KERNEL))
++		return -ENOMEM;
++
++	if (!zalloc_cpumask_var(&irq_mask, GFP_KERNEL)) {
++		err = -ENOMEM;
++		goto finish;
++	}
++
++	cpuset_cpus_allowed(current, allowed_mask);
++
++	for (i = 0; i < count; i++) {
++		if (cpus[i] >= nr_cpumask_bits ||
++		    !cpumask_test_cpu(cpus[i], allowed_mask)) {
++			err = -EPERM;
++			goto finish2;
++		}
++		__cpumask_set_cpu(cpus[i], irq_mask);
++	}
++
++	/* need at least 1 online cpu in the mask */
++	if (!cpumask_intersects(irq_mask, cpu_online_mask)) {
++		err = -EPERM;
++		goto finish2;
++	}
++
++	err = irq_set_affinity(ctx->producer.irq, irq_mask);
++
++finish2:
++	free_cpumask_var(irq_mask);
++finish:
++	free_cpumask_var(allowed_mask);
++	return err;
++}
++
+ static int vfio_pci_set_msi_trigger(struct vfio_pci_core_device *vdev,
+ 				    unsigned index, unsigned start,
+ 				    unsigned count, uint32_t flags, void *data)
+@@ -691,6 +740,9 @@ static int vfio_pci_set_msi_trigger(struct vfio_pci_core_device *vdev,
+ 	if (!(irq_is(vdev, index) || is_irq_none(vdev)))
+ 		return -EINVAL;
+ 
++	if (flags & VFIO_IRQ_SET_DATA_AFFINITY)
++		return vfio_pci_set_msi_affinity(vdev, start, count, data);
++
+ 	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
+ 		int32_t *fds = data;
+ 		int ret;
+diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
+index e97d796a54fb..5469a6f85822 100644
+--- a/drivers/vfio/vfio_main.c
++++ b/drivers/vfio/vfio_main.c
+@@ -1489,7 +1489,6 @@ int vfio_set_irqs_validate_and_prepare(struct vfio_irq_set *hdr, int num_irqs,
+ 	minsz = offsetofend(struct vfio_irq_set, count);
+ 
+ 	if ((hdr->argsz < minsz) || (hdr->index >= max_irq_type) ||
+-	    (hdr->count >= (U32_MAX - hdr->start)) ||
+ 	    (hdr->flags & ~(VFIO_IRQ_SET_DATA_TYPE_MASK |
+ 				VFIO_IRQ_SET_ACTION_TYPE_MASK)))
+ 		return -EINVAL;
+@@ -1497,9 +1496,19 @@ int vfio_set_irqs_validate_and_prepare(struct vfio_irq_set *hdr, int num_irqs,
+ 	if (data_size)
+ 		*data_size = 0;
+ 
+-	if (hdr->start >= num_irqs || hdr->start + hdr->count > num_irqs)
++	if (hdr->start >= num_irqs)
+ 		return -EINVAL;
+ 
++	/* For DATA_AFFINITY count is the number of cpu index */
++	if (hdr->flags & VFIO_IRQ_SET_DATA_AFFINITY) {
++		if (hdr->count > nr_cpumask_bits)
++			return -EINVAL;
++	} else {
++		if ((hdr->count >= (U32_MAX - hdr->start)) ||
++		    (hdr->start + hdr->count > num_irqs))
++			return -EINVAL;
++	}
++
+ 	switch (hdr->flags & VFIO_IRQ_SET_DATA_TYPE_MASK) {
+ 	case VFIO_IRQ_SET_DATA_NONE:
+ 		size = 0;
+@@ -1510,6 +1519,9 @@ int vfio_set_irqs_validate_and_prepare(struct vfio_irq_set *hdr, int num_irqs,
+ 	case VFIO_IRQ_SET_DATA_EVENTFD:
+ 		size = sizeof(int32_t);
+ 		break;
++	case VFIO_IRQ_SET_DATA_AFFINITY:
++		size = sizeof(uint32_t);
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 2b68e6cdf190..af9405060401 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -548,7 +548,8 @@ struct vfio_irq_info {
+  *
+  * Set signaling, masking, and unmasking of interrupts.  Caller provides
+  * struct vfio_irq_set with all fields set.  'start' and 'count' indicate
+- * the range of subindexes being specified.
++ * the range of subindexes being specified, except for DATA_AFFINITY as
++ * explained below.
+  *
+  * The DATA flags specify the type of data provided.  If DATA_NONE, the
+  * operation performs the specified action immediately on the specified
+@@ -580,6 +581,11 @@ struct vfio_irq_info {
+  *
+  * Note that ACTION_[UN]MASK specify user->kernel signaling (irqfds) while
+  * ACTION_TRIGGER specifies kernel->user signaling.
++ *
++ * DATA_AFFINITY specifies the affinity for an interrupt vector. It must be set
++ * with ACTION_TRIGGER in 'flags'. The 'start' field is the device interrupt
++ * vector. The variable-length 'data' is an array of CPU index encoded as __u32,
++ * the number of entries in the array is given by the 'count' field.
+  */
+ struct vfio_irq_set {
+ 	__u32	argsz;
+@@ -587,6 +593,7 @@ struct vfio_irq_set {
+ #define VFIO_IRQ_SET_DATA_NONE		(1 << 0) /* Data not present */
+ #define VFIO_IRQ_SET_DATA_BOOL		(1 << 1) /* Data is bool (u8) */
+ #define VFIO_IRQ_SET_DATA_EVENTFD	(1 << 2) /* Data is eventfd (s32) */
++#define VFIO_IRQ_SET_DATA_AFFINITY	(1 << 6) /* Data is cpu index (u32) */
+ #define VFIO_IRQ_SET_ACTION_MASK	(1 << 3) /* Mask interrupt */
+ #define VFIO_IRQ_SET_ACTION_UNMASK	(1 << 4) /* Unmask interrupt */
+ #define VFIO_IRQ_SET_ACTION_TRIGGER	(1 << 5) /* Trigger interrupt */
+@@ -599,7 +606,8 @@ struct vfio_irq_set {
+ 
+ #define VFIO_IRQ_SET_DATA_TYPE_MASK	(VFIO_IRQ_SET_DATA_NONE | \
+ 					 VFIO_IRQ_SET_DATA_BOOL | \
+-					 VFIO_IRQ_SET_DATA_EVENTFD)
++					 VFIO_IRQ_SET_DATA_EVENTFD | \
++					 VFIO_IRQ_SET_DATA_AFFINITY)
+ #define VFIO_IRQ_SET_ACTION_TYPE_MASK	(VFIO_IRQ_SET_ACTION_MASK | \
+ 					 VFIO_IRQ_SET_ACTION_UNMASK | \
+ 					 VFIO_IRQ_SET_ACTION_TRIGGER)
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.40.1
+
