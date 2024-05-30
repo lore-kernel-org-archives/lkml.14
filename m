@@ -1,90 +1,130 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED749186E32;
-	Thu, 30 May 2024 14:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA23E186E49
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717077901; cv=none; b=JKzvPYIA1UySOmKe+6SSQ4FFklbjYyaZCBTzG/X7g8kcX9iVjElSn/lA9eR5nBurLAub06eYxu5BFel2hEVbVEBaHEu4cmOmi+bvFMpLp9V1OWQ1R3UpsvZTgfXGNFxf+7ZBZTo+RGCyHeYm1SQ/WZWgL+zAfgCtEtqxRSZ7tKQ=
+	t=1717077934; cv=none; b=Xw93MJ3BFVbakMx2oAlumy0IPUwsrYvx5b17vbf4Hmv+epf2MNj2b3fCQnp1KMG/3tXjplibFbuB4iFbNHf1c2Xz6Ncomx6npWB2azN7/Nbpy6vLGRjTOY+6q/tY7YJ4ujhmsoXiN1vXBjorL4aIc1s/KUsIzUgEqbDPDvrGYHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717077901; c=relaxed/simple;
-	bh=ABBWcpkh87HumHDzf2KDobuTBk2N1d8JJ4fjNpzoS1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sHV+3AYye6yIjEIc3FWeAPzlhCLFzPWd0ggAjBSbmQFPudXxD1nT2puL27aDjlaNSnygz15/UdhcsBXm/3MTn19x07SngXm0507BtsjWFnVU0dvHC4O9ZfQjUEgeskhCVtmgCsG2a4B9VCYMF8zkISEfMVthdViAjWf9V7P400c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HWamFT3x; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717077934; c=relaxed/simple;
+	bh=ESd0gNsxszqbQaloGtME7oCQ3PNGImKH+e9qTcBH1qk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JqXqQeAqqg3K/aoM0Ty7lhELz/b6XEomhajvzaRYjrIna7Y2fzoMbvj27sj6DbMklzFftwWRxzoGw5LgX7/Er8l1E3aV3ptZSI2oKgjHYm9KPUmmBYC7MfzJfhxrg1F0KctAEbxyAssAF2yu6eooxIpaVCtb86HIOR6W9qwVkLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L/B8RX2Y; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HWamFT3x"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9B66840E0192;
-	Thu, 30 May 2024 14:04:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YZgOyo_Wrz23; Thu, 30 May 2024 14:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717077886; bh=W8SfD8cqXYbhTm+gZa2gaKivt8VGV0aD4jBoQKBjeQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HWamFT3xq6BM3221ZEQ5AeSuK9RmAYRXxAiMHDnH8F8QEux7ofTHAQ0CleIMBVGPH
-	 uT0hmU9mT73sC7RTh62KfWMMn5/VUujUfykifGmXZU0+FdTOEb8AmwCPTlwjJmvyr8
-	 cty/2NijG9RvutLHRNtAM6l+AqJSAQRAau+DVkuk4S0CwlMCuDSDXaN6mqdAdrq70a
-	 PJJxN4BQoUd7B+2TAb1ftbxm8vq4kCsi8NmzDxkhotsFPOMqNPVhOTl5vhCZQHRt+C
-	 jiASZ8MLq4DsvveYmicZS4knEchxmvCrlYBmQvklRqZ5Srx5qa3B4bHbuQvw7sjIgL
-	 gPoGMnYl0dnPZ7VSMb4nVA3xWt34QlQEB5SJeFoKQa1qd4KoyVl78stg5Xe3UetYSc
-	 XsWxyyLnX4y3pB6yuv0bMm/IfAR3zZiyOA3Bf+7C7Jc62HyXIeQNxTccbKUYOaGNFj
-	 hWGlqoLDErmZk82oWuoZXnTyqCacLVtiAFTJmgkO40dyVtITuMzMSOotH4qUB/IriL
-	 vfxYiEPwVSmCTN60GBc3oRTtZW+h5ZWUuAiu3d9YamvFU6uYRC/AQs97EwzRqaSzZC
-	 eXwYAN4RkThJUdvJDIZZD+e5dNXD9fNpnVu2cqvEMngc6Amih3mW3gKBpYKmTEI5cQ
-	 bGoWI+oSLdMVaNmL0a0DuZ0U=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5F9E940E0177;
-	Thu, 30 May 2024 14:04:42 +0000 (UTC)
-Date: Thu, 30 May 2024 16:04:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Christian Heusel <christian@heusel.eu>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [tip: x86/urgent] x86/topology/amd: Evaluate SMT in CPUID leaf
- 0x8000001e only on family 0x17 and greater
-Message-ID: <20240530140436.GCZliHdFXy1VkMdgAP@fat_crate.local>
-References: <7skhx6mwe4hxiul64v6azhlxnokheorksqsdbp7qw6g2jduf6c@7b5pvomauugk>
- <171697474837.10875.6335609575452053884.tip-bot2@tip-bot2>
- <2gj2lkahha4wzyf2ol6xk2ermrmsxaklznrisixdg4m3ogzten@gbrtiyjebeup>
- <20240530085914.GAZlg_4lcZIaa83jVb@fat_crate.local>
- <xoof7q7s6gak5iyvp3x6lgksqlpmw6sfiqvyjqc53m7egrvuya@vb7w6uoq25w7>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/B8RX2Y"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a63036f2daaso97405266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717077931; x=1717682731; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ozNVAnxqE0lL+qF5HV2h+4/UhN7PSqlhKtJqHseh0HI=;
+        b=L/B8RX2YxSaggGp7tw6FdKibbb1unU3VPPON/2IXs3mh+d50C+Fs6Olj3BGQGD5L6q
+         /+38Nkwht8CgJhrrK4NZqszbRS0XqIy7lnEX8y28t6KB5wGKH7bFwYyyPLY0hJip9wlX
+         u2GWI2xeVoilzIsioojVNWS+ECDBzLr+CErKNjDMm/ms5IK+b5Vd4s+dfNWQ/He8Pykb
+         TAUvNL+U4Zu6JVBo6hwwywcE/s50PqlHsN9A5v6AdnQxvmZH/L7dw6HAWtl7wxwY1IxA
+         nsGT43SXv9v+CpJTwqXu5nKuym1H7+P81ND8iVhXqJbP0lZDsJyJ5XX2+BKyAeSr3jni
+         Xojg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717077931; x=1717682731;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ozNVAnxqE0lL+qF5HV2h+4/UhN7PSqlhKtJqHseh0HI=;
+        b=mJGnieRY2NOm2UAFVISzBV/Mu1QnJJzPcvcQfoSO6NSVslGOu3ER8F2ORIW/Sh/IEH
+         E1IJD55n45j8TZh3ovohZYIeiTPA0QG/GPxmEHRzzVFkzSQrK3XRXqMGP4TMqz86OSqA
+         wic4q6o7KW8oUEKSxIb1oAFyFpPoqo3UGKLQm9v7HCGyj+jmgKClh/UnpzgOBkZCJ1qC
+         8FkfUzJ74MUazZdj6wgHVK3i3R8xVoPuBsO8licpooJ0/rchJVn3ABnflyHDOn7zXr0f
+         94LcwxybAIIB08uCaGvCH6tCoAZd4resF5YntFcmuNIv3g6tmuDC5x9iqS2Co83Q7Qo/
+         SWEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVs79nfplZ5mpp6Dy3sUK7sdOuDiaAPYOrKtL56h25lVWgnj9fC/m/sNTRyhufC97KJct8kq7mfBo+aPZ5hMeomKiseFUDzP0H6abrE
+X-Gm-Message-State: AOJu0YzRrElQT6z5ux4k84553QQPlgZAQ+wX4yCCsT0W2abmMAMf18Vt
+	039+r1rcxFO3/s5FLuYVtyCQ27H/c3AJPoLbBtPOXOfeZ61L2MKIzcM5PYkuo+A=
+X-Google-Smtp-Source: AGHT+IF/EgUdnO2R7u5brYgNfOJ73YaN+O9YN+pDX7gvTyYiHIa/WTphpHtPpGYtAukA9aMRxwrvhw==
+X-Received: by 2002:a17:906:2550:b0:a66:7666:fc64 with SMTP id a640c23a62f3a-a667666ffcemr88422766b.4.1717077930807;
+        Thu, 30 May 2024 07:05:30 -0700 (PDT)
+Received: from [127.0.1.1] ([188.27.161.69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a663848c9aasm49630566b.207.2024.05.30.07.05.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 07:05:30 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Thu, 30 May 2024 17:05:24 +0300
+Subject: [PATCH] clk: qcom: gcc-x1e80100: Set parent rate for USB3 sec and
+ tert PHY pipe clks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <xoof7q7s6gak5iyvp3x6lgksqlpmw6sfiqvyjqc53m7egrvuya@vb7w6uoq25w7>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240530-x1e80100-clk-gcc-usb3-sec-tert-set-parent-rate-v1-1-7b2b04cad545@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAKOHWGYC/x2NwQrCMBAFf6Xs2YXdpAX1V8RDTF9rUGLZpFIo/
+ XeDt5nLzE4FllDo2u1k+KaSPrmJnjqKz5BncBqbkxPXy+CFN8VZVITj+8VzjLyWh+eCyBVWG1R
+ egiFXtlDBvZNwgVP1o1KLLoYpbf/h7X4cPxJIJf+AAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1259; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=ESd0gNsxszqbQaloGtME7oCQ3PNGImKH+e9qTcBH1qk=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmWIel1xURmFNij+ie/FjjZdjHt5Q7HW7elDTa7
+ lANeTceYDSJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZliHpQAKCRAbX0TJAJUV
+ VnMiEACLXvkhX7K/Kz112drtLnDhAMbNb6HDLeh++fS2QCXs9qI+bIjcbdPR6/30p/LtLiLWIJb
+ cNK46wGJVKbF2oXJlCr4ESUl0lbRlFXM5RRafqQl8DUWiFpYkRDkqpDa3l3nSf+ola7xybzXgsY
+ F5V7jgqIRTeYb4HjYsJ/3TB+YLEgejcaVhksIHEbi2Nk8Cczc0X4M9TkJYWl2oRg7frJtffiC2K
+ VJAbg3WTVGwFP0a/cUK9AEqaAWLHfD4z8gk8qZDHylXYu0vbC5wtb58lpmfXTB8v3hws6qJR9H8
+ O6aqeWGh8Y/L+4+O+cwtKri95vnQEmRPsTUoQrqi2SA/qhEGfTH4uctL4HXkmgLHh9HJMp6Vs5Y
+ GOyiB8b8PhFXXV3W3S42oGLE194Pq/kBlNI3gWhM8a12+SUfwIwAtwrfgmEWm7E3gC12+rNLAhg
+ oHqyu7C0FyXM4Bm1fM7y5WWNGdbL8tpPUQBxc6OmWe5DzwGHKTwzZL2XtNAUemLc7uGrwCimIFa
+ +2dmQChazyn6oDAWyUQ8MeUOJE+jRWOwGfY+oFUOm1NpeTr0TKdXRpgosj1/eUdKjkkmtmsn4xt
+ w6YLx9za4BQJKWqHIcGMX++JtUCMcrJJe+CnkZG5vp54+8ENcD/LNr13FAE1Jx/b0BIxgrdZbyl
+ zWF9Hj8ix0ZoohQ==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-On Thu, May 30, 2024 at 02:21:28PM +0200, Christian Heusel wrote:
-> Sounds good! I thought it was a thing because I saw it used in a few
-> places, i.e. here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27
+Allow the USB3 second and third GCC PHY pipe clocks to propagate the
+rate to the pipe clocks provided by the QMP combo PHYs. The first
+instance is already doing that.
 
-Yeah, I'm polling internally whether we should add this new tag. But
-Reported-by pretty much does it...
+Fixes: ("161b7c401f4b clk: qcom: Add Global Clock controller (GCC) driver for X1E80100")
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+ drivers/clk/qcom/gcc-x1e80100.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> I'll keep it in mind for future bug reports! :)
-> 
-> Have a nice week,
+diff --git a/drivers/clk/qcom/gcc-x1e80100.c b/drivers/clk/qcom/gcc-x1e80100.c
+index 1404017be918..8c72fdc99fd9 100644
+--- a/drivers/clk/qcom/gcc-x1e80100.c
++++ b/drivers/clk/qcom/gcc-x1e80100.c
+@@ -5269,6 +5269,7 @@ static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
+ 				&gcc_usb3_sec_phy_pipe_clk_src.clkr.hw,
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -5339,6 +5340,7 @@ static struct clk_branch gcc_usb3_tert_phy_pipe_clk = {
+ 				&gcc_usb3_tert_phy_pipe_clk_src.clkr.hw,
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
 
-Thanks and ditto. :-)
+---
+base-commit: 9d99040b1bc8dbf385a8aa535e9efcdf94466e19
+change-id: 20240530-x1e80100-clk-gcc-usb3-sec-tert-set-parent-rate-420a9e2113d1
 
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Abel Vesa <abel.vesa@linaro.org>
 
-https://people.kernel.org/tglx/notes-about-netiquette
