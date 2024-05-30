@@ -1,421 +1,101 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0870183971;
-	Thu, 30 May 2024 09:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2416F301
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717060889; cv=none; b=PM+yIkoUalI8UQzs8tlo2NdpmxSuod6pnCtmIzXASEnxq2TJnnkA/ZIyPd2Q+pTR4u+F9oT8U4bMkB+8bUccLcI5b3RGrXekqsEqdcFNOeovROfMniZJ9RgeO3hR49WSuDfSyVJgGNXgIY56G6EvH1fQ9el6YfJEtHaGV6/3juc=
+	t=1717060909; cv=none; b=cd7CXJcN2sHBoM9KHXpPIjtXTys34B+RQpWrE31ZU23d4kg9IeC+UAybkss5uSfio//WnfvDZLVaUu5aVcuP6eOStaV32xabiiwXFezP9vx8VJNAmjHozyrOE0d1tyA5gALuYadJxHRIGHbwGa5/6+6eMjYjqts8NpYs7ihEKww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717060889; c=relaxed/simple;
-	bh=WyJ8/AA8xtDaG+uv7jk8HpbPR3mDB7JxK6qcLYPk1QU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dKBGx3txC0aWBT9QD6jVuHMP/fMJqCDzVVyNz5z2Yf1SVsTvVsGsu1goRTc4+pyws8p7zXoEqSHdT3mi+mGB8f8yJx9alev5qe9kRfnDpGygfd06S3WKygvR8LBNckUEtYfC6EnVjeukWETnChOfsGWpw+Ct7PwSxIVpLQpH03E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.08,199,1712588400"; 
-   d="asc'?scan'208";a="206163612"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 30 May 2024 18:21:23 +0900
-Received: from [10.226.92.79] (unknown [10.226.92.79])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1697C400F2CC;
-	Thu, 30 May 2024 18:21:18 +0900 (JST)
-Message-ID: <e7cf9dd8-9c67-476b-a892-b8dbe9312c4c@bp.renesas.com>
-Date: Thu, 30 May 2024 10:21:16 +0100
+	s=arc-20240116; t=1717060909; c=relaxed/simple;
+	bh=LOuk5ngQgDvwGWmTqF8UHa1uZEIcOdoIOKhJeBC24z0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oYA6Ey/cb52ZKuBRr+uXnJ+CodBDTwfZI3+sxDVYiZ/XwlbBelKhomv6+RgKev5eeQKl30/VJ7O7frseKPFHy8FuY+U8FBM1tRzw58dKldJnUCgKq2J1KS07z4mcnAziTlHH98sJND3Wj5P6j8gAWHJvP36dO/+jqhbgcsTTYG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=C1N+N03H; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="C1N+N03H"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42017f8de7aso6563115e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717060906; x=1717665706; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J2NdMUTFKCND4TuQAML2rnvjKT/jKwjKz+oofuCTZRU=;
+        b=C1N+N03HSClTf7HDAbAg03esAG0+Hm8TAvrIXn0xEH5owaeDI0RbU8q4kXwKvam6YH
+         6rJ25m5X9RKo1K1EwEidkD4JpcmHehhR3FabH2EOxdr7aBtp/vEiD0wzYkrgcO4HSGRA
+         gKvs/fZ1Cf+zJJDnvOLovhlC9TwqeK0vtppkz6ArotbeipU1Am/gsSuBZIpOnLIYZcPz
+         Yx2squZ9tT4c9XLq1T1swEm9+fYB6X7re+6inPYBToqzoiuiJuDx5PFCMiw5St/bhrbm
+         yygowueKgj/KrRX7pqC55WDPsqKeiAWcESt0Xy6l3iKjpZxqM/OasJU/xJWUpVoVw6V/
+         qsYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717060906; x=1717665706;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J2NdMUTFKCND4TuQAML2rnvjKT/jKwjKz+oofuCTZRU=;
+        b=GSZRVsXsSDbBY9PFW/vTcpItX9+nA/FXWr2kVVkxsX8erNgsVsmW4VPCUge/6eQPkl
+         Ik3qVqwnptWD/KwduIbBXGv4LaAP+czqfsrZAdM4ZSPjDjKYHQeC4fBJNcS9awl2bYIK
+         sQr1M/5n8eeOBku7MX1kJv6Xas6FNgNDj3eyhOQIXBwMlyYU3iPm5O5fLYEgUdiW9TUk
+         4XWCQCCD91taelc5ZwKTv2R5HAghqfMCO/6g3jsHN0wvaIpWpr3A2TINLtCMa9L62Vmq
+         3OKuBPf9Bcqaxpvic8Fi0lm+WOJ37BHGqY5pSKYWZSRXTgzB5sV4ikisslAWidLVPQyh
+         M75w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRwrua/zV2UXA3edyQICIv7JwWJ6lwsHldxduaC3bKtTxfLJZR5CRzRjfLGm38LYovXaO0Ikqy/YTt6hhgcIrKDoA7T85JhNk3ja25
+X-Gm-Message-State: AOJu0YwxMOMzT9P9poMlbnRKLuDFyxq+dxOSsJbwCESlOzvR85B2bsc0
+	w1RAqpqxJHDyUXdlZMba8XuApwyge0hsJIB/SEaQXU54QXNYdVzUvEtcSKvqVsg=
+X-Google-Smtp-Source: AGHT+IGvEkCdARfpYJn7j9uuA7yNxUbgpb8AAl+3ZNngODEN/Wqw/TiTEIYw1nqx7Q6osL9EIgQc7Q==
+X-Received: by 2002:a05:600c:154f:b0:421:b79:93fd with SMTP id 5b1f17b1804b1-4212781b4a7mr13857215e9.21.1717060905592;
+        Thu, 30 May 2024 02:21:45 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:aae:8a32:91fa:6bf5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706c46fsm19043935e9.28.2024.05.30.02.21.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 02:21:45 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Baryshkov <dbaryshkov@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] gpio: amd8111: Convert PCIBIOS_* return codes to errnos
+Date: Thu, 30 May 2024 11:21:43 +0200
+Message-ID: <171706089866.32720.4484394923188699673.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com>
+References: <20240527132345.13956-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next PATCH v4 7/7] net: ravb: Allocate RX buffers via page
- pool
-To: Sergey Shtylyov <s.shtylyov@omp.ru>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
- <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
- <eefce0af-2771-a56c-753d-85fe991fdf31@omp.ru>
-Content-Language: en-GB
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-Organization: Renesas Electronics Corporation
-In-Reply-To: <eefce0af-2771-a56c-753d-85fe991fdf31@omp.ru>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------NduQAJmKJW5S98p94IasMcFk"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------NduQAJmKJW5S98p94IasMcFk
-Content-Type: multipart/mixed; boundary="------------tT627k6zk8L9vxPOpFEzDnM7";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
- netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <e7cf9dd8-9c67-476b-a892-b8dbe9312c4c@bp.renesas.com>
-Subject: Re: [net-next PATCH v4 7/7] net: ravb: Allocate RX buffers via page
- pool
-References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
- <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
- <eefce0af-2771-a56c-753d-85fe991fdf31@omp.ru>
-In-Reply-To: <eefce0af-2771-a56c-753d-85fe991fdf31@omp.ru>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---------------tT627k6zk8L9vxPOpFEzDnM7
-Content-Type: multipart/mixed; boundary="------------gYXoYI3vxxKEXotyQaJdbFVX"
 
---------------gYXoYI3vxxKEXotyQaJdbFVX
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 29/05/2024 21:52, Sergey Shtylyov wrote:
-> On 5/28/24 6:03 PM, Paul Barker wrote:
->=20
->> This patch makes multiple changes that can't be separated:
->>
->>   1) Allocate plain RX buffers via a page pool instead of allocating
->>      SKBs, then use build_skb() when a packet is received.
->>   2) For GbEth IP, reduce the RX buffer size to 2kB.
->>   3) For GbEth IP, merge packets which span more than one RX descripto=
-r
->>      as SKB fragments instead of copying data.
->>
->> Implementing (1) without (2) would require the use of an order-1 page
->> pool (instead of an order-0 page pool split into page fragments) for
->> GbEth.
->>
->> Implementing (2) without (3) would leave us no space to re-assemble
->> packets which span more than one RX descriptor.
->>
->> Implementing (3) without (1) would not be possible as the network stac=
-k
->> expects to use put_page() or page_pool_put_page() to free SKB fragment=
-s
->> after an SKB is consumed.
->>
->> RX checksum offload support is adjusted to handle both linear and
->> nonlinear (fragmented) packets.
->>
->> This patch gives the following improvements during testing with iperf3=
-=2E
->>
->>   * RZ/G2L:
->>     * TCP RX: same bandwidth at -43% CPU load (70% -> 40%)
->>     * UDP RX: same bandwidth at -17% CPU load (88% -> 74%)
->>
->>   * RZ/G2UL:
->>     * TCP RX: +30% bandwidth (726Mbps -> 941Mbps)
->>     * UDP RX: +417% bandwidth (108Mbps -> 558Mbps)
->>
->>   * RZ/G3S:
->>     * TCP RX: +64% bandwidth (562Mbps -> 920Mbps)
->>     * UDP RX: +420% bandwidth (90Mbps -> 468Mbps)
->>
->>   * RZ/Five:
->>     * TCP RX: +217% bandwidth (145Mbps -> 459Mbps)
->>     * UDP RX: +470% bandwidth (20Mbps -> 114Mbps)
->>
->> There is no significant impact on bandwidth or CPU load in testing on
->> RZ/G2H or R-Car M3N.
->>
->> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
->> ---
->> Changes v3->v4:
->>   * Used a separate page pool for each RX queue.
->>   * Passed struct ravb_rx_desc to ravb_alloc_rx_buffer() so that we ca=
-n
->>     simplify the calling function.
->>   * Explained the calculation of rx_desc->ds_cc.
->>   * Added handling of nonlinear SKBs in ravb_rx_csum_gbeth().
->>
->>  drivers/net/ethernet/renesas/ravb.h      |  10 +-
->>  drivers/net/ethernet/renesas/ravb_main.c | 230 ++++++++++++++--------=
--
->>  2 files changed, 146 insertions(+), 94 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/etherne=
-t/renesas/ravb.h
->> index 6a7aa7dd17e6..f2091a17fcf7 100644
->> --- a/drivers/net/ethernet/renesas/ravb.h
->> +++ b/drivers/net/ethernet/renesas/ravb.h
-> [...]> @@ -1094,7 +1099,8 @@ struct ravb_private {
->>  	struct ravb_tx_desc *tx_ring[NUM_TX_QUEUE];
->>  	void *tx_align[NUM_TX_QUEUE];
->>  	struct sk_buff *rx_1st_skb;
->> -	struct sk_buff **rx_skb[NUM_RX_QUEUE];
->> +	struct page_pool *rx_pool[NUM_RX_QUEUE];
->=20
->    Don't we need #include <net/page_pool/types.h>
-
-Yes. I got away with it as ravb_main.c includes
-<net/page_pool/helpers.h> before including "ravb.h", but the header
-shouldn't assume that.
-
->=20
+On Mon, 27 May 2024 16:23:44 +0300, Ilpo Järvinen wrote:
+> amd_gpio_init() uses pci_read_config_dword() that returns PCIBIOS_*
+> codes. The return code is then returned as is but amd_gpio_init() is
+> a module init function that should return normal errnos.
+> 
+> Convert PCIBIOS_* returns code using pcibios_err_to_errno() into normal
+> errno before returning it from amd_gpio_init().
+> 
 > [...]
->> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/et=
-hernet/renesas/ravb_main.c
->> index dd92f074881a..bb7f7d44be6e 100644
->> --- a/drivers/net/ethernet/renesas/ravb_main.c
->> +++ b/drivers/net/ethernet/renesas/ravb_main.c
-> [...]
->> @@ -317,35 +289,56 @@ static void ravb_ring_free(struct net_device *nd=
-ev, int q)
->>  	priv->tx_skb[q] =3D NULL;
->>  }
->> =20
->> +static int
->> +ravb_alloc_rx_buffer(struct net_device *ndev, int q, u32 entry, gfp_t=
- gfp_mask,
->> +		     struct ravb_rx_desc *rx_desc)
->> +{
->> +	struct ravb_private *priv =3D netdev_priv(ndev);
->> +	const struct ravb_hw_info *info =3D priv->info;
->> +	struct ravb_rx_buffer *rx_buff =3D &priv->rx_buffers[q][entry];
->> +	dma_addr_t dma_addr;
->> +	unsigned int size;
->> +
->> +	size =3D info->rx_buffer_size;
->> +	rx_buff->page =3D page_pool_alloc(priv->rx_pool[q], &rx_buff->offset=
-, &size,
->> +					gfp_mask);
->> +	if (unlikely(!rx_buff->page)) {
->> +		/* We just set the data size to 0 for a failed mapping
->> +		 * which should prevent DMA from happening...
->> +		 */
->> +		rx_desc->ds_cc =3D cpu_to_le16(0);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	dma_addr =3D page_pool_get_dma_addr(rx_buff->page) + rx_buff->offset=
-;
->> +	dma_sync_single_for_device(ndev->dev.parent, dma_addr,
->> +				   info->rx_buffer_size, DMA_FROM_DEVICE);
->=20
->    Do we really need this call?
 
-Looking at .config I see CONFIG_DMA_NEED_SYNC=3Dy so yes I think this is
-needed.
+Applied, thanks!
 
->=20
->> +	rx_desc->dptr =3D cpu_to_le32(dma_addr);
->> +
->> +	/* The end of the RX buffer is used to store skb shared data, so we =
-need
->> +	 * to ensure that the hardware leaves enough space for this.
->> +	 */
->> +	rx_desc->ds_cc =3D cpu_to_le16(info->rx_buffer_size
->> +				     - SKB_DATA_ALIGN(sizeof(struct skb_shared_info))
->=20
->    Please leave the - operator on the previous line...
+[1/2] gpio: amd8111: Convert PCIBIOS_* return codes to errnos
+      commit: d4cde6e42f2eb56436cab6d1931738ec09e64f74
+[2/2] gpio: rdc321x: Convert PCIBIOS_* return codes to errnos
+      commit: 9a73e037f4b5eb45c9ecccb191d39c280abe7cbd
 
-Ack.
-
->=20
->> +				     - ETH_FCS_LEN + sizeof(__sum16));
->=20
->    Here as well...
-
-Ack.
-
->=20
->> +	return 0;
->> +}
->> +
->>  static u32
->>  ravb_rx_ring_refill(struct net_device *ndev, int q, u32 count, gfp_t =
-gfp_mask)
->>  {
->>  	struct ravb_private *priv =3D netdev_priv(ndev);
->> -	const struct ravb_hw_info *info =3D priv->info;
->>  	struct ravb_rx_desc *rx_desc;
->> -	dma_addr_t dma_addr;
->>  	u32 i, entry;
->> =20
->>  	for (i =3D 0; i < count; i++) {
->>  		entry =3D (priv->dirty_rx[q] + i) % priv->num_rx_ring[q];
->>  		rx_desc =3D ravb_rx_get_desc(priv, q, entry);
->> -		rx_desc->ds_cc =3D cpu_to_le16(info->rx_max_desc_use);
->> =20
->> -		if (!priv->rx_skb[q][entry]) {
->> -			priv->rx_skb[q][entry] =3D ravb_alloc_skb(ndev, info, gfp_mask);
->> -			if (!priv->rx_skb[q][entry])
->> +		if (!priv->rx_buffers[q][entry].page) {
->> +			if (unlikely(ravb_alloc_rx_buffer(ndev, q, entry,
->=20
->    Well, IIRC Greg KH is against using unlikely() unless you have actua=
-lly
-> instrumented the code and this gives an improvement... have you? :-)
-
-My understanding was that we should use unlikely() for error checking in
-hot code paths where we want the "good" path to be optimised. I can drop
-this if I'm wrong though.
-
->=20
-> [...]
->> @@ -727,12 +739,22 @@ static void ravb_rx_csum_gbeth(struct sk_buff *s=
-kb)
->>  	if (unlikely(skb->len < sizeof(__sum16) * 2))
->>  		return;
->> =20
->> -	hw_csum =3D skb_tail_pointer(skb) - sizeof(__sum16);
->> +	if (skb_is_nonlinear(skb)) {
->> +		last_frag =3D &shinfo->frags[shinfo->nr_frags - 1];
->> +		hw_csum =3D skb_frag_address(last_frag) + skb_frag_size(last_frag) =
-- sizeof(__sum16);
->> +	} else {
->> +		hw_csum =3D skb_tail_pointer(skb) - sizeof(__sum16);
->> +	}
->=20
->    We can do the subtraction only once here...
-
-Ack. I'll pull that out of the if.
-
->=20
-> [...]
->> @@ -816,14 +824,26 @@ static int ravb_rx_gbeth(struct net_device *ndev=
-, int budget, int q)
->>  			if (desc_status & MSC_CEEF)
->>  				stats->rx_missed_errors++;
->>  		} else {
->> +			struct ravb_rx_buffer *rx_buff =3D &priv->rx_buffers[q][entry];
->> +			void *rx_addr =3D page_address(rx_buff->page) + rx_buff->offset;
->=20
->    Need an empty line here...
-
-Ack.
-
->=20
->>  			die_dt =3D desc->die_dt & 0xF0;
->> -			skb =3D ravb_get_skb_gbeth(ndev, entry, desc);
->> +			dma_sync_single_for_cpu(ndev->dev.parent, le32_to_cpu(desc->dptr),=
-
->> +						desc_len, DMA_FROM_DEVICE);
->> +
->>  			switch (die_dt) {
->>  			case DT_FSINGLE:
->>  			case DT_FSTART:
->>  				/* Start of packet:
->> -				 * Set initial data length.
->> +				 * Prepare an SKB and add initial data.
->=20
->    I'd prefer calling it skb in the comments...
-
-Ack.
-
->=20
-> [...]
->> @@ -865,7 +894,16 @@ static int ravb_rx_gbeth(struct net_device *ndev,=
- int budget, int q)
->>  				stats->rx_bytes +=3D skb->len;
->>  				napi_gro_receive(&priv->napi[q], skb);
->>  				rx_packets++;
->> +
->> +				/* Clear rx_1st_skb so that it will only be
->> +				 * non-NULL when valid.
->> +				 */
->> +				if (die_dt =3D=3D DT_FEND)
->> +					priv->rx_1st_skb =3D NULL;
->=20
->    Hm, can't we do this under *case* DT_FEND above?
-
-It makes more logical sense to me to do this as the last step, but I
-guess it's a little more optimal to do it earlier. I'll move it.
-
-Thanks,
-
---=20
-Paul Barker
---------------gYXoYI3vxxKEXotyQaJdbFVX
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
-
---------------gYXoYI3vxxKEXotyQaJdbFVX--
-
---------------tT627k6zk8L9vxPOpFEzDnM7--
-
---------------NduQAJmKJW5S98p94IasMcFk
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZlhFDQUDAAAAAAAKCRDbaV4Vf/JGvcXD
-AQCrgEBeh3Q47M88KJr3A+824TVXmdwbR8DZTYZJWvTYgAEAnyZP9yXhntoUECQxVpmydhJiR0fi
-eeluhSL2cfp0MQ4=
-=BtU8
------END PGP SIGNATURE-----
-
---------------NduQAJmKJW5S98p94IasMcFk--
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
