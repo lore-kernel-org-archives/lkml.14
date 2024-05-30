@@ -1,191 +1,106 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B574186E39;
-	Thu, 30 May 2024 14:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B189186E39;
+	Thu, 30 May 2024 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717078063; cv=none; b=krcZDddMnYU8Y1DoxX3QYSOEwzMtvVf7kjBiEscNipqbc3Au31T7HQyjRTyiPT3WmyTv9rpuBblQUiAeDfvli9l1BzYFkoCefb6r5Q+PJPXxbkZrVXua67LQ6trQWbzaYgD/eC2rUJ4aiLfLBoR4FYe9Flwxx00I4MXq32/7KaA=
+	t=1717078083; cv=none; b=HMiN+jV7QieWAs7bksVexOiQnKwGGFyQf2NdU0+GVoSsE+XZ2kNexm//vLwqnR93zV7cfarbSFC+RX3gMXReNXuB67kGOzwUHabS6QRj/QC9AxR9vBiakLJbtQNTGwxclEKPUKt9L/VBmN73W0nW8dy04nDz6PBxCRIoKQ6eA34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717078063; c=relaxed/simple;
-	bh=h7hU7qbuwVbk/ZpC7LCL/8LlxomxCnLOqgvlLA9FNQE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M39bsiyH8bvOtsMBY0lxUMq+VX/gdLDi96byvCmqR5V5f6wsEn+FIdfK6Az23ncqfjnT9/FajHTKMK1Ce2Hfc6MqDpuadutZ4YUgsW8hlU4xUaLLRxWs6G4AmB/L/5o+BDGu7SoidsQ6BCHWsWTqyY/Wk4emzphW3ta7hZVnY7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFN6lXNN; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717078083; c=relaxed/simple;
+	bh=nCLxw0SHqx1x703rvJNq+CGCwDIzdOix84z/8W/NPq0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BTbN/aVpDJ/KQuXQlb18AOyCnr8IPeXpHXUbISwut4jt9rLxV4cXl9/Ekcc9xz3FMA4Y19xG6zTfGwVs/dmZcWWvANdk2bWM7oemG8T2Kczew2Q/kG17KwoWjYuKcfnqxJTSoZ0HsQMQ0k+alaFWAlqDgn3qYULV6Xwv/0NvNII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcIxdJr8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFN6lXNN"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f480624d0fso7443585ad.1;
-        Thu, 30 May 2024 07:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717078061; x=1717682861; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=u4GimzYAy1i6fno73Dy7LKKA9+QvH6ceArd5s19dZ3Q=;
-        b=QFN6lXNN8if9zSpTw0wJ7ERDb/f/q2rAxiS13RNNsgHPQsHZRrZ7uZKTVa32xcyzBD
-         DwmBsgIHmyRwRY2Ly2r7bbgqMUkGw7x/SySi+kyjT/YUxnkHdIGa94FQJ9o6cKZf3QDa
-         +veoutHYK4IdffrKiYIy2n8dF8xAXk69NPR3IW+bkdK0etoKu2aWS5W0k5kamPRat8K6
-         ft9H/Gd4ZsvtY9j9XmeJiYNWCLbxwPo3AqgdB+pMqLFr/58Ey7C/p8+7TLbmRJ3bwuG6
-         IgIG79JfHn0pfHAPPpcZyxuLP6oVlLDQMVPGejQjKJsmaxXBdPYQAeUPtFe6ZeM0w95c
-         0MAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717078061; x=1717682861;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u4GimzYAy1i6fno73Dy7LKKA9+QvH6ceArd5s19dZ3Q=;
-        b=Zh+OZsUwInSWWHxtdlyiVbiPefS1LjGFD6710gk5pDGEgB8QsKBXL1CBcGhwpwMVMx
-         C5dbeBqAbidj3dH2+R6ro8Med7RRFd/nCcj33sNH/WNNHCsTaEq+VOIZvVyX+LQfn1gf
-         qZwZwpcHR7+iNv0N7k3pDjxFbu0yGbIP/XUlR7PRVJhBtmVbCWYUbHaMehtFazeDIfj8
-         ABoGoOyJ4LYQ82eLzdei7WWO9QKudI3nkJ2wtqpaGQzpwKxuAW1DW5QhAvDsatYAI0Ei
-         6qpMNBExra3UiS2X8KZ7DSg5C8k/wzs++iOiz6f5TqG2Edmk50Mw5djOlaVJJYDf+o1v
-         ROTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUILjmxMpafWxbn9AH0s/miVk3hEOHc++myGhVfXyEdyuinZJZy9x8EuDXaOxMDm0q8GWQ5ytlfXCqiu1kH65EmzDttqJaCtWTv6v2Z2rskYckdbIquyA/7SDnUeU6vglydOh/17Flskg==
-X-Gm-Message-State: AOJu0Yz/XsO/1EsRMqMROswJQe7alAN/X8PvWUuLt6PtEJtY2Q5buFuF
-	JsUS4v1M037Hbhq6tVLMb1YA+txKtRCrGMgzB3fn5yPsovOT0ZbD/jP/FQ==
-X-Google-Smtp-Source: AGHT+IF+NwkLYoqUUkxUSa66EEz/TnURnDEyqNPbWe0h19CPeb05BMbtjoD0ITlOoaofTJ79xaP7Jg==
-X-Received: by 2002:a17:902:e5cf:b0:1f4:a3a1:a7e9 with SMTP id d9443c01a7336-1f619605f60mr26066885ad.24.1717078061343;
-        Thu, 30 May 2024 07:07:41 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c9b87b4sm121997815ad.264.2024.05.30.07.07.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 07:07:39 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <468905cc-151a-4513-84a7-712684aaea68@roeck-us.net>
-Date: Thu, 30 May 2024 07:07:38 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcIxdJr8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7109AC2BBFC;
+	Thu, 30 May 2024 14:07:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717078082;
+	bh=nCLxw0SHqx1x703rvJNq+CGCwDIzdOix84z/8W/NPq0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=AcIxdJr8pBj6BSAwOKTo+BahWxvvCYGL6MlLuHBi0rHRStmDLKSBvdWYcfs6Jr/fd
+	 rhnpV2e4EXshXZYGqvZuwKanU5Lmz4DGtkiWSBhgD8nFDddscqL66LEww00Bnvlbo6
+	 7d+astys8Bt2I6vHowdgvCkrcOXX+bNk4KFPbDhwLnKnYZamuqpAT/wbROMia/bQWw
+	 7jZH1SfO+fEc3nMYXzMxrv8cd4QUKrUMNlfOlTus4pMAIf4gWpGtTGGkx6aGpR2QJ5
+	 lnPiYSoLncU15qwivJoFGLrsC8G6RCCzTBZABRJLxS/JFXiI6B6BlzjdRohZJtreuW
+	 pG/6X8F2WPUsg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v3 0/3] doc: mptcp: new general doc and fixes
+Date: Thu, 30 May 2024 16:07:29 +0200
+Message-Id: <20240530-upstream-net-20240520-mptcp-doc-v3-0-e94cdd9f2673@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] hwmon: Add support for SPD5118 compliant temperature
- sensors
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Cc: linux-hwmon@vger.kernel.org, Hristo Venev <hristo@venev.name>,
- =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
-References: <20240529205204.81208-1-linux@roeck-us.net>
- <20240529205204.81208-3-linux@roeck-us.net>
- <6d5c2ee5-6e0e-4d13-a977-493d2ee2c0ed@t-8ch.de>
- <9c7e050b-0e73-4388-bc58-5c4d3ed4f50a@roeck-us.net>
- <1258a064-e23f-4079-b1f5-59017c28a210@t-8ch.de>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <1258a064-e23f-4079-b1f5-59017c28a210@t-8ch.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACGIWGYC/43NQQ6CMBAF0KuQWVtTpiWgK+9hXJQyQKO0pK0EQ
+ 7i7lYXRlS7//Mz7CwTyhgIcswU8TSYYZ1MQuwx0r2xHzDQpA3KUvEDO7mOIntTALEX2vg5j1CN
+ rnGZUlEoLRJJKQ1JGT62Zt4UzvH4szREuqelNiM4/tukp3/q/V6accUZCNXiQokJdn67kLd32z
+ ncbPuEnWP0GMYGybLEpao3Uii9wXdcn671j/ioBAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Gregory Detal <gregory.detal@gmail.com>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Randy Dunlap <rdunlap@infradead.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1418; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=nCLxw0SHqx1x703rvJNq+CGCwDIzdOix84z/8W/NPq0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmWIg+9hiNPQi3hS/j24txtVKA0c4i4n3/uiOir
+ Bid2uW9l46JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZliIPgAKCRD2t4JPQmmg
+ c11PD/4kRSW5fUs+Gs392EvMInGG/OuwY5HH3GtpgZcmLydVHZa0HGRtg1d6oA+y9YQNaVnDOf6
+ bZ0WcmJQcyRZFHAaXs7ormxFjbsvAI3eu72cT8PWZJZ/0eELU1RbRzmlqAu3xJqcF8L7NNYn/CW
+ u4cvTun5M2pov/y1bNfbIbo+NzMoj/QGGCsQnCMI6QpHfMmMpvcSwJrq4Ah8LLBrmZgCSusAcca
+ XIJcuCCTZ8kkQbTjCxfYQ7OeTX36g/kVH/+uzv0SIPbzIp8wXMo41ynaHS+ZMG7mhJfIwVLcQSR
+ EV5mOMyNScKRUBwNovCwC/NCwIGgelP59xmzWUIQSkjTTAHbtwW2jygoJNu35fTW7TuC5OSaYVZ
+ X1rZK7FY/Mwb+4OyPj/Qrk4eFQiVmarm4pKa5goE0PTnt1FOr3+yL0EmaqJy2hI7WtDm8XP/owY
+ ZJ568QJ93VpV4RIwdXmEdYr0p33Y36sl2/QuEpwczriBMS9/v5y2pr+JbTm6dL5FnDBaNt17ONH
+ TEHP2TFls1JmDMCMdlEzAS9PzmZlu31ZnG6BkkkUaorzWHdgykbcg3xZ113B0+AuPv0i7b48K4s
+ VPUlKLG+etZs6Mc1sUBxE9iJiOYXLZ82JRLVPegaPppWydnc40fU19PVZR8RTtbIrrA3GqKHbF2
+ vNNPrQ9eg347Zsg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 5/30/24 06:57, Thomas Weißschuh wrote:
-> On 2024-05-30 06:47:17+0000, Guenter Roeck wrote:
->> On 5/30/24 03:51, Thomas Weißschuh wrote:
->>> On 2024-05-29 13:52:03+0000, Guenter Roeck wrote:
->>>> Add support for SPD5118 (Jedec JESD300-5B.01) compliant temperature
->>>> sensors. Such sensors are typically found on DDR5 memory modules.
->>>>
->>>> Cc: René Rebe <rene@exactcode.de>
->>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>>> ---
->>>> Tested on MAG B650 TOMAHAWK WIFI with CMH32GX5M2B6000Z30
->>>> (Corsair Venegance DDR5).
->>>>
->>>> René: I included you as MODULE_AUTHOR since the patch is derived from
->>>>         your driver. Please let me know if you prefer not to be listed as
->>>>         author.
->>>>
->>>>    Documentation/hwmon/index.rst   |   1 +
->>>>    Documentation/hwmon/spd5118.rst |  60 ++++
->>>>    drivers/hwmon/Kconfig           |  12 +
->>>>    drivers/hwmon/Makefile          |   1 +
->>>>    drivers/hwmon/spd5118.c         | 482 ++++++++++++++++++++++++++++++++
->>>>    5 files changed, 556 insertions(+)
->>>>    create mode 100644 Documentation/hwmon/spd5118.rst
->>>>    create mode 100644 drivers/hwmon/spd5118.c
->>>
->>> With the Makefile and detect callback fixed:
->>>
->>> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
->>> Tested-by: Thomas Weißschuh <linux@weissschuh.net>
->>
->> Thanks a lot for the feedback!
->>
->> If it is not too much trouble, could you send me a register dump ?
->> The one I have is from Montage Technology M88SPD5118, and I'd like to get
->> a few more to improve my module test script.
-> 
->>From a Kingston KF556S40-32:
-> 
-> # i2cdump 20 0x50
->       0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
-> 00: 51 18 0a 86 32 03 32 00 00 00 00 07 ff 3c 00 00    Q???2?2....?.<..
-> 10: 00 00 00 00 00 00 00 00 00 00 00 00 70 03 00 00    ............p?..
-> 20: 50 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00    P?..............
-> 30: 00 f0 01 00 00 00 00 00 00 00 00 00 00 00 00 00    .??.............
-> 40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> 50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> 60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> 70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> 80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> 90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
-> f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00    ................
+A general documentation about MPTCP was missing since its introduction
+in v5.6. The last patch adds a new 'mptcp' page in the 'networking'
+documentation.
 
-This is the same SPD hub chip (Montage Technology M88SPD5118)
-as used on my Corsair DDRs. Interesting.
+The first patch is a fix for a missing sysctl entry introduced in v6.10
+rc0, and the second one reorder the sysctl entries.
 
-Thanks!
-Guenter
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Patch 3/3: Fix a few run-on sentences (Randy)
+- Link to v2: https://lore.kernel.org/r/20240528-upstream-net-20240520-mptcp-doc-v2-0-47f2d5bc2ef3@kernel.org
+
+Changes in v2:
+- Patch 3/3: fixed mptcp.dev link syntax.
+- Rebased on top of net-next (Paolo).
+- Link to v1: https://lore.kernel.org/r/20240520-upstream-net-20240520-mptcp-doc-v1-0-e3ad294382cb@kernel.org
+
+---
+Matthieu Baerts (NGI0) (3):
+      doc: mptcp: add missing 'available_schedulers' entry
+      doc: mptcp: alphabetical order
+      doc: new 'mptcp' page in 'networking'
+
+ Documentation/networking/index.rst        |   1 +
+ Documentation/networking/mptcp-sysctl.rst |  74 +++++++-------
+ Documentation/networking/mptcp.rst        | 156 ++++++++++++++++++++++++++++++
+ MAINTAINERS                               |   2 +-
+ 4 files changed, 197 insertions(+), 36 deletions(-)
+---
+base-commit: c53a46b16ce2605181688ea6af5f6c8d7fb3c9c1
+change-id: 20240520-upstream-net-20240520-mptcp-doc-e57ac322e4ac
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
