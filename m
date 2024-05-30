@@ -1,174 +1,104 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0377417994D;
-	Thu, 30 May 2024 12:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31C117C7AA
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 12:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717070475; cv=none; b=EEqv8bPvZ1J232aDmu2EkDfF65e5tgCDerpeAsm2hhzxje91fsVirdB6+VJGLY3sDnM8TQQG+jFLNdywG1/RX0sFfeb4hI8meUvKslzsJxOqAnC+Bpah+r73KetOYVkSsb1QP9X5TekpXsv8nqb+2KXvD6BqVkAVQYORk0aDA3A=
+	t=1717070492; cv=none; b=PzYCVbcZrVSQKWlxvWNdPqUAf21imDbaoky21CtHxkhmxZ1yMIBf9BN5rwg/dbI//f14DMlzIIswkYn071fV5I/yFTbWBFF462zLKrFxKoiy719xMz8CChFwUArvwCu658ksfg2AzRpihclTStUXYgteKhOl1HKI4x2SDceDWL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717070475; c=relaxed/simple;
-	bh=Tl6DTRhvTbHYhZAg1L7YnyT3uFvW0YlIVmWcMHuwnK8=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
-	 MIME-Version:Content-Type; b=RbqJf9YbXjCUHLMr3Z5gBgh9VkiSjeDbTAPtVSpDzZ6cGRV7xzz2SK0yrv1IEi3ASqcbFGmHcus0IV3yNx2hIjx57wyIhyv5wyFIoGLMUqmTKgtOcIGMq4a26iVXeLjWAd6wmuuuP7P/jL2eT9eKouOERtPobmIWMV45hW3XgGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QV7VyKYW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QV7VyKYW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-351da5838fcso817134f8f.1;
-        Thu, 30 May 2024 05:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717070472; x=1717675272; darn=vger.kernel.org;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yhumDgLqGsw+W+rll4K5ZUwAewDs5YChN4XpuaaZQ+g=;
-        b=QV7VyKYW5Yy/EtPVdR0M3zvfVT6Ym3/GTdX4YuC/t5fwaWi8rgHttJuTJjBHn3ipFJ
-         YlrGa2/XlZ9j49tAMms4AiBpcOxkC/FAKylRrYpM6HLvj5IipzpMgwpb6qEPvR5gwZvD
-         oGmpuvgCOiCjR2XNGjkstuWF1jv4n5NvnQ5I5A2zD1FzaxHJz3b0qfsZRjM+2SrovWb6
-         MUDuFZj8C/onJLx5r0/B1m9/7i8bpPQP/Sdl3P83ggD8d3gGx9TkbA/+wnopKFqxPZvr
-         Pmrt2KRuZvjP5rmkuJqUGtsaSgZYz9upvRc0wRE5Oi0axfbvyEIxqPovAHRCZKxmFGE2
-         /1Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717070472; x=1717675272;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yhumDgLqGsw+W+rll4K5ZUwAewDs5YChN4XpuaaZQ+g=;
-        b=vlV2BiXDFKFf7sa3ritJWXN2Rt3wRS4E3evSk+3HgQBGONDr295eMgSQuwUijAXhj4
-         sD4wBiCpmzoz5I0KkiBoyPvnyeQU0az0G2ShnB+he8epfPUO3wWEKa/M4Ld51ZiUTCw8
-         E7qJnOnc8cQmion7Nr3upRZ715KMi7ssvMoBAP7IFEDYahFzpPCAtbMY/o3Jc/hCBqWy
-         ZH47P6R3nYDghbWpL9n+v4Mf42pFJT4ABMtqvDKydgkloOkmztdqfrsfu4jPEhK5pJJx
-         /SkYi+YZ+u8zkHjW6FZ/sRyCZA3ybq7hNGhOrG7pvhC+zxfNjjRy3ZAEaMMYl7xXCXl1
-         Y5rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUNR6x1EqIwnCvRpUsBq+20/AsuRC1St/7Nj7mA6dGEhmdUAPMf5ygnSITU56pda5Ir0xwtp1af8Kde5kU9MrDlfNWIFxovnUKuOhGR6+spNkRYh9ClR7XvG01QRO2kA/Cq3oQ
-X-Gm-Message-State: AOJu0Yxv8NMKBglFMsCwiS8FbHga488ohmbhllkUDkm9o9MG8CvSO1S2
-	PTjoQRwJVRctryp1EmrRdBj/E7GH6ybUdASUBQ3tysWt9KSJ8TAg
-X-Google-Smtp-Source: AGHT+IEfzNTCRkV9qhhoxKRPdHhIipmn0ah+KKGjTsG1lPZAMV631k3LZGQ5R97iAHucUzP0z+5Pow==
-X-Received: by 2002:a5d:6e48:0:b0:355:38e:c391 with SMTP id ffacd0b85a97d-35dc00be810mr1234897f8f.51.1717070471978;
-        Thu, 30 May 2024 05:01:11 -0700 (PDT)
-Received: from imac ([2a02:8010:60a0:0:c8da:756f:fe9d:41b5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3557a1c9363sm17283293f8f.72.2024.05.30.05.01.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 05:01:11 -0700 (PDT)
-From: Donald Hunter <donald.hunter@gmail.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  Oleksij Rempel <o.rempel@pengutronix.de>,  Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>,  linux-kernel@vger.kernel.org,
-  netdev@vger.kernel.org,  Dent Project <dentproject@linuxfoundation.org>,
-  kernel@pengutronix.de
-Subject: Re: [PATCH 2/8] net: ethtool: pse-pd: Expand C33 PSE status with
- class, power and status message
-In-Reply-To: <20240529-feature_poe_power_cap-v1-2-0c4b1d5953b8@bootlin.com>
-	(Kory Maincent's message of "Wed, 29 May 2024 16:09:29 +0200")
-Date: Thu, 30 May 2024 11:32:23 +0100
-Message-ID: <m2jzjbd1zc.fsf@gmail.com>
-References: <20240529-feature_poe_power_cap-v1-0-0c4b1d5953b8@bootlin.com>
-	<20240529-feature_poe_power_cap-v1-2-0c4b1d5953b8@bootlin.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1717070492; c=relaxed/simple;
+	bh=6agvjoYknHYxKRL+NaQ2AzP9Mpqe70cIuvhtkCdwR8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E2BTXdipsGkxMEsFZzvwbdaaMBJbSFik85gUZ2wdpG9JumffPHlErvJJlo4fJQGXxkFdXWxji39b4t2/gO2+/dAPdz0ayuABYkZSv23+u3Zp6tU0k70vax4vF9oMLEUrndT47C3CDSwCi7s7PW9/CBm1maRNNFP9cNMTZGrH4+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sCeTC-0001jR-Ok; Thu, 30 May 2024 14:01:22 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sCeTB-003adJ-PO; Thu, 30 May 2024 14:01:21 +0200
+Received: from sha by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <sha@pengutronix.de>)
+	id 1sCeTB-0005pq-2F;
+	Thu, 30 May 2024 14:01:21 +0200
+Date: Thu, 30 May 2024 14:01:21 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	David Lin <yu-hao.lin@nxp.com>
+Subject: Re: [PATCH] wifi: mwifiex: fix parsing of more than two AKM suites
+Message-ID: <ZlhqkXIhK7ynrl65@pengutronix.de>
+References: <20240523081428.2852276-1-s.hauer@pengutronix.de>
+ <878qzyntg5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878qzyntg5.fsf@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Kory Maincent <kory.maincent@bootlin.com> writes:
+On Sat, May 25, 2024 at 12:15:22PM +0300, Kalle Valo wrote:
+> Sascha Hauer <s.hauer@pengutronix.de> writes:
+> 
+> > params->crypto.n_akm_suites seems to be limited to two AKM suites. Once
+> > there are more they will be passed as extra elements of type WLAN_EID_RSN
+> > or WLAN_EID_VENDOR_SPECIFIC.
+> >
+> > This takes some snippets from the downstream vendor driver to parse
+> > these elements and to set the correct protocol and key_mgmt bits to
+> > enable the desired key managements algorithms in the hardware.
+> >
+> > This patch is not a request for inclusion, more a heads up that there's
+> > something missing and the question if the approach taken is the right
+> > one or if there are other preferred ways to fix this issue.
+> 
+> Please mark patches like this as "[PATCH RFC]", that way we maintainers
+> know to drop them automatically.
 
-> From: "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
->
-> This update expands the status information provided by ethtool for PSE c33.
-> It includes details such as the detected class, current power delivered,
-> and a detailed status message.
->
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> ---
->  include/linux/pse-pd/pse.h           |  8 ++++++++
->  include/uapi/linux/ethtool_netlink.h |  3 +++
->  net/ethtool/pse-pd.c                 | 22 ++++++++++++++++++++++
->  3 files changed, 33 insertions(+)
->
-> diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-> index 6eec24ffa866..04219ca20d60 100644
-> --- a/include/linux/pse-pd/pse.h
-> +++ b/include/linux/pse-pd/pse.h
-> @@ -36,12 +36,20 @@ struct pse_control_config {
->   *	functions. IEEE 802.3-2022 30.9.1.1.2 aPSEAdminState
->   * @c33_pw_status: power detection status of the PSE.
->   *	IEEE 802.3-2022 30.9.1.1.5 aPSEPowerDetectionStatus:
-> + * @c33_pw_class: detected class of a powered PD
-> + *	IEEE 802.3-2022 30.9.1.1.8 aPSEPowerClassification
-> + * @c33_actual_pw: power currently delivered by the PSE in mW
-> + *	IEEE 802.3-2022 30.9.1.1.23 aPSEActualPower
-> + * @c33_pw_status_msg: detailed power detection status of the PSE
->   */
->  struct pse_control_status {
->  	enum ethtool_podl_pse_admin_state podl_admin_state;
->  	enum ethtool_podl_pse_pw_d_status podl_pw_status;
->  	enum ethtool_c33_pse_admin_state c33_admin_state;
->  	enum ethtool_c33_pse_pw_d_status c33_pw_status;
-> +	u32 c33_pw_class;
-> +	u32 c33_actual_pw;
-> +	const char *c33_pw_status_msg;
->  };
->  
->  /**
-> diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
-> index b49b804b9495..c3f288b737e6 100644
-> --- a/include/uapi/linux/ethtool_netlink.h
-> +++ b/include/uapi/linux/ethtool_netlink.h
-> @@ -915,6 +915,9 @@ enum {
->  	ETHTOOL_A_C33_PSE_ADMIN_STATE,		/* u32 */
->  	ETHTOOL_A_C33_PSE_ADMIN_CONTROL,	/* u32 */
->  	ETHTOOL_A_C33_PSE_PW_D_STATUS,		/* u32 */
-> +	ETHTOOL_A_C33_PSE_PW_STATUS_MSG,	/* binary */
+Yes, will do. I should have known that.
 
-It looks like the type is 'string' ?
+The question I had with this patch is more like whether the approach is
+fine.
 
-> +	ETHTOOL_A_C33_PSE_PW_CLASS,		/* u32 */
-> +	ETHTOOL_A_C33_PSE_ACTUAL_PW,		/* u32 */
->  
->  	/* add new constants above here */
->  	__ETHTOOL_A_PSE_CNT,
-> diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-> index 2c981d443f27..faddc14efbea 100644
-> --- a/net/ethtool/pse-pd.c
-> +++ b/net/ethtool/pse-pd.c
-> @@ -86,6 +86,13 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
->  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ADMIN_STATE */
->  	if (st->c33_pw_status > 0)
->  		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_D_STATUS */
-> +	if (st->c33_pw_class > 0)
-> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_PW_CLASS */
-> +	if (st->c33_actual_pw > 0)
-> +		len += nla_total_size(sizeof(u32)); /* _C33_PSE_ACTUAL_PW */
-> +	if (st->c33_pw_status_msg)
-> +		/* _C33_PSE_PW_STATUS_MSG */
-> +		len += nla_total_size(strlen(st->c33_pw_status_msg) + 1);
->  
->  	return len;
->  }
-> @@ -117,6 +124,21 @@ static int pse_fill_reply(struct sk_buff *skb,
->  			st->c33_pw_status))
->  		return -EMSGSIZE;
->  
-> +	if (st->c33_pw_class > 0 &&
-> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_PW_CLASS,
-> +			st->c33_pw_class))
-> +		return -EMSGSIZE;
-> +
-> +	if (st->c33_actual_pw > 0 &&
-> +	    nla_put_u32(skb, ETHTOOL_A_C33_PSE_ACTUAL_PW,
-> +			st->c33_actual_pw))
-> +		return -EMSGSIZE;
-> +
-> +	if (st->c33_pw_status_msg &&
-> +	    nla_put_string(skb, ETHTOOL_A_C33_PSE_PW_STATUS_MSG,
-> +			   st->c33_pw_status_msg))
-> +		return -EMSGSIZE;
-> +
->  	return 0;
->  }
+I wonder why I have to parse the WLAN_EID_RSN element in driver specific
+code and why I do not find similar code in other drivers which should
+suffer from the same problem.
+
+Looking deeper at it the Kernel by default only supports two AKM suites.
+wiphy->max_num_akm_suites is initialized to NL80211_MAX_NR_AKM_SUITES
+(which is 2). Whenever wpa_supplicant/hostapd specify more AKM suites
+the suites exceeding 2 are encoded in the WLAN_EID_RSN element and I
+would expect other drivers to handle this as well.
+
+I realized that the Kernel can handle up to 10 AKM suites by setting
+wiphy->max_num_akm_suites to CFG80211_MAX_NUM_AKM_SUITES and that
+seems to do the trick as well, at least when I patch wpa_supplicant
+to actually use this increased number.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
