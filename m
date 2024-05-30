@@ -1,96 +1,307 @@
-Received: from mailrelay6-1.pub.mailoutpod3-cph3.one.com (mailrelay6-1.pub.mailoutpod3-cph3.one.com [46.30.211.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C5146433
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.245
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717100915; cv=none; b=g07EGhgL9wMqojItIElKez/WzKZMy8GCNVcwynGLvNj3j23zi/lgV4cvjJ4ftwCmgVHt80n6TsqoaHv1ZqcPxz3bWnggmHRzqOWILMLh0dulnIUUyAh4qNAzIz1BAzFYdeRzh2rN3R5RE1OLSTkiaK5Aq+etourwROSUeXDvyzo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717100915; c=relaxed/simple;
-	bh=J4KBa91vTwvjKyQ32cxhENIxuhAvRMoEF4xMj9S4DD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTgucsLQewob+YdjPZzyxMta+H6f1Z2/INPWvc95xWkBO7rLUnpvi2V2lZbwxGIt5pDDuyH13XAJGpwuuv6kDALAS2VG5f2jzTG4YyY9ZJxjljy42g7b9TXVuajWSG0rnafGlMXpwTfrCyYMqK9oHWIQpVzhKiQ+L2SCffcW4nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=iISsR6bi; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=npM9s9pq; arc=none smtp.client-ip=46.30.211.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4AD46433
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717100954; cv=fail; b=hcyhrHzW1gB/YAa/7XYdVyjH9Y5twGcm8SPg74406ryWiKZ31UpQ2u0t8m7fZWibYgVKscXABFw/MIpgr1r7+MNUgp9ntnkMuHx7XOPbScPphThP39KX3GXwkCzUYySeJu+fgQllXIfxqujCIzqO2Iry5cfZKwVwE0/5ILoJOlw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717100954; c=relaxed/simple;
+	bh=J0yC0iUcB7G2GOpBjXZGiZn9iR9y/KkcJZ7eqd0HyDM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CZ+ZkZMVA+FJJdiDeM4WNtoJ8RVCcjr3B065KFH9CTO3xKDYPB/w40Erew081ZBcwV50UdpVtQv7PsawjolPbSLZedGLk+m4h0LzTl8Rn3a6176f/RP9dQMaK8helg7KIXD73c1bmFKpsT68pXxPIq2Boyu/xbN8EifudRQKL7E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KuFOqCw9; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="iISsR6bi";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="npM9s9pq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=A9v8zIG2nO6qcSOd8DMaTxsgywGvI2zqZhB8aRF0VXo=;
-	b=iISsR6biyfqy471hHRm4DcrNBvLRjGn6Rrlbq3LLjWeWegmckdRQ7ry1JBB7Vj7a6C608YKq/4gzV
-	 GhnTDBMWdJX3H7ZbtPcaCyYrLeKyvl4dj9vcUVowseqybeN4TSAnIKs//2e79NYPYpRroXOO5oRcwC
-	 Km9d9jNyeLezx+BYjNQ+OUhWvuG4imtAS7XUnu/P1cAo9lAzSk7R26jbq6aFBW71lXThwYMBA+tnxE
-	 FQJH2zDbVfopF8YvDr5wVZWjShv0YNUQK82VrCOtJSKQtHcIAmweEydYnJqZAPnJyekswHejAN5FWd
-	 t5Vi+dSBIiahJZHVGGbgur6q+eZnfPg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=A9v8zIG2nO6qcSOd8DMaTxsgywGvI2zqZhB8aRF0VXo=;
-	b=npM9s9pqoihScimHGnN8anoeoASHuow7Z4UzFsgkJiRkYLCiikfF/CQiv3D5PdqbVNi9OYlVZjlHX
-	 Kj6jhpyDQ==
-X-HalOne-ID: 03b25ac3-1ec3-11ef-bda0-83bcbd00a978
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay6.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 03b25ac3-1ec3-11ef-bda0-83bcbd00a978;
-	Thu, 30 May 2024 20:27:21 +0000 (UTC)
-Date: Thu, 30 May 2024 22:27:20 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: WARN on using default root node
- #address-cells/#size-cells
-Message-ID: <20240530202720.GA1656150@ravnborg.org>
-References: <20240530185049.2851617-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KuFOqCw9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717100953; x=1748636953;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=J0yC0iUcB7G2GOpBjXZGiZn9iR9y/KkcJZ7eqd0HyDM=;
+  b=KuFOqCw9izm9V1CzI+MQJ25bUcaMvs2hKoC+CG6WVn7ZOxjSoeM0+vCK
+   6n5DYt+mnY29vztMCtHKj3ZM8LcmgiV8Ck+e1FiwtSGtlxq6nuZttO2kw
+   HoCSrU0+XYgtGtD5FZLrem8HPBSYyAy3ROFAfvE1MhYQ/XexhTBNbF8XY
+   M4X2oUDOTg067yP4mTWdYDGDFVRWdMLx5VIGQx/uH3r8CReSffX199lBh
+   l48/+nz82NCNFWt9SYgIhiA2j1d+jM4lz8CL/ueKxS7pkAKKewjIn+bkS
+   89XYCr8w31OQHOUX0HZgG4PvqoOR/DxBcDPqR7woWZFG3dK1+jTLNc/gP
+   g==;
+X-CSE-ConnectionGUID: tXnO2ixFRq2FOesTj6UrSA==
+X-CSE-MsgGUID: WeKIJpOrRIeH5tTc1E21Cg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="16567437"
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="16567437"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 13:28:53 -0700
+X-CSE-ConnectionGUID: JXlqIeY1ROK3z7qoeho6xw==
+X-CSE-MsgGUID: ucnu4+oCToeF6W6y3kPNzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="36040644"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 May 2024 13:28:53 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 30 May 2024 13:28:52 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 30 May 2024 13:28:52 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 30 May 2024 13:28:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ItqShadPjf+kgKt1TN6SeQ3041BHzCBw/TR32nDn4ClxgR4sI2ejFNelDsE767itIbH9wBHRy7qrVkp09LTh6rVuaInzSodlvfgDdMq6ifh9XmkaPQrnXElZwESlE2zW5sxRvUsKaKcxSIArhRdXkBXgtoNmmv1m8C/lUwGS6mke+vjvceMxK1xnnJg9A0wKDKtgo3/4X9FvDacravKt6N37+cXscHebVHGYKjjX6EkHb5koxHIAF3wuj0PpzbLJd7QkG6bDTuEo54IDNkM45VprelD7NbOYLoh9exibqgPBL6L9vfAIwTHEnn8J48irUBJt3flqoJefx4Dx9KcpnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7SMWu+dP7vEWAWqPDQ/x2Vy73fA1J3jVopB9M7NHiac=;
+ b=LPh7wiVFUuDUQUYds04e0TAqIi01peP2Gi83aXeQz9zF9mUAzt4wns29EBxjUUx9bRs7Q44WpN1Rn8hqQ1lbgswRZRDJxCay2CK9hbzt4JqeZS4lFSQEdS8sIL3z4/Bj5L1NKD8nazle4obdMNTL/I8lvp8TJuhbsC1SS7oTo5TNLwfdpudmx7oA6uHvpddSruNlmyhM2vft2YUnPHNOJ/wzoCfhZ9GnlmbhzBWNCxcFJRfA9T3T6+qUiLCuYSYnG2tMfoIUvNkHB8cSlbDdasH1f3ceNMk9odfxi0powxavbykbZqpJ67xU7RGUWiKw/kLaN3Wgz2D4b6WYAN5Ciw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by MN2PR11MB4581.namprd11.prod.outlook.com (2603:10b6:208:26c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30; Thu, 30 May
+ 2024 20:28:49 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.7633.017; Thu, 30 May 2024
+ 20:28:49 +0000
+Message-ID: <c6651270-25a3-4d9e-91f8-4aa9c8652b98@intel.com>
+Date: Thu, 30 May 2024 13:28:47 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v19 19/20] x86/resctrl: Sub-NUMA Cluster (SNC) detection
+ and enabling
+To: Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+	"Maciej Wieczor-Retman" <maciej.wieczor-retman@intel.com>, Peter Newman
+	<peternewman@google.com>, James Morse <james.morse@arm.com>, Babu Moger
+	<babu.moger@amd.com>, Drew Fustini <dfustini@baylibre.com>, Dave Martin
+	<Dave.Martin@arm.com>
+CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<patches@lists.linux.dev>
+References: <20240528222006.58283-1-tony.luck@intel.com>
+ <20240528222006.58283-20-tony.luck@intel.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <20240528222006.58283-20-tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0229.namprd04.prod.outlook.com
+ (2603:10b6:303:87::24) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530185049.2851617-1-robh@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|MN2PR11MB4581:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff40c397-7b20-4a5a-915c-08dc80e71d03
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?K0RVS25OZUlJQlBGbHBmWDJhRXB0amU5SnJPV0tCTXlyRGdFai9vd2J3bW5B?=
+ =?utf-8?B?Qzh4K2trQ2dnUnYvakhHTEpxdWNLSTlTYkxIOEhvT3pHbEFWUW1qSE9FZzZT?=
+ =?utf-8?B?SFcyZkZEQXkyK2o5S3VaSE5OdW9rVnVIQ0wrdHhLVVRkd24xSEkvczd3b3Jn?=
+ =?utf-8?B?aS9KV0d5S1Jxc2w3SjdJdEpBNzdLdm5IT2ROT0VMcXlNelM4ZXlFOTI4NWRh?=
+ =?utf-8?B?bkFpdGV3NDBaL1VyUzBjK3ZMZTQ1TjlBdGZNUlZCdEZrN0NmdUJ2bHNkWHRx?=
+ =?utf-8?B?elBNek5RekF6ZUd3NlU5RTdtM3Y0QUpWZVhtSlQ4Ym9RRDZjWGs2MXROTHJL?=
+ =?utf-8?B?dlN1am1uWmh0UHVNQm1XdzBHaXY1ZmgvNlJXQytadTJSYkxqdEtmaU0wQVVy?=
+ =?utf-8?B?Zjl2VlpqbThnWm9ZdDRUT2JrWUhwNEQrUG1KRDdHd2ZlVHZ5OUFsRlJ6L1l3?=
+ =?utf-8?B?aGtXbGFXRWord2tLVldBVytTR0gxSjA2QTlud1JHMmhSMkpsQmJkbUZhN2pI?=
+ =?utf-8?B?NEFsV0hDZDYvS1BaVkdrbG1yaHdJV09tUWJyZGEzTlhaTVRjYXUva3RJdlJn?=
+ =?utf-8?B?NjJzMnBab0JHOHFIbVhIZHlBRnNEOE4zaExWU0JtZHVMMFB4M0ZXeExUOURF?=
+ =?utf-8?B?N3VYYWxpVlBTQlQ1QWJ4Sk83Q2VwakdKeitYUHJZRGU0ZmN1SU9HK2dFa1Zz?=
+ =?utf-8?B?Zkc5WUp2dnl5YThLd3hsdlB5bk10U0pzYkNUMXpoR205QVBCUEo2eEJoZlZM?=
+ =?utf-8?B?VWxleFVONWxuRXN0NWkyWEx1KzIzK3pMajFUNDc3TWFpbE9zcWl3MzhNY0s2?=
+ =?utf-8?B?ZHdObHp3VGphMVhVemFZb2V3QjZKZ3lVOWw0QWw0Z3Nnd2hLekFIbGhPZVNF?=
+ =?utf-8?B?QmhsRUM5TCtYZmhiOWxpNVA2SHpwaGpzbHFsRDBCTTdLTFc5WStxS3pPZXlU?=
+ =?utf-8?B?RjlpUXFrZFZMS2FFL3k2Ynk0QlUweVArb0hlb21GOGZkS2NTaHIzd1h0S1R1?=
+ =?utf-8?B?T1FEak45YjhnSUh2MU1wNkFBRmdGYzBvUll5OVFNejRMUWlsdHliSGtueEF6?=
+ =?utf-8?B?dHNiUnpFZS9NOUdRVHFwdUdnNmhnUXBiL3k2Y0YvNzhEbjFSZXJIV3VML1Bx?=
+ =?utf-8?B?cHNyRWFLT2psdElYclY1cHB3dVBvQUNMQTc4eDNOZERHVnVHcUpVY2FQQVFD?=
+ =?utf-8?B?eVBBN3o1M0pnM0dzbFlFOUd1S1lISkl3Q1FhSlBNMjNWWkdQM0FiejkvZ0lM?=
+ =?utf-8?B?d09LSWE2dVMzeHU0UmJOYnpVL0ovRGNNWkluYU1WeWsybit6Y1U3VG1pZWEz?=
+ =?utf-8?B?eXU2aXhrKzdKUEVUdmhyZFEyVnJaaGRMbStQSXZLaCtCbkl6dDA4M2c3TTlR?=
+ =?utf-8?B?Y0xxU0JxSjRvZ3krd2pmTVRBS2RqdkdDellER0VVekU3WTZIT3JaNURNcWFG?=
+ =?utf-8?B?U2Y4UTNobXd5ZE13MmhRQkpLZmlNZ2duK1c3bkQwdjR4RG9LMDVaYmJiaXYr?=
+ =?utf-8?B?ZWdYRHcwdTU5SS9QZXB1SFhlSURFbC9sa29aaFU3TG5JRTVVS1Z6TEswOThj?=
+ =?utf-8?B?YnNub0NoVENaSlRqRmxDUHlFMmdrVzByanoxWERzRWoxMTRBOCtZNEFrMXpo?=
+ =?utf-8?B?dERjWmlFTmRsVHp1KzRiWmVUa0cvQTRZNU5DRi9JcnhKYkFRUVpUS0llQTN4?=
+ =?utf-8?B?dllUVWF0Ry9RTGhtZWNQS240ZExYaDZoWHZHS3Rjd1ora1h2Nm1sZlZnPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S2gvTVEwV1BLZEJ2OENTc1FUdWFjS2FuUEdZRzJxSDNUSDdLaFV0alRreFJl?=
+ =?utf-8?B?Y1RyNHJvUVVqbG9hVUQ5b1dPUzkwSXBJZGlCYyt3dnZsTE1FbTJoUE0zVUxw?=
+ =?utf-8?B?UmMyUmpaRWVRVG1oTy9vZytMN2ZjRnNmaFdUNU5LZDN4MDEwOTA3K0NtbHln?=
+ =?utf-8?B?VXROcDNIQmsxUE5VRmZLbVd2NURtVC9qWDBZSG9tSnM5aTNJczRKRzlBMUg0?=
+ =?utf-8?B?bXV6SkhDU2NWaXFPN0FKdFdiK3F1allaUmhvTWVyNGRTTElTbGV6MUtKOXc3?=
+ =?utf-8?B?VHdsSkxTaXVzR0Q3M25nQVliZG9QTWswVHB6M0F4Q2Rvb251cmZ3SlRRUkpP?=
+ =?utf-8?B?YXhhK1pVVWtyVytrM1Zna1k3Snh5bEFLVTE5YXF0QVhEWlAxM2lIQUdwZS9K?=
+ =?utf-8?B?UXVuWFZPZUI2ejNkNnMyTjFUdHdINVdpeDJVeURxRDk1UjNHMzZMVE5PQlB3?=
+ =?utf-8?B?ZlVkalpyalhsN2RMT0N1bVFIMWtzdUl6Q21xRkQ1M1lLcDZLNmREMzl6bzFr?=
+ =?utf-8?B?TmZtQ2d1U25PeFNXNDg0VDZGNHJkazA2UnUyVTFDTTIvZ1lmaU5kcURydkdn?=
+ =?utf-8?B?R0VkNVE4SUY4cmFrbVQ5THNFMWRCazY0QXNJSEFBc3pwQ3hZb0RrNUlYM1li?=
+ =?utf-8?B?U09RY3lIM2taUFQ5dXpPK1VxVk1hc2JGd0ttT1ZSL1FkNUxheG0rREF5NFY0?=
+ =?utf-8?B?TXNkcGNWN3pFaXJORTUvRkJqNGdsVDBEZzZvcVFzZ2FpRUJ5c0tEcGtGSDBI?=
+ =?utf-8?B?NWZOMGhwMzRhNlRTcmtabWxnYzhFUDRNTTIveTFEdVo4RjZ4TVI1Wi9aMThm?=
+ =?utf-8?B?Z05VYTdTVldSYVozMStZYTE4R3ZPTWVqOENSblpvNERZczZGR2w0SWFrdTBG?=
+ =?utf-8?B?K0I3bFZRUzFXekFOdHB0TDFNa25icEJGbE1ZWWo0Nm9LNHZGRktlTno2d1Q0?=
+ =?utf-8?B?OW5jSys3REEyemFEaTlGbE13UzdrZ1U1a2ZzL3hwTnAwbm5GeHhKVEZPaERJ?=
+ =?utf-8?B?R1JXY1RTMG9jNjYzb0ZpcDBlR1FRUTRXdkJnUWIvQklReGtzQzQwSGQ5UG8x?=
+ =?utf-8?B?SUVwN1ZVbC85SUpGVWJHRkZJQXc3L0FZN0RoN0ZhTmRObmJLZjRXcFdSb2w2?=
+ =?utf-8?B?L0kyL3R2NzQyc0ZtUmJtMSt3by9DRnRCc3d3L0hXVU1xc2JHaXN6Y0lxME1i?=
+ =?utf-8?B?ZTdLZlhtRWc0SWpxakZ1WnBtb2lSZThvM1dYYUNhYytYYXZQdkdjd0xKdlYx?=
+ =?utf-8?B?bUkrYkROQ05rVzg2dWNiT0dOT0xwOVN0dDFiUEtQQjluRU1XbVlNaExyVkli?=
+ =?utf-8?B?K3E5VkFtajZhb1dIOUdQRUtDd3JBVUFIK0tSQmdadWZ4TG5vT2l3MzdiSmJh?=
+ =?utf-8?B?UWhQRGFOb1d5OXQvcU1nK09KTzhiZklOanh0TUF5d3hyWlBiMnFTMGI4d1hR?=
+ =?utf-8?B?Vzd3YlR3bGRuSnlrSkVJVzFEcmJUME9pRDVsM0dvaVc2MFFuTEF5V0pDeHcx?=
+ =?utf-8?B?TE84V0hWM3h5dzhYT0NZWFZzRVVDSERqUWNoc3Q3UWRRZHpOb29hZnFRR3NI?=
+ =?utf-8?B?Y2x1ZXdVTnZiQnQ3ZjlYOXVhUENyajcwaFBwYVJMZ1NsRm15dFFSMXRsYjcx?=
+ =?utf-8?B?NUZGaWZJK1NzKzcxVkM1Y1F2cGVZZGlSaGZOa29OSUJNZk5kekdFcVpGZ21w?=
+ =?utf-8?B?M2tFSEN4SVdDMG9COTQ3YjBkbHZyZjZVOFJuQVZqRFBmWlpLeG5nVGFNbWlV?=
+ =?utf-8?B?Uy9NazhEZEhDbWVxQWw5aUNnMkliYnRNZDlvOWxkQVNXYW5HZFpkYkhjU09N?=
+ =?utf-8?B?djlIcUZEL3ZLOER4VDdDSUFwaU5ieUpSMVZUenNvSk56b1NtUnZUb0JPbnp2?=
+ =?utf-8?B?SWNKMDVRZDg3ZGEvcG9CbFQrM0xnbmlXSWpkNitXRXY2aFYzbXlYbUxUait0?=
+ =?utf-8?B?ZU5SakFnbkRoS3UvZENiWWx5a3RRL05XSThoVS9qL3doeWRMLzBYQTlaY2px?=
+ =?utf-8?B?THE0RkFYZFNIQWZVblNBVmNSZkFXQnYzVzB5WHJMY0czV2NMTUNBbmpjRFlE?=
+ =?utf-8?B?bG9UMjh3QjQrQWV2c3FQT0tGcTJLYXE0dTM4eVVENlNXclBQV0p2RGRMcHlo?=
+ =?utf-8?B?VEVyZitJSmh0cHl6dmtCYWxlZjNsK0l1dTRxblhxWEhFUTNYUVZHeDJmL0V3?=
+ =?utf-8?B?MFE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff40c397-7b20-4a5a-915c-08dc80e71d03
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 20:28:49.3517
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IgjRpUa2JRecfSMwUMG36hQXBbqbTh4ZbEiviU2qlxuTEwuOxQAQ9Lm7fF2qCCNS0Isd5ySoGy4PxNJr1MF2xJvfpqB01eyrSQiDAdzQzng=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4581
+X-OriginatorOrg: intel.com
 
-Hi Rob.
+Hi Tony,
 
-On Thu, May 30, 2024 at 01:50:48PM -0500, Rob Herring (Arm) wrote:
-> While OpenFirmware originally allowed default values of #address-cells
-> and #size-cells, FDT has long required explicit values. It's been a
-> warning in dtc for the root node since the beginning (2005) and for
-> any parent node since 2007. Of course, not all FDT uses dtc, but that
-> should be the majority by far. The various extracted OF devicetrees I
-> have dating back to the 1990s (various PowerMac, OLPC, PASemi Nemo)
-> all have explicit root node properties.
+should "and enabling" be dropped from shortlog?
+
+On 5/28/24 3:20 PM, Tony Luck wrote:
+> There isn't a simple hardware bit that indicates whether a CPU is
+> running in Sub-NUMA Cluster (SNC) mode. Infer the state by comparing
+> number CPUs sharing the L3 cache with CPU0 to the number of CPUs in
+> the same NUMA node as CPU0.
 > 
-> I have no idea what exists for Sparc, so disabling the warning for it.
-> If any other platforms hit the warning, then the warning can be
-> disabled for them.
+> If SNC mode is detected, print a single informational message to the
+> console.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> Add the missing definition of pr_fmt() to monitor.c. This wasn't
+> noticed before as there are only "can't happen" console messages
+> from this file.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
 > ---
-> Sparc folks, If anyone can dump DTs from some Sparc systems it would be
-> helpful.
+>   arch/x86/kernel/cpu/resctrl/monitor.c | 59 +++++++++++++++++++++++++++
+>   1 file changed, 59 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> index c7559735e33a..1c5162a68461 100644
+> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> @@ -15,6 +15,8 @@
+>    * Software Developer Manual June 2016, volume 3, section 17.17.
+>    */
+>   
+> +#define pr_fmt(fmt)	"resctrl: " fmt
+> +
+>   #include <linux/cpu.h>
+>   #include <linux/module.h>
+>   #include <linux/sizes.h>
+> @@ -1095,6 +1097,61 @@ void arch_mon_domain_online(struct rdt_resource *r, struct rdt_mon_domain *d)
+>   	wrmsrl(MSR_RMID_SNC_CONFIG, val);
+>   }
+>   
+> +/* CPU models that support MSR_RMID_SNC_CONFIG */
+> +static const struct x86_cpu_id snc_cpu_ids[] __initconst = {
+> +	X86_MATCH_VFM(INTEL_ICELAKE_X, 0),
+> +	X86_MATCH_VFM(INTEL_SAPPHIRERAPIDS_X, 0),
+> +	X86_MATCH_VFM(INTEL_EMERALDRAPIDS_X, 0),
+> +	X86_MATCH_VFM(INTEL_GRANITERAPIDS_X, 0),
+> +	X86_MATCH_VFM(INTEL_ATOM_CRESTMONT_X, 0),
+> +	{}
+> +};
+> +
+> +/*
+> + * There isn't a simple hardware bit that indicates whether a CPU is running
+> + * in Sub-NUMA Cluster (SNC) mode. Infer the state by comparing the
+> + * number CPUs sharing the L3 cache with CPU0 to the number of CPUs in
+> + * the same NUMA node as CPU0.
+> + * It is not possible to accurately determine SNC state if the system is
+> + * booted with a maxcpus=N parameter. That distorts the ratio of SNC nodes
+> + * to L3 caches. It will be OK if system is booted with hyperthreading
+> + * disabled (since this doesn't affect the ratio).
+> + */
+> +static __init int snc_get_config(void)
+> +{
+> +	struct cacheinfo *ci = get_cpu_cacheinfo_level(0, RESCTRL_L3_CACHE);
+> +	const cpumask_t	*node0_cpumask;
 
-For sparc the format looks much different - see:
-git://git.kernel.org/pub/scm/linux/kernel/git/davem/prtconfs.git
+Stray tab
 
-This is dumps from the prtconf tool found in Solaris.
+> +	int ret;
+> +
+> +	if (!x86_match_cpu(snc_cpu_ids) || !ci)
+> +		return 1;
+> +
+> +	cpus_read_lock();
+> +	if (num_online_cpus() != num_present_cpus())
+> +		pr_warn("Some CPUs offline, SNC detection may be incorrect\n");
+> +	cpus_read_unlock();
+> +
+> +	node0_cpumask = cpumask_of_node(cpu_to_node(0));
+> +
+> +	ret = cpumask_weight(&ci->shared_cpu_map) / cpumask_weight(node0_cpumask);
 
-Looking at for example t1000 it looks like #size-cells, #address-cells
-are used properly.
+It is not obvious to the static checker I tried that cpumask_weight(node0_cpumask)
+cannot be zero. Can you please insert a check to make static checkers happy?
 
-Looking at the older ss20 I see no use of these.
-Looking at sb100 (old sparc64 machine) I see inconsistent use.
+> +
+> +	/* sanity check: Only valid results are 1, 2, 3, 4 */
+> +	switch (ret) {
+> +	case 1:
+> +		break;
+> +	case 2 ... 4:
+> +		pr_info("Sub-NUMA Cluster mode detected with %d nodes per L3 cache\n", ret);
+> +		rdt_resources_all[RDT_RESOURCE_L3].r_resctrl.mon_scope = RESCTRL_L3_NODE;
+> +		break;
+> +	default:
+> +		pr_warn("Ignore improbable SNC node count %d\n", ret);
+> +		ret = 1;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>   int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+>   {
+>   	unsigned int mbm_offset = boot_cpu_data.x86_cache_mbm_width_offset;
+> @@ -1102,6 +1159,8 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+>   	unsigned int threshold;
+>   	int ret;
+>   
+> +	snc_nodes_per_l3_cache = snc_get_config();
+> +
+>   	resctrl_rmid_realloc_limit = boot_cpu_data.x86_cache_size * 1024;
+>   	hw_res->mon_scale = boot_cpu_data.x86_cache_occ_scale / snc_nodes_per_l3_cache;
+>   	r->num_rmid = (boot_cpu_data.x86_cache_max_rmid + 1) / snc_nodes_per_l3_cache;
 
-My best guess is that sparc32 machines see little to no use of them.
-sparc64 use them, but on older machines the usage is inconsistent.
-
-	Sam
+Reinette
