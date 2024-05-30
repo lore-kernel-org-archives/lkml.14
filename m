@@ -1,78 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC632BD0F;
-	Thu, 30 May 2024 05:08:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFBB21A19;
+	Thu, 30 May 2024 05:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717045708; cv=none; b=L3VOd8EoXIop0T6bkpL/mNtkcNhj9937DSE6/zTJFgaHUrpfUWcGxRvTnRxY6dN5S0TDt0DnwcrXbMxO8Zya1gIOuHN/faRygsNyHsLQDNVw+DiD4WxXo3ME5kWmS4l1flkXy6kIrL8whSH/ev0Tuzh/wsgkOY1S9U8U+XUip9s=
+	t=1717046338; cv=none; b=hmS2dMkFbK4nd6qjyxseaqe86CPJOHu2PCB1ToSa6NwACova+KvYdctPzG1Fd7ycFle03EvcGRs+mDZtIo0x+MxmVwwztSutuvQUFrJUaxYHI4ucEHIBmmtUW0q4SD8xJ1DTLFP85Aj9OL41TK40ncBt9Xl31T+TfzmYpRWcDZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717045708; c=relaxed/simple;
-	bh=gBDuLudmfbZqPlaV0ny+HEdAMRPxPbpiX0rPhaTiNrA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Zhew+zYfi/WuJqTcFJMO8WNvlC4kul4o+47VtZkaa/Sa0j6lDVEZN21dWPFU+zjlVycA/mXCLnf5sMYgawTiv4VfsBYYBNipOS0WZUWVqaLrNLtXjK8hkuTnTGHkJ6WavwAElOk4E3IhCu7+dGHgi9OusqquYjfSUDn9qIfCPpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Glcw5yIo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717046338; c=relaxed/simple;
+	bh=pB/96JTuRoro7LJvuDUAX1gz1MMHuzk0wvh4zz3qcYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ayaDVTCvxTyqIgZOb7LGZB3PSHdPz4oSBwKpeJnlaevLb0lJuA4VK0fsKDqYAZSX5bsGPoj5V56/vl3hJK91zJFBQQutLTRlo7ON6bzm8BrJ+egwrI5HKEfcxejMjQTBWF/pHyA0REp3hLuJTxOLN/8gRfWvfVsEjSOOT8Ltvu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=miPpxzI4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Glcw5yIo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3789C2BBFC;
-	Thu, 30 May 2024 05:08:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717045708;
-	bh=gBDuLudmfbZqPlaV0ny+HEdAMRPxPbpiX0rPhaTiNrA=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=Glcw5yIo6MMcWYrzrdTrjkd414NngIclvaDqVWtkot9kMBN4WOCe2Srlm6IUPHuDO
-	 IZLaij8L3CPCUye/e1nYu5RfUx+g7BD8SmGuxJmP8tMjrp/2yrT8xRZJoHLeJ/OadO
-	 OLuYAgFj+GkDjZwDjt+jaPfGBs1iyI6A+yDFDFakdxigEtwXggfhoE2GdXkJn8ZgFB
-	 LxifjrHRZ78ck0v+t5Q5eUbcdS9EsIsw2kbn6EWwWoohyNphIR8yT7m44mNjO3o+iB
-	 Exf68EdfLJrE/Ozy9cKlPPsZ5sV9/zrKfQKOEemzfY43heMMaXUBvLpOA2uXzYNz2I
-	 KnWgBlkqOqVFg==
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="miPpxzI4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC56C2BBFC;
+	Thu, 30 May 2024 05:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717046337;
+	bh=pB/96JTuRoro7LJvuDUAX1gz1MMHuzk0wvh4zz3qcYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=miPpxzI4OTYb1l3r1n90qJsxQVL+atcvaro2og/zgPEzy4uEfNng1Rwqx3ZfRf/ny
+	 LwtTWMX99mHCz/L85on2LtNJPS6fAj2E7HkXgDiOudZN/RoG5DhIleC4+hw03ofWYA
+	 q0GoJksCAdGY4VdJziGDG0geh3X/WTcBecxxQUzQ=
+Date: Thu, 30 May 2024 07:19:02 +0200
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Kuzey Arda Bulut <kuzeyb.business@gmail.com>
+Cc: security@kernel.org, jirislaby@kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: Subject: [SECURITY] Vulnerability in Linux Kernel
+Message-ID: <2024053036-villain-backlight-d92b@gregkh>
+References: <CAKmisHAUUqQ-7F+7BOymY7_3XBT1FE=gskraKDC1OmySZgS0yA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 30 May 2024 08:08:22 +0300
-Message-Id: <D1MPWI6C2ZCW.F08I9ILD63L4@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <lukas@wunner.de>
-Subject: Re: [PATCH 0/2] ecdsa: Use ecc_digits_from_bytes to simplify code
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Stefan Berger" <stefanb@linux.ibm.com>, <keyrings@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <herbert@gondor.apana.org.au>,
- <davem@davemloft.net>
-X-Mailer: aerc 0.17.0
-References: <20240529230827.379111-1-stefanb@linux.ibm.com>
-In-Reply-To: <20240529230827.379111-1-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKmisHAUUqQ-7F+7BOymY7_3XBT1FE=gskraKDC1OmySZgS0yA@mail.gmail.com>
 
-On Thu May 30, 2024 at 2:08 AM EEST, Stefan Berger wrote:
-> Simplify two functions that were using temporary byte arrays for
-> converting too-short input byte arrays to digits. Use ecc_digits_from_byt=
-es
-> since this function can now handle an input byte array that provides
-> less bytes than what a coordinate of a curve requires - the function
-> provides zeros for the missing (leading) bytes.
->
-> See: c6ab5c915da4 ("crypto: ecc - Prevent ecc_digits_from_bytes from read=
-ing too many bytes")
->
-> Regards,
->    Stefan
->
-> Stefan Berger (2):
->   crypto: ecdsa - Use ecc_digits_from_bytes to create hash digits array
->   crypto: ecdsa - Use ecc_digits_from_bytes to convert signature
->
->  crypto/ecdsa.c | 29 ++++++-----------------------
->  1 file changed, 6 insertions(+), 23 deletions(-)
+On Wed, May 29, 2024 at 08:25:18PM +0300, Kuzey Arda Bulut wrote:
+> Dear Linux Kernel Security Team,
+> 
+> I have discovered a null-ptr-deref security vulnerability in tty driver in
+> the Linux kernel. You can find the detailed descriptions of the
+> vulnerability in report.md.
+> 
+> If you have any questions or need further information, please do not
+> hesitate to contact me.
 
-BTW, would it make sense split ecdsa signature encoding to its own patch
-in my next patch set version and name it ecdsa_* style and put it to
-ecdsa.c?
+As the n_gsm is full of known issues by the developers, and the ldisc is
+not allowed to be loaded by a non-root user, this isn't all that serious
+of an issue.  See this thread for a list of problems that I think you
+might have already found here:
+	https://lore.kernel.org/r/DB9PR10MB5881D2170678C169FB42A423E0082@DB9PR10MB5881.EURPRD10.PROD.OUTLOOK.COM
 
-Just asking this because the part should be the same same for any ECDSA
-signature. It must scale also to all NIST variants before my patch set
-can land.
+Note, 2 fixes have landed in 6.10-rc2 for this driver, can you verify if
+these fix the issue you are reporting here?
 
-BR, Jarkko
+And do you have a proposed fix for this issue?
+
+thanks,
+
+greg k-h
