@@ -1,215 +1,101 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB97447A6A;
-	Thu, 30 May 2024 17:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9935405FB;
+	Thu, 30 May 2024 17:14:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089170; cv=none; b=cNDXpHtu2eGwitdHUIx5u5q8NDtW4/mgPpDeTkP9JKN/WHhhWssOpNzf4xGgLJ0Hae4Oa+zv4OD06P9XOSQvBTgxK6NUJUqXuZf7P8GfVCe09RJrPhEVTO+wnWH1iZBr/ey5g4VfD5lZ2F11fqwESiOuMMjVG42sKeBhciJS0dg=
+	t=1717089286; cv=none; b=WWvHVc/fvWM9L7eD0khFSz8bx/z5DXrUqcP1XIxg9PfPSqJnzsITnLjoQoOyILVdFSk9dqYD4pB0BYDGUuqoHDVWTUCVzkDIaPTNvsjcvx6FXXe2TgfXXe/r9fnDC/EecuHDEzmjyQOFCSsG48BV6KzC5aWuCXghQXd8Z6Ibe6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089170; c=relaxed/simple;
-	bh=LDZdp5aUZDzJRQFxyUmVWtBdJDRZWdCHtHshkVP8rzc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pzyVPhHeDI2ZRSGWH66lvA4EhMhsJjS2fNeI2/35DnAqxw+XNbDhcwRwDtimESfpgLNIlDQlZq8Q1qwVJveCDNfr69pYW5ObOC5rffrRgDWOtVNSHg7+NJhhtrRZqQe45ocp+sqOHy5n0ULfl1eKfdAtlK5WMHbMFkpVkiFuveM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UydH+mEx; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717089286; c=relaxed/simple;
+	bh=zmY0ORK1B5BkKpd/9Xan0GjeGKmQu1tubxofXOvTQ3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mGclEvESfvjTLIgMWMn0wi0Mh/eQfKXAdPfceadR6ZBXnl4fcPYIvPr4jwxT02yt1edpCvhjJqwMDfAu47BKi8CyAA0YZewWxH7g5p+zMJrVJZBq7Tg4v8/Xw/9rTHI9aaYIRFvkDZ3orZ8OHbdOV/jGiP+5dLRe94KDILKULuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVtnVjqu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UydH+mEx"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44UHCRCg026237;
-	Thu, 30 May 2024 12:12:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717089147;
-	bh=3aNzr9uceqg3pOicXXuyXGK/Y+G9kDvzv2RfMYKcupU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=UydH+mExLY4K4NTEty6agejlBOLfVB80LF3G2auLiJTi6Wrjho9N5eaQdWokVRmmN
-	 ePPCH38pfLEjcR9PspOBxP4G6BjE0oAR0HJ4CuzDaSHdQlmRYRaYQDdhp7S5sHlccN
-	 wG2xIWw+Zckf0g3jhI0xgIcHHy4NONQlq5QfgyQ4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44UHCRYl025196
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 30 May 2024 12:12:27 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
- May 2024 12:12:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 30 May 2024 12:12:26 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44UHCQgu056152;
-	Thu, 30 May 2024 12:12:26 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <andriy.shevchenko@linux.intel.com>, <adobriyan@gmail.com>,
-        <jani.nikula@intel.com>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-        <daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
-Subject: [PATCH v10 06/11] math.h: Add macros for rounding to closest value
-Date: Thu, 30 May 2024 22:42:25 +0530
-Message-ID: <20240530171225.2749312-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240530165925.2715837-1-devarsht@ti.com>
-References: <20240530165925.2715837-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVtnVjqu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB8AC2BBFC;
+	Thu, 30 May 2024 17:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717089286;
+	bh=zmY0ORK1B5BkKpd/9Xan0GjeGKmQu1tubxofXOvTQ3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cVtnVjquT9t/oU24rofoX/VO4hKKAoyUg8nwf1saq/CSo8QiS0jvEMbGyn4uOanMH
+	 w2AiX8R+8ATIx0dVLBVrk/PR6vskaGikuVfH6zcvNOsffNnXYx4zlMB6G2rEgC+p9m
+	 Q3Wx3u1ArDSN0tOlN4IUvG40geWHH9UBKMAWVRIlKAAgXrCd+2MSbpFDWQ8NEX33+4
+	 OfPS9hkHwCm/3gF4h/bshVJ1cr+d1gW573dmt5+X+DPzaZjcQN/aRDGFyJEbyvcnZD
+	 G9UU820BZUuVtIH6GdCWU0uNBXjyNW4GyF14wiex3EZMjG41pTNrSbTHPDiDmvqVQs
+	 5FS6ig9zbaL7Q==
+Date: Thu, 30 May 2024 20:14:40 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Anand Khoje <anand.a.khoje@oracle.com>
+Cc: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rama.nichanamatlu@oracle.com, manjunath.b.patil@oracle.com
+Subject: Re: [PATCH 1/1] RDMA/mlx5: Release CPU for other processes in
+ mlx5_free_cmd_msg()
+Message-ID: <20240530171440.GE3884@unreal>
+References: <20240522033256.11960-1-anand.a.khoje@oracle.com>
+ <20240522033256.11960-2-anand.a.khoje@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20240522033256.11960-2-anand.a.khoje@oracle.com>
 
-Add below rounding related macros:
+On Wed, May 22, 2024 at 09:02:56AM +0530, Anand Khoje wrote:
+> In non FLR context, at times CX-5 requests release of ~8 million device pages.
+> This needs humongous number of cmd mailboxes, which to be released once
+> the pages are reclaimed. Release of humongous number of cmd mailboxes
+> consuming cpu time running into many secs, with non preemptable kernels
+> is leading to critical process starving on that cpu’s RQ. To alleviate
+> this, this patch relinquishes cpu periodically but conditionally.
+> 
+> Orabug: 36275016
+> 
+> Signed-off-by: Anand Khoje <anand.a.khoje@oracle.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> index 9c21bce..9fbf25d 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+> @@ -1336,16 +1336,23 @@ static struct mlx5_cmd_msg *mlx5_alloc_cmd_msg(struct mlx5_core_dev *dev,
+>  	return ERR_PTR(err);
+>  }
+>  
+> +#define RESCHED_MSEC 2
+>  static void mlx5_free_cmd_msg(struct mlx5_core_dev *dev,
+>  			      struct mlx5_cmd_msg *msg)
+>  {
+>  	struct mlx5_cmd_mailbox *head = msg->next;
+>  	struct mlx5_cmd_mailbox *next;
+> +	unsigned long start_time = jiffies;
+>  
+>  	while (head) {
+>  		next = head->next;
+>  		free_cmd_box(dev, head);
 
-round_closest_up(x, y) : Rounds x to closest multiple of y where y is a
-power of 2, with a preference to round up in case two nearest values are
-possible.
+Did you consider to make this function asynchronous and parallel?
 
-round_closest_down(x, y) : Rounds x to closest multiple of y where y is a
-power of 2, with a preference to round down in case two nearest values are
-possible.
+Thanks
 
-roundclosest(x, y) : Rounds x to closest multiple of y, this macro should
-generally be used only when y is not multiple of 2 as otherwise
-round_closest* macros should be used which are much faster.
-
-Examples:
- * round_closest_up(17, 4) = 16
- * round_closest_up(15, 4) = 16
- * round_closest_up(14, 4) = 16
- * round_closest_down(17, 4) = 16
- * round_closest_down(15, 4) = 16
- * round_closest_down(14, 4) = 12
- * roundclosest(21, 5) = 20
- * roundclosest(19, 5) = 20
- * roundclosest(17, 5) = 15
-
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
----
-NOTE: This patch is inspired from the Mentor Graphics IPU driver [1]
-which uses similar macro locally and which is updated in further patch
-in the series to use this generic macro instead along with other drivers
-having similar requirements.
-
-[1]:
-https://elixir.bootlin.com/linux/v6.8.9/source/drivers/gpu/ipu-v3/ipu-image-convert.c#L480
-
-V10:
-- Update example comment to fix formatting issues as observed with html docs
-
-V9:
-- No change
-
-V8:
-- Add new macro to round to nearest value for non-multiple of 2
-- Update commit message as suggested:
-
-V1->V6 (No change, patch introduced in V7)
----
- include/linux/math.h | 72 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
-
-diff --git a/include/linux/math.h b/include/linux/math.h
-index dd4152711de7..1f6177191b66 100644
---- a/include/linux/math.h
-+++ b/include/linux/math.h
-@@ -34,6 +34,58 @@
-  */
- #define round_down(x, y) ((x) & ~__round_mask(x, y))
- 
-+/**
-+ * round_closest_up - round closest to be multiple of specified value (which is
-+ *                    power of 2) with preference to rounding up
-+ * @x: the value to round
-+ * @y: multiple to round closest to (must be a power of 2)
-+ *
-+ * Rounds @x to closest multiple of @y (which must be a power of 2).
-+ * The value can be either rounded up or rounded down depending upon rounded
-+ * value's closeness to the specified value. If there are two closest possible
-+ * values, i.e. the difference between the specified value and it's rounded up
-+ * and rounded down values is same then preference is given to rounded up
-+ * value.
-+ *
-+ * To perform arbitrary rounding to closest value (not multiple of 2), use
-+ * roundclosest().
-+ *
-+ * Examples :
-+ *
-+ * 	round_closest_up(17, 4) = 16
-+ *
-+ * 	round_closest_up(15, 4) = 16
-+ *
-+ * 	round_closest_up(14, 4) = 16
-+ */
-+#define round_closest_up(x, y) round_down((x) + (y) / 2, (y))
-+
-+/**
-+ * round_closest_down - round closest to be multiple of specified value (which
-+ *			is power of 2) with preference to rounding down
-+ * @x: the value to round
-+ * @y: multiple to round closest to (must be a power of 2)
-+ *
-+ * Rounds @x to closest multiple of @y (which must be a power of 2).
-+ * The value can be either rounded up or rounded down depending upon rounded
-+ * value's closeness to the specified value. If there are two closest possible
-+ * values, i.e. the difference between the specified value and it's rounded up
-+ * and rounded down values is same then preference is given to rounded up
-+ * value.
-+ *
-+ * To perform arbitrary rounding to closest value (not multiple of 2), use
-+ * roundclosest().
-+ *
-+ * Examples:
-+ *
-+ * 	round_closest_down(17, 4) = 16
-+ *
-+ * 	round_closest_down(15, 4) = 16
-+ *
-+ * 	round_closest_down(14, 4) = 12
-+ */
-+#define round_closest_down(x, y) round_up((x) - (y) / 2, (y))
-+
- #define DIV_ROUND_UP __KERNEL_DIV_ROUND_UP
- 
- #define DIV_ROUND_DOWN_ULL(ll, d) \
-@@ -77,6 +129,26 @@
- }							\
- )
- 
-+/**
-+ * roundclosest - round to nearest multiple
-+ * @x: the value to round
-+ * @y: multiple to round nearest to
-+ *
-+ * Rounds @x to nearest multiple of @y.
-+ * The rounded value can be greater than or less than @x depending
-+ * upon it's nearness to @x. If @y will always be a power of 2, consider
-+ * using the faster round_closest_up() or round_closest_down().
-+ *
-+ * Examples :
-+ *
-+ * 	roundclosest(21, 5) = 20
-+ *
-+ * 	roundclosest(19, 5) = 20
-+ *
-+ * 	roundclosest(17, 5) = 15
-+ */
-+#define roundclosest(x, y) rounddown((x) + (y) / 2, (y))
-+
- /*
-  * Divide positive or negative dividend by positive or negative divisor
-  * and round to closest integer. Result is undefined for negative
--- 
-2.39.1
-
+>  		head = next;
+> +		if (time_after(jiffies, start_time + msecs_to_jiffies(RESCHED_MSEC))) {
+> +			mlx5_core_warn_rl(dev, "Spent more than %d msecs, yielding CPU\n", RESCHED_MSEC);
+> +			cond_resched();
+> +			start_time = jiffies;
+> +		}
+>  	}
+>  	kfree(msg);
+>  }
+> -- 
+> 1.8.3.1
+> 
+> 
