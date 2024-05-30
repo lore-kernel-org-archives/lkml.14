@@ -1,128 +1,209 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9FF8183A66
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 12:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6773017B420
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 12:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717070503; cv=none; b=lo/2kD/PcIXXpa6nHjhQ75LVujzbXRBY/qELOR1z6v4JPBzx/E71TvgWPujxnuX7DdhapFpI15N8jvNqREkIClwN4uWzcRBmp+9e1LeAXPnewc7qGk2M7C3s7W+kHBUj8TBLX9cuqM0r39bqYVV4cdWWuyDDKwdy4PP0ctq4CpQ=
+	t=1717070749; cv=none; b=q3J9gPp9NpgrtUpUz2hHaVDFmmGSHsTwCmb3gMRDP16XIMVnKQBIr1wS277W9FoReZQGewGPvlDxXsgmThXanr+PFe8+Nkkjjh/lRxgA9lZ4ALcyrcOp8hnwb2u4sUydP3fawh2PRfqj8XE7z3ZxhwYDEpAFNknDPB9MCyj4G5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717070503; c=relaxed/simple;
-	bh=cTzUY6jSVP0z3DdLxZ3a8PW6ByaAklUFEgH+9kaYB0A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QguN8edULdN/OqF+xrDryPbh8HXd3qCzYbdU6y9Kqtinhn6HuFE6RxHW5OCTNglx6tk8pVmCNlvOGtqFfFxweC2Q+PJXNe6IfT/WUC5dew8JbWdGKgjmSot39XHrnY4kf5m2k3yaDQVODQ74T3A+sS3tG0UPwM2t3fMB7CEZzLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ilQJi9Xn; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1717070749; c=relaxed/simple;
+	bh=6DUJ8tsgfrpE7dMN5xMdCi4IdduLwN5+kaoGzysiLws=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C5Mhh90lE2hLxu/FIub/I19yMP7tTksW9bjtmUpRwChykD2SsuhzhNLKg7ejmyh3GOGb5h0a+XPHQyvazf01cpeeMY1qRRVW/LAWNelPbndpF25BftBCw1/Mv0scXr2iozUUN4OM1zKrOtKOmrscCxFG2DNuTu6K+34Sd/mqmhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NLJy8k+4; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ilQJi9Xn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=jzdIn
-	PFoiQE79oz0FAxRgBjy+bhSglkdU1VhG3eJOdY=; b=ilQJi9XnuoCEnlo9ZrzET
-	J2KRKmN1w7/JQMQAsG+opNLqL7/o1hIeQckARBUCFb5r9epSZ+JIHmeoWPB0llOD
-	I0vUvv9/7AyOitSsuEtxYX0B6jRayjKdNJM8E11ADIuE254333T5o6JlAX82Vr91
-	ZBkdWWdTQM3w12Z38ocg1c=
-Received: from localhost.localdomain (unknown [111.35.185.173])
-	by gzga-smtp-mta-g3-0 (Coremail) with SMTP id _____wDnD7SGalhmU1M7Fg--.17729S4;
-	Thu, 30 May 2024 20:01:13 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: sivanich@hpe.com,
-	kevin.tian@intel.com,
-	baolu.lu@linux.intel.com,
-	jroedel@suse.de
-Cc: linux-kernel@vger.kernel.org,
-	00107082@163.com
-Subject: [Regression] 6.10-rc1: Fail to resurrect from suspend.
-Date: Thu, 30 May 2024 20:01:10 +0800
-Message-Id: <20240530120110.22141-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NLJy8k+4"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a5a89787ea4so64917966b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 05:05:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717070744; x=1717675544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Sz6gimwf1g/uM/VSKdjbih5l18TxYGdFz1hq8H1cc4=;
+        b=NLJy8k+4nm+KGyY8I6C8gQYzhbfHVEhNlOgQX5NggMNeZENLtziBPvrD1xRC4cx6L1
+         lA+IGNWZL7Axe1wpirFLOF0IFZtLOs9JIuqr9SIba6tlsp0YbzJ9mmVkeQ/+nFa5miB6
+         jP61DyDmKqQ/cWi81In3RHkL2tymFiA+3K2Eu/byHjSXIiCmA/noRUP97R+TK6jxRx0L
+         g0FPcatqI7KeDPPJVH5A1CPrL7uJOFz8tkG+BXyBPsLTXtr8wbNH0rI1O1ycSt9Zd58H
+         HE1ACQL5vexebymvKAeuknNjSq/LfUyh8j6/44/IP8zCJAWWyNsyhNJ9jxFDeEp8atup
+         T1Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717070744; x=1717675544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Sz6gimwf1g/uM/VSKdjbih5l18TxYGdFz1hq8H1cc4=;
+        b=ozEWxpRCmai1YhixidDrNQNawAPCClLER1e7jv+ptYCsCRur6V1HknQ/EOYWoL5oZ/
+         sLEWR8m+pSM6OVqRGuMocPk3W+Jq960chrJqtG1xG1ovui9hpW3RsN1dYHK5VWQFLtLY
+         LKNtuM54AeAoprgcO4y6EE/UQPzcTwhyVjF7ZqnHyOHgHsAWa2q2cV+QeIEb0v+rKu5h
+         kB19tDyiRBCXxI3FLV6Hbl7r2DuHVv5zn8nREL106fyTl4zL1byP+GKcv/PHb+wAyfet
+         SfygHNSobLv4J1/rp1482tKVFNmwFrjD7sQOhQwbwk3zq2I9hK34TUDhVIyKjS8VBfEw
+         rQsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdEl60ff9vLCcT+xDe0mr5uLCRiO4mz0sgnZaT4Gq4b0M0jcoBsBwDpMFTOuB+ndLT8fjMWTa+CzhSDy3Ysmdyv1+Hi2yy0rkGjkZW
+X-Gm-Message-State: AOJu0Yz6NzQ7tvW2jRFyWEnhyKmAXpYuFcs/udQV6KrD98BdtxCQTYYP
+	LjkHuG5H7R1dN9jS7aJM2WnPhA2hVVoPWysiFWxN3RKKHaBqMjswpfMVUzKP6fUTvg+CodRE/nJ
+	PsUE3vJB9jijBJUhFsYsrdtmSyXDGoShKuLsSFw==
+X-Google-Smtp-Source: AGHT+IG/YXSYNiT6o3H60M0bRLCqTArznAl+myxGGWTw4/86wdJCt5jT5bYBWxWt9IjzAEOIedJ5eSNcM/ArO6iW/iM=
+X-Received: by 2002:a17:906:d784:b0:a59:b88c:2b2a with SMTP id
+ a640c23a62f3a-a65e925021dmr114248066b.50.1717070744574; Thu, 30 May 2024
+ 05:05:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnD7SGalhmU1M7Fg--.17729S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1UCryxJFy5tr4kCw18AFb_yoW7GFyxpr
-	yxWFnI9r43Xry8X3Wjgw47u3ZxG3s8Ar43u3y5Kw45AF98Gr9YqFsIqrW3Wry8ZF4UGay7
-	Xa4DZrn0934DZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p_KZXUUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBEAfuqmVOER6+FwABsf
+References: <20240530075424.380557-1-alexghiti@rivosinc.com> <ZlhpA9NsgI0z6t/E@andrea>
+In-Reply-To: <ZlhpA9NsgI0z6t/E@andrea>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Thu, 30 May 2024 14:05:32 +0200
+Message-ID: <CAHVXubi+XW=v=MKDov5j0v2QG-cAMjWxdqMRhgfLmo1JhCkryQ@mail.gmail.com>
+Subject: Re: [PATCH -fixes] riscv: Fix fully ordered LR/SC xchg[8|16]() implementations
+To: Andrea Parri <parri.andrea@gmail.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Leonardo Bras <leobras@redhat.com>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Andrea,
 
-My system fails to resurrect after `systemctl suspend` with 6.10-rc1,
-when pressing power button, the machine "sounds" starting(fans roaring),
-but my keyboard/mouse/monitor is not powered, and I have nothing to
-do but powering cycle the system.
+On Thu, May 30, 2024 at 1:54=E2=80=AFPM Andrea Parri <parri.andrea@gmail.co=
+m> wrote:
+>
+> > -#define _arch_xchg(ptr, new, sfx, prepend, append)                   \
+> > +#define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend, append)       =
+       \
+> >  ({                                                                   \
+> >       __typeof__(ptr) __ptr =3D (ptr);                                 =
+ \
+> >       __typeof__(*(__ptr)) __new =3D (new);                            =
+ \
+> > @@ -55,15 +55,15 @@
+> >       switch (sizeof(*__ptr)) {                                       \
+> >       case 1:                                                         \
+> >       case 2:                                                         \
+> > -             __arch_xchg_masked(prepend, append,                     \
+> > +             __arch_xchg_masked(sc_sfx, prepend, append,             \
+> >                                  __ret, __ptr, __new);                \
+> >               break;                                                  \
+> >       case 4:                                                         \
+> > -             __arch_xchg(".w" sfx, prepend, append,                  \
+> > +             __arch_xchg(".w" swap_sfx, prepend, append,             \
+> >                             __ret, __ptr, __new);                     \
+> >               break;                                                  \
+> >       case 8:                                                         \
+> > -             __arch_xchg(".d" sfx, prepend, append,                  \
+> > +             __arch_xchg(".d" swap_sfx, prepend, append,             \
+> >                             __ret, __ptr, __new);                     \
+> >               break;                                                  \
+> >       default:                                                        \
+> > @@ -73,16 +73,16 @@
+> >  })
+> >
+> >  #define arch_xchg_relaxed(ptr, x)                                    \
+> > -     _arch_xchg(ptr, x, "", "", "")
+> > +     _arch_xchg(ptr, x, "", "", "", "")
+> >
+> >  #define arch_xchg_acquire(ptr, x)                                    \
+> > -     _arch_xchg(ptr, x, "", "", RISCV_ACQUIRE_BARRIER)
+> > +     _arch_xchg(ptr, x, "", "", "", RISCV_ACQUIRE_BARRIER)
+> >
+> >  #define arch_xchg_release(ptr, x)                                    \
+> > -     _arch_xchg(ptr, x, "", RISCV_RELEASE_BARRIER, "")
+> > +     _arch_xchg(ptr, x, "", "", RISCV_RELEASE_BARRIER, "")
+> >
+> >  #define arch_xchg(ptr, x)                                            \
+> > -     _arch_xchg(ptr, x, ".aqrl", "", "")
+> > +     _arch_xchg(ptr, x, ".rl", ".aqrl", "", "     fence rw, rw\n")
+>
+> This does indeed fix the fully-ordered variant of xchg8/16().  But this
+> also changes the fully-ordered xchg32() to
+>
+>   amoswap.w.aqrl  a4,a5,(s1)
+>   fence   rw,rw
+>
+> (and similarly for xchg64()); we should be able to restore the original
+> mapping with the diff below on top of this patch.
 
-I run a bisect session, and narrows it down to following commit:
+And you already told me that privately...Sorry, my mind has been
+elsewhere lately...I'll fix that right now.
 
-	commit d74169ceb0d2e32438946a2f1f9fc8c803304bd6
-	Author: Dimitri Sivanich <sivanich@hpe.com>
-	Date:   Wed Apr 24 15:16:29 2024 +0800
+Sorry again and thanks,
 
-	    iommu/vt-d: Allocate DMAR fault interrupts locally
-	    
-	    The Intel IOMMU code currently tries to allocate all DMAR fault interrupt
-	    vectors on the boot cpu.  On large systems with high DMAR counts this
-	    results in vector exhaustion, and most of the vectors are not initially
-	    allocated socket local.
-	    
-	    Instead, have a cpu on each node do the vector allocation for the DMARs on
-	    that node.  The boot cpu still does the allocation for its node during its
-	    boot sequence.
-	    
-	    Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>
-	    Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-	    Link: https://lore.kernel.org/r/Zfydpp2Hm+as16TY@hpe.com
-	    Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-	    Signed-off-by: Joerg Roedel <jroedel@suse.de>
- 
-And I have confirmed that reverting this commit can fix my problem.
+Alex
 
-Following is my bisect logs:
-	$ git bisect log
-	git bisect start
-	# status: waiting for both good and bad commits
-	# good: [a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6] Linux 6.9
-	git bisect good a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-	# status: waiting for bad commit, 1 good commit known
-	# bad: [1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0] Linux 6.10-rc1
-	git bisect bad 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-	# good: [db5d28c0bfe566908719bec8e25443aabecbb802] Merge tag 'drm-next-2024-05-15' of https://gitlab.freedesktop.org/drm/kernel
-	git bisect good db5d28c0bfe566908719bec8e25443aabecbb802
-	# good: [db5d28c0bfe566908719bec8e25443aabecbb802] Merge tag 'drm-next-2024-05-15' of https://gitlab.freedesktop.org/drm/kernel
-	git bisect good db5d28c0bfe566908719bec8e25443aabecbb802
-	# bad: [a90f1cd105c6c5c246f07ca371d873d35b78c7d9] Merge tag 'turbostat-for-Linux-6.10-merge-window' of git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux
-	git bisect bad a90f1cd105c6c5c246f07ca371d873d35b78c7d9
-	# good: [8b35a3bb33b57bc2cb2694a50e49e0ea01b9ff6f] Merge tag 'pmdomain-v6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm
-	git bisect good 8b35a3bb33b57bc2cb2694a50e49e0ea01b9ff6f
-	# bad: [619b92b9c8fe5369503ae948ad4e0a9c195c2c4a] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
-	git bisect bad 619b92b9c8fe5369503ae948ad4e0a9c195c2c4a
-	# good: [91b6163be404e36baea39fc978e4739fd0448ebd] Merge tag 'sysctl-6.10-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl
-	git bisect good 91b6163be404e36baea39fc978e4739fd0448ebd
-	# bad: [0cc6f45cecb46cefe89c17ec816dc8cd58a2229a] Merge tag 'iommu-updates-v6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu
-	git bisect bad 0cc6f45cecb46cefe89c17ec816dc8cd58a2229a
-	# good: [89721e3038d181bacbd6be54354b513fdf1b4f10] Merge tag 'net-accept-more-20240515' of git://git.kernel.dk/linux
-	git bisect good 89721e3038d181bacbd6be54354b513fdf1b4f10
-	# good: [89721e3038d181bacbd6be54354b513fdf1b4f10] Merge tag 'net-accept-more-20240515' of git://git.kernel.dk/linux
-	git bisect good 89721e3038d181bacbd6be54354b513fdf1b4f10
-	# good: [de111f6b4f6a3010020825d22a068f416bc29c95] iommu/amd: Enable Guest Translation after reading IOMMU feature register
-	git bisect good de111f6b4f6a3010020825d22a068f416bc29c95
-	# good: [da55da5a42d4247d7a48b843fa5fcd9a4a10f4fe] iommu/arm-smmu-v3: Make the kunit into a module
-	git bisect good da55da5a42d4247d7a48b843fa5fcd9a4a10f4fe
-	# bad: [ba00196ca41c4f6d0b0d3c4a6748a133577abe05] iommu/vt-d: Decouple igfx_off from graphic identity mapping
-	git bisect bad ba00196ca41c4f6d0b0d3c4a6748a133577abe05
-	# bad: [446a68c58d2e5b8140d474f1a74082aebeee9bb0] iommu/vt-d: Add trace events for cache tag interface
-	git bisect bad 446a68c58d2e5b8140d474f1a74082aebeee9bb0
-	# bad: [cc9e49d35b4de47d6b656ac144cb22b11dc65c2e] iommu/vt-d: Remove debugfs use of private data field
-	git bisect bad cc9e49d35b4de47d6b656ac144cb22b11dc65c2e
-	# good: [9e7ee0f045395dc8aa55fbdc164c062484f4c88d] iommu/vt-d: Use try_cmpxchg64{,_local}() in iommu.c
-	git bisect good 9e7ee0f045395dc8aa55fbdc164c062484f4c88d
-	# bad: [d74169ceb0d2e32438946a2f1f9fc8c803304bd6] iommu/vt-d: Allocate DMAR fault interrupts locally
-	git bisect bad d74169ceb0d2e32438946a2f1f9fc8c803304bd6
-	# first bad commit: [d74169ceb0d2e32438946a2f1f9fc8c803304bd6] iommu/vt-d: Allocate DMAR fault interrupts locally
-
-
-FYI
-David
-
+>
+>   Andrea
+>
+> P.S. Perhaps expand the width of the macros to avoid newlines (I didn't
+> do it keep the diff smaller).
+>
+> P.S. With Zabha, we'd probably like to pass swap_sfx and swap_append as
+> well to __arch_xchg_masked().
+>
+>
+> diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cm=
+pxchg.h
+> index e1e564f5dc7ba..88c8bb7ec1c34 100644
+> --- a/arch/riscv/include/asm/cmpxchg.h
+> +++ b/arch/riscv/include/asm/cmpxchg.h
+> @@ -46,7 +46,8 @@
+>                 : "memory");                                            \
+>  })
+>
+> -#define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend, append)         =
+       \
+> +#define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend,                 =
+       \
+> +                  sc_append, swap_append)                              \
+>  ({                                                                     \
+>         __typeof__(ptr) __ptr =3D (ptr);                                 =
+ \
+>         __typeof__(*(__ptr)) __new =3D (new);                            =
+ \
+> @@ -55,15 +56,15 @@
+>         switch (sizeof(*__ptr)) {                                       \
+>         case 1:                                                         \
+>         case 2:                                                         \
+> -               __arch_xchg_masked(sc_sfx, prepend, append,             \
+> +               __arch_xchg_masked(sc_sfx, prepend, sc_append,          \
+>                                    __ret, __ptr, __new);                \
+>                 break;                                                  \
+>         case 4:                                                         \
+> -               __arch_xchg(".w" swap_sfx, prepend, append,             \
+> +               __arch_xchg(".w" swap_sfx, prepend, swap_append,        \
+>                               __ret, __ptr, __new);                     \
+>                 break;                                                  \
+>         case 8:                                                         \
+> -               __arch_xchg(".d" swap_sfx, prepend, append,             \
+> +               __arch_xchg(".d" swap_sfx, prepend, swap_append,        \
+>                               __ret, __ptr, __new);                     \
+>                 break;                                                  \
+>         default:                                                        \
+> @@ -73,16 +74,16 @@
+>  })
+>
+>  #define arch_xchg_relaxed(ptr, x)                                      \
+> -       _arch_xchg(ptr, x, "", "", "", "")
+> +       _arch_xchg(ptr, x, "", "", "", "", "")
+>
+>  #define arch_xchg_acquire(ptr, x)                                      \
+> -       _arch_xchg(ptr, x, "", "", "", RISCV_ACQUIRE_BARRIER)
+> +       _arch_xchg(ptr, x, "", "", "", RISCV_ACQUIRE_BARRIER, RISCV_ACQUI=
+RE_BARRIER)
+>
+>  #define arch_xchg_release(ptr, x)                                      \
+> -       _arch_xchg(ptr, x, "", "", RISCV_RELEASE_BARRIER, "")
+> +       _arch_xchg(ptr, x, "", "", RISCV_RELEASE_BARRIER, "", "")
+>
+>  #define arch_xchg(ptr, x)                                              \
+> -       _arch_xchg(ptr, x, ".rl", ".aqrl", "", "     fence rw, rw\n")
+> +       _arch_xchg(ptr, x, ".rl", ".aqrl", "", "     fence rw, rw\n", "")
+>
+>  #define xchg32(ptr, x)                                                 \
+>  ({                                                                     \
+>
