@@ -1,87 +1,150 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303244D117;
-	Thu, 30 May 2024 18:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E2D18756B
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 18:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717093761; cv=none; b=H7ckkOWaoGRpvQRYljJ3ky5pGTBFHzNnC2vlpxCqiJvgDYH0Kv7UNmDGTtx9yephR/SGoLClyJr9+w2ArA6sYTcFKDyrk5BoRQ4mCp6CWyGI2pd4BLmFbNz0566b4UlVVD1M9lk5hWE97SxvBsi3r+OZzms5hynmZ6QL7AL0fc4=
+	t=1717093853; cv=none; b=psWHWtaqXP8iHy4TZv4Lbof0ToNa9yXdcz1NuKo+0z23DXsW2nR/RFVIxsrgV8BFeCXOkUGHXMg2UvpZgGf6dVWfzr97CDAHORRJCvravX/hLKbewJQiuGU/xr8MK0a6rAnhqMRmwkAIjq/Ez9dsiiq1DdjxQeNdGrPwF3gITcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717093761; c=relaxed/simple;
-	bh=ZTWJJtOnoCEjjDR1YvgdBuP7PEVdi3wWf+FmqRugq7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pbm9W8dDdMUQRiYzQ58go2qNtyEKyiVpAJc8dR0gBCKaKRr/bH905Dq++AJWblmc0bj5d4v0BQaIyrGYt0pnZh2wtCpiOgBONjDrz1u/bxPixX/HiwGhYawcR95M5OOOQSgdUucbsSuit6wt3O5x4jLKuvhjkuPuas6IMAxGfG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c+mkWtRa; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717093853; c=relaxed/simple;
+	bh=33L6s4vKy97GaN4BZzqEE5/renpH8a2GYzMSjcrPTFQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=F1oLdpu3Nugpe/0E3cEZc27nqtdjXturO0R3RdJiPHeGe7t+w6GubOtzFPjjPZ74vYA06WTOYeNG1W+8XAdDH99J8K4XngnjlnycqGRjV4HFIpPmOv0I87EbdkRIYaZ3fJeIHBw+IExkTukLkMaqqrysVlP56G+DOeVf14p9iwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S7gjuGR6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+mkWtRa"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f480624d10so10459045ad.1;
-        Thu, 30 May 2024 11:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717093759; x=1717698559; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nhnjgQ6rE1XRAEbHs7A8p+fYG6USGpWs0Q0HH94k2uE=;
-        b=c+mkWtRaiUJyN47Ego5ly7waU0aqiK6aEP6VHakjPZZIUOXCMR9/VMfJhWjSDoGvbO
-         GN/fao30gw9pbfV2ebN3ORvHrlLvfaXxjDTInMe8vWbGONPwTHCUyC+LTlhovoYwP76B
-         Ade1j2Fx8M9ZZYvzKIeHaVTmTFyEU49FGFiCnbiQrJj36lGpbJZwYLu8jfomArnGqBTu
-         7d1YpI+I5SppIq5nouUCa6AL5bDwRn7a8/t5ye9NjSo1ubv8oiYUvLUFP6gaQuU4/xwt
-         n4y4rH2+Vx5oXqoErXmJYLgOCanVYB0izFPK9DAxxFG9zBLM1OxeGudJBZ4KjRIcMZIR
-         Bk9A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S7gjuGR6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717093851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=nd2gyK4ZonhwCOT/Y7f2LA/uGx9MOgzn7+cShk0mQFA=;
+	b=S7gjuGR67/iL1TF8qIIElhmNhswN9rCu42pRPTB9FA9XWHf3w5hHNAYt2G5D0lkIrE6G9d
+	+3StaA8GFiJSfqFdA7WXApoBPIfM11f3QVqSYvMgIauW86bZqu/sFEBldeCMBzpvZaraUE
+	eyoAFaUXX0XjHLDzCnFwOkIhkgxW8mM=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-286-aI51XmRtO2-TRSg1fso_gw-1; Thu, 30 May 2024 14:30:47 -0400
+X-MC-Unique: aI51XmRtO2-TRSg1fso_gw-1
+Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-5234e83c4a6so894257e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 11:30:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717093759; x=1717698559;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nhnjgQ6rE1XRAEbHs7A8p+fYG6USGpWs0Q0HH94k2uE=;
-        b=hiefzF8nF6VcxFYcqZhYQcm9wMkZTH4RUW3NaiPApFTwm+Ok6shVvZuXanDaJbvyDd
-         ATm9/+O0Pw4s3CdRgIoiCIoJ/fktCWOnOAWkK2SgHEOhM5pp9t1Prp9pXWRNi55Yi6Su
-         suUpVuRVkSwkt8jjDhMecBEaACgbvgy4di6d4N89VZjy4keExBO0VU8umY1Bp9Ku93YS
-         lvKksB4YLDBVYZPYFEzmeA6+NTra75MCVn698ra5CuckOtDo8y427sp15kM+2qxWDBzw
-         Iio2RwHX0VbtfOfyESVId0BSoioUDDgXvl06bvMeZWmBwqY6oX5ntPKk6ERhveM7syFh
-         RFsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqsM29MxFgibpFjrbCSkSoQ5I+0Z+7TLJR869BrncL2iOhdpdk2rah8brqxvNNos8ddt/RIVKACxtdmXRf5C39ZHU/J6dydmxUp6zRXsaBh8W9UdTJQwJmVJ9DxPe7jasUscXVUYaRchg5nQ==
-X-Gm-Message-State: AOJu0YxD6Bez8NMVpO+WNJrE9B+Y8prGeSm4CcbOlxCr3V0pcwFO7IPx
-	pmIY7/JLJEBNlIUfEXOhZ67lcGw722MrWnaZC5gPWcHyXzf13Ol6
-X-Google-Smtp-Source: AGHT+IEIvSA83Fm1beIcN7N5DqFxEn0p2FT7DfcpBfoR0l5W7lY+eiAwMxWAF/z92+SPWST9SQlwig==
-X-Received: by 2002:a17:902:e547:b0:1f5:e635:21e3 with SMTP id d9443c01a7336-1f6195f6418mr32102755ad.27.1717093759360;
-        Thu, 30 May 2024 11:29:19 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63235a619sm970975ad.69.2024.05.30.11.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 11:29:19 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 30 May 2024 08:29:17 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: willy@infradead.org, akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/8] writeback: factor out wb_dirty_freerun to remove
- more repeated freerun code
-Message-ID: <ZljFffFosO0qxE1T@slm.duckdns.org>
-References: <20240514125254.142203-1-shikemeng@huaweicloud.com>
- <20240514125254.142203-6-shikemeng@huaweicloud.com>
+        d=1e100.net; s=20230601; t=1717093846; x=1717698646;
+        h=content-transfer-encoding:content-language:cc:to:subject:from
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nd2gyK4ZonhwCOT/Y7f2LA/uGx9MOgzn7+cShk0mQFA=;
+        b=fK3/Hoh+c9rQTizD8QWVHuAxo785C723ZdiBdBM08MV/CE9e89hEWFAPLkBNwF2n6N
+         4lDktRd2lm09M8E3c5/jmhVvmz3W71CcHacptIT1NNmZ611mMxTtfDOWrkbMe3VEpeh/
+         sQJbACGLmWSlWgDAnk9xcE7XZmE7OOAc3HXhsimgjgwW/QDEQtDfs+7YbGel0x0y3llv
+         lIWCWxXnyXM6pPKLIq2l9ikYLWsUnVHplGZilp+nZKVNYgDEpMXZqAD2jMt+RuD9kZMY
+         CpbKIKFpHNvHj5Dp/x1xdr/pPUxh2V4HuQo8Z2xY81mjdhMfgoeb0k4Sw6qY0mJJUhKj
+         G6Nw==
+X-Gm-Message-State: AOJu0YzyiNWNOiM5OAz6/NLTXkLrugw3g3FURbjxf2PwnloMJdD6ls0s
+	iYdKHNkkTl6BtOrtGUgWbw44Tc7GE8JwG9R/dwdV+40uAjNMcaZOxSdJ9k35ZKs47dev16zO7/v
+	gMsfP3EmHAgOVm2e2xx/s2o4XPQMMf+IiC/T1rQkv4OQNdT87UizRtMfKVtQhTvuuUILFlQ==
+X-Received: by 2002:ac2:52ad:0:b0:52b:68e3:6e02 with SMTP id 2adb3069b0e04-52b7d4263ffmr1732274e87.27.1717093845809;
+        Thu, 30 May 2024 11:30:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGm6WIHSy1XP/kCjJRfi19l9VpuwmnbTkKAggfM+5EFREAwdT4X0ElY/xJHa6zOBTaduJM7Wg==
+X-Received: by 2002:ac2:52ad:0:b0:52b:68e3:6e02 with SMTP id 2adb3069b0e04-52b7d4263ffmr1732263e87.27.1717093845326;
+        Thu, 30 May 2024 11:30:45 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67eb344426sm2429566b.215.2024.05.30.11.30.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 11:30:44 -0700 (PDT)
+Message-ID: <470d8b3d-1c9a-475e-a6fb-4fcc4b9ef98e@redhat.com>
+Date: Thu, 30 May 2024 20:30:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514125254.142203-6-shikemeng@huaweicloud.com>
+User-Agent: Mozilla Thunderbird
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] platform-drivers-x86 for 6.10-2
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ platform-driver-x86@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 14, 2024 at 08:52:51PM +0800, Kemeng Shi wrote:
-> Factor out wb_dirty_freerun to remove more repeated freerun code.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Hi Linus,
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Here is the first round of fixes for platform-drivers-x86 for 6.10.
 
-Thanks.
+Highlights:
+ -  A use-after-free bugfix
+ -  2 Kconfig fixes for randconfig builds
+ -  Allow setting touchscreen_dmi quirks from the cmdline for debugging
+ -  touchscreen_dmi quirks for 2 new laptop/tablet models
 
--- 
-tejun
+Regards,
+
+Hans
+
+
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.10-2
+
+for you to fetch changes up to 3050052613790e75b5e4a8536930426b0a8b0774:
+
+  platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro (2024-05-27 11:43:03 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.10-2
+
+Highlights:
+ -  A use-after-free bugfix
+ -  2 Kconfig fixes for randconfig builds
+ -  Allow setting touchscreen_dmi quirks from the cmdline for debugging
+ -  touchscreen_dmi quirks for 2 new laptop/tablet models
+
+The following is an automated git shortlog grouped by driver:
+
+ISST:
+ -  fix use-after-free in tpmi_sst_dev_remove()
+
+thinkpad_acpi:
+ -  Select INPUT_SPARSEKMAP in Kconfig
+
+touchscreen_dmi:
+ -  Add info for the EZpad 6s Pro
+ -  Add info for GlobalSpace SolT IVW 11.6" tablet
+ -  Add support for setting touchscreen properties from cmdline
+
+x86-android-tablets:
+ -  Add "select LEDS_CLASS"
+
+----------------------------------------------------------------
+Hans de Goede (2):
+      platform/x86: x86-android-tablets: Add "select LEDS_CLASS"
+      platform/x86: touchscreen_dmi: Add support for setting touchscreen properties from cmdline
+
+Harshit Mogalapalli (1):
+      platform/x86: ISST: fix use-after-free in tpmi_sst_dev_remove()
+
+Steven Rostedt (Google) (1):
+      platform/x86: thinkpad_acpi: Select INPUT_SPARSEKMAP in Kconfig
+
+hmtheboy154 (2):
+      platform/x86: touchscreen_dmi: Add info for GlobalSpace SolT IVW 11.6" tablet
+      platform/x86: touchscreen_dmi: Add info for the EZpad 6s Pro
+
+ Documentation/admin-guide/kernel-parameters.txt    |  22 ++++
+ drivers/platform/x86/Kconfig                       |   1 +
+ .../x86/intel/speed_select_if/isst_tpmi_core.c     |   2 +-
+ drivers/platform/x86/touchscreen_dmi.c             | 117 ++++++++++++++++++++-
+ drivers/platform/x86/x86-android-tablets/Kconfig   |   2 +
+ 5 files changed, 139 insertions(+), 5 deletions(-)
+
