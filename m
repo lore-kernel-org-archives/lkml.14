@@ -1,108 +1,86 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C827A186E5C
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E30186E33
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717081127; cv=none; b=m0Ll2KAnZuItUmOhZ7w66pme90b2ZyV3KYUpR1oc0OsD68VchHJRpUGeuwEyelXGkJ4QKBtwzWwf4S1/+0AmZ7jKgvI8YJ1YtKQVGUpybpYJUXCjjDk/a+4eZLjHs37fEbTaY0CecvP3pKlsC0wkos3oPvGxqm5tQ/BFszHVYGA=
+	t=1717081153; cv=none; b=bERpTkpS5xekeUBMbH92XrgYn4Z/haAYDlctRVtidhCm7iLULmXwfcAs8EEdileJMhIb/baoILTk/fXy5X1tJV53rJP0bxAvk22e9zLh7C9E54AKtCWsNoPSk22AWsPnKb7Z8ckYGQ6xenPGGir6v5iiKTvWeeImel1Pvdapcgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717081127; c=relaxed/simple;
-	bh=sdD5EKvPawDfwF33sGxeusqZlqiuH15jx7QlM/a78pU=;
-	h=Subject:Date:Message-ID:MIME-Version:Cc:From:To; b=etHI6cXzigntheGRHU/QJi4RG4gfxFUw1a845IycCeq84U+Amd52dioKDIOgKvTFMuD+RK0St8lwKDLLp0y3xblwfmr/oXwD7Wwo0m4rX4fKoz8+gWHiMpoZSU/XnJDOIRwY09m/KgRi0IqCM9mu8OkOVFO8SgA5/hQJuHhEqmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ukpzFHxV; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1717081153; c=relaxed/simple;
+	bh=To7Obkom+Eu+b5CzCZMTNz1Zon//K/3BLINJ/4Jzzjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HAVFPcvmei+4v3tOeoqRN6xAPncVwBbXExB2SSBzt/k96I2ysUzHjVvsoqTLT6wRtP9wx3KyCRWVZuuvd5+xsekpfVMY2Yq5Zq4iPBy+31lrJavuA3ox1tFj5h9XoIwpVcBlQtbsAAH7GyHo4rGaMBAcyEv5M0F+O9V9AjZ5x0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AVtW63z+; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ukpzFHxV"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f62fae8c1aso620425ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717081125; x=1717685925; darn=vger.kernel.org;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5khecYMdKDHw89iJpsW1yiXKEfGunwm3+6Z9OsK0so=;
-        b=ukpzFHxVSgxINPRQ7Si+DPOVZBMyXrt5b3d6ycfwB56rvGeUiX4s6JPM3P8eas05p6
-         BVicx51UH3pnosWWR6TqqDaQECVtUJzXKLl86JcbmKPX9U0vU3I21+XDMVoT5NoVVpDe
-         x8wUmzsOjvUaEiLFgIgZiQSq2WghFlNNahzl8vvLYckamoiyydc7e4M8xj5buPemQHQG
-         gWSViWRdh5mgJWyJB5gnNxXjOjw2BCe7iuwd602yzveGDw8GYuBlJmN1Y2FWSttn9Q9g
-         fY1bkRNeUuV4Kiv+iKkVbKJ81neNsZBV0vaW2sybSGPA4jKryCr8KnLlvuvGck6F8/tq
-         /Yag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717081125; x=1717685925;
-        h=to:from:cc:content-transfer-encoding:mime-version:message-id:date
-         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l5khecYMdKDHw89iJpsW1yiXKEfGunwm3+6Z9OsK0so=;
-        b=Hug3uV3yoZx0qdXBGLHmKBdDVv8J68J6vH2+Heyj89XUhRa8b1r7l0ZkyoFOLIsHQt
-         JnCWpLZ1Ujay8lfiB4/UycgJ580rJU7IxnaY2anXk+JtMp2IoCgn7AZeLpkJbY2yQIXr
-         LMfWbB2yZEBfMR6fpWd6V0Qey76LX9Sp6vWGxVOWxVryN3ilojkG82f25knlDcuB5lS8
-         1tmVVj+zO0Y4dE+M6+H/bYHItkszB9eZedJoVgBb7LdA7Ch9pSn4AGjmFXP978USu+9x
-         FG3zaqpUhmPkFypTRsoXVWQII4Eg570aF+0olb5Lt2zLMUCfDp2Clytm6q72Q9q38HMr
-         kAyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAHmKn5JPxUd8MdtPkaAIOq9WFardf7JaLlVWUs2Emae+oFFN7tPd0YOIpkGQiH8DbU1wltJ9rK8oPx1mEQo90uiJl9epxkLANXYdq
-X-Gm-Message-State: AOJu0Yw51fGAnL2adARMpndFC+4T83IIwBRJ2BG9IHhRjJGFGXZRU8hz
-	qRYW+svdRPEA27jV2okaIGOda89pp+Rg8G+mXnA5t0WNWI+AWlL/QFe3vrgDlR8=
-X-Google-Smtp-Source: AGHT+IEKvEjoLbbrN4JdqK6X02tKZ1Vg/fjeNLYXxvvVYtupVhUWAkZyf5sli6+XANrywg1P87S/sw==
-X-Received: by 2002:a17:902:ea0b:b0:1f4:8190:33a5 with SMTP id d9443c01a7336-1f61a3dd9ebmr24276305ad.56.1717081124823;
-        Thu, 30 May 2024 07:58:44 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c967975sm119659155ad.152.2024.05.30.07.58.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 07:58:44 -0700 (PDT)
-Subject: [PATCH] drm/amd/display: Increase frame-larger-than warning limit
-Date: Thu, 30 May 2024 07:57:42 -0700
-Message-ID: <20240530145741.7506-2-palmer@rivosinc.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AVtW63z+"
+X-Envelope-To: linux@treblig.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717081147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YmuU//dkJp7/bqMDC5bYlhcDNvJuvWDepZNNFMpTHfQ=;
+	b=AVtW63z+BFg+N+i/VwF6voyhpXmTsIdi4tudn1OlsR1k9zDPA1VMDUJWt76QSW0eWIQkO6
+	rq9EIF1DH6yZF4KtAQhnn/d9675jDbbrrxE8CZIB8j/PUfeIVRR5Mu1nghvPPznYxZW2Yh
+	XLbrQnF24ylVS2WvPMpMZDkNCZwoezQ=
+X-Envelope-To: camelia.groza@nxp.com
+X-Envelope-To: linuxppc-dev@lists.ozlabs.org
+X-Envelope-To: linux-arm-kernel@lists.infradead.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+Message-ID: <336239e6-4369-44ea-a60c-d300cf6e6f81@linux.dev>
+Date: Thu, 30 May 2024 10:59:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Cc: harry.wentland@amd.com, sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com,
-  christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com, daniel@ffwll.ch, Qingqing.Zhuo@amd.com,
-  nathan@kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, hamza.mahfooz@amd.com,
-  chenhuacai@kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-  linux-kernel@vger.kernel.org
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: alexander.deucher@amd.com
+Subject: Re: [PATCH] soc/fsl/qbman: remove unused struct 'cgr_comp'
+To: linux@treblig.org, camelia.groza@nxp.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240528231123.136664-1-linux@treblig.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240528231123.136664-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Palmer Dabbelt <palmer@rivosinc.com>
+On 5/28/24 19:11, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> 'cgr_comp' has been unused since
+> commit 96f413f47677 ("soc/fsl/qbman: fix issue in
+> qman_delete_cgr_safe()").
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  drivers/soc/fsl/qbman/qman.c | 5 -----
+>  1 file changed, 5 deletions(-)
+> 
+> diff --git a/drivers/soc/fsl/qbman/qman.c b/drivers/soc/fsl/qbman/qman.c
+> index 7e9074519ad2..4dc8aba33d9b 100644
+> --- a/drivers/soc/fsl/qbman/qman.c
+> +++ b/drivers/soc/fsl/qbman/qman.c
+> @@ -2546,11 +2546,6 @@ int qman_delete_cgr(struct qman_cgr *cgr)
+>  }
+>  EXPORT_SYMBOL(qman_delete_cgr);
+>  
+> -struct cgr_comp {
+> -	struct qman_cgr *cgr;
+> -	struct completion completion;
+> -};
+> -
+>  static void qman_delete_cgr_smp_call(void *p)
+>  {
+>  	qman_delete_cgr((struct qman_cgr *)p);
 
-I get a handful of build errors along the lines of
-
-    linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn32/display_mode_vba_32.c:58:13: error: stack frame size (2352) exceeds limit (2048) in 'DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerformanceCalculation' [-Werror,-Wframe-larger-than]
-    static void DISPCLKDPPCLKDCFCLKDeepSleepPrefetchParametersWatermarksAndPerformanceCalculation(
-                ^
-    linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn32/display_mode_vba_32.c:1724:6: error: stack frame size (2096) exceeds limit (2048) in 'dml32_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
-    void dml32_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-         ^
-
-as of 6.10-rc1.
-
-Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
----
- drivers/gpu/drm/amd/display/dc/dml/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-index c4a5efd2dda5..b2bd72e63734 100644
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@ -62,9 +62,9 @@ endif
- 
- ifneq ($(CONFIG_FRAME_WARN),0)
- ifeq ($(filter y,$(CONFIG_KASAN)$(CONFIG_KCSAN)),y)
--frame_warn_flag := -Wframe-larger-than=3072
-+frame_warn_flag := -Wframe-larger-than=4096
- else
--frame_warn_flag := -Wframe-larger-than=2048
-+frame_warn_flag := -Wframe-larger-than=3072
- endif
- endif
- 
--- 
-2.45.1
-
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
