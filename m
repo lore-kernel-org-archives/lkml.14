@@ -1,233 +1,215 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2075.outbound.protection.outlook.com [40.107.8.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D29DDA1;
-	Thu, 30 May 2024 08:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717057096; cv=fail; b=R/EyzH+69fYjCpei6gUBiTjfK5haZbrFWGM8/Hy49F3nbtUohHaRv1TaixJ+MKzkBlS0UzrUVT3fubTMVQS2vwaX2PLRDkjGzxtT7/FHcuncwSgGOEIN6+7boGo4hu4rGCHNTIWMtEWtPf9gv9MfIqe9ILLtZkR8OlWp+Foj0SE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717057096; c=relaxed/simple;
-	bh=7zQIxZJ3NCWUUlWkpYqYk5NkODFwyEUvPUHzTuJJMiU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ml3LIsB0uo2aPvjU+pI4rEPpJnv9kwTUBYPC/uAjE1r91V4JxN0el5Sa0o39bueYHDzLpw2m+6fETiVCPTr03Cv1dxufaklbq6zTnUv2LC4KS53FFjUFuTNiVOOncDYZkgYlMRdvdiQv+PK0Nnn8H2tA9AqslWhTQYVm/lpOf14=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=qGFo9G7c; arc=fail smtp.client-ip=40.107.8.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B2914387F
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717057127; cv=none; b=FxCQ7E+oci+8DnC2vD+Qph/JpZkg8zFAcX6quh1H80Y5Z1uyVog9ja92VyTA9mojFFysppDmxpq9Bk1X/b9tdtqHUydeXyVP7bmnUToWrOJevdGNWKfayME0fLmjbljEdKyLkzfULAcU/3i+Xwrr7QGCJj8J1UHzwcqBcBsQ8mo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717057127; c=relaxed/simple;
+	bh=rNwHQiH6mmQDwL0U6Z8P3lRAILA5tuVfCPZGLxWRoqI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pQKS0c7ZKDB4UYYslqMLB+3f4CGZ2bthWE7UKDac865prOJociEkmXydjj6ahRhRi1YtKkuH6A+nNrvKcpCtXFL5jzZ11tSE8AK9tB17phzUJKwDDbp34JA9iHDqiCmqA/S432T6Uj7O9O63zU8pu8X440Q6fVQfQP0OIfZnGSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPplUFCG; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="qGFo9G7c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XsgsyhujJ8Xz5j96pV8s3Yc1PUtjxnQhdCasFFJEAW1agrUvc8RpGgG6QPLrN2SQdcva/5Lhof9lJlvIhhf6tikH2v1o2t3TIsnwmdTvLokJd90VuD2NZaiPHr+mHAY+nTlM8k4NxlRL5m5zmJINTf0iJfzSkr4IMRlYUtz4Y4XtxZB6Hhn/008GC2rxgbdVII/d0FHc4HeopoPxraxR25wu9TJNasnIJEGlKUm4ZGBi4+9iZIFMxYRQhaGUEh3OznqmcOgjucvtnE1OOUQeFXrbU7p3QLXHxaV7m3MWPEzuS9PomZlftdsyLUcTRx0BHvCRZ77mfxlsJIt00v9pTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hsOdDpuDO7fgXupti3q5PdZCXWrgXoqhEH3BVQ9S2TI=;
- b=lt9bB7fAvXXiVyYc3A/GKamZ5byPi6w8cgo/0dKEy0IKsF25JDM0aPCC0ZbL8VeDXtmg/VelTi1leB0dtH+nBKl1yZP8cBbpoeOF2wrtP0y0unoy8Xf3MGIX4HRqJN37FE7tqxC7HEEJd3hKJNQXG9/jIJslGMgeiMxPk52ST6X2jvP5W+nJalpafoYNwodNqpxhEoHGkv3OfLKUjKDZ2T+E5+pZlJ66GPHbyTHBERdbDRJaq7C20kEuwbuHa3eIrdOnu8hJZOQi6u4bfCftWGxkhAyW2nvz/xvwxqH0X8RAewanmeJv14Th57vDOXQq/qIAfqb6Lr8Le+/KE0wBPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hsOdDpuDO7fgXupti3q5PdZCXWrgXoqhEH3BVQ9S2TI=;
- b=qGFo9G7c/dtqxZbJQRmBoH3YoO78B0xiCmxDMKi3mhkcAb1fpFDM+s8QbiWHdwF9VgdGKBrZ/3BddHKRPMvLSOTQmPKj5OMTKHUCjyJHy5L4nDIYt96II/mZf5nP6TJ4aoLGbstRAlU4lOiKqE3G0I8Na4Nik0V2e3ZGsILiR0I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-Received: from DB9PR02MB9994.eurprd02.prod.outlook.com (2603:10a6:10:462::8)
- by VI1PR02MB6109.eurprd02.prod.outlook.com (2603:10a6:800:18c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Thu, 30 May
- 2024 08:18:10 +0000
-Received: from DB9PR02MB9994.eurprd02.prod.outlook.com
- ([fe80::f9a2:77a1:a5aa:8f8b]) by DB9PR02MB9994.eurprd02.prod.outlook.com
- ([fe80::f9a2:77a1:a5aa:8f8b%4]) with mapi id 15.20.7633.018; Thu, 30 May 2024
- 08:18:10 +0000
-Message-ID: <c936db6e-58cd-4445-92a2-9d53ba7f6b8c@axis.com>
-Date: Thu, 30 May 2024 10:18:08 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ti,ina2xx: Add alert-polarity
- property
-To: Guenter Roeck <linux@roeck-us.net>, Krzysztof Kozlowski
- <krzk@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@axis.com
-References: <20240529-apol-ina2xx-fix-v1-0-77b4b382190f@axis.com>
- <20240529-apol-ina2xx-fix-v1-1-77b4b382190f@axis.com>
- <1ae97b90-ff20-4238-abe2-f2e5d87fc344@kernel.org>
- <76dd5c0e-cc67-4ad1-8733-d8efdb8a172b@roeck-us.net>
-Content-Language: en-US
-From: Amna Waseem <Amna.Waseem@axis.com>
-In-Reply-To: <76dd5c0e-cc67-4ad1-8733-d8efdb8a172b@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MM0P280CA0023.SWEP280.PROD.OUTLOOK.COM (2603:10a6:190:a::9)
- To DB9PR02MB9994.eurprd02.prod.outlook.com (2603:10a6:10:462::8)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPplUFCG"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e95a1d5ee2so10089901fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717057124; x=1717661924; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zaL5WD7NTrZXgrCgxrS4DuBKHjHniNbKiAgaYsZSm8=;
+        b=aPplUFCGSojkax9RD0WkgnnbXyKdtL8uNYhXiyo/lHmeBMUmfjphVqoC/enAaFHyQl
+         eXeaIeWkWi1pIM2QoIHpzrtHZTKwLY0RQfp9Kwy2eVG3/+BvXykvlLmujyP55HWFS6+A
+         65BQ/HUWJQxqS1zlY3sgtAUhvV6RY8kHLj5yLOkrJ7v9Pg9u9DY2udaowNrSD/EEJMpc
+         SECvw4fJD53Vgbgzy54OyoLpSvIZuwin9nvaWgPnsw8sta+gDXwcSdA4n1rAmQh7vJc2
+         oeMq8wDIov0KdZtMHiELqADlJ6nldpBAksAx3hneh+3i6ygwSs2N65SO3fia9iteeMQD
+         8MnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717057124; x=1717661924;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/zaL5WD7NTrZXgrCgxrS4DuBKHjHniNbKiAgaYsZSm8=;
+        b=lhFPNID8HEj00ClPjuxzcI4lfhMqt8AeaRf8/t9bU/xzSudWAiXiNH7D8X/wJMU02L
+         jcLRoCsLLnU17/092oqxOhCL58lZOCOG+w989OuHii4OCfxs5OtLQR/4TDN0c/wiJioS
+         t8ecfHG6iAwFNXu/DOxr6C2vQsqxTmNgV5oRdBvOBJVjiNt+CZ8xLm80aP1s2IVtdXpn
+         Cj9bfVFZKb0XqTb3rccdB3uL5u/3rCtGsjCGZPq9JeWjuFPK+Y0xojh8EinDT1yLpl5v
+         zsQtQ8ziPNkvthKGvBAZSV2snrxRECeeVv+J+78y7JqT/4l35hxsE7HAAEc+1lRKMWVa
+         PFTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUv3lcqDS1f+WHSy/B4XKwp664XKDQOkT7TrCKzGI+msEZCMaMaeZYSD3OyTpglBrD7T1d3REm5ILJyUuxV96wzGYWEWl77jVKfg6Un
+X-Gm-Message-State: AOJu0YzfDFpzfuqhtGdDcUcNVbspKL5CSWaY5c76M9XRdTrV3+0dPNBE
+	zxBvusg72IEjV6Fkc3oglCn08DWtXLFgBAUY2GcfqqhlC5YbyMu5C4kLClR176XEr58m6Pdk/Lv
+	ZmBwFDUhxlW2trIKrGExK5T1F4EQ=
+X-Google-Smtp-Source: AGHT+IGfnzM04cgjZOM34LIMfzSs8VxbR1kCAU/6ZNji/seMTGawYM31bLJqAb8oXPM0EjOJ+2axtTo0pFZ0XEobT34=
+X-Received: by 2002:a2e:8ec8:0:b0:2e1:fa3f:67bd with SMTP id
+ 38308e7fff4ca-2ea8486d338mr10047371fa.36.1717057123451; Thu, 30 May 2024
+ 01:18:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR02MB9994:EE_|VI1PR02MB6109:EE_
-X-MS-Office365-Filtering-Correlation-Id: e25eb5b6-bd9d-4419-45e0-08dc80810b1d
-X-LD-Processed: 78703d3c-b907-432f-b066-88f7af9ca3af,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UlNXWisvc2NSRHRHSnVNUkp6R0l1Sm84RElEUEFrY1hxZEtJT1EwaENCVzVZ?=
- =?utf-8?B?TnAwU2hzZHdjN2NGYlVxOVpSV2lkNmpHaWhRL3poaXM2dDBWTkFCRVlUVWJy?=
- =?utf-8?B?OWJBckFPeG93UU8wQ3QxT2Q5VThBUFl6V2oydjNPY2xLU05oMGFmaU1nSEll?=
- =?utf-8?B?RlNVZ29PTG5BOTVvMk9KYXJ2SEtuaVhqblgwVFE4NmU5WFpYRWVITlN6ZmFs?=
- =?utf-8?B?b2tHa1d6Y0ZQRWF5a2J4cnA2MXp2RUgycnpLd0J2TUlrNFZsZDA1TG5rSTFm?=
- =?utf-8?B?a2NuNllDSEFPSi9yN2MyOGpxdUZtMVdLRm1Oa1pGcjVkSkErNTBCdUJrN1Nh?=
- =?utf-8?B?L2Fhc2RxZVJ1K3ZObk0xT1plK0VsUUtKcGwvUlhYMDlTbjhKUzVZZEFLU1BG?=
- =?utf-8?B?Y08wUVdkanFTVzY3alFkb05zRDVidUxQMWtHY1BabkVwYXI4S2c0d25tWWpT?=
- =?utf-8?B?N1RNT0lOcHNTSFQ0cjlhSWJxOWM3ZUI3T2RyUVhUTjNranhhN3hVcCtlcjE4?=
- =?utf-8?B?eFhHd0VBaUNnTmN2enlwVTRJd0ZYRm1BTUVCak5OZjZFSzhsV3BlRXhPaVgv?=
- =?utf-8?B?LzFCbGJmNkVTbWdHVXZTdWNQek1nak8wS0ZQaU1QOVRtMGNxd1UzQkdHY25R?=
- =?utf-8?B?UXZWbnJwdnQvMExKSUh6VnQ4YlFzREJjL0JWL2trbzRWQWF2SFFLQXdUbzdv?=
- =?utf-8?B?Y002c1BlMTBDMzB5UklMWDRuRnFGTFRiNTcyc3VQeHdjdUhjWVUvU0VCVnhU?=
- =?utf-8?B?eHh5aGNjTUd6YXdUb2owWVM0WXJXczJxcXF1QmxMZWM0TlVNcUZSSitrV3Zq?=
- =?utf-8?B?ankwSkV1a1dWOVBWUjNhOTBDK3U5V0J1VGdoNy9POXQyYTlDemh3OFdsSmZF?=
- =?utf-8?B?Qi9kejgwZDNaSzUvUUpoZkpBWTNmVGhOdU8xdEFwT3o5NVhyejUxQS9EcFR6?=
- =?utf-8?B?ZWk5RHd2YzVCeFBhMGJKVlh4RTNTK1MrY1lZYzBkSVEwZGFqREtodlFDQVE2?=
- =?utf-8?B?Rm5KTjZtUzlSak9aM1VnZGZpTDdVTG01UUhMbi8rUXhBZmdubXpGdXVHRHpJ?=
- =?utf-8?B?UWx6ZWtGTE93SDZabUhmNTkyWkdQZFU0ZWlsVUJkYzRKNVhmRkhJZktIdGVS?=
- =?utf-8?B?OGVaRjg1U1NocysvZVgwSlJZWEJseVFrRlgwRFRsQzgxdlMyZytOUVphVjQw?=
- =?utf-8?B?OUJRc1RxMXBNNDZ4bDE4TkIrNnVVdmYwMkNya2tqOGhaV010aFl6Q0EwemI2?=
- =?utf-8?B?WUJUdWJ5M0g5amMxTkZMby9hVzBlNW9KSTRlNTlVRVBteWRzNFcrRzBtZTVF?=
- =?utf-8?B?M1FYanRKTDNiU1prR2l4Y3dzZ0NpODBhVlN2NU9hWERFb2RSZStuOE82V0k4?=
- =?utf-8?B?UlVtYmhFVFlkOUlYR0JzZ3dneWV0T3VVM1N4Q2JPOWVZMzhweFhpR3BZS2ZJ?=
- =?utf-8?B?WUdmSEhFZWdZYjZ6bEdoOHlvTHZyaXpqYnYrU1R0eUdNYWpHYkhjRWJjblpM?=
- =?utf-8?B?TXVwZ3pJaDlXZFBoOWtET1g5a29pcnpBWTUrRWthSkloYUZjSlVLd3dHTHVy?=
- =?utf-8?B?QklUaWN0UHFkRThlL0l5YmZGU2RDQ2FMUFFyeDJGRUxaWFp1anFHa3AxNzk0?=
- =?utf-8?B?V1hTQUlOWXZ4N3ZSTWluQzhhbXltTmltTGUydVhVZGg5WWNqYUtsK2Q5R1Rp?=
- =?utf-8?B?aURGZ1FsNGFtOUhzS2ptVzBtL0Vkbmg5NHBFcWhVQmZSQWVlMnRTMmN3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR02MB9994.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OEhmNXUzWjNVREViQ0RaVU4wdXdFTG9FNVFBWVQyWStnVUEzaDJhbWYrdDhj?=
- =?utf-8?B?R0R2YWlOWlF2RnV4cG01eWo3VUZrVFVvMmZFc09sSWd3SnBYU3VqczBmOC9a?=
- =?utf-8?B?L0JJdWxYMjhrWTNnYUQ2elplMFB5WWJFOCtoOWJJRi9iRWNxRFhEYjJqdUxE?=
- =?utf-8?B?amR6V0c4amx4SHY1VnJXL0Q2SlhDOEdjSWk3RjhKWXhKaG1JQ2JGbmtxblhY?=
- =?utf-8?B?VWZYZjZXajNDZk5ZWmpoeXRxRUV4VHU5Rm82d2lDSkU4bHcwY3dOWXc3TFVi?=
- =?utf-8?B?b1RyL0pDUWFleFFRUnhEZmtnZXVXck53T0ZWUnFPWkIvc2VxVkkvSFBXNkpO?=
- =?utf-8?B?TXBxTXQvTVVVcVlvSGRIWDJSRm1Sbm8yOEVraGZqOHI4RFpKOUlid0txTlBt?=
- =?utf-8?B?TEUzSUIrZXc2OWFCWDF0OWVHMmJ6RlVWc3lhVEZKNWEvbWViQjN1L3FCWHVD?=
- =?utf-8?B?TjV5amgweGNDUmVGam1SMDJNZ0lrQmxRTGR5Q1JiTkk0S2pHZUpKYzNhaVRh?=
- =?utf-8?B?cW1yK2MzaXlaV3B1MnJSVk9LOVJqMUsrWHBCK2dtbTJWTUczUnlhMDlXZzha?=
- =?utf-8?B?QkR6UGFZQ3Y2WVVFZkNvemt3cnhiL0NCZXF5dzMxd2xLNktWTUkzL1Q0TXNF?=
- =?utf-8?B?VEZ2ZTZnN2EwemFNR2lCK3FaOVA2T1pUV3dYMXFXNVZ6SGtpREY4SCtvbU9C?=
- =?utf-8?B?ZVZtak45WTkzMzVuRG9lZmJhaUpwek52dDBYNk9JaDAzQ2VaTmhzOHA1ZWZF?=
- =?utf-8?B?dnd3anZKaUwvdGlGanJJMDdNWnE5TXdqU0Z4SHVDakErdzQrZnZ6aHo4S2dV?=
- =?utf-8?B?VkVjdUJxcHdnYk1JdjFlaC9yR1FmRkFCN0paRjAvYlF6UFBXQzhjS2pWbUFn?=
- =?utf-8?B?clo5dEJ2ZUxOTUt4SlY4dFZETFZPa1hkS1Rrb2hCdFgrck5EN0wxREpub2RU?=
- =?utf-8?B?V1VQVHVESndxaG9JTjBRNVFPNUNMYk9SWDhMakVkR0hKeFRJUllGWlc0eUVN?=
- =?utf-8?B?T3Z3NFRWbUdFMlUxTzZOOEQreVI0NDcxOE5PZ0hqdVRVVWVsYms3dFJaeXpJ?=
- =?utf-8?B?RnRKMmJiWlVhdXZrbU5PcWhIY3EwWFNLTDdyQUNmd3FLbGxMUUFic1RoWVdR?=
- =?utf-8?B?VVZKWi9FQ1BiS3N4Vjc0MnBNVEtSQ0RObnUwdTB1LzJsc0hSZTBRb2tabS92?=
- =?utf-8?B?djlUQUU0RDFIVFZ1WTA0L3dnU1o1ZXpIdEVOZ0VXdEtNaU9yYzRWdmJ1UVpK?=
- =?utf-8?B?VzlxY1lhQ1Zqcm5tb1A4cktoMWFwczRtelNuSlBDS1FPUjVMUFNubDRnaDJZ?=
- =?utf-8?B?TlJiZDV3VnJmQThZV2dBcjkrWjlveDI0MCtEckdqdmIrV0xoS1dBam1meUg0?=
- =?utf-8?B?Ynk4YWMrY1V4WkF1QTIvaXE0QWJlY1NPUVIxUWozbkpoSVR0MWpiQ05naVB0?=
- =?utf-8?B?WUNTNkUvSGNPNm10OGY0cE11dlpHT3F6MElya3UrQjY3NFlBSk01WlhZTHBJ?=
- =?utf-8?B?NHNkQUdpT1l4d3ZTcFo1UGxCU3J4SVIvVG5XQS9uWEo4UDJZeVpaaU83UUdz?=
- =?utf-8?B?TVB3bDVpb3lrZ21MYjR1SnhWRFQrMTA5VFBqdjJTOWN6NEpidlYwWm5hTVA2?=
- =?utf-8?B?STBLMWxqSU5qSkNuYlUrMXZ2anRRd1dyajRkb0I1MjFaSWxhQmEyZFR3eDBw?=
- =?utf-8?B?MjkxY1JET21wMXUrRmpKOUQ3MGFYOURZdE9veGJhL2xleDEzTE9nbDBVL2pJ?=
- =?utf-8?B?aXp6dVJuaGd5VE9TS0pTamZocUZrcWgyN1Bvc3djSDFLRzJ1bVRoY3FHKzIz?=
- =?utf-8?B?MTJNb0RNM1NGTWNGZkllamNBcXd6d25zdUJPNExqekUzY1RkN2V0RTh6cUEw?=
- =?utf-8?B?Z1pNTlZHSUlrdE1oUE9KVlV1L3FES0gxeVJjUUxVZEJHeVlxSmQ1ZThKRDhy?=
- =?utf-8?B?aUwvb0ZDRjYvdjFzOGxIN0xnUFhhbUo4WTdzOUN2VEtSMmo5VzA5NkFWeGNX?=
- =?utf-8?B?S0gyU3RuYnBCOXdnd3FWYWJYdDROVFg5RHIxZlI2WFNMOXo0MGxJQUp0WDE0?=
- =?utf-8?B?OG1nME04NDZZMUpiMGRHVERnUkwvMXNxUUdwSmZQWHBwVy96VSswNzIwSFdi?=
- =?utf-8?Q?003Q=3D?=
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e25eb5b6-bd9d-4419-45e0-08dc80810b1d
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR02MB9994.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 08:18:10.6282
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AZuPRv75VxEDgF6xqQdVYHQCDwNQ44RF9kOsYo03eLhp+ygqitVEJHZpNI6VMT8p
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB6109
+References: <20240530025144.1570865-1-zhaoyang.huang@unisoc.com>
+ <ZlgoX1E4/juuP7+o@MiWiFi-R3L-srv> <CAGWkznE=akrSBEQyq+f6tDN6fJ_J59WhJ-bvxpfrLUgTJ73h4g@mail.gmail.com>
+ <ZlgwxwN3k5vQVVvH@MiWiFi-R3L-srv>
+In-Reply-To: <ZlgwxwN3k5vQVVvH@MiWiFi-R3L-srv>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Thu, 30 May 2024 16:18:32 +0800
+Message-ID: <CAGWkznG5Y2hwJLQk_-U9qVtaYL_g3WgvHYVkD_z-QcTtjzLAkw@mail.gmail.com>
+Subject: Re: [PATCH] mm: fix incorrect vbq reference in purge_fragmented_block
+To: Baoquan He <bhe@redhat.com>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	steve.kang@unisoc.com, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/29/24 16:01, Guenter Roeck wrote:
-> On 5/29/24 00:07, Krzysztof Kozlowski wrote:
->> On 29/05/2024 08:07, Amna Waseem wrote:
->>> Add a property to the binding to configure the Alert Polarity.
->>> Alert pin is asserted based on the value of Alert Polarity bit of
->>> Mask/Enable register. It is by default 0 which means Alert pin is
->>> configured to be active low. To configure it to active high, set
->>> alert-polarity property value to 1.
->>>
->>> Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
->>> ---
->>>   Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 9 +++++++++
->>>   1 file changed, 9 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml 
->>> b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
->>> index df86c2c92037..a3f0fd71fcc6 100644
->>> --- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
->>> +++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
->>> @@ -66,6 +66,14 @@ properties:
->>>       description: phandle to the regulator that provides the VS 
->>> supply typically
->>>         in range from 2.7 V to 5.5 V.
->>>   +  alert-polarity:
->>
->> Missing vendor prefix.
->>
+On Thu, May 30, 2024 at 3:54=E2=80=AFPM Baoquan He <bhe@redhat.com> wrote:
 >
-> Are you sure you want a vendor prefix here ? Reason for asking is that
-> many hardware monitoring chips have configurable alert or interrupt 
-> polarity,
-> only the name is different. Some examples are the JC42.4 standard ("event
-> polarity"), adt7410/adt7420 "interrupt polarity", MAX31827 ("alarm 
-> polarity"),
-> or DS1621 ("output polarity"). We even have a vendor property, 
-> "adi,alarm-pol",
-> used for MAX31827.
+> On 05/30/24 at 03:35pm, Zhaoyang Huang wrote:
+> > On Thu, May 30, 2024 at 3:19=E2=80=AFPM Baoquan He <bhe@redhat.com> wro=
+te:
+> > >
+> > > On 05/30/24 at 10:51am, zhaoyang.huang wrote:
+> > > > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> > > >
+> > > > Broken vbq->free reported on a v6.6 based system which is caused
+> > > > by invalid vbq->lock protect over vbq->free in purge_fragmented_blo=
+ck.
+> > > > This should be introduced by the Fixes below which ignored vbq->loc=
+k
+> > > > matter.
+> > >
+> > > It will be helpful to provide more details, what's the symptom of the
+> > > brekage, and in which case vbq->free is broken.
+> > Vmalloc area runs out in our ARM64 system during an erofs test as
+> > vm_map_ram failed[1]. We find that one vbq->free->next point to
+> > vbq->free which makes list_for_each_entry_rcu can not iterate the list
+> > and find the BUG.
 >
-> Secondary problem is that not all chips of the series support this
-> configuration. INA209 has a configurable "warning polarity", but the
-> warning pin and the smbus alert pin are two different pins.
-> INA219 and INA220 do not have alert or interrupt output pins.
-> Only INA226, INA230, INA231, INA238, and INA260 support configurable
-> alert polarity.
+> Thanks for these information which are very helpful and important.
+> They need be put in log for easier understanding.
+ok, I will update the commit message in the next version.
+
+> about the vbq->free list breakage by the run out vmalloc area, could
+vm_map_ram()->vb_alloc() will allocate new vb->va which corresponding
+to 4MB vmalloc area as list_for_each_entry_rcu returns immediately
+when vbq->free->next points to vbq->free. That is to say, 65536 times
+of page fault after the list's broken will run out of the whole
+vmalloc area.
+
+> you say more about how it's caused? And do you think we need fix that
+> vbq->free list breakage either?
+IMO, the purge_fragmented_block->list_del_rcu could race with
+new_vmap_block->list_add_tail_rcu when vbq is wrongly referenced.
+
 >
-> Thanks,
-> Guenter
-
-I agree with not using vendor prefix with alert-polarity property. 
-@Krzysztof Kozlowski what do you suggest?
-
-Amna
-
->>> +    description: |
->>
->> Do not need '|' unless you need to preserve formatting.
->>
->>> +      Alert polarity bit value of Mask/Enable register. Alert pin 
->>> is asserted
->>> +      based on the value of Alert polarity Bit. Default value is 
->>> active low.
->>> +      0 selects active low, 1 selects active high.
->>
->> Just use string, easier to read. But for sure do not introduce different
->> values than we already have - GPIO HIGH is 0, not 1.
->>
->>
->>
->> Best regards,
->> Krzysztof
->>
+> >
+> > [1]
+> > PID: 1        TASK: ffffff80802b4e00  CPU: 6    COMMAND: "init"
+> >  #0 [ffffffc08006afe0] __switch_to at ffffffc08111d5cc
+> >  #1 [ffffffc08006b040] __schedule at ffffffc08111dde0
+> >  #2 [ffffffc08006b0a0] schedule at ffffffc08111e294
+> >  #3 [ffffffc08006b0d0] schedule_preempt_disabled at ffffffc08111e3f0
+> >  #4 [ffffffc08006b140] __mutex_lock at ffffffc08112068c
+> >  #5 [ffffffc08006b180] __mutex_lock_slowpath at ffffffc08111f8f8
+> >  #6 [ffffffc08006b1a0] mutex_lock at ffffffc08111f834
+> >  #7 [ffffffc08006b1d0] reclaim_and_purge_vmap_areas at ffffffc0803ebc3c
+> >  #8 [ffffffc08006b290] alloc_vmap_area at ffffffc0803e83fc
+> >  #9 [ffffffc08006b300] vm_map_ram at ffffffc0803e78c0
+> > #10 [ffffffc08006b420] z_erofs_lz4_decompress at ffffffc0806a49b0
+> > #11 [ffffffc08006b670] z_erofs_decompress_queue at ffffffc0806a8fd0
+> > #12 [ffffffc08006b860] z_erofs_runqueue at ffffffc0806a8744
+> > #13 [ffffffc08006b970] z_erofs_readahead at ffffffc0806a6cfc
+> > #14 [ffffffc08006ba00] read_pages at ffffffc08037ed78
+> > #15 [ffffffc08006ba70] page_cache_ra_unbounded at ffffffc08037eb58
+> > #16 [ffffffc08006bb00] page_cache_ra_order at ffffffc08037f42c
+> > #17 [ffffffc08006bbb0] do_sync_mmap_readahead at ffffffc080371d3c
+> > #18 [ffffffc08006bc40] filemap_fault at ffffffc080371774
+> > #19 [ffffffc08006bd60] handle_mm_fault at ffffffc0803cc118
+> > #20 [ffffffc08006bdc0] do_page_fault at ffffffc08112a618
+> > #21 [ffffffc08006be20] do_translation_fault at ffffffc08112a36c
+> > #22 [ffffffc08006be30] do_mem_abort at ffffffc0800bfbf0
+> > #23 [ffffffc08006be70] el0_ia at ffffffc08111583c
+> > #24 [ffffffc08006bea0] el0t_64_sync_handler at ffffffc0811156a4
+> > #25 [ffffffc08006bfe0] el0t_64_sync at ffffffc080091584
+> >
+> >
+> > >
+> > > >
+> > > > Fixes: fc1e0d980037 ("mm/vmalloc: prevent stale TLBs in fully utili=
+zed blocks")
+> > > >
+> > > > Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> > > > ---
+> > > >  mm/vmalloc.c | 11 +++++++----
+> > > >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > index 22aa63f4ef63..112b50431725 100644
+> > > > --- a/mm/vmalloc.c
+> > > > +++ b/mm/vmalloc.c
+> > > > @@ -2614,9 +2614,10 @@ static void free_vmap_block(struct vmap_bloc=
+k *vb)
+> > > >  }
+> > > >
+> > > >  static bool purge_fragmented_block(struct vmap_block *vb,
+> > > > -             struct vmap_block_queue *vbq, struct list_head *purge=
+_list,
+> > > > -             bool force_purge)
+> > > > +             struct list_head *purge_list, bool force_purge)
+> > > >  {
+> > > > +     struct vmap_block_queue *vbq;
+> > > > +
+> > > >       if (vb->free + vb->dirty !=3D VMAP_BBMAP_BITS ||
+> > > >           vb->dirty =3D=3D VMAP_BBMAP_BITS)
+> > > >               return false;
+> > > > @@ -2625,6 +2626,8 @@ static bool purge_fragmented_block(struct vma=
+p_block *vb,
+> > > >       if (!(force_purge || vb->free < VMAP_PURGE_THRESHOLD))
+> > > >               return false;
+> > > >
+> > > > +     vbq =3D container_of(addr_to_vb_xa(vb->va->va_start),
+> > > > +             struct vmap_block_queue, vmap_blocks);
+> > > >       /* prevent further allocs after releasing lock */
+> > > >       WRITE_ONCE(vb->free, 0);
+> > > >       /* prevent purging it again */
+> > > > @@ -2664,7 +2667,7 @@ static void purge_fragmented_blocks(int cpu)
+> > > >                       continue;
+> > > >
+> > > >               spin_lock(&vb->lock);
+> > > > -             purge_fragmented_block(vb, vbq, &purge, true);
+> > > > +             purge_fragmented_block(vb, &purge, true);
+> > > >               spin_unlock(&vb->lock);
+> > > >       }
+> > > >       rcu_read_unlock();
+> > > > @@ -2801,7 +2804,7 @@ static void _vm_unmap_aliases(unsigned long s=
+tart, unsigned long end, int flush)
+> > > >                        * not purgeable, check whether there is dirt=
+y
+> > > >                        * space to be flushed.
+> > > >                        */
+> > > > -                     if (!purge_fragmented_block(vb, vbq, &purge_l=
+ist, false) &&
+> > > > +                     if (!purge_fragmented_block(vb, &purge_list, =
+false) &&
+> > > >                           vb->dirty_max && vb->dirty !=3D VMAP_BBMA=
+P_BITS) {
+> > > >                               unsigned long va_start =3D vb->va->va=
+_start;
+> > > >                               unsigned long s, e;
+> > > > --
+> > > > 2.25.1
+> > > >
+> > > >
+> > >
+> >
 >
-
