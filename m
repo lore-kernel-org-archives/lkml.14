@@ -1,144 +1,160 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089C318755D;
-	Thu, 30 May 2024 15:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE1C17D8B3
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 15:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717082056; cv=none; b=A+pYBfImtomNG+qod+f4ggHOR/8EhLFM7EWhVUBCuTGXSHiHm96Dofkzq+8PB5YYID4J6AIOxvhWdU+Ww366+C42T+CZ4yiYl/m3syZfUPGu8zoVxvP8WOHpez84LdDEJHuOSnpXMBuaGaGItQ1VwIdyKduwy4FS1tQYFl+Jvsk=
+	t=1717082072; cv=none; b=th/EeQxaFSJFn+SVlyqdBZw22xvehqGl2coMRUHe6mkwpbBjNPcD2MqNGvblEn5vgxc6CcJoxBvDyfIFWTyCeuzZEvyNu1npzWJ9LSwr6vNgJDemaPP2MWiZC6faP2Fo5KN0UTPu7wng6W3myYyVD5YKOSm9dnVp3vk3Hj7c8YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717082056; c=relaxed/simple;
-	bh=WIbbh2QIEse26jjLM2QZGcRptTEmJwSZHC3dc6xVXTI=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=PXzITOVziOh43Dv2zM3ygVcrTBgNXIoXDMelGv4tmbyF8PwVNkuy7RHVNAeJkFdqZI+ZtTE128EyZS5AP6HOfbCq1L0wRA9FooHJwVaqilPydm+7gVpK9JS/7cAoMmJsJzUAXF7eEpPkgPHQvXsEvfM/C3tXSYJNiiKhRJJLNns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=my013GmM; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717082072; c=relaxed/simple;
+	bh=ZRrBEnty0a3OvlAcxFKH/wVNDRG+6DSpTucqWWr66pQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YbWu2icWKjft3rudG0qq8jBmMsiDSfY7IVZBoh7I0ia/3y//qNvylB6rX6cDfUDsHMLEdbf3EBgqRHYuM+27HoDl4tnL6bc9SMdb2Ev0CHE9c1GFahdCvHVCLwSW5utzxILYqGcWk4U2e3qpBcUekb1d+z19oqZnDAECsqgqYO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IA0CP7al; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="my013GmM"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70231ac9093so743276b3a.3;
-        Thu, 30 May 2024 08:14:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IA0CP7al"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6f8d0a00a35so38690a34.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717082054; x=1717686854; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717082069; x=1717686869; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
-        b=my013GmM7FWATseWx6v6ZmgH4OZZAsT9IztuiSkjPRmr8mtjqIBzUL0NJK68YHcyZF
-         mzmJLT5io1neE+MLPiqBHTIkFxY093L2XPaIICTmUHso1Vbqu0PyPriENO4tM09id7No
-         Sr3S95yk3A0D5JvaoWxD2MIq/BK18gCEn5Spg2iKjxFajcNuHzd64wb2DZem8dlQNIYI
-         P3ssaNd2TYeh2RTFZ4EnR46H/Mrt2Sve2jCO32WTgczDQf8NMVGMvvrdYxG9A5c37Kml
-         wRbe/8tLdaTodctr2vAxYeKZrw6yXKfOzGVgRGdo7yq7VYMSo9nDUME7OYr6963X8vVv
-         /YmA==
+        bh=FbWYNDGeB4acdSvzLHvqWONXfu2Ni8kWHZVRyossuwM=;
+        b=IA0CP7alcnAhoaw0ReGN3EZynNr/XEzvSWs+w6TKe4f+X5SVe04w8nFkvj+jymikic
+         5QYcY3eBou1//g9hryIINrBQirenZ85DvWk5ppdc+u3r6WskxZIiF7HSNvEwAE/jzyAz
+         q2yC6I3p1fafA+YBZC60mQ+3n9sVqBVpTsUEGNBUcI78wkYFJ1m7gTTtluVKJlH40KM8
+         5WiXVRJNN2hWgQLNwU4M6wwQoNpuLO141M3B6wmMFttkd6CtZ6oblh94jTu6M4arzqs9
+         MAY2fxA7hG1pcCpnaiWSP3c6Ew/+6u32i4veEDCl9n3J3OK/iGJIl0rnYHa0ECqU7ne+
+         NNWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717082054; x=1717686854;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717082069; x=1717686869;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
-        b=WXzPRtsaAfE8PwHx1m5LAa5gosND8vOh97qeAHSA9coN9hN6nDyEpXFL+52l/6jwCx
-         XG9vbfXsO2HAAJ4hBI2tFT4JF9xQztD5dPX+eZMvaMhBpzU9BOvjHU4M1xRhJRGxnOQy
-         NutqU/Phkb2lB29DkyUpEjwC5Q/yZnza4A7Q3bRYOVaA0EAyjkYl3QSmANuK0x1Gf8jg
-         OVyRMJ0RqQOpGQOQnUBY5rORf6bYYyxFsE17SK0r+lRA/hTZ9dnBw11aA3GpAAeaN+2p
-         6mubsYyhVHAySsNRIeRMFI3pK7SSk3wPAslUHpwnaxw/ZocakY+ue74gm2Vbgq76OQlD
-         uNxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUI6qbZnqzAhK9P8DeBmVfJv5NVquVklfNK7CIDKBm2s5pDGiU1KzsPK9mywJvRSOwvqP4zVV1fkPs3Q7MgdUhdmlJA9E5gFB0eWglMW8D5IPmRHIclr1CCKjDunjCqALTeM7Qu8kYi
-X-Gm-Message-State: AOJu0YzYqgHBSaYX1tkwTWsi+NEr4PiZqcB2sH7HrrP+4p3eYCROoxcG
-	gYZU/uC8QYUq0dw+Y2CNp6xCjtZMhZCBmQ5ONIz7v7KOke04Adtu
-X-Google-Smtp-Source: AGHT+IGICTP5sklLFqbs/ZwVa6ppaEurwlGt53+Midop+1P6fL/wAwqHWhlksi7i6tSOKUtz3E7Y8Q==
-X-Received: by 2002:a05:6a20:104c:b0:1a7:7ac1:a3ba with SMTP id adf61e73a8af0-1b26460b783mr1963623637.53.1717082054022;
-        Thu, 30 May 2024 08:14:14 -0700 (PDT)
-Received: from localhost ([36.40.187.183])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-68226a133d0sm10738538a12.62.2024.05.30.08.14.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 30 May 2024 08:14:13 -0700 (PDT)
-From: joswang <joswang1221@gmail.com>
-To: Thinh.Nguyen@synopsys.com
-Cc: gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	joswang <joswang@lenovo.com>
-Subject: [PATCH] usb: dwc3: core: workaround for hibernation D3 entry timeout
-Date: Thu, 30 May 2024 23:13:39 +0800
-Message-Id: <20240530151339.45572-1-joswang1221@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        bh=FbWYNDGeB4acdSvzLHvqWONXfu2Ni8kWHZVRyossuwM=;
+        b=hN5FvNcsJh0f2rr89oHiuZKBclOGq9T6rVo4xS+wNJjaETB9yYFPNaJ8n3z3JxjYTh
+         2QlwvtjCak94szlx6ayHfCHfgKEM2ZWa2yJXizsHtplH0x7l8yJ6k2z4dMt9Mr7t5NVM
+         Ruz7ffnm0f7aBFhUFQtIvzG3McO7vIfx6sJZ1aTz7526PZOrjHMVQJFn20lsaWJvv5Rw
+         /ogivFV+HFJojE1U6mL6DAqXrzpUsxpvlXeVkHnJcwHXF8jfAqAJnZJXgMToOPHxM0Kb
+         eQ+BuuXqHZHSYUtsb73eCV6UU5PGYHVSfW00AAnP/Facbro1aDJprT70qhezFf07ddEd
+         5XTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVje/4E3xZz7dyuIJvi7uyjAALPiHiqq0r+bcbg9cCBQQ/4nk92JE0mHZ4+oP7+haGKaJBmxpbRydWfUFT2GxOh63bw91tbqGyMbUaC
+X-Gm-Message-State: AOJu0Yw15Ohi3V4V+d9FOdlJC9eo6yH0BzWOLcKbEQMUw47DT1cKKRWR
+	Kmp3gOTrc8+5XccP4c9oEYzmIb/1B1dHBOk68Xub7wJ7f54SSyjt1C69pRbQj3o=
+X-Google-Smtp-Source: AGHT+IE2lyAsahNdb+M+r2VsDVKfYnrWiFE+5vnGDiP3IBTld3L7Pf2jxyrJMpOL2y8G8xxJqtOR7w==
+X-Received: by 2002:a9d:4802:0:b0:6f0:e7c3:945c with SMTP id 46e09a7af769-6f90af1c9b2mr2439771a34.36.1717082069189;
+        Thu, 30 May 2024 08:14:29 -0700 (PDT)
+Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f8d0de6314sm2803425a34.41.2024.05.30.08.14.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 08:14:28 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+	Julien Stephan <jstephan@baylibre.com>,
+	Esteban Blanc <eblanc@baylibre.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/5] iio: introduce struct iio_scan_type
+Date: Thu, 30 May 2024 10:14:08 -0500
+Message-ID: <20240530-iio-add-support-for-multiple-scan-types-v3-1-cbc4acea2cfa@baylibre.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240530-iio-add-support-for-multiple-scan-types-v3-0-cbc4acea2cfa@baylibre.com>
+References: <20240530-iio-add-support-for-multiple-scan-types-v3-0-cbc4acea2cfa@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-From: joswang <joswang@lenovo.com>
+This gives the channel scan_type a named type so that it can be used
+to simplify code in later commits.
 
-In the case of enable hibernation, there is an issue with
-the DWC31 2.00a and earlier versions where the controller
-link power state transition from P3/P3CPM/P4 to P2 may take
-longer than expected, ultimately resulting in the hibernation
-D3 entering time exceeding the expected 10ms.
-
-Synopsys workaround:
-If the PHY supports direct P3 to P2 transition, program
-GUSB3PIPECTL.P3P2Tran0K=1. However, note that as per PIPE4
-Specification, direct transition from P3 to P2 is illegal.
-
-Therefore, adding p3p2tranok quirk for workaround hibernation
-D3 exceeded the expected entry time.
-
-Signed-off-by: joswang <joswang@lenovo.com>
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
- drivers/usb/dwc3/core.c | 5 +++++
- drivers/usb/dwc3/core.h | 4 ++++
- 2 files changed, 9 insertions(+)
+v3 changes: none
+v2 changes: none
+---
+ include/linux/iio/iio.h | 41 ++++++++++++++++++++++-------------------
+ 1 file changed, 22 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 7ee61a89520b..3a8fbc2d6b99 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -666,6 +666,9 @@ static int dwc3_ss_phy_setup(struct dwc3 *dwc, int index)
- 	if (dwc->dis_del_phy_power_chg_quirk)
- 		reg &= ~DWC3_GUSB3PIPECTL_DEPOCHANGE;
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 55e2b22086a1..19de573a944a 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -173,6 +173,27 @@ struct iio_event_spec {
+ 	unsigned long mask_shared_by_all;
+ };
  
-+	if (dwc->p2p3tranok_quirk)
-+		reg |= DWC3_GUSB3PIPECTL_P3P2TRANOK;
++/**
++ * struct iio_scan_type - specification for channel data format in buffer
++ * @sign:		's' or 'u' to specify signed or unsigned
++ * @realbits:		Number of valid bits of data
++ * @storagebits:	Realbits + padding
++ * @shift:		Shift right by this before masking out realbits.
++ * @repeat:		Number of times real/storage bits repeats. When the
++ *			repeat element is more than 1, then the type element in
++ *			sysfs will show a repeat value. Otherwise, the number
++ *			of repetitions is omitted.
++ * @endianness:		little or big endian
++ */
++struct iio_scan_type {
++	char	sign;
++	u8	realbits;
++	u8	storagebits;
++	u8	shift;
++	u8	repeat;
++	enum iio_endian endianness;
++};
 +
- 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(index), reg);
- 
- 	return 0;
-@@ -1715,6 +1718,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
- 
- 	dwc->dis_split_quirk = device_property_read_bool(dev,
- 				"snps,dis-split-quirk");
-+	dwc->p2p3tranok_quirk = device_property_read_bool(dev,
-+				"snps,p2p3tranok-quirk");
- 
- 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
- 	dwc->tx_de_emphasis = tx_de_emphasis;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 3781c736c1a1..2810dce8b42e 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -327,6 +327,7 @@
- #define DWC3_GUSB3PIPECTL_DEP1P2P3_EN	DWC3_GUSB3PIPECTL_DEP1P2P3(1)
- #define DWC3_GUSB3PIPECTL_DEPOCHANGE	BIT(18)
- #define DWC3_GUSB3PIPECTL_SUSPHY	BIT(17)
-+#define DWC3_GUSB3PIPECTL_P3P2TRANOK	BIT(11)
- #define DWC3_GUSB3PIPECTL_LFPSFILT	BIT(9)
- #define DWC3_GUSB3PIPECTL_RX_DETOPOLL	BIT(8)
- #define DWC3_GUSB3PIPECTL_TX_DEEPH_MASK	DWC3_GUSB3PIPECTL_TX_DEEPH(3)
-@@ -1132,6 +1133,8 @@ struct dwc3_scratchpad_array {
-  *			instances in park mode.
-  * @parkmode_disable_hs_quirk: set if we need to disable all HishSpeed
-  *			instances in park mode.
-+ * @p2p3tranok_quirk: set if Controller transitions directly from phy
-+ *			power state P2 to P3 or from state P3 to P2.
-  * @gfladj_refclk_lpm_sel: set if we need to enable SOF/ITP counter
-  *                          running based on ref_clk
-  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
-@@ -1361,6 +1364,7 @@ struct dwc3 {
- 	unsigned		ulpi_ext_vbus_drv:1;
- 	unsigned		parkmode_disable_ss_quirk:1;
- 	unsigned		parkmode_disable_hs_quirk:1;
-+	unsigned		p2p3tranok_quirk:1;
- 	unsigned		gfladj_refclk_lpm_sel:1;
- 
- 	unsigned		tx_de_emphasis_quirk:1;
+ /**
+  * struct iio_chan_spec - specification of a single channel
+  * @type:		What type of measurement is the channel making.
+@@ -184,17 +205,6 @@ struct iio_event_spec {
+  * @scan_index:		Monotonic index to give ordering in scans when read
+  *			from a buffer.
+  * @scan_type:		struct describing the scan type
+- * @scan_type.sign:		's' or 'u' to specify signed or unsigned
+- * @scan_type.realbits:		Number of valid bits of data
+- * @scan_type.storagebits:	Realbits + padding
+- * @scan_type.shift:		Shift right by this before masking out
+- *				realbits.
+- * @scan_type.repeat:		Number of times real/storage bits repeats.
+- *				When the repeat element is more than 1, then
+- *				the type element in sysfs will show a repeat
+- *				value. Otherwise, the number of repetitions
+- *				is omitted.
+- * @scan_type.endianness:	little or big endian
+  * @info_mask_separate: What information is to be exported that is specific to
+  *			this channel.
+  * @info_mask_separate_available: What availability information is to be
+@@ -245,14 +255,7 @@ struct iio_chan_spec {
+ 	int			channel2;
+ 	unsigned long		address;
+ 	int			scan_index;
+-	struct {
+-		char	sign;
+-		u8	realbits;
+-		u8	storagebits;
+-		u8	shift;
+-		u8	repeat;
+-		enum iio_endian endianness;
+-	} scan_type;
++	struct iio_scan_type scan_type;
+ 	long			info_mask_separate;
+ 	long			info_mask_separate_available;
+ 	long			info_mask_shared_by_type;
+
 -- 
-2.17.1
+2.45.1
 
