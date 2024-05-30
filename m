@@ -1,93 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E4F18036
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7D117984
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717034476; cv=none; b=HsibG+qWx/ezxOkq8v6A0I7LCipof+XJGuEwmCdeEJTpkoojYHAPWCeng5py66EMz+ST/WcbTQ0MGrupwtVHngrYgaPJT+HuYkVEOccg/nuVandErWhyZSq3K+vLY4zng3x1KxwL8jv0N1q/pSwrfIumieVT2nKAe0UHIR3+TV0=
+	t=1717034681; cv=none; b=X1EwpKX1akn0mWDh18NwwlXH/GKCYGXn1Glabx5G3bqwJd92MUicWa4NqYLrhAJrLTxX6VAwwebBmApkAwo3SOsosAPSZ9qzKHw9sFFt7r3Gtxvg0ebdRd/JzwN+fSRO/eV9SryKcd8pnMm+WCo+6pvmQcedYsbfehfqSwZ3W9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717034476; c=relaxed/simple;
-	bh=z8p2Fbv7q51FsTbE9Q6ou8CNMBaz3vo4l9U9rPdC/fQ=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JmsrClx11ZpQbGDf+3tcD/WgMm7yEQ72dvMN0/NQuu48kDsnwd/qxlU4ihOo5lXd6Jsx1FeSh1gx1qoZ9pKe178n/Rnnsp58RBiPcvb0xI9BO4BMtioXj8Ujv6bF0tJ/uJEU+IsUAGBJqzRprJZEtLYEMseBp3lX/NU1Yuqnv8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eQloIB07; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717034681; c=relaxed/simple;
+	bh=MdkBRveM76fQHQTM7S6N8DZ6f1RVhY6GeqHdoE5KucI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Plg7L6utFQp1mF+81bpwHSBPyQw1V3Uv/rntC7o1L9RRhYGEX1hcelTqBDN3oWdk73tawNN4M9azXG7prEssqrPZS/rFKbhnkCUzuwsA14pmW2vCMLyX1H6U7++0Erttx1sKxs9PaRj5w11wEvcyUY44LJlGCuvb+JDf9RXZMIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=GZXlLYFE; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eQloIB07"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717034475; x=1748570475;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=z8p2Fbv7q51FsTbE9Q6ou8CNMBaz3vo4l9U9rPdC/fQ=;
-  b=eQloIB07xk7bWidVKWBLmJKM+f7L8p5yH0sPXC0AsUkN0d0XhcjQmDBL
-   CAmEoaz5WAv0KfE1sceese5arqQZvd8hlG+H85R4fhtggMqS2xFVlicBK
-   lNfsIoHRbqsL0qkklC3xfOUxpJmQLES4itvdrbpUTOk6U5g9TomNoB4Ji
-   YmyOYTup+0fY0n1fLD403SYelfL/xUe1u7s34dE4kUp6SJ2ciPDAxb9VH
-   wcT4Jwgzc+hI6nq7Qygh2X4srf0xPmnlqO1wtSHq1rURUuQqnx+UbieLU
-   9Vkfdmj/eUnBf5q88B0uPxNWbMC62zrF4xyMWx+JfFPRqiiYrn7+daJfV
-   A==;
-X-CSE-ConnectionGUID: PyAbSVyFRImQ1sCQjXFIiA==
-X-CSE-MsgGUID: HwjKXVkNRPGq0UHP5Ktb1A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11087"; a="13604237"
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="13604237"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2024 19:01:15 -0700
-X-CSE-ConnectionGUID: TQJC9/b/QlCc2uUz6FLNVg==
-X-CSE-MsgGUID: bbMexaIEQZisW9zr+4pHDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,199,1712646000"; 
-   d="scan'208";a="35737900"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa010.fm.intel.com with ESMTP; 29 May 2024 19:01:11 -0700
-Message-ID: <dc9fa861-628f-4a96-ae37-e419b23c6ea0@linux.intel.com>
-Date: Thu, 30 May 2024 09:59:03 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="GZXlLYFE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1717034676; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=S1iPg+ik4InPIm0h6COwUgYMHQTxsJZhhLbc4ho8+Oo=;
+	b=GZXlLYFE6LqyDYlHQav36XWeVF3OChEK2cuvYmfcpymjGV9fOgPyfO7/0RMsnU/Kk8wCBDDKGnxx0RSj14gTQT6POqAwjAKgDqZvRRuO07Zh9HJOQtmUphoPbewRi1rIJ1tLdCpEnGRlKPcBixgk36eRr13TLLK0XTOs1UX1OxE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7V1J4O_1717034673;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7V1J4O_1717034673)
+          by smtp.aliyun-inc.com;
+          Thu, 30 May 2024 10:04:34 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: willy@infradead.org,
+	david@redhat.com,
+	wangkefeng.wang@huawei.com,
+	ying.huang@intel.com,
+	21cnbao@gmail.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	ziy@nvidia.com,
+	ioworker0@gmail.com,
+	da.gomez@samsung.com,
+	p.raghav@samsung.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/6] add mTHP support for anonymous shmem
+Date: Thu, 30 May 2024 10:04:11 +0800
+Message-Id: <cover.1717033868.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Kalle Valo <kvalo@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
- Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/20] iommu: Add iommu_paging_domain_alloc() interface
-To: Yi Liu <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
- <20240529053250.91284-6-baolu.lu@linux.intel.com>
- <eedb1df0-e745-4b48-9261-faa0ff320ee9@intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <eedb1df0-e745-4b48-9261-faa0ff320ee9@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/29/24 5:04 PM, Yi Liu wrote:
-> On 2024/5/29 13:32, Lu Baolu wrote:
->> Commit <17de3f5fdd35> ("iommu: Retire bus ops") removes iommu ops from
->> bus. The iommu subsystem no longer relies on bus for operations. So the
->> bus parameter in iommu_domain_alloc() is no longer relevant.
->>
->> Add a new interface named iommu_paging_domain_alloc(), which explicitly
->> indicates the allocation of a paging domain for DMA managed by a kernel
->> driver. The new interface takes a device pointer as its parameter, that
->> better aligns with the current iommu subsystem.
-> 
-> you may want to move this patch before patch 03/04.
+Anonymous pages have already been supported for multi-size (mTHP) allocation
+through commit 19eaf44954df, that can allow THP to be configured through the
+sysfs interface located at '/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/enabled'.
 
-Emm, why?
+However, the anonymous shmem will ignore the anonymous mTHP rule configured
+through the sysfs interface, and can only use the PMD-mapped THP, that is not
+reasonable. Many implement anonymous page sharing through mmap(MAP_SHARED |
+MAP_ANONYMOUS), especially in database usage scenarios, therefore, users expect
+to apply an unified mTHP strategy for anonymous pages, also including the
+anonymous shared pages, in order to enjoy the benefits of mTHP. For example,
+lower latency than PMD-mapped THP, smaller memory bloat than PMD-mapped THP,
+contiguous PTEs on ARM architecture to reduce TLB miss etc.
 
-Best regards,
-baolu
+The primary strategy is similar to supporting anonymous mTHP. Introduce
+a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+which can have all the same values as the top-level
+'/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+additional "inherit" option. By default all sizes will be set to "never"
+except PMD size, which is set to "inherit". This ensures backward compatibility
+with the anonymous shmem enabled of the top level, meanwhile also allows
+independent control of anonymous shmem enabled for each mTHP.
+
+Use the page fault latency tool to measure the performance of 1G anonymous shmem
+with 32 threads on my machine environment with: ARM64 Architecture, 32 cores,
+125G memory:
+base: mm-unstable
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.04s        3.10s         83516.416                  2669684.890
+
+mm-unstable + patchset, anon shmem mTHP disabled
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.02s        3.14s         82936.359                  2630746.027
+
+mm-unstable + patchset, anon shmem 64K mTHP enabled
+user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+0.08s        0.31s         678630.231                 17082522.495
+
+From the data above, it is observed that the patchset has a minimal impact when
+mTHP is not enabled (some fluctuations observed during testing). When enabling 64K
+mTHP, there is a significant improvement of the page fault latency.
+
+Changes from v2:
+ - Rebased to mm/mm-unstable.
+ - Remove 'huge' parameter for shmem_alloc_and_add_folio(), per Lance.
+
+Changes from v1:
+ - Drop the patch that re-arranges the position of highest_order() and
+   next_order(), per Ryan.
+ - Modify the finish_fault() to fix VA alignment issue, per Ryan and
+   David.
+ - Fix some building issues, reported by Lance and kernel test robot.
+ - Update some commit message.
+
+Changes from RFC:
+ - Rebase the patch set against the new mm-unstable branch, per Lance.
+ - Add a new patch to export highest_order() and next_order().
+ - Add a new patch to align mTHP size in shmem_get_unmapped_area().
+ - Handle the uffd case and the VMA limits case when building mapping for
+   large folio in the finish_fault() function, per Ryan.
+ - Remove unnecessary 'order' variable in patch 3, per Kefeng.
+ - Keep the anon shmem counters' name consistency.
+ - Modify the strategy to support mTHP for anonymous shmem, discussed with
+   Ryan and David.
+ - Add reviewed tag from Barry.
+ - Update the commit message.
+
+Baolin Wang (6):
+  mm: memory: extend finish_fault() to support large folio
+  mm: shmem: add THP validation for PMD-mapped THP related statistics
+  mm: shmem: add multi-size THP sysfs interface for anonymous shmem
+  mm: shmem: add mTHP support for anonymous shmem
+  mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
+  mm: shmem: add mTHP counters for anonymous shmem
+
+ Documentation/admin-guide/mm/transhuge.rst |  29 ++
+ include/linux/huge_mm.h                    |  23 ++
+ mm/huge_memory.c                           |  17 +-
+ mm/memory.c                                |  58 +++-
+ mm/shmem.c                                 | 340 ++++++++++++++++++---
+ 5 files changed, 406 insertions(+), 61 deletions(-)
+
+-- 
+2.39.3
+
