@@ -1,138 +1,87 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDE94653C;
-	Thu, 30 May 2024 17:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048A546435;
+	Thu, 30 May 2024 17:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717089076; cv=none; b=bR+Zr0e7Zo8gRtq3bkkqWgY19QBbt8eENnOYZIDkqVy75pZCyaeIKz0IkHBqoR+qslLXjTEaCuAGQrAGHTH2Zg+otC0JyGFNIUvjcT4DaHA8V9SaSNK1BQg8+7X72431Q6x2xW3rsfHCPGE5O/sIaQ+GiCuvfpRZhb9O8ghJ/mA=
+	t=1717089079; cv=none; b=ppH/iiMhgvzsTHKxcisjGaV+WeNdsGUvGFU3tDKoMQ3gDcV7BnqKyuxfBTzfBOojpyvs/Pm96k5dyTKSiOdzJXkIE6CcvH4EIv/GkukAUG2+2cs1YM1M5/YJGhBXoLuY8s2KhciS4t4b+t5dTTGuAXT9xQprVI60scALRtwSkQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717089076; c=relaxed/simple;
-	bh=w1P9GtWTZiHFljha6+hHxilF9/Ml0j8wVOwBBGlUVKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNu+bgo4MCselEaJDzQO4m8v62Yr2W/5wPMFQDMxqa1GqjFDxw4HS1DpDtoC3O8E/Wx3XXTNDWKgMvhATvP9Ocah6EvfoveH9B/3Xw/7j0dk8uNwiQTQhJff6VH8Z61TwF6GSpQd98p8jneQJF2VCzDC947KGWDmhURmYKkTC0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hMV1UhCL; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717089079; c=relaxed/simple;
+	bh=iGoKvNnQ+YdL4/1r3sPYk9sQQvMBHfX0Xry1ufnrd68=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Zb+q0fd0AttJg8sbaY5aw/RGbMTB6Y2FLQ2uZ4VDCZDzd5d3sjXVLhXgwaeBCR3OFx80Uh2jwliCQ680+Erj+5CHeEYmoj598xviE5J6y9RSlnKzotmbyzSbwXp0YFqFhyq0uWP9413rkcN29aGAYECVxzPBjkH+MhluUm7ttPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtWM+qef; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMV1UhCL"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f61f775738so6362865ad.2;
-        Thu, 30 May 2024 10:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717089074; x=1717693874; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=b5dMIK+YmRjKcd+w3hKSLG4KLhKC/IhFM8M8zHEuCAE=;
-        b=hMV1UhCLwlKxQjhs6r8tmhQMgu61oo8J5jwJFpDBAlq3ec9zZsrynG+aYyHTEQZbXn
-         KIG42d8cQLeBKwqPBK5pTiCMegaiysg5zgiVC3IW7cqQR8Hc2yLDgCgPzJ9pWlq0eEri
-         jxGS42BTCR3unVO5qyime7FKXurFSTUM6RQtb3KuSCQZN8lf+3sNN4zGxKoqK3KiCnjq
-         u4nfj0K4xpbtBlLG6NLpT/k/VZ1ZAVeJx5VqVRBK/wdQ+YoOllW085K3QQq6BRu8oyT5
-         f37NnnHNAzFDD+71I49hkzMcVP1TrhR0cSbo0A32OEyaX9Avwp0j9SX4mOWZG0k7zk8P
-         MlUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717089074; x=1717693874;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b5dMIK+YmRjKcd+w3hKSLG4KLhKC/IhFM8M8zHEuCAE=;
-        b=AVhcHGnaDEu05WxJHV6xTh2FFTljODLqOaYhFn5zQtFqeD722JXF4zZkkgF01xDpGC
-         XEldUxksEaFSlyRHN4Hij+1NRVlLDyuXAHwLMHomD5TboI7ypUPyrp1bErZwQjyw8YA6
-         6lu0S9sRw8tXo4lAGcGuKnX9kCgDHKuOlWSq2PkI5DrGcQHX+nWpf6VuKDueAJUvZACC
-         zUUEFIxONrfxt48Aq+aBKZrmcGmKPBVA0G7yfLLPLaMh69/VL8jf4+CHfsZFPkwEeO0R
-         WiKnoD4ji0dt/LOy+NckHoE89m515q0L80Hw85V8hdzr729CbGGL/k3JXnky7lVmGx84
-         3gtw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgoYfDCGX7YthnArIzmCDwcPDl2MGVok6fM30fxa7co+GXFEzxvbueWtqFxBBWAW8x56498JAqCCjJ9SZ8KhvjsriMuL06Pd6HCENyUOg6bKF63aG9EtSazG5FdBC9o5MHmvno
-X-Gm-Message-State: AOJu0YzIuv536NXXANqPIHFQo1sR8wRa27TRdlzFk4oyjhFn+w21IGR5
-	dBhGSwdBoIhGfNIa4eEjubiOr07IWE5HGl7wKy/xr/6uc+BTed3a
-X-Google-Smtp-Source: AGHT+IEBj73siAJfZoLiX9gqpPn+nv1DxMqUBBrc8uKp//jC475DsqApjM9Y16BLcPTu9eoocFrNUA==
-X-Received: by 2002:a17:902:c7d2:b0:1f3:a14:5203 with SMTP id d9443c01a7336-1f61962bd45mr20087525ad.38.1717089074324;
-        Thu, 30 May 2024 10:11:14 -0700 (PDT)
-Received: from localhost ([216.228.127.129])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dd824sm203895ad.128.2024.05.30.10.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 10:11:13 -0700 (PDT)
-Date: Thu, 30 May 2024 10:11:11 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 13/21] bitmap: make bitmap_{get,set}_value8()
- use bitmap_{read,write}()
-Message-ID: <ZlizL6d1_ePq-eKs@yury-ThinkPad>
-References: <20240327152358.2368467-1-aleksander.lobakin@intel.com>
- <20240327152358.2368467-14-aleksander.lobakin@intel.com>
- <5a18f5ac-4e9a-4baf-b720-98eac7b6792f@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtWM+qef"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FB5C32781;
+	Thu, 30 May 2024 17:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717089078;
+	bh=iGoKvNnQ+YdL4/1r3sPYk9sQQvMBHfX0Xry1ufnrd68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RtWM+qefsV3TB89kDCxjJfEgUdPE3oWEdnyu7kFtZPHC7wNeHx+A42A1/fEtbIySp
+	 dB4khKL+W4SAytw/vjJaTei2kvEn4O9QHLC3jSTH1+lghFWKk55ztrjDslSwsHKs4u
+	 jSLKYAcxzXkCEzQDrDA2u2+WczR5SreygM5cftnYkpkx4IM7+XFhXFFtUGZP+ySwYN
+	 rdPH0b0trQ6tvEmCWWG2NhWOhz8du3xeL310LjaMBrZZuJJhRdufuAc4pML/gQxSkS
+	 80DdAGja0IALTVGznnvulS4+YhCO0msT0xYnjfD+DaBhdHOf8g8csIC0R4fTmn3Kbs
+	 NQ8aha0eYHO0Q==
+Date: Thu, 30 May 2024 12:11:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: devi priya <quic_devipriy@quicinc.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org,
+	mturquette@baylibre.com, sboyd@kernel.org,
+	manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH V5 6/6] PCI: qcom: Add support for IPQ9574
+Message-ID: <20240530171116.GA551131@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5a18f5ac-4e9a-4baf-b720-98eac7b6792f@arm.com>
+In-Reply-To: <20240512082858.1806694-7-quic_devipriy@quicinc.com>
 
-On Wed, May 29, 2024 at 04:12:25PM +0100, Robin Murphy wrote:
-> Hi Alexander,
-> 
-> On 27/03/2024 3:23 pm, Alexander Lobakin wrote:
-> > Now that we have generic bitmap_read() and bitmap_write(), which are
-> > inline and try to take care of non-bound-crossing and aligned cases
-> > to keep them optimized, collapse bitmap_{get,set}_value8() into
-> > simple wrappers around the former ones.
-> > bloat-o-meter shows no difference in vmlinux and -2 bytes for
-> > gpio-pca953x.ko, which says the optimization didn't suffer due to
-> > that change. The converted helpers have the value width embedded
-> > and always compile-time constant and that helps a lot.
-> 
-> This change appears to have introduced a build failure for me on arm64
-> (with GCC 9.4.0 from Ubuntu 20.04.02) - reverting b44759705f7d makes
-> these errors go away again:
-> 
-> In file included from drivers/gpio/gpio-pca953x.c:12:
-> drivers/gpio/gpio-pca953x.c: In function ‘pca953x_probe’:
-> ./include/linux/bitmap.h:799:17: error: array subscript [1, 1024] is outside array bounds of ‘long unsigned int[1]’ [-Werror=array-bounds]
->   799 |  map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
->       |                 ^~
-> In file included from ./include/linux/atomic.h:5,
->                  from drivers/gpio/gpio-pca953x.c:11:
-> drivers/gpio/gpio-pca953x.c:1015:17: note: while referencing ‘val’
->  1015 |  DECLARE_BITMAP(val, MAX_LINE);
->       |                 ^~~
-> ./include/linux/types.h:11:16: note: in definition of macro ‘DECLARE_BITMAP’
->    11 |  unsigned long name[BITS_TO_LONGS(bits)]
->       |                ^~~~
-> In file included from drivers/gpio/gpio-pca953x.c:12:
-> ./include/linux/bitmap.h:800:17: error: array subscript [1, 1024] is outside array bounds of ‘long unsigned int[1]’ [-Werror=array-bounds]
->   800 |  map[index + 1] |= (value >> space);
->       |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-> In file included from ./include/linux/atomic.h:5,
->                  from drivers/gpio/gpio-pca953x.c:11:
-> drivers/gpio/gpio-pca953x.c:1015:17: note: while referencing ‘val’
->  1015 |  DECLARE_BITMAP(val, MAX_LINE);
->       |                 ^~~
-> ./include/linux/types.h:11:16: note: in definition of macro ‘DECLARE_BITMAP’
->    11 |  unsigned long name[BITS_TO_LONGS(bits)]
->       |                ^~~~
-> 
-> I've not dug further since I don't have any interest in the pca953x
-> driver - it just happened to be enabled in my config, so for now I've
-> turned it off. However I couldn't obviously see any other reports of
-> this, so here it is.
+On Sun, May 12, 2024 at 01:58:58PM +0530, devi priya wrote:
+> The IPQ9574 platform has 4 Gen3 PCIe controllers:
+> two single-lane and two dual-lane based on SNPS core 5.70a
 
-It's a compiler false-positive. The straightforward fix is to disable the warning
-For gcc9+, and it's in Andrew Morton's tree alrady. but there's some discussion 
-ongoing on how it should be mitigated properlu:
+s/4/four/ to match "two"
 
-https://lore.kernel.org/all/0ab2702f-8245-4f02-beb7-dcc7d79d5416@app.fastmail.com/T/
+> The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
+> Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
 
-Thanks,
-YUry
+s/Added/Add/ (use imperative mood:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=v6.9#n94)
+
+> which reuses all the members of 'ops_2_9_0' except for the post_init
+> as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
+> and 1_27_0.
+
+Add periods at end of sentences.  Rewrap to fill 75 columns.
+
+> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
+> +{
+> +	writel(SLV_ADDR_SPACE_SZ_1_27_0,
+> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+
+Fits on one line.
+
+> +	return qcom_pcie_post_init(pcie);
+> +}
+> +
+> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+> +{
+> +	writel(SLV_ADDR_SPACE_SZ,
+> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+
+Fits on one line.
+
+> +	return qcom_pcie_post_init(pcie);
+> +}
