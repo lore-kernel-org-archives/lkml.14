@@ -1,144 +1,225 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B0C208A0
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A61814BF91
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:16:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717100128; cv=none; b=urKpuYegn0AfxOZJRtXPXyhkK4wKI9AXBV37eiyrKx1rbfSwxirdARhoMeMim4355Pu+Tu0c7FOvx1Ah07Af8n5UnYS8WqEn16LoRwHXkhDaaUibpRxkXHbzpolnpYG9yNZQkH6575lnlWRXnp6Ux1NKUpNjo0ZNe5alAh52RF8=
+	t=1717100185; cv=none; b=VptngSxMb5BxU5jTJRP2cu3go21vpLKrql8wvwHK08n3/4D8Y0LX7NA7jHSbRgQdMyhcLpt880AU7Ye/a5XNR5O6q1ofErc8rDXhT6CP369CWFN8u+ltVmwBnArrE9rSU6lp75IMgmLv3ZkcZeMi6g/2aTVPF4rOBF9Ds38REso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717100128; c=relaxed/simple;
-	bh=eYSGgU0e7o3r5dR8Tt7lVgtJXXcKm4en1UBjrXl2qC8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=s6D+lXEAGydpqF0cxPuL4RxCtFv+ETjJAz14p7xcZvSA0bSZy3SP4boLaGyBWC2e8fXvZm3rPfvAe1w2yVOvM+WZobx198nPq+YiYyQ69dSFBawAuKXwb78lSc3PONYNrMxtvvydN2iUVxUCH+wSuPts1NNge+UT8b6/37gco7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7ead7796052so36809539f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:15:27 -0700 (PDT)
+	s=arc-20240116; t=1717100185; c=relaxed/simple;
+	bh=c10vRAymnFEiD+J93cVDAwHMQipnrIDVb/DDxIZNtws=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=W5K4ZsfQ0eCXQaUEPeCtlXejYguhnuHCqp8vEP3Ti5KqQY0MbWiyhWLltMZdr7mWHFOpaLXiCAqHIfllFJYInEypT2ladMSmrhPc+PSsBcOG36s1PtsWjt0DITDhTx9rWaDCJPBjGH+19Xld8nsgDYswYzXbYMFxrxe2/Mj1fh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DQx4PI6A; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DQx4PI6A"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df52a2535d5so609134276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717100181; x=1717704981; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yaEF0DqCm5CQkZB35PjEH+gJQ00Kx0ca44YJl8gv7Yk=;
+        b=DQx4PI6AEZlcqseS7nlUwWauzeA7vJjByZP7oeq8vxzm+uKFmIgbyyTxwbxnV44oUZ
+         cazPHOzBC0J+Q13MZNU/3nJCv58aYB4kQton3B2ti/jRfoXWj/foeQ/32ueZWclPNvNL
+         KXje91b/2uOMi0QH/InptkH/4kjVkyEYz8aLRUy2tdW29fJ/J8BJNhb7QmYPelTL3/Nx
+         UKnSqnwFatxq31OENazAzJOZO3Dgx2Js6DUGFQw+vzTQ47PlICH30DgiNunY5p1J9o+9
+         MpdjQs7uIFyEoVH+6NWX9EUn80vJKWOieKaedtxr4F0JzHGffN6xR3ORT8g1UL+JymBu
+         k8wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717100126; x=1717704926;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A3StR6mZe3YmJy3qS4VUKmhxhqo1zmXvkNJZo68Xt4w=;
-        b=UuRv+dRu/F7vWHWX0jshXta+1/2qdSsx9KB/93o6LL9IWl++LZefyu18Nx5CUjeVVf
-         cvZreCp5iyC9/F+Tb70ygVEsbnSsoEZb7K6Z58RgpozdJsuCQN8x1zsedl7CZa5T7Bcb
-         5Gs4i56Ty9KWc1ETIDnnsg9WTJfULhrF27OReU3xGw4e4DSb9DJdFwHSgKlYAwZRfEgs
-         luwDSxY/My1tVy1QdWxdMKLfZ2BMq66G1jWcxisaTzzpQ1BJ/mqqlV87UHHhEdhQ8VzO
-         A/GZls5ESsj5VeReC3I356sGPaQXIXLoPDKMAP5Q+Q8RXylUUclNqpI+4w0C08U3Uwe0
-         LNWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWws+sEzBHx0F8yY5ADn0IZ0kEivx8rNbqNMq8YtcU36B3sjWPyBuZqZJv37FY19z1xtQACvzS3yKpSfDQiQaZ7u0d/nQRwAHHc/f7
-X-Gm-Message-State: AOJu0YxHIeR+PD3K1MsSTBQoyhn0Uzq8Ng+8n8lCde83anNf0QKcYaSV
-	rmww2yNrcItlxN6Lo77dbN3U1cn4Z+WGH2WUo1znhWiAomWyTn4xIbUTrLS4dvnq+J7nvzyQA3a
-	eFkaY3GoqS9Ry5j6DjzV4CeK7BHtQ9bnzG4ycNJ0r4YDtLFuBFxAFzDk=
-X-Google-Smtp-Source: AGHT+IGRB/tWbS4xqZF+WYsVWxEe1U0FocGy13H0qds2KNsHhd+oXsKOL5MvlPaU53/mLxxTkpVlTv6dtJI4bzKVp/MiDr/Su3cV
+        d=1e100.net; s=20230601; t=1717100181; x=1717704981;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yaEF0DqCm5CQkZB35PjEH+gJQ00Kx0ca44YJl8gv7Yk=;
+        b=AWQ0YmKBOXYhmlx26fHjvP9Afy7q6lGATyd65Nqlv8gY9a/ARBZdf9qkbCR6+prigi
+         AHRMLYRfWWI/t7r2gT1msEyGRhL0Ecg/TQjGAzTqzGnTcS+D2K9rzuo9+C3v22QJHkV4
+         TMF4J51FZQ3TqlNQW2EA78fGTBrQVS6/YJ8gLbo6SsEcAeWXKqsn7EkXDt5xvkRryHPm
+         phdFqB+wKxQ2wa8ERWHprE4KQEMtqxX1jb/PcCoFaoHDQRCavsVfbGTFmlijhkfBEV71
+         nb+WCMbX0Aiz77ge0m9QUQtR+52uMJmqt7hA0vVQ0ZJYGNSzW1maElqadrKa1f04KGuN
+         3r3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWus/p2W+AliV1jTlRwhCOVJ2ARVgbtQSIt8ibfb0fLoQFOsdzSHu+UWOVHCSVCL2ZBsomXjWyFGCFnNDnOg91d//MKPeDSVFN4P2BA
+X-Gm-Message-State: AOJu0YxK65JA8JaPEPQWw3QBzZXa31BW8m0nFrDNrd5/CdPVKxIBUxLk
+	1UXPfzk4GvRDp4ZoK2SQMBYpsngc/VVg+1VtokwlEUXrLGJOPjGgiXwAcyaHGfKA+Ywmp1PsY/x
+	iGH/uY3h9Arc1WBqb5GYAVA==
+X-Google-Smtp-Source: AGHT+IHQSp6ih1zR7n3tsFdazsyJvnckERFqUtnhikqH/B2yNteq1+Esq+3zctzZclvpF1Z7GTwU7qeCMRAP5FzJOw==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:154a:b0:df7:6b9d:21fd with
+ SMTP id 3f1490d57ef6-dfa5a68894emr293702276.8.1717100181353; Thu, 30 May 2024
+ 13:16:21 -0700 (PDT)
+Date: Thu, 30 May 2024 20:16:00 +0000
+In-Reply-To: <20240530201616.1316526-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6638:35a5:b0:488:7838:5aba with SMTP id
- 8926c6da1cb9f-4b1e4c01d47mr217371173.2.1717100126558; Thu, 30 May 2024
- 13:15:26 -0700 (PDT)
-Date: Thu, 30 May 2024 13:15:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000166d3c0619b187e8@google.com>
-Subject: [syzbot] [wireless?] INFO: task hung in ieee80211_unregister_hw
-From: syzbot <syzbot+2782e03212f5ae711088@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, johannes@sipsolutions.net, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Mime-Version: 1.0
+References: <20240530201616.1316526-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240530201616.1316526-2-almasrymina@google.com>
+Subject: [PATCH net-next v10 01/14] netdev: add netdev_rx_queue_restart()
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Add netdev_rx_queue_restart() function to netdev_rx_queue.h
 
-syzbot found the following issue on:
-
-HEAD commit:    e0cce98fe279 Merge tag 'tpmdd-next-6.10-rc2' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=125ada62980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=238430243a58f702
-dashboard link: https://syzkaller.appspot.com/bug?extid=2782e03212f5ae711088
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d23687674aed/disk-e0cce98f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/780007429aa0/vmlinux-e0cce98f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/43ef750cb8d4/bzImage-e0cce98f.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2782e03212f5ae711088@syzkaller.appspotmail.com
-
-INFO: task kworker/u8:3:51 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc1-syzkaller-00021-ge0cce98fe279 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/u8:3    state:D stack:24512 pid:51    tgid:51    ppid:2      flags:0x00004000
-Workqueue: netns cleanup_net
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0xf15/0x5d00 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x5b8/0x9c0 kernel/locking/mutex.c:752
- ieee80211_unregister_hw+0x4d/0x3a0 net/mac80211/main.c:1645
- mac80211_hwsim_del_radio drivers/net/wireless/virtual/mac80211_hwsim.c:5576 [inline]
- hwsim_exit_net+0x3ad/0x7d0 drivers/net/wireless/virtual/mac80211_hwsim.c:6453
- ops_exit_list+0xb0/0x180 net/core/net_namespace.c:173
- cleanup_net+0x5b7/0xbf0 net/core/net_namespace.c:640
- process_one_work+0x9fb/0x1b60 kernel/workqueue.c:3231
- process_scheduled_works kernel/workqueue.c:3312 [inline]
- worker_thread+0x6c8/0xf70 kernel/workqueue.c:3393
- kthread+0x2c1/0x3a0 kernel/kthread.c:389
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-INFO: task syz-executor.1:5928 blocked for more than 143 seconds.
-      Not tainted 6.10.0-rc1-syzkaller-00021-ge0cce98fe279 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.1  state:D stack:25408 pid:5928  tgid:5928  ppid:1      flags:0x00000006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5408 [inline]
- __schedule+0xf15/0x5d00 kernel/sched/core.c:6745
- __schedule_loop kernel/sched/core.c:6822 [inline]
- schedule+0xe7/0x350 kernel/sched/core.c:6837
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x5b8/0x9c0 kernel/locking/mutex.c:752
- rtnl_lock net/core/rtnetlink.c:79 [inline]
- rtnetlink_rcv_msg+0x372/0xe60 net/core/rtnetlink.c:6592
- netlink_rcv_skb+0x16b/0x440 net/netlink/af_netlink.c:2564
- netlink_unicast_kernel net/netlink/af_netlink.c:1335 [inline]
- netlink_unicast+0x542/0x820 net/netlink/af_netlink.c:1361
- netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1905
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x47f/0x4e0 net/socket.c:2192
-
+Signed-off-by: David Wei <dw@davidwei.uk>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+(submitted by David).
+- fixed SPDX license identifier (Simon).
+- Rebased on top of merged queue API definition, and changed
+  implementation to match that.
+- Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+  netlink code where rtnl is already locked.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+---
+ include/net/netdev_rx_queue.h |  3 ++
+ net/core/Makefile             |  1 +
+ net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 net/core/netdev_rx_queue.c
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index aa1716fb0e53c..e78ca52d67fbf 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+ 	return index;
+ }
+ #endif
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
++
+ #endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 62be9aef25285..f82232b358a2c 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+ 
+ obj-y += net-sysfs.o
+ obj-y += hotdata.o
++obj-y += netdev_rx_queue.o
+ obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+ obj-$(CONFIG_PROC_FS) += net-procfs.o
+ obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+new file mode 100644
+index 0000000000000..b3899358e5a9c
+--- /dev/null
++++ b/net/core/netdev_rx_queue.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/netdevice.h>
++#include <net/netdev_queues.h>
++#include <net/netdev_rx_queue.h>
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
++{
++	void *new_mem, *old_mem;
++	int err;
++
++	if (!dev->queue_mgmt_ops->ndo_queue_stop ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
++	    !dev->queue_mgmt_ops->ndo_queue_start)
++		return -EOPNOTSUPP;
++
++	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
++
++	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!new_mem)
++		return -ENOMEM;
++
++	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!old_mem) {
++		err = -ENOMEM;
++		goto err_free_new_mem;
++	}
++
++	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_free_old_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
++	if (err)
++		goto err_free_new_queue_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_start_queue;
++
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++
++	kvfree(old_mem);
++	kvfree(new_mem);
++
++	return 0;
++
++err_start_queue:
++	/* Restarting the queue with old_mem should be successful as we haven't
++	 * changed any of the queue configuration, and there is not much we can
++	 * do to recover from a failure here.
++	 *
++	 * WARN if the we fail to recover the old rx queue, and at least free
++	 * old_mem so we don't also leak that.
++	 */
++	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
++		WARN(1,
++		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
++		     rxq_idx);
++		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, &old_mem);
++	}
++
++err_free_new_queue_mem:
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
++
++err_free_old_mem:
++	kvfree(old_mem);
++
++err_free_new_mem:
++	kvfree(new_mem);
++
++	return err;
++}
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
