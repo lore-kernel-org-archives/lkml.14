@@ -1,78 +1,85 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991DE17588;
-	Thu, 30 May 2024 01:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B887D299;
+	Thu, 30 May 2024 01:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717033187; cv=none; b=X8i8XQxhpNZVnzIZgJgMGvm1l+Y9NqzcQwi41NMB3zzQbennmhddgPFU9BBXmz83YiH3t8vMX+TFS8APQvF1Q5A+dmOt70YgDEabfCoM8fZTVSX3HURSmEPA48GHrbwvrmRWSTE4VjJRMmMGdII1BmjVki6ZPZdAXSAkFCdSLQg=
+	t=1717033214; cv=none; b=H6oGW4SblIOPztHnsDcE8jwTrbzE2U4eMOqaTkRRZpFW1uGNnDT/QAfJDoHsDw6VeGAlvPMExwRuJSGY86qZbK8fBINuZKVg5jjRLGE5AQXU4pHtpa36jlXTAa0DjChhSUVVQi7LN22ZaLSmIs6pt1XPXJOp77orgAMzZ/HFpXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717033187; c=relaxed/simple;
-	bh=mz4RT6hveuJ2IUTffPJMhhSR3xpExYc7bL9BHeP9LPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OBC9dprHbgv5Okb8Q4W0gee0ntiZpPLGPOKQtwjQ+dAS2PN5eq+l1NITa0LahV4AeCGOafXwMwjb7rK7LIOR+0hNfsExH9f5d9dH0XrSOhth5H5Sz19/AixwmJDYUdvkYvtpju3SKyDHyrAH538ffWGEWsO89NhJ9ZyGOtmiJ24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Mmj9kcDd; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1717033214; c=relaxed/simple;
+	bh=/a3OkwfELwxb5Ut+MgxOZAlCZBTT6NvlJfjqQmhTdWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aAchHOBNSx3v6MO8NraB3u7FmS/SSCRPPeO/ngAlDM0Y3r3m6U9CducDJ0E0O5choeTHTZdKvYBwLB5HF03zwArWuSuTi057+Batp92Kp15YWNHtqZMdKx9UG/sQREmPOuMR3d6k8VmvdaYhfUMCaniMceldOgqVBaHGOqHAgv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVS0zkBC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Mmj9kcDd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1717033173;
-	bh=mz4RT6hveuJ2IUTffPJMhhSR3xpExYc7bL9BHeP9LPw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Mmj9kcDd8Oh/sOzHJ3sm8e3o3T9Of950UPUQvk5SlCd1Hmr6GpaoTYsNJBTzcc9PN
-	 AGFB4/wABwbt4cUAgcS1yhBVevU7Fk8DehLDJarKyDzXw/6OoZJZDFG6x+xNdeXdXZ
-	 ypdgmAE7VI69HZczNAYZk3kxGARnUMFsSlpaJ7t+Dz4ydryZxf4cPZ0mvcv7Qryg8l
-	 gT3mmvUjIqa1BKbzY1JQ2v0tI1udhmQH0lHCJqFf8+poR5jrE/zHvjJ01gtOfao7pW
-	 EqZVhcCWyLzV1kMcvtaAOVEFEVt47ODFC5/cxk5Kc2c2sbRPZ1GsoSWl+yHALYcJyK
-	 dsjuHt6OzzC1g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VqTSj0kYmz4wp3;
-	Thu, 30 May 2024 11:39:33 +1000 (AEST)
-Date: Thu, 30 May 2024 11:39:30 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: no release today
-Message-ID: <20240530113930.3bc514ef@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVS0zkBC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9478EC113CC;
+	Thu, 30 May 2024 01:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717033214;
+	bh=/a3OkwfELwxb5Ut+MgxOZAlCZBTT6NvlJfjqQmhTdWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OVS0zkBChjBRfxjrk8h/Y2AmlnvdB+d8eGeHKJMORQ8Bjl8Xa/rn/45y/Q52ptF7V
+	 Td7y4bX6N1H8YykoITZLPrmj+d6vPHa1DrqcrRrDsX/l47Z9LwW13399gZftI465pU
+	 V56yNHpriGlaYYgoEjDD/saXWZiuazVXuJB4zTC+G5n+ZWTBR2HqL8P5Totxofpzn5
+	 26JOioMSPfyw8J89E6RZIwphvXgp3tOltPD8krCXb2xpKzYmdtwWt00nOzbFD6HJ/e
+	 EySqqyIOuNHU6aXi/NIcVxeWzErvWXkXovJVoAcJlwLPvZM1CHLjiRXI7bGhVWHen/
+	 GPyjGMqrwsTVg==
+Date: Wed, 29 May 2024 18:40:12 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Mina
+ Almasry <almasrymina@google.com>,
+ nex.sw.ncis.osdt.itp.upstreaming@intel.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH iwl-next 11/12] idpf: convert header split mode to
+ libeth + napi_build_skb()
+Message-ID: <20240529184012.5e999a93@kernel.org>
+In-Reply-To: <20240528134846.148890-12-aleksander.lobakin@intel.com>
+References: <20240528134846.148890-1-aleksander.lobakin@intel.com>
+	<20240528134846.148890-12-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Zm.wPoikpwxrPqA91=G_l5Q";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/Zm.wPoikpwxrPqA91=G_l5Q
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Tue, 28 May 2024 15:48:45 +0200 Alexander Lobakin wrote:
+> Currently, idpf uses the following model for the header buffers:
+> 
+> * buffers are allocated via dma_alloc_coherent();
+> * when receiving, napi_alloc_skb() is called and then the header is
+>   copied to the newly allocated linear part.
+> 
+> This is far from optimal as DMA coherent zone is slow on many systems
+> and memcpy() neutralizes the idea and benefits of the header split. Not
+> speaking of that XDP can't be run on DMA coherent buffers, but at the
+> same time the idea of allocating an skb to run XDP program is ill.
+> Instead, use libeth to create page_pools for the header buffers, allocate
+> them dynamically and then build an skb via napi_build_skb() around them
+> with no memory copy. With one exception...
+> When you enable header split, you except you'll always have a separate
 
-There will be no linux-next release today and most likely not
-tomorrow either.
+                                    accept
 
---=20
-Cheers,
-Stephen Rothwell
+> header buffer, so that you could reserve headroom and tailroom only
+> there and then use full buffers for the data. For example, this is how
+> TCP zerocopy works -- you have to have the payload aligned to PAGE_SIZE.
+> The current hardware running idpf does *not* guarantee that you'll
+> always have headers placed separately. For example, on my setup, even
+> ICMP packets are written as one piece to the data buffers. You can't
+> build a valid skb around a data buffer in this case.
+> To not complicate things and not lose TCP zerocopy etc., when such thing
+> happens, use the empty header buffer and pull either full frame (if it's
+> short) or the Ethernet header there and build an skb around it. GRO
+> layer will pull more from the data buffer later. This W/A will hopefully
+> be removed one day.
 
---Sig_/Zm.wPoikpwxrPqA91=G_l5Q
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZX2NIACgkQAVBC80lX
-0GwgyQf7BlXzQ/mWeNU4BgdgbBcCO2jCiLYoDGs31DKyUCpdBQ1DO6lb0nZlrcg6
-Zyw5AWJtX3FdXeLQCUzOfaBCWk6Ip7oaE29GEyP/bXXaQUumAvrUnQa3XYDYAOXJ
-05rOMf9ACucqHxnNfWpo+3nsY8EfiwF+Worx4PMnLFjbjz2839sK21BI5sZZtnby
-YMKzEjmy6cihF3RQApCNMC5J8aSbE5jlUdDUNA1YQTu1Zu2ZZ67MDUPSp8sclCR3
-wre4T1vt0mc0ZsEcKjinOoaMLojP2K6vgmcwYTkY8a5VAwn7dv8n3XbrpT/+jvx6
-NQHh4y91U9yxXE4hemuJAw2G3WZBlw==
-=s2yd
------END PGP SIGNATURE-----
-
---Sig_/Zm.wPoikpwxrPqA91=G_l5Q--
+Hopefully soon, cause it will prevent you from mapping data buffers to
+user space or using DMABUF memory :(
