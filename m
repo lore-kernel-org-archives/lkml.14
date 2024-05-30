@@ -1,46 +1,47 @@
 Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F93132129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FE0143C40
 	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717080422; cv=none; b=BOqedCUZZfUOa8FqSI0qy2fehrbuVZdVBKDuQkXmj4RAReWwlJfIkmFL34LZuD9IkkHGFZycWmY5UhlfO09QlIXPlKMGgathdkuYJr25QgmcagWGvqO5acBwF4Lmc4Mv/P6W24FSl5DDWkPIhFAwYPH9ataAKzFOFlFDoCi6HGQ=
+	t=1717080422; cv=none; b=E43KbQHcaREKRK/doMsKCOBRskUv8mMNvkoZqN4oj9cyvUaUg9KsPpfmu3K4Ym8m1fsgXsKsQcAC8XATv3l98uCqJzkSGsBVniS+ksl2T/X0IBTJcjmyIQjldkPwyJxqJLNHYB5cW7wQTTvVH1GL9xn5pntlE6k+Hb5e5EuPV2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717080422; c=relaxed/simple;
-	bh=hec9jZ8GWjjsOhfEAzSjDoHUwtpSRvZqlBCq8AeIrFo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=S/fpFW/6iBByb2jB6oWlELa/3osYfxiuV+OdyaHAOg+6KnThs+9/Jg3SkcLGj1Fl4XZi7BIj/sbsnQVlFfx8SNXDyIblgVguai6WtuSeLMew5bvxXsjb3xxASqHxJPC0QS4FD3vaDpW4Jgoz0AOKnjVkx69pl662HoQnKKqACaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=k4I/tL93; arc=none smtp.client-ip=188.40.30.78
+	bh=gYh5ZeM8RAfRySwrSZmO3AMBCrGHKKvIQY62urO1EUw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aX92JuPseA7DMBllYA5Iu4iNDym/JnvzpFWw3piENSrwgNJquDVJtsLVFWWivBToCmz1m/Jodb8Em1cQOtz7dBrzj5qdIUz1lTxBNmnHHlFPUcCLtSxg1bRqobYcG4kKrwYGHzPNrzDmGrmNgemG02qFluI6bFfZycMVROoaEtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=LXFXSmXE; arc=none smtp.client-ip=188.40.30.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="k4I/tL93"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="LXFXSmXE"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References; bh=ghtoP556IbQ/4WNCjbdXYdl4SF/fbsBPebHF32JHF24=; b=k4
-	I/tL93vaUznDzldj8OIPU2ha2h+e6lf/zM1QEjKjHd2quynoZiN1zahEuzRAZ4+bHOgWq6Tbcs9fw
-	WDm+F+bs7JNE35wJf32IceQHAa2k1bYDmfWo+pV1TMAMzOdTngeDMadfuXhAt7PFC/RBhnwTzSX8T
-	wHNFXEfLZF+PEC6vTMV7D9qZoO472Z/18NA/Aotrm8RUpFMHDVJ5LikAlBhiB9QYzA1THkfYr95No
-	ZeWt5QiDAPIPMwc+SiEFIl8T+fp3u1YZwLBdY+aPN4ew7GLvZ39Ie7N5M+K4R8bgRhbLoAwhs4djm
-	wMe4Y08hGige7WNGIuBmJ8nOelEK7RAA==;
+	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Rx1tDglSe0Vnos0b8SgqUc/GQHG/nBapjYKNOpTecRQ=; b=LXFXSmXE2NO6YoJACAG3IMhtgZ
+	jreM9kQQmdz5ILPRCxN6w3NCKxwWeiQ6JWn1iTvdIHT6gROBRicQ7hBXZKQIYp+ajIGUWmVzYXLRP
+	syzvqX5+DN2HPikkBrfddlUAOXRw/NdT2sIc2IFJeX6AXAiz5VGtC5KWpIeOulB3MY6N6oz1nch73
+	rX5i9KQcR9LjMYZbOJp9bNOYEyd5Xnt69hgwSRi/4hSpDhRxX63JQI+Ss3Mng0G+86dkSxx9+ERm4
+	LtS+NydUjy+9VO2NYSrsXlbcGxxj4FHsEGSeaUM2/B2d+W6HAdyd+uzSCKBJz1iOjLJptboBtMOvn
+	LBsRktjg==;
 Received: from sslproxy07.your-server.de ([78.47.199.104])
 	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <esben@geanix.com>)
-	id 1sCh3B-000CAW-Cu; Thu, 30 May 2024 16:46:41 +0200
+	id 1sCh3C-000CAk-1m; Thu, 30 May 2024 16:46:42 +0200
 Received: from [185.17.218.86] (helo=localhost)
 	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <esben@geanix.com>)
-	id 1sCh3A-000N5A-1R;
+	id 1sCh3B-000NCM-0q;
 	Thu, 30 May 2024 16:46:40 +0200
 From: Esben Haabendal <esben@geanix.com>
-Subject: [PATCH v3 0/3] memory: fsl_ifc: Make FSL_IFC config visible and
- selectable
-Date: Thu, 30 May 2024 16:46:35 +0200
-Message-Id: <20240530-fsl-ifc-config-v3-0-1fd2c3d233dd@geanix.com>
+Date: Thu, 30 May 2024 16:46:37 +0200
+Subject: [PATCH v3 2/3] powerpc/configs: Update defconfig with now
+ user-visible CONFIG_FSL_IFC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,10 +50,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEuRWGYC/3WMQQ6CMBAAv0J6dk0p0oIn/2E8QLuFTbQlrWkwh
- L9bOGmMx5lkZmERA2Fk52JhARNF8i5DdSiYHjs3IJDJzAQXJ16LCmy8A1kN2jtLA+hGqZaLXrQ
- KWY6mgJbmfXi9ZR4pPn147f9UbvbvKpVQgkRrVdUbrVBeBuwczUftH2x7JfHZNz+9AA61NapHJ
- WXNzVe/rusbKHPTy+0AAAA=
+Message-Id: <20240530-fsl-ifc-config-v3-2-1fd2c3d233dd@geanix.com>
+References: <20240530-fsl-ifc-config-v3-0-1fd2c3d233dd@geanix.com>
+In-Reply-To: <20240530-fsl-ifc-config-v3-0-1fd2c3d233dd@geanix.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>, 
  Tudor Ambarus <tudor.ambarus@linaro.org>, 
  Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
@@ -67,48 +67,46 @@ Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
  linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
  Esben Haabendal <esben@geanix.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717080399; l=1363;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717080399; l=958;
  i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=hec9jZ8GWjjsOhfEAzSjDoHUwtpSRvZqlBCq8AeIrFo=;
- b=buzvR/qD7i5oCABreVm4NXVrvG2Yrha5/9sV9qT58rBe0Y1V0HlLMjxj016UsCkarlgM2PV1D
- qnXPPLMay4qDek66RR3yRO4bP1kvryYBpWSCZwqM67gmus4KuCWQaIZ
+ bh=gYh5ZeM8RAfRySwrSZmO3AMBCrGHKKvIQY62urO1EUw=;
+ b=bEJ0aVmdyDT0u7vwaSZCYG6fAyLnvfzCYF/YRQ2PzyReLEUsEQqAiYRgiG0aZcxyjQ+7BA76p
+ O+Nhm+tA4POA6cUaW0cQw3HzyLrZ/KPEneXUVUsEnnoTKtdF81zYrIk
 X-Developer-Key: i=esben@geanix.com; a=ed25519;
  pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 X-Authenticated-Sender: esben@geanix.com
 X-Virus-Scanned: Clear (ClamAV 0.103.10/27291/Thu May 30 10:29:52 2024)
 
-While use of fsl_ifc driver with NAND flash is fine, as the fsl_ifc_nand
-driver selects FSL_IFC automatically, we need the CONFIG_FSL_IFC option to
-be selectable for platforms using fsl_ifc with NOR flash.
-
-Fixes: ea0c0ad6b6eb ("memory: Enable compile testing for most of the drivers")
-
-Changes in v3:
-- Refresh arm64 defconfig.
-- Link to v2: https://lore.kernel.org/r/20240528-fsl-ifc-config-v2-0-5fd7be76650d@geanix.com
-
-Changes in v2:
-- CONFIG_MTD_NAND_FSL_IFC depends on CONFIG_FSL_IFC instead of select.
-- Refresh powerpc config snippet accordingly.
-- Link to v1: https://lore.kernel.org/r/20240523-fsl-ifc-config-v1-1-6eff73bdc7e6@geanix.com
+With CONFIG_FSL_IFC now being user-visible, and thus changed from a select
+to depends in CONFIG_MTD_NAND_FSL_IFC, the dependencies needs to be
+selected in defconfigs.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
-Esben Haabendal (3):
-      memory: fsl_ifc: Make FSL_IFC config visible and selectable
-      powerpc/configs: Update defconfig with now user-visible CONFIG_FSL_IFC
-      arm64/configs: Update defconfig with now user-visible CONFIG_FSL_IFC
-
- arch/arm64/configs/defconfig        | 1 +
  arch/powerpc/configs/85xx-hw.config | 2 ++
- drivers/memory/Kconfig              | 2 +-
- drivers/mtd/nand/raw/Kconfig        | 3 +--
- 4 files changed, 5 insertions(+), 3 deletions(-)
----
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-change-id: 20240523-fsl-ifc-config-c877902b297e
+ 1 file changed, 2 insertions(+)
 
-Best regards,
+diff --git a/arch/powerpc/configs/85xx-hw.config b/arch/powerpc/configs/85xx-hw.config
+index 524db76f47b7..8aff83217397 100644
+--- a/arch/powerpc/configs/85xx-hw.config
++++ b/arch/powerpc/configs/85xx-hw.config
+@@ -24,6 +24,7 @@ CONFIG_FS_ENET=y
+ CONFIG_FSL_CORENET_CF=y
+ CONFIG_FSL_DMA=y
+ CONFIG_FSL_HV_MANAGER=y
++CONFIG_FSL_IFC=y
+ CONFIG_FSL_PQ_MDIO=y
+ CONFIG_FSL_RIO=y
+ CONFIG_FSL_XGMAC_MDIO=y
+@@ -58,6 +59,7 @@ CONFIG_INPUT_FF_MEMLESS=m
+ CONFIG_MARVELL_PHY=y
+ CONFIG_MDIO_BUS_MUX_GPIO=y
+ CONFIG_MDIO_BUS_MUX_MMIOREG=y
++CONFIG_MEMORY=y
+ CONFIG_MMC_SDHCI_OF_ESDHC=y
+ CONFIG_MMC_SDHCI_PLTFM=y
+ CONFIG_MMC_SDHCI=y
+
 -- 
-Esben Haabendal <esben@geanix.com>
+2.45.1
 
