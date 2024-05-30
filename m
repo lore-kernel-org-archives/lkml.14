@@ -1,87 +1,95 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C982C18756B;
-	Thu, 30 May 2024 18:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FC4D5B0;
+	Thu, 30 May 2024 18:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717093884; cv=none; b=aaog1cqA+LEYB5v+ktBsvB19NAbqCEhS1tzeBR5Vboy6iIJiAhOMpn7RatvMzdZvaqm7LHTg5+IKRXost3oVZcP/w0V3TpZpgQsM2yITig44GJ88enmYAd14+0h8QpnxFJ5oTPKI39o662LU6VNU32dvxFkLLXbPEEnX8e4eqG8=
+	t=1717093914; cv=none; b=kh5R6YvTdwWwGY2lh2JQ4uvpb9XW4OzikzpOTpD4858IsPpopby5npB7t92IqP/W7yXRcuYIurVnhoTPkZWCApDHi/bEcdTFYsj137gysuyyNJI0dc2UKRheEU5jQm9YepDD34fNuCN0THSvMd3RimFxZ3RksNZpAPszSWIWxP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717093884; c=relaxed/simple;
-	bh=jw+/1omh9aija+/3PTa3hhBC/RMuLVVyV6nh2oe1lU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oj5c3/T1l0ZkTxbard0BzLa7GL98IqocY/TVFIm2RHGS/WgUgAJ6LPhfYl5THBkz8HK4Fc10mLDfWWZ0/joARLVH1XDEY7UdAh74zQRcUzsW42i4fMkxnsWlz9tnNMjBeNQTp+2hPCezlNlOU6CeKR/aMvfo2jQDPIh+XoO+GVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQOOc7g0; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717093914; c=relaxed/simple;
+	bh=oV2ANB+ulV/DSp8xJCrxkLf1wBmQtbX6KxkYIPVxXc0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n2HrSn6bpvV/oSX4NyYM/TEpLrbhdkWA5EUXpbB5h+1Ji+VvYs2OX1Qznmu8WsQ6CGVsvkPjPFwG7kwDMIYBVt8TEKFuCzPWQIT3AwSHydiNQQkh2wn4SGPeRwDximQmwNVcJH5YwL8W7baAURJwrlQylRFuwPeXhPkE80fzNy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4+EVvH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQOOc7g0"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f44b42e9a6so9989765ad.0;
-        Thu, 30 May 2024 11:31:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717093882; x=1717698682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I8qugGotj3ZZLtSERra+hK/Mv9F36ldpUIYGeJNBrMQ=;
-        b=NQOOc7g0MmB2IRejFxhZPKcxlhpusuBfur3LZ8piRa1AL9XzeBi98wnOV2BBTaOBVD
-         mYPn22EhBxJ1+vZX0BhKfw0n21Ke1fc/+39yJ+h9FtMTJ4yzzooudOC9HXeY2eP20diP
-         0k5w+UlGLwT22CXN5LWxaELhBCBSE4HqwHGk0E8QtnXzKHTRxN7JIrSEwOr1MecwjJA+
-         bCbtBTC77IUpXchWU61R1+YPmXwVTwcbgyHJ2OEJvm4/19lekX9yCUHMB+yael8rPgLh
-         lgWDsrrWBd0mSmBQoDCabdVGnVaUc1kiBnDtUs8KrA5Ge+WDJDz4SDNXwKfBYHV+9Ysx
-         csBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717093882; x=1717698682;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I8qugGotj3ZZLtSERra+hK/Mv9F36ldpUIYGeJNBrMQ=;
-        b=BrAxMGk6Mol48A33XZpUaBaMpr5Q+SDTEDn077LCIcUBP3ZsgS0KIWW2zXjXv/lLV6
-         tk1E/Jh1zSDM3VsJ1GC99uVanq0TtupyPgoIhNOvYGMNMqgQ+bhsn4q2iXiY4zgnFxsp
-         KPHSchbDTWc1tCHlJVv1akXZEAEPAFYNFseBlDNtPYi97DnegnB9sIxqohHuB6xzNdcj
-         FAG/XRP/8d4/zqv0u9pGGxM15v+oon6mMV6VHrPjOcdR9COjl2aRO0CLTYNizaqet56O
-         znRjhZ4gJzvHM2lMIclu1ef5YVJWw1hXNK+m5WROIWr+ynBIgCbBqs51/fpMATjyVBeX
-         +UmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmpW4igVKd/vcLU1cr9RP0b6ANo5Gy/7tarr2jpW+VhJDkdR1xYbOK2BkeLoZWcBq6V1EoqhazrSnjLfhbj2vcMjlHJRPigqK+fZpv4NABiAAlCae52trXBMRJimzD0wWOZnamgGTFrTIhgw==
-X-Gm-Message-State: AOJu0YxbzF0gCWyoq23NUqGSAO+gXXUhi4UcLS4K29XNfdPUd0T46zaH
-	DSTv6UEgC8VLvoKKQBFNCQZYrJ7ZWZwQbHSGh3I6LWMtDgBio9sY0O801g==
-X-Google-Smtp-Source: AGHT+IEsmGHzU7+6bVHVyy/d/YH911xaWUrmNif58TKuQitb7HqYKen2zbZwmoUnyCaURfIs2FM/iA==
-X-Received: by 2002:a17:902:fc4b:b0:1f6:2269:1067 with SMTP id d9443c01a7336-1f6226914ffmr25443705ad.53.1717093882126;
-        Thu, 30 May 2024 11:31:22 -0700 (PDT)
-Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ddeecsm949995ad.160.2024.05.30.11.31.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 11:31:21 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Thu, 30 May 2024 08:31:20 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: willy@infradead.org, akpm@linux-foundation.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] writeback: factor out wb_dirty_exceeded to remove
- repeated code
-Message-ID: <ZljF-CndHpAnPlQ8@slm.duckdns.org>
-References: <20240514125254.142203-1-shikemeng@huaweicloud.com>
- <20240514125254.142203-8-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4+EVvH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF3CC2BBFC;
+	Thu, 30 May 2024 18:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717093914;
+	bh=oV2ANB+ulV/DSp8xJCrxkLf1wBmQtbX6KxkYIPVxXc0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p4+EVvH5KamzgwLTElqCojVkEP8mGN9Cj1Rl/avHfcaqPc6Uo4Y2ZmnNdwrdnRux+
+	 sJgt2YhmeCs61sLwVQ+TLhvbfo6eTI2v9LxSt8tCAe4n5VsHDt8LhoQf9SKwhsoV06
+	 NLrPHhuIIX/5W+m3ZPCqgG3INM1BGBXzD1BPS+zyk11I0Um8vtU/KFqOlZckT/8NB4
+	 0JNUXVO9WFlDKfZZp0WXZJmeO1X4K3ndlr9hbEwR5eBJgFnPSoptxsv4LMlASqPu4I
+	 5id25ffRMLsXKdE1K9Rw1s1YxXOd44IL1ESGNoeS7blLpSMcTygcIX0lCkK7Ws51U0
+	 7Rc1eXjTx8qUg==
+Date: Thu, 30 May 2024 20:31:49 +0200
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: YongSu Yoo <yongsuyoo0215@gmail.com>
+Cc: Markus Elfring <Markus.Elfring@web.de>, linux-media@vger.kernel.org,
+ Hyunwoo Kim <v4bel@theori.io>, LKML <linux-kernel@vger.kernel.org>, Dan
+ Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] media: dvb_ca_en50221: Add a returing EBUSY logic into
+ CA_RESET
+Message-ID: <20240530203149.1fe881ed@coco.lan>
+In-Reply-To: <CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
+References: <20240308121338.1983-1-yongsuyoo0215@gmail.com>
+	<eda2a849-c23a-4624-85da-78a2fdef4fe9@web.de>
+	<CANXPkT5ggr8VbYdRy+uSnfHxDRES5arJJ8p+ist1CBTm-1xaUQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240514125254.142203-8-shikemeng@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 14, 2024 at 08:52:53PM +0800, Kemeng Shi wrote:
-> Factor out wb_dirty_exceeded to remove repeated code
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Em Tue, 28 May 2024 21:14:37 +0900
+YongSu Yoo <yongsuyoo0215@gmail.com> escreveu:
 
-Acked-by: Tejun Heo <tj@kernel.org>
+> Dear Markus Elfring
 
-Thanks.
+Please don't top-post. Makes hard to follow the comments.
+>=20
+>=20
+> 2024=EB=85=84 5=EC=9B=94 28=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 2:38,=
+ Markus Elfring <Markus.Elfring@web.de>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
+=B1:
+>=20
+> >
+> > =E2=80=A6 =20
+> > > For preventing this problem from happening, we make CA_RESET ioctl do
+> > > nothing and only return EBUSY if the ioctl is called during the
+> > > "transiting" states. =20
+> >
+> > Would you like to avoid any typos (in the summary phrase)?
 
--- 
-tejun
+> Initially, I sent this E-mail using the below command
+> "....git send-email --to  mchehab@kernel.org,
+> linux-media@vger.kernel.org, xxxxxxxxxxx.patch. ..."
+
+Git send-email is a good way to send patches. You may also use
+a decent e-mail client that won't mangle with whitespaces. I use
+myself claws-mail; other develpers use emacs. Feel free to pick your
+poison, but if the email doesn't handle whitespaces well and/or
+don't allow writing the answers below the original comments (instead
+of top-posting), it shouldn't be used.
+
+> In response to what you suggested, is it OK if I use Gmail and attach
+> a new patch ?
+
+No. Never attach a patch as the mailing list will reject, and if not,
+patchwork.linuxtv.org won't pick it.
+
+You may use gmail, if you setup your e-mail client to use it as a
+SMTP server. Using webmail solutions typically won't work open source
+discussions, as it does lots of wrong things, like top-posting, not
+honoring 80 columns on emails and/or mangling tabs and white spaces.
+
+Thanks,
+Mauro
