@@ -1,123 +1,162 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F57A18309F;
-	Thu, 30 May 2024 12:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253CB13211A;
+	Thu, 30 May 2024 12:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717073084; cv=none; b=hDxysxhDA8thpNeO8Fc20Bghs9PnTl1xsqVVSetg9xBd74eJwfu+iZbqcx0EDVvrPSWsdJKmhqV60B4l2C0WHj09X4hlpDfuvDtXkD/ESDDXd69LPzqR+CrvAReRSZj328SbIGnvydyjtLG1nqWxKQo31/HAVKK5zDMRRmp6LDA=
+	t=1717073097; cv=none; b=tkwchYTyj8vO8loxxdI7FePHWLYeNXFpOjSaJA4gkrq3Q6qYfK7EkNxiVqtEK5LcqUy1EPvpYB0giAitK1RoSDyNh5vx3NGm48updL3ZOQPgENQ+7tlXVHHGvu1tlIto1hdZ4kumO+DkWFDjLOCTYODkyC4WuPxiU7GowRjfFBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717073084; c=relaxed/simple;
-	bh=tl3Gx8GhE1b/e4gvK0Lfp630cLEwyy06op12vRvGxFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AfcvvGeyBIiQtQmy9LMj/z6PbhlgPZYUCauOTrFmM0h0s5FlCAFcTzxKRzLTU4E25Oba9LOnr17a2E5g2rYU8VqP1NbV6TqzXs/PD7tq3UBhjZzCGHnrrBm+Fl1KTnvO+F65hoAP7EatgwKREO3YbRoa/m6FCcVZ0165qgBpa9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jGIyEAii; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717073097; c=relaxed/simple;
+	bh=BE5vKjWoF5clRJtqrDhKP5DaIp8mpQT6m134/dlB5jY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dLgTKmEf/V9I67txFQoqLszovak8WfLjVXaHS2YMhho7cN9hh+hhYO3eZimDxuR1v6Nn3kjmORC3imd/Vc3Gtj1vimlFHyM1En1P3lqxrLouDz1IamfRTkmNWmNxxqPn0VBtAjujtj46Kd/ZlxDC5O3lfgXrYqZyWuGFG+0nQxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ioZafEyQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jGIyEAii"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UCGPZM001414;
-	Thu, 30 May 2024 12:44:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=x/5WyAvEHtHaYc78l54/mQX1c4iwlaGJHyfS9qbBN8Y=;
- b=jGIyEAiiehCVGbYpPrTADNFymVxbc9/S8HJrWCjV3Sg2JybvRHYWpX355TYwCCIBvjAn
- UhynzApJTI2k9YlE2VTuvL9klXPAvkrzppkFPQrq9nLqbbL+kR3PjXQgn13btnSO8zKl
- vK/oSQbLGCv3Qw73R61y4FLueb+ICyJYin45rhOtTjC1kE80FGlO0vfC2dURJnlMIHgG
- nsAuj71uBinmZV6XbJmkRT6KmJSsA68hwem50ORNid4HZLCV9JvLtG5BECfd6FPB0DiW
- XtkC1mGbw97WGLlUW5y5x7QDrtdLp8iEXydqveXa6sAtlgZBnU+AS1X8GKImVPMmcdK1 Mg== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yes5nr2sg-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 May 2024 12:44:34 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44UC6XH8026789;
-	Thu, 30 May 2024 12:16:53 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpd2stbr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 May 2024 12:16:53 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44UCGoM618285144
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 May 2024 12:16:52 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 50F865805B;
-	Thu, 30 May 2024 12:16:50 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AA7655804B;
-	Thu, 30 May 2024 12:16:49 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 30 May 2024 12:16:49 +0000 (GMT)
-Message-ID: <435d756d-2404-4f66-9ce3-363813997629@linux.ibm.com>
-Date: Thu, 30 May 2024 08:16:49 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ioZafEyQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569AFC2BBFC;
+	Thu, 30 May 2024 12:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717073096;
+	bh=BE5vKjWoF5clRJtqrDhKP5DaIp8mpQT6m134/dlB5jY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ioZafEyQtEczCqRpQo7xFcf/W2XF5tkER2qdhpO6JVZpf6j6P0711matV43Ya70gZ
+	 ii3noAJn8+slkpAUbPSJ6+bC2bf8NVi+YUhh69hDtKPZXIbTvjAiPIB5Y1rMBsor3z
+	 Dw5U8mxIVDzJn6bxhHdCCDPTplUhcJDG60LAtP2g=
+Date: Thu, 30 May 2024 14:45:02 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: CrescentCY Hsieh <crescentcy.hsieh@moxa.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: serial: 8250: Passing attr_group to universal driver
+Message-ID: <2024053013-clapping-germless-d50d@gregkh>
+References: <20240530094457.1974-1-crescentcy.hsieh@moxa.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] ecdsa: Use ecc_digits_from_bytes to simplify code
-To: Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net
-Cc: linux-kernel@vger.kernel.org, lukas@wunner.de
-References: <20240529230827.379111-1-stefanb@linux.ibm.com>
- <D1MPWI6C2ZCW.F08I9ILD63L4@kernel.org>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <D1MPWI6C2ZCW.F08I9ILD63L4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wnydKamIK_X16yge0UrmJz1oP5kdyasd
-X-Proofpoint-ORIG-GUID: wnydKamIK_X16yge0UrmJz1oP5kdyasd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-30_09,2024-05-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 malwarescore=0 phishscore=0
- mlxlogscore=966 adultscore=0 mlxscore=0 spamscore=0 bulkscore=0
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2405010000 definitions=main-2405300096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240530094457.1974-1-crescentcy.hsieh@moxa.com>
 
-
-
-On 5/30/24 01:08, Jarkko Sakkinen wrote:
-> On Thu May 30, 2024 at 2:08 AM EEST, Stefan Berger wrote:
->> Simplify two functions that were using temporary byte arrays for
->> converting too-short input byte arrays to digits. Use ecc_digits_from_bytes
->> since this function can now handle an input byte array that provides
->> less bytes than what a coordinate of a curve requires - the function
->> provides zeros for the missing (leading) bytes.
->>
->> See: c6ab5c915da4 ("crypto: ecc - Prevent ecc_digits_from_bytes from reading too many bytes")
->>
->> Regards,
->>     Stefan
->>
->> Stefan Berger (2):
->>    crypto: ecdsa - Use ecc_digits_from_bytes to create hash digits array
->>    crypto: ecdsa - Use ecc_digits_from_bytes to convert signature
->>
->>   crypto/ecdsa.c | 29 ++++++-----------------------
->>   1 file changed, 6 insertions(+), 23 deletions(-)
+On Thu, May 30, 2024 at 05:44:57PM +0800, CrescentCY Hsieh wrote:
+> Many low-level drivers in Linux kernel register their serial ports with
+> the help of universal driver (8250_core, 8250_port).
 > 
-> BTW, would it make sense split ecdsa signature encoding to its own patch
-> in my next patch set version and name it ecdsa_* style and put it to
-> ecdsa.c?
+> There is an attribute group called `serial8250_dev_attr_group` within
+> `8250_port.c` to handle the `rx_trig_bytes` attribute:
+> https://lore.kernel.org/all/20140716011931.31474.68825.stgit@yuno-kbuild.novalocal/
+> 
+> However, if a low-level driver has some HW specifications that need to
+> be set or retrieved using an attr_group, the universal driver
+> (8250_port) would overwrite the low-level driver's attr_group.
+> 
+> This patch allows the low-level driver's attr_group to be passed to the
+> universal driver (8250_port) and combines the two attr_groups. This
+> ensures that the corresponding system file will only be created if the
+> device is registered by such a low-level driver.
 
-I would only put it into ecdsa.c if functions inside this file (can) 
-make use of it, otherwise leave it in your file.
+Great!  But is this needed now by any in-kernel drivers, or is this only
+needed by things that are not in our tree?
+
+If in our tree, what driver(s) does this fix up?  If none, then for
+obvious reasons, we can't take this change.
 
 > 
-> Just asking this because the part should be the same same for any ECDSA
-> signature. It must scale also to all NIST variants before my patch set
-> can land.
+> Signed-off-by: CrescentCY Hsieh <crescentcy.hsieh@moxa.com>
+> ---
+>  drivers/tty/serial/8250/8250_core.c |  9 +++++++++
+>  drivers/tty/serial/8250/8250_port.c | 26 ++++++++++++++++++++++++--
+>  include/linux/serial_core.h         |  1 +
+>  3 files changed, 34 insertions(+), 2 deletions(-)
 > 
-> BR, Jarkko
-> 
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> index 43824a174a51..01d04f9d5192 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -1130,6 +1130,8 @@ int serial8250_register_8250_port(const struct uart_8250_port *up)
+>  			uart->port.pm = up->port.pm;
+>  		if (up->port.handle_break)
+>  			uart->port.handle_break = up->port.handle_break;
+> +		if (up->port.attr_group)
+> +			uart->port.attr_group = up->port.attr_group;
+>  		if (up->dl_read)
+>  			uart->dl_read = up->dl_read;
+>  		if (up->dl_write)
+> @@ -1210,6 +1212,13 @@ void serial8250_unregister_port(int line)
+>  		uart->port.type = PORT_UNKNOWN;
+>  		uart->port.dev = &serial8250_isa_devs->dev;
+>  		uart->port.port_id = line;
+> +
+> +		if (uart->port.attr_group_allocated) {
+> +			kfree(uart->port.attr_group->attrs);
+> +			kfree(uart->port.attr_group);
+> +			uart->port.attr_group_allocated = false;
+
+Why is this needed to be set to false now, how can it matter anymore?
+
+> +		}
+> +		uart->port.attr_group = NULL;
+>  		uart->capabilities = 0;
+>  		serial8250_init_port(uart);
+>  		serial8250_apply_quirks(uart);
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 893bc493f662..ddfa8b59e562 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -3135,9 +3135,31 @@ static struct attribute_group serial8250_dev_attr_group = {
+>  static void register_dev_spec_attr_grp(struct uart_8250_port *up)
+>  {
+>  	const struct serial8250_config *conf_type = &uart_config[up->port.type];
+> +	struct attribute **upp_attrs = NULL;
+> +	int upp_attrs_num = 0, i;
+>  
+> -	if (conf_type->rxtrig_bytes[0])
+> -		up->port.attr_group = &serial8250_dev_attr_group;
+> +	up->port.attr_group_allocated = false;
+> +
+> +	if (up->port.attr_group) {
+> +		upp_attrs = up->port.attr_group->attrs;
+> +
+> +		while (upp_attrs[upp_attrs_num])
+> +			upp_attrs_num++;
+> +
+> +		up->port.attr_group = kcalloc(1, sizeof(struct attribute_group), GFP_KERNEL);
+> +		up->port.attr_group->attrs = kcalloc(upp_attrs_num + 2, sizeof(struct attribute *), GFP_KERNEL);
+> +
+> +		for (i = 0; i < upp_attrs_num; ++i)
+> +			up->port.attr_group->attrs[i] = upp_attrs[i];
+> +
+> +		if (conf_type->rxtrig_bytes[0])
+> +			up->port.attr_group->attrs[upp_attrs_num] = &dev_attr_rx_trig_bytes.attr;
+> +
+> +		up->port.attr_group_allocated = true;
+
+This feels odd, why is this all dynamically allocated?  You want to add
+another group to the existing group?
+
+
+> +	} else {
+> +		if (conf_type->rxtrig_bytes[0])
+> +			up->port.attr_group = &serial8250_dev_attr_group;
+> +	}
+>  }
+>  
+>  static void serial8250_config_port(struct uart_port *port, int flags)
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 8cb65f50e830..3212d64c32c6 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -581,6 +581,7 @@ struct uart_port {
+>  	unsigned char		console_reinit;
+>  	const char		*name;			/* port name */
+>  	struct attribute_group	*attr_group;		/* port specific attributes */
+> +	bool			attr_group_allocated;	/* whether attr_group is dynamic allocated */
+
+Any way to do this without this variable?
+
+thanks,
+
+greg k-h
