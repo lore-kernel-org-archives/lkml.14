@@ -1,221 +1,169 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11olkn2069.outbound.protection.outlook.com [40.92.19.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79F34177992;
-	Thu, 30 May 2024 11:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.19.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717067940; cv=fail; b=Vkl900UoYt/hzXxcmKCDZKISvZ7J1QU2WEJU2XghVy9PENmZzcxyrA9zPhRnVo58cLWVf/djVpirudlYvruUNBW8t8cSLM+v1osHD/J/bM6GN94fdQ13Mm+sQeb0r9Zi5YPcMN777BBasaRjKRirSIW91sBJQJKQCWtnPuxXlnc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717067940; c=relaxed/simple;
-	bh=plexqSYVeCU70nZK2wY2GUWJYNmc3QyenGr2Sz+az0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=AwicogPzuOTDf4sgGsYtWGaKr/Sf97+5nrGDcshv+8dNU5jsPlAmjGei7SI83wDbEK3uczzAmQ7WcGTUcV0G1oNIXLj1zfUem/W99QRtxBASZKtpZ9I29ueOJPN5xAKj0yc8fnWqtwsX1s5UaVdCEEi64POs7fAwbnWZYzb6v+k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=PD4ux0nO; arc=fail smtp.client-ip=40.92.19.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="PD4ux0nO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X9G8bValoywm89fbKdMFkjniOvaYUBkzEtkNw69fQfPxgURpa9EDxqRuZezF54co5J8CwhOmhUqaRzLPvgAZ+i5Al2rvALJxRApkB2b5rFJzkN8V1AncSWCvcSf3UN85rz3gj/wskSK1isYa1wDQKt38GbTCqxdRqcyIMy9WSqK5GP3sHAlXI4oCWv9GeuchNghwMGca4DkZdy/HllniDVb8M4GOZlHlUmrcYQ3u7w+WZAHpVe0/Z6y3sMNeStcCTk8J2hnxCz+/vsjd2HQjLAIhRtLVGmkbnXpqIpBhlCBB26KZHQ7JjjIMTpQMmv7icDVrLss6+/Xe6FmqHT1Pcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c1g3dcYVIGes9Pbp4hU9DcM/1/dmc5+Ay2jCxUQHq08=;
- b=az3Lq4BZcFQQhPwLvexqoqyE0zAZ4z9JXPq8slkEed9TZbbm0Ptw8Cky5Ot46lpUKzy3Iu8W/chuW1C7ilPSxq/B8xaUEra9SWjd6e1f+3Pp7gOm2Jrd7kMwLmuCqT8ec4wJAO4nwvEqrn7YvU8YuzIOPMCzg1uYP0EhwrHJk6aIWTepH/1bgXTfdLW8OxM6b/GF+vPrqtewW4YKh7ZZ/TT94PBV7/2FWxR0KS7iPBEP/C4oWGajShT7c2SJMknVsMwyhUfkiRcDyyJG8I3yOcrFymk0s59jqh+2DhUVcEepOzVnPcqNzhgyLrMD0rFdWLL+24HI7ZZjPBMjkZoHkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c1g3dcYVIGes9Pbp4hU9DcM/1/dmc5+Ay2jCxUQHq08=;
- b=PD4ux0nOzYGSZi497ao/x+wqg4Qa2PUGS58TWKc4bnKA5QWIkY5GfLOO/IdFJEjydgiKXKxOUUsNmaZIWVdbVFdAvm+EONFmnQ/TQGtLxljU+jDqSkJQVYUjkEqW6uBFJpTqQORAE2NjPSZzMFOxnFzf5oXaVdCWMa3vFs2x3n7BiY0eWG8Kq1PmjwPYzwPH+N/QyGRJnWzRvbb5k0dU3XcaQ5H8ttlk17FJ41uWLFaqgRYHjtinDR9zWTuBxc4rZ0AuXiegsXT4y+DSBF2xMprgfWXA6C0gMvm9e0KGIuGSPrhzWalxtmyvSLsZ+sb8N/xewuSF/DzRm9SCiywO1w==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by CH0PR20MB6420.namprd20.prod.outlook.com (2603:10b6:610:191::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Thu, 30 May
- 2024 11:18:56 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::ab0b:c0d3:1f91:d149%5]) with mapi id 15.20.7611.030; Thu, 30 May 2024
- 11:18:56 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Jisheng Zhang <jszhang@kernel.org>,
-	Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Inochi Amaoto <inochiama@outlook.com>,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: dts: thead: th1520: Add PMU event node
-Date: Thu, 30 May 2024 19:18:35 +0800
-Message-ID:
- <IA1PR20MB4953BA3638A0839FCB0EF86BBBF32@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.45.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [Ybx/Ue/KoV28DTWdmY2k1N2+n6V1EsDwYJn3psc3r/Y=]
-X-ClientProxiedBy: TYAPR01CA0007.jpnprd01.prod.outlook.com (2603:1096:404::19)
- To IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <20240530111836.297712-1-inochiama@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B7D17836D
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 11:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717067946; cv=none; b=lZPFCs6ZL3ZLVhBB5vpXGDF1CUJ+02QZrkiOIUmqwA0mmCPD2r7W0tLsLq4ehnOtB+mhIoT6MKyJ+UbvP1yGeg3PB+jANiEMQT3CbFAT2farMDjrKvnedCBisvFnNLULM0ZzO6FaGlgT+gI5US/xJOIOMoboinWFy7Rbseu+JXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717067946; c=relaxed/simple;
+	bh=TZtErRrn9BuJ/shP328m+ALlU8XeK7qyK1b+NpnFhSI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Anq88AQbwLf/KstwvSN+hEYDDCL3JIgFw43sxbpTu5IBahQCA6T83+30Z3YR/hCUjbr7kYdef4s1BKpJ8+oXT0qu+3dAWd+5PBAdxhfmU8k+60GUXOBHQig1FL/aydDX0gr2ETIA7u0CNLTiHx6FFgjsfnGxSpPz075IwsnvgDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7eada05bd3bso92300739f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 04:19:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717067944; x=1717672744;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r1L0yw6JjJQlCzbvwK7356fjD9g4ArNEcx738vKMeXw=;
+        b=me1Cyk87j7nyaqGMapSIkHdGW3z0apqtZLGMOukoZhDBu0Y2up6yFJzhxCFDj2Ihy7
+         sgRvzgMteuEDk3+cWvWfr4iWrtkZ3fJ3uHGYJKiiv7Nub1LmO1cXBldE63s3uEZXdDWT
+         svwEZsrlpLrNRbUBhAHoQhUg2i8/KvuqEXhAvZXOq2dYpQCk4Rk3VIn/Vl8SU+bGVSxR
+         s235nMOwcn+WXwaim+8412auyOkueb1U1V0RFK5dEy2tbc05GYizhDtezLSdMlGqDqsE
+         UOUpR5/+60hZbkcKBMCLrs69JkUbuPz4miN6Q/zSaavgGaDSkjNGVABgqAew7oKbSQ6Z
+         0XwA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6LffoUnhkFoo/IyJ94KP2Ce4dJQHj4Et3CkIG5YuX4pmo5QREb5ALoRi8WxH4xYk3+8Ig6PV8TIGzbygA/87H6IAWbQpN06w0LOIL
+X-Gm-Message-State: AOJu0Yw2nqZZ7sEmN+r9iBIwBwHiYZvF4qkp518egjyoU7GNGHSvA5yT
+	iePiJR2jrwbZGo8u0MUfuzHzxos32TB5iroxncOTqFxhfe5LzovypeXE3jx0wvVkAdbm3ojtSC+
+	mR/PoPXM/s/Is1VIKM4W1fzXj9NgJ9DAp6Cqsjx/Hs7iapmfC/HlpTGU=
+X-Google-Smtp-Source: AGHT+IGoruQB8wc9P6Fc34Pgy2yGZlJ0WxM82Qhla7Kg4rsoY2Qau3B865zduG5CuwoWwkr18e5imYir+RPrwWNGzzhIQV5BXKPg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|CH0PR20MB6420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71d15887-b981-4235-1584-08dc809a4ba4
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|440099019|3412199016|1602099003|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	hIId+rXnGJGDh9GNR+pu/JuIJShmIaFhXi1iGqj1e85J5K7YUA/HI7al0oNjYCJXU1zh07f7nPuX9v4O4OAyGakxT8etqmTlvTWq+mbv2A8MYUOryC1cHJf2wKxQ/+WwoSDyCkPAzGbhAK9yzSHNh7FDKnTq9q8jjYTR+K85tEex9PHKs1OjG2ePn9AxQ+cmo84dvKl3NHayMqJ/Ua3Rr8fz3jXR3CjvsvLN3wIjymPGPtYh90jq0rO0vBJqthGvVhMqexSx45zB69SGIPg12tPqTZVEB9xnkpfA7R133AS9w2Vw3P/g6abtUY2WioCqjJUw/PYl2YSdNBQQ4Q39lNKWQn/tvWhYmO/7owRKbIrbtLcctHjNzZynmM1Kk87YaHJ9+MdA9tdNt/TccwJdXx5bkgKSc+NKiAQgh+ev34xr17jgbPdvBFbt1IYc/orgfeRAvNqYf/coDxBsfMFo4AzhQR+HfkElKUBGM/Q30U98JJzsEsi9P+DxGkOgUi+X4J+ZkmDrDHcUKkHMfOT7WlNSZU1HT+CnCdmUWcCyfsd2C+Mnka/+chPqi93jrrlxbMfqIK6hYdXlcoG39R/DJ9f6W0QHBZdGq/ybXYIVEGLbOQFT6ZUlexRGxlJGi1bF62fGvLwB4XLUt+bpdmhj0hV3HaYgWH1PuPUEVkpzADnQjZB/MyOvxt7vTG0W30aA
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?A/SBS4HDsYcrWpuysI2HVpn+aSbfGuCBhO/b2c+vU5ZLzYT87o489cBWMAI4?=
- =?us-ascii?Q?KJFg0jVKlT8j2Blh6O504Mmri0vWIX8MWurRujAuAME7wOWP+DZOOucqY3AK?=
- =?us-ascii?Q?BFORUvMZGDU3/rAy1D/QBV+XeXrwW1SBdq0onlnpwMsurgt6tlU1iE/iqdbc?=
- =?us-ascii?Q?17hibpqn1AezU4ztefpEuwCIFnbr2VEIJ5/R3tb0QXOCqDteSc+OW0gaymO0?=
- =?us-ascii?Q?m3fOuUoCfPZUV5w6hvXuGWQ7ENZJmOIDKt60CiEFZ3C3QFJC9egQyRt1bfeh?=
- =?us-ascii?Q?3FWmm4014c+V2kk8nNzaT11La7IHl5uiphXjVsdQ/fYkIpND5+LbdTuPYk/h?=
- =?us-ascii?Q?L+bl3QjueKDXsfQdKS4CJmUS+Fmw9WMsSL3QhFdWLCvHps0GNcaJCHg7WStf?=
- =?us-ascii?Q?4Qy3bkYcvq0bOQmvS/dTi2NhFDXMVzizRHyVltq7BKdYEUVZBo3xO5lk5jo7?=
- =?us-ascii?Q?2zz+W4oGn1iXRyBVh8HJF/oUWA0IMoewRiSmGGZAD56rSJzO/4RmDufkdrLs?=
- =?us-ascii?Q?FRr+DyVoQRDqLNO87P5opUb+ddBaxfsooK7u/tTAAOO625RyLZ40nR0uXVm7?=
- =?us-ascii?Q?NQSkjtC683aKFKV5gPxDBdEmrAuS7hL0grdgT0h4N8w/LkCEUXyKR8+Fcgs8?=
- =?us-ascii?Q?AsLvtdTu1BzwKrtSDgbLWPMvpH1SRU0cE0Y51IKb48MDJaQiO7Qld1j0KhVW?=
- =?us-ascii?Q?7I960oHs2F7sqY4M2rvi6NWR3fDc0isw1UnGxwW1ppW1yBvmCGs4MrbsXb61?=
- =?us-ascii?Q?75zziuVPnYoQyZg95q/r4QJIkNFZt67Z+oDhiSL/SByf3fY/FCHMNqX9rQ3H?=
- =?us-ascii?Q?jfSc95/ULxSxd+MrS3IvA8eYY943FB5nEO1GxFvP063If71ZutV2TDq4TV4c?=
- =?us-ascii?Q?WLFgEvN+iiewmXUFakup3B2e0J4Io76ZZwKNnL1RUCzNVDQCCy1BvJ37+S4g?=
- =?us-ascii?Q?iEUwgaz03DhNB2D3R71vN+0DGOthg6DvU3S6EaQGobl7M8t6N5kBoc44pwWu?=
- =?us-ascii?Q?fxvvVJICpDZJhbH+wmnHGSvC04FvggRekcBpl+CFd1qOEG3qB9w6VMsWSIs0?=
- =?us-ascii?Q?Htsd46ssAcGx9jP1KLilqg9RTqRszeHdFg9LrkmdKWNLnDbch752H1EPG8pz?=
- =?us-ascii?Q?S29Pgw+hBvPbhp1LCaCeMjx1LVZWSpEs5wnCZjpk4fNtlSp9OOaSPxOrmHkx?=
- =?us-ascii?Q?dE1HsjlPI9zAnoXXT8DyfdkhDL39V8guWY73kRffipQK66xr5L/pxsGAWbe6?=
- =?us-ascii?Q?PKTlJCqNKbcHysNALEzq?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71d15887-b981-4235-1584-08dc809a4ba4
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 11:18:56.5347
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR20MB6420
+X-Received: by 2002:a92:cd84:0:b0:36c:5c1b:2051 with SMTP id
+ e9e14a558f8ab-3747dff6adcmr1315115ab.6.1717067944216; Thu, 30 May 2024
+ 04:19:04 -0700 (PDT)
+Date: Thu, 30 May 2024 04:19:04 -0700
+In-Reply-To: <20240530103435.3077-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dedcea0619aa08aa@google.com>
+Subject: Re: [syzbot] [net?] INFO: rcu detected stall in packet_release
+From: syzbot <syzbot+a7d2b1d5d1af83035567@syzkaller.appspotmail.com>
+To: edumazet@google.com, hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, radoslaw.zielonek@gmail.com, 
+	syzkaller-bugs@googlegroups.com, vinicius.gomes@intel.com, 
+	vladimir.oltean@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T-HEAD th1520 uses standard C910 chip and its pmu is already supported
-by OpenSBI.
+Hello,
 
-Add the pmu event description for T-HEAD th1520 SoC.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-Link: https://www.xrvm.com/product/xuantie/4240217381324001280?spm=xrvm.27140568.0.0.7f979b29nzIa1m
----
- arch/riscv/boot/dts/thead/th1520.dtsi | 81 +++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+lost connection to test machine
 
-diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-index d2fa25839012..3c9974062c20 100644
---- a/arch/riscv/boot/dts/thead/th1520.dtsi
-+++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-@@ -122,6 +122,87 @@ l2_cache: l2-cache {
- 		};
- 	};
 
-+	pmu {
-+		compatible = "riscv,pmu";
-+		riscv,event-to-mhpmcounters =
-+			<0x00003 0x00003 0x0007fff8>,
-+			<0x00004 0x00004 0x0007fff8>,
-+			<0x00005 0x00005 0x0007fff8>,
-+			<0x00006 0x00006 0x0007fff8>,
-+			<0x00007 0x00007 0x0007fff8>,
-+			<0x00008 0x00008 0x0007fff8>,
-+			<0x00009 0x00009 0x0007fff8>,
-+			<0x0000a 0x0000a 0x0007fff8>,
-+			<0x10000 0x10000 0x0007fff8>,
-+			<0x10001 0x10001 0x0007fff8>,
-+			<0x10002 0x10002 0x0007fff8>,
-+			<0x10003 0x10003 0x0007fff8>,
-+			<0x10010 0x10010 0x0007fff8>,
-+			<0x10011 0x10011 0x0007fff8>,
-+			<0x10012 0x10012 0x0007fff8>,
-+			<0x10013 0x10013 0x0007fff8>;
-+		riscv,event-to-mhpmevent =
-+			<0x00003 0x00000000 0x00000001>,
-+			<0x00004 0x00000000 0x00000002>,
-+			<0x00006 0x00000000 0x00000006>,
-+			<0x00005 0x00000000 0x00000007>,
-+			<0x00007 0x00000000 0x00000008>,
-+			<0x00008 0x00000000 0x00000009>,
-+			<0x00009 0x00000000 0x0000000a>,
-+			<0x0000a 0x00000000 0x0000000b>,
-+			<0x10000 0x00000000 0x0000000c>,
-+			<0x10001 0x00000000 0x0000000d>,
-+			<0x10002 0x00000000 0x0000000e>,
-+			<0x10003 0x00000000 0x0000000f>,
-+			<0x10010 0x00000000 0x00000010>,
-+			<0x10011 0x00000000 0x00000011>,
-+			<0x10012 0x00000000 0x00000012>,
-+			<0x10013 0x00000000 0x00000013>;
-+		riscv,raw-event-to-mhpmcounters =
-+			<0x00000000 0x00000001 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000002 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000003 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000004 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000005 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000006 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000007 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000008 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000009 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000a 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000b 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000c 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000d 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000e 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000000f 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000010 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000011 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000012 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000013 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000014 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000015 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000016 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000017 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000018 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000019 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001a 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001b 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001c 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001d 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001e 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000001f 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000020 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000021 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000022 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000023 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000024 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000025 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000026 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000027 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000028 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x00000029 0xffffffff 0xffffffff 0x0007fff8>,
-+			<0x00000000 0x0000002a 0xffffffff 0xffffffff 0x0007fff8>;
-+	};
-+
- 	osc: oscillator {
- 		compatible = "fixed-clock";
- 		clock-output-names = "osc_24m";
---
-2.45.1
 
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.21.4'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
+mod'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build1459151336=3D/tmp/go-build -gno-record-gc=
+c-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 4f9530a3b
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:32: run command via tools/syz-env for best compatibility, see:
+Makefile:33: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D4f9530a3b62297342999c9097c77dde726522618 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20231220-163507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
+ github.com/google/syzkaller/syz-fuzzer
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D4f9530a3b62297342999c9097c77dde726522618 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20231220-163507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D4f9530a3b62297342999c9097c77dde726522618 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20231220-163507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
+ github.com/google/syzkaller/tools/syz-stress
+mkdir -p ./bin/linux_amd64
+gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"4f9530a3b62297342999c9097c77dde726=
+522618\"
+
+
+
+Tested on:
+
+commit:         13c7c941 netdev: add qstat for csum complete
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.=
+git main
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D98a238b2569af6d
+dashboard link: https://syzkaller.appspot.com/bug?extid=3Da7d2b1d5d1af83035=
+567
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+
+Note: no patches were applied.
