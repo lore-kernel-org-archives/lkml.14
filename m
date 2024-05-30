@@ -1,122 +1,399 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DCE17B4F2
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7BB158D88
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 20:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717100215; cv=none; b=RFn2mL3bZih1YqS1M7EoAnLSfPu5yJUZp+qRiX9en2ip94TBz64BUzNWRpAiKvKj8Vy+c+uOsrSrLNw/uvtkMYZILHCs5VcrnaJ4bKFJcfNzTT+c/CQwliS4jZBZ95u8EzjpElB0YLUkx+jyrRCsDlY3fDZq3YdyzN5XyDfuZEs=
+	t=1717100203; cv=none; b=q4c02/QQyO4v1eklLWoGNiu+dJqPSazLmueknbsWk1CdvZvZXJqnt5W2aQloxfEG6iN4kIsnIRnJ81x/7LIfW8xpU7xv8tXsgXk2wjYm9l/gudrv4IbJTvRjWI8V+tFwHeP1C4mkqcp6AIF6Vp/1O+AjSQB+gUU4/p97bZ0EWS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717100215; c=relaxed/simple;
-	bh=w/LlhHGvNr9h36RirGQv+V9ut5ip0myLpxA0mSnObZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J1XHPPA+uWwuW5cHVFlLziuVrOKcSRBdFLWwo98IR2hKsl6Vb4KBoYy1q379SOYB6fnpdGHtclyRpCkdXW3mw3ZegJDaKIZFaoun9Bf0mXlM8Hw684No438hBWCXUpKOZtQmMurul6DOzqiN7RWVw+fh7Yw8Yl00cGc0GjccyAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DaqdWv6/; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1717100203; c=relaxed/simple;
+	bh=XUjFWGj6/WpAaFwycBfCrOCU9DlTes4t/F71EMkAvys=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DG5uaujhoGS1KT5/dns2nA+M9iZHLD9RrgtochlrXRolMxJEtZvhfN0xwlngkb7jyH74Tv48jwSt5Dyc9yU3OqtVuucuAH8IPnGzQOrxrr9G2WM3ybh5qLAtQlYwnZYl3InXGT467Q5Cmmg4xKcuDxaI0uVn11R5ypJllFBdPOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wmWVCbnc; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DaqdWv6/"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a62972c88a9so140854966b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:16:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wmWVCbnc"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a0841402aso4244347b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:16:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717100204; x=1717705004; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7OTWf97i9msDaAtUbKTlawU5KSwt/tocxmyS3gYffoM=;
-        b=DaqdWv6/LcQ9h42zhRV2fJ6CiQZXO6NhuN2qzzUo/z2TRSTM6baz/YqV4e40YVhtz4
-         VUkik5pfuhut8yVtUlXr12sj4EzSVxlxrxDaBIvSlde79Jqu64qN26zuh8wW4QVqBZEL
-         /PzNNpaINagJ1w8G/ubHP0a9nxVLbV3qWKoqxzDL05Hr5dcTrPLj8ZV2+zj4O+IudTJW
-         cvZ1krMzS7Om9i38jQd8nKLv/GEeNOz5FaA/+sKhPFfa3TyMra4mvl+uBSSBTuk8buiP
-         OR+toEhjfRxybnXoM3bLSpI+r9BBpEZYL9GKtiADxN8ASP8jv2UfXiuEN3Sh8VlpW0VN
-         Ah8A==
+        d=google.com; s=20230601; t=1717100194; x=1717704994; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+pHjSd+aIqRhv+ONO+ERZ6+Qj/zRJj03ekyM6mSPMSw=;
+        b=wmWVCbncaCu6slFi8FMRu6CSf7OjTc3ooIJ6u4JTGz4uuB/5XYNqSY6kpiX8l+cv/a
+         RS2YjRfGNDbTLe9RRtUCiqHDjyWFJFUOawr1MUergdAODIT43nGChItokZ8q50Jk6/Bc
+         g37L5yJ+N/471zX6HSFi6EPPZZs+5rYS53yT0Uzo9kkSsDuoFEGRQVEDXSCceu4hUhpX
+         qtmdfmxzzkXtIKxy4usn1YBEJ5T38MJlAUtAEB9OgYOrw2o9K3XwYhPfDs6DjcJhg/qy
+         UHcWIB/w+OsfyMnFJxebDJ5OPdN02j1FqS9s9IbJPNejdtqzMo3m+4u0yKZ8QgDMaDQY
+         ejcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717100204; x=1717705004;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7OTWf97i9msDaAtUbKTlawU5KSwt/tocxmyS3gYffoM=;
-        b=VWkTeka4xK343wXWGl9ilXE+rhuF95flccVXCFVkhSzLwc1xZVxNDG771oqDuYogDG
-         zaarskfQw8JESWVd4e+u6S3MRhjq555jqRNvRb3dD1vco7La9DD9qkt9O7e9lodozVMC
-         0Zzp4lbdgtBGHp6R9dd8rdP+Baa4CABGWSxim9plv3huEtOS9ZU+D+iprmb/BZZFi5P4
-         f/DsOzwSe/PUyd3f/i2ZxMVGSR5Nl7qdOiziDfd+4TKBHZ1gDG870TuVWiV5NHv+0T8o
-         tRJYoYnuMChu5a+QXNUmVzyGl+veTTEdF/GXeUuP2Vf8Wx7Zrv7caCfeUR41KLNfW1vE
-         FnYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFraXN7ozn9RhV3W6mApsDkmycy6NzV17q2LNfX04BRwGHCtZJfPgdtRYIypY93s/ilphiS+DyVQDGUqJ6R9L/Ys5B+G9LICYJDdpG
-X-Gm-Message-State: AOJu0YzWCWeV1JxRpN5WqEeTs4iYwVJCC175uhtVzruwpll9Kc8HB9bb
-	Gm3gbTg1sRxsBB4f7yR8F0Jv6BN2liwOp5cWpxcnGWwVNxHlxt+SACITGoQDoMqFaZ6jgaEcS2q
-	+I7eXYsqSTlOwgAzba21u1tYNKDLG5+d+LztDWxpiDibg6jz7+xyT
-X-Google-Smtp-Source: AGHT+IGfhSphpt3Xt9x/htvOQl3pSYxwOhOVDjvz7uv3zgNs2OoaZVoWnDiNErSEG6McsHKtRKsOInjy25s7jMJjoKI=
-X-Received: by 2002:a17:906:abd0:b0:a5a:8a63:9fee with SMTP id
- a640c23a62f3a-a65e8d2b827mr209645766b.3.1717100203599; Thu, 30 May 2024
- 13:16:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717100194; x=1717704994;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+pHjSd+aIqRhv+ONO+ERZ6+Qj/zRJj03ekyM6mSPMSw=;
+        b=JYgT59xzNwoBlCcItLuq2hRtMtlrG5qJK8Z5sZjlGMTRIXrajnrI3Ui88hMRRWzbli
+         6wHDHMTlmqBa57/dfvk3sbvDr8MNJ8pohnTIzLMi2RYSQwWYGe7j8nKls8YsF2UiEHPg
+         nZ/CRjsrTnB1Gn/ipF0MJlhii0vMS3jym7qGdyR95qCv9M5Ty6WVoy6SPC/qq/L/4nrL
+         lj1U5gZDmh/9ESbBuCL0OEYQ4l/+pGYxTPwENorLUEsA6PO8qFGmYn+Pf8pAoejwHmXj
+         gtchXhowQRQYpKHS3gRkI1wmaBW8iTIr8OANhtyizmqQt8P0rZMRpaAnIX95/s/RW50Z
+         dIdg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFgsa784UrO7gkXhvtzAJ/4T3KvAfPN3lk73muxu6iuBnIN/BCLAgcOF2G61BZhG0AWscL/gV9Are+SERldL8qW2SrYDKZUM/FvanT
+X-Gm-Message-State: AOJu0YygMX2oCxGhX++OGBoTNOxpp6cRtIKH1lOi39emkQRwqL5ug9LX
+	czBWpMFY4x3rS9CA5PEFllzeWfhvH5pSwZh4j8Zwa501ag4dFNJ+a329+Q/Uie460YlLucqUleT
+	eep35q0aILnEPgApJlGsUcg==
+X-Google-Smtp-Source: AGHT+IGF2g6dxEX+gxT34hXKpp4EetOLAozp6L7SZwUKbjyW2NHWygGsIen9fVtJ1Yl28C4lRpzFPm38Ju/2eQQdZg==
+X-Received: from almasrymina.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:4bc5])
+ (user=almasrymina job=sendgmr) by 2002:a05:690c:fd2:b0:627:7563:95b1 with
+ SMTP id 00721157ae682-62c6bce7d09mr9510237b3.5.1717100193783; Thu, 30 May
+ 2024 13:16:33 -0700 (PDT)
+Date: Thu, 30 May 2024 20:16:07 +0000
+In-Reply-To: <20240530201616.1316526-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240530102126.357438-1-usamaarif642@gmail.com>
- <20240530102126.357438-2-usamaarif642@gmail.com> <20240530122715.GB1222079@cmpxchg.org>
- <CAJD7tkYcTV_GOZV3qR6uxgFEvYXw1rP-h7WQjDnsdwM=g9cpAw@mail.gmail.com> <ZljbwMj-FNw9TqDV@casper.infradead.org>
-In-Reply-To: <ZljbwMj-FNw9TqDV@casper.infradead.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 30 May 2024 13:16:04 -0700
-Message-ID: <CAJD7tkb4iTnm2xGvncmVwr+uqV=99hv0kZzMdMc34xc4GUyXJw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: store zero pages to be swapped out in a bitmap
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Usama Arif <usamaarif642@gmail.com>, 
-	akpm@linux-foundation.org, nphamcs@gmail.com, chengming.zhou@linux.dev, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Hugh Dickins <hughd@google.com>, Huang Ying <ying.huang@intel.com>
+Mime-Version: 1.0
+References: <20240530201616.1316526-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240530201616.1316526-9-almasrymina@google.com>
+Subject: [PATCH net-next v10 08/14] memory-provider: dmabuf devmem memory provider
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, 
+	Kaiyuan Zhang <kaiyuanz@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 1:04=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Thu, May 30, 2024 at 09:24:20AM -0700, Yosry Ahmed wrote:
-> > I am wondering if it's even possible to take this one step further and
-> > avoid reclaiming zero-filled pages in the first place. Can we just
-> > unmap them and let the first read fault allocate a zero'd page like
-> > uninitialized memory, or point them at the zero page and make them
-> > read-only, or something? Then we could free them directly without
-> > going into the swap code to begin with.
->
-> I was having similar thoughts.  You can see in do_anonymous_page() that
-> we simply map the shared zero page when we take a read fault on
-> unallocated anon memory.
->
-> So my question is where are all these zero pages coming from in the Meta
-> fleet?  Obviously we never try to swap out the shared zero page (it's
-> not on any LRU list).  So I see three possibilities:
->
->  - Userspace wrote to it, but it wrote zeroes.  Then we did a memcmp(),
->    discovered it was zeroes and fall into this path.  It would be safe
->    to just discard this page.
->  - We allocated it as part of a THP.  We never wrote to this particular
->    page of the THP, so it's zero-filled.  While it's safe to just
->    discard this page, we might want to write it for better swap-in
->    performance.
+Implement a memory provider that allocates dmabuf devmem in the form of
+net_iov.
 
-My understanding is that here we check if the entire folio is
-zero-filled. If the THP is still intact as a single folio, we will
-only apply the optimization if the entire THP is zero-filled. If we
-are checking a page that used to be part of a THP, then I think the
-THP is already split and swap-in performance would not be affected.
+The provider receives a reference to the struct netdev_dmabuf_binding
+via the pool->mp_priv pointer. The driver needs to set this pointer for
+the provider in the net_iov.
 
-Did I miss anything here?
+The provider obtains a reference on the netdev_dmabuf_binding which
+guarantees the binding and the underlying mapping remains alive until
+the provider is destroyed.
 
->  - Userspace wrote non-zeroes to it, then wrote zeroes to it before
->    abandoning use of this page, and so it eventually got swapped out.
->    Perhaps we could teach userspace to MADV_DONTNEED the page instead?
+Usage of PP_FLAG_DMA_MAP is required for this memory provide such that
+the page_pool can provide the driver with the dma-addrs of the devmem.
 
-Why wouldn't it be safe to discard the page in this case as well?
+Support for PP_FLAG_DMA_SYNC_DEV is omitted for simplicity & p.order !=
+0.
 
->
-> Has any data been gathered on this?  Maybe there are other sources of
-> zeroed pages that I'm missing.  I do remember a presentation at LSFMM
-> in 2022 from Google about very sparsely used THPs.
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Apart from that, we may also want to think about shmem if we want a
-general approach to avoid swapping out zero pages.
+---
+
+v8:
+- Use skb_frag_size instead of frag->bv_len to fix patch-by-patch build
+  error
+
+v6:
+- refactor new memory provider functions into net/core/devmem.c (Pavel)
+
+v2:
+- Disable devmem for p.order != 0
+
+v1:
+- static_branch check in page_is_page_pool_iov() (Willem & Paolo).
+- PP_DEVMEM -> PP_IOV (David).
+- Require PP_FLAG_DMA_MAP (Jakub).
+
+---
+ include/net/netmem.h            | 15 ++++++
+ include/net/page_pool/helpers.h | 22 +++++++++
+ include/net/page_pool/types.h   |  2 +
+ net/core/devmem.c               | 83 +++++++++++++++++++++++++++++++++
+ net/core/page_pool.c            | 38 +++++++--------
+ 5 files changed, 138 insertions(+), 22 deletions(-)
+
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index 35ad237fdf29e..7c28d6fac6242 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -100,6 +100,21 @@ static inline struct page *netmem_to_page(netmem_ref netmem)
+ 	return (__force struct page *)netmem;
+ }
+ 
++static inline struct net_iov *netmem_to_net_iov(netmem_ref netmem)
++{
++	if (netmem_is_net_iov(netmem))
++		return (struct net_iov *)((__force unsigned long)netmem &
++					  ~NET_IOV);
++
++	DEBUG_NET_WARN_ON_ONCE(true);
++	return NULL;
++}
++
++static inline netmem_ref net_iov_to_netmem(struct net_iov *niov)
++{
++	return (__force netmem_ref)((unsigned long)niov | NET_IOV);
++}
++
+ static inline netmem_ref page_to_netmem(struct page *page)
+ {
+ 	return (__force netmem_ref)page;
+diff --git a/include/net/page_pool/helpers.h b/include/net/page_pool/helpers.h
+index 1770c7be24afc..731f2d1e1ee10 100644
+--- a/include/net/page_pool/helpers.h
++++ b/include/net/page_pool/helpers.h
+@@ -477,4 +477,26 @@ static inline void page_pool_nid_changed(struct page_pool *pool, int new_nid)
+ 		page_pool_update_nid(pool, new_nid);
+ }
+ 
++static inline void page_pool_set_pp_info(struct page_pool *pool,
++					 netmem_ref netmem)
++{
++	netmem_set_pp(netmem, pool);
++	netmem_or_pp_magic(netmem, PP_SIGNATURE);
++
++	/* Ensuring all pages have been split into one fragment initially:
++	 * page_pool_set_pp_info() is only called once for every page when it
++	 * is allocated from the page allocator and page_pool_fragment_page()
++	 * is dirtying the same cache line as the page->pp_magic above, so
++	 * the overhead is negligible.
++	 */
++	page_pool_fragment_netmem(netmem, 1);
++	if (pool->has_init_callback)
++		pool->slow.init_callback(netmem, pool->slow.init_arg);
++}
++
++static inline void page_pool_clear_pp_info(netmem_ref netmem)
++{
++	netmem_clear_pp_magic(netmem);
++	netmem_set_pp(netmem, NULL);
++}
+ #endif /* _NET_PAGE_POOL_HELPERS_H */
+diff --git a/include/net/page_pool/types.h b/include/net/page_pool/types.h
+index edc3066e1ea56..87a7799460267 100644
+--- a/include/net/page_pool/types.h
++++ b/include/net/page_pool/types.h
+@@ -142,6 +142,8 @@ struct pp_memory_provider_params {
+ 	void *mp_priv;
+ };
+ 
++extern const struct memory_provider_ops dmabuf_devmem_ops;
++
+ struct page_pool {
+ 	struct page_pool_params_fast p;
+ 
+diff --git a/net/core/devmem.c b/net/core/devmem.c
+index fe9865699abb1..e591449a3cf1b 100644
+--- a/net/core/devmem.c
++++ b/net/core/devmem.c
+@@ -163,6 +163,7 @@ int net_devmem_bind_dmabuf_to_queue(struct net_device *dev, u32 rxq_idx,
+ 	 * the driver may read this config while it's creating its * rx-queues.
+ 	 * WRITE_ONCE() here to match the READ_ONCE() in the driver.
+ 	 */
++	WRITE_ONCE(rxq->mp_params.mp_ops, &dmabuf_devmem_ops);
+ 	WRITE_ONCE(rxq->mp_params.mp_priv, binding);
+ 
+ 	err = netdev_rx_queue_restart(dev, rxq_idx);
+@@ -298,4 +299,86 @@ int net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf_fd,
+ 	dma_buf_put(dmabuf);
+ 	return err;
+ }
++
++/*** "Dmabuf devmem memory provider" ***/
++
++static int mp_dmabuf_devmem_init(struct page_pool *pool)
++{
++	struct net_devmem_dmabuf_binding *binding = pool->mp_priv;
++
++	if (!binding)
++		return -EINVAL;
++
++	if (!pool->dma_map)
++		return -EOPNOTSUPP;
++
++	if (pool->dma_sync)
++		return -EOPNOTSUPP;
++
++	if (pool->p.order != 0)
++		return -E2BIG;
++
++	net_devmem_dmabuf_binding_get(binding);
++	return 0;
++}
++
++static netmem_ref mp_dmabuf_devmem_alloc_netmems(struct page_pool *pool,
++						 gfp_t gfp)
++{
++	struct net_devmem_dmabuf_binding *binding = pool->mp_priv;
++	netmem_ref netmem;
++	struct net_iov *niov;
++	dma_addr_t dma_addr;
++
++	niov = net_devmem_alloc_dmabuf(binding);
++	if (!niov)
++		return 0;
++
++	dma_addr = net_devmem_get_dma_addr(niov);
++
++	netmem = net_iov_to_netmem(niov);
++
++	page_pool_set_pp_info(pool, netmem);
++
++	if (page_pool_set_dma_addr_netmem(netmem, dma_addr))
++		goto err_free;
++
++	pool->pages_state_hold_cnt++;
++	trace_page_pool_state_hold(pool, netmem, pool->pages_state_hold_cnt);
++	return netmem;
++
++err_free:
++	net_devmem_free_dmabuf(niov);
++	return 0;
++}
++
++static void mp_dmabuf_devmem_destroy(struct page_pool *pool)
++{
++	struct net_devmem_dmabuf_binding *binding = pool->mp_priv;
++
++	net_devmem_dmabuf_binding_put(binding);
++}
++
++static bool mp_dmabuf_devmem_release_page(struct page_pool *pool,
++					  netmem_ref netmem)
++{
++	WARN_ON_ONCE(!netmem_is_net_iov(netmem));
++	WARN_ON_ONCE(atomic_long_read(netmem_get_pp_ref_count_ref(netmem)) !=
++		     1);
++
++	page_pool_clear_pp_info(netmem);
++
++	net_devmem_free_dmabuf(netmem_to_net_iov(netmem));
++
++	/* We don't want the page pool put_page()ing our net_iovs. */
++	return false;
++}
++
++const struct memory_provider_ops dmabuf_devmem_ops = {
++	.init			= mp_dmabuf_devmem_init,
++	.destroy		= mp_dmabuf_devmem_destroy,
++	.alloc_netmems		= mp_dmabuf_devmem_alloc_netmems,
++	.release_page		= mp_dmabuf_devmem_release_page,
++};
++EXPORT_SYMBOL(dmabuf_devmem_ops);
+ #endif
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index fa2a1f7ba0067..b625791a0fe77 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -13,6 +13,7 @@
+ 
+ #include <net/page_pool/helpers.h>
+ #include <net/xdp.h>
++#include <net/netdev_rx_queue.h>
+ 
+ #include <linux/dma-direction.h>
+ #include <linux/dma-mapping.h>
+@@ -21,12 +22,15 @@
+ #include <linux/poison.h>
+ #include <linux/ethtool.h>
+ #include <linux/netdevice.h>
++#include <linux/genalloc.h>
++#include <net/devmem.h>
+ 
+ #include <trace/events/page_pool.h>
+ 
+ #include "page_pool_priv.h"
+ 
+ DEFINE_STATIC_KEY_FALSE(page_pool_mem_providers);
++EXPORT_SYMBOL(page_pool_mem_providers);
+ 
+ #define DEFER_TIME (msecs_to_jiffies(1000))
+ #define DEFER_WARN_INTERVAL (60 * HZ)
+@@ -187,7 +191,9 @@ static int page_pool_init(struct page_pool *pool,
+ 			  const struct page_pool_params *params,
+ 			  int cpuid)
+ {
++	const struct memory_provider_ops *mp_ops = NULL;
+ 	unsigned int ring_qsize = 1024; /* Default */
++	void *mp_priv = NULL;
+ 	int err;
+ 
+ 	page_pool_struct_check();
+@@ -270,6 +276,16 @@ static int page_pool_init(struct page_pool *pool,
+ 	if (pool->dma_map)
+ 		get_device(pool->p.dev);
+ 
++	if (pool->p.queue) {
++		mp_ops = READ_ONCE(pool->p.queue->mp_params.mp_ops);
++		mp_priv = READ_ONCE(pool->p.queue->mp_params.mp_priv);
++	}
++
++	if (mp_ops && mp_priv) {
++		pool->mp_ops = mp_ops;
++		pool->mp_priv = mp_priv;
++	}
++
+ 	if (pool->mp_ops) {
+ 		err = pool->mp_ops->init(pool);
+ 		if (err) {
+@@ -469,28 +485,6 @@ static bool page_pool_dma_map(struct page_pool *pool, netmem_ref netmem)
+ 	return false;
+ }
+ 
+-static void page_pool_set_pp_info(struct page_pool *pool, netmem_ref netmem)
+-{
+-	netmem_set_pp(netmem, pool);
+-	netmem_or_pp_magic(netmem, PP_SIGNATURE);
+-
+-	/* Ensuring all pages have been split into one fragment initially:
+-	 * page_pool_set_pp_info() is only called once for every page when it
+-	 * is allocated from the page allocator and page_pool_fragment_page()
+-	 * is dirtying the same cache line as the page->pp_magic above, so
+-	 * the overhead is negligible.
+-	 */
+-	page_pool_fragment_netmem(netmem, 1);
+-	if (pool->has_init_callback)
+-		pool->slow.init_callback(netmem, pool->slow.init_arg);
+-}
+-
+-static void page_pool_clear_pp_info(netmem_ref netmem)
+-{
+-	netmem_clear_pp_magic(netmem);
+-	netmem_set_pp(netmem, NULL);
+-}
+-
+ static struct page *__page_pool_alloc_page_order(struct page_pool *pool,
+ 						 gfp_t gfp)
+ {
+-- 
+2.45.1.288.g0e0cd299f1-goog
+
