@@ -1,118 +1,132 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6582614535A
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6C9150996
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717056487; cv=none; b=KuYNsjligqgTHMZjcLxAxrl6HSh+Q+reuIbRZeARbGLcpC7NR59Gto5A+7lnZC5v/n3T0jjy4DCVYU87hxFh8CH0ugF6T1rob8HvGVw6/jC7Du6kP+N/HVQINgsuYq8AnGjBgDGbgpOmatAbRG7GaRvJSaHaS/Vo1DOTjyv799o=
+	t=1717056501; cv=none; b=LioCwdMwNDJ+m7wz/MorgIEMKAFWUBWDxcPdR/Dzzj4x5RCgaAs4lKhFOqUzQJw2EHZ5SiwfUumCbON6XaHMXD9iUGVqCXowc550WsO8jOkvG1qQcDIee670VWoYOfnZpRUBt++oi6YroVEGGiNgHNyz8MufmAPlG1vfnJ5vAqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717056487; c=relaxed/simple;
-	bh=BKFupsJftGMs6W6ZZIn49gRpZlGuTWZ9PfyykZzrqn4=;
+	s=arc-20240116; t=1717056501; c=relaxed/simple;
+	bh=k0ZBEeRh0XWyWlSOxsnf9VcY8uTBB9L1XhwNW0u7CGM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NbHSxLw/mPOv3Qjut6WpXA41rl6LZKQotMrMke8Mo4CNuQHD7PmP2nNed+w6Ugzam/haf2QKHbDqIvmRV1m0Z9gJpC/ughhUse3zW/CQIdTmQVko8MtVdfC/2RSwmgMaXzjmzzvrxg70FPdyNZRx8Q2UvIAP7ZNdJJ6yt6yIN2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bgBZ8BNU; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=ZWb085QSazgl5oEycJMQDAWGlVoAE7sEKIv/jvYDXng5ZYHDrret1SRgIbEbs3GxIGooIZvEfm0wfoE5kNC8tSS3/Eu+TMAxIFEcRcfLyXuExJPWVrc3GKLtxC51sEPgAgGtACb34yfFpp97UNGW9n7mM+A773U66qHkTIZRqSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bQtUrnwZ; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bgBZ8BNU"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dfa4ad7f6dfso517027276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:08:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bQtUrnwZ"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e78fe9fc2bso6677141fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717056485; x=1717661285; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ea398ookltKnMcZe9XrXhw80TYHn5RUehEf25oaXTj0=;
-        b=bgBZ8BNUj0eDg8oL2AFWY9kHE4TP6RtHeJXgfzCvA1pJ4VnoiGiRJjIX8Nyeh7XbS0
-         GNA0uGA483S2wfG30ERpev70wFm3r0E2ZSX5hfGZvaH1S0xNYzUvKSy98eKMSq+ObLhe
-         OxgShayuHRDO4Zl0KI9RES8Ud+EYvwbzjSX2wacIPdprMJie3X0oO58O/WF9An4z1CeW
-         yXT7otZkQrKIYozDupREMnF5OzhK7YKJx7ygWuZXnjY8Q8T2YHhD4wbLwZMMHYq0a2Z4
-         lkQGmz12mkLsW+v+m/bAx/y+zs1SDbzJdxqaJSlqUN6C1EGb1iGewf8/U6NyBUkP6XoJ
-         jdnw==
+        d=gmail.com; s=20230601; t=1717056498; x=1717661298; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mfKMyMYhLm5TkN6bYgjnafVY1Qip0F79Hn2SwhSUVBc=;
+        b=bQtUrnwZySFoG+nR0rTOeJEiKky2ZlIn33tI10t+Swnm4kPOa8bKA9eO6ZBno9CjsG
+         NKnoOkAAUdHhcibCj1ohpo9ROjUxVGZIMtV4+CZOB+d/OsvWp0FVyNbJ/1Vl47TVOwV9
+         yRUQfn6t7nkCYL9bAq/xL6y7RGgebTvPWrCZ5ljhcoJoYzNEhalQfOX/FjfnV96hdS7U
+         AATFMuqCyK4V5aryQOZbE35JyIhNpoIIXfSBaoWXpGzqTpjIqVIkrWE+sDaZA1D7Z0IY
+         wHvIKtfB55ftDLM+j1im8qzXsflojvhZJkpg+C7pDY0zTBCav++qRFVNZhZBj7jeNqxz
+         3DGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717056485; x=1717661285;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ea398ookltKnMcZe9XrXhw80TYHn5RUehEf25oaXTj0=;
-        b=cdc5nmSKJh96/Jy0aUMzHSZQiLxBs45D96hfbge/SqzF44SC7Dd9vWk4pgvm9GsnHl
-         TbP/y1a3hcX+iKbFbk2LO25Q8rL0D9Ytpbg2hgdP9Xl2x5xELUY2EVfoyWOHhqvDYY6t
-         e6bsb1hEeVhCYOVQorKZxw86Jdmb0QIsNSReDUxuYeroC9SLOLYzv8xxMw6ZrY5RN83A
-         +0F9XW8re165TWbhU/JFZg4Hx/b9xjEBsqC+453/RIuqt8yqt+beTyW/QGmadIrpDNqP
-         M7KK3nZoDZFWbKoygJXb9MYqiwrqg9xghGWdzZ7kfteWKka1pFSaTud5ROVj/eRuliOt
-         +Aag==
-X-Forwarded-Encrypted: i=1; AJvYcCXmc44PJiGVTnDOVDueHlzVwfBNbWTd5/uMA/ZObSLkBQ8wwSmWCvqpjCkyAoqpG3rY449gaDw6xubcbiUkeaOK7+gKfQBcDOJV9qt9
-X-Gm-Message-State: AOJu0Yyfp48yqcYSTRvyHAnMmkFthOb2zUZ6J+mmTdZxlo3BKY+LEn2B
-	Y5qR/J1BaRv7FPswkCb6lDF//j4cYMJTIkvu24HPE1iM+HX5om98dyCmv7byoFm7LCA8QGVFsWx
-	DQBjzw1XI6h/tIGDVrKNByo68MRTPLWWlj5Yc7Q==
-X-Google-Smtp-Source: AGHT+IGz+ZsfJJB5VdBGOljgIkzRdHhgei+gaKgI65RBquJxbv4kncJ2bpBR1QliVBmCJF1PLzPJlIZVnBu5WHt6piI=
-X-Received: by 2002:a25:ac92:0:b0:dca:c369:fac2 with SMTP id
- 3f1490d57ef6-dfa5a5baeb4mr1629327276.3.1717056485217; Thu, 30 May 2024
- 01:08:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717056498; x=1717661298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mfKMyMYhLm5TkN6bYgjnafVY1Qip0F79Hn2SwhSUVBc=;
+        b=JXF6rf+8PWdxz8WS2mJdDZFtoF8rXrr1KiBtSKxVUAD13o2C1FnuVKjPXk69lx/yq9
+         O60HeA0j5xq1XsjoM7yXUbANf4J8HgL8Rgb1vKiHdX16VMCGorgC8VuqpX3W4W4COfQJ
+         XNWa2JQNnbwMmMcLZQUZ7o7L2zLddYzNzuZrjexLUR3YXifLoWJ2wkGehB9pkL3x3Wf8
+         BDRqUy43EKdffIIu3CjHQhqKk/0JuEwR0+luR5D5F98+pl+ruMJ+kBsiqcNnZFnvELNr
+         46u1qS68yseEpRPv7mW4fZjF0ahdmZp9sXwzz8uubACwjgQZUOlnKmDwP8h98WdwMhGv
+         yXGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXefRR18QhRI+iZQA/p/rELBz82JvqdXc0a0lY84XYazxuknNnQZnMsPvGjYN6qT2DMuuneJs1wKbtxLt2fFIx43RqisG+UPFdLm28d
+X-Gm-Message-State: AOJu0YyGrZ+tMd9vDuljsTpw/+04jvd1JvP8FhJvueyEgy4E+XPmyZvD
+	4MussM66sh5bfKyK4Ve/xJZZb+HuvPpYVgakV7dWRuPewdtF4o21pVlOg1JZgLlhg5i4Is9lZp4
+	9/QFNMFp91LrvxTVrripYzno1r+oUxRnL
+X-Google-Smtp-Source: AGHT+IEGSmC/noP/5Mjx/gVtFSofe9jPz4+grh9k7k93qRBTcGFy+pJETqSw477sKKOLSUx59OJYTDq+9LHxLZDmD6U=
+X-Received: by 2002:a2e:99d6:0:b0:2da:9ed:9b43 with SMTP id
+ 38308e7fff4ca-2ea84824837mr8587261fa.31.1717056497579; Thu, 30 May 2024
+ 01:08:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528210319.1242-1-mario.limonciello@amd.com>
- <Zlc4V1goFvU2antl@intel.com> <197d195f-9206-41dd-8ff1-f4bb4988fb9b@amd.com>
- <ZldMKZ1MzSDXOheJ@intel.com> <g34f3sdk22grheq2vaaonkl543dtk7nb5sffqgmkl5ywtj5skk@p5ht5ug33q4z>
- <873b7a7b-139d-498e-89da-098cb3d7599d@amd.com>
-In-Reply-To: <873b7a7b-139d-498e-89da-098cb3d7599d@amd.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 30 May 2024 11:07:53 +0300
-Message-ID: <CAA8EJpqODpGX-RthQ8qu3oU80qXp8a-N1Chz-dcQXjKYoDfEgw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during initialization
-To: "Limonciello, Mario" <mario.limonciello@amd.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	linux-kernel@vger.kernel.org, Chris Bainbridge <chris.bainbridge@gmail.com>, 
-	hughsient@gmail.com, linux-input@vger.kernel.org
+References: <20240524-swap-allocator-v1-0-47861b423b26@kernel.org>
+ <CANeU7QkmQ+bJoFnr-ca-xp_dP1XgEKNSwb489MYVqynP_Q8Ddw@mail.gmail.com>
+ <87cyp5575y.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAF8kJuN8HWLpv7=abVM2=M247KGZ92HLDxfgxWZD6JS47iZwZA@mail.gmail.com>
+ <875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 30 May 2024 16:08:01 +0800
+Message-ID: <CAMgjq7AoCL3yqBiys+ksoKQVZW_AopzhuXk7xzQzSwBxHZumeQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] mm: swap: mTHP swap allocator base on swap cluster order
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Chris Li <chrisl@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Barry Song <baohua@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 May 2024 at 07:41, Limonciello, Mario
-<mario.limonciello@amd.com> wrote:
+On Thu, May 30, 2024 at 10:54=E2=80=AFAM Huang, Ying <ying.huang@intel.com>=
+ wrote:
 >
+> Chris Li <chrisl@kernel.org> writes:
 >
-> >> Also a direct acpi_lid_open() call seems a bit iffy. But I guess if
-> >> someone needs this to work on non-ACPI system they get to figure out
-> >> how to abstract it better. acpi_lid_open() does seem to return != 0
-> >> when ACPI is not supported, so at least it would err on the side
-> >> of enabling everything.
+> > Hi Ying,
 > >
-> > Thanks. I was going to comment, but you got it first. I think a proper
-> > implementation should check for SW_LID input device instead of simply
-> > using acpi_lid_open(). This will handle the issue for other,
-> > non-ACPI-based laptops.
+> > On Wed, May 29, 2024 at 1:57=E2=80=AFAM Huang, Ying <ying.huang@intel.c=
+om> wrote:
+> >>
+> >> Chris Li <chrisl@kernel.org> writes:
+> >>
+> >> > I am spinning a new version for this series to address two issues
+> >> > found in this series:
+> >> >
+> >> > 1) Oppo discovered a bug in the following line:
+> >> > +               ci =3D si->cluster_info + tmp;
+> >> > Should be "tmp / SWAPFILE_CLUSTER" instead of "tmp".
+> >> > That is a serious bug but trivial to fix.
+> >> >
+> >> > 2) order 0 allocation currently blindly scans swap_map disregarding
+> >> > the cluster->order.
+> >>
+> >> IIUC, now, we only scan swap_map[] only if
+> >> !list_empty(&si->free_clusters) && !list_empty(&si->nonfull_clusters[o=
+rder]).
+> >> That is, if you doesn't run low swap free space, you will not do that.
 > >
+> > You can still swap space in order 0 clusters while order 4 runs out of
+> > free_cluster
+> > or nonfull_clusters[order]. For Android that is a common case.
 >
-> Can you suggest how this would actually work?  AFAICT the only way to
-> discover if input devices support SW_LID would be to iterate all the
-> input devices in the kernel and look for whether ->swbit has SW_LID set.
->
-> This then turns into a dependency problem of whether any myriad of
-> drivers have started to report SW_LID.  It's also a state machine
-> problem because other drivers can be unloaded at will.
->
-> And then what do you if more than one sets SW_LID?
+> When we fail to allocate order 4, we will fallback to order 0.  Still
+> don't need to scan swap_map[].  But after looking at your below reply, I
+> realized that the swap space is almost full at most times in your cases.
+> Then, it's possible that we run into scanning swap_map[].
+> list_empty(&si->free_clusters) &&
+> list_empty(&si->nonfull_clusters[order]) will become true, if we put too
+> many clusters in si->percpu_cluster.  So, if we want to avoid to scan
+> swap_map[], we can stop add clusters in si->percpu_cluster when swap
+> space runs low.  And maybe take clusters out of si->percpu_cluster
+> sometimes.
 
-It might be easier to handle this in the input subsystem. For example
-by using a refcount-like variable which handles all the LIDs and
-counts if all of them are closed. Or if any of the LIDs is closed.
+Stop adding when it runs low seems too late, there could still be a
+free cluster stuck on a CPU, and not getting scanned, right?
 
->
-> IOW - a lot of complexity for a non-ACPI system.  Does such a problem
-> exist in non-ACPI systems?
+> Another issue is nonfull_cluster[order1] cannot be used for
+> nonfull_cluster[order2].  In definition, we should not fail order 0
+> allocation, we need to steal nonfull_cluster[order>0] for order 0
+> allocation.  This can avoid to scan swap_map[] too.  This may be not
+> perfect, but it is the simplest first step implementation.  You can
+> optimize based on it further.
 
-There are non-ACPI laptops. For example Chromebooks. Or Lenovo X13s,
-Lenovo Yoga C630, Lenovo Flex5G, etc. We are expecting more to come in
-the next few months. And I don't see why they won't have the same
-problem.
+This can be extended to allow any order < MAX_ORDER to steal from
+higher order, which might increase fragmentation though.
 
-
--- 
-With best wishes
-Dmitry
+So this is looking more and more like a buddy allocator, and that
+should be the long term solution.
