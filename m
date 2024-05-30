@@ -1,68 +1,100 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836D614D428;
-	Thu, 30 May 2024 19:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12651581E6;
+	Thu, 30 May 2024 19:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717097745; cv=none; b=IgLAK2W8tLFn8CTT4ue19HY9PCuLUYEC5PotyAI0ATMipxJOHlzhifjqXOi8bEC04hFGXguyjj8tJgMF33vpnLbc7sjw03WIL6b42N6oVAWEcV64OweZQ0JqtuJevZA3cfOCspzYm+7+jsN5MdKh9O126HDGpO8P1UMGL0KQbvM=
+	t=1717097979; cv=none; b=Pd7U2zrpJhFW/gskCKrfwx1+w1MMdv86EuAMZJiIHcW/0gmtzxVEXzPmx1fzMhmXb/bzB2NylwBJqsaMplpTl2FpmRNpHK1dCUDfFAwKOk2s30uRe3TJCLLOEiyM6zUU7pnYFGMUaB5QlyfqM+4WbkscuXnp1kz0LgrTAfPDKd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717097745; c=relaxed/simple;
-	bh=zZ95PbAGHDZITMHqBFl4Fcs/YNpUG8IRO3W6hR/wDOA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gw0x4I7uAf74+/S2oiRFKLOowBXIeCcBRI0wK6T0MMR1hl8a9urn6Iaj4vq+8uG6b6ZUbVtiTIL5mOkKtH8z1sZOgXDOs7BTqQqWLy454svLyeReVAQoWNprrM5vcGBTYBv/Gy3cAzgXLEHsehkPBPRwK3YKIqf9Z9JWN2ow/Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=RTP/6QD1; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1717097979; c=relaxed/simple;
+	bh=wUld6fDYM1OOaXYHHFwLLRyYEIOykO8t+EULeUJsVwQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=lqHcbIhkehxzqdEYmMDKxnaNfbL/9iHcPgMJ2Ub4EW2qDFdUJvES6zjZ24N6KPFrijGhytcb8JFc1TYW6WX2SX9cQ22/ZRG49oj5DgpQ8BnT8P3jusKzTnYr6usyi6lmCEbGS9izZhl2gpM/HTumrhcFmUqowmTkIFh0Pq6clKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kGAodZpT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="RTP/6QD1"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net CE61247C39
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1717097743; bh=EJcE2U0fTyieXXqvhCcgmZrobv5ZLgZuvcLqFu5r9Jg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=RTP/6QD1F55Ia6jC+xzKTthycw4g+OhaGPQJDjW6loRLP0ZSayfOY4yHR6esSsBg9
-	 LR/y5/93RpN7QIxdyrsCBYZ2uwmRGPuikN7DUe9U6k9cujN8BRHBt0yBeiYYBP5tSn
-	 RH/EaWYrjS7IC28u/rsy9yOBLmXIcPVi6rWP2AIy3ctc5m8ESNUxa7CRXjVZ5pVkwG
-	 O24NqloKuNXSsJjkePIDOKEKTmHBe3fUbmAp8sNWJUZjUfRa3fv38bR+4TtdwZk9e3
-	 Ubr4HGuLFFJhlzbE4xIuF6T0RZ99TIScwVMlD3ZfwU9hweEygrTXe/pp7T11lLQFTM
-	 aOzSaU6GSvQKQ==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id CE61247C39;
-	Thu, 30 May 2024 19:35:42 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] doc-guide: kernel-doc: document Returns: spelling
-In-Reply-To: <20240522224726.10498-1-rdunlap@infradead.org>
-References: <20240522224726.10498-1-rdunlap@infradead.org>
-Date: Thu, 30 May 2024 13:35:42 -0600
-Message-ID: <87ed9jcctt.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kGAodZpT"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44UGpGxU024728;
+	Thu, 30 May 2024 19:39:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=G3LhfMYXLod+WXyf4kdGO/
+	jHODsxn9J3pVc37hfWDsY=; b=kGAodZpTwWYkwEBVdPEUJz2E1FDOJNwQxzvj6T
+	IFhFCRegim8E8nAlrQ7L7V+Wf6u58oLJEzp2o2xnzaN0xm3eqKBBYpyDrCgCOKSa
+	F8Um25XZwq7hDLwJAWck9qBBt1ZfPpklHN5FhfnUa4F3SUy9i3SnMIvIPXz6BQD+
+	Qh7NIgKDmmho3VKj4GCuzLosKDlerVbk0II1YK5TP/0WR9DwHKMagoDn+DU6peIR
+	XGpaXYXf7KMgn5lNve4iJveErH9sHvMYmxd9mg+lzqo/9qHtOJVwKlioKpb43/Ba
+	8fPddLiDCD5D+hcFZVUtVEwzVAYN4Q+RmRbNxWdXwfvAgG4Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qmyvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 19:39:32 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44UJdVmU011554
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 19:39:31 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 30 May
+ 2024 12:39:30 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Thu, 30 May 2024 12:39:26 -0700
+Subject: [PATCH] kcsan: test: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240530-md-kernel-kcsan-v1-1-a6f69570fdf6@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAO7VWGYC/x3MywrCQAxA0V8pWRuYPgYZf0VczCPa0DZKolIo/
+ XenLs/i3g2MlMng0myg9GXjp1S0pwbyGOVByKUaOtcNzvcOl4ITqdCMU7YoGM7B5+B9W/oEtXo
+ p3Xn9H6+36hSNMGmUPB6fmeWz4hLtTQr7/gMZhQwLgAAAAA==
+To: Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>
+CC: <kasan-dev@googlegroups.com>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: p3zlZjerhl5YzVcwUELOeuVp3a5BI-Jf
+X-Proofpoint-ORIG-GUID: p3zlZjerhl5YzVcwUELOeuVp3a5BI-Jf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-30_13,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405300145
 
-Randy Dunlap <rdunlap@infradead.org> writes:
+Fix the warning reported by 'make C=1 W=1':
+WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/kcsan/kcsan_test.o
 
-> scripts/kernel-doc accepts "Return:" or "Returns:" for describing the
-> return value of a function or function-like macro, so document this
-> alternative spelling and use it in an example.
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> ---
->  Documentation/doc-guide/kernel-doc.rst |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ kernel/kcsan/kcsan_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied, thanks.
+diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+index 0c17b4c83e1c..117d9d4d3c3b 100644
+--- a/kernel/kcsan/kcsan_test.c
++++ b/kernel/kcsan/kcsan_test.c
+@@ -1620,5 +1620,6 @@ static struct kunit_suite kcsan_test_suite = {
+ 
+ kunit_test_suites(&kcsan_test_suite);
+ 
++MODULE_DESCRIPTION("KCSAN test suite");
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Marco Elver <elver@google.com>");
 
-jon
+---
+base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+change-id: 20240530-md-kernel-kcsan-9795c9551d3b
+
