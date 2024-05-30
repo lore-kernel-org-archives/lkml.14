@@ -1,235 +1,313 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2057.outbound.protection.outlook.com [40.107.100.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB8314B97A;
-	Thu, 30 May 2024 19:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717097325; cv=fail; b=kh+viW3eVGj3IIdZ7kLTYfTuqCN3qexKnoKDVjDrDecDv3KgGS3uxJXxvMPp6eKNeSJbrpPEK7+Z6EJwsSvHQ7O+F/xz8hReo1RreBvVHZPbmQf3DYqF6VMsXXi16XNBtBW6KlmYeExIF7Kz3BjnXQkILJaEFr3oUmsatacCHPM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717097325; c=relaxed/simple;
-	bh=qu0HkuFw+5FuXbGanszQhE7EQ1xrCo2lFs06kBMoUWw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=irv/8i6vL98AnASounV7JctZn7Xr6KUNozTcY1/Hd8GAbba+d7LwponJjzhWeQ5nUfkyw6Sdk4rHnXFcGCA9myZiPF2cVDXjv/HPVZ8xuv4CCB7+DS9wGcrL7pMB6ale1ruAvJus8RVr3qPob5xYt6asFlelKfE72GJ7toCM9rU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Q/HB+IH1; arc=fail smtp.client-ip=40.107.100.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAEA156C62;
+	Thu, 30 May 2024 19:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717097507; cv=none; b=PNn/O1h8MzcoJ/7JYpraCwaUs0vGIAqMTPRrZOqjaC8CRC78dG8lOMyQoj90I/T1v4YhVYvB+zJHtkJiO982npzth71XBBvxcZor7Pdj0GcWJ6OUt8XxGPdIkKlNe7DSXNO2XJYvqhSMTW6+9bXJVU/jRQxh+vWfFUwzZ50B5+w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717097507; c=relaxed/simple;
+	bh=mz+Tc5gTd6y/EAf0bn20tHzGg4BqnD6TaMtO7GXGH04=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=fLtOmgj1AiSoombk24QyLf7sv33YPL/4DWz6gy9OuUBeul2VE0huNWoBylGd0SBZHO+VPboQBIyHPq7khBPHu+2+cdLtWCU9i0dA0WRYFxAX6LuvWEyk+NzzrDd9yL51tWNaE6H70SNP/+cSsmjuZkCRjX+JcWgYCegf5teRx7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=wobW0bUS; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Q/HB+IH1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfK+dbujKU05BVWELuFfwYe4TMbXOP4X9qq3Pw+idd1xWxIVM/sLiOvb92LK/+QNEZWmHzwMombfGuUTW/TmU7tdUNs6TQuXNujWz98JXb86ZezhYxOwS8DRwrXHPY8GRZWmRC1LEvtNBOTFEEuM79hs+yIcIGt/RabgBAfYQOI0usHWnVrItpWxxQNYYbfRwdpJuuzWlw2NIDYe7B/iUO/BehhAs4fTpE2+apdzKNhcx/nxGHtqT/j53tfWF+piG0bG6mcBEiAadW45b+zI4+SMCKzS8rqMYy3JZubGE1pzD+WhQxj0k5ssfd8rwyRagHJ5bOTsCZnenmuBrM9OpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G9vmDKBiSw/JrMqwuPn0Z0nPi23MsJYITvaHF4jcEw8=;
- b=jGSdjYA62QS2nYMyokShhDJ06fWIFNg/HZUh7Mtpb3cDurSlFOrKFYxVBO+2ZYrCTd9ivIo1n6BCoFdEG9sx1iF8Yq//AOTYan5R6lOoxI4DUZLbghA1ba7rPKTNl76SNcL188Bsrt7prSn0YKvXg765KofhUWEpg7Da7v3ouRgRv4cdsoVRbOmlZ0I34NP48ENU+MWRrSYeXVk63/uz+lui3bhLh/mY89ULAUM9BZPDpH8AEqQx1vL0esAGrvye0Xb7jSqoe0ytUpjL/7tbGMwHSadvUr8fS5UTrkADvKIJdhyoaI3udxHIU83OV3IjlXAfvNRn9+hE/7aENiYjQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G9vmDKBiSw/JrMqwuPn0Z0nPi23MsJYITvaHF4jcEw8=;
- b=Q/HB+IH1mI2C4zMa1cokCj+/YwAHlKfBdR22Jn6R9IqP7SkOKScOsjF2udpBLp4Er5qgw5NkSox69ngyBwm6o8JTsl7UtYS5o1JBPnpUB+VbqSoi4iIo8An/77KDt8EK8tp+M8YujzCl15+5ltSypPNI/jUXpSUE3W2P4EUS8Uu8tyKrF/2pMfB2SY/h60qJs4Q/3BLdFeg2KPJEqGP/5kbhFzdfUrsBMMq8Cy9dqwXvrCEcxZLbr8vxgu7bVD3JwfoCuevt620zDboWYKigvZeQDYCmT03KmC3G/8F5fFWKFHoja7gf3kFhwQIClL20SKHBMAf9Dy8mkACTUmzgFQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by PH8PR12MB7025.namprd12.prod.outlook.com (2603:10b6:510:1bc::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Thu, 30 May
- 2024 19:28:39 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7633.018; Thu, 30 May 2024
- 19:28:39 +0000
-Message-ID: <e0f3563b-5cd7-4f3c-ae7c-4478c25d527c@nvidia.com>
-Date: Thu, 30 May 2024 12:28:14 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] selftests/lib.mk: silence some clang warnings that
- gcc already ignores
-To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: Beau Belgrave <beaub@linux.microsoft.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mark Brown <broonie@kernel.org>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Justin Stitt <justinstitt@google.com>, Bill Wendling <morbo@google.com>,
- sunliming <sunliming@kylinos.cn>, Masami Hiramatsu <mhiramat@kernel.org>,
- Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev,
- Nathan Chancellor <nathan@kernel.org>
-References: <20240529020842.127275-1-jhubbard@nvidia.com>
- <20240529020842.127275-3-jhubbard@nvidia.com>
- <88c64f5e-4586-4b38-b3c8-0c3af93a71ae@linuxfoundation.org>
-Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <88c64f5e-4586-4b38-b3c8-0c3af93a71ae@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BYAPR11CA0045.namprd11.prod.outlook.com
- (2603:10b6:a03:80::22) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="wobW0bUS"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|PH8PR12MB7025:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7303b896-3dc6-49f2-5642-08dc80deb59a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|376005|1800799015|366007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkdSdW1Pc3crSWVPWDdVMlI5Sy9ZWnd6czg1UWF5bXRTaUhlQjdlalg5UmdF?=
- =?utf-8?B?ek40aHBodlQrZlAvbzg4MWVyZ3VIMzFxS1BKMWNCZDdjVGJoN2hHMTMvVm9U?=
- =?utf-8?B?cmY2aEFJaHkvVVNXM2lsTmlEaEFCcVF4NUhRdklzTG1Teml3T091MVNXSTNO?=
- =?utf-8?B?eEdFQTgxdDJWWmcwSXg3UjR5OFk4LzBGTHc2cFRGM2dzMHliVWxQVFNxeWdV?=
- =?utf-8?B?eE15UUJwcWxYM3pmS1hUbWlCTzB4ZmxpUjAxS01BWE1kRWpCY0FaNnEydVhu?=
- =?utf-8?B?c3V1TVV5K2t1MFFUKzF3ZERiVkFmYzBWQ1JYcW1uRWF0UVdIL1ArVVN2QjI2?=
- =?utf-8?B?N1pnVWtlcTg3TFdUSU5ISGN6TWVaRGpqVEFQb0dSNm5idkxpUW9oNEMvNWhx?=
- =?utf-8?B?NllRSzhvWEZ5UlhyT05PT3JWTmlZalpOSWwzUXJJL1hMVUpFcm1hNVFZV2pY?=
- =?utf-8?B?ZEpvcW9naTB4aVFUOFYzZkswR3VsYkJZUmJnVm1TS3JrVFRsditiUEhuNnZl?=
- =?utf-8?B?dEg0ZDZHbUlDZDBxS2o5YjlqV285Q1Rwc1Y5R2hZTkZydzRpdHdsTDUydnBx?=
- =?utf-8?B?alhORFdYNzlZNG5LbmxocVJEd2RHeXBLUitCYk56TWlvRm95aG0xbXMrOVlU?=
- =?utf-8?B?ME1oaXE0UVJHeE1NV1hyUzNYS2dVMnRsaUFDVmUvRDUxQVNaNnBXbWlHRXpI?=
- =?utf-8?B?eDhweHVWV2hUTE5CWlJwN1NSQlkzM0V1d0EzY1FQRUZncDg5bHFlQXViNXhx?=
- =?utf-8?B?UldsY1M0TFY3WTRPU2V6VFhqeW5aN01lRENKaGwwOEx3TTRvRkpaVC9QU1VC?=
- =?utf-8?B?NDFFQU5ycmtFcXJiSjZFdHlCMDJ1RWVxeVM0SG9JWFJneUlEU1BlMjRVM3JY?=
- =?utf-8?B?a1NXRVZyMDMweW1MblNkR282MEVQaC9ZSnluNE1icHFVV3dFY1p5bnlWWm1i?=
- =?utf-8?B?L0MyRDZUVG91ZHhNaXgvUENtVlRZMlZza3R5ZW9ncmZvWW93RkEyYlBXbnBH?=
- =?utf-8?B?TURYblZ6S1d4d09tZU5mR3EwdzVPSzhhQTMvQkY2UUs4c3c3Qk1xdzVncmpl?=
- =?utf-8?B?dTU1RmQvcEdSSjk2UWVSaDNWY1pGTnJnY3o4Slo2blpDQlhnbW1DV2VQeHkw?=
- =?utf-8?B?cE96bXZtSWk2TGNIRVlNaGJhWWx5UmFNZlFVNU5LV3NoTk5BWExoVDQwSlNX?=
- =?utf-8?B?c0Z1cW9sRVovOEdITnBpWVFUYlczYWdNZHNxOG5TT2NrMlZKbnF5ZFlZTnJ6?=
- =?utf-8?B?a29VbkFZMHlkTm1BQ2VleW1sTTBtSzdpUGErM2RQV0dNL3dLMGdmZjNYK3ds?=
- =?utf-8?B?M1N5ZzJiMVZHR1YzQVhSTHNjOXJBZDZ0YjlHTUNxOTkvcTZOM3pSb2N4Sktm?=
- =?utf-8?B?ejdLV0VoczlHdEVwVTg1emEvTGdsQ01yMm5NZ0IyY01zYXhEWG1LaDJudHNJ?=
- =?utf-8?B?TjB1K3ZQa1ZaaFJnTmg5OGVwVWhoRmV6T0dHYVJ1SGxLTEZnaVUyQzExTTlV?=
- =?utf-8?B?RmJlYWVvWFJ5citCWE14WHJ3N3I0L0ZPUktwbEZFakVnYTdKbCtZanFmQmQ3?=
- =?utf-8?B?MGNEaGRhZ3dFY1hDT1NsUHRxaENyYXRocGhkVG80UWNoa3IyRkI4eW9IOUhS?=
- =?utf-8?B?RUFyRGw1SWdSRlhNbTMwRi82S09DOWF0ZFdjNVp1eEdkckhtako5R2kwR0lq?=
- =?utf-8?B?WGowTlYrM1FUQThmZHREa0tWUEZPU2xiK0RTT0ZySFhOWlVmMlIzaktnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UTBVUW1UV0xkM0hxQUIvcnY4SFBpb2lBNWdPM3JRRkxCa3lKSkJWSE10d0gr?=
- =?utf-8?B?RFluZldEaTRnTisydFY2YkZ1QWFCckswNkdaVmJ6bENIczdRa25PdytqTkpC?=
- =?utf-8?B?d2hOM2JDbmgzVUxjYnF0TSs1Ui9RMU5kSkRuc1hCU1dmTmVpSDE3UWh2QVIz?=
- =?utf-8?B?eVVqbVRIam15S212WXg4Vmp0WkVwbGU3Z25GYkpCZUJrTHZtQkQrOWh0YkM4?=
- =?utf-8?B?K2NjWUlubXNGMFUwdWs2dUMvclhGcU1JamJLNEd0aTF2dUJJSHU3Q1R1MUJ2?=
- =?utf-8?B?S1JGUVI5Q0RpUVVKL3YzVkYwTGNrM0laMFNlbEJxeU95T05hUkdISzFub0JC?=
- =?utf-8?B?WkMxdzRVd3FoQ2puZmVIZm5oVzlYN29uYzloMmZnamhNYWNRRjlkSEtKYU1H?=
- =?utf-8?B?aUtNZDRQcndLeEtvbUJyVFkvSFl0YVBaZ25yMEhiMUJoRGZydnVOdWEvMTlz?=
- =?utf-8?B?L1cwTGFSYVBKa0JDeVhuTUl5RFYreTA2aTJlc0NEUmJ0eHc2aGlYOEtsUnFN?=
- =?utf-8?B?aC9JaEFRZ2s5MWREZ3JmUlJCMkptdEF0bVJKSHEzZFFwRHhXcTdHOHlubGRh?=
- =?utf-8?B?dGxzOEZJNUYzNDlVQ3dtMGU4VC9GQzJhZVVhd1VsUjVSK3VEMGlUUUo1TVdK?=
- =?utf-8?B?LzVYd0V6SmNlMWRKdG9GOHpQK2FybXIrK2Z1Z3BDaFRWdlgzS1BScWdpYUh1?=
- =?utf-8?B?N3orZU5SRkNPaTVQZEdndVJTZHE2NUtwNkNYb3MzYjhwdFhxNi8ycFUvaWRm?=
- =?utf-8?B?bUF0WDgwTVZ3UmpGT1R2bnhidlo2Y3JqNkR5ME5BWmIyL0NndEd0N28ya1Rj?=
- =?utf-8?B?NDl5Rm5OVnhZV012Tm5PV3pXZ2h2bFVQb1F6Z1g0Tk55c3AzMWNMNUROWGhm?=
- =?utf-8?B?MHo5NHFNWWc3NnZwekFacmJqTGhNN3RDRmZsYW1MZCsvVXhDVGd0YUk4bk5w?=
- =?utf-8?B?eU1PcTRrbVZnSm5CVDhnMUFJblJJcXpvYmJ1ckhDSjlLZmkzWU1kbmc4VG9F?=
- =?utf-8?B?VzVISlRXanVlUzhDaktySTFMWUJ3ZWxtRURaYkxQeGh6OFlIRnVCT2N5ZWhF?=
- =?utf-8?B?blRaenJLa1h4S0dtTGlYVngrNFUxOUFzcXBVZkVKVWxsa3VtZ2tVN1JsTWt2?=
- =?utf-8?B?TGRTSmk2TUc0QndJYk01T3V4QUtGbHM2VHIweG92YVp0R2ZKeVJhVFFsY3E2?=
- =?utf-8?B?bGhqQ2hFNjFSZlR4a21pVG4yZVNLekUzWi9rRm9mR1VITm1jdUJQNFJSc1Vt?=
- =?utf-8?B?ZUxLR0Y3Y043c0VBVGliR3lUeFowU09sZG44RDBCTzhQeUI3Qk52Wk9Rczhu?=
- =?utf-8?B?UEpiMTJOWFAyMHpUeEl5WTlIdVMrb3d1UjhHd2VIWExMbitETEhnUmtQQ1Br?=
- =?utf-8?B?UjkvWjlHMXdIQUliekJXVHFYamxZVlEvU2lWckNIQ3JnT1ovdDhNejllOUE1?=
- =?utf-8?B?TENpOFl5ODlpZkdPRlViVnYrSlRHNCthUDBhTmdoSlpmN1BwWGgxdmlSOU5u?=
- =?utf-8?B?Q2hvVFloK0FrTEd3NSt6TUJYb3VISVBNSEJhQ2lCcEwweVY1TlZEWVRlamtw?=
- =?utf-8?B?NFpwUkFITnNDeUlQZ2dzQzNQR2VPckQxSUl5REhMTWU0aGhFTHBXSWRKY3B3?=
- =?utf-8?B?eTFTWFNwa1ZScFpLSVlmbzI1TDJEMHJ0UzJUUlByRHFiV0FiTXRSaVkybjlX?=
- =?utf-8?B?andiYkFoU0YwWmlsV0JWb21RelZ5RllHbS91V3d6dkt3Y1ZXTjN0eEVKZG1J?=
- =?utf-8?B?MitLQnRMZHhzbzMva2dFckpiZHFSOVFxWGxDbUtUN1UzOS8zdklYUEtjWW1H?=
- =?utf-8?B?K0FueVlHTkdFRG9KaXovYk5sS3RjdFJ1dDNSLy9TS3hYNGZKaWR4dURFQzRX?=
- =?utf-8?B?c2ptbjNjUkF1b0tUYjJ2SC9NVTNMVUVUMDJ5ZTdjZ2o4TEd5ME5lTm84N0ov?=
- =?utf-8?B?QXZTWXVKWlIzSkN3Y3pHMVdHaUJ2NXdBVnIwcDUwMkVNZEQ3K0pyeXNpbHJ6?=
- =?utf-8?B?dUx3dmVCKzRSSC93OTNXY3NIRFFXSDkyM1RHdi8zOEZ5M3dhRWVyRk5JeXhp?=
- =?utf-8?B?VU16TXVxV0VBL0RwcEdUZ1FzNDZXNVNNSExjZzIwN09rcUlxeDNtKzlKTzJq?=
- =?utf-8?B?MVhpV0ViYzNZdkdLM056aGZKdHZIdDE1OW9LNGl0UGhhNUZqZVQwY1hsTlpS?=
- =?utf-8?B?WXc9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7303b896-3dc6-49f2-5642-08dc80deb59a
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 19:28:39.8402
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Tu73YmL+Zki3WQ+o4Xar4Ajyk1AiFj+p+YprjLe+5gY0O8SHGQjTtufcz89YaYMQPQ6sjjH2eYdxyhaKrbD0Mw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1717097496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GkDv3p3MdujIs63eiYtNPcuXLqersYyHaudDkQ3VAPg=;
+	b=wobW0bUSA/cxhu9cqWD2cZZRP3hnhyedEjELk87vU3ROtxDZAb+VvwjmuMM8nMBp6H8uMx
+	8ogsYFSel9BVhyWRCChOg6U+O+dvjeBRFKNa5HVrzDPcgcji9YB+GEuYqwaB9Ms6P4b363
+	JXGzPjoBEcoDDAZWZSv3wBnHub10dBb8A3dmy7Emlr2/lNfbvO1xDpXAQuVha9IBba3+If
+	/j5ozHo2lut0b7e8UVejNAxWYVYeOs2056mdCjyqWwNScaxSz5iaoYro+O1uZagt7d+zt5
+	pzMvUB2S/nh02GJvyNZI4B5q/lyaFUqt09XjyJF1IGX9eUPV6iJHkZM/OxPOtA==
+Date: Thu, 30 May 2024 21:31:34 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, heiko@sntech.de,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-kernel@vger.kernel.org, quentin.schulz@cherry.de, wens@kernel.org,
+ daniel.lezcano@linaro.org, didi.debian@cknow.org,
+ krzysztof.kozlowski+dt@linaro.org, viresh.kumar@linaro.org
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: Make preparations for
+ per-RK3588-variant OPPs
+In-Reply-To: <CABjd4YzDNQa45=KC_t0xnTDrH+g-oUrcpgP55oOj7JcAuu7uFw@mail.gmail.com>
+References: <673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org>
+ <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
+ <8f8623e29a479c4108141302e708dc3b@manjaro.org>
+ <CABjd4Yy4RMg+6-4ygV0MSwJj5LReY-ymbctq4PPfVZ6L+c1tsw@mail.gmail.com>
+ <166cc4e46f31644a50306625b2ab18a6@manjaro.org>
+ <CABjd4YzDNQa45=KC_t0xnTDrH+g-oUrcpgP55oOj7JcAuu7uFw@mail.gmail.com>
+Message-ID: <82db817a908b761d8c3d73ea04714314@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 5/30/24 7:25 AM, Shuah Khan wrote:
-> On 5/28/24 20:08, John Hubbard wrote:
->> gcc defaults to silence (off) for the following warnings, but clang
->> defaults to the opposite. These warnings are not useful for kselftests,
->> so silence them for the clang builds as well:
+Hello Alexey,
+
+I'm sorry for my delayed response, had some "IRL stuff" to take care of.
+
+On 2024-05-29 16:05, Alexey Charkov wrote:
+> On Wed, May 29, 2024 at 4:22 PM Dragan Simic <dsimic@manjaro.org> 
+> wrote:
+>> On 2024-05-29 14:04, Alexey Charkov wrote:
+>> > On Wed, May 29, 2024 at 2:45 PM Dragan Simic <dsimic@manjaro.org>
+>> > wrote:
+>> >> On 2024-05-29 11:57, Alexey Charkov wrote:
+>> >> > On Wed, May 29, 2024 at 6:14 AM Dragan Simic <dsimic@manjaro.org>
+>> >> > wrote:
+>> >> >>
+>> >> >> Rename and modify the RK3588 dtsi files a bit, to make preparations
+>> >> >> for
+>> >> >> the ability to specify different CPU and GPU OPPs for each of the
+>> >> >> supported
+>> >> >> RK3588 SoC variants, including the RK3588J.
+>> >> >>
+>> >> >> As already discussed, [1][2][3] some of the different RK3588 SoC
+>> >> >> variants
+>> >> >> require different OPPs, and it makes more sense to have the OPPs
+>> >> >> already
+>> >> >> defined when a board dts includes one of the SoC dtsi files
+>> >> >> (rk3588.dtsi,
+>> >> >> rk3588j.dtsi or rk3588s.dtsi), rather than requiring the board dts
+>> >> >> file to
+>> >> >> also include a separate rk3588*-opp.dtsi file.  The choice of the SoC
+>> >> >> variant
+>> >> >> is already made by the inclusion of the SoC dtsi file, and it doesn't
+>> >> >> make
+>> >> >> much sense to, effectively, allow the board dts file to include and
+>> >> >> use an
+>> >> >> incompatible set of OPPs for the already selected SoC variant.
+>> >> >
+>> >> > Indeed, including just one .dtsi for the correct SoC variant and not
+>> >> > having to bother about what other bits and pieces are required to use
+>> >> > the full SoC functionality sounds great! Thanks for putting this
+>> >> > together so promptly!
+>> >>
+>> >> You're welcome. :)
+>> >>
+>> >> > Some considerations below.
+>> >> >
+>> >> >> No intended functional changes are introduced.  (Still to be
+>> >> >> additionally
+>> >> >> verified if the patch moves forward from the RFC state.)
+>> >> >>
+>> >> >> [1]
+>> >> >> https://lore.kernel.org/linux-rockchip/646a33e0-5c1b-471c-8183-2c0df40ea51a@cherry.de/
+>> >> >> [2]
+>> >> >> https://lore.kernel.org/linux-rockchip/CABjd4Yxi=+3gkNnH3BysUzzYsji-=-yROtzEc8jM_g0roKB0-w@mail.gmail.com/
+>> >> >> [3]
+>> >> >> https://lore.kernel.org/linux-rockchip/035a274be262528012173d463e25b55f@manjaro.org/
+>> >> >>
+>> >> >> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+>> >> >> ---
+>> >> >>  ...inctrl.dtsi => rk3588-common-pinctrl.dtsi} |    0
+>> >> >
+>> >> > Renaming the pinctrl includes seems superfluous - maybe keep them as
+>> >> > they were to minimize churn?
+>> >>
+>> >> Believe it or not, the same thoughts crossed my mind.  However,
+>> >> after thinking a bit about it, I concluded that renaming the pinctrl
+>> >> .dtsi files as well makes the overall naming of the reworked RK3588
+>> >> .dtsi files more consistent.
+>> >>
+>> >> It's also rather neat to have the "common" and "fullfat" file pairs
+>> >> together in the arch/arm64/boot/dts/rockchip directory listing, when
+>> >> it's sorted by the file name, which is the default in most (if not
+>> >> all) environments.
+>> >>
+>> >> >>  .../{rk3588s.dtsi => rk3588-common.dtsi}      |    2 +-
+>> >> >>  ...nctrl.dtsi => rk3588-fullfat-pinctrl.dtsi} |    0
+>> >> >>  .../{rk3588.dtsi => rk3588-fullfat.dtsi}      |    4 +-
+>> >> >
+>> >> > To me, "fullfat" doesn't look super descriptive, albeit fun :)
+>> >>
+>> >> Yeah, I resorted to "fullfat" as some kind of a funny option. :)
+>> >> That's for the "beefy" SoC variants, so it kind of fits well. :)
+>> >>
+>> >> > How about we rename the existing rk3588.dtsi and rk3588s.dtsi to
+>> >> > something like rk3588-devices.dtsi and rk3588s-devices.dtsi
+>> >> > (preserving the inheritance between them), and then I add
+>> >> > rk3588s-opp.dtsi and rk3588j-opp.dtsi in a follow-up patch?
+>> >>
+>> >> The trouble with including "devices" into the filenames is, well,
+>> >> the fact that those files isn't about any devices, but about the
+>> >> SoC variants.  Thus, "devices" simply wouldn't fit there.
+>> >
+>> > My thinking was along the lines of "here is the file that contains all
+>> > DT nodes for built-in _devices_ (as in on-chip IP blocks) on RK3588 -
+>> > thus it's called rk3588-devices.dtsi", and "here's the file that
+>> > contains operating parameters that distinguish RK3588 and RK3588s from
+>> > RK3588j - it's called rk3588s-opp.dtsi"
+>> 
+>> Hmm...  I see, but a device is usually though of as some standalone
+>> computer, at least in this context.  Surely, an SoC is also some kind
+>> of a device, for example, but I'm pretty sure we'll very rarely call
+>> an SoC a device.  It's always good to adhere to the usual meaning of
+>> the words in a particular lingo.
 > 
-> Please you add more information on why they aren't useful
-> for kselftests.
+> Agreed, and calling the SoC itself a device is not what I implied by
+> the suggested naming.
 
-Ah OK. My wording is a little misleading. The warnings are not useful
-for the *kernel*, as previous decided by the gcc settings when building
-the kernel. And it is only only due to including kernel data structures
-in the selftests, that we get the warnings on clang.
+Thanks.  As a clarification, I just used calling an SoC a device as
+another example of how "device" can be used in an uncommon way.
 
-So it is not something unique to the selftests. There is nothing that
-the selftests' code does that triggers these warnings, other than the
-act of including the kernel's data structures.
-
-I can post a v2 to update both the comment and the commit description.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+>> When it comes to rk3588s-opp.dtsi, it would be more of a file that
+>> completes the rk3588s.dtsi by adding the OPPs, but we can in fact
+>> add the OPPs directly into rk3588s.dtsi, because in the new layout
+>> rk3588s.dtsi isn't a parent to any other file.
+>> 
+>> >> Moreover, in the envisioned scheme there should be no separate
+>> >> OPP .dtsi files;  the OPP data should go directly into the new
+>> >> rk3588.dtsi, rk3588s.dtsi and rk3588j.dtsi files, where it actually
+>> >> belongs.  That's why those .dtsi files exist and are mostly empty,
+>> >> at least the way I see it.  I'll get back to this below.
+>> >>
+>> >> > Then we keep "thin" versions of rk3588.dtsi, rk3588s.dtsi and
+>> >> > rk3588j.dtsi for board files to include. The mix-and-match of
+>> >> > different on-chip devices and different OPPs then gets transparently
+>> >> > represented within those "thin" .dtsi, something like this:
+>> >> >
+>> >> > rk3588.dtsi:
+>> >> > #include "rk3588-devices.dtsi"
+>> >> > #include "rk3588s-opp.dtsi"
+>> >> >
+>> >> > rk3588s.dtsi:
+>> >> > #include "rk3588s-devices.dtsi"
+>> >> > #include "rk3588s-opp.dtsi"
+>> >> >
+>> >> > rk3588j.dtsi:
+>> >> > #include "rk3588-devices.dtsi"
+>> >> > #include "rk3588j-opp.dtsi"
+>> >>
+>> >> Such a layout, in general, has also crossed my mind, but my conclusion
+>> >> was that having the per-SoC-variant OPP data specified directly in the
+>> >> reworked rk3588.dtsi, rk3588s.dtsi and rk3588j.dtsi files is a better
+>> >> option in the long term, even if we end up that way with rk3588.dtsi
+>> >> and
+>> >> rk3588s.dtsi repeating most (if not all) of the same OPP data.
+>> >
+>> > From all the info we have available so far, RK3588 and RK3588s share
+>> > identical OPPs, so having one file with OPPs that both variants refer
+>> > to should be more maintainable (and fewer lines of DT code).
+>> 
+>> Hmm.  Perhaps we can have rk3588-opp.dtsi as a separate file with the
+>> OPPs shared between the RK3588 and the RK3588S, which would be 
+>> included
+>> from rk3588.dtsi and rk3588s.dtsi.
+>> 
+>> Though, the OPPs for the RK3588J should go directly into rk3588j.dtsi;
+>> if we ever split the OPPs for the RK3588 and the RK3588S, the new OPPs
+>> should also go directly into rk3588.dtsi and rk3588s.dtsi.
 > 
->>
->>      -Wno-address-of-packed-member
->>      -Wno-gnu-variable-sized-type-not-at-end
->>
->> This eliminates warnings for the net/ and user_events/ kselftest
->> subsystems, in these files:
->>
->>      ./net/af_unix/scm_rights.c
->>      ./net/timestamping.c
->>      ./net/ipsec.c
->>      ./user_events/perf_test.c
->>
->> Cc: Nathan Chancellor <nathan@kernel.org>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
->> ---
->>   tools/testing/selftests/lib.mk | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/tools/testing/selftests/lib.mk 
->> b/tools/testing/selftests/lib.mk
->> index 2902787b89b2..41e879f3f8a2 100644
->> --- a/tools/testing/selftests/lib.mk
->> +++ b/tools/testing/selftests/lib.mk
->> @@ -50,6 +50,12 @@ else
->>   CLANG_FLAGS     += --target=$(notdir $(CROSS_COMPILE:%-=%))
->>   endif # CROSS_COMPILE
->> +# gcc defaults to silence (off) for the following warnings, but clang 
->> defaults
->> +# to the opposite. These warnings are not useful for kselftests, so 
->> silence them
->> +# for the clang builds as well.
->> +CFLAGS += -Wno-address-of-packed-member
->> +CFLAGS += -Wno-gnu-variable-sized-type-not-at-end
->> +
->>   CC := $(CLANG) $(CLANG_FLAGS) -fintegrated-as
->>   else
->>   CC := $(CROSS_COMPILE)gcc
-> 
-> thanks,
-> -- Shuah
-> 
+> Sounds good to me!
 
+Thanks!  I'm glad you agree.
 
+>> > All in all, it appears that RK3588 and RK3588j have an identical set
+>> > of built-in devices, but different OPPs due to RK3588j being spec'd
+>> > for industrial use which apparently has different requirements. At the
+>> > same time, RK3588s uses an identical set of OPPs as RK3588 but a
+>> > reduced set of built-in devices. The combination of includes I
+>> > proposed above makes this explicit.
+>> 
+>> Again, calling IP blocks devices is, AFAIK, very uncommon.
+> 
+> Perhaps. Shall we settle on something like "-devicenodes.dtsi" or
+> "-hwblocks.dtsi"? :) This will delineate what goes to which .dtsi:
+> things that describe the hardware composition go to "-hwblocks.dtsi",
+> things that describe performance parameters for that hardware go to
+> "-opp.dtsi" (or directly to the SoC .dtsi if there is only one SoC
+> variant that uses a particular OPP table).
+
+But why not use "-common" instead?  It's simple and aready used for
+another SoC family, which I actually took the inspiration from.  That
+way we'll have both simplicity (it is what it is, common part of the
+RK3588 dtsi, shared among all RK3588 variants) and some arm64-dts-wide
+consistency.  (See also below for further thoughts.)
+
+> The problem I have with -common is that there are several layers of
+> "common" even among just the three of these chip revisions, and a
+> clear inheritance hierarchy between them (i.e. RK3588j and RK3588 also
+> have a sizeable chunk of their IP blocks that is "common" between
+> these two variants, in addition to those shared among all three
+> variants)
+
+Hmm, I see, that's a rather valid concern.  How about using "-base"
+for what I called "-common", and "-extra" for what I called "-fullfat",
+for the lack of a better term?  Using "-extra" takes inspiration from
+the way Linux distribution package repositories are commonly named, so
+it should be rather familiar to nearly everyone.
+
+Also, "-base" and "-extra" are rather short, so their shortness would
+also make them stand out in the directory listing as something that 
+isn't
+just another board .dts or .dtsi file, which can only help.
+
+>> > As for RK3588m, it seems to include all the same devices as RK3588 and
+>> > RK3588j, but a slightly modified set of OPPs compared to RK3588j. We
+>> > don't have any boards using that variant in the mainline tree right
+>> > now, but it would be easy, when the need arises, to add something
+>> > along the lines of:
+>> >
+>> > rk3588m.dtsi:
+>> > #include "rk3588-devices.dtsi"
+>> > #include "rk3588m-opp.dtsi"
+>> >
+>> > rk3588m-opp.dtsi:
+>> > #include "rk3588j-opp.dtsi"
+>> > &cluster0_opp_table {
+>> >         /delete-node/ opp-1296000000;
+>> > };
+>> 
+>> I don't think that deleting nodes that way is a good option.  It's
+>> rather error-prone and hard to track, so it would be better to have
+>> the OPPs for RK3588M specified directly (and fully) in the future
+>> rk3588m.dtsi file, just like in rk3588j.dtsi.
+> 
+> You're right, that does indeed look fishy upon further thought.
+
+Thanks, I'm glad you agree.
+
+>> >> That way we'll have no roadblocks if, at some point, we end up with
+>> >> having
+>> >> different OPPs defined for the RK3588 and the RK3588S variants.  Or
+>> >> maybe
+>> >> even for the RK3582, which we don't know much about yet.
+>> >
+>> > Guess we'll deal with that one once we stumble upon an actual RK3582
+>> > board out in the wild and heading to the mainline kernel tree :)
+>> 
+>> Of course, that was just an example for the future use.
+> 
+> In fact, I've just discovered that Radxa has recently released Rock 5C
+> Lite which is based on RK3582, and starts at just $29 for the 1GB
+> version, making it interesting for tinkering. Especially given that
+> its GPU, one of the big-core clusters and one of the VPU cores seem to
+> be disabled in software (u-boot) rather than in hardware, which means
+> there is some chance that a particular SoC specimen would actually
+> have them in a working condition and possible to re-enable at no cost.
+> Ordered myself one to investigate :)
+
+Yes, I also saw the RK3582-based ROCK 5C Lite a couple of days ago. :)
+It seems that the disabled IP blocks are detected as defective during
+the manufacturing, which means that they might work correctly, or might
+actually misbehave.  It seems similar to the way old three-core AMD
+Phenom II CPUs could sometimes be made quad-core.
