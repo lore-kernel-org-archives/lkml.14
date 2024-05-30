@@ -1,78 +1,143 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4866E4D8A6;
-	Thu, 30 May 2024 07:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2994D8A1;
+	Thu, 30 May 2024 07:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717053129; cv=none; b=DusNy3BV3h/MsBifcerSUoVuI2goFJAbP1Rqk7D9lTxlgBAqWszCQerlvJO9wOWCrIx/Un4ELQLWz17APaFcsIMzjXbonp0s+L6c9jGXAhsvxS1zKVI8opw8sjpq0KCXvPy52mIFiKo8ZJqKG4MQfJCceVBilgQEwrIknhTGdP8=
+	t=1717053142; cv=none; b=jNbhOxTGB/S527FLvabvL+ZnV39yDpXnBg9z/DPKPpd7YIsCLISbEO/JpYfSwciN4UMsCCxXOR0mEQ96kjbeUBR57D6ECM02804Rxz7Edb1spzffX3+7rYuMPDv2fgO3CDp1oyK7Cnip13jCvAMdJB2p7cPNjySguKASEUbIhgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717053129; c=relaxed/simple;
-	bh=A8QA5xiuTXpYm2b3qlN0XfhdUwCEKH7elZsg/fbQ2VY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q66nGvZE5Es2hgPW5uuI5dEgeWa0jFHvppYMsFaEUbCMRgKHm66u3aiU/SIwsQcyj5OOTmOIpgqdiVY77AQlzuOdG56L+ZMadqs+Y9jjJKMybg6Thzlbg4mftlltCV8FqtXRaH1NB4229kxQpMEsiJpZnu09vVTBBzBMYDYTLmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Thu, 30 May
- 2024 15:06:56 +0800
-Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Thu, 30 May 2024 15:06:56 +0800
-From: Tommy Huang <tommy_huang@aspeedtech.com>
-To: <brendan.higgins@linux.dev>, <benh@kernel.crashing.org>, <joel@jms.id.au>,
-	<andi.shyti@kernel.org>, <andrew@codeconstruct.com.au>, <wsa@kernel.org>
-CC: <linux-i2c@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, <BMC-SW@aspeedtech.com>
-Subject: [PATCH] i2c: aspeed: Update the stop sw state when the bus recovry occurs
-Date: Thu, 30 May 2024 15:06:56 +0800
-Message-ID: <20240530070656.3841066-1-tommy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1717053142; c=relaxed/simple;
+	bh=PKz1EZxwe0Xxg+9SZOqevI59oQ7sI56fbUrrtSgK6rc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y69DB44LDYgK99vqDGf9I3nrjPUvu/Td1nwfN6AWKwagqpxm9DVjYPIc0rfsN/ouTGjWN6MHH4VIFxcVJ2SI205wsEdli10zYUPSuYVmZQdxxGkOjUUEbNaKCesQOJzCS4InVQYT2JiCgC3faI2BRM9Y8vx4ScyMlFvzzheuyAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-627efad69b4so4947227b3.3;
+        Thu, 30 May 2024 00:12:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717053139; x=1717657939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZyNSHj0o/RWVtaOY8gZmEcLnBSvcNumfCPoamhSWsi4=;
+        b=aeRetxgko57Zk3WkbP6YB+m8Iwap5d6AEOi3xqxfedsv3krTAb6CgWRKq1mCWYB1U9
+         Yy+rO+kL6RN5rjAj0aM2EfzrIZPSq4VLLH12MxoicSasrYXI3/RQhcpKnGMnYrZAtTww
+         dyxmtvXGirC68UXgEkgc811ArcJNjagFafqTr3e4uWK/gd7T33IjYpLMv09oVJnEL7hR
+         sIqbFpWcT+fh2DH79GWmQJdunq7wxIx9EKwVyCwQrBBXhTUyse+nPZs57oZYPmn0LxR8
+         JqPirTOSvn0WBM6h2SEClifszqsQoN+DRMVxCORFQTfzYKEwfYmuHfgZh2hC4AFmWfjg
+         K14A==
+X-Forwarded-Encrypted: i=1; AJvYcCWjNyK5Vg9v1s4S/l/Pe/tcz1V6HUvsjuPA4QyX7ooB2wYCSO6kQ5kpMJxb4trLYtiIhT1vLgEN8APEm2BiOgFYoxFVbIINexwERJINJWMRXN4+eoe1JmRwXyS80BBVZB2WovQ3o8GYTkdeaH0YxREt3RX9bIjbNaeEb778BMYQaYDSdXh2iRD4yDisT9m3GomFyD/t9xOV6Qxt5F5q7BItSehwAmM3
+X-Gm-Message-State: AOJu0YyCdVgcycobxrg2dk6W0jn20Ou73W2xbQaWG8jD16hGJtaT3KHZ
+	jq3XdEbMQthdUsjROwMF1zohIWPaAxcOX8yuMHhMu18fJ7pI37atHJX8HtO4
+X-Google-Smtp-Source: AGHT+IFB9qeO+NXrL5ryUPVnOe/WpYBwOYpUmK240metnJSPPUQLGkfoKGiQu6RXlvek439bEbxW4g==
+X-Received: by 2002:a81:8046:0:b0:627:dfbb:9b81 with SMTP id 00721157ae682-62c6bc13543mr13117477b3.24.1717053138615;
+        Thu, 30 May 2024 00:12:18 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62a0a56e642sm27077897b3.135.2024.05.30.00.12.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 00:12:18 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfa49a90146so493106276.1;
+        Thu, 30 May 2024 00:12:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW7c7bDMccFYoG73jvAuG7weDZOJCShw1nBtgjLvzRWbbgZQvyzI8Az185t7VgoM1FlGxgilq2QwJY/7M8lo/3pFpnQgrZ4eOU1BIM2qsmCOYleoac6RPuzVTEeHQllP8oO7nP4bG+9CqMqc0Cw2cgg7MmEhSBbjvS2eskfWSwywnzWb49OtN0pSLOemb7KCW7GUzLGQRPQpfPyrZmmh6i2GT9aoFYd
+X-Received: by 2002:a25:b11f:0:b0:de6:17e7:ddd1 with SMTP id
+ 3f1490d57ef6-dfa5a60f54dmr1404276276.34.1717053137821; Thu, 30 May 2024
+ 00:12:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240524082800.333991-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWzZP2d6kRw1oTkMYgzS46J68gR_bg14==HCvVpkp0sJA@mail.gmail.com> <CA+V-a8uxwiof-hLPRpYCnDkVs8tj+-+v8GQLSSkMFUP13cuoXQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8uxwiof-hLPRpYCnDkVs8tj+-+v8GQLSSkMFUP13cuoXQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 30 May 2024 09:12:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWEKCB3XdwQeK_MOUm3wyrhLtVXE+96vAVLv2iurmGbJQ@mail.gmail.com>
+Message-ID: <CAMuHMdWEKCB3XdwQeK_MOUm3wyrhLtVXE+96vAVLv2iurmGbJQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] dt-bindings: clock: Add R9A09G057 CPG Clock and Reset Definitions
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When the i2c bus recovey occurs, driver will send i2c stop command
-in the scl low condition. In this case the sw state will still keep
-original situation. Under multi-master usage, i2c bus recovery will
-be called when i2c transfer timeout occurs. Update the stop command
-calling with aspeed_i2c_do_stop function to update master_state.
+Hi Prabhakar,
 
-Fixes: f327c686d3ba ("i2c: aspeed: added driver for Aspeed I2C")
+On Wed, May 29, 2024 at 11:10=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, May 27, 2024 at 10:18=E2=80=AFAM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Fri, May 24, 2024 at 10:29=E2=80=AFAM Prabhakar <prabhakar.csengg@gm=
+ail.com> wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Define RZ/V2H(P) (R9A09G057) Clock Pulse Generator module clock outpu=
+ts
+> > > (CPG_CLK_ON* registers), and reset definitions (CPG_RST_* registers)
+> > > in Section 4.4.2 and 4.4.3 ("List of Clock/Reset Signals") of the RZ/=
+V2H(P)
+> > > Hardware User's Manual (Rev.1.01, Feb. 2024).
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
+>
+> >
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/clock/r9a09g057-cpg.h
+> > > @@ -0,0 +1,644 @@
+> > > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > + *
+> > > + * Copyright (C) 2024 Renesas Electronics Corp.
+> > > + */
+> > > +#ifndef __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
+> > > +#define __DT_BINDINGS_CLOCK_R9A09G057_CPG_H__
+> > > +
+> > > +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> > > +
+> > > +/* Clock list */
+> >
+> > No distinction between Core and Module clocks?
+> >
+> I was in two minds here. Would you prefer clocks with no CGC support
+> to be listed as core clocks?
 
-Signed-off-by: Tommy Huang <tommy_huang@aspeedtech.com>
----
- drivers/i2c/busses/i2c-aspeed.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+What's CGC support? (Obviously I need some more reading before
+I can tackle the rest of this series :-)
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index ce8c4846b7fa..32f8b0c1c174 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -169,6 +169,7 @@ struct aspeed_i2c_bus {
- };
- 
- static int aspeed_i2c_reset(struct aspeed_i2c_bus *bus);
-+static void aspeed_i2c_do_stop(struct aspeed_i2c_bus *bus);
- 
- static int aspeed_i2c_recover_bus(struct aspeed_i2c_bus *bus)
- {
-@@ -187,7 +188,7 @@ static int aspeed_i2c_recover_bus(struct aspeed_i2c_bus *bus)
- 			command);
- 
- 		reinit_completion(&bus->cmd_complete);
--		writel(ASPEED_I2CD_M_STOP_CMD, bus->base + ASPEED_I2C_CMD_REG);
-+		aspeed_i2c_do_stop(bus);
- 		spin_unlock_irqrestore(&bus->lock, flags);
- 
- 		time_left = wait_for_completion_timeout(
--- 
-2.25.1
+My comments are due to the bindings saying:
 
+  '#clock-cells':
+    description: |
+      - For CPG core clocks, the two clock specifier cells must be "CPG_COR=
+E"
+        and a core clock reference, as defined in
+        <dt-bindings/clock/r9a09g057-cpg.h>,
+      - For module clocks, the two clock specifier cells must be "CPG_MOD" =
+and
+        a module number, as defined in <dt-bindings/clock/r9a09g057-cpg.h>.
+    const: 2
+
+while the header file does not make it obvious whether a clock needs
+CPG_CORE or CPG_MOD.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
