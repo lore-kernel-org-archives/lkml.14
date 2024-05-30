@@ -1,27 +1,27 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629731D531;
-	Thu, 30 May 2024 02:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771A121A0D;
+	Thu, 30 May 2024 02:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717037250; cv=none; b=ch1zuZalzQmUempUzwxRrESEgF66/C5TA7lwl+6l0j71B0m5PbBdksWh6m+oyX/166RIFcCIN74WwRkHEDVqQp49Pp0ZH/HrFnpFqX+Ou7fLp9c4IM5GQUVS7sKnhFE48npQ+hTNweni0K0kw4rYoE43GF97rmzk9BIJqF8qLsw=
+	t=1717037253; cv=none; b=C6R1LmFILMEd4HST62sw/Gc21PJ9jtF5e8MpmQpbonca0zfhykjhM1ILlZmjt1UxSRA2hQS5NKtlrINbyCgVUwwRDYHIwkxaMSpfs1Tc3Ka98MlwnHpt5yWQ31z1C73gktkyxr3JilNl5jf4y8ypqRKJHs4qFiP+V51sS7IWj0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717037250; c=relaxed/simple;
-	bh=mqiHu88SLDXDtaGXDAKBUHOn26hvhZJtfrW3LFLV710=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=UFcN7h6ZM7F+AWr7158oElwTzG09hjZo8xcimlR742ZTtPTeh3d/nDtNOlXwnZpIedhtTfP/YAETKBoXSXtKAhXnobO3fJQP8Xkh4yGFP180Ey69FYS2tnLx8tIxrvw2nLpmrK4RZSdFNrKuyEW1nBgP8zs0FgNT8R2B5s7gGOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+	s=arc-20240116; t=1717037253; c=relaxed/simple;
+	bh=K6ify13TMCVePzFtFbttLg9jPajrP/iaO6VEAqKe/I0=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=HuiTLQ7hRLt3I22Qng/xdcoH4aQMFA+pH75VWOYf84iBa291QAoemQMlFMoHLNdzltSqOYvueW0Jb+GXPFK40JgHLW79xtbj62UFouTHEGbft4agPCDbtOnIIvR7bAVeTMTlkuy9XkP0EVbrs6NjhdkK/IVfGjptRp64wenZwbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CD05D1A1704;
-	Thu, 30 May 2024 04:47:26 +0200 (CEST)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C42672017F1;
+	Thu, 30 May 2024 04:47:29 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 42CE01A0483;
-	Thu, 30 May 2024 04:47:26 +0200 (CEST)
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 78FAC2017EF;
+	Thu, 30 May 2024 04:47:29 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id E6BDA180222C;
-	Thu, 30 May 2024 10:47:23 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 29E84180222C;
+	Thu, 30 May 2024 10:47:27 +0800 (+08)
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
 To: p.zabel@pengutronix.de,
 	abelvesa@kernel.org,
@@ -42,9 +42,9 @@ To: p.zabel@pengutronix.de,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	shengjiu.wang@gmail.com
-Subject: [PATCH v6 2/5] clk: imx: clk-audiomix: Add reset controller
-Date: Thu, 30 May 2024 10:31:15 +0800
-Message-Id: <1717036278-3515-3-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH v6 4/5] clk: imx: clk-audiomix: Add CLK_SET_RATE_PARENT flags for clocks
+Date: Thu, 30 May 2024 10:31:17 +0800
+Message-Id: <1717036278-3515-5-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1717036278-3515-1-git-send-email-shengjiu.wang@nxp.com>
 References: <1717036278-3515-1-git-send-email-shengjiu.wang@nxp.com>
@@ -55,124 +55,54 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Audiomix block control can be a reset controller for
-Enhanced Audio Return Channel (EARC), which is one of
-modules in this audiomix subsystem.
-
-The reset controller is supported by the auxiliary device
-framework.
+Add CLK_SET_RATE_PARENT flags that when the device driver sets the
+child clock rate, parent clock frequency can be refined accordingly.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/Kconfig               |  1 +
- drivers/clk/imx/clk-imx8mp-audiomix.c | 60 +++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
+ drivers/clk/imx/clk-imx8mp-audiomix.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-index 6da0fba68225..9edfb030bea9 100644
---- a/drivers/clk/imx/Kconfig
-+++ b/drivers/clk/imx/Kconfig
-@@ -81,6 +81,7 @@ config CLK_IMX8MP
- 	tristate "IMX8MP CCM Clock Driver"
- 	depends on ARCH_MXC || COMPILE_TEST
- 	select MXC_CLK
-+	select AUXILIARY_BUS
- 	help
- 	    Build the driver for i.MX8MP CCM Clock Driver
- 
 diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index b381d6f784c8..a3dc2f3606ee 100644
+index a3dc2f3606ee..ad6eceb419cc 100644
 --- a/drivers/clk/imx/clk-imx8mp-audiomix.c
 +++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2022 Marek Vasut <marex@denx.de>
-  */
+@@ -325,12 +325,12 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	for (i = 0; i < ARRAY_SIZE(sels); i++) {
+ 		if (sels[i].num_parents == 1) {
+ 			hw = devm_clk_hw_register_gate_parent_data(dev,
+-				sels[i].name, &sels[i].parent, 0,
++				sels[i].name, &sels[i].parent, CLK_SET_RATE_PARENT,
+ 				base + sels[i].reg, sels[i].shift, 0, NULL);
+ 		} else {
+ 			hw = devm_clk_hw_register_mux_parent_data_table(dev,
+ 				sels[i].name, sels[i].parents,
+-				sels[i].num_parents, 0,
++				sels[i].num_parents, CLK_SET_RATE_PARENT,
+ 				base + sels[i].reg,
+ 				sels[i].shift, sels[i].width,
+ 				0, NULL, NULL);
+@@ -373,7 +373,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_BYPASS] = hw;
  
-+#include <linux/auxiliary_bus.h>
- #include <linux/clk-provider.h>
- #include <linux/device.h>
- #include <linux/io.h>
-@@ -13,6 +14,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/slab.h>
+ 	hw = devm_clk_hw_register_gate(dev, "sai_pll_out", "sai_pll_bypass",
+-				       0, base + SAI_PLL_GNRL_CTL, 13,
++				       CLK_SET_RATE_PARENT,
++				       base + SAI_PLL_GNRL_CTL, 13,
+ 				       0, NULL);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -382,7 +383,8 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
+ 	clk_hw_data->hws[IMX8MP_CLK_AUDIOMIX_SAI_PLL_OUT] = hw;
  
- #include <dt-bindings/clock/imx8mp-clock.h>
- 
-@@ -217,6 +219,60 @@ struct clk_imx8mp_audiomix_priv {
- 	struct clk_hw_onecell_data clk_data;
- };
- 
-+#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
-+
-+static void clk_imx8mp_audiomix_reset_unregister_adev(void *_adev)
-+{
-+	struct auxiliary_device *adev = _adev;
-+
-+	auxiliary_device_delete(adev);
-+	auxiliary_device_uninit(adev);
-+}
-+
-+static void clk_imx8mp_audiomix_reset_adev_release(struct device *dev)
-+{
-+	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-+
-+	kfree(adev);
-+}
-+
-+static int clk_imx8mp_audiomix_reset_controller_register(struct device *dev,
-+							 struct clk_imx8mp_audiomix_priv *priv)
-+{
-+	struct auxiliary_device *adev __free(kfree) = NULL;
-+	int ret;
-+
-+	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-+	if (!adev)
-+		return -ENOMEM;
-+
-+	adev->name = "reset";
-+	adev->dev.parent = dev;
-+	adev->dev.release = clk_imx8mp_audiomix_reset_adev_release;
-+
-+	ret = auxiliary_device_init(adev);
-+	if (ret)
-+		return ret;
-+
-+	ret = auxiliary_device_add(adev);
-+	if (ret) {
-+		auxiliary_device_uninit(adev);
-+		return ret;
-+	}
-+
-+	return devm_add_action_or_reset(dev, clk_imx8mp_audiomix_reset_unregister_adev,
-+					no_free_ptr(adev));
-+}
-+
-+#else /* !CONFIG_RESET_CONTROLLER */
-+
-+static int clk_imx8mp_audiomix_reset_controller_register(struct clk_imx8mp_audiomix_priv *priv)
-+{
-+	return 0;
-+}
-+
-+#endif /* !CONFIG_RESET_CONTROLLER */
-+
- static void clk_imx8mp_audiomix_save_restore(struct device *dev, bool save)
- {
- 	struct clk_imx8mp_audiomix_priv *priv = dev_get_drvdata(dev);
-@@ -337,6 +393,10 @@ static int clk_imx8mp_audiomix_probe(struct platform_device *pdev)
- 	if (ret)
+ 	hw = devm_clk_hw_register_fixed_factor(dev, "sai_pll_out_div2",
+-					       "sai_pll_out", 0, 1, 2);
++					       "sai_pll_out",
++					       CLK_SET_RATE_PARENT, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
  		goto err_clk_register;
- 
-+	ret = clk_imx8mp_audiomix_reset_controller_register(dev, priv);
-+	if (ret)
-+		goto err_clk_register;
-+
- 	pm_runtime_put_sync(dev);
- 	return 0;
- 
 -- 
 2.34.1
 
