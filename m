@@ -1,318 +1,201 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2066.outbound.protection.outlook.com [40.107.20.66])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AC24776F;
-	Thu, 30 May 2024 16:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717088085; cv=fail; b=JcIDPVJSiBPGSPBFVw+l/5POZkgGT6sHcr7eZKMl2IQRm+cTA+VTzzf/G4kligDnxxqYxns3L6JIyXkT6wG238RLel3rLv96KTJqyv8tDTYiXHwS6ueUy9RW6tENz+JRJ4fd5yJO5sBFzWaKkm0WPgEFP6k4PBve09OLgzhbXcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717088085; c=relaxed/simple;
-	bh=BlAMvXoPbWfAXZpcX917YxtYn7HH1nWDwnOe5GPK9I0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Q6ZDZMViGdhKhD60h4dYN5/ngBiz5rBHdzrTX958SU9GnGBhHMZQvPbVQ46fqrdIpkPKtfSMkQ8SQPeeBMzy1YqaHGzkgyFxduWivtdTqXtCH3YEZBIbO4E7rg0C64DrSSzyUoayBWVWbrvRA6BZaLrt8k++HwQzMIZHXzDkJF0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LV3s6NAO; arc=fail smtp.client-ip=40.107.20.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A87D3BB2E;
+	Thu, 30 May 2024 16:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717088140; cv=none; b=nIyugSQiXoKOZlwGvv546bF7zEHMA4JLABFylEEC2o0ADCoL6n8Yg/SDiQLy3p4TkYkY3tOBs8v//RwduQEKJ7n/9gZ7jqFLF7iE43dzsPf8GOJEIBwNRYGRylO0pacFVFLdxPGKmJ8HKz26Vfbk0rypy3Cj8huwkQG6SmMAhB8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717088140; c=relaxed/simple;
+	bh=tCkHJUiWVp34QgTZuninP//WmPuka/jpuBZokKDdlwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QkWzgiDs6hTufT4c1AWkpxwaVdw6M8CXr+SLMh9yseGr1GI9rPgYiwI/yji3SXdP0MMb6j/fmbtMJHCnyO6HKWyezj68WFC9KJ3xjZYK5pBUH0EEe554ntLfiiKJtOfx7FfqVvUG4OmsmdVReSzrTCybxuC6mHspiS9ObS2lkzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=vt1b5BwQ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LV3s6NAO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FL9IiJ4eM49XjTvvZdj66z9QcN4HZDom3HVVxEexy+3kkc+HCDEbHfzyGZcWCRUNaMTuT85cUD7tNCPORMQz4WEgVvAaF+eX+csw6i84aPV8CGkP2s4iIwpr2mafP3lXC4GVZbnvpHRjBHobK0buGqPsVZElv2HUfEwK94tqU3Jgep+olpdHI/c44ISn5RCNo/JD82f5ae7htAiQ+bvTMx7sA8zVAc5nkkXXl00Vy00ftGlKKn2pTZijqgmo3QJtK7BbF7OGUZFdwYJcbjUyeSEROOXrBV7tfVjYv8/eZsafgpkdbumGSCOUyBIjnOpkb002phWo/iGdci5tKyTXUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3iEEgiDfLuU24gK0/aTuNkWwHhNv7Cyr53ift2m412o=;
- b=EAZu8O+JBP5VBjkfMghFRhUOxt4D6feLlDg2XlIV2+mNhSh75lgUhRFypBi+ocOk+WCHCA7a+WZwFLW41Rda+MEdMOPfi/fbxB6aH9iutQMCBAXKvy7DW1KwrccKsxxfTmTv5ReRTfN5mKvdFYS6WbRkcyMSwaZsokQWr/D89vWg5pD8uiFYew5k/eNVJtdwqIAE2OYTyiooTyXbU2f1dbIVYOl3v0Hhb9jPRXHQS/ce9n5Rf6oLEQwMNNqMdWaRSWH5DipNG2vd0PCQUiFrFWUSiR33EYW90ciKzyZJKnow5zX/hCqr0W0EIGQlxJoSqPMUzgy7nEmWr35kARAyhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3iEEgiDfLuU24gK0/aTuNkWwHhNv7Cyr53ift2m412o=;
- b=LV3s6NAOXAgemq2ZUeP/bdBdm9BMld7m+KWLfSIhrhBHQwIdUOMobWpPqGB5KfHZVIwYEhJBmIVbtAvQryg5lGOsnj91BapscWOHmyRgklvOpyZchGB1zTQUzIsb1fxqBILEb1J30nzCeNm8H/ZRqwfVUDVLKS+qZDS2rJdicvw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7653.eurprd04.prod.outlook.com (2603:10a6:20b:299::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Thu, 30 May
- 2024 16:54:39 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Thu, 30 May 2024
- 16:54:39 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: robh@kernel.org
-Cc: Frank.Li@nxp.com,
-	brgl@bgdev.pl,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	krzk+dt@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] dt-bindings: gpio: mpc8xxx: Convert to yaml format
-Date: Thu, 30 May 2024 12:54:24 -0400
-Message-Id: <20240530165424.3173673-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SA0PR11CA0010.namprd11.prod.outlook.com
- (2603:10b6:806:d3::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vt1b5BwQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=E4Et8IsTqKEjB0VKgfn0i10/CIt14tSmicrHni37u2I=; b=vt1b5BwQEsBhb0MJSh/BT73Kob
+	pGD5KZ7UtoJRwdt9gjlUj8jztY4K4pGKr5EvDoixdrgvaw7CbpFKyCZ+rdiQ9PTOz7HfZuOrmtQCN
+	zIV1i5dNDY1ulh+YoaqNoKW8divQ2hc1oIA7joKQA1OsldI3mGB+02GgHb06FPdEbsloO4k9VzjyJ
+	KFF9QGtLFp5kevCXlqIjr9lyr/3Opds0tBqYB+wfUvTnCwvwHSFE9rT19y2zyG+gTWlXJSP13BHkz
+	VPO/55MX0M3JWR+4qGRtA0jF3xfay8wCJ9BlhRw4jXablECkDkVe21W6l9XiwkB09apvqUL+LfIFi
+	JkDS50ew==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34142)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sCj3p-0007dO-0b;
+	Thu, 30 May 2024 17:55:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sCj3p-0005IQ-7e; Thu, 30 May 2024 17:55:29 +0100
+Date: Thu, 30 May 2024 17:55:29 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"dqfext@gmail.com" <dqfext@gmail.com>,
+	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"daniel@makrotopia.org" <daniel@makrotopia.org>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH net-next v5 5/5] net: phy: add driver for built-in 2.5G
+ ethernet PHY on MT7988
+Message-ID: <ZlivgVpycflhLUcl@shell.armlinux.org.uk>
+References: <20240530034844.11176-1-SkyLake.Huang@mediatek.com>
+ <20240530034844.11176-6-SkyLake.Huang@mediatek.com>
+ <ZlhWfua01SCOor80@shell.armlinux.org.uk>
+ <0707897b44cfbc479cd08a092829a8bfc480281b.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7653:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a0d5cf3-c125-4529-6d31-08dc80c93201
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|376005|52116005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YR1dihWCJh5WhgUElmEagi0F6gc0x9kL9iZ3dwxbLHAI16Xqa0mFi2lhU6QY?=
- =?us-ascii?Q?TtXBqAfhCLNUc7PI8qpgaHHrOxkhIuOptonQHqHGBLT9k7ApjorpJeTP92vz?=
- =?us-ascii?Q?+J+o0Srl78dHm3GUDEl5i8qZCFMVPZ+8w5qSn2kAQV4xaz/yj7JhibuvlDNC?=
- =?us-ascii?Q?GJh2yOY8ldl3c80RqkE8e0TmzWjJ15M201y4R+gFHzn7ZQGFGHeg1QI3orLb?=
- =?us-ascii?Q?7FpjJ0CZQtwT2JHw37E3p75DHq9x/81Z/WkZLJIPesgzu1jlG13z0RACrRrL?=
- =?us-ascii?Q?42o0uezds+CDmcoQRNqQUNsKZ/ajALkQJFdnhHI0lOYgckP8eU6z16FiXv5i?=
- =?us-ascii?Q?5JHSOttuVi3xLTyCcxlCj2je/K0fwNcX7cGEyxLSOVmOmJRIII1EpwcDEwWG?=
- =?us-ascii?Q?bkXETx55ktu2TRryRM4Eh2y8+EDFkSnh5Anx3N0G5bkLPp+Xl3gHQpZG2Djw?=
- =?us-ascii?Q?qlYx7iT9h0WCmaqmMg5Bhp/KVfkH7N+J9GVPPAjV+Thi6Iz6qrmKPsw27jFZ?=
- =?us-ascii?Q?9qVIbiTRPiGigDl5W1lUr1R1AZ0E2CTbsRfx3ruNuC/bHg2ra+nE2tBCQDvB?=
- =?us-ascii?Q?EUjoXDkU2MgosCHOqvNJzu3Asm8NpnU8DuK9KhK0Rz/O+kmvW2F+eijqNELj?=
- =?us-ascii?Q?zWD3Qwk5c/oVoYg2S6STiJQih9WWV19rPj5JvDKrjF9PjORjwcEyuwRdyRTi?=
- =?us-ascii?Q?5tgihXMgB5UkEkLyUCX4O4NzJbdKBIiM/5MFFz7IpRCYmw8jQ/E72s4DI0TU?=
- =?us-ascii?Q?N1aBWgglJOY8aefWK6GMpSp1d0gf0lDH5tWi4y3GqDZ5U9aSsLUR7XlHcZ5r?=
- =?us-ascii?Q?DLseUo3QvroMiosoU8XXeyYeLjhatHC98eBol7ohDlFiMS3gbAuwWNenVnux?=
- =?us-ascii?Q?9qgdz1VIzjHXAQ9/ofNSZvCPPo0IDXKycuxPSUjqpQdR9HMEU3WSuZ9unbT7?=
- =?us-ascii?Q?93zT4sPOK/dlbLQhlA+Vzt/AFPnj7Kmo2OFDmzC1b+DBOCdSMWA8QTg/sAU5?=
- =?us-ascii?Q?Q/vcyUr/bm71rH909sFqusnFT+qO9iwpI8umVfB9BHA7Aku6ZGJ8olyR5scH?=
- =?us-ascii?Q?IeWTrdp0iVaFZ9sKv9mT/kLhuETOBIWqd9OkzZHGHbxoJqdIyMuDkV/lcBid?=
- =?us-ascii?Q?NhQCrR/WM4wOU1yg0/69+tpe3Y2sNGL2LhIz94BwfOqAZWRDqoIWxjvr0jcD?=
- =?us-ascii?Q?ZqP+5doKvamHZzFT4pJ3woefOYJUogRhIQldnJW/D02Z6iEDbB42YnyS2QXX?=
- =?us-ascii?Q?WwHl5EBrxMy9MfN/rczV2m+ZLvGtpj+YU9xGUGkYKXZdQBhPfSY5ninlKigH?=
- =?us-ascii?Q?KxM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xs1DGavOiE5HH5e7vUlsHm7kTWWICXDrQgzpKTbOXt4UXJMBtRrGWTQL/hEA?=
- =?us-ascii?Q?M/muUi9aKrNEKQDZzs1rW+1XgSdXsgpQBYzblcUV5U5/dvAwQbOMnLw77yNQ?=
- =?us-ascii?Q?HiIDBSK3/X45fVuPvcKmdaiq2deFkuwnyVPWlky6WmLAaRzzKvMtmQzME0pq?=
- =?us-ascii?Q?0e5kQrd/tTE0F/RpvHweaKMj8xhDeRb07oxqqFDfXKh1WH077RFmMIm02agR?=
- =?us-ascii?Q?XAPtizNTugoRmGOuHnFVP5ZC8HvdaEVNtEqsECcF0iBpavpcyXRQIFFszYPS?=
- =?us-ascii?Q?L9UZTte8foAg9bEuOZz78unk+Pd01y9NRDDK6HYzhfnpoXRy/v99T7eZEkp3?=
- =?us-ascii?Q?QkbSNYCOKrt2zD/f1NYXO0HTaeYCNPc6a/xBevAe5MnjrB0n6CUKrV4Oymdt?=
- =?us-ascii?Q?VqKeCL9nUselTOpHBraH0NM4hsBKtZ7OeW91HPJvbYOGMKhjVvkP7MO46IOh?=
- =?us-ascii?Q?SNzH9jJgUwC01wD9WQ8tT22aF93taBI4N8KZ8yfiSwKWKdqU9rKCacy52hSh?=
- =?us-ascii?Q?uEifxfN7dwiS0ERHThmCfX+wZz+EudFF818ssqlDfPe8R51Y5+64GiYwS1hD?=
- =?us-ascii?Q?HBzTlFvQ00Nnb6yRB43ky8Bn06GRxEr7xocy5RmvS8+EtTyDzQvVLS50ZsAH?=
- =?us-ascii?Q?jy3P3VYH32bftCt6oeA+bSNugzCfVgySAXJ/XMsEUQxScUmPQEPJFZ1H2Zs8?=
- =?us-ascii?Q?swzNCXoLGdTvBUmnjpeZAcnbNBHVo0t4VZP4UlORgw4I84eOgur7l3hiM+6q?=
- =?us-ascii?Q?l/H1lM0HFoJBad9LpUylaAOdx1qKBzqJ272YNpzvljY9YgnvgSNcfEzt3NdI?=
- =?us-ascii?Q?Rr1kLjsJy17KyP9gwFnCPEuF5pGtc/dz6XHUnPjliRLcmOSFYhZvBDTS9g4L?=
- =?us-ascii?Q?xVuaF5aOE/90AyfTgl9xUNesNFQJZDm17ESz6jLBnlPsDjVNgillWDugqYwf?=
- =?us-ascii?Q?NzFstZbUcWhRkQ9aKVBVIdO0ABumXgC1Jnf7n05ogSQvWEoGIMq5iAv/1L40?=
- =?us-ascii?Q?T6gSP+cgp+AROgiP++ogOEQz7aYe0+Vupa8m/NIyYUzQqEH+hxkWDHQME8i3?=
- =?us-ascii?Q?YPscRwi1BjcY0djJ2U4EnlOp2i5hcqP5okKbSFinPdcoAY0yMbjxEP3O98u4?=
- =?us-ascii?Q?HcH/E0sTtMuxv853SOR5Zeer07rgWCimEpIP1QPVu9XjOOfp4DJ+Ym/4B1c5?=
- =?us-ascii?Q?PAim/wPb9Yv8CffBSodUsY2ym7YZ+GMcs7UOJvgj9I/GI4pxdHDqwfPRwKZs?=
- =?us-ascii?Q?fS8fjeEWK5fvFGcWiW79U6lfxnhEvp1dlAnQNnEHbYxRMs6jO6S+j+qXpu8p?=
- =?us-ascii?Q?pXxF2AinMpXeuXxVyGgHGwBFIz/RgHqa274fWGPfrTQcbu1nLfueiDVy3KdA?=
- =?us-ascii?Q?yRlYGAN4SSCRvzoIL99rozNhGCya0Rj/9IYLNxCyszi2lJrCF4+hTex0A1OE?=
- =?us-ascii?Q?mRFH39yzetwYAH16Wg31QKPhdQk1Bkd8w1/Nef9hxr6i6WEbxXDW2/MIHb8V?=
- =?us-ascii?Q?++CUpCTCv4nu4U8K54MkHHWkpKho3OUnSGSzXk7XTBR7ecsQy6cUIhQWe6k2?=
- =?us-ascii?Q?MeqNkYzih2mKUhPDFdOlskfTQSg1xo/1pR+48xY+?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a0d5cf3-c125-4529-6d31-08dc80c93201
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 16:54:39.6511
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LryE0VQ2zqmC+rFUAvTwvpqrSDEaKtRnxyxp1bVhdaOpcxkvhQhHaYgEBgsdguxSs5dKLbCpLOKoHEVeJ5mKyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7653
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0707897b44cfbc479cd08a092829a8bfc480281b.camel@mediatek.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Convert binding doc from txt to yaml.
+On Thu, May 30, 2024 at 04:25:56PM +0000, SkyLake Huang (黃啟澤) wrote:
+> On Thu, 2024-05-30 at 11:35 +0100, Russell King (Oracle) wrote:
+> >  	 
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >  On Thu, May 30, 2024 at 11:48:44AM +0800, Sky Huang wrote:
+> > > +static int mt798x_2p5ge_phy_config_aneg(struct phy_device *phydev)
+> > > +{
+> > > +bool changed = false;
+> > > +u32 adv;
+> > > +int ret;
+> > > +
+> > > +/* In fact, if we disable autoneg, we can't link up correctly:
+> > > + *  2.5G/1G: Need AN to exchange master/slave information.
+> > > + *  100M: Without AN, link starts at half duplex(According to IEEE
+> > 802.3-2018),
+> > > + *        which this phy doesn't support.
+> > > + *   10M: Deprecated in this ethernet phy.
+> > > + */
+> > > +if (phydev->autoneg == AUTONEG_DISABLE)
+> > > +return -EOPNOTSUPP;
+> > 
+> > We have another driver (stmmac) where a platform driver is wanting to
+> > put a hack in the ksettings_set() ethtool path to error out on
+> > disabling AN for 1G speeds. This sounds like something that is
+> > applicable to more than one hardware (and I've been wondering whether
+> > it is universally true that 1G copper links and faster all require
+> > AN to function.)
+> > 
+> > Thus, I'm wondering whether this is something that the core code
+> > should
+> > be doing.
+> > 
+> Yeah..As far as I know, 1G/2.5G/5G/10G speed require AN to decide
+> master/slave role. Actually I can use force mode by calling
+> genphy_c45_pma_set_forced, which will set correspoding C45 registers.
+> However, after that, this 2.5G PHY can't still link up with partners.
+> 
+> I'll leave EOPNOTSUPP here temporarily. Hope phylib can be patched
+> someday.
 
-Remove redundated "gpio1: gpio@2300000" example.
-Add gpio-controller at example "gpio@1100".
+Please no. "someday" tends to never happen, and you're basically
+throwing the problem over the wall to other people to solve who
+then have to spot your hack and eventually remove it.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+We need this solved properly, not by people hacking drivers. This
+is open source, you can propose a patch to phylib to fix this for
+everyone.
 
-Notes:
-    Change from v1 to v2
-     - Add gpio-controller at example "gpio@1100". to fix bot error.
-    Strangely, I can't reproduce locally.
-    
-    Pass dt_binding_check
-    make dt_binding_check DT_SCHEMA_FILES=fsl,qoriq-gpio.yaml
-      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-      CHKDT   Documentation/devicetree/bindings
-      LINT    Documentation/devicetree/bindings
-      DTC_CHK Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.example.dtb
+> > > +/* This phy can't handle collision, and neither can (XFI)MAC it's
+> > connected to.
+> > > + * Although it can do HDX handshake, it doesn't support CSMA/CD
+> > that HDX requires.
+> > > + */
+> > 
+> > What the MAC can and can't do really has little bearing on what link
+> > modes the PHY driver should be providing. It is the responsibility of
+> > the MAC driver to appropriately change what is supported when
+> > attaching
+> > to the PHY. If using phylink, this is done by phylink via the MAC
+> > driver
+> > telling phylink what it is capable of via mac_capabilities.
+> > 
+> > > +static int mt798x_2p5ge_phy_get_rate_matching(struct phy_device
+> > *phydev,
+> > > +      phy_interface_t iface)
+> > > +{
+> > > +if (iface == PHY_INTERFACE_MODE_XGMII)
+> > > +return RATE_MATCH_PAUSE;
+> > 
+> > You mention above XFI...
+> > 
+> > XFI is 10GBASE-R protocol to XFP module electrical standards.
+> > SFI is 10GBASE-R protocol to SFP+ module electrical standards.
+> > 
+> > phy_interface_t is interested in the protocol. So, given that you
+> > mention XFI, why doesn't this test for PHY_INTERFACE_MODE_10GBASER?
+> > 
+> We have 2 XFI-MAC on mt7988 platform. One is connected to internal
+> 2.5Gphy(SoC built-in), as we discussed here (We don't test this phy for
+> 10G speed.) Another one is connected to external 10G phy.
 
- .../bindings/gpio/fsl,qoriq-gpio.yaml         | 82 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio-mpc8xxx.txt | 53 ------------
- 2 files changed, 82 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+I can't parse your response in a meaningful way, to me it doesn't
+address my point.
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-new file mode 100644
-index 0000000000000..adc955679d066
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/fsl,qoriq-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc5121-gpio
-+          - fsl,mpc5125-gpio
-+          - fsl,mpc8349-gpio
-+          - fsl,mpc8572-gpio
-+          - fsl,mpc8610-gpio
-+          - fsl,pq3-gpio
-+      - items:
-+          - enum:
-+              - fsl,ls1021a-gpio
-+              - fsl,ls1028a-gpio
-+              - fsl,ls1043a-gpio
-+              - fsl,ls1088a-gpio
-+              - fsl,ls2080a-gpio
-+          - const: fsl,qoriq-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  little-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      GPIO registers are used as little endian. If not
-+      present registers are used as big endian by default.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@1100 {
-+        compatible = "fsl,mpc5125-gpio";
-+        reg = <0x1100 0x080>;
-+        interrupts = <78 0x8>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpio@2300000 {
-+        compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-+        reg = <0x2300000 0x10000>;
-+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+        gpio-controller;
-+        little-endian;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-deleted file mode 100644
-index cd28e932bf50e..0000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--* Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
--
--Required properties:
--- compatible : Should be "fsl,<soc>-gpio"
--  The following <soc>s are known to be supported:
--	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
--	ls1021a, ls1043a, ls2080a, ls1028a, ls1088a.
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--
--Optional properties:
--- little-endian : GPIO registers are used as little endian. If not
--                  present registers are used as big endian by default.
--
--Example of gpio-controller node for a mpc5125 SoC:
--
--gpio0: gpio@1100 {
--	compatible = "fsl,mpc5125-gpio";
--	#gpio-cells = <2>;
--	reg = <0x1100 0x080>;
--	interrupts = <78 0x8>;
--};
--
--Example of gpio-controller node for a ls2080a SoC:
--
--gpio0: gpio@2300000 {
--	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <0 36 0x4>; /* Level high type */
--	gpio-controller;
--	little-endian;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
--
--
--Example of gpio-controller node for a ls1028a/ls1088a SoC:
--
--gpio1: gpio@2300000 {
--	compatible = "fsl,ls1028a-gpio", "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	little-endian;
--};
+> 
+> > > +static int mt798x_2p5ge_phy_probe(struct phy_device *phydev)
+> > > +{
+> > > +struct mtk_i2p5ge_phy_priv *priv;
+> > > +
+> > > +priv = devm_kzalloc(&phydev->mdio.dev,
+> > > +    sizeof(struct mtk_i2p5ge_phy_priv), GFP_KERNEL);
+> > > +if (!priv)
+> > > +return -ENOMEM;
+> > > +
+> > > +switch (phydev->drv->phy_id) {
+> > > +case MTK_2P5GPHY_ID_MT7988:
+> > > +/* The original hardware only sets MDIO_DEVS_PMAPMD */
+> > > +phydev->c45_ids.mmds_present |= (MDIO_DEVS_PCS | MDIO_DEVS_AN |
+> > > + MDIO_DEVS_VEND1 | MDIO_DEVS_VEND2);
+> > 
+> > No need for parens on the RHS. The RHS is an expression in its own
+> > right, and there's no point in putting parens around the expression
+> > to turn it into another expression!
+> > 
+> > -- 
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> Do you mean these two line?
+> +phydev->c45_ids.mmds_present |= (MDIO_DEVS_PCS | MDIO_DEVS_AN |
+> + MDIO_DEVS_VEND1 | MDIO_DEVS_VEND2);
+> 
+> What do you mean by "RHS is an expression in its own right"?
+> I put parens here to enhance readability so we don't need check
+> operator precedence again.
+
+|= one of the assignment operators, all of which have one of the
+lowest precedence. Only the , operator has a lower precedence.
+Therefore, everything except , has higher precedence. Therefore,
+the parens on the right hand side of |= make no difference.
+
 -- 
-2.34.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
