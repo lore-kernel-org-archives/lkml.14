@@ -1,200 +1,167 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2082.outbound.protection.outlook.com [40.107.20.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62D9224D4;
-	Thu, 30 May 2024 17:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717091818; cv=fail; b=DC0xpkieSlzYM4i0HBXowb8kp6Ckw/B1ZPZBoMyEfoe42dpds2DVhWe31bkt7tdOFe9ggMTWrODnbIF2/WcSYpNUThOgQoV83NFhP5KFpMgTvwTPVBhwejwqr98xpEFpA6WK5aP8VnSbxGl37g56fvdMs8DZJ0b7A0NydSfRjlw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717091818; c=relaxed/simple;
-	bh=JNCFW3WxXlR4KU0Wkv1zxa95No14uBcLeptDSMb850o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dKmkurHSNAUDL3N/q+Tt1agA+cOcvFEe8y4GysmcmDeLEzmUAwn5eRERVEID4sLckVqRSvjmAzCYgGjeEx2uV6Cup6jQOlCIAR0QaBLqese8WCFUxkU7+pDnGR3VgzlJgYuL2/jmjBwuJ5iNbhEWP9jjAu2xgj5gK/uhYVt/A+E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=BP9f4pNS; arc=fail smtp.client-ip=40.107.20.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BP9f4pNS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VcuaR5v3lU0tzN44bX54Q4691GByAS40c0fYzQOCdPrfB2kED+qOksnPiBVWEowJnGmeX2I41XKj7qRN59cHEfVgi+Jj/ho2qfbm9WtDYui46pP2mqgy7NP3lLQudVsff2EpRab3tbRad7uOzxpWMdzM8br095nIEQkdri2Y7ryt+VDk51cJzYjWeLAb3L5PwMq3zfWlcoAj6Y2rnLHfNfTUE4AJRKAGs5txJux/llLWPB3sEtDPlG2dc3Kqfrn9ZBcn6SV52EjwkVGg2Xkja09XzE8yv0Bi5W0f7sxRhTSRAV9KD1mI6seL8jZk1VwJZcEa7pNSApn8fuflzSHXrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3DseiNip4D5B54oWWL6RtLNzuzXBCeMV1/J+T4hHt2E=;
- b=n9/E8N6psxg9Guj61B+XoDAEN/GX2Vy5TSHWefe7VkkxDka9rG2dlQyhRe1WNyDqZPnlZecJlE4YR/hwXTf7p0ueEQ3YZUe9EGkIgyB4PTDUANk7Mr0RWY84/vtJzQ/zOkFrlOVRZhxi60QzBH0ZPyhhGmrciZ7a7M+mvOSVw0/biK9e+nlAKTqYcWPfHXbNdSvktFap9O8+3vIrystkCnw/cmKBdA8d3fz/A9cS2e8soJ6i5zvNWymzoJuBE1KYV3Ryag1LnNzvvkskyfhGftvmfWPhXPfWNf68wQ9M+EmVbi0xLFUMdnp8lI5bFM2wTgOUEZRk9QwrVsPCGgB9mQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3DseiNip4D5B54oWWL6RtLNzuzXBCeMV1/J+T4hHt2E=;
- b=BP9f4pNSLDSp00xBJnm1QPG/1M8M47fiJSdUzuHb7QmykNpvHBEhENIxVKV+29N7S3rnWRJJlZCBOOZ33KZYtXy8iwqrVyLVrntLax7tfK+P9YmNaxBwdRJrcP1YAFOpJ50L6QvcKs4Fe8Xk/dlR8t7cy8kXqrGjuL7Ck4Nw0pM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB7133.eurprd04.prod.outlook.com (2603:10a6:800:126::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Thu, 30 May
- 2024 17:56:52 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Thu, 30 May 2024
- 17:56:52 +0000
-Date: Thu, 30 May 2024 13:56:41 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	devicetree@vger.kernel.org, Jason Liu <jason.hui.liu@nxp.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v5 00/12] PCI: imx6: Fix\rename\clean up and add lut
- information for imx95
-Message-ID: <Zli92VLw6IEVg97b@lizhi-Precision-Tower-5810>
-References: <ZldDIabPAa7NEmDQ@lizhi-Precision-Tower-5810>
- <20240530172749.GA552716@bhelgaas>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530172749.GA552716@bhelgaas>
-X-ClientProxiedBy: BYAPR02CA0030.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::43) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B2C6224D4
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 17:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717091963; cv=none; b=DU4FBXTXH/he0/S9E3Ahyfft0iV+fe9HtWOGV4EfRtPWAo0z5ukf52V3v8LN45s0Lu8iIn6159N1eVV3Rr4qJ7pHnYRDiJTazT5qARAdGTSV/uv7nbU8VYRiascbfLn82GOmsvZj9QFaqX2gtMS7wz/llqCOnnUfqykOFyD63pA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717091963; c=relaxed/simple;
+	bh=PflqUtKjJmJPu3D5IoNLbM2Op32gT6oU3jXs1MEadWU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GMNbTG8Rw4twIxTuVJNlaeCTIaRApqVkfNmoaC/GhVZ90o9cbzmSBZHVI9wwGqEowaedYelg+DlDpguZs95wQF/kHlf933hTJMxMT0LUHvin8hSZIPhttCI6lgAEvDykZtNsTas+YX+vpDvlsZCkxAkdnTLjCeg6EmnSr80f4LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15C161424;
+	Thu, 30 May 2024 10:59:45 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75BA43F641;
+	Thu, 30 May 2024 10:59:18 -0700 (PDT)
+Message-ID: <ac5d8f21-5fb7-4193-9a0b-cdaff39e8493@arm.com>
+Date: Thu, 30 May 2024 18:59:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB7133:EE_
-X-MS-Office365-Filtering-Correlation-Id: 991ba564-fb26-42ba-e56b-08dc80d1e2f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|376005|52116005|1800799015|7416005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DHy4qUqBztE4hDC1j+uh/RVz0fIhxtkKpaqcptPo+D6hgIowHPpaM+VQyAIJ?=
- =?us-ascii?Q?w6lGRiGBff/ADEjuPh7aCgPqMBGmTH2pB+2ow95tHCdsYqv5rfRx6hdrqgrd?=
- =?us-ascii?Q?1fRbFKwiGh0wf62SCUyzQYijp97ffNFAz+Q09hxuAWfoqlEtwrCIoPpEni5S?=
- =?us-ascii?Q?6Dj6ADXYx3G+vXfThRqX8NpXf7kjnb/IrvD7aHNHUeOhvMLBs9a8AysSeazT?=
- =?us-ascii?Q?oY0u/8+pz7odx4shcKoeE8frkpStIzTQImd104GGlGA4j4EVBPttTs8ca7w7?=
- =?us-ascii?Q?6BOFTQMFU1jf3qDmjdwNNoBKphONGeEpoZyp46oVzzaVWNnUdnHlxdET35Io?=
- =?us-ascii?Q?c2tT59DvNvhXdWu1PZBixgUYN3HAE5GWfUkdCKtB2hTqM8k/PZ0UO8bAiG2d?=
- =?us-ascii?Q?eRhFDW0s4W+hYbyJwikaR4sa5tQuMm58C5rC1P0ZVnFBTUOkJhIwVBrLxcm/?=
- =?us-ascii?Q?UoQfiFiyhiMVXCS3FVMsySUXgLnalkLdE56Yr8yTV7WwUHojLIGvXZ9+xaol?=
- =?us-ascii?Q?hL6FsJQ683nT6P3e3myuLTJ/Xg0NnI1QbhFmw5n/Vqgnk+VlDUKlwkTpExqx?=
- =?us-ascii?Q?dsi/SSXx+0p4ppMGbuE6qg/d3vdQ3c966iQal0WJGysgmM9xtwsOGEZ707gs?=
- =?us-ascii?Q?atSXxPqW9bS+3XutZPLmDVs8/913lc7iMMqdwSEPfAkHsvlXNTLkF60Dx4b7?=
- =?us-ascii?Q?KMuuv2FY5lmYLLdzZAho1sNssqvDXhUSJEqFLeqROOotXnucH8uUi9OjlFyY?=
- =?us-ascii?Q?5sbOqjhL+jkjlLp1+bNh6xxrZIQ56XT0X2Co0Lfid64L8tMtYHzjHkfJhWZa?=
- =?us-ascii?Q?s49izeRx9DfM6UPGoBiGuEAb5PlCeo6xG6rI6x298WS+Zcibd7yYNDxgl2Wk?=
- =?us-ascii?Q?Vn9nXERbWrKBpiEsmjOvEpA+SfgCQ3iTJ/T66hSE2RLQ/jIbekgrfVUfZdHn?=
- =?us-ascii?Q?RhsyUC+xqINi8jWYsFXbamrpgSFKLg4Drq8ZOLQoDaDFG1h0cceHRhlKtgxu?=
- =?us-ascii?Q?AdCbIiHjiPBbiZ2LVsD6pZc4D9nP4K8g5coBHfYyN1vpA9mDa4cccCC8gVRv?=
- =?us-ascii?Q?rFwK0CgDRfsHSaLBTaPUpicufl4Q3ERjPQ/sNmGg2uQfI5UvDPoIq0BZELQg?=
- =?us-ascii?Q?d0igLVutuMssmE8TJdT9RhMipW1asqGMtNBAm08luHmt1fUTDLuoVczgbwPJ?=
- =?us-ascii?Q?8e7zPIJFCY4Z/ekZs4XlDAA7ILHjSUPqCVOr8Acegv5vZwd15MdHqIs0qWKc?=
- =?us-ascii?Q?h1ZINN2ihKiBxR1dMnq8n9w0SN2nUBQwKI+GGxtyvOWkj3QMwEn6FjnoYU9q?=
- =?us-ascii?Q?d8d50CS0Q0HVGCffqQt76x/ACSEBM8vlsH4Fcv+J3Sk9SQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(52116005)(1800799015)(7416005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?whFBwZZi3U7MXrKESQTai/Nt7vnR6gALmxniJK+JsmbI2cFZvFssV8TYousa?=
- =?us-ascii?Q?1P69sZRP5/sdqyg1n01xtjaVV6V6FoDyKrV1rs1/EwAskFzu2T8Didz0dfSw?=
- =?us-ascii?Q?di0lrmSQ0OzH9Ofpla5zSKvfNRaHF7NcHeJF5iBR+uiyJ3I/1ytEewRTMA/v?=
- =?us-ascii?Q?IZQDXE88XGMBO2YY1fSCsGuqAR0/nE4RNm0qrfuoyx11bK3kkjMJu+chVHHC?=
- =?us-ascii?Q?pF2YBnizGdH00FlYLFLr6arA6ggmeBHOhNMqwhbKtpmHotVhPbtuvDuyr3EZ?=
- =?us-ascii?Q?DykN87fx67bjA3t054oNzFpT6y2m1LBiolVjD0toYSQeO2z0iQE936iaSzY2?=
- =?us-ascii?Q?GxrpO3czk2XgxUMzPIapo3aBWxo2Bfx0VKd5krGGhemWE5t+EYnftly3nRq4?=
- =?us-ascii?Q?WGprPJTI4ehV06BuwqpO0i5rpU0wsJo8A8nLIsrx0R1VjqG7kUkrjWiyBt5K?=
- =?us-ascii?Q?hJ+MIIR/36AIPXFvAuy6JwoH2DmWgOotGSqSSuMp7Mb3vtusDOT9HUFrnjL8?=
- =?us-ascii?Q?Db6ky/j5M8fnGFk/qLgagG1+FNwC4M21n8k0JPHYRQNyqPKPa4AusHol3SWp?=
- =?us-ascii?Q?Zw4KCsPmCFKn73jaHsp4XBUNyiCcAl+GItAeCjsR9O/ELVTtw2LE5qV0WKVH?=
- =?us-ascii?Q?j+bOl5nTglBPG4eIz/CXM1WmJi26Dtr4FSRFzDn9SYPkU3H3QYzNyhtwy6qJ?=
- =?us-ascii?Q?Wu0yPJY754E/bfkna7ujLj553s5RuDvUI3PYq1CyP6LqcWyQSIhi+yVUEbQX?=
- =?us-ascii?Q?ivTdw/+q24izIybae2Jh7IF4CWT23Z+1p4Z/4AFJdSmYyQAUgLNgYG+mbzy7?=
- =?us-ascii?Q?+L7+XMAI+PdPdtzHTEYp7OjGDXQTmUhaudvn7VziXHH176VLfB67/LZ7daFH?=
- =?us-ascii?Q?Qn0ztHchMRJ14odJdBsxXnswm/YjZNGKQosLizu9IkrMJR8JeypX5/9dsMQ8?=
- =?us-ascii?Q?3xTRDg+u2t3vFRbUbft6gOoRxzCiUq/1EXghzKdqbgXTGofXPyazWyAK8RJY?=
- =?us-ascii?Q?LsMqwbWJkliy3FtqZxe7782I18+p4lFhIe0egpP4U1V7EgFdcZUqe6PtMO9V?=
- =?us-ascii?Q?QxvKBkcvtFuNA0+nX9mygx4hdNTm3firOzIUI7uWZDTQ/HbUO0tH+iznU5Ha?=
- =?us-ascii?Q?+uJjV+2QrrovXxHGmc0itmg9aFgXjJetPqcHWmzmLAjRIn+GaFVm3gvAZhfp?=
- =?us-ascii?Q?r57e6y2LyAR+oUuo3L7NSz/94nLp9StoSvy3zwyil3/ESHm+JNgBqnyzCk/m?=
- =?us-ascii?Q?8nmM8Lgi3+14FSZdB0P2JYf2An3BmEkWIsMffHbbzCmklOPM/tdYxiZJkOV4?=
- =?us-ascii?Q?lZXHlid3JyjOrizx5blHizErwW2M8yeshkE6pUWWMWnBJBIZgEkbVxHsamqo?=
- =?us-ascii?Q?wQFLNYGRPsr0t/Ys/i/Cyhaezbzz+zr6d6DsmKBt4AyLO2zq4P52C9ObzVHg?=
- =?us-ascii?Q?7lETSGZO2CUPQJa2Y43VDs6pHy1akxUO0Q1rtmliWTpetMpzB74rcuAX4oZD?=
- =?us-ascii?Q?QodB1hCd0Xolmsft9rurfr9QC+wcnEmVoF5z7mG/UZ7EtPsJeNrYGzaAwHJu?=
- =?us-ascii?Q?uYBBVIwGkOCAeZBnmyN5mMLcQcOrg5AsMgheOq0e?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 991ba564-fb26-42ba-e56b-08dc80d1e2f4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2024 17:56:52.4969
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /jp3GnBH2RJR4cvezYUDK07+8V7/StYDsj0nT/4XjtqI4eG0T/3sxaeOcOolmB7JgZZTqSxmOqTBqCYlMqbH+w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7133
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/20] iommu: Refactoring domain allocation interface
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>
+Cc: Yi Liu <yi.l.liu@intel.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Kalle Valo <kvalo@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+ Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20240529053250.91284-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 30, 2024 at 12:27:49PM -0500, Bjorn Helgaas wrote:
-> On Wed, May 29, 2024 at 11:00:49AM -0400, Frank Li wrote:
-> > On Tue, May 28, 2024 at 05:31:36PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, May 28, 2024 at 03:39:13PM -0400, Frank Li wrote:
-> > ...
+On 29/05/2024 6:32 am, Lu Baolu wrote:
+> The IOMMU subsystem has undergone some changes, including the removal
+> of iommu_ops from the bus structure. Consequently, the existing domain
+> allocation interface, which relies on a bus type argument, is no longer
+> relevant:
 > 
-> > > > Base on linux-pci/controller/imx
-> > > 
-> > > This applies cleanly to the pci/controller/gpio branch, which has some
-> > > minor rework in pci-imx6.c.
-> > > 
-> > > When we apply this, I think we should do it on a a pci/controller/imx6
-> > > branch that is based on "main" (v6.10-rc1).
-> > > 
-> > > I can resolve the conflicts with pci/controller/gpio when building
-> > > pci/next.
-> > 
-> > Sorry, I forget update this. It should be base on linux-pci/next
-> > (e3fca37312892122d73f8c5293c0d1cc8c34500b). 
+>      struct iommu_domain *iommu_domain_alloc(struct bus_type *bus)
 > 
-> I prefer patches that are based on -rc1, i.e., the pci/main branch,
-> not on the pci/next branch.
+> This series is designed to refactor the use of this interface. It
+> proposes two new interfaces to replace iommu_domain_alloc():
 > 
-> If a series *requires* functionality that is already on a topic
-> branch, you can base it on that branch instead of on pci/main.
+> - iommu_user_domain_alloc(): This interface is intended for allocating
+>    iommu domains managed by userspace for device passthrough scenarios,
+>    such as those used by iommufd, vfio, and vdpa. It clearly indicates
+>    that the domain is for user-managed device DMA.
 > 
-> This series happens to touch some of the same code as
-> pci/controller/gpio, but it doesn't require those gpio changes, so it
-> does not need to be based on pci/controller/gpio.
+>    If an IOMMU driver does not implement iommu_ops->domain_alloc_user,
+>    this interface will rollback to the generic paging domain allocation.
 > 
-> Having this series based on pci/main means that if we update or drop
-> the gpio branch for some reason, this series will still make sense.
+> - iommu_paging_domain_alloc(): This interface is for allocating iommu
+>    domains managed by kernel drivers for kernel DMA purposes. It takes a
+>    device pointer as a parameter, which better reflects the current
+>    design of the IOMMU subsystem.
+> 
+> The majority of device drivers currently using iommu_domain_alloc() do
+> so to allocate a domain for a specific device and then attach that
+> domain to the device. These cases can be straightforwardly migrated to
+> the new interfaces.
 
-v4 should cleanly apply to pci/main. It is not big deal. Do you have any
-additional comments for this series?
+Ooh, nice! This was rising back up my to-do list as well, but I concur 
+it's rather more straightforward than my version that did devious things 
+to keep the iommu_domain_alloc() name...
 
-We still have some other works (such as simply suspend/resume by using
-common PME turn off method), which base on this series.
-
-Frank
-
+> However, there are some drivers with more complex use cases that do
+> not fit neatly into this new scheme. For example:
 > 
-> Bjorn
+> $ git grep "= iommu_domain_alloc"
+> arch/arm/mm/dma-mapping.c:      mapping->domain = iommu_domain_alloc(bus);
+
+This one's simple enough, the refactor just needs to go one step deeper. 
+I've just rebased and pushed my old patch for that, if you'd like it [1].
+
+> drivers/gpu/drm/rockchip/rockchip_drm_drv.c:    private->domain = iommu_domain_alloc(private->iommu_dev->bus);
+
+Both this one and usnic_uiom_alloc_pd() should be OK - back when I did 
+all the figuring out to clean up iommu_present(), I specifically 
+reworked them into "dev->bus" style as a reminder that it *is* supposed 
+to be the right device for doing this with, even if the attach is a bit 
+more distant.
+
+> drivers/gpu/drm/tegra/drm.c:            tegra->domain = iommu_domain_alloc(&platform_bus_type);
+
+This is the tricky one, where the device to hand may *not* be the right 
+device for IOMMU API use [2]. FWIW my plan was to pull the "walk the 
+platform bus to find any IOMMU-mapped device" trick into this code and 
+use it both to remove the final iommu_present() and for a device-based 
+domain allocation.
+
+> drivers/infiniband/hw/usnic/usnic_uiom.c:       pd->domain = domain = iommu_domain_alloc(dev->bus);
+> 
+> This series leave those cases unchanged and keep iommu_domain_alloc()
+> for their usage. But new drivers should not use it anymore.
+
+I'd certainly be keen for it to be gone ASAP, since I'm seeing 
+increasing demand for supporting multiple IOMMU drivers, and this is the 
+last bus-based thing standing in the way of that.
+
+Thanks,
+Robin.
+
+[1] 
+https://gitlab.arm.com/linux-arm/linux-rm/-/commit/f048cc6a323d8641898025ca96071df7cbe8bd52
+[2] 
+https://lore.kernel.org/linux-iommu/add31812-50d5-6cb0-3908-143c523abd37@collabora.com/
+
+> The whole series is also available on GitHub:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu-domain-allocation-refactor-v1
+> 
+> Lu Baolu (20):
+>    iommu: Add iommu_user_domain_alloc() interface
+>    iommufd: Use iommu_user_domain_alloc()
+>    vfio/type1: Use iommu_paging_domain_alloc()
+>    vhost-vdpa: Use iommu_user_domain_alloc()
+>    iommu: Add iommu_paging_domain_alloc() interface
+>    drm/msm: Use iommu_paging_domain_alloc()
+>    drm/nouveau/tegra: Use iommu_paging_domain_alloc()
+>    gpu: host1x: Use iommu_paging_domain_alloc()
+>    media: nvidia: tegra: Use iommu_paging_domain_alloc()
+>    media: venus: firmware: Use iommu_paging_domain_alloc()
+>    ath10k: Use iommu_paging_domain_alloc()
+>    wifi: ath11k: Use iommu_paging_domain_alloc()
+>    remoteproc: Use iommu_paging_domain_alloc()
+>    soc/fsl/qbman: Use iommu_paging_domain_alloc()
+>    iommu/vt-d: Add helper to allocate paging domain
+>    iommu/vt-d: Add domain_alloc_paging support
+>    iommu/vt-d: Simplify compatibility check for identity domain
+>    iommu/vt-d: Enhance compatibility check for paging domain attach
+>    iommu/vt-d: Remove domain_update_iommu_cap()
+>    iommu/vt-d: Remove domain_update_iommu_superpage()
+> 
+>   include/linux/iommu.h                         |  12 +
+>   drivers/gpu/drm/msm/msm_iommu.c               |   8 +-
+>   .../drm/nouveau/nvkm/engine/device/tegra.c    |   4 +-
+>   drivers/gpu/host1x/dev.c                      |   6 +-
+>   drivers/iommu/intel/iommu.c                   | 319 ++++++++----------
+>   drivers/iommu/intel/pasid.c                   |  28 +-
+>   drivers/iommu/iommu.c                         |  62 ++++
+>   drivers/iommu/iommufd/hw_pagetable.c          |  20 +-
+>   .../media/platform/nvidia/tegra-vde/iommu.c   |   6 +-
+>   drivers/media/platform/qcom/venus/firmware.c  |   6 +-
+>   drivers/net/wireless/ath/ath10k/snoc.c        |   6 +-
+>   drivers/net/wireless/ath/ath11k/ahb.c         |   6 +-
+>   drivers/remoteproc/remoteproc_core.c          |   6 +-
+>   drivers/soc/fsl/qbman/qman_portal.c           |   4 +-
+>   drivers/vfio/vfio_iommu_type1.c               |   7 +-
+>   drivers/vhost/vdpa.c                          |  11 +-
+>   16 files changed, 253 insertions(+), 258 deletions(-)
+> 
