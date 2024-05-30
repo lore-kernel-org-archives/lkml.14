@@ -1,104 +1,103 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22B16F30E;
-	Thu, 30 May 2024 09:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0E6145B38
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717061667; cv=none; b=L+zZVYvPb2vQOaRu6YInFeGTfGVuI5/ePLDm7dEgXY+A80YRX9ZWrydj5pYkhL3oDhFMsiX5pHn83bMo4jACnFUPpo+ArLnCnT5B1NhaeH4eVD6uY4nXUhcvexfHWLntWbCa8m7AAsywJv0dw2CVIcgg48aiB5mgttJNv/4xr0w=
+	t=1717061668; cv=none; b=ekOG13ovlWBr3x5ApROXCyy+foKVrzkhutIPEroYiRKMOEjMsKjcyYQdxWQCafAlRyqU0Wl4x3uE24uY07ahcSYO6UvckRiefd6jxtJNwZOctPPG4KvIyVjLThu1cEBwft3kSTLeZ9K73LaziEXuqIcZV74ErrcPfGx1wDfMKoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717061667; c=relaxed/simple;
-	bh=8ZQGTCGcyaej3NAULCSUI7HXuYKHb/3VdfI4eWGwi3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UOiAmlBPs+gr32XmT91A+tXnt76SjxgTUC4E6i3poJ3s7Fw1iAnqJL9E+NK5TRk5B7U4SPFOmnVTTz+AgPVyiSTsPxijVQQytU4tkutt0B6dsKQ+WKjYI/l012umeaQAspw4xg4jmbzueQ56EI4UsS3Ny4upXAIJeJSLRG8S9ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4IOp5nkE; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717061668; c=relaxed/simple;
+	bh=tEQu35CaxhT9+Q6qAEJEskYUshMXy0do6KkUt7ceXLw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sb1YxngAwFj2MOBX3vUJ5tGwVLRkeVjn9vKddkK0CH5GmRVVOen69sRMZNR6lrqnQjJmy/1Sxmo7q+eX83gTDZ1fwDIG+H9vHYRv+HPktMYoSUXuXxg9ORLPWmCNIM9b14EjfbtaMzFnxSyXQef635a5CuZv8xljpknMRbXlp4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJyu+LBg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4IOp5nkE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717061663;
-	bh=8ZQGTCGcyaej3NAULCSUI7HXuYKHb/3VdfI4eWGwi3k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=4IOp5nkEGFtLNSOZG0xMpT8cqoH5Sf5dX+TlDIk/7s2JkAVhbtHaQrPuXewcNhh0w
-	 kn+E+QTCioX1cHuXpdOxBOY3saNvT444FLkSUaKnFsD2u73MrbjF3cV/Eyq0PjG8sy
-	 PQqOI0z7U6rqRZP9myveNpu1H9b9oXYUpIB4REIgNOGjYIE1NcLNMtmKhSHHlitmC9
-	 NYYicYZGYBwC1Qapst0KOgN19AMMsYKDNvQiKGY65HA3JzsPHmo3nxPkxEmy0qeZMw
-	 yrllIsYMOio5xKx9V0B9D5dQMlRL8YRD/A3ib05c5EhGfkju73C5rVuJ6pp7djqMhX
-	 rvVlZl45PqByw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4E7FB3782196;
-	Thu, 30 May 2024 09:34:22 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: jic23@kernel.org
-Cc: lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	lee@kernel.org,
-	andy@kernel.org,
-	nuno.sa@analog.com,
-	bigunclemax@gmail.com,
-	dlechner@baylibre.com,
-	marius.cristea@microchip.com,
-	marcelo.schmitt@analog.com,
-	fr0st61te@gmail.com,
-	mitrutzceclan@gmail.com,
-	mike.looijmans@topic.nl,
-	marcus.folkesson@gmail.com,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH v1 0/4] MediaTek MT6357/8/9 PMIC Auxiliary ADC support
-Date: Thu, 30 May 2024 11:34:06 +0200
-Message-ID: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJyu+LBg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F31D2C2BBFC;
+	Thu, 30 May 2024 09:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717061667;
+	bh=tEQu35CaxhT9+Q6qAEJEskYUshMXy0do6KkUt7ceXLw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uJyu+LBgo9JPAAsFFLlXJ1qJFP+qD0BC7jiXxbKMh0txds+0+h8QZeLsZs5yn95tj
+	 rIBoQINUONJ1IgqwfT+eXCz7QwhlNHCdJTj9uHbAcpmwFbhLTzjMbp8PmZ5uQhcJ4q
+	 Y2rlMKe+XYLdEFmN0vvC7xw4YLX68qGDBrUEP1fdvx0mxVGbHVNnh8rOc5145zvEWT
+	 4NEuknsI7Q1I7vpgAC2eBqe2fxpawGQ4UxsKqZo8dMU17QNWb6kjRL/lz8qxfQ50d8
+	 /smnXzxTnDqo2ql3epJ2Hs0c+hYeH615vfDPT43W4MVaqEjCghDVG4XMAtUJ2RlAPl
+	 7JjMDbNIB+hWg==
+Date: Thu, 30 May 2024 11:34:24 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Jayesh Choudhary <j-choudhary@ti.com>
+Cc: linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org, 
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, sam@ravnborg.org, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, 
+	a-bhatia1@ti.com, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 2/2] drm/bridge: Add pixel clock check in atomic_check
+Message-ID: <20240530-spiked-psychedelic-monkey-ddd0b0@houat>
+References: <20240530092930.434026-1-j-choudhary@ti.com>
+ <20240530092930.434026-3-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="eqvyt5rrxiedz2k4"
+Content-Disposition: inline
+In-Reply-To: <20240530092930.434026-3-j-choudhary@ti.com>
 
-This series adds support for the Auxiliary ADC IP found on the MediaTek
-MT635(x) PMICs, including MT6357, 6358 and 6359, exposing various ADC
-channels for accessory detection (usually, on 3.5mm jack), battery
-voltage, PMIC temperature, PMIC-integrated voltage regulators, and
-others, depending on the PMIC model.
 
-AngeloGioacchino Del Regno (4):
-  dt-bindings: iio: adc: Add MediaTek MT6359 PMIC AUXADC
-  iio: adc: Add support for MediaTek MT6357/8/9 Auxiliary ADC
-  mfd: mt6397-core: Add support for AUXADCs on MT6357/58/59 PMICs
-  arm64: dts: mediatek: Add ADC node on MT6357, MT6358, MT6359 PMICs
+--eqvyt5rrxiedz2k4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../iio/adc/mediatek,mt6359-auxadc.yaml       |  43 ++
- arch/arm64/boot/dts/mediatek/mt6357.dtsi      |   5 +
- arch/arm64/boot/dts/mediatek/mt6358.dtsi      |   5 +
- arch/arm64/boot/dts/mediatek/mt6359.dtsi      |   5 +
- drivers/iio/adc/Kconfig                       |  12 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/mt6359-auxadc.c               | 598 ++++++++++++++++++
- drivers/mfd/mt6397-core.c                     |  10 +
- .../iio/adc/mediatek,mt6357-auxadc.h          |  21 +
- .../iio/adc/mediatek,mt6358-auxadc.h          |  22 +
- .../iio/adc/mediatek,mt6359-auxadc.h          |  22 +
- 11 files changed, 744 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
- create mode 100644 drivers/iio/adc/mt6359-auxadc.c
- create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
- create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
- create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
+Hi,
 
--- 
-2.45.1
+On Thu, May 30, 2024 at 02:59:30PM GMT, Jayesh Choudhary wrote:
+> Check the pixel clock for the mode in atomic_check and ensure that
+> it is within the range supported by the bridge.
+>=20
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+>  drivers/gpu/drm/bridge/sii902x.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/si=
+i902x.c
+> index 6a6055a4ccf9..1bf2f14a772d 100644
+> --- a/drivers/gpu/drm/bridge/sii902x.c
+> +++ b/drivers/gpu/drm/bridge/sii902x.c
+> @@ -494,6 +494,12 @@ static int sii902x_bridge_atomic_check(struct drm_br=
+idge *bridge,
+>  				       struct drm_crtc_state *crtc_state,
+>  				       struct drm_connector_state *conn_state)
+>  {
+> +	if (crtc_state->mode.clock < SII902X_MIN_PIXEL_CLOCK_KHZ)
+> +		return MODE_CLOCK_LOW;
+> +
+> +	if (crtc_state->mode.clock > SII902X_MAX_PIXEL_CLOCK_KHZ)
+> +		return MODE_CLOCK_HIGH;
+> +
 
+atomic_check doesn't return drm_mode_status but regular error codes (0
+on success, negative error code on failure)
+
+Maxime
+
+--eqvyt5rrxiedz2k4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZlhIIAAKCRAnX84Zoj2+
+dmtDAYDKG/BmH6pQDT3/a9jAZw6MLC3PDP1ck88oGHUNjjKiyUhwBwrTl/m0ZG4E
+BnoybWsBgMVO4kmBlXkJ4Ee2H26nQTt68ithsfMMFyxYYmZ6gS2qoV6snRnbJ9SF
+KUcF31qy8g==
+=SvhA
+-----END PGP SIGNATURE-----
+
+--eqvyt5rrxiedz2k4--
