@@ -1,86 +1,159 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5161C8C06;
-	Thu, 30 May 2024 05:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBA9143881
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 05:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717047325; cv=none; b=X381MjtyyJJgErOgT/cTRc6APiZhYhu8krYdhdYUrdz5B9FXjoyWsk+Pd0XqJq+qVVtXOljSMMtzUSIeAuG9kKuDwu43NcHm2kXO+fbrH025NyZwgR/GeVHH27GLUd7cHE9s+o05UkQTfr56ZkKDIPWntloQJRE7a3EpIv7xyTk=
+	t=1717047351; cv=none; b=bO3G2BGJ4zF9O3KfE0Zy1KH/bgWBS2lyJy9GdJzraT36Uf++sy/UQ9ibx9m7F2G7+QeeOl478ixjRNW8YpycvFrXKYv6mwa9qYOv7ea266pXODXafwHvgxWQ8wkGeR33VJ9H0Bc6txBVSIoXuuKL9YI6Ao5Px9SufU4/uRw4uiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717047325; c=relaxed/simple;
-	bh=0CsSKfEsPjwBWmUdBY02Yt/YHwAyF+hHRKlg/jxONgM=;
+	s=arc-20240116; t=1717047351; c=relaxed/simple;
+	bh=KnUZHp13dS77ruhiqaUUV7kRUy1j62cNhux/gUno07M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e8J3ZtZu2CGQtXu6DY3PqmSOmoVkh2Y2OKhCBZKsYD9Cl6Mlgvn7hU3RlhS0LCty/Eyi9lkXEZitZDLS0oiC9pD6X3NKcVc84p8GZ+1G0NJz5Mf5jLtZ289CKCYDd8qVmTrzZVIjcf3UycM+deKfEeN+qd43BOY6cpyf3MUOdCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2bdb61c5fdbso377064a91.2;
-        Wed, 29 May 2024 22:35:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717047324; x=1717652124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xejpgpEtLzwv9hcH2rJtXiBs10TLFrUh7R8Ixh2PMdY=;
-        b=hKVtGUUXxzkNHd6Mi+Fq4zhSN4vVGgpr6z7qjMusFjM/+RVwFTfXBQrNB2Yw3O7JkN
-         DKDrhrmgBu5+sy+3U1dheNIAOATzt9zwikRV+cDOho6tWXOZW60WV2WoFmLIIDLk88BK
-         4jOg5LV/1OXNnVK0P1IiggPXSFnH0QrmQIwNXpw5hWN7oAeSSh7bQC6x+L6ZwnBpYwA/
-         NfyZjGKU6EYtyWq36mZKKOt+6DEmtHHtlMHMonwMyLfbw4ZXJ9i2azo6qd4jXeJGlW0d
-         WuoyEm2UEcPc9NFqtL7QvoC6EkzePb1wlcXBFkxUVnob+HSk1yFrMp79G2uHUKJY0WYj
-         ZrjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcUu8yi3PawNUyALrHMKBf454iybrWDjCIXZ5JPkOA8zHN+zmw3AIkcAx67iMXdVbFI3aWjMvMRwAB432M2qPhapqa6TUIr6Pzr19e4oOddzKDwqEO3ILjqAnFGXNwjyfLrpnuKn8Rdj95BIsFsg==
-X-Gm-Message-State: AOJu0YwaMEWUdI9x/TfIdVxBS6sEk81/6fwEb3QrQ2ZZt6yIIJiE2o2C
-	jmT29oH61eYVIgcMvVRefy4Xrc1+7f6+DhCIoaJOPnruNKJFM4y0B+NC5vnWMiGT42dBAjvrxHt
-	xHWGTQsY7dVIlt2rr9cwyhYWBuMA=
-X-Google-Smtp-Source: AGHT+IHJ61RW9EgO0VUalcxM48ZvgUKyWi8RX4+RyScW4gsiljz+kCURsIgJxPTLt0WelyX94RNFpY9alTGkYF6s5IQ=
-X-Received: by 2002:a17:90b:364e:b0:2c0:f62:7b88 with SMTP id
- 98e67ed59e1d1-2c1abc3c58fmr1123757a91.25.1717047323480; Wed, 29 May 2024
- 22:35:23 -0700 (PDT)
+	 To:Cc:Content-Type; b=LCgaIgM+XfD+nhUNoGX/GGKJcchgQGwr1UUIT1Lgd9Fxsnrf03/Cek+w9R3KiglIUeaaUB+/b8Dj3LH21DsUL3vcsZxhfBhFcEZRmyu69U1oY2bBn8x0bCh+xaUyPeen6WxQoxvE5KQxIlIWlZT9Y6L8H8XgsYKWWWjUsHdFhPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [209.85.222.41])
+	by gateway (Coremail) with SMTP id _____8Ax3eoxEFhmmn8BAA--.6460S3;
+	Thu, 30 May 2024 13:35:46 +0800 (CST)
+Received: from mail-ua1-f41.google.com (unknown [209.85.222.41])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMctEFhmNOINAA--.36480S3;
+	Thu, 30 May 2024 13:35:42 +0800 (CST)
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-804ee8b03afso182360241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 22:35:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUL5jEsDDL23vm6yXhDetmjZhI1t8Pl8F3VPq+o9HURDj32K7a8i6UJnrET7BoUHJ/zFt2OpN+UTh6dhrI03QnpmoP9L4rDSmco6zvQ
+X-Gm-Message-State: AOJu0YxRLaslKwtmvnx1OxGBK5QlZZOB1iD+PCA9C83ux6u2m8MD1Z40
+	lskedCWYp0bQwtz9YddLyIrWgn3EPiEl5AOCLKo17U1FpaRRV60hW1NXo4uU+ehqxVn63NJGWIR
+	lUxmXyKTDHSqwZqNoGmng5g1oluJPB++p6aN++w==
+X-Google-Smtp-Source: AGHT+IHZ8axvx4jJzWGomNL8c+GbmDiaO9PRsPYzYWjOKV+NeSRwIAALP8RQjhFwT0nvL1TaFn2o7uc4LyxEFlKjn9M=
+X-Received: by 2002:a25:6986:0:b0:df4:b01b:3d21 with SMTP id
+ 3f1490d57ef6-dfa5a7db705mr1302353276.49.1717045325049; Wed, 29 May 2024
+ 22:02:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525152927.665498-1-irogers@google.com> <CAHk-=wgYxi_+Q1OpZKg2F9=eem7VQjYnoqN6sA1+uUt-0JqQKQ@mail.gmail.com>
- <CAHk-=wi5Ri=yR2jBVk-4HzTzpoAWOgstr1LEvg_-OXtJvXXJOA@mail.gmail.com>
- <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <ZlY0F_lmB37g10OK@x1> <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com> <Zld3dlJHjFMFG02v@x1> <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
-In-Reply-To: <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 29 May 2024 22:35:12 -0700
-Message-ID: <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linux.dev>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240522-loongarch-booting-fixes-v3-0-25e77a8fc86e@flygoat.com> <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
+In-Reply-To: <20240522-loongarch-booting-fixes-v3-3-25e77a8fc86e@flygoat.com>
+From: WANG Rui <wangrui@loongson.cn>
+Date: Thu, 30 May 2024 13:01:54 +0800
+X-Gmail-Original-Message-ID: <CAHirt9hbzVxcKzwnSF_5jpwma+kr-WJHBQjc47ojB95Ph9SnqA@mail.gmail.com>
+Message-ID: <CAHirt9hbzVxcKzwnSF_5jpwma+kr-WJHBQjc47ojB95Ph9SnqA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] LoongArch: Fix entry point in image header
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>, Binbin Zhou <zhoubinbin@loongson.cn>, 
+	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:AQAAf8AxDMctEFhmNOINAA--.36480S3
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF1UWF15KF45Gr45GrykJFc_yoW5CryDpa
+	1UAF4DAr48Cr4DJas7Jw45uFyUXwnrW34agasrGFyrCFsFvr18Xr109rZruFyvqw4xK3yS
+	qFn0gF12v3WDJ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvKb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+	6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_
+	JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17
+	CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0
+	I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I
+	8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU
+	0xZFpf9x07jbPEfUUUUU=
 
-On Wed, May 29, 2024 at 12:25=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> We can fix the arm_dsu bug by renaming cycles there. If that's too
-> hard to land, clearing up ambiguity by adding a PMU name has always
-> been the way to do this. My preference for v6.10 is revert the revert,
-> then add either a rename of the arm_dsu event and/or the change here.
+On Thu, May 23, 2024 at 6:03=E2=80=AFAM Jiaxun Yang <jiaxun.yang@flygoat.co=
+m> wrote:
 >
-> We can make perf record tolerant and ignore opening events on PMUs
-> that don't support sampling, but I think it is too big a thing to do
-> for v6.10.
+> Currently kernel entry in head.S is in DMW address range,
+> firmware is instructed to jump to this address after loading
+> the image.
+>
+> However kernel should not make any assumption on firmware's
+> DMW setting, thus the entry point should be a physical address
+> falls into direct translation region.
+>
+> Fix by converting entry address to physical and amend entry
+> calculation logic in libstub accordingly.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+> v2: Fix efistub
+> v3: Move calculation to linker script
+> ---
+>  arch/loongarch/kernel/head.S             | 2 +-
+>  arch/loongarch/kernel/vmlinux.lds.S      | 2 ++
+>  drivers/firmware/efi/libstub/loongarch.c | 2 +-
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index c4f7de2e2805..2cdc1ea808d9 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -22,7 +22,7 @@
+>  _head:
+>         .word   MZ_MAGIC                /* "MZ", MS-DOS header */
+>         .org    0x8
+> -       .dword  kernel_entry            /* Kernel entry point */
+> +       .dword  _kernel_entry_phys      /* Kernel entry point (physical a=
+ddress) */
+>         .dword  _kernel_asize           /* Kernel image effective size */
+>         .quad   PHYS_LINK_KADDR         /* Kernel image load offset from =
+start of RAM */
+>         .org    0x38                    /* 0x20 ~ 0x37 reserved */
+> diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/=
+vmlinux.lds.S
+> index e8e97dbf9ca4..c6f89e51257a 100644
+> --- a/arch/loongarch/kernel/vmlinux.lds.S
+> +++ b/arch/loongarch/kernel/vmlinux.lds.S
+> @@ -6,6 +6,7 @@
+>
+>  #define PAGE_SIZE _PAGE_SIZE
+>  #define RO_EXCEPTION_TABLE_ALIGN       4
+> +#define TO_PHYS_MASK                   0x000fffffffffffff /* 48-bit */
+>
+>  /*
+>   * Put .bss..swapper_pg_dir as the first thing in .bss. This will
+> @@ -142,6 +143,7 @@ SECTIONS
+>
+>  #ifdef CONFIG_EFI_STUB
+>         /* header symbols */
+> +       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
 
-How about adding a flag to parse_event_option_args so that we
-can check if it's for sampling events.  And then we might skip
-uncore PMUs easily (assuming arm_dsu PMU is uncore).
+ -       _kernel_entry_phys =3D kernel_entry & TO_PHYS_MASK;
+ +       _kernel_entry_phys =3D ABSOLUTE(kernel_entry & TO_PHYS_MASK);
 
-It might not be a perfect solution but it could be a simple one.
-Ideally I think it'd be nice if the kernel exports more information
-about the PMUs like sampling and exclude capabilities.
+>         _kernel_asize =3D _end - _text;
+>         _kernel_fsize =3D _edata - _text;
+>         _kernel_vsize =3D _end - __initdata_begin;
+> diff --git a/drivers/firmware/efi/libstub/loongarch.c b/drivers/firmware/=
+efi/libstub/loongarch.c
+> index 684c9354637c..60c145121393 100644
+> --- a/drivers/firmware/efi/libstub/loongarch.c
+> +++ b/drivers/firmware/efi/libstub/loongarch.c
+> @@ -41,7 +41,7 @@ static efi_status_t exit_boot_func(struct efi_boot_memm=
+ap *map, void *priv)
+>  unsigned long __weak kernel_entry_address(unsigned long kernel_addr,
+>                 efi_loaded_image_t *image)
+>  {
+> -       return *(unsigned long *)(kernel_addr + 8) - VMLINUX_LOAD_ADDRESS=
+ + kernel_addr;
+> +       return *(unsigned long *)(kernel_addr + 8) - TO_PHYS(VMLINUX_LOAD=
+_ADDRESS) + kernel_addr;
+>  }
+>
+>  efi_status_t efi_boot_kernel(void *handle, efi_loaded_image_t *image,
+>
+> --
+> 2.43.0
+>
+>
 
-Thanks,
-Namhyung
+- Rui
+
