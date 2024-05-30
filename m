@@ -1,125 +1,75 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gentwo.org (gentwo.org [62.72.0.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9CC176246
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 15:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68917F504
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 15:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717083021; cv=none; b=pJRLGk27sccETFrBa6ZW4gqxT1SG3oMc/lWkPU9OISaXnjuybxrRxiTeZUkrXqX2EF0aWS61optLoN3nLh5VXuGwGem9BIQSJlg30V4twZ+Ohs4k5xnflaF0GI4qMxJK4dVET1jCeeZVQ0cPRK3H+5D38aO7c3JLjYQTdcLTb+Q=
+	t=1717083043; cv=none; b=FPf1wNqnVXCgc7Wd6DXNP57XUQ2UhvknZF1WY6pjvjPt2t28UoshtS2BEe90P8QDuobz+2AkM9JpGAOtr6dxkmHHwx90AmvjE0ZkTL5yX8sWEUAzJpClED8YqbECONSVt8pcaiyH0aewlth6QhPVaKADbbDlwphb9r2gOPcLLm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717083021; c=relaxed/simple;
-	bh=iaQfvQSJKPuqC/g7uIa9elYYZ+csDMb2TH/hJRRLu2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kG8OnY5aywvOGGd+84pbf5mXFSOgk6rAzNicWjoDGofZvo2nk69xiJCKVeYVIHynbD/+8rP+0AqwXsqtLdiFAXKnDNxDbaoN7yvjhB2ja0lw+KcnF3/xICSakZWGpEYHk6aDiCsXpccX7fqLANcK2HdLKlfjg8xuq0idiSw6kgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RwxRXyhJ; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717083043; c=relaxed/simple;
+	bh=PhD8vfWQu0fzYUGcN9chnT6h1Jccukmikqwpa2qBXcI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tTgZ6fJgjQ/fHvI6lATEPfMBUh+s61aIISDxgxQuI/yNWscM/xmlDdBaRqZXnRm3ouqoKgxKZUWU6zsfDJKjmioxb2nEpvvdBkkgonmA/gMY8qC+EbgbcHPJSWpz+/0xW+zi+HuRJeM3Agnma3s/rmMA+lgDX2uaxsMH5F1JEWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=eAjtpJHp; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RwxRXyhJ"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-421124a04d6so11061385e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:30:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717083017; x=1717687817; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vfRTfm9PXIfDsjwFwFKFqJQ/IgaytwUE/fEPjM3ptoM=;
-        b=RwxRXyhJhkRItncwlXfKJajxvWK4y60x3N+EzuX6Kk62gFA3h1T1X9dDFfuVzRAQsS
-         +h1tAuPkp7DiDB+us1DEpFjc2MUU0arDklSNBr22EoGhwsf5cimeZxMcPGes/NQG83Df
-         eSzLJJuzEjIv/WVrkDrCWKIb541kyddFLhRNs23+LkTcj/IBoqvXVdvrzSGS6MfXDlE7
-         Pq1JXtyfpeqp0zDFm9RPU6Tl0AqEe+/9NcHp5avMdEiNafywN55O9A+PGgWzIE5pJUdZ
-         356DtD4a1uyseP4XUL3G4Iv3pg63PrH4IogdwoU2qb7/UDNkEWIwvW52j6crzEJpZHgq
-         sXVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717083017; x=1717687817;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfRTfm9PXIfDsjwFwFKFqJQ/IgaytwUE/fEPjM3ptoM=;
-        b=m1S6JP2lM0VmAnG6IPk5dQ2/pwOXImRCgttDOOxw0qtxSsRyBWOGdvXMxRgc3A04hV
-         7g/jXcd/K/ThPLj2lAQpfHPy186qRXrHeFs6USrxhUIlszL9uUBXSukU4d1o7agEHAuo
-         pp4SMpXw7tYAmsS3tsjwLQgMe8ptk/Q4sIjX/gwbSM8VDUzjKrenqm4X5ccvbKEz3reO
-         cB/RO95S8Nrc+eDDrti4whpohNNDyqekEp14KDSulcSfYqZXrV6hoTwaFWILX0vNoJrr
-         C9yP+390IY6z4w8Y4OCxg4SkebdH+ARJlQi0t2UDc2cnWqRZACyWkD/pjTCzTmHMWZk5
-         P/jA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUyOou67yoV2E5L/43G9Exyrw+8dIHnxkP58KXnwQ/UU7sXwSieKyXAVb5HcoaIlSr+pg1vEzCt/gMMitKBojr6wdsEqxuUffaSjTW
-X-Gm-Message-State: AOJu0YxId96FUVWCE3DTN8ay2xEBZH8a9PwMXWI4tzrP/0/VZOUatyCt
-	idQuNIEieiHKUaa4jldZTPvb666/IXIAUAbfyD3hA/7YqoYVyNGDTxA9lMd4QIc=
-X-Google-Smtp-Source: AGHT+IGG1oTknVJBn2jB+FyeaYyisX4fTAtHZFR8cnWyGDDbZhWRb+CCfMPl6Eoi3fkG0umZ+H0w7g==
-X-Received: by 2002:a05:600c:3d8b:b0:421:29e1:998 with SMTP id 5b1f17b1804b1-42129e10af2mr9062085e9.39.1717083017479;
-        Thu, 30 May 2024 08:30:17 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:5de0:a23:f1c3:862a:5eac? ([2a10:bac0:b000:5de0:a23:f1c3:862a:5eac])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212706c952sm28153545e9.26.2024.05.30.08.30.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 08:30:17 -0700 (PDT)
-Message-ID: <186d2d79-b7c2-4fab-8243-4c7080412074@suse.com>
-Date: Thu, 30 May 2024 18:30:15 +0300
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="eAjtpJHp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1717082428;
+	bh=PhD8vfWQu0fzYUGcN9chnT6h1Jccukmikqwpa2qBXcI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=eAjtpJHpJYbnCqofA59amrPyn/YQpj9C/4aetzSjTKpYPvskNwTir9HyzdZeaQx1B
+	 i21UfQmlqJ19Z4Bc4L0++cvGtJ2ZZ7Q3OiLvuuMUp0tz3KZ7IHkpu6KlrlE53OfD+Q
+	 b0YjszmZ3lxw6gKLDrGPev9L7nCmauH82W3TH4bM=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 41E0E40A77; Thu, 30 May 2024 08:20:28 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 41008401D5;
+	Thu, 30 May 2024 08:20:28 -0700 (PDT)
+Date: Thu, 30 May 2024 08:20:28 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, 
+    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Vlastimil Babka <vbabka@suse.cz>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>, 
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+    zhouchengming@bytedance.com
+Subject: Re: [PATCH 1/3] slab: check the return value of
+ check_bytes_and_report()
+In-Reply-To: <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
+Message-ID: <4e4d45b5-c684-2d93-49d2-b179a088c2d5@gentwo.org>
+References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev> <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] prefetch: Add ARCH_HAS_PREFETCH definition when the
- architecture is not defined
-To: Youling Tang <youling.tang@linux.dev>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- Mateusz Guzik <mjguzik@gmail.com>, Youling Tang <tangyouling@kylinos.cn>
-References: <20240529032059.899347-1-youling.tang@linux.dev>
- <20240529032059.899347-2-youling.tang@linux.dev>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <20240529032059.899347-2-youling.tang@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+On Tue, 28 May 2024, Chengming Zhou wrote:
 
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 0809760cf789..de57512734ac 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1324,9 +1324,10 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+> 		}
+> 	} else {
+> 		if ((s->flags & SLAB_POISON) && s->object_size < s->inuse) {
+> -			check_bytes_and_report(s, slab, p, "Alignment padding",
+> +			if (!check_bytes_and_report(s, slab, p, "Alignment padding",
+> 				endobject, POISON_INUSE,
+> -				s->inuse - s->object_size);
+> +				s->inuse - s->object_size))
+> +				return 0;
+> 		}
+> 	}
 
-On 29.05.24 г. 6:20 ч., Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
-> 
-> After commit ab483570a13b ("x86 & generic: change to __builtin_prefetch()"), the
-> __builtin_prefetch implementation will be used by default, so add its definition
-> to return to a state similar to before commit[1].
-
-I find those references to the past state somewhat confusing and not 
-really adding sustenance to the explanation.
-
-> 
-> Currently prefetch_range() will be empty implemented under the x86_64 architecture,
-> there was a concrete implementation before "x86 & generic: change to
-> __builtin_prefetch()", so fix it.
-
-Actually prefetch_range will be empty for every architecture which 
-doesn't defined ARCH_HAS_PREFETCH and since we have a working generic 
-fallback this indeed seems backwards. So defining ARCH_HAS_PREFETCH 
-makes sense.
-
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-
-> 
-> No similar changes have been made to ARCH_HAS_PREFETCHW at this time.
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/include/linux/prefetch.h?id=8e4f2fd31bf737abb392e694898a1496157623b5
-> 
-> Fixes: ab483570a13b ("x86 & generic: change to __builtin_prefetch()")
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
-> ---
->   include/linux/prefetch.h | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/prefetch.h b/include/linux/prefetch.h
-> index b068e2e60939..162b7105e37c 100644
-> --- a/include/linux/prefetch.h
-> +++ b/include/linux/prefetch.h
-> @@ -36,6 +36,7 @@ struct page;
->   */
->   
->   #ifndef ARCH_HAS_PREFETCH
-> +#define ARCH_HAS_PREFETCH
->   #define prefetch(x) __builtin_prefetch(x)
->   #endif
->   
+This change means we will then skip the rest of the checks in 
+check_object() such as the poison check.
