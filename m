@@ -1,153 +1,117 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9346F316
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AAB18396C
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 09:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717061731; cv=none; b=RTSDL73JsKOC7fuYNk4khz/kqz8TZI+FTnYdCTuedLXeJrUq6/5Y+fjdhXVWiIdFKMV8gof9lMoYovtOUEHC92K5TCvl7R7CFwDIGhRrf6yjpDbxP6Ea/jPCEYtblFEwzZCVH+nrI3lwLwU3cukYSQQ36CvrtCuhOdDZNCDz4NQ=
+	t=1717061807; cv=none; b=eudXUJzVg08g9vdrqoaKTpXkckEd+GUyJbQLOtnjtM/EMVyorLOsKdCxfDbEphYf5TyH0AR0oU3YCF8zxfiYnxWqaXuVUj1Bgg1Q7VBlVQMwITPdbDVPzymkWBIS5e8GDgtzpM78oEtoGEFjYTICmBBZcTqwydqoOJd+6NhtAq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717061731; c=relaxed/simple;
-	bh=fjkXIremmoZmlou8OGomK4d7XuR+f9e1/ohh3sWxQWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i+c5lR5ducTld5uY+mi+1EVVw1nlt8PX9UHDRv14+poPy2U0iIVFU5ITj28Xfqdto10hDgW92vfYjwFFJ5hRIr1HVW6z+34BDrDFMaJabML6B4l+bY2QaSdECzxsY3m0VxROkBpE0u9nPpq1CfKfXqiLDHZNIxAgYJMNxNMGfYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=fail smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OKwOr0OP; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1717061807; c=relaxed/simple;
+	bh=JiFEQeqE8G8g8PcQJBsUUHzXMQn0i0rKi4ih5hsEpfk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BVjdZR0Q+08tics/xa6kupYNb7Is3YofZ94VhfO0SArPkZmupiDQOOVdXwZXzleeTRUChxJIm1teEk7uqNOqnvp1MFmrlS+8KOUzY2xm829NY72Vbjy1Ovxdf1N4hrDiqw0kkCrQCv1w+DU28XdqjHqcXXbMzVPRTUdb96wE3xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NbWkCLyi; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OKwOr0OP"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-24ca21014ccso326797fac.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1717061727; x=1717666527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aIKK60Me9RhDM5LPzOVIbg3hAvv72+j6Tp3QihasYZ0=;
-        b=OKwOr0OPhgIovH6ETpTz4mJfPB19eY2jLtiFdOh1RQVmqNHOMVqoM7UMGVC39Fy1m9
-         Mlw1QZF6fG1OayhLymZyu6PGY2vpzas8LrsWfnvUwYw/8oN6OBueJCHYTR1dYeybBSjp
-         ++ugn405rm1bDlPletv2oLVXjl/I2GB69KrRW+qv+imMfQlh/pDdq7Siwxi3y/vTp4IM
-         3f64Cj7/Kphj/s/6E+UO/wVq0BZepc+cpHmaTbyl6PxfkgnhuIHeCkvSnmCsrNy9XbIl
-         8fCZfM+6Du8TfdwvazLd1qC8VYA0yViDz+MjPtDxWAv0p0BYzLabjZToD7JsqqcN+K2K
-         +ZcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717061727; x=1717666527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aIKK60Me9RhDM5LPzOVIbg3hAvv72+j6Tp3QihasYZ0=;
-        b=Md0h3eb0AHX+LN94aum9zlvPwOdyN9WQNPNnjxDvvr5l8fjrRu0bFMRFBBtfmtw6vu
-         fda8m5Ui9YuruLU0ZAeZ8qZpq1E09BmOYqDnMAD0sLfZwrqaE4C6ZDTot6s6seo8eUDj
-         k16pkiq0dUvrkppD8k6p9Qga7wgHEFh2RHhCGl59DDzwevFRe4KVgZ0r242Va2VkTFW6
-         +bbXe6e0j4GHBt5SCQ1cM18iA3WUbqnaFmvtizOcgK9c4ILRDqTSmmu2xxq5atN7SYcV
-         N9U86G5Y97DG3X7nKnSHnLZ5aLzEMqMQsCTjuTkh6FbjJMsjNoxViwMvz6xbmfQ7X7Dt
-         jtuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4LrAnSsvn2Vj4mKgyHKVOiVxkthH1ansv5dTj6IcNxu0lD74z6vOUkxVa6/0Chm164G/oMwfJNYXIqwxG/pyq7Tpho4scv2pwKAdG
-X-Gm-Message-State: AOJu0Yy8ykR60jwZjkRMxWOHUIn38LDK2tIhQ3cgRISx2KwLhUY5YqsV
-	dZxvp1xp7rw0+ai1DYoMUuTEAF3bu/Ul7U/zF3PKAhuivfue52RnhmJfpPulEVbblEPqDscvxXZ
-	1O/CctFhkKzxP3zw7lcDetJAeGY6ny6Ryg1iviA==
-X-Google-Smtp-Source: AGHT+IGQo/4+Bcec7GR4w4t9VuGgDnfgRuIzi4gbmVB9EXNZxFk4++tYC42KZVEUtna/+lcQBmHO84N93cneyoHhbbs=
-X-Received: by 2002:a05:6871:3329:b0:24c:ac96:ac78 with SMTP id
- 586e51a60fabf-25060de9e8amr1722957fac.44.1717061727430; Thu, 30 May 2024
- 02:35:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NbWkCLyi"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44U9aQX4055554;
+	Thu, 30 May 2024 04:36:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717061786;
+	bh=8IsrSRtFydZv3T+0eIRnXTxvkv96aiYK/zRbroJAvnw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NbWkCLyiXn22mHNHAVj/Qir2Nf12AdmLgoZwihAmwLFup9REorPyDNtH5tZ9zvkb9
+	 dMOTi6rY0RR2l3VJKAjP0ReQlE2lGGtPTN6+QNtcvIOWZJJ8/qGEB2VkH2z/5/uvY7
+	 HTVFGDTXYbEEEUIRS0a70AMIsoC7FxRoQi+IWxJA=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44U9aQZQ128496
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 30 May 2024 04:36:26 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 30
+ May 2024 04:36:26 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 30 May 2024 04:36:26 -0500
+Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44U9aPth000471;
+	Thu, 30 May 2024 04:36:25 -0500
+From: Aradhya Bhatia <a-bhatia1@ti.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Andrzej Hajda
+	<andrzej.hajda@intel.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Robert
+ Foss <rfoss@kernel.org>,
+        Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej
+ Skrabec <jernej.skrabec@gmail.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Jyri
+ Sarha <jyri.sarha@iki.fi>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David
+ Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: DRI Development List <dri-devel@lists.freedesktop.org>,
+        Linux Kernel List
+	<linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Thierry
+ Reding <treding@nvidia.com>,
+        Kieran Bingham
+	<kieran.bingham+renesas@ideasonboard.com>,
+        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+        Devarsh Thakkar <devarsht@ti.com>,
+        Jayesh
+ Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>,
+        Aradhya Bhatia
+	<a-bhatia1@ti.com>
+Subject: [PATCH v2 2/9] drm/bridge: cdns-dsi: Fix the phy_initialized variable
+Date: Thu, 30 May 2024 15:06:14 +0530
+Message-ID: <20240530093621.1925863-3-a-bhatia1@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240530093621.1925863-1-a-bhatia1@ti.com>
+References: <20240530093621.1925863-1-a-bhatia1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131155929.169961-1-alexghiti@rivosinc.com> <20240131155929.169961-5-alexghiti@rivosinc.com>
-In-Reply-To: <20240131155929.169961-5-alexghiti@rivosinc.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Thu, 30 May 2024 17:35:16 +0800
-Message-ID: <CAEEQ3wnmCr5NTEFo3wTN_zWse2DPkE6ieVUk_=Vv7A-UzDCCvQ@mail.gmail.com>
-Subject: Re: [External] [PATCH RFC/RFT v2 4/4] riscv: Stop emitting preventive
- sfence.vma for new userspace mappings with Svvptc
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Andrew Morton <akpm@linux-foundation.org>, 
-	Ved Shanbhogue <ved@rivosinc.com>, Matt Evans <mev@rivosinc.com>, Dylan Jhong <dylan@andestech.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Alex,
+Update the Phy initialized state to "not initialized" when the driver
+(and the hardware by extension) gets suspended. This will allow the Phy
+to get initialized again after resume.
 
-On Thu, Feb 1, 2024 at 12:04=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
-.com> wrote:
->
-> The preventive sfence.vma were emitted because new mappings must be made
-> visible to the page table walker but Svvptc guarantees that xRET act as
-> a fence, so no need to sfence.vma for the uarchs that implement this
-> extension.
->
-> This allows to drastically reduce the number of sfence.vma emitted:
->
-> * Ubuntu boot to login:
-> Before: ~630k sfence.vma
-> After:  ~200k sfence.vma
->
-> * ltp - mmapstress01
-> Before: ~45k
-> After:  ~6.3k
->
-> * lmbench - lat_pagefault
-> Before: ~665k
-> After:   832 (!)
->
-> * lmbench - lat_mmap
-> Before: ~546k
-> After:   718 (!)
->
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/pgtable.h | 16 +++++++++++++++-
->  arch/riscv/mm/pgtable.c          | 13 +++++++++++++
->  2 files changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
-table.h
-> index 0c94260b5d0c..50986e4c4601 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -473,6 +473,9 @@ static inline void update_mmu_cache_range(struct vm_f=
-ault *vmf,
->                 struct vm_area_struct *vma, unsigned long address,
->                 pte_t *ptep, unsigned int nr)
->  {
-> +       asm_volatile_goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA=
-_EXT_SVVPTC, 1)
-> +                         : : : : svvptc);
-> +
->         /*
->          * The kernel assumes that TLBs don't cache invalid entries, but
->          * in RISC-V, SFENCE.VMA specifies an ordering constraint, not a
-> @@ -482,12 +485,23 @@ static inline void update_mmu_cache_range(struct vm=
-_fault *vmf,
->          */
->         while (nr--)
->                 local_flush_tlb_page(address + nr * PAGE_SIZE);
-> +
-> +svvptc:
-> +       /*
-> +        * Svvptc guarantees that xRET act as a fence, so when the uarch =
-does
-> +        * not cache invalid entries, we don't have to do anything.
-> +        */
-> +       ;
->  }
+Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-From the perspective of RISC-V arch, the logic of this patch is
-reasonable. The code of mm comm submodule may be missing
-update_mmu_cache_range(), for example: there is no flush TLB in
-remap_pte_range() after updating pte.
-I will send a patch to mm/ to fix this problem next.
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index b016f2ba06bb..42565e253b2d 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -1153,6 +1153,7 @@ static int __maybe_unused cdns_dsi_suspend(struct device *dev)
+ 	clk_disable_unprepare(dsi->dsi_p_clk);
+ 	reset_control_assert(dsi->dsi_p_rst);
+ 	dsi->link_initialized = false;
++	dsi->phy_initialized = false;
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
 
-
-Thanks,
-Yunhui
