@@ -1,137 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0D617BA4
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 02:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from smtp.cecloud.com (unknown [1.203.97.246])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C51E117545;
+	Thu, 30 May 2024 02:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717036004; cv=none; b=QDCQudjSroFXRJGmtNt3XqhQJXg08+ywRFTSJdY++NRmx2fpyn0/Un38RZiPxhoW/wOkdU2lxUDcmn6Eew48Xi/s1eoZr5d038cI1zE0VzSJjZsj15buVxT5LYTwEHldapQ9X9GrFCzO0idgZTC4d+yzSRhdZuAGvADB/vjud5Q=
+	t=1717036715; cv=none; b=NYiAcVCYjNHDZYHssIbkx+J3E2BsvtGk+T7UZH4OivS/Kwt7xxWiM5AgL5VS3OZXgJUxM/ld8wREKnQHzimvFZSUgZ9uOfnMBPuspT3+ouqyZHiUy3DH1JxL/sIFjMUdaRbWtm3ni/M3jKqQoTvTt5tVlZMb2WzkD/J+zwv70eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717036004; c=relaxed/simple;
-	bh=ttvT3Ah8wGJXvc1wF+zv6cWjUvrcFWayTzZSGPdzpVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ErRyNhoUOTS6eG/r1Wzo1kL/QGzP1/bZfhzTyYhLS+8RJEW4g43SU1wO2OxgMRVzKb7c45pHgkwEjNqx+CrwkQGDNDkwBTBkbpVL2FMrjenQV3aYPU8GD69QSMesppGq7D7m9uNXFtMZopVdwUR3yDQDcUl1ksHCPu1WuWT2Xh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C4x9UyXL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717036715; c=relaxed/simple;
+	bh=TNoVU3TtSf6bcIdcXsfbZYo/x8ibozTXW6/eh8jkNaU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TNBsBZHXjrYQCvEmSeDKtY69i/yFiFkJaGyciKrgNGPacsuCuDttf7xrTITZS3sXc1batEvTrdzVSH4VMQ4M80tSPoQ0S1KImnyxHw7tm2RvVKyKWcohu74CD5OncxP3eNkUyjwe97/l1CToCLyIzueilATYSDkYQ5fjJf+2o3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; dkim=fail (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=F9BvcxNL reason="signature verification failed"; arc=none smtp.client-ip=209.85.214.174; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; arc=none smtp.client-ip=1.203.97.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C4x9UyXL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717036002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YnXsZTwwCzxzslifQa2+0cYHA7NTq6cDJZpAlg9suAg=;
-	b=C4x9UyXLWCeMWJNFgi58E+6kIlI1Ce9HrRuxJwMW6cobmWR6SXNBFdsOPmdMwKiL3JTxxz
-	YFpxJRwDytr4asl4p1kqfOYd8z2z5bys2+ltpisBwJl7Yc/btVI48A72CI1VQIzzzrd4fJ
-	wR8jDpFoQRNeywdgJhayqXxQKbzGPDQ=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658--k55yVQjP7-lykoszvBqLg-1; Wed, 29 May 2024 22:26:40 -0400
-X-MC-Unique: -k55yVQjP7-lykoszvBqLg-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2bde806870aso354769a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 19:26:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717035999; x=1717640799;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YnXsZTwwCzxzslifQa2+0cYHA7NTq6cDJZpAlg9suAg=;
-        b=Xw3iuw7rgUUEY156KV64JdlKEWniVqOPHYptIMwzxRsaEY/DUHhVgFhFDPwx9tPJuY
-         9QbvPQkSexkWHc0UlDmxMEJcC+4IjMrkVCs+IOxXqiwI05BbXSBVBAXYXvI2qPT1rDzs
-         3KUZFMo9GgexFDWLrIx/uqshT3rCvtkwjpY6aEIzgjdvykGsj3qe08HGvx39iJtc9X4T
-         +u6KZJyfIbFVnDnPPT3c00zc6Lah95ihpszpMV1x9nLQ/y7B2QiixxRlGYN5MZfzNWu9
-         bt6tTtsqKiMSZiKJA6BYGb5AQc3OuN926ne9bxvIqk1NlC6kXJZNHEBnJi8V9tvVKnda
-         0oTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrztotXoWouglfjaLBv9ND1RX069o1CH7DKsZgdNL/6Rw588aBLiiJUxhAv7Sb1qbid/5YfonOW6SjCtwlDISyGr/1f0N9DNpr3WGD
-X-Gm-Message-State: AOJu0YyXkjakX60ZkMvugBl566prAt6oZqKaNiyiBkMsqhpuqBAuJUaB
-	mAkS7aF0QuzxVdqgvlchx3YeCTDUBB/5ZBgrGE0wZogPpy5+/HbQ8mlO99XSwcl57T73eKw6/yk
-	7gE974IMeak5kivxDpWL3ykMBgvrTeAYmmL4Csi0bLPhxM6/mAB7uvb3086hpB8ZO/CVqVjEEPh
-	Kfcu7gIeqqTlIFoYUuZBOB+GEa01T68jNlh5Ks
-X-Received: by 2002:a17:90a:f195:b0:2bd:d42a:f84e with SMTP id 98e67ed59e1d1-2c1abc06547mr875956a91.7.1717035999548;
-        Wed, 29 May 2024 19:26:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH8dBx7RLFwBbNLz/cVRtFvFW6wntNsZHbddxuYrQboeaA2JoWMYRdJDPzA+vve9b7jk9Fg1IkiIYjLozfohWs=
-X-Received: by 2002:a17:90a:f195:b0:2bd:d42a:f84e with SMTP id
- 98e67ed59e1d1-2c1abc06547mr875939a91.7.1717035999145; Wed, 29 May 2024
- 19:26:39 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="F9BvcxNL"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id A879C7C012C;
+	Thu, 30 May 2024 10:33:09 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-ANTISPAM-LEVEL:2
+X-SKE-CHECKED:1
+X-ABS-CHECKED:1
+Received: from localhost.localdomain (unknown [111.48.58.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P1860752T281471823376752S1717036388286019_;
+	Thu, 30 May 2024 10:33:09 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:liuwei09@cestc.cn
+X-SENDER:liuwei09@cestc.cn
+X-LOGIN-NAME:liuwei09@cestc.cn
+X-FST-TO:liuwei09@cestc.cn
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:1
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.58.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<ab71a20c679e9c04ec8ec16fdd219dda>
+X-System-Flag:0
+From: Liu Wei <liuwei09@cestc.cn>
+To: liuwei09@cestc.cn
+Cc: akpm@linux-foundation.org,
+	hch@lst.de,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rgoldwyn@suse.com,
+	willy@infradead.org,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] mm/filemap: invalidating pages is still necessary when io with IOCB_NOWAIT
+Date: Thu, 30 May 2024 10:33:04 +0800
+Message-ID: <c66ca795-da93-437c-bb11-718801f8114a@kernel.dk>
+X-Mailer: git-send-email 2.42.1
+In-Reply-To: <20240527100908.49913-1-liuwei09@cestc.cn>
+References: <024b9a30-ad3b-4063-b5c8-e6c948ad6b2e@kernel.dk> <20240527100908.49913-1-liuwei09@cestc.cn>
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174]) (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits)) (No client certificate requested) by smtp.subspace.kernel.org (Postfix) with ESMTPS id A493717E8E2 for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 15:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f4c043d2f6so35095ad.2 for <linux-kernel@vger.kernel.org>; Mon, 27 May 2024 08:36:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1716824187; x=1717428987; darn=vger.kernel.org; h=content-transfer-encoding:in-reply-to:from:content-language :references:cc:to:subject:user-agent:mime-version:date:message-id :from:to:cc:subject:date:message-id:reply-to; bh=FGMRKGoSYUA5y3/8ZCfrZ1xp7rqzMx12hKUQWEXXdwY=; b=F9BvcxNLHbFCL5XfHLnGTxQs/kbGpALZnSl2DYjNA/21xx0FBmmySwAJN/5dtkPhZV IwwKjcqRB9pV10OOLL6wHdu5znp/6PE86Vas57cBS/wuAbBw2UZndM8t2ducr7YYWm6Y qK9hMREyXKjeBhZWSjTI2InCbzAtbz3PLAwXmX2LUbmD27CV84Ld62XttJh+nGQRapAs b070pptuUluTj7BrbyTY7tkobVJKFo/9qxvErZHnOMlm8wItNpZuLUNC8RDdtzThAB2N KMJsW+YN/2uWpInjYvnpvDqSoW6Kn8DylQoMu4CqVNrueusLUWYFZNSZk1pdxY03zMc1 k2IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1716824187; x=1717428987; h=content-transfer-encoding:in-reply-to:from:content-language :references:cc:to:subject:user-agent:mime-version:date:message-id :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to; bh=FGMRKGoSYUA5y3/8ZCfrZ1xp7rqzMx12hKUQWEXXdwY=; b=CPhMhbHOK9YffoFiKDtV0Khpu+NfyscXGdbauR7ikW2SVhyGiJpw4+uaH2oTdxcQJp 8n4PLLZijcpA7uhY6eSngYbNg9W0N8GVCb0k+Es5NqFIDwRGN5hQ53IWyAuavf8MxoPQ gyf/CMAUI2l4mRd6ebTUPSgYTPvl+YPTsWJWI6RVFTvYrWMlXaDm72KLOUADWEQhAvtZ wIQt3RivAEe6aaeIkaFXSlkvu3/TkmFqvry2kOWIMCJuavmmBTFM+6Jm8zt1wOhuvRDX KeT9zlF1L0CSx7G6Eu0CQqpNUPji9HMjieOGHhgPLFFXAc1685CBAslFxHZSSIx3CZi6 rypw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMOG1hqfcAj8O+U8OYJhDCzufVhCbdgAbARsyGquOUCPGzb4/qlUWfi1GmEWjyNPXVWjcnOAIwkpkfqK1b0Rr2kWyMri0yOsSYAgLj
+X-Gm-Message-State: AOJu0YzKpYHq7uA5B37LhUsrmqqOlmSrPE30ly9kbznTlXurSaloSBil CUW6yqJdNri6W8/hPsAPPODhw+jVKov//aV6VQLQxPVoTmgOmj9khDGcyWUQ8lk=
+X-Google-Smtp-Source: AGHT+IHTxIPNAK3HsNoC9uItVsCnZCK8MD3ThRKVvVNi4TwdQa2YRFJqyU+MaLPmqStXfF6Dl3dotQ==
+X-Received: by 2002:a17:902:e810:b0:1f2:fd9a:dbf8 with SMTP id d9443c01a7336-1f449907a09mr116945035ad.5.1716824186842; Mon, 27 May 2024 08:36:26 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194]) by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c970058sm64280955ad.121.2024.05.27.08.36.25 (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128); Mon, 27 May 2024 08:36:26 -0700 (PDT)
+Precedence: bulk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1717026141-25716-1-git-send-email-si-wei.liu@oracle.com>
-In-Reply-To: <1717026141-25716-1-git-send-email-si-wei.liu@oracle.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Thu, 30 May 2024 10:26:27 +0800
-Message-ID: <CACGkMEugdcKjxMA_3+-gfh4wKOP5vTvYOb2V+MP7VxDiZ6EhiA@mail.gmail.com>
-Subject: Re: [PATCH] net: tap: validate metadata and length for XDP buff
- before building up skb
-To: Si-Wei Liu <si-wei.liu@oracle.com>
-Cc: willemdebruijn.kernel@gmail.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, mst@redhat.com, 
-	boris.ostrovsky@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Message-ID: <20240530023304.8UVNxQNYJoDrWU2wt4MhxUT7rFrHpKKu3sJR4n0FjIU@z>
 
-On Thu, May 30, 2024 at 8:54=E2=80=AFAM Si-Wei Liu <si-wei.liu@oracle.com> =
-wrote:
->
-> The cited commit missed to check against the validity of the length
-> and various pointers on the XDP buff metadata in the tap_get_user_xdp()
-> path, which could cause a corrupted skb to be sent downstack. For
-> instance, tap_get_user() prohibits short frame which has the length
-> less than Ethernet header size from being transmitted, while the
-> skb_set_network_header() in tap_get_user_xdp() would set skb's
-> network_header regardless of the actual XDP buff data size. This
-> could either cause out-of-bound access beyond the actual length, or
-> confuse the underlayer with incorrect or inconsistent header length
-> in the skb metadata.
->
-> Propose to drop any frame shorter than the Ethernet header size just
-> like how tap_get_user() does. While at it, validate the pointers in
-> XDP buff to avoid potential size overrun.
->
-> Fixes: 0efac27791ee ("tap: accept an array of XDP buffs through sendmsg()=
-")
-> Cc: jasowang@redhat.com
-> Signed-off-by: Si-Wei Liu <si-wei.liu@oracle.com>
-> ---
->  drivers/net/tap.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-> index bfdd3875fe86..69596479536f 100644
-> --- a/drivers/net/tap.c
-> +++ b/drivers/net/tap.c
-> @@ -1177,6 +1177,13 @@ static int tap_get_user_xdp(struct tap_queue *q, s=
-truct xdp_buff *xdp)
->         struct sk_buff *skb;
->         int err, depth;
->
-> +       if (unlikely(xdp->data < xdp->data_hard_start ||
-> +                    xdp->data_end < xdp->data ||
-> +                    xdp->data_end - xdp->data < ETH_HLEN)) {
-> +               err =3D -EINVAL;
-> +               goto err;
-> +       }
+From: Jens Axboe <axboe@kernel.dk>
 
-For ETH_HLEN check, is it better to do it in vhost-net? It seems
-tuntap suffers from this as well.
-
-And for the check for other xdp fields, it deserves a BUG_ON() or at
-least WARN_ON() as they are set by vhost-net.
-
-Thanks
-
-> +
->         if (q->flags & IFF_VNET_HDR)
->                 vnet_hdr_len =3D READ_ONCE(q->vnet_hdr_sz);
+On 5/27/24 4:09 AM, Liu Wei wrote:
+> > I am a newer, thanks for the reminder.
+> > 
+> >>
+> >> I don't think WB_SYNC_NONE tells it not to block, it just says not to
+> >> wait for it... So this won't work as-is.
+> > 
+> > Yes, but I think an asynchronous writex-back is better than simply
+> > return EAGAIN. By using __filemap_fdatawrite_range to trigger a
+> > writeback, subsequent retries may have a higher chance of success. 
+> 
+> And what's the application supposed to do, just hammer on the same
+> IOCB_NOWAIT submission until it then succeeds? The only way this can
+> reasonably work for that would be if yo can do:
+> 
+> 1) Issue IOCB_NOWAIT IO
+> 2) Get -EAGAIN
+> 3) Sync kick off writeback, wait for it to be done
+> 4) Issue IOCB_NOWAIT IO again
+> 5) Success
+> 
+> If you just kick it off, then you'd repeat steps 1..2 ad nauseam until
+> it works out, not tenable.
+> 
+> And this doesn't even include the other point I mentioned, which is
+> __filemap_fdatawrite_range() IO issue blocking in the first place.
+> 
+> So no, NAK on this patch.
 >
-> --
-> 2.39.3
->
+
+I know, thanks for your patient explanation.
+
 
