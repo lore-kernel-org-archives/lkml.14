@@ -1,214 +1,158 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9BD178362
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 11:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF9B6F2E2;
+	Thu, 30 May 2024 11:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717067944; cv=none; b=KdnjaMzVPPW3ER93sEjSBfcgseIIETwh4YkyUk/F6kQPu7RVk7xbpBhsX4ZDVdh//ljSm0o4fYO6q/XaNULIizY5sXbMFsQayc78y8vjdF5a4s2mLPnr0udtJCTHhf9l20hREKBUGY6ihh0vofP64cmiVwIu2ASu28pZubdsvE0=
+	t=1717068007; cv=none; b=N1lCkRokB69P7ZSyrhzXk3R3KRENeRCQlPAD9TBmKE+Lvnk+/+XsNeRz/7GStrb65qKivoK/qgVrX0najGTyGxo4neXAXhL3AVQTfDoabogPEcNbDRYNa0NpURlDYNBEkWa3JF4bZwZVXD73SQDWYzkBScDEZxhIUWDj9vGZGh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717067944; c=relaxed/simple;
-	bh=NUlEbNyavhHOhkm2XeeaMoGtHkkSo3W7X85piRfwEBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/noDmBhCEUGWSaQJb1/cZsF5lUPDxziUjyUeCfwQw6S8K5Wo0Jz4xzCXxGAlroUZ6PKlF7oYW0ZfHuFfMFzMQub7vTRxyPjH1C+X9EIT5ulYikwKMYhNv5CQEmZ6FEzTinu7i3dqmjpSnPl10dy0Xxb4z4DpxhK+Ml1bMO4wJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VyctFN6X; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717068007; c=relaxed/simple;
+	bh=YDOl/Eq4EU32U8REOXA1aLCIyDHNFvkWJvOdwbcP7JA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gSNyaZY5UfMtt2iyZ8vwLv/yvsUp8OnY96/YHI7yL7NQgMjXDRBNMcQX+kDGZv692jN4FRqFu2cY3cIx5nheC7BiX1RG+tMsk8/KpFZvvnbEhvPZ22RvbgivS/8cB7HDOVNMqsPV1h439SuCZYlW0vnrvaDQTcdTmfeNz89ERNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TMnDA+mM; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VyctFN6X"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52b7ebb2668so678372e87.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 04:19:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TMnDA+mM"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-1f4a52b9413so6390675ad.2;
+        Thu, 30 May 2024 04:20:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717067941; x=1717672741; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=N14dolJ0PkU7EYoMUWicS8K8p72D3KTXUMbK9wMcK6w=;
-        b=VyctFN6XObrjQ3GVUZa+6V+eO/9vtLTrK1h015pBxF9IPyc5bIALLRB6XrljtQ/spB
-         gCqv+xbVZ1nTpAtG/kO0utnBGDYz5yACIaeO2ejPeJm1JRvotnCwK42utB+dcJsERvUw
-         XwPf5voxr/MqFEmq3JfYqfk8Fhgm2FXs79+bircx7O2ITjZplTQSs6F5r48xOCNKDNuh
-         dOHWEemgDF3mdzmUhb0uJcYS1a0V5g1SpW2rwNBxk8pilF61bnQAjO4s1PLyXC/9LMmq
-         lMC5HuGhNftC8FQW6NNgdXE0A5/Aq+w7DOC8i+ct7BC1Gut3PFjpjx/p9N7sDS6WqroC
-         17JQ==
+        d=gmail.com; s=20230601; t=1717068005; x=1717672805; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=z8dJKE69s5+86iqiKT1v7IFgnofzj53z+mkIUUuty68=;
+        b=TMnDA+mMdV4bZkMZAb9nIvcwACBSlOM9kM5GC+yxIzU7+2tgTlhjHgAhpJqHuwHLN6
+         spZOivSs6iQnfZ/uP5ChenUi825P6SY/RkjoUNx64BmRKnmD/ktkwsYvnOS40qebLDCh
+         jCFa9xQ0fsLuZL9JqnxNGXkey+1fV7JtX90cxRnPvryMdYSG6HGQMUQ4rB/Zy9aWx93s
+         /H7xy0c74yPe4jojUHSqQox6t/FPp/6uL9txE2ZuR+80T+jiAV4WPC3O9Q/aXYdja19Q
+         kil8/Ic2es2x3iogpye6zlwN/ynFUBt5eiNeIuTN5gseelL+vgximjSeTyQFYEUVvk4a
+         PZKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717067941; x=1717672741;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N14dolJ0PkU7EYoMUWicS8K8p72D3KTXUMbK9wMcK6w=;
-        b=GzLUV1BPc3lJdalE++DGkdNXWxVE9glkLFfHJSqRFIdG7+rfzy5y2m0rZFlFioFtk4
-         wTiVg8+JykvKinzlVzyLylRgBazWWDB73LUDOFTbRNqqdpyzXGkLkAEFxQy+DSU61aRI
-         E/k8uKIIaXB4cBw59wZmnapJ8eeNVm1SdBKTr2kGU7d2yoA1iYRxGIlz7aba+qLwFoAm
-         ny3czbOO2/qYA+ctJ+LsjJ1tgU2LhMRXb2VuzBp2ser913PWphrGW5nT01NjLeY/M7L+
-         P55pysgfg+TF2yGxLrmGoH01wzJG4/I5XjYtcytrHL94IkYqRRP4+R8CoAdtPuRaQWaj
-         6DKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrQ02+htA6q8SUXTSNyv8jtezRolH+ba+S+oOAEpfhhBn4ZVQgt2dKXwwpwp30AU1Wjrx55NE3KnezVQr8c6AXWYbDFIc+75Alz1FO
-X-Gm-Message-State: AOJu0Yxjfpoo3wyq4S2npRWFR0u4brLi0BQQGsud6MUvWCK+2XNQfu6a
-	fFLamfM5f64FQ6+FGRKoaDI/zxR/TgOEN8yS81LOMhaCXF0tBScV6sGKanOrzdE=
-X-Google-Smtp-Source: AGHT+IHSkn8193QJ7bhYwashD1ckamm7z3rtCun6DGwToGY7eMTbmvAcTfjkx9QJktZvIttJ4it7/w==
-X-Received: by 2002:a05:6512:2f4:b0:529:b6c3:be9e with SMTP id 2adb3069b0e04-52b7d419a3dmr1648588e87.9.1717067940962;
-        Thu, 30 May 2024 04:19:00 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-529b7360d1fsm964214e87.157.2024.05.30.04.19.00
+        d=1e100.net; s=20230601; t=1717068005; x=1717672805;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z8dJKE69s5+86iqiKT1v7IFgnofzj53z+mkIUUuty68=;
+        b=RrB/R3HWLt6Ylkj6Hgxxq6KFs3QN6qVtP5f0JzPX/9Ump7iAAksun4tqaATTwpNXzD
+         B/GfsJwf4flzK7GgwcAR2ZnoVhnwJNZwxaB4A7i6zXJ8eB8pE7WP6z4mxg9b3+0aDfBX
+         ubCDx0VacUyTmv31Apji7V7ioczmPy1NEXDiT28zCOmyI02fdixxc9f5F+sXlhEbtEl8
+         D7ax6W+vIcwCY/g7Id8b8DbfuSagRBTN2trEBz1X5JfPELm70ilAne0ytSneuT0Xq/cJ
+         CZXGNKxBdXAiz9DlpJamGeXEShWgXPgDAVaC/fT5BP2WXXkmmSE8Vi5j2DTw6nNpKW9b
+         sqLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUl/N00iNwsLN16HXvBjqyrK82HKbuKKj/LpwSFWXvW2yLihJ6vtKCDVAustQP7a6TAfBcJzjoEEmVdKEa0Rf3P0mN11fzvEruzRZv5zpXZ6mCvLMyHFUNZCz24P1AJ5rxuA+nGuv5cX/0gHe/WiKWvMr+Jw7Hw5kynwCr9HC8j16ReszdX9wcymVPYKoq6BVA9wP+xuf+fCob+58ZpiDydu1CHjAGPLZcSCgCJ0Hg6l8nVZy88uEd1dKGugkCU9S5bEJpqjrEW0ZadcJKZOtp
+X-Gm-Message-State: AOJu0YyselM/f4vGUgJgnNJhLVaURHjlvK4660SXa6kkIz1cPdgoA/X6
+	GJWysucJyLWgFERmRcW8cMdXj1VX9Z6Fvt3EmkwwtyRtC8CilGKT
+X-Google-Smtp-Source: AGHT+IHnnxtV+JRyOSR711uh0rY3WubRdOsfI4Q80RTI+mV/CYp9f7gUkptu0Yhyjwe8jY0JUuOaAA==
+X-Received: by 2002:a17:903:22cb:b0:1f3:50e7:36db with SMTP id d9443c01a7336-1f6199310f7mr20627105ad.48.1717068004916;
+        Thu, 30 May 2024 04:20:04 -0700 (PDT)
+Received: from localhost ([212.107.28.52])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f44c754d20sm116341765ad.32.2024.05.30.04.20.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 04:19:00 -0700 (PDT)
-Date: Thu, 30 May 2024 14:18:58 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, 
-	jsnitsel@redhat.com, quic_bjorande@quicinc.com, mani@kernel.org, 
-	quic_eberman@quicinc.com, robdclark@chromium.org, u.kleine-koenig@pengutronix.de, 
-	robh@kernel.org, vladimir.oltean@nxp.com, quic_pkondeti@quicinc.com, 
-	quic_molvera@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/5] iommu/arm-smmu: introduction of ACTLR for custom
- prefetcher settings
-Message-ID: <tvlhu6kvlektss3kb52zxiynwz7ivte4al43pcgx3ratdxxeos@pkwwq4eecii7>
-References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
- <20240123144543.9405-4-quic_bibekkum@quicinc.com>
- <CAF6AEGs3_wBNo58EbGicFoQuq8--fDohTGv1JSFgoViygLS5Lg@mail.gmail.com>
- <f2222714-1e00-424e-946d-c314d55541b8@quicinc.com>
- <51b2bd40-888d-4ee4-956f-c5239c5be9e9@linaro.org>
- <0a867cd1-8d99-495e-ae7e-a097fc9c00e9@quicinc.com>
- <7140cdb8-eda4-4dcd-b5e3-c4acdd01befb@linaro.org>
- <omswcicgc2kqd6gp4bebd43sklfs2wqyaorhfyb2wumoeo6v74@gaay3p5m46xi>
- <CAF6AEGub2b5SRw7kDUGfKQQ35VSsMkQ9LNExSkyHHczdFa2T4Q@mail.gmail.com>
- <9992067e-51c5-4a55-8d66-55a102a001b6@quicinc.com>
+        Thu, 30 May 2024 04:20:04 -0700 (PDT)
+From: Celeste Liu <coelacanthushex@gmail.com>
+X-Google-Original-From: Celeste Liu <CoelacanthusHex@gmail.com>
+To: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
+	Anup Patel <anup@brainfault.org>,
+	Guo Ren <guoren@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+	Sven Joachim <svenjoac@gmx.de>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Russell King <linux@armlinux.org.uk>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Mykola Lysenko <mykolal@fb.com>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-sh@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lennart Poettering <lennart@poettering.net>,
+	Icenowy Zheng <uwu@icenowy.me>,
+	Celeste Liu <CoelacanthusHex@gmail.com>
+Subject: [PATCH 0/6] defconfig: drop RT_GROUP_SCHED=y
+Date: Thu, 30 May 2024 19:19:48 +0800
+Message-ID: <20240530111947.549474-8-CoelacanthusHex@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2134; i=CoelacanthusHex@gmail.com; h=from:subject; bh=YDOl/Eq4EU32U8REOXA1aLCIyDHNFvkWJvOdwbcP7JA=; b=owJ4nJvAy8zAJfY4pvNJRPo6U8bTakkMaREJlycx/Wu4/Y1tQ+K7zVu27px3o+2Lk2ztb/Ozp zgqUpTP2XztKGVhEONikBVTZBHb+fT1stJHH5bxmsyAmcPKBDKEgYtTACbycj7DP527VsIyk9XS 03fzz7u7fEfWj2MbLsg93Phzuu9s68m3tf0Y/jtvNfKVfy57aprVB27vy3ZWNnJqNsYHao9/4hZ SOJ4dzggA3yZObA==
+X-Developer-Key: i=CoelacanthusHex@gmail.com; a=openpgp; fpr=892EBC7DC392DFF9C9C03F1D15F4180E73787863
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9992067e-51c5-4a55-8d66-55a102a001b6@quicinc.com>
 
-On Thu, May 30, 2024 at 02:51:56PM +0530, Bibek Kumar Patro wrote:
-> 
-> 
-> On 5/28/2024 9:38 PM, Rob Clark wrote:
-> > On Tue, May 28, 2024 at 6:06 AM Dmitry Baryshkov
-> > <dmitry.baryshkov@linaro.org> wrote:
-> > > 
-> > > On Tue, May 28, 2024 at 02:59:51PM +0200, Konrad Dybcio wrote:
-> > > > 
-> > > > 
-> > > > On 5/15/24 15:59, Bibek Kumar Patro wrote:
-> > > > > 
-> > > > > 
-> > > > > On 5/10/2024 6:32 PM, Konrad Dybcio wrote:
-> > > > > > On 10.05.2024 2:52 PM, Bibek Kumar Patro wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > On 5/1/2024 12:30 AM, Rob Clark wrote:
-> > > > > > > > On Tue, Jan 23, 2024 at 7:00 AM Bibek Kumar Patro
-> > > > > > > > <quic_bibekkum@quicinc.com> wrote:
-> > > > > > > > > 
-> > > > > > > > > Currently in Qualcomm  SoCs the default prefetch is set to 1 which allows
-> > > > > > > > > the TLB to fetch just the next page table. MMU-500 features ACTLR
-> > > > > > > > > register which is implementation defined and is used for Qualcomm SoCs
-> > > > > > > > > to have a custom prefetch setting enabling TLB to prefetch the next set
-> > > > > > > > > of page tables accordingly allowing for faster translations.
-> > > > > > > > > 
-> > > > > > > > > ACTLR value is unique for each SMR (Stream matching register) and stored
-> > > > > > > > > in a pre-populated table. This value is set to the register during
-> > > > > > > > > context bank initialisation.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
-> > > > > > > > > ---
-> > > > > > 
-> > > > > > [...]
-> > > > > > 
-> > > > > > > > > +
-> > > > > > > > > +               for_each_cfg_sme(cfg, fwspec, j, idx) {
-> > > > > > > > > +                       smr = &smmu->smrs[idx];
-> > > > > > > > > +                       if (smr_is_subset(smr, id, mask)) {
-> > > > > > > > > +                               arm_smmu_cb_write(smmu, cbndx, ARM_SMMU_CB_ACTLR,
-> > > > > > > > > +                                               actlrcfg[i].actlr);
-> > > > > > > > 
-> > > > > > > > So, this makes ACTLR look like kind of a FIFO.  But I'm looking at
-> > > > > > > > downstream kgsl's PRR thing (which we'll need to implement vulkan
-> > > > > > > > sparse residency), and it appears to be wanting to set BIT(5) in ACTLR
-> > > > > > > > to enable PRR.
-> > > > > > > > 
-> > > > > > > >            val = KGSL_IOMMU_GET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR);
-> > > > > > > >            val |= FIELD_PREP(KGSL_IOMMU_ACTLR_PRR_ENABLE, 1);
-> > > > > > > >            KGSL_IOMMU_SET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR, val);
-> > > > > > > > 
-> > > > > > > > Any idea how this works?  And does it need to be done before or after
-> > > > > > > > the ACTLR programming done in this patch?
-> > > > > > > > 
-> > > > > > > > BR,
-> > > > > > > > -R
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Hi Rob,
-> > > > > > > 
-> > > > > > > Can you please help provide some more clarification on the FIFO part? By FIFO are you referring to the storing of ACTLR data in the table?
-> > > > > > > 
-> > > > > > > Thanks for pointing to the downstream implementation of kgsl driver for
-> > > > > > > the PRR bit. Since kgsl driver is already handling this PRR bit's
-> > > > > > > setting, this makes setting the PRR BIT(5) by SMMU driver redundant.
-> > > > > > 
-> > > > > > The kgsl driver is not present upstream.
-> > > > > > 
-> > > > > 
-> > > > > Right kgsl is not present upstream, it would be better to avoid configuring the PRR bit and can be handled by kgsl directly in downstream.
-> > > > 
-> > > > No! Upstream is not a dumping ground to reduce your technical debt.
-> > > > 
-> > > > There is no kgsl driver upstream, so this ought to be handled here, in
-> > > > the iommu driver (as poking at hardware A from driver B is usually not good
-> > > > practice).
-> > > 
-> > > I'd second the request here. If another driver has to control the
-> > > behaviour of another driver, please add corresponding API for that.
-> > 
-> > We have adreno_smmu_priv for this purpose ;-)
-> > 
-> 
-> Thanks Rob for pointing to this private interface structure between smmu
-> and gpu. I think it's similar to what you're trying to implement here
-> https://lore.kernel.org/all/CAF6AEGtm-KweFdMFvahH1pWmpOq7dW_p0Xe_13aHGWt0jSbg8w@mail.gmail.com/#t
-> I can add an api "set_actlr_prr()" with smmu_domain cookie, page pointer as
-> two parameters. This api then can be used by drm/msm driver to carry out the
-> prr implementation by simply calling this.
-> Would this be okay Rob,Konrad,Dmitry?
+For cgroup v1, if turned on, and there's any cgroup in the "cpu" hierarchy it
+needs an RT budget assigned, otherwise the processes in it will not be able to
+get RT at all. The problem with RT group scheduling is that it requires the
+budget assigned but there's no way we could assign a default budget, since the
+values to assign are both upper and lower time limits, are absolute, and need to
+be sum up to < 1 for each individal cgroup. That means we cannot really come up
+with values that would work by default in the general case.[1]
 
-SGTM
+For cgroup v2, it's almost unusable as well. If it turned on, the cpu controller
+can only be enabled when all RT processes are in the root cgroup. But it will
+lose the benefits of cgroup v2 if all RT process were placed in the same cgroup.
 
-> Let me know if any other suggestions you have in mind as well regarding
-> parameters and placement.
-> 
-> Thanks & regards,
-> Bibek
-> 
-> > BR,
-> > -R
-> > 
-> > > > 
-> > > > > 
-> > > > > > > Thanks for bringing up this point.
-> > > > > > > I will send v10 patch series removing this BIT(5) setting from the ACTLR
-> > > > > > > table.
-> > > > > > 
-> > > > > > I think it's generally saner to configure the SMMU from the SMMU driver..
-> > > > > 
-> > > > > Yes, agree on this. But since PRR bit is not directly related to SMMU
-> > > > > configuration so I think it would be better to remove this PRR bit
-> > > > > setting from SMMU driver based on my understanding.
-> > > > 
-> > > > Why is it not related? We still don't know what it does.
-> > > > 
-> > > > Konrad
-> > > 
-> > > --
-> > > With best wishes
-> > > Dmitry
+Red Hat, Gentoo, Arch Linux and Debian all disable it. systemd also doesn't
+support it.[2]
+
+I leave tools/testing/selftests/bpf/config.{s390x,aarch64} untouched because
+I don't whether bpf testing requires it.
+
+[1]: https://bugzilla.redhat.com/show_bug.cgi?id=1229700
+[2]: https://github.com/systemd/systemd/issues/13781#issuecomment-549164383
+
+
+Celeste Liu (6):
+  riscv: defconfig: drop RT_GROUP_SCHED=y
+  loongarch: defconfig: drop RT_GROUP_SCHED=y
+  mips: defconfig: drop RT_GROUP_SCHED=y from generic/db1xxx/eyeq5
+  powerpc: defconfig: drop RT_GROUP_SCHED=y from ppc6xx_defconfig
+  sh: defconfig: drop RT_GROUP_SCHED=y from sdk7786/urquell
+  arm: defconfig: drop RT_GROUP_SCHED=y from bcm2855/tegra/omap2plus
+
+ arch/arm/configs/bcm2835_defconfig         | 1 -
+ arch/arm/configs/omap2plus_defconfig       | 1 -
+ arch/arm/configs/tegra_defconfig           | 1 -
+ arch/loongarch/configs/loongson3_defconfig | 1 -
+ arch/mips/configs/db1xxx_defconfig         | 1 -
+ arch/mips/configs/eyeq5_defconfig          | 1 -
+ arch/mips/configs/generic_defconfig        | 1 -
+ arch/powerpc/configs/ppc6xx_defconfig      | 1 -
+ arch/riscv/configs/defconfig               | 1 -
+ arch/sh/configs/sdk7786_defconfig          | 1 -
+ arch/sh/configs/urquell_defconfig          | 1 -
+ 11 files changed, 11 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.45.1
+
