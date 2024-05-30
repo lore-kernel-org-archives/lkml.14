@@ -1,169 +1,134 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254B6186E38
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16E9E17D892
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 14:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717080953; cv=none; b=SVro2NBH5y17wd+1tynJSOEjjDx7PN5m6zm14UnPRW9TrspIkBZdrrfkvHFOGrYVvUHZhRYEczzPaoJOYvH/W6DXYQNDvGHPHTlY3jDM+tDucbJrRJxkuIBn7unltPVzSIjUeVxk/nKO7KaQz5r1207rmH8jN2xW634LC5XF6CU=
+	t=1717081100; cv=none; b=G5hQRCZaFjIGZrJNjEgGvfi1ASaK9nZzSzfECPOLWR+6o4GLRz5+DHoMRbqQbIIRl5XluurNVPxaPDutON/qHPBDD/tU1gpVXOoafx0okrA68tMxq3kuKP6Zt14aj6OKkqcfbouUI4yTdj9hP3i0CzZZlRUd6Ku2/spVutPCSjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717080953; c=relaxed/simple;
-	bh=w1Nw0nZzuw9ioh1PWzH+4KPx2457IuPjvzKZkwIX78M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nGC5Ph/ltfwcHu43Uzvf6MpZEHRi34IYe5EpSIGX/HCcFJXDQU0CaqrORDoctFeoVNjWh1AOOvkQtEjojhWu6dWFnI9VY8a4g/pMmSd4RaSK8ccbQZ4gN+B1AdxyRJeaa7kQzhiD1z+02hQDXzxZiaPSI8Vl1AZup2EcXUpjblU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=c9z0U+yQ; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1717081100; c=relaxed/simple;
+	bh=6frT2cUqOy2QZwW8Jb/ICL917q3xtkQYsWty0q3A7EM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=esePtTkw4JxRHswyRrrtMMYD5ilQZqHZaAdGW2QO6/e6hs8O3mWYhgsbKJaf33dyXL9zPY/KO5xIn7QEkeWwYSybI0qxsc0uTetJQ5wxNPtUuaFfKSwpyrmiwCnQybBZKk/Tv6IfqbJiXI+EwTfhGlBtyiToZJ0n2/ywrzoAu5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BH3o7go5; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="c9z0U+yQ"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4211245e889so9588115e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:55:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BH3o7go5"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7e3b1981fe5so4942639f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 07:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717080949; x=1717685749; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kF9KjPkj/1zZtp+GEuMgpwBghf6s7Q8QVJOIdZrAtlI=;
-        b=c9z0U+yQiFfVjcvZDlzxnlt1gtxEOLOyJNThJloNkvL3MTT+wDsBy2n3P6QRdh+49q
-         qb/hD/cO9JPIhH4+yVd4POoHf0wR72CiAKJgD8KNXdWLeKUMpriLXydSA2Ei+X8EtxSw
-         0pSYdiEyA98YRnMbK8u8wcrUHl54RF80Wsfm0P5djdoLahEOHgOsEbfsrV6QGT6s6g+w
-         xN2bfu1o4iGKNTxdy3ZQrdaJiqNy20Qgm5XueYeb52QFQwfp10Azz3rbVfSw4zj8Pl9P
-         v8+6ygWLRpAJzmNf7mL35wkJQUywwejBckq+RK6E0rObNjKxkZWNfq8ZOW+jKwGdIZIA
-         cDbA==
+        d=linuxfoundation.org; s=google; t=1717081097; x=1717685897; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UYQWkDbOOCMyq/o0QgNOHjrEjyrRmklhwNgybQNhet8=;
+        b=BH3o7go5uU9GFxLELhp5muo6xJ8S7whMvwe1K3VaD4bBzmCMSMv7mwDr3ulgp2Fm/y
+         Z69oQUoGnQ/Spq7svVv9cpB/Lj14DPzZfkUaRdz3rFVgbpeZntqUjAX8vnA2Is8TRkpG
+         nulYZLF2D0lNMgZW3sUT0coM3zHucQpq1oyK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717080949; x=1717685749;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kF9KjPkj/1zZtp+GEuMgpwBghf6s7Q8QVJOIdZrAtlI=;
-        b=jdhKBiic2TnIlSvdD2EMqJFfB89yNFgASsv2hnEbXY/8JFX8Lysyxa2MrW/+Z+9vSQ
-         5mNlMNH3u4lzTaruogVjMWkt84Y7zEEGnD1/bEj+QKBVjxxjFIx+Y1p7i7IKeOUxHxdS
-         rO23hyQU9lF38A3G9sgEAkWSNcdLyoOHabmYqetJ7fH5kYFW2+U2a+T9J5V++dyDtX0V
-         IVbAHUxn59Yoqg1H8zm2ZY6m1tljijGxDejwVGXW4ubB9lYjXv7c/xoFGwGQsmPWUHLB
-         5gzwC9uhwYCIl6GmgAbV2wnkct5HQ0hjKOFusQzbd/rqql7pOiR/mh6nliLCQQvARDTh
-         SRZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsx5FrOuj66BUdro9pKJJ2vBZnr8pHiOYWDW6qMY53QzUXgKSOthsxSBb5AIbfIHHQm2AnHXGNYnDxrrHDgeHzQVIdpm10y9MFtBRG
-X-Gm-Message-State: AOJu0YwVHmx1TBmNZLHWll7aB7a5HpMkUpYK3F6jMQw2o3/zHVHc9mck
-	4L+LR4IME8Vwu0GxWOcnZEe32NbISXicp7VhHViyekGFQOBtEfwhL3NF8EMd5AI=
-X-Google-Smtp-Source: AGHT+IG9d2Dhr06uBPNVTlyZtrq3fR1la7qkTtdMZ9XARQizEYKDs2DfO+7rmvJ5eCSaU68b9UjyXw==
-X-Received: by 2002:a05:600c:4f8f:b0:418:f991:713f with SMTP id 5b1f17b1804b1-4212781b9bbmr23791285e9.23.1717080949418;
-        Thu, 30 May 2024 07:55:49 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421270553c9sm27435975e9.8.2024.05.30.07.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 07:55:49 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Leonardo Bras <leobras@redhat.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrea Parri <parri.andrea@gmail.com>
-Subject: [PATCH -fixes v2] riscv: Fix fully ordered LR/SC xchg[8|16]() implementations
-Date: Thu, 30 May 2024 16:55:46 +0200
-Message-Id: <20240530145546.394248-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1717081097; x=1717685897;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UYQWkDbOOCMyq/o0QgNOHjrEjyrRmklhwNgybQNhet8=;
+        b=OW7sXDwlqLq+TQkiB6TgZWqFoI4RotFJFLHFpFtRsWggzbvGghgj2nFbvi7IITWYob
+         DSAwoUlYJx0vuc5ZeEB5X+a3ZgNOmHPI9tqN12tw1b84OeBnK10sPrNkSlh0WaE9+eUL
+         jEnN+ytTvwH79BrIzbSmO8JG6Tiyx+HMQ2xryDlnQ9a+He/LwbPywFgwxemLMLZPgxJY
+         vCFzKztATcCWt4EoWhplHuL9eCJbfQuwrCMO5v6586lEdnpo5cMKXzZ3LXm7XFdW6irA
+         Q/Ke3rWHVykRbUSYUmdtD6W0ncdrJyr2BYD2Bajv/4bzpaAaqsY5w7RyebIvpTZanbrJ
+         GqZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWwctZjq3I2m6RYk6N3LmqvFiqsejhJzSepmQxxxOsWxXTv7sdNOOqqqLsYST6iZYrMzwhL8nST82Qhwh7g6Ym0QybATSQ/S2gr5F2w
+X-Gm-Message-State: AOJu0YyKe0j5QcLrWVno15E2x2ilLyrmrEOTfHIAMhgnBaoPczpI6JpY
+	Y7tdtBId4NFbvr94JJ6Cn4qT8X8SR46P6WtGvtsLLpf4MkUu8iRI+xuwC6Yi5IA=
+X-Google-Smtp-Source: AGHT+IF+c5SyF4FomowgTAfuj5YYGj0MkoKjfwfa0To8fH/UHJshVIcQ2oirqjk7Q32H9m4sYBF/7A==
+X-Received: by 2002:a5d:970c:0:b0:7e1:d865:e700 with SMTP id ca18e2360f4ac-7eaf5d9611amr259019339f.2.1717081097098;
+        Thu, 30 May 2024 07:58:17 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b0f152442asm1842750173.173.2024.05.30.07.58.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 07:58:16 -0700 (PDT)
+Message-ID: <f4877afd-dc2c-4e54-8b53-c681d3eed045@linuxfoundation.org>
+Date: Thu, 30 May 2024 08:58:15 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/6] selftests/x86: fix build errors and warnings found
+ via clang
+To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: angquan yu <angquan21@gmail.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Binbin Wu <binbin.wu@linux.intel.com>, Alexey Dobriyan
+ <adobriyan@gmail.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Sohil Mehta <sohil.mehta@intel.com>, Yu-cheng Yu <yu-cheng.yu@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev, x86@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240527210042.220315-1-jhubbard@nvidia.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240527210042.220315-1-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The fully ordered versions of xchg[8|16]() using LR/SC lack the
-necessary memory barriers to guarantee the order.
+On 5/27/24 15:00, John Hubbard wrote:
+> Hi,
+> 
+> Just a bunch of build and warnings fixes that show up when
+> building with clang. Some of these depend on each other, so
+> I'm sending them as a series.
+> 
+> Changes since the first version:
+> 
+> 1) Rebased onto Linux 6.10-rc1
 
-Fix this by matching what is already implemented in the fully ordered
-versions of cmpxchg() using LR/SC.
+x86 test patches usually go through x86 tree.
 
-Suggested-by: Andrea Parri <parri.andrea@gmail.com>
-Reported-by: Andrea Parri <parri.andrea@gmail.com>
-Closes: https://lore.kernel.org/linux-riscv/ZlYbupL5XgzgA0MX@andrea/T/#u
-Fixes: a8ed2b7a2c13 ("riscv/cmpxchg: Implement xchg for variables of size 1 and 2")
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
+This series requires x86 maintainer review and ack for me
+to take this through kselftest tree.
 
-Changes in v2:
-- Remove the superfluous full barrier introduced in v1 for xchg32/64() (Andrea)
-- Use RISCV_FULL_BARRIER instead of the corresponding string (Andrea)
 
- arch/riscv/include/asm/cmpxchg.h | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> Enjoy!
+> 
+> thanks,
+> John Hubbard
+> 
+> John Hubbard (6):
+>    selftests/x86: build test_FISTTP.c with clang
+>    selftests/x86: build fsgsbase_restore.c with clang
+>    selftests/x86: build sysret_rip.c with clang
+>    selftests/x86: avoid -no-pie warnings from clang during compilation
+>    selftests/x86: remove (or use) unused variables and functions
+>    selftests/x86: fix printk warnings reported by clang
+> 
+>   tools/testing/selftests/x86/Makefile          | 10 +++++++
+>   tools/testing/selftests/x86/amx.c             | 16 -----------
+>   .../testing/selftests/x86/clang_helpers_32.S  | 11 ++++++++
+>   .../testing/selftests/x86/clang_helpers_64.S  | 28 +++++++++++++++++++
+>   tools/testing/selftests/x86/fsgsbase.c        |  6 ----
+>   .../testing/selftests/x86/fsgsbase_restore.c  | 11 ++++----
+>   tools/testing/selftests/x86/sigreturn.c       |  2 +-
+>   .../testing/selftests/x86/syscall_arg_fault.c |  1 -
+>   tools/testing/selftests/x86/sysret_rip.c      | 20 ++++---------
+>   tools/testing/selftests/x86/test_FISTTP.c     |  8 +++---
+>   tools/testing/selftests/x86/test_vsyscall.c   | 15 ++++------
+>   tools/testing/selftests/x86/vdso_restorer.c   |  2 ++
+>   12 files changed, 72 insertions(+), 58 deletions(-)
+>   create mode 100644 tools/testing/selftests/x86/clang_helpers_32.S
+>   create mode 100644 tools/testing/selftests/x86/clang_helpers_64.S
+> 
+> 
+> base-commit: 2bfcfd584ff5ccc8bb7acde19b42570414bf880b
+> prerequisite-patch-id: 39d606b9b165077aa1a3a3b0a3b396dba0c20070
 
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index ddb002ed89de..808b4c78462e 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -10,7 +10,7 @@
- 
- #include <asm/fence.h>
- 
--#define __arch_xchg_masked(prepend, append, r, p, n)			\
-+#define __arch_xchg_masked(sc_sfx, prepend, append, r, p, n)		\
- ({									\
- 	u32 *__ptr32b = (u32 *)((ulong)(p) & ~0x3);			\
- 	ulong __s = ((ulong)(p) & (0x4 - sizeof(*p))) * BITS_PER_BYTE;	\
-@@ -25,7 +25,7 @@
- 	       "0:	lr.w %0, %2\n"					\
- 	       "	and  %1, %0, %z4\n"				\
- 	       "	or   %1, %1, %z3\n"				\
--	       "	sc.w %1, %1, %2\n"				\
-+	       "	sc.w" sc_sfx " %1, %1, %2\n"			\
- 	       "	bnez %1, 0b\n"					\
- 	       append							\
- 	       : "=&r" (__retx), "=&r" (__rc), "+A" (*(__ptr32b))	\
-@@ -46,7 +46,8 @@
- 		: "memory");						\
- })
- 
--#define _arch_xchg(ptr, new, sfx, prepend, append)			\
-+#define _arch_xchg(ptr, new, sc_sfx, swap_sfx, prepend,			\
-+		   sc_append, swap_append)				\
- ({									\
- 	__typeof__(ptr) __ptr = (ptr);					\
- 	__typeof__(*(__ptr)) __new = (new);				\
-@@ -55,15 +56,15 @@
- 	switch (sizeof(*__ptr)) {					\
- 	case 1:								\
- 	case 2:								\
--		__arch_xchg_masked(prepend, append,			\
-+		__arch_xchg_masked(sc_sfx, prepend, sc_append,		\
- 				   __ret, __ptr, __new);		\
- 		break;							\
- 	case 4:								\
--		__arch_xchg(".w" sfx, prepend, append,			\
-+		__arch_xchg(".w" swap_sfx, prepend, swap_append,	\
- 			      __ret, __ptr, __new);			\
- 		break;							\
- 	case 8:								\
--		__arch_xchg(".d" sfx, prepend, append,			\
-+		__arch_xchg(".d" swap_sfx, prepend, swap_append,	\
- 			      __ret, __ptr, __new);			\
- 		break;							\
- 	default:							\
-@@ -73,16 +74,17 @@
- })
- 
- #define arch_xchg_relaxed(ptr, x)					\
--	_arch_xchg(ptr, x, "", "", "")
-+	_arch_xchg(ptr, x, "", "", "", "", "")
- 
- #define arch_xchg_acquire(ptr, x)					\
--	_arch_xchg(ptr, x, "", "", RISCV_ACQUIRE_BARRIER)
-+	_arch_xchg(ptr, x, "", "", "",					\
-+		   RISCV_ACQUIRE_BARRIER, RISCV_ACQUIRE_BARRIER)
- 
- #define arch_xchg_release(ptr, x)					\
--	_arch_xchg(ptr, x, "", RISCV_RELEASE_BARRIER, "")
-+	_arch_xchg(ptr, x, "", "", RISCV_RELEASE_BARRIER, "", "")
- 
- #define arch_xchg(ptr, x)						\
--	_arch_xchg(ptr, x, ".aqrl", "", "")
-+	_arch_xchg(ptr, x, ".rl", ".aqrl", "", RISCV_FULL_BARRIER, "")
- 
- #define xchg32(ptr, x)							\
- ({									\
--- 
-2.39.2
+thanks,
+-- Shuah
 
