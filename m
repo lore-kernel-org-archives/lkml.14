@@ -1,242 +1,107 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76DE6F2F4;
-	Thu, 30 May 2024 08:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292316F31F
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 08:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059389; cv=none; b=hapBDxpUuES7p9cxvQAV1/vcRvyWfmcD5XUCnlMLJZg42agXw3JS0xtQ+VCN7d8xN1kXwE5ZK8r99Ou0crjR3UXkA3pFgmlTq5RwNUOByM1WqyPL0R6utYu8rfS7ZdxiFJ0tQYr33kw3mdNsoTJbrGvqnLwP0UwiH84Mpd5r4H4=
+	t=1717059390; cv=none; b=BqwtBX6OpYNrBVt3u30JzKOAaAFeVHWMLo4qxUl7NJrwDkFnJGs17UjqdPnTtq6R6eZsuvscbHK6jEXNRCogPoLUvWOlMKCLdVkRgaVHtYGBfusvjN/yzxZk56wcR23T83VYNxqFFtxinM2940VmBLaTvenc5dfrrVyVRu2ctDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059389; c=relaxed/simple;
-	bh=qOadE76vLdaIplciF8D6zHAXndcfCGT/osoFvr6KlEk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GznVRRLn1CQCwiMeA1U6UwMxd0s4anVGLLE+AxtVpT63Oy8q/CR+WtrY2fLE8eMrxYGGZkVpYkokd3DOucxeulhi216/xTcMQtrObGIEV9HgjugJcxp3Yt5ALCwFvv1Xk0CUEstaWdr0hEs1r7IuUZY2HojWMU0U6jRzVAysD9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YBpXHacA; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717059390; c=relaxed/simple;
+	bh=7MIEsx3viVzGK+9Ye/pP9NjKqSOEzFj4nY7OfSS17JA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PozVFHg1zOigzia5BfCL30K3/VQHm6r5tf9ugJ8y92+Plyvh3RbdqC+NZ1wW4jliFs/3FR1IHdM3nf++FfmnrTQMLdupyQOE83krkvmGvwGVMK8oymU2gDU5HSF5kRIdvkQUHaF8gVIWkaS73eBxLQc082fSDM0wmLWxsFkZlaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LgVmunu4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBpXHacA"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63a96so301146a12.0;
-        Thu, 30 May 2024 01:56:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717059386; x=1717664186; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lJbFOMieqUJ1HvhG4PnEYVJKF/U/LFck+FVCHvfSXS0=;
-        b=YBpXHacA1eDj9F2y9pU6rVlNOJg2O+Zbb/k6Zw7cBmd65pgQHIbSUqibnTQXFKSNfI
-         H6tXfvJr/5W3radVQD6z5ysa4fi/uGdIt7/K/ZgNagMBaawVAerdWb5g39lmMZvNfh+g
-         xU4k2ybHSQdfaaOgtnpm4UV2nrzYUpg9m2OJToILdKPLti4NJN2wvk3h6KZ+N51wu5so
-         F6HKpkrvUo1EFfffHMAFUzg/l9yzGbPymYZpgcafH9uzx2+nIEtXftoox+Q/cQvXQBlS
-         FosvQEeP9PCMoeHtqWgCQQOqEvmmAZj48pgCFHdWYsuIEHEdcfgGsQZh3KDG2Fz2RdAT
-         CH4Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LgVmunu4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717059387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wp9dT8wMnCyOCgEUiVZrNKqa8UOFLDrwjHbCmADMGTw=;
+	b=LgVmunu4+LINRh3pSqLYgGD6q7wDmfgRKAVXZyUEPD/lpi3cVagJmkytTjv3hd6DcpcY0V
+	dBHSnvXEokNiucVunxLKvrIeENapjB/bBVGQyGjsbFBPyW48NWIRemJ5E7EiidcW8g/e/m
+	zLtZbSwT+GQZXYqsI/ZzVe/LlsNnjkw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-330-9igs_UFeMf6OE_SYLtw3MA-1; Thu, 30 May 2024 04:56:26 -0400
+X-MC-Unique: 9igs_UFeMf6OE_SYLtw3MA-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-35dbe9e69d5so15862f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 01:56:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717059386; x=1717664186;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lJbFOMieqUJ1HvhG4PnEYVJKF/U/LFck+FVCHvfSXS0=;
-        b=D0EmXdeSHDvvwK1Y3UEX13vEh89L9EXayVrziZSSHu0lLRQDwuTSn+PS3/AsYIfGQm
-         TL3gwAP9C7CqawnGS174GoJhZmi09lbziUKwI77kA/Byz8XWgZHuIui4b9I+Ev+Y919k
-         kPN7MuErGkhfkM0gzA8TRkr6WfxvMaEYHnaVDTGTomSPJ/pLjYYdqPQU+FyXB40yrAMK
-         Bxorbn+f2UcKs+anLliaAp6VH36JkcZXwgScMc8cgXPdCFCZLreBszyc9V72lWV8HUn9
-         ur2IFwUjng+JEXh45pw9cguOH7aXZ3kGF3rcRx4e2OkZdGzK+AKqquCKNpXcaIt3uFgy
-         rfcw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLd2xE/DM+qKcVXSwbGAmcQi+Bzyw1D450zuDTCihhexq3gxBT2xF20eqtEv957pVxR28FQMUojiOFqJTVEWFLdvHk36SwsilHyJNkfcoEAkCCt8f+W0mBiZ5gDgBJuRBY7ZJEIKITETEHxFeJQO52lbIg5o5kDRc2nSzOVTnXcfliZyvH3UWH3G7G+Wp9tVkLFtBfuh8bWhUTwz9DZUAYlgCcsPg=
-X-Gm-Message-State: AOJu0YyjFhHLTwJZ0+GbSpXcyHK+MDsHAuDtP0Qwcr7/sueNjiBKczJo
-	hRHNWHRVG46eowl1gHp6UVaJe5z8xzOt4LfBw/2mm08y/PKgtIe2
-X-Google-Smtp-Source: AGHT+IEKymx3ifIQOa5BXuhl+5X0zN/+cM7GQF9Ej5dDfbtdj4YsozuxlRJoa3tJo6QcZv/W0pOI2A==
-X-Received: by 2002:a17:906:70c:b0:a5a:5b8b:d14 with SMTP id a640c23a62f3a-a65e8f7b58fmr91646866b.40.1717059385883;
+        d=1e100.net; s=20230601; t=1717059385; x=1717664185;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wp9dT8wMnCyOCgEUiVZrNKqa8UOFLDrwjHbCmADMGTw=;
+        b=OF0/AUTpQBAbiGbJ2RzY6OL9O8avgKX8PMBwjN1uVEy/qFiaLdqk1jGbBHVM6txw8r
+         n7RDw3xgk82MMJj+40uIjAGj4dvDvavHTNZNN92gptPLm+sfxcp/BXFmaCc3uZKhWAld
+         naCLoeeza2mw0jy14LdD2M2UUb+8aK/hljveJ4V4pFbSyAkl11wtfyivKuK34FOm5TZQ
+         3PiSRgPyIV++4he4oLwzINntcRjZ0eNFi/HRKQCQAXtDXvhyruuQuSRxMTiENGz+Frw4
+         YIsUtckvKR3fvfNtwkpDzfpXxrKRGV0yKMOkiIv22RzUQ3mos7AlokajpuD+g/yCvLf1
+         w1Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYFxn4Grse+0Bf6upPxbBoWrZDevhCq7boEIhHVLge+0oKTbm8yohDe7FTfSy/vccnOnoLq2NqAcjqkD3OzpGPM0kvHPCxK6+2eKOt
+X-Gm-Message-State: AOJu0Ywt+Z2CjsB/+Ffbv9gUaxlwPgGN5hCc2PwH6XJEFfbF4F6xp9Fn
+	6ZwK1QGnuCFnNiwj7DEBbPr4bOgET1oy404z+VC2MQHQXQOAIoXp9+XlL8fXvDdHtTxkYr/G+Wg
+	hImizYDXucnimqaTkixY8gXf3+G1K6Tq12hRXwJ1Uva7NZV8OhhLMrc038WC9uw==
+X-Received: by 2002:a5d:6106:0:b0:358:a09:2677 with SMTP id ffacd0b85a97d-35dc007f0e5mr1417481f8f.2.1717059385139;
         Thu, 30 May 2024 01:56:25 -0700 (PDT)
-Received: from hex.my.domain (83.8.128.191.ipv4.supernova.orange.pl. [83.8.128.191])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a626cc500a1sm798430166b.125.2024.05.30.01.56.24
+X-Google-Smtp-Source: AGHT+IE5g49sVWo14q3yzafoJelbNBLZrTw+aBDr7TNTSOXdYo4t02cOtNuBjL2RWSj0/66rZREUIg==
+X-Received: by 2002:a5d:6106:0:b0:358:a09:2677 with SMTP id ffacd0b85a97d-35dc007f0e5mr1417462f8f.2.1717059384745;
+        Thu, 30 May 2024 01:56:24 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3341:b094:ab10:29ae:cdc:4db4:a22a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dc9885324sm1013378f8f.38.2024.05.30.01.56.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 01:56:25 -0700 (PDT)
-From: Artur Weber <aweber.kernel@gmail.com>
-Subject: [PATCH RFC 00/11] power: supply: max77693: Toggle charging/OTG
- based on extcon status
-Date: Thu, 30 May 2024 10:55:50 +0200
-Message-Id: <20240530-max77693-charger-extcon-v1-0-dc2a9e5bdf30@gmail.com>
+        Thu, 30 May 2024 01:56:24 -0700 (PDT)
+Message-ID: <6092d48946628c7e41fff25b161fdb71ce55d3d2.camel@redhat.com>
+Subject: Re: [PATCH net] net: dsa: microchip: fix wrong register write when
+ masking interrupt
+From: Paolo Abeni <pabeni@redhat.com>
+To: Tristram.Ha@microchip.com, Arun Ramadoss <arun.ramadoss@microchip.com>, 
+ Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
+ Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli
+ <f.fainelli@gmail.com>,  Vladimir Oltean <olteanv@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,
+ UNGLinuxDriver@microchip.com, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Date: Thu, 30 May 2024 10:56:22 +0200
+In-Reply-To: <1716932113-3418-1-git-send-email-Tristram.Ha@microchip.com>
+References: <1716932113-3418-1-git-send-email-Tristram.Ha@microchip.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABY/WGYC/x2MzQqDMBAGX0X23AUbf1L7KsVDEj91D41lUyQgv
- rvB4zDMHJSggkTv6iDFLkm2WOD5qCisLi5gmQqTqU1bd6bjr8vW9kPDResCZeR/2CIP8N56N72
- aACr1TzFLvs+f8TwvQw6C9GkAAAA=
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, Henrik Grimler <henrik@grimler.se>, 
- Wolfgang Wiedmeyer <wolfgit@wiedmeyer.de>, 
- Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>, 
- Artur Weber <aweber.kernel@gmail.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717059384; l=7625;
- i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=qOadE76vLdaIplciF8D6zHAXndcfCGT/osoFvr6KlEk=;
- b=MMtU+GPWlwCX0PoSEku/V91gjQOS+G/MXBGM8VPiwgMRwiRu56xv0CqcQUQT5CiqwS3RIBZBn
- nd+dmF9GoxmCzDiJrOArIdCmggW/bE8oKrBrk0QPkcIrP/w0iqPrpRp
-X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
- pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-This patchset does the following:
+On Tue, 2024-05-28 at 14:35 -0700, Tristram.Ha@microchip.com wrote:
+> From: Tristram Ha <tristram.ha@microchip.com>
+>=20
+> The initial code used 32-bit register.  After that it was changed to 0x1F
+> so it is no longer appropriate to use 32-bit write.
 
-- Add CURRENT_MAX and INPUT_CURRENT_MAX power supply properties to
-  expose the "fast charge current" (maximum current from charger to
-  battery) and "CHGIN input current limit" (maximum current from
-  external supply to charger).
+IMHO the above sentence is too much unclear. It sort of implies that
+the currently used register is 8 bit wide because such register address
+can be represented with 8 bit - which in turn sounds weird or
+irrelevant.
 
-- Add functions for toggling charging and OTG modes.
+I guess some documentation describes register 0x1F, please rephrase the
+changelog accordingly.
 
-- Add an extcon-based handler that enables charging or OTG depending
-  on the cable type plugged in. The extcon device to use for cable
-  detection can be specified in the device tree, and is entirely
-  optional.
+Thanks,
 
-The extcon listener implementation is inspired by the rt5033 charger
-driver (commit 8242336dc8a8 ("power: supply: rt5033_charger: Add cable
-detection and USB OTG supply")).
-
-Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
----
-This started off as a cleanup of "[PATCH 0/3] max77693: USB event listener
-for charger"[1] (and its later iterations[2]), but I ended up replacing 99%
-of the code and adding a few more additions on top.
-
-This patchset was made for two reasons:
-
-- I noticed that charging on my Galaxy Tab 3 8.0 seems to "work", but is
-  so slow that it starts to discharge during normal usage. After some
-  investigation I found that under the downstream kernel, the charging
-  limit registers (two of them! see patch descriptions) are changed to a
-  higher value when plugged into a charger, and adjusted based on the cable
-  type.
-
-- I was investigating what was needed to get OTG support running, and
-  found that some OTG mode bits had to be set in the charger when an OTG
-  cable is detected, and that required me to modify the charging driver.
-
-That's why the patchset includes *both* charging detection and OTG support.
-
-== Kernel-side charging management ==
-
-The original patchset this was meant to supersede was denied because,
-among other reasons, upstream did not agree to having the charging be
-controlled this way in the charger driver, suggesting that either
-user-space or the charger-manager driver should do it[3][4].
-
-charger-manager is not used in any devices, plus the already mentioned
-patchset comments suggest that it's not the correct way to do things
-("DT should be used for concrete hardware, not glue drivers")[4].
-
-There are also some drivers that already do this sort of kernel-side charger
-toggling/management: other than the aforementioned RT5033 driver which this
-new patchset is based off[5], there's also the MAX8997 charger[6] (the patch
-for which was merged just a year after the MAX77693 discussion[7]!) and the
-AXP288 driver[8]. Still, that's just 3 out of many more drivers...
-
-For this reason, I'm sending this first version of the patchset as an RFC
-for further discussion. I've done some thinking about what a potential
-implementation allowing for controlling charging from userspace might look
-like, and here's what I came up with:
-
-- Allow for setting the charging input current by setting the INPUT_CURRENT_
-  MAX property of the power supply. (Leave current from charger to battery
-  set by the device tree in the kernel, since it's arguably more dangerous.)
-
-- Allow for setting the CHARGER regulator on/off through some sysfs property.
-  How this should be done is tough to specify; there seems to be a few
-  ways to do it (e.g. setting the STATUS property[9]), we could use a custom
-  sysfs property.
-
-- Add a custom sysfs property to disable kernel-side charging.
-
-About that last one - I'm convinced at least *some* level of kernel-side
-charging control should exist, and that's for a practical reason:
-
-A reccuring complaint[10] is devices that are low on battery and plugged
-into a charger shutting down before they can fully boot. If we set up
-charging during boot, the charger driver can handle charging until a
-userspace daemon appears and takes over.
-
-Of course, this is all up for discussion - comments appreciated ;)
-
-== CHARGER regulator ==
-
-I think it's worth also analysing the role that the CHARGER regulator plays
-here. At the moment, the CHARGER regulator (managed in drivers/regulator/
-max77693-regulator.c) handles:
-
-* the CHGIN input limit as the regulator current limit;
-* charger enable/disable as the regulator enable/disable.
-
-A comment in the regulator driver suggests that this should in fact manage
-the *fast charge* current, not the CHGIN input current, and that "this
-should be fixed"[11]. But now we're managing the fast charge current in
-the charger driver... and, if the regulator driver ever was to be "fixed"
-this way, it would break the charger driver's ability to set input current.
-
-We could potentially drop the CHARGER regulator and manage these registers
-within the charger driver, but since it's not causing us any real problems
-at the moment (and the "fix" scenario mentioned earlier is very unlikely),
-I decided to keep it and use it to handle the two functions mentioned above.
-(Although one of the reasons for the superseded patchset being denied was
-that "[this] power supply driver should not manage regulators"[3]...)
-
----
-
-Special thanks to Wolfgang Wiedmeyer whose original patchset[1] served as
-the base for this one, and to Henrik Grimler for helping me out with
-figuring out how the input current/fast charge current registers are
-used.
-
-[1] https://lore.kernel.org/all/1474932670-11953-1-git-send-email-wolfgit@wiedmeyer.de/
-[2] https://lore.kernel.org/all/20190910200233.3195-1-GNUtoo@cyberdimension.org/
-[3] https://lore.kernel.org/all/20160927081344.GC4394@kozik-lap/
-[4] https://lore.kernel.org/all/298d81d5-fe41-e2d1-32a7-d3dc35b0fe25@kernel.org/
-[5] https://github.com/torvalds/linux/blob/v6.9/drivers/power/supply/rt5033_charger.c
-[6] https://github.com/torvalds/linux/blob/v6.9/drivers/power/supply/max8997_charger.c#L98-L141
-[7] https://github.com/torvalds/linux/commit/f384989e88d4484fc9a9e31b0cf0a36e6f172136
-[8] https://github.com/torvalds/linux/blob/v6.9/drivers/power/supply/axp288_charger.c#L617-L673
-[9] https://github.com/torvalds/linux/blob/v6.9/drivers/power/supply/rt9471.c#L370-L371
-[10] https://gitlab.com/postmarketOS/pmaports/-/issues/2594
-[11] https://github.com/torvalds/linux/blob/v6.9/drivers/regulator/max77693-regulator.c#L45-L54
-
----
-Artur Weber (10):
-      dt-bindings: power: supply: max77693: Add fast charge current property
-      dt-bindings: power: supply: max77693: Add maxim,usb-connector property
-      mfd: max77693: Add defines for OTG control
-      power: supply: max77693: Expose INPUT_CURRENT_LIMIT and CURRENT_MAX
-      power: supply: max77693: Set charge current limits during init
-      power: supply: max77693: Add USB extcon detection for enabling charging
-      power: supply: max77693: Add support for detecting and enabling OTG
-      power: supply: max77693: Set up charge/input current according to cable type
-      ARM: dts: samsung: exynos4212-tab3: Set fast charge current for MAX77693
-      ARM: dts: samsung: exynos4212-tab3: Add USB connector node
-
-Wolfgang Wiedmeyer (1):
-      mfd: max77693: Add defines for charger current control
-
- .../bindings/power/supply/maxim,max77693.yaml      |  13 +
- arch/arm/boot/dts/samsung/exynos4212-tab3.dtsi     |  14 +
- drivers/power/supply/Kconfig                       |   1 +
- drivers/power/supply/max77693_charger.c            | 291 +++++++++++++++++++++
- include/linux/mfd/max77693-private.h               |   9 +
- 5 files changed, 328 insertions(+)
----
-base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-change-id: 20240525-max77693-charger-extcon-9ebb7bad83ce
-
-Best regards,
--- 
-Artur Weber <aweber.kernel@gmail.com>
+Paolo
 
