@@ -1,160 +1,162 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F61446556;
-	Thu, 30 May 2024 17:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E934AEFD;
+	Thu, 30 May 2024 17:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717090895; cv=none; b=p1RgvSmqBWeYFMoXCjCfO1SJWCOiAXdlC6OvHg5Z2xrfYJywQsjrbL6a6yc2oXPoIqy+GSvksFoXDgym6X6xuD5S3SS7ZmePHNQUY0ULM1kI2mmG53voZDexafYZ0z+gRx6rBzjLgCo7wEItoReuKb5htsMIVQQEXq7AhL6Cg20=
+	t=1717090903; cv=none; b=c4FBXHpuZYdE/nHj7VotXQPwyKKFEXSy+an7+QEfkOJ2WcJikDLUfVbTX6T1r1Lcjpg0/dUj68M69DftG3IUY5Yuf/Ow2XhTWcFQ+3a1iHOk6lc+rR0FnBHWTxcpjoPR36o8kVkMWgIIqnQt9NqWMIJWxyFHfu2qlUNBo0KeZ0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717090895; c=relaxed/simple;
-	bh=PN12H3vukIEUvh92k02PFG+Hv5AE+f0Wb7EmKyT6t+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OJ1QpmYi8K1pHSrZw11XL4MHBBAdrPaZkKYh+fr9Vy3m7qvVPmn6OmsNBTz+3Ye1ObiLojfZWHUzFGCjVkSSDMKc8yi7I6pWGAHzy55xqQffnfOFRnzi1V+IwW1ER+JmK55JkvC9qAK2y0G/d2WM7Sl0he76YJROn1mIboXWD2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=R5oBB0t/; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1717090903; c=relaxed/simple;
+	bh=J5HoT6wvLCEP6PKrxjLxadfzILQKD5XkS7lncw08i3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rAPbnZQem1UayBmBDWkcZiDN/8VLfcpf0bEEEVhExaHqES52wGCBhXAbRmoEWR2YrL7tFMj0a6Scls7lgPRSUiBgss2iJxYhspgT+LTuVa9bTQJuRlVE9wtE6p0171aHErSkEsrgKW00yoQC8oDvDSYwuPWirYU48LE9lBUbEjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qzq7Py3N; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="R5oBB0t/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1717090861; x=1717695661; i=w_armin@gmx.de;
-	bh=PN12H3vukIEUvh92k02PFG+Hv5AE+f0Wb7EmKyT6t+k=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=R5oBB0t//IvSpkl7HJ2NoPH46s2VOu8fbNZn2ybZ4BTCZQqAbKQuasdUd1RC3XZ6
-	 T1f/sbjSJAHaS1aMLomARyE3jZdDtyj1XDxbMwLmqNr5mityZo0WfH9EledvB4zK0
-	 1EzcB8SzafP4dyi7OcB6XMFXrHELUQtMhSNQ+RYhxU9+H47cIpP7pzJ6WSGGiZPIe
-	 0aw/8/B3QTlBZ9JNiXpF4UjRukY8A4bKMw5XAKPFctXI2K3hZn6TgZeVPRwUV6jd6
-	 zQooaxHvQ0XEFtJuT0ZkcQobcMY7tFxh1eFry2HGIj1/wdINLnlXawsATv6aNaftB
-	 tUF8RLuyUv6005hi5A==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlXA-1swDON03ZW-00jn0W; Thu, 30
- May 2024 19:41:01 +0200
-Message-ID: <78c58496-78b2-48a5-b5df-74545fd58dc3@gmx.de>
-Date: Thu, 30 May 2024 19:41:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qzq7Py3N"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f62217f806so7246765ad.2;
+        Thu, 30 May 2024 10:41:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717090901; x=1717695701; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/ota4vn2GS8aqgXje2STBimgM+Hm93FTRCKMqODBkA=;
+        b=Qzq7Py3NyH1N6ugUBy/k45yVvskWtppUUHAxDsRWfFWwZVaIQCyFJgjTgZl0WGV51o
+         TK5d/GBDpPGJs4JW7MhxWn9/Qjm9ZARsWrIlvMQ3HadOPunpMeASrj3Y0/0b9aJUJh+h
+         HkFFjs3EJpQfPuRk2bPo0Wbh3CxxaB4LkMIhuskyTtXM8ZmG7pb4tpKagTtfUsMgzmPa
+         dIZ+rd6Mu7BJoO2/+obI2rxBnjhDVj1WvQMvnRAkq5DSzVhwPu7oxrHsGoZCjJ1LKmL3
+         1ax4XyjP9EyuYI/7QMZMLuHwxK5vhB0pmqCXPuagcXLyhx6fMMKRr4cwfArWxczWwm6x
+         y9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717090901; x=1717695701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m/ota4vn2GS8aqgXje2STBimgM+Hm93FTRCKMqODBkA=;
+        b=i8DO3hTWeV1iFmWmyvYJMov4M+dYTYIcTFSbWZdtvag+uf8HOChfoMaa88E6d8huYF
+         qZ/3VblfsNcEDflsAac2NJ+HJZqwXbbem4bXotihCQnOg3dhF66nCYfIltN/vY1X/Y3u
+         GxiSnK8wNSdG9gkvzCN8BvAGEhxfu0FgZV1k0Lt8sjEiWYbN6MCzBb99e1joW7vPjcBA
+         nzJYRXaE9aD6tKdPHUxUk6bl0ayHichY/FrxWCNvRSYlCvjfZ5FABr2kAYGPi3iu4+zS
+         XoyPn+IeIMVchYYVQUPBJ0Qhi9j21xA1HfX2oNsXhgFUYLvm5lhiQUEjPYA9UanKlL5f
+         CQZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVOD3H4/v3u38FI3wbn0rWZAwEDi9AtGMEfAd0IHo95jjr7FnxJJyDTx8ZMfh+c0/UlH0xqrpOQ4vg5sB+cFx8LxlMSR10XNdGSQOU/pmFzjZgmuBNLbRrxZJXXCm2+4Q1wBS5Z5MBWfGW31cxSvAXesFtwTJxf3ZzMKPUFo9GQ9BH9x4s=
+X-Gm-Message-State: AOJu0YzmS/qXZ/OAyuYW0+aJLZpBdFE6qRFu/csQ0z6/0qatdVuVbQIn
+	4R2Q+aDjOyFGMU7J3nj7UY92jTgDUuoCxmZiGuB/FvXwVYnWCd3h
+X-Google-Smtp-Source: AGHT+IHZ0dDmSPfX+xofX/WmcrGuZDwcUggoaa+ft3XatTCOde0yruag4R9avDoOo4qe8Wvx6gsKpw==
+X-Received: by 2002:a17:902:c943:b0:1f4:9474:e44d with SMTP id d9443c01a7336-1f61961bcd0mr37074115ad.21.1717090901019;
+        Thu, 30 May 2024 10:41:41 -0700 (PDT)
+Received: from prasmi.. ([2401:4900:1c07:3bcb:e05d:a577:9add:a9ce])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63240c947sm450105ad.269.2024.05.30.10.41.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 10:41:40 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 00/15] Add PFC support for Renesas RZ/V2H(P) SoC
+Date: Thu, 30 May 2024 18:38:42 +0100
+Message-Id: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] hwmon: Add support for SPD5118 compliant temperature
- sensors
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc: Hristo Venev <hristo@venev.name>, =?UTF-8?Q?Ren=C3=A9_Rebe?=
- <rene@exactcode.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
-References: <20240529205204.81208-1-linux@roeck-us.net>
- <20240529205204.81208-3-linux@roeck-us.net>
- <6f1ffb83-a64f-469d-b981-f0da0d2f02ac@gmx.de>
- <b8aa563a-5ca1-4624-a1c7-25744f15cfa9@roeck-us.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <b8aa563a-5ca1-4624-a1c7-25744f15cfa9@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:50jYUZgJk05eSRj+dxdH12Nn8+NWXvjBbT/6mYeS+B5sN6BYufr
- rIe1hkHMideIRM91OMvZX5lV2zKwvkEDEHQBc5/lmZJ2InBeakTFzxS//fBPOG68jxRBZh3
- TKaCoVn9Jy5cZXAk0Um3VMqobFRVxJVBb67KL1WNTyOrEYu50hJjPqTnw0BZrJtrRL2xTq0
- RuF+T3T2uaryUM9Yb+ieg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lRtdwUgQvfo=;TKo1J+5irFvECnFjnhSYXPepOyf
- LTJOtA+Lj+KwmxVUPzIfTkxgAqFwP8yHG8zRCBu79R9mTOb+X2/PL7E4DMTiVq6DYzrexC83y
- eF6rpzWjz/hADw0O7zN433KD82XlZ+gm4LcGU0s3s23hu83XFKE88amr0GytEZjMQ0sxX5Knr
- 1P1ggI4Ew72hD3pBlAuJHIuLhVnkyIuXF7jbeMRECQ5TmWDGIeXDXpVpX5Lc5Kuzo9HisJtRJ
- eRulCFM2DHXglDizy8o3vcwzOSZO6++rG4FMAr0BwxC+R3P+/+fES/6x2pBMxqEvPM7S2qK6i
- xF2d+mUPuloLrdwkq8lwAf82wXS8B3WxKWmomCgoYPZ28eEZXSaZo8kROsxDhcONgh/9XoW5J
- YRO2uJnZz2IW057AjqayYPH1VgCrVIOb3gjHIyQMkx6iPCB1kOtuebOIp7Q1ZG99Y5v+L3JVe
- jth4sIX10GCUATMUwOXqMJ4JiiicBOuuOR41hvbkoJKA/1wxq3qkpdlsUs7K7EbvY2/3cm6tT
- ApG5bIKrGGimXdzW6QWqSG17uE4Iy2QvatgoA/snJPYtH8a/aSgNETsI7mVzV3NhHTBo7Cnbg
- gNu12BmA7HujxUyKSAC5E367/47sDVem2Bta2lLM/0XsTpcYw1DrLhACiU4sZzLU9H0BBkVq0
- 12HRuiA2zFhcppU7dt8LDlmJtq+g7tVJuqCgLQu4RrOQHWwNKaLIvQ8DzKWamdqkMKx+XlIZP
- 2gdoeiEqhNbkcI0m50TPmdX2eAlMm17feLoeAPUjBR5+BEFUsvZdPQRq+sZZL+86sGwMq4u4e
- 4Q84OS/JAQoEIjWFCYVmKZ0FGVwvAQidTIx3PWqLVaytQ=
+Content-Transfer-Encoding: 8bit
 
-Am 30.05.24 um 19:33 schrieb Guenter Roeck:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> On 5/30/24 10:03, Armin Wolf wrote:
->> Am 29.05.24 um 22:52 schrieb Guenter Roeck:
->>
-> [ ... ]
->
->>> +
->>> +temp1_lcrit_alarm=C2=A0=C2=A0=C2=A0 Temperature low critical alarm
->>> +temp1_min_alarm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Temperature=
- low alarm
->>> +temp1_max_alarm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Temperature=
- high alarm
->>> +temp1_crit_alarm=C2=A0=C2=A0=C2=A0 Temperature critical alarm
->>
->> Maybe it would be a good idea to tell users that the alarm attributes
->> are sticky.
->>
->
-> The driver auto-clears them after read, so they are only sticky in the
-> sense
-> that they will remain active until read. This is quite common for
-> hardware
-> monitoring devices. However, sure, I'll add a note.
->
-> [ ... ]
->
->>> +static int spd5118_write_enable(struct regmap *regmap, u32 attr,
->>> long val)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 if (val && val !=3D 1)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
->>> +
->>> +=C2=A0=C2=A0=C2=A0 return regmap_update_bits(regmap, SPD5118_REG_TEMP=
-_CONFIG,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SPD5118_TS_DISABLE,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val ? 0 : SPD5118_TS_DISABLE);
->>
->> The spd5118 spec says that we have to wait 10ms after enabling the
->> sensors before
->> we start reading temperature values, maybe we need a delay + locking
->> here?
->>
->
-> I don't think that would add much if any value but a lot of complexity
-> for little gain. I find it acceptable that the sensor returns 0 for a
-> few ms
-> after enabling it. Pretty much all chips have the same problem, so I am
-> really not concerned about it.
->
->>> +
->>> +static struct i2c_driver spd5118_driver =3D {
->>> +=C2=A0=C2=A0=C2=A0 .class=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
-=3D I2C_CLASS_HWMON,
->>> +=C2=A0=C2=A0=C2=A0 .driver =3D {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name=C2=A0=C2=A0=C2=A0 =
-=3D "spd5118",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .of_match_table =3D spd511=
-8_of_ids,
->>
->> The driver is missing suspend support, without it hibernation/S4
->> sleep will cause the
->> limit and config registers to be out of sync with the regmap cache.
->>
->
-> Good point. Do you have a means to test this if I add suspend support ?
-> I have not been able to figure out how to put my system into suspend.
->
-> Thanks,
-> Guenter
->
-I think so, at least i can verify if S3 sleep works, but S4 sleep should w=
-ork fine too.
+Hi All,
 
-Thanks,
-Armin Wolf
+This patch series aims to add PFC (Pin Function Controller) support for
+Renesas RZ/V2H(P) SoC. The PFC block on RZ/V2H(P) is almost similar to
+one found on the RZ/G2L family with couple of differences. To able to
+re-use the use the existing driver for RZ/V2H(P) SoC function pointers
+are introduced based on the SoC changes.
+
+v2->v3
+- Dropped patch 1/13 [0] as its been already queued up.
+- Updated description for renesas,output-impedance property
+- Added three new patches 02/15, 04/15 and 14/15
+- Updated size for cfg in struct rzg2l_variable_pin_cfg
+- Included RB tags
+- Introduced single function pointer to (un)lock PFC
+- Now passing offset to pmc_writeb() instead of virtual address
+- Renamed read_oen->oen_read
+- Renamed write_oen->oen_write
+- Renamed get_bias_param -> hw_to_bias_param
+- Renamed get_bias_val -> bias_param_to_hw
+- Dropped un-necessary block {}
+- Now reading arg before calling hw_to_bias_param()
+- Added gaurd for custom_conf_items in struct rzg2l_pinctrl_data
+- Renamed PIN_CFG_OPEN_DRAIN->PIN_CFG_NOD
+- Renamed PIN_CFG_SCHMIT_CTRL->PIN_CFG_SMT
+- Introduced PWPR_REGWE_A instead of using PWPR_PFCWE
+- Dropped using pwpr_lock
+- Optimized rzv2h_pin_to_oen_bit()
+
+RFC->v2
+- Fixed review comments pointed by Rob
+- Incorporated changes suggested by Claudiu
+- Fixed build error reported for m68K
+- Dropped IOLH groups as we will be passing register values
+- Fixed configs for dedicated pins
+- Added support for slew-rate and bias settings
+- Added support for OEN
+
+RFC: https://patchwork.kernel.org/project/linux-renesas-soc/cover/20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240423175900.702640-2-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (15):
+  dt-bindings: pinctrl: renesas: Document RZ/V2H(P) SoC
+  pinctrl: renesas: pinctrl-rzg2l: Rename B0WI to BOWI
+  pinctrl: renesas: pinctrl-rzg2l: Allow more bits for pin configuration
+  pinctrl: renesas: pinctrl-rzg2l: Drop struct rzg2l_variable_pin_cfg
+  pinctrl: renesas: pinctrl-rzg2l: Allow parsing of variable
+    configuration for all architectures
+  pinctrl: renesas: pinctrl-rzg2l: Validate power registers for SD and
+    ETH
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointer for
+    locking/unlocking the PFC register
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointer for writing to
+    PMC register
+  pinctrl: renesas: pinctrl-rzg2l: Add function pointers for
+    reading/writing OEN register
+  pinctrl: renesas: pinctrl-rzg2l: Add support to configure the
+    slew-rate
+  pinctrl: renesas: pinctrl-rzg2l: Add support to set pulling up/down
+    the pins
+  pinctrl: renesas: pinctrl-rzg2l: Pass pincontrol device pointer to
+    pinconf_generic_parse_dt_config()
+  pinctrl: renesas: pinctrl-rzg2l: Add support for custom parameters
+  pinctrl: renesas: pinctrl-rzg2l: Acquire lock in
+    rzg2l_pinctrl_pm_setup_pfc()
+  pinctrl: renesas: pinctrl-rzg2l: Add support for RZ/V2H SoC
+
+ .../pinctrl/renesas,rzg2l-pinctrl.yaml        |  23 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 773 ++++++++++++++----
+ 2 files changed, 619 insertions(+), 177 deletions(-)
+
+-- 
+2.34.1
 
