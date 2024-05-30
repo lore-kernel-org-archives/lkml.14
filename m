@@ -1,370 +1,202 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5217F17CA0C;
-	Thu, 30 May 2024 13:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4821617107B;
+	Thu, 30 May 2024 13:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717076108; cv=none; b=Mg7Bw435ghZejdqt4a6chsfiEqlBgLzbf1vyo0dAusLd7gqfPIZ6oC7Tgj4WTr94t2M6KlrkgM1tTfE8iHfNV+pLKoo+p0UD33zuxkce+SKuBjfXXf6WRnOguZCOmeJJTLR8b5PNdOreCg7+LN3phzGuc/fukRXbNgNZGJIcNlU=
+	t=1717076166; cv=none; b=ETEx4w/H7E2e/0/NfVuT9AQiFZEkYoN59V/ZPUimW+XP84FdwURkZ2EdeP6V7z5NiU+7Tcp9LgEX+XchKE6LyR7Xc7zDFUXU4qW6WAfVaq698/F9cSZvZIn+FQII5pMXHmOyWjrzVHLAfZuSNkop4ArmoYUjdSRH2sV4FBGCSZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717076108; c=relaxed/simple;
-	bh=3AnIdFj3lsHNNgl6yv0mA/L6OL0S21ZbcdFtYn1dTkk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sHrFoU0d4wyMm2FjgbIqk6KkR4xRCAZuj7B3J9sbuctYF/+muqo4giHXgtJPNESQ8oGJJ8OLkaaSudvQJcQZEVL0QWNpcYir3Qd985VtVw+LtCkUSiesc1r5wRRcOY/M0yZjynqrm8/kWAicjq67LxpDzsY+hUGvemQgx9EIzW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2Ew6wpH; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717076166; c=relaxed/simple;
+	bh=HTcEgZPhvNIqb5QSFsqU4J//bVvYGx934btYPhodD+c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=H9u3MlFMSks+I4HcpHuDuPuFhENWGt9d3EMXO5kMe4apY9xl2LDXYNumbegOx1IQii0Phstxhlsotd6L8/Wz5n4xacnXxARYad51wgZ55421Au5P+6Us9sSvdIsZLwdTszX+hJiPcZq5fpzEG/2B+W9nyVfS97llf8OZWSMF5ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mXRaK+dv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AKSEw11s; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2Ew6wpH"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5a89787ea4so75990766b.2;
-        Thu, 30 May 2024 06:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717076104; x=1717680904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6ityrTb+cN3E6zdWopkba23K4YFJ51mGn7zptESF64M=;
-        b=g2Ew6wpH6dM/XqI+8wTZANq97DhovcLk+XgeeVEE8KcG6XLAzq856AfBwQsZnaoC7v
-         9iTmDc/Xf2i602QIxKmJZ26y/oa1ppLRzkcJW4NnbJ7VusgNu45GjNwT1/nxxzfIkuWN
-         usAZvSjHAfs9nDH+QYXcs9tUET82pz54OSXKpXuPB4SMSArHBh+CLIRJJ+Oy/4bce2sD
-         auFwQysdS8D0CAFSeNFcmnDWq/+Ysx+plXsknrIMsqkW2TL9jqfc7h5/ezTrH36Yp/9Q
-         KFO+LmWYMco85oB4PtEGF4g9R9FLwRlG1tSgwIUgQh85sg+F7F6vpFCjlRs9x7SMV1qM
-         RQeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717076104; x=1717680904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6ityrTb+cN3E6zdWopkba23K4YFJ51mGn7zptESF64M=;
-        b=tz4SQoxEOC9BpDr2HtHemzlDzRfyW0k5JwhJxrEyC98OCJjbloBANzQoCUtDYmnonQ
-         fYHuGww7mJCkn845RscoH/5PTRNpuLnJ8mncxNeeCUEoDlDWekGy3wxDm8BHv0XmIQtk
-         DavaO07mSk2bypGrZ+vRNJOKOBaaMdsB/BluVd2QdwaV8zgDoKfAVqNz2ifC2C3cBjp6
-         V1DI8AbRGbPWo5DsmPs4k+YeYnEpQgYK1utH8fcEY8z7/v4gpawS3qhMCzezRsSn8Fl8
-         y+v6b54ZUs5VoTfCbxUU3R1pS+WZ3pRQXfMJ5ba3gqjaE8rZZW1f1WSNdv/hzbRF/xqj
-         CzVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXhPQO5JsF6oCayE/4nNsoYshCCVs+6UU68+xObmHLM+ZYWE9qv5jpIKj9eklH+EJ28WSx5DroIwAizLFXfi32dlhIduSM9Y9Q+V/HDyJHnXUw3J9Cm7ICWuuryne8oIahZRWiS9EnlTB9hW5rCczMBOZNOVsEfdjFff0S1bfrvCjp4WQ==
-X-Gm-Message-State: AOJu0YwZkzbFqt6VF0QEA19Rni6Zg5QzQOMsEBo2ZVShEr90NyoOzGy8
-	rMV93lzUCKbT4gsV2P6t7eW0Z2HZrNESbIuaa/Yi9Juw55mAuqpe+TI7cZPlES0ZOf2CjQaMZG/
-	oJ+WYB5mqeAYpVdCHhJBEkNbB6Ps=
-X-Google-Smtp-Source: AGHT+IH7FtLH1XLeHqlHgAvWr9dzcasrfRvrJ3/m57OZQa4LKdwDt7riItXkQ11EXy8nI4WkwAdBQEESRzaKO1SQlGQ=
-X-Received: by 2002:a17:906:b3a0:b0:a5a:1562:5187 with SMTP id
- a640c23a62f3a-a65e924fd51mr115572766b.55.1717076104311; Thu, 30 May 2024
- 06:35:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mXRaK+dv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AKSEw11s"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717076157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKb7c3hZZ1sIQ6Jxj+rYmCRbrY2s6dn/gQHDJs1x228=;
+	b=mXRaK+dvM0pd+6847+YJ2bz6M7XvyjYbBWAiMhE/x3zeStW2CtVORfRkhiabrKeoVBbVk7
+	94eQB/gcL0mlrd7jp4aOdo6e7KuZQ17YJcNXjarAOzXUfzdymzK/zkU/4ho/9e8Vgreve9
+	/+LyRoRYg4BFRProroyS85/VTwuQfkRtk0zMinXT1ksDLFO3G0P4UC5eBLCHS9tae5X2bm
+	z0ZjPY96JiciZbVv+pFiD5fNjyWvqCVMCCmjckTH0AW0af/A7ZieysMWr7O4dNAlESop1N
+	5YbRu2d+Z7FSe7SPUFkyz5a3Iq9laWk+JRlj9S3/uRD1v3Sio/spr3OrFifdkQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717076157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UKb7c3hZZ1sIQ6Jxj+rYmCRbrY2s6dn/gQHDJs1x228=;
+	b=AKSEw11srme/Q7fBd1EHmHjfHHOeDEnQwOkN40pAnYODx2auL9TKjHTN6XrLd8lz26a4Bh
+	zw3AQrK9lhlRpyCQ==
+To: Peter Schneider <pschneider1968@googlemail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
+In-Reply-To: <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
+References: <877cffcs7h.ffs@tglx>
+ <16cd76b1-a512-4a7b-a304-5e4e31af3c8a@googlemail.com>
+ <ce3abe01-4c37-416e-a5ed-25703318318a@googlemail.com>
+ <87zfs78zxq.ffs@tglx>
+ <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
+Date: Thu, 30 May 2024 15:35:55 +0200
+Message-ID: <87r0dj8ls4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com> <20240530093410.112716-3-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240530093410.112716-3-angelogioacchino.delregno@collabora.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 30 May 2024 16:34:27 +0300
-Message-ID: <CAHp75Vexddt1xUGogRDZA9pM1pFp2=ZtCQnCfXePahSCb+oKpg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] iio: adc: Add support for MediaTek MT6357/8/9
- Auxiliary ADC
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org, andy@kernel.org, 
-	nuno.sa@analog.com, bigunclemax@gmail.com, dlechner@baylibre.com, 
-	marius.cristea@microchip.com, marcelo.schmitt@analog.com, fr0st61te@gmail.com, 
-	mitrutzceclan@gmail.com, mike.looijmans@topic.nl, marcus.folkesson@gmail.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, May 30, 2024 at 12:34=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
+Peter!
+
+On Thu, May 30 2024 at 12:06, Peter Schneider wrote:
+> Am 30.05.24 um 10:30 schrieb Thomas Gleixner:
 >
-> Add a driver to support reading the Auxiliary ADC IP found in the
-> MediaTek MT6357, MT6358 and MT6359 Power Management ICs.
+>> Can you please apply the debug patch below ad provide the full dmesg
+>> after boot?
 >
-> This driver provides multiple ADC channels for system monitoring,
-> such as battery voltage, PMIC temperature, PMIC-internal voltage
-> regulators temperature, and others.
-
-> ---
-
-Here is no explanation on how this is differ to any of the three
-existing drivers? I.o.w. why do we need a brand new one?
-
-...
-
-+ bits.h
-
-> +#include <linux/delay.h>
-
-> +#include <linux/kernel.h>
-
-Why?
-
-+ mod_devicetable.h
-> +#include <linux/module.h>
-
-> +#include <linux/of.h>
-
-Why?
-
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-
-+ types.h
-
-+ blank line
-
-> +#include <linux/iio/iio.h>
-
-+ Blank line
-
-> +#include <linux/mfd/mt6397/core.h>
-
-...
-
-> +#define PMIC_RG_RESET_VAL              (BIT(0) | BIT(3))
-
-In this form it requires a comment explaining each mentioned bit.
-
-> +#define PMIC_AUXADC_ADCx(x)            ((x) << 1)
-
-Seems like a useless macro, it occupies much more space than in-place shift=
-.
-
-...
-
-> +#define MT6358_IMP0_CLEAR              (BIT(14) | BIT(7))
-
-As per above.
-
-...
-
-> +/**
-> + * struct mtk_pmic_auxadc_chan - PMIC AUXADC channel data
-> + * @req_idx:       Request register number
-> + * @req_mask:      Bitmask to activate a channel
-> + * @num_samples:   Number of AUXADC samples for averaging
-> + * @r_numerator:   Resistance ratio numerator
-> + * @r_denominator: Resistance ratio denominator
-> + */
-> +struct mtk_pmic_auxadc_chan {
-> +       u8 req_idx;
-> +       u16 req_mask;
-> +       u16 num_samples;
-
-> +       u8 r_numerator;
-> +       u8 r_denominator;
-
-Can you add struct u8_fract to the math.h and use it? I will Ack/R the
-respective patch.
-
-> +};
-
-...
-
-> +struct mtk_pmic_auxadc_pdata {
-> +       const struct iio_chan_spec *channels;
-> +       int num_channels;
-
-Why signed?
-
-> +       const struct mtk_pmic_auxadc_chan *desc;
-> +       const u16 *regs;
-> +       u16 sec_unlock_key;
-> +       u8 imp_adc_num;
-> +       int (*read_imp)(struct mt6359_auxadc *adc_dev, int *vbat, int *ib=
-at);
-> +};
-
-...
-
-> +static const u16 mt6357_auxadc_regs[] =3D {
-> +       [PMIC_HK_TOP_RST_CON0]  =3D 0xf90,
-
-Can we use the fixed-width values so all of them will look nice and
-easy to parse?
-
-> +       [PMIC_AUXADC_DCM_CON]   =3D 0x122e,
-> +       [PMIC_AUXADC_ADC0]      =3D 0x1088,
-> +       [PMIC_AUXADC_IMP0]      =3D 0x119c,
-> +       [PMIC_AUXADC_IMP1]      =3D 0x119e,
-> +       [PMIC_AUXADC_RQST0]     =3D 0x110e,
-> +       [PMIC_AUXADC_RQST1]     =3D 0x1114,
-> +};
-
-...
-
-> +static const u16 mt6358_auxadc_regs[] =3D {
-
-Ditto.
-
-> +       [PMIC_HK_TOP_RST_CON0]  =3D 0xf90,
-> +       [PMIC_AUXADC_DCM_CON]   =3D 0x1260,
-> +       [PMIC_AUXADC_ADC0]      =3D 0x1088,
-> +       [PMIC_AUXADC_IMP0]      =3D 0x1208,
-> +       [PMIC_AUXADC_IMP1]      =3D 0x120a,
-> +       [PMIC_AUXADC_RQST0]     =3D 0x1108,
-> +       [PMIC_AUXADC_RQST1]     =3D 0x110a,
-> +};
-
-...
-
-> +static const u16 mt6359_auxadc_regs[] =3D {
-
-Ditto.
-
-> +       [PMIC_FGADC_R_CON0]     =3D 0xd88,
-> +       [PMIC_HK_TOP_WKEY]      =3D 0xfb4,
-> +       [PMIC_HK_TOP_RST_CON0]  =3D 0xf90,
-> +       [PMIC_AUXADC_RQST0]     =3D 0x1108,
-> +       [PMIC_AUXADC_RQST1]     =3D 0x110a,
-> +       [PMIC_AUXADC_ADC0]      =3D 0x1088,
-> +       [PMIC_AUXADC_IMP0]      =3D 0x1208,
-> +       [PMIC_AUXADC_IMP1]      =3D 0x120a,
-> +       [PMIC_AUXADC_IMP3]      =3D 0x120e,
-> +};
-
-...
-
-> +       ret =3D regmap_read_poll_timeout(adc_dev->regmap, pdata->regs[PMI=
-C_AUXADC_IMP0],
-> +                                      val, !!(val & MT6358_IMP0_IRQ_RDY)=
-,
-> +                                      IMP_POLL_DELAY_US, AUXADC_TIMEOUT_=
-US);
-> +       if (ret) {
-> +               mt6358_stop_imp_conv(adc_dev);
-
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-
-  if (ret)
-    foo()
-
-  return ret;
-
-
-...
-
-> +       int val_v, ret;
-
-Why is val_v signed?
-
-...
-
-> +       int val_v, val_i, ret;
-
-Ditto for all val_*.
-
-...
-
-> +       /* If it succeeded, wait for the registers to be populated */
-> +       usleep_range(IMP_STOP_DELAY_US, IMP_STOP_DELAY_US + 50);
-
-fsleep() ?
-
-...
-
-> +       /* Assert ADC reset */
-> +       regmap_set_bits(regmap, pdata->regs[PMIC_HK_TOP_RST_CON0], PMIC_R=
-G_RESET_VAL);
-
-No required delay in between?
-
-> +       /* De-assert ADC reset */
-> +       regmap_clear_bits(regmap, pdata->regs[PMIC_HK_TOP_RST_CON0], PMIC=
-_RG_RESET_VAL);
-
-...
-
-> +       /* Wait until all samples are averaged */
-> +       usleep_range(desc->num_samples * AUXADC_AVG_TIME_US,
-> +                    (desc->num_samples + 1) * AUXADC_AVG_TIME_US);
-
-fsleep()
-
-...
-
-> +       ret =3D regmap_read_poll_timeout(regmap,
-> +                                      (pdata->regs[PMIC_AUXADC_ADC0] +
-> +                                       PMIC_AUXADC_ADCx(chan->address)),
-
-Drop unneeded parentheses and possibly make it one line.
-
-> +                                      val, (val & PMIC_AUXADC_RDY_BIT),
-
-Unneeded parentheses.
-
-> +                                      AUXADC_POLL_DELAY_US, AUXADC_TIMEO=
-UT_US);
-> +       if (ret)
-> +               return ret;
-
-...
-
-> +       mutex_lock(&adc_dev->lock);
-
-Why not use cleanup.h?
-
-...
-
-> +static int mt6359_auxadc_probe(struct platform_device *pdev)
-> +{
-
-  struct device *dev =3D &pdev->dev;
-
-> +       struct device *mt6397_mfd_dev =3D pdev->dev.parent;
-
-  ... =3D dev->parent;
-
-> +       struct mt6359_auxadc *adc_dev;
-> +       struct iio_dev *indio_dev;
-> +       struct regmap *regmap;
-> +       int ret;
-> +
-> +       /* Regmap is from SoC PMIC Wrapper, parent of the mt6397 MFD */
-> +       regmap =3D dev_get_regmap(mt6397_mfd_dev->parent, NULL);
-> +       if (!regmap)
-> +               return dev_err_probe(&pdev->dev, -ENODEV, "Failed to get =
-regmap\n");
-> +
-> +       indio_dev =3D devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev))=
-;
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       adc_dev =3D iio_priv(indio_dev);
-> +       adc_dev->regmap =3D regmap;
-> +       adc_dev->dev =3D &pdev->dev;
-> +
-> +       adc_dev->pdata =3D device_get_match_data(&pdev->dev);
-> +       if (!adc_dev->pdata)
-> +               return -EINVAL;
-> +
-> +       mutex_init(&adc_dev->lock);
-> +
-> +       mt6359_auxadc_reset(adc_dev);
-> +
-> +       indio_dev->dev.parent =3D &pdev->dev;
-> +       indio_dev->name =3D dev_name(&pdev->dev);
-> +       indio_dev->info =3D &mt6359_auxadc_info;
-> +       indio_dev->modes =3D INDIO_DIRECT_MODE;
-> +       indio_dev->channels =3D adc_dev->pdata->channels;
-> +       indio_dev->num_channels =3D adc_dev->pdata->num_channels;
-> +
-> +       ret =3D devm_iio_device_register(&pdev->dev, indio_dev);
-> +       if (ret < 0)
-
-Why  ' < 0' ?
-
-> +               return dev_err_probe(&pdev->dev, ret, "failed to register=
- iio device\n");
-> +
-> +       return 0;
-> +}
-
---=20
-With Best Regards,
-Andy Shevchenko
+> Here you go... The patch applied cleanly against 6.9.3, which I saw
+> was just released by Greg, so I used that. If you want, I can repeat
+> the test against 6.9.2, too.
+
+.3 is fine
+
+> Please note: to be able to boot any kernel >= 6.8.4 on my machine, I also had to apply 
+> this patch by Martin Petersen, fixing another (unrelated SCSI) regression I reported some 
+> time ago, see here:
+>
+> https://lore.kernel.org/all/20240521023040.2703884-1-martin.petersen@oracle.com/
+>
+> But I think these two issues are not connected in any way. It was during testing the above 
+> patch by Martin that I noticed this new issue in 6.9 BTW.
+
+Right. It's a seperate problem.
+
+> I have attached resulting file dmesg_6.9.3-dirty_Bad_wDebugInfo.txt,
+> and I hope you can make some sense of it.
+
+It's exactly what I expected but it does not make any sense at all.
+
+>     [    0.000000] Legacy: 2 5 5
+
+So that means that during early boot where the topology parameters are
+decoded from CPUID the CPUID evaluation code sees that the maximum
+supported CPUID leaf is 0x02 and it therefore reads complete non-sense.
+
+Later on when the full CPUID evaluation happens it sees the full space
+and uses leaf 0xb.
+
+>     [    1.687649] L:b 0 0 S:1 N:2 T:1
+>     [    1.687652] D: 0
+>     [    1.687653] L:b 1 1 S:5 N:24 T:2
+>     [    1.687655] D: 1
+>     [    1.687656] L:b 2 2 S:0 N:0 T:0
+>     [    1.687658] [Firmware Bug]: CPU0: Topology domain 0 shift 1 != 5
+
+And this obviously sees the proper numbers and complains about the
+inconsistency.
+
+So something on this CPU is broken. The same problem exists on all APs:
+
+>     [    1.790035] .... node  #0, CPUs:        #4
+>     [    1.790312] .... node  #1, CPUs:   #12 #16
+>     [    0.011992] Legacy: 2 5 5
+>     [    0.011992] Legacy: 2 5 5
+>     [    0.011992] Legacy: 2 5 5
+>     [    0.011992] Legacy: 2 5 5
+      .....
+
+Now the million-dollar question is what unlocks CPUID to read the proper
+value of EAX of leaf 0. All I could come up with is to sprinkle a dozen
+of printks into that code. Updated debug patch below.
+
+Thanks,
+
+        tglx
+---
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -65,6 +65,7 @@ static void parse_legacy(struct topo_sca
+ 		cores <<= smt_shift;
+ 	}
+ 
++	pr_info("Legacy: %u %u %u\n", c->cpuid_level, smt_shift, core_shift);
+ 	topology_set_dom(tscan, TOPO_SMT_DOMAIN, smt_shift, 1U << smt_shift);
+ 	topology_set_dom(tscan, TOPO_CORE_DOMAIN, core_shift, cores);
+ }
+--- a/arch/x86/kernel/cpu/topology_ext.c
++++ b/arch/x86/kernel/cpu/topology_ext.c
+@@ -72,6 +72,9 @@ static inline bool topo_subleaf(struct t
+ 
+ 	cpuid_subleaf(leaf, subleaf, &sl);
+ 
++	pr_info("L:%0x %0x %0x S:%u N:%u T:%u\n", leaf, subleaf, sl.level, sl.x2apic_shift,
++		sl.num_processors, sl.type);
++
+ 	if (!sl.num_processors || sl.type == INVALID_TYPE)
+ 		return false;
+ 
+@@ -97,6 +100,7 @@ static inline bool topo_subleaf(struct t
+ 			     leaf, subleaf, tscan->c->topo.initial_apicid, sl.x2apic_id);
+ 	}
+ 
++	pr_info("D: %u\n", dom);
+ 	topology_set_dom(tscan, dom, sl.x2apic_shift, sl.num_processors);
+ 	return true;
+ }
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1584,22 +1584,30 @@ static void __init early_identify_cpu(st
+ 	/* cyrix could have cpuid enabled via c_identify()*/
+ 	if (have_cpuid_p()) {
+ 		cpu_detect(c);
++		pr_info("MAXL1: %x\n", cpuid_eax(0));
+ 		get_cpu_vendor(c);
++		pr_info("MAXL2: %x\n", cpuid_eax(0));
+ 		get_cpu_cap(c);
++		pr_info("MAXL3: %x\n", cpuid_eax(0));
+ 		setup_force_cpu_cap(X86_FEATURE_CPUID);
+ 		get_cpu_address_sizes(c);
++		pr_info("MAXL4: %x\n", cpuid_eax(0));
+ 		cpu_parse_early_param();
++		pr_info("MAXL5: %x\n", cpuid_eax(0));
+ 
+ 		cpu_init_topology(c);
++		pr_info("MAXL6: %x\n", cpuid_eax(0));
+ 
+ 		if (this_cpu->c_early_init)
+ 			this_cpu->c_early_init(c);
++		pr_info("MAXL7: %x\n", cpuid_eax(0));
+ 
+ 		c->cpu_index = 0;
+ 		filter_cpuid_features(c, false);
+ 
+ 		if (this_cpu->c_bsp_init)
+ 			this_cpu->c_bsp_init(c);
++		pr_info("MAXL8: %x\n", cpuid_eax(0));
+ 	} else {
+ 		setup_clear_cpu_cap(X86_FEATURE_CPUID);
+ 		get_cpu_address_sizes(c);
+@@ -1797,9 +1805,12 @@ static void identify_cpu(struct cpuinfo_
+ #ifdef CONFIG_X86_VMX_FEATURE_NAMES
+ 	memset(&c->vmx_capability, 0, sizeof(c->vmx_capability));
+ #endif
++	pr_info("MAXLG1: %x\n", cpuid_eax(0));
+ 
+ 	generic_identify(c);
+ 
++	pr_info("MAXLG2: %x\n", cpuid_eax(0));
++
+ 	cpu_parse_topology(c);
+ 
+ 	if (this_cpu->c_identify)
