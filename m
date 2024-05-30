@@ -1,258 +1,130 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7A2DDA0;
-	Thu, 30 May 2024 06:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2369926AD3
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 06:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717049510; cv=none; b=S42myYXjLSy1p6hWAs5wgzMG8CMX1kmw1M3Co1jpqM61aIto7oe1fvYs0qWoP8M4esxvF3WcLpdQQlANL/uDK793lL/q844huN2dDgjuU3cy03fM3GUV1iELyFX/hZsXiyeATxZqyRrdHERB/lBJk8G7lQVGqlBgFsey3PuM3OQ=
+	t=1717049786; cv=none; b=h0IqN2Eue3Go3rSRcB2xl76+t2jasUwmQapsiwI/+2AIlzclakvZbse7Ep+r3pG8+txFt/WfNTXypdKuusTDEADRifvb1qB1T1r4RqegFqZYv6j511d89/5nh6qDqLexsZI8R8pzm3UU3QuUWI1oJI9t8CtqZCNkVa/rdKA3RrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717049510; c=relaxed/simple;
-	bh=NNuRGnCC/PwvYry4sTt4WxbSvgwyXHJP0+uo5/GHg94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Z0GtF/fLa6ALqtM1aUTablUWHrkv4ycenx3I5OhAs78Z1oYuo+I3FFO3MPDZpFV/bsAWzpdrrUrihfBiiBe9G39x+p2+DEivUJiiRtYTyxA/KHxVZpqz1hVn6HJSOU3lHgwVL+PYF50sOmGwnpjqIdN8AVhHq8oYDOVAiCLJkfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=iqnipGLU; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1717049786; c=relaxed/simple;
+	bh=cJlNRabZ63c4rwDvW/6pW/RB3/AqAq1C0anVNyFoUqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=th2v8Rj0Y/w9gnRQS3k84AQineq4DayCFXon7vGqRhybzAnEnjvdPY+3J/T1lbHDXLNg/aE1oZoQMvbNK2wb/indvhn28AWjqtxbx37salYzJgVcUtft4u8PPZ8/Yf3z43oXFtERZbwR+zI4P30q8GNjZQgTsiN/KLoXMLu1L0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r53BVgUU; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="iqnipGLU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1717049479; x=1717654279; i=wahrenst@gmx.net;
-	bh=EsObzuDggZcPsAJCrYelSxDfb2ObF3xVT9aYpHF/x8o=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=iqnipGLUmAHOOWqDMe9hRcfpFCCpxhFLUkCe/fYExpavDdLid1imlEzKBqHZpsvW
-	 xl+SkXhnxzRcHcqbUdH4f9i9KgQywuvm1M7Wx3+9QLJrs0vNNwWTtgBoavp8j+QW4
-	 gUueQNl1mOrSPgzR+e3z7sGeJY3hKmSBpvAf28XtjUXb8lDzWiSMP6JTXZci9v/e7
-	 8aftExv2s2VmQtJFJKT2AQtSgnNa3pLgFO64cYBfPIqqwuDFBRa8iRa0RKvX0uO1R
-	 EGzmUBb8+q6Q2/ulh0zVNTCLaHBxb12s5MA71IowjWDzzZenGmi6KjYaULVLCywcA
-	 CvXJTgQT/yH5hrLIXg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MORAa-1rq4531Lw6-00MYLI; Thu, 30
- May 2024 08:11:19 +0200
-Message-ID: <f94cf0fb-a9a2-4447-9b32-7f09c2a37cf6@gmx.net>
-Date: Thu, 30 May 2024 08:11:18 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r53BVgUU"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2c19bba897bso388607a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 29 May 2024 23:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717049784; x=1717654584; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9x8sXCDajpYUsltQRGScSRDo95HG23BSUbceELtrjcw=;
+        b=r53BVgUUpHkQIk0DeEAoAWZLDKKsIBUdpcSjQCEQdbgcdb137UipjVLQc11U3dtZDO
+         7BrOGf+EHAPQjEu00Yow6w48yq8XI67/AGTJIfPJiLDDcVzlzn2XBMNpWYLaDTJEVMuU
+         +BdgvdhujYCy5Bpta2rw2OvHcOf+cJNR6CyRBJ4FGbElxiif/9NT2LEr//FFxxqyqp9V
+         qCuyj1vxEt3Odg/y1U0cdan3c3qNTm0/NZP7HehTTfI9UlEv0gKcfvVU2OPSoPMT9f8g
+         RzDwLdnNp22l3TryPj/sJk3bSTpXE6jJ4+hNpx9vdSQ3NSE5s6ulUKVby9ifssKBlYTj
+         d4Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717049784; x=1717654584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9x8sXCDajpYUsltQRGScSRDo95HG23BSUbceELtrjcw=;
+        b=jg8vxn90Fy+FAkj1E7KVYrlaF5oXeYyTYuCK/RuqjQ2f1WYiJPX9r9sUg66fzqpmLx
+         KEiAyFHfGPeemKnTfdqwRSwOYMERyvqBFOxbrT2Icu3tVuwuP6YXfWJUmyvSvNHjxWPC
+         ViqdBPkR/kFMJTtGPQhXq4cjOXkR39UkUkT5zBWPoXZyDoUnUheHN19r7qlRmkaODZuZ
+         CUNnFahiiSA6bcB4GvOJ77O+0VT6bhIKKiMb0Vw8JNMj/hpBhubSiDsRHoNrF7jqRIM1
+         TFoWm7fXcxinDI6hqFD2ubTcLs/kfFM4eylzXFJvHRd6HXJS6F03edo91ihaO1MUFLIU
+         Pj6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXuxis4VtI5YX7sjedLzBCgE8+jeXUksFAu7AQnEhAeQHqXbnkSVDCH9gkK2rkoDzLEKGb8V0vj3WzO9H489f+0I1Gzr1jZYKCx2DNR
+X-Gm-Message-State: AOJu0YyXilKM+U4r0QGp6bJs3aGGnqhSaqfuv9KvOXiAnoo1C3WOK3b9
+	YWkGiuPd/D6EnvUfJzqcysUNkq9NW4vlkG4BSWZxaAoMjKA5mCKEtaBKXFq2o5Q=
+X-Google-Smtp-Source: AGHT+IH6pbLwPJIs+k7aqwTxKi4mh3rtMT7+SWv2j5qj/8dKBkbaRat6jBUKRChGlBm8+KPJ5BBhcQ==
+X-Received: by 2002:a17:90a:bb12:b0:2bf:ee29:1a64 with SMTP id 98e67ed59e1d1-2c1abc328d9mr1296620a91.23.1717049784218;
+        Wed, 29 May 2024 23:16:24 -0700 (PDT)
+Received: from localhost ([122.172.82.13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1a77afb24sm850173a91.46.2024.05.29.23.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 May 2024 23:16:23 -0700 (PDT)
+Date: Thu, 30 May 2024 11:46:21 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Riwen Lu <luriwen@hotmail.com>
+Cc: Ionela Voinescu <ionela.voinescu@arm.com>,
+	Beata Michalska <beata.michalska@arm.com>,
+	Hoan Tran <hotran@apm.com>, rafael@kernel.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v2] cpufreq/cppc: Take policy->cur into judge when set
+ target
+Message-ID: <20240530061621.36byo5a2iqc6o2az@vireshk-i7>
+References: <TYCP286MB24861BA890594C119892FB3DB1F22@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
+ <20240529053652.pzcjoyor7i23qc4i@vireshk-i7>
+ <TYCP286MB248669BCAD7A7E54C5071EF9B1F22@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
+ <20240529071244.vwognqagaa4347dm@vireshk-i7>
+ <TYCP286MB2486B1D734F8E2D74BFBEEB1B1F32@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
+ <20240530055624.quutkzdd44l3oevc@vireshk-i7>
+ <TYCP286MB2486A0F14AE38F83F425F506B1F32@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] arm64: dts: broadcom: Add support for BCM2712
-To: Andrea della Porta <andrea.porta@suse.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kamal Dasu <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <cover.1716899600.git.andrea.porta@suse.com>
- <8dd6997394a01317747ca11b4779f586752b4947.1716899600.git.andrea.porta@suse.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <8dd6997394a01317747ca11b4779f586752b4947.1716899600.git.andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wTYiOw3KxXiOy40hYJRqts+FSsstKKT4WxhXtd/QEojTR2X2ojL
- TySUwrIHVWRK3PLZ3br7lh9HWcvgqFq2Wsw6ETiv3sJukezwScTkBHYdP/3PM8UfTPdtmKG
- 4PnTCpPe//sivTIVv2K/20Lv58L+bv4arelOS6JPGh2oZW5HDWxTFz+P5yfPc9Faf5xmkRv
- AtJ9RlWQo0KXN4mclqdFw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:c7pe3KccDI8=;iYBiNMPDOng309BceoMXopUPaVf
- wnJd1FHtrLbgnE+aKZuojCZx19zPY+xm5Sr1HrY+8QY2JE4otngDh4f8+WEUgX0h/5kAUIYr0
- 5xeQK+lu93ucjWyBnUM+W9Clm4/bAP6k+znyoSe/yllkHhEB7rIf6lNB+FLrgRk4r0WGgQCik
- 70Wm8/xDZPJ1fevl80ItZ5AaOULyUUrKCnXN9ums/pzQcWkx0PHQlgJllXlUITDsAhtQrETRm
- S9gepccEx2efsRDN3ziRxdTuQ/kXe+Bi2P2cVlASD/e94++dKDpOEzAVLUcfSMnLGHx3WaNVW
- AOqbouezSuWZEF9RSP6VygGPoux36PMni+hPcGS6CjL9axWBCQ5zwGrws/CzyKW9QRisEV30l
- s09DMY9oosd6PEtfd9TQms3xAEqhu9EMHMAj5FiT5cno8+eRIPpgDZyUwmfs56sBOIjpASvOx
- 4LkRwTwBORL8OOaQO8HJSiFLKYct3/ZvpocLr3lWwOpC+imcDk2EZKW5svuBOSmqsAMWXrco9
- 0MBMIvO0xEORFqbG62E04VWvt4b8kv8ziJNy88Dc/d7ys0dZeqS0n0HV43nPhJa5x6XGLxEbw
- OJZFnankn0wnJTy+ORGZi9TmkOjCIbvk8LBrj/WN2XcjjsrLlfI69xjHatQsjt8plx5anT5py
- rwGl2ezvMFlRKTzDA20toUCIM8flQ99OJp/boL9gnvpx7eDNv8OwMSQp1OrepdQJkRFgNOVLv
- Xx51oZF7v5LEjaUY95FEDNX/kUiKBmsl0UjkOUqOH641g+/9lCPOmZOi9vVVGp1pvPRjva/TC
- S+R7WtrnsdDkIRs3CuiaT0gLswLgiB8iwIAkz7+7/70Xs=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYCP286MB2486A0F14AE38F83F425F506B1F32@TYCP286MB2486.JPNP286.PROD.OUTLOOK.COM>
 
-Hi Andrea,
+On 30-05-24, 14:02, Riwen Lu wrote:
+> 在 2024/5/30 13:56, Viresh Kumar 写道:
+> > Cc'ing few more people.
+> > 
+> > On 30-05-24, 09:06, Riwen Lu wrote:
+> > > 在 2024/5/29 15:12, Viresh Kumar 写道:
+> > > > On 29-05-24, 14:53, Riwen Lu wrote:
+> > > > > Yes, you are right， I didn't think it through. In this circumstance, the
+> > > > > policy->cur is the highest frequency, desired_perf converted from
+> > > > > target_freq is the same with cpu_data->perf_ctrls.desired_perf which
+> > > > > shouldn't.
+> > > > 
+> > > > Please investigate more and see where the real problem is.
+> > > > 
+> > > The boot CPU's frequency would be configured to the highest perf when
+> > > powered on from S3 even though the policy governor is powersave.
+> > > 
+> > > In cpufreq resume process, the booting CPU's new_freq obtained via .get() is
+> > > the highest frequency, while the policy->cur and
+> > > cpu->perf_ctrls.desired_perf are in the lowest level(powersave governor).
+> > > Causing the warning: "CPU frequency out of sync:", and set policy->cur to
+> > > new_freq. Then the governor->limits() calls cppc_cpufreq_set_target() to
+> > > configures the CPU frequency and returns directly because the desired_perf
+> > > converted from target_freq and cpu->perf_ctrls.desired_perf are the same and
+> > > both are the lowest_perf.
+> > > 
+> > > The problem is that the cpu->perf_ctrls.desired_perf is the lowest_perf but
+> > > it should be the highest_perf.
+> > > 
+> > > In my opinion, desired_perf and cpu->perf_ctrls.desired_perf represent the
+> > > target_freq and policy->cur respectively. Since target_freq and policy->cur
+> > > have been compared in __cpufreq_driver_target(), there's no need to compare
+> > > desired_perf and cpu->perf_ctrls.desired_perf again in
+> > > cppc_cpufreq_set_target().
+> > > So, maybe we can remove the following logic in cppc_cpufreq_set_target().
+> > > /* Return if it is exactly the same perf */
+> > > if (desired_perf == cpu_data->perf_ctrls.desired_perf)
+> > > 	return ret;
+> > 
+> > This is what I was thinking as well yesterday.
+> > 
+> OK, I'll push a V3 patch.
 
-i think the following subject would be better:
+Please CC everyone from this email.
 
-arm64: dts: broadcom: Add minimal support for Raspberry Pi 5
-
-because you also add the board file here.
-
-Am 28.05.24 um 15:32 schrieb Andrea della Porta:
-> The BCM2712 SoC family can be found on Raspberry Pi 5.
-> Add minimal SoC and board (Rpi5 specific) dts file to be able to
-> boot from SD card and use console on debug UART.
->
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> ---
->   arch/arm64/boot/dts/broadcom/Makefile         |   1 +
->   .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  64 ++++
->   arch/arm64/boot/dts/broadcom/bcm2712.dtsi     | 292 ++++++++++++++++++
->   3 files changed, 357 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
->   create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712.dtsi
->
-> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts=
-/broadcom/Makefile
-> index 8b4591ddd27c..92565e9781ad 100644
-> --- a/arch/arm64/boot/dts/broadcom/Makefile
-> +++ b/arch/arm64/boot/dts/broadcom/Makefile
-> @@ -6,6 +6,7 @@ DTC_FLAGS :=3D -@
->   dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
->   			      bcm2711-rpi-4-b.dtb \
->   			      bcm2711-rpi-cm4-io.dtb \
-> +			      bcm2712-rpi-5-b.dtb \
->   			      bcm2837-rpi-3-a-plus.dtb \
->   			      bcm2837-rpi-3-b.dtb \
->   			      bcm2837-rpi-3-b-plus.dtb \
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm=
-64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> new file mode 100644
-> index 000000000000..2bdbb6780242
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "bcm2712.dtsi"
-> +
-> +/ {
-> +	compatible =3D "raspberrypi,5-model-b", "brcm,bcm2712";
-> +	model =3D "Raspberry Pi 5";
-> +
-> +	aliases {
-> +		serial10 =3D &uart10;
-> +	};
-> +
-> +	chosen: chosen {
-> +		stdout-path =3D "serial10:115200n8";
-> +	};
-> +
-> +	/* Will be filled by the bootloader */
-> +	memory@0 {
-> +		device_type =3D "memory";
-> +		reg =3D <0 0 0 0x28000000>;
-> +	};
-> +
-> +	sd_io_1v8_reg: sd-io-1v8-reg {
-> +		compatible =3D "regulator-gpio";
-> +		regulator-name =3D "vdd-sd-io";
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +		regulator-settling-time-us =3D <5000>;
-> +		gpios =3D <&gio_aon 3 GPIO_ACTIVE_HIGH>;
-> +		states =3D <1800000 1>,
-> +			 <3300000 0>;
-> +	};
-> +
-> +	sd_vcc_reg: sd-vcc-reg {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "vcc-sd";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		regulator-boot-on;
-> +		enable-active-high;
-> +		gpios =3D <&gio_aon 4 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +/* The Debug UART, on Rpi5 it's on JST-SH 1.0mm 3-pin connector
-> + * labeled "UART", i.e. the interface with the system console.
-> + */
-> +&uart10 {
-> +	status =3D "okay";
-> +};
-> +
-> +/* SDIO1 is used to drive the SD card */
-> +&sdio1 {
-> +	vqmmc-supply =3D <&sd_io_1v8_reg>;
-> +	vmmc-supply =3D <&sd_vcc_reg>;
-> +	bus-width =3D <4>;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-ddr50;
-> +	sd-uhs-sdr104;
-> +};
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712.dtsi b/arch/arm64/boot=
-/dts/broadcom/bcm2712.dtsi
-> new file mode 100644
-> index 000000000000..71b0fa6c9594
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2712.dtsi
-> @@ -0,0 +1,292 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible =3D "brcm,bcm2712";
-> +
-> +	#address-cells =3D <2>;
-> +	#size-cells =3D <2>;
-> +
-> +	interrupt-parent =3D <&gicv2>;
-> +
-> +	axi: axi@1000000000 {
-> +		compatible =3D "simple-bus";
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges =3D <0x10 0x00000000  0x10 0x00000000  0x01 0x00000000>;
-> +
-> +		sdio1: mmc@1000fff000 {
-> +			compatible =3D "brcm,bcm2712-sdhci",
-> +				     "brcm,sdhci-brcmstb";
-> +			reg =3D <0x10 0x00fff000  0x0 0x260>,
-> +			      <0x10 0x00fff400  0x0 0x200>;
-> +			reg-names =3D "host", "cfg";
-> +			interrupts =3D <GIC_SPI 273 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks =3D <&clk_emmc2>;
-> +			clock-names =3D "sw_sdio";
-> +			mmc-ddr-3_3v;
-> +		};
-> +
-> +		gicv2: interrupt-controller@107fff9000 {
-> +			interrupt-controller;
-> +			#interrupt-cells =3D <3>;
-> +			compatible =3D "arm,gic-400";
-> +			reg =3D <0x10 0x7fff9000  0x0 0x1000>,
-> +			      <0x10 0x7fffa000  0x0 0x2000>,
-> +			      <0x10 0x7fffc000  0x0 0x2000>,
-> +			      <0x10 0x7fffe000  0x0 0x2000>;
-Please move compatible and reg before the other properties (DTS coding
-style)
-> +		};
-> +	};
-> +
-> +	clocks {
-> +		/* The oscillator is the root of the clock tree. */
-> +		clk_osc: clk-osc {
-> +			compatible =3D "fixed-clock";
-> +			#clock-cells =3D <0>;
-> +			clock-output-names =3D "osc";
-> +			clock-frequency =3D <54000000>;
-> +		};
-> +
-> +		clk_vpu: clk-vpu {
-> +			#clock-cells =3D <0>;
-> +			compatible =3D "fixed-clock";
-> +			clock-frequency =3D <750000000>;
-> +			clock-output-names =3D "vpu-clock";
-> +		};
-Is the VPU clock really fixed or is it just a workaround for minimal
-boot support?
-
-Except of this, LGTM
+-- 
+viresh
