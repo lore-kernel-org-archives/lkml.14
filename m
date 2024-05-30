@@ -1,100 +1,132 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBED1761BF;
-	Thu, 30 May 2024 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BB76F301;
+	Thu, 30 May 2024 08:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717059246; cv=none; b=ba54QbpdLjiTXxkT8nTXN08kJbaCcMVcG+VARf82kXlX8QzbEoQ7F03JhknqpDFDkbSWdmh5jeO+SOZAVYukSZDv7ftXebdnJ1XHGzoFQ5Uej4IDZP6JOHgHP/mx4he3agZX9ZXQ4HZ9AgJdrNxv4IleVUMS+im1rV5si/YtDbI=
+	t=1717059388; cv=none; b=VcVybITCTwQgDal5FhlCFXx3rguDG3Pq3KIMziBMArBd94PyjXXbFzw2SKkT0wgMMwZUWLYWOKKAZH+e8Q/3nrJbeAvrszJZWFkgjxHoZOC/GaTWsoQ14EkVf0rYQvkasn4q/m22s839HFLd1VEROKIX5CfCg7FtXAenOnNBPfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717059246; c=relaxed/simple;
-	bh=OiPXOYqVDdLsZkYedWaVvRrpJe0cx5AuAOz/naYPWjE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEco8bC3gwu9+qPLJGy84/gYQrOPJKF2Gk2HrsDNlPRPcOkl7fxzkK0IPzaPnusUu/cn0I3p3Q5dzZoQejoY9Ah5zkUf4dka0vMacKnlnfJToWGmkpI+hcSFObVxiW8P9tm5PemVSjCjtGN1L/nwtrW56fNkTykz1MGdzoOjns8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de; spf=pass smtp.mailfrom=heusipp.de; dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b=Npr4RdNt; arc=none smtp.client-ip=212.227.126.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusipp.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusipp.de
+	s=arc-20240116; t=1717059388; c=relaxed/simple;
+	bh=fum/BPvWuDHoboZhfPtwEwo9cUCkLkyCgJcO+Gf/NjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pwi6T4Jb12nZ0Xrz8CyaasEanfmkrQLXYPMuPs6hrDzjpYHbPFcw62KSgu9cruCv4AJjogdbqmfiZqG8c5+KfzLTZFD0FLye65RRhWY/xZKzj/wF5WsdwKki151BUb/bskXIY8B5E6Tiiz4zzMo7wAPdfTKIj+TevZtPsinLkaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MrDPeC2x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusipp.de header.i=osmanx@heusipp.de header.b="Npr4RdNt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusipp.de;
-	s=s1-ionos; t=1717059224; x=1717664024; i=osmanx@heusipp.de;
-	bh=OiPXOYqVDdLsZkYedWaVvRrpJe0cx5AuAOz/naYPWjE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Npr4RdNtY55Jk8MtA7iGYZlMk+fOCmMPnjKgmsFZTiMI4H7B1OKcZpDt3VnplkXs
-	 SM9oRq20+Flf2YAiRYE+xsJKJaAxAJZz+qt8QY0x83ctV6g7bNkSqz8mcqcjIKkjF
-	 o9Z9+117NY/hZI5Fvkjk4Fj27ljDlIEkcs0vEDBQKC7J7GpA/5r0NGlh2XVrRWq3U
-	 c8x++Z8yyhlXqn29d9zFzs/OclcTyO3xj8/7cOil2VueuBi9UC/rRrECuI8EILkWU
-	 aY3ouvj0Wr8F4GF0bPAhi0+Z44jkWKc84vAwg9K9/eSccWO1becWMNM2QxM2lN47I
-	 x0fWBBUHpzOkaVKE3w==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.178.90] ([91.62.108.110]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N8VkX-1sZ1yo1lkP-014Xap; Thu, 30 May 2024 10:47:19 +0200
-Message-ID: <5e31cad3-ad4d-493e-ab07-724cfbfaba44@heusipp.de>
-Date: Thu, 30 May 2024 10:45:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MrDPeC2x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5B2C32786;
+	Thu, 30 May 2024 08:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717059388;
+	bh=fum/BPvWuDHoboZhfPtwEwo9cUCkLkyCgJcO+Gf/NjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MrDPeC2xAruMf0dsLELM9FoeYWMHVJCNCBGH8lb4co9Con9cFEHZl3zEt26HxOX8T
+	 wv5V3SUq47QQghlMVGMwD8CnghcgGDPdi4zmEr9c8WuXg+Lln3jXBRoQipd/aGL8ZP
+	 eJoNUKhq1dJZIPdSRcI3plFu8KT/4nF7XHpDS6lgqYAfmARlrH7Eic/3Bwb4nq5PPE
+	 y5vEzRHuvWd49tf3Qhq7Qv68aDHDVq8RIXizIQqPSxm0Q0oXvE2VZSIih4F0VgfgCB
+	 MU5L1amHuAmAPgNUsKyEi88dsPNotrHJwnerM5k+0fwZy6TOXzgQzXdI4xW6fMZ1eA
+	 gafO4//xKUfIg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sCbaG-000000004kF-0kIr;
+	Thu, 30 May 2024 10:56:28 +0200
+Date: Thu, 30 May 2024 10:56:28 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 13/14] regulator: add pm8008 pmic regulator driver
+Message-ID: <Zlg_PP3PomxYGJ8A@hovoldconsulting.com>
+References: <20240529162958.18081-1-johan+linaro@kernel.org>
+ <20240529162958.18081-14-johan+linaro@kernel.org>
+ <CAHp75VcC5t1FynFeHGd+57=AeXKE8u0uduzOfozsG3MEzCPpDQ@mail.gmail.com>
+ <Zlg1bGOs3V3TkHck@hovoldconsulting.com>
+ <CAHp75VeiVSxJwjxXyNueinudOfj-WHZEUg32VBTW4PfCfB9Q+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6
- (Linux 6.7+) crashes during boot
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Adam Dunlap <acdunlap@google.com>,
- 1071378@bugs.debian.org
-References: <ebb0791c-60a5-4fe3-bc85-4921ad026605@heusipp.de>
- <4611b3c8-0ef6-4951-8b34-10a1c7262355@leemhuis.info>
-Content-Language: en-US
-From: =?UTF-8?Q?J=C3=B6rn_Heusipp?= <osmanx@heusipp.de>
-In-Reply-To: <4611b3c8-0ef6-4951-8b34-10a1c7262355@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TH5Rj8IDETzGF7pUOEsDoQfRqaiaWyTdAXIj2gLCYvG4cs93TLH
- qirAWYb3jzHboshA3g7QUf3yAiqeiM0WDKF8nQby/DCGGOmpQXZ4Sycy2Tu5m4VySg/aNzE
- FdhXHwAjqXQT5pdrIzsHbmOQ21ac45SZXhEuj9KJiLcRHog8ZdT/Mq5nTOE6KMtGAsEwshl
- npzs5T36VcPVgWDYJH5+Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:MBSDXgNKHTU=;z2YdmhNWzRwp5qolDSwAdFk1mtL
- 6uLeuYZHJMqAK5G4juvCo3YTKEEMPQgYVJpZYZ8wALCJQlr9SFCIxnD99kk/F/bFkQehOLbl/
- mr7e0pY2mVf9rfThdA224xPjFGxM4ryUy/B8W7u9GdfP2BjvOaGCDdduAgpGRpys5RKMZL+jA
- 9xKJnVLAIQC1pq9MHxYvuQQJLp1WyfzAEInXn3qHsqE4fGTh2ROHRN8dZcvzA8M/elONIrgSo
- CSSy+Ifskp2mLZIBiADeUFuuX9W11sVtQT+5cnvTJNk/LHuxagXv7UJLnj6gyc3KFsQtU5N4E
- DbXtknFJzRMbwYJ2SvR+f1CUy1JYMwCmoxRMI3Nv5RPJ5MlRjz0VuPchDveHh+XiJ+9LPMRbA
- rQF/+XsZqa1Zbhr50hc+OtyP5kMBz1e57Z2XPlo825t1pZksCsqPSyFUL4ECk612P+hGUONRl
- GFZy7mLAkTo0m3Rh306ye9AAsMfILQgIW9H+PweES33WFo4YUkgHhw+VZnzoCjWOqWp3qDkdV
- uD1ogN3cFx7Bo9vv0ZA3HzIILfpHwOq9628zO/JOCECE/it9YtIg6UJiaMNF6LpscTV2ukKLa
- e50B5PbbA/8xUVfFakUmcw2XLThblqaLMOdwsmDgVBnbICzliuJ6QsR3reG2UmHUB3+YBRcw1
- CstgOv7eTUozuoClvl8cgdbDN/827PKDweBP1vxg8kNl4anU0TxvtXnilROHloVL3gtbkdvSB
- 7KXaWJzvdazLGgcKN3imGia7KDwI2LWHsF/HcM8ZZNVl9MWrHyoagU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeiVSxJwjxXyNueinudOfj-WHZEUg32VBTW4PfCfB9Q+g@mail.gmail.com>
 
+On Thu, May 30, 2024 at 11:46:12AM +0300, Andy Shevchenko wrote:
+> On Thu, May 30, 2024 at 11:14 AM Johan Hovold <johan@kernel.org> wrote:
+> > On Wed, May 29, 2024 at 11:02:57PM +0300, Andy Shevchenko wrote:
+> > > On Wed, May 29, 2024 at 7:30 PM Johan Hovold <johan+linaro@kernel.org> wrote:
+> 
+> ...
+> 
+> > > > +#include <linux/array_size.h>
+> > > > +#include <linux/bits.h>
+> > > > +#include <linux/device.h>
+> > > > +#include <linux/math.h>
+> > > > +#include <linux/module.h>
+> > >
+> > > > +#include <linux/of.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/regmap.h>
+> > > > +#include <linux/regulator/driver.h>
+> > >
+> > > + types.h
+> >
+> > This one is already pulled in indirectly and I'm not going to respin for
+> > this.
+> >
+> > > + asm/byteorder.h
+> >
+> > Already explicitly included in the code you left out.
+> 
+> Is there any guarantee it will be like this? I don't think so. That's
+> why there is an IWYU principle to give more flexibility of reshuffling
+> the (core) headers. And I believe you know that we have way too far
+> dependency hell in the headers in the kernel. Have you seen what Ingo
+> tried to do and what the potential achievements are?
 
-Hello!
+The driver is using cpu_to_le16() from asm/byteorder.h so the __le16
+type definition will be pulled in.
 
-On 30/05/2024 09:27, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 30.05.24 08:55, J=C3=B6rn Heusipp wrote:
+> 
+> ...
+> 
+> > > > +               rdev = devm_regulator_register(dev, desc, &config);
+> > > > +               if (IS_ERR(rdev)) {
+> > > > +                       ret = PTR_ERR(rdev);
+> > > > +                       dev_err(dev, "failed to register regulator %s: %d\n",
+> > > > +                                       desc->name, ret);
+> > > > +                       return ret;
+> > >
+> > > It's possible to use
+> > >
+> > >   return dev_err_probe(...);
+> > >
+> > > even for non-probe functions.
+> 
+> (this should be "non-probe deferred functions")
+> 
+> > This is a probe function(), but as I've told you repeatedly I'm not
+> > going to use dev_err_probe() here.
+> 
+> Yeah, I got it, some developers are leaving in the previous decades to
+> make code very verbose for no benefit, no problem.
 
->> commit fbf6449f84bf5e4ad09f2c09ee70ed7d629b5ff6 ("x86/sev-es: Set
->> x86_virt_bits to the correct value straight away, instead of a two-phas=
-e
->> approach") crashes during boot for me on this 32bit x86 system.
->
-> FWIW, not my area of expertise, but there is a patch from Dave with a
-> Fixes: tag for your culprit up for review:
-> https://lore.kernel.org/all/20240517200534.8EC5F33E@davehans-spike.ostc.=
-intel.com/
+And some developers write unreadable code just to save a few lines of
+code. I prefer clarity.
 
-That did not apply cleanly to 6.10-rc1, but I figured it out manually. I
-can confirm that it fixes the issue.
-
-Best regards,
-J=C3=B6rn
+Johan
