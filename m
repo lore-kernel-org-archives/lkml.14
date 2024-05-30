@@ -1,123 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7C51D531;
-	Thu, 30 May 2024 18:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9EA433D2;
+	Thu, 30 May 2024 18:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717092248; cv=none; b=bDZP5hRTtTs/XvGYRQ0lZcjC33oVVdQWN+t5+9Hz1473dxpI8jMGIRbfbomDjGygYGWTePpQzu8o+yrHuSfPl+WCzpWVHaeh50eKjUwHQU2G2NtyUFvEuVJTHtZV2jgodDIY3sWhBu3ZcCg4cGnSoPGML2M1lWoVHvAmQgkw/os=
+	t=1717092376; cv=none; b=My46Yxl+ehcWDbnuODfIU/xfua9j31jF2V/rZaVi9RamLBXZC2zy5gnNTwL1xq5nT86Inkuf5+vdq73CGDU+QjIQbp+evgntR8OVDD9yKfCEzdbxpkAKlE71XuXleAGTT3fFMLidM3+mL+Lle922evaBH1+9X/whFsJYOX+FcCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717092248; c=relaxed/simple;
-	bh=BEIEhrG9qX9RIUaoual1xQdHFV9ZgAZNbmY16Qsocp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aj30lVGyTE3JrzBG78vasgqdchlKVfmwg57M+ro3D4N7MZ1v+FYrA8PRF9066Mo59lRQFMTLqG8ZS1fNrFr6+EJADcpK9W+9K3URqND/Ii9QXcCvNDkPPpgU/v+K7IZt5P7+mHXQbKN3AnX8U2mGTKDKlzQ7w5IS7GIY4qDcvrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fEmKXiJ9; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717092376; c=relaxed/simple;
+	bh=ECROXY97FzRRFQfl/vTg9noe1+ys7k0kn2Q+dIUph7Y=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=H3kD1+pyqa25wJyfI6wU7ZqU3zjGGJcC29uv2BIcQdQroOLxNkiJSAi5al5waxoWRIaFTBI0rLKcZzHDTnqfyvlfyfcN8ildxUMd5b9IcUJhXuvQX7vTDAusv3kNwmQhvnKvkLS1pPbUh1EIgtdcEuWHrPQvGL3qz0bdQGwLCgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=LayYkV9W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F5yW3jNC; arc=none smtp.client-ip=64.147.123.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fEmKXiJ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717092245; x=1748628245;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BEIEhrG9qX9RIUaoual1xQdHFV9ZgAZNbmY16Qsocp4=;
-  b=fEmKXiJ9a9KI3LhofMaAmYU2k8sEPfaU4GdHcnShcAfaj92M5ql6eyQz
-   qYuHLiqLc2NopnOvRsmpXGECdwTY3ydpErSDRmmZYNV79Ke1i6YkLxTaE
-   wtv1smQNGzQXt1So3L81lyo+f4N8AFlPI2NSfFZU9/99M4+ritZOvErL4
-   /remByHzWARVQA1d7NqREm7RYQmo8RMmwLodlplc8cOWRx5maBK5I4ZAs
-   5DynTB/V2Jm65MbCOTmEc1/PGyXo3w9hoxNcrdZ/1mBGBieqSzxVZy0Tg
-   ilSFhqjQjHteY5LSWpauNhnP7PmZHpBnBbDRriqDqWmqdiUM3QittDvbO
-   Q==;
-X-CSE-ConnectionGUID: xXJLHjC1SDWX9ETATQY+NA==
-X-CSE-MsgGUID: 6LRcVIqjT4+Oui8mue5SWg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13828132"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="13828132"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 11:04:05 -0700
-X-CSE-ConnectionGUID: zucVqWpJR0mBCJBFt7Bqzw==
-X-CSE-MsgGUID: p3huy5JiRFKNX17xuU9R6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="36389437"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 30 May 2024 11:04:00 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCk85-000For-1p;
-	Thu, 30 May 2024 18:03:57 +0000
-Date: Fri, 31 May 2024 02:03:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chen-Yu Tsai <wenst@chromium.org>, Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: oe-kbuild-all@lists.linux.dev, Chen-Yu Tsai <wenst@chromium.org>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] clk: mediatek: Add mt8173-mfgtop driver
-Message-ID: <202405310123.KWoPspRr-lkp@intel.com>
-References: <20240530083513.4135052-3-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="LayYkV9W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F5yW3jNC"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id D5CAC1800079;
+	Thu, 30 May 2024 14:06:12 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 30 May 2024 14:06:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1717092372; x=1717178772; bh=SkLD/QSa35
+	SjDwEkaUt3lwI+SBmwPmQOygwVgmlQz2s=; b=LayYkV9WK4f6u5i7IHuefhADZR
+	SRZx8GYAhJ2vN8neBBjcFYIqov388lwboVrHphim/Sw/W4elUyFixlKtLIXA6/hK
+	vU26MgPk8udNrj5RkyKu3QlbMxUs/VDT4ELPRhVI+I2TzxWLsk21+ezWO+b2B03X
+	JAT2X/BJQ+bkKcLJDD3GRQbRlPpKFiVIz47m/OegB5eDQxtbjIGdpMZnrFtqKhQB
+	Gg10e7BAyGYoRTfls61EWjV+ooItFdbWlZphZZs0dwbpkFZHyq9b+4JznreCfSDX
+	J2fl/147w3JZplclvkTAXJ+/FaohUwhFZ2YsYTtqHy2ByWSNfWGfyf0chYiA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1717092372; x=1717178772; bh=SkLD/QSa35SjDwEkaUt3lwI+SBmw
+	PmQOygwVgmlQz2s=; b=F5yW3jNCWi4pf8bFfGOqpfo9+c/c7BOh0lfT5jd+dkvc
+	4sfBpqMbeVGgKaMFKwBB/danWHi9fCWT9VT3QexmMoiPcTrQuGiW+3PM067YTORI
+	2UzyyzW90pn2kHLVNIOQc1cArR8uj8cV3HK8MKpGPcDDhXdHhgTs+voOmJzBAkrs
+	UmRXN4IKO7HhlA6FUjUQW2cfZPgUoT3070RJTjJtiE+3IJ9tMHJVWt8lM1ucvKbZ
+	GAcoX7UO1glDoKWQczit6nDD/oXRwHzJPhOf94I2AyxUoRMXZFYzljwwYQsJckgm
+	nLItEaTgt0Hh9I9MwR4NDt333OorSsOdw5ox1WIC8Q==
+X-ME-Sender: <xms:FMBYZolMBkQ8--FIaWoIg4h6cE5bRL_i8Vvt9xkKn1bfVkpUoaadzA>
+    <xme:FMBYZn3Is0PDuHMAU9Uv9B56vbV91_x56X9DARz34nJxt1-40kga_xEXxNEeneoSo
+    z-VndqrUP7GVXs8llw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekgedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:FMBYZmoDSYqASoiDwPn7wqJPHrh-ybvXXxDq28TCC04Ayc_FszcfUw>
+    <xmx:FMBYZkkcw9CdbF9WH9HwSJzMXG4xipkFmlY68RcbmFhhmDVvWvmxkw>
+    <xmx:FMBYZm1lDMybhSKIMrStfnx9ONJx1jZkLSxQo7xdDNqTIXaXsjTz5Q>
+    <xmx:FMBYZru5yYvLFagqIOqC_B4mHlLcZNB-w_R8vyqg9C6X1PQtjh8Xhg>
+    <xmx:FMBYZsP7bYZrJdDZhdOZK9HZH_egqwQIt1lWUyxblVel5xBaPCG3pX-p>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E5E5DB6008D; Thu, 30 May 2024 14:06:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-491-g033e30d24-fm-20240520.001-g033e30d2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530083513.4135052-3-wenst@chromium.org>
+Message-Id: <38442e3d-1e43-4894-b126-b4258d331a32@app.fastmail.com>
+In-Reply-To: <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
+References: 
+ <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
+ <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
+ <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
+ <5426b25f-9c25-4938-99e8-5cdea75e4d3b@paulmck-laptop>
+ <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
+Date: Thu, 30 May 2024 20:05:50 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Russell King" <linux@armlinux.org.uk>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
+ lkft-triage@lists.linaro.org,
+ "Linux Regressions" <regressions@lists.linux.dev>, rcu <rcu@vger.kernel.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Joel Fernandes" <joel@joelfernandes.org>, eeraj.upadhyay@kernel.org,
+ "John Ogness" <john.ogness@linutronix.de>, "Mark Brown" <broonie@kernel.org>
+Subject: Re: arm-linux-gnueabihf-ld: kernel/rcu/update.o:update.c:(.text+0x1cc4): more
+ undefined references to `__bad_cmpxchg' follow
+Content-Type: text/plain
 
-Hi Chen-Yu,
+On Thu, May 30, 2024, at 19:24, Paul E. McKenney wrote:
+> On Thu, May 30, 2024 at 09:37:21AM -0700, Paul E. McKenney wrote:
+>> On Thu, May 30, 2024 at 03:27:58PM +0200, Arnd Bergmann wrote:
 
-kernel test robot noticed the following build warnings:
+> And for an untested first attempt at a fix.
+>
+> What did I mess up this time?  ;-)
+>
 
-[auto build test WARNING on 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0]
+I think only the comment:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Chen-Yu-Tsai/dt-bindings-clock-mediatek-Add-mt8173-mfgtop/20240530-163739
-base:   1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-patch link:    https://lore.kernel.org/r/20240530083513.4135052-3-wenst%40chromium.org
-patch subject: [PATCH 2/6] clk: mediatek: Add mt8173-mfgtop driver
-config: x86_64-buildonly-randconfig-002-20240531 (https://download.01.org/0day-ci/archive/20240531/202405310123.KWoPspRr-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240531/202405310123.KWoPspRr-lkp@intel.com/reproduce)
+> 
+>  	switch (size) {
+> -#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
+> +#ifdef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
+> +	case 1:
+> +		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
+> +		break;
+> +#else
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405310123.KWoPspRr-lkp@intel.com/
+"min ARCH >= ARMv6K" now applies to the #else side, while the
+#if side is the early ARMv6 (pre-v6K).
 
-All warnings (new ones prefixed by >>):
-
->> drivers/pmdomain/core.c:2965:34: warning: 'idle_state_match' defined but not used [-Wunused-const-variable=]
-    2965 | static const struct of_device_id idle_state_match[] = {
-         |                                  ^~~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS_OF
-   Depends on [n]: PM_GENERIC_DOMAINS [=y] && OF [=n]
-   Selected by [y]:
-   - COMMON_CLK_MT8173_MFGTOP [=y] && COMMON_CLK [=y] && (ARCH_MEDIATEK || COMPILE_TEST [=y]) && COMMON_CLK_MT8173 [=y]
-
-
-vim +/idle_state_match +2965 drivers/pmdomain/core.c
-
-5d6be70add65e3 drivers/base/power/domain.c Ulf Hansson 2018-06-29  2964  
-30f604283e05d3 drivers/base/power/domain.c Lina Iyer   2016-10-14 @2965  static const struct of_device_id idle_state_match[] = {
-598da548ef7892 drivers/base/power/domain.c Lina Iyer   2016-11-03  2966  	{ .compatible = "domain-idle-state", },
-30f604283e05d3 drivers/base/power/domain.c Lina Iyer   2016-10-14  2967  	{ }
-30f604283e05d3 drivers/base/power/domain.c Lina Iyer   2016-10-14  2968  };
-30f604283e05d3 drivers/base/power/domain.c Lina Iyer   2016-10-14  2969  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+     Arnd
