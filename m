@@ -1,87 +1,99 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7309A17CA10
-	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1A61E488
+	for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 13:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717074127; cv=none; b=rv76WIrMlRuDh1VhI7a/EoVX+cM22aTzVD6IjCIkvlAvqjhyM0W6TOwBnfu0jnwD7xaIBO0G69R2lUF+4JNVLNbXHxjuUdyNc5qIux7bizpxi+Gfn+wH4GQzdx0SCGupRGqHZUwxxOlCsCKvhoowRKTFuR87R4YbqEGKNdKeTJY=
+	t=1717074167; cv=none; b=h6S3+NqXnEVY02CvJpVj54TFw2pAqi+SeVXWz650ZeReDvbtjKyGbEZPfB0zzo2jmAnhUrQ4SpYGtjYK80bHRzPsiEn1aYWoB8ThDrkx22cwDa/FJ8NygsH9Pn8c0y3aAp4DVOskNBS9Ymj3DoPRt+/+BuLPkbQATEFo2Cne6P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717074127; c=relaxed/simple;
-	bh=Zclcy1rakeT5f0M+PlcV2Mt4kyDmQgT74mkvgQcSmBg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=swZH5X86lRe/1B2Z2Lt4H4retf3dOrvccJmBo6BPWbHem1lWAhn6r9WsUILEBvqt7jaaDsLooiT70oQCAFbyCj1tbptck55Kz4KGkE9shj1uFRhi9DoIHXhNaqn7DUE+2u748g7mAwQZcIYDSM1aaCzQrBe33Y2R7xp7zJXZ9Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1sCfPq-00061d-1p; Thu, 30 May 2024 15:01:58 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1sCfPp-003b90-Hq; Thu, 30 May 2024 15:01:57 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1sCfPp-006vb6-1Q;
-	Thu, 30 May 2024 15:01:57 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-To: linux-wireless@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Kalle Valo <kvalo@kernel.org>,
-	David Lin <yu-hao.lin@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] wifi: mwifiex: increase max_num_akm_suites
-Date: Thu, 30 May 2024 15:01:56 +0200
-Message-Id: <20240530130156.1651174-1-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1717074167; c=relaxed/simple;
+	bh=9vnkikzwNsTLhzs4okPcSYMp94jwRq2McQqFXH0Vs+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rqMU0MOCetGdsyuU5NQlmikiLTgCGxS/kcdXzLMUaBUmSnCK/GdL4FBkpE4Hbsv5ILXeNxkmK61dF9hJVEa+X3BrlFkQ1jxWs3bIEf7DbF+9qNBy9Rmxj7uIqKqa9JN2zPOTQID19qEi66pAUFI1OgaFdW9svUCaarCNpcWxFRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nnspboH8; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nnspboH8"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3550134ef25so874948f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 06:02:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717074164; x=1717678964; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=49+GMxNWhLkVW4rmL96a1CAqr3zak+IQF7tujObyMU8=;
+        b=nnspboH8UBEmVtMl5vk1JbizDmcYIYXXjwI6ezu17RPvlE/h2MlGRP7TcE/5WeDBIS
+         fSRP3DbNrQ+6Y30imZsOdwS1trndR7YhsVr/k+01JyxFDbrNiu+Mc3pz2ZJUTtqkKdKB
+         DTrkPRQ0BUoTA0OMrGrrWYcggcLj19kyfnzD4gvummH9E9L58UKS9uHnXDquJsT2GHEk
+         WqYFRTWwoQbE0yHKhOdwOe3ocbjorMETP4puNRBqFlb0vqkdpNs5929EEkH+RkDOSJzZ
+         5M7rgHJotBW6FIhG8RR426pIdJhYKlTr5jTHLQ0anA25N3ReAjipSQOTjTX9Bp2Y6zh/
+         r51Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717074164; x=1717678964;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=49+GMxNWhLkVW4rmL96a1CAqr3zak+IQF7tujObyMU8=;
+        b=UHGpHOf4F5UpiuOwWZFOtIhnS/b5gPJnvZQjLh1eprL668zezdh5+kl8f7sOvNYpHm
+         kCO4CRYclC/uQsVc2vqCYobKoACDlMCH/qwNLW++VIbxs9oT9PPJP34ONcv2rQNF/8aR
+         PY7OHUKdj7zQTDAJbsQZALku+r8otg8dsC8h6piy5nyK+sybhGgRVxtAbqsgEtI72e1l
+         ezW1yH8lHwV9Ps5l21Rl4x05d1xJVkx4Ppr/dM/n7AEQWPdUXgbPXPjrKU3tBp+sz9xf
+         GqTT2kK+Uds9jOYHMO8Jk3BM6y+HtghsTe5kh/xXZx+BW2w2X2uXub6tZK3dNIn9ooyE
+         pduw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOwqjpYPaZnYPejGh9t9vWFlLbAo7I6uoFvo8anoqfbSc75uBvKSVC+RxtHiOGJbWa/p+/nXKm5lQit9ubL5tAz00/ohaeXaevZsUC
+X-Gm-Message-State: AOJu0Yy4UEF4c+ymlHVmNkDV4q9z6osNMavqe43eoThB3TChbxCRITrk
+	QhiacxVEF/YOhgvqTBGMj9JHeiydlrztVTvGPeCbEMZB2rdSqlzOEf4xi6HViD4=
+X-Google-Smtp-Source: AGHT+IHNGCVX8UsXryv51jGEZDjnSTfAQ7QHc5uIJgMOYfUdLU99pXCIdvPzL4LOxkd6BoZkmXFpDA==
+X-Received: by 2002:a5d:58fa:0:b0:354:fb1a:25f5 with SMTP id ffacd0b85a97d-35dc00c9a4cmr1567928f8f.52.1717074163561;
+        Thu, 30 May 2024 06:02:43 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35c19618fa3sm5708331f8f.52.2024.05.30.06.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 06:02:43 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+To: Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Sam Ravnborg <sam@ravnborg.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Gerald Loacker <gerald.loacker@wolfvision.net>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
+References: <20240409-bugfix-jt240mhqs_hwt_ek_e3-timing-v2-0-e4821802443d@wolfvision.net>
+Subject: Re: [PATCH v2 0/3] drm/panel: sitronix-st7789v: fixes for
+ jt240mhqs_hwt_ek_e3 panel
+Message-Id: <171707416276.4156460.9937231106022840438.b4-ty@linaro.org>
+Date: Thu, 30 May 2024 15:02:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-The maximum number of AKM suites will be set to two if not specified by
-the driver. Set it to CFG80211_MAX_NUM_AKM_SUITES to let userspace
-specify up to ten AKM suites in the akm_suites array.
+Hi,
 
-Without only the first two AKM suites will be used, further ones are
-ignored.
+On Wed, 29 May 2024 16:42:44 +0200, Gerald Loacker wrote:
+> At the jt240mhqs_hwt_ek_e3 panel, noticeable flickering occurs. This is
+> addressed by patch 1, which adjusts the vertical timing. Patch 2 and 3 are
+> two more minor fixes for timing and dimension.
+> 
+> 
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
+Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-fixes)
 
-Current wpa_supplicant/hostapd only put a maximum of two into the
-akm_suites array as well, a patch changing this can be found here:
-http://lists.infradead.org/pipermail/hostap/2024-May/042720.html
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 ++
- 1 file changed, 2 insertions(+)
+[1/3] drm/panel: sitronix-st7789v: fix timing for jt240mhqs_hwt_ek_e3 panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0e5895ff7fab0fc05ec17daf9a568368828fa6ea
+[2/3] drm/panel: sitronix-st7789v: tweak timing for jt240mhqs_hwt_ek_e3 panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/2ba50582634d0bfe3a333ab7575a7f0122a7cde8
+[3/3] drm/panel: sitronix-st7789v: fix display size for jt240mhqs_hwt_ek_e3 panel
+      https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/b62c150c3bae72ac1910dcc588f360159eb0744a
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index b909a7665e9cc..908dfe01c30d7 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -4358,6 +4358,8 @@ int mwifiex_register_cfg80211(struct mwifiex_adapter *adapter)
- 				 BIT(NL80211_IFTYPE_P2P_GO) |
- 				 BIT(NL80211_IFTYPE_AP);
- 
-+	wiphy->max_num_akm_suites = CFG80211_MAX_NUM_AKM_SUITES;
-+
- 	if (ISSUPP_ADHOC_ENABLED(adapter->fw_cap_info))
- 		wiphy->interface_modes |= BIT(NL80211_IFTYPE_ADHOC);
- 
 -- 
-2.39.2
+Neil
 
