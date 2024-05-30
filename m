@@ -1,124 +1,208 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3058318308D;
-	Thu, 30 May 2024 13:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF93183097;
+	Thu, 30 May 2024 13:46:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717076774; cv=none; b=lSlA5jbChV/YMGV75c2UgBTFAKShXWnc9WM2XosTWNXja0VujNVi0xTwNiQyRdR3iJoYp5TJ1QUgiOTVmwdfATRUYUrolrvQllHpJ2ddkPNGun7jVuSCQqTp/p5z2OOZuZeJYZWEqfq7S+XyPkeJ+ecUUqSRUs0qnF305e6BywY=
+	t=1717076774; cv=none; b=g82u042oxetI1/C0sa9Rzaz/EzSRgg+YHdzJRBzTTZmo+T5Z8+1QxjXHg7+6GQxn2kyH35f8rxj6H6vxxJD6R+HqjccWHDaoEpqrZJzqEg8tnQTobLzZFtweZAlByz7JTKn2QeBTkKjqLHpgTwSfLyRzi0TuWpZduRvv+0xMOkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717076774; c=relaxed/simple;
-	bh=rmN/CuQwtYSCBMHu0PjHZJZkczGNhMDmrCHhNf4781Y=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iYwD5fi9ST78iWMcB6R91gKq2wg25TBA3ObnqZSlpO2nIFor1mRPbItn4CHiimaDQUvlqPWWtXLHpjf3AjdSkMk/0A+gtdZp9qYPUQhzpbR06FHjxBhcjQVBOrJDkJeA7VFKb2wo7AQdjyUPQpYdgx9/ojYZgVFaFk1C4wo0FEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N6N7K8U1; arc=none smtp.client-ip=10.30.226.201
+	bh=1x1ZVvoyd/scItjNHmQqJ4F98y6ofZVQkFFX62fDv8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N2ZeVxX873U+IK+elYNvPuXB1A7s8S0zvnPR6xtR9MG0FaouX5nJxZh2kVuTdJidI9XknFi6FOrv9JJBBZt/QSUXZpKQmQZvp7CE0ANnNkenmnIZsKdAkXPUCDBzPsVnvtBUS79xmryBJ9All3Z82tHm/S7tEU6cqgtv53hXs28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+Dp4oti; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N6N7K8U1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA33CC32786;
-	Thu, 30 May 2024 13:46:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+Dp4oti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6553DC3277B;
+	Thu, 30 May 2024 13:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717076773;
-	bh=rmN/CuQwtYSCBMHu0PjHZJZkczGNhMDmrCHhNf4781Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N6N7K8U1MYLtPsBvXFs4TMoPJIyyQYodKhzeKWKXvjBx6NnSqm1INEI5J2cr8vikJ
-	 VtxS0wca+ityVskAlyT+MKFjyA6a+eKjhLGTpvpFK6avUHBxTtppM/MtBIX9Kf2JW6
-	 1cNHssEUfIxrmIu773b+YJgI8rx8eJPlxl3PfJ0GS0vytuc65B11gdqoHD5F0rfteU
-	 2Pow+aOPjg9GKGIXfGdXH/Z2I5MoJPt19TYa0OpnaiRN+qrjNbLjCFa03IkHTMpkNL
-	 eoG5RDAmVlJ6hboF+ewwQXAt/Tcew5QW0uG5FhinzkhYw2gVlO48Jhg7GGaR90Lnhi
-	 AuqpdKi27HPng==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sCg6d-00GuJ9-DW;
-	Thu, 30 May 2024 14:46:11 +0100
-Date: Thu, 30 May 2024 14:46:10 +0100
-Message-ID: <86y17rl8f1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] of/irq: Factor out parsing of interrupt-map parent phandle+args from of_irq_parse_raw()
-In-Reply-To: <20240529-dt-interrupt-map-fix-v2-1-ef86dc5bcd2a@kernel.org>
-References: <20240529-dt-interrupt-map-fix-v2-0-ef86dc5bcd2a@kernel.org>
-	<20240529-dt-interrupt-map-fix-v2-1-ef86dc5bcd2a@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1717076774;
+	bh=1x1ZVvoyd/scItjNHmQqJ4F98y6ofZVQkFFX62fDv8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=M+Dp4otiz13s3D9mmrv1NMF6JR15JpCaztJ+OxGyanZkeONy/xGoQLCC8EfW4Hk90
+	 /Ockty4XmudJ5Lz5BDN70tYiaND2BUTaxbHwkCbfOfFf5W1JssvLMAw+7ni0YxnoAZ
+	 aMnUlpNNVPt1ksuEfWLecVJ8qTqcEi5zLx6PkS83cwxWdOSkwThZ0sr5AEZYLmhYQz
+	 btHODWYs/YIpqRPsP/lRtc6HJNjDCTU8z93oTmsyf6vMLumJU23sfRBZjar11ctiQC
+	 /EBdp5ZtFW3i8iDdaRf3FdaDgpQSrRs58qxUEonEMuiIxA0sSLM04jBNGjjT37GmoW
+	 ZbYhIRe8FAQBg==
+From: Frederic Weisbecker <frederic@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	rcu <rcu@vger.kernel.org>
+Subject: [PATCH 04/11] rcu/nocb: Introduce nocb mutex
+Date: Thu, 30 May 2024 15:45:45 +0200
+Message-ID: <20240530134552.5467-5-frederic@kernel.org>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240530134552.5467-1-frederic@kernel.org>
+References: <20240530134552.5467-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, saravanak@google.com, apatel@ventanamicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 29 May 2024 20:59:20 +0100,
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
-> 
-> Factor out the parsing of interrupt-map interrupt parent phandle and its
-> arg cells to a separate function, of_irq_parse_imap_parent(), so that it
-> can be used in other parsing scenarios (e.g. fw_devlink).
-> 
-> There was a refcount leak on non-matching entries when iterating thru
-> "interrupt-map" which is fixed.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  drivers/of/irq.c        | 127 +++++++++++++++++++++++++++++-------------------
->  drivers/of/of_private.h |   3 ++
->  2 files changed, 79 insertions(+), 51 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 174900072c18..a7cdb892991e 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -25,6 +25,8 @@
->  #include <linux/string.h>
->  #include <linux/slab.h>
->  
-> +#include "of_private.h"
-> +
->  /**
->   * irq_of_parse_and_map - Parse and map an interrupt into linux virq space
->   * @dev: Device node of the device whose interrupt is to be mapped
-> @@ -96,6 +98,59 @@ static const char * const of_irq_imap_abusers[] = {
->  	NULL,
->  };
->  
-> +const __be32 *of_irq_parse_imap_parent(const __be32 *imap, int len, struct of_phandle_args *out_irq)
-> +{
-> +	u32 intsize, addrsize;
-> +	struct device_node *np;
-> +
-> +	/* Get the interrupt parent */
-> +	if (of_irq_workarounds & OF_IMAP_NO_PHANDLE)
-> +		np = of_node_get(of_irq_dflt_pic);
-> +	else
-> +		np = of_find_node_by_phandle(be32_to_cpup(imap));
-> +	imap++;
-> +
-> +	/* Check if not found */
-> +	if (!np) {
-> +		pr_debug(" -> imap parent not found !\n");
-> +		return NULL;
-> +	}
-> +
-> +	/* Get #interrupt-cells and #address-cells of new
-> +		* parent
-> +		*/
+The barrier_mutex is used currently to protect (de-)offloading
+operations and prevent from nocb_lock locking imbalance in rcu_barrier()
+and shrinker, and also from misordered RCU barrier invocation.
 
-nit: funky formatting.
+Now since RCU (de-)offloading is going to happen on offline CPUs, an RCU
+barrier will have to be executed while transitionning from offloaded to
+de-offloaded state. And this can't happen while holding the
+barrier_mutex.
 
-	M.
+Introduce a NOCB mutex to protect (de-)offloading transitions. The
+barrier_mutex is still held for now when necessary to avoid barrier
+callbacks reordering and nocb_lock imbalance.
 
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+---
+ kernel/rcu/tree.c        |  3 +++
+ kernel/rcu/tree.h        |  1 +
+ kernel/rcu/tree_nocb.h   | 20 ++++++++++++--------
+ kernel/rcu/tree_plugin.h |  1 +
+ 4 files changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 4cbc4e78a8c5..e904c187c281 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -97,6 +97,9 @@ static struct rcu_state rcu_state = {
+ 	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
+ 		rcu_sr_normal_gp_cleanup_work),
+ 	.srs_cleanups_pending = ATOMIC_INIT(0),
++#ifdef CONFIG_RCU_NOCB_CPU
++	.nocb_mutex = __MUTEX_INITIALIZER(rcu_state.nocb_mutex),
++#endif
+ };
+ 
+ /* Dump rcu_node combining tree at boot to verify correct setup. */
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index a297dc89a09c..16e6fe63d93c 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -421,6 +421,7 @@ struct rcu_state {
+ 	atomic_t srs_cleanups_pending; /* srs inflight worker cleanups. */
+ 
+ #ifdef CONFIG_RCU_NOCB_CPU
++	struct mutex nocb_mutex;		/* Guards (de-)offloading */
+ 	int nocb_is_setup;			/* nocb is setup from boot */
+ #endif
+ };
+diff --git a/kernel/rcu/tree_nocb.h b/kernel/rcu/tree_nocb.h
+index fdd0616f2fd1..16bcb8b13a5e 100644
+--- a/kernel/rcu/tree_nocb.h
++++ b/kernel/rcu/tree_nocb.h
+@@ -1141,6 +1141,7 @@ int rcu_nocb_cpu_deoffload(int cpu)
+ 	int ret = 0;
+ 
+ 	cpus_read_lock();
++	mutex_lock(&rcu_state.nocb_mutex);
+ 	mutex_lock(&rcu_state.barrier_mutex);
+ 	if (rcu_rdp_is_offloaded(rdp)) {
+ 		if (cpu_online(cpu)) {
+@@ -1153,6 +1154,7 @@ int rcu_nocb_cpu_deoffload(int cpu)
+ 		}
+ 	}
+ 	mutex_unlock(&rcu_state.barrier_mutex);
++	mutex_unlock(&rcu_state.nocb_mutex);
+ 	cpus_read_unlock();
+ 
+ 	return ret;
+@@ -1228,6 +1230,7 @@ int rcu_nocb_cpu_offload(int cpu)
+ 	int ret = 0;
+ 
+ 	cpus_read_lock();
++	mutex_lock(&rcu_state.nocb_mutex);
+ 	mutex_lock(&rcu_state.barrier_mutex);
+ 	if (!rcu_rdp_is_offloaded(rdp)) {
+ 		if (cpu_online(cpu)) {
+@@ -1240,6 +1243,7 @@ int rcu_nocb_cpu_offload(int cpu)
+ 		}
+ 	}
+ 	mutex_unlock(&rcu_state.barrier_mutex);
++	mutex_unlock(&rcu_state.nocb_mutex);
+ 	cpus_read_unlock();
+ 
+ 	return ret;
+@@ -1257,7 +1261,7 @@ lazy_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+ 		return 0;
+ 
+ 	/*  Protect rcu_nocb_mask against concurrent (de-)offloading. */
+-	if (!mutex_trylock(&rcu_state.barrier_mutex))
++	if (!mutex_trylock(&rcu_state.nocb_mutex))
+ 		return 0;
+ 
+ 	/* Snapshot count of all CPUs */
+@@ -1267,7 +1271,7 @@ lazy_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+ 		count +=  READ_ONCE(rdp->lazy_len);
+ 	}
+ 
+-	mutex_unlock(&rcu_state.barrier_mutex);
++	mutex_unlock(&rcu_state.nocb_mutex);
+ 
+ 	return count ? count : SHRINK_EMPTY;
+ }
+@@ -1285,9 +1289,9 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	 * Protect against concurrent (de-)offloading. Otherwise nocb locking
+ 	 * may be ignored or imbalanced.
+ 	 */
+-	if (!mutex_trylock(&rcu_state.barrier_mutex)) {
++	if (!mutex_trylock(&rcu_state.nocb_mutex)) {
+ 		/*
+-		 * But really don't insist if barrier_mutex is contended since we
++		 * But really don't insist if nocb_mutex is contended since we
+ 		 * can't guarantee that it will never engage in a dependency
+ 		 * chain involving memory allocation. The lock is seldom contended
+ 		 * anyway.
+@@ -1326,7 +1330,7 @@ lazy_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 			break;
+ 	}
+ 
+-	mutex_unlock(&rcu_state.barrier_mutex);
++	mutex_unlock(&rcu_state.nocb_mutex);
+ 
+ 	return count ? count : SHRINK_STOP;
+ }
+@@ -1473,15 +1477,15 @@ static void rcu_spawn_cpu_nocb_kthread(int cpu)
+ 	 * No need to protect against concurrent rcu_barrier()
+ 	 * because the number of callbacks should be 0 for a non-boot CPU,
+ 	 * therefore rcu_barrier() shouldn't even try to grab the nocb_lock.
+-	 * But hold barrier_mutex to avoid nocb_lock imbalance from shrinker.
++	 * But hold nocb_mutex to avoid nocb_lock imbalance from shrinker.
+ 	 */
+ 	WARN_ON_ONCE(system_state > SYSTEM_BOOTING && rcu_segcblist_n_cbs(&rdp->cblist));
+-	mutex_lock(&rcu_state.barrier_mutex);
++	mutex_lock(&rcu_state.nocb_mutex);
+ 	if (rcu_rdp_is_offloaded(rdp)) {
+ 		rcu_nocb_rdp_deoffload(rdp);
+ 		cpumask_clear_cpu(cpu, rcu_nocb_mask);
+ 	}
+-	mutex_unlock(&rcu_state.barrier_mutex);
++	mutex_unlock(&rcu_state.nocb_mutex);
+ }
+ 
+ /* How many CB CPU IDs per GP kthread?  Default of -1 for sqrt(nr_cpu_ids). */
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 0d6b152a9a17..05239042a08b 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -28,6 +28,7 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
+ 		!(lockdep_is_held(&rcu_state.barrier_mutex) ||
+ 		  (IS_ENABLED(CONFIG_HOTPLUG_CPU) && lockdep_is_cpus_held()) ||
+ 		  lockdep_is_held(&rdp->nocb_lock) ||
++		  lockdep_is_held(&rcu_state.nocb_mutex) ||
+ 		  (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
+ 		   rdp == this_cpu_ptr(&rcu_data)) ||
+ 		  rcu_current_is_nocb_kthread(rdp)),
 -- 
-Without deviation from the norm, progress is not possible.
+2.45.1
+
