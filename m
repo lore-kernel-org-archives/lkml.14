@@ -1,57 +1,68 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9C382482
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 22:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE438172E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 22:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717195364; cv=none; b=cXtUHclQfX5ckUwTKI1ddmOvqm2dUdrqjN8EWxoSjPVYmwDTe2iw7V3CzE+itt3Ea/CSqWVshaQxXRurb02mWfPTpvT32uuk8Kc4FlPkER9p97WnsiLGCX7m+gQ1PB4pHCKOh8+aANnuA5smCOuJKATkdF05I7pDun2TvsYtxYs=
+	t=1717195462; cv=none; b=pmL2chL8WjgAZV97eWt69Bocb41mIA/kdsOvDBtFlvKoDtjxSHFUff4fufs1XLR7rJRxs7xWAjduFbayBZ/2Z8pdeXlYVg5PYHwJ/BcAIBWPwW8dYsWTNXs6st7wFVSyD3U6EAzZ+/o/LJiH+4Jh9QpRyyutMzZuALjZ88qasHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717195364; c=relaxed/simple;
-	bh=LTbTrJRXsqD4HbCJs7pMX0aPhVw4BfgOdoQ/+xKr3uY=;
+	s=arc-20240116; t=1717195462; c=relaxed/simple;
+	bh=Sus4y6UmNR5dzGV4IzmSLrPvvrNGonDyWCvKjZx6etY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ir41kwer57hbJlzPhwHoeb0PRg390/NL1YY43wQbGWTpx/4vqvY216jOnKs6nJus+QVv3fiqUUvAlX7zii+8rcAwJ39cZ/VWNK+M8Ybfy5UftuUQ3BJtZLUEswzFJdtSVfQliuZOGQMlva3kVQXlhJOP5Xu/RJBwyV07hO+KUTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uXJnOGHf; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=oROkJZXF6jW1sR8W9+GDDoFLS6cn+mZUqpdcoLG18YyedDO5ytNOi21vGByGXYXqdBKniWhZi5leNEBQNKBl9I1rCErcFgmEy5kjYilCAy5YtR/9jTrM5vvXzgl26Znc1UsIMn/2lVkJtjkJmwXkCuML4EaPRP+7SZjEHwKxTLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hxvKrD5h; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uXJnOGHf"
-X-Envelope-To: pasha.tatashin@soleen.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717195359;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=42+HF/lg9ToKNNAC62AfkBIUQjk90D8+CQb9koVMHSI=;
-	b=uXJnOGHfEcr/IzgwqNuLMQ9RuiVUlcjbw0n6WpFsotQ58wpKM2VSlFd0g9fwiv/B6KPRp1
-	z5sNHTaRLEEkPq5hXfCmhvv44aayNUl/0d2rAxHswuUNfT66p9ec9GjXvdYaJVhAm5+iPW
-	ixfX+ufyX+pMi/goMtSMLuynQ9ZhPU0=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: jpoimboe@kernel.org
-X-Envelope-To: kent.overstreet@linux.dev
-X-Envelope-To: peterz@infradead.org
-X-Envelope-To: nphamcs@gmail.com
-X-Envelope-To: cerasuolodomenico@gmail.com
-X-Envelope-To: surenb@google.com
-X-Envelope-To: lizhijian@fujitsu.com
-X-Envelope-To: willy@infradead.org
-X-Envelope-To: vbabka@suse.cz
-X-Envelope-To: ziy@nvidia.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-mm@kvack.org
-Date: Fri, 31 May 2024 15:42:34 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: akpm@linux-foundation.org, jpoimboe@kernel.org, 
-	kent.overstreet@linux.dev, peterz@infradead.org, nphamcs@gmail.com, 
-	cerasuolodomenico@gmail.com, surenb@google.com, lizhijian@fujitsu.com, willy@infradead.org, 
-	vbabka@suse.cz, ziy@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v3] vmstat: Kernel stack usage histogram
-Message-ID: <i66bzhgnbql7bvuteqttpijml3ze3nngxapv32k7paqv25c5th@wd37oaastkvz>
-References: <20240530170259.852088-1-pasha.tatashin@soleen.com>
- <cq7537bswpnbsmeiw3rh4ffrgqky4iufsaurukpk2flxts6jcu@6ctttkclvf3f>
- <CA+CK2bCuiDAv05Xu6OuKB=gqJ5NM20F_uUyJV8E=XH=r47ik=Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hxvKrD5h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717195461; x=1748731461;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Sus4y6UmNR5dzGV4IzmSLrPvvrNGonDyWCvKjZx6etY=;
+  b=hxvKrD5hra1wLW3qK0yRhSiB5AicBGB/ra6yy0MEhMUvXHnqtaXbTbgG
+   6sTIi5NCmHZp8yqkTfzEPnYKbKya2mUdAY1auwKI4W1rCwyiFiE30IsG0
+   0hM+c/VypCR+sBdiJSk5OFAaDeKx9z7Nn51NYcTJcIvDAEgoWpqcnneHS
+   RekTa6le5G2kdggN/Qh68u9aXnyOGLSS+Qtc9Fxqrc1c7se0ZR8fqBX9L
+   YDfWfVVzpngrLbm7V3NbCe8NKrVk4KOM9Vyn1H+STrcwq58W+kot2Jmnl
+   r9Za93X25/Z8LjSDGqH/dN+FT0xDSr9bWEHNWEvN3n6XjJBh5n1S846Jg
+   Q==;
+X-CSE-ConnectionGUID: to1FvddiSZq1C/3nsJh1/g==
+X-CSE-MsgGUID: 4JEnU4CoSl2ab6xgql7sbw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13882286"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="13882286"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 15:44:20 -0700
+X-CSE-ConnectionGUID: ngmWe3QmTvmwk9vRxe5PZg==
+X-CSE-MsgGUID: 76dvYXejRtWErjwhEgsmwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="41223266"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 31 May 2024 15:44:17 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sDAys-000HxN-1J;
+	Fri, 31 May 2024 22:44:14 +0000
+Date: Sat, 1 Jun 2024 06:44:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jesse Taube <jesse@rivosinc.com>, linux-riscv@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Jesse Taube <jesse@rivosinc.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v0] RISC-V: Use Zkr to seed KASLR base address
+Message-ID: <202406010606.hHFDxmHY-lkp@intel.com>
+References: <20240531162327.2436962-1-jesse@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,32 +71,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bCuiDAv05Xu6OuKB=gqJ5NM20F_uUyJV8E=XH=r47ik=Q@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240531162327.2436962-1-jesse@rivosinc.com>
 
-On Thu, May 30, 2024 at 08:14:17PM GMT, Pasha Tatashin wrote:
-> Hi Shakeel,
-> 
-> > Couple of questions:
-> >
-> > 1. In future with your on-demand kstack allocation feature, will these
-> > metrics still be useful? (I think so but I want to know your take)
-> 
-> It depends on how on-demand allocation is implemented. On hardware
-> that supports faults on kernel stacks,
+Hi Jesse,
 
-Which hardware supports faults on kernel stacks and which do not?
+kernel test robot noticed the following build errors:
 
-> we will have other metrics that
-> show the total number of pages allocated for stacks.
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.10-rc1 next-20240531]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Don't we already have a metric for that i.e. KernelStack in meminfo
-which is in kB unit?
+url:    https://github.com/intel-lab-lkp/linux/commits/Jesse-Taube/RISC-V-Use-Zkr-to-seed-KASLR-base-address/20240601-002545
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20240531162327.2436962-1-jesse%40rivosinc.com
+patch subject: [PATCH v0] RISC-V: Use Zkr to seed KASLR base address
+config: riscv-defconfig (https://download.01.org/0day-ci/archive/20240601/202406010606.hHFDxmHY-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406010606.hHFDxmHY-lkp@intel.com/reproduce)
 
-One more question: Is there any concern in making
-CONFIG_DEBUG_STACK_USAGE not a debug feature i.e. enable in default
-kernels instead of just debug kernels?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406010606.hHFDxmHY-lkp@intel.com/
 
-thanks,
-Shakeel
+All errors (new ones prefixed by >>):
 
+>> ld.lld: error: undefined symbol: __pi__printk
+   >>> referenced by __pi_archrandom_early.c
+   >>>               arch/riscv/kernel/pi/archrandom_early.pi.o:(__pi_get_kaslr_seed_zkr) in archive vmlinux.a
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
