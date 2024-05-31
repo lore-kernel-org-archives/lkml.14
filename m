@@ -1,99 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E62232C8C;
-	Fri, 31 May 2024 16:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6ED225DA
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717171597; cv=none; b=s0l7n/q935QjI9Pu5Fv03+247kMsIaQD14f+gKMB16opIFZFkhIw3XESNJDDWHCR54RXbMB5Kq28yjyqTudRLWSCDwJAB97JDZUYno8PvoP0c0ynr/Yd41GRkID54mmDYaI3m2cj0lWh1TgNtNHJGeFnfieyDeTywfaqgMDFB/o=
+	t=1717171612; cv=none; b=HQpj7UEP9eBNxyjSllY/NLdadx86r/p/j0YEnUJI8cwNxkRzNAlI1dJPpXameMkpxe73b4Titvvl0+Yis7bpP/hM3vPdhAXcRnmFcB4Oq5B/wvMTJXEhBuwhIoVmnTfJfRdvfnXl7opfAD8j5ZcMtqDu1djriV0ssKpZSXxkT9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717171597; c=relaxed/simple;
-	bh=xEdqlVv+yc6xxPC8F436pV7MA4qGjyS+19cc5fL/qdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dP40/Gp94eTPs433eKhW9aPDIQybEPTj1en8F4PrXoRNda2yvOkGbGtq07K0RejYS0Y4DrETw/xora7HnzXxC3NjvgSZyRASBo6txzn9poKn2/DOFR9l+oAsIwRLU/y+L3+QnCYrgPnoVztkn9ecqlGyG2M0ZYhvj1IXvLEmHPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNn7ecS+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717171612; c=relaxed/simple;
+	bh=7mwVVurPzUNChHUh1iMgSK0YI+J7pOF0uwbRcRDKm6E=;
+	h=Date:Subject:CC:From:To:Message-ID; b=gBEmwdoAf/DfJK6VAjrcEEBInKDTNy8M8vc0pIamX7GtuGldHhB8YHu8U9c4XGZydb6kYtV+UUl2jPNAle53U7d8oklMCPUcw6MzIufoViGeNSQwAJYuF4365BcdVBiOpbFtuYqwGQ9qwBrzuRg9el4Papb42lziBy7tzfOiqzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=X2iXABms; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNn7ecS+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60699C116B1;
-	Fri, 31 May 2024 16:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717171596;
-	bh=xEdqlVv+yc6xxPC8F436pV7MA4qGjyS+19cc5fL/qdE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oNn7ecS+B1fnRsmy8+fl1HimszXdSyd42J3hvvDH6VHJHwaci4o+Ez3/vR/y4flHT
-	 8aUVVrsXUEvmDdPEU3VsuOQAI6pib0urxj+kBakXS48rdyvD121L3v4+MlurlMs8q/
-	 wkWU6mJcQCzyHSjOteiZcxQrXIAZU/nkb4DxRUGwSq0hBuUUZH37mkrkgT7NKDkGT9
-	 AfgSO6wzjvces+aADq3LHoZdBoVTd/yqSQI2pvLq2lHLyb2BuiFxO2Gvq/I10XY++m
-	 JzSw1s/zlo+7ZCXH99HZfZkwnpPe7283pyOHoxgiKzxImKdYesyl0n9HteStQ6EIyV
-	 xjGVLgjyF8uXw==
-Date: Fri, 31 May 2024 17:06:30 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	shengjiu wang <shengjiu.wang@gmail.com>,
-	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound <linux-sound@vger.kernel.org>,
-	devicetree <devicetree@vger.kernel.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	alsa-devel <alsa-devel@alsa-project.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
- for generic codec
-Message-ID: <47a7a618-31d5-4dfc-9b6b-9426c6409e80@sirena.org.uk>
-References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
- <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com>
- <ce9a87c6-4a5c-4f0a-a8df-1fdce8c1f5df@sirena.org.uk>
- <599489232.349333.1715936741672.JavaMail.zimbra@savoirfairelinux.com>
- <500db9de-6113-4e73-ba92-6e52ea292b32@sirena.org.uk>
- <1598202415.701258.1717159684103.JavaMail.zimbra@savoirfairelinux.com>
- <291daed8-a2e1-44d4-9a71-5bca2c585720@sirena.org.uk>
- <1220272166.706254.1717166894551.JavaMail.zimbra@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="X2iXABms"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c19baaf564so1716817a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717171609; x=1717776409; darn=vger.kernel.org;
+        h=message-id:to:from:cc:subject:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=59bPOkit/bk/X5CUNpKpOBEpf+FwqR7nda+qLGURm8M=;
+        b=X2iXABmstgQMbta4/lnXBKKLEROTnHb2NErMyj+ChHqqcGam1fFJIftVnrgpjDEPi6
+         3k82+tKXFDXgZqXtSpJzuw5ZIx5MLxLZMPGWtFvzLwa16g9KYLtwD70OrR2csp9PwjC7
+         TdKEds6QDwwK0Dp0MSbU9aSa4wGzcwNsoLpLXUFKcgLAYmeP4yRVju23QKxxwiNPGlAB
+         J68A0om4DqFgCgewIuO1zHuAC/J4DqTs/tCJBoF2ewEq+gfBnl9VZ2o4kfSiuly2ey6b
+         6nRE5S0O5P9/foRGhpYiPDDGCFmq5ouaJUhe2VbriAEclGXDyM4mL939Hecd2Sx1s3Cb
+         wfXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717171609; x=1717776409;
+        h=message-id:to:from:cc:subject:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=59bPOkit/bk/X5CUNpKpOBEpf+FwqR7nda+qLGURm8M=;
+        b=PvlYTL+mtP1M5SoTD6eQiJq0d9oKF5DNkGQJ44PlAJEk3ItTWAQp31abSlnDIDwwGx
+         luTXCt6m/Ee+QoYcn3KENLAnU73ozWGmM74Uwf0NXPtybP28p5Rfzqje7f13svoMmQP9
+         z+LQKv64g9/iIELRK8BR2bmq+TriAzxCUyR+O/3glTfvwdEGneo5qsHBQiRYpXbULSeI
+         WXkhq6MMtUUVa2PruMgmjZLUsNu+62XRq+hxERLuMHWGRVbSRUT8tqW9OnksiwH6s/En
+         oSEWZxjnR+x//YY56f66cihV27bb3i6ZjM6U0ekLnHr416Ui1isaxNIVHBQ0aMJKuNdF
+         IRKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUfG1AlE65FKkO+xQ5fKt3/np2JZqIJ8ppVsHxWkDOZmNXpJU0iIJ7W1UCP6MuoD8rynav5nP4lhi9rEQCdu69rtG6SGnQVXyMpfGqJ
+X-Gm-Message-State: AOJu0YwidVMZDNpb0JLOVyU6XYNIGO32T2iTIG3cckaXugcI1TD4VkLU
+	7YOFN+QhM1YXE4fkMKH4yBcjjv4XrHUbSSYOaNs5jFpGlsDNiDeQOCGdf18IXmA=
+X-Google-Smtp-Source: AGHT+IEMigNfn1r6huzicsFKt2kn2Nt7nxSoyfkxZfZCNNTaNpu9jKUKM5YvL/KwFqdKX7px3NAhtg==
+X-Received: by 2002:a17:90a:d593:b0:2ab:eff6:e2ce with SMTP id 98e67ed59e1d1-2c1dc4b3f75mr2568823a91.0.1717171609109;
+        Fri, 31 May 2024 09:06:49 -0700 (PDT)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1c28450d4sm1651552a91.55.2024.05.31.09.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 09:06:48 -0700 (PDT)
+Date: Fri, 31 May 2024 09:06:48 -0700 (PDT)
+X-Google-Original-Date: Fri, 31 May 2024 09:06:37 PDT (-0700)
+Subject: [GIT PULL] RISC-V Fixes for 6.10-rc2
+CC:         linux-riscv@lists.infradead.org,        linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-d5ff54e8-e0e4-4b50-8461-c23eeb95b31d@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yZnX6EMpaBNVB9zA"
-Content-Disposition: inline
-In-Reply-To: <1220272166.706254.1717166894551.JavaMail.zimbra@savoirfairelinux.com>
-X-Cookie: Serving suggestion.
 
+The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
 
---yZnX6EMpaBNVB9zA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
 
-On Fri, May 31, 2024 at 10:48:14AM -0400, Elinor Montmasson wrote:
-> From: "Mark Brown" <broonie@kernel.org>
+are available in the Git repository at:
 
-> > Why not just use the existing compatible - why would someone not want to
-> > be able to use the ASRC if it's available in their system?
+  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.10-rc2
 
-> That's true but it will be a problem if both `fsl-asoc-card.c` and
-> `imx-spdif.c` drivers have the same compatible, and they don't
-> have the same DT properties.
+for you to fetch changes up to 1d84afaf02524d2558e8ca3ca169be2ef720380b:
 
-So merge the two then?
+  riscv: Fix fully ordered LR/SC xchg[8|16]() implementations (2024-05-30 09:43:14 -0700)
 
---yZnX6EMpaBNVB9zA
-Content-Type: application/pgp-signature; name="signature.asc"
+----------------------------------------------------------------
+RISC-V Fixes for 6.10-rc2
 
------BEGIN PGP SIGNATURE-----
+* A fix to avoid pt_regs aliasing with idle thread stacks on secondary
+  harts.
+* HAVE_ARCH_HUGE_VMAP is enabled on XIP kernels, which fixes boot issues
+  on XIP systems with huge pages.
+* An update to the uABI documentation clarifying that only scalar
+  misaligned accesses were grandfathered in as supported, as the vector
+  extension did not exist at the time the uABI was frozen.
+* A fix for the recently-added byte/half atomics to avoid losing the
+  fully ordered decorations.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZZ9YUACgkQJNaLcl1U
-h9Ah0wf9F6py9uWrUIg1Rnm8ihwTDC9bWMpewQrTH27b7Ps5H2TxzLO6KV2GCTHH
-bAcv+oyDym09iXKcPq3vvTrenJ0iPIaZWSOOwYS38JtGL5dAMnv07C3R6iWJJd98
-z94n+vvDb3EL3UBU2+atXg0gUN5e4ekRdLRf7MmkjlGRszzVTuUafLdHUue4uPRw
-gKDNcu2v2gC2e3OaZnA5jQh5ypP74fLrnWxyktzZg8acu482DkDBA7h13lSFCF7H
-sZb+MsvHM7euPdKQ9nwfFk7bVErS0yb3PEPvNrd0ZJNvEE2aClUiFgNlKfNUY1hu
-PvxfhbZEbZGiNyV8WXYwqtqGyzHB9w==
-=o/G2
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+Alexandre Ghiti (1):
+      riscv: Fix fully ordered LR/SC xchg[8|16]() implementations
 
---yZnX6EMpaBNVB9zA--
+Nam Cao (1):
+      riscv: enable HAVE_ARCH_HUGE_VMAP for XIP kernel
+
+Palmer Dabbelt (1):
+      Documentation: RISC-V: uabi: Only scalar misaligned loads are supported
+
+Sergey Matyukevich (1):
+      riscv: prevent pt_regs corruption for secondary idle threads
+
+ Documentation/arch/riscv/uabi.rst    |  4 +++-
+ arch/riscv/Kconfig                   |  2 +-
+ arch/riscv/include/asm/cmpxchg.h     | 22 ++++++++++++----------
+ arch/riscv/kernel/cpu_ops_sbi.c      |  2 +-
+ arch/riscv/kernel/cpu_ops_spinwait.c |  3 +--
+ 5 files changed, 18 insertions(+), 15 deletions(-)
