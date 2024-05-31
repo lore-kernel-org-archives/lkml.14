@@ -1,208 +1,158 @@
-Received: from hs01.dakr.org (hs01.dk-develop.de [173.249.23.66])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAEF41C69;
-	Fri, 31 May 2024 14:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.249.23.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EC41C69;
+	Fri, 31 May 2024 14:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166416; cv=none; b=Wp19KFH/WtNleM6m7mR6gOitjhbMiKGFNV7c52yeLcSQ7kgvkGWqSm3PrJIbMH21cZd6MQJ3NoEKVQS8DgX9xogOj62eLv0ogIRXi90cPhr7D3sUPOBxOjZhweDneiY46R8nNrrZ8RW/a/9m/iRUOAVt15uLmPBrwncm2dQwKOY=
+	t=1717166437; cv=none; b=ZwhoymqzKRtiEBZEYjVx6pszNZxdlRabNomdfxm1iai2FJof/jit9pAbXU6muOzu+UroZQRqd3r6kozEBqxL3yYhrFuZ0EI5DJRsVnsNROdJdCNevtJuV5Zgb172MzQLxZ6zihM+IGVSamRHXtWq03kiyi4EErzJqV4V0NZvioQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717166416; c=relaxed/simple;
-	bh=xlO1Mp3KBU+sq/6oeFxX6/VD7mrtgTn6P2Yuj2MlJiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaWzj8KSWYQwkgpPSZX7nQ1U+DDCPqT8hllVg7G7+WAWYZerVqwOxPKKiPv7HWZIWak+wtakC7ZxP7FAXH4WHDGKl3ChRymUiniRlsDihrKDhwe5muBY5X/bCf1ryCjZnFQU/i3DgdNrgalrd9qh9d8b3V6chL3x1Zxgoka0BAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org; spf=pass smtp.mailfrom=dakr.org; arc=none smtp.client-ip=173.249.23.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dakr.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dakr.org
-Message-ID: <38f11766-b601-410b-9025-1e6b4c2203e7@dakr.org>
-Date: Fri, 31 May 2024 16:34:00 +0200
+	s=arc-20240116; t=1717166437; c=relaxed/simple;
+	bh=cVO1zYAC2fFp+2M6n/50pvfOMB27efWTsVzRMx4hPZ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GzxpK4xd5VlqgAB6LdEwLGHgGOennrkuYJlsQRTmPJrWgNWfWSqbPTSOcN08vB5FUxzWyyVtj3BEdDWjt/Rsauo1S07v8SAotpYVyuAuLwQcjQ4+LkhrefZvafoWxScJ7+VGS/gNwwk4qbccazFVBsrEalkpID4nfQFqytI38zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=Un9aMCGo; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="Un9aMCGo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=ORkr0FUSsLGvEF3bN9w6PBzH9IbyeKtnP6Z+733ED7Y=; b=Un9aMCGoq7Xlcj1SBNXiHqSjhm
+	lI9PFEekR6ylPHyF4JRi5PhFxuD1bobE4LcOc0YeDsfRoANphJqUxriNwwFbxHRbqlSrR+RGV8Nt2
+	A9ar0J6BiEZssX8lKSwHNwjMcxtZc0lAJj8jA8s0GgbVbQygbFDHEIisraoeC8wRYKKv1ERGgPREN
+	eEzqAVLLYAcAX102DPvmFUTpp59MILbr6i6cXm/WRoCv8nmTTABDkl8+vgKKXvIa+ouJsKKMTjTbY
+	fF78Mmmi2rHWzJ72rGa36D/+jY76JHA0VkNhHV12UvH/GWWylcBeffGQk2o95G0dH1fxWMpDkxQVX
+	7AjRjxpg==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1sD3Qk-0007EQ-TF; Fri, 31 May 2024 16:40:30 +0200
+Received: from [87.49.42.81] (helo=localhost)
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <esben@geanix.com>)
+	id 1sD3Qk-000K1h-29;
+	Fri, 31 May 2024 16:40:30 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Shawn Guo <shawnguo@kernel.org>,  Rob Herring <robh@kernel.org>,
+  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  linux-arm-kernel@lists.infradead.org,  Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>,  devicetree@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: ls1021a: add QUICC Engine node
+In-Reply-To: <5987259.31r3eYUQgx@steina-w> (Alexander Stein's message of "Fri,
+	31 May 2024 15:09:05 +0200")
+References: <20240530-arm-ls1021a-qe-dts-v1-1-2eda23bdf8c5@geanix.com>
+	<3380831.44csPzL39Z@steina-w> <87frtynpfx.fsf@geanix.com>
+	<5987259.31r3eYUQgx@steina-w>
+Date: Fri, 31 May 2024 16:40:29 +0200
+Message-ID: <87ttiem4de.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH v2 00/30] Rust abstractions for VFS
-To: Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: Dave Chinner <david@fromorbit.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Matthew Wilcox <willy@infradead.org>,
- Kent Overstreet <kent.overstreet@gmail.com>,
- Christian Brauner <brauner@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-fsdevel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240514131711.379322-1-wedsonaf@gmail.com>
-Content-Language: en-US
-From: Danilo Krummrich <me@dakr.org>
-In-Reply-To: <20240514131711.379322-1-wedsonaf@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27292/Fri May 31 10:31:14 2024)
 
-Hi Wedson,
+Alexander Stein <alexander.stein@ew.tq-group.com> writes:
 
-On 5/14/24 15:16, Wedson Almeida Filho wrote:
-> This series introduces Rust abstractions that allow read-only file systems to
-> be written in Rust.
-> 
-> There are three file systems implementations using these abstractions
-> abstractions: ext2, tarfs, and puzzlefs. The first two are part of this series.
-> 
-> Rust file system modules can be declared with the `module_fs` macro and are
-> required to implement the following functions (which are part of the
-> `FileSystem` trait):
-> 
->      fn fill_super(
->          sb: &mut SuperBlock<Self, sb::New>,
->          mapper: Option<inode::Mapper>,
->      ) -> Result<Self::Data>;
-> 
->      fn init_root(sb: &SuperBlock<Self>) -> Result<dentry::Root<Self>>;
-> 
-> They can optionally implement the following:
-> 
->      fn read_xattr(
->          _dentry: &DEntry<Self>,
->          _inode: &INode<Self>,
->          _name: &CStr,
->          _outbuf: &mut [u8],
->      ) -> Result<usize>;
-> 
->      fn statfs(_dentry: &DEntry<Self>) -> Result<Stat>;
-> 
-> They may also choose the type of the data they can attach to superblocks and/or
-> inodes.
-> 
-> Lastly, file systems can implement inode, file, and address space operations
-> and attach them to inodes when they're created, similar to how C does it. They
-> can get a ro address space operations table from an implementation of iomap
-> operations, to be used with generic ro file operations.
-> 
-> A git tree is available here:
->      git://github.com/wedsonaf/linux.git vfs-v2
-> 
-> Web:
->      https://github.com/wedsonaf/linux/commits/vfs-v2
+> Hi Esben,
+>
+> Am Freitag, 31. Mai 2024, 14:20:02 CEST schrieb Esben Haabendal:
+>> Alexander Stein <alexander.stein@ew.tq-group.com> writes:
+>> >> +			brg-frequency = <150000000>;
+>> >> +			bus-frequency = <300000000>;
+>> >
+>> > Mh, aren't these values depending on your actual RCW configuration?
+>> 
+>> Yes, you are right. The QE bus-frequency comes from platform_clk which
+>> is controlled by various bits in RCW and sys_ref_clk.
+>> 
+>> So I guess it should be possible to derive bus-frequency from sysclk
+>> clock-frequency attribute and RCW. But fsl,qe bus-frequency is a
+>> required property...
+>> 
+>> Max bus-frequency for LS1021A is 300 MHz. But it should be possible to
+>> set it lower, although I suspect that many/most/everyone is running it
+>> at 300 MHz.
+>
+> Thanks for confirmation. I'll let DT maintainer decide how to deal with this.
 
-This branch indicates that this patch series might have a few more dependencies
-that are not upstream yet, e.g. [1].
+For reference.
 
-Do you intend to send them in a separate series (soon)? In case they were already
-submitted somewhere and I just failed to find them, please be so kind an provide
-me with a pointer.
+The existing DTS with fsl,qe have the following bus-frequency property values:
 
-[1] https://github.com/wedsonaf/linux/commit/96ef0376887f4194ebad608f9943eb41108cf255
+arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi:  bus-frequency = <200000000>
+arch/powerpc/boot/dts/fsl/mpc8568si-post.dtsi:   bus-frequency = <396000000>
+arch/powerpc/boot/dts/fsl/mpc8569si-post.dtsi:   bus-frequency = <0>
+arch/powerpc/boot/dts/fsl/p1021si-post.dtsi:     missing!
+arch/powerpc/boot/dts/fsl/t1024si-post.dtsi:     bus-frequency = <0>
+arch/powerpc/boot/dts/fsl/t1040si-post.dtsi:     missing!
+arch/powerpc/boot/dts/kmeter1.dts:               bus-frequency = <0>
+arch/powerpc/boot/dts/mpc836x_rdk.dts:           bus-frequency = <0>
+arch/powerpc/boot/dts/mpc832x_rdb.dts:           bus-frequency = <198000000>
 
-- Danilo
+The 3 non-zero values are most likely also not guaranteed by SoC design
+to always be the right values. But I haven't checked.
 
-> 
-> ---
-> 
-> Changes in v2:
-> 
-> - Rebased to latest rust-next tree
-> - Removed buffer heads
-> - Added iomap support
-> - Removed `_pin` field from `Registration` as it's not needed anymore
-> - Renamed sample filesystem to match the module's name
-> - Using typestate instead of a separate type for superblock/new-superblock
-> - Created separate submodules for superblocks, inodes, dentries, and files
-> - Split out operations from FileSystem to inode/file/address_space ops, similar to how C does it
-> - Removed usages of folio_set_error
-> - Removed UniqueFolio, for now reading blocks from devices via the pagecache
-> - Changed map() to return the entire folio if not in highmem
-> - Added support for unlocking the folio asynchronously
-> - Added `from_raw` to all new ref-counted types
-> - Added explicit types in calls to cast()
-> - Added typestate to folio
-> - Added support for implementing get_link
-> - Fixed data race when reading inode->i_state
-> - Added nofs scope support during allocation
-> - Link to v1: https://lore.kernel.org/rust-for-linux/20231018122518.128049-1-wedsonaf@gmail.com/
-> 
-> ---
-> 
-> Wedson Almeida Filho (30):
->    rust: fs: add registration/unregistration of file systems
->    rust: fs: introduce the `module_fs` macro
->    samples: rust: add initial ro file system sample
->    rust: fs: introduce `FileSystem::fill_super`
->    rust: fs: introduce `INode<T>`
->    rust: fs: introduce `DEntry<T>`
->    rust: fs: introduce `FileSystem::init_root`
->    rust: file: move `kernel::file` to `kernel::fs::file`
->    rust: fs: generalise `File` for different file systems
->    rust: fs: add empty file operations
->    rust: fs: introduce `file::Operations::read_dir`
->    rust: fs: introduce `file::Operations::seek`
->    rust: fs: introduce `file::Operations::read`
->    rust: fs: add empty inode operations
->    rust: fs: introduce `inode::Operations::lookup`
->    rust: folio: introduce basic support for folios
->    rust: fs: add empty address space operations
->    rust: fs: introduce `address_space::Operations::read_folio`
->    rust: fs: introduce `FileSystem::read_xattr`
->    rust: fs: introduce `FileSystem::statfs`
->    rust: fs: introduce more inode types
->    rust: fs: add per-superblock data
->    rust: fs: allow file systems backed by a block device
->    rust: fs: allow per-inode data
->    rust: fs: export file type from mode constants
->    rust: fs: allow populating i_lnk
->    rust: fs: add `iomap` module
->    rust: fs: add memalloc_nofs support
->    tarfs: introduce tar fs
->    WIP: fs: ext2: add rust ro ext2 implementation
-> 
->   fs/Kconfig                        |   2 +
->   fs/Makefile                       |   2 +
->   fs/rust-ext2/Kconfig              |  13 +
->   fs/rust-ext2/Makefile             |   8 +
->   fs/rust-ext2/defs.rs              | 173 +++++++
->   fs/rust-ext2/ext2.rs              | 551 +++++++++++++++++++++
->   fs/tarfs/Kconfig                  |  15 +
->   fs/tarfs/Makefile                 |   8 +
->   fs/tarfs/defs.rs                  |  80 +++
->   fs/tarfs/tar.rs                   | 394 +++++++++++++++
->   rust/bindings/bindings_helper.h   |  11 +
->   rust/helpers.c                    | 182 +++++++
->   rust/kernel/block.rs              |  10 +-
->   rust/kernel/error.rs              |   8 +-
->   rust/kernel/file.rs               | 251 ----------
->   rust/kernel/folio.rs              | 305 ++++++++++++
->   rust/kernel/fs.rs                 | 492 +++++++++++++++++++
->   rust/kernel/fs/address_space.rs   |  90 ++++
->   rust/kernel/fs/dentry.rs          | 136 ++++++
->   rust/kernel/fs/file.rs            | 607 +++++++++++++++++++++++
->   rust/kernel/fs/inode.rs           | 780 ++++++++++++++++++++++++++++++
->   rust/kernel/fs/iomap.rs           | 281 +++++++++++
->   rust/kernel/fs/sb.rs              | 194 ++++++++
->   rust/kernel/lib.rs                |   6 +-
->   rust/kernel/mem_cache.rs          |   2 -
->   rust/kernel/user.rs               |   1 -
->   samples/rust/Kconfig              |  10 +
->   samples/rust/Makefile             |   1 +
->   samples/rust/rust_rofs.rs         | 202 ++++++++
->   scripts/generate_rust_analyzer.py |   2 +-
->   30 files changed, 4555 insertions(+), 262 deletions(-)
->   create mode 100644 fs/rust-ext2/Kconfig
->   create mode 100644 fs/rust-ext2/Makefile
->   create mode 100644 fs/rust-ext2/defs.rs
->   create mode 100644 fs/rust-ext2/ext2.rs
->   create mode 100644 fs/tarfs/Kconfig
->   create mode 100644 fs/tarfs/Makefile
->   create mode 100644 fs/tarfs/defs.rs
->   create mode 100644 fs/tarfs/tar.rs
->   delete mode 100644 rust/kernel/file.rs
->   create mode 100644 rust/kernel/folio.rs
->   create mode 100644 rust/kernel/fs.rs
->   create mode 100644 rust/kernel/fs/address_space.rs
->   create mode 100644 rust/kernel/fs/dentry.rs
->   create mode 100644 rust/kernel/fs/file.rs
->   create mode 100644 rust/kernel/fs/inode.rs
->   create mode 100644 rust/kernel/fs/iomap.rs
->   create mode 100644 rust/kernel/fs/sb.rs
->   create mode 100644 samples/rust/rust_rofs.rs
-> 
-> 
-> base-commit: 183ea65d1fcd71039cf4d111a22d69c337bfd344
+>> >> +			fsl,qe-num-riscs = <1>;
+>> >> +			fsl,qe-num-snums = <28>;
+>> >
+>> > Current bindings defines:
+>> >> fsl,qe-snums: This property has to be specified as '/bits/ 8' value,
+>> >>   defining the array of serial number (SNUM) values for the virtual
+>> >>   threads.
+>> >
+>> > So '/bits/ 8' is missing.
+>> 
+>> Ok, so you want me to add an array for fs,qe-snums attribute?
+>> None of the existing fsl,qe devices has a fsl,qe-snums.
+>> And qe_snums_init() has a fallback, so I don't think it is correct to
+>> specify fsl,qe-snums to be a required property in the bindings. It
+>> should be listed as optional.
+>
+> fsl,qe-num-snums is a deprecated property, so IMHO the replacement
+> fsl,qe-snums should be used instead for new device tree entries.
+> qe_snums_init() supporting 'fsl,qe-num-snums' is just to support
+> "legacy bindings" as stated in the comment.
+
+Figuring out the correct array values for fsl,qe-snums for ls1021a is
+not so easy. It is not so clear from the reference manual, what it
+should be. And the default array used for fsl,qe-num-snums = <28> does
+not look right in any way, but seems to work.
+
+It would not feel right to just copy those values and put into DTS, as
+it would imply that the values are truly a correct description for the
+LS1021A hardware.
+
+>> 
+>> >> +			};
+>> >> +
+>> >> +			muram@10000 {
+>> >> +				#address-cells = <1>;
+>> >> +				#size-cells = <1>;
+>> >> +				compatible = "fsl,qe-muram", "fsl,cpm-muram";
+>> >> +				ranges = <0x0 0x10000 0x6000>;
+>> >
+>> > Node address but no 'reg' property? I have no idea if this is okay.
+>> > Also compatible (and possibly reg) first.
+>> 
+>> It is done in the same way for all existing fsl,qe-muram devices. So if
+>> it is not okay, a tree-wide fixup would be in place.
+>
+> I can't finally say if this is okay, but at least the compatible shall be
+> listed first.
+
+Done.
+
+/Esben
