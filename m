@@ -1,121 +1,231 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D8E7C082
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 04:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717130064; cv=none; b=tWiSajnBr9GlMlqEPYqFZ7SORqAEZjcJDfggg5Tt2ofHgnDZgqCrUhRXS4nSLOgGdYU5YhM0Cz5AkN+2JvWuD4VrM7Pi2nmc59pp+CZIFAKn1aEp2WzmAYSUbyOHsKhNLe11esG/+93kB+rTLuPcdZyaEXYGtLV6taYs78Fyjek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717130064; c=relaxed/simple;
-	bh=JbXFS0Fgv/0TnV1TSruhy4/VftWuFz4YNvlVR+xTgiA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BJ2gGxnn/UXg/VMF0s3MVRuL6yJtGyuGkxjmWtxQGRIjXy3UJK4QWeL+pRlsPqHbVl2QEGZSJv8SiRxTlUG4RuQ5zDv3dOwIf63mPQPInVky4rX3ub/SSLXarL37gGlHtFcMLoIbbkvrO64X39mIbrxYf1O2M5sxnOK5+ghicW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=AqbnsYY+; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00FF2135B;
+	Fri, 31 May 2024 04:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717130075; cv=fail; b=m0jrfe+FssqvlyHykFqcolLFpgmrmZaQwtDXcOH1cYmB6VrjcFtwTkk7Cd35jYlhK2phIt93JXNddeblgjC6a6PuX8A36cYTPUad/k40h2gf8yl0dBs9MUux1BH7yBL65KgS6zEfPHSh3Gd6qW2AjK77X04igeR1wLIPoYLsb88=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717130075; c=relaxed/simple;
+	bh=7RatBNCnIbDRhEKO1UiiuqJEpLxL39hIQkT7wV0TAJw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QKJZUoNn9Kj4qfLC5ZRRqgf9k2OEQyIf2iZjReagK2ZaLwMLyOINC54hSoPz11/3HAnc14ZNP/PfHmYaVbylDgZ/cy7PTcocdfd+DNE4pXw88C2PBTPpxUbaGapSo31yUvYklJYjaLGeJJt8iyMJDzYegmtwG0Hz6NRIMklU0cc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gogVyGb+; arc=fail smtp.client-ip=40.107.237.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="AqbnsYY+"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7eacb1bc636so77719239f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 21:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1717130061; x=1717734861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9aojvCCZI7oDG8nQF+lVjR38DWbQN1/i4Dj6O/Uiios=;
-        b=AqbnsYY+ZJqS25mKTXXbsEc+6PFAz4NGuL7fyC1LDyYey/h+41o2HgGplLyyvddlh4
-         JE5CGhKsnv8T1HoLBWS0OY+pItTr/wOir+sr8Fd16+3dXLpnaQHED5wFD3WjCNpPfynM
-         PEU1m3BHIWQSv8ZOTEStHfqMXZbxR71boo9DysqGQdH7JA+G0tkt1EfRcTRTN2w6un7w
-         5LAZnJu1A5vOOR6kQbo9E3oZEfdwHxKd4rOcCdSUM9FtajBHgk4j1YifDa1DzUh41Fpu
-         BzDbYHfymX6YGCkLomGatWYsPPBEPPZQuYNmYKxxh8WV9M9EVQNFNXfoBuIgYVBGuipB
-         K2GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717130061; x=1717734861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9aojvCCZI7oDG8nQF+lVjR38DWbQN1/i4Dj6O/Uiios=;
-        b=Fc43I1ceXVrNMG8eysSaX99xVgAwr0XNPkLQEYK0u7HCtrLsa9QI4T5qht/VUH4rgO
-         p3Oihvf3671o+BLGt9uV05PniWgABaAhqqxJknPXUH+B9y0uS7wF2Afkg9F6OvMYOcH2
-         RXa0fQzua92lcTD+HOEAzxwBK3/LDM/Rx+d93/8NdI5c9/EzuTG2sM4ijyfzjJzethxC
-         fIGTReeBus1S1xtqRcatJx+ITUB9/hc7UjTbYu3yroA/LJ2lkVYFbvm3WF6wiL/x5DYz
-         8WsAnzPL2uk87ej7hyhxcOZ79yJVdoiIpdi1Oqg0Q5pb5r3CpnbauDmRbM3l7GS5E9GA
-         URDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiRNBMPyphsjFbceGYfhIs2ArjAl/U4Hp4BClWRcOQ6/5frE1DL1alB/fwqRzolSQ/ZAHO2dz+ud6+LrFQc8v4WciL/RgBgJEj6exT
-X-Gm-Message-State: AOJu0YxJaWWG18NI3BoOg+2N5OJG0N+hz9J+X6BmYKfZzPCasgH3r8Yh
-	ThpnwVroQ3hxBin7QcMXeYuGOtfl8jOQUq3BezXPhEGK/j/Mio5seCxNKpV8sUR8CDtwjzlI9U4
-	nG7DQR9meyN4nZkS7qhBU1av5LbKE240sW7z7Ig==
-X-Google-Smtp-Source: AGHT+IFumUwOVBhqm9jSSegtfTbBsWrL7+wRv2hHDnozjQHdKdEmqi3s7UpbRv2rHVzdr2XDkO13liv49fwxH13T3Ws=
-X-Received: by 2002:a05:6602:3425:b0:7de:c59f:2151 with SMTP id
- ca18e2360f4ac-7eaffe71e50mr101316239f.3.1717130060742; Thu, 30 May 2024
- 21:34:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gogVyGb+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j37lGsRfELBG8p5AIOwFGecRoEI7qnR46YIothLtZBSrnhwvDRRybS3MaAhD5MODKCqbqL+wgAkKUXkCbTpfzc8J3dRYeSPM/g+PXGAxSefu/y6uN8wKAkN92b1TJ5HHL2wqewMM40vC5rQ4Sf9Y87N1kS744gKMoFwVo46fpVLvWVAEFrIZS3DB4rOTCgv80WipnAZh9amD8uAq2ISmTymFeDUZjFli1cg0PEZgVa/zI+fKwxrH0qyU2DzjHSNLdc27wfYmQ2ZR0KOb8SK5YJePEPPICfsVYFzKFZheNvA6xx8BRf+oqaaozeolV/mfx0BrPkCrtVEdnhvKLdJTcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8FW1kVb2HUuaBogO5Iihlfq+YjSLq/wBGzEKbi3itwQ=;
+ b=ZQJiD3NLjQwOFlljMeNZm1Nb6HkO/k81h9aHMSmlsF+sSaMheG9uNjWw9qjeC/j1L35IkM8E13xdovW01CMTkYWzR8mTPniSGZNbED1K0I0xJjI2keo1ku8Zjnx7AvWbQ01wuaLFDRSmlajhhJCgDaezzHlUOTLN7zc3p7DZ3ia10AXGmCkOQhz45klEY/1ZmwWRbWHv46OVoR9XdprrVOXmJ7ecH3hc4monhYDFgYo1mS/UhfLDewJaO5LYAso57h870KAoR0uxxVib43blXNEyLsMg4bjPMuO2wxxXvRFdHmjvrJTSCzv+H7g3txu365+B0smRfBBVQSlEVBcJEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8FW1kVb2HUuaBogO5Iihlfq+YjSLq/wBGzEKbi3itwQ=;
+ b=gogVyGb+x7v31ArH5MSBHXy1u1EhlQ4VlI0/RYGcuI4FPISzOjpc7dReCzkSeuvhhXlLmCxOGFg3QZLJ2vsehKwiBVrJsYLYLTP8j/S6mKNNuokt15wNQropcYaAHmSd+ieq0hqNWK8fbjBDC3fj1QT70/ieDw1ljdQfIM0RLII=
+Received: from CH2PR07CA0058.namprd07.prod.outlook.com (2603:10b6:610:5b::32)
+ by DM6PR12MB4042.namprd12.prod.outlook.com (2603:10b6:5:215::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22; Fri, 31 May
+ 2024 04:34:29 +0000
+Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
+ (2603:10b6:610:5b:cafe::21) by CH2PR07CA0058.outlook.office365.com
+ (2603:10b6:610:5b::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.28 via Frontend
+ Transport; Fri, 31 May 2024 04:34:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 04:34:03 +0000
+Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 30 May
+ 2024 23:33:59 -0500
+From: Nikunj A Dadhania <nikunj@amd.com>
+To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
+	<x86@kernel.org>, <kvm@vger.kernel.org>
+CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
+	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
+	<nikunj@amd.com>
+Subject: [PATCH v9 15/24] x86/sev: Cache the secrets page address
+Date: Fri, 31 May 2024 10:00:29 +0530
+Message-ID: <20240531043038.3370793-16-nikunj@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240531043038.3370793-1-nikunj@amd.com>
+References: <20240531043038.3370793-1-nikunj@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240415064905.25184-1-yongxuan.wang@sifive.com>
-In-Reply-To: <20240415064905.25184-1-yongxuan.wang@sifive.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 31 May 2024 10:04:09 +0530
-Message-ID: <CAAhSdy0STe67n6TB2ZH1OYZCTQ+yPycmsQ+8Ay0KsorwVYEo6w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] RISC-V: KVM: No need to use mask when hart-index-bit
- is 0
-To: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-Cc: linux-riscv@lists.infradead.org, kvm-riscv@lists.infradead.org, 
-	greentime.hu@sifive.com, vincent.chen@sifive.com, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|DM6PR12MB4042:EE_
+X-MS-Office365-Filtering-Correlation-Id: da6abbc3-0884-434c-82c0-08dc812af5e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|7416005|1800799015|376005|36860700004|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?2Kq+m/pCm2g3gkTQpcTIhbARQ5ZWSVIW6OFWVSHbrJTO8A4zCr/yoh+s+RUA?=
+ =?us-ascii?Q?nDOvLr2yCn8QdN3ytKaAyoReN8TQ1rWyQipAgSPPuQMkoHaTCqtHfXOjDaTa?=
+ =?us-ascii?Q?mT20LS27+iSMjGORqrifjq5jRte3zjbvPQj5qg4qQueYKccDkRBdleS8JWWs?=
+ =?us-ascii?Q?Jc7uZr0UDy0BycEeDqjSSnhDMwbvG9NTtcjVHC6pimwe+6sQGiwSn/V5gzwl?=
+ =?us-ascii?Q?V1HmwXcbnfusTob0uVpqq0MrhUpsHFKOmNW0Li3Mk83BMTjG9Za+zAZrGhBQ?=
+ =?us-ascii?Q?r4THFy+bUDT2QtwRcZd9zbg25ibe3hTDyN0HdzHcM2K7NafscolYsYBEKt52?=
+ =?us-ascii?Q?q9rnpca4DCTFc2hUtpou4wzYtH6FlzUpzCDLAyL0iE3Hd3nvQvp14PuZ/EAc?=
+ =?us-ascii?Q?d/RQ0CPdRdd/4VAV261cfZhqZUin99kqKDBJMueu45tAtqlFG2drtDY0NzLp?=
+ =?us-ascii?Q?KmAKddCX/aojOzypdOSwVShasWOA3xs3POw4ZaLXtO8EVKBs7oejKfnAGzlE?=
+ =?us-ascii?Q?wDjdXXF096zCrHbbCNVuSkJJQjZh7GjNlVg/IYJvte++8cMhAyd2HV3Vg0Fo?=
+ =?us-ascii?Q?7IddF0yGVbEd4O7QxLWw/Kf7Gf7AyDpr3wRldguKrNfI3O16nl95vMKlPruv?=
+ =?us-ascii?Q?zyAATouHewHglfyvqmhNrE58A2Ui7Mri+0nqiRemStZjG4ZU/uL/972KnJ3Y?=
+ =?us-ascii?Q?NUlFcZH8dkDSz2uDZ/D+nFbMUlT1CDxp/AcFw2hlRuc0bNNhNpXnnAEQx0Yo?=
+ =?us-ascii?Q?MufHXxdw3tFNENJrqO7E1hKjYFBkLwe2rn7BbQi2jVmvxtxdaXODYl+mIIV2?=
+ =?us-ascii?Q?HZSGzctSksZmB6v/Wvrj+HCZkrbP2QvC4JuCdxNc8To4TXidl+b4jC/83GfJ?=
+ =?us-ascii?Q?kRUUg0d+cVyJZ7oChqFvcXs+DxqaAHISDalEs19UduHD/W4j0bxBcQ4/cLAe?=
+ =?us-ascii?Q?7gr1VujBAcU6pE5x6SHDtzjI1O9dAUrnCEjMAosRzN/7S8TLF0SqHwMnVI51?=
+ =?us-ascii?Q?sQ1lN9yJyDSPnoOhGP1mE4DAwI9t7tcpk2KIiHKcKtL6T1T7RIxks5o586JO?=
+ =?us-ascii?Q?G5P8ZSVWr8FVD3Jk2/NN9XbhDjxa5TuqmGKQlfwkXfXpSzoSId9klf4soL6e?=
+ =?us-ascii?Q?OfW2UY4xyTXY3b3rcZCl/vH73/4rVbQHAmsxm2cfIRsXkR+DtYBI52EO5ylI?=
+ =?us-ascii?Q?sKo7R7kwick/h3TJBQIOysKJqF1M/aalP1DDKyQt1l5+u8ZSHjTJq4jLZqmm?=
+ =?us-ascii?Q?uOyYaZTt/IRkg3FIVUPQpFGaG7flcNDz7apBm1Vi+8Taeen1U+sxQmO8uDs/?=
+ =?us-ascii?Q?zSenN5L1ow6rViOuTjD6LQ9LfJEZUTQ1phOhQreGBL+U1QdgdTdiFVPHZBOQ?=
+ =?us-ascii?Q?0vPerKNmLdmuUiz469O1QHav8xs+?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 04:34:03.8952
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da6abbc3-0884-434c-82c0-08dc812af5e2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099D8.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4042
 
-On Mon, Apr 15, 2024 at 12:19=E2=80=AFPM Yong-Xuan Wang
-<yongxuan.wang@sifive.com> wrote:
->
-> When the maximum hart number within groups is 1, hart-index-bit is set to
-> 0. Consequently, there is no need to restore the hart ID from IMSIC
-> addresses and hart-index-bit settings. Currently, QEMU and kvmtool do not
-> pass correct hart-index-bit values when the maximum hart number is a
-> power of 2, thereby avoiding this issue. Corresponding patches for QEMU
-> and kvmtool will also be dispatched.
->
-> Fixes: 89d01306e34d ("RISC-V: KVM: Implement device interface for AIA irq=
-chip")
-> Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
+Instead of calling get_secrets_page() that parses the CC blob every time
+for getting the secrets page physical address(secrets_pa), save the secrets
+page physical address during snp_init() from the CC blob. Now that there
+are no users of get_secrets_page() drop the function.
 
-Queued this patch for Linux-6.10-rcX fixes.
+Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
+---
+ arch/x86/kernel/sev.c | 51 ++++++++++---------------------------------
+ 1 file changed, 11 insertions(+), 40 deletions(-)
 
-Thanks,
-Anup
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 878575b05b2d..141a670d2a85 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -93,6 +93,9 @@ static struct ghcb *boot_ghcb __section(".data");
+ /* Bitmap of SEV features supported by the hypervisor */
+ static u64 sev_hv_features __ro_after_init;
+ 
++/* Secrets page physical address from the CC blob */
++static u64 secrets_pa __ro_after_init;
++
+ /* #VC handler runtime per-CPU data */
+ struct sev_es_runtime_data {
+ 	struct ghcb ghcb_page;
+@@ -619,45 +622,13 @@ void noinstr __sev_es_nmi_complete(void)
+ 	__sev_put_ghcb(&state);
+ }
+ 
+-static u64 __init get_secrets_page(void)
+-{
+-	u64 pa_data = boot_params.cc_blob_address;
+-	struct cc_blob_sev_info info;
+-	void *map;
+-
+-	/*
+-	 * The CC blob contains the address of the secrets page, check if the
+-	 * blob is present.
+-	 */
+-	if (!pa_data)
+-		return 0;
+-
+-	map = early_memremap(pa_data, sizeof(info));
+-	if (!map) {
+-		pr_err("Unable to locate SNP secrets page: failed to map the Confidential Computing blob.\n");
+-		return 0;
+-	}
+-	memcpy(&info, map, sizeof(info));
+-	early_memunmap(map, sizeof(info));
+-
+-	/* smoke-test the secrets page passed */
+-	if (!info.secrets_phys || info.secrets_len != PAGE_SIZE)
+-		return 0;
+-
+-	return info.secrets_phys;
+-}
+-
+ static u64 __init get_snp_jump_table_addr(void)
+ {
+ 	struct snp_secrets_page *secrets;
+ 	void __iomem *mem;
+-	u64 pa, addr;
+-
+-	pa = get_secrets_page();
+-	if (!pa)
+-		return 0;
++	u64 addr;
+ 
+-	mem = ioremap_encrypted(pa, PAGE_SIZE);
++	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
+ 	if (!mem) {
+ 		pr_err("Unable to locate AP jump table address: failed to map the SNP secrets page.\n");
+ 		return 0;
+@@ -2107,6 +2078,11 @@ bool __head snp_init(struct boot_params *bp)
+ 	if (!cc_info)
+ 		return false;
+ 
++	if (cc_info->secrets_phys && cc_info->secrets_len == PAGE_SIZE)
++		secrets_pa = cc_info->secrets_phys;
++	else
++		return false;
++
+ 	setup_cpuid_table(cc_info);
+ 
+ 	/*
+@@ -2264,16 +2240,11 @@ static struct platform_device sev_guest_device = {
+ static int __init snp_init_platform_device(void)
+ {
+ 	struct sev_guest_platform_data data;
+-	u64 gpa;
+ 
+ 	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+ 		return -ENODEV;
+ 
+-	gpa = get_secrets_page();
+-	if (!gpa)
+-		return -ENODEV;
+-
+-	data.secrets_gpa = gpa;
++	data.secrets_gpa = secrets_pa;
+ 	if (platform_device_add_data(&sev_guest_device, &data, sizeof(data)))
+ 		return -ENODEV;
+ 
+-- 
+2.34.1
 
-> ---
->  arch/riscv/kvm/aia_device.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
-> index 0eb689351b7d..5cd407c6a8e4 100644
-> --- a/arch/riscv/kvm/aia_device.c
-> +++ b/arch/riscv/kvm/aia_device.c
-> @@ -237,10 +237,11 @@ static gpa_t aia_imsic_ppn(struct kvm_aia *aia, gpa=
-_t addr)
->
->  static u32 aia_imsic_hart_index(struct kvm_aia *aia, gpa_t addr)
->  {
-> -       u32 hart, group =3D 0;
-> +       u32 hart =3D 0, group =3D 0;
->
-> -       hart =3D (addr >> (aia->nr_guest_bits + IMSIC_MMIO_PAGE_SHIFT)) &
-> -               GENMASK_ULL(aia->nr_hart_bits - 1, 0);
-> +       if (aia->nr_hart_bits)
-> +               hart =3D (addr >> (aia->nr_guest_bits + IMSIC_MMIO_PAGE_S=
-HIFT)) &
-> +                      GENMASK_ULL(aia->nr_hart_bits - 1, 0);
->         if (aia->nr_group_bits)
->                 group =3D (addr >> aia->nr_group_shift) &
->                         GENMASK_ULL(aia->nr_group_bits - 1, 0);
-> --
-> 2.17.1
->
