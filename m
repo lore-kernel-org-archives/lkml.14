@@ -1,94 +1,132 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E6C4C7B;
-	Fri, 31 May 2024 01:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7D56AC0
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717118196; cv=none; b=QyOlQA2B0tVhzEe6ivliY5f7NUleMhQmagVYs3CV5RsVXju7U8cbNhpVlbmEcOV5NA1j5BUQuQ3t/4FGiA2G1V2s717cZj53tMtZ3T8vPK6IgCbl96uCiCgoa657asi1X5Dbg1nTmTXjAtsE+jm+26YP8ALdOtrAjQRY7n8D5AU=
+	t=1717118250; cv=none; b=bvHZ5+jy/kEW+WST8b0af3oNhRRuzcBxla9H3g+qrLiJENIKlE9Olyqe0S9FJarYXqk1c8SKTvt58hsCwF1OcOw6xkzvkNp6E4h/BwIAnofhHOTrdJEUXgxMWd3xc/q0iFGslEf+cOiKBpNVXHi4xcjApYuyQXgnnEmlu/JVWfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717118196; c=relaxed/simple;
-	bh=ZXpDPuU8btt1ZFC3F39jk5VEbo6WXmRE18sLPg/xHSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ece60b0RGA6CblDNc+bLlUKVgL/mxDcN7N/2C9PsFr+VxQhxGcuNmck7BOifBXyPXu6QmbGRfi1RaNkuRIaqghaaUDmamz7SrBgzLCDTBc6r/TwOf3XcoXUELldPNf9uzBcvn56C9/YOCrg0omuqIz8RP+wiTrl93nAzxEyysJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFTfkq005999;
-	Fri, 31 May 2024 01:16:27 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:in-reply?=
- =?UTF-8?Q?-to:message-id:mime-version:references:subject:to;_s=3Dcorp-202?=
- =?UTF-8?Q?3-11-20;_bh=3DgOqugPLXSKN/Hqjf5gEqkV//LtZrIZw7lNbXHa7PE5s=3D;_b?=
- =?UTF-8?Q?=3DQiOY8mgtdgIeMfw7K2xmMEuisY53s8uYXMK6QkOKUPtSuGZADDSQLvp2RFF/?=
- =?UTF-8?Q?EjJhTR9v_bnlZjXTS5BRIgfHxGqgYSlQM0x6bPQ7UfwmTjoy1YLWcRMnvoGhrwG?=
- =?UTF-8?Q?e5AC7oojQ/ljRF_N6Fkje5SV1jvHEz8SL/Qv/A3kmH4RjekQmstpeM7ztfogj48?=
- =?UTF-8?Q?dcD3OdueuRfD6twCt095_LahYHVHkRXbXiso1LeoAz8Pqw3XYR4kO3op6rL3Rmu?=
- =?UTF-8?Q?qTULIFe/2sQfGigMkk5eAcKYmN_nbJ7HvrSihGUphSu+HeCPfAqwO9mM0bVXn3r?=
- =?UTF-8?Q?s+CKC3MLpRVHwBba/1EKdY2Op9U7IIta_NQ=3D=3D_?=
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8hga6mv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 01:16:26 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44UMdgOw010772;
-	Fri, 31 May 2024 01:16:25 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3yc511ba2b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 01:16:25 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1GO0b005442;
-	Fri, 31 May 2024 01:16:24 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3yc511ba28-1;
-	Fri, 31 May 2024 01:16:24 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
-        James.Bottomley@HansenPartnership.com, quic_nguyenb@quicinc.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chanwoo Lee <cw9316.lee@samsung.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2] ufs:mcq:Fixing Error Output and cleanup for ufshcd_mcq_abort
-Date: Thu, 30 May 2024 21:15:49 -0400
-Message-ID: <171711788756.3706380.7009680386444419702.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240524015904.1116005-1-cw9316.lee@samsung.com>
-References: <CGME20240524015907epcas1p2598a2ba8a81529b6639cff007fe9106b@epcas1p2.samsung.com> <20240524015904.1116005-1-cw9316.lee@samsung.com>
+	s=arc-20240116; t=1717118250; c=relaxed/simple;
+	bh=6qmwuyMEvvP0Hsm2Rz0a7pueEgM5xbu7B+w3vkN7rYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p5VNbezIyYYQiWpPb2sunQ5NcCFwixir09kXeAirsM0QdYwjd0FePwU4QrKYAFA0u2E1IRk4NyhsUjZGNHOut6KATL3qD641j7wjx0NMK9aukgmBKpJho3Gbhye5dgomamy7kOOqQg79BAuUUmoz7XZuVquzSWx0pB/4UeF8GT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qYcThanK; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qYcThanK"
+X-Envelope-To: nik.borisov@suse.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717118244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wwENAVxxQtEomtor8VVQD99hPDXcx9AWwuArFugb+7Q=;
+	b=qYcThanKKIBCctUoEHBCXOtSOk9m3a4y4iTXSLJ3BTaV34TPXSNNftXp2BjVpI5rvYAkNg
+	aaHvSU7eZSlE0FjdEIn34NTDhevkwN3IG0AdOazV6x+C/1/7N6DsiJgsIxxmM4yw7K9sKx
+	KOM3N0FfqJ5jPZKpmfl903LX0JGcmHQ=
+X-Envelope-To: tglx@linutronix.de
+X-Envelope-To: mingo@redhat.com
+X-Envelope-To: bp@alien8.de
+X-Envelope-To: dave.hansen@linux.intel.com
+X-Envelope-To: x86@kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: mjguzik@gmail.com
+X-Envelope-To: tangyouling@kylinos.cn
+Message-ID: <ac6b2f60-e611-422c-9e22-311701f9d4c0@linux.dev>
+Date: Fri, 31 May 2024 09:17:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [PATCH 1/2] x86: Remove the prefetch() specific implementation on
+ x86_64
+To: Nikolay Borisov <nik.borisov@suse.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Mateusz Guzik <mjguzik@gmail.com>, Youling Tang <tangyouling@kylinos.cn>
+References: <20240529032059.899347-1-youling.tang@linux.dev>
+ <ca6c512a-c9cd-4210-bd71-c72c729c95a9@suse.com>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Youling Tang <youling.tang@linux.dev>
+In-Reply-To: <ca6c512a-c9cd-4210-bd71-c72c729c95a9@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-30_21,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=631 malwarescore=0
- spamscore=0 adultscore=0 mlxscore=0 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405310008
-X-Proofpoint-GUID: Om4A4TWW4AZZFO8QNYAd4Opo9oZeIwf7
-X-Proofpoint-ORIG-GUID: Om4A4TWW4AZZFO8QNYAd4Opo9oZeIwf7
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 24 May 2024 10:59:04 +0900, Chanwoo Lee wrote:
+Hi, Nikolay
+On 30/05/2024 23:26, Nikolay Borisov wrote:
+>
+>
+> On 29.05.24 г. 6:20 ч., Youling Tang wrote:
+>> From: Youling Tang <tangyouling@kylinos.cn>
+>>
+>> After commit ab483570a13b ("x86 & generic: change to 
+>> __builtin_prefetch()"),
+>> x86_64 directly uses __builtin_prefetch() without the specific 
+>> implementation
+>> of prefetch(). Also, x86_64 use a generic definition until commit 
+>> ae2e15eb3b6c
+>> ("x86: unify prefetch operations"). So remove it.
+>
+>
+> So this patch just ensures the x86-specific prefetch() implementation 
+> is defined only for 32bit case, otherwise we have it defined for the 
+> 64bit case as well but effectively it's not used since 
+> ARCH_HAS_PREFETCH is not defined for 64bit, meaning in the 64bit case 
+> prefetch() is still defined to __builtint_prefetch in 
+> include/linux/prefetch.h.
+>
+>
+> In essence this is a purely cosmetic cleanup , am I right?
+Yes, when arch customization and __builtint_prefetch are implemented with
+the same instructions, it looks like pure cleaning (without changing the
+generated assembly).
 
-> An error unrelated to ufshcd_try_to_abort_task is being output and
-> can cause confusion. So, I modified it to output the result of abort
-> fail.
->   * dev_err(hba->dev, "%s: device abort failed %d\n", __func__, err);
-> 
-> And for readability,I modified it to return immediately instead of 'goto'.
-> 
-> [...]
-
-Applied to 6.10/scsi-fixes, thanks!
-
-[1/1] ufs:mcq:Fixing Error Output and cleanup for ufshcd_mcq_abort
-      https://git.kernel.org/mkp/scsi/c/d53b681ce9ca
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Youling.
+>
+>
+> I compiled a file that utilizes prefetch with and without your patch 
+> and the generated assembly is identical.
+>
+>
+> Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+>
+>
+>>
+>> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+>> ---
+>>   arch/x86/include/asm/processor.h | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/processor.h 
+>> b/arch/x86/include/asm/processor.h
+>> index cb4f6c513c48..44371bdcc59d 100644
+>> --- a/arch/x86/include/asm/processor.h
+>> +++ b/arch/x86/include/asm/processor.h
+>> @@ -599,9 +599,6 @@ extern char            ignore_fpu_irq;
+>>   #ifdef CONFIG_X86_32
+>>   # define BASE_PREFETCH        ""
+>>   # define ARCH_HAS_PREFETCH
+>> -#else
+>> -# define BASE_PREFETCH        "prefetcht0 %1"
+>> -#endif
+>>     /*
+>>    * Prefetch instructions for Pentium III (+) and AMD Athlon (+)
+>> @@ -616,6 +613,10 @@ static inline void prefetch(const void *x)
+>>                 "m" (*(const char *)x));
+>>   }
+>>   +#else
+>> +# define BASE_PREFETCH        "prefetcht0 %1"
+>> +#endif
+>> +
+>>   /*
+>>    * 3dnow prefetch to get an exclusive cache line.
+>>    * Useful for spinlocks to avoid one state transition in the
