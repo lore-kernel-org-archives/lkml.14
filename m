@@ -1,99 +1,115 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC2A155758
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E9E155CA1;
+	Fri, 31 May 2024 08:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717145618; cv=none; b=oF0+tEKkjZaMVNyM2VgVsGobpnoxOEOwA8SE9AJRA9io/9mB9s7hzFjWeNjfllXlVzM3miansmw8Y/QibNhmSghdhgJFyzQ6j6RGDawdqHQJndSRsUWl/LinjMNPKYoyFVvK5vimXRnmAtJx7e/f3fgchwLfcRkMXqRtxCIE+Pc=
+	t=1717145620; cv=none; b=cdowW+lI08DNv8qJVfTCIvX1ulE+jEej3/tTeUnNYZ2G4Apt/f4xjsSX9M9OEYc/d36hkHJCiAK2D09we7o80oenVFL1vhUIiJAYYOD4AFHWEtx5vD5nhXT+6o9Sz26GjAG1O/zD2+pwFYs7+8Diiz2Ks0pMee87CYlKMh93vMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717145618; c=relaxed/simple;
-	bh=NovAGQAJDKQTMTAI+az5GHF58LXNrOVqVoPHaefwx2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CYoc4eXHvAjiBhx/BUxupOX7kZtUmBlMv4gVFf9hMMPu8zqIvyYOC5giamo748AdZG/gq9PVyJwDvtg6PP1p5G8VXafDzjNnhjWK5C1SRssT4jauNbitolsPJGhY4HTNQZkolT0sb/nYok5NKYmRAEvgEDemx9muZcpZ8EnAzsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D6UlgJr0; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717145620; c=relaxed/simple;
+	bh=hejNiCvLj7Dk9SFPEcozF5XOfDPrPBPpe0gJ7vmY0QI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XII40taW++vD75fz6tIhd8BBv+x14E9xlOAJg3GYLmJWb4+n/9APXaYnkpn/rpD5oJ2Objau2Fo9wOqWXd/8LCAI7+H5HAgunq2ZYXypjjcdpKSMfksbC6FtbDP3d9sBJbJKV4GxKFTESfnq14oLpY6bdwE6HrzEk0AAVFSrGng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UX0WeXm0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D6UlgJr0"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52b8b638437so300779e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717145614; x=1717750414; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PLysO7NeGsNXqaNuKCZ49ISqQA88jU3o40hSAdkel0w=;
-        b=D6UlgJr0B7sWc+/jdtfuQTaCEFI6ij4Vtfkx3FX6r7kj9EMFeFbL42TH8i2tqSOTYn
-         XG2gmvuYOBwJROIDIcroCdDCW9MyS/ZzEGvlaKkej3//pfqzDy0o5BK6QQ5Ew0BJf8C9
-         WSZtdsJatfQq71+fuHo/vqStQ2JwREjW/azYSSKV72wnqbJVQgX9pYX4swTI4EEpk4BL
-         0t2zCnPCte1c453Uj9h2L7/HqBgPMz/1pwHkcns1xDAqlLJvdFzrnEwHkmXGVJMbnTUm
-         yAYj0di+MucAvgfA9iIV6+23X6LvVdzs+o3hW0Omzjct1M4MuSyPnFI/9pEZqbku0wcT
-         EDig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717145615; x=1717750415;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PLysO7NeGsNXqaNuKCZ49ISqQA88jU3o40hSAdkel0w=;
-        b=MYAa2d3+Tk1lZxyF1/LIEO9YO47Z6tfi+7nwbnJICPL2WBiFZ80xlOibKpP+lIZwjT
-         FMIEwET9/W8T4D7lILcogUnySWNKOazisCmELfFZWV9kOhs2K4g7n1c6imOPIBFM/vQ2
-         iOxC8hL3p2sVyIq0qkYmmCQCvAJDsFiM6EoSXH7cHavlv6vl6FCukRsc+TR12ZiekgQz
-         Nib7ffRJmZZIf/NGwl8WPEgZ0V7Chkmub7xZZTjlcVR4MW4OvKFwM03oIOp4a0Qpz1v6
-         iSf2/YK0kn5oVrjAXj/Zx8JCzgUaCR5B7KWjL0P8EOSALvG/6QDlK5gvEWMOscBycURq
-         uFHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAXds+puGNGB3efEzOmba3yUsZmO5/9rNW28bggukywn0w/iERZNuMnpg+tN7My+U4QOqlQd7wxx7IXVRgXJazFIdjk2VXWCM7UUJ0
-X-Gm-Message-State: AOJu0YzuEvXzblGP/DqNG5zYFWeeGuRqWSva5LlQ1MpjGqdaLzZiD3HL
-	5W9jtdyWwzdRoQ6oruPXKrvxWReltzm4RMla4xjwderm1SGAqlLW6yRXJCYrnsE=
-X-Google-Smtp-Source: AGHT+IGrI3Xg4zdtsWUBFh/C9H8BavQLRkhQTUppdMH6+mDG8k23IfbW5XCrkz8PmMS4gZWwWO0rig==
-X-Received: by 2002:ac2:4e93:0:b0:52b:7bde:896b with SMTP id 2adb3069b0e04-52b8958b992mr604317e87.14.1717145614446;
-        Fri, 31 May 2024 01:53:34 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67ea5869ddsm63483966b.105.2024.05.31.01.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 01:53:33 -0700 (PDT)
-Date: Fri, 31 May 2024 11:53:29 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+07762f019fd03d01f04c@syzkaller.appspotmail.com,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	Dan Carpenter <error27@gmail.com>
-Subject: Re: [syzbot] [input?] [usb?] KMSAN: uninit-value in asus_report_fixup
-Message-ID: <b86a9ef9-ea50-45e1-85b6-20b6f5358862@moroto.mountain>
-References: <000000000000915d550619389e8a@google.com>
- <tencent_9FA58DAAA5CF0D8B9250DDB2DDF4192FCF07@qq.com>
- <a66819c1-1ee1-47e1-8831-c0f1a22a12c9@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UX0WeXm0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03BDBC116B1;
+	Fri, 31 May 2024 08:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717145619;
+	bh=hejNiCvLj7Dk9SFPEcozF5XOfDPrPBPpe0gJ7vmY0QI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UX0WeXm0NkCilX5aVvEi+LkdAAzdayAzppiXYAxwCkUwHdgG0i6uaxsMBdgIpfb0g
+	 XrjT4JwEYsVlaZLLRgwUOqL3WLf1BabanQt7nO5qbkEOX4/tj4QTM737NHYYZpc5t9
+	 Eoz6YlE5XM6jV7Xoxyw4jJ4Zh08sjf1tv8HBacEtVGFJxfL1AaDIA46gvQUtttr9J/
+	 US9Ithh2ox0IpQvsyN9FPv8qKn5CXHDnMmlrYEOst/oT6x5ISqkc/LaRXpb3EP8VMX
+	 7VFVGcB4r9RcqDbyN8g4p218s4rowR62ytVJH34Higs9bMfc6nHu4Bw9zS1imWEpRK
+	 mcQqGdCfo9y+g==
+Message-ID: <99bed183-9b3e-437a-8c35-8a345f4a3558@kernel.org>
+Date: Fri, 31 May 2024 10:53:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a66819c1-1ee1-47e1-8831-c0f1a22a12c9@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] arm64: dts: ti: k3-am64-phycore-som: Add
+ serial_flash label
+To: Wadim Egorov <w.egorov@phytec.de>,
+ Nathan Morrisson <nmorrisson@phytec.com>, nm@ti.com, vigneshr@ti.com,
+ kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+References: <20240528225137.3629698-1-nmorrisson@phytec.com>
+ <20240528225137.3629698-2-nmorrisson@phytec.com>
+ <bd062517-4756-4ba3-b937-c3a2db7a9855@phytec.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <bd062517-4756-4ba3-b937-c3a2db7a9855@phytec.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 30, 2024 at 08:16:59PM +0530, Harshit Mogalapalli wrote:
-> > diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-> > index a90ed2ceae84..9f0e09f667b1 100644
-> > --- a/drivers/hid/usbhid/hid-core.c
-> > +++ b/drivers/hid/usbhid/hid-core.c
-> > @@ -1029,7 +1029,7 @@ static int usbhid_parse(struct hid_device *hid)
-> >   		return -EINVAL;
-> >   	}
-> > -	rdesc = kmalloc(rsize, GFP_KERNEL);
-> > +	rdesc = kzalloc(rsize, GFP_KERNEL);
+On 31/05/2024 10:28, Wadim Egorov wrote:
+> 
+> 
+> Am 29.05.24 um 00:51 schrieb Nathan Morrisson:
+>> Label the spi nor as serial_flash. This allows us to disable the
+>> flash with an overlay common to all am6xx-phycore-som boards.
+>>
+>> Signed-off-by: Nathan Morrisson <nmorrisson@phytec.com>
+> 
+> For all 3 patches,
+> 
+> Reviewed-by: Wadim Egorov <w.egorov@phytec.de>
 
-This kzalloc() is unnecessary because hid_get_class_descriptor() has
-a memset() built in:
+Tooling does not work like this. You need to review each or provide tag
+for 4 (not three) in cover letter.
 
-	memset(buf, 0, size);
-
-I'm not a huge fan of how if hid_get_class_descriptor() runs out of
-retries, we return the number of bytes in a partial read.  Then the
-caller pretends it was a success instead of using the result.  But
-that's a different issue.
-
-regards,
-dan carpenter
+Best regards,
+Krzysztof
 
