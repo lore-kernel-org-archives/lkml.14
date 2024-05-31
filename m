@@ -1,128 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D36FE39FF3;
-	Fri, 31 May 2024 15:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CA739FF3;
+	Fri, 31 May 2024 15:31:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717169467; cv=none; b=Pn0d8EET1JQSnLSdZy5EBFbHO9wLHTo9/TUuTBOaZ07ZNDZroRCk4bJgAZudQE60by94DNotHJodcyXb9Vup/qimyHC2ZlBtNA0Cmfbiy6VVx0jA5f6met/DVJD7j67bqr4CTKJ5Cd0JyZ51699JtY6KV4ejud6LOhGtapl6RhE=
+	t=1717169487; cv=none; b=XOTibFL6ba3umTM4/Qb0+ubrcSK2tx297wL1b8619btJDLi23Ss8vod1DF922tuOZo2jyEf8LfoPwOBGvMWSwtTB0UKK/eZRNAZoGsfUH5sdH4dzeAMj3w9KNWQ0KYMae3t2VD92tJh3pAApldxCKUPaELcaEXVZ6nddRxcWHE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717169467; c=relaxed/simple;
-	bh=sA6qI//FTL7pgyGldUMsd1jU+l556RY52OWXWgjHnto=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gwDg8oJVX2FSrUb1/OiSRPSQtgjGDIHwxRUy8WAabaA5RY/Y7DKuIbvCzVIbeXU7SUGs/SsxLgy7UU+IQ7PF1Q6VBIgwYk3MG64DJvOO1b3Ad82zFQahoCcMBc0HMj7nkz7Sy2TEdp+v3n49/OKnoeTKeCq21B7seeOSVs0qhR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eSF45pq1; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eSF45pq1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717169466; x=1748705466;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sA6qI//FTL7pgyGldUMsd1jU+l556RY52OWXWgjHnto=;
-  b=eSF45pq1QjAZ3zPZDNQXqcHDSX9NpgUjnTq8VClVx0Wid/ml9emR9Dhr
-   I2MOa3as0O/Zn7ndrbUc5OeMlBTH5T0duXVLns4JhLpsYF1K9kdflc8qx
-   hBe4UdscvxNIG52K63EEaEJIRE/jUaCoGSajII6WiPVPurD+ETq+VANF9
-   8hDTBIvsaNAIR1Hu3s62Z3/p6Ig0r5afZYjthKuR4K4UDagHDzWhCwQ54
-   A02sFtzXWqm45EDls1u0wtAHYWrGdXlMywDxyKJDvfDPq8LCmy6BSMNbp
-   ubGLsPWrqpaW8wUFggNClQjMGJDzetP5Y1XFKrIZvVkP0PNGkZqPMk6sU
-   w==;
-X-CSE-ConnectionGUID: UfMCBpMKTMe41atVcb5+UA==
-X-CSE-MsgGUID: wC63gSXVTzeNItIReGjgdg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13839673"
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="13839673"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 08:30:57 -0700
-X-CSE-ConnectionGUID: hHqXtMjBQrmkR3of3UKpuQ==
-X-CSE-MsgGUID: 7H/Fjvj9SyuUz1KNLZXrwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="40627351"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 31 May 2024 08:30:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 04665692; Fri, 31 May 2024 18:30:39 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Rob Herring <robh@kernel.org>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Kevin Lu <kevin-lu@ti.com>,
-	Baojun Xu <baojun.xu@ti.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 6/6] ASoC: samsung: Replace of_gpio.h by proper one
-Date: Fri, 31 May 2024 18:29:33 +0300
-Message-ID: <20240531153038.1590171-7-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240531153038.1590171-1-andriy.shevchenko@linux.intel.com>
-References: <20240531153038.1590171-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1717169487; c=relaxed/simple;
+	bh=wb1cOchvcOujs9HWcw7r/ZrIUMH4fHWuktSZkjSAwAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iwNtD4RhyRW0yjyAzAjMb8qB1VuGonUFFeUZwOvUU8D/1uBwtPWvgRYUQFA7JXCEt0kthWjMVjGLBG9htgc8LVhfIml0QAJKGdptfB3pXj6oP6AvC6e5e+XOnkHEvmihfUqZuwKyUvveuP9+QeXOz9w3RiwCkDlrKTg1tqwxG1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 559941424;
+	Fri, 31 May 2024 08:31:49 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A56163F641;
+	Fri, 31 May 2024 08:31:21 -0700 (PDT)
+Date: Fri, 31 May 2024 16:31:14 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/4] static key support for error injection functions
+Message-ID: <ZlntQn-a7Ycko_j5@J2N7QTR9R3>
+References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
 
-of_gpio.h is deprecated and subject to remove.
-The driver doesn't use it directly, replace it
-with what is really being used.
+Hi,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- sound/soc/samsung/aries_wm8994.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, May 31, 2024 at 11:33:31AM +0200, Vlastimil Babka wrote:
+> Incomplete, help needed from ftrace/kprobe and bpf folks.
 
-diff --git a/sound/soc/samsung/aries_wm8994.c b/sound/soc/samsung/aries_wm8994.c
-index a548ac33dd94..01716df0c842 100644
---- a/sound/soc/samsung/aries_wm8994.c
-+++ b/sound/soc/samsung/aries_wm8994.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0+
- #include <linux/extcon.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/iio/consumer.h>
- #include <linux/input-event-codes.h>
- #include <linux/mfd/wm8994/registers.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/regulator/consumer.h>
- #include <sound/jack.h>
- #include <sound/pcm_params.h>
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+> - the generic error injection using kretprobes with
+>   override_function_with_return is handled in patch 2. The
+>   ALLOW_ERROR_INJECTION() annotation is extended so that static key
+>   address can be passed, and the framework controls it when error
+>   injection is enabled or disabled in debugfs for the function.
+> 
+> There are two more users I know of but am not familiar enough to fix up
+> myself. I hope people that are more familiar can help me here.
+> 
+> - ftrace seems to be using override_function_with_return from
+>   #define ftrace_override_function_with_return but I found no place
+>   where the latter is used. I assume it might be hidden behind more
+>   macro magic? But the point is if ftrace can be instructed to act like
+>   an error injection, it would also have to use some form of metadata
+>   (from patch 2 presumably?) to get to the static key and control it.
 
+I don't think you've missed anything; nothing currently uses
+ftrace_override_function_with_return(). I added that in commit:
+
+  94d095ffa0e16bb7 ("ftrace: abstract DYNAMIC_FTRACE_WITH_ARGS accesses")
+
+... so that it was possible to do anything that was possible with
+FTRACE_WITH_REGS and/or kprobes, under the expectation that we might
+want to move fault injection and BPF probes over to fprobes in future,
+as ftrace/fprobes is generally faster than kprobes (e.g. for
+architectures that can't do KPROBES_ON_FTRACE or OPTPROBES).
+
+That's just the mechanism for the handler to use; I'd expect whatever
+registered the handler to be responsible for flipping the static key,
+and I don't think anything needs to change within ftrace itself.
+
+>   If ftrace can only observe the function being called, maybe it
+>   wouldn't be wrong to just observe nothing if the static key isn't
+>   enabled because nobody is doing the fault injection?
+
+Yep, that sounds right to me.
+
+Mark.
