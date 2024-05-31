@@ -1,80 +1,142 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A682A78C80
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 04:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3122E187554;
+	Fri, 31 May 2024 04:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717129639; cv=none; b=JlsvnU5x1FdVyGZpO+YQUWd7K/xZqEv1lwXkzYbf/YwcOo/2sG0WEl6acO+W/sdzev9uf9pU/tkBvLtjY/j6AdX6p5d+5etILvfyzs0l90ns2GLyX4HNvACFC2OcLG7wbRP0x7tLnBM+q30Vdy7d97jMZHqC/egFn6tapiLTWho=
+	t=1717129694; cv=none; b=iUUWRwoXRmqCtLH+znSUMdfKh4p2Giy/iRNcz7cfBaskFf9jyUUaZs1JMdPBIX0/+GBtlyvmsO6fBBLsBgS2G3iHwY0/xFkcaRk3P7438f+3AaoHFzJUA8k5xZ+1wPW5Agfv7LFdQgokMqlSUxZLp8S7GtVY9lQ1K8nwlJ8UJLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717129639; c=relaxed/simple;
-	bh=HKMcOpiHI6pPvp3WTEDZeQ8ROXmtjUo0XoWydl3PoiU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YuNtVSOA96Af9SY/wDSWusCC84Rawi1ktHnFCWpJrkE8nbvEboaVJSlesLd24ZP9GkATGKIKQmhaZ/jT2Y9CM556nnr9T4jHvP9x05sqk5AK0rE1WWl8N4tNRsBQ9nCLhGGLsQIO2xd4jfYmzoO869uJGKnQFZMijHwfSX7vVOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4212b102935so419165e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 21:27:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717129636; x=1717734436;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wMhU6ONqx7VzpejGc29mu0haH8B25NLSo99kjECHleA=;
-        b=bpdJ2yXbEJDZjBIpdUr7ltjMO7X+S7dUMiTrxP/9xkz2fMaBCV0T5oMU5OUSgqCn6P
-         6I2Vc/QUFVDZfcU/MrqGU2rz90hAhUHnpd/hrReC2/9pqnA3M5HnXfanqlw3r5hE6+A2
-         EmT9LlCBV3knpNZRVf4C0DjS02l4ao5JDXD448k31tmKdjz8FXGPY0Ikq3n20/pH3fxc
-         6W1laHAYJlrFMAR31sKvKZabNvyIeN+2Wf12Ili6jQwhiMLmJ05KZkmSBWV0LDRYo9fk
-         tnE8+uQJvcTOy0UiDb2NCb4pJ8PXZwA7s+xbDIuxwDDMjmGVmXribacOCfp1M/oZix4i
-         5p4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWNrcfqjTu0Ax0UHTqq4X61CPgP44QZkwxMfZnTkAgFD0CfPNv1gFQ6KohhsTkkafXM1rPK1MryWnSnZwqcPZmCYfr/Z0W1+Zxh6Hy5
-X-Gm-Message-State: AOJu0YzNxBIdHgp302IYpAj4Gj1id3TJTshnUYiLlovynZ9u2G0pZGPO
-	zLt0vwlAG2M/aXDyiYlnCkq1NGF7CpN76CdtIBBpCVTv96vmLE/zh5Kj3A==
-X-Google-Smtp-Source: AGHT+IG6YzXnayr3//psDaQ5EjQJEh/NDUfKm5ouwEGMHvrVzW1s62TBKYxs9iwQB6AjvGO/Xrwqdg==
-X-Received: by 2002:a05:600c:1d28:b0:41b:e83e:8bb with SMTP id 5b1f17b1804b1-4212e0c158dmr4509695e9.3.1717129635707;
-        Thu, 30 May 2024 21:27:15 -0700 (PDT)
-Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c10fdsm885124f8f.17.2024.05.30.21.27.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 21:27:15 -0700 (PDT)
-Message-ID: <7c1792f6-dacf-494c-a6a3-04b48596f903@grimberg.me>
-Date: Fri, 31 May 2024 07:27:14 +0300
+	s=arc-20240116; t=1717129694; c=relaxed/simple;
+	bh=MXIzVq0dIhtRg32LkPd8K+sI/KI97awMjyylhz3JFG4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MmkV3nYlLDTpmRBJo2U1yGfpU3d+c0EmFUXgbJ+X4bc/7nyU1Jxsnq+CP4TIUATlUQNxC8JhxRxepJCxtB0t8c+q6141oaTrfb5GR8EbRezaAinTdFUUnhpx7Soesyat2vBqFteujazebEM7+O+0HGs4T3yYcks/usSAshzIreA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=S4Cf+SMR; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="S4Cf+SMR"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44UHMRI6026563;
+	Thu, 30 May 2024 21:28:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=h
+	hicOWMHKa1J/H/XNJ6E6RZzHWAH/BnUWB/xcC7KnOc=; b=S4Cf+SMR/5oKE8QPx
+	gPmh4y0f2paPz6xsJ4P9VnfCJYe93z1SUu5XTQ9eR4Ku3f8Edq26aguYyfcnXMUK
+	eQklHS0OP6XjAh2Xx+s8Td8S1BQVr7hTb1bC1hfz+3uNrmuUjr9NXOr8ukuEAM02
+	NT4swB5irPsT/l72YXFj6O9nWbFAsNb3DEnJPc5bdM847IONYg9JtZr7b3ulfQKT
+	UEYFa/YSoqZgudCna8/16spjAccWPxhrycCAtJoaeTxDEUDAmLzKSHCYyookxkvx
+	42M/aTah0gGSCUSPFkfoJRLZhtcqqdMmiDpcQseF1GXBwP37uRHMB5tiTP9EcbjT
+	g8Esg==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yewt3a0vk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 May 2024 21:28:02 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 30 May 2024 21:28:01 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 30 May 2024 21:28:01 -0700
+Received: from virtx40.. (unknown [10.28.34.196])
+	by maili.marvell.com (Postfix) with ESMTP id 99D1C3F7085;
+	Thu, 30 May 2024 21:27:57 -0700 (PDT)
+From: Linu Cherian <lcherian@marvell.com>
+To: <suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@arm.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
+        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <sgoutham@marvell.com>,
+        <gcherian@marvell.com>, Linu Cherian <lcherian@marvell.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v8 1/7] dt-bindings: arm: coresight-tmc: Add "memory-region" property
+Date: Fri, 31 May 2024 09:57:39 +0530
+Message-ID: <20240531042745.494222-2-lcherian@marvell.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240531042745.494222-1-lcherian@marvell.com>
+References: <20240531042745.494222-1-lcherian@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: WQ_UNBOUND workqueue warnings from multiple drivers
-To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
- Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: "kbusch@kernel.org" <kbusch@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-References: <BYAPR04MB41513F04DB2ECDC3601CC36ABC2D2@BYAPR04MB4151.namprd04.prod.outlook.com>
- <c4057654-97bd-4721-9bed-9dd5ef8b3f8d@grimberg.me>
- <6d3af8dd-30c3-48d4-9083-7f00ea21ff8c@nvidia.com>
- <BYAPR04MB415196EC84756BA1876463DABC3E2@BYAPR04MB4151.namprd04.prod.outlook.com>
- <f5d57e3b-8168-41af-8e36-c7a21ef3a475@grimberg.me>
- <BYAPR04MB415180536421C9B8326D6A30BCE52@BYAPR04MB4151.namprd04.prod.outlook.com>
- <dfb9074c-d019-4a19-83eb-00d93da8dada@grimberg.me>
- <BYAPR04MB41514F3EA640750D6C68AF56BCF12@BYAPR04MB4151.namprd04.prod.outlook.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <BYAPR04MB41514F3EA640750D6C68AF56BCF12@BYAPR04MB4151.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 78w7haN8_V3iAbsh_xc1vl49rVmKgg17
+X-Proofpoint-GUID: 78w7haN8_V3iAbsh_xc1vl49rVmKgg17
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-30_21,2024-05-30_01,2024-05-17_01
 
->> I see, what is the mdts?
-> MDTS=3, i.e. 32K
->
->> and what are the r2t lengths the controller is sending to the host?
-> r2t lengths are 24 bytes or 28 bytes.
->
+memory-region 0: Reserved trace buffer memory
 
-Umm, so your controller requests 24 or 28 bytes from the host at a time??
-That's unlikely. by "r2t lengths" I meant r2t_length field in the r2t, 
-which tells
-the host how much to send in a h2cdata...
+  TMC ETR: When available, use this reserved memory region for
+  trace data capture. Same region is used for trace data
+  retention after a panic or watchdog reset.
+
+  TMC ETF: When available, use this reserved memory region for
+  trace data retention synced from internal SRAM after a panic or
+  watchdog reset.
+
+memory-region 1: Reserved meta data memory
+
+  TMC ETR, ETF: When available, use this memory for register
+  snapshot retention synced from hardware registers after a panic
+  or watchdog reset.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linu Cherian <lcherian@marvell.com>
+---
+ .../bindings/arm/arm,coresight-tmc.yaml       | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
+index cb8dceaca70e..4787d7c6bac2 100644
+--- a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
++++ b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
+@@ -101,6 +101,29 @@ properties:
+           and ETF configurations.
+         $ref: /schemas/graph.yaml#/properties/port
+ 
++  memory-region:
++    items:
++      - description: Reserved trace buffer memory for ETR and ETF sinks.
++          For ETR, this reserved memory region is used for trace data capture.
++          Same region is used for trace data retention as well after a panic
++          or watchdog reset.
++          This reserved memory region is used as trace buffer or used for trace
++          data retention only if specifically selected by the user in sysfs
++          interface.
++          The default memory usage models for ETR in sysfs/perf modes are
++          otherwise unaltered.
++
++          For ETF, this reserved memory region is used by default for
++          retention of trace data synced from internal SRAM after a panic
++          or watchdog reset.
++      - description: Reserved meta data memory. Used for ETR and ETF sinks
++          for storing metadata.
++
++  memory-region-names:
++    items:
++      - const: tracedata
++      - const: metadata
++
+ required:
+   - compatible
+   - reg
+@@ -115,6 +138,9 @@ examples:
+     etr@20070000 {
+         compatible = "arm,coresight-tmc", "arm,primecell";
+         reg = <0x20070000 0x1000>;
++        memory-region = <&etr_trace_mem_reserved>,
++                       <&etr_mdata_mem_reserved>;
++        memory-region-names = "tracedata", "metadata";
+ 
+         clocks = <&oscclk6a>;
+         clock-names = "apb_pclk";
+-- 
+2.34.1
+
