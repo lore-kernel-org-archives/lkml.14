@@ -1,117 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E67E43154
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7A381AC1
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717145831; cv=none; b=ZM/VDhTdQlxradsMEDsXdI+LpxgXZGMLcGqjIOifbDEprTyv7pcXJsIyiPU/vhNR+B01T9kYkk4qxYeDCz1Gm9Rl9fPGd0rOk1MBuWkhQTWdsnTll0UM+/Ycn2pcg+/EJUY0H4XD/bPqFDcjr/cmOLhFaDloJ8BkggSmchlshLQ=
+	t=1717145863; cv=none; b=EoEN5/YFFmzf7KKbWiW9L8ES7T+u7/CSdrvwmJLtEEX2TnQT9if9MI5ClNvjZIh3cGlFpYuD8BS8XOOPXK6VPnjyq8DNgzuKTVUriHpAtZ2azMCDS8UNtV5UpfkKcThXAVYo0IF2ZxV7U4RoqRBtE5SruMaXQr8QsBa3kxFQduk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717145831; c=relaxed/simple;
-	bh=RMhOq0e80xkHIOos311ef0InQ1+OuX+zK7Yy4hvNt5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aSLVJhbnUoIDQc6ZYCCwEkbb6306IynlVDOXiHVr2a8Kx/yhPyTmdmpd/2m2uPHOt+PVHOQylrJhNDKHIX5zeeKJLYUFMJkO/UgyWyImnwXXTWN8f/Pz3gnwB6t87iEL6etDriMmKZgCf7qnU4eNuetRTy+YtlifJqI8RPxinjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VBw/Yiis; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717145863; c=relaxed/simple;
+	bh=jGp5xMVbjd0tUmykpevDlhzB7AOsvsUsk6fB4tAJBRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cm9G7rGbrc6yIxJwq3aBHs0ncXkVAvr7Zq68ziHEY4BiK7B9ipDr262Z/2XBS/Pvh21heaCK0x5tlyY389KjsUj3iY+i+CvzNyVE3rbSnrlyA7Ajt5035dAK3aRRfKGbee2dNS4p4LXXeRRcwkQ+hoWQSgNOkSwsRX1ihDcSs04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tiKDy1B2; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VBw/Yiis"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717145831; x=1748681831;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RMhOq0e80xkHIOos311ef0InQ1+OuX+zK7Yy4hvNt5I=;
-  b=VBw/YiisbFl9FSKzgNr9+GyQ6MH8xst3qMt/aQjlhneoWcWSoCgoT0Qg
-   HlJmfjHf+1RUFnvDjHqHS60vvbYtrkZxy4s1lsmAW/UOh8ORe0sW2/qlf
-   NOzAgBNpOGPWbUr6oqI4eN8X14EIO4h0hlPJhQ8kqd2a29j9OzdNmTfPX
-   8+6WeGk+Yr5TAFNDDZOto7ts0111zm4DbR6q2MOev0GIJbJ/wI6WXj0KH
-   gMiloh4phzvUUATpX+3hmoQXN8AnYWB8WBFKcP0L+ITIdNHFqgLvRyvrh
-   bqHndx4JlyjhQdF0dOhJlqVNzeyhVphatsot/4O0hemNAXKqVD8sxOTws
-   g==;
-X-CSE-ConnectionGUID: GigziEflTaiLhvu1r16AIQ==
-X-CSE-MsgGUID: A/C22HOcR+Sp+N1n2j9CYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="24802613"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="24802613"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:57:10 -0700
-X-CSE-ConnectionGUID: zlNN3HCQRCO/ESfZhJtDKA==
-X-CSE-MsgGUID: um8Yq5J8TUGDJ2jy96E4GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36583456"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:57:07 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sCy4O-0000000CQFP-07an;
-	Fri, 31 May 2024 11:57:04 +0300
-Date: Fri, 31 May 2024 11:57:03 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chia-I Wu <olvaffe@gmail.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	christian.koenig@amd.com, alexander.deucher@amd.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Baoquan He <bhe@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel/resource: optimize find_next_iomem_res
-Message-ID: <ZlmQ3_wcL3cgp4Hb@smile.fi.intel.com>
-References: <20240531053704.2009827-1-olvaffe@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tiKDy1B2"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2bde007cc57so1313386a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:57:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717145861; x=1717750661; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nPlAccRu1ht0ugLS/YX5R85LXm4AvuNcIW8FJ60Xapc=;
+        b=tiKDy1B2hwFCqw6xuI3fWATDtD3MomsjOn2FlwD1SnPrzBOdxV/w8s7Zb5rkAoR+C9
+         7YgbN5QzrEkrWOToAQJ3XFjNPeYEk07Lqk8a12l6i7+W6C7u4jIOcaTlVXq2NhxwUCPg
+         gFdfuPJ3eyJ0hxHZnfB0ro/3LLVoz7qSqUkVLDKGuM6rFqDRnNiZACt8sL1vclKQuLmf
+         v3sBRq1bUyS6Ro5K8Yt0uyH4ObkjqiDkYXdcq0Bbs1ayXKXZSSlIhhr6lkS4kN7P44mf
+         o7QdSvYXB5nw8GtvWQsUfaWi8Dboxt7J/7Ibgtw5rrNTnVQ8490QigWXFGuKeq4eCJPx
+         hpgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717145861; x=1717750661;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nPlAccRu1ht0ugLS/YX5R85LXm4AvuNcIW8FJ60Xapc=;
+        b=MfXirAu5uwkEl4KWwMtmtwYmcamGVnGf59rS2b21I5t9QGq08AjDzW+A0iXM1jYH5B
+         BD3q8IQKbJtnfWxTELjFT5nLMQaMjnqwBf1zgxpFfJ0zs81991BmkQNZBuV5607WtX8Q
+         h/vIjLb0LUwTitZNpHHqwRQ2QkG6RkGB1LAjdFzumChbUhDvEs+PI5YgUkgBVfOFN5a3
+         /zFEzRHDZVX3egvNrYkMazD9h73WTYxvGFaCD75ANVqnJTDel0jjdC0RhgMOSs476Hhh
+         q85QEdkFVy/+x1qVM+hnofvRcKl6/JQGb9aSJS8sSyOd5CFHMN6jbgwrUGGuDfGVF8z3
+         xxbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWk5TncWkYda3dEMOJa8wvADaznSBrexnrs4DYcgjkNc2G+obzzxDaq5oahP/HPFnmI+Fe8I39h7o/81CV+0+A8BfH47I/J7WmvVZu9
+X-Gm-Message-State: AOJu0Yzyo/51ouA7r2UOA9EfoJhZvD/Bwkz9xsW3K6ysKmDKfhz4DK+l
+	l+rw2aLG7IGKmcBhWd9xHNsB+Cv43Qs6SHrgDgoFg2f8ilSjTRZR5ZcXqjCxBEafR38Bp21TcLV
+	aGczB9eJQrMqiBfuX8fxY2jLt0h+bET0lJSyzjg==
+X-Google-Smtp-Source: AGHT+IEk0xAq4H6amqfMwetzDZJPVGDcv7FZKBb2l9gcvP6xSw2q5lzmYnt2+a5eGjhW4z3tZcMHkEzVbz+bKslsKVY=
+X-Received: by 2002:a17:90a:bf16:b0:2be:9547:41a8 with SMTP id
+ 98e67ed59e1d1-2c1dc5d9f17mr1081334a91.48.1717145860631; Fri, 31 May 2024
+ 01:57:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531053704.2009827-1-olvaffe@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20230105145159.1089531-1-kajetan.puchalski@arm.com>
+ <20230105145159.1089531-3-kajetan.puchalski@arm.com> <20230711175814.zfavcn7xn3ia5va4@airbuntu>
+ <ZLZ/btJw5LNVxVy8@e126311.manchester.arm.com> <20230718132432.w5xoxbqm54jmu6n5@airbuntu>
+ <20230917010516.54dgcmms44wyfrvx@airbuntu> <CAKfTPtA6ZzRR-zMN7sodOW+N_P+GqwNv4tGR+aMB5VXRT2b5bg@mail.gmail.com>
+ <d54d6115-a4d6-466b-a4a2-9c064194f06e@arm.com> <CAKfTPtB21aY9cgi5dSHB0jRp6pE85AfGcHrHjrcpMwi3fJL0FA@mail.gmail.com>
+ <4cd905e8-594e-4858-89df-a501184ee521@arm.com>
+In-Reply-To: <4cd905e8-594e-4858-89df-a501184ee521@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 31 May 2024 10:57:27 +0200
+Message-ID: <CAKfTPtCUZfpunq1C9n=3tkjsSSdmd8jhf6kR523NONKvEcxOpQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] cpuidle: teo: Introduce util-awareness
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>, Kajetan Puchalski <kajetan.puchalski@arm.com>, rafael@kernel.org, 
+	daniel.lezcano@linaro.org, Dietmar.Eggemann@arm.com, dsmythies@telus.net, 
+	yu.chen.surf@gmail.com, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Qais Yousef <qyousef@layalina.io>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 30, 2024 at 10:36:57PM -0700, Chia-I Wu wrote:
-> We can skip children resources when the parent resource does not cover
-> the range.
-> 
-> This should help vmf_insert_* users on x86, such as several DRM drivers.
-> On my AMD Ryzen 5 7520C, when streaming data from cpu memory into amdgpu
-> bo, the throughput goes from 5.1GB/s to 6.6GB/s.  perf report says
-> 
->   34.69%--__do_fault
->   34.60%--amdgpu_gem_fault
->   34.00%--ttm_bo_vm_fault_reserved
->   32.95%--vmf_insert_pfn_prot
->   25.89%--track_pfn_insert
->   24.35%--lookup_memtype
->   21.77%--pat_pagerange_is_ram
->   20.80%--walk_system_ram_range
->   17.42%--find_next_iomem_res
-> 
-> before this change, and
-> 
->   26.67%--__do_fault
->   26.57%--amdgpu_gem_fault
->   25.83%--ttm_bo_vm_fault_reserved
->   24.40%--vmf_insert_pfn_prot
->   14.30%--track_pfn_insert
->   12.20%--lookup_memtype
->   9.34%--pat_pagerange_is_ram
->   8.22%--walk_system_ram_range
->   5.09%--find_next_iomem_res
-> 
-> after.
+On Wed, 29 May 2024 at 15:09, Christian Loehle <christian.loehle@arm.com> wrote:
+>
+> On 5/28/24 15:07, Vincent Guittot wrote:
+> > On Tue, 28 May 2024 at 11:59, Lukasz Luba <lukasz.luba@arm.com> wrote:
+> >>
+> >> Hi Vincent,
+> >>
+> >> On 5/28/24 10:29, Vincent Guittot wrote:
+> >>> Hi All,
+> >>>
+> >>> I'm quite late on this thread but this patchset creates a major
+> >>> regression for psci cpuidle driver when using the OSI mode (OS
+> >>> initiated mode).  In such a case, cpuidle driver takes care only of
+> >>> CPUs power state and the deeper C-states ,which includes cluster and
+> >>> other power domains, are handled with power domain framework. In such
+> >>> configuration ,cpuidle has only 2 c-states : WFI and cpu off states
+> >>> and others states that include the clusters, are managed by genpd and
+> >>> its governor.
+> >>>
+> >>> This patch selects cpuidle c-state N-1 as soon as the utilization is
+> >>> above CPU capacity / 64 which means at most a level of 16 on the big
+> >>> core but can be as low as 4 on little cores. These levels are very low
+> >>> and the main result is that as soon as there is very little activity
+> >>> on a CPU, cpuidle always selects WFI states whatever the estimated
+> >>> sleep duration and which prevents any deeper states. Another effect is
+> >>> that it also keeps the tick firing every 1ms in my case.
+> >>
+> >> Thanks for reporting this.
+> >> Could you add what regression it's causing, please?
+> >> Performance or higher power?
+> >
+> > It's not a perf but rather a power regression. I don't have a power
+> > counter so it's difficult to give figures but I found it while running
+> > a unitary test below on my rb5:
+> > run 500us every 19457ms on medium core (uclamp_min: 600).
+>
+> Is that supposed to say 19.457ms?
 
-Is there any documentation that explicitly says that the children resources
-must not overlap parent's one? Do we have some test cases? (Either way they
-needs to be added / expanded).
+Yes, it's a mistake.  it's 19.457ms I forgot to put the dot when
+copying the value from the rt-app json file
 
-P.S> I'm not so sure about this change. It needs a thoroughly testing, esp.
-in PCI case. Cc'ing to Ilpo.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> (Because below you say idle time is >18ms and total test time 5sec)
+> Is the utilisation more like 1/20000 or 1/20?
+> In any case what you describe is probably an issue, I'll try to reproduce.
+> Note also my findings here:
+> https://lore.kernel.org/lkml/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com/
+>
+> Kind Regards,
+> Christian
+>
