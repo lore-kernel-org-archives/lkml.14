@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED95380
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C80617CA09
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717185454; cv=none; b=BLEdDMn/QIHcuRH71OnuJIeblXH2S4U1FTJjjj8iNoGnYQTRPk2XIpyEQtAkKccxcteDra6I4kVbrkcAykvHLEqXSe+B29TNZoaEhf2cwj+XNub87K8NbC62J3yKshDMrc6dIX3rOjPRiT4zktGA0zSHA7hxOeDQVtQ47QpDUKw=
+	t=1717185456; cv=none; b=CGEGqiJVyGcc7YFyIoX08SfaT3ltTZrt29RgD5QGkfSSqWSDHNdZ77rP9X2fJgCrnRELNsEW7VMR5U9GtGAD5dYTYSoAv2/Yf+m35Sy2F0uJ/Lqva31sK3ubsnaIpEpmhbA8r0svPG40MApa/aXtdJsW6iV5H4SA17T7wlWag6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717185454; c=relaxed/simple;
-	bh=/lOtInnt6prvkKlLm8woy26AEwqxaaGOlQ+2tGdoA84=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n7CaUbXVZPAhQ78h3+eXatY1fLXUyWXC2rfTKuqfZP+dyPFMcoa48wafoMCNLrsb2Ap7MuRBIWkPZmPjQJUsZ+TTM8KNV35uDkqENMAIPFESdKDWFfvmhbHXg6fqATOLSEVC05Rfay6RBM/XjToYD8zSdUi20CkSKAZOoEgYl3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imrUFFMW; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1717185456; c=relaxed/simple;
+	bh=RsqO07LtaR/1pQ294RLwenEBg2L8jtETbGsARD5fAjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fl4tkIPqfLxwwesXQL4BErp29qriyskuCGPkirgTrZ8zaqQQ0Fb8NUyfzviBO85Wk7ryUcLH6wCazNZEycTdKdXOSBiol7KPken9pdXOHR3P1qSMJyFo0Vtx8n2aMYLa6+8PDPrXA4FhAGO0nESfA+JSD4+rlTr6lsNLP41+2Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJKlGeh2; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imrUFFMW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJKlGeh2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717185453; x=1748721453;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/lOtInnt6prvkKlLm8woy26AEwqxaaGOlQ+2tGdoA84=;
-  b=imrUFFMWr/Y3ipD2QcmrXrdICiOhdBc+7zKe25y4dnyISfhFP+rwArfD
-   2CBLtNvjhWOfJRH/5w02UKfmE3jTF6/ViCePeihTxiQTPGWMMat1Ml8Wz
-   6GxUVU2RaUtOr8EGF0njx+hal4aC1k7WjhSjDkEe1QrV6CwH801RM2Fi6
-   w909Ty+KEQ6EKd57afFc5VK7bWeP0muNP6dDIyGYevvAgSBT5Zhy3KodM
-   LDPZsrfTD1zYekK1Nr2xIr+RQBOsP/vsjndeSqqs8o36Wco52jwNcVnxj
-   czZXetYFofArHbFo0H+06H65Yf5jnDqg3IV55Zvncu1/p82K/kSLXWhWo
+  t=1717185455; x=1748721455;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=RsqO07LtaR/1pQ294RLwenEBg2L8jtETbGsARD5fAjo=;
+  b=ZJKlGeh21J6/yGuI58Pxh+Tkd7vnoEwCxXprd4CMeslZinmxkyo0uvH+
+   pnaLPG8B9RWDq2y675QqDdieg96pW5qycCMLtrpSa8pgLaLm3CKc8eabY
+   pu9NGTMGrjGkyWaRsHT5NIQB/N1q2k5lGfz1BBYg2UAklgkyJfzqK+Po5
+   qGDn/Mjs1y8xaFAWku8f4AdckrUmXBdwZot4dV8TnLTO9cQmHc47+QLt1
+   ba7yttIp1NKELUomcsMwhkV2fc0+PlinAfgoYrrbLq+Gb5FnJ02v7BzCU
+   /rVYHdwub1qwyqfpJnZCuGIECqiRc6sQHlIkOyID8LX5IIRBuSDAs4isu
    Q==;
-X-CSE-ConnectionGUID: kFBGK9PbTma3GhdNjHUViA==
-X-CSE-MsgGUID: qpHpCoI6TwKZtw3nzz2SEA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13501127"
+X-CSE-ConnectionGUID: XbLATo1ITHCowp7eofFzGQ==
+X-CSE-MsgGUID: p+iOPmpsTCu1pIdV+TC4vg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13501146"
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="13501127"
+   d="scan'208";a="13501146"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 12:57:32 -0700
-X-CSE-ConnectionGUID: 9CQNwWH2SSebzbLyMWYUOw==
-X-CSE-MsgGUID: 3hwgAf8STv+CgTeLHf44Dw==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 12:57:33 -0700
+X-CSE-ConnectionGUID: KoVO3zmHRBm5PSLOFDbLfA==
+X-CSE-MsgGUID: /Lt1zt62TxGKKJVhQXyUeg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="59438867"
+   d="scan'208";a="59438873"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
   by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 12:57:32 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -58,10 +59,12 @@ Cc: Fenghua Yu <fenghua.yu@intel.com>,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 0/3] Add and use get_cpu_cacheinfo_level()
-Date: Fri, 31 May 2024 12:57:17 -0700
-Message-ID: <20240531195720.232561-1-tony.luck@intel.com>
+Subject: [PATCH 2/3] x86/resctrl: Replace open code cacheinfo search in pseudo_lock_region_init()
+Date: Fri, 31 May 2024 12:57:19 -0700
+Message-ID: <20240531195720.232561-3-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240531195720.232561-1-tony.luck@intel.com>
+References: <20240531195720.232561-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,36 +73,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[get_maintainer.pl is vague about who owns <linux/cacheinfo.h>
- to I've scattershooted some of the folks that committed changes
- for this file]
-
-This helper function came up in discussion of the resctrl patches
-for Sub-NUMA Cluster (SNC) support. Reinette pointed out[1] that there
-are already two places where it would clean things up by avoiding
-open coding. The SNC patches will add two additional call sites.
-
-So rather than have this jammed up as part of the SNC series, I'm
-posting it as a simple standalone cleanup.
+Use get_cpu_cacheinfo_level() instead of open coded search.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
-
-[1] https://lore.kernel.org/all/050c64b3-20b3-4db6-b782-f5124ebaab31@intel.com/
-
-Tony Luck (3):
-  cacheinfo: Add function to get cacheinfo for a given (cpu, cachelevel)
-  x86/resctrl: Replace open code cacheinfo search in
-    pseudo_lock_region_init()
-  x86/resctrl: Replace open code cacheinfo search in
-    rdtgroup_cbm_to_size()
-
- include/linux/cacheinfo.h                 | 21 ++++++++++++++++-----
+---
  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 17 ++++++-----------
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 14 +++++---------
- 3 files changed, 27 insertions(+), 25 deletions(-)
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index aacf236dfe3b..1bbfd3c1e300 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -292,9 +292,8 @@ static void pseudo_lock_region_clear(struct pseudo_lock_region *plr)
+  */
+ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ {
+-	struct cpu_cacheinfo *ci;
++	struct cacheinfo *ci;
+ 	int ret;
+-	int i;
+ 
+ 	/* Pick the first cpu we find that is associated with the cache. */
+ 	plr->cpu = cpumask_first(&plr->d->cpu_mask);
+@@ -306,15 +305,11 @@ static int pseudo_lock_region_init(struct pseudo_lock_region *plr)
+ 		goto out_region;
+ 	}
+ 
+-	ci = get_cpu_cacheinfo(plr->cpu);
+-
+-	plr->size = rdtgroup_cbm_to_size(plr->s->res, plr->d, plr->cbm);
+-
+-	for (i = 0; i < ci->num_leaves; i++) {
+-		if (ci->info_list[i].level == plr->s->res->cache_level) {
+-			plr->line_size = ci->info_list[i].coherency_line_size;
+-			return 0;
+-		}
++	ci = get_cpu_cacheinfo_level(plr->cpu, plr->s->res->cache_level);
++	if (ci) {
++		plr->line_size = ci->coherency_line_size;
++		plr->size = rdtgroup_cbm_to_size(plr->s->res, plr->d, plr->cbm);
++		return 0;
+ 	}
+ 
+ 	ret = -1;
 -- 
 2.45.0
 
