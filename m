@@ -1,193 +1,95 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B082173502;
-	Fri, 31 May 2024 15:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184BE13D63E;
+	Fri, 31 May 2024 15:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717168523; cv=none; b=d8dfh4gi1ixO1u5Eq8GyDTa1QH1HTb2l4UWEnYFgCt5KjGClgUPKE1784pN6pDzPm2ABod76Qos0+LEkHyuYy0LFW8wClfyaMvaXDSc7jpZza9ZLb23H1h9YQQiCvmeJ4Bh86lqL3VaNJmXILeDFrlqgSy05SOTc0qhUYVb7N0I=
+	t=1717168531; cv=none; b=pCC+yg3aQV65C5osxpWTTxmH9+3/xNYa4cnTsRglQ4lJhNC1AZSbY6vl3PsPtryaUZ3tCn6NfNvc6mtNneDkAWQS5UkCe2GHGZDWLuu4duuqIOJm+XwNQXD76Op9osacXHqNRVHL6rW+h655F3COwAQqcqWvBtyBMAIMjsp67+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717168523; c=relaxed/simple;
-	bh=KuFosQ9xJS3QXwL9rRdDEjEMEUkYQVI21lZRTP74w5k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiNmm65nPXEDhDp56xITCm2WqlDnWH+ZXAjxrYVkkdlBO0Zwxj+Z/7EXEkXp4KdmQ9BO6KX8+4U6qN3X+Zhh8NPrsvRNq3lp1lAKz2Y+4EJFDQQHNlX3+OYgRK+uUSFEJSSj3P11PXl3zdTLths0cXoINfGAlCCJdO8YOBsoHFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Q6PLaDRJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717168531; c=relaxed/simple;
+	bh=z9ks63cL85mhkLcOnvb3ahawtzRr8EIrpG1aeu2Bwrw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lDv1UcmkMk5Fn6tSb8CBdFQvHC9LXTSL5wgZwOsUGDBdiLxZE/cljJmkTddI4FbXgOtPfz8zqbaBrVqNjtTOlKYfnEdfxtQl5h4E8mFfJG1SuiRrdGFgLnB2Zq3Zq74URPv9CQlb5L495b0gz8aUsetWQo2bgJAthcmHG1PELmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=iTY6TGm1; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q6PLaDRJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2049540E0192;
-	Fri, 31 May 2024 15:15:19 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id FSUEfZbijwTn; Fri, 31 May 2024 15:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717168515; bh=CimpYdG8QQl3X2QgMhhHzMQn8EofMmTYe+oEbL8ZrvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q6PLaDRJ86E0OGNAGCUojT3CX1WrSdqZh8RMU8h1+IyOWZ5wR7SbnPUJ9+JopYOFv
-	 q6Fp7di+pKi+J6Crq/DKHAQ+2EGmF+N1koju13pL4DfyJYqefqB3sQqgJYx5+HGISW
-	 6VTzbQeP6POrjfvVR4P5rrQ4oMqOWFKQMIaeAOFhJuA0/PMPI9HWMMxKWusnekNmCP
-	 QoYmcSSfNhePOXGbxoOtwzrcQYoBCx9bspLdrll9T0F+xNAgYMNOVZnjGuqkMGspDP
-	 RN/A/cW8YUxtgTdzfkaxdOMYbTI7Uh2v4FI/FEVyho3WEtZMnSoTAzFSg1vHRQ64A7
-	 cstm5aWVt74OCKGk5mh9a4lKEnCEVC39eTqTx8O7vMWhhRHSwHkN5CpUvbi/5XWzaY
-	 TO9nnirQSbxwiRXDOUP09aArD1c1hXdVDCEGCKIOKLRFL47YJnlcsdICo8O558IfgS
-	 BXElZk75qTe+R78bwi/7qQnfjxrvjasBQoFstD5smrSvO1W7O3NNBxNjMWkFAm6JFd
-	 aap8w2d0O7pwC1loUtrtasJ1MhDev3vvHWwJsG53Bva9khDOU5UmXgkROfJBQMpaNA
-	 8uawK2joAgByCDPLKKjLV+41+FquZPhLac+8bRKLlYLRPDhtPFDm4ptYa0YYyOxThQ
-	 eHGxqsqNGnZSsEix9vDbesbc=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9041840E01E8;
-	Fri, 31 May 2024 15:14:48 +0000 (UTC)
-Date: Fri, 31 May 2024 17:14:42 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 11/19] x86/tdx: Convert shared memory back to private
- on kexec
-Message-ID: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="iTY6TGm1"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VB0WSp017940;
+	Fri, 31 May 2024 10:15:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=PODMain02222019; bh=Y4m3MsoMsbca1Nbl
+	2qGve/cq5PJ1F3O1UChPigH7UYU=; b=iTY6TGm173K86uJPMzauwmZBBRUaT8ht
+	vVDCHirFRueYxgEotoeze4uPnqIMGf4zSMw+LV2GSsZjxxr13xpJolO+iS+YNuyv
+	6eBsrKU6L0Avdfpp4X5Z9LHIpz04nJk1M2mt1cLRXPGizcqY9ek/dqjKpXfsgmaC
+	xkagPnSpCZqkgSoTYWLk32o4xrCjBQfksPbvO66Xf41DBtkmXtBk/GiBjYFxtnvb
+	quJvZyy6YtvJ/OYGs4W5/NqnyvHqTPr3QdoLfbpMJ0GDtJGP70PhGJga1l3yWmGp
+	fnXHLzdiiXXWkk6ud4IQLgO23XIGEIND9swo3JAGpZ/7SzI3mux/HA==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3ybcdhe0a3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 10:15:11 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 31 May
+ 2024 16:15:09 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Fri, 31 May 2024 16:15:09 +0100
+Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.65.72])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3D1AA820244;
+	Fri, 31 May 2024 15:15:09 +0000 (UTC)
+From: Simon Trimmer <simont@opensource.cirrus.com>
+To: <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        <soyer@irl.hu>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
+        <baojun.xu@ti.com>, <kailang@realtek.com>,
+        Simon Trimmer
+	<simont@opensource.cirrus.com>
+Subject: [PATCH 0/7] ALSA: hda: Improvements to hda_component
+Date: Fri, 31 May 2024 16:14:02 +0100
+Message-ID: <20240531151409.80284-1-simont@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: GGAIf1TMiFTYMryBMBZzhBn6acOXJBAv
+X-Proofpoint-ORIG-GUID: GGAIf1TMiFTYMryBMBZzhBn6acOXJBAv
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, May 28, 2024 at 12:55:14PM +0300, Kirill A. Shutemov wrote:
-> +static void tdx_kexec_finish(void)
-> +{
-> +	unsigned long addr, end;
-> +	long found = 0, shared;
-> +
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	addr = PAGE_OFFSET;
-> +	end  = PAGE_OFFSET + get_max_mapped();
-> +
-> +	while (addr < end) {
-> +		unsigned long size;
-> +		unsigned int level;
-> +		pte_t *pte;
-> +
-> +		pte = lookup_address(addr, &level);
-> +		size = page_level_size(level);
-> +
-> +		if (pte && pte_decrypted(*pte)) {
-> +			int pages = size / PAGE_SIZE;
-> +
-> +			/*
-> +			 * Touching memory with shared bit set triggers implicit
-> +			 * conversion to shared.
-> +			 *
-> +			 * Make sure nobody touches the shared range from
-> +			 * now on.
-> +			 */
-> +			set_pte(pte, __pte(0));
-> +
+This series of patches makes sure that the existing consumers of
+the infrastructure unbind their interface before they begin
+destroying the driver, moves duplicated members from the
+instanced component structures into a new parent structure and
+introduces locking so that consumers of the interface do not use
+stale data.
 
-Format the below into a comment here:
+Simon Trimmer (7):
+  ALSA: hda: cs35l56: Component should be unbound before deconstruction
+  ALSA: hda: cs35l41: Component should be unbound before deconstruction
+  ALSA: hda/tas2781: Component should be unbound before deconstruction
+  ALSA: hda: hda_component: Introduce component parent structure
+  ALSA: hda: hda_component: Change codecs to use component parent
+    structure
+  ALSA: hda: hda_component: Move codec field into the parent
+  ALSA: hda: hda_component: Protect shared data with a mutex
 
-/* 
-
-The only thing one can do at this point on failure is panic. It is
-reasonable to proceed, especially for the crash case because the
-kexec-ed kernel is using a different page table so there won't be
-a mismatch between shared/private marking of the page so it doesn't
-matter.
-
-Also, even if the failure is real and the page cannot be touched as
-private, the kdump kernel will boot fine as it uses pre-reserved memory.
-What happens next depends on what the dumping process does and there's
-a reasonable chance to produce useful dump on crash.
-
-Regardless, the print leaves a trace in the log to give a clue for
-debug.
-
-One possible reason for the failure is if kdump raced with memory
-conversion. In this case shared bit in page table got set (or not
-cleared form shared->private conversion), but the page is actually
-private. So this failure is not going to affect the kexec'ed kernel.
-
-*/
-
-<---
-
-> +			if (!tdx_enc_status_changed(addr, pages, true)) {
-> +				pr_err("Failed to unshare range %#lx-%#lx\n",
-> +				       addr, addr + size);
-> +			}
-> +
-> +			found += pages;
-> +		}
-> +
-> +		addr += size;
-> +	}
-> +
-> +	__flush_tlb_all();
-> +
-> +	shared = atomic_long_read(&nr_shared);
-> +	if (shared != found) {
-> +		pr_err("shared page accounting is off\n");
-> +		pr_err("nr_shared = %ld, nr_found = %ld\n", shared, found);
-> +	}
-> +}
-
-...
-
->  static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
->  {
-> -	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
-> -		return __set_memory_enc_pgtable(addr, numpages, enc);
-> +	int ret = 0;
->  
-> -	return 0;
-> +	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
-> +		if (!down_read_trylock(&mem_enc_lock))
-> +			return -EBUSY;
-> +
-> +		ret = __set_memory_enc_pgtable(addr, numpages, enc);
-> +
-> +		up_read(&mem_enc_lock);
-> +	}
-
-So CC_ATTR_MEM_ENCRYPT is set for SEV* guests too. You need to change
-that code here to take the lock only on TDX, where you want it, not on
-the others.
-
-Thx.
+ sound/pci/hda/cs35l41_hda.c     | 47 +++++++++++---------
+ sound/pci/hda/cs35l56_hda.c     | 29 +++++++------
+ sound/pci/hda/hda_component.c   | 76 ++++++++++++++++++++-------------
+ sound/pci/hda/hda_component.h   | 48 ++++++++++++++-------
+ sound/pci/hda/patch_realtek.c   | 17 ++++----
+ sound/pci/hda/tas2781_hda_i2c.c | 37 ++++++++--------
+ 6 files changed, 148 insertions(+), 106 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.34.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
