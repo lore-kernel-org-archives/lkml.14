@@ -1,58 +1,58 @@
 Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BBE17758
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526891B812
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717165989; cv=none; b=fkk/4vowVVyXRGD3U+0KgfgX87/L3VjSoOSk1ctRG8Ii0A1JCU6uBRRyf+emwYXFhQsQIljsQxrxg1R+7cp7rKKeaK+9GNgZH7PVO9Bd8wNw26snRy4wVsxc01PjN3EhxJIwQ+A81n67t7EkWBBDOZrNcALn3HOqtOpxS6uMnqk=
+	t=1717166198; cv=none; b=vF8JzsrCGYcmsUHUZcs8H14LyEG/EBeqUNmK6zC9fZ7z1PeG8tPbt1xYsCy7tw1KGq1UoChv+PunkG8waBh2ROOi0ngXs8PoP5y9aavhaYM0mX0K4MsdM1patRuVizznaNjbf+K5gwHIQMVkQvcAcuDC1IFsuTY3Zj/zlDPnCwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717165989; c=relaxed/simple;
-	bh=/ybGb71D4r00IUnnKMB3xndfFp9T+1YpgNy/AAMZhWI=;
+	s=arc-20240116; t=1717166198; c=relaxed/simple;
+	bh=bp3mpYg5aqxQ5h2UJjsRt/+KZ6FiaFeWRlPVXrf5Vk0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Doy6VpXA9sxgJ0Fz8hHCecUTjO6yVxbW3+6M0U/04hIx7Q6n9JtmfkfOQajNN+PMF5eJACTif8qikDiNUKs1f0KrOxJYAC4+cLcyxiFP/ulmFkdnYZbCh/jXqJPzuCSFWpcWIX7n6t5QAItB27TWKnmC81l882f0f7Fr7pFF7w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=X/sce4D7; arc=none smtp.client-ip=65.109.113.108
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZuboKtdv/+AGuD24guCOn7hqu/jemO0ouOyo/49qetbBUC6v0DbRnUm/oXr1p47ugbHcxG8AdlWawAkKpxLqj06T0u2i9EX2pR7nLn5TRa1e64b5temSTdLBXcKZbIvqBHS75Y9VUemLRFnWyII3uWyFDlVLEFKlwT1GyhCAzSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CO5IIWp2; arc=none smtp.client-ip=65.109.113.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="X/sce4D7"
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CO5IIWp2"
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0849740E01E8;
-	Fri, 31 May 2024 14:33:00 +0000 (UTC)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4C45F40E01E8;
+	Fri, 31 May 2024 14:36:34 +0000 (UTC)
 X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
 Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
 	header.d=alien8.de
 Received: from mail.alien8.de ([127.0.0.1])
 	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id H4Oojfp3Dg1E; Fri, 31 May 2024 14:32:56 +0000 (UTC)
+	with ESMTP id XTj2D6oU0NdG; Fri, 31 May 2024 14:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717165976; bh=YQhuTQMib3XYb0Fnoq/gWXTobkZBhfftmNFNgwns6Fg=;
+	t=1717166191; bh=c3MNzbuXB9F3awfURCkVkL8SA45DpAUdTvwlvfinAnY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X/sce4D7j/NmOMCg+fBeikOfAkcD0Qee/Vkbr/Vyxaaa5RtDwX04EVriwZdri3tBa
-	 5PBHP4r+g94qvgk8D8VmZGUPqGI97eAZcpGV0gqsgasmJjYlVf86nvOYHTnbRsxeO7
-	 K7jGZn4vOHY2i7H4X8Si1m7v8w+ae/OwyspbdSHr1kJ/dTlCYXbWuO8k8qyHLwGvDX
-	 dOZ2zM+oLhUguvrt1nG4e9T8vf31WdO4yNf1J/2AgVlC5T6XJBSOSPs7Nc5iQN19HK
-	 u37UZWC8kMoK3sLjd9wQ4kpobNi+R18kiEgm34NLoCpBv6aZWF6/u/krENZihVW5BH
-	 Hv9fR3HbP8UiqDau535n1Rcxpq/a/fIKBmouaLoUKJ3boMqFng4nFU50F0ADQFPruJ
-	 3XOMOB8un8cSUj/zSPMT68w2ZDjh+qMdg94x9a+J6eHx8Uh76Zs6J34/BSpmcRCLhh
-	 PsNqF8zGLaaVGcJhUEh1La6CQLoVSkzj6/AxbaVBriYzjSWjAtlinxsZXyXbdfujEa
-	 4C9rjgI/qcZKeFGU8n30virDqXrXIK7Rnc1KHjzYcn3uQCWxUtNZdiv+l+9BbI/uiY
-	 dr9X6dV1EDElD8vV3yGqfZrf+hLeeOXH4stqlUSZaegR0vFMgW0y9MOzEOELNxcX6V
-	 rOLF0DPaUHF/c8wLu0cajbyE=
+	b=CO5IIWp2L7NutmxJgE06lLCideJvNYRN/NCTamsATUprRPcG3L84YPnsC/2aKdGPk
+	 AL5H7ACj9eQ2bGkrEIJ/UdUzNCSaEmaqOfrqxiQ2dbSygCMgyj2veVkSC2/erqbWW/
+	 URAIo53RVd5Ga40IyRozc/CsQuAKkdeHPhHVhUZ/1AewRDpyqdZbNyn/NyKXBTqJur
+	 CSbJdjxYP/VX81Z+SmgP0ETDrD/1trZ8rCVk4dYIvnzj6s3PTS0Ag1TbM0u43s4a4s
+	 DCEmFw88+/tfVV4aPQdzKogNCHA/cmFuP66kj+S3kFDyaUPkD4uVzQ3Jc+hQujHM1x
+	 U5bEdzaCDMI9HfAXcko+iEFzEznMVa5aiAWz2JlBvzsm91MCs15e9PH3QNbMehJHcX
+	 5PDCHg7TXlGTK6FBTWLJ7xdAM9ejoAQ0yYMi9E1EevzgYUFGgp+7N+l2kHJDESbEsv
+	 8vzrf2TsE97/1bh6KIQftxB5ANZtoCjtcUDyo0+LM4fC8zgcguxBSQQbqoskoWZ36N
+	 PxeyGkElVFLAQg11etnhYgNNVzZI3LALpO0YwJcCdB6DI6rpShRJnYkW0EC306dwSa
+	 4f+OW0hkS5wwloyLKRA0r9ZKy8Hy9k4bp9IKLUCU+3sunTni8YGzSuggPk4LNfiF5M
+	 iY9PHkFrMOHkKZsOiRY5th/c=
 Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0257F40E01A1;
-	Fri, 31 May 2024 14:32:50 +0000 (UTC)
-Date: Fri, 31 May 2024 16:32:44 +0200
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E5E2140E0192;
+	Fri, 31 May 2024 14:36:25 +0000 (UTC)
+Date: Fri, 31 May 2024 16:36:25 +0200
 From: Borislav Petkov <bp@alien8.de>
 To: Uros Bizjak <ubizjak@gmail.com>
 Cc: Borislav Petkov <bp@kernel.org>, X86 ML <x86@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
 Subject: Re: [PATCH 02/14] x86/alternatives: Add nested alternatives macros
-Message-ID: <20240531143244.GGZlnfjCYalemAZ_Fu@fat_crate.local>
+Message-ID: <20240531143625.GHZlngaQfx6CiJlujI@fat_crate.local>
 References: <20240531123512.21427-1-bp@kernel.org>
  <20240531123512.21427-3-bp@kernel.org>
  <3a86f790-3194-4ea0-de8d-0af231ec7525@gmail.com>
@@ -68,33 +68,19 @@ In-Reply-To: <3a86f790-3194-4ea0-de8d-0af231ec7525@gmail.com>
 
 On Fri, May 31, 2024 at 04:30:31PM +0200, Uros Bizjak wrote:
 > Please don't resurrect the %P modifier, use %c instead.
-> 
-> > +
-> >   /*
-> >    * Like alternative_call, but there are two features and respective functions.
-> >    * If CPU has feature2, function2 is used.
-> > @@ -307,6 +376,15 @@ static inline int alternatives_text_reserved(void *start, void *end)
-> >   		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		\
-> >   		  [new2] "i" (newfunc2), ## input)
-> > +#define n_alternative_call_2(oldfunc, newfunc1, ft_flags1, newfunc2, ft_flags2,   \
-> > +			   output, input...)				      \
-> > +	asm_inline volatile (N_ALTERNATIVE_2("call %P[old]", "call %P[new1]", ft_flags1,\
-> > +		"call %P[new2]", ft_flags2)				      \
-> > +		: output, ASM_CALL_CONSTRAINT				      \
-> > +		: [old] "i" (oldfunc), [new1] "i" (newfunc1),		      \
-> > +		  [new2] "i" (newfunc2), ## input)
-> 
-> Here too, %P should be avoided in favor of %c.
 
-Yeah, will do.
+Btw, out of curiosity, is %P being phased out?
 
-We probably should update our patch checking scripts to catch such
-things in the future.
+I'm looking at
 
-/me adds to todo.
+41cd2e1ee96e ("x86/asm: Use %c/%n instead of %P operand modifier in asm templates")
+
+and yeah, %c is the generic one while %P is the x86-specific one but
+phasing latter out is probably going to take a bunch of gcc releases...
+
+Or is it something else entirely?
 
 Thx.
-
 
 -- 
 Regards/Gruss,
