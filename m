@@ -1,199 +1,203 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7385B56448;
-	Fri, 31 May 2024 14:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DB31CAA1
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717165512; cv=none; b=E8uZ7v38buRxE/huVjOkkaA8a/rQBjGtqczCE/P3seak4Hyarc13o2Mw94aDIQ2r/Fa6tDClxxzZZKvB9qs2KVSCC7Z12Qr2F+duOpquLWjveDWVjwl/XzlpUiz7YWweFqS+nOIyVR6neu1IiEd8KAVAozs0MGThr2EvBIengBU=
+	t=1717165566; cv=none; b=hmaf8zkL9/rFkCvO86el/F540g+RgBgWUv6BBQzbralt6vrxhJtrdCFb7z3jA/Vy2jQgQdfdveg0o5zIGNJ7zgGRbe8kg54EzCMHkVEye3GjRxwe+VTBuTcXV5g4V+KfH/JPHmsgvFlmZvS/gdNLkYVf89oMCHepIiqHcs4pR9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717165512; c=relaxed/simple;
-	bh=cOofNTY/oXTRZ81RXzPrmeOruTYdnOEFZTR+wvJ4FfE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YeC2huJ4Y5DsdppunQ+aqpqw8Fuvfg6N+xCKGLQGLVZ+Wogbl2j/7+KoaxaeRDsg7uUrYw7Uyk96sBE0xWc4P61KPE/m6/kQeX8LT7NhnhBu/hY/pzbr7kEaWttAvX2rpCzTREgODvuGldIZ/xVHgA6buzp+QAA6neIf12UCUaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtGAo6f3; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717165566; c=relaxed/simple;
+	bh=LqRcRR1cFi1+thtnTUt29DnULSfs9Z8g1CGzHs6MSzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PcHmWlaUXBjVO+qiCU/W26wN8V1Dk6uePmuf7uouU3qpFFEs1s0yzVc0DMb9k4K00vcW+kh2og2Ta8qox0T5csXsDWC6iE38ndTPGqPZEMsT9qOL4kPpVjzrjc++I8GYpqOK1btWAkMqZJ13vcBjL0AqfqQwB/Qm2MvA9taTuio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yFhP3Kl2; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtGAo6f3"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-656d8b346d2so1451965a12.2;
-        Fri, 31 May 2024 07:25:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFhP3Kl2"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52961b77655so2515872e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717165511; x=1717770311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FvrZTCq64hB5lHJheyU2TPKqgbbvFWSIbyIIWaCcr6w=;
-        b=FtGAo6f3qR5kU+3ZtHO+i2eBpRZvw5me1eLAXUmvjqJerBIKd6+JCHQznme32TVzk2
-         Z6FAzAiGZR3NxB/oepUQ3FyTaCaAP+cMFeEeiKU2+GnjqfBuefLQmfcG/2Olc3GoIgs5
-         3AAGRCyZjh/5C8zjuTvtBSVY/Eo/F8NQNXLk8zHft0eNuwdc/zDqvmyZYqEqn/4FbwQD
-         Xwi+uCgNvifToizW16HHY7Loi5CFdNwaUQq5b2ooTtBY9MFXNxjLCSPSnMP+/H6CVLGN
-         xyw57/ttSTYWU82uzaBwibXCgxU0s52KIjkqiKrDjEtBRHD+zgxQPi75uCAzxV951vtP
-         4THQ==
+        d=linaro.org; s=google; t=1717165563; x=1717770363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TFd7dzhMFZkIzJzGiLdET+zEuG1GiWj/+wfLNFxwkBg=;
+        b=yFhP3Kl24gu2TI/vB4R3o+qc7gEIlb4beXVBcXn1mGUPYmmYVqtu8BpzyVyEmVB3hj
+         jsQ0/wsW3n6dnlpfw+gGeBMhip+dHxCyn0YbZK0tB+mx9PoqZuO2PSoRgJIEL7/e5idB
+         VNECOq4BSvweoZSf9jSCTnEnCgDTnMcrGYULzRrwJ9tme/i2HFCAx1d10NIkiYn/HA6C
+         +hkXpl+/3+GLg32HV9hnm8pUJe9WYaQY2ZJLcTtLgYLiXxDctSLwNt0/Eq+5ejBrBx1e
+         41hQWVE/1LQg0xoIed1/T/xwGqLBDverk7OLTJ8cSzdCMZTG0UJ/U48inv9JwVnCrpVS
+         7mcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717165511; x=1717770311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FvrZTCq64hB5lHJheyU2TPKqgbbvFWSIbyIIWaCcr6w=;
-        b=PtOwS/uAglEmH4U72kEEmKgTEBtnyNSQrD+Sb+W8x74WBYtzIogBxZVmrDNazJGu+f
-         sBRHdImEjkJcjTYKW5HKeWocqdZU9BKxFdZQPzTeucx8ALMxdu71PnVNf/+64kBBT0xD
-         sTPemradqpEJkB3bmEjVokfbnlB/oEg0wWL1BznZYtduX2JeKcw87gRdEWB5fWMAcFSY
-         8ztkiFZrRm2rbCCVpxBbR8u6AU8YJ91pc4uaGMWjNkSOFw1AiEMrcSZFLPbU4Kv8/Hnv
-         9jLQF1latFEQXgDvcB29lIyRrZ16suXhrzML82ipvWu/sHMk7NFr9mfeJ4SSkLmzv3QC
-         SwlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxvf4JH2ZMROmeZBBtMbLJ2HWZUXQICyLdjLAASghMx4xwg7dBPtbfNon7YqKH39uCXly1TTGMpgimNR9r2lh4jawhviAHPlGJDTffZC+HHVJioC+D/A6xuVXy4wzjGKl0MhZYXc3vC2B/RtDfpzovC3Ez1oy/1Xh5xuvh37GNdnAGOw==
-X-Gm-Message-State: AOJu0YxJIPQv6rfKUMt57XRIYlJ6qB7FQh58Gx3mnXLVHn/0OhF/HxmP
-	b4q2KO/sOXyvi9id3/v+jt1X4zA2HsXHvfZzSag0N/njmtOFyyvbdrnCGbBb7qsuSLgyEdI8gxh
-	UchC8Xz8LDDaWbzPHMXyayWZgFyM=
-X-Google-Smtp-Source: AGHT+IGLbXNCTP7kEEDSMq48BUCNTcGq4/Bj168zhaicbZLEfBju50BxyoEC44nEYY/K5zSXtSoOZMn4twkyQ+dOxks=
-X-Received: by 2002:a17:90b:2282:b0:2bd:fa57:b361 with SMTP id
- 98e67ed59e1d1-2c1dc56fce1mr1799546a91.11.1717165510580; Fri, 31 May 2024
- 07:25:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717165563; x=1717770363;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TFd7dzhMFZkIzJzGiLdET+zEuG1GiWj/+wfLNFxwkBg=;
+        b=vel7bUChhM1nw7KWdlDJ3fEwht0jfOxWuxMN4LaDauUeZf8FHW2b6gvvAOwImwQa+I
+         Qk5AsP4VagtL3Bfu9Slm6OnF12ny+X4/Y5ip64cy1zOdyEG/tPYW8tiUna6aHG0nWwA2
+         jy8aVM2FurlgfBW3uLrUAqHDKKlFA1v+IXq60eW8EGO2+zDsILIBx3S2azqINvLhhmmt
+         qjsBTlYrf2/yrO1H1R0KirtJggHuKExiyGmzlsO78zs0q7nNdZPbnxU+YL0HLjtsKe4W
+         4UPo75D3B6RvDj0RPz7GG8GFcR5R7yGgTltmxeAEoudzhTCs0b5INADLiLdohNDrJ9xS
+         5g8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVySUyE9NDflNjrJ9nHIF2MRGqYaWPJUftES7fpus50Yl5wJEqnwDTsNWZLu7VMjLKWgYsjkW97zbcTSka+If1X4FcDyGoDhj5BiTiT
+X-Gm-Message-State: AOJu0YwyzH8+5DPLGUclLEP2KRGEPKkhtIJV2GDcAzxSvDUQwX8BZrgr
+	k71DkAMO82fS/LRGwkgT80W13y8wFPqKzUrAJ/w4VUJUZvu9AjaWjUpFW+CjKXw=
+X-Google-Smtp-Source: AGHT+IFc4CdzwrD/1uDBczJOhAz9Yly8TMnZUxBNCzlrntRUhMCMlLQJIqLJ7jUAXAiUvLODNW4HjA==
+X-Received: by 2002:a19:4314:0:b0:523:72b8:8002 with SMTP id 2adb3069b0e04-52b896b4832mr1292417e87.30.1717165562633;
+        Fri, 31 May 2024 07:26:02 -0700 (PDT)
+Received: from [192.168.128.139] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31be6525sm1085330a12.56.2024.05.31.07.26.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 07:26:02 -0700 (PDT)
+Message-ID: <e5f6e9bd-e19e-4997-a646-f3ddee84a5c8@linaro.org>
+Date: Fri, 31 May 2024 16:26:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530083513.4135052-1-wenst@chromium.org> <20240530083513.4135052-4-wenst@chromium.org>
- <cc5847a486a760921375f069a4f65cd29453a624.camel@imgtec.com>
-In-Reply-To: <cc5847a486a760921375f069a4f65cd29453a624.camel@imgtec.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Fri, 31 May 2024 09:24:56 -0500
-Message-ID: <CAHCN7xJ7X9_yNJa7-HyU=FzN2G1cV8i9R+PoTHm-DKyiOPenUQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] dt-bindings: gpu: powervr-rogue: Add MediaTek MT8173 GPU
-To: Frank Binns <Frank.Binns@imgtec.com>
-Cc: "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-	Matt Coster <Matt.Coster@imgtec.com>, "sboyd@kernel.org" <sboyd@kernel.org>, 
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
-	"wenst@chromium.org" <wenst@chromium.org>, "mripard@kernel.org" <mripard@kernel.org>, 
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "airlied@gmail.com" <airlied@gmail.com>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Disable SS instances in park mode for SC7180/ SC7280
+To: Doug Anderson <dianders@chromium.org>
+Cc: Krishna Kurapati <quic_kriskura@quicinc.com>,
+ cros-qcom-dts-watchers@chromium.org, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Stephen Boyd <swboyd@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Matthias Kaehlcke <mka@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ quic_ppratap@quicinc.com, quic_jackp@quicinc.com
+References: <20240530082556.2960148-1-quic_kriskura@quicinc.com>
+ <CAD=FV=UhrCKCv5R-LAAugrLXFp=cDcj2=Pp9-N3qk5pk2=sGEg@mail.gmail.com>
+ <e732257d-cd16-4e81-9a20-af481184ce0e@linaro.org>
+ <CAD=FV=XO_8SwDLJfoNwwCKEO6CZyMRMY_BdsWMLPBkpczErppA@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <CAD=FV=XO_8SwDLJfoNwwCKEO6CZyMRMY_BdsWMLPBkpczErppA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 8:37=E2=80=AFAM Frank Binns <Frank.Binns@imgtec.com=
-> wrote:
->
-> Hi ChenYu,
->
-> On Thu, 2024-05-30 at 16:35 +0800, Chen-Yu Tsai wrote:
-> > The MediaTek MT8173 comes with a PowerVR Rogue GX6250, which is one
-> > of the Series6XT GPUs, another sub-family of the Rogue family.
->
-> I've added Adam Ford who sent out some DT related patches [1] for the Ren=
-esas
-> variant of GX6250 and the GX6650 (another Series6XT GPU).
->
+On 31.05.2024 4:17 PM, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, May 31, 2024 at 5:33 AM Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>> On 30.05.2024 3:34 PM, Doug Anderson wrote:
+>>> Hi,
+>>>
+>>> On Thu, May 30, 2024 at 1:26 AM Krishna Kurapati
+>>> <quic_kriskura@quicinc.com> wrote:
+>>>>
+>>>> When working in host mode, in certain conditions, when the USB
+>>>> host controller is stressed, there is a HC died warning that comes up.
+>>>> Fix this up by disabling SS instances in park mode for SC7280 and SC7180.
+>>>>
+>>>> Krishna Kurapati (2):
+>>>>   arm64: dts: qcom: sc7180: Disable SS instances in park mode
+>>>>   arm64: dts: qcom: sc7280: Disable SS instances in park mode
+>>>>
+>>>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 1 +
+>>>>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 1 +
+>>>>  2 files changed, 2 insertions(+)
+>>>
+>>> FWIW, the test case I used to reproduce this:
+>>>
+>>> 1. Plug in a USB dock w/ Ethernet
+>>> 2. Plug a USB 3 SD card reader into the dock.
+>>> 3. Use lsusb -t to confirm both Ethernet and card reader are on USB3.
+>>> 4. From a shell, run for i in $(seq 5); do dd if=/dev/sdb of=/dev/null
+>>> bs=4M; done to read from the card reader.
+>>> 5. At the same time, stress the Internet. If you've got a very fast
+>>> Internet connection then running Google's "Internet speed test" did
+>>> it, but I could also reproduce by just running this from a PC
+>>> connected to the same network as my DUT: ssh ${DUT} "dd of=/dev/null"
+>>> < /dev/zero
+>>>
+>>> I would also note that, though I personally reproduced this on sc7180
+>>> and sc7280 boards and thus Krishna posted the patch for those boards,
+>>> there's no reason to believe that this problem doesn't affect all of
+>>> Qualcomm's SoCs. It would be nice if someone at Qualcomm could post a
+>>> followup patch fixing this everywhere.
+>>
+>> Right, this sounds like a more widespread issue
+>>
+>> That said, I couldn't reproduce it on SC8280XP / X13s (which does NOT mean
+>> 8280 isn't affected). My setup was:
+>>
+>> - USB3 5GB/s hub plugged into one of the side USBs
+>>   - on-hub 1 Gb /s network hub connected straight to my router with a
+>>     600 / 60 Mbps link, spamming speedtest-cli and dd-over-ssh
+>>   - M.2 SSD connected over a USB adapter, nearing 280 MB/s speeds (the
+>>     adapter isn't particularly speedy)
+>>
+>> So it stands to reason that it might not have been enough to trigger it.
+> 
+> In my case I wasn't using anything nearly as fast as a M.2 SSD. I was
+> just using a normal USB3 SD card reader. That being said, multiple
+> people at Qualcomm were able to replicate the issue without lots of
+> back and forth, so I'd guess that the problem isn't that sensitive to
+> the exact storage device. I will also note that it's not sensitive to
+> the exact network device as I replicated it with two Ethernet adapters
+> with very different chipsets.
+> 
+> My only guess is that somehow SC8280XP is faster and that changes the
+> timing of how it handles interrupts. I guess you could try capping
+> your cpufreq in sysfs and see if that makes a difference in
+> reproducing. ;-) ...or maybe somehow SC8280XP has a newer version of
+> the IP where they've fixed this?
 
-Thanks for including me.
+Well, great minds think alike :P I did cap it to f_min on all cores, but
+that didn't change the situation. Might have been worth to check out powering
+off all cores except 0.. I might do that at one point.
 
-> >
-> > This was part of the very first few versions of the PowerVR submission,
-> > but was later dropped. The compatible string has been updated to follow
-> > the new naming scheme adopted for the AXE series.
-> >
-> > In a previous iteration of the PowerVR binding submission [1], the
-> > number of clocks required for the 6XT family was mentioned to be
-> > always 3. This is also reflected here.
-> >
-> > [1] https://lore.kernel.org/dri-devel/6eeccb26e09aad67fb30ffcd523c793a4=
-3c79c2a.camel@imgtec.com/
-> >
-> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> > ---
-> >  .../bindings/gpu/img,powervr-rogue.yaml       | 24 +++++++++++++++----
-> >  1 file changed, 20 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.ya=
-ml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> > index 256e252f8087..48aa205b66b4 100644
-> > --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> > +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
-> > @@ -12,10 +12,17 @@ maintainers:
-> >
-> >  properties:
-> >    compatible:
-> > -    items:
-> > -      - enum:
-> > -          - ti,am62-gpu
-> > -      - const: img,img-axe # IMG AXE GPU model/revision is fully disco=
-verable
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - mediatek,mt8173-gpu
-> > +          # PowerVR 6XT GPU model/revision is fully discoverable
-> > +          - const: img,powervr-6xt
-> > +      - items:
-> > +          - enum:
-> > +              - ti,am62-gpu
-> > +          # IMG AXE GPU model/revision is fully discoverable
-> > +          - const: img,img-axe
->
-> The Series6XT GPU models have differing numbers of power domains (either =
-2, 4 or
-> 5). Whereas, the AXE GPUs have a single power domain, so I assume there s=
-hould
-> be a related change here.
->
-> The GX6250 has two power domains (lets call them A and B). There's a cons=
-traint
-> that if domain B is powered then domain A must also be powered.
->
-> In patch 6 [2] it's setting the power domain to MT8173_POWER_DOMAIN_MFG, =
-which I
-> believe corresponds to power domain B. I assume this works because the MT=
-K power
-> controller driver is encoding the constraint above, meaning that when we =
-disable
-> or enable MT8173_POWER_DOMAIN_MFG it's also disabling/enabling MT8173_POW=
-ER_DOMA
-> IN_MFG_2D (domain A).
->
+My guess is that with a process node change, they might have used some
+newer/better ip revision though. Remains to be seen.
 
-In the cover letter of this series, it was noted that the GPU
-enumerates, but it doesn' fully function yet.  This is also the case
-for both of the Renesas variants I have been testing, and I was nicely
-asked to postpone my series until the driver was closer to being
-ready.
+Konrad
 
-Even if the driver isn't ready yet, it would be nice to move the
-bindings forward.
-
-adam
-
-> Thanks
-> Frank
->
-> [1] https://lists.freedesktop.org/archives/dri-devel/2024-February/443548=
-.html
-> [2] https://lists.freedesktop.org/archives/dri-devel/2024-May/455833.html
->
-> >
-> >    reg:
-> >      maxItems: 1
-> > @@ -56,6 +63,15 @@ allOf:
-> >        properties:
-> >          clocks:
-> >            maxItems: 1
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            const: img,powervr-6xt
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          minItems: 3
-> >
-> >  examples:
-> >    - |
+> 
+> It would be interesting if someone with a SDM845 dragonboard could try
+> replicating since that seems highly likely to reproduce, at least.
+> 
+> -Doug
