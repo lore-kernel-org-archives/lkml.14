@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD847483;
-	Fri, 31 May 2024 01:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274F1EEBA;
+	Fri, 31 May 2024 01:03:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717117416; cv=none; b=JboSYGK8XXab+gm5SdEmlzg1TXdeDJEr7zTF1FWH5ZKnCDlqLU1h1Hp9O9Ne7pBfbPt3wu3j/OSC7NADTsyTyIi1MKltnuGMaTFQiwdCqxs8fI57bHfzUPbRfIxpeNaPVo/GPclYhERTFimShYsn9Ox9pXQWNTAa0Vw7Aut8/0I=
+	t=1717117418; cv=none; b=JJTX/IEmBeVqEPWkIx5+uBranSUeyvhFBnJGgnorC7dAGWTcx5Hy2lZhOWeKvo4QU3r1JAhEafX9lJCST6cKTEAxQhdoIVURLEmqWSMMMhTP30uh0rJ7EhrHRTtMEJIJ966RJmipwnTBhZW+r7rXh7+vQmXc7YttX8e0ovnSH5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717117416; c=relaxed/simple;
-	bh=MhZFv6QxVQ1ubVbKQDF07E67+FwUvci9ncljfLMfprc=;
+	s=arc-20240116; t=1717117418; c=relaxed/simple;
+	bh=TBi8BiVNfed7a3wLohEOqAfZBAjmUXKDQITmxlZkrSQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XgZMWiciCJK9dGLK0xt491eOpgeQwhyYRD1BRoYBl7bEcm95rD91XJ+MCMtv/a+3L5ghEIieaRTI+c3lbUibYSopy3t9ik1ysW6l6h6S6PIYyc9Y3GIeFR311+hpAZ8HglrCRsPBJ0RLOBIeBLiT514ejI5L1mIN0YHAtjeRwHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HNPUYaOP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XXCBw6XTnXkHlqaPU9J7ac3PczKUrbr3vwRzcycw/fQyEa13tGzbs203k6T35NceaoNQ7W7XktFVqwxtvGmURoBZ7zBLGQFeQ25DlToBcmERhrbswRV87lo9TleSmzh3TQwUzW9ttZdioShuwLO4MXUmTQPR3Mvccump6gi7yxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbZ2ocmr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HNPUYaOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C31C2BBFC;
-	Fri, 31 May 2024 01:03:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbZ2ocmr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B9C0C32789;
+	Fri, 31 May 2024 01:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717117416;
-	bh=MhZFv6QxVQ1ubVbKQDF07E67+FwUvci9ncljfLMfprc=;
+	s=k20201202; t=1717117417;
+	bh=TBi8BiVNfed7a3wLohEOqAfZBAjmUXKDQITmxlZkrSQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HNPUYaOPXEaNmxKOw0i9msGwW9I1KiIe95rvYMFVLnIcKLz0HDfZmgui6n3GuoNNO
-	 irs6OXRqyVteiTco2B0B1uKn4AuD8JXh22ScXG76/dk+t3njEUKloytgansoyzxitb
-	 CaJ5otOo4ixz7op7Pqvdi5Oq16auxhc1w10iJXEOaBmabVaVwNLRQlIlHtrNaLfBmD
-	 nPPT2xVILLc6PLEuWEBHNjTb7YwvjKDi38no6GyZXMadtr3wxQWFO3vSC/f/ivDds4
-	 QGqn0ktcCsRNfApu8CHaEqLNjmS+YYPyNvmFCLIEq8qJaWFySDiWJE1jRSiXzrchMk
-	 3eF07m6eVIT9Q==
+	b=fbZ2ocmr2pO4+9KIvoZiSh2nbnmh1KrrQTtyfraADcqRxrTVQY+321sjiJHkJsrZL
+	 lEJYXiARvf3jrS9etlJJcs1GFhMLaMmDTOUVEKSUxGalp68oymgdtuytqZ1Emrl8bv
+	 t+gOvrZhLugtX8itN0wapYNqV5RWmQXzLBwTo30UA2j55Yr0PkARUio0wiJjsrD+BD
+	 YhZujCwU+3FIJXVzIoxRPlSpNTALoGHt9sbroGr1jtUAN2NKWRnD5AULcicNKx7C81
+	 DlHe1hEWP9aX5QHWq39mPupaj+BUJ4uDAdAUNm0hXj+DMq5Cp3PnBbSiV8REI5wcx1
+	 rCrT4HiT5wuIg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 30 May 2024 20:03:27 -0500
-Subject: [PATCH 1/3] of: Add an iterator to walk up parent nodes
+Date: Thu, 30 May 2024 20:03:28 -0500
+Subject: [PATCH 2/3] of: Add missing locking to
+ of_(bus_)?n_(size|addr)_cells()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,41 +38,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240530-dt-interrupt-map-fix-v1-1-2331d8732f08@kernel.org>
+Message-Id: <20240530-dt-interrupt-map-fix-v1-2-2331d8732f08@kernel.org>
 References: <20240530-dt-interrupt-map-fix-v1-0-2331d8732f08@kernel.org>
 In-Reply-To: <20240530-dt-interrupt-map-fix-v1-0-2331d8732f08@kernel.org>
 To: Saravana Kannan <saravanak@google.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14-dev
 
-Similar to other node iterators, add one for walking up parent
-nodes. The iterator starts on the current node, not the immediate
-parent as that seems to be the common case and starting with the parent
-node can be implemented like this:
-
-for_each_parent_of_node_scoped(parent, of_get_parent(node))
+When accessing parent/child/sibling pointers the DT spinlock needs to
+be held. The of_(bus_)?n_(size|addr)_cells() functions are missing that
+when walking up the parent nodes. In reality, it rarely matters as most
+nodes are static.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- include/linux/of.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/of/base.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a0bedd038a05..c322802dfc2b 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1482,6 +1482,11 @@ static inline int of_property_read_s32(const struct device_node *np,
- 	     child != NULL;						\
- 	     child = of_get_next_available_child(parent, child))
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 20603d3c9931..61fff13bbee5 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -91,8 +91,8 @@ int of_bus_n_addr_cells(struct device_node *np)
+ {
+ 	u32 cells;
  
-+#define for_each_parent_of_node_scoped(parent, node) \
-+	for (struct device_node *parent __free(device_node) = \
-+	     of_node_get(node) ; \
-+	     parent; parent = of_get_next_parent(parent))
-+
- #define for_each_of_cpu_node(cpu) \
- 	for (cpu = of_get_next_cpu_node(NULL); cpu != NULL; \
- 	     cpu = of_get_next_cpu_node(cpu))
+-	for (; np; np = np->parent)
+-		if (!of_property_read_u32(np, "#address-cells", &cells))
++	for_each_parent_of_node_scoped(parent, np)
++		if (!of_property_read_u32(parent, "#address-cells", &cells))
+ 			return cells;
+ 
+ 	/* No #address-cells property for the root node */
+@@ -101,10 +101,9 @@ int of_bus_n_addr_cells(struct device_node *np)
+ 
+ int of_n_addr_cells(struct device_node *np)
+ {
+-	if (np->parent)
+-		np = np->parent;
++	struct device_node *parent __free(device_node) = of_get_parent(np);
+ 
+-	return of_bus_n_addr_cells(np);
++	return of_bus_n_addr_cells(parent);
+ }
+ EXPORT_SYMBOL(of_n_addr_cells);
+ 
+@@ -112,8 +111,8 @@ int of_bus_n_size_cells(struct device_node *np)
+ {
+ 	u32 cells;
+ 
+-	for (; np; np = np->parent)
+-		if (!of_property_read_u32(np, "#size-cells", &cells))
++	for_each_parent_of_node_scoped(parent, np)
++		if (!of_property_read_u32(parent, "#size-cells", &cells))
+ 			return cells;
+ 
+ 	/* No #size-cells property for the root node */
+@@ -122,10 +121,9 @@ int of_bus_n_size_cells(struct device_node *np)
+ 
+ int of_n_size_cells(struct device_node *np)
+ {
+-	if (np->parent)
+-		np = np->parent;
++	struct device_node *parent __free(device_node) = of_get_parent(np);
+ 
+-	return of_bus_n_size_cells(np);
++	return of_bus_n_size_cells(parent);
+ }
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
 
 -- 
 2.43.0
