@@ -1,324 +1,152 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2056.outbound.protection.outlook.com [40.107.6.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A1E16D9AC;
-	Fri, 31 May 2024 16:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173855; cv=fail; b=ay69ToVc+bJYZRwxXg049i0vnVbaDjp131Z5ubKrK29An77RfYxaQYZVhhfjumoLF7//COn9j08chXlACQ6aat3w3bjl01K8cm3Sx3eBniMKPqLrTqwck1Vj32MHn4dNpDt/7nUOc/e72f35IQwB5M6y3Dg5qxt8tVP6OJilCQg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717173855; c=relaxed/simple;
-	bh=QfhQ0tSjtsAp3pwdL16aT4ioOSRp2kefG1/9b0svC2A=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=pHlgL7MLJeg48dWzoORYS1F4izxbuUCdBbz8Jo9bcdfGFLzUWPR8XN+eFcY3lAET39uYqVkO2IUqH6pOcOa+3Qy8vT4262/W1lHxW8wk0+Q17ziLrBYB4XLd6Alv9vxo7GfEaqLbiceqbCwagJ5sjjUDhAHRROlmQ9KC767g8oU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=ErqaLlMp; arc=fail smtp.client-ip=40.107.6.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D422135B;
+	Fri, 31 May 2024 16:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717173946; cv=none; b=dNSWiMWn1a2PQhLxX4yJbXpwtOKytCFtxX+wwPqKCOJ2oTcpjBEgLER6C++T61FCq4jbKE0qWGIKQSI9Qfv4PULdWzX8+atcaZFwZUaWAipTi1fV8fnAz1TGLyAUb5pQj5z7sQC1oZZuCJvyUnY6tC7kQEuS3gtuXQuDuuZtnmA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717173946; c=relaxed/simple;
+	bh=9ZGyYiqIe9YBKccu9aVX7tFCEevFRWtYp/GVAzLQ7eE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PI0E+b8HE/88E4bdcxQZQpNOzlPDnlx4h5jJeC0TMDZn1qxb9Fk8EcfC63A0kq8UnkkModxytGRf81EFRIeVNayXxRSbDJdgQydapRK8yAikBaVHN2N4Gke3VduSlAX9MeYhOavlJCJ6xzmmsKsaEoyEHf2gUDcIqkfkeJJ3doY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=da0K0Pyo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ErqaLlMp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Csz5r/EmNWj5q5MHtaz7KasD7494EST2xV/tg8o2CA5oT322kusSXVAch3nfM4eRihmq7eJF7bhSnWl/Tvx3gfZ3ExcJv143Q+TbpvGr81oVbn9anbEh218gms9pX7VPGunCvc++0WfNZhN0Vgj+0RvvWLVHrD3F/GiZph+M0GJK4loNvbkwMiXu2MjgeV7Ar1dT8Fb8G5lx3eUCB4EwgZVUF65zFca7srR1oWSOMky1XGkLmeOTsFwSw/GVHSXJmvW/khe77wKy65LN90AfrNpMoafEEjUaWj/aMEwMOEx4BPjo+fSPWlobsEl8PtPKIxz9Mx/prCMZtQ0sR3QDOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4dJxGasPJaw589fVwlksqdg1/sl0BoImJj0StJOPsy0=;
- b=EfeKexrC4B+Q2YkVRFdgKPtyumMRmdkY+Dqqnl7pVdVesU4EjHs8wgI5FGL4UDcIgMS3ytn1T2RyIz8G+wOcBEMP//PJT9sZ+9fkbpA7oxq/oYeSdWQ0ByKTpRlrCNOoecgKOWWtTwd4CW1jOI7lvfoM5v2IMrpHezi96rpWOPwIBT2lX7O2MHz4+IeOSoQVUB8R861odDdKOjKCodz41bwJBQRCkZYr6Z4mwVgghAdgKhfH6EmaNUwmgUlEyzZszea4j4wQvdljNFAHULPowyJAPPw2ow+U9tPPm8HwF8B69VlPn19kyXp5O2Qg7CLW1R3GKN8LcivP5Js901c1Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dJxGasPJaw589fVwlksqdg1/sl0BoImJj0StJOPsy0=;
- b=ErqaLlMpJZfa+tGQO5P00nA6paZolcVAMzjZ5WPCv7KdNzmV4LszeLYdFK4GQJk/z2CxJF99rfpF2+IRe/zzN2Mn7VSnyBeeK99FET+U3kYg+bS5NavHs4GWYQzttvSd5Yei3jERk9QINOWkKmg2lpr/FOtJ/OHH5bUc8yj9toY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB8316.eurprd04.prod.outlook.com (2603:10a6:10:246::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.27; Fri, 31 May
- 2024 16:44:10 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Fri, 31 May 2024
- 16:44:10 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: alexander.stein@ew.tq-group.com,
-	krzk+dt@kernel.org
-Cc: Frank.Li@nxp.com,
-	brgl@bgdev.pl,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: [PATCH v3 1/1] dt-bindings: gpio: mpc8xxx: Convert to yaml format
-Date: Fri, 31 May 2024 12:43:57 -0400
-Message-Id: <20240531164357.1419858-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="da0K0Pyo"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V9pLYm002217;
+	Fri, 31 May 2024 16:45:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=SxcHMvjlVyGvXa+aKGe+oOvQ+0ImX/B+Xhu
+	V6t49JaU=; b=da0K0Pyow5EDGX1PonsKfxeQcTqzC00VVETH9nIUD8TkT9k2cum
+	qdR99u0aZSeE7ovISNLtZhooPoBLDO5TzW1jCwW63yKs7ULAbHuAlOXiGawoRdTl
+	yGAtfju0k7ztV6z/o4oxVNE7uALPhP2UOhiNz2M9bJli6gaTBaZL0RnBfmCH8GIV
+	Dl0FFwiJGRf4qSEEqEgeqwap1IszPTBWtVL6rRs/rAhbzfDG+MV0svqqSr5/23dJ
+	2idN/wBuHbDBpJ8bKAo5N8bTKMTTcLPbYGVDdlA6tBr5LrUmLY3ovVV/WNRJC2GS
+	90XFNa5vFCwBIZAK8YpEBi9p3wqwCkTbxxA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfc9nh128-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 16:45:40 +0000 (GMT)
+Received: from pps.filterd (NALASPPMTA01.qualcomm.com [127.0.0.1])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44VGfCpP026789;
+	Fri, 31 May 2024 16:45:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by NALASPPMTA01.qualcomm.com (PPS) with ESMTPS id 3yfd4ta3an-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 16:45:39 +0000
+Received: from NALASPPMTA01.qualcomm.com (NALASPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44VGgLOx027988;
+	Fri, 31 May 2024 16:45:39 GMT
+Received: from hu-devc-lv-u22-c.qualcomm.com (hu-uchalich-lv.qualcomm.com [10.81.89.1])
+	by NALASPPMTA01.qualcomm.com (PPS) with ESMTPS id 44VGjcbw000483
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 16:45:39 +0000
+Received: by hu-devc-lv-u22-c.qualcomm.com (Postfix, from userid 4184210)
+	id 49D0A658; Fri, 31 May 2024 09:45:38 -0700 (PDT)
+From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@quicinc.com
+Subject: [PATCH v6 0/5] LLCC: Support for Broadcast_AND region
+Date: Fri, 31 May 2024 09:45:23 -0700
+Message-Id: <cover.1717014052.git.quic_uchalich@quicinc.com>
 X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::19) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB8316:EE_
-X-MS-Office365-Filtering-Correlation-Id: 229f2d9c-5609-45d4-0ec0-08dc8190e531
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|7416005|1800799015|52116005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JtqwbdKManIGVECDzGYtiHsdPxPMORiKhrxpUVRnS5TA339Mk5ZzLeNJ+VVa?=
- =?us-ascii?Q?Z7CvyZXrgDAqbD0h3y0fzRhCL2D0NgeFfviDdl+C4QFX3nNL+xNT728r5YVk?=
- =?us-ascii?Q?nH2tO660c8fMw/tWNIJsXKk0At2G/01qQSOw7N+V9JGpHuDGjWB36Rx0dbYU?=
- =?us-ascii?Q?xG11oVmb1+BFr3fzcPW9GmnFWfW5BCek02M3Th7AUz6tKg7tE07blApFr84n?=
- =?us-ascii?Q?wVSjBFbvVUYw5HByl7WPBFTziMT7ixph5bxBPlroZUtzOxGrBmNmmN2RxJdY?=
- =?us-ascii?Q?4xLI4frOkQ4sSZYB1yE5sQghYInoLsKZ4JvozfJqnkiDD6fvCIQkNix24mDO?=
- =?us-ascii?Q?PLEKvqLIgpGJTGPlaQr9aOuOg6dydakbiZgLgMzA7qdp6zt2gnWN3Dkkjq9M?=
- =?us-ascii?Q?W07PiUcHqfB0lbwueXF2QZiXwj3PXt4Ky/YxwlqA++GMJ2GRb2/F+iRW6841?=
- =?us-ascii?Q?efeTXFkdZl44F+lQviKpLOl2P6viHfi7LiXd6DLw8mAS/81FL8johlA8WfFC?=
- =?us-ascii?Q?1nocAHucAMxGoI0ylq1E/9CLsRoHsN7Xuzg8dS/a4pFZf4VXRcy6NULwS0ii?=
- =?us-ascii?Q?fK/+Q3CDbjLKMLBHXH8SNZXrJAJm/oK4gkoELgshZIyWlkVSIgAknF0ts1jq?=
- =?us-ascii?Q?sOaG1SS/fq0xVXGMLv1z/71gefn53dvBUvjIrgSCZFNLblf350EBotYcA5f8?=
- =?us-ascii?Q?w7MjiMa1m7YXRaY7ktDEjPBaZGXA+GysFDl9Hu/e5NJg6kPe6Nfpw6x65Jzb?=
- =?us-ascii?Q?AQC2AfXZA2MoxymBKQtHwZw4Mv3X1ywBkc4e6hDG+BmmHO60h9qPV9u4uDVA?=
- =?us-ascii?Q?tj4dDt+Y+ArgqIR39CQPz7VEva/ZGQMTCd0ggE06XGIPBViH6FdDO0sJVBkb?=
- =?us-ascii?Q?U1/kkjPXSqrRWk36hvju6BlgooTXxSTlG1dJgllZPWGaewU+YcGEXZNTRGdn?=
- =?us-ascii?Q?XNUlw13zDzNg4Ioqsg4KIU+86B6rZWCdhfvxKKC9pjQRqRpFBBaIAVgvxl9X?=
- =?us-ascii?Q?mRx+6J3b1G6bkReD7SD9AW7JX3s/zFduvFK11tL3WJj6z/E911zrxgDQga1e?=
- =?us-ascii?Q?cZoQw41i8RIt2x8Fq5czQCsgTL58KkBRCzZLkvEY7ApBrsC4t2PNLuvWanKS?=
- =?us-ascii?Q?IX0mM0nYyRGeFfzcmFP8jFSQEVqaQPZ5BkMt0QYyktlwYM1TXatm98I89+f9?=
- =?us-ascii?Q?3YD3iO+vhqKKHHPANabWC/XTtcWuETPFTTovjilz111nNWHy9fEArzMvp984?=
- =?us-ascii?Q?F4wo4SoT9Lcb6djXZPWLiVbLoAQqRyQoUx1JihvcFDQtEBSZ+LJRR52NCt4d?=
- =?us-ascii?Q?SHc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KLLqIMMkvDwE9207pz7QnbLvqWVQ4TbKJNGVHo68dvsIPeC1mHnnFxuHX+Yd?=
- =?us-ascii?Q?0MXJeJ4LckcFibhoBM+LBRNrDpFQ+VtVbrcSVL4WyU8GCKWHyYfX6Xlb2Lxa?=
- =?us-ascii?Q?jU+sKJX1OqsZCcVQs/pOQSW33Ei2HF0iXsyx/qSkbrl0nHeTyLTidEu5tF/7?=
- =?us-ascii?Q?3AEDfJs7a60jMpnx+tCUoMKk7jm1QWmJIX2EGdsv1e1sMv5iTD59cEW3TBtd?=
- =?us-ascii?Q?zJPwg9CksujD/BR21jAELS8FLanBdb/trfHpVHEl0z870iq2fDCIQZa9U4ay?=
- =?us-ascii?Q?poWsdEE/d1Azraiv7iqyxntSaOLN59SijwHzp9KBHwScEXzHL4KjZrEG7Rx9?=
- =?us-ascii?Q?3Oiax04tuIGy5KeyXGEQyo1/VT07EuBI8WP+Kf4LjJ5Ia3IIA5xLPcxBtkJ9?=
- =?us-ascii?Q?my2wAxHH39sEKWOzqSuRF0YIYkkTJi3u4FL1is0X3/ANVD8u0CQL/37vB8g1?=
- =?us-ascii?Q?VPK17DqxE7f0MXbYHdnHiUPYzC/52AWvI948LBMphUCNncGdP7QN8SrHipct?=
- =?us-ascii?Q?uUoz+r1Ftpcsf6efcAt9QEjmhCHTL6PJs8an6bft6u27A0yb+KCrDMm03qC+?=
- =?us-ascii?Q?x53at9yn4vH0YaxpIADkht0qpq4bv21FKFTJBHGai5e1v1hBe7rHW8vPA6P+?=
- =?us-ascii?Q?9lQbVVXwJ74n21reuapZna2PvEa5SC6f+vrEI+qTj9q9T1816SszR8stRThO?=
- =?us-ascii?Q?AcQF8bXoacbH46OkMK9zaKYjxVmSKSgtmBXrtqgzG0BGFLKE3nlEBBIqr2It?=
- =?us-ascii?Q?EjHVf1Mkz3HxyCHU/rnuFPc+Qj3B5JXuV0N7VHqXIcNc/waPZUxe7q9DysBa?=
- =?us-ascii?Q?O6/onPz6RFr1/FGk1U2JHukxipTtRW3VmkAmmgCd8SsHqaUIhTzMod7YspZq?=
- =?us-ascii?Q?1UUyl8v5cg+hVbxYWsURMU6jg+ajN2qD2Ul3owwBCsodQOEFDhlnaS70IE0K?=
- =?us-ascii?Q?CX4VX2XBG3UmybuV5lZnFIuvWyDGTB6El361BQp3sfzndwHhiSoVDlaTwgj+?=
- =?us-ascii?Q?wPMU7IEOGp0N07zERbFZyM4JbAiYCsszQU6KvRAKpGuqOah+79zQ7bOgrqq3?=
- =?us-ascii?Q?eAF3jrbRE93nk+yjQODAp7djHY3ZryYmBPX6J36ZbiCuuoqKxolCENBcl44H?=
- =?us-ascii?Q?lJ+/j9DskGN2pIiEzKfD+Pexh61mgN+LA1wBjP88uLIabSOV4zm4HMkcGOSV?=
- =?us-ascii?Q?aX428DjtU9NePTtvoDDCE6aFzlsO68hiNX1qPo3bQ8c4yUb/yHLzda8yVxRL?=
- =?us-ascii?Q?RepGe3C9dIMDEUKfPkm1+3BWzjhl+7JljZ6xzFXSlCsNtjzn4NIfh2EfWrge?=
- =?us-ascii?Q?JNoUZ9Zgx/5njQ7QPztP0lQGLddZfPMC6zDoEfIMQRqY6e/pVNK6P0YAOfpf?=
- =?us-ascii?Q?YpyfznVhO1VJBmguwtFrPzLG8EP3YIPDjHppo1SW4qKWDACzk7JuoLQJhbaB?=
- =?us-ascii?Q?fPPl8xyh5vQesRUhaeNC1Oxx4xUz3HazsI07berBQH/NtOtD0RzEKEdBk+It?=
- =?us-ascii?Q?LMbmzeE2MsAbri9GFwryej34ABOmOpQD+rTUSdw45FoDwmcj7W6Ck3O/fqYN?=
- =?us-ascii?Q?J4p8QOAIYMxGNsIBmPU=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 229f2d9c-5609-45d4-0ec0-08dc8190e531
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 16:44:10.1394
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rwR3WlkZlXAbP6pX65tynVaarv211qI83H0Yqx+O+fzRHT8BOyy2UgVvNe5rwMSck635kKLm3CtXgeGKK8/onA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8316
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: JHled-lritcTTLGDqSS0DcgTXmptPPOT
+X-Proofpoint-GUID: JHled-lritcTTLGDqSS0DcgTXmptPPOT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_12,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 mlxlogscore=796 suspectscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405310127
 
-Convert binding doc from txt to yaml.
+This series adds:
+1. Device tree register mapping for Broadcast_AND region in SM8450,
+SM8550, SM8650.
+2. LLCC driver updates to reflect addition of Broadcast_AND regmap.
 
-Remove redundated "gpio1: gpio@2300000" example.
-Add gpio-controller at example "gpio@1100".
+To support CSR programming, a broadcast interface is used to program all
+channels in a single command. Until SM8450 there was only one broadcast
+region (Broadcast_OR) used to broadcast write and check for status bit
+0. From SM8450 onwards another broadcast region (Broadcast_AND) has been
+added which checks for status bit 1.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+This series updates the device trees from SM8450 onwards to have a
+mapping to this Broadcast_AND region. It also updates the llcc_drv_data
+structure with a regmap for Broadcast_AND region and corrects the
+broadcast region used to check for status bit 1.
 
-Notes:
-    Change from v2 to v3
-     - Add Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-     - keep 'gpio-controller' and '#gpio-cells' together in example.
-    
-    Change from v1 to v2
-     - Add gpio-controller at example "gpio@1100". to fix bot error.
-    Strangely, I can't reproduce locally.
-    
-    Pass dt_binding_check
-    make dt_binding_check DT_SCHEMA_FILES=fsl,qoriq-gpio.yaml
-      SCHEMA  Documentation/devicetree/bindings/processed-schema.json
-      CHKDT   Documentation/devicetree/bindings
-      LINT    Documentation/devicetree/bindings
-      DTC_CHK Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.example.dtb
+Changes in v6:
+- Update commit message of driver code patch to include problem statement.
 
- .../bindings/gpio/fsl,qoriq-gpio.yaml         | 82 +++++++++++++++++++
- .../devicetree/bindings/gpio/gpio-mpc8xxx.txt | 53 ------------
- 2 files changed, 82 insertions(+), 53 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
+Changes in v5:
+- Add additional check to remove warning from devres.c on older
+chipsets.
+- Carried over Bjorn's and Krzysztof's R-b tags from v4.
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-new file mode 100644
-index 0000000000000..eb046a48a3f59
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/fsl,qoriq-gpio.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/fsl,qoriq-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,mpc5121-gpio
-+          - fsl,mpc5125-gpio
-+          - fsl,mpc8349-gpio
-+          - fsl,mpc8572-gpio
-+          - fsl,mpc8610-gpio
-+          - fsl,pq3-gpio
-+      - items:
-+          - enum:
-+              - fsl,ls1021a-gpio
-+              - fsl,ls1028a-gpio
-+              - fsl,ls1043a-gpio
-+              - fsl,ls1088a-gpio
-+              - fsl,ls2080a-gpio
-+          - const: fsl,qoriq-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  little-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      GPIO registers are used as little endian. If not
-+      present registers are used as big endian by default.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio@1100 {
-+        compatible = "fsl,mpc5125-gpio";
-+        reg = <0x1100 0x080>;
-+        interrupts = <78 0x8>;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+    };
-+
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    gpio@2300000 {
-+        compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
-+        reg = <0x2300000 0x10000>;
-+        interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+        little-endian;
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt b/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-deleted file mode 100644
-index cd28e932bf50e..0000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt
-+++ /dev/null
-@@ -1,53 +0,0 @@
--* Freescale MPC512x/MPC8xxx/QorIQ/Layerscape GPIO controller
--
--Required properties:
--- compatible : Should be "fsl,<soc>-gpio"
--  The following <soc>s are known to be supported:
--	mpc5121, mpc5125, mpc8349, mpc8572, mpc8610, pq3, qoriq,
--	ls1021a, ls1043a, ls2080a, ls1028a, ls1088a.
--- reg : Address and length of the register set for the device
--- interrupts : Should be the port interrupt shared by all 32 pins.
--- #gpio-cells : Should be two.  The first cell is the pin number and
--  the second cell is used to specify the gpio polarity:
--      0 = active high
--      1 = active low
--
--Optional properties:
--- little-endian : GPIO registers are used as little endian. If not
--                  present registers are used as big endian by default.
--
--Example of gpio-controller node for a mpc5125 SoC:
--
--gpio0: gpio@1100 {
--	compatible = "fsl,mpc5125-gpio";
--	#gpio-cells = <2>;
--	reg = <0x1100 0x080>;
--	interrupts = <78 0x8>;
--};
--
--Example of gpio-controller node for a ls2080a SoC:
--
--gpio0: gpio@2300000 {
--	compatible = "fsl,ls2080a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <0 36 0x4>; /* Level high type */
--	gpio-controller;
--	little-endian;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--};
--
--
--Example of gpio-controller node for a ls1028a/ls1088a SoC:
--
--gpio1: gpio@2300000 {
--	compatible = "fsl,ls1028a-gpio", "fsl,ls1088a-gpio", "fsl,qoriq-gpio";
--	reg = <0x0 0x2300000 0x0 0x10000>;
--	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
--	gpio-controller;
--	#gpio-cells = <2>;
--	interrupt-controller;
--	#interrupt-cells = <2>;
--	little-endian;
--};
+Changes in v4:
+- Updated Devicetree patches' commit messages to make problem statement
+clearer
+- Resolved Konrad's comments on driver code patch
+- Updated v3 changelog to include dropped R-b tag
+
+Changes in v3:
+- Removed new example in dt-bindings patch and ran 'make
+DT_CHECKER_FLAGS=-m dt_binding_check'
+- Dropped Krzysztof's R-b tag on dt-bindings patch
+- Use of ternary operator in llcc_update_act_ctrl()
+- Add comment before initialization of Broadcast_AND regmap in probe
+- Move DeviceTree patches to the end
+
+Changes in v2:
+- Added an additional check in the case old DT files are used for
+above mentioned chipsets for backwards compatibility
+- Moved addition of if check in llcc_update_act_ctrl() to a separate
+"Fixes" patch; not part of this series
+
+Link to v5: https://lore.kernel.org/all/cover.1716228054.git.quic_uchalich@quicinc.com/
+Link to v4: https://lore.kernel.org/all/20240329-llcc-broadcast-and-v4-0-107c76fd8ceb@quicinc.com/
+Link to v3: https://lore.kernel.org/all/cover.1708551850.git.quic_uchalich@quicinc.com/
+Link to v2: https://lore.kernel.org/all/cover.1707202761.git.quic_uchalich@quicinc.com/
+Link to v1: https://lore.kernel.org/all/cover.1706296015.git.quic_uchalich@quicinc.com/
+
+Unnathi Chalicheemala (5):
+  dt-bindings: arm: msm: Add llcc Broadcast_AND register
+  soc: qcom: llcc: Add regmap for Broadcast_AND region
+  arm64: dts: qcom: sm8450: Add Broadcast_AND register in LLCC block
+  arm64: dts: qcom: sm8550: Add Broadcast_AND register in LLCC block
+  arm64: dts: qcom: sm8650: Add Broadcast_AND register in LLCC block
+
+ .../devicetree/bindings/cache/qcom,llcc.yaml  | 27 ++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sm8450.dtsi          |  5 ++--
+ arch/arm64/boot/dts/qcom/sm8550.dtsi          |  6 +++--
+ arch/arm64/boot/dts/qcom/sm8650.dtsi          |  6 +++--
+ drivers/soc/qcom/llcc-qcom.c                  | 16 ++++++++++-
+ include/linux/soc/qcom/llcc-qcom.h            |  4 ++-
+ 6 files changed, 55 insertions(+), 9 deletions(-)
+
 -- 
 2.34.1
 
