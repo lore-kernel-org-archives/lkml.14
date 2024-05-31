@@ -1,138 +1,119 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB79770EA;
-	Fri, 31 May 2024 14:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC4457C8E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167140; cv=none; b=WTiozne9sb1hvG0nHOm3apJ6Ulqden/r9wTpzwYyakrEviZuAieqIYDRY9zmPXS96Q70Gw+nBchtBXvTrQdQHTNBxF0iKHFu0h5z1JV5PlrC4j87Wzt0uPVF6EmzwlEDuJ4MXqCRvl0RIm4NIZ+ednTxNhmcF0TYQvHFHmh0hrc=
+	t=1717167199; cv=none; b=cV2IKwJjEO/IseMmghEd3WKiUSOjpO6eUD6/VYOgqj4avSCSDamXg4trVvbOpmn7RQ58iwZBhQdgvrrTfmvayOfuhAFXdp5QOLaNceiRmr8SVMDuVoICxppekKVGPqVMYEaFaoCKUqPm5rsjj+oIEUIE7GIq9TWYafNUFKyYzlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167140; c=relaxed/simple;
-	bh=ZFiZrue0HN69gCDWqYdx8oP2j7lujcCjKuWNJDuzz/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tNEvB0VP2Jqy26BVAMSaKsRNACjUDvh+SGOySVje1cHumx/nhDyaT0aaIrUmtSAMrjXutgSbOQZD29ZY+2HiCuCxLJDd7ouTHz/L40CgiGweq+7vh2WszDVI3rVZmm0qSPJuFIKCRxCU5fFiWJQAIaxEca+LMHuam95PIooLAgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nJN1++Xq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717167199; c=relaxed/simple;
+	bh=zIxJj+eFNW131CghuD8tAVb+DXZz1K/r7747QzysLZ0=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=lzyxyuVDzZnbG0HGvypSUUnnLqoaQApkTbWHW+ZJO4UA9AwOujQTpjTtE9Sla098b1X0NEdQPxlp5U1jCD1PbnGFvQZKVTFsQEA62tEgrOJeqQPb2owcDUHFALLJEIGNsk5KKCiAukxCUD5cE6dJLREP0lTCZfALFZHGt+KRStQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=gJhSWPMl; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nJN1++Xq"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VA1HDx015725;
-	Fri, 31 May 2024 14:52:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nKoGiFE8U0Hz4us4ZPo+aD6AjWEeN1VhK7zaTrNaG20=; b=nJN1++XqrFI+Cgfy
-	CJFgZlhGHABmA2O+la9RaEu4drjNcFxT3+BFzZ7ufltNMxWniuCHkUJqREtInLcT
-	newhkSlCGEYL7KPCX2948f9bpwg0Do/dn/PpBDlFPAqFd9Z/6qEJnP4TV2QHwuVM
-	scfn5MreAtraXhI3rmww5S6jiHPBrh4SxUfWgZZGy9wA9xmI1cMZaOIiNxxXJV1G
-	3jzlFHtrOf0Urmi8NAhfdukBSmBuIvzuKU2jh0pPSYSOY5o1nmAwWqBejtFxhzNR
-	1AH/ft/8UcTxtC6B61EppYjgD5f8UyfuUTGrDpbOZqmFOisXgDdfW2TIVqWes0c7
-	tpsL0g==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba0qq6rw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 14:52:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44VEqC1q017847
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 14:52:12 GMT
-Received: from [10.216.8.21] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 31 May
- 2024 07:52:06 -0700
-Message-ID: <68621b7a-0079-49ad-adf0-71d1fe24bcf0@quicinc.com>
-Date: Fri, 31 May 2024 20:22:02 +0530
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="gJhSWPMl"
+Received: from macsyma.thunk.org (unn-149-40-50-56.datapacket.com [149.40.50.56] (may be forged))
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 44VEnwYM020082
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 10:50:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1717167002; bh=TVitHfGXx2wIQGCXtRSfpVuiPAJXkRLy5+/11kjTZi8=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=gJhSWPMlva12midGaeg/PHU2neWOcKsKiFso7tYpYY6tMVpafdbk0znXMFEK9H1hU
+	 qdyBPtkEngiB7yqQ+IbNrHlkWYOWgTjcvQgJNO7MTOTZisvZdZSoDHJWY3lqeJaYZE
+	 U38u43F9VE4lFxJknYqgbIoTNE+P1A2Q4LVc12BHeDv1KKY88JN9DqWz4hzA6iWmx8
+	 y2TY1uFckzpWjIiew4C1qPlARFYwrj6ebMmhkk+fiFQEX7rpKDXel6j5rvPRdi9eDf
+	 HMJqjXMcGDUiuhpBoML4bUHQ6xIbM2FnKtOoPuHSbUzya2eBGa7gg01LX6ZZmBbqR2
+	 QX791qc6scs2g==
+Received: by macsyma.thunk.org (Postfix, from userid 15806)
+	id 257EA340A68; Fri, 31 May 2024 16:49:57 +0200 (CEST)
+Date: Fri, 31 May 2024 16:49:57 +0200
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Linux Kernel Developers List <linux-kernel@vger.kernel.org>,
+        Linux Filesystem Development List <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, ksummit@lists.linux.dev
+Subject: Maintainers Summit 2024 Call for Topics
+Message-ID: <20240531144957.GA301668@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Disable SS instances in park mode for SC7180/ SC7280
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Doug Anderson
-	<dianders@chromium.org>
-CC: <cros-qcom-dts-watchers@chromium.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Bjorn Andersson
-	<andersson@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Stephen Boyd
-	<swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>
-References: <20240530082556.2960148-1-quic_kriskura@quicinc.com>
- <CAD=FV=UhrCKCv5R-LAAugrLXFp=cDcj2=Pp9-N3qk5pk2=sGEg@mail.gmail.com>
- <e732257d-cd16-4e81-9a20-af481184ce0e@linaro.org>
- <CAD=FV=XO_8SwDLJfoNwwCKEO6CZyMRMY_BdsWMLPBkpczErppA@mail.gmail.com>
- <d61ede0b-f689-46af-9bc8-e715784b86c0@quicinc.com>
- <CAD=FV=Xwf4eW+zwPecDg5855nVEY2NQMqpvHu59_e2xma6=wxQ@mail.gmail.com>
- <33db558f-2863-4246-a06a-d94ae2efc0a1@linaro.org>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <33db558f-2863-4246-a06a-d94ae2efc0a1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1kEPteRDxgoOvPuEcZz1qwzckogaa9tO
-X-Proofpoint-ORIG-GUID: 1kEPteRDxgoOvPuEcZz1qwzckogaa9tO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_10,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=874 malwarescore=0 spamscore=0 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405310110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+This year, the Maintainers Summit will be held in Vienna, Austria on
+Tuesday, September 17th, 2024, just before the Linux Plumber's Conference
+(September 18--20th).
+
+As in previous years, the Maintainers Summit is invite-only, where the
+primary focus will be process issues around Linux Kernel Development.
+It will be limited to 30 invitees and a handful of sponsored
+attendees.
+
+Linus has generated a list of people for the program committee to
+consider.  People who suggest topics that should be discussed at the
+Maintainers Summit will also be added to the list for consideration.
+To make topic suggestions for the Maintainers Summit, please send
+e-mail to the ksummit@lists.linux.dev with a subject prefix of
+[MAINTAINERS SUMMIT].
+
+To get the most out of our topic discussions, folks proposing a topic
+should also suggest relevant people and desired outcomes.
+
+For an examples of past Maintainers Summit topics, please see these
+LWN articles:
+
+ * 2023 https://lwn.net/Articles/951847/
+ * 2022 https://lwn.net/Articles/908320/
+ * 2021 https://lwn.net/Articles/870415/
+
+The Kernel Summit is organized as a track which is run in parallel
+with the other tracks at the Linux Plumbers Conference (LPC), and is
+open to all registered attendees of LPC.  The goal of the Kernel
+Summit track will be to provide a forum to discuss specific technical
+issues that would be easier to resolve in person than over e-mail.
+The program committee will also consider "information sharing" topics
+if they are clearly of interest to the wider development community
+(i.e., advanced training in topics that would be useful to kernel
+developers).
+
+To suggest a topic for the Kernel Summit, please do two things. by
+June 16th, 2024.  First, please tag your e-mail with [TECH TOPIC].  As
+before, please use a separate e-mail for each topic, and send the
+topic suggestions to the ksummit discussion list.
+
+Secondly, please create a topic at the Linux Plumbers Conference
+proposal submission site and target it to the Kernel Summit track:
+
+	https://lpc.events/event/18/abstracts/
+
+Please do both steps.  I'll try to notice if someone forgets one or
+the other, but your chances of making sure your proposal gets the
+necessary attention and consideration are maximized by submitting both
+to the mailing list and the web site.
 
 
+If you were not subscribed on to the kernel mailing list from
+last year (or if you had removed yourself after the kernel summit),
+you can subscribe by sending an e-mail to the address:
 
-On 5/31/2024 8:11 PM, Konrad Dybcio wrote:
-> On 31.05.2024 4:31 PM, Doug Anderson wrote:
->> Hi,
->>
->> On Fri, May 31, 2024 at 7:27 AM Krishna Kurapati PSSNV
->> <quic_kriskura@quicinc.com> wrote:
->>>
->>>> My only guess is that somehow SC8280XP is faster and that changes the
->>>> timing of how it handles interrupts. I guess you could try capping
->>>> your cpufreq in sysfs and see if that makes a difference in
->>>> reproducing. ;-) ...or maybe somehow SC8280XP has a newer version of
->>>> the IP where they've fixed this?
->>>>
->>>> It would be interesting if someone with a SDM845 dragonboard could try
->>>> replicating since that seems highly likely to reproduce, at least.
->>>>
->>>
->>> Hi Konrad, Doug,
->>>
->>>    Usually on downstream we set this quirk only for all Gen-1 targets
->>> (not particularly for this testcase) but to avoid these kind of
->>> controller going dead issues. I can filter out the gen-1 targets (other
->>> than sc7280/sc7180) and send a separate series to add this quirk in all
->>> of them.
->>
->> Sounds like a plan to me!
-> 
-> Yep!
-> 
-> In case there are more gen1 platforms than what we have upstream, it would
-> be of great utility if you could list them all, so that we can have a reference
-> for future additions, Krishna.
-> 
+   ksummit+subscribe@lists.linux.dev
 
-I am not sure if I can give out info on targets that are not on 
-upstream. I will check internally if I can do that. Else we can just 
-ensure that from now on whenever a Gen-1 target is getting upstreamed, 
-this quirk is set.
+The program committee this year is composed of the following people:
 
-Regards,
-Krishna,
+Christian Brauner
+Jon Corbet
+Greg KH
+Sasha Levin
+Ted Ts'o
+Rafael J. Wysocki
+
