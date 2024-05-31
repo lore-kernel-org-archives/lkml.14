@@ -1,46 +1,46 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B397720B33;
-	Fri, 31 May 2024 04:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FE37D096;
+	Fri, 31 May 2024 04:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717129987; cv=fail; b=Cnu2gbQKGaUM+XYhzTy9xmrqDI5ArBTVmD8qnUWVFULASwDt0XT+ivdMHJZ3cwi1doj+cEYy3HEetgLRWB+2ObNJSRGl6G5sHD3nsQeFYTEWmRExNbrPGe8ZFAXVjHAEc4ouTvG/AP3Nv4GjYa4gFAGHu5r7Ryn7ttDQUFZ1OuI=
+	t=1717129990; cv=fail; b=nA0hL6ozOOpVjiwqqGUT0/jYewU269PWbyKi3NjwWzECZA40GAXgICbuoBKtkWsLQ2uCsMfBhVTjJwx5TTUDXMejcwq1tIj6BGzPThzyTBh27MBoJ3eb9mkI98uTIe5vP41Q1fAX5mJ5CeIMz0Cz5ss19CE+YosYXafhza4PnUI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717129987; c=relaxed/simple;
-	bh=7ZDn46ulUtwzRbJyDl53G4ujNNySYMc14dJ+ykT7hFA=;
+	s=arc-20240116; t=1717129990; c=relaxed/simple;
+	bh=JhzeNpCXiZt+ZCmy09NVMPrWAFQsr8TlaBbEBA4NAQ0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gNi3ugrzVQh2AKoytZ61zWRekzyyWFh2N3MbI+uZqaAe92Iv6vCIUNRncwnAEb+syVJGSYkTk8K4c942SvhDnyYDO6p+W24zbQjsmvY8YzEMc2THw49k3oRKqivGgGqE6TeMSZ0Qu0n6c50H7nLtkmhm/KDyjaCt029AZIm3LZM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=XD4IdLBY; arc=fail smtp.client-ip=40.107.237.73
+	 MIME-Version:Content-Type; b=Fo8FmNJpHDmWFGRg1cqwuPraTzU0SCL8BTzw2PspDulVvkr35YH4S+LE8uywnyTwaiJI3WcQeMXVMwyUTBhNexJdLfbOwYFCa1HUjcUOolH5hKGXfNdZxAB0O4tyW30rdjg3887R1x6LPXuYzB+bygQ7lF/pZdr9WZaZlXcyeBE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OpkoHNYU; arc=fail smtp.client-ip=40.107.93.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="XD4IdLBY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OpkoHNYU"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=juRJwq5GmKz0opQ/Lq1iVRZXPrI/KarOiQSDw5C43hjPC66hAlYlxkA/2BoKnYdTixsMreCdOV2FiZcGAghpoXw5Qi9VaunxyjWpflKqYdsjcsOKyzRfpSYxvbb0579+pIgIuuXSQJeDdVjvPflDOiZo2oVt7f0QQGEMgpN2efTsPCXNFQttbm/kD4aW7DI4Z7Iwyw6B8Fi8S0OIyCbCwFcE/uOa0UJkDscNANBVc3X6w2xTJS8mBwURSE7g8ez2AUDGjgmkCjiLAeTvQcJ6zZxKwpouhzP9iJ1qeh+SldhAIMjYiO/7f0mDi03mOhp2OmGYCpNiXl6ZRBQUX5BUJg==
+ b=QnB5C3L8VbRq5gP9m8Q4ANldP9HILMfCpYhMes7UfCAAObdexnFnkATRC80dcRWvRLUxCSeo1c4AjABXveOqgSnITEhpFya6+mPzv/iAclhAjqtoxj3ScWRwg2PQoNQCKUnZpUkWL+FrhMyCEWI0+quMAIibrQRMhM6t1y/3AbEeYbN8ZIDTC0GOObya0w67QWmqyI3iQmnTFdgWoPwX6OmHDqvbKID0ea11im44YdrpT5ActNLN+cEliPPdd0a2Rmql62N8KMrXwy5jYxbMcBNW72pNy8ZmAbF+XL1GJuauuNxZnubHspIyZEr2CEvYSp5lSN6y4AXl7/DOGk40gQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i9GkarFZgKGH1f0qGp274+NA5OexXI/DQxI6BAriPHU=;
- b=JnMzO/Oaigzx3MDHhUTcx+x6S4H+9gv5BXfr/Xm+0w+OTWIKwN+gbedqvmxUllMg0dyCuZYxOQH5Ks3AWrAdQRNUGRfFvTk2CWgIRVKjZU+oFkxJbjy/EQxKDUeD8MmhJnJBf6i0BvBlM9v1DkBmn0ybaQGEATS5n1xY76a5290xZqIfyXIU2tcWYBKtzvnYqTNQzlObdUSrZsItFeComeZGW5PC+FUmtu6BSzXCdK6Aw5Tlxn3MrWLeiY2fqYE6QOe4qS2XEoD4YAebm0gCI9+lLp75+sHldEc5unrLncX9UrwvS8IKCMWoNdu7P19KSTs0Tb5HIVkRAC5vwad5Xw==
+ bh=xRBQlAHS9rNdGZeioNgGfyyZkvzGqblc/uPtEahNQDw=;
+ b=g55vsHw6Sd+zaYfu7Tw7R7ITx6arfCvS70p1w5sPDi/4O9FJWEZjWhhLNhPwqtO5HKuOlFkGJEtEynk1nnOHeBsGG588RKBZhIHeAzR3QC6pdaSKmEfoEtoplURUUqQLUI1dwQwqMAYzEB+JD6Mt47zKrDw+qndhj8x1Ur0oMznIVwXmDGURlOvSIYU2kT9Iq5Q4GwlGSMFxjMmH0JBhqJcJjh4rbNPmlAVZk4b4zr6La6+j8m2ALOmfAAC2+Yff0/kMtcTqBS/OA401v9gM3yTx+z4gjBGMlU6qK1LJ3hY6y1Ytj4+YLLlZZI1Tn2IUPhkiFBZYWlUub1B5dEGJcQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i9GkarFZgKGH1f0qGp274+NA5OexXI/DQxI6BAriPHU=;
- b=XD4IdLBYnBsArk3ZFclJ70oJAGs2SFzfQPN5f/DCn9MT4zbhat3l4gzlyChHANg2Keyj+weuGHziHcDTO/JIIFusUuzZFfe/zO63ThtFhiGfP8nz8hFrB9l4RmhKuL3r2gkp9GqddYwPVE/TMiSkDDnAwSz6Dc9CIG/3woMsliM=
-Received: from DM6PR08CA0057.namprd08.prod.outlook.com (2603:10b6:5:1e0::31)
- by DS0PR12MB7874.namprd12.prod.outlook.com (2603:10b6:8:141::11) with
+ bh=xRBQlAHS9rNdGZeioNgGfyyZkvzGqblc/uPtEahNQDw=;
+ b=OpkoHNYUhLv9c0ebM3MnNRJfjyjvf36vYOb+Xkm0aeXuiPBBJ0eso89iZwtqfTQe7IPgN0G8xHMsaUsAKuLh2aMuR0QOBSVf3jUR2PM3EivSHpm2arJL15fgMYytbCzPmcNGYGZVoRWnN7iuRnUPc+QrgEpYocNss5HoLV0tWqQ=
+Received: from DM6PR08CA0063.namprd08.prod.outlook.com (2603:10b6:5:1e0::37)
+ by CYYPR12MB8991.namprd12.prod.outlook.com (2603:10b6:930:b9::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Fri, 31 May
- 2024 04:33:03 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Fri, 31 May
+ 2024 04:33:06 +0000
 Received: from DS3PEPF000099D9.namprd04.prod.outlook.com
- (2603:10b6:5:1e0:cafe::ad) by DM6PR08CA0057.outlook.office365.com
- (2603:10b6:5:1e0::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.23 via Frontend
- Transport; Fri, 31 May 2024 04:33:03 +0000
+ (2603:10b6:5:1e0:cafe::4a) by DM6PR08CA0063.outlook.office365.com
+ (2603:10b6:5:1e0::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24 via Frontend
+ Transport; Fri, 31 May 2024 04:33:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,20 +50,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DS3PEPF000099D9.mail.protection.outlook.com (10.167.17.10) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 04:33:02 +0000
+ 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 04:33:00 +0000
 Received: from gomati.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 30 May
- 2024 23:32:58 -0500
+ 2024 23:32:19 -0500
 From: Nikunj A Dadhania <nikunj@amd.com>
 To: <linux-kernel@vger.kernel.org>, <thomas.lendacky@amd.com>, <bp@alien8.de>,
 	<x86@kernel.org>, <kvm@vger.kernel.org>
 CC: <mingo@redhat.com>, <tglx@linutronix.de>, <dave.hansen@linux.intel.com>,
 	<pgonda@google.com>, <seanjc@google.com>, <pbonzini@redhat.com>,
 	<nikunj@amd.com>
-Subject: [PATCH v9 08/24] virt: sev-guest: Take mutex in snp_send_guest_request()
-Date: Fri, 31 May 2024 10:00:22 +0530
-Message-ID: <20240531043038.3370793-9-nikunj@amd.com>
+Subject: [PATCH v9 06/24] virt: sev-guest: Simplify VMPCK and sequence number assignments
+Date: Fri, 31 May 2024 10:00:20 +0530
+Message-ID: <20240531043038.3370793-7-nikunj@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240531043038.3370793-1-nikunj@amd.com>
 References: <20240531043038.3370793-1-nikunj@amd.com>
@@ -79,164 +79,138 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D9:EE_|DS0PR12MB7874:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16c183ef-92ab-47be-93dc-08dc812ac26f
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099D9:EE_|CYYPR12MB8991:EE_
+X-MS-Office365-Filtering-Correlation-Id: c110c2ce-c623-404c-0974-08dc812ac0df
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|36860700004|376005|7416005|1800799015;
+	BCL:0;ARA:13230031|36860700004|376005|1800799015|82310400017|7416005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?m3KPB/7VCTLMMzpAbEhgT8cbRlciN8AaXry6PFlWUziOdx2UA9+sEGHRp5/D?=
- =?us-ascii?Q?BYWfx5r4g9lm58WoeKX26m67YaCAZ4xSDjJNv13MvCPadvpL6RwFVmAgI2/Z?=
- =?us-ascii?Q?jvYr1ET5R+OaRtW4Tzkm7/hvTKecflX6QpeZED8/BG8v/TGsrv/0PqJKJUU1?=
- =?us-ascii?Q?ST/g+LkK7a87urmW6xgMngI+7oPv5o03AsZk1n9L93fwfLDVGb7MlfuTH+C5?=
- =?us-ascii?Q?NlNMej6fC20Oy6GYEKPq4Y3f36gj1XLzXlNCLqFwBtA7xUvndAyr/EWlnvdi?=
- =?us-ascii?Q?cqUR8IeIwk3XH67kbbhvV9Y7sloVhHJKU7GLd0q7qtvxj20NmCMDRWIPFdf0?=
- =?us-ascii?Q?BOGXf4hS5Obaw0NVslGtUiK6i8qpmpGkECkbDug+xlEXHeHTD4nxTJLeSmwB?=
- =?us-ascii?Q?Emp3GcPW/Va2nZdMS23pOP9UX4c+lRjum7rMM+ptwUWEjufB64esJJi39U9p?=
- =?us-ascii?Q?043t7F4iBO8StqFV9zCY6aZElU7qUEalfHxkM6Uz3Wkk3+zZwVV81qr4VOlZ?=
- =?us-ascii?Q?DiEs8CdDG5jx9h73G0QitKV0rCDU9AGfYJLBrAv/lAWCLmZxBRW2bD4pkwEE?=
- =?us-ascii?Q?2S8wi9A91ZC8Pn2MIsyGmPU4B1Y7XQZmra5T95iOiWIYNxOvV7shAGB2ZGdy?=
- =?us-ascii?Q?XO09tgB+Ur2OCjTOxHBsnCzYTmI8/zsdInAPXaqBeoiNrq35VkaGjd3+LD2q?=
- =?us-ascii?Q?oETerDBvDU9yBIEU/OpdazOlPhmsA9sFoHeEGMKSlIXY5zB+OnjiwC/40NPU?=
- =?us-ascii?Q?nJTTz4CYCdzPN8htYezXUbPphMXTaxx07345/p/6IHo1q6Yxb0lz+RU2j2Fl?=
- =?us-ascii?Q?Nqbfa2VtNy6cSHrygrEULjUI1cKOeuJsJY+Os4Q82fegCd6pJ2WlmdhJrZ/7?=
- =?us-ascii?Q?apYJ4OCkIKRzJvTTbFXdnfD66Jx67LJRay2ZtBVy9iPJGs3+jZLTibbGRd2z?=
- =?us-ascii?Q?Zysg4enWJB2g7B/+4FO0h9zw6+h1vRlcIkuy/52Y9GST2qtdYjGshEKdVtIS?=
- =?us-ascii?Q?TZX90+o4PmLMoQOsJ5yFVHPHW3fKupICvzqxKm+Dh0Ln50XodEwAOZyT8pfM?=
- =?us-ascii?Q?mG0KRGRCEW40pr9KMA7PxrC+LYhJCViHSWkzRnLeUNX6O8xa3ngir4MTJYtd?=
- =?us-ascii?Q?PISusalZcbA29aDVb1tAWlbg7B82ZdVsWqKKwWSTjBP/RbQH3KptpgHGSvbf?=
- =?us-ascii?Q?9sJmnHE/l0//lawvw2qPhgYTR4UXWm/z16FRR774i3ZRBx15dcU6tud3cWn0?=
- =?us-ascii?Q?Hqci/QaRnxQCXgquiWCmAPU8Gc4pVEsU8CBBaWxzwI8Bsten5o1ye/yXprm1?=
- =?us-ascii?Q?WHlpLJRsOhAEPBteSx9NYDuZuAnqWMqlftXFJfyIrKqHIdgFtxLQg/mpNDBe?=
- =?us-ascii?Q?UaXST1A=3D?=
+	=?us-ascii?Q?DIKGTTkux+JqAHNBuqoXmsFHS8aiE8YnjngImfL0Pq9yj/0BPKFFwtMWPgtd?=
+ =?us-ascii?Q?qqyoWqnP21Cja2nRXXfO4GsTwbhYjfhkSZyoGKJf1mblECYlzfiOC813apxq?=
+ =?us-ascii?Q?cpq7oiiL3L08AnL6u4tQlYwmgwqMRAMxwr6qpBZ4/yb7hvpq6Rl8qX333dBu?=
+ =?us-ascii?Q?hqjoaPuhlQ74wMoinVAKHsiLDN0MK9mhZPWvTYBzv4VDGf0wmo20KvEEyvpd?=
+ =?us-ascii?Q?jvYwGW8NBBKsRMdKQJtDtHQWSGA6ib3mdqjYc2xFyGAwuJuxosclETH4UXvw?=
+ =?us-ascii?Q?TXWvCybKo7oRkbmqh2BnNk8PSLEUw/HbfHK/ydIMBWbbabu/d/mugYsXSzf0?=
+ =?us-ascii?Q?BvPO/iIuRJ5YmmGsvOgd1BPWR2mmG7vfft0tVhAUeQPvz/CdFIH/MNaIGl5m?=
+ =?us-ascii?Q?dz/0pp+P8k9791pemD4gkJQZRBBzH/GDBltAUPgjYH5iEbAMLIPfZHiBhzE7?=
+ =?us-ascii?Q?ZzkZMhE3po6yabJZQ8j6ZmBnCndZ0UTC7fY0UP9uzBJRA+g/hqe4HlwTPyc6?=
+ =?us-ascii?Q?GZuKx7+gn7FB9ZJEcESxrJ+ER8+9h6OTsrRQQgVragtFIaugdodMrIFoQsYq?=
+ =?us-ascii?Q?XXQKAnU4htk+AHN774sq1dpGEL7ZK+kSqH1Ll7IcVv7RAYL2I2nvPhmyR5zM?=
+ =?us-ascii?Q?DcY6H/nElhm9qM2rEp9RnPj95br8IWP78if/5BlmtdcfPF0SXLInj60cn2db?=
+ =?us-ascii?Q?Kwc87lb5ZZNtUVvb38Jmh9tQInZFWqj1QReCgFzc/UUz3RWxgNMqGS6fLzNF?=
+ =?us-ascii?Q?0H1MJzC680Ol7OJFfJF+L3a3eMryo/RIZWPJc60GrVhX1pt0VOc0e9y5IPWr?=
+ =?us-ascii?Q?tzYPMTdwvrRCFnwt4pp6K4HZbIMig12jQGTIspiWCq/bh8rmAtppLPdMS92o?=
+ =?us-ascii?Q?wFeFphHAbYWljFd1fRTnbrXFr6V/tHWyudRLOnjNbXT5QQOtKKnGq6K72x5O?=
+ =?us-ascii?Q?7Yjk3n0bThj7F+lRYzMWgsoT42ELhxxQDnE9PmbdpnXXWW09dtbCPMo6iJLp?=
+ =?us-ascii?Q?96Lrz0DCsALhezAvzSDKxW5nppLPFf9HdQS9hyRaqrBtGOcdkSwahzeuIWQt?=
+ =?us-ascii?Q?VAhy1DU2HtWhRX1jd/PNlFoM2glMRP73lG6fZ3WIFmW13q9T4uX+p6rvgeFM?=
+ =?us-ascii?Q?V5UC2QPRgjfyvVe1Y+XE5FwQ1QVHUXBU4E0CVDSIJz6MZCMoNLsInMmRb+G6?=
+ =?us-ascii?Q?BuPKQLc/e9T/4Gia9t1ACz+65pHTH/+U8RURy0W3bodU4GVPk+q3PjQZ6xyv?=
+ =?us-ascii?Q?oHeZc+GOBtlAviAXGPgjAfIk9KZqv8COlDdlCLb8tGDSf46tMvomq6XCGDIo?=
+ =?us-ascii?Q?ij9s1pdRajirHf6NM1rOyIqzAkqz969sMwJ4rfm6XrR6LfJxH7YCffzcXkIo?=
+ =?us-ascii?Q?zkavhSlPnquR+aByoBD3RYOjhhDr?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(36860700004)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(1800799015)(82310400017)(7416005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 04:33:02.9688
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 04:33:00.3282
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16c183ef-92ab-47be-93dc-08dc812ac26f
+X-MS-Exchange-CrossTenant-Network-Message-Id: c110c2ce-c623-404c-0974-08dc812ac0df
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099D9.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7874
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8991
 
-SNP command mutex is used to serialize access to the shared buffer, command
-handling and message sequence number races.
-
-As part of the preparation for moving SEV guest driver common code and
-making mutex private, take the mutex in snp_send_guest_request() instead of
-snp_guest_ioctl(). This will result in locking behavior change as detailed
-below:
-
-Current locking behaviour:
-
-    snp_guest_ioctl()
-      mutex_lock(&snp_cmd_mutex)
-        get_report()/get_derived_key()/get_ext_report()
-          snp_send_guest_request()
-    	...
-      mutex_unlock(&snp_cmd_mutex)
-
-New locking behaviour:
-
-    snp_guest_ioctl()
-      get_report()/get_derived_key()/get_ext_report()
-        snp_send_guest_request()
-           guard(mutex)(&snp_cmd_mutex)
-             ...
-
-Remove multiple lockdep check in the sev-guest driver as they are redundant
-now.
+Preparatory patch to remove direct usage of VMPCK and message sequence
+number in the SEV guest driver. Use arrays for the VM platform
+communication key and message sequence number to simplify the function and
+usage.
 
 Signed-off-by: Nikunj A Dadhania <nikunj@amd.com>
 ---
- drivers/virt/coco/sev-guest/sev-guest.c | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/sev.h              | 12 ++++-------
+ drivers/virt/coco/sev-guest/sev-guest.c | 27 ++++---------------------
+ 2 files changed, 8 insertions(+), 31 deletions(-)
 
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index dbf17e66d52a..d06b08f7043c 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -118,6 +118,8 @@ struct sev_guest_platform_data {
+ 	u64 secrets_gpa;
+ };
+ 
++#define VMPCK_MAX_NUM		4
++
+ /*
+  * The secrets page contains 96-bytes of reserved field that can be used by
+  * the guest OS. The guest OS uses the area to save the message sequence
+@@ -126,10 +128,7 @@ struct sev_guest_platform_data {
+  * See the GHCB spec section Secret page layout for the format for this area.
+  */
+ struct secrets_os_area {
+-	u32 msg_seqno_0;
+-	u32 msg_seqno_1;
+-	u32 msg_seqno_2;
+-	u32 msg_seqno_3;
++	u32 msg_seqno[VMPCK_MAX_NUM];
+ 	u64 ap_jump_table_pa;
+ 	u8 rsvd[40];
+ 	u8 guest_usage[32];
+@@ -145,10 +144,7 @@ struct snp_secrets_page {
+ 	u32 fms;
+ 	u32 rsvd2;
+ 	u8 gosvw[16];
+-	u8 vmpck0[VMPCK_KEY_LEN];
+-	u8 vmpck1[VMPCK_KEY_LEN];
+-	u8 vmpck2[VMPCK_KEY_LEN];
+-	u8 vmpck3[VMPCK_KEY_LEN];
++	u8 vmpck[VMPCK_MAX_NUM][VMPCK_KEY_LEN];
+ 	struct secrets_os_area os_area;
+ 	u8 rsvd3[3840];
+ } __packed;
 diff --git a/drivers/virt/coco/sev-guest/sev-guest.c b/drivers/virt/coco/sev-guest/sev-guest.c
-index 0729d0b73495..19ee85fcfd08 100644
+index 5c0cbdad9fa2..a3c0b22d2e14 100644
 --- a/drivers/virt/coco/sev-guest/sev-guest.c
 +++ b/drivers/virt/coco/sev-guest/sev-guest.c
-@@ -111,8 +111,6 @@ static u64 snp_get_msg_seqno(struct snp_guest_dev *snp_dev)
+@@ -668,30 +668,11 @@ static const struct file_operations snp_guest_fops = {
+ 
+ static u8 *get_vmpck(int id, struct snp_secrets_page *secrets, u32 **seqno)
  {
- 	u64 count;
- 
--	lockdep_assert_held(&snp_cmd_mutex);
+-	u8 *key = NULL;
 -
- 	count = snp_dev->secrets->os_area.msg_seqno[snp_dev->vmpck_id] + 1;
+-	switch (id) {
+-	case 0:
+-		*seqno = &secrets->os_area.msg_seqno_0;
+-		key = secrets->vmpck0;
+-		break;
+-	case 1:
+-		*seqno = &secrets->os_area.msg_seqno_1;
+-		key = secrets->vmpck1;
+-		break;
+-	case 2:
+-		*seqno = &secrets->os_area.msg_seqno_2;
+-		key = secrets->vmpck2;
+-		break;
+-	case 3:
+-		*seqno = &secrets->os_area.msg_seqno_3;
+-		key = secrets->vmpck3;
+-		break;
+-	default:
+-		break;
+-	}
++	if ((id + 1) > VMPCK_MAX_NUM)
++		return NULL;
  
- 	/*
-@@ -334,6 +332,8 @@ static int snp_send_guest_request(struct snp_guest_dev *snp_dev, struct snp_gues
- 	u64 seqno;
- 	int rc;
+-	return key;
++	*seqno = &secrets->os_area.msg_seqno[id];
++	return secrets->vmpck[id];
+ }
  
-+	guard(mutex)(&snp_cmd_mutex);
-+
- 	/* Get message sequence and verify that its a non-zero */
- 	seqno = snp_get_msg_seqno(snp_dev);
- 	if (!seqno)
-@@ -388,8 +388,6 @@ static int get_report(struct snp_guest_dev *snp_dev, struct snp_guest_request_io
- 	struct snp_report_resp *report_resp;
- 	int rc, resp_len;
- 
--	lockdep_assert_held(&snp_cmd_mutex);
--
- 	if (!arg->req_data || !arg->resp_data)
- 		return -EINVAL;
- 
-@@ -436,8 +434,6 @@ static int get_derived_key(struct snp_guest_dev *snp_dev, struct snp_guest_reque
- 	/* Response data is 64 bytes and max authsize for GCM is 16 bytes. */
- 	u8 buf[64 + 16];
- 
--	lockdep_assert_held(&snp_cmd_mutex);
--
- 	if (!arg->req_data || !arg->resp_data)
- 		return -EINVAL;
- 
-@@ -488,8 +484,6 @@ static int get_ext_report(struct snp_guest_dev *snp_dev, struct snp_guest_reques
- 	sockptr_t certs_address;
- 	int ret, resp_len;
- 
--	lockdep_assert_held(&snp_cmd_mutex);
--
- 	if (sockptr_is_null(io->req_data) || sockptr_is_null(io->resp_data))
- 		return -EINVAL;
- 
-@@ -585,12 +579,9 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
- 	if (!input.msg_version)
- 		return -EINVAL;
- 
--	mutex_lock(&snp_cmd_mutex);
--
- 	/* Check if the VMPCK is not empty */
- 	if (is_vmpck_empty(snp_dev)) {
- 		dev_err_ratelimited(snp_dev->dev, "VMPCK is disabled\n");
--		mutex_unlock(&snp_cmd_mutex);
- 		return -ENOTTY;
- 	}
- 
-@@ -615,8 +606,6 @@ static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long
- 		break;
- 	}
- 
--	mutex_unlock(&snp_cmd_mutex);
--
- 	if (input.exitinfo2 && copy_to_user(argp, &input, sizeof(input)))
- 		return -EFAULT;
- 
-@@ -705,8 +694,6 @@ static int sev_report_new(struct tsm_report *report, void *data)
- 	if (!buf)
- 		return -ENOMEM;
- 
--	guard(mutex)(&snp_cmd_mutex);
--
- 	/* Check if the VMPCK is not empty */
- 	if (is_vmpck_empty(snp_dev)) {
- 		dev_err_ratelimited(snp_dev->dev, "VMPCK is disabled\n");
+ struct snp_msg_report_resp_hdr {
 -- 
 2.34.1
 
