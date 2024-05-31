@@ -1,155 +1,92 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08293F8FB
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97DB3F8FB;
+	Fri, 31 May 2024 06:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717135908; cv=none; b=mpXkxNvPM7f2TD3LobBfI5/OolcKppVJ1Wov1WpsieVIYRoyNrKPZ1ZTS0HMQAI/lYCtPsmcUlEez+Pf+USsAZwxYfpDa0zH0IYFPCJ1PgT0MKft1ufcU4xhbUsK3uS0N/W3jseet9sT0gJWCC8VNB8MJ+JkpFlZi8cNZ5GXCOg=
+	t=1717135934; cv=none; b=l1P0vafh52J/Fhh4ATlSMGer0ZU9Whz0AbDpv2YtLm5PuxXxi3k5MFzGL+J/anr9v29aRxizF/uANrb88Senzt1HZA/HBWiZ5QRWtDxaLAQmD3J0zWEj6UMlg4SluAYx4wG5ZPJ93Iwk13VcvoZjdgMi5W8N0S2w016ltNGA39I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717135908; c=relaxed/simple;
-	bh=b0Y5dRLQaYt3mf0VGzfdq8z0+s59RcDFw7CTP55VyrU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=vC+lWDk+gXq5m04RpbcqBJjWeXpKwF1qwgDGlO/LA0ut5auPfJ5nQ9C9cyVlQ2ag2fizVpAbNnJcxnzR1FDh1JKBykCjsSP1EzsCMeamqOivjOhpgtdPm8PKjVUwxm2/d/1VmpelnrA7EDLrcTJTfhg/hWBavi42v5vnuzLzjg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EhfbK691; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717135934; c=relaxed/simple;
+	bh=IuPngLtZwZOcdvzTEyXnPo1R5atzTCaIjZbLuOCpQIg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T78MYOVs07HQPil/uDkAiSo+YRQHGBH3hfvlMLhYXbHY74SE1s6h14nRsknFGwc00CyN0ip1/wbBaNmsr//lwsnvx2H8NHz4NM76BvG0ea0TB8RgvAbL2sEjpTlctT/5bMN+bmqbDA6SZnvwXajOV/fMgNsSztGyXC7sfQMsjKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=D0mi+kUA; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EhfbK691"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44V6AjaJ016213;
-	Fri, 31 May 2024 01:10:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717135845;
-	bh=WhEVFbeNknRh1BQSwCnDYk1qPCnB8HaWvQq4y3qw8pU=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=EhfbK691DNfBC8sDsKUJ+XctjPTvAXm6Fa6mbOaogFzqQtOu/W+AFLgncCr+WrZ8N
-	 tBiKxKA6BiTGYWoEdcuBU2uU3W67s12XMj2BaJPkQMGEi+y/Awgp8kHFswEREC6VoO
-	 f1XwBGZ0svfPOEgTN/EOvFAPjnGPUPTj8jJ2dSKI=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44V6AjL1047883
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 May 2024 01:10:45 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- May 2024 01:10:44 -0500
-Received: from DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d]) by
- DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d%17]) with mapi id
- 15.01.2507.023; Fri, 31 May 2024 01:10:44 -0500
-From: "Xu, Baojun" <baojun.xu@ti.com>
-To: "tiwai@suse.de" <tiwai@suse.de>
-CC: "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "perex@perex.cz"
-	<perex@perex.cz>,
-        "pierre-louis.bossart@linux.intel.com"
-	<pierre-louis.bossart@linux.intel.com>,
-        "Lu, Kevin" <kevin-lu@ti.com>,
-        "Ding,
- Shenghao" <shenghao-ding@ti.com>,
-        "Navada Kanyana, Mukund" <navada@ti.com>,
-        "13916275206@139.com" <13916275206@139.com>,
-        "Hampiholi, Vallabha"
-	<v-hampiholi@ti.com>,
-        "P O, Vijeth" <v-po@ti.com>,
-        "Holalu Yogendra,
- Niranjan" <niranjan.hy@ti.com>,
-        "alsa-devel@alsa-project.org"
-	<alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "liam.r.girdwood@intel.com"
-	<liam.r.girdwood@intel.com>,
-        "yung-chuan.liao@linux.intel.com"
-	<yung-chuan.liao@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "soyer@irl.hu" <soyer@irl.hu>
-Subject: Re: [PATCH v6 0/1] Add tas2781 driver for SPI.
-Thread-Topic: [PATCH v6 0/1] Add tas2781 driver for SPI.
-Thread-Index: AQHaseDnrvmrnJlJZ0CQY5+1p/UdJbGw25Ri
-Date: Fri, 31 May 2024 06:10:44 +0000
-Message-ID: <62a298a58b944ecdaa1b2842d51f3a38@ti.com>
-References: <20240529155653.3037-1-baojun.xu@ti.com>
-In-Reply-To: <20240529155653.3037-1-baojun.xu@ti.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="D0mi+kUA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A12161C0004;
+	Fri, 31 May 2024 06:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1717135930;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ogNqXL0ApIs13zC/uLEPr6wCJVu7uWiXb0gYZeNG97o=;
+	b=D0mi+kUARIW/Xiq4qgyPzhxwk2SU672KDO6+AgpFmL1CaodK3HoZxficaZsRgKxd+Y6ld4
+	xTgv207ezmVW/JUCqfr7ts5OZaIl9J62KLyWJ7Cw07ev+gknGRuxB9NOM86jV7jo+EOcEO
+	qqGiFpFFJTtXWcAqdCTEvPvqvq7mf0K/UTxfjLED4uuP7pKMsCMIDkLGukpDiyCNa5t1Bt
+	gSllCuRStlW+yiCQpv+e8AUZeYFKwwWeEeeImrUMsqncDGXSDplQAZg1ePVa2XxvR8zsrI
+	oPgVCSLqGDIOiS9Undmxf6hCgATSJ29i/+f7ycdAjVYaVB/RkhPXXd6lCAl36g==
+Message-ID: <aaaeb4b2-e57e-4d7b-b598-a664cc05b0cf@arinc9.com>
+Date: Fri, 31 May 2024 09:12:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+To: frank-w@public-files.de, Frank Wunderlich <linux@fw-web.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Daniel Golle <daniel@makrotopia.org>
+References: <20240516204847.171029-1-linux@fw-web.de>
+ <a29dd7d1-40a8-4c88-99aa-651a3305b640@arinc9.com>
+ <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <5AEE5668-0C8E-4EE4-A398-66CB99DF5650@public-files.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-Hi Pierre,
+On 17/05/2024 09.27, Frank Wunderlich wrote:
+> Am 17. Mai 2024 04:17:47 MESZ schrieb "Arınç ÜNAL" <arinc.unal@arinc9.com>:
+>> On 16/05/2024 23:48, Frank Wunderlich wrote:
+>>> From: Frank Wunderlich <frank-w@public-files.de>
+>>>
+>>> After commit 868ff5f4944a
+>>> ("net: dsa: mt7530-mdio: read PHY address of switch from device tree")
+>>> the mt7531 switch on Bananapi-R64 was not detected.
+>>>
+>>> mt7530-mdio mdio-bus:00: reset timeout
+>>> mt7530-mdio mdio-bus:00: probe with driver mt7530-mdio failed with error -110
+>>>
+>>> Fix this by adding phy address in devicetree.
+>>>
+>>> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+>>
+>> I don't like the mention of the Linux kernel driver on the patch log. What
+>> you're fixing is the incorrect description of the switch's PHY address on
+>> the DTS file. Whether or not any driver from any project is actually
+>> reading it from the DTS file is irrelevant to this patch. That said, I
+>> already have a patch series I've been meaning to send the next version of
+>> that already addresses this. Please wait for that.
+>>
+>> Arınç
+> 
+> Hi arinc,
+> 
+>  From my PoV it is a regression in next/6.10 because the driver change was merged (without "broadcast" fallback) and the dts patch [1] is not.
 
-Do you know any different between windows and Ubuntu on SPI inialyze?
-We are testing my patch on Laptop (HP-Varcolac, SSID:103C8B92, fly-out SPI =
-& I2S cables), no any issue with wondows, but with Linux, second speaker ha=
-s no sound, it's initialyze is totally same with first AMP, and relative re=
-gisters can be dumped, no problem found.
+What is a broadcast fallback? 0x1f is just another PHY address.
 
-Best Regards
-Jim
-________________________________________
-From: Xu, Baojun
-Sent: 29 May 2024 23:56
-To: tiwai@suse.de
-Cc: robh+dt@kernel.org; andriy.shevchenko@linux.intel.com; lgirdwood@gmail.=
-com; perex@perex.cz; pierre-louis.bossart@linux.intel.com; Lu, Kevin; Ding,=
- Shenghao; Navada Kanyana, Mukund; 13916275206@139.com; Hampiholi, Vallabha=
-; P O, Vijeth; Holalu Yogendra, Niranjan; alsa-devel@alsa-project.org; linu=
-x-kernel@vger.kernel.org; liam.r.girdwood@intel.com; yung-chuan.liao@linux.=
-intel.com; Xu, Baojun; broonie@kernel.org; soyer@irl.hu
-Subject: [PATCH v6 0/1] Add tas2781 driver for SPI.
-
-This patch was used to add TAS2781 devices on SPI support in sound/pci/hda.
-It use ACPI node descript about parameters of TAS2781 on SPI, it like:
-    Scope (_SB.PC00.SPI0)
-    {
-        Device (GSPK)
-        {
-            Name (_HID, "TXNW2781")  // _HID: Hardware ID
-            Method (_CRS, 0, NotSerialized)
-            {
-                Name (RBUF, ResourceTemplate ()
-                {
-                    SpiSerialBusV2 (...)
-                    SpiSerialBusV2 (...)
-                }
-            }
-        }
-    }
-
-And in platform/x86/serial-multi-instantiate.c, those spi devices will be
-added into system as a single SPI device, so TAS2781 SPI driver will
-probe twice for every single SPI device. And driver will also parser
-mono DSP firmware binary and RCA binary for itself.
-
-Signed-off-by: Baojun Xu <baojun.xu@ti.com>
-
-Baojun Xu (1):
-  ALSA: hda/tas2781: Add tas2781 hda driver based on SPI
-
- drivers/acpi/scan.c                           |    1 +
- .../platform/x86/serial-multi-instantiate.c   |   12 +
- sound/pci/hda/Kconfig                         |   14 +
- sound/pci/hda/Makefile                        |    2 +
- sound/pci/hda/patch_realtek.c                 |   13 +
- sound/pci/hda/tas2781-spi.h                   |  148 ++
- sound/pci/hda/tas2781_hda_spi.c               | 1266 ++++++++++
- sound/pci/hda/tas2781_spi_fwlib.c             | 2101 +++++++++++++++++
- 8 files changed, 3557 insertions(+)
- create mode 100644 sound/pci/hda/tas2781-spi.h
- create mode 100644 sound/pci/hda/tas2781_hda_spi.c
- create mode 100644 sound/pci/hda/tas2781_spi_fwlib.c
-
---
-2.40.1
-
+Arınç
