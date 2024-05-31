@@ -1,109 +1,75 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3AB17E9;
-	Fri, 31 May 2024 07:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C3D26AC8;
+	Fri, 31 May 2024 07:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717138913; cv=none; b=ZplfrKDdVzYFSA6HdQx3YYRAmB7UF57PJNIRimNITBZ1cwe5+MnZb9VSvV+2AOTrxyn2BcteS0W4j6i/1n3X0yhg0uyHROHtImH74P1RPhtpPUew8KVGzXPgf8Qfn1PC/+o7Qh3d1KHsXdpNjTIQK2krDGWG1ftIsYJbPsIzNv8=
+	t=1717138970; cv=none; b=fIbqCPtlkC84y6GceLSvCvqjt2mCYGTnlZ5hhMcDJfDn6/iY7bz/S2MJHrN2nzOC7x02xv4Kc0jxLrXiZWgGyU20WaJv2YD7oFhqK3Y054bDaRm2oQpga23F2JbraVP9mFYLYgCOjuPSnE7GcxsIvwwvlagXZt5IoFpocBKt7pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717138913; c=relaxed/simple;
-	bh=ZmP0QtArttdJbguIhN02o6hMyhO1HzCXd/u5SVJDrp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=u2tAtiRf4pGpFE29yKPwpGtcSP1REdtal2+GFLqxF4hGZ+GoRUiAQPv66ul9oxDC947cw7eqRUm+4dnaP19ZGkbFajHNXLLdbLUhLfv0cvRYD5mjcNDeLlSIkzb3IvKT4procVaaNLtlcADIRnlfVaeTshdqLoFCFTgeckcWqhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mQe5nKxT; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717138970; c=relaxed/simple;
+	bh=+qj0pjsVrP5Du0E6LXt9MVesXit8cTR7SOTl6erev3I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ATW9o7AodlN0sPgToaYj2/qMYRIvOBm5Gqe3CRFygz7gJFQyaiD7rwz/8ytmUnVbRISKrc5uaIVptNLIOgtSx/LGWJx2wzbxWR/eFZP3fdG2tOTQh76N3WBhCWEtBiYfXDHmUx0sDBbm96lExZTGWxlTS5CsAxygIwAkZi/O33w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=jLIva+GY; arc=none smtp.client-ip=49.12.199.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mQe5nKxT"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44V6Urwa021365;
-	Fri, 31 May 2024 07:01:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc : content-type : date
- : from : in-reply-to : message-id : mime-version : references : subject :
- to; s=pp1; bh=aaBvNxIquJs2EzYvuRrhC1j6ewLwD9KjNMpikXuKNzg=;
- b=mQe5nKxTT+CdpzPbrS0jeeIw8W86Si3gUj3MCUqv6SUYQK4TnE4x2qQhkiI5lI8s0vrC
- PxloZHBfHWVVS7KyS00P1EzjBhGwJUWXQLmocR1wdtE254o3ENnIB6awvuMnGIP4Ocem
- 21l85NgYf7UgtV3VrHCbQaKW3SHVei1IPWGuam8E9DNKXsZJ53aoSGrzv+K+FCu5Pi2+
- Kmexz032cTkhctsAC7zA259bumoMkYbEqyPeyMiXfau7vVoxd9qWwtJRtf70BgjpWlxv
- WEvgSjeENx0QfOWHMNls4URTcqNKGv86WYOtc1pqXyLe7+yEIdBOcRWOTurSu+S36hlH tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yf8sp04pk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 07:01:35 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V71ZAo003390;
-	Fri, 31 May 2024 07:01:35 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yf8sp04pg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 07:01:35 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44V5O4nh026740;
-	Fri, 31 May 2024 07:01:34 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ydpd2xgwu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 07:01:34 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44V71UZM21561822
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 07:01:32 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8575B2004E;
-	Fri, 31 May 2024 07:01:30 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6AAF920043;
-	Fri, 31 May 2024 07:01:28 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.204.206.66])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 31 May 2024 07:01:28 +0000 (GMT)
-Date: Fri, 31 May 2024 12:31:26 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, corbet@lwn.net,
-        linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] arch/powerpc/kvm: Fix doorbell emulation by adding DPDES
- support
-Message-ID: <35ek73rjziiolk3zja3i5qayjzvjruuro72co74nc4a6ljvhhf@5tus3qlcb522>
-References: <20240522082838.121769-1-gautam@linux.ibm.com>
- <rrsuqfqugrdowhws2f7ug7pzvimzkepx3g2cp36ijx2zhzokee@eitrr6vxp75w>
- <2024053143-wanted-legible-ca3f@gregkh>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024053143-wanted-legible-ca3f@gregkh>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9BAPae-QWeiZiE9h7wdQgwkjUoJxgrhI
-X-Proofpoint-ORIG-GUID: Qrx9-h68gqIaI3Q_bqAX6RVcT_WIuh1d
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="jLIva+GY"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 27F9BDB46D;
+	Fri, 31 May 2024 08:57:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
+	t=1717138638; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=LcHxNAVjNi8r6vtfjQ5RqoVt1L/zZdSoO2z8g2Scxlw=;
+	b=jLIva+GY+Sa47mlJFKz99TeYtXAr+e9NzlP//nxx7JQ9ymha6eGn9uUQRJcUg5Ahd23l1V
+	Rh1UahdU1Z3uiCRsGdFEDBQyle/vCdpy60sOm+jUUmOB0YFCTCDE6v2o1PmxpVcySa7K94
+	o4nLHkIlvRxca2OX7SJ+aM25YOy83iH2GfZl9bnCAzCMirjiSYrY2NectIp54L7lW+OT2I
+	7rD4XKzFodLXU4xIB0tUr7tT4hlcvvBcWZd5Dhr/F88Z61Zvf75R25vvym9D3EWfv2bJI9
+	C7TPMZT5xldWkkp5sviiWHxacj2iqzZZrJ9Ixdqx81aATONSbxU7ghZMlClwPA==
+From: Daniel Wagner <wagi@monom.org>
+To: LKML <linux-kernel@vger.kernel.org>,
+	 <linux-rt-users@vger.kernel.org>,
+	 <stable-rt@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	Clark Williams <williams@redhat.com>
+Cc: Daniel Wagner <wagi@monom.org>
+Subject: [PATCH RT 1/1] Linux 4.19.315-rt135
+Date: Fri, 31 May 2024 08:57:11 +0200
+Message-ID: <20240531065711.32484-2-wagi@monom.org>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240531065711.32484-1-wagi@monom.org>
+References: <20240531065711.32484-1-wagi@monom.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_03,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=673 bulkscore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 impostorscore=0 spamscore=0 phishscore=0 clxscore=1011
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405310051
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, May 31, 2024 at 08:09:13AM GMT, Greg KH wrote:
-> On Fri, May 31, 2024 at 10:54:58AM +0530, Gautam Menghani wrote:
-> > Hello,
-> > 
-> > Please review this patch and let me know if any changes are needed.
-> 
-> There already was review comments on it, why ignore them?
+v4.19.315-rt135-rc1 stable review patch.
+If anyone has any objections, please let me know.
 
-Sorry I pinged on the wrong thread, I had already addressed the stable
-tag issue in a resend - https://lore.kernel.org/linuxppc-dev/20240522084949.123148-1-gautam@linux.ibm.com/
+-----------
 
-Thanks,
-Gautam
+
+Signed-off-by: Daniel Wagner <wagi@monom.org>
+---
+ localversion-rt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/localversion-rt b/localversion-rt
+index 6067da4c8c99..e3026053f01e 100644
+--- a/localversion-rt
++++ b/localversion-rt
+@@ -1 +1 @@
+--rt134
++-rt135
+-- 
+2.45.1
+
