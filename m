@@ -1,147 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36E357CA6
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 02:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CBD57C9F
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 02:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717120809; cv=none; b=rm/EQpgpv1t9EiFlD+lnFKUrTiKyv3IHvXXE0dXbaDGBHJdJNk7ikxtzhu/yFlZePx9IL0EGogupKAs9MkdU4vHv45ZT7D31seaQQeemu2BCJ2aB0rpwNUIUjGeD7MVMNzrTkIUG/DPxWpQpz+vvlBQ1rPwo4ZlD0IL2OBcrYbs=
+	t=1717120852; cv=none; b=cJuK9Q37WfpbeSRpCH5tLrKCNzs7M0rof5tBtq4cPMhYHvGf/M0gdknxjFQFg1ngUzkDIBqcGwV5qaFXe2/T4Aly2r2TkE4+pYvAzqX4L90DdV4ONN210PqQGhm/zgYDSFdggfpsVv0+9BEihMlegLXIkWV00UmZ1p+zuAPuOeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717120809; c=relaxed/simple;
-	bh=2fUiLAe0vLP2hoMqQ1N3E6uckKGVMNj5dHoJ19Y+sN0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rCPpCq0kYp+GpCzCUu/bG/FYRLjHmlWs9laS6LtHLgi4RhDBw1LRaA6MAMzjrYMrPlAe55beC2p7dsdOkfINIWEgN+uCoeA9OSa9z/Qn68N5/8TJfBVfvrac2eSeBjZo5+IeX+zqr2KLA6IF5WaXlBdE5ZHlCH6X3Et4Kt5dQ+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kmZL7lZl; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717120852; c=relaxed/simple;
+	bh=e6FvCnMSTUbrwovcAooKEJgOvDGLT5Yho5xbDrCtYn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YpDF4cB2c2dnX2T+pO6fTTtNoe1xZXrykq6d4S7MP1ieFsjSf++khhjGYkepYE0VLMJlXmSJwrKYE+eAcP0tTvvGXK1DMZGCa24x9bQnZ3436Ly6vNZGWJZMen379IS8R2C0W82BMuJl838rq2aGfQzgucEBS7KMnFcocQ+nnys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y947cVXP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kmZL7lZl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717120808; x=1748656808;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2fUiLAe0vLP2hoMqQ1N3E6uckKGVMNj5dHoJ19Y+sN0=;
-  b=kmZL7lZlV2Gm4OBXmcDU1jfoCGjPPJjDYBbJnj+twYdE3LjtyzXcurWQ
-   aS+eZdITfwQXSqRd4BUqxuNNnEBIMyNQaeJ8UqeVWhxYPsIgkwdECDUZi
-   +NMHcYyrZTueDTRlKayHBg44k2V3OJxSoTPkDsyG0CyOn7WPQp2egMDFq
-   TII16fFCDJovpqysA9RT4E7iKMlNpuL12rV9QjWr81FSln8waBARt1lIv
-   u0UyzEQ7EMZB2YFIhGKKu45/0+ZsavHBSqc0/rg817pRtq+rHBDLkfFDR
-   uNX/XGudOGdyF7wakhwTq3SttGgV3blkPEiQaKB6N5azXOT08a70AdLLT
-   A==;
-X-CSE-ConnectionGUID: CvxAf+ESQWCf4AZBXJ7/XA==
-X-CSE-MsgGUID: qecW2XQzSHa6cbHmyA0BpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17479951"
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="17479951"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 19:00:08 -0700
-X-CSE-ConnectionGUID: U2f5FXHqTNiG/j8alR7vOg==
-X-CSE-MsgGUID: +b1UL6wJRJyLg9EzJxqHvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="40936569"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa005.jf.intel.com with ESMTP; 30 May 2024 19:00:02 -0700
-Message-ID: <dda59cd5-b227-4f42-a7f2-b9fe03e1b020@linux.intel.com>
-Date: Fri, 31 May 2024 09:57:54 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y947cVXP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D136C2BBFC;
+	Fri, 31 May 2024 02:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717120851;
+	bh=e6FvCnMSTUbrwovcAooKEJgOvDGLT5Yho5xbDrCtYn4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Y947cVXPDglDwwEyDotZ0v6B9Ze7nwAcVZCEEmsG/J9f5ivZxqn4drDTTntJfh/K4
+	 OO/955rgkYcKJiJSIMy1z+5ZzZ38JNQ4TgdUR+uTXGMaRyZ3kniJC0nc2RXkvUJBLB
+	 aZuQuPO+qp8En9QPIgG53LC2DIw6234URXwd6ak1Jl67w7zsVGmh1muNsYv7o7cm2s
+	 xTcwyQMi7NVY7/u64ZnxWvaGuZwmRaeAVu0Ezn5zd3lnIr74ppdqil2GyqIyG7JS8h
+	 rynzn46pZgzKCh7OTMSrIwuJ3dnUK+QLCnRG/RspELos1eo5l+8RW2KTqc3c1BXS2Z
+	 m8rqTWN/aA9WQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
+Subject: [PATCH v2] f2fs: fix to cover read extent cache access with lock
+Date: Fri, 31 May 2024 10:00:32 +0800
+Message-Id: <20240531020032.1019991-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
- Yi Liu <yi.l.liu@intel.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Kalle Valo <kvalo@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
- Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/20] drm/msm: Use iommu_paging_domain_alloc()
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
- <20240529053250.91284-7-baolu.lu@linux.intel.com>
- <jd7df7jshswukstxwbfoxuswyltyemdmkx272i5mpldlfsk4t7@ad36olyvmw27>
- <960bfc23-22b3-48d1-baa6-2707767875c5@linux.intel.com>
- <CAA8EJppZU5yy4g85oMWzV_O9Qo91-Cr6d+W9Rz+K+mS6tfU8kw@mail.gmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <CAA8EJppZU5yy4g85oMWzV_O9Qo91-Cr6d+W9Rz+K+mS6tfU8kw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/30/24 3:58 PM, Dmitry Baryshkov wrote:
-> On Thu, 30 May 2024 at 04:59, Baolu Lu<baolu.lu@linux.intel.com>  wrote:
->> On 5/29/24 4:21 PM, Dmitry Baryshkov wrote:
->>> On Wed, May 29, 2024 at 01:32:36PM +0800, Lu Baolu wrote:
->>>> The domain allocated in msm_iommu_new() is for the @dev. Replace
->>>> iommu_domain_alloc() with iommu_paging_domain_alloc() to make it explicit.
->>>>
->>>> Update msm_iommu_new() to always return ERR_PTR in failure cases instead
->>>> of NULL.
->>> Please don't mix unrelated changes, because ...
->>>
->>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->>>> ---
->>>>    drivers/gpu/drm/msm/msm_iommu.c | 8 ++++----
->>>>    1 file changed, 4 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
->>>> index d5512037c38b..f7e28d4b5f62 100644
->>>> --- a/drivers/gpu/drm/msm/msm_iommu.c
->>>> +++ b/drivers/gpu/drm/msm/msm_iommu.c
->>>> @@ -407,9 +407,9 @@ struct msm_mmu *msm_iommu_new(struct device *dev, unsigned long quirks)
->>>>       struct msm_iommu *iommu;
->>>>       int ret;
->>>>
->>>> -    domain = iommu_domain_alloc(dev->bus);
->>>> -    if (!domain)
->>>> -            return NULL;
->>>> +    domain = iommu_paging_domain_alloc(dev);
->>>> +    if (IS_ERR(domain))
->>>> +            return ERR_CAST(domain);
->>>>
->>>>       iommu_set_pgtable_quirks(domain, quirks);
->>>>
->>>> @@ -441,7 +441,7 @@ struct msm_mmu *msm_iommu_gpu_new(struct device *dev, struct msm_gpu *gpu, unsig
->>>>       struct msm_mmu *mmu;
->>>>
->>>>       mmu = msm_iommu_new(dev, quirks);
->>>> -    if (IS_ERR_OR_NULL(mmu))
->>>> +    if (IS_ERR(mmu))
->>>>               return mmu;
->>> NAK, not having an IOMMU is a poor but legit usecase for some of devices
->>> which don't have IOMMU support yet (for example because of the buggy
->>> implementation for which we were not able to get all the hooks in).
->>>
->>> Please don't break compatibility for existing platforms.
->> Sure. I will remove this line of change. Though I have no idea in which
->> case msm_iommu_new() could return NULL after this patch.
-> So, even without this chunk you are going to break the no-IOMMU case.
-> Please don't. This will result in a regression report and a revert.
-> 
-> Instead please provide a way for the existing drivers to continue
-> working. For example, something like:
-> 
-> if (IS_ERR(mmu) && ERR_PTR(mmu) == -ENODEV))
->      return NULL;
+syzbot reports a f2fs bug as below:
 
-Oh I see. msm_iommu_new() returning NULL indicates a no-IOMMU case,
-right? So perhaps we can make it explicit like below?
+BUG: KASAN: slab-use-after-free in sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
+Read of size 4 at addr ffff8880739ab220 by task syz-executor200/5097
 
-         if (!device_iommu_mapped(dev))
-                 return NULL;
+CPU: 0 PID: 5097 Comm: syz-executor200 Not tainted 6.9.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ sanity_check_extent_cache+0x370/0x410 fs/f2fs/extent_cache.c:46
+ do_read_inode fs/f2fs/inode.c:509 [inline]
+ f2fs_iget+0x33e1/0x46e0 fs/f2fs/inode.c:560
+ f2fs_nfs_get_inode+0x74/0x100 fs/f2fs/super.c:3237
+ generic_fh_to_dentry+0x9f/0xf0 fs/libfs.c:1413
+ exportfs_decode_fh_raw+0x152/0x5f0 fs/exportfs/expfs.c:444
+ exportfs_decode_fh+0x3c/0x80 fs/exportfs/expfs.c:584
+ do_handle_to_path fs/fhandle.c:155 [inline]
+ handle_to_path fs/fhandle.c:210 [inline]
+ do_handle_open+0x495/0x650 fs/fhandle.c:226
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-         domain = iommu_paging_domain_alloc(dev);
-         if (IS_ERR(domain))
-                 return ERR_CAST(domain);
+We missed to cover sanity_check_extent_cache() w/ extent cache lock,
+so, below race case may happen, result in use after free issue.
 
-Best regards,
-baolu
+- f2fs_iget
+ - do_read_inode
+  - f2fs_init_read_extent_tree
+  : add largest extent entry in to cache
+					- shrink
+					 - f2fs_shrink_read_extent_tree
+					  - __shrink_extent_tree
+					   - __detach_extent_node
+					   : drop largest extent entry
+  - sanity_check_extent_cache
+  : access et->largest w/o lock
+
+let's refactor sanity_check_extent_cache() to avoid extent cache access
+and call it before f2fs_init_read_extent_tree() to fix this issue.
+
+Reported-by: syzbot+74ebe2104433e9dc610d@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/linux-f2fs-devel/00000000000009beea061740a531@google.com
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v2:
+- fix typo in commit message: w/ -> w/o
+ fs/f2fs/extent_cache.c | 48 +++++++++++++++++-------------------------
+ fs/f2fs/f2fs.h         |  2 +-
+ fs/f2fs/inode.c        | 10 ++++-----
+ 3 files changed, 25 insertions(+), 35 deletions(-)
+
+diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
+index 48048fa36427..fd1fc06359ee 100644
+--- a/fs/f2fs/extent_cache.c
++++ b/fs/f2fs/extent_cache.c
+@@ -19,33 +19,23 @@
+ #include "node.h"
+ #include <trace/events/f2fs.h>
+ 
+-bool sanity_check_extent_cache(struct inode *inode)
++bool sanity_check_extent_cache(struct inode *inode, struct page *ipage)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+-	struct f2fs_inode_info *fi = F2FS_I(inode);
+-	struct extent_tree *et = fi->extent_tree[EX_READ];
+-	struct extent_info *ei;
+-
+-	if (!et)
+-		return true;
++	struct f2fs_extent *i_ext = &F2FS_INODE(ipage)->i_ext;
++	struct extent_info ei;
+ 
+-	ei = &et->largest;
+-	if (!ei->len)
+-		return true;
++	get_read_extent_info(&ei, i_ext);
+ 
+-	/* Let's drop, if checkpoint got corrupted. */
+-	if (is_set_ckpt_flags(sbi, CP_ERROR_FLAG)) {
+-		ei->len = 0;
+-		et->largest_updated = true;
++	if (!ei.len)
+ 		return true;
+-	}
+ 
+-	if (!f2fs_is_valid_blkaddr(sbi, ei->blk, DATA_GENERIC_ENHANCE) ||
+-	    !f2fs_is_valid_blkaddr(sbi, ei->blk + ei->len - 1,
++	if (!f2fs_is_valid_blkaddr(sbi, ei.blk, DATA_GENERIC_ENHANCE) ||
++	    !f2fs_is_valid_blkaddr(sbi, ei.blk + ei.len - 1,
+ 					DATA_GENERIC_ENHANCE)) {
+ 		f2fs_warn(sbi, "%s: inode (ino=%lx) extent info [%u, %u, %u] is incorrect, run fsck to fix",
+ 			  __func__, inode->i_ino,
+-			  ei->blk, ei->fofs, ei->len);
++			  ei.blk, ei.fofs, ei.len);
+ 		return false;
+ 	}
+ 	return true;
+@@ -394,24 +384,22 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
+ 
+ 	if (!__may_extent_tree(inode, EX_READ)) {
+ 		/* drop largest read extent */
+-		if (i_ext && i_ext->len) {
++		if (i_ext->len) {
+ 			f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+ 			i_ext->len = 0;
+ 			set_page_dirty(ipage);
+ 		}
+-		goto out;
++		set_inode_flag(inode, FI_NO_EXTENT);
++		return;
+ 	}
+ 
+ 	et = __grab_extent_tree(inode, EX_READ);
+ 
+-	if (!i_ext || !i_ext->len)
+-		goto out;
+-
+ 	get_read_extent_info(&ei, i_ext);
+ 
+ 	write_lock(&et->lock);
+-	if (atomic_read(&et->node_cnt))
+-		goto unlock_out;
++	if (atomic_read(&et->node_cnt) || !ei.len)
++		goto skip;
+ 
+ 	en = __attach_extent_node(sbi, et, &ei, NULL,
+ 				&et->root.rb_root.rb_node, true);
+@@ -423,11 +411,13 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct page *ipage)
+ 		list_add_tail(&en->list, &eti->extent_list);
+ 		spin_unlock(&eti->extent_lock);
+ 	}
+-unlock_out:
++skip:
++	/* Let's drop, if checkpoint got corrupted. */
++	if (f2fs_cp_error(sbi)) {
++		et->largest.len = 0;
++		et->largest_updated = true;
++	}
+ 	write_unlock(&et->lock);
+-out:
+-	if (!F2FS_I(inode)->extent_tree[EX_READ])
+-		set_inode_flag(inode, FI_NO_EXTENT);
+ }
+ 
+ void f2fs_init_age_extent_tree(struct inode *inode)
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 9118a4e2db6d..9688df332147 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -4191,7 +4191,7 @@ void f2fs_leave_shrinker(struct f2fs_sb_info *sbi);
+ /*
+  * extent_cache.c
+  */
+-bool sanity_check_extent_cache(struct inode *inode);
++bool sanity_check_extent_cache(struct inode *inode, struct page *ipage);
+ void f2fs_init_extent_tree(struct inode *inode);
+ void f2fs_drop_extent_tree(struct inode *inode);
+ void f2fs_destroy_extent_node(struct inode *inode);
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 4b39aebd3c70..3a13f32b43a2 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -508,16 +508,16 @@ static int do_read_inode(struct inode *inode)
+ 
+ 	init_idisk_time(inode);
+ 
+-	/* Need all the flag bits */
+-	f2fs_init_read_extent_tree(inode, node_page);
+-	f2fs_init_age_extent_tree(inode);
+-
+-	if (!sanity_check_extent_cache(inode)) {
++	if (!sanity_check_extent_cache(inode, node_page)) {
+ 		f2fs_put_page(node_page, 1);
+ 		f2fs_handle_error(sbi, ERROR_CORRUPTED_INODE);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
++	/* Need all the flag bits */
++	f2fs_init_read_extent_tree(inode, node_page);
++	f2fs_init_age_extent_tree(inode);
++
+ 	f2fs_put_page(node_page, 1);
+ 
+ 	stat_inc_inline_xattr(inode);
+-- 
+2.40.1
+
