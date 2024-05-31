@@ -1,283 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8014D135
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717136458; cv=fail; b=ZNCi53Q0u+vHY4P7s3xXtb5fJATWrvXOA0cpfO6UtucyLGx1j750eCYjQFZDexSmocVctJCfp1M6+MAFbHXowlaPKQPkLXB78IIkXFW/KRzIQR0agNzN+Nu/5SMrrCDwNBPeVP/5s1sQNQQUfbLYEMrgYNJ/wxK/nSbMkGd53YE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717136458; c=relaxed/simple;
-	bh=2ejHtZMhuW109w6mLnjs26oI8Lpw8WN2QMRdo6opaOc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=bnOTwhwcGFCMntBhLXOg//HyPCiwb+WGHGQ+pIDTNKWk3w+R2kAqExNIiQQJVLuQe/i6kqwqhbfIUTS/rTFi5RQ2zo8Re6ngINdazlPSRoYHDmoellYidm9Dft4+2AcPAVQ670r3YLUA6NhUCIsS5T0ILhJPKHy5xpdWFIEjDSA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L+1jFIzR; arc=fail smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80A97D07F
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717136517; cv=none; b=jj7AJICsqCIMznd/7ZU6lrIhyB5SF4DVJiAXUv8mPuoKsbdobXBw0F1jwDlRzuG0fhb1isn6w0n5rJm0sTD+SLX7rJrDxYzGdQRoln71YoRWioXPdF8DGsbxKHIgB6rGiWYLjkuaNyzACqA6/QbaVXx3rdP7VIIpG9am+oYXxfI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717136517; c=relaxed/simple;
+	bh=fFkZ8TAr6SU5Y0vnG4OgXcYwVOOp2klZ+zMv/VYv8to=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OQ6nAccrhUTgiLUkb8HXoMRFNYe7du51zIof1MeMBAc/WFPS7nA1FFvAzZHvrO4sZDJ+Fs5LsgTAqGf5mLIgCn+oGIhB8uADJBCW92FMmshdwCaJWav4k77hnxfPLMs3cSyIyo+un6vgZekWupN4FFSu7MlIqvUuGritwBXhPKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Xr+4Y/3n; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L+1jFIzR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717136457; x=1748672457;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=2ejHtZMhuW109w6mLnjs26oI8Lpw8WN2QMRdo6opaOc=;
-  b=L+1jFIzRMVYjjGUJmDX1D5N+8vlSrzZL6tFesUWpPogxU2yAEyYtiVNO
-   pBhhFnv5umptzoFDwWI/xQ8CL1QUlB871fSjq/xaSmkMG1aePfMqO5TkH
-   ItduFpwht3C7A7rV1+/zgfCfA3XsarjCA8QcvJ+RYlUntBykGAF2Ax2ai
-   lqZKtrdgQUb11+Wdo5xBx1+ZIgEEr2vBwXu+oEj0zSOPEkMhffwoEblFO
-   PUJ3I8yR8ZhZbhNSbM62LCWypYMd1Qx0gXTqj7ZjYPruuZWSM6of81JLs
-   1iiCghu0f5yvaks38dCj0VdVzfz71uL+IuyFx0YCnp9fiTejvuovGY7U4
-   A==;
-X-CSE-ConnectionGUID: UErXlQoZSqqIOkXkGfy2Cg==
-X-CSE-MsgGUID: artstYBfQ8unVyJbaVDiVw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="11835081"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="11835081"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 23:20:52 -0700
-X-CSE-ConnectionGUID: kfAOBe+cQgWWwqT+qps4oQ==
-X-CSE-MsgGUID: v85/ncJkQgaqwrnti0aGLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36639288"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 May 2024 23:20:52 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 30 May 2024 23:20:51 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 30 May 2024 23:20:51 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 30 May 2024 23:20:51 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 30 May 2024 23:20:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MF/l/95BhzuJB1nQVdHWwcuSU3+eD97Tiq9CAnc0EmJhBw/uXOSGvVm9dV0/SU6HAKwITuogkscmYwGvcfRL7GeA62lSD1zhp7ivJvCFGnXfZ/2rTDmXsWdD2BnwMDaKFB19eVrP3e5cUy+WlISOz7sb3fncnCwmsq8umQc2a1JW8Xu0qUQWzo0dZJKj1GKU+/UQfVXhfQw9ETGJgWcxfBBV09R4CzNBMem00Zx7e3y5MMsWinGPGTiITglTcm0r5bfJmDwALwL3tF5rp37OUQTNpglSiAjdZ1aBbWIz5sJMctPovA8HnW06B4xAJdgLH2iWUCnBNoZkVU+fQ8eapQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r8+PdSHCC+FXZ3Ff6BFagDHeVwpEHRe7XmVaXm+rNOE=;
- b=XQjJNfrjwY474SqlvmvgTlQOvUlvjfC3u72l2YRtQMr0r7NjkUlJ8LNWujKsq94HxYGDEvljeMvF4EVRvX/HcSCq5aAdQ0KDSbcT5GcstOTHfcM+NL8AmUmHjRNrdAazhY/kKw/ty3nLKLAz1okYvritr4FySTogGHXd1klpfiHSUVmZvkxleKGEc0w4duPX5tKUm5crkaL7j85Ls2Ja8ZvbYEiXBk5AgXBV3rmxB0QtIgSUEYImVYxYZ8bZz2iYLw9SaYkLofl+TIxLzeJxzq48XLXV5qqNNuGzsedKgV+8BngYsWfEm19YBFfjhF7/GRt8+jClN6Mo44sPhn5Crg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
- by DM4PR11MB6312.namprd11.prod.outlook.com (2603:10b6:8:a5::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22; Fri, 31 May
- 2024 06:20:49 +0000
-Received: from DS0PR11MB7529.namprd11.prod.outlook.com
- ([fe80::d244:15cd:1060:941a]) by DS0PR11MB7529.namprd11.prod.outlook.com
- ([fe80::d244:15cd:1060:941a%7]) with mapi id 15.20.7633.018; Fri, 31 May 2024
- 06:20:48 +0000
-Message-ID: <f96d09a3-f1f5-4a73-88ae-50bf15b9e729@intel.com>
-Date: Fri, 31 May 2024 14:24:41 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/20] iommu: Refactoring domain allocation interface
-To: Baolu Lu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
- Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-CC: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Kalle
- Valo" <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, "Mathieu
- Poirier" <mathieu.poirier@linaro.org>, Alex Williamson
-	<alex.williamson@redhat.com>, <mst@redhat.com>, Jason Wang
-	<jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>, "Jonathan
- Hunter" <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>,
-	<iommu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240529053250.91284-1-baolu.lu@linux.intel.com>
- <efd902f6-eafc-4a26-8057-bdd9d7d6e535@intel.com>
- <a1f2c08a-e92f-4080-b55e-8d6dbd94db78@linux.intel.com>
- <7af4fee2-1b37-4eb8-9d03-8b1a402ec00b@intel.com>
- <34d23852-ea68-414e-92ce-61dcfe6a0368@linux.intel.com>
-Content-Language: en-US
-From: Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <34d23852-ea68-414e-92ce-61dcfe6a0368@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR02CA0006.apcprd02.prod.outlook.com
- (2603:1096:3:17::18) To DS0PR11MB7529.namprd11.prod.outlook.com
- (2603:10b6:8:141::20)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Xr+4Y/3n"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5755fafa5a7so1931332a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 23:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1717136514; x=1717741314; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=UQ6kKwyyFsGMHpdJmmwBKTWKasVE0feVJrpjcHhJyQM=;
+        b=Xr+4Y/3nwQNnxxSNFmLt2IOBSvHwTSfbf+be7catm4DsdGhF1t6zNI9mSzoSacxCbu
+         IIS0bXwxrnJI/EthtGrRkm2AGAP3JMMI5NFVp5XK0Q9EI9hmlBXRNBN41g0Hk77tzQqN
+         ZBUvQamDb756nTOBtnTZfOc6FGW+JarKBL2D/dH18rwq978hkSmnjUT1n8D9ANysFHlo
+         wp5yY3zXupXP0kLxy5qGlK3R2I1MOZjAyI3UBDWVnuD0ikwL4gHDVlMsaUrPW233EZ8U
+         vIz2OQJ8zOsMFW94E1KB8d3cqv9FfeXVYhReqi1kYf0BznLJfXYUAMeu+8GjB0MVoLyN
+         PPUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717136514; x=1717741314;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UQ6kKwyyFsGMHpdJmmwBKTWKasVE0feVJrpjcHhJyQM=;
+        b=vu3rHbBijWk3cTaHaa1Gf9avLzEapxKOAMt3OVKx2yfmJiZs8xUbak3eSxkXUB4q2R
+         +kpB00q49St1AVD1ei8BinqzVgzkukrixA2WL1xSlRQR4Q8HsksuTGn5vKeJmGBnGyTO
+         Y0/ZIGtzTqc8PbdrVSTg3K8t8XYr2QcIyyPMpbp1n8aSsf8lgl1vO7QVELUWsv0kud42
+         FTKqLwILy4Kw84hUJs2nH4reM+2PzoTNttdRU/RZ9nixeXYpJb2gBBYmWq1v++kKxRnm
+         82GFHnb9bnvgDlgTg6oX+pZ9P8L7tmlJxtv9AyKdfvZ9C1EzGjF9RisFMxgml3CyCE47
+         10bw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1aCjEc1dNMMybkjEvbyXgK3H7/WOWthBhSTsX4lR1+7Y995fYlyrq2fVyyABBntCRVGrIinr6fT62bOAkxEle2mto+IWb8L5g7v0G
+X-Gm-Message-State: AOJu0YyqqNqgn5Mx9p+Ed5zAATuGiW52FgAB53wa+0OjLSnRL/FvR8fV
+	+syO1kB97y4ouGBdrE1VWMRuZJ4McRsvnxEeGtOwigTkAYuHWOqaDaleOgZLhw==
+X-Google-Smtp-Source: AGHT+IHo6mzlcPnlN26oAQajbmGI4v5vL4n994N6QbmUpFFYDDgojxmCs0eo+jCCcklf4F/FmyX+kw==
+X-Received: by 2002:a17:906:7c8d:b0:a62:4b4d:5447 with SMTP id a640c23a62f3a-a6821b76639mr78203466b.62.1717136513767;
+        Thu, 30 May 2024 23:21:53 -0700 (PDT)
+Received: from [10.156.60.236] (ip-037-024-206-209.um08.pools.vodafone-ip.de. [37.24.206.209])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e73fb4dbsm51080366b.56.2024.05.30.23.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 23:21:53 -0700 (PDT)
+Message-ID: <8d906c2a-8666-430c-aa41-2db6ec0088e5@suse.com>
+Date: Fri, 31 May 2024 08:21:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|DM4PR11MB6312:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60930d50-9c20-4bda-b80f-08dc8139d020
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?OUNUS1RmVWw2bzRLSVhPUldLcHNHWFo3V2IvVEFhR2pMQ1lSSE1SK3B1cXpM?=
- =?utf-8?B?YVpONDNiemtMd2pUaFhDdTU5YklNeExjWnRCQTA1NldOTCtMQytFN0djTVF6?=
- =?utf-8?B?SXcvZHp0K1duUzN4WEMzdStJOHVIcHlzQVJqMG9tcC91Z01BNE92VHRlNzI0?=
- =?utf-8?B?alcraHcxVGlNbFNjejkzN0JDVDlZdVA3QnVXaVFVZ2pLbGQrTzR6UEZiMktX?=
- =?utf-8?B?cVBHQ1lXR3dYaGk0cFZLNjhJTXQ1Qlk3QmVra3JNMEVwL1MydjFWNXYwK2pX?=
- =?utf-8?B?a1hHRVZTT0lWREdYSGE2TmpINWM3MkFqZXBnNzhGRDkydjdXaG81eVJqWkp4?=
- =?utf-8?B?TUNhdjFpL1E2eFlJVHY4SlQ0OE9jNkVsU3EyUmNqOUJKMGlJUExVelZvVFdE?=
- =?utf-8?B?QzMwaHBuTG9rVlZlS2Mxdks2UXdxaUtVQ01RZ1NsU1R3NUwxM2FvMWZ4ZDh6?=
- =?utf-8?B?cXBEL0NhWHJYZUIyMVh0c0JjQWZVQnN3eVl2RWh1UmZiYVJkUWpoeEFPZm1u?=
- =?utf-8?B?d0pUOU5qL0lEMGFCUlo0dU92Ti9RNmxQNC9YNmN0YWZDN05VeHJEdXozMkYz?=
- =?utf-8?B?SEFUTy8vWTBsYWp2N2N0VjVKeWNiRDBnZitlNU1uU0xCWEhGb2tTR2pVT0ZG?=
- =?utf-8?B?N3NWeXhDcEFlN2pEdnVoVmJ1bEVxRFZXcERlcTZBaFR5b2g5Zi9NWW1DMlR1?=
- =?utf-8?B?VGhwLzFCdlBTZnREWHRwRmNEK3lIQ2ZnZXUrblNOTUc5RlVNVVRxdmdwci9u?=
- =?utf-8?B?em0vWk9aeFBBWTFKcmt6Wkc5dmxTMUZ2Mm9kcHArN040Q0xrWkFkQTZVSXg4?=
- =?utf-8?B?RDdCcENETXhzMkFmZ2txNngrZW1JZHVOV1RBbEdManNoOGp4NFpkTTZwLzZU?=
- =?utf-8?B?Ulo0eDc2Y2M0SEZRV29odEVZeCttdGtsZDMxOXV4SGtUeThXbGM2SEVWRnRG?=
- =?utf-8?B?MVAzUmRPRnFKT0NkVm8yenFGbHdadDRZR3N2RVJmODg1Z3gvekdsQ1RnZldK?=
- =?utf-8?B?M25leW5xT2l1a3A5alRnV0xqUFlkYXQ5RkMvbVBMUit2OTlUVVZrb1hCeDVv?=
- =?utf-8?B?d2hXWEdPSG01NU5OK0x0OWFSTjU2SGxvNHlaeUZnZWp5MWNrSW9hNTN6UlVL?=
- =?utf-8?B?by83TkxoM1dBUTdlVWhHZ2pwYWVzNUxqc2w1Q09HTHFsQ0RaaW8yVm9ybmFq?=
- =?utf-8?B?aUhLVmw0dW42WkVkNHFFcEpTWndxVkNQL3VvZVBxV0xxcFpTVnhiYWt0czNY?=
- =?utf-8?B?SGJTaUtldlRKQ284V29maXFucjdPVTE0anZQbjBBQVZHT2dnenNhSHU1RTMv?=
- =?utf-8?B?VDNZem51OXpGTkg3SGxnclJrSGFzcVJiNFF0d3loL1BYL0FuZDFQWTFJZkNt?=
- =?utf-8?B?VzlOZUNUaUwvbzBEcFp4S1ppZDNqNTJReXptVWgzeXJER09TaFlmc08wQTI5?=
- =?utf-8?B?ZzNzQlY3cHVEOC8wajhXcUJFNFhBdnNicFBiaGNUdE9DeFFnVkFuK2N2VGNN?=
- =?utf-8?B?dmpqYm9uS2R2VE0wRkRhYVliNGZzY3JyU2I4eVBLWUpuYUk3NmQyOFplZEZH?=
- =?utf-8?B?WFh4WlVidExVUktBOTZWaFYwYVNrMStVM0VmTTJMTWUva2l0TDZBWnVma20w?=
- =?utf-8?B?ekhEYThTNXdFeFlZQ29uVlFyZkdQVFd5ZlBQNzR1MjU5U2lWVE5mVzVHNmNB?=
- =?utf-8?B?eUdQOGtJajluMEdWMTNlMCtKWE9TYksxd084b3dYaXRZS1BOcVE5VUVRPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ck1VVWtXd0wySHR5ZGs0Vk5UQ0wzdDYvN0pDclNheGcrWjVPcVE0MDFTK2F4?=
- =?utf-8?B?U2NUZDQrUldvK2VxaUJ1M1pjbVdlYmNqbWluZzRMUGZmb3BMQ3YyUWF3MnZ5?=
- =?utf-8?B?dlBraFdOeWUzNzhiRDErdVZidGpoMytId0szZFMxSlFTbXNkWXB5RUo3VFpK?=
- =?utf-8?B?cWV2SnVRY2g2NC9uaTI1YlRpM0xNbkQyeElPZzUwRFZhV2dFRmplREtBVlJ1?=
- =?utf-8?B?Z2Nadi90TlJHSUY2b1RKeTFlazNYdlRibWxJbytzeTg0eEQ1emVQNDlGU0l6?=
- =?utf-8?B?SHJBUUN6QlRHQ0ZqQmhHWS9pc25aUHZkdjFIblFsSnlIdkZxaDd3NXJ0L1BT?=
- =?utf-8?B?Q1AvczROaUg0SW1VMG9jeFZNdjh2Tmx5T3RhQUtIZTZCSXR3elIwckx2MzlK?=
- =?utf-8?B?QlNPR1RnMWJZTlhxM0I5cFIyR3hVbjd1WFlONWYwSTN1a1p5U0R4N0E3Tkpw?=
- =?utf-8?B?L2dwK2ptRjEvY2xtckZzYldUNGV4NlJHd2JvMHF5Nnh6UjdRS3BCMW1VbGVB?=
- =?utf-8?B?cUFNUjhzNmZkMXJDU3BPbUxJaWF3RkZtQXBKaWszU1U1M1VSSURGdjd6anN4?=
- =?utf-8?B?Y0VvRS9DaVBnVU0xMWdpcXNCZEtLTHYxQWpZRlRaMXVGUGRVT3NKSlR3NWp6?=
- =?utf-8?B?U2hLVlp4eTlWa0oxd3M2b2t0R1NaTGlHY002UmFVK21pV3hRMmYwd1dnWkpR?=
- =?utf-8?B?T25ETUgzSmFvYXJZbTc2SWdzL2RPMWlMbHdPM0pjakU1eUNWZ09yQmcvMkp4?=
- =?utf-8?B?UFNrRm9NT21tM3dvNC82S2lCQ0lHR203OTRBa2VORllLbHZrdnRIcXduc3B5?=
- =?utf-8?B?ajhSd1EyU1lqUkhRbkVMTkgzSzBqa0dwZ3cxS1FabUhFVVZNK2RpS2lIc1Fl?=
- =?utf-8?B?YWl1bVZlL3RXYXRoaGJ4UE5YaitwM2FvUlVRc0tqYit3WlcxVmZ2alk4eGNv?=
- =?utf-8?B?QTZ1Tlhla0lRL2dsQWQ3VUpLWitCVkxhdlBsb085SEdIeCtwN2FwMFZWQ2pS?=
- =?utf-8?B?d3kvY0xsdm0zQnN4T3VnbVNJYXQ3VVc1UVVUb2c0WFVIckJaTEQxdzZwUzBM?=
- =?utf-8?B?aitjZU5tbm1wZUV6RlJ0K21qUHFTMm1sR2hER1MvazY1TGQ2K2szQzVzcUtN?=
- =?utf-8?B?ajBUTTZjS096dVB2UVZLQm84RHFSOU4wenFJbzVLaU8xM1VRcTRCb0txcmZJ?=
- =?utf-8?B?QlVPWHo1aFlJeUlZTkVLQk5SSGNrRXZMNHVxY3F4MUxpYjdOZGFHTjVvZmlC?=
- =?utf-8?B?RFkrZjR5dkw4ZWZsMWlMSi84dkRMN280SEpZT0h5ZldWcWFZTXNybDNBbFdU?=
- =?utf-8?B?YTJjRkp5bjRlQ1lDQjQ1eWFrNEY0bWdsK0lFbGc0aTJEdkdLeTZnSWlsM1c0?=
- =?utf-8?B?eWNVM0RQWG9WWjNVUXcxck9hR00zWG01eUV0bUl1eGdUR0lMTlRIc1AvcjFt?=
- =?utf-8?B?dVhqdVQrMDB1NWV4ZWJpaTUrbDV6MHVUMGxVZU14aTVHdkFYTDFiRndyOFN4?=
- =?utf-8?B?d2ZzYmZ0YWM3NnQ4MitQcEEvSVc2d2ltUGdxTVZZWnoyV0puU1d0dEJTVlIw?=
- =?utf-8?B?KzIvYXVyMUJ0Vml1Uy8yVTJrUWdFN2RuWTg4MlpVNVUyWVJSMHd1Z3psYzhL?=
- =?utf-8?B?MDcvdTR2alV4QlVLR25vaVZxUkJJaXp2aXNyWlRDSGJpdk1HV0FkSkZjM1dJ?=
- =?utf-8?B?S1QrSWJjTlJicFhjLzNrS3Fidk0vYmUyYkxTa3lZQnBic28zMElXYTROZWdJ?=
- =?utf-8?B?UUNCNXBXU3d1UVNEek9EeTNRQmNHOTQwbVB0U1kwLzRDQ0FyL0Q0dEZiYklI?=
- =?utf-8?B?OXFRUzc0NVRTaUhXSTROS1hTZTl6V29Va05kR3ZwQUp3L1ZndmV6WjlBcWxZ?=
- =?utf-8?B?RGw2QUxiZlVMRzhnN1RjZmVwUFVrd1dLd1RLMklSOXVIRUIxaFRtd0l2TCts?=
- =?utf-8?B?aDl3cWVuYjNRM1BQZGdkejZqRmh5UnhlZ0tUeUtwWm9iZ2IwUHU1THpiNys1?=
- =?utf-8?B?MTIvZ1hXSWYvNk5vLzAwNzVPSmZaeVc2SnBwaVNZU3BRQmlLSkF0S3Bld3pk?=
- =?utf-8?B?U2RpcjNWcFBQdStlWkRSS1RJemRUeGxHeGN4UUpnZUJCUnJvMU44b1Q4SHgy?=
- =?utf-8?Q?Zpmc6/e78OmvxGNrlp3IsuyOz?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60930d50-9c20-4bda-b80f-08dc8139d020
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 06:20:48.7749
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JIB/BGNcwg5Ebq6chmyTaomhAhxV71xX8ibb5XWWvjRczDHZhtG3JeH5zwTEBl0G3e75uzKyN1YOBNu8nWnwGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6312
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/NUMA: don't pass MAX_NUMNODES to memblock_set_node()
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+ Andrew Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ lkml <linux-kernel@vger.kernel.org>
+References: <abadb736-a239-49e4-ab42-ace7acdd4278@suse.com>
+ <e33ec69b-21e0-46e3-9b70-6d89548a145b@intel.com>
+ <997fcbc7-4e75-4aa2-974c-15d984f02d02@suse.com>
+ <bec94a1e-8c87-461a-a8db-1ea57385e745@intel.com>
+Content-Language: en-US
+From: Jan Beulich <jbeulich@suse.com>
+Autocrypt: addr=jbeulich@suse.com; keydata=
+ xsDiBFk3nEQRBADAEaSw6zC/EJkiwGPXbWtPxl2xCdSoeepS07jW8UgcHNurfHvUzogEq5xk
+ hu507c3BarVjyWCJOylMNR98Yd8VqD9UfmX0Hb8/BrA+Hl6/DB/eqGptrf4BSRwcZQM32aZK
+ 7Pj2XbGWIUrZrd70x1eAP9QE3P79Y2oLrsCgbZJfEwCgvz9JjGmQqQkRiTVzlZVCJYcyGGsD
+ /0tbFCzD2h20ahe8rC1gbb3K3qk+LpBtvjBu1RY9drYk0NymiGbJWZgab6t1jM7sk2vuf0Py
+ O9Hf9XBmK0uE9IgMaiCpc32XV9oASz6UJebwkX+zF2jG5I1BfnO9g7KlotcA/v5ClMjgo6Gl
+ MDY4HxoSRu3i1cqqSDtVlt+AOVBJBACrZcnHAUSuCXBPy0jOlBhxPqRWv6ND4c9PH1xjQ3NP
+ nxJuMBS8rnNg22uyfAgmBKNLpLgAGVRMZGaGoJObGf72s6TeIqKJo/LtggAS9qAUiuKVnygo
+ 3wjfkS9A3DRO+SpU7JqWdsveeIQyeyEJ/8PTowmSQLakF+3fote9ybzd880fSmFuIEJldWxp
+ Y2ggPGpiZXVsaWNoQHN1c2UuY29tPsJgBBMRAgAgBQJZN5xEAhsDBgsJCAcDAgQVAggDBBYC
+ AwECHgECF4AACgkQoDSui/t3IH4J+wCfQ5jHdEjCRHj23O/5ttg9r9OIruwAn3103WUITZee
+ e7Sbg12UgcQ5lv7SzsFNBFk3nEQQCACCuTjCjFOUdi5Nm244F+78kLghRcin/awv+IrTcIWF
+ hUpSs1Y91iQQ7KItirz5uwCPlwejSJDQJLIS+QtJHaXDXeV6NI0Uef1hP20+y8qydDiVkv6l
+ IreXjTb7DvksRgJNvCkWtYnlS3mYvQ9NzS9PhyALWbXnH6sIJd2O9lKS1Mrfq+y0IXCP10eS
+ FFGg+Av3IQeFatkJAyju0PPthyTqxSI4lZYuJVPknzgaeuJv/2NccrPvmeDg6Coe7ZIeQ8Yj
+ t0ARxu2xytAkkLCel1Lz1WLmwLstV30g80nkgZf/wr+/BXJW/oIvRlonUkxv+IbBM3dX2OV8
+ AmRv1ySWPTP7AAMFB/9PQK/VtlNUJvg8GXj9ootzrteGfVZVVT4XBJkfwBcpC/XcPzldjv+3
+ HYudvpdNK3lLujXeA5fLOH+Z/G9WBc5pFVSMocI71I8bT8lIAzreg0WvkWg5V2WZsUMlnDL9
+ mpwIGFhlbM3gfDMs7MPMu8YQRFVdUvtSpaAs8OFfGQ0ia3LGZcjA6Ik2+xcqscEJzNH+qh8V
+ m5jjp28yZgaqTaRbg3M/+MTbMpicpZuqF4rnB0AQD12/3BNWDR6bmh+EkYSMcEIpQmBM51qM
+ EKYTQGybRCjpnKHGOxG0rfFY1085mBDZCH5Kx0cl0HVJuQKC+dV2ZY5AqjcKwAxpE75MLFkr
+ wkkEGBECAAkFAlk3nEQCGwwACgkQoDSui/t3IH7nnwCfcJWUDUFKdCsBH/E5d+0ZnMQi+G0A
+ nAuWpQkjM1ASeQwSHEeAWPgskBQL
+In-Reply-To: <bec94a1e-8c87-461a-a8db-1ea57385e745@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2024/5/31 14:00, Baolu Lu wrote:
-> On 5/31/24 11:16 AM, Yi Liu wrote:
->> On 2024/5/29 20:02, Baolu Lu wrote:
->>> On 2024/5/29 17:03, Yi Liu wrote:
->>>> On 2024/5/29 13:32, Lu Baolu wrote:
->>>>> The IOMMU subsystem has undergone some changes, including the removal
->>>>> of iommu_ops from the bus structure. Consequently, the existing domain
->>>>> allocation interface, which relies on a bus type argument, is no longer
->>>>> relevant:
->>>>>
->>>>>      struct iommu_domain *iommu_domain_alloc(struct bus_type *bus)
->>>>>
->>>>> This series is designed to refactor the use of this interface. It
->>>>> proposes two new interfaces to replace iommu_domain_alloc():
->>>>>
->>>>> - iommu_user_domain_alloc(): This interface is intended for allocating
->>>>>    iommu domains managed by userspace for device passthrough scenarios,
->>>>>    such as those used by iommufd, vfio, and vdpa. It clearly indicates
->>>>>    that the domain is for user-managed device DMA.
->>>>
->>>> user paging domain? It looks to me user domain includes the nested domains
->>>> as well.
->>>
->>> Yes, nested domain is a user domain. The iommu driver should implement
->>> iommu_ops->domain_alloc_user for nested domain allocation.
->>
->> will it be more clear to name iommu_user_domain_alloc() be
->> iommu_user_paging_domain_alloc() as it is mainly for paging domain
->> allocation?
+On 29.05.2024 18:08, Dave Hansen wrote:
+> On 5/29/24 09:00, Jan Beulich wrote:
+>>> In other words, it's not completely clear why ff6c3d81f2e8 introduced
+>>> this problem.
+>> It is my understanding that said change, by preventing the NUMA
+>> configuration from being rejected, resulted in different code paths to
+>> be taken. The observed crash was somewhat later than the "No NUMA
+>> configuration found" etc messages. Thus I don't really see a connection
+>> between said change not having had any MAX_NUMNODES check and it having
+>> introduced the (only perceived?) regression.
 > 
-> That might be better; let's wait and see if there's another option.
+> So your system has a bad NUMA config.  If it's rejected, then all is
+> merry.  Something goes and writes over the nids in all of the memblocks
+> to point to 0 (probably).
 > 
->>
->>>>
->>>>>    If an IOMMU driver does not implement iommu_ops->domain_alloc_user,
->>>>>    this interface will rollback to the generic paging domain allocation.
->>>>>
->>>>> - iommu_paging_domain_alloc(): This interface is for allocating iommu
->>>>>    domains managed by kernel drivers for kernel DMA purposes. It takes a
->>>>>    device pointer as a parameter, which better reflects the current
->>>>>    design of the IOMMU subsystem.
->>>>>
->>>>> The majority of device drivers currently using iommu_domain_alloc() do
->>>>> so to allocate a domain for a specific device and then attach that
->>>>> domain to the device. These cases can be straightforwardly migrated to
->>>>> the new interfaces.
->>>>>
->>>>> However, there are some drivers with more complex use cases that do
->>>>> not fit neatly into this new scheme. For example:
->>>>>
->>>>> $ git grep "= iommu_domain_alloc"
->>>>> arch/arm/mm/dma-mapping.c:      mapping->domain = 
->>>>> iommu_domain_alloc(bus);
->>>>> drivers/gpu/drm/rockchip/rockchip_drm_drv.c:    private->domain = 
->>>>> iommu_domain_alloc(private->iommu_dev->bus);
->>>>> drivers/gpu/drm/tegra/drm.c:            tegra->domain = 
->>>>> iommu_domain_alloc(&platform_bus_type);
->>>>> drivers/infiniband/hw/usnic/usnic_uiom.c:       pd->domain = domain = 
->>>>> iommu_domain_alloc(dev->bus);
->>>>>
->>>>> This series leave those cases unchanged and keep iommu_domain_alloc()
->>>>> for their usage. But new drivers should not use it anymore.
->>>>
->>>> does it mean there is still domains allocated via iommu_domain_alloc()
->>>> on VT-d platform?
->>>
->>> I think the drivers mentioned above do not run on x86 platforms, or do
->>> they?
->>
->> cool. BTW. I know out-of-tree drivers are not counted in upstream review.
->> Just out of curious, is there a formal way to let such drivers know it is
->> no longer allowed to use iommu_domain_alloc() on VT-d?
+> If it _isn't_ rejected, then it leaves a memblock in place that points
+> to MAX_NUMNODES.  That MAX_NUMNODES is a ticking time bomb for later.
 > 
-> As Robin suggested, we should try to remove iommu_domain_alloc() from
-> the tree in this series.
+> So this patch doesn't actually revert the rejection behavior change in
+> the Fixes: commit.  It just makes the rest of the code more tolerant to
+> _not_ rejecting the NUMA config?
 
-If it's completely dropped, that's fine. OOT drivers should fail in the
-time of compiling.
+No, the NUMA config is now properly rejected again:
 
--- 
-Regards,
-Yi Liu
+NUMA: no nodes coverage for 2041MB of 8185MB RAM
+No NUMA configuration found
+Faking a node at [mem 0x0000000000000000-0x000000027fffffff]
+
+Jan
