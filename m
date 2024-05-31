@@ -1,103 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD19134AB
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419A363C7
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717118508; cv=none; b=MLhghcSF2+rAOCgmU93wpM2sUX9WWV4JGVFj7v06rYUNDbQsg89keKdbh9GC3gzrWwYduKMfL39zoql1SufIV9xb0IZDqGjNJjW+xXL2+KeDWal1bCJAV3cpj53mb+vP4GErkUQuTiqIeF1mpn0AaPO3mNMxIPS3jn9A/UhyQO4=
+	t=1717118555; cv=none; b=VbcwNm1xz7Xe26YNLH905TtpzBDgBsdRxuUpDOvkQYBpb0D92HnwZ1hhlwukVpsJs4MJYcASYjUC43BOTebX1g2lGWwY0CKN0gZL8W4rkChqseLuhfPFPjNMHvogEoMSGouiq3bwHEsSrWf5kH/h2+xtsqfDf4nOZCmXPUNBpMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717118508; c=relaxed/simple;
-	bh=oduJrBgxC7GPahDyRFBPQ85EMmHXFVU+B7UUePfvsVo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lUvV466FpU7lZe69ugK2VUkdSfMtTuT0NZXhnb7QSPu2uCabWs+mym8gPrY+7E83D8a06cNvUaGnLXtcyrXG7FTpS2vpdlAqJHrg9kUaTQgEzbd6+zI3YHuAlTqwRLngkaTB7BBW39XgZhUYyW2yY0r0gckL4M4xqxcUyQyN/H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cCRn7uNY; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717118555; c=relaxed/simple;
+	bh=VnNHpRzZrBLyR03ZBBRoUhv2fOQNBpllKF4FtcJ17m0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SHqUwNAWV8RLF2AdthB721/rQk5eu4N3e9PAIpcjbAO5bBSxCCGM/zqtjdJfrOt60OtTP0H+IK9Sn9VdmDrI/c3rPkDueDw57MRiBynf0cDYChSUzKf4/aFDnbXilOW1HuKjpBTWHUSTOoJ/rDb9UGuvJdezDADOshfW6dcnPtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eH0Mptjq; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cCRn7uNY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eH0Mptjq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717118507; x=1748654507;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=oduJrBgxC7GPahDyRFBPQ85EMmHXFVU+B7UUePfvsVo=;
-  b=cCRn7uNYwb++7opeutKEMEtve3gQ5saoOP3lC2d91ABFFa6pnae/XRFy
-   mjHqSzwyGHeX4PYzjUxKsZjrjyCsobIjfdqIIYOpVwE1x/iMN9642erh/
-   cwY1RqB9pC27qdDWs8iCikeXkIFX71z0CJ4ym2xyzNrxgm1reSnr4QMBQ
-   y0GnxIukSSAo+T1iBEG3CqmhIjc7GqQPxn6oky6IJfl2TtUSmlRL9YBvm
-   WY+NXWEWMIKMHalBdGN5rDCTCXBqfGw6qq/MVfgyCZcL7v+vqXQcyc4zQ
-   ugUF7kjuVf6r/TqHYnGBKnWor5cLSobQutZPjuhle8fy2I9E8UNNZMySg
-   A==;
-X-CSE-ConnectionGUID: cZ1Ln5KETVORVK3ccuXuDw==
-X-CSE-MsgGUID: BVnrqKdCTiOXh/cYf0a67w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="36180235"
+  t=1717118554; x=1748654554;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VnNHpRzZrBLyR03ZBBRoUhv2fOQNBpllKF4FtcJ17m0=;
+  b=eH0MptjqdXn8ZJHMZVyrbKwZ6aVwJVh9V9nMFknYMI/tJdH1Ig65o1YR
+   qSr5iy22YQNFol6qhVRPK9tT/qhWOHScUqzaxbY9tyzg/OfYfrCZgcw+h
+   QjPluGdoIR4NeINnsNRA73dRzA1GXkwRNgUUlK2oe6s+J3HOqV3zoCnNB
+   VTCYZuMT1nbiZJ3Eimnntil/2bR1VjiCrboO/Xn8OqQmwgOyEgmfFOw7k
+   HWb0KUfWuEukKpvTaeEF0NpxSd43wicR1gRcno5Qx59FLNSIP3pRML6C8
+   pnAd7u8Ky94pa+YPgV0MWDjPo7R3JYBix/dcVKcsEH7Pxu5yuq3KGO3d2
+   Q==;
+X-CSE-ConnectionGUID: KsK2ThsvRYmxzhXi54142A==
+X-CSE-MsgGUID: 2qAxUk+qRQ6RuE77pr9K/g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13467932"
 X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="36180235"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 18:21:46 -0700
-X-CSE-ConnectionGUID: knuVU2IfRFWTjds6ES9ncg==
-X-CSE-MsgGUID: KOMsvPMzTfe0JmIFF4SbHQ==
+   d="scan'208";a="13467932"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 18:22:20 -0700
+X-CSE-ConnectionGUID: j1E0OUfnS06d8RjB+9HywA==
+X-CSE-MsgGUID: VNerk86RQuOtSvoxCtS2Cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="40921229"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by orviesa003.jf.intel.com with ESMTP; 30 May 2024 18:21:45 -0700
-Message-ID: <1333039e-ec61-467e-a0ee-d3cb86e769f5@linux.intel.com>
-Date: Fri, 31 May 2024 09:19:37 +0800
+   d="scan'208";a="40455195"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 30 May 2024 18:22:18 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCqyG-000GL3-0P;
+	Fri, 31 May 2024 01:22:16 +0000
+Date: Fri, 31 May 2024 09:21:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tick: shift tick_nohz_switch_to_nohz() from
+ tick_check_oneshot_change() to hrtimer_run_queues()
+Message-ID: <202405310959.9U6sUim5-lkp@intel.com>
+References: <20240530124203.GA26990@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: device_def_domain_type documentation header does not match
- implementation
-To: Robin Murphy <robin.murphy@arm.com>,
- Diederik de Haas <didi.debian@cknow.org>,
- David Woodhouse <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>
-References: <14311965.TaHA55BQu8@bagend>
- <32921840-43d6-4ad9-99eb-aac32e67e04c@arm.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <32921840-43d6-4ad9-99eb-aac32e67e04c@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240530124203.GA26990@redhat.com>
 
-On 5/30/24 11:49 PM, Robin Murphy wrote:
-> On 30/05/2024 2:57 pm, Diederik de Haas wrote:
->> Hi,
->>
->> While looking into 
->> ``drivers/iommu/intel/iommu.c::device_def_domain_type``
->> function I noticed a discrepancy between the documentation header and the
->> implementation.
->>
->> ``@startup: true if this is during early boot``
->> 0e31a7266508 ("iommu/vt-d: Remove startup parameter from
->> device_def_domain_type()")
->> removed the ``startup`` function parameter
->>
->> returns ``IOMMU_DOMAIN_DMA: device requires a dynamic mapping domain``
->> 28b41e2c6aeb ("iommu: Move def_domain type check for untrusted device 
->> into
->> core")
->> moved the possible return of ``IOMMU_DOMAIN_DMA`` to 
->> ``drivers/iommu/iommu.c``
->>
->> But neither updated the documentation header.
-> 
-> TBH it could probably just be deleted now, since the 
-> iommu_ops::def_domain_type callback is properly documented in iommu.h, 
-> so individual implementations shouldn't need to repeat that. It's also 
-> never been actual kerneldoc either, since it's a regular "/*" comment. 
-> Feel free to send a patch 🙂
+Hi Oleg,
 
-Agreed. I will make a patch to remove it later.
+kernel test robot noticed the following build errors:
 
-Best regards,
-baolu
+[auto build test ERROR on tip/timers/core]
+[also build test ERROR on linus/master v6.10-rc1 next-20240529]
+[cannot apply to tip/timers/nohz]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Oleg-Nesterov/tick-shift-tick_nohz_switch_to_nohz-from-tick_check_oneshot_change-to-hrtimer_run_queues/20240530-204940
+base:   tip/timers/core
+patch link:    https://lore.kernel.org/r/20240530124203.GA26990%40redhat.com
+patch subject: [PATCH] tick: shift tick_nohz_switch_to_nohz() from tick_check_oneshot_change() to hrtimer_run_queues()
+config: i386-buildonly-randconfig-005-20240531 (https://download.01.org/0day-ci/archive/20240531/202405310959.9U6sUim5-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240531/202405310959.9U6sUim5-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405310959.9U6sUim5-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: kernel/time/hrtimer.o: in function `hrtimer_run_queues':
+>> hrtimer.c:(.text+0x1851): undefined reference to `tick_nohz_switch_to_nohz'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
