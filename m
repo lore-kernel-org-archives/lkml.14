@@ -1,98 +1,121 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C53B17B51D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB1C17B51D;
+	Fri, 31 May 2024 19:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717182810; cv=none; b=CTGsf3O9IgL2VrzkH+euGt/R71qIpR8T+e7DY6WWC1todsR9ATG2Ko28ja7964UPRlXuPV6Cd++qh0JxBhbARge3F1WG1aWB08+psEXzOzio+gt3pVz+eFNp/A7QhB5mK/INoEhtxYqtPINnP0xgT8gYSZzgT8hTaikmkFHyRW8=
+	t=1717182899; cv=none; b=ZXoeAaPapy9yYcl5qJh4LbyZu0XjSV9YViBsMcRH1IhrEJSyKIyNuekwGsJvKdBZBNjQPoKPgjtGrXUXcrvnwRX68tg1id3VC89t/K+s+qmiPH9QDxraAJZ+FIYYmugFy5k2f7LjwewkKw+y7SmXHpUZntSvwpgrT19qI5Y3FYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717182810; c=relaxed/simple;
-	bh=E296/Sootdy1zZQGNWdy4Bn1+fEQuepZc3Fj238Krog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ajy2RciU1FS4w2C4GtLKrVyW6ua2DR/K4t61qmhgzPUZLtd/BGqDILLAAoZ7/tUbJ2niWNg2q+BJjGjbLjhfNA/Tl++JjLCIH7DqDvpNxdkOZ3+hyVI9qB1rESrQsZAUuKn2l+3yMrR4eiwoqv1PA17eu6MM1zqtdVLG9Anr6As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Xdt3BDL2; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1717182899; c=relaxed/simple;
+	bh=GCCmwO/29MDWHdLt+3VUIvxE5UJuxve2yweYGuL7qiA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iVihNRSBl7TG+UIsHMyQFc6cw2bYgdueWH/lqK2J3hM33xgS3wgCjW2GwcYDgnO0HBt5pv5LabqeizMN2Y00zZ6cZ3vT/Aewt3oxCUTtHWW3tggkFbvzlhED9OtWzbtpj+ThEqwTwzEDCUFu6GlVbo6svVXIzg2d29UoZeP3mpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcThVp9O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xdt3BDL2"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7ead7e95c91so10565439f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717182808; x=1717787608; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=41fiE54FY+e6bgGGsIbRgTEJBX7DPyrtesC8AIAh9Ug=;
-        b=Xdt3BDL22gzsFqcdg/T4UgxHlLb9JGTaMPdlXWcilOXYfJHV59WqcsF02AAh3C6o9L
-         KtLSBJ1hz9SsKYBDG4WNPdkfoAXLmUe1WPDU+dEOKSUdPjbww8gm9eFstKSEECVAmXfG
-         qPeEz5bcQwzrUzvkcyxU2iK6TRtsYdGjjt2YU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717182808; x=1717787608;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=41fiE54FY+e6bgGGsIbRgTEJBX7DPyrtesC8AIAh9Ug=;
-        b=iic6LAYZsAzirCo2zeROXtdohNlFQt4qq6vGfnpCqaJuNJJnLps7KDUwEnz2O12iIp
-         UlvMhrtRXesFcSha19sD1VVrn+SYWgdvArq5Z7SGuDRpdVmXdoc1CZYkI+uvkliqpeEl
-         dgw855y7KVK/a+dQBP8XozzGNKQSlhJXp+v3IGgFor/7vA8QOEKp6MnV9WODKAmk4cWw
-         CH/4v61ANmrqGpK40hu3wlJHETBNho6nTdXfKtK2Z3g2R62vkYKmlJ+vWvxU5d/vJ/hs
-         LZNtxkGLMBk8T8DGYQh3Wd13MlP3BrnBPLBmemueqQh+uLcG8OtF6lOD/t2Fx0YelBXr
-         D9Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVG2lGkwuXsF3hC5Nis9v6McubJ9o90Yn3qSYFW7TTG9qnM3IFumsXo90bfKn4pMITnoymD3ZBswv0D+gW+nqqUg4DR4Vw87fZuXVwf
-X-Gm-Message-State: AOJu0YzXJFoDlCAxQUPUnMEW8omVIAij+h7IxkF8WMPZpqm1ZZGicZC/
-	FjD+wqJ5+vUtrdVrdNqcMLl5QSUzuktgqGwvvrE6yZdfINdSIfnSbsCkqJbsRqE=
-X-Google-Smtp-Source: AGHT+IHrKoWGzpR+rMVObi2QP9d4WGkPOovhn8D1ERBu3+IYhrknVsI6Qi0EL7KWAFhRyTDonEBaPg==
-X-Received: by 2002:a5d:9b13:0:b0:7e1:7e15:6471 with SMTP id ca18e2360f4ac-7eaffee2c4amr334625439f.1.1717182808038;
-        Fri, 31 May 2024 12:13:28 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b48b99b0c8sm626884173.107.2024.05.31.12.13.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 12:13:27 -0700 (PDT)
-Message-ID: <f9091516-37ff-43d1-b515-ae8eb3f80e80@linuxfoundation.org>
-Date: Fri, 31 May 2024 13:13:27 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcThVp9O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D812C4AF0A;
+	Fri, 31 May 2024 19:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717182899;
+	bh=GCCmwO/29MDWHdLt+3VUIvxE5UJuxve2yweYGuL7qiA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kcThVp9ODciDqR4t3BBbXTS6sQt/cbQ6XFTUxaxOcLk0CsG9Ctv6ST/2n88UxDg1i
+	 cTmfdZrqxOqWGGQr5jpF0d7AyiP3J1Aj5rgbLC8nfsT7EIw7Z4U7NqzNMW+xVh7N5p
+	 OsQImzr+tvg427WjiNLLdXg4mPwTJhgtCCTCiHWGC+r1TFZCq6JaSsR8s9KaEIHqWf
+	 OBHhQRCU/Cb5tOIWIP7oGBkHZ6k+sAB7d1yJg6JddK+brFv7eiTdaaVZ0RuPDOhYvU
+	 6vztMnE/2hYdUKAqCUrWgEkWRpoGXwe5todNt35PgbRx7Al8iN1/YfFuqTl2oaHGq/
+	 1ii38BhumuqBw==
+From: Kees Cook <kees@kernel.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kees Cook <kees@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>,
+	Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v4 1/6] mm/slab: Introduce kmem_buckets typedef
+Date: Fri, 31 May 2024 12:14:53 -0700
+Message-Id: <20240531191458.987345-1-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240531191304.it.853-kees@kernel.org>
+References: <20240531191304.it.853-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] list: test: remove unused struct 'klist_test_struct'
-To: "Dr. David Alan Gilbert" <linux@treblig.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: davidgow@google.com, linux-kselftest@vger.kernel.org,
- kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240531151801.128792-1-linux@treblig.org>
- <89e07c93-a54d-4cc2-8ee1-664389ffcdd7@collabora.com>
- <Zlod5TMzmXinDu2X@gallifrey>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <Zlod5TMzmXinDu2X@gallifrey>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1809; i=kees@kernel.org; h=from:subject; bh=GCCmwO/29MDWHdLt+3VUIvxE5UJuxve2yweYGuL7qiA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmWiGxJyLrOsUa6xU6DBGw+2yp7OUHaMAtvGnjr vnReswagR2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZlohsQAKCRCJcvTf3G3A Jod5EACfz20WkxqWJaAiwfbSw0tisbkRIA7NQR5NKbhxr5QTTLMcM49PatlGCuMu/uVIDNgCnCE 632ua5oc0HCyQXf9IfE35ke9Jo/QNgyG9S++26daItquqVgKQW/8Ast7pQagboaHUxQW1NTdCI0 wUhT3zl16pYuO0Vc4sp/ECUxMl7ZzGTGEkNHtxcsq+5BM194IPqUFUeT/DoxgrR0GtpUCojtFyi 8As8UtO0GYv5rG76w2Q+67MOKcVsQNvA4pJ31EvnjPpKYhjFD//n+/gHC2XY0eGckm0hN43T88b y1LlH5ThWVmIKeP1JV7fgv0NCN4WMOZKqW1dlxJEVywCaL+0n9KmVUJ4Jm92aWqv7767SrgcLY3 h0/q5nAsQuoCgHFyi7u9WhVFxqr0j3InRibsVIOQRxImTET8qh6Wtmxv373Sf2atQP8a0xlcPMv VOVZg6X+un864Nh7tQ2+bMWltaqq9X6xIQN0Gun88AfPH1AHnujDjbKV1P4fEkfmvu5E8XgKd+E Av5G8lClHZxbCosNd7q33lZXSjwr3g8zRTFM9A3lGpWI6jPnTpDDsUInP37Ll9haL4zGGxaQZW7 +LIUy00LcQUCdv6Czd8IMansxZ7b7xBd+q6+zUMM/ktgono3dI7fSFrN4K80saSpy5mUEgjzqLE HK9LKzxl7bkm78A==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 5/31/24 12:58, Dr. David Alan Gilbert wrote:
-> * Muhammad Usama Anjum (usama.anjum@collabora.com) wrote:
->> On 5/31/24 8:18 PM, linux@treblig.org wrote:
->>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->>>
->>> 'klist_test_struct' has been unused since the original
->>> commit 57b4f760f94d ("list: test: Test the klist structure").
->> Probably a fixes by tag would be needed here.
-> 
-> I'm generally avoiding fixes tags in this set of changes, since
->    a) They have no behavioural change at all.
->    b) Downstream and stable kernel people use fixes tags to indicate
->       stuff they should pick up if they have the original, and there's
->       no need for them to do that with this cleanup.
-> 
-> Dave
+Encapsulate the concept of a single set of kmem_caches that are used
+for the kmalloc size buckets. Redefine kmalloc_caches as an array
+of these buckets (for the different global cache buckets).
 
-+1 on using careful use of Fixes tag only on real fixes for the
-reasons mentioned above.
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: jvoisin <julien.voisin@dustri.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: linux-mm@kvack.org
+---
+ include/linux/slab.h | 5 +++--
+ mm/slab_common.c     | 3 +--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 7247e217e21b..de2b7209cd05 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -426,8 +426,9 @@ enum kmalloc_cache_type {
+ 	NR_KMALLOC_TYPES
+ };
+ 
+-extern struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
++typedef struct kmem_cache * kmem_buckets[KMALLOC_SHIFT_HIGH + 1];
++
++extern kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES];
+ 
+ /*
+  * Define gfp bits that should not be set for KMALLOC_NORMAL.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 1560a1546bb1..e0b1c109bed2 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -653,8 +653,7 @@ static struct kmem_cache *__init create_kmalloc_cache(const char *name,
+ 	return s;
+ }
+ 
+-struct kmem_cache *
+-kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
++kmem_buckets kmalloc_caches[NR_KMALLOC_TYPES] __ro_after_init =
+ { /* initialization for https://llvm.org/pr42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
+-- 
+2.34.1
 
