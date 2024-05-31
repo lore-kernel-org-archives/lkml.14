@@ -1,180 +1,107 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994DC78C9C;
-	Fri, 31 May 2024 21:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191679; cv=fail; b=c7aZ2BEnZkZHyMgwgywTmwbnhYe6IIYN9kqnpRNudVStxkHLgoB0zt4huLyIsHCzynlDPfE50DapbQavcirWiu680H0OavM4+iKm9SaR5sGTizWGMfejHjLiChmeXt7dlFqKIiLH6yE1r76Ymxwkok69yBrkrespuA9RCLp4mpI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717191679; c=relaxed/simple;
-	bh=btENwbSnpFzoHh1T01k2JDYx10vsDoRjrXVQQ9ca9+I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ITt5xkwluWbyxWV8bzIYZCkbtu0PmhBc95RQF6eEhhWUF7F52IwFJpI8fADJYN/1VZIKnV6/OLVN2DfTvbvvuv4ZLplZF/zM+n557Zx4gGujaEUmPUmCUxzoQzWMdi1ChaJb6g/8thCyFs86y1wWbiNBsd61WRU1F2jqbFlzMRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jdgrGhZC; arc=fail smtp.client-ip=40.107.212.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF96AD59;
+	Fri, 31 May 2024 21:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717191969; cv=none; b=geUZeM4z6GrvXg0K20ZeA6MVjAH7Ko1aKDoyzJMSTBkBGAJSVRqalJVEMIZDTWzFEx9CCrrXQZM4320t1+tiyJtkEMaJ3fSrDYszZiWkYSUN+sPLGBWghO3PHrTY3jIpDG8/V6dXv+zP2SB2rf39h2x+63zA+psZXF7V2iwgW6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717191969; c=relaxed/simple;
+	bh=gghBl4JNIy95VfLrfwUP2Off8V0JTaP9S92vAyIBtpk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pUogEvR+MEuWjgBF3l/3KzSys+lw8trAwiDdlTq4pc1HhDoENiGX82RRrBTAjhjGxoSvEglW6GsW1LfjO+NnGYwL5lJS/7YdD41ouvKLfV0ut7ZzXUdOw/hAZwDle8J5rXPvSYF49lGLC1SHVoPU/CT+VUh36vpeRi8urGhlfg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QMfXA6y7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jdgrGhZC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fDz5xJQYuzQ/AwMZ2+Q7R/hiKazsdXV63vZuFPEmIHU6UlYIZ10q9AqSEHxG8EV0/iY/dY7KKpPr/F/WIpQHhgiIsVmjbm+bod2E/PL3S6ptKVl+Ll4WCBdIduLvEzzKFNtizOSX5bUEdegsoIMUQAqgW5hz9U2X9OMtv3JAfHe+20lGTkcJNaaIZkaKXWDJu+F8GRMubULn0hAABDd7zCR9WXxGrI28+z2GuYaaOgurEZ/8wUFEZShXC1jcJh7AoBPpjMR/SFniYXjQ7rQ+ZW0sPouji+21ENcvUXff5YrIa7yeHL1oedgt+AgIO8S15pIC3AE+cArEw/KKJkr8xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/FNRNjmADYCA1uNaWioZ9Zr+Zk5zuPBkHnmWIsj3W+8=;
- b=noRfpcZsvQfRwZ7cVHVLT9yiPB6X82Ooxr1zzRNsBFsSZ4cAGImTv1L9jGjW4tseXC1/U1zUVkLNefEmtqR1Jl5EgdAwe9VaJm6v8bHF/d40aWrHrElcna2FYInUTO+uY87ODbL99lga55RRMrsk6gJQLjjjM4Ip3/l+e0R7i7l/O3ZFAL9R9ORtqBEDNmywOe3iEntxSAJwLp5c6KhHqz2gWTcHkpN95ieoBDR+6a4oRyQn3xuT4jdNG8oCEs+yYBYbdaqXO7NIyMEhbz8qcNN9qN1meSkbHWq93UYeM8YA9KHfVyH+jCwWwCQTUd62EE3Sb7cKUBUuW/nULHPTsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/FNRNjmADYCA1uNaWioZ9Zr+Zk5zuPBkHnmWIsj3W+8=;
- b=jdgrGhZCXFPUdV9P3GHxoASqU6YC+9aTXWvqZd6j85q1yUqKT0F5FBJR+6PwNcj+NQYSX77NM3W5xSw2j+ICv0XNvZk2WRN6wDlThpH3/zt6jZWrucUuWeAzuhe+8HZXE1D/01m7YxsU4sXJY+7Sfz+XZP2YKLK19rFNbW2pXGE=
-Received: from BN9PR03CA0171.namprd03.prod.outlook.com (2603:10b6:408:f4::26)
- by PH8PR12MB6988.namprd12.prod.outlook.com (2603:10b6:510:1bf::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Fri, 31 May
- 2024 21:41:13 +0000
-Received: from BL6PEPF0001AB4E.namprd04.prod.outlook.com
- (2603:10b6:408:f4:cafe::86) by BN9PR03CA0171.outlook.office365.com
- (2603:10b6:408:f4::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.31 via Frontend
- Transport; Fri, 31 May 2024 21:41:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB4E.mail.protection.outlook.com (10.167.242.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 21:41:13 +0000
-Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 31 May
- 2024 16:41:12 -0500
-From: Wei Huang <wei.huang2@amd.com>
-To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
-CC: <bhelgaas@google.com>, <corbet@lwn.net>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<alex.williamson@redhat.com>, <gospo@broadcom.com>,
-	<michael.chan@broadcom.com>, <ajit.khaparde@broadcom.com>,
-	<somnath.kotur@broadcom.com>, <andrew.gospodarek@broadcom.com>,
-	<manoj.panicker2@amd.com>, <Eric.VanTassell@amd.com>, <wei.huang2@amd.com>,
-	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>
-Subject: [PATCH V2 9/9] bnxt_en: Pass NQ ID to the FW when allocating RX/RX AGG rings
-Date: Fri, 31 May 2024 16:38:41 -0500
-Message-ID: <20240531213841.3246055-10-wei.huang2@amd.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240531213841.3246055-1-wei.huang2@amd.com>
-References: <20240531213841.3246055-1-wei.huang2@amd.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QMfXA6y7"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E46A540E02BA;
+	Fri, 31 May 2024 21:46:04 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mp9dd_f_l4Ta; Fri, 31 May 2024 21:46:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717191961; bh=EB3b0oK1NO82II0HvxGp1gnqwn/B2ARuYc6PW/E4a7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QMfXA6y7f3Wu0gHnuLb7og3I+KNwp73rGCOQrSpTYXYF+Hg9Eu5qWu6GUrWIe6kj8
+	 5aaXWWbU0YxSm+yLfWZp3CA4SS1Saw+W+8gkPylwes3iA3HIlRnWXo65h5pllRglXF
+	 WrEwA4ELVEp21OMiFsbRw+6U6LtNqw0Cr4ToQJJ3kRNV29lJwmF8Qwbn1DcG1HwFWk
+	 DZq3Dnbdw10d814C7kg0VqbwvXikIXFXBYcVNFy2t03hbl4gbj/ZTQqaDMDvb/7vbY
+	 o0H3w5gozMLcYeyMc5R4irUnvw5xp/IzbFHXRy4uuQzBWABd1ZGYQPUIjpTmWD9i2G
+	 qwHN7xOgE7eB0rN2f+lAXwu8jIgDexgZJcIEqf3TDblDhVFh7uoYK7G9S6HUz8tebO
+	 a9rzJsxyiwC+0DUebmLkOEfHAP5Zj6xZvjrwEEhXSKtUO5fxd9PT7lSrhrdWE59Mn9
+	 WfnHXtOvWNQOsB0RxMBXNIn3cKdpvFixSoQ4PK9uQcmLe+RXPWch5T3tTqr/Z/HR0L
+	 pFD0mmxZx1SEFa8m9mlW6JjkXXoktNbYHCYpQCDNahe3+7hwSt16Dx+GYDLwcIhdjS
+	 upNpTLaoBiVNfHPMMzmRJtw1u9n2kucfbWt7wJuyIqpbPP6x4D96mso/A7eUMNcPpy
+	 y4/wWrdmJ9q8fAMUy+tJe2sg=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AAB5340E02B9;
+	Fri, 31 May 2024 21:45:50 +0000 (UTC)
+Date: Fri, 31 May 2024 23:45:45 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Kees Cook <kees@kernel.org>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
+Message-ID: <20240531214545.GPZlpFCaXtTGinbcfl@fat_crate.local>
+References: <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
+ <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
+ <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
+ <202405310951.56D9BD5C41@keescook>
+ <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
+ <202405311345.D91BF6E9@keescook>
+ <20240531204947.GNZlo367G0YXVbOk1I@fat_crate.local>
+ <202405311359.EFC7345EC@keescook>
+ <20240531212009.GOZlo_CV0lxZ1xviQW@fat_crate.local>
+ <202405311431.BF9FE3F7A7@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4E:EE_|PH8PR12MB6988:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8510eab1-3843-4900-ec3b-08dc81ba64b5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|36860700004|7416005|1800799015|82310400017|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5KPmR4vkT0zaOwqXL0T/DSky+3OcjymRMYvLddz+rrwjWDLDUnqetuGFCjEi?=
- =?us-ascii?Q?rTNwFs0iiIWjWtlQOhVefWlWJ5W8+5QnuazvmcoH9tzqhZAMNGLLILm1Omy1?=
- =?us-ascii?Q?u08AjY0yKZS1LPxkUd5vLY5D1VuJKUPCgo7hmMZCnTgpEn4HbN/H4/BVZk9L?=
- =?us-ascii?Q?J5kR9QxOIHPupI/I9SRIT9V3Hwi7hcafobk5gtV2jEbwmPVmyKTsd8OX1Awg?=
- =?us-ascii?Q?OT+vQKhTxQI2mhKI86vX8grhRZhqYW0X0VZe96oJIUmkMypt34zEzFB1CrXP?=
- =?us-ascii?Q?KjH7dJrUHWy7rr93nL6bo6RU7/MhMIlSrWKWIeg0S0OQBcsn1Mr+jUCNONwJ?=
- =?us-ascii?Q?hSMATRLOxXi1ZC+2mNKgz1Ift9EUmt4X/wwxeHE2+EZ70gjMvT3Xo+5lzXAT?=
- =?us-ascii?Q?XmK4opQ/QyX5bCJEiPix834wSUgswwaW+8yFqco3fxjaCvdqIaqVQzMOQ6fl?=
- =?us-ascii?Q?xwEdh0LDmgCjJ722ytqiyhx0n2EAxeN43CkbyW/LDQWz+34frwsT8Ws8LhT0?=
- =?us-ascii?Q?TLJdok/J6mbMBNUxCguKdTtgBUXBHh/LokMRwbCXNH9OdSdXdRMJ1+8KBuTo?=
- =?us-ascii?Q?vec3uQmZfSaVZyTRdWWInuLDgIueegHVgEcqNlAaeq0VVLx7wDeXTFNQpx4l?=
- =?us-ascii?Q?q671/cdub6X+wDtJHz86wyRL+fEpsEt+rtYkY4ZcH1pZG/UuXbn57eOdMKWb?=
- =?us-ascii?Q?Mi9En4xzRs6FzmqbRy1q3ZKrCxqb2fsmyGSHBoEIZKw/8yCeCjj13vVBIeg7?=
- =?us-ascii?Q?01xDyOGuYfj1wDJ1brzD2V9va5H3NHasb0MaaagvYXyEw2iwtZg+qJImTwGr?=
- =?us-ascii?Q?XEsc4j9BYjkurAti4to0AD50g4haAqRvovbK0x+03BVNUBelCIxfNO7vjiso?=
- =?us-ascii?Q?3yGN99xWvJuWjmfM6/HVQxiBrtCYC/rLgUSmkOMw8Cbav+xE+Oh6m1HJZYRE?=
- =?us-ascii?Q?AjcrRgUNDzp3/EIsFtuHE/P4/CV6ZF+Z8owfFm6Rr1tHLIe8hUDkjEgSuen1?=
- =?us-ascii?Q?F6JK8YWoD67YtF0xzywDUDRpONjnENAlHpcCufca7u0nXRVO7zrKu1yfL7Jr?=
- =?us-ascii?Q?vj5UuK/Y3ExJZfEjLh8a6llJVHeQKr99qbYrB4qogS01vttAPfyCU5hpAtJm?=
- =?us-ascii?Q?bF8VQJ/pBIZ10AjS76okgG2MsTGFw676zPlps/S0PaG+ZtHSVRqRRrZTnUdC?=
- =?us-ascii?Q?2W2wfk4B4amzmAD/kniv69/VpfZRdAGFG3zbd92/5aavvnJum669aIRthdVu?=
- =?us-ascii?Q?gAFdhGfAmaCUoID60v2YqQNwD65zlqTokiMyg1lgJVjKxcsC9AdWVMMnKy0k?=
- =?us-ascii?Q?zpFal/kYNOHaPkwBv1LsRD5WFl/dY92xCxgVTuLBDv6O77VxV+ygPscCQ5C9?=
- =?us-ascii?Q?jAtJWb9v1UNnWPl1gwqfv1eBykpM?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(1800799015)(82310400017)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 21:41:13.2843
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8510eab1-3843-4900-ec3b-08dc81ba64b5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB4E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6988
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202405311431.BF9FE3F7A7@keescook>
 
-From: Michael Chan <michael.chan@broadcom.com>
+On Fri, May 31, 2024 at 02:34:07PM -0700, Kees Cook wrote:
+> On Fri, May 31, 2024 at 11:20:09PM +0200, Borislav Petkov wrote:
+> > So I get an allergic reaction everytime we wag the dog - i.e., fix the
+> > code because some tool or option can't handle it even if it is
+> > a perfectly fine code. In that case it is an unused symbol.
+> > 
+> > And frankly, I'd prefer the silly warning to denote that fortify doesn't
+> > need to do any checking there vs shutting it up just because.
+> 
+> If we want to declare that x86 boot will never perform string handling
+> on strings with unknown lengths, we could just delete the boot/
+> implementation of __fortify_panic(), and make it a hard failure if such
+> cases are introduced in the future. This hasn't been a particularly
+> friendly solution in the past, though, as the fortify routines do tend
+> to grow additional coverage over time, so there may be future cases that
+> do trip the runtime checking...
 
-Newer firmware can use the NQ ring ID associated with each RX/RX AGG
-ring to enable PCIe steering tag.  Older firmware will just ignore the
-information.
+Yes, and we should not do anything right now either.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-Reviewed-by: Hongguang Gao <hongguang.gao@broadcom.com>
-Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+As said, I'd prefer the warning which actually says that fortify
+routines are not used, which in itself is useful information vs shutting
+it up.
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 2207dac8ce18..308b4747d041 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6699,10 +6699,12 @@ static int hwrm_ring_alloc_send_msg(struct bnxt *bp,
- 
- 			/* Association of rx ring with stats context */
- 			grp_info = &bp->grp_info[ring->grp_idx];
-+			req->nq_ring_id = cpu_to_le16(grp_info->cp_fw_ring_id);
- 			req->rx_buf_size = cpu_to_le16(bp->rx_buf_use_size);
- 			req->stat_ctx_id = cpu_to_le32(grp_info->fw_stats_ctx);
- 			req->enables |= cpu_to_le32(
--				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID);
-+				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID |
-+				RING_ALLOC_REQ_ENABLES_NQ_RING_ID_VALID);
- 			if (NET_IP_ALIGN == 2)
- 				flags = RING_ALLOC_REQ_FLAGS_RX_SOP_PAD;
- 			req->flags = cpu_to_le16(flags);
-@@ -6714,11 +6716,13 @@ static int hwrm_ring_alloc_send_msg(struct bnxt *bp,
- 			/* Association of agg ring with rx ring */
- 			grp_info = &bp->grp_info[ring->grp_idx];
- 			req->rx_ring_id = cpu_to_le16(grp_info->rx_fw_ring_id);
-+			req->nq_ring_id = cpu_to_le16(grp_info->cp_fw_ring_id);
- 			req->rx_buf_size = cpu_to_le16(BNXT_RX_PAGE_SIZE);
- 			req->stat_ctx_id = cpu_to_le32(grp_info->fw_stats_ctx);
- 			req->enables |= cpu_to_le32(
- 				RING_ALLOC_REQ_ENABLES_RX_RING_ID_VALID |
--				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID);
-+				RING_ALLOC_REQ_ENABLES_RX_BUF_SIZE_VALID |
-+				RING_ALLOC_REQ_ENABLES_NQ_RING_ID_VALID);
- 		} else {
- 			req->ring_type = RING_ALLOC_REQ_RING_TYPE_RX;
- 		}
 -- 
-2.44.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
