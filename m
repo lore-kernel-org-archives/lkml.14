@@ -1,133 +1,113 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A632156F5F;
-	Fri, 31 May 2024 11:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A864D745E7;
+	Fri, 31 May 2024 11:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717154045; cv=none; b=luwsPJrNlthuFimRInWg4uYHlksbGIrsD7WgNUPjq0PIe5YPgmkTAFCTlWMt3RoJ58mxWjhFRHhI0JbdASRkMpP7gXiUop+LNAlZfCSJDIbjR3G+Bff/zyk5PMn15ea3iYI8Qzrjl/MoM9/UqtDxNI492KBB20qaZYkwVfJF6rs=
+	t=1717154164; cv=none; b=oXlGngCgMPxyjKnSv9kqy2qS9gZiERhOnCmt4pXmQveeVCRrrlgmIbLUrmPenHY1EcsomEkGpKrfSlX4fFg4JFvBIoykr9Ct1dKEDthZ89s59QAPHJpex6gHUxGxktsjluxMzDNCVhE2AdJNcQi1y8Pw4kCMCXCA6X5qlktnjFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717154045; c=relaxed/simple;
-	bh=5JDD33qRorywNmQKPBbyh44Bl11dNVa+Lm3wUWF09Ic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DZd+MB6AtS2EaA96VDKn+vbaVum8S4cqrc83ZvY38fDWxMjP01IoZnJWzTLM0Cl4DFRWcuvYZjesELSU+g+VC/SC1yqH8/5aW+olHRAuG0w4P0elUd2C0G4t7m3C6PRvXFWUavmADsZ1ToKQncwlcqcD/Rjq09LM0xea36F5ebs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1KkYP+/; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1717154164; c=relaxed/simple;
+	bh=lzU+ACahgdWp8DXcp9/J0T05KhWTiXpBLy8PGomSY14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KcHW9phTfvJTjiWYivozesl0NleuShHsdlg7jEZu1FO+HUlXcX1INYaZzPetox+oVfekGaYVzPF0lEcIp8RKKWmvOkXV1nNaP3eAQjUrhjyHVAtftP772IL3vvm41VVhZStvKTWPnuoDeOM1LZkrc2skI/kLKEUnw6uq5V085iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1KkYP+/"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-25074a27485so771588fac.3;
-        Fri, 31 May 2024 04:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717154043; x=1717758843; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eXBg1IIKOFylKo+rkqsg8yzt/arKbmHAdUcO7p0ZR7c=;
-        b=G1KkYP+/GW4iy6fFCRqFaxAbKgrzreg6lhK6Sw0OS6cHiJ+AkGbZqAS1lFG43vx8Fi
-         TYjHPaWR83Jsdh3lwGxb8jGzPIGpzhmJ5ZqPODFNW5Aq67UOaBy6XmeQxZQAVx+Dlvku
-         Pvey8mty55ABDkq5HA7+rJA3ThVjqkQ9ETfu0DBIFgaQc6OxcIbNK4g8t+F7IRVNug7V
-         jLvUwW6E5qROPbl3s6CK3PFf8Y09YfkhL8plJQmfFS/xpNpt04eSxqjIRL9M0xJebosn
-         zhFp/MRrsDwC0cMXskhhJTwJ5LBZvzRx2/ZqBPmH0/ERrdOMeAKskccJ1jKXz+jGnuib
-         KV2w==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a6893c33403so5236066b.3;
+        Fri, 31 May 2024 04:16:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717154043; x=1717758843;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eXBg1IIKOFylKo+rkqsg8yzt/arKbmHAdUcO7p0ZR7c=;
-        b=nUGudwTvhOGphlDluRFtq04uzIz7yi3oqJ2FI5ejvQNuhsmqslF3ifYSltmNx6Kz5l
-         q4DuL2xnc+RtVZL26vfzXuHGsF0yNhjWh9IxLk0NewPCc1C+Q0qiw9nAj7unpsiaxovT
-         2a62u6jmpr1BZzRXYITgfG3lBqhRJTz7UhTYS7EtCtC4YfjmBideh0+3lL6gDhAHGhP9
-         fkWEiXQJcGRKWpBEV2FVEouKVym7fahpVRVCTOujXJFboN/ZXP2iScQhePcD90Ofp0dR
-         sprbLq0tf9gndmXVXod6/2j2I+4PQk3CZHd5QETendGknp9tAkPD5CF83g3cktuQcyT0
-         xk+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXJieifmFH2zBlqb164LfRQI4zqe/X8L8PkpKaaXwGyDPoVzSIndKBypgSOr/00k8ibxTl7Sw2oChpOsLNBPZnxHHMWXAMAvKTBeldzJVJV+zadhxckV+SyL/g2ctYx+Mi3nXvMg/i9ou+OJXS8JpKg36zSUTwtH/qGHg9ef1YmyHmfOw==
-X-Gm-Message-State: AOJu0YxtEzqeyvTKeYCWXuRh6fPB/+OxE8zylwslcM4NNjaXsyoNzkaq
-	wfPKNDRxRIdeB68xu11YbV0e665m3kLCcFyOhP1L84xEG7B0KNsa1E0z3A1muuasoOFLKadHXlU
-	I4ukjVeMdvCRFSkTKL+nvvjaqVos=
-X-Google-Smtp-Source: AGHT+IHxpK+grLpjn8RaNCKVuk2asXOqwaFS7gBD9s5FbqdCZLTtq7o51KMuQ/gD9ZSt6PBAA87mn9OqOkvS9K3F1PY=
-X-Received: by 2002:a05:6870:969e:b0:250:8141:9219 with SMTP id
- 586e51a60fabf-2508b7f15f2mr1716934fac.18.1717154043442; Fri, 31 May 2024
- 04:14:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717154161; x=1717758961;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=otBvvEMTLMLnzI9ZLifgCog+x7xxrRbOwj15O7mxl/g=;
+        b=fSfveSvcFTKPGQmvVk2rXtbx+w72BEXLQtLO79tDghTpAjlhEnP4nyn+Npb9Lqkq3K
+         pBls7rS605SHqRdiGqMeomcAIo+EemA8hD/AAvccvQrS709ONTBBA2c+Iy2fkX631I3H
+         3ETOXgYSw8iWrjN3v3PSrtZEYrE3evgMCV0rDlK0zw3rSW+1MzBkAcQJ6c7FrKkp4Icc
+         B4tpsLJ6kzOhy2bav3QkIcg4ccPe0WSepIC4DeGixC4RBC6ja6rOP6hmg+AGTlJs51px
+         yNCy05ceFyN85vYFs6+1AbdaFcgRNF84uDb1T8b6IWAYZTLUhJaUb2F2E+cVCYaFmovY
+         QeIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFiFJLTYDP+J62dJ+93NfBIE+ZlJu6D2R4ikAn2ggI3obCFe7AuR0K88TTHBAiPuqp4pET8nhzVBnKgADQKaShDcLuZZXxC45vqytc
+X-Gm-Message-State: AOJu0Yw76E8n3J0nA0+s+FuBkrylPH/97WzhGDx1A7K87HEQOesQBwi0
+	p0AsGkF0XIY0kr9MzG0u2aVrC4dgmEWkG6i6prWfvdTg+rmr7pBs
+X-Google-Smtp-Source: AGHT+IEoBf5u3A5Syw/lTniBy3rP5CqaR9zdYeTxFTfMNe2FbFjsxeJnBvTnP+Rdo1EjmwdKQK5RzQ==
+X-Received: by 2002:a17:906:175a:b0:a63:2698:2163 with SMTP id a640c23a62f3a-a681fc5d513mr141285066b.7.1717154160854;
+        Fri, 31 May 2024 04:16:00 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-004.fbsv.net. [2a03:2880:30ff:4::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e78db9b9sm75815266b.97.2024.05.31.04.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 04:16:00 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Pravin B Shelar <pshelar@ovn.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
+	horms@kernel.org,
+	dev@openvswitch.org (open list:OPENVSWITCH),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next 1/2] openvswitch: Move stats allocation to core
+Date: Fri, 31 May 2024 04:15:49 -0700
+Message-ID: <20240531111552.3209198-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531090458.99744-1-animeshagarwal28@gmail.com> <a472e8ba-bf54-4a62-9b05-ea265a83ef1b@kernel.org>
-In-Reply-To: <a472e8ba-bf54-4a62-9b05-ea265a83ef1b@kernel.org>
-From: Animesh Agarwal <animeshagarwal28@gmail.com>
-Date: Fri, 31 May 2024 16:43:52 +0530
-Message-ID: <CAE3Oz825RQg25PxEbnb=ui7+MtH0ssS=i2HAQK-yOJo+v8JMMw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 3:49=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 31/05/2024 11:04, Animesh Agarwal wrote:
-> > +  "#dma-cells":
-> > +    const: 1
-> > +
-> > +  dma-channels:
-> > +    maximum: 16
->
-> maximum or const?
+With commit 34d21de99cea9 ("net: Move {l,t,d}stats allocation to core and
+convert veth & vrf"), stats allocation could be done on net core instead
+of this driver.
 
-The txt binding says it should always be 16. Datasheet says this
-device has 16 channels of DMA services. I thought specifying just the
-maximum implies maximum=3Dminimum=3D16. Sorry for missing the changelog in
-this version it was cost in the v1 of this patch.
+With this new approach, the driver doesn't have to bother with error
+handling (allocation failure checking, making sure free happens in the
+right spot, etc). This is core responsibility now.
 
->
-> deprecated: true
->
+Move openvswitch driver to leverage the core allocation.
 
-Shall it not be
-"#dma-channels ":
-  deprecated: true
-?
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/openvswitch/vport-internal_dev.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-> > +
-> > +  dma-requests:
-> > +    description: Number of DMA requests supported.
->
-> deprecated: true
->
+diff --git a/net/openvswitch/vport-internal_dev.c b/net/openvswitch/vport-internal_dev.c
+index 74c88a6baa43..7daba6ac6912 100644
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -140,11 +140,7 @@ static struct vport *internal_dev_create(const struct vport_parms *parms)
+ 		err = -ENOMEM;
+ 		goto error_free_vport;
+ 	}
+-	vport->dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
+-	if (!vport->dev->tstats) {
+-		err = -ENOMEM;
+-		goto error_free_netdev;
+-	}
++	dev->pcpu_stat_type = NETDEV_PCPU_STAT_TSTATS;
+ 
+ 	dev_net_set(vport->dev, ovs_dp_get_net(vport->dp));
+ 	dev->ifindex = parms->desired_ifindex;
+@@ -169,8 +165,6 @@ static struct vport *internal_dev_create(const struct vport_parms *parms)
+ 
+ error_unlock:
+ 	rtnl_unlock();
+-	free_percpu(dev->tstats);
+-error_free_netdev:
+ 	free_netdev(dev);
+ error_free_vport:
+ 	ovs_vport_free(vport);
+@@ -186,7 +180,6 @@ static void internal_dev_destroy(struct vport *vport)
+ 
+ 	/* unregister_netdevice() waits for an RCU grace period. */
+ 	unregister_netdevice(vport->dev);
+-	free_percpu(vport->dev->tstats);
+ 	rtnl_unlock();
+ }
+ 
+-- 
+2.43.0
 
-Shall it not be
-"#dma-requests ":
-  deprecated: true
-?
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - "#dma-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    dma-controller@10001000 {
-> > +      compatible =3D "fsl,imx27-dma";
-> > +      reg =3D <0x10001000 0x1000>;
-> > +      interrupts =3D <32 33>;
-> > +      #dma-cells =3D <1>;
-> > +      dma-channels =3D <16>;
->
-> and drop it from here
-
-Is this really a deprecated property?
