@@ -1,132 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D658F187567
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F7A74BE8
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717141677; cv=none; b=eKvXWnMxjiIx7J1+wZifoT26wwTOITZOgph8enoBsafbaed1OgAVyYfX4x7o2SQgUlT4mt0Cnl46GAU/Pmbc/NFsLjCEOaLGtN0OZNliEqWOeSbM5a/QECqyUGWm0i8QfbehiqAp3DI2aHzIx6pW+65B2VMRW57L2z2J8HmlweE=
+	t=1717141689; cv=none; b=b1IZWze/2l3fHswPzg6tjtxsXV+UJhnbas9AQqhk0ONPsD+KBFdMHpG5JDwfLf4JG4QzanafbTiVpmXLvejyCKwjb1t5Fs5MMlfbqh8AU6uZpErZNmpQKpjF7pqq/6yxMrAnYoy/uUy9bFrNe8bfyeBLvEQCs6Jh682rxfkOb4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717141677; c=relaxed/simple;
-	bh=Tu16eDOVCigfYW8Pz4VFPcNphxmr5sYpfmyZz/1SfQs=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=YmSpCg8E7cjEZq8p88UdKDwgzSCy2/YXGCRKFClxKEfsiYFryeOXmQH4+sWgoqwNfyOzyoDT3n4QXj1Zg1f0tAqqa6rGHVfWjQPBoZa/mnXxmePCdxexHTIGofuLIOKLeSRjOZe5DN/ubrhweB+M7ID+n1qKTsrb3uCuvN9z/gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SHY82Che; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717141689; c=relaxed/simple;
+	bh=x9dpYpK4KV2Cwmi70K5k5sjxw79jDI92Nquuca//MEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WH87h7gF2zFGQji7JueP6hCJoMbOC7U+y1/cSHZEUn/EqozCcdNLTGwzXRzAW8DLJjmCfWH7hPlp9Jxy857DkBa1BSVXfowstIDg6od86aChNr3+n1X5Unu1P94AD7W8L/b5KJ2DgtUmmXzIMepMvaJE7sAoMOX/3nJiT4RO6zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A7LCwY4T; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SHY82Che"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717141676; x=1748677676;
-  h=from:to:cc:subject:date:message-id;
-  bh=Tu16eDOVCigfYW8Pz4VFPcNphxmr5sYpfmyZz/1SfQs=;
-  b=SHY82Che2tqjU++MtTJLlC49JYKqpjIoij2p/YbE3LFB/iIxjJl7eXQb
-   zo19oeJlsWUNESPY2AeI41coLbXhHPRRJjAO2LODdNAn/rT53mkHaYb3+
-   z/AHnnPxxXGhnr+VwSdmZ84NVpMtLcxixu4Ix0eEjWEDDGgPKX+kueU0C
-   sjE9yyiG2OuzSn4yaDAz1r+AEvz98PijwLgbYUN2ZQXUOaFdSI9UBYb7V
-   8/gtq68XeFyGsiVKoWNiPN6cirNnI9TnuWeZgs0yUyTXHqpmjy8LZL5MZ
-   hzIrbbavcdSFUkMiujGfA4N7LwH2vg01UDJRqOi2OzDAZUiazzIcHQO/j
-   Q==;
-X-CSE-ConnectionGUID: 9fSflpo2S/Cv1ZeYRiFKrw==
-X-CSE-MsgGUID: Vn2y5sITSzeYevxig+T/9A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13520038"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="13520038"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 00:47:55 -0700
-X-CSE-ConnectionGUID: CzEIJVuXTHuCo7DPY+hBFA==
-X-CSE-MsgGUID: vTWwWsuWRqiBcImIGrihwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="73567522"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 00:47:53 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	tony.luck@intel.com,
-	qiuxu.zhuo@intel.com,
-	yudong.wang@intel.com
-Subject: [PATCH 1/1] drm/fb-helper: Don't schedule_work() to flush frame buffer during panic()
-Date: Fri, 31 May 2024 15:45:21 +0800
-Message-Id: <20240531074521.30406-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7LCwY4T"
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-80ac8c7caddso542483241.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 00:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717141687; x=1717746487; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSaCVUi0zQXquWS21+Fh+LLppuApoIxo0HCn/IZS3vI=;
+        b=A7LCwY4TjUDlFyoSAnaSZRNtcV7lrcneuLQJmlgEZka5xKZsIUefdNML0CJY6H7gbv
+         ujHV9q0SbSPuqXzn+8P17TVUEzjzch81TL5ePNGQ/ebAZlCCperEZY2ddpz9VTJd4/yI
+         foTBJ1KnLLs936ESy7avxBAg0PxxXjukt48R9/bCHfKdbVYFLToiiizniVDKWdm+mLTn
+         yoJXWCT6wuVrjqNM6mG2u/RC0Rw+VAOYKWJsKVVBe70CIDsc+DlSaalVN59XEp186Jzl
+         twil0/4omLp1U5mpUKiQdMz6pEGP7PA8u4rwJCi4Qjrji9YHItVbIg+Kag/QQd+L4zcp
+         gWXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717141687; x=1717746487;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSaCVUi0zQXquWS21+Fh+LLppuApoIxo0HCn/IZS3vI=;
+        b=PWgSaJq3MGZIR8nmwjJYivrwNEzyho1n0xrCR0UbrYWc1CjS2ecnZWDn+sSMW1evB7
+         e8Isg5Mb/B4Gpg/i3kodIRzuZFWIRcLKto0CJtR8uHfiEhbLpaNOytWiJVsFQyJdWg5G
+         gkrzWWYrVWtcgvRJpD6SONYjxqI1oIFxUmHXntP0b/RWj3fgEYKiKW197mBykatkgQGm
+         b3kQyDvE5vQIVbVAqoTpseghCH0r+Ra1WsZUrzU3v8oS7nkBZ/OlIEDLLXSBVWV9F/VE
+         WIYMDYgx+0WXUEB6s/Io4PXF9foBS21lSaI/mEuPVmtstHYvWki9MDpU++pKkSK8TRAB
+         ODHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+GcmczzL9y9JFA8Q7UWj+FtrGAZ3knfnfwYWKVLo5wsFs8sRIXOw+tbez4KSwqu2qjE+VziN/XCReVcGXNPodHV1cDNv93eV5K7tZ
+X-Gm-Message-State: AOJu0Yxh8WELLKvizv10gbCtK+uQoRLZwevbYM0xEjmQjE7LfW5Yw6fs
+	MeBzBwNimT0PdAfx9NBbrbHmQ2lPQEBKOIXacEvY9RJXgQr5lpIifgsuO971JzyVIjr4RLPpeZc
+	SufFA0dtKGMoICmMszRr11SOzWL9LDlrHaDuB
+X-Google-Smtp-Source: AGHT+IFwbl7LCe7uZITUbsbpr+vTZ/z7OBOUdW9jr0RrzbVMGpMRPXRbZdWgTCObtq06JDZKBnuF3wcxqsOgZOEZOx8=
+X-Received: by 2002:a67:f655:0:b0:47b:a00c:4680 with SMTP id
+ ada2fe7eead31-48bc2370c46mr1125258137.32.1717141686612; Fri, 31 May 2024
+ 00:48:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240530-md-kernel-kcsan-v1-1-a6f69570fdf6@quicinc.com>
+In-Reply-To: <20240530-md-kernel-kcsan-v1-1-a6f69570fdf6@quicinc.com>
+From: Marco Elver <elver@google.com>
+Date: Fri, 31 May 2024 09:47:27 +0200
+Message-ID: <CANpmjNN1qf=uUnetER3CPZ9d5DSU_S5n-4dka3mDKgV-Jq0Jgw@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: test: add missing MODULE_DESCRIPTION() macro
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Sometimes the system [1] hangs on x86 I/O machine checks. However, the
-expected behavior is to reboot the system, as the machine check handler
-ultimately triggers a panic(), initiating a reboot in the last step.
+On Thu, 30 May 2024 at 21:39, Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
+>
+> Fix the warning reported by 'make C=1 W=1':
+> WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/kcsan/kcsan_test.o
+>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-The root cause is that sometimes the panic() is blocked when
-drm_fb_helper_damage() invoking schedule_work() to flush the frame buffer.
-This occurs during the process of flushing all messages to the frame
-buffer driver as shown in the following call trace:
+Reviewed-by: Marco Elver <elver@google.com>
 
-  Machine check occurs [2]:
-    panic()
-      console_flush_on_panic()
-        console_flush_all()
-          console_emit_next_record()
-            con->write()
-              vt_console_print()
-                hide_cursor()
-                  vc->vc_sw->con_cursor()
-                    fbcon_cursor()
-                      ops->cursor()
-                        bit_cursor()
-                          soft_cursor()
-                            info->fbops->fb_imageblit()
-                              drm_fbdev_generic_defio_imageblit()
-                                drm_fb_helper_damage_area()
-                                  drm_fb_helper_damage()
-                                    schedule_work() // <--- blocked here
-    ...
-    emergency_restart()  // wasn't invoked, so no reboot.
+Jeff, do you have a tree to take this through?
+If not - Paul, could this go through your tree again?
 
-During panic(), except the panic CPU, all the other CPUs are stopped.
-In schedule_work(), the panic CPU requires the lock of worker_pool to
-queue the work on that pool, while the lock may have been token by some
-other stopped CPU. So schedule_work() is blocked.
+Many thanks,
+-- Marco
 
-Additionally, during a panic(), since there is no opportunity to execute
-any scheduled work, it's safe to fix this issue by skipping schedule_work()
-on 'oops_in_progress' in drm_fb_helper_damage().
 
-[1] Enable the kernel option CONFIG_FRAMEBUFFER_CONSOLE,
-    CONFIG_DRM_FBDEV_EMULATION, and boot with the 'console=tty0'
-    kernel command line parameter.
-
-[2] Set 'panic_timeout' to a non-zero value before calling panic().
-
-Reported-by: Yudong Wang <yudong.wang@intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/gpu/drm/drm_fb_helper.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index d612133e2cf7..6d7b6f038821 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -628,6 +628,9 @@ static void drm_fb_helper_add_damage_clip(struct drm_fb_helper *helper, u32 x, u
- static void drm_fb_helper_damage(struct drm_fb_helper *helper, u32 x, u32 y,
- 				 u32 width, u32 height)
- {
-+	if (oops_in_progress)
-+		return;
-+
- 	drm_fb_helper_add_damage_clip(helper, x, y, width, height);
- 
- 	schedule_work(&helper->damage_work);
--- 
-2.17.1
-
+> ---
+>  kernel/kcsan/kcsan_test.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/kcsan/kcsan_test.c b/kernel/kcsan/kcsan_test.c
+> index 0c17b4c83e1c..117d9d4d3c3b 100644
+> --- a/kernel/kcsan/kcsan_test.c
+> +++ b/kernel/kcsan/kcsan_test.c
+> @@ -1620,5 +1620,6 @@ static struct kunit_suite kcsan_test_suite = {
+>
+>  kunit_test_suites(&kcsan_test_suite);
+>
+> +MODULE_DESCRIPTION("KCSAN test suite");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_AUTHOR("Marco Elver <elver@google.com>");
+>
+> ---
+> base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+> change-id: 20240530-md-kernel-kcsan-9795c9551d3b
+>
