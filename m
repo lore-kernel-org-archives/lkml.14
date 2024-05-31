@@ -1,151 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C78208D4
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 20:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F7578276
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 20:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717188747; cv=none; b=ay3bp+Z7vp5i+5AhS8AKZbU1nAF7QuhVv44H8C2pudxvVhOFMeneDs7QS7LiKWz9Phm2bWK2/ueUFRgOJZReuLrZcC7WULyb8/PA0Tkx1IN8n8N0P7XT0npQjbPgapaPDiwZvRKaxQTk03+wV0vbUod6UoFXwSuBLYqWXA3KPrc=
+	t=1717188835; cv=none; b=LQxSVK7mQ8Yv8JPdu1xX9mFghKpxRfSn1UYsyCB78H7Lukzje7QHeEJkajJxjU8P9dE/7AWzrhNgf43QnB23QpW4mxeHfgUgyhjdOT1tbY+9dCdSRye8K2ASx5YpqgXnTgZlPOpFwfe0te9pS7WH4PrUW6W2KM/AU43ax1+/jfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717188747; c=relaxed/simple;
-	bh=x4yRE+8eJOrqN0Tg8eCdRDR/ydVszAFAvviD2pLZoPA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=krwOx7X2sr9nmv0zTlBvqXzonuX2VaDPr1ouP5/fBpoaexPKCD3+EJkMvDDP06l0Xl0Esn3aclXMtRoP4ORICdKCqOv+k1RKdDhCuaq+FwwI29CMfIdcayw9juVx1sGVwe3Uaad9zbPL6E5OHcDGxt4P1wB31YH+NadihPc8i7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0FcRpT5; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717188835; c=relaxed/simple;
+	bh=pgDYnODcp2BTX/BCu+v6+Qj8N74jOLekqacMvQEwug8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7iv1YfITSnfR1onc1LfoLXtkWBrhug/ZLmuxMZHPF7HQbrB7uVhH2I/nAVbJHHrH8bZdZYf15bYqFoI200WIqlIq1jRL6BXSYX3jw9K09mfJhwF6FSjvTZ0nFW0y/Xvs21ag80ZpzRagkN//xoWw0fla7hz4/7Xc6G5GCIFqmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaOJ2wXA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0FcRpT5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717188745; x=1748724745;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=x4yRE+8eJOrqN0Tg8eCdRDR/ydVszAFAvviD2pLZoPA=;
-  b=e0FcRpT5c94Oxjql0fTbKOkGLC10gfmFivPdM2/rxtg8goXK1U1J8T2X
-   mwItITVBLFfjAziWMepcIukEafVDPoNQUXSxQ4/iUR56qJ+8un4C77YWC
-   Cj8Sp5etqNNUfoVXYOhKEPOvnvoRlJ69iNoFNPnsguiGViAXv6NR1/m8J
-   Ux6CeQ2O4ZTXsR0eK8iJ7VJq/QKsJgUEqIphqS2pnf4Zc7HN/bfyeW3m3
-   6+1bsSd2kPVUwuR+aT4jtrWFASOB7TfZ+JJW1Xv516LtLoGAm7v413cSq
-   bImRHLuDh/VGdBZIIcNGKGiOHBJ9rcTS3KRRTAyVZLYey2wdjC2fXUleW
-   w==;
-X-CSE-ConnectionGUID: ERis017UQhSZlHa11bN1Fg==
-X-CSE-MsgGUID: FLN+L6e2Tkec3GcQfW50gg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13873119"
-X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="13873119"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:52:25 -0700
-X-CSE-ConnectionGUID: 2nRCBILhRv+cgSARzCATcQ==
-X-CSE-MsgGUID: PeXTGiktRPaD88FL+iSStA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="36726557"
-Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
-  by orviesa006.jf.intel.com with ESMTP; 31 May 2024 13:52:25 -0700
-From: Tim Chen <tim.c.chen@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>,
-	Vinicius Gomes <vinicius.gomes@intel.com>
-Subject: [PATCH] sched/balance: Skip unnecessary updates to idle load balancer's flags
-Date: Fri, 31 May 2024 13:54:52 -0700
-Message-Id: <20240531205452.65781-1-tim.c.chen@linux.intel.com>
-X-Mailer: git-send-email 2.32.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaOJ2wXA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFA4C116B1;
+	Fri, 31 May 2024 20:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717188835;
+	bh=pgDYnODcp2BTX/BCu+v6+Qj8N74jOLekqacMvQEwug8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iaOJ2wXAJI5oyhlMmOS1qpjcTQt4YPKlTTg9M50fjcAQE4skZPup6aSVS8e+pw4a4
+	 zwGjXJ6IW+p0HAzP50/bIe+tgDHtW1TLeGoEl1mv40L0Tdmjbh1rP/vEkjrX+7v3dW
+	 PLzPmXU/CKE/MNSUXie59xTvsgO5VgldFNzk12EHqJeM9Ovp/L/4vkrB5hisaQcMYs
+	 Y4l9NbGonOuZ7BH5DqNm+IhpjdfkUdfBCetxuCoGBEJIIJXY2R1Y7Ekn6vxLdLeOSC
+	 wPsQLxbInDr717xHnkyM42HDxumtc4nOqHvvrLYPWhfdp8GgtPcl9MlVWli6TWvS7y
+	 DdO2dWR7Etqvw==
+Date: Fri, 31 May 2024 14:53:52 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: "brookxu.cn" <brookxu.cn@gmail.com>
+Cc: axboe@kernel.dk, hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] nvme-fabrics: use reserved tag for reg read/write
+ command
+Message-ID: <Zlo44PRN94sfQAoI@kbusch-mbp.dhcp.thefacebook.com>
+References: <20240531092421.317296-1-brookxu.cn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531092421.317296-1-brookxu.cn@gmail.com>
 
-We observed that the overhead on trigger_load_balance(), now renamed
-sched_balance_trigger(), has risen with a system's core counts.
+On Fri, May 31, 2024 at 05:24:21PM +0800, brookxu.cn wrote:
+> From: Chunguang Xu <chunguang.xu@shopee.com>
+> 
+> In some scenarios, if too many commands are issued by nvme command in
+> the same time by user tasks, this may exhaust all tags of admin_q. If
+> a reset (nvme reset or IO timeout) occurs before these commands finish,
+> reconnect routine may fail to update nvme regs due to insufficient tags,
+> which will cause kernel hang forever. In order to workaround this issue,
+> maybe we can let reg_read32()/reg_read64()/reg_write32() use reserved
+> tags. This maybe safe for nvmf:
+> 
+> 1. For the disable ctrl path,  we will not issue connect command
+> 2. For the enable ctrl / fw activate path, since connect and reg_xx()
+>    are called serially.
+> 
+> So the reserved tags may still be enough while reg_xx() use reserved tags.
+> 
+> Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
+> Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
 
-For an OLTP workload running 6.8 kernel on a 2 socket x86 systems
-having 96 cores/socket, we saw that 0.7% cpu cycles are spent in
-trigger_load_balance(). On older systems with fewer cores/socket, this
-function's overhead was less than 0.1%.
-
-The cause of this overhead was that there are multiple cpus calling
-kick_ilb(flags), updating the balancing work needed to a common idle
-load balancer cpu. The ilb_cpu's flags field got updated unconditionally
-with atomic_fetch_or().  The atomic read and writes to ilb_cpu's flags
-causes much cache bouncing and cpu cycles overhead. This is seen in the
-annotated profile below.
-
-             kick_ilb():
-             if (ilb_cpu < 0)
-               test   %r14d,%r14d
-             ↑ js     6c
-             flags = atomic_fetch_or(flags, nohz_flags(ilb_cpu));
-               mov    $0x2d600,%rdi
-               movslq %r14d,%r8
-               mov    %rdi,%rdx
-               add    -0x7dd0c3e0(,%r8,8),%rdx
-             arch_atomic_read():
-  0.01         mov    0x64(%rdx),%esi
- 35.58         add    $0x64,%rdx
-             arch_atomic_fetch_or():
-
-             static __always_inline int arch_atomic_fetch_or(int i, atomic_t *v)
-             {
-             int val = arch_atomic_read(v);
-
-             do { } while (!arch_atomic_try_cmpxchg(v, &val, val | i));
-  0.03  157:   mov    %r12d,%ecx
-             arch_atomic_try_cmpxchg():
-             return arch_try_cmpxchg(&v->counter, old, new);
-  0.00         mov    %esi,%eax
-             arch_atomic_fetch_or():
-             do { } while (!arch_atomic_try_cmpxchg(v, &val, val | i));
-               or     %esi,%ecx
-             arch_atomic_try_cmpxchg():
-             return arch_try_cmpxchg(&v->counter, old, new);
-  0.01         lock   cmpxchg %ecx,(%rdx)
- 42.96       ↓ jne    2d2
-             kick_ilb():
-
-With instrumentation, we found that 81% of the updates do not result in
-any change in the ilb_cpu's flags.  That is, multiple cpus are asking
-the ilb_cpu to do the same things over and over again, before the ilb_cpu
-has a chance to run NOHZ load balance.
-
-Skip updates to ilb_cpu's flags if no new work needs to be done.
-Such updates do not change ilb_cpu's NOHZ flags.  This requires an extra
-atomic read but it is less expensive than frequent unnecessary atomic
-updates that generate cache bounces.
-
-We saw that on the OLTP workload, cpu cycles from trigger_load_balance()
-(or sched_balance_trigger()) got reduced from 0.7% to 0.2%.
-
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
----
- kernel/sched/fair.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8a5b1ae0aa55..9ab6dff6d8ac 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -11891,6 +11891,13 @@ static void kick_ilb(unsigned int flags)
- 	if (ilb_cpu < 0)
- 		return;
- 
-+	/*
-+	 * Don't bother if no new NOHZ balance work items for ilb_cpu,
-+	 * i.e. all bits in flags are already set in ilb_cpu.
-+	 */
-+	if ((atomic_read(nohz_flags(ilb_cpu)) & flags) == flags)
-+		return;
-+
- 	/*
- 	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
- 	 * the first flag owns it; cleared by nohz_csd_func().
--- 
-2.32.0
-
+Thanks, applied to nvme-6.10.
