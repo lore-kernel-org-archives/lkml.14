@@ -1,215 +1,108 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDF45221
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 02:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74E84C6D;
+	Fri, 31 May 2024 02:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717121751; cv=none; b=u0VU2yaG1FtNKpy5wl0WE/emsnJr78/GP4YZl2n1Wq+UOkbPCyN+cV1kqb45pBM4A7zE1jSueAOa5P9P0azhtw/0CgfiZwHjDdmqTQ9Myaaf7LXylxkb6sCQL4mAG9SrF6qzvqoI59sn49jrSkCt6H528Xq4ANBqxXvyR+I+95k=
+	t=1717121819; cv=none; b=htacjHei9MURWTIIl7GEQgGhabsO7UwBiRSP03Ob9UfHiy4guG+5cv0UB81LpWmvchkM8puk0bPWZheogiXb0Xgu+kkrONa3kYG2zabNnQLtXBpRxpSQLBZYk6j2Kwmi7uNX54PwjMPcSoz/HfT3/rgh6YVE9u2Fc+tuld+aWgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717121751; c=relaxed/simple;
-	bh=ujqjt6nPYvhHkI8+PJNsQn1SZ1cTucvti8kPxHzCn1Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8Q4oddXjBuYyi1vbRlszB5TnXgJo8G4XB9zcIs9+wLGbRGm4bshYBFGFYYtiDUfno/UGZ5JNhuQq/GAKETJRvHqVly6GHkSxstcD8c6fgzH1RQHqc23czTFl1xyBmUSvlIa33WppPJvTH86owr/MfS5Exxn+A3vIViAHLFdMFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZu5SNF+; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717121819; c=relaxed/simple;
+	bh=P5d/0b92iEEWWrKJQ67tqG3rp+vdYxJZiUvaostorGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nS65dhGE3Ncm1XPRHuXXGaRIeFSt4C+dVJhEsg2txL+S8/pu0kiz8Brmw4B4liC6jxwpnyz49+88sG0hZS9G+yHYBxSfn/fVhWsz9OY5XuBs8C6TAkx34n4Z/AmGJcRSHVW6n0UwUhibXhknCK7Z4q9MgbEYdo2np0Ij7mpBQlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkaByAMr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZu5SNF+"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35dc36b107fso639291f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 19:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717121748; x=1717726548; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SVZ+m5D5+txNLZWQ1wHkb88kpVVpmlzrHDUo9d6Wu3o=;
-        b=WZu5SNF+xMWhLNNyB9BRQ2L1QGPRbJ3/cPDE9dTVvz/XNGBeuuY4OPc1dYsQyUL9Vy
-         V2tnl5PBWw9JXnkWCOpeJcG9ofx/TZwH34YB2zbXHNAekioUFjReBiaqtVs4l1yMsloK
-         xWq/BdOH1DQGo5V2Sah4XiwV4BKOpqaLPW+7o9+ouVOEnpz0KFvUEvaidKLhbbUIeUb/
-         hA+w3MQf1xPT1S+RMVItKT9IYQTlyRpdpjWGPRRxTg5yFY4GnMQYgaRuODfFsqW5M2eh
-         aeQ/SefGD5dxULDi65yaU6bqdQB2v4FKbADSXRRY0QvLd9r16pB0mp1f3VxvOFNWTK3a
-         3CqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717121748; x=1717726548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SVZ+m5D5+txNLZWQ1wHkb88kpVVpmlzrHDUo9d6Wu3o=;
-        b=dATEOOO9Kx6GpTduUWBfug9stxpQGKS298xRW103VlXUer6zGcgFaHoleLG248K8Q6
-         j6OrDzMwHX+ozTdfOflLLp+o7cv1gAz+hkk11+bNZoa2t2kT/ZGVfBM/4fP5j7fnVeLG
-         5HHS/Z0ife4O65TKRbCsuRIvT6KGwgG0pbRrQtALhRqcbtaqe02RWdxKF6fLeYhk6Oxr
-         TNI0D4wpi7wzNndVcUp3/ikZuL/fYGvSVMmVS9ku9+csKvSGVd0nM4qTqUwxoU7ZOblt
-         Gtb3QVxE2U+XptGdNVHaL2GoU/gnIN0NVl53VeWbq48WJ+ky2XXjR206W2WbBCZoEVXG
-         J0Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWbhpU8kdQDj8HuTJL6AdvDV1d7L1l20q9qxnCVomTeDdO2Iqq0JndxsWuluGw6VLOfyyqgUrqPB+YMqebaaCi+GNEqzIOLiSlrMOO4
-X-Gm-Message-State: AOJu0YzlkmeWJpUy9j9FqSma6gZbh46nBzuIjiDQ7f3/jNdDsqNEZEq9
-	fds8HPkx+A9fxP3kxuIocYw2PQ3b7PQn6MLIc297Dm2foLADRI5dSgV5+L7BHLBYoCR8272nIr3
-	+23iIJq1hF75qbjYC9wtSSRtSLHc=
-X-Google-Smtp-Source: AGHT+IHRWJN+gxDchzmDSqJk6zLAuQIT1nOSjWlbD6Rv+4uUgrbaWgOh/7ArTSHrMuvTdEVXCutlfFw3zw5BoONSCjE=
-X-Received: by 2002:a5d:4808:0:b0:354:fca5:4190 with SMTP id
- ffacd0b85a97d-35e0f289f41mr212647f8f.41.1717121748147; Thu, 30 May 2024
- 19:15:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkaByAMr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9C8C2BBFC;
+	Fri, 31 May 2024 02:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717121819;
+	bh=P5d/0b92iEEWWrKJQ67tqG3rp+vdYxJZiUvaostorGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hkaByAMrS7s3R8mRhw3b+e4esv4ruad8pwZal97P7yPssH0JV1AZh/jIKAQTk6Tu+
+	 JS1Bcf42qlwozPi845OchFKmaFQBRLqLd5IbpLo33CwKwmKGGFe4caWgrY+BF6I3Oo
+	 lQvzd7s68N16zgT+eX1feCQkUFxpflo7srOsfgGO5Nuu3GlQXMIjaZH3HK4tB4440c
+	 GoqHWACn0iwEfylTG+VXzj9wuwAN+hfKFtYP4YBMVwebVRc6/hx6mLpjLqG0qGlEEW
+	 X+Fvudlzs2OvFvkw16SPZ8f9OE+vPr6XP+zhRE/XXACoJ4CmeoxbHv5oyuab8yZeqJ
+	 3rAnt80rtWJDg==
+Date: Thu, 30 May 2024 19:16:56 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+	davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com,
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+	trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch
+ early measurements
+Message-ID: <20240531021656.GA1502@sol.localdomain>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-7-ross.philipson@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1716204978-29455-1-git-send-email-zhiguo.niu@unisoc.com>
- <1d67715b-5f88-4940-969d-e098fd80ae2a@kernel.org> <CAHJ8P3LXYWQ+bLZHPn_5FLu3oi83ei8C9ZCzAXwa9oBdEKVDNA@mail.gmail.com>
- <CAHJ8P3+ro9YsU7jZWeAfiUh9uNFEj_=Wiaf2YRLVLBD5_9fM0g@mail.gmail.com> <0a4b5b40-1532-44a4-a4d6-601ceced20a4@kernel.org>
-In-Reply-To: <0a4b5b40-1532-44a4-a4d6-601ceced20a4@kernel.org>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Fri, 31 May 2024 10:15:36 +0800
-Message-ID: <CAHJ8P3J1_Yg3FAruR0zPQdDnbw_GbT7wOKON3-xzBr32+HU_6w@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: enable atgc if atgc_age_threshold from user is less
- than elapsed_time
-To: Chao Yu <chao@kernel.org>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531010331.134441-7-ross.philipson@oracle.com>
 
-On Fri, May 31, 2024 at 10:04=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> On 2024/5/30 17:49, Zhiguo Niu wrote:
-> > On Mon, May 27, 2024 at 12:07=E2=80=AFPM Zhiguo Niu <niuzhiguo84@gmail.=
-com> wrote:
-> >>
-> >> On Mon, May 27, 2024 at 11:49=E2=80=AFAM Chao Yu <chao@kernel.org> wro=
-te:
-> >>>
-> >>> On 2024/5/20 19:36, Zhiguo Niu wrote:
-> >>>> Now atgc can be enabled based on the following conditions:
-> >>>> -ATGC mount option is set
-> >>>> -elapsed_time is more than atgc_age_threshold already
-> >>>> but these conditions are check when umounted->mounted device again.
-> >>>> If the device has not be umounted->mounted for a long time, atgc can
-> >>>> not work even the above conditions met.
-> >>>
-> >>> Zhiguo, I didn't get it, can you please explain more about this issue=
-?
-> >>>
-> >>> Thanks,
-> >> Hi Chao,
-> >>
-> >> At present, the point of atgc enale is checked during the mount
-> >> process. What I mean is that if a device has not been rebooted
-> >> (re-mounted) for a long time, even if the above two conditions are
-> >> met(ATGC mount option is set, and the device has been powered on long
-> >> enough=EF=BC=8C more than atgc default threshold ), atgc cannot be dyn=
-amically
-> >> enabled.
-> >>
-> >> If the user is used to not restarting the phone after turning it on,
-> >> it will be difficult to use atgc.
-> >> thanks!
-> > Hi Chao,
-> > Do you have any suggestions or comments on this?
->
-> Zhiguo,
->
-> I remember that atgc can not be enabled at runtime due to some reasons, b=
-ut
-> I need some time to recall and check the details...
->
-> Thanks,
-Hi Chao,
-OK, Thanks for your help.
->
-> > thanks=EF=BC=81
-> >
-> >>>
-> >>>>
-> >>>> It is better to enable atgc dynamiclly when user change atgc_age_thr=
-eshold
-> >>>> meanwhile this vale is less than elapsed_time and ATGC mount option =
-is on.
-> >>>>
-> >>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> >>>> ---
-> >>>>    fs/f2fs/f2fs.h    |  1 +
-> >>>>    fs/f2fs/segment.c |  9 ++++-----
-> >>>>    fs/f2fs/sysfs.c   | 16 ++++++++++++++++
-> >>>>    3 files changed, 21 insertions(+), 5 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>> index 1974b6a..e441d2d 100644
-> >>>> --- a/fs/f2fs/f2fs.h
-> >>>> +++ b/fs/f2fs/f2fs.h
-> >>>> @@ -3694,6 +3694,7 @@ void f2fs_clear_prefree_segments(struct f2fs_s=
-b_info *sbi,
-> >>>>    int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi);
-> >>>>    void f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi);
-> >>>>    void f2fs_restore_inmem_curseg(struct f2fs_sb_info *sbi);
-> >>>> +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi);
-> >>>>    int f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, in=
-t type,
-> >>>>                                        unsigned int start, unsigned =
-int end);
-> >>>>    int f2fs_allocate_new_section(struct f2fs_sb_info *sbi, int type,=
- bool force);
-> >>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> >>>> index 71dc8042..44923d4 100644
-> >>>> --- a/fs/f2fs/segment.c
-> >>>> +++ b/fs/f2fs/segment.c
-> >>>> @@ -2931,14 +2931,11 @@ static int get_atssr_segment(struct f2fs_sb_=
-info *sbi, int type,
-> >>>>        return ret;
-> >>>>    }
-> >>>>
-> >>>> -static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> >>>> +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> >>>>    {
-> >>>>        struct curseg_info *curseg =3D CURSEG_I(sbi, CURSEG_ALL_DATA_=
-ATGC);
-> >>>>        int ret =3D 0;
-> >>>>
-> >>>> -     if (!sbi->am.atgc_enabled)
-> >>>> -             return 0;
-> >>>> -
-> >>>>        f2fs_down_read(&SM_I(sbi)->curseg_lock);
-> >>>>
-> >>>>        mutex_lock(&curseg->curseg_mutex);
-> >>>> @@ -2955,7 +2952,9 @@ static int __f2fs_init_atgc_curseg(struct f2fs=
-_sb_info *sbi)
-> >>>>    }
-> >>>>    int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi)
-> >>>>    {
-> >>>> -     return __f2fs_init_atgc_curseg(sbi);
-> >>>> +     if (!sbi->am.atgc_enabled)
-> >>>> +             return 0;
-> >>>> +     return f2fs_init_atgc_curseg(sbi);
-> >>>>    }
-> >>>>
-> >>>>    static void __f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi, in=
-t type)
-> >>>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> >>>> index 09d3ecf..72676c5 100644
-> >>>> --- a/fs/f2fs/sysfs.c
-> >>>> +++ b/fs/f2fs/sysfs.c
-> >>>> @@ -673,6 +673,22 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
-> >>>>                return count;
-> >>>>        }
-> >>>>
-> >>>> +     if (!strcmp(a->attr.name, "atgc_age_threshold")) {
-> >>>> +             if (t < 0)
-> >>>> +                     return -EINVAL;
-> >>>> +             sbi->am.age_threshold =3D t;
-> >>>> +             if (sbi->am.atgc_enabled)
-> >>>> +                     return count;
-> >>>> +
-> >>>> +             if (test_opt(sbi, ATGC) &&
-> >>>> +                     le64_to_cpu(sbi->ckpt->elapsed_time) >=3D t) {
-> >>>> +                     if (f2fs_init_atgc_curseg(sbi))
-> >>>> +                             return -EINVAL;
-> >>>> +                     sbi->am.atgc_enabled =3D true;
-> >>>> +             }
-> >>>> +             return count;
-> >>>> +     }
-> >>>> +
-> >>>>        if (!strcmp(a->attr.name, "gc_segment_mode")) {
-> >>>>                if (t < MAX_GC_MODE)
-> >>>>                        sbi->gc_segment_mode =3D t;
+On Thu, May 30, 2024 at 06:03:18PM -0700, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+> 
+> For better or worse, Secure Launch needs SHA-1 and SHA-256. The
+> choice of hashes used lie with the platform firmware, not with
+> software, and is often outside of the users control.
+> 
+> Even if we'd prefer to use SHA-256-only, if firmware elected to start us
+> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
+> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in order
+> to safely use SHA-256 for everything else.
+> 
+> The SHA-1 code here has its origins in the code from the main kernel:
+> 
+> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+> 
+> A modified version of this code was introduced to the lib/crypto/sha1.c
+> to bring it in line with the SHA-256 code and allow it to be pulled into the
+> setup kernel in the same manner as SHA-256 is.
+> 
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+
+Thanks.  This explanation doesn't seem to have made it into the actual code or
+documentation.  Can you please get it into a more permanent location?
+
+Also, can you point to where the "deliberately cap the SHA-1 PCRs" thing happens
+in the code?
+
+That paragraph is also phrased as a hypothetical, "Even if we'd prefer to use
+SHA-256-only".  That implies that you do not, in fact, prefer SHA-256 only.  Is
+that the case?  Sure, maybe there are situations where you *have* to use SHA-1,
+but why would you not at least *prefer* SHA-256?
+
+> /*
+>  * An implementation of SHA-1's compression function.  Don't use in new code!
+>  * You shouldn't be using SHA-1, and even if you *have* to use SHA-1, this isn't
+>  * the correct way to hash something with SHA-1 (use crypto_shash instead).
+>  */
+> #define SHA1_DIGEST_WORDS	(SHA1_DIGEST_SIZE / 4)
+> #define SHA1_WORKSPACE_WORDS	16
+> void sha1_init(__u32 *buf);
+> void sha1_transform(__u32 *digest, const char *data, __u32 *W);
+>+void sha1(const u8 *data, unsigned int len, u8 *out);
+
+Also, the comment above needs to be updated.
+
+- Eric
