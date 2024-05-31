@@ -1,621 +1,240 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D126134AB;
-	Fri, 31 May 2024 00:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717115764; cv=none; b=Lcoq0kUoxa03vTA+GB+nPmc7IAKepTO7sWqO5qNnb8pQTqjZjVRvA8Jijot50wL6PNsERpefCXvWlw962/3UlJwoqLwmJYqbek3KOUE7+rDXBli3FExRCSp1R+ZMjo7SQO5RHaqr7gIgUMDsCO25jLd1o0YJGi9VRr3Ux6/RSZU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717115764; c=relaxed/simple;
-	bh=9jMbF4EvO2HoOup8CkZuyhS+D9sSQeQlp+iSl94nf50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SdlONU7s6OJLGzwZeeuBER95vq1sbh7WUjuJPvbvvKXxYMLryzkO0DqJhTodX2/pTCDVaZdYL47cdUDrriLOGd0iVacD/yp6PUGPA41WMrS/kETfdPegVl9ZJBxXnBG5fAfB6lTBVNaqGgl67luQ7XQtfeg99bz4u3Gapc08Ahw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JuZAqMGj; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2259DEAC0;
+	Fri, 31 May 2024 00:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717115820; cv=fail; b=U/QAaaFozW9bjSh+G7EuyVsmQxRVK4LGASMcdJ9fVkHIlxGYltx098g7JrvrkMbckcvpdqF+6YI3f+Dgtfx7OupPykf0xe12YW0c3eODoe0ntS4+0xIxoaUPjbt+8z7/Em1DD2XLz76GU3vC5dcsxUx5Pyi6uNBqcPycQ4jfuo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717115820; c=relaxed/simple;
+	bh=MqGv4y1WtgJSsBgK8YfHt5KSS0ChSgox4qF1pErGv6g=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=k+T4QWMoWVzeGfpfEpVZkZ4ALCpfL1uoSxyKOr6JTWLQM7vlHR06zLs9MpJutwxKKwm/wDpFA7dSNqU3LTZ8n+Cz00wzlzcqLEl3tYICxhYoiker2FlDF2rvBuQ+ivewx8uNCUUsWz7OFL/5mgOBbaKOiDrFjeI2Y+NyYV1SHXk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C00GOwHZ; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JuZAqMGj"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UNkPol006819;
-	Fri, 31 May 2024 00:35:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=Q6pjVGzrPHHTVu9KRNWWYX/lLVJpjXE3+mIUz4VfgLA=;
- b=JuZAqMGjwsBvODRrYlGUN2JTqcuhJHSn2arGgOnLOhdu6kkl6Pzzg2bbSreFL3MACL2+
- 9xl1N6/WfD3gHvZNsDajpJy34CQ7TUE0PVadEqdbWDrHWU/ljHdboQLsUd8rUhmloUaw
- ek2yBT4EaaIWDk+HfBEsRjhh9Sa4qNLG3BKRpVDfNFLBOcVSs1EEtz07uIqALreXjGKM
- 132YPajVwyX0Nr+XADjZBlWSjiLmmDPojXGq4I8QLKvkNrLuG4njzjqTB4UGp2qFDmy+
- qTs4V+VPYML1L+7QiTINfVxKVDcOSt4gSBuiwzXVdl+d4oedh28Bv1sAQ3lcr//x/+6P SQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yf30g860q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 00:35:29 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V0ZTwV016185;
-	Fri, 31 May 2024 00:35:29 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yf30g860j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 00:35:28 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44ULjBB7029537;
-	Fri, 31 May 2024 00:35:28 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ydpayvyyq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 00:35:28 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44V0ZP8B35521062
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 00:35:28 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CCAD458058;
-	Fri, 31 May 2024 00:35:25 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A768558061;
-	Fri, 31 May 2024 00:35:23 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 31 May 2024 00:35:23 +0000 (GMT)
-Message-ID: <97dd7485-51bf-4e47-83ab-957710fc2182@linux.ibm.com>
-Date: Thu, 30 May 2024 20:35:22 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C00GOwHZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717115819; x=1748651819;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=MqGv4y1WtgJSsBgK8YfHt5KSS0ChSgox4qF1pErGv6g=;
+  b=C00GOwHZ9Cfbbg9w3HWj0psQ5z3LYsn1cyqrBMCfb2KjV/FeifmfUFtw
+   9C62v/2r91bimqTj3PMc+yqLkXCL3B7PwJEuJOQ6lsTtBXlS+l+c8fzCN
+   UNuIGNJu5URwJaxn/Uwphh7fdYTZiY/vMdLla7P++VJEjpMBVvmVGbT/j
+   TX6YicS91VY8763w0GJ+mVVq6/Y15dZEu2duGJ/gaSoIrqKBsTQkau1c/
+   fOnL96s+w/yGI170cz+tzgmBDowK1bx7CUMX9JSKPSRXeAP5i8lOsnruy
+   0qwAON+v+kOeNx1/a721/9JRF220kcCOgJzpsSAlkfdB8qa00Dql8ivaq
+   Q==;
+X-CSE-ConnectionGUID: Z/klRqDgT3WWLzwlzUzo0w==
+X-CSE-MsgGUID: 4QnEDiO5RhGUxOsbK+I6zg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="16590514"
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="16590514"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 17:36:58 -0700
+X-CSE-ConnectionGUID: 2g590DlqQaG824JsQFFUpQ==
+X-CSE-MsgGUID: PY3oSHYTSoqc3vo1qmNHvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
+   d="scan'208";a="36076408"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 30 May 2024 17:36:53 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 30 May 2024 17:36:52 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Thu, 30 May 2024 17:36:52 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 30 May 2024 17:36:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ncYULVN5aqGY8qPI4umIk9rhqNqBg53MNeDZrN1YIdqDyLRvdnadPjDpu+fql8kQzEW1F65uj9a4XWhUuCK0fSqZGkFUNfHjl2EE0JAFoMdSo8OpTZdw/Swg7/qQjfAQBPBziogLjaKxmgkvsHTkflP0fCFBlygR3a2E1TMJ3E5MqADxNlYHHGnZpBob7YuE2wIOa6aX/mJJuY9Studc3YmN3/zBA8m53eftEoG+1v+JHP4A3AcCZRPxOos7LM1QMgmtagx88HqcDUDzvCkTU/AzGzAvjoADxT79Na56Y0jBiXcb7SPgcAsvm+OOpUx3Lpljkz+1eMfZUFdnuCt3Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MqGv4y1WtgJSsBgK8YfHt5KSS0ChSgox4qF1pErGv6g=;
+ b=bJ69lCTqnGhZwHo8GjU5O4IGDNf0sB2I9RhLl4WXhiuTNTM7TAGXZ6IH3kTMa7hMN/NKOObjGXacxvLc4iBZ54hA1ZrQqXzeRmqYawCvXvjNAe7meE6lnE9HKfDfi0OMn5S94TtCmhu0qjUfkDYO0xgbP5Hz2QOyt0NVOFpXHZd05TtOGExQ67xAICRAt9iDDQxf2fNwSOVdIMOBbbYruXPU1beeU9Ii2rYZEEzvadFBFXxOJm7/fNwjesHDzapfqOmbYDRTSOeoR9BCLir6ebL1gMQWaRdhNEijlPGUyGe2lPISGwsCJJeabrHQiYUqc5Fwp4B99i3B+gVA2zPEcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by IA0PR11MB7694.namprd11.prod.outlook.com (2603:10b6:208:409::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Fri, 31 May
+ 2024 00:36:50 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::fdb:309:3df9:a06b]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::fdb:309:3df9:a06b%4]) with mapi id 15.20.7633.021; Fri, 31 May 2024
+ 00:36:49 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "seanjc@google.com" <seanjc@google.com>
+CC: "Zhang, Tina" <tina.zhang@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Yuan, Hang" <hang.yuan@intel.com>, "Chen,
+ Bo2" <chen.bo@intel.com>, "sagis@google.com" <sagis@google.com>,
+	"isaku.yamahata@linux.intel.com" <isaku.yamahata@linux.intel.com>, "Aktas,
+ Erdem" <erdemaktas@google.com>, "isaku.yamahata@gmail.com"
+	<isaku.yamahata@gmail.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>
+Subject: Re: [PATCH v19 037/130] KVM: TDX: Make KVM_CAP_MAX_VCPUS backend
+ specific
+Thread-Topic: [PATCH v19 037/130] KVM: TDX: Make KVM_CAP_MAX_VCPUS backend
+ specific
+Thread-Index: AQHaaI2/dJkfmwuOl0Kzt5Q4G20a/rGPjNSAgABl+QCAAANegIAAB3kAgAAJ9QCAAO1bAIAFfyEAgBj234CAANvZgIAAtdgAgAAXewA=
+Date: Fri, 31 May 2024 00:36:49 +0000
+Message-ID: <ab2e918df4191d098b9b6fe87c7f14f2da734a3b.camel@intel.com>
+References: <9bd868a287599eb2a854f6983f13b4500f47d2ae.1708933498.git.isaku.yamahata@intel.com>
+	 <Zjz7bRcIpe8nL0Gs@google.com>
+	 <5ba2b661-0db5-4b49-9489-4d3e72adf7d2@intel.com>
+	 <Zj1Ty6bqbwst4u_N@google.com>
+	 <49b7402c-8895-4d53-ad00-07ce7863894d@intel.com>
+	 <20240509235522.GA480079@ls.amr.corp.intel.com>
+	 <Zj4phpnqYNoNTVeP@google.com>
+	 <50e09676-4dfc-473f-8b34-7f7a98ab5228@intel.com>
+	 <Zle29YsDN5Hff7Lo@google.com>
+	 <f2952ae37a2bdaf3eb53858e54e6cc4986c62528.camel@intel.com>
+	 <ZliUecH-I1EhN7Ke@google.com>
+In-Reply-To: <ZliUecH-I1EhN7Ke@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|IA0PR11MB7694:EE_
+x-ms-office365-filtering-correlation-id: 936c5a83-36e4-4352-983f-08dc8109c29b
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|376005|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?YjFsWnVlckI5eGFJU3JPS3lvMXhNeUdjclREMVRLbTZsMUVNRWVCVmlDeTg4?=
+ =?utf-8?B?amdRWmt0NXRmN09uRWN3Mm1aTW5keTBNUG5PYkFwYytNYUdNVXhTY2k0Ykx5?=
+ =?utf-8?B?Sm13ejF1MElxUW9SL2Rhb1FLSG83Y2k5OVFQMjU5NHlLcWtnT25CQUZDT0JY?=
+ =?utf-8?B?aVBhOVVIWEJvWW5kRkg0MDloQk9raDVFSEswQWNUbER5SktrSk5kZkZxY1N4?=
+ =?utf-8?B?V0ljd3dhRkh1UzdPelpLc01jU2lXdDVxQUpLNG9lK2VHUmMyK3VwYlArdnpM?=
+ =?utf-8?B?UUtYL28zYWlTMFh6N3hhQm9nbHkrRVpVeWJ1MzdxdTg5Z1Y3bStDU3NyNjRM?=
+ =?utf-8?B?YW1yNmtHSDlBUmRNOUFBRWlFblZyS2hKL09MUVdXd1FLalFSQXR1Z2RyUjhw?=
+ =?utf-8?B?MUl0L0w3VDBsMGhXNFM2MUtabzlOTFBvNVFEaXFhczhoWmo0SmRFODRFK25Q?=
+ =?utf-8?B?ZTdaTHB3K3l5dldCU1ZWNjEyREk3ZUUyNXhuTVpUQkFFK2xxS2pEcXpKUS9u?=
+ =?utf-8?B?UkozUW91azY3UXN2VUxZY0RLZDVIbFRPUE81S0w3cTVZY0JscmNkR1p5U3Bm?=
+ =?utf-8?B?MTF6RWpjQVYwSnNLd3pFS3I2aW5PTzVJWmhUR2k0VUNBdWlnc3VzRkN5VUFH?=
+ =?utf-8?B?Mks1VUFrdkw1NldSdFZnemtCSE1nYUN2UmpMbHBpK1VBRTA5a2dlVWRQMWs5?=
+ =?utf-8?B?dGZiMFRyZGppWjhMTlNXQ2dyTnY3REM3UUQwQ2dXTFUvMDVQajFQbzhoRDlL?=
+ =?utf-8?B?K085dHk0QllKU3VWZFhIMnJBcC9IV1lqSzF6TjN2K1Q3VThiUjVrc01yMGoy?=
+ =?utf-8?B?c3ArNG9NcGRxZisvUGdLUzRWWVNBQnR6d1c4SG5qVW1BZVJtei8xUHhIenR5?=
+ =?utf-8?B?cHZxa0pENHJDeXhTMkdFRU9Lak1JekNqRk1SZlQ3K0dralQrRVZNVVNIbVFH?=
+ =?utf-8?B?ZXBSb3o2VDJkZWJyc1RJL0dGRFk2S2xxOE9jMzMyMVRBZDFFOTJmcm1hWDd1?=
+ =?utf-8?B?UEhlUVNBOU0zRTBucmFYVDgzOFIvM0xxTENYUXE2Z0Y5VnRFVE9MSHJ1WGMz?=
+ =?utf-8?B?ak1GbnJZVUt3dlpJcjY0US9lS24xQUM4bGtFZ01rUEQrdGRXNXJZeTltUXRr?=
+ =?utf-8?B?VGNhaURLYnpnTVUvNmgvcDZsdU5PaU5Ecys5cmg1RE1xWTUxYkVkOFVlQlVZ?=
+ =?utf-8?B?My80MUltS2d4S1ZhVU1NcW5tTGR6QU1valNtVGxXVXh1MDVUN3AxbnNKYXdF?=
+ =?utf-8?B?ODRnd3JJV2lMNVVaVjFBblVwMXhuQzFjTVA4Zm5CN3JUWXJIc29jVlFLUTlk?=
+ =?utf-8?B?dUZkR010SUwrWUE5UUFJM2FiQzdnQjJZL3VOS0JKdnl1RUY5WE9wK1ZJYTFq?=
+ =?utf-8?B?Qy9aQU1BZVJyWU1JeGtLS2lINDhBS0o4ckdRRGQ4UFl4K2k3enZTRXR6SmlU?=
+ =?utf-8?B?ci9tZGtsb0tBMVdQMHB5ZlJjSGNHRHJOc0RKU2JzcHgvQmtPdFF3bUtHUVpp?=
+ =?utf-8?B?OW1UOWRTRkdrYUNGR2c4TWJKb1dEWnliMi9NcjFxRStkRFc3MjFTejlvZ0o2?=
+ =?utf-8?B?TjdjWVc5SmpEMjlCN2E3eUZBMU0zUVFxQlB3VDUyOTBqQUZLVjdVK01oOFVP?=
+ =?utf-8?B?OERjTVV1dkJjSHVaQ3JKYzdMS0JFaU41MG82dTlNQW5mU2ZVcGZibno2b1Ar?=
+ =?utf-8?B?Y3QwMXdQYTd6UE90a3ovZkZ4T1FwZ3ZabE9VQ3I5aXoyaXVsSzJkQ0JRblJC?=
+ =?utf-8?B?LzBobEl3ck0wU2NaRDA0L2xzRXRMM1ltOGt3Z2J4enJlR1hzVHViRkY1aVEx?=
+ =?utf-8?B?bE9tT1MvWGpzdmpFLzhuUT09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WjBpWi8yVlhXSUhWMzZyZkhCd29ra0lDTGhMZzQ4bXpKREljVmhxTnZZdW9F?=
+ =?utf-8?B?d2JCQTdOd2hHVy9uL1F1b2g5WkdFTHZBV2srQ1BoSjQvcU9WZnl1eFRKM1dH?=
+ =?utf-8?B?SlhXWmtqdDdoTFZSMDFGVEtVU1pDdTJJb0ZYNkhLVTFEYXJrNjd6WU9MVTJ2?=
+ =?utf-8?B?MEtHTXZLSWVIVzZBa0JVczROejVMSVFTaUNya2tNUzBkWCtvUWNaZlk3MGpt?=
+ =?utf-8?B?QzM1ZmFTNHU4UFFDaHNFRHlZdGVUcUltWnA4Y0haclM5RnhlN2ZxTkV5VnFR?=
+ =?utf-8?B?VUJTVERLaHI2eFF1NEE1QTZGVGZ6ZGh2cFB4SjdzWkRiV2pOSnFhUGpUUjIv?=
+ =?utf-8?B?ODQvSDFQOGlzWWJCSFE3VDZ0dW5lVGFOeDhuMFlQOTVhOWEydHRQdEFmemIz?=
+ =?utf-8?B?bFdkdUFRNTZaa3ZObnNhOFNkc1grUk5hSFZ2bE1sd3Jud0J1WUVqVUUvTVhL?=
+ =?utf-8?B?c042aWpFeXR5ZnUzeVpMUXdpdjE2RUFNMGtFNWlMUVhvQkhDNjVreCs0R2hL?=
+ =?utf-8?B?QjhaczNxMlErU2dzeGlFQm8vOVAvOUdRNXRUQ24xQ2c0MUozdmlQWlNDMGNL?=
+ =?utf-8?B?R214dXo1WTJvMGtNSGNxYjBHbldQVStFUDVvYTFpWWp3S1hhZEhaMFdIZzZB?=
+ =?utf-8?B?Zk41U1RjQzJ3dTlBS1lseHpiWWRuZkZBb0thKzNpeGNFQlA5d0grNXhBeSt4?=
+ =?utf-8?B?Z1ZNZjg0QVlJbVYwSk5xL0pGdXk0dC9BaExoY2ZpbGZBdVdsSzh1OVpYMGl3?=
+ =?utf-8?B?aE5vZllDK3BnVDRtZzUrR1puaGJ5Qkw4SEZHQ2tySUIvY2N5YXEycTgyQ3Vh?=
+ =?utf-8?B?bGVQVW5rNkJuZTRLd0NLQytUTE1kWHRIQTBOVFlBN3h6VGxaNWNqYXBtZHBO?=
+ =?utf-8?B?K1FIY1FSRHE4OC96cmJzTlFHdktTTVg0UlJDaW5mNEZuQnM1WWhvY0xKc0Rn?=
+ =?utf-8?B?VG9nbzdheUdKWkFRU25Wb1c5a0RIUWttaHQ4SVNmM0pHeFlqQzNmNzU5QlBo?=
+ =?utf-8?B?V0Q1eExZN1QvR1RMZmVaZXpWa1Q2QS9lVjV4UUkwZjNsdjM5elpibStHVWNw?=
+ =?utf-8?B?L0ZuVTBXM1YxUER3VTE5T3MrU2pOa2hZTERuMWV2U2hTK2NaVXVpR0dmUGk3?=
+ =?utf-8?B?U040UFF3U2FQZHlaMUpsKzRuS0w4SkV1Y1NtNEtXVWFoc2VzTS9XT1FMRkpl?=
+ =?utf-8?B?RWJ6YjN1eU1pbytlOUZVL3RZb2RST2hzbitPS1FBRlJ3RFVzb2l4M2ZUd1gw?=
+ =?utf-8?B?VUF2M3hacHhQMEgyQWRRMmtRR0VzUXRKNEtpQUdhclhza1QwNVNBVmZoRnU2?=
+ =?utf-8?B?b0VsbjZsL2kyTzRCeU5IN1BqZGQzakZaSE1VdFh1SStBclNoNExxb1UvKzZB?=
+ =?utf-8?B?Ny9mZEhsQ2ZnKzBwUlR5V09scXRleENSV0RJRUdzZHZodktoTXZ4RXowVUlo?=
+ =?utf-8?B?c1NhRGE4UENEYzA3Q2RDQnBscWlJTlhkRzlNb3FWNDVjMHFsWVhzNE0vdkZZ?=
+ =?utf-8?B?bkR0bnE0ZGI5TVgvNm1VRE10eWxCLzZyZTRtNUkrN1AzVVg3L21BNFFxMnJP?=
+ =?utf-8?B?Z0R4OWRuWC9MOG5HbTYvY20zQ0hRaFdlQWtUODJDamJJOHo1Tkd1N2UzY25D?=
+ =?utf-8?B?QWhPUW5ySk9NcTRTZGtBRzRzUDZ3V29CTmE2anVkaGZqYjRLekxBK2UzNVdC?=
+ =?utf-8?B?NFhUSFhkVnlrUmFOMENmUGd6bkRxNFF6VmtBcnlySUdIcVpOdlQ1TUVDeHF4?=
+ =?utf-8?B?M0NXeEg3M0dmZ2NWWDNJa2FEbDRsK3NSMVF5MGt6VnhoanQzWFJxREJwWkdI?=
+ =?utf-8?B?U0lHcW1aT0ZmZDh6eDllNWhzclJZZUxINFVWVGhxVFYyZW95R2RMVlIxemoy?=
+ =?utf-8?B?eWo2QUwxbWhQeTJjdUI3L2d3UC9HeXpJUFJmRzJBNyt0V1Z2WXlxdEpoVXI1?=
+ =?utf-8?B?TkErWEhKZ3NYd3V5a3FOMHBIaGRONWgwV0VDL2k1ZlY5WUdENHowdWlGb0hw?=
+ =?utf-8?B?Z0wxYkMrTkJ2Nm1kSEF5SU1ITWhDSXB0R3JjUS9SaklNQnlCeTFoSmFURmpv?=
+ =?utf-8?B?MWlBOWxqSmhPUEg5WVkzWmh6RkcxeTJ1Skt4c3VZSGUrR0oyMjY4Uy9KeDJT?=
+ =?utf-8?B?S2dMeFVpMUhqVHlYTUNDR29EcDdhV2h6Rjc3R2MyZ1V0SWxFVTJQS0wrNE1k?=
+ =?utf-8?B?bUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EEE6008B9AD41645B6921248E6C065E8@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 3/5] crypto: tpm2_key: Introduce a TPM2 key type
-To: Jarkko Sakkinen <jarkko@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Andreas.Fuchs@infineon.com, James Prestwood <prestwoj@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-crypto@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-References: <20240528210823.28798-1-jarkko@kernel.org>
- <20240528210823.28798-4-jarkko@kernel.org>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20240528210823.28798-4-jarkko@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2oUTOSqJRONevSoQUit8x_Yyj3YB--14
-X-Proofpoint-GUID: Y7GxRg9p7jkfs27DlUvao_oMuYInduYN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-30_21,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1015 priorityscore=1501 mlxlogscore=999 suspectscore=0
- bulkscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405310002
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 936c5a83-36e4-4352-983f-08dc8109c29b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2024 00:36:49.9365
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R+SzrXa44/zcnCblDSlt5kc+xA5BrBNmFROZp3iZS+HOsWnbRGEMW9sXKHKO4g4pnwwSfqfcCHsYZZB2XrvP2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7694
+X-OriginatorOrg: intel.com
 
-
-
-On 5/28/24 17:08, Jarkko Sakkinen wrote:
-> TPM2 ASN.1 format is required for trusted keys and asymmetric keys. Move it
-> to crypto in order to make it available for both. Implement validation with
-> coverage of all TPMT_PUBLIC shared fields. Key type specific fields must be
-> covered by the different subsystems using this.
-> 
-> A Kconfig option CRYPTO_TPM2_KEY can be used to select the feature, which
-> depends only crypto subsystem itself and ASN.1 parser.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v6:
-> * Relocate to crypto. Validate the shared part and provide
->    accessor functions. Use a fixed buffer size.
-> v2:
-> * Do not allocate blob twice. Use the one inside struct tpm2_key.
-> ---
->   crypto/Kconfig                            |   7 ++
->   crypto/Makefile                           |   6 +
->   crypto/tpm2_key.asn1                      |  11 ++
->   crypto/tpm2_key.c                         | 134 ++++++++++++++++++++
->   include/crypto/tpm2_key.h                 |  46 +++++++
->   security/keys/trusted-keys/Kconfig        |   2 +-
->   security/keys/trusted-keys/Makefile       |   2 -
->   security/keys/trusted-keys/tpm2key.asn1   |  11 --
->   security/keys/trusted-keys/trusted_tpm2.c | 141 +++++-----------------
->   9 files changed, 235 insertions(+), 125 deletions(-)
->   create mode 100644 crypto/tpm2_key.asn1
->   create mode 100644 crypto/tpm2_key.c
->   create mode 100644 include/crypto/tpm2_key.h
->   delete mode 100644 security/keys/trusted-keys/tpm2key.asn1
-> 
-> diff --git a/crypto/Kconfig b/crypto/Kconfig
-> index 5688d42a59c2..c8989bc71f57 100644
-> --- a/crypto/Kconfig
-> +++ b/crypto/Kconfig
-> @@ -5,6 +5,13 @@
->   config XOR_BLOCKS
->   	tristate
->   
-> +config CRYPTO_TPM2_KEY
-> +	bool
-> +	depends on CRYPTO
-> +	select ASN1
-> +	select OID_REGISTRY
-> +	default n
-> +
->   #
->   # async_tx api: hardware offloaded memory transfer/transform support
->   #
-> diff --git a/crypto/Makefile b/crypto/Makefile
-> index edbbaa3ffef5..d932fdb72319 100644
-> --- a/crypto/Makefile
-> +++ b/crypto/Makefile
-> @@ -216,3 +216,9 @@ obj-$(CONFIG_CRYPTO_SIMD) += crypto_simd.o
->   # Key derivation function
->   #
->   obj-$(CONFIG_CRYPTO_KDF800108_CTR) += kdf_sp800108.o
-> +
-> +ifdef CONFIG_CRYPTO_TPM2_KEY
-> +$(obj)/tpm2_key.asn1.o: $(obj)/tpm2_key.asn1.h $(obj)/tpm2_key.asn1.c
-> +$(obj)/tpm2_key.o: $(obj)/tpm2_key.asn1.h
-> +obj-y += tpm2_key.o tpm2_key.asn1.o
-> +endif
-> diff --git a/crypto/tpm2_key.asn1 b/crypto/tpm2_key.asn1
-> new file mode 100644
-> index 000000000000..b235d02ab78e
-> --- /dev/null
-> +++ b/crypto/tpm2_key.asn1
-> @@ -0,0 +1,11 @@
-> +---
-> +--- ASN.1 for TPM 2.0 keys
-> +---
-> +
-> +TPMKey ::= SEQUENCE {
-> +	type		OBJECT IDENTIFIER ({tpm2_key_get_type}),
-> +	emptyAuth	[0] EXPLICIT BOOLEAN OPTIONAL,
-> +	parent		INTEGER ({tpm2_key_get_parent}),
-> +	pubkey		OCTET STRING ({tpm2_get_public}),
-> +	privkey		OCTET STRING ({tpm2_get_private})
-> +	}
-> diff --git a/crypto/tpm2_key.c b/crypto/tpm2_key.c
-> new file mode 100644
-> index 000000000000..78f55478d046
-> --- /dev/null
-> +++ b/crypto/tpm2_key.c
-> @@ -0,0 +1,134 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <crypto/tpm2_key.h>
-> +#include <linux/oid_registry.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <asm/unaligned.h>
-> +#include "tpm2_key.asn1.h"
-> +
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "tpm2_key: "fmt
-> +
-> +struct tpm2_key_decoder_context {
-> +	u32 parent;
-> +	const u8 *pub;
-> +	u32 pub_len;
-> +	const u8 *priv;
-> +	u32 priv_len;
-> +	enum OID oid;
-> +};
-> +
-> +int tpm2_key_get_parent(void *context, size_t hdrlen,
-> +			unsigned char tag,
-> +			const void *value, size_t vlen)
-> +{
-> +	struct tpm2_key_decoder_context *decoder = context;
-> +	const u8 *v = value;
-> +	int i;
-> +
-> +	decoder->parent = 0;
-> +	for (i = 0; i < vlen; i++) {
-> +		decoder->parent <<= 8;
-> +		decoder->parent |= v[i];
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int tpm2_key_get_type(void *context, size_t hdrlen,
-> +		      unsigned char tag,
-> +		      const void *value, size_t vlen)
-> +{
-> +	struct tpm2_key_decoder_context *decoder = context;
-> +
-> +	decoder->oid = look_up_OID(value, vlen);
-> +	return 0;
-> +}
-> +
-> +static inline bool tpm2_key_is_valid(const void *value, size_t vlen)
-> +{
-> +	if (vlen < 2 || vlen > TPM2_KEY_BYTES_MAX)
-> +		return false;
-> +
-> +	if (get_unaligned_be16(value) != vlen - 2)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +int tpm2_get_public(void *context, size_t hdrlen, unsigned char tag,
-> +		    const void *value, size_t vlen)
-> +{
-> +	struct tpm2_key_decoder_context *decoder = context;
-> +
-> +	if (!tpm2_key_is_valid(value, vlen))
-> +		return -EBADMSG;
-> +
-> +	if (sizeof(struct tpm2_key_desc) > vlen - 2)
-> +		return -EBADMSG;
-> +
-> +	decoder->pub = value;
-> +	decoder->pub_len = vlen;
-> +	return 0;
-> +}
-> +
-> +int tpm2_get_private(void *context, size_t hdrlen, unsigned char tag,
-> +		     const void *value, size_t vlen)
-> +{
-> +	struct tpm2_key_decoder_context *decoder = context;
-> +
-> +	if (!tpm2_key_is_valid(value, vlen))
-> +		return -EBADMSG;
-> +
-> +	decoder->priv = value;
-> +	decoder->priv_len = vlen;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * tpm_key_decode() - Decode TPM2 ASN.1 key
-> + * @src:	ASN.1 source.
-> + * @src_len:	ASN.1 source length.
-> + *
-> + * Decodes the TPM2 ASN.1 key and validates that the public key data has all
-> + * the shared fields of TPMT_PUBLIC. This is full coverage of the memory that
-> + * can be validated before doing any key type specific validation.
-
-I am not sure what the last sentence means.
-
-> + *
-> + * Return:
-> + * - TPM2 ASN.1 key on success.
-> + * - -EBADMSG when decoding fails.
-> + * - -ENOMEM when OOM while allocating struct tpm2_key.
-> + */
-> +struct tpm2_key *tpm2_key_decode(const u8 *src, u32 src_len)
-> +{
-> +	struct tpm2_key_decoder_context decoder;
-> +	struct tpm2_key *key;
-> +	u8 *data;
-> +	int ret;
-> +
-> +	memset(&decoder, 0, sizeof(decoder));
-> +	ret = asn1_ber_decoder(&tpm2_key_decoder, &decoder, src, src_len);
-> +	if (ret < 0) {
-> +		if (ret != -EBADMSG)
-> +			pr_info("Decoder error %d\n", ret);
-> +
-> +		return ERR_PTR(-EBADMSG);
-> +	}
-> +
-> +	key = kzalloc(sizeof(*key), GFP_KERNEL);
-> +	if (!key)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	data = &key->data[0];
-> +	memcpy(&data[0], decoder.priv, decoder.priv_len);
-> +	memcpy(&data[decoder.priv_len], decoder.pub, decoder.pub_len);
-> +
-> +	key->oid = decoder.oid;
-> +	key->priv_len = decoder.priv_len;
-> +	key->pub_len = decoder.pub_len;
-> +	key->parent = decoder.parent;
-> +	key->desc = (struct tpm2_key_desc *)&data[decoder.priv_len + 2];
-> +	return key;
-> +}
-> +EXPORT_SYMBOL_GPL(tpm2_key_decode);
-> diff --git a/include/crypto/tpm2_key.h b/include/crypto/tpm2_key.h
-> new file mode 100644
-> index 000000000000..74debaf707bf
-> --- /dev/null
-> +++ b/include/crypto/tpm2_key.h
-> @@ -0,0 +1,46 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef __LINUX_TPM2_KEY_H__
-> +#define __LINUX_TPM2_KEY_H__
-> +
-> +#include <linux/oid_registry.h>
-> +#include <linux/slab.h>
-> +
-> +#define TPM2_KEY_BYTES_MAX 1024
-> +
-> +/*  TPM2 Structures 12.2.4: TPMT_PUBLIC */
-> +struct tpm2_key_desc {
-> +	__be16 type;
-> +	__be16 name_alg;
-> +	__be32 object_attributes;
-> +	__be16 policy_size;
-> +} __packed;
-> +
-> +/* Decoded TPM2 ASN.1 key. */
-> +struct tpm2_key {
-> +	u8 data[2 * TPM2_KEY_BYTES_MAX];
-> +	struct tpm2_key_desc *desc;
-> +	u16 priv_len;
-> +	u16 pub_len;
-> +	u32 parent;
-> +	enum OID oid;
-> +	char oid_str[64];
-> +};
-> +
-> +struct tpm2_key *tpm2_key_decode(const u8 *src, u32 src_len);
-> +
-> +static inline const void *tpm2_key_data(const struct tpm2_key *key)
-> +{
-> +	return &key->data[0];
-> +}
-> +
-> +static inline u16 tpm2_key_type(const struct tpm2_key *key)
-> +{
-> +	return be16_to_cpu(key->desc->type);
-> +}
-> +
-> +static inline int tpm2_key_policy_size(const struct tpm2_key *key)
-> +{
-> +	return be16_to_cpu(key->desc->policy_size);
-> +}
-> +
-> +#endif /* __LINUX_TPM2_KEY_H__ */
-> diff --git a/security/keys/trusted-keys/Kconfig b/security/keys/trusted-keys/Kconfig
-> index 1fb8aa001995..00d9489384ac 100644
-> --- a/security/keys/trusted-keys/Kconfig
-> +++ b/security/keys/trusted-keys/Kconfig
-> @@ -9,9 +9,9 @@ config TRUSTED_KEYS_TPM
->   	select CRYPTO_HMAC
->   	select CRYPTO_SHA1
->   	select CRYPTO_HASH_INFO
-> +	select CRYPTO_TPM2_KEY
->   	select ASN1_ENCODER
->   	select OID_REGISTRY
-> -	select ASN1
->   	select HAVE_TRUSTED_KEYS
->   	help
->   	  Enable use of the Trusted Platform Module (TPM) as trusted key
-> diff --git a/security/keys/trusted-keys/Makefile b/security/keys/trusted-keys/Makefile
-> index f0f3b27f688b..2674d5c10fc9 100644
-> --- a/security/keys/trusted-keys/Makefile
-> +++ b/security/keys/trusted-keys/Makefile
-> @@ -7,9 +7,7 @@ obj-$(CONFIG_TRUSTED_KEYS) += trusted.o
->   trusted-y += trusted_core.o
->   trusted-$(CONFIG_TRUSTED_KEYS_TPM) += trusted_tpm1.o
->   
-> -$(obj)/trusted_tpm2.o: $(obj)/tpm2key.asn1.h
->   trusted-$(CONFIG_TRUSTED_KEYS_TPM) += trusted_tpm2.o
-> -trusted-$(CONFIG_TRUSTED_KEYS_TPM) += tpm2key.asn1.o
->   
->   trusted-$(CONFIG_TRUSTED_KEYS_TEE) += trusted_tee.o
->   
-> diff --git a/security/keys/trusted-keys/tpm2key.asn1 b/security/keys/trusted-keys/tpm2key.asn1
-> deleted file mode 100644
-> index f57f869ad600..000000000000
-> --- a/security/keys/trusted-keys/tpm2key.asn1
-> +++ /dev/null
-> @@ -1,11 +0,0 @@
-> ----
-> ---- ASN.1 for TPM 2.0 keys
-> ----
-> -
-> -TPMKey ::= SEQUENCE {
-> -	type		OBJECT IDENTIFIER ({tpm2_key_type}),
-> -	emptyAuth	[0] EXPLICIT BOOLEAN OPTIONAL,
-> -	parent		INTEGER ({tpm2_key_parent}),
-> -	pubkey		OCTET STRING ({tpm2_key_pub}),
-> -	privkey		OCTET STRING ({tpm2_key_priv})
-> -	}
-> diff --git a/security/keys/trusted-keys/trusted_tpm2.c b/security/keys/trusted-keys/trusted_tpm2.c
-> index 06c8fa7b21ae..b9e505e99e8c 100644
-> --- a/security/keys/trusted-keys/trusted_tpm2.c
-> +++ b/security/keys/trusted-keys/trusted_tpm2.c
-> @@ -13,11 +13,10 @@
->   
->   #include <keys/trusted-type.h>
->   #include <keys/trusted_tpm.h>
-> +#include <crypto/tpm2_key.h>
->   
->   #include <asm/unaligned.h>
->   
-> -#include "tpm2key.asn1.h"
-> -
->   static struct tpm2_hash tpm2_hash_map[] = {
->   	{HASH_ALGO_SHA1, TPM_ALG_SHA1},
->   	{HASH_ALGO_SHA256, TPM_ALG_SHA256},
-> @@ -98,106 +97,6 @@ static int tpm2_key_encode(struct trusted_key_payload *payload,
->   	return ret;
->   }
->   
-> -struct tpm2_key_context {
-> -	u32 parent;
-> -	const u8 *pub;
-> -	u32 pub_len;
-> -	const u8 *priv;
-> -	u32 priv_len;
-> -};
-> -
-> -static int tpm2_key_decode(struct trusted_key_payload *payload,
-> -			   struct trusted_key_options *options,
-> -			   u8 **buf)
-> -{
-> -	int ret;
-> -	struct tpm2_key_context ctx;
-> -	u8 *blob;
-> -
-> -	memset(&ctx, 0, sizeof(ctx));
-> -
-> -	ret = asn1_ber_decoder(&tpm2key_decoder, &ctx, payload->blob,
-> -			       payload->blob_len);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	if (ctx.priv_len + ctx.pub_len > MAX_BLOB_SIZE)
-> -		return -E2BIG;
-> -
-> -	blob = kmalloc(ctx.priv_len + ctx.pub_len + 4, GFP_KERNEL);
-> -	if (!blob)
-> -		return -ENOMEM;
-> -
-> -	*buf = blob;
-> -	options->keyhandle = ctx.parent;
-> -
-> -	memcpy(blob, ctx.priv, ctx.priv_len);
-> -	blob += ctx.priv_len;
-> -
-> -	memcpy(blob, ctx.pub, ctx.pub_len);
-> -
-> -	return 0;
-> -}
-> -
-> -int tpm2_key_parent(void *context, size_t hdrlen,
-> -		  unsigned char tag,
-> -		  const void *value, size_t vlen)
-> -{
-> -	struct tpm2_key_context *ctx = context;
-> -	const u8 *v = value;
-> -	int i;
-> -
-> -	ctx->parent = 0;
-> -	for (i = 0; i < vlen; i++) {
-> -		ctx->parent <<= 8;
-> -		ctx->parent |= v[i];
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -int tpm2_key_type(void *context, size_t hdrlen,
-> -		unsigned char tag,
-> -		const void *value, size_t vlen)
-> -{
-> -	enum OID oid = look_up_OID(value, vlen);
-> -
-> -	if (oid != OID_TPMSealedData) {
-> -		char buffer[50];
-> -
-> -		sprint_oid(value, vlen, buffer, sizeof(buffer));
-> -		pr_debug("OID is \"%s\" which is not TPMSealedData\n",
-> -			 buffer);
-> -		return -EINVAL;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
-> -int tpm2_key_pub(void *context, size_t hdrlen,
-> -	       unsigned char tag,
-> -	       const void *value, size_t vlen)
-> -{
-> -	struct tpm2_key_context *ctx = context;
-> -
-> -	ctx->pub = value;
-> -	ctx->pub_len = vlen;
-> -
-> -	return 0;
-> -}
-> -
-> -int tpm2_key_priv(void *context, size_t hdrlen,
-> -		unsigned char tag,
-> -		const void *value, size_t vlen)
-> -{
-> -	struct tpm2_key_context *ctx = context;
-> -
-> -	ctx->priv = value;
-> -	ctx->priv_len = vlen;
-> -
-> -	return 0;
-> -}
-> -
->   /**
->    * tpm2_buf_append_auth() - append TPMS_AUTH_COMMAND to the buffer.
->    *
-> @@ -387,22 +286,43 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
->   			 struct trusted_key_options *options,
->   			 u32 *blob_handle)
->   {
-> -	struct tpm_buf buf;
->   	unsigned int private_len;
->   	unsigned int public_len;
->   	unsigned int blob_len;
-> -	u8 *blob, *pub;
-> -	int rc;
-> +	struct tpm2_key *key;
-> +	const u8 *blob, *pub;
-> +	struct tpm_buf buf;
->   	u32 attrs;
-> +	int rc;
->   
-> -	rc = tpm2_key_decode(payload, options, &blob);
-> -	if (rc) {
-> -		/* old form */
-> +	key = tpm2_key_decode(payload->blob, payload->blob_len);
-> +	if (IS_ERR(key)) {
-> +		/* Get the error code and reset the pointer to the key: */
-> +		rc = PTR_ERR(key);
-> +		key = NULL;
-> +
-> +		if (rc == -ENOMEM)
-> +			return -ENOMEM;
-> +
-> +		/* A sanity check, as only -EBADMSG or -ENOMEM are expected: */
-> +		if (rc != -EBADMSG)
-> +			pr_err("tpm2_key_decode(): spurious error code %d\n", rc);
-
-tpm2_key_decode seems simple enough that it only returns key, -ENOMEM or 
-EBADMSG.
-
-> +
-> +		/* Fallback to the legacy format: */
->   		blob = payload->blob;
->   		payload->old_format = 1;
-> +	} else {
-> +		blob = tpm2_key_data(key);
-> +		if (key->oid != OID_TPMSealedData) {
-> +			kfree(key);
-> +			return -EBADMSG;
-> +		}
->   	}
->   
-> -	/* new format carries keyhandle but old format doesn't */
-> +	/*
-> +	 * Must be non-zero here, either extracted from the ASN.1 for the new
-> +	 * format or specified on the command line for the old.
-
-sentence seems incomplete: ... for the old one.  OR  ... for the old format.
-
-> +	 */
->   	if (!options->keyhandle)
->   		return -EINVAL;
->   
-> @@ -464,8 +384,7 @@ static int tpm2_load_cmd(struct tpm_chip *chip,
->   			(__be32 *) &buf.data[TPM_HEADER_SIZE]);
->   
->   out:
-> -	if (blob != payload->blob)
-> -		kfree(blob);
-> +	kfree(key);
->   	tpm_buf_destroy(&buf);
->   
->   	if (rc > 0)
+T24gVGh1LCAyMDI0LTA1LTMwIGF0IDE2OjEyIC0wNzAwLCBTZWFuIENocmlzdG9waGVyc29uIHdy
+b3RlOg0KPiBPbiBUaHUsIE1heSAzMCwgMjAyNCwgS2FpIEh1YW5nIHdyb3RlOg0KPiA+IE9uIFdl
+ZCwgMjAyNC0wNS0yOSBhdCAxNjoxNSAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToN
+Cj4gPiA+IEluIHRoZSB1bmxpa2VseSBldmVudCB0aGVyZSBpcyBhIGxlZ2l0aW1hdGUgcmVhc29u
+IGZvciBtYXhfdmNwdXNfcGVyX3RkIGJlaW5nDQo+ID4gPiBsZXNzIHRoYW4gS1ZNJ3MgbWluaW11
+bSwgdGhlbiB3ZSBjYW4gdXBkYXRlIEtWTSdzIG1pbmltdW0gYXMgbmVlZGVkLiAgQnV0IEFGQUlD
+VCwNCj4gPiA+IHRoYXQncyBwdXJlbHkgdGhlb3JldGljYWwgYXQgdGhpcyBwb2ludCwgaS5lLiB0
+aGlzIGlzIGFsbCBtdWNoIGFkbyBhYm91dCBub3RoaW5nLg0KPiA+IA0KPiA+IEkgYW0gYWZyYWlk
+IHdlIGFscmVhZHkgaGF2ZSBhIGxlZ2l0aW1hdGUgY2FzZTogVEQgcGFydGl0aW9uaW5nLiAgSXNh
+a3UNCj4gPiB0b2xkIG1lIHRoZSAnbWF4X3ZjcHVzX3Blcl90ZCcgaXMgbG93ZWQgdG8gNTEyIGZv
+ciB0aGUgbW9kdWxlcyB3aXRoIFREDQo+ID4gcGFydGl0aW9uaW5nIHN1cHBvcnRlZC4gIEFuZCBh
+Z2FpbiB0aGlzIGlzIHN0YXRpYywgaS5lLiwgZG9lc24ndCByZXF1aXJlDQo+ID4gVEQgcGFydGl0
+aW9uaW5nIHRvIGJlIG9wdC1pbiB0byBsb3cgdG8gNTEyLg0KPiANCj4gU28gd2hhdCdzIEludGVs
+J3MgcGxhbiBmb3IgdXNlIGNhc2VzIHRoYXQgY3JlYXRlcyBURHMgd2l0aCA+NTEyIHZDUFVzPw0K
+DQpJIGRvbid0IHRoaW5rIHdlIGhhdmUgc3VjaCB1c2UgY2FzZXMuICBMZXQgbWUgZG91YmxlIGNo
+ZWNrIHdpdGggVERYIG1vZHVsZQ0KZ3V5cy4gIA0KDQoNCj4gDQo+ID4gU28gQUZBSUNUIHRoaXMg
+aXNuJ3QgYSB0aGVvcmV0aWNhbCB0aGluZyBub3cuDQo+ID4gDQo+ID4gQWxzbywgSSB3YW50IHRv
+IHNheSBJIHdhcyB3cm9uZyBhYm91dCAiTUFYX1ZDUFVTIiBpbiB0aGUgVERfUEFSQU1TIGlzIHBh
+cnQNCj4gPiBvZiBhdHRlc3RhdGlvbi4gIEl0IGlzIG5vdC4gIFREUkVQT1JUIGRvc2VuJ3QgaW5j
+bHVkZSB0aGUgIk1BWF9WQ1BVUyIsIGFuZA0KPiA+IGl0IGlzIG5vdCBpbnZvbHZlZCBpbiB0aGUg
+Y2FsY3VsYXRpb24gb2YgdGhlIG1lYXN1cmVtZW50IG9mIHRoZSBndWVzdC4NCj4gPiANCj4gPiBH
+aXZlbiAiTUFYX1ZDUFVTIiBpcyBub3QgcGFydCBvZiBhdHRlc3RhdGlvbiwgSSB0aGluayB0aGVy
+ZSdzIG5vIG5lZWQgdG8NCj4gPiBhbGxvdyB1c2VyIHRvIGNoYW5nZSBrdm0tPm1heF92Y3B1cyBi
+eSBlbmFibGluZyBLVk1fRU5BQkxFX0NBUCBpb2N0bCgpIGZvcg0KPiA+IEtWTV9DQVBfTUFYX1ZD
+UFVTLg0KPiANCj4gU3VyZSwgYnV0IEtWTSB3b3VsZCBzdGlsbCBuZWVkIHRvIGFkdmVydGlzZSB0
+aGUgcmVkdWNlZCB2YWx1ZSBmb3IgS1ZNX0NBUF9NQVhfVkNQVVMNCj4gd2hlbiBxdWVyaWVkIHZp
+YSBLVk1fQ0hFQ0tfRVhURU5TSU9OLiAgQW5kIHVzZXJzcGFjZSBuZWVkcyB0byBiZSBjb25kaXRp
+b25lZCB0bw0KPiBkbyBhIFZNLXNjb3BlZCBjaGVjaywgbm90IGEgc3lzdGVtLXNjb3BlZCBjaGVj
+ay4NCg0KT2ggeWVzLg0K
