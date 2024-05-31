@@ -1,40 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C40739FF3;
-	Fri, 31 May 2024 12:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A632C142E90;
+	Fri, 31 May 2024 12:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717158512; cv=none; b=r1GkvGor21jm20BKC9nuPmguaHno2fKU94e22wjbuqEBPvvO+3Z6NrvoHgocenUrWZFPFrInup9OfSwd+0FJ+Ag9ZWBb0FVYBDeMdzxwsmv1KaaM4DWGdvsw0L7vRxEmim4IzDV6+3ioEOGShxp1JiC8XsG4huYiTV+tN//VzF8=
+	t=1717158613; cv=none; b=UitnJAwQuXnE18zLtkOCgr8wpe/ByP30CoKMqlYSIGkf5LdZO3KLwQWFaIqA98bYY0CHWmwFCh0qiYVedpYTOaw19m8A+qoyl6cRdb0ilIWfXtQfNStbBqXdaRFhNV8aDizRPAwHQLxbmOBXrEcxSr8W1HySN6YtW8FEsF6WxWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717158512; c=relaxed/simple;
-	bh=z4ruzD56OZPWPzQYpYgTNc4Tq1V0MYMO9wYsXWqIpKI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QL37CU81G5gXOm7sle3XAGanifLbLikxI5TC5hPPsxzkEyyAFVm9hutJnsogul2qQ8UN+j9JUn0G4nEgcDz8ghzNTkNbDVFoylWRHJBHVk6ZkXQmIkwRhZxq5b6ImNAxi/GRXJMrsYeHfYA3rXz55ZAX9QKpi67aUaPPM3Y6th0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJYZLkhM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717158613; c=relaxed/simple;
+	bh=BKqXlZK7XF1UJpzIlE4H+vLXVZQDJHc91wlqO8+Qta4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dB89G+LFTH4Nzbr58o/ghQ0FrEcPr4AqolC5gH/KWvUShLv56qlXowgPuwWC2R1792g/nFfrpzl8HC95EzI69AxdLZquYIA1OxbeERk652RPIzY4qBjf2ThOm3Elk5gFdc9syd1vSyaG4sNF3dZIajlJvAsUiupoLicr1kvFQpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VCbOfWAv; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJYZLkhM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5F1BC32781;
-	Fri, 31 May 2024 12:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717158511;
-	bh=z4ruzD56OZPWPzQYpYgTNc4Tq1V0MYMO9wYsXWqIpKI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sJYZLkhMsPzY5OGXDbm/gd0vcmG3lgyvt+C0ripDS2x66QuN6Sg9QGcTSZnB8ehZH
-	 guptbHgKhMvpghLd6TMQ6VUcQFqM6fzPJe1UG++2heMUL+YXWxqeFez3rHPrL1ytek
-	 bi3EjU73JE9LrYjyWmd0CimGr36lLfQnDEFfaJLLnQwjWzOXTUMXsYesI3YXsJf0Ck
-	 pRw0TiYJSds6n4wpUDNsz1jGRLWPlEuYUcfz7oxmBNwtfQ61Q3kqrTaTlj0O/Fmg0k
-	 jM83pk/V7HoguzYFuBGsyprdEt3EZ74aA8Gunwflg6DNks+cEf3334SzyollguYisT
-	 ov88nLSw1hCqA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>
-Subject: [PATCH] usr: shorten cmd_initfs in Makefile
-Date: Fri, 31 May 2024 21:28:25 +0900
-Message-Id: <20240531122825.699771-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCbOfWAv"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f8ec7e054dso1505793b3a.2;
+        Fri, 31 May 2024 05:30:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717158611; x=1717763411; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=forXuWPFy2XsVfocDJuDgmCjaOGTlPxEs7gWnYosGQU=;
+        b=VCbOfWAv5HAjKMSduSiicoUrrSfl+0KNea+HySys2ems0r+eZbg0UUuqg64b5oYpo8
+         5sXTWbHslsEkAGGkaLkZ+cMrq7gsrG0uOdBW/bsl3oOKrpakBKq4Hwr87dp1/E2PawB/
+         3TBdjgcgRisKm+/289qYFmMnpHFi6QHv7+mcoV0Uz0RWTXWKzd/uERAZVauPyZMLEfuT
+         NWFwyTyDjfqRuPLZHV7HmH1Ffns9qmPNCG158SyK1zif6YbHZFPlqNsn6fAHqmfsfN3z
+         DfMpmRiqjOPq2HqKMqcV1e1X8mpPJZYuEaRhYq/Od5Rs5F2Zyy+1UFj395NPlgCNyPRV
+         8BJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717158611; x=1717763411;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=forXuWPFy2XsVfocDJuDgmCjaOGTlPxEs7gWnYosGQU=;
+        b=c0wP7qpxV5dSkUDiQ1/MzvYslFjZoW/eI3D2lfcEoZzptKGv0u6fn5RV1IGGBTqNNT
+         A76t36ZeuM1rPR5Ki/+R/NCxmHJnKL8twXlvM5gE4sgZY8cihwAJLU3U52vnNiMpMXYi
+         /WtKktXB9ANk1TN8mftg+VjxRftrxS/EW71tvxFYh7uknD8HGBmdN0I6tgp67j0S7HF2
+         L+FPvPHyqh72bNZ1q8QNrLVt3fzlI7F3awYuUhHDSrwYh2AEX02Sx89Or0JztEkmfBBZ
+         vt918esJnwKkcDYJZeKEHrzvI6HcpvdaRJsvGvRvFtwOanulILxnm1eta5bTSzKi30hI
+         La1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVAbAl8dtXrjKXvMSug+pCCoGSN6CjE5qZ8hfBMEUomPzHKE3bj6bHPtAifrT64J5UUzCZaoNVfego9uN1ytmuFUL1Wt+EXkJkBTWAhv2H1c3PC0vt3onkH3EeOe95qdHMTJwNs+hGwbvaDSHS/BhNAlL6dDhykDscE70ChBSk+nBS9SA==
+X-Gm-Message-State: AOJu0Yycc6kraZFbJff9nnvXwvKdIrufC2DELczAU4HN9h5AqpsgXD6l
+	x+DH1zq8GXXybyf4n6xjp3Ks7/sAKzGTjAE520r7xtKZ6448d0J2
+X-Google-Smtp-Source: AGHT+IHrSpIGiBHstlMPdxkIWgAD6jVOeR2hwOCG67G+LZyMrCJvZ6auiVBIez1jv5QaTvEr+Bv3AQ==
+X-Received: by 2002:a05:6a00:1a91:b0:702:3174:c03d with SMTP id d2e1a72fcca58-702477bd7aemr1741085b3a.7.1717158610682;
+        Fri, 31 May 2024 05:30:10 -0700 (PDT)
+Received: from localhost.localdomain ([223.178.85.118])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-70242ae88casm1280863b3a.125.2024.05.31.05.30.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 05:30:09 -0700 (PDT)
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+X-Google-Original-From: Kanak Shilledar <kanakshilledar111@protonmail.com>
+To: 
+Cc: Kanak Shilledar <kanakshilledar@gmail.com>,
+	Kanak Shilledar <kanakshilledar111@protonmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND v3] dt-bindings: spi: brcm,bcm2835-spi: convert to dtschema
+Date: Fri, 31 May 2024 17:59:37 +0530
+Message-Id: <20240531122941.3524-1-kanakshilledar111@protonmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,33 +81,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Avoid repetition of long variables.
+From: Kanak Shilledar <kanakshilledar@gmail.com>
 
-No functional change intended.
+Convert the Broadcom BCM2835 SPI0 controller to newer DT
+schema. Created DT schema based on the .txt file which had
+`comaptible`, `reg`, `interrupts`, `clocks` as required
+properties.
+Added GPL-2.0 OR BSD-2-Clause License
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Kanak Shilledar <kanakshilledar111@protonmail.com>
 ---
+Changes in v3:
+- Updated DCO email address
+Changes in v2:
+- Updated the maintainers
+---
+ .../bindings/spi/brcm,bcm2835-spi.txt         | 23 ---------
+ .../bindings/spi/brcm,bcm2835-spi.yaml        | 50 +++++++++++++++++++
+ 2 files changed, 50 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
 
- usr/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/usr/Makefile b/usr/Makefile
-index 132ef7e96e6d..75224d927025 100644
---- a/usr/Makefile
-+++ b/usr/Makefile
-@@ -62,9 +62,9 @@ $(deps_initramfs): ;
- quiet_cmd_initfs = GEN     $@
-       cmd_initfs = \
- 	$(CONFIG_SHELL) $< -o $@ -l $(obj)/.initramfs_data.cpio.d \
--	$(if $(CONFIG_INITRAMFS_ROOT_UID), -u $(CONFIG_INITRAMFS_ROOT_UID)) \
--	$(if $(CONFIG_INITRAMFS_ROOT_GID), -g $(CONFIG_INITRAMFS_ROOT_GID)) \
--	$(if $(KBUILD_BUILD_TIMESTAMP), -d "$(KBUILD_BUILD_TIMESTAMP)") \
-+	$(addprefix -u , $(CONFIG_INITRAMFS_ROOT_UID)) \
-+	$(addprefix -g , $(CONFIG_INITRAMFS_ROOT_GID)) \
-+	$(patsubst %,-d "%", $(KBUILD_BUILD_TIMESTAMP)) \
- 	$(ramfs-input)
- 
- # We rebuild initramfs_data.cpio if:
+diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
+deleted file mode 100644
+index 3d55dd64b1be..000000000000
+--- a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Broadcom BCM2835 SPI0 controller
+-
+-The BCM2835 contains two forms of SPI master controller, one known simply as
+-SPI0, and the other known as the "Universal SPI Master"; part of the
+-auxiliary block. This binding applies to the SPI0 controller.
+-
+-Required properties:
+-- compatible: Should be one of "brcm,bcm2835-spi" for BCM2835/2836/2837 or
+-  "brcm,bcm2711-spi" for BCM2711 or "brcm,bcm7211-spi" for BCM7211.
+-- reg: Should contain register location and length.
+-- interrupts: Should contain interrupt.
+-- clocks: The clock feeding the SPI controller.
+-
+-Example:
+-
+-spi@20204000 {
+-	compatible = "brcm,bcm2835-spi";
+-	reg = <0x7e204000 0x1000>;
+-	interrupts = <2 22>;
+-	clocks = <&clk_spi>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-};
+diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
+new file mode 100644
+index 000000000000..94da68792194
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/brcm,bcm2835-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom BCM2835 SPI0 controller
++
++maintainers:
++  - Florian Fainelli <florian.fainelli@broadcom.com>
++  - Kanak Shilledar <kanakshilledar111@protonmail.com>
++  - Stefan Wahren <wahrenst@gmx.net>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - brcm,bcm2835-spi
++      - brcm,bcm2711-spi
++      - brcm,bcm7211-spi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    spi@20204000 {
++        compatible = "brcm,bcm2835-spi";
++        reg = <0x7e204000 0x1000>;
++        interrupts = <2 22>;
++        clocks = <&clk_spi>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
 -- 
-2.40.1
+2.34.1
 
