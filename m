@@ -1,94 +1,101 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434984C6D;
-	Fri, 31 May 2024 02:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0852A4C6D;
+	Fri, 31 May 2024 02:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717121827; cv=none; b=KY8Rrrdo3ZNqithj9yxsd5tsMkjwBvyENm3h7BTBX0mAjbOVEZUHOp7tQlB7PSiMxmsc/zCVdWAAhU5PvqnRd8eSvh6UJOilw5wMnQK4dmXH8T0Ukt/ctPcNihggxcJwPDmlFkmwVWqtrBif694LVhVG17IwQgr8NePYBolHPJs=
+	t=1717122053; cv=none; b=qJN6LtxxE6xEde2u3fWcV4o+nC+y1UwXWReNiYSrJWfbh5C/if6yhVSk6f5qq1jmyeOe/gGLBlIF8ZOTXAndpgojI0tbcd0gxghHGow6srpyJT5M7Ndr9ncvSaaS1/6xwVuVYJR1bi9x33pClGOJd2EwYJ0INAxdIAxqbkN6Hzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717121827; c=relaxed/simple;
-	bh=ChFmsqTuhqCWj9Q0CuDq9Et2eZr78DFDG1R2WzdOpxM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=GslapNbfGQqb+IvHTM11rFcD770loFEZsMwW4ld9Dc7/LJJ/45KMP0ffHrqyZ/+6g4xVWfdkQS6qvStVdQ6IqpinZPl1ZDt3Ix38rOdepPl7kX/1gV2SOY/fsGs1pP/gKj8s6i0SMBQXJ5UKSuee7Q/hjmOORZ0Zb+S26HZg9xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TqIFkSET; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717122053; c=relaxed/simple;
+	bh=b5G/xzCKKv13+PNvSDpcSoc6cOLXomTBBZTbM3WNl+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BMzdU36xnguHz19KBSNUPL6f/7K0BugDCo/a57c27SOqc2ykg2dpQGfXjUKPMXC7OSUtBodwS5xf2CyMC6a7ZY5V0vRu+cSDCO6LLOvfPVQgioHW+/I9p75Fudj3gzUO8PlWqAcqCQwTQ38EkylQZLCLWY7LKbMweq1YrR/IMTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYC6kPFD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqIFkSET"
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5b9817a135aso847119eaf.0;
-        Thu, 30 May 2024 19:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717121825; x=1717726625; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ChFmsqTuhqCWj9Q0CuDq9Et2eZr78DFDG1R2WzdOpxM=;
-        b=TqIFkSETR9+ZWUkCnZrs8BSlKVMoyqnhUbvTSzgIILIWwr3NOuB8XrlvPTzaAgRG9C
-         lrWZP7XAg2A9PthqFzDku/eATS0v33GGG5yf64edw+hKbnvTGIv5mw6k4RUyULQYL9U8
-         ziirKPMF5Cs6nuM0MQQ12YLDYuMIpD3ZMBOTAfXpcw78PIT9KzJDX3o1fsgECZIztJYl
-         gFDQB2mEUEBAOywOq5+x0j3pk31gnH7wWIKRiXAnaGF4AMzPSSZmQwNGArsRHjchXj5K
-         tGXChVFoKXX+bUZq1WvDsdbyikP2sF4Z9NCjffpQHU3ILTH5AANjgQb9j3SYUTxcTl1s
-         M07Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717121825; x=1717726625;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ChFmsqTuhqCWj9Q0CuDq9Et2eZr78DFDG1R2WzdOpxM=;
-        b=wPr3z38u6SOdOHCtLthPesm/TKSH4dwYrPxyW3hE6XwRXJH0rMpzIxqz+fAiXskPfk
-         ec3BdfBtW+IOE9EsiYtmemyg9AXM9jVuIrD07S8OeBceIjPpyFhVGs930mdTI9S4w9XD
-         sJn8Ry0RQxwVSUy6lzPMgBi8xNfU+Hfnvf9jXJyGoqfa2fvkj3twmteQ3H8T6jPcZoZP
-         msAnPlkodqzVYav3Kh3g3ZzBWf1U7XDlOC60SKS0SNdZ2UJwzKpi/XpooSoQNKBPy5O8
-         c/6vRS/F0aXHaKf7RbqiaKvTSerR2iFh41/Iav6oyX3CNA3BUM2qLXZMzSX2NHfpadGg
-         1GDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAReCo0mE9vNE9aN0Ou5Ecm82ILtYGbARfFhc88EYv88CB3k94JwI570irGzvK+guHDBKQmAKby1ppwJsT0vM9LiyE8i4hf80DeE31KGeLfspFeuoFWKgEBh8ghyPCHl0YXOJssBoFEi+1aQ==
-X-Gm-Message-State: AOJu0Yzvnb0VyHdMeyqTk0vHtGSije1pIP0pJc0XiuXO1nbsgB/5R9Ab
-	93n3N0RlZfP9YI+lyovcnogRFLdzL66Ibwmm3hnXdnrfDRwDNUUr
-X-Google-Smtp-Source: AGHT+IFWDmPVOfAz9M39oJcVLgklrgfEF71/eAZOJCXmybnDydmg1DxI6zz9lMLjRV4/a8gX34adLg==
-X-Received: by 2002:a05:6358:6f05:b0:198:e35d:6800 with SMTP id e5c5f4694b2df-19b489cd7d7mr92627655d.3.1717121825093;
-        Thu, 30 May 2024 19:17:05 -0700 (PDT)
-Received: from smtpclient.apple ([198.11.178.15])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c359564fcfsm373594a12.75.2024.05.30.19.17.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 30 May 2024 19:17:04 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYC6kPFD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 028B2C2BBFC;
+	Fri, 31 May 2024 02:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717122052;
+	bh=b5G/xzCKKv13+PNvSDpcSoc6cOLXomTBBZTbM3WNl+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AYC6kPFDmbrWlFSPd9ew7nngeX7vNnr7ubo6m9b2OyqpSVvNr9Q8uOXF8czbmW329
+	 hAMZAcC4V57o7n/GKhiLNhD6YeGftel6CgNbC9WQctIo0hrmBGfQuHjIWWzmsAmlvb
+	 JnaxB7ChCJyWD8KJo6Wn7BnKMdiBznYh4hKn6gjWpyU7R9JYYwYQA3a6N4VRSZT268
+	 wDAWVRGuUaqLVlfNCd9QEI/q0r/+8/3Xf23cYFxgVBkAxZUCUe/yue9txfFzQ/fr4K
+	 hVFb4of589BAsJUL6hVkvmusxUoILUcdQYNjKrsziUWjldRgk0RMdSIjwVc3hG1bhe
+	 U+MvwDYRDWjYg==
+Date: Thu, 30 May 2024 19:20:50 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+	jaegeuk@kernel.org, kadlec@netfilter.org, kuba@kernel.org,
+	linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	pablo@netfilter.org,
+	syzbot+340581ba9dceb7e06fb3@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Subject: Re: [PATCH] ext4: add casefolded file check
+Message-ID: <20240531022050.GB1502@sol.localdomain>
+References: <20240531010513.GA9629@sol.localdomain>
+ <20240531014747.1386219-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] livepatch: introduce klp_func called interface
-From: zhang warden <zhangwarden@gmail.com>
-In-Reply-To: <ZkxVlIPj9VZ9NJC4@pathway.suse.cz>
-Date: Fri, 31 May 2024 10:16:46 +0800
-Cc: Miroslav Benes <mbenes@suse.cz>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Jiri Kosina <jikos@kernel.org>,
- Joe Lawrence <joe.lawrence@redhat.com>,
- live-patching@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2551BBD9-735E-4D1E-B1AE-F5A3F0C38815@gmail.com>
-References: <20240520005826.17281-1-zhangwarden@gmail.com>
- <alpine.LSU.2.21.2405200845130.11413@pobox.suse.cz>
- <BBD2A553-6D44-4CD5-94DD-D8B2D5536F94@gmail.com>
- <alpine.LSU.2.21.2405210823590.4805@pobox.suse.cz>
- <ZkxVlIPj9VZ9NJC4@pathway.suse.cz>
-To: Petr Mladek <pmladek@suse.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531014747.1386219-1-lizhi.xu@windriver.com>
 
+On Fri, May 31, 2024 at 09:47:47AM +0800, 'Lizhi Xu' via syzkaller-bugs wrote:
+> On Thu, 30 May 2024 18:05:13 -0700, Eric Biggers wrote:
+> > > The file name that needs to calculate the siphash must have both flags casefolded
+> > > and dir at the same time, so before calculating it, confirm that the flag meets
+> > > the conditions.
+> > >
+> > > Reported-by: syzbot+340581ba9dceb7e06fb3@syzkaller.appspotmail.com
+> > > Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+> > > ---
+> > >  fs/ext4/hash.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/fs/ext4/hash.c b/fs/ext4/hash.c
+> > > index deabe29da7fb..c8840cfc01dd 100644
+> > > --- a/fs/ext4/hash.c
+> > > +++ b/fs/ext4/hash.c
+> > > @@ -265,6 +265,10 @@ static int __ext4fs_dirhash(const struct inode *dir, const char *name, int len,
+> > >  		__u64	combined_hash;
+> > >
+> > >  		if (fscrypt_has_encryption_key(dir)) {
+> > > +			if (!IS_CASEFOLDED(dir)) {
+> > > +				ext4_warning_inode(dir, "Siphash requires Casefolded file");
+> > > +				return -2;
+> > > +			}
+> > >  			combined_hash = fscrypt_fname_siphash(dir, &qname);
+> > >  		} else {
+> > >  			ext4_warning_inode(dir, "Siphash requires key");
+> > 
+> > First, this needs to be sent to the ext4 mailing list (and not to irrelevant
+> > mailing lists such as netdev).  Please use ./scripts/get_maintainer.pl, as is
+> > recommended by Documentation/process/submitting-patches.rst.
+> > 
+> > Second, ext4 already checks for the directory being casefolded before allowing
+> > siphash.  This is done by dx_probe().  Evidently syzbot found some way around
+> > that, so what needs to be done is figure out why that happened and what is the
+> > best fix to prevent it.  This is not necessarily the patch you've proposed, as
+> > the real issue might actually be a missing check at some earlier time like when
+> > reading the inode from disk or when mounting the filesystem.
+> I have confirmed that there is no casefolded feature when creating the directory.
+> I agree with your statement that it should be checked for casefold features when
+> mounting or reading from disk.
+> 
 
-Hi Bros,
+I haven't looked at the syzbot reproducer, but I'm guessing that the
+DX_HASH_SIPHASH is coming from s_def_hash_version in the filesystem superblock.
+It's not valid to have DX_HASH_SIPHASH there, and it probably would make more
+sense to validate that at mount time.
 
-How about my patch? I do think it is a viable feature to show the state =
-of the patched function. If we add an unlikely branch test before we set =
-the 'called' state, once this function is called, there maybe no =
-negative effect to the performance.
-
-Please give me some advice.
-
-Regards,
-Wardenjohn=
+- Eric
