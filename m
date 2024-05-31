@@ -1,105 +1,141 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360EC1586D7
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD16210EC;
+	Fri, 31 May 2024 12:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717159735; cv=none; b=EH+pduiErF+2yIHKY0jX63Au2FY3QyPr1Gv55tyISWgvfsiMl6B1JQu7SVE23edsFX70EZyqU0N7N+5goDP2qyc2QljdbE564pY8x0WQPAR7pvx2lwIDp31wQwwJXie1KTun7MItzvrP4/PVYnQncdsBESpkPDEM7u4JpkAEGYY=
+	t=1717159911; cv=none; b=DUmRi7sDMaIGFXQK/qb2dFUVvVlkvXXF8wLzvfgqsYetTsDZQQV0mytUJ+KwTgZX2gSjN0evji4AAy/bBi72HwOT8+qhMS05Mh0np8MAsBeObgdttxK2Xjv/AUScT49zD8TQRXeYFVO7VNfCzNb6Bb357gda+JptNS6QymlxuAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717159735; c=relaxed/simple;
-	bh=iiuNGBj2BQDkNZVFjcFc9hllPApGtuUWnv+F9HYgOWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JrY4V+DPuQmEO747w53632Om3AijXLYtOxsCjrngTkWqoxfcCC7bvbiGHppfMgseUhK0hWkN3Zupzyy4CsDrwKz6t2ebDr0I6EjtV31qflV7ZV2wG7zxARhA6BkGAdp8QtFH4XFzozK4hmNFs0Lagc884yr8zSTx2lV1+CMKS/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=O8jCgTB3; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717159911; c=relaxed/simple;
+	bh=mq2Zzqny2IVXTs3luQ/FAMhkfHVKM3ejXtFE0TZCml4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oKJKk+0xGHGn3vJ692yORFNyoFfwVM/85hXXKzmPVDhtbX4UeuihsRiB2N5UUCLJ0RNc1qiqWYql/8i2Adse1asTpPOPyR37BpWA+QiGkskNmO1Bq1vL0aNZoUMftPWjruA8ZN4V6rKZUASpPW8A1X/9FDRzzGMpvWf/bLTafks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=luLGxnmE; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="O8jCgTB3"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 03C2040E0241;
-	Fri, 31 May 2024 12:48:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id q1fJjZY8sWNT; Fri, 31 May 2024 12:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717159728; bh=TY6VcibxdweZqQIFn+missxQLP+1JlXnv47ORNzMTiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O8jCgTB3M9+aX8bNkwCg0eDZjy3e61S9TpWBS4rXqtIFK5tHcEisjKoDJkMKniRTt
-	 J5tKGvpDW9cyPvfbHuYGCB/5StUYCosPiPP+kLK5WSKrTW/suSamhrl2y93/yZfiCZ
-	 urjJFBvdZ9C3QiOaNz+wKLSBOj4eppaBXXQanyV/fBDqkNWcu0Qy1swCjsPJaW/diT
-	 z3nbzVfAM27LJKIVeiaSLd76N29aLGFcIl4dIEW9ht8BKSiD49R6BUsKylLg+kLZ/H
-	 3INm01Y4fKvSs0+JWhhtEwXWiBZHTMOIaY5OIhkL5L4qDDkaX3+JY6PRqr0jW+VLTT
-	 sJLJrNwZuWhPiRTpBLWeS7yHtH03dutxd+uhRAJEGpndy/xNlJlC8iClHA2LiT6POJ
-	 NHJVDxGq6BfZgf5NiCwMbMlQqsWxahJmAKe8IT1rQzMHo8N93slh21gHEEgc7kBuW1
-	 DplDRryDV73XWsPJZ1TV5h6iOyU9oS2XE1Xq14OrGMGruFX8YEbhB5Mteb/uqkrtyR
-	 y8DZCL6zFAMFHdKl+LWPQoOs2/mvrEHhEUDed9TvVvx65XRcIi3FK5dfnXVf+iSfv4
-	 ELhhHEYR2X7Ocm0u2G/zjbHViL+d7zas/uklR4VmP604uKOmr4V+LnCdp3Gpk6lDjX
-	 3S8VCws3pa+z7iLCS6KlQZQ0=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B4D6240E01E8;
-	Fri, 31 May 2024 12:48:34 +0000 (UTC)
-Date: Fri, 31 May 2024 14:48:29 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v4 08/15] x86/sev: Provide SVSM discovery support
-Message-ID: <20240531124829.GDZlnHHZnj-oByMTIK@fat_crate.local>
-References: <cover.1713974291.git.thomas.lendacky@amd.com>
- <0b460ba621d39fda47694332f09301b440619efc.1713974291.git.thomas.lendacky@amd.com>
- <20240527131022.GAZlSGPm_s0FAu_BRB@fat_crate.local>
- <ab9e93f0-132e-b7cc-48e0-f83463003e21@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="luLGxnmE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717159910; x=1748695910;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=mq2Zzqny2IVXTs3luQ/FAMhkfHVKM3ejXtFE0TZCml4=;
+  b=luLGxnmEAUdSPynLO7N1hp4ey3wblvcGEsWGmn/EJ1Nrh7bnvgF2lvKG
+   eD9etu6B2hCAvjsdlBBW7zidJf5PMbVXGiDqWvF8A9hKvSnCNexLKKUNo
+   MRGYS3pGFeI+X0sluXzXeXMRRuFCqEsp7d/hVdM6+xwdozBYydFC7fa/g
+   +a280HH+/lRwa4KaDSlY5txi7E5zfaa38qyz2tZH+5A9ZGKSmTjkc1We4
+   nPaDXIATyLdgwbErITfP48JpuMONmQILXIM+3GJ3VH1brfmOORxv2MKxj
+   6tKnSBXsrtvL1ImfkGG/e4gMr7haM/s+iSSFiTNKL2bGaFb7Bv9Z6V3/C
+   A==;
+X-CSE-ConnectionGUID: dEK4+ey5RMCWG35y1KdmUw==
+X-CSE-MsgGUID: DGKesi6tRdq05FQxoJ/zcQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="16647416"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="16647416"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 05:51:49 -0700
+X-CSE-ConnectionGUID: ME7YDNouRmuXSHs5bc096w==
+X-CSE-MsgGUID: 1RdvsJU8T/yDNeC0TVKyXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="41077266"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.152])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 05:51:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 31 May 2024 15:51:44 +0300 (EEST)
+To: Reinette Chatre <reinette.chatre@intel.com>
+cc: linux-kselftest@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
+    Babu Moger <babu.moger@amd.com>, 
+    =?ISO-8859-15?Q?Maciej_Wiecz=F3r-Retman?= <maciej.wieczor-retman@intel.com>, 
+    LKML <linux-kernel@vger.kernel.org>, Fenghua Yu <fenghua.yu@intel.com>, 
+    Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v4 02/16] selftests/resctrl: Calculate resctrl FS derived
+ mem bw over sleep(1) only
+In-Reply-To: <3b0baf88-c9cb-49c0-a6e1-acb581403f52@intel.com>
+Message-ID: <23188ca6-2de8-3998-c73f-41939a964754@linux.intel.com>
+References: <20240520123020.18938-1-ilpo.jarvinen@linux.intel.com> <20240520123020.18938-3-ilpo.jarvinen@linux.intel.com> <04d0a5d6-82fa-4cc7-bd80-ee5cbd35f0c3@intel.com> <ea0c86b9-ae77-c2d9-b52b-239ae42603e8@linux.intel.com> <d8063ee7-1744-45a2-b6b9-506e68106baf@intel.com>
+ <b029db88-2e09-0b4a-f46a-84b5e535f178@linux.intel.com> <904aa442-9fc5-c6dd-f367-07b197085f7b@linux.intel.com> <700e3df4-4e10-4870-a1df-49d4616cbc45@intel.com> <0f294d43-e704-d1de-06ee-97bb81ebb9cb@linux.intel.com>
+ <3b0baf88-c9cb-49c0-a6e1-acb581403f52@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ab9e93f0-132e-b7cc-48e0-f83463003e21@amd.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-125186921-1717136622=:1027"
+Content-ID: <af795ab7-1f7b-2778-334f-1fa913818b38@linux.intel.com>
 
-On Tue, May 28, 2024 at 03:57:10PM -0500, Tom Lendacky wrote:
-> The alternative method is really meant for things like UEFI runtime services
-> (which uses the kernels #VC handler), not the kernel directly.
-> 
-> Some of those checks have to be made very early, I'll see if it is feasible
-> to rely on the CPUID check / cpu_feature_enabled() support.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Put that in the commit message.
+--8323328-125186921-1717136622=:1027
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <5c23432d-da0d-c4b1-66c5-528957fb8e06@linux.intel.com>
 
-> We can separate out SVSM vs VMPL, but if the kernel isn't running at VMPL0
-> then it requires that an SVSM be present.
+On Thu, 30 May 2024, Reinette Chatre wrote:
 
-Ok, I guess the two things are identical.
+> Hi Ilpo,
+>=20
+> On 5/30/24 4:11 AM, Ilpo J=E4rvinen wrote:
+> > On Tue, 28 May 2024, Reinette Chatre wrote:
+> > > On 5/28/24 3:19 AM, Ilpo J=E4rvinen wrote:
+> > > > On Fri, 24 May 2024, Ilpo J=E4rvinen wrote:
+> > > > > On Fri, 24 May 2024, Reinette Chatre wrote:
+> > > > > > On 5/24/24 12:57 AM, Ilpo J=E4rvinen wrote:
+> > > > > > > On Thu, 23 May 2024, Reinette Chatre wrote:
+>=20
+> ...
+>=20
+> > > > > > It is not necessary to open and close the file every time a val=
+ue
+> > > > > > needs
+> > > > > > to be read from it.
+> > > >=20
+> > > > I'm bit unsure where to go with this. While I could change the code=
+ to
+> > > > match what you described, I realized with the two files approach th=
+ere's
+> > > > no need to do even review/lseek() call during the measurement. It m=
+ight
+> > > > not be very significant compared with the open that was there initi=
+ally
+> > > > but it's still extra.
+> > >=20
+> > > We are discussing the resctrl selftests that will accompany the resct=
+rl
+> > > filesystem in the kernel. When in doubt on how to interact with resct=
+rl
+> > > users
+> > > use the selftests as reference. Needing to open and close a resctrl f=
+ile
+> > > every time a value needs to be read from it is not the correct guidan=
+ce.
+> >=20
+> > That's actually a different goal from the earlier, but I've no problem
+> > adjusting to it.
+> >=20
+> > Initially, this open/close() refactoring was made because of another go=
+al
+> > which was to avoid doing extra syscalls during the test.
+> >=20
+>=20
+> It is not clear what you hint at here. Reading twice from an open file
+> should not be a huge adjustment so it is not clear to me how this results
+> in a big change to this work. As I understand this does match with origin=
+al
+> goal
+> of reducing syscalls since the file need not be opened and closed twice.
 
-> I'll incorporate this, but probably won't change the way exit_info_1 is
-> assigned.
+What I tried to say is that with a single file, the test uses rewind()=20
+that also needs to do a syscall within the test period, whereas if the=20
+file is opened twice in advance rewind() won't be needed.
 
-Oh, but we love our '!!' construct:
+But I've converted it into single file for the sake of serving as an=20
+example for other resctrl users.
 
-git grep -E '\s!![^!]' *.[ch] | wc -l
-7776
-
-At least so many, my pattern is not precise.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+ i.
+--8323328-125186921-1717136622=:1027--
