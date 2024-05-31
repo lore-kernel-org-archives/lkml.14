@@ -1,103 +1,184 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3BF7D40E;
-	Fri, 31 May 2024 18:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653C61E498;
+	Fri, 31 May 2024 19:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717181931; cv=none; b=Tn9Y+R6LJx0iJm/vu+bKM12lhKFk9WPjmnOH/Xtx0R13gM5SqY1Ci976zHqugju9ybE47Zajth5hxjcKM8J/1uAosWfYDLOc76pOBKbOzSmbi2oPEhkGt4I7bl4wazgHyCBlhMfJHrajMh+1kWdFzN7R6zqm4SvJFH6hkA4o2dc=
+	t=1717182127; cv=none; b=F3NlhvcQrFKWtB0uC0fePxEmPga6Yp8xgt/SJzH1c2Cp1t5QJwXmY+8LPGFrRiCpo65tU0rDOKDUxIvED5Ja6r7Uw4B9CMd0uZdW7wvmIZh1qtHX1eMnGwYzNigNypVTTaaRxlNGzeEcOBdPue7KN7yjODCe96dvX/eHWYLC88I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717181931; c=relaxed/simple;
-	bh=mJQDp5OVE52hSetYA8xq+qtJdIpr+7mUyWY61xiyUKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dL1Hpytp/D5SdO2N2P6IUzbZF9iVAn2dCNfanbepinnpbTuQ9LIQmUMZqB1nX1iTSm8zZBWOeD01zqvIQLY4oETSTyPsXBNSvT4DI0HuskkF6Na1h/vrbqWkAGfggNIMV4rp0EGiAdmdRyHdjEVeLk0N4I+chO5uLVesmHQ3Zyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=HHYVz9wH; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1717182127; c=relaxed/simple;
+	bh=4/qrFOt0J60H9Q8gZg1QzL1Ob0AeG1+br64Pzy1aoLk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=EGG9F2rNalK7CkQ2FVB5MGjqHM21JIov6lznJLvStKgQO3yIeWFbXCgmJDXbkn1GerqSzbjDrFa+aSzyuwLOr6lB/i9d4VdzpSLJXvnPmiy1z94/+CDfxU/5nOABVDWHHWPBSxsmUs1Ol8URzlWyhVz+l+6e1G0RD8W2YrkfOr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LL20CsDh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JYEK0UrY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="HHYVz9wH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=J00hHbCv0tmWX3RsYRCdEYWH/PP4cQcPiWZYM0T92ck=; b=HHYVz9wHuEJdBcIo
-	WMaLl2zl1miSHNW8SWzfQ8zlbKPhzpnTRYCbSGom/Qg84Tce6JSpQ6CnsZqflASI4sKeFpCyID1Xq
-	2SDmzBFq0j6VcYuYM/+Uu+w48NyfzNz2ZZiPVBtyvVvaQ9oKVH2LeIqClHL8YpvHGgN0WdTr5gsVa
-	tI/MGPmrflJGKPGpDw5TojQwAlSaeYphyvD3j+9JybofM9SdtevWaBpav+5+4tx/h4vdSejXMX/Ol
-	WgnNnhn/Ea3x7Gwh2Qw+0va46CTBTClrDiTLXivI1fw/rqGZsTlCakCzbBe1b6HDHr6utrhGHfeBk
-	D2Q0XVuDBIOu1lu6qQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sD7Sf-003drn-1k;
-	Fri, 31 May 2024 18:58:45 +0000
-Date: Fri, 31 May 2024 18:58:45 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: davidgow@google.com, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] list: test: remove unused struct 'klist_test_struct'
-Message-ID: <Zlod5TMzmXinDu2X@gallifrey>
-References: <20240531151801.128792-1-linux@treblig.org>
- <89e07c93-a54d-4cc2-8ee1-664389ffcdd7@collabora.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LL20CsDh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JYEK0UrY"
+Date: Fri, 31 May 2024 19:02:02 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717182123;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y9MJU17Ekc/uxv5y4w6TjvOm/CdW/nFdhox3LjTYtqY=;
+	b=LL20CsDhcM4mVsDIzcaCBCynrd2qG5CAq5x7IV8yaT+1HGEITbGXiZCJ4hzqTIh2QqxsZa
+	e7k6sd8rXsGuj4dgj00dIcDnBcPVNd0eVstqFag5/x45fjdqU6HNFc/eATjrGCHoekCOxz
+	/w4Yz/9Z5j0r45oykKpw6NidfCIfnvM5M0VyYbX/3EG9mI/0BfiXajI6iNkqXO0uCva3hV
+	tCHwUVTi9Ml5PFfrthpyK9LHOhPj5WjzwYyMQPFvlTHlbVLi2AG9HmJCTyxYor3pQfcJ+b
+	EgkG03+MdqOw4BrJ9ELHF6OxTL1N7twB5ArbXb5wnXzqtOXfHC+d65dgfJ7Wxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717182123;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y9MJU17Ekc/uxv5y4w6TjvOm/CdW/nFdhox3LjTYtqY=;
+	b=JYEK0UrY1N5PXVSy9GlG46i4XPXU2CNgWNetyJmzxNa1P8OPoLo/1vbY7Yx9KfRQKHuSzV
+	gBOwzVmAEsvx1DBw==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/topology/intel: Unlock CPUID before evaluating anything
+Cc: Peter Schneider <pschneider1968@googlemail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+  <stable@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com>
+References: <fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <89e07c93-a54d-4cc2-8ee1-664389ffcdd7@collabora.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 18:57:18 up 23 days,  6:11,  1 user,  load average: 0.15, 0.03, 0.01
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Message-ID: <171718212254.10875.16204655017704621999.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-* Muhammad Usama Anjum (usama.anjum@collabora.com) wrote:
-> On 5/31/24 8:18 PM, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > 'klist_test_struct' has been unused since the original
-> > commit 57b4f760f94d ("list: test: Test the klist structure").
-> Probably a fixes by tag would be needed here.
+The following commit has been merged into the x86/urgent branch of tip:
 
-I'm generally avoiding fixes tags in this set of changes, since
-  a) They have no behavioural change at all.
-  b) Downstream and stable kernel people use fixes tags to indicate
-     stuff they should pick up if they have the original, and there's
-     no need for them to do that with this cleanup.
+Commit-ID:     0c2f6d04619ec2b53ad4b0b591eafc9389786e86
+Gitweb:        https://git.kernel.org/tip/0c2f6d04619ec2b53ad4b0b591eafc9389786e86
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 30 May 2024 17:29:18 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 31 May 2024 20:25:56 +02:00
 
-Dave
+x86/topology/intel: Unlock CPUID before evaluating anything
 
-> > 
-> > Remove it.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > ---
-> >  lib/list-test.c | 6 ------
-> >  1 file changed, 6 deletions(-)
-> > 
-> > diff --git a/lib/list-test.c b/lib/list-test.c
-> > index 0cc27de9cec8..383ee0ad582e 100644
-> > --- a/lib/list-test.c
-> > +++ b/lib/list-test.c
-> > @@ -1201,12 +1201,6 @@ static struct kunit_suite hlist_test_module = {
-> >  };
-> >  
-> >  
-> > -struct klist_test_struct {
-> > -	int data;
-> > -	struct klist klist;
-> > -	struct klist_node klist_node;
-> > -};
-> > -
-> >  static int node_count;
-> >  static struct klist_node *last_node;
-> >  
-> 
-> -- 
-> BR,
-> Muhammad Usama Anjum
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Intel CPUs have a MSR bit to limit CPUID enumeration to leaf two. If
+this bit is set by the BIOS then CPUID evaluation including topology
+enumeration does not work correctly as the evaluation code does not try
+to analyze any leaf greater than two.
+
+This went unnoticed before because the original topology code just
+repeated evaluation several times and managed to overwrite the initial
+limited information with the correct one later. The new evaluation code
+does it once and therefore ends up with the limited and wrong
+information.
+
+Cure this by unlocking CPUID right before evaluating anything which
+depends on the maximum CPUID leaf being greater than two instead of
+rereading stuff after unlock.
+
+Fixes: 22d63660c35e ("x86/cpu: Use common topology code for Intel")
+Reported-by: Peter Schneider <pschneider1968@googlemail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Cc: <stable@kernel.org>
+Link: https://lore.kernel.org/r/fd3f73dc-a86f-4bcf-9c60-43556a21eb42@googlemail.com
+---
+ arch/x86/kernel/cpu/common.c |  3 ++-
+ arch/x86/kernel/cpu/cpu.h    |  2 ++
+ arch/x86/kernel/cpu/intel.c  | 25 ++++++++++++++++---------
+ 3 files changed, 20 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index e31293c..d4e539d 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1589,6 +1589,7 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
+ 	if (have_cpuid_p()) {
+ 		cpu_detect(c);
+ 		get_cpu_vendor(c);
++		intel_unlock_cpuid_leafs(c);
+ 		get_cpu_cap(c);
+ 		setup_force_cpu_cap(X86_FEATURE_CPUID);
+ 		get_cpu_address_sizes(c);
+@@ -1748,7 +1749,7 @@ static void generic_identify(struct cpuinfo_x86 *c)
+ 	cpu_detect(c);
+ 
+ 	get_cpu_vendor(c);
+-
++	intel_unlock_cpuid_leafs(c);
+ 	get_cpu_cap(c);
+ 
+ 	get_cpu_address_sizes(c);
+diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
+index ea9e07d..1beccef 100644
+--- a/arch/x86/kernel/cpu/cpu.h
++++ b/arch/x86/kernel/cpu/cpu.h
+@@ -61,9 +61,11 @@ extern __ro_after_init enum tsx_ctrl_states tsx_ctrl_state;
+ 
+ extern void __init tsx_init(void);
+ void tsx_ap_init(void);
++void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c);
+ #else
+ static inline void tsx_init(void) { }
+ static inline void tsx_ap_init(void) { }
++static inline void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c) { }
+ #endif /* CONFIG_CPU_SUP_INTEL */
+ 
+ extern void init_spectral_chicken(struct cpuinfo_x86 *c);
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 3c3e7e5..fdf3489 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -269,19 +269,26 @@ detect_keyid_bits:
+ 	c->x86_phys_bits -= keyid_bits;
+ }
+ 
++void intel_unlock_cpuid_leafs(struct cpuinfo_x86 *c)
++{
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++		return;
++
++	if (c->x86 < 6 || (c->x86 == 6 && c->x86_model < 0xd))
++		return;
++
++	/*
++	 * The BIOS can have limited CPUID to leaf 2, which breaks feature
++	 * enumeration. Unlock it and update the maximum leaf info.
++	 */
++	if (msr_clear_bit(MSR_IA32_MISC_ENABLE, MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0)
++		c->cpuid_level = cpuid_eax(0);
++}
++
+ static void early_init_intel(struct cpuinfo_x86 *c)
+ {
+ 	u64 misc_enable;
+ 
+-	/* Unmask CPUID levels if masked: */
+-	if (c->x86 > 6 || (c->x86 == 6 && c->x86_model >= 0xd)) {
+-		if (msr_clear_bit(MSR_IA32_MISC_ENABLE,
+-				  MSR_IA32_MISC_ENABLE_LIMIT_CPUID_BIT) > 0) {
+-			c->cpuid_level = cpuid_eax(0);
+-			get_cpu_cap(c);
+-		}
+-	}
+-
+ 	if ((c->x86 == 0xf && c->x86_model >= 0x03) ||
+ 		(c->x86 == 0x6 && c->x86_model >= 0x0e))
+ 		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
