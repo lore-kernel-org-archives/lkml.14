@@ -1,130 +1,94 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28FF770EE
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12693770EE
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717147465; cv=none; b=HN18vMpLZY2+f8RjNyGhhTVqSbr6yF6fXFjoRhm106zUWwnCuK5yqi2bVt5kpZvYbwHyB+D1GssQfxrPaUUYv/cNXgWrraowbhah5SQT5gPqVPmAXI9lAEPFtpbDPRuKnY4ccoLvs5Jyfw07zE3G+2HthMWSDS5ZV6Tfkto0glk=
+	t=1717147627; cv=none; b=nGfCD91Ta91wHFXjfhCvRLcZpT9cNWyJPG7sWuUN+5r56yqamGXCGVaVPG/a2yG2RQ3aeUfOW8kDlUU4ZnG2jylEnOnnb1VKcrIkPxP2s7+2xziWv1LLLKhgeAYlpRvmm7TnFoW0/117RUr4/pPodV8h7aA2sk/e6h0Ua3qbXNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717147465; c=relaxed/simple;
-	bh=njpPL1V1veKANz+pyjKvPcN17ctn8E8cPDIE73nMeXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VSFHIHVuiMGzch4oIGgZUPrGz9qjxgCBFkFKV8DCyB1NaCB9PsT6VEFqng12IberuiWRT2E0jYnul3iUbNlcSIkBS95FFhMmc5yz7y9kHdSfcxNm5BBvG6Bu1Dk1FDPxjXoRQ+HW0UrP00XEKeyZS/3YyY3XnjP3h3Nhi+CG8TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DSXl6MM/; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717147627; c=relaxed/simple;
+	bh=a7wmDqmUfEy4sWh4SogWxUyxjOiHWPHOFeUWeU5qm9I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TbTOBwxgXzsleI/DsLZUuC3iu0077qZrSeuKWjYzPD5TaC4xHhEFGLxGyd3X06k0K56wqKScGBeZay+uutyv3sPMpjqiHekaGCSgXXEDxufBMkVvqN7BBJGOz0+UPDBcNdOouJ7EcX+yPWmJrBYqK7sMjRPrKNRpT5w3JEk/WuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s15xrfFB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSXl6MM/"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f61f775738so11638735ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 02:24:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717147463; x=1717752263; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mrKkBvog5oyiwqctC5TCQKtV++LMDGUX2RPtvKV8xCI=;
-        b=DSXl6MM/CVfNGKXsmOmQSSqdMd9sE/X/IesPX1xuyrA4PwuCiSL3Ghc+YV4SSZSmn6
-         yMBc8gp2hUxORezbEQnqPv8thlNpFn91pfkRKXTVmkLrF8mKHYsu2V0ryEdppTBf/5z/
-         YEfPLz9/o3CBdPkdb1YqS/E4Uon5oFWZRsm2nDFxbpraHUyUPqmER132i6HYMjXahPj4
-         Xhp+rnbCio8YBH4hQIvN37ZFfxkUeMGg7eGuNcJutFj0AV2XEmWOG2ijl4nidCOoHTlv
-         bi5CB1bV3+FaVPNp43gWzRlNyJt+Ca09tu1/NWP6JI5HJnDAoNS/9oW7+qZNNCrrjnWR
-         NzAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717147463; x=1717752263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mrKkBvog5oyiwqctC5TCQKtV++LMDGUX2RPtvKV8xCI=;
-        b=vaMyuqPvDa47AD5ZZvZCjd3cO8nW0/wTBYjOrDlKvbzYCaWFz3EjVQWXuJ1/oBx7BS
-         GFI9A6kd9EqRC8OLfDIvJp8AI5zF0kx3Nuf5y8+4bYNqT2ik4QjZUZhs+xsPP1OWi+Jc
-         r8DRWzdUDY8eIf6wxqDnZfJcw9c3BZOc9q3R5HQ0dqK6B2KlaBa2tgFlmxnv9836qOjj
-         ejvh/5GHYtlXVbAv5AEGNqUJK+ibE6hTj8ZBRgERveQlm/TjBj3q4zWekCV4wHIyb+lx
-         LgNVnawd6Mjzx9yf5L2T0KALKVwPtmdPbUZj8uPI9W2s/pNsWdVPrf0o8hxcp6IS87tq
-         414w==
-X-Forwarded-Encrypted: i=1; AJvYcCWHr2+6mCu7ueTbRGb8bdtVQZUUyeTiTBbXpQ/kC87IuSi25w0GfLCmQxePuGaM9/mMMvk+nk27G1pdQo1SgMAIBdjvyOOPJENLFSch
-X-Gm-Message-State: AOJu0Yw5dIFEApSPwRS+bz1dzELzcsbY/nl4xWt7I6k8wmCl0RUGWvTU
-	q5IT68ELG1hMzUxm5TsmxShlaesOt5GTZ1ywpZj467rC1nip5XlKyDvnMvrCZFo=
-X-Google-Smtp-Source: AGHT+IE6gGq+eCrjF3uWKXdUrVl9nCO1Z75cjEF8h5pRBPogQzDAKCEb/EdSACkI92nCASHWM37d5g==
-X-Received: by 2002:a17:903:1249:b0:1f4:b858:5fe7 with SMTP id d9443c01a7336-1f6370cefbbmr14952105ad.61.1717147462737;
-        Fri, 31 May 2024 02:24:22 -0700 (PDT)
-Received: from localhost.localdomain ([143.92.64.17])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dde85sm11870975ad.149.2024.05.31.02.24.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 02:24:21 -0700 (PDT)
-From: "brookxu.cn" <brookxu.cn@gmail.com>
-To: kbusch@kernel.org,
-	axboe@kernel.dk,
-	hch@lst.de,
-	sagi@grimberg.me,
-	kch@nvidia.com
-Cc: linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] nvme-fabrics: use reserved tag for reg read/write command
-Date: Fri, 31 May 2024 17:24:21 +0800
-Message-Id: <20240531092421.317296-1-brookxu.cn@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s15xrfFB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1450C116B1;
+	Fri, 31 May 2024 09:27:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717147626;
+	bh=a7wmDqmUfEy4sWh4SogWxUyxjOiHWPHOFeUWeU5qm9I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s15xrfFBXLLa2OztA12J9cnSuK2dOlgh+od2sYYyavwU33qQ78WmvBa0HEUaDWP91
+	 4yuOGl4/jwg2hP44S7KlhweiIDfe0f8fD34F21730fL6gKBTZSU2b/FF4M77w0ZK6a
+	 2HZBPZWgqptJKEzdK0XVksSPVvs6YBgWWUcbZEGjkzez1BGf3MKqaem5SuTO9l4/6y
+	 N2kr97V2NUfm1wlUPnXD/wvIdujAp0LVXrf4EyegofsVMA1dLBqNQ1FiM+p0/HizOl
+	 2DK6CXaFF7n4Cpdlx/+6xlU3cJgQhmcTE+A3ZAv4VpdToWYLueaIWlg8jLIyniV5Cb
+	 XoYwT2nOWI0ug==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sCyXQ-00H83j-Fj;
+	Fri, 31 May 2024 10:27:04 +0100
+Date: Fri, 31 May 2024 10:27:04 +0100
+Message-ID: <86ttiel4bb.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Hagar Hemdan <hagarhem@amazon.com>
+Cc: Maximilian Heyne <mheyne@amazon.de>,
+	Norbert Manthey <nmanthey@amazon.de>,
+	"Thomas\
+ Gleixner" <tglx@linutronix.de>,
+	Eric Auger <eric.auger@redhat.com>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_update()
+In-Reply-To: <20240531074302.30563-1-hagarhem@amazon.com>
+References: <20240531074302.30563-1-hagarhem@amazon.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: hagarhem@amazon.com, mheyne@amazon.de, nmanthey@amazon.de, tglx@linutronix.de, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Chunguang Xu <chunguang.xu@shopee.com>
+On Fri, 31 May 2024 08:43:02 +0100,
+Hagar Hemdan <hagarhem@amazon.com> wrote:
+> 
+> its_vlpi_prop_update() calls lpi_write_config() which obtains the
+> mapping information for a VLPI without lock held. So it could race
+> with its_vlpi_unmap().
+> Since all calls from its_irq_set_vcpu_affinity() require the same
+> lock to be held. So instead of peppering the locking all over the
+> place, we hoist the locking into its_irq_set_vcpu_affinity().
+> 
+> This bug was discovered and resolved using Coverity Static Analysis
+> Security Testing (SAST) by Synopsys, Inc.
+> 
+> Fixes: 015ec0386ab6 ("irqchip/gic-v3-its: Add VLPI configuration handling")
+> Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
 
-In some scenarios, if too many commands are issued by nvme command in
-the same time by user tasks, this may exhaust all tags of admin_q. If
-a reset (nvme reset or IO timeout) occurs before these commands finish,
-reconnect routine may fail to update nvme regs due to insufficient tags,
-which will cause kernel hang forever. In order to workaround this issue,
-maybe we can let reg_read32()/reg_read64()/reg_write32() use reserved
-tags. This maybe safe for nvmf:
+Given that you have lifted both my proposed patch and part of my
+reply as a commit message, you may at least credit me with a
+Suggested-by: tag. Not to mention that the blatant advertising doesn't
+really apply in this case.
 
-1. For the disable ctrl path,  we will not issue connect command
-2. For the enable ctrl / fw activate path, since connect and reg_xx()
-   are called serially.
+> ---
+> v2: moved the lock to its_irq_set_vcpu_affinity().
+> Only compile-tested, no access to HW.
 
-So the reserved tags may still be enough while reg_xx() use reserved tags.
+Was the initial patch tested at all?
 
-Signed-off-by: Chunguang Xu <chunguang.xu@shopee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+	M.
 
----
- drivers/nvme/host/fabrics.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-index 1f0ea1f32d22..f6416f8553f0 100644
---- a/drivers/nvme/host/fabrics.c
-+++ b/drivers/nvme/host/fabrics.c
-@@ -180,7 +180,7 @@ int nvmf_reg_read32(struct nvme_ctrl *ctrl, u32 off, u32 *val)
- 	cmd.prop_get.offset = cpu_to_le32(off);
- 
- 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, &res, NULL, 0,
--			NVME_QID_ANY, 0);
-+			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
- 
- 	if (ret >= 0)
- 		*val = le64_to_cpu(res.u64);
-@@ -226,7 +226,7 @@ int nvmf_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
- 	cmd.prop_get.offset = cpu_to_le32(off);
- 
- 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, &res, NULL, 0,
--			NVME_QID_ANY, 0);
-+			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
- 
- 	if (ret >= 0)
- 		*val = le64_to_cpu(res.u64);
-@@ -271,7 +271,7 @@ int nvmf_reg_write32(struct nvme_ctrl *ctrl, u32 off, u32 val)
- 	cmd.prop_set.value = cpu_to_le64(val);
- 
- 	ret = __nvme_submit_sync_cmd(ctrl->fabrics_q, &cmd, NULL, NULL, 0,
--			NVME_QID_ANY, 0);
-+			NVME_QID_ANY, NVME_SUBMIT_RESERVED);
- 	if (unlikely(ret))
- 		dev_err(ctrl->device,
- 			"Property Set error: %d, offset %#x\n",
 -- 
-2.25.1
-
+Without deviation from the norm, progress is not possible.
