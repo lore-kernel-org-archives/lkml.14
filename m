@@ -1,86 +1,173 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E627AD59
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6315E80617;
+	Fri, 31 May 2024 06:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717137836; cv=none; b=TB13IEV209TlP4bu9ta7Kv/pSe8K93P9EyOTP8msZhM51gwL0kh2t7VfNmOnOrK7IODrgtgZbnlaLD/VqPsIAjSkBSf/IFH5tLMUTivLzbEtnMvVIjR17MBITjZp05Q2DqcZWvRZWJmivI/UpgjqtHqvXMuPNByf8lXtx7AVSPY=
+	t=1717137848; cv=none; b=rlfKNqYNq77kk812T2RLawIEo7Wz4wGnghpvIwM3imPgKtkKtNcEILLs9ELAA3OMNt8z+RSRt2sAGLa6jbmrT/5tRxHtoxjO6cWa7OPWBID5NIbxnZ6mYZxz2QTcRS1Ezh4geRbG/HdZ+s5gxAm+XKo7fDE4OkAWTaec+EePVAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717137836; c=relaxed/simple;
-	bh=iTlnbU1rl+5ZTBkkWR0zu+TUVYCwvWt6+ALadeJVDyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eJS2YYj1kTMtxcPMGpq3D9rR+enLPkCUsuj4MVnoTlWybEwY8zfI+WLI/qzyu4WwbuiGLMr2E78UjqEBXoeOk4oD/NeUmvacL1ec0fSExIoF5EB/vyuCiq1vGGluFDisBht8XMJ5YzirTWHRxViE7TuhI7khT5hGPdQeRgY8qUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dbvd2kHF; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717137848; c=relaxed/simple;
+	bh=UG2VPXJmnotgQCGbUJuzOG/RmR6KlipUd0UjDzTFmOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FuMv690125zS4AybR+SOzRiHp7G07DXSqocF6nTNEg5F3DtAXde6LhhhAG2cWbkizq9T8yT8Vsh0kNwPioOCmta2B2KO6LGQjkcNPnQC+0tFXx0jTPtcMryaMUZ9lEyoHZD/Jg0Hu0RfFTewKo4SiCh4NCaMFIAf2pgrRAUaCw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZM0CWkl; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dbvd2kHF"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2e964acff1aso17106111fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 23:43:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717137832; x=1717742632; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oMiq15SmhHqHIQjJm9pUJ6aH+pnQZBtgLiLte82fH8E=;
-        b=dbvd2kHFn70l4zFZdepSIkbXWb4OOpcp/FAMjq1jdnYY3cPkscKHrk7D4SOtxE4FpJ
-         fKZ2k52ECjjzH6gw1UZB0iqMXhE6FOHujEgRWiANADkl0Nu7F3e4fYgHMdo1R+Q0uTNm
-         n/tXGp4ze7nlQoHi/kJttM2xXX+QCpPIQs9eH/bFE9YJsC6kfmFfrxRd2B+iX3qqmBA+
-         iyr3l4c1ZSdnm/mr7Vkqm5N5L1+8+amjJuWiYWEDA7tB5cSkIjPUzsHsVdZv7Jxz9iN1
-         RM8Bp4j3MI6Yf6uEVTIWoeeBttr4d1UNL78oQOVB2Dhf6kbrGim+o2OHWc2c3hgikku4
-         SusQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717137832; x=1717742632;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMiq15SmhHqHIQjJm9pUJ6aH+pnQZBtgLiLte82fH8E=;
-        b=XlQoBGdb6YfYXngzpUOJoNw1py84Lp+ZVWI583g9Ypcukxi96AKSHpRLTMvF2hiVfW
-         /lzAZgiHokprvezIkBosmXsU+igiRQp5bQf3/AecToVjz9UuvejWzqsIXooNtGUpXKb3
-         3e7wXGBlxZTHhj2d2xQpbKjKqTLckkHnVFyUd8S35MB6BvVNszZsWS88tZDQMKrDrnQi
-         fEtILk5Pzpjl0wCwvwMimWHbdH4UVFf5xV3V2GK9mVSew7yu+zamMix1OYZe6qGk33OL
-         oEdOmX3tiCRDM49qElbtGPCReZn42YRjyc2D/+mhNzS1ElkD28siJHV/nJP/71XZfdIS
-         ruBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVaoDsze8gAL+ACQ1agskr65Xwq2aDHTLPhHPPpy505SCXE46nonji0l9PkP1HVEGBwcYVx257SqXxr0lx26mZ8aXB/NanGtRyseIty
-X-Gm-Message-State: AOJu0Yws64rHnsxhLgqoBHvCUZVjDryO3TOcx8aPaLeASvyvNkBG6YQH
-	39s/ht4J0rpM5ptUqYOZdY9gm0nYzeXjOjVzVcUwJKABFwgEiV505rq0x+noQEY=
-X-Google-Smtp-Source: AGHT+IGlj/rDGIF5KJU8pZOw+FyOP+EzXkNiG7PGjV92PN3ciJjdFWhnjCSEr75gphiPw/9vmM+q5g==
-X-Received: by 2002:a2e:8415:0:b0:2ea:814b:f578 with SMTP id 38308e7fff4ca-2ea950fdc71mr6721401fa.6.1717137832314;
-        Thu, 30 May 2024 23:43:52 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:5de0:bb8b:418e:c4fc:b349? ([2a10:bac0:b000:5de0:bb8b:418e:c4fc:b349])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c4388sm1121324f8f.14.2024.05.30.23.43.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 May 2024 23:43:52 -0700 (PDT)
-Message-ID: <d143cc4c-8f8e-48e5-87f1-dded3272433a@suse.com>
-Date: Fri, 31 May 2024 09:43:50 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZM0CWkl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717137846; x=1748673846;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UG2VPXJmnotgQCGbUJuzOG/RmR6KlipUd0UjDzTFmOc=;
+  b=YZM0CWklr+d5AEzyUfDHiw6G70pIq1zPbl84ETih1cZ0sHmpx4cZJg91
+   ujsN23p1MTVpdLpBkrIPcV3k1ctrcqgIwSh90xgTaSCFJ2TouRlzulp4R
+   4B2gAEc/G40BtGaPpggwjB/yzSAjd0PbVNRaCO88jj3gF/tjz/7HSZq6M
+   4itWWMkOzqs+fX5Jdu9CMcxk3SYGPH/s2LQjd0uMTDG1sCL2vcpc8M3h7
+   DrQpgcz4NquJolwz9QdigWd5gM4yLX09lLzbLBTJqfWmoo3rKkGuUS7kE
+   PuIRHG0mR9cCc03EcnF4lxnpLo9XpQeayJiumEpjXuEk7MPc3jrTf20q1
+   Q==;
+X-CSE-ConnectionGUID: j/NJpsWBT8KTgexo6gJlWw==
+X-CSE-MsgGUID: Lg3v9zVGRxOp0EamNz2UXQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17497233"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="17497233"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 23:44:06 -0700
+X-CSE-ConnectionGUID: 3FNSixCJRzeU6SpSydb64Q==
+X-CSE-MsgGUID: MIPAgyHVT2ebsdue2tL+gg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="36689755"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 30 May 2024 23:43:58 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sCvzO-000Gd3-2Y;
+	Fri, 31 May 2024 06:43:49 +0000
+Date: Fri, 31 May 2024 14:42:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Weidong Wang <wangweidong.a@awinic.com>,
+	Mark Brown <broonie@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+	linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	James Schulman <james.schulman@cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>
+Subject: Re: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
+Message-ID: <202405311428.tzsBMIPs-lkp@intel.com>
+References: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/fpu: Remove export of mxcsr_feature_mask
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-References: <20240530192751.172597-1-chang.seok.bae@intel.com>
-Content-Language: en-US
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20240530192751.172597-1-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
+
+Hi Andy,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on broonie-sound/for-next]
+[also build test ERROR on shawnguo/for-next rockchip/for-next linus/master v6.10-rc1 next-20240529]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/ASoC-codecs-Remove-unused-of_gpio-h/20240531-070350
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+patch link:    https://lore.kernel.org/r/20240530230037.1156253-2-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
+config: i386-buildonly-randconfig-006-20240531 (https://download.01.org/0day-ci/archive/20240531/202405311428.tzsBMIPs-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240531/202405311428.tzsBMIPs-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405311428.tzsBMIPs-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> sound/soc/codecs/tas2781-comlib.c:408:6: error: call to undeclared function 'gpio_is_valid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     408 |         if (gpio_is_valid(tas_priv->irq_info.irq_gpio))
+         |             ^
+   sound/soc/codecs/tas2781-comlib.c:408:6: note: did you mean 'uuid_is_valid'?
+   include/linux/uuid.h:102:19: note: 'uuid_is_valid' declared here
+     102 | bool __must_check uuid_is_valid(const char *uuid);
+         |                   ^
+>> sound/soc/codecs/tas2781-comlib.c:409:3: error: call to undeclared function 'gpio_free'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     409 |                 gpio_free(tas_priv->irq_info.irq_gpio);
+         |                 ^
+   sound/soc/codecs/tas2781-comlib.c:409:3: note: did you mean 'pmd_free'?
+   include/asm-generic/pgtable-nopmd.h:63:20: note: 'pmd_free' declared here
+      63 | static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
+         |                    ^
+   2 errors generated.
+--
+>> sound/soc/codecs/tas2781-i2c.c:664:6: error: call to undeclared function 'gpio_is_valid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     664 |         if (gpio_is_valid(tas_priv->irq_info.irq_gpio)) {
+         |             ^
+   sound/soc/codecs/tas2781-i2c.c:664:6: note: did you mean 'uuid_is_valid'?
+   include/linux/uuid.h:102:19: note: 'uuid_is_valid' declared here
+     102 | bool __must_check uuid_is_valid(const char *uuid);
+         |                   ^
+>> sound/soc/codecs/tas2781-i2c.c:665:8: error: call to undeclared function 'gpio_request'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     665 |                 rc = gpio_request(tas_priv->irq_info.irq_gpio,
+         |                      ^
+>> sound/soc/codecs/tas2781-i2c.c:668:4: error: call to undeclared function 'gpio_direction_input'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     668 |                         gpio_direction_input(
+         |                         ^
+   sound/soc/codecs/tas2781-i2c.c:668:4: note: did you mean 'gpiod_direction_input'?
+   include/linux/gpio/consumer.h:110:5: note: 'gpiod_direction_input' declared here
+     110 | int gpiod_direction_input(struct gpio_desc *desc);
+         |     ^
+>> sound/soc/codecs/tas2781-i2c.c:672:5: error: call to undeclared function 'gpio_to_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     672 |                                 gpio_to_irq(tas_priv->irq_info.irq_gpio);
+         |                                 ^
+   sound/soc/codecs/tas2781-i2c.c:672:5: note: did you mean 'gpiod_to_irq'?
+   include/linux/gpio/consumer.h:167:5: note: 'gpiod_to_irq' declared here
+     167 | int gpiod_to_irq(const struct gpio_desc *desc);
+         |     ^
+   4 errors generated.
 
 
+vim +/gpio_is_valid +408 sound/soc/codecs/tas2781-comlib.c
 
-On 30.05.24 г. 22:27 ч., Chang S. Bae wrote:
-> The variable was previously referenced in KVM code but is no longer used.
-> Don't export it.
-> 
-> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  405  
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  406  void tasdevice_remove(struct tasdevice_priv *tas_priv)
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  407  {
+ef3bcde75d06d6 Shenghao Ding 2023-06-18 @408  	if (gpio_is_valid(tas_priv->irq_info.irq_gpio))
+ef3bcde75d06d6 Shenghao Ding 2023-06-18 @409  		gpio_free(tas_priv->irq_info.irq_gpio);
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  410  	mutex_destroy(&tas_priv->codec_lock);
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  411  }
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  412  EXPORT_SYMBOL_GPL(tasdevice_remove);
+ef3bcde75d06d6 Shenghao Ding 2023-06-18  413  
 
-FWIW the usage of this variable got removed in ea4d6938d4c0 ("x86/fpu: 
-Replace KVMs home brewed FPU copy from user")
-
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
