@@ -1,121 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E7615AAB6;
-	Fri, 31 May 2024 14:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E5C155C8E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717164283; cv=none; b=brikfm0nH3LT7A8ePvZWO5OMEGE/+tfWAtevoavFXtzMf3ovp+9F2UGUlTcl+OL2Y2W3bL1bnmNh45FkiSkpym/e7+jWQlX7OcxVhdxzq1EB6bxjaEpeRbzs9G3Uo2jRvUDap8RyRItdjgj8qK91XFpEynSCpdH/RCA97q8VZ0g=
+	t=1717164287; cv=none; b=arGaJ934bmcmyK5+5VwDIE3Tt95CyGnyU95atMNpkV1qC4K5mLZ3qky0GSzkeMmhUdPXotYj0G6cizEgmesA5hMqrCjUaaZA0t+b4VZ3M1fPLUCcSbFT6h5ci53x/EKQFIVLfR7xEJaV7cTq+Vbh6od0Mw4QNXjt9jUY9jwwZwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717164283; c=relaxed/simple;
-	bh=b5qIPlknK8jeWDh3WleCY1vRy0w4FGugICdq2Y4YMvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bX73YZsVLZ9z/QxvSRkdaxKfCJnhQ8lW91r75C2pgyA0ZnFmad+z3HXnhWpF9HH3MtDzd6awuO1doucnFG3Z4os9OPyYpSy0ndL0MuDGE1N0N1fgsA9w9sqY17tMsIV/8Fwf+74RocVyRw7t4ctQNXtBQh6s3k+KDkTRTx5/CNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nH1rEpv6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717164287; c=relaxed/simple;
+	bh=9X3/+K4zOUhzNbutloj3w6yI0u7JNa7iWNyhISz2UUo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tPsLIn5zV0g28EY0iuFVhw3rVJKFNHlqJjCm2VHZC9aZDsDMu+YxXGRzmUsFCwCygKrPbCCrETQUlb/XFNo4hvqXrfVmMuM15VYor6DlUJsVxoKyMk9BTeXmqBvmLR+BXR2vPvYj1T9/tjczVc23ue7L3rJ9LENb2YVhFWBZjo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dcdxt/2v; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nH1rEpv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FC9C116B1;
-	Fri, 31 May 2024 14:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717164283;
-	bh=b5qIPlknK8jeWDh3WleCY1vRy0w4FGugICdq2Y4YMvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nH1rEpv61HPwulSaOR9famkQ9Xic/cw0ly3cU/keRssOQgODRyvAQ8PV7WBD87yXU
-	 cFaFlfhSjKPQXGoNF1Zu94DAx40IXm2wtejn87Tvd+367xlR+fpKgCMu+88M2hdoLo
-	 986X5yaH4gi3KaZVPOZ+5b/zpWKOli1UvgsNSLXqEz3zZxYThmHgfhkUvDYPPHARJs
-	 PnY16UKVc9dfmQMLhvt/ZhJWQaz6gkxa3qSF1pm7lgMYaUdFvRvsDZD/LM2Teie5D6
-	 4Iu2Dwzc3/3/vJ3ju+2RoVpW02Srb29a9VzpvZ2oa/Un5KVIBm5l85gP1JGqn+LH0k
-	 2QziNQ48nuVXw==
-Date: Fri, 31 May 2024 07:04:42 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
-	david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
-	willy@infradead.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: Re: [RFC PATCH v4 2/8] math64: add rem_u64() to just return the
- remainder
-Message-ID: <20240531140442.GG52987@frogsfrogsfrogs>
-References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
- <20240529095206.2568162-3-yi.zhang@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dcdxt/2v"
+X-Envelope-To: sam@ravnborg.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717164282;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o/qvTrH1SiQj3MlmnfxDD66NKPm741DV2Sf6ZGRQjq0=;
+	b=dcdxt/2vKtqS3mvkvS2XwUo4rVK/Gi3jVopqG04THr1VzIf7XXW6pasFPOGn1fuDJAZp3Z
+	pM86B8Jg1dR0SbpIP0CqPk90+ackIQKmtNnD+v+Pq8GQ+jUZuXT6gB8/+9qgOksy9sYsAa
+	NrKgSHKf79u9c0ljICkoi5d5I1JCESU=
+X-Envelope-To: j-choudhary@ti.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: dmitry.baryshkov@linaro.org
+X-Envelope-To: andrzej.hajda@intel.com
+X-Envelope-To: neil.armstrong@linaro.org
+X-Envelope-To: rfoss@kernel.org
+X-Envelope-To: laurent.pinchart@ideasonboard.com
+X-Envelope-To: mripard@kernel.org
+X-Envelope-To: jonas@kwiboo.se
+X-Envelope-To: jernej.skrabec@gmail.com
+X-Envelope-To: maarten.lankhorst@linux.intel.com
+X-Envelope-To: tzimmermann@suse.de
+X-Envelope-To: airlied@gmail.com
+X-Envelope-To: daniel@ffwll.ch
+X-Envelope-To: a-bhatia1@ti.com
+X-Envelope-To: dri-devel@lists.freedesktop.org
+Message-ID: <955a6d94-9a4c-4f7d-974c-819261579f14@linux.dev>
+Date: Fri, 31 May 2024 22:04:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529095206.2568162-3-yi.zhang@huaweicloud.com>
+Subject: Re: [v4,1/2] drm/bridge: sii902x: Fix mode_valid hook
+To: Sam Ravnborg <sam@ravnborg.org>, Jayesh Choudhary <j-choudhary@ti.com>
+Cc: linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
+ andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ Laurent.pinchart@ideasonboard.com, mripard@kernel.org, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+ tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, a-bhatia1@ti.com,
+ dri-devel@lists.freedesktop.org
+References: <20240530092930.434026-2-j-choudhary@ti.com>
+ <e5ce13e6-1007-41c9-bedc-2045d6f75480@linux.dev>
+ <20240531133324.GA1715839@ravnborg.org>
+Content-Language: en-US, en-AU
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240531133324.GA1715839@ravnborg.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 29, 2024 at 05:52:00PM +0800, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
-> 
-> Add a new helper rem_u64() to only get the remainder of unsigned 64bit
-> divide with 32bit divisor.
-> 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+Hi, Jayesh
 
-Modulo hch's comments,
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
---D
+On 5/31/24 21:33, Sam Ravnborg wrote:
+> Hi Jayesh,
+> 
+>>> +
+>>>    static const struct drm_bridge_funcs sii902x_bridge_funcs = {
+>>>    	.attach = sii902x_bridge_attach,
+>>>    	.mode_set = sii902x_bridge_mode_set,
+>>> @@ -516,6 +529,7 @@ static const struct drm_bridge_funcs sii902x_bridge_funcs = {
+>>>    	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+>>>    	.atomic_get_input_bus_fmts = sii902x_bridge_atomic_get_input_bus_fmts,
+>>>    	.atomic_check = sii902x_bridge_atomic_check,
+>>> +	.mode_valid = sii902x_bridge_mode_valid,
+> 
+> As you have the possibility to test the driver, it would be nice with a
+> follow-up patch that replaces the use of enable() / disable() with the
+> atomic counterparts.
+> 
+> enable() / disable() are deprecated, so it is nice to reduce their use.
 
-> ---
->  include/linux/math64.h | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/math64.h b/include/linux/math64.h
-> index d34def7f9a8c..618df4862091 100644
-> --- a/include/linux/math64.h
-> +++ b/include/linux/math64.h
-> @@ -3,6 +3,7 @@
->  #define _LINUX_MATH64_H
->  
->  #include <linux/types.h>
-> +#include <linux/log2.h>
->  #include <linux/math.h>
->  #include <asm/div64.h>
->  #include <vdso/math64.h>
-> @@ -12,6 +13,20 @@
->  #define div64_long(x, y) div64_s64((x), (y))
->  #define div64_ul(x, y)   div64_u64((x), (y))
->  
-> +/**
-> + * rem_u64 - remainder of unsigned 64bit divide with 32bit divisor
-> + * @dividend: unsigned 64bit dividend
-> + * @divisor: unsigned 32bit divisor
-> + *
-> + * Return: dividend % divisor
-> + */
-> +static inline u32 rem_u64(u64 dividend, u32 divisor)
-> +{
-> +	if (is_power_of_2(divisor))
-> +		return dividend & (divisor - 1);
-> +	return dividend % divisor;
-> +}
-> +
->  /**
->   * div_u64_rem - unsigned 64bit divide with 32bit divisor with remainder
->   * @dividend: unsigned 64bit dividend
-> @@ -86,6 +101,15 @@ static inline s64 div64_s64(s64 dividend, s64 divisor)
->  #define div64_long(x, y) div_s64((x), (y))
->  #define div64_ul(x, y)   div_u64((x), (y))
->  
-> +#ifndef rem_u64
-> +static inline u32 rem_u64(u64 dividend, u32 divisor)
-> +{
-> +	if (is_power_of_2(divisor))
-> +		return dividend & (divisor - 1);
-> +	return do_div(dividend, divisor);
-> +}
-> +#endif
-> +
->  #ifndef div_u64_rem
->  static inline u64 div_u64_rem(u64 dividend, u32 divisor, u32 *remainder)
->  {
-> -- 
-> 2.39.2
-> 
-> 
+I agree with Sam.
+
+Please using atomic uniformally with a follow-up patch, the mixed
+using of atomic API and non atomic API is a little bit confusing IMO.
+
+
+> 	Sam
