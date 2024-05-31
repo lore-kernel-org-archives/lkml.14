@@ -1,100 +1,226 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8937C78B4E
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638FD4653C
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717182256; cv=none; b=o/hRWHTHYGj+/guQbWk5uiY64MHkSChgbR4000xmmewC4q7PFNtKABSIzC9G4mVzSzRAsO+9+ct4dAsHuWce0bb0GtQdRKGHAC3KbS5YUDNd2Qc8JLuTNz1xmeNuB+uQuvOLzontgpIZNLJ+delZ/hmSBoGAS+L1tDLm/f9NCh0=
+	t=1717182331; cv=none; b=NIOBighe8tmOHV+e/XT2Ikr7OxfHAxsYKiSjMF5L92/oygoFoYrz3ZP8ShLWdKrLHPvHfTF3U+F3U+oHuwJ7ZIV/GCg9nHuDiui5ZiT/cjC4j1UOQIDF8zVxF4gbAHyQMZy1YbBTdrY0pUfFPZv40dTZTW7UL5rzvrCPaC6Xb0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717182256; c=relaxed/simple;
-	bh=j64WrxVCusVPXbcxYdi0BKTNsLqOlTUxz6KOgFj2Stg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZfNwYizwNIQe502Qw2LDdWWjOOJI9AAUK99KIyYH8ulsvLNT5e4PI+cUTT1Nk9I+UdgDmPxT0QjTV/8qa4I4CU/BMELvX1G08KzgTrTnG0rV6Fp4nXK+J/EWSfND/F6jGm84mOlrEhnv8kCFKDsXkOfucBew4VHU/MHUo9tpRIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kqfWhaCO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717182331; c=relaxed/simple;
+	bh=JLgUk4/H0I49wI7AFpjfE5SBqXIrl4DmbD4W1JvveUQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sXETYv5Dw5/USlMFAlMWe2tJ3r7YJR6j7RapXnRsOc0yAcbJtXMHit/MchQdvE5zwyHa/KlLhDZDfmDw4pIAvLtSCurrse+Yag1c7Mgmn4kxu9AuroYPnmED2K2p6Kf+MLys8h1/Kdxr4e9vg98D5H6P/Crx/3QPbPCFl3lG/No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=LhVIrZAi; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kqfWhaCO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1034840E02B9;
-	Fri, 31 May 2024 19:04:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id l2pttj_BtIsB; Fri, 31 May 2024 19:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717182248; bh=YW1GaQV5pIAH1uLSwH78leJY+IrB5jokOW7hJIKbxXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kqfWhaCODgXkWjfsspGdVtLTBgaqp/loqAh7i7+IX9+30e6WMkkgycspvZNwvDyUq
-	 epaXel9stfbb+BN1kG63I6flVdCfxdl37gipgcfoKDyYgW/BTp1gTr/gnXji3NqosV
-	 WLf78hIYBd2D7IQtzFS6F6D/vTyuNsuxPOhMd+ni2XEJUQvQYa0zwC17O5ACP6VRph
-	 8p+1mxldzI2NOHcypHop6ByPA5WmyPvNlVRREpgIrjfPLPS3qo1fLcy4T5Q3OCzReW
-	 0u/wnOtASONA5l6KpxBSk0mmjqHlKmA1kNt48QgI6QfXt4EZtkmvecmkMckSLnsT88
-	 3INtbNS7HpK8T8z6aUvtyelbM6PhCyrc0q/Zxe4cQdVXY3+km1NKZwkoMx44Zy7Yx6
-	 RgI7OEu53i9Y4ZYNzpH+za3YmrPZq0Ohn4NvEAqPbGj2SBW3F5GdepDN6y/bx9J2m9
-	 QBAjoRF03mY6kTHRvSl+KYLIvWCrNnO/Yv/LRVKMxeeS+y1Q9/tD43qUZueldll1/D
-	 USLsyS8pMaob5nLMJ2dHtOA8tfrAasGn4FwkO1qTGxGPyQ+tgvEDeBMQS4fH3XBWtx
-	 KeaCA7Di9pRIL/lp2Q4lOk+x3hkuMT7c2CQzyFpba6B9yfSZo8+DWDmMOerTFGomZD
-	 FOr/4GAd9CNu2julsqhE7c3w=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63E3F40E02BA;
-	Fri, 31 May 2024 19:03:54 +0000 (UTC)
-Date: Fri, 31 May 2024 21:03:48 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v4 10/15] virt: sev-guest: Choose the VMPCK key based on
- executing VMPL
-Message-ID: <20240531190348.GKZlofFDL4ESfpOQ6O@fat_crate.local>
-References: <cover.1713974291.git.thomas.lendacky@amd.com>
- <b8508f57712e3194484aa8695494eea26abe1b73.1713974291.git.thomas.lendacky@amd.com>
- <20240531125503.GEZlnIp7YobFu7g9iS@fat_crate.local>
- <ad55da28-e5e0-a348-3cbc-d1a80d0ab2bb@amd.com>
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="LhVIrZAi"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-578517c7ae9so2631678a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1717182328; x=1717787128; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XI3ySpP1YuGuRU+0r2fjh+wjdLvP3upJGIzwxGrKcXs=;
+        b=LhVIrZAiHb7iMJSGRxvYzuyS37uhblIV4+4flec2xUd0h9+pTRbsY6S4E1cRvrORPH
+         jH3wgPoZVNRSrLa1erSkHI44EtEqEYqBhCSvrBg7kSAbQvB0M9Ry2Qv8xYmDoDTOPIDr
+         /fjGQjac5/PT8FxjEb5NO+Vri925HWedruGDHcBobRcrJWZ7Bb/dTSCqxXbUNGs3lZV2
+         UxUefJ9UHX83icT+tfjtNoWYvSypj8EL+IDbyQUzHVLWkP1yAze33zV57m0xWNF8UOMX
+         +R/cBr5aqrGHNrv4+j8ix/BGlbzngEVcPvVGhSdWHYRv026D2OKiszL+7KUnjizxx8J9
+         CNkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717182328; x=1717787128;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XI3ySpP1YuGuRU+0r2fjh+wjdLvP3upJGIzwxGrKcXs=;
+        b=CptmGrey+RO73EnWIVqZkrllsEh15Y5ydx4u2AClzAUyf2wT773sIaYweqf6V5/nRy
+         vjmqX5i+31dRwZPj9/eeh5BI9JGTrmePxvVSJieT2WjmIDqhgjVJ2i3i897aaqqerLUA
+         Y7VoxIHD1D1L8mjN/ibT7i9e9ZDTl3EYrzDwgAFc0dAZlzZbaowoNSonCivR593/ilH/
+         f0fLCibpgh9+AI9HplfzZ5ZCHoqcSGpo0XBC9P2INEJmaxmU6rEJsVckpMWzbKgs+f5H
+         p+J4H3kMAj1xP5JmsuCdaV8iajQkyH0ITKpj3aEmcCMt7zhlW6BCzZmvPjB3vjS5OblT
+         F1Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3jSanRMEKQUvT2ScqTsL53VRL9t2l5mrI7xIbSIFGOGsRnzLJUs5jhGrOsgMwysC/TUXDb28zGAEFpzHfCJNSfOyABRq5b56Er5Au
+X-Gm-Message-State: AOJu0YwjR5kmknKcOjU488uHkJKkRhHb8n4Cc8+kQfd4dog2bwR9FCvl
+	l7u7ge0Kpmu0yJIKRpmHejTK6ZC33nsY376tR9jfwLP3R279ayec1RXUUrcUXb9PVPeblLSX3U+
+	IxbqWckxob8jLncPcl8S2mgADDGaXtqgtTn/Pqw==
+X-Google-Smtp-Source: AGHT+IGHM+cFCKr3cD4qLfBdzN50PJ4EDyUgAhS4Wnkb4lkIVrzCC1xfhFir50c+Rban7OD/Mp5ebucWbvjCKDVrJhg=
+X-Received: by 2002:a50:9f22:0:b0:57a:2bfd:82b3 with SMTP id
+ 4fb4d7f45d1cf-57a36430e90mr1727721a12.23.1717182327616; Fri, 31 May 2024
+ 12:05:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ad55da28-e5e0-a348-3cbc-d1a80d0ab2bb@amd.com>
+References: <cover.1717105215.git.yan@cloudflare.com> <9be3733eee16bb81a7e8e2e57ebcc008f95cae08.1717105215.git.yan@cloudflare.com>
+ <CANn89iLo6A__U5HqeA65NuBnrg36jpt9EOUC7T0fLdNEpa6eRQ@mail.gmail.com>
+ <CAO3-PboQ68+xFe4Z10L-s-k3NCgciGXNWM00-3wgqbPmGaBB9A@mail.gmail.com> <CANn89iJ_rd_vUH1LPbby5vV=s=jWdpzvDKnm6H1YK=wRPWBiyw@mail.gmail.com>
+In-Reply-To: <CANn89iJ_rd_vUH1LPbby5vV=s=jWdpzvDKnm6H1YK=wRPWBiyw@mail.gmail.com>
+From: Yan Zhai <yan@cloudflare.com>
+Date: Fri, 31 May 2024 14:05:16 -0500
+Message-ID: <CAO3-PbqaiqWvc1vgHzj2-DEQUPCxTByp4r+zTBWyo-XP4u1G4A@mail.gmail.com>
+Subject: Re: [RFC net-next 1/6] net: add kfree_skb_for_sk function
+To: Eric Dumazet <edumazet@google.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Ahern <dsahern@kernel.org>, Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+	Mina Almasry <almasrymina@google.com>, Florian Westphal <fw@strlen.de>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, David Howells <dhowells@redhat.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Pavel Begunkov <asml.silence@gmail.com>, linux-kernel@vger.kernel.org, 
+	kernel-team@cloudflare.com, Jesper Dangaard Brouer <hawk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 31, 2024 at 01:36:06PM -0500, Tom Lendacky wrote:
-> The sev-guest driver needs to access it. Given it is a driver/module, I
-> created the accessor rather than mark the variable EXPORT_SYMBOL_GPL(). Your
-> call, I'm fine with either.
+On Fri, May 31, 2024 at 12:32=E2=80=AFPM Eric Dumazet <edumazet@google.com>=
+ wrote:
+>
+> On Fri, May 31, 2024 at 6:58=E2=80=AFPM Yan Zhai <yan@cloudflare.com> wro=
+te:
+> >
+> > Hi Eric,
+> >
+> >  Thanks for the feedback.
+> >
+> > On Fri, May 31, 2024 at 1:51=E2=80=AFAM Eric Dumazet <edumazet@google.c=
+om> wrote:
+> > >
+> > > On Thu, May 30, 2024 at 11:46=E2=80=AFPM Yan Zhai <yan@cloudflare.com=
+> wrote:
+> > > >
+> > > > Implement a new kfree_skb_for_sk to replace kfree_skb_reason on a f=
+ew
+> > > > local receive path. The function accepts an extra receiving socket
+> > > > argument, which will be set in skb->cb for kfree_skb/consume_skb
+> > > > tracepoint consumption. With this extra bit of information, it will=
+ be
+> > > > easier to attribute dropped packets to netns/containers and
+> > > > sockets/services for performance and error monitoring purposes.
+> > >
+> > > This is a lot of code churn...
+> > >
+> > > I have to ask : Why not simply adding an sk parameter to an existing
+> > > trace point ?
+> > >
+> > Modifying a signature of the current tracepoint seems like a breaking
+> > change, that's why I was saving the context inside skb->cb, hoping to
+> > not impact any existing programs watching this tracepoint. But
+> > thinking it twice, it might not cause a problem if the signature
+> > becomes:
+> >
+> >  trace_kfree_skb(const struct sk_buff *skb, void *location, enum
+> > skb_drop_reason reason, const struct sock *sk)
+> >
+> > As return values are usually not a thing for tracepoints, it is
+> > probably still compatible. The cons is that the last "sk" still breaks
+> > the integrity of naming. How about making a "kfree_skb_context"
+> > internal struct and putting it as the last argument to "hide" the
+> > naming confusion?
+> >
+> > > If this not possible, I would rather add new tracepoints, adding new =
+classes,
+> > > because it will ease your debugging :
+> > >
+> > > When looking for TCP drops, simply use a tcp_event_sk_skb_reason inst=
+ance,
+> > > and voila, no distractions caused by RAW/ICMP/ICMPv6/af_packet drops.
+> > >
+> > > DECLARE_EVENT_CLASS(tcp_event_sk_skb_reason,
+> > >
+> > >      TP_PROTO(const struct sock *sk, const struct sk_buff *skb, enum
+> > > skb_drop_reason reason),
+> > > ...
+> > > );
+> >
+> > The alternative of adding another tracepoint could indeed work, we had
+> > a few cases like that in the past, e.g.
+> >
+> > https://lore.kernel.org/lkml/20230711043453.64095-1-ivan@cloudflare.com=
+/
+> > https://lore.kernel.org/netdev/20230707043923.35578-1-ivan@cloudflare.c=
+om/
+> >
+> > But it does feel like a whack-a-mole thing. The problems are solvable
+> > if we extend the kfree_skb tracepoint, so I would prefer to not add a
+> > new tracepoint.
+>
+> Solvable with many future merge conflicts for stable teams.
+>
+I don't quite follow it. I think this specific commit using skb->cb is
+unnecessary so I am going to re-work it. As you initially mentioned,
+maybe I should just extend kfree_skb tracepoint. I saw a similar
+change dd1b527831a3("net: add location to trace_consume_skb()"), is it
+something I might follow, or do you specifically mean changes like
+this can annoy stable teams?
 
-Yeah, if the variable doesn't change after init, then you don't really
-need an accessor.
+>
+> >
+> > >
+> > > Also, the name ( kfree_skb_for_sk) and order of parameters is confusi=
+ng.
+> > >
+> > > I always prefer this kind of ordering/names :
+> > >
+> > > void sk_skb_reason_drop( [struct net *net ] // not relevant here, but
+> > > to expand the rationale
+> > >               struct sock *sk, struct sk_buff *skb, enum skb_drop_rea=
+son reason)
+> > >
+> > > Looking at the name, we immediately see the parameter order.
+> > >
+> > > The consume one (no @reason there) would be called
+> > >
+> > > void sk_skb_consume(struct sock *sk, struct sk_buff *skb);
+> >
+> > I was intending to keep the "kfree_skb" prefix initially since it
+> > would appear less surprising to kernel developers who used kfree_skb
+> > and kfree_skb_reason. But your points do make good sense. How about
+> > "kfree_sk_skb_reason" and "consume_sk_skb" here?
+> >
+>
+> IMO kfree_skb() and consume_skb() were a wrong choice. We have to live
+> with them.
+>
+> It should have been skb_free(), skb_consume(), skb_alloc(),
+> to be consistent.
+>
+> Following (partial) list was much better:
+>
+> skb_add_rx_frag_netmem, skb_coalesce_rx_frag, skb_pp_cow_data,
+> skb_cow_data_for_xdp,
+> skb_dump, skb_tx_error, skb_morph, skb_zerocopy_iter_stream, skb_copy_ubu=
+fs,
+> skb_clone, skb_headers_offset_update, skb_copy_header, skb_copy,
+> skb_realloc_headroom, skb_expand_head, skb_copy_expand, skb_put,
+> skb_push, skb_pull, skb_pull_data, skb_trim, skb_copy_bits,
+> skb_splice_bits, skb_send_sock_locked, skb_store_bits,
+> skb_checksum, skb_copy_and_csum_bits, skb_zerocopy_headlen,
+> skb_zerocopy, skb_copy_and_csum_dev, skb_dequeue,
+> skb_dequeue_tail, skb_queue_purge_reason, skb_errqueue_purge,
+> skb_queue_head, skb_queue_tail, skb_unlink, skb_append,
+> skb_split, skb_prepare_seq_read, skb_seq_read, skb_abort_seq_read,
+> skb_find_text, skb_append_pagefrags, skb_pull_rcsum, skb_segment_list,
+> skb_segment, skb_to_sgvec, skb_to_sgvec_nomark, skb_cow_data, skb_clone_s=
+k,
+> skb_complete_tx_timestamp, skb_tstamp_tx, skb_complete_wifi_ack,
+> skb_partial_csum_set, skb_checksum_setup, skb_checksum_trimmed,
+> skb_try_coalesce, skb_scrub_packet, skb_vlan_untag, skb_ensure_writable,
+> skb_ensure_writable_head_tail, skb_vlan_pop, skb_vlan_push, skb_eth_pop,
+> skb_eth_push, skb_mpls_push, skb_mpls_pop, skb_mpls_update_lse,
+> skb_mpls_dec_ttl, skb_condense, skb_ext_add, skb_splice_from_iter
+>
+> (just to make my point very very clear)
+>
+> Instead we have a myriad of functions with illogical parameter
+> ordering vs their names.
+>
+> I see no reason to add more confusion for new helpers.
 
-> Yes, the driver can and does figure it out. However, this module parameter
-> was added in the off chance the default VMPCK gets wiped. Then you can
-> reload the driver and use a different (less privileged) VMPCK.
+ACK. Thanks for clarifying.
 
-Is that what the text over snp_disable_vmpck() is alluding to?
-
-Or where are we documenting this intended use?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Yan
