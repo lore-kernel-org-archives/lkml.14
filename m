@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0535413D532
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E2251420A8
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:20:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717147231; cv=none; b=m+rHvzgiVNRyrI+YX04/blUxZcyNFGi3qwITQDCmU/oY1bptr1Wtg/LBZCAqzEW6IhPz7BZgiQ6UZd2wN4xkfBrv4X3COBdMv0PpudwYm0tNibQplR8BKgM+lIg2sQta1GeNHlV/w3O+ftGmOFcyTvhYt5Br0WheYuDPG8gbhII=
+	t=1717147233; cv=none; b=K5bUleuUK+WH+PBor5GXjsMlKwASCNczPQ8Gxtd7L4Igw9iFJNcUS5J6Bcxl1I0Obrx8RBt4+CFmprJPaK9WY+CHL44OYMhr7SB31LAWVnnu8vd0//0s60edAmBnPX0iRsNtZRu6RR+S8Oo3F0Nq3krIv/QB1RgIgFbDQcCImIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717147231; c=relaxed/simple;
-	bh=IfnJmTeO+yghusg9q3mIouw1WOiUL6zWSD5MfvRSC7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Wmq00lpdyxdd3agFZEEOAwFg+qpDk7xojyhR/fkmqYR6SCaAO9xq4w/x7E0caI0V0LcTFZ7BMehY/FQiu6SS9C6SAJLCebawSlFLYlCbUoDyys+HPtu1yW5CRQUgO0jGBplFGaw2rYlsuf4hzQnG+/BUIt1xkGfMMuiMUlzlBiE=
+	s=arc-20240116; t=1717147233; c=relaxed/simple;
+	bh=2qGNSW3KdM44HWff9yLzL1bREhePCprdjakSuzSQq5w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JxmpmLjgRYsP+9cqt9o2B2k6MUwM18ScrOGF9KfwwhSwdP2Z0oIay1rYtqIhG/aW5gKf433FbPbHF4YT8RcFMRsR3HaZwQo5JQs5WvITQBbwkpR8ivCkX2VbSgJiTZG1x8WK4r0QJ1ETESXiye1gLxWHf8BSsShTllYk3ebz8a0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-71-6659964c48ee
+X-AuditID: a67dfc5b-d85ff70000001748-7b-6659964cd3e1
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,36 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v11 10/12] mm: separate move/undo parts from migrate_pages_batch()
-Date: Fri, 31 May 2024 18:19:59 +0900
-Message-Id: <20240531092001.30428-11-byungchul@sk.com>
+Subject: [PATCH v11 12/12] mm, vmscan: apply luf mechanism to unmapping during folio reclaim
+Date: Fri, 31 May 2024 18:20:01 +0900
+Message-Id: <20240531092001.30428-13-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240531092001.30428-1-byungchul@sk.com>
 References: <20240531092001.30428-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsXC9ZZnka7PtMg0g9e/FCzmrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsXC9ZZnka7PtMg0g8Pr1SzmrF/DZvF5wz82
 	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
 	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
-	pG2tbAU/tSue7OpjamCcrtzFyMkhIWAiMfHDK2YY++OVjewgNpuAusSNGz/B4iICZhIHW/+A
-	xZkF7jJJHOhnA7GFBYIk9u9rYgWxWQRUJb7unwMU5+DgBar/cJodYqS8xOoNB8DGcAKFD/y9
-	wwhiCwmYSiz63wtkcwHVvGeT2DKvmwmiQVLi4IobLBMYeRcwMqxiFMrMK8tNzMwx0cuozMus
-	0EvOz93ECAz8ZbV/oncwfroQfIhRgINRiYc3oCIiTYg1say4MvcQowQHs5II7690oBBvSmJl
-	VWpRfnxRaU5q8SFGaQ4WJXFeo2/lKUIC6YklqdmpqQWpRTBZJg5OqQZGnetHNrLGrPlk3vP3
-	mulSi6JXU7pEDnWkP5jtr3pLRSFjtWCprdsHkZeiiWsX7Z7/j3dZ1xO26Mmrhfh7Yy7+1Nox
-	JUI/xe+3ZNuF629fKkxQK1rYc5v3x5sli+tU1CUsvNx4N+vJqVWEPGv86cSolrJSIfaDy5e+
-	aXeeBzFbWH3MS6wW28quxFKckWioxVxUnAgA8yXjLHgCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsXC5WfdrOszLTLNYPYPMYs569ewWXze8I/N
+	jFdXGQsuqlVs/zeDrYHxnHwXIweHhICJxLoXcV2MnGDmjqe72UFsNgF1iRs3fjKD2CICZhIH
+	W/+AxZkF7jJJHOhnA2kVFoiRmNsGFmYRUJX4faaBFcTmBSo/vfcYO8RIeYnVGw6AjeEEih/4
+	e4cRxBYSMJVY9L8XyOYCqnnPJrHn30w2iAZJiYMrbrBMYORdwMiwilEoM68sNzEzx0QvozIv
+	s0IvOT93EyMw7JfV/onewfjpQvAhRgEORiUe3oCKiDQh1sSy4srcQ4wSHMxKIry/0oFCvCmJ
+	lVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGKNeWKy/Om+nn+ID
+	R8GFHXlp5xU9TapyL8XUhD2MPqIk2pm32WkpY4tW2cqAk2cW3z9vccEkMnFOQtMdvp7+gNIA
+	o241mX+ck0JeHQnyPr1YPz9D7rjz7hYJkQVtYm+33pz8a0LTRtnwN835gj/CA1/Fe/7U2cC3
+	+8GN5xltyeonBcTObL1dqMRSnJFoqMVcVJwIAK+DkQR3AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDLMWRmVeSWpSXmKPExsXC5WfdrOszLTLN4MBGGYs569ewWXze8I/N
 	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
 	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
 	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZUza1spW8FO74smuPqYGxunKXYycHBICJhIfr2xkB7HZBNQlbtz4yQxiiwiY
-	SRxs/QMWZxa4yyRxoJ8NxBYWCJLYv6+JFcRmEVCV+Lp/DlCcg4MXqP7DaXaIkfISqzccABvD
-	CRQ+8PcOI4gtJGAqseh/L+MERq4FjAyrGEUy88pyEzNzTPWKszMq8zIr9JLzczcxAsN4We2f
-	iTsYv1x2P8QowMGoxMMbUBGRJsSaWFZcmXuIUYKDWUmE91c6UIg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTqoExrqdV8t2/qR1ef4pYd7D0LVR5Ip0mHLxC
-	znjDU6cJUyYarLhzY0NCgv+Ba75Lv7a6hvZ9TPwp2sMlUnwldduion+sJoH2nzIt/+fO/aQe
-	+KbYrmD1MvVlyef/rKyM75vaeXp7+bUl+3onTmQ2nx8oMS0+VeveQ9GKWGstJafpXyLzF63/
-	Nz9JiaU4I9FQi7moOBEAAlW2u18CAAA=
+	5mSWpRbp2yVwZcx4dZWx4KJaxfZ/M9gaGM/JdzFyckgImEjseLqbHcRmE1CXuHHjJzOILSJg
+	JnGw9Q9YnFngLpPEgX62LkYODmGBGIm5bWBhFgFVid9nGlhBbF6g8tN7j7FDjJSXWL3hANgY
+	TqD4gb93GEFsIQFTiUX/exknMHItYGRYxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERjGy2r/
+	TNzB+OWy+yFGAQ5GJR7egIqINCHWxLLiytxDjBIczEoivL/SgUK8KYmVValF+fFFpTmpxYcY
+	pTlYlMR5vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2MzfbJLtFvJyd0h0l0NtYEFppJFzVEpM+Z
+	ebh1xv/4+ZLy6anXpFgTEn5etXazS5Pk2RGS8GwJ5/J6LYVn14t48s7aRk9nmGXnecXAfonp
+	bmuNBXec3xpVvmJi8tFbyVGlqCLU/j/3OOPyg+zP5YROX3INunbiWJb0jbcH83MTK2zEH978
+	HK3EUpyRaKjFXFScCAARIRXIXwIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,182 +67,141 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Functionally, no change.  This is a preparation for luf mechanism that
-requires to use separated folio lists for its own handling during
-migration.  Refactored migrate_pages_batch() so as to separate move/undo
-parts from migrate_pages_batch().
+A new mechanism, LUF(Lazy Unmap Flush), defers tlb flush until folios
+that have been unmapped and freed, eventually get allocated again.  It's
+safe for folios that had been mapped read only and were unmapped, since
+the contents of the folios don't change while staying in pcp or buddy
+so we can still read the data through the stale tlb entries.
+
+Applied the mechanism to unmapping during folio reclaim.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- mm/migrate.c | 134 +++++++++++++++++++++++++++++++--------------------
- 1 file changed, 83 insertions(+), 51 deletions(-)
+ include/linux/rmap.h |  5 +++--
+ mm/rmap.c            |  5 ++++-
+ mm/vmscan.c          | 21 ++++++++++++++++++++-
+ 3 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index e04b451c4289..6c22a1402923 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1584,6 +1584,81 @@ static int migrate_hugetlbs(struct list_head *from, new_folio_t get_new_folio,
- 	return nr_failed;
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index 6aca569e342b..9f3e66239f0a 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -661,7 +661,7 @@ int folio_referenced(struct folio *, int is_locked,
+ 			struct mem_cgroup *memcg, unsigned long *vm_flags);
+ 
+ bool try_to_migrate(struct folio *folio, enum ttu_flags flags);
+-void try_to_unmap(struct folio *, enum ttu_flags flags);
++bool try_to_unmap(struct folio *, enum ttu_flags flags);
+ 
+ int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
+ 				unsigned long end, struct page **pages,
+@@ -770,8 +770,9 @@ static inline int folio_referenced(struct folio *folio, int is_locked,
+ 	return 0;
  }
  
-+static void migrate_folios_move(struct list_head *src_folios,
-+		struct list_head *dst_folios,
-+		free_folio_t put_new_folio, unsigned long private,
-+		enum migrate_mode mode, int reason,
-+		struct list_head *ret_folios,
-+		struct migrate_pages_stats *stats,
-+		int *retry, int *thp_retry, int *nr_failed,
-+		int *nr_retry_pages)
-+{
-+	struct folio *folio, *folio2, *dst, *dst2;
-+	bool is_thp;
-+	int nr_pages;
-+	int rc;
+-static inline void try_to_unmap(struct folio *folio, enum ttu_flags flags)
++static inline bool try_to_unmap(struct folio *folio, enum ttu_flags flags)
+ {
++	return false;
+ }
+ 
+ static inline int folio_mkclean(struct folio *folio)
+diff --git a/mm/rmap.c b/mm/rmap.c
+index b8b977278a1b..6f90c2adc4ae 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -2272,10 +2272,11 @@ static int folio_not_mapped(struct folio *folio)
+  * Tries to remove all the page table entries which are mapping this
+  * folio.  It is the caller's responsibility to check if the folio is
+  * still mapped if needed (use TTU_SYNC to prevent accounting races).
++ * Return true if all the mappings are read-only, otherwise false.
+  *
+  * Context: Caller must hold the folio lock.
+  */
+-void try_to_unmap(struct folio *folio, enum ttu_flags flags)
++bool try_to_unmap(struct folio *folio, enum ttu_flags flags)
+ {
+ 	struct rmap_walk_control rwc = {
+ 		.rmap_one = try_to_unmap_one,
+@@ -2300,6 +2301,8 @@ void try_to_unmap(struct folio *folio, enum ttu_flags flags)
+ 		fold_ubc(tlb_ubc_luf, tlb_ubc_ro);
+ 	else
+ 		fold_ubc(tlb_ubc, tlb_ubc_ro);
 +
-+	dst = list_first_entry(dst_folios, struct folio, lru);
-+	dst2 = list_next_entry(dst, lru);
-+	list_for_each_entry_safe(folio, folio2, src_folios, lru) {
-+		is_thp = folio_test_large(folio) && folio_test_pmd_mappable(folio);
-+		nr_pages = folio_nr_pages(folio);
-+
-+		cond_resched();
-+
-+		rc = migrate_folio_move(put_new_folio, private,
-+				folio, dst, mode,
-+				reason, ret_folios);
-+		/*
-+		 * The rules are:
-+		 *	Success: folio will be freed
-+		 *	-EAGAIN: stay on the unmap_folios list
-+		 *	Other errno: put on ret_folios list
-+		 */
-+		switch(rc) {
-+		case -EAGAIN:
-+			*retry += 1;
-+			*thp_retry += is_thp;
-+			*nr_retry_pages += nr_pages;
-+			break;
-+		case MIGRATEPAGE_SUCCESS:
-+			stats->nr_succeeded += nr_pages;
-+			stats->nr_thp_succeeded += is_thp;
-+			break;
-+		default:
-+			*nr_failed += 1;
-+			stats->nr_thp_failed += is_thp;
-+			stats->nr_failed_pages += nr_pages;
-+			break;
-+		}
-+		dst = dst2;
-+		dst2 = list_next_entry(dst, lru);
-+	}
-+}
-+
-+static void migrate_folios_undo(struct list_head *src_folios,
-+		struct list_head *dst_folios,
-+		free_folio_t put_new_folio, unsigned long private,
-+		struct list_head *ret_folios)
-+{
-+	struct folio *folio, *folio2, *dst, *dst2;
-+
-+	dst = list_first_entry(dst_folios, struct folio, lru);
-+	dst2 = list_next_entry(dst, lru);
-+	list_for_each_entry_safe(folio, folio2, src_folios, lru) {
-+		int old_page_state = 0;
-+		struct anon_vma *anon_vma = NULL;
-+
-+		__migrate_folio_extract(dst, &old_page_state, &anon_vma);
-+		migrate_folio_undo_src(folio, old_page_state & PAGE_WAS_MAPPED,
-+				anon_vma, true, ret_folios);
-+		list_del(&dst->lru);
-+		migrate_folio_undo_dst(dst, true, put_new_folio, private);
-+		dst = dst2;
-+		dst2 = list_next_entry(dst, lru);
-+	}
-+}
-+
++	return can_luf;
+ }
+ 
  /*
-  * migrate_pages_batch() first unmaps folios in the from list as many as
-  * possible, then move the unmapped folios.
-@@ -1606,7 +1681,7 @@ static int migrate_pages_batch(struct list_head *from,
- 	int pass = 0;
- 	bool is_thp = false;
- 	bool is_large = false;
--	struct folio *folio, *folio2, *dst = NULL, *dst2;
-+	struct folio *folio, *folio2, *dst = NULL;
- 	int rc, rc_saved = 0, nr_pages;
- 	LIST_HEAD(unmap_folios);
- 	LIST_HEAD(dst_folios);
-@@ -1765,42 +1840,11 @@ static int migrate_pages_batch(struct list_head *from,
- 		thp_retry = 0;
- 		nr_retry_pages = 0;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 15efe6f0edce..d52a6e605183 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1034,14 +1034,17 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		struct reclaim_stat *stat, bool ignore_references)
+ {
+ 	struct folio_batch free_folios;
++	struct folio_batch free_folios_luf;
+ 	LIST_HEAD(ret_folios);
+ 	LIST_HEAD(demote_folios);
+ 	unsigned int nr_reclaimed = 0;
+ 	unsigned int pgactivate = 0;
+ 	bool do_demote_pass;
+ 	struct swap_iocb *plug = NULL;
++	unsigned short int ugen;
  
--		dst = list_first_entry(&dst_folios, struct folio, lru);
--		dst2 = list_next_entry(dst, lru);
--		list_for_each_entry_safe(folio, folio2, &unmap_folios, lru) {
--			is_thp = folio_test_large(folio) && folio_test_pmd_mappable(folio);
--			nr_pages = folio_nr_pages(folio);
--
--			cond_resched();
--
--			rc = migrate_folio_move(put_new_folio, private,
--						folio, dst, mode,
--						reason, ret_folios);
--			/*
--			 * The rules are:
--			 *	Success: folio will be freed
--			 *	-EAGAIN: stay on the unmap_folios list
--			 *	Other errno: put on ret_folios list
--			 */
--			switch(rc) {
--			case -EAGAIN:
--				retry++;
--				thp_retry += is_thp;
--				nr_retry_pages += nr_pages;
--				break;
--			case MIGRATEPAGE_SUCCESS:
--				stats->nr_succeeded += nr_pages;
--				stats->nr_thp_succeeded += is_thp;
--				break;
--			default:
--				nr_failed++;
--				stats->nr_thp_failed += is_thp;
--				stats->nr_failed_pages += nr_pages;
--				break;
--			}
--			dst = dst2;
--			dst2 = list_next_entry(dst, lru);
--		}
-+		/* Move the unmapped folios */
-+		migrate_folios_move(&unmap_folios, &dst_folios,
-+				put_new_folio, private, mode, reason,
-+				ret_folios, stats, &retry, &thp_retry,
-+				&nr_failed, &nr_retry_pages);
- 	}
- 	nr_failed += retry;
- 	stats->nr_thp_failed += thp_retry;
-@@ -1809,20 +1853,8 @@ static int migrate_pages_batch(struct list_head *from,
- 	rc = rc_saved ? : nr_failed;
- out:
- 	/* Cleanup remaining folios */
--	dst = list_first_entry(&dst_folios, struct folio, lru);
--	dst2 = list_next_entry(dst, lru);
--	list_for_each_entry_safe(folio, folio2, &unmap_folios, lru) {
--		int old_page_state = 0;
--		struct anon_vma *anon_vma = NULL;
--
--		__migrate_folio_extract(dst, &old_page_state, &anon_vma);
--		migrate_folio_undo_src(folio, old_page_state & PAGE_WAS_MAPPED,
--				       anon_vma, true, ret_folios);
--		list_del(&dst->lru);
--		migrate_folio_undo_dst(dst, true, put_new_folio, private);
--		dst = dst2;
--		dst2 = list_next_entry(dst, lru);
--	}
-+	migrate_folios_undo(&unmap_folios, &dst_folios,
-+			put_new_folio, private, ret_folios);
+ 	folio_batch_init(&free_folios);
++	folio_batch_init(&free_folios_luf);
+ 	memset(stat, 0, sizeof(*stat));
+ 	cond_resched();
+ 	do_demote_pass = can_demote(pgdat->node_id, sc);
+@@ -1053,6 +1056,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		enum folio_references references = FOLIOREF_RECLAIM;
+ 		bool dirty, writeback;
+ 		unsigned int nr_pages;
++		bool can_luf = false;
  
- 	return rc;
- }
+ 		cond_resched();
+ 
+@@ -1295,7 +1299,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 			if (folio_test_large(folio) && list_empty(&folio->_deferred_list))
+ 				flags |= TTU_SYNC;
+ 
+-			try_to_unmap(folio, flags);
++			can_luf = try_to_unmap(folio, flags);
+ 			if (folio_mapped(folio)) {
+ 				stat->nr_unmap_fail += nr_pages;
+ 				if (!was_swapbacked &&
+@@ -1458,6 +1462,18 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		nr_reclaimed += nr_pages;
+ 
+ 		folio_undo_large_rmappable(folio);
++
++		if (can_luf) {
++			if (folio_batch_add(&free_folios_luf, folio) == 0) {
++				mem_cgroup_uncharge_folios(&free_folios_luf);
++				ugen = try_to_unmap_luf();
++				if (!ugen)
++					try_to_unmap_flush();
++				free_unref_folios(&free_folios_luf, ugen);
++			}
++			continue;
++		}
++
+ 		if (folio_batch_add(&free_folios, folio) == 0) {
+ 			mem_cgroup_uncharge_folios(&free_folios);
+ 			try_to_unmap_flush();
+@@ -1527,8 +1543,11 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 	pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
+ 
+ 	mem_cgroup_uncharge_folios(&free_folios);
++	mem_cgroup_uncharge_folios(&free_folios_luf);
++	ugen = try_to_unmap_luf();
+ 	try_to_unmap_flush();
+ 	free_unref_folios(&free_folios, 0);
++	free_unref_folios(&free_folios_luf, ugen);
+ 
+ 	list_splice(&ret_folios, folio_list);
+ 	count_vm_events(PGACTIVATE, pgactivate);
 -- 
 2.17.1
 
