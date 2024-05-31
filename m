@@ -1,130 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCE88063C
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023B879B84
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717185483; cv=none; b=eFfcpzZOIOfnb1AXlHCuowpqtiAY1eW3wdhDWbsz45FKma6s0nbaqXrWtHvXGoCD+xnkU9Ui8uG17nixGHR6PYONzQNneAyNDHMqybzfXS8SmQL1C7PFv+i5ry6M2ggvYINt+sjnHhDujh+y67J8lGOfVB72pIgCeToi4eDfQNM=
+	t=1717185520; cv=none; b=nyp+loXDtLNw1zee50LOYghNUR7BFcxmM+KAGmmsrTlx+/QzuFEKg0OB7m8ACzxQlNV4CgTmqWMJ9neY1GhvTh0yLqZJLXjwCkGrVaIQt0HQufHXV4G2VF3srE/HQvaKPVyA+hk82+XqsNiElL+dZAJ9WgyZaD9dNH0bIL/bg64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717185483; c=relaxed/simple;
-	bh=O3IiSbAL9+Pwsd2kGX9sYJ5vsluSfA9Q60apb6/OW2k=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=aRoxumXLmB7TY+rfcOqecKB6qWOOs96SJegNVMshE2nHTyl2oUb7RK8lVdYUMf3TUJhF9U4QAW4mZ4Dt6DbPK/L78Djr/7JeAP5/98zC9j6a6PV3MT1QjLKe/Rj4k0Jlt0GwwTAq40uHLOWkXOunF+VRDtutkdRnkKx7pss+94c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LC5A54up; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717185520; c=relaxed/simple;
+	bh=8bHXn3OXNLx5qjnzYVxRFBUrKPOLz9Ymqk62iJc+lAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cmwXCD72fX3TO7bxoqFg1YjmyYW4wCl9hnyqpQmgZZxJMoabcdoqBu4oJv5nGdP9shd3MTnGzuqcbWCAgFF41QKeqSWN5Q1ej8WEq1oXUsJicj3Ra4jCd6JZXP8Ww6l66CkM1MyRKLS8jqfKEuTR9XaIFOj/fUzw59TF7qtX7ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iXSj9Ah3; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LC5A54up"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717185480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/nl6Y8hA9tFb67R/Sjk+6a1HT3MS13bvblE3whYJwL0=;
-	b=LC5A54upzm/fxk+gge4PTXu2YqJTisTAwKa3cQuo56hoJHAl/bhrdt/KOPMg7RIACURD7J
-	z3FDNiQYCEg52yElm4ueMwzEbSCmmSzkQxg7FLco2YuKOr+AWRXnXf7P73erJMumPo1DBi
-	NjRu3YyA/9SPdgv6liYm3wAalDF/6lA=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-248-v7aC2X3QMqetX1FceVgMsg-1; Fri, 31 May 2024 15:57:58 -0400
-X-MC-Unique: v7aC2X3QMqetX1FceVgMsg-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-794ab2615f4so309209685a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:57:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iXSj9Ah3"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52b90038cf7so202007e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717185517; x=1717790317; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2zzL15EC2L89F0jcA6FwGlL6a9GXwi72mLESASORZ3U=;
+        b=iXSj9Ah3i+jVarZyMCCy+THXkt60zQaI52Y212obGyRuthJtAE+Okypxm44VFtP7Pt
+         jbTZjafmgozTGOVJg8uBsQmVq840qRK1GFR9XBWgxVdwY8SvxcziM9k4f/sV7sJL/Vd+
+         bMPzGRoIoiP76TxdHUEmYMO4J4tepPCh+jS+AJtKJ/qUh/0SAbZ4uwBupcdb4FNUzEWl
+         62xSaigXr2hT6XW5lbkqQWtjNYNuguabNO2mf8z5eRwkty0tEc2zAcG+1YyQOyWO1oyu
+         IIRptYhZQd4yWFloejbe6JKS57AsZ8Fvo6Z+w/0qHdO7iJdgw90q/5b9H9Fo9COKzrBW
+         hABQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717185478; x=1717790278;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/nl6Y8hA9tFb67R/Sjk+6a1HT3MS13bvblE3whYJwL0=;
-        b=DwO+9QcxkX0j6s+u5bx7TSHeEqaq3ZToK7zDnXqhFM5u6mA3CWv+hXTCNvJG6cBjkl
-         dsi/jv+71kTnXWYGydTGc2qN0Cz3gD1n0E9IL0EbOtS8QUg8gODfJYYzc790dmhtfRk6
-         6ZZ/GhyxSjNpUKRHu0kFNUlWaMO84+4kzvpxFoRD7/7Qt5UcfLc3hz7oAkDgNGxx5DKS
-         7nIOreSSvb553tjvQ3QIKfQUVW9jjPqK1pK7d3Uq4/ZqpWR+UpcOo3GUucwyn2JElsDw
-         poEXPE6ifP4IHUrjaG7ualmjsEotKm3MGDJX6f4oOR21bSwBxZNkG3KFBNgoXLEQ4dB+
-         rG1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuquYo8lRjI34Z2QY+5LFzN7gzg6/AoO5SHA5pDWtNpnWMv2qXvmKic68GI1qlFk9f+rzvliwJkL4vvoQ9131wHwqmm3Y+eBG0gUR/
-X-Gm-Message-State: AOJu0YwcKKrq98MiD3zuJyZIgyZ1Qmz0vR0jmfT9RRY7+ftjGrvJJsv2
-	3MCBAFKedGyoTj+Dq373X+PetHyT85nKpAlmeISEd+Dcq4AzRG2HaaCoq3QCbchL6arTQNYeDIQ
-	U3P/S/TG90NplRG17tl8suXapZEbB6Kvzq2q0zCXqmtA1JlKU85mD967Qm8OUYg==
-X-Received: by 2002:a05:620a:664:b0:790:c803:7425 with SMTP id af79cd13be357-794f5c66501mr279074085a.2.1717185478135;
-        Fri, 31 May 2024 12:57:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFADsX3LlVJp2rhbpBOhqWa6AFga5ig63FMldaWAgcXQlqM+67tY/cWC3znifvPe3kXDYXLbg==
-X-Received: by 2002:a05:620a:664:b0:790:c803:7425 with SMTP id af79cd13be357-794f5c66501mr279072285a.2.1717185477559;
-        Fri, 31 May 2024 12:57:57 -0700 (PDT)
-Received: from [192.168.1.19] (pool-68-160-135-240.bstnma.fios.verizon.net. [68.160.135.240])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-794f2f166cdsm82437485a.54.2024.05.31.12.57.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 12:57:57 -0700 (PDT)
-Message-ID: <a93e9121-4558-0cb7-224b-550738e45641@redhat.com>
-Date: Fri, 31 May 2024 15:57:56 -0400
+        d=1e100.net; s=20230601; t=1717185517; x=1717790317;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2zzL15EC2L89F0jcA6FwGlL6a9GXwi72mLESASORZ3U=;
+        b=TrkjlsPzE8O2K0KsW9/T2/4LyTMKbaq6uK0hAfclx4WvJgo1VfsL/czYUWyuTdz7Cd
+         5NmP4nq90/iOoDAd5qfpwa3PqiKR+NssDsxxghL8VDxGxWfGs0k4G9VDvgw4FKYpb8ZY
+         BgMpjgEOK62TCsfQBg/qP0d+QAZhqC0CLCo7EiuCVCnrx47d/2AcrX/Z0uA5aOQNph//
+         6z/pE8H1Mw2AaUGcKrBA++aC9qP4+hz+TujqOwPf5gwqXXJr/mXJxOut4QvBhypCtEqU
+         iD/rIUXJmLKQC8jZgGbGV71aa6IJSKsc2ciLfDxtDgf6b1nRj4EinaqFMLnd+HHgXEwT
+         AsAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBJrnOyo+XPudhp51UoyMaAd/Qz/wMG8eerjecMn4OKDglzIDaUbB+gzmf5FNP6jCjLJjUbZj+9ng16UeKA/nJWG9F0E2qu1Lh6kDg
+X-Gm-Message-State: AOJu0YymMDc31UBl3WSnD+xbgfqNCYWXuhRpH52k+6GMWkNq56nKGZr1
+	S4ITypxPXXfL5VqrjTw4akROcNfiY4P7qr2QLL+TCiR2K+t9CUSlxG5VMmgKTjQ=
+X-Google-Smtp-Source: AGHT+IEwiQ6pk+BKY1MK9bmBUgM955M0mWQUYVZ2U93GbXyqgrUjB4xGztU6OWyYemMzgch8INelqA==
+X-Received: by 2002:a19:6a09:0:b0:523:8a14:9149 with SMTP id 2adb3069b0e04-52b8956b5c9mr1678167e87.21.1717185517080;
+        Fri, 31 May 2024 12:58:37 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d7f94fsm426524e87.207.2024.05.31.12.58.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 12:58:36 -0700 (PDT)
+Date: Fri, 31 May 2024 22:58:35 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: tjakobi@math.uni-bielefeld.de
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] drm: panel-orientation-quirks: Add quirk for Aya
+ Neo KUN
+Message-ID: <geyj3ixnlka232jndzkydfr2n7a4lipqumyihujzkhdgdmp5wg@hthqr3agxvtr>
+References: <20240310220401.895591-1-tjakobi@math.uni-bielefeld.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: Miroslav Benes <mbenes@suse.cz>
-Cc: live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200721161407.26806-1-joe.lawrence@redhat.com>
- <alpine.LSU.2.21.2405311319090.8344@pobox.suse.cz>
-From: Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH 0/2] livepatch: Add compiler optimization disclaimer/docs
-In-Reply-To: <alpine.LSU.2.21.2405311319090.8344@pobox.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240310220401.895591-1-tjakobi@math.uni-bielefeld.de>
 
-On 5/31/24 07:23, Miroslav Benes wrote:
-> Hi,
+On Sun, Mar 10, 2024 at 11:04:00PM +0100, tjakobi@math.uni-bielefeld.de wrote:
+> From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 > 
-> On Tue, 21 Jul 2020, Joe Lawrence wrote:
+> Similar to the other Aya Neo devices this one features
+> again a portrait screen, here with a native resolution
+> of 1600x2560.
 > 
->> In light of [PATCH] Revert "kbuild: use -flive-patching when
->> CONFIG_LIVEPATCH is enabled" [1], we should add some loud disclaimers
->> and explanation of the impact compiler optimizations have on
->> livepatching.
->>
->> The first commit provides detailed explanations and examples.  The list
->> was taken mostly from Miroslav's LPC talk a few years back.  This is a
->> bit rough, so corrections and additional suggestions welcome.  Expanding
->> upon the source-based patching approach would be helpful, too.
->>
->> The second commit adds a small README.rst file in the livepatch samples
->> directory pointing the reader to the doc introduced in the first commit.
->>
->> I didn't touch the livepatch kselftests yet as I'm still unsure about
->> how to best account for IPA here.  We could add the same README.rst
->> disclaimer here, too, but perhaps we have a chance to do something more.
->> Possibilities range from checking for renamed functions as part of their
->> build, or the selftest scripts, or even adding something to the kernel
->> API.  I think we'll have a better idea after reviewing the compiler
->> considerations doc.
-> 
-> thanks to Marcos for resurrecting this.
-> 
-> Joe, do you have an updated version by any chance? Some things have 
-> changed since July 2020 so it calls for a new review. If there was an 
-> improved version, it would be easier. If not, no problem at all.
+> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+> ---
+>  drivers/gpu/drm/drm_panel_orientation_quirks.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
-Yea, it's been a little while :) I don't have any newer version than
-this one.  I can rebase,  apply all of the v1 suggestions, and see where
-it stands.  LMK if you can think of any specifics that could be added.
-
-For example, CONFIG_KERNEL_IBT will be driving some changes soon,
-whether it be klp-convert for source-based patches or vmlinux.o binary
-comparison for kpatch-build.
-
-I can push a v2 with a few changes, but IIRC, last time we reviewed
-this, it kinda begged the question of how someone is creating the
-livepatch in the first place.  As long as we're fine holding that
-thought for a while longer, this doc may still be useful by itself.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-Joe
-
+With best wishes
+Dmitry
