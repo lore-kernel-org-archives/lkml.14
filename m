@@ -1,102 +1,278 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4099715575A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 11:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2471415575A;
+	Fri, 31 May 2024 11:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717154660; cv=none; b=WAjnLxSOZgNxPHtyvYqqvt92e7NhhDsgi6j9INqiQS+sZPSCA9ZwuY5VkmAeFEP94oKmDrAKkvzZAbcjLJ76aRQGuWQUGdIqihAFsqNCts/Z6YxSd9EeHCenEuGDKSU6TRicM4hp9uW2l0gHqthzKuGGf/x6rWfQyYtp0JYO03Y=
+	t=1717154743; cv=none; b=NunbCoasuH6IEc2/mlwE3bse2nRuqghZNoyxQ5gtM8/xy36V9AWqWwAbiMzHbjkWWLKlND9eunDU1P7sajV3B5Hyi7fQxLJFpnJafDQQNA6ILcpvVaZW+U1/BQQPYy9PgTQIbb42kILEnQaIjvGhbD7Iz8/CIlHhnXIV33YCF00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717154660; c=relaxed/simple;
-	bh=TknuzXYSGYBvL4tnZNG0vu3hs7bscxbNbZEVSVBGojs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JV8AhzHzsSKNx/oKfrPLfeD7/h00fKtaQVnI8rAjx8fNpbfUqtkDHUXERrGLGxwR5fDEzXSYN5lR6WSfKyMTgfWiD/LgoFkYxQY6W4ZA4taK5zeUdQBpVcJ307hQtyaZ/30u/EIJs7HawULsauPOUfLP8kPc08LL/M7wCblLdk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=XTV9YHRk; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1717154743; c=relaxed/simple;
+	bh=8rvouJXSTI4Pm7kS/trxN1GuwWPDuIYI3MqGF8IM4eE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a8QUzmN0fcGWyJ89tBD4u2FtOd4tEtMMTQiTcLhIvfc6IZOXmBcv8oI6dI8BcYawD3BLOC0KYG/06w1Ojnw3uo6OV4BJwSEiGPtml/lYX47aUc1R+4oC8M4ec574Mmf9Ht0OKi5FA+zszOLkPO1bWG+9RE7sEKqyuPlwBW7Fg9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cv9TEttt; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="XTV9YHRk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1717154649; x=1717759449; i=christian@heusel.eu;
-	bh=NIk0wO5MccgZYUBzv8EbfLQiHFSL8i8W00sI/cWEPdo=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=XTV9YHRkixZpejmdmVREFxsDyUhhxVaevW90hGzRvz8Sm9cN4B70ScMK9+i+R0/y
-	 R8waAaY0kl2M8gzmo7pFQJPhMaxBeMq76PTprCJR4U4jl1CDF0DbmSTwzoC/vA1n9
-	 Z4Co1U7fEe5gG473QBnHXYZA672Z496ZWcNhxM3TJ1CPKmkpi1N+jHGiSf9416yje
-	 t/JzZaWvkMin9ntpHkO8z2OEUBPbKn3PjqYfNSwPgsS1XjKHKoBBzZYzmRHMs2mja
-	 mGn0ya9+mzGHxfTrGmSKpHGFuSBqDmPbfnkNDRZ9FQtCmz/Z1zl6invMw3DbPMz6A
-	 6QQPljORyh2rzkAmjw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from meterpeter.chris.vpn.heusel.eu ([141.70.80.5]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MWjQU-1rxdAD1Nk0-00Xy16; Fri, 31 May 2024 13:18:45 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Borislav Petkov <bp@alien8.de>,
-	linux-kernel@vger.kernel.org
-Cc: Christian Heusel <christian@heusel.eu>
-Subject: [PATCH RESEND] tools/x86/kcpuid: Add missing dir via Makefile
-Date: Fri, 31 May 2024 13:17:58 +0200
-Message-ID: <20240531111757.719528-2-christian@heusel.eu>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cv9TEttt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717154741; x=1748690741;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8rvouJXSTI4Pm7kS/trxN1GuwWPDuIYI3MqGF8IM4eE=;
+  b=Cv9TEtttqn1D+ZYS4iIpUZbvlJJVlggevmk9d1Sx1ONYiyRopsQgcjVm
+   t7T7u6Rn8M9wQOFlSYV/0ql87u5SwLTmqjtFPNv3Ud+0n8++kE2evl/Hj
+   494mXNJlZU2Fx5XGEBRpRmhB+Y0ypMYMdqb8PFaVTplRR4IT27NhYp660
+   f+NVWA/KuWxLW7ph9IyEs1d9XsWTONpbjhGXRXT2v5Sc24YdGziKAchIK
+   heb/SzV02wzyH+Jp4E4tjR0OfcozssPrZSNjM+GoCWGJInpKIIMYuonfD
+   m7VVoM0SVs2ksscs8th+uMZ85HAGJnYybEJDwGB76a4fQIyi02F8n96Rb
+   g==;
+X-CSE-ConnectionGUID: fLejgK87QGW19IpwjfMmzw==
+X-CSE-MsgGUID: l8ZdtoDUTXiRc40UXErvHg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="13916927"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="13916927"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 04:25:39 -0700
+X-CSE-ConnectionGUID: s/V0LCyfQgubFb97mBSlCQ==
+X-CSE-MsgGUID: sIKyOqq8S72f1xaIKEPK5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="36232672"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 04:25:36 -0700
+Message-ID: <a4542d2a-490f-40ab-a2a8-a42b921d2656@intel.com>
+Date: Fri, 31 May 2024 14:25:30 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nBRnD6BMmca3It9c8Bq0t0VWMLCyL79OT9OBuq8/jKeWVSqkq/4
- 6jvZERsdsbKOifjsERCbnEGKEH5hLuF+8vzIOR8OPRs8g/c/um0uM0Ehgt1buuiXQY5y3CS
- tM7g+pPapAnmCK2EoGvfs2CA+ukgZ3DIZtR5Pgo5BhhBXDAnmMgzAxCgzbquaj5w013tVmt
- DcYLlkaqrp26mUnkNk1xg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bFm4w6UGHcQ=;S7oxE0OWu7MGow4k0PeRCEXIr86
- +6/WBbl3kNg71XUtkBVL0QEaaQC5S8ME/ZRKowGKNs/xEpl6NZcDIAiKrkHJOHTH0fcJbuhja
- lytchSqEvqS8ngCEJ2VfVHbcLK6dFcofoDhSqjZfUjv8MZvXLVV7S8NKQqve5w1yFz316x5PO
- 268NIQ+Phvdb8oVEbZusnfsrKdKGeGOGtJy9fvLJ6Dauwh39MhZeq4IdbFqb5V9pC4zhz/9TL
- 8uUoJ+Bg09T6L/4gSIh5eQ9e/s6CGIsmVvNRpv2vfqCr+Zg18jnY6ZT4QD/5Sb0gNR5koMuZn
- Z6OW9p+oHs5d/SQLsSWCuYyyuYqql/Brk3otmYBmMmNCOarwaBfKF6lyEsVKL946Jr6e/fRlJ
- qm4NC8fGgpdmJ+aPZVVUdZaRwmeUfr+Lzd2W/ftsOydZzIJ+0WmhP/bxYXFhqqwg+ltNaEghc
- 9CTy7M1ZvHxvfzFzo+sQPG5U9iiiGgVyjMZQe1Dh/pl1rHx3VjLDKBYGEVLAqsunez+Mn53qs
- uhXsZCkst2BN4mHjr5C2lDtwZzxPQkf/OFZrVBP1sYB8mhgOzUnpaJPJizQ7MYXfPXJ61psNR
- Jm7KBbaBUfylMID+2C4v3j/bF0OWhqkjzR1emYMa2JvuakoIjgGDtx5lkcU+Ysw6eGmWDtxXt
- US2xIqOB5d55c5Y23v4bZX1o/sfefVWcFaL+jw1LKgezTIjD6u2agt7+Y9hDEWWAevnQfgfvf
- Ow7edo5KAGz6U1fB3A/tH6Z2HFIqBPWShmq3w8rru7asCQhXL5l5Rw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V16 12/23] mmc: sdhci-uhs2: add reset function function
+To: Victor Shih <victorshihgli@gmail.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benchuanggli@gmail.com, HL.Liu@genesyslogic.com.tw,
+ Greg.tu@genesyslogic.com.tw, dlunev@chromium.org,
+ Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+ Victor Shih <victor.shih@genesyslogic.com.tw>, ulf.hansson@linaro.org
+References: <20240522110909.10060-1-victorshihgli@gmail.com>
+ <20240522110909.10060-13-victorshihgli@gmail.com>
+ <42f2b1d4-e6c2-4860-956d-4f10c3b05529@intel.com>
+ <CAK00qKBA81zx=QmU7m=pZXOzdY4syOht4p_-SU7fdw+-an0ciQ@mail.gmail.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAK00qKBA81zx=QmU7m=pZXOzdY4syOht4p_-SU7fdw+-an0ciQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-So far the Makefile just installed the csv into $(HWDATADIR)/cpuid.csv,
-which made it unaware about $DESTDIR. Add $DESTDIR to the install
-command and while we are at it also create the directory, should it not
-exist already. This eases the packaging of kcpuid and allows i.e. for
-the install on arch to look like this:
+On 31/05/24 13:32, Victor Shih wrote:
+> On Fri, May 24, 2024 at 3:23 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 22/05/24 14:08, Victor Shih wrote:
+>>> From: Victor Shih <victor.shih@genesyslogic.com.tw>
+>>>
+>>> Sdhci_uhs2_reset() does a UHS-II specific reset operation.
+>>>
+>>> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>> Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+>>> ---
+>>>
+>>> Updates in V15:
+>>>  - Refer the SD Host Controller Standard Specification Section 3.10
+>>>    to add reset command data mechanism.
+>>>
+>>> Updates in V14:
+>>>  - Since mmc_card_uhs2() is the same as sdhci_uhs2_mode(), so drop
+>>>    sdhci_uhs2_mode() and use mmc_card_uhs2() instead of sdhci_uhs2_mode().
+>>>
+>>> Updates in V13:
+>>>  - Use ios timing to stead MMC_UHS2_SUPPORT for indicate the UHS2 mode.
+>>>
+>>> Updates in V8:
+>>>  - Adjust the position of matching brackets.
+>>>
+>>> Updates in V6:
+>>>  - Remove unnecessary functions and simplify code.
+>>>
+>>> ---
+>>>
+>>>  drivers/mmc/host/sdhci-uhs2.c | 57 +++++++++++++++++++++++++++++++++++
+>>>  drivers/mmc/host/sdhci-uhs2.h |  1 +
+>>>  drivers/mmc/host/sdhci.c      |  3 +-
+>>>  drivers/mmc/host/sdhci.h      |  1 +
+>>>  4 files changed, 61 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-uhs2.c
+>>> index 9cb0f1b2a37d..7652158ea151 100644
+>>> --- a/drivers/mmc/host/sdhci-uhs2.c
+>>> +++ b/drivers/mmc/host/sdhci-uhs2.c
+>>> @@ -10,7 +10,9 @@
+>>>   *  Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>>   */
+>>>
+>>> +#include <linux/delay.h>
+>>>  #include <linux/module.h>
+>>> +#include <linux/iopoll.h>
+>>>
+>>>  #include "sdhci.h"
+>>>  #include "sdhci-uhs2.h"
+>>> @@ -21,6 +23,8 @@
+>>>  #define SDHCI_UHS2_DUMP(f, x...) \
+>>>       pr_err("%s: " DRIVER_NAME ": " f, mmc_hostname(host->mmc), ## x)
+>>>
+>>> +#define UHS2_RESET_TIMEOUT_100MS             100000
+>>> +
+>>>  void sdhci_uhs2_dump_regs(struct sdhci_host *host)
+>>>  {
+>>>       if (!(mmc_card_uhs2(host->mmc)))
+>>> @@ -49,6 +53,57 @@ void sdhci_uhs2_dump_regs(struct sdhci_host *host)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(sdhci_uhs2_dump_regs);
+>>>
+>>> +/*****************************************************************************\
+>>> + *                                                                           *
+>>> + * Low level functions                                                       *
+>>> + *                                                                           *
+>>> +\*****************************************************************************/
+>>> +
+>>> +/**
+>>> + * sdhci_uhs2_reset - invoke SW reset
+>>> + * @host: SDHCI host
+>>> + * @mask: Control mask
+>>> + *
+>>> + * Invoke SW reset, depending on a bit in @mask and wait for completion.
+>>> + */
+>>> +void sdhci_uhs2_reset(struct sdhci_host *host, u16 mask)
+>>> +{
+>>> +     u32 val;
+>>> +
+>>> +     sdhci_writew(host, mask, SDHCI_UHS2_SW_RESET);
+>>> +
+>>> +     if (mask & SDHCI_UHS2_SW_RESET_FULL)
+>>> +             host->clock = 0;
+>>> +
+>>> +     /* hw clears the bit when it's done */
+>>> +     if (read_poll_timeout_atomic(sdhci_readw, val, !(val & mask), 10,
+>>> +                                  UHS2_RESET_TIMEOUT_100MS, true, host, SDHCI_UHS2_SW_RESET)) {
+>>> +             pr_warn("%s: %s: Reset 0x%x never completed. %s: clean reset bit.\n", __func__,
+>>> +                     mmc_hostname(host->mmc), (int)mask, mmc_hostname(host->mmc));
+>>> +             sdhci_writeb(host, 0, SDHCI_UHS2_SW_RESET);
+>>> +             return;
+>>> +     }
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(sdhci_uhs2_reset);
+>>> +
+>>> +static void sdhci_uhs2_reset_cmd_data(struct mmc_host *mmc)
+>>> +{
+>>> +     struct sdhci_host *host = mmc_priv(mmc);
+>>> +
+>>> +     sdhci_do_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
+>>> +
+>>> +     if (host->mmc->ios.timing == MMC_TIMING_UHS2_SPEED_A ||
+>>> +         host->mmc->ios.timing == MMC_TIMING_UHS2_SPEED_A_HD ||
+>>> +         host->mmc->ios.timing == MMC_TIMING_UHS2_SPEED_B ||
+>>> +         host->mmc->ios.timing == MMC_TIMING_UHS2_SPEED_B_HD) {
+>>
+>> Please use mmc_card_uhs2()
+>>
+> 
+> Hi, Adrian
+> 
+>      I will update this in the v17 version.
+> 
+> Thanks, Victor Shih
+> 
+>>> +             sdhci_uhs2_reset(host, SDHCI_UHS2_SW_RESET_SD);
+>>> +
+>>> +             sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+>>> +             sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+>>> +             sdhci_uhs2_clear_set_irqs(host, SDHCI_INT_ALL_MASK, SDHCI_UHS2_INT_ERROR_MASK);
+>>> +     }
+>>> +}
+>>> +
+>>>  /*****************************************************************************\
+>>>   *                                                                           *
+>>>   * Driver init/exit                                                          *
+>>> @@ -57,6 +112,8 @@ EXPORT_SYMBOL_GPL(sdhci_uhs2_dump_regs);
+>>>
+>>>  static int sdhci_uhs2_host_ops_init(struct sdhci_host *host)
+>>>  {
+>>> +     host->mmc_host_ops.uhs2_reset_cmd_data = sdhci_uhs2_reset_cmd_data;
+>>
+>> As noted for patch 8, any host controller resets needed
+>> should be done before completing the request, so a call
+>> back function should not be needed.
+>>
+> 
+> Hi, Adrian
+> 
+>      I want to confirm further, so can I call
+> sdhci_uhs2_reset_cmd_data() directly
+>      in the mmc_wait_for_req_done()?
 
-    make BINDIR=3D/usr/bin DESTDIR=3D"$pkgdir" -C tools/arch/x86/kcpuid in=
-stall
+No
 
-So far this change is carried as a downstream patch.
+>      Am I understanding something wrong?
 
-Signed-off-by: Christian Heusel <christian@heusel.eu>
-=2D--
-Resend to add missing linux-kernel@vger.kernel.org to recipients
-=2D--
- tools/arch/x86/kcpuid/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+See the response to your questions over patch 8.
 
-diff --git a/tools/arch/x86/kcpuid/Makefile b/tools/arch/x86/kcpuid/Makefi=
-le
-index 87b554fab14b8..d0b4b0ed10ff9 100644
-=2D-- a/tools/arch/x86/kcpuid/Makefile
-+++ b/tools/arch/x86/kcpuid/Makefile
-@@ -19,6 +19,6 @@ clean :
- 	@rm -f kcpuid
-
- install : kcpuid
--	install -d  $(DESTDIR)$(BINDIR)
-+	install -d  $(DESTDIR)$(BINDIR) $(DESTDIR)$(HWDATADIR)
- 	install -m 755 -p kcpuid $(DESTDIR)$(BINDIR)/kcpuid
--	install -m 444 -p cpuid.csv $(HWDATADIR)/cpuid.csv
-+	install -m 444 -p cpuid.csv $(DESTDIR)$(HWDATADIR)/cpuid.csv
-=2D-
-2.45.1
+> 
+> Thanks, Victor Shih
+> 
+>>> +
+>>>       return 0;
+>>>  }
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci-uhs2.h b/drivers/mmc/host/sdhci-uhs2.h
+>>> index 2bfe18d29bca..caaf9fba4975 100644
+>>> --- a/drivers/mmc/host/sdhci-uhs2.h
+>>> +++ b/drivers/mmc/host/sdhci-uhs2.h
+>>> @@ -177,5 +177,6 @@
+>>>  struct sdhci_host;
+>>>
+>>>  void sdhci_uhs2_dump_regs(struct sdhci_host *host);
+>>> +void sdhci_uhs2_reset(struct sdhci_host *host, u16 mask);
+>>>
+>>>  #endif /* __SDHCI_UHS2_H */
+>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>> index 8fc3e001db74..f212da6dc2aa 100644
+>>> --- a/drivers/mmc/host/sdhci.c
+>>> +++ b/drivers/mmc/host/sdhci.c
+>>> @@ -236,7 +236,7 @@ void sdhci_reset(struct sdhci_host *host, u8 mask)
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(sdhci_reset);
+>>>
+>>> -static bool sdhci_do_reset(struct sdhci_host *host, u8 mask)
+>>> +bool sdhci_do_reset(struct sdhci_host *host, u8 mask)
+>>>  {
+>>>       if (host->quirks & SDHCI_QUIRK_NO_CARD_NO_RESET) {
+>>>               struct mmc_host *mmc = host->mmc;
+>>> @@ -249,6 +249,7 @@ static bool sdhci_do_reset(struct sdhci_host *host, u8 mask)
+>>>
+>>>       return true;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(sdhci_do_reset);
+>>>
+>>>  static void sdhci_reset_for_all(struct sdhci_host *host)
+>>>  {
+>>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>>> index 13703f1a3710..83d994c8d89e 100644
+>>> --- a/drivers/mmc/host/sdhci.h
+>>> +++ b/drivers/mmc/host/sdhci.h
+>>> @@ -845,6 +845,7 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
+>>>  int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+>>>  void sdhci_set_bus_width(struct sdhci_host *host, int width);
+>>>  void sdhci_reset(struct sdhci_host *host, u8 mask);
+>>> +bool sdhci_do_reset(struct sdhci_host *host, u8 mask);
+>>>  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
+>>>  int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode);
+>>>  int __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode);
+>>
 
