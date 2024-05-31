@@ -1,107 +1,136 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABE780034;
-	Fri, 31 May 2024 21:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FC57F7EF
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191971; cv=none; b=nY0jUVVECHioPV01ZTN9o0WUCjmfGqMlH3TwXji9w0FbvDeB0BcTJVFrRPKOMOc0FPhey/Z96UdQWou1oxpbSDgntf0BW6fSE5v0vxMtm2JmypQP3uNfDUd+wT7DrEbPKClnpH3cj/RLYZwLW2mPEJDshvjJclHI5q5xJWjDq7k=
+	t=1717191987; cv=none; b=f3RrRr9lw0b5/m0+9blochP7NICZUsjmmoBNosq5S92bvSlJgilmIdU5I6bG04jXaVZhX/GE5+2U2mlEh0oO652x6QkLLyPG83BpZPJqAr7KtJSj0g39MnRY1eeYY/cL9kTqTmON5qx2sXWR17IrDTzTMlno/7RGP2htXwG6Qnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717191971; c=relaxed/simple;
-	bh=Ax0ZyJOVsJMqf3GkJn8oJR1x2sY8yNWTx1LHPubxfPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A1NqBsEtPvXI8uh38GYzkqCKZNM8RwWLSgE9glfE/9dJvM41r1E7Ph1Y89qaDawTmZgRu7dtsrPkRtBx86kvEzSuILNG4giBa7/U93TujNYoVjFtBwOUT2dU3tpDMUVw/lpWdZAReDWwhUYKo1Yz293EJmZ7TLUpxvxwDmCHACI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OkY7LVZn; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717191987; c=relaxed/simple;
+	bh=l9l3FqC9dknDCtsJMKp0h5MAOYBbJfIqVGQU5aZNZEg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YDzFA9chsn7pVzKufxiIWr01D34iXU1cxJkhQYiI8kWJbNdHDl2TZ3qYFPgQBzybJKRZkm6DfbFVokyFrUlc6xo3XFxkHm5GBkLK7ZXDx7QKKpt+vXsE5MVsEnoW/OoyzJP5/4Z+BBrzFgsXKoQ0ksHu+/6pTDf98SWZx6F5aA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXvx31dm; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OkY7LVZn"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a2f032007so1961127a12.0;
-        Fri, 31 May 2024 14:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717191968; x=1717796768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ax0ZyJOVsJMqf3GkJn8oJR1x2sY8yNWTx1LHPubxfPs=;
-        b=OkY7LVZnd9qD3ZTKutLcKGH3OD2lEZi+CvVmPIxuW7iNAHCED2cqDWzjdgm0bQnode
-         BO5BV5tiGmxB6Y1+OS1UnveMTDI3//KKcWNbNerAK3Xb0yNt2KaN5EEOviRNNKFT0YrZ
-         vzAWM6pjyGd4q106MY2jwWIJvUqy2KwFCHVMwhNRodxjdDKMCmbPktu1P2Q22TytYe+3
-         ceLtMypxvExiyY87AUqHi4817J9CEZSXc2UvONnpoignFn8VRZcf59xAMKjyFGimNqfE
-         JvThuRi8qZHgQ5KMV1ify30UfIy8donX3a0cbsazeIg2yj0OcPG8Qv8yfiTRSINXUdyu
-         MvyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717191968; x=1717796768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ax0ZyJOVsJMqf3GkJn8oJR1x2sY8yNWTx1LHPubxfPs=;
-        b=HqiFCr2xa9mBvom9D+GMepdnX+lFT+T7Yw4g+T8v83Ibj9kcJVUq6aafMuFBh4js8x
-         2Hve5/Ty0XbBeSxKWL7RyaFEJruFxZ1UPF0mQ0Lnu/xQEm1fHb1w67YJFNpa++CXUhu4
-         A417ZgjzPNzIDja8bgc28TeoresKTVLgV9YW9mwXQVHqgZamEuzrUnqW3CUSh7TynuXv
-         G+gjdH0/HGFQxowDXeSLgofG7nwt0oIk/VtvtAXkffWI4MJM+jwo/T7hFfD13w3TgBAi
-         aoWxBUhDTMCOk99/mR3HAlby6gmF04Fdt4ttkjNPzbRiHCW3bv2ogwOWC3ipiASRRwlZ
-         34jg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0k30oAwlDv4EO2pvW4n+ziry82UzOlkIkstFeEnwLlbPVULJvIM8EqAFeGsBNXtip3lU1uWRfSWgNedEe7WnEjtY9AJ+hssaKWPZU7+CEyea3Pq3YC/luFthGqzg7vPI9qlzERNq4
-X-Gm-Message-State: AOJu0YxvYHLpuuNGIoznTpXwBY4NIED7ippsABxfJ65R7SAwDeulodrk
-	t3RKWGmPshmOcPr1DjUSVJLHaE9KIz/3MH1JgrDnBnA1XCjVo7rRPv8/qrckdpWc8EsYPDuYF5t
-	SlQTf+f7Ig7xi89VR7ltk6S8yuMg=
-X-Google-Smtp-Source: AGHT+IF2JFzwO5h9jWIbwQwlcBnpViCMfdgYP0QRsx/mlMurfH6n2y2K95pbPdxLBZOKzRyClZLaWoOaVrxqGYHBhfQ=
-X-Received: by 2002:a17:906:5281:b0:a59:bdb7:73e8 with SMTP id
- a640c23a62f3a-a68220499f5mr195797566b.53.1717191967594; Fri, 31 May 2024
- 14:46:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXvx31dm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717191985; x=1748727985;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=l9l3FqC9dknDCtsJMKp0h5MAOYBbJfIqVGQU5aZNZEg=;
+  b=PXvx31dmchmizR+dLssJtvMY2OHL8wSXZN50yMnbNz+GoYLtuFeU/Gt6
+   xOk/MOia1ynXz1F0wtInf6VJk4eU+sPyQ9P86gTrq/fHTPwNyF7ua+TWK
+   GPGRD5sbvVoRQxMILwiPdoky78BUuikI+mxFnO0EAYCPyAa9aaaG8tP9x
+   Pda9e7/6okRVOTGMS1Q4eGajf+r4dI3bG2H2qfh/I0TA1avqehlLPRQzu
+   5wbmDMofJkfdjyNWTSkdw1iXPBtWDSoWljGU5JbgnJTu3A7PfuQKt/f2k
+   ED6cqIaeyEhDXrqS0Jy0pRx7jhEOwVbtbDzBoa4dPF69T8ghLAbSfrTmx
+   g==;
+X-CSE-ConnectionGUID: keabngv+REORBiiOFPZPag==
+X-CSE-MsgGUID: a6fhAkGmSzGK+23W5S3yxQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="25158614"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="25158614"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 14:46:24 -0700
+X-CSE-ConnectionGUID: vQR7QD4/TY2g2Hysghvfjw==
+X-CSE-MsgGUID: 4IdUVHs4R8G1i4VFHNMhug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="36297654"
+Received: from uaeoff-desk1.amr.corp.intel.com (HELO [10.125.108.48]) ([10.125.108.48])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 14:46:24 -0700
+Message-ID: <f17f33e8-1c1f-460f-8c5a-713476f524a3@intel.com>
+Date: Fri, 31 May 2024 14:46:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531094658.1598969-1-andy.shevchenko@gmail.com>
- <1ea41944-a107-4528-8e8d-559c06907e3f@notapiano> <CAHp75VeG9K3Ar4UJnGxus3zz_vtt4QfFdkYQ8=6D8pt2aB8kmA@mail.gmail.com>
- <CAHp75VcHsE_vb12rwgf6f3q4V_wUVq5tckA5QgFhwUHaYKjwWg@mail.gmail.com> <3f0606f3-c781-49e1-a946-dc9aea77f835@notapiano>
-In-Reply-To: <3f0606f3-c781-49e1-a946-dc9aea77f835@notapiano>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 1 Jun 2024 00:45:30 +0300
-Message-ID: <CAHp75VehYoEFPV4jTdXh4D5DSGUkHzska6tuvB=BrZDpZhiv5Q@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] spi: Make dummy SG handling robust
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 09/12] mm: implement LUF(Lazy Unmap Flush) defering
+ tlb flush when folios get unmapped
+To: Byungchul Park <lkml.byungchul.park@gmail.com>
+Cc: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kernel_team@skhynix.com, akpm@linux-foundation.org,
+ ying.huang@intel.com, vernhao@tencent.com, mgorman@techsingularity.net,
+ hughd@google.com, willy@infradead.org, david@redhat.com,
+ peterz@infradead.org, luto@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, rjgolo@gmail.com
+References: <20240531092001.30428-1-byungchul@sk.com>
+ <20240531092001.30428-10-byungchul@sk.com>
+ <fab1dd64-c652-4160-93b4-7b483a8874da@intel.com>
+ <CAHyrMpxETdVewTH3MCS4qPyD6Xf1zRUfWZf-8SCdpCFj2Pj_Wg@mail.gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CAHyrMpxETdVewTH3MCS4qPyD6Xf1zRUfWZf-8SCdpCFj2Pj_Wg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 8:14=E2=80=AFPM N=C3=ADcolas F. R. A. Prado
-<nfraprado@collabora.com> wrote:
->
-> On Fri, May 31, 2024 at 06:51:46PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 31, 2024 at 6:46=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, May 31, 2024 at 5:37=E2=80=AFPM N=C3=ADcolas F. R. A. Prado
-> > > <nfraprado@collabora.com> wrote:
-> > > > On Fri, May 31, 2024 at 12:44:31PM +0300, Andy Shevchenko wrote:
-
+On 5/31/24 11:04, Byungchul Park wrote:
 ...
+> I don't believe you do not agree with the concept itself.  Thing is
+> the current version is not good enough.  I will do my best by doing
+> what I can do.
 
-> > > > applying either of these patches causes issues. See the traces for =
-each one
-> > > > below. This was tested on top of next-20240531, which works fine.
-> > >
-> > > Oh, thank you very much for prompt testing! Can you test just the
-> > > second one without the revert?
-> >
-> > Ah, you wrote "either", so it seems you have tried that already.
->
-> Yes exactly. Both patches are troublesome. Patch 2 causes a slightly diff=
-erent
-> null pointer dereference, in "dcache_clean_poc+0x20/0x38", as the stack t=
-race I
-> posted shows.
+More performance is good.  I agree with that.
 
-I have sent a new series where the last patch has a massive rework of
-the cur_msg_mapped flag. Would be nice to see if it passes your tests.
-The main idea there is to actually move to per transfer flag(s) from
-per message one.
+But it has to be weighed against the risk and the complexity.  The more
+I look at this approach, the more I think this is not a good trade off.
+There's a lot of risk and a lot of complexity and we haven't seen the
+full complexity picture.  The gaps are being fixed by adding complexity
+in new subsystems (the VFS in this case).
 
---=20
-With Best Regards,
-Andy Shevchenko
+There are going to be winners and losers, and this version for example
+makes file writes lose performance.
+
+Just to be crystal clear: I disagree with the concept of leaving stale
+TLB entries in place in an attempt to gain performance.
+
