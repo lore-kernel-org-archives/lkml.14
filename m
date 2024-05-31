@@ -1,218 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295285234;
-	Fri, 31 May 2024 01:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B702F52
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717119794; cv=none; b=tCpxIQt4iEDQMhzlQS8s0f5YjQ18j6jc9iHvDpDoxA3u90wJzCKLscekl7xligqjdEKANRi0sLbPNqSwwfZqHkrYkTBrRcBrOgjnld5DiAMZ1BiRo66PGf/CUhGEfS19/gLHGiMoKHe4NnWf6GdvjGNatcViObS9wKvK1Rt9axc=
+	t=1717119946; cv=none; b=E5bPha3IWaqTaEknvrbNzJHDQ9jSM9zohmVpchXLpdhgZqZ/WiVowIKu6+6Dv5xtdf4kOfqfjIBKgwidDzc9lWac2Hby0otuyeaeda136rC5YB2/YDbeKmSUMOTyhEA9itv+cLMWFx8OT9iAjJ3teWmQp3UtxPN0ym29iNvLUmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717119794; c=relaxed/simple;
-	bh=gayPJsOWp4Fcpeui9tfmQJneqTunc1QXKItLF50AT04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZvU43uuxB1cQ1cBFwebVlIr4eG0zj828m2Q8XQMm6+k7rjd62CXpf1hVaWYG8oAOL9Q28Qpv0YbX3G+CDm7I2q+AWtONlqP+7dDEV1HOGTDO1AwIwtC5pGK2a5jOg28ukogM8JF5pbL8WZRJEvYppHPAjA4JtjvtkL4+9CLBwYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYAXI2me; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717119946; c=relaxed/simple;
+	bh=TjIl2/33bs6RwTfiYeZL8n4d3JkXGlZVTl/oNecoK0w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IyCZYNbHgVHHof+fnLWo8/M+HyaqZYYfJDHsQym/wDRBnTZobdyhDR1fjWv4PrGRh00V7m1qYHD8Dm/45gBlaaMfPszMiEM0zct7Hpnjnl9pVEDa06unNsBl7HUoY4FFY3N+hsAl+cFaKCpjlRO7pUZrPWN810FnLPT/MMdTWeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rRTTSiI7; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYAXI2me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E2CC32789;
-	Fri, 31 May 2024 01:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717119793;
-	bh=gayPJsOWp4Fcpeui9tfmQJneqTunc1QXKItLF50AT04=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fYAXI2meZ5JK+wf8EHAa8W8sRCGrrTD0QNrGhOuQSdIzCgAd8fnPpz96/i7YyAWnm
-	 os39adGByKAuYkmtCAcv6IluFX5LQnmFz52WrDTrUuYwbmB7dWtp4TgbtiAC1+KVQ9
-	 L6LhWqG6uYkUeB8ND3H1PzmOduj6r9VIMztkA1KvLJlKg/RLPPNZx4D1LaLtLcbouE
-	 bseTQjs9/et9eNm6SBzSOohb3o4Sd907cTZSTy0IlOAYCIVtGutfJyGpHZnNZzDusF
-	 IfK527/0htbytgV3N7a7jauSXDH13ZKvIa/calBfO5IwHGGpfJo49b+YI814Sdt2lY
-	 QH30A/KDalvNw==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572c65cea55so2624182a12.0;
-        Thu, 30 May 2024 18:43:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVmakY65As4dAMN02zhJCrkOyOCzdctJwxlfIUmNtezX4LgsUPbQvXgfepOTxFd4MpwrC8uvoGEMjj+r2NRjPPinkSlIsYB9EpLf0vekwEEQKfbrxYA8IBVE6cWc0UprJaO1xTgQvowWw==
-X-Gm-Message-State: AOJu0YxeROqxK0X6RmnnqeM9ThvbLtikbqBtsAyHc99XHjJI833SBtdL
-	hCWa0b6o1bVF9enJGxIz9jt+Fv4F3z6U5qadpzsXvjcm1nKrPTwGzoqBxRvpBE/WwREHsdU8J4J
-	T1AtqLp4aWqLwqgYqVmH04iMfIeE=
-X-Google-Smtp-Source: AGHT+IGA06cT5oNVVAof3ajmceIaL3u0EFu5Ya5KQd6z+if9VJ7W4G3j+QdFSZh4WuDJL+vmceLnEsUhQi3CQwHAKi8=
-X-Received: by 2002:a50:99d5:0:b0:578:62f7:2881 with SMTP id
- 4fb4d7f45d1cf-57a193fd230mr2692616a12.0.1717119792140; Thu, 30 May 2024
- 18:43:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rRTTSiI7"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7022c872aa1so32707b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 18:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1717119943; x=1717724743; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VxgHarzDtgbT8/ObYTgg1m1M6VzyS5V0Ao63Wtq4STU=;
+        b=rRTTSiI7u53wQKiX0lG8yYtwmhCJwwVWjjJl0/fgPIcT6PjhFvCRX2vR52q4DaxI2O
+         xdRmc27c0OLptW2rm7/Fkz33Wi1giXuzmHjDWGIsx9W/xYVBmvKKS2LHK3ftgLlrfSDc
+         rR8FcQnrO1MHtG69vxlg3eVIF3Ikq3a3otscx7CcrdjruVBPdcXSLo34DYpnGt241g7p
+         obcxBjxZaBnmW2WIg4FYA0LAFBtX5Fs3p3bj/m/J7M1wPkIJvZ+Y+u/+DG6qBFBr8Z6b
+         6353esA4txlPVlkS/CmVzQg645+GHjqZ1i8hWTLZjSnuo8wCQNkm7ACT5O5dJxQW/5ed
+         9htQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717119943; x=1717724743;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VxgHarzDtgbT8/ObYTgg1m1M6VzyS5V0Ao63Wtq4STU=;
+        b=fo4BUYKkkUXpHQ7hjPvjot60iw5wxKMgmwd10FYceIO4V2otuCzN4ipexRnzMIEXUJ
+         H49nyLlhpcR9Wdet3VTYao0zjOKTguHRjAL0MOgOEfD9q1yR8bp2AVQOzjz6QQtwlYHG
+         vxnZO8Uxmagiu7WsShDMnGSgRTo5yQbwFphsKqAMPZAUz+AXpk0ftplWg+kZaIqGsUTU
+         nqfC4nmply6laoHndMIjVkU6B4WwaTK0qaK8xFqahaVdbLMp2Q0k5q8u5sRPYWNCvcQE
+         eidp9RrYUNwMEEZB1ijS4VwEl0Ukbf/H5CvPW/pmDG4f962EbxJloHRUNu77wX7s0WkH
+         oZOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVH9qQJ/7z9UkLvzBqyVzzKa/fv5vj0uH1NQejLoCiNyzJXILQX5+9OD50HWb+QExSK6bJ0zscjTjo9ZAbAsXIefv5sJjeL6DLKlSK
+X-Gm-Message-State: AOJu0YxxxDoa8qyXfPsf8dkziJtdPXTaXJi789Y7Nxq+6EVETtniZqz6
+	IF+ygEoT9Agf7qHEpKdTEwj7OV3iaeETShT2w/SN8Iyub5LyrC+51HFuci88oFU=
+X-Google-Smtp-Source: AGHT+IEYopcm3XTog2VzN012UH39SJ41KEHhDRmBEvl2J2WnDc6b7TxZOlgRFb2wNcHYmLVQs6ieKA==
+X-Received: by 2002:a62:e116:0:b0:6ec:ee44:17bb with SMTP id d2e1a72fcca58-70247899e76mr542825b3a.2.1717119943064;
+        Thu, 30 May 2024 18:45:43 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702423cb359sm376354b3a.5.2024.05.30.18.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 May 2024 18:45:42 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+ Waiman Long <longman@redhat.com>
+Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dan Schatzberg <schatzberg.dan@gmail.com>, 
+ Ming Lei <ming.lei@redhat.com>, Justin Forbes <jforbes@redhat.com>
+In-Reply-To: <20240530134547.970075-1-longman@redhat.com>
+References: <20240530134547.970075-1-longman@redhat.com>
+Subject: Re: [PATCH] blk-throttle: Fix incorrect display of io.max
+Message-Id: <171711994168.606218.16094424745811206145.b4-ty@kernel.dk>
+Date: Thu, 30 May 2024 19:45:41 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <IA1PR20MB4953BA3638A0839FCB0EF86BBBF32@IA1PR20MB4953.namprd20.prod.outlook.com>
-In-Reply-To: <IA1PR20MB4953BA3638A0839FCB0EF86BBBF32@IA1PR20MB4953.namprd20.prod.outlook.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Fri, 31 May 2024 09:43:00 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTRu8WUkjOOzH4MZvinZv=0cgF988c7HyzP5jw0p3w+MWQ@mail.gmail.com>
-Message-ID: <CAJF2gTRu8WUkjOOzH4MZvinZv=0cgF988c7HyzP5jw0p3w+MWQ@mail.gmail.com>
-Subject: Re: [PATCH] riscv: dts: thead: th1520: Add PMU event node
-To: Inochi Amaoto <inochiama@outlook.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On Thu, May 30, 2024 at 7:19=E2=80=AFPM Inochi Amaoto <inochiama@outlook.co=
-m> wrote:
->
-> T-HEAD th1520 uses standard C910 chip and its pmu is already supported
-> by OpenSBI.
->
-> Add the pmu event description for T-HEAD th1520 SoC.
->
-> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
-> Link: https://www.xrvm.com/product/xuantie/4240217381324001280?spm=3Dxrvm=
-.27140568.0.0.7f979b29nzIa1m
-> ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 81 +++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/=
-thead/th1520.dtsi
-> index d2fa25839012..3c9974062c20 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -122,6 +122,87 @@ l2_cache: l2-cache {
->                 };
->         };
->
-> +       pmu {
-> +               compatible =3D "riscv,pmu";
-> +               riscv,event-to-mhpmcounters =3D
-> +                       <0x00003 0x00003 0x0007fff8>,
-> +                       <0x00004 0x00004 0x0007fff8>,
-> +                       <0x00005 0x00005 0x0007fff8>,
-> +                       <0x00006 0x00006 0x0007fff8>,
-> +                       <0x00007 0x00007 0x0007fff8>,
-> +                       <0x00008 0x00008 0x0007fff8>,
-> +                       <0x00009 0x00009 0x0007fff8>,
-> +                       <0x0000a 0x0000a 0x0007fff8>,
-> +                       <0x10000 0x10000 0x0007fff8>,
-> +                       <0x10001 0x10001 0x0007fff8>,
-> +                       <0x10002 0x10002 0x0007fff8>,
-> +                       <0x10003 0x10003 0x0007fff8>,
-> +                       <0x10010 0x10010 0x0007fff8>,
-> +                       <0x10011 0x10011 0x0007fff8>,
-> +                       <0x10012 0x10012 0x0007fff8>,
-> +                       <0x10013 0x10013 0x0007fff8>;
-> +               riscv,event-to-mhpmevent =3D
-> +                       <0x00003 0x00000000 0x00000001>,
-> +                       <0x00004 0x00000000 0x00000002>,
-> +                       <0x00006 0x00000000 0x00000006>,
-> +                       <0x00005 0x00000000 0x00000007>,
-> +                       <0x00007 0x00000000 0x00000008>,
-> +                       <0x00008 0x00000000 0x00000009>,
-> +                       <0x00009 0x00000000 0x0000000a>,
-> +                       <0x0000a 0x00000000 0x0000000b>,
-> +                       <0x10000 0x00000000 0x0000000c>,
-> +                       <0x10001 0x00000000 0x0000000d>,
-> +                       <0x10002 0x00000000 0x0000000e>,
-> +                       <0x10003 0x00000000 0x0000000f>,
-> +                       <0x10010 0x00000000 0x00000010>,
-> +                       <0x10011 0x00000000 0x00000011>,
-> +                       <0x10012 0x00000000 0x00000012>,
-> +                       <0x10013 0x00000000 0x00000013>;
-> +               riscv,raw-event-to-mhpmcounters =3D
-> +                       <0x00000000 0x00000001 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000002 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000003 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000004 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000005 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000006 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000007 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000008 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000009 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000a 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000b 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000c 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000d 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000e 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000000f 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000010 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000011 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000012 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000013 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000014 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000015 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000016 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000017 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000018 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000019 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001a 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001b 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001c 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001d 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001e 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000001f 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000020 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000021 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000022 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000023 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000024 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000025 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000026 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000027 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000028 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x00000029 0xffffffff 0xffffffff 0x00=
-07fff8>,
-> +                       <0x00000000 0x0000002a 0xffffffff 0xffffffff 0x00=
-07fff8>;
-> +       };
-> +
->         osc: oscillator {
->                 compatible =3D "fixed-clock";
->                 clock-output-names =3D "osc_24m";
-> --
-> 2.45.1
->
-LGTM! Reviewed-by: Guo Ren <guoren@kernel.org>
 
---=20
-Best Regards
- Guo Ren
+On Thu, 30 May 2024 09:45:47 -0400, Waiman Long wrote:
+> Commit bf20ab538c81 ("blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW")
+> attempts to revert the code change introduced by commit cd5ab1b0fcb4
+> ("blk-throttle: add .low interface").  However, it leaves behind the
+> bps_conf[] and iops_conf[] fields in the throtl_grp structure which
+> aren't set anywhere in the new blk-throttle.c code but are still being
+> used by tg_prfill_limit() to display the limits in io.max. Now io.max
+> always displays the following values if a block queue is used:
+> 
+> [...]
+
+Applied, thanks!
+
+[1/1] blk-throttle: Fix incorrect display of io.max
+      commit: 0a751df4566c86e5a24f2a03290dad3d0f215692
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
