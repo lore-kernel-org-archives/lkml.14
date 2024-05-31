@@ -1,193 +1,219 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A19B20DD2
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3368480043
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717189609; cv=none; b=DUTUjXUVgUvmibDCV6a00kHaKNO7kWFfS6isM9Py6j5ESxgfkbW4sP3GK8EaRC9js1Gwt2pq2J0QKU8lrB8d3q8il08CcwUZd/C6yp8as0QllWgtf7rGE2qyr6R0Xh2SM/iSjMKZPPVs/Z/3TKCqoRs63GKoyBftQxJR39h3HrQ=
+	t=1717189619; cv=none; b=liZwaIiZ0/yPs0xQglrA0HnSUy7G6yCI6fPkHyj4vURdG8ignLrt4eMy7An0Cnvn2VBJpnLWCQOsCDoGMjZ5GQ1MbMV9SJ+G0dvcLp0s2zN4uTwqcO3G+vD3FangQNYVwPXTEMv1usLcnEwmZzYJb26CyDAcWCFoDB6q86wVLcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717189609; c=relaxed/simple;
-	bh=30ELdth7WZicC/vpAKe5PHSVhm4ww9cLgul2n4KcwnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=FHIyGy5uf8zspdq1S5kftwN12gMIk12spEMKSeKnz8U9TwGefMHZUTPlXDJ5MIm0hpNUSvhHAcwX0C1oOS32oKLFkC83pr09MKNGiFL/7aBmVLteJV49oC8jWDzlYv18/sFRBY3W8UPTVcHj70E1yuhr4w8OacSUPJGvavjSfDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=U7Z59UU8; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717189619; c=relaxed/simple;
+	bh=bwCukm/Yfw6lwZqmTFY8N+2pL/22FYmG87P4IZ8Kg6M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DpBWwutg67T/dcTAZo5XEj80mPMdhcmRbvBrfZj53avtER+73h8T4Z2rcqU2l9OcN7+1X0J2CrTeFEB1Vc6+zC6TUjlgTM00ddfDgJD0UL5Cph/4//aglY07HPrLVH7d5lgsoumSBP4xaNAQuf99Ze1l29oo6PLFZ50ynOzxt0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dzysLtzu; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U7Z59UU8"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240531210645epoutp0263d038fec604214673a4a5234c651add~UrtkLblD10228502285epoutp02m
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:06:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240531210645epoutp0263d038fec604214673a4a5234c651add~UrtkLblD10228502285epoutp02m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717189605;
-	bh=1tNjP7sssd68InhNCGdfvXyfrkMDNeQ2G4gpmxYHLjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U7Z59UU8tAnDij30JgyIY40B+lfJl2gWs+ldvT3OjUZSOGy48K+1eweITVszR8Fsi
-	 tlZULGOz/xBiQb7D18dpySjBhXAM2BW5xEPGytCg9/CeOjozrtWdNiRsuOD/TP1MsA
-	 +PyGiNemXvGG2TUnviCrARTVRLdVl0r+whMqUnlU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240531210644epcas2p28bbd8f3a12c5f0ac259d318cc77c6d42~Urtjr3xG82023520235epcas2p2o;
-	Fri, 31 May 2024 21:06:44 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VrbJz5nF8z4x9Pv; Fri, 31 May
-	2024 21:06:43 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	20.A1.09848.3EB3A566; Sat,  1 Jun 2024 06:06:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240531210643epcas2p28898ec306853744e728e3cec880b29b1~UrtiN0zPm2002720027epcas2p2j;
-	Fri, 31 May 2024 21:06:43 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240531210643epsmtrp12df85af8968fd0dace703310a5b43d1a~UrtiNQbaM2169121691epsmtrp1w;
-	Fri, 31 May 2024 21:06:43 +0000 (GMT)
-X-AuditID: b6c32a45-447fe70000002678-38-665a3be3a4e9
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	71.37.18846.2EB3A566; Sat,  1 Jun 2024 06:06:42 +0900 (KST)
-Received: from localhost (unknown [10.229.54.230]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240531210642epsmtip1779b289e9d7f12eddbce420a4ac9f8c8~UrtiAsoMU1427614276epsmtip1f;
-	Fri, 31 May 2024 21:06:42 +0000 (GMT)
-Date: Sat, 1 Jun 2024 05:55:23 +0900
-From: Minwoo Im <minwoo.im@samsung.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
-	gost.dev@samsung.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jeuk Kim <jeuk20.kim@samsung.com>, Minwoo Im
-	<minwoo.im@samsung.com>
-Subject: Re: [PATCH 1/3] ufs: mcq: Add ufshcd_mcq_queue_cfg_addr helper
-Message-ID: <Zlo5O3NDlsX089Xz@localhost>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dzysLtzu"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a63359aaaa6so312558766b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1717189614; x=1717794414; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1n0VoVMhStMuRZZjqgXJlMWW/IMmC2AmLspEwJJwpMY=;
+        b=dzysLtzufeQGlRxU7JnVygR+PsRpjA1ux3Cp8mpSduV3DT+B/4Q0A6+tbBt+E2++qC
+         MpZ1LBzTZifDxelbM21681Tz/7NoqII8Szbtg/DihiU+OYLMqJg6BhbyNjv0z8kY3a1L
+         VBIOlLDw6xrIt4wOlpYJdVqik0phYKJ90Xhepe0ijNE6PwiFVz/DQfKJtdOMY3q6HTM3
+         PRruZbO/Tit/fYDU48VzcsyDqsF5fuFh01IBxYPT/7aeJn2xSlCPYC8rA9bhHqF+2Bxm
+         EP96FzGeoK5fS0jBxjyKaj89mhtpD/xq4yUZaAtOBYc0ZOh9Iaj3LfeGYM7ldlMX+YJ1
+         5HgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717189614; x=1717794414;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1n0VoVMhStMuRZZjqgXJlMWW/IMmC2AmLspEwJJwpMY=;
+        b=U1nDfiklh3QHjoWXXi2J3L0hrXa+njPxkIgi9GtWUFaVrqodOdocF0uWlmtviVzOgx
+         qqiEapmXLks8bcrjR1MZ406X+6OA5m4i5Nvyk61Oaj6iUOuJLrO5gWUgnulk+u9YN77T
+         pGySDY2DVYTKhwxj8nhv1nRHkSFqc0+/SEyxe3Lx/Ssh+HTfrqyiaMN98ULouHNKB9Ac
+         eTKLoaqeVSbjpZ/fDb4AeVUxIqJeeuvnyK/vguRVJaJwURVgD9UzUZJha91sxp98pvi2
+         6+DL+cH97GCF3+OS8GtfPaDkJsT5/cYqzFxGmGFxTG5kGSEBc7r7mBTwQf2WpDfRcGkY
+         fbbA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1EGhmwOGL7FEEU9HAI7cHNf4adSJbPQJv6eE/eh9zdw+80dSSDRpznk3YgyKkOAyQHdKiGNmiu9f/JdikoPy2bw0m8mMCjib0qoZD
+X-Gm-Message-State: AOJu0YyU0Y7GvH9QzIGnPCuJsKj+GGR9qYvG97wSNavaqTNTMJ7+NZMC
+	0Lp0XUsuukxMLpv19le0Y8T5m3NQDjLa7INNGXFPhTgUgyWn2xtrsbucaB0wjyc=
+X-Google-Smtp-Source: AGHT+IGzjwkRbK7JN2qov60rIIZ6FETvbPiNqcZq5L48jeuG3cKt0CBJaeq9KbIc5yAj/nstHzIqug==
+X-Received: by 2002:a17:906:2746:b0:a68:ac15:cd3c with SMTP id a640c23a62f3a-a68ac15d8c6mr8287966b.17.1717189614508;
+        Fri, 31 May 2024 14:06:54 -0700 (PDT)
+Received: from ?IPv6:2804:5078:851:4000:58f2:fc97:371f:2? ([2804:5078:851:4000:58f2:fc97:371f:2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a253881asm23809966b.211.2024.05.31.14.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 14:06:54 -0700 (PDT)
+Message-ID: <92d683bd138a76e6c7100f4984be202dd06c9424.camel@suse.com>
+Subject: Re: [PATCH v2] selftests: livepatch: Test atomic replace against
+ multiple modules
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+ Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Shuah Khan
+ <shuah@kernel.org>,  live-patching@vger.kernel.org,
+ linux-kselftest@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Fri, 31 May 2024 18:06:48 -0300
+In-Reply-To: <ZloormpDnnc4SDub@redhat.com>
+References: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
+	 <ZloormpDnnc4SDub@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d3d2d848-e70c-462b-bbb2-f5a2308646fd@acm.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmhe5j66g0g087tS0ezNvGZvHy51U2
-	i2kffjJb3Dywk8liYz+Hxf2t1xgtLu+aw2bRfX0Hm8Xy4/+YLJ6dPsDswOVx+Yq3x7RJp9g8
-	Pj69xeLRt2UVo8fnTXIe7Qe6mQLYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0t
-	zJUU8hJzU22VXHwCdN0yc4AOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBfo
-	FSfmFpfmpevlpZZYGRoYGJkCFSZkZzybPI+lYLNYRevek4wNjEuFuhg5OSQETCTe3v/H3MXI
-	xSEksINR4sDia+wQzidGiUXX+lngnF1Hb7DAtPye/RuqaiejxLSXa9ggnOeMEq077wA5HBws
-	AioSS0/6gDSwCahLNEx9BdYsIqAh8e3BcrCpzAKPmSQWP3rECJIQFnCXeHn4DFgRL1DR7W17
-	oGxBiZMzn4DZnALWEjv+3AZbJiHQyiEx9dtsqJNcJHo+P2OEsIUlXh3fwg5hS0m87G+Dsssl
-	fr6ZBFVTIXFw1m2wQyUE7CWuPU8BCTMLZEhMf3OcCSKsLHHkFgtEmE+i4/Bfdogwr0RHGzTo
-	lCU+HjrEDGFLSiy/9JoNwvaQePjmCzTgvjBK/D12hHUCo9wsJN/MQrJtFtBYZgFNifW79CFM
-	aYnl/ziQRBcwsq5iFEstKM5NTy02KjCEx29yfu4mRnAy1XLdwTj57Qe9Q4xMHIyHGCU4mJVE
-	eH+lR6QJ8aYkVlalFuXHF5XmpBYfYjQFxsxEZinR5HxgOs8riTc0sTQwMTMzNDcyNTBXEue9
-	1zo3RUggPbEkNTs1tSC1CKaPiYNTqoGpnnP6iWbefx6hLGoOe3ff0gs9vM1EZtaqwhtij1xu
-	2+ie5oyTP7r7bscxfa7tIe+NV3fOir9/oPTY/1MZgRt16zot02Yd5U2/lcq7qMBNT+de7NZr
-	6nURLTbOrNeuOrTWLb3msjancHfTv9Sbt2d8PqJ1lUOLbVWhQqHE0tkzjO1n+192uuYjcU03
-	Z8XJ1MmvhO6u89zMGbuDdT5joPvkW9mzrTeY7Zm9ptfHZbtbzq5VZgHFXe2Z0SGT7Fa0WJcU
-	bf26o/vV26WnCs9dVer5XV7rfOjaHOmFOz37VDODNrStvVZVlaMzL/zcE/+Kc9wWxTxJrzc/
-	OVtoPlX4Zm57scCOhqr3ElwLjOZo71RRYinOSDTUYi4qTgQAdwfm8C8EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsWy7bCSnO4j66g0g4vfLS0ezNvGZvHy51U2
-	i2kffjJb3Dywk8liYz+Hxf2t1xgtLu+aw2bRfX0Hm8Xy4/+YLJ6dPsDswOVx+Yq3x7RJp9g8
-	Pj69xeLRt2UVo8fnTXIe7Qe6mQLYorhsUlJzMstSi/TtErgydr0tL/gmXPH70E7GBsZGgS5G
-	Tg4JAROJ37N/s4PYQgLbGSW+NcVAxCUl9p2+yQphC0vcbzkCZHMB1TxllGif/YCli5GDg0VA
-	RWLpSR+QGjYBdYmGqa9YQGwRAQ2Jbw+Ws4DUMws8ZZK4/nMtE0hCWMBd4uXhM2BFvEBFt7ft
-	YYEY+oVRYvX7lawQCUGJkzOfgBUxA039M+8SM8gyZgFpieX/OEDCnALWEjv+3GabwCgwC0nH
-	LCQdsxA6FjAyr2IUTS0ozk3PTS4w1CtOzC0uzUvXS87P3cQIjgKtoB2My9b/1TvEyMTBeIhR
-	goNZSYT3V3pEmhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe5ZzOFCGB9MSS1OzU1ILUIpgsEwen
-	VAMTx1vt2VPDTnZWTXl6TX3PZv3Km5eObmWr4/A7ZRXoqjVz4ZoyDpX0Y9FM3gyMsZv9Vus6
-	iOv/lHWekZT1wjPtXE5Xw+Zey3tazSUMXr9b11+Ta1Y9c6RItd15k97E3WvPq2RtMDHP28e1
-	O9PnsXuqVc/W9QIMjYe8728KnLvN45lGFkfrzufLn+lUrjCcWpK71/wSn8Punvna28R5Ji3b
-	ejReYIaWlcAR5vyw/Ad7ugNnVJwS3Goz/Ubph8b4V74PZ8c0Z27KzONz/iUT/rGIzfEo58FH
-	as0W6Tz++ZdPftO9lrs590qEXqxNTWnI3wvcuttmqPRwXtfU6Ei8d46vs58579C+ufFlTRsP
-	myuxFGckGmoxFxUnAgDwLYJ68QIAAA==
-X-CMS-MailID: 20240531210643epcas2p28898ec306853744e728e3cec880b29b1
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----He.yNZkzpBak.xuDKC9auljxNssTvAfbOgKyc16DCg-DQrdx=_28df6_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240531104947epcas2p1cd477921c1cd307d84f9ffc25b2c08a8
-References: <20240531103821.1583934-1-minwoo.im@samsung.com>
-	<CGME20240531104947epcas2p1cd477921c1cd307d84f9ffc25b2c08a8@epcas2p1.samsung.com>
-	<20240531103821.1583934-2-minwoo.im@samsung.com>
-	<d3d2d848-e70c-462b-bbb2-f5a2308646fd@acm.org>
 
-------He.yNZkzpBak.xuDKC9auljxNssTvAfbOgKyc16DCg-DQrdx=_28df6_
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-
-On 24-05-31 13:15:11, Bart Van Assche wrote:
-> On 5/31/24 03:38, Minwoo Im wrote:
-> > This helper returns an offset address of MCQ queue configuration
-> > registers.  This is a prep patch for the following patch.
-> > 
-> > Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
+On Fri, 2024-05-31 at 15:44 -0400, Joe Lawrence wrote:
+> On Sat, May 25, 2024 at 11:34:08AM -0300, Marcos Paulo de Souza
+> wrote:
+> > Adapt the current test-livepatch.sh script to account the number of
+> > applied livepatches and ensure that an atomic replace livepatch
+> > disables
+> > all previously applied livepatches.
+> >=20
+> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 > > ---
-> >   drivers/ufs/core/ufs-mcq.c | 14 ++++++++++++++
-> >   include/ufs/ufshcd.h       |  1 +
-> >   2 files changed, 15 insertions(+)
-> > 
-> > diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-> > index 52210c4c20dc..46faa54aea94 100644
-> > --- a/drivers/ufs/core/ufs-mcq.c
-> > +++ b/drivers/ufs/core/ufs-mcq.c
-> > @@ -18,6 +18,7 @@
-> >   #include <linux/iopoll.h>
-> >   #define MAX_QUEUE_SUP GENMASK(7, 0)
-> > +#define QCFGPTR GENMASK(23, 16)
-> >   #define UFS_MCQ_MIN_RW_QUEUES 2
-> >   #define UFS_MCQ_MIN_READ_QUEUES 0
-> >   #define UFS_MCQ_MIN_POLL_QUEUES 0
-> > @@ -116,6 +117,19 @@ struct ufs_hw_queue *ufshcd_mcq_req_to_hwq(struct ufs_hba *hba,
-> >   	return &hba->uhq[hwq];
-> >   }
-> > +/**
-> > + * ufshcd_mcq_queue_cfg_addr - get an start address of the MCQ Queue Config
-> > + * Registers.
-> > + * @hba: per adapter instance
-> > + *
-> > + * Return: Start address of MCQ Queue Config Registers in HCI
-> > + */
-> > +unsigned int ufshcd_mcq_queue_cfg_addr(struct ufs_hba *hba)
-> > +{
-> > +	return FIELD_GET(QCFGPTR, hba->mcq_capabilities) * 0x200;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ufshcd_mcq_queue_cfg_addr);
+> > Changes since v1:
+> > * Added checks in the existing test-livepatch.sh instead of
+> > creating a
+> > =C2=A0 new test file. (Joe)
+> > * Fixed issues reported by ShellCheck (Joe)
+> > ---
+> > =C2=A0.../testing/selftests/livepatch/test-livepatch.sh=C2=A0 | 46
+> > ++++++++++++++++++++--
+> > =C2=A01 file changed, 42 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh
+> > b/tools/testing/selftests/livepatch/test-livepatch.sh
+> > index e3455a6b1158..d85405d18e54 100755
+> > --- a/tools/testing/selftests/livepatch/test-livepatch.sh
+> > +++ b/tools/testing/selftests/livepatch/test-livepatch.sh
+> > @@ -107,9 +107,12 @@ livepatch: '$MOD_LIVEPATCH': unpatching
+> > complete
+> > =C2=A0
+> > =C2=A0# - load a livepatch that modifies the output from /proc/cmdline
+> > and
+> > =C2=A0#=C2=A0=C2=A0 verify correct behavior
+> > -# - load an atomic replace livepatch and verify that only the
+> > second is active
+> > -# - remove the first livepatch and verify that the atomic replace
+> > livepatch
+> > -#=C2=A0=C2=A0 is still active
+> > +# - load two addtional livepatches and check the number of
+> > livepatch modules
+> > +#=C2=A0=C2=A0 applied
+> > +# - load an atomic replace livepatch and check that the other
+> > three modules were
+> > +#=C2=A0=C2=A0 disabled
+> > +# - remove all livepatches besides the atomic replace one and
+> > verify that the
+> > +#=C2=A0=C2=A0 atomic replace livepatch is still active
+> > =C2=A0# - remove the atomic replace livepatch and verify that none are
+> > active
+> > =C2=A0
+> > =C2=A0start_test "atomic replace livepatch"
+> > @@ -119,12 +122,31 @@ load_lp $MOD_LIVEPATCH
+> > =C2=A0grep 'live patched' /proc/cmdline > /dev/kmsg
+> > =C2=A0grep 'live patched' /proc/meminfo > /dev/kmsg
+> > =C2=A0
+> > +for mod in test_klp_syscall test_klp_callbacks_demo; do
+>=20
+> Slightly nitpicky here, but the tests were originally written with
+> the
+> livepatch module names via variables like $MOD_LIVEPATCH.=C2=A0 Would
+> using
+> $MOD_LIVEPATCH{1,2,3} help indicate that their specifics aren't
+> really
+> interesting, that we just need 3 of them?
+
+Makes sense. I thought about it when I was changing the code, but I
+didn't want to change it too much, so it was the result. But that makes
+sense to have the modules better named.
+
+>=20
+> > +	load_lp $mod
+> > +done
 > > +
-> >   /**
-> >    * ufshcd_mcq_decide_queue_depth - decide the queue depth
-> >    * @hba: per adapter instance
-> > diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-> > index df68fb1d4f3f..9e0581115b34 100644
-> > --- a/include/ufs/ufshcd.h
-> > +++ b/include/ufs/ufshcd.h
-> > @@ -1278,6 +1278,7 @@ void ufshcd_update_evt_hist(struct ufs_hba *hba, u32 id, u32 val);
-> >   void ufshcd_hba_stop(struct ufs_hba *hba);
-> >   void ufshcd_schedule_eh_work(struct ufs_hba *hba);
-> >   void ufshcd_mcq_config_mac(struct ufs_hba *hba, u32 max_active_cmds);
-> > +unsigned int ufshcd_mcq_queue_cfg_addr(struct ufs_hba *hba);
-> >   u32 ufshcd_mcq_read_cqis(struct ufs_hba *hba, int i);
-> >   void ufshcd_mcq_write_cqis(struct ufs_hba *hba, u32 val, int i);
-> >   unsigned long ufshcd_mcq_poll_cqe_lock(struct ufs_hba *hba,
-> 
-> New functions should not be introduced as a separate patch but instead should
-> be introduced in the first patch that adds a caller to the new function.
+> > +mods=3D(/sys/kernel/livepatch/*)
+> > +nmods=3D${#mods[@]}
+> > +if [ "$nmods" -ne 3 ]; then
+> > +	die "Expecting three modules listed, found $nmods"
+> > +fi
+> > +
+>=20
+> I was going to suggest that we might protect against a situation
+> where
+> other livepatch modules were active, that a simple count wouldn't be
+> sufficient.=C2=A0 But then I thought about this test, atomic replace!
+> Anything previously loaded is going to be pushed aside anyway.
+>=20
+> So maybe (in another patch or set) it would be worth enhancing
+> functions.sh :: start_test() do a quick sanity check to see that the
+> initial conditions are safe?=C2=A0 That might also prevent some collatera=
+l
+> damage when test A fails and leaves the world a strange place for
+> tests
+> B, C, etc.
 
-I will squash it to the second one and udpate it in the next version.
+We have been discussing about start/end functions that would check for
+leftover modules... maybe should be a good think to implement soon as
+we land more tests.
 
-> 
-> Thanks,
-> 
-> Bart.
-> 
+>=20
+> > =C2=A0load_lp $MOD_REPLACE replace=3D1
+> > =C2=A0
+> > =C2=A0grep 'live patched' /proc/cmdline > /dev/kmsg
+> > =C2=A0grep 'live patched' /proc/meminfo > /dev/kmsg
+> > =C2=A0
+> > -unload_lp $MOD_LIVEPATCH
+> > +mods=3D(/sys/kernel/livepatch/*)
+> > +nmods=3D${#mods[@]}
+> > +if [ "$nmods" -ne 1 ]; then
+> > +	die "Expecting only one moduled listed, found $nmods"
+> > +fi
+> > +
+> > +# These modules were disabled by the atomic replace
+> > +for mod in test_klp_callbacks_demo test_klp_syscall
+> > $MOD_LIVEPATCH; do
+> > +	unload_lp "$mod"
+> > +done
+> > =C2=A0
+> > =C2=A0grep 'live patched' /proc/cmdline > /dev/kmsg
+> > =C2=A0grep 'live patched' /proc/meminfo > /dev/kmsg
+> > @@ -142,6 +164,20 @@ livepatch: '$MOD_LIVEPATCH': starting patching
+> > transition
+> > =C2=A0livepatch: '$MOD_LIVEPATCH': completing patching transition
+> > =C2=A0livepatch: '$MOD_LIVEPATCH': patching complete
+> > =C2=A0$MOD_LIVEPATCH: this has been live patched
+> > +% insmod test_modules/test_klp_syscall.ko
+>=20
+> Similar minor nit here, too.=C2=A0 If we think copy/pasting all the
+> $MOD_FOO
+> is annoying, I am fine with leaving this as is.=C2=A0 I don't have a
+> strong
+> opinion other than following some convention.
+>=20
+> With that, I'm happy to ack as-is or with variable names.
 
-------He.yNZkzpBak.xuDKC9auljxNssTvAfbOgKyc16DCg-DQrdx=_28df6_
-Content-Type: text/plain; charset="utf-8"
+Thanks Joe! I think that is Petr's call, either way I can rework this
+patch, or send additional ones to adjust the tests.
 
+>=20
+> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+>=20
+> --
+> Joe
+>=20
 
-------He.yNZkzpBak.xuDKC9auljxNssTvAfbOgKyc16DCg-DQrdx=_28df6_--
