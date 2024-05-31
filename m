@@ -1,105 +1,84 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862E57C6D5;
-	Fri, 31 May 2024 22:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7F224B4A
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 22:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717192890; cv=none; b=aKkpnO8Gn+Qnw813/osKHz69mKwBSjEAYFtZ9jVrtESHd3Bar0nOJWTT1t82djL/mgbZgpx0mQsIFcqQzfktls/btYgHXfrBju9/KhO8YnujD891R+FXPIrizlEMZxg3cfk2wmt5DtDm/gnor0HU8WFfBymiOcW4tNSUdsSrfXA=
+	t=1717193406; cv=none; b=pjoCSPZVDNCP3J85ZxcDo5G6xhNq/n9H9BV+HXeneqDQxgIUijDZjzCCrN5cCt48+f7qEPPIEUQ0zHzNFrBSfZjjgCcr7Mre/f7+3DXQK2OVzMSiN+nYHVz4xb8PAX+d2sRzg+1tkRSo+Df3X8TQdioGgH5RQ+yqNoLMMwkxiKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717192890; c=relaxed/simple;
-	bh=GEv0qDvfvODZ6seXHQ7UUUQ4eKVs2Wh3/3XrNIWWv7E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ZtaSwkxSacaZMywalBu6X2h9EaEeLaYXGxYAwBdr7XX8O98kDx3pmaSRCztocEZdPFhqBhSRPSytDnIvHNmjwjepptyFEVx3QapnXAUEqYYRNFs6Klf9a3PV9PdwdWm0ZdveTLX60xSV7S5kwuY9eB8jXV2BWioeLxuWpp5dNyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=L1oAFopk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717193406; c=relaxed/simple;
+	bh=neMthn+my1WAJWqEpUsCTbkhD0SCbK/9kqeYHZgSIWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cXneCoUxFxVrYy23A8PpnDyXUoim80sOgL7v+c5+cI19wwEvftcM9ZTOIqfncMBoMao88K9WybOK0bl5PzC5rh/708igP8ixQzu3SacEKuix4l0bhg+v881p/QkKIzSM3Y+tA5R/YRJ/McIKB23FQTwXyA12BcuvlvnbUPmxU5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YOAb47UN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L1oAFopk"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VHP8OE016293;
-	Fri, 31 May 2024 22:01:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=IUh6ggCC9Qril41TpwYvch
-	5CFUtO1Qcti3THYUHCXiU=; b=L1oAFopkQab/MC4oV5beJy2m2ZvXWgRvE+uJ8+
-	YpfAY3rGtfk9ByKFxEOc43c8EiTMYotI3m6aAx3iil7BamNLnuRxo913BFQI1kvt
-	Oz/6z8z/3XhPFmsS1oQbzK4qOH6w9W21L/iqPBjkGp2A25yMZQkmKLCXmEScgSVD
-	DkecXVl628NsLpLvwieofPp1rRO4IWyUmkDMvCd51PXkBhXdrmhEzFfmYrtTqrh9
-	myOIQ+4265upBUqzPGQ03O3xminfKa0LpvAUdajyy+bU5A5oOjBQniiC+4G6o52l
-	Lkzvj/ZpgqEZJeePOq9CNPaO3iZtvgV1bsQvJqYOjxNPZthA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yba2n8ax3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 22:01:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44VM1FV6032364
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 22:01:15 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 31 May
- 2024 15:01:14 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Fri, 31 May 2024 15:01:14 -0700
-Subject: [PATCH] dyndbg: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YOAb47UN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MkS6taIPYxq4oexTWP4Nym8gBT1BhbKY0UZv23zB09c=; b=YOAb47UNG4kr8fjujJxJLocaah
+	gAD8nRmrJmfY16d/vHGhG/ULklZSzFjKDEQj5Jsvt6jNIBVa2xYYwK0g9e5tZ9eyi1BEkZQPMEUXu
+	LYjXw/PsVwoiWXHEwmTlg6s8+eWAFGraVhRyXIB2rHlue3eyQU7efWdgwvMux7vX9jSJfw95vIuW0
+	CDxs+adDaRuBRPjULIb1qHKNhi5q4CxrlWJAisHnMltsxKLWucQZ0ynCzb0VVxreZfGYyVDv8jxs8
+	7Dl1Q8BGXCO/5sDZ/TqL9Q2dBpe+kPcp9lMyAsWeT25aYFO5bjLIyDsUTu3mN3M0FUC8EZqR/RFFA
+	AyLcaXPQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sDARW-0000000C4jN-2aQL;
+	Fri, 31 May 2024 22:09:46 +0000
+Date: Fri, 31 May 2024 23:09:46 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Byungchul Park <lkml.byungchul.park@gmail.com>,
+	Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com,
+	akpm@linux-foundation.org, ying.huang@intel.com,
+	vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [PATCH v11 09/12] mm: implement LUF(Lazy Unmap Flush) defering
+ tlb flush when folios get unmapped
+Message-ID: <ZlpKqrm7d57gmoG5@casper.infradead.org>
+References: <20240531092001.30428-1-byungchul@sk.com>
+ <20240531092001.30428-10-byungchul@sk.com>
+ <fab1dd64-c652-4160-93b4-7b483a8874da@intel.com>
+ <CAHyrMpxETdVewTH3MCS4qPyD6Xf1zRUfWZf-8SCdpCFj2Pj_Wg@mail.gmail.com>
+ <f17f33e8-1c1f-460f-8c5a-713476f524a3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240531-md-test_dynamic_debug-v1-1-2194b477f55e@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAKlIWmYC/x3M0QrCMAxA0V8ZeTawrRuCvyIymjZuARul6WQy9
- u9WH8/DvTsYZ2GDS7ND5reYPLWiOzUQFq8zo8Rq6Nt+aEfXYYpY2MoUP+qThCkyrTNSdI5HCmf
- iAWr7ynyX7f+93qrJGyNlr2H53R6i64bJW+EMx/EFvpS/W4YAAAA=
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron
-	<jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BECvLFVWUARQCasFl5wp_Ldsfukel1MJ
-X-Proofpoint-ORIG-GUID: BECvLFVWUARQCasFl5wp_Ldsfukel1MJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_14,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 adultscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0
- malwarescore=0 spamscore=0 bulkscore=0 mlxlogscore=992 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405310168
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f17f33e8-1c1f-460f-8c5a-713476f524a3@intel.com>
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/test_dynamic_debug.o
+On Fri, May 31, 2024 at 02:46:23PM -0700, Dave Hansen wrote:
+> On 5/31/24 11:04, Byungchul Park wrote:
+> ...
+> > I don't believe you do not agree with the concept itself.  Thing is
+> > the current version is not good enough.  I will do my best by doing
+> > what I can do.
+> 
+> More performance is good.  I agree with that.
+> 
+> But it has to be weighed against the risk and the complexity.  The more
+> I look at this approach, the more I think this is not a good trade off.
+> There's a lot of risk and a lot of complexity and we haven't seen the
+> full complexity picture.  The gaps are being fixed by adding complexity
+> in new subsystems (the VFS in this case).
+> 
+> There are going to be winners and losers, and this version for example
+> makes file writes lose performance.
+> 
+> Just to be crystal clear: I disagree with the concept of leaving stale
+> TLB entries in place in an attempt to gain performance.
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
-
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- lib/test_dynamic_debug.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
-index 8dd250ad022b..77c2a669b6af 100644
---- a/lib/test_dynamic_debug.c
-+++ b/lib/test_dynamic_debug.c
-@@ -162,4 +162,5 @@ module_init(test_dynamic_debug_init);
- module_exit(test_dynamic_debug_exit);
- 
- MODULE_AUTHOR("Jim Cromie <jim.cromie@gmail.com>");
-+MODULE_DESCRIPTION("Kernel module for testing dynamic_debug");
- MODULE_LICENSE("GPL");
-
----
-base-commit: b050496579632f86ee1ef7e7501906db579f3457
-change-id: 20240531-md-test_dynamic_debug-bd33e5bc7be4
+FWIW, I agree with Dave.  This feels insanely dangerous and I don't
+think you're paranoid enough about things that can go wrong.
 
