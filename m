@@ -1,135 +1,118 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E16D187575
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0A7187575;
+	Fri, 31 May 2024 07:45:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717141527; cv=none; b=iBBzqKD0l4csZ9wWFfz9fwyFfKQl6+9QG7qpYQ4BTnomJMnQ60pRxyAiJuEqyclWeORFHxMpjVPVgI6/vnoX9H9+haUo3tghfpEVq0f7sSqXDMZDZExPTG51k1Uib3TvrESjxUrb0PdCYrKdsXd8tIhkPkyPIhVf//Vw7hCFbl0=
+	t=1717141531; cv=none; b=h6d1DtWUxdzCBfENB8zryvr2a8SAkObOUu1gQxdtdj5HlAg2VnKi3che0qyfIjgSdVX2hB7vdCfyvtETaYoJ4F1Bb7JzwEqwqLf9FfQWqzeHsohzR0YutMC5hWAkGQo/W79rg5Ub5AKmEhmbyjtMck/f4mD0AMRlcFbosxM2fvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717141527; c=relaxed/simple;
-	bh=3hxTqPHa+3uT3qalG6S62+LU3FmNytJEHI1pZQn/Ln0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dqDwlRb4ghN2bnBE1Pf72nNB1wOMA2lCGFt/tnP90h509QxBnAHHHm7/PwwCTnvyKa/dC4duDT1lbZK+f0TaxQO23xzR+ycgJumThtcur42Vx97vrLk/2QC0SgNreoKM9aUJL4y0Z4UH57nsQpPXtvkwOBC3KhU7plWg8kuAYVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62a145e0bb2so16704137b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 00:45:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717141523; x=1717746323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MzYlvKg62KG4Y2Kc1f8OI9fT+ZIiT1F2JGmXChS17WE=;
-        b=jOJqhnacMtoGYQYkgX0S1/jrRRMF7vVgdK4mHXlr/reP+gTUnZeZSQJfdNsN1xT8X8
-         q6rcKaChrscm+qslnUndrK/FV3a8FBBw6dCtVrCd8T72rsilQBg/UHWM9FRtL4WDAy4Q
-         0rtTmrt9t2BCmRFOWFYeWd8BiCbLI1PF8eu1aDKMJW4SrajwawhWypvDRuwDsXBhR3ze
-         aC8U+sV7xUOsk6h+sZPT3cpcVTbKb2GcBofzcOGRv0CXRnA8vdum6zC74DkC/1jMsxhw
-         CSMk2kRKnjB0TxFwc4YWngpyHPPssQPuPdCm5QW+IeVMQq+SkJ7X1LaGYZtR7ZXNJkxk
-         f2nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEcFNpi4dR4KmwAH1bWLp/IGqWjJy5DwtirSg/RG7knk/+THdGX6ILIDtky7hG/hYm6ypXGXOBHISmuHI/PgiH1JixWd3HxEb+HxGM
-X-Gm-Message-State: AOJu0YwtEeMc/Wa7kJbLRex9AhHWcjm/I0KYPekLxVyR5287yn8Msstl
-	YTTKXJ0dCy0whFfLvyf+dVopYLiwxHF6xdZGq2JAWX6ptA8Xvv6ll5vW9zhx
-X-Google-Smtp-Source: AGHT+IHdBapNqY1DrYfBOrpyWnN9qK3iuLsvzgqnPjScaKDPlmLW4Ox9TWpsaNKu9Rp5fCvD8wkC1g==
-X-Received: by 2002:a0d:c242:0:b0:61a:e48c:38b7 with SMTP id 00721157ae682-62c797ef625mr10175487b3.41.1717141523392;
-        Fri, 31 May 2024 00:45:23 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c7667dbf8sm2429737b3.77.2024.05.31.00.45.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 00:45:23 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dfa5b9274feso1949137276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 00:45:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXvJUUzPzP7UkB69RrG40M0/au7Ht0v0RiZQLuEzYGGBOptv1ZOtIuKDSZxmkPrUjyfV3TX+JCmyyDui+CyuuBKCxNURY4gVtB2M+b
-X-Received: by 2002:a25:d3ce:0:b0:de6:154b:5835 with SMTP id
- 3f1490d57ef6-dfa73c43dcemr1140786276.26.1717141522447; Fri, 31 May 2024
- 00:45:22 -0700 (PDT)
+	s=arc-20240116; t=1717141531; c=relaxed/simple;
+	bh=EgdK4bok6szl35MRPgHKpDvmJh8QUS4WWV/ex7U86Cs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=opXMvSqFNYBunFyp8TOpCFRNvzdB4bSiQpwQ6fHPYVSAl3U5BxN7R1FhWEzDQQ+zhrM2peiykxIwXTYgjIk8u3phWpzTBPTGZuVVbqhLMhYjNNv25w6EAP9ee2725mfpMfi/xNoQlUg/WNHIXAL095f+3U9IqIrzULeeGmD3TJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hotfMnXH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hotfMnXH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F9B9C4AF07;
+	Fri, 31 May 2024 07:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717141530;
+	bh=EgdK4bok6szl35MRPgHKpDvmJh8QUS4WWV/ex7U86Cs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hotfMnXHhYIP53RIBlMiA3J5FPM48+yFv1GwR5KLIP3zZCHhzOpI+WugtZADTjctf
+	 2qziLoHymomufVllY/2fPljngjLwGIGOVNRA1hE+m4qjPtbiwnu/KWJF90lfQ+DETi
+	 tcHwrs54+XvOSSQhaKhf8Mfk/O4ayQkCN75c7uE65bYRxj+XQ34w4ON4hAsDbR3KnL
+	 fujMcuiE/GE1CM/cBeeiYVQoB86rszfPaWV7GQQUkiMDZqc1iDl8qeHh+DR8jvLCuz
+	 uFAFZDCMwESY9vXqfyEYgq3SCG95ipfBmuZuaJKPka/SjwmQV3kfs2rclmjn7yu69j
+	 MFnjEz5cAQnag==
+Message-ID: <ef601549-47a2-49cd-9c9c-1ea35ac7c1ee@kernel.org>
+Date: Fri, 31 May 2024 09:45:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530232054.3559043-1-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20240530232054.3559043-1-chris.packham@alliedtelesis.co.nz>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 May 2024 09:45:10 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXGJxwRDRjKQT5aa6off9nQ5WqreK9K-QhJwhUXngYA=Q@mail.gmail.com>
-Message-ID: <CAMuHMdXGJxwRDRjKQT5aa6off9nQ5WqreK9K-QhJwhUXngYA=Q@mail.gmail.com>
-Subject: Re: [PATCH] auxdisplay: linedisp: Support configuring the boot message
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: andy@kernel.org, tzimmermann@suse.de, ojeda@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: iio: adc: add a7779 doc
+To: "Nechita, Ramona" <Ramona.Nechita@analog.com>,
+ "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20240522120208.18575-1-ramona.nechita@analog.com>
+ <efb07835-8894-43d0-9fe1-14cb865db135@kernel.org>
+ <SN6PR03MB4320A1D0DDCFBEED28319815F3F22@SN6PR03MB4320.namprd03.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <SN6PR03MB4320A1D0DDCFBEED28319815F3F22@SN6PR03MB4320.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Chris,
+On 29/05/2024 17:25, Nechita, Ramona wrote:
+> Hello,
+> 
+> Thank you for your review. I will send a v2 shortly, I just have a minor misunderstanding below. I will send a v2 shortly without the clock-names.
+> 
+>> On 22/05/2024 14:01, ranechita wrote:
+>>> Add dt bindings for adc ad7779.
+>>>
+>>> Signed-off-by: ranechita <ramona.nechita@analog.com>
+>>
+>> Are you sure that's the name or identity you want to use? Looks like misconfigured git...
+> 
+> Do you mean the email sign-off? Or just the name?  That is my git username and I have used it for other patches/purposes, but I might update in the future with the full name.
 
-On Fri, May 31, 2024 at 7:28=E2=80=AFAM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
-> Like we do for charlcd, allow the configuration of the initial message
-> on line-display devices.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+"Might"? OK, so this is not a known identity case, then please use full
+name *now*. For all entries. Don't post your usernames to mailing list.
 
-Thanks for your patch!
+Best regards,
+Krzysztof
 
-> --- a/drivers/auxdisplay/line-display.c
-> +++ b/drivers/auxdisplay/line-display.c
-> @@ -8,7 +8,9 @@
->   * Copyright (C) 2021 Glider bv
->   */
->
-> +#ifndef CONFIG_PANEL_BOOT_MESSAGE
->  #include <generated/utsrelease.h>
-> +#endif
-
-The #ifndef/#endif is not really needed.
-
->  #include <linux/container_of.h>
->  #include <linux/device.h>
-> @@ -312,6 +314,12 @@ static int linedisp_init_map(struct linedisp *linedi=
-sp)
->         return 0;
->  }
->
-> +#ifdef CONFIG_PANEL_BOOT_MESSAGE
-> +#define LINE_DISP_INIT_TEXT CONFIG_PANEL_BOOT_MESSAGE
-
-So the user has to add extra spaces at the end when needed.
-This makes sense, as they are not always needed (e.g. when the length of
-the message matches the display size, no scrolling is needed/wanted).
-I have verified that Kconfig actually preserves such spaces.
-
-Nit: this is the only definition having an underscore between "line"
-and "disp".
-
-> +#else
-> +#define LINE_DISP_INIT_TEXT "Linux " UTS_RELEASE "       "
-> +#endif
-
-I'd rather move this up, next to the other definitions at the top of
-the file.
-
-> +
->  /**
->   * linedisp_register - register a character line display
->   * @linedisp: pointer to character line display structure
-
-As I see no real deficiencies:
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
