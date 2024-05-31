@@ -1,98 +1,88 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE8317D349
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9D9176187;
+	Fri, 31 May 2024 16:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717172046; cv=none; b=FBJ98lprJx1D+JUFBAkwFfsQ77VmgAfBKaG9S7Hd5kzzl+rcWMh+RVdkw9A2L454T+vBu5Zxkvyon8BS6UngHJ1y20R1YJF4lDBqj4KK7KDlSvY4sLyYfR03WMyR9HXWgduPXgSdXSVUxleSf7OXZ9Uyg7GGZLqkdjIy3PR1G5U=
+	t=1717172079; cv=none; b=kP0T8gOo/FoXhHFePcBGHgArD/NaCPaqPmJG1v904584LgCEVtHte4Fh26Zt1jHMXGPfaH10xkrAMeHg6hkypVAW+8aUF52gHs/u5jGyoQqZqpnb+bULc2slkKF0VJPyB2wtQ/c20xvSWcSY1VdCzybgzlwcEKi9m6pl+/LKYrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717172046; c=relaxed/simple;
-	bh=jvMliZyp5b79r8W0ZhbR9tXovMVqI+2d9dyyz9g1J6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOM0ZwzWd879t+TRaE0DV4fh7jq9yn+WtyX0wiEjOlZGkk8kHq0XoYuBrMMn0pXDDaVhj4IInW/v3S/DIDiSCF15IFjQJ8US29mOFjTQuTogpAjA25pXRUYFrpyp1kFtuUq/XkQ1obr7EMbejiaW2KoOvU4IkSweHgU2kMOwt7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FCtpd2Dn; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717172079; c=relaxed/simple;
+	bh=QdzlEyMDhhnNbePJUWmMm+1/sM2F1xaHRBUXUSNsT1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=heK0GoCOLixrik9Nbkxami0EQaxlpArup4U/FyhbQhOmpEeHye8UhZDhII+sySFouTBQ6opTF2+1yQ6EwKrZwjh0K3DjYDyI1Y6zR90mr3YPduUgPlUzScBK54RkSSi3/37Re0iamWuTmbJEl1R4cfW+5OIafcUHLXMZa3we9dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VMfbo/Pk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FCtpd2Dn"
-X-Envelope-To: lpieralisi@kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717172043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oBzV40mF6T/nwZNSQ5a6icyFUiLmHUNqTXGAGDGS/rc=;
-	b=FCtpd2DnZG48NvYC7vXKziYauy2VKSnj/rKz8ZxgLAwf4iCYIZVccOujIp/xCW1+hykLnt
-	YdeuUSw/31GZ6RtLZAdGc9T0kd2IKA+tXFJ9//TqcLD3N9I6hgsaK6SVsY80MJ34WxlZaU
-	lFShJXqNzDYFtjuBVxYqR4/Jgm3e7KQ=
-X-Envelope-To: kw@linux.com
-X-Envelope-To: robh@kernel.org
-X-Envelope-To: linux-pci@vger.kernel.org
-X-Envelope-To: thippeswamy.havalige@amd.com
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: markus.elfring@web.de
-X-Envelope-To: dan.carpenter@linaro.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: bhelgaas@google.com
-X-Envelope-To: michal.simek@amd.com
-X-Envelope-To: sean.anderson@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org
-Cc: Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Markus Elfring <Markus.Elfring@web.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v4 7/7] arm64: zynqmp: Add PCIe phys
-Date: Fri, 31 May 2024 12:13:37 -0400
-Message-Id: <20240531161337.864994-8-sean.anderson@linux.dev>
-In-Reply-To: <20240531161337.864994-1-sean.anderson@linux.dev>
-References: <20240531161337.864994-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VMfbo/Pk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A6ECC4AF09;
+	Fri, 31 May 2024 16:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717172078;
+	bh=QdzlEyMDhhnNbePJUWmMm+1/sM2F1xaHRBUXUSNsT1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VMfbo/PkJZXLjoSvSALFUeQNFcjVwL+/keE0mRGIzlnsx29xKsfizstNisWtcNwXO
+	 X2XB8sAfudxx9gmPoBLZ1C2zvht2W+s0k4IG37vFpZCMLSal+KCgQV3QzpUmzwLt4J
+	 s6mCstHLL0pB5+SjwfSV1JEIsDABEdoRC0tQVdzjjw53PsspkE6HoW/6fOqLWyhR5G
+	 0JVoWAZkmjXIyoIjEDZZ49Mm2qHZHNT8o560N6Q8jaPyK0JtF7vAegrlQhLJ+Nzgb2
+	 F5TIZP9TzQ9vmRvv37VINXY9mek7B1MFTjNU8fkMLM2q3SwHgsIn+s0b3eOph6T7T3
+	 hdvQIPnVJGdnQ==
+Date: Fri, 31 May 2024 17:14:33 +0100
+From: Lee Jones <lee@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: qcom,spmi-pmic: Document PMC8380
+ and SMB2360
+Message-ID: <20240531161433.GU1005600@google.com>
+References: <20240529-topic-x1e_pmic-v1-0-9de0506179eb@linaro.org>
+ <20240529-topic-x1e_pmic-v1-1-9de0506179eb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240529-topic-x1e_pmic-v1-1-9de0506179eb@linaro.org>
 
-Add PCIe phy bindings for the ZCU102.
+On Wed, 29 May 2024, Konrad Dybcio wrote:
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Tested-by: thippeswamy.havalige@amd.com
----
+> These are just some more PMICs adjacent to X1 SoCs. Document them.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> index b7f01cbb8fff..a2b2fbf77d5c 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> @@ -75,6 +75,7 @@ properties:
+>            - qcom,pma8084
+>            - qcom,pmc8180
+>            - qcom,pmc8180c
+> +          - qcom,pmc8380
+>            - qcom,pmd9635
+>            - qcom,pmi632
+>            - qcom,pmi8950
+> @@ -95,6 +96,7 @@ properties:
+>            - qcom,pmx65
+>            - qcom,pmx75
+>            - qcom,smb2351
+> +          - qcom,smb2360
 
-(no changes since v2)
+Abel already added this in:
 
-Changes in v2:
-- Remove phy-names
+  dt-bindings: mfd: qcom-spmi-pmic: Document SMB2360 PMIC
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 1 +
- 1 file changed, 1 insertion(+)
+I've made changes to the commit message to reflect it.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index ad8f23a0ec67..d2175f3dd099 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -941,6 +941,7 @@ conf-pull-none {
- 
- &pcie {
- 	status = "okay";
-+	phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
- };
- 
- &psgtr {
 -- 
-2.35.1.1320.gc452695387.dirty
-
+Lee Jones [李琼斯]
