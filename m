@@ -1,179 +1,178 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7415B128;
-	Fri, 31 May 2024 16:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E6916FF26;
+	Fri, 31 May 2024 16:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173848; cv=none; b=kwZLfWKiLUXkTpoaTeHB24qBVfHalprS/1JO8ZKtMBduGWBk+ppU0oOAZgDzOU0lNrQ0WwB0ABGjAXb4qNZYhkqttPau580WDpQaPPnX+7RedyPTEjr1I/6uTIIX3grMqYRN3Ze8hoTS3aHAtn0Ycrz4lv6BlToKvw4eNLC8Vmk=
+	t=1717173850; cv=none; b=t/DwsC61Ettelwu9HTH+s0l7NN2yWLF9HqsuYWjdG7rF3LuzvH00Uayq19WSjVvhSxwq/Zq9A++S1y0uBCtApzwndjXgv1LLmtE6j99dS2ohOi+5vfysJ6MFR/HaNqhW0esM9+qW6Ah1SRVo589s1Ud9rZcM0S3Il2zoahj+wCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717173848; c=relaxed/simple;
-	bh=uG7P1x3HrP8RowMmWDcBXTYjXz0LxJxK8wl6ae3emAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDRdQmoGXR1FSOkLIM2ycT2kiDzToRVd5WAdNr7zUkCbdpSQ0c37PZurO7JsZLiW8HB9SDR/GjG93wn46BcvxOT1kNH2pNJML01/p97ljMPDYLx7S0OB+4MK45oFTMzA4zza1IyPZkOFhrC1mRnO01Nrxt9I6fXY7PRWqlYlw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7SyYA5K; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717173850; c=relaxed/simple;
+	bh=gjNaygJxEmGVOCosMiMdTQrI3y7aaBzzVSVlr1yu1jQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QWwa3hAhbCvZILgejBCenmx5i4SueZi9b4Xf4nk1k2YQoBfZ1Wyggxd+DoI7X0DK75F5GGrPE9C6QALYushJYna/nMFk+ERsYQ/clX+BgvMICWxlSPfGoPuODNdQAL0UuMq0/7uHuMAdpqodOw9CUjjf5uK5mvlCKxECiXle4M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IjkbaIIo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7SyYA5K"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-421208c97a2so21008805e9.1;
-        Fri, 31 May 2024 09:44:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717173845; x=1717778645; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
-        b=T7SyYA5KUZsU23dLb8L62F/2Jh5Qo6J/r4/MNbO8TkE8nC2FZnaVwWl+kKSqh/QOe+
-         BS1fGqJHvsUtzbGAS4xwdvW8m59LhW2FsM+AlGMc1N3DyrOTvD/76DP7mPJ3Iwm8i5JH
-         eFkkoolx/lsc5ilSkRkPla5644JSh1ltjHyFeP6aCNsujj1mx6xHn72aXGvOgsOPcpTo
-         9DIkSl8uLu/8/e9YHZbf3g4Y3m3AJ57YcLmiSD0LXUyqkqT2P5oi4bpWcLpMXsUQpFZT
-         GwcNl1bC9kXpKpGRO7WQOQC8vMMuSzPT6jJN2kEXAHXlf6SUkKPeKtN0PMsGETVR7mLa
-         ImLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717173845; x=1717778645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GgrPSqavQhhCwRo/IO4y9sSd78oBJ0BfHadESybGIRk=;
-        b=KNUJo6s2zjEMtfJv+23IQd1ZLp/RwYOf3qzaQZd65wf5WooWRDd7+R8A3qeqoBVtsV
-         n3NjqQe2gwHO+/ZU6+SGPZ9NW2+47ztfKDeTu6t3ydC/U5ro6doF15t2a+GHCFuJLzRW
-         lxSv5NFlGYOYm/iTf83GGuoTY/k6LRtBsaiokJIcfWSwLyht4Wau2j7LFGaxzajOFSNW
-         lEBXFvBa8Cu2QBtZzCWivRu9oihXC6pDxyQ1pS2eM7+LU/GZfENhG2FGm6JqdfaRnuRo
-         XKxQGDP0R+6gUczIg7k8NCkvw+YINmHSUJ4q80GB9eVFSM2TGpW+maMFaxQz3gF0MFtg
-         CR6w==
-X-Forwarded-Encrypted: i=1; AJvYcCW201XqUwz/uvT0jmYeD9qAlOn7uN64A2c3btX4znu03YN1rqGa0lSlV7RkzlNYnSSh8ShvdMHYB8ax4sTvEvfHmMnoscb9wawIqrpI9YCgi8cVw6iTmSPXqZ8+xnM79ndW2i/cmm2L9U34luoTyMhyiOLuDOaM745GLyYXmlWp5LP6/Ind
-X-Gm-Message-State: AOJu0Yz1UyywsN/HQ4N5+OWt4YRfYPY7D2GEoxeSnRxyuKOXv+xQM0Pq
-	DfAGcHkimmLGrQdhqZU3mNre/EhgTKe7QliavpBzWLgYCGqttssCRuxCM27upee9DVgiFBo9CzE
-	JnZJrsoLPsjXNvKpPXQnQBiwaukG0bDSf
-X-Google-Smtp-Source: AGHT+IFTytoJamLJRvTQO3BYC2MBDxCEuBj6lgJTYnD/N3Qp380NOujMSa5JG5AI3SYo5H23tb7dmLf0PjIWpX8mTVk=
-X-Received: by 2002:a05:600c:3541:b0:41a:c86e:a4db with SMTP id
- 5b1f17b1804b1-4212e04732amr18706075e9.9.1717173844917; Fri, 31 May 2024
- 09:44:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IjkbaIIo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35664C32786;
+	Fri, 31 May 2024 16:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717173850;
+	bh=gjNaygJxEmGVOCosMiMdTQrI3y7aaBzzVSVlr1yu1jQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IjkbaIIooYDH8y6nOdbyewI+UXwTb5Nfq4KqnfU2FPVRJA02NNCv0JdHkgXnq7tqK
+	 X1lN4otqKMIhbjpgKtq5ftcAirF7PWO0e/isWzEN/+JC8R7EbgrVLmtdOiTsQhqzvJ
+	 Yftmtcf4zFkQI8vkim1i+nYIIcGu+VlsP/XFBFRoSWfSb3dlDLshKKSbs80SRrm3fu
+	 xmw3w0Vm43wBcT1pz9POYb1EYVAoH2Y/seEOrbFdJWJYdmMpc1jhygDB1YfdHaMlft
+	 KOkHfQhuRRZ0NqBm1LqATpCTbjSGYhyhwmInq31JB81lASlrNH4uqTa1nEy1ee9C6t
+	 ZCKqHyGtMwIoA==
+Date: Fri, 31 May 2024 17:44:05 +0100
+From: Lee Jones <lee@kernel.org>
+To: MarileneGarcia <marilene.agarcia@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Julia Lawall <julia.lawall@inria.fr>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 linux-next] leds: powernv: replace of_node_put to
+ __free
+Message-ID: <20240531164405.GV1005600@google.com>
+References: <20240529200233.1188228-1-marilene.agarcia@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz> <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
-In-Reply-To: <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 31 May 2024 09:43:53 -0700
-Message-ID: <CAADnVQJ=bNg9nWQPXGjJ11pZnmjntt=zLBqtJng3328T1L-u0g@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/4] mm, slab: add static key for should_failslab()
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240529200233.1188228-1-marilene.agarcia@gmail.com>
 
-On Fri, May 31, 2024 at 2:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> Since commit 4f6923fbb352 ("mm: make should_failslab always available for
-> fault injection") should_failslab() is unconditionally a noinline
-> function. This adds visible overhead to the slab allocation hotpath,
-> even if the function is empty. With CONFIG_FAILSLAB=3Dy there's additiona=
-l
-> overhead when the functionality is not enabled by a boot parameter or
-> debugfs.
->
-> The overhead can be eliminated with a static key around the callsite.
-> Fault injection and error injection frameworks can now be told that the
-> this function has a static key associated, and are able to enable and
-> disable it accordingly.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+On Wed, 29 May 2024, MarileneGarcia wrote:
+
+> Use __free for device_node values, and thus drop calls to
+> of_node_put.
+> 
+> The variable attribute __free adds a scope based cleanup to
+> the device node. The goal is to reduce memory management issues
+> in the kernel code.
+> 
+> The of_node_put calls were removed, and the
+> for_each_available_child_of_node was replaced to the equivalent
+> for_each_available_child_of_node_scoped which use the __free.
+> 
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: MarileneGarcia <marilene.agarcia@gmail.com>
 > ---
->  mm/failslab.c |  2 +-
->  mm/slab.h     |  3 +++
->  mm/slub.c     | 10 +++++++---
->  3 files changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/failslab.c b/mm/failslab.c
-> index ffc420c0e767..878fd08e5dac 100644
-> --- a/mm/failslab.c
-> +++ b/mm/failslab.c
-> @@ -9,7 +9,7 @@ static struct {
->         bool ignore_gfp_reclaim;
->         bool cache_filter;
->  } failslab =3D {
-> -       .attr =3D FAULT_ATTR_INITIALIZER,
-> +       .attr =3D FAULT_ATTR_INITIALIZER_KEY(&should_failslab_active.key)=
-,
->         .ignore_gfp_reclaim =3D true,
->         .cache_filter =3D false,
->  };
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 5f8f47c5bee0..792e19cb37b8 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -11,6 +11,7 @@
->  #include <linux/memcontrol.h>
->  #include <linux/kfence.h>
->  #include <linux/kasan.h>
-> +#include <linux/jump_label.h>
->
->  /*
->   * Internal slab definitions
-> @@ -160,6 +161,8 @@ static_assert(IS_ALIGNED(offsetof(struct slab, freeli=
-st), sizeof(freelist_aba_t)
->   */
->  #define slab_page(s) folio_page(slab_folio(s), 0)
->
-> +DECLARE_STATIC_KEY_FALSE(should_failslab_active);
+> Changes v2:
+> It was missing a blank line.
+> 
+> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> Signed-off-by: MarileneGarcia <marilene.agarcia@gmail.com>
+> ---
+>  drivers/leds/leds-powernv.c | 28 +++++++++-------------------
+>  1 file changed, 9 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/leds/leds-powernv.c b/drivers/leds/leds-powernv.c
+> index 4f01acb75727..8f94d2efed9f 100644
+> --- a/drivers/leds/leds-powernv.c
+> +++ b/drivers/leds/leds-powernv.c
+> @@ -246,29 +246,25 @@ static int powernv_led_classdev(struct platform_device *pdev,
+>  	const char *cur = NULL;
+>  	int rc = -1;
+>  	struct property *p;
+> -	struct device_node *np;
+>  	struct powernv_led_data *powernv_led;
+>  	struct device *dev = &pdev->dev;
+>  
+> -	for_each_available_child_of_node(led_node, np) {
+> +	for_each_available_child_of_node_scoped(led_node, np) {
+>  		p = of_find_property(np, "led-types", NULL);
+>  
+>  		while ((cur = of_prop_next_string(p, cur)) != NULL) {
+>  			powernv_led = devm_kzalloc(dev, sizeof(*powernv_led),
+>  						   GFP_KERNEL);
+> -			if (!powernv_led) {
+> -				of_node_put(np);
+> +			if (!powernv_led)
+>  				return -ENOMEM;
+> -			}
+>  
+>  			powernv_led->common = powernv_led_common;
+>  			powernv_led->loc_code = (char *)np->name;
+>  
+>  			rc = powernv_led_create(dev, powernv_led, cur);
+> -			if (rc) {
+> -				of_node_put(np);
+> +			if (rc)
+>  				return rc;
+> -			}
 > +
->  /*
->   * If network-based swap is enabled, sl*b must keep track of whether pag=
-es
->   * were allocated from pfmemalloc reserves.
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0809760cf789..3bb579760a37 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -3874,13 +3874,15 @@ static __always_inline void maybe_wipe_obj_freept=
-r(struct kmem_cache *s,
->                         0, sizeof(void *));
->  }
->
-> +DEFINE_STATIC_KEY_FALSE(should_failslab_active);
-> +
->  noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
+>  		} /* while end */
+>  	}
+>  
+> @@ -278,12 +274,11 @@ static int powernv_led_classdev(struct platform_device *pdev,
+>  /* Platform driver probe */
+>  static int powernv_led_probe(struct platform_device *pdev)
 >  {
->         if (__should_failslab(s, gfpflags))
->                 return -ENOMEM;
->         return 0;
+> -	struct device_node *led_node;
+>  	struct powernv_led_common *powernv_led_common;
+>  	struct device *dev = &pdev->dev;
+> -	int rc;
+> +	struct device_node *led_node __free(device_node) =
+> +							of_find_node_by_path("/ibm,opal/leds");
+
+This is not a good line-break strategy.
+
+	struct device_node *led_node
+		__free(device_node) = of_find_node_by_path("/ibm,opal/leds");
+
+	struct device_node *led_node __free(device_node) =
+		of_find_node_by_path("/ibm,opal/leds");
+
+Please choose one of these instead.
+
+I suggest the top one might read a little easier.
+
+> -	led_node = of_find_node_by_path("/ibm,opal/leds");
+
+Does the __free() have to be combined with an allocation?
+
+>  	if (!led_node) {
+>  		dev_err(dev, "%s: LED parent device node not found\n",
+>  			__func__);
+> @@ -292,20 +287,15 @@ static int powernv_led_probe(struct platform_device *pdev)
+>  
+>  	powernv_led_common = devm_kzalloc(dev, sizeof(*powernv_led_common),
+>  					  GFP_KERNEL);
+> -	if (!powernv_led_common) {
+> -		rc = -ENOMEM;
+> -		goto out;
+> -	}
+> +	if (!powernv_led_common)
+> +		return -ENOMEM;
+>  
+>  	mutex_init(&powernv_led_common->lock);
+>  	powernv_led_common->max_led_type = cpu_to_be64(OPAL_SLOT_LED_TYPE_MAX);
+>  
+>  	platform_set_drvdata(pdev, powernv_led_common);
+>  
+> -	rc = powernv_led_classdev(pdev, led_node, powernv_led_common);
+> -out:
+> -	of_node_put(led_node);
+> -	return rc;
+> +	return powernv_led_classdev(pdev, led_node, powernv_led_common);
 >  }
-> -ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
-> +ALLOW_ERROR_INJECTION_KEY(should_failslab, ERRNO, &should_failslab_activ=
-e);
->
->  static __fastpath_inline
->  struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s, gfp_t flags=
-)
-> @@ -3889,8 +3891,10 @@ struct kmem_cache *slab_pre_alloc_hook(struct kmem=
-_cache *s, gfp_t flags)
->
->         might_alloc(flags);
->
-> -       if (unlikely(should_failslab(s, flags)))
-> -               return NULL;
-> +       if (static_branch_unlikely(&should_failslab_active)) {
-> +               if (should_failslab(s, flags))
-> +                       return NULL;
-> +       }
+>  
+>  /* Platform driver remove */
+> -- 
+> 2.34.1
+> 
 
-makes sense.
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-
-Do you have any microbenchmark numbers before/after this optimization?
+-- 
+Lee Jones [李琼斯]
