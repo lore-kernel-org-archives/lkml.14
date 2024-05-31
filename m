@@ -1,88 +1,65 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6933080;
-	Fri, 31 May 2024 15:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1BD33080;
+	Fri, 31 May 2024 15:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717169106; cv=none; b=K2bivyYDpYqi12ZToRqagjMe+CgOltc4dy4H6cy792dFUPMnZ+Fs3kAZc6c7FAoTda4hcytTv89Q0OEHfIaC/T7oMt32ERqQfXGR0cI9IqbAROXNCxWAP04KvD6k3k3Z7VAVCq/kr4Z40ven2yl88E32HLT8iR2Ef30h/KkT+DE=
+	t=1717169115; cv=none; b=IVP9bJWL/xisj5xPVacmDR6l4UQ0WjZysBkt8OzP+nq9aoVqSJDYo2w+jDPPisDyRVdUg8fA4shUaR1dfUg646+3LLT9f4KptXzlmAOv8S9CV68NesQF/+tTcqiduDCwUw/nHoJge9krKDKy2r4uKPmQoe3mIZ7zadnhNI4BekQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717169106; c=relaxed/simple;
-	bh=pF4Mixxdrq0cYOpR+ClRxFtubx/s2XmY9q7iP3NxDqg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YhMfiOf8EswM+Nfze70YQzG/8jfEsM48yllLfZ+xCWUlL+eXFT9bOqhVf6p+/VrMlEy5p/Qwb3Em7X/5x/Enisr/qvGemjIQCTAihX/xbYwh944gVFMA70yMBqinqnteiUV6Fl6P1Yv5e6waEq+siU17jw5PfDLT9iuoNaEMYvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pJEIrs2f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X272vt9j; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1717169115; c=relaxed/simple;
+	bh=zxVsxyf0/sNtu7IRBazt4q5BudR9fH+3gYfF6OkKIKQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=UI7JtRyXgKJGgkBcu4+37vRptdk6GBpTFG79qQumA/6Oq+lQkbC9fVDnwMcMc4MWLL0jUD6lb1ANfiKGpvZ0wnOQit954KEpPaLyKOXabTguaYTcJHcAxcsz02UQko9ijaTkhUX/65Wc6IzhJb/YBkv/+YWn3gjpbBQZeN5TKg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdhjgPgu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pJEIrs2f";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X272vt9j"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717169102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zBAiXgC5x6K/2E25MmGwn9JeI87ahIu7LD3cMl3AcgI=;
-	b=pJEIrs2fQMNn+nGI1rBaVPcWTQOUXi7P4atPxxPoRH2Fim0kO4PPoHNaW2EglMy/KdNQWf
-	yAmJNeXfL9KrLIcPRb9Ma54ySvg5VFzVDKFlJCh7ZgpKKeyf2ElJVCP4NQuX1H12dkfN7L
-	J5AqlHjH20FdGBi/tKGR0J6THLXH2NVEpAYbo3pag912MyCCB5HQkk8KstB0KY8+2MO109
-	AKbJbLySvpgPs73pDglKLGxgBmqGvx9ms68b1RzoIOlsZ1VWsST15OzWW+gYmC87VUc2hX
-	cm290au9wvRPlhry5e2iC0/gE/3lAwG+2Gv/3/M583XOXSLE0qeHqLcVFxK9Dw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717169102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zBAiXgC5x6K/2E25MmGwn9JeI87ahIu7LD3cMl3AcgI=;
-	b=X272vt9jZHCuUxIPlGP7h16QUfr6QWEuUYpJNrjFH+d/k/xNcbO61KHjTne81u5i5EyzD1
-	6pQNFx81D9aLOhCg==
-To: Christian Heusel <christian@heusel.eu>
-Cc: Peter Schneider <pschneider1968@googlemail.com>, LKML
- <linux-kernel@vger.kernel.org>, x86@kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: Kernel 6.9 regression: X86: Bogus messages from topology detection
-In-Reply-To: <43c15a7b-6f43-410e-800e-2ebec87ea762@heusel.eu>
-References: <76b1e0b9-26ae-4915-920d-9093f057796b@googlemail.com>
- <87r0dj8ls4.ffs@tglx> <87o78n8fe2.ffs@tglx> <87le3r8dyw.ffs@tglx>
- <4171899b-78cb-4fe2-a0b6-e06844554ed5@heusel.eu>
- <20ec1c1a-b804-408f-b279-853579bffc24@heusel.eu> <87cyp28j0b.ffs@tglx>
- <875xuu8hx0.ffs@tglx> <b42363ac-31ef-4b1a-9164-67c0e0af3768@heusel.eu>
- <87sexy6qt9.ffs@tglx> <43c15a7b-6f43-410e-800e-2ebec87ea762@heusel.eu>
-Date: Fri, 31 May 2024 17:25:00 +0200
-Message-ID: <87plt26m2b.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdhjgPgu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 814C0C116B1;
+	Fri, 31 May 2024 15:25:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717169115;
+	bh=zxVsxyf0/sNtu7IRBazt4q5BudR9fH+3gYfF6OkKIKQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=KdhjgPgu/aHy5I2QrRAxUXtQkttbYDOkDQlkRn7uzZqqQoRibwHweW9F5yVdE07xo
+	 EDPX71jtSXZfP1t7lWWR6mUFqTNnBwxfYu4LSqt+HoUU1jQdo5IZTw+hN4+c6arg66
+	 v5340PxwQl6ndm4KJI3HtSDHzvAcFPrLtWP7E5Epnv29r6pwCSXRHM5BysnthyaKyg
+	 98HpnmMJF1MmgUJ8TvFSekQpH3/Cg1FI+/5sbMKCIehP6CSoK4weQmFO2CHFxh1L1A
+	 HsYaxaarxH7RRKlMd5iXTlYyTDyYji+6QRkB4yfyWNms98WGqPdYDmD7qwEGLiVlzs
+	 ZVT8nhMRS/yYg==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240527-smb2360-bindings-mfd-qcom-spmi-pmic-v1-1-31a2c051529c@linaro.org>
+References: <20240527-smb2360-bindings-mfd-qcom-spmi-pmic-v1-1-31a2c051529c@linaro.org>
+Subject: Re: (subset) [PATCH] dt-bindings: mfd: qcom-spmi-pmic: Document
+ SMB2360 PMIC
+Message-Id: <171716911326.1158996.10059017246764192377.b4-ty@kernel.org>
+Date: Fri, 31 May 2024 16:25:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-On Fri, May 31 2024 at 16:29, Christian Heusel wrote:
+On Mon, 27 May 2024 10:02:03 +0300, Abel Vesa wrote:
+> Add bindings for SMB2360 PMIC. This PMIC is found in boards like
+> X1 Elite CRD and QCP.
+> 
+> 
 
-P-Cores are consistent:
+Applied, thanks!
 
-> CPU 0:
->    0x0000000b 0x01: eax=0x00000006 ebx=0x0000000c ecx=0x00000201 edx=0x00000000
+[1/1] dt-bindings: mfd: qcom-spmi-pmic: Document SMB2360 PMIC
+      commit: f22e741dfbc63c7bf5b0640ae5f0a81b00e01b43
 
->    0x0000001f 0x00: eax=0x00000001 ebx=0x00000002 ecx=0x00000100 edx=0x00000000
-
-E-Cores are not:
-
-> CPU 4:
->    0x0000000b 0x01: eax=0x00000006 ebx=0x0000000c ecx=0x00000201 edx=0x00000010
-
->    0x0000001f 0x01: eax=0x00000007 ebx=0x0000000c ecx=0x00000201 edx=0x00000010
-
-As the topology is evaluated from CPU0 CPUID leaf 0x1f it's obvious that
-CPU4...11 will trigger the sanity checks because their CPUID leaf 0x1f
-subleaf 1 entries are bogus.
-
-IOW it's a firmware bug and there is nothing the kernel will and can do
-about it except what it does already: complaining about the inconsistency.
-
-Thanks for providing all the information!
-
-       tglx
+--
+Lee Jones [李琼斯]
 
