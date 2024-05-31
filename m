@@ -1,112 +1,153 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DA51CAA6;
-	Fri, 31 May 2024 21:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D811CAA6;
+	Fri, 31 May 2024 21:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717190435; cv=none; b=jpXiJoyhh7KWAraqY0EPunPSsZxdOCABoiQWiSEFSlHBkj1PnL1BAmNOh25x4bdzQukjELlgfQTLr6re38/KdW7R+XmT7VOPjzwhwa3JQu8p0vTtBSBzvjeCZQuQesbKMoPnc1nHWQxP5QJoIa4KHC8kmQEORtBNeiSk1cEbkKA=
+	t=1717190705; cv=none; b=J+A1tsDxQskyjMmP3FZ+zsbK07cm+7cMAsguoIznp+c0MwRd/HimvhvNuqyQX/EMceT5Qnz4l01lZD8Sc0IZsc/u+m47UXvSLa6CUNSfUcxMGkKAPc/DZ2PNGP+zBnAs8mB6+gue8AtGytGfKPSmOnNj4+iRZW7oWGs7xaXuThQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717190435; c=relaxed/simple;
-	bh=DYSIAFngwhG4d9k8FbXoD1jdg/3v/GIty7zsCQvOhJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WihFjczqZe7tat1KXG3PD6vWxjWLhOHVunXMLNiR+7G3ca6Yom4wPjFihxq6HbpbsBN+KJf7X1W1LygXX1JNE+h7sHDnsnwedY5wv/u6uAH2MqBrh8yNcfVLKqFVwTfPJQsbVGLhOMn4NSyMc+JbJS1QwfksgsGqKOmiV5br878=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hTaeYk6A; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717190705; c=relaxed/simple;
+	bh=VF5huSIXEGspnsYcYrVm6cTWXK90solzuMmSiSuO6uY=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=BDTtXj3kVPqMGEgG+QPcs2ZYAen4gjF9mefPpv9sh1nM6YJFaHa1IMo31Uayn65swX4SmzYNhL0sr0d3PgsL+oTPXfGj8ZTKDNkYb7qacpjl5I1jvRckskmi3LHbisW+kJPYsSjodjEXKfoLJDTiRDXu9CaJaxUHQPL/ub+l73E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=lY00Jlkh; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hTaeYk6A"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9CFE740E02B7;
-	Fri, 31 May 2024 21:20:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zIDDVK4B_qjv; Fri, 31 May 2024 21:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717190427; bh=tHY1hcVxCcJ3Qq0c+H5bGa1+YZfmU+M7Xl3/p2DIUBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hTaeYk6AyvfPvE+7dWAnYrlEJpabckfPR2IFRUV7MWXhQXzwWmyAPipyIn25WQGrq
-	 YfN1dgS7k0tNp9oqolrTAkIyJSPfWGDoT/I0mm0/3AX5+lsc05oqU1ibyyBcpMRSG2
-	 9aOFeqnQa26loXt9nUtnn5SX7PWv/jTo2/YElkJEp9w+WcSVp+cTQ82YqEnkcG0yFG
-	 vuhkTUS75NAMqlEblf+T4gdVe2tireUE0+vbbKDDE64XbmGIR6JaLf4wYr+HgC64Rk
-	 lcmAOEDt/crzdzN0LuRlyxHTwmQi1KY0zqs4KILdyB9OfSwaLA8ZCNPJRib7t0Zxyw
-	 dXtPYsImuWS459i3/C/jP8YzwNV6XcIe9XJXP7QM2kR+Rr4CCgE06PIEI1LuXCLuBC
-	 uCRxzBLqlRarTZcrJOuoXEVITqovObIQlSXSsQAMkmCcQuu6/qJgKyFDolMl22MKY+
-	 JQWKuL1eFgCzFN3vQ579cif293o8oS13m4/jCnIoTlEY4oTQniYgZQoJs2poOmMKf5
-	 8J8QzruBWhvWYXsGb6ddk0NRoYVA8EWKb1vMkp0pUq4S6+cvL/HooJKJWE0wu0bf5t
-	 qHZ0mzjMlfxecPI28JYIM6TgovEczZNBcf72B4tBl8IzcBH3TsvnM2hcfzuzsgJDjk
-	 XpMHsJLTw75g1rwcrN2ur5MA=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 038DA40E02B2;
-	Fri, 31 May 2024 21:20:15 +0000 (UTC)
-Date: Fri, 31 May 2024 23:20:09 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-Message-ID: <20240531212009.GOZlo_CV0lxZ1xviQW@fat_crate.local>
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
- <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
- <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
- <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
- <202405310951.56D9BD5C41@keescook>
- <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
- <202405311345.D91BF6E9@keescook>
- <20240531204947.GNZlo367G0YXVbOk1I@fat_crate.local>
- <202405311359.EFC7345EC@keescook>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="lY00Jlkh"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202405311359.EFC7345EC@keescook>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1717190694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jww2qZI1db4LLxX4ddTJs3O/960dbOvvlMlYQYu9OhE=;
+	b=lY00JlkhEeFaQAD6/CPV34Box50rDsxRCnJhPcrckinMIimIB2a+vL0dC2/10rznzsFNTM
+	HpicKiI70a8tubn7YogGYe4aVV5iJY4gMVHOA1kLWpzW6RfkpjWioyrZ+pN0dMdDjbT1hi
+	0scxBkRlDJ7B5znOVfryeCtRcBd4CvvWJNDkZB6Rk/u34Ep/9jtkFXWGRIE07Dp5JTlJvC
+	BpZvNk6Xwu11785eyHPD7KUmyNxwlUNKy57BXqr53H/h1f3sEhC2E+fiFQvzrg8Tm7wi9n
+	QsgiyHgZ2FP8zCwMTuRfnEytkZJU6SVZAYW4ItOHwVAlYZdzEtayK4AV5yvuTg==
+Date: Fri, 31 May 2024 23:24:53 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org,
+ heiko@sntech.de, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, quentin.schulz@cherry.de,
+ wens@kernel.org, daniel.lezcano@linaro.org, didi.debian@cknow.org,
+ krzysztof.kozlowski+dt@linaro.org, viresh.kumar@linaro.org
+Subject: Re: [RFC PATCH] arm64: dts: rockchip: Make preparations for
+ per-RK3588-variant OPPs
+In-Reply-To: <607f4da8-99b2-4379-9567-4bfd2744eab3@kwiboo.se>
+References: <673dcf47596e7bc8ba065034e339bb1bbf9cdcb0.1716948159.git.dsimic@manjaro.org>
+ <CABjd4YxD41DEkBCZfkznLboEY9ZVOfTCLcj4S_kkcsVswbANyQ@mail.gmail.com>
+ <8f8623e29a479c4108141302e708dc3b@manjaro.org>
+ <CABjd4Yy4RMg+6-4ygV0MSwJj5LReY-ymbctq4PPfVZ6L+c1tsw@mail.gmail.com>
+ <166cc4e46f31644a50306625b2ab18a6@manjaro.org>
+ <CABjd4YzDNQa45=KC_t0xnTDrH+g-oUrcpgP55oOj7JcAuu7uFw@mail.gmail.com>
+ <82db817a908b761d8c3d73ea04714314@manjaro.org>
+ <607f4da8-99b2-4379-9567-4bfd2744eab3@kwiboo.se>
+Message-ID: <66677077acf4e970444cea829436fd0a@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Fri, May 31, 2024 at 02:06:48PM -0700, Kees Cook wrote:
-> ...
-> or refactors and forgets to change some name, etc. It's all for catching
-> bugs before they happen, etc. And when source string lengths aren't
-> known, the runtime checking can kick in too.
+Hello Jonas,
 
-Aha, thanks for explaining.
+On 2024-05-31 13:27, Jonas Karlman wrote:
+> On 2024-05-30 21:31, Dragan Simic wrote:
+> [snip]
+> 
+>>>>>> That way we'll have no roadblocks if, at some point, we end up 
+>>>>>> with
+>>>>>> having
+>>>>>> different OPPs defined for the RK3588 and the RK3588S variants.  
+>>>>>> Or
+>>>>>> maybe
+>>>>>> even for the RK3582, which we don't know much about yet.
+>>>>> 
+>>>>> Guess we'll deal with that one once we stumble upon an actual 
+>>>>> RK3582
+>>>>> board out in the wild and heading to the mainline kernel tree :)
+>>>> 
+>>>> Of course, that was just an example for the future use.
+>>> 
+>>> In fact, I've just discovered that Radxa has recently released Rock 
+>>> 5C
+>>> Lite which is based on RK3582, and starts at just $29 for the 1GB
+>>> version, making it interesting for tinkering. Especially given that
+>>> its GPU, one of the big-core clusters and one of the VPU cores seem 
+>>> to
+>>> be disabled in software (u-boot) rather than in hardware, which means
+>>> there is some chance that a particular SoC specimen would actually
+>>> have them in a working condition and possible to re-enable at no 
+>>> cost.
+>>> Ordered myself one to investigate :)
+>> 
+>> Yes, I also saw the RK3582-based ROCK 5C Lite a couple of days ago. :)
+>> It seems that the disabled IP blocks are detected as defective during
+>> the manufacturing, which means that they might work correctly, or 
+>> might
+>> actually misbehave.  It seems similar to the way old three-core AMD
+>> Phenom II CPUs could sometimes be made quad-core.
+> 
+> I can confirm that the RK3582 include ip-state in OTP indicating
+> unusable cores, any unusable cpu core cannot be taken online and stalls
+> Linux kernel a few extra seconds during boot.
 
-> It happens x86 boot doesn't have any of those (good!) so
-> __fortify_panic() goes unused there. But
+Thanks for this confirmation!
 
-Exactly!
+> Started working on a patch for U-Boot to remove any broken cpu core
+> and/or cluster nodes, similar to what vendor U-Boot does, adopted to
+> work with a mainline DT for RK3588.
 
-> that's a larger topic covered by stuff like
-> CONFIG_LD_DEAD_CODE_DATA_ELIMINATION, etc.
+Nice, thanks for working on that. :)
 
-"... This option is not well tested yet, so use at your own risk."
+> On one of my ROCK 5C Lite board one of the cpu cores is unusable, 
+> U-Boot
+> removes the related cpu cluster nodes. On another ROCK 5C Lite board 
+> one
+> rkvdec core is only marked unusable and all cpu cores can be taken
+> online, U-Boot does nothing in this case. Guessing we should apply
+> similar policy as vendor U-Boot and disable cores anyway.
 
-Oh well.
+Just checking, you're referring to disabling the rkvdec core only,
+for the latter case?
 
-So I get an allergic reaction everytime we wag the dog - i.e., fix the
-code because some tool or option can't handle it even if it is
-a perfectly fine code. In that case it is an unused symbol.
+> Following commit contains early work-in-progress and some debug output.
+> 
+> https://github.com/Kwiboo/u-boot-rockchip/commit/8cdf606e616baa36751f3b4adcfaefc781126c8c
+> 
+> Booting ROCK 5C Lite boards using U-Boot generic-rk3588_defconfig:
+> 
+> ROCK 5C Lite v1.1 (RK3582 with 1 bad cpu core):
+> 
+>   cpu-code: 3582
+>   cpu-version: 08 10
+>   data: fe 21
+>   package: 11
+>   specification: 01
+>   ip-state: 10 00 00
+>   bad-state: cpu core 4
+> 
+> ROCK 5C Lite v1.1 (RK3582 with 1 bad rkvdec core):
+> 
+>   cpu-code: 3582
+>   cpu-version: 08 00
+>   data: fe 21
+>   package: 11
+>   specification: 01
+>   ip-state: 00 80 00
+>   bad-state: rkvdec core 1
 
-And frankly, I'd prefer the silly warning to denote that fortify doesn't
-need to do any checking there vs shutting it up just because.
-
-So can we aim our efforts at real bugs please?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks again for these nice details!
