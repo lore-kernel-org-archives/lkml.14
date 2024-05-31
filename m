@@ -1,92 +1,158 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB08158A02;
-	Fri, 31 May 2024 13:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76D4158A14
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 13:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717161063; cv=none; b=NVUsutoRjsNtTyM9Lr2L6juwQwmJnQFlF0j47Lg4mtiGAzVFrDeOdWc3ReBUzMs7YeLVXpaD1dI31TfVAXb9Tako/8greJj3LsjaB3jle+I0IUyAynoLwxZFqallA1+H5zFTI49MGOy7/OoW6ObPAKT/JH5lejAlZdwRVEPiUHE=
+	t=1717161082; cv=none; b=PXucNJyj69GOY8bQhLyO6Hu8DxfciTWvUfBx6R7eGEwqmDuLQwn6rQsZJzLyCeYHW96nIfcyT3MX8ewBkMO5999PbNWdUuSjIjeCaPl9LRTph2yEOTnBihp5IY3jCOXzSp/WlrN/jYxpwt/aRIZPIc37glsFsypcpYEUO2drttg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717161063; c=relaxed/simple;
-	bh=vYhw5UUQUky0CjkeCADHyX32yK5HSVjizY87gvg4ohU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O2ZoUkVT7Uj5xFA+Mqaj7Um3g4qC4XWLVP0wtTn/0Rnsf8yFec663doZQ14a6umlWUOWOpQGxqjTl7xawr16fIatI+DyydON0vywg4bFS1meosNFm1GRa7RNaoUF8gDub5mGohFGMOKS0Mwl3JthJNmJzHRJV4dr+31w/mGxJ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UVZ/TzM1; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717161082; c=relaxed/simple;
+	bh=c3XdctI4qUJlJfz5ADlPYS/uW7u8v1FB/rMrC5LHkds=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J2lSGO8kpzZBVeRu/oYnLjhFs/na+01ATrqm8W1gDVesIImKWynIkDa0rFog5gkIysLKyk7bJY6XwsmKkHaOvOzkoMnnNaOKUPHQGK4bFN6npQilEKxcK+5xugVaLrP6Zz4oTRJN39Us8uIg0yUhofcLF48ilO2hfjgF2ls1bJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VsWS0fjg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVZ/TzM1"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a634e03339dso128827066b.3;
-        Fri, 31 May 2024 06:11:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717161060; x=1717765860; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vYhw5UUQUky0CjkeCADHyX32yK5HSVjizY87gvg4ohU=;
-        b=UVZ/TzM14sDH9Ni2LAl2Rp4j0lDvr3D9qVvz83R5Pskxauqtz5GvJzRoHG2NVoJ7R/
-         f38hpqzP4YFWxIjpGBr44igB9iHLLsBjb5CZptyRK+YAhfkxJMGOfaDxmdcVcRvjyiUz
-         +U+ZFSjeLr2EV+dRLyEcsjNmZq3MIBuADXTlfKbPP52MTeFc/mBYQPOZLN62ozvnS+TV
-         uiXJQt6uh+FJzP9iBVXo6DFyk3b7NNBykc+B9h6bJdIBuY9prJAymsayNfysth29wR9c
-         KyRecWr4x+EDg03USNoBIEKOBAsIKar3mBfFZRxaCClxdP4atNcNYfy0jnRIvECLJUMe
-         KYiw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsWS0fjg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717161079;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Px56jy9il/IYwkPayrMIkBySKFiPmogiNfHl+A5skDU=;
+	b=VsWS0fjgShR/OgeiVF+dMjd90ZryTNSZExTJ4NSq8TxMDgVxS3cAiWxGZXOO0+Ok7Yq+Tn
+	1EIb1gWN6zB8rCNAVelz8oKoOz+bd6c0iAKhu79IojSY1eSQcF62NH4hrTcKt1yYRKhDod
+	5edjcaiqtQhzKibW4s3F4ZPX3crxOnQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-225-QNPI0xSQOuuq40B6MsgdHA-1; Fri, 31 May 2024 09:11:18 -0400
+X-MC-Unique: QNPI0xSQOuuq40B6MsgdHA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a62c4ffecefso94370866b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:11:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717161060; x=1717765860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vYhw5UUQUky0CjkeCADHyX32yK5HSVjizY87gvg4ohU=;
-        b=JKNLDkQqaUAUkuqleboOS2Rj1MBraB6gnZgLSiLGgEGtlGMyk7gee9CTYxlutHyQrr
-         lSrJymKnp/sA9DlCNe0H9N8f+EXmYiFgJJR/f+ZcSjpflSUwK41e+7cEb180NMxfegin
-         5KHQM5jU9zvar5EvaBuSlb3sULqCiStZgmmSUjUccPvboPdEPODXvLEONdoRdNj2ULh0
-         iMw7rGsPeOjP/9/jnO/6ItsiUjoMmFiyukJEECKpWg5PzeM8hrFaUBZ3nwJok4/5QQJo
-         MX1/kcu101EA4Ly3OeqUX2zKXEHr38kb01iGiS3YfbsMBoueHbqit7hBG2t+wIOKATC7
-         wRPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVXBjFsVd0FswBt7zj9D5TMypMgEG6ymHZ13NGC5bh2F/JRs0zWs0QsAQjstto1JhmQDOXfOBvwF2gVFR75+f4Tz71xvE1E4n/PAo13
-X-Gm-Message-State: AOJu0Yzvfgpk6a4UvL+6UIEXXr4V/EkfAoiqyBjfb6kEMfkyf0XTeUFg
-	WQGzbFkqgwce58HcAUb/YDTaz0lEb3ARgCw6WJls8mcctGNbJoUiW74RbFIrRNfL0Acj8q7bVMu
-	UY0ly9x2JZhERt0ujT5zp5yEEYmYezadEmdI=
-X-Google-Smtp-Source: AGHT+IF7FWWerFN3tYRlR39i7AAGTup3perSgx/iHdJSCfpMuOLcmfs82Yw11UmSdu3SrPX7aeaHxBP3X9/9vnws2t8=
-X-Received: by 2002:a17:906:2c0d:b0:a63:49a9:7906 with SMTP id
- a640c23a62f3a-a68220496f7mr121453766b.52.1717161060258; Fri, 31 May 2024
- 06:11:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717161077; x=1717765877;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Px56jy9il/IYwkPayrMIkBySKFiPmogiNfHl+A5skDU=;
+        b=Uf3m5Q4MQHfnIYJ0XsS8ij5JvVzUcW01LC/25ab7oZ9kiSFKbLNGoETZgFgwkH+Dtd
+         cT3aqwTEvxfQKfx1+5afl9JPZ+G/dAwbhUm2mj37mD/JM2CdgnK5j9+Ygm7CuWQ9kW/T
+         5dN4znZg+hevKi1KzMzxC/q0uznHSoNoqg05e6mQT/3AFW4MwpFPI38Vy+Et+QOZ/Swn
+         l+d7UO/N2y74k1Ar1CjDQeycrd2FUC4xHlnHoIAjgRJR4voQktTCSI0WRGHGK7g8d5PK
+         M+kK9cZ94919htbZiUMmZgpYPsGGEZL30DyyQV+InqaO6q9PZMHtlFM47796wASRNqiW
+         xpmA==
+X-Forwarded-Encrypted: i=1; AJvYcCXlW27ECT6uq9Oz6xAoK75zXftPm8MeDYtHFunIdLlAqJadRoH93HxGLjz6bBULSLfqU+X/2PBDjeelffz5oJ3ncw4p3PywMWUWmyf/
+X-Gm-Message-State: AOJu0Yw/vuIR4xdIaKGbmlyTd9mKWLQeKiKhJGJ6DFRlpX3OYRADBhP8
+	LEtVj3+TPi5N/AasbGEMciHh0QIot1poy2ovAavFEZETOTW1Qj6j7ELfUWYHhY7+iuudomUgBnN
+	qiW7TtYwn6Y93YsW3AcrIgsJ1Udelt7vH1Ikl5XM8ziCg9oMrN2Wo5ePIA8idrzmdddZE1w==
+X-Received: by 2002:a17:906:7ac7:b0:a68:13d8:3d00 with SMTP id a640c23a62f3a-a6821f4e6d6mr150501666b.56.1717161076967;
+        Fri, 31 May 2024 06:11:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFApD+njPNUgEgZoAQ0f63kVWmn84bRFqq8Ou8YZKepQ4ySoVE/xIS7SnQ8n3/uLsbJXQVPHg==
+X-Received: by 2002:a17:906:7ac7:b0:a68:13d8:3d00 with SMTP id a640c23a62f3a-a6821f4e6d6mr150497366b.56.1717161076394;
+        Fri, 31 May 2024 06:11:16 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e73f9b84sm85694766b.64.2024.05.31.06.11.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 06:11:16 -0700 (PDT)
+Message-ID: <2a6045e2-031a-46b6-9943-eaae21d85e37@redhat.com>
+Date: Fri, 31 May 2024 15:11:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531094658.1598969-1-andy.shevchenko@gmail.com>
- <20240531094658.1598969-2-andy.shevchenko@gmail.com> <3305f8ef-ccc4-4f95-8141-67c7adeeb21f@sirena.org.uk>
-In-Reply-To: <3305f8ef-ccc4-4f95-8141-67c7adeeb21f@sirena.org.uk>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 31 May 2024 16:10:23 +0300
-Message-ID: <CAHp75VeOTVWr5V09aFWbSYYnY_0Tz36AD27aKeYHqkOu-3tQCw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] spi: Revert "Check if transfer is mapped before
- calling DMA sync APIs"
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	=?UTF-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4gUHJhZG8=?= <nfraprado@collabora.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hung tasks due to a AB-BA deadlock between the leds_list_lock
+ rwsem and the rtnl mutex
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Linux LEDs <linux-leds@vger.kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, johanneswueller@gmail.com,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>,
+ Genes Lists <lists@sapience.com>
+References: <9d189ec329cfe68ed68699f314e191a10d4b5eda.camel@sapience.com>
+ <15a0bbd24cd01bd0b60b7047958a2e3ab556ea6f.camel@sapience.com>
+ <ZliHhebSGQYZ/0S0@shell.armlinux.org.uk>
+ <42d498fc-c95b-4441-b81a-aee4237d1c0d@leemhuis.info>
+ <618601d8-f82a-402f-bf7f-831671d3d83f@redhat.com>
+ <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <01fc2e30-eafe-495c-a62d-402903fd3e2a@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 3:15=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Fri, May 31, 2024 at 12:44:32PM +0300, Andy Shevchenko wrote:
-> > This reverts commit da560097c05612f8d360f86528f6213629b9c395.
->
-> Please include human readable descriptions of things like commits and
-> issues being discussed in e-mail in your mails, this makes them much
-> easier for humans to read especially when they have no internet access.
-> I do frequently catch up on my mail on flights or while otherwise
-> travelling so this is even more pressing for me than just being about
-> making things a bit easier to read.
+Hi,
 
-Sure! But I will wait a bit (a couple of days?) to give a chance to
-get this (re)tested.
+On 5/31/24 2:54 PM, Andrew Lunn wrote:
+>> I actually have been looking at a ledtrig-netdev lockdep warning yesterday
+>> which I believe is the same thing. I'll include the lockdep trace below.
+>>
+>> According to lockdep there indeed is a ABBA (ish) cyclic deadlock with
+>> the rtnl mutex vs led-triggers related locks. I believe that this problem
+>> may be a pre-existing problem but this now actually gets hit in kernels >=
+>> 6.9 because of commit 66601a29bb23 ("leds: class: If no default trigger is
+>> given, make hw_control trigger the default trigger"). Before that commit
+>> the "netdev" trigger would not be bound / set as phy LEDs trigger by default.
+>>
+>> +Cc Heiner Kallweit who authored that commit.
+>>
+>> The netdev trigger typically is not needed because the PHY LEDs are typically
+>> under hw-control and the netdev trigger even tries to leave things that way
+>> so setting it as the active trigger for the LED class device is basically
+>> a no-op. I guess the goal of that commit is correctly have the triggers
+>> file content reflect that the LED is controlled by a netdev and to allow
+>> changing the hw-control mode without the user first needing to set netdev
+>> as trigger before being able to change the mode.
+> 
+> It was not the intention that this triggers is loaded for all
+> systems.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Right note there are really 2 separate issues (or 1 issue
+and one question) here:
+
+1. The locking issue which this commit has exposed (but existed before)
+
+2. If it is desirable to load / activate ledtrig-netdev by default on
+   quite a lot of machines where it does not really gain us anything ?
+
+For now I think we should focus on 1.
+
+Still about 2:
+
+> It should only be those that actually have LEDs which can be
+> controlled:
+> 
+> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/ethernet/realtek/r8169_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/ethernet/intel/igc/igc_leds.c:	led_cdev->hw_control_trigger = "netdev";
+> drivers/net/dsa/qca/qca8k-leds.c:		port_led->cdev.hw_control_trigger = "netdev";
+> drivers/net/phy/phy_device.c:		cdev->hw_control_trigger = "netdev";
+
+Well those drivers combined, esp. with the generic phy_device in there
+does mean that the ledtrig-netdev module now gets loaded on a whole lot
+of x86 machines where before it would not. On one hand those machines
+are plenty powerful typically, so what is one more module. OTOH I don't
+think many users if any at all want to change the hwcontrol mode for
+those LEDs...
+
+> Reverting this patch does seem like a good way forward, but i would
+> also like to give Heiner a little bit of time to see if he has a quick
+> real fix.
+
+Ack.
+
+Regards,
+
+Hans
+
+
+
