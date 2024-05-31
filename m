@@ -1,117 +1,169 @@
-Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC2163C7;
-	Fri, 31 May 2024 01:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E014415E9B;
+	Fri, 31 May 2024 01:21:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717118390; cv=none; b=jPj8bH4wIEMF0ubQdklTI2zFOoaLPkZpBkjyzFXRr7IEjTjPAwZqsj6QF28IaAonSM+3cLKgd5EIUNhgkcLGS8iv8M0z9K+mkAnrtyKoSmzxOKOiT/ys5ebghbE6X+dWfaxXAk7/Mw8GaElOX5bk98ONrCfxsqnKGMxPcJa+PgY=
+	t=1717118491; cv=none; b=Cx6SvA4z9fWCfSJkHNqfPaxn+0xhT/KRKtv+X4uJ5oM+PQLlfBZesJwxx8PtSKglLkGNR1LUQ2nDchEFXOM1oWuQYC9oIBqhf/X++nedxtfA69ey6x+H8tNfZKbIjW3ewj4r44jW8vIdQf+yrc1IZ3PzUcpm9KNHf4rAuNm/6r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717118390; c=relaxed/simple;
-	bh=e5/NKjsM5ULYOYhot/Kcrf0uXGGr7Q2ErMsxZ8AbhNg=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eSH09g6xHRB+UmglkbjgROtsciolwWNZuJpKBP7a1bIy5sU4QsjD49TVH/ctrn5dVi+9HOoGxRbtAgLcK7lBfIfTvz/uEkbug/mrPDBUn0i/IBNazILk2pXhmOGDI6Qv2+UlQnbM8CB2gzXOaKoP1PYteXhMf+gdrGkCGDFvJko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca; spf=pass smtp.mailfrom=lyndeno.ca; dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b=t7LL0MZv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X3q6euZd; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lyndeno.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lyndeno.ca header.i=@lyndeno.ca header.b="t7LL0MZv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X3q6euZd"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 450861140183;
-	Thu, 30 May 2024 21:19:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Thu, 30 May 2024 21:19:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lyndeno.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1717118387;
-	 x=1717204787; bh=5yJmV879YPZ2+qzVIS5sOrVKm0uZoMEEXgLMCx1poD4=; b=
-	t7LL0MZvW1jNfL47fgQk0BtOskjZFYY4xsj2o4QysAQA6CxHmsSn3Qp8sraA31Wm
-	82rJTaX0BmsADgS4jjebsMOsW2oWyZc6z/mVYDpbTu6s0Ius6l2xryFtDdh1vERG
-	/oE5MGMcI+n4dGqcxbQVEewkASakh0Lz/gsvRaSFg17gTX9gnCvUZQFD1qOOnt9G
-	1PVQjYy5yKTb0UghisAqYAkjzATCz3Hu67degCdAeoPTNr1fN0xdHUlKxJ/VvP1s
-	4KodTbTh2l2THRoWuDgMqi1YrH5HJMHw2SfuXjuzujL5X6YIS1CxigYb6tF88TY9
-	HMsqi2h9bIvfyrvmLMSn2Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717118387; x=
-	1717204787; bh=5yJmV879YPZ2+qzVIS5sOrVKm0uZoMEEXgLMCx1poD4=; b=X
-	3q6euZdRcSJ9L82NWcjjmlvOUHNeTNGeUlCTiYlv+aYkSY1CgNmNKulQ1J42aKWT
-	tfJnEoMkvCFWCeOLYrgddNoj5zQQzrkh91H/O6hk7Th+Xaioq/bJHnjjl0yRQXzA
-	cYdHSOrnrtnJFiAGmRAPKG+Uum6/qcqj8cCZRNsw0VINH8cYkzMlD2DhH2sfqRVu
-	x3XVbm/1J5ddIO/D5dk2jWm/gZ4Cuxh/m3m3WzrwnDVgu9H7oHo57ncXtsUlcm1+
-	KVOISrZPxADh/7uI1Pw37iMsJWoVlFyNhlFc0A/oCzPTCMP+KWdfkhwY217VVy0s
-	OCJEfh58wwBW0wfj4ps7w==
-X-ME-Sender: <xms:siVZZjWxe6P1aqiXVIfF48_IZTo2a1YXZCvgrj-paahP-42B4K0KfA>
-    <xme:siVZZrktsld1OtgJjDSqZJ_B94rytQkIHHROpI2xs1UTa9ZQSlZmpHuoxu6e3Qpxg
-    7Z3QjRYypiB5H5_mRA>
-X-ME-Received: <xmr:siVZZvYF3vdW9lRkyRnjAu68DMX79zJEgJIO1HShsHEpPyPUdtvJKQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdekhedggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvvefkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnhihn
-    ughonhcuufgrnhgthhgvuceolhhsrghntghhvgeslhihnhguvghnohdrtggrqeenucggtf
-    frrghtthgvrhhnpedtvdefvdetfeeggeejgeejvdevteejvdehhedtueeugfelhfeuieff
-    ieehffetheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehlshgrnhgthhgvsehlhihnuggvnhhordgtrg
-X-ME-Proxy: <xmx:siVZZuX5jhqfQLr1QqWzbt7Ah025Pmtag-r-O9UaKe1UB_LQ_wvb9g>
-    <xmx:siVZZtnow_TRZRrhr1sWLuMDeLzqH5Jqsx_KdhWHMctQEXqs54PkUQ>
-    <xmx:siVZZre2j5ECAOlqWuWgd_9gGuHKphodRk687MOR9eVQiQGsJ3KsYg>
-    <xmx:siVZZnHHqq3CADkutlUm9FeNh6oaJrtPFQHanlupiWdcv-ckhDljdw>
-    <xmx:syVZZtmVuUgtuHs-7GMhWRF36Cf_-lkiT-rQ7sIWkuBGknk4Wl3o7DAh>
-Feedback-ID: i1719461a:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 May 2024 21:19:44 -0400 (EDT)
-Date: Thu, 30 May 2024 19:19:36 -0600
-From: Lyndon Sanche <lsanche@lyndeno.ca>
-Subject: Re: [PATCH v8 3/3] platform/x86: dell-pc: Implement platform_profile
-To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: mario.limonciello@amd.com, pali@kernel.org, W_Armin@gmx.de,
-	srinivas.pandruvada@linux.intel.com, lkp@intel.com, Hans de Goede
-	<hdegoede@redhat.com>, Yijun.Shen@dell.com, Matthew Garrett
-	<mjg59@srcf.ucam.org>, Vegard Nossum <vegard.nossum@oracle.com>, AceLan Kao
-	<acelan.kao@canonical.com>, Heiner Kallweit <hkallweit1@gmail.com>, LKML
-	<linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-	Dell.Client.Kernel@dell.com
-Message-Id: <O0TBES.JKXVC38VSDID@lyndeno.ca>
-In-Reply-To: <db3191b5-2f42-5075-a493-dedb34e578ad@linux.intel.com>
-References: <20240425172758.67831-1-lsanche@lyndeno.ca>
-	<20240529174843.13226-1-lsanche@lyndeno.ca>
-	<20240529174843.13226-4-lsanche@lyndeno.ca>
-	<db3191b5-2f42-5075-a493-dedb34e578ad@linux.intel.com>
-X-Mailer: geary/44.1
+	s=arc-20240116; t=1717118491; c=relaxed/simple;
+	bh=3iZda8hQoxDkFln2Bed60LL/YAsuXzhJiaI3KKtJlUA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mkuU+CBUxbBjlISwc25UXDTktD7WF8Pnz/fW3y+hdpfqXWFUcb9yMMd2Ys74A0xVusatQ3mh1N6KitbMV17OKchB2C0dQ8a44SeWk48QveStuoMj9Xqt/GAwb2tXbSZ4qOfEZLUoL5nWG38xWUGI76uQHr687WiP1+ua009vEn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vr51B0fv5z4f3k6d;
+	Fri, 31 May 2024 09:21:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 34CCC1A0184;
+	Fri, 31 May 2024 09:21:24 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ4SJllmULOSOA--.35328S3;
+	Fri, 31 May 2024 09:21:24 +0800 (CST)
+Subject: Re: [PATCH] blk-throttle: Fix incorrect display of io.max
+To: Waiman Long <longman@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+ Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>
+Cc: cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Dan Schatzberg <schatzberg.dan@gmail.com>,
+ Ming Lei <ming.lei@redhat.com>, Justin Forbes <jforbes@redhat.com>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240530134547.970075-1-longman@redhat.com>
+ <0de07021-df77-4196-bb75-9ded88b74ce2@redhat.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <8191bb3d-2afd-ab76-c8b4-50f2871b7a9d@huaweicloud.com>
+Date: Fri, 31 May 2024 09:21:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0de07021-df77-4196-bb75-9ded88b74ce2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHZQ4SJllmULOSOA--.35328S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF4rXr1DZw47ur4UWr1UGFg_yoWrZryUpF
+	93trWUW345X3Z5KF13tr1UXFW5JrWDJa4DXwn3WFy3Ar4UAryIgr1DXr1v9rWUAF48Gr4Y
+	yw1UXr9xZF17J3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+在 2024/05/30 21:49, Waiman Long 写道:
+> 
+> On 5/30/24 09:45, Waiman Long wrote:
+>> Commit bf20ab538c81 ("blk-throttle: remove 
+>> CONFIG_BLK_DEV_THROTTLING_LOW")
+>> attempts to revert the code change introduced by commit cd5ab1b0fcb4
+>> ("blk-throttle: add .low interface").  However, it leaves behind the
+>> bps_conf[] and iops_conf[] fields in the throtl_grp structure which
+>> aren't set anywhere in the new blk-throttle.c code but are still being
+>> used by tg_prfill_limit() to display the limits in io.max. Now io.max
+>> always displays the following values if a block queue is used:
+>>
+>>     <m>:<n> rbps=0 wbps=0 riops=0 wiops=0
+>>
+>> Fix this problem by removing bps_conf[] and iops_conf[] and use bps[]
+>> and iops[] instead to complete the revert.
+>>
+>> Fixes: bf20ab538c81 ("blk-throttle: remove 
+>> CONFIG_BLK_DEV_THROTTLING_LOW")
+>> Reported-by: Justin Forbes <jforbes@redhat.com>
+>> Closes: 
+>> https://github.com/containers/podman/issues/22701#issuecomment-2120627789
+>> Signed-off-by: Waiman Long <longman@redhat.com>
 
+LGTM
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 
-On Thu, May 30 2024 at 11:39:27 AM +03:00:00, Ilpo J=E4rvinen=20
-<ilpo.jarvinen@linux.intel.com> wrote:
-> Thanks for the update. I've now applied this into review-ilpo branch.
->=20
-> I reordered those headers into alphabetical order while applying. In
-> future, when adding new headers, try adhere to the alphabetical order.
->=20
-> --
->  i.
-
-Thank you for taking the time to review. Also thank you for letting me=20
-know about the header order, I will note that for next time.
-
-Please let me know if you need anything else on my end.
-
-Thank you,
-
-Lyndon Sanche
-
+>> ---
+>>   block/blk-throttle.c | 24 ++++++++++++------------
+>>   block/blk-throttle.h |  8 ++------
+>>   2 files changed, 14 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+>> index d907040859f9..da619654f418 100644
+>> --- a/block/blk-throttle.c
+>> +++ b/block/blk-throttle.c
+>> @@ -1347,32 +1347,32 @@ static u64 tg_prfill_limit(struct seq_file 
+>> *sf, struct blkg_policy_data *pd,
+>>       bps_dft = U64_MAX;
+>>       iops_dft = UINT_MAX;
+>> -    if (tg->bps_conf[READ] == bps_dft &&
+>> -        tg->bps_conf[WRITE] == bps_dft &&
+>> -        tg->iops_conf[READ] == iops_dft &&
+>> -        tg->iops_conf[WRITE] == iops_dft)
+>> +    if (tg->bps[READ] == bps_dft &&
+>> +        tg->bps[WRITE] == bps_dft &&
+>> +        tg->iops[READ] == iops_dft &&
+>> +        tg->iops[WRITE] == iops_dft)
+>>           return 0;
+>>       seq_printf(sf, "%s", dname);
+>> -    if (tg->bps_conf[READ] == U64_MAX)
+>> +    if (tg->bps[READ] == U64_MAX)
+>>           seq_printf(sf, " rbps=max");
+>>       else
+>> -        seq_printf(sf, " rbps=%llu", tg->bps_conf[READ]);
+>> +        seq_printf(sf, " rbps=%llu", tg->bps[READ]);
+>> -    if (tg->bps_conf[WRITE] == U64_MAX)
+>> +    if (tg->bps[WRITE] == U64_MAX)
+>>           seq_printf(sf, " wbps=max");
+>>       else
+>> -        seq_printf(sf, " wbps=%llu", tg->bps_conf[WRITE]);
+>> +        seq_printf(sf, " wbps=%llu", tg->bps[WRITE]);
+>> -    if (tg->iops_conf[READ] == UINT_MAX)
+>> +    if (tg->iops[READ] == UINT_MAX)
+>>           seq_printf(sf, " riops=max");
+>>       else
+>> -        seq_printf(sf, " riops=%u", tg->iops_conf[READ]);
+>> +        seq_printf(sf, " riops=%u", tg->iops[READ]);
+>> -    if (tg->iops_conf[WRITE] == UINT_MAX)
+>> +    if (tg->iops[WRITE] == UINT_MAX)
+>>           seq_printf(sf, " wiops=max");
+>>       else
+>> -        seq_printf(sf, " wiops=%u", tg->iops_conf[WRITE]);
+>> +        seq_printf(sf, " wiops=%u", tg->iops[WRITE]);
+>>       seq_printf(sf, "\n");
+>>       return 0;
+>> diff --git a/block/blk-throttle.h b/block/blk-throttle.h
+>> index 32503fd83a84..8c365541a275 100644
+>> --- a/block/blk-throttle.h
+>> +++ b/block/blk-throttle.h
+>> @@ -95,15 +95,11 @@ struct throtl_grp {
+>>       bool has_rules_bps[2];
+>>       bool has_rules_iops[2];
+>> -    /* internally used bytes per second rate limits */
+>> +    /* bytes per second rate limits */
+>>       uint64_t bps[2];
+>> -    /* user configured bps limits */
+>> -    uint64_t bps_conf[2];
+>> -    /* internally used IOPS limits */
+>> +    /* IOPS limits */
+>>       unsigned int iops[2];
+>> -    /* user configured IOPS limits */
+>> -    unsigned int iops_conf[2];
+>>       /* Number of bytes dispatched in current slice */
+>>       uint64_t bytes_disp[2];
+> 
+> Add Yu Kuai <yukuai3@huawei.com> to cc.
+> 
+> 
+> .
+> 
 
