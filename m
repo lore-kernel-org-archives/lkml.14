@@ -1,195 +1,175 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2057.outbound.protection.outlook.com [40.107.7.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEB78120F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2238F81AC3;
 	Fri, 31 May 2024 21:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717192243; cv=fail; b=qaGKno5Y/BXTZIDdLkHbMrvi1+bz1tvJo/no6qNWdEbXW7wFgxHyYxouanUfI1KbvIKnL6q9pQVJfEK4GJScx7/kNJuaqNsE4//fnCc/ULkemf2qPYkitWSuQqjkrzRJfJjFAvfNwoQ6FmvgCGX81YHFF2hm1TzpHitRJhiwiV8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717192243; c=relaxed/simple;
-	bh=yycNzUXf5Sme9HuGzotdm2HFLb9GjXmNlpSpArLkkus=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AuAYGMceIu+p4t2RV/r4jppH7ySbT7BwjHEQpgCoZtgy3wJnSW7HK7vAjUoGnFJyMEoWTgnorUClqlWK1GCBs0obrpr0+JTa2LVB5PHo6F3iKdeSE78OnjutYKXhi8zI/1aZxjAFOT+/sLi3OCXSwKcASd4hjaFwJzulgWPtgtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=eciAumpP; arc=fail smtp.client-ip=40.107.7.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717192244; cv=none; b=nEiZVbTnGjWvq8gRDBuVvseXnd8yD3WnVMNj2VXZv4Yqqfzc/ZHMJBaoXPt+H779C8TH7iawAudvUH7J8UHyOvDS7ZnkGYyQ9fjxJdFFbc405Kd2DNDBajU3Tz7UsdgIA3TaBCCxZ60UokrkXw+lLGs2rF2EEiqiK97whBYjkTE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717192244; c=relaxed/simple;
+	bh=qVjAzYJmg/3LhPTWuC3MTisC3Itt1jRkl5kv7uiZWQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BE6TlWL5oxsY86+OQWSvqXwVCAwtxDh9rdHFcPArGykvkJhq+RxzSmCPUGvKvabP92a+0D3rRzDGxt/EWbCEVtavTXFUv/ukZgBDs2PkVJ6StHx4yBLdB9Lrxk3YqK/B1h0pyWuRrIruU5IW4f/sBL1Y+sTxnsO9TRLmuAEdOSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hGbZF8e+; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eciAumpP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U2EXpds0EjRD3oQbLZHc1rGmIyKSAtCp3Jp42gq6Z5+sgcoQLEYou7rCVDbhPI1Y71Y3GcJKg+qBNNlZGKoywGOz3Zs1NsM0GcKTb1fKht+0i+SyQlKmZxCzcioy1qCZ9aHjGO4feXg+VJ55UuOI/2sD2hbI7ZuQb6+XMtQr0Y6Ls4FoR3DUZKmxZheJpE6nbIH3jrHsK6oW25yR4FqIhAQm2fcNcCPsDwGFR5qtwrHVhMxB+eKhYmowwBqvyVa9CvfayTKnd9cH+xcZ+4DpCJNpTocrcSB8Xt1/I2cbT0NJX+jX3fZRA+EHaLEpo674b3IoCncV0JIzQEidGaoWgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t0hgsfQv43en2E885ScYVNBU0pSrIvobF/PPvEQuSy8=;
- b=dK9M24RZ/1mjeqxdD3qYOJbr9AWCU6qOpBof2cQf4WuLtVO3w/RDmAXLNSKYNVkiMT0/nRpUH5YWoHf7trUeDjutn0sL7HMEDlM2cZoCipgzRhZy9PEDtaB8NCSGOzZJ9dTgx+Ycjd9RTAC2v9iYnh/O+S4u7T/ub+vHkVndebdrmwaBgsoKgKyZ7L7MXoB7HBhR919Tkzm41SVf+4+nxfLlLy+R6KBpxmUaofqmO8p8NxOjp2PV5IXD1cN2nsV/BT48+0kZDF3o5HrYoBuJ1XFEcPPgx1dwzPtHOIxvbihvYCs9bcqlQWzvQ2VvtvLALAs+NaqMkZsuMIvRL96pHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t0hgsfQv43en2E885ScYVNBU0pSrIvobF/PPvEQuSy8=;
- b=eciAumpPbPqSeaMtFfxsHt3AytSbwW1h66684ZoqkHnm9BeEmLN7bh1OS/OMF5sWE/mQGZmeYG9rrqd9MiOAYyst4R4sO3iv7c5xTOMTHWcwTW1WyC8U3l3qD8CF3EkxbU59EV2T+vR+26RvIKXT2yGrZKeQGAYy3WCVFoEFUz0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA1PR04MB10748.eurprd04.prod.outlook.com (2603:10a6:102:485::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Fri, 31 May
- 2024 21:50:39 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Fri, 31 May 2024
- 21:50:39 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: frank.li@nxp.com,
-	shawnguo@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org
-Subject: [PATCH 3/4] arm64: dts: ls208xa: Change I2C clock name to ipg to fix DTB_CHECK warning
-Date: Fri, 31 May 2024 17:50:16 -0400
-Message-Id: <20240531215017.1969431-3-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240531215017.1969431-1-Frank.Li@nxp.com>
-References: <20240531215017.1969431-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR01CA0036.prod.exchangelabs.com (2603:10b6:a02:80::49)
- To PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGbZF8e+"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70234843a67so2050117b3a.1;
+        Fri, 31 May 2024 14:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717192242; x=1717797042; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=uCUM0vHfUxs5T4DYnVX7mJ8jYT5mGlx0XKmQiKJa2KM=;
+        b=hGbZF8e+Gb9b0G8CfFPCzAJBP/NfxRu9yJ4pRzOXRV5y+EkHoGLekGg+fBM8aW9fIP
+         aFUGIC6I+OP4l7heU3yIzh+f0MVwf5VvqjfzvmMvNfm0s3+whhzADJOEHmXTFMMqN8Pd
+         bBJFBFyHeZ/LFTT2y3JPFCFSqcSsjTRupHWRJUr9Ym3Tf7qyH8uFjgG+Nhx51QjOyDOb
+         XxzasSos5ZlMB6JtbX7pMWQsKygK8fUdaWH8c9Hpkx4qYU1rv7BuJE/+txsD2d2LtWr+
+         2rHTVj8PU6cwIS8Q65Oz+/PpDkTLBMDLyE9IzCcSe7T5uJq4rUNIuSBwlUFkdyt6/WmW
+         asKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717192242; x=1717797042;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uCUM0vHfUxs5T4DYnVX7mJ8jYT5mGlx0XKmQiKJa2KM=;
+        b=j4C3hAj9kNbqSjv4ges4wW/NsQJf7davRvZIzIVV+Stlo9Rmigqq/HANabQDKnw3fS
+         CHd8R8BRZUJLz9CXF5ELawOrJVCe2AU2uzZjcBDYldS2f+j1aI+UbjgIZW0UlXeITWyQ
+         n53klqHtgzbur1JaZXuDgJXZIF4H2oW5+OfrAeslg6H/ur9tgReC3c0VzkzKX2cTXb4V
+         mj1eqCj33Wk050TyfmPO42TrjMxJk5a4DqLFqL4nMuCeuoFoXoG+95yBSwBXlkXx0zpW
+         xhYyYJwkrEo4GIbniBjUuKKtadDZTgZuFb2ax4kMeiPAVYiSR+TEYYrWuS5InDGlOt4L
+         eLCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlYN8/V0o2Mhcuig4WCIweaFCCUuNb7+fXIyROOOWN7NXubOokEgL7sUjkKctPvAWUo5DDHUqDHjxGnBAyBWEnCTg1UJmqnEpPlnQ6jElVYS9zLgIKLF+LtLD2RveBntE0M4wx9+o5wA==
+X-Gm-Message-State: AOJu0Ywv2QOmLKvOkIqdmVeW+8qniSyNtLUw3PcTggMGHm0O2CcYc4Td
+	5N+B4Ej8+QvZDqLegJyv+Gee/iXK+8sEqqMARAXTBkehTDMcp0+VUVhSGg==
+X-Google-Smtp-Source: AGHT+IF1BtbVfdSJj8l2TJeUMqufcaXX1W7IzUb+QCCW7bUTMsqSs6z4o5vumicGkTI635u6ANrKWg==
+X-Received: by 2002:a05:6a00:22cd:b0:6e5:43b5:953b with SMTP id d2e1a72fcca58-7024780448bmr3629140b3a.14.1717192242241;
+        Fri, 31 May 2024 14:50:42 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b059e0sm1877472b3a.176.2024.05.31.14.50.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 14:50:41 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <f96cc689-a340-4eec-8187-57e74b20c07c@roeck-us.net>
+Date: Fri, 31 May 2024 14:50:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10748:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8732a722-c3f8-414c-484d-08dc81bbb63d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|52116005|376005|366007|1800799015|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?JUa5ZtcjIPOkarrWzOLWeOkFd6oMWcYBqZQp+uZ+5fcLxjsUHktHU2+ngSR+?=
- =?us-ascii?Q?/y7pyhTE5WS4Yd6KOnHPrCpCXuY0TavDbPA3oGVDU7mMTuoh5+KUUppu0esx?=
- =?us-ascii?Q?HNxMlqMPl39v4hfNo6abseJ+Nv499whDa1q5/NMhlf7fAcB5zrmVHZCvHjPl?=
- =?us-ascii?Q?pVyWmzlGZvtsHhL35B6LgfpsTzetLDv/1/M0bDzvBlH0eLStCmgMSxoWFmym?=
- =?us-ascii?Q?r3DU/6dskNlatw6ZUb1cFLfwKSmbQ19eYEaEgrW4p6Yys8SAIIyolcaTD5jh?=
- =?us-ascii?Q?YBaVPcQ9grnOayq7q8up0zYWV9WBQifBcwYUNiKTthb7DqKLidAoKyXYNt7h?=
- =?us-ascii?Q?zVNmQgnQZz0nMxtSD6o92nuTZBJ+oK0VcCVsiP+UePL1OkVJzz87zZqe/PUr?=
- =?us-ascii?Q?fpb+UMz6Wj8hmD2afttiREmBDj1lEzFOPArigNRpGs1thn3A5ME8S9wa/28c?=
- =?us-ascii?Q?t6+x66Ue+n/3KtmNhcdqxic09KzfaFsYBnI40UZIdyV4mIwpefLhugJBEA+8?=
- =?us-ascii?Q?clBxsTjbXwAmtv3FToAMR01BRdfjrsMHecdohDSckBlaA8RHUjn97MZsudnz?=
- =?us-ascii?Q?2JpmM9pJQAZRQx0XXL8fr4sAbexcZxvJLwqwIKTyYkcBsp+XewxNBxcTNjNG?=
- =?us-ascii?Q?P3evGQAahvIuLeEWgTCE2WNatQQDBuSHN6n811qpx0TzdhQl+gCLTU9rZOid?=
- =?us-ascii?Q?28yrPaUZAkQpl+6g4DELZS90QfKU1UelxS50suAWUPSlquttsrfs5Q/b6Yx9?=
- =?us-ascii?Q?II9UKYyB2ruw62r7r7cRML4/17Sz9kSXsFSZ5SpZkxGCYlItYRo10hen36oB?=
- =?us-ascii?Q?Lh0tEUhPvDhz4AeCQtQ9JkDaAojes2141XZbokfxKhK/QWAE91QRSZwqKpao?=
- =?us-ascii?Q?f/bjttUzz9YzuILPl9esW2epe1NVdAMImb6rg0qqFSUDhOQ7P8FX8M07J+7H?=
- =?us-ascii?Q?fQUYcvIP1qwKIXsO0EaQH6WFQTWn1Xy26HrxRr/rhgluGve1VTM9OEYg2dvZ?=
- =?us-ascii?Q?gFJOFawUWKfgyPHLtY4vp8XW9f8Yk6c/FSpCmnBp3JleSe9DDq2iC1j+XIfo?=
- =?us-ascii?Q?5byRfco0gewq/DEtsdLi5A0xIdhwQncFM5n3Hm4HghIrAobEniBbyfZkRfjv?=
- =?us-ascii?Q?sjFjRklXQad3InmU/H2ot391QS3tUcLWTeXaTJdLQw+kPV4lHptakhtaGUzZ?=
- =?us-ascii?Q?GGUhAkP5L26jo0Q/UsGo6VyOnVA68J9zRgTgYJvcWU+M4SuQrxG6W+lnSmDF?=
- =?us-ascii?Q?KZ6Kl1Kc84kFXQ2+orBgkwKsSYUpN3vNiaFzLYdaCZrpc7cUtrD6xcAPde4Z?=
- =?us-ascii?Q?m0hUaReGFtF3vx8pCTmQzdW0udFg3Rk6rh+eXJ2iETDPcQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(376005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MJRDIuaCwXIK5TgHG4LT7i5UsZDBy11WCZhXCsumtX+TvUoC0qdXnwuMge5i?=
- =?us-ascii?Q?kVs6+Gza4D5fBJcnxIK3BcnVQY82TjrnSAuXkWHmv7JJDlhdcndj9B8sCPxn?=
- =?us-ascii?Q?wWPutsGQ1BSCX/rQ5ILr30fCL9hDbGtBD4pkBdl5Br/dwllsexX/hu5AKny5?=
- =?us-ascii?Q?6snHCDBmrrQR8Ph+lPKfcWVRbX028JC2qCwsevWf8pGuo3wZDKD6opGTtd3H?=
- =?us-ascii?Q?C2cFdmG8+EeVE9TK2AFh4UyALHZcxnSTtP9SZDJfGqhZ9XPVzXQiUtJeC+GI?=
- =?us-ascii?Q?lcSO8KHLEjPF3M7lCwgMwrol3II2RHmJdU6XvOiYPpL65RCJIPFL/4GJm6rd?=
- =?us-ascii?Q?ywg9GzSChA9eWeaSOa8S/W7N1BS+Y5hcnqCXNYWQVliDZXCBQnB9beNYv2+a?=
- =?us-ascii?Q?nLI2XT3byYB811IOgxCzfRPx/soY2yKs+MKRQZxRebBbIFKGdjCtiphV0gMu?=
- =?us-ascii?Q?1iMLCqAA/NxG1KS5ikYX6H17N1yByLF9GLxR+umxhf2Ng6Cvdr/CKsz+epFf?=
- =?us-ascii?Q?4mk9q4QLX9MZbnDWW92NXgNLJ03glGzQvL3iGaNUUkCD7uxYkmqRSwYc3Ogf?=
- =?us-ascii?Q?7MyPz4dtxEjdskVdFHz1DgeD4rzUYEM4IRXnwnmYmzaj5H6aFYRYWmvJd3TG?=
- =?us-ascii?Q?LpPlMqFX2RIaFTJR0tChhwapQ9p3ViOF6KB1qTdhkOpNzpNouSKYI9aJvm+T?=
- =?us-ascii?Q?hbPW2VpWFp7qbSAwKrY15ihe7WhfkqJYVDrQYz6wO3p0aC1I4t8HDQfPgOvK?=
- =?us-ascii?Q?76OL5dYwWb25PmZ+aSEjvr6YPYI54dNwGJx+xadmTOnb/5m6xyHUlUHF9L6N?=
- =?us-ascii?Q?uQJQnhOotGUddOsBJ3n4kMBH6paxen50BbGLiNTA8dxlnRr1rP4dOyDlzgiS?=
- =?us-ascii?Q?FBwjtQfK+rlHbRoG8b1vJKcSe6F70TgY9rZgWTYDz/R2AQ3E2nx9CpZDboRL?=
- =?us-ascii?Q?CGzr57TkT7Qu1ZOyeCuaN4KhSWcYbIhvEARnGk1zGCYhiHj+drFiJuv+o5ft?=
- =?us-ascii?Q?K5VGUFAhGkEPq9r1quE5rAoYaoCd0nzXiByD+iFetsUeCb2lOvd6JJKv1dze?=
- =?us-ascii?Q?AEGk6jMpMl2FxTWGTEWdC+/ncNM11zvl83wpJWRyzcuF0sx3R9CVPCNoicZl?=
- =?us-ascii?Q?19bw1YN/vlvFG9eEDSo0FWsRcVPHxkAQDeIwl6mCFpNqhYg9iqqlX3mAFhUr?=
- =?us-ascii?Q?P3ijGaE9r5wc/6kflpVF4TgswkIBYBm6s5I2ZE3ba6j1+i8gbBuRZR/aMO3J?=
- =?us-ascii?Q?ZQDYopp1i3kdO3P3JTJ2Puf6XMoozD+cbdJKqzwA+ILQvpNpEBy4nnbf5N++?=
- =?us-ascii?Q?9F2CNPeRko14cpbh4rJGQ2wiNppnywwSD3u7QZZQyRNaH0n/X5ABQguEbv+n?=
- =?us-ascii?Q?EPRfKiBip2nxoNGzbSHAswEMQAWUCcO6Oeb96KOY1kxP0mwnrPczmxIpn8oY?=
- =?us-ascii?Q?z6T644Gt29+bmn2Guagm8QyT1O0ubMif9wkiBkbMjjhySdUX/BWifDiyMtHG?=
- =?us-ascii?Q?2nfFXp/JQ8sIb5VJQ0DTqA7pVHGAwsYNWGCo4kA4vI+hRHGuP4uCIrN9626X?=
- =?us-ascii?Q?9nOgwIe/BfAq3o27SakeGAfJyvENK2s9VTHpku9S?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8732a722-c3f8-414c-484d-08dc81bbb63d
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 21:50:39.7205
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 11c2GxVOHKShk19cQThWFfLtFO2YiNbzKt069/oAI8jl4pYcuoX937OBTM3S7OhjNB4GywajtB3mDdNvxsE/Kw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10748
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ti,ina2xx: Add alert-polarity
+ property
+To: Krzysztof Kozlowski <krzk@kernel.org>, Amna Waseem
+ <Amna.Waseem@axis.com>, Jean Delvare <jdelvare@suse.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@axis.com
+References: <20240529-apol-ina2xx-fix-v1-0-77b4b382190f@axis.com>
+ <20240529-apol-ina2xx-fix-v1-1-77b4b382190f@axis.com>
+ <1ae97b90-ff20-4238-abe2-f2e5d87fc344@kernel.org>
+ <76dd5c0e-cc67-4ad1-8733-d8efdb8a172b@roeck-us.net>
+ <3a050921-6bf6-444e-8f61-83fcb6b9f2a5@kernel.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <3a050921-6bf6-444e-8f61-83fcb6b9f2a5@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-dt_binding require I2C's clock name is "ipg". Change it to "ipg" from "i2c"
-to fix below DTB_CHECK warning.
-arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dtb: i2c@2000000: clock-names:0: 'ipg' was expected
+On 5/31/24 00:41, Krzysztof Kozlowski wrote:
+> On 29/05/2024 16:01, Guenter Roeck wrote:
+>> On 5/29/24 00:07, Krzysztof Kozlowski wrote:
+>>> On 29/05/2024 08:07, Amna Waseem wrote:
+>>>> Add a property to the binding to configure the Alert Polarity.
+>>>> Alert pin is asserted based on the value of Alert Polarity bit of
+>>>> Mask/Enable register. It is by default 0 which means Alert pin is
+>>>> configured to be active low. To configure it to active high, set
+>>>> alert-polarity property value to 1.
+>>>>
+>>>> Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 9 +++++++++
+>>>>    1 file changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>>>> index df86c2c92037..a3f0fd71fcc6 100644
+>>>> --- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>>>> +++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>>>> @@ -66,6 +66,14 @@ properties:
+>>>>        description: phandle to the regulator that provides the VS supply typically
+>>>>          in range from 2.7 V to 5.5 V.
+>>>>    
+>>>> +  alert-polarity:
+>>>
+>>> Missing vendor prefix.
+>>>
+>>
+>> Are you sure you want a vendor prefix here ? Reason for asking is that
+>> many hardware monitoring chips have configurable alert or interrupt polarity,
+>> only the name is different. Some examples are the JC42.4 standard ("event
+>> polarity"), adt7410/adt7420 "interrupt polarity", MAX31827 ("alarm polarity"),
+>> or DS1621 ("output polarity"). We even have a vendor property, "adi,alarm-pol",
+>> used for MAX31827.
+> 
+> Hm, I just checked if this is already existing property, but indeed I
+> did not check other variants.
+> 
+> Indeed it could go to common properties - hwmon-common.yaml. But then
+> how about using strings (as I asked before...).
+> 
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I can't really comment on the strings; that is out of my knowledge zone.
+It might make sense to have hwmon-common.yaml, but I think that would
+require a some (read: a lot of) work.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index ccba0a135b247..9064e6de7d107 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -1004,7 +1004,7 @@ i2c0: i2c@2000000 {
- 			#size-cells = <0>;
- 			reg = <0x0 0x2000000 0x0 0x10000>;
- 			interrupts = <0 34 0x4>; /* Level high type */
--			clock-names = "i2c";
-+			clock-names = "ipg";
- 			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(4)>;
- 		};
-@@ -1016,7 +1016,7 @@ i2c1: i2c@2010000 {
- 			#size-cells = <0>;
- 			reg = <0x0 0x2010000 0x0 0x10000>;
- 			interrupts = <0 34 0x4>; /* Level high type */
--			clock-names = "i2c";
-+			clock-names = "ipg";
- 			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(4)>;
- 		};
-@@ -1028,7 +1028,7 @@ i2c2: i2c@2020000 {
- 			#size-cells = <0>;
- 			reg = <0x0 0x2020000 0x0 0x10000>;
- 			interrupts = <0 35 0x4>; /* Level high type */
--			clock-names = "i2c";
-+			clock-names = "ipg";
- 			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(4)>;
- 		};
-@@ -1040,7 +1040,7 @@ i2c3: i2c@2030000 {
- 			#size-cells = <0>;
- 			reg = <0x0 0x2030000 0x0 0x10000>;
- 			interrupts = <0 35 0x4>; /* Level high type */
--			clock-names = "i2c";
-+			clock-names = "ipg";
- 			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
- 					    QORIQ_CLK_PLL_DIV(4)>;
- 		};
--- 
-2.34.1
+Guenter
 
