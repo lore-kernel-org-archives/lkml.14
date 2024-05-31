@@ -1,97 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2273158A1B;
-	Fri, 31 May 2024 13:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405F1158DB3;
+	Fri, 31 May 2024 13:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717161255; cv=none; b=ZjR422d3H9cY5K4FXRZZ+cgKPQaojPDzqeA7Zr2supC7XHb9I7HhR0JTy1eKjV0vwxReM5pzKkdoqpDJprDMya/GayospY0b2IfrW/ivMGjXNISqlfgYOqCzA90S5ySQUBJG8BGPNL1zsdQykqGG2zCi0ZpU3tmPmfqRuTpnjGo=
+	t=1717161260; cv=none; b=qdbGDZIPbNuoeCM/r/07uF9SsvUACX5VnklyhKEk/QoDq+FbwM5LVeBdzW3JUpv9zdSYBCIAq9BDnoDTl6GL4Mym52c2iz0F9l9i2eVF6PJBPt33caxidd0noLFYlAQY9lZA5F4/6Oo3XRdFe7rfAchpT584cl30PLvHTPaxlo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717161255; c=relaxed/simple;
-	bh=gEdB0ql+iXyQKgfAS8X+Gy4guSIHDeUO8eOjHZ1F3U8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cI3nW0jC8gEebuzaEMKg3xx1mONbQ5mV60gChwUgHWDT/PbEYYNbMSqDkFSwkMzXkpQZQhT2030RH/9UGezIkwKtvvu50qFfe3QLdwR5Dk3ztimR2aKSR2j+iO1vChiwTdwG5ScAzuw2gr+SGVikceTyOB/Es7C87OM/BdjNIAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e6KbIi5p; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717161260; c=relaxed/simple;
+	bh=gbORHtwfINA/7XdxHmGEDfKRg0KInm4NPfWu2fzeZAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pb9ldaMSIIwdL+4TBJwasViWDNIUfGLqsDjUsXlktatJ0pOGrpNy5VeX+I7Bf0OQF9sfwXfy9RQVgKRpJeuoK3ic1F9tJO72Lh5WhyesB37Htp+7Z7nqQV0r9oroNa8tVlO8YaxUkI0UrqjgnE1XkGUmAAxxI9WgUUwGMYsGCEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/p5/BYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e6KbIi5p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717161254; x=1748697254;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=gEdB0ql+iXyQKgfAS8X+Gy4guSIHDeUO8eOjHZ1F3U8=;
-  b=e6KbIi5p7raMM2ksS5IEZfeN/xhChSJ5gyMsKDRcuDiQ1qg18IY1+2Pt
-   5jbDsI5rpVTAmFxqTcoGJyIUvM+IqNuQHV/otuuxyTduhIQvnWJubp3GU
-   1StHhXoUfjbFO4f0EtkqP2FZ8GmXvq5EipUKF0l8IZ9JSbQ0JuhzfLUQB
-   3yvI5cGei24lUPoFdt1/UpYw7hNvIKPESXuCASxI86Xzrj5H3wtFBg+Tv
-   PWa0XFI2cJmThs0fsvlnxbEwUZPQKh8PDNZI08emKq/UmYiNPtPjmdPVL
-   jvls0ipq3O0WGqA597c+Hxy3AGPqJFWJ5QifY6vuKfXtFQNehi6S0opel
-   g==;
-X-CSE-ConnectionGUID: Gvtc6LeiTSaFgVicbDX9TQ==
-X-CSE-MsgGUID: bgqgkP6BQQyyYv3JZHx3iA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="25103339"
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="25103339"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:14:14 -0700
-X-CSE-ConnectionGUID: /jPvPeo2THigHTycFu4FPQ==
-X-CSE-MsgGUID: snFfrxzdS7mWIRJWwA4QtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="41078021"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.152])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:14:10 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v5 14/16] selftests/resctrl: Remove mongrp from MBA test
-Date: Fri, 31 May 2024 16:11:40 +0300
-Message-Id: <20240531131142.1716-15-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240531131142.1716-1-ilpo.jarvinen@linux.intel.com>
-References: <20240531131142.1716-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/p5/BYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C100C4AF0B;
+	Fri, 31 May 2024 13:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717161259;
+	bh=gbORHtwfINA/7XdxHmGEDfKRg0KInm4NPfWu2fzeZAk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S/p5/BYH+7SLVMMU5PV73oOe1faDyRKMjLR5ONU3OakdDGYY9jCufxQxC+5+R2R0l
+	 u+UIe1VqdRF55y5E2DzojmYPOQLv97xTZ6akCM+kKof8vK4+q0zblr4F3moIc4M8Z1
+	 hpyhVpLawfs1r9rtV3LP6cmzqBGTgciX7nTub2eopXQg8ZxMMH6T/mVWMTj1rAHWD9
+	 WgpXwL/IX+7/8lUz20VvcKfGUKc8ZuiH0iYYKxxobrOGkIe6EkrbueKlazOR/Pp2Rt
+	 hvN1d/fyOeFobUEZbOXT8gGTw09MrI1tdEAXc6ptHsERFuniGPiqhKvdWX89DfT7lA
+	 P6jzA6VExq+4w==
+Date: Fri, 31 May 2024 14:14:13 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	shengjiu wang <shengjiu.wang@gmail.com>,
+	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound <linux-sound@vger.kernel.org>,
+	devicetree <devicetree@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	alsa-devel <alsa-devel@alsa-project.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
+ for generic codec
+Message-ID: <291daed8-a2e1-44d4-9a71-5bca2c585720@sirena.org.uk>
+References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com>
+ <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com>
+ <ce9a87c6-4a5c-4f0a-a8df-1fdce8c1f5df@sirena.org.uk>
+ <599489232.349333.1715936741672.JavaMail.zimbra@savoirfairelinux.com>
+ <500db9de-6113-4e73-ba92-6e52ea292b32@sirena.org.uk>
+ <1598202415.701258.1717159684103.JavaMail.zimbra@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KygPM2XsMX13VSvX"
+Content-Disposition: inline
+In-Reply-To: <1598202415.701258.1717159684103.JavaMail.zimbra@savoirfairelinux.com>
+X-Cookie: Serving suggestion.
 
-Nothing during MBA test uses mongrp even if it has been defined ever
-since the introduction of the MBA test in the commit 01fee6b4d1f9
-("selftests/resctrl: Add MBA test").
 
-Remove the mongrp from MBA test.
+--KygPM2XsMX13VSvX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- tools/testing/selftests/resctrl/mba_test.c | 1 -
- 1 file changed, 1 deletion(-)
+On Fri, May 31, 2024 at 08:48:04AM -0400, Elinor Montmasson wrote:
 
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 9c9a4f22e529..5e0b1e794295 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -166,7 +166,6 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 	struct resctrl_val_param param = {
- 		.resctrl_val	= MBA_STR,
- 		.ctrlgrp	= "c1",
--		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
- 		.init		= mba_init,
- 		.setup		= mba_setup,
--- 
-2.39.2
+> Then maybe it's not be a good idea to make this compatible generic
+> for this contribution.
+> The original intention is to bring support for the S/PDIF,
+> so maybe the contribution should focus on this use case?
+> In that case, would changing the compatible for "fsl,imx-audio-spdif-card"
+> be acceptable?
+> "fsl,imx-audio-spdif" is already used for the `imx-spdif.c`
+> which does not use the ASRC.
 
+Why not just use the existing compatible - why would someone not want to
+be able to use the ASRC if it's available in their system?
+
+--KygPM2XsMX13VSvX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZZzSUACgkQJNaLcl1U
+h9CI/gf/Xn2/xlVXYFjqqRcmEeA+Mmby4XlBih17KdiGdDQeHIPD9tnY3ub27oEm
+Uz2RM669ae1CKI/GTYYiZ1bB97E80YvV7vH92KowbeYrNnMK/un2WfCc4nofGAMj
+ETU4lvrazJEj8xLQMM5XT+9zGSrd24cyJIwATqPD3NwNFOgZ0TncrCx7f7j2Hswd
+WojlP7VZdmX0Ru2XpvjmnVCmDbaxZ543qbRFSp4+rIrWKGTUHowxahzaDbhziSla
+BmX1BjJK0AW0+WnOS/ZaCApM8hQHxq6s/aFreHlth67DHmUtfsQtdIBUnEJJbRn7
+UvwuEy+mXzr6YIXOjhrobfvp1XF/HQ==
+=dJiZ
+-----END PGP SIGNATURE-----
+
+--KygPM2XsMX13VSvX--
