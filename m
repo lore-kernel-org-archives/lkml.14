@@ -1,61 +1,56 @@
 Received: from out-06.pe-b.jellyfish.systems (out-06.pe-b.jellyfish.systems [198.54.127.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A62B28DA5;
-	Fri, 31 May 2024 06:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6EBE7F483;
+	Fri, 31 May 2024 06:20:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717136402; cv=none; b=u08Ajc9+SI6yUgdG9IwgHS05MwriZbsI6bJ6f9CE5pdz0rwlJlPJHzaS9oTF06GEvp27XN0S+GmMKnYW2ITHl5VANdS+RxiSlxNLCbJGNkZMtKk3NBN6w/kYFHXfW1JMdATe2yTz/dNz7JWYDIGaPAkcIWnB/mlamURD9I/vK2o=
+	t=1717136406; cv=none; b=UiTs3dRUMekkclp39qz3kY0DvksamAQUTTfI42N7BAovfT/WdGzXOi2ZMK305yu4ZTZBebhPrLlPrxx1JNYTCbD1k7JwQpdJYTydy8uqK2Z7JHnij1tCoigtC/XaI+7ZKsoohPUrlX7BmmSey0cEWTx61x9w9YP7Aw/X+PrQjXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717136402; c=relaxed/simple;
-	bh=jgp/6vz5V2JFZNzmdgRvgt76fGnP/p9jwDavyuTA2x4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IdZ2eK9nCopgySIn4ZZbNBeXAoT4p7VQ/x/HQCSZhWbpc2xk6HSXDv4c+hNlsGSftEBzWBaHu8i8S9TNts8xy4R+XYcb7ipse6ujJ7VvCgU0W0BZ6k/Tq4z2ZTA8K9GPx7yOSDK8jz+lwiV4mxCmn4xz+inVt/+YoXrQVAR8irk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danishpraka.sh; spf=pass smtp.mailfrom=danishpraka.sh; dkim=fail (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b=CZ9uHnDW reason="key not found in DNS"; arc=none smtp.client-ip=198.54.127.72
+	s=arc-20240116; t=1717136406; c=relaxed/simple;
+	bh=2iZUbMs4Le2i9kPGbGkkXd46wq54CuJ1IfgZTgoXtls=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h9H3swUrkkyHVGyoBwNJon5NVuez6uyiZqc8OWy1gWatOEBIauMT/8C17lDr0cm8uJPGV8jvvsw0YssnicTso2KrS5LZl0Y6g0HxhQju571qgNpKVOVSF3tY1HtGYe24TmOb7Vc+v3kRP8UyKZygRgBmVL39JFXbAJdJeUyvC6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danishpraka.sh; spf=pass smtp.mailfrom=danishpraka.sh; dkim=fail (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b=PEm6Wu8y reason="key not found in DNS"; arc=none smtp.client-ip=198.54.127.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danishpraka.sh
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danishpraka.sh
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b="CZ9uHnDW"
-Received: from output-router-d5c465c44-d7pgd (new-01.privateemail.com [198.54.118.220])
-	by pe-b.jellyfish.systems (Postfix) with ESMTPA id 4VrCQX2qQmzFpjr;
-	Fri, 31 May 2024 06:10:12 +0000 (UTC)
-Received: from MTA-11-1.privateemail.com (unknown [10.50.14.23])
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b="PEm6Wu8y"
+Received: from output-router-d5c465c44-45n78 (new-01.privateemail.com [198.54.118.220])
+	by pe-b.jellyfish.systems (Postfix) with ESMTPA id 4VrCdv6QNkzFphv;
+	Fri, 31 May 2024 06:20:03 +0000 (UTC)
+Received: from MTA-05.privateemail.com (unknown [10.50.14.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by NEW-01.privateemail.com (Postfix) with ESMTPS id 53FA918000D0;
-	Fri, 31 May 2024 02:10:12 -0400 (EDT)
-Received: from mta-11.privateemail.com (localhost [127.0.0.1])
-	by mta-11.privateemail.com (Postfix) with ESMTP id 26E3018000AB;
-	Fri, 31 May 2024 02:10:12 -0400 (EDT)
+	by NEW-01.privateemail.com (Postfix) with ESMTPS id D041618000D3;
+	Fri, 31 May 2024 02:20:03 -0400 (EDT)
+Received: from mta-05.privateemail.com (localhost [127.0.0.1])
+	by mta-05.privateemail.com (Postfix) with ESMTP id A10421800180;
+	Fri, 31 May 2024 02:20:03 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=danishpraka.sh;
-	s=default; t=1717135812;
-	bh=jgp/6vz5V2JFZNzmdgRvgt76fGnP/p9jwDavyuTA2x4=;
+	s=default; t=1717136403;
+	bh=2iZUbMs4Le2i9kPGbGkkXd46wq54CuJ1IfgZTgoXtls=;
 	h=From:To:Cc:Subject:Date:From;
-	b=CZ9uHnDWJwYV0T89EfGrrHtbGYozHYy7/V6P5ziIKYLiwWAcT0ptbB0rXP5NAr9QG
-	 /Y9gKDGMzA74quXo5RDeOLrnidvSsA7e6FsYcQMa0I91iP9T+Drsh9SX6zRWX768Wy
-	 w1JAZq8fNAVLlOeX6+QS1cexlR4hcfNWnEGztFHD/F08MZ8mJ9l17kYgLshM2FmfTz
-	 SapSqOY81rlF5vYnF/CsqhijsQ3SdQGkm+rWed1SaMd4uImzQksFEdDTZoO9k3R1wv
-	 9GT9umEKVAXcmAiUUyLCmnBgs501S62DCBDfgDfZJIL6cYhHC9hSXHAh8GrFiEAHer
-	 syfTGYslsolwQ==
+	b=PEm6Wu8yMEmcaTKq+IIbxA6umS37NaUdkJt4aj/ds/OqgzTjdGPgEuMjJVPM40BEx
+	 a7Go5K3qjgy7i6pdVXWZRC4P5t3fttsQ+Cex0BvO+r87KQh7SBTh87vVmvdTqXfToy
+	 eKfEfpo8IglF9Jbv4eFG0eUeYIDy66cKzYyYDLO8rzPG2cZHEUwYatfwRlPPfERACb
+	 cWknY6KQHYj5fkdzaNsrq8aBXS0ijiPzrA1FDY99xH/xP8TPHefMHsK+xEyKVjgn3j
+	 UQQy5PtZtvyVkFm+XA4rffxNMNr/cE0+otgnn174sV5b/2P3jJPvHsXLLJP4C4CgMR
+	 mojf8NcDJaGzg==
 Received: from localhost.localdomain (unknown [106.196.30.82])
-	by mta-11.privateemail.com (Postfix) with ESMTPA;
-	Fri, 31 May 2024 02:09:55 -0400 (EDT)
+	by mta-05.privateemail.com (Postfix) with ESMTPA;
+	Fri, 31 May 2024 02:19:55 -0400 (EDT)
 From: Danish Prakash <contact@danishpraka.sh>
 To: 
 Cc: Shuah Khan <skhan@linuxfoundation.org>,
 	Danish Prakash <contact@danishpraka.sh>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Carl Vanderlip <quic_carlv@quicinc.com>,
-	Pranjal Ramajor Asha Kanojiya <quic_pkanojiy@quicinc.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>,
-	linux-arm-msm@vger.kernel.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
-	dri-devel@lists.freedesktop.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] Documentation/accel/qaic: Fix typo 'phsyical'
-Date: Fri, 31 May 2024 11:39:26 +0530
-Message-ID: <20240531060929.5281-1-contact@danishpraka.sh>
+Subject: [PATCH] scripts/sphinx-pre-install: fix incorrect package names for openSUSE
+Date: Fri, 31 May 2024 11:49:15 +0530
+Message-ID: <20240531061941.9607-1-contact@danishpraka.sh>
 X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,26 +61,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: ClamAV using ClamSMTP
 
-(as part of LFX Linux Mentorship program)
+openSUSE made some changes to python package names in the recent
+past and hence the current information on installing the relevant
+doc-related packages yields no output when run on openSUSE distros.
+Update the package names to the correct ones.
 
 Signed-off-by: Danish Prakash <contact@danishpraka.sh>
 ---
- Documentation/accel/qaic/qaic.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/sphinx-pre-install | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/accel/qaic/qaic.rst b/Documentation/accel/qaic/qaic.rst
-index efb7771273bb..628bf2f7a416 100644
---- a/Documentation/accel/qaic/qaic.rst
-+++ b/Documentation/accel/qaic/qaic.rst
-@@ -93,7 +93,7 @@ commands (does not impact QAIC).
- uAPI
- ====
- 
--QAIC creates an accel device per phsyical PCIe device. This accel device exists
-+QAIC creates an accel device per physical PCIe device. This accel device exists
- for as long as the PCIe device is known to Linux.
- 
- The PCIe device may not be in the state to accept requests from userspace at
+diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+index c1121f098542..56bda8b43a44 100755
+--- a/scripts/sphinx-pre-install
++++ b/scripts/sphinx-pre-install
+@@ -465,8 +465,8 @@ sub give_redhat_hints()
+ sub give_opensuse_hints()
+ {
+ 	my %map = (
+-		"python-sphinx"		=> "python3-sphinx",
+-		"yaml"			=> "python3-pyyaml",
++		"python-sphinx"		=> "python3-Sphinx",
++		"yaml"			=> "python3-pyaml",
+ 		"virtualenv"		=> "python3-virtualenv",
+ 		"dot"			=> "graphviz",
+ 		"convert"		=> "ImageMagick",
 -- 
 2.45.1
 
