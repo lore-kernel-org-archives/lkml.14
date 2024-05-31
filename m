@@ -1,85 +1,128 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0634D24211
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 15:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95EC770FC;
+	Fri, 31 May 2024 15:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717170056; cv=none; b=rH+XPHHlSy3TGImr5sbtDSwJ2p9W3kyw6cEY5OvAixV32zaDrLJRpyYTo/6H+QyVnJEebU55UWLM7eKux5LDo8xnVTH5Nvd8OtNAVpA+sjoP55AUp0EuZyE3R/4c1Ji6EkAQOweqm9WUrGpTAWJ1rq+PpbDa7M+vQM7h1Y9QZ10=
+	t=1717170187; cv=none; b=V47wndxpjFsesgKfQxGWpt68Y+14Jl4ceGyTIbHYhw3gawUNZ6yY7e3xeXugQ16VTT7lnx1ROGMkj/y8I+Ik1FIFLAvKyDDAPzYKo08BlXDEK6HJ3opPNVJCSmlWbHf8V7wgDJppKIozhJFkJNabpY7nI+3KslwZmEXXshC8t6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717170056; c=relaxed/simple;
-	bh=jMphLtJ1ajjONUHwdMfQkImvbdmMMRz8DvS2PZBC1Ww=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o0sb0ioSVpyeZ4+GR0FMPIwOr0xquh9BoQVW/HCC5dIgv0TOvQnyR/KrRm1CpaOYcJKlYXqDqueY3Jq4Bh2NJW6Co9Jgn1RUBUVEBlmAworpPgzoxHnD9ZcuhP+cYnBw4w0VAYa0J+5+2XjWslXencqAXY1WRCn18hAY2QiC9Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XpxlPg86; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1717170187; c=relaxed/simple;
+	bh=zBfKRiTb3thRIUaH1yDSHFpa2a0pLOSkK6tnaNaFnEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0BQkf4PucrAAsgLcQAXpvDHStj0DTebZxuNeyItV5CPiBbe8mwyEoBRFnHNjmqTcNfzHRmLFBS2TwXY+uF04MXbXqdM9fuQPIUzEd6BpBQVU2lhbQvY/wISGzPk0eiUwATEDXi53JT+gXY/V4vNoVv8+7jcHWzbewKH+cv4nvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvWsP3HR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XpxlPg86"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VrS4q5Z1lz1WM;
-	Fri, 31 May 2024 17:40:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1717170043;
-	bh=j4+nbp4ODTAZgk4eMuAJTaPQPhKuOjoc5EjXd36hnA4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XpxlPg867rk6kWp5pkC+7M2c23z8uYSM2AN3yaalvLFuvlMCHvGjrGs4ugotxmmE+
-	 7IyDArcdEgg1dTPWYq5ju6vKTl5WSSe0eoIXss4vf3m6T5fp4yw7DW799IVaNGCvtc
-	 fSdV7graSZaMU4aM9mXSPPPc7K5Q5CLmZ9xC5RhU=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VrS4q27FFzZ0S;
-	Fri, 31 May 2024 17:40:43 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [GIT PULL] Landlock fix for v6.10-rc2
-Date: Fri, 31 May 2024 17:40:34 +0200
-Message-ID: <20240531154034.198316-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvWsP3HR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62583C116B1;
+	Fri, 31 May 2024 15:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717170186;
+	bh=zBfKRiTb3thRIUaH1yDSHFpa2a0pLOSkK6tnaNaFnEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JvWsP3HR0PibCNkuVtCawazRSehMxHOIGbRVal2Mxwuh5BYBxtNdwpJTeRg7HVKbm
+	 JDWYJv7I1ZMX0w/N302ejbzZrEu08uxM6BMTrpWMLTcImtXkeVMIrLGLavlXvaFxXb
+	 lNsPj4Ys6zKqrzM4idZMQGhn2mKGRecsrGC0Rs3hnLBBl1Ez93jNTTZk+Qsieez7xs
+	 MjjuBvXtXKQmkf870igfsgLBApstdRjUi3cKoiJ1+vPKLueCNMETXG2hT40zZWgdZg
+	 4aOcrd0QxhnWMEDkNvizVkMAZDuuaIeQz+cibd1MKE8L/GZhYK9DR5NVXMKcxk5Y70
+	 3m9rlW+QiHMzw==
+Date: Fri, 31 May 2024 16:42:42 +0100
+From: Lee Jones <lee@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Pavel Machek <pavel@ucw.cz>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@weissschuh.net>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+	Dustin Howett <dustin@howett.net>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 1/5] leds: introduce led_color_name function
+Message-ID: <20240531154242.GQ1005600@google.com>
+References: <20240520-cros_ec-led-v1-0-4068fc5c051a@weissschuh.net>
+ <20240520-cros_ec-led-v1-1-4068fc5c051a@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20240520-cros_ec-led-v1-1-4068fc5c051a@weissschuh.net>
 
-Hi Linus,
+It would save me a lot of work if you could follow the conventions of
+the subsystem when drafting subjects.
 
-This PR fixes a wrong path walk triggered by syzkaller.
+`git log --online -- <subsystem>` is your friend.
 
-Please pull these changes for v6.10-rc2.  This commit merged cleanly with your
-master branch.  The kernel code has been tested in the latest linux-next
-releases for two weeks, but I rebased it on v6.10-rc1 to fix a commit message
-and properly test it again.
+> This is similar to the existing led_colors array but is safer to use and
+> usable by everyone.
 
-Regards,
- Mickaël
+Place spaces between paragraphs or don't line-break at all please.
 
---
-The following changes since commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0:
+> Getting string representations of color ids is useful for drivers
 
-  Linux 6.10-rc1 (2024-05-26 15:20:12 -0700)
+"IDs"
 
-are available in the Git repository at:
+> which are handling color ids anyways, for example for the multicolor API.
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+>  drivers/leds/led-core.c |  9 +++++++++
+>  include/linux/leds.h    | 10 ++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index 89c9806cc97f..04a49958458e 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -534,6 +534,15 @@ int led_compose_name(struct device *dev, struct led_init_data *init_data,
+>  }
+>  EXPORT_SYMBOL_GPL(led_compose_name);
+>  
+> +const char *led_color_name(u8 color_id)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.10-rc2
+led_get_color_name()
 
-for you to fetch changes up to 0055f53aac80fd938bf7cdfad7ad414ca6c0e198:
+> +{
+> +	if (color_id >= ARRAY_SIZE(led_colors))
+> +		return NULL;
+> +
+> +	return led_colors[color_id];
+> +}
+> +EXPORT_SYMBOL_GPL(led_color_name);
+> +
+>  enum led_default_state led_init_default_state_get(struct fwnode_handle *fwnode)
+>  {
+>  	const char *state = NULL;
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index db6b114bb3d9..0f1b955fa3f7 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -427,6 +427,16 @@ void led_sysfs_enable(struct led_classdev *led_cdev);
+>  int led_compose_name(struct device *dev, struct led_init_data *init_data,
+>  		     char *led_classdev_name);
+>  
+> +/**
+> + * led_color_name - get string representation of color id
+> + * @color_id: The LED_COLOR_ID_* constant
+> + *
+> + * Get the string name of a LED_COLOR_ID_* constant.
+> + *
+> + * Returns: A string constant or NULL on an invalid ID.
+> + */
+> +const char *led_color_name(u8 color_id);
 
-  selftests/landlock: Add layout1.refer_mount_root (2024-05-31 16:41:54 +0200)
 
-----------------------------------------------------------------
-Landlock fix for v6.10-rc2
+>  /**
+>   * led_sysfs_is_disabled - check if LED sysfs interface is disabled
+>   * @led_cdev: the LED to query
+> 
+> -- 
+> 2.45.1
+> 
+> 
 
-----------------------------------------------------------------
-Mickaël Salaün (2):
-      landlock: Fix d_parent walk
-      selftests/landlock: Add layout1.refer_mount_root
-
- security/landlock/fs.c                     | 13 +++++++--
- tools/testing/selftests/landlock/fs_test.c | 45 ++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 2 deletions(-)
+-- 
+Lee Jones [李琼斯]
