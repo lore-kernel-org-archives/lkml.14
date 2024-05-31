@@ -1,36 +1,36 @@
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA377CF1F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AD078C9C;
 	Fri, 31 May 2024 21:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191328; cv=none; b=Znw0OpHwS+UN523+K+57dVIOE6eT9t35uYejw78huwhAFciPZZQQxZARlf8pLwrwpIapSi69LNDcaqJ+mOk0ogphC1SPcMGTPGv5I4TLoMTd+W8zEzvtVHOCPjQHOESJOFHk+Z74d8xfQRiaIeQ4O8yRMTAPmEnJ0mN73Egqouc=
+	t=1717191329; cv=none; b=hJcp4qNXJf72Vuyqolzt2WcEVK3lHf2IWUxFI7xXIJU4ori1qqAmrRXsZz/4hK7niXLspFhHdkPtK6WKVbL1d3uvEKdz+axsIr0W3nYrcBGtswFLr1alBWHTDRZH+QcUMIsBWirQFBhI8ly6WE1/yoOTdLD7jBuDS42V+3ISm7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717191328; c=relaxed/simple;
-	bh=EBLle0cZpCIXZD7rmqgDVXdaUXUTA2nKtAXDK6Ecjio=;
+	s=arc-20240116; t=1717191329; c=relaxed/simple;
+	bh=mjBnWdIpAfjAZO3tAVyHWZmi3iW8UcI6ABCHF3cvcwY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bxR/0u6/R1Uyexgo3nrKFTzMQ+xkli4Lf2wkXzTKpJtncual8tenLuu6SZdlm5/SfTh36DifxD089DDNuZsk/kqHPrcCnM5z34kmiXvEddjQDSGixhbV2sx4muqbzFCr5sbrNK1um67iie/L90/eY4p5CqeKHd4sffaOSnGjOQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YTdaWx0M; arc=none smtp.client-ip=192.19.144.208
+	 MIME-Version; b=mcEExdhP6xMmIxwb1sZF0B6X3UKRRCmDHNRuRdNIge7pqVzwU0An7PFdFkg88WLcLatEm2PBzAdxQV68Hv2/aE3IeMl9xIQM0HJowTfVp0XSXT2tyZYOItV7ZahwyjY9B03YJOYbR1YVaBJLGXNUZe7UboHY97nanLhY8nnqkh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QxnMnJ2D; arc=none smtp.client-ip=192.19.144.208
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YTdaWx0M"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QxnMnJ2D"
 Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 90857C0000F4;
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6B243C0000EC;
 	Fri, 31 May 2024 14:29:44 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 90857C0000F4
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6B243C0000EC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
 	s=dkimrelay; t=1717190984;
-	bh=EBLle0cZpCIXZD7rmqgDVXdaUXUTA2nKtAXDK6Ecjio=;
+	bh=mjBnWdIpAfjAZO3tAVyHWZmi3iW8UcI6ABCHF3cvcwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YTdaWx0MWUZOS956hQZhcU0vMs+W6r+E9aBTHOAXuCHYCLgl5D2kOTRgMom2ap3gu
-	 Dq/qCuXJ7Yv1Rx71UIobkMMHc7WKbKpELeqo1zlnKtGsKn0IL5SK5otDYbz6O9V3JQ
-	 NjCZi2FuEiay7sbR/Hcf4Hfubjy9ZFFuU+Ewq4Y0=
+	b=QxnMnJ2DH/OEjbUVEvujWvJflW0ZstYqKPujJV1FY9ljpfVwhMTVsBXdWqEY/jC6/
+	 nFhD/1zQi6nbYoVrZGc9WmnR42n+S9qavRIUG6TlwhJ/WYKWje0jsU1Bpmuf6CO3ID
+	 /KrQHd/HnIiOfUorxAXbATSSq8ixUy9hrfxFu/NA=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 73F9718041CAC7;
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 4920418041CAC6;
 	Fri, 31 May 2024 14:29:42 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: linux-kernel@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH v2 2/3] firmware: Default RASPBERRYPI_FIRMWARE to y
-Date: Fri, 31 May 2024 14:29:41 -0700
-Message-Id: <20240531212942.3340484-3-florian.fainelli@broadcom.com>
+Subject: [PATCH v2 1/3] mailbox: Make BCM2835_MBOX default to ARCH_BCM2835
+Date: Fri, 31 May 2024 14:29:40 -0700
+Message-Id: <20240531212942.3340484-2-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240531212942.3340484-1-florian.fainelli@broadcom.com>
 References: <20240531212942.3340484-1-florian.fainelli@broadcom.com>
@@ -62,28 +62,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The firmware driver provides the communication interface for a number of
-other essential drivers, including a clock provider. Having it the
-default when enabling CONFIG_ARCH_BCM2835 ensures that we have a
-provider for essential system functions.
+This driver is depended on by CONFIG_FIRMWARE_RASPBERRYPI which provides
+a number of essential services, including but not limited to a Linux
+common clock framework provider. Make sure that enable
+CONFIG_ARCH_BCM2835 does enable the corresponding mailbox driver as
+well.
 
 Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- drivers/firmware/Kconfig | 1 +
+ drivers/mailbox/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index 71d8b26c4103..964f6c45c446 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -116,6 +116,7 @@ config ISCSI_IBFT
- config RASPBERRYPI_FIRMWARE
- 	tristate "Raspberry Pi Firmware Driver"
- 	depends on BCM2835_MBOX
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index 3b8842c4a340..b5108896dd72 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -112,6 +112,7 @@ config ALTERA_MBOX
+ config BCM2835_MBOX
+ 	tristate "BCM2835 Mailbox"
+ 	depends on ARCH_BCM2835
 +	default y
  	help
- 	  This option enables support for communicating with the firmware on the
- 	  Raspberry Pi.
+ 	  An implementation of the BCM2385 Mailbox.  It is used to invoke
+ 	  the services of the Videocore. Say Y here if you want to use the
 -- 
 2.34.1
 
