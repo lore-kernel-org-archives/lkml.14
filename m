@@ -1,159 +1,154 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EB316936F;
-	Fri, 31 May 2024 16:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEB7155CA1
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173948; cv=none; b=TqOVqKD+VTLoESuY7n0gn8O0ytoFXworLtw20K+dD3zUkSLBePtzONun/4+Yyq+JDjxZv9fTxrNJJWiH+bn0wRhROthjxGmtNGwhF8pcJRiWTanEn3ljfYaCkmLKpApWallI3k8V1ufg9DOWLNSQysSuOrWKe4nOLL6FMOMV6p0=
+	t=1717173948; cv=none; b=Lmx57YdF2OTY8u6f/OW3QuNMuKEiUhQy+UzR0XfFpGE49pU3LFrm7hxygGvedKDe40utns1Y/dTBcBuPryDCQ1bQL/OVw/Gjx6Wef5NbU5U8TWJA685Galn923+uuFjVjkSBNRmzTfMWp88FRT21n5TmLUaOJ8ix6Plfxu2IJtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717173948; c=relaxed/simple;
-	bh=V0dOZxWPgDrqV3kwmvN5CXjG3vARp49SCbjGtF4s+sY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LJ8ZzJxPaVENW/atqahUNXCxGJtpzXktxoAci7snCpYaZs68HPnFMBIFs7COcrpe9mQP3O+BEGIF25udSMz37SEQJta5K6ZrcFkDubqalKYqaXneg2pFHYtz+PTUnV0N9XAZw0iI1RiD37jzO/nLoqRW0FrDf43NKnvnAjeK1NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NMGiYm3k; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	bh=36m2p7lcItP/+bB0ofDSLrkZ1c8ARR5jCIwAHfSrTs0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YwybN7SPr4BgSORQeH5ZlwZI1749WmLIXvGrtQh440eGDQNtCy8JENVXOnlDTxUEDFwxvLBmd+V6kMXSel4pkyo7qd4uXN2F4efYPPY8Ru7xVldpFVCnMSUZh7s/2gGk/Yi6rrU9sxBWx+CB7Rc3YPAHHHyPiPBJdBQygd9Qpo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UCk/4hhx; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NMGiYm3k"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VGeTNq022112;
-	Fri, 31 May 2024 16:45:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=Xej7Mdj8B3W
-	4gF4TEFskOP5nfnYJbm8rIl6YpnPsaqA=; b=NMGiYm3kHn1beulFGrv0KQCKVLD
-	5tWujv9A2PZDb5IO8qE18Z7M1bSa3+yOzx1741N7BY/H5h7C/gbbSAw8P+Rxc01e
-	7nMpH1QBolAgU63cxXy2UMD3rkAkDN8BOsJ/M9fC5G186M2LZdiWSADBEh1WrEp4
-	/NAHxX0CrHR2yJo61GOstnxVl3fa7DKnJP0md6jr1tvAeJkL2fCmFF4SnRG6GihQ
-	qpzobxxJsIgdtMW7fdPMciANj4+rdKyQ4bpjiYJGfHHMdttoe8OfwjqDlFkkI8xb
-	EfZ3vERXd7RKkhf4KuqkW/15uX3bxmWxi3zkWmQcgFirGr/X7R2BYySTJgg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfj9d80wb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 16:45:43 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA05.qualcomm.com [127.0.0.1])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 44VGjg27020259;
-	Fri, 31 May 2024 16:45:42 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA05.qualcomm.com (PPS) with ESMTPS id 3yet2kj3qh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 16:45:42 +0000
-Received: from NALASPPMTA05.qualcomm.com (NALASPPMTA05.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44VGdD3x011633;
-	Fri, 31 May 2024 16:45:41 GMT
-Received: from hu-devc-lv-u22-c.qualcomm.com (hu-uchalich-lv.qualcomm.com [10.81.89.1])
-	by NALASPPMTA05.qualcomm.com (PPS) with ESMTPS id 44VGjfjp020253
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 16:45:41 +0000
-Received: by hu-devc-lv-u22-c.qualcomm.com (Postfix, from userid 4184210)
-	id 8AC65658; Fri, 31 May 2024 09:45:40 -0700 (PDT)
-From: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: Unnathi Chalicheemala <quic_uchalich@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 1/5] dt-bindings: arm: msm: Add llcc Broadcast_AND register
-Date: Fri, 31 May 2024 09:45:24 -0700
-Message-Id: <3306bf3026f38b0486e00307d26827d71c99915d.1717014052.git.quic_uchalich@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1717014052.git.quic_uchalich@quicinc.com>
-References: <cover.1717014052.git.quic_uchalich@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UCk/4hhx"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-420107286ecso2115e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717173944; x=1717778744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TH4bnbtSSVEcXN8q4TBBHbQcYVbG9UpE4sBQSCvIGBs=;
+        b=UCk/4hhxC9TTHJFm/SwPJSMMnlMhcDoNO2QA35JXbrLd6qvfLJGdG6clHM4wqdFN+T
+         X9kHvucJTzr2PLtYEqwtJjZzGfy3QbJPaN2Tn4j+uFo5PenwKGSmJ4VgKbhykJo08BU/
+         jbL/s1PqK5Xg6l+ZMFoJuzLbhaXh1sCZOHt4lHMlJ72lxFKovBtyGYHDND0RLXWCpjnJ
+         g7uxM7rcbbUFqkj1PrjED5cXUkMl18o97jggrgC40XtawhccskTMcTsSfWkUsX+kObQc
+         smI5WnvINM4M08+Q9/i0MnRBaBSHhUJsdHvq+0455OyIgScHxvcUnShXtXOWGp3QcHLj
+         UKWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717173944; x=1717778744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TH4bnbtSSVEcXN8q4TBBHbQcYVbG9UpE4sBQSCvIGBs=;
+        b=VBPJfyTXmvPsSGnmvdnoDwwrC7b1ILYk/AT5kLblZTdPI5BQ099JRVeTtYVGtspgcX
+         vi0zc3mhmSI22Esyp97DIzy1UezlCoXqnbwOIxUO/q+lXaZrCgiI5SUTFRmSj0M3ximJ
+         cZk7e6lUYb4PKdDYlUJBjKGah0imP1Yc6piNwfvqleF/RaHPE++tAloH28Vy6BDQ5ldF
+         gNcC+NQ+/j9e7/lvq5ElYGxAqocVZz/5e4YjO1K/GOdDCF7URbfxoCtlaMhrdnauBI/6
+         itX0cuN3GJ6nSvFPOy0hSROVYbDdd9fC6JCPIkQQh34NkFtIn/pWG07sloJIsEj0c3S6
+         58cA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLq0bTi/B/qNAkynUWICQfoS1E8bSDrUJTlQKP4en2H5LOHTd4v0myIuvOSl5A15YcRipTkIpOM1JYEUINLOC4i6d/Xt8yM7X5Hoel
+X-Gm-Message-State: AOJu0YwA2k7YLNeN1OE5yLtgSn5CzUrq3GuYqYFOzs9YpNdN6zVvmM9Y
+	tdXAKZ3l4/8s1uxUqpSCJSSwO7FrQobBUMN4zIWQgRO6f05MGjr8Geu6Qb/UhFyf9ZtSig+htB5
+	0x1iImXCVEg6c71FS9p8EeIV9dECKgzBfjW8X
+X-Google-Smtp-Source: AGHT+IEq8Fs3z13ePwWrnbWJUDpx50btCGNNHylLrjkBr8g/csKK0P+GO3+xFEqljtHAVxZhGvPrjS68k6wXeE2cHVA=
+X-Received: by 2002:a05:600c:6546:b0:41f:9dd0:7168 with SMTP id
+ 5b1f17b1804b1-4212c091f55mr2200815e9.2.1717173943952; Fri, 31 May 2024
+ 09:45:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: e-f8H4a85YKDwyq1CG3j5oKeZZrbv7kA
-X-Proofpoint-ORIG-GUID: e-f8H4a85YKDwyq1CG3j5oKeZZrbv7kA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_12,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2405310127
+References: <20240529180510.2295118-1-jthoughton@google.com>
+ <20240529180510.2295118-3-jthoughton@google.com> <CAOUHufYFHKLwt1PWp2uS6g174GZYRZURWJAmdUWs5eaKmhEeyQ@mail.gmail.com>
+ <ZlelW93_T6P-ZuSZ@google.com> <CAOUHufZdEpY6ra73SMHA33DegKxKaUM=Os7A7aDBFND6NkbUmQ@mail.gmail.com>
+ <Zley-u_dOlZ-S-a6@google.com> <CADrL8HXHWg_MkApYQTngzmN21NEGNWC6KzJDw_Lm63JHJkR=5A@mail.gmail.com>
+ <CAOUHufZq6DwpStzHtjG+TOiHaQ6FFbkTfHMCe8Yy0n_M9MKdqw@mail.gmail.com> <Zll2ILUNWE-JPi9U@linux.dev>
+In-Reply-To: <Zll2ILUNWE-JPi9U@linux.dev>
+From: Yu Zhao <yuzhao@google.com>
+Date: Fri, 31 May 2024 10:45:04 -0600
+Message-ID: <CAOUHufb_-w=B+NfHAUAo=O8bDXZBdXeeGRZD6kY=krN07srbGA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] mm: multi-gen LRU: Have secondary MMUs participate
+ in aging
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: James Houghton <jthoughton@google.com>, Sean Christopherson <seanjc@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Ankit Agrawal <ankita@nvidia.com>, 
+	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Bibo Mao <maobibo@loongson.cn>, 
+	Catalin Marinas <catalin.marinas@arm.com>, David Matlack <dmatlack@google.com>, 
+	David Rientjes <rientjes@google.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
+	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
+	loongarch@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The LLCC block in SM8450, SM8550 and SM8650 have a new register
-space for Broadcast_AND region. This is used to check that all
-channels have bit set to "1", mainly in SCID activation/deactivation.
+On Fri, May 31, 2024 at 1:03=E2=80=AFAM Oliver Upton <oliver.upton@linux.de=
+v> wrote:
+>
+> On Fri, May 31, 2024 at 12:05:48AM -0600, Yu Zhao wrote:
 
-Previously we were mapping only the Broadcast_OR region assuming
-there was only one broadcast register region. Now we also map
-Broadcast_AND region.
+Let me add back what I said earlier:
 
-Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/cache/qcom,llcc.yaml  | 27 ++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+  I'm not convinced, but it doesn't mean your point of view is
+  invalid. If you fully understand the implications of your design
+  choice and document them, I will not object.
 
-diff --git a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-index 07ccbda4a0ab..a6237028957f 100644
---- a/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-+++ b/Documentation/devicetree/bindings/cache/qcom,llcc.yaml
-@@ -141,8 +141,31 @@ allOf:
-               - qcom,sm8150-llcc
-               - qcom,sm8250-llcc
-               - qcom,sm8350-llcc
-+    then:
-+      properties:
-+        reg:
-+          items:
-+            - description: LLCC0 base register region
-+            - description: LLCC1 base register region
-+            - description: LLCC2 base register region
-+            - description: LLCC3 base register region
-+            - description: LLCC broadcast base register region
-+        reg-names:
-+          items:
-+            - const: llcc0_base
-+            - const: llcc1_base
-+            - const: llcc2_base
-+            - const: llcc3_base
-+            - const: llcc_broadcast_base
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-               - qcom,sm8450-llcc
-               - qcom,sm8550-llcc
-+              - qcom,sm8650-llcc
-     then:
-       properties:
-         reg:
-@@ -151,7 +174,8 @@ allOf:
-             - description: LLCC1 base register region
-             - description: LLCC2 base register region
-             - description: LLCC3 base register region
--            - description: LLCC broadcast base register region
-+            - description: LLCC broadcast OR register region
-+            - description: LLCC broadcast AND register region
-         reg-names:
-           items:
-             - const: llcc0_base
-@@ -159,6 +183,7 @@ allOf:
-             - const: llcc2_base
-             - const: llcc3_base
-             - const: llcc_broadcast_base
-+            - const: llcc_broadcast_and_base
- 
- additionalProperties: false
- 
--- 
-2.34.1
+> > All optimizations in v2 were measured step by step. Even that bitmap,
+> > which might be considered overengineered, brought a readily
+> > measuarable 4% improvement in memcached throughput on Altra Max
+> > swapping to Optane:
+>
+> That's great, but taking an iterative approach to the problem allows
+> the reviewers and maintainers to come to their own conclusions about
+> each optimization independently. Squashing all of that together and
+> posting the result doesn't allow for this.
 
+That's your methodology, which I respect: as I said I won't stand in your w=
+ay.
+
+But mine is backed by data, please do respect that as well, by doing
+what I asked: document your justifications.
+
+> Even if we were to take the series as-is, the door is wide open to
+> subsequent improvements.
+>
+> > What I don't think is acceptable is simplifying those optimizations
+> > out without documenting your justifications (I would even call it a
+> > design change, rather than simplification, from v3 to v4).
+>
+> No, sorry, there's nothing wrong with James' approach here.
+
+Sorry, are you saying "without documenting your justifications" is
+nothing wrong? If so, please elaborate.
+
+> The discussion that led to the design of v4 happened on list; you were
+> on CC. The general consensus on the KVM side was that the bitmap was
+> complicated and lacked independent justification. There was ample
+> opportunity to voice your concerns before he spent the time on v4.
+
+Please re-read my previous emails -- I never object to the removal of
+the bitmap or James' approach.
+
+And please stop making assumptions -- I did voice my concerns with
+James privately.
+
+> You seriously cannot fault a contributor for respinning their work based
+> on the provided feedback.
+
+Are you saying I faulted James for taking others' feedback? If so,
+where? And I'll make sure I don't give such an impression in the
+future.
+
+Also what do you think about the technical flaws and inaccurate
+understandings I pointed out? You seem to have a strong opinion on
+your iterate approach, but I hope you didn't choose to overlook the
+real meat of this discussion.
