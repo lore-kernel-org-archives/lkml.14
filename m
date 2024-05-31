@@ -1,83 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98731E51E;
-	Fri, 31 May 2024 14:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CAC16D9AC;
+	Fri, 31 May 2024 14:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717164731; cv=none; b=feOQy+AYUXfyxKp2C7BjBEG9F242geWjklfi5mQYVQZyGiT0xBIJ+j82hX7y+9yApXpYUi5CJHNVuhFT6A6kUWCDAC3ipSght6zBdknbV1BgpcyN+UGXXjM6uV6vRg5C37UTAp0FyiKrMPJO2Rz6DwnXwWnt19chPQTa6k+byxA=
+	t=1717164735; cv=none; b=Xlf9mPYPCUhjoOnF/JA5N4LNA4yvDsntXc4GRDkdGrl5JtTSjvMJfI4zR+nUaDWtf8G2ESFbU2NCiYNA0VI+5eLXZ/hW0ngfy+w0DkQpVKNj6w5JM4LXqabMQur4/C4iye38aO69SSmBNwkLnulLmcpfh+wg9DM758P8FEB0hE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717164731; c=relaxed/simple;
-	bh=ltHQlzja/oVvYD/+bUKbl1gFLeTZuZ0V+xk4C4XpYsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FyqHwdBN63YXg+jbg3UzRDAHJcptL/Tr9+5LpvdMzekkb1yRj2ec5ADmNdKowpD7v39AQjdM67GEZ+nMk7Yn0Kszl2MWHhHEqVNmZo3f2rzv9daQM4JBKIHMWnb9zwdCZpYsH+iEHbOCjvR/FMOGxS497AqqhVD4+tLHro5r8Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ipt8Aw2T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717164735; c=relaxed/simple;
+	bh=XLqZFjlEoqxOyPl9bFUh7Jqa2hmuAmBz32zTzjZrBpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZyYEaKIYWaXc8LnJ6aiNKx4oWLHfyX6T/CGxqMXV44dajr67AkXsie3+qQzAwNYQC0xHxEeQQou+uJp7tDxT/cMlRDvzGb1y3Dd+5FOsCbNjhIV2RaGI3RubGNvxs6Q7oERM9rF81SVYbt7CaVGIaJ/yLLrABf3zPS1spGAB5A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etrY+1R5; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ipt8Aw2T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56106C116B1;
-	Fri, 31 May 2024 14:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717164731;
-	bh=ltHQlzja/oVvYD/+bUKbl1gFLeTZuZ0V+xk4C4XpYsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ipt8Aw2TzmRuDmdOoYNqsQiFNcBXqqFslWMSSzSYtO9O4I3VaKYWQ+xnCFBvjzFHr
-	 C6G6QYYd3MsrqsAhElhOiAcShArkFaeG1I15kY2wQ5n86i7UIgKb/n2Jiv8jH9VFsk
-	 vZzrtjtmtHJvGBUAN+96TQeZQ3Aff5ltpFUR0a8BkN0AawQ1NoXXQuFjSO3TLNfIQu
-	 dFi+Y4EtUQxLIZ/tDW10QnAMeu1nHDh7UYuD2vjfAglRi1pXi67SGvnoKAq2M5hfok
-	 Sgo1RiLAThJUSAolfcLILS88aQ9KiqhoDHNRv6N/0UC6+mmxF7o6/e8Fd42zvmS7Pf
-	 jmelPNTJt6XfQ==
-Date: Fri, 31 May 2024 07:12:10 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	brauner@kernel.org, david@fromorbit.com, chandanbabu@kernel.org,
-	jack@suse.cz, willy@infradead.org, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com
-Subject: Re: [RFC PATCH v4 8/8] xfs: improve truncate on a realtime inode
- with huge extsize
-Message-ID: <20240531141210.GI52987@frogsfrogsfrogs>
-References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
- <20240529095206.2568162-9-yi.zhang@huaweicloud.com>
- <ZlnUorFO2Ptz5gcq@infradead.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etrY+1R5"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-701ae8698d8so1701899b3a.0;
+        Fri, 31 May 2024 07:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717164734; x=1717769534; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ykvp/0wm2JKYn1VhbfeNlnxDMxT2k1KfiM797oH+i0A=;
+        b=etrY+1R5LOUSB1HRNYYB/4c8RoCUD1HHCRZQ5PmTZiDeJdWD6HCfVAZKlx3pHJYSQ0
+         SQgHdbsqaQOySbeG5tv01869eBF0flTdOKMUQLMbRxhyfs0QpMeLgjIgZYTcxRoqPHXa
+         UQccCyK/8IiIfN3Lw7QozOKp7ryOim25M4GmBEb/KeSmbNRUh/pHIsGT9ru2Qwp5lwh2
+         kI4U6mJbCRNp4qmzzox0qwfiH2h+9h3/CjY/dhHn8snwjC7IncYl2AVXuabxHS3jbx6V
+         Gx05VQxHAjgREq/O6jM3CWoezVidQKxoQC3JJr7I15usUEwwifxjwMEZMGu5yA+4YOTC
+         lOIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717164734; x=1717769534;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ykvp/0wm2JKYn1VhbfeNlnxDMxT2k1KfiM797oH+i0A=;
+        b=iv0hqqewBZLg0sPJE0nad5fOIDN3mPN4Hqfvm/OkzCBqFZeIHUUz7C/kdxcD1Ox9n/
+         yOkaHfaFVIurmWkvsuBVrw0i5DyfF2mYvxeyqsWuf5/qfoN0UFEV2NdhMCr2K7pRzmsa
+         9Sn9c9/oTA9hoMvyRLOesYaCK2sxfqYQpKpBtYUr/eEUUtMx3uGKaiP5BzG1pn1raF9o
+         uuo6DCuZRtZx/L72H40bMdsdmui/RP0ZGB+b6nHSdX+axEDRi+zsooTKfgikxAvkqNqr
+         97S+BCre0GqEGjTVxScrrICD0vQ294GoYAGr3dOgbcJAfCjBFIDnHJkj2sCaLBPZyMiS
+         LKlw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9JtLJ/RB8e3sTGjY9NZFu2bXEOYor/70iJ87RuzcWJ21JcKutpmnKtv9I1cd3VZgxGIvSOpww+upoZ64BVJaxK4rjD22flENU9/0tKYMCcu75zO4exHx+AbYOecCK6YWf/3x0GQ==
+X-Gm-Message-State: AOJu0Yw1/2r2tZ4Eu4OK8Vbmm5FoBBjOXex4U2poakwQuUrso+d6R4bX
+	dyuagqOpwIgaNZ8TpTNHHInb5PtCJxWg1MzhOnDd72EHXozsPBtDK959b68G7/8=
+X-Google-Smtp-Source: AGHT+IF9QK1BGyLlONfFHI2NZ/q0q6TlP168YBjy8Girmb88VacbO8e/f7OnxTM2vSORBcmJgAyihA==
+X-Received: by 2002:a05:6a00:1785:b0:6ea:f05d:d2ec with SMTP id d2e1a72fcca58-702477c2abamr2233447b3a.2.1717164733748;
+        Fri, 31 May 2024 07:12:13 -0700 (PDT)
+Received: from noel.flets-west.jp ([2405:6586:4480:a10:167:9818:d778:5c14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b057besm1418103b3a.162.2024.05.31.07.12.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 07:12:13 -0700 (PDT)
+From: Hironori KIKUCHI <kikuchan98@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Hironori KIKUCHI <kikuchan98@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Aleksandr Shubin <privatesub2@gmail.com>,
+	Cheo Fusi <fusibrandon13@gmail.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev
+Subject: [PATCH 0/5] Add support for Allwinner H616 PWM
+Date: Fri, 31 May 2024 23:11:32 +0900
+Message-ID: <20240531141152.327592-1-kikuchan98@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlnUorFO2Ptz5gcq@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 06:46:10AM -0700, Christoph Hellwig wrote:
-> > +/*
-> > + * Decide if this file is a realtime file whose data allocation unit is larger
-> > + * than default.
-> > + */
-> > +static inline bool xfs_inode_has_hugertalloc(struct xfs_inode *ip)
-> > +{
-> > +	struct xfs_mount *mp = ip->i_mount;
-> > +
-> > +	return XFS_IS_REALTIME_INODE(ip) &&
-> > +	       mp->m_sb.sb_rextsize > XFS_B_TO_FSB(mp, XFS_DFL_RTEXTSIZE);
-> > +}
-> 
-> The default rtextsize is actually a single FSB unless we're on a striped
-> volume in which case it is increased.
-> 
-> I'll take care of removing the unused and confusing XFS_DFL_RTEXTSIZE,
-> but for this patch we'd need to know the trade-off of when to just
-> convert to unwritten.  For single-fsb rtextents we obviously don't need
-> any special action.  But do you see a slowdown when converting to
-> unwritten for small > 1 rtextsizes?  Because if not we could just
-> always use that code path, which would significantly simplify things
-> and remove yet another different to test code path.
+Add support for the Allwinner H616 PWM, building on top of Aleksandr's
+Allwinner D1 PWM driver v9.
 
-There are <cough> some users that want 1G extents.
+Additionally, the 4th and 5th patches implement the proposed method
+for delegating the clock source and DIV_M selection to the Device Tree.
+While it works well without these patches with the original behavior,
+applying them enables fine-grained control of PWM resolution and
+prevents non-deterministic behavior dependent on the enabling order.
 
-For the rest of us who don't live in the stratosphere, it's convenient
-for fsdax to have rt extents that match the PMD size, which could be
-large on arm64 (e.g. 512M, or two smr sectors).
+I have only been able to test on H700 (H616 variant) using an
+oscilloscope. I would greatly appreciate it if someone could test
+this patch series on the D1 or other models.
 
---D
+Regards,
+kikuchan.
+
+Hironori KIKUCHI (5):
+  pwm: sun20i: Use devm_pwmchip_alloc() helper
+  pwm: sun20i: Add support for Allwinner H616 PWM
+  dt-bindings: pwm: sun20i: Add compatible string for Allwinner H616 PWM
+  pwm: sun20i: Delegating the clock source and DIV_M to the Device Tree
+  dt-bindings: pwm: sun20i: Add options to select a clock source and
+    DIV_M
+
+ .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  20 ++
+ drivers/pwm/pwm-sun20i.c                      | 326 ++++++++++--------
+ 2 files changed, 201 insertions(+), 145 deletions(-)
+
+-- 
+2.45.1
+
