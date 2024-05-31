@@ -1,969 +1,150 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B81741A80;
-	Fri, 31 May 2024 03:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B2A36134
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 03:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717124602; cv=none; b=IbX03LFp1zfA7IN7t1bqo4yAAv0hVz7Z7kL9umVDKnx+k+j/4bXjTiTsqIGFjmSpVcWbaGzc1TIR7x5DfcP6HpG6HFdGFL3yOZ2l/bqLN/YEYw0Qo6UOrSybddQebswQKtM6oBlcDpMJSbLXutwvU60mFI7q4CBZdPleizdfYMk=
+	t=1717124748; cv=none; b=FTDSwvB/YjsSPXWDXkpFP37/HO5l3D8HEb4av/kRd7bxEbmFZmasjltcPsQAZ+hVAcFv8SScloN17uFwD0gVkiGoZI8/syfdd69JxRJUsu6eMiwoUxAKtIq/aaGUB+33D3tDB/O5ad8cdC2/M41zolt9T210Day445w/Xxz7ORQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717124602; c=relaxed/simple;
-	bh=aQ6bGNO4pmwGTrS9RMo7pl7Rg1gyN8yCR9S4MYAQcXI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jKqur6KEG24uQK9ybj/rdrKvkeDReYFjrslQTi0m1Yc+bpzmNyS0RyWxK3AtM5jCdIsQ8l5bfuMk2vUDfojedgWXJDJwV+Ocpx55Hq5n/to2jeplyvq9VHxB7xNnAznp+3fVqbPCLxNv1H5/hP8faVp52Hxg/7RY2Y2jVpA6XcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=M3872SgC; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="M3872SgC"
-Received: from [127.0.1.1] (ppp118-210-171-248.adl-adc-lon-bras34.tpg.internode.on.net [118.210.171.248])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1D85820127;
-	Fri, 31 May 2024 11:03:11 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1717124591;
-	bh=fJDKNJqu8iYnwvnbaLD8y+qmBpIOacENHreRRAkgbeI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=M3872SgCjumPegQIY2UqFSlzVWEY3wNEK7vqCqoiRLgSr+aGXWzObJ2MCEGHPLnfP
-	 u5XRDvy0hK6Ec8M71cmxhlhPCTq+5WAsMP6gA1ZmOyLjpBvlF5mquE7fk/YAZxXM2Q
-	 eaYPm6+beo2H3V8uunytTTb5yFJs88tnqXlsRw6mHIEqGyimaN8N72fipNISvPRr/U
-	 pmEbrpEYH/fyzKZoWq/peyav5FN77Zx+oxG4L8Pk5sTXFe3//12FXaOh1cFuZG4sTc
-	 Vps7QlvIhZzmiNHttXIdt52S7HY/ILspim3d1g0sPCeJ13ZhaqwMHoFWw8h5Hr5jHL
-	 dPEr+UwkwU5DA==
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-Date: Fri, 31 May 2024 12:32:47 +0930
-Subject: [PATCH 1/3] dt-bindings: pinctrl: aspeed: Use block syntax for
- function and groups
+	s=arc-20240116; t=1717124748; c=relaxed/simple;
+	bh=PcOaiwMIy0o3e+ZmFIWOayujeWmn4r2cX5BRChXf8t4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IKMzW2JnHzGFo8ENW3h58+bM4H4wY13S8T6+UhBXSh+4v72nKvyONU94XAutQGqVl7PCMPXsz4PFLlXMzLAQQ1c/9p+UOp06CppZRSVIXk9MU8kdwMDwCeLqTCmlU3a7/G4JAV4Bhm7JQoElsJOkPNCAoZpV/VQpOowBZq7Qsb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44V35RmE064534;
+	Fri, 31 May 2024 11:05:27 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vr7Dw3fpPz2QLg51;
+	Fri, 31 May 2024 11:01:36 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Fri, 31 May 2024 11:05:24 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki
+	<urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes
+	<lstoakes@gmail.com>, Baoquan He <bhe@redhat.com>,
+        Thomas Gleixner
+	<tglx@linutronix.de>,
+        hailong liu <hailong.liu@oppo.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang
+	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [PATCHv3] mm: fix incorrect vbq reference in purge_fragmented_block
+Date: Fri, 31 May 2024 11:05:20 +0800
+Message-ID: <20240531030520.1615833-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-1-a6fe2281a1b8@codeconstruct.com.au>
-References: <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-0-a6fe2281a1b8@codeconstruct.com.au>
-In-Reply-To: <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-0-a6fe2281a1b8@codeconstruct.com.au>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>
-Cc: linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.13.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 44V35RmE064534
 
-The expansion makes the documents a lot longer, but it's easier to
-review changes to functions and groups when we're not having to deal
-with line wrapping.
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+vmalloc area runs out in our ARM64 system during an erofs test as
+vm_map_ram failed[1]. By following the debug log, we find that
+vm_map_ram()->vb_alloc() will allocate new vb->va which corresponding
+to 4MB vmalloc area as list_for_each_entry_rcu returns immediately
+when vbq->free->next points to vbq->free. That is to say, 65536 times
+of page fault after the list's broken will run out of the whole
+vmalloc area. This should be introduced by one vbq->free->next point to
+vbq->free which makes list_for_each_entry_rcu can not iterate the list
+and find the BUG.
+
+[1]
+PID: 1        TASK: ffffff80802b4e00  CPU: 6    COMMAND: "init"
+ #0 [ffffffc08006afe0] __switch_to at ffffffc08111d5cc
+ #1 [ffffffc08006b040] __schedule at ffffffc08111dde0
+ #2 [ffffffc08006b0a0] schedule at ffffffc08111e294
+ #3 [ffffffc08006b0d0] schedule_preempt_disabled at ffffffc08111e3f0
+ #4 [ffffffc08006b140] __mutex_lock at ffffffc08112068c
+ #5 [ffffffc08006b180] __mutex_lock_slowpath at ffffffc08111f8f8
+ #6 [ffffffc08006b1a0] mutex_lock at ffffffc08111f834
+ #7 [ffffffc08006b1d0] reclaim_and_purge_vmap_areas at ffffffc0803ebc3c
+ #8 [ffffffc08006b290] alloc_vmap_area at ffffffc0803e83fc
+ #9 [ffffffc08006b300] vm_map_ram at ffffffc0803e78c0
+
+Fixes: fc1e0d980037 ("mm/vmalloc: prevent stale TLBs in fully utilized blocks")
+
+Suggested-by: Hailong.Liu <hailong.liu@oppo.com>
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 ---
- .../bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   | 169 ++++++-
- .../bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   | 187 +++++++-
- .../bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   | 501 +++++++++++++++++++--
- 3 files changed, 774 insertions(+), 83 deletions(-)
+v2: introduce cpu in vmap_block to record the right CPU number
+v3: use get_cpu/put_cpu to prevent schedule between core
+---
+---
+ mm/vmalloc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-index 37c0a74c7c01..23ed9a8b6689 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
-@@ -35,22 +35,159 @@ additionalProperties:
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 22aa63f4ef63..ecdb75d10949 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2458,6 +2458,7 @@ struct vmap_block {
+ 	struct list_head free_list;
+ 	struct rcu_head rcu_head;
+ 	struct list_head purge;
++	unsigned int cpu;
+ };
  
-   patternProperties:
-     "^function|groups$":
--      enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15,
--              ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK, DDCDAT,
--              EXTRST, FLACK, FLBUSY, FLWP, GPID, GPID0, GPID2, GPID4, GPID6, GPIE0,
--              GPIE2, GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13, I2C14, I2C3, I2C4,
--              I2C5, I2C6, I2C7, I2C8, I2C9, LPCPD, LPCPME, LPCRST, LPCSMI, MAC1LINK,
--              MAC2LINK, MDIO1, MDIO2, NCTS1, NCTS2, NCTS3, NCTS4, NDCD1, NDCD2,
--              NDCD3, NDCD4, NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2, NDTR3, NDTR4,
--              NDTS4, NRI1, NRI2, NRI3, NRI4, NRTS1, NRTS2, NRTS3, OSCCLK, PWM0,
--              PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2, RMII1,
--              RMII2, ROM16, ROM8, ROMCS1, ROMCS2, ROMCS3, ROMCS4, RXD1, RXD2, RXD3,
--              RXD4, SALT1, SALT2, SALT3, SALT4, SD1, SD2, SGPMCK, SGPMI, SGPMLD,
--              SGPMO, SGPSCK, SGPSI0, SGPSI1, SGPSLD, SIOONCTRL, SIOPBI, SIOPBO,
--              SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1DEBUG, SPI1PASSTHRU,
--              SPICS1, TIMER3, TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1, TXD2,
--              TXD3, TXD4, UART6, USB11D1, USB11H2, USB2D1, USB2H1, USBCKI, VGABIOS_ROM,
--              VGAHS, VGAVS, VPI18, VPI24, VPI30, VPO12, VPO24, WDTRST1, WDTRST2]
-+      enum:
-+        - ACPI
-+        - ADC0
-+        - ADC1
-+        - ADC10
-+        - ADC11
-+        - ADC12
-+        - ADC13
-+        - ADC14
-+        - ADC15
-+        - ADC2
-+        - ADC3
-+        - ADC4
-+        - ADC5
-+        - ADC6
-+        - ADC7
-+        - ADC8
-+        - ADC9
-+        - BMCINT
-+        - DDCCLK
-+        - DDCDAT
-+        - EXTRST
-+        - FLACK
-+        - FLBUSY
-+        - FLWP
-+        - GPID
-+        - GPID0
-+        - GPID2
-+        - GPID4
-+        - GPID6
-+        - GPIE0
-+        - GPIE2
-+        - GPIE4
-+        - GPIE6
-+        - I2C10
-+        - I2C11
-+        - I2C12
-+        - I2C13
-+        - I2C14
-+        - I2C3
-+        - I2C4
-+        - I2C5
-+        - I2C6
-+        - I2C7
-+        - I2C8
-+        - I2C9
-+        - LPCPD
-+        - LPCPME
-+        - LPCRST
-+        - LPCSMI
-+        - MAC1LINK
-+        - MAC2LINK
-+        - MDIO1
-+        - MDIO2
-+        - NCTS1
-+        - NCTS2
-+        - NCTS3
-+        - NCTS4
-+        - NDCD1
-+        - NDCD2
-+        - NDCD3
-+        - NDCD4
-+        - NDSR1
-+        - NDSR2
-+        - NDSR3
-+        - NDSR4
-+        - NDTR1
-+        - NDTR2
-+        - NDTR3
-+        - NDTR4
-+        - NDTS4
-+        - NRI1
-+        - NRI2
-+        - NRI3
-+        - NRI4
-+        - NRTS1
-+        - NRTS2
-+        - NRTS3
-+        - OSCCLK
-+        - PWM0
-+        - PWM1
-+        - PWM2
-+        - PWM3
-+        - PWM4
-+        - PWM5
-+        - PWM6
-+        - PWM7
-+        - RGMII1
-+        - RGMII2
-+        - RMII1
-+        - RMII2
-+        - ROM16
-+        - ROM8
-+        - ROMCS1
-+        - ROMCS2
-+        - ROMCS3
-+        - ROMCS4
-+        - RXD1
-+        - RXD2
-+        - RXD3
-+        - RXD4
-+        - SALT1
-+        - SALT2
-+        - SALT3
-+        - SALT4
-+        - SD1
-+        - SD2
-+        - SGPMCK
-+        - SGPMI
-+        - SGPMLD
-+        - SGPMO
-+        - SGPSCK
-+        - SGPSI0
-+        - SGPSI1
-+        - SGPSLD
-+        - SIOONCTRL
-+        - SIOPBI
-+        - SIOPBO
-+        - SIOPWREQ
-+        - SIOPWRGD
-+        - SIOS3
-+        - SIOS5
-+        - SIOSCI
-+        - SPI1
-+        - SPI1DEBUG
-+        - SPI1PASSTHRU
-+        - SPICS1
-+        - TIMER3
-+        - TIMER4
-+        - TIMER5
-+        - TIMER6
-+        - TIMER7
-+        - TIMER8
-+        - TXD1
-+        - TXD2
-+        - TXD3
-+        - TXD4
-+        - UART6
-+        - USB11D1
-+        - USB11H2
-+        - USB2D1
-+        - USB2H1
-+        - USBCKI
-+        - VGABIOS_ROM
-+        - VGAHS
-+        - VGAVS
-+        - VPI18
-+        - VPI24
-+        - VPI30
-+        - VPO12
-+        - VPO24
-+        - WDTRST1
-+        - WDTRST2
+ /* Queue of free and dirty vmap blocks, for allocation and flushing purposes */
+@@ -2586,10 +2587,12 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 		return ERR_PTR(err);
+ 	}
  
- allOf:
-   - $ref: pinctrl.yaml#
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-index 863da5d80826..ef8499a0aba4 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
-@@ -35,7 +35,7 @@ properties:
-     description: |
-       A cell of phandles to external controller nodes:
-       0: compatible with "aspeed,ast2500-gfx", "syscon"
--      1: compatible with "aspeed,ast2500-lhc", "syscon"
-+      1: compatible with "aspeed,ast2500-lpc", "syscon"
++	vb->cpu = get_cpu();
+ 	vbq = raw_cpu_ptr(&vmap_block_queue);
+ 	spin_lock(&vbq->lock);
+ 	list_add_tail_rcu(&vb->free_list, &vbq->free);
+ 	spin_unlock(&vbq->lock);
++	put_cpu();
  
- additionalProperties:
-   $ref: pinmux-node.yaml#
-@@ -47,24 +47,173 @@ additionalProperties:
+ 	return vaddr;
+ }
+@@ -2614,9 +2617,10 @@ static void free_vmap_block(struct vmap_block *vb)
+ }
  
-   patternProperties:
-     "^function|groups$":
--      enum: [ ACPI, ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15,
--              ADC2, ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, DDCCLK, DDCDAT,
--              ESPI, FWSPICS1, FWSPICS2, GPID0, GPID2, GPID4, GPID6, GPIE0, GPIE2,
--              GPIE4, GPIE6, I2C10, I2C11, I2C12, I2C13, I2C14, I2C3, I2C4, I2C5,
--              I2C6, I2C7, I2C8, I2C9, LAD0, LAD1, LAD2, LAD3, LCLK, LFRAME, LPCHC,
--              LPCPD, LPCPLUS, LPCPME, LPCRST, LPCSMI, LSIRQ, MAC1LINK, MAC2LINK,
--              MDIO1, MDIO2, NCTS1, NCTS2, NCTS3, NCTS4, NDCD1, NDCD2, NDCD3, NDCD4,
--              NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2, NDTR3, NDTR4, NRI1, NRI2,
--              NRI3, NRI4, NRTS1, NRTS2, NRTS3, NRTS4, OSCCLK, PEWAKE, PNOR, PWM0,
--              PWM1, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, RGMII1, RGMII2, RMII1,
--              RMII2, RXD1, RXD2, RXD3, RXD4, SALT1, SALT10, SALT11, SALT12, SALT13,
--              SALT14, SALT2, SALT3, SALT4, SALT5, SALT6, SALT7, SALT8, SALT9, SCL1,
--              SCL2, SD1, SD2, SDA1, SDA2, SGPS1, SGPS2, SIOONCTRL, SIOPBI, SIOPBO,
--              SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1CS1, SPI1DEBUG,
--              SPI1PASSTHRU, SPI2CK, SPI2CS0, SPI2CS1, SPI2MISO, SPI2MOSI, TIMER3,
--              TIMER4, TIMER5, TIMER6, TIMER7, TIMER8, TXD1, TXD2, TXD3, TXD4, UART6,
--              USB11BHID, USB2AD, USB2AH, USB2BD, USB2BH, USBCKI, VGABIOSROM, VGAHS,
--              VGAVS, VPI24, VPO, WDTRST1, WDTRST2]
-+      enum:
-+        - ACPI
-+        - ADC0
-+        - ADC1
-+        - ADC10
-+        - ADC11
-+        - ADC12
-+        - ADC13
-+        - ADC14
-+        - ADC15
-+        - ADC2
-+        - ADC3
-+        - ADC4
-+        - ADC5
-+        - ADC6
-+        - ADC7
-+        - ADC8
-+        - ADC9
-+        - BMCINT
-+        - DDCCLK
-+        - DDCDAT
-+        - ESPI
-+        - FWSPICS1
-+        - FWSPICS2
-+        - GPID0
-+        - GPID2
-+        - GPID4
-+        - GPID6
-+        - GPIE0
-+        - GPIE2
-+        - GPIE4
-+        - GPIE6
-+        - I2C10
-+        - I2C11
-+        - I2C12
-+        - I2C13
-+        - I2C14
-+        - I2C3
-+        - I2C4
-+        - I2C5
-+        - I2C6
-+        - I2C7
-+        - I2C8
-+        - I2C9
-+        - LAD0
-+        - LAD1
-+        - LAD2
-+        - LAD3
-+        - LCLK
-+        - LFRAME
-+        - LPCHC
-+        - LPCPD
-+        - LPCPLUS
-+        - LPCPME
-+        - LPCRST
-+        - LPCSMI
-+        - LSIRQ
-+        - MAC1LINK
-+        - MAC2LINK
-+        - MDIO1
-+        - MDIO2
-+        - NCTS1
-+        - NCTS2
-+        - NCTS3
-+        - NCTS4
-+        - NDCD1
-+        - NDCD2
-+        - NDCD3
-+        - NDCD4
-+        - NDSR1
-+        - NDSR2
-+        - NDSR3
-+        - NDSR4
-+        - NDTR1
-+        - NDTR2
-+        - NDTR3
-+        - NDTR4
-+        - NRI1
-+        - NRI2
-+        - NRI3
-+        - NRI4
-+        - NRTS1
-+        - NRTS2
-+        - NRTS3
-+        - NRTS4
-+        - OSCCLK
-+        - PEWAKE
-+        - PNOR
-+        - PWM0
-+        - PWM1
-+        - PWM2
-+        - PWM3
-+        - PWM4
-+        - PWM5
-+        - PWM6
-+        - PWM7
-+        - RGMII1
-+        - RGMII2
-+        - RMII1
-+        - RMII2
-+        - RXD1
-+        - RXD2
-+        - RXD3
-+        - RXD4
-+        - SALT1
-+        - SALT10
-+        - SALT11
-+        - SALT12
-+        - SALT13
-+        - SALT14
-+        - SALT2
-+        - SALT3
-+        - SALT4
-+        - SALT5
-+        - SALT6
-+        - SALT7
-+        - SALT8
-+        - SALT9
-+        - SCL1
-+        - SCL2
-+        - SD1
-+        - SD2
-+        - SDA1
-+        - SDA2
-+        - SGPS1
-+        - SGPS2
-+        - SIOONCTRL
-+        - SIOPBI
-+        - SIOPBO
-+        - SIOPWREQ
-+        - SIOPWRGD
-+        - SIOS3
-+        - SIOS5
-+        - SIOSCI
-+        - SPI1
-+        - SPI1CS1
-+        - SPI1DEBUG
-+        - SPI1PASSTHRU
-+        - SPI2CK
-+        - SPI2CS0
-+        - SPI2CS1
-+        - SPI2MISO
-+        - SPI2MOSI
-+        - TIMER3
-+        - TIMER4
-+        - TIMER5
-+        - TIMER6
-+        - TIMER7
-+        - TIMER8
-+        - TXD1
-+        - TXD2
-+        - TXD3
-+        - TXD4
-+        - UART6
-+        - USB11BHID
-+        - USB2AD
-+        - USB2AH
-+        - USB2BD
-+        - USB2BH
-+        - USBCKI
-+        - VGABIOSROM
-+        - VGAHS
-+        - VGAVS
-+        - VPI24
-+        - VPO
-+        - WDTRST1
-+        - WDTRST2
+ static bool purge_fragmented_block(struct vmap_block *vb,
+-		struct vmap_block_queue *vbq, struct list_head *purge_list,
+-		bool force_purge)
++		struct list_head *purge_list, bool force_purge)
+ {
++	struct vmap_block_queue *vbq = &per_cpu(vmap_block_queue, vb->cpu);
++
+ 	if (vb->free + vb->dirty != VMAP_BBMAP_BITS ||
+ 	    vb->dirty == VMAP_BBMAP_BITS)
+ 		return false;
+@@ -2664,7 +2668,7 @@ static void purge_fragmented_blocks(int cpu)
+ 			continue;
  
- allOf:
-   - $ref: pinctrl.yaml#
-diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-index 612464aef98b..d0a9cc2027f8 100644
---- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
-@@ -29,56 +29,461 @@ additionalProperties:
- 
-   properties:
-     function:
--      enum: [ ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15, ADC2,
--              ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, EMMC, ESPI, ESPIALT,
--              FSI1, FSI2, FWQSPI, FWSPIABR, FWSPID, FWSPIWP, GPIT0, GPIT1, GPIT2, GPIT3,
--              GPIT4, GPIT5, GPIT6, GPIT7, GPIU0, GPIU1, GPIU2, GPIU3, GPIU4, GPIU5,
--              GPIU6, GPIU7, I2C1, I2C10, I2C11, I2C12, I2C13, I2C14, I2C15, I2C16,
--              I2C2, I2C3, I2C4, I2C5, I2C6, I2C7, I2C8, I2C9, I3C3, I3C4, I3C5,
--              I3C6, JTAGM, LHPD, LHSIRQ, LPC, LPCHC, LPCPD, LPCPME, LPCSMI, LSIRQ,
--              MACLINK1, MACLINK2, MACLINK3, MACLINK4, MDIO1, MDIO2, MDIO3, MDIO4,
--              NCTS1, NCTS2, NCTS3, NCTS4, NDCD1, NDCD2, NDCD3, NDCD4, NDSR1, NDSR2,
--              NDSR3, NDSR4, NDTR1, NDTR2, NDTR3, NDTR4, NRI1, NRI2, NRI3, NRI4,
--              NRTS1, NRTS2, NRTS3, NRTS4, OSCCLK, PEWAKE, PWM0, PWM1, PWM10, PWM11,
--              PWM12, PWM13, PWM14, PWM15, PWM2, PWM3, PWM4, PWM5, PWM6, PWM7, PWM8,
--              PWM9, RGMII1, RGMII2, RGMII3, RGMII4, RMII1, RMII2, RMII3, RMII4,
--              RXD1, RXD2, RXD3, RXD4, SALT1, SALT10, SALT11, SALT12, SALT13, SALT14,
--              SALT15, SALT16, SALT2, SALT3, SALT4, SALT5, SALT6, SALT7, SALT8,
--              SALT9, SD1, SD2, SGPM1, SGPM2, SGPS1, SGPS2, SIOONCTRL, SIOPBI, SIOPBO,
--              SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1, SPI1ABR, SPI1CS1, SPI1WP, SPI2,
--              SPI2CS1, SPI2CS2, TACH0, TACH1, TACH10, TACH11, TACH12, TACH13, TACH14,
--              TACH15, TACH2, TACH3, TACH4, TACH5, TACH6, TACH7, TACH8, TACH9, THRU0,
--              THRU1, THRU2, THRU3, TXD1, TXD2, TXD3, TXD4, UART10, UART11, UART12,
--              UART13, UART6, UART7, UART8, UART9, USBAD, USBADP, USB2AH, USB2AHP,
--              USB2BD, USB2BH, VB, VGAHS, VGAVS, WDTRST1, WDTRST2, WDTRST3, WDTRST4 ]
-+      enum:
-+        - ADC0
-+        - ADC1
-+        - ADC10
-+        - ADC11
-+        - ADC12
-+        - ADC13
-+        - ADC14
-+        - ADC15
-+        - ADC2
-+        - ADC3
-+        - ADC4
-+        - ADC5
-+        - ADC6
-+        - ADC7
-+        - ADC8
-+        - ADC9
-+        - BMCINT
-+        - EMMC
-+        - ESPI
-+        - ESPIALT
-+        - FSI1
-+        - FSI2
-+        - FWQSPI
-+        - FWSPIABR
-+        - FWSPID
-+        - FWSPIWP
-+        - GPIT0
-+        - GPIT1
-+        - GPIT2
-+        - GPIT3
-+        - GPIT4
-+        - GPIT5
-+        - GPIT6
-+        - GPIT7
-+        - GPIU0
-+        - GPIU1
-+        - GPIU2
-+        - GPIU3
-+        - GPIU4
-+        - GPIU5
-+        - GPIU6
-+        - GPIU7
-+        - I2C1
-+        - I2C10
-+        - I2C11
-+        - I2C12
-+        - I2C13
-+        - I2C14
-+        - I2C15
-+        - I2C16
-+        - I2C2
-+        - I2C3
-+        - I2C4
-+        - I2C5
-+        - I2C6
-+        - I2C7
-+        - I2C8
-+        - I2C9
-+        - I3C3
-+        - I3C4
-+        - I3C5
-+        - I3C6
-+        - JTAGM
-+        - LHPD
-+        - LHSIRQ
-+        - LPC
-+        - LPCHC
-+        - LPCPD
-+        - LPCPME
-+        - LPCSMI
-+        - LSIRQ
-+        - MACLINK1
-+        - MACLINK2
-+        - MACLINK3
-+        - MACLINK4
-+        - MDIO1
-+        - MDIO2
-+        - MDIO3
-+        - MDIO4
-+        - NCTS1
-+        - NCTS2
-+        - NCTS3
-+        - NCTS4
-+        - NDCD1
-+        - NDCD2
-+        - NDCD3
-+        - NDCD4
-+        - NDSR1
-+        - NDSR2
-+        - NDSR3
-+        - NDSR4
-+        - NDTR1
-+        - NDTR2
-+        - NDTR3
-+        - NDTR4
-+        - NRI1
-+        - NRI2
-+        - NRI3
-+        - NRI4
-+        - NRTS1
-+        - NRTS2
-+        - NRTS3
-+        - NRTS4
-+        - OSCCLK
-+        - PEWAKE
-+        - PWM0
-+        - PWM1
-+        - PWM10
-+        - PWM11
-+        - PWM12
-+        - PWM13
-+        - PWM14
-+        - PWM15
-+        - PWM2
-+        - PWM3
-+        - PWM4
-+        - PWM5
-+        - PWM6
-+        - PWM7
-+        - PWM8
-+        - PWM9
-+        - RGMII1
-+        - RGMII2
-+        - RGMII3
-+        - RGMII4
-+        - RMII1
-+        - RMII2
-+        - RMII3
-+        - RMII4
-+        - RXD1
-+        - RXD2
-+        - RXD3
-+        - RXD4
-+        - SALT1
-+        - SALT10
-+        - SALT11
-+        - SALT12
-+        - SALT13
-+        - SALT14
-+        - SALT15
-+        - SALT16
-+        - SALT2
-+        - SALT3
-+        - SALT4
-+        - SALT5
-+        - SALT6
-+        - SALT7
-+        - SALT8
-+        - SALT9
-+        - SD1
-+        - SD2
-+        - SGPM1
-+        - SGPM2
-+        - SGPS1
-+        - SGPS2
-+        - SIOONCTRL
-+        - SIOPBI
-+        - SIOPBO
-+        - SIOPWREQ
-+        - SIOPWRGD
-+        - SIOS3
-+        - SIOS5
-+        - SIOSCI
-+        - SPI1
-+        - SPI1ABR
-+        - SPI1CS1
-+        - SPI1WP
-+        - SPI2
-+        - SPI2CS1
-+        - SPI2CS2
-+        - TACH0
-+        - TACH1
-+        - TACH10
-+        - TACH11
-+        - TACH12
-+        - TACH13
-+        - TACH14
-+        - TACH15
-+        - TACH2
-+        - TACH3
-+        - TACH4
-+        - TACH5
-+        - TACH6
-+        - TACH7
-+        - TACH8
-+        - TACH9
-+        - THRU0
-+        - THRU1
-+        - THRU2
-+        - THRU3
-+        - TXD1
-+        - TXD2
-+        - TXD3
-+        - TXD4
-+        - UART10
-+        - UART11
-+        - UART12
-+        - UART13
-+        - UART6
-+        - UART7
-+        - UART8
-+        - UART9
-+        - USB2AH
-+        - USB2AHP
-+        - USB2BD
-+        - USB2BH
-+        - USBAD
-+        - USBADP
-+        - VB
-+        - VGAHS
-+        - VGAVS
-+        - WDTRST1
-+        - WDTRST2
-+        - WDTRST3
-+        - WDTRST4
- 
-     groups:
--      enum: [ ADC0, ADC1, ADC10, ADC11, ADC12, ADC13, ADC14, ADC15, ADC2,
--              ADC3, ADC4, ADC5, ADC6, ADC7, ADC8, ADC9, BMCINT, EMMCG1, EMMCG4,
--              EMMCG8, ESPI, ESPIALT, FSI1, FSI2, FWQSPI, FWSPIABR, FWSPID, FWSPIWP,
--              GPIT0, GPIT1, GPIT2, GPIT3, GPIT4, GPIT5, GPIT6, GPIT7, GPIU0, GPIU1,
--              GPIU2, GPIU3, GPIU4, GPIU5, GPIU6, GPIU7, HVI3C3, HVI3C4, I2C1, I2C10,
--              I2C11, I2C12, I2C13, I2C14, I2C15, I2C16, I2C2, I2C3, I2C4, I2C5,
--              I2C6, I2C7, I2C8, I2C9, I3C3, I3C4, I3C5, I3C6, JTAGM, LHPD, LHSIRQ,
--              LPC, LPCHC, LPCPD, LPCPME, LPCSMI, LSIRQ, MACLINK1, MACLINK2, MACLINK3,
--              MACLINK4, MDIO1, MDIO2, MDIO3, MDIO4, NCTS1, NCTS2, NCTS3, NCTS4,
--              NDCD1, NDCD2, NDCD3, NDCD4, NDSR1, NDSR2, NDSR3, NDSR4, NDTR1, NDTR2,
--              NDTR3, NDTR4, NRI1, NRI2, NRI3, NRI4, NRTS1, NRTS2, NRTS3, NRTS4,
--              OSCCLK, PEWAKE, PWM0, PWM1, PWM10G0, PWM10G1, PWM11G0, PWM11G1, PWM12G0,
--              PWM12G1, PWM13G0, PWM13G1, PWM14G0, PWM14G1, PWM15G0, PWM15G1, PWM2,
--              PWM3, PWM4, PWM5, PWM6, PWM7, PWM8G0, PWM8G1, PWM9G0, PWM9G1, QSPI1,
--              QSPI2, RGMII1, RGMII2, RGMII3, RGMII4, RMII1, RMII2, RMII3, RMII4,
--              RXD1, RXD2, RXD3, RXD4, SALT1, SALT10G0, SALT10G1, SALT11G0, SALT11G1,
--              SALT12G0, SALT12G1, SALT13G0, SALT13G1, SALT14G0, SALT14G1, SALT15G0,
--              SALT15G1, SALT16G0, SALT16G1, SALT2, SALT3, SALT4, SALT5, SALT6,
--              SALT7, SALT8, SALT9G0, SALT9G1, SD1, SD2, SD3, SGPM1, SGPM2, SGPS1, SGPS2,
--              SIOONCTRL, SIOPBI, SIOPBO, SIOPWREQ, SIOPWRGD, SIOS3, SIOS5, SIOSCI, SPI1,
--              SPI1ABR, SPI1CS1, SPI1WP, SPI2, SPI2CS1, SPI2CS2, TACH0, TACH1, TACH10, TACH11,
--              TACH12, TACH13, TACH14, TACH15, TACH2, TACH3, TACH4, TACH5, TACH6,
--              TACH7, TACH8, TACH9, THRU0, THRU1, THRU2, THRU3, TXD1, TXD2, TXD3,
--              TXD4, UART10, UART11, UART12G0, UART12G1, UART13G0, UART13G1, UART6,
--              UART7, UART8, UART9, USBA, USBB, VB, VGAHS, VGAVS, WDTRST1, WDTRST2,
--              WDTRST3, WDTRST4]
-+      enum:
-+        - ADC0
-+        - ADC1
-+        - ADC10
-+        - ADC11
-+        - ADC12
-+        - ADC13
-+        - ADC14
-+        - ADC15
-+        - ADC2
-+        - ADC3
-+        - ADC4
-+        - ADC5
-+        - ADC6
-+        - ADC7
-+        - ADC8
-+        - ADC9
-+        - BMCINT
-+        - EMMCG1
-+        - EMMCG4
-+        - EMMCG8
-+        - ESPI
-+        - ESPIALT
-+        - FSI1
-+        - FSI2
-+        - FWQSPI
-+        - FWSPIABR
-+        - FWSPID
-+        - FWSPIWP
-+        - GPIT0
-+        - GPIT1
-+        - GPIT2
-+        - GPIT3
-+        - GPIT4
-+        - GPIT5
-+        - GPIT6
-+        - GPIT7
-+        - GPIU0
-+        - GPIU1
-+        - GPIU2
-+        - GPIU3
-+        - GPIU4
-+        - GPIU5
-+        - GPIU6
-+        - GPIU7
-+        - HVI3C3
-+        - HVI3C4
-+        - I2C1
-+        - I2C10
-+        - I2C11
-+        - I2C12
-+        - I2C13
-+        - I2C14
-+        - I2C15
-+        - I2C16
-+        - I2C2
-+        - I2C3
-+        - I2C4
-+        - I2C5
-+        - I2C6
-+        - I2C7
-+        - I2C8
-+        - I2C9
-+        - I3C3
-+        - I3C4
-+        - I3C5
-+        - I3C6
-+        - JTAGM
-+        - LHPD
-+        - LHSIRQ
-+        - LPC
-+        - LPCHC
-+        - LPCPD
-+        - LPCPME
-+        - LPCSMI
-+        - LSIRQ
-+        - MACLINK1
-+        - MACLINK2
-+        - MACLINK3
-+        - MACLINK4
-+        - MDIO1
-+        - MDIO2
-+        - MDIO3
-+        - MDIO4
-+        - NCTS1
-+        - NCTS2
-+        - NCTS3
-+        - NCTS4
-+        - NDCD1
-+        - NDCD2
-+        - NDCD3
-+        - NDCD4
-+        - NDSR1
-+        - NDSR2
-+        - NDSR3
-+        - NDSR4
-+        - NDTR1
-+        - NDTR2
-+        - NDTR3
-+        - NDTR4
-+        - NRI1
-+        - NRI2
-+        - NRI3
-+        - NRI4
-+        - NRTS1
-+        - NRTS2
-+        - NRTS3
-+        - NRTS4
-+        - OSCCLK
-+        - PEWAKE
-+        - PWM0
-+        - PWM1
-+        - PWM10G0
-+        - PWM10G1
-+        - PWM11G0
-+        - PWM11G1
-+        - PWM12G0
-+        - PWM12G1
-+        - PWM13G0
-+        - PWM13G1
-+        - PWM14G0
-+        - PWM14G1
-+        - PWM15G0
-+        - PWM15G1
-+        - PWM2
-+        - PWM3
-+        - PWM4
-+        - PWM5
-+        - PWM6
-+        - PWM7
-+        - PWM8G0
-+        - PWM8G1
-+        - PWM9G0
-+        - PWM9G1
-+        - QSPI1
-+        - QSPI2
-+        - RGMII1
-+        - RGMII2
-+        - RGMII3
-+        - RGMII4
-+        - RMII1
-+        - RMII2
-+        - RMII3
-+        - RMII4
-+        - RXD1
-+        - RXD2
-+        - RXD3
-+        - RXD4
-+        - SALT1
-+        - SALT10G0
-+        - SALT10G1
-+        - SALT11G0
-+        - SALT11G1
-+        - SALT12G0
-+        - SALT12G1
-+        - SALT13G0
-+        - SALT13G1
-+        - SALT14G0
-+        - SALT14G1
-+        - SALT15G0
-+        - SALT15G1
-+        - SALT16G0
-+        - SALT16G1
-+        - SALT2
-+        - SALT3
-+        - SALT4
-+        - SALT5
-+        - SALT6
-+        - SALT7
-+        - SALT8
-+        - SALT9G0
-+        - SALT9G1
-+        - SD1
-+        - SD2
-+        - SD3
-+        - SGPM1
-+        - SGPM2
-+        - SGPS1
-+        - SGPS2
-+        - SIOONCTRL
-+        - SIOPBI
-+        - SIOPBO
-+        - SIOPWREQ
-+        - SIOPWRGD
-+        - SIOS3
-+        - SIOS5
-+        - SIOSCI
-+        - SPI1
-+        - SPI1ABR
-+        - SPI1CS1
-+        - SPI1WP
-+        - SPI2
-+        - SPI2CS1
-+        - SPI2CS2
-+        - TACH0
-+        - TACH1
-+        - TACH10
-+        - TACH11
-+        - TACH12
-+        - TACH13
-+        - TACH14
-+        - TACH15
-+        - TACH2
-+        - TACH3
-+        - TACH4
-+        - TACH5
-+        - TACH6
-+        - TACH7
-+        - TACH8
-+        - TACH9
-+        - THRU0
-+        - THRU1
-+        - THRU2
-+        - THRU3
-+        - TXD1
-+        - TXD2
-+        - TXD3
-+        - TXD4
-+        - UART10
-+        - UART11
-+        - UART12G0
-+        - UART12G1
-+        - UART13G0
-+        - UART13G1
-+        - UART6
-+        - UART7
-+        - UART8
-+        - UART9
-+        - USBA
-+        - USBB
-+        - VB
-+        - VGAHS
-+        - VGAVS
-+        - WDTRST1
-+        - WDTRST2
-+        - WDTRST3
-+        - WDTRST4
- 
-     pins: true
-     bias-disable: true
-
+ 		spin_lock(&vb->lock);
+-		purge_fragmented_block(vb, vbq, &purge, true);
++		purge_fragmented_block(vb, &purge, true);
+ 		spin_unlock(&vb->lock);
+ 	}
+ 	rcu_read_unlock();
+@@ -2801,7 +2805,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+ 			 * not purgeable, check whether there is dirty
+ 			 * space to be flushed.
+ 			 */
+-			if (!purge_fragmented_block(vb, vbq, &purge_list, false) &&
++			if (!purge_fragmented_block(vb, &purge_list, false) &&
+ 			    vb->dirty_max && vb->dirty != VMAP_BBMAP_BITS) {
+ 				unsigned long va_start = vb->va->va_start;
+ 				unsigned long s, e;
 -- 
-2.39.2
+2.25.1
 
