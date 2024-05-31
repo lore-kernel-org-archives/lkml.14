@@ -1,72 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1160E33CF1;
-	Fri, 31 May 2024 13:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBCA33CF1;
+	Fri, 31 May 2024 13:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717162589; cv=none; b=dk6tiDzEsd1hEJYcFMJuAISRyQpMutFrKcAmYTi9xZXGicQUYUzkkr7+zC7wq8WBhek6nm4t2DsSINVddS0wqjga8Ui7aqgfXjVGNTz81F9q/U7xwc1aK2Q/YvL+CmuIC6wR3vO3GJROHi//FNdrzeAvcl53pYU6TPh63rCcDKM=
+	t=1717162603; cv=none; b=Scttjbsp9y7lpFFSCZZhSgVzrTQdZ4TktUtMqEU3HygF4ztmiYlChKmzEy5g97z9ePjLQZVIUI5OBombh7SRMCBEXqZ2uf7VbyxfEw5Y/D1hGIzGYb6ZomG9GihIt5bOZCieVA8ypksPRdDSKCEzwRZpheITjqS9Be8vVAyN0j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717162589; c=relaxed/simple;
-	bh=gf/hTHqh4wQYWgTtV+wMyboPa6r7AQpsapL7cucv+5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h3DbZWFfV3yc5ZfgRoCZ08PCVySiS2AzyaLoW3H3uzqznaIOmN9bJeR0UJ9VQWuv56Z/BLNVoRDdZg5PblVEQMam9o4dmsNWHzvLitAskt5dd4cjUf9qpo8PW5g5vIHZbfTTPxcawzhLjDDokBjDsUb7M2nwrQUdXd6XcibMeHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSV3yx26; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717162603; c=relaxed/simple;
+	bh=fn20dGx87hZm43/fi8GvAgBZOI7xvT0Wysw5+egYsAE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XEbfyUirz/fj9DtGWPIkNsNZWbkQS/JS601CqxGqifXX8i+5aYG9zjIS028w2Haf4s3eTxkarZUKR2XJk78StpM01pogfTMTiayqhiCS9Rw9e7IkW9YBnhY7vXb+PyatbAUtEIt+Z7QE3hK6R6M5sTgUBz3roUWGVfVp+g83a6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=M87+et4K; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSV3yx26"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B068AC116B1;
-	Fri, 31 May 2024 13:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717162588;
-	bh=gf/hTHqh4wQYWgTtV+wMyboPa6r7AQpsapL7cucv+5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TSV3yx26VoTRDb1Ue+c89VBR25aAMil7OSdarzxp8uu1olMLR1wx2wFiZJM0tLXA5
-	 1HoVYWU9dojMkKmYPkJzGGxfob6MmzXSm7i7knNnnY95qUJGUml1e3eXpxWNgW4C+g
-	 dpad2LIQvx6GDeFXByU/zlpzeUEkok/Sxq5EsS4z3W6NyKFEckq3BwkmEUQbVSMXir
-	 W60D540GfSzalwjnd+RBKuCoOVztS1Ds6w5mci0Ky/lvn2W1MAebJ86wbPzUmHWFA8
-	 DHvWmBdI4Fv+5HfmwwUEF2ntl9MMKiLG5cjrski+Ep2oo6x0CI3gAAxvTuOxqUolC7
-	 F8UXDeoXsjFCg==
-Date: Fri, 31 May 2024 14:36:24 +0100
-From: Lee Jones <lee@kernel.org>
-To: Richard Genoud <richard.genoud@bootlin.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Esteban Blanc <eblanc@baylibre.com>, linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] rtc: tps6594: Add power management support
-Message-ID: <20240531133624.GJ1005600@google.com>
-References: <20240515152827.80185-1-richard.genoud@bootlin.com>
- <20240515152827.80185-2-richard.genoud@bootlin.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="M87+et4K"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V7sUfw030255;
+	Fri, 31 May 2024 09:36:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=rkyvpbvPE8YaG4nx3cDWUbOvROT
+	VXz82CU723yezSMM=; b=M87+et4K2c2FODmniSRuBrCBKhNQaef+R+vcrB2aNko
+	Yu0PZafl0mSBBsI8zdAvryI/GpitDYH5P2vF5ejHntthkJo3EUC5TOdw/cO9yMMQ
+	S/ysr7oiqNMEikE53N4Go3XMtdlarhdOe16ofM58/pFTxgGj/dimErYWdvXrP9SM
+	nQMYhD7E8BrkrWL0evzDdzlCC421qTHwzT1r5HXs8h45igfI4ALKoZCb7UcQBygw
+	PFDdh+PFgTipCVevsE2tQz3+l4UZz4uq3WEIROjOlqGJk4Yad5SxgavKZTQhHLFW
+	h34sfZbr/jn5TgL8L+Vm4LiBVfEa/Cta35fW6ZmbUOw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yb9vq0k34-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 09:36:28 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 44VDaQ2T063998
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 31 May 2024 09:36:26 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Fri, 31 May
+ 2024 09:36:25 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Fri, 31 May 2024 09:36:25 -0400
+Received: from HYB-hYN1yfF7zRm.ad.analog.com (HYB-hYN1yfF7zRm.ad.analog.com [10.48.65.147])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44VDaF86020041;
+	Fri, 31 May 2024 09:36:18 -0400
+From: Ramona Alexandra Nechita <ramona.nechita@analog.com>
+To: <linux-iio@vger.kernel.org>
+CC: Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+        Jonathan Cameron
+	<jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich
+	<Michael.Hennerich@analog.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH v3 1/1] dt-bindings:iio:adc: correct previous patch
+Date: Fri, 31 May 2024 16:35:51 +0300
+Message-ID: <20240531133604.1380-1-ramona.nechita@analog.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240515152827.80185-2-richard.genoud@bootlin.com>
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: wPiWAEBf8cNbd47hJ5HGqQHcaUbbEE8G
+X-Proofpoint-ORIG-GUID: wPiWAEBf8cNbd47hJ5HGqQHcaUbbEE8G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_08,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ suspectscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=712 bulkscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2405310100
 
-On Wed, 15 May 2024, Richard Genoud wrote:
+v3 changelog:
+	* remove clock-names from yaml file
+	* update name appropriately 
 
-> Add power management support to the driver. This allows a SoC to wake
-> from suspend using the nINT provided by the RTC.
-> It takes care of the case when the interrupt has not been caught because
-> the kernel has not yet woke up.
-> (This is the case when only edges interrupt are caught)
-> 
-> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
-> ---
->  drivers/rtc/rtc-tps6594.c   | 46 +++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/tps6594.h |  1 +
+Ramona ALexandra Nechita (1):
+  dt-bindings: iio: adc: add a7779 doc
 
-Acked-by: Lee Jones <lee@kernel.org>
-
->  2 files changed, 47 insertions(+)
+ .../ABI/testing/sysfs-bus-iio-adc-ad777x      | 23 +++++
+ .../bindings/iio/adc/adi,ad7779.yaml          | 87 +++++++++++++++++++
+ 2 files changed, 110 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
 
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
