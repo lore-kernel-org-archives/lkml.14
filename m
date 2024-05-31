@@ -1,90 +1,91 @@
-Received: from mail.mainlining.org (mainlining.org [94.241.141.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01ECB29A0;
-	Fri, 31 May 2024 12:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.241.141.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7C21581F7;
+	Fri, 31 May 2024 12:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717157571; cv=none; b=bPRHFsbM6IiJ9Lv0xt9uMX/jPrDeI5DglujNh71jTi6aFN2LyeJS6OlKnwG7OPMHJKGbBGq9+wzCoVAVuDZK9cDUjlpHogUPs4gPqKAbuxuJCpvwBMf15UYGtO/6rAo7FlN1SwPglASaaRh9aA4qTktl7gSq2deAc0JXDNaOn/w=
+	t=1717157602; cv=none; b=Zit1bihTmnI9BRairFFoA6eVrBMOt2EUj21WLIZQt+gA894/Sv+vaED/8PuOfyr4jPV0knL/UGPvXzeNeVS04ypBPLjuEuOqzaqS5TpOFAxt8dK0yS89nT+HKjy2zxcOKANgrJ4w2fYVxVMK1L5MaG1sRPPM5z1HWQNcCnC8PIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717157571; c=relaxed/simple;
-	bh=sNwq9j0seUAAM0TlDZhbME8CPsDh4g2j1l5gla81evc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L6kCC30a+WkBQeO4lq9TaFE1Vyfa9Ge3NXDG4RUtTBg/+wSnHxXn+gu5j1u3rLqXLsT21UYDOcymSHgTsopzTVaIE3f+MhYfu/LenWku1da9uUYTZnRSERQX0pQMbyQCRCFXI1+hQ+nZTWmByx+QNS/rFJTgikgJaoKkvGwO2Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=aHII+BlE; arc=none smtp.client-ip=94.241.141.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
+	s=arc-20240116; t=1717157602; c=relaxed/simple;
+	bh=pEk6KhSitAdG3WGeUhmwDaMCiS6rCqAE9GvzL8jnLW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LtPw4/BGq/zzZTSzRj/YMPHAyK4di8NDMfmLsEPFcCxDFhyjvsUB0shBNxnF1BnTnSGeukiIAOkb+DtmQ9uplXmb5Q4vj4PqXrwE1jiQYXdMAZEQ2KZBgKlYnCH3mP/FzYZvKxUyBZbthJFl371fX0aNVVyjFfFoy6iG8iIEf8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=NmsH7RWJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="aHII+BlE"
-Received: from [192.168.188.26] (ipb21bf7ea.dynamic.kabel-deutschland.de [178.27.247.234])
-	by mail.mainlining.org (Postfix) with ESMTPSA id 09D1CE1FB4;
-	Fri, 31 May 2024 12:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
-	s=psm; t=1717157195;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="NmsH7RWJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8895DC116B1;
+	Fri, 31 May 2024 12:13:20 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="NmsH7RWJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1717157598;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=365GHuWbQyUl6ukwGlIrpFAaKYKPH0Juz+u4AfNJ4+M=;
-	b=aHII+BlECXTNdaRd2bvpCG6OehJvPxLj0/U3tGLo/MLmrUUb+D87U2eFC91TzYTu6JhF7D
-	KVUSyaeNS3vlSNkK/UI64W2d2b0RzuRkbKnQQ8nbah7K3llkkCgfWOb6NIdebetD5MHGso
-	Xs6p8UWdnnUjQniax7muMORH0ZON2iDduyh2DczrlCU2ahL9wj0llFNHCeWMasLW8luW2C
-	+YWx4NsBCRs3uJpDsGQAft72lQN6/a3i7Mti1JBUbY9O/mrrhk8Uqj4ThAFNvNo7kKK/57
-	bV3P8TUwyzM/sCVOyrlh9DfZzQKzD75DDaVHSVSHPf9OAZK1T3pcDLfVO9VwBA==
-From: David Wronek <david@mainlining.org>
-Date: Fri, 31 May 2024 14:05:59 +0200
-Subject: [PATCH] arm64: dts: qcom: sm8550-samsung-q5q: fix typo
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IV/gUlFTczwkw63MVUJ0IOnRq1Gl4NdBa5kuDrSn6iw=;
+	b=NmsH7RWJ9ZrOgR/Eqt4Mp8/kZUcNm/VXQDo7eL3+4tjJeLE1VV7M6J7f45g2TbdFYf2p1G
+	K5SnFr1i/TrSEc3/FqZG44P1ju1b3hSm6RNVBwh4JuxDhmtXiPkeacOda94Ah3CXelPhu5
+	JlVInX41OuD4+LxdVPUgLipVozEIcko=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 790e363e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 31 May 2024 12:13:18 +0000 (UTC)
+Date: Fri, 31 May 2024 14:13:15 +0200
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Jann Horn <jannh@google.com>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	tglx@linutronix.de, linux-crypto@vger.kernel.org,
+	linux-api@vger.kernel.org, x86@kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH v16 1/5] mm: add VM_DROPPABLE for designating always
+ lazily freeable mappings
+Message-ID: <Zlm-26QuqOSpXQg7@zx2c4.com>
+References: <20240528122352.2485958-1-Jason@zx2c4.com>
+ <20240528122352.2485958-2-Jason@zx2c4.com>
+ <CAG48ez0P3EDXC0uLLPjSjx3i6qB3fcdZbL2kYyuK6fZ_nJeN5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240531-fix-typo-q5q-v1-1-95f10a8eff9b@mainlining.org>
-X-B4-Tracking: v=1; b=H4sIACa9WWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDU2ND3bTMCt2SyoJ83ULTQl3TFGMTEyPjJPOkJBMloJaColSgPNi46Nj
- aWgBRksprXgAAAA==
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Wronek <david@mainlining.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717157194; l=948;
- i=david@mainlining.org; s=20240531; h=from:subject:message-id;
- bh=sNwq9j0seUAAM0TlDZhbME8CPsDh4g2j1l5gla81evc=;
- b=te3JsqLcyA2g3BK4ZBdiENlHG97kZ+Wym6ylsy25J/ENSEY/3pPHqH1nW13eDMppwe3GQsiYD
- e2VLLNJMmd2CprD7SJ2GJIcfW2W2GqQ7M4BU36+NVL8gk2p4iolUuNS
-X-Developer-Key: i=david@mainlining.org; a=ed25519;
- pk=XqkgbOfXJSEnyKxaC8p47fQE9Mm3634OwptSTONhdSk=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez0P3EDXC0uLLPjSjx3i6qB3fcdZbL2kYyuK6fZ_nJeN5w@mail.gmail.com>
 
-It looks like "cdsp_mem" was pasted in the license header by accident.
-Fix the typo by removing it.
+On Fri, May 31, 2024 at 12:48:58PM +0200, Jann Horn wrote:
+> On Tue, May 28, 2024 at 2:24 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+> > c) If there's not enough memory to service a page fault, it's not fatal.
+> [...]
+> > @@ -5689,6 +5689,10 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+> >
+> >         lru_gen_exit_fault();
+> >
+> > +       /* If the mapping is droppable, then errors due to OOM aren't fatal. */
+> > +       if (vma->vm_flags & VM_DROPPABLE)
+> > +               ret &= ~VM_FAULT_OOM;
+> 
+> Can you remind me how this is supposed to work? If we get an OOM
+> error, and the error is not fatal, does that mean we'll just keep
+> hitting the same fault handler over and over again (until we happen to
+> have memory available again I guess)?
 
-Signed-off-by: David Wronek <david@mainlining.org>
----
- arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, it'll just keep retrying. I agree this isn't great, which is why
+in the 2023 patchset, I had additional code to simply skip the faulting
+instruction, and then the userspace code would notice the inconsistency
+and fallback to the syscall. This worked pretty well. But it meant
+decoding the instruction and in general skipping instructions is weird,
+and that made this patchset very very contentious. Since the skipping
+behavior isn't actually required by the /security goals/ of this, I
+figured I'd just drop that. And maybe we can all revisit it together
+sometime down the line. But for now I'm hoping for something a little
+easier to swallow.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-index 4654ae1364ba..3d351e90bb39 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts
-@@ -1,4 +1,4 @@
--// SPDX-License-cdsp_memIdentifier: BSD-3-Clause
-+// SPDX-License-Identifier: BSD-3-Clause
- /*
-  * Copyright (c) 2024, Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-  * Copyright (c) 2024, David Wronek <david@mainlining.org>
-
----
-base-commit: 0e1980c40b6edfa68b6acf926bab22448a6e40c9
-change-id: 20240531-fix-typo-q5q-5d34423b7bb4
-
-Best regards,
--- 
-David Wronek <david@mainlining.org>
-
+Jason
