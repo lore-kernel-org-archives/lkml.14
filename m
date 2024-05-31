@@ -1,94 +1,102 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B023315CD62;
-	Fri, 31 May 2024 15:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B80C24A0E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 15:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717170746; cv=none; b=EQUpVL3WXGaSLXyTxQheFABLgfOMeTNwJN/PXgEYHD4Lv3hcy2MsK0zsD6UqDXGLczXY5kP8wNCQXbXonwXzJSfllXwVqvXtJEziV8Cp2ZbMh1RSbP0PfmNqZlQblEmoTRtN5z++JtlXD/M7AP5uALPLkl/9rbJyFNY6f5etbTo=
+	t=1717170766; cv=none; b=YbUjygnEO2SsC8ViXAkTMoR+ASjf18U9bQkWQyVG5AaXiTUCN0RCKMnrNEvtMhoAPcCn3sAk6+QrzqWAWO4jKEkdJiYQ6vWmo2DtUiTpJWPKkOWk3vYtoxuioWI4MN3qH4/upEbHb/9QAjHh2hCReaLahRVFDvbPDmRAYp8eYKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717170746; c=relaxed/simple;
-	bh=h33iTaw5SrLKIZZPrLstGAQpq2Jz/IjEsivDBhPYmTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fJA7y2oAbpt5lCjfw44KjiNVpafM16VYLzXe/kEm+wnaXG/y57+JLSNeT0yM7ZtN2WEIaCwOhVh9U/cAY6sWVIA71qTbR4fxJh2ODK9cxX9xzzscB52faF8Va259GBWO9ewyMbAurWkhIxt8mnXkYP2PAY4utq0AfgOP59IOb0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpAYRMV5; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717170766; c=relaxed/simple;
+	bh=J0kbwRHmV/+gyGrwgRmUSbnanlbcmQ5Rx6idzys8fSY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2CKZywyx91eXuf1iazH8bb4A1czDq58q/ZyFcSWJM8IYksWpldmwa7/l8+hITwJsNNhIKSEV6u2jGRsVl0yc+LKEhG7/UJdtB77sIEoUIybYUi8k/tldikIQoClqXCyesuvDspHVCIiif/TK/f+Rs1mMVxPpjiLK+tCKGLowQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jl2PWOGq; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpAYRMV5"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6858bdc9ddso99582666b.2;
-        Fri, 31 May 2024 08:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717170743; x=1717775543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h33iTaw5SrLKIZZPrLstGAQpq2Jz/IjEsivDBhPYmTs=;
-        b=KpAYRMV5pAVWV7U7VMzoNIItm+dr6eEMXgscqvGFI0fGbyvNQoS1OL1O3p0EKEiidL
-         ZKzZR9/pnFOYHcLHcn46pbIGcrrlqELs6n6mvrzmXKIvd6Dx5I/tKlChEf0zqIRsYg2+
-         XrLwhctIufUYWPNj9tyjQE4KeHjZwAVkXDvpnNzdvxwHv8oRLEGiAmlWMkAVxRoyRIbI
-         y2otcxMnfKJiQc4FYim3qkbqL+3oJiELrojclaaD1/X+4l0W0IXuIKDeK2jfRqWwMICq
-         J2GKk/S4N0mtqceadUWtOWmZzGbVxP+urGqbhQzn6H5TdSgVSHq5dY3jmHvBLt2S7M7j
-         jJUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717170743; x=1717775543;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h33iTaw5SrLKIZZPrLstGAQpq2Jz/IjEsivDBhPYmTs=;
-        b=vrYUlXZYE0xXWO2bCZtEzwM0a+e6I7ZilhW6HGUjThaEdXQ+35rMGeJzZVSAdLIkw8
-         Fmroqhp2ql8tdFPkDWuVdKioYHHb4rf2LY0TumBdEeCM46Oyz960d10/2g16nMiNzhae
-         C3CG5/bTkVw0zhXcy0BS6T/QQYrX2PE/sPVVbamERbDWb1gJhOwhVsTzqhKrO+L2pkar
-         +rcfPzX1A/W+FdXEit2ZImpGvWfaSB6rwMyMRvn80MJxmvrNIiWnClDDf4eE/0Dzl63w
-         hTLqbXI505dcI3XXY15jywxGPVILf323MzED6R5F0rtGrH6kqVtZLl5e3BOm+OW37k/9
-         hPYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9fu+tMsFCu4Y+tSOhCD2E3gZAJQ2drIXrxyHzOvGXQUGt0hNEsap+Xixz2tYe2MBnrcwqHAZnAQ4MQEaZ8jpFbs0vz8wjqx6MyVsWjOET3y7c5/oUi9AjUnXri+IuFOn2jedxmEDO
-X-Gm-Message-State: AOJu0YwkVkDaFuDf68u68nMcGP4yTS4daCeSDAv2t0aPKMLCaX/nePt6
-	VPFStYRmQN1JJUGN3h6Qx0hl4BoGNXQMU13Sc5FKhHCJqwMDzUKGszQ+MO6W421JPcLtDsXcI6C
-	/HVpm9xrTzFB/Zddv5eIsN0vNY64=
-X-Google-Smtp-Source: AGHT+IHF2MeOHvv48FrUFGRoQjsiyyWp+nFdSGTIxDQKjCSukxIZ++hVa/FJ3YE5N1/a5G8Gn6QHSqKLwM4zu/PpLGk=
-X-Received: by 2002:a17:907:76e5:b0:a65:c99e:50c3 with SMTP id
- a640c23a62f3a-a681ff45272mr187552966b.26.1717170742734; Fri, 31 May 2024
- 08:52:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jl2PWOGq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717170763; x=1748706763;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=J0kbwRHmV/+gyGrwgRmUSbnanlbcmQ5Rx6idzys8fSY=;
+  b=Jl2PWOGqwdkMrLN1My//9lWF1ambVxcY/K1yi6qsTFLWlICy3N4ZkbkS
+   57/rtrxFR4yAjgjve8YcHMnXDG1cEIsi6y78vGHYwrlcD3YFoVygN4pcp
+   wOXCSNasoHliv7srXA7xp3Xq9mlje97dz8xvrYTflmZ4N0N5RGo/s1KXc
+   D/wrxBFwgCZKVyoGaz8vjG8my3mzs9J9gSTYoAI66u3w+iFalRvufY6LO
+   3GHKBAjQQ26GyQuuxDXCFqAj+9SGY/R+2fz8Nt+1nfS9UoCiHvMjhwU+M
+   bcBkSUHWfhiNrDoU7DBkPCN+FR5Fj7RCol1u17moNgrmNoKrqWf9xG020
+   A==;
+X-CSE-ConnectionGUID: hgUEzJKkRVWaXU+foNpeoA==
+X-CSE-MsgGUID: x+kZR9e0RJi9I7cZTj7I9A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13587514"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="13587514"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 08:52:43 -0700
+X-CSE-ConnectionGUID: zpuuR3eiRQ60zgBo3cKqcg==
+X-CSE-MsgGUID: +jYVfnZySUSdu642MgqtqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="59376531"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.125.108.62]) ([10.125.108.62])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 08:52:42 -0700
+Message-ID: <457b2e1c-00b7-45d5-9c66-6d03c39586d5@intel.com>
+Date: Fri, 31 May 2024 08:52:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531094658.1598969-1-andy.shevchenko@gmail.com>
- <1ea41944-a107-4528-8e8d-559c06907e3f@notapiano> <CAHp75VeG9K3Ar4UJnGxus3zz_vtt4QfFdkYQ8=6D8pt2aB8kmA@mail.gmail.com>
-In-Reply-To: <CAHp75VeG9K3Ar4UJnGxus3zz_vtt4QfFdkYQ8=6D8pt2aB8kmA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 31 May 2024 18:51:46 +0300
-Message-ID: <CAHp75VcHsE_vb12rwgf6f3q4V_wUVq5tckA5QgFhwUHaYKjwWg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] spi: Make dummy SG handling robust
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] ntb: Fix kernel-doc param for
+ ntb_transport_create_queue
+To: Yang Li <yang.lee@linux.alibaba.com>, jdmason@kudzu.us, allenbh@gmail.com
+Cc: ntb@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240531072124.64352-1-yang.lee@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20240531072124.64352-1-yang.lee@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 6:46=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, May 31, 2024 at 5:37=E2=80=AFPM N=C3=ADcolas F. R. A. Prado
-> <nfraprado@collabora.com> wrote:
-> > On Fri, May 31, 2024 at 12:44:31PM +0300, Andy Shevchenko wrote:
 
-...
 
-> > applying either of these patches causes issues. See the traces for each=
- one
-> > below. This was tested on top of next-20240531, which works fine.
->
-> Oh, thank you very much for prompt testing! Can you test just the
-> second one without the revert?
+On 5/31/24 12:21 AM, Yang Li wrote:
+> The patch updates the function documentation comment for
+> ntb_transport_create_queue to adhere to the kernel-doc specification.
 
-Ah, you wrote "either", so it seems you have tried that already.
+I wouldn't say it's not adhering to kernel-doc specification but rather that it's documenting the incorrect/out of date parameters. So maybe something like:
 
-> So, your patch seems needed for the sync API calls, while I considered
-> only mapping APIs.
+Update ntb_transport_create_queue() kdoc header to specify the correct input parameters used by the function.
+> 
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Besides the commit log change,
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  drivers/ntb/ntb_transport.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ntb/ntb_transport.c b/drivers/ntb/ntb_transport.c
+> index f9e7847a378e..5d466a3f117b 100644
+> --- a/drivers/ntb/ntb_transport.c
+> +++ b/drivers/ntb/ntb_transport.c
+> @@ -1966,9 +1966,10 @@ static bool ntb_dma_filter_fn(struct dma_chan *chan, void *node)
+>  
+>  /**
+>   * ntb_transport_create_queue - Create a new NTB transport layer queue
+> - * @rx_handler: receive callback function
+> - * @tx_handler: transmit callback function
+> - * @event_handler: event callback function
+> + * @data: user-defined data to associate with the queue
+> + * @client_dev: the device structure of the NTB client
+> + * @handlers: structure containing receive, transmit, and event callback
+> + *	      functions
+>   *
+>   * Create a new NTB transport layer queue and provide the queue with a callback
+>   * routine for both transmit and receive.  The receive callback routine will be
