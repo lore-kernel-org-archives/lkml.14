@@ -1,138 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EF466F2EB;
-	Fri, 31 May 2024 14:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804B6F2EB;
+	Fri, 31 May 2024 14:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167539; cv=none; b=Ls45+0T4OchJM9U3l5UUcYpV6WHdg0KOEizmpnNXO3BACEpBhy5bB3kICNpQoluajGQFyrlimx+uGFo6sersfmc9W4gRsKPUfTlWgrUnidxBIgujkmGcUiSpKuwlbwDyQ2Sd9aLu6pJN5FEWL9fl0+Hg5INJFizpHw//zM3nbv8=
+	t=1717167553; cv=none; b=b0riGXPLo7OMMGhiy6P4vP589cIwBlxA6eldH4hm2csOQmaWEBOUg9Sm2uvQhSkl+iQkpKFYCIPh1j/GFUUL5sKgFHLvKa9HeipFW4DvGKx06FBXhgf8RgdLiUAT/zkDGY+tbn6mf7/ShIq3H1Wn93au+2rxXmtI1BgAFTx09bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167539; c=relaxed/simple;
-	bh=G/b7RyaoGodqjPBF0FsWhLwSns9WaG79sqo1CfgHyUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5k1zqrQxl4O/40wlCUqyxMu44QfW7iwCZVqjbOYtHwUjAlZP8C7/zxzyRBKSAJrcetMSoRlw7efCKByHXpqiyGqXb6B7WoNQ0P55Fs1hXGrHUK59tYs6TywGighL0QXehqs2lW6OJNWn70UFyQsRrSkeoI86kl9XhVUOYAEUBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6911F1424;
-	Fri, 31 May 2024 07:59:21 -0700 (PDT)
-Received: from [10.57.69.119] (unknown [10.57.69.119])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D57253F641;
-	Fri, 31 May 2024 07:58:51 -0700 (PDT)
-Message-ID: <974f1d23-aba8-432e-85b5-0e4b1c2005e7@arm.com>
-Date: Fri, 31 May 2024 15:58:49 +0100
+	s=arc-20240116; t=1717167553; c=relaxed/simple;
+	bh=9+6h3DiodrT9YFrdp+kdRsd+uvX5l44PO21I4T4zFO4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaJtWdqUsnXtb9munJsZjDSJS24deBDnIKEAef+bzlIYLsdPR545lVbIJVLbFUHqE5ISGCMQEabcuI7fYr3vFve6xioiUNFhygj+Cv3cMrY3T39mfmyAan0MY3eHoL4vELeKGfacHHqDgUI7p0Ep2TrxqKlJHACQe8oL3xaqM+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=cgV8psTi; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cgV8psTi"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V9Swso003313;
+	Fri, 31 May 2024 09:58:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=hxGvSEqlUm/4Gr1/Y7
+	FisaucBu8jAHnTKI/Obg6VI9c=; b=cgV8psTiVp2etlgNlYKT/Xz5UTa72Adwnp
+	Mz2p1O9qHqFUPa15bt9k4vOaw0BFh7bPfJ1p4wP2ArTWshr7L1GtTFZWa18VmbEX
+	efyhNCr7LGDVTGEkFIdZ0+fQ7lrmWR08B7gFutkTdq4gik7dVbbMx17C3hPbsiqX
+	FCCs7+w31Fz3cjSd/vTp8fxiOXlBH0SixpDYUeNAgOZyC/WqXTvNGN/y23eabUCD
+	5uteqKIcoNKlQlCxYfRo5l/rbU0dUpjor+W6lYVOnFoOCyW4y/NdaGcm+icIdEzg
+	FzQyVFTV5U46MBSRn9vkeAmsXDfnV3tfBs9CiTKaysNGvNIL1WOg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3ybdcwwwuu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 09:58:06 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 31 May
+ 2024 15:58:04 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Fri, 31 May 2024 15:58:04 +0100
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 05CBE820244;
+	Fri, 31 May 2024 14:58:04 +0000 (UTC)
+Date: Fri, 31 May 2024 14:58:02 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Rob Herring <robh@kernel.org>, Weidong Wang <wangweidong.a@awinic.com>,
+        Mark Brown <broonie@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>,
+        Shenghao Ding <shenghao-ding@ti.com>,
+        "Marco Felsch" <m.felsch@pengutronix.de>,
+        Alper Nebi Yasak
+	<alpernebiyasak@gmail.com>,
+        Chancel Liu <chancel.liu@nxp.com>,
+        "Kuninori
+ Morimoto" <kuninori.morimoto.gx@renesas.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <imx@lists.linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "James
+ Schulman" <james.schulman@cirrus.com>,
+        David Rhodes
+	<david.rhodes@cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>,
+        Srinivas Kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        Banajit Goswami <bgoswami@quicinc.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Heiko Stuebner
+	<heiko@sntech.de>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
+Message-ID: <ZlnleuSae2C6/WRU@opensource.cirrus.com>
+References: <20240530230037.1156253-1-andriy.shevchenko@linux.intel.com>
+ <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
- MSI ITS and IOMMU for i.MX95
-To: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <Frank.Li@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
- Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>
-References: <20240530230832.GA474962@bhelgaas>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240530230832.GA474962@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
+X-Proofpoint-GUID: QOHrrhhsAlL1BvB8LD1NFqOZRJaPkXqI
+X-Proofpoint-ORIG-GUID: QOHrrhhsAlL1BvB8LD1NFqOZRJaPkXqI
+X-Proofpoint-Spam-Reason: safe
 
-On 2024-05-31 12:08 am, Bjorn Helgaas wrote:
-> [+cc IOMMU and pcie-apple.c folks for comment]
+On Fri, May 31, 2024 at 01:58:47AM +0300, Andy Shevchenko wrote:
+> of_gpio.h is deprecated and subject to remove. The drivers in question
+> don't use it, simply remove the unused header.
 > 
-> On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
->> For the i.MX95, configuration of a LUT is necessary to convert Bus Device
->> Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
->> This involves examining the msi-map and smmu-map to ensure consistent
->> mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
->> registers are configured. In the absence of an msi-map, the built-in MSI
->> controller is utilized as a fallback.
->>
->> Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
->> upon the appearance of a new PCI device and when the bus is an iMX6 PCI
->> controller. This function configures the correct LUT based on Device Tree
->> Settings (DTS).
-> 
-> This scheme is pretty similar to apple_pcie_bus_notifier().  If we
-> have to do this, I wish it were *more* similar, i.e., copy the
-> function names, bitmap tracking, code structure, etc.
-> 
-> I don't really know how stream IDs work, but I assume they are used on
-> most or all arm64 platforms, so I'm a little surprised that of all the
-> PCI host drivers used on arm64, only pcie-apple.c and pci-imx6.c need
-> this notifier.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  sound/soc/codecs/cs53l30.c        | 1 -
 
-This is one of those things that's mostly at the mercy of the PCIe root 
-complex implementation. Typically the SMMU StreamID and/or GIC ITS 
-DeviceID is derived directly from the PCI RID, sometimes with additional 
-high-order bits hard-wired to disambiguate PCI segments. I believe this 
-RID-translation LUT is a particular feature of the the Synopsys IP - I 
-know there's also one on the NXP Layerscape platforms, but on those it's 
-programmed by the bootloader, which also generates the appropriate 
-"msi-map" and "iommu-map" properties to match. Ideally that's what i.MX 
-should do as well, but hey.
-
-> There's this path, which is pretty generic and does at least the
-> of_map_id() part of what you're doing in imx_pcie_add_device():
-> 
->      __driver_probe_device
->        really_probe
->          pci_dma_configure                       # pci_bus_type.dma_configure
->            of_dma_configure
->              of_dma_configure_id
->                of_iommu_configure
->                  of_pci_iommu_init
->                    of_iommu_configure_dev_id
->                      of_map_id
->                      of_iommu_xlate
->                        ops = iommu_ops_from_fwnode
->                        iommu_fwspec_init
->                        ops->of_xlate(dev, iommu_spec)
-> 
-> Maybe this needs to be extended somehow with a hook to do the
-> device-specific work like updating the LUT?  Just speculating here,
-> the IOMMU folks will know how this is expected to work.
-
-Note that that particular code path has fundamental issues and much of 
-it needs to go away (I'm working on it, but it's a rich ~8-year-old pile 
-of technical debt...). IOMMU configuration needs to be happening at 
-device_add() time via the IOMMU layer's own bus notifier.
-
-If it's really necessary to do this programming from Linux, then there's 
-still no point in it being dynamic - the mappings cannot ever change, 
-since the rest of the kernel believes that what the DT said at boot time 
-was already a property of the hardware. It would be a lot more logical, 
-and likely simpler, for the driver to just read the relevant map 
-property and program the entire LUT to match, all in one go at 
-controller probe time. Rather like what's already commonly done with the 
-parsing of "dma-ranges" to program address-translation LUTs for inbound 
-windows.
-
-Plus that would also give a chance of safely dealing with bad DTs 
-specifying invalid ID mappings (by refusing to probe at all). As it is, 
-returning an error from a child's BUS_NOTIFY_ADD_DEVICE does nothing 
-except prevent any further notifiers from running at that point - the 
-device will still be added, allowed to bind a driver, and able to start 
-sending DMA/MSI traffic without the controller being correctly 
-programmed, which at best won't work and at worst may break the whole 
-system.
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
 Thanks,
-Robin.
+Charles
