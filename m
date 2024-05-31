@@ -1,365 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2063.outbound.protection.outlook.com [40.107.244.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F901C6BD;
-	Fri, 31 May 2024 19:38:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717184321; cv=none; b=SHVAkPglmjHz8UGWLldm3ZVQKrvgzcs+B0z5e2Z7W+bIOrg6AzLYids0r/1f4raQaWJd9wVSeQ68vcfHE4bq763S9kADjWm/tx+G5f0FCbp1U8KeDRZAnAjuM/5ZugOo/ZS5lZv9GsCTOtpVTvIPa3AvO5ybkuappixOJLLauEs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717184321; c=relaxed/simple;
-	bh=fNirT9X5z5PGC8a0mvbvylqJzj4WA1QF269Y4SA0Y34=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=En6matNtjysd8stT6FyyvXPbtuLR3p3MuW6xVSHFuzjem/jxR/Hni6K1E0TzUO20MrbTJF5q9szBIHBFKswVZ7al8jFGN0v/xOvRtMfrtesiF5OXq601X43qutqSTTrOfzdrDrGJGnYOnrl77ocFxfohV6sjSM78nlEMuuoiR7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwdFNHsf; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8A117D358;
+	Fri, 31 May 2024 19:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717184325; cv=fail; b=r6PkkKOYGOxbJGrqcIF4T0aViNuzft2ZW0Ye7iDBGXWdX/AGs7BpeZ0gV5PwwWo25ySQ7E+yUE4prKAJg96gQbSuLXfGaypbAmBt5FRQkKaKbzFu9RvdGrZi0X9JUCq4CNTElpodH+aGiB96nz7x4IGwH9pj9+0gqQqh5JnDxrc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717184325; c=relaxed/simple;
+	bh=ie2OqclMHnylLphlJ/DT+yCw3LgxNA7ecDYXdCmGTVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=MHJiGLLNLU6O7W8tMwWjsjya8uPSMBHG76q1NiY99gLQ9ClnyS3757YSQ8nCPF15Xgo0UwKjOW0nY1IOwAl2cHsV3nSqWHRy7j5JFwZi5kdL8BK3qVqcbvFgK7mAeUiSUeRedZIU2Y8wLeJt/FdWlrzKHCez1fd+246Wc6JfbSo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DcSWg5ps; arc=fail smtp.client-ip=40.107.244.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwdFNHsf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A5F7C116B1;
-	Fri, 31 May 2024 19:38:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717184320;
-	bh=fNirT9X5z5PGC8a0mvbvylqJzj4WA1QF269Y4SA0Y34=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lwdFNHsfp1Wa67UDmR34wO5Bfkq2EOr4YTNS0vEwBPr9WMwGmSkFqU8K5oQ+lXVFI
-	 kdPJ3br895U8tI9pXUobnA47iFWQn+L8wXIPv6UVhAFuCVqwlXnY+Rs2o0AxU2mRTX
-	 uK+cE83AumffGk2vGiySue9707Ua2/DxAkjrLHdxiUc02nLW59LFcJLFyO6ep6qRa2
-	 sxu+X9VwGK0yTMwWal8PRblHyzyg0t1PShveVLXr860L8Fus526YyRvD7D6SOxocnb
-	 V4ZTHng1Iw0wkWrkiRrTwmlIcJgi2qF8CnqWBCXticNSKaipTSw4VfOgbpvNsuFTcd
-	 L0cmU26d+VfZA==
-From: SeongJae Park <sj@kernel.org>
-To: Alex Rusuf <yorha.op@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] mm/damon/core: implement multi-context support
-Date: Fri, 31 May 2024 12:38:38 -0700
-Message-Id: <20240531193838.71538-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240531122320.909060-3-yorha.op@gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DcSWg5ps"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g+W2i7kVKO0tYWtTSQsSvg5ql6OzFNVLUGp7lLShjhAWz/LwNeeGSeAdGYX0UZoYBWkTlQPCLDzSy8+wunDyPBjcz+ZO7qVkAntIWr9g7ylEZM4GomQXzOm1KsfjhRMg/4RejO2MnDL70b+JhqFPDpz95Y07TpPfXkMIf7lznxGstzYi/NpD9lD2IkbGFIOUsUQHftzjYML6UtO0VZoP1xM4idO2frL24L23Rmw7OSrzITjjBSzDZ1OYeULxapvXNiP2LIQJzGlqpQ9SRSJ4/uzMn8L1KtZGQo0H9e5Shrpu5fHslHTz4JRFKinvo2RY9+w/nC5z3dommKOM8pw+yg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0gbvJvlxgGSEfx8wcjWwvCw7mOfUZfqC8rRe73WXMqY=;
+ b=BvpPBMat4+gJuIWTuf8HKovVvHoDD/r6AIL/y7hKb+Bd+G7S1VADsJXVr5MNLrx/YRXgYWfHseDPrPiBcmldZdUd+R2saskqsH/POZYv2P7437N94Ea8amUTIeUXgqh4wZc3BWIK+Tw+aElf5WmLjnTpenkiY9O463IHiX9mbYinQ+TsmRWk/o8MGAZPJKXebeTtbOwlQL3rcWWbBbDo2CYh2ETtc7Cou/40V9gpsqgTq/udxLRvFA1Nz47H7AUAqo89sv8dAZxSFjwWKf3+IFMOf8tIoKlS8Hou0V/Czvucpc+/HrHA476bavNQ94IT6cw+xVOimHV2vVKjRkRYpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0gbvJvlxgGSEfx8wcjWwvCw7mOfUZfqC8rRe73WXMqY=;
+ b=DcSWg5psnGjl9zoYon4osqlyKt4gVJijqpMwYmOw0Y+Bg8G1DUANIqDLgV0ulrcRPFDyBu4onu7RTpMG5JYuQ4t4qi18oOQNI9AEpkBSugBKL2RFRX77ClPlgWmuR5ogBhUtu9/FKiA/vlO27DEvNQZxbwSIsH4dGo2y6nV4sC1EYmJSe003QE8OJb0SSEGJI2YlWsJMb5PJ1QXmclLQY4k8lrMcKNd8Ez+VC1GvYv7BbFZAalV3iHF4UKdFRcKRhhToYpCEzgTL0SLhgBf3kOMWuLC3qXMY4Yx1qNixMUwuu/TabagcMD0jA1QfTGcxz4jLLn9ntWdRo5XlqBt1+g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by IA1PR12MB7712.namprd12.prod.outlook.com (2603:10b6:208:420::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Fri, 31 May
+ 2024 19:38:40 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7633.021; Fri, 31 May 2024
+ 19:38:40 +0000
+From: John Hubbard <jhubbard@nvidia.com>
+To: Shuah Khan <shuah@kernel.org>
+Cc: angquan yu <angquan21@gmail.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Binbin Wu <binbin.wu@linux.intel.com>,
+	Alexey Dobriyan <adobriyan@gmail.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kselftest@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	llvm@lists.linux.dev,
+	x86@kernel.org,
+	John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v3 0/7] selftests/x86: fix build errors and warnings found via clang
+Date: Fri, 31 May 2024 12:38:31 -0700
+Message-ID: <20240531193838.108454-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.45.1
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0018.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::23) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|IA1PR12MB7712:EE_
+X-MS-Office365-Filtering-Correlation-Id: a00d64c3-83aa-4367-5dd0-08dc81a945fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KK5tn7+mkpihbUgYxAwVy7y1Odd8685avYygAxtw89Ps2gkjMx13RfrBHcif?=
+ =?us-ascii?Q?sKVPKy3h+LJIWuHjB4dcn3EEMuKAN3GCE78/UHJT0iJnVRVqWcrJMuJMZXKd?=
+ =?us-ascii?Q?Z3+BlaFEc0dQvifEuNCwC4q4HqCXZ9Xxid3bwWePaBbBniyC5PWOSkMNRKPn?=
+ =?us-ascii?Q?kTIg9H79Ezdi7TDdOLntBq6kdoUfr8vA4oc0OV1iHhBjPu4ETzsR3P1GvN4F?=
+ =?us-ascii?Q?hgHfgTrJev7HSEOE2CG6MjCafuZhN0dHNZWDYCyS97Dv2SJIrOkmgEq63JbH?=
+ =?us-ascii?Q?NcruqGP5QJGr4l+VX86IfzM1G/8CJWLYPYAY7U1WDitpjp8nGzTxeRoTUtrF?=
+ =?us-ascii?Q?RGZkud9l4D5L8uIUCQjtN+Bh59oSU+MTchZ43ebsCjXo4Vl3LgfBpMipa6rg?=
+ =?us-ascii?Q?SNq4Zk4veCDqk0f0f53dV/3ChYy485orkI7u6t2bgiXXCIWNNGbrB3vZMj/M?=
+ =?us-ascii?Q?wDgne7aaoxOrVcL4q9MJ4fQ+s8eqwxxrjy5oQXXSmyhLBKE8zeJxfybvPhVM?=
+ =?us-ascii?Q?a20pYa7isjt875CDtb0nVho5ctPbRDlcouD8Z8/AKOsiJA3vxXnaWT8yOEhH?=
+ =?us-ascii?Q?Ns2KUv0SmzZtwWyf5AuJtp+VrvOGUMMQLuBiwE0lTQmXsLm66xW0MswZZp4x?=
+ =?us-ascii?Q?m9dBrzviynpD0P4R2n6n8lprUnkR+XWk7s9Z7RQ/OGVmg5899+brCKpA/MBW?=
+ =?us-ascii?Q?2vdw3/OYye71cNltDVakl/Ib/nj0ZpXa3yq9M21C3YmZjGa3XaQW6O1X82tA?=
+ =?us-ascii?Q?9rQpENaxucVPx0sb3hHMCyXhxn7oJcfkUG5/XfCvY7ph248EE9NDMpdNKJb0?=
+ =?us-ascii?Q?extT9I9AkiNBPEtl3HFugvboEEN9YM2wU5a52jkfG8gjJKMa+HGnAF4J00E5?=
+ =?us-ascii?Q?TcZWU9JCdod/t8ayl0eVA6lirWRNH5COm8bdK+QjK1wT1Jp6ANYieYeV2JfW?=
+ =?us-ascii?Q?3bjSw2khI8t+MUU5Hw4VnGLScTie5JNJG047/i3wn8pxMDVQv0LDX7+WKxN/?=
+ =?us-ascii?Q?tJ5LrTZ0hbughOb5jH8ZyUJ5beG/LwUIT6to74DUA3t964ee9dgUHULTrhjI?=
+ =?us-ascii?Q?q66M1riuu1TMyUU8dQzp09ijna49kAFy3EIsBXtOLdnSSK9VFk7SSLzLfNTq?=
+ =?us-ascii?Q?o9LXiv1IOqa1Ts0q8m8Vjwgj1zdi0doPkFgevUYLB2ckNLbQso4fQltwhFN0?=
+ =?us-ascii?Q?M0r2yON5C39Oo0MxJhP6iSDg5tJdRtbkBbJCJ/SqfgKGejdr1MqgCrn5oGdq?=
+ =?us-ascii?Q?Ql7OtRXdaNrEFz6YRx7/n1DUneqdBAghq9egy5S6oA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?bBeZDNtMgtmO97bdwAdcphg784Tj8bkR03KfF/06vjBCcUlAiVJghoPauZOd?=
+ =?us-ascii?Q?VOE5UD/em2RXcWXvlAgJveUE3l0L6TwAIcnhWFaGvkADUupFxD3NJ3iY3RMH?=
+ =?us-ascii?Q?SOYoEXxQDJZkZw1k5m1/wZwMmiU+uI6K9bl42o90jBeCd0v5531SGkKrpnTf?=
+ =?us-ascii?Q?fZHLr3MjcmgbWr3ogdcyrIvB7meFCWyaePptyxsMLPNRSjc9Fr6fVtO6h+K6?=
+ =?us-ascii?Q?UF3rVTO0U92D14JmQgC9ld5AmFW98wU67xsAcmIa4KGTHUshrR5GlzdLattV?=
+ =?us-ascii?Q?z6mEfHI0px3lom9rpM7LRNPHwMNz4oJ/zcTJtJrqbAdSnzdmkU3pCXl7pJmT?=
+ =?us-ascii?Q?gslnxX/rA8xGY+EgpxAwZPG0M8+bSa8kMe3HDCxKFklTUAY8OhC/eFkxB+3C?=
+ =?us-ascii?Q?3RBF3YKl8AAgSBZbalxS7PMI+6s1RJfoP0rtj36vrLtKd/43ClgxVxbXMU24?=
+ =?us-ascii?Q?ZW2dhlkAitEqGpdj8AgHa6hYkb0zW8IoX6DURwnlsRQnXUllTVh/HjMvlas9?=
+ =?us-ascii?Q?dSldXD4ITEQhwl40/5hROPY1necBx3z3Krezreg4vUPLhYfud2HYR44rMk8P?=
+ =?us-ascii?Q?TDA2FppMCv2jY1QZ5OPrmS6H6X9i2ooIfZJoqoXgNek8qbPNeJ6ItDfrz2Hr?=
+ =?us-ascii?Q?xrOChkXHBP1jJy0RtQiRwLUhe2gr88qtxTHyPU2NUUpSnC6aDYRQxK5GKs8H?=
+ =?us-ascii?Q?SKkDDUEh+cEYFTX/ecQyEXZjOW+cUoxYtB6jvC1hS4zjalkcfFEedrhoVgj4?=
+ =?us-ascii?Q?etxw4uRmuJ+PXmbvRJnCYRHTXFjoZw7x0zotSduTFFNZTyLd5qeil9UUrj8r?=
+ =?us-ascii?Q?8F+BeyOZ6Fvv9wxRL+RRemvAsGVM3/FKJVZM8i5reVuUK/V8ImohN27MKI2P?=
+ =?us-ascii?Q?hSqy/K/CecdpynWVmfc+0c94vUwfOGts3KX2lHKJQ1AwuStxqwfC025Lb4Qr?=
+ =?us-ascii?Q?OjZjsnInVYVO85Gh5ngZrg3h8mV8MwGaal5wR69C/Tz0GGJizqs9l4Xtjhd4?=
+ =?us-ascii?Q?oDIAD3OuQGNWc3Nu2yuegRwiYDferMNRPazY6CK69YeFFJpbVk9AtMHUzdg9?=
+ =?us-ascii?Q?RITOyTGbsohGXUEF9W0QQpGxzq2J34AWziGWxOjIWEeilwO6wvia6nerVkVK?=
+ =?us-ascii?Q?rkViBg5IGyQsxddH5omjqAA3E7+X6RQhTm4KmfZI9d3V7XA2jTM8pCfJFiND?=
+ =?us-ascii?Q?tGOq2Zx5Afgkby0F+yIsqk+xhb1mAlg/McrkifP6nyMp9J3tbxeqSdLKUjDS?=
+ =?us-ascii?Q?tqvZxWjsTwBJ09ZfhmcLXlfFpPvIcKYoQZjejMtuivZGvFB5FR3POSAcPFhg?=
+ =?us-ascii?Q?VEcs47u2OF61FXbt3GLGZBznlfmZbMEN2PlMBmC6XWIz3tNbE1mwC0B9HGf3?=
+ =?us-ascii?Q?Vc0KK2i+e8ZYZl5rSoYbtoJSDXS7tYCYEFwH5QxKmnMBIO1yQJ8aO59E9yyR?=
+ =?us-ascii?Q?PE8mNr14pK2rwX9HHzYnYB+HnJzXwjv652GeIwUewqbnnzvR8AEnrwzEQwQO?=
+ =?us-ascii?Q?q8JK+sHV+PLA1iKukEr0+F+epR6e6g57hfsWEKSIQbC1ZddXziQFLh5yxy+N?=
+ =?us-ascii?Q?pigoNU9d/hAn1az4m0pY2fEsBONa0CK5b8/dmqCu?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a00d64c3-83aa-4367-5dd0-08dc81a945fe
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 19:38:40.4416
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rLfGlM+6H6f+TbOiaRxx8ZcW0V9r/ENz6j6gBh99rGkPYLf4YMJ1ekhXZFuEFbjkpuC8UQLpA27fwsDjNlnG8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7712
 
-Hi Alex,
+Hi,
 
-On Fri, 31 May 2024 15:23:20 +0300 Alex Rusuf <yorha.op@gmail.com> wrote:
+Dave Hansen, Muhammad Usama Anjum, here is the combined series that we
+discussed yesterday [1].
 
-> This patch actually implements support for
-> multi-context design for kdamond daemon.
-> 
-> In pseudo code previous versions worked like
-> the following:
-> 
->     while (!kdamond_should_stop()) {
-> 
-> 	/* prepare accesses for only 1 context */
-> 	prepare_accesses(damon_context);
-> 
-> 	sleep(sample_interval);
-> 
-> 	/* check accesses for only 1 context */
-> 	check_accesses(damon_context);
-> 
-> 	...
->     }
-> 
-> With this patch kdamond workflow will look
-> like the following:
-> 
->     while (!kdamond_shoule_stop()) {
-> 
-> 	/* prepare accesses for all contexts in kdamond */
-> 	damon_for_each_context(ctx, kdamond)
-> 	    prepare_accesses(ctx);
-> 
-> 	sleep(sample_interval);
-> 
-> 	/* check_accesses for all contexts in kdamond */
-> 	damon_for_each_context(ctx, kdamond)
-> 	    check_accesses(ctx);
-> 
-> 	...
->     }
+As I mentioned then, this is a bit intrusive--but no more than
+necessary, IMHO. Specifically, it moves some clang-un-inlineable things
+out to "pure" assembly code files.
 
-This is not what you do now, but on previous patch, right?  Let's modify the
-mesage appropriately.
+I've tested this by building with clang, then running each binary on my
+x86_64 test system with today's 6.10-rc1, and comparing the console and
+dmesg output to a gcc-based build without these patches applied. Aside
+from timestamps and virtual addresses, it looks identical.
 
-> 
-> Another point to note is watermarks. Previous versions
-> checked watermarks on each iteration for current context
-> and if matric's value wan't acceptable kdamond waited
-> for watermark's sleep interval.
+Earlier cover letter:
 
-Mention changes of versions on cover letter.
+Just a bunch of build and warnings fixes that show up when building with
+clang. Some of these depend on each other, so I'm sending them as a
+series.
 
-> 
-> Now there's no need to wait for each context, we can
-> just skip context if watermark's metric isn't ready,
-> but if there's no contexts that can run we
-> check for each context's watermark metric and
-> sleep for the lowest interval of all contexts.
-> 
-> Signed-off-by: Alex Rusuf <yorha.op@gmail.com>
-> ---
->  include/linux/damon.h        |  11 +-
->  include/trace/events/damon.h |  14 +-
->  mm/damon/core-test.h         |   2 +-
->  mm/damon/core.c              | 286 +++++++++++++++++------------
->  mm/damon/dbgfs-test.h        |   4 +-
->  mm/damon/dbgfs.c             | 342 +++++++++++++++++++++--------------
->  mm/damon/modules-common.c    |   1 -
->  mm/damon/sysfs.c             |  47 +++--
->  8 files changed, 431 insertions(+), 276 deletions(-)
-> 
-> diff --git a/include/linux/damon.h b/include/linux/damon.h
-> index 7cb9979a0..2facf3a5f 100644
-> --- a/include/linux/damon.h
-> +++ b/include/linux/damon.h
-> @@ -575,7 +575,6 @@ struct damon_attrs {
->   * @lock:	Kdamond's global lock, serializes accesses to any field.
->   * @self:	Kernel thread which is actually being executed.
->   * @contexts:	Head of contexts (&damon_ctx) list.
-> - * @nr_ctxs:	Number of contexts being monitored.
->   *
->   * Each DAMON's background daemon has this structure. Once
->   * configured, daemon can be started by calling damon_start().
-> @@ -589,7 +588,6 @@ struct kdamond {
->  	struct mutex lock;
->  	struct task_struct *self;
->  	struct list_head contexts;
-> -	size_t nr_ctxs;
+Changes since v2:
 
-Why we add this on first patch, and then remove here?  Let's not make
-unnecessary temporal change.  It only increase review time.
+1) Dropped my test_FISTTP.c patch, and picked up Muhammad's fix instead,
+   seeing as how that was posted first.
 
->  
->  /* private: */
->  	/* for waiting until the execution of the kdamond_fn is started */
-> @@ -634,7 +632,10 @@ struct damon_ctx {
->  	 * update
->  	 */
->  	unsigned long next_ops_update_sis;
-> +	/* upper limit for each monitoring region */
->  	unsigned long sz_limit;
-> +	/* marker to check if context is valid */
-> +	bool valid;
+2) Updated patch descriptions to reflect that Valentin Obst's build fix
+   for LLVM [1] has already been merged into Linux main.
 
-What is the validity?
+3) Minor wording and typo corrections in the commit logs throughout.
 
->  
->  /* public: */
->  	struct kdamond *kdamond;
-> @@ -682,6 +683,12 @@ static inline struct damon_ctx *damon_first_ctx(struct kdamond *kdamond)
->  	return list_first_entry(&kdamond->contexts, struct damon_ctx, list);
->  }
->  
-> +static inline bool damon_is_last_ctx(struct damon_ctx *ctx,
-> +				     struct kdamond *kdamond)
-> +{
-> +	return list_is_last(&ctx->list, &kdamond->contexts);
-> +}
-> +
->  #define damon_for_each_region(r, t) \
->  	list_for_each_entry(r, &t->regions_list, list)
->  
-> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-> index 23200aabc..d5287566c 100644
-> --- a/include/trace/events/damon.h
-> +++ b/include/trace/events/damon.h
+Changes since the first version:
+1) Rebased onto Linux 6.10-rc1
 
-Let's separate this change to another patch.
+Enjoy!
 
-> @@ -50,12 +50,13 @@ TRACE_EVENT_CONDITION(damos_before_apply,
->  
->  TRACE_EVENT(damon_aggregated,
->  
-> -	TP_PROTO(unsigned int target_id, struct damon_region *r,
-> -		unsigned int nr_regions),
-> +	TP_PROTO(unsigned int context_id, unsigned int target_id,
-> +		struct damon_region *r, unsigned int nr_regions),
->  
-> -	TP_ARGS(target_id, r, nr_regions),
-> +	TP_ARGS(context_id, target_id, r, nr_regions),
->  
->  	TP_STRUCT__entry(
-> +		__field(unsigned long, context_id)
->  		__field(unsigned long, target_id)
->  		__field(unsigned int, nr_regions)
->  		__field(unsigned long, start)
-> @@ -65,6 +66,7 @@ TRACE_EVENT(damon_aggregated,
->  	),
->  
->  	TP_fast_assign(
-> +		__entry->context_id = context_id;
->  		__entry->target_id = target_id;
->  		__entry->nr_regions = nr_regions;
->  		__entry->start = r->ar.start;
-> @@ -73,9 +75,9 @@ TRACE_EVENT(damon_aggregated,
->  		__entry->age = r->age;
->  	),
->  
-> -	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u %u",
-> -			__entry->target_id, __entry->nr_regions,
-> -			__entry->start, __entry->end,
-> +	TP_printk("context_id=%lu target_id=%lu nr_regions=%u %lu-%lu: %u %u",
-> +			__entry->context_id, __entry->target_id,
-> +			__entry->nr_regions, __entry->start, __entry->end,
->  			__entry->nr_accesses, __entry->age)
->  );
->  
-> diff --git a/mm/damon/core-test.h b/mm/damon/core-test.h
-> index 0cee634f3..7962c9a0e 100644
-> --- a/mm/damon/core-test.h
-> +++ b/mm/damon/core-test.h
-> @@ -99,7 +99,7 @@ static void damon_test_aggregate(struct kunit *test)
->  		}
->  		it++;
->  	}
-> -	kdamond_reset_aggregated(ctx);
-> +	kdamond_reset_aggregated(ctx, 0);
->  	it = 0;
->  	damon_for_each_target(t, ctx) {
->  		ir = 0;
-> diff --git a/mm/damon/core.c b/mm/damon/core.c
-> index cfc9c803d..ad73752af 100644
-> --- a/mm/damon/core.c
-> +++ b/mm/damon/core.c
-> @@ -500,6 +500,8 @@ struct damon_ctx *damon_new_ctx(void)
->  	ctx->attrs.min_nr_regions = 10;
->  	ctx->attrs.max_nr_regions = 1000;
->  
-> +	ctx->valid = true;
-> +
->  	INIT_LIST_HEAD(&ctx->adaptive_targets);
->  	INIT_LIST_HEAD(&ctx->schemes);
->  	INIT_LIST_HEAD(&ctx->list);
-> @@ -513,7 +515,7 @@ struct damon_ctx *damon_new_ctx(void)
->  void damon_add_ctx(struct kdamond *kdamond, struct damon_ctx *ctx)
->  {
->  	list_add_tail(&ctx->list, &kdamond->contexts);
-> -	++kdamond->nr_ctxs;
-> +	ctx->kdamond = kdamond;
->  }
->  
->  struct kdamond *damon_new_kdamond(void)
-> @@ -567,10 +569,8 @@ void damon_destroy_ctxs(struct kdamond *kdamond)
->  {
->  	struct damon_ctx *c, *next;
->  
-> -	damon_for_each_context_safe(c, next, kdamond) {
-> +	damon_for_each_context_safe(c, next, kdamond)
->  		damon_destroy_ctx(c);
-> -		--kdamond->nr_ctxs;
-> -	}
->  }
->  
->  void damon_destroy_kdamond(struct kdamond *kdamond)
-> @@ -735,6 +735,20 @@ bool damon_kdamond_running(struct kdamond *kdamond)
->  	return running;
->  }
->  
-> +/**
-> + * kdamond_nr_ctxs() - Return number of contexts for this kdamond.
-> + */
-> +static int kdamond_nr_ctxs(struct kdamond *kdamond)
-> +{
-> +	struct list_head *pos;
-> +	int nr_ctxs = 0;
-> +
-> +	list_for_each(pos, &kdamond->contexts)
-> +		++nr_ctxs;
-> +
-> +	return nr_ctxs;
-> +}
-> +
->  /* Returns the size upper limit for each monitoring region */
->  static unsigned long damon_region_sz_limit(struct damon_ctx *ctx)
->  {
-> @@ -793,11 +807,11 @@ static int __damon_start(struct kdamond *kdamond)
->   * @exclusive:	exclusiveness of this contexts group
->   *
->   * This function starts a group of monitoring threads for a group of monitoring
-> - * contexts.  One thread per each context is created and run in parallel.  The
-> - * caller should handle synchronization between the threads by itself.  If
-> - * @exclusive is true and a group of threads that created by other
-> + * contexts. If @exclusive is true and a group of contexts that created by other
->   * 'damon_start()' call is currently running, this function does nothing but
-> - * returns -EBUSY.
-> + * returns -EBUSY, if @exclusive is true and a given kdamond wants to run
-> + * several contexts, then this function returns -EINVAL. kdamond can run
-> + * exclusively only one context.
->   *
->   * Return: 0 on success, negative error code otherwise.
->   */
-> @@ -806,10 +820,6 @@ int damon_start(struct kdamond *kdamond, bool exclusive)
->  	int err = 0;
->  
->  	BUG_ON(!kdamond);
-> -	BUG_ON(!kdamond->nr_ctxs);
-> -
-> -	if (kdamond->nr_ctxs != 1)
-> -		return -EINVAL;
->  
->  	mutex_lock(&damon_lock);
->  	if ((exclusive && nr_running_kdamonds) ||
-> @@ -818,6 +828,11 @@ int damon_start(struct kdamond *kdamond, bool exclusive)
->  		return -EBUSY;
->  	}
->  
-> +	if (exclusive && kdamond_nr_ctxs(kdamond) > 1) {
-> +		mutex_unlock(&damon_lock);
-> +		return -EINVAL;
-> +	}
-> +
->  	err = __damon_start(kdamond);
->  	if (err)
->  		return err;
-> @@ -857,7 +872,7 @@ int damon_stop(struct kdamond *kdamond)
->  /*
->   * Reset the aggregated monitoring results ('nr_accesses' of each region).
->   */
-> -static void kdamond_reset_aggregated(struct damon_ctx *c)
-> +static void kdamond_reset_aggregated(struct damon_ctx *c, unsigned int ci)
->  {
->  	struct damon_target *t;
->  	unsigned int ti = 0;	/* target's index */
-> @@ -866,7 +881,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
->  		struct damon_region *r;
->  
->  		damon_for_each_region(r, t) {
-> -			trace_damon_aggregated(ti, r, damon_nr_regions(t));
-> +			trace_damon_aggregated(ci, ti, r, damon_nr_regions(t));
+[1] https://lore.kernel.org/44428518-4d21-4de7-8587-04eceefb330d@nvidia.com
 
-Separate traceevent change into another patch.
+thanks,
+John Hubbard
 
->  			r->last_nr_accesses = r->nr_accesses;
->  			r->nr_accesses = 0;
->  		}
-> @@ -1033,21 +1048,15 @@ static bool damos_filter_out(struct damon_ctx *ctx, struct damon_target *t,
->  	return false;
->  }
->  
-> -static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
-> -		struct damon_region *r, struct damos *s)
-> +static void damos_apply_scheme(unsigned int cidx, struct damon_ctx *c,
-> +			       struct damon_target *t, struct damon_region *r,
-> +			       struct damos *s)
+John Hubbard (6):
+  selftests/x86: fix Makefile dependencies to work with clang
+  selftests/x86: build fsgsbase_restore.c with clang
+  selftests/x86: build sysret_rip.c with clang
+  selftests/x86: avoid -no-pie warnings from clang during compilation
+  selftests/x86: remove (or use) unused variables and functions
+  selftests/x86: fix printk warnings reported by clang
 
-Unnecesary change.
+Muhammad Usama Anjum (1):
+  selftests: x86: test_FISTTP: use fisttps instead of ambiguous fisttp
 
-As also mentioned on the reply to the first patch, I think this patch can
-significantly changed if you agree to my opinion about the flow of patches that
-I mentioned on the reply to the cover letter.  Hence, stopping review from here
-for now.  Please let me know if you have a different opinion.
+ tools/testing/selftests/x86/Makefile          | 31 +++++++++++++++----
+ tools/testing/selftests/x86/amx.c             | 16 ----------
+ .../testing/selftests/x86/clang_helpers_32.S  | 11 +++++++
+ .../testing/selftests/x86/clang_helpers_64.S  | 28 +++++++++++++++++
+ tools/testing/selftests/x86/fsgsbase.c        |  6 ----
+ .../testing/selftests/x86/fsgsbase_restore.c  | 11 +++----
+ tools/testing/selftests/x86/sigreturn.c       |  2 +-
+ .../testing/selftests/x86/syscall_arg_fault.c |  1 -
+ tools/testing/selftests/x86/sysret_rip.c      | 20 ++++--------
+ tools/testing/selftests/x86/test_FISTTP.c     |  8 ++---
+ tools/testing/selftests/x86/test_vsyscall.c   | 15 +++------
+ tools/testing/selftests/x86/vdso_restorer.c   |  2 ++
+ 12 files changed, 87 insertions(+), 64 deletions(-)
+ create mode 100644 tools/testing/selftests/x86/clang_helpers_32.S
+ create mode 100644 tools/testing/selftests/x86/clang_helpers_64.S
 
 
-Thanks,
-SJ
+base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
+-- 
+2.45.1
 
-[...]
