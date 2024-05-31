@@ -1,174 +1,123 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B2915884F
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8395515B975;
+	Fri, 31 May 2024 16:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717171620; cv=none; b=Qi55sxpp5zikGzsCxNDdSh5tPi+XVZHp8OHMEWOzHuxvM3FXjMtQma/WZzBR7lryOSLXuZshjb51AyGrYys3QOeQ2eGfr82hsigFb6DPf+TLMdqsnPjS3+D6megFmwVmWhSrTLhx1QUU/fHYAKTGld0WO28teYqtUTLAu4e65UQ=
+	t=1717171661; cv=none; b=APmPY90k9fpzxHeHN+2dVWkadtM1t7vEEEwYJ8+MGFJak+cINXs6ETujlEMm0Et/2aQOFIdklhmvOwglBHKgM4dpsYbStVBbNMwrf3VXzOvRR1rp/blRe0vi1kGRRx7bKjTaq8J2m8Q62lBSXvlHoQUgmf+FBlqtHNtjziZ1YjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717171620; c=relaxed/simple;
-	bh=JJsL5OqAlyz9O2TqvokIzCODnIdsn9g7a8asMj9Q3QI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UUGR3ZXzfL2wFCR2h3gv5tMFiEMn4OUzsZtlfkNwLE/wdTbO7g2G+FPBWDrmGxToawo3eG4d5VritK6Eh/5EW9wn5vowVcw5msoQ4EZQ4ugluZtVDd2Qcxn8CVDHS2/KALJlIi/2O+U8oqR079UPvjdg85XceBm7f9uQmdczJNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MN3R1Dn0; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717171661; c=relaxed/simple;
+	bh=mE0OUhJiQMMzHxfgx0IOqHje5tQRxYiF+OB7kIk7BQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBpx7JfOHpgvCfE3KBfb8P9kfE5v50jC0iXwQIfZAUgFchHUWThy7VYoufTa4eoOPHPLRpjaXZLjn4Lp4xaBN+Ae96lWLg7nxiVX27jdIbbPgUEEi14WrGkrOEAL8yU1caCTvRNZy/c5PwlUZfR4aKuGGfo6Tkz7NbRLggMnXy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmIiCxm0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MN3R1Dn0"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b80e5688aso2705297e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717171616; x=1717776416; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G6//FEP7cApjoaJ6/xp+H/xK3TdzcTfbzf8Zzgf+lsQ=;
-        b=MN3R1Dn0Gr1L3oL4fjeCZf/wywVvKejzscUp5F6pHfdlRnMqj+O+bE6GbLoZ83WzB8
-         m3l3vWMoQMElyRpGL/hhfboItniYwAKBq3MWugu9BHvCIMRRdoB1W/Eol20pRpcQquL+
-         4+1UnWKHj1CBGBtB+2P3EOGSH2836pg6QPz+pYhyIjzDr8zoDIYLOY/fwc6b+UCLlWmn
-         ui1C752OT6hDcrlPzIKX0v1DJ/Y/b8Oyu5A6dLn0ECaEeOETfcql4VSfQ4lc/naeSA4p
-         fyqNW/PGa7qaSVNjr3kBcs8p1Nuzr6JW7JvkuCSKuJ03z1vKlGG19Pcikg9kryUccO0p
-         MKfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717171616; x=1717776416;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G6//FEP7cApjoaJ6/xp+H/xK3TdzcTfbzf8Zzgf+lsQ=;
-        b=n4o/Dn4fosBXJ2ZjGuxUwFcz4XXn3gZ2y1dv/10wJiYTBCVQBjTqfNg+tNAHKr22vb
-         cZCc80rdE8nNPssOz0LeK78LOwP9s52lepCzGWiMQjj98YfGw3P3fHDZgseZfAiANKp+
-         Um8wWGrhlZv5aeNJtbSDihXCep4vmP5UJF3cRJNcyO08yXfMxeBqTAJPXm4mqCgid4FU
-         qrq0ulrVENQU6yuNm50jFaBvU2TDeoHzXe2S6w5/TrlyhzIyy+OwELnlIdlEiWS/rc7d
-         3w7Uy5YJn6IwvLkKLXjt3jqJlIYPEA1jLRiwsos6fSDk3KzJds7cuatmfHu1A+oAZ+wf
-         SvsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxE/mYh2Aqp4acN8EF5QHPHRDEbycbHatYyJJLjHWlJhBRCQCd95qvmFBLEyH5sdbLjEU0+W0AImDUTKaZTohzxl+aJP2yxhHM6xld
-X-Gm-Message-State: AOJu0YzQ+wj/kUm5EwuMXfpSXnx548TCQ+qNbGJbN5e2wVVXK8EG1t/j
-	u1tH5o5wrKitCFhbjWduAXthc1mJVKoXVq4hn+UOOIBl9Ud5qeaiwgVVvGTvZIaIaAc2y7xMoLV
-	j
-X-Google-Smtp-Source: AGHT+IEHWKpPL+jhfqZavVDoxTOPOV5YFGaBjgLYXJxMXGRrq6wSeFgdwO7LUe8FIhStMBVRPg7hJg==
-X-Received: by 2002:a19:7501:0:b0:52a:7d01:84cd with SMTP id 2adb3069b0e04-52b89563555mr2122032e87.30.1717171616398;
-        Fri, 31 May 2024 09:06:56 -0700 (PDT)
-Received: from [127.0.1.1] ([188.27.161.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e73fc1b3sm100802566b.74.2024.05.31.09.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 09:06:55 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Fri, 31 May 2024 19:06:45 +0300
-Subject: [PATCH 2/2] phy: qcom: qmp-pcie: Add X1E80100 Gen4 4-lane mode
- support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmIiCxm0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BD16C2BD10;
+	Fri, 31 May 2024 16:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717171661;
+	bh=mE0OUhJiQMMzHxfgx0IOqHje5tQRxYiF+OB7kIk7BQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jmIiCxm0t+WW0oDLFbzpb97vsloCQOGygqInun3z/KqgTGXTl0X8sb6iu/GPspD+F
+	 NPEMmQfMP5NPkWPOQfPn+ZR01fhntn9dZ4xZJyreUlb5Jt3XqhrOCAgx2X6+3Qar+1
+	 sJl0/nS6GLx6bYMl5Q3Nq8TsaS4qvADsYam0QoK25lv4+38tki18s91Ryxs5eCPMLt
+	 08S6l5f4C1YPnmOk20oswNPJxj3VLzNXpY8FiHClDIxWUsDgs51ThFWVSM4JmnzSow
+	 5xhTgwGIfx6iTjLHyFhjj5oJWbEIomg04B1e5uyTuV9M8mBApgf8D8PsEm0x8SadNf
+	 bNMxEUZUv5Mxg==
+Date: Fri, 31 May 2024 17:07:32 +0100
+From: Lee Jones <lee@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, UNGLinuxDriver@microchip.com,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
+	netdev@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: mfd: syscon: Add more simple compatibles
+Message-ID: <20240531160732.GT1005600@google.com>
+References: <20240510123018.3902184-1-robh@kernel.org>
+ <20240531134536.GK1005600@google.com>
+ <CAL_Jsq+Cu9PSFwp-6cT5svqP+GZ8rp5hBgXA2=cgqQYYUDDKDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240531-x1e80100-phy-add-gen4x4-v1-2-5c841dae7850@linaro.org>
-References: <20240531-x1e80100-phy-add-gen4x4-v1-0-5c841dae7850@linaro.org>
-In-Reply-To: <20240531-x1e80100-phy-add-gen4x4-v1-0-5c841dae7850@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org, 
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3148; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=JJsL5OqAlyz9O2TqvokIzCODnIdsn9g7a8asMj9Q3QI=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmWfWbZ+v0JzeD+G1ezXOkdmTUgYe7zkYCZUaJp
- AT4TPNHSUGJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZln1mwAKCRAbX0TJAJUV
- Vl4JEACZlz6/FX72IPvoBV2KhG9rc7UqNay9v/AWlqtoOrFjkUGKYrtfWDzoLf3V72U2WR4b6Ae
- GgtBzkEufTBZgAzbfmRTCt9E1VT621Pu6y3hn7OMCrntVyvFtKfVETkJjEjx4AJwLIakN/AU4pU
- +JBmRNMQO/+ICih7/FEZFAF0u1rvMSs5ET+DBA6Jt15xr/iUKysZ8iRBNgKoWnKcjP1fyhW8sJG
- 1c6DJt5A3h92cxz8nCDaPWX3f1JXlirD7VtvB3YsAo4fJOJQERAi080O5OelHN3sWK85GKQ9CnK
- vSIxq3pzAY8ncjabYrsnUWv+Cci6GNYl0r//kHSX2tMNyAIYoYBrkjxnEF1uyh7SKCfyU9ydEoY
- Ekih3Td7WE1OZjVnQoNXaLSDPTud+530/R1cqUs0DcYfyEDU0G7brmDhlkr9ay3bzRd8eLQp1HT
- u8ozVsQNXsXBJAkNHJXmEanYl0HX7DTn1oddemGnycsRiff/5Bgxowm2G6SX2LqbbJCMpbdibHb
- dZvzTtHB/ng8d3BysFfcyeL+wakfNnt8Zzn7hVd1wJ85A9Uqdv+uot1siNWybEwqMCxgrsyV+xI
- fTjL1qevRegswKsItjvnFuOSb1cEYyvkKrQFIaD+iVnfAivE9OK9iO+vz0HTdQXD8eb1Z9q9WZA
- jKpObCZO6iOhRig==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+Cu9PSFwp-6cT5svqP+GZ8rp5hBgXA2=cgqQYYUDDKDA@mail.gmail.com>
 
-The PCIe 6th instance from X1E80100 can be used in both 4-lane mode or
-2-lane mode. Add the configuration and compatible for the 4-lane mode.
+On Fri, 31 May 2024, Rob Herring wrote:
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 42 ++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+> On Fri, May 31, 2024 at 8:45 AM Lee Jones <lee@kernel.org> wrote:
+> >
+> > On Fri, 10 May 2024, Rob Herring (Arm) wrote:
+> >
+> > > Add another batch of various "simple" syscon compatibles which were
+> > > undocumented or still documented with old text bindings. Remove the old
+> > > text binding docs for the ones which were documented.
+> > >
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > > ---
+> > > This batch is mostly from arm32 platforms.
+> > > ---
+> > >  .../bindings/arm/amlogic/analog-top.txt       | 20 -------------
+> > >  .../bindings/arm/amlogic/assist.txt           | 17 -----------
+> > >  .../bindings/arm/amlogic/bootrom.txt          | 17 -----------
+> > >  .../devicetree/bindings/arm/amlogic/pmu.txt   | 18 ------------
+> > >  .../devicetree/bindings/arm/atmel-sysregs.txt | 29 -------------------
+> > >  .../devicetree/bindings/arm/axis.txt          | 16 ----------
+> > >  .../arm/cpu-enable-method/al,alpine-smp       | 10 -------
+> > >  .../arm/freescale/fsl,vf610-mscm-cpucfg.txt   | 14 ---------
+> > >  .../bindings/arm/marvell/marvell,dove.txt     | 15 ----------
+> > >  .../devicetree/bindings/arm/spear-misc.txt    |  9 ------
+> > >  .../bindings/clock/ti-keystone-pllctrl.txt    | 20 -------------
+> > >  .../devicetree/bindings/mfd/syscon.yaml       | 29 +++++++++++++++++++
+> > >  .../devicetree/bindings/mips/mscc.txt         | 17 -----------
+> > >  .../devicetree/bindings/mtd/atmel-nand.txt    |  9 ------
+> > >  .../bindings/net/hisilicon-hip04-net.txt      | 10 -------
+> > >  15 files changed, 29 insertions(+), 221 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/analog-top.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/assist.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/bootrom.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/spear-misc.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
+> >
+> > No longer applies.  Please rebase and I'll promptly hoover this up.
+> 
+> I can't find where it doesn't. Fine on next, v6.10-rc1, your current
+> branch. Maybe something you applied today and haven't pushed out?
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-index 6c796723c8f5..4e0b28da69a7 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
-@@ -1028,6 +1028,10 @@ static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x2_pcie_ln_shrd_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V6_LN_SHRD_RX_MARG_COARSE_THRESH6_RATE3, 0x1f),
- };
- 
-+static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x4_pcie_serdes_4ln_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V6_COM_PLL_BIAS_EN_CLK_BUFLR_EN, 0x1c),
-+};
-+
- static const struct qmp_phy_init_tbl x1e80100_qmp_gen4x2_pcie_tx_tbl[] = {
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_TX_RES_CODE_LANE_OFFSET_TX, 0x1d),
- 	QMP_PHY_INIT_CFG(QSERDES_V6_20_TX_RES_CODE_LANE_OFFSET_RX, 0x03),
-@@ -3342,6 +3346,41 @@ static const struct qmp_phy_cfg x1e80100_qmp_gen4x2_pciephy_cfg = {
- 		.ln_shrd		= x1e80100_qmp_gen4x2_pcie_ln_shrd_tbl,
- 		.ln_shrd_num		= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_ln_shrd_tbl),
- 	},
-+
-+	.reset_list		= sdm845_pciephy_reset_l,
-+	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
-+	.vreg_list		= sm8550_qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(sm8550_qmp_phy_vreg_l),
-+	.regs			= pciephy_v6_regs_layout,
-+
-+	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
-+	.phy_status		= PHYSTATUS_4_20,
-+	.has_nocsr_reset	= true,
-+};
-+
-+static const struct qmp_phy_cfg x1e80100_qmp_gen4x4_pciephy_cfg = {
-+	.lanes = 4,
-+
-+	.offsets		= &qmp_pcie_offsets_v6_20,
-+
-+	.tbls = {
-+		.serdes			= x1e80100_qmp_gen4x2_pcie_serdes_tbl,
-+		.serdes_num		= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_serdes_tbl),
-+		.tx			= x1e80100_qmp_gen4x2_pcie_tx_tbl,
-+		.tx_num			= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_tx_tbl),
-+		.rx			= x1e80100_qmp_gen4x2_pcie_rx_tbl,
-+		.rx_num			= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_rx_tbl),
-+		.pcs			= x1e80100_qmp_gen4x2_pcie_pcs_tbl,
-+		.pcs_num		= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_pcs_tbl),
-+		.pcs_misc		= x1e80100_qmp_gen4x2_pcie_pcs_misc_tbl,
-+		.pcs_misc_num		= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_pcs_misc_tbl),
-+		.ln_shrd		= x1e80100_qmp_gen4x2_pcie_ln_shrd_tbl,
-+		.ln_shrd_num		= ARRAY_SIZE(x1e80100_qmp_gen4x2_pcie_ln_shrd_tbl),
-+	},
-+
-+	.serdes_4ln_tbl		= x1e80100_qmp_gen4x4_pcie_serdes_4ln_tbl,
-+	.serdes_4ln_num		= ARRAY_SIZE(x1e80100_qmp_gen4x4_pcie_serdes_4ln_tbl),
-+
- 	.reset_list		= sdm845_pciephy_reset_l,
- 	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
- 	.vreg_list		= sm8550_qmp_phy_vreg_l,
-@@ -4108,6 +4147,9 @@ static const struct of_device_id qmp_pcie_of_match_table[] = {
- 	}, {
- 		.compatible = "qcom,x1e80100-qmp-gen4x2-pcie-phy",
- 		.data = &x1e80100_qmp_gen4x2_pciephy_cfg,
-+	}, {
-+		.compatible = "qcom,x1e80100-qmp-gen4x4-pcie-phy",
-+		.data = &x1e80100_qmp_gen4x4_pciephy_cfg,
- 	},
- 	{ },
- };
+That could well be the case.
+
+I just pushed for-mfd-next for you.
+
+Thanks.
 
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
