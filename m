@@ -1,133 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10EF176223;
-	Fri, 31 May 2024 13:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13AE176AC9;
+	Fri, 31 May 2024 13:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717161262; cv=none; b=YHAwpjcjIh+cehM8NcGqQgwV3naRRNGTdIPFAVv5tYVAhKuxYI8zxgSW6pmYT2GON1KprY4nSRKHOOuv+5PQMDj1mG+YJ3bf+C5dHb5AUFBrDwQ1OGY8gQ8o8rqpCU8CjhBUuyKoUx8Hoe/UxiLfCbKc2ggNi12Wj8ei3jo0gPk=
+	t=1717161265; cv=none; b=h2gJE0pcvFrroPuwDr0kNAt1aU3Y4hMAsIxXqhn9wfoqoKET+nYnb/R5MhMxpXm7yRaGOfnt+QsDKHXIRHXD4vJcB0fsdVOFp6kWSKsqy3LX8CWsUtWaoMYOaNqysnZSY9EMDgXK0QG0y6yirsanmPGF1EILGYTwQIxLKjwwixY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717161262; c=relaxed/simple;
-	bh=KZTmeuMUDKio4yDfxfwdVDu8uwEJhAaCkCOYZBNRHt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OQZKeHad8yU9EvUV5ox6NGeuGjH3rvb8W4nQh14zlYj2Tqqz6U7b+GT7OQB0+pelGqEyA3L4CtnoI5XAP7uE7ALx/vvuarKCk+gjQ6iy20Ei1LvHGQD3qM8DXOEAdt8TmqN7BuPUZ2u16s22idG9bWS2Omno8ZlUl2NIwD7UQJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbRyx9TZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717161265; c=relaxed/simple;
+	bh=CvFqSJiNzfsGJ0vkCckpwpi4AWMEa7rfewympWlIBiE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q+/M9XZnAVOCxJpfrJCGZudgHMbyYUpTrhkthRewW46etlNpLUx1AXuEpYNw2ywpCvvv7TpfrinrHoDUdxY+qqw/zg/sMlwe7Gszhz9BCzZbG/7cGUxdFam6aROe0C2HVBaZdOo/CYQ1wgCLZtfXGeJT6jRqygLUM/O9H4Utbec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cd7VRIKb; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbRyx9TZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFABEC32781;
-	Fri, 31 May 2024 13:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717161262;
-	bh=KZTmeuMUDKio4yDfxfwdVDu8uwEJhAaCkCOYZBNRHt0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VbRyx9TZORY2DnoDWJ3EbEq16/QWedLHyTLDiLhbz7UfPmcNl7JX2h5QlpkojxHhk
-	 zMHLlHmDHX7Soeqz6MHbiqEdOGuiazuYCTSZY5NLowRviRrMdkZ9oBNjBz6thRi4YZ
-	 PxwjBZqaNXcv+11vmmvuCbWnmthIPnSZ2BRhImceC/NQWw/mKwh2hXbukNA+rzUOvh
-	 ruPF9Jds1v5lCkhdxOCh2/4/HPiBcAr/YNS3VSxTa+dic+3glu4JL8PPvnBCXrP938
-	 RJ7KRRKULr2O4NmjdkUxvRDYn1Wb3y1E5lEPRdfK02nNU9VZTMP8yAONRPMeD8n9I0
-	 uDIeEN9ZeA4ZQ==
-Message-ID: <85e49c2f-e69d-4bd4-917f-0a3b12d65509@kernel.org>
-Date: Fri, 31 May 2024 15:14:17 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cd7VRIKb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717161264; x=1748697264;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=CvFqSJiNzfsGJ0vkCckpwpi4AWMEa7rfewympWlIBiE=;
+  b=cd7VRIKbbA5V8+XXP8VkesR6kroGd00OPp1Fzln14N5bMYXpkQCgBqcp
+   HrozOO/1GZ0I7uckCb7TnDCdVfAnKOfkQnuzpZbZjWj2YtQdQMFFOssfR
+   SyY/7jCzvcLnDlP0y7mXdAGHGhlpR10iDAeH5G+UFKQAzAKWi6PAnxAnA
+   aeCAhy6aWiAQWztTgty8UoczdJN3t+0PRlkn3dtbw4yGJI2k2mDx6HF5m
+   c0V0zp8L/mRGuiQTQlUiYc5Vj9O2cMwRe9q04haKuKh+UQJ2TmY2LLBeN
+   CMQRkkNajmNdthJv4g82MTbD7WLxXGTUJn4lwLG+f5d7qFG/cVDTMKWRQ
+   A==;
+X-CSE-ConnectionGUID: 0noPJ0dzSh6uLWNso3nWsQ==
+X-CSE-MsgGUID: /oTECt9dRqW7w+R5se8ITg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17501591"
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="17501591"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:14:23 -0700
+X-CSE-ConnectionGUID: xdABLVBuTx2nkFoeVUs5AQ==
+X-CSE-MsgGUID: 05NSAZhBSHCaDnD00btXsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
+   d="scan'208";a="36240683"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.152])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 06:14:21 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: linux-kernel@vger.kernel.org,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v5 15/16] selftests/resctrl: Remove mongrp from CMT test
+Date: Fri, 31 May 2024 16:11:41 +0300
+Message-Id: <20240531131142.1716-16-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240531131142.1716-1-ilpo.jarvinen@linux.intel.com>
+References: <20240531131142.1716-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: hwmon: jedec,spd5118: Add bindings
-To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <linux@weissschuh.net>, =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>
-References: <20240530223939.1027659-1-linux@roeck-us.net>
- <20240530223939.1027659-2-linux@roeck-us.net>
- <0ee11044-8dfc-4589-96b5-fa1f906928e5@kernel.org>
- <f53deeb2-bc08-4363-b8d0-ff3987409ca7@roeck-us.net>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <f53deeb2-bc08-4363-b8d0-ff3987409ca7@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 31/05/2024 15:09, Guenter Roeck wrote:
-> On 5/31/24 01:15, Krzysztof Kozlowski wrote:
->> On 31/05/2024 00:39, Guenter Roeck wrote:
->>> Add device tree bindings for the SPD hub present in DDR5 modules.
->>>
->>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->>
->> ...
->>
->>> +title: JEDEC JESD300-5B (SPD5118) compatible DDR5 SPD hub
->>> +
->>> +maintainers:
->>> +  - Guenter Roeck <linux@roeck-us.net>
->>> +
->>> +description: |
->>> +  JEDEC JESD300-5B.01 SPD5118 Hub and Serial Presence Detect
->>> +  https://www.jedec.org/standards-documents/docs/jesd300-5b01
->>> +
->>> +select:
->>> +  properties:
->>> +    compatible:
->>> +      const: jedec,spd5118
->>
->> Why do you need the select? This s needed for cases with multiple
->> bindings using parts of compatible list. I don't see the case here so far.
->>
-> 
-> Sorry, I am not a devicetree expert, I don't really know what I am doing,
-> and just copied this from some other binding. I'll try to find a better
-> example. Actually, I'll just add the binding to trivial devices.
+The CMT selftest instantiates a monitor group to read LLC occupancy.
+Since the test also creates a control group, it is unnecessary to
+create another one for monitoring because control groups already
+provide monitoring too.
 
-Sounds good.
+Remove the unnecessary monitor group from the CMT selftest.
 
-Best regards,
-Krzysztof
+Suggested-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+--
+
+v4:
+- New patch
+---
+ tools/testing/selftests/resctrl/cmt_test.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
+index 238f514ba7e6..b63fa1e93307 100644
+--- a/tools/testing/selftests/resctrl/cmt_test.c
++++ b/tools/testing/selftests/resctrl/cmt_test.c
+@@ -17,12 +17,12 @@
+ #define MAX_DIFF_PERCENT	15
+ 
+ #define CON_MON_LCC_OCCUP_PATH		\
+-	"%s/%s/mon_groups/%s/mon_data/mon_L3_%02d/llc_occupancy"
++	"%s/%s/mon_data/mon_L3_%02d/llc_occupancy"
+ 
+ static int cmt_init(const struct resctrl_val_param *param, int domain_id)
+ {
+ 	sprintf(llc_occup_path, CON_MON_LCC_OCCUP_PATH, RESCTRL_PATH,
+-		param->ctrlgrp, param->mongrp, domain_id);
++		param->ctrlgrp, domain_id);
+ 
+ 	return 0;
+ }
+@@ -146,7 +146,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
+ 	struct resctrl_val_param param = {
+ 		.resctrl_val	= CMT_STR,
+ 		.ctrlgrp	= "c1",
+-		.mongrp		= "m1",
+ 		.filename	= RESULT_FILE_NAME,
+ 		.mask		= ~(long_mask << n) & long_mask,
+ 		.num_of_runs	= 0,
+-- 
+2.39.2
 
