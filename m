@@ -1,157 +1,63 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4ED44C64
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7592B9C2;
+	Fri, 31 May 2024 19:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717183105; cv=none; b=NIjYyOFN+uJHvre1XA9pAHio95FNveQwJXj3ZvAHTcfFlxxmYVF5RE095QGwCEoLSaXU2+gX7LQGuM1HRSnRvMQwCeXuvsUaV6CP1/EnAzJZ87zsG8WIs7mm5u5HPDYBvGb9KntyzmRsCo7DMg8FfN5bQ7iyWt3V0JjrTBvg8aw=
+	t=1717183204; cv=none; b=QCHqVwMlt9U2c59pG+tGES1sTL/XLAgSCppFxeMfNSyP+A2fQhMaA2VPYiXFNv7K1AfnZewkm4MvlNMWiMoKy/WEB3A3maYK7fNSd0lFanxAx5RFbB/Ap0nVO3/Nn1mw1JQocjGWODAbs9CSGpra9Nxy64cFbfU8zpf0KIy23iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717183105; c=relaxed/simple;
-	bh=8HZ1n1s6qKTPU9KH0f7lccCKB3kfMQ8uzpkLiQlx0XM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jmd5vEOtaBw3nqnZgy7cPMOEVojPrqWTpy540bJMTylkgz5YLs29rFYEcVrUMDQpLb4kAbbIcyWs7bL7omUQeCT9uaFNahuG2hd5l+x+bIj53XkSh/ory4PNITI3/405HYhQeyTnenBEIlp4qGfSx4zLi8GD6W7GPDt64D8FnXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OL//CPF3; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717183204; c=relaxed/simple;
+	bh=VfOSh3jZo/FtpixUIPxhcFVqhHvS4bpYu139qzJdjes=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=WpIV1XH4gdwybfst0YLLI2rqK1/e1oW8SqflzYCX6EuuPoSV/mBRKEM7EkUJv765/i09OiAkxgtszuni4mSb2M8aTkFpQLzerFlpAl8/5ZVs0x0XUpxClanfoj7U4st5+aG62gaQYNuj+sFw88fEoB0IhU0ZNSl8OT28LQLq1zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=maT/Cayf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OL//CPF3"
-X-Envelope-To: jthoughton@google.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717183102;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2PNxbejm0F++LAZR/c3kykM2MBahftMSuulGipIjRRI=;
-	b=OL//CPF3OaxDLNyUcF7L7kyNMf3VPjTvzSryLUW5C3BaNJ8N7qvdo+GYUTIaqfYoH8qbo6
-	hUFuWYcFNlSydh5QitAFxaO+uiSO8irmL6Dy7FoK51VSXO1IpH+zzZd24unXmg4kvPBA2e
-	eDLUrnlpHUL5vYjUk6kginvv7JlKt2g=
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: pbonzini@redhat.com
-X-Envelope-To: aou@eecs.berkeley.edu
-X-Envelope-To: ankita@nvidia.com
-X-Envelope-To: anup@brainfault.org
-X-Envelope-To: atishp@atishpatra.org
-X-Envelope-To: axelrasmussen@google.com
-X-Envelope-To: maobibo@loongson.cn
-X-Envelope-To: catalin.marinas@arm.com
-X-Envelope-To: dmatlack@google.com
-X-Envelope-To: rientjes@google.com
-X-Envelope-To: chenhuacai@kernel.org
-X-Envelope-To: james.morse@arm.com
-X-Envelope-To: corbet@lwn.net
-X-Envelope-To: maz@kernel.org
-X-Envelope-To: mpe@ellerman.id.au
-X-Envelope-To: npiggin@gmail.com
-X-Envelope-To: palmer@dabbelt.com
-X-Envelope-To: paul.walmsley@sifive.com
-X-Envelope-To: rananta@google.com
-X-Envelope-To: ryan.roberts@arm.com
-X-Envelope-To: seanjc@google.com
-X-Envelope-To: shahuang@redhat.com
-X-Envelope-To: shuah@kernel.org
-X-Envelope-To: suzuki.poulose@arm.com
-X-Envelope-To: zhaotianrui@loongson.cn
-X-Envelope-To: will@kernel.org
-X-Envelope-To: yuzhao@google.com
-X-Envelope-To: yuzenghui@huawei.com
-X-Envelope-To: kvm-riscv@lists.infradead.org
-X-Envelope-To: kvm@vger.kernel.org
-X-Envelope-To: kvmarm@lists.linux.dev
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-doc@vger.kernel.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: linux-kselftest@vger.kernel.org
-X-Envelope-To: linux-mips@vger.kernel.org
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-riscv@lists.infradead.org
-X-Envelope-To: linuxppc-dev@lists.ozlabs.org
-X-Envelope-To: loongarch@lists.linux.dev
-Date: Fri, 31 May 2024 12:18:11 -0700
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: James Houghton <jthoughton@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ankit Agrawal <ankita@nvidia.com>, Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	David Matlack <dmatlack@google.com>,
-	David Rientjes <rientjes@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	James Morse <james.morse@arm.com>, Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-mm@kvack.org,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 6/7] KVM: arm64: Relax locking for kvm_test_age_gfn
- and kvm_age_gfn
-Message-ID: <Zloicw4IU8_-V5Ns@linux.dev>
-References: <20240529180510.2295118-1-jthoughton@google.com>
- <20240529180510.2295118-7-jthoughton@google.com>
- <Zlog5Yk_Pjq0jQhC@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="maT/Cayf"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E670C2BD10;
+	Fri, 31 May 2024 19:20:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717183204;
+	bh=VfOSh3jZo/FtpixUIPxhcFVqhHvS4bpYu139qzJdjes=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=maT/CayfFs7vCRBV4U8B+CSqDNFqXZ6TqmLoBV/uQvcCxxywLt0XyBFE2+YluTcf8
+	 GuIOTV05fhrWzi9wiUrFoZHPwgqwzrCxrx7eTZUvLIS+NsmZ/maE732fHCIOBk3JRr
+	 jIp2jaUlWgqnMW4rkHqrwejJhBihz0yCKJfUC2yDomc/3coz2ItlJOyYQ4wPOLgrVA
+	 Buu1GkT67zkJUls10juCZa4FGy3UO6Cpy8RohnYm5+3drIwQM1EU2e8/7GjWZLSk7X
+	 CxCZ/k4pkMqodlqzR1vvAqWNa4d9TCsr0HRzUm4TpzW0JAcRm80v/t55ui+ekQV3ie
+	 WEnNuplBOisnA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4EA8EC4361B;
+	Fri, 31 May 2024 19:20:04 +0000 (UTC)
+Subject: Re: [GIT PULL] bcachefs fixes for 6.10-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <wvw6rfvpz7nfq3dbvy2frovpzrqkgsyke6e45pgh2bntvubxqb@wjanieiymayi>
+References: <wvw6rfvpz7nfq3dbvy2frovpzrqkgsyke6e45pgh2bntvubxqb@wjanieiymayi>
+X-PR-Tracked-List-Id: <linux-bcachefs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <wvw6rfvpz7nfq3dbvy2frovpzrqkgsyke6e45pgh2bntvubxqb@wjanieiymayi>
+X-PR-Tracked-Remote: https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-05-30
+X-PR-Tracked-Commit-Id: 7b038b564b3e2a752d2211e7b0c3c29fd2f6e197
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ff9bce3d06fbdd12bcc74657516757b66aca9e43
+Message-Id: <171718320427.20247.17569724543278721273.pr-tracker-bot@kernel.org>
+Date: Fri, 31 May 2024 19:20:04 +0000
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zlog5Yk_Pjq0jQhC@linux.dev>
-X-Migadu-Flow: FLOW_OUT
 
-On Fri, May 31, 2024 at 12:11:33PM -0700, Oliver Upton wrote:
-> On Wed, May 29, 2024 at 06:05:09PM +0000, James Houghton wrote:
-> 
-> [...]
-> 
-> > diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
-> > index 9e2bbee77491..eabb07c66a07 100644
-> > --- a/arch/arm64/kvm/hyp/pgtable.c
-> > +++ b/arch/arm64/kvm/hyp/pgtable.c
-> > @@ -1319,10 +1319,8 @@ static int stage2_age_walker(const struct kvm_pgtable_visit_ctx *ctx,
-> >  	data->young = true;
-> >  
-> >  	/*
-> > -	 * stage2_age_walker() is always called while holding the MMU lock for
-> > -	 * write, so this will always succeed. Nonetheless, this deliberately
-> > -	 * follows the race detection pattern of the other stage-2 walkers in
-> > -	 * case the locking mechanics of the MMU notifiers is ever changed.
-> > +	 * This walk may not be exclusive; the PTE is permitted to change
-> > +	 * from under us.
-> >  	 */
-> >  	if (data->mkold && !stage2_try_set_pte(ctx, new))
-> >  		return -EAGAIN;
-> 
-> It is probably worth mentioning that if there was a race to update the
-> PTE then the GFN is most likely young, so failing to clear AF probably
-> isn't even consequential.
+The pull request you sent on Thu, 30 May 2024 11:53:16 -0400:
 
-Oh, and the WARN_ON() in kvm_pgtable_stage2_test_clear_young() is bogus
-now. Maybe demote it to:
+> https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-05-30
 
-  r = kvm_pgtable_walk(...);
-  WARN_ON_ONCE(r && r != -EAGAIN);
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ff9bce3d06fbdd12bcc74657516757b66aca9e43
+
+Thank you!
 
 -- 
-Thanks,
-Oliver
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
