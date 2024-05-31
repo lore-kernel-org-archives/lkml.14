@@ -1,224 +1,972 @@
-Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4455C29A0
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E57729A0
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717156844; cv=none; b=uQKgSuSHC91cHgSvBh0ebSd8G4cxILUwND2ifOUMzaN3oCCBnJrDQjjmalMcMuxMT7SCmPYEMwZXruNvySfhDGRsgdFbQ/SgO5mi8VDwU3YXWUeauiJoErR0KlM7J4nkymfLLYs9GLcxKJOVabG7gFgxQO8wetxJpchPi6Gbo9w=
+	t=1717156936; cv=none; b=F3496HRhFS0gab2w5/MwTRt8P9eBQxpwTueVKgSJr+FvObJOUJWHRRqFIXrqcI9mIlceQipGlnVXDoc0+jOZVJ+Q2TpW57cTg6r3r3IcGdvJDaxEzXra+gR+m9ZMBTwe50OFwKRK5EK85iGAViXz2wL5w0evc1BKJJP4FykMKT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717156844; c=relaxed/simple;
-	bh=/fNJjki3s+FiaWJi/pZfpB/oREdyo+P3mnzggQXSVFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FgW9d+DY5W3fOG9TCecbF1dEApuXEgsvE/Dx1/AVJfno87eNLBG1Tm+UUIXfbCvuXobGP5SqomrrYfZUjNrjwlItrmgw32W1AbzwbjoxltUHrtJCW+PLOcQWlyZMWxNBGfSN+SeI9KVEx1oJPYegbejTJ6DPuU3FCena0jauJsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XixqvIIV; arc=none smtp.client-ip=83.166.143.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1717156936; c=relaxed/simple;
+	bh=BhrEVabLMT9xolSiF/6YszyixoFMRwY+xBpHtpZ2xds=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KML8qpeGvQTTHJH6Yiwpe9TQ9Fh1J2raTF0DGI0dpvwybNHlVcFf7Yhs1F7ysqik0xn+7BVWCTp57cKOaqLY5pDr7pFcFtycsu8q5OtpryLvpaGRxGUMRPlE8XcFWSgH/Sj9Ab6o5KCRLgTFHl+u8JeBualrXKRu6+/W+xDUwT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Hhn9Q2pI; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XixqvIIV"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VrJ3l5mjBzR2;
-	Fri, 31 May 2024 11:39:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1717148355;
-	bh=PTdHv7fGQLwj9u1hLPUCBVWvG4NslAaAcaO2qrWkcQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XixqvIIVm/qoziDyjt+S7HOGZId9u2DzV2KjsxtPTjOy6QIx/+zd3xRNHQP7eVy8r
-	 mfHLFGk0RtA6q5icg6c5+TLSgd/513l0BN1RlNVbg0e3m34uwxc+HOB+wJgC70KSr3
-	 R8zPZ7hcAWFubneduokr8003QwG+fO2HwWvKxhCA=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VrJ3k0hfGzZk3;
-	Fri, 31 May 2024 11:39:14 +0200 (CEST)
-Date: Fri, 31 May 2024 11:39:12 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Tahera Fahimi <fahimitahera@gmail.com>
-Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E.Hallyn" <serge@hallyn.com>, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev, netdev@vger.kernel.org, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Jann Horn <jannh@google.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: [PATCH v2] landlock: Add abstract unix socket connect
- restrictions
-Message-ID: <20240531.Ahg5aap6caeG@digikod.net>
-References: <ZgX5TRTrSDPrJFfF@tahera-OptiPlex-5000>
- <20240401.ieC2uqua5sha@digikod.net>
- <ZhcRnhVKFUgCleDi@tahera-OptiPlex-5000>
- <20240411.ahgeefeiNg4i@digikod.net>
- <ZlkIAIpWG/l64Pl9@tahera-OptiPlex-5000>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Hhn9Q2pI"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a6341cf2c99so206577966b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 05:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717156932; x=1717761732; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n5ltd+Q1r31hNsOKM+mo5WJDGkDt77P5jodMkGj2DWE=;
+        b=Hhn9Q2pIzF24TjKi7XYjYE55x8PXxX+izThq98nB5WR6GnFOjTB4qkOdC1z8isHMIL
+         j+00u75WnXvCmTF21sbrmQq09x8QVVN6m6bAbofIwQTyYx6DlA3tzEdDl3+QIVq0G8ur
+         kAzqC+MZfVzcfu6mWKKYdKE0L/UIevLv2ldMyYOAsACnJEI8ENHul93nELaLvF+qJSbk
+         3tFO8X6/oSBQWgHQuLurpJo5hxfDPYPa/mVoi3QiwZUmY7LydIopodrm3fCwvsdnBZDv
+         DWO8F32riuAE9CEqVUFU5Zx12PSLGR99UGdiXWU8/l8DBSQsUR+VYksWgRayabP31Uh8
+         MFOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717156932; x=1717761732;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n5ltd+Q1r31hNsOKM+mo5WJDGkDt77P5jodMkGj2DWE=;
+        b=ctNNTBA3UoGGSWxxE0NmSg81Sec33KtLoNHUMUtu0nk1YMgRF+pXn1YxBBoQtDtQJ7
+         ZpQ0eyavj/LNB85nFuIwA16McUeDCr6MbgDX4Ff7ng54WvA/6WjQinnSlbHGJOPfywuv
+         1wy3ulWiZ7kx8wdx1DhA3/ErOVa9nemGfsCbsIGQs5//xGs9E0Nr10agHAUwm/NAFNM6
+         1bBYospZkMfN+1v5hV3HUOIDQNu3h3dBNsJzutx+WXLye9JlPMD/J4ufTQ/szcQS2lJc
+         uCHYaJHthMPH/YCcfsuVUMMjJSWQbfYdO3hl6AV/9L5kKyu2FLn1hbdIe/z1viKyqs/X
+         Xddg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgCMJA9QHDCHAiEUnKvuWiVDU2Jpz/5SFnT/qSPHztheKK0R00T0wA8q7nhJ+PPxqoLCSJoHxGzgjKa7DkF6dSXSWzPwRE0tig2Jfo
+X-Gm-Message-State: AOJu0YzP3/fwrdyF7Eno1UyNxeXr4e2f4H/OkTBg6yALhJONlVn3M1Bk
+	8HJXopVZ65n6HXdtzSpjJBYDon3XKtnLeX8+6hmYEWx79LtHzMXET6pERqJELKY=
+X-Google-Smtp-Source: AGHT+IGCXVfciDl7JiSO6buExLa3+C8TnQurwuTFrk5f2JHildkzakc9BuJ3BXKSKyYrUkWQHb1c5w==
+X-Received: by 2002:a17:907:1314:b0:a68:86b9:52e8 with SMTP id a640c23a62f3a-a6886b9537dmr64684866b.68.1717156931323;
+        Fri, 31 May 2024 05:02:11 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-160.dynamic.mnet-online.de. [82.135.80.160])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67e6f030f7sm81539066b.10.2024.05.31.05.02.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 05:02:10 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Nicolas Pitre <nico@fluxnic.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Breno Leitao <leitao@debian.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH net-next v2] net: smc91x: Refactor SMC_* macros
+Date: Fri, 31 May 2024 14:01:04 +0200
+Message-ID: <20240531120103.565490-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZlkIAIpWG/l64Pl9@tahera-OptiPlex-5000>
-X-Infomaniak-Routing: alpha
 
-On Thu, May 30, 2024 at 05:13:04PM -0600, Tahera Fahimi wrote:
-> On Tue, Apr 30, 2024 at 05:24:45PM +0200, Mickaël Salaün wrote:
-> > On Wed, Apr 10, 2024 at 04:24:30PM -0600, Tahera Fahimi wrote:
-> > > On Tue, Apr 02, 2024 at 11:53:09AM +0200, Mickaël Salaün wrote:
-> > > > Thanks for this patch.  Please CC the netdev mailing list too, they may
-> > > > be interested by this feature. I also added a few folks that previously
-> > > > showed their interest for this feature.
-> > > > 
-> > > > On Thu, Mar 28, 2024 at 05:12:13PM -0600, TaheraFahimi wrote:
-> > > > > Abstract unix sockets are used for local interprocess communication without
-> > > > > relying on filesystem. Since landlock has no restriction for connecting to
-> > > > > a UNIX socket in the abstract namespace, a sandboxed process can connect to
-> > > > > a socket outside the sandboxed environment. Access to such sockets should
-> > > > > be scoped the same way ptrace access is limited.
-> > > > 
-> > > > This is good but it would be better to explain that Landlock doesn't
-> > > > currently control abstract unix sockets and that it would make sense for
-> > > > a sandbox.
-> > > > 
-> > > > 
-> > > > > 
-> > > > > For a landlocked process to be allowed to connect to a target process, it
-> > > > > must have a subset of the target process’s rules (the connecting socket
-> > > > > must be in a sub-domain of the listening socket). This patch adds a new
-> > > > > LSM hook for connect function in unix socket with the related access rights.
-> > > > 
-> > > > Because of compatibility reasons, and because Landlock should be
-> > > > flexible, we need to extend the user space interface.  As explained in
-> > > > the GitHub issue, we need to add a new "scoped" field to the
-> > > > landlock_ruleset_attr struct. This field will optionally contain a
-> > > > LANDLOCK_RULESET_SCOPED_ABSTRACT_UNIX_SOCKET flag to specify that this
-> > > > ruleset will deny any connection from within the sandbox to its parents
-> > > > (i.e. any parent sandbox or not-sandboxed processes).
-> > 
-> > > Thanks for the feedback. Here is what I understood, please correct me if
-> > > I am wrong. First, I should add another field to the
-> > > landlock_ruleset_attr (a field like handled_access_net, but for the unix
-> > > sockets) with a flag LANDLOCK_ACCESS_UNIX_CONNECT (it is a flag like
-> > > LANDLOCK_ACCESS_NET_CONNECT_TCP but fot the unix sockets connect).
-> > 
-> > That was the initial idea, but after thinking more about it and talking
-> > with some users, I now think we can get a more generic interface.
-> > 
-> > Because unix sockets, signals, and other IPCs are fully controlled by
-> > the kernel (contrary to inet sockets that get out of the system), we can
-> > add ingress and egress control according to the source and the
-> > destination.
-> > 
-> > To control the direction we could add an
-> > LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE and a
-> > LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND rights (these names are a bit
-> > long but at least explicit).  To control the source and destination, it
-> > makes sense to use Landlock domain (i.e. sandboxes):
-> > LANDLOCK_DOMAIN_HIERARCHY_PARENT, LANDLOCK_DOMAIN_HIERARCHY_SELF, and
-> > LANDLOCK_DOMAIN_HIERARCHY_CHILD.  This could be used by extending the
-> > landlock_ruleset_attr type and adding a new
-> > landlock_domain_hierarchy_attr type:
-> > 
-> > struct landlock_ruleset_attr ruleset_attr = {
-> >   .handled_access_dom = LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE | \
-> >                         LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
-> > }
-> > 
-> > // Allows sending data to and receiving data from processes in the same
-> > // domain or a child domain, through abstract unix sockets.
-> > struct landlock_domain_hierarchy_attr dom_attr = {
-> >   .allowed_access = LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE | \
-> >                     LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
-> >   .relationship = LANDLOCK_DOMAIN_HIERARCHY_SELF | \
-> >                   LANDLOCK_DOMAIN_HIERARCHY_CHILD,
-> > };
-> > 
-> > It should also work with other kind of IPCs:
-> > * LANDLOCK_ACCESS_DOM_UNIX_PATHNAME_RECEIVE/SEND (signal)
-> > * LANDLOCK_ACCESS_DOM_SIGNAL_RECEIVE/SEND (signal)
-> > * LANDLOCK_ACCESS_DOM_XSI_RECEIVE/SEND (XSI message queue)
-> > * LANDLOCK_ACCESS_DOM_MQ_RECEIVE/SEND (POSIX message queue)
-> > * LANDLOCK_ACCESS_DOM_PTRACE_RECEIVE/SEND (ptrace, which would be
-> >   limited)
-> > 
-> > What do you think?
-> 
-> I was wondering if you expand your idea on the following example. 
-> 
-> Considering P1 with the rights that you mentioned in your email, forks a
-> new process (P2). Now both P1 and P2 are on the same domain and are
-> allowed to send data to and receive data from processes in the same
-> domain or a child domain. 
-> /*
->  *         Same domain (inherited)
->  * .-------------.
->  * | P1----.     |      P1 -> P2 : allow
->  * |        \    |      P2 -> P1 : allow
->  * |         '   |
->  * |         P2  |
->  * '-------------'
->  */
-> (P1 domain) = (P2 domain) = {
-> 		.allowed_access =
-> 			LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE | 
-> 			LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
-> 		.relationship = 
-> 			LANDLOCK_DOMAIN_HIERARCHY_SELF | 
-> 			LANDLOCK_DOMAIN_HIERARCHY_CHILD,
+Use the macro parameter lp directly instead of relying on ioaddr being
+defined in the surrounding scope.
 
-In this case LANDLOCK_DOMAIN_HIERARCHY_CHILD would not be required
-because P1 and P2 are on the same domain.
+The macros SMC_CURRENT_BANK(), SMC_SELECT_BANK(), SMC_GET_BASE(), and
+SMC_GET_REV() take an additional parameter ioaddr to use a different
+address if necessary (e.g., as in smc_probe()).
 
-> 		}
-> 
-> In another example, if P1 has the same domain as before but P2 has
-> LANDLOCK_DOMAIN_HIERARCHY_PARENT in their domain, so P1 still can 
-> connect to P2. 
-> /*
->  *        Parent domain
->  * .------.
->  * |  P1  --.           P1 -> P2 : allow
->  * '------'  \          P2 -> P1 : allow
->  *            '
->  *            P2
->  */
-> 
-> (P1 domain) = {
->                 .allowed_access =
->                         LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE |
->                         LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
->                 .relationship = 
->                         LANDLOCK_DOMAIN_HIERARCHY_SELF |
->                         LANDLOCK_DOMAIN_HIERARCHY_CHILD,
+Relying on implicitly defined variable names in C macros is generally
+considered bad practice and can be avoided by using explicit parameters.
 
-Hmm, in this case P2 doesn't have a domain, so
-LANDLOCK_DOMAIN_HIERARCHY_CHILD doesn't make sense.
+Compile-tested only.
 
->                 }
-> (P2 domain) = {
->                 .allowed_access =
->                         LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE |
->                         LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND,
->                 .relationship = 
->                         LANDLOCK_DOMAIN_HIERARCHY_SELF |
->                         LANDLOCK_DOMAIN_HIERARCHY_CHILD |
-> 			LANDLOCK_DOMAIN_HIERARCHY_PARENT,
-> 		}
+Suggested-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Changes in v2:
+- Add macro parameter ioaddr where necessary to fix smc_probe() after
+  feedback from Jakub Kicinski
+- Update patch description
+- Link to v1: https://lore.kernel.org/linux-kernel/20240528104421.399885-3-thorsten.blum@toblux.com/
+---
+ drivers/net/ethernet/smsc/smc91x.c | 132 +++++++++++--------------
+ drivers/net/ethernet/smsc/smc91x.h | 152 ++++++++++++++---------------
+ 2 files changed, 131 insertions(+), 153 deletions(-)
 
-I think you wanted to use the "Inherited + child domain" example here,
-in which case the domain policies make sense.
+diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
+index 78ff3af7911a..b008385a92dd 100644
+--- a/drivers/net/ethernet/smsc/smc91x.c
++++ b/drivers/net/ethernet/smsc/smc91x.c
+@@ -239,7 +239,6 @@ static inline void PRINT_PKT(u_char *buf, int length) { }
+ static void smc_reset(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int ctl, cfg;
+ 	struct sk_buff *pending_skb;
+ 
+@@ -247,7 +246,7 @@ static void smc_reset(struct net_device *dev)
+ 
+ 	/* Disable all interrupts, block TX tasklet */
+ 	spin_lock_irq(&lp->lock);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_INT_MASK(lp, 0);
+ 	pending_skb = lp->pending_tx_skb;
+ 	lp->pending_tx_skb = NULL;
+@@ -264,7 +263,7 @@ static void smc_reset(struct net_device *dev)
+ 	 * This resets the registers mostly to defaults, but doesn't
+ 	 * affect EEPROM.  That seems unnecessary
+ 	 */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RCR(lp, RCR_SOFTRST);
+ 
+ 	/*
+@@ -272,7 +271,7 @@ static void smc_reset(struct net_device *dev)
+ 	 * This is necessary because the CONFIG_REG is not affected
+ 	 * by a soft reset
+ 	 */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 
+ 	cfg = CONFIG_DEFAULT;
+ 
+@@ -303,11 +302,11 @@ static void smc_reset(struct net_device *dev)
+ 	udelay(1);
+ 
+ 	/* Disable transmit and receive functionality */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RCR(lp, RCR_CLEAR);
+ 	SMC_SET_TCR(lp, TCR_CLEAR);
+ 
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	ctl = SMC_GET_CTL(lp) | CTL_LE_ENABLE;
+ 
+ 	/*
+@@ -322,7 +321,7 @@ static void smc_reset(struct net_device *dev)
+ 	SMC_SET_CTL(lp, ctl);
+ 
+ 	/* Reset the MMU */
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_MMU_CMD(lp, MC_RESET);
+ 	SMC_WAIT_MMU_BUSY(lp);
+ }
+@@ -333,24 +332,23 @@ static void smc_reset(struct net_device *dev)
+ static void smc_enable(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int mask;
+ 
+ 	DBG(2, dev, "%s\n", __func__);
+ 
+ 	/* see the header file for options in TCR/RCR DEFAULT */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_TCR(lp, lp->tcr_cur_mode);
+ 	SMC_SET_RCR(lp, lp->rcr_cur_mode);
+ 
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	SMC_SET_MAC_ADDR(lp, dev->dev_addr);
+ 
+ 	/* now, enable interrupts */
+ 	mask = IM_EPH_INT|IM_RX_OVRN_INT|IM_RCV_INT;
+ 	if (lp->version >= (CHIP_91100 << 4))
+ 		mask |= IM_MDINT;
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_INT_MASK(lp, mask);
+ 
+ 	/*
+@@ -367,14 +365,13 @@ static void smc_enable(struct net_device *dev)
+ static void smc_shutdown(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	struct sk_buff *pending_skb;
+ 
+ 	DBG(2, dev, "%s: %s\n", CARDNAME, __func__);
+ 
+ 	/* no more interrupts for me */
+ 	spin_lock_irq(&lp->lock);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_INT_MASK(lp, 0);
+ 	pending_skb = lp->pending_tx_skb;
+ 	lp->pending_tx_skb = NULL;
+@@ -382,13 +379,13 @@ static void smc_shutdown(struct net_device *dev)
+ 	dev_kfree_skb(pending_skb);
+ 
+ 	/* and tell the card to stay away from that nasty outside world */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RCR(lp, RCR_CLEAR);
+ 	SMC_SET_TCR(lp, TCR_CLEAR);
+ 
+ #ifdef POWER_DOWN
+ 	/* finally, shut the chip down */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	SMC_SET_CONFIG(lp, SMC_GET_CONFIG(lp) & ~CONFIG_EPH_POWER_EN);
+ #endif
+ }
+@@ -399,7 +396,6 @@ static void smc_shutdown(struct net_device *dev)
+ static inline void  smc_rcv(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int packet_number, status, packet_len;
+ 
+ 	DBG(3, dev, "%s\n", __func__);
+@@ -540,7 +536,6 @@ static void smc_hardware_send_pkt(struct tasklet_struct *t)
+ {
+ 	struct smc_local *lp = from_tasklet(lp, t, tx_task);
+ 	struct net_device *dev = lp->dev;
+-	void __iomem *ioaddr = lp->base;
+ 	struct sk_buff *skb;
+ 	unsigned int packet_no, len;
+ 	unsigned char *buf;
+@@ -590,7 +585,7 @@ static void smc_hardware_send_pkt(struct tasklet_struct *t)
+ 	SMC_PUSH_DATA(lp, buf, len & ~1);
+ 
+ 	/* Send final ctl word with the last byte if there is one */
+-	SMC_outw(lp, ((len & 1) ? (0x2000 | buf[len - 1]) : 0), ioaddr,
++	SMC_outw(lp, ((len & 1) ? (0x2000 | buf[len - 1]) : 0), lp->base,
+ 		 DATA_REG(lp));
+ 
+ 	/*
+@@ -630,7 +625,6 @@ static netdev_tx_t
+ smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int numPages, poll_count, status;
+ 	unsigned long flags;
+ 
+@@ -703,7 +697,6 @@ smc_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ static void smc_tx(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int saved_packet, packet_no, tx_status;
+ 	unsigned int pkt_len __always_unused;
+ 
+@@ -751,9 +744,9 @@ static void smc_tx(struct net_device *dev)
+ 	SMC_SET_PN(lp, saved_packet);
+ 
+ 	/* re-enable transmit */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_TCR(lp, lp->tcr_cur_mode);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ }
+ 
+ 
+@@ -762,7 +755,6 @@ static void smc_tx(struct net_device *dev)
+ static void smc_mii_out(struct net_device *dev, unsigned int val, int bits)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int mii_reg, mask;
+ 
+ 	mii_reg = SMC_GET_MII(lp) & ~(MII_MCLK | MII_MDOE | MII_MDO);
+@@ -784,7 +776,6 @@ static void smc_mii_out(struct net_device *dev, unsigned int val, int bits)
+ static unsigned int smc_mii_in(struct net_device *dev, int bits)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int mii_reg, mask, val;
+ 
+ 	mii_reg = SMC_GET_MII(lp) & ~(MII_MCLK | MII_MDOE | MII_MDO);
+@@ -809,10 +800,9 @@ static unsigned int smc_mii_in(struct net_device *dev, int bits)
+ static int smc_phy_read(struct net_device *dev, int phyaddr, int phyreg)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int phydata;
+ 
+-	SMC_SELECT_BANK(lp, 3);
++	SMC_SELECT_BANK(lp, 3, lp->base);
+ 
+ 	/* Idle - 32 ones */
+ 	smc_mii_out(dev, 0xffffffff, 32);
+@@ -829,7 +819,7 @@ static int smc_phy_read(struct net_device *dev, int phyaddr, int phyreg)
+ 	DBG(3, dev, "%s: phyaddr=0x%x, phyreg=0x%x, phydata=0x%x\n",
+ 	    __func__, phyaddr, phyreg, phydata);
+ 
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	return phydata;
+ }
+ 
+@@ -840,9 +830,8 @@ static void smc_phy_write(struct net_device *dev, int phyaddr, int phyreg,
+ 			  int phydata)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+-	SMC_SELECT_BANK(lp, 3);
++	SMC_SELECT_BANK(lp, 3, lp->base);
+ 
+ 	/* Idle - 32 ones */
+ 	smc_mii_out(dev, 0xffffffff, 32);
+@@ -856,7 +845,7 @@ static void smc_phy_write(struct net_device *dev, int phyaddr, int phyreg,
+ 	DBG(3, dev, "%s: phyaddr=0x%x, phyreg=0x%x, phydata=0x%x\n",
+ 	    __func__, phyaddr, phyreg, phydata);
+ 
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ }
+ 
+ /*
+@@ -902,7 +891,6 @@ static void smc_phy_detect(struct net_device *dev)
+ static int smc_phy_fixed(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int phyaddr = lp->mii.phy_id;
+ 	int bmcr, cfg1;
+ 
+@@ -929,9 +917,9 @@ static int smc_phy_fixed(struct net_device *dev)
+ 	smc_phy_write(dev, phyaddr, MII_BMCR, bmcr);
+ 
+ 	/* Re-Configure the Receive/Phy Control register */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RPC(lp, lp->rpc_cur_mode);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 
+ 	return 1;
+ }
+@@ -1005,7 +993,6 @@ static void smc_phy_powerdown(struct net_device *dev)
+ static void smc_phy_check_media(struct net_device *dev, int init)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	if (mii_check_media(&lp->mii, netif_msg_link(lp), init)) {
+ 		/* duplex state has changed */
+@@ -1015,7 +1002,7 @@ static void smc_phy_check_media(struct net_device *dev, int init)
+ 			lp->tcr_cur_mode &= ~TCR_SWFDUP;
+ 		}
+ 
+-		SMC_SELECT_BANK(lp, 0);
++		SMC_SELECT_BANK(lp, 0, lp->base);
+ 		SMC_SET_TCR(lp, lp->tcr_cur_mode);
+ 	}
+ }
+@@ -1034,7 +1021,6 @@ static void smc_phy_configure(struct work_struct *work)
+ 	struct smc_local *lp =
+ 		container_of(work, struct smc_local, phy_configure);
+ 	struct net_device *dev = lp->dev;
+-	void __iomem *ioaddr = lp->base;
+ 	int phyaddr = lp->mii.phy_id;
+ 	int my_phy_caps; /* My PHY capabilities */
+ 	int my_ad_caps; /* My Advertised capabilities */
+@@ -1064,7 +1050,7 @@ static void smc_phy_configure(struct work_struct *work)
+ 		PHY_INT_SPDDET | PHY_INT_DPLXDET);
+ 
+ 	/* Configure the Receive/Phy Control register */
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RPC(lp, lp->rpc_cur_mode);
+ 
+ 	/* If the user requested no auto neg, then go set his request */
+@@ -1122,7 +1108,7 @@ static void smc_phy_configure(struct work_struct *work)
+ 	smc_phy_check_media(dev, 1);
+ 
+ smc_phy_configure_exit:
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	spin_unlock_irq(&lp->lock);
+ }
+ 
+@@ -1158,14 +1144,13 @@ static void smc_phy_interrupt(struct net_device *dev)
+ static void smc_10bt_check_media(struct net_device *dev, int init)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int old_carrier, new_carrier;
+ 
+ 	old_carrier = netif_carrier_ok(dev) ? 1 : 0;
+ 
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	new_carrier = (SMC_GET_EPH_STATUS(lp) & ES_LINK_OK) ? 1 : 0;
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 
+ 	if (init || (old_carrier != new_carrier)) {
+ 		if (!new_carrier) {
+@@ -1182,16 +1167,15 @@ static void smc_10bt_check_media(struct net_device *dev, int init)
+ static void smc_eph_interrupt(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned int ctl;
+ 
+ 	smc_10bt_check_media(dev, 0);
+ 
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	ctl = SMC_GET_CTL(lp);
+ 	SMC_SET_CTL(lp, ctl & ~CTL_LE_ENABLE);
+ 	SMC_SET_CTL(lp, ctl);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ }
+ 
+ /*
+@@ -1202,7 +1186,6 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
+ {
+ 	struct net_device *dev = dev_id;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int status, mask, timeout, card_stats;
+ 	int saved_pointer;
+ 
+@@ -1227,9 +1210,9 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
+ 
+ 		DBG(2, dev, "INT 0x%02x MASK 0x%02x MEM 0x%04x FIFO 0x%04x\n",
+ 		    status, mask,
+-		    ({ int meminfo; SMC_SELECT_BANK(lp, 0);
++		    ({ int meminfo; SMC_SELECT_BANK(lp, 0, lp->base);
+ 		       meminfo = SMC_GET_MIR(lp);
+-		       SMC_SELECT_BANK(lp, 2); meminfo; }),
++		       SMC_SELECT_BANK(lp, 2, lp->base); meminfo; }),
+ 		    SMC_GET_FIFO(lp));
+ 
+ 		status &= mask;
+@@ -1255,9 +1238,9 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
+ 			mask &= ~IM_TX_EMPTY_INT;
+ 
+ 			/* update stats */
+-			SMC_SELECT_BANK(lp, 0);
++			SMC_SELECT_BANK(lp, 0, lp->base);
+ 			card_stats = SMC_GET_COUNTER(lp);
+-			SMC_SELECT_BANK(lp, 2);
++			SMC_SELECT_BANK(lp, 2, lp->base);
+ 
+ 			/* single collisions */
+ 			dev->stats.collisions += card_stats & 0xF;
+@@ -1267,9 +1250,9 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
+ 			dev->stats.collisions += card_stats & 0xF;
+ 		} else if (status & IM_RX_OVRN_INT) {
+ 			DBG(1, dev, "RX overrun (EPH_ST 0x%04x)\n",
+-			    ({ int eph_st; SMC_SELECT_BANK(lp, 0);
++			    ({ int eph_st; SMC_SELECT_BANK(lp, 0, lp->base);
+ 			       eph_st = SMC_GET_EPH_STATUS(lp);
+-			       SMC_SELECT_BANK(lp, 2); eph_st; }));
++			       SMC_SELECT_BANK(lp, 2, lp->base); eph_st; }));
+ 			SMC_ACK_INT(lp, IM_RX_OVRN_INT);
+ 			dev->stats.rx_errors++;
+ 			dev->stats.rx_fifo_errors++;
+@@ -1325,7 +1308,6 @@ static void smc_poll_controller(struct net_device *dev)
+ static void smc_timeout(struct net_device *dev, unsigned int txqueue)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	int status, mask, eph_st, meminfo, fifo;
+ 
+ 	DBG(2, dev, "%s\n", __func__);
+@@ -1334,10 +1316,10 @@ static void smc_timeout(struct net_device *dev, unsigned int txqueue)
+ 	status = SMC_GET_INT(lp);
+ 	mask = SMC_GET_INT_MASK(lp);
+ 	fifo = SMC_GET_FIFO(lp);
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	eph_st = SMC_GET_EPH_STATUS(lp);
+ 	meminfo = SMC_GET_MIR(lp);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	spin_unlock_irq(&lp->lock);
+ 	PRINTK(dev, "TX timeout (INT 0x%02x INTMASK 0x%02x MEM 0x%04x FIFO 0x%04x EPH_ST 0x%04x)\n",
+ 	       status, mask, meminfo, fifo, eph_st);
+@@ -1367,7 +1349,6 @@ static void smc_timeout(struct net_device *dev, unsigned int txqueue)
+ static void smc_set_multicast_list(struct net_device *dev)
+ {
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 	unsigned char multicast_table[8];
+ 	int update_multicast = 0;
+ 
+@@ -1443,13 +1424,13 @@ static void smc_set_multicast_list(struct net_device *dev)
+ 	}
+ 
+ 	spin_lock_irq(&lp->lock);
+-	SMC_SELECT_BANK(lp, 0);
++	SMC_SELECT_BANK(lp, 0, lp->base);
+ 	SMC_SET_RCR(lp, lp->rcr_cur_mode);
+ 	if (update_multicast) {
+-		SMC_SELECT_BANK(lp, 3);
++		SMC_SELECT_BANK(lp, 3, lp->base);
+ 		SMC_SET_MCAST(lp, multicast_table);
+ 	}
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	spin_unlock_irq(&lp->lock);
+ }
+ 
+@@ -1625,17 +1606,16 @@ static int smc_write_eeprom_word(struct net_device *dev, u16 addr, u16 word)
+ {
+ 	u16 ctl;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	spin_lock_irq(&lp->lock);
+ 	/* load word into GP register */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	SMC_SET_GP(lp, word);
+ 	/* set the address to put the data in EEPROM */
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_PTR(lp, addr);
+ 	/* tell it to write */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	ctl = SMC_GET_CTL(lp);
+ 	SMC_SET_CTL(lp, ctl | (CTL_EEPROM_SELECT | CTL_STORE));
+ 	/* wait for it to finish */
+@@ -1644,7 +1624,7 @@ static int smc_write_eeprom_word(struct net_device *dev, u16 addr, u16 word)
+ 	} while (SMC_GET_CTL(lp) & CTL_STORE);
+ 	/* clean up */
+ 	SMC_SET_CTL(lp, ctl);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	spin_unlock_irq(&lp->lock);
+ 	return 0;
+ }
+@@ -1653,14 +1633,13 @@ static int smc_read_eeprom_word(struct net_device *dev, u16 addr, u16 *word)
+ {
+ 	u16 ctl;
+ 	struct smc_local *lp = netdev_priv(dev);
+-	void __iomem *ioaddr = lp->base;
+ 
+ 	spin_lock_irq(&lp->lock);
+ 	/* set the EEPROM address to get the data from */
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_PTR(lp, addr | PTR_READ);
+ 	/* tell it to load */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	SMC_SET_GP(lp, 0xffff);	/* init to known */
+ 	ctl = SMC_GET_CTL(lp);
+ 	SMC_SET_CTL(lp, ctl | (CTL_EEPROM_SELECT | CTL_RELOAD));
+@@ -1672,7 +1651,7 @@ static int smc_read_eeprom_word(struct net_device *dev, u16 addr, u16 *word)
+ 	*word = SMC_GET_GP(lp);
+ 	/* clean up */
+ 	SMC_SET_CTL(lp, ctl);
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	spin_unlock_irq(&lp->lock);
+ 	return 0;
+ }
+@@ -1773,7 +1752,6 @@ static const struct net_device_ops smc_netdev_ops = {
+  */
+ static int smc_findirq(struct smc_local *lp)
+ {
+-	void __iomem *ioaddr = lp->base;
+ 	int timeout = 20;
+ 	unsigned long cookie;
+ 
+@@ -1787,7 +1765,7 @@ static int smc_findirq(struct smc_local *lp)
+ 	 * when done.
+ 	 */
+ 	/* enable ALLOCation interrupts ONLY */
+-	SMC_SELECT_BANK(lp, 2);
++	SMC_SELECT_BANK(lp, 2, lp->base);
+ 	SMC_SET_INT_MASK(lp, IM_ALLOC_INT);
+ 
+ 	/*
+@@ -1857,7 +1835,7 @@ static int smc_probe(struct net_device *dev, void __iomem *ioaddr,
+ 	DBG(2, dev, "%s: %s\n", CARDNAME, __func__);
+ 
+ 	/* First, see if the high byte is 0x33 */
+-	val = SMC_CURRENT_BANK(lp);
++	val = SMC_CURRENT_BANK(lp, ioaddr);
+ 	DBG(2, dev, "%s: bank signature probe returned 0x%04x\n",
+ 	    CARDNAME, val);
+ 	if ((val & 0xFF00) != 0x3300) {
+@@ -1874,8 +1852,8 @@ static int smc_probe(struct net_device *dev, void __iomem *ioaddr,
+ 	 * The above MIGHT indicate a device, but I need to write to
+ 	 * further test this.
+ 	 */
+-	SMC_SELECT_BANK(lp, 0);
+-	val = SMC_CURRENT_BANK(lp);
++	SMC_SELECT_BANK(lp, 0, ioaddr);
++	val = SMC_CURRENT_BANK(lp, ioaddr);
+ 	if ((val & 0xFF00) != 0x3300) {
+ 		retval = -ENODEV;
+ 		goto err_out;
+@@ -1887,8 +1865,8 @@ static int smc_probe(struct net_device *dev, void __iomem *ioaddr,
+ 	 * register to bank 1, so I can access the base address
+ 	 * register
+ 	 */
+-	SMC_SELECT_BANK(lp, 1);
+-	val = SMC_GET_BASE(lp);
++	SMC_SELECT_BANK(lp, 1, ioaddr);
++	val = SMC_GET_BASE(lp, ioaddr);
+ 	val = ((val & 0x1F00) >> 3) << SMC_IO_SHIFT;
+ 	if (((unsigned long)ioaddr & (0x3e0 << SMC_IO_SHIFT)) != val) {
+ 		netdev_warn(dev, "%s: IOADDR %p doesn't match configuration (%x).\n",
+@@ -1900,8 +1878,8 @@ static int smc_probe(struct net_device *dev, void __iomem *ioaddr,
+ 	 * recognize.  These might need to be added to later,
+ 	 * as future revisions could be added.
+ 	 */
+-	SMC_SELECT_BANK(lp, 3);
+-	revision_register = SMC_GET_REV(lp);
++	SMC_SELECT_BANK(lp, 3, ioaddr);
++	revision_register = SMC_GET_REV(lp, ioaddr);
+ 	DBG(2, dev, "%s: revision = 0x%04x\n", CARDNAME, revision_register);
+ 	version_string = chip_ids[ (revision_register >> 4) & 0xF];
+ 	if (!version_string || (revision_register & 0xff00) != 0x3300) {
+@@ -1923,7 +1901,7 @@ static int smc_probe(struct net_device *dev, void __iomem *ioaddr,
+ 	spin_lock_init(&lp->lock);
+ 
+ 	/* Get the MAC address */
+-	SMC_SELECT_BANK(lp, 1);
++	SMC_SELECT_BANK(lp, 1, lp->base);
+ 	SMC_GET_MAC_ADDR(lp, addr);
+ 	eth_hw_addr_set(dev, addr);
+ 
+diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
+index 45ef5ac0788a..561a1b958fd0 100644
+--- a/drivers/net/ethernet/smsc/smc91x.h
++++ b/drivers/net/ethernet/smsc/smc91x.h
+@@ -815,7 +815,7 @@ static const char * chip_ids[ 16 ] =  {
+ #if SMC_DEBUG > 0
+ #define SMC_REG(lp, reg, bank)					\
+ 	({								\
+-		int __b = SMC_CURRENT_BANK(lp);			\
++		int __b = SMC_CURRENT_BANK(lp, lp->base);		\
+ 		if (unlikely((__b & ~0xf0) != (0x3300 | bank))) {	\
+ 			pr_err("%s: bank reg screwed (0x%04x)\n",	\
+ 			       CARDNAME, __b);				\
+@@ -839,64 +839,64 @@ static const char * chip_ids[ 16 ] =  {
+ #define SMC_MUST_ALIGN_WRITE(lp)	SMC_32BIT(lp)
+ 
+ #define SMC_GET_PN(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, PN_REG(lp)))	\
+-				: (SMC_inw(ioaddr, PN_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, PN_REG(lp)))	\
++				: (SMC_inw(lp->base, PN_REG(lp)) & 0xFF))
+ 
+ #define SMC_SET_PN(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 0, 2));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 0, 2));	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_outb(x, ioaddr, PN_REG(lp));		\
++			SMC_outb(x, lp->base, PN_REG(lp));		\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, PN_REG(lp));		\
++			SMC_outw(lp, x, lp->base, PN_REG(lp));		\
+ 	} while (0)
+ 
+ #define SMC_GET_AR(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, AR_REG(lp)))	\
+-				: (SMC_inw(ioaddr, PN_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, AR_REG(lp)))	\
++				: (SMC_inw(lp->base, PN_REG(lp)) >> 8))
+ 
+ #define SMC_GET_TXFIFO(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, TXFIFO_REG(lp)))	\
+-				: (SMC_inw(ioaddr, TXFIFO_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, TXFIFO_REG(lp)))	\
++				: (SMC_inw(lp->base, TXFIFO_REG(lp)) & 0xFF))
+ 
+ #define SMC_GET_RXFIFO(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, RXFIFO_REG(lp)))	\
+-				: (SMC_inw(ioaddr, TXFIFO_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, RXFIFO_REG(lp)))	\
++				: (SMC_inw(lp->base, TXFIFO_REG(lp)) >> 8))
+ 
+ #define SMC_GET_INT(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, INT_REG(lp)))	\
+-				: (SMC_inw(ioaddr, INT_REG(lp)) & 0xFF))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, INT_REG(lp)))	\
++				: (SMC_inw(lp->base, INT_REG(lp)) & 0xFF))
+ 
+ #define SMC_ACK_INT(lp, x)						\
+ 	do {								\
+ 		if (SMC_8BIT(lp))					\
+-			SMC_outb(x, ioaddr, INT_REG(lp));		\
++			SMC_outb(x, lp->base, INT_REG(lp));		\
+ 		else {							\
+ 			unsigned long __flags;				\
+ 			int __mask;					\
+ 			local_irq_save(__flags);			\
+-			__mask = SMC_inw(ioaddr, INT_REG(lp)) & ~0xff; \
+-			SMC_outw(lp, __mask | (x), ioaddr, INT_REG(lp)); \
++			__mask = SMC_inw(lp->base, INT_REG(lp)) & ~0xff; \
++			SMC_outw(lp, __mask | (x), lp->base, INT_REG(lp)); \
+ 			local_irq_restore(__flags);			\
+ 		}							\
+ 	} while (0)
+ 
+ #define SMC_GET_INT_MASK(lp)						\
+-	(SMC_8BIT(lp)	? (SMC_inb(ioaddr, IM_REG(lp)))	\
+-				: (SMC_inw(ioaddr, INT_REG(lp)) >> 8))
++	(SMC_8BIT(lp)	? (SMC_inb(lp->base, IM_REG(lp)))	\
++				: (SMC_inw(lp->base, INT_REG(lp)) >> 8))
+ 
+ #define SMC_SET_INT_MASK(lp, x)					\
+ 	do {								\
+ 		if (SMC_8BIT(lp))					\
+-			SMC_outb(x, ioaddr, IM_REG(lp));		\
++			SMC_outb(x, lp->base, IM_REG(lp));		\
+ 		else							\
+-			SMC_outw(lp, (x) << 8, ioaddr, INT_REG(lp));	\
++			SMC_outw(lp, (x) << 8, lp->base, INT_REG(lp));	\
+ 	} while (0)
+ 
+-#define SMC_CURRENT_BANK(lp)	SMC_inw(ioaddr, BANK_SELECT)
++#define SMC_CURRENT_BANK(lp, ioaddr)	SMC_inw(ioaddr, BANK_SELECT)
+ 
+-#define SMC_SELECT_BANK(lp, x)					\
++#define SMC_SELECT_BANK(lp, x, ioaddr)					\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+ 			SMC_outl((x)<<16, ioaddr, 12<<SMC_IO_SHIFT);	\
+@@ -904,125 +904,125 @@ static const char * chip_ids[ 16 ] =  {
+ 			SMC_outw(lp, x, ioaddr, BANK_SELECT);		\
+ 	} while (0)
+ 
+-#define SMC_GET_BASE(lp)		SMC_inw(ioaddr, BASE_REG(lp))
++#define SMC_GET_BASE(lp, ioaddr)	SMC_inw(ioaddr, BASE_REG(lp))
+ 
+-#define SMC_SET_BASE(lp, x)	SMC_outw(lp, x, ioaddr, BASE_REG(lp))
++#define SMC_SET_BASE(lp, x)	SMC_outw(lp, x, lp->base, BASE_REG(lp))
+ 
+-#define SMC_GET_CONFIG(lp)	SMC_inw(ioaddr, CONFIG_REG(lp))
++#define SMC_GET_CONFIG(lp)	SMC_inw(lp->base, CONFIG_REG(lp))
+ 
+-#define SMC_SET_CONFIG(lp, x)	SMC_outw(lp, x, ioaddr, CONFIG_REG(lp))
++#define SMC_SET_CONFIG(lp, x)	SMC_outw(lp, x, lp->base, CONFIG_REG(lp))
+ 
+-#define SMC_GET_COUNTER(lp)	SMC_inw(ioaddr, COUNTER_REG(lp))
++#define SMC_GET_COUNTER(lp)	SMC_inw(lp->base, COUNTER_REG(lp))
+ 
+-#define SMC_GET_CTL(lp)		SMC_inw(ioaddr, CTL_REG(lp))
++#define SMC_GET_CTL(lp)		SMC_inw(lp->base, CTL_REG(lp))
+ 
+-#define SMC_SET_CTL(lp, x)	SMC_outw(lp, x, ioaddr, CTL_REG(lp))
++#define SMC_SET_CTL(lp, x)	SMC_outw(lp, x, lp->base, CTL_REG(lp))
+ 
+-#define SMC_GET_MII(lp)		SMC_inw(ioaddr, MII_REG(lp))
++#define SMC_GET_MII(lp)		SMC_inw(lp->base, MII_REG(lp))
+ 
+-#define SMC_GET_GP(lp)		SMC_inw(ioaddr, GP_REG(lp))
++#define SMC_GET_GP(lp)		SMC_inw(lp->base, GP_REG(lp))
+ 
+ #define SMC_SET_GP(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 1));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 8, 1));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, GP_REG(lp));		\
++			SMC_outw(lp, x, lp->base, GP_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_SET_MII(lp, x)	SMC_outw(lp, x, ioaddr, MII_REG(lp))
++#define SMC_SET_MII(lp, x)	SMC_outw(lp, x, lp->base, MII_REG(lp))
+ 
+-#define SMC_GET_MIR(lp)		SMC_inw(ioaddr, MIR_REG(lp))
++#define SMC_GET_MIR(lp)		SMC_inw(lp->base, MIR_REG(lp))
+ 
+-#define SMC_SET_MIR(lp, x)	SMC_outw(lp, x, ioaddr, MIR_REG(lp))
++#define SMC_SET_MIR(lp, x)	SMC_outw(lp, x, lp->base, MIR_REG(lp))
+ 
+-#define SMC_GET_MMU_CMD(lp)	SMC_inw(ioaddr, MMU_CMD_REG(lp))
++#define SMC_GET_MMU_CMD(lp)	SMC_inw(lp->base, MMU_CMD_REG(lp))
+ 
+-#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(lp, x, ioaddr, MMU_CMD_REG(lp))
++#define SMC_SET_MMU_CMD(lp, x)	SMC_outw(lp, x, lp->base, MMU_CMD_REG(lp))
+ 
+-#define SMC_GET_FIFO(lp)	SMC_inw(ioaddr, FIFO_REG(lp))
++#define SMC_GET_FIFO(lp)	SMC_inw(lp->base, FIFO_REG(lp))
+ 
+-#define SMC_GET_PTR(lp)		SMC_inw(ioaddr, PTR_REG(lp))
++#define SMC_GET_PTR(lp)		SMC_inw(lp->base, PTR_REG(lp))
+ 
+ #define SMC_SET_PTR(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 4, 2));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 4, 2));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, PTR_REG(lp));		\
++			SMC_outw(lp, x, lp->base, PTR_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_GET_EPH_STATUS(lp)	SMC_inw(ioaddr, EPH_STATUS_REG(lp))
++#define SMC_GET_EPH_STATUS(lp)	SMC_inw(lp->base, EPH_STATUS_REG(lp))
+ 
+-#define SMC_GET_RCR(lp)		SMC_inw(ioaddr, RCR_REG(lp))
++#define SMC_GET_RCR(lp)		SMC_inw(lp->base, RCR_REG(lp))
+ 
+-#define SMC_SET_RCR(lp, x)		SMC_outw(lp, x, ioaddr, RCR_REG(lp))
++#define SMC_SET_RCR(lp, x)		SMC_outw(lp, x, lp->base, RCR_REG(lp))
+ 
+-#define SMC_GET_REV(lp)		SMC_inw(ioaddr, REV_REG(lp))
++#define SMC_GET_REV(lp, ioaddr)	SMC_inw(ioaddr, REV_REG(lp))
+ 
+-#define SMC_GET_RPC(lp)		SMC_inw(ioaddr, RPC_REG(lp))
++#define SMC_GET_RPC(lp)		SMC_inw(lp->base, RPC_REG(lp))
+ 
+ #define SMC_SET_RPC(lp, x)						\
+ 	do {								\
+ 		if (SMC_MUST_ALIGN_WRITE(lp))				\
+-			SMC_outl((x)<<16, ioaddr, SMC_REG(lp, 8, 0));	\
++			SMC_outl((x)<<16, lp->base, SMC_REG(lp, 8, 0));	\
+ 		else							\
+-			SMC_outw(lp, x, ioaddr, RPC_REG(lp));		\
++			SMC_outw(lp, x, lp->base, RPC_REG(lp));		\
+ 	} while (0)
+ 
+-#define SMC_GET_TCR(lp)		SMC_inw(ioaddr, TCR_REG(lp))
++#define SMC_GET_TCR(lp)		SMC_inw(lp->base, TCR_REG(lp))
+ 
+-#define SMC_SET_TCR(lp, x)	SMC_outw(lp, x, ioaddr, TCR_REG(lp))
++#define SMC_SET_TCR(lp, x)	SMC_outw(lp, x, lp->base, TCR_REG(lp))
+ 
+ #ifndef SMC_GET_MAC_ADDR
+ #define SMC_GET_MAC_ADDR(lp, addr)					\
+ 	do {								\
+ 		unsigned int __v;					\
+-		__v = SMC_inw(ioaddr, ADDR0_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR0_REG(lp));			\
+ 		addr[0] = __v; addr[1] = __v >> 8;			\
+-		__v = SMC_inw(ioaddr, ADDR1_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR1_REG(lp));			\
+ 		addr[2] = __v; addr[3] = __v >> 8;			\
+-		__v = SMC_inw(ioaddr, ADDR2_REG(lp));			\
++		__v = SMC_inw(lp->base, ADDR2_REG(lp));			\
+ 		addr[4] = __v; addr[5] = __v >> 8;			\
+ 	} while (0)
+ #endif
+ 
+ #define SMC_SET_MAC_ADDR(lp, addr)					\
+ 	do {								\
+-		SMC_outw(lp, addr[0] | (addr[1] << 8), ioaddr, ADDR0_REG(lp)); \
+-		SMC_outw(lp, addr[2] | (addr[3] << 8), ioaddr, ADDR1_REG(lp)); \
+-		SMC_outw(lp, addr[4] | (addr[5] << 8), ioaddr, ADDR2_REG(lp)); \
++		SMC_outw(lp, addr[0] | (addr[1] << 8), lp->base, ADDR0_REG(lp)); \
++		SMC_outw(lp, addr[2] | (addr[3] << 8), lp->base, ADDR1_REG(lp)); \
++		SMC_outw(lp, addr[4] | (addr[5] << 8), lp->base, ADDR2_REG(lp)); \
+ 	} while (0)
+ 
+ #define SMC_SET_MCAST(lp, x)						\
+ 	do {								\
+ 		const unsigned char *mt = (x);				\
+-		SMC_outw(lp, mt[0] | (mt[1] << 8), ioaddr, MCAST_REG1(lp)); \
+-		SMC_outw(lp, mt[2] | (mt[3] << 8), ioaddr, MCAST_REG2(lp)); \
+-		SMC_outw(lp, mt[4] | (mt[5] << 8), ioaddr, MCAST_REG3(lp)); \
+-		SMC_outw(lp, mt[6] | (mt[7] << 8), ioaddr, MCAST_REG4(lp)); \
++		SMC_outw(lp, mt[0] | (mt[1] << 8), lp->base, MCAST_REG1(lp)); \
++		SMC_outw(lp, mt[2] | (mt[3] << 8), lp->base, MCAST_REG2(lp)); \
++		SMC_outw(lp, mt[4] | (mt[5] << 8), lp->base, MCAST_REG3(lp)); \
++		SMC_outw(lp, mt[6] | (mt[7] << 8), lp->base, MCAST_REG4(lp)); \
+ 	} while (0)
+ 
+ #define SMC_PUT_PKT_HDR(lp, status, length)				\
+ 	do {								\
+ 		if (SMC_32BIT(lp))					\
+-			SMC_outl((status) | (length)<<16, ioaddr,	\
++			SMC_outl((status) | (length)<<16, lp->base,	\
+ 				 DATA_REG(lp));			\
+ 		else {							\
+-			SMC_outw(lp, status, ioaddr, DATA_REG(lp));	\
+-			SMC_outw(lp, length, ioaddr, DATA_REG(lp));	\
++			SMC_outw(lp, status, lp->base, DATA_REG(lp));	\
++			SMC_outw(lp, length, lp->base, DATA_REG(lp));	\
+ 		}							\
+ 	} while (0)
+ 
+ #define SMC_GET_PKT_HDR(lp, status, length)				\
+ 	do {								\
+ 		if (SMC_32BIT(lp)) {				\
+-			unsigned int __val = SMC_inl(ioaddr, DATA_REG(lp)); \
++			unsigned int __val = SMC_inl(lp->base, DATA_REG(lp)); \
+ 			(status) = __val & 0xffff;			\
+ 			(length) = __val >> 16;				\
+ 		} else {						\
+-			(status) = SMC_inw(ioaddr, DATA_REG(lp));	\
+-			(length) = SMC_inw(ioaddr, DATA_REG(lp));	\
++			(status) = SMC_inw(lp->base, DATA_REG(lp));	\
++			(length) = SMC_inw(lp->base, DATA_REG(lp));	\
+ 		}							\
+ 	} while (0)
+ 
+@@ -1031,10 +1031,10 @@ static const char * chip_ids[ 16 ] =  {
+ 		if (SMC_32BIT(lp)) {				\
+ 			void *__ptr = (p);				\
+ 			int __len = (l);				\
+-			void __iomem *__ioaddr = ioaddr;		\
++			void __iomem *__ioaddr = lp->base;		\
+ 			if (__len >= 2 && (unsigned long)__ptr & 2) {	\
+ 				__len -= 2;				\
+-				SMC_outsw(ioaddr, DATA_REG(lp), __ptr, 1); \
++				SMC_outsw(lp->base, DATA_REG(lp), __ptr, 1); \
+ 				__ptr += 2;				\
+ 			}						\
+ 			if (SMC_CAN_USE_DATACS && lp->datacs)		\
+@@ -1042,12 +1042,12 @@ static const char * chip_ids[ 16 ] =  {
+ 			SMC_outsl(__ioaddr, DATA_REG(lp), __ptr, __len>>2); \
+ 			if (__len & 2) {				\
+ 				__ptr += (__len & ~3);			\
+-				SMC_outsw(ioaddr, DATA_REG(lp), __ptr, 1); \
++				SMC_outsw(lp->base, DATA_REG(lp), __ptr, 1); \
+ 			}						\
+ 		} else if (SMC_16BIT(lp))				\
+-			SMC_outsw(ioaddr, DATA_REG(lp), p, (l) >> 1);	\
++			SMC_outsw(lp->base, DATA_REG(lp), p, (l) >> 1);	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_outsb(ioaddr, DATA_REG(lp), p, l);	\
++			SMC_outsb(lp->base, DATA_REG(lp), p, l);	\
+ 	} while (0)
+ 
+ #define SMC_PULL_DATA(lp, p, l)					\
+@@ -1055,7 +1055,7 @@ static const char * chip_ids[ 16 ] =  {
+ 		if (SMC_32BIT(lp)) {				\
+ 			void *__ptr = (p);				\
+ 			int __len = (l);				\
+-			void __iomem *__ioaddr = ioaddr;		\
++			void __iomem *__ioaddr = lp->base;		\
+ 			if ((unsigned long)__ptr & 2) {			\
+ 				/*					\
+ 				 * We want 32bit alignment here.	\
+@@ -1080,9 +1080,9 @@ static const char * chip_ids[ 16 ] =  {
+ 			__len += 2;					\
+ 			SMC_insl(__ioaddr, DATA_REG(lp), __ptr, __len>>2); \
+ 		} else if (SMC_16BIT(lp))				\
+-			SMC_insw(ioaddr, DATA_REG(lp), p, (l) >> 1);	\
++			SMC_insw(lp->base, DATA_REG(lp), p, (l) >> 1);	\
+ 		else if (SMC_8BIT(lp))				\
+-			SMC_insb(ioaddr, DATA_REG(lp), p, l);		\
++			SMC_insb(lp->base, DATA_REG(lp), p, l);		\
+ 	} while (0)
+ 
+ #endif  /* _SMC91X_H_ */
+-- 
+2.45.1
 
-I was maybe too enthusiastic with the "relationship" field.  Let's
-rename landlock_domain_hierarchy_attr to landlock_domain_attr and remove
-the "relationship" field.  We'll always consider that
-LANDLOCK_DOMAIN_HIERARCHY_SELF is set as well as
-LANDLOCK_DOMAIN_HIERARCHY_CHILD (i.e. no restriction to send/received
-to/from a child domain or our own domain).  In a nutshell, please only
-keep the LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_{RECEIVE,SEND} rights and
-follow the same logic as with ptrace restrictions.  It will be easier to
-reason about and will be useful for most cases.  We could later extend
-that with more features.
-
-LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_RECEIVE will then translates to "allow
-to receive from the parent domain".
-LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_SEND will then translates to "allow to
-send to the parent domain".
-
-As for other Landlock access rights, the restrictions of domains should
-only be changed if LANDLOCK_ACCESS_DOM_UNIX_ABSTRACT_* is "handled" by
-the ruleset/domain.
