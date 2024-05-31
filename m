@@ -1,186 +1,320 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2044.outbound.protection.outlook.com [40.107.22.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEF31420DD
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 15:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717170212; cv=fail; b=mkSndA/Le23Xl0q7jnmBrhUB3/Ft0wxkTAi0pDfvlr7skiZcwJrEMMxd4b/SNpxDBCqy2v3VIjUKbABs15YuW67/mgYH0U2tQ00yVOvSOrn6+z69lZ5W3bdYMCTQmKpaL/2tmZpV81ngWnFCBRIZ0tfVR4bS9MK68WhyziO/PSc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717170212; c=relaxed/simple;
-	bh=LWyoI2Rb7ciBVh8y0WJrLQpa5VJ/rm2nLGRJ0o91ZJM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=AV/Hoy2nbUqgXD7jrp5LxG8F14p9zhEtBV3vBUEn5KQa5aGAmX58BsAQ5kEfHRyg7pVFO4+45cJLVIb7nkjTyzL8is8D5+GkAFW7dmWaYYQA0ue/QfcycZy/6BKsfJ/FGisFUCiSa+WZV1c/53eEcyvS1oOIBtOEiZv0tFTtBTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Qbn6nF8L; arc=fail smtp.client-ip=40.107.22.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE546CDA3;
+	Fri, 31 May 2024 15:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717170261; cv=none; b=E6KPpyrohzmrDlqYhwBX3X3kxHvZqSLwWQ0FsrpPpt8yrtSSb79FZcm5r0vaPnuASrEPjvEVG/alYPrYZ4RS2B41u3K+oa5B0NySlhUCp+CIuTQESxe0dZz4vzHMvdcuRnuJsoY7EQEnQZ9z0Agrf76RR+4ch8yylxpWT2TqeYc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717170261; c=relaxed/simple;
+	bh=0g/brmY75GKu9UfvuKo6Byyw0S+dlVufHw2SasUdd0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n7oFnAY6eTy8hV86DHvmx8C1nExhrIQMu/ilvO6NYc/3ZkcYr5j3c0nGcaOVyATrMJdCBZqsPuj42MCH9tIQzlUnFA6FSwffnBe4hoduPJnAgGJZTW96uLOjUm2ckpPK9h/Vc0diXBHcJx3NRLJ2fYPY6/MBY1oi1fq9UlGDbPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHuEE5ts; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Qbn6nF8L"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jBzXdDw/fxQ6ySZxdRq5+UQRO1OSSyImaOMdCikmlL3gkLCAwxrPdT9/NAZVJx4X4l1aRbmdi6wrTI/aJ9npHkMa+fsTHil4o48UcS/9C9XBYCZy4JFseVeadFXXFzOjledN1sOXMqIDdQh3luiuwN48rPx33DeujGAePX9YGDEnsTl1cWnUt9PLn1KfIyEzfYR+PhJeHM+/O+hEwg7GDFC+nyNc/xsGybxSueUEiFeyzr5oAIGzEhiv8Cfv+e8W6AbPn+64z8QOOGwQOKo6XuGEoSyL2LbAG5f8wNOcwqJ1suUs8gmcU+5ml014QGwzFlWAEcPOWJbMZTQ4M5+U5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o3HQz8cnIDtSZICFSDsale5sAWPlHWfAZhfoat1UN2k=;
- b=c+4Ac8aimc0eVt9oYzCneGkO8KrkB3M4G7n4lyM5zSa86hrtEmlyhAJO1JareUjJHbLNRELmb7san4wCRRd61I+WZL2sTptFW7fSrMQahYUeFPqXjQwgNmrK8sVjfDICgctGmrP54VC4a6AzD1CY1kc3SYH2VP4eYhN67U37AKyX1t5tHutD2TL4cp1GFd0d4i0MfTcYeX8glZp4IUCe2iXvWrDCLvjJWoBDY4IJ+QcFyw9nq8dxnDiaLeoHeG6P+7Mz4LI6u3jM+7w0Z0H1xSgik1lhUPl9IbRp505X4EwfCTbWkmyTYH5Yeu+H8+TN7ffJuP9aIF2sBmmKbJGP/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o3HQz8cnIDtSZICFSDsale5sAWPlHWfAZhfoat1UN2k=;
- b=Qbn6nF8L2dP1L9ka9ZjNNesiKtY70OGvrCNdOgxektfx5GuKunOMKcZ0cKXU+G8eI8Vf2LiRA/WN8MI+wv/2LoDNQPFteJ4CY1JWL43sZ79GGtbfrrStWr5ORwQozb4Q3X6K0OJoveoXErIZ/Z07tfxf8esw3eUjtJvk8PDKuKw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7605.eurprd04.prod.outlook.com (2603:10a6:20b:292::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.30; Fri, 31 May
- 2024 15:43:27 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.7633.018; Fri, 31 May 2024
- 15:43:27 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Conor Culhane <conor.culhane@silvaco.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-i3c@lists.infradead.org (moderated list:SILVACO I3C DUAL-ROLE MASTER),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] i3c: master: svc: fix IBIWON not set if IBI follow a hot join
-Date: Fri, 31 May 2024 11:43:08 -0400
-Message-Id: <20240531154308.1246214-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0025.namprd08.prod.outlook.com
- (2603:10b6:a03:100::38) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHuEE5ts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE62CC116B1;
+	Fri, 31 May 2024 15:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717170261;
+	bh=0g/brmY75GKu9UfvuKo6Byyw0S+dlVufHw2SasUdd0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pHuEE5ts+cIgQmZH1nESlqOyjM4GEAGaeWlajSE1/eVcCQarpLFCKNfB/dEd7/dy+
+	 ry2ZROPpHTq3yY8FhoN0QTEj2HeIgH60RQwKjs6er4+PZSfbAYkXsL//HmzRKvGJSE
+	 x6pdPtPuJgN7IiDctazEkrGQo/yxybb6h/2YulZXBgSk73Oh1xnvmKC3Z8CD/hW6n8
+	 3fQvZLER8JD9E/HZc6wuYS3SzDok34OV1MLLDWMZVKFsiA/pq/c4CpF9iwwApVFCYf
+	 QbLcKTV5eTCxZV/yfuNbY6xnHKzQIiM1mSGf2KlErHyvvzsqEPzoqHFpt4OQecKFmt
+	 4FNVwBNCR0wNw==
+Date: Fri, 31 May 2024 08:44:20 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, hch@infradead.org, brauner@kernel.org,
+	david@fromorbit.com, chandanbabu@kernel.org, jack@suse.cz,
+	willy@infradead.org, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: Re: [RFC PATCH v4 5/8] xfs: refactor the truncating order
+Message-ID: <20240531154420.GO52987@frogsfrogsfrogs>
+References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
+ <20240529095206.2568162-6-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e69c251-ff58-408e-6f01-08dc818869bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|52116005|366007|1800799015|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AIkaE8I400MQCQ6MCMmTDxzsWc+Y2RXmUUrGTQ51nVAQFlhBA8BI/8a3zn4Q?=
- =?us-ascii?Q?oXkdAjIXZqtlXSUfbBNm9Vuy5NYdUVkw11+lMemzjDW3ljZ6roMrDJ5nhTzz?=
- =?us-ascii?Q?+2NOeGL0Plth9YGpAy/MQu6WgSKg9P5ATpvvv2nhPsSVAB8VLRzBu+UOUDN5?=
- =?us-ascii?Q?4ITvFLGLHJxJeXRf5zXA8Ah/rE04IhTnAyMWLuMlI2LLEmh7m7LLPWNw0CWx?=
- =?us-ascii?Q?EK3BUXHBfQI2eGiZiQmP3eFwyNmzAoRlhRYHXymHxGRWPXdxY6lvZxKyu/WN?=
- =?us-ascii?Q?Hb5GWKDGsKpUXuMjW0dpiTVdtLTx30C0YhHgcVu/R3CYNLw4cuXOZCIwiW4L?=
- =?us-ascii?Q?t0mZBRoTVkgzc7/QZOFaNetlTAQ65QaJhaWR7zmWNe4Iso1GDuXYaa2ydKd7?=
- =?us-ascii?Q?zfVR7JlFTtY5SU3jRAMlv+lFU+feQNn1se89BEF/a/414K6XmmXCHV+/ByUq?=
- =?us-ascii?Q?vClyE5TJqB59seZaSy+taPvbtrMl4eh4+GhLZu8tqUltN2YLhzhGrIpgQNeN?=
- =?us-ascii?Q?U8ATm810rq8B3f7/mMRDsx06iGnV6w6JrL0vGCRuQZWQaFkCC5caHC/1gvH7?=
- =?us-ascii?Q?enSox04C5QZQxE8TpUhMU1MYDYFgKbmBvIWmJHFK5Eg5un8pJO42viiiGmTP?=
- =?us-ascii?Q?oxALBaDy87KKcUdt/V+5bd+7oKNrVEvp7k+AELgCQQiiywpLmz/Ju017RVzd?=
- =?us-ascii?Q?3XUwXzQtnxKnlRVQqYirbNj2Piyj5+p9uRsNZ9bbx2Is7QXUXEBVZDK+IWgQ?=
- =?us-ascii?Q?c5G9UvlYIBX5cpu2MF2lWFvcoU4F4gL11X6xQHFSKsUplIzxjWHpXLSujI8U?=
- =?us-ascii?Q?Y7yndz/Jx+j2tb9hfEV5Lj/3N29PSzBzcM7ctK+XECbClO5r2gY5FiVBol5Z?=
- =?us-ascii?Q?fKxerBYiDRbZLsVGf184XEBW2XxyJlvEcNOtv28SETjtPO4VJ3nicVNUBFvX?=
- =?us-ascii?Q?achrkych8mWRW+uH3pyi8nsDaEdCgUrao1rBPlYZXjtXmP+L40Y06PRJYFq+?=
- =?us-ascii?Q?9E8jMaFMBJNLrvBdwBkTUoo9H1XZrf/1ULPlExWwz0sQQDhapS/lS+3YC3RW?=
- =?us-ascii?Q?20uu0WES/NnAFfSIMWIbdTNm9/lkzJUwdRqdfxP7Op3sSZdqIQCnPKjhFwfm?=
- =?us-ascii?Q?v7AJOaThd+46R0n5gNRlgZuF8UrW04kAMTptqoaeQ7BgrY1WViXSUBZc10RM?=
- =?us-ascii?Q?Y7sdZZc5hWbQCcydUXHY1khqBqLckbdtXsEzTTezrwertRNGeg63OzLyWiiR?=
- =?us-ascii?Q?H3qgzXZxc3a+ft5zKat1evS/wDpoL6jLp54nz4RY7qtRcUhfMVchUBI5aQOx?=
- =?us-ascii?Q?16Q5b07nGG737EJ6PiuZIAA33UFdtolNv+V+clnA9/VYoQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(366007)(1800799015)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Rl4zVHo1yr/bKDTdH4m/ew+QOSvY/Jy0P9+xSTtkZZTHmo/0EM6MJLG6uTqc?=
- =?us-ascii?Q?yZi8LXHiLGGf0DOttRzL1BuwTuT21aX7i/s0m9wi58iIr3Xo5WH1pfqvXY9o?=
- =?us-ascii?Q?sJRVsmOOv0yNPeYkgI7k2V+1W6krGXOktwN1qGe8tkD9RliUa+zTad3KcEe+?=
- =?us-ascii?Q?aSqzouskjsidhVzCAkwFP3pEu5awEVfEyU2fS8diaSD+yHQ2YoUqPmz8HB78?=
- =?us-ascii?Q?q6LyVpdwKNd2xg4Fhdi3NNKww2srMk7yMGLzN9rN4Kj0rVjZY5ePthPM2Vau?=
- =?us-ascii?Q?RL4A+SinryZku+JjuJtKi7AuqDSbNG2kHYpDCWPuslY2GQILLGKbiewZModi?=
- =?us-ascii?Q?iheRCxAJHrRoLc88p/r5xaaTia4NzK/C7wJR+hlj5HrdOpFt0nIjTcGN34oo?=
- =?us-ascii?Q?H0dbEPIE4my7ccm+BPa7w83SesgD5b1+cdMZyrrvkfh+HX4ZC9KykWUSDJkf?=
- =?us-ascii?Q?Fwl2j7UzOq7ItcDlog5O0NSfLYdYgo/SalMEBL1mxDeuSHUntoBBMzEB3kC0?=
- =?us-ascii?Q?Bf3dGmhUqDcHIbdI+6gSiYPomXalR+UQzJmqwmjs8lQLDBWTkXO/LOUvuVpW?=
- =?us-ascii?Q?qLOoHlqlQGZ0IlBBJK+ZwNcmNTXI5Tk2SgNSea/9Tn3ca2ujUrjR9pNlxorn?=
- =?us-ascii?Q?odQyuwkteq+uJGo8Z52TDFMepnNOwkz4KmE5ZQnsXKYMv1xJRmz43O4RKMGJ?=
- =?us-ascii?Q?T/QXZFfjYzSjDH0jGFAFVNl2QM4CZnKp3Hizn23OQOBCLfinrNdGfWrBOWl6?=
- =?us-ascii?Q?JtMZAj9i/GhKZNG6mqCgXceUPCFQ785NDI8RdYGv1mgMrE0d96BTOk/RCXa+?=
- =?us-ascii?Q?j65l+aWWMO9nLE7NjkqZwrBMoIY+kF7L98ik2Iy2q+it1DGZACm/Ahkhz0UB?=
- =?us-ascii?Q?ULGngy98yrfWzEaFb01pN5JMLAArXIfWMYUHeyniCYkxDM9zJjtiApFoYpx3?=
- =?us-ascii?Q?WAvsIlc3O+66UsQnZuN1jfhUFd6fp/JDBl3UrJuZPOv4Qf+wDRSF9UOSXr+6?=
- =?us-ascii?Q?vq2lmIee/RhWgBJH2PeNR57txPSnMWZBdeg9OUufxpu67lEIVAeZq/NDGvcZ?=
- =?us-ascii?Q?bBl+hnh5XY4GE3JVJL6bJpnJV5DQ25fXTJMwlcqLKgJIIE9/ntlNFy11QxBs?=
- =?us-ascii?Q?KgcYWXyLwDDW+LpPPZhbDEpdR9utZkL/vkRlotlvWuGzZrpBXtesxEaXpKQT?=
- =?us-ascii?Q?yPtfmmPjijatF1F2y5fidH9KGAfwTp7laxtcCWLqL4tJGgg7kZbIFVOgBaJD?=
- =?us-ascii?Q?Om/XM0sf4rcI9yLD0m5nIABpbVJiem5NJCH+HxTlL+KyjvAuSas1jGSgZ9M8?=
- =?us-ascii?Q?5h7gPy5FCCtuyXusiLFIAxVdECX4NH8SXl5jZqgRsl/SJkhOp0bBVRierzgr?=
- =?us-ascii?Q?lyEhQGcJ+gk6FRntmZD74y3Pn1v1NqSItWazyc5BoHrQ+jADnSrB0gEdWT7d?=
- =?us-ascii?Q?v60HybaU1FljlbQJuIS96cs2rl07N8tBD1zeh2tMBV0SD4JrimVzte4Wzp4Q?=
- =?us-ascii?Q?WMxO8NCvA9UMjhygptosKe/hc1HWThPTXIO2WJzfHK9s3b4AIC9FJg5jCGbj?=
- =?us-ascii?Q?xP4IqqtztuOjL6oGW0LFjiul0wvhC3JwpdH+Irlr?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e69c251-ff58-408e-6f01-08dc818869bb
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 15:43:27.0681
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qtunjkrM1emh+s4EeyFf6gLrD1YZvjNSaBK+7X0V12hKo8zu85VU6FNXxMedWRDGoAtD69qDNWxg6djIYUMWUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7605
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529095206.2568162-6-yi.zhang@huaweicloud.com>
 
-When an In-Band Interrupt(IBI) occurs after svc_i3c_master_do_daa_locked(),
-typically triggered during a Hot Join (HJ) event, the IBIWON flag fails to
-be set when issuing an auto IBI command.
+On Wed, May 29, 2024 at 05:52:03PM +0800, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> When truncating down an inode, we call xfs_truncate_page() to zero out
+> the tail partial block that beyond new EOF, which prevents exposing
+> stale data. But xfs_truncate_page() always assumes the blocksize is
+> i_blocksize(inode), it's not always true if we have a large allocation
+> unit for a file and we should aligned to this unitsize, e.g. realtime
+> inode should aligned to the rtextsize.
+> 
+> Current xfs_setattr_size() can't support zeroing out a large alignment
+> size on trucate down since the process order is wrong. We first do zero
+> out through xfs_truncate_page(), and then update inode size through
+> truncate_setsize() immediately. If the zeroed range is larger than a
+> folio, the write back path would not write back zeroed pagecache beyond
+> the EOF folio, so it doesn't write zeroes to the entire tail extent and
+> could expose stale data after an appending write into the next aligned
+> extent.
+> 
+> We need to adjust the order to zero out tail aligned blocks, write back
+> zeroed or cached data, update i_size and drop cache beyond aligned EOF
+> block, preparing for the fix of realtime inode and supporting the
+> upcoming forced alignment feature.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> ---
+>  fs/xfs/xfs_iomap.c |   2 +-
+>  fs/xfs/xfs_iomap.h |   3 +-
+>  fs/xfs/xfs_iops.c  | 107 ++++++++++++++++++++++++++++-----------------
+>  3 files changed, 69 insertions(+), 43 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index 8cdfcbb5baa7..0369b64cc3f4 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -1468,10 +1468,10 @@ int
+>  xfs_truncate_page(
+>  	struct xfs_inode	*ip,
+>  	loff_t			pos,
+> +	unsigned int		blocksize,
+>  	bool			*did_zero)
+>  {
+>  	struct inode		*inode = VFS_I(ip);
+> -	unsigned int		blocksize = i_blocksize(inode);
+>  
+>  	if (IS_DAX(inode))
+>  		return dax_truncate_page(inode, pos, blocksize, did_zero,
+> diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
+> index 4da13440bae9..feb1610cb645 100644
+> --- a/fs/xfs/xfs_iomap.h
+> +++ b/fs/xfs/xfs_iomap.h
+> @@ -25,7 +25,8 @@ int xfs_bmbt_to_iomap(struct xfs_inode *ip, struct iomap *iomap,
+>  
+>  int xfs_zero_range(struct xfs_inode *ip, loff_t pos, loff_t len,
+>  		bool *did_zero);
+> -int xfs_truncate_page(struct xfs_inode *ip, loff_t pos, bool *did_zero);
+> +int xfs_truncate_page(struct xfs_inode *ip, loff_t pos,
+> +		unsigned int blocksize, bool *did_zero);
+>  
+>  static inline xfs_filblks_t
+>  xfs_aligned_fsb_count(
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index d44508930b67..d24927075022 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -812,6 +812,7 @@ xfs_setattr_size(
+>  	int			error;
+>  	uint			lock_flags = 0;
+>  	bool			did_zeroing = false;
+> +	bool			write_back = false;
+>  
+>  	xfs_assert_ilocked(ip, XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL);
+>  	ASSERT(S_ISREG(inode->i_mode));
+> @@ -853,30 +854,7 @@ xfs_setattr_size(
+>  	 * the transaction because the inode cannot be unlocked once it is a
+>  	 * part of the transaction.
+>  	 *
+> -	 * Start with zeroing any data beyond EOF that we may expose on file
+> -	 * extension, or zeroing out the rest of the block on a downward
+> -	 * truncate.
+> -	 */
+> -	if (newsize > oldsize) {
+> -		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
+> -		error = xfs_zero_range(ip, oldsize, newsize - oldsize,
+> -				&did_zeroing);
+> -	} else if (newsize != oldsize) {
+> -		error = xfs_truncate_page(ip, newsize, &did_zeroing);
+> -	}
+> -
+> -	if (error)
+> -		return error;
+> -
+> -	/*
+> -	 * We've already locked out new page faults, so now we can safely remove
+> -	 * pages from the page cache knowing they won't get refaulted until we
+> -	 * drop the XFS_MMAP_EXCL lock after the extent manipulations are
+> -	 * complete. The truncate_setsize() call also cleans partial EOF page
+> -	 * PTEs on extending truncates and hence ensures sub-page block size
+> -	 * filesystems are correctly handled, too.
+> -	 *
+> -	 * We have to do all the page cache truncate work outside the
+> +	 * And we have to do all the page cache truncate work outside the
 
-The issue stems from the omission of emitting STOP upon successful
-execution of svc_i3c_master_do_daa_locked(). Consequently, the controller
-interprets it as a repeat start when emitting the auto IBI command. Per the
-I3C specification, an IBI should never occur during a repeat start, thus
-preventing the IBIWON flag from being set.
+Style nit: don't start a paragraph with "and".
 
-Emit STOP regardless of the success or failure of
-svc_i3c_master_do_daa_locked() to match I3C spec requirement.
+>  	 * transaction context as the "lock" order is page lock->log space
+>  	 * reservation as defined by extent allocation in the writeback path.
+>  	 * Hence a truncate can fail with ENOMEM from xfs_trans_alloc(), but
+> @@ -884,27 +862,74 @@ xfs_setattr_size(
+>  	 * user visible changes). There's not much we can do about this, except
+>  	 * to hope that the caller sees ENOMEM and retries the truncate
+>  	 * operation.
+> -	 *
+> -	 * And we update in-core i_size and truncate page cache beyond newsize
+> -	 * before writeback the [i_disk_size, newsize] range, so we're
+> -	 * guaranteed not to write stale data past the new EOF on truncate down.
+>  	 */
+> -	truncate_setsize(inode, newsize);
+> +	write_back = newsize > ip->i_disk_size && oldsize != ip->i_disk_size;
+> +	if (newsize < oldsize) {
+> +		unsigned int blocksize = i_blocksize(inode);
+>  
+> -	/*
+> -	 * We are going to log the inode size change in this transaction so
+> -	 * any previous writes that are beyond the on disk EOF and the new
+> -	 * EOF that have not been written out need to be written here.  If we
+> -	 * do not write the data out, we expose ourselves to the null files
+> -	 * problem. Note that this includes any block zeroing we did above;
+> -	 * otherwise those blocks may not be zeroed after a crash.
+> -	 */
+> -	if (did_zeroing ||
+> -	    (newsize > ip->i_disk_size && oldsize != ip->i_disk_size)) {
+> -		error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping,
+> -						ip->i_disk_size, newsize - 1);
+> +		/*
+> +		 * Zeroing out the partial EOF block and the rest of the extra
+> +		 * aligned blocks on a downward truncate.
+> +		 */
+> +		error = xfs_truncate_page(ip, newsize, blocksize, &did_zeroing);
+>  		if (error)
+>  			return error;
+> +
+> +		/*
+> +		 * We are going to log the inode size change in this transaction
+> +		 * so any previous writes that are beyond the on disk EOF and
+> +		 * the new EOF that have not been written out need to be written
+> +		 * here.  If we do not write the data out, we expose ourselves
+> +		 * to the null files problem. Note that this includes any block
+> +		 * zeroing we did above; otherwise those blocks may not be
+> +		 * zeroed after a crash.
+> +		 */
+> +		if (did_zeroing || write_back) {
+> +			error = filemap_write_and_wait_range(inode->i_mapping,
+> +					min_t(loff_t, ip->i_disk_size, newsize),
+> +					roundup_64(newsize, blocksize) - 1);
+> +			if (error)
+> +				return error;
+> +		}
+> +
+> +		/*
+> +		 * Updating i_size after writing back to make sure the zeroed
 
-Cc: <stable@vger.kernel.org>
-Fixes: dd3c52846d59 ("i3c: master: svc: Add Silvaco I3C master driver")
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
+"Update the incore i_size after flushing dirty tail pages to disk, and
+drop all the pagecache beyond the allocation unit containing EOF." ?
 
-Notes:
-    Change from v1 to v2
-    - new patch
+> +		 * blocks could been written out, and drop all the page cache
+> +		 * range that beyond blocksize aligned new EOF block.
+> +		 *
+> +		 * We've already locked out new page faults, so now we can
+> +		 * safely remove pages from the page cache knowing they won't
+> +		 * get refaulted until we drop the XFS_MMAP_EXCL lock after the
+> +		 * extent manipulations are complete.
+> +		 */
+> +		i_size_write(inode, newsize);
+> +		truncate_pagecache(inode, roundup_64(newsize, blocksize));
 
- drivers/i3c/master/svc-i3c-master.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I'm not sure why we need to preserve the pagecache beyond eof having
+zeroed and then written the post-eof blocks out to disk, but I'm
+guessing this is why you open-code truncate_setsize?
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index bb299ce02cccb..032fe032ec433 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -961,11 +961,11 @@ static int svc_i3c_master_do_daa(struct i3c_master_controller *m)
- 	spin_lock_irqsave(&master->xferqueue.lock, flags);
- 	ret = svc_i3c_master_do_daa_locked(master, addrs, &dev_nb);
- 	spin_unlock_irqrestore(&master->xferqueue.lock, flags);
--	if (ret) {
--		svc_i3c_master_emit_stop(master);
--		svc_i3c_master_clear_merrwarn(master);
-+
-+	svc_i3c_master_emit_stop(master);
-+	svc_i3c_master_clear_merrwarn(master);
-+	if (ret)
- 		goto rpm_out;
--	}
- 
- 	/* Register all devices who participated to the core */
- 	for (i = 0; i < dev_nb; i++) {
--- 
-2.34.1
+> +	} else {
+> +		/*
+> +		 * Start with zeroing any data beyond EOF that we may expose on
+> +		 * file extension.
+> +		 */
+> +		if (newsize > oldsize) {
+> +			trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
+> +			error = xfs_zero_range(ip, oldsize, newsize - oldsize,
+> +					       &did_zeroing);
+> +			if (error)
+> +				return error;
+> +		}
+> +
+> +		/*
+> +		 * The truncate_setsize() call also cleans partial EOF page
+> +		 * PTEs on extending truncates and hence ensures sub-page block
+> +		 * size filesystems are correctly handled, too.
+> +		 */
+> +		truncate_setsize(inode, newsize);
+> +
+> +		if (did_zeroing || write_back) {
+> +			error = filemap_write_and_wait_range(inode->i_mapping,
+> +					ip->i_disk_size, newsize - 1);
+> +			if (error)
+> +				return error;
+> +		}
+>  	}
 
+At this point I wonder if these three truncate cases (down, up, and
+unchanged) should just be broken out into three helpers without so much
+twisty logic.
+
+xfs_setattr_truncate_down():
+	xfs_truncate_page(..., &did_zeroing);
+
+	if (did_zeroing || extending_ondisk_eof)
+		filemap_write_and_wait_range(...);
+
+	truncate_setsize(...); /* or your opencoded version */
+
+xfs_setattr_truncate_up():
+	xfs_zero_range(..., &did_zeroing);
+
+	truncate_setsize(...);
+
+	if (did_zeroing || extending_ondisk_eof)
+		filemap_write_and_wait_range(...);
+
+xfs_setattr_truncate_unchanged():
+	truncate_setsize(...);
+
+	if (extending_ondisk_eof)
+		filemap_write_and_wait_range(...);
+
+So then the callsite becomes:
+
+	if (newsize > oldsize)
+		xfs_settattr_truncate_up();
+	else if (newsize < oldsize)
+		xfs_setattr_truncate_down();
+	else
+		xfs_setattr_truncate_unchanged();
+
+But, I dunno.  Most of the code is really just extensive commenting.
+
+--D
+
+> +			if (error)
+> +				return error;
+> +		}
+> +
+> +		/*
+> +		 * The truncate_setsize() call also cleans partial EOF page
+> +		 * PTEs on extending truncates and hence ensures sub-page block
+> +		 * size filesystems are correctly handled, too.
+> +		 */
+> +		truncate_setsize(inode, newsize);
+> +
+> +		if (did_zeroing || write_back) {
+> +			error = filemap_write_and_wait_range(inode->i_mapping,
+> +					ip->i_disk_size, newsize - 1);
+
+
+
+>  
+>  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
+> -- 
+> 2.39.2
+> 
+> 
