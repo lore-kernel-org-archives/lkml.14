@@ -1,115 +1,140 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C65176AC9
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 15:10:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7207580D;
+	Fri, 31 May 2024 15:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717168213; cv=none; b=YpxYqqcnYv10EaZ4ZXZJd0Mubl0svkNuFY6D533LF1DVZKPRqSH2ZQKLPEBTN8jayBSSZ15BuiTds95vRe64N5LbZZfv/pmV1o1+ZTw1lb1XlGxI1KqauujPbGBzHI8B/NXetyB9lpyncnfb7+Ekxlv7c2SCT88StyWgPhNv59U=
+	t=1717168234; cv=none; b=GmCkg3JUi4vU8v45fSI4em7JUg+EWOEa0Tu2bSZCxhsPbRDYGuBrtS49mF+HT7jS1JohLAviF5JtWWKqu+3q3jw25h6dB3DCpd+e5lWWcHacDJNOsNMGa9P5/DMx5t/SyLCOTQC4wFErD+C8OeSMC0YbnYIF+r5tJhbVBJGZP1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717168213; c=relaxed/simple;
-	bh=aAFoj1nQJv9eWht7cafhIt8bfUNw+ZFX8S3MZtNZ45E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qetHt21zoRTD4I72UjzQkYb8HYHtirKReA1pFwMy8MCrF5cUqRrfTYTsuSTEVMBfJ9Ie8mBGHU9AOSqu1W9dKGrL+5oiwR2tSiXROLg583D/MNW285Fsgp02x7hhbotQkbX5fUglnwpx4NLvuh+EZ392CfbOxCUFi+chnCm3vnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0fm7uU6; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717168234; c=relaxed/simple;
+	bh=LIsP3X2XqQ9KjJgQNKXDGbnTzcEjsXl+faeoX/w+qT8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Asc2IXefKohqxo3zJN0L5jnP81MjdFnEmG3kr4HDuYRtIB2U/gHiT14Dhnay2v3IFSjv40ZnuAqYz+rlj7XZikRQLOh67n1hWhDbs4l7aqOrLenKIhUxxB7LjIJZ1+kUo0gGH4HOaGEzm8u4UlciqL/1b5OIP8xuT6nPJRE3Srs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kZPcKcj5; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0fm7uU6"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a63036f2daaso245304066b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:10:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717168210; x=1717773010; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KQ+k8MjnPe+PGGHhvvxgv0JVQrL81ckxYVKdMATgRt4=;
-        b=m0fm7uU6liqyoxHWV625SPmNtdZoDOvtd2NpS+9FzbrXjRfgoa2rwYJjZMEuCSVkK1
-         MG4jD8EnX2wEiogSTV+7Tgi1ehA9AissYI5gdzN65K3h4jGUxFO13FZo4BB2/opYMAPG
-         8PgpyazhcZObDTJlYBKYHr3kGLRj/cHTrz7ilMIjZv5y8z3vbY7D95xgLejxRWSf86e7
-         oHbK20Lb5B0qFz39wnVBFLDOmXx/BVB7H3HKo9MO1UWoMz+OLPfycpFGN8wMD7NTGQgO
-         gbQ5DfjKLir3ccxyCaRCZAiPiOcxKNmWutfQ63bTEv6tV4CN5l9idqe28d1wl6MrygIq
-         ne1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717168210; x=1717773010;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KQ+k8MjnPe+PGGHhvvxgv0JVQrL81ckxYVKdMATgRt4=;
-        b=X6yKnDrOnd4pxfybWASH6zpGXBpQUm9Hpg0uLrazIgjBzg9R+yI/DlQQmiEKl2Z4Ig
-         CpeiTdYG10PQiIFmqpAAsNUDFxFCxXonRzCOjcG7N+n7n64lYzrVztlLW9C1TRPwzqS0
-         DmcblKu5H8wZ7JyLxfL/AttMcBntkAxFKx8yqUQ8b4m6bVSz628v4OU8J/2xVFFl8BiZ
-         rt64sL0NjIZDnXzwVfU1p4A1i/tMfRg9l9XPXcyBsHWTzNZJ2F+NwHGG/agyYB4+kp0V
-         cWTNWbp3aElBO0jeKrZGVJ6FpHWHL4EVIcIQSUXMNT+oI925oDyOPmbd6tg4fFP3aV0/
-         zZ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVmxA1zf5Bvg12IIwDl/lpaGcv8Ns8UvhcKkJAdj3IJxA5xUtWohU7DEvbLN7AKKEnCqnigUbofO8Pnes+OSZXIvgL/9DTdRU5aYWhj
-X-Gm-Message-State: AOJu0YxQUsKMoxm3KOwgdd9ev5F6CQMfWVYpOq7YJVurxg3Huqhe0qys
-	mMSPnK1uf8HQI4YnP3MT5FTYUq17hMhQY4WtaTvNQbyzivtElBjh
-X-Google-Smtp-Source: AGHT+IFPrnAX+y1wIrUwZTLLnjyMLVE5vd3bsUxWYgyXc4bf/Vz7qpDQYMx/J5AOQEFfKreGUhHi5w==
-X-Received: by 2002:a17:906:3f89:b0:a66:b27:f9d4 with SMTP id a640c23a62f3a-a6820be9275mr147593366b.42.1717168209830;
-        Fri, 31 May 2024 08:10:09 -0700 (PDT)
-Received: from [192.168.1.100] ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67eb341abfsm95668066b.192.2024.05.31.08.10.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 08:10:09 -0700 (PDT)
-Message-ID: <d3969a10-7cd2-3dfb-2e49-37ebad2d6440@gmail.com>
-Date: Fri, 31 May 2024 17:10:08 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kZPcKcj5"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44VDnIcl015872;
+	Fri, 31 May 2024 17:10:14 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	64wt0pzZ2kSRPpOSzALQl3R/464mRk7ij9nfrGdQFww=; b=kZPcKcj5E94ulSWg
+	4XQYKORgCPyuDzJ9S818wavq/eIAdCOpqkcRtQBbABps+NVHdEbrfO+p44Zlo7dH
+	yxrB9O2HD2JOBjnjGAwUiezb/SZaOr5moSz7MQs+ROI2KWEmny7gNedFM7r9u5gr
+	Suq1PbutAml0ot/ZnemsxjD37iwANtZhi4sSsbAoKYyRPSXKsW6Zlm4SwHhRiTkw
+	AlZPEHzvSpRML4qXirzuKvcMhkIK54W9kJ/4Y9HnVyD9UU8XlashGosyWPzEd16R
+	Jx1emC+6JkVCUACFTMmD+SrBIVKM15tQ0Zvz7sSmtxPS8kUpRiDtvUqppKrhQhjf
+	1tytmw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yba52ceqh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 17:10:14 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D3D9840048;
+	Fri, 31 May 2024 17:10:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EAF5207FF0;
+	Fri, 31 May 2024 17:09:25 +0200 (CEST)
+Received: from localhost (10.252.27.179) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 31 May
+ 2024 17:09:24 +0200
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>
+CC: <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        Amelie Delaunay
+	<amelie.delaunay@foss.st.com>
+Subject: [PATCH v4 11/12] dmaengine: stm32-dma3: defer channel registration to specify channel name
+Date: Fri, 31 May 2024 17:07:11 +0200
+Message-ID: <20240531150712.2503554-12-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
+References: <20240531150712.2503554-1-amelie.delaunay@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 02/14] x86/alternatives: Add nested alternatives macros
-To: Borislav Petkov <bp@alien8.de>
-Cc: Borislav Petkov <bp@kernel.org>, X86 ML <x86@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
-References: <20240531123512.21427-1-bp@kernel.org>
- <20240531123512.21427-3-bp@kernel.org>
- <3a86f790-3194-4ea0-de8d-0af231ec7525@gmail.com>
- <20240531143625.GHZlngaQfx6CiJlujI@fat_crate.local>
-Content-Language: en-US
-From: Uros Bizjak <ubizjak@gmail.com>
-In-Reply-To: <20240531143625.GHZlngaQfx6CiJlujI@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_11,2024-05-30_01,2024-05-17_01
 
+On STM32 DMA3, channels can be reserved, so they are non available for
+Linux. This non-availability creates a mismatch between dma_chan id and
+DMA3 channel id.
 
+Use dma_async_device_channel_register() to register the channels
+after controller registration and change the default channel name, so that
+it can match the name in the Reference Manual and ease requesting a channel
+thanks to its name.
 
-Borislav Petkov je 31. 05. 24 ob 16:36 napisal:
-> On Fri, May 31, 2024 at 04:30:31PM +0200, Uros Bizjak wrote:
->> Please don't resurrect the %P modifier, use %c instead.
-> 
-> Btw, out of curiosity, is %P being phased out?
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ drivers/dma/stm32/stm32-dma3.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-No ;)
+diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
+index 9249b64a4455..4e932c2931dc 100644
+--- a/drivers/dma/stm32/stm32-dma3.c
++++ b/drivers/dma/stm32/stm32-dma3.c
+@@ -1732,9 +1732,6 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		chan->fifo_size = get_chan_hwcfg(i, G_FIFO_SIZE(i), hwcfgr);
+ 		/* If chan->fifo_size > 0 then half of the fifo size, else no burst when no FIFO */
+ 		chan->max_burst = (chan->fifo_size) ? (1 << (chan->fifo_size + 1)) / 2 : 0;
+-		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
+-
+-		vchan_init(&chan->vchan, dma_dev);
+ 	}
+ 
+ 	ret = dmaenginem_async_device_register(dma_dev);
+@@ -1742,14 +1739,26 @@ static int stm32_dma3_probe(struct platform_device *pdev)
+ 		goto err_clk_disable;
+ 
+ 	for (i = 0; i < ddata->dma_channels; i++) {
++		char name[12];
++
+ 		if (chan_reserved & BIT(i))
+ 			continue;
+ 
++		chan = &ddata->chans[i];
++		snprintf(name, sizeof(name), "dma%dchan%d", ddata->dma_dev.dev_id, chan->id);
++
++		chan->vchan.desc_free = stm32_dma3_chan_vdesc_free;
++		vchan_init(&chan->vchan, dma_dev);
++
++		ret = dma_async_device_channel_register(&ddata->dma_dev, &chan->vchan.chan, name);
++		if (ret) {
++			dev_err_probe(&pdev->dev, ret, "Failed to register channel %s\n", name);
++			goto err_clk_disable;
++		}
++
+ 		ret = platform_get_irq(pdev, i);
+ 		if (ret < 0)
+ 			goto err_clk_disable;
+-
+-		chan = &ddata->chans[i];
+ 		chan->irq = ret;
+ 
+ 		ret = devm_request_irq(&pdev->dev, chan->irq, stm32_dma3_chan_irq, 0,
+-- 
+2.25.1
 
-> I'm looking at
-> 
-> 41cd2e1ee96e ("x86/asm: Use %c/%n instead of %P operand modifier in asm templates")
-> 
-> and yeah, %c is the generic one while %P is the x86-specific one but
-> phasing latter out is probably going to take a bunch of gcc releases...
-
-The intention of '%P' operand modifier is primarily to be used with PIC, 
-where:
-
-'P'        If used for a function, print the PLT
-            suffix and generate PIC code.  For
-            example, emit 'foo@PLT' instead of 'foo'
-            for the function foo().  If used for a
-            constant, drop all syntax-specific
-            prefixes and issue the bare constant.  See
-            'p' above.
-
-the fact that is handles constants is due to historic reasons.
-
-The '%c' operand modifier will also check its operand that it is indeed 
-an immediate integer operand, so should be used with 'i' operand constraint:
-
-'c'        Require a constant operand and print the
-            constant expression with no punctuation.
-
-Uros.
