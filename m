@@ -1,142 +1,188 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD4F224F6
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB417565;
+	Fri, 31 May 2024 09:11:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146648; cv=none; b=ekHLiSAo2mMxgQowPygPwDcxejmCn5KbLF1PMSo4CcvkjR2P6alv8sLj9riyoTiSTwCbHUj9mpGFnuC/vl8PrOjKfgwsBKwOZGL8YljykFQxa0jaA88+Rn4UZ3z2hVY++3gVT7uiKbAeQVZcyOiOvsZlWg8ELrGfvVTPNZ2rq1k=
+	t=1717146682; cv=none; b=P5qUGdw1izrFh5r7gO+kWDo7mwVIwrUM+G4+KF9RnZ9wyG8cMLWv/JkFAkLHsDIQJjSdQO4YmlXbzC/9V/ugRQaSixPuNLWDj25I7Q5tIHEeETgmgPJKf429QffXdm+Lzl91TcTrvnjfSjDf/lPNtnESUX0jhdxOKAc1uNoLKNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146648; c=relaxed/simple;
-	bh=8k4FpKQXsM42cdPZUF+s9v5Mg/QNDBjS55kjfvqjdRM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=Nntj1U/XlJ8TUPQInAfZUdSrhXmxGMq28QROqdl4jxzys4UaN6XiDrgXWZc9rvYX8rzdoXYmL0MM0k6rKa+nYTtWGdLTjq5vjxx/VpQ7Vh4IuLDE7KQaRXM1mg3Xm5lVLrSF8NQ/6DWowbwk954wCTLBXBVVklSLgXz2vFsLEpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uM1Wcmpc; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717146682; c=relaxed/simple;
+	bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
+	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=fS+76CGS2YM/CU3ueTbm4g+jSvQchUqSD8zJWW4e5YXE2I+l0NL8P/LfmDR4oC8tm1tbl3EUNBxmryftp9fcL1V8Qp7T2cNAcAfm+CK3C8WflrxvVSHeYIyfxpcXnjQQBw1+rUW00NiWRcQZZTeQ+npPgf/IBgei0uJEF/ETcPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXmOC0jN; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uM1Wcmpc"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240531091042epoutp03ed34a98a8a356803d05d0dae48ddc70d~Uh8YWWszb2923629236epoutp03T
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:10:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240531091042epoutp03ed34a98a8a356803d05d0dae48ddc70d~Uh8YWWszb2923629236epoutp03T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717146642;
-	bh=DT5kVb5GgEEKGoo1ZoN8PwlN8iNvooLbd2zvQBMGthY=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=uM1WcmpcIWdeoerK8Hd+OetLjrBldJJsWsxYV+SV7mz7phLHJB/sDJASeNczoUCcH
-	 P/47KT2v2IP8IQh82vqG5YilbYBNu+VlIvlZHkzEnBUyDlyqoaPvwAqjOTRah8EO2V
-	 eLDRuZ7oLma7ThFzjYVYW6rsdA/MVv5Y2bhjYXW4=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20240531091042epcas5p3d1ba5dcb04dc1049d8b56812ed2afc76~Uh8YE537D1063210632epcas5p30;
-	Fri, 31 May 2024 09:10:42 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VrHQl3yM9z4x9Pt; Fri, 31 May
-	2024 09:10:39 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	10.FD.19174.F0499566; Fri, 31 May 2024 18:10:39 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240531091021epcas5p48fdbd6302bec7a91ff66272c600b0dab~Uh8ELyE0W1099010990epcas5p4Q;
-	Fri, 31 May 2024 09:10:21 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240531091021epsmtrp2c323fb7a21eb06df67d6796a51a83ba7~Uh8ELFANl0785607856epsmtrp2y;
-	Fri, 31 May 2024 09:10:21 +0000 (GMT)
-X-AuditID: b6c32a50-87fff70000004ae6-45-6659940ff427
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5A.2A.08336.DF399566; Fri, 31 May 2024 18:10:21 +0900 (KST)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240531091020epsmtip2cf9a4abb2229fdcd69b2ef2551973b03~Uh8DRiGP00314203142epsmtip2S;
-	Fri, 31 May 2024 09:10:20 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, hexue
-	<xue01.he@samsung.com>
-Subject: [PATCH] block: Avoid polling configuration errors
-Date: Fri, 31 May 2024 17:10:15 +0800
-Message-Id: <20240531091015.2636025-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXmOC0jN"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-35dce610207so1153202f8f.2;
+        Fri, 31 May 2024 02:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717146679; x=1717751479; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
+        b=CXmOC0jN/3IRcuGlm642YtKa1v4UlEcMZStqZvlRmjxVJOfdkRBhYFiHTzCcbdCYVO
+         YFAP6bGArWVDli0n233A2g0ah5JWvYblL0G8FutIMqEXkSAzgW9pzCG/Et2d9gil647v
+         u47dVOCQZ7z7Ds7yyAXmnFMwuIQUPNXUZGI24NvqjLSrmbmP8IIPH3HlGXrDC7hxej8P
+         54nNbcRSpZgwMd2S5UYLWLWksiOrvBjQdsc6PvndDXZ/Q3Hb9e4SsrUkp0eeLRJzMRhV
+         xtUb99RHnUXUthZcjEZq5oIZbBRbv1NFO0/E+CMc+fdK512RQ/+pNEmhHWnkUFBWCL2J
+         wGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717146679; x=1717751479;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
+        b=jjpHqTVjgJVb+eo1cA2jNnh0pMl8yWOftrjcfejU8oTOQUxsDtniQUfYL4Muu7vClP
+         xLhQJLf88Mm6J/ZbIFwzmwHB4Esx5qaIUtgbW1ZH9aQlqyJt3i9CqA/+9KwB5s8lZoXU
+         oVOAAEMDLJrHePOe4A38RnZEl/jMe1W8Vdz/IKE35rt2XU8636AoiYtz74jQQ9sAcG0B
+         OHBTR0/hTg62q41E/DhPF0nq5P8NUoystpRXsEObk7Nisf1EstkySfX8TmrU2pbT3Saw
+         vR8CgA423Yy9L60c1lP1BH/Wgr5WkSGbWNFo6Frufb6kLLpgcAyRIRFrJ/VWfBv1Z3Ix
+         aHxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWu9FWpE/WP+OvGYLUiYu95BFEyksq1/H7hXwTqi2Yb2GY/lBAILtYPQcOiVMWduxJD2DpZwKI+ZhDrSOh29EojSpqec1gYbkL3XHpLM1+htGnq0Ih2bcjakA3GY/ag/0bgUOCY1gxbsIZdhAY4Wqd8OJIAZBi/imcSzrTQ1Cdz+H9Ot0UP23c+Ou8mTqAkQEqXN5mbnKo8hVFkXYyTuQcoUA==
+X-Gm-Message-State: AOJu0YxdNeTav8xdaHtcknT4z9h0DfcvD4ioDcP6sVXYptrHASwBpxsD
+	GzEpZC1kAKJ8FpTROeuB8fjBi4l27BbYKEjOyjyHontb6Q5cK0nx
+X-Google-Smtp-Source: AGHT+IHjSCeQFuSwL4zgQTAANKUrOtLq+ipp/4k2/cpZCON8iuqmoX8dSGF/d93BBGIHlUH85jMQVg==
+X-Received: by 2002:a5d:664d:0:b0:354:f536:31d3 with SMTP id ffacd0b85a97d-35e0f325184mr986696f8f.54.1717146679010;
+        Fri, 31 May 2024 02:11:19 -0700 (PDT)
+Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0f47sm1409029f8f.8.2024.05.31.02.11.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 02:11:18 -0700 (PDT)
+Content-Type: multipart/signed;
+ boundary=44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrEKsWRmVeSWpSXmKPExsWy7bCmui7/lMg0g2nr5CxW3+1ns/jVfZfR
-	Yu8tbYvLu+awWZyd8IHVouvCKTYHNo/LZ0s9+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUz
-	L91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKuSQlliTilQKCCxuFhJ386mKL+0
-	JFUhI7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITtj29+3bAXNHBU3bq1ga2A8
-	ztbFyMkhIWAicWrpUyCbi0NIYA+jxMsrLYwgCSGBT4wSnxosIRLfGCXW7F7DAtPR0LqPGSKx
-	l1Fiz6Lv7BDOD0aJrv2dYO1sAkoS+7d8ALNFBIQl9ne0gnUzC8RKHF32ACjOwSEsYCVxdTYT
-	SJhFQFXi1qZXYDavgLVEz4//rBDL5CVudu1nhogLSpyc+QRqjLxE89bZYEdICGxil9iwcj3U
-	dS4SV3euYYSwhSVeHd/CDmFLSXx+txfq53yJyd/XQ9XUSKzb/A6q11ri35U9LCC3MQtoSqzf
-	pQ8RlpWYemodE8RePone30+YIOK8EjvmwdhKEkuOrIAaKSHxe8IiqPs9JC5/WcEGCdFYiVMb
-	lrNNYJSfheSdWUjemYWweQEj8ypGqdSC4tz01GTTAkPdvNRyeMQm5+duYgQnPq2AHYyrN/zV
-	O8TIxMF4iFGCg1lJhPdXekSaEG9KYmVValF+fFFpTmrxIUZTYCBPZJYSTc4Hpt68knhDE0sD
-	EzMzMxNLYzNDJXHe161zU4QE0hNLUrNTUwtSi2D6mDg4pRqYlunEtLekxP8/0cF1afauZ9OZ
-	VHYd7nF6ff5Cx49/Bbe0j15IYF8fqj2d9d/blf1BC5dn8YaVq8QUvLKc+ujv5ze7fv7nOp//
-	6sKitYaeTtNF/m2K2RW1qy/K0vdfyeWqkhuxzt/bnaMLxBovJGxaK7/D8faUhlvfYraWZUUl
-	pTr8vyCycvH2VaLXk63WspuVdf084t9Q69j9p+rNj9OPv16cH2wivsdfQZ3R8YbUL8sPz3m+
-	HpjV2Nd88v7Ug3P8lk3TEr6U5ZE62+j/c6aq1uu9UUXrL3JMPHRzktV0yQoB6R0/DU1Kwip9
-	W2eZBiXLPlLiVhYQD/B/tzLhtEeA91fDtrc/ZuUIP2+UTbJMU2Ipzkg01GIuKk4EAGjKgD8F
-	BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLLMWRmVeSWpSXmKPExsWy7bCSvO7fyZFpBl1drBar7/azWfzqvsto
-	sfeWtsXlXXPYLM5O+MBq0XXhFJsDm8fls6UefVtWMXp83iQXwBzFZZOSmpNZllqkb5fAlbHt
-	71u2gmaOihu3VrA1MB5n62Lk5JAQMJFoaN3H3MXIxSEksJtR4uG0m+wQCQmJHY/+sELYwhIr
-	/z1nhyj6xigx58QMZpAEm4CSxP4tHxhBbBGgov0drSwgNrNAvMSlqeeBajg4hAWsJK7OZgIJ
-	swioStza9ArM5hWwluj58R9qvrzEza79zBBxQYmTM59AjZGXaN46m3kCI98sJKlZSFILGJlW
-	MUqmFhTnpucWGxYY5qWW6xUn5haX5qXrJefnbmIEh6CW5g7G7as+6B1iZOJgPMQowcGsJML7
-	Kz0iTYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv+IveFCGB9MSS1OzU1ILUIpgsEwenVAPTnPMe
-	C+/sVmtR9Sq3i3hbx+gVnbJwItflCrdfgW8+BzXPYOesPsWuaPjr2cGXXz+2HP1y/MLDqZP/
-	9GllB67UafMyzYxW9GRwWV2g2rptVpL2+rYjV+NjFu8ovCG2KS3SsM1qxkQhmSvrtXKMNLrW
-	rr7KXMzRtkTz5LQu5yC/o/XBqotn7tl2ev+5plJ/6V5JxSXBYuuePpT9UfWVuXuOWJDVnnnZ
-	HCsYaw8yuaZeY2vVLrSYeKCjJZmheq1My9rNSWUfGiaFx3n9s6+8zLtr53/T9588Ui0uCbjc
-	+uXkfmdf36dphdITp/S/3btv97WzUU0LPyo7pPhO9qj6cUVsgowL8/2DbKphF48Y+xxWYinO
-	SDTUYi4qTgQAnQ4zc7ACAAA=
-X-CMS-MailID: 20240531091021epcas5p48fdbd6302bec7a91ff66272c600b0dab
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240531091021epcas5p48fdbd6302bec7a91ff66272c600b0dab
-References: <CGME20240531091021epcas5p48fdbd6302bec7a91ff66272c600b0dab@epcas5p4.samsung.com>
+Mime-Version: 1.0
+Date: Fri, 31 May 2024 11:11:17 +0200
+Message-Id: <D1NPP1PJ5UYS.2IGK7FBR9Q6LN@gmail.com>
+Cc: "Jonathan Corbet" <corbet@lwn.net>, "Dmitry Baryshkov"
+ <dmitry.baryshkov@linaro.org>, "Rob Clark" <robdclark@gmail.com>, "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>, "Sean Paul" <sean@poorly.run>, "Marijn
+ Suijten" <marijn.suijten@somainline.org>, <workflows@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Masahiro
+ Yamada" <masahiroy@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH] docs: document python version used for compilation
+From: "Thierry Reding" <thierry.reding@gmail.com>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
+ <87o79faq4a.fsf@meer.lwn.net> <D1N564M136RW.3CRPYTGKMW1NP@gmail.com>
+ <CAMuHMdVA7MU8LMUW6rR=VWtCDs8erpKgx30woL5eUucRYiK-Fg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVA7MU8LMUW6rR=VWtCDs8erpKgx30woL5eUucRYiK-Fg@mail.gmail.com>
 
-Here's a misconfigured if application is doing polled IO
-for devices that don't have a poll queue, the process will
-continue to do syscall between user space and kernel space,
-as in normal poll IO, CPU utilization will be 100%. IO actually
-arrives through interruption.
+--44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c
+Content-Type: multipart/mixed;
+ boundary=5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
+Mime-Version: 1.0
 
-This patch returns a signal that does not support the operation
-when the underlying device does not have a poll queue, avoiding
-performance and CPU simultaneous loss.
+--5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
+Content-Type: multipart/alternative;
+ boundary=07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2
 
-Signed-off-by: hexue <xue01.he@samsung.com>
----
- block/blk-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 01186333c88e..0afcd74ae939 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -913,7 +913,7 @@ int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags)
- 	q = bdev_get_queue(bdev);
- 	if (cookie == BLK_QC_T_NONE ||
- 	    !test_bit(QUEUE_FLAG_POLL, &q->queue_flags))
--		return 0;
-+		return -EOPNOTSUPP;
- 
- 	blk_flush_plug(current->plug, false);
- 
--- 
-2.40.1
+On Fri May 31, 2024 at 9:33 AM CEST, Geert Uytterhoeven wrote:
+> Hi Thierry,
+>
+> On Thu, May 30, 2024 at 7:07=E2=80=AFPM Thierry Reding <thierry.reding@gm=
+ail.com> wrote:
+> > Alternatively, maybe Kconfig could be taught about build dependencies?
+>
+> git grep "depends on \$(" -- "*Kconf*"
 
+Duh... of course there's something like this already. =3D)
+
+Maybe something like the attached patch?
+
+Thierry
+
+--07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2--
+
+--5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename=0001-kbuild-Allow-Kconfig-dependendencies-on-Python.patch
+Content-Type: text/x-patch; charset=utf-8;
+ name=0001-kbuild-Allow-Kconfig-dependendencies-on-Python.patch
+
+RnJvbSAxNTNlYWVjNjE1MTNlMTRmNWE3ZjhmMmE5OTg2MDBkMDdmMTdiYzg0IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgpE
+YXRlOiBGcmksIDMxIE1heSAyMDI0IDEwOjUxOjQyICswMjAwClN1YmplY3Q6IFtQQVRDSF0ga2J1
+aWxkOiBBbGxvdyBLY29uZmlnIGRlcGVuZGVuZGVuY2llcyBvbiBQeXRob24KClJlY2VudGx5IGRy
+aXZlcnMgaGF2ZSBzdGFydGVkIGRlcGVuZGluZyBvbiBQeXRob24gdG8gZ2VuZXJhdGUgcmVnaXN0
+ZXIKZGVmaW5pdGlvbnMgZHVyaW5nIHRoZSBidWlsZCBwcm9jZXNzLiBJbiBvcmRlciB0byBwcmV2
+ZW50IHN1Y2ggZHJpdmVycwpmcm9tIGJyZWFraW5nIGJ1aWxkcyBvbiBzeXN0ZW1zIHRoYXQgZG9u
+J3QgaGF2ZSBQeXRob24gaW5zdGFsbGVkLCBtYWtlCnRoZW0gZGVwZW5kIG9uIHRoZSBtaW5pbXVt
+IHJlcXVpcmVkIFB5dGhvbiB2ZXJzaW9uIHRoYXQgdGhleSBuZWVkIHZpYQpLY29uZmlnLiBJZiBQ
+eXRob24gaXMgbm90IGluc3RhbGxlZCBvbiB0aGUgc3lzdGVtLCB0aGVzZSBkcml2ZXJzIHdpbGwK
+YmUgYXV0b21hdGljYWxseSBkaXNhYmxlZC4KClNpZ25lZC1vZmYtYnk6IFRoaWVycnkgUmVkaW5n
+IDx0cmVkaW5nQG52aWRpYS5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnIHwg
+IDEgKwogc2NyaXB0cy9taW4tdG9vbC12ZXJzaW9uLnNoIHwgIDMgKysrCiBzY3JpcHRzL3B5dGhv
+bi12ZXJzaW9uLnNoICAgfCA0MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+CiAzIGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDc1NSBz
+Y3JpcHRzL3B5dGhvbi12ZXJzaW9uLnNoCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21z
+bS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnCmluZGV4IDE5MzFlY2Y3M2Uz
+Mi4uNWY3Zjg0ZGU1NWU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL0tjb25maWcK
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnCkBAIC0xMSw2ICsxMSw3IEBAIGNvbmZp
+ZyBEUk1fTVNNCiAJZGVwZW5kcyBvbiBRQ09NX0xMQ0MgfHwgUUNPTV9MTENDPW4KIAlkZXBlbmRz
+IG9uIFFDT01fQ09NTUFORF9EQiB8fCBRQ09NX0NPTU1BTkRfREI9bgogCWRlcGVuZHMgb24gUE0K
+KwlkZXBlbmRzIG9uICQoc3VjY2VzcywkKHNyY3RyZWUpL3NjcmlwdHMvcHl0aG9uLXZlcnNpb24u
+c2gpCiAJc2VsZWN0IElPTU1VX0lPX1BHVEFCTEUKIAlzZWxlY3QgUUNPTV9NRFRfTE9BREVSIGlm
+IEFSQ0hfUUNPTQogCXNlbGVjdCBSRUdVTEFUT1IKZGlmZiAtLWdpdCBhL3NjcmlwdHMvbWluLXRv
+b2wtdmVyc2lvbi5zaCBiL3NjcmlwdHMvbWluLXRvb2wtdmVyc2lvbi5zaAppbmRleCA5MWM5MTIw
+MTIxMmMuLjQ0N2EzYWQ0YzBiZiAxMDA3NTUKLS0tIGEvc2NyaXB0cy9taW4tdG9vbC12ZXJzaW9u
+LnNoCisrKyBiL3NjcmlwdHMvbWluLXRvb2wtdmVyc2lvbi5zaApAQCAtMzgsNiArMzgsOSBAQCBy
+dXN0YykKIGJpbmRnZW4pCiAJZWNobyAwLjY1LjEKIAk7OworcHl0aG9uKQorCWVjaG8gMy41LjAK
+Kwk7OwogKikKIAllY2hvICIkMTogdW5rbm93biB0b29sIiA+JjIKIAlleGl0IDEKZGlmZiAtLWdp
+dCBhL3NjcmlwdHMvcHl0aG9uLXZlcnNpb24uc2ggYi9zY3JpcHRzL3B5dGhvbi12ZXJzaW9uLnNo
+Cm5ldyBmaWxlIG1vZGUgMTAwNzU1CmluZGV4IDAwMDAwMDAwMDAwMC4uYzk5N2Q0MDQxOGRjCi0t
+LSAvZGV2L251bGwKKysrIGIvc2NyaXB0cy9weXRob24tdmVyc2lvbi5zaApAQCAtMCwwICsxLDQx
+IEBACisjIS9iaW4vc2gKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQor
+IworIyBQcmludCB0aGUgUHl0aG9uIHZlcnNpb24gaW4gYSA1IG9yIDYtZGlnaXQgZm9ybS4KKyMg
+QWxzbywgcGVyZm9ybSB0aGUgbWluaW11bSB2ZXJzaW9uIGNoZWNrLgorCitzZXQgLWUKKworUFlU
+SE9OPSR7UFlUSE9OOi1weXRob259CisKK2dldF9jYW5vbmljYWxfdmVyc2lvbigpCit7CisJSUZT
+PS4KKwlzZXQgLS0gJDEKKworCSMgSWYgdGhlIDJuZCBvciAzcmQgZmllbGQgaXMgbWlzc2luZywg
+ZmlsbCBpdCB3aXRoIGEgemVyby4KKwllY2hvICQoKDEwMDAwICogJDEgKyAxMDAgKiAkezI6LTB9
+ICsgJHszOi0wfSkpCit9CisKK291dHB1dD0kKExDX0FMTD1DICIkUFlUSE9OIiAtLXZlcnNpb24p
+CisKKyMgU3BsaXQgdGhlIGxpbmUgb24gc3BhY2VzLgorSUZTPScgJworc2V0IC0tICRvdXRwdXQK
+K25hbWU9JDEKK3ZlcnNpb249JDIKKworbWluX3Rvb2xfdmVyc2lvbj0kKGRpcm5hbWUgJDApL21p
+bi10b29sLXZlcnNpb24uc2gKK21pbl92ZXJzaW9uPSQoJG1pbl90b29sX3ZlcnNpb24gcHl0aG9u
+KQorCitjdmVyc2lvbj0kKGdldF9jYW5vbmljYWxfdmVyc2lvbiAkdmVyc2lvbikKK21pbl92ZXJz
+aW9uPSQoZ2V0X2Nhbm9uaWNhbF92ZXJzaW9uICRtaW5fdmVyc2lvbikKKworaWYgWyAiJGN2ZXJz
+aW9uIiAtbHQgIiRtaW5fdmVyc2lvbiIgXTsgdGhlbgorCWVjaG8gPiYyICIqKioiCisJZWNobyA+
+JjIgIioqKiBQeXRob24gaXMgdG9vIG9sZC4iCisJZWNobyA+JjIgIioqKiIKKwlleGl0IDEKK2Zp
+CisKK2VjaG8gJG5hbWUgJHZlcnNpb24KLS0gCjIuNDQuMAoK
+--5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae--
+
+--44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmZZlDYACgkQ3SOs138+
+s6HXBRAAsSmvbEsN51NCB4QBYVV1Jn9Y+Tptu+xCkkaqDLbKNSCLAseuPQph4+Sm
+yP9zBadxx9tzZ9IiJos2zcoidgtSZz6qf/fltaBjgKesq+YhIoRcjlEOjeBBK9li
+d0jZrccvkzNDPJqvQWfCrT7GHcZO5xe1RJKw5YcH5acTmYI0JTkHUpmHPWdC5GFO
+3gkvHGeth0Mus2+mGUyWXHgEWaL1iOyrm8fCDhuuFZlYxQfkuYbtsOGDz1gKsJWM
+tQcCruBMsml9b5cF88NTLJpJ3drz5RqNkxaM793DXcZVTL0rPt9Pc5m331xaKlKl
+yWf84jYCgaxFDk2f3IkWcg0Mm35a0dQi7LZ+LecsXtLZZB915wcAQV67dCIOFmyW
+qyxex5Tu5jzxDoOJx5/SJrhIdB2Lz33u+XC6nvgAAhsiAKM6lnTkSq0E/s7dIW9z
+9Dwhl4k7KpZ4MAPPqzvEH0osPi8ZqbUiv6xIUHtbo+g5ejAvqr/JXauknDacbvJ4
+xSyYAkh7Aqpu6K/y9tuI/A9sDBHhUD8D/JqRXEc9BOxjOetDeg0vpvkMQbrntX/a
+kk1pkuJrQwIsffqTOWrje9UcjkvbdzmNOknrC/uv+UTrgut/0Rn8p5zsuReU0hjD
+SzzXJF890v2QiUMen3kfPuH5vxdiwXehagUZuHDJuUMmwaMcISs=
+=cZjs
+-----END PGP SIGNATURE-----
+
+--44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c--
