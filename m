@@ -1,139 +1,65 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42BC14F9FA;
-	Fri, 31 May 2024 08:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2583914F9EF;
+	Fri, 31 May 2024 08:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717144606; cv=none; b=Lsh7xY7qLUWFwGRRFc5w2JV9REZMuHEDv4XuHwbcibHDmGQVGYAms+MUJFW41HNvphQNGJlAnpC9tutAYuvgwOaOFQngEl7bqAnUQcrR4alB3pKH4V4sXh0tUyCa5pWXSLVaiSjCqpd6gWpMLBlU0JynnSLpQLRpgfkmaRv67s4=
+	t=1717144641; cv=none; b=Y+d5EtOpsV3ktOEjv70xFtWPBoQUEOWxuMuQDOsP0jHAk6BU/DuzLDSrNr6m4YneG60mYAn4nAK0kj5T6NGK9OLlB14wniSHKi0TnFJ2r8Vav2fa7tP8sWRHjkR2tXs0OEsgJnHRWfdXt7Pswb5p/6utGvujbeqMDCS8zPjINf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717144606; c=relaxed/simple;
-	bh=TfQdA2XCPGkN/zEB747sTwVs1wSBXHbq/hbPTp30TYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gD5JYgRbTD8WZDlp8qp8CJsqrcFYEsKHZyePgx5lTOdCfcMW1uE+HHyInq3X2hbnlO9H7L3fKCw9ZZDulnYqRQrye26/AloU4dBZVx8ghlFP5ZkGxvdn4SWpK0ojRA3ZfJoIqEjxaEAF6C3u+BNpS9LRbnFbkDbY6MtavUPkiF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=meMAKXV6; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="meMAKXV6"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44V8aMR9042855;
-	Fri, 31 May 2024 03:36:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717144582;
-	bh=S0ukmk1g2waDrHjd+R+8zkx4KdRvWUrWFxGLS+wgH5o=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=meMAKXV66h+EykWFPDoMgyrkHcRwg0+dFJ/xtgo6dy/5/lpt8EuwgxEeH80KIrnSG
-	 U940IDV5SC45+69YFr2knqGlDA+G9lN0oYWmsx5AYL2M74hR/3iaqCyPhvJg8TOfCf
-	 sK7vMOV9TYdPqU1Kx/Gd3bBUepEm8LLSZ9pPOv+E=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44V8aMc9051757
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 May 2024 03:36:22 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- May 2024 03:36:22 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 31 May 2024 03:36:22 -0500
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44V8aEXd052311;
-	Fri, 31 May 2024 03:36:14 -0500
-Message-ID: <7bed5792-db9d-3bc8-5325-7333076822e9@ti.com>
-Date: Fri, 31 May 2024 14:06:13 +0530
+	s=arc-20240116; t=1717144641; c=relaxed/simple;
+	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=abdXR1P+ihPugg7FwvrYHuK469K9f89dnUt8XlAGc1ISZ70sCesgDBugrgU3/dvm7xSanWc4PeYv3CUig1Eq/+aCsfKn3tnJU3gJDpAa3GRjxyozQ9Rx+zIzbim8wco/DOyLYYvM+l7qIuHWTHBoRFBe+N65iztKubBYZZOPuZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4212b102935so678245e9.2;
+        Fri, 31 May 2024 01:37:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717144638; x=1717749438;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=ucvxFaOwB62sqDtaCYcaortqOjRDVBbeNJ/pe7ggSP9i600lPZ6wBID3w9C2eZ4OrJ
+         BXhVzCNHIJoWfG2cD+uEAJqNXjj3LKl7m9hiXeFNsUa1ejDlKbhpV6g+tld4ozbBOhGu
+         wpnA4t1GEyWfmNDhTN5bNtFqNDMkFlYhlnZBmozY6yZvADdfGriDb1Uivp2iOy6hQfwU
+         0uS7ZHJl9z7BdkIUFlYRil/ArmHGarsVjyNZhSg87puny0nZxtPyzCv4j8oYB7AoiaVK
+         C0WjqI6r1Jv2RgP9gBsSfU1pq/9X2Ybhtt9x6vnG5LqQjmfSPifRg+S/SbZk9F6UVrHc
+         HHbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7I9TJJ42OuLZqnltYWfn+3mlvoxg3+tWZgSRcedFNF5yMJZisA8WLq1j/8TErbzCD14QoRYR6bgz8C9kVLljs3MgAum6rZfyhfogmGwcEo45xgUnEEZhzAB9FMbbwJiiNe9xzZk/ITwS6DZOT
+X-Gm-Message-State: AOJu0YzpiXLXAVf/gGocze2uI6X917jxNhpa3LlmjUlh4BdM1RATxRXq
+	2Pdz2tGCb9GMnC1Ij7x7oqxE25ttqL7Q3Id9FxgzgUeNlA7ZI+vX
+X-Google-Smtp-Source: AGHT+IEcMZB90PK3n/9rMQxD7m9IN3Nt4bzySZUbYfywqxlzdNOgXH/47NR1pw7f8r7XCWcMKZ23iw==
+X-Received: by 2002:a05:600c:3b0c:b0:421:2918:3d9a with SMTP id 5b1f17b1804b1-4212e006132mr9155745e9.0.1717144638185;
+        Fri, 31 May 2024 01:37:18 -0700 (PDT)
+Received: from [10.100.102.74] (85.65.193.189.dynamic.barak-online.net. [85.65.193.189])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b8afe40sm17955285e9.40.2024.05.31.01.37.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 01:37:17 -0700 (PDT)
+Message-ID: <746bdba5-8826-4069-8f3b-08891d78321d@grimberg.me>
+Date: Fri, 31 May 2024 11:37:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v10 06/11] math.h: Add macros for rounding to closest
- value
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme-apple: add missing MODULE_DESCRIPTION()
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Hector Martin
+ <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240530-md-nvme-apple-v1-1-b8b7ca569660@quicinc.com>
 Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <adobriyan@gmail.com>, <jani.nikula@intel.com>,
-        <p.zabel@pengutronix.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <laurent.pinchart@ideasonboard.com>,
-        <praneeth@ti.com>, <nm@ti.com>, <vigneshr@ti.com>, <a-bhatia1@ti.com>,
-        <j-luthra@ti.com>, <b-brnich@ti.com>, <detheridge@ti.com>,
-        <p-mantena@ti.com>, <vijayp@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
-References: <20240530165925.2715837-1-devarsht@ti.com>
- <20240530171225.2749312-1-devarsht@ti.com>
- <ZljRSXtXWdOyCJaB@smile.fi.intel.com>
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <ZljRSXtXWdOyCJaB@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Sagi Grimberg <sagi@grimberg.me>
+In-Reply-To: <20240530-md-nvme-apple-v1-1-b8b7ca569660@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Andy,
-
-Thanks for the review.
-
-On 31/05/24 00:49, Andy Shevchenko wrote:
-> On Thu, May 30, 2024 at 10:42:25PM +0530, Devarsh Thakkar wrote:
->> Add below rounding related macros:
->>
->> round_closest_up(x, y) : Rounds x to closest multiple of y where y is a
->> power of 2, with a preference to round up in case two nearest values are
->> possible.
->>
->> round_closest_down(x, y) : Rounds x to closest multiple of y where y is a
->> power of 2, with a preference to round down in case two nearest values are
->> possible.
->>
->> roundclosest(x, y) : Rounds x to closest multiple of y, this macro should
->> generally be used only when y is not multiple of 2 as otherwise
->> round_closest* macros should be used which are much faster.
->>
->> Examples:
->>  * round_closest_up(17, 4) = 16
->>  * round_closest_up(15, 4) = 16
->>  * round_closest_up(14, 4) = 16
->>  * round_closest_down(17, 4) = 16
->>  * round_closest_down(15, 4) = 16
->>  * round_closest_down(14, 4) = 12
->>  * roundclosest(21, 5) = 20
->>  * roundclosest(19, 5) = 20
->>  * roundclosest(17, 5) = 15
-> 
-> ...
-> 
->> + * Examples :
-> 
-> It's inconsistent with the other one below.
-> 
->> + * 	round_closest_up(17, 4) = 16
->> + *
->> + * 	round_closest_up(15, 4) = 16
->> + *
->> + * 	round_closest_up(14, 4) = 16
-> 
-> The three have TABs/spaces mixture.
-> 
-> I believe you wanted:
-> 
->  * Examples::
->  * * round_closest_up(17, 4) = 16
->  * * round_closest_up(15, 4) = 16
->  * * round_closest_up(14, 4) = 16
-> 
-
-I initially referred the style from this link [1] but probably missed to
-remove extra space from my patch.
-
-But what you suggested looks better, I will go with what you suggested.
-
-[1]  https://elixir.bootlin.com/linux/v6.9/source/include/linux/int_log.h#L22
-
-Regards
-Devarsh
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
