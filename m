@@ -1,57 +1,57 @@
 Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC3277F08
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB24378C90
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:34:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191272; cv=none; b=qHVg0nuFNXTVsFoKiuEDX9P9BV3Hvkc3FWvGSb6z1lxmXxbELTrTb5M63dWl+QjP4QMvebS8uiUIJwwkvviYNmClEMYVlm0x4PvrHjzD6cNbxkyJm+BioynydxMMydLqeCIe8dRfAr5cBqZJuyFY3AsXq7iT0hJ1Q9uA/+C5YAI=
+	t=1717191272; cv=none; b=Wmh/tRcZEfBfEn5ZGyB9Or4EaIBuo3VV9AHQYZOlNM18Z8ayMUmZCjap/KR97Vu4+/92Z6Sn/shx44xcmEeK4Hrwh7mNSXfAIqFSSrplESDe52rErXREMRmvDi174UEfmbS/Vjwjw6OOAlIe9+e6D8R6DKbmxy2L26IACnBMKoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717191272; c=relaxed/simple;
-	bh=RS404MaW/RRWkBNJVZPcTnWbwxOOHWs8vCjY74+uM3Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=JDftClL3BC0YtQD9aB9ce6483nM6RYkdAHmgi8ZveNfpNSX4UvsEo7b207FUuwFDWW8IB2EOS1b8mr4tlLPcNqqUuJC0wwruV4E61mzBmmJZgikwJwOm3BAl0yyn6ndG9oNXYr1N3Nl657kLGG3LqynYC7/ziWZG0TNZm1NbK9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rQyAMHzt; arc=none smtp.client-ip=203.254.224.24
+	bh=Y7uG4pwdtEkmmnK3J+jlUy6sLyQYuEF3zOYH+EVSXTg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=aYjegEHVWG1auym9d4ePEs/RzoOcLxj2gKMAH6LpPEAOxZBqnCJxgD3QbtK/YnDZZnQSvG4V94HFd2lvPwI/fmNXGe07Esmf3glu8xaSCdsL7CkzWyMEgSJXvXCB73/MQD1QOGrrMe/FadfQ2PGTDivQCwDiIsLM/xfnbuCLKCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tEJLx/Cj; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rQyAMHzt"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tEJLx/Cj"
 Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240531213427epoutp016f5f61ed85d4af0b488611bd92f3b04e~UsFwKN5C-2372223722epoutp01e
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:34:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240531213427epoutp016f5f61ed85d4af0b488611bd92f3b04e~UsFwKN5C-2372223722epoutp01e
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240531213428epoutp018b72f473e56b41d259342f5a3ae7613c~UsFw5p5X32372223722epoutp01f
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:34:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240531213428epoutp018b72f473e56b41d259342f5a3ae7613c~UsFw5p5X32372223722epoutp01f
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717191267;
-	bh=YTBytlr7ecZYCvMxUYhfydMV+Bi6kPS36xosbNeI0cE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rQyAMHztBoBoy+N/KsuluaMiAr3fQIOcfE3WmIS14oE2Umi1kwDGfOQYHI4e/adPw
-	 bKm/c/ePk6zCEL6T7nB4U1ujXxfcImuttmElwDHxWRxvxarwpPeXu3dtxRtNYkvm77
-	 FN45M9NGdrIAXADC5BmdFybiYFN55lHhiNKLhNx4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-	20240531213426epcas2p179b6939ef325166973d6f569e1389f10~UsFvcWJg-1103811038epcas2p1W;
+	s=mail20170921; t=1717191268;
+	bh=4UCeOpS2gxGOtZ2m/Twam0+uQamLCIEw8CzQlgjVKts=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=tEJLx/CjtPh421bp7xcbwpwM7KBoD7UMjHnCmGlBKTPAHdND/DX6oNqHG9VbpWIH1
+	 sLYWV/X46c4FlCc7RitzOFEx0stlIAlv/va61Vr9VcNgfRMz0ZYLbxAYBJ6YAP9+qe
+	 RaBSqWsMwv0c544vQt+oVXw4FjC+NYLPQjdln5Ik=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20240531213426epcas2p45e00bc21be45a7c255f109d8351b3f61~UsFvzXVGn2198821988epcas2p4D;
 	Fri, 31 May 2024 21:34:26 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.36.90]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Vrbwx5SH1z4x9Pp; Fri, 31 May
-	2024 21:34:25 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8F.35.09479.1624A566; Sat,  1 Jun 2024 06:34:25 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240531213425epcas2p477d443427f706b999e81432393bfdc8a~UsFuHsr9v2198821988epcas2p49;
-	Fri, 31 May 2024 21:34:25 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.90]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Vrbwy128pz4x9Pp; Fri, 31 May
+	2024 21:34:26 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8E.63.18956.1624A566; Sat,  1 Jun 2024 06:34:26 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240531213424epcas2p16d7360e12d310c9f299d449e66af07b3~UsFt8gW2M0661106611epcas2p1m;
+	Fri, 31 May 2024 21:34:24 +0000 (GMT)
 Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240531213425epsmtrp2573c90bc02eb722d9a6b605f38f9efd5~UsFuG7FVd0808808088epsmtrp2x;
-	Fri, 31 May 2024 21:34:25 +0000 (GMT)
-X-AuditID: b6c32a48-ea7ff70000002507-8d-665a42619b59
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240531213424epsmtrp12e4929d5edf65f4217a98411789c6df0~UsFt7wCIA0490304903epsmtrp1h;
+	Fri, 31 May 2024 21:34:24 +0000 (GMT)
+X-AuditID: b6c32a4d-247ff70000004a0c-d6-665a4261e3ca
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
 	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	18.F6.07412.0624A566; Sat,  1 Jun 2024 06:34:24 +0900 (KST)
+	67.F6.07412.0624A566; Sat,  1 Jun 2024 06:34:24 +0900 (KST)
 Received: from localhost.dsn.sec.samsung.com (unknown [10.229.54.230]) by
 	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240531213424epsmtip26f28ca152e1f446c95d844ba27f85083~UsFt4LerI1505315053epsmtip2t;
+	20240531213424epsmtip2add19db3793fafde8f2204283eb68324~UsFtucPsp1505315053epsmtip2s;
 	Fri, 31 May 2024 21:34:24 +0000 (GMT)
 From: Minwoo Im <minwoo.im@samsung.com>
 To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
@@ -61,11 +61,10 @@ Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
 	<avri.altman@wdc.com>, Minwoo Im <minwoo.im@samsung.com>,
 	gost.dev@samsung.com, linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Jeuk Kim <jeuk20.kim@samsung.com>
-Subject: [PATCH v2 2/2] ufs: mcq: Prevent no I/O queue case for MCQ
-Date: Sat,  1 Jun 2024 06:22:44 +0900
-Message-Id: <20240531212244.1593535-3-minwoo.im@samsung.com>
+Subject: [PATCH v2 0/2] ufs: pci: Add support UFSHCI 4.0 MCQ
+Date: Sat,  1 Jun 2024 06:22:42 +0900
+Message-Id: <20240531212244.1593535-1-minwoo.im@samsung.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240531212244.1593535-1-minwoo.im@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,83 +72,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmhW6iU1SawYFfGhYP5m1js3j58yqb
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCJsWRmVeSWpSXmKPExsWy7bCmmW6SU1SaQcdeZosH87axWbz8eZXN
+	YtqHn8wWNw/sZLLY2M9hcX/rNUaLy7vmsFl0X9/BZrH8+D8mi2enDzA7cHlcvuLtMW3SKTaP
+	j09vsXj0bVnF6PF5k5xH+4FupgC2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sL
+	cyWFvMTcVFslF58AXbfMHKDDlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkF5gV6
+	xYm5xaV56Xp5qSVWhgYGRqZAhQnZGW1bFzIVvOasWL/8KHsD4xf2LkZODgkBE4mrl3YwdzFy
+	cQgJ7GGUWHN/GSOE84lRYsWy9awQzjdGiSvtJ9hgWrpXvIaq2ssoce5UP9gsIYHfjBJXt3OB
+	2GwC6hINU1+xgNgiAosZJeau5gNpYBZ4wSjxbeE8JpCEsICNxJS226wgNouAqsTn581gcV6g
+	+IeF06G2yUvsP3iWGSIuKHFy5hOwocxA8eats8EOlxB4yy6x7NxSqAYXiWlPzrNC2MISr45v
+	gfpUSuJlfxuUXS7x880kRgi7QuLgrNtAvRxAtr3EtecpICazgKbE+l36EFFliSO3oLbySXQc
+	/ssOEeaV6GgTgpihLPHx0CFmCFtSYvml11C3eEi0nu1ngoROrMTZRx1MExjlZyH5ZRaSX2Yh
+	7F3AyLyKUSq1oDg3PTXZqMBQNy+1HB6vyfm5mxjByVPLdwfj6/V/9Q4xMnEwHmKU4GBWEuH9
+	lR6RJsSbklhZlVqUH19UmpNafIjRFBjCE5mlRJPzgek7ryTe0MTSwMTMzNDcyNTAXEmc917r
+	3BQhgfTEktTs1NSC1CKYPiYOTqkGpgQTm8ovk7V+fMu3t1JdXNM1ZfPN4qJ9XPv3BBrvUXrv
+	Jf9+on2Ss07ptqufqlvPdZwuqWKe1eDi+Xan9pm8BQxHHLIef5D/UjfB/dfsqS+kc83/Frza
+	+Ij1cpnik5t/j3+u3hrwSb9Q6ZWadoj87i2nfHjPrm0u4eBgXCBquvj6ZZHsW5I6nWs4e423
+	XwxTelW0tfjpMofE2L2dbGXr9flcn4Z2vH2kEs69eU+L1Y0PNteTlLYl5eZN8E47dOjoSiH1
+	xMev/h/9ohLGVCx8KedUavimk/MFpnAaLZn18ZXeMjOm9aUGfOomm9cea+2bzfEkN3KD9IeZ
+	TSL+XQeCzx/okUvzUMzyPaR5VFj0jRJLcUaioRZzUXEiAMPibdonBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMLMWRmVeSWpSXmKPExsWy7bCSvG6CU1SawaxXxhYP5m1js3j58yqb
 	xbQPP5ktbh7YyWSxsZ/D4v7Wa4wWl3fNYbPovr6DzWL58X9MFs9OH2B24PK4fMXbY9qkU2we
-	H5/eYvHo27KK0ePzJjmP9gPdTAFsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
-	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKzAv0
-	ihNzi0vz0vXyUkusDA0MjEyBChOyM6Z3LGUt2MpZcbrrGnsD43X2LkZODgkBE4klZ84B2Vwc
-	QgI7GCV2///MDOF8YpQ43NLDAuF8Y5S4dnENI0zLwe4msHYhgb2MEkfeakEU/WaUeHVlOlgR
-	m4C6RMPUVywgtojAYkaJuav5QIqYBV4wSnxbOI8JJCEs4Cyxa88DsAYWAVWJrk9X2LoYOTh4
-	BWwkNv+ohlgmL7H/4FlmEJtTwFbi/dbtYDavgKDEyZlPwOYzA9U0b50NdraEQCuHxI9vF1gh
-	ml0kPszdBvWosMSr41ugbCmJz+/2skHY5RI/30yC+qxC4uCs22A3SAjYS1x7ngJiMgtoSqzf
-	pQ8RVZY4cgtqK59Ex+G/7BBhXomONiGIGcoSHw8dYoawJSWWX3oNtcdD4tHB5UyQkJrAKNH5
-	7zvbBEaFWUiemYXkmVkIixcwMq9iFEstKM5NTy02KjCBx29yfu4mRnAy1fLYwTj77Qe9Q4xM
-	HIyHGCU4mJVEeH+lR6QJ8aYkVlalFuXHF5XmpBYfYjQFhvREZinR5HxgOs8riTc0sTQwMTMz
-	NDcyNTBXEue91zo3RUggPbEkNTs1tSC1CKaPiYNTqoGpWTmUW0x4jsi0fu9406Jnp+ZbzGw5
-	wXql+gzL2mlvlj7VDNYtlXY5/ztH+Oy/RaWe95/nz314fWv5Ux6/1JWX/BuKF/Wef3S6OKNC
-	tzHfZfpHQ6WrXwPOPvx0kCNgl1tzy7yNU5x2GuU9Lmm+u2HXsjxnS5f9z1Ym9j20P/dx6eyl
-	yqEzfhpFe+drpJkyXleNz1oaee/aYlHVaY4CHFWd62WDVRLzmvR378944Lp5v5ygrl6nzz3e
-	I4fWqGt9e8vEFrngGNuFNNbF63/wmVRY9H0LvJsuNH/eRMsFG9XX7NrVsIGt9PP6H8Gqyw49
-	fWSzeOuTnxevRD9cU5Dy9bqB+5KVizsyuRV+KDy7a18apMRSnJFoqMVcVJwIAHig4PkvBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsWy7bCSvG6CU1SawczH1hYP5m1js3j58yqb
-	xbQPP5ktbh7YyWSxsZ/D4v7Wa4wWl3fNYbPovr6DzWL58X9MFs9OH2B24PK4fMXbY9qkU2we
-	H5/eYvHo27KK0ePzJjmP9gPdTAFsUVw2Kak5mWWpRfp2CVwZ0zuWshZs5aw43XWNvYHxOnsX
-	IyeHhICJxMHuJiCbi0NIYDejxJLFZ5khEpIS+07fZIWwhSXutxxhhSj6ySixoO8AI0iCTUBd
-	omHqKxaQhIjAYkaJJ+fegDnMAu8YJXbvmcAEUiUs4Cyxa88DsA4WAVWJrk9X2LoYOTh4BWwk
-	Nv+ohtggL7H/IMRmTgFbifdbt4PZQkAlr3dPB7N5BQQlTs58wgJiMwPVN2+dzTyBUWAWktQs
-	JKkFjEyrGCVTC4pz03OTDQsM81LL9YoTc4tL89L1kvNzNzGCg19LYwfjvfn/9A4xMnEwHmKU
-	4GBWEuH9lR6RJsSbklhZlVqUH19UmpNafIhRmoNFSZzXcMbsFCGB9MSS1OzU1ILUIpgsEwen
-	VAMTo/RNvq6QDX80bfZf4M3//MgzNWxpy7t1HrGlG4y6V8mFx1QKeDyX5vGVffVg19+go4+u
-	pLJ0aoS9+vOoRnNyqKPF6cUlVZ9fT4ky5cy8YK/W7W5tnNCho/Q82Em8tk9qVemiIq21siJ6
-	Wht42ZkP1J67Pu9o74HiOmPLPO6PbwR3Kv44mJK0bmtOb3y2U7vwb7O/NS+fftLld7b5z7tr
-	inPm/u1GTa+YH4grSd04+dZbKFt5BhcDww5Px7n8n1QWrO86/FhA4+7qyf94ky8qFPP6XnB4
-	8/fKDU+h82aPY3q4Zy308khPZrpfatu4o+jAM9MDupf1fNfd1NTW4pv1YbHWUdvc+Z+3vv51
-	Y5oSS3FGoqEWc1FxIgBYj7eW7QIAAA==
-X-CMS-MailID: 20240531213425epcas2p477d443427f706b999e81432393bfdc8a
+	H5/eYvHo27KK0ePzJjmP9gPdTAFsUVw2Kak5mWWpRfp2CVwZbVsXMhW85qxYv/woewPjF/Yu
+	Rk4OCQETie4Vrxm7GLk4hAR2M0p8mrSVGSIhKbHv9E1WCFtY4n7LEVaIop+MElebnoEl2ATU
+	JRqmvmIBSYgILGaUeHLuDZjDLPCOUWL3nglMIFXCAjYSU9pug3WwCKhKfH7eDBbnBYp/WDid
+	DWKFvMT+g2eZIeKCEidnPmEBsZmB4s1bZzNPYOSbhSQ1C0lqASPTKkbJ1ILi3PTcZMMCw7zU
+	cr3ixNzi0rx0veT83E2M4HDW0tjBeG/+P71DjEwcjIcYJTiYlUR4f6VHpAnxpiRWVqUW5ccX
+	leakFh9ilOZgURLnNZwxO0VIID2xJDU7NbUgtQgmy8TBKdXApFP/yCU5cPq1uy5rOTqfW70z
+	jKlr9/U+/Y+pquu2u0jbnDD/Hwfjj/R9DTWoym3bUnJr1WbW1y/1Pf2/yW449exBvoHz1TBf
+	n3kf6tqn2cZVrrywQsBatSRN4/GGCJXjy2aaPRH5MMnzsf/kmDtmTz9uWVlZVMMzc9mfX47O
+	974s0tvEf2jXwb4UzYpU/RvyUq78bxhur1jL3Hyq+tmuQ90B59vfd12dfc1IUaX6Q+S3eXP7
+	ZM/cCFhT1dilVJx/KrDRW3nz5GsVsyRrlh+Zs3vDQ4ULhis+n9z8P3fenQzBM5Mj8jknP+w+
+	XR56+dLTIFf2F3M4Z/xymMTLuyslwfN5Uuz7VgaO5ZmrbgWk7lFiKc5INNRiLipOBAD95WYI
+	1gIAAA==
+X-CMS-MailID: 20240531213424epcas2p16d7360e12d310c9f299d449e66af07b3
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: AUTO_CONFIDENTIAL
 CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240531213425epcas2p477d443427f706b999e81432393bfdc8a
-References: <20240531212244.1593535-1-minwoo.im@samsung.com>
-	<CGME20240531213425epcas2p477d443427f706b999e81432393bfdc8a@epcas2p4.samsung.com>
+X-CMS-RootMailID: 20240531213424epcas2p16d7360e12d310c9f299d449e66af07b3
+References: <CGME20240531213424epcas2p16d7360e12d310c9f299d449e66af07b3@epcas2p1.samsung.com>
 
-If hba_maxq equals poll_queues, which means there are no I/O queues
-(HCTX_TYPE_DEFAULT, HCTX_TYPE_READ), the very first hw queue will be
-allocated as HCTX_TYPE_POLL and it will be used as the dev_cmd_queue.
-In this case, device commands such as QUERY cannot be properly handled.
+This patchset introduces add support for MCQ introduced in UFSHCI 4.0.  The
+first patch adds a simple helper to get the address of MCQ queue config
+registers.  The second one enables MCQ feature by adding mandatory vops
+callback functions required at MCQ initialization phase.  The last one is to
+prevent a case where number of MCQ is given 1 since driver allocates poll_queues
+first rather than I/O queues to handle device commands.  Instead of causing
+exception handlers due to no I/O queue, failfast during the initialization time.
 
-This patch prevents the initialization of MCQ when the number of I/O
-queues is not set and only the number of POLL queues is set.
-
-Signed-off-by: Minwoo Im <minwoo.im@samsung.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
 ---
- drivers/ufs/core/ufs-mcq.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+v2:
+  - https://lore.kernel.org/linux-scsi/20240531103821.1583934-1-minwoo.im@samsung.com/T/#t
+  - Not separate the newly introduced function from the actuall caller in the
+    other patch by squash the second patch to the first one (Bart).
+  - Rename ufs_redhat_* in ufshcd-pci.c to ufs_qemu_* to represent that it's
+    for QEMU UFS PCI device (Bart).
 
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index 46faa54aea94..4bcae410c268 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -179,6 +179,15 @@ static int ufshcd_mcq_config_nr_queues(struct ufs_hba *hba)
- 		return -EOPNOTSUPP;
- 	}
- 
-+	/*
-+	 * Device should support at least one I/O queue to handle device
-+	 * commands via hba->dev_cmd_queue.
-+	 */
-+	if (hba_maxq == poll_queues) {
-+		dev_err(hba->dev, "At least one non-poll queue required\n");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	rem = hba_maxq;
- 
- 	if (rw_queues) {
+Minwoo Im (2):
+  ufs: pci: Add support MCQ for QEMU-based UFS
+  ufs: mcq: Prevent no I/O queue case for MCQ
+
+ drivers/ufs/core/ufs-mcq.c    | 23 +++++++++++++++++
+ drivers/ufs/host/ufshcd-pci.c | 48 ++++++++++++++++++++++++++++++++++-
+ include/ufs/ufshcd.h          |  1 +
+ 3 files changed, 71 insertions(+), 1 deletion(-)
+
 -- 
 2.34.1
 
