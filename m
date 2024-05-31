@@ -1,73 +1,40 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46900155C8E;
-	Fri, 31 May 2024 10:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729B9155CB4;
+	Fri, 31 May 2024 10:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717151892; cv=none; b=TKYVd6bDWSG2ZyRwwS/8Uj0nYUjNwQSXO2xjOQDZeJDcuN2CZ/fxrl5qNKxesf5S5t2EExkPOlhWxJ6DAzCOwQHkUA7kJFtCGXFhNhQNUjQV6Io+SIYp+5IUdSVCjA+JTaUQItGY2sHLzrXhAuWjL/idntnuyt9mi9XwAZo7O58=
+	t=1717151925; cv=none; b=R2HLgqY91SgFqqGH7oYlMiSMXYJgFDOGU+Iyd7v2d2rxyDlPEf8ZosAS1KTsCDFrZUtydt7obJvWkp9wUr2+TgLo0FZ0rY05s7QI9sgd2n02ju8l3xiCCShNTVSqcZOOMIRPmYtZYdTWaQkRMWmxdFM3Bp6KhiUe4WLqFj6PFoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717151892; c=relaxed/simple;
-	bh=pHEsO2qn1rcaa/CVVCC1rJCGrocpF3xq2ymrPBC1hyM=;
+	s=arc-20240116; t=1717151925; c=relaxed/simple;
+	bh=h/2sOB9x1IUImpZzBBj2jDaXq1nmHaIGab6FBR+GwAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVa84WxKhoNcvFLGRU7mPDvTn3SYjw7Slnhf/Dyb+0WDQn2nuyX/CyEOOcdFGupdMLE4fV5FfWWjkhxhMRZAQGXCFB31ElW2VCIPcM9z/of7iyW2vZHOO5h7TNkhyZTs+7mbWNfMcVeSI9oStdRlHmsJcVw3tIdVSM2TnMdcvjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F0heMktW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YN+uNLES; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qlt8I68xZ4Iq8nbUMUZk10zaMujwd3o5Cl/34adJUFLzemCflGwnNZWUM+IolVtRWyBRaB6ZtJ8mHdyx4U7ntDROWJG9TOhPE/QrK6EG4FelCfOSt4Ibd60X+zZ0hMgCGCG71idjQn9KdzsL6xhMUsNv7b2E3J9UdHgQ59HWCLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I26DnSIc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F0heMktW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YN+uNLES"
-Date: Fri, 31 May 2024 12:38:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717151889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s4acigBe027wOQx0luMaaon6tV311jRRizAmbiQqL3w=;
-	b=F0heMktWAuN3lpcjkR+BkoYknS08e++75PnvWStPB9mL2ifxNdHcKz5weNkFgwFB1j84Qw
-	QMYeUMqjHfYnQDfLmxfG2IMol2YmnIYoV9aDk3SIvCyO9iJc/PrYDZExR53KWU5eBit800
-	A/8ur4BgPCXyYAcK0arCAFyxTYkLdMSj9Go2Y8rByOr4PvmyKltCd8K6hxKDc8uxbiMzhS
-	O/0ecInyrCKM0d9uYSRkS3A/JOTNZ6Up+04k9Kl5vtbZutIm4rIE2mvgdJFOll5X/Ok3EF
-	Wu1wiB8LMEdDeFz3DMTP32t5qruIRsjPHFSDeoImxEjZtLmkFDty3EdUcpWWnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717151889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=s4acigBe027wOQx0luMaaon6tV311jRRizAmbiQqL3w=;
-	b=YN+uNLESzX+WmX/Q2l0gLeQmgehpBRHwNK7BGf1Ci7es9A7xJHTFdbLQVw8obMJK45/1gV
-	40Y6OrLNtX5SqzCQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v3 net-next 14/15] net: Reference bpf_redirect_info via
- task_struct on PREEMPT_RT.
-Message-ID: <20240531103807.QjzIOAOh@linutronix.de>
-References: <20240529162927.403425-1-bigeasy@linutronix.de>
- <20240529162927.403425-15-bigeasy@linutronix.de>
- <87y17sfey6.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I26DnSIc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38167C116B1;
+	Fri, 31 May 2024 10:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717151925;
+	bh=h/2sOB9x1IUImpZzBBj2jDaXq1nmHaIGab6FBR+GwAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I26DnSIcFGef+qsXDEWbQkVxxktWUDIDKCPzFYgx7pK4mCFk5Xv0LonIfoQzFbfyH
+	 J/acrbKpqHQHwuf3yQ9aP4VUJC1isRCeUXRCM40FMcfNY6dXIMAJbIRtSGj59d495V
+	 1g0M9/ijeVnYV90NIy57eCnGJTE5YTvgGjVjqB7KjAcziP6B8fS5gBby/h2LUHZ2zS
+	 EEouwQESdZ+/muMhtpUKPQ6OBFTQPX5yr0tpgSIu/jxP4FyasNCoB7JvL4J0xK1kA/
+	 G7DpYbOrz2LPpEAw0MYuxKc5EhXNxOEro/VbXL+20rIXuD9GaHR5XLPYaCV2fQ3tY7
+	 xcOmo35hWcQ8g==
+Date: Fri, 31 May 2024 11:38:40 +0100
+From: Lee Jones <lee@kernel.org>
+To: Joseph Strauss <jstrauss@mailbox.org>
+Cc: pavel@ucw.cz, jansimon.moeller@gmx.de, conor@kernel.org,
+	christophe.jaillet@wanadoo.fr, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] Add multicolor support to BlinkM LED driver
+Message-ID: <20240531103840.GC1005600@google.com>
+References: <20240506201905.789376-1-jstrauss@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,70 +43,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <87y17sfey6.fsf@toke.dk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240506201905.789376-1-jstrauss@mailbox.org>
 
-On 2024-05-30 00:09:21 [+0200], Toke H=C3=B8iland-J=C3=B8rgensen wrote:
-> [...]
-> > @@ -240,12 +240,14 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_ma=
-p_entry *rcpu, void **frames,
-> >  				int xdp_n, struct xdp_cpumap_stats *stats,
-> >  				struct list_head *list)
-> >  {
-> > +	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
-> >  	int nframes;
->=20
-> I think we need to zero-initialise all the context objects we allocate
-> on the stack.
->=20
-> The reason being that an XDP program can return XDP_REDIRECT without
-> calling any of the redirect helpers first; which will lead to
-> xdp_do_redirect() being called without any of the fields in struct
-> bpf_redirect_info having being set. This can lead to a crash if the
-> values happen to be the wrong value; and if we're not initialising the
-> stack space used by this struct, we have no guarantees about what value
-> they will end up with.
+On Mon, 06 May 2024, Joseph Strauss wrote:
 
-Okay, I can do that.
+> Add multicolor support to the BlinkM driver, making it easier to control
+> from userspace. The BlinkM LED is a programmable RGB LED. The driver
+> currently supports only the regular LED sysfs class, resulting in the
+> creation of three distinct classes, one for red, green, and blue. The
+> user then has to input three values into the three seperate brightness
+> files within those classes. The multicolor LED framework makes the
+> device easier to control with the multi_intensity file: the user can
+> input three values at once to form a color, while still controlling the
+> lightness with the brightness file.
+> 
+> The main struct blinkm_led has changed slightly. The struct led_classdev
+> for the regular sysfs classes remain. The blinkm_probe function checks
+> CONFIG_LEDS_BLINKM_MULTICOLOR to decide whether to load the seperate
+> sysfs classes or the single multicolor one, but never both. The
+> blinkm_set_mc_brightness() function had to be added to calculate the
+> three color components and then set the fields of the blinkm_data
+> structure accordingly.
+> 
+> Signed-off-by: Joseph Strauss <jstrauss@mailbox.org>
+> ---
+> Changes in v2:
+> - Replaced instances of the constant 3 with NUM_LEDS, where applicable
+> - Fixed formatting errors
+> - Replaced loop inside of blinkm_set_mc_brightness() with equivalent
+>   statements
+> - Changed id of multicolor class from 4 to 3
+> - Replaced call to devm_kmalloc_array() with devm_kcalloc()
+> Changes in v3:
+> - Add CONFIG_LEDS_BLINKM_MULTICOLOR to check whether to use multicolor
+>   funcitonality
+> - Extend well-known-leds.txt to include standard names for RGB and indicator
+>   LEDS
+> - Change name of Blinkm sysfs class according to well-known-leds.txt
+> - Simplify struct blinkm_led and struct blinkm_data
+> - Remove magic numbers
+> - Fix formatting errors
+> - Remove unrelated changes
+> Changes in v4:
+> - Fix indentation
+> - Add default case to switch statement
+> Changes in v5:
+> - Fix warnings related to snprintf on s390 architecture, reported by
+>   0-DAY CI Kernel Test Service
+> Changes in v6:
+> - Refactored struct blinkm_led to use a union
+> - Refactored blinkm_probe()
+> - Clarified documentation
+> Changes in v7:
+> - Fix formatting and spelling errors
+> 
+>  Documentation/leds/leds-blinkm.rst     |  31 +++-
+>  Documentation/leds/well-known-leds.txt |   8 +
+>  drivers/leds/Kconfig                   |   8 +
+>  drivers/leds/leds-blinkm.c             | 224 +++++++++++++++++--------
+>  4 files changed, 199 insertions(+), 72 deletions(-)
 
-> >  void bpf_clear_redirect_map(struct bpf_map *map)
-> >  {
-> > -	struct bpf_redirect_info *ri;
-> > -	int cpu;
-> > -
-> > -	for_each_possible_cpu(cpu) {
-> > -		ri =3D per_cpu_ptr(&bpf_redirect_info, cpu);
-> > -		/* Avoid polluting remote cacheline due to writes if
-> > -		 * not needed. Once we pass this test, we need the
-> > -		 * cmpxchg() to make sure it hasn't been changed in
-> > -		 * the meantime by remote CPU.
-> > -		 */
-> > -		if (unlikely(READ_ONCE(ri->map) =3D=3D map))
-> > -			cmpxchg(&ri->map, map, NULL);
-> > -	}
-> > +	/* ri->map is assigned in __bpf_xdp_redirect_map() from within a eBPF
-> > +	 * program/ during NAPI callback. It is used during
-> > +	 * xdp_do_generic_redirect_map()/ __xdp_do_redirect_frame() from the
-> > +	 * redirect callback afterwards. ri->map is cleared after usage.
-> > +	 * The path has no explicit RCU read section but the local_bh_disable=
-()
-> > +	 * is also a RCU read section which makes the complete softirq callba=
-ck
-> > +	 * RCU protected. This in turn makes ri->map RCU protected and it is
-> > +	 * sufficient to wait a grace period to ensure that no "ri->map =3D=
-=3D map"
-> > +	 * exists. dev_map_free() removes the map from the list and then
-> > +	 * invokes synchronize_rcu() after calling this function.
-> > +	 */
-> >  }
->=20
-> With the zeroing of the stack variable mentioned above, I agree that
-> this is not needed anymore, but I think we should just get rid of the
-> function entirely and put a comment in devmap.c instead of the call to
-> the (now empty) function.
+Applying patch(es)
+Applying: Add multicolor support to BlinkM LED driver
+Using index info to reconstruct a base tree...
+M	Documentation/leds/well-known-leds.txt
+M	drivers/leds/Kconfig
+M	drivers/leds/leds-blinkm.c
+Checking patch Documentation/leds/leds-blinkm.rst...
+Checking patch Documentation/leds/well-known-leds.txt...
+Checking patch drivers/leds/Kconfig...
+Checking patch drivers/leds/leds-blinkm.c...
+Applied patch Documentation/leds/leds-blinkm.rst cleanly.
+Applied patch Documentation/leds/well-known-leds.txt cleanly.
+Applied patch drivers/leds/Kconfig cleanly.
+Applied patch drivers/leds/leds-blinkm.c cleanly.
+Falling back to patching base and 3-way merge...
+error: Your local changes to the following files would be overwritten by merge:
+	Documentation/leds/leds-blinkm.rst
+	Documentation/leds/well-known-leds.txt
+	drivers/leds/Kconfig
+	drivers/leds/leds-blinkm.c
+Please commit your changes or stash them before you merge.
+Aborting
+error: Failed to merge in the changes.
+Patch failed at 0001 Add multicolor support to BlinkM LED driver
 
-I wasn't entirely sure if my reasoning is valid. In that case=E2=80=A6
-
-> -Toke
-
-Sebastian
+-- 
+Lee Jones [李琼斯]
