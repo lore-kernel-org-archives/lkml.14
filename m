@@ -1,110 +1,220 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270EA380;
-	Fri, 31 May 2024 22:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6255381204;
+	Fri, 31 May 2024 22:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717194132; cv=none; b=hyb/4H8xbm3HN4l5l5cd3MpjnXGDZ3eOP1x/Rq03evjq0vxkFb9a5mPiWn7Ljtu+iBoZlOzIIOLcoC4xut1mTFY4UOgqYWurSnYx9+eKALKFAXF/ppcsx8oc6K/GTVljq2K7+1wPazJNvJtFjB6N4/YNSY0fCSKZcEo0y4CoIs4=
+	t=1717194396; cv=none; b=oWFTo4wYGvGJLltar2jkyIVTqUk9E2isUCMqWSoe/Yflm0O7vJmYkF2kUIcP4B0sEk6AGWnTN8t9WGUbq3P1PzsfbsIsW46N08W7WSefgAk/duZGNLsYCf9qRT4Xv0a8Cp8xHBp7Q9rt0WiwNEKYoYqTVMvPmXzJWLIzq86PoNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717194132; c=relaxed/simple;
-	bh=8aasfJYMSp7Rca3V+snQkwV21X6/KhsdEbYfIRJapRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CX4jrjkPU+z12AzksBID/v0aeifZ4yZka6W+L6EWUHJ5UGLb0pS4XuUUcvK8c3I0pdob7ltZpD8m267/g8d+QVYMpKXyjFBGkcEefdZytBhut6Xx0hDG7KBV2RwTMzQLeMd2DqRuf/N8KQlC1w2P8ZyiYEoSHEz1Gg+pMYuvQ/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9vDvH85; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717194396; c=relaxed/simple;
+	bh=eqN2yKPP04cTarojAaLprGk14sHMHhoIfgiMAqyE0Ac=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=eKbI2S6Jbj+R8oqUL6osd3R28wuPP3xCGrcf1J4lAtdilUCfx3pQjF4ghptSZsMhGVJoEMbe1xSlWbmBgw8giuXPcO6gjiv6hevf4/3ns4bxb3JAPN+rqYd4bef1vd56azVecaAZAyzzRhZAZLINacVH1biGmpn/I7JcWOyUz7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P+Au7tMx; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9vDvH85"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7022cabdc0aso1950217b3a.1;
-        Fri, 31 May 2024 15:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717194130; x=1717798930; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1AgJOdQzaSF+x48xZPHcAex543/+XUv+ldPOnodDgaw=;
-        b=k9vDvH85Qd63mMOrJllfS3gTTq/6UNcxyh5mizvlMZCsfYT1GAQkFZOXR1Xcf+G4Vd
-         4m1RrZ+Bi/7YcratdILT2xL61N3NcsWJZdtxwjGlnpOjX4WFdRePYCcoIYz08K4gJCO2
-         XCStNONf8MtK6XwpVFoL0niBynQCu90Rwou8iCeBAGiNEyL7Dp2aTdWt6t3tJtlLZxTm
-         fT1LlaWPgyTHT2x2PeQ1lALsDfaSrC4eMNBbwSLGex7ke0vh4fJaksQXAB52GFpD5bx0
-         JWtASpsWdxdAWXkHenFR/09s9drCsXuen+aprAQ/GPvgWRzLImpx5xm7dD7fTjIs68Ri
-         XkFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717194130; x=1717798930;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1AgJOdQzaSF+x48xZPHcAex543/+XUv+ldPOnodDgaw=;
-        b=F11xRWnrB4vNHvbuIFPROiC2FIgNTI4gDbeNcnCK8UOR/aAokOtvGTEvoExEmrbHFa
-         W3psy+WJhh/v03Liz/l/tgOhHdXAzMGXFSc0BbmyWMFxBnVVujBetS4bJiD8LzDuPh5h
-         EvVJBsotwcyfv5oqXtAmFsXc1n0rutxILdtjcj7FKVKsk18X/IsIbpL7MySi33ooaGqx
-         DiJqEGXU86Rqq6Ka3zbjz27DX6NSpPTFsjUL4Lkv+lWDIsDH9FtiESN0paq+YUIE/m4J
-         BjU96JR9uq4ggkmW03zfORpA3aId2IBHSTu/aKFE/x17uzEx2u2UpZAvcX02D/p+0JEh
-         B13A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPVJJjS5tYIaFQFC77VhE4L7zkcuA8izvc/Ka/IK18k2Nfn/HirPZrgyBlJKZENPHTgZSnAfCMfaaOW8xvggMwDW9WWFOAq/6pJT0xLGNVmJBT5WU+sqloa85/zAm0+CB3nhQKgKK+tFQJoOUbQXKEUhDN8z7lb3wrVPLLOt+vY7nspQ==
-X-Gm-Message-State: AOJu0YxFZ7gXK+Pv1Lh1cfDmGeszLXY7tO7ih34/XI+kqUW2krK3fuuh
-	g4Iz5DEj56ZUTclQ1O3yLSzKsfwdjFa3uVdTT3baJRtvFjr2bbJdo1nl73gKCP4=
-X-Google-Smtp-Source: AGHT+IGONFMeWhM6DGloHHRuKEmzh8MdNpvj9MZ2WZCIpzVApBH6H+bkiHK1nnz7IgrFO2mwTWMvmg==
-X-Received: by 2002:a05:6a21:3a4a:b0:1af:86e4:bc99 with SMTP id adf61e73a8af0-1b26f12ce72mr4643339637.10.1717194130200;
-        Fri, 31 May 2024 15:22:10 -0700 (PDT)
-Received: from archlinux ([189.101.162.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b2c438sm1834252b3a.202.2024.05.31.15.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 15:22:09 -0700 (PDT)
-Date: Fri, 31 May 2024 19:22:02 -0300
-From: Gustavo Silva <gustavograzs@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, lars@metafoo.de, christophe.jaillet@wanadoo.fr, 
-	devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: vendor-prefixes: add ScioSense
-Message-ID: <kluu6wchcz47duw5kdamlhacvms3bielepees7gjx5hhoqz4dh@bktawzj73nan>
-References: <20240529001504.33648-1-gustavograzs@gmail.com>
- <8e27c8da-d856-4fab-bb12-3af07e13838e@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P+Au7tMx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717194394; x=1748730394;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=eqN2yKPP04cTarojAaLprGk14sHMHhoIfgiMAqyE0Ac=;
+  b=P+Au7tMxlkX/rMczxPEGEClwFkdU9mPUdrP/F57Uc6VlB+HEHxBp6lnq
+   RKqTQfLjCiH8cs+Bf1e0BP95N3aDA7lvSJmIT2gQNCKNZ2DEfxbBX80pJ
+   KxpJiuoNdW77ahgF3+P47QLgwIbOSnGbBuxQNnscJvVNwuecgePCK06Qu
+   byNZh01ZgZEREWaHoHVL4zGQM4SM4D/vbT4Hj/wGghF/rAvgDBlQFgQvc
+   GqNPin/0TA0xVMpMP/9dp5X9aNvDAYCg8koDGfyknVchC6/ZCRhsYgHKn
+   vS+M7HYA0BKCyqrbFIec3emd1U/rqeWNND5C/GCiTwfD1wCcAGoPGjOV/
+   w==;
+X-CSE-ConnectionGUID: ntQbN9hvQ5OBNZgXiiO+HA==
+X-CSE-MsgGUID: 6wcc7LN+RueDUTrBT4xU7w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13949752"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="13949752"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 15:26:33 -0700
+X-CSE-ConnectionGUID: 44jArniuRd+A6i6mX8tIew==
+X-CSE-MsgGUID: jg7XUO40RaOhL9ENjCry3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="40736921"
+Received: from b4969161e530.jf.intel.com ([10.165.56.46])
+  by fmviesa005.fm.intel.com with ESMTP; 31 May 2024 15:26:32 -0700
+From: Haitao Huang <haitao.huang@linux.intel.com>
+To: jarkko@kernel.org,
+	dave.hansen@linux.intel.com,
+	kai.huang@intel.com,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	linux-kernel@vger.kernel.org,
+	linux-sgx@vger.kernel.org,
+	x86@kernel.org,
+	cgroups@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	hpa@zytor.com,
+	sohil.mehta@intel.com,
+	tim.c.chen@linux.intel.com
+Cc: zhiquan1.li@intel.com,
+	kristen@linux.intel.com,
+	seanjc@google.com,
+	zhanb@microsoft.com,
+	anakrish@microsoft.com,
+	mikko.ylinen@linux.intel.com,
+	yangjie@microsoft.com,
+	chrisyan@microsoft.com
+Subject: [PATCH v14 03/14] cgroup/misc: Export APIs for SGX driver
+Date: Fri, 31 May 2024 15:26:19 -0700
+Message-Id: <20240531222630.4634-4-haitao.huang@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240531222630.4634-1-haitao.huang@linux.intel.com>
+References: <20240531222630.4634-1-haitao.huang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e27c8da-d856-4fab-bb12-3af07e13838e@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 29, 2024 at 09:29:54AM GMT, Krzysztof Kozlowski wrote:
-> On 29/05/2024 02:14, Gustavo Silva wrote:
-> > Add vendor prefix for ScioSense B.V.
-> > https://www.sciosense.com/
-> > 
-> > Signed-off-by: Gustavo Silva <gustavograzs@gmail.com>
-> > ---
-> 
-> This is a friendly reminder during the review process.
-> 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
-> 
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> 
-> Best regards,
-> Krzysztof
-> 
+From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-Hi Krzysztof,
+The SGX EPC cgroup will reclaim EPC pages when usage in a cgroup reaches
+its or ancestor's limit. This requires a walk from the current cgroup up
+to the root similar to misc_cg_try_charge(). Export misc_cg_parent() to
+enable this walk.
 
-Sorry, I totally forgot to add the tag. If we need a new version of
-this patch series, I'll make sure to add it.
+The SGX driver also needs start a global level reclamation from the
+root. Export misc_cg_root() for the SGX driver to access.
 
-Also, thank you for mentioning b4, I'll definitely give it a try.
+Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
+Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Reviewed-by: Tejun Heo <tj@kernel.org>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
+Tested-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+V6:
+- Make commit messages more concise and split the original patch into two(Kai)
+---
+ include/linux/misc_cgroup.h | 24 ++++++++++++++++++++++++
+ kernel/cgroup/misc.c        | 21 ++++++++-------------
+ 2 files changed, 32 insertions(+), 13 deletions(-)
 
-Best regards,
-Gustavo
+diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
+index 0806d4436208..541a5611c597 100644
+--- a/include/linux/misc_cgroup.h
++++ b/include/linux/misc_cgroup.h
+@@ -64,6 +64,7 @@ struct misc_cg {
+ 	struct misc_res res[MISC_CG_RES_TYPES];
+ };
+ 
++struct misc_cg *misc_cg_root(void);
+ u64 misc_cg_res_total_usage(enum misc_res_type type);
+ int misc_cg_set_capacity(enum misc_res_type type, u64 capacity);
+ int misc_cg_set_ops(enum misc_res_type type, const struct misc_res_ops *ops);
+@@ -84,6 +85,20 @@ static inline struct misc_cg *css_misc(struct cgroup_subsys_state *css)
+ 	return css ? container_of(css, struct misc_cg, css) : NULL;
+ }
+ 
++/**
++ * misc_cg_parent() - Get the parent of the passed misc cgroup.
++ * @cgroup: cgroup whose parent needs to be fetched.
++ *
++ * Context: Any context.
++ * Return:
++ * * struct misc_cg* - Parent of the @cgroup.
++ * * %NULL - If @cgroup is null or the passed cgroup does not have a parent.
++ */
++static inline struct misc_cg *misc_cg_parent(struct misc_cg *cgroup)
++{
++	return cgroup ? css_misc(cgroup->css.parent) : NULL;
++}
++
+ /*
+  * get_current_misc_cg() - Find and get the misc cgroup of the current task.
+  *
+@@ -108,6 +123,15 @@ static inline void put_misc_cg(struct misc_cg *cg)
+ }
+ 
+ #else /* !CONFIG_CGROUP_MISC */
++static inline struct misc_cg *misc_cg_root(void)
++{
++	return NULL;
++}
++
++static inline struct misc_cg *misc_cg_parent(struct misc_cg *cg)
++{
++	return NULL;
++}
+ 
+ static inline u64 misc_cg_res_total_usage(enum misc_res_type type)
+ {
+diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
+index 4a602d68cf7d..7d852139121a 100644
+--- a/kernel/cgroup/misc.c
++++ b/kernel/cgroup/misc.c
+@@ -43,18 +43,13 @@ static u64 misc_res_capacity[MISC_CG_RES_TYPES];
+ static const struct misc_res_ops *misc_res_ops[MISC_CG_RES_TYPES];
+ 
+ /**
+- * parent_misc() - Get the parent of the passed misc cgroup.
+- * @cgroup: cgroup whose parent needs to be fetched.
+- *
+- * Context: Any context.
+- * Return:
+- * * struct misc_cg* - Parent of the @cgroup.
+- * * %NULL - If @cgroup is null or the passed cgroup does not have a parent.
++ * misc_cg_root() - Return the root misc cgroup.
+  */
+-static struct misc_cg *parent_misc(struct misc_cg *cgroup)
++struct misc_cg *misc_cg_root(void)
+ {
+-	return cgroup ? css_misc(cgroup->css.parent) : NULL;
++	return &root_cg;
+ }
++EXPORT_SYMBOL_GPL(misc_cg_root);
+ 
+ /**
+  * valid_type() - Check if @type is valid or not.
+@@ -183,7 +178,7 @@ int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
+ 	if (!amount)
+ 		return 0;
+ 
+-	for (i = cg; i; i = parent_misc(i)) {
++	for (i = cg; i; i = misc_cg_parent(i)) {
+ 		res = &i->res[type];
+ 
+ 		new_usage = atomic64_add_return(amount, &res->usage);
+@@ -196,12 +191,12 @@ int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
+ 	return 0;
+ 
+ err_charge:
+-	for (j = i; j; j = parent_misc(j)) {
++	for (j = i; j; j = misc_cg_parent(j)) {
+ 		atomic64_inc(&j->res[type].events);
+ 		cgroup_file_notify(&j->events_file);
+ 	}
+ 
+-	for (j = cg; j != i; j = parent_misc(j))
++	for (j = cg; j != i; j = misc_cg_parent(j))
+ 		misc_cg_cancel_charge(type, j, amount);
+ 	misc_cg_cancel_charge(type, i, amount);
+ 	return ret;
+@@ -223,7 +218,7 @@ void misc_cg_uncharge(enum misc_res_type type, struct misc_cg *cg, u64 amount)
+ 	if (!(amount && valid_type(type) && cg))
+ 		return;
+ 
+-	for (i = cg; i; i = parent_misc(i))
++	for (i = cg; i; i = misc_cg_parent(i))
+ 		misc_cg_cancel_charge(type, i, amount);
+ }
+ EXPORT_SYMBOL_GPL(misc_cg_uncharge);
+-- 
+2.25.1
+
