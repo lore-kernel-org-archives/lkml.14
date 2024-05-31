@@ -1,126 +1,136 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7A381AC1
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C089224E8;
+	Fri, 31 May 2024 08:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717145863; cv=none; b=EoEN5/YFFmzf7KKbWiW9L8ES7T+u7/CSdrvwmJLtEEX2TnQT9if9MI5ClNvjZIh3cGlFpYuD8BS8XOOPXK6VPnjyq8DNgzuKTVUriHpAtZ2azMCDS8UNtV5UpfkKcThXAVYo0IF2ZxV7U4RoqRBtE5SruMaXQr8QsBa3kxFQduk=
+	t=1717145914; cv=none; b=uUzSnyK9JxKz6cK6uIbeAfl9EB3w3ZcYONMz4GBSeQ9yp5ZfqFKkYQ8iEpE0oyrUp7ebX7ZtX9NabmefHN27zaAmBuyYl9cUkD8LUJ375nJ/aLpSmNhSI6VuF0YKy0qfVVqdvk2lka4/9+hAq3ri9Axe2gcj0LBv5dFy62Fg9AI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717145863; c=relaxed/simple;
-	bh=jGp5xMVbjd0tUmykpevDlhzB7AOsvsUsk6fB4tAJBRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cm9G7rGbrc6yIxJwq3aBHs0ncXkVAvr7Zq68ziHEY4BiK7B9ipDr262Z/2XBS/Pvh21heaCK0x5tlyY389KjsUj3iY+i+CvzNyVE3rbSnrlyA7Ajt5035dAK3aRRfKGbee2dNS4p4LXXeRRcwkQ+hoWQSgNOkSwsRX1ihDcSs04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tiKDy1B2; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717145914; c=relaxed/simple;
+	bh=e6NBTqHgSmIb0zVlvTQjhTndBEZojNhEaQQzpcViO5Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYryVgbagKGI+PE3HG9BPFwanKLAKR4jvCTTAHzgjx9+HuszfTVz5LGx37si4aitFDJ2Dx2d9QxPVjmwhcH8WO+WvMajqi/UoqJ19s0tmvy/zvqUyxogIM1fxnTZXbJ65OBDz8miGCWMRsZkoBQAlKVspe4Fjsaecayt/qHeLkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIDRtLGm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tiKDy1B2"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2bde007cc57so1313386a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717145861; x=1717750661; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nPlAccRu1ht0ugLS/YX5R85LXm4AvuNcIW8FJ60Xapc=;
-        b=tiKDy1B2hwFCqw6xuI3fWATDtD3MomsjOn2FlwD1SnPrzBOdxV/w8s7Zb5rkAoR+C9
-         7YgbN5QzrEkrWOToAQJ3XFjNPeYEk07Lqk8a12l6i7+W6C7u4jIOcaTlVXq2NhxwUCPg
-         gFdfuPJ3eyJ0hxHZnfB0ro/3LLVoz7qSqUkVLDKGuM6rFqDRnNiZACt8sL1vclKQuLmf
-         v3sBRq1bUyS6Ro5K8Yt0uyH4ObkjqiDkYXdcq0Bbs1ayXKXZSSlIhhr6lkS4kN7P44mf
-         o7QdSvYXB5nw8GtvWQsUfaWi8Dboxt7J/7Ibgtw5rrNTnVQ8490QigWXFGuKeq4eCJPx
-         hpgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717145861; x=1717750661;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nPlAccRu1ht0ugLS/YX5R85LXm4AvuNcIW8FJ60Xapc=;
-        b=MfXirAu5uwkEl4KWwMtmtwYmcamGVnGf59rS2b21I5t9QGq08AjDzW+A0iXM1jYH5B
-         BD3q8IQKbJtnfWxTELjFT5nLMQaMjnqwBf1zgxpFfJ0zs81991BmkQNZBuV5607WtX8Q
-         h/vIjLb0LUwTitZNpHHqwRQ2QkG6RkGB1LAjdFzumChbUhDvEs+PI5YgUkgBVfOFN5a3
-         /zFEzRHDZVX3egvNrYkMazD9h73WTYxvGFaCD75ANVqnJTDel0jjdC0RhgMOSs476Hhh
-         q85QEdkFVy/+x1qVM+hnofvRcKl6/JQGb9aSJS8sSyOd5CFHMN6jbgwrUGGuDfGVF8z3
-         xxbg==
-X-Forwarded-Encrypted: i=1; AJvYcCWk5TncWkYda3dEMOJa8wvADaznSBrexnrs4DYcgjkNc2G+obzzxDaq5oahP/HPFnmI+Fe8I39h7o/81CV+0+A8BfH47I/J7WmvVZu9
-X-Gm-Message-State: AOJu0Yzyo/51ouA7r2UOA9EfoJhZvD/Bwkz9xsW3K6ysKmDKfhz4DK+l
-	l+rw2aLG7IGKmcBhWd9xHNsB+Cv43Qs6SHrgDgoFg2f8ilSjTRZR5ZcXqjCxBEafR38Bp21TcLV
-	aGczB9eJQrMqiBfuX8fxY2jLt0h+bET0lJSyzjg==
-X-Google-Smtp-Source: AGHT+IEk0xAq4H6amqfMwetzDZJPVGDcv7FZKBb2l9gcvP6xSw2q5lzmYnt2+a5eGjhW4z3tZcMHkEzVbz+bKslsKVY=
-X-Received: by 2002:a17:90a:bf16:b0:2be:9547:41a8 with SMTP id
- 98e67ed59e1d1-2c1dc5d9f17mr1081334a91.48.1717145860631; Fri, 31 May 2024
- 01:57:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIDRtLGm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E139C116B1;
+	Fri, 31 May 2024 08:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717145913;
+	bh=e6NBTqHgSmIb0zVlvTQjhTndBEZojNhEaQQzpcViO5Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZIDRtLGmyywyrafWrsDWFkhQvMHZnlC82TLOzdpe46dYG4wS9T+RmVq7Etov0D4YM
+	 u4cz7EWyE+uGTd51uAQS1qxSa+RG+UXYB5pn9okK2eHMNYKOYJoBNmbP8l+S2K9gwy
+	 tCzJpBZKItpZImDMoOey7JaClP//JRYxOh49vm2NJlSyymda/xiNT9HIQhZFBCfpZt
+	 lS9P4F8GyV2OaWPvL9kHMfhIg9ByvbvU4Zi7ditRMV/BOl5HOQNt+hilm2UGwfzzY6
+	 +mRpmlTcwqIFSDruhSI9idLQOTN5DvekE3BtVTYubiiOz8l1elNatoI1C+g7Jw68Tb
+	 4hDLFbTzFdb3A==
+Message-ID: <7845bb1c-47d5-41f6-bf08-bd7b357df02c@kernel.org>
+Date: Fri, 31 May 2024 10:58:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230105145159.1089531-1-kajetan.puchalski@arm.com>
- <20230105145159.1089531-3-kajetan.puchalski@arm.com> <20230711175814.zfavcn7xn3ia5va4@airbuntu>
- <ZLZ/btJw5LNVxVy8@e126311.manchester.arm.com> <20230718132432.w5xoxbqm54jmu6n5@airbuntu>
- <20230917010516.54dgcmms44wyfrvx@airbuntu> <CAKfTPtA6ZzRR-zMN7sodOW+N_P+GqwNv4tGR+aMB5VXRT2b5bg@mail.gmail.com>
- <d54d6115-a4d6-466b-a4a2-9c064194f06e@arm.com> <CAKfTPtB21aY9cgi5dSHB0jRp6pE85AfGcHrHjrcpMwi3fJL0FA@mail.gmail.com>
- <4cd905e8-594e-4858-89df-a501184ee521@arm.com>
-In-Reply-To: <4cd905e8-594e-4858-89df-a501184ee521@arm.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 31 May 2024 10:57:27 +0200
-Message-ID: <CAKfTPtCUZfpunq1C9n=3tkjsSSdmd8jhf6kR523NONKvEcxOpQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] cpuidle: teo: Introduce util-awareness
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, Kajetan Puchalski <kajetan.puchalski@arm.com>, rafael@kernel.org, 
-	daniel.lezcano@linaro.org, Dietmar.Eggemann@arm.com, dsmythies@telus.net, 
-	yu.chen.surf@gmail.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Qais Yousef <qyousef@layalina.io>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
+To: Mighty <bavishimithil@gmail.com>
+Cc: peter.ujfalusi@gmail.com, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Lopez Cruz <misael.lopez@ti.com>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240530111205.1764-1-bavishimithil@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240530111205.1764-1-bavishimithil@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 29 May 2024 at 15:09, Christian Loehle <christian.loehle@arm.com> wrote:
->
-> On 5/28/24 15:07, Vincent Guittot wrote:
-> > On Tue, 28 May 2024 at 11:59, Lukasz Luba <lukasz.luba@arm.com> wrote:
-> >>
-> >> Hi Vincent,
-> >>
-> >> On 5/28/24 10:29, Vincent Guittot wrote:
-> >>> Hi All,
-> >>>
-> >>> I'm quite late on this thread but this patchset creates a major
-> >>> regression for psci cpuidle driver when using the OSI mode (OS
-> >>> initiated mode).  In such a case, cpuidle driver takes care only of
-> >>> CPUs power state and the deeper C-states ,which includes cluster and
-> >>> other power domains, are handled with power domain framework. In such
-> >>> configuration ,cpuidle has only 2 c-states : WFI and cpu off states
-> >>> and others states that include the clusters, are managed by genpd and
-> >>> its governor.
-> >>>
-> >>> This patch selects cpuidle c-state N-1 as soon as the utilization is
-> >>> above CPU capacity / 64 which means at most a level of 16 on the big
-> >>> core but can be as low as 4 on little cores. These levels are very low
-> >>> and the main result is that as soon as there is very little activity
-> >>> on a CPU, cpuidle always selects WFI states whatever the estimated
-> >>> sleep duration and which prevents any deeper states. Another effect is
-> >>> that it also keeps the tick firing every 1ms in my case.
-> >>
-> >> Thanks for reporting this.
-> >> Could you add what regression it's causing, please?
-> >> Performance or higher power?
-> >
-> > It's not a perf but rather a power regression. I don't have a power
-> > counter so it's difficult to give figures but I found it while running
-> > a unitary test below on my rb5:
-> > run 500us every 19457ms on medium core (uclamp_min: 600).
->
-> Is that supposed to say 19.457ms?
+On 30/05/2024 13:12, Mighty wrote:
+> From: Mithil Bavishi <bavishimithil@gmail.com>
+> 
+> Convert the OMAP4+ McPDM bindings to DT schema.
+> 
+> Signed-off-by: Mithil Bavishi <bavishimithil@gmail.com>
 
-Yes, it's a mistake.  it's 19.457ms I forgot to put the dot when
-copying the value from the rt-app json file
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,omap4-mcpdm
+> +
+> +  reg:
+> +    items:
+> +      - description: MPU access base address
+> +      - description: L3 interconnect address
+> +
+> +  reg-names:
+> +    items:
+> +      - const: mpu
+> +      - const: dma
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    maxItems: 2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: up_link
+> +      - const: dn_link
 
-> (Because below you say idle time is >18ms and total test time 5sec)
-> Is the utilisation more like 1/20000 or 1/20?
-> In any case what you describe is probably an issue, I'll try to reproduce.
-> Note also my findings here:
-> https://lore.kernel.org/lkml/0ce2d536-1125-4df8-9a5b-0d5e389cd8af@arm.com/
->
-> Kind Regards,
-> Christian
->
+Please mention in the commit msg all changes (and explain why!) done
+during conversion (comparing to original binding). I am pretty sure I
+gave this feedback already.
+
+
+Best regards,
+Krzysztof
+
