@@ -1,283 +1,191 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2051.outbound.protection.outlook.com [40.107.102.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A4D8249E;
-	Fri, 31 May 2024 21:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717191598; cv=fail; b=jtbDSd4k2kt8/7QRwfUuTbSI271B3qv0ZHCwRUIci00zHIORBbiN9c+I5bqtaahVDkT1/LgVPyEOBMaD8G7Wsxf4yEad0OnM4/x++oUZFp9egLS96jB2/it0OQ1CAfS5LpSvHIUBvrqNffFlxbdUOhe6oxLO/O7+NRjMieQxvNU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717191598; c=relaxed/simple;
-	bh=ze5WfOe+D4ySVTHAEZS7qudi74rejujs48vqCgwz1aI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pGeAwhayI/DEuNsMed4erdRF86D2zHWAymcYIREYfi+JDKJoURvGsRIUqBflNJ+zESjEurSGrf00TUEXxX78em1cjeIn/r8tte8gXkc1vqH2REWkPYMiyXsboQvYh5LNnezbpjfBxi7nAlwq2mGwQk/ihRuli0Cz71YyJx5jSX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Zvi+4+jt; arc=fail smtp.client-ip=40.107.102.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Zvi+4+jt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HqpZK1loVVgxrwTCDdGuVHDLuE3hxIq9H5ehzHcdtZwYpOyfIVvZCHWNnHCO88IRnww3bjIXrcVoTbkvNmnY2Swy5iIUZYPnkRIodo7znyGU7od1fJrPrtRhtj28ePekPJcPHU1kYidpYHIeBTtEbxiLdn+1anzebDf04DiOBtycaBRrWTe5fvCZNv/fW3AQSo7VH1I3Rb377pZIbAhIhjbP/feqM6STz7Zut9xRty1s/Umlngkib/UEFRXX/2eV9HdwdIJThBTy+zqbYzy/Id3wT5hPfR2mvW+2NxWVudQAPiDbcdlfT7dI1kARSv/HX8bBiyiB3WazUvXqklLzsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TOzRGb8DxJNJFzmxTVXHq+t764c0uTSA2LqkTrWP360=;
- b=Vk7338I2xATuYl8WMRDdavEo/yOimgabQ5yVd85fDcSsPSx2F+z3rN5Q++2lUk19i/jVnK0kXySj42vdWJjZ8Okjk2gsiiluoysJs9EdBzJBw4XIdwO8nc1Ohmhfaar+qZFlKWiVG7cW/y9ypy3nFaPxZx1B74U0qtn399SMw1+fKOUQRsaoIT1Xpb6jSJlTc/BeOyOw0gKpv6f2zMLJaI/+gFG79gYjrFpXGjRoBEXi+vTFR8+icZCBK3yAUl2hL+kWTTvvMebvBfjFYTToCcPKEUrlbhcrLZYpYMFUcJIqHol144pjRgEF/bgW+dsW+5KA3DllJtiJEE2dXW4tKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TOzRGb8DxJNJFzmxTVXHq+t764c0uTSA2LqkTrWP360=;
- b=Zvi+4+jtKV9hyEDql2DY4ka6w9Zj3533HU6jZpY1o7sawMbnqzzQHUTUPYuoGomQNqCb7MxqryNAuhMNB546EBtlyWlgiKzBsT64o1goUDfCsvpsyIJlEy3GeWSI0ISTL0Tr6JUODETXnN4LGGJSIvzOFn8wagGIl89gFcGGbM8=
-Received: from CY8PR11CA0036.namprd11.prod.outlook.com (2603:10b6:930:4a::22)
- by SN7PR12MB7370.namprd12.prod.outlook.com (2603:10b6:806:299::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.17; Fri, 31 May
- 2024 21:39:54 +0000
-Received: from CY4PEPF0000EE33.namprd05.prod.outlook.com
- (2603:10b6:930:4a:cafe::3c) by CY8PR11CA0036.outlook.office365.com
- (2603:10b6:930:4a::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22 via Frontend
- Transport; Fri, 31 May 2024 21:39:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EE33.mail.protection.outlook.com (10.167.242.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Fri, 31 May 2024 21:39:53 +0000
-Received: from weiserver.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 31 May
- 2024 16:39:52 -0500
-From: Wei Huang <wei.huang2@amd.com>
-To: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <netdev@vger.kernel.org>
-CC: <bhelgaas@google.com>, <corbet@lwn.net>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<alex.williamson@redhat.com>, <gospo@broadcom.com>,
-	<michael.chan@broadcom.com>, <ajit.khaparde@broadcom.com>,
-	<somnath.kotur@broadcom.com>, <andrew.gospodarek@broadcom.com>,
-	<manoj.panicker2@amd.com>, <Eric.VanTassell@amd.com>, <wei.huang2@amd.com>,
-	<vadim.fedorenko@linux.dev>, <horms@kernel.org>, <bagasdotme@gmail.com>
-Subject: [PATCH V2 4/9] PCI/TPH: Implement a command line option to force No ST Mode
-Date: Fri, 31 May 2024 16:38:36 -0500
-Message-ID: <20240531213841.3246055-5-wei.huang2@amd.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240531213841.3246055-1-wei.huang2@amd.com>
-References: <20240531213841.3246055-1-wei.huang2@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8E7824B0;
+	Fri, 31 May 2024 21:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717191604; cv=none; b=QQ2PcrNTxvQ0QWYQdMFCLoHMUJKajzFnU05vlKb0zsv9LtLl0Mhxq+cAmGI8YQq5+4qb6kxRv/fLqV9cWKPLe9CrDe81ZW/7TYNRb3VbrX2E87L0RSAb68vHd0xzNxJ+lCmDfDOzS9lpw0jOlRIX//GRfPd0iDgifKXUBgbW6M8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717191604; c=relaxed/simple;
+	bh=PS1Zb3Ua1t3vKzQK0lFelDKo1TPa4JWNWk6dhN0bg38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GHHHNNDYu8VZMJNQ4IwdvclYNhZPk/k1s0KYxwmGJj2xibkFweozyNd4oqGlP55GcSG5v1P51pBPw8Q8npb3gGGRBNc3mg7kxDYg8t3bl3LPH/1ClG2xC0m4OKmTYr5zBzeAUoAhHukCJzgUOBHJ5MJd/JCOpFFkumkKklU1oHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-6c3b5c5e32cso853998a12.1;
+        Fri, 31 May 2024 14:40:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717191602; x=1717796402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DVNjkBJYVeKrZqddtj398UOYP5tbEGwouSvGlhcZZio=;
+        b=MJJ87aEUAoyRsqd+rlEByeKFEg7O6u+rlOBkXWr2nYf98oXaOkrtlC/z2O4D2YZWiK
+         x5uYTOKuYq6urNBNsoo8LKOpwVoYCh0rPnbHDj4atM6RNrrBidVdFRyBoJJqj1so2QW2
+         rg/hAP6S+hpmUevssBRW+u/ZQEMA1MH8/6Ra+HVvW1h8Msr2P9KCLMvRS0qaXIEZ4DJi
+         ggE8uaDZ4r40BSxEGsdK2H0xOb5d0e0FXkjs3lcXs8bJZBI7saHuApInei0qdNGyDGVq
+         Q8vwMqblvJCxgEeSmrFCR5E8tEDXHuuaUGa4tzxzhHVBZvURn+GbYGuqTyvBjwUZRfez
+         uG5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXR+8CM1c5VvSPN2MHqQfPZOKCD0Cr8mbMvE8Qlxo3Xv1lWMJhWo9501zvj3b9q9e1F8D3eSeZWm1p3/SqaPWsWFnXqgf35dAReRPe65SoEzNb9nwgIy4V1Am0ivD6Spg5FSK9r+Bz8tBI2WKiSCw==
+X-Gm-Message-State: AOJu0YyuLfdK1fabFAv3qQnHk/ReKus1DoNvwwdBntnYraxq02WGwF51
+	0pv0aOndAMQNxPPkYSmSui5bg7p7b/YljDk6C+1X04YkA5+yR4dXJf4cgxI3pvqTs+hq037CKoP
+	aY38LTOS3+EeVQWb/cFApkgsRTt8=
+X-Google-Smtp-Source: AGHT+IHjEMrd91ew9ydEyMI88OAA9SfOhVfmgsVB9MjlgDo85yYO43yH9Pa6fHKWW8HhG/nkRFAB0Ybg75dBbw83M0A=
+X-Received: by 2002:a17:90a:c284:b0:2c1:b88a:3a22 with SMTP id
+ 98e67ed59e1d1-2c1dc5cd779mr2636876a91.45.1717191601678; Fri, 31 May 2024
+ 14:40:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE33:EE_|SN7PR12MB7370:EE_
-X-MS-Office365-Filtering-Correlation-Id: c257b5a7-cd46-446b-8575-08dc81ba3548
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|7416005|1800799015|82310400017|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?b7GJdae/2AMIeGdOE/YfdUUWdtgecdgt6+zuFBfRLkHUhPpBzlmZGnP9ikcU?=
- =?us-ascii?Q?BpAzFqNhQTVWbBZNVm32f9WOyzWNEGo2zE9K5NXV/O2tpT/Sa0l+S1L7b0T5?=
- =?us-ascii?Q?ttNaemC75PpmnuFQF9FQUhjGa69jaYoSuzwJPfUhYT2ppZRAErvA0y8o+SJr?=
- =?us-ascii?Q?MFUOOQ8s32spEg0i4X0c5JfO2/deHwVz+UQE2Da61tkgIwgFoTolsv1DApeW?=
- =?us-ascii?Q?mes60T4Zt4yCkyj4MLORMGxF5sGQnV/xWwoyunl9EJbm27rJWNwjscnCsxAj?=
- =?us-ascii?Q?eCGzPbheghDF3bTn6RNztMT9rXxonVBC02TPmZLee36MQDFMFWvaj1eEKdOL?=
- =?us-ascii?Q?g3aUXF/yDv7ubj508WhrOJJeMmvS3ROLlmmkdUKOc8L5cDPGks1rj8jk8bFb?=
- =?us-ascii?Q?Ts79uVrZmpLAKyA/HB2YgeEeh+IYUr8+f1kLLxsPgfnUK3gbaibla/9wNOmy?=
- =?us-ascii?Q?Vz9qUCiRfWA/9Mc+2p+apAJaVi0e2T4CgeOZkOAKIzPw3vk95DDpLlfnEyPz?=
- =?us-ascii?Q?DfjT1FRWDNebE871xHtVA12f4YBLom6xjuMk8b53TZ6uuhfcUja5/4him/db?=
- =?us-ascii?Q?7mdIo9cWYA0emyk2go7OG6x7GclVfu4UuzxZlPafsSH2R6MWHjB5JQSsl1FY?=
- =?us-ascii?Q?htjTPplSBPM6mGw21mvk9RetiW1SZcV9FQ/+TV+lGRvwpo1cNvLo+hgHS4GE?=
- =?us-ascii?Q?ZEz04lYMGEO1tsjZ0MD5iMaV359Q9HSuAe5ID36yOIB2Fia7ViLEKwKOVJUd?=
- =?us-ascii?Q?9nHpb7OYU8Xq72DEkP0cWj2OS4x/71S0rrguTO0v4uN5w6WY0FcaUR6p4BWJ?=
- =?us-ascii?Q?oqonyyXo4NH6CdgTn6VieTXlaa5e1TG6ufRuz998sqI/T46bEWR5FAcU10Gx?=
- =?us-ascii?Q?GpO7jKbJtU4PzJo2MP2SAVJxyHLHGGtETYvDSGvx0fSJD/l0GxGCrbVC3Fkg?=
- =?us-ascii?Q?peNB2kfmzYUAOtgjX71BJ76ku3wMB+VZmg/WOV3pP8XsYWU4aCFVkvBxxY0t?=
- =?us-ascii?Q?IgWrbTaweXAckeK/nXDMOYiinfSwGnQyUF3091yiSngV/bsvff33FTGz8Xnu?=
- =?us-ascii?Q?73jd1sAcBzYCxIx6/+QMhQzJwwX4nkig96E/nahv9RfYp1u+d46WcezE3Jkf?=
- =?us-ascii?Q?nG8tv/7j/t/VF9eFsj9FxzIpSR0mDQQSSiXXdZF58xfhccwRD9FfSDfeJaC0?=
- =?us-ascii?Q?RNshiOdPM/F8T+DgcrrE4xs3lozdBF6YsNnaxlNyKbhL5trnKkDsX6utEdrb?=
- =?us-ascii?Q?2S9MKm4h7p47dYwRB0fX72eIyDVqbTZk1U+9OsUrA8J5yJbBC4SQEo2t0n0e?=
- =?us-ascii?Q?jze73Bb95ClNhh1oTOeRB0kFyhPokVCdGeO9fx8RnVQImb09wWJHiGWPy5zd?=
- =?us-ascii?Q?+8N5ADVSU2dIohvoGDABymKVr51m?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(82310400017)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 21:39:53.6519
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c257b5a7-cd46-446b-8575-08dc81ba3548
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE33.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7370
+References: <20240529064327.4080674-1-weilin.wang@intel.com>
+ <20240529064327.4080674-4-weilin.wang@intel.com> <CAM9d7cgSwZ3PU3H9VNvxQakocEZ_CQEqB9M1o3xTMdJ7F1sufQ@mail.gmail.com>
+ <CO6PR11MB56357F58D99B17CD08671A26EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB56357F58D99B17CD08671A26EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 31 May 2024 14:39:50 -0700
+Message-ID: <CAM9d7cjbHzgfW2fKQkZ2=gtEMD9N5wG4xaWgPU+N-YvmfhXviQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v10 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When "No ST mode" is enabled, end-point devices can generate TPH headers
-but with all steering tags treated as zero. A steering tag of zero is
-interpreted as "using the default policy" by the root complex. This is
-essential to quantify the benefit of steering tags for some given
-workloads.
+On Thu, May 30, 2024 at 11:46=E2=80=AFPM Wang, Weilin <weilin.wang@intel.co=
+m> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Thursday, May 30, 2024 11:41 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v10 3/8] perf stat: Fork and launch perf record=
+ when
+> > perf stat needs to get retire latency value for a metric.
+> >
+> > On Tue, May 28, 2024 at 11:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> > >
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > When retire_latency value is used in a metric formula, evsel would fo=
+rk a perf
+> > > record process with "-e" and "-W" options. Perf record will collect r=
+equired
+> > > retire_latency values in parallel while perf stat is collecting count=
+ing values.
+> > >
+> > > At the point of time that perf stat stops counting, evsel would stop =
+perf
+> > record
+> > > by sending sigterm signal to perf record process. Sampled data will b=
+e
+> > process
+> > > to get retire latency value.
+> > >
+> > > Another thread is required to synchronize between perf stat and perf =
+record
+> > > when we pass data through pipe.
+> > >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > ---
+> > [SNIP]
+> > > +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread=
+)
+> > > +{
+> > > +       struct perf_counts_values *count;
+> > > +       struct tpebs_retire_lat *t;
+> > > +       bool found =3D false;
+> > > +       __u64 val;
+> > > +       int ret;
+> > > +
+> > > +       /* Non reitre_latency evsel should never enter this function.=
+ */
+> > > +       if (!evsel__is_retire_lat(evsel))
+> > > +               return -1;
+> > > +
+> > > +       ret =3D tpebs_stop();
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       count =3D perf_counts(evsel->counts, cpu_map_idx, thread);
+> > > +
+> > > +       list_for_each_entry(t, &tpebs_results, nd) {
+> > > +               if (!strcmp(t->tpebs_name, evsel->name) || !strcmp(t-
+> > >tpebs_name, evsel->metric_id)) {
+> > > +                       found =3D true;
+> > > +                       break;
+> > > +               }
+> > > +       }
+> > > +
+> > > +       /* Set ena and run to non-zero */
+> > > +       count->ena =3D count->run =3D 1;
+> > > +       count->lost =3D 0;
+> > > +
+> > > +       if (!found) {
+> > > +               /*
+> > > +                * Set default value or 0 when retire_latency for thi=
+s event is
+> > > +                * not found from sampling data (enable_tpebs_recordi=
+ng not set
+> > > +                * or 0 sample recorded).
+> > > +                */
+> > > +               val =3D 0;
+> > > +               return 0;
+> > > +       }
+> > > +
+> > > +       /*
+> > > +        * Only set retire_latency value to the first CPU and thread.
+> > > +        */
+> > > +       if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0) {
+> > > +       /* Lost precision when casting from double to __u64. Any
+> > improvement? */
+> >
+> > As I said before I think you can set t->val * 1000 and then
+> > set the evsel->scale to 1e3 or 1e-3.
+>
+> Hi Namhyung,
+>
+> Sorry if this is a repeated message. I thought I replied to your suggesti=
+on
+> on this last time. I'm thinking we should keep it like this for now and m=
+ake
+> this change unless we find the precision loss is critical. Because I thou=
+ght
+> we don't want to add special code to handle the calculation and final pri=
+nt
+> to keep code simple.
+>
+> I kept this comment here so that we don't forget about it. Please let me
+> know if you'd like me to remove it.
 
-Co-developed-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-Signed-off-by: Eric Van Tassell <Eric.VanTassell@amd.com>
-Signed-off-by: Wei Huang <wei.huang2@amd.com>
-Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com> 
-Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
----
- .../admin-guide/kernel-parameters.txt         |  1 +
- drivers/pci/pci-driver.c                      |  7 ++++++-
- drivers/pci/pci.c                             | 12 +++++++++++
- drivers/pci/pcie/tph.c                        | 21 +++++++++++++++++++
- include/linux/pci-tph.h                       |  3 +++
- include/linux/pci.h                           |  1 +
- 6 files changed, 44 insertions(+), 1 deletion(-)
+Please see print_counter_aggrdata().  It's the generic code to print
+the event value and it'll display the value multiplied by the scale
+(default to 1.0).  So you can keep precision as long as you set the
+scale properly (1e-3).
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fedcc69e35c1..e97a4a239563 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4624,6 +4624,7 @@
- 		norid		[S390] ignore the RID field and force use of
- 				one PCI domain per PCI function
- 		notph		[PCIE] Do not use PCIe TPH
-+		nostmode	[PCIE] Force TPH to use No ST Mode
- 
- 	pcie_aspm=	[PCIE] Forcibly enable or ignore PCIe Active State Power
- 			Management.
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 9722d070c0ca..aa98843d9884 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -324,8 +324,13 @@ static long local_pci_probe(void *_ddi)
- 	pci_dev->driver = pci_drv;
- 	rc = pci_drv->probe(pci_dev, ddi->id);
- 	if (!rc) {
--		if (pci_tph_disabled())
-+		if (pci_tph_disabled()) {
- 			pcie_tph_disable(pci_dev);
-+			return rc;
-+		}
-+
-+		if (pci_tph_nostmode())
-+			tph_set_dev_nostmode(pci_dev);
- 
- 		return rc;
- 	}
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 31c443504ce9..f3558a551bf2 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -160,6 +160,9 @@ static bool pcie_ats_disabled;
- /* If set, the PCIe TPH capability will not be used. */
- static bool pcie_tph_disabled;
- 
-+/* If TPH is enabled, "No ST Mode" will be enforced. */
-+static bool pcie_tph_nostmode;
-+
- /* If set, the PCI config space of each device is printed during boot. */
- bool pci_early_dump;
- 
-@@ -175,6 +178,12 @@ bool pci_tph_disabled(void)
- }
- EXPORT_SYMBOL_GPL(pci_tph_disabled);
- 
-+bool pci_tph_nostmode(void)
-+{
-+	return pcie_tph_nostmode;
-+}
-+EXPORT_SYMBOL_GPL(pci_tph_nostmode);
-+
- /* Disable bridge_d3 for all PCIe ports */
- static bool pci_bridge_d3_disable;
- /* Force bridge_d3 for all PCIe ports */
-@@ -6818,6 +6827,9 @@ static int __init pci_setup(char *str)
- 			} else if (!strcmp(str, "notph")) {
- 				pr_info("PCIe: TPH is disabled\n");
- 				pcie_tph_disabled = true;
-+			} else if (!strcmp(str, "nostmode")) {
-+				pr_info("PCIe: TPH No ST Mode is enabled\n");
-+				pcie_tph_nostmode = true;
- 			} else if (!strncmp(str, "cbiosize=", 9)) {
- 				pci_cardbus_io_size = memparse(str + 9, &str);
- 			} else if (!strncmp(str, "cbmemsize=", 10)) {
-diff --git a/drivers/pci/pcie/tph.c b/drivers/pci/pcie/tph.c
-index 5dc533b89a33..d5f7309fdf52 100644
---- a/drivers/pci/pcie/tph.c
-+++ b/drivers/pci/pcie/tph.c
-@@ -43,6 +43,27 @@ static int tph_set_reg_field_u32(struct pci_dev *dev, u8 offset, u32 mask,
- 	return ret;
- }
- 
-+int tph_set_dev_nostmode(struct pci_dev *dev)
-+{
-+	int ret;
-+
-+	/* set ST Mode Select to "No ST Mode" */
-+	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-+				    PCI_TPH_CTRL_MODE_SEL_MASK,
-+				    PCI_TPH_CTRL_MODE_SEL_SHIFT,
-+				    PCI_TPH_NO_ST_MODE);
-+	if (ret)
-+		return ret;
-+
-+	/* set "TPH Requester Enable" to "TPH only" */
-+	ret = tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-+				    PCI_TPH_CTRL_REQ_EN_MASK,
-+				    PCI_TPH_CTRL_REQ_EN_SHIFT,
-+				    PCI_TPH_REQ_TPH_ONLY);
-+
-+	return ret;
-+}
-+
- int pcie_tph_disable(struct pci_dev *dev)
- {
- 	return  tph_set_reg_field_u32(dev, PCI_TPH_CTRL,
-diff --git a/include/linux/pci-tph.h b/include/linux/pci-tph.h
-index e187d7e89e8c..95269afc8b7d 100644
---- a/include/linux/pci-tph.h
-+++ b/include/linux/pci-tph.h
-@@ -11,9 +11,12 @@
- 
- #ifdef CONFIG_PCIE_TPH
- int pcie_tph_disable(struct pci_dev *dev);
-+int tph_set_dev_nostmode(struct pci_dev *dev);
- #else
- static inline int pcie_tph_disable(struct pci_dev *dev)
- { return -EOPNOTSUPP; }
-+static inline int tph_set_dev_nostmode(struct pci_dev *dev)
-+{ return -EOPNOTSUPP; }
- #endif
- 
- #endif /* LINUX_PCI_TPH_H */
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d88ebe87815a..5f520624d133 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1842,6 +1842,7 @@ static inline bool pci_aer_available(void) { return false; }
- 
- bool pci_ats_disabled(void);
- bool pci_tph_disabled(void);
-+bool pci_tph_nostmode(void);
- 
- #ifdef CONFIG_PCIE_PTM
- int pci_enable_ptm(struct pci_dev *dev, u8 *granularity);
--- 
-2.44.0
-
+Thanks,
+Namhyung
