@@ -1,60 +1,47 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFB833CF1;
-	Fri, 31 May 2024 13:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21691EB2F;
+	Fri, 31 May 2024 13:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717162515; cv=none; b=NAUYHstqnCWOBPRehO1rbrQkPKxtugIsVkFJ0G/0hTuGPI2Lg3QuxfMRfHyPBkXnWQeMSQrDggbI/u3hcGG8AzrV189wlPKtfGJ4QtAS0yGy6ROkkDZcKmrRhBCS4qeXCJBF1xyvr7Sx89QpTRvO8EyVHDIGLLF3rBSLG/xOgjM=
+	t=1717162574; cv=none; b=Uf9kh6s9saCS3MTqtfDjrbiNRIenpRtuP6aoA8M9/8Z4IQdYWBKeFbr5HBsPLlgvBvhPSf9dum4JBQkU5sVdUftcNNhgvF8REQnsAE8Kvc3I5SaYVigaIoaH4WtxPss9CP95F8nTfWB285fzi/7KGQuw/tn2J3dWcq71aWXJJ9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717162515; c=relaxed/simple;
-	bh=RCxKlMkz2hwtL0o/rwKf34aSNTRYA9l7vN2VAKV+xtE=;
+	s=arc-20240116; t=1717162574; c=relaxed/simple;
+	bh=vQ11bK9p/errhGU+cq6SulAeneFsqE5o8JUd2PnAQdw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HcwC6lutUtQ/9+kuVr1arOnj6WptOrnSM8xjGl0JJ17XzWrbp1E4q18sPYLCjWtA8MZ0bzn56Cgx1wRHlZgtBKSDtaZblpkeBajN4XvAbDX1eWsaubjZjBfIcWdX3/FzYqh29UEtEQjVwZ0ql2uprbmPR3Y0Sk4cnkx3cXT26tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=pN4EV1jY; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKLPegt8x+1kheH9AGLFRz7Cp0wvJV6kwiYqPymRNSya9l14cEyr3qxBleMqVsjL/x9AgoJFZKNFAGvZr4uF0O+6Lw+FdTdzpVr7R77dID/mOR7gggMXIa+dCc1K+l5xHXY244K6CsIacKUw5okbkP7IVcG6SWiqRE/Acq6OZNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yza6EQ+l; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pN4EV1jY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=vgm/OpbOd3cmMPFc8u81IplmaIz3UZVMWUU0TbmKPI4=; b=pN4EV1jYOQbw5L36gUcI2rJiYl
-	vU2G4SxRbmLRYpHxvqkFvZNuuA7cNptVkp7xSP5O4tv9/oD5yuJMtSPLmvdhiJgneeqpoUQFGpcAE
-	IyC3givwc+xtYxWiMzhFtKg2Sr+PGzUodCaLzrrIcIQyt4JD6DbhSfPqnrwyrrFMmFi4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1sD2P4-00GT67-D1; Fri, 31 May 2024 15:34:42 +0200
-Date: Fri, 31 May 2024 15:34:42 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Anwar, Md Danish" <a0501179@ti.com>
-Cc: Jacob Keller <jacob.e.keller@intel.com>,
-	MD Danish Anwar <danishanwar@ti.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Simon Horman <horms@kernel.org>, Diogo Ivo <diogo.ivo@siemens.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, srk@ti.com,
-	Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH net-next v8 2/2] net: ti: icssg_prueth: add TAPRIO
- offload support
-Message-ID: <e0fe45c7-ea81-4d5f-bb42-6bec73a7d895@lunn.ch>
-References: <20240529110551.620907-1-danishanwar@ti.com>
- <20240529110551.620907-3-danishanwar@ti.com>
- <7143f846-623d-465f-a717-8c550407d012@intel.com>
- <a5895c1f-4f89-4da7-8977-e1d681a72442@ti.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yza6EQ+l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WHxUhk+JvUedQtAT8ttJV6/LW6nSiIM50H+9WqdW+Nc=; b=yza6EQ+lK+43+PHW4DgB5EwMDk
+	ky5eitb+serbJk9uK/4AyEhJkS0vf7EQGFv7gdb5HqgH1yB3FWdttmEz3IT3Yz+Hf88FHX+bcfZ6Z
+	MzHdPARO5FYuKJVRjWGH1SHUDfGHEuCWNN7yHLSA35tghg/u974kAgwSbXxMLKMwOyCjuJsgClRxa
+	S/e6JMoGcBdvf1tYmdVPHg+NrFDDQj8VXsiI6PHtYbZHzynXCVplOKvuSNv1na32NOL9Q4pcmNIG4
+	LbZ8TeAp3OcaLsGyCqtL07qfnGrcORWSZB+tE8i0rrlHoH3YoYP1Ypat2tRel+Lj0huSfwmBzujGA
+	CfIzorrQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sD2QW-0000000AMYi-2Acy;
+	Fri, 31 May 2024 13:36:12 +0000
+Date: Fri, 31 May 2024 06:36:12 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
+	brauner@kernel.org, david@fromorbit.com, chandanbabu@kernel.org,
+	jack@suse.cz, willy@infradead.org, yi.zhang@huawei.com,
+	chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [RFC PATCH v4 6/8] xfs: correct the truncate blocksize of
+ realtime inode
+Message-ID: <ZlnSTAg15vWjc1Qm@infradead.org>
+References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
+ <20240529095206.2568162-7-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,21 +50,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a5895c1f-4f89-4da7-8977-e1d681a72442@ti.com>
+In-Reply-To: <20240529095206.2568162-7-yi.zhang@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-> When I had posted this series (v8) the ICSSG switch series was not
-> merged yet and I had rebased this series on net-next/main. When you
-> tested it, the ICSSG Series was merged and as it resulted in conflict.
-> 
-> I will rebase it on the latest net-next and make sure that their is no
-> conflict and post next revision.
+On Wed, May 29, 2024 at 05:52:04PM +0800, Zhang Yi wrote:
+> +	if (xfs_inode_has_bigrtalloc(ip))
+> +		first_unmap_block = xfs_rtb_roundup_rtx(mp, first_unmap_block);
 
-This is what i asked about, what are the build dependencies. Please
-always state them in the cover note.
+Given that first_unmap_block is a xfs_fileoff_t and not a xfs_rtblock_t,
+this looks a bit confusing.  I'd suggest to just open code the
+arithmetics in xfs_rtb_roundup_rtx.  For future proofing my also
+use xfs_inode_alloc_unitsize() as in the hunk below instead of hard
+coding the rtextsize.  I.e.:
 
-In general, we recommend what when you have two or more patch series
-for a driver floating around, mark all but one RFC, so you get
-comments on them, but it is clear there is no need to try to apply
-them because of dependency conflicts.
+	first_unmap_block = XFS_B_TO_FSB(mp,
+		roundup_64(new_size, xfs_inode_alloc_unitsize(ip)));
 
-       Andrew
