@@ -1,499 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBC11CAA6;
-	Fri, 31 May 2024 21:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3123A33CA;
+	Fri, 31 May 2024 21:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717190973; cv=none; b=bomKVl1wzJNnp95cqR9nXtC5MiHxhHIR1cVUcGpN0k57aeZdmTli7fCWTrHzGycYxdSWhqKiWaZm5EHVu8Grxu/SPL6RncUEGUE75qAB1ZLXyM55+PWdd//wMfg/RUkTgZc6rPU4MbP7iVef73Bsj8GkBJZ4LpoEQ1HNvFjeb7M=
+	t=1717191015; cv=none; b=rYsjfwMwb41FixTcinJ3WYXhoNSHJEJhhIQKHvuhlVdFrYqd/hVetTo3cDXs89OGn/v9kcVWyvCBWj5pfZkTg/Am9pwDoDmRntiJHhFyLObSshUG7SDNyGdE4M5jXrHNmrzvraPPF8mwsZd8kP9q3qKDDI/tBhwaoNmSCfQb89I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717190973; c=relaxed/simple;
-	bh=JbTIpNFt/shuxrQHd3JQWbcsyDVIS6LzqmoqvLsjIu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tdQ8VHpJmppDC2NLv/bLO1ThpDDEE1INZNmszjiYO5li/AKbdPqq0iJQUZdoTvGqjrNodQwJxfZcM0W9Z4RiFSEksoETVvoRgHTAPfqalAXpNoyZNVJvlctm+1nfJFHQ6lxRGXYvHPG9OJFdItvfqe68eBXWLYwh/icjYcQBBvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LICkJ6G/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LICkJ6G/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 273F0C116B1;
-	Fri, 31 May 2024 21:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717190973;
-	bh=JbTIpNFt/shuxrQHd3JQWbcsyDVIS6LzqmoqvLsjIu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LICkJ6G/cFtneyix7ZXKvXZNnhQmCZy5mPMMn0s2kMFDF1wpsQZJTH0EQTOacOLFu
-	 8/qbs5YLu3UVFxIQuhSOiQ1800Gjx38gsyvFACMe4d70t660yFennLXDDHBF/Yx15f
-	 R3GWQmrnc2SeuSW/dQnGq7hrGJdYlylKAaAWde+QK3IoPxkybHsiV4t6QJuGBX169X
-	 88EuGJ8RiXNACLWNMvcpW17jvOANXEBOIIkB2mgki+jIglW7JKYL316UhjR9pb6IBV
-	 7CNzlFy/4+sB0Rx2/W5Q29RTOTyStIguLEVMeIGTVsvTpyG85CncIGUFfRFG8laOoB
-	 UIrIGi7O91ndg==
-Date: Fri, 31 May 2024 14:29:32 -0700
-From: Kees Cook <kees@kernel.org>
-To: Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-doc@vger.kernel.org, kernel@collabora.com, gbiv@google.com,
-	ryanbeltran@google.com, inglorion@google.com, ajordanr@google.com,
-	jorgelo@chromium.org, Guenter Roeck <groeck@chromium.org>,
-	Doug Anderson <dianders@chromium.org>, Jann Horn <jannh@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Mike Frysinger <vapier@chromium.org>
-Subject: Re: [PATCH v4 2/2] proc: restrict /proc/pid/mem
-Message-ID: <202405311419.79D766DE@keescook>
-References: <20240524192858.3206-1-adrian.ratiu@collabora.com>
- <20240524192858.3206-2-adrian.ratiu@collabora.com>
+	s=arc-20240116; t=1717191015; c=relaxed/simple;
+	bh=r0gbpWvNbzGCrMhYFi0EbECyBtITGpmDI6DFAmxmtLQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WQc1WF6P6D8p44ONXwWKAjTZLc/6X789V4jT4TEW22n396VQYhSLYCLsKBVROYTJHch18FY4LdHxxDaSF4Veo/dvTwNH+j7Ky0kkvyWSH+YksWMdJsm04y1JN6sOa0dyxOhD4vfevVITZcTtj58WqtoXReO6CW0zmjD8HWWstBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2bdd8968dabso1112736a91.3;
+        Fri, 31 May 2024 14:30:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717191013; x=1717795813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lf5goCeDE6/jONyA1+NLXMd0UgptexLjaZQOdCXS4dQ=;
+        b=KkyrqLnXKv1/AbVgo/CDBWvUx4r1PGjNPqKx0bCezRT1jpcmQphpCtoxdDSx5ZKbZs
+         drzzYQQ1DJXVVNWtGhSsFiQD2s5f/2+JIykkhvykqtZSvlTwp0pPV1x3/0HnoMu8TUG2
+         BSvtVzW+neBGIb07HXTzGXjvdHp1mdMq0CucV/vRYiBT/r5K+iybR+YDEE67sCuZUKn6
+         IorXeim6+l15O2jVLHVN8cJPhs/ZbxtI+PHZT0OSmIpK7N/b8uo38HI/dZ2mZ7AyAEHF
+         +obtXgd3/6S9qqq644dHjdsVQYi3kKMuUtzK2pp2FUSr1V9hDdUjt9f+vUQDuzuJDfhN
+         JAyA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4qCCCYasONJ5dYXMiBBFbAxBCNNzJD+jMIUhZVzjz3vs3tOCG3EJssvsRG24q60AGeTu671FJrat020BLaJS13+hawosxw+eGtu2g+TEa7ouVMEfczE6fs6HQJFiSMe+9A0bQ82Nybq61EmesZQ==
+X-Gm-Message-State: AOJu0YzOrWLecw+BeqYm+O0zcnJNRW7JgMy5OsiRozBaH3tFTmizKeM2
+	tT3dwzFa8NOipBtA6RAUkZMetBqkZ9PwNicWOUB6upzcC/p3h9xfTq4A9pysMOwVv/dzQJkoIO0
+	9HuWJbMgWfmAkZUT+A/ymIPmMoJg=
+X-Google-Smtp-Source: AGHT+IHwy0dvwzXh9ZxotJ+7sqGd6Df4qBQTmz9Q0Xs+Mh9KNGYtTRNVs8y7/4W8vAySGuNIdjts7lCgB3KbW+7Ankw=
+X-Received: by 2002:a17:90b:440b:b0:2c1:aa8d:25d5 with SMTP id
+ 98e67ed59e1d1-2c1dc568f40mr2716432a91.8.1717191013289; Fri, 31 May 2024
+ 14:30:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524192858.3206-2-adrian.ratiu@collabora.com>
+References: <20240529064327.4080674-1-weilin.wang@intel.com>
+ <CAM9d7cj676sty01zqJVyk9DVesVYNFgVTZ329X=UP3xgV2aDfA@mail.gmail.com> <CO6PR11MB5635D7581425EF0F089EA781EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB5635D7581425EF0F089EA781EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 31 May 2024 14:30:02 -0700
+Message-ID: <CAM9d7chSC=n2sCc_nhgwqHYnBhSjMhH1quAY6_JWXNhrk1ri8Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v10 0/8] TPEBS counting mode support
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 10:28:58PM +0300, Adrian Ratiu wrote:
-> Prior to v2.6.39 write access to /proc/<pid>/mem was restricted,
-> after which it got allowed in commit 198214a7ee50 ("proc: enable
-> writing to /proc/pid/mem"). Famous last words from that patch:
-> "no longer a security hazard". :)
-> 
-> Afterwards exploits started causing drama like [1]. The exploits
-> using /proc/*/mem can be rather sophisticated like [2] which
-> installed an arbitrary payload from noexec storage into a running
-> process then exec'd it, which itself could include an ELF loader
-> to run arbitrary code off noexec storage.
-> 
-> One of the well-known problems with /proc/*/mem writes is they
-> ignore page permissions via FOLL_FORCE, as opposed to writes via
-> process_vm_writev which respect page permissions. These writes can
-> also be used to bypass mode bits.
-> 
-> To harden against these types of attacks, distrbutions might want
-> to restrict /proc/pid/mem accesses, either entirely or partially,
-> for eg. to restrict FOLL_FORCE usage.
-> 
-> Known valid use-cases which still need these accesses are:
-> 
-> * Debuggers which also have ptrace permissions, so they can access
-> memory anyway via PTRACE_POKEDATA & co. Some debuggers like GDB
-> are designed to write /proc/pid/mem for basic functionality.
-> 
-> * Container supervisors using the seccomp notifier to intercept
-> syscalls and rewrite memory of calling processes by passing
-> around /proc/pid/mem file descriptors.
-> 
-> There might be more, that's why these params default to disabled.
-> 
-> Regarding other mechanisms which can block these accesses:
-> 
-> * seccomp filters can be used to block mmap/mprotect calls with W|X
-> perms, but they often can't block open calls as daemons want to
-> read/write their runtime state and seccomp filters cannot check
-> file paths, so plain write calls can't be easily blocked.
-> 
-> * Since the mem file is part of the dynamic /proc/<pid>/ space, we
-> can't run chmod once at boot to restrict it (and trying to react
-> to every process and run chmod doesn't scale, and the kernel no
-> longer allows chmod on any of these paths).
-> 
-> * SELinux could be used with a rule to cover all /proc/*/mem files,
-> but even then having multiple ways to deny an attack is useful in
-> case one layer fails.
-> 
-> Thus we introduce four kernel parameters to restrict /proc/*/mem
-> access: open-read, open-write, write and foll_force. All these can
-> be independently set to the following values:
-> 
-> all     => restrict all access unconditionally.
-> ptracer => restrict all access except for ptracer processes.
-> 
-> If left unset, the existing behaviour is preserved, i.e. access
-> is governed by basic file permissions.
-> 
-> Examples which can be passed by bootloaders:
-> 
-> proc_mem.restrict_foll_force=all
-> proc_mem.restrict_open_write=ptracer
-> proc_mem.restrict_open_read=ptracer
-> proc_mem.restrict_write=all
-> 
-> These knobs can also be enabled via Kconfig like for eg:
-> 
-> CONFIG_PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT=y
-> CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT=y
-> 
-> Each distribution needs to decide what restrictions to apply,
-> depending on its use-cases. Embedded systems might want to do
-> more, while general-purpouse distros might want a more relaxed
-> policy, because for e.g. foll_force=all and write=all both break
-> break GDB, so it might be a bit excessive.
-> 
-> Based on an initial patch by Mike Frysinger <vapier@chromium.org>.
-> 
-> Link: https://lwn.net/Articles/476947/ [1]
-> Link: https://issues.chromium.org/issues/40089045 [2]
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Co-developed-by: Mike Frysinger <vapier@chromium.org>
-> Signed-off-by: Mike Frysinger <vapier@chromium.org>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
-> ---
-> Changes in v4:
-> * Renamed parameters to use a fake namespace and respect
->   subject-verb-objec pattern (eg proc_mem.restrict_read)
-> * Replaced static key array with individual definitions.
->   Still need 6 key definitions because we need to store 3
->   states for each parameter, eg read all/ptrace/DAC states,
->   so we need 2 keys for each parameter -- they will not fit
->   into just 1 static key.
-> * Replaced strncmp -> strcmp and dropped redundant helper,
->   significantly simplified DEFINE_EARLY_PROC_MEM_RESTRICT
->   macro.
-> * Dropped else from __mem_open_check_access_restriction()
-> * Moved ptracer check to proc_mem_open to avoid ToCToU
-> * Added extra mm_access() check for the mem_rw() case
-> * Found a use case for blocking just writes independent
->   of open restrictions, so added a new param
-> * Added *_DEFAULT Kconfigs
-> ---
->  .../admin-guide/kernel-parameters.txt         |  38 ++++++
->  fs/proc/base.c                                | 124 +++++++++++++++++-
->  security/Kconfig                              |  68 ++++++++++
->  3 files changed, 229 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 500cfa776225..3fdfeaefccf2 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4792,6 +4792,44 @@
->  	printk.time=	Show timing data prefixed to each printk message line
->  			Format: <bool>  (1/Y/y=enable, 0/N/n=disable)
->  
-> +	proc_mem.restrict_foll_force= [KNL]
-> +			Format: {all | ptracer}
-> +			Restricts the use of the FOLL_FORCE flag for /proc/*/mem access.
-> +			If restricted, the FOLL_FORCE flag will not be added to vm accesses.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, FOLL_FORCE is always used.
-> +
-> +	proc_mem.restrict_open_read= [KNL]
-> +			Format: {all | ptracer}
-> +			Allows restricting read access to /proc/*/mem files during open().
-> +			Depending on restriction level, open for reads return -EACCES.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, then basic file permissions continue to apply.
-> +
-> +	proc_mem.restrict_open_write= [KNL]
-> +			Format: {all | ptracer}
-> +			Allows restricting write access to /proc/*/mem files during open().
-> +			Depending on restriction level, open for writes return -EACCES.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, then basic file permissions continue to apply.
-> +
-> +	proc_mem.restrict_write= [KNL]
-> +			Format: {all | ptracer}
-> +			Allows restricting write access to /proc/*/mem after the files
-> +			have been opened, during the actual write calls. This is useful for
-> +			systems which can't block writes earlier during open().
-> +			Depending on restriction level, writes will return -EACCES.
-> +			Can be one of:
-> +			- 'all' restricts all access unconditionally.
-> +			- 'ptracer' allows access only for ptracer processes.
-> +			If not specified, then basic file permissions continue to apply.
-> +
->  	processor.max_cstate=	[HW,ACPI]
->  			Limit processor to maximum C-state
->  			max_cstate=9 overrides any DMI blacklist limit.
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 6faf1b3a4117..9223eaaf055b 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -152,6 +152,30 @@ struct pid_entry {
->  		NULL, &proc_pid_attr_operations,	\
->  		{ .lsmid = LSMID })
->  
-> +#define DEFINE_EARLY_PROC_MEM_RESTRICT(CFG, name)				\
-> +DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_PROC_MEM_RESTRICT_##CFG##_DEFAULT,		\
-> +			   proc_mem_restrict_##name##_all);			\
-> +DEFINE_STATIC_KEY_MAYBE_RO(CONFIG_PROC_MEM_RESTRICT_##CFG##_PTRACE_DEFAULT,	\
-> +			   proc_mem_restrict_##name##_ptracer);			\
-> +										\
-> +static int __init early_proc_mem_restrict_##name(char *buf)			\
-> +{										\
-> +	if (!buf)								\
-> +		return -EINVAL;							\
-> +										\
-> +	if (strcmp(buf, "all") == 0)						\
-> +		static_key_slow_inc(&proc_mem_restrict_##name##_all.key);	\
-> +	else if (strcmp(buf, "ptracer") == 0)					\
-> +		static_key_slow_inc(&proc_mem_restrict_##name##_ptracer.key);	\
-> +	return 0;								\
-> +}										\
-> +early_param("proc_mem.restrict_" #name, early_proc_mem_restrict_##name)
-> +
-> +DEFINE_EARLY_PROC_MEM_RESTRICT(OPEN_READ, open_read);
-> +DEFINE_EARLY_PROC_MEM_RESTRICT(OPEN_WRITE, open_write);
-> +DEFINE_EARLY_PROC_MEM_RESTRICT(WRITE, write);
-> +DEFINE_EARLY_PROC_MEM_RESTRICT(FOLL_FORCE, foll_force);
-> +
->  /*
->   * Count the number of hardlinks for the pid_entry table, excluding the .
->   * and .. links.
-> @@ -794,12 +818,56 @@ static const struct file_operations proc_single_file_operations = {
->  };
->  
->  
-> +static int __mem_open_access_permitted(struct file *file, struct task_struct *task)
-> +{
-> +	bool is_ptracer;
-> +
-> +	rcu_read_lock();
-> +	is_ptracer = current == ptrace_parent(task);
-> +	rcu_read_unlock();
-> +
-> +	if (file->f_mode & FMODE_WRITE) {
-> +		/* Deny if writes are unconditionally disabled via param */
-> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_DEFAULT,
-> +					&proc_mem_restrict_open_write_all))
-> +			return -EACCES;
-> +
-> +		/* Deny if writes are allowed only for ptracers via param */
-> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_WRITE_PTRACE_DEFAULT,
-> +					&proc_mem_restrict_open_write_ptracer) &&
-> +		    !is_ptracer)
-> +			return -EACCES;
-> +	}
-> +
-> +	if (file->f_mode & FMODE_READ) {
-> +		/* Deny if reads are unconditionally disabled via param */
-> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_DEFAULT,
-> +					&proc_mem_restrict_open_read_all))
-> +			return -EACCES;
-> +
-> +		/* Deny if reads are allowed only for ptracers via param */
-> +		if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_OPEN_READ_PTRACE_DEFAULT,
-> +					&proc_mem_restrict_open_read_ptracer) &&
-> +		    !is_ptracer)
-> +			return -EACCES;
-> +	}
-> +
-> +	return 0; /* R/W are not restricted */
-> +}
-> +
->  struct mm_struct *proc_mem_open(struct file  *file, unsigned int mode)
->  {
->  	struct task_struct *task = get_proc_task(file->f_inode);
->  	struct mm_struct *mm = ERR_PTR(-ESRCH);
-> +	int ret;
->  
->  	if (task) {
-> +		ret = __mem_open_access_permitted(file, task);
-> +		if (ret) {
-> +			put_task_struct(task);
-> +			return ERR_PTR(ret);
-> +		}
-> +
->  		mm = mm_access(task, mode | PTRACE_MODE_FSCREDS);
->  		put_task_struct(task);
->  
-> @@ -835,6 +903,56 @@ static int mem_open(struct inode *inode, struct file *file)
->  	return ret;
->  }
->  
-> +static bool __mem_rw_current_is_ptracer(struct file *file)
-> +{
-> +	struct inode *inode = file_inode(file);
-> +	struct task_struct *task = get_proc_task(inode);
-> +	int is_ptracer = false, has_mm_access = false;
-> +
-> +	if (task) {
-> +		rcu_read_lock();
-> +		is_ptracer = current == ptrace_parent(task);
-> +		rcu_read_unlock();
-> +
-> +		has_mm_access = file->private_data == mm_access(task, PTRACE_MODE_READ_FSCREDS);
-> +		put_task_struct(task);
-> +	}
-> +
-> +	return is_ptracer && has_mm_access;
-> +}
+On Fri, May 31, 2024 at 12:00=E2=80=AFAM Wang, Weilin <weilin.wang@intel.co=
+m> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Thursday, May 30, 2024 11:37 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v10 0/8] TPEBS counting mode support
+> >
+> > Hello,
+> >
+> > On Tue, May 28, 2024 at 11:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> > >
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > I have tried not to count retire_latency events but did not succeed.
+> > > In particular, I tried the following methods:
+> > >  - Convert retire_latency event to dummy event in event parser.
+> > >  - Early bail out in evsel__open_cpu() and store_evsel_ids().
+> > >
+> > > The first method fails and causes non-retire_latency events with the =
+same
+> > event
+> > > name return 0 count.
+> > >
+> > > The second method fails and causes all the events in the same group
+> > returning
+> > > "<not counted>" results.
+> >
+> > Can you please describe where it fails?  Is it failing on other events
+> > because the tpebs event is a leader of the group?  I think you wanted
+> > to avoid having it in the leader position.  If we can skip any actual
+> > operations (open/close/enable/disable/read) for the tpebs events, then
+> > it could be fine..
+>
+> It does not fail with the code in this patch set. But if I make it return=
+ directly
+> from tpebs_start() in evsel__open_cpu(), it will cause segfault. The segf=
+ault is
+> caused by store_evsel_id(). I could add another early return from store_e=
+vsel_id()
+> if the evsel->retire_lat is true.
 
-This is much improved; thanks!
+Yeah, I think event:R should not go to kernel from perf stat and you need t=
+o
+handle that in the tools.
 
-One resource leak is here, though: mm_access() takes a reference count
-on the mm, so you'll need something like:
+>
+> After this change, it will eventually run and give me <not counted> resul=
+ts
+> like below:
+>
+>         <not counted> event1
+>         <not counted> event2
+>         xx event1:R
+>
+> In a different case, it may seem to work (xxxxxx stands for some valid va=
+lue):
+>
+>         xxxxxxx event1
+>         xxxxxxx event2
+>         xxxxxxx event3
+>         xx event1:R
+>
+> In the first case, the event1, event2 and event1:R are scheduled in the s=
+ame
+> group. On the other hand, in the second case, event1, event2 and event3 a=
+re
+> in one group, while event1:R is in a different group.
 
+If you don't open event1:R then the kernel only sees event1 and event2.
 
-	...
-	if (task) {
-		struct mm_struct *mm;
+>
+> Based on these two different type of results, I believe the failure happe=
+ns in
+> the group that include a :R event. I've added the change to arch_evlist__=
+cmp()
+> so that a :R event would not be a leader of the group.
+>
+> I think I've made evsel__open_cpu() return before it create fd and make
+> store_evsel_id() not to read and store fd. I'm not sure where I'm missing=
+. Please
+> let me know if you have any suggestions.
 
-		rcu_read_lock();
-		is_ptracer = current == ptrace_parent(task);
-		rcu_read_unlock();
+As I said, please don't open event1:R (for perf stat) and let tpebs_stop() =
+set
+the value using the data from perf record in background.
 
-		mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
-		if (mm && file->private_data == mm) {
-			has_mm_access = true;
-			mmput(mm);
-		}
-		put_task_struct(task);
-	}
-	...
-
-
-> +
-> +static unsigned int __mem_rw_get_foll_force_flag(struct file *file)
-> +{
-> +	/* Deny if FOLL_FORCE is disabled via param */
-> +	if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT,
-> +				&proc_mem_restrict_foll_force_all))
-> +		return 0;
-> +
-> +	/* Deny if FOLL_FORCE is allowed only for ptracers via param */
-> +	if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT,
-> +				&proc_mem_restrict_foll_force_ptracer) &&
-> +	    !__mem_rw_current_is_ptracer(file))
-> +		return 0;
-> +
-> +	return FOLL_FORCE;
-> +}
-> +
-> +static bool __mem_rw_block_writes(struct file *file)
-> +{
-> +	/* Block if writes are disabled via param proc_mem.restrict_write=all */
-> +	if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_WRITE_DEFAULT,
-> +				&proc_mem_restrict_write_all))
-> +		return true;
-> +
-> +	/* Block with an exception only for ptracers */
-> +	if (static_branch_maybe(CONFIG_PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT,
-> +				&proc_mem_restrict_write_ptracer) &&
-> +	    !__mem_rw_current_is_ptracer(file))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static ssize_t mem_rw(struct file *file, char __user *buf,
->  			size_t count, loff_t *ppos, int write)
->  {
-> @@ -847,6 +965,9 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
->  	if (!mm)
->  		return 0;
->  
-> +	if (write && __mem_rw_block_writes(file))
-> +		return -EACCES;
-> +
->  	page = (char *)__get_free_page(GFP_KERNEL);
->  	if (!page)
->  		return -ENOMEM;
-> @@ -855,7 +976,8 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
->  	if (!mmget_not_zero(mm))
->  		goto free;
->  
-> -	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
-> +	flags = (write ? FOLL_WRITE : 0);
-> +	flags |= __mem_rw_get_foll_force_flag(file);
->  
->  	while (count > 0) {
->  		size_t this_len = min_t(size_t, count, PAGE_SIZE);
-> diff --git a/security/Kconfig b/security/Kconfig
-> index 412e76f1575d..0cd73f848b5a 100644
-> --- a/security/Kconfig
-> +++ b/security/Kconfig
-> @@ -183,6 +183,74 @@ config STATIC_USERMODEHELPER_PATH
->  	  If you wish for all usermode helper programs to be disabled,
->  	  specify an empty string here (i.e. "").
->  
-> +menu "Procfs mem restriction options"
-> +
-> +config PROC_MEM_RESTRICT_FOLL_FORCE_DEFAULT
-> +	bool "Restrict all FOLL_FORCE flag usage"
-> +	default n
-> +	help
-> +	  Restrict all FOLL_FORCE usage during /proc/*/mem RW.
-> +	  Debuggerg like GDB require using FOLL_FORCE for basic
-> +	  functionality.
-> +
-> +config PROC_MEM_RESTRICT_FOLL_FORCE_PTRACE_DEFAULT
-> +	bool "Restrict FOLL_FORCE usage except for ptracers"
-> +	default n
-> +	help
-> +	  Restrict FOLL_FORCE usage during /proc/*/mem RW, except
-> +	  for ptracer processes. Debuggerg like GDB require using
-> +	  FOLL_FORCE for basic functionality.
-> +
-> +config PROC_MEM_RESTRICT_OPEN_READ_DEFAULT
-> +	bool "Restrict all open() read access"
-> +	default n
-> +	help
-> +	  Restrict all open() read access to /proc/*/mem files.
-> +	  Use with caution: this can break init systems, debuggers,
-> +	  container supervisors and other tasks using /proc/*/mem.
-> +
-> +config PROC_MEM_RESTRICT_OPEN_READ_PTRACE_DEFAULT
-> +	bool "Restrict open() for reads except for ptracers"
-> +	default n
-> +	help
-> +	  Restrict open() read access except for ptracer processes.
-> +	  Use with caution: this can break init systems, debuggers,
-> +	  container supervisors and other non-ptrace capable tasks
-> +	  using /proc/*/mem.
-> +
-> +config PROC_MEM_RESTRICT_OPEN_WRITE_DEFAULT
-> +	bool "Restrict all open() write access"
-> +	default n
-> +	help
-> +	  Restrict all open() write access to /proc/*/mem files.
-> +	  Debuggers like GDB and some container supervisors tasks
-> +	  require opening as RW and may break.
-> +
-> +config PROC_MEM_RESTRICT_OPEN_WRITE_PTRACE_DEFAULT
-> +	bool "Restrict open() for writes except for ptracers"
-> +	default n
-> +	help
-> +	  Restrict open() write access except for ptracer processes,
-> +	  usually debuggers.
-> +
-> +config PROC_MEM_RESTRICT_WRITE_DEFAULT
-> +	bool "Restrict all write() calls"
-> +	default n
-> +	help
-> +	  Restrict all /proc/*/mem direct write calls.
-> +	  Open calls with RW modes are still allowed, this blocks
-> +	  just the write() calls.
-> +
-> +config PROC_MEM_RESTRICT_WRITE_PTRACE_DEFAULT
-> +	bool "Restrict write() calls except for ptracers"
-> +	default n
-> +	help
-> +	  Restrict /proc/*/mem direct write calls except for ptracer processes.
-> +	  Open calls with RW modes are still allowed, this blocks just
-> +	  the write() calls.
-> +
-> +endmenu
-> +
->  source "security/selinux/Kconfig"
->  source "security/smack/Kconfig"
->  source "security/tomoyo/Kconfig"
-> -- 
-> 2.44.1
-
-I think this looks really close.
-
--- 
-Kees Cook
+Thanks,
+Namhyung
