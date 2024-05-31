@@ -1,87 +1,86 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009518062D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662918062E
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717138113; cv=none; b=JyVvzdVoqYEaB8dNQ2cLR6OBdBgHdI9WBdHdAjPc4I79pqs9hTGfiMTQnJelt7xnRchhzO12fAAI7XZRTYdP5e/kEDIYyXfj8amdzYtyZDFpj7D2flsqUEiLqp5L4FiA4vESVCFurJY/gLCWpHNjT7tq0jnDndh8+UOERYOxD6Q=
+	t=1717138113; cv=none; b=CF1cZsRcUR9KGedB3iUi9wTfy/5gk9ff7VFp6PcHkxubDBcIKIl9FfuHQKDktXghbzOCLA6zcyMc6ue48WIeyVbgKkLj3Iaxg7By/D77wsXKyOYKU5Kh5ankw6RQ//1X6BKqsRy5fEzVBqDUx2ysciimYvMT4h4f1eonDYyNlok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717138113; c=relaxed/simple;
-	bh=7QejB9pI0IN5MUmQWauJo90F0JVTLv2zs5GyRFRNBA0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NC/Ao3FQzOUJTgiFiG2t0Uz+DcjFAnhb2U74FKSq8SnP205J1kap8P9XBtNXLdL4SvqFGiCrY40YKy9+8tOWZ5V2UmCach8hXPC0IXbvU7Ptc/9faBddtxxiNf0EPBzdeYNCrvjv6h89OzekARWcblvh/K5OkwrHuR9pnqjb3jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+	bh=IpHQ9pXBMLQwVnLeqFaCcD6lYgK0L2gpS0fDvq8+S74=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=th57q8SogWCDdHKQqXPBQwP1zIVRgvji28m16Slz/jmAqD8ePmajw3LYEjKaYsbtmFWPD8iXuhRGtJKbGHLF7pbJ6zCIvqWu/+3Cq4J09hTnfqtbZRfEuM635oyZEcp8v6iqZRbjY8ek/nT2qDB21NouYCgd8O2E7UdUzJq+aNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3748bce476fso3907095ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 23:48:31 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e6e4a83282so216750439f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 23:48:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1717138111; x=1717742911;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gEINjGxnE7ro2V60KkzJtpSNs6OYeynGZGwunvL8F4w=;
-        b=BnKTNUm868lxGwl8nicFOj0y8Rl2KJCN97XUGI25rN1jsFdmJNNfYowgpOwi//ORaG
-         1D5nEqKWDrNYC2l/6kEVMlTOk6ZBZFXpWBj0vnwfPNbCnON+K3+QpusSM+GRTdazoSYZ
-         BLo15z1WeN86cY8ftqx/bgcof13FJ3eiv3akyr5925gJJW58WCJ/s0desHkcyXEa75gk
-         yFbRGK5vt52j7cl7EOOJpZIGTSvgb9x5O/HjBEIBR6KMG+IU/sO+/57qaDM6j8uRZmil
-         W3XE3Jq0BvTmLqUe3Zw4ULMasHfHFzjz8Dh/pM1BLM4E4TRgEIR6egze594cwFdWg/Uj
-         FIBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU87fsDOKgSiWOuREaP0gEEiRHlmDQ4JMCuFuqds0IgeTvB56gcdYRDbFne84uN9ioNPmn17ko1kNF2/bhiRMQXRlFY2MGM8QKfETNj
-X-Gm-Message-State: AOJu0YwaSvx9axlct6/bwF/GLlLM7l4daLHeNTDIJa14urmBzrD5E+tX
-	6I0zxunLhT2EKPvyr8j7sVvm+fLXDcRqK3WPSuUZ5R//ooAtRgswjZnztxLck9eW7udU0aP7BzW
-	ePXCrIzMn1BuKxOJVe6zSF7J8iF0WpIT+2IreMxkgz5rBAHfPrjNqWog=
-X-Google-Smtp-Source: AGHT+IF1hLMNoT/Ruj48ZmhlqzRawIwG3TzT7LjKnD077jWcLgUayf6dNSVc0J5xARvBUFRuxYPg2yAOcRCH4SBGe/TYfQi6KF0+
+        bh=4VPT2PQ2Se5tuiyJo6AYJJeaTgvUn7VCRuc9f1bOPYs=;
+        b=vaknsnFrjIIJkNs34DcqqeVpDlOWN/4Ka3fr7o/nxh+f/ApcXNNH1IK4OoOaal3i3S
+         nPEvuGJcvNDPOWjgY2zKX5llEYPBg6EdKzDusGpFoOz0JM0RtUQ1LhieSv4ULskJoXZ+
+         92v7/aKRM0s/dbP66OBVWdaucqPCg0g9nEsulWl22kCxxYI+6TrXgB4rsRp0qI94IiqJ
+         CZUh6AW5UyGmJ4T05sxVbrWcb40x6fCScxypKiQOnkQEdGrtYgzgpd5YtqNAw4Etfy6C
+         kePsGDIKKycA+lT7jxMkPc0a8eP+gKTXIpPZH7e3azHFR7fIuQeK813SHAzCmisNPBAQ
+         6wiw==
+X-Gm-Message-State: AOJu0YzhKdl+lslN+a87YDRw3wZHM7323sN8t9swtnCANKmuZpCL7bne
+	2X0aZSsv3l1PMss1VYuiE3BL1EkDBDCB44V7gz7e68vTpxWDxpNOj+AatLphznVtEUfFooqBLUK
+	RClW2SP80NWavNEE9MMwVTX4AijKqS35KbDJ4M0rPYQiAByy8jwkq8Zg=
+X-Google-Smtp-Source: AGHT+IHawgdtfdJHXnmbVaChxPF3fT6GQ5DxNIr2ZrJBKtLTUSGPY1gXJ7nGbG81xlJ2rWatp+sHSxg5oNc6xILQEa5dCzN85hCV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18cb:b0:36d:cef6:7c8c with SMTP id
- e9e14a558f8ab-3748b9f6d02mr786545ab.5.1717138110541; Thu, 30 May 2024
- 23:48:30 -0700 (PDT)
-Date: Thu, 30 May 2024 23:48:30 -0700
+X-Received: by 2002:a05:6602:3fc8:b0:7ea:ff9a:8420 with SMTP id
+ ca18e2360f4ac-7eafff5276emr10056339f.3.1717138111572; Thu, 30 May 2024
+ 23:48:31 -0700 (PDT)
+Date: Thu, 30 May 2024 23:48:31 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001bfd730619ba5fe5@google.com>
-Subject: [syzbot] Monthly input report (May 2024)
-From: syzbot <syzbot+listc6acad497c5ea05c5769@syzkaller.appspotmail.com>
-To: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Message-ID: <0000000000002bbe460619ba5f40@google.com>
+Subject: [syzbot] Monthly mm report (May 2024)
+From: syzbot <syzbot+list9b272dba49b70afcd21e@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello input maintainers/developers,
+Hello mm maintainers/developers,
 
-This is a 31-day syzbot report for the input subsystem.
+This is a 31-day syzbot report for the mm subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/input
+https://syzkaller.appspot.com/upstream/s/mm
 
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 24 issues are still open and 52 have been fixed so far.
+During the period, 8 new issues were detected and 1 were fixed.
+In total, 56 issues are still open and 242 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref  Crashes Repro Title
-<1>  11549   Yes   WARNING in input_mt_init_slots
-                   https://syzkaller.appspot.com/bug?extid=0122fa359a69694395d5
-<2>  958     Yes   WARNING in implement
-                   https://syzkaller.appspot.com/bug?extid=38e7237add3712479d65
-<3>  646     No    possible deadlock in evdev_pass_values (2)
-                   https://syzkaller.appspot.com/bug?extid=13d3cb2a3dc61e6092f5
-<4>  380     Yes   INFO: task hung in uhid_char_release
-                   https://syzkaller.appspot.com/bug?extid=8fe2d362af0e1cba8735
-<5>  313     Yes   WARNING in cm109_urb_irq_callback/usb_submit_urb
-                   https://syzkaller.appspot.com/bug?extid=2d6d691af5ab4b7e66df
-<6>  19      Yes   possible deadlock in uinput_request_submit
-                   https://syzkaller.appspot.com/bug?extid=159077b1355b8cd72757
-<7>  13      Yes   WARNING in cm109_input_open/usb_submit_urb (3)
-                   https://syzkaller.appspot.com/bug?extid=ac0f9c4cc1e034160492
-<8>  8       Yes   INFO: task hung in __input_unregister_device (5)
-                   https://syzkaller.appspot.com/bug?extid=78e2288f58b881ed3c45
-<9>  4       Yes   WARNING in __input_unregister_device
-                   https://syzkaller.appspot.com/bug?extid=b03b0fc32e288051502d
-<10> 4       Yes   WARNING in input_unregister_device (2)
-                   https://syzkaller.appspot.com/bug?extid=617f4ccb03b9869f6494
+<1>  10236   Yes   KASAN: slab-out-of-bounds Read in generic_perform_write
+                   https://syzkaller.appspot.com/bug?extid=4a2376bc62e59406c414
+<2>  7377    Yes   WARNING in ext4_dirty_folio
+                   https://syzkaller.appspot.com/bug?extid=ecab51a4a5b9f26eeaa1
+<3>  1078    Yes   possible deadlock in filemap_fault
+                   https://syzkaller.appspot.com/bug?extid=7736960b837908f3a81d
+<4>  720     Yes   KCSAN: data-race in generic_fillattr / shmem_mknod (2)
+                   https://syzkaller.appspot.com/bug?extid=702361cf7e3d95758761
+<5>  466     Yes   inconsistent lock state in __mmap_lock_do_trace_acquire_returned
+                   https://syzkaller.appspot.com/bug?extid=76f802bc1dee8ba28a6e
+<6>  390     Yes   WARNING in kunmap_local_indexed
+                   https://syzkaller.appspot.com/bug?extid=691cb37358791bebebe6
+<7>  93      Yes   BUG: unable to handle kernel NULL pointer dereference in __kmap_local_page_prot
+                   https://syzkaller.appspot.com/bug?extid=b18872ea9631b5dcef3b
+<8>  72      No    INFO: task hung in __lru_add_drain_all (2)
+                   https://syzkaller.appspot.com/bug?extid=5294aa7d73bb0fa85bd0
+<9>  49      Yes   BUG: unable to handle kernel paging request in list_lru_add
+                   https://syzkaller.appspot.com/bug?extid=2403e3909382fbdeaf6c
+<10> 46      Yes   INFO: rcu detected stall in sys_openat (3)
+                   https://syzkaller.appspot.com/bug?extid=23d96fb466ad56cbb5e5
 
 ---
 This report is generated by a bot. It may contain errors.
