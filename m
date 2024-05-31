@@ -1,232 +1,213 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D105155CA1
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717173165; cv=none; b=QSSXplglwFecY0HeNZz53ncLApOUp7C1jFMYqjBEtdkq5WzXUgl5JtdnVsmllZ+cSaBL/Uzv2xYNgG6hH0XCr7qKgDqYAF15IQnTgj05yddAVJGj5C5gzAOyB8QAOfppdMniNqpvaz2BP+RwX1GnAuom8ujV3BLy8wF/UUmyOMk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717173165; c=relaxed/simple;
-	bh=Mltl0pXK6YlhdW0WyyexXZZFzn0aD6bwJXi7FRIGejI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LSGWKuM/2iwfI4rAIJLpXzUjEtiyI+PABU2ce59oq+dCQok8uYSnK6anuCoWhfzMZ1rX2UXR+vbbRV8rJXo5yFwmIzi5XMdSUUjJYCwpmRslUbjPZGP7LM+YlD6D8GZR5M9cXMBPCGHK00xFQP17pVCL9Dp4UsDYZVzvYzL8l+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Tcki9jJs; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Tcki9jJs"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52b80e5688aso2749249e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:32:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80931155CA1;
+	Fri, 31 May 2024 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717173185; cv=fail; b=p2a36Y80qmxSvaq4AgtrzVOcQqqc4rbCkohIXtsTK/1i5zEgs580vxvPTPDH9PjX8LkLwG1rMK2Kt/RpR3F3yMq/77RFW4wT4tO5/GW+QqRIPQjkh012gkF7lPBb+ecFPxHiu7zU5KOApSp7U43M/GaX0pRX5e70NIdgGqzhMQY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717173185; c=relaxed/simple;
+	bh=nn2hICc5AVthLqmPv/tfpgqPd7gRSdH38dYm3bfD37c=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=FoX6GzicDVJTfrLH/VNqvH2PG/HGbkJpB52YoeB3w1opmIFmBICIe6KOnaXIR3xATjddu8aWY1gGatJg82etPLIes+5Ie1oYUb5yLJvz0B5nSHqJuk2GPvAkLrCsHEP0bThdO5SxSz5/1XogOvvwkl/TXQrKKdb2+Lkplly4Ktw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44V9VZxu030206;
+	Fri, 31 May 2024 16:32:46 GMT
+DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
+ =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:message-?=
+ =?UTF-8?Q?id:mime-version:subject:to;_s=3Dcorp-2023-11-20;_bh=3DGwGJXYNQp?=
+ =?UTF-8?Q?7c4anFKgay2mbvPxBx/3edfDkmGb2FBBfc=3D;_b=3DEktvtpFlAguoZNERaGo4?=
+ =?UTF-8?Q?+3RSrPoOrfQXI/c3tmjY2Tdgc+s5choG0dj4nyc6XtZyLAQw_rHsqknzeeu2Djx?=
+ =?UTF-8?Q?5w0+5NHlCDTnrzPKMe5QCf6aLT5WAB3ucMV+KaF9V1UmSqPILVHSs/_Jlc4nSty?=
+ =?UTF-8?Q?B76wEiNiBJ2HnouqK49bwz8EaskGE3pg4T1Z74mnu54q/DcL/cgWb2MGVlB3_YE?=
+ =?UTF-8?Q?GanvNFzDP446fydGnPuGXT6LPCxqESMk59C7ppegE3uU1ZMy5qubsQFi446tPEA?=
+ =?UTF-8?Q?efZ_gLxK9qNGsklvOmlS91ujufKesIs4ReLKuKq93GcTsvw2cZvBv8CjdmS/sqm?=
+ =?UTF-8?Q?RYt3VnQEr_Nw=3D=3D_?=
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8hgbk7m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 May 2024 16:32:45 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44VFSSCo016417;
+	Fri, 31 May 2024 16:32:45 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50u2xb6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 May 2024 16:32:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U0eKvqzJjeGJ5XRp1l0hId6eJWukmUSll7jFbKj86Phouu+lfc1RP5MF8AMHXhrEN2iAUlvB1HriGAdymNS3Gd07/XZo4KMk/2tueV+R6hJakysuEbJfVHVkxKA3rBZQVMVPlW5fgXupEPaKi2cLExdhlN5FnPoB5Hf58RaL7LVM5W+8ISsUJjrVF2Zt4+yD57B3L1oCgtkjfC1fUOt7L9SjpoTa58u7gSTLKlS8VzasjEC+zgSIH7N0t6IlLu3+3WXkH7tUp0eVdFE2C+aA2lE57gChJJmaX6xHalPG+Vyp3HgYJgKBcLOdZYEX4j9Hn0V9jwgzVEAR9xUD8eJ2pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GwGJXYNQp7c4anFKgay2mbvPxBx/3edfDkmGb2FBBfc=;
+ b=cvp0kMr2njqVgVzjxyTqHbVKM5oWAk5ULQOv29Ac1y9m5aLff9fzNpvyHPcNOpcRindMzOX/SPSw5buPRFthOdzlxjNFyq+zykCwNELQf4JCjRPOe7UUFPtOkZ82M8I6L2owSf6oz/2D26RhymbfKruyoul4uy5/xiAdd5I1WjbnQXbJghXdWXhMse4KowExj8EzPkMLpsZC/Nx+yfM+Ea4W37pba1sV/jvC97Mbxz254Fk38tLEEpTkOeMHqs6f+wTX2JB631C9YrjR8ZHAYuqta6IYLQHWK9rKo58N6MtzOsRWYNvEAleFLkIuzq9EWNh+FPR4KZHlnyn4QhJiFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1717173161; x=1717777961; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBpv58mvXEiXCF5CDI3gZ6QIxp2dJ2BrRtOeKNeRg60=;
-        b=Tcki9jJsIvqJFLhyc+q2XVfIrXs/zTuSZnNpTYyDW18CGjE55TS96JG/cx1rbQZYDC
-         Jat1yCH0kwby0GCWNLpI287DerojZ+SxGzAgGITPu7VZUCGQ7fO83N/rWWHZ//vzkot9
-         6EfuLmoqtyNqwhYO0N8uxO3b1R8bnGU067FgI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717173161; x=1717777961;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qBpv58mvXEiXCF5CDI3gZ6QIxp2dJ2BrRtOeKNeRg60=;
-        b=va7IPW1YrRLQ7CAnCU2r6yp1RPszng3rF8XGcSGD12/1FmtXz04vaWBb+2Xh64Vnsf
-         CfuBgs6vXQryQ4lXiBSZwReGbYtIkxSEW+yuG1gxq719oo5i9havBMZ0UuLMKDjI5qpI
-         eS5hLcNcgmmzfFRqfd6Y22Pa2Zc8muc17QCHrLijJTJbaK/Cr7mnJ2oFpDutOLVkM/4J
-         93onACJMtMNqGR4BbWIerWUkcOK/nFWS4LIlgPWzPuKyxxeYcXGboZzUISt8aL3Mg06N
-         17cmJehxdFDrVbS6ZK12ylHsfCh8vlGOcLpH/8s6+KE7WBEY9tr/5UitFi4/FJ6Pji0w
-         467Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVdlp4euAtcD2J7M1KPJuHroasXZZUTV2fOsDM6iJltA6mVrHyoqrAPzvyyCvBvgQOzKq2gBldJLvTr0CgEqT37pYnk4V0vwDYJ7SMV
-X-Gm-Message-State: AOJu0Yw/8gYVatPxzKb7hRejI1n/4Wf29/vPwxWi9EV50zAYqW7/8dM7
-	XOQUaEpboL/phhrJYwU5HT4yLKgoMD9FbhiPfE9d1G9hRSvteA116XbDrPLxXGxZge3Nc48RkRn
-	hMHUChw==
-X-Google-Smtp-Source: AGHT+IHwMNg4fy4dIIHfABgFJfSdTrFa06d+jiW7rWG0jS2GIg9tfFM3JtwCXKe5CEBHbE3LmAUM3A==
-X-Received: by 2002:a19:8c14:0:b0:51f:3e0c:ace3 with SMTP id 2adb3069b0e04-52b8954e810mr1820083e87.16.1717173161113;
-        Fri, 31 May 2024 09:32:41 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d3f411sm380741e87.104.2024.05.31.09.32.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 09:32:40 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52b86cfcbcaso2226821e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:32:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVUMJ9Y9tLBs2I4M6HLCLc1oZ3z0BHhY5A7Psh0sCJaIVYW5c//bLm+Q+GY4fydg7s0VHxy4l6WtJyneqL5saWDRxctxiknMf/DeO7s
-X-Received: by 2002:a05:6512:1108:b0:52b:8da0:e0e1 with SMTP id
- 2adb3069b0e04-52b8da0e1e2mr958133e87.62.1717173160098; Fri, 31 May 2024
- 09:32:40 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GwGJXYNQp7c4anFKgay2mbvPxBx/3edfDkmGb2FBBfc=;
+ b=gxUsVm+xgaVHagQPHCP0PD4tqPN1YGw76j/xHcFQ2oi3pLic1Ey4NfE+ACofDdr7BwW7aXpAE6bVyTMb24p8dEnpUJh62642K4TFjRbmqszcZh3NdQX6B0vWO3c7L5oWoa1SfP00uWzKuJYWZ26Ym7WcX3dGJ/GwySqpzoVJ9/M=
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
+ by CH0PR10MB5036.namprd10.prod.outlook.com (2603:10b6:610:dd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Fri, 31 May
+ 2024 16:32:42 +0000
+Received: from DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
+ ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.7633.021; Fri, 31 May 2024
+ 16:32:42 +0000
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Suren Baghdasaryan <surenb@google.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, sidhartha.kumar@oracle.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/5] Avoid MAP_FIXED gap exposure
+Date: Fri, 31 May 2024 12:32:12 -0400
+Message-ID: <20240531163217.1584450-1-Liam.Howlett@oracle.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: YT2PR01CA0008.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:38::13) To DS0PR10MB7933.namprd10.prod.outlook.com
+ (2603:10b6:8:1b8::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503081125.67990-1-arnd@kernel.org> <272a909522f2790a30b9a8be73ab7145bf06d486.camel@physik.fu-berlin.de>
- <alpine.DEB.2.21.2405280041550.23854@angie.orcam.me.uk> <aa397ad5-a08a-48a1-a9c0-75cfd5f6a3a5@paulmck-laptop>
- <alpine.DEB.2.21.2405291432450.23854@angie.orcam.me.uk> <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com>
-In-Reply-To: <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 31 May 2024 09:32:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
-Message-ID: <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
-Subject: Re: [PATCH 00/14] alpha: cleanups for 6.10
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Arnd Bergmann <arnd@kernel.org>, 
-	linux-alpha@vger.kernel.org, Richard Henderson <richard.henderson@linaro.org>, 
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	Michael Cree <mcree@orcon.net.nz>, Frank Scheiner <frank.scheiner@web.de>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|CH0PR10MB5036:EE_
+X-MS-Office365-Filtering-Correlation-Id: c13e5292-a236-4fa2-53d2-08dc818f4b44
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015;
+X-Microsoft-Antispam-Message-Info: 
+	=?us-ascii?Q?4v3QOHQ+zROZxnGpna2fpdGeW61+uEk/dMxdO1qCYGq3Ef9Aw4UufNOtfjEh?=
+ =?us-ascii?Q?2x7fXWxvIYpwERZqB4MJnnEUMpr5PsFQjiWpbnu6O1iH5y7MdbR+OxWIts7Q?=
+ =?us-ascii?Q?VaIkbgnSngJC5nro9xjwYIDE0Jc4V2RSHxU6pwYt6oW63HNuiOKDnzcw381K?=
+ =?us-ascii?Q?Pe+c7sKf8XZ6NcaMzIjUjjgyROcpYHGHwRoTK26XAGxCwi7zNUnVkWCaxYwZ?=
+ =?us-ascii?Q?izQOhTRoSrp/Qo4modg5ineq3yE3Wb8fpexx5QJ/dUm343LPnJqd6tDKGpKY?=
+ =?us-ascii?Q?C5dpp2aXb4TQlXuQsSOAPFbLyURwHxquTaNCWzLNBMI2X3nnpXTjXjNJ/e/I?=
+ =?us-ascii?Q?++KYjNMOXKVHWTg2hViBWc+bTpDSW6lUcul4+sKnT20P7wt9XGac93o+j7Iv?=
+ =?us-ascii?Q?8j2yKE14HzI8xyP6VVYjpInXpM9Wyy7ZcBblDV0VCJKtzx2yIl2bQHQOrv9h?=
+ =?us-ascii?Q?ZScaT81H0IaG/GTzacJqC4JJX7uHNucwbB7QwsggD6bWcdYkGEq/3L4bZ2wP?=
+ =?us-ascii?Q?/+JKhEl5aieFyVeodtxmHol+7ReVRm0ymJfYmPIqFZxYnORX6VbBF8Zwl1pQ?=
+ =?us-ascii?Q?wmqVmfYvf8KN9IqDyRu4w6e3gKRebAdK7KLYc5HZdmbgafKc5KXn1BCf6j52?=
+ =?us-ascii?Q?96uPoMVu1Iiq4Idd7PykJgBt4mbU8FyDhfQPTrXJOcqIfdOPMlU0Z2MlMe3W?=
+ =?us-ascii?Q?bgpMOngLK7jK7YOYWRGb5J+EqytTzPVCR+6P27NEzEFjibvvH04rCluTQNGr?=
+ =?us-ascii?Q?BqrG1AluD7iX3qwbfYWPwVfJ7sYTxQ1l/8wHPKmTDa5wzp5DzNJJ7Mhym866?=
+ =?us-ascii?Q?7Urf3sSAgNd5Rzi322HoQnS7MRT3P9UJEEK02O08csk4rKTGsPK+3vF9HJ1y?=
+ =?us-ascii?Q?B2B0i3zBzNc60lRGm5iHrsFVAqqhdJzDUzFLl3s9J3GgY2DHMtnNvfauEBe1?=
+ =?us-ascii?Q?qR9iBic92auXwfLSaWLIs2QMrAMnJNPomgbdAMlITdwtP7s9qcLbEzvxGy49?=
+ =?us-ascii?Q?Krg+IcMfe9PLuhbJi49iz7e+qjLD+g9+rId5bZMLxIJXmh/I9zqCspVitRbX?=
+ =?us-ascii?Q?ADek16HpJOFwBOuX03K+mCLidw49ZndQDQUajy8o3sUvCSxI1uSpS/Hefe9R?=
+ =?us-ascii?Q?ltHrr33F+mkVGfAjFy6CoPwqHaiuS+4r6NUlO4cf9M9o43jU251HPZqbO7bB?=
+ =?us-ascii?Q?5c4nNzycTMi1s3V3Tx6BDHEWLuUHqIFh8WlZx1uELDs4qMT+dij4PBSa58I?=
+ =?us-ascii?Q?=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?0udmhyvLiMDbaJ1bSYhS/BqzrVIf+EBqVRRuf5nn0y13g8qcrTK1w/SAmgdD?=
+ =?us-ascii?Q?WrfOAS7ihW1EK/bET0zqhuy+UU4F5jMgVtN//zkFtCGiSi7wVvIzTuXTmWaz?=
+ =?us-ascii?Q?B94eiS8yMrt6w2uEQTovMPcZ4D9EaocKlVDap35OQT9EZDTzPxvkSg+ieL3l?=
+ =?us-ascii?Q?lr87odLa3Whgy/469y+TyM660rBnXbNfkoBXCpSjrXqWSmApuPvJKH8qF6TR?=
+ =?us-ascii?Q?zNNG392stHfPsNCZ85b7D/4mg92kPROlOWO4aYhXdDau0M7tSbe+kkzlKsIt?=
+ =?us-ascii?Q?bStanqZi2G502IIYGH518x9wNZK5jsdx9++Fy5HUKYPlwQIdGHdUznAGqE/D?=
+ =?us-ascii?Q?ii5Q9lGNsoVqgyqTI+/tFurnfbeR3kzdLx6Ib+I3FO9JwLJ4Yd2vII538uRa?=
+ =?us-ascii?Q?EIkxOANDR/BkeAH5HHzJ0NSj7+PTNrm059pLaU9VDIElTnc9Y/HWF8DtuyF/?=
+ =?us-ascii?Q?XgM6O1mcWj/TOWtmORAqS1hLZKRXalK3D3hHmaGxrbmNhrhr5BdgClfKxZk9?=
+ =?us-ascii?Q?dS6KMDCG0w2gMvfcmiuI1Jm6SFZ5nlY5uAuc+uOvvwvhvAewlPTufeU9Wub0?=
+ =?us-ascii?Q?8ocq21M9AjwTFOGvPhPhTz3f85xCW/4bG1C5apfhL4kERm7NtZo4mfluMlQu?=
+ =?us-ascii?Q?x0IwjRuCCq08gI1xSIP5Kaf806agtsqVZwq0xEH2y2OGTqCep3IBuJScvaUA?=
+ =?us-ascii?Q?sM4G+eWW02KuaGVfTyDgiY5TX4qEYM2XYRKqvVcssjtqoHw4MBuBRxFwXskZ?=
+ =?us-ascii?Q?tWTmidDsjs0EWOelSpdFigMpizGMjcWdS5QuPlhwMMpU1j7cYSmtLWn9ZVp6?=
+ =?us-ascii?Q?DLPTswxdVMi+r3BX1yqRVzD3fIFBgCO5fn88/sLoAI8M91RB+DXOtpfBeOvE?=
+ =?us-ascii?Q?LzPA5YAo6JZIXm/nN3RJkFCJv2/D5vXilI0gd025MqFRd+/i09PD8j77e8Ii?=
+ =?us-ascii?Q?lcvf21I0ENvxVb3EQ3Au5bhI4xuFH6oWYp7pDkfwBqZZ2zZNciquxbCW45am?=
+ =?us-ascii?Q?Z5zhXiGIvXk4l6oUbyTQibu96O8b2bIM/BNlqVR3TAO1A8CAMo2jbrS157H+?=
+ =?us-ascii?Q?DUJtd1GzhU0we+ZdMqgjJlZWYnc5D/cZvILZpWQ8O0jYyWChATHBV5YV7ZSS?=
+ =?us-ascii?Q?LwMq6w3L2v2GxlsMdD9zgbEvzSPxDUnLSom+kGgOxegF7ihmeDqyI8ZnXd8F?=
+ =?us-ascii?Q?vkpEfltEO5V9Rp5p3GyvofQUudi89dLgwcuOyCYiEmK6gP4VBlgH4BcD1hoj?=
+ =?us-ascii?Q?7HX9cENDJc+yNUFdRRrTjOryBgPi61asZt65ALo11cnGF1wZbVGgp2NJBk4x?=
+ =?us-ascii?Q?MrMtuWLQOTrcQBZ0tEMtUCkviAwaA/TTmGG6ys4jAQ/QxKRIsgi+nTz4NGxd?=
+ =?us-ascii?Q?TvH1NspnegD9DdzS/ftfmRS33MbmvjKQowdBHCI91AYxHjkNEQPczlSzthDW?=
+ =?us-ascii?Q?ohMGLmLY3Vxil++xosRziw1mzCrGVBnrSH4uYwzHScljApdhbchO7J9BmQfs?=
+ =?us-ascii?Q?SzlwhhnhPVE7Uxr/MATChEtrHRz3YD0/vQsEUJUgs5QVhf2nhWfpDNdz9fGN?=
+ =?us-ascii?Q?Emc94THuqt9b7tjZhBvILwV7rVMbJCQnsQu7A89okkz20LEMJnwQkX2Ou+ct?=
+ =?us-ascii?Q?7g=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	6930PmU8jYcW63wcEr/AByPFjQP4cii1Ujp4yleFXhUwdAq57Jtqr/EvNWd7dFKQC1PYYJwvuG4HcD/8Db1tfCK7YlLIPXd40UUn57/k3qEbcG0OFJh1v5b0o6gmXJXr2Q8qjKPi6DZ4bWypqUymVfv21r2CkRIu2ZC7sf8UBKtXhZJyWvSK5bgeq7Ks67I/fTDtCov4DeMJhG1Ex7UPeYfqQKZTOhPBl32UgAWRHcBqsJEFz+KUQa3jv3zMJSCa53BHkVU5QsQ+kgVzP2oR4kDK6YlDospgAjpJ+0yqln0kvacxUynrm5xR7kusmtzpMA9odfjNZnfZ3tsvB970EfSfZAhBkf7uEroLeSX0RYofSJwaFBmews9c8StLqVs2PTTGCagCvrzyuZkF6LYb66PjbEC2w4l6iwF9q/GhMr472gXQtkszNdFX6RuSbDXfQpYJdCpvBikWR1UV0JRlHsjtydNjbXnnwnZrEJT5F0/cakxRH9HDQX+8fXZOFPkIS7IfgVvRyclKahTbMLZxFtCL/4PP7de2X/Sodce3cBh2Y7SsJr+q6O2GLAwHwQjt7qzZeRdT2sMcN75YWlkLm0rJvtXGmyZwpDWL76ryMb8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c13e5292-a236-4fa2-53d2-08dc818f4b44
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 16:32:42.3781
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bG9ouDVWfCqXwZK6oyKbos/kcxsv7xSCm42kvJDY9b2puKTXePC+iOS0b8vz0mZ60xwuqvEDv2mzOIo5sz6Scg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5036
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_12,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=732 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405310124
+X-Proofpoint-GUID: OPAubzvUnpHQsM_EW-f5rHhSBnytq9BX
+X-Proofpoint-ORIG-GUID: OPAubzvUnpHQsM_EW-f5rHhSBnytq9BX
 
-On Fri, 31 May 2024 at 08:48, Arnd Bergmann <arnd@arndb.de> wrote:
->
->  /* Is this type a native word size -- useful for atomic operations */
->  #define __native_word(t) \
-> -       (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
-> -        sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
-> +       (sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
->
->  #ifdef __OPTIMIZE__
->  # define __compiletime_assert(condition, msg, prefix, suffix)          \
->
-> The WRITE_ONCE() calls tend to be there in order to avoid
-> expensive atomic or locking when something can be expressed
-> with a store that known to be visible atomically (on all other
-> architectures).
+It is now possible to walk the vma tree using the rcu read locks and is
+beneficial to do so to reduce lock contention.  Doing so while a
+MAP_FIXED mapping is executing means that a reader may see a gap in the
+vma tree that should never logically exist - and does not when using the
+mmap lock in read mode.  The temporal gap exists because mmap_region()
+calls munmap() prior to installing the new mapping.
 
-No, if you go down this road, then you would want to do the same thing
-we do for READ_ONCE() - but for a different reason - hook into it for
-alpha, and add a memory barrier to get rid of the crazy alpha memory
-ordering:
+This patch set stops rcu readers from seeing the temporal gap by
+splitting up the munmap() function into two parts.  The first part
+prepares the vma tree for modifications by doing the necessary splits
+and tracks the vmas in a side tree.  The second part completes the
+munmapping of the vmas after the vma tree has been overwritten (either
+by a MAP_FIXED replacement vma or by a NULL in the munmap() case).
 
-  /*
-   * Alpha is apparently daft enough to reorder address-dependent loads
-   * on some CPU implementations. Knock some common sense into it with
-   * a memory barrier in READ_ONCE().
-   *
-   * For the curious, more information about this unusual reordering is
-   * available in chapter 15 of the "perfbook":
-   *
-   *  https://kernel.org/pub/linux/kernel/people/paulmck/perfbook/perfbook.html
-   *
-   */
-  #define __READ_ONCE(x)                                                  \
-  ({                                                                      \
-        __unqual_scalar_typeof(x) __x =                                 \
-                (*(volatile typeof(__x) *)(&(x)));                      \
-        mb();                                                           \
-        (typeof(x))__x;                                                 \
-  })
+Please note that rcu walkers will still be able to see a temporary state
+of split vmas that may be in the process of being removed, but the
+temporal gap will not be exposed.  vma_start_write() are called on both
+parts of the split vma, so this state is detectable.
 
-and the solution would be to make a __WRITE_ONCE() that then uses
-"sizeof()" to decide at compile-time whether it can just do it as a
-regular write, or whether it needs to do it as a LL/SC loop.
+I am sending this as an RFC as Andrii Nakryiko [1] and Suren
+Baghdasaryan are both working on features that require the vma tree to
+avoid exposing this temporal gap to rcu readers.
 
-Because we're definitely not changing hundreds - probably thousands -
-of random generic data structures.
+[1] https://lore.kernel.org/all/gkhzuurhqhtozk6u53ufkesbhtjse5ba6kovqm7mnzrqe3szma@3tpbspq7hxjl/
 
-That said, the above fixes WRITE_ONCE() without changing the
-definition of what a native word size is, but doesn't actually *fix*
-the problem.
+Liam R. Howlett (5):
+  mm/mmap: Correctly position vma_iterator in __split_vma()
+  mm/mmap: Split do_vmi_align_munmap() into a gather and complete
+    operation
+  mm/mmap: Introduce vma_munmap_struct for use in munmap operations
+  mm/mmap: Change munmap to use vma_munmap_struct() for accounting and
+    surrounding vmas
+  mm/mmap: Use split munmap calls for MAP_FIXED
 
-Let's take a really simple example:
+ mm/internal.h |  22 +++
+ mm/mmap.c     | 382 +++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 258 insertions(+), 146 deletions(-)
 
-    struct net_device {
-        ...
-        u8 reg_state;
+-- 
+2.43.0
 
-        bool dismantle;
-
-        enum {
-                RTNL_LINK_INITIALIZED,
-                RTNL_LINK_INITIALIZING,
-        } rtnl_link_state:16;
-        ...
-
-are all in the same 32-bit word, and we intentionally have code
-without locking like this:
-
-        WRITE_ONCE(dev->reg_state, NETREG_RELEASED);
-...
-        return READ_ONCE(dev->reg_state) <= NETREG_REGISTERED;
-
-because the code knows the state machine ordering requirements (ie
-once it has moved past NETREG_REGISTERED, it won't move back).
-
-So now - assuming we fix WRITE_ONCE() to use LL/SC, these READ_ONCE()
-and WRITE_ONCE() games work fine on alpha
-
-BUT.
-
-Code that then does something like this:
-
-        dev->dismantle = true;
-
-which is all nice and good (accesses are done under the RTNL lock) now
-will possibly race with the unlocked reg_state accesses.
-
-So it's still fundamentally buggy.
-
-And before you say "that's why I wanted to fix the __native_word()
-definition", please realize that the above happens EVEN WITH the
-READ_ONCE/WRITE_ONCE being done on an "int".
-
-Yes, really. The READ_ONCE and WRITE_ONCE will be individual
-instructions. But lookie here, if we have
-
-        u32 reg_state;
-        bool dismantle;
-
-and they happen to share the same 8-byte word, and somebody passes
-'&dismantle' off to something that does byte writes to it, guess what
-the canonical byte write sequence is?
-
-That's right, it looks something like this (excuse any bugs, this is
-from memory and looking up the ops in the architecture manual):
-
-        LDQ_U tmp,(addr)
-        INSBL byte,addr,tmp2
-        MSKBL tmp,addr,tmp
-        OR tmp,tmp2,tmp
-        STQ_U tmp,(addr)
-
-and notice how in the process it read and then wrote that supposedly
-atomic 'req_state" that was otherwise accessed purely with 32-bit
-atomic instructions?
-
-There are no LDL_U/STL_U instructions. The unaligned memory ops are
-always 8 bytes wide (you can obviously always do address masking
-manually and "emulate" a LDL_U/STL_U model, but then you make already
-bad code generation even *worse*).
-
-So no. Even 32-bit values aren't "atomic" in alpha, because of the
-complete sh*t-show that is lack of byte ops.
-
-NOTE NOTE NOTE! Note how I said "pass off the address of
-'dev->dismantle' to something that does byte ops"? If you *know* the
-alignment of the byte in a structure, so you don't just get a random
-pointer to a byte, you can - and should - generate better code on
-alpha, which may in fact involve just doing a 32-bit load, masking off
-the low bits, and doing the 32-bit store.
-
-So that LDQ_U/STQ_U sequence is for the generic case, with various
-simpler sub-cases that don't necessarily require it.
-
-The fact is, the original alpha is the worst architecture ever made.
-The lack of byte instructions and the absolutely horrendous memory
-ordering are fatal flaws. And while the memory ordering arguably had
-excuses for it ("they didn't know better"), the lack of byte ops was
-wilful misdesign that the designers were proud of, and made a central
-tenet of their mess.
-
-And I say that as somebody who *loved* it originally. Yes, the lack of
-byte operations always was a pain, because it really caused the IO
-subsystem to be a nightmare, but I was young, I was stupid, it was
-interesting, and I had bought into the kool aid.
-
-But alpha without BWX really is shit. People think x86 is bad. Those
-people have NO CLUE.
-
-               Linus
