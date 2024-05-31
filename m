@@ -1,49 +1,50 @@
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C8BA50;
-	Fri, 31 May 2024 01:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E1120310;
+	Fri, 31 May 2024 01:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717119138; cv=none; b=one/hxIHF8KM4tgGV+4OPj0qJYLFI2inXwcL5ECKtUD03SpNfiM+4dRxWq289gWn4lIa2g3r/EMga5fso32U68JIpQIRPX24CJkyAE0abzHTL1RwRJW1/HC4RQpzUgbO0IrzqJQ6yWqPcVWmXpZCB3mYb4SM5WkdLIdSy+asdIQ=
+	t=1717119141; cv=none; b=MuE8NVL9AjU0catXV8AEzRrhV8MW9vDAxvxYAb5M3xgjbmbPmm/uZkN3zTvMzcBdCQKUymwWEVhd1wiZRCkENFg5VP30TG3Mwt8sLVK9hSU89k3ODfg8zZGla11A1l59jaVt3MsnstCM4Ai5MxZjjqkn06DIKXjUQOGteWgRw20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717119138; c=relaxed/simple;
-	bh=mpla0UXc3viMwjU8H/0lpqDG4xFB+X0xsJvlHcLgol0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PFx2mqgJXZBzT4WnhcBK4tKxfePahhMcdv65DXW+16R+gefKhA4yhnZHJdHNhRS6z+rxLje8hl08jvfg22MRFmc4kPPS76gcPvSfHDc5eZuScxvvOVqdCkQMD1rQU4BvTmyAMlAQkCJVNHseqH2rXrV4s4VoQMZo9Z3N4B+slY4=
+	s=arc-20240116; t=1717119141; c=relaxed/simple;
+	bh=AsJQyxZTYf4nH/f3JF7ZzrzwKGxciy41W/mwgML2eEk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SUReFfadstjRYfvEBhfIkyXJahgvpkNfaSSVfA9jlAuGAauwm2hR8jqgrenBpxnovXRSByLnY4FDXxtaNVtBmhlFv2o0cD0QIm5DrFKTMlcobiCXcS8oXfb9gNgHucpDjLMIu/xpo6w+riDOdxT6GFTH4ukzJ5d+0QU9NKKHxbU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=none smtp.client-ip=205.220.165.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFHOI1006321;
-	Fri, 31 May 2024 01:30:29 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFLJmU004539;
+	Fri, 31 May 2024 01:30:53 GMT
 DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:message-id:mime-versi?=
- =?UTF-8?Q?on:subject:to;_s=3Dcorp-2023-11-20;_bh=3DqyH+bDJ/v0O1dmFLTpYo5a?=
- =?UTF-8?Q?pbWg9MOytu0JYpsM4yWws=3D;_b=3DagObQj/Kpm/lerGczBh6BeuzWu2b5hEjE?=
- =?UTF-8?Q?WvQCKZ2cocUNp8mgHg6bWfU8phmAoo/6gL0_3xqtjcWKQqiWWSvGKHDJzpAUyvm?=
- =?UTF-8?Q?F6oQgvGivb+8UpZoMtcW6uDUAoj7Mm+knx1Wlet6r_gxj3kC+0aR47aqdmVFrzd?=
- =?UTF-8?Q?OuB4EFhAyZH4CQko+YJVgdQfvVxip98SqbJM6Wp9+7BylCf_JZSjdSoUngF+ac3?=
- =?UTF-8?Q?nOHgBHk3b4sgveEBlu7lPn8M1oBgZRb9nm+oWxhQP9ji9GB0VRmrw_I4dU68cqE?=
- =?UTF-8?Q?/miweDsV2GIIRJ067LmYT/Tt9z43cYyf5AHCa+35YsFkrnfKLx2b378wcAT_EQ?=
- =?UTF-8?Q?=3D=3D_?=
+ =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:in-reply-to:message-i?=
+ =?UTF-8?Q?d:mime-version:references:subject:to;_s=3Dcorp-2023-11-20;_bh?=
+ =?UTF-8?Q?=3DJIq8PD4p775hUTle2DjI37VqTFXpTvBbeNVGaMhFFXA=3D;_b=3DGZ7tGkI+?=
+ =?UTF-8?Q?1U4KbLCQ0SO1ck4ZUMhdvr/zzp4fKUVHVoNrTV2YIwYHW604ubzLw1dM+nm8_rW?=
+ =?UTF-8?Q?khmXEdCTyiuik6LhQdB3PKOwyh47HJRvY5qU56xxxCJfUwV7ZycoF04mKiavD5y?=
+ =?UTF-8?Q?58G_rUfN1NlVGbh8WOfcBgTP6vctE2RaBGRt+ZSJmP3Z0zVQaY7lYcAMbRqVaOD?=
+ =?UTF-8?Q?/j9WoLZPL_MfJSWIsg39sJzu4HnK6stykXJsJgkdCUjo1Yhg3VCkzahJwuGZM4N?=
+ =?UTF-8?Q?G2eedTah/fqPJxf_dxOlcFF5PGE7/wz2Cv4GlWSUhYOYXC+2LlzbYC7FXf4Ak/y?=
+ =?UTF-8?Q?vXStvxhiZvg05LrAbC4Ho_rw=3D=3D_?=
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8p7t3gn-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8hga70e-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 01:30:28 +0000
+	Fri, 31 May 2024 01:30:52 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V0uRw1016376;
-	Fri, 31 May 2024 01:30:28 GMT
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V0ro2C016224;
+	Fri, 31 May 2024 01:30:51 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t973g-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t97p3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:30:28 +0000
+	Fri, 31 May 2024 01:30:51 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNE027418;
-	Fri, 31 May 2024 01:30:27 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNQ027418;
+	Fri, 31 May 2024 01:30:50 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-7
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:30:26 +0000
+	Fri, 31 May 2024 01:30:50 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -59,10 +60,12 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v9 00/19] x86: Trenchboot secure dynamic launch Linux kernel support
-Date: Thu, 30 May 2024 18:03:12 -0700
-Message-Id: <20240531010331.134441-1-ross.philipson@oracle.com>
+Subject: [PATCH v9 06/19] x86: Add early SHA-1 support for Secure Launch early measurements
+Date: Thu, 30 May 2024 18:03:18 -0700
+Message-Id: <20240531010331.134441-7-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240531010331.134441-1-ross.philipson@oracle.com>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,267 +80,170 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamsc
  adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
  definitions=main-2405310010
-X-Proofpoint-ORIG-GUID: flZL183toSrZY36SPdpDyNYeOOf-3K-O
-X-Proofpoint-GUID: flZL183toSrZY36SPdpDyNYeOOf-3K-O
+X-Proofpoint-GUID: zTtkDTS_C9TfsYLA0QhDg3w6DJFlLWuc
+X-Proofpoint-ORIG-GUID: zTtkDTS_C9TfsYLA0QhDg3w6DJFlLWuc
 
-The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
-enhance the boot security and integrity in a unified manner. The first area of
-focus has been on the Trusted Computing Group's Dynamic Launch for establishing
-a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
-Trust for Measurement). The project has been and continues to work on providing
-a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
-cross-architecture (x86 and Arm), with our recent involvment in the upcoming
-Arm DRTM specification. The order of introducing DRTM to the Linux kernel
-follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
-Technology (TXT) is present today and only requires a preamble loader, e.g. a
-boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
-been present since the introduction of AMD-V but requires an additional
-component that is AMD specific and referred to in the specification as the
-Secure Loader, which the TrenchBoot project has an active prototype in
-development. Finally Arm's implementation is in specification development stage
-and the project is looking to support it when it becomes available.
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
-This patchset provides detailed documentation of DRTM, the approach used for
-adding the capbility, and relevant API/ABI documentation. In addition to the
-documentation the patch set introduces Intel TXT support as the first platform
-for Linux Secure Launch.
+For better or worse, Secure Launch needs SHA-1 and SHA-256. The
+choice of hashes used lie with the platform firmware, not with
+software, and is often outside of the users control.
 
-A quick note on terminology. The larger open source project itself is called
-TrenchBoot, which is hosted on Github (links below). The kernel feature enabling
-the use of Dynamic Launch technology is referred to as "Secure Launch" within
-the kernel code. As such the prefixes sl_/SL_ or slaunch/SLAUNCH will be seen
-in the code. The stub code discussed above is referred to as the SL stub.
+Even if we'd prefer to use SHA-256-only, if firmware elected to start us
+with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
+the TPM event log thus far, and deliberately cap the SHA-1 PCRs in order
+to safely use SHA-256 for everything else.
 
-The Secure Launch feature starts with patch #2. Patch #1 was authored by Arvind
-Sankar. There is no further status on this patch at this point but
-Secure Launch depends on it so it is included with the set.
+The SHA-1 code here has its origins in the code from the main kernel:
 
-Links:
+commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
 
-The TrenchBoot project including documentation:
+A modified version of this code was introduced to the lib/crypto/sha1.c
+to bring it in line with the SHA-256 code and allow it to be pulled into the
+setup kernel in the same manner as SHA-256 is.
 
-https://trenchboot.org
-
-The TrenchBoot project on Github:
-
-https://github.com/trenchboot
-
-Intel TXT is documented in its own specification and in the SDM Instruction Set volume:
-
-https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
-https://software.intel.com/en-us/articles/intel-sdm
-
-AMD SKINIT is documented in the System Programming manual:
-
-https://www.amd.com/system/files/TechDocs/24593.pdf
-
-The TrenchBoot project provides a quick start guide to help get a system
-up and running with Secure Launch for Linux:
-
-https://github.com/TrenchBoot/documentation/blob/master/QUICKSTART.md
-
-Patch set based on commit:
-
-torvalds/master/ea5f6ad9ad9645733b72ab53a98e719b460d36a6
-
-Thanks
-Ross Philipson and Daniel P. Smith
-
-Changes in v2:
-
- - Modified 32b entry code to prevent causing relocations in the compressed
-   kernel.
- - Dropped patches for compressed kernel TPM PCR extender.
- - Modified event log code to insert log delimiter events and not rely
-   on TPM access.
- - Stop extending PCRs in the early Secure Launch stub code.
- - Removed Kconfig options for hash algorithms and use the algorithms the
-   ACM used.
- - Match Secure Launch measurement algorithm use to those reported in the
-   TPM 2.0 event log.
- - Read the TPM events out of the TPM and extend them into the PCRs using
-   the mainline TPM driver. This is done in the late initcall module.
- - Allow use of alternate PCR 19 and 20 for post ACM measurements.
- - Add Kconfig constraints needed by Secure Launch (disable KASLR
-   and add x2apic dependency).
- - Fix testing of SL_FLAGS when determining if Secure Launch is active
-   and the architecture is TXT.
- - Use SYM_DATA_START_LOCAL macros in early entry point code.
- - Security audit changes:
-   - Validate buffers passed to MLE do not overlap the MLE and are
-     properly laid out.
-   - Validate buffers and memory regions used by the MLE are
-     protected by IOMMU PMRs.
- - Force IOMMU to not use passthrough mode during a Secure Launch.
- - Prevent KASLR use during a Secure Launch.
-
-Changes in v3:
-
- - Introduce x86 documentation patch to provide background, overview
-   and configuration/ABI information for the Secure Launch kernel
-   feature.
- - Remove the IOMMU patch with special cases for disabling IOMMU
-   passthrough. Configuring the IOMMU is now a documentation matter
-   in the previously mentioned new patch.
- - Remove special case KASLR disabling code. Configuring KASLR is now
-   a documentation matter in the previously mentioned new patch.
- - Fix incorrect panic on TXT public register read.
- - Properly handle and measure setup_indirect bootparams in the early
-   launch code.
- - Use correct compressed kernel image base address when testing buffers
-   in the early launch stub code. This bug was introduced by the changes
-   to avoid relocation in the compressed kernel.
- - Use CPUID feature bits instead of CPUID vendor strings to determine
-   if SMX mode is supported and the system is Intel.
- - Remove early NMI re-enable on the BSP. This can be safely done later
-   on the BSP after an IDT is setup.
-
-Changes in v4:
- - Expand the cover letter to provide more context to the order that DRTM
-   support will be added.
- - Removed debug tracing in TPM request locality funciton and fixed
-   local variable declarations.
- - Fixed missing break in default case in slmodule.c.
- - Reworded commit messages in patches 1 and 2 per suggestions.
-
-Changes in v5:
- - Comprehensive documentation rewrite.
- - Use boot param loadflags to communicate Secure Launch status to
-   kernel proper.
- - Fix incorrect check of X86_FEATURE_BIT_SMX bit.
- - Rename the alternate details and authorities PCR support.
- - Refactor the securityfs directory and file setup in slmodule.c.
- - Misc. cleanup from internal code reviews.
- - Use reverse fir tree format for variables.
-
-Changes in v6:
- - Support for the new Secure Launch Resourse Table that standardizes
-   the information passed and forms the ABI between the pre and post
-   launch code.
- - Support for booting Linux through the EFI stub entry point and
-   then being able to do a Secure Launch once EFI stub is done and EBS
-   is called.
- - Updates to the documentation to reflect the previous two items listed.
-
-Changes in v7:
- - Switch to using MONITOR/MWAIT instead of NMIs to park the APs for
-   later bringup by the SMP code.
- - Use static inline dummy functions instead of macros when the Secure
-   Launch feature is disabled.
- - Move early SHA1 code to lib/crypto and pull it in from there.
- - Numerous formatting fixes from comments on LKML.
- - Remove efi-stub/DL stub patch temporarily for redesign/rework.
-
-Changes in v8:
- - Reintroduce efi-stub Linux kernel booting through the dynamic launch
-   stub (DL stub).
- - Add new approach to setting localities > 0 through kernel and sysfs
-   interfaces in the TPM mainline driver.
- - General code cleanup from v7 post comments.
-
-Changes in v9:
- - Updated DL stub support for recent changes to EFI stub in the kernel.
- - Added patches to fix locality changing support in the TPM driver
-   (these patches originally were posted as a separate set).
- - Enhanced Secure Launch TPM locality 2 setting in the TPM driver.
- - Added locality setting support through sysfs for user land to access.
- - Split up SHA1 and SHA256 changes into separate patches and updated
-   the commit messages to be more clear (per request from upstream
-   review).
- - Fix Clang compile issues detected by kernel test robot.
- - Modifications to the Secure Launch Resource Table ABI:
-   . Use flex arrays in table structures.
-   . Update and move fields in tables to make everything 8b aligned.
-   . Add 2 new DLME fields and a txt_heap address field.
-   . Remove platform specific tables that are not defined yet (AMD/ARM).
- - Update Kconfig dependencies for Secure Launch with SHA1/SHA256/TPM.
- - Remove push/pop of rsi since boot params is now stored in r15.
- - Update outdated kernel documentation.
- - Misc. comment fixes for type-os and mispellings.
-
-Arvind Sankar (1):
-  x86/boot: Place kernel_info at a fixed offset
-
-Daniel P. Smith (6):
-  x86: Add early SHA-1 support for Secure Launch early measurements
-  x86: Add early SHA-256 support for Secure Launch early measurements
-  tpm: Protect against locality counter underflow
-  tpm: Ensure tpm is in known state at startup
-  tpm: Make locality requests return consistent values
-  x86: Secure Launch late initcall platform module
-
-Ross Philipson (12):
-  Documentation/x86: Secure Launch kernel documentation
-  x86: Secure Launch Kconfig
-  x86: Secure Launch Resource Table header file
-  x86: Secure Launch main header file
-  x86: Secure Launch kernel early boot stub
-  x86: Secure Launch kernel late boot stub
-  x86: Secure Launch SMP bringup support
-  kexec: Secure Launch kexec SEXIT support
-  reboot: Secure Launch SEXIT support on reboot paths
-  tpm: Add ability to set the preferred locality the TPM chip uses
-  tpm: Add sysfs interface to allow setting and querying the preferred
-    locality
-  x86: EFI stub DRTM launch support for Secure Launch
-
- Documentation/arch/x86/boot.rst               |  21 +
- Documentation/security/index.rst              |   1 +
- .../security/launch-integrity/index.rst       |  11 +
- .../security/launch-integrity/principles.rst  | 320 ++++++++
- .../secure_launch_details.rst                 | 587 ++++++++++++++
- .../secure_launch_overview.rst                | 227 ++++++
- arch/x86/Kconfig                              |  11 +
- arch/x86/boot/compressed/Makefile             |   3 +
- arch/x86/boot/compressed/early_sha1.c         |  12 +
- arch/x86/boot/compressed/early_sha256.c       |   6 +
- arch/x86/boot/compressed/head_64.S            |  30 +
- arch/x86/boot/compressed/kernel_info.S        |  53 +-
- arch/x86/boot/compressed/kernel_info.h        |  12 +
- arch/x86/boot/compressed/sl_main.c            | 577 ++++++++++++++
- arch/x86/boot/compressed/sl_stub.S            | 725 ++++++++++++++++++
- arch/x86/boot/compressed/vmlinux.lds.S        |   6 +
- arch/x86/include/asm/msr-index.h              |   5 +
- arch/x86/include/asm/realmode.h               |   3 +
- arch/x86/include/uapi/asm/bootparam.h         |   1 +
- arch/x86/kernel/Makefile                      |   2 +
- arch/x86/kernel/asm-offsets.c                 |  20 +
- arch/x86/kernel/reboot.c                      |  10 +
- arch/x86/kernel/setup.c                       |   3 +
- arch/x86/kernel/slaunch.c                     | 598 +++++++++++++++
- arch/x86/kernel/slmodule.c                    | 513 +++++++++++++
- arch/x86/kernel/smpboot.c                     |  58 +-
- arch/x86/realmode/init.c                      |   3 +
- arch/x86/realmode/rm/header.S                 |   3 +
- arch/x86/realmode/rm/trampoline_64.S          |  32 +
- drivers/char/tpm/tpm-chip.c                   |  24 +-
- drivers/char/tpm/tpm-interface.c              |  15 +
- drivers/char/tpm/tpm-sysfs.c                  |  30 +
- drivers/char/tpm/tpm.h                        |   1 +
- drivers/char/tpm/tpm_tis_core.c               |  25 +-
- drivers/firmware/efi/libstub/x86-stub.c       |  98 +++
- drivers/iommu/intel/dmar.c                    |   4 +
- include/crypto/sha1.h                         |   1 +
- include/linux/slaunch.h                       | 542 +++++++++++++
- include/linux/slr_table.h                     | 271 +++++++
- include/linux/tpm.h                           |  10 +
- kernel/kexec_core.c                           |   4 +
- lib/crypto/sha1.c                             |  81 ++
- 42 files changed, 4946 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/security/launch-integrity/index.rst
- create mode 100644 Documentation/security/launch-integrity/principles.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_details.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_overview.rst
+Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/boot/compressed/Makefile     |  2 +
+ arch/x86/boot/compressed/early_sha1.c | 12 ++++
+ include/crypto/sha1.h                 |  1 +
+ lib/crypto/sha1.c                     | 81 +++++++++++++++++++++++++++
+ 4 files changed, 96 insertions(+)
  create mode 100644 arch/x86/boot/compressed/early_sha1.c
- create mode 100644 arch/x86/boot/compressed/early_sha256.c
- create mode 100644 arch/x86/boot/compressed/kernel_info.h
- create mode 100644 arch/x86/boot/compressed/sl_main.c
- create mode 100644 arch/x86/boot/compressed/sl_stub.S
- create mode 100644 arch/x86/kernel/slaunch.c
- create mode 100644 arch/x86/kernel/slmodule.c
- create mode 100644 include/linux/slaunch.h
- create mode 100644 include/linux/slr_table.h
 
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index e9522c6893be..3307ebef4e1b 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -118,6 +118,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+ vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
++vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/early_sha1.o
++
+ $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+ 	$(call if_changed,ld)
+ 
+diff --git a/arch/x86/boot/compressed/early_sha1.c b/arch/x86/boot/compressed/early_sha1.c
+new file mode 100644
+index 000000000000..8a9b904a73ab
+--- /dev/null
++++ b/arch/x86/boot/compressed/early_sha1.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2024 Apertus Solutions, LLC.
++ */
++
++#include <linux/init.h>
++#include <linux/linkage.h>
++#include <linux/string.h>
++#include <asm/boot.h>
++#include <asm/unaligned.h>
++
++#include "../../../../lib/crypto/sha1.c"
+diff --git a/include/crypto/sha1.h b/include/crypto/sha1.h
+index 044ecea60ac8..d715dd5332e1 100644
+--- a/include/crypto/sha1.h
++++ b/include/crypto/sha1.h
+@@ -42,5 +42,6 @@ extern int crypto_sha1_finup(struct shash_desc *desc, const u8 *data,
+ #define SHA1_WORKSPACE_WORDS	16
+ void sha1_init(__u32 *buf);
+ void sha1_transform(__u32 *digest, const char *data, __u32 *W);
++void sha1(const u8 *data, unsigned int len, u8 *out);
+ 
+ #endif /* _CRYPTO_SHA1_H */
+diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
+index 1aebe7be9401..10152125b338 100644
+--- a/lib/crypto/sha1.c
++++ b/lib/crypto/sha1.c
+@@ -137,4 +137,85 @@ void sha1_init(__u32 *buf)
+ }
+ EXPORT_SYMBOL(sha1_init);
+ 
++static void __sha1_transform(u32 *digest, const char *data)
++{
++       u32 ws[SHA1_WORKSPACE_WORDS];
++
++       sha1_transform(digest, data, ws);
++
++       memzero_explicit(ws, sizeof(ws));
++}
++
++static void sha1_update(struct sha1_state *sctx, const u8 *data, unsigned int len)
++{
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++
++	sctx->count += len;
++
++	if (likely((partial + len) >= SHA1_BLOCK_SIZE)) {
++		int blocks;
++
++		if (partial) {
++			int p = SHA1_BLOCK_SIZE - partial;
++
++			memcpy(sctx->buffer + partial, data, p);
++			data += p;
++			len -= p;
++
++			__sha1_transform(sctx->state, sctx->buffer);
++		}
++
++		blocks = len / SHA1_BLOCK_SIZE;
++		len %= SHA1_BLOCK_SIZE;
++
++		if (blocks) {
++			while (blocks--) {
++				__sha1_transform(sctx->state, data);
++				data += SHA1_BLOCK_SIZE;
++			}
++		}
++		partial = 0;
++	}
++
++	if (len)
++		memcpy(sctx->buffer + partial, data, len);
++}
++
++static void sha1_final(struct sha1_state *sctx, u8 *out)
++{
++	const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++	__be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
++	__be32 *digest = (__be32 *)out;
++	int i;
++
++	sctx->buffer[partial++] = 0x80;
++	if (partial > bit_offset) {
++		memset(sctx->buffer + partial, 0x0, SHA1_BLOCK_SIZE - partial);
++		partial = 0;
++
++		__sha1_transform(sctx->state, sctx->buffer);
++	}
++
++	memset(sctx->buffer + partial, 0x0, bit_offset - partial);
++	*bits = cpu_to_be64(sctx->count << 3);
++	__sha1_transform(sctx->state, sctx->buffer);
++
++	for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
++		put_unaligned_be32(sctx->state[i], digest++);
++
++	*sctx = (struct sha1_state){};
++}
++
++void sha1(const u8 *data, unsigned int len, u8 *out)
++{
++	struct sha1_state sctx = {0};
++
++	sha1_init(sctx.state);
++	sctx.count = 0;
++	sha1_update(&sctx, data, len);
++	sha1_final(&sctx, out);
++}
++EXPORT_SYMBOL(sha1);
++
+ MODULE_LICENSE("GPL");
 -- 
 2.39.3
 
