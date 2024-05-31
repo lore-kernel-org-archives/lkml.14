@@ -1,72 +1,66 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF82158A14;
-	Fri, 31 May 2024 12:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B340F155A32
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717159155; cv=none; b=DDZNUKO9Kwylk4WP9F1WVNGBxEBNZ7IAEj4MtJyn64KpVvoH+/OtCUJe9mkEQgn0j4TfqVIMW+0w1ytI4fD0s/bqGDZnDyI7apkgRG5r0+qhD3aC7rCO99mSq5qW+ZicJSMdNp80g2GMHYWiZVv1K6WDX/qf76WyxQ+sPdfD6Ng=
+	t=1717159222; cv=none; b=XSgM5J5f7C2DdqVysuMRZlkGAtCVXHfgBpnZ+pOwmqUHHKlW5Mz3qG6WxHklS77b9TatQ0MB/QJ4d5pdX/K0Th1FOCMWkuTDBXoDLAdY5dZEPABurqBiQn/YzbkJY3Y8JMzD8tBNIX3WoAMXxnTVdV41SCajWzP070a+bp/Zbno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717159155; c=relaxed/simple;
-	bh=XHhIKllrLS04EQIbw2cXL6NKpGu+cxJfRqy8n5ltMfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a0h0HAvwm1BsAArAUoM3uup0CDpvIJs+E4GmgIH3sv5QcrkljwYElPiinFZsp1KY/kNEetBKDnB8bd1KAW+wPaY2KqQ0R+Lx/4M8t7ZoPtbRmXNyxXIY3xAzLtCZPxP18sVwtm6Rc3m8ygBmMR/993CY81bkUjeGjiKs9lSHWRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iQld/0+w; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1717159222; c=relaxed/simple;
+	bh=MsC1KrxvRHyGoEgoRZpA5nJme8Xo2JROcu4amc8FmBU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=lu4LCqRZzfyKZa3GGxXx8hgPwLzDvBP+YPNIO0s0s/SS6PHka55Bs2RXCtJomR9nf0L4sd7AFcIt7BW+F0VdhufOXu/H1tQLvtfBc0EW24vt3Mbx6QQ1vmrn98rsdYAu1FVsp3/fEoBIzbvi47nEgfNYhD1/jOBFByBqO39MuG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SobEOHTD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iQld/0+w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JUHpCtOFvJ217dOG69CLyUE0s9lGKzV3hZOfC/pApv8=; b=iQld/0+wSyfDLz98D3BIIzo6Ac
-	x0Kz29ldzbaZqe3zBKjJV5QDN2L941s1LbVSuwnrhoAoU7XP/QxLTgu79MZ7uwZFM8R5ABwwaUS+E
-	eCr7HJjGHMmlVgDZKCQ/ET2oUVa3AiYGlyTjXatp4q4nqfzZcBif0iRw6XtgN35+02gEDFDAIHxZb
-	QkIAWVD7WxeqRRAcU63D4fj6MQcY4Bybro4TsAka9FJeb5N1ZYtMcqo/1a9pP6furrGehPRXH4v89
-	Ev9xqid/1uHzTf44rjHWrxGPVRQitVoixmDtn/7rI4kGEH6u5FLVUmya0YnvDbWir4nTaE8Pw/CQx
-	PL3jCGig==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sD1XK-0000000ADsj-3R6h;
-	Fri, 31 May 2024 12:39:10 +0000
-Date: Fri, 31 May 2024 05:39:10 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
-	brauner@kernel.org, david@fromorbit.com, chandanbabu@kernel.org,
-	jack@suse.cz, willy@infradead.org, yi.zhang@huawei.com,
-	chengzhihao1@huawei.com, yukuai3@huawei.com
-Subject: Re: [RFC PATCH v4 3/8] iomap: pass blocksize to iomap_truncate_page()
-Message-ID: <ZlnE7vrk_dmrqUxC@infradead.org>
-References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
- <20240529095206.2568162-4-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SobEOHTD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F033C116B1;
+	Fri, 31 May 2024 12:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717159222;
+	bh=MsC1KrxvRHyGoEgoRZpA5nJme8Xo2JROcu4amc8FmBU=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SobEOHTDWlEJSR5pwg1LtauZKSlDZLjrB3ZTF1OtqimcfeGsU2LD43PEO+gHGTb8l
+	 NyxXCSkr2qkjRYCxCDuuxMaXvHx0yxStZYssmR0+Uq66x9xmigyPeEUA+wXMzLjZ5r
+	 3vK2EMJFBDTxMKyulCfwbpxnLdW/UtdFuQ3qFsLRJEg3Vh66h7zpwyIy1qLAtxhh7u
+	 xhdnj4qNpuQrionG9D7H0d0B2R04YWhVsJpPdu0V3qvBRtjl+H8pfpTrM6G9uSjenI
+	 JetAw2PPFf60ndn3vx/cZvrtCzwUTpCauNGJrcA5HcarbLlOnEtRvRzVjvdZMCgfx2
+	 G8uwwL3ElBOmQ==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, kernel@pengutronix.de
+In-Reply-To: <20240510211011.2273978-2-u.kleine-koenig@pengutronix.de>
+References: <20240510211011.2273978-2-u.kleine-koenig@pengutronix.de>
+Subject: Re: (subset) [PATCH] mfd: Drop explicit initialization of struct
+ i2c_device_id::driver_data to 0
+Message-Id: <171715922112.1068824.2575456159464930318.b4-ty@kernel.org>
+Date: Fri, 31 May 2024 13:40:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529095206.2568162-4-yi.zhang@huaweicloud.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-> -		const struct iomap_ops *ops)
-> +iomap_truncate_page(struct inode *inode, loff_t pos, unsigned int blocksize,
-> +		bool *did_zero, const struct iomap_ops *ops)
->  {
-> -	unsigned int blocksize = i_blocksize(inode);
-> -	unsigned int off = pos & (blocksize - 1);
-> +	unsigned int off = rem_u64(pos, blocksize);
->  
->  	/* Block boundary? Nothing to do */
->  	if (!off)
+On Fri, 10 May 2024 23:10:11 +0200, Uwe Kleine-König wrote:
+> These drivers don't use the driver_data member of struct i2c_device_id,
+> so don't explicitly initialize this member.
+> 
+> This prepares putting driver_data in an anonymous union which requires
+> either no initialization or named designators. But it's also a nice
+> cleanup on its own.
+> 
+> [...]
 
-Instad of passing yet another argument here, can we just kill
-iomap_truncate_page?
+Applied, thanks!
 
-I.e. just open code the rem_u64 and 0 offset check in the only caller
-and call iomap_zero_range.  Same for the DAX variant and it's two
-callers.
+[1/1] mfd: Drop explicit initialization of struct i2c_device_id::driver_data to 0
+      commit: e0dce41bc37ac8222f08e86c2059ab1ff3778f93
+
+--
+Lee Jones [李琼斯]
 
