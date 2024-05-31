@@ -1,78 +1,45 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C77211C;
-	Fri, 31 May 2024 00:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB96F4F1
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 00:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717116639; cv=none; b=civgZSMmdxTMHS8jcHs0am0FyKNiVowv9hFLHEYzaCRwROe979fwCXylOR4wZfd2Rp1Zybgif1qwCk2aUictvAiNK8lHFW3YJkoyd0mD9T9dyduzA3n5d5kwdGP+us37vPRojOK7pNtF5EIoximWrqZeCjTPXDyuE+CezvWZx8Q=
+	t=1717116646; cv=none; b=kZJmabvfSpvj786UYDkL4EJXOprvtR9lidL1rjJusGi6H+R7yVK93ZMP7wKw8WdTNQNmnC6uchr4L5VXIgx6uFvPbZ2shOmhP4bY5h3qlSfWdA7YUSgIxiE0/CACZ/W2SV/4v2WhobqK3QEofNff/AU+nEBTgr4tFB9/SaNWkzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717116639; c=relaxed/simple;
-	bh=onuwuvENVCtNHWu8XCs4vv6O1mZKno2paCmRnfkN2xQ=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ruu9SPAzAeRqvl5ge9QYWVQ+75C1bXIf2VVohQKUe4xG4kdAuCrf88sOK2HRy3Z91ird0xbfX6mZOyWOIvZMnC7oA8cEsIPZ1Vm75jCPdv9p2jNXyEDpIRdSZLiFN0UDloSjC3LmtbxGvuFiaIqgMcqlDfZyG906tRxpm+UhySA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9ymvS95; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9ymvS95"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4202cea9a2fso14783145e9.3;
-        Thu, 30 May 2024 17:50:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717116636; x=1717721436; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mCAmW2qrRsxZlUwi0zvsDbZO9ACbl7sZDK6XgFcx6CE=;
-        b=e9ymvS95gDbSOXsUnj7kC31bRWyBSD2FDKet4KhUZGYI6rGlQ85GvppQBJuKzFenFT
-         nYoJIr3JckpfSUxiMmmrd98lRkKvthrTZteqtSNul47Z1jj+zvmiK+zJzlYm+JI4UbJf
-         s2WOEq1KDWK5f3SKxhpa28pq6rtu4Q9mAZBvcqNNQEU2mjeOVwGNkaOK6R13J72dHs3s
-         RdEFGvnZ/V3k+XyQKtlJKGzCpvZnPSFkslB0OL2VMGhtspYClTPdTVqsx6JpA5McoBed
-         ZRVe8kNGDZ+0TtUjNMMk9tmVqgcBJuysVTTn15Ab5FkoO6blgz97NmdReXJ1cBgn2hyI
-         7e1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717116636; x=1717721436;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mCAmW2qrRsxZlUwi0zvsDbZO9ACbl7sZDK6XgFcx6CE=;
-        b=PsPqh0oFFixxRnhdmQPNoZ73RWGKH3ZQcfURiO40X0WLBu+oyr6KCIdAntPlp7FanV
-         zxc/0SmREaFJxr7eT6j8p7kKsl/xt6/LBEA0wzWxzomGytGXuRlTFSSFVI6F2Fzs+LDc
-         EDDjAhLe1A4+tz9qc9cdB0ZVIivi7t/ZCqNWukyNOhDhNCfqEYmfpzXPyfZbAySXgewI
-         046g+4DenBszyQ9anAJyNCUjQYumKrYYxmWJOp7cEq/pjq9kWwM0KwQwtp9B9KHthtVP
-         uElg1LLllnu2Pwp+OJCpZ8k30Tl/v4kyk83RV+mNwmMP9AH1iP3w8eQkRniVRvmwbPbO
-         r2hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKK3dJUgUhA+Wx+CvU7N+9xmLEV1RiRa1O+N8hgFvMTiU5Nzlr24Nc1D8l90DdqyorItgjN8mjvOP7n0u7kapd0EiIX+fQcKvpN+NmsSgd1XDBqDOFhO2c/B25cH5BGK+cUn1Q
-X-Gm-Message-State: AOJu0YwrYuosEeidT4I9arl41VnE9obRTIRYRDInn1zM9kr/vD5FJzmH
-	Acg0lFCmP++FIq661ukHev3+j8Rz2zTZcB6RRfuGkS1dgTXgwv3k
-X-Google-Smtp-Source: AGHT+IH/5yv8dmxla3/yPc+53hm77sEyKxgYeCvGirIo6LmD1zFBqb0dgPfB6x//Oh72GSKOgh6q2A==
-X-Received: by 2002:a05:600c:4314:b0:421:2ddf:aec4 with SMTP id 5b1f17b1804b1-4212e09b9b9mr2593715e9.30.1717116635714;
-        Thu, 30 May 2024 17:50:35 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4212279b4c7sm64327125e9.0.2024.05.30.17.50.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 17:50:35 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Robert Marko <robimarko@gmail.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	=?UTF-8?q?Pawe=C5=82=20Owoc?= <frut3k7@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [net-next PATCH v2 2/2] net: phy: aquantia: add support for PHY LEDs
-Date: Thu, 30 May 2024 23:20:31 +0200
-Message-ID: <20240530212043.9006-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240530212043.9006-1-ansuelsmth@gmail.com>
-References: <20240530212043.9006-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1717116646; c=relaxed/simple;
+	bh=PXP3qouM95Yb/Z4GJB6s+wDC+hU13simptL+d3AX5Oo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jJ95ZkQJYJebgtPHo1mg4nN7rX8TwE+Qm0hkiNoz72ihqW/4o4GO6COEj4KtxdZbQHsHmZ5b9Siv/bAIecQQhCJrahv36EWdt3THMINf4elmzKo2qKIDKIYuNFGkz86gwQ+w4kqFmm8znrV5sWkiwTmrqJu/0No/Uzod1jwXVbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 44V0oCZS010395;
+	Fri, 31 May 2024 08:50:12 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Vr4Ds5lq3z2Mx64R;
+	Fri, 31 May 2024 08:46:21 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Fri, 31 May 2024 08:50:09 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki
+	<urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes
+	<lstoakes@gmail.com>, Baoquan He <bhe@redhat.com>,
+        Thomas Gleixner
+	<tglx@linutronix.de>,
+        hailong liu <hailong.liu@oppo.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang
+	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [PATCHv2] mm: fix incorrect vbq reference in purge_fragmented_block
+Date: Fri, 31 May 2024 08:50:07 +0800
+Message-ID: <20240531005007.1600287-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,409 +47,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 44V0oCZS010395
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Aquantia Ethernet PHYs got 3 LED output pins which are typically used
-to indicate link status and activity.
-Add a minimal LED controller driver supporting the most common uses
-with the 'netdev' trigger as well as software-driven forced control of
-the LEDs.
+vmalloc area runs out in our ARM64 system during an erofs test as
+vm_map_ram failed[1]. By following the debug log, we find that
+vm_map_ram()->vb_alloc() will allocate new vb->va which corresponding
+to 4MB vmalloc area as list_for_each_entry_rcu returns immediately
+when vbq->free->next points to vbq->free. That is to say, 65536 times
+of page fault after the list's broken will run out of the whole
+vmalloc area. This should be introduced by one vbq->free->next point to
+vbq->free which makes list_for_each_entry_rcu can not iterate the list
+and find the BUG.
 
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-[ rework indentation, fix checkpatch error and improve some functions ]
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+[1]
+PID: 1        TASK: ffffff80802b4e00  CPU: 6    COMMAND: "init"
+ #0 [ffffffc08006afe0] __switch_to at ffffffc08111d5cc
+ #1 [ffffffc08006b040] __schedule at ffffffc08111dde0
+ #2 [ffffffc08006b0a0] schedule at ffffffc08111e294
+ #3 [ffffffc08006b0d0] schedule_preempt_disabled at ffffffc08111e3f0
+ #4 [ffffffc08006b140] __mutex_lock at ffffffc08112068c
+ #5 [ffffffc08006b180] __mutex_lock_slowpath at ffffffc08111f8f8
+ #6 [ffffffc08006b1a0] mutex_lock at ffffffc08111f834
+ #7 [ffffffc08006b1d0] reclaim_and_purge_vmap_areas at ffffffc0803ebc3c
+ #8 [ffffffc08006b290] alloc_vmap_area at ffffffc0803e83fc
+ #9 [ffffffc08006b300] vm_map_ram at ffffffc0803e78c0
+
+Fixes: fc1e0d980037 ("mm/vmalloc: prevent stale TLBs in fully utilized blocks")
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 ---
-Changes v2:
-- Out of RFC
+v2: introduce cpu in vmap_block to record the right CPU number
+---
+---
+ mm/vmalloc.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
- drivers/net/phy/aquantia/Makefile        |   2 +-
- drivers/net/phy/aquantia/aquantia.h      |  40 ++++++
- drivers/net/phy/aquantia/aquantia_leds.c | 150 +++++++++++++++++++++++
- drivers/net/phy/aquantia/aquantia_main.c |  63 +++++++++-
- 4 files changed, 252 insertions(+), 3 deletions(-)
- create mode 100644 drivers/net/phy/aquantia/aquantia_leds.c
-
-diff --git a/drivers/net/phy/aquantia/Makefile b/drivers/net/phy/aquantia/Makefile
-index aa77fb63c8ec..c6c4d494ee2a 100644
---- a/drivers/net/phy/aquantia/Makefile
-+++ b/drivers/net/phy/aquantia/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--aquantia-objs			+= aquantia_main.o aquantia_firmware.o
-+aquantia-objs			+= aquantia_main.o aquantia_firmware.o aquantia_leds.o
- ifdef CONFIG_HWMON
- aquantia-objs			+= aquantia_hwmon.o
- endif
-diff --git a/drivers/net/phy/aquantia/aquantia.h b/drivers/net/phy/aquantia/aquantia.h
-index c79b33d95628..c0e1fd9d7152 100644
---- a/drivers/net/phy/aquantia/aquantia.h
-+++ b/drivers/net/phy/aquantia/aquantia.h
-@@ -63,6 +63,28 @@
- #define VEND1_GLOBAL_CONTROL2_UP_RUN_STALL_OVD	BIT(6)
- #define VEND1_GLOBAL_CONTROL2_UP_RUN_STALL	BIT(0)
- 
-+#define VEND1_GLOBAL_LED_PROV			0xc430
-+#define AQR_LED_PROV(x)				(VEND1_GLOBAL_LED_PROV + (x))
-+#define VEND1_GLOBAL_LED_PROV_LINK2500		BIT(14)
-+#define VEND1_GLOBAL_LED_PROV_LINK5000		BIT(15)
-+#define VEND1_GLOBAL_LED_PROV_FORCE_ON		BIT(8)
-+#define VEND1_GLOBAL_LED_PROV_LINK10000		BIT(7)
-+#define VEND1_GLOBAL_LED_PROV_LINK1000		BIT(6)
-+#define VEND1_GLOBAL_LED_PROV_LINK100		BIT(5)
-+#define VEND1_GLOBAL_LED_PROV_RX_ACT		BIT(3)
-+#define VEND1_GLOBAL_LED_PROV_TX_ACT		BIT(2)
-+#define VEND1_GLOBAL_LED_PROV_ACT_STRETCH	GENMASK(0, 1)
-+
-+#define VEND1_GLOBAL_LED_PROV_LINK_MASK		(VEND1_GLOBAL_LED_PROV_LINK100 | \
-+						 VEND1_GLOBAL_LED_PROV_LINK1000 | \
-+						 VEND1_GLOBAL_LED_PROV_LINK10000 | \
-+						 VEND1_GLOBAL_LED_PROV_LINK5000 | \
-+						 VEND1_GLOBAL_LED_PROV_LINK2500)
-+
-+#define VEND1_GLOBAL_LED_DRIVE			0xc438
-+#define VEND1_GLOBAL_LED_DRIVE_VDD		BIT(1)
-+#define AQR_LED_DRIVE(x)			(VEND1_GLOBAL_LED_DRIVE + (x))
-+
- #define VEND1_THERMAL_PROV_HIGH_TEMP_FAIL	0xc421
- #define VEND1_THERMAL_PROV_LOW_TEMP_FAIL	0xc422
- #define VEND1_THERMAL_PROV_HIGH_TEMP_WARN	0xc423
-@@ -125,6 +147,8 @@
- #define VEND1_GLOBAL_INT_VEND_MASK_GLOBAL2	BIT(1)
- #define VEND1_GLOBAL_INT_VEND_MASK_GLOBAL3	BIT(0)
- 
-+#define AQR_MAX_LEDS				3
-+
- struct aqr107_hw_stat {
- 	const char *name;
- 	int reg;
-@@ -149,6 +173,7 @@ static const struct aqr107_hw_stat aqr107_hw_stats[] = {
- 
- struct aqr107_priv {
- 	u64 sgmii_stats[AQR107_SGMII_STAT_SZ];
-+	unsigned long leds_active_low;
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 22aa63f4ef63..ca962b554fa0 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2458,6 +2458,7 @@ struct vmap_block {
+ 	struct list_head free_list;
+ 	struct rcu_head rcu_head;
+ 	struct list_head purge;
++	unsigned int cpu;
  };
  
- #if IS_REACHABLE(CONFIG_HWMON)
-@@ -158,3 +183,18 @@ static inline int aqr_hwmon_probe(struct phy_device *phydev) { return 0; }
- #endif
+ /* Queue of free and dirty vmap blocks, for allocation and flushing purposes */
+@@ -2574,6 +2575,7 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 	vb->dirty = 0;
+ 	vb->dirty_min = VMAP_BBMAP_BITS;
+ 	vb->dirty_max = 0;
++	vb->cpu = smp_processor_id();
+ 	bitmap_set(vb->used_map, 0, (1UL << order));
+ 	INIT_LIST_HEAD(&vb->free_list);
  
- int aqr_firmware_load(struct phy_device *phydev);
-+
-+int aqr_phy_led_blink_set(struct phy_device *phydev, u8 index,
-+			  unsigned long *delay_on,
-+			  unsigned long *delay_off);
-+int aqr_phy_led_brightness_set(struct phy_device *phydev,
-+			       u8 index, enum led_brightness value);
-+int aqr_phy_led_hw_is_supported(struct phy_device *phydev, u8 index,
-+				unsigned long rules);
-+int aqr_phy_led_hw_control_get(struct phy_device *phydev, u8 index,
-+			       unsigned long *rules);
-+int aqr_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
-+			       unsigned long rules);
-+int aqr_phy_led_active_low_set(struct phy_device *phydev, int index, bool enable);
-+int aqr_phy_led_polarity_set(struct phy_device *phydev, int index,
-+			     unsigned long modes);
-diff --git a/drivers/net/phy/aquantia/aquantia_leds.c b/drivers/net/phy/aquantia/aquantia_leds.c
-new file mode 100644
-index 000000000000..47bcc6d70945
---- /dev/null
-+++ b/drivers/net/phy/aquantia/aquantia_leds.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* LED driver for Aquantia PHY
-+ *
-+ * Author: Daniel Golle <daniel@makrotopia.org>
-+ */
-+
-+#include <linux/phy.h>
-+
-+#include "aquantia.h"
-+
-+int aqr_phy_led_brightness_set(struct phy_device *phydev,
-+			       u8 index, enum led_brightness value)
-+{
-+	if (index > 2)
-+		return -EINVAL;
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1, AQR_LED_PROV(index),
-+			      VEND1_GLOBAL_LED_PROV_LINK_MASK |
-+			      VEND1_GLOBAL_LED_PROV_FORCE_ON |
-+			      VEND1_GLOBAL_LED_PROV_RX_ACT |
-+			      VEND1_GLOBAL_LED_PROV_TX_ACT,
-+			      value ? VEND1_GLOBAL_LED_PROV_FORCE_ON : 0);
-+}
-+
-+static const unsigned long supported_triggers = (BIT(TRIGGER_NETDEV_LINK) |
-+						 BIT(TRIGGER_NETDEV_LINK_100) |
-+						 BIT(TRIGGER_NETDEV_LINK_1000) |
-+						 BIT(TRIGGER_NETDEV_LINK_2500) |
-+						 BIT(TRIGGER_NETDEV_LINK_5000) |
-+						 BIT(TRIGGER_NETDEV_LINK_10000)  |
-+						 BIT(TRIGGER_NETDEV_RX) |
-+						 BIT(TRIGGER_NETDEV_TX));
-+
-+int aqr_phy_led_hw_is_supported(struct phy_device *phydev, u8 index,
-+				unsigned long rules)
-+{
-+	if (index >= AQR_MAX_LEDS)
-+		return -EINVAL;
-+
-+	/* All combinations of the supported triggers are allowed */
-+	if (rules & ~supported_triggers)
-+		return -EOPNOTSUPP;
-+
-+	return 0;
-+}
-+
-+int aqr_phy_led_hw_control_get(struct phy_device *phydev, u8 index,
-+			       unsigned long *rules)
-+{
-+	int val;
-+
-+	if (index >= AQR_MAX_LEDS)
-+		return -EINVAL;
-+
-+	val = phy_read_mmd(phydev, MDIO_MMD_VEND1, AQR_LED_PROV(index));
-+	if (val < 0)
-+		return val;
-+
-+	*rules = 0;
-+	if (val & VEND1_GLOBAL_LED_PROV_LINK100)
-+		*rules |= BIT(TRIGGER_NETDEV_LINK_100);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_LINK1000)
-+		*rules |= BIT(TRIGGER_NETDEV_LINK_1000);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_LINK2500)
-+		*rules |= BIT(TRIGGER_NETDEV_LINK_2500);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_LINK5000)
-+		*rules |= BIT(TRIGGER_NETDEV_LINK_5000);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_LINK10000)
-+		*rules |= BIT(TRIGGER_NETDEV_LINK_10000);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_RX_ACT)
-+		*rules |= BIT(TRIGGER_NETDEV_RX);
-+
-+	if (val & VEND1_GLOBAL_LED_PROV_TX_ACT)
-+		*rules |= BIT(TRIGGER_NETDEV_TX);
-+
-+	return 0;
-+}
-+
-+int aqr_phy_led_hw_control_set(struct phy_device *phydev, u8 index,
-+			       unsigned long rules)
-+{
-+	u16 val = 0;
-+
-+	if (index >= AQR_MAX_LEDS)
-+		return -EINVAL;
-+
-+	if (rules & (BIT(TRIGGER_NETDEV_LINK_100) | BIT(TRIGGER_NETDEV_LINK)))
-+		val |= VEND1_GLOBAL_LED_PROV_LINK100;
-+
-+	if (rules & (BIT(TRIGGER_NETDEV_LINK_1000) | BIT(TRIGGER_NETDEV_LINK)))
-+		val |= VEND1_GLOBAL_LED_PROV_LINK1000;
-+
-+	if (rules & (BIT(TRIGGER_NETDEV_LINK_2500) | BIT(TRIGGER_NETDEV_LINK)))
-+		val |= VEND1_GLOBAL_LED_PROV_LINK2500;
-+
-+	if (rules & (BIT(TRIGGER_NETDEV_LINK_5000) | BIT(TRIGGER_NETDEV_LINK)))
-+		val |= VEND1_GLOBAL_LED_PROV_LINK5000;
-+
-+	if (rules & (BIT(TRIGGER_NETDEV_LINK_10000) | BIT(TRIGGER_NETDEV_LINK)))
-+		val |= VEND1_GLOBAL_LED_PROV_LINK10000;
-+
-+	if (rules & BIT(TRIGGER_NETDEV_RX))
-+		val |= VEND1_GLOBAL_LED_PROV_RX_ACT;
-+
-+	if (rules & BIT(TRIGGER_NETDEV_TX))
-+		val |= VEND1_GLOBAL_LED_PROV_TX_ACT;
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1, AQR_LED_PROV(index),
-+			      VEND1_GLOBAL_LED_PROV_LINK_MASK |
-+			      VEND1_GLOBAL_LED_PROV_FORCE_ON |
-+			      VEND1_GLOBAL_LED_PROV_RX_ACT |
-+			      VEND1_GLOBAL_LED_PROV_TX_ACT, val);
-+}
-+
-+int aqr_phy_led_active_low_set(struct phy_device *phydev, int index, bool enable)
-+{
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1, AQR_LED_DRIVE(index),
-+			      VEND1_GLOBAL_LED_DRIVE_VDD, enable);
-+}
-+
-+int aqr_phy_led_polarity_set(struct phy_device *phydev, int index, unsigned long modes)
-+{
-+	struct aqr107_priv *priv = phydev->priv;
-+	bool active_low = false;
-+	u32 mode;
-+
-+	if (index >= AQR_MAX_LEDS)
-+		return -EINVAL;
-+
-+	for_each_set_bit(mode, &modes, __PHY_LED_MODES_NUM) {
-+		switch (mode) {
-+		case PHY_LED_ACTIVE_LOW:
-+			active_low = true;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	/* Save LED driver vdd state to restore on SW reset */
-+	if (active_low)
-+		priv->leds_active_low |= BIT(index);
-+
-+	return aqr_phy_led_active_low_set(phydev, index, active_low);
-+}
-diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
-index 252123d12efb..6c14355744b7 100644
---- a/drivers/net/phy/aquantia/aquantia_main.c
-+++ b/drivers/net/phy/aquantia/aquantia_main.c
-@@ -475,7 +475,9 @@ static void aqr107_chip_info(struct phy_device *phydev)
- 
- static int aqr107_config_init(struct phy_device *phydev)
- {
--	int ret;
-+	struct aqr107_priv *priv = phydev->priv;
-+	u32 led_active_low;
-+	int ret, index = 0;
- 
- 	/* Check that the PHY interface type is compatible */
- 	if (phydev->interface != PHY_INTERFACE_MODE_SGMII &&
-@@ -496,7 +498,19 @@ static int aqr107_config_init(struct phy_device *phydev)
- 	if (!ret)
- 		aqr107_chip_info(phydev);
- 
--	return aqr107_set_downshift(phydev, MDIO_AN_VEND_PROV_DOWNSHIFT_DFLT);
-+	ret = aqr107_set_downshift(phydev, MDIO_AN_VEND_PROV_DOWNSHIFT_DFLT);
-+	if (ret)
-+		return ret;
-+
-+	/* Restore LED polarity state after reset */
-+	for_each_set_bit(led_active_low, &priv->leds_active_low, AQR_MAX_LEDS) {
-+		ret = aqr_phy_led_active_low_set(phydev, index, led_active_low);
-+		if (ret)
-+			return ret;
-+		index++;
-+	}
-+
-+	return 0;
+@@ -2614,9 +2616,10 @@ static void free_vmap_block(struct vmap_block *vb)
  }
  
- static int aqcs109_config_init(struct phy_device *phydev)
-@@ -786,6 +800,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
+ static bool purge_fragmented_block(struct vmap_block *vb,
+-		struct vmap_block_queue *vbq, struct list_head *purge_list,
+-		bool force_purge)
++		struct list_head *purge_list, bool force_purge)
  {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQCS109),
-@@ -805,6 +824,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR111),
-@@ -824,6 +848,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR111B0),
-@@ -843,6 +872,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR405),
-@@ -869,6 +903,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR412),
-@@ -906,6 +945,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings    = aqr107_get_strings,
- 	.get_stats      = aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR113C),
-@@ -925,6 +969,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings    = aqr107_get_strings,
- 	.get_stats      = aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR114C),
-@@ -944,6 +993,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings    = aqr107_get_strings,
- 	.get_stats      = aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- {
- 	PHY_ID_MATCH_MODEL(PHY_ID_AQR813),
-@@ -963,6 +1017,11 @@ static struct phy_driver aqr_driver[] = {
- 	.get_strings	= aqr107_get_strings,
- 	.get_stats	= aqr107_get_stats,
- 	.link_change_notify = aqr107_link_change_notify,
-+	.led_brightness_set = aqr_phy_led_brightness_set,
-+	.led_hw_is_supported = aqr_phy_led_hw_is_supported,
-+	.led_hw_control_set = aqr_phy_led_hw_control_set,
-+	.led_hw_control_get = aqr_phy_led_hw_control_get,
-+	.led_polarity_set = aqr_phy_led_polarity_set,
- },
- };
++	struct vmap_block_queue *vbq = &per_cpu(vmap_block_queue, vb->cpu);
++
+ 	if (vb->free + vb->dirty != VMAP_BBMAP_BITS ||
+ 	    vb->dirty == VMAP_BBMAP_BITS)
+ 		return false;
+@@ -2664,7 +2667,7 @@ static void purge_fragmented_blocks(int cpu)
+ 			continue;
  
+ 		spin_lock(&vb->lock);
+-		purge_fragmented_block(vb, vbq, &purge, true);
++		purge_fragmented_block(vb, &purge, true);
+ 		spin_unlock(&vb->lock);
+ 	}
+ 	rcu_read_unlock();
+@@ -2801,7 +2804,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+ 			 * not purgeable, check whether there is dirty
+ 			 * space to be flushed.
+ 			 */
+-			if (!purge_fragmented_block(vb, vbq, &purge_list, false) &&
++			if (!purge_fragmented_block(vb, &purge_list, false) &&
+ 			    vb->dirty_max && vb->dirty != VMAP_BBMAP_BITS) {
+ 				unsigned long va_start = vb->va->va_start;
+ 				unsigned long s, e;
 -- 
-2.43.0
+2.25.1
 
