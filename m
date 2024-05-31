@@ -1,106 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9886E14532D;
-	Fri, 31 May 2024 09:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D44155CB4;
+	Fri, 31 May 2024 09:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146235; cv=none; b=Q3QqsY7gdQC2eM9jiFdUlNBHQg+3hY1+1vcWZuMU1xSIsLg+iVP0jxySdD+wlvrAnKE1WBbBX+BiK6jwKHr84uFwZI5RmTXlR6NfHLTOrkiwxGlR0vyOM1+7H1AYl2NfWfLxe58f4bGVBXfUHI5uECJMIO9QLn1SthBj1G3YegQ=
+	t=1717146241; cv=none; b=paCt4BufyhRaHFyakEVlI2XQfExmXs9fluK9Zr3HtFY6sD4lRvO8lfOEFZuUKAFM+hjq2hQWqRYr30OsGbxYcJQMyG/SZKB0Z2zxTlpmmeNCeQATKpRp6D8BJxNO92WuGYWGHv2DoJYyd3fFXisWTKn1UcAgSoFm8u+gMe9xZ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146235; c=relaxed/simple;
-	bh=7oDijFUHb/SzuGN0T03N+niG7QYaHVhZCXHr291ui9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WxJ0/l6RnEzJ2SIItKni9rmppLOYIfbSGYzYQDxM5R6T/dH5TFXuL3liBdvKOLUbxsJFSQPNvAj6RTuvN4YW+zjXlPVh6a+4/xdIydMqEnzUBDDQiu5ry3+X+jlA6fIgyUIGEYp54NB4V2shNJszmbZshvHnaQ0GYF3j4b9EBfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxhA6qI2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717146241; c=relaxed/simple;
+	bh=I0bGr5yXXQvBH92i/MM1H8K0WJgO/wpihzV4iteId4Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xz4e6cWi0KdlJKxdS/Ka4Yua9cmL3j4Tu5E03pLgeVoLT2XcIRTf9x7H+YY6KxmAIVAv4zgzVtvHce10rgwCvAvTGkXAgTCM+u4LLVihO3+tpAYpJAlv+IXeX/Ml2J277oWNLDTtrYwdIZWeS7cyltiQYhTWsmLGHDL4PMsMaJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ms5XktFO; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxhA6qI2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8A38C116B1;
-	Fri, 31 May 2024 09:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717146235;
-	bh=7oDijFUHb/SzuGN0T03N+niG7QYaHVhZCXHr291ui9c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JxhA6qI2GZ3wBeoAQOs8MgBZI7+U0CZf+n8MyebURts/gIfiq2v8vLCrsH//Ahj1f
-	 1j3i6qm35dyRDDVqhSHxhf0mPBfg3mFsR0pJ0UQ//tx4KO38Wl62rvmEHCdek5XSIR
-	 jvspU4FEzRouBxtIC9UM9m/6LSe+EOMGUXG487OSuJGL8GeMIdEQKHSFLqoV338kjG
-	 YF44WSTV3BMRLP4bWia4Gjhp1Kp27YhSCjYdKKNfwe2vLLB7xPHL/XK835HIn5gEi0
-	 m+0N0XkXch+KqtU1zv5TVHnbM4K7KYzs6MqCB6h6H6vYbcOprQvgBQJauQiwUyLKv0
-	 16QsHrspytJ2Q==
-Message-ID: <21b8fc7a-f915-40a1-aa40-c8f91f158b1c@kernel.org>
-Date: Fri, 31 May 2024 11:03:50 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ms5XktFO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717146239; x=1748682239;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I0bGr5yXXQvBH92i/MM1H8K0WJgO/wpihzV4iteId4Q=;
+  b=ms5XktFOdcciOiDglhKe3WVL7OPw2MKBxPGiOhVXp+aL86IkhK8G9+4W
+   W/kYnWgMMnAKYraQnJyG8JL3FE/49SucXzo0ElA3HVg46teQfIuyMzXYv
+   hxxuaRX1B35pLnVECfVWkIQcaU1IwOXWuJNj3fmvd3sf3IgmVKCze0KL4
+   XLlzJsrbuFfDPWnhqit2LBSqMxhAe8oQZBeUH/pKZBkklbxVmlRZSlCwJ
+   2q5EU3L1BG9GegBl3MLcWU42l8folQeT2DLWIxZMLHYdNCXalAK54AwNt
+   Xt9PTVq4vLGOfT7uecFU76zb66VrAdZmZF7a8LfeqKNWTHEa476AAUW1k
+   Q==;
+X-CSE-ConnectionGUID: A6dfvAHSTcKtqlQaqcVvzA==
+X-CSE-MsgGUID: DiAK/4d+Tra7j2d7GPa06A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17480579"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="17480579"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:03:58 -0700
+X-CSE-ConnectionGUID: VsG6pjvOQtSXzE7bScY08w==
+X-CSE-MsgGUID: 5VMMdoCUTHm+kfp1jzwWHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="36102732"
+Received: from jf.jf.intel.com ([10.165.9.183])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:03:58 -0700
+From: Yang Weijiang <weijiang.yang@intel.com>
+To: tglx@linutronix.de,
+	dave.hansen@intel.com,
+	x86@kernel.org,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: peterz@infradead.org,
+	chao.gao@intel.com,
+	rick.p.edgecombe@intel.com,
+	mlevitsk@redhat.com,
+	weijiang.yang@intel.com,
+	john.allen@amd.com
+Subject: [PATCH 0/6] Introduce CET supervisor state support
+Date: Fri, 31 May 2024 02:03:25 -0700
+Message-ID: <20240531090331.13713-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: add a7779 doc
-To: ranechita <ramona.nechita@analog.com>, linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240530075914.28080-1-ramona.nechita@analog.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240530075914.28080-1-ramona.nechita@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30/05/2024 09:59, ranechita wrote:
-> Add dt bindings for adc ad7779.
-> 
-> Signed-off-by: ranechita <ramona.nechita@analog.com>
+This series spins off from CET KVM virtualization enabling series [1].
+The purpose is to get these preparation work resolved ahead of KVM part
+landing. There was a discussion about introducing CET supervisor state
+support [2] [3].
 
-Same v2? Nothing improved?
+CET supervisor state, i.e., IA32_PL{0,1,2}_SSP, are xsave-managed MSRs,
+it can be enabled via IA32_XSS[bit 12]. KVM relies on host side CET
+supervisor state support to fully enable guest CET MSR contents storage.
+The benefits are: 1) No need to manually save/restore the 3 MSRs when
+vCPU fpu context is sched in/out. 2) Omit manually swapping the three
+MSRs at VM-Exit/VM-Entry for guest/host. 3) Make guest CET user/supervisor
+states managed in a consistent manner within host kernel FPU framework.
 
-Name used is still not full name, as I asked.
+This series tries to:
+1) Fix existing issue regarding enabling guest supervisor states support.
+2) Add CET supervisor state support in core kernel.
+3) Introduce new FPU config for guest fpstate setup.
 
-Best regards,
-Krzysztof
+With the preparation work landed, for guest fpstate, we have xstate_bv[12]
+== xcomp_bv[12] == 1 and CET supervisor state is saved/reloaded when
+xsaves/xrstors executes on guest fpstate.
+For non-guest/normal fpstate, we have xstate_bv[12] == xcomp_bv[12] == 0,
+then HW can optimize xsaves/xrstors operations.
+
+Patch1: Preserve guest supervisor xfeatures in __state_perm.
+Patch2: Enable CET supervisor xstate support.
+Patch3: Introduce kernel dynamic xfeature set.
+Patch4: Initialize fpu_guest_cfg settings.
+Patch5: Create guest fpstate with fpu_guest_cfg.
+Patch6: Check invalid fpstate config before executes xsaves.
+
+[1]: https://lore.kernel.org/all/20240219074733.122080-1-weijiang.yang@intel.com/
+[2]: https://lore.kernel.org/all/ZM1jV3UPL0AMpVDI@google.com/
+[3]: https://lore.kernel.org/all/2597a87b-1248-b8ce-ce60-94074bc67ea4@intel.com/
+
+
+Sean Christopherson (1):
+  x86/fpu/xstate: Always preserve non-user xfeatures/flags in
+    __state_perm
+
+Yang Weijiang (5):
+  x86/fpu/xstate: Add CET supervisor mode state support
+  x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC xfeature set
+  x86/fpu/xstate: Introduce fpu_guest_cfg for guest FPU configuration
+  x86/fpu/xstate: Create guest fpstate with guest specific config
+  x86/fpu/xstate: Warn if CET supervisor state is detected in normal
+    fpstate
+
+ arch/x86/include/asm/fpu/types.h  | 16 ++++++++--
+ arch/x86/include/asm/fpu/xstate.h | 11 ++++---
+ arch/x86/kernel/fpu/core.c        | 53 ++++++++++++++++++++++++-------
+ arch/x86/kernel/fpu/xstate.c      | 35 +++++++++++++++-----
+ arch/x86/kernel/fpu/xstate.h      |  2 ++
+ 5 files changed, 90 insertions(+), 27 deletions(-)
+
+
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.43.0
 
