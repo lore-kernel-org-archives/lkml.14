@@ -1,55 +1,57 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C56C28F7
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D0676413
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 21:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717190386; cv=none; b=PCtAQlgFwX7LO2Vy6uPUtYgBud9IZbeJniGTl4D6wBRaCH6SJgsXIomKFmpENNh9gs8GztVhGTRKiqZfjFlQnyTs9o6ppBNItNuflBqGvHhbTw9lAsxn4T5nPCHFD6GaP+NoKV31CiLO8/CrVQaA6GmQNbJTr3ZWWS1xuE2FA+g=
+	t=1717190387; cv=none; b=Rv9bXDgztHf77y56rG2FoAHIg9jqhby8rokLeWIJwgxVvQNF0Cjyc5kz7VEtzZNv+HOo8Ht2O8KwwQ7IRlTlcrOGflojITM/gPvPm9LZ5IJ7CdeRftw9fwiEN0Pf9RDrIw4pasjAvLPlR3/nAiQdLbONiGDFnh1CtgdbQCSAbk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717190386; c=relaxed/simple;
-	bh=ek78r9i4xgfXrjMsbmfUbdTIlxlFPKdQJjlSqdM9BrU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mz/4fXQX1YgGjtg3yJstfzx4VLYkQ8CSJlPNBkLgg/90wLzjMP3+y7Sf1GXbe/3DLBfCDVEL+aB5JupR4GmfQ1JWXmldI8CnZwFDQRswupIWZvvs9MO98ZMFczyUYbyfdumUuA7iedUyrmsrePY1hQOpBtyf4s7LeJvyWJD/Cms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nzVkJujF; arc=none smtp.client-ip=209.85.210.47
+	s=arc-20240116; t=1717190387; c=relaxed/simple;
+	bh=Js0YVyBPm/E3WxsjG5z4McvboiBRBwpr7xybmk/0tP4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CDX6F2fUf/mknwPMB1T4qUN5qiTUjw/DTMB7DH2BxPtSLFVZMW2RXMaoDugMEAg7TB0bk3LPMiimAyqeM+tSbWxuvoDjI2CzH1vtJJkCCdbvFRb0xSmqmydSQUu3LswLF/tIPi3+MuXQ4div+NRDN93LI/4G6l7mEEHnmITOie4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=TagLpnQC; arc=none smtp.client-ip=209.85.210.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nzVkJujF"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6f8f024a75cso1459365a34.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:19:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="TagLpnQC"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f120ae1ca3so1361922a34.1
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717190383; x=1717795183; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hf1Jh1GnZHozNnd+M9c3JoKjbK3zJd+Wb/SAaafdMJI=;
-        b=nzVkJujFWF4xtO6+SPV9p5TowRucecWXsNX6IMRupBOg7G2z5Sdxj/Z/dOulvSbuGk
-         +nUWW9NCeU42c5DBekY6+2yhpu//vA17UT+CfAA0Ai0mI/bz0toXXfyUrSOhDKOHgh2+
-         nalJlhrzNQhhI7jo3hJ2YKlt5LYVRs2d9TMMY68m5KodsUjXw3SzCtRAkc3HB1mWSXTq
-         fRCC338jyqFuURNhmG4/0YkzpFpZIWDoKamvwCp6ornqpR72jAdoqGWAE3Q5n6xuTsP7
-         HD06En9TCqfq5gj0sDhzYF4xcj89byoEQKFYumITSofIWTENHOIiGux5nOjDC+/EOLCq
-         KGfw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717190385; x=1717795185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h6K6MHKU/orn8S+VKImZw/DZY35U7Zc26RBfAXI+Msw=;
+        b=TagLpnQCDNYhpxS3acth5vPJhgVXybe8PVEs3xxaFsMZEry4W5oOfAQ4lLWzlA5UgH
+         4LP88Gj+SmwKcd8dA7TamR9BKdUvo/j72PEyq988UxC/ycnpa+aWdMC3QgMC96g0SMDf
+         yZQiqddRzSwWS6bEtmVBPdULaF9ooJkRyir7UYqAxlnpzPfvvusleZM3kZtimTkrpxmz
+         TPDMovmw0ZJJkzKOVcxvexKiyqII/iK1BcYfH0wsPUH/x+lwpRwg4EHrOHUgsOjq5lvU
+         Op7MP7oyvf4v+U4VvtWAP3GVg2FkBQ22IcNSiB+uQPlOZo2lcDfUEp0YrKEVzP/fUU9I
+         ZsSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717190383; x=1717795183;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hf1Jh1GnZHozNnd+M9c3JoKjbK3zJd+Wb/SAaafdMJI=;
-        b=ftWzN95p4GtRDtE445Z9lAD+FJvIg9TUC4zIP8aLF+eKWizU9Zi1ZaNOREQpFVj7Jr
-         614hv/InPDALzh0rUVkxLYy8J02v9cFvmc8TKixCqzvaTl0jNWEQr2wV01vduTEbh9wW
-         V7NdYOonuH/ZxQD0aef4HpqsWFSrEh4QRCNf/uGiYkWTUDSuNLsk4lQG2X2Wxe3WHRRc
-         7rG89xCd8JQ5uKtkYo5tu2tITbSzn23M8Scz0Ijifv6UpKJ5tWy9xs8PF9UOb+exPLCU
-         Tfm91Uo1aWpgQeih0sgRuRlcpTmPE7mqVCGLaWo4WCVUObna3knZ89/QkflSBvkyzT23
-         hZbw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ZGDuvP9kDD/qpBo3gaW/aVFd2hBVp1ea22iEh1dJ8o+uHPtpO7YclpVV5T5qaP5kuK/OaxdtbAgEsVZU+i3Ne/aanCm38Ji6VKO+
-X-Gm-Message-State: AOJu0Yy1Eausehd3xGlSjtSFkJre1m/oW2Q1iYqYJuN4UcZzPZoXfrQo
-	QBDBGBm9poKfQQ9cGCAgWjf5i9zmhZGh7z8p7VURd7jyTut1j+S98VzCFcgCYCU=
-X-Google-Smtp-Source: AGHT+IGXRUv16oMo5Ev5KjlYDLKoeF2Bafvr70mApyYCccmsm7EegR5N7vmblOTP4jtUERC/Bl1a5A==
-X-Received: by 2002:a9d:6755:0:b0:6f8:d23e:78e0 with SMTP id 46e09a7af769-6f911fc9917mr2899040a34.38.1717190383278;
-        Fri, 31 May 2024 14:19:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717190385; x=1717795185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h6K6MHKU/orn8S+VKImZw/DZY35U7Zc26RBfAXI+Msw=;
+        b=MKyEMpHjmjiJe2GZRmknx2DnFoR0RGSqYtKGM0V+N6PLTTW1f54kN7nWybKY/IpZvA
+         ejTorFoji6ypmUpS93n2tdGYmyVKqNOucfcGcOW7Rz3WwtkinFFGmfdyOggS5jzmLj88
+         qv7+/5ue6K8gsbrMz/8EW1CP9XjaUOMIuQQNfb2RHXwlJESJTwaX+fZgOkBJAlUCLu2o
+         CWlGupNg5inlTKn+RDwMiiy9CgOW/c0jfI15HDxHlsEvftPsoXvpO/49oSafswbsQhwH
+         UXV2sp/BwVQMSgM/FvsaC7IV8bfL+07kBrBEbRqpW5yFhOwyBgNkkknQWeHxulX3AXrT
+         sIuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLDBV5s8+ljNnnjFAbEgg+tQY4PR3pHz6rQ2xO84fDZ4td5miwKC8BdL2OpC5a+4yr9ZX2zIvpkiIpmEPTgdftAsYFp37uyYokYCxT
+X-Gm-Message-State: AOJu0Yzrckr0ROc8h060jBMe2jZqn9HTw5v2yOtdXcYH2KsDjdjFHb4v
+	JZy1/CZed3ZaW7fZjGknjTgYfHvuXQxF4JEl0f5k7Qc3ojR85LbLvX3hgEGMfN0=
+X-Google-Smtp-Source: AGHT+IE0Vyt+zzbJTkqMnIXs9WS274qnPNRombwHnz/DhsObFIFbFv8rZmMnOeEGBJQY3G9nmBrm3Q==
+X-Received: by 2002:a9d:6206:0:b0:6f0:e4b1:587a with SMTP id 46e09a7af769-6f911f23d9bmr3449349a34.8.1717190385136;
+        Fri, 31 May 2024 14:19:45 -0700 (PDT)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f91054f6c5sm470176a34.38.2024.05.31.14.19.42
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f91054f6c5sm470176a34.38.2024.05.31.14.19.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 14:19:42 -0700 (PDT)
+        Fri, 31 May 2024 14:19:44 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
 To: Jonathan Cameron <jic23@kernel.org>
 Cc: David Lechner <dlechner@baylibre.com>,
@@ -60,10 +62,12 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	Liam Girdwood <lgirdwood@gmail.com>,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] iio: adc: use devm_regulator_get_enable_read_voltage round 1
-Date: Fri, 31 May 2024 16:19:31 -0500
-Message-ID: <20240531-iio-adc-ref-supply-refactor-v1-0-4b313c0615ad@baylibre.com>
+Subject: [PATCH 2/5] iio: adc: ad7266: use devm_regulator_get_enable_read_voltage
+Date: Fri, 31 May 2024 16:19:33 -0500
+Message-ID: <20240531-iio-adc-ref-supply-refactor-v1-2-4b313c0615ad@baylibre.com>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240531-iio-adc-ref-supply-refactor-v1-0-4b313c0615ad@baylibre.com>
+References: <20240531-iio-adc-ref-supply-refactor-v1-0-4b313c0615ad@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,28 +78,78 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-Following up from [1], this is the first round of patches to convert the
-ADC drivers to use devm_regulator_get_enable_read_voltage().
+This makes use of the new devm_regulator_get_enable_read_voltage()
+function to reduce boilerplate code.
 
-Some of these are trivial but some aren't so I'm breaking them up into
-smaller series to spread out the review load (and my work load).
-
-[1]: https://lore.kernel.org/linux-iio/20240429-regulator-get-enable-get-votlage-v2-0-b1f11ab766c1@baylibre.com
-
+Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
-David Lechner (5):
-      iio: adc: ad7192: use devm_regulator_get_enable_read_voltage
-      iio: adc: ad7266: use devm_regulator_get_enable_read_voltage
-      iio: adc: ad7292: use devm_regulator_get_enable_read_voltage
-      iio: adc: ad7793: use devm_regulator_get_enable_read_voltage
-      iio: adc: ad7944: use devm_regulator_get_enable_read_voltage
+ drivers/iio/adc/ad7266.c | 37 ++++++++++---------------------------
+ 1 file changed, 10 insertions(+), 27 deletions(-)
 
- drivers/iio/adc/ad7192.c | 98 +++++++++++++++++-------------------------------
- drivers/iio/adc/ad7266.c | 37 +++++-------------
- drivers/iio/adc/ad7292.c | 40 +++++---------------
- drivers/iio/adc/ad7793.c | 24 ++----------
- drivers/iio/adc/ad7944.c | 62 ++++++++++--------------------
- 5 files changed, 77 insertions(+), 184 deletions(-)
----
-base-commit: 15895709c7dc5f1a8b53b3564fc2bed724209611
-change-id: 20240531-iio-adc-ref-supply-refactor-93f962d40c23
+diff --git a/drivers/iio/adc/ad7266.c b/drivers/iio/adc/ad7266.c
+index 353a97f9c086..026db1bedc0a 100644
+--- a/drivers/iio/adc/ad7266.c
++++ b/drivers/iio/adc/ad7266.c
+@@ -25,7 +25,6 @@
+ 
+ struct ad7266_state {
+ 	struct spi_device	*spi;
+-	struct regulator	*reg;
+ 	unsigned long		vref_mv;
+ 
+ 	struct spi_transfer	single_xfer[3];
+@@ -377,11 +376,6 @@ static const char * const ad7266_gpio_labels[] = {
+ 	"ad0", "ad1", "ad2",
+ };
+ 
+-static void ad7266_reg_disable(void *reg)
+-{
+-	regulator_disable(reg);
+-}
+-
+ static int ad7266_probe(struct spi_device *spi)
+ {
+ 	struct ad7266_platform_data *pdata = spi->dev.platform_data;
+@@ -396,28 +390,17 @@ static int ad7266_probe(struct spi_device *spi)
+ 
+ 	st = iio_priv(indio_dev);
+ 
+-	st->reg = devm_regulator_get_optional(&spi->dev, "vref");
+-	if (!IS_ERR(st->reg)) {
+-		ret = regulator_enable(st->reg);
+-		if (ret)
+-			return ret;
+-
+-		ret = devm_add_action_or_reset(&spi->dev, ad7266_reg_disable, st->reg);
+-		if (ret)
+-			return ret;
+-
+-		ret = regulator_get_voltage(st->reg);
+-		if (ret < 0)
+-			return ret;
+-
+-		st->vref_mv = ret / 1000;
+-	} else {
+-		/* Any other error indicates that the regulator does exist */
+-		if (PTR_ERR(st->reg) != -ENODEV)
+-			return PTR_ERR(st->reg);
+-		/* Use internal reference */
++	/*
++	 * Use external reference from vref if present, otherwise use 2.5V
++	 * internal reference.
++	 */
++	ret = devm_regulator_get_enable_read_voltage(&spi->dev, "vref");
++	if (ret == -ENODEV)
+ 		st->vref_mv = 2500;
+-	}
++	else if (ret < 0)
++		return ret;
++	else
++		st->vref_mv = ret / 1000;
+ 
+ 	if (pdata) {
+ 		st->fixed_addr = pdata->fixed_addr;
+
+-- 
+2.45.1
+
