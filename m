@@ -1,96 +1,305 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6762AD2D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B161586C4
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717158628; cv=none; b=BVDrELH4CqiUYkrkxTIqopYXnLhlvRmyf5GXY9xzzqHy9aYz5dZ99UdXzOtu6Aaz1xCD1fPVJFHGAt0ifJYaOs4IWzyJrx+zINpDxULJ/JIFcJ55cVsTwGIJLKCjMQ5trchYrKZ1p7+QfU9c6WVZPI7CzawmdEaru6Cyubn5Biw=
+	t=1717158638; cv=none; b=bau1pYnKS2x1JAx7o323K9+4uvSg4yROg/3ccg3cFmT7uwBspLsVz70q/VWF/wV/ppY0zKqC8g5pWoVc5W/FXFQV2sBR/EviYvnf/Kj6zNW/Y3ot46b3tzLr0KJwOjL6G8tdicwEGVVnbx9JNZpsJianCYtCK7WLNmXKOfxWy7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717158628; c=relaxed/simple;
-	bh=2mc0HWTfOV1Teq6IYJqOMKDrFW1OILUGkAVGkdJ9Acc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DVNe8mpWyxd2rA5TlsiGHggKVXOVspmXuzpvbkkwtdjrKMq6cnyWf/J4JHjW8R8yXNrMwKmTxmsTvBqu4ogkr4r7JiaSD9IORaHWD81FnqYHQCiFP70pH37VGBG7A8H6Uu7bnD2avxxT9TMjqazkcpxH39rA1m8QdB26U8d9HZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SMApdGDK; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717158638; c=relaxed/simple;
+	bh=Mr72enCel7LQ06KMcZmS4q5jw0z5xWmKZ97M5iPHoB8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ShCAlqDpS+IPq8F6mIxHhuR7v4R34osn5uYJe8wNYkiQzxnx417O9wzvMHzDwzen5dnyG5DpCsFhtIJaJUyCsayTpwqLai1UvdbGVakQW5dbkQA+bCz61yc+FDkkpXzSxl9eWskTuD/ADpfvoYT6wnG6DsA62apwpRBfmU/W6mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hp6XCIzj; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SMApdGDK"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5A6C440E0192;
-	Fri, 31 May 2024 12:30:24 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sPIeD_FlmuX3; Fri, 31 May 2024 12:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717158619; bh=Cp7gWFWCgunxt2EZJJB/aMuJ7vmygLLqyPm4seO3fyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SMApdGDKJuXYKkzBsXvwplsjbBQp5vqi+c5SXxkmQngoAniCZWwd+D8iDQqxgQXAq
-	 9aIylFmNIC2SiiDYnmCouKbPaNfEIcXMoILkbr70GUv16+ylobyh2c832VEhU6uUvK
-	 3UrxUutyaYyOU0uMnM06iX0V9wfxNLY2ZrFxfNc5IKxoRlV2CukGQ7eMjX3zkxTTv6
-	 6CptbotB/rPBL/D1tn7nwnWvqv14u1ke7ld8OTKUJ64iDVVeM0/jgadH9AaMFCv6mH
-	 sXlu7OcCjKqOZaYJdLeMGlXEZMTAn6E8yqbeNosVT3qL1RocRBTA1uXTxSfLfimK2Z
-	 qVf20E6SmUCF9rvTjWdhdXMumbv5LmoIPqXFNfZfwavzsrFB4Zrvb+QkPJun87P8/W
-	 7fHkb9g+ehc6LED69c92QsZed8qHvOuMrlYvptYKteNzFhNhrssmXihrxp63rdVVZ5
-	 VyjQ+wiYsqWQMH1T5o0MlQCXHzxejAua71GG9eh+LtM9GJGjHynoSFV7QbLfDequXq
-	 qnbKRMXMswlVjY/GpL+0/xbCssqOmNuFYtSP5+i/p8G0vUZsqcSrqYFh23d5v7vNlN
-	 NLVcMASThnwqJxikvCi5OOmsM2y5PvBeVvd8ndXCkSC4UYJiPzJIRnzpoSntafxkmA
-	 vLHMB5HIbule/nrq7PtTEjdE=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E1EE540E0177;
-	Fri, 31 May 2024 12:30:04 +0000 (UTC)
-Date: Fri, 31 May 2024 14:29:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v4 07/15] x86/sev: Use the SVSM to create a vCPU when not
- in VMPL0
-Message-ID: <20240531122959.GCZlnCx8uxvozjmfly@fat_crate.local>
-References: <cover.1713974291.git.thomas.lendacky@amd.com>
- <aa7f311d90efb49dfa6f4589854ee43c049b7b88.1713974291.git.thomas.lendacky@amd.com>
- <20240527123304.GBZlR9gBzBIjqEKKo6@fat_crate.local>
- <4f704d19-088a-89d7-0515-144db61b93a5@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hp6XCIzj"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-80ac969db43so509737241.2
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 05:30:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717158635; x=1717763435; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MqCPiV40FRCqL5KZ/1CQ42Axiq6JU3nKj3bRIMUuHKc=;
+        b=hp6XCIzjmisYZxO+/W8QmrELbrPvYILDhG5g9eMpZ8hGYB8yf8SaQN19BC8iWXHt5h
+         ViviWejx/7D/QdwUlfn1tMbfwG+rW5YLapbSRwT1YkVlEsvukFCETE0NWL7vDeNb4UwH
+         QzrXo6iuIqGmMe0WfNmVrFfkPIXKHkdLX/C/8TIoIPJl1VmyEAjugeB9uS9bktJly5+c
+         kAiOD8Z3d6q07PWPv58pTLiA0raZe4B5mnf9S2pJvPEC8AICiaZHxXJcibvkAHfhR0/S
+         CGp34Y+ggr1srlzAO4fPeSfRokCOX/HthV9ei2T/3sxJ+WdU444V8Ykf2TN/0bS4eMA2
+         cJ9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717158635; x=1717763435;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MqCPiV40FRCqL5KZ/1CQ42Axiq6JU3nKj3bRIMUuHKc=;
+        b=EvPP1t7/Q+EvOwiR3hZ9pSHDSgXqoUUfGXtsO5RKpTPjrVEP5zgeZKwaS8+qTVxCPM
+         bhfsQZ669Fy4vZaeLXfIeLeJ6Zu0/g6psZ0IG57yNn6N0N3V8ocVNc4GT0KD2KaAA8AU
+         GS4XhgvPXHvlvAYNZBtMKAmYLUHsEDhk8nSyV73vTdybJh5fZG3bFMZmCM/QW30wUaM9
+         agQ5ut5MvLsKCT8l1B5qDUcWMEfdsnm031sobSFqruOoXrZenBFXGr5nafQlqm29QvsL
+         rxIPjfWZVTcbHQzCAmKUIg+pEOY8zSqrkKnuq7cxgZDN7QAfA4/Jp4tO0ndIwWvs9n8M
+         7zuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/RNHyAvZAVw7Uik4Qs/PdO0vT2TFibShF90CmtBw/vQoPmHjxn74V2BUT0z7NhlCHa+w5RG0XL5LO0qErqNu5dN1QfHw69FxmkmMv
+X-Gm-Message-State: AOJu0Yxx1KfhPZil2z+3+EKd+9ePAiVJEqtaw1Rza6THUDk1Hmq2CSX7
+	HvWa0CEjWHwjMXCWVajikhTXOotQreUbzeqA1D7tRia6wdWkt6kHf+ITDijYwjqlVKH4UBT3UgY
+	W48BVjR1A8ESxbAolco7bihkovZY=
+X-Google-Smtp-Source: AGHT+IF4M93lrQW5Fsa+giSnqh14rcaRZpYxJ+MPoqduDV6r4sAWty6AusRycWj39BSyyyaDQIlbZEOxnzHCdJzk6Yc=
+X-Received: by 2002:a67:ef84:0:b0:47f:251c:61df with SMTP id
+ ada2fe7eead31-48bc23b40d2mr1662359137.27.1717158633456; Fri, 31 May 2024
+ 05:30:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4f704d19-088a-89d7-0515-144db61b93a5@amd.com>
+References: <20240531104819.140218-1-21cnbao@gmail.com> <87ac9610-5650-451f-aa54-e634a6310af4@redhat.com>
+ <CAGsJ_4zgf8j0oRnVBhe-__=K2RFDHTCo-JnMak95HTvxtMUwnQ@mail.gmail.com>
+ <d4c1a9ad-4945-40d7-9b7a-5b02df805884@redhat.com> <CAGsJ_4xpDwTTbwzMx8ipmpCyNmVmABpRN1f9yfZfFiOaGMKiew@mail.gmail.com>
+In-Reply-To: <CAGsJ_4xpDwTTbwzMx8ipmpCyNmVmABpRN1f9yfZfFiOaGMKiew@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Sat, 1 Jun 2024 00:30:22 +1200
+Message-ID: <CAGsJ_4yX52k=Wx2x3jwXzNBG=rDGJrzGNwGCAh0puUP7zby=QA@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: swap: reuse exclusive folio directly instead of
+ wp page faults
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, chrisl@kernel.org, 
+	surenb@google.com, kasong@tencent.com, minchan@kernel.org, 
+	willy@infradead.org, ryan.roberts@arm.com, linux-kernel@vger.kernel.org, 
+	Barry Song <v-songbaohua@oppo.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 28, 2024 at 03:28:28PM -0500, Tom Lendacky wrote:
-> I just think it's easier to follow, with specific functions for the
-> situation and less indentation. But if you want, I can put it all in one
-> function.
+On Sat, Jun 1, 2024 at 12:20=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrot=
+e:
+>
+> On Sat, Jun 1, 2024 at 12:10=E2=80=AFAM David Hildenbrand <david@redhat.c=
+om> wrote:
+> >
+> > On 31.05.24 13:55, Barry Song wrote:
+> > > On Fri, May 31, 2024 at 11:08=E2=80=AFPM David Hildenbrand <david@red=
+hat.com> wrote:
+> > >>
+> > >> On 31.05.24 12:48, Barry Song wrote:
+> > >>> From: Barry Song <v-songbaohua@oppo.com>
+> > >>>
+> > >>> After swapping out, we perform a swap-in operation. If we first rea=
+d
+> > >>> and then write, we encounter a major fault in do_swap_page for read=
+ing,
+> > >>> along with additional minor faults in do_wp_page for writing. Howev=
+er,
+> > >>> the latter appears to be unnecessary and inefficient. Instead, we c=
+an
+> > >>> directly reuse in do_swap_page and completely eliminate the need fo=
+r
+> > >>> do_wp_page.
+> > >>>
+> > >>> This patch achieves that optimization specifically for exclusive fo=
+lios.
+> > >>> The following microbenchmark demonstrates the significant reduction=
+ in
+> > >>> minor faults.
+> > >>>
+> > >>>    #define DATA_SIZE (2UL * 1024 * 1024)
+> > >>>    #define PAGE_SIZE (4UL * 1024)
+> > >>>
+> > >>>    static void *read_write_data(char *addr)
+> > >>>    {
+> > >>>            char tmp;
+> > >>>
+> > >>>            for (int i =3D 0; i < DATA_SIZE; i +=3D PAGE_SIZE) {
+> > >>>                    tmp =3D *(volatile char *)(addr + i);
+> > >>>                    *(volatile char *)(addr + i) =3D tmp;
+> > >>>            }
+> > >>>    }
+> > >>>
+> > >>>    int main(int argc, char **argv)
+> > >>>    {
+> > >>>            struct rusage ru;
+> > >>>
+> > >>>            char *addr =3D mmap(NULL, DATA_SIZE, PROT_READ | PROT_WR=
+ITE,
+> > >>>                            MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+> > >>>            memset(addr, 0x11, DATA_SIZE);
+> > >>>
+> > >>>            do {
+> > >>>                    long old_ru_minflt, old_ru_majflt;
+> > >>>                    long new_ru_minflt, new_ru_majflt;
+> > >>>
+> > >>>                    madvise(addr, DATA_SIZE, MADV_PAGEOUT);
+> > >>>
+> > >>>                    getrusage(RUSAGE_SELF, &ru);
+> > >>>                    old_ru_minflt =3D ru.ru_minflt;
+> > >>>                    old_ru_majflt =3D ru.ru_majflt;
+> > >>>
+> > >>>                    read_write_data(addr);
+> > >>>                    getrusage(RUSAGE_SELF, &ru);
+> > >>>                    new_ru_minflt =3D ru.ru_minflt;
+> > >>>                    new_ru_majflt =3D ru.ru_majflt;
+> > >>>
+> > >>>                    printf("minor faults:%ld major faults:%ld\n",
+> > >>>                            new_ru_minflt - old_ru_minflt,
+> > >>>                            new_ru_majflt - old_ru_majflt);
+> > >>>            } while(0);
+> > >>>
+> > >>>            return 0;
+> > >>>    }
+> > >>>
+> > >>> w/o patch,
+> > >>> / # ~/a.out
+> > >>> minor faults:512 major faults:512
+> > >>>
+> > >>> w/ patch,
+> > >>> / # ~/a.out
+> > >>> minor faults:0 major faults:512
+> > >>>
+> > >>> Minor faults decrease to 0!
+> > >>>
+> > >>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> > >>> ---
+> > >>>    mm/memory.c | 7 ++++---
+> > >>>    1 file changed, 4 insertions(+), 3 deletions(-)
+> > >>>
+> > >>> diff --git a/mm/memory.c b/mm/memory.c
+> > >>> index eef4e482c0c2..e1d2e339958e 100644
+> > >>> --- a/mm/memory.c
+> > >>> +++ b/mm/memory.c
+> > >>> @@ -4325,9 +4325,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf=
+)
+> > >>>         */
+> > >>>        if (!folio_test_ksm(folio) &&
+> > >>>            (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+> > >>> -             if (vmf->flags & FAULT_FLAG_WRITE) {
+> > >>> -                     pte =3D maybe_mkwrite(pte_mkdirty(pte), vma);
+> > >>> -                     vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> > >>> +             if (vma->vm_flags & VM_WRITE) {
+> > >>> +                     pte =3D pte_mkwrite(pte_mkdirty(pte), vma);
+> > >>> +                     if (vmf->flags & FAULT_FLAG_WRITE)
+> > >>> +                             vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> > >>
+> > >> This implies, that even on a read fault, you would mark the pte dirt=
+y
+> > >> and it would have to be written back to swap if still in the swap ca=
+che
+> > >> and only read.
+> > >>
+> > >> That is controversial.
+> > >>
+> > >> What is less controversial is doing what mprotect() via
+> > >> change_pte_range()/can_change_pte_writable() would do: mark the PTE
+> > >> writable but not dirty.
+> > >>
+> > >> I suggest setting the pte only dirty if FAULT_FLAG_WRITE is set.
+> > >
+> > > Thanks!
+> > >
+> > > I assume you mean something as below?
+> >
+> > It raises an important point: uffd-wp must be handled accordingly.
+> >
+> > >
+> > > diff --git a/mm/memory.c b/mm/memory.c
+> > > index eef4e482c0c2..dbf1ba8ccfd6 100644
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@ -4317,6 +4317,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> > >          add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
+> > >          pte =3D mk_pte(page, vma->vm_page_prot);
+> > >
+> > > +       if (pte_swp_soft_dirty(vmf->orig_pte))
+> > > +               pte =3D pte_mksoft_dirty(pte);
+> > > +       if (pte_swp_uffd_wp(vmf->orig_pte))
+> > > +               pte =3D pte_mkuffd_wp(pte);
+> > >          /*
+> > >           * Same logic as in do_wp_page(); however, optimize for page=
+s that are
+> > >           * certainly not shared either because we just allocated the=
+m without
+> > > @@ -4325,18 +4329,19 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> > >           */
+> > >          if (!folio_test_ksm(folio) &&
+> > >              (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+> > > -               if (vmf->flags & FAULT_FLAG_WRITE) {
+> > > -                       pte =3D maybe_mkwrite(pte_mkdirty(pte), vma);
+> > > -                       vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> > > +               if (vma->vm_flags & VM_WRITE) {
+> > > +                       if (vmf->flags & FAULT_FLAG_WRITE) {
+> > > +                               pte =3D pte_mkwrite(pte_mkdirty(pte),=
+ vma);
+> > > +                               vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> > > +                       } else if ((!vma_soft_dirty_enabled(vma) ||
+> > > pte_soft_dirty(pte))
+> > > +                                   && !userfaultfd_pte_wp(vma, pte))=
+ {
+> > > +                                       pte =3D pte_mkwrite(pte, vma)=
+;
+> >
+> > Even with FAULT_FLAG_WRITE we must respect uffd-wp and *not* do a
+> > pte_mkwrite(pte). So we have to catch and handle that earlier (I could
+> > have sworn we handle that somehow).
+> >
+> > Note that the existing
+> >         pte =3D pte_mkuffd_wp(pte);
+> >
+> > Will fix that up because it does an implicit pte_wrprotect().
+>
+> This is exactly what I have missed as I am struggling with why WRITE_FAUL=
+T
+> blindly does mkwrite without checking userfaultfd_pte_wp().
+>
+> >
+> >
+> > So maybe what would work is
+> >
+> >
+> > if ((vma->vm_flags & VM_WRITE) && !userfaultfd_pte_wp(vma, pte) &&
+> >      !vma_soft_dirty_enabled(vma)) {
+> >         pte =3D pte_mkwrite(pte);
+> >
+> >         /* Only set the PTE dirty on write fault. */
+> >         if (vmf->flags & FAULT_FLAG_WRITE) {
+> >                 pte =3D pte_mkdirty(pte);
+> >                 vmf->flags &=3D ~FAULT_FLAG_WRITE;
+> >         }
 
-Well, if the function were huge and hard to read sure, but right now it
-is simple and with single indentation level. There's the other side of
-having too many small helpers, leading into not seeing the flow. The
-logic we should follow is: if the function is big and fat and has too
-many indentation levels, you split into smaller functions.
+WRITE_FAULT has a pte_mkdirty, so it doesn't need to check
+"!vma_soft_dirty_enabled(vma)"?
+Maybe I thought too much, just the simple code below should work?
 
-The "Functions" section in Documentation/process/coding-style.rst has
-some blurb on the matter.
+        if (!folio_test_ksm(folio) &&
+            (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+                if (vma->vm_flags & VM_WRITE) {
+                        if (vmf->flags & FAULT_FLAG_WRITE) {
+                                pte =3D pte_mkwrite(pte_mkdirty(pte), vma);
+                                vmf->flags &=3D ~FAULT_FLAG_WRITE;
+                        } else {
+                                pte =3D pte_mkwrite(pte, vma);
+                        }
+                }
+                rmap_flags |=3D RMAP_EXCLUSIVE;
+        }
 
--- 
-Regards/Gruss,
-    Boris.
+        if (pte_swp_soft_dirty(vmf->orig_pte))
+                pte =3D pte_mksoft_dirty(pte);
+        if (pte_swp_uffd_wp(vmf->orig_pte))
+                pte =3D pte_mkuffd_wp(pte);
 
-https://people.kernel.org/tglx/notes-about-netiquette
+This still uses the implicit wrprotect of pte_mkuffd_wp.
+
+> > }
+> >
+>
+> looks good!
+>
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+> >
+>
+> Thanks
+> Barry
