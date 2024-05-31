@@ -1,266 +1,109 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C888D158848;
-	Fri, 31 May 2024 12:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2C11586D0;
+	Fri, 31 May 2024 12:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717159699; cv=none; b=aCWQZPApzitmdQ4ZAdt9tgb6Naq89KNkoY7PnzYfiyB0iXfmuC+vZ4nDiJJhza6C8Nm2acrzkHsFhkt/0vPgjWG72FX2uojaF+0uU2wJuIAT5CASbvo8oHhVpt+PMP8cudpCt4wdvOXlO+8oUgxWC4ivuRCXH0NrqENlpKWnoPg=
+	t=1717159734; cv=none; b=FJwqliJXH2Kuj56QQxHONBZXLfG1l1zxW+uK5AWy1fx3kY7aG+HJH7PqfjmFwmBmjm94n5ytZbsc1KJX1h70cSGJvs8lMtErcCPpPahT1ilKiTCz9afaHim10TvbED1IuryPnqCPOMN6+wDaSvTAiNDCDzhgCHs7i2gVhWNJ054=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717159699; c=relaxed/simple;
-	bh=RpjgYwPDyJuqrExpz1nNP6Ko9Qg4oE1su/7aCIq+LAM=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=QuOAiMOpxc0mzPwF2ZxJ4abxVxu2JTFEuvt1OnoX8TlehhACDblGeMWpISRgrnDCgNxsGzxKYuVESEohdRHTeuOuuI5dFlETItJ1Wd2MJC/ixiQ9QVA6LHSdVw9rCK+57w0Vdbg6VIJnK/+3pagFbBz1+kzNoAolXjTP5UtiC6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=CME5Ful2; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1717159734; c=relaxed/simple;
+	bh=g/oNMocg76yWK2v8EuxnpMD3Hu9NyCAtBqT+lzQxQlA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pGUf0NuvWX9RVU9jsr6D+I7y9qpufeQbxFp2zdGQTk38mfDC0/NDwlWLbmqGcze0OeNb5myIojBPRl9d+H7j/QbX7kPo9hW65Q9lhIroeVlKdFz66M8bksJBH/L5M74BZnD7zQHHjt0vIpdW1wZy42IatE5NOx3JRC/s1LtCCPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=rGHlnRHI; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="CME5Ful2"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1F9649C096E;
-	Fri, 31 May 2024 08:48:17 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id wsrHJO9_bBGT; Fri, 31 May 2024 08:48:15 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id B31369C2CD8;
-	Fri, 31 May 2024 08:48:15 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com B31369C2CD8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1717159695; bh=XHYg/xXbggBW6T/eEAZpR4M9NzidJhaQVBYe6V+5Uwo=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=CME5Ful22NGYQX5X3G/QGYkgnwUNX4QmgtRMXjjWtkoudDR5OH9Vn2oMnBk9H7Lx+
-	 oBqbJM2GPGCWTnBBVwJvtK3H9XEsrgIIro0fnNxSivQPKzby4UKlAiCdzBQmRB3i2X
-	 r+l6CIrcJ62QWiIDmyt82kiWN2SKbIlE+lRWeXMD73TBcyyBgostjPISQWIyEJxoRY
-	 8pZTcDY4/DNYag52VbveIAaUDKmCLQVmfHsxJqLnTIIQFIwm9NLq1BSVzsItkwMaBE
-	 diSMZ4X/F4wMXc0N05X4P4GoyXrlIV5lwvv1pVNGN3nT1XIcV4TjSZQYX9Ua1MU00J
-	 kkiNgxA9AeNew==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 0-nDvHVWvAtj; Fri, 31 May 2024 08:48:15 -0400 (EDT)
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7FDF39C096E;
-	Fri, 31 May 2024 08:48:15 -0400 (EDT)
-Date: Fri, 31 May 2024 08:48:15 -0400 (EDT)
-From: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, 
-	shengjiu wang <shengjiu.wang@gmail.com>, 
-	Xiubo Lee <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>, 
-	Nicolin Chen <nicoleotsuka@gmail.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-sound <linux-sound@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	alsa-devel <alsa-devel@alsa-project.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Message-ID: <1712008549.701259.1717159695483.JavaMail.zimbra@savoirfairelinux.com>
-In-Reply-To: <20240520183148.GA1250699-robh@kernel.org>
-References: <20240515135411.343333-1-elinor.montmasson@savoirfairelinux.com> <20240515135411.343333-10-elinor.montmasson@savoirfairelinux.com> <20240520183148.GA1250699-robh@kernel.org>
-Subject: Re: [PATCHv4 9/9] ASoC: dt-bindings: fsl-asoc-card: add compatible
- for generic codec
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="rGHlnRHI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717159731;
+	bh=g/oNMocg76yWK2v8EuxnpMD3Hu9NyCAtBqT+lzQxQlA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rGHlnRHINbWHvFCUvanARjCe5GzAiK3y7LSzS3ZnXZUq3C1mEv27RDBUUFTmTotxv
+	 WUZNuT1bwk84c3l52Yf9R3waTkPV/7DcrRgPpphQ2ltY8MFcfoSNzKTpSpbHNX2x4j
+	 CC0VuXglIiSJwBfj/Mp1EnY8LNg72VUXgZUsqKBqJ+6+On29KjWPPFi2Y1FfNeK6+w
+	 Lg9c/T9/KXdGd4qV+3hD52hSRFzkXsSFI49NTiqD4rVd/WK+rR5m2qS013fOzq3Mc0
+	 ERmdS4JE0JJyuA9sSR3MWtNFf8U0ak7JIBhlrQZJVMRYy+xWIlL2JjRmKz2HZI3Exy
+	 Z4GvZQPqsMB7Q==
+Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1A800378148F;
+	Fri, 31 May 2024 12:48:49 +0000 (UTC)
+Message-ID: <d11d92e48321e8c1a429a878917e7c6a6211ea4b.camel@collabora.com>
+Subject: Re: [PATCH] media: verisilicon: AV1: Correct some registers fields
+ size or position
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+	ezequiel@vanguardiasur.com.ar, p.zabel@pengutronix.de, mchehab@kernel.org, 
+	heiko@sntech.de
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kernel@collabora.com
+Date: Fri, 31 May 2024 08:48:44 -0400
+In-Reply-To: <20240521152603.120723-1-benjamin.gaignard@collabora.com>
+References: <20240521152603.120723-1-benjamin.gaignard@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - GC112 (Linux)/8.8.15_GA_4581)
-Thread-Topic: ASoC: dt-bindings: fsl-asoc-card: add compatible for generic codec
-Thread-Index: 9W7FNkO/DHfWsLN9ZmR/Fd4sK0HmGw==
 
-From: "Rob Herring" <robh@kernel.org>
-Sent: Monday, 20 May, 2024 20:31:48
-> On Wed, May 15, 2024 at 03:54:11PM +0200, Elinor Montmasson wrote:
->> Add documentation about new dts bindings following new support
->> for compatible "fsl,imx-audio-generic".
->> 
->> Some CPU DAI don't require a real audio codec. The new compatible
->> "fsl,imx-audio-generic" allows using the driver with codec drivers
->> SPDIF DIT and SPDIF DIR as dummy codecs.
->> It also allows using not pre-configured audio codecs which
->> don't require specific control through a codec driver.
->> 
->> The new dts properties give the possibility to set some parameters
->> about the CPU DAI usually set through the codec configuration.
->> 
->> Signed-off-by: Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>
->> ---
->>  .../bindings/sound/fsl-asoc-card.yaml         | 96 ++++++++++++++++++-
->>  1 file changed, 92 insertions(+), 4 deletions(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
->> b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
->> index 9922664d5ccc..332d8bf96e06 100644
->> --- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
->> +++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
->> @@ -23,6 +23,16 @@ description:
->>    and PCM DAI formats. However, it'll be also possible to support those non
->>    AC'97/I2S/PCM type sound cards, such as S/PDIF audio and HDMI audio, as
->>    long as the driver has been properly upgraded.
->> +  To use CPU DAIs that do not require a codec such as an S/PDIF controller,
->> +  or to use a DAI to output or capture raw I2S/TDM data, you can
->> +  use the compatible "fsl,imx-audio-generic".
->> +
->> +definitions:
->> +  imx-audio-generic-dependency:
->> +    properties:
->> +      compatible:
->> +        contains:
->> +          const: fsl,imx-audio-generic
->>  
->>  maintainers:
->>    - Shengjiu Wang <shengjiu.wang@nxp.com>
->> @@ -81,6 +91,7 @@ properties:
->>                - fsl,imx-audio-wm8960
->>                - fsl,imx-audio-wm8962
->>                - fsl,imx-audio-wm8958
->> +              - fsl,imx-audio-generic
->>  
->>    model:
->>      $ref: /schemas/types.yaml#/definitions/string
->> @@ -93,8 +104,14 @@ properties:
->>        need to add ASRC support via DPCM.
->>  
->>    audio-codec:
->> -    $ref: /schemas/types.yaml#/definitions/phandle
->> -    description: The phandle of an audio codec
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    description: |
->> +      The phandle of an audio codec.
->> +      If using the "fsl,imx-audio-generic" compatible, give instead a pair of
->> +      phandles with the spdif_transmitter first (driver SPDIF DIT) and the
->> +      spdif_receiver second (driver SPDIF DIR).
-> 
->       minItems: 1
->       maxItems: 2
-> 
->> +    items:
->> +      maxItems: 1
->>  
->>    audio-cpu:
->>      $ref: /schemas/types.yaml#/definitions/phandle
->> @@ -150,8 +167,8 @@ properties:
->>      description: dai-link uses bit clock inversion.
->>  
->>    mclk-id:
->> -    $ref: /schemas/types.yaml#/definitions/uint32
->> -    description: main clock id, specific for each card configuration.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    description: Main clock id for each codec, specific for each card
->> configuration.
-> 
->       minItems: 1
->       maxItems: 2
->>  
->>    mux-int-port:
->>      $ref: /schemas/types.yaml#/definitions/uint32
->> @@ -167,10 +184,68 @@ properties:
->>      $ref: /schemas/types.yaml#/definitions/phandle
->>      description: The phandle of an CPU DAI controller
->>  
->> +  # Properties relevant only with "fsl,imx-audio-generic" compatible
->> +  dai-tdm-slot-width:
->> +    description: See tdm-slot.txt.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +
->> +  dai-tdm-slot-num:
->> +    description: See tdm-slot.txt.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +
->> +  clocks:
->> +    description: |
->> +      The CPU DAI system clock, used to retrieve
->> +      the CPU DAI system clock frequency with the generic codec.
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: cpu_sysclk
->> +
->> +  cpu-system-clock-direction-out:
->> +    description: |
->> +      Specifies cpu system clock direction as 'out' on initialization.
->> +      If not set, direction is 'in'.
->> +    $ref: /schemas/types.yaml#/definitions/flag
->> +
->> +dependencies:
->> +  dai-tdm-slot-width:
->> +    $ref: "#/definitions/imx-audio-generic-dependency"
->> +  dai-tdm-slot-num:
->> +    $ref: "#/definitions/imx-audio-generic-dependency"
->> +  clocks:
->> +    $ref: "#/definitions/imx-audio-generic-dependency"
->> +  cpu-system-clock-direction-out:
->> +    $ref: "#/definitions/imx-audio-generic-dependency"
-> 
-> This works, but is an unusual pattern...
-> 
->> +
->>  required:
->>    - compatible
->>    - model
->>  
->> +allOf:
->> +  - if:
->> +      $ref: "#/definitions/imx-audio-generic-dependency"
->> +    then:
->> +      properties:
->> +        audio-codec:
->> +          items:
->> +            - description: SPDIF DIT phandle
->> +            - description: SPDIF DIR phandle
->> +        mclk-id:
->> +          maxItems: 1
->> +          items:
->> +            minItems: 1
->> +            maxItems: 2
->> +    else:
->> +      properties:
->> +        audio-codec:
->> +          maxItems: 1
->> +        mclk-id:
->> +          maxItems: 1
->> +          items:
->> +            maxItems: 1
-> 
-> 
-> You can handle the dependency like this instead:
-> 
->           dai-tdm-slot-width: false
->           dai-tdm-slot-num: false
-> 
-> 
-> And then you don't need the definitions.
-> 
->> +
->>  unevaluatedProperties: false
->>  
->>  examples:
->> @@ -195,3 +270,16 @@ examples:
->>               "AIN2L", "Line In Jack",
->>               "AIN2R", "Line In Jack";
->>      };
->> +
->> +  - |
->> +    #include <dt-bindings/clock/imx8mn-clock.h>
->> +    sound-spdif-asrc {
->> +      compatible = "fsl,imx-audio-generic";
->> +      model = "spdif-asrc-audio";
->> +      audio-cpu = <&spdif>;
->> +      audio-asrc = <&easrc>;
->> +      audio-codec = <&spdifdit>, <&spdifdir>;
->> +      clocks = <&clk IMX8MN_CLK_SAI5_ROOT>;
->> +      clock-names = "cpu_sysclk";
->> +      cpu-system-clock-direction-out;
->> +    };
->> --
->> 2.34.1
+Le mardi 21 mai 2024 =C3=A0 17:26 +0200, Benjamin Gaignard a =C3=A9crit=C2=
+=A0:
+> Some fields aren't well positionned or with incorrect size inside the
+> hardware registers. Fix them.
+>=20
+> That doesn't impact Fluster score test.
 
-Ok, thank you for the review, I'll make these modifications in v5.
+Does it impact any known streams though ? (just for a sake of documentation=
+, not
+really a problem with your change).
+
+>=20
+> Fixes: 727a400686a2 ("media: verisilicon: Add Rockchip AV1 decoder")
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+
+> ---
+>  .../media/platform/verisilicon/rockchip_vpu981_regs.h  | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h b/=
+drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
+> index 182e6c830ff6..990f8e69524a 100644
+> --- a/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
+> +++ b/drivers/media/platform/verisilicon/rockchip_vpu981_regs.h
+> @@ -327,7 +327,7 @@
+> =20
+>  #define av1_apf_threshold		AV1_DEC_REG(55, 0, 0xffff)
+>  #define av1_apf_single_pu_mode		AV1_DEC_REG(55, 30, 0x1)
+> -#define av1_apf_disable			AV1_DEC_REG(55, 30, 0x1)
+> +#define av1_apf_disable			AV1_DEC_REG(55, 31, 0x1)
+> =20
+>  #define av1_dec_max_burst		AV1_DEC_REG(58, 0, 0xff)
+>  #define av1_dec_buswidth		AV1_DEC_REG(58, 8, 0x7)
+> @@ -337,10 +337,10 @@
+>  #define av1_dec_mc_polltime		AV1_DEC_REG(58, 17, 0x3ff)
+>  #define av1_dec_mc_pollmode		AV1_DEC_REG(58,	27, 0x3)
+> =20
+> -#define av1_filt_ref_adj_3		AV1_DEC_REG(59, 0, 0x3f)
+> -#define av1_filt_ref_adj_2		AV1_DEC_REG(59, 7, 0x3f)
+> -#define av1_filt_ref_adj_1		AV1_DEC_REG(59, 14, 0x3f)
+> -#define av1_filt_ref_adj_0		AV1_DEC_REG(59, 21, 0x3f)
+> +#define av1_filt_ref_adj_3		AV1_DEC_REG(59, 0, 0x7f)
+> +#define av1_filt_ref_adj_2		AV1_DEC_REG(59, 7, 0x7f)
+> +#define av1_filt_ref_adj_1		AV1_DEC_REG(59, 14, 0x7f)
+> +#define av1_filt_ref_adj_0		AV1_DEC_REG(59, 21, 0x7f)
+>  #define av1_ref0_sign_bias		AV1_DEC_REG(59, 28, 0x1)
+>  #define av1_ref1_sign_bias		AV1_DEC_REG(59, 29, 0x1)
+>  #define av1_ref2_sign_bias		AV1_DEC_REG(59, 30, 0x1)
+
