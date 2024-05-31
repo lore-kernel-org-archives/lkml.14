@@ -1,57 +1,57 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F5C152166;
-	Fri, 31 May 2024 10:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from mail.bugwerft.de (mail.bugwerft.de [46.23.86.59])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E10C53DBB7;
+	Fri, 31 May 2024 10:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.23.86.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717151112; cv=none; b=ZoqB06n2OkfibiEPJLalzQAc2TreH/mgBg8ra/tIJgqw5SidM2AxsF487SYTYauVq1v0ruGXX9w/eDKbfoqVKQYKKNSfM6qmJ8WKh1JRFESOZH/pd3/RHCB6RcIo9ti6GNVbHBr/93+jZ6uHOh2WaevPbFH1QHGu4D/DYDuIn1k=
+	t=1717151179; cv=none; b=J9wROk9KdZ2Tb+mSkFtKf/k3Yx6dP7d+CqBLub8FYABolsCUG/bb72ZGp0lR8PJFYOZBXOYY9pymVdhz5yGEX+RigYoaxFqFdGq8u8N9NzYvHHJIS5j95w+OgfC+ncPICwD/FdrPMb1/RuusuWRqHNGMlOxRD7ifHYu295kAM2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717151112; c=relaxed/simple;
-	bh=SpVb3zXMO4QqG/nwzrQQk/Z4Nf2OeOEBLKzG1FZZsHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PHxWngAmyJC9RyecljdiZMrltF3ngyrqg8OZMkpmodpapyudPEKf3t3exSyddbfGvusxwWpHwfDkLa+pij7PPDphIVEsgFMMD89qxn9Ws2ZuA+hPwWLFef2wHjM0+O3GPLSloNWnL4euVjsHka0QJyTTT+jv+NLYX8SHvouY810=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1sCzRM-004ApZ-2M;
-	Fri, 31 May 2024 18:24:53 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 31 May 2024 18:24:54 +0800
-Date: Fri, 31 May 2024 18:24:54 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: davem@davemloft.net, dan.carpenter@linaro.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: atmel-sha204a - fix negated return value
-Message-ID: <ZlmldrSVt0CWVlzX@gondor.apana.org.au>
-References: <20240526103128.14703-1-l.rubusch@gmail.com>
+	s=arc-20240116; t=1717151179; c=relaxed/simple;
+	bh=PTMlr5w/6kBEWcOKgHe858k6nFFyhwJ1CCKOVUOJ9kM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sY8t9+DIcQIAZ79rC28Gwpqk9MB8VxR7sX50Ql60bm4m6TI6yRLxEMNBwMPnVJqZqoukWWkMiOVGiC6rlfPfRq44dn/uRA8JUsM87JgLzf8EqpxcMnKcCPny20UPcCEII9KebqeSgmc5Fd65WtHGvYWY5kRWuF/L4We5KMQYBhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zonque.org; spf=pass smtp.mailfrom=zonque.org; arc=none smtp.client-ip=46.23.86.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zonque.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zonque.org
+Received: from hq-00595.fritz.box (unknown [178.19.214.146])
+	by mail.bugwerft.de (Postfix) with ESMTPSA id 0B8D52806FF;
+	Fri, 31 May 2024 10:20:06 +0000 (UTC)
+From: Daniel Mack <daniel@zonque.org>
+To: gregkh@linuxfoundation.org,
+	hvilleneuve@dimonoff.com
+Cc: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Mack <daniel@zonque.org>
+Subject: [PATCH] serial: sc16is7xx: set driver name
+Date: Fri, 31 May 2024 12:19:59 +0200
+Message-ID: <20240531101959.181457-1-daniel@zonque.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240526103128.14703-1-l.rubusch@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 26, 2024 at 10:31:28AM +0000, Lothar Rubusch wrote:
-> Fix negated variable return value.
-> 
-> Fixes: e05ce444e9e5 ("crypto: atmel-sha204a - add reading from otp zone")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-crypto/34cd4179-090e-479d-b459-8d0d35dd327d@moroto.mountain/
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
->  drivers/crypto/atmel-sha204a.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Set the drv_name field of the driver struct so that the tty core
+registers a procfs entry for it. This is useful for debugging.
 
-Patch applied.  Thanks.
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+---
+ drivers/tty/serial/sc16is7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+index bf0065d1c8e9..308edbacda7b 100644
+--- a/drivers/tty/serial/sc16is7xx.c
++++ b/drivers/tty/serial/sc16is7xx.c
+@@ -351,6 +351,7 @@ static struct uart_driver sc16is7xx_uart = {
+ 	.owner		= THIS_MODULE,
+ 	.driver_name    = SC16IS7XX_NAME,
+ 	.dev_name	= "ttySC",
++	.driver_name	= SC16IS7XX_NAME,
+ 	.nr		= SC16IS7XX_MAX_DEVS,
+ };
+ 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.45.1
+
