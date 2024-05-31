@@ -1,166 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731D7156C77
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6482978C80;
+	Fri, 31 May 2024 19:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717184695; cv=none; b=qY4HUEx9DJBwVo9BpSqtWKlNH97/xmUepRfZIyZPkIIlHk98X3LwRXGHmUZsma3CrbnRha64vCwBVODRV0J7sV4ddZ+ZmU7yunEnHx9OwZccmfRZKFal+ujVrOpkjTLYVevH8Hv9jwxpitdtLxxnLG5TXkgQuKH+sVCxQ8+wAio=
+	t=1717184852; cv=none; b=u5Dcce6yC+dxI347XZ1ggCzMkCO3G5AriPCE0W8OS5CPicB1Foe72wdWjPHo2JUhOCZpTEJ/YufRPnIDKtztqjBSM642+NImvwa4PDtib6fX/MOsduPjOdQmeoYHPiEs8q6iMxkOKT+/W6DpMXvwxI/eYeCuGEWaJe/K2xYIfws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717184695; c=relaxed/simple;
-	bh=WsXsZUZBHM71gw5SH/Pl2AmNjI0Fjt2FzypgjJ5Rw5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DRaKlL2guWHlznR5gdY/SQpZhrz7BrnnpLCS07X/jI8XmfdCCmIn5NtXYqE7jirYlgmeX27k/1PCy0N6T7AWjgm3HxaDk0ThQ+g5ay9/duhHY5AN3e71ukwHJBRwbvpBFIMsfo9liUC9/jeQrWbQOvMcdwBZpGmEAFf6akLqOcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Au+QfD/e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717184852; c=relaxed/simple;
+	bh=ONMDe0AeAis0si41LBoi+8F/DBMmBIHYuIzcZWniouM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sTn4h3PYV/eHM2R42H2KL7BOssJzaHHPuDEy/KnzK+M6biX6fBdiELscAUiYAiu1VG8/ijUcX9qUpe8WKbIA/aPmj6u52COGT6+wZShiMg6VtnNp5AoD6SZROM4Sr5lns4ZmkgvvHN3ONLlxUy7uzXXX5xJvdXTPKUCRItiEUt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vz7Pu6Tv; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Au+QfD/e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717184692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=srIuKAq+Z2eXfh6Ltvl4It8PMcDQP7/BZ/A3IAY5rw0=;
-	b=Au+QfD/eRafNq6WW4u0B9QBQyKlmcWEFbmH8Hhtk199Fo0M6otFXdLpZASikaGt4Dg1ZEz
-	Jnm8hsDlcAXxAVg2aYnQSiHqNvVe1yAdcHAJPLJxeNA444ca07imjDcGJYgW3skdgIUaIr
-	t3hRb1FVewIe9weu39qsgAjNHK3Su2w=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-612-pOdfD2urOUW337F-bRD_dA-1; Fri,
- 31 May 2024 15:44:48 -0400
-X-MC-Unique: pOdfD2urOUW337F-bRD_dA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37EAE3C025AC;
-	Fri, 31 May 2024 19:44:48 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.18.140])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BEBAC3C27;
-	Fri, 31 May 2024 19:44:47 +0000 (UTC)
-Date: Fri, 31 May 2024 15:44:46 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
-	Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: livepatch: Test atomic replace against
- multiple modules
-Message-ID: <ZloormpDnnc4SDub@redhat.com>
-References: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vz7Pu6Tv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717184851; x=1748720851;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ONMDe0AeAis0si41LBoi+8F/DBMmBIHYuIzcZWniouM=;
+  b=Vz7Pu6TvxtBFZNAM73M7EQomsCeJdgFT4OKq6Njtkgxj/noFv2/dFNI0
+   AYTNFVavaUiapERgufJmLSRXRiNkC+bVUqEWH2haTvG52BFV8n0gF14Qi
+   DwdhX6PmcSWn3hnp47FiD7mymGEXnmzDTMlfQJAOr8/8MWi6+b7I/NUqK
+   fN175LlsHOg9e6/mDiGi16vOztAWxWfjY07HCRh9Xjm60hrIotxTkuhdM
+   3TFZhw22LLf8cOyqsVCIDkZ4Rt0gsd6e1nqc1grSuFmN0IORFmNNBIibQ
+   TbvC0ZqENVFPNt5oC2FXHy2cw5yNIqbxj+a0/C5IEXbyZxLywUFtehMkz
+   A==;
+X-CSE-ConnectionGUID: I4q6pGlLSkCmmjTrbtllYQ==
+X-CSE-MsgGUID: PJpIFkAPReaN9b7gPw4qyA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="39144636"
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="39144636"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 12:47:29 -0700
+X-CSE-ConnectionGUID: L/T6RM0KQwWWXDKRMF4JAA==
+X-CSE-MsgGUID: HHuZNyPCQbuMsitkKuFmWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
+   d="scan'208";a="67452618"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 31 May 2024 12:47:26 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E391E228; Fri, 31 May 2024 22:47:24 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mark Brown <broonie@kernel.org>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thangaraj Samynathan <thangaraj.s@microchip.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org
+Cc: Serge Semin <fancer.lancer@gmail.com>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v1 0/8] spi: Rework DMA mapped flag
+Date: Fri, 31 May 2024 22:42:32 +0300
+Message-ID: <20240531194723.1761567-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 25, 2024 at 11:34:08AM -0300, Marcos Paulo de Souza wrote:
-> Adapt the current test-livepatch.sh script to account the number of
-> applied livepatches and ensure that an atomic replace livepatch disables
-> all previously applied livepatches.
-> 
-> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> ---
-> Changes since v1:
-> * Added checks in the existing test-livepatch.sh instead of creating a
->   new test file. (Joe)
-> * Fixed issues reported by ShellCheck (Joe)
-> ---
->  .../testing/selftests/livepatch/test-livepatch.sh  | 46 ++++++++++++++++++++--
->  1 file changed, 42 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh b/tools/testing/selftests/livepatch/test-livepatch.sh
-> index e3455a6b1158..d85405d18e54 100755
-> --- a/tools/testing/selftests/livepatch/test-livepatch.sh
-> +++ b/tools/testing/selftests/livepatch/test-livepatch.sh
-> @@ -107,9 +107,12 @@ livepatch: '$MOD_LIVEPATCH': unpatching complete
->  
->  # - load a livepatch that modifies the output from /proc/cmdline and
->  #   verify correct behavior
-> -# - load an atomic replace livepatch and verify that only the second is active
-> -# - remove the first livepatch and verify that the atomic replace livepatch
-> -#   is still active
-> +# - load two addtional livepatches and check the number of livepatch modules
-> +#   applied
-> +# - load an atomic replace livepatch and check that the other three modules were
-> +#   disabled
-> +# - remove all livepatches besides the atomic replace one and verify that the
-> +#   atomic replace livepatch is still active
->  # - remove the atomic replace livepatch and verify that none are active
->  
->  start_test "atomic replace livepatch"
-> @@ -119,12 +122,31 @@ load_lp $MOD_LIVEPATCH
->  grep 'live patched' /proc/cmdline > /dev/kmsg
->  grep 'live patched' /proc/meminfo > /dev/kmsg
->  
-> +for mod in test_klp_syscall test_klp_callbacks_demo; do
+The first part of the series (patches 1 to 7) is an introduction
+of a new helper followed by the user conversion.
 
-Slightly nitpicky here, but the tests were originally written with the
-livepatch module names via variables like $MOD_LIVEPATCH.  Would using
-$MOD_LIVEPATCH{1,2,3} help indicate that their specifics aren't really
-interesting, that we just need 3 of them?
+This consolidates the same code and also makes patch 8 (last one)
+be localised to the SPI core part.
 
-> +	load_lp $mod
-> +done
-> +
-> +mods=(/sys/kernel/livepatch/*)
-> +nmods=${#mods[@]}
-> +if [ "$nmods" -ne 3 ]; then
-> +	die "Expecting three modules listed, found $nmods"
-> +fi
-> +
+The last patch is the main rework to get rid of a recently introduced
+hack with a dummy SG list and move to the transfer-based DMA mapped
+flag. 
 
-I was going to suggest that we might protect against a situation where
-other livepatch modules were active, that a simple count wouldn't be
-sufficient.  But then I thought about this test, atomic replace!
-Anything previously loaded is going to be pushed aside anyway.
+That said, the patches 1 to 7 may be applied right away since they
+have no functional change intended, while the last one needs more
+testing and reviewing.
 
-So maybe (in another patch or set) it would be worth enhancing
-functions.sh :: start_test() do a quick sanity check to see that the
-initial conditions are safe?  That might also prevent some collateral
-damage when test A fails and leaves the world a strange place for tests
-B, C, etc.
+Andy Shevchenko (8):
+  spi: Introduce internal spi_xfer_is_dma_mapped() helper
+  spi: dw: Use new spi_xfer_is_dma_mapped() helper
+  spi: ingenic: Use new spi_xfer_is_dma_mapped() helper
+  spi: omap2-mcspi: Use new spi_xfer_is_dma_mapped() helper
+  spi: pxa2xx: Use new spi_xfer_is_dma_mapped() helper
+  spi: pci1xxxx: Use new spi_xfer_is_dma_mapped() helper
+  spi: qup: Use new spi_xfer_is_dma_mapped() helper
+  spi: Rework per message DMA mapped flag to be per transfer
 
->  load_lp $MOD_REPLACE replace=1
->  
->  grep 'live patched' /proc/cmdline > /dev/kmsg
->  grep 'live patched' /proc/meminfo > /dev/kmsg
->  
-> -unload_lp $MOD_LIVEPATCH
-> +mods=(/sys/kernel/livepatch/*)
-> +nmods=${#mods[@]}
-> +if [ "$nmods" -ne 1 ]; then
-> +	die "Expecting only one moduled listed, found $nmods"
-> +fi
-> +
-> +# These modules were disabled by the atomic replace
-> +for mod in test_klp_callbacks_demo test_klp_syscall $MOD_LIVEPATCH; do
-> +	unload_lp "$mod"
-> +done
->  
->  grep 'live patched' /proc/cmdline > /dev/kmsg
->  grep 'live patched' /proc/meminfo > /dev/kmsg
-> @@ -142,6 +164,20 @@ livepatch: '$MOD_LIVEPATCH': starting patching transition
->  livepatch: '$MOD_LIVEPATCH': completing patching transition
->  livepatch: '$MOD_LIVEPATCH': patching complete
->  $MOD_LIVEPATCH: this has been live patched
-> +% insmod test_modules/test_klp_syscall.ko
+ drivers/spi/internals.h       |  8 ++++
+ drivers/spi/spi-dw-core.c     |  4 +-
+ drivers/spi/spi-ingenic.c     |  4 +-
+ drivers/spi/spi-omap2-mcspi.c |  8 ++--
+ drivers/spi/spi-pci1xxxx.c    |  5 ++-
+ drivers/spi/spi-pxa2xx.c      |  6 +--
+ drivers/spi/spi-qup.c         |  9 ++---
+ drivers/spi/spi.c             | 73 +++++++++++++----------------------
+ include/linux/spi/spi.h       | 11 ++++--
+ 9 files changed, 59 insertions(+), 69 deletions(-)
 
-Similar minor nit here, too.  If we think copy/pasting all the $MOD_FOO
-is annoying, I am fine with leaving this as is.  I don't have a strong
-opinion other than following some convention.
-
-With that, I'm happy to ack as-is or with variable names.
-
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-
---
-Joe
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
