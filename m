@@ -1,39 +1,56 @@
-Received: from smtp2.math.uni-bielefeld.de (smtp2.math.uni-bielefeld.de [129.70.45.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8476117C7D4
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C53B17B51D
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 19:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717182762; cv=none; b=OlI3fGhM6U7a8qJ1dAG+0LAMM8IcWVT7bZrmhj6cwre86ntKLSjooKEw2ugZyaBKxR69eAvkrHEIFGEVjia6gC47M1j9qikZ8XzNOBOFYoOr+7cm5/5WJbfp73/EXjfiDtRA9BmTloVBBW8fE6Nid2hs+NxVW4WU/+XRyxy3Jf4=
+	t=1717182810; cv=none; b=CTGsf3O9IgL2VrzkH+euGt/R71qIpR8T+e7DY6WWC1todsR9ATG2Ko28ja7964UPRlXuPV6Cd++qh0JxBhbARge3F1WG1aWB08+psEXzOzio+gt3pVz+eFNp/A7QhB5mK/INoEhtxYqtPINnP0xgT8gYSZzgT8hTaikmkFHyRW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717182762; c=relaxed/simple;
-	bh=l6Noy5qDuga5ddzS3uhFndxB/qs8GrX99aTIdEU4qGo=;
+	s=arc-20240116; t=1717182810; c=relaxed/simple;
+	bh=E296/Sootdy1zZQGNWdy4Bn1+fEQuepZc3Fj238Krog=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BDIbX74sU2q3H+91eR8YhEv4Qyyd4ySuQN/koBLzGKx2zWN0+Fs7r8v4iutKFwObFRPCfNKHZcTxghzIM0I6p1BMjS05R1ZYXxzKYz+cewFZTDMnXVZvVYmssF2+CNJFqXcjh7yzwuRmmpBjw5lSnu3j295rN/XrE1W+6+/J3VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=w+5RfYmC; arc=none smtp.client-ip=129.70.45.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
+	 In-Reply-To:Content-Type; b=ajy2RciU1FS4w2C4GtLKrVyW6ua2DR/K4t61qmhgzPUZLtd/BGqDILLAAoZ7/tUbJ2niWNg2q+BJjGjbLjhfNA/Tl++JjLCIH7DqDvpNxdkOZ3+hyVI9qB1rESrQsZAUuKn2l+3yMrR4eiwoqv1PA17eu6MM1zqtdVLG9Anr6As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Xdt3BDL2; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="w+5RfYmC"
-Received: from [192.168.0.100] (dslb-088-074-203-220.088.074.pools.vodafone-ip.de [88.74.203.220])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtp2.math.uni-bielefeld.de (Postfix) with ESMTPSA id C27B56015A;
-	Fri, 31 May 2024 21:04:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=math.uni-bielefeld.de; s=default; t=1717182249;
-	bh=l6Noy5qDuga5ddzS3uhFndxB/qs8GrX99aTIdEU4qGo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=w+5RfYmCDLL39Us+JDOzdHqgmRGlqo8OWHhr7mWY2eJVoyJXFo93+GRnBB/dx/rav
-	 z33rrAesPCMaPGXP5CFXthePyVYRhxhAmlLqC5gBlzqzGFQnkwhA+FrjDVZFwl8HSc
-	 BMF1UWHrVR4IJPvoiEEnJcu/UCuU79MGCN6UeLRItizp7vfN68qnNSy5K/zjVhqJHZ
-	 6vyxOSsUki4qNll8xlw4Xv/hBGOReZcin50XjiV3qAW41P5Qxn/4tc40kwCOfvfYDe
-	 zgT8D96tzaNmwKu0rHTdN6FFHM6LBe9c6vDtvKA2BajuknkaLhHkslmshDahNpEowZ
-	 eEtT7dZb0q3Gg==
-Message-ID: <a4069a85-b990-42b4-8cde-8906a740ec27@math.uni-bielefeld.de>
-Date: Fri, 31 May 2024 21:04:05 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xdt3BDL2"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7ead7e95c91so10565439f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1717182808; x=1717787608; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=41fiE54FY+e6bgGGsIbRgTEJBX7DPyrtesC8AIAh9Ug=;
+        b=Xdt3BDL22gzsFqcdg/T4UgxHlLb9JGTaMPdlXWcilOXYfJHV59WqcsF02AAh3C6o9L
+         KtLSBJ1hz9SsKYBDG4WNPdkfoAXLmUe1WPDU+dEOKSUdPjbww8gm9eFstKSEECVAmXfG
+         qPeEz5bcQwzrUzvkcyxU2iK6TRtsYdGjjt2YU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717182808; x=1717787608;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=41fiE54FY+e6bgGGsIbRgTEJBX7DPyrtesC8AIAh9Ug=;
+        b=iic6LAYZsAzirCo2zeROXtdohNlFQt4qq6vGfnpCqaJuNJJnLps7KDUwEnz2O12iIp
+         UlvMhrtRXesFcSha19sD1VVrn+SYWgdvArq5Z7SGuDRpdVmXdoc1CZYkI+uvkliqpeEl
+         dgw855y7KVK/a+dQBP8XozzGNKQSlhJXp+v3IGgFor/7vA8QOEKp6MnV9WODKAmk4cWw
+         CH/4v61ANmrqGpK40hu3wlJHETBNho6nTdXfKtK2Z3g2R62vkYKmlJ+vWvxU5d/vJ/hs
+         LZNtxkGLMBk8T8DGYQh3Wd13MlP3BrnBPLBmemueqQh+uLcG8OtF6lOD/t2Fx0YelBXr
+         D9Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVG2lGkwuXsF3hC5Nis9v6McubJ9o90Yn3qSYFW7TTG9qnM3IFumsXo90bfKn4pMITnoymD3ZBswv0D+gW+nqqUg4DR4Vw87fZuXVwf
+X-Gm-Message-State: AOJu0YzXJFoDlCAxQUPUnMEW8omVIAij+h7IxkF8WMPZpqm1ZZGicZC/
+	FjD+wqJ5+vUtrdVrdNqcMLl5QSUzuktgqGwvvrE6yZdfINdSIfnSbsCkqJbsRqE=
+X-Google-Smtp-Source: AGHT+IHrKoWGzpR+rMVObi2QP9d4WGkPOovhn8D1ERBu3+IYhrknVsI6Qi0EL7KWAFhRyTDonEBaPg==
+X-Received: by 2002:a5d:9b13:0:b0:7e1:7e15:6471 with SMTP id ca18e2360f4ac-7eaffee2c4amr334625439f.1.1717182808038;
+        Fri, 31 May 2024 12:13:28 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b48b99b0c8sm626884173.107.2024.05.31.12.13.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 May 2024 12:13:27 -0700 (PDT)
+Message-ID: <f9091516-37ff-43d1-b515-ae8eb3f80e80@linuxfoundation.org>
+Date: Fri, 31 May 2024 13:13:27 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,98 +58,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] drm: panel-orientation-quirks: Add quirk for Aya
- Neo KUN
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240310220401.895591-1-tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH] list: test: remove unused struct 'klist_test_struct'
+To: "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: davidgow@google.com, linux-kselftest@vger.kernel.org,
+ kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240531151801.128792-1-linux@treblig.org>
+ <89e07c93-a54d-4cc2-8ee1-664389ffcdd7@collabora.com>
+ <Zlod5TMzmXinDu2X@gallifrey>
 Content-Language: en-US
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Autocrypt: addr=tjakobi@math.uni-bielefeld.de; keydata=
- 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
- JRHWPGCL3BhOxQ==
-In-Reply-To: <20240310220401.895591-1-tjakobi@math.uni-bielefeld.de>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <Zlod5TMzmXinDu2X@gallifrey>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/10/24 23:04, tjakobi@math.uni-bielefeld.de wrote:
+On 5/31/24 12:58, Dr. David Alan Gilbert wrote:
+> * Muhammad Usama Anjum (usama.anjum@collabora.com) wrote:
+>> On 5/31/24 8:18 PM, linux@treblig.org wrote:
+>>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>>>
+>>> 'klist_test_struct' has been unused since the original
+>>> commit 57b4f760f94d ("list: test: Test the klist structure").
+>> Probably a fixes by tag would be needed here.
+> 
+> I'm generally avoiding fixes tags in this set of changes, since
+>    a) They have no behavioural change at all.
+>    b) Downstream and stable kernel people use fixes tags to indicate
+>       stuff they should pick up if they have the original, and there's
+>       no need for them to do that with this cleanup.
+> 
+> Dave
 
-> From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->
-> Similar to the other Aya Neo devices this one features
-> again a portrait screen, here with a native resolution
-> of 1600x2560.
->
-> Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-> ---
->   drivers/gpu/drm/drm_panel_orientation_quirks.c | 6 ++++++
->   1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_panel_orientation_quirks.c b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-> index 3d92f66e550c..5d3fb11fd45f 100644
-> --- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-> +++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-> @@ -196,6 +196,12 @@ static const struct dmi_system_id orientation_data[] = {
->   		  DMI_MATCH(DMI_BOARD_NAME, "NEXT"),
->   		},
->   		.driver_data = (void *)&lcd800x1280_rightside_up,
-> +	}, {	/* AYA NEO KUN */
-> +		.matches = {
-> +		  DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
-> +		  DMI_MATCH(DMI_BOARD_NAME, "KUN"),
-> +		},
-> +		.driver_data = (void *)&lcd1600x2560_rightside_up,
->   	}, {	/* Chuwi HiBook (CWI514) */
->   		.matches = {
->   			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
++1 on using careful use of Fixes tag only on real fixes for the
+reasons mentioned above.
 
-Trying yet another ping! Also adding Hans to the list of recipients, as 
-he committed the last quirk for an Ayaneo device. Someone pick this up, 
-pretty please! :-)
-
-- Tobias
+thanks,
+-- Shuah
 
