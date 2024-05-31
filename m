@@ -1,99 +1,212 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94A2C156;
-	Fri, 31 May 2024 01:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846062D7B8;
+	Fri, 31 May 2024 01:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717119359; cv=none; b=E1Jv/A0/UCuvAbZX5P8HVjXg8zAJU+6hGYklgNPVfRv/9n9n1Otp4j32kme7/+A8I0fonCI9g3OwUPkarItQidJ52r+wUTV9S24c3UhPacDRn3yNNI3CQ2W74ladHrm9LuIw1n0Uf3DtOOZTVRfiJgHhFAkhJDv3Ys2LaqfBChg=
+	t=1717119369; cv=none; b=fpASYeLqfBnDlvxv1ga/rqSjzphl1bX5EdabkVosJPk4Joeol67j58Ufgss3aBGAjGI1tS2uLZaH6MvC6McqbuWWlUH7krByI1dhAM4ssuA2MZuOznGeu8EN8Z6a1YJRs7kkeU9LGuVZOnwFWJh8QefHEPRwbd9Gf9PvJe5bUVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717119359; c=relaxed/simple;
-	bh=ZApCVXmY3VKY4Y2jD64wkUq43qrLdZnkV1A6irpmLnE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fGfHznOYiQu6gUJlzUbI897PDwOkLlNIfEdHt8yJ9mGtBgS+E7Idsm59DmpvFIoyaCn8nw9H4OQtaURfbdRX1qPtsg7Kapi3tEs+VINm5aNr+Hm+cnk9sE9Om6r/mfsS058OyPhd9W4nLelH7Ld678ORrgLDn2YmjmQ0vrcNKhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kjDQ2yJg; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1717119369; c=relaxed/simple;
+	bh=yJBuR6bIVxGlNAFlMMWwvgbcjFar6UC2gGWKayrnt8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H2CQ+Ig7wmdspa0bYK1zgsfJ+7wuF8UNdCnsVhbKF4Wp6JhB31PK2ldVBZImOgUODCSilSPrD5EQQc5FWJTQdNgmUN5CSgF9A6l4NYvC5YKb1rQ4RersQZc8JprfjEAvDLBx/w5dIh+93oVZGfBss9HEk88556iQZNeANIrt75A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0BexmJa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kjDQ2yJg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1717119358; x=1748655358;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=ZApCVXmY3VKY4Y2jD64wkUq43qrLdZnkV1A6irpmLnE=;
-  b=kjDQ2yJgxKOhezNgSZuxg3FZ/cPVrZvnAnrlOy8gbslpl0pVaHJKKq+T
-   skYu0XKLj6XViON1ChuOtmso3Wq7Gp66sG8cd1WmBHStRoEhyUxNoxHa8
-   2k+C/ZrPN0VY6lJAG1N8cs+0LIfq2HQ2vDokxXbtn9HRmEHdQaJCR+3hw
-   hVNRMG5oZMHSCVVg+qcIDQjmNw0gLQZ7HL9tonftTyJbx5R//DfdAwbZb
-   QzuGobN2H+CmFoyVBP/aTckvu7SXbTYS7GItvod8anqdRUwJqar1kApBx
-   cipwoA7pvdxaIXuT+AHDu3maoQC5OqfFydhnjtpXIyxDUd2+y7nNFQibz
-   Q==;
-X-CSE-ConnectionGUID: p7Nt11kgR9WQrbyNTGr1Dw==
-X-CSE-MsgGUID: OeEJoB9GT/2cX8Cuxwz61Q==
-X-IronPort-AV: E=Sophos;i="6.08,202,1712646000"; 
-   d="scan'208";a="26781106"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 May 2024 18:35:57 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 30 May 2024 18:35:51 -0700
-Received: from hat-linux.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 30 May 2024 18:35:51 -0700
-From: <Tristram.Ha@microchip.com>
-To: Arun Ramadoss <arun.ramadoss@microchip.com>, Woojung Huh
-	<woojung.huh@microchip.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot
-	<vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>,
-	"Vladimir Oltean" <olteanv@gmail.com>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, <UNGLinuxDriver@microchip.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tristram Ha
-	<tristram.ha@microchip.com>
-Subject: [PATCH v1 net] net: dsa: microchip: fix wrong register write when masking interrupt
-Date: Thu, 30 May 2024 18:39:13 -0700
-Message-ID: <1717119553-3441-1-git-send-email-Tristram.Ha@microchip.com>
-X-Mailer: git-send-email 1.9.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0BexmJa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D178AC2BBFC;
+	Fri, 31 May 2024 01:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717119369;
+	bh=yJBuR6bIVxGlNAFlMMWwvgbcjFar6UC2gGWKayrnt8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k0BexmJaExgl1ZplrCjGz0HjNtHSFPWVzNrtfWSaQf1fKKYJsnyg8Wx3VHuCUb32O
+	 XWDtg2icUwyUQZ5FESl7On5ww4KndEIm8IQpJ+fPGc9aI5vcIIjrPwiMPe4kDQWj2O
+	 oK3vZSaaZbos0jnC3e0/kwhHg7u1gF1lS5LhJ4LonBoxWTQnRjl61sHLvxdPoYp5Fo
+	 TFX7qoijrqnuI4XhqITNKW6RS608E5JLHffsI/4tBT+AsQunRwEH1GkabRZV8A9Uzp
+	 QiL65ARGdwZ/PRQUiJBV4tfoUeR9EMI8ZExdknqrm3O7Vw/TBIjDaG301YeMCo0R4S
+	 1F6ui8LIwaMFg==
+Date: Thu, 30 May 2024 20:36:07 -0500
+From: Rob Herring <robh@kernel.org>
+To: wangshuaijie@awinic.com
+Cc: dmitry.torokhov@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	jeff@labundy.com, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liweilei@awinic.com, kangjiajun@awinic.com
+Subject: Re: [PATCH V1 1/5] dt-bindings: input: Add YAML to Awinic sar sensor.
+Message-ID: <20240531013607.GA3665090-robh@kernel.org>
+References: <20240529130608.783624-1-wangshuaijie@awinic.com>
+ <20240529130608.783624-2-wangshuaijie@awinic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529130608.783624-2-wangshuaijie@awinic.com>
 
-From: Tristram Ha <tristram.ha@microchip.com>
+On Wed, May 29, 2024 at 01:06:04PM +0000, wangshuaijie@awinic.com wrote:
+> From: shuaijie wang <wangshuaijie@awinic.com>
+> 
+> Add the awinic,aw_sar.yaml file to adapt to the awinic sar sensor driver.
+> 
+> Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
+> ---
+>  .../bindings/input/awinic,aw_sar.yaml         | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+> new file mode 100644
+> index 000000000000..ed4ec29c9b4d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/awinic,aw_sar.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Awinic sar sensor driver family
+> +
+> +maintainers:
+> +  - Shuaijie Wang <wangshuaijie@awinic.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - awinic,aw_aw96103
+> +      - awinic,aw_aw96105
+> +      - awinic,aw_aw96303
+> +      - awinic,aw_aw96305
+> +      - awinic,aw_aw96308
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  sar-num:
 
-Initially the macro REG_SW_PORT_INT_MASK__4 is defined as 0x001C in
-ksz9477_reg.h and REG_PORT_INT_MASK is defined as 0x#01F.  Because the
-global and port interrupt handling is about the same the new
-REG_SW_PORT_INT_MASK__1 is defined as 0x1F in ksz_common.h.  This works
-as only the least significant bits have effect.  As a result the 32-bit
-write needs to be changed to 8-bit.
+Custom properties need vendor prefix.
 
-Fixes: e1add7dd6183 ("net: dsa: microchip: use common irq routines for girq and pirq")
-Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
----
-v1
- - clarify the reason to change the code
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      set the index of the sar sensor.
 
- drivers/net/dsa/microchip/ksz_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+What is 'sar'? It's never defined.
 
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index 1e0085cd9a9a..3ad0879b00cd 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -2185,7 +2185,7 @@ static void ksz_irq_bus_sync_unlock(struct irq_data *d)
- 	struct ksz_device *dev = kirq->dev;
- 	int ret;
- 
--	ret = ksz_write32(dev, kirq->reg_mask, kirq->masked);
-+	ret = ksz_write8(dev, kirq->reg_mask, kirq->masked);
- 	if (ret)
- 		dev_err(dev->dev, "failed to change IRQ mask\n");
- 
--- 
-2.34.1
+How is the index determined? We generally don't do indexes in DT unless 
+there is some correlation to the h/w.
 
+> +
+> +  vcc0-supply:
+> +    description:
+> +      Optional regulator for chip, 1.7V-3.6V.
+> +
+> +  channel_use_flag:
+
+vendor prefix needed plus use '-' rather than '_'. Here and elsewhere.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The flag of channels used.
+> +      Configure according to the specific chip channel used.
+> +      Bit[31:0] Each bit represents a channel.
+
+So a mask rather than a flag.
+
+Up to 32 channels possible? If not, add constraints.
+
+> +      If the customer uses ch0 and ch2, then channel_use_flag=<0x05>
+> +
+> +  aw_sar,update_fw:
+> +    type: boolean
+> +    description:
+> +      Choose if you want to update the firmware.
+
+DT is mostly fixed. So someone would want to update the firmware every 
+time?
+
+> +
+> +  aw_sar,monitor_esd:
+> +    type: boolean
+> +    description:
+> +      Choose if you want to monitor ESD.
+> +
+> +  aw_sar,pin_set_inter_pull-up:
+> +    type: boolean
+> +    description:
+> +      Choose if you want to set the interrupt pin to internal pull-up.
+> +
+> +  aw_sar,using_pm_ops:
+> +    type: boolean
+> +    description:
+> +      Choose if you want to use suspend and resume related function.
+
+OS configuration. Doesn't belong in DT.
+
+> +
+> +  aw_sar,use_plug_cail:
+> +    type: boolean
+> +    description:
+> +      Choose If you want to perform calibration when plugging and unplugging the charger.
+> +
+> +  start-mode:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      When connecting to aw963xx, select the location where the firmware starts.
+> +      set 0 if start in rom.
+> +      set 1 if start in ram
+
+Looks like constraints.
+
+> +
+> +  irq-mux:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      set csx as irq pin. config this field when connect to aw96308/aw96305BFOR
+
+Constraints? Can you imply this based on the compatible?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - sar-num
+> +  - interrupts
+> +  - channel_use_flag
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        awinic_sar@12 {
+> +            compatible = "awinic,aw_sar";
+> +            reg = <0x12>;
+> +            sar-num = < 0 >;
+> +            interrupt-parent = < &tlmm >;
+> +            interrupts = <72 0>;
+> +            //vcc0-supply = <&pm660l_l4>;
+
+Why commented?
+
+> +            channel_use_flag = <0xff>;
+> +            aw_sar,update_fw;
+> +            //aw_sar,monitor_esd;
+> +            start-mode = < 1 >;
+> +            irq-mux = < 2 >;
+> +        };
+> +    };
+> -- 
+> 2.45.1
+> 
