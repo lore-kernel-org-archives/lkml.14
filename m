@@ -1,117 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2931F15688F
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D57156980;
+	Fri, 31 May 2024 09:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146310; cv=none; b=IhytyJuRWMGwXx6ns5NJ3kpyl4OF6SSt4vo311Th7lNkq7GyBS3IsIPnBNsLyHVvjLKYwVr1UILsz4dtwm4YKYV6XFvFAxUP57hOcWHAKqx4rJhs54SzgRpBOPDTl9+A4AnZ8n0qKpt3s3RjPCZMNzHEqZJljzrIXoS0Pk33Q9Q=
+	t=1717146311; cv=none; b=LobLQiudN9haiZLSkkfj796v8lHztKqhg7vvalW0Lpp3neJobkw0GCqzKMwEMKXq29XfL41fYUGoh0Mt3+KbdE6+iQkxYAMKBwRHE1jJyFhOLJc+Te4WK4P1aRST2md52TdcXnsE/AAwfEiUy4cJM430Ba7KugaQu90uDMDi3i4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146310; c=relaxed/simple;
-	bh=HC/iebU12r4tuo/bQ21zBgXZmHDhLCixcZMw3ZfNxMQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r+zl1rkDvuh6osmouKY6Ak8GB9uho5j53JUAdlT6f+3pDHT80y+oTYgxZaJ5Vj0JZdalNs/kCaOd+HNrhfphXujuio5wttffiQkSWTTZJn6xrHfKPkuu2tSLc7HclSm81IKjPYSeYjr7bi7iG8KS/rIhM0ZPDE74tDxpi+6/eW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d22hFSf2; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717146311; c=relaxed/simple;
+	bh=ZQPGyWk58dtkH8TyKhLhlGonzK2+ErMUnyPwNu2UZao=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ip6/AbOzmxYRvMK1z/hO+5TEQ66w0PPoqNN+Ki7KKdcRUTPlvEvu89PXSR5WwHv+okwA61mSbLHDEzGTGBVFQE4O3E6RIS6DNhmbsBXP7WN8CeICMsOgF9VA+NcRgcHd2OkNa9eNT01Ei5V9hqnxxixz1e56aQfgRGh+3s4lq4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aGvPsU60; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d22hFSf2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717146309; x=1748682309;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HC/iebU12r4tuo/bQ21zBgXZmHDhLCixcZMw3ZfNxMQ=;
-  b=d22hFSf2iS5fBGIGn47z3rCR8Um2WnPfY9nQhkwf17jzo7zaySgkvsZM
-   gmcwI45sNioMlWaixXk3Im7JrbZIKhILaD0ifLTSpXT6c/asZUj9QVvGV
-   KNoPU3T3vAuUSRMq7a56CjaBxlDe0pdyqsalA/CnQgh8XV8xFF47zRlri
-   OGROJooiKxxiz4qCKWrnEP6T6hkeUG5Uyysmme2Y5pL2m4BN9Fx75eyxh
-   AdGovE9jJ3Qbud2hdtx18brtMBlVu930Jlsjeh9l/VStVU+SnOppBmrg1
-   4yAjXt7xXe3RyChWKuGGp36QqMmvIeTcyJt0m+lHatABZ9hhUhv9sNo/u
-   w==;
-X-CSE-ConnectionGUID: X5+ftijOQCKGsg+ZWGK2mw==
-X-CSE-MsgGUID: qE+2nOELRl68D3as+2gMcg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="39074066"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="39074066"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:09 -0700
-X-CSE-ConnectionGUID: m9Gq5WLzSc2KPusanhgQ+g==
-X-CSE-MsgGUID: sbEKQx1WTJCQaLM+lOXRqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="40543234"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.190])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:07 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: jani.nikula@intel.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH 1/4] kernel/panic: return early from print_tainted() when not tainted
-Date: Fri, 31 May 2024 12:04:54 +0300
-Message-Id: <01d6c03de1c9d1b52b59c652a3704a0a9886ed63.1717146197.git.jani.nikula@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1717146197.git.jani.nikula@intel.com>
-References: <cover.1717146197.git.jani.nikula@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aGvPsU60"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V23uh0003481;
+	Fri, 31 May 2024 09:04:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EcnyoOtoHZV8gKifoNOhF6
+	6xLuIhNpDLaEP7oKF8kUY=; b=aGvPsU60hEzCny7k8jis+43xnRhtUBIkA18AJy
+	tFf3E8aVYK9DM8P0DcQ0Tsbx84PxQMVC0FYkV2v9HMa0h6N7gMVYyXgEWsTyXJmP
+	gBo2nddnDziR4SW1Y89BWkD76q3VYMO+X7J8kyMqrxT3DAkkW11XfWKH+mm7SxzA
+	XH0gm1RgYPA0HfwuXh8lqG3ZeMVOueO4PQ+GtPgtKJH5BJV52KX3FaI7pxa8GsH+
+	XG7ci1MUBoXwt/VR6MY+L5JZ5EcdA+IHdkSvkpkM2MfOIrwQfpNalOCRP21kWM+V
+	UlvpH4A+gy0+AbHQ3AIo5VXCW2+74FbALrtrK304fRBTuqrw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yesw5jd56-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 09:04:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44V94g22005283
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 31 May 2024 09:04:42 GMT
+Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 31 May 2024 02:04:35 -0700
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <dmitry.baryshkov@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        Tengfei Fan
+	<quic_tengfan@quicinc.com>
+Subject: [PATCH v3 0/2] [PATCH v2 0/2] arm64: dts: qcom: sm8550: Update some usb properties
+Date: Fri, 31 May 2024 17:04:20 +0800
+Message-ID: <20240531090422.158813-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dqyrzse_ON5vLNjML5e0Rx0Dws593Bug
+X-Proofpoint-GUID: dqyrzse_ON5vLNjML5e0Rx0Dws593Bug
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-31_05,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=1 lowpriorityscore=0
+ mlxlogscore=220 phishscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ suspectscore=0 priorityscore=1501 clxscore=1015 spamscore=1 mlxscore=1
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2405310066
 
-Reduce indent to make follow-up changes slightly easier on the eyes.
+Move usb-role-switch to SoC dtsi, and remove usb default dr_mode.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- kernel/panic.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 6df2ba08d5ae..5c9396418e1c 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -508,22 +508,23 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- const char *print_tainted(void)
- {
- 	static char buf[TAINT_FLAGS_COUNT + sizeof("Tainted: ")];
-+	char *s;
-+	int i;
- 
- 	BUILD_BUG_ON(ARRAY_SIZE(taint_flags) != TAINT_FLAGS_COUNT);
- 
--	if (tainted_mask) {
--		char *s;
--		int i;
--
--		s = buf + sprintf(buf, "Tainted: ");
--		for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
--			const struct taint_flag *t = &taint_flags[i];
--			*s++ = test_bit(i, &tainted_mask) ?
--					t->c_true : t->c_false;
--		}
--		*s = 0;
--	} else
-+	if (!tainted_mask) {
- 		snprintf(buf, sizeof(buf), "Not tainted");
-+		return buf;
-+	}
-+
-+	s = buf + sprintf(buf, "Tainted: ");
-+	for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
-+		const struct taint_flag *t = &taint_flags[i];
-+		*s++ = test_bit(i, &tainted_mask) ?
-+			t->c_true : t->c_false;
-+	}
-+	*s = 0;
- 
- 	return buf;
- }
+v2 -> v3:
+  - Update comment message
+v1 -> v2:
+  - Splitting a patch into two patches based on functionality
+  - Remove some changes that have already been mainlined
+  - Update patch commit message
+
+previous discussion here:
+[1] v2: https://lore.kernel.org/linux-arm-msm/20240529100256.3158447-1-quic_tengfan@quicinc.com
+[2] v1: https://lore.kernel.org/linux-arm-msm/20240513084701.1658826-1-quic_tengfan@quicinc.com
+
+Tengfei Fan (2):
+
+Tengfei Fan (2):
+  arm64: dts: qcom: sm8550: Move usb-role-switch to SoC dtsi
+  arm64: dts: qcom: sm8550: Remove usb default dr_mode
+
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts                     | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts | 5 -----
+ arch/arm64/boot/dts/qcom/sm8550.dtsi                        | 1 +
+ 5 files changed, 1 insertion(+), 20 deletions(-)
+
+
+base-commit: 0e1980c40b6edfa68b6acf926bab22448a6e40c9
 -- 
-2.39.2
+2.25.1
 
