@@ -1,210 +1,221 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5741278269
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41EF80631
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 08:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717143179; cv=none; b=fw4+tY6FzZb/Lh9EHL7apud6zP94HxuDMJ30DZcwOeKzMvtSMeDWe0mfulI6qrjvEjDOwzEsR68qCkQGBd8aWgLDqLgYKq0RIlBUTzjQh7vcj6/d7PhIr0P4Grp7hwNW7BaP/sjEjGiJuDBBjNK39HHbYouzaGyACxAz9E5wouk=
+	t=1717143185; cv=none; b=VbmgNVOTFt/UQMoT2plxJ3KXaeXvf490O2mEFv3oqLuoH/N8IRH773yCrJao4RFanEqUoLOkbUPAGkG7JyHQO65kRunzOYj+BDHie5UlfcFqAqF78c2aIqO2TcXfzIwGZwvbhvQpXelvlUl1gYXp0c3hduuO59AlW9omeF/i/ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717143179; c=relaxed/simple;
-	bh=50bDE9GVqx4l6q4sfSURNi+FaLu/7o8czkzdCOYXEuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Z/humDzTChi8z14sCEq6Uq4TU/XpDLXL+Ggb0Tb4rBtlif5x50Jk1QaG6OMVVlRI1kHnGhhfqg9V7YFJaRR1OTWpenmugo8aWuJevwDJl/5VbcEYXFXmi1CN7DevYM1urrRVx3STGypTNv5N38XjlNJmxnINu/etw4b2oQaQFD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=payMWvDe; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717143185; c=relaxed/simple;
+	bh=DJJ27LGVAKyFkd3DhLbHS54xSb3Z7Ev5IjhsRkqv+7A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GN4uQA6+gEyB4y9Yc0WMDf/MnvMc2SoTecbUqAs59qKdeDIi88nm6BbbpC33XEA5E18O1svxJzCVIg6AvKWNO6lbjPbhYn+shPIRMbKB0X7dGQPYPAbOX+19X8JoEftxe+wE7bYHYGMN8R1+KKGN/qMHQzGyVO4yICD3mR9fEMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJMqoplf; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="payMWvDe"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a688d7e0eceso7751666b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 01:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717143176; x=1717747976; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X7y8eyhIqfF5t90/h/o/3CeZlPVMesGC4ZxrK7wpyBo=;
-        b=payMWvDeoKvtf+2IHvALItOjLmFyhxJv8Vl6H3z7Vn2/6+x6B+/wph1TkZjW6+FFFp
-         V/WIMa+1qxDP8WR4xR2Bd+DNqcZzBdMqpTrK7InP8Vl8w48wo2RBpIwbWLkOr8gdFZMq
-         yUMuwSOFc4NVFQ1dfU7xJiuD4Q645Z4fneS5rVLWLJZpZ15ZQhdfBIKN/jpExUNRkMKO
-         dus9HD0UrDldvHM9JrljIfvIKa4m3fSiqImonyWwZd1etxI4vrT72rdkrqEdN5zMG8iV
-         FabqvO8WXN3NRMMwWzks6uLsrtTWEMX+ysUO0RMfijRmwuTIIILF2e6nxFqUtWW2Xly5
-         rodg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717143176; x=1717747976;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X7y8eyhIqfF5t90/h/o/3CeZlPVMesGC4ZxrK7wpyBo=;
-        b=VpeHnskD26RW+5nIeQeX6G86W2p75ncjmk8h9cI8CaAlh47pickuT/uTZh4w9E/Y5B
-         vSsPSePb2fJSKEEB2Oo+TeCotvaOmH3yPwwGk4Kamol3QgCUwFcfhyq0k0Wtua7nOE4Q
-         MyDMdPK3/35Fas8bIXdJC475vqy8xdIkygFjgGw34FD746md9g27GziB1XXHABdxI1iO
-         YbC5RxrWSdPfKOHxBQOyr6FyyiUboxt9Xsl2mDt+AxjkgcTEQIW7EJRmPqFZvCcUOzeh
-         kDPYOgYMNG1qrqDRV0oEo2T9xC9/ljUX5o897DtqRG15H+kTzDAtZLW8+jwgdLsnH+hp
-         FifA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPHXaYkB4Clqb8HgCcIvziaTEUl5Ox5BwIUTgXufD3nYNEVCkP+uysDZzkppSkyegBblHKqVHf6nWygMpLllYYykPhT6JLTUQjggqQ
-X-Gm-Message-State: AOJu0YzMNjeAgJsl4yfMNOmr9wmCsTfhoC9sxQ/xVYqMyLd8UtL7+vyF
-	b7gen0aYSt0r3WzbgL7XhFbMG6ohRQe6DOvnXxSur9IE6/zzfrEvmb85/ARvKGI=
-X-Google-Smtp-Source: AGHT+IEjwh5swZuHRMZk1utIs6Dg1augmzOniQXqTFWyNzZVY2ErsR96IGThsIucTuSpBWvR4YJDqw==
-X-Received: by 2002:a17:906:cec8:b0:a62:de58:b358 with SMTP id a640c23a62f3a-a681fc5c055mr85952766b.13.1717143175393;
-        Fri, 31 May 2024 01:12:55 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67eb3444a6sm59838866b.211.2024.05.31.01.12.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 01:12:55 -0700 (PDT)
-Date: Fri, 31 May 2024 11:12:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev, wangshuaijie@awinic.com,
-	dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jeff@labundy.com, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, wangshuaijie@awinic.com,
-	liweilei@awinic.com, kangjiajun@awinic.com
-Subject: Re: [PATCH V1 5/5] Add support for Awinic sar sensor.
-Message-ID: <9d90f11f-c476-40f2-a7b1-41b35783b27e@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJMqoplf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717143184; x=1748679184;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=DJJ27LGVAKyFkd3DhLbHS54xSb3Z7Ev5IjhsRkqv+7A=;
+  b=fJMqoplfzShj4bhcxBehWuDO8KnCqnXDPK1se6e354obd2sMyeCSy+yK
+   JvZ1Sn1yqQXHAE+Ej9T0YuF9JhQMGfu7YLGpaGU7HtLyTrmL6YugN3I3T
+   O82Bz+eELkmiHejpDSNJJv2j1u7X29sZ04vjrx/usvEhSfksh1wpwQSYC
+   8IgBdBctcL4+hJ3Qu5E7i4PY1JD4OPyBf1+CPA9mvoisdjC07RAiJ8tQZ
+   mD5q1PBQJSXCKk5w6X9h0e6e7hjTpGbqwZ0XSQ21iGszR0+c+LzL97P7h
+   nK5GmeOxHW2vxOFVzDSa6+Zzy0nrtJkVSEtFd0h68EQmKhqwx4jzkINGi
+   A==;
+X-CSE-ConnectionGUID: Z+Xz2MPiTvq1cKppoeMB4A==
+X-CSE-MsgGUID: cU36IxCNT5al3YICTo8EDw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="25079761"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="25079761"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:13:03 -0700
+X-CSE-ConnectionGUID: Aoj6Nli8Q8y4dEyZsXEN8g==
+X-CSE-MsgGUID: OoElfOprR362hwmdpIgRUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="59270947"
+Received: from unknown (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.255.30.35])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 01:12:59 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Huang Ying <ying.huang@intel.com>,
+	Hugh Dickins <hughd@google.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Yang Shi <shy828301@gmail.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Kairui Song <kasong@tencent.com>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Chris Li <chrisl@kernel.org>,
+	Yosry Ahmed <yosryahmed@google.com>
+Subject: [PATCH 2/3] mm,swap: remove struct vma_swap_readahead
+Date: Fri, 31 May 2024 16:12:29 +0800
+Message-Id: <20240531081230.310128-3-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240531081230.310128-1-ying.huang@intel.com>
+References: <20240531081230.310128-1-ying.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529130608.783624-6-wangshuaijie@awinic.com>
+Content-Transfer-Encoding: 8bit
 
-Hi,
+When VMA based swap readahead is introduced in commit
+ec560175c0b6 ("mm, swap: VMA based swap readahead"), "struct
+vma_swap_readahead" is defined to describe the readahead window.
+Because we wanted to save the PTE entries in the struct at that time.
+But after commit 4f8fcf4ced0b ("mm/swap: swap_vma_readahead() do the
+pte_offset_map()"), we no longer save PTE entries in the struct.  The
+size of the struct becomes so small, that it's better to use the
+fields of the struct directly.  This can simplify the code to improve
+the code readability.  The line number of source code reduces too.
 
-kernel test robot noticed the following build warnings:
+No functionality change is expected in this patch.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/wangshuaijie-awinic-com/dt-bindings-input-Add-YAML-to-Awinic-sar-sensor/20240529-211303
-base:   e0cce98fe279b64f4a7d81b7f5c3a23d80b92fbc
-patch link:    https://lore.kernel.org/r/20240529130608.783624-6-wangshuaijie%40awinic.com
-patch subject: [PATCH V1 5/5] Add support for Awinic sar sensor.
-config: riscv-randconfig-r071-20240530 (https://download.01.org/0day-ci/archive/20240531/202405310138.ry5jf9hL-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Yang Shi <shy828301@gmail.com>
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Kairui Song <kasong@tencent.com>
+Cc: Barry Song <v-songbaohua@oppo.com>
+Cc: Chris Li <chrisl@kernel.org>
+Cc: Yosry Ahmed <yosryahmed@google.com>
+---
+ mm/swap_state.c | 48 ++++++++++++++++++++----------------------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202405310138.ry5jf9hL-lkp@intel.com/
-
-New smatch warnings:
-drivers/input/misc/aw_sar/aw_sar.c:221 aw_sar_load_bin_comm() warn: 'fw' from request_firmware() not released on lines: 217.
-drivers/input/misc/aw_sar/aw_sar.c:283 aw_sar_irq() error: uninitialized symbol 'irq_status'.
-drivers/input/misc/aw_sar/./aw9610x/aw9610x.c:479 aw9610x_get_chip_version() error: __builtin_memcpy() 'aw9610x->chip_name[__builtin_choose_expr((4 == 1), __builtin_strlen(aw9610x->chip_name), __fortify_strlen(aw9610x->chip_name))]' too small (1 vs 2)
-drivers/input/misc/aw_sar/./aw963xx/aw963xx.c:227 aw963xx_sram_data_write() error: uninitialized symbol 'ret'.
-drivers/input/misc/aw_sar/./aw963xx/aw963xx.c:522 aw963xx_get_cap_offset() warn: inconsistent indenting
-
-Old smatch warnings:
-drivers/input/misc/aw_sar/./aw963xx/aw963xx.c:557 aw963xx_get_cap_offset() warn: inconsistent indenting
-
-vim +/fw +221 drivers/input/misc/aw_sar/aw_sar.c
-
-e5df082e247559 shuaijie wang 2024-05-29  203  static int32_t aw_sar_load_bin_comm(struct aw_sar *p_sar)
-e5df082e247559 shuaijie wang 2024-05-29  204  {
-e5df082e247559 shuaijie wang 2024-05-29  205  	const struct firmware *fw;
-e5df082e247559 shuaijie wang 2024-05-29  206  	int32_t ret;
-e5df082e247559 shuaijie wang 2024-05-29  207  
-e5df082e247559 shuaijie wang 2024-05-29  208  	ret = request_firmware(&fw, p_sar->load_bin.bin_name, p_sar->dev);
-e5df082e247559 shuaijie wang 2024-05-29  209  	if (ret != 0) {
-e5df082e247559 shuaijie wang 2024-05-29  210  		dev_err(p_sar->dev, "parse %s error!", p_sar->load_bin.bin_name);
-e5df082e247559 shuaijie wang 2024-05-29  211  		return ret;
-e5df082e247559 shuaijie wang 2024-05-29  212  	}
-e5df082e247559 shuaijie wang 2024-05-29  213  
-e5df082e247559 shuaijie wang 2024-05-29  214  	ret = aw_sar_parse_bin(fw, p_sar);
-e5df082e247559 shuaijie wang 2024-05-29  215  	if (ret != 0) {
-e5df082e247559 shuaijie wang 2024-05-29  216  		dev_err(p_sar->dev, "reg_bin %s load error!", p_sar->load_bin.bin_name);
-
-release_firmware(fw);
-
-e5df082e247559 shuaijie wang 2024-05-29  217  		return ret;
-e5df082e247559 shuaijie wang 2024-05-29  218  	}
-e5df082e247559 shuaijie wang 2024-05-29  219  	release_firmware(fw);
-e5df082e247559 shuaijie wang 2024-05-29  220  
-e5df082e247559 shuaijie wang 2024-05-29 @221  	return 0;
-e5df082e247559 shuaijie wang 2024-05-29  222  }
-e5df082e247559 shuaijie wang 2024-05-29  223  
-e5df082e247559 shuaijie wang 2024-05-29  224  static int32_t aw_sar_parse_dts_comm(struct device *dev, struct device_node *np,
-e5df082e247559 shuaijie wang 2024-05-29  225  		struct aw_sar_dts_info *p_dts_info)
-e5df082e247559 shuaijie wang 2024-05-29  226  {
-e5df082e247559 shuaijie wang 2024-05-29  227  	int32_t val;
-e5df082e247559 shuaijie wang 2024-05-29  228  
-e5df082e247559 shuaijie wang 2024-05-29  229  	val = of_property_read_u32(np, "sar-num", &p_dts_info->sar_num);
-e5df082e247559 shuaijie wang 2024-05-29  230  	dev_info(dev, "sar num = %d", p_dts_info->sar_num);
-e5df082e247559 shuaijie wang 2024-05-29  231  	if (val != 0) {
-e5df082e247559 shuaijie wang 2024-05-29  232  		dev_err(dev, "multiple sar failed!");
-e5df082e247559 shuaijie wang 2024-05-29  233  		return -EINVAL;
-e5df082e247559 shuaijie wang 2024-05-29  234  	}
-e5df082e247559 shuaijie wang 2024-05-29  235  
-e5df082e247559 shuaijie wang 2024-05-29  236  	p_dts_info->irq_gpio = of_get_named_gpio(np, "irq-gpio", 0);
-e5df082e247559 shuaijie wang 2024-05-29  237  	if (p_dts_info->irq_gpio < 0) {
-e5df082e247559 shuaijie wang 2024-05-29  238  		p_dts_info->irq_gpio = -1;
-e5df082e247559 shuaijie wang 2024-05-29  239  		dev_err(dev, "no irq gpio provided.");
-e5df082e247559 shuaijie wang 2024-05-29  240  		return -EINVAL;
-e5df082e247559 shuaijie wang 2024-05-29  241  	}
-e5df082e247559 shuaijie wang 2024-05-29  242  
-e5df082e247559 shuaijie wang 2024-05-29  243  	val = of_property_read_u32(np, "channel_use_flag", &p_dts_info->channel_use_flag);
-e5df082e247559 shuaijie wang 2024-05-29  244  	if (val != 0) {
-e5df082e247559 shuaijie wang 2024-05-29  245  		dev_err(dev, "channel_use_flag failed!");
-e5df082e247559 shuaijie wang 2024-05-29  246  		return -EINVAL;
-e5df082e247559 shuaijie wang 2024-05-29  247  	}
-e5df082e247559 shuaijie wang 2024-05-29  248  
-e5df082e247559 shuaijie wang 2024-05-29  249  	//GPIO is set as internal pull-up input
-e5df082e247559 shuaijie wang 2024-05-29  250  	p_dts_info->use_inter_pull_up = of_property_read_bool(np, "aw_sar,pin_set_inter_pull-up");
-e5df082e247559 shuaijie wang 2024-05-29  251  	p_dts_info->use_pm = of_property_read_bool(np, "aw_sar,using_pm_ops");
-e5df082e247559 shuaijie wang 2024-05-29  252  	p_dts_info->update_fw_flag = of_property_read_bool(np, "aw_sar,update_fw");
-e5df082e247559 shuaijie wang 2024-05-29  253  	p_dts_info->use_plug_cail_flag = of_property_read_bool(np, "aw_sar,use_plug_cail");
-e5df082e247559 shuaijie wang 2024-05-29  254  	p_dts_info->monitor_esd_flag = of_property_read_bool(np, "aw_sar,monitor_esd");
-e5df082e247559 shuaijie wang 2024-05-29  255  
-e5df082e247559 shuaijie wang 2024-05-29  256  	return 0;
-e5df082e247559 shuaijie wang 2024-05-29  257  }
-e5df082e247559 shuaijie wang 2024-05-29  258  
-e5df082e247559 shuaijie wang 2024-05-29  259  static int32_t aw_sar_parse_dts(struct aw_sar *p_sar)
-e5df082e247559 shuaijie wang 2024-05-29  260  {
-e5df082e247559 shuaijie wang 2024-05-29  261  	int32_t ret;
-e5df082e247559 shuaijie wang 2024-05-29  262  
-e5df082e247559 shuaijie wang 2024-05-29  263  	ret = aw_sar_parse_dts_comm(p_sar->dev, p_sar->i2c->dev.of_node, &p_sar->dts_info);
-e5df082e247559 shuaijie wang 2024-05-29  264  
-e5df082e247559 shuaijie wang 2024-05-29  265  	//Special requirements of SAR chip
-e5df082e247559 shuaijie wang 2024-05-29  266  	if (p_sar->p_sar_para->p_platform_config->p_add_parse_dts_fn != NULL)
-e5df082e247559 shuaijie wang 2024-05-29  267  		ret |= p_sar->p_sar_para->p_platform_config->p_add_parse_dts_fn(p_sar);
-e5df082e247559 shuaijie wang 2024-05-29  268  
-e5df082e247559 shuaijie wang 2024-05-29  269  	return ret;
-e5df082e247559 shuaijie wang 2024-05-29  270  }
-e5df082e247559 shuaijie wang 2024-05-29  271  
-e5df082e247559 shuaijie wang 2024-05-29  272  static irqreturn_t aw_sar_irq(int32_t irq, void *data)
-e5df082e247559 shuaijie wang 2024-05-29  273  {
-e5df082e247559 shuaijie wang 2024-05-29  274  	struct aw_sar *p_sar = (struct aw_sar *)data;
-e5df082e247559 shuaijie wang 2024-05-29  275  	uint32_t irq_status;
-e5df082e247559 shuaijie wang 2024-05-29  276  
-e5df082e247559 shuaijie wang 2024-05-29  277  	//step1: read clear interrupt
-e5df082e247559 shuaijie wang 2024-05-29  278  	if (p_sar->p_sar_para->p_platform_config->p_irq_init->rc_irq_fn != NULL)
-e5df082e247559 shuaijie wang 2024-05-29  279  		irq_status = p_sar->p_sar_para->p_platform_config->p_irq_init->rc_irq_fn(p_sar->i2c);
-e5df082e247559 shuaijie wang 2024-05-29  280  
-e5df082e247559 shuaijie wang 2024-05-29  281  	//step2: Read the status register for status reporting
-e5df082e247559 shuaijie wang 2024-05-29  282  	if (p_sar->p_sar_para->p_platform_config->p_irq_init->irq_spec_handler_fn != NULL)
-e5df082e247559 shuaijie wang 2024-05-29 @283  		p_sar->p_sar_para->p_platform_config->p_irq_init->irq_spec_handler_fn(irq_status,
-e5df082e247559 shuaijie wang 2024-05-29  284  				p_sar);
-
-Probably if ->irq_spec_handler_fn is non-NULL then ->rc_irq_fn is also
-non-NULL, but the static checker doesn't know that so it warns about
-uninitialized variables.
-
-e5df082e247559 shuaijie wang 2024-05-29  285  
-e5df082e247559 shuaijie wang 2024-05-29  286  	//step3: The chip
-e5df082e247559 shuaijie wang 2024-05-29  287  
-e5df082e247559 shuaijie wang 2024-05-29  288  	if ((!p_sar->dts_info.monitor_esd_flag) && (p_sar->fault_flag == AW_SAR_UNHEALTHY)) {
-e5df082e247559 shuaijie wang 2024-05-29  289  		p_sar->fault_flag = AW_SAR_HEALTHY;
-e5df082e247559 shuaijie wang 2024-05-29  290  		disable_irq_nosync(p_sar->irq_init.to_irq);
-e5df082e247559 shuaijie wang 2024-05-29  291  		p_sar->irq_init.host_irq_stat = IRQ_DISABLE;
-e5df082e247559 shuaijie wang 2024-05-29  292  		//aw_sar_soft_reset(p_sar);
-e5df082e247559 shuaijie wang 2024-05-29  293  		schedule_delayed_work(&p_sar->update_work, msecs_to_jiffies(500));
-e5df082e247559 shuaijie wang 2024-05-29  294  	}
-e5df082e247559 shuaijie wang 2024-05-29  295  
-e5df082e247559 shuaijie wang 2024-05-29  296  	return IRQ_HANDLED;
-e5df082e247559 shuaijie wang 2024-05-29  297  }
-
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index 848c167df530..e1dac70198a6 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -42,6 +42,8 @@ struct address_space *swapper_spaces[MAX_SWAPFILES] __read_mostly;
+ static unsigned int nr_swapper_spaces[MAX_SWAPFILES] __read_mostly;
+ static bool enable_vma_readahead __read_mostly = true;
+ 
++#define SWAP_RA_ORDER_CEILING	5
++
+ #define SWAP_RA_WIN_SHIFT	(PAGE_SHIFT / 2)
+ #define SWAP_RA_HITS_MASK	((1UL << SWAP_RA_WIN_SHIFT) - 1)
+ #define SWAP_RA_HITS_MAX	SWAP_RA_HITS_MASK
+@@ -738,16 +740,9 @@ void exit_swap_address_space(unsigned int type)
+ 	swapper_spaces[type] = NULL;
+ }
+ 
+-#define SWAP_RA_ORDER_CEILING	5
+-
+-struct vma_swap_readahead {
+-	unsigned short win;
+-	unsigned short offset;
+-	unsigned short nr_pte;
+-};
+-
+-static void swap_ra_info(struct vm_fault *vmf,
+-			 struct vma_swap_readahead *ra_info)
++static unsigned short swap_vma_ra_win(struct vm_fault *vmf,
++				      unsigned short *offset,
++				      unsigned short *nr_pte)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	unsigned long ra_val;
+@@ -757,10 +752,8 @@ static void swap_ra_info(struct vm_fault *vmf,
+ 
+ 	max_win = 1 << min_t(unsigned int, READ_ONCE(page_cluster),
+ 			     SWAP_RA_ORDER_CEILING);
+-	if (max_win == 1) {
+-		ra_info->win = 1;
+-		return;
+-	}
++	if (max_win == 1)
++		return 1;
+ 
+ 	faddr = vmf->address;
+ 	fpfn = PFN_DOWN(faddr);
+@@ -768,12 +761,11 @@ static void swap_ra_info(struct vm_fault *vmf,
+ 	pfn = PFN_DOWN(SWAP_RA_ADDR(ra_val));
+ 	prev_win = SWAP_RA_WIN(ra_val);
+ 	hits = SWAP_RA_HITS(ra_val);
+-	ra_info->win = win = __swapin_nr_pages(pfn, fpfn, hits,
+-					       max_win, prev_win);
++	win = __swapin_nr_pages(pfn, fpfn, hits, max_win, prev_win);
+ 	atomic_long_set(&vma->swap_readahead_info,
+ 			SWAP_RA_VAL(faddr, win, 0));
+ 	if (win == 1)
+-		return;
++		return 1;
+ 
+ 	if (fpfn == pfn + 1) {
+ 		lpfn = fpfn;
+@@ -794,8 +786,10 @@ static void swap_ra_info(struct vm_fault *vmf,
+ 	end = min3(rpfn, PFN_DOWN(vma->vm_end),
+ 		   PFN_DOWN((faddr & PMD_MASK) + PMD_SIZE));
+ 
+-	ra_info->nr_pte = end - start;
+-	ra_info->offset = fpfn - start;
++	*nr_pte = end - start;
++	*offset = fpfn - start;
++
++	return win;
+ }
+ 
+ /**
+@@ -826,19 +820,17 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
+ 	pgoff_t ilx;
+ 	unsigned int i;
+ 	bool page_allocated;
+-	struct vma_swap_readahead ra_info = {
+-		.win = 1,
+-	};
++	unsigned short win, nr_pte, offset;
+ 
+-	swap_ra_info(vmf, &ra_info);
+-	if (ra_info.win == 1)
++	win = swap_vma_ra_win(vmf, &offset, &nr_pte);
++	if (win == 1)
+ 		goto skip;
+ 
+-	addr = vmf->address - (ra_info.offset * PAGE_SIZE);
+-	ilx = targ_ilx - ra_info.offset;
++	addr = vmf->address - offset * PAGE_SIZE;
++	ilx = targ_ilx - offset;
+ 
+ 	blk_start_plug(&plug);
+-	for (i = 0; i < ra_info.nr_pte; i++, ilx++, addr += PAGE_SIZE) {
++	for (i = 0; i < nr_pte; i++, ilx++, addr += PAGE_SIZE) {
+ 		if (!pte++) {
+ 			pte = pte_offset_map(vmf->pmd, addr);
+ 			if (!pte)
+@@ -858,7 +850,7 @@ static struct folio *swap_vma_readahead(swp_entry_t targ_entry, gfp_t gfp_mask,
+ 			continue;
+ 		if (page_allocated) {
+ 			swap_read_folio(folio, false, &splug);
+-			if (i != ra_info.offset) {
++			if (i != offset) {
+ 				folio_set_readahead(folio);
+ 				count_vm_event(SWAP_RA);
+ 			}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
 
