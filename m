@@ -1,188 +1,167 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADB417565;
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0027514F98;
 	Fri, 31 May 2024 09:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146682; cv=none; b=P5qUGdw1izrFh5r7gO+kWDo7mwVIwrUM+G4+KF9RnZ9wyG8cMLWv/JkFAkLHsDIQJjSdQO4YmlXbzC/9V/ugRQaSixPuNLWDj25I7Q5tIHEeETgmgPJKf429QffXdm+Lzl91TcTrvnjfSjDf/lPNtnESUX0jhdxOKAc1uNoLKNY=
+	t=1717146684; cv=none; b=Ai6dIfCeTtyi1iSADhvuskTTmjHimeMsia+ksyPxZC9GGvnEC7kjxjraVWcI7dz+eL7pklMYPtKgNiuEoxA9DIy3jv15E5r5hCkeeF6h8QV7O7fYLtXR5FQBegrQ8jPb02n5aV7JaRmiOfRilmw4H0uCeqgpCGBDumttNtcfuro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146682; c=relaxed/simple;
-	bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
-	h=Content-Type:Mime-Version:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=fS+76CGS2YM/CU3ueTbm4g+jSvQchUqSD8zJWW4e5YXE2I+l0NL8P/LfmDR4oC8tm1tbl3EUNBxmryftp9fcL1V8Qp7T2cNAcAfm+CK3C8WflrxvVSHeYIyfxpcXnjQQBw1+rUW00NiWRcQZZTeQ+npPgf/IBgei0uJEF/ETcPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CXmOC0jN; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717146684; c=relaxed/simple;
+	bh=mZP/brlklpO5LkphHGOq9s+S2cL8tohoUqi2RukSRpo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=osESY37qjwB1NMWxou9jr0BRIRPBKcwnfyUykK/ankBeYitC20JswknvltmoIi5A4CMOtRowovcelYDSywz6wtWSU8mb/UcE2B0OcY8Pp2FJFjV9IrGTsHQpx3+Bvx/vChNMb4C0z8UlMaZYpFMxOPlll6zgcNZm+TXtQMlbcKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fHP4FBZx; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXmOC0jN"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-35dce610207so1153202f8f.2;
-        Fri, 31 May 2024 02:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717146679; x=1717751479; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
-        b=CXmOC0jN/3IRcuGlm642YtKa1v4UlEcMZStqZvlRmjxVJOfdkRBhYFiHTzCcbdCYVO
-         YFAP6bGArWVDli0n233A2g0ah5JWvYblL0G8FutIMqEXkSAzgW9pzCG/Et2d9gil647v
-         u47dVOCQZ7z7Ds7yyAXmnFMwuIQUPNXUZGI24NvqjLSrmbmP8IIPH3HlGXrDC7hxej8P
-         54nNbcRSpZgwMd2S5UYLWLWksiOrvBjQdsc6PvndDXZ/Q3Hb9e4SsrUkp0eeLRJzMRhV
-         xtUb99RHnUXUthZcjEZq5oIZbBRbv1NFO0/E+CMc+fdK512RQ/+pNEmhHWnkUFBWCL2J
-         wGdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717146679; x=1717751479;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ge2Owzh3S5cehKRYUUe+V39V9v0+HbuSHCXDNGT09Ys=;
-        b=jjpHqTVjgJVb+eo1cA2jNnh0pMl8yWOftrjcfejU8oTOQUxsDtniQUfYL4Muu7vClP
-         xLhQJLf88Mm6J/ZbIFwzmwHB4Esx5qaIUtgbW1ZH9aQlqyJt3i9CqA/+9KwB5s8lZoXU
-         oVOAAEMDLJrHePOe4A38RnZEl/jMe1W8Vdz/IKE35rt2XU8636AoiYtz74jQQ9sAcG0B
-         OHBTR0/hTg62q41E/DhPF0nq5P8NUoystpRXsEObk7Nisf1EstkySfX8TmrU2pbT3Saw
-         vR8CgA423Yy9L60c1lP1BH/Wgr5WkSGbWNFo6Frufb6kLLpgcAyRIRFrJ/VWfBv1Z3Ix
-         aHxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWu9FWpE/WP+OvGYLUiYu95BFEyksq1/H7hXwTqi2Yb2GY/lBAILtYPQcOiVMWduxJD2DpZwKI+ZhDrSOh29EojSpqec1gYbkL3XHpLM1+htGnq0Ih2bcjakA3GY/ag/0bgUOCY1gxbsIZdhAY4Wqd8OJIAZBi/imcSzrTQ1Cdz+H9Ot0UP23c+Ou8mTqAkQEqXN5mbnKo8hVFkXYyTuQcoUA==
-X-Gm-Message-State: AOJu0YxdNeTav8xdaHtcknT4z9h0DfcvD4ioDcP6sVXYptrHASwBpxsD
-	GzEpZC1kAKJ8FpTROeuB8fjBi4l27BbYKEjOyjyHontb6Q5cK0nx
-X-Google-Smtp-Source: AGHT+IHjSCeQFuSwL4zgQTAANKUrOtLq+ipp/4k2/cpZCON8iuqmoX8dSGF/d93BBGIHlUH85jMQVg==
-X-Received: by 2002:a5d:664d:0:b0:354:f536:31d3 with SMTP id ffacd0b85a97d-35e0f325184mr986696f8f.54.1717146679010;
-        Fri, 31 May 2024 02:11:19 -0700 (PDT)
-Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0f47sm1409029f8f.8.2024.05.31.02.11.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 02:11:18 -0700 (PDT)
-Content-Type: multipart/signed;
- boundary=44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fHP4FBZx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=OpnQM
+	xVNdJhAJ0JA1aQabqRhD8QhN2Egrh/1v4UTVLc=; b=fHP4FBZxVcERj6ztdMA4V
+	Fwer9qUGhagKRm1oNtNeT8R0i9drBqM9+vggAqOa8ngQoRNuOcs5CMJkm9HPGPks
+	LlSAB63qGGVpqxJ/NIl8wB020kKIh4uPOjypuQkmmsrWon5TXtjA5yPY2JCzV+Rw
+	pKgo5fdTPunaXYPKTvNqhU=
+Received: from localhost.localdomain (unknown [111.48.69.246])
+	by gzga-smtp-mta-g3-0 (Coremail) with SMTP id _____wD3f6oalFlm3XSvFg--.25893S2;
+	Fri, 31 May 2024 17:10:50 +0800 (CST)
+From: chizhiling@163.com
+To: mchehab@kernel.org
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chi Zhiling <chizhiling@kylinos.cn>
+Subject: [PATCH] media: xc2028: avoid use-after-free in load_firmware_cb()
+Date: Fri, 31 May 2024 17:10:26 +0800
+Message-Id: <20240531091026.3094284-1-chizhiling@163.com>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Fri, 31 May 2024 11:11:17 +0200
-Message-Id: <D1NPP1PJ5UYS.2IGK7FBR9Q6LN@gmail.com>
-Cc: "Jonathan Corbet" <corbet@lwn.net>, "Dmitry Baryshkov"
- <dmitry.baryshkov@linaro.org>, "Rob Clark" <robdclark@gmail.com>, "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>, "Sean Paul" <sean@poorly.run>, "Marijn
- Suijten" <marijn.suijten@somainline.org>, <workflows@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Masahiro
- Yamada" <masahiroy@kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>
-Subject: Re: [PATCH] docs: document python version used for compilation
-From: "Thierry Reding" <thierry.reding@gmail.com>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
- <87o79faq4a.fsf@meer.lwn.net> <D1N564M136RW.3CRPYTGKMW1NP@gmail.com>
- <CAMuHMdVA7MU8LMUW6rR=VWtCDs8erpKgx30woL5eUucRYiK-Fg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVA7MU8LMUW6rR=VWtCDs8erpKgx30woL5eUucRYiK-Fg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3f6oalFlm3XSvFg--.25893S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXF47ZFyrCFyfKw1ktr1rCrg_yoWrAry3pF
+	sxZFWfCrW8Jry3Jr47Jr4UJr1FqrW5Aa10kr4xA34agr43WrZ8t34UtFWUXr1UWr45Aa47
+	JF13JrWFkF4qyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgZ2fUUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/1tbiTwHvnWXAmIwwpAAAsZ
 
---44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c
-Content-Type: multipart/mixed;
- boundary=5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
-Mime-Version: 1.0
+From: Chi Zhiling <chizhiling@kylinos.cn>
 
---5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
-Content-Type: multipart/alternative;
- boundary=07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2
+syzkaller reported use-after-free in load_firmware_cb() [1].
+The reason is because the module allocated a struct tuner in tuner_probe(),
+and then the module initialization failed, the struct tuner was released.
+If a worker which created during module initialization accesses this struct
+later, it will cause use-after-free.
 
---07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-Content-Type: text/plain; charset=UTF-8
+The process is as follows:
 
-On Fri May 31, 2024 at 9:33 AM CEST, Geert Uytterhoeven wrote:
-> Hi Thierry,
->
-> On Thu, May 30, 2024 at 7:07=E2=80=AFPM Thierry Reding <thierry.reding@gm=
-ail.com> wrote:
-> > Alternatively, maybe Kconfig could be taught about build dependencies?
->
-> git grep "depends on \$(" -- "*Kconf*"
+task-6504           worker_thread
+tuner_probe                                <= alloc dvb_frontend [2]
+...
+request_firmware_nowait                    <= create a worker for request_firmware_work_func
+...
+tuner_remove                               <= free dvb_frontend
+...
+                    request_firmware_work_func  <= the firmware is ready
+                        load_firmware_cb   <= but now the dvb_frontend has been freed.
 
-Duh... of course there's something like this already. =3D)
+To fix the issue, Check the dvd_frontend in load_firmware_cb(), if it is null, report a warning
+and just return.
 
-Maybe something like the attached patch?
+[1]:
+    ==================================================================
+     BUG: KASAN: use-after-free in load_firmware_cb+0x1310/0x17a0
+     Read of size 8 at addr ffff8000d7ca2308 by task kworker/2:3/6504
 
-Thierry
+     Call trace:
+      load_firmware_cb+0x1310/0x17a0
+      request_firmware_work_func+0x128/0x220
+      process_one_work+0x770/0x1824
+      worker_thread+0x488/0xea0
+      kthread+0x300/0x430
+      ret_from_fork+0x10/0x20
 
---07a5dde67ef47e9448bf0ccc85db98c9dc1a803fa3ba19fc3678c11852c2--
+     Allocated by task 6504:
+      kzalloc
+      tuner_probe+0xb0/0x1430
+      i2c_device_probe+0x92c/0xaf0
+      really_probe+0x678/0xcd0
+      driver_probe_device+0x280/0x370
+      __device_attach_driver+0x220/0x330
+      bus_for_each_drv+0x134/0x1c0
+      __device_attach+0x1f4/0x410
+      device_initial_probe+0x20/0x30
+      bus_probe_device+0x184/0x200
+      device_add+0x924/0x12c0
+      device_register+0x24/0x30
+      i2c_new_device+0x4e0/0xc44
+      v4l2_i2c_new_subdev_board+0xbc/0x290
+      v4l2_i2c_new_subdev+0xc8/0x104
+      em28xx_v4l2_init+0x1dd0/0x3770
 
---5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename=0001-kbuild-Allow-Kconfig-dependendencies-on-Python.patch
-Content-Type: text/x-patch; charset=utf-8;
- name=0001-kbuild-Allow-Kconfig-dependendencies-on-Python.patch
+     Freed by task 6504:
+      kfree+0x238/0x4e4
+      tuner_remove+0x144/0x1c0
+      i2c_device_remove+0xc8/0x290
+      __device_release_driver+0x314/0x5fc
+      device_release_driver+0x30/0x44
+      bus_remove_device+0x244/0x490
+      device_del+0x350/0x900
+      device_unregister+0x28/0xd0
+      i2c_unregister_device+0x174/0x1d0
+      v4l2_device_unregister+0x224/0x380
+      em28xx_v4l2_init+0x1d90/0x3770
 
-RnJvbSAxNTNlYWVjNjE1MTNlMTRmNWE3ZjhmMmE5OTg2MDBkMDdmMTdiYzg0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgpE
-YXRlOiBGcmksIDMxIE1heSAyMDI0IDEwOjUxOjQyICswMjAwClN1YmplY3Q6IFtQQVRDSF0ga2J1
-aWxkOiBBbGxvdyBLY29uZmlnIGRlcGVuZGVuZGVuY2llcyBvbiBQeXRob24KClJlY2VudGx5IGRy
-aXZlcnMgaGF2ZSBzdGFydGVkIGRlcGVuZGluZyBvbiBQeXRob24gdG8gZ2VuZXJhdGUgcmVnaXN0
-ZXIKZGVmaW5pdGlvbnMgZHVyaW5nIHRoZSBidWlsZCBwcm9jZXNzLiBJbiBvcmRlciB0byBwcmV2
-ZW50IHN1Y2ggZHJpdmVycwpmcm9tIGJyZWFraW5nIGJ1aWxkcyBvbiBzeXN0ZW1zIHRoYXQgZG9u
-J3QgaGF2ZSBQeXRob24gaW5zdGFsbGVkLCBtYWtlCnRoZW0gZGVwZW5kIG9uIHRoZSBtaW5pbXVt
-IHJlcXVpcmVkIFB5dGhvbiB2ZXJzaW9uIHRoYXQgdGhleSBuZWVkIHZpYQpLY29uZmlnLiBJZiBQ
-eXRob24gaXMgbm90IGluc3RhbGxlZCBvbiB0aGUgc3lzdGVtLCB0aGVzZSBkcml2ZXJzIHdpbGwK
-YmUgYXV0b21hdGljYWxseSBkaXNhYmxlZC4KClNpZ25lZC1vZmYtYnk6IFRoaWVycnkgUmVkaW5n
-IDx0cmVkaW5nQG52aWRpYS5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnIHwg
-IDEgKwogc2NyaXB0cy9taW4tdG9vbC12ZXJzaW9uLnNoIHwgIDMgKysrCiBzY3JpcHRzL3B5dGhv
-bi12ZXJzaW9uLnNoICAgfCA0MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-CiAzIGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDc1NSBz
-Y3JpcHRzL3B5dGhvbi12ZXJzaW9uLnNoCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21z
-bS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnCmluZGV4IDE5MzFlY2Y3M2Uz
-Mi4uNWY3Zjg0ZGU1NWU0IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL0tjb25maWcK
-KysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnCkBAIC0xMSw2ICsxMSw3IEBAIGNvbmZp
-ZyBEUk1fTVNNCiAJZGVwZW5kcyBvbiBRQ09NX0xMQ0MgfHwgUUNPTV9MTENDPW4KIAlkZXBlbmRz
-IG9uIFFDT01fQ09NTUFORF9EQiB8fCBRQ09NX0NPTU1BTkRfREI9bgogCWRlcGVuZHMgb24gUE0K
-KwlkZXBlbmRzIG9uICQoc3VjY2VzcywkKHNyY3RyZWUpL3NjcmlwdHMvcHl0aG9uLXZlcnNpb24u
-c2gpCiAJc2VsZWN0IElPTU1VX0lPX1BHVEFCTEUKIAlzZWxlY3QgUUNPTV9NRFRfTE9BREVSIGlm
-IEFSQ0hfUUNPTQogCXNlbGVjdCBSRUdVTEFUT1IKZGlmZiAtLWdpdCBhL3NjcmlwdHMvbWluLXRv
-b2wtdmVyc2lvbi5zaCBiL3NjcmlwdHMvbWluLXRvb2wtdmVyc2lvbi5zaAppbmRleCA5MWM5MTIw
-MTIxMmMuLjQ0N2EzYWQ0YzBiZiAxMDA3NTUKLS0tIGEvc2NyaXB0cy9taW4tdG9vbC12ZXJzaW9u
-LnNoCisrKyBiL3NjcmlwdHMvbWluLXRvb2wtdmVyc2lvbi5zaApAQCAtMzgsNiArMzgsOSBAQCBy
-dXN0YykKIGJpbmRnZW4pCiAJZWNobyAwLjY1LjEKIAk7OworcHl0aG9uKQorCWVjaG8gMy41LjAK
-Kwk7OwogKikKIAllY2hvICIkMTogdW5rbm93biB0b29sIiA+JjIKIAlleGl0IDEKZGlmZiAtLWdp
-dCBhL3NjcmlwdHMvcHl0aG9uLXZlcnNpb24uc2ggYi9zY3JpcHRzL3B5dGhvbi12ZXJzaW9uLnNo
-Cm5ldyBmaWxlIG1vZGUgMTAwNzU1CmluZGV4IDAwMDAwMDAwMDAwMC4uYzk5N2Q0MDQxOGRjCi0t
-LSAvZGV2L251bGwKKysrIGIvc2NyaXB0cy9weXRob24tdmVyc2lvbi5zaApAQCAtMCwwICsxLDQx
-IEBACisjIS9iaW4vc2gKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQor
-IworIyBQcmludCB0aGUgUHl0aG9uIHZlcnNpb24gaW4gYSA1IG9yIDYtZGlnaXQgZm9ybS4KKyMg
-QWxzbywgcGVyZm9ybSB0aGUgbWluaW11bSB2ZXJzaW9uIGNoZWNrLgorCitzZXQgLWUKKworUFlU
-SE9OPSR7UFlUSE9OOi1weXRob259CisKK2dldF9jYW5vbmljYWxfdmVyc2lvbigpCit7CisJSUZT
-PS4KKwlzZXQgLS0gJDEKKworCSMgSWYgdGhlIDJuZCBvciAzcmQgZmllbGQgaXMgbWlzc2luZywg
-ZmlsbCBpdCB3aXRoIGEgemVyby4KKwllY2hvICQoKDEwMDAwICogJDEgKyAxMDAgKiAkezI6LTB9
-ICsgJHszOi0wfSkpCit9CisKK291dHB1dD0kKExDX0FMTD1DICIkUFlUSE9OIiAtLXZlcnNpb24p
-CisKKyMgU3BsaXQgdGhlIGxpbmUgb24gc3BhY2VzLgorSUZTPScgJworc2V0IC0tICRvdXRwdXQK
-K25hbWU9JDEKK3ZlcnNpb249JDIKKworbWluX3Rvb2xfdmVyc2lvbj0kKGRpcm5hbWUgJDApL21p
-bi10b29sLXZlcnNpb24uc2gKK21pbl92ZXJzaW9uPSQoJG1pbl90b29sX3ZlcnNpb24gcHl0aG9u
-KQorCitjdmVyc2lvbj0kKGdldF9jYW5vbmljYWxfdmVyc2lvbiAkdmVyc2lvbikKK21pbl92ZXJz
-aW9uPSQoZ2V0X2Nhbm9uaWNhbF92ZXJzaW9uICRtaW5fdmVyc2lvbikKKworaWYgWyAiJGN2ZXJz
-aW9uIiAtbHQgIiRtaW5fdmVyc2lvbiIgXTsgdGhlbgorCWVjaG8gPiYyICIqKioiCisJZWNobyA+
-JjIgIioqKiBQeXRob24gaXMgdG9vIG9sZC4iCisJZWNobyA+JjIgIioqKiIKKwlleGl0IDEKK2Zp
-CisKK2VjaG8gJG5hbWUgJHZlcnNpb24KLS0gCjIuNDQuMAoK
---5dd707c8aefca53a80287b4aa87859be5f60dd9e69ea1e2dfc6c279ce4ae--
+     The buggy address belongs to the object at ffff8000d7ca2000
+      which belongs to the cache kmalloc-2k of size 2048
+     The buggy address is located 776 bytes inside of
+      2048-byte region [ffff8000d7ca2000, ffff8000d7ca2800)
+     The buggy address belongs to the page:
+     page:ffff7fe00035f280 count:1 mapcount:0 mapping:ffff8000c001f000 index:0x0
+     flags: 0x7ff800000000100(slab)
+     raw: 07ff800000000100 ffff7fe00049d880 0000000300000003 ffff8000c001f000
+     raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+     page dumped because: kasan: bad access detected
 
---44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c
-Content-Type: application/pgp-signature; name="signature.asc"
+     Memory state around the buggy address:
+      ffff8000d7ca2200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+      ffff8000d7ca2280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+     >ffff8000d7ca2300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                           ^
+      ffff8000d7ca2380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+      ffff8000d7ca2400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+     ==================================================================
 
------BEGIN PGP SIGNATURE-----
+[2]
+    Actually, it is allocated for struct tuner, and dvb_frontend is inside.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmZZlDYACgkQ3SOs138+
-s6HXBRAAsSmvbEsN51NCB4QBYVV1Jn9Y+Tptu+xCkkaqDLbKNSCLAseuPQph4+Sm
-yP9zBadxx9tzZ9IiJos2zcoidgtSZz6qf/fltaBjgKesq+YhIoRcjlEOjeBBK9li
-d0jZrccvkzNDPJqvQWfCrT7GHcZO5xe1RJKw5YcH5acTmYI0JTkHUpmHPWdC5GFO
-3gkvHGeth0Mus2+mGUyWXHgEWaL1iOyrm8fCDhuuFZlYxQfkuYbtsOGDz1gKsJWM
-tQcCruBMsml9b5cF88NTLJpJ3drz5RqNkxaM793DXcZVTL0rPt9Pc5m331xaKlKl
-yWf84jYCgaxFDk2f3IkWcg0Mm35a0dQi7LZ+LecsXtLZZB915wcAQV67dCIOFmyW
-qyxex5Tu5jzxDoOJx5/SJrhIdB2Lz33u+XC6nvgAAhsiAKM6lnTkSq0E/s7dIW9z
-9Dwhl4k7KpZ4MAPPqzvEH0osPi8ZqbUiv6xIUHtbo+g5ejAvqr/JXauknDacbvJ4
-xSyYAkh7Aqpu6K/y9tuI/A9sDBHhUD8D/JqRXEc9BOxjOetDeg0vpvkMQbrntX/a
-kk1pkuJrQwIsffqTOWrje9UcjkvbdzmNOknrC/uv+UTrgut/0Rn8p5zsuReU0hjD
-SzzXJF890v2QiUMen3kfPuH5vxdiwXehagUZuHDJuUMmwaMcISs=
-=cZjs
------END PGP SIGNATURE-----
+Signed-off-by: Chi Zhiling <chizhiling@kylinos.cn>
+---
+ drivers/media/tuners/xc2028.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---44e1abd3ea18a8ea349c6fb2b07d82a6bec49652599fd2a60f6af9c26a3c--
+diff --git a/drivers/media/tuners/xc2028.c b/drivers/media/tuners/xc2028.c
+index 5a967edceca9..352b8a3679b7 100644
+--- a/drivers/media/tuners/xc2028.c
++++ b/drivers/media/tuners/xc2028.c
+@@ -1361,9 +1361,16 @@ static void load_firmware_cb(const struct firmware *fw,
+ 			     void *context)
+ {
+ 	struct dvb_frontend *fe = context;
+-	struct xc2028_data *priv = fe->tuner_priv;
++	struct xc2028_data *priv;
+ 	int rc;
+ 
++	if (!fe) {
++		pr_warn("xc2028: No frontend in %s\n", __func__);
++		return;
++	}
++
++	priv = fe->tuner_priv;
++
+ 	tuner_dbg("request_firmware_nowait(): %s\n", fw ? "OK" : "error");
+ 	if (!fw) {
+ 		tuner_err("Could not load firmware %s.\n", priv->fname);
+-- 
+2.25.1
+
