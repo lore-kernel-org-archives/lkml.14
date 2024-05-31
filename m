@@ -1,111 +1,81 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1804B6F2EB;
-	Fri, 31 May 2024 14:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EC27483;
+	Fri, 31 May 2024 15:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717167553; cv=none; b=b0riGXPLo7OMMGhiy6P4vP589cIwBlxA6eldH4hm2csOQmaWEBOUg9Sm2uvQhSkl+iQkpKFYCIPh1j/GFUUL5sKgFHLvKa9HeipFW4DvGKx06FBXhgf8RgdLiUAT/zkDGY+tbn6mf7/ShIq3H1Wn93au+2rxXmtI1BgAFTx09bM=
+	t=1717167617; cv=none; b=JDC/80kIhkUV28jvCK0Of/B8xxhtwMrSej6LRqcPlczxat4N3wRAjefDLjp0W6n/Tc/sNz0pmGmz7tJMRVs1SRlwbhWrkjcZkdvYIEgI/mNcPgc3M9cMS7pjSdefPRUgvQk+bnoNBtxizBukrgeazdWc5NxwIZN48rN0cRNyDg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717167553; c=relaxed/simple;
-	bh=9+6h3DiodrT9YFrdp+kdRsd+uvX5l44PO21I4T4zFO4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DaJtWdqUsnXtb9munJsZjDSJS24deBDnIKEAef+bzlIYLsdPR545lVbIJVLbFUHqE5ISGCMQEabcuI7fYr3vFve6xioiUNFhygj+Cv3cMrY3T39mfmyAan0MY3eHoL4vELeKGfacHHqDgUI7p0Ep2TrxqKlJHACQe8oL3xaqM+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=cgV8psTi; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1717167617; c=relaxed/simple;
+	bh=oHjJ3ge5Oy2UenWzWYCDHU9h8HZVrZIgr4dbqGF2JYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SCAtr2G0XceqeIlinUEvgTDpD1pJRNXOS/DnMTVlSPSuvMy+XPKfdneL1TEHbhQN/iy1zSDXtJHAs/0blmrUblb3qIBZCD+nzShE8lfZ6B2iSboqvut1EIjhxYVVZRPDKB8f/SbfTQg1BZgzhtY0FpTxtaoAI0E0swp3c/e1PQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLTihaM8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="cgV8psTi"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V9Swso003313;
-	Fri, 31 May 2024 09:58:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=hxGvSEqlUm/4Gr1/Y7
-	FisaucBu8jAHnTKI/Obg6VI9c=; b=cgV8psTiVp2etlgNlYKT/Xz5UTa72Adwnp
-	Mz2p1O9qHqFUPa15bt9k4vOaw0BFh7bPfJ1p4wP2ArTWshr7L1GtTFZWa18VmbEX
-	efyhNCr7LGDVTGEkFIdZ0+fQ7lrmWR08B7gFutkTdq4gik7dVbbMx17C3hPbsiqX
-	FCCs7+w31Fz3cjSd/vTp8fxiOXlBH0SixpDYUeNAgOZyC/WqXTvNGN/y23eabUCD
-	5uteqKIcoNKlQlCxYfRo5l/rbU0dUpjor+W6lYVOnFoOCyW4y/NdaGcm+icIdEzg
-	FzQyVFTV5U46MBSRn9vkeAmsXDfnV3tfBs9CiTKaysNGvNIL1WOg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3ybdcwwwuu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 09:58:06 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 31 May
- 2024 15:58:04 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Fri, 31 May 2024 15:58:04 +0100
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 05CBE820244;
-	Fri, 31 May 2024 14:58:04 +0000 (UTC)
-Date: Fri, 31 May 2024 14:58:02 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Rob Herring <robh@kernel.org>, Weidong Wang <wangweidong.a@awinic.com>,
-        Mark Brown <broonie@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>,
-        Shenghao Ding <shenghao-ding@ti.com>,
-        "Marco Felsch" <m.felsch@pengutronix.de>,
-        Alper Nebi Yasak
-	<alpernebiyasak@gmail.com>,
-        Chancel Liu <chancel.liu@nxp.com>,
-        "Kuninori
- Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <imx@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "James
- Schulman" <james.schulman@cirrus.com>,
-        David Rhodes
-	<david.rhodes@cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>,
-        Srinivas Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Banajit Goswami <bgoswami@quicinc.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Heiko Stuebner
-	<heiko@sntech.de>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
-Message-ID: <ZlnleuSae2C6/WRU@opensource.cirrus.com>
-References: <20240530230037.1156253-1-andriy.shevchenko@linux.intel.com>
- <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLTihaM8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A88DC116B1;
+	Fri, 31 May 2024 15:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717167616;
+	bh=oHjJ3ge5Oy2UenWzWYCDHU9h8HZVrZIgr4dbqGF2JYI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fLTihaM8uhf8S4bQ24cMMo9PFjcBjm1r9poKMCfnpvSKZIo2uyE76MniP84yBbO46
+	 WFsj05gHbaftfJYMHi9ggHyH/XIcyBDAgE6z5ckcZl2LTS14+fNeSmraIDVyCFWz5P
+	 bJNH88ug57pC82N5g7GdRfevaz3W9hlhjYhZWDU1S+cCEG1dWjo9hLDZGiHQmENayW
+	 HLav5+/ZXvAzn+NqOuy4YEYGqlTec3oK58LNwDWOY18DbHuxi4XjKQ7/5bsUFuvVMf
+	 bb1ky8R7NHfgf/RScZv5yPb4ty8TPIky1W3jnrxxYlNybXPgOT/1PVPvYdp1GoMQ2T
+	 C3FYhbPW1QpWg==
+Date: Fri, 31 May 2024 08:00:16 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	brauner@kernel.org, david@fromorbit.com, chandanbabu@kernel.org,
+	jack@suse.cz, willy@infradead.org, yi.zhang@huawei.com,
+	chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [RFC PATCH v4 8/8] xfs: improve truncate on a realtime inode
+ with huge extsize
+Message-ID: <20240531150016.GL52987@frogsfrogsfrogs>
+References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
+ <20240529095206.2568162-9-yi.zhang@huaweicloud.com>
+ <ZlnUorFO2Ptz5gcq@infradead.org>
+ <20240531141210.GI52987@frogsfrogsfrogs>
+ <Zlnbht9rCiv-d2un@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
-X-Proofpoint-GUID: QOHrrhhsAlL1BvB8LD1NFqOZRJaPkXqI
-X-Proofpoint-ORIG-GUID: QOHrrhhsAlL1BvB8LD1NFqOZRJaPkXqI
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <Zlnbht9rCiv-d2un@infradead.org>
 
-On Fri, May 31, 2024 at 01:58:47AM +0300, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove. The drivers in question
-> don't use it, simply remove the unused header.
+On Fri, May 31, 2024 at 07:15:34AM -0700, Christoph Hellwig wrote:
+> On Fri, May 31, 2024 at 07:12:10AM -0700, Darrick J. Wong wrote:
+> > There are <cough> some users that want 1G extents.
+> > 
+> > For the rest of us who don't live in the stratosphere, it's convenient
+> > for fsdax to have rt extents that match the PMD size, which could be
+> > large on arm64 (e.g. 512M, or two smr sectors).
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  sound/soc/codecs/cs53l30.c        | 1 -
+> That's fine.  Maybe to rephrase my question.  With this series we
+> have 3 different truncate path:
+> 
+>  1) unmap all blocks (!rt || rtextsizse == 1)
+>  2) zero leftover blocks in an rtextent (small rtextsize, but > 1)
+>  3) converted leftover block in an rtextent to unwritten (large
+>    rtextsize)
+> 
+> What is the right threshold to switch between 2 and 3?  And do we
+> really need 2) at all?
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+I don't think we need (2) at all.
 
-Thanks,
-Charles
+There's likely some threshold below where it's a wash -- compare with
+ext4 strategy of trying to write 64k chunks even if that requires
+zeroing pagecache to cut down on fragmentation on hdds -- but I don't
+know if we care anymore. ;)
+
+--D
