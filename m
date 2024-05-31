@@ -1,101 +1,136 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF1A156C61
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 10:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6AF156C7B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 10:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717152580; cv=none; b=NREfJwm6082v/X35Fa9ABPvXxNm/XMVgtxy8Lj7tCcFN3hPaS0tzkOsS22Ven1rXVNMVn4Yt66K9d6AQIA3v59tIG9WDIOAXk0l+6l7LUEgXt58lb2s8zuHqAKNy5DvjW1jmUb5PBv+ujqyHrd1zQbW6+7o/rpEe2a9p6pui+ck=
+	t=1717152594; cv=none; b=PxpYczaBWIHXqixAYyRqdjYGiSVI48o6KjvCOAFrHpvDvrYsRktT8vW8HJjZBuu5et6mdBYhpXg29PMAsPE5m3SwK0DZN4Pm0HdHjBiHfCaAZZoFJuGlqLCdQatitq5I6TqpVu9vk2SDMP1/LA8UJye7g3rIYvpjxYGG5ZTVYxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717152580; c=relaxed/simple;
-	bh=rGZ05Wtl7/tFqqeKIfV5yhM9avsTsSpt/wX8DUBeUl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UtB4a9FBWFdCygpQaYmhQzucf6IVCuDiuW380ytay2/bj6AMoPZW+50/NbCfht9D/QhVDViNsJWF7ObYGTB9Lfge7vnO4j4PZhEx7fkGprulu4u8ucLuAcriRrKC623CYgtuYgqPjI7jImKKXtIqO8BsZRdpHEgLqb9lfDQBsCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HsWkXc6v; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717152594; c=relaxed/simple;
+	bh=PVahwFJO8LJfhi0Pb1DQm5Wbf1qUqfCUUYbU04fLMbQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=M3n6mPPvRMPrVznNDs2wyVfcMag8ZAMjVAKSeAZNK6qAVfuIxMJViFgF5ar8/ewz4uNJuytm7OfiWqGqTOemGr6y3+YPSoJOCGtcGXDD/E3BdaOkiPRnEMevdXIwfgTAFPcuqHeC9FT//IOPXhBmHhmbWGyNviU7T4Pa++KTw9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Jw2SrlVB; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HsWkXc6v"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5750a8737e5so12490a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 03:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717152577; x=1717757377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rRp80lBW4FzoN8ncda3wP8nvCP0z9lrK+Jc/IWYduo=;
-        b=HsWkXc6vy3EByAB77Ul9Zsx8LSEDqCaS97xpcWD1S0rgCDbugyzcodDnIX5Ll9QzSq
-         L+iFuGtE1cvJCF+MJ79ypkPiMHFaoEg4ys/QwM9U8Ugqtpmy10O5ySti3ido5YjJRzrH
-         PaDlTUsD9/fI2JkEaR8DWsj3dOU8qkKatA25NOS7JS3c9FeJ7GMdJIWpGVG6RBKOM4Nf
-         4bAHjlC6464A49PpcdupEPOYlA8VbgumeFLmefyHQ4Smagk7tWzywW52/aYVvruvYIjO
-         WvA1ZKBsjPOzX+22PcvvsE7xlt9DyYuEqAXpne4NV1ldrqJyGugVp8Lya1vmOy8hvUgI
-         ohdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717152577; x=1717757377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8rRp80lBW4FzoN8ncda3wP8nvCP0z9lrK+Jc/IWYduo=;
-        b=okrFBX3PqJPZn93Hi7Kkvh+wpT3SL/Lx5nmq17h+5BVoXLOdJhnQgq+AKTEOGUAJ22
-         DFcLNS8yP4YaBc0e8Qc8vjMTssgQcTQWdZEaQgISfuRQpXyfiagTNmoUemhumolg41+g
-         l/0ljAde9JQwvhdzkYACX7cRe598n1l7DYWvUHz/M6bRMn3AxC1/5mMTsLmuwI2rEMS6
-         iPuQ+gRqOUc7pus3tjyIPhy+52e7xnJilbRqFyuJ8XsMAjqhC8DMZpCNNM0qirNV7nCC
-         6a1l/mdt00X0W5O5Hd+Qc35ntTyF4H3yRaOuZPM8rt0fdbtk65vEGV1bigJ/NW2XLz5D
-         QpHw==
-X-Gm-Message-State: AOJu0YwA5Ijsdwqkk1Deuhtj+81VoV/gsBxjrFLWTU4wxapqxWdExqcR
-	i8kiLJZscB9/Fbxpmlpsyobp6hxTV92oQSj+0Tqemor9dIV5V0E2qOfn/4ac5j4uRgxXaTkcV4X
-	1vhJ+NOMDuemGwfXsdC7mN6wmKjIy91a9n47y
-X-Google-Smtp-Source: AGHT+IGNvupsb1UVYookhWaIP+aHUuOsnl1pdEMh3RFuflcTYqmKBlgYK4b83wq+i4WL/kDsRqslbWqCLr6DiBSSCT0=
-X-Received: by 2002:a05:6402:148b:b0:572:988f:2f38 with SMTP id
- 4fb4d7f45d1cf-57a33c6bab5mr160899a12.6.1717152576620; Fri, 31 May 2024
- 03:49:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Jw2SrlVB"
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240531104949epoutp04a68bf5c3dd1dd630a963e7efb5e9d44a~UjS7FHAiE1362613626epoutp04v
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 10:49:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240531104949epoutp04a68bf5c3dd1dd630a963e7efb5e9d44a~UjS7FHAiE1362613626epoutp04v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717152589;
+	bh=AcrbxBR/K7PJ3gXtcaqiIgnaaJyMH+AxyYG1HcE+KEc=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=Jw2SrlVBe96l0VIwTvUvimolEx6xfoRrnxJpCIeeq+xahLWuXB1HPTfQXB2aBXnUk
+	 jcczoDobfJdoFPEPi4GqUcV0n0vIF1eXI+Waom+UsQ4kv4S/ASNzbBzsG0fyobFtBy
+	 NbNEVeS7gqHq2n27rZr+znmsUD2b/4Zo7gOsh3QY=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20240531104949epcas2p4242f84969dbb7efad96611fb0989253b~UjS6xhCtb2486524865epcas2p49;
+	Fri, 31 May 2024 10:49:49 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.68]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VrKd85ysrz4x9Pw; Fri, 31 May
+	2024 10:49:48 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2C.DC.09806.C4BA9566; Fri, 31 May 2024 19:49:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+	20240531104947epcas2p31961bda5ee0eb313c0d9a7d63d5461ba~UjS5Ovjpm2726827268epcas2p37;
+	Fri, 31 May 2024 10:49:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240531104947epsmtrp1d4c5ca0f6ab041d6598a2556963eaf39~UjS5ODm9R2848028480epsmtrp10;
+	Fri, 31 May 2024 10:49:47 +0000 (GMT)
+X-AuditID: b6c32a47-ecbfa7000000264e-24-6659ab4ca463
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F6.83.08336.B4BA9566; Fri, 31 May 2024 19:49:47 +0900 (KST)
+Received: from localhost.dsn.sec.samsung.com (unknown [10.229.54.230]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240531104947epsmtip1417f875e98bbe3be84cd9d52aa6dd9de~UjS49lsm00934709347epsmtip1J;
+	Fri, 31 May 2024 10:49:47 +0000 (GMT)
+From: Minwoo Im <minwoo.im@samsung.com>
+To: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman
+	<avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, Minwoo Im
+	<minwoo.im@samsung.com>, gost.dev@samsung.com, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jeuk Kim <jeuk20.kim@samsung.com>
+Subject: [PATCH 0/3] ufs: pci: Add support UFSHCI 4.0 MCQ
+Date: Fri, 31 May 2024 19:38:18 +0900
+Message-Id: <20240531103821.1583934-1-minwoo.im@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528122352.2485958-1-Jason@zx2c4.com> <20240528122352.2485958-2-Jason@zx2c4.com>
-In-Reply-To: <20240528122352.2485958-2-Jason@zx2c4.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 31 May 2024 12:48:58 +0200
-Message-ID: <CAG48ez0P3EDXC0uLLPjSjx3i6qB3fcdZbL2kYyuK6fZ_nJeN5w@mail.gmail.com>
-Subject: Re: [PATCH v16 1/5] mm: add VM_DROPPABLE for designating always
- lazily freeable mappings
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, tglx@linutronix.de, 
-	linux-crypto@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>, "Carlos O'Donell" <carlos@redhat.com>, 
-	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, David Hildenbrand <dhildenb@redhat.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdljTXNdndWSawYG1WhYP5m1js3j58yqb
+	xbQPP5ktbh7YyWSxsZ/D4v7Wa4wWl3fNYbPovr6DzWL58X9MFs9OH2B24PK4fMXbY9qkU2we
+	H5/eYvHo27KK0ePzJjmP9gPdTAFsUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+	5koKeYm5qbZKLj4Bum6ZOUCHKSmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKzAv0
+	ihNzi0vz0vXyUkusDA0MjEyBChOyM+6c+sZasI694uD732wNjF9Yuxg5OCQETCQebJHpYuTk
+	EBLYwSixcXN+FyMXkP2JUWLn5ufsEM43RomeSYeZQKpAGub++ACV2Mso8WjHRUYI5zejxLTb
+	95hBqtgE1CUapr5iAbFFBKolNrf/ZQMpYhboY5Jonz2fFSQhLGAp0TT3EFgRi4CqxK7fi8BW
+	8ArYSCx72MoGsU5eYv/Bs8wQcUGJkzOfgNUzA8Wbt85mBhkqIfCSXeLhu2Z2iIdcJCbssYHo
+	FZZ4dXwLO4QtJfGyvw3KLpf4+WYSI4RdIXFw1m02iFZ7iWvPU0BMZgFNifW79CGiyhJHbkEt
+	5ZPoOPwXag+vREebEMQMZYmPhw4xQ9iSEssvvYa63UNi49YDrJDAjZV4P2kS+wRG+VlIXpmF
+	5JVZCHsXMDKvYhRLLSjOTU8tNiowhsdocn7uJkZwwtRy38E44+0HvUOMTByMhxglOJiVRHh/
+	pUekCfGmJFZWpRblxxeV5qQWH2I0BQbuRGYp0eR8YMrOK4k3NLE0MDEzMzQ3MjUwVxLnvdc6
+	N0VIID2xJDU7NbUgtQimj4mDU6qBye8VS94NkdjCaRvjnp2++LedlWOJur54+7zv9wvCd8z6
+	+Vf/Yxir0sPziocCkhuqZbNeVu6aq2HJ9G7Rqh/bhJ3nqUUvO1z/kKEkasHGbEabLc8m90St
+	Ug/tu+pyqLXhn6uVm76KTTy7fY7eNxfTH3KJ8hev+n+MX5A5s2b6xA2nmvtWNcXMD8tTyRHf
+	1+30LcH+enLnNoPJL2d94uy4KLeHwzrs7dw9P7wW1SlOlU7et3KlxprzFhvyOHbG7WCKfnTO
+	rDp5qcy1ee9kHn7d8nKRgUoJi2Zq1KfW0AV/WI+oRPGVVau+LRM5yfPXQyAtw6Q/OmFW43fl
+	LkU/+8rb2WcyLzYZSN/7eC+9YG6mEktxRqKhFnNRcSIAkmwgtyEEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSnK736sg0g7XLjCwezNvGZvHy51U2
+	i2kffjJb3Dywk8liYz+Hxf2t1xgtLu+aw2bRfX0Hm8Xy4/+YLJ6dPsDswOVx+Yq3x7RJp9g8
+	Pj69xeLRt2UVo8fnTXIe7Qe6mQLYorhsUlJzMstSi/TtErgy7pz6xlqwjr3i4PvfbA2MX1i7
+	GDk5JARMJOb++MDexcjFISSwm1Hi0YStTBAJSYl9p29CFQlL3G85wgpR9JNRYvekmSwgCTYB
+	dYmGqa/AbBGBaonN7X/ZQIqYBaYxSSyaBdEtLGAp0TT3EFgRi4CqxK7fi8A28ArYSCx72MoG
+	sUFeYv/Bs8wQcUGJkzOfgNUzA8Wbt85mnsDINwtJahaS1AJGplWMkqkFxbnpucWGBYZ5qeV6
+	xYm5xaV56XrJ+bmbGMHBrKW5g3H7qg96hxiZOBgPMUpwMCuJ8P5Kj0gT4k1JrKxKLcqPLyrN
+	SS0+xCjNwaIkziv+ojdFSCA9sSQ1OzW1ILUIJsvEwSnVwLTj54eVMx7mRrsLFwlOOtO3aKpH
+	73Vvo6v/lzS/Yb6XvTy8faOq+4yPupKzd8xe+1fZ/fC6Of+53+xru3JuwxsL49U/S/xXi79N
+	nSL7Y3+AZM2t+w+lSye/X/t07cNlzAVKzw4emVRyt8+HQVDvps6GBQ7lfolGTp/Zpa6lOD1a
+	d17m595IjzaRO3FTdNV+3etavlK1hq/mX9GnLUXBr/wiL+6Qen5S0rHn3LoV6cUHpn4LObSu
+	eeuFB/52wSrhE69nKonPliteeWzrlRv2C1s4z5b32PJF/fGcoTGp1emrQeOybfUTdKID/s31
+	t7/6x7KzeREj24aJfoX73FfYPfe3uihdGXK0Svh4nNf+bv81SizFGYmGWsxFxYkA9Bl6mtUC
+	AAA=
+X-CMS-MailID: 20240531104947epcas2p31961bda5ee0eb313c0d9a7d63d5461ba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240531104947epcas2p31961bda5ee0eb313c0d9a7d63d5461ba
+References: <CGME20240531104947epcas2p31961bda5ee0eb313c0d9a7d63d5461ba@epcas2p3.samsung.com>
 
-On Tue, May 28, 2024 at 2:24=E2=80=AFPM Jason A. Donenfeld <Jason@zx2c4.com=
-> wrote:
-> c) If there's not enough memory to service a page fault, it's not fatal.
-[...]
-> @@ -5689,6 +5689,10 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *=
-vma, unsigned long address,
->
->         lru_gen_exit_fault();
->
-> +       /* If the mapping is droppable, then errors due to OOM aren't fat=
-al. */
-> +       if (vma->vm_flags & VM_DROPPABLE)
-> +               ret &=3D ~VM_FAULT_OOM;
+This patchset introduces add support for MCQ introduced in UFSHCI 4.0.  The
+first patch adds a simple helper to get the address of MCQ queue config
+registers.  The second one enables MCQ feature by adding mandatory vops
+callback functions required at MCQ initialization phase.  The last one is to
+prevent a case where number of MCQ is given 1 since driver allocates poll_queues
+first rather than I/O queues to handle device commands.  Instead of causing
+exception handlers due to no I/O queue, failfast during the initialization time.
 
-Can you remind me how this is supposed to work? If we get an OOM
-error, and the error is not fatal, does that mean we'll just keep
-hitting the same fault handler over and over again (until we happen to
-have memory available again I guess)?
+Minwoo Im (3):
+  ufs: mcq: Add ufshcd_mcq_queue_cfg_addr helper
+  ufs: pci: Add support MCQ for QEMU-based UFS
+  ufs: mcq: Prevent no I/O queue case for MCQ
 
-Or is there something in this series that somehow redirects userspace
-execution to getrandom() in that case?
+ drivers/ufs/core/ufs-mcq.c    | 23 +++++++++++++++++
+ drivers/ufs/host/ufshcd-pci.c | 48 ++++++++++++++++++++++++++++++++++-
+ include/ufs/ufshcd.h          |  1 +
+ 3 files changed, 71 insertions(+), 1 deletion(-)
 
+-- 
+2.34.1
 
-> +
->         if (flags & FAULT_FLAG_USER) {
->                 mem_cgroup_exit_user_fault();
->                 /*
