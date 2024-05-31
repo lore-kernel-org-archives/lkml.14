@@ -1,102 +1,105 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp1.math.uni-bielefeld.de (smtp1.math.uni-bielefeld.de [129.70.45.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F70B7F7D1;
-	Fri, 31 May 2024 19:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5989880604;
+	Fri, 31 May 2024 19:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.70.45.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717182516; cv=none; b=noD1gpg1tOlMlf4xlbCf5guAVF4xLTT7hh4io+sObAmAGxqirzMQX8aut5DlXLbGdWjOfe/qwMq3oppEpwI8GdtS8TPuOpx1uK5NkyZq8azemv34tlRWD+97hDi1VXiiutOQDjSC4qN3KXDtpAOC3dLtQFzvy5U+KuaygOvzxoE=
+	t=1717182560; cv=none; b=e+7jrrLeLxE3eC+TIGWqHbygTHBV9JgtTtqg94jJCnAz4rJ8l1x2BXfESExJblj3Wu88Fy78WR7XAnlhnalbDmCkdr5jgEuQFPBmtvL5bFmzP8OVJTcPcUT/qnSgo7Ja1/7ZmvOJ1Dr3amODFMVbLR2esmNTocnj9TDqG5Qg4TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717182516; c=relaxed/simple;
-	bh=+ZwA3B3uUTKPcLPMQO8JUOutJEuWTiTxesZp1gVR1FQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0vOkUI4vJ3qr7/Xo+kpNaEOSeJZ06h1pdSYUFvbYeeXMdntbX/YxlxtVtTKQsxEw/8ixx9MTuKIb1Z2vt71SJmrXjFyd6dP9XIQ92nIGIAnRPY+IPYde6Rh17PnfKQWUGO3yUWGqiBBedZD6TKxUrPcO2Io4qPOXdQNYRtmpUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ePRI7kWs; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717182560; c=relaxed/simple;
+	bh=f6oyVa4CF+Atx2Os6W1pYW+SHbV4+5PZDkBbDDgOlAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r40dhGHzpsxfQeUPET2ExC3VNp1UBVRoXXP1lNz7l+Vd88Vwsvk+Wu/sKiIlk/QpkMTh2JjTmwrTN3xXGRMGhuhmdSUv9lVCQjjtPROi+SFzinM4AYpu72XMAv71w1uVK9Db7Vj5ly5Fw9dTgu09ip4CFhVEmdo6Pv8m0acN+qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de; spf=pass smtp.mailfrom=math.uni-bielefeld.de; dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b=s6PRNz2a; arc=none smtp.client-ip=129.70.45.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=math.uni-bielefeld.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=math.uni-bielefeld.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ePRI7kWs"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2E73040E02B2;
-	Fri, 31 May 2024 19:08:32 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YQHt5Fn7dxfN; Fri, 31 May 2024 19:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717182509; bh=NzGpXJTXbKmIHkjFqSrkePeRDdQz6l3rbrrmmm9dbpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ePRI7kWsGmRmTVawaSnCct4KAy/HrsK/Pzu/KHZ4mfC11QekKZnaOyenXZEpRswrp
-	 lhP6Pa94Up/ZB7itrz03ai3HxwQczJCUQvhb0/FjVv7da4GE9MuhSeHEcdgsPC5eOY
-	 WdW2Kl6vzRK6j2ARwwBlkNIeilAfF2YIu3bQ2n3igvI87CSdZ3CF/b7oMFQp0/r33L
-	 AQCoZ5KNOQXb4cMJ0giIwm3flBqhSLVJiTXvuFH5FvHkY2M1NwyMfuV3JjaagNTNlS
-	 +MkFjxUzkj6F0qGgfFPsOL8jkka2dc8WUKyg7Uj7Y6n1w3U5Iyql5J7Qx0FS+Ha5HL
-	 Yr69FvCWXeWdjJfGGNlDJclRhwEUqlnAqTESegYP1TxWflFGv83OwZLYHe3cQE5nN7
-	 dMk2l7QSZj9bPg6WYj+6gCP7igIkWPXE1pT+/hgNisiyAKeNLk1qjeNszVA2rw31fm
-	 UY004yI84iTb/ZhpZD1BOZsmGP9A3VXJmeFgzspnYUcZt75utGJxP0ffSEfwVPzfQk
-	 cCKMSCtwd9k2kLJcI+Y6shL0E+lXcObGhO5gTjfVJV/HoSEHOxffQx93LF5N6Mqxa9
-	 8H/Fhpi05qDU4ulmyxj4vWEyytITjWdOuXQXoSQBCsJZzCHUezc+nYk224QPfM03sH
-	 QFhAQFG5dZEwK468C5iUzMqo=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	dkim=pass (2048-bit key) header.d=math.uni-bielefeld.de header.i=@math.uni-bielefeld.de header.b="s6PRNz2a"
+Received: from localhost (dslb-088-074-203-220.088.074.pools.vodafone-ip.de [88.74.203.220])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA77240E02B9;
-	Fri, 31 May 2024 19:08:17 +0000 (UTC)
-Date: Fri, 31 May 2024 21:08:16 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Kees Cook <kees@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: add prototype for __fortify_panic()
-Message-ID: <20240531190816.GLZlogIGgpc5maOeLN@fat_crate.local>
-References: <20240529-fortify_panic-v1-1-9923d5c77657@quicinc.com>
- <0d3f7c58-7fc0-4e8b-b6fb-c4d0d9969ce7@suse.com>
- <e42c4984-d4a2-45b1-b93d-7471000766b7@quicinc.com>
- <5658B525-6642-43A2-B14C-BC4AA916FBCC@alien8.de>
- <202405310951.56D9BD5C41@keescook>
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by smtp1.math.uni-bielefeld.de (Postfix) with ESMTPSA id 867DA6014D;
+	Fri, 31 May 2024 21:01:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=math.uni-bielefeld.de; s=default; t=1717182069;
+	bh=f6oyVa4CF+Atx2Os6W1pYW+SHbV4+5PZDkBbDDgOlAE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s6PRNz2aHjg5896ke3uhntALQDyhSz99QfC1B91xOm1j62oXnSrWYhuujaM5PPULS
+	 6IhG04FI9qC5TGvkMkwrduu2ONlkGbTlqtFymZu+LJNKGtnNg20AwnXAWcXfc5MwsY
+	 JK6JXPnIJU0Re522Auaoujm+MiD3LEvfju9oFDHESqnpBKoFVHFS4s5m7L7PA0evcS
+	 sWvbF9vGPhKcF8feELZGs1rssjjCFrVv4C0qLdRFTQ4bWJaika122wWJh8Wlfej37U
+	 fzjso3cOx0HR/HEOP4pxhkSvEiHJHe8xoj6Kh44N+mLY4sfBy8VjdXzbGs93N9lVMu
+	 Xd5A4T6lWTFew==
+From: tjakobi@math.uni-bielefeld.de
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: i8042 - add Ayaneo Kun to i8042 quirk table
+Date: Fri, 31 May 2024 21:00:59 +0200
+Message-ID: <20240531190100.3874731-1-tjakobi@math.uni-bielefeld.de>
+X-Mailer: git-send-email 2.44.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202405310951.56D9BD5C41@keescook>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 31, 2024 at 09:53:28AM -0700, Kees Cook wrote:
-> Under CONFIG_FORTIFY_SOURCE, the boot code *does* still uses
-> fortify-string.h. It lets us both catch mistakes we can discover at
-> compile and will catch egregious runtime mistakes, though the reporting
-> is much simpler in the boot code.
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
 
-From where I'm standing, we're not catching anything in the
-decompressor:
+See the added comment for details. Also fix a typo in the
+quirk's define.
 
-$  objdump -D arch/x86/boot/compressed/vmlinux | grep __fortify_panic
-0000000001bec250 <__fortify_panic>:
-$
+Signed-off-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+---
+ drivers/input/serio/i8042-acpipnpio.h | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-Sure, in vmlinux proper (allmodconfig) we do:
-
-objdump -D vmlinux | grep __fortify_panic | wc -l
-1417
-
-but not in the decompressor which is special anyway.
-
-So we can just as well disable CONFIG_FORTIFY_SOURCE in the decompressor
-and not do silly prototypes.
-
+diff --git a/drivers/input/serio/i8042-acpipnpio.h b/drivers/input/serio/i8042-acpipnpio.h
+index dfc6c581873b..0a7388985622 100644
+--- a/drivers/input/serio/i8042-acpipnpio.h
++++ b/drivers/input/serio/i8042-acpipnpio.h
+@@ -76,7 +76,7 @@ static inline void i8042_write_command(int val)
+ #define SERIO_QUIRK_PROBE_DEFER		BIT(5)
+ #define SERIO_QUIRK_RESET_ALWAYS	BIT(6)
+ #define SERIO_QUIRK_RESET_NEVER		BIT(7)
+-#define SERIO_QUIRK_DIECT		BIT(8)
++#define SERIO_QUIRK_DIRECT		BIT(8)
+ #define SERIO_QUIRK_DUMBKBD		BIT(9)
+ #define SERIO_QUIRK_NOLOOP		BIT(10)
+ #define SERIO_QUIRK_NOTIMEOUT		BIT(11)
+@@ -1332,6 +1332,19 @@ static const struct dmi_system_id i8042_dmi_quirk_table[] __initconst = {
+ 		.driver_data = (void *)(SERIO_QUIRK_NOMUX | SERIO_QUIRK_RESET_ALWAYS |
+ 					SERIO_QUIRK_NOLOOP | SERIO_QUIRK_NOPNP)
+ 	},
++	{
++		/*
++		 * The Ayaneo Kun is a handheld device where some the buttons are handled by an
++		 * AT keyboard. The keyboard is usually detected as raw, but sometimes, usually
++		 * after a cold boot, it is detected as translated.
++		 * Make sure that the keyboard is always in raw mode.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "AYANEO"),
++			DMI_MATCH(DMI_BOARD_NAME, "KUN"),
++		},
++		.driver_data = (void *)(SERIO_QUIRK_DIRECT)
++	},
+ 	{ }
+ };
+ 
+@@ -1655,7 +1668,7 @@ static void __init i8042_check_quirks(void)
+ 		if (quirks & SERIO_QUIRK_RESET_NEVER)
+ 			i8042_reset = I8042_RESET_NEVER;
+ 	}
+-	if (quirks & SERIO_QUIRK_DIECT)
++	if (quirks & SERIO_QUIRK_DIRECT)
+ 		i8042_direct = true;
+ 	if (quirks & SERIO_QUIRK_DUMBKBD)
+ 		i8042_dumbkbd = true;
 -- 
-Regards/Gruss,
-    Boris.
+2.44.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
