@@ -1,152 +1,91 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A8B77114;
-	Fri, 31 May 2024 08:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACCB78276;
+	Fri, 31 May 2024 08:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717143233; cv=none; b=jrIDsz1ll9Bnrw58HzO5GrDrasg88jGCfawUMqb5ILdbu6pWsarmdf6BVzjw4A2Tebxz76k2zp7G5ModoXRudvECYEKTu8jkiA2OM0ZZuOrP7+g3UkVUjHojnNQR7Amt6rQmstIlqrBivmaivoraRRKrLXrQj8sCw8ii8sPMlDA=
+	t=1717143260; cv=none; b=ngNXqkjmuGzpwGy6u4bUyeKInPMGh3GADVgzDnIvkQr5c+/dJ9N1SZXPJYlv4Ij6lfmt3iCliec34ES04rMTkzOHtEg1QYgWgK4okekW1K6fXf0508cVyAXKgdqO1GU2F4GPj2fNcOvMIS0Eym7DhURQ9Qg0rZMCz28STeOyTcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717143233; c=relaxed/simple;
-	bh=KaZu3PfnuCLAgttdKtOj8aMS+kBKtD2hyquye1H9HRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GEDkNL2Qjdh6LtWg2xTXhc6tq8UyyYPkk9Itg5t/jj36ctJE5ROcCCef1/e4PA0bcBtRZbAM6Yoj7fJhH1BBCRtI8ecSZ2y4USeElubTfB6mVkZsEZ7RaJqNV35HrHQM2Bh48eS5WOMuygflFggSKMX1nQfsXjVHQ1PR3wnBIbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: b10363301f2511ef9305a59a3cc225df-20240531
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:5d283cd1-a105-48ee-8743-2c5c99b604d6,IP:20,
-	URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.38,REQID:5d283cd1-a105-48ee-8743-2c5c99b604d6,IP:20,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:82c5f88,CLOUDID:e8ac45031189e541bd5ee02aacc15a8a,BulkI
-	D:240531161344YZ4O3K9Z,BulkQuantity:0,Recheck:0,SF:66|38|24|72|19|44|102,T
-	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: b10363301f2511ef9305a59a3cc225df-20240531
-Received: from node4.com.cn [(39.156.73.12)] by mailgw.kylinos.cn
-	(envelope-from <tanzheng@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1052488889; Fri, 31 May 2024 16:13:41 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id 4AFC916002081;
-	Fri, 31 May 2024 16:13:41 +0800 (CST)
-X-ns-mid: postfix-665986B5-191610221
-Received: from localhost.localdomain (unknown [10.42.124.206])
-	by node4.com.cn (NSMail) with ESMTPA id 62B0016002081;
-	Fri, 31 May 2024 08:13:40 +0000 (UTC)
-From: zheng tan <tanzheng@kylinos.cn>
-To: hare@suse.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zheng tan <tanzheng@kylinos.cn>,
-	k2ci <kernel-bot@kylinos.cn>
-Subject: [PATCH] scsi: aic7xxx: Fix some build warning
-Date: Fri, 31 May 2024 16:13:37 +0800
-Message-Id: <20240531081337.536182-1-tanzheng@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1717143260; c=relaxed/simple;
+	bh=L2wsg+UyGOMk0Z8wJlmeo08VtpIEFKjlqtaUhQDmXUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qghIkjK7OE9rd4mQaqHX6lNK+Uwh9Vlon/8RKuRtsKeGZvDcfmP9HpfaAp691rpoFEg4kzBHufwbahMoi1ict8RKTvIDR2Zgcwm7Rs7mv2N1ZV0HOQAxxljkLoxYOmTbrJxz+njwl8pBTFV7sV1GgFV9J4LMSHUgZVNaEl57nK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hsfv1nU3; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hsfv1nU3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zCPwI73R4MJQqX+IZ9CDgIEhpJs+l0IYh+oqHsV7kBQ=; b=hsfv1nU3pxWAGTPmsBQnTuh8pp
+	WHIwLFYZ1Hink6MH2uwDexSiqz9mOEU9Lqw5reCTaPE/vnkTsYkew/6XnRbbePMnqHLsqIriKOsqO
+	nN0RqaREbXpipEsSuBdZ1UySx6WgPstFPDbZ+Sc9FA8oTpCc4rzouziREPQRDdzUmAUy06Y6LrqYG
+	tjfEXez5qeTV8T96lmsU9b9EIZrn7nmMOKgKT4JSmLY5HwuO+V61UwEv+7ycyAjFkRbkZBbeXMdj9
+	peQXyRbt/oasf4aZQLN7clcZ32eWRKMTT96iIIMsigVQJ6Bol2cO6fIWy02vi487cdMjL4tei3J15
+	4+GB8cCg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sCxOv-00000009aJO-42ve;
+	Fri, 31 May 2024 08:14:13 +0000
+Date: Fri, 31 May 2024 01:14:13 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+	Aleksa Sarai <cyphar@cyphar.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <ZlmG1Rss6gTgbSVT@infradead.org>
+References: <ZlRy7EBaV04F2UaI@infradead.org>
+ <20240527133430.ifjo2kksoehtuwrn@quack3>
+ <ZlSzotIrVPGrC6vt@infradead.org>
+ <20240528-wachdienst-weitreichend-42f8121bf764@brauner>
+ <ZlWVkJwwJ0-B-Zyl@infradead.org>
+ <20240528-gesell-evakuieren-899c08cbfa06@brauner>
+ <ZlW4IWMYxtwbeI7I@infradead.org>
+ <20240528-gipfel-dilemma-948a590a36fd@brauner>
+ <ZlXaj9Qv0bm9PAjX@infradead.org>
+ <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529-marzipan-verspannungen-48b760c2f66b@brauner>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-From: Zheng tan <tanzheng@kylinos.cn>
+On Wed, May 29, 2024 at 09:40:01AM +0200, Christian Brauner wrote:
+> Yeah, that's exactly what I figured and no that's not something we
+> should do.
+> 
+> Not just can have a really large number of superblocks if you have mount
+> namespaces and large container workloads that interface also needs to be
+> highly privileged.
 
-Fixed some warnings in compilation:
+Again, that would be the most trivial POC.  We can easily do hash.
 
-aicasm_gram.c:1562:16: warning: implicit declaration of function =E2=80=98=
-yylex=E2=80=99
-yychar =3D yylex ();
+> Plus, you do have filesystems like btrfs that can be mounted multiple
+> times with the same uuid.
 
-aicasm_scan.l:417:6: warning: implicit declaration of function =E2=80=98m=
-m_switch_to_buffer=E2=80=99
-      mm_switch_to_buffer(old_state);
-      ^~~~~~~~~~~~~~~~~~~
-      yy_switch_to_buffer
-aicasm_scan.l:418:6: warning: implicit declaration of function =E2=80=98m=
-mparse=E2=80=99
-      mmparse();
-      ^~~~~~~
-      yyparse
-aicasm_scan.l:421:6: warning: implicit declaration of function =E2=80=98m=
-m_delete_buffer=E2=80=99
-      mm_delete_buffer(temp_state);
+Which doesn't matter.  Just like for NFS file handles the fs identifier
+identifier plus the file part of the file handle need to be unique.
 
-Reported-by: k2ci <kernel-bot@kylinos.cn>
-Signed-off-by: Zheng tan <tanzheng@kylinos.cn>
----
- drivers/scsi/aic7xxx/aicasm/aicasm_gram.y       | 2 +-
- drivers/scsi/aic7xxx/aicasm/aicasm_macro_gram.y | 2 +-
- drivers/scsi/aic7xxx/aicasm/aicasm_scan.l       | 7 ++++---
- 3 files changed, 6 insertions(+), 5 deletions(-)
+> And in general users will still need to be able to legitimately use a
+> mount fd and not care about the handle type used with it.
 
-diff --git a/drivers/scsi/aic7xxx/aicasm/aicasm_gram.y b/drivers/scsi/aic=
-7xxx/aicasm/aicasm_gram.y
-index 65182ad9cdf8..ac96fb9152b6 100644
---- a/drivers/scsi/aic7xxx/aicasm/aicasm_gram.y
-+++ b/drivers/scsi/aic7xxx/aicasm/aicasm_gram.y
-@@ -103,7 +103,7 @@ static void add_version(const char *verstring);
- static int  is_download_const(expression_t *immed);
- static int  is_location_address(symbol_t *symbol);
- void yyerror(const char *string);
--
-+int yylex(void);
- #define SRAM_SYMNAME "SRAM_BASE"
- #define SCB_SYMNAME "SCB_BASE"
- %}
-diff --git a/drivers/scsi/aic7xxx/aicasm/aicasm_macro_gram.y b/drivers/sc=
-si/aic7xxx/aicasm/aicasm_macro_gram.y
-index 8c0479865f04..d787b2f89007 100644
---- a/drivers/scsi/aic7xxx/aicasm/aicasm_macro_gram.y
-+++ b/drivers/scsi/aic7xxx/aicasm/aicasm_macro_gram.y
-@@ -62,7 +62,7 @@ static symbol_t *macro_symbol;
-=20
- static void add_macro_arg(const char *argtext, int position);
- void mmerror(const char *string);
--
-+int mmlex(void);
- %}
-=20
- %union {
-diff --git a/drivers/scsi/aic7xxx/aicasm/aicasm_scan.l b/drivers/scsi/aic=
-7xxx/aicasm/aicasm_scan.l
-index c78d4f68eea5..8214d7eaef1d 100644
---- a/drivers/scsi/aic7xxx/aicasm/aicasm_scan.l
-+++ b/drivers/scsi/aic7xxx/aicasm/aicasm_scan.l
-@@ -56,6 +56,7 @@
- #include "aicasm.h"
- #include "aicasm_symbol.h"
- #include "aicasm_gram.h"
-+#include "aicasm_macro_gram.h"
-=20
- /* This is used for macro body capture too, so err on the large size. */
- #define MAX_STR_CONST 4096
-@@ -414,11 +415,11 @@ nop			{ return T_NOP; }
- 					    yy_create_buffer(stdin,
- 							     YY_BUF_SIZE);
- 					yy_switch_to_buffer(temp_state);
--					mm_switch_to_buffer(old_state);
-+					yy_switch_to_buffer(old_state);
- 					mmparse();
--					mm_switch_to_buffer(temp_state);
-+					yy_switch_to_buffer(temp_state);
- 					yy_switch_to_buffer(old_state);
--					mm_delete_buffer(temp_state);
-+					yy_delete_buffer(temp_state);
- 					expand_macro(yylval.sym);
- 				} else {
- 					if (yylval.sym->type =3D=3D UNINITIALIZED) {
---=20
-2.25.1
+I don't understand what you mean.  If we hand out file handles with
+fsid that of course needs to be keyed off a new flag for both
+name_to_handle and open_by_hnalde that makes them not interchangable
+to handles generated without that flag.
 
