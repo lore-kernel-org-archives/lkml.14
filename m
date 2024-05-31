@@ -1,137 +1,85 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD81916E867;
-	Fri, 31 May 2024 16:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BF116D9AC
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 16:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717174710; cv=none; b=fMeGX2vZ6jdoEjvVo7s4ID3hWS8esWhdC6UDql80J+uFFrKAVBxsr4mjR/+pyGuLboJvbXxHx+VP7uAiHUe9G1lWYTlzLvyWXxl6UuBGB4QGfUJEAa1yjtyjKHziMaOqHOkP6DaAvKrHApGBosVoPAgNKpAe0LX3pIFIiwy3AJ4=
+	t=1717174718; cv=none; b=h0SCuYzbqO5nvOCueRL7mRMWnfWKFaMlJ0bi4bYtb5ew4vEnmF97VKeyC17UaexFh0nsKlNxstrylXZ2h7VJ2ku8l/WDnVWjgysvam65WSQHBdzhmDePB3qZD8LyMpVSYrcXulYXCeUoc0nKMb43k07uUg32fFBYiykELb7GKj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717174710; c=relaxed/simple;
-	bh=aGRrRjKhc2q1dy0PbGkr1B3BphvFlUHcgPTDtktT34s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SwV/c9e6R6KtAIZ+V3CykQuv++2G5Ph73gYDG+GA1uKKst3J1C0x7vFN2Euq8sQ5dqsBGu+CeF1bGPHsjpzcuM+Z4TL+1p2tK160NeeQPatgorvimMuRc+lsH4Qpzr5YjysdytB37dRy6lGzaDe/U/ytTJaXreECNAm64AbGvLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vimy6Tsk; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717174718; c=relaxed/simple;
+	bh=JP5FgACki9lWVStVz0zZfzJonGjYnYCtNW2WTeX1HD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rolew4h8UFyV9ixnddcD8ZIQcRt6hacdiwf5CSATD7lQSiCiDD5fTPtkFBpJDFsZaiQXU6/tYtcMCd4iTFma93aea0dY2+PN7kAVbKCRZw240R7FIIP/r9w8cf2FZ+cupdLKfebHn3ikVOE15A1VglfbWaFywxbh04l4LFI914E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SLPHo0v7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vimy6Tsk"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44VGvpkq059573;
-	Fri, 31 May 2024 11:57:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717174671;
-	bh=1q9tDaD0alJjEVrUhFUirlBLwy8o73Gn1mGNhE6sui8=;
-	h=From:To:CC:Subject:Date;
-	b=vimy6Tsk4Y5bo9v2s9c8x023VB9kV+38nCCP7sFcZBlUAofKFiaVD/wpaDBmDNuwj
-	 +PlEcUQjB7ObLSGCw1MMLSwJFm434ZJawoHE/+bxe35wP/T6f89xOOxol705TSBVg7
-	 WgImnnxZgdIkpq7zrkMHx6jhp5yquiDd8tVJHLkg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44VGvp1g007698
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 May 2024 11:57:51 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 31
- May 2024 11:57:51 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 31 May 2024 11:57:51 -0500
-Received: from udit-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (udit-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.18])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44VGvjiU023353;
-	Fri, 31 May 2024 11:57:46 -0500
-From: Udit Kumar <u-kumar1@ti.com>
-To: <vigneshr@ti.com>, <nm@ti.com>, <tglx@linutronix.de>, <tpiepho@impinj.com>,
-        <w.egorov@phytec.de>
-CC: <andrew@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Udit Kumar <u-kumar1@ti.com>,
-        Kip
- Broadhurst <kbroadhurst@ti.com>
-Subject: [PATCH v2] dt-bindings: net: dp8386x: Add MIT license along with GPL-2.0
-Date: Fri, 31 May 2024 22:27:25 +0530
-Message-ID: <20240531165725.1815176-1-u-kumar1@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SLPHo0v7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E82DC116B1;
+	Fri, 31 May 2024 16:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717174718;
+	bh=JP5FgACki9lWVStVz0zZfzJonGjYnYCtNW2WTeX1HD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SLPHo0v7a6sqPnvGBsg0go+M7RdhsO5GPIulJIHTCiIS+3n+3TiwnzUpRfxfrNiUp
+	 Uvq4TF3KU2Oxnl/uZJujuY63yEXl563XravaoIW+Dz9r2AnPQifP8R7L+oDMuGdRwU
+	 jO/EA4STPSrXIa0teUq+Je0vyLk1/U6FkA4ejzFTiCLzVpo76d+AuB8KAsvWgeMzeu
+	 Y5f2CEXMYTXd1ZJ3iPFqpAH8CDfaO3G+Pfx4ZSvyiLDNdlBDiUv8Su33CrCLFMUSnO
+	 Le36+n/b8XIu0TMdpIiSV2Fid5VI2bNtXgmkbd8K7gpGFXni4F6u95kXjr38qzujvS
+	 efU62MRSQ6i0A==
+Date: Fri, 31 May 2024 17:58:34 +0100
+From: Lee Jones <lee@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, johan@kernel.org
+Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/2] mfd: lm3533: Hide legacy platform data in the
+ driver
+Message-ID: <20240531165834.GA1204315@google.com>
+References: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
+ <20240508104848.846580-2-andriy.shevchenko@linux.intel.com>
+ <20240531150048.GO1005600@google.com>
+ <Zlnn89KPSHSCp3Bh@smile.fi.intel.com>
+ <20240531155445.GS1005600@google.com>
+ <Zln9lRvKJYwlSM3l@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <Zln9lRvKJYwlSM3l@smile.fi.intel.com>
 
-Modify license to include dual licensing as GPL-2.0-only OR MIT
-license for TI specific phy header files. This allows for Linux
-kernel files to be used in other Operating System ecosystems
-such as Zephyr or FreeBSD.
+On Fri, 31 May 2024, Andy Shevchenko wrote:
 
-While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
-with latest SPDX conventions (GPL-2.0 is deprecated).
+> On Fri, May 31, 2024 at 04:54:45PM +0100, Lee Jones wrote:
+> > On Fri, 31 May 2024, Andy Shevchenko wrote:
+> > > On Fri, May 31, 2024 at 04:00:48PM +0100, Lee Jones wrote:
+> > > > On Wed, 08 May 2024, Andy Shevchenko wrote:
+> > > > 
+> > > > > First of all, there is no user for the platform data in the kernel.
+> > > > > Second, it needs a lot of updates to follow the modern standards
+> > > > > of the kernel, including proper Device Tree bindings and device
+> > > > > property handling.
+> > > > > 
+> > > > > For now, just hide the legacy platform data in the driver's code.
+> > > > 
+> > > > Why not just rip it out entirely?
+> > > 
+> > > You mean the driver?
+> > 
+> > The unused platform data.
+> 
+> Good question. In any case these drivers are non-functional anyway without OOT
+> board code. If we rip out the main platform data completely, the logical following
+> question arises: why do we need the per-device platform data? If we rip that out,
+> we basically make non-functional driver a 100% dead code. Hence what you propose
+> mostly equals to ripping out the drivers completely.
+> 
+> TL;DR: with the main platform data being ripped out the driver code will be in
+> inconsistent state.
 
-While at this, update the TI copyright year to sync with current year
-to indicate license change.
+What do you think Johan?  Do you see any reason to keep it around?
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Trent Piepho <tpiepho@impinj.com>
-Cc: Wadim Egorov <w.egorov@phytec.de>
-Cc: Kip Broadhurst <kbroadhurst@ti.com>
-Signed-off-by: Udit Kumar <u-kumar1@ti.com>
----
-Changelog:
-Changes in v2:
-- Updated Copyright information as per review comments of v1
-- Added all authors[0] in CC list of patch
-- Extended patch to LAKML list
-v1 link: https://lore.kernel.org/all/20240517104226.3395480-1-u-kumar1@ti.com/
-
-[0] Patch cc list is based upon (I am representing @ti.com for this patch)
-git log --no-merges --pretty="%ae" $files|grep -v "@ti.com"
-
-Requesting Acked-by, from the CC list of patch at the earliest
-
-
- include/dt-bindings/net/ti-dp83867.h | 4 ++--
- include/dt-bindings/net/ti-dp83869.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/include/dt-bindings/net/ti-dp83867.h b/include/dt-bindings/net/ti-dp83867.h
-index 6fc4b445d3a1..b8a4f3ff4a3b 100644
---- a/include/dt-bindings/net/ti-dp83867.h
-+++ b/include/dt-bindings/net/ti-dp83867.h
-@@ -1,10 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
-+/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
- /*
-  * Device Tree constants for the Texas Instruments DP83867 PHY
-  *
-  * Author: Dan Murphy <dmurphy@ti.com>
-  *
-- * Copyright:   (C) 2015 Texas Instruments, Inc.
-+ * Copyright (C) 2015-2024 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef _DT_BINDINGS_TI_DP83867_H
-diff --git a/include/dt-bindings/net/ti-dp83869.h b/include/dt-bindings/net/ti-dp83869.h
-index 218b1a64e975..917114aad7d0 100644
---- a/include/dt-bindings/net/ti-dp83869.h
-+++ b/include/dt-bindings/net/ti-dp83869.h
-@@ -1,10 +1,10 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
-+/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
- /*
-  * Device Tree constants for the Texas Instruments DP83869 PHY
-  *
-  * Author: Dan Murphy <dmurphy@ti.com>
-  *
-- * Copyright:   (C) 2019 Texas Instruments, Inc.
-+ * Copyright (C) 2015-2024 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #ifndef _DT_BINDINGS_TI_DP83869_H
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
