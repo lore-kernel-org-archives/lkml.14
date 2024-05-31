@@ -1,223 +1,124 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14ADE2032D;
-	Fri, 31 May 2024 09:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FF681724
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717147774; cv=none; b=FY2l94n2R8qi+KTnqFEMUuBsXhSQ0/AmzjiFKLn61LOCrGC0My9MAgRCZWfjq7qPf+AH6fTwqbXBewwdzsf3o924ZY3FrSlBb1DT/HdXZq/A0cMclbmPJsfMSbJtb74m8qm8Pq71Qu4nak5ZTCWm4pgJlvJWIi9uO42764GynM8=
+	t=1717147924; cv=none; b=nntb3lIKU57b9MeVqqv3EIXeReYGo8yIJrJLU6lZGGB5LfQ/BnuznyLup2HSfIG+/+z9WXKatTY0Sf95LFR6j71rL+vJ1DqnJ3TmXuFMNtdiMAPETQ/cSF2mvIwCVHAjTbe2L1kGabUVG/v6QCYNpnDK/GUkARxu3GMCrmOab84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717147774; c=relaxed/simple;
-	bh=EN3yAsbmjnvvPDgNC90DZ+p+kvaIL34JaNYFOwcvgsQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UIumBWxO3mGzMaDQDuG+5u3REmC09Lemj+gI7FGb1VJZWXnlBg141SdEU/XtDS7PN7JGWnYzhjNYRST/wawM7IkTcjRy6TEf4A+GspP+ii9EIGUT+CKl9pTu86uTVLeAWCKadyiyZPK43cPGyrhfjh3MO35iCLqFq/h+44qMblc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=uPrMofPP; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1717147924; c=relaxed/simple;
+	bh=5U7FyklsEaq5Z77Xh71GF62p+k3mhNStH7+QJ6d8CG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4gK0uuEJuybxrDWxSZ045rEAu3INc7pZDFpwon1nK6dORTEJRAK7UMXJd88BfZ+my5uK0JkqbbIRqTtD8Uw13fIqZDDhflYbFpWI3CNiCBAMY8t0LkRZq0SPNET2vmkfLPZBl6uRVmSBF+uZI7I64T3r/s8L/oCJBv1c2Ra3TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hOWHqTxx; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="uPrMofPP"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V8p9aQ013187;
-	Fri, 31 May 2024 05:29:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=t8hvnnR4gL7szMpPoyw0DjEfOAO
-	Y0g/eXoIWy/G7HoQ=; b=uPrMofPPSilPfE8UMTu7ixypwlZ5OzY8OMzWMfs5Q0Q
-	mUO/wtwIJ6HPa5qKKj5uuvQmokvFpKKTpK65JZ1uAqgEqFNyxu0J/eMfCbZm1UC4
-	t48ArHNnw6npwW6ZL3uYGGymB8syQ1QxM3lp4dsqWsdMBvxfSAv9mNQ553M27nYf
-	Uz5h+2lIiGpabuyIGvRp5Ej0z/ATQVH5DhNEBHPScal+OKc2ZLVgQXl4rxUafLJ5
-	EU43PGhoroqSvs8YDH69KC+DrTTujU9SLfFcQWjQl5JyjkT2JaEz3Rw8Xj00hiIT
-	YXmP4ItwYKIDcOylQpNUIIUy63yy5jdxr8zVJUx770A==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3yf60qh6rb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 05:29:19 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 44V9THKn046249
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 31 May 2024 05:29:17 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 31 May 2024 05:29:16 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 31 May 2024 05:29:16 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 31 May 2024 05:29:16 -0400
-Received: from HYB-hYN1yfF7zRm.ad.analog.com (HYB-hYN1yfF7zRm.ad.analog.com [10.48.65.147])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 44V9T4nm001182;
-	Fri, 31 May 2024 05:29:06 -0400
-From: ranechita <ramona.nechita@analog.com>
-To: <linux-iio@vger.kernel.org>
-CC: ranechita <ramona.nechita@analog.com>,
-        Jonathan Cameron
-	<jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich
-	<Michael.Hennerich@analog.com>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH v2] dt-bindings: iio: adc: add a7779 doc
-Date: Fri, 31 May 2024 12:26:59 +0300
-Message-ID: <20240531092704.21255-1-ramona.nechita@analog.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hOWHqTxx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=duxs
+	2uujR9NRLXhAk81tC9D0XnsOzJhWFLu0vA/jvfo=; b=hOWHqTxxNcqGINU4ZS5V
+	8MKGNRQ1ywH86zYBzxlq9zwDNbGRiiSw5RvoUrm48F2QpF0DCXRMrgO1kjOrvHzs
+	4czC037sbomdEVd9YlqOIwXxeyhEw9stc5w2H33Wdz1y61ck7YCnA6DUZG3Nahtb
+	XNQWWa/d8HSv7t8HZv5J9/+MT9/VFmZfwwa48cmWDpIkg7TvIGzISVhjTr1XaOWz
+	27CkblNe7VFsPOMdAPFv1s9oy9EfYIKgHFXApaatbxu3BnLUYeHxS8ruz8//uZMM
+	IFXNJ4LCDGR66sMqy3QBipWsNdt2fB4qCdn/V6OfG2cnFhbkSCA45K4eYexWXN0g
+	6A==
+Received: (qmail 1124244 invoked from network); 31 May 2024 11:31:55 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 31 May 2024 11:31:55 +0200
+X-UD-Smtp-Session: l3s3148p1@C1GEp7wZ4rFehhtB
+Date: Fri, 31 May 2024 11:31:54 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	linux-hwmon@vger.kernel.org, Hristo Venev <hristo@venev.name>,
+	=?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH 2/3] hwmon: Add support for SPD5118 compliant temperature
+ sensors
+Message-ID: <20240531093154.rna2vwbfx7csu2sj@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	linux-hwmon@vger.kernel.org, Hristo Venev <hristo@venev.name>,
+	=?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>,
+	Paul Menzel <pmenzel@molgen.mpg.de>
+References: <20240529205204.81208-1-linux@roeck-us.net>
+ <20240529205204.81208-3-linux@roeck-us.net>
+ <34a4292e-c4db-4b40-822e-b892e1444045@t-8ch.de>
+ <16e448f1-cfc9-4e88-b3f1-55e1856d1405@roeck-us.net>
+ <0a2ed64d-06d9-45e8-a054-4ded4429f952@t-8ch.de>
+ <ffd72953-ecd2-405a-ad6d-236143b26946@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: WIHj57tDlcTo0k9EgzQtG_-quuHgbV61
-X-Proofpoint-GUID: WIHj57tDlcTo0k9EgzQtG_-quuHgbV61
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_05,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0 phishscore=0
- clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405310068
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xeb7swmh4n3lar4t"
+Content-Disposition: inline
+In-Reply-To: <ffd72953-ecd2-405a-ad6d-236143b26946@roeck-us.net>
 
-Add dt bindings for adc ad7779.
 
-Signed-off-by: Ramona Alexandra Nechita <ramona.nechita@analog.com>
----
- .../ABI/testing/sysfs-bus-iio-adc-ad777x      | 23 +++++
- .../bindings/iio/adc/adi,ad7779.yaml          | 87 +++++++++++++++++++
- 2 files changed, 110 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
+--xeb7swmh4n3lar4t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
-new file mode 100644
-index 000000000000..0a57fda598e6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad777x
-@@ -0,0 +1,23 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/filter_type_available
-+KernelVersion:  6.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading returns a list with the possible filter modes. Only supported by
-+		AD7771.
-+
-+		  * "sinc3"	- The digital sinc3 filter implements three main notches, one at
-+				the maximum ODR (128 kHz or 32 kHz, depending on the
-+				power mode) and another two at the ODR frequency selected to
-+				stop noise aliasing into the pass band.
-+
-+		  * "sinc5"	- The sinc5 filter implements five notches, one at
-+				the maximum ODR (128 kHz or 32 kHz, depending on the
-+				power mode) and another four at the ODR frequency
-+				selected to stop noise aliasing into the pass band.
-+
-+What:		/sys/bus/iio/devices/iio:deviceX/filter_type
-+KernelVersion:  6.1
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Set the filter mode of the differential channel. The current sampling_frequency
-+		is set according to the filter range. Only supported by AD7771.
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-new file mode 100644
-index 000000000000..632e9ec0ab44
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7779.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/adi,ad7779.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD777X family 8-Channel, 24-Bit, Simultaneous Sampling ADCs
-+
-+maintainers:
-+  - Ramona Nechita <ramona.nechita@analog.com>
-+
-+description: |
-+  The AD777X family consist of 8-channel, simultaneous sampling analog-to-
-+  digital converter (ADC). Eight full Σ-Δ ADCs are on-chip. The
-+  AD7771 provides an ultralow input current to allow direct sensor
-+  connection. Each input channel has a programmable gain stage
-+  allowing gains of 1, 2, 4, and 8 to map lower amplitude sensor
-+  outputs into the full-scale ADC input range, maximizing the
-+  dynamic range of the signal chain.
-+
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7770.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7771.pdf
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7779.pdf
-+
-+$ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7770
-+      - adi,ad7771
-+      - adi,ad7779
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  spi-max-frequency: true
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vref-supply:
-+    description:
-+      ADC reference voltage supply
-+
-+  start-gpios:
-+    description:
-+      Pin that controls start synchronization pulse.
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adc@0 {
-+          compatible = "adi,ad7779";
-+          reg = <0>;
-+          spi-max-frequency = <20000000>;
-+          vref-supply = <&vref>;
-+          start-gpios = <&gpio0 87 GPIO_ACTIVE_LOW>;
-+          reset-gpios = <&gpio0 93 GPIO_ACTIVE_LOW>;
-+          clocks = <&adc_clk>;
-+        };
-+    };
-+...
--- 
-2.43.0
+Hi all,
 
+> > Wolfgang seems to think it's important:
+
+Wolfram, please.
+
+> > https://lore.kernel.org/lkml/tdia472d4pow2osabef24y2ujkkquplfajxmmtk5pn=
+xllsdxsz@wxzynz7llasr/
+> >=20
+>=20
+> Ok, but that doesn't explain the reason. Wolfram, Paul, why do you
+> think this is needed ? Note that I am not opposed to adding spd
+> eeprom support, but I'd like to know why I am doing it before
+> I spend time on it.
+
+A working eeprom driver is needed to get 'decode-dimms' from the
+i2c-tools package working. Jean reported that EEPROM access for DDR5 is
+different from DDR4, so it needs a separate driver. And
+i2c_register_spd() then needs to be updated to use the new driver for
+DDR5.
+
+Happy hacking,
+
+   Wolfram
+
+--xeb7swmh4n3lar4t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZZmQcACgkQFA3kzBSg
+KbYuTg/6A5ij4YXV/CfauyFRASldgEnInfw2WdYkuXzCtfXvsZCRvP15BLSBEH9K
+VKEnsN6sysLVyMnIJnfH8/hQ+6eOniAio8fcPIcxHQyWZOOZeqEa5pOyBuGoXZYS
+/5DTYEjeII6iOILpNCQa2s6gbK3IPZioCheK8WliLIiTYO5vpjg4QVjHO7R6MK6o
+u/Fp8goQNofhZRqijddVMVc1m3r8EAgfU5tb+DLgM3x9WWzl0IFWKAPbtkcyuTPs
+kVwaJj35pWJG6zAQKmu+6213QIlmFVZM8ODPtTvYD1lc9Msrnq366u+SCrWuu5vF
+zxmZkp8+C1uHq/jXroOEQaYZQJ9ncMDtZ/aDhwV7nZz0RfhPTGSq7PdTg/q5S1gW
+bQMt3uGdDaTGD70IAHoXZjKMBO6J2mDAmjvLX89krNCNpj9r3rqekJU8Rr6g7Bji
+XFpPaCvZHEC7QswW07/TIDhCF5dgTaUIQxtQvYcb1ioROTFFenqMk4LNkJ1zLGtb
++lr4D6Fyqv2Is2ZEVSQi9Y6Xh9Q5zS4tYcbhiItsnxjOqGQfQF3aPRvreeauFEyk
+DdGuiSZWrub8Gg2EsOUAgrL6gJ55uu9s14Ke2UsxcS7/GWfDyK/tJACWzpW2Swdc
+8j5H3E1hxJFiXVloKf040i9jT0odS0H2fSXHyaWpjhJTJbc9e28=
+=gjGP
+-----END PGP SIGNATURE-----
+
+--xeb7swmh4n3lar4t--
