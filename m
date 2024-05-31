@@ -1,35 +1,71 @@
-Received: from zg8tmtu5ljy1ljeznc42.icoremail.net (zg8tmtu5ljy1ljeznc42.icoremail.net [159.65.134.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69CF0D26A;
-	Fri, 31 May 2024 01:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.65.134.6
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302554C8F;
+	Fri, 31 May 2024 01:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717118990; cv=none; b=tBwtAMY5HXxnfi0H7VHw8+s58qbwUL3FXiDr64rAMzKg79S3FStlY8ygDV/c6J/HBksvXXs6pwkqpSu5GjazNoPmbLHtGtCTk6exos+++HHPBU/2E5aM8S34u3C0t0p+bu6QSw5X07a8GdI+1nw1k3tmKS+Lb2iLD06enNytQFg=
+	t=1717119137; cv=none; b=mJhjGzh+ltt86WmKWxfVuyKOxVSb7I70DHvqMaCupwnW24N9/Dn5v9Q6Mk7yBGAaucYhbt0bwSQmnrFawRLI2i6FsJTpxNbSjIxZsnIf2+ZOXWTQay6VunFWdnYaCEQLc5Au+1L5XtTKyTCoQdidolSkGVsn3cG60SIeXtZyZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717118990; c=relaxed/simple;
-	bh=cN24PCts8cd/+uVtUS2fsYyNPhWnS9RM9MgIE/6VNN0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C//G1e6XXuM55pFGIQdwPGHTrOknEe83NFtNOIWOdihocxt2CVzdaoCb+r+olUugjvsNLvQlk4reTi2bgzphosRUNnfqGnzJmHaJK/ETRKPSqO2AotHdablPJgOquodcm/cxJtLDwPTq0gEM5Mlkmp7X7CLgaX/P7cYX100GMcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=159.65.134.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from gui.. (unknown [125.120.154.162])
-	by mail-app4 (Coremail) with SMTP id cS_KCgCnNrTWJ1lmOB00AQ--.34291S4;
-	Fri, 31 May 2024 09:28:55 +0800 (CST)
-From: Lin Ma <linma@zju.edu.cn>
-To: pablo@netfilter.org,
-	kadlec@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Lin Ma <linma@zju.edu.cn>
-Subject: [PATCH net-next v1] netfilter: cttimeout: remove 'l3num' attr check
-Date: Fri, 31 May 2024 09:28:47 +0800
-Message-Id: <20240531012847.2390529-1-linma@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717119137; c=relaxed/simple;
+	bh=nqgDqt5419QMyMvBEfbugMk0baBsDMSVWA5qg2N/pAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AiqKxqubz7x+mHMFVHKnkgpDPUxoFqWyTdxzhdbW6hc9zKW5lMe7lDsXN6TDR1AwwU7w0BFgRt7N/UKhU99GG1ZPcu9qxliZVs+9BZSJPG96PJ4FQNTAD1N9hCjOO40vNWvBL0CficMWE2zJHExPBVH3/ls4Hk6QX4UMhdG9Muo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFg1A5006773;
+	Fri, 31 May 2024 01:30:41 GMT
+DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
+ =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:in-reply-to:message-i?=
+ =?UTF-8?Q?d:mime-version:references:subject:to;_s=3Dcorp-2023-11-20;_bh?=
+ =?UTF-8?Q?=3DC529cB4SacRW7NrFUDFGM9jfyRchRmKOKw8zTRl3EW4=3D;_b=3DOtY6AaJ3?=
+ =?UTF-8?Q?p+c/PMtLIENTqVdFoMBkgc/h7t2cHJh9e06Ad1P19B6SwhvJV6Hn5Exh6QbC_7E?=
+ =?UTF-8?Q?pM2nH6qTxVQM0Y0olUkiyFjGcBo+9wgJHOVyNFrx/BuHl0YpQKglD6FNGfkwrWq?=
+ =?UTF-8?Q?1MQ_QLAA6+KiYU2Lw/EjOfAB2zbTJ1BPmzpVj39NEmr0+dwXR0L6mECiWksWZdl?=
+ =?UTF-8?Q?iBYCB63wW_cIxd3b+IByEMyfH0V37n9McKsVTLyQzfZdmL6Lm+rP/VCdQi0Yd6R?=
+ =?UTF-8?Q?ISxH1rvzwAqIVyu_cc7lDCk4ofUDaWfN/Kgs3HZm6gd8jGw1oiJSevh0ze6meXM?=
+ =?UTF-8?Q?gnZcNbVoJG6MMre1V6srZ_gw=3D=3D_?=
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8p7t3gt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 31 May 2024 01:30:40 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V1PHdJ016250;
+	Fri, 31 May 2024 01:30:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t97by-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 31 May 2024 01:30:40 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNK027418;
+	Fri, 31 May 2024 01:30:39 GMT
+Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-4
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 31 May 2024 01:30:39 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+        linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v9 03/19] x86: Secure Launch Kconfig
+Date: Thu, 30 May 2024 18:03:15 -0700
+Message-Id: <20240531010331.134441-4-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240531010331.134441-1-ross.philipson@oracle.com>
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,54 +73,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgCnNrTWJ1lmOB00AQ--.34291S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gr18Cr4xKr4DAF13Ar4fKrg_yoWkGrg_Zr
-	Wkta9rZF15Jw4qgw4UKa1fXr9rK34xWF1fuFyfX3y7J3s8twsYgrWv9as0yF17Cw1DKFyU
-	Ar4vqryru343KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
-	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
-	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
-	C2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: qtrwiiyqvtljo62m3hxhgxhubq/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-05-30_21,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 suspectscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405310010
+X-Proofpoint-ORIG-GUID: Pz8sMCrjKOF9bqhSMLqH-Lz8bz61Jabq
+X-Proofpoint-GUID: Pz8sMCrjKOF9bqhSMLqH-Lz8bz61Jabq
 
-After commit dd2934a95701 ("netfilter: conntrack: remove l3->l4 mapping
-information"), the attribute of type `CTA_TIMEOUT_L3PROTO` is not used
-any more in function cttimeout_default_set.
+Initial bits to bring in Secure Launch functionality. Add Kconfig
+options for compiling in/out the Secure Launch code.
 
-However, the previous commit ea9cf2a55a7b ("netfilter: cttimeout: remove
-set but not used variable 'l3num'") forgot to remove the attribute
-present check when removing the related variable.
-
-This commit removes that check to ensure consistency.
-
-Signed-off-by: Lin Ma <linma@zju.edu.cn>
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- net/netfilter/nfnetlink_cttimeout.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/x86/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/net/netfilter/nfnetlink_cttimeout.c b/net/netfilter/nfnetlink_cttimeout.c
-index f466af4f8531..eab4f476b47f 100644
---- a/net/netfilter/nfnetlink_cttimeout.c
-+++ b/net/netfilter/nfnetlink_cttimeout.c
-@@ -366,8 +366,7 @@ static int cttimeout_default_set(struct sk_buff *skb,
- 	__u8 l4num;
- 	int ret;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index bc47bc9841ff..ee8e0cbc9a3e 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2067,6 +2067,17 @@ config EFI_RUNTIME_MAP
  
--	if (!cda[CTA_TIMEOUT_L3PROTO] ||
--	    !cda[CTA_TIMEOUT_L4PROTO] ||
-+	if (!cda[CTA_TIMEOUT_L4PROTO] ||
- 	    !cda[CTA_TIMEOUT_DATA])
- 		return -EINVAL;
+ 	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
  
++config SECURE_LAUNCH
++	bool "Secure Launch support"
++	depends on X86_64 && X86_X2APIC && TCG_TPM && CRYPTO_LIB_SHA1 && CRYPTO_LIB_SHA256
++	help
++	   The Secure Launch feature allows a kernel to be loaded
++	   directly through an Intel TXT measured launch. Intel TXT
++	   establishes a Dynamic Root of Trust for Measurement (DRTM)
++	   where the CPU measures the kernel image. This feature then
++	   continues the measurement chain over kernel configuration
++	   information and init images.
++
+ source "kernel/Kconfig.hz"
+ 
+ config ARCH_SUPPORTS_KEXEC
 -- 
-2.34.1
+2.39.3
 
