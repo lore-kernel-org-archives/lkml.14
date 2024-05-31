@@ -1,66 +1,67 @@
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0308468;
-	Fri, 31 May 2024 00:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E1D6AB6;
+	Fri, 31 May 2024 00:41:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717116104; cv=fail; b=iu11aJEGjo5c3R5uz6xHhgHkMsN4WNZbfsyxzJzQU0itGyhxIIzgxCbBXo8XYI+lqpaENwjaFxwh+VFVdxiDQc0TszpuSKC62wZZZvkWZy2kfziQEFEZ+oky5LNkUQZOgn1fRKG5yOr0n1QLMVLz3HYP3FDx7MxpxNaVyLGzF3w=
+	t=1717116116; cv=fail; b=GRooIyGzj4qNqx94OSU1VMNvg0uxQ5THf0Lbv/es7ReASo1Y/ZcaIM1VjpTOJuZdeEjgOOLbUcczYBMlMfbg4gOjy4ZVPHBRSmgHkakaEAdoGj+Stb52u+QXoyVWQ+86vC+Ydy/d0igw7l8MyyigfpEAywdnke88thWjMe9o9fM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717116104; c=relaxed/simple;
-	bh=WV/vaBMP6WGJi5yAUUMEVdjuFC/EzXfDZv/UGO4jHmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=jCXYnHrujg+8ItkbCcQtDcpYOZw9pl4PzCCz8euaIWnXC5MxS20w7Q/n1FXiKsUETVrSFEcOSlq2llyDCwzyhgQ52Mj+0jVwJy1jSAkFyOsPsxy6EgQhMEY9edTF92eC+sTpTEj22DoilPyxM/IC25wIiZvXxVWFczrxol8fR4U=
+	s=arc-20240116; t=1717116116; c=relaxed/simple;
+	bh=13OTUR1JrftSdz5wTB2uNsIEZyqLRxhWrLppd0Mkd80=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ClTibDulNljUueFfIGCmiCPKYadSU/kPNReRrzIk3HfubkC0kPN8c9n7Hcr7SDe/Bnct/enTpIiLc4+a7lvUzqx7ZgduXXyrBFWMLSmLDgionqmKFkxHsrcVAauNFdahQZ5VL2gaAKjtuFBCAgKgZoTfS/ea0eX+bgs/6BQ/x3o=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFUsZS002189;
-	Fri, 31 May 2024 00:39:59 GMT
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFdpQj018500;
+	Fri, 31 May 2024 00:40:27 GMT
 DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:message-?=
- =?UTF-8?Q?id:mime-version:subject:to;_s=3Dcorp-2023-11-20;_bh=3DNv5/+1dZE?=
- =?UTF-8?Q?eLuiLfwOa34ZKF/wikTpCKPHBsTv/tvAeo=3D;_b=3DZRnw1B5o2uswtzq7O656?=
- =?UTF-8?Q?rXo7CXB8yA5CITtF+iwIj15dKBEFTiLN9ffY182Da7bbXG6u_VZDnTILEsEjgis?=
- =?UTF-8?Q?tu45AI8iGeHyRqbeRXsSvgmTA7KBB19z9uSp42dt5XEvWs5HpOdfPT_J2pDvj/g?=
- =?UTF-8?Q?KZrVzG2IbL36ojV1v9wrZSglkNV8ye3Jh0PCD2aCIcWmHhneKSwB7BYIanck_in?=
- =?UTF-8?Q?t0bu72XxkhSSUTl5eclI6VTrcxwGoKN1TpooNEQbO/3WBid4y4dyDDp2TWletVk?=
- =?UTF-8?Q?zbe_FIjgTTSTlKDxz6NBfdU5k3m/KAV1rbtEGp+e16Pwpki0BZ5K1/df3nIaZq6?=
- =?UTF-8?Q?QP6v3aNiD_Qg=3D=3D_?=
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8kba710-1
+ =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:in-reply?=
+ =?UTF-8?Q?-to:message-id:mime-version:references:subject:to;_s=3Dcorp-202?=
+ =?UTF-8?Q?3-11-20;_bh=3D6tVqAtBqVCFaMj0ujhY0KcsI0reA3mIzS4BhuUtBP1E=3D;_b?=
+ =?UTF-8?Q?=3DbF381lwTJuR7N54QZNwN5rw5hZJjq1pGOkBrY9Q05S3gxSxRbHRhSthrMueg?=
+ =?UTF-8?Q?Y7V8TZds_9haEgEBuQt7jgxPMVa92ZPu7lWW69yF7megzkCpSPuJncBeLnGLX+C?=
+ =?UTF-8?Q?hUqGkSEGAaxKbG_vHVFoN82RFSkT4ZhzxZyWIF/96eWoZGX+zETuFT+2bWMvePc?=
+ =?UTF-8?Q?rYuhVFvSP2M/pVbgcPeB_U43ZSuPLKH86o0PNwiBkiXOYPDzqZDfW8LgfdxX0bt?=
+ =?UTF-8?Q?oULUhBUrBxOU8XVFyhgo5HNIUP_zGJi5N7WG4R3eQMmmAxizAuspseu1dt6V41j?=
+ =?UTF-8?Q?BjGuBmI9EvBJWYZGFYOVDnZ+66Exo9te_Wg=3D=3D_?=
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8j8a214-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 00:39:58 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V0Fq5n006199;
-	Fri, 31 May 2024 00:39:57 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yd7c7pksw-1
+	Fri, 31 May 2024 00:40:27 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44UMCOER026633;
+	Fri, 31 May 2024 00:40:26 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc5098j24-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 00:39:57 +0000
+	Fri, 31 May 2024 00:40:25 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SBzOMut2qN/OqgwitdABt7vfKuE0li5pBxPj5FR7lonewCt50JdnGG1PSVTkOjRiblVv2dOZ1JoVuAPwYYQYGX8kiKJqRJURrCLl/tOj2mDEoIv83H5/U/b6kFWbQ6PRGM4UaFgV+mZfwuS/yszLTaKF0QgzMnhL3ACfUcvPI9HXHX6Kyqd8ed6npZvIdR+T1K9vGQQVJldIzNakQrzNHl9NsQdBdRS2JqPawe4I1DismD1HaYfL3rGX5xfILuvUneQknrXMDmjm+YjV+bZcYp6rFFaAGdHhlVbPrecjT/pK6EhLwaAn11t+ET+ZnvRjTK3JGfsrUMjMMIUiU94LWA==
+ b=DA79pFu2OgpYmo2m6jFUBTUMixEhLbDRu08YV1fcWqfvT/VD8Bs6Hovt/5C8yR0bi7sO0FXNw3TYscdA5cFpA19dtRCdKoVtV4KYCT4la7pFkseBU6+mQNQqqVarwqGZaA3kmEkz71Adg+anTJ9XE3e2ZqTw4trFZNtnru14LTZRlZC9Fu4nYkug0hxr4aWI5znjh+om0ZHElxv3T/hdnEI35WJi07tOeN9aiXWuEtqRb8HPrtLi0Voam8ulVPWFAVxQpgO5Cah629fruLZ4t+T4CfdwdknrVgLy3gG9I7wOFsqHv1M9MLI7qdbtJkyQ+zA8gAWj+0ncfHm/75vH4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nv5/+1dZEeLuiLfwOa34ZKF/wikTpCKPHBsTv/tvAeo=;
- b=TB3wdePojECCpYc+VzSqoYO2+IYnLr1QLRlk2s7v1HGxUEy6Ji7QbxNF9tGWFruImfPIwI9Q9++8gbJiwGsxvOr3kkR9gheT+l0f+Q0S2de4fQvEWj19x7dtbSt+slSvNJb2ndg8KujUvMhy0NgGQw8o5wzaKFziy4yIEvwFYcEZjWAEjUPks4wvnLWXv8KNY7hCeF3MA61WAn1E5cK2jRIuj3WzZiFU1t6kTiM08I+xh91Mkh3K8XtBleG2sWE06WTtTEGenMnaeFDk6A3nOsfUOHhbV2V+5asVauiFf1PJgDOQIPausjoLpbBnCba+7G3xIPp0UlTRVBn9Lv7jQA==
+ bh=6tVqAtBqVCFaMj0ujhY0KcsI0reA3mIzS4BhuUtBP1E=;
+ b=VepUCVUt/808xSH4ToX9e4aU5044IgTmDeBX5dT/rLhafVKEaFvMvdywl8SOmCZ9OE1MdlYX0N/MkhiYDY6VoXIgJLLmFqtFqXRAFP4rruq/cPaK/PgEm8LIJxcU9UteFL5te0YmQEWywOOvEQ2zeqBhaRYdpUmoGDBp8Yxo79gDAkqOXI+2/HMl+FXY8Bma90t1ZtDzu7tDcNtSbxG7axBCR6mHMNptaIcoiKpcp2SGj13pLIsiLIdlII++miV0Sru1tO5ORTilCroKF3WYFn++jmXavqKpI6k0L0ITTuE56K+DIuMfprWfKn8DJAkoeFJkpWtkiemNsMfj0vBOqQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nv5/+1dZEeLuiLfwOa34ZKF/wikTpCKPHBsTv/tvAeo=;
- b=sdPVJxl/uq/+pifDggpXSCi451ZZvOHQtLJQLDQY33JtMXh1GnvEGlT+d5ux9Qdg8EtnBcUVqyMuJgy/ylg2f1GTyNQqjA0m9BeUoHHt3FCd82p3z+8yuLJrPe+g5x/BdhQVvMJtwFC3eiwWqZ8Nc74Z90V57JQ0L9QqyAHWj6o=
+ bh=6tVqAtBqVCFaMj0ujhY0KcsI0reA3mIzS4BhuUtBP1E=;
+ b=rwMotToZZFvmKP1o5ZSIujKHxaaNqwF+R1Q/hO/n75vfbD+3IptiUfcR3j/mOKqZhXIPt5ZTZfeTgXDeIOsRwUWPS19E2/wPoUMZjvFhsQKgFtKt9o+w3vAMr2Pz8p2Kt5iCB67PkpJA8+ftrHybEICoYSNjDbwoRToYOsZlMYc=
 Received: from CH2PR10MB4150.namprd10.prod.outlook.com (2603:10b6:610:ac::13)
  by BY5PR10MB4274.namprd10.prod.outlook.com (2603:10b6:a03:206::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22; Fri, 31 May
- 2024 00:39:53 +0000
+ 2024 00:40:23 +0000
 Received: from CH2PR10MB4150.namprd10.prod.outlook.com
  ([fe80::5527:ab55:d1e7:9c9a]) by CH2PR10MB4150.namprd10.prod.outlook.com
  ([fe80::5527:ab55:d1e7:9c9a%4]) with mapi id 15.20.7633.018; Fri, 31 May 2024
- 00:39:52 +0000
+ 00:40:23 +0000
 From: Eric Snowberg <eric.snowberg@oracle.com>
 To: linux-security-module@vger.kernel.org
 Cc: dhowells@redhat.com, dwmw2@infradead.org, herbert@gondor.apana.org.au,
@@ -72,14 +73,16 @@ Cc: dhowells@redhat.com, dwmw2@infradead.org, herbert@gondor.apana.org.au,
         rdunlap@infradead.org, linux-kernel@vger.kernel.org,
         keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
         linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: [RFC PATCH v2 0/8] Clavis LSM
-Date: Thu, 30 May 2024 18:39:37 -0600
-Message-ID: <20240531003945.44594-1-eric.snowberg@oracle.com>
+Subject: [RFC PATCH v2 8/8] clavis: Introduce new LSM called clavis
+Date: Thu, 30 May 2024 18:39:45 -0600
+Message-ID: <20240531003945.44594-9-eric.snowberg@oracle.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240531003945.44594-1-eric.snowberg@oracle.com>
+References: <20240531003945.44594-1-eric.snowberg@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: MN2PR15CA0051.namprd15.prod.outlook.com
- (2603:10b6:208:237::20) To CH2PR10MB4150.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO4P123CA0109.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:192::6) To CH2PR10MB4150.namprd10.prod.outlook.com
  (2603:10b6:610:ac::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -89,251 +92,648 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CH2PR10MB4150:EE_|BY5PR10MB4274:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee0d9d13-e2d2-4658-7f37-08dc810a2f91
+X-MS-Office365-Filtering-Correlation-Id: cc87c4e1-a954-4257-50e9-08dc810a4175
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015|7416005;
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
 X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?0DSSR6VVg2j1Pnf25UyeW8Nr6IZWUl3Azi99YgT1vz+jwuJnGzpciwZ6LbsW?=
- =?us-ascii?Q?mRRAczuR38sPFTZBknodk4eQAAF4q2lX/SlBn9aE9kDNqpNy5R2gfpMxes64?=
- =?us-ascii?Q?+sPopnk4nCLiPD7Mia3qEg5OgnLaN1sn0oZR0bGa083HpWx4rNNn01iE4rbb?=
- =?us-ascii?Q?qYEd6jLgb/bXj34IpXLk1wFhH/3dgGLhqeV1LNHgkfN824YOkLc8/GtxuB0D?=
- =?us-ascii?Q?kN9acwDf1i9d+ecyJLqHHC4ST42wwOA6pUHpQHr/DHcFKmRTaHyIJ63eP+C7?=
- =?us-ascii?Q?u3e7ZiQ84ipr4ODoYwX9/dr17PQ1jcDNSrUA9pphk0CJHKzcNfjha0+7QpHF?=
- =?us-ascii?Q?4apQeAd68QTvrrmG72Z4Y3Pd1KYtRvvfDF62pSK+gmpIC15UQa1cXKD00XoD?=
- =?us-ascii?Q?YKPAJZjad98AjX5cjRbOZtYcgqN5qKclywICNROo2iKIMKZDwUT4BpnQYLva?=
- =?us-ascii?Q?2p1TRD0UKW6lUbHMsK6CM5A69HcduOU7cIvVJXOu/LisiSHeWsdbcCdpDIdK?=
- =?us-ascii?Q?q3MWbk1mQ8dFcp6Drye1+kp9bpa2L9PnYn8MOkgF20ABc1DEiU18L1axKFJv?=
- =?us-ascii?Q?VynGMnsRb1tXPoDuL0ElWoXNquOP98MG+Zx63rxmbrOEH83om/wQC7f7vCWv?=
- =?us-ascii?Q?yYJYhY+XBda5MobWp4C4twYpNuGoar1e22t/cy7Hmei7rPWL3kV+T6Xh18EH?=
- =?us-ascii?Q?TlXMlqHbGt+qfw622bM+wGo9VAes2VyaDdn3+neouQ9FfjCoNU9FGq+0nqAd?=
- =?us-ascii?Q?Qr6T57Ea02JYUdeAipXPEZ5wcx2WxFXqgtsYdY6mpBIsDUUSK4PQQF64iZd7?=
- =?us-ascii?Q?xzebcwrMM4AiMGv+4karo4qa0gck/Hf7vIZAqwvlIMBq2u+Q4WbM31qiXBKo?=
- =?us-ascii?Q?JGLhHkGBsfc972ByAcEJuFvQaXWt2G9Lu/JEwvYXwfBhpnaOPHxvezdy1ue2?=
- =?us-ascii?Q?VQijQFZ4QsFQG7+KOs/daZ8iqVE5Os4Zg9IXzNentlw2vxQhX4/XJ2261J8n?=
- =?us-ascii?Q?qYhv71817TG89qW9yZrFSkEJzx2AnGfSdpXA5OM9ymjm8tJofQxv2tCQklcP?=
- =?us-ascii?Q?37KI8sgsHMSottxr6eLGxpXB96uSu0LHIRUbeQBoK8iNIi5Qpvgg2d+kp+hA?=
- =?us-ascii?Q?KO4wHgYUSdpMAoBirTMwWl7/qc44HusYv50hSALfqfLQPGcIvdYB0RIeQkAG?=
- =?us-ascii?Q?D8CqYBcYK4gYcQ6AQ5MuxiYP+UAYwDuS0XQQJItq/xpp9Gh0TfvFBPypczkC?=
- =?us-ascii?Q?mVHlUw5HW4cFm9dy7pnpc4B8/pFg/PzdtAwSAisjbw=3D=3D?=
+	=?us-ascii?Q?0eKBoPX4qEBAiVq6TT+4LAMa/IFpxEfEQcVTJzpR9sTTghecQ3AErzwkh3TI?=
+ =?us-ascii?Q?8MdqggQSB47RjfYYEvjmNIKWz7v0637VTWOU0mI62dPIdy5JIGET8GyriYTQ?=
+ =?us-ascii?Q?rjzF0fJo5/+0SJK+nFysefEWIecvrRYthZsbC8ZrS5JgyLp9USOuY3tx1Wpk?=
+ =?us-ascii?Q?mxolMLevKu7ffisYVpneXRlkdOL9KngcU/kcTYJZBBvvjTSAJ6B9eQebYNUz?=
+ =?us-ascii?Q?HJ+tAqrttKJfdwzBA33YbyczRgtF7efwawpFLk9xyMQi2SvYK+AJhbisjhyk?=
+ =?us-ascii?Q?mv4RleMJPduCId4ORgBt/e2+cDhFr7gbaIOnTHFnMAB6GRcaPp9D6tvKy6d3?=
+ =?us-ascii?Q?dFiBD1MnMf2Apm6Wtpxkx/9bg7jkzxQj+ieAZhIqiqO7JfnMSQEfeghzaP/F?=
+ =?us-ascii?Q?ER2INEbpXcAdJ2JViuW+78WdP5QN7wCulMEsUP+Sz5uu1HtLRqTKtUAIZ/1h?=
+ =?us-ascii?Q?sBViErjzjFhynKXbFEuBeI4JXZEbJtWK3WtcqqO0krnlsLdj2ZVOW0tjRFBM?=
+ =?us-ascii?Q?1EsX2awcy5hTEOgLHAUEP7WmXhxJSZpAv57l84CEF2EAPcz0FJ89pME0EClY?=
+ =?us-ascii?Q?8DLTxF3qXHz/XJp2OynjmUO3SXpaOjVIY4e63SDztKdeHGe5hEhB7Z239mW3?=
+ =?us-ascii?Q?cIutMSYJ4V0BsXS2uBHkvmIZmwjfMBA6exRjeQt6xR9FNHjkZoij6VRXm2sO?=
+ =?us-ascii?Q?8PE2AiwzFKBg4MBrqm9pNGyM02CR/c8ybvs3fDnnFtWGgNnJJIqR13ZPHWS4?=
+ =?us-ascii?Q?BK+xBqAxt1Afpk2CoIq5Oyby++T1mNRHm7nYs15+GGv/Nfsughm0nzr4oBBs?=
+ =?us-ascii?Q?+Ew8zPJg2PJf+ZPPz4mZdQk+/vmCVsJDbauS5xiK1o5VMeNDpZgsMIH7ZNzG?=
+ =?us-ascii?Q?pxF+rMipOYL627WMVhB0Ymof/wdeWf7QhRLMXe02mBRn7ZNTovjIH5/0a5EP?=
+ =?us-ascii?Q?hSmH1JLZfAJRdtGY3SZVlfkvOtK5t4y2U/LiDYbnNpeKUTGGIF5bsk1XCY5I?=
+ =?us-ascii?Q?YOIgL2l/rJC0l095aflflRuQD2c2ueZOtE7Yl+pVW9wenzDN75dkjHvqu6SP?=
+ =?us-ascii?Q?S/bSrCsh6PmUyPP9+V45C6UWEm+W9Hh0uy0CmcFhqMsKOL0vzJ5JzusUamJG?=
+ =?us-ascii?Q?ZD45vj2SxMGS9yk4jPzKBluSkwVi4XAf71xDWsfdC69sXi0G7PocT60NG4XX?=
+ =?us-ascii?Q?Fbb8xx3Gc5KTvcr6/9ImvWMDJzAsn7+/SipTM0N56b1zvdult06QSusbedQw?=
+ =?us-ascii?Q?MHqKK+V4sQKmDuGX8temTzMy9QJ18z6rhJbS6p8J3w=3D=3D?=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4150.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4150.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?eifnUsw1hulDYJpZVblPdr8LN4Is3UHCD0pPA7TB0n0U7eL1IS6766hBQya1?=
- =?us-ascii?Q?8r2wsGanE5ilPXUIlrrtB6iBODC3H7rF73R52Io3j8kAQWBW1UMp4XlYHmRx?=
- =?us-ascii?Q?wk9mSp/iejJL54KU43EqspXVnjw0VDYfX0UWc4RVc26ULGcbLEpDqAG11flX?=
- =?us-ascii?Q?cM5ePHIqfUb9jQZEVN+aX2OtVYvslzBi3pttx/DlEKTt8d1jzQUBL0A48fgh?=
- =?us-ascii?Q?lrx0jOAV0bTphtdkUe3xfAtXUzzigKX+0ulg+mb4XmVvTbGUdLlY4ILbRXd1?=
- =?us-ascii?Q?lu6BLV7fb5+HoQyolBkHMw+a5+DzX6Sve6m76GBvOC9/I6vKRK2QnYGSl7//?=
- =?us-ascii?Q?2Oj/SU3mNI4QDACzhlVJSou08Tc5o2gN5N7I9I+hglgPmTDAN8gCylm6lNFe?=
- =?us-ascii?Q?w8+QYuxfLwza+QtRAES2HLEd90Cw1RuhC6w5ENQV0YsMIDd8ZoK7IT840GhO?=
- =?us-ascii?Q?i3CInh6mGkWxZb8k4eS9k8EVe/2xpMzydoNlxPUQvLR2H1EM6QEHrtJv8WKP?=
- =?us-ascii?Q?mu8qi4il/ouJ96ZkyeLSifaCePs2JD8S/iHf1spwabvwPs/Iw+kP0iN2u5AU?=
- =?us-ascii?Q?hL/UHqvU0JOeakw7JZl0U6iWYaB8j89uzOL6/Ass8kRpNArdtYjkeh2H+h+Q?=
- =?us-ascii?Q?k4uVGpFMOG+iiPdGjMtfqm+dq54UxiRuY3Txz+EhqQhA/uIabQSKnJaYuj9r?=
- =?us-ascii?Q?sgElSM1LHTpy28Qk0WD9VVSadUphsngf03BvIDfVPXHXEHZiSGjzjjhtEwIo?=
- =?us-ascii?Q?oUCVVsDtB1h1E7lMwEDSKlsCgWXCdGvJlWyPbjRssYxeFcWa1D0obU51amxF?=
- =?us-ascii?Q?KFgf4iKYzjNmsZ0zcSs224GGfGArcYs+4kkSiElA6DkYce215+gtckQ1H7gP?=
- =?us-ascii?Q?YfLfntIEjNGScNvvJxLBf99hPEKcf8Ys/OVyPCOBq05vvs6hvnDvGYxY5YKO?=
- =?us-ascii?Q?mrSOZLJpZESmCtpNmIxq8xZapscTNzJU2Uylg/RdSLA+RtpMBhC8eSLVryUU?=
- =?us-ascii?Q?u2KCHWbF29ECZEd7auL+XMqwPNzC/lnFyVe/tmUlATi6YCOO3rGXFtXQrIbT?=
- =?us-ascii?Q?gif/3bj+3dijrR1pPvoHRPFNuyHISwtqNE2tzq4JIRHJLiG9REyMgIhb5ile?=
- =?us-ascii?Q?1Cl9xGpDs1HDDC7iU/9RB3snYemV1/MRK5VZkW7JyIlJpld7cV9uBvikOgel?=
- =?us-ascii?Q?s0tlZh9O7YSUrvZGFgdYIum0+ZZnYylZb5N7xnc/uQzB1Qxw6U6luCro0ApQ?=
- =?us-ascii?Q?eRiZAMO+x6ShA6l4lMyVKxjNL+wJ7oH6yf5STXxpRsKmV+XiLP4eoxBMxtge?=
- =?us-ascii?Q?AXdv5evLI5FgnlVF+tgWr7nXuXqvJpz9uX/Hc+TbCqfSomvQDuGjQeXWcoNy?=
- =?us-ascii?Q?wGL7SklBRLG3l7pJY5bI5weA6GASSQnaJ9TRSEGbYRj1wSQABRi54D+4Sj4Q?=
- =?us-ascii?Q?qQTSKPwzlaXnNu4AlN7XpLo1z+5U0jvnNWJmAn0TVz5LCDZsEhN45Dzbx2KW?=
- =?us-ascii?Q?UQB+77WZdhByIxSZd9ox4+j2ioUnT2mQqKaqTT4WDe9sSqIaJlwy3WNT9uBj?=
- =?us-ascii?Q?piiX182IX9GIbHHSFyMMTIEYMqqtVktkYMV0of3blannEd081Z/07qIH+3XY?=
- =?us-ascii?Q?Ig=3D=3D?=
+	=?us-ascii?Q?Lyu5279BsBR7QJNq5dyZhkgcLeQfMP4/GwdHk25jBcR9ynBYSB5YoZ5X4sPs?=
+ =?us-ascii?Q?YQN5Jzb32Q+W3RbLcJc7Z5qUYsL1kxJPcyAZXeBmEQjC36fyYqCzY8D2B6K2?=
+ =?us-ascii?Q?goT8KyXXfhlGZLxAYpIzxkwCDzOj0rj7GD2zWswRiEvhVsNW8dAjqdDCtzya?=
+ =?us-ascii?Q?L1Da+JMrC14HPvz1D0Xl4XD9KoQOa4ipFF4XeusDjg+3prho4+KJBWC4mb8L?=
+ =?us-ascii?Q?QtufNhISjNtyMhDrRIF2CbIIsNR7G8De6ZoSHuGLINT+abhYXld8ZscY1lfW?=
+ =?us-ascii?Q?KzKqtXhgZ2x+4c/9kiyWPZgf2LPSqC0a8dnHVPtN4WkaXVfvP6qm095kVjzp?=
+ =?us-ascii?Q?hyDdfo4+GcoYQ2SPVaNBix3GvFxOQWxDJl1SSLUT7qRKQFju0ri3shfbr2cK?=
+ =?us-ascii?Q?5ob/Af8ggNSK43B4ICk8MLTjAwIdujaCNh4uvm9InLnGevvVrbOcnf3vW/op?=
+ =?us-ascii?Q?4BSyyQ0A06nNVNTA3bQcv8zgbaiFD4pnM1vPW8SSmGjgATNmt6MBGAcWd+gy?=
+ =?us-ascii?Q?qL/MSktYb7u4MX27qyrwxkPKKT15+r6FgwgPYWDGy4ygJQZi5+KSDIwZP2+u?=
+ =?us-ascii?Q?W5JdUPfoqRKqt87icOG8Czwg7MdFIkAidQE7fdK9VGJTUKP9PaB8G6OeZrs3?=
+ =?us-ascii?Q?T5vTnB4BS66G2Zet5Moa6dUiytR0BMNUKns2jwLunmIZct1CvVbh9Yj7KF2W?=
+ =?us-ascii?Q?LxYZJGHFZ70g12sb+/1UvihCmMbxrVNWBmxeLXhEX/YfmCbTjyZe0JaTzPIa?=
+ =?us-ascii?Q?HijDP4XpL8x6g3lSYtMijYUpJI2mW8oIdgHepdTFxAZWx+jsomwPPqNh6z0q?=
+ =?us-ascii?Q?2WyO8XFWUJ34Zf2CaYRQdV6joo0n3jhbKKS2v2PwT3ZUolbi6L1emOb/tJt2?=
+ =?us-ascii?Q?fE0N+gP6u8mGRCzfo3ZOo2WTflXlrGdjER/5tfFWTOQAb5bkhpk05tiIBm3W?=
+ =?us-ascii?Q?b49fjTQnTbdIO1m5DAj5N3wrvLCxfzsl48Xglm13oPoda1A5j0tylnSzObKT?=
+ =?us-ascii?Q?XQNczE9Qz80HteHiAOsZLdn4V+c1Gi2dXQw46pcTsZDOoZf5yeaVThGI1B42?=
+ =?us-ascii?Q?wb2nJV8AKY4YVFZGwxXwaN7nrhWdTgmgl3LmDgsrwX33mAYty57UD0+V0MAx?=
+ =?us-ascii?Q?UM7QKnFn2AC6w+82HeprE009lvrKISRxl3AN9R2tz6xTsiYe8N+Eg/xIYbRn?=
+ =?us-ascii?Q?tGvFxMyWAaZZaQN55VHKBW1e/6KCt7HNqTfJ9LwKqng877mMVyy6Va6AySpJ?=
+ =?us-ascii?Q?G6sQDgMrcz+N/JmXuylo1BDM9uFbNuv9RREvb/AjPFeYatWXReYAVtUjmT49?=
+ =?us-ascii?Q?jIQdZPA2VoubLkffRICJpFi0KkE19kPhT44LP6M0tGJZCwrqswewd4eOvIqt?=
+ =?us-ascii?Q?2x7fYJR0OZ/NjSa8C+7k/DPxCEjx1+F4AIcaXctD89wvuDhldAw0fqyQbUM2?=
+ =?us-ascii?Q?eoFdY5FlPdEvLoVCIjtlipCx+1MlvekXydCvxuY8xvK6CJykZc5vuJXL/6oP?=
+ =?us-ascii?Q?3bIfjjiyCtboF/z0sF2eMP68ib4bg4oUrbDs98W+t25DP4S48ptN5yP/DWh4?=
+ =?us-ascii?Q?EuF2ebqG3Ql5MBIaH/JWzRcYZnAOqGKr7kYfjsET6spvCMETlN8VwZhgb1xb?=
+ =?us-ascii?Q?qg=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	7wY6hGEWVl8gXWhw0ZTRS6LjUw/bmX27cAL+d7t72sMsDrBpvDga3RWxajoRdAOqmw3JycAg76Ra+owrbvlKuoyWavJe+CCg99oueiS8JS7zd/TlBVwic8fQm0QsyuvhLAVaV3arSkVOOs43AMJmejzhlDEQ3NvrsSOr9BwZsw4/OOIMUrDmpLiBJ6BbC+NXvXN+zvdhG+zce6HCw2xIoXpS6pZ7naqT75msMM7uQ1h08M6CR97y0FJGkYHkhzD7sWf07RnNhQ0ZR088dCespxMf6zR9yfN9vO8E2cW6ZdNITCWLjgoiswU37ccCYm2M5e9W9ByNxRVFx4fuFWd24OTQ7JMmdP68QnUygZnC7RLuCFph8ERS1fgiMgwHgHfu0I8K7I7LeJhpW8Ehz4fq4zuFGBb5Cj73scWBbu3TZQ2DeV8RXxmqkPt1gwcVUe80WrPfn6xWhgUGGI0dgoeAOpH1CzvB+X6NNlAVXK6dNFQ3UeBLx/7nSluean10o2rT/F3u1MiDUyJrzPkDshEkCDUde6+5uve+q4kaYiS0WKNh9/5+iU4IR0qqtCVmOirzSDYamI1LWp/1klubJBGjLgLEKMTJmrcsx8yXkoEfl2o=
+	pEscxjtV8TimaJamTzAViwalNTjiS1z4VWu4R2Ra42oAxE+LolW/UNQfBlVV/yLWEUwH0zLtr1Hs7vytzBcc+qXbFHGve6WrkK1mIcntLHpacszErmSSXMJAnKkYRflEtf+jyaKolS56xvUXrZdITtCL9gqxNH7pWn3xYXeARCnjJhMVm+NJV/97bOTdJvYK3PkNg5xOXnadBr5bh3WizH1oZNyUR2OTIFvCnZ8FW63v933MIblFH6O/lVufd3Dtq9T/lltRD/oYrABDotUWSDwbkS9IbzUq5htzknkNmu1BpZtEhmoStFq4BjlZtNhdfJFN7xZWOHz3y2EX3zhBwYA+zjXA7nkT7NIdbDKfzluUn4It47VsnuYIAaAJy7kXZ9GabVRAcLc+WUsbyiapLAbNmSwM0D7AHtsSV2/VnwJSgs8NhhPEOSfvkrb1HiivMdAaqXopvOkTFYygT19NWnTkGgRws2kjvhrH/60aos/NIMmmE8H3dCICfnB00J3tUaa2vDIQyhXva/dpG+LYW40f6y2RHlFon+iKFcCm5zpAlnr/zvLeLUlsk9btDFNLyu/mlElVveOx9S575jByzM7gwQ3vDCBHc4q2OIYqyWM=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee0d9d13-e2d2-4658-7f37-08dc810a2f91
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc87c4e1-a954-4257-50e9-08dc810a4175
 X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4150.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 00:39:52.9376
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2024 00:40:23.0875
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xM/09o2TWb6B8dXquBNhvamTzrZ1c6/NGGSEsyCXQkxZhVfityytno+/OMXN+r7PG8YsSUWzhqdyh5WjJ/A4+HexKYV+UPRq8iDHQ5VDYkY=
+X-MS-Exchange-CrossTenant-UserPrincipalName: fHhwoRvvpERLFS+JKySIyuqGAGidERpWcHljWO6Fr7f2MislN2ONv1hdQZGkZuBE8HCDEzo85WH+svP6h3kJECttKHTkYY5GG9QrsUvStgA=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4274
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-05-30_21,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 bulkscore=0
- suspectscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 adultscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
  definitions=main-2405310002
-X-Proofpoint-GUID: nE63IZupd9uw7VtbVJidpQnPffqx7Xr5
-X-Proofpoint-ORIG-GUID: nE63IZupd9uw7VtbVJidpQnPffqx7Xr5
+X-Proofpoint-ORIG-GUID: 1Qx6XI1MA_-Q0I-Nfp1LAHeCOVytpgqf
+X-Proofpoint-GUID: 1Qx6XI1MA_-Q0I-Nfp1LAHeCOVytpgqf
 
-Introduce a new LSM called Clavis (Latin word meaning key).  The motivation
-behind this LSM is to provide access control for system keys.  Before spending
-more time on this LSM, I am sending this as an RFC to start a discussion to see
-if the current direction taken has a possibility of being accepted in the
-future.
+Introduce a new LSM called clavis.  The motivation behind this LSM is to
+provide access control for system keys.  The access control list is
+contained within a keyring call .clavis.  During boot if the clavis= boot
+arg is supplied with a key id contained within any of the current system
+keyrings (builtin, secondary, machine, or platform) it shall be used as
+the root of trust for validating anything that is added to the ACL list.
 
-Today the kernel has the following system keyrings: .builtin_trusted_keyring,
-.secondary_trusted_keyring, and the .machine.  It also has the .platform
-keyring which has limited capabilities; it can only be used to verify a kernel
-for kexec.
+The first restriction introduced with this LSM is the ability to enforce
+key usage.  The kernel already has a notion of tracking key usage.  This
+LSM adds the ability to enforce this usage based on the system owners
+configuration.
 
-Today the kernel also tracks key usage for verification done with any of these
-keys. Current verification usage includes: VERIFYING_MODULE_SIGNATURE,
-VERIFYING_FIRMWARE_SIGNATURE, VERIFYING_KEXEC_PE_SIGNATURE,
-VERIFYING_KEY_SIGNATURE, VERIFYING_KEY_SELF_SIGNATURE, and
-VERIFYING_UNSPECIFIED_SIGNATURE. After these usage types were originally
-introduced, most additions have typically used the
-VERIFYING_UNSPECIFIED_SIGNATURE.
+Each system key may have one or more uses defined within the ACL list.
+When this LSM is enabled, only the builtin keys are available for loading
+kernel modules and doing a kexec.  Until an entry is added to the .clavis
+keyring, no other system key may be used for any other purpose.
 
-At the moment, besides the usage enforcement for .platform keys, any key
-contained within the system keyrings can be used for any verification
-purpose.  For example, a key that was originally created to sign kernel
-modules could be used for BPF verification.
+In the future it is envisioned this LSM could be enhanced to provide
+access control for UEFI Secure Boot Advanced Targeting (SBAT).  Using
+the same clavis= boot param and storing the additional contents within
+the new Runtime Services UEFI var, SBAT restrictions could be maintained
+across kexec.
 
-This new LSM adds the ability to do access control for all system keys. When
-enabled, only the .builtin_trusted_keys are available for loading kernel
-modules and doing a kexec.  Until an ACL entry is added for a specific key, no
-other system key may be used for any other purpose.
-
-Enabling the LSM is done during initial boot by passing in a single asymmetric
-key id within a new "clavis=" boot param. The asymmetric key id must match one
-already contained within any of the system keyrings.  If a match is found, a
-link is created into the new .clavis keyring.  This key shall be used as the
-root of trust for any keyring ACL updates afterwards.
-
-On UEFI systems the "clavis" boot param is mirrored into a new UEFI variable
-within the EFI stub code. This variable will persist until the next power on
-reset.  This same type of functionality is done within shim. Since this
-variable is created before ExitBootServices (EBS) it will not have the NVRAM
-bit set, signifying it was created during the Boot Services phase. This is
-being used so the "clavis" boot param can not be changed via kexec, thereby
-preventing a pivot of the root of trust.
-
-As mentioned earlier, this LSM introduces a new .clavis keyring.  Following
-boot, no new asymmetric keys can be added to this keyring and only the key
-designated via the initial boot param may be used. This LSM can not be started
-at any other point in time.  The .clavis keyring also holds the access control
-list for system keys. A new key type called clavis_key_acl is being introduced.
-This contains the usage followed by the asymmetric key id. To be added to the
-clavis keyring, the clavis_key_acl must be S/MIME signed by the sole asymmetric
-key contained within it. New ACL additions to the .clavis keyring may be added
-at any time.
-
-Currently this LSM does not require new changes or modifications to any user
-space tools.  It also does not have a securityfs interface.  Everything is
-done using the existing keyctl tool through the new .clavis keyring. The
-S/MIME signing can be done with a simple OpenSSL command. If additions or
-updates need to be added in the future, new ACL key types could be created.
-With this approach, maintainability should not be an issue in the future
-if missing items are identified.
-
-Clavis must be configured at build time with CONFIG_SECURITY_CLAVIS=y. The list
-of security modules enabled by default is set with CONFIG_LSM.  The kernel
-configuration must contain CONFIG_LSM=clavis,[...] with [...] as the list of
-other security modules for the running system.
-
-For setup and usage instructions, the final patch includes an admin-guide.
-
-Future enhancements to this LSM could include:
-
-1. Subsystems that currently use system keys with
-   VERIFYING_UNSPECIFIED_SIGNATURE could be updated with their specific
-   usage type.  For example, a usage type for IMA, BPF, etc could be
-   added.
-
-2. Currently, each clavis_key_acl must be individually signed.  Add the ability
-   to sign multiple clavis_key_acl entries within the same file.
-
-3. Currently, this LSM does not place key usage restrictions on the builtin
-   keys for kexec and kernel module verification. This was done to prevent a
-   regression that could  prevent the kernel from booting.  This could be
-   changed if there was a way at compile time to pre-populate the .clavis
-   keyring. This would allow the ephemeral key used to sign the kernel
-   modules to be included within the .clavis keyring, allowing the kernel
-   to boot.
-
-4. UEFI Secure Boot Advanced Targeting (SBAT) support. Since
-   the boot param is mirrored into UEFI before EBS is called,
-   this LSM could be enhanced to not only enforce key usage,
-   but also SBAT levels across kexec.
-
-5. Having the ability to allow platform keys to be on par with
-   all other system keys when using this LSM. This would be useful
-   for a user that controls their entire UEFI SB DB key chain and
-   doesn't want to use MOK keys.
-
-I would appreciate any feedback on this approach. Thanks.
-
-Changes in v2:
-  Rebased to 6.10-rc1
-  Various cleanup in the first patch recommended by Jarkko
-  Documentation improvements recommended by Randy
-  Fixed lint warnings
-  Other cleanup
-
-Eric Snowberg (8):
-  certs: Introduce ability to link to a system key
-  clavis: Introduce a new system keyring called clavis
-  efi: Make clavis boot param persist across kexec
-  clavis: Prevent clavis boot param from changing during kexec
-  keys: Add new verification type (VERIFYING_CLAVIS_SIGNATURE)
-  keys: Add ability to track intended usage of the public key
-  clavis: Introduce a new key type called clavis_key_acl
-  clavis: Introduce new LSM called clavis
-
- Documentation/admin-guide/LSM/clavis.rst      | 198 +++++++++++
- .../admin-guide/kernel-parameters.txt         |   8 +
- MAINTAINERS                                   |   7 +
- certs/blacklist.c                             |   3 +
- certs/system_keyring.c                        |  31 ++
- crypto/asymmetric_keys/asymmetric_type.c      |   1 +
- crypto/asymmetric_keys/pkcs7_trust.c          |  20 ++
- crypto/asymmetric_keys/pkcs7_verify.c         |   5 +
- crypto/asymmetric_keys/signature.c            |   4 +
- drivers/firmware/efi/Kconfig                  |  12 +
- drivers/firmware/efi/libstub/Makefile         |   1 +
- drivers/firmware/efi/libstub/clavis.c         |  33 ++
- .../firmware/efi/libstub/efi-stub-helper.c    |   2 +
- drivers/firmware/efi/libstub/efi-stub.c       |   2 +
- drivers/firmware/efi/libstub/efistub.h        |   8 +
- drivers/firmware/efi/libstub/x86-stub.c       |   2 +
- include/crypto/pkcs7.h                        |   3 +
- include/crypto/public_key.h                   |   4 +
- include/keys/system_keyring.h                 |   7 +-
- include/linux/efi.h                           |   1 +
- include/linux/integrity.h                     |   8 +
- include/linux/lsm_hook_defs.h                 |   2 +
- include/linux/security.h                      |   7 +
- include/linux/verification.h                  |   1 +
- include/uapi/linux/lsm.h                      |   1 +
- security/Kconfig                              |  11 +-
- security/Makefile                             |   1 +
- security/clavis/Kconfig                       |   9 +
- security/clavis/Makefile                      |   7 +
- security/clavis/clavis.c                      |  25 ++
- security/clavis/clavis.h                      |  20 ++
- security/clavis/clavis_efi.c                  |  50 +++
- security/clavis/clavis_keyring.c              | 314 ++++++++++++++++++
- security/integrity/iint.c                     |   2 +
- security/security.c                           |  16 +-
- 35 files changed, 819 insertions(+), 7 deletions(-)
+Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
+---
+ Documentation/admin-guide/LSM/clavis.rst | 198 +++++++++++++++++++++++
+ MAINTAINERS                              |   7 +
+ crypto/asymmetric_keys/signature.c       |   4 +
+ include/linux/lsm_hook_defs.h            |   2 +
+ include/linux/security.h                 |   7 +
+ include/uapi/linux/lsm.h                 |   1 +
+ security/Kconfig                         |  10 +-
+ security/clavis/Makefile                 |   1 +
+ security/clavis/clavis.c                 |  25 +++
+ security/clavis/clavis.h                 |   4 +
+ security/clavis/clavis_keyring.c         |  83 ++++++++++
+ security/security.c                      |  16 +-
+ 12 files changed, 352 insertions(+), 6 deletions(-)
  create mode 100644 Documentation/admin-guide/LSM/clavis.rst
- create mode 100644 drivers/firmware/efi/libstub/clavis.c
- create mode 100644 security/clavis/Kconfig
- create mode 100644 security/clavis/Makefile
  create mode 100644 security/clavis/clavis.c
- create mode 100644 security/clavis/clavis.h
- create mode 100644 security/clavis/clavis_efi.c
- create mode 100644 security/clavis/clavis_keyring.c
 
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+diff --git a/Documentation/admin-guide/LSM/clavis.rst b/Documentation/admin-guide/LSM/clavis.rst
+new file mode 100644
+index 000000000000..d1641e3ef38b
+--- /dev/null
++++ b/Documentation/admin-guide/LSM/clavis.rst
+@@ -0,0 +1,198 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======
++Clavis
++======
++
++Clavis is a Linux Security Module that provides mandatory access control to
++system kernel keys (i.e. builtin, secondary, machine and platform). These
++restrictions will prohibit keys from being used for validation. Upon boot, the
++Clavis LSM is provided a key id as a boot param.  This single key is then
++used as the root of trust for any access control modifications made going
++forward. Access control updates must be signed and validated by this key.
++
++Clavis has its own keyring.  All ACL updates are applied through this keyring.
++The update must be signed by the single root of trust key.
++
++When enabled, all system keys are prohibited from being used until an ACL is
++added for them. There is two exceptions to this rule, builtin keys may be used
++to validate both signed kernels and modules.
++
++Adding system kernel keys can only be performed by the machine owner; this
++could be through the Machine Owner Key (MOK) or the UEFI Secure Boot DB. It
++is possible the machine owner and system administrator may be different
++people. The system administrator will not be able to make ACL updates without
++them being signed by the machine owner.
++
++On UEFI platforms, the root of trust key shall survive a kexec. Trying to
++defeat or change it from the command line is not allowed.  The original boot
++param is stored in UEFI and will always be referenced following a kexec.
++
++The Clavis LSM contains a system keyring call .clavis.  It contains a single
++asymmetric key that is use to validate anything added to it.  This key can only
++be added during boot and must be a preexisting system kernel key.  If the
++``clavis=`` boot param is not used, the keyring does not exist and the feature
++can not be used until the next reboot.
++
++The only user space components are OpenSSL and the keyctl utility. A new
++key type call ``clavis_key_acl`` is used for ACL updates. Any number of signed
++``clavis_key_acl`` entries may be added to the .clavis keyring. The
++``clavis_key_acl`` contains the subject key identifier along with the allowed
++usage type for
++the key.
++
++The format is as follows:
++
++.. code-block:: console
++
++  XX:YYYYYYYYYYY
++
++  XX - Single byte of the key type
++	VERIFYING_MODULE_SIGNATURE            00
++	VERIFYING_FIRMWARE_SIGNATURE          01
++	VERIFYING_KEXEC_PE_SIGNATURE          02
++	VERIFYING_KEY_SIGNATURE               03
++	VERIFYING_KEY_SELF_SIGNATURE          04
++	VERIFYING_UNSPECIFIED_SIGNATURE       05
++  :  - ASCII colon
++  YY - Even number of hexadecimal characters representing the key id
++
++The ``clavis_key_acl`` must be S/MIME signed by the sole asymmetric key contained
++within the .clavis keyring.
++
++In the future if new features are added, new key types could be created.
++
++Usage Examples
++==============
++
++How to create a signing key:
++----------------------------
++
++.. code-block:: bash
++
++  cat <<EOF > clavis-lsm.genkey
++  [ req ]
++  default_bits = 4096
++  distinguished_name = req_distinguished_name
++  prompt = no
++  string_mask = utf8only
++  x509_extensions = v3_ca
++  [ req_distinguished_name ]
++  O = TEST
++  CN = Clavis LSM key
++  emailAddress = user@example.com
++  [ v3_ca ]
++  basicConstraints=CA:TRUE
++  subjectKeyIdentifier=hash
++  authorityKeyIdentifier=keyid:always,issuer
++  keyUsage=digitalSignature
++  EOF
++
++  openssl req -new -x509 -utf8 -sha256 -days 3650 -batch \
++        -config clavis-lsm.genkey -outform DER \
++        -out clavis-lsm.x509 -keyout clavis-lsm.priv
++
++How to get the Subject Key Identifier
++-------------------------------------
++
++.. code-block:: bash
++
++  openssl x509 -in ./clavis-lsm.x509 -inform der \
++        -ext subjectKeyIdentifier  -nocert \
++        | tail -n +2 | cut -f2 -d '='| tr -d ':'
++  4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++
++How to enroll the signing key into the MOK
++------------------------------------------
++
++The key must now be added to the machine or platform keyrings.  This
++indicates the key was added by the system owner. To add to the machine
++keyring on x86 do:
++
++.. code-block:: bash
++
++  mokutil --import ./clavis-lsm.x509
++
++and then reboot and enroll the key through the MokManager.
++
++How to enable the Clavis LSM
++----------------------------
++
++Add the key id to the ``clavis=`` boot param.  With the example above the
++key id is the subject key identifier: 4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++
++Add the following boot param:
++
++.. code-block:: console
++
++  clavis=4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++
++After booting there will be a single key contained in the .clavis keyring:
++
++.. code-block:: bash
++
++  keyctl show %:.clavis
++  Keyring
++    254954913 ----swrv      0     0  keyring: .clavis
++    301905375 ---lswrv      0     0   \_ asymmetric: TEST: Clavis LSM key: 4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++
++The original ``clavis=`` boot param will persist across any kexec. Changing it or
++removing it has no effect.
++
++
++How to sign an entry to be added to the .clavis keyring:
++--------------------------------------------------------
++
++In this example we have 3 keys in the machine keyring.  Our Clavis LSM key, a
++key we want to use for kernel verification and a key we want to use for module
++verification.
++
++.. code-block:: bash
++
++  keyctl show %:.machine
++  Keyring
++    999488265 ---lswrv      0     0  keyring: .machine
++    912608009 ---lswrv      0     0   \_ asymmetric: TEST: Module Key: 17eb8c5bf766364be094c577625213700add9471
++    646229664 ---lswrv      0     0   \_ asymmetric: TEST: Kernel Key: b360d113c848ace3f1e6a80060b43d1206f0487d
++   1073737099 ---lswrv      0     0   \_ asymmetric: TEST: Clavis LSM key: 4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++
++To update the .clavis kerying ACL list.  First create a file containing the
++key usage type followed by a colon and the key id that we want to allow to
++validate that usage.  In the first example we are saying key
++17eb8c5bf766364be094c577625213700add9471 is allowed to validate kernel modules.
++In the second example we are saying key b360d113c848ace3f1e6a80060b43d1206f0487d
++is allowed to validate signed kernels.
++
++.. code-block:: bash
++
++  echo "00:17eb8c5bf766364be094c577625213700add9471" > module-acl.txt
++  echo "02:b360d113c848ace3f1e6a80060b43d1206f0487d" > kernel-acl.txt
++
++Now both these files must be signed by the key contained in the .clavis keyring:
++
++.. code-block:: bash
++
++  openssl smime -sign -signer clavis-lsm.x509 -inkey clavis-lsm.priv -in module-acl.txt \
++        -out module-acl.pkcs7 -binary -outform DER -nodetach -noattr
++
++  openssl smime -sign -signer clavis-lsm.x509 -inkey clavis-lsm.priv -in kernel-acl.txt \
++        -out kernel-acl.pkcs7 -binary -outform DER -nodetach -noattr
++
++Afterwards the ACL list in the clavis keyring can be updated:
++
++.. code-block:: bash
++
++  keyctl padd clavis_key_acl "" %:.clavis < module-acl.pkcs7
++  keyctl padd clavis_key_acl "" %:.clavis < kernel-acl.pkcs7
++
++  keyctl show %:.clavis
++
++  Keyring
++    254954913 ----swrv      0     0  keyring: .clavis
++    301905375 ---lswrv      0     0   \_ asymmetric: TEST: Clavis LSM key: 4a00ab9f35c9dc3aed7c225d22bafcbd9285e1e8
++   1013065475 --alswrv      0     0   \_ clavis_key_acl: 02:b360d113c848ace3f1e6a80060b43d1206f0487d
++    445581284 --alswrv      0     0   \_ clavis_key_acl: 00:17eb8c5bf766364be094c577625213700add9471
++
++Now the 17eb8c5bf766364be094c577625213700add9471 key can be used for
++validating kernel modules and the b360d113c848ace3f1e6a80060b43d1206f0487d
++key can be used to validate signed kernels.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..edf28dee71f2 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5326,6 +5326,13 @@ F:	scripts/Makefile.clang
+ F:	scripts/clang-tools/
+ K:	\b(?i:clang|llvm)\b
+ 
++CLAVIS LINUX SECURITY MODULE
++M:	Eric Snowberg <eric.snowberg@oracle.com>
++L:	linux-security-module@vger.kernel.org
++S:	Maintained
++F:	Documentation/admin-guide/LSM/clavis.rst
++F:	security/clavis
++
+ CLK API
+ M:	Russell King <linux@armlinux.org.uk>
+ L:	linux-clk@vger.kernel.org
+diff --git a/crypto/asymmetric_keys/signature.c b/crypto/asymmetric_keys/signature.c
+index 2deff81f8af5..7e3a78650a93 100644
+--- a/crypto/asymmetric_keys/signature.c
++++ b/crypto/asymmetric_keys/signature.c
+@@ -13,6 +13,7 @@
+ #include <linux/err.h>
+ #include <linux/slab.h>
+ #include <linux/keyctl.h>
++#include <linux/security.h>
+ #include <crypto/public_key.h>
+ #include <keys/user-type.h>
+ #include "asymmetric_keys.h"
+@@ -153,6 +154,9 @@ int verify_signature(const struct key *key,
+ 
+ 	ret = subtype->verify_signature(key, sig);
+ 
++	if (!ret)
++		ret = security_key_verify_signature(key, sig);
++
+ 	pr_devel("<==%s() = %d\n", __func__, ret);
+ 	return ret;
+ }
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index f804b76cde44..6534af90d8db 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -409,6 +409,8 @@ LSM_HOOK(int, 0, key_getsecurity, struct key *key, char **buffer)
+ LSM_HOOK(void, LSM_RET_VOID, key_post_create_or_update, struct key *keyring,
+ 	 struct key *key, const void *payload, size_t payload_len,
+ 	 unsigned long flags, bool create)
++LSM_HOOK(int, 0, key_verify_signature, const struct key *key,
++	 const struct public_key_signature *sig)
+ #endif /* CONFIG_KEYS */
+ 
+ #ifdef CONFIG_AUDIT
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 21cf70346b33..c5474e9260e0 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -63,6 +63,7 @@ enum fs_value_type;
+ struct watch;
+ struct watch_notification;
+ struct lsm_ctx;
++struct public_key_signature;
+ 
+ /* Default (no) options for the capable function */
+ #define CAP_OPT_NONE 0x0
+@@ -2009,6 +2010,7 @@ void security_key_post_create_or_update(struct key *keyring, struct key *key,
+ 					const void *payload, size_t payload_len,
+ 					unsigned long flags, bool create);
+ 
++int security_key_verify_signature(const struct key *key, const struct public_key_signature *sig);
+ #else
+ 
+ static inline int security_key_alloc(struct key *key,
+@@ -2043,6 +2045,11 @@ static inline void security_key_post_create_or_update(struct key *keyring,
+ 						      bool create)
+ { }
+ 
++static inline int security_key_verify_signature(const struct key *key,
++						const struct public_key_signature *sig)
++{
++	return 0;
++}
+ #endif
+ #endif /* CONFIG_KEYS */
+ 
+diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
+index 33d8c9f4aa6b..3a60c4ff5186 100644
+--- a/include/uapi/linux/lsm.h
++++ b/include/uapi/linux/lsm.h
+@@ -64,6 +64,7 @@ struct lsm_ctx {
+ #define LSM_ID_LANDLOCK		110
+ #define LSM_ID_IMA		111
+ #define LSM_ID_EVM		112
++#define LSM_ID_CLAVIS		113
+ 
+ /*
+  * LSM_ATTR_XXX definitions identify different LSM attributes
+diff --git a/security/Kconfig b/security/Kconfig
+index b9ad8e580b96..7df8b2a4941f 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -232,11 +232,11 @@ endchoice
+ 
+ config LSM
+ 	string "Ordered list of enabled LSMs"
+-	default "landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
+-	default "landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
+-	default "landlock,lockdown,yama,loadpin,safesetid,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
+-	default "landlock,lockdown,yama,loadpin,safesetid,bpf" if DEFAULT_SECURITY_DAC
+-	default "landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,bpf"
++	default "clavis,landlock,lockdown,yama,loadpin,safesetid,smack,selinux,tomoyo,apparmor,bpf" if DEFAULT_SECURITY_SMACK
++	default "clavis,landlock,lockdown,yama,loadpin,safesetid,apparmor,selinux,smack,tomoyo,bpf" if DEFAULT_SECURITY_APPARMOR
++	default "clavis,landlock,lockdown,yama,loadpin,safesetid,tomoyo,bpf" if DEFAULT_SECURITY_TOMOYO
++	default "clavis,landlock,lockdown,yama,loadpin,safesetid,bpf" if DEFAULT_SECURITY_DAC
++	default "clavis,landlock,lockdown,yama,loadpin,safesetid,selinux,smack,tomoyo,apparmor,bpf"
+ 	help
+ 	  A comma-separated list of LSMs, in initialization order.
+ 	  Any LSMs left off this list, except for those with order
+diff --git a/security/clavis/Makefile b/security/clavis/Makefile
+index 2b2b3bc8eef4..441c70c6b78a 100644
+--- a/security/clavis/Makefile
++++ b/security/clavis/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ obj-$(CONFIG_SECURITY_CLAVIS) += clavis_keyring.o
++obj-$(CONFIG_SECURITY_CLAVIS) += clavis.o
+ ifeq ($(CONFIG_EFI),y)
+ obj-$(CONFIG_SECURITY_CLAVIS) += clavis_efi.o
+ endif
+diff --git a/security/clavis/clavis.c b/security/clavis/clavis.c
+new file mode 100644
+index 000000000000..040337dbd8d9
+--- /dev/null
++++ b/security/clavis/clavis.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++#include <linux/lsm_hooks.h>
++#include <uapi/linux/lsm.h>
++#include "clavis.h"
++
++static struct security_hook_list clavis_hooks[] __ro_after_init = {
++	LSM_HOOK_INIT(key_verify_signature, clavis_sig_verify),
++};
++
++const struct lsm_id clavis_lsmid = {
++	.name = "clavis",
++	.id = LSM_ID_CLAVIS,
++};
++
++static int __init clavis_lsm_init(void)
++{
++	security_add_hooks(clavis_hooks, ARRAY_SIZE(clavis_hooks), &clavis_lsmid);
++	return 0;
++};
++
++DEFINE_LSM(clavis) = {
++	.name = "clavis",
++	.init = clavis_lsm_init,
++};
+diff --git a/security/clavis/clavis.h b/security/clavis/clavis.h
+index 708dd0b1cc76..2a2fe2525c7c 100644
+--- a/security/clavis/clavis.h
++++ b/security/clavis/clavis.h
+@@ -2,6 +2,8 @@
+ #ifndef _SECURITY_CLAVIS_H_
+ #define _SECURITY_CLAVIS_H_
+ 
++struct key;
++struct public_key_signature;
+ struct asymmetric_key_id;
+ 
+ #ifdef CONFIG_EFI
+@@ -13,4 +15,6 @@ static inline int __init clavis_efi_param(struct asymmetric_key_id *kid, int len
+ }
+ #endif
+ 
++int clavis_sig_verify(const struct key *key, const struct public_key_signature *sig);
++
+ #endif /* _SECURITY_CLAVIS_H_ */
+diff --git a/security/clavis/clavis_keyring.c b/security/clavis/clavis_keyring.c
+index 9b3db299acef..736bdadd9000 100644
+--- a/security/clavis/clavis_keyring.c
++++ b/security/clavis/clavis_keyring.c
+@@ -13,6 +13,7 @@
+ static struct key *clavis_keyring;
+ static struct asymmetric_key_id *setup_keyid;
+ 
++static int clavis_init;
+ #define MAX_ASCII_KID 64
+ #define MAX_BIN_KID   32
+ 
+@@ -228,4 +229,86 @@ void __init late_init_clavis_setup(void)
+ 
+ 	clavis_keyring_init();
+ 	system_key_link(clavis_keyring, keyid);
++	clavis_init = true;
++}
++
++int clavis_sig_verify(const struct key *key, const struct public_key_signature *sig)
++{
++	const struct asymmetric_key_ids *kids = asymmetric_key_ids(key);
++	const struct asymmetric_key_subtype *subtype;
++	const struct asymmetric_key_id *newkid;
++	char *buf_ptr, *ptr;
++	key_ref_t ref;
++	int i, buf_len;
++
++	if (!clavis_init)
++		return 0;
++
++	if (key->type != &key_type_asymmetric)
++		return -EKEYREJECTED;
++	subtype = asymmetric_key_subtype(key);
++	if (!subtype || !key->payload.data[0])
++		return -EKEYREJECTED;
++	if (!subtype->verify_signature)
++		return -EKEYREJECTED;
++
++	/* Allow sig validation when not using a system keyring */
++	if (!test_bit(PKS_USAGE_SET, &sig->usage_flags))
++		return 0;
++
++	if (test_bit(KEY_FLAG_BUILTIN, &key->flags) && sig->usage == VERIFYING_MODULE_SIGNATURE)
++		return 0;
++
++	if (test_bit(KEY_FLAG_BUILTIN, &key->flags) && sig->usage == VERIFYING_KEXEC_PE_SIGNATURE)
++		return 0;
++
++	/* The previous sig validation is enough to get on the clavis keyring */
++	if (sig->usage == VERIFYING_CLAVIS_SIGNATURE)
++		return 0;
++
++	if (test_bit(PKS_REVOCATION_PASS, &sig->usage_flags))
++		return 0;
++
++	for (i = 0, buf_len = 0; i < 3; i++) {
++		if (kids->id[i]) {
++			newkid = (struct asymmetric_key_id *)kids->id[i];
++			if (newkid->len > buf_len)
++				buf_len = newkid->len;
++		}
++	}
++
++	if (!buf_len)
++		return -EKEYREJECTED;
++
++	/* Allocate enough space for the conversion to ascii plus the header. */
++	buf_ptr = kmalloc(buf_len * 2 + 4, GFP_KERNEL | __GFP_ZERO);
++
++	if (!buf_ptr)
++		return -ENOMEM;
++
++	for (i = 0; i < 3; i++) {
++		if (kids->id[i]) {
++			newkid = (struct asymmetric_key_id *)kids->id[i];
++			if (!newkid->len)
++				continue;
++
++			ptr = buf_ptr;
++			ptr = bin2hex(ptr, &sig->usage, 1);
++			*ptr++ = ':';
++			ptr = bin2hex(ptr, newkid->data, newkid->len);
++			*ptr = 0;
++			ref = keyring_search(make_key_ref(clavis_keyring, true), &clavis_key_acl,
++					     buf_ptr, false);
++
++			if (!IS_ERR(ref))
++				break;
++		}
++	}
++
++	kfree(buf_ptr);
++
++	if (IS_ERR(ref))
++		return -EKEYREJECTED;
++
++	return 0;
+ }
+diff --git a/security/security.c b/security/security.c
+index e5da848c50b9..bd2e13a8f01b 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -51,7 +51,8 @@
+ 	(IS_ENABLED(CONFIG_BPF_LSM) ? 1 : 0) + \
+ 	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0) + \
+ 	(IS_ENABLED(CONFIG_IMA) ? 1 : 0) + \
+-	(IS_ENABLED(CONFIG_EVM) ? 1 : 0))
++	(IS_ENABLED(CONFIG_EVM) ? 1 : 0) + \
++	(IS_ENABLED(CONFIG_SECURITY_CLAVIS) ? 1 : 0))
+ 
+ /*
+  * These are descriptions of the reasons that can be passed to the
+@@ -5323,6 +5324,19 @@ void security_key_post_create_or_update(struct key *keyring, struct key *key,
+ 	call_void_hook(key_post_create_or_update, keyring, key, payload,
+ 		       payload_len, flags, create);
+ }
++
++/**
++ * security_key_verify_signature - verify signature
++ * @key: key
++ * @sig: signature
++ *
++ * See whether signature verification is allowed based on the ACL for
++ * key usage.
++ */
++int security_key_verify_signature(const struct key *key, const struct public_key_signature *sig)
++{
++	return call_int_hook(key_verify_signature, key, sig);
++}
+ #endif	/* CONFIG_KEYS */
+ 
+ #ifdef CONFIG_AUDIT
 -- 
 2.43.0
 
