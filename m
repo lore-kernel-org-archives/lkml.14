@@ -1,55 +1,33 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E04857CB0
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FAA4502D;
+	Fri, 31 May 2024 14:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166517; cv=none; b=eYYt8koq5ey887yA/2VrsXK0rdSCLIC/TbmYiuCMyk0ZUtYhqrT4jyzlUNQYBYHjPM/WYsjaDx3zT5/e5lzyOC2sYiO3MZv2gIFI+5QTRBaaWW5AR5rGdul1LXrc3w31cYKQsgU/jFeVz69MwnHjar9MrraBgfV50V17kIqfJDk=
+	t=1717166620; cv=none; b=SMoRFia5/4UPpwo6DzNtx6mHmDEVVpR9D+Naz/noM1qZo67EUV7U44TvSGCq5K9xnW61Z/bjEOLbEfl61WXcKPDItZVNo95jDZ7202MbBmLkNTb6EQmORkDSRzrJjZFt/g4NPdR2mgKxCt+Kr28G09lUrSCSw5qG6lg5SXwkaIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717166517; c=relaxed/simple;
-	bh=8N4Uy4hfNGQeJYMhXwYP8HHYJUaM4nwbu6ME4Nq7pIg=;
+	s=arc-20240116; t=1717166620; c=relaxed/simple;
+	bh=aS+nrTZxy7m9OYj7c0HhMNxrjln+wRR7+umRM4AtBuw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fyuhNlZBMdLbv//m+baDxOUoF+S5bp7rp5Zwj0BEYWj99Xq9/6dLqiLkJtuByR5k4yENwhnAQkpp7dzp/T1So8dUpUjeyCzrU+rLpzT+BIfo04PTD102oDMGu2SIDliJPY58/CwmBHbdODILTQaFGEhjCpoYT12f+p6wwv8aWzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=btPSd/5c; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=onKF6NPbhwgx2UvmEM8YDcJo7f/G3iKkTJdnGKskCJmQqk23QqXSuKHgUbF36reEEoZGTJymAqlJ192d75FM+nThl9ZjyfxvIb/fZvteuTHb9zxfqNJLeLFtm9X5tKJhSqL1ZHFbgFPtcgqTEJ/nSsroZq+nzPiSR83TIgE3Unk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=glUwW9ut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="btPSd/5c"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7e8e5875866so10737639f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1717166515; x=1717771315; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LPAJXLuoxd2SK/byJSfbPIINKV2PiEIqB7HOimxozzM=;
-        b=btPSd/5cgXep/twtjBxlN0sPFoMYyY3x9BmuVog5I4yhFr41kzKqmuEEhwAGVTFxiE
-         VhJIHuZi9d8ryj6m+dP/6J1yhVmEqDxkNZLO0iWqw4IdjTYBU5FtB7FeP/2L4XyW5N0W
-         DcIDt8fM6RnuE7T+zVJAbyBWPS78ZxAw1typU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717166515; x=1717771315;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LPAJXLuoxd2SK/byJSfbPIINKV2PiEIqB7HOimxozzM=;
-        b=wj9g4kHk4s9CnMHhfzYyVqsnphAASz93QJYblxg7JKqh5/MH/2sfOjxPAyNfSjo6iq
-         KsqXNOmyoaeASxxihFiQUnwEGOf75k7yaL8bVl1s5lkQOWGgXbekm3pI2UZyrgmdHmUA
-         q4/Zo2uzeo5HP2+n1n/DarV0n4PDtY4zOnX1nuKIo1PGQ87jK3R/CXtBOEuG0ikbs4Eh
-         /L5jVjLEFvdNG8aYfIKDosiLxXwZhxOL0RnoTvQf8qBGca9pEH4+EmPLzXvGvHcVcope
-         PftoukcNaJfDqQpdSQ8cqTEjzK2S7WdmrzVUDLRSuvU1d6vi7+kKfcqrpHC+t6yTTaNE
-         hVug==
-X-Gm-Message-State: AOJu0YzTMFVKNo93OWMZccy+FcwHzWifVr9ISpMb5am9HdTriGoQYq/Z
-	KjJu0VR5GPiG8H2jNa1Hg8+5vaGSudXUJswjwdAt6iplaPFygtgwDERgFsrwnAg=
-X-Google-Smtp-Source: AGHT+IG3dnxtFX/O6HOtneBr+kVaD6kMk7E+Nl3USYm/ynLDRSimUh2lFGqyh96b0i8s6EO6E3NYIw==
-X-Received: by 2002:a5d:8485:0:b0:7de:e04b:42c3 with SMTP id ca18e2360f4ac-7eaffdb5092mr237075339f.0.1717166515426;
-        Fri, 31 May 2024 07:41:55 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b48c4400afsm503109173.136.2024.05.31.07.41.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 07:41:54 -0700 (PDT)
-Message-ID: <c59efdb5-26d3-43ce-8390-fef349fc9d1b@linuxfoundation.org>
-Date: Fri, 31 May 2024 08:41:54 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="glUwW9ut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9115CC116B1;
+	Fri, 31 May 2024 14:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717166620;
+	bh=aS+nrTZxy7m9OYj7c0HhMNxrjln+wRR7+umRM4AtBuw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=glUwW9ut5NvBLZwkVAwwbZNid0Vd6jxMW0wp1ZFavPdG0Jxrc4kwPWBckmnRraCzz
+	 rls4uNHDHuS6S3bpMdM0asTlqOTyEmBFlEHsHvFCHAtzi9tIGVLaYxlxR9/Mw2CuaF
+	 se3mqJoTADSuhojf2wkwjvaHvrP2g/jvMcAlpS9VGcufWZ5jvNKDnxN6TZ1KSkWYJz
+	 7iZqyGs/ibFeDo/Z1wbt6N9X+8I2elo9qiPnJoZ8CAPnIcmqONuvDn91bKaWZ4dSWc
+	 vIR/rFXnwUZkRMy7eH4C7lHICN30d6gfRrlf+A61IyyCooiD/Gg5F+f6nKGmRRazaF
+	 Kg74NOKsk/dBA==
+Message-ID: <851280ad-ac0e-47d1-99e2-4f3b5ea29f2f@kernel.org>
+Date: Fri, 31 May 2024 16:43:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,33 +35,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] selftests/tracing: Fix event filter test to retry up
- to 10 times
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <171714860864.198407.18416314586430149538.stgit@devnote2>
- <171714861780.198407.16488694516653649947.stgit@devnote2>
+Subject: Re: [PATCH 5/5] dt-bindings: pwm: sun20i: Add options to select a
+ clock source and DIV_M
+To: Hironori KIKUCHI <kikuchan98@gmail.com>, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi
+ <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
+ <20240531141152.327592-6-kikuchan98@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <171714861780.198407.16488694516653649947.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240531141152.327592-6-kikuchan98@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/31/24 03:43, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 31/05/2024 16:11, Hironori KIKUCHI wrote:
+> This patch adds new options to select a clock source and DIV_M register
+> value for each coupled PWM channels.
+
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+
+Bindings are before their users. This should not be last patch, because
+this implies there is no user.
+
+This applies to all variants? Or the one you add? Confused...
+
 > 
-> Commit eb50d0f250e9 ("selftests/ftrace: Choose target function for filter
-> test from samples") choose the target function from samples, but sometimes
-> this test failes randomly because the target function does not hit at the
-> next time. So retry getting samples up to 10 times.
-> 
-> Fixes: eb50d0f250e9 ("selftests/ftrace: Choose target function for filter test from samples")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
 > ---
+>  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> index b9b6d7e7c87..436a1d344ab 100644
+> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> @@ -45,6 +45,25 @@ properties:
+>      description: The number of PWM channels configured for this instance
+>      enum: [6, 9]
+>  
+> +  allwinner,pwm-pair-clock-sources:
+> +    description: The clock source names for each PWM pair
+> +    items:
+> +      enum: [hosc, apb]
+> +    minItems: 1
+> +    maxItems: 8
 
-Applied to linux-kselftest fixes for the next rc
+Missing type... and add 8 of such items to your example to make it complete.
 
-thanks,
--- Shuah
+> +
+> +  allwinner,pwm-pair-clock-prescales:
+> +    description: The prescale (DIV_M register) values for each PWM pair
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      items:
+> +        minimum: 0
+> +        maximum: 8
+> +      minItems: 1
+> +      maxItems: 1
+> +    minItems: 1
+> +    maxItems: 8
+
+This does not look like matrix but array.
+
+Why clock DIV cannot be deduced from typical PWM attributes + clock
+frequency?
+
+Best regards,
+Krzysztof
+
