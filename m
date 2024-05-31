@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7797B7D40E;
-	Fri, 31 May 2024 20:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF0A17D8B3;
+	Fri, 31 May 2024 20:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717187832; cv=none; b=DHFdTYEtSRjWWRIz/V62YiQfQZnrzt9ZItobLtzzsaNzr0QhNc86iYHSfqWnoAYITtwRa0Hh0kD96zMKQGI6Bu8Hz6AUzF+KIItypQTypBW0GssBNkxqAqFMVYPwhdvh6061hUFQaxKHGvEkZnAdQzhIGID2UcnPVyGPc5t9rGk=
+	t=1717187834; cv=none; b=A0v83/y9qNH2uW0s6KfVtLHgeItZxL/6WApOq+UGV9xFmwqGyK/34oojnQi3Ksjs/aOeOtl3F8fUPPxnfVZZaQcnhh6Jp2TWPx2SOvXAg4flfngO1O8qSs88S5OdhmIUFn4ln5H4qg5XESgmhWQYYgkK8gKUtVUPOKi6DocG7cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717187832; c=relaxed/simple;
-	bh=geUk9QqAqwdlj+xo+azEieXJI7qruG0IFBgwbdK8oXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZF9O+uij0F34j35H5ShoHHKWvXgzkce1gAPOqggLVk0WqQK4mFm7g056cxNz7b2F4nd3Qtnl5JueKHSaZFL6TC6bGI4M6QaBx4HS36bIHwNmRHIlP9Lf4XNpDhcR+bA9KRWVLDeWKsUuQBBMB1f2y080JkabBYlf4x+UMnz8zvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBenSTy+; arc=none smtp.client-ip=198.175.65.17
+	s=arc-20240116; t=1717187834; c=relaxed/simple;
+	bh=sOqZyHOaT5a0l8XCc8dAZljiRy7fauzwISe5OXzMWko=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u9VUh3eFPM+ZXHZhdl8nKoR1nUJcK14tq+bTugFSPyxx+QhZ8kCktdXX04iSnV+Qmc1JLTTQQC2BJ1Q2yVagx+WJaDaSY1Y+MYW9ZaMsbJsrgxGk9jl9qEcKxs8dWI8ktHxYeemI75MrDGeAoi2KvJgtuPUuVIiocCSj1m1uP5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YNp9HAgo; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBenSTy+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YNp9HAgo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717187831; x=1748723831;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=geUk9QqAqwdlj+xo+azEieXJI7qruG0IFBgwbdK8oXA=;
-  b=IBenSTy+JtsR/3cJc7DjXhXXQpgSywrleZF3Tqy4eAcDVkj9cjrwVpji
-   Ilb4TYj4Q3opZ9R6f4igfm9dQpM9tO2JxRgcbJk07z53d0Aq71NARkzju
-   mC8Ny0jpw+h92VrLn2ROtzueDYMpyNzvsQvLvnPGakGT/HA8ypPoD2HbP
-   GsC1hxPcz1DNqBmazY1HxWF7U8v33qsQwVF0LssgcPBlAC/CE+EovWKtD
-   NMabTviFTtIO+i1O9OeTy1Hv3AkTaM3l4qkNNwmzWc20uM2e0PcRwNcZq
-   nnMC2asiGWemLATQYfwmuxPX+JQ6hztHPwSoiZ2/a5g/yKyiuXQZq2uyo
+  t=1717187833; x=1748723833;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sOqZyHOaT5a0l8XCc8dAZljiRy7fauzwISe5OXzMWko=;
+  b=YNp9HAgojvmP22LFuCMEhufXVuQJHQ7Fxjri9VoBTqCUqlXMRNgH0pPK
+   NPHaYFjeVvDqcCcgzUu1DteWXLOs9uTRpIfGoS00CT+sUY8rnZOIimZWl
+   aj0vkKERjVP54bmYqtSmcivLx2VnshlKcOH47Vf4vpHYG5YkpIPKAvMSf
+   4jFixIr/rxvxUurHIIzlV5jS/f9TYvjIvlSA4M8Tr4ED4xr/ayKRdVrOT
+   2hdfWjPWOKw3/Tt6I/WyCt31VpggJZxOfAetpuQipxnEQc/gL6vt15GaC
+   zx+XdT6DKY/sKegeXkZmov5riStaxX7ntq8bQ3sgFJrD3lYAdsD2N2Mvg
    Q==;
-X-CSE-ConnectionGUID: rFn6DQGZTUOGvDXsuaHvzg==
-X-CSE-MsgGUID: zmX3yzaHRAG/Y1rgqHMJZg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13871818"
+X-CSE-ConnectionGUID: BXx4m3hoQlSRTZ+uoGDwZg==
+X-CSE-MsgGUID: sAx5tW8rR8OOuQjHBUbLKg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="13871825"
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="13871818"
+   d="scan'208";a="13871825"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
   by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:37:11 -0700
-X-CSE-ConnectionGUID: hklv9mXdTW6bg5dHxhtUkg==
-X-CSE-MsgGUID: 3ppO/1SoRwKVKqp7VUakQQ==
+X-CSE-ConnectionGUID: heBKNJT+QL2CKT+2huO8ng==
+X-CSE-MsgGUID: Z8CZGAMUTta+zyMZ61VfJg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,205,1712646000"; 
-   d="scan'208";a="36355361"
+   d="scan'208";a="36355367"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:37:11 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 13:37:12 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Hans de Goede <hdegoede@redhat.com>
@@ -50,10 +51,12 @@ Cc: platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 00/11] New Intel CPU model defines for x86/platform
-Date: Fri, 31 May 2024 13:36:56 -0700
-Message-ID: <20240531203706.233365-1-tony.luck@intel.com>
+Subject: [PATCH 02/11] platform/x86: intel_telemetry: Switch to new Intel CPU model defines
+Date: Fri, 31 May 2024 13:36:58 -0700
+Message-ID: <20240531203706.233365-3-tony.luck@intel.com>
 X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240531203706.233365-1-tony.luck@intel.com>
+References: <20240531203706.233365-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,55 +65,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These patches were part of the v6 patch bomb converting everything.
-Link: https://lore.kernel.org/all/20240520224620.9480-1-tony.luck@intel.com/
-
-This reposting as requested by maintainer to make it easier to
-pick up and apply.
-
-Changes since that post:
-
-Combined two telemetry patches into one and fixed shorlog tag
-Combined two pmc patches into one and fixed shorlog tag
-
-The ISST patch may now be irrelevant as Srinivas has done
-the conversion. I put it as the last patch to make it easy
-to skip.
+New CPU #defines encode vendor and family as well as model.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel/telemetry/debugfs.c | 4 ++--
+ drivers/platform/x86/intel/telemetry/pltdrv.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-
-Tony Luck (11):
-  platform/x86/intel/pmc: Switch to new Intel CPU model defines
-  platform/x86: intel_telemetry: Switch to new Intel CPU model defines
-  x86/platform/atom: Switch to new Intel CPU model defines
-  platform/x86: p2sb: Switch to new Intel CPU model defines
-  platform/x86: intel_turbo_max_3: Switch to new Intel CPU model defines
-  platform/x86: intel_ips: Switch to new Intel CPU model defines
-  platform/x86: intel-uncore-freq: Switch to new Intel CPU model defines
-  platform/x86: intel_speed_select_if: Switch to new Intel CPU model
-    defines
-  platform/x86: intel_scu_wdt: Switch to new Intel CPU model defines
-  platform/x86/intel/ifs: Switch to new Intel CPU model defines
-  platform/x86: ISST: Switch to new Intel CPU model defines
-
- arch/x86/platform/atom/punit_atom_debug.c     | 11 ++--
- drivers/platform/x86/intel/ifs/core.c         | 15 +++--
- drivers/platform/x86/intel/pmc/core.c         | 46 +++++++--------
- drivers/platform/x86/intel/pmc/pltdrv.c       | 16 +++---
- .../intel/speed_select_if/isst_if_common.c    |  8 +--
- .../intel/speed_select_if/isst_if_mbox_msr.c  |  2 +-
- .../platform/x86/intel/telemetry/debugfs.c    |  4 +-
- drivers/platform/x86/intel/telemetry/pltdrv.c |  4 +-
- drivers/platform/x86/intel/turbo_max_3.c      |  4 +-
- .../intel/uncore-frequency/uncore-frequency.c | 56 +++++++++----------
- drivers/platform/x86/intel_ips.c              |  3 +-
- drivers/platform/x86/intel_scu_wdt.c          |  2 +-
- drivers/platform/x86/p2sb.c                   |  2 +-
- 13 files changed, 86 insertions(+), 87 deletions(-)
-
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+diff --git a/drivers/platform/x86/intel/telemetry/debugfs.c b/drivers/platform/x86/intel/telemetry/debugfs.c
+index 1d4d0fbfd63c..70e5736c44c7 100644
+--- a/drivers/platform/x86/intel/telemetry/debugfs.c
++++ b/drivers/platform/x86/intel/telemetry/debugfs.c
+@@ -308,8 +308,8 @@ static struct telemetry_debugfs_conf telem_apl_debugfs_conf = {
+ };
+ 
+ static const struct x86_cpu_id telemetry_debugfs_cpu_ids[] = {
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&telem_apl_debugfs_conf),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&telem_apl_debugfs_conf),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&telem_apl_debugfs_conf),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&telem_apl_debugfs_conf),
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(x86cpu, telemetry_debugfs_cpu_ids);
+diff --git a/drivers/platform/x86/intel/telemetry/pltdrv.c b/drivers/platform/x86/intel/telemetry/pltdrv.c
+index 06311d0e9451..767a0bc6c7ad 100644
+--- a/drivers/platform/x86/intel/telemetry/pltdrv.c
++++ b/drivers/platform/x86/intel/telemetry/pltdrv.c
+@@ -177,8 +177,8 @@ static struct telemetry_plt_config telem_glk_config = {
+ };
+ 
+ static const struct x86_cpu_id telemetry_cpu_ids[] = {
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&telem_apl_config),
+-	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&telem_glk_config),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT,	&telem_apl_config),
++	X86_MATCH_VFM(INTEL_ATOM_GOLDMONT_PLUS,	&telem_glk_config),
+ 	{}
+ };
+ 
 -- 
 2.45.0
 
