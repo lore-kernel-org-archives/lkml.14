@@ -1,171 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8187E788;
-	Fri, 31 May 2024 19:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BAD17C223;
+	Fri, 31 May 2024 19:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717184547; cv=none; b=BPa6L/qwMkf6Vkebs3C83oCVHjl3QBnPYgOsJgvXGQajwC1Hl1J6qlzoGeCI6JlaueaDxqBQ1/p2S4Lu1qEHbt/c4bBmFXiLkmKBQw9HBElpqkIawFHY2p2I13JpN6AvAQWkcTNstbhQUF05bd2HDzTpNz4wJj9AeqB8BkxvYC4=
+	t=1717184571; cv=none; b=tRmi+FxPNbkS2fzs8cEwW+fyL4C4HpFlPx81S5QHKwOIV4/GtZQNrtfAbbqAXzRjJmedVHbUuGSZk70nzqcPaaKDPjbznU8MFbcp8GoQpYklzX8KGUGc7FpwF0uFvRZIfnyhU1VlnEgqQfTI70+NuKCDQ7tBXrEJNImo07D0gok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717184547; c=relaxed/simple;
-	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTHEFPv5Cs+6tRaYiTQM4PteQ4YU8O42FtqIMzYPPQtcP+uQIZShpnLZiMBmMIzw8pHWP6BTequ0wfs2JdUIYRGAx4uccVOnP+CaHF0mApiGA5rUV0umCfncDmljZyiKPh0zpJ6UI6Z+CWVJW2MAVyv+VMCKsOAN/vtebUAttug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EpsfUyDE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717184571; c=relaxed/simple;
+	bh=sLlNh5KM9caSYG90x2iutDPvdP6uUJqRbn814aBoYIk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dcUFBx6ujXUe6hCJKTFudoR6GvRzsltxcjgY4G6z51sZ8kW8mk4NosoztE2GREq5PlQafYq5m/1FeLVTmiJ8UqnRJWrYvj8nKyNSKbt5WEXzhV49ksCxWDKq1VIbG9uFZARBc9glleH4qE8UrVOu8IU3esqSsaEaC/jdUMGXtTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mhzkntFP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EpsfUyDE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B2DCC116B1;
-	Fri, 31 May 2024 19:42:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mhzkntFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3C246C4AF0B;
+	Fri, 31 May 2024 19:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717184546;
-	bh=IHtY4B5fyvO4/kzwdP0+z8rMYAMuQ09eRmDS4pTYFTc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=EpsfUyDEfoc4GlQNr5/qC/rYJf8CRPzzKGQUfTc7IU9IUTZNp1q98+3dTDuKCbEnn
-	 YhDUZX2XNqj92hNk46/RoBzz9kFPMjVDY+EcvUwnMP4zR89qq3CE6XunMvcQrA+i08
-	 mV/cg9CuzC/VYHdMpIROINmHesTgSjKTeswUg2sqTR6wOXFQqte+LFmMIz15BWKnOv
-	 pCJpZVwn3dCxyNUVq+I/tdZGueAKlR9dS1WNaRwjnNELnVyagDeH4pzKrVKZweDhI2
-	 tBNmnY7jP9EdESxwaMjqdzXV977X1qU04SbJEoc2oReu1WJP4nRa/rH8LKJe56WUFV
-	 ceQL5p5ID2uFA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 42BADCE3ED6; Fri, 31 May 2024 12:42:26 -0700 (PDT)
-Date: Fri, 31 May 2024 12:42:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	rcu <rcu@vger.kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
-	Joel Fernandes <joel@joelfernandes.org>, neeraj.upadhyay@kernel.org,
-	John Ogness <john.ogness@linutronix.de>, broonie@kernel.org
-Subject: Re: arm-linux-gnueabihf-ld:
- kernel/rcu/update.o:update.c:(.text+0x1cc4): more undefined references to
- `__bad_cmpxchg' follow
-Message-ID: <fb84bb7f-a621-406a-8d1a-51be17caa712@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com>
- <Zlhwe5owmbzI3jJK@shell.armlinux.org.uk>
- <7f61cc11-7afe-46ac-9f07-62e0b9ab429f@app.fastmail.com>
- <5426b25f-9c25-4938-99e8-5cdea75e4d3b@paulmck-laptop>
- <214a33ac-d4fa-4d48-ad3c-ad8b00ae1a5e@paulmck-laptop>
- <20240530215153.GA466604@thelio-3990X>
- <583e2476-50c5-4f9c-85af-f4489a53083b@paulmck-laptop>
- <20240530233053.GA1601862@thelio-3990X>
- <3ce74da3-0b21-439b-af72-e80bfe0e9f02@paulmck-laptop>
- <20240531162722.GA1457604@thelio-3990X>
+	s=k20201202; t=1717184571;
+	bh=sLlNh5KM9caSYG90x2iutDPvdP6uUJqRbn814aBoYIk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=mhzkntFP1mcEZ1D0J+hIEC2PpjFdQrYvZozm33tPdlxZrQNTjD+rZPCj+XNy+0XwA
+	 jlmbQqwbNmYCk62FvvPP17sUPaFIwKm3AnA1WAwqZ2UJo/MWGa5wsQZgYR4vItjfiU
+	 S7lXZKc8lJJhzJQiXY3EM5Rw0JLnXccOCy7k0lkS5kbrMVuPXMaaMFrDUGA7w8JgoK
+	 rGgxExlfkkbSWNvB9inTIDNFhivYdAl6hJI2bJgbxlWXQTv/AHWbaaIH69FZI8YRs4
+	 0Ep6FCasPZI8/eCIj1ohPJP4a9aBt2vJ2SlD1+yCVY/+k9BFH52uZ7zpZW/KsWB771
+	 bUn7etG72ddvA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F891C25B7C;
+	Fri, 31 May 2024 19:42:51 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Date: Fri, 31 May 2024 22:42:28 +0300
+Subject: [PATCH v4 2/6] iio: adc: ad7173: refactor channel configuration
+ parsing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531162722.GA1457604@thelio-3990X>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240531-ad4111-v4-2-64607301c057@analog.com>
+References: <20240531-ad4111-v4-0-64607301c057@analog.com>
+In-Reply-To: <20240531-ad4111-v4-0-64607301c057@analog.com>
+To: Ceclan Dumitru <dumitru.ceclan@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Nuno Sa <nuno.sa@analog.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717184569; l=2390;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=tyfIBjq9+3kqvLQ3iYrfTDEdse1O9TimBWVFOmM0qog=;
+ b=DTeTcfTX5k8OZQ8f3AaMWc5IifhiebXkxIwsMzcSHA4ddZchb5XI0DLAlSwkAD0LyjeiBUbfj
+ 5Ly49LIRkrEAqDUjwvn2wCJDyP4Oaa9F82xwpoWLSIo09YbRUT66myh
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-On Fri, May 31, 2024 at 09:27:22AM -0700, Nathan Chancellor wrote:
-> On Thu, May 30, 2024 at 05:35:44PM -0700, Paul E. McKenney wrote:
-> > On Thu, May 30, 2024 at 04:30:53PM -0700, Nathan Chancellor wrote:
-> > > On Thu, May 30, 2024 at 03:05:21PM -0700, Paul E. McKenney wrote:
-> > > > On Thu, May 30, 2024 at 02:52:48PM -0700, Nathan Chancellor wrote:
-> > > > > On Thu, May 30, 2024 at 10:24:05AM -0700, Paul E. McKenney wrote:
-> > > > > > And for an untested first attempt at a fix.
-> > > > > > 
-> > > > > > What did I mess up this time?  ;-)
-> > > > > 
-> > > > > An include for cmpxchg-emu.h ;)
-> > > > > 
-> > > > >   In file included from arch/arm/include/asm/atomic.h:16,
-> > > > >                    from include/linux/atomic.h:7,
-> > > > >                    from include/asm-generic/bitops/lock.h:5,
-> > > > >                    from arch/arm/include/asm/bitops.h:245,
-> > > > >                    from include/linux/bitops.h:63,
-> > > > >                    from include/linux/log2.h:12,
-> > > > >                    from kernel/bounds.c:13:
-> > > > >   arch/arm/include/asm/cmpxchg.h: In function '__cmpxchg':
-> > > > >   arch/arm/include/asm/cmpxchg.h:167:26: error: implicit declaration of function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-> > > > >     167 |                 oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> > > > >         |                          ^~~~~~~~~~~~~~
-> > > > >   cc1: some warnings being treated as errors
-> > > > 
-> > > > Good catch, and thank you for testing this!  Does the updated version
-> > > > shown below do better?
-> > > 
-> > > Yes, that matches what I tested locally before I replied initially.
-> > 
-> > Very good!  May I please add your Tested-by?
-> 
-> Sure thing.
-> 
-> Tested-by: Nathan Chancellor <nathan@kernel.org>
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-Thank you!  I will apply this on my next rebase.
+Move configurations regarding number of channels from
+*_fw_parse_device_config to *_fw_parse_channel_config.
 
-							Thanx, Paul
+Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Link: https://lore.kernel.org/all/20240303162148.3ad91aa2@jic23-huawei/
+Reviewed-by: David Lechner <dlechner@baylibre.com>
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+---
+ drivers/iio/adc/ad7173.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > commit 74e3470afacaa9d2f37db4773a5fef887ac4ef56
-> > > > Author: Paul E. McKenney <paulmck@kernel.org>
-> > > > Date:   Thu May 30 10:11:31 2024 -0700
-> > > > 
-> > > >     ARM: Emulate one-byte cmpxchg
-> > > >     
-> > > >     Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on ARM systems
-> > > >     with ARCH < ARMv6K.
-> > > >     
-> > > >     [ paulmck: Apply Arnd Bergmann and Nathan Chancellor feedback. ]
-> > > >     
-> > > >     Reported-by: Mark Brown <broonie@kernel.org>
-> > > >     Closes: https://lore.kernel.org/all/54798f68-48f7-4c65-9cba-47c0bf175143@sirena.org.uk/
-> > > >     Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > > >     Closes: https://lore.kernel.org/all/CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com/
-> > > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > >     Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> > > >     Cc: Arnd Bergmann <arnd@arndb.de>
-> > > >     Cc: Andrew Davis <afd@ti.com>
-> > > >     Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > >     Cc: Linus Walleij <linus.walleij@linaro.org>
-> > > >     Cc: Eric DeVolder <eric.devolder@oracle.com>
-> > > >     Cc: Rob Herring <robh@kernel.org>
-> > > >     Cc: <linux-arm-kernel@lists.infradead.org>
-> > > > 
-> > > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > > index ee5115252aac4..a867a7d967aa5 100644
-> > > > --- a/arch/arm/Kconfig
-> > > > +++ b/arch/arm/Kconfig
-> > > > @@ -34,6 +34,7 @@ config ARM
-> > > >  	select ARCH_MIGHT_HAVE_PC_PARPORT
-> > > >  	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
-> > > >  	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
-> > > > +	select ARCH_NEED_CMPXCHG_1_EMU if CPU_V6
-> > > >  	select ARCH_SUPPORTS_ATOMIC_RMW
-> > > >  	select ARCH_SUPPORTS_CFI_CLANG
-> > > >  	select ARCH_SUPPORTS_HUGETLBFS if ARM_LPAE
-> > > > diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
-> > > > index 44667bdb4707a..a428e06fe94ee 100644
-> > > > --- a/arch/arm/include/asm/cmpxchg.h
-> > > > +++ b/arch/arm/include/asm/cmpxchg.h
-> > > > @@ -5,6 +5,7 @@
-> > > >  #include <linux/irqflags.h>
-> > > >  #include <linux/prefetch.h>
-> > > >  #include <asm/barrier.h>
-> > > > +#include <linux/cmpxchg-emu.h>
-> > > >  
-> > > >  #if defined(CONFIG_CPU_SA1100) || defined(CONFIG_CPU_SA110)
-> > > >  /*
-> > > > @@ -162,7 +163,11 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
-> > > >  	prefetchw((const void *)ptr);
-> > > >  
-> > > >  	switch (size) {
-> > > > -#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
-> > > > +#ifdef CONFIG_CPU_V6	/* min ARCH < ARMv6K */
-> > > > +	case 1:
-> > > > +		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-> > > > +		break;
-> > > > +#else /* min ARCH >= ARMv6K */
-> > > >  	case 1:
-> > > >  		do {
-> > > >  			asm volatile("@ __cmpxchg1\n"
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 638e2468efbf..6e249628bc64 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -912,7 +912,23 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+ 	struct device *dev = indio_dev->dev.parent;
+ 	struct iio_chan_spec *chan_arr, *chan;
+ 	unsigned int ain[2], chan_index = 0;
+-	int ref_sel, ret;
++	int ref_sel, ret, num_channels;
++
++	num_channels = device_get_child_node_count(dev);
++
++	if (st->info->has_temp)
++		num_channels++;
++
++	if (num_channels == 0)
++		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
++
++	if (num_channels > st->info->num_channels)
++		return dev_err_probe(dev, -EINVAL,
++			"Too many channels specified. Maximum is %d, not including temperature channel if supported.\n",
++			st->info->num_channels);
++
++	indio_dev->num_channels = num_channels;
++	st->num_channels = num_channels;
+ 
+ 	chan_arr = devm_kcalloc(dev, sizeof(*indio_dev->channels),
+ 				st->num_channels, GFP_KERNEL);
+@@ -1007,7 +1023,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ {
+ 	struct ad7173_state *st = iio_priv(indio_dev);
+ 	struct device *dev = indio_dev->dev.parent;
+-	unsigned int num_channels;
+ 	int ret;
+ 
+ 	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
+@@ -1066,16 +1081,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ 
+ 	ad7173_sigma_delta_info.irq_line = ret;
+ 
+-	num_channels = device_get_child_node_count(dev);
+-
+-	if (st->info->has_temp)
+-		num_channels++;
+-
+-	if (num_channels == 0)
+-		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
+-	indio_dev->num_channels = num_channels;
+-	st->num_channels = num_channels;
+-
+ 	return ad7173_fw_parse_channel_config(indio_dev);
+ }
+ 
+
+-- 
+2.43.0
+
+
