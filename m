@@ -1,173 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6315E80617;
-	Fri, 31 May 2024 06:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE1339A8
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 06:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717137848; cv=none; b=rlfKNqYNq77kk812T2RLawIEo7Wz4wGnghpvIwM3imPgKtkKtNcEILLs9ELAA3OMNt8z+RSRt2sAGLa6jbmrT/5tRxHtoxjO6cWa7OPWBID5NIbxnZ6mYZxz2QTcRS1Ezh4geRbG/HdZ+s5gxAm+XKo7fDE4OkAWTaec+EePVAw=
+	t=1717137888; cv=none; b=tAM6LJfv67HOcSDOm5XWw87b4haLXOXQt5fF/KqztrsJpzTqSoM35oLuXMfNDtooww9G161TiR3RE2K4+/2SZZHzGpIIytmorW2Mu0PEZ7s7hqtrBukZepYZWvx5AV0GMuTj7P12eHXEjRocCFBA7pC0pIL/jZTjYwXwPTU2l4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717137848; c=relaxed/simple;
-	bh=UG2VPXJmnotgQCGbUJuzOG/RmR6KlipUd0UjDzTFmOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FuMv690125zS4AybR+SOzRiHp7G07DXSqocF6nTNEg5F3DtAXde6LhhhAG2cWbkizq9T8yT8Vsh0kNwPioOCmta2B2KO6LGQjkcNPnQC+0tFXx0jTPtcMryaMUZ9lEyoHZD/Jg0Hu0RfFTewKo4SiCh4NCaMFIAf2pgrRAUaCw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YZM0CWkl; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717137888; c=relaxed/simple;
+	bh=BCGsz3iZV2DrmSa/WUkiRfpcRISW7pinFjp8ivjl398=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F3LAbpAYQMRfrfrV07ur3+WBCxEZlWEHCHY+9hIve99eikhJkkl9SzG94djCB2XHLcktqhOomXMVdu9ZUF9WqBZjN+9G5BRc1I1zvLmwyhnQMJFQZSP0vSKPtZO2f5I7SuCmIjxfWbyabKSisMBXZ95aUjNcTvpZZCLkr+mfOUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k+3j+SoV; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YZM0CWkl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717137846; x=1748673846;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UG2VPXJmnotgQCGbUJuzOG/RmR6KlipUd0UjDzTFmOc=;
-  b=YZM0CWklr+d5AEzyUfDHiw6G70pIq1zPbl84ETih1cZ0sHmpx4cZJg91
-   ujsN23p1MTVpdLpBkrIPcV3k1ctrcqgIwSh90xgTaSCFJ2TouRlzulp4R
-   4B2gAEc/G40BtGaPpggwjB/yzSAjd0PbVNRaCO88jj3gF/tjz/7HSZq6M
-   4itWWMkOzqs+fX5Jdu9CMcxk3SYGPH/s2LQjd0uMTDG1sCL2vcpc8M3h7
-   DrQpgcz4NquJolwz9QdigWd5gM4yLX09lLzbLBTJqfWmoo3rKkGuUS7kE
-   PuIRHG0mR9cCc03EcnF4lxnpLo9XpQeayJiumEpjXuEk7MPc3jrTf20q1
-   Q==;
-X-CSE-ConnectionGUID: j/NJpsWBT8KTgexo6gJlWw==
-X-CSE-MsgGUID: Lg3v9zVGRxOp0EamNz2UXQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="17497233"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="17497233"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2024 23:44:06 -0700
-X-CSE-ConnectionGUID: 3FNSixCJRzeU6SpSydb64Q==
-X-CSE-MsgGUID: MIPAgyHVT2ebsdue2tL+gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="36689755"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 30 May 2024 23:43:58 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sCvzO-000Gd3-2Y;
-	Fri, 31 May 2024 06:43:49 +0000
-Date: Fri, 31 May 2024 14:42:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	Mark Brown <broonie@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-	linuxppc-dev@lists.ozlabs.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	James Schulman <james.schulman@cirrus.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>
-Subject: Re: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
-Message-ID: <202405311428.tzsBMIPs-lkp@intel.com>
-References: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+3j+SoV"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-62a08b1a81bso13975647b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 30 May 2024 23:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717137885; x=1717742685; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rHvbYiipVOuDjYGCfTtKSuc1awi5eLZfdGsz5nVF2ZQ=;
+        b=k+3j+SoV2TCpjOslTAt9PMA9pAXJtMuAI2nngCD2w2K+7eS2Fbc6bePVtXFPBp3plu
+         4ZOcTPcszaO5sBY718byYyQwAoRQ8LKPfJzl3+y6yu/Q0LbRpQPjcN3Sfcz3Z6a/rHEv
+         LQ5NA+KIt3cSfaU3Ef21gjBmTfKLonBbSP6R3mnlW7vU2o1IgX061orUR9riIX0ZMAkb
+         cfRP4DG3AMdlrsgtnAdmHmCsgUjLr/c3irfx1JX7nJ5DZUWhEF1F3WafXVndXFaXAvA2
+         Ehtu/ZpLyaJE80wa3frXRJ5r3uRg6OZ9+MmKba7uX9jnHjt/j+/RmZkmXgRJowcrlZh2
+         QoIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717137885; x=1717742685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rHvbYiipVOuDjYGCfTtKSuc1awi5eLZfdGsz5nVF2ZQ=;
+        b=LXGq0rb5h36MPd6us6AxWllbzjmaYv9UovTWqY1s7Bjsqbe/TLQavhay74AwjBOqgU
+         kukVda6kiyQRWeQCK5/87wiSquI/w73aWIO6CIDSSXVhlEsJ6rRVorZMIVVx1GUiiPw9
+         45tuhEpfen2p/dtRFFNTSEk13miwH4QcUlNuH+VHMVzLsQ9nVVwsRdatUG8luoGOrLu3
+         qZjzEbTMdXb4zWoKdH2RhLaEE8Ayc6wgSS5IwfsX/p7E4L72jUAyEUMvBHvD1LNPtdtf
+         YCn6aKvb1Om0gyib1f0Feisvdyr3duBtVLnX7ejepxrz+6cHFFuS5j+08ONHo4Jyd4iW
+         suEg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3J7+l1meNaZkwf3RQaykc41ivQMXaKY6ANCSTXRRbhWNLW/RSamhCQ//pFhqmFT+KPcjbUy85O0GyMNPrcnt4uxpfADfXi5UdwZ6y
+X-Gm-Message-State: AOJu0Yw0d6BO4YT3mMYtAnlmuBducfTOO6YQO/iL39KGWWhQYGsgWq59
+	vbfmlm7m1E+4/7Lf5w45ZAjsY7zbETLuXQgP4D+RWrYQCPUhG3oM/1OC7hPQ+5oWK5TrQ+WpZin
+	+
+X-Google-Smtp-Source: AGHT+IEbplcJjnkF9ceT4BZITDuJNgu2aEsuEwyLLAkBCdRRYbtUcF8wWEdP4XOrGo4ERPlrSMTPQw==
+X-Received: by 2002:a81:ed0d:0:b0:609:ff2d:1814 with SMTP id 00721157ae682-62c797fd91emr8919517b3.37.1717137885591;
+        Thu, 30 May 2024 23:44:45 -0700 (PDT)
+Received: from [192.168.86.191] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id af79cd13be357-794f2f042dasm39390285a.22.2024.05.30.23.44.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 May 2024 23:44:45 -0700 (PDT)
+Message-ID: <87e109a7-2088-42f7-b8c1-fb549fe3e377@linaro.org>
+Date: Fri, 31 May 2024 07:44:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240530230037.1156253-2-andriy.shevchenko@linux.intel.com>
-
-Hi Andy,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on broonie-sound/for-next]
-[also build test ERROR on shawnguo/for-next rockchip/for-next linus/master v6.10-rc1 next-20240529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/ASoC-codecs-Remove-unused-of_gpio-h/20240531-070350
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-patch link:    https://lore.kernel.org/r/20240530230037.1156253-2-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH v1 1/6] ASoC: codecs: Remove unused of_gpio.h
-config: i386-buildonly-randconfig-006-20240531 (https://download.01.org/0day-ci/archive/20240531/202405311428.tzsBMIPs-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240531/202405311428.tzsBMIPs-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405311428.tzsBMIPs-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> sound/soc/codecs/tas2781-comlib.c:408:6: error: call to undeclared function 'gpio_is_valid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     408 |         if (gpio_is_valid(tas_priv->irq_info.irq_gpio))
-         |             ^
-   sound/soc/codecs/tas2781-comlib.c:408:6: note: did you mean 'uuid_is_valid'?
-   include/linux/uuid.h:102:19: note: 'uuid_is_valid' declared here
-     102 | bool __must_check uuid_is_valid(const char *uuid);
-         |                   ^
->> sound/soc/codecs/tas2781-comlib.c:409:3: error: call to undeclared function 'gpio_free'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     409 |                 gpio_free(tas_priv->irq_info.irq_gpio);
-         |                 ^
-   sound/soc/codecs/tas2781-comlib.c:409:3: note: did you mean 'pmd_free'?
-   include/asm-generic/pgtable-nopmd.h:63:20: note: 'pmd_free' declared here
-      63 | static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
-         |                    ^
-   2 errors generated.
---
->> sound/soc/codecs/tas2781-i2c.c:664:6: error: call to undeclared function 'gpio_is_valid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     664 |         if (gpio_is_valid(tas_priv->irq_info.irq_gpio)) {
-         |             ^
-   sound/soc/codecs/tas2781-i2c.c:664:6: note: did you mean 'uuid_is_valid'?
-   include/linux/uuid.h:102:19: note: 'uuid_is_valid' declared here
-     102 | bool __must_check uuid_is_valid(const char *uuid);
-         |                   ^
->> sound/soc/codecs/tas2781-i2c.c:665:8: error: call to undeclared function 'gpio_request'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     665 |                 rc = gpio_request(tas_priv->irq_info.irq_gpio,
-         |                      ^
->> sound/soc/codecs/tas2781-i2c.c:668:4: error: call to undeclared function 'gpio_direction_input'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     668 |                         gpio_direction_input(
-         |                         ^
-   sound/soc/codecs/tas2781-i2c.c:668:4: note: did you mean 'gpiod_direction_input'?
-   include/linux/gpio/consumer.h:110:5: note: 'gpiod_direction_input' declared here
-     110 | int gpiod_direction_input(struct gpio_desc *desc);
-         |     ^
->> sound/soc/codecs/tas2781-i2c.c:672:5: error: call to undeclared function 'gpio_to_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     672 |                                 gpio_to_irq(tas_priv->irq_info.irq_gpio);
-         |                                 ^
-   sound/soc/codecs/tas2781-i2c.c:672:5: note: did you mean 'gpiod_to_irq'?
-   include/linux/gpio/consumer.h:167:5: note: 'gpiod_to_irq' declared here
-     167 | int gpiod_to_irq(const struct gpio_desc *desc);
-         |     ^
-   4 errors generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] ASoC: qcom: common: add Display port Jack function
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, broonie@kernel.org, perex@perex.cz,
+ tiwai@suse.com, lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+ linux-kernel@vger.kernel.org
+References: <20240422134354.89291-1-srinivas.kandagatla@linaro.org>
+ <20240422134354.89291-3-srinivas.kandagatla@linaro.org>
+ <ZiejT5yddioQ8upR@hovoldconsulting.com>
+ <b9d0e2fd-069c-439c-a85f-1e99bf9018c3@linaro.org>
+ <Zi-0kSU6TMcev05r@hovoldconsulting.com>
+ <a980d7a5-0d80-4ff1-93e1-b5f5806980c3@linaro.org>
+ <Zlj_4IuZqnC3gESL@eriador.lumag.spb.ru>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <Zlj_4IuZqnC3gESL@eriador.lumag.spb.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +/gpio_is_valid +408 sound/soc/codecs/tas2781-comlib.c
 
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  405  
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  406  void tasdevice_remove(struct tasdevice_priv *tas_priv)
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  407  {
-ef3bcde75d06d6 Shenghao Ding 2023-06-18 @408  	if (gpio_is_valid(tas_priv->irq_info.irq_gpio))
-ef3bcde75d06d6 Shenghao Ding 2023-06-18 @409  		gpio_free(tas_priv->irq_info.irq_gpio);
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  410  	mutex_destroy(&tas_priv->codec_lock);
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  411  }
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  412  EXPORT_SYMBOL_GPL(tasdevice_remove);
-ef3bcde75d06d6 Shenghao Ding 2023-06-18  413  
+On 30/05/2024 23:38, Dmitry Baryshkov wrote:
+>>> It will always be DP out of the machine even if an adapter can convert
+>>> to HDMI internally.
+>>>
+>>> The DRM ports are called "DP-1" and "DP-2" so it seems we should match
+>>> that.
+>>>
+>>>> This is the most common naming for the USB-C DP/HDMI jack events.
+>>> It looks like some Intel machines use names like "HDMI/DP, pcm=%d Jack"
+>>> (with a pcm device number), but we also have "DP Jack". Not sure which
+>>> are are used with USB-C, though. (Or if the former actually support HDMI
+>>> altmode.)
+>> I checked this on my machine which has usb-c and I can confirm using HDMI/DP
+>> naming for these jack.
+>>
+>> Either way I don't mind having any names, but my point here is to be more
+>> consistent across.
+> I fear it is till not consistent. On the Intel laptop I see following
+> jacks:
+> 
+> numid=18,iface=CARD,name='HDMI/DP,pcm=3 Jack'
+> numid=24,iface=CARD,name='HDMI/DP,pcm=7 Jack'
+> numid=30,iface=CARD,name='HDMI/DP,pcm=8 Jack'
+> 
+> On the other hand Mediatek and RockChip use just 'DP Jack'.
+> 
+> I'd suggest settling on the latter option. We are closer to MTK and
+> RockChip rather than Intel.
+that is fine with me.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> BTW: a platform can easily have 4 (x1e8100) or even 8 (sc8280xp) DP
+> outputs. Could you please point out why there are just 3 jacks?
+The CRD platform that I have access to has 3 ports which is why I 
+started with 3 ports, but we can add more ports as and when we can 
+really test them.
+
+--srini
