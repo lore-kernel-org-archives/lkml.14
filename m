@@ -1,42 +1,35 @@
-Received: from r3-11.sinamail.sina.com.cn (r3-11.sinamail.sina.com.cn [202.108.3.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B9B78C7A
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 02:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64166256D;
+	Fri, 31 May 2024 02:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717123766; cv=none; b=QgfROSjVy6ANjzqwtQrIyS3K7frgQs/VrlrM7aRF+4o7rCrpaMsyP234rz3EPZkB4pbPZ+evd8E6EmK3nMMZFgRmtTN6qZ/CkbqwrnyUycSp+D2iAeh4uyQWsRTR6mzjWww53HLShsMKvhAuUnuioRB0nDLRFawku4lsLOzPJt8=
+	t=1717123830; cv=none; b=H++iOnTel2tZ2hNVhpMUvO5ywfjGHRHsME1unIN/rlwockDvkC22y7dudKlDzoY0EOL22AFhXaLAd2Mx2dHSPHJsWYFfDgd2/JytqbCt5kf1c1lTwmdWZe2nt3oFj1SUlhZdoNRirSHTVSyEEY3ibp7lHTcCzkvuDeZL6563mkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717123766; c=relaxed/simple;
-	bh=yC+LB2Y6jUoQAATr+h19M50CQIqqD4nkhuJXFLuUmIk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jgj0NArw22IWj2VJ1tghXDz1YydgoNrS1MlZ41GkR/gXEwkIl0SBslcWGauJX+cmmDRfu0hDuEST0qDljSTCrf3M9N/FI+2y/xBWoPQ0I8My7CpeSzyyBkzTP4TgkIlWgNAvVHGtGwfOsYVfVfcuqcgNFD3I4M2ODElHCWX1sCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost
-Received: from unknown (HELO localhost)([101.132.132.191])
-	by sina.com (10.182.253.22) with ESMTP
-	id 66593A8700000D3E; Fri, 31 May 2024 10:48:41 +0800 (CST)
-X-Sender: ghostxavier@sina.com
-X-Auth-ID: ghostxavier@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=ghostxavier@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=ghostxavier@sina.com
-X-SMAIL-MID: 2472246816138
-X-SMAIL-UIID: C36FAEE0ECE84822B888075C91066179-20240531-104841-1
-From: Xavier <ghostxavier@sina.com>
-To: longman@redhat.com,
-	lizefan.x@bytedance.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xavier <ghostxavier@sina.com>
-Subject: [PATCH v2] cpuset: Optimize the number of iterations in the scheduling domain construction process
-Date: Fri, 31 May 2024 10:48:37 +0800
-Message-Id: <20240531024837.255293-1-ghostxavier@sina.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717123830; c=relaxed/simple;
+	bh=QDJ8YbhmGXMyUNUrXuBhbp93iWFoaOop/TTLaiT4ujg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=IVDg2Oyo/xnD+70dFJTCsRcPbLcaa2Kl/SRKRPB5IJIck7+aybHQFu/9K52laeUla22BALEzTTwevgLjC56BuYURPjGDbvzE20VnQo5S0CBpMYCPt6IRwN0wXqSmA9fUT5KU1dWCfq+WNeWafwZIu0mjk4r7XBvztEmVocT7uvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2UmkRY1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2UmkRY1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D46B0C3277B;
+	Fri, 31 May 2024 02:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717123829;
+	bh=QDJ8YbhmGXMyUNUrXuBhbp93iWFoaOop/TTLaiT4ujg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=L2UmkRY1VKj10+fBWn8mmDVwJa/VkgYi2L08LDauF08mSq5fbqxw0PZxDkbJu2X66
+	 GZQK3tfftj4WJCggWnJnPDmQ55G3beoXwktsliEmMCNMqMBZ+t+S7xwZjbP7qYOvte
+	 swQJIvIksQi6vqS23sPWZlZ9o2bXWHPzA01XCT0FM30+wApHo4jQ0DYODTv6lC0BC8
+	 DFWS+9Kxv+sDnf6dMeRnbtw/LyyFyrBJgBVtJzTaAGs8nKVtsdDERMqzTV/8jcdP1U
+	 BYhbmkuSXvn2MYxk1gvXFtSgELY2LW4ZD0OzR+nadXu2JDaVManabNOO4Cu0Hu3dCs
+	 qsUjSOY7mlswA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C2F19CF21F2;
+	Fri, 31 May 2024 02:50:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,193 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] riscv: fix overlap of allocated page and PTR_ERR
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171712382979.22953.17135876483679871225.git-patchwork-notify@kernel.org>
+Date: Fri, 31 May 2024 02:50:29 +0000
+References: <20240425115201.3044202-1-namcao@linutronix.de>
+In-Reply-To: <20240425115201.3044202-1-namcao@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alexghiti@rivosinc.com,
+ akpm@linux-foundation.org, bhe@redhat.com, samitolvanen@google.com,
+ chenjiahao16@huawei.com, bjorn@rivosinc.com, linux-kernel@vger.kernel.org,
+ rppt@kernel.org, bjorn@kernel.org, stable@vger.kernel.org
 
-The process of constructing scheduling domains involves multiple loops
-and repeated evaluations, leading to numerous redundant and ineffective
-assessments that impact code efficiency.
+Hello:
 
-Here, we use Union-Find to optimize the merging of cpumasks. By employing
-path compression and union by rank, we effectively reduce the number of
-lookups and merge comparisons.
+This patch was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Signed-off-by: Xavier <ghostxavier@sina.com>
----
- kernel/cgroup/cpuset.c | 117 +++++++++++++++++++++++------------------
- 1 file changed, 66 insertions(+), 51 deletions(-)
+On Thu, 25 Apr 2024 13:52:01 +0200 you wrote:
+> On riscv32, it is possible for the last page in virtual address space
+> (0xfffff000) to be allocated. This page overlaps with PTR_ERR, so that
+> shouldn't happen.
+> 
+> There is already some code to ensure memblock won't allocate the last page.
+> However, buddy allocator is left unchecked.
+> 
+> [...]
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c12b9fdb2..4bea1c2db 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -891,6 +891,44 @@ static inline int nr_cpusets(void)
- 	return static_key_count(&cpusets_enabled_key.key) + 1;
- }
- 
-+/*define a union find node struct*/
-+struct uf_node {
-+	int parent;
-+	int rank;
-+};
-+
-+static int find_root(struct uf_node *nodes, int x)
-+{
-+	int root = x;
-+	int parent;
-+
-+	/*Find the root node and perform path compression at the same time*/
-+	while (nodes[root].parent != root) {
-+		parent = nodes[root].parent;
-+		nodes[root].parent = nodes[parent].parent;
-+		root = parent;
-+	}
-+	return root;
-+}
-+
-+/*Function to merge two sets, using union by rank*/
-+static void union_sets(struct uf_node *nodes, int a, int b)
-+{
-+	int root_a = find_root(nodes, a);
-+	int root_b = find_root(nodes, b);
-+
-+	if (root_a != root_b) {
-+		if (nodes[root_a].rank < nodes[root_b].rank) {
-+			nodes[root_a].parent = root_b;
-+		} else if (nodes[root_a].rank > nodes[root_b].rank) {
-+			nodes[root_b].parent = root_a;
-+		} else {
-+			nodes[root_b].parent = root_a;
-+			nodes[root_a].rank++;
-+		}
-+	}
-+}
-+
- /*
-  * generate_sched_domains()
-  *
-@@ -950,13 +988,14 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cpuset *cp;	/* top-down scan of cpusets */
- 	struct cpuset **csa;	/* array of all cpuset ptrs */
- 	int csn;		/* how many cpuset ptrs in csa so far */
--	int i, j, k;		/* indices for partition finding loops */
-+	int i, j;		/* indices for partition finding loops */
- 	cpumask_var_t *doms;	/* resulting partition; i.e. sched domains */
- 	struct sched_domain_attr *dattr;  /* attributes for custom domains */
- 	int ndoms = 0;		/* number of sched domains in result */
- 	int nslot;		/* next empty doms[] struct cpumask slot */
- 	struct cgroup_subsys_state *pos_css;
- 	bool root_load_balance = is_sched_load_balance(&top_cpuset);
-+	struct uf_node *nodes;
- 
- 	doms = NULL;
- 	dattr = NULL;
-@@ -1022,33 +1061,31 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	}
- 	rcu_read_unlock();
- 
--	for (i = 0; i < csn; i++)
--		csa[i]->pn = i;
--	ndoms = csn;
--
--restart:
--	/* Find the best partition (set of sched domains) */
--	for (i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		int apn = a->pn;
-+	nodes = kmalloc_array(csn, sizeof(struct uf_node), GFP_KERNEL);
-+	if (!nodes)
-+		goto done;
- 
--		for (j = 0; j < csn; j++) {
--			struct cpuset *b = csa[j];
--			int bpn = b->pn;
- 
--			if (apn != bpn && cpusets_overlap(a, b)) {
--				for (k = 0; k < csn; k++) {
--					struct cpuset *c = csa[k];
-+	/* Each node is initially its own parent */
-+	for (i = 0; i < csn; i++) {
-+		nodes[i].parent = i;
-+		nodes[i].rank = 0;
-+	}
- 
--					if (c->pn == bpn)
--						c->pn = apn;
--				}
--				ndoms--;	/* one less element */
--				goto restart;
--			}
-+	/* Merge overlapping cpusets */
-+	for (i = 0; i < csn; i++) {
-+		for (j = i + 1; j < csn; j++) {
-+			if (cpusets_overlap(csa[i], csa[j]))
-+				union_sets(nodes, i, j);
- 		}
- 	}
- 
-+	/* Calculate the number of domains after merging */
-+	for (i = 0; i < csn; i++) {
-+		if (nodes[i].parent == i)
-+			ndoms++;
-+	}
-+
- 	/*
- 	 * Now we know how many domains to create.
- 	 * Convert <csn, csa> to <ndoms, doms> and populate cpu masks.
-@@ -1065,47 +1102,25 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 			      GFP_KERNEL);
- 
- 	for (nslot = 0, i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		struct cpumask *dp;
--		int apn = a->pn;
--
--		if (apn < 0) {
--			/* Skip completed partitions */
--			continue;
--		}
--
--		dp = doms[nslot];
--
--		if (nslot == ndoms) {
--			static int warnings = 10;
--			if (warnings) {
--				pr_warn("rebuild_sched_domains confused: nslot %d, ndoms %d, csn %d, i %d, apn %d\n",
--					nslot, ndoms, csn, i, apn);
--				warnings--;
--			}
--			continue;
--		}
-+		struct cpumask *dp = doms[nslot];
- 
- 		cpumask_clear(dp);
- 		if (dattr)
- 			*(dattr + nslot) = SD_ATTR_INIT;
- 		for (j = i; j < csn; j++) {
--			struct cpuset *b = csa[j];
-+			if (find_root(nodes, j) == i) {
-+				if (i == j)
-+					nslot++;
- 
--			if (apn == b->pn) {
--				cpumask_or(dp, dp, b->effective_cpus);
-+				cpumask_or(dp, dp, csa[j]->effective_cpus);
- 				cpumask_and(dp, dp, housekeeping_cpumask(HK_TYPE_DOMAIN));
- 				if (dattr)
--					update_domain_attr_tree(dattr + nslot, b);
--
--				/* Done with this partition */
--				b->pn = -1;
-+					update_domain_attr_tree(dattr + nslot, csa[j]);
- 			}
- 		}
--		nslot++;
- 	}
- 	BUG_ON(nslot != ndoms);
--
-+	kfree(nodes);
- done:
- 	kfree(csa);
- 
+Here is the summary with links:
+  - riscv: fix overlap of allocated page and PTR_ERR
+    https://git.kernel.org/riscv/c/a5e8a5b08a48
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
