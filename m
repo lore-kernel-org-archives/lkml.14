@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB47517D343;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80111179654;
 	Fri, 31 May 2024 19:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717184571; cv=none; b=VCgCvY0NauBgo6KgmT9+BfTOqBKZALCOoqnYxDYzDOCsWa3oWvtfPBBiEyo6t2pAaqbT14i1xTl0hV0mJhJCPxSDLgjR6Bmt9EKxvEJoF9MjJqctan7/pMun4Y0r7lu95g6wChQBRLSZuuyvq5u+scPsJXwt8Aw5N8F0Mskr82A=
+	t=1717184571; cv=none; b=KP/MVPTRlJvFC0GSC67HnBY10adwmvC+ZqXPG69aP8/NLvT9+XSwfVpWEugkhVu8vAwd/jH7Zck9vKG1zFrb9ay15CpFuH8O29Qs7E82iCJig4mnAPw5XgjONPzS0ZE4VwcgmxxRcFUhUZIVoOefuWSgVoS7d889tfSeCUUmDOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717184571; c=relaxed/simple;
-	bh=coty3zmiVkzC0+Ab+NP3vBQIUemt6njlqQD0stWfSn4=;
+	bh=iGaZp8H3G4+QX/RI/q+767NxJulbdkdzJpWxohTv6YI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PbQGnruLEY/2MwZaEgzRhF+q/bVDwp24uF/rslokQFXMBlVsPMUCg0hrsUCL5TM0e5/o3C4SyM/uNXwBF/WdzFyGoXsK9dNrIrcyqtDqCcsVp6GYzA3LJKy95hYytxLsaMNu1jRv/bH387ChZQCiaN8ZSvQLts25BnWV+JPHQpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKHULrhD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=HbTvgLwfk27sLKu591L2GDvkI9p090gWU/njCWPJh3s+Dq4DowY2HoFyOkpRXk5wks8OIxX6G2kGt4gjFSq1AXc56/hHHxFSmGdoigEXJ9eMxSxNehv0/hyBFRlCzBbHg63LdRTDAfFH0tgtWpaKz1jxaHVwu5YoYC+LdtgYA0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3h/IR6H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKHULrhD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5493EC4AF0F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3h/IR6H"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 27E80C32789;
 	Fri, 31 May 2024 19:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717184571;
-	bh=coty3zmiVkzC0+Ab+NP3vBQIUemt6njlqQD0stWfSn4=;
+	bh=iGaZp8H3G4+QX/RI/q+767NxJulbdkdzJpWxohTv6YI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=KKHULrhD16NlqabMnShbPtVFP9CbnKW1V3nH1+G74/nLcYDpBFPKD+wQFNTAWwiK1
-	 ul8G2wSx9qmQOdFdm8Xn8JECyTN1kXAF/pWXvMWZNFWmoMtsGU91QHzg/peQZ1USVh
-	 BQzKiw9Y4yoQIxVMDlMOmICIjpMbUTxNFCceArSO1L+1/kBCjPuSETR8UmhfhkSQs8
-	 dYf0QOb2aiVWEDg3qC1/6jOXHPXVk2TKtPMxIy2tIfBAEb4RY7f3+4ZNwZ9VrCafS7
-	 V+HJkAtXhD1nvqpDmINx0NzQbbP4sqpkqWRTmMRd+0rxDbivklyh/f9suoA32ZGUJS
-	 VUQC3pnbY7PjA==
+	b=D3h/IR6HuYKdmFxbvwXBBRhEbDowhv9erwKELzeccUbmiwZ846sFDO1vD2j3M6C+f
+	 gk7ngOvOHrlHM6Zef7BXQyb0/KhugLnDPOLjl46WcVySa87FKSKanxB+cuW6BWHutk
+	 xVknFt6CM39ooioevqi6apwBGzex93L/koUf9MlD4K0U0llZDH+7RwzQF+AbpVnLUR
+	 n1NEaujExo9JQA4Xuooy8FiVNpP9Aj6g64pAmZRBY5IwU1APKOYFQUSbguY8g3KMKb
+	 okambjdTYtDvJYT5CqyFajKkYs5FK+041iSJAGgK4L6tdEh4lLgCLrfkkHyJ7rHwAW
+	 nfrFKRe7oOxQw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B82DC27C4F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F5CC27C4F;
 	Fri, 31 May 2024 19:42:51 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Fri, 31 May 2024 22:42:29 +0300
-Subject: [PATCH v4 3/6] iio: adc: ad7173: refactor ain and vref selection
+Date: Fri, 31 May 2024 22:42:27 +0300
+Subject: [PATCH v4 1/6] dt-bindings: adc: ad7173: add support for ad411x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240531-ad4111-v4-3-64607301c057@analog.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240531-ad4111-v4-1-64607301c057@analog.com>
 References: <20240531-ad4111-v4-0-64607301c057@analog.com>
 In-Reply-To: <20240531-ad4111-v4-0-64607301c057@analog.com>
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
@@ -52,11 +52,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717184569; l=4550;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717184569; l=8710;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=7xTLh9Dt46L6LmGcvJeBdLPREQkljJ0gREj2u5d2Mow=;
- b=XPE9rYupnMn63Ou1dEHEiVk8PJKUaxKx/OB6jyyZqEwr3OucVpbqQeX9vpSAAXqKcLC9KbSME
- 5RzBrEZTSkTBlSIUIEs5wYHXykhgdwJDaKluwDf2axqfVqOae6XGpue
+ bh=PM7BwdJbpQwyM+2GI7zCVGR1f3pC7c+bSTpc05Tuc/w=;
+ b=AFBu9RsoKmBp4kpQQz3r2cV0PDeTCGhrpuulZ2AgYboM4za+gI7KAt3sWFq/nBQS5ehFU2m7k
+ 7gSKaQ+dr9QDZYryaq5V6Srp5Lsb0y0K3/QwgTgMcXyxUOvVG5KklZk
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -66,141 +66,284 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-Move validation of analog inputs and reference voltage selection to
-separate functions to reduce the size of the channel config parsing
-function and improve readability.
-Add defines for the number of analog inputs in a channel.
+Add support for: AD4111, AD4112, AD4114, AD4115, AD4116.
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+AD411x family ADCs support a VCOM pin. The purpose of this pin is to
+offer a dedicated common-mode voltage input for single-ended channels.
+This pin is specified as supporting a differential channel with VIN10 on
+model AD4116.
+
+AD4111/AD4112 support current channels. Support is implemented using
+single-channel and "adi,current-channel".
+
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- drivers/iio/adc/ad7173.c | 71 ++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 50 insertions(+), 21 deletions(-)
+ .../devicetree/bindings/iio/adc/adi,ad7173.yaml    | 192 ++++++++++++++++++++-
+ 1 file changed, 190 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 6e249628bc64..a20831d99aa5 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -60,6 +60,7 @@
- #define AD7173_CH_SETUP_AINPOS_MASK	GENMASK(9, 5)
- #define AD7173_CH_SETUP_AINNEG_MASK	GENMASK(4, 0)
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+index ea6cfcd0aff4..d8474eee553e 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+@@ -19,7 +19,18 @@ description: |
+   primarily for measurement of signals close to DC but also delivers
+   outstanding performance with input bandwidths out to ~10kHz.
  
-+#define AD7173_NO_AINS_PER_CHANNEL	2
- #define AD7173_CH_ADDRESS(pos, neg) \
- 	(FIELD_PREP(AD7173_CH_SETUP_AINPOS_MASK, pos) | \
- 	 FIELD_PREP(AD7173_CH_SETUP_AINNEG_MASK, neg))
-@@ -623,6 +624,7 @@ static int ad7173_setup(struct iio_dev *indio_dev)
- static unsigned int ad7173_get_ref_voltage_milli(struct ad7173_state *st,
- 						 u8 reference_select)
- {
-+	struct device *dev = &st->sd.spi->dev;
- 	int vref;
- 
- 	switch (reference_select) {
-@@ -646,9 +648,11 @@ static unsigned int ad7173_get_ref_voltage_milli(struct ad7173_state *st,
- 		return -EINVAL;
- 	}
- 
--	if (vref < 0)
-+	if (vref < 0) {
-+		dev_err(dev, "Cannot use reference %u. Error:%d\n",
-+			reference_select, vref);
- 		return vref;
--
-+	}
- 	return vref / (MICRO / MILLI);
- }
- 
-@@ -905,13 +909,50 @@ static int ad7173_register_clk_provider(struct iio_dev *indio_dev)
- 					   &st->int_clk_hw);
- }
- 
-+static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
-+					      const unsigned int ain[AD7173_NO_AINS_PER_CHANNEL])
-+{
-+	struct device *dev = &st->sd.spi->dev;
++  Analog Devices AD411x ADC's:
++  The AD411X family encompasses a series of low power, low noise, 24-bit,
++  sigma-delta analog-to-digital converters that offer a versatile range of
++  specifications. They integrate an analog front end suitable for processing
++  fully differential/single-ended and bipolar voltage inputs.
 +
-+	for (int i = 0; i < AD7173_NO_AINS_PER_CHANNEL; i++) {
-+		if (ain[i] < st->info->num_inputs)
-+			continue;
-+
-+		return dev_err_probe(dev, -EINVAL,
-+			"Input pin number out of range for pair (%d %d).\n",
-+			ain[0], ain[1]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ad7173_validate_reference(struct ad7173_state *st, int ref_sel)
-+{
-+	struct device *dev = &st->sd.spi->dev;
-+	int ret;
-+
-+	if (ref_sel == AD7173_SETUP_REF_SEL_INT_REF && !st->info->has_int_ref)
-+		return dev_err_probe(dev, -EINVAL,
-+			"Internal reference is not available on current model.\n");
-+
-+	if (ref_sel == AD7173_SETUP_REF_SEL_EXT_REF2 && !st->info->has_ref2)
-+		return dev_err_probe(dev, -EINVAL,
-+			"External reference 2 is not available on current model.\n");
-+
-+	ret = ad7173_get_ref_voltage_milli(st, ref_sel);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- {
- 	struct ad7173_channel *chans_st_arr, *chan_st_priv;
- 	struct ad7173_state *st = iio_priv(indio_dev);
- 	struct device *dev = indio_dev->dev.parent;
- 	struct iio_chan_spec *chan_arr, *chan;
--	unsigned int ain[2], chan_index = 0;
-+	unsigned int ain[AD7173_NO_AINS_PER_CHANNEL], chan_index = 0;
- 	int ref_sel, ret, num_channels;
+   Datasheets for supported chips:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4111.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4112.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4114.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4115.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4116.pdf
+     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
+     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-4.pdf
+     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
+@@ -31,6 +42,11 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - adi,ad4111
++      - adi,ad4112
++      - adi,ad4114
++      - adi,ad4115
++      - adi,ad4116
+       - adi,ad7172-2
+       - adi,ad7172-4
+       - adi,ad7173-8
+@@ -129,10 +145,54 @@ patternProperties:
+         maximum: 15
  
- 	num_channels = device_get_child_node_count(dev);
-@@ -965,11 +1006,9 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 		if (ret)
- 			return ret;
+       diff-channels:
++        description: |
++          This property is used for defining the inputs of a differential
++          voltage channel. The first value is the positive input and the second
++          value is the negative input of the channel.
++
++          Family AD411x supports a dedicated VINCOM voltage input.
++          To select it set the second channel to 16.
++            (VIN2, VINCOM) -> diff-channels = <2 16>
++
++          There are special values that can be selected besides the voltage
++          analog inputs:
++            21: REF+
++            22: REF−
++          Supported only by AD7172-2, AD7172-4, AD7175-2, AD7175-8, AD7177-2:
++            19: ((AVDD1 − AVSS)/5)+
++            20: ((AVDD1 − AVSS)/5)−
++
+         items:
+           minimum: 0
+           maximum: 31
  
--		if (ain[0] >= st->info->num_inputs ||
--		    ain[1] >= st->info->num_inputs)
--			return dev_err_probe(dev, -EINVAL,
--				"Input pin number out of range for pair (%d %d).\n",
--				ain[0], ain[1]);
-+		ret = ad7173_validate_voltage_ain_inputs(st, ain);
-+		if (ret)
-+			return ret;
++      single-channel:
++        description: |
++          This property is used for defining a current channel or the positive
++          input of a voltage channel (single-ended or pseudo-differential).
++
++          Models AD4111 and AD4112 support current channels.
++            Example: (IIN2+, IIN2−) -> single-channel = <2>
++          To correctly configure a current channel set the "adi,current-channel"
++          property to true.
++
++          To configure a single-ended/pseudo-differential channel set the
++          "adi,common-mode-channel" property to the desired negative voltage input.
++
++          When used as a voltage channel, special inputs are valid as well.
++        minimum: 0
++        maximum: 31
++
++      adi,common-mode-channel:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description:
++          This property is used for defining the negative input of a
++          single-ended or pseudo-differential voltage channel.
++
++          Special inputs are valid as well.
++        minimum: 0
++        maximum: 31
++
+       adi,reference-select:
+         description: |
+           Select the reference source to use when converting on
+@@ -154,9 +214,31 @@ patternProperties:
+           - avdd
+         default: refout-avss
  
- 		ret = fwnode_property_match_property_string(child,
- 							    "adi,reference-select",
-@@ -980,19 +1019,9 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 		else
- 			ref_sel = ret;
++      adi,current-channel:
++        description: |
++          Signal that the selected inputs are current channels.
++          Only available on AD4111 and AD4112.
++        type: boolean
++
+     required:
+       - reg
+-      - diff-channels
++
++    allOf:
++      - oneOf:
++          - required: [single-channel]
++            properties:
++              diff-channels: false
++          - required: [diff-channels]
++            properties:
++              single-channel: false
++              adi,current-channel: false
++              adi,common-mode-channel: false
++
++      - if:
++          required: ["adi,common-mode-channel"]
++        then:
++          properties:
++            adi,current-channel: false
  
--		if (ref_sel == AD7173_SETUP_REF_SEL_INT_REF &&
--		    !st->info->has_int_ref)
--			return dev_err_probe(dev, -EINVAL,
--				"Internal reference is not available on current model.\n");
--
--		if (ref_sel == AD7173_SETUP_REF_SEL_EXT_REF2 && !st->info->has_ref2)
--			return dev_err_probe(dev, -EINVAL,
--				"External reference 2 is not available on current model.\n");
--
--		ret = ad7173_get_ref_voltage_milli(st, ref_sel);
--		if (ret < 0)
--			return dev_err_probe(dev, ret,
--					     "Cannot use reference %u\n", ref_sel);
-+		ret = ad7173_validate_reference(st, ref_sel);
-+		if (ret)
-+			return ret;
+ required:
+   - compatible
+@@ -166,7 +248,6 @@ allOf:
+   - $ref: /schemas/spi/spi-peripheral-props.yaml#
  
- 		if (ref_sel == AD7173_SETUP_REF_SEL_INT_REF)
- 			st->adc_mode |= AD7173_ADC_MODE_REF_EN;
+   # Only ad7172-4, ad7173-8 and ad7175-8 support vref2
+-  # Other models have [0-3] channel registers
+   - if:
+       properties:
+         compatible:
+@@ -187,6 +268,37 @@ allOf:
+                 - vref
+                 - refout-avss
+                 - avdd
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,ad4114
++              - adi,ad4115
++              - adi,ad4116
++              - adi,ad7173-8
++              - adi,ad7175-8
++    then:
++      patternProperties:
++        "^channel@[0-9a-f]$":
++          properties:
++            reg:
++              maximum: 15
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,ad7172-2
++              - adi,ad7175-2
++              - adi,ad7176-2
++              - adi,ad7177-2
++    then:
++      patternProperties:
++        "^channel@[0-9a-f]$":
++          properties:
+             reg:
+               maximum: 3
+ 
+@@ -210,6 +322,34 @@ allOf:
+           required:
+             - adi,reference-select
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - adi,ad4111
++              - adi,ad4112
++              - adi,ad4114
++              - adi,ad4115
++              - adi,ad4116
++    then:
++      properties:
++        avdd2-supply: false
++
++  - if:
++      properties:
++        compatible:
++          not:
++            contains:
++              enum:
++                - adi,ad4111
++                - adi,ad4112
++    then:
++      patternProperties:
++        "^channel@[0-9a-f]$":
++          properties:
++            adi,current-channel: false
++
+   - if:
+       anyOf:
+         - required: [clock-names]
+@@ -221,6 +361,7 @@ allOf:
+ unevaluatedProperties: false
+ 
+ examples:
++  # Example AD7173-8 with external reference connected to REF+/REF-:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+@@ -277,3 +418,50 @@ examples:
+         };
+       };
+     };
++
++  # Example AD4111 with current channel and single-ended channel:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++       adc@0 {
++        compatible = "adi,ad4111";
++        reg = <0>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++        interrupt-names = "rdy";
++        interrupt-parent = <&gpio>;
++        spi-max-frequency = <5000000>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        #clock-cells = <0>;
++
++        channel@0 {
++          reg = <0>;
++          bipolar;
++          diff-channels = <4 5>;
++        };
++
++        // Single ended channel VIN2/VINCOM
++        channel@1 {
++          reg = <1>;
++          bipolar;
++          single-channel = <2>;
++          adi,common-mode-channel = <16>;
++        };
++
++        // Current channel IN2+/IN2-
++        channel@2 {
++          reg = <2>;
++          single-channel = <2>;
++          adi,current-channel;
++        };
++      };
++    };
 
 -- 
 2.43.0
