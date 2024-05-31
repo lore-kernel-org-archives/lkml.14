@@ -1,94 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08E013665D
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB1924B26;
+	Fri, 31 May 2024 09:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717148667; cv=none; b=XzDDdSLCkXRnJW//w+06X/FPxyBiM62AXEGiW314anaSZ+5ioqVBHib1Bilx7TjJbBDBBnrnRkXujOrQ7tgxzzLbxSl05EhnOsg2bs9OIUHY9eoSWuum/6zAiQXAdeOSA4tV+DtZQa4Esk3zk8/DKio+gXNlsj3VB3ArZy1IvzE=
+	t=1717148733; cv=none; b=sWDPVEHmaImbdZXfO7wo0G1jyxXxdD4LdURkAt/kUTvJVjl8LxEbyY5w8+4eUvRSQ3GO5hyBaZ82S6HEUW0e0y1hdMTRWUoAtxukejcLPTQQR2OkfHAXXWQR7T0/UthDQkLJdpQ3/az30MG+EyFbWDXYEcmQ3TmQzsgTytMmOb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717148667; c=relaxed/simple;
-	bh=g7uZiVfUTpbSwjMd6U9QyTBugO8rfC8rQMTVhjpqVvo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCTmM73tYpnWl8kq2l49b2FfMpGIvetQlRyoblGYzeKFUTkKKSHcQJXhsuYcKXX7Fz4u4CV5o6o+TUdeoeOxFYzapgUNnApOkYcTsoj4mnU7UYLubR1Xo00zObnFLYQQ4JAZzMaAjF2m03zcXE5YxTWxKeHXiN+mG/W5JtjbXJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lldvXWDn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717148733; c=relaxed/simple;
+	bh=lERvVoyJAE/jeXnmH1j9lxgnxLnRxdAv4vYaPklDwFE=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pTfUAMxGhIGUXn/RhdzSJ0M0qinT/whz0oAHdZ/RxOmhYITotIOK9g6Z9DJMKA20jQQ3B18nhuLG4Gsxf1KCRlmPC0O4RuS+YaOv+w0Pob9l1ApJbd3T7Gf31bUtYpCD7M0T0CbPYfwe1RuNn2XU8vRvw00mJPEsA3s8JUZy79w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iROFP+Am; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lldvXWDn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AB6C116B1;
-	Fri, 31 May 2024 09:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717148666;
-	bh=g7uZiVfUTpbSwjMd6U9QyTBugO8rfC8rQMTVhjpqVvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lldvXWDnTr5ZsMdVI4TWGiD3UxhCzBGltVXIJP24uhIIfxmyChNutM1v8qedY4QQg
-	 z3rtp7CxbjVSpA8FSvaus0QfpU8PQDsJ0xwZp6e3XYdoE71qXwVCaUdqhxMEdd/U4W
-	 sMr40E/FaHXjbGnjIT1HAFEpIpkSBPebknODyPvgyli01LgqEAL6HyggGI24EYSBua
-	 980RbFLA86A22PK9eRacvPTfETqSk+0MBqUJvVjB3yl2rToguK/DoCDhd1hmmy/2IH
-	 80FZHmxV42qBx9RTMDAzPRM5SSR7aE3W3+Sb6FJN2/zlJkXhXoyjpg9aHkD/UPdeRT
-	 LWz71S615AKIg==
-Date: Fri, 31 May 2024 12:42:34 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Jan Beulich <jbeulich@suse.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andrew Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/NUMA: don't pass MAX_NUMNODES to memblock_set_node()
-Message-ID: <ZlmbitudD6_JNb1s@kernel.org>
-References: <abadb736-a239-49e4-ab42-ace7acdd4278@suse.com>
- <e33ec69b-21e0-46e3-9b70-6d89548a145b@intel.com>
- <997fcbc7-4e75-4aa2-974c-15d984f02d02@suse.com>
- <bec94a1e-8c87-461a-a8db-1ea57385e745@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iROFP+Am"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a352bbd9so292091366b.1;
+        Fri, 31 May 2024 02:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717148730; x=1717753530; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lERvVoyJAE/jeXnmH1j9lxgnxLnRxdAv4vYaPklDwFE=;
+        b=iROFP+AmyemW+k/xYH1mkWxyfFqaSyg/qMbCJQOmEYICIslZLFTXc87RVj9/0MqHdS
+         NLIaynR0Q5Bb50+CZ5wRnc2FroOis5t8LeU+Nf6kbaRXrVcB/lGMGEryUHWPLK8y0oIL
+         zxfbdAWVQogZWfy5YNzBrKN2b2XuCjT5Nx+wud6p2I4IFzFfgj8yz6JGXH0MpXiDwTZi
+         LpPgyLI2l2PRD9QMPzp9vrAV980evHYPLyZBMjxy5KK5X7VIiU+5rNYbbikpz0Xe6rhz
+         p63ckITaJz5VBv4as+K06ooLnCFu/0NW0rNYQ2cr0vc4BfEUNWU+AkeXZUMm8zztRHI6
+         5W+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717148730; x=1717753530;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lERvVoyJAE/jeXnmH1j9lxgnxLnRxdAv4vYaPklDwFE=;
+        b=BIx90/83KNPIkkutabrbUJLIaGPA3Y+Zjfmh4iLhNIsry6s4S4EgNmLApnQoUd/dpq
+         n3Yer/XcqQzNMSH5kAyipI1r3n0DGsRSsgV7wabJyqz4Dgi/UQ2lezb0kmpeg/F6bgkO
+         t2Z/Lj8P0SmoanvrXt03nc6csXZjX9Kb/YXfz4dmT4RD0B2dbqfWb921833lr+fSG167
+         IW7MTyV3WUavF/EkY18QSvlCb+0QBwYubogm31rsfWfP0rUV098/0WvQXrTd8H5pmIfe
+         8V2CbM9ZMyRR/WbueHa7b5glcIwL6ZMOWcd9/HPEJSdxAUeXu95Bk4gC6450U3pRIHKm
+         xegg==
+X-Forwarded-Encrypted: i=1; AJvYcCUY8rSzVMa8xRAqbMBLw2iX8UajxzZLUnVOhruEKVbJmvGenxBV3FACySGItOHGTnRYO5q1ll4fAwIRd7m5hBHRbGluPufzTm7GybZNCBXGuMSlpbDkAF1GmvVeW+zxJhmRaLazyOFpE8zMPL17nXdgH7AwKKEgHBzKa5rQCaMWEMLffO0=
+X-Gm-Message-State: AOJu0Yz/VbNSYszDvs/jyVaoVYrDdpfucQi+/z2MCuT+IvCbmtn74iJT
+	R75uHglyjscu7KqdUqIj/HtHoN3X5VPu9e17KMmaEUEFnaIg8e0KSDB1F0JfR7M=
+X-Google-Smtp-Source: AGHT+IFTFMH2jNPbQ/gcHw6Zpbe+myU3YyJ7m0d+2DIQGeRbcHm78hJ6xn84ifk1xVD6VmkTxOYzkg==
+X-Received: by 2002:a17:906:414d:b0:a59:c807:72d3 with SMTP id a640c23a62f3a-a681933565fmr134693866b.17.1717148729683;
+        Fri, 31 May 2024 02:45:29 -0700 (PDT)
+Received: from nsa.fritz.box ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a682ea1e5c4sm50888966b.115.2024.05.31.02.45.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 02:45:29 -0700 (PDT)
+Message-ID: <635356d36f5d402a3a921da12e352a95926ff03d.camel@gmail.com>
+Subject: Re: [PATCH v6 2/2] drivers: hwmon: max31827: Add PEC support
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Radu Sabau <radu.sabau@analog.com>, Jean Delvare <jdelvare@suse.com>, 
+ Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
+ linux-hwmon@vger.kernel.org,  linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Fri, 31 May 2024 11:45:28 +0200
+In-Reply-To: <20240531084645.12935-2-radu.sabau@analog.com>
+References: <20240531084645.12935-1-radu.sabau@analog.com>
+	 <20240531084645.12935-2-radu.sabau@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bec94a1e-8c87-461a-a8db-1ea57385e745@intel.com>
 
-Hi Dave,
+On Fri, 2024-05-31 at 11:46 +0300, Radu Sabau wrote:
+> Add support for PEC by configuring the chip accordingly to the hwmon core=
+ PEC
+> attribute handling
+> Handle hwmon_chip_pec attribute writing in the max31827_write in the
+> hwmon_chip type switch case, approaching the same code structure
+> as for temp writing.
+>=20
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
 
-On Wed, May 29, 2024 at 09:08:12AM -0700, Dave Hansen wrote:
-> On 5/29/24 09:00, Jan Beulich wrote:
-> >> In other words, it's not completely clear why ff6c3d81f2e8 introduced
-> >> this problem.
-> > It is my understanding that said change, by preventing the NUMA
-> > configuration from being rejected, resulted in different code paths to
-> > be taken. The observed crash was somewhat later than the "No NUMA
-> > configuration found" etc messages. Thus I don't really see a connection
-> > between said change not having had any MAX_NUMNODES check and it having
-> > introduced the (only perceived?) regression.
-> 
-> So your system has a bad NUMA config.  If it's rejected, then all is
-> merry.  Something goes and writes over the nids in all of the memblocks
-> to point to 0 (probably).
-> 
-> If it _isn't_ rejected, then it leaves a memblock in place that points
-> to MAX_NUMNODES.  That MAX_NUMNODES is a ticking time bomb for later.
-> 
-> So this patch doesn't actually revert the rejection behavior change in
-> the Fixes: commit.  It just makes the rest of the code more tolerant to
-> _not_ rejecting the NUMA config?
- 
-It actually does. Before ff6c3d81f2e8 the NUMA coverage was verified
-against numa_meminfo rather than memblock, so it could detect that only
-small portion of the memory has node ID assigned.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-With transition to memblock, the verification relies on node IDs set by the
-arch code, but since memblock_validate_numa_coverage() only checked for
-NUMA_NO_NODE is missed the ranges with nid == MAX_NUMNODES.
+- Nuno S=C3=A1
+>=20
 
-I took Jan's fix for memblock:
-
-https://lore.kernel.org/all/1c8a058c-5365-4f27-a9f1-3aeb7fb3e7b2@suse.com
-
-but I think that we should replace MAX_NUMNODES with NUMA_NO_NODE in calls to
-memblock_set_node() in arch/x86.
-
--- 
-Sincerely yours,
-Mike.
