@@ -1,60 +1,60 @@
-Received: from mailrelay5-1.pub.mailoutpod2-cph3.one.com (mailrelay5-1.pub.mailoutpod2-cph3.one.com [46.30.211.180])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F2C33CF1
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 13:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFB833CF1;
+	Fri, 31 May 2024 13:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717162478; cv=none; b=BhQIJSRqViaUd0Iytp5TngnFyKUT/J7jYcwFtCAVacaV6oaaF+iEYbV9dily19BnfRyDn0xNGnoRMFRuejAUrQwxlqh4mNQIFLxU+p41svkSHGowESlb1bla3xrEIIkeA1ffURBgKuEYhgTQTRgdxVSDT+Gyl4R6ODMzXGvvmag=
+	t=1717162515; cv=none; b=NAUYHstqnCWOBPRehO1rbrQkPKxtugIsVkFJ0G/0hTuGPI2Lg3QuxfMRfHyPBkXnWQeMSQrDggbI/u3hcGG8AzrV189wlPKtfGJ4QtAS0yGy6ROkkDZcKmrRhBCS4qeXCJBF1xyvr7Sx89QpTRvO8EyVHDIGLLF3rBSLG/xOgjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717162478; c=relaxed/simple;
-	bh=pm5XWq85ofI0ZiiAAhQazU+EXRbmq43J0rqYOWTvjSg=;
+	s=arc-20240116; t=1717162515; c=relaxed/simple;
+	bh=RCxKlMkz2hwtL0o/rwKf34aSNTRYA9l7vN2VAKV+xtE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JU1z+YuMjyApuqClHlsdf0gd2rHDuJyxHxCglkGb5lY3xfjiEDa7Wz6H+O38/JanVHhDCYR4EnwRiqNhdsKioC/RLugDXWF7qkUbuesC3bxY72YoRLDmRUmlBpYviwYgvg5Vx1KzP6llMS/nUyfas6rfUKidBnXksbVuB92JdUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=IW4IgK+v; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=m4BwLR/F; arc=none smtp.client-ip=46.30.211.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcwC6lutUtQ/9+kuVr1arOnj6WptOrnSM8xjGl0JJ17XzWrbp1E4q18sPYLCjWtA8MZ0bzn56Cgx1wRHlZgtBKSDtaZblpkeBajN4XvAbDX1eWsaubjZjBfIcWdX3/FzYqh29UEtEQjVwZ0ql2uprbmPR3Y0Sk4cnkx3cXT26tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=pN4EV1jY; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="IW4IgK+v";
-	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="m4BwLR/F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=rsa1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=KnLBkmGVK+Mze45aQJhkynNz/NaOQLWFZL8uozaU7LA=;
-	b=IW4IgK+vKRlYYnKwovgqCnj3TvBdlAzVSMtWU8mUdBVU8J6Rvf2vh0yD/j0BUyPO9L9PqmoFTzvhA
-	 VePw5r44xg5xsbKYPQTlWIgrHL5XuP4q5ZCmBMSUhh4nsvdz1Qvk6dd8oSgTlzVrEFj18xrKATDoVD
-	 oiLAkN20nKbjxWaI8Wk9tR6+Gjpk7KU3csEl7HIj7fc+ADuK3aCmEP+o3pv02CJG7v0gaW5uB7BY7l
-	 Oyjqgty7Uj8DoslRJu6sbvZoGhR183HokRL8qXyJR5w8q0LEyhHHbCgu60I3yiSpCszWlKWi/oDeBX
-	 TTuslA1CH+hbPTpUaLA6Dc0Wa+SkPDA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
-	d=ravnborg.org; s=ed1;
-	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
-	 from:date:from;
-	bh=KnLBkmGVK+Mze45aQJhkynNz/NaOQLWFZL8uozaU7LA=;
-	b=m4BwLR/F0FHK1XL7SfH6omLlaMI4VtEMHgFTamYSyyDmHt6/4e3SgffntQNRBhmgSdrt1vQ/vP5Oy
-	 dDp6wFHDQ==
-X-HalOne-ID: 5ad6a8be-1f52-11ef-8959-edf132814434
-Received: from ravnborg.org (2-105-2-98-cable.dk.customer.tdc.net [2.105.2.98])
-	by mailrelay5.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
-	id 5ad6a8be-1f52-11ef-8959-edf132814434;
-	Fri, 31 May 2024 13:33:25 +0000 (UTC)
-Date: Fri, 31 May 2024 15:33:24 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-To: Sui Jingfeng <sui.jingfeng@linux.dev>,
-	Jayesh Choudhary <j-choudhary@ti.com>
-Cc: Jayesh Choudhary <j-choudhary@ti.com>, linux-kernel@vger.kernel.org,
-	dmitry.baryshkov@linaro.org, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com, mripard@kernel.org,
-	jonas@kwiboo.se, jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
-	airlied@gmail.com, daniel@ffwll.ch, a-bhatia1@ti.com,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [v4,1/2] drm/bridge: sii902x: Fix mode_valid hook
-Message-ID: <20240531133324.GA1715839@ravnborg.org>
-References: <20240530092930.434026-2-j-choudhary@ti.com>
- <e5ce13e6-1007-41c9-bedc-2045d6f75480@linux.dev>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pN4EV1jY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=vgm/OpbOd3cmMPFc8u81IplmaIz3UZVMWUU0TbmKPI4=; b=pN4EV1jYOQbw5L36gUcI2rJiYl
+	vU2G4SxRbmLRYpHxvqkFvZNuuA7cNptVkp7xSP5O4tv9/oD5yuJMtSPLmvdhiJgneeqpoUQFGpcAE
+	IyC3givwc+xtYxWiMzhFtKg2Sr+PGzUodCaLzrrIcIQyt4JD6DbhSfPqnrwyrrFMmFi4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sD2P4-00GT67-D1; Fri, 31 May 2024 15:34:42 +0200
+Date: Fri, 31 May 2024 15:34:42 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Anwar, Md Danish" <a0501179@ti.com>
+Cc: Jacob Keller <jacob.e.keller@intel.com>,
+	MD Danish Anwar <danishanwar@ti.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Simon Horman <horms@kernel.org>, Diogo Ivo <diogo.ivo@siemens.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com,
+	Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH net-next v8 2/2] net: ti: icssg_prueth: add TAPRIO
+ offload support
+Message-ID: <e0fe45c7-ea81-4d5f-bb42-6bec73a7d895@lunn.ch>
+References: <20240529110551.620907-1-danishanwar@ti.com>
+ <20240529110551.620907-3-danishanwar@ti.com>
+ <7143f846-623d-465f-a717-8c550407d012@intel.com>
+ <a5895c1f-4f89-4da7-8977-e1d681a72442@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,24 +63,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5ce13e6-1007-41c9-bedc-2045d6f75480@linux.dev>
+In-Reply-To: <a5895c1f-4f89-4da7-8977-e1d681a72442@ti.com>
 
-Hi Jayesh,
+> When I had posted this series (v8) the ICSSG switch series was not
+> merged yet and I had rebased this series on net-next/main. When you
+> tested it, the ICSSG Series was merged and as it resulted in conflict.
+> 
+> I will rebase it on the latest net-next and make sure that their is no
+> conflict and post next revision.
 
-> > +
-> >   static const struct drm_bridge_funcs sii902x_bridge_funcs = {
-> >   	.attach = sii902x_bridge_attach,
-> >   	.mode_set = sii902x_bridge_mode_set,
-> > @@ -516,6 +529,7 @@ static const struct drm_bridge_funcs sii902x_bridge_funcs = {
-> >   	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> >   	.atomic_get_input_bus_fmts = sii902x_bridge_atomic_get_input_bus_fmts,
-> >   	.atomic_check = sii902x_bridge_atomic_check,
-> > +	.mode_valid = sii902x_bridge_mode_valid,
+This is what i asked about, what are the build dependencies. Please
+always state them in the cover note.
 
-As you have the possibility to test the driver, it would be nice with a
-follow-up patch that replaces the use of enable() / disable() with the
-atomic counterparts.
+In general, we recommend what when you have two or more patch series
+for a driver floating around, mark all but one RFC, so you get
+comments on them, but it is clear there is no need to try to apply
+them because of dependency conflicts.
 
-enable() / disable() are deprecated, so it is nice to reduce their use.
-
-	Sam
+       Andrew
