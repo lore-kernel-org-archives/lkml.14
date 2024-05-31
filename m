@@ -1,112 +1,120 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062872374C
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2C046433;
+	Fri, 31 May 2024 14:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166334; cv=none; b=aLb0CkQpETYLxQcITps1fOIg7wlUpVafWqBDE74Rqd74sMGBsfKiNFF97nZcUJQy3NcHvReBqFduFCsedQueYKmDS0Xh6s+Nkj0PKizN1clH/7GZuzdjBa3Iydfy6rvPSxe9M8OYX0T0xcwsELjQP2dqt+x/Iw4pp0IBZiZKbxM=
+	t=1717166382; cv=none; b=nB1tCPdhSZ9Th0QpWUFyeh4e7IZPaOBGGpJ5xwB3+628ccfWcsA38bF5RhF80e4224k6Hb6WGHw4xFqGB3LHGugNV+kOEXUMKiGD4+tcxVkYC/izYZQqmEt5ZCuT2X7Pe+wr8byIQXbv5dg44ZLHtGM2bEfWrd9P4hrQy0+BZJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717166334; c=relaxed/simple;
-	bh=rD1cK89x0gwQ1Akf8e1MCQlJyJh8IFbiQBAk6Tz76lQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AX4Z6pPj+/4+J5eLcToaCQDY3F8XTPMidb/W2DeJyGhyd6r+CTnrNs3qT0PD3oE1vCM5gOjQiA9B3iGXceC7KLOHAlbFymNbLK/DsXEkJ05OWTgk2sob/bf7GNTg2CBqIeZmoMJSsvBguHHaqkLdAgViOuRkhXvyfszMJy7xeNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Zm+OGz41; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1717166382; c=relaxed/simple;
+	bh=sPw45t2PqKwh8iCOp5XfEqmCLd/MAmRw/0vaK+k6cU0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m5YqxjXlf/q30XWq/Kr+EnHkLv33HQXl/pPqA43Oit8e/teviVilRSeer2lo5rSLLM5VvbeusTWNSedZNPc9BstBEv5U4DEtzBneMSAOKFI49JWsmO/CnYStNdwKAIh3OdGp8Ju4xdOKdB6DW573tVUsba5NTR1JyhtG59aEd3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhhHqWr1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zm+OGz41"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-43fd1a5a586so12104081cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717166331; x=1717771131; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w93Mo8Seh4Ih0DonXdf2s7kp6WzdgYrxnnUHUop/6+s=;
-        b=Zm+OGz41MEclD1zgAeEIXDyo5f2VH5NXEgf34IBqCGkgJkfp+cNoPNn41yXCOHHPyT
-         1HWbn3Kc3J+8f/ALD3EyuDyDJ8RkXSiPaKr1E2KFLZV6mqChf6XpfBi5dwCsudeX0UaH
-         se0hSn87dCD6H/jq2UaWOxOMmzh9zM/blGlgs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717166331; x=1717771131;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w93Mo8Seh4Ih0DonXdf2s7kp6WzdgYrxnnUHUop/6+s=;
-        b=Gs7r9zCuB7ZZENDHbMx0KX/EqpbsR7PRT3G3n9T78rPc9byThkcSv5kZGqoMSHSjGr
-         ra9PJTL4PkzPZBIMn9ylCpv8qitnTjtQuDpse1VBPsFa2A8D2kzyzuVyb51h4Tfkyeez
-         /+XivTFBJ200GtSWs2AqtxuGNC4arr2SjPe793DxgHmbzehT224/HBisXA71LSLsDNrn
-         TmD9VqMmLac4SsxBGyDKq/TIxbZxOH2/ot0dGFTIIpilqczND2op8/b/5E1qWBIOw4D+
-         HIstrrfi842w9+aunefriJQ7780bPMjakxwj9HJmDw51186TIfTY/6Yg2kmmC5OT5VW5
-         4mMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9+TBMsh7MHr2fCUfF7mzba0s2MGF1xjeWBc2bxoSMtWlqRgUM6844WUgwy/fyTDkJRuCBXn9kbVEM2OjH8yVUVTsjVemjBkPrWoEq
-X-Gm-Message-State: AOJu0YxYC22EVjBNP1QgltyOu1aXmoaFHyB2KqY8gSyOJjtcaa4xd+n3
-	nZMgLNDCLh65ch5rZXL953IbYgjBJcPV3vStpnV5WNz6y/5MDycN0bZ7hKlVFtxzvpjNMM3oFd2
-	O1Y2J
-X-Google-Smtp-Source: AGHT+IF0bQRCtjz+BxLg4yv9G5/I3G1V0/T1ni7PzcZr6M0I3y2tFs5nflAHGPHZIMLNRB3K0Sfmmw==
-X-Received: by 2002:ac8:57d0:0:b0:43f:f018:6a79 with SMTP id d75a77b69052e-43ff52b67damr22097571cf.44.1717166331477;
-        Fri, 31 May 2024 07:38:51 -0700 (PDT)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff5b5d475sm5950811cf.55.2024.05.31.07.38.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 May 2024 07:38:50 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43f87dd6866so390521cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 07:38:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWGZ7jCKOSSAmGLLYDc1uqz0S6MR5C5J5C2RYcR9Fr7cWyBap9CzjWjgq/wBg6kmsejgQoPjPnXE3qHlBTwZaUMznRF7N4AvO9uVwJN
-X-Received: by 2002:a05:622a:2596:b0:43b:6b6:8cad with SMTP id
- d75a77b69052e-43ff2c53bc9mr3353421cf.10.1717165910903; Fri, 31 May 2024
- 07:31:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhhHqWr1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A1DC116B1;
+	Fri, 31 May 2024 14:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717166382;
+	bh=sPw45t2PqKwh8iCOp5XfEqmCLd/MAmRw/0vaK+k6cU0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qhhHqWr17EHAoGPbabLMAt7MxUwcCj+7EXVOf45lOmrbH891gmbmsy060/tQWmpkb
+	 n3eQQsjqRfQKd9IM9nueGBmE2K03t7hoCXFJR0+c1C4qTuK4WRNeKLOosZHfrEVxj1
+	 dfJHkRlwbJo0GAbWGPrwd/CcLa2SEJ5dtKiwk6dqBNr6HXYEIYF9Zrqs70/jzoiuD6
+	 gQ7wEwo+1RCsAkDlhr1oalHUAEEeDT9XmFGmBtPgMrRRFVMswWsmAhTlhUi0bJ4D07
+	 s+D/mfp90FMpWQbGiecOErEZrZIOLs9SotBQmTvH1uMD5AjYKBR85LsDkZSRXaF+m4
+	 yGQk4ptg7q50w==
+Message-ID: <18d98f83-aeee-4022-b418-ed6e81988d27@kernel.org>
+Date: Fri, 31 May 2024 16:39:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530082556.2960148-1-quic_kriskura@quicinc.com>
- <CAD=FV=UhrCKCv5R-LAAugrLXFp=cDcj2=Pp9-N3qk5pk2=sGEg@mail.gmail.com>
- <e732257d-cd16-4e81-9a20-af481184ce0e@linaro.org> <CAD=FV=XO_8SwDLJfoNwwCKEO6CZyMRMY_BdsWMLPBkpczErppA@mail.gmail.com>
- <d61ede0b-f689-46af-9bc8-e715784b86c0@quicinc.com>
-In-Reply-To: <d61ede0b-f689-46af-9bc8-e715784b86c0@quicinc.com>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 31 May 2024 07:31:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xwf4eW+zwPecDg5855nVEY2NQMqpvHu59_e2xma6=wxQ@mail.gmail.com>
-Message-ID: <CAD=FV=Xwf4eW+zwPecDg5855nVEY2NQMqpvHu59_e2xma6=wxQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Disable SS instances in park mode for SC7180/ SC7280
-To: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, cros-qcom-dts-watchers@chromium.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Stephen Boyd <swboyd@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Matthias Kaehlcke <mka@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	quic_ppratap@quicinc.com, quic_jackp@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] dt-bindings: pwm: sun20i: Add compatible string for
+ Allwinner H616 PWM
+To: Hironori KIKUCHI <kikuchan98@gmail.com>, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi
+ <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
+ <20240531141152.327592-4-kikuchan98@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240531141152.327592-4-kikuchan98@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 31/05/2024 16:11, Hironori KIKUCHI wrote:
+> Allwinner H616 SoC has a PWM controller similar to the one
+> in the D1, which is supported by the pwm-sun20i driver.
+> 
+> The main difference is in the register layout. Specifically, the
+> GATING flag is placed in the PCCR register instead of the
+> individual PCGR register.
+> 
+> Add a compatible string to distinguish them.
+> 
+> Signed-off-by: Hironori KIKUCHI <kikuchan98@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml | 1 +
 
-On Fri, May 31, 2024 at 7:27=E2=80=AFAM Krishna Kurapati PSSNV
-<quic_kriskura@quicinc.com> wrote:
->
-> > My only guess is that somehow SC8280XP is faster and that changes the
-> > timing of how it handles interrupts. I guess you could try capping
-> > your cpufreq in sysfs and see if that makes a difference in
-> > reproducing. ;-) ...or maybe somehow SC8280XP has a newer version of
-> > the IP where they've fixed this?
-> >
-> > It would be interesting if someone with a SDM845 dragonboard could try
-> > replicating since that seems highly likely to reproduce, at least.
-> >
->
-> Hi Konrad, Doug,
->
->   Usually on downstream we set this quirk only for all Gen-1 targets
-> (not particularly for this testcase) but to avoid these kind of
-> controller going dead issues. I can filter out the gen-1 targets (other
-> than sc7280/sc7180) and send a separate series to add this quirk in all
-> of them.
+There is no such file and there is no dependency (lore link) neither
+here nor in cover letter.
 
-Sounds like a plan to me!
+Best regards,
+Krzysztof
 
--Doug
