@@ -1,20 +1,21 @@
 Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C18626CB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EFC62A02;
 	Fri, 31 May 2024 14:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166977; cv=none; b=btv2HT9ZknzRZhmM8H2nw/M9Bkff6BrIKhi0G9pbNeIoiNvrJeepPGmk4beyMYlSDbReQrGicvjQL0eDo5zlXSSNwfaFHYa/9JUKcivQ5Qj+WY7sYbQoBJ72gL6HrrHAb1NNHqitE733ensof38ihuMEh1toqTwCubolorsfNj8=
+	t=1717166977; cv=none; b=GgBavug5U2fPzFJ41KmMg7QPwQ+JcjC5tIbP/DN8xeOztYWwH6YYX0Ns3d+lp03J06wV/BewBwK164SMfeTEArecUDpo9x3BklOa03nnILhBcaXT2SxeeaciO8G7HS5HtVo+CTRmYU21dWAXr5Y3owvBN/yibi2QhvGiGlw+P/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717166977; c=relaxed/simple;
-	bh=c7HXXvBTV5PGlRRhVIlLpfYS5XM04ZPwGWusUMtWg+w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xe9uM25SaIB5iZ+dyVnMit+FdFOnJ2vvKxO1JG7HVhJZi1ur+47w/Tld15vTbs6Z/gF2WJIRSfLRV7TQ0RffuE5EnPmaP66waoHvdm9YZliMUO2fQ3gGYzrGLKlA4ULeiUbbt0NDiJ7XYLeFzXRVbsM6bKQycHvC8lgCL21HHF8=
+	bh=WDqR7FUN5MYbqjlweAuWRbTA/INUGEQ4XZouK1umPMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JmXKXVa5S2YMkifTV2/51V5J1RjCCBzir+j8gzWlsJWntRhh1VKC3t3j0/cmKiWfS35vcsBQX5Ny8QDECrRBRUynsyygeMKUFBWTeslJXLmg6oIGW1lGaM4GIlvCm4CdRMsk4JLKaUZ7Om4cqmFRCZ454+1rgKY6wK/HwqGbhp0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
 Received: from mgb4.. (unknown [62.77.71.229])
-	by mx.gpxsee.org (Postfix) with ESMTPSA id D0F5B4B2D0;
+	by mx.gpxsee.org (Postfix) with ESMTPSA id F3DA24CD69;
 	Fri, 31 May 2024 16:49:26 +0200 (CEST)
 From: tumic@gpxsee.org
 To: Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -22,10 +23,12 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 Cc: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	=?UTF-8?q?Martin=20T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
-Subject: [PATCH v6 0/4] media: mgb4: YUV and variable framerate support
-Date: Fri, 31 May 2024 16:49:17 +0200
-Message-ID: <20240531144921.2104-1-tumic@gpxsee.org>
+Subject: [PATCH v6 3/4] media: mgb4: Fixed signal frame rate limit handling
+Date: Fri, 31 May 2024 16:49:20 +0200
+Message-ID: <20240531144921.2104-4-tumic@gpxsee.org>
 X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240531144921.2104-1-tumic@gpxsee.org>
+References: <20240531144921.2104-1-tumic@gpxsee.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,47 +40,99 @@ Content-Transfer-Encoding: 8bit
 
 From: Martin Tůma <martin.tuma@digiteqautomotive.com>
 
-Recent mgb4 FW update added support for the YUV image format and variable
-framerates independent of the signal framerate. The following patches extend
-the mgb4 driver with support for both features.
+Change the default DV timings for the outputs to produce a better signal less
+"crippled" by the frame rate limiting. While the individual values are now
+different, the resulting signal still matches the same default display as before.
 
-Changes in V6:
-- Properly handle the timings when no signal is present.
+Additionaly fix the corner case when the frame rate limit is set to zero causing
+a "divide by zero" kernel panic.
 
-Changes in V5:
-- Removed surplus v4l2_format.type checks.
-- Improved the patch descriptions.
-- Splitted the frame rate limit patch into separate code/documentation parts.
+Signed-off-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
+---
+ drivers/media/pci/mgb4/mgb4_sysfs_out.c |  9 +++++----
+ drivers/media/pci/mgb4/mgb4_vout.c      | 12 ++++++------
+ drivers/media/pci/mgb4/mgb4_vout.h      |  2 +-
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-Changes in V4:
-- Splitted the output frame_rate handling fix from the variable frame rate
-  addition patch.
-
-Changes in V3:
-- Use div_u64() for 64b division (fixes build error on ARM32)
-
-Changes in V2:
-- Added missing stride limit
-
-Martin Tůma (4):
-  media: mgb4: Add support for YUV image formats
-  media: mgb4: Add support for V4L2_CAP_TIMEPERFRAME
-  media: mgb4: Fixed signal frame rate limit handling
-  media: admin-guide: mgb4: Outputs DV timings documentation update
-
- Documentation/admin-guide/media/mgb4.rst |  23 +-
- drivers/media/pci/mgb4/mgb4_core.c       |   2 +-
- drivers/media/pci/mgb4/mgb4_core.h       |   2 +
- drivers/media/pci/mgb4/mgb4_io.h         |  29 ++-
- drivers/media/pci/mgb4/mgb4_sysfs_out.c  |   9 +-
- drivers/media/pci/mgb4/mgb4_vin.c        | 193 +++++++++++---
- drivers/media/pci/mgb4/mgb4_vin.h        |   3 +-
- drivers/media/pci/mgb4/mgb4_vout.c       | 309 ++++++++++++++++++++---
- drivers/media/pci/mgb4/mgb4_vout.h       |   5 +-
- 9 files changed, 482 insertions(+), 93 deletions(-)
-
-
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+diff --git a/drivers/media/pci/mgb4/mgb4_sysfs_out.c b/drivers/media/pci/mgb4/mgb4_sysfs_out.c
+index f67ff2a48329..573aa61c69d4 100644
+--- a/drivers/media/pci/mgb4/mgb4_sysfs_out.c
++++ b/drivers/media/pci/mgb4/mgb4_sysfs_out.c
+@@ -229,9 +229,9 @@ static ssize_t frame_rate_show(struct device *dev,
+ 	struct video_device *vdev = to_video_device(dev);
+ 	struct mgb4_vout_dev *voutdev = video_get_drvdata(vdev);
+ 	u32 period = mgb4_read_reg(&voutdev->mgbdev->video,
+-				   voutdev->config->regs.frame_period);
++				   voutdev->config->regs.frame_limit);
+ 
+-	return sprintf(buf, "%u\n", MGB4_HW_FREQ / period);
++	return sprintf(buf, "%u\n", period ? MGB4_HW_FREQ / period : 0);
+ }
+ 
+ /*
+@@ -245,14 +245,15 @@ static ssize_t frame_rate_store(struct device *dev,
+ 	struct video_device *vdev = to_video_device(dev);
+ 	struct mgb4_vout_dev *voutdev = video_get_drvdata(vdev);
+ 	unsigned long val;
+-	int ret;
++	int limit, ret;
+ 
+ 	ret = kstrtoul(buf, 10, &val);
+ 	if (ret)
+ 		return ret;
+ 
++	limit = val ? MGB4_HW_FREQ / val : 0;
+ 	mgb4_write_reg(&voutdev->mgbdev->video,
+-		       voutdev->config->regs.frame_period, MGB4_HW_FREQ / val);
++		       voutdev->config->regs.frame_limit, limit);
+ 
+ 	return count;
+ }
+diff --git a/drivers/media/pci/mgb4/mgb4_vout.c b/drivers/media/pci/mgb4/mgb4_vout.c
+index d98b6e87d71f..998edcbd9723 100644
+--- a/drivers/media/pci/mgb4/mgb4_vout.c
++++ b/drivers/media/pci/mgb4/mgb4_vout.c
+@@ -665,12 +665,12 @@ static void fpga_init(struct mgb4_vout_dev *voutdev)
+ 	mgb4_write_reg(video, regs->config, 0x00000011);
+ 	mgb4_write_reg(video, regs->resolution,
+ 		       (DEFAULT_WIDTH << 16) | DEFAULT_HEIGHT);
+-	mgb4_write_reg(video, regs->hsync, 0x00102020);
+-	mgb4_write_reg(video, regs->vsync, 0x40020202);
+-	mgb4_write_reg(video, regs->frame_period, DEFAULT_PERIOD);
++	mgb4_write_reg(video, regs->hsync, 0x00283232);
++	mgb4_write_reg(video, regs->vsync, 0x40141F1E);
++	mgb4_write_reg(video, regs->frame_limit, DEFAULT_PERIOD);
+ 	mgb4_write_reg(video, regs->padding, 0x00000000);
+ 
+-	voutdev->freq = mgb4_cmt_set_vout_freq(voutdev, 70000 >> 1) << 1;
++	voutdev->freq = mgb4_cmt_set_vout_freq(voutdev, 61150 >> 1) << 1;
+ 
+ 	mgb4_write_reg(video, regs->config,
+ 		       (voutdev->config->id + MGB4_VIN_DEVICES) << 2 | 1 << 4);
+@@ -696,8 +696,8 @@ static void debugfs_init(struct mgb4_vout_dev *voutdev)
+ 	voutdev->regs[3].offset = voutdev->config->regs.hsync;
+ 	voutdev->regs[4].name = "VIDEO_PARAMS_2";
+ 	voutdev->regs[4].offset = voutdev->config->regs.vsync;
+-	voutdev->regs[5].name = "FRAME_PERIOD";
+-	voutdev->regs[5].offset = voutdev->config->regs.frame_period;
++	voutdev->regs[5].name = "FRAME_LIMIT";
++	voutdev->regs[5].offset = voutdev->config->regs.frame_limit;
+ 	voutdev->regs[6].name = "PADDING_PIXELS";
+ 	voutdev->regs[6].offset = voutdev->config->regs.padding;
+ 	if (has_timeperframe(video)) {
+diff --git a/drivers/media/pci/mgb4/mgb4_vout.h b/drivers/media/pci/mgb4/mgb4_vout.h
+index ab9b58b1deb7..adc8fe1e7ae6 100644
+--- a/drivers/media/pci/mgb4/mgb4_vout.h
++++ b/drivers/media/pci/mgb4/mgb4_vout.h
+@@ -19,7 +19,7 @@ struct mgb4_vout_regs {
+ 	u32 config;
+ 	u32 status;
+ 	u32 resolution;
+-	u32 frame_period;
++	u32 frame_limit;
+ 	u32 hsync;
+ 	u32 vsync;
+ 	u32 padding;
 -- 
 2.45.1
 
