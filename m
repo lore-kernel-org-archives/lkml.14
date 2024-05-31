@@ -1,154 +1,90 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31955156668;
-	Fri, 31 May 2024 09:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4584315688F
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146293; cv=none; b=u32QbgE0cfhpJjdSavdreEZjPrM7meOcbyUYYBibr5+vKgsuWZDjQCkxq1NYczkg9UdjHVc+VNM+oZzfGuL/3b5JlCZWkiB1Hm6pXr/iuR+mWXD0+wplwuHP1AkmxnADrRfzvu7+T79DdY7eLOIpRH00sbyFFxCz6sRKH+1bgZA=
+	t=1717146305; cv=none; b=FtJHDS/53IsxH6Tr2Cp60BribFq3cwoJUkzgU9JJy4vITEzen/s2oiDeiIwBpuka66rnBIBV2CILImLTfCzs8X7N4Jqtn7WauA9i8+aWUgw2jD1Ei9odHFFNYB9IW4Q9zxJ8tpHVxQraqqeA9nLbpSh9X5ctuW63rNdGyjnRVds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146293; c=relaxed/simple;
-	bh=0dSibXkU6f8Q//sCbH2eQglOEU1J6upIDpbuwvdMICM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U1Dl8Qz/A1Cb2TgVFJ06PWxa7kL24VfcAnLoNbYnsxg7LkBXXMkRRGr4LeFZgoUYLk+JOPDlKIbdq/qyK/ykMU4rxvpThPwtnqSgw3Hnl/b7ARRCk1SZ8nbecud4d5XtjlxLkGEn3NbZhcsXJYndhyW0ohVkLAUikpLBQ1BcBk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RTpMfSNW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717146305; c=relaxed/simple;
+	bh=aO3h9HmNwc1+wkz7rcJJoUBS3/VMC4mHtmeMrSAirCg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XjgiCRngJf1LCR5Y3ygakwKoKAM5gcucKww/BcD5hhVM3BkhnW0klGzjmwP7VQhlDI0d0SF8o2Edd76iTCTu+SzlqUK01bRuuRT0jQxWDeUhCvbao/6cR2ekKfgPtrC9j7P/ilOk/AZYgvYWaZS8rpUBEYHPaug7F93fuAdZKtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TfDdo6B0; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RTpMfSNW"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44V23uh1003481;
-	Fri, 31 May 2024 09:04:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/iAyTRXChGwQJX0VqI/cabOvsSm4oDhHvF+DV6/sKhs=; b=RTpMfSNW88tQ8KtE
-	ml5zEL0YXoDkUojCxPCuWkPlHSAgrHma6Y3D4i/Pg7wVvrp+agflMZgCoHIq71EI
-	+r8QDUeWAr26Jpbz/0VhSuB5egclTuvbH3R1OL1R3M3IB/ZCnwYsGGee+qxR4Nyf
-	96eBzKtBsw83BlPosmju2gDa9QBpsQGJgyMCUfeIvbjE4q2hy+Z7RrPkUapT3gpe
-	ZEZaqgNaVyRZnicpC0nj9Kn8OgazY+lrvmz5m5qo85l3CrIUFD1vTjuuLgOxQsiJ
-	ZHjlmieMa6j9XQ82k0u5kedOgo4FEtNys0TpzA0I1DYsh/uU0CztZChX3GcqHjBc
-	lmowIg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yesw5jd5d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 09:04:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44V94lTt004400
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 31 May 2024 09:04:47 GMT
-Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 31 May 2024 02:04:41 -0700
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-Subject: [PATCH v3 2/2] arm64: dts: qcom: sm8550: Remove usb default dr_mode
-Date: Fri, 31 May 2024 17:04:22 +0800
-Message-ID: <20240531090422.158813-3-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240531090422.158813-1-quic_tengfan@quicinc.com>
-References: <20240531090422.158813-1-quic_tengfan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TfDdo6B0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717146304; x=1748682304;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aO3h9HmNwc1+wkz7rcJJoUBS3/VMC4mHtmeMrSAirCg=;
+  b=TfDdo6B05i+OKoJyRJWtVC+ef5HmXbSWYADeAmnHyqdW/EF72fc2ywLc
+   r6KCUVJkSNn54JxBXImYP7ekCOjezrOMFBGceeE+CRMyGhGJnCfxUQBom
+   WIu24RDJxLcqCq1L7UGVpcJ8CRMHeN2pMQuetF6tOLxIbjjNhEPizqmWo
+   UDx3Gj26p7daPy8AtpuvsyTm01+CuL2SPzgx8311AEFoLgKzG7tbDyKna
+   pG3Qnr/Ujn/1lL4n0Zq6jX1rzpKQpN3a9pLgaakcUOKNt0ORHFG8kzpK8
+   OOkMbMNVEP9EC2ng0mFN1DCen7ikOZcGrvQR0z2V7rxhywnknk9x5kpDN
+   g==;
+X-CSE-ConnectionGUID: 3uBVvjboQDiVs9RimENm/Q==
+X-CSE-MsgGUID: iceKwFcnRm6VX7alKvi0AA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="39074062"
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="39074062"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:03 -0700
+X-CSE-ConnectionGUID: VmiYVtuTTSWqYvycE9W1Hg==
+X-CSE-MsgGUID: TgKrv+yzSoO4SRCSJnn7uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
+   d="scan'208";a="40543218"
+Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.190])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:02 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: jani.nikula@intel.com
+Subject: [PATCH 0/4] kernel/panic: add more descriptive logging of kernel taints
+Date: Fri, 31 May 2024 12:04:53 +0300
+Message-Id: <cover.1717146197.git.jani.nikula@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4rIsaSUFc8F-7HVfYi_mp-Gz4k72WyQE
-X-Proofpoint-GUID: 4rIsaSUFc8F-7HVfYi_mp-Gz4k72WyQE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-05-31_05,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=547 phishscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- suspectscore=0 priorityscore=1501 clxscore=1015 spamscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2405310066
 
-OTG is default usb dr_mode, so this property can be removed.
+Resend of
+https://lore.kernel.org/r/cover.1711380724.git.jani.nikula@intel.com
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8550-hdk.dts                     | 4 ----
- arch/arm64/boot/dts/qcom/sm8550-mtp.dts                     | 4 ----
- arch/arm64/boot/dts/qcom/sm8550-qrd.dts                     | 4 ----
- arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts | 4 ----
- 4 files changed, 16 deletions(-)
+A few years back there was a discussion about it being difficult to
+remember all the taint flags [1].
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-index 411de3451db8..e0dc03a97771 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
-@@ -1253,10 +1253,6 @@ &usb_1 {
- 	status = "okay";
- };
- 
--&usb_1_dwc3 {
--	dr_mode = "otg";
--};
--
- &usb_1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_hs_in>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-index 84d16227ef80..26dfca0c3e05 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-@@ -946,10 +946,6 @@ &usb_1 {
- 	status = "okay";
- };
- 
--&usb_1_dwc3 {
--	dr_mode = "otg";
--};
--
- &usb_1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_hs_in>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-index e20c6240f76d..d27820fb5fc0 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
-@@ -1115,10 +1115,6 @@ &usb_1 {
- 	status = "okay";
- };
- 
--&usb_1_dwc3 {
--	dr_mode = "otg";
--};
--
- &usb_1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_hs_in>;
- };
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-index 6dd5232da9f9..85d487ef80a0 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-sony-xperia-yodo-pdx234.dts
-@@ -737,10 +737,6 @@ &usb_1 {
- 	status = "okay";
- };
- 
--&usb_1_dwc3 {
--	dr_mode = "otg";
--};
--
- &usb_1_dwc3_hs {
- 	remote-endpoint = <&pmic_glink_hs_in>;
- };
+Time flies. I stumbled on my old branch, brushed it up, and here it is.
+
+I'm not entirely happy with the static buf (which was there to begin
+with) or how to decide on its size. Thoughts?
+
+BR,
+Jani.
+
+[1] https://lore.kernel.org/r/YmvU+/RUhOcL+B1p@kroah.com
+
+Jani Nikula (4):
+  kernel/panic: return early from print_tainted() when not tainted
+  kernel/panic: convert print_tainted() to use struct seq_buf internally
+  kernel/panic: initialize taint_flags[] using a macro
+  kernel/panic: add verbose logging of kernel taints in backtraces
+
+ include/linux/panic.h |   8 +--
+ kernel/panic.c        | 116 ++++++++++++++++++++++++++++--------------
+ lib/dump_stack.c      |   3 ++
+ 3 files changed, 87 insertions(+), 40 deletions(-)
+
 -- 
-2.25.1
+2.39.2
 
