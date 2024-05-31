@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EC815B96C
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5C215B978
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 12:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717158925; cv=none; b=two4HPPXkgzUCiTB7E6zYuLgi2MItmdY5JZmDQ9uk1FLGFxyPgxV8qGkrTMn+3+7XjgElF5yeJfK5IfNwL9N09E451j8osdyD4TtqaidShZRlK2j11lrkOkap/vLCy3GrfYWuXmRjb71m7UnfdX3tIkAfS2u5BY6Zb5gVxbvxK0=
+	t=1717158925; cv=none; b=O/+sngNK6l4QAXSUjia2D46+tNycRjrCFZWjqwoJ0dBSrk1OdfyjAz343k7y4gx41g36utBDnHdP6IBwx4VlL8IaxYUAKBlf0fM4+Uk+xaaM0M46pTNNhHftGgXwncoRgv5BFBHvGPZ85xLXVySF49+ZA21yCDAnQhN/I3tnCX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717158925; c=relaxed/simple;
-	bh=dN5HiwWgdZsCjkAa5Gu71vLMtjXHrncFvZfcWHAJ8xI=;
+	bh=j0mGso8kNgtVmg3sLyotcKOfUTQN9/QvAP75p19vlTg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IfY/uUDaEtqj6LAlctrv9Eaa/+Hj9C2J8bxPLdXiK+NfiLF25DVHYR0k9Q/rJv1iMih+aV5QwlAYJSsHmGQ99hfRqoPziwhWrPhZNzqUHm4ktuFfFSlovC38ouB/ZXz2owmfQtUXMVVy5hKlYthtJHHHrmVwPaZheVtan9pfSWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ac6XCjqX; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AQK3suHklcj4S6h9vud7bbpcalxmVwAaRrhpjv8bBi62xfZTy1nx3cdxzcAuRKzLC7k/QTABYaKAjk6kOFAK0JWFus/pcjMENdYgE9Q8QfhkfPIxNKyY/PYO78z97ntjDmuL68jVMMYXYwoS1HO3MJhqOuzfbGdBbmbN8tsfqJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM2ozbUv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ac6XCjqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C266CC116B1;
-	Fri, 31 May 2024 12:35:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM2ozbUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D3EEC32789;
+	Fri, 31 May 2024 12:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717158923;
-	bh=dN5HiwWgdZsCjkAa5Gu71vLMtjXHrncFvZfcWHAJ8xI=;
+	s=k20201202; t=1717158924;
+	bh=j0mGso8kNgtVmg3sLyotcKOfUTQN9/QvAP75p19vlTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ac6XCjqXy6vpdVp8dQaboG/+NmqFCXFQKzFnyIU3ScL046HCJ4PsyeTBllR4AGei1
-	 HV6U/tPHWY9IXtXBTJasqbT62LeB/ugX1VQ5ovfxKHh0Pe24xDfz7LdzcMFEGYJOGq
-	 BeYbeaL0GNPuE/FpzhmxwlhV0jpnbOaA36pqqt4gasc0T+iGtYT4wYcTxZ6/PGSRdS
-	 WlO2Gn0QuKqwETXzMVGlIXRxJF6csiT0kx9xAiQaPPHlXMyYxP8LxH5VzC+unUPz3M
-	 BtVRgAuUDK/QJiZoOM49PTy9Txil5wqSpq5fctUFX5k8wvRpn+ogjtOiHyp3ZMls/x
-	 V5pUopQugPFUg==
+	b=eM2ozbUvVXe39GTTF8OpF6nwnO+Dl7pzaar+wMEacViymfI/QXVJh8AYvs07tsgsM
+	 8l9mFzbF2nBKCKGs6YaPTjAarPyZY4IdJg/SUlZDyqZoafkNjLiMG0evFxWwaZCvE9
+	 GT0ObNnWZZrsb9+UGbKw8BTA7ZQMayQoWM7GFkPyDsVYuJL4qsr1GOwl06gFAE6rQI
+	 aaqiJBKrO2Cwo/CHC2ysDMKq6IPykgQTvCNIsLLhyxg7r3C/JCjHyGY5lR7ItxNyyd
+	 vTAJSJi+G9YiGVFmU+L3qMhhYr/DrZ4M+quL7fU2opVjFb0vs8zpfZu6fBxhaP+nUd
+	 6Q8M5CMRyaJQA==
 From: Borislav Petkov <bp@kernel.org>
 To: X86 ML <x86@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH 06/14] x86/alternative: Convert alternative_io()
-Date: Fri, 31 May 2024 14:35:03 +0200
-Message-ID: <20240531123512.21427-7-bp@kernel.org>
+Subject: [PATCH 07/14] x86/alternative: Convert alternative_call()
+Date: Fri, 31 May 2024 14:35:04 +0200
+Message-ID: <20240531123512.21427-8-bp@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240531123512.21427-1-bp@kernel.org>
 References: <20240531123512.21427-1-bp@kernel.org>
@@ -48,29 +48,26 @@ From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- arch/x86/include/asm/alternative.h | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ arch/x86/include/asm/alternative.h | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 7f5f26fc42a9..8a0a6ba4b741 100644
+index 8a0a6ba4b741..bc696c60848d 100644
 --- a/arch/x86/include/asm/alternative.h
 +++ b/arch/x86/include/asm/alternative.h
-@@ -335,14 +335,9 @@ static inline int alternatives_text_reserved(void *start, void *end)
+@@ -340,11 +340,7 @@ static inline int alternatives_text_reserved(void *start, void *end)
  
- /* Like alternative_input, but with a single output argument */
- #define alternative_io(oldinstr, newinstr, ft_flags, output, input...)	\
--	asm_inline volatile (ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
-+	asm_inline volatile(N_ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
- 		: output : "i" (0), ## input)
- 
--#define n_alternative_io(oldinstr, newinstr, ft_flags, output, input...)	\
--	asm_inline volatile (N_ALTERNATIVE(oldinstr, newinstr, ft_flags)	\
--		: output : "i" (0), ## input)
--
--
  /* Like alternative_io, but for replacing a direct call with another one. */
  #define alternative_call(oldfunc, newfunc, ft_flags, output, input...)	\
- 	asm_inline volatile (ALTERNATIVE("call %c[old]", "call %c[new]", ft_flags) \
+-	asm_inline volatile (ALTERNATIVE("call %c[old]", "call %c[new]", ft_flags) \
+-		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
+-
+-#define n_alternative_call(oldfunc, newfunc, ft_flags, output, input...)	\
+-	asm_inline volatile (N_ALTERNATIVE("call %P[old]", "call %P[new]", ft_flags) \
++	asm_inline volatile(N_ALTERNATIVE("call %P[old]", "call %P[new]", ft_flags) \
+ 		: output : [old] "i" (oldfunc), [new] "i" (newfunc), ## input)
+ 
+ /*
 -- 
 2.43.0
 
