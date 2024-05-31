@@ -1,147 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E65158878
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249A4158A08;
+	Fri, 31 May 2024 09:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717146315; cv=none; b=dOORs+D/1RSALmyvNgZQ5o+I0DTGcyZ+OW7WDDdr1owvK2cGtoRmJoNGF4Br8fQj0VwnQd++b/X/2y4cWglolCz3Ru+SYB+xH53iSGL43gUL4JaCphkFHwwa+RZoTH+o3ngirHe3EcBb2/5U7OuTX2RBeCi1DDJU46sAj9kGNX0=
+	t=1717146318; cv=none; b=Vdku7if5/no360Xd2vCo6byOcJBzWNKLkc03JCPPqlgVdxvr6yms7A2PffCT1y3bAtmLPvvlUJGhTQK9KOioHcXhJal0wc3E+ISVGPUIKUnR41nrQ4pIOP0k50unw3j9+oGm21XH0xiVCN8mXVAVYeJqpY2yI+k1ItfVpGAy2BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717146315; c=relaxed/simple;
-	bh=TFgdIL/o05mXh9mn/TW+lrAw5f/LmbhsEY4ucnUQogs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NT8xaFZmAYScnYTg3d0zSBK/p8GnxoOfPv7jZ4PiJ5iRaTDDxfx1yftQNquAnDPBR8UUZWUotnsPu7x3YyV/WK/tGFV/xN+5ml0rY4tLGV0hx07BDL4HUlo2/mVU0sqbWCgO2/lLaJk+3G53TIBCMDx7dFtS8JPnKFEWPWjySFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l7J122fB; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717146318; c=relaxed/simple;
+	bh=l9od8fUQjOt1e50pDgBVKHh7h1Sq3qEMWS9k7Ol8kHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZixX7PhmDSSMT6Y1RDJNe0G1FJ5Q1YpZ4NmxLjfWGtG3vk0sOuoSudkzkL2qVD4X3nVhrkdZCxt8/tafl26xYQYdzl007UflcY+xXNDuNWWPJTc7/zmmRcK2aTBV0hqK+lweFDRxIHHNxt+rTI9PHVa0Ihk5z6WKJYosReap/4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=diRdJuWk; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l7J122fB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717146314; x=1748682314;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TFgdIL/o05mXh9mn/TW+lrAw5f/LmbhsEY4ucnUQogs=;
-  b=l7J122fBBGFjsZVXFSaBy4apA5ld+FKceBQbCk9FIqt8zO5tGLHA73Nn
-   chpN9NcXOpEqs9rU3JzSo7rXEU24xMahfaUKmnjTOhHNpo6WBy7t/2qHW
-   ICCVbX6ZCPscx3ScEj2FzhumfiiKKQ/nJleKIZiW9bJNM8IKmWXNpbYpn
-   WgpdTc8F0SAWdMBmrl5QivvRxfrbvmV3zDOvDc8yvQPF55ky0H/bb9ekb
-   7Cu1DoXJpyreclKYlGLm/QMGXD4fQHuUQUYrMkSv518EesUYV2sZBpfRL
-   E8xULbso2a7wF78C5UOh7rgZMdCA+Jp+zpAXgVMuzTmWCL2EC+g6a/gyN
-   w==;
-X-CSE-ConnectionGUID: vzSRiIvRTHarPRm+hhm5dQ==
-X-CSE-MsgGUID: kh11MXO6QUSfYN9yl9AuOw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="39074070"
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="39074070"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:14 -0700
-X-CSE-ConnectionGUID: 411iwXpMQuSVAaztMpV0eQ==
-X-CSE-MsgGUID: xOKqWE8HQ+Gs8qdTnY/tPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,203,1712646000"; 
-   d="scan'208";a="40543240"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.190])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 02:05:12 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: jani.nikula@intel.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>
-Subject: [PATCH 2/4] kernel/panic: convert print_tainted() to use struct seq_buf internally
-Date: Fri, 31 May 2024 12:04:55 +0300
-Message-Id: <cb6006fa7c0f82a6b6885e8eea2920fcdc4fc9d0.1717146197.git.jani.nikula@intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1717146197.git.jani.nikula@intel.com>
-References: <cover.1717146197.git.jani.nikula@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diRdJuWk"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f63642ab8aso3920845ad.3;
+        Fri, 31 May 2024 02:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717146315; x=1717751115; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cIqlWuPqBxRMmc3AFgZJ/wVDP6Hh20wzHjGm/ayLPpw=;
+        b=diRdJuWkEJBpje1sMRWu3ZQQJhRjgeBTfzhyZwQ7VPHwmeFrnwwbY1yJBWL77L40LV
+         AitIr0qXXoI+AQ5104uKe0SqoIN5yzF5PjiuyHv0z2WwtHAFbmxhq4vRQY+BIdbJEs6C
+         JyWxHwVB3T9OqlcZuv+KuA2IpleQZWFT/39xVlCbDcpQewgZMZIhaZ/w4/HUhMbZj7ES
+         JCD+U8OZ0+GMXBD4IgASM4li0/ydwAJUwNv5BC4/axyaSTiym2Ioddt/zhtpijz+LCoP
+         qHkebbTJwBF7IYCJkqT4elJ3VNgIIIbAp4q0KTN0JejSuEFvLKUKpe0mLCSBkxqQ1RaS
+         1JoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717146315; x=1717751115;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cIqlWuPqBxRMmc3AFgZJ/wVDP6Hh20wzHjGm/ayLPpw=;
+        b=bagoR4PbFJAKf4z2YiOAy2ITQEj8qdIdt0hAAbCb0FZq3yz5YwO3b3uXzd7D+l7I0v
+         pJHcS7/vG6bBDNO/taz8T1MYOdi+wBkSf12JsUFw31epS7WnnZQdRD60peDzg1UIynAw
+         KS9vV/IDUUEqDuLs8J0eRI9ElFexaUawjorv/xlSrUkzOOilEOaido1OW3O2fKFcKO12
+         FrmgXIlzALTdapZguaT7H9ORQBc6i1Xy5M5U4sZhR8QOtpj6kNXzi5plGMoz4RN+nOu8
+         E1frm0cNPwvo5FHpOA06zRgr04tgfehIOiGYFZZ+pMrPsrqPdhh9ZAMHDMhRXORgqxsa
+         6u6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU3cuFw+LtE5glYGIk4Hg5wBz8YqXMIuc+fV06APw+u1AVEfNdDDeY/mxWppMcQ3Zhr7oVn5iLhBcwtUNOVsGxlqDXofv3SvX0k11/hQo6skq+8b72Pk6VI6BmG8xpqsDFPV87rUiOkmvTNkXMEgTrRmuFW32OcbtCzgXY6KYHFztMqpQ==
+X-Gm-Message-State: AOJu0YzP8PtKtpbeXpiosaqhQWegqtl55r/7l2OWofm0RF21X8qywS5X
+	Gs1SG5VomtKBKd9K6E3QZqHb03yesHLFUAPZx3ROslZ4KFpcCjRj
+X-Google-Smtp-Source: AGHT+IEcCbIUb7FLaS1kv0Gl0B/d0JLuJYOBmQuhl+Pn9+ipuPL8cfMSAbBqrvyB9DDLlJppJJN4Lg==
+X-Received: by 2002:a17:902:e88f:b0:1f2:fe12:b79e with SMTP id d9443c01a7336-1f637012f93mr15319515ad.17.1717146315068;
+        Fri, 31 May 2024 02:05:15 -0700 (PDT)
+Received: from fedora.pi.hole ([2405:201:6013:c0b2:b3f7:7c95:a370:4345])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ec184sm11572445ad.209.2024.05.31.02.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 02:05:14 -0700 (PDT)
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+To: 
+Cc: animeshagarwal28@gmail.com,
+	Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
+Date: Fri, 31 May 2024 14:34:51 +0530
+Message-ID: <20240531090458.99744-1-animeshagarwal28@gmail.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Content-Transfer-Encoding: 8bit
 
-Convert print_tainted() to use struct seq_buf internally in order to be
-more aware of the buffer constraints as well as make it easier to extend
-in follow-up work.
+Convert the fsl i.MX DMA controller bindings to DT schema.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
 ---
- kernel/panic.c | 38 ++++++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/dma/fsl,imx-dma.yaml  | 56 +++++++++++++++++++
+ .../devicetree/bindings/dma/fsl-imx-dma.txt   | 50 -----------------
+ 2 files changed, 56 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 5c9396418e1c..b7b2fb8b3625 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -35,6 +35,7 @@
- #include <linux/debugfs.h>
- #include <linux/sysfs.h>
- #include <linux/context_tracking.h>
-+#include <linux/seq_buf.h>
- #include <trace/events/error_report.h>
- #include <asm/sections.h>
- 
-@@ -497,6 +498,25 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- 	[ TAINT_TEST ]			= { 'N', ' ', true },
- };
- 
-+static void print_tainted_seq(struct seq_buf *s)
-+{
-+	int i;
+diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml
+new file mode 100644
+index 000000000000..13ac6d6ad49f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl,imx-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!tainted_mask) {
-+		seq_buf_puts(s, "Not tainted");
-+		return;
-+	}
++title: Freescale Direct Memory Access (DMA) Controller for i.MX
 +
-+	seq_buf_printf(s, "Tainted: ");
-+	for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
-+		const struct taint_flag *t = &taint_flags[i];
-+		bool is_set = test_bit(i, &tainted_mask);
-+		char c = is_set ? t->c_true : t->c_false;
++maintainers:
++  - Animesh Agarwal <animeshagarwal28@gmail.com>
 +
-+		seq_buf_putc(s, c);
-+	}
-+}
++allOf:
++  - $ref: dma-controller.yaml#
 +
- /**
-  * print_tainted - return a string to represent the kernel taint state.
-  *
-@@ -508,25 +528,15 @@ const struct taint_flag taint_flags[TAINT_FLAGS_COUNT] = {
- const char *print_tainted(void)
- {
- 	static char buf[TAINT_FLAGS_COUNT + sizeof("Tainted: ")];
--	char *s;
--	int i;
-+	struct seq_buf s;
- 
- 	BUILD_BUG_ON(ARRAY_SIZE(taint_flags) != TAINT_FLAGS_COUNT);
- 
--	if (!tainted_mask) {
--		snprintf(buf, sizeof(buf), "Not tainted");
--		return buf;
--	}
-+	seq_buf_init(&s, buf, sizeof(buf));
- 
--	s = buf + sprintf(buf, "Tainted: ");
--	for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
--		const struct taint_flag *t = &taint_flags[i];
--		*s++ = test_bit(i, &tainted_mask) ?
--			t->c_true : t->c_false;
--	}
--	*s = 0;
-+	print_tainted_seq(&s);
- 
--	return buf;
-+	return seq_buf_str(&s);
- }
- 
- int test_taint(unsigned flag)
++properties:
++  compatible:
++    enum:
++      - fsl,imx1-dma
++      - fsl,imx21-dma
++      - fsl,imx27-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    items:
++      - description: DMA complete interrupt
++      - description: DMA Error interrupt
++    minItems: 1
++
++  "#dma-cells":
++    const: 1
++
++  dma-channels:
++    maximum: 16
++
++  dma-requests:
++    description: Number of DMA requests supported.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    dma-controller@10001000 {
++      compatible = "fsl,imx27-dma";
++      reg = <0x10001000 0x1000>;
++      interrupts = <32 33>;
++      #dma-cells = <1>;
++      dma-channels = <16>;
++    };
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
+deleted file mode 100644
+index 1c9929d53727..000000000000
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-* Freescale Direct Memory Access (DMA) Controller for i.MX
+-
+-This document will only describe differences to the generic DMA Controller and
+-DMA request bindings as described in dma/dma.txt .
+-
+-* DMA controller
+-
+-Required properties:
+-- compatible : Should be "fsl,<chip>-dma". chip can be imx1, imx21 or imx27
+-- reg : Should contain DMA registers location and length
+-- interrupts : First item should be DMA interrupt, second one is optional and
+-    should contain DMA Error interrupt
+-- #dma-cells : Has to be 1. imx-dma does not support anything else.
+-
+-Optional properties:
+-- dma-channels : Number of DMA channels supported. Should be 16.
+-- #dma-channels : deprecated
+-- dma-requests : Number of DMA requests supported.
+-- #dma-requests : deprecated
+-
+-Example:
+-
+-	dma: dma@10001000 {
+-		compatible = "fsl,imx27-dma";
+-		reg = <0x10001000 0x1000>;
+-		interrupts = <32 33>;
+-		#dma-cells = <1>;
+-		dma-channels = <16>;
+-	};
+-
+-
+-* DMA client
+-
+-Clients have to specify the DMA requests with phandles in a list.
+-
+-Required properties:
+-- dmas: List of one or more DMA request specifiers. One DMA request specifier
+-    consists of a phandle to the DMA controller followed by the integer
+-    specifying the request line.
+-- dma-names: List of string identifiers for the DMA requests. For the correct
+-    names, have a look at the specific client driver.
+-
+-Example:
+-
+-	sdhci1: sdhci@10013000 {
+-		...
+-		dmas = <&dma 7>;
+-		dma-names = "rx-tx";
+-		...
+-	};
 -- 
-2.39.2
+2.45.1
 
