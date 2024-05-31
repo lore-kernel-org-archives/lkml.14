@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18A3282869
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E92112FB3B
+	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 09:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717147227; cv=none; b=Ls1tJ3awbsjMtaaOYQ40oCvH1jE4NNn3lNQuXFziagB6b6YDqgscvZhtivTqL9zEO+op7EcGwpbOEoQdhz2CMZlDVfSqLRMFVckbZEPqTfaxBLRh1n3NfIeR1PeyjHpfKOorTKgRGrCKuh4orLJtVFP6DbOW3KX6faM7W6K3C1M=
+	t=1717147228; cv=none; b=fF800nau/hU2RtiUIRa0bRXAEajShnKR3TY90kGPLII53kt5lqLLLXtmM4suvbRn4P3PslsMjM6tRBzHnkR65kkiFet7qjvwP9UOmw8rIBdvF5U6DtJosZibHUnXueeiGKqHKM0SnaGCGj9TFv9mX0I3NKxly2WWADXFIEFoOMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717147227; c=relaxed/simple;
-	bh=ySyfp9Tsb6A3ifM2kAJNqbEQbETZH/UsyUxprYmMjNw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=PUh3PfBUQyrdvmlFEcvakbees7/ieDSkWh8NxlQUr9e1aw1uPkpPU9Z5S4Eu7m8XIKcA/CwpEbBzfkfEZCQvwesmUO4UWGF0hCmTFEP8GNAEgnGhvNAocKMCO/qrZGTWmqxpwTf5eAy5UpL80MsVlMcjMj5XMm+3mA6OOxWRuAU=
+	s=arc-20240116; t=1717147228; c=relaxed/simple;
+	bh=3Qa06/bNSuGqk/lF+w8XivvbfZPxyLfhmfvPOs6TN6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=FE8RkDAnBfIuDUYnQTeEhKd6zjTJHaA3YT7qS96zakvZgTv2ENPC62g9R7NC9klupIeXRuZA4x5SdLev5fPF+KSQ4240np8wUNYEYaHM78LLqV3ELSN2kLhmyvuwEu3BuftMe/xyCxQsA6T/2BaoPvtqzW1hVKOMHgi4PHbM/LY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-57-6659964c6c58
+X-AuditID: a67dfc5b-d85ff70000001748-61-6659964c009f
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,36 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v11 05/12] mm: buddy: make room for a new variable, ugen, in struct page
-Date: Fri, 31 May 2024 18:19:54 +0900
-Message-Id: <20240531092001.30428-6-byungchul@sk.com>
+Subject: [PATCH v11 07/12] mm: add a parameter, unmap generation number, to free_unref_folios()
+Date: Fri, 31 May 2024 18:19:56 +0900
+Message-Id: <20240531092001.30428-8-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240531092001.30428-1-byungchul@sk.com>
 References: <20240531092001.30428-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC9ZZnoa7PtMg0g3nvuC3mrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC9ZZnoa7PtMg0g0lThC3mrF/DZvF5wz82
 	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
 	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
-	k4+/WQuuqlQcn/6VuYGxTbaLkZNDQsBE4tO5A8ww9qXnqxhBbDYBdYkbN36CxUUEzCQOtv5h
-	B7GZBe4ySRzoZwOxhQUiJDZd6wSLswioSmz93MwEYvMKmEqsWrWNBWKmvMTqDRDzOYHmHPh7
-	B2y+EFDNov+9QDYXUM17Nolfr06xQTRIShxccYNlAiPvAkaGVYxCmXlluYmZOSZ6GZV5mRV6
-	yfm5mxiBob+s9k/0DsZPF4IPMQpwMCrx8AZURKQJsSaWFVfmHmKU4GBWEuH9lQ4U4k1JrKxK
-	LcqPLyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwCjryvz40vvJyrdqnzfJ
-	uk1n9lu8Oz9HT9XU+5VggRRf1NFJz/cf6bA4d3p2nGbTqs6jog+Cv4YKzRWsOPtnztx9s/lM
-	3WPOSR6o2XYh2+DPZ1VB/eQ0YUNzAVmFstMcoe9qA581nuue6PLi6etLpmLn1y58PjNUO/Zq
-	3Pf20s0WV59Jf5LhW6bEUpyRaKjFXFScCABLWebVeQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC5WfdrOszLTLN4OlFRos569ewWXze8I/N
+	3D2rWAvuqlU86TzC0sC4U76LkZNDQsBE4vXki8ww9qmTT1hAbDYBdYkbN36CxUUEzCQOtv5h
+	B7GZBe4ySRzoZwOxhQXiJWa8hoizCKhK7Pm3AyzOK2Aq8fXmCxaImfISqzccAJvDCTTnwN87
+	jCC2EFDNov+9QDYXUM17NolDF2dAHSEpcXDFDZYJjLwLGBlWMQpl5pXlJmbmmOhlVOZlVugl
+	5+duYgSG/rLaP9E7GD9dCD7EKMDBqMTDG1ARkSbEmlhWXJl7iFGCg1lJhPdXOlCINyWxsiq1
+	KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs1NSC1CKYLBMHp1QDo1NnzjGhvF3zvnLovXVh
+	f3zizEvvR1q+Ztc/ZJrf+WnvEv2H89H07cGTmvdqPvo8T0lgmsws5hOVuxc9l5ZdLrSl64Xy
+	m9Vm16a+8JtrP2XtNamir8fvXr5fuK72lrrQ7bPLzB1c/74yVrrQbyLwWLxlzcfKnjW+AtHF
+	7r+32+5Z7HN6QypjznklluKMREMt5qLiRAAo08rMeQIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsXC5WfdrOszLTLNYNsjdos569ewWXze8I/N
 	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
 	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
 	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZTz5+Ju14KpKxfHpX5kbGNtkuxg5OSQETCQuPV/FCGKzCahL3LjxkxnEFhEw
-	kzjY+ocdxGYWuMskcaCfDcQWFoiQ2HStEyzOIqAqsfVzMxOIzStgKrFq1TYWiJnyEqs3HACb
-	wwk058DfO2DzhYBqFv3vZZzAyLWAkWEVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZGYCAvq/0z
-	cQfjl8vuhxgFOBiVeHgDKiLShFgTy4orcw8xSnAwK4nw/koHCvGmJFZWpRblxxeV5qQWH2KU
-	5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTA+fnZK+2ia54ZJppuPr1j2tetYx4HIo7wt
-	NTtTVeWLnj/4M2Frv76rQt9fw5IPSv+6F9sfTZ1Tz6uipmwYnnNZrlJl9qxI37DK0qJYFlPv
-	niL30xeuX5nvV95jsN5zoc7Wvy5v5Pw8pzbsXj8vXpLjZHzer9fvW89tqz/kvdYmcYKtFGNH
-	yUQlluKMREMt5qLiRADuneMJYAIAAA==
+	5mSWpRbp2yVwZczds4q14K5axZPOIywNjDvluxg5OSQETCROnXzCAmKzCahL3LjxkxnEFhEw
+	kzjY+ocdxGYWuMskcaCfDcQWFoiXmPEaIs4ioCqx598OsDivgKnE15svWCBmykus3nAAbA4n
+	0JwDf+8wgthCQDWL/vcyTmDkWsDIsIpRJDOvLDcxM8dUrzg7ozIvs0IvOT93EyMwkJfV/pm4
+	g/HLZfdDjAIcjEo8vAEVEWlCrIllxZW5hxglOJiVRHh/pQOFeFMSK6tSi/Lji0pzUosPMUpz
+	sCiJ83qFpyYICaQnlqRmp6YWpBbBZJk4OKUaGCe+PnHw2aOZX14+ZYx7ZyVbVFf4OZ+dyUyp
+	yIBv5k6HzPhNi1SlbYJtmqt9fz3KvLTp07+9fvsvifsdCe4N+2sbd3dldH9p1Cmf/nk9GueM
+	79YGzIg4apnc7r1mS3Tz5SV3dHQU7CZ/zl+7zlm/o1vxX/913jVrFh3c2fx71aOwOQ3H/6gK
+	zFBiKc5INNRiLipOBAC//IG9YAIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,147 +67,149 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Functionally, no change.  This is a preparation for luf mechanism that
-tracks need of tlb flush for each page residing in buddy, using a
-generation number in struct page.
+Unmap generation number is used by luf mechanism to track need of tlb
+flush for each page residing in pcp or buddy.
 
-Fortunately, since the private field in struct page is used only to
-store page order in buddy, ranging from 0 to MAX_PAGE_ORDER, that can be
-covered with unsigned short int.  So splitted it into two smaller ones,
-order and ugen, so that the both can be used in buddy at the same time.
+The number should be delivered to pcp or buddy via free_unref_folios()
+that is for releasing folios that have been unmapped during reclaim in
+shrink_folio_list().
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm_types.h | 40 +++++++++++++++++++++++++++++++++-------
- mm/internal.h            |  4 ++--
- mm/page_alloc.c          | 13 ++++++++-----
- 3 files changed, 43 insertions(+), 14 deletions(-)
+ mm/internal.h   |  2 +-
+ mm/page_alloc.c | 10 +++++-----
+ mm/swap.c       |  6 +++---
+ mm/vmscan.c     |  8 ++++----
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 24323c7d0bd4..37eb3000267c 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -108,13 +108,25 @@ struct page {
- 				pgoff_t index;		/* Our offset within mapping. */
- 				unsigned long share;	/* share count for fsdax */
- 			};
--			/**
--			 * @private: Mapping-private opaque data.
--			 * Usually used for buffer_heads if PagePrivate.
--			 * Used for swp_entry_t if PageSwapCache.
--			 * Indicates order in the buddy system if PageBuddy.
--			 */
--			unsigned long private;
-+			union {
-+				/**
-+				 * @private: Mapping-private opaque data.
-+				 * Usually used for buffer_heads if PagePrivate.
-+				 * Used for swp_entry_t if PageSwapCache.
-+				 */
-+				unsigned long private;
-+				struct {
-+					/*
-+					 * Indicates order in the buddy system if PageBuddy.
-+					 */
-+					unsigned short int order;
-+					/*
-+					 * Tracks need of tlb flush used by luf,
-+					 * which stands for lazy unmap flush.
-+					 */
-+					unsigned short int ugen;
-+				};
-+			};
- 		};
- 		struct {	/* page_pool used by netstack */
- 			/**
-@@ -521,6 +533,20 @@ static inline void set_page_private(struct page *page, unsigned long private)
- 	page->private = private;
- }
- 
-+#define page_buddy_order(page)		((page)->order)
-+
-+static inline void set_page_buddy_order(struct page *page, unsigned int order)
-+{
-+	page->order = (unsigned short int)order;
-+}
-+
-+#define page_buddy_ugen(page)		((page)->ugen)
-+
-+static inline void set_page_buddy_ugen(struct page *page, unsigned short int ugen)
-+{
-+	page->ugen = ugen;
-+}
-+
- static inline void *folio_get_private(struct folio *folio)
- {
- 	return folio->private;
 diff --git a/mm/internal.h b/mm/internal.h
-index bbec99cc9d9d..552e1061d36d 100644
+index 380ae980e4f9..dba6d0eb7b6d 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -461,7 +461,7 @@ struct alloc_context {
- static inline unsigned int buddy_order(struct page *page)
- {
- 	/* PageBuddy() must be checked by the caller */
--	return page_private(page);
-+	return page_buddy_order(page);
- }
+@@ -662,7 +662,7 @@ extern bool free_pages_prepare(struct page *page, unsigned int order);
+ extern int user_min_free_kbytes;
  
- /*
-@@ -475,7 +475,7 @@ static inline unsigned int buddy_order(struct page *page)
-  * times, potentially observing different values in the tests and the actual
-  * use of the result.
-  */
--#define buddy_order_unsafe(page)	READ_ONCE(page_private(page))
-+#define buddy_order_unsafe(page)	READ_ONCE(page_buddy_order(page))
+ void free_unref_page(struct page *page, unsigned int order, unsigned short int ugen);
+-void free_unref_folios(struct folio_batch *fbatch);
++void free_unref_folios(struct folio_batch *fbatch, unsigned short int ugen);
  
- /*
-  * This function checks whether a page is free && is the buddy
+ extern void zone_pcp_reset(struct zone *zone);
+ extern void zone_pcp_disable(struct zone *zone);
 diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index b1e3eb5787de..ae57dd8718fe 100644
+index 6fbbe45be5ae..c9acb4da91e0 100644
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -565,9 +565,12 @@ void prep_compound_page(struct page *page, unsigned int order)
- 	prep_compound_head(page, order);
- }
- 
--static inline void set_buddy_order(struct page *page, unsigned int order)
-+static inline void set_buddy_order_ugen(struct page *page,
-+					unsigned int order,
-+					unsigned short int ugen)
+@@ -2698,7 +2698,7 @@ void free_unref_page(struct page *page, unsigned int order,
+ /*
+  * Free a batch of folios
+  */
+-void free_unref_folios(struct folio_batch *folios)
++void free_unref_folios(struct folio_batch *folios, unsigned short int ugen)
  {
--	set_page_private(page, order);
-+	set_page_buddy_order(page, order);
-+	set_page_buddy_ugen(page, order);
- 	__SetPageBuddy(page);
- }
- 
-@@ -826,7 +829,7 @@ static inline void __free_one_page(struct page *page,
- 	}
- 
- done_merging:
--	set_buddy_order(page, order);
-+	set_buddy_order_ugen(page, order, 0);
- 
- 	if (fpi_flags & FPI_TO_TAIL)
- 		to_tail = true;
-@@ -1336,7 +1339,7 @@ static inline void expand(struct zone *zone, struct page *page,
+ 	unsigned long __maybe_unused UP_flags;
+ 	struct per_cpu_pages *pcp = NULL;
+@@ -2720,7 +2720,7 @@ void free_unref_folios(struct folio_batch *folios)
+ 		 */
+ 		if (!pcp_allowed_order(order)) {
+ 			free_one_page(folio_zone(folio), &folio->page,
+-				      pfn, order, FPI_NONE, 0);
++				      pfn, order, FPI_NONE, ugen);
  			continue;
+ 		}
+ 		folio->private = (void *)(unsigned long)order;
+@@ -2756,7 +2756,7 @@ void free_unref_folios(struct folio_batch *folios)
+ 			 */
+ 			if (is_migrate_isolate(migratetype)) {
+ 				free_one_page(zone, &folio->page, pfn,
+-					      order, FPI_NONE, 0);
++					      order, FPI_NONE, ugen);
+ 				continue;
+ 			}
  
- 		__add_to_free_list(&page[size], zone, high, migratetype, false);
--		set_buddy_order(&page[size], high);
-+		set_buddy_order_ugen(&page[size], high, 0);
- 		nr_added += size;
+@@ -2769,7 +2769,7 @@ void free_unref_folios(struct folio_batch *folios)
+ 			if (unlikely(!pcp)) {
+ 				pcp_trylock_finish(UP_flags);
+ 				free_one_page(zone, &folio->page, pfn,
+-					      order, FPI_NONE, 0);
++					      order, FPI_NONE, ugen);
+ 				continue;
+ 			}
+ 			locked_zone = zone;
+@@ -2784,7 +2784,7 @@ void free_unref_folios(struct folio_batch *folios)
+ 
+ 		trace_mm_page_free_batched(&folio->page);
+ 		free_unref_page_commit(zone, pcp, &folio->page, migratetype,
+-				order, 0);
++				order, ugen);
  	}
- 	account_freepages(zone, nr_added, migratetype);
-@@ -6801,7 +6804,7 @@ static void break_down_buddy_pages(struct zone *zone, struct page *page,
+ 
+ 	if (pcp) {
+diff --git a/mm/swap.c b/mm/swap.c
+index dae169b19ab9..67605bbfc95c 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -161,11 +161,11 @@ void put_pages_list(struct list_head *pages)
+ 		/* LRU flag must be clear because it's passed using the lru */
+ 		if (folio_batch_add(&fbatch, folio) > 0)
  			continue;
- 
- 		add_to_free_list(current_buddy, zone, high, migratetype, false);
--		set_buddy_order(current_buddy, high);
-+		set_buddy_order_ugen(current_buddy, high, 0);
+-		free_unref_folios(&fbatch);
++		free_unref_folios(&fbatch, 0);
  	}
+ 
+ 	if (fbatch.nr)
+-		free_unref_folios(&fbatch);
++		free_unref_folios(&fbatch, 0);
+ 	INIT_LIST_HEAD(pages);
  }
+ EXPORT_SYMBOL(put_pages_list);
+@@ -1027,7 +1027,7 @@ void folios_put_refs(struct folio_batch *folios, unsigned int *refs)
+ 
+ 	folios->nr = j;
+ 	mem_cgroup_uncharge_folios(folios);
+-	free_unref_folios(folios);
++	free_unref_folios(folios, 0);
+ }
+ EXPORT_SYMBOL(folios_put_refs);
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b9170f767353..15efe6f0edce 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1461,7 +1461,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		if (folio_batch_add(&free_folios, folio) == 0) {
+ 			mem_cgroup_uncharge_folios(&free_folios);
+ 			try_to_unmap_flush();
+-			free_unref_folios(&free_folios);
++			free_unref_folios(&free_folios, 0);
+ 		}
+ 		continue;
+ 
+@@ -1528,7 +1528,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 
+ 	mem_cgroup_uncharge_folios(&free_folios);
+ 	try_to_unmap_flush();
+-	free_unref_folios(&free_folios);
++	free_unref_folios(&free_folios, 0);
+ 
+ 	list_splice(&ret_folios, folio_list);
+ 	count_vm_events(PGACTIVATE, pgactivate);
+@@ -1868,7 +1868,7 @@ static unsigned int move_folios_to_lru(struct lruvec *lruvec,
+ 			if (folio_batch_add(&free_folios, folio) == 0) {
+ 				spin_unlock_irq(&lruvec->lru_lock);
+ 				mem_cgroup_uncharge_folios(&free_folios);
+-				free_unref_folios(&free_folios);
++				free_unref_folios(&free_folios, 0);
+ 				spin_lock_irq(&lruvec->lru_lock);
+ 			}
+ 
+@@ -1890,7 +1890,7 @@ static unsigned int move_folios_to_lru(struct lruvec *lruvec,
+ 	if (free_folios.nr) {
+ 		spin_unlock_irq(&lruvec->lru_lock);
+ 		mem_cgroup_uncharge_folios(&free_folios);
+-		free_unref_folios(&free_folios);
++		free_unref_folios(&free_folios, 0);
+ 		spin_lock_irq(&lruvec->lru_lock);
+ 	}
  
 -- 
 2.17.1
