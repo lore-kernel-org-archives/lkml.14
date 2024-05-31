@@ -1,137 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FE87602B
-	for <linux-kernel@vger.kernel.org>; Fri, 31 May 2024 14:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C18626CB;
+	Fri, 31 May 2024 14:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166936; cv=none; b=AK4+OcBqKDMCXZJrAjmRFGkNYudUmKXlBeiNPX+gMKTay2tth+qbOkNJg+ao19yYReErwf5zWh8HpqJH1BOq1q5CXJ3GwIbH7/b7n3ZNs3VsqhtYR92QHQ49FY+Xoc/o+PFyRSOcZgZcGqX2xE8iSet8WH1dlmIn31YrXliNdxc=
+	t=1717166977; cv=none; b=btv2HT9ZknzRZhmM8H2nw/M9Bkff6BrIKhi0G9pbNeIoiNvrJeepPGmk4beyMYlSDbReQrGicvjQL0eDo5zlXSSNwfaFHYa/9JUKcivQ5Qj+WY7sYbQoBJ72gL6HrrHAb1NNHqitE733ensof38ihuMEh1toqTwCubolorsfNj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717166936; c=relaxed/simple;
-	bh=MG4XTF460ME3QysgJdn6KSQKbYDcjfrewhgJYyzES+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=st6qATkPHqtc2F8fCEeHwway4fSkYWtesJspYaFI/NHfZLi4m0K6+T0geO0YjcJkpjH9wS6GPV58B6ZYPVgO7n5Oy6E8ifPVDWx49fQyGf0Jr9wy79aEhm23ZZlK1ygh3pnLOcSGvfGlfjblpnWUrRaxVrymzXjeEnawKrEspYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XG8EPRYs; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XG8EPRYs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717166935; x=1748702935;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MG4XTF460ME3QysgJdn6KSQKbYDcjfrewhgJYyzES+8=;
-  b=XG8EPRYsaZoy0KFio2Ju+Rvec97a8r9lEhiHxVmVCiD9ZpJLQznY/1DI
-   xTap5rkRGiLVEq7mwngORjlA75IK+rKLWREqirOhNa2Chf5f5LKEa+fMt
-   xgVbHZ+u6G7YFWaPGlbZpy4/UN9jQQGEISSjJ6DKNcYpjvoiocLgSECWi
-   5XY1YboequMxCp4GwJCCr4ODJzx2M6ou1xVAWn9YmoyPEp+2TDXu7RjG4
-   Ewim5EgtTq99avI7fcZKVFpZ2Ux6RnlA3iVgU6R86o+z7jVfqWYbB5BS3
-   YG2PQg95F4QmppFJG5imZTI0Xm9nbeYdHGeqHM/DA0SbVZ0fJV3v/dVcB
-   Q==;
-X-CSE-ConnectionGUID: kaUPsBW7Q3OINUgMZZjlgA==
-X-CSE-MsgGUID: fzds1pj1RGWZpcg0MT9i6g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11088"; a="24288606"
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="24288606"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 07:47:59 -0700
-X-CSE-ConnectionGUID: eiuozHKnS2iAMwXvlG0LLQ==
-X-CSE-MsgGUID: ztnHMCkNRxanqV1Z1AVwhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,204,1712646000"; 
-   d="scan'208";a="59361042"
-Received: from ibganev-desk.amr.corp.intel.com (HELO [10.125.108.40]) ([10.125.108.40])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 07:47:56 -0700
-Message-ID: <f1b6d4d8-1d17-4d1f-ba9d-8b59393a6676@linux.intel.com>
-Date: Fri, 31 May 2024 09:46:55 -0500
+	s=arc-20240116; t=1717166977; c=relaxed/simple;
+	bh=c7HXXvBTV5PGlRRhVIlLpfYS5XM04ZPwGWusUMtWg+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xe9uM25SaIB5iZ+dyVnMit+FdFOnJ2vvKxO1JG7HVhJZi1ur+47w/Tld15vTbs6Z/gF2WJIRSfLRV7TQ0RffuE5EnPmaP66waoHvdm9YZliMUO2fQ3gGYzrGLKlA4ULeiUbbt0NDiJ7XYLeFzXRVbsM6bKQycHvC8lgCL21HHF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
+Received: from mgb4.. (unknown [62.77.71.229])
+	by mx.gpxsee.org (Postfix) with ESMTPSA id D0F5B4B2D0;
+	Fri, 31 May 2024 16:49:26 +0200 (CEST)
+From: tumic@gpxsee.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Martin=20T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
+Subject: [PATCH v6 0/4] media: mgb4: YUV and variable framerate support
+Date: Fri, 31 May 2024 16:49:17 +0200
+Message-ID: <20240531144921.2104-1-tumic@gpxsee.org>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] ASoc: tas2781: Enable RCA-based playback without DSP
- firmware download
-To: Shenghao Ding <shenghao-ding@ti.com>, broonie@kernel.org
-Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
- 13916275206@139.com, alsa-devel@alsa-project.org, i-salazar@ti.com,
- linux-kernel@vger.kernel.org, j-chadha@ti.com, liam.r.girdwood@intel.com,
- jaden-yue@ti.com, yung-chuan.liao@linux.intel.com, dipa@ti.com,
- yuhsuan@google.com, tiwai@suse.de, baojun.xu@ti.com, soyer@irl.hu,
- Baojun.Xu@fpt.com, judyhsiao@google.com, navada@ti.com,
- cujomalainey@google.com, aanya@ti.com, nayeem.mahmud@ti.com,
- savyasanchi.shukla@netradyne.com, flaviopr@microsoft.com, jesse-ji@ti.com
-References: <20240531052636.565-1-shenghao-ding@ti.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20240531052636.565-1-shenghao-ding@ti.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+From: Martin Tůma <martin.tuma@digiteqautomotive.com>
+
+Recent mgb4 FW update added support for the YUV image format and variable
+framerates independent of the signal framerate. The following patches extend
+the mgb4 driver with support for both features.
+
+Changes in V6:
+- Properly handle the timings when no signal is present.
+
+Changes in V5:
+- Removed surplus v4l2_format.type checks.
+- Improved the patch descriptions.
+- Splitted the frame rate limit patch into separate code/documentation parts.
+
+Changes in V4:
+- Splitted the output frame_rate handling fix from the variable frame rate
+  addition patch.
+
+Changes in V3:
+- Use div_u64() for 64b division (fixes build error on ARM32)
+
+Changes in V2:
+- Added missing stride limit
+
+Martin Tůma (4):
+  media: mgb4: Add support for YUV image formats
+  media: mgb4: Add support for V4L2_CAP_TIMEPERFRAME
+  media: mgb4: Fixed signal frame rate limit handling
+  media: admin-guide: mgb4: Outputs DV timings documentation update
+
+ Documentation/admin-guide/media/mgb4.rst |  23 +-
+ drivers/media/pci/mgb4/mgb4_core.c       |   2 +-
+ drivers/media/pci/mgb4/mgb4_core.h       |   2 +
+ drivers/media/pci/mgb4/mgb4_io.h         |  29 ++-
+ drivers/media/pci/mgb4/mgb4_sysfs_out.c  |   9 +-
+ drivers/media/pci/mgb4/mgb4_vin.c        | 193 +++++++++++---
+ drivers/media/pci/mgb4/mgb4_vin.h        |   3 +-
+ drivers/media/pci/mgb4/mgb4_vout.c       | 309 ++++++++++++++++++++---
+ drivers/media/pci/mgb4/mgb4_vout.h       |   5 +-
+ 9 files changed, 482 insertions(+), 93 deletions(-)
 
 
-> -enum tasdevice_dsp_fw_state {
-> -	TASDEVICE_DSP_FW_NONE = 0,
-> +enum tasdevice_fw_state {
-> +	/* Driver in startup mode, not load any firmware. */
->  	TASDEVICE_DSP_FW_PENDING,
-> +	/* DSP firmware in the system, but parsing error. */
->  	TASDEVICE_DSP_FW_FAIL,
-> +	/*
-> +	 * Only RCA (Reconfigurable Architecture) firmware load
-> +	 * successfully.
-> +	 */
-> +	TASDEVICE_RCA_FW_OK,
-> +	/* Both RCA and DSP firmware load successfully. */
->  	TASDEVICE_DSP_FW_ALL_OK,
-
-I appreciate the effort to document the states, but for the RCA cases we
-can have two 'success' states?
-
-> -	tas_priv->fw_state = TASDEVICE_DSP_FW_PENDING;
-> +	tas_priv->fw_state = TASDEVICE_RCA_FW_OK;
->  	scnprintf(tas_priv->coef_binaryname, 64, "%s_coef.bin",
->  		tas_priv->dev_name);
->  	ret = tasdevice_dsp_parser(tas_priv);
->  	if (ret) {
->  		dev_err(tas_priv->dev, "dspfw load %s error\n",
->  			tas_priv->coef_binaryname);
-> -		tas_priv->fw_state = TASDEVICE_DSP_FW_FAIL;
->  		goto out;
->  	}
-> -	tasdevice_dsp_create_ctrls(tas_priv);
-> +
-> +	/*
-> +	 * If no dsp-related kcontrol created, the dsp resource will be freed.
-> +	 */
-> +	ret = tasdevice_dsp_create_ctrls(tas_priv);
-> +	if (ret) {
-> +		dev_err(tas_priv->dev, "dsp controls error\n");
-> +		goto out;
-> +	}
->  
->  	tas_priv->fw_state = TASDEVICE_DSP_FW_ALL_OK;
-
-from this code, it seems that the RCA case goes from RCA_FW_OK to
-TASDEVICE_DSP_FW_ALL_OK, so there's a difference between the two states, no?
-
-
-> @@ -466,14 +474,14 @@ static int tasdevice_startup(struct snd_pcm_substream *substream,
->  {
->  	struct snd_soc_component *codec = dai->component;
->  	struct tasdevice_priv *tas_priv = snd_soc_component_get_drvdata(codec);
-> -	int ret = 0;
->  
-> -	if (tas_priv->fw_state != TASDEVICE_DSP_FW_ALL_OK) {
-> -		dev_err(tas_priv->dev, "DSP bin file not loaded\n");
-> -		ret = -EINVAL;
-> +	switch (tas_priv->fw_state) {
-> +	case TASDEVICE_RCA_FW_OK:
-> +	case TASDEVICE_DSP_FW_ALL_OK:
-> +		return 0;
-> +	default:
-> +		return -EINVAL;
-
-maybe keep the error logs?
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.45.1
 
