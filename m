@@ -1,122 +1,324 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33780152790;
-	Sat,  1 Jun 2024 15:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A2153580
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 15:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717254341; cv=none; b=K84ndoJzbj5/Vo4f/wFTWfS2sXKijXPde+onSobqviczWv4wHLKe6oXFzNEdpH5l6e+LoLOj+HevsNS1k963B+dSz7zOv1wbYwGGcDRDq05qWCE4F/LW7Su/L2ynBcEVuIh/hi6dWjNYabAxEfkGTF2tv+11VldBI3NjFEEa7ws=
+	t=1717254341; cv=none; b=jnirTq39r7CHXcC06GRWqwedtCilMnredyoNRUoEZWyMoib51GXOeF7jjQLMZyMj9aDMYEi+kG8CZobE7dJJ0IYRG2kiD4wCuCuBNwAIlq/65NCdI7z+g2S2F7BChSywZH9Lz9Qv+HdZQtGS2M/pDpEiOATrqNhQgIPU2TVBsdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717254341; c=relaxed/simple;
-	bh=N4+f77hmblsYWyxLqdoO6HFFJ+2yG2uuZNMtKfF1cdY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=FKxvIeZ7Q59F5I5rwK6kQ3JPekuXX6bXgF4Ugv0HIIcw0/pLX5pBCbE10O7AiakE6RQAJpeZnsXbbB3xCJN2Sz1mfj9hp4rQizpZQQ6msSfPd84MRTWFNlv4aHyAkT2LOHrNO9XwXANsNlWlbPPh66P/03lGrmL/LOFG6rDhYB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yhxP+r3A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nASV/q8J; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=cR3uveiGxGLJmRft6U2PQ0/OsQCFgHzkLGPMHFEaI+Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pSYcPlxargftJ8i4dgqVLWqp/89mnXjBmoue79yrmkjWv6BPnFYYGwiVBptKgtNnSs+ys3eAHMFtNtj4com+V/fxtoNT5tWMjWMBCdQqWbCcovPadOAJPdmkljloZj/NUWr/Cu1FqlvnUklZOTb+QNndQ6PP7yvzBr19Z7IvSwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=PjAamX+f; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yhxP+r3A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nASV/q8J"
-Date: Sat, 01 Jun 2024 15:05:30 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717254330;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FwjvXUJwOV2b8jf6WvgH0V8CrS+brHJ3EcpyG+R0d0Q=;
-	b=yhxP+r3AWYatGR/QflydLKxujeqTbqGvITT52OlNKs9cMVALLKnR6oU0jPOi7Ku/5LHriD
-	WXQU0s3xEiLwIozqA8XXuXd5+HVDyc2xjEnjnFnh+JJ6YtmgaZEQhkmehyJULCYfRE58Jo
-	D6geOdgd3b4e6a9ltKSkLzns6Yqka72Er8QyEz0nmMyv2dzSnb/2DGfZcr6O1eflPgdA1p
-	XQjn014rMKo36Awd2jfxhXhG6dFKSxTMY1o49QVryhkhyZ/J7CJulxNbEcjXks8fBBNJwQ
-	i4jLLs9q9TFTLk+mCPVEYK0YiBji3Ica602qWxAlw6WDdraxco2ltAKbNn8Ubw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717254330;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FwjvXUJwOV2b8jf6WvgH0V8CrS+brHJ3EcpyG+R0d0Q=;
-	b=nASV/q8JdtgMAknDSvbe8FOm67cHaxNdnkLGmUBZDXT6gbI/ee/RtHyCL1No/M3Ieili/b
-	GolLVhxgAfyiQBBA==
-From: "tip-bot2 for Marcin Juszkiewicz" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/misc] x86, arm: Add missing license tag to syscall tables files
-Cc: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240229145101.553998-1-marcin@juszkiewicz.com.pl>
-References: <20240229145101.553998-1-marcin@juszkiewicz.com.pl>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="PjAamX+f"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-702621d8725so62539b3a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 08:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1717254339; x=1717859139; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dz2b5NSEn3co4GBYyIFhq4o1B5yNhLUdwhxGlUjO5R4=;
+        b=PjAamX+f7yZkKYMIE7m0+QyPkZFUFlLQ3FX7MhvGkclVykmuXPcOssfG37+H/nvZvg
+         5K5Tz+DQ7LF5QuSl5bcSxdvGnrX/QXJaoFYAjT6HRAE082prGc239qS4D2DNq2WLJHcr
+         yf+OeyllsIb6ME49oShNrbbuKoQJ7D617x3wKlT0qFows/zTaSQkU4jX5piN2bZz7Rhh
+         y8XNPa/+yBc5qwv2gA1677xeFytOacIUQ9Panmc6ff6WW6dOgUjpKKopQdL26nJ6x02j
+         pvrzC8VLezFS6eFzZN6uJSgcu2gADGZLT1O7pjCHN8ykTk1qBWey54gkRI4smHg4dlN+
+         bGpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717254339; x=1717859139;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dz2b5NSEn3co4GBYyIFhq4o1B5yNhLUdwhxGlUjO5R4=;
+        b=jXisIdAMgTpRJFvhAU6NqBd/gtlTg0gEMTtvCsrjjdLsFtPdkoelY47anykre5ETfD
+         ellkZCpGTEjKDHglM8FLy6w8FhzagTAmQrShY2+WYSBSqpKcYjtlu1hy/Dn+ya5MHP3J
+         uUoaF1FdymsmAsBiS5MDjOtDlnmW+z6w3iePgA0MRrbBU5MY0d3Qyo/ll0Gu2pCmeZYu
+         5BwMm7N83G9ReJzoKXIenUkmQmfOO3cDsnjdODF1ZMv/uZn1TA90AiFWCqYk6B1Cj2kU
+         lX0jfO80DyXtzHJ9g6pY0NH654imFO5tpGw7Z3j8MAM0h6uPvuZ1Wcooh9Z5zozPqquf
+         2wlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhIjroDHopTjo8IsmHcp8Mvoh1Im1xJXQIXimWPVICEavmFZM6CcAEgy7bMVrfE9wp935XTWvvqVYw5lx85ii8pfjTP4qosUO3zUdB
+X-Gm-Message-State: AOJu0Yw6LwJvAt+CpSLiiGKHw42jxDxE0zR0Myn48phXYvSsm5q8eI1S
+	Qx97ll3H3z1FN7B5YqS/eJus7GXRSo2kYRvRUvS1rDlNqrMAX/6wnpGkpSY3LrE=
+X-Google-Smtp-Source: AGHT+IFi9FvR07K+9EvB/LtbP5RxfWdx62HcMAj5Tgp+bEEJtSdzuKB0A31tUE7N74MPsHLQ+KB8vQ==
+X-Received: by 2002:a05:6a21:3288:b0:1a8:2cc0:290a with SMTP id adf61e73a8af0-1b26f185b75mr5513828637.30.1717254339312;
+        Sat, 01 Jun 2024 08:05:39 -0700 (PDT)
+Received: from sunil-pc.Dlink ([106.51.187.237])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c35a4ba741sm2559410a12.85.2024.06.01.08.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 08:05:38 -0700 (PDT)
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-acpi@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Anup Patel <anup@brainfault.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Robert Moore <robert.moore@intel.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Atish Kumar Patra <atishp@rivosinc.com>,
+	Haibo1 Xu <haibo1.xu@intel.com>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>
+Subject: [PATCH v6 11/17] ACPI: RISC-V: Initialize GSI mapping structures
+Date: Sat,  1 Jun 2024 20:34:05 +0530
+Message-Id: <20240601150411.1929783-12-sunilvl@ventanamicro.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171725433033.10875.630169255677526443.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/misc branch of tip:
+RISC-V has PLIC and APLIC in MADT as well as namespace devices.
+Initialize the list of those structures using MADT and namespace devices
+to create mapping between the ACPI handle and the GSI ranges. This will
+be used later to add dependencies.
 
-Commit-ID:     95e3fa6acf624ca9689397ca7ea881450f3cbe24
-Gitweb:        https://git.kernel.org/tip/95e3fa6acf624ca9689397ca7ea881450f3cbe24
-Author:        Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
-AuthorDate:    Thu, 29 Feb 2024 15:51:00 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Sat, 01 Jun 2024 16:53:25 +02:00
-
-x86, arm: Add missing license tag to syscall tables files
-
-syscall*.tbl files were added to make it easier to check which system
-calls are supported on each architecture and to check for their numbers.
-
-Arm and x86 files lack Linux-syscall-note license exception present in
-files for all other architectures.
-
-Signed-off-by: Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: https://lore.kernel.org/r/20240229145101.553998-1-marcin@juszkiewicz.com.pl
+Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 ---
- arch/arm/tools/syscall.tbl             | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl | 1 +
- 3 files changed, 3 insertions(+)
+ arch/riscv/include/asm/irq.h |  22 ++++++
+ drivers/acpi/riscv/init.c    |   2 +
+ drivers/acpi/riscv/init.h    |   4 +
+ drivers/acpi/riscv/irq.c     | 142 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 170 insertions(+)
+ create mode 100644 drivers/acpi/riscv/init.h
 
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 2ed7d22..23c9820 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # Linux system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 7fd1f57..9436b67 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 32-bit system call numbers and entry vectors
- #
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index a396f6e..129bdd4 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -1,3 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
- #
- # 64-bit system call numbers and entry vectors
- #
+diff --git a/arch/riscv/include/asm/irq.h b/arch/riscv/include/asm/irq.h
+index 8e10a94430a2..44a0b128c602 100644
+--- a/arch/riscv/include/asm/irq.h
++++ b/arch/riscv/include/asm/irq.h
+@@ -16,4 +16,26 @@ void riscv_set_intc_hwnode_fn(struct fwnode_handle *(*fn)(void));
+ 
+ struct fwnode_handle *riscv_get_intc_hwnode(void);
+ 
++#ifdef CONFIG_ACPI
++
++enum riscv_irqchip_type {
++	ACPI_RISCV_IRQCHIP_INTC		= 0x00,
++	ACPI_RISCV_IRQCHIP_IMSIC	= 0x01,
++	ACPI_RISCV_IRQCHIP_PLIC		= 0x02,
++	ACPI_RISCV_IRQCHIP_APLIC	= 0x03,
++};
++
++int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
++			    u32 *id, u32 *nr_irqs, u32 *nr_idcs);
++struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi);
++
++#else
++static inline int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
++					  u32 *id, u32 *nr_irqs, u32 *nr_idcs)
++{
++	return 0;
++}
++
++#endif /* CONFIG_ACPI */
++
+ #endif /* _ASM_RISCV_IRQ_H */
+diff --git a/drivers/acpi/riscv/init.c b/drivers/acpi/riscv/init.c
+index 5f7571143245..22db97f7a772 100644
+--- a/drivers/acpi/riscv/init.c
++++ b/drivers/acpi/riscv/init.c
+@@ -6,7 +6,9 @@
+  */
+ 
+ #include <linux/acpi.h>
++#include "init.h"
+ 
+ void __init acpi_riscv_init(void)
+ {
++	riscv_acpi_init_gsi_mapping();
+ }
+diff --git a/drivers/acpi/riscv/init.h b/drivers/acpi/riscv/init.h
+new file mode 100644
+index 000000000000..0b9a07e4031f
+--- /dev/null
++++ b/drivers/acpi/riscv/init.h
+@@ -0,0 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#include <linux/init.h>
++
++void __init riscv_acpi_init_gsi_mapping(void);
+diff --git a/drivers/acpi/riscv/irq.c b/drivers/acpi/riscv/irq.c
+index f56e103a501f..0473428e8d1e 100644
+--- a/drivers/acpi/riscv/irq.c
++++ b/drivers/acpi/riscv/irq.c
+@@ -7,6 +7,21 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/sort.h>
++#include <linux/irq.h>
++
++#include "init.h"
++
++struct riscv_ext_intc_list {
++	acpi_handle handle;
++	u32 gsi_base;
++	u32 nr_irqs;
++	u32 nr_idcs;
++	u32 id;
++	u32 type;
++	struct list_head list;
++};
++
++LIST_HEAD(ext_intc_list);
+ 
+ static int irqchip_cmp_func(const void *in0, const void *in1)
+ {
+@@ -30,3 +45,130 @@ void arch_sort_irqchip_probe(struct acpi_probe_entry *ap_head, int nr)
+ 		return;
+ 	sort(ape, nr, sizeof(*ape), irqchip_cmp_func, NULL);
+ }
++
++static void riscv_acpi_update_gsi_handle(u32 gsi_base, acpi_handle handle)
++{
++	struct riscv_ext_intc_list *ext_intc_element;
++	struct list_head *i, *tmp;
++
++	list_for_each_safe(i, tmp, &ext_intc_list) {
++		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
++		if (gsi_base == ext_intc_element->gsi_base) {
++			ext_intc_element->handle = handle;
++			return;
++		}
++	}
++
++	acpi_handle_err(handle, "failed to find the GSI mapping entry\n");
++}
++
++int riscv_acpi_get_gsi_info(struct fwnode_handle *fwnode, u32 *gsi_base,
++			    u32 *id, u32 *nr_irqs, u32 *nr_idcs)
++{
++	struct riscv_ext_intc_list *ext_intc_element;
++	struct list_head *i, *tmp;
++
++	list_for_each_safe(i, tmp, &ext_intc_list) {
++		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
++		if (ext_intc_element->handle == ACPI_HANDLE_FWNODE(fwnode)) {
++			*gsi_base = ext_intc_element->gsi_base;
++			*id = ext_intc_element->id;
++			*nr_irqs = ext_intc_element->nr_irqs;
++			if (nr_idcs)
++				*nr_idcs = ext_intc_element->nr_idcs;
++
++			return 0;
++		}
++	}
++
++	return -ENODEV;
++}
++
++struct fwnode_handle *riscv_acpi_get_gsi_domain_id(u32 gsi)
++{
++	struct riscv_ext_intc_list *ext_intc_element;
++	struct acpi_device *adev;
++	struct list_head *i, *tmp;
++
++	list_for_each_safe(i, tmp, &ext_intc_list) {
++		ext_intc_element = list_entry(i, struct riscv_ext_intc_list, list);
++		if (gsi >= ext_intc_element->gsi_base &&
++		    gsi < (ext_intc_element->gsi_base + ext_intc_element->nr_irqs)) {
++			adev = acpi_fetch_acpi_dev(ext_intc_element->handle);
++			if (!adev)
++				return NULL;
++
++			return acpi_fwnode_handle(adev);
++		}
++	}
++
++	return NULL;
++}
++
++static int __init riscv_acpi_register_ext_intc(u32 gsi_base, u32 nr_irqs, u32 nr_idcs,
++					       u32 id, u32 type)
++{
++	struct riscv_ext_intc_list *ext_intc_element;
++
++	ext_intc_element = kzalloc(sizeof(*ext_intc_element), GFP_KERNEL);
++	if (!ext_intc_element)
++		return -ENOMEM;
++
++	ext_intc_element->gsi_base = gsi_base;
++	ext_intc_element->nr_irqs = nr_irqs;
++	ext_intc_element->nr_idcs = nr_idcs;
++	ext_intc_element->id = id;
++	list_add_tail(&ext_intc_element->list, &ext_intc_list);
++	return 0;
++}
++
++static acpi_status __init riscv_acpi_create_gsi_map(acpi_handle handle, u32 level,
++						    void *context, void **return_value)
++{
++	acpi_status status;
++	u64 gbase;
++
++	if (!acpi_has_method(handle, "_GSB")) {
++		acpi_handle_err(handle, "_GSB method not found\n");
++		return AE_OK;
++	}
++
++	status = acpi_evaluate_integer(handle, "_GSB", NULL, &gbase);
++	if (ACPI_FAILURE(status)) {
++		acpi_handle_err(handle, "failed to evaluate _GSB method\n");
++		return AE_OK;
++	}
++
++	riscv_acpi_update_gsi_handle((u32)gbase, handle);
++	return AE_OK;
++}
++
++static int __init riscv_acpi_aplic_parse_madt(union acpi_subtable_headers *header,
++					      const unsigned long end)
++{
++	struct acpi_madt_aplic *aplic = (struct acpi_madt_aplic *)header;
++
++	return riscv_acpi_register_ext_intc(aplic->gsi_base, aplic->num_sources, aplic->num_idcs,
++					    aplic->id, ACPI_RISCV_IRQCHIP_APLIC);
++}
++
++static int __init riscv_acpi_plic_parse_madt(union acpi_subtable_headers *header,
++					     const unsigned long end)
++{
++	struct acpi_madt_plic *plic = (struct acpi_madt_plic *)header;
++
++	return riscv_acpi_register_ext_intc(plic->gsi_base, plic->num_irqs, 0,
++					    plic->id, ACPI_RISCV_IRQCHIP_PLIC);
++}
++
++void __init riscv_acpi_init_gsi_mapping(void)
++{
++	/* There can be either PLIC or APLIC */
++	if (acpi_table_parse_madt(ACPI_MADT_TYPE_PLIC, riscv_acpi_plic_parse_madt, 0) > 0) {
++		acpi_get_devices("RSCV0001", riscv_acpi_create_gsi_map, NULL, NULL);
++		return;
++	}
++
++	if (acpi_table_parse_madt(ACPI_MADT_TYPE_APLIC, riscv_acpi_aplic_parse_madt, 0) > 0)
++		acpi_get_devices("RSCV0002", riscv_acpi_create_gsi_map, NULL, NULL);
++}
+-- 
+2.40.1
+
