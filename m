@@ -1,326 +1,96 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BE6153BD9
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 15:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D8F1CD3D;
+	Sat,  1 Jun 2024 15:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717254384; cv=none; b=oIxMLIGt0JuxbJuWwLEnF9/WFINbWYs75bxaPwJD7DVb39/HHjfBQ+SoZ8P59ashzUBHNAimqCFb3wwSVCHadXedLqKdBPqoCktnfVxGRA4LOWjpPIWsNuC1qd4LqSIkyWHHGsjwWObt7FKBqAium6CG2w8sWwrleaPTPRlJerw=
+	t=1717254534; cv=none; b=mj/PZoThuv8cABshiZWgJs1GtkJDB235JtvLOth3tQdvqxEKuUXJlWKWby8XkwKchZ1kLE8EUepLsSg1OicUb1ZGj09AzsTwpaFDg0rfHXVsZYQLUIFCf8svXUOBG/eH7Qgss9AT8aRbhWfaLwKvZalTmJ/uJ/WvH9CmZM4Mnyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717254384; c=relaxed/simple;
-	bh=g/nCh87m2ytG2OIgK8Av4Ye7UzU/5NkwwuYfgi2XUyM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r37xmzIbN62T1aHIRV/q72taVksaUz5NT1iCRIWci2lp0V56j38hgCWzT8xxqgJdtxqRv/0tct9JicQjq0uYqmIF1UDtiA/avlHmStpr5B1/b8qqTgym97fvLrvsjf3koplwDG1PmLmHfZiRb6dkplr5i5fw8ZC8QEkG8fnIWpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GcT793Ct; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1717254534; c=relaxed/simple;
+	bh=1oVKVqQgdKTr5SQqEoXNfoaiRhZ43/gYviSPxoYVDCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JacTh2GpTep5Tk2nU9SvqWGw9JLkjfEefPWh4zRJ5RZgdR1wRHUtauZTZ6IVJsxJJJUBPfuGSp+FpCNzjDgahnsI98u7TDZBIOU3DtQnasDqQ4iFnX0zHAGOE73twbGRh2s/14DiYoFAZKD/wvGAEGP+dc+27cUddGUfHBu2jNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GBFgqTZI; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GcT793Ct"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7024ac84ae4so1315293b3a.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 08:06:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBFgqTZI"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6af538c750eso108006d6.1;
+        Sat, 01 Jun 2024 08:08:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1717254382; x=1717859182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zW4fXjPpT42pLVv05FwYUtW5DHy0qyH2wbeyOWXak5Q=;
-        b=GcT793Ct9nesOLyqkPbWj4qDHdpnJslKsHlG+6ebulStvmo+PZWX4qK9a9YDxZvU99
-         VoyKx0aIyldC/vSWFXJb8X7aCnmxXl12vYrbERFlUHUz0JVW2NlMcpOem8DkoRLQ/z27
-         W/N2/2VJc0SEMyTsHVtXiP1gqZsSLaOTqCkJ6fikaIiZFhVeEJVWZX2GTbq9WxE6silV
-         QFpThcgJuentjCedw228t7L+mXeK1P/0IwWfGy6QSOpXlUKSWO32Kdtv2btaAVvMXr29
-         +cUVSgKAr10XYgKb0KCTSJ3CMc+o/E3NAaskpiMqzYVKVDhDMf//XDlTRrzfO0IdxK0u
-         9kaw==
+        d=gmail.com; s=20230601; t=1717254532; x=1717859332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d8x4+MRtwD32I6N1x72QTvMbn3LCLaG3WhWmmoOO4kg=;
+        b=GBFgqTZIZQGofTs+Ve2jR6ynhIu51hc7aHbHWbvnZs2n+sSR/uofeFW1u5aJ+AQcT7
+         8eMf959kqGo/qGItPLOjZ0wHHyrkt2UQiS1A+Tm+C8E6wnjryyi4fHrr/E3AJG0VkB6q
+         ZRBBiVY+Vu8r1vGsm8HtOmXjQgIlNNVkbZWTrUOCCWHZ+3JBJ6nl0HEwnXm080Sp/EtY
+         hEc4D/6APWTT5A4W30Vntf3wtizviNPVvx5Kw2dBqD4VDcV+m6Nn1yHIBwXhKLRGmWJe
+         8Fb3sYiCXRCZd3cJ174YokTCDxMQqjxnbNJJuFxkA+4ePPXFFufv8TGSj0K/ZJig7FOI
+         dhbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717254382; x=1717859182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zW4fXjPpT42pLVv05FwYUtW5DHy0qyH2wbeyOWXak5Q=;
-        b=Md9b4QDegzCnlHVcZk6fgF3et60LhuMQA5faA9jzo0YKn3hbMxeyMJdd5ogvYjpbfW
-         SXYHHzlGdEm9ZoWUJGBCxZqvIK9imNdDFT3TsYdCfMUquVMUKh0rBedqCgjY1WdXBdr9
-         +1CTlWHPLs4nT1A12Nw/7tm56GzNVIB6u3gGLwvkKCvm8kuHnX3GBxMXn9PWj5WVSM7R
-         RLQdd94PkOQtCWYNK5BpF/Hl02NZBnyo+VETfn/MkGekrz3uTzfUgENmsCVFMivwhMH3
-         MR8XdrilMXkkj9FUvXh7YsOfAmE5GfQxRBicHjcn+DVhK73893SnK82uZ2ni40rBvOg0
-         8YoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWrVnRV3tLV2H3g3h/hXXSBdKxNWRyAxUwngZLpanieETAgpHTlARfRMk34Z0lZIaHG2c019bCLnzNS7V5FRzazPGYzD4QlMcZcOycM
-X-Gm-Message-State: AOJu0YxVMgeIgfFJv95ZwkxB7lRIbZWu2UCaRvGUOBlxaKiJhI7O5JmT
-	EGNfNHAvxcj1POubrI7UNk472jbmIF318kGkmBrp6hCm2ptli4JeOFe/wOcewJQ=
-X-Google-Smtp-Source: AGHT+IFuXEPFBN0We6rdV6a/iSYDuKPWGhuoDCz5EfXXYkEbKpU23aOijuX7nTlft734/9HFXfeWsA==
-X-Received: by 2002:a05:6a20:1595:b0:1ad:9413:d5c3 with SMTP id adf61e73a8af0-1b26f1428b1mr5444483637.17.1717254382443;
-        Sat, 01 Jun 2024 08:06:22 -0700 (PDT)
-Received: from sunil-pc.Dlink ([106.51.187.237])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c35a4ba741sm2559410a12.85.2024.06.01.08.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 08:06:21 -0700 (PDT)
-From: Sunil V L <sunilvl@ventanamicro.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Robert Moore <robert.moore@intel.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Atish Kumar Patra <atishp@rivosinc.com>,
-	Haibo1 Xu <haibo1.xu@intel.com>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>
-Subject: [PATCH v6 17/17] irqchip/sifive-plic: Add ACPI support
-Date: Sat,  1 Jun 2024 20:34:11 +0530
-Message-Id: <20240601150411.1929783-18-sunilvl@ventanamicro.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
-References: <20240601150411.1929783-1-sunilvl@ventanamicro.com>
+        d=1e100.net; s=20230601; t=1717254532; x=1717859332;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d8x4+MRtwD32I6N1x72QTvMbn3LCLaG3WhWmmoOO4kg=;
+        b=fu3vSOE5FhvEyII1mvy0r+E4EeAdoMHz89qMyOOeyW4tD8hNnUD96oLEKIvbHVvEo9
+         +5Zz4djQq49c0E+pUocJJoP62l/edmT1JK1yBzIHW9E3+Qbz+kNaX0gllW5KG6PYk1Kr
+         11PXm31xgcYRnDWQMqJ3D8YaGyvndh4xY4+c/7pKpQAW5xdLL+H8MEn3tO+Q6nu8iB/w
+         FyT9Pes7g8hcwaeaRUX68+3nQIOo4/vrH4o+OEBmARkKeoBMia+mAdIB8vyS00FoFvEM
+         Ax0nB04byg+g1XR1wWToo3etkJk4uUuJqGhwH6mHutqwKP1aLwZTicVqa/WaO3ay1Q7i
+         rxPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWslet6s0DIY5N8oq3zzNGKKDmeEJlRNiauGhHwZYJt8p6Nor688q24bh4u9U0PZwTuPf0z6Efz3+/shCycnh5df3XzCMUjxcU6mViqNpIIPP77juZxyl7PiEL6mthHh1HgJAIZkmhrv+WiRBud8u4kWC/iAO3mv/ikzp/AKOwVTwUH9FaQuG6O6tBdPIY=
+X-Gm-Message-State: AOJu0YyROA5zv5kb57rGw5ZmghS1um0CRa9iaUVwK/aRG/qROBCxiiS9
+	DBI1yoViMrkvMvlDQ2gJqcenLr81CBv73JiL+mRT7pKMxQfmD/qf
+X-Google-Smtp-Source: AGHT+IG1T/hp6o7zkkb5+oFcjirqY1NXo+A6couRFfEo2eooW4Dbt+1SecgfOPduKlbcqakOYQFEGg==
+X-Received: by 2002:ac8:574e:0:b0:43f:edee:9219 with SMTP id d75a77b69052e-43ff4f79747mr51031171cf.0.1717254526665;
+        Sat, 01 Jun 2024 08:08:46 -0700 (PDT)
+Received: from [192.168.0.98] ([67.6.32.220])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff23a18e3sm19794811cf.10.2024.06.01.08.08.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 01 Jun 2024 08:08:46 -0700 (PDT)
+Message-ID: <f9e26fac-5ab0-4cfb-a721-8290656c11a9@gmail.com>
+Date: Sat, 1 Jun 2024 10:08:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] Input: novatek-nvt-ts: add support for NT36672A
+ touchscreen
+To: Hans de Goede <hdegoede@redhat.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20240526-nvt-ts-devicetree-regulator-support-v3-0-aa88d10ccd9a@gmail.com>
+ <20240526-nvt-ts-devicetree-regulator-support-v3-3-aa88d10ccd9a@gmail.com>
+ <55272a3b-575d-4212-a40b-7245beed5d80@redhat.com>
+ <a2f68c56-e6d6-4626-8d05-b5e808da60da@gmail.com>
+ <cbc86440-5065-448d-b83c-83602de6651c@redhat.com>
+Content-Language: en-US
+From: Joel Selvaraj <joelselvaraj.oss@gmail.com>
+In-Reply-To: <cbc86440-5065-448d-b83c-83602de6651c@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add ACPI support in PLIC driver. Use the mapping created early during
-boot to get details about the PLIC.
+Hi Hans de Goede,
 
-Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
-Co-developed-by: Haibo Xu <haibo1.xu@intel.com>
-Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
----
- drivers/irqchip/irq-sifive-plic.c | 94 ++++++++++++++++++++++++-------
- 1 file changed, 73 insertions(+), 21 deletions(-)
+On 6/1/24 09:07, Hans de Goede wrote:
+> Sounds good.
+> 
+> It is great to see people working on getting mainline
+> kernels to work on phones like the work you are doing here.
+> Thank you for doing this work!
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-index 8fb183ced1e7..89c04f257f81 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2017 SiFive
-  * Copyright (C) 2018 Christoph Hellwig
-  */
-+#include <linux/acpi.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -70,6 +71,8 @@ struct plic_priv {
- 	unsigned long plic_quirks;
- 	unsigned int nr_irqs;
- 	unsigned long *prio_save;
-+	u32 gsi_base;
-+	int id;
- };
- 
- struct plic_handler {
-@@ -324,6 +327,10 @@ static int plic_irq_domain_translate(struct irq_domain *d,
- {
- 	struct plic_priv *priv = d->host_data;
- 
-+	/* For DT, gsi_base is always zero. */
-+	if (fwspec->param[0] >= priv->gsi_base)
-+		fwspec->param[0] = fwspec->param[0] - priv->gsi_base;
-+
- 	if (test_bit(PLIC_QUIRK_EDGE_INTERRUPT, &priv->plic_quirks))
- 		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
- 
-@@ -424,18 +431,37 @@ static const struct of_device_id plic_match[] = {
- 	{}
- };
- 
-+#ifdef CONFIG_ACPI
-+
-+static const struct acpi_device_id plic_acpi_match[] = {
-+	{ "RSCV0001", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, plic_acpi_match);
-+
-+#endif
- static int plic_parse_nr_irqs_and_contexts(struct platform_device *pdev,
--					   u32 *nr_irqs, u32 *nr_contexts)
-+					   u32 *nr_irqs, u32 *nr_contexts,
-+					   u32 *gsi_base, u32 *id)
- {
- 	struct device *dev = &pdev->dev;
- 	int rc;
- 
--	/*
--	 * Currently, only OF fwnode is supported so extend this
--	 * function for ACPI support.
--	 */
--	if (!is_of_node(dev->fwnode))
--		return -EINVAL;
-+	if (!is_of_node(dev->fwnode)) {
-+		rc = riscv_acpi_get_gsi_info(dev->fwnode, gsi_base, id, nr_irqs, NULL);
-+		if (rc) {
-+			dev_err(dev, "failed to find GSI mapping\n");
-+			return rc;
-+		}
-+
-+		*nr_contexts = acpi_get_plic_nr_contexts(*id);
-+		if (WARN_ON(!*nr_contexts)) {
-+			dev_err(dev, "no PLIC context available\n");
-+			return -EINVAL;
-+		}
-+
-+		return 0;
-+	}
- 
- 	rc = of_property_read_u32(to_of_node(dev->fwnode), "riscv,ndev", nr_irqs);
- 	if (rc) {
-@@ -449,23 +475,29 @@ static int plic_parse_nr_irqs_and_contexts(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
-+	*gsi_base = 0;
-+	*id = 0;
-+
- 	return 0;
- }
- 
- static int plic_parse_context_parent(struct platform_device *pdev, u32 context,
--				     u32 *parent_hwirq, int *parent_cpu)
-+				     u32 *parent_hwirq, int *parent_cpu, u32 id)
- {
- 	struct device *dev = &pdev->dev;
- 	struct of_phandle_args parent;
- 	unsigned long hartid;
- 	int rc;
- 
--	/*
--	 * Currently, only OF fwnode is supported so extend this
--	 * function for ACPI support.
--	 */
--	if (!is_of_node(dev->fwnode))
--		return -EINVAL;
-+	if (!is_of_node(dev->fwnode)) {
-+		hartid = acpi_get_ext_intc_parent_hartid(id, context);
-+		if (hartid == INVALID_HARTID)
-+			return -EINVAL;
-+
-+		*parent_cpu = riscv_hartid_to_cpuid(hartid);
-+		*parent_hwirq = RV_IRQ_EXT;
-+		return 0;
-+	}
- 
- 	rc = of_irq_parse_one(to_of_node(dev->fwnode), context, &parent);
- 	if (rc)
-@@ -490,7 +522,9 @@ static int plic_probe(struct platform_device *pdev)
- 	struct irq_domain *domain;
- 	struct plic_priv *priv;
- 	irq_hw_number_t hwirq;
-+	int id, context_id;
- 	bool cpuhp_setup;
-+	u32 gsi_base;
- 
- 	if (is_of_node(dev->fwnode)) {
- 		const struct of_device_id *id;
-@@ -500,7 +534,7 @@ static int plic_probe(struct platform_device *pdev)
- 			plic_quirks = (unsigned long)id->data;
- 	}
- 
--	error = plic_parse_nr_irqs_and_contexts(pdev, &nr_irqs, &nr_contexts);
-+	error = plic_parse_nr_irqs_and_contexts(pdev, &nr_irqs, &nr_contexts, &gsi_base, &id);
- 	if (error)
- 		return error;
- 
-@@ -511,6 +545,8 @@ static int plic_probe(struct platform_device *pdev)
- 	priv->dev = dev;
- 	priv->plic_quirks = plic_quirks;
- 	priv->nr_irqs = nr_irqs;
-+	priv->gsi_base = gsi_base;
-+	priv->id = id;
- 
- 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (WARN_ON(!priv->regs))
-@@ -521,12 +557,22 @@ static int plic_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < nr_contexts; i++) {
--		error = plic_parse_context_parent(pdev, i, &parent_hwirq, &cpu);
-+		error = plic_parse_context_parent(pdev, i, &parent_hwirq, &cpu, priv->id);
- 		if (error) {
- 			dev_warn(dev, "hwirq for context%d not found\n", i);
- 			continue;
- 		}
- 
-+		if (is_of_node(dev->fwnode)) {
-+			context_id = i;
-+		} else {
-+			context_id = acpi_get_plic_context(priv->id, i);
-+			if (context_id == INVALID_CONTEXT) {
-+				dev_warn(dev, "invalid context id for context%d\n", i);
-+				continue;
-+			}
-+		}
-+
- 		/*
- 		 * Skip contexts other than external interrupts for our
- 		 * privilege level.
-@@ -572,10 +618,10 @@ static int plic_probe(struct platform_device *pdev)
- 		cpumask_set_cpu(cpu, &priv->lmask);
- 		handler->present = true;
- 		handler->hart_base = priv->regs + CONTEXT_BASE +
--			i * CONTEXT_SIZE;
-+			context_id * CONTEXT_SIZE;
- 		raw_spin_lock_init(&handler->enable_lock);
- 		handler->enable_base = priv->regs + CONTEXT_ENABLE_BASE +
--			i * CONTEXT_ENABLE_SIZE;
-+			context_id * CONTEXT_ENABLE_SIZE;
- 		handler->priv = priv;
- 
- 		handler->enable_save = devm_kcalloc(dev, DIV_ROUND_UP(nr_irqs, 32),
-@@ -591,8 +637,8 @@ static int plic_probe(struct platform_device *pdev)
- 		nr_handlers++;
- 	}
- 
--	priv->irqdomain = irq_domain_add_linear(to_of_node(dev->fwnode), nr_irqs + 1,
--						&plic_irqdomain_ops, priv);
-+	priv->irqdomain = irq_domain_create_linear(dev->fwnode, nr_irqs + 1,
-+						   &plic_irqdomain_ops, priv);
- 	if (WARN_ON(!priv->irqdomain))
- 		goto fail_cleanup_contexts;
- 
-@@ -619,13 +665,18 @@ static int plic_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+#ifdef CONFIG_ACPI
-+	if (!acpi_disabled)
-+		acpi_dev_clear_dependencies(ACPI_COMPANION(dev));
-+#endif
-+
- 	dev_info(dev, "mapped %d interrupts with %d handlers for %d contexts.\n",
- 		 nr_irqs, nr_handlers, nr_contexts);
- 	return 0;
- 
- fail_cleanup_contexts:
- 	for (i = 0; i < nr_contexts; i++) {
--		if (plic_parse_context_parent(pdev, i, &parent_hwirq, &cpu))
-+		if (plic_parse_context_parent(pdev, i, &parent_hwirq, &cpu, priv->id))
- 			continue;
- 		if (parent_hwirq != RV_IRQ_EXT || cpu < 0)
- 			continue;
-@@ -644,6 +695,7 @@ static struct platform_driver plic_driver = {
- 	.driver = {
- 		.name		= "riscv-plic",
- 		.of_match_table	= plic_match,
-+		.acpi_match_table = ACPI_PTR(plic_acpi_match),
- 	},
- 	.probe = plic_probe,
- };
--- 
-2.40.1
+Thanks! :)
 
+Regards,
+Joel Selvaraj
