@@ -1,55 +1,57 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C347B1CD2F
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 21:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0AA21364
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 21:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717277613; cv=none; b=WzbCyVDmN77Z81KIghEF3xwEDGnKS6zbExIGQbe8iX+W8exTR1RzbtcBa5eA8UPz2V7Kn2E1cVYbQHNk/sqN8QJ0nGiyKuvriV8NrCb9hCrjNJDzjarY6IoXf/7fJwMeSzswIGxWJXgkKJx8WgOGvD2XP6f+TVau5l5x0WtiFRs=
+	t=1717277615; cv=none; b=QjpR4yRIjFRllPKAtxolvI41Yi67mDCBpvmHaS6YHqW4jNfmck6LJesRLNibrSxWdapClb/F3N3t3ruM2u4VR3QJbIT3zZqVWPgfEF+3P+Q8FH6Pn2T+ov3JERprDzq9ZoERHp89MJyI82Kw/SDCKo8zSaF+jH8sOChYF1js4No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717277613; c=relaxed/simple;
-	bh=3sBwYo/AqZ+0RfDJFg+GCK+aWleW3pxMfuHyAah0dzA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m30IDPOeF+WiSOEz69hpm6ui9p+IGho5O1ZZ1MJ6GMjxl6GJyLgz544Dm7AJ7mK9u2dp3e1aCOSEssZgpb5hGPt5j+6D+GVb+09kRdyGAw4NdIqt+lMzQZJPBp2AeVhqEhPFr1phbMmA9zxP0qfaRI2gKTsi4Kfer4tX2UJ+/mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=TLwXvDBd; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1717277615; c=relaxed/simple;
+	bh=O8JuXN/F7C9Ahr23boiRySLU30zszNQXarX6RobRxdc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=L8JGiBI75tx8MtaY3PMS927uW+mPqTxevCZgESsfjHiJZldw06m91l5iorFIbk0YXN7+OPuBw+fg9Amqf0yNUUBEu5FExICj/reE3+d5Z1D1fmaF5ETWezPDDASjQS9l63dQIDyQFIGMHyxJWLRonUsBmJcsUkwdfVvKw9dX1ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=gsCHRutT; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="TLwXvDBd"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-421396e3918so1254105e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 14:33:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="gsCHRutT"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e95a1f9c53so39785541fa.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 14:33:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717277610; x=1717882410; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HJt3Ya3JYlNDKcCqPU+4dBowkDesFTehUTcWLYXANYk=;
-        b=TLwXvDBd2KibpGurTDNi0sS+F1f2zelbruqHlBywSWqKU0TBnjVDV2I9he92JaYU+J
-         wkztfGH/CioZVK4nKw0NVukUyatKtpyj/Qw9a7+0w6AOW61OOyUmKQQK/YDiWuohdgj1
-         7hq0QEZu++TL9htN8+fffSxcA1BTQRsNaE9fv082V56CEc+wTYar/pfjMOhwxek2VFGc
-         HqkJRulNSTqpx5rfrUIglt6di5bT2mYLGJr/3yYSZMybL0C/13lEHP5uOSiipbdXvaAL
-         /d0ROzAFVNH7iXSpNoOgKPIn1MbQtYIMiooXq6730LwBebTl3KzTYl6xueNsTXl4Bx0S
-         JVTA==
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1717277612; x=1717882412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3sT0UxPJVsFvbizWQFXaFxd+myFLbvt1Djq9NxHiO/k=;
+        b=gsCHRutT+kkmDaDw99jdqRf4h1xDF/cC9Jm4Ym/eV0Ly4NNEN6JdUMV4lgMFGJx26Q
+         08fT9CRM5LZSvPxdS/JZ52OPmwPJYJG46ca9sXEqrCqwCxpcdGcMHjXduDQDpDPGR6rj
+         RmYt2I7xUPy4YzZ+qseoBshXeMlrFd57aiK/LxtqkCTvTkXNua/yOlg2QJIwSykoozRR
+         F0KaTZegWZI3PpfgRYvwINALTlsKABcK8W6+p6r2ri9Q5RFhkqY7FSk0Vs4zNW2LVWFI
+         nRrf2roBbiYoXd8SnU3/9F1X1uNLlxOvs75pdkbQMMvw8NnsS0Zzy2i3dYBcGTmsVIah
+         lFYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717277610; x=1717882410;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HJt3Ya3JYlNDKcCqPU+4dBowkDesFTehUTcWLYXANYk=;
-        b=b4WYnEPSh2eUn55wtc9LZoeJL+DcXnGB0kgpnuLKn1z2fcWQp9yLD3L34IAwvm0l2l
-         J3zQwj1Rs64XViUXn+IXeCjm7r1ZelGmuCBKe9V7bqCb+jgT5G33fmLFVaAdrqa7n7w4
-         H5k78y+Lhtq2egCbEaRprNvhhSxYVLPGM3h0H9rY1nY69ciIufX6PgYQCaF4+pnRF30V
-         mJ5xs6ynTYy+h57kpcWER4jU38pgyZFLUc+yHjNIiTTgqKCM0URM85TsCz+iyORZuemx
-         weVdRWsJT5/vml6XBPsMpIrItM9Czy3/g+qwop0vkuQTpJBs4JHd8Y6/WrFo/UPPS5Q3
-         JuCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP+vPRJhS2DP1AbOevarraQzUlfOHwMNhGiv7FrN6Q5qxmKjPIhnYYdzn7KpFgDIFYkIFH+ILM6TnZDlGUNIE/20OU/bFqhAhDsTFv
-X-Gm-Message-State: AOJu0YzYbUelwbVijIw3qQ7essbi12RfeOm/GQ4sMCWTPsacjUPNDByZ
-	84GUNHP0SsV9R4P/nUvXfo7jJAj5IT+fuR7oPbESQLnHdD+YalHscUFsLAbOrLw=
-X-Google-Smtp-Source: AGHT+IGl9Hl1b8VRJQpVpXl7hCsSBOPLOHgRsVLux3bAWL4Geb2ApKKwM1lVHyceYADVoADXs17YOw==
-X-Received: by 2002:adf:e80f:0:b0:354:f724:6419 with SMTP id ffacd0b85a97d-35e0f25509fmr4554299f8f.8.1717277609843;
-        Sat, 01 Jun 2024 14:33:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717277612; x=1717882412;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3sT0UxPJVsFvbizWQFXaFxd+myFLbvt1Djq9NxHiO/k=;
+        b=sZnBbDA1uQYGLIm0GK3LQpK6Ul1Gnyt45FDPRSu2+nnhwPC293qW4EW+HiTtCYJjSN
+         s/rYFmpAdUrFlNFrUKkOVQYVIFpCPDUWO7yJoNgqrZClRbPvc+X1pzLHtWmtH4+TmWvH
+         xv9QbckNGzt/D7ZvWBSppWJ0VY02VGbzP3RFk3e3mfPVgYTyQf68fhOgFT1av6RVVeuX
+         HBBKd7fzebkO/jhP3pSpv/+lIzzx3BJkiOB8Ulzlnm9Hnr3kOWP5mzidIoNwyniCcSCx
+         4aNHs9BvXx2sFJMAch8NbUJIJXJH9pzQEkn6BmZcWAYLJisOav/h5pwXTDLXjk0Kmv6X
+         vAwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPZIMJ3JZZWsqDdajiS3B8tAIK+3iAcds4WRQm5zR3MvxKKGrZrlesCAmf6X71uid62qPBywDPvww/y9+KNDyvhPJQNMsyRAVw3mzD
+X-Gm-Message-State: AOJu0Yy0al+SHfHxLJe7bL266OGWDCxuANCCI5ItJnqGyuIG12KeQ0l1
+	wTT2T6/Cr2XveWTfuexlp0pkVj3LpXMd8+YrTVWX6DYJ2n8aKaLtAAbqwPyKq1k=
+X-Google-Smtp-Source: AGHT+IHTtXDQYUCHcup+VdBP7H+9TJT0tVCvzBLqaigZ6UCn3zIJ6feyXGCuTgk0t3iYmSADXLLaag==
+X-Received: by 2002:a2e:8e62:0:b0:2ea:7954:3777 with SMTP id 38308e7fff4ca-2ea950f8c22mr29792601fa.18.1717277611480;
+        Sat, 01 Jun 2024 14:33:31 -0700 (PDT)
 Received: from airbuntu.. (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0839sm4751324f8f.23.2024.06.01.14.33.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0839sm4751324f8f.23.2024.06.01.14.33.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 14:33:29 -0700 (PDT)
+        Sat, 01 Jun 2024 14:33:31 -0700 (PDT)
 From: Qais Yousef <qyousef@layalina.io>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -68,10 +70,12 @@ Cc: Vincent Guittot <vincent.guittot@linaro.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Qais Yousef <qyousef@layalina.io>
-Subject: [PATCH v4 0/2] Clean up usage of rt_task()
-Date: Sat,  1 Jun 2024 22:33:07 +0100
-Message-Id: <20240601213309.1262206-1-qyousef@layalina.io>
+Subject: [PATCH v4 2/2] sched/rt, dl: Convert functions to return bool
+Date: Sat,  1 Jun 2024 22:33:09 +0100
+Message-Id: <20240601213309.1262206-3-qyousef@layalina.io>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240601213309.1262206-1-qyousef@layalina.io>
+References: <20240601213309.1262206-1-qyousef@layalina.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,61 +84,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make rt_task() return true only for RT class and add new realtime_task() to
-return true for RT and DL classes to avoid some confusion the old API can
-cause.
+{rt, realtime, dl}_{task, prio}() functions return value is actually
+a bool.  Convert their return type to reflect that.
 
-No functional changes intended in patch 1. Patch 2 cleans up the return type as
-suggested by Steve.
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Qais Yousef <qyousef@layalina.io>
+---
+ include/linux/sched/deadline.h |  8 ++++----
+ include/linux/sched/rt.h       | 16 ++++++++--------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-Changes since v3:
-
-	* Make sure the 'new' bool functions return true/false instead of 1/0.
-	* Drop patch 2 about hrtimer usage of realtime_task() as ongoing
-	  discussion on v1 indicates its scope outside of this simple cleanup.
-
-Changes since v2:
-
-	* Fix one user that should use realtime_task() but remained using
-	  rt_task() (Sebastian)
-	* New patch to convert all hrtimer users to use realtime_task_policy()
-	  (Sebastian)
-	* Add a new patch to convert return type to bool (Steve)
-	* Rebase on tip/sched/core and handle a conflict with code shuffle to
-	  syscalls.c
-	* Add Reviewed-by Steve
-
-Changes since v1:
-
-	* Use realtime_task_policy() instead task_has_realtime_policy() (Peter)
-	* Improve commit message readability about replace some rt_task()
-	  users.
-
-v1 discussion: https://lore.kernel.org/lkml/20240514234112.792989-1-qyousef@layalina.io/
-v2 discussion: https://lore.kernel.org/lkml/20240515220536.823145-1-qyousef@layalina.io/
-v3 discussion: https://lore.kernel.org/lkml/20240527234508.1062360-1-qyousef@layalina.io/
-
-Qais Yousef (2):
-  sched/rt: Clean up usage of rt_task()
-  sched/rt, dl: Convert functions to return bool
-
- fs/bcachefs/six.c                 |  2 +-
- fs/select.c                       |  2 +-
- include/linux/ioprio.h            |  2 +-
- include/linux/sched/deadline.h    | 14 +++++++------
- include/linux/sched/prio.h        |  1 +
- include/linux/sched/rt.h          | 35 ++++++++++++++++++++++++++-----
- kernel/locking/rtmutex.c          |  4 ++--
- kernel/locking/rwsem.c            |  4 ++--
- kernel/locking/ww_mutex.h         |  2 +-
- kernel/sched/core.c               |  4 ++--
- kernel/sched/syscalls.c           |  2 +-
- kernel/time/hrtimer.c             |  6 +++---
- kernel/trace/trace_sched_wakeup.c |  2 +-
- mm/page-writeback.c               |  4 ++--
- mm/page_alloc.c                   |  2 +-
- 15 files changed, 57 insertions(+), 29 deletions(-)
-
+diff --git a/include/linux/sched/deadline.h b/include/linux/sched/deadline.h
+index 5cb88b748ad6..f2053f46f1d5 100644
+--- a/include/linux/sched/deadline.h
++++ b/include/linux/sched/deadline.h
+@@ -10,18 +10,18 @@
+ 
+ #include <linux/sched.h>
+ 
+-static inline int dl_prio(int prio)
++static inline bool dl_prio(int prio)
+ {
+ 	if (unlikely(prio < MAX_DL_PRIO))
+-		return 1;
+-	return 0;
++		return true;
++	return false;
+ }
+ 
+ /*
+  * Returns true if a task has a priority that belongs to DL class. PI-boosted
+  * tasks will return true. Use dl_policy() to ignore PI-boosted tasks.
+  */
+-static inline int dl_task(struct task_struct *p)
++static inline bool dl_task(struct task_struct *p)
+ {
+ 	return dl_prio(p->prio);
+ }
+diff --git a/include/linux/sched/rt.h b/include/linux/sched/rt.h
+index a055dd68a77c..efbdd2e57765 100644
+--- a/include/linux/sched/rt.h
++++ b/include/linux/sched/rt.h
+@@ -6,25 +6,25 @@
+ 
+ struct task_struct;
+ 
+-static inline int rt_prio(int prio)
++static inline bool rt_prio(int prio)
+ {
+ 	if (unlikely(prio < MAX_RT_PRIO && prio >= MAX_DL_PRIO))
+-		return 1;
+-	return 0;
++		return true;
++	return false;
+ }
+ 
+-static inline int realtime_prio(int prio)
++static inline bool realtime_prio(int prio)
+ {
+ 	if (unlikely(prio < MAX_RT_PRIO))
+-		return 1;
+-	return 0;
++		return true;
++	return false;
+ }
+ 
+ /*
+  * Returns true if a task has a priority that belongs to RT class. PI-boosted
+  * tasks will return true. Use rt_policy() to ignore PI-boosted tasks.
+  */
+-static inline int rt_task(struct task_struct *p)
++static inline bool rt_task(struct task_struct *p)
+ {
+ 	return rt_prio(p->prio);
+ }
+@@ -34,7 +34,7 @@ static inline int rt_task(struct task_struct *p)
+  * PI-boosted tasks will return true. Use realtime_task_policy() to ignore
+  * PI-boosted tasks.
+  */
+-static inline int realtime_task(struct task_struct *p)
++static inline bool realtime_task(struct task_struct *p)
+ {
+ 	return realtime_prio(p->prio);
+ }
 -- 
 2.34.1
 
