@@ -1,139 +1,168 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AE11C6AF;
-	Sat,  1 Jun 2024 12:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B5F335A7;
+	Sat,  1 Jun 2024 12:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717244137; cv=none; b=ijN1Tb5DN5WC1b6LT7G+SKbD72auP9ymhYfWC4yGwEF/toR2ZVNHB1URCdq/5lKWIU/2B8kxDlq3ttODM4J0MqRJU+Fl1RTn2GBz3l2L4WnzVzV4Orzo8GLDYh045MxbUhel3Po0IzmN6b2COqw4OwhoAelbTYFOOIw/vrc00wg=
+	t=1717244175; cv=none; b=JEoNq110jQHUfK5RLlQwQOwihp05U4pwA/dAsEo5rm+iChJ0FhQcp74heW/cyDhW2swn4FdtXEfhgyqow2phHueIOGX42tpACZZKCeYBVHQgWlLwWukN1DdPSsifoED2gqgVVcWydpDRa997ivdvYEzR4ZgaGd3MQjvrkK1qFtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717244137; c=relaxed/simple;
-	bh=lvEcECdSPEZ9gHThU+ok/dFIWZz6KwxLY9jrZJous+A=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=qinnWlpNhkYTPqduaE6VlTYSYTr3GAt6PYUi7l+GixbF7FfYLNiy3pMngtIVnSu/5QAVuihxog12uh0C5i0AbnWuyodO/jmc7Ht8KlzjcMNKLTUSHVA674mya/oiZqPCB/V645/TFiQRBaG8qHzG8Ov1fiTz4o56v+NI0agaDTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=m5aCDMt9; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1717244175; c=relaxed/simple;
+	bh=YQbtDqKskNjMF+zgtEnVxmBnSMyDmmQbOPUAkWECbYs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0ZKdVBwuLLXpfL1aFuJ2ofHiH7XvYyNjzY+0FLGNnBfXRw1ZCUdANb3pOIMa4sOFYVIc67JEfATbz1lqrzB3c5kW16VXExNmJrhDxwbOzhWM0C/4VZiOjMnfl1e3fJlwfwRwI01NBGP9RYdagoUI+8mIsOguQyKEPWEkDQY/0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xhMHJO4l; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="m5aCDMt9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1717244099; x=1717848899; i=frank-w@public-files.de;
-	bh=lvEcECdSPEZ9gHThU+ok/dFIWZz6KwxLY9jrZJous+A=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=m5aCDMt9HIKbzsoH185M2Yfo7fwJNHtvlNHVa/bMzbqeyUwAcCDoHKWMO6dsDI53
-	 MJbr0KmSgP3NQLBPJk18KbHxWuxalptJOh6Su/R6adC7cbXf5IhdBhmmPyONNqaxH
-	 ztqZgY7HfIsjPIlaLguwHbK5V9XyX675I19rtAOFx9aECAsjm1dFdzHLBRjj52Vtb
-	 0iHGfvdBdhOtHgMtAZqlIfawXd1Ez01bZMj4GAgNoZzSWhllstz7dzSIyldJ2JWrc
-	 T30oa9v9lynbC+TAPfqxkoPDtTpWCCyFMrNRfKxaiIhqQAj32xggKks1z11AI9YJD
-	 K0mxsWQEAWSjr2+0gQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [217.61.147.29] ([217.61.147.29]) by web-mail.gmx.net
- (3c-app-gmx-bap08.server.lan [172.19.172.78]) (via HTTP); Sat, 1 Jun 2024
- 14:14:59 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xhMHJO4l"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 451CG48n001986;
+	Sat, 1 Jun 2024 07:16:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717244164;
+	bh=wPOgx6jvz6CXPqydR8T70MR8eQ6jCHkPssl7vSeN1X4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=xhMHJO4lJhyT1ekX1BK8VUDbMBcQQwrsK09ZzDHnc2Iql1yTtYAUQSNb71XEAngWS
+	 KRTIdpTj/diz8S04eKLnYbPQ4O2zUnLhEP9WUeHT9dpTPqi0l7k0K0bN/kV8hagZM4
+	 a8MDj8OLlHn4dMehk9zXtf/weFnxlT5t487+l6Nw=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 451CG4JG046713
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Sat, 1 Jun 2024 07:16:04 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 1
+ Jun 2024 07:16:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 1 Jun 2024 07:16:04 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 451CFtkF009323;
+	Sat, 1 Jun 2024 07:16:00 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <rogerq@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>,
+        <danishanwar@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v4 1/7] arm64: dts: ti: am62p: Rename am62p-{}.dtsi to am62p-j722s-common-{}.dtsi
+Date: Sat, 1 Jun 2024 17:45:48 +0530
+Message-ID: <20240601121554.2860403-2-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240601121554.2860403-1-s-vadapalli@ti.com>
+References: <20240601121554.2860403-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-afd8a6d5-1acc-4020-b8cb-e0db80c241cf-1717244099767@3c-app-gmx-bap08>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen
- Boyd <sboyd@kernel.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones
- <lee@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eric
- Woudstra <ericwouds@gmail.com>, Tianling Shen <cnsztl@immortalwrt.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-leds@vger.kernel.org,
- netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Conor Dooley
- <conor.dooley@microchip.com>
-Subject: Aw: Re: [PATCH v3 1/2] dt-bindings: arm64: mediatek: add BananaPi
- R3 Mini
-Content-Type: text/plain; charset=UTF-8
-Date: Sat, 1 Jun 2024 14:14:59 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <a7a20d35-f566-4c3c-aef1-cb7a0f349cf6@collabora.com>
-References: <20240510095707.6895-1-linux@fw-web.de>
- <20240510095707.6895-2-linux@fw-web.de>
- <a7a20d35-f566-4c3c-aef1-cb7a0f349cf6@collabora.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:csPF87R4ollgagNDdL+HT/01eQEv27Y1G6e/ybL/hqAjMvhTTSL19a/hYOa0N91ckFy1u
- m/eYtsKP20+o0LNLtViebe5BzFkkpLthFMc+cWYLiaBRUO1wRywenLslwMPzj1BwkeqJn3nB5VBp
- lAtk6lfKrjvW2V/6XLYH2iHIkdf15CgqJBnHcp2ZHZZ2k3S8N31M0GFv6rHVcEjV/jEJ/0f0zHJ/
- ylN01GfwjzQMSbeVeXs5M5yoGXANlVLm4tlzXIbhg0HhNTT/qvTNliIkyUBnodU+MrfLKyGHHZ1f
- tQ=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:9m4bUWM75tM=;ugYFxEsX+a5lkO2Zcqo7G7+zfjz
- KgZNAsN3DTuYK3PROs1445uXbDRwkbcD66MED97R3+O7hjCWpSwSoPsmzCTTDv0zBMbQGXh2J
- Rh3PIAzlinoT4BgrR+nFDOOAaMTiN7oaPXSJXEWcWKFQDc24BT3nmEYf8oVtr2X4exqH7rTNX
- /kHtKuu7s/WsjsgwgIM2zi87Q5PZPFiEEI0iGdUcKf7g7z2MZiY7UvKywVB9BZrIEJKtIuqe0
- HP3udYRs2G2f5j61t4hLnjGgstPa6W8AArZtYzQor43jJAr3TcCU4JLw0jpa5vqpRQMWrReXn
- XJUk8DWSA6dWWcZ65b9rFPFW7k787d/7E6BIBdxAp8uKEH2Owb3L3Wd/N4g0Un2A0YDVQFzih
- l0BqF85t6MQsTdyPsh+vApyipjIjyyzkd333sRukslARpXzpMtOkSlWbGIYmgopu5HYZcJYu9
- Dmqkphtrrd29iysn9D/nbBybeVFGxO8Lc2vYWFOgH4shL9PDOw8+N1IpyllqnV1NN3XFqUYqp
- YTeYPHrDeJPr20/JJJmADXkdn3nnppFBwyf9mB3TuHOpU0/QDjHp0g9a2SJ9ZYl2e7xhtvwLn
- EaBKXkNJRLJgcZ4oMGhyRzYs3qbSAe3Tls/AHhD4GQ+DZIVN9lIYsgAf+tuao1ojvoW3IDUQT
- t10Sk5GHXuxiqRbXRBpxVgQaf8UXonCoskxpzxyb9wcLt+SwzryX27Qw4ajCX0E=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi
+The AM62P and J722S SoCs share most of the peripherals. With the aim of
+reusing the existing k3-am62p-{mcu,main,wakeup}.dtsi files for J722S SoC,
+rename them to indicate that they are shared with J722S SoC.
 
-just a gentle ping...is there anything missing?
+The peripherals that are not shared will be moved in the upcoming patches
+to the respective k3-{soc}-{mcu,main,wakeup}.dtsi files without "common" in
+the filename, emphasizing that they are not shared.
 
-i see state in netdev-patchwork [1] is "changes requested", but comments d=
-o not say anything about this...
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+No changelog since this patch is introduced in this version of the
+series.
 
-in mtk-patchwork [2] it is new and i do not see patches in mtk-next [3] ye=
-t
+ .../{k3-am62p-main.dtsi => k3-am62p-j722s-common-main.dtsi} | 2 +-
+ .../{k3-am62p-mcu.dtsi => k3-am62p-j722s-common-mcu.dtsi}   | 2 +-
+ ...-am62p-wakeup.dtsi => k3-am62p-j722s-common-wakeup.dtsi} | 2 +-
+ .../dts/ti/{k3-am62p.dtsi => k3-am62p-j722s-common.dtsi}    | 6 +++---
+ arch/arm64/boot/dts/ti/k3-am62p5.dtsi                       | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
+ rename arch/arm64/boot/dts/ti/{k3-am62p-main.dtsi => k3-am62p-j722s-common-main.dtsi} (99%)
+ rename arch/arm64/boot/dts/ti/{k3-am62p-mcu.dtsi => k3-am62p-j722s-common-mcu.dtsi} (98%)
+ rename arch/arm64/boot/dts/ti/{k3-am62p-wakeup.dtsi => k3-am62p-j722s-common-wakeup.dtsi} (97%)
+ rename arch/arm64/boot/dts/ti/{k3-am62p.dtsi => k3-am62p-j722s-common.dtsi} (97%)
 
-regards Frank
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+similarity index 99%
+rename from arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+rename to arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+index 900d1f9530a2..ea214f649ebd 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+- * Device Tree file for the AM62P main domain peripherals
++ * Device Tree file for the main domain peripherals shared by AM62P and J722S
+  * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+similarity index 98%
+rename from arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
+rename to arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+index b973b550eb9d..a5dbaf3ff41b 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+- * Device Tree file for the AM62P MCU domain peripherals
++ * Device Tree file for the mcu domain peripherals shared by AM62P and J722S
+  * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
+similarity index 97%
+rename from arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
+rename to arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
+index c71d9624ea27..ca493f4e1acd 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-wakeup.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+- * Device Tree file for the AM62P wakeup domain peripherals
++ * Device Tree file for the wakeup domain peripherals shared by AM62P and J722S
+  * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common.dtsi
+similarity index 97%
+rename from arch/arm64/boot/dts/ti/k3-am62p.dtsi
+rename to arch/arm64/boot/dts/ti/k3-am62p-j722s-common.dtsi
+index 94babc412575..d85d05e0792a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common.dtsi
+@@ -120,6 +120,6 @@ cbass_wakeup: bus@b00000 {
+ };
+ 
+ /* Now include peripherals for each bus segment */
+-#include "k3-am62p-main.dtsi"
+-#include "k3-am62p-mcu.dtsi"
+-#include "k3-am62p-wakeup.dtsi"
++#include "k3-am62p-j722s-common-main.dtsi"
++#include "k3-am62p-j722s-common-mcu.dtsi"
++#include "k3-am62p-j722s-common-wakeup.dtsi"
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
+index 41f479dca455..b7bb04a7968f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
+@@ -8,7 +8,7 @@
+ 
+ /dts-v1/;
+ 
+-#include "k3-am62p.dtsi"
++#include "k3-am62p-j722s-common.dtsi"
+ 
+ / {
+ 	cpus {
+-- 
+2.40.1
 
-[1] https://patchwork.kernel.org/project/netdevbpf/list/?series=3D852204&s=
-tate=3D%2A&archive=3Dboth
-[2] https://patchwork.kernel.org/project/linux-mediatek/patch/202405100957=
-07.6895-2-linux@fw-web.de/
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/mediatek/linux.git
-
-> Gesendet: Montag, 13. Mai 2024 um 15:06 Uhr
-> Von: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.c=
-om>
-> An: "Frank Wunderlich" <linux@fw-web.de>, "Rob Herring" <robh@kernel.org=
->, "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Doole=
-y" <conor+dt@kernel.org>, "Michael Turquette" <mturquette@baylibre.com>, "=
-Stephen Boyd" <sboyd@kernel.org>, "Pavel Machek" <pavel@ucw.cz>, "Lee Jone=
-s" <lee@kernel.org>, "David S. Miller" <davem@davemloft.net>, "Eric Dumaze=
-t" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni=
-" <pabeni@redhat.com>, "Matthias Brugger" <matthias.bgg@gmail.com>
-> Cc: "Frank Wunderlich" <frank-w@public-files.de>, "Eric Woudstra" <ericw=
-ouds@gmail.com>, "Tianling Shen" <cnsztl@immortalwrt.org>, devicetree@vger=
-.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linu=
-x-leds@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.inf=
-radead.org, linux-mediatek@lists.infradead.org, "Conor Dooley" <conor.dool=
-ey@microchip.com>
-> Betreff: Re: [PATCH v3 1/2] dt-bindings: arm64: mediatek: add BananaPi R=
-3 Mini
->
-> Il 10/05/24 11:57, Frank Wunderlich ha scritto:
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >
-> > Add MT7988A based BananaPi R3 Mini.
-> >
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
->
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@colla=
-bora.com>
->
->
->
