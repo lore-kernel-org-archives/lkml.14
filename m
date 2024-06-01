@@ -1,175 +1,141 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75247134BC;
-	Sat,  1 Jun 2024 08:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B981BC39
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 08:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717229870; cv=none; b=YlkCWx7B4xtMjc05lUqXha4p4vgjwjn7+I4ztHYoXLBHr+qJ2MCuU/eNQDgc9BbkiO8MAHIXO1ns8SVIhodo6/P3cHVbE/d1iBHUNZd0aj5bw138quCLhxsPRLVXThb1Cc1vRmgPGkSg8kpHxxQX9mRfoHnH/YCQ1h5PDGb6k9E=
+	t=1717229928; cv=none; b=C/MAf3/60Baj164C0JX3uRqxGFT/0K5h16v4BGHcQwEtLqkotlwFFaB9643NHYmWzOj7B8ICX9bIl2+qhINJR/onX/8KpREIsqJBC1q8ZmGFAFUZ0AIuCYZb1ANn2yKY83vBekjYmH0Qx4fXXUV9l66Kht0P1Ton+7UlhGOXMCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717229870; c=relaxed/simple;
-	bh=7eeatt4CcPmiwk7FadqALe+uBEk9RzdNLVP4oBfTTKE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bfyJIzG1PJRzJfFaCGj3gsqeNi4K1AIqw+mq2v+pIl7GVK7eDTEs2TGaUgRxp/zYmtfQ9YCsqq+DD3zVi5gzsN4weXib4QOJZlKpd55oE53izmrb/J5ctb0sUoxUSfirBhFxY3s3SDfxYXxIv2PotjMcK06jYJfhrtjXxKJTUAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=s6bYa9xp; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1717229928; c=relaxed/simple;
+	bh=juRogTLPO2qs3UM+cO6uXQ3Ufimi9V6rXzS1gdbXpLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F1G2w+dzv52ihm+HReFMXOFQ+inWiBp3BGqmh13fO69vpdeTkuxDMJdwsgS3a9uWciRVmm9GpktZSdfg0kVIUIqpKDDIZb+w0kCgijfu19jXcKJVo/kv2eosQ+5bUXpoxwKhLvPI+WkTuFhU0dpYI596QGzj2yWwJhYvosmEXuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=UXAeb+nT; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="s6bYa9xp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1717229848; x=1717834648; i=wahrenst@gmx.net;
-	bh=9g8i1E4J9Qgk8VQ+f5MzIOoR/utW2DTqj5vifxeAFu0=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=s6bYa9xp91jDDnaO2Kpu+8DRegMiTGOgaXKB5Mhg5+c0CxhX6N+KZEnbOhs284yb
-	 201Qihxzh59QbT6NLof7RVxYhmL4pyuH7gaBq4AsthocxoV14DKBRLF4tUs3WOLKf
-	 WEkW7PPdZx3/ipknLGdkZbrfqYlMEfiMg22lJJ0g+zcaJb90vbZKJFjMiF5ElEpMy
-	 q/jie6giETFV+PLeGydIgqlfu/HfaEFb5HLttNT9V6JhuprZEFpMc1GymbxLRPMR+
-	 VVB4wufjQ+f/hC9SwsS2T0SZXS0K9Ic+kqvghAuiikIb2zbzu4mXp4AY4+cJ+1MNN
-	 fIT0Jm0KATg9WbhHlw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.127] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6bfq-1sXTkM0R6U-01528i; Sat, 01
- Jun 2024 10:17:28 +0200
-Message-ID: <0a041812-875b-42e3-b303-4d984b0f9a54@gmx.net>
-Date: Sat, 1 Jun 2024 10:17:26 +0200
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="UXAeb+nT"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-35dcd34a69bso1792007f8f.3
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 01:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717229924; x=1717834724; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
+        b=UXAeb+nTAXYVlf/wWSR6UtWpUp1HdEJnm9CFFgcSUfUzYH/0sIUktygmcLEIO7VYQQ
+         tnWgHESeAQJ4H+XORw+Z6OLTCtawqYU+C2otIFGAjd8b3LFBJiXfCM32OivPBTNuZTqB
+         Y3XPXrqU7Ex+/cUXVu808VmwS/rc+NSVEnUewag1q8CLrK8BWR2pRh7imhL927WjTCO0
+         VzHUgQmxU9jS7Y7A/C9FUL7em4eZBRRmDgSPFcnpSp8+jZMpzt6h6VDz6aee7SDSr87Q
+         Z9u0slFVcXK6yk6B/mkmQDU6UJhqS3WRqRUL+H4PdnclxD4aJT8Ew5uRxaA/zLA/dhjH
+         4H0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717229924; x=1717834724;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qDSrS2M7i0BNRPCtONpXbPIlnKGYcwSP27wPNDFPtFI=;
+        b=D8jwwflZXTG2ZMuhoAkdoUxbqao0VrugefgicisR0kQmZm2AS3JDB1vcm7YBIeXn2I
+         tmuC5XYSVYLZ3CT7HvYERxgqAYvyAarUIE8Oi8mlZlmjpsKMpwJUt5kbae8rSgU1S/aK
+         qYlxEjge60a6gpPDxZdkeTwOp4PUU1cGSYA8Ha9yzXrjQyRBrpiT8vZd2CkYQX/UJaEC
+         WWQgOIH21TDkxWwARGLREJZ0m53Iakc3E1FSvHtAB+D2G4XIWXr5CeDKE59k7XUGJL+c
+         t2vEaD3hIBU0hbQgOa33i38AemdX9LcrkYJsBk5nPoXdjkEGRRf9hYgm1jC2E/bKWqLv
+         u0Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPnFiFW4Vcn1Jh3zwvjpGT7fjEiz/D1YKOzHhaEB7HppaWjhgdE0kcDXa+jwixn/Chz0lk3onsSExmOgkiItZrQ1EIjDcT9VbCG4X1
+X-Gm-Message-State: AOJu0YzHFY7f1049CApiSNHgBP6B+2UTId+f6swEgkV/OkFXt2d2kUaJ
+	LPL2GPR50e4FecIUetaoI2n75/rJisJHeyATjB1pu1aNUDWIhuzpWGhHa9uAf1c=
+X-Google-Smtp-Source: AGHT+IHUHqF5zw5T0LAYRAz4EodAka68lyRIDO+dvLKGP6ottBNPhvhdtLKKamX3vjh65SPUKbcu8g==
+X-Received: by 2002:adf:cc82:0:b0:354:fa0d:1424 with SMTP id ffacd0b85a97d-35e0f2580fcmr2520631f8f.14.1717229924498;
+        Sat, 01 Jun 2024 01:18:44 -0700 (PDT)
+Received: from localhost ([194.62.217.3])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0839sm3547736f8f.23.2024.06.01.01.18.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 01:18:44 -0700 (PDT)
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Ming Lei <ming.lei@redhat.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yexuan Yang <1182282462@bupt.edu.cn>,
+	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
+	Joel Granados <j.granados@samsung.com>,
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Niklas Cassel <Niklas.Cassel@wdc.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Conor Dooley <conor@kernel.org>,
+	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
+	open list <linux-kernel@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"gost.dev@samsung.com" <gost.dev@samsung.com>
+Subject: [PATCH v3 3/3] MAINTAINERS: add entry for Rust block device driver API
+Date: Sat,  1 Jun 2024 10:18:06 +0200
+Message-ID: <20240601081806.531954-4-nmi@metaspace.dk>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240601081806.531954-1-nmi@metaspace.dk>
+References: <20240601081806.531954-1-nmi@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/4] Add minimal boot support for Raspberry Pi 5
-To: Andrea della Porta <andrea.porta@suse.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui
- <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ulf Hansson
- <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kamal Dasu <kamal.dasu@broadcom.com>, Al Cooper <alcooperx@gmail.com>,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mmc@vger.kernel.org
-References: <cover.1717061147.git.andrea.porta@suse.com>
- <36642bd8-c981-4190-9f44-072ac3c97c6b@gmx.net> <ZlnJzqnvTk70O3ap@apocalypse>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <ZlnJzqnvTk70O3ap@apocalypse>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:goG2aefWUGM6HYTd+wn1rjaTrNzvf9I4cz3NFvFZ99ncYKSE6rO
- iJQzkald9qRVqEJ2oEE2aeOE0fxuGQfDjplO0NPDzwkzUisk2+SS0IcrfHLc/bV4Ii1yKsf
- i9ZV5Jb5zcumld0v0rACFuw8a/vtP1ZfF1j6fzo9zY6RlJdmUrDzmjmDJlyeBO7slxHXPbj
- ZHpwb5QMnwYkjDcqWGmtQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:f4k/wUKkgVI=;4dC/SJSfIquim+tu6BbxkI3Fa50
- 3mHopelSNKrGAnz6sAKWy+wmGFFdSoy5ZplfsfOF5qQXnZ5L9KbZfiZ8Ogm3/kMcFnBzd03ai
- OymQOumXnn98K93p1s1DvwQD5Y+Do/lZNywUqzjt1T+dwiqHffiZqUExRyk6T2ttfi6rgZFJl
- crBjYOLZU9PnwFxtnEYxdDsNxU0CwPzbttfoF0m/8XWrdNdg3dGdqbPrkw0Qi5jVrbkQfZeCg
- mNd3njO/3t7g4FyRBZVzVsVxaceCqMxP1iJqRZlrD7Gqogb1BVqFa6dYa2qcY0+/DXnSH0nEa
- ewvLP3kNv8dMyTYrf8p+52SzLV6KC5t0NIgd8IzRVSX4eo2vp7dzsKxfJYQjgIgUnSsySnwZ0
- f/Ws409+fdIr8qWx0/FinFJlWN4HmxcpxApcEPlrxi/bmOoL3199H9f56bFWfcJ5L8aRRspus
- cA6epR/LQxUNy0XHF7amOH9HXsBQbcpZNO1H+YE2XTdgrjggZtm1Ws/Lh6H9dJUFi5zKWyPgH
- Pw8jnMNfpUvyCeApCUfDhhK9+6BC0annUnkfc3B6nUIJdOz3cklfDQCoVeK7N76+mADDYpbE/
- qxGWSM87tkkUbW5T8iZjhhmrAI0VK4w2xpx9mr0s7PdQ3j2Scf+AhMnGFtplGBoRxW40/tzLe
- CBWTsaPyyDPebTSNyotf1ALh+Kd63qISh2hWXLsM73ZxNo4+uy6tzh7BIIv7+MLUvt3Uq9xQH
- LVVBi20eUDmQG99rWSqnzXQ4U6+z8lus8ad2ads3YjbV+z6AYGLoGkC8yY3XEV1r7evEAlAIO
- LckLuCpPucU7wz4uGz0o7BVaZahYsfiAG6UZZNVzz6eio=
+Content-Transfer-Encoding: 8bit
 
-Hi Andrea,
+From: Andreas Hindborg <a.hindborg@samsung.com>
 
-Am 31.05.24 um 14:59 schrieb Andrea della Porta:
-> Hi Stefan,
->
-> On 12:00 Fri 31 May     , Stefan Wahren wrote:
->> Hi Andrea,
->>
->> Am 30.05.24 um 12:11 schrieb Andrea della Porta:
->>> Hi,
->>>
->>> This patchset adds minimal support for the Broadcom BCM2712 SoC and fo=
-r
->>> the on-board SDHCI controller on Broadcom BCM2712 in order to make it
->>> possible to boot (particularly) a Raspberry Pi 5 from SD card and get =
-a
->>> console through uart.
->>> Changes to arm64/defconfig are not needed since the actual options wor=
-k
->>> as they are.
->>> This work is heavily based on downstream contributions.
->>>
->>> Tested on Tumbleweed substituting the stock kernel with upstream one,
->>> either chainloading uboot+grub+kernel or directly booting the kernel
->>> from 1st stage bootloader. Steps to reproduce:
->>> - prepare an SD card from a Raspberry enabled raw image, mount the fir=
-st
->>>     FAT partition.
->>> - make sure the FAT partition is big enough to contain the kernel,
->>>     anything bigger than 64Mb is usually enough, depending on your ker=
-nel
->>>     config options.
->>> - build the kernel and dtbs making sure that the support for your root
->>>     fs type is compiled as builtin.
->>> - copy the kernel image in your FAT partition overwriting the older on=
-e
->>>     (e.g. kernel*.img for Raspberry Pi OS or u-boot.bin for Tumbleweed=
-).
->>> - copy arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dtb on FAT partiti=
-on.
->>> - make sure you have a cmdline.txt file in FAT partition with the
->>>     following content:
->>>     # cat /boot/efi/cmdline.txt
->>>     root=3D/dev/mmcblk0p3 rootwait rw console=3Dtty ignore_loglevel ea=
-rlycon
->>>     console=3DttyAMA10,115200
->>> - if you experience random SD issues during boot, try to set
->>>     initial_turbo=3D0 in config.txt.
->> was this an issue since the beginning of this series?
->>
-> I experienced this even during early testing, using the complete downstr=
-eam
-> driver. It seems that when initual_turbo !=3D 0, the fw can throttle the=
- clock
-> to reduce the boot time and it (directly or indirectly) may affect SD fu=
-nctionality.
-> I believe that the probability of this to happen is likely a function of=
- SD
-> card speed, whether it requires timing tuning, initial_turbo exact value=
-  and whether
-> you are booting the kernel directly or chainloading u-boot + grub (or
-> whatever combination of secondary stage bootloader). For example, your
-> boot setup may have a timeout in the grub boot menu that is large enough=
- for the clocks
-> to settle and the boot process to end successfully, while faster boot ti=
-me can lead
-> to the issue described. Since this behaviour seems to depend on all of t=
-his factors and
-> does not necessarily arise in practice, disabling initial_turbo is just =
-a suggestion
-> in case things go haywire.
-yes in case the VPU changes the SD clock or one of the parent while the
-ARM cores tries to boot, they won't be informed about these changes
-which could ends up with the wrong SD clock frequency.
+Add an entry for the Rust block device driver abstractions.
 
-Thanks for your explanations
->
->> What kind of SD issues?
->>
-> I wasn't able to boot from SD card due to clock issues.
->
->> Is there a downstream reference?
-> Some (old) reference e.g.:
-> https://forums.raspberrypi.com/viewtopic.php?t=3D112480#:~:text=3DIt%20s=
-ets%20turbo%20mode%20from,have%20turbo%20during%20the%20boot.
->
-> but there are probably more.
->
-> Many thanks,
-> Andrea
+Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+---
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..698515b0b0b3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3782,6 +3782,20 @@ F:	include/linux/blk*
+ F:	kernel/trace/blktrace.c
+ F:	lib/sbitmap.c
+ 
++BLOCK LAYER DEVICE DRIVER API [RUST]
++M:	Andreas Hindborg <a.hindborg@samsung.com>
++R:	Boqun Feng <boqun.feng@gmail.com>
++L:	linux-block@vger.kernel.org
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
++T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
++F:	drivers/block/rnull.rs
++F:	rust/kernel/block.rs
++F:	rust/kernel/block/
++
+ BLOCK2MTD DRIVER
+ M:	Joern Engel <joern@lazybastard.org>
+ L:	linux-mtd@lists.infradead.org
+-- 
+2.45.1
 
