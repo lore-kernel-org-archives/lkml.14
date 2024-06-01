@@ -1,65 +1,50 @@
-Received: from out-15.pe-b.jellyfish.systems (out-15.pe-b.jellyfish.systems [198.54.127.81])
+Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3534D152533;
-	Sat,  1 Jun 2024 15:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96A31CD3D;
+	Sat,  1 Jun 2024 15:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717254004; cv=none; b=rnu6oF+c6BrFPzIZIRVj6e2UUbR2+QV86chQ/vvyBA/+51vUCW3kknleZVpBPqS6JYD7iM6Z99FooM+E/Koa0w7riAxG3xw5JKWyWxYGE7w8mjmMZeYcz0l1ZXpD0QRvb3wnKNduFKKsimcb8VX00GliEl6VAZNuokcHv+BIcnE=
+	t=1717254051; cv=none; b=uA7Mgs3E/QRH1eTbmYk4P3DaxhURz+DAEc+78iXBY4UX8lUF2bb6uMacLtkhavwANqm1LOYB8HUYKFxdp2XiIY2gAwWzvXHxwsqBAdNs3PfR5gklMs0LgI495xz1Cy5VYvsjPEyCFRglddHrXVLOVPfDiUMK1F8vLzTx5Bt+Ft0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717254004; c=relaxed/simple;
-	bh=lo3WERO5Od+lCrB7tZFl4JPJAq2xflULTe7KYhW0Ip4=;
+	s=arc-20240116; t=1717254051; c=relaxed/simple;
+	bh=cpDMvVIdLPhR5zy2zCBjOcNpO7WYB4YNI6UM9U7l+y8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lQ5tsXZE/6zlFPRM4G9p80JPB2Up3iQc0nmuGX2lBcd3OCM5xRoYbfyAbbKr7IwXisZcrgNjqoyr+B9XgOsxPGedhkklecfRSmxZ0+SSTxuVC6+WeHnYMZz2rT50Xn02R5ZY/AXGsPSuMHgpJRTW4vzO8wyxU4rHho6yURZGTro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danishpraka.sh; spf=pass smtp.mailfrom=danishpraka.sh; dkim=fail (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b=rqZM/y3i reason="key not found in DNS"; arc=none smtp.client-ip=198.54.127.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danishpraka.sh
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danishpraka.sh
+	 MIME-Version; b=G2Ob7mqzYX5IgcYMD2kVpQI4ikJleMWWAQSuWe1RX3N+WgJ2xgNVXNlLcICjo5G2ci06GazuoHyODbjb/0NVJ8ehpmEz7eA8+iSP3IRruNKfkNhXPCAoUpomoT8TOfk96iB7OF4uUIWp6ZmC0xNEglxPVHr7JMb2Ts5/O6NGrso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=JY4lvHhN; arc=none smtp.client-ip=80.12.242.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=danishpraka.sh header.i=@danishpraka.sh header.b="rqZM/y3i"
-Received: from output-router-d5c465c44-45n78 (new-01.privateemail.com [198.54.118.220])
-	by pe-b.jellyfish.systems (Postfix) with ESMTPA id 4Vs2z80JgnzGq2w;
-	Sat,  1 Jun 2024 14:52:52 +0000 (UTC)
-Received: from MTA-07.privateemail.com (unknown [10.50.14.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01.privateemail.com (Postfix) with ESMTPS id EB84D18000D0;
-	Sat,  1 Jun 2024 10:52:51 -0400 (EDT)
-Received: from mta-07.privateemail.com (localhost [127.0.0.1])
-	by mta-07.privateemail.com (Postfix) with ESMTP id C2E2918000B0;
-	Sat,  1 Jun 2024 10:52:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=danishpraka.sh;
-	s=default; t=1717253571;
-	bh=lo3WERO5Od+lCrB7tZFl4JPJAq2xflULTe7KYhW0Ip4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rqZM/y3iohM9HsGn1TL+LI2bnfmZBtSDmTndpPLP5aColQqUihT4nopGxg9WBwE9Z
-	 1hB13aEVLuf3WMdV+xW4vqPvHvWIqumpiCEmpmgBJnLTYC96oxrvsPHYMhmaXbmPyb
-	 G+uNScvNqe4p9K+z360D+1exRHkQpuVoph96Ng62KovldpxMBMOFMuVmNXIWiTwZns
-	 9DAtrZ/FUnhOUfyYLe4UV1aCRL5knt3sP348n/gHXN+OdCkY4sHgemNJA4hj3/Ig1x
-	 pIoqtgNbYi17KQa9TGCUb/rd58VI+5iBaXgtVPFE8G+eqzLxb4iYb5dxBJFBjjS2LT
-	 IDXsBXgSe9ecw==
-Received: from localhost.localdomain (unknown [122.171.21.36])
-	by mta-07.privateemail.com (Postfix) with ESMTPA;
-	Sat,  1 Jun 2024 10:52:37 -0400 (EDT)
-From: Danish Prakash <contact@danishpraka.sh>
-To: 
-Cc: Shuah Khan <skhan@linuxfoundation.org>,
-	Danish Prakash <contact@danishpraka.sh>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Carl Vanderlip <quic_carlv@quicinc.com>,
-	Pranjal Ramajor Asha Kanojiya <quic_pkanojiy@quicinc.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-arm-msm@vger.kernel.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
-	dri-devel@lists.freedesktop.org (open list:QUALCOMM CLOUD AI (QAIC) DRIVER),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] Documentation/accel/qaic: Fix typo
-Date: Sat,  1 Jun 2024 20:21:24 +0530
-Message-ID: <20240601145216.32232-1-contact@danishpraka.sh>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="JY4lvHhN"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id DQDisz5ua13tqDQDpsovaD; Sat, 01 Jun 2024 17:00:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1717254041;
+	bh=jIblfMwtliNUcxjvHa+qfP3YXi+49by7T+Qpw7+AkQ0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=JY4lvHhNoh9sABZn7VeIG7ThlFCIA1L1eh0wpizfGsh6Wb3qy6AXQLDMQeIsJ2NcD
+	 zqQN1pSPj2TUPB7EeJUcF19B9FLSECKUyzSwhAtH0Yz8EO1ykp6qMWZkQEGrULQ0Ol
+	 XsoImMCDv8Y9vmGbFsGAoMIYpBXkqiSbtspP1SjG1XscF9NISKcFMKBg6AzhgqLMrx
+	 Y7GKXFbh4lCYd0OTUnrRykQwvhOyR9Yo11PJkfgULfnQJ4WpuIPYqZsH8vDGptOCio
+	 VCw9/q/lo56y/VQ2fg6OhFyTTVkap57zEmUmmj8FC2RVL8HCpLco/N4IoTRR3Q/n7b
+	 AoHi3+BBGaNEw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 01 Jun 2024 17:00:41 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pm@vger.kernel.org
+Subject: [PATCH 2/2] power: supply: samsung-sdi-battery: Constify struct power_supply_maintenance_charge_table
+Date: Sat,  1 Jun 2024 17:00:29 +0200
+Message-ID: <02c6ad69a3ace192c9d609b7336a681a8fc7ba94.1717253900.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.45.1
-In-Reply-To: <16b1bcb5-00c6-4b59-a880-188bed32d175@linuxfoundation.org>
-References: <16b1bcb5-00c6-4b59-a880-188bed32d175@linuxfoundation.org>
+In-Reply-To: <cover.1717253900.git.christophe.jaillet@wanadoo.fr>
+References: <cover.1717253900.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,29 +52,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
 
-Fixed a typo in the docs where 'phsyical'
-was corrected to 'physical'.
+'struct power_supply_maintenance_charge_table' is not modified in this
+driver.
 
-Signed-off-by: Danish Prakash <contact@danishpraka.sh>
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
+
+In order to do it, some code also needs to be adjusted to this new const
+qualifier.
+
+On a x86_64, with allmodconfig:
+Before:
+======
+$ size drivers/power/supply/samsung-sdi-battery.o
+   text	   data	    bss	    dec	    hex	filename
+   4055	   4584	      0	   8639	   21bf	drivers/power/supply/samsung-sdi-battery.o
+
+After:
+=====
+$ size drivers/power/supply/samsung-sdi-battery.o
+   text	   data	    bss	    dec	    hex	filename
+   4087	   4552	      0	   8639	   21bf	drivers/power/supply/samsung-sdi-battery.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- Documentation/accel/qaic/qaic.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Compile tested-only
+---
+ drivers/power/supply/power_supply_core.c   | 2 +-
+ drivers/power/supply/samsung-sdi-battery.c | 2 +-
+ include/linux/power_supply.h               | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/accel/qaic/qaic.rst b/Documentation/accel/qaic/qaic.rst
-index efb7771273bb..628bf2f7a416 100644
---- a/Documentation/accel/qaic/qaic.rst
-+++ b/Documentation/accel/qaic/qaic.rst
-@@ -93,7 +93,7 @@ commands (does not impact QAIC).
- uAPI
- ====
+diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
+index 022d0e4bf621..8f6025acd10a 100644
+--- a/drivers/power/supply/power_supply_core.c
++++ b/drivers/power/supply/power_supply_core.c
+@@ -1072,7 +1072,7 @@ int power_supply_vbat2ri(struct power_supply_battery_info *info,
+ }
+ EXPORT_SYMBOL_GPL(power_supply_vbat2ri);
  
--QAIC creates an accel device per phsyical PCIe device. This accel device exists
-+QAIC creates an accel device per physical PCIe device. This accel device exists
- for as long as the PCIe device is known to Linux.
+-struct power_supply_maintenance_charge_table *
++const struct power_supply_maintenance_charge_table *
+ power_supply_get_maintenance_charging_setting(struct power_supply_battery_info *info,
+ 					      int index)
+ {
+diff --git a/drivers/power/supply/samsung-sdi-battery.c b/drivers/power/supply/samsung-sdi-battery.c
+index 725fbe09379e..b63fd2758c2f 100644
+--- a/drivers/power/supply/samsung-sdi-battery.c
++++ b/drivers/power/supply/samsung-sdi-battery.c
+@@ -613,7 +613,7 @@ static struct power_supply_battery_ocv_table samsung_ocv_cap_eb585157lu[] = {
+ 	{ .ocv = 3300000, .capacity = 0},
+ };
  
- The PCIe device may not be in the state to accept requests from userspace at
+-static struct power_supply_maintenance_charge_table samsung_maint_charge_table[] = {
++static const struct power_supply_maintenance_charge_table samsung_maint_charge_table[] = {
+ 	{
+ 		/* Maintenance charging phase A, 60 hours */
+ 		.charge_current_max_ua = 600000,
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 3ccf7d47f502..6f983720c146 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -741,7 +741,7 @@ struct power_supply_battery_info {
+ 	int overvoltage_limit_uv;
+ 	int constant_charge_current_max_ua;
+ 	int constant_charge_voltage_max_uv;
+-	struct power_supply_maintenance_charge_table *maintenance_charge;
++	const struct power_supply_maintenance_charge_table *maintenance_charge;
+ 	int maintenance_charge_size;
+ 	int alert_low_temp_charge_current_ua;
+ 	int alert_low_temp_charge_voltage_uv;
+@@ -815,7 +815,7 @@ power_supply_temp2resist_simple(struct power_supply_resistance_temp_table *table
+ 				int table_len, int temp);
+ extern int power_supply_vbat2ri(struct power_supply_battery_info *info,
+ 				int vbat_uv, bool charging);
+-extern struct power_supply_maintenance_charge_table *
++extern const struct power_supply_maintenance_charge_table *
+ power_supply_get_maintenance_charging_setting(struct power_supply_battery_info *info, int index);
+ extern bool power_supply_battery_bti_in_range(struct power_supply_battery_info *info,
+ 					      int resistance);
+@@ -829,7 +829,7 @@ extern int power_supply_set_battery_charged(struct power_supply *psy);
+ static inline bool
+ power_supply_supports_maintenance_charging(struct power_supply_battery_info *info)
+ {
+-	struct power_supply_maintenance_charge_table *mt;
++	const struct power_supply_maintenance_charge_table *mt;
+ 
+ 	mt = power_supply_get_maintenance_charging_setting(info, 0);
+ 
 -- 
 2.45.1
 
