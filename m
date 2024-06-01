@@ -1,266 +1,101 @@
-Received: from smtp-out.freemail.hu (fmfe15.freemail.hu [46.107.16.208])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6B22032D
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 23:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D9E2032D;
+	Sat,  1 Jun 2024 23:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717283269; cv=none; b=MeYnYHxPynislvjvkni0H02uQKRb9qb/V11BFCv54W1dO//pZVyQ5l7knMnXvXZF0UnjJmTuHFdHZHiR0yrPRekeDrMYFcSn3OBDZRRy5TNekv12b7RCMifU7qapNjjknZ8t88xOukVmyPJdKFn5dgfkj+b+Lbn6C2aPJdAd7LA=
+	t=1717283392; cv=none; b=dQ3Gf9TW62LaJ7L2kXZE+clTxPYxVFF7FZg6I6Dh+A+5hEQrM1pv5QXqnAaJQrq/16ARxmk6sdfQZvG8QamC/lkEeXNYZa3v/DKhDWB2mP1RhoHahObkaaa6sz3bOO2LIcrOGx/997EJFXL5/N83nn2kB95Ew0eELunIyej1T+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717283269; c=relaxed/simple;
-	bh=CjxhuTad7d4nqApWl4u2bxSLcayNi88xTRB9tCUnO+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mcy6GI/wDqssaoobB0NktG4rDOgOs9KMPSQRwumqLmrzPRTyHxZFDIsdYgts+i5XMuAv4BnEdyL5XO+UaFLfd5/POnDxH3osIzi375YV7HYxGt3G7erGnydnQzAHz9xO2vhFXy9jg1QoM3I3shKSDEDqjVbCr8O8Ta0Ru17PzJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=1oSo+wfG reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
+	s=arc-20240116; t=1717283392; c=relaxed/simple;
+	bh=Ejac065p3hSV7LFZ5s2YPxIUBg9t1HCo86cKn689q4M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=NzD3Gbm9F5hpcUvb6ziRu2nKSGpnIL0CNcWgpeLQow63VkUak5WIqtoLw6WXUlG09QgjPu0DUuW5gYVAJAYvGJFJSxwzr3gO0ip1ZWJfqGriIblspcvCQv3K2gN8lxD+ss7AYRN1PlyDJADiwPWwvvXfstYRegqLJnw1M/7iK68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ckPCBaMZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="1oSo+wfG"
-Received: from [192.168.0.16] (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4VsFpH2ncXzMZ;
-	Sun,  2 Jun 2024 01:00:55 +0200 (CEST)
-Message-ID: <bec5f516-211d-4c6e-9204-311d1e31532a@freemail.hu>
-Date: Sun, 2 Jun 2024 01:00:49 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ckPCBaMZ"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 451MkTcc018735;
+	Sat, 1 Jun 2024 23:09:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=7JsXaXglz8GMwqZbU8D7Xb
+	/9VdGkdjiD05GYIpAzQ8U=; b=ckPCBaMZjSNH7UKOy7YaOzOtdRMPx3k8fMCkph
+	ZGDxCwYcoHjDKhR/0rVGZfLoQVaHOgpnN10a8wp4JUyDgF8BrnXMIaFhXrgwKYW4
+	hbVTLz2mgCzz94rN8VCykvbSE1eGnGhxqLOTXA+2yxAWXCSZScBBFsVwJowS4l05
+	dwA7lJVQLXcSJckoVwLzTwShBOUyT7bdSqZgFN85FaMLf97Oojh56kSqikEbaFfi
+	tumPuPHtQgH4K2585ORh9asikJkxvzDJxnGpwK2GQ7MFQLfu7q5GCunWS7WHKM4M
+	8NpGt4j7RdSnH0vAMW/hC45864g4lBzOI8tpfbS8pD6qr/Jg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw6v1cad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 01 Jun 2024 23:09:49 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 451N9m1S013184
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 1 Jun 2024 23:09:48 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sat, 1 Jun 2024
+ 16:09:48 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sat, 1 Jun 2024 16:09:47 -0700
+Subject: [PATCH] lib/asn1_encoder: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/nouveau/i2c: rename aux.c and aux.h to nvkm_i2c_aux.c
- and nvkm_i2c_aux.h
-To: Karol Herbst <kherbst@redhat.com>
-Cc: bskeggs@redhat.com, lyude@redhat.com, airlied@gmail.com, daniel@ffwll.ch,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20240601212247.54786-1-egyszeregy@freemail.hu>
- <CACO55tvW7zDRt=ka0w5D8drbJiZFqMFmx=n=PttAjubZJ5zX2Q@mail.gmail.com>
-Content-Language: hu, en-US
-From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
-In-Reply-To: <CACO55tvW7zDRt=ka0w5D8drbJiZFqMFmx=n=PttAjubZJ5zX2Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717282857;
-	s=20181004; d=freemail.hu;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	l=8472; bh=iw0a2TUtlt0KIetu+spJR9WLW1F3MPSfBbxxiBBkhDM=;
-	b=1oSo+wfGjIoAfhgzfBaxNDoTN0TmXW/jadL52HL5ZAyzWMk15XqSBLjBkAd//Bh9
-	u1d+ypo+idz4sTys/CYP5oS8lb8fepRTYBFboPsOAnbHQg6tR0QizBnjyYGq1iMYD02
-	GmZWamFVQ/I9kT0XMOMhoKNp1jmr3tFr0iaoS+PqyGv5aNFi6tmiFSJT5fnNaf8/Bct
-	XgidaouR1QSqrB6vgHDUjd13+165V+RoCh/CflqZroE132r01M9mxZU5bk4M4uMO38l
-	HwZjS8YTSOmTA49PcLYbh+hr+e+GVFHP+X1wgmd/93wqlySRgqM7N1fh84jucg03IMS
-	D/tvbePTzg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240601-md-lib-asn1_encoder-v1-1-8c634ed2d2e8@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIADqqW2YC/x3MQQrCQAxA0auUrA3M1FLEq4hIZia1gTaVpEqh9
+ O6OLt/i/x2cTdjh2uxg/BGXRSviqYE8kj4ZpVRDG9ou9CHiXHCShOQaH6x5KWwYh5Rjf6ZL7gL
+ U8mU8yPa/3u7ViZwxGWkef69J9L3hTL6ywXF8Ac6Vk5KEAAAA
+To: Andrew Morton <akpm@linux-foundation.org>
+CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Jeff
+ Johnson" <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: werer5dGlAXoFJVUR7Gp0UmEtBRgNwtb
+X-Proofpoint-ORIG-GUID: werer5dGlAXoFJVUR7Gp0UmEtBRgNwtb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-01_11,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
+ clxscore=1015 spamscore=0 priorityscore=1501 mlxlogscore=977 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406010185
 
-2024. 06. 02. 0:12 keltezéssel, Karol Herbst írta:
-> On Sat, Jun 1, 2024 at 11:33 PM <egyszeregy@freemail.hu> wrote:
->>
->>          s=20181004; d=freemail.hu;
->>          h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
->>          l=6462; bh=CnHSqkRX34kqCWN2/oPtvm9wm8HJCe8QhPwQypdpi3w=;
->>          b=JDlDB9yOQDBY7EDnRMrt8qYnWfH8J/LKYKb90434FH1tuOL04za+3TXXSbU0uvs0
->>          hWYDYjpbob4XGgUcd1s+lCkerOgDwkpWJWKFW8N5j6WENAKdR/hWJgcma2JEDDotXZ0
->>          cisYRrLsQBfjyKkBWw0qv/5PDe7vliytix5oP2piBPJC+uR3pN8OKck/+zLBGlJY4za
->>          qywwOiMNzHAdyOJT5kCg0yd+k186Oa1jX93iCpiRk5mxJQqJJcAxfW8rYbKRXi5QQTl
->>          SymDGdZ72wK5PkHxGgpZ9qXZtFV3eH4+95xNzpoPowMkXFkBy1uMClZzxv1oBmRo8o6
->>          CXPcfsWUsQ==
->> Content-Transfer-Encoding: quoted-printable
->>
->> From: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
->>
->> The goal is to clean-up Linux repository from AUX file names, because
->> the use of such file names is prohibited on other operating systems
->> such as Windows, so the Linux repository cannot be cloned and
->> edited on them.
->>
-> 
-> something went horribly wrong with encoding so the patch is pretty much invalid.
-> 
->> Signed-off-by: Benjamin Sz=C5=91ke <egyszeregy@freemail.hu>
->> ---
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/Kbuild                  | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/anx9805.c               | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c                | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgf119.c              | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c              | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c                  | 2 +-
->>   .../gpu/drm/nouveau/nvkm/subdev/i2c/{aux.c =3D> nvkm_i2c_aux.c}   | 2 +-
->>   .../gpu/drm/nouveau/nvkm/subdev/i2c/{aux.h =3D> nvkm_i2c_aux.h}   | 0
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padg94.c                | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgf119.c              | 2 +-
->>   drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgm200.c              | 2 +-
->>   11 files changed, 10 insertions(+), 10 deletions(-)
->>   rename drivers/gpu/drm/nouveau/nvkm/subdev/i2c/{aux.c =3D> nvkm_i2c_aux.=
->> c} (99%)
->>   rename drivers/gpu/drm/nouveau/nvkm/subdev/i2c/{aux.h =3D> nvkm_i2c_aux.=
->> h} (100%)
->>
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/Kbuild b/drivers/gpu=
->> /drm/nouveau/nvkm/subdev/i2c/Kbuild
->> index 819703913a00..c488dfce4392 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/Kbuild
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/Kbuild
->> @@ -25,7 +25,7 @@ nvkm-y +=3D nvkm/subdev/i2c/busnv50.o
->>   nvkm-y +=3D nvkm/subdev/i2c/busgf119.o
->>   nvkm-y +=3D nvkm/subdev/i2c/bit.o
->> =20
->> -nvkm-y +=3D nvkm/subdev/i2c/aux.o
->> +nvkm-y +=3D nvkm/subdev/i2c/nvkm_i2c_aux.o
->>   nvkm-y +=3D nvkm/subdev/i2c/auxg94.o
->>   nvkm-y +=3D nvkm/subdev/i2c/auxgf119.o
->>   nvkm-y +=3D nvkm/subdev/i2c/auxgm200.o
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/anx9805.c b/drivers/=
->> gpu/drm/nouveau/nvkm/subdev/i2c/anx9805.c
->> index dd391809fef7..30bf84e77db9 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/anx9805.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/anx9805.c
->> @@ -24,7 +24,7 @@
->>   #define anx9805_pad(p) container_of((p), struct anx9805_pad, base)
->>   #define anx9805_bus(p) container_of((p), struct anx9805_bus, base)
->>   #define anx9805_aux(p) container_of((p), struct anx9805_aux, base)
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "bus.h"
->> =20
->>   struct anx9805_pad {
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c b/drivers/g=
->> pu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
->> index 47068f6f9c55..9e07ba444ca8 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxg94.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs <bskeggs@redhat.com>
->>    */
->>   #define g94_i2c_aux(p) container_of((p), struct g94_i2c_aux, base)
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->> =20
->>   struct g94_i2c_aux {
->>          struct nvkm_i2c_aux base;
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgf119.c b/drivers=
->> /gpu/drm/nouveau/nvkm/subdev/i2c/auxgf119.c
->> index dab40cd8fe3a..8709b728c38b 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgf119.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgf119.c
->> @@ -19,7 +19,7 @@
->>    * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->>    * OTHER DEALINGS IN THE SOFTWARE.
->>    */
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->> =20
->>   static const struct nvkm_i2c_aux_func
->>   gf119_i2c_aux =3D {
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c b/drivers=
->> /gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
->> index 8bd1d442e465..f40c5709d217 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/auxgm200.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs <bskeggs@redhat.com>
->>    */
->>   #define gm200_i2c_aux(p) container_of((p), struct gm200_i2c_aux, base)
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->> =20
->>   struct gm200_i2c_aux {
->>          struct nvkm_i2c_aux base;
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c b/drivers/gpu=
->> /drm/nouveau/nvkm/subdev/i2c/base.c
->> index 976539de4220..736275f0c774 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/base.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs
->>    */
->>   #include "priv.h"
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "bus.h"
->>   #include "pad.h"
->> =20
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c b/drivers/gpu/=
->> drm/nouveau/nvkm/subdev/i2c/nvkm_i2c_aux.c
->> similarity index 99%
->> rename from drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
->> rename to drivers/gpu/drm/nouveau/nvkm/subdev/i2c/nvkm_i2c_aux.c
->> index d063d0dc13c5..6b76df02c63a 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/nvkm_i2c_aux.c
->> @@ -24,7 +24,7 @@
->> =20
->>   #include <linux/string_helpers.h>
->> =20
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "pad.h"
->> =20
->>   static int
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h b/drivers/gpu/=
->> drm/nouveau/nvkm/subdev/i2c/nvkm_i2c_aux.h
->> similarity index 100%
->> rename from drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.h
->> rename to drivers/gpu/drm/nouveau/nvkm/subdev/i2c/nvkm_i2c_aux.h
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padg94.c b/drivers/g=
->> pu/drm/nouveau/nvkm/subdev/i2c/padg94.c
->> index 5904bc5f2d2a..e9c55a57c878 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padg94.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padg94.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs
->>    */
->>   #include "pad.h"
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "bus.h"
->> =20
->>   void
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgf119.c b/drivers=
->> /gpu/drm/nouveau/nvkm/subdev/i2c/padgf119.c
->> index 3bc4d0310076..1af64e25d838 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgf119.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgf119.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs
->>    */
->>   #include "pad.h"
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "bus.h"
->> =20
->>   static const struct nvkm_i2c_pad_func
->> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgm200.c b/drivers=
->> /gpu/drm/nouveau/nvkm/subdev/i2c/padgm200.c
->> index 7d417f6a816e..997a5a2146c4 100644
->> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgm200.c
->> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/i2c/padgm200.c
->> @@ -22,7 +22,7 @@
->>    * Authors: Ben Skeggs
->>    */
->>   #include "pad.h"
->> -#include "aux.h"
->> +#include "nvkm_i2c_aux.h"
->>   #include "bus.h"
->> =20
->>   static void
->> --=20
->> 2.43.0
->>
-> 
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/asn1_encoder.o
 
-Hi,
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-This patched is totally fine and visible in "linux-kernel@vger.kernel.org" list 
-page, so it should not be invalid. Please check your e-mail client SW and fix 
-your settings.
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ lib/asn1_encoder.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://lore.kernel.org/lkml/20240601212247.54786-1-egyszeregy@freemail.hu/
-https://lore.kernel.org/lkml/20240601212247.54786-1-egyszeregy@freemail.hu/raw
+diff --git a/lib/asn1_encoder.c b/lib/asn1_encoder.c
+index 0fd3c454a468..92f35aae13b1 100644
+--- a/lib/asn1_encoder.c
++++ b/lib/asn1_encoder.c
+@@ -449,4 +449,5 @@ asn1_encode_boolean(unsigned char *data, const unsigned char *end_data,
+ }
+ EXPORT_SYMBOL_GPL(asn1_encode_boolean);
+ 
++MODULE_DESCRIPTION("Simple encoder primitives for ASN.1 BER/DER/CER");
+ MODULE_LICENSE("GPL");
 
-kernel test robot used it for a build test successfully, so it has to be a valid 
-patch.
-https://github.com/intel-lab-lkp/linux/commits/egyszeregy-freemail-hu/drm-nouveau-i2c-rename-aux-c-and-aux-h-to-nvkm_i2c_aux-c-and-nvkm_i2c_aux-h/20240602-053530
+---
+base-commit: b050496579632f86ee1ef7e7501906db579f3457
+change-id: 20240601-md-lib-asn1_encoder-1fbc163a8c40
 
