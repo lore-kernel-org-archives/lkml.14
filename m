@@ -1,42 +1,41 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1611514EC;
-	Sat,  1 Jun 2024 13:13:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93CE15216C;
+	Sat,  1 Jun 2024 13:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717247591; cv=none; b=XR4WiQIm39OuedHbRH62d2zynnRKeFgjjeByAN+71pRYvndowWdUu5s1D5bSPh1kmchh+At2BD7bSGuYgtt8A4bjQHCR2lmu2JA9JwPLMyUJk4LZKkeipQHAQuoIaJMxyk7qo89rhWFxGJmndG6dwrsdpN2wy8TDR0O37ApXeu8=
+	t=1717247592; cv=none; b=ERGYcBPE60gaTWj83nLggkxw/Ob2SXJPNZbIKfbCC4+NvdEp6XBor9yR7Ntyk8kSEVF115hKEsYLuQhgmP5bgLA3KKLLhpc9pgksK2W79b82HbPj1/Snm3FOvU7TJ4dV4ptcXHiTmWnZLLlYFGZY61U18rkG2d3W2xTYkbxxQKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717247591; c=relaxed/simple;
-	bh=0XPNMqqFtOhoxjrDgj6/3VgASXxe/+nxRaHRw8jQO2Y=;
+	s=arc-20240116; t=1717247592; c=relaxed/simple;
+	bh=wdTfL3nRIT/i+BGqWfrDyHK4xJeuD/9ukGuYk+DmWew=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tLeuAP4k1e0zAoy0sOLe+58n96TnmRUvYUQ8ZSdjfAYJuPfgLQbd3A1Sgx58aYiqv7h02e6/Gjnl5bOd5X5WSOEW5UDUOyELl5kdhC0SfSBIw+UFEAQi3QToYE8peiQBZPTIRX21av/l1iY5Fw+xExQRSaAL9lZSaVWMtSIQtsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CcIMQRSy; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:To:Cc; b=nebsS6elU4cQtnMgX54V/KxZsMmAmeSZjg0NzVsDGhSE2Ok1mgJbAMpf6pMx+uOXEBxCGOC5lZDsnMT/UbNZT5mHHgSOWi4ymMP0C5+c/zubmyiTGyk0eh5csOvifqc+8Dno96jmzpH7qKaJvaaqCYH7CakizMnQ5rqlidii+60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m6CKoWUX; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CcIMQRSy"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m6CKoWUX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717247587;
-	bh=0XPNMqqFtOhoxjrDgj6/3VgASXxe/+nxRaHRw8jQO2Y=;
+	s=mail; t=1717247584;
+	bh=wdTfL3nRIT/i+BGqWfrDyHK4xJeuD/9ukGuYk+DmWew=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CcIMQRSyY1+Z92ftcrx1DteAUgwOPwlot84JpoOPX/eObZdYfStC0xX4VzqfB53xr
-	 r+0ty4/5Fw1SKcNW/6WYGoAGRc7jh8Rme12L9IHJVFY+vT/UpoAVGdUs0/oBblNXtQ
-	 KRiUteamltWxYkVn6xDg+DF5ndxcgY7v+Dh+SMnDIzd+LzHFvqCAtBC8Gds6CswbGv
-	 4yTRffFSMfkQPeM7tPorG8R0anVEmck3TajYYctUBN8fSiIbHvaDu597h1eu36aAxK
-	 yiqHd+U4Y7YZdD2LZwVoGXPLhBBL58hyeZixdKyIgiPDm72+gmxBJhdnyr7u7dIYG2
-	 sIuEp4Nrj8HUw==
+	b=m6CKoWUXxqep7cMzq8BiuH4GBKCkAcKYFtsJnatfngYUx1pOTHpmi3Uj+EvCKdnFM
+	 VLqRBcCSiGT3NC4mx6FbdbysQ1hs8VmLSUVaWI8uSIJyLB+4fhxfL5vOXKMeXVtKR1
+	 D9qhllMmBdlfRoiBpUhjHXTWJln1viwNQosSMj+CkiiSOCttanMgqdDF8MN+WfdBsd
+	 12I+YJZykeGgtUzc8bLkVaqyLoHTH8ZSI8xCf/rSD7Mo8VgLgt6CXjnjg4BCDLj0ST
+	 ImUSsLk/bea73FOSS6Z5hmfy2gYRExXAUJuDqK1tzfvGRjVpxx2vmhx6EOgni2F/+/
+	 TNy1dzihq1B/w==
 Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DD74437821EF;
-	Sat,  1 Jun 2024 13:13:06 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6745D37821EE;
+	Sat,  1 Jun 2024 13:13:04 +0000 (UTC)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sat, 01 Jun 2024 16:12:29 +0300
-Subject: [PATCH 07/14] drm/bridge: dw-hdmi: Commonize
- dw_hdmi_connector_create()
+Date: Sat, 01 Jun 2024 16:12:27 +0300
+Subject: [PATCH 05/14] drm/bridge: dw-hdmi: Factor out vmode setup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +44,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240601-b4-rk3588-bridge-upstream-v1-7-f6203753232b@collabora.com>
+Message-Id: <20240601-b4-rk3588-bridge-upstream-v1-5-f6203753232b@collabora.com>
 References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
 In-Reply-To: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
 To: Andrzej Hajda <andrzej.hajda@intel.com>, 
@@ -67,69 +66,71 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
 X-Mailer: b4 0.14-dev-f7c49
 
 In preparation to add support for the HDMI 2.1 Quad-Pixel TX Controller
-and minimize code duplication, export dw_hdmi_connector_create()
-function, while adding a new parameter to allow using a different
-drm_connector_funcs structure.
+and minimize code duplication, factor out the vmode setup from
+hdmi_av_composer() into a common dw_hdmi_prep_vmode() helper.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h | 2 ++
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c        | 8 +++++---
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h |  2 ++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c        | 23 ++++++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h
-index 5fb65db4aaea..512fbaa1bb0c 100644
+index 0569196bbe3b..e73b8eb7528b 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h
-@@ -161,6 +161,8 @@ void dw_hdmi_prep_data(struct dw_hdmi *hdmi,
+@@ -154,6 +154,8 @@ void dw_hdmi_prep_avi_infoframe(struct hdmi_avi_infoframe *frame,
+ 				struct dw_hdmi *hdmi,
+ 				const struct drm_connector *connector,
+ 				const struct drm_display_mode *mode);
++struct hdmi_vmode *dw_hdmi_prep_vmode(struct dw_hdmi *hdmi,
++				      const struct drm_display_mode *mode);
  
  enum drm_connector_status
  dw_hdmi_connector_detect(struct drm_connector *connector, bool force);
-+int dw_hdmi_connector_create(struct dw_hdmi *hdmi,
-+			     const struct drm_connector_funcs *funcs);
- 
- int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
- 				struct drm_bridge_state *bridge_state,
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index d124c781da20..95c9ccb809ec 100644
+index 81d73fbcb2e6..5cf929f68ae9 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2469,7 +2469,8 @@ static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs =
- 	.atomic_check = dw_hdmi_connector_atomic_check,
- };
+@@ -1864,15 +1864,10 @@ static void hdmi_config_drm_infoframe(struct dw_hdmi *hdmi,
+ 		  HDMI_FC_PACKET_TX_EN_DRM_MASK, HDMI_FC_PACKET_TX_EN);
+ }
  
--static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
-+int dw_hdmi_connector_create(struct dw_hdmi *hdmi,
-+			     const struct drm_connector_funcs *funcs)
+-static void hdmi_av_composer(struct dw_hdmi *hdmi,
+-			     const struct drm_display_info *display,
+-			     const struct drm_display_mode *mode)
++struct hdmi_vmode *dw_hdmi_prep_vmode(struct dw_hdmi *hdmi,
++				      const struct drm_display_mode *mode)
  {
- 	struct drm_connector *connector = &hdmi->connector;
- 	struct cec_connector_info conn_info;
-@@ -2487,7 +2488,7 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
- 	drm_connector_helper_add(connector, &dw_hdmi_connector_helper_funcs);
+-	u8 inv_val, bytes;
+-	const struct drm_hdmi_info *hdmi_info = &display->hdmi;
+ 	struct hdmi_vmode *vmode = &hdmi->hdmi_data.video_mode;
+-	int hblank, vblank, h_de_hs, v_de_vs, hsync_len, vsync_len;
+-	unsigned int vdisplay, hdisplay;
  
- 	drm_connector_init_with_ddc(hdmi->bridge.dev, connector,
--				    &dw_hdmi_connector_funcs,
-+				    funcs ? funcs : &dw_hdmi_connector_funcs,
- 				    DRM_MODE_CONNECTOR_HDMIA,
- 				    hdmi->ddc);
+ 	vmode->mpixelclock = mode->clock * 1000;
  
-@@ -2516,6 +2517,7 @@ static int dw_hdmi_connector_create(struct dw_hdmi *hdmi)
+@@ -1900,6 +1895,20 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
  
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_connector_create);
+ 	dev_dbg(hdmi->dev, "final tmdsclock = %d\n", vmode->mtmdsclock);
  
- /* -----------------------------------------------------------------------------
-  * DRM Bridge Operations
-@@ -2804,7 +2806,7 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge,
- 		return drm_bridge_attach(bridge->encoder, hdmi->next_bridge,
- 					 bridge, flags);
- 
--	return dw_hdmi_connector_create(hdmi);
-+	return dw_hdmi_connector_create(hdmi, NULL);
- }
- 
- void dw_hdmi_bridge_detach(struct drm_bridge *bridge)
++	return vmode;
++}
++EXPORT_SYMBOL_GPL(dw_hdmi_prep_vmode);
++
++static void hdmi_av_composer(struct dw_hdmi *hdmi,
++			     const struct drm_display_info *display,
++			     const struct drm_display_mode *mode)
++{
++	u8 inv_val, bytes;
++	const struct drm_hdmi_info *hdmi_info = &display->hdmi;
++	struct hdmi_vmode *vmode = dw_hdmi_prep_vmode(hdmi, mode);
++	int hblank, vblank, h_de_hs, v_de_vs, hsync_len, vsync_len;
++	unsigned int vdisplay, hdisplay;
++
+ 	/* Set up HDMI_FC_INVIDCONF */
+ 	inv_val = (hdmi->hdmi_data.hdcp_enable ||
+ 		   (dw_hdmi_support_scdc(hdmi, display) &&
 
 -- 
 2.45.0
