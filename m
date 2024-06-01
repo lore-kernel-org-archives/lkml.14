@@ -1,94 +1,158 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF841509A1;
-	Sat,  1 Jun 2024 13:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B7AD59;
+	Sat,  1 Jun 2024 13:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717247493; cv=none; b=YNC7DkyT5teHESq5mPiPNqZMg1P/hmPpyLgRKGFhU7AdZbb5QfComtK/vU5ewZ78nXWzZpodytb6sJPhN5UQWaNvLQGB6cprQi4ZeQ3Ll3KzPEOTz6pxnUebW0stsFUuimxwrrUNAXIaHMZ/mk4oOXOLirh+VHcoJL0B66/bSGs=
+	t=1717247588; cv=none; b=LYxC4k0SdfK6a/hBwRvn8hWtlJ6AGZckSQSw8ZRi/S0T7DjZFBuwSbIfLgsvZXOmAcF4NWugbb1KMkPILXRTEwC1q9nOglv4QRqHwMjjACZPdH/jKOFMbP9S0+riMlN9nFsUP69sswPQFqI3+mUGUEMG/DGhfr1lFZzaVhsiKU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717247493; c=relaxed/simple;
-	bh=1azJbmKafXYpI7cPrs4sh/5oeftQgPo4X4g1HEFMTDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pmUJs/aW/EzHkHC/LRHwuUUn/5XCAq8rt5F9a8z4Lmtb5ZaIK1WoSD9+wp0YqIliejxkn+ehrSe6zer3sgnPjC8s2B+6kNGs4E1/EHaEXubKmAf9YlZ7bCwutmxekU91KasyrcwJHR/3s4lXnyOK/Ba83U41VHh/ZqpiwH06U1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=gkR1vG4P; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717247588; c=relaxed/simple;
+	bh=h58JsD+SebyiyL2HCvGvq4VST8PeU6RDgSW12Kr6f70=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=e1TZQyQVUy77kl1cG8vo78RReLBNi8L/jmfUQhT5KAvy7ZaTLr8XsNzENn/eG16JcK1hv475Ysx5TccbmzJpsi6d34jlNz93H+7fcCsdaiL4JS61UIaqpe6YjpFW8+2xHfiUjgZK1zbBW250UIml1TdY5s2lLwYuqAFkiqe8f8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=i+8QZ1ck; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="gkR1vG4P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717247440; x=1717852240; i=markus.elfring@web.de;
-	bh=1azJbmKafXYpI7cPrs4sh/5oeftQgPo4X4g1HEFMTDI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=gkR1vG4PWxoV0wY+ljRZqKsbe8ownQbLIekqm0gF/RdpoxNT7ZPf0PMj74VXYCkV
-	 WoBnYOowP8AEsvKwIXx0EFA5n1FwefIyiiSh2UhsTmkqy9I+x7x0tMTZgT28youFM
-	 mPQnFv2EfcYWykUCRMXbYTy26/qgqtRCafT40qdArO9iZyzCj9VzN2ki0mg7bu0mK
-	 qAwhPljOHpt42F7VA3rQJ5OlpP4wFXiuojnCvjiOnDOVtanQV9Dri6cysZESU7QMJ
-	 DR1F38tES2ivM9n2b3TnpbhMHaSIkg2KJAhfc4dcLtKGs4ywduOB5CRDqrvjWetQc
-	 CYxxpyCA8IVLvMTFPg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8T7K-1s8yeW1qYC-009vic; Sat, 01
- Jun 2024 15:10:40 +0200
-Message-ID: <e4e9a26f-720a-4648-a099-be9193af1734@web.de>
-Date: Sat, 1 Jun 2024 15:10:29 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="i+8QZ1ck"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717247578;
+	bh=h58JsD+SebyiyL2HCvGvq4VST8PeU6RDgSW12Kr6f70=;
+	h=From:Subject:Date:To:Cc:From;
+	b=i+8QZ1ckn9fn0MNYXlvoDa1BwwVl3iWJXXphGhoixfP0siuIUWV+i0drhAffhWN5q
+	 Qq+dnv5IhTJALQk0gHMaUIeD1foqJWZN3iIjcR6l2xvHFk38KfSSTT9Y3tG9nSQVJN
+	 hgqpVjmUb0tIm7cymZRCxcP4NCahLJiSRngakt++NzI9ffbRfUygfciuXoq9Jt8Rt/
+	 NU2BaG+OgFRlHP2JuSVuwjMqEmxcvX0q+SEQ0lrWqcU2WtFFDDpijLqiDL06mT9JIV
+	 sqDbwWxfsqJ9PtVr0qi+CM1t165hSgP+flA9P7jt9nOXgmsg2ng0N8H5zOvlnC37Cz
+	 IDwY+6jDFWiyw==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5A752378203E;
+	Sat,  1 Jun 2024 13:12:58 +0000 (UTC)
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Subject: [PATCH 00/14] Add initial support for the Rockchip RK3588 HDMI TX
+ Controller
+Date: Sat, 01 Jun 2024 16:12:22 +0300
+Message-Id: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/7] PCI: xilinx-nwl: Add phy support
-To: Sean Anderson <sean.anderson@linux.dev>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- Dan Carpenter <dan.carpenter@linaro.org>, Michal Simek
- <michal.simek@amd.com>, Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-References: <20240531161337.864994-1-sean.anderson@linux.dev>
- <20240531161337.864994-7-sean.anderson@linux.dev>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240531161337.864994-7-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rr0oyNIhZsSYRmKnkOucR9Hnu5e7lA1H5g6+bgs5JjeJyKuLq0b
- gfn+X2lblMLkvd1RN6itUqIcqLUJwWcrcKx1TlJMfYtpeR2mBz0DeCdoxpOEXRCBTv5i/gG
- bMiulP3G/MO/ora81oPn2M3noj4QrQjrRGuYvK5gvn2RPbhnJjkMLwaubArX2DSPv2gEFkY
- fn5kg+YVa3D9hu+VmBYKw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zmel7gxYK9M=;CsezFhwRd1YgwkDWyl9LkM6gLr3
- y7Ltp5b/BFj82tGPE7dpM7Ig10am/QTbVDxOQVlqrKQeVkzSTRKiuGOVvHzCaW2piTZF6hMb5
- 8kzWVUwdFodYkbrhxswldnpMokKLkJkhZ/M2x5r3JpZ8oixxJ8rPxU/5/3W4b5LuxntS/Lph2
- XH/kYKdMU4Xfs9scU7YDmU+FbaqLXVwedllqd0/3NvrobDgOpZLbh3eJltqNSWvaSzlvvvywK
- /omG1LnxbCxe8Vt0FOgSakA9c/IaZv1wvS5JCXDjJYRheOgWq90ZqetRsXh9h2IF5n32rJhG8
- j7+I/uivkmFY8iL1I/Ap/xYe8ieXC563DKFqqIpxxuq0cr9Z3MFdXv5uyE0vbmMASCASZDE+v
- U7TkkuwVLnYAzBcq1VjmXF+pffV1Im+mxX0vsll8Wrhw884LoYGYQOj/mwTyQgs8PNhiUuz/f
- DoBSgWk8rJM981Mu7WjKobo0NeQGPGlZwsIUQIQxY3L4CHRptzFoE5/B2jJ3OUUoiXiW7wd5c
- 0YfU61UnaCscPK/pfu5qMo8LCMvKfgKdpL18j5JQGWM2JLKTSzKvI0tqmvhEtEtE3EQ292u1d
- Ll/wR97QZ4hbcaGrx0hNo4zadgzcMWZz4OXrdn8yThcgLOjQhzycF0mko7l0r3qJeaUMDjQSx
- EPi8Vx+BGd7NTT6yLJ615Ehy+JN3xeiZvChFzMrHYXtLMBzfI1cHx/eRKrJN8Yt4LwTe/qVKR
- giHVSacz/SVXEOQqML6eyV1IdDDbbh0uNgLj19kKx/wYeIUhoLsu1eojJfFl8aM37HlbcUKkr
- 27/mdZf03Z8KxcztQp0hyriCscZ/YVMXrlEZNq82LHsoU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADYeW2YC/x2MQQrDIBAAvyJ7zoLaNJF+JfSgcU2WUitrWgqSv
+ 1d6HIaZBpWEqcJNNRD6cOVX7mAGBevu80bIsTNYbUc9aYNhRHlcrs5hEI7dv0s9hPwTvZ2DT8k
+ El1bofRFK/P2/l/t5/gDw2BPpawAAAA==
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Sandy Huang <hjc@rock-chips.com>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+ Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Mark Yao <markyao0591@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ devicetree@vger.kernel.org, kernel@collabora.com, 
+ Alexandre ARNOUD <aarnoud@me.com>, Luis de Arquer <ldearquer@gmail.com>, 
+ Algea Cao <algea.cao@rock-chips.com>
+X-Mailer: b4 0.14-dev-f7c49
 
-> Add support for enabling/disabling PCIe phys. We can't really do
-> anything about failures in the disable/remove path, so just print an
-> error.
+The RK3588 SoC family integrates a Quad-Pixel (QP) variant of the
+Synopsys DesignWare HDMI TX controller used in the previous SoCs.
 
-You propose to extend the exception handling.
-Does such information indicate a need for another tag =E2=80=9CFixes=E2=80=
-=9D?
+It is HDMI 2.1 compliant and supports the following features, among
+others:
 
+* Fixed Rate Link (FRL)
+* 4K@120Hz and 8K@60Hz video modes
+* Variable Refresh Rate (VRR) including Quick Media Switching (QMS)
+* Fast Vactive (FVA)
+* SCDC I2C DDC access
+* TMDS Scrambler enabling 2160p@60Hz with RGB/YCbCr4:4:4
+* YCbCr4:2:0 enabling 2160p@60Hz at lower HDMI link speeds
+* Multi-stream audio
+* Enhanced Audio Return Channel (EARC)
 
-Would you become more interested in the application of scope-based resourc=
-e management?
+This is the last required component that needs to be supported in order
+to enable the HDMI output functionality on the RK3588 based SBCs, such
+as the RADXA Rock 5B. The other components are the Video Output
+Processor (VOP2) and the Samsung IP based HDMI/eDP TX Combo PHY, for
+which basic support has been already made available via [1] and [2],
+respectively.
 
-Regards,
-Markus
+The patches are grouped as follows:
+* PATCH 1..7: DW HDMI TX driver refactor to minimize code duplication in
+  the new QP driver (no functional changes intended)
+
+* PATCH 8..11: Rockchip DW HDMI glue driver cleanup/improvements (no
+  functional changes intended)
+
+* PATCH 12..13: The new DW HDMI QP TX driver reusing the previously
+  exported functions and structs from existing DW HDMI TX driver
+
+* PATCH 14: Rockchip DW HDMI glue driver update to support RK3588 and
+  make use of DW HDMI QP TX
+
+They provide just the basic HDMI support for now, i.e. RGB output up to
+4K@60Hz, without audio, CEC or any of the HDMI 2.1 specific features.
+Also note the vop2 driver is currently not able to properly handle all
+display modes supported by the connected screens, e.g. it doesn't cope
+with non-integer refresh rates.
+
+A possible workaround consists of enabling the display controller to
+make use of the clock provided by the HDMI PHY PLL. This is still work
+in progress and will be submitted later, as well as the required DTS
+updates.
+
+To facilitate testing and experimentation, all HDMI output related
+patches, including those part of this series, are available at [3].
+So far I could only verify this on the RADXA Rock 3A and 5B boards.
+
+Thanks,
+Cristian
+
+[1]: 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+[2]: 553be2830c5f ("phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver")
+[3]: https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/commits/rk3588-hdmi-bridge-v6.10-rc1
+
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+---
+Cristian Ciocaltea (14):
+      drm/bridge: dw-hdmi: Simplify clock handling
+      drm/bridge: dw-hdmi: Add dw-hdmi-common.h header
+      drm/bridge: dw-hdmi: Commonize dw_hdmi_i2c_adapter()
+      drm/bridge: dw-hdmi: Factor out AVI infoframe setup
+      drm/bridge: dw-hdmi: Factor out vmode setup
+      drm/bridge: dw-hdmi: Factor out hdmi_data_info setup
+      drm/bridge: dw-hdmi: Commonize dw_hdmi_connector_create()
+      drm/rockchip: dw_hdmi: Use modern drm_device based logging
+      drm/rockchip: dw_hdmi: Simplify clock handling
+      drm/rockchip: dw_hdmi: Use devm_regulator_get_enable()
+      drm/rockchip: dw_hdmi: Drop superfluous assignments of mpll_cfg, cur_ctr and phy_config
+      dt-bindings: display: rockchip,dw-hdmi: Add compatible for RK3588
+      drm/bridge: synopsys: Add DW HDMI QP TX controller driver
+      drm/rockchip: dw_hdmi: Add basic RK3588 support
+
+ .../display/rockchip/rockchip,dw-hdmi.yaml         | 127 +++-
+ drivers/gpu/drm/bridge/synopsys/Makefile           |   2 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h   | 179 +++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c       | 787 +++++++++++++++++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.h       | 831 +++++++++++++++++++++
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          | 353 +++------
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 351 +++++++--
+ include/drm/bridge/dw_hdmi.h                       |   8 +
+ 8 files changed, 2290 insertions(+), 348 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240601-b4-rk3588-bridge-upstream-a27baff1b8fc
+
