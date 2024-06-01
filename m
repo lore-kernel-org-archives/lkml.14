@@ -1,204 +1,144 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD9313EFE5;
-	Sat,  1 Jun 2024 09:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48D014E2E7;
+	Sat,  1 Jun 2024 09:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717233374; cv=none; b=dRtb4yhqAYYWWADy2ugsugmjc9pDEk7u5bmUL/m5hZdGPaEOxZusTEXDm002n8FwMsI3p95JOg6RPOrh/ByhgHx4GgeAaJDwMcghUnxNZKCeomUhsLRaJnhU8vYSSnypCYAF4FskJF+oChc6JixW9hF7akivuLtButWEPM86OBw=
+	t=1717234019; cv=none; b=WTFbBTcS/+iQaMRtQ0qKQBruSNx1wzMNOy5il8oEafxh5u5/ermMaEN/Ot4+HvEZ5S3SSNzDwHE/JR0gLXfhEsizhyqihsYOY2QbsFZK2DWRyOuW/3mdByIxh8i+E/wYaMpp6eSxVjYYKrij912ASPDKJd6mXzO6b8PB/c3xxxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717233374; c=relaxed/simple;
-	bh=valRT79Qyh8MqljC8cw+qpWMGMEcVYjXDrKWZFTYhuc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YlnRoqpMfw/qXibnivp/RWuF7uZnCGj8mgpb1aKMsKSz8j1xL018iaeSQJot/xeEXgTv7opCqLjM4g2gHTfhxh16Y6kD601fPPkvDhuqfZCX+K0O5UohAJk4UFFpzClLco4E1YSyAb6uk5clYaXfvOwxXde7HPG43M63zCoBVgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ktJwwC6A; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1717234019; c=relaxed/simple;
+	bh=WIbbh2QIEse26jjLM2QZGcRptTEmJwSZHC3dc6xVXTI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=WN7IJGz4VKxnMX1NbuqGtMaqiEmOkG5731NJvGmO5dssnjUP69N6IqFm9Tku5G8Xk+fx4stt8fwvDF0vSYkPAUrqBh5kCF4UNU46Cu+eOMdwYaYtSQ2igESxdn/9VcwZI4LI4cG7oc7NJU6IA6GGdJkUUY4E1lRtWU4J6PpaIz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZkIf7dQ9; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ktJwwC6A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1717233364; x=1717492564;
-	bh=XSHQKn8Qe0ezivdh2WpMnm74QPZf/l0QE6ECgprOFW8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=ktJwwC6ANSJRgcP1fd72xGNtggWoVSmB8/YgPHKZkn7rcyKt7832MGmWe8XykhbvA
-	 iFlgGz7G/34HxSfdClYqv+BBqod10gGcKNJOIyrmP8XoJLD4qkJRZOpU6TUOsjub1b
-	 i3IrD4SToqlRNMkzUm5Pvjq1xHA8XtZYFNRF3RTIfWLIltSovvV3t9EalYMUimuqvQ
-	 dKgG33RRBXtE2W6T7iDryvHEDHKaN1j7uvE6Znuh8I8vJ1kYoID3Tmq6LkelYlc5pI
-	 jGdV0JvInK5LwdVlx3LaezO0gvi8I9y+zl1iHB/U2Np1mKOekag3qjEPXoebSVZdA0
-	 /YyUYOgmnC3BA==
-Date: Sat, 01 Jun 2024 09:15:59 +0000
-To: Andreas Hindborg <nmi@metaspace.dk>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>, Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>, =?utf-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, Joel Granados <j.granados@samsung.com>, "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>, Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>, Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, =?utf-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>, open list <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, "gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [PATCH v3 2/3] rust: block: add rnull, Rust null_blk implementation
-Message-ID: <2021ea8f-a3df-46c6-8fdf-61b1df231773@proton.me>
-In-Reply-To: <20240601081806.531954-3-nmi@metaspace.dk>
-References: <20240601081806.531954-1-nmi@metaspace.dk> <20240601081806.531954-3-nmi@metaspace.dk>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 750ec28b436cee911f397833a294bd2d4dcc5890
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZkIf7dQ9"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6f855b2499cso1766074a34.1;
+        Sat, 01 Jun 2024 02:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717234016; x=1717838816; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
+        b=ZkIf7dQ9zBnSp8379Cws1L3jbXb7jXT20xLWjwkQopbk9WvFeDmZbkaEyKoyRpv26z
+         s0H47FprefKadK2jlFbIlIvBNa/oKjmmobtT1OohwAJAg2QetFkqzNm6jaSNv19o262j
+         o+V2LwYPTG3b7HEYgFgcVOiUscwPaGwdmwKe+7EOohzjsgotOx+p1NkKoymseJ7FdeGb
+         TF4Y7NSpwJa+IUjThLYkS+V1h8Xwr0ViTtTXgBExqcAgiUOoLGhHhgY3UUmsLXhRt7lN
+         MbK8Bz3r6xZWvoPc3+/RU6jU+EwrbY1E1yyzHQkXsmaeP52wpWj8ohj0CGv+TZnJJ55u
+         RV3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717234016; x=1717838816;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=POWEYsGteFBsH2FZNkJsEWH+VNGD5DA1v64fZi4BMrU=;
+        b=WOqoy5+WMLSDgcscGFphwsrEK9mKaWDKdUZmMNoHOqyIVXR/9shUmOreIMUhCdSqOT
+         I8O8tHSrNSfVQufLqXacboDESYgnthkWGOzPHN/OzA70gzO+j2CuBjaZZ2x/p7el5Tjl
+         ZZ7wiYCY0F6uOfgdmzs9EiW7S38OkVPa+3MD1q+eYOERZm4Oi8duUt8KxlC31Csy3Ozq
+         nlTwtgU9vRn7DDYY7qaqxjr4Z0B1CAivkxOomnz92a9eQwL1i9afgrflqMCUeCYTqlgH
+         2H8ZRk7hWw3ZAftWMibaMry2b8/PZb8DSDU8mKKugs6GdNLHHnYpRWcgX9iYLLPWpCPp
+         4oFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXx4HlH03JcZnrFRKs2jw52+21sf5+rlEufXlGZEgclEJNky8ofMfAIcIOd+gtJDa77jXo2ADU8JH8kW/kZGAApeuSQNMiB51jNdYL1MjKE5ik6+W8enZE8Tk7tPMcBU/Qh9ZkrlgaG
+X-Gm-Message-State: AOJu0YxXqYllL+URW+lkKAc6DZakKmODDS14TfqpIy0F0LbbdjqUhtgt
+	t8BCn09jqj7nycXkvYoTeiEhrmQLNhMX5Rw8v/gHk+05AccFpMdUny6VBrwxHQ4=
+X-Google-Smtp-Source: AGHT+IGtlKmP8b1TTPHLk8+wYZaiUOWCgZoPi/0gYX+coLg5+FhXw5YVYCXxurITDbPyYoJSBYHEFQ==
+X-Received: by 2002:a05:6870:a11a:b0:250:7913:170b with SMTP id 586e51a60fabf-2508bc5cd0dmr4711729fac.55.1717234016396;
+        Sat, 01 Jun 2024 02:26:56 -0700 (PDT)
+Received: from localhost ([219.144.1.218])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242c26bafsm2562979b3a.219.2024.06.01.02.26.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 01 Jun 2024 02:26:55 -0700 (PDT)
+From: joswang <joswang1221@gmail.com>
+To: Thinh.Nguyen@synopsys.com
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	joswang <joswang@lenovo.com>
+Subject: [PATCH 1/2] usb: dwc3: core: add p3p2tranok quirk
+Date: Sat,  1 Jun 2024 17:26:45 +0800
+Message-Id: <20240601092646.52139-1-joswang1221@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On 01.06.24 10:18, Andreas Hindborg wrote:
-> From: Andreas Hindborg <a.hindborg@samsung.com>
->=20
-> This patch adds an initial version of the Rust null block driver.
->=20
-> Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
-> ---
->  drivers/block/Kconfig  |  9 +++++
->  drivers/block/Makefile |  3 ++
->  drivers/block/rnull.rs | 78 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 90 insertions(+)
->  create mode 100644 drivers/block/rnull.rs
+From: joswang <joswang@lenovo.com>
 
-I left two comments below, but it already seems fine to me:
+In the case of enable hibernation, there is an issue with
+the DWC31 2.00a and earlier versions where the controller
+link power state transition from P3/P3CPM/P4 to P2 may take
+longer than expected, ultimately resulting in the hibernation
+D3 entering time exceeding the expected 10ms.
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Synopsys workaround:
+If the PHY supports direct P3 to P2 transition, program
+GUSB3PIPECTL.P3P2Tran0K=1. However, note that as per PIPE4
+Specification, direct transition from P3 to P2 is illegal.
 
->=20
-> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-> index 5b9d4aaebb81..ed209f4f2798 100644
-> --- a/drivers/block/Kconfig
-> +++ b/drivers/block/Kconfig
-> @@ -354,6 +354,15 @@ config VIRTIO_BLK
->  =09  This is the virtual block driver for virtio.  It can be used with
->            QEMU based VMMs (like KVM or Xen).  Say Y or M.
->=20
-> +config BLK_DEV_RUST_NULL
-> +=09tristate "Rust null block driver (Experimental)"
-> +=09depends on RUST
-> +=09help
-> +=09  This is the Rust implementation of the null block driver. For now i=
-t
-> +=09  is only a minimal stub.
-> +
-> +=09  If unsure, say N.
-> +
->  config BLK_DEV_RBD
->  =09tristate "Rados block device (RBD)"
->  =09depends on INET && BLOCK
-> diff --git a/drivers/block/Makefile b/drivers/block/Makefile
-> index 101612cba303..1105a2d4fdcb 100644
-> --- a/drivers/block/Makefile
-> +++ b/drivers/block/Makefile
-> @@ -9,6 +9,9 @@
->  # needed for trace events
->  ccflags-y=09=09=09=09+=3D -I$(src)
->=20
-> +obj-$(CONFIG_BLK_DEV_RUST_NULL) +=3D rnull_mod.o
-> +rnull_mod-y :=3D rnull.o
-> +
->  obj-$(CONFIG_MAC_FLOPPY)=09+=3D swim3.o
->  obj-$(CONFIG_BLK_DEV_SWIM)=09+=3D swim_mod.o
->  obj-$(CONFIG_BLK_DEV_FD)=09+=3D floppy.o
-> diff --git a/drivers/block/rnull.rs b/drivers/block/rnull.rs
-> new file mode 100644
-> index 000000000000..c69ea7e7436e
-> --- /dev/null
-> +++ b/drivers/block/rnull.rs
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! This is a Rust implementation of the C null block driver.
-> +//!
-> +//! Supported features:
-> +//!
-> +//! - blk-mq interface
-> +//! - direct completion
-> +//! - block size 4k
-> +//!
-> +//! The driver is not configurable.
-> +
-> +use kernel::{
-> +    alloc::flags,
-> +    block::mq::{
-> +        self,
-> +        gen_disk::{self, GenDisk},
-> +        Operations, TagSet,
-> +    },
-> +    error::Result,
-> +    new_mutex, pr_info,
-> +    prelude::*,
-> +    sync::{Arc, Mutex},
-> +    types::ARef,
-> +};
-> +
-> +module! {
-> +    type: NullBlkModule,
-> +    name: "rnull_mod",
-> +    author: "Andreas Hindborg",
-> +    license: "GPL v2",
-> +}
-> +
-> +struct NullBlkModule {
-> +    _disk: Pin<Box<Mutex<GenDisk<NullBlkDevice, gen_disk::Added>>>>,
-> +}
-> +
-> +impl kernel::Module for NullBlkModule {
-> +    fn init(_module: &'static ThisModule) -> Result<Self> {
-> +        pr_info!("Rust null_blk loaded\n");
-> +        let tagset =3D Arc::pin_init(TagSet::try_new(1, 256, 1), flags::=
-GFP_KERNEL)?;
-> +
-> +        let disk =3D {
-> +            let block_size: u16 =3D 4096;
-> +            if block_size % 512 !=3D 0 || !(512..=3D4096).contains(&bloc=
-k_size) {
-> +                return Err(kernel::error::code::EINVAL);
-> +            }
-> +
-> +            let mut disk =3D gen_disk::GenDisk::try_new(tagset)?;
-> +            disk.set_name(format_args!("rnullb{}", 0))?;
-> +            disk.set_capacity_sectors(4096 << 11);
-> +            disk.set_queue_logical_block_size(block_size.into());
-> +            disk.set_queue_physical_block_size(block_size.into());
-> +            disk.set_rotational(false);
-> +            disk.add()
-> +        }?;
+Therefore, adding p3p2tranok quirk for workaround hibernation
+D3 exceeded the expected entry time.
 
-Personally, I would prefer to put the `?` into the line above.
+Signed-off-by: joswang <joswang@lenovo.com>
+---
+ drivers/usb/dwc3/core.c | 5 +++++
+ drivers/usb/dwc3/core.h | 4 ++++
+ 2 files changed, 9 insertions(+)
 
-> +
-> +        let disk =3D Box::pin_init(new_mutex!(disk, "nullb:disk"), flags=
-::GFP_KERNEL)?;
-> +
-> +        Ok(Self { _disk: disk })
-> +    }
-> +}
-> +
-> +struct NullBlkDevice;
-> +
-> +#[vtable]
-> +impl Operations for NullBlkDevice {
-> +    #[inline(always)]
-> +    fn queue_rq(rq: ARef<mq::Request<Self>>, _is_last: bool) -> Result {
-> +        mq::Request::end_ok(rq)
-> +            .map_err(|_e| kernel::error::code::EIO)
-> +            .expect("Fatal error - expected to be able to end request");
-
-I expected something more along the lines of: "expected to be able to
-end request, since `NullBlkDevice` never takes refcounts on Requests and
-as such the ARef must be unique, but `end_ok` only fails if that is not
-the case". But maybe that would fit better in a comment, what do you
-think?
-
-> +
-> +        Ok(())
-> +    }
-> +
-> +    fn commit_rqs() {}
-> +}
-> --
-> 2.45.1
->=20
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 7ee61a89520b..3a8fbc2d6b99 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -666,6 +666,9 @@ static int dwc3_ss_phy_setup(struct dwc3 *dwc, int index)
+ 	if (dwc->dis_del_phy_power_chg_quirk)
+ 		reg &= ~DWC3_GUSB3PIPECTL_DEPOCHANGE;
+ 
++	if (dwc->p2p3tranok_quirk)
++		reg |= DWC3_GUSB3PIPECTL_P3P2TRANOK;
++
+ 	dwc3_writel(dwc->regs, DWC3_GUSB3PIPECTL(index), reg);
+ 
+ 	return 0;
+@@ -1715,6 +1718,8 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 
+ 	dwc->dis_split_quirk = device_property_read_bool(dev,
+ 				"snps,dis-split-quirk");
++	dwc->p2p3tranok_quirk = device_property_read_bool(dev,
++				"snps,p2p3tranok-quirk");
+ 
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 3781c736c1a1..2810dce8b42e 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -327,6 +327,7 @@
+ #define DWC3_GUSB3PIPECTL_DEP1P2P3_EN	DWC3_GUSB3PIPECTL_DEP1P2P3(1)
+ #define DWC3_GUSB3PIPECTL_DEPOCHANGE	BIT(18)
+ #define DWC3_GUSB3PIPECTL_SUSPHY	BIT(17)
++#define DWC3_GUSB3PIPECTL_P3P2TRANOK	BIT(11)
+ #define DWC3_GUSB3PIPECTL_LFPSFILT	BIT(9)
+ #define DWC3_GUSB3PIPECTL_RX_DETOPOLL	BIT(8)
+ #define DWC3_GUSB3PIPECTL_TX_DEEPH_MASK	DWC3_GUSB3PIPECTL_TX_DEEPH(3)
+@@ -1132,6 +1133,8 @@ struct dwc3_scratchpad_array {
+  *			instances in park mode.
+  * @parkmode_disable_hs_quirk: set if we need to disable all HishSpeed
+  *			instances in park mode.
++ * @p2p3tranok_quirk: set if Controller transitions directly from phy
++ *			power state P2 to P3 or from state P3 to P2.
+  * @gfladj_refclk_lpm_sel: set if we need to enable SOF/ITP counter
+  *                          running based on ref_clk
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+@@ -1361,6 +1364,7 @@ struct dwc3 {
+ 	unsigned		ulpi_ext_vbus_drv:1;
+ 	unsigned		parkmode_disable_ss_quirk:1;
+ 	unsigned		parkmode_disable_hs_quirk:1;
++	unsigned		p2p3tranok_quirk:1;
+ 	unsigned		gfladj_refclk_lpm_sel:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+-- 
+2.17.1
 
