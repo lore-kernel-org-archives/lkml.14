@@ -1,219 +1,147 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823AB27447;
-	Sat,  1 Jun 2024 20:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484BA1CAA6;
+	Sat,  1 Jun 2024 20:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717274945; cv=none; b=Sl0Fp0OPIFWjRND0561fXYhUsh+v1UBAVLrSiXoYQ0p+nqhbmkkIkHps5QP0MGx55ZT7629RubIqmMQlXRBWQXCSutadrdUpxsme+cIKRjkBpBLOVkffI4KFCeG37dQ5PppF6ayV1McHgE65D5Pjdr77QdtiSYrjZV8CBqfLcxs=
+	t=1717275065; cv=none; b=njmk14sppV/IIFPSpFevC9hAXfEz7YIeOiWesZtRF1390IT+5z7f98x4ZstWSyFi0vRkDoyzbxRN/C6Rq7XPL81c1usOHoEA/9kM4b+X/23eEW8WFEPylUOkZctWZo4h8MUtaBnuX4Bcmfvpqgo+RtNtQPKUphydIBLUQYxgVUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717274945; c=relaxed/simple;
-	bh=TJUhnakkezy3jijdOVSBPJtYX1JNamsqZONzk+asy4w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FgMDJ2SmiTI5NKAJKwuCvrsxD4E5Rs8Cr//2mzqiBitMdAOq/ETL+iCx1WuYQ64eKEoECbGdd8+jsXtTVnpjjrW7TxkreVy+TDUw9NiOoHvmNiLm788dTngs/yTghgfeuHMEY99/KTAoYUJ/YfgEx+r0J2IrDUthpurDSM1/+hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kGfbzgwA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3gzI0uYT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kGfbzgwA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=3gzI0uYT; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717275065; c=relaxed/simple;
+	bh=NP/r89WxcSHiG32+OPN4wVDkmqX2CPWxzvihewvyHAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TQ3dgQbFXlHdGtsNJU9FmGP0/rdopsn5Uw2R1UFwQ2YomXkwXozJLpfXSZuB3gcpjtj+zQD4/59x7yneyFKkAE2XXPSvyvboZBgHUDIyFDO37abTOkTTkO4/DdLusJIZyj02tmWxhTHoD/ANTO7Yfi+IyhH0veshS+e451FVO00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=AY1J70zv; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kGfbzgwA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3gzI0uYT";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kGfbzgwA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="3gzI0uYT"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9B1DD1FEE9;
-	Sat,  1 Jun 2024 20:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717274934; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dCDTiX0KomT1r1tAFoAwvnZAd6hkmojiupNma6nyo+c=;
-	b=kGfbzgwAJio3GgGdExfGZnRxU6Evf3D8g4jlsxLTOBJXhDuIYX4H2vldEtDEmX1Xz/T5Oh
-	nxRAu+nm8tOGfvJesYNIasVsC863iSEH3aHX1pf/pCh3lcZMvyN8yO+jjJ5DKN3fgIPFl0
-	LF56y34NWUZgyKEE/d3Pvp5c4P9VR94=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717274934;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dCDTiX0KomT1r1tAFoAwvnZAd6hkmojiupNma6nyo+c=;
-	b=3gzI0uYTZxFIrmGm+TBHChXdVgUUhGyJIf5BdU6BfdM58vhL5E/AXW6pJogURno0S0TAvo
-	N/qXJGRQU79etnBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717274934; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dCDTiX0KomT1r1tAFoAwvnZAd6hkmojiupNma6nyo+c=;
-	b=kGfbzgwAJio3GgGdExfGZnRxU6Evf3D8g4jlsxLTOBJXhDuIYX4H2vldEtDEmX1Xz/T5Oh
-	nxRAu+nm8tOGfvJesYNIasVsC863iSEH3aHX1pf/pCh3lcZMvyN8yO+jjJ5DKN3fgIPFl0
-	LF56y34NWUZgyKEE/d3Pvp5c4P9VR94=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717274934;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=dCDTiX0KomT1r1tAFoAwvnZAd6hkmojiupNma6nyo+c=;
-	b=3gzI0uYTZxFIrmGm+TBHChXdVgUUhGyJIf5BdU6BfdM58vhL5E/AXW6pJogURno0S0TAvo
-	N/qXJGRQU79etnBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D9C6137C3;
-	Sat,  1 Jun 2024 20:48:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gqgkGjaJW2azTQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Sat, 01 Jun 2024 20:48:54 +0000
-Message-ID: <87a4928a-ea15-453c-b252-2da0b301cb7e@suse.cz>
-Date: Sat, 1 Jun 2024 22:48:53 +0200
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="AY1J70zv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=WscMFS7a4CeJw0zsLY2pLYSCPzFoN90vk/QWypLw3pM=; b=AY1J70zvdlqs7izN
+	VcbE9s52IV9X9U7B+mp/1LMrAFAjZ9QleqdE5W9tZwOqKw0cwYp+YuQcDsW5ZQBvgCCJFCLjk5V4v
+	kOszt8wtTi3n4VPIHnk2FlU6T4MrGPRakY914LVDg1/r3Zv8PrhtCLZ72/nmp+mK8p3bORW7asCeW
+	nSY1qiMGYytIzM/J80tcko6xVAT4ohBHb98Oz+xVS6/NrJ5oFmNXiQTF3X7yl7uvWlc+tKulSsOsl
+	sjGxRqoLzH8qsEwbJRKfqs9EweTyzl/IWJcceeyPsB3j+g9E+NeHXBGo2MsqkUs6UgmKOMQ1zU18t
+	RzyUrBTmyqcbsjESBg==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1sDV0s-003l0n-1I;
+	Sat, 01 Jun 2024 20:07:38 +0000
+Date: Sat, 1 Jun 2024 20:07:38 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Greg KH <greg@kroah.com>, lars@metafoo.de, Michael.Hennerich@analog.com,
+	linux-iio@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] staging: iio: adt7316: remove unused struct
+ 'adt7316_limit_regs'
+Message-ID: <Zlt_iqhNZpPNkTEn@gallifrey>
+References: <20240529160055.28489-1-linux@treblig.org>
+ <2024053049-repossess-moonwalk-4235@gregkh>
+ <20240601202426.0f667a0d@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/4] static key support for error injection functions
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>,
- David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
- "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
- <ZlntQn-a7Ycko_j5@J2N7QTR9R3>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <ZlntQn-a7Ycko_j5@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.79
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,linux.com,google.com,kernel.org,iogearbox.net,linux.ibm.com,intel.com,davemloft.net,goodmis.org,linux.dev,vger.kernel.org,kvack.org];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20240601202426.0f667a0d@jic23-huawei>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 20:07:26 up 24 days,  7:21,  1 user,  load average: 0.00, 0.00, 0.00
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On 5/31/24 5:31 PM, Mark Rutland wrote:
-> Hi,
+* Jonathan Cameron (jic23@kernel.org) wrote:
+> On Thu, 30 May 2024 11:45:03 +0200
+> Greg KH <greg@kroah.com> wrote:
 > 
-> On Fri, May 31, 2024 at 11:33:31AM +0200, Vlastimil Babka wrote:
->> Incomplete, help needed from ftrace/kprobe and bpf folks.
+> > On Wed, May 29, 2024 at 05:00:55PM +0100, linux@treblig.org wrote:
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > > 
+> > > 'adt7316_limit_regs' has never been used since the original
+> > > commit 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9
+> > > driver").
+> > > 
+> > > The comment above it is a copy-and-paste from a different struct.
+> > > 
+> > > Remove both the struct and the comment.
+> > > 
+> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> Greg's bot is correct, but meh, not worth a v3.
 > 
->> - the generic error injection using kretprobes with
->>   override_function_with_return is handled in patch 2. The
->>   ALLOW_ERROR_INJECTION() annotation is extended so that static key
->>   address can be passed, and the framework controls it when error
->>   injection is enabled or disabled in debugfs for the function.
->> 
->> There are two more users I know of but am not familiar enough to fix up
->> myself. I hope people that are more familiar can help me here.
->> 
->> - ftrace seems to be using override_function_with_return from
->>   #define ftrace_override_function_with_return but I found no place
->>   where the latter is used. I assume it might be hidden behind more
->>   macro magic? But the point is if ftrace can be instructed to act like
->>   an error injection, it would also have to use some form of metadata
->>   (from patch 2 presumably?) to get to the static key and control it.
+> I picked up Nuno's tag from v1 though. I don't think that came
+> in after you'd sent this, so I guess you missed that one.
 > 
-> I don't think you've missed anything; nothing currently uses
-> ftrace_override_function_with_return(). I added that in commit:
+> Applied.
 
-Ah, great, thanks for confirming that.
+Thanks!
 
->   94d095ffa0e16bb7 ("ftrace: abstract DYNAMIC_FTRACE_WITH_ARGS accesses")
-> 
-> ... so that it was possible to do anything that was possible with
-> FTRACE_WITH_REGS and/or kprobes, under the expectation that we might
-> want to move fault injection and BPF probes over to fprobes in future,
-> as ftrace/fprobes is generally faster than kprobes (e.g. for
-> architectures that can't do KPROBES_ON_FTRACE or OPTPROBES).
-> 
-> That's just the mechanism for the handler to use; I'd expect whatever
-> registered the handler to be responsible for flipping the static key,
-> and I don't think anything needs to change within ftrace itself.
-> 
->>   If ftrace can only observe the function being called, maybe it
->>   wouldn't be wrong to just observe nothing if the static key isn't
->>   enabled because nobody is doing the fault injection?
-> 
-> Yep, that sounds right to me.
+Dave
 
-Good.
-
-> Mark.
-
+> Jonathan
+> 
+> > > ---
+> > >  drivers/staging/iio/addac/adt7316.c | 9 ---------
+> > >  1 file changed, 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
+> > > index 79467f056a05..f4260786d50a 100644
+> > > --- a/drivers/staging/iio/addac/adt7316.c
+> > > +++ b/drivers/staging/iio/addac/adt7316.c
+> > > @@ -209,15 +209,6 @@ struct adt7316_chip_info {
+> > >  #define ADT7316_TEMP_AIN_INT_MASK	\
+> > >  	(ADT7316_TEMP_INT_MASK)
+> > >  
+> > > -/*
+> > > - * struct adt7316_chip_info - chip specific information
+> > > - */
+> > > -
+> > > -struct adt7316_limit_regs {
+> > > -	u16	data_high;
+> > > -	u16	data_low;
+> > > -};
+> > > -
+> > >  static ssize_t adt7316_show_enabled(struct device *dev,
+> > >  				    struct device_attribute *attr,
+> > >  				    char *buf)
+> > > -- 
+> > > 2.45.1
+> > > 
+> > >   
+> > 
+> > Hi,
+> > 
+> > This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> > a patch that has triggered this response.  He used to manually respond
+> > to these common problems, but in order to save his sanity (he kept
+> > writing the same thing over and over, yet to different people), I was
+> > created.  Hopefully you will not take offence and will fix the problem
+> > in your patch and resubmit it so that it can be accepted into the Linux
+> > kernel tree.
+> > 
+> > You are receiving this message because of the following common error(s)
+> > as indicated below:
+> > 
+> > - This looks like a new version of a previously submitted patch, but you
+> >   did not list below the --- line any changes from the previous version.
+> >   Please read the section entitled "The canonical patch format" in the
+> >   kernel file, Documentation/process/submitting-patches.rst for what
+> >   needs to be done here to properly describe this.
+> > 
+> > If you wish to discuss this problem further, or you have questions about
+> > how to resolve this issue, please feel free to respond to this email and
+> > Greg will reply once he has dug out from the pending patches received
+> > from other developers.
+> > 
+> > thanks,
+> > 
+> > greg k-h's patch email bot
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
