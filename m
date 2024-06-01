@@ -1,131 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8389A171A5;
-	Sat,  1 Jun 2024 19:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0485614E2EF
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 19:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717269879; cv=none; b=b/AXFAD/5uq7gUU+pvMjaNc2bT4g8VdU4FCZ9XfHqLtApsF6fXGJMY5XSLrYPjxAXbqX2eEyw4ODRXyanhOtAYDrVYj+XEqMchpJpsc+ywWcM/YQbf8t0C8xRUXzeXvygz0CetzRAC+BeDhKyijjJ+4bN3ikkyiWYomykMQ9uaQ=
+	t=1717271642; cv=none; b=l6CrNx8/N5g5cSCimwr+hA6agYy+KJF8r0yv1fTH0zqZTZET+F4YugvLFNakgQHVMc+zgmxQhIbGey8CMDQavgi1t3t+yyA1S0ti7LVmvuQJM7hj0tf+DdZAlGdgvuwZ9UKjUC/ptZDK82UlxNFelLb0QqO0natMtGMDLEzsGQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717269879; c=relaxed/simple;
-	bh=lJsSCZd98JRXceVU+lNuxRSqXxc0iQ2E6diITqpWoGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=entFIAt+bcAnWr6O4D6J4SwoMhD55RDoRXvxYoCalVKtq45LPARUOZajiBxutbdD2ARE7TwzhC0ynAHk4THGqUpe4XzQiGQcumXkQrsoo1yLrsiKcLYY1aCgxtqoCP3cEXAlG8nQpocqSgkQhr0yf7GTWDuWB4A/AfYW1afBeiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abna+zd2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717271642; c=relaxed/simple;
+	bh=sjTvnLL15+axd8kEPHCrI1q2EZzeItpEAdxMZyj56QQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XSqvT35W+dTLlhw7LsPsOA61HnZC6NHhusj10lCBGQw8cizAff4PdNANicnA+WY44BdEMkmpOSPuPzA+dbc6mQDE9R55itFW6+uE8L99PKPoNkPlRDkuKEsdWYcYkroIEiqM/1UJ8fZ4joJ2hyh6UEhTgeZ8IWlVgfjXUbr8XXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=j6+JKXK9; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abna+zd2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4829FC116B1;
-	Sat,  1 Jun 2024 19:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717269879;
-	bh=lJsSCZd98JRXceVU+lNuxRSqXxc0iQ2E6diITqpWoGY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=abna+zd2u9t/Q0MDsblVaYLJ//OznWHXRywOnSKJ/3LPDRC/L0xt0STFav3miY0uI
-	 j6Qgh2gkf7aTgXhzfB5bXUtsgJz8WNZ9ztQv392bKltsrbstYoracJiYO7Dc3Tw5As
-	 2wdzRJLuuyvCqHLiXoVF6cX/2sJvqZKpWIZpHP9bqZZmC+s7e9mLrHL2X8Xpll7NBL
-	 0AUEfZv7V+Py2rhxnalDYGMCXdSH2qGTu93gOP/1A5vWDMyCc3e/yZP5lPaweXbei4
-	 bJKkoMoxdRETJ6hztUbjkw3fCpjSIgY8Wsf5HAjvEHZOjnmRj3Yuif0WNFJgfLr6eM
-	 2BbjNU/I2rLGA==
-Date: Sat, 1 Jun 2024 20:24:26 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Greg KH <greg@kroah.com>
-Cc: linux@treblig.org, lars@metafoo.de, Michael.Hennerich@analog.com,
- linux-iio@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: iio: adt7316: remove unused struct
- 'adt7316_limit_regs'
-Message-ID: <20240601202426.0f667a0d@jic23-huawei>
-In-Reply-To: <2024053049-repossess-moonwalk-4235@gregkh>
-References: <20240529160055.28489-1-linux@treblig.org>
-	<2024053049-repossess-moonwalk-4235@gregkh>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="j6+JKXK9"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a44c2ce80so970161a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 12:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717271638; x=1717876438; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jr2Al8+ndIMPJPdlShlncDNXoaIKKJSR1q01cY4wntc=;
+        b=j6+JKXK9DoUXHI7BnH41+jvrY3T7Uyzt4W0eazDXOhSvG1K8S2duPPt/Hqm6AhZsgB
+         C5IQLXFJWRYblqCxJQ7FXZ4oFVxqRUvL0Y33GYbPZcv9WftEP2hFcMYzw2b3WLcyorYc
+         0gzd+u8pPG9J11WR6tkwwwXgXD+dbl2/gIOU3bEDJHMsXT0RJRS1EaBMjqBWvRQj6nM2
+         bfyVgH55WgIRcRuDIaL8FRIrMBdCbEH6GZ0k/SU/S7rmqhLqgRDpPy7/3ib8HP6XaIrw
+         o/j2AgllMma/RokiDWrjkbT8gvYHvAF10tOZyQh5sWBK1cfVyWF6uwVl6+uEhzlw0Q7A
+         yWTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717271638; x=1717876438;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jr2Al8+ndIMPJPdlShlncDNXoaIKKJSR1q01cY4wntc=;
+        b=pOblLEPq3oORT01qMPfLOh+BgNQhdBIzc0Q8r4P38HOYUkJ6BOoJgK2jChfOztxSTi
+         Ify28HyIvV5PgsCr0x0ktCRUs0F5rLBWoXHPhQgQBDVsEeNNvFfsAp4cK1O02GHCvddT
+         brhzok2Zy9seOLHJq1MmjFMq54A053Mj3RTLAkuoWEt+0UuefkR8VSIz4FzelwQe8Au0
+         B0avtHiEE/6gRE0RYSevjbRT8V7XTNvuBCcoU4A/OWMiuwb4CtIUnkLJPvyJlnNzLDbb
+         OWmoIB7Y7CKBsjpQKiGpFIlP7RFjen/oGfK6CQZbIsApkm37z/JQ3XePtHV7MtmSs5nG
+         PVvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUs0GflijoIZmzyek+CsY8FODZBgpR+LzTDJWptXr23L/5LjF1oGuboIqp6/jsPJ1flWv42QIwKuQGp2Uc4Hw7snsjfOpKJoqiUjwDQ
+X-Gm-Message-State: AOJu0YyuAz41IOkYWyPsxhUlzKjPB0eX+LqDQoAf6qH7d9HGkR6zTilt
+	Nl5zZMhbh88Fr8vcnp7nM/zECA3nIvrZ8g1ttWjuvf2dvGcRxG5d1N7nL1YwcpY=
+X-Google-Smtp-Source: AGHT+IHg/Tdb9DK9+R9MFmqVcUxrNUbRCWNDM/3aHBB9G/2ub/z/P4O87DthrD+4wpkjKUhladJ/Gw==
+X-Received: by 2002:a50:9992:0:b0:57a:2546:2512 with SMTP id 4fb4d7f45d1cf-57a36456201mr3737951a12.34.1717271637875;
+        Sat, 01 Jun 2024 12:53:57 -0700 (PDT)
+Received: from localhost ([79.142.230.34])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b9958fsm2594386a12.2.2024.06.01.12.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 12:53:57 -0700 (PDT)
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>,  Christoph Hellwig <hch@lst.de>,  Damien
+ Le Moal <dlemoal@kernel.org>,  Bart Van Assche <bvanassche@acm.org>,
+  Hannes Reinecke <hare@suse.de>,  Ming Lei <ming.lei@redhat.com>,
+  "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,  Andreas
+ Hindborg <a.hindborg@samsung.com>,  Greg KH <gregkh@linuxfoundation.org>,
+  Matthew Wilcox <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,
+  Alex Gaynor <alex.gaynor@gmail.com>,  Wedson Almeida Filho
+ <wedsonaf@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,
+  Chaitanya Kulkarni <chaitanyak@nvidia.com>,  Luis Chamberlain
+ <mcgrof@kernel.org>,  Yexuan Yang <1182282462@bupt.edu.cn>,  Sergio
+ =?utf-8?Q?Gonz=C3=A1lez?= Collado <sergio.collado@gmail.com>,  Joel
+ Granados
+ <j.granados@samsung.com>,  "Pankaj Raghav (Samsung)"
+ <kernel@pankajraghav.com>,  Daniel Gomez <da.gomez@samsung.com>,  Niklas
+ Cassel <Niklas.Cassel@wdc.com>,  Philipp Stanner <pstanner@redhat.com>,
+  Conor Dooley <conor@kernel.org>,  Johannes Thumshirn
+ <Johannes.Thumshirn@wdc.com>,  Matias =?utf-8?Q?Bj=C3=B8rling?=
+ <m@bjorling.me>,  open list
+ <linux-kernel@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
+ <rust-for-linux@vger.kernel.org>,  "lsf-pc@lists.linux-foundation.org"
+ <lsf-pc@lists.linux-foundation.org>,  "gost.dev@samsung.com"
+ <gost.dev@samsung.com>
+Subject: Re: [PATCH v4 2/3] rust: block: add rnull, Rust null_blk
+ implementation
+In-Reply-To: <871q5goaz0.fsf@metaspace.dk> (Andreas Hindborg's message of
+	"Sat, 01 Jun 2024 18:59:31 +0200")
+References: <20240601134005.621714-1-nmi@metaspace.dk>
+	<20240601134005.621714-3-nmi@metaspace.dk>
+	<ZlsvHV6y4DEdC8ja@kbusch-mbp.dhcp.thefacebook.com>
+	<875xusoetn.fsf@metaspace.dk>
+	<ZltF5NvDnKFphcOo@kbusch-mbp.dhcp.thefacebook.com>
+	<871q5goaz0.fsf@metaspace.dk>
+Date: Sat, 01 Jun 2024 21:53:38 +0200
+Message-ID: <87wmn8mocd.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Thu, 30 May 2024 11:45:03 +0200
-Greg KH <greg@kroah.com> wrote:
+Andreas Hindborg <nmi@metaspace.dk> writes:
 
-> On Wed, May 29, 2024 at 05:00:55PM +0100, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > 'adt7316_limit_regs' has never been used since the original
-> > commit 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9
-> > driver").
-> > 
-> > The comment above it is a copy-and-paste from a different struct.
-> > 
-> > Remove both the struct and the comment.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Greg's bot is correct, but meh, not worth a v3.
+> Keith Busch <kbusch@kernel.org> writes:
+>
+>> On Sat, Jun 01, 2024 at 05:36:20PM +0200, Andreas Hindborg wrote:
+>>> Keith Busch <kbusch@kernel.org> writes:
+>>> 
+>>> > On Sat, Jun 01, 2024 at 03:40:04PM +0200, Andreas Hindborg wrote:
+>>> >> +impl kernel::Module for NullBlkModule {
+>>> >> +    fn init(_module: &'static ThisModule) -> Result<Self> {
+>>> >> +        pr_info!("Rust null_blk loaded\n");
+>>> >> +        let tagset = Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
+>>> >> +
+>>> >> +        let disk = {
+>>> >> +            let block_size: u16 = 4096;
+>>> >> +            if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
+>>> >> +                return Err(kernel::error::code::EINVAL);
+>>> >> +            }
+>>> >
+>>> > You've set block_size to the literal 4096, then validate its value
+>>> > immediately after? Am I missing some way this could ever be invalid?
+>>> 
+>>> Good catch. It is because I have a patch in the outbound queue that allows setting
+>>> the block size via a module parameter. The module parameter patch is not
+>>> upstream yet. Once I have that up, I will send the patch with the block
+>>> size config.
+>>> 
+>>> Do you think it is OK to have this redundancy? It would only be for a
+>>> few cycles.
+>>
+>> It's fine, just wondering why it's there. But it also allows values like
+>> 1536 and 3584, which are not valid block sizes, so I think you want the
+>> check to be:
+>>
+>> 	if !(512..=4096).contains(&block_size) || ((block_size & (block_size - 1)) != 0)
+>
+> Right, that makes sense. I modeled it after the C null_blk validation
+> code in `null_validate_conf`. It contains this:
+>
+> 	dev->blocksize = round_down(dev->blocksize, 512);
+> 	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
+>
+> That would have the same semantics, right? I guess I'll try to make a
+> device with a 1536 block size and see what happens.
 
-I picked up Nuno's tag from v1 though. I don't think that came
-in after you'd sent this, so I guess you missed that one.
+This happens:
 
-Applied.
+root@debian:~# insmod /mnt/linux-build/drivers/block/null_blk/null_blk.ko bs=1536
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor write access in kernel mode
+#PF: error_code(0x0002) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0002 [#1] SMP
+CPU: 2 PID: 291 Comm: insmod Not tainted 6.10.0-rc1+ #839
 
-Jonathan
+Probably a good idea with a better check.
 
-> > ---
-> >  drivers/staging/iio/addac/adt7316.c | 9 ---------
-> >  1 file changed, 9 deletions(-)
-> > 
-> > diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
-> > index 79467f056a05..f4260786d50a 100644
-> > --- a/drivers/staging/iio/addac/adt7316.c
-> > +++ b/drivers/staging/iio/addac/adt7316.c
-> > @@ -209,15 +209,6 @@ struct adt7316_chip_info {
-> >  #define ADT7316_TEMP_AIN_INT_MASK	\
-> >  	(ADT7316_TEMP_INT_MASK)
-> >  
-> > -/*
-> > - * struct adt7316_chip_info - chip specific information
-> > - */
-> > -
-> > -struct adt7316_limit_regs {
-> > -	u16	data_high;
-> > -	u16	data_low;
-> > -};
-> > -
-> >  static ssize_t adt7316_show_enabled(struct device *dev,
-> >  				    struct device_attribute *attr,
-> >  				    char *buf)
-> > -- 
-> > 2.45.1
-> > 
-> >   
-> 
-> Hi,
-> 
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
-> 
-> You are receiving this message because of the following common error(s)
-> as indicated below:
-> 
-> - This looks like a new version of a previously submitted patch, but you
->   did not list below the --- line any changes from the previous version.
->   Please read the section entitled "The canonical patch format" in the
->   kernel file, Documentation/process/submitting-patches.rst for what
->   needs to be done here to properly describe this.
-> 
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
-> 
-> thanks,
-> 
-> greg k-h's patch email bot
-
+BR Andreas
