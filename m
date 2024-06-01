@@ -1,91 +1,104 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B1E14267
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 13:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0E48248C;
+	Sat,  1 Jun 2024 13:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717249921; cv=none; b=Ebs1yjxZdkHzzzN+oK5esq8OyYRGrPeMnHtgZLJdj5j9+tx4tpAivVfRBI0gwmM5iZ1YcIkqyikq/JPGYbvLBC+3OUBiRv9mUINO+h2nwtbaSZ9E3G36y7TmXS3pigEvaqsbtaGnQ+6Obb6UgaoSBIBO5eviLHqpDQqAzSCqdoI=
+	t=1717249960; cv=none; b=uCmS82WhxQfngLEBEXOxuAedYjsNHmrrUJ8TQU7RwbzCTKdWwyGOtow2PVeVx41SzabRwlsexUDtXGdAc5kQrdEl5Y0eG7wExHHnYhVgjHucv4psmUt/oytoTEzr3KBwCOB8wa9K1dIozXdNzpVMbmM9XDpOa1qftoYpUD35Ogw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717249921; c=relaxed/simple;
-	bh=1swqdd3h6pFCFF9FkaDga64RadxTF94ynOEkAnJ0yeo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=paTJMZ6rpdOThcvmPn46hnapAdu4HXJ8wPO9oo+6kKSazRyHmSdRIwi3LgXX1wNPMnWYuXLEGWhZnRM42qKt8SFqpx7ZKDwItWu5nwl6CziYTL7wDtTPnNEitAPAdSO5nJQ7+8gEhqXb+oj7h3Jbe5NhpBLa5vkaQPu7NXiLgGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-66-UpaXNTL1Oe6ZI-Mr5uhv1Q-1; Sat, 01 Jun 2024 14:51:48 +0100
-X-MC-Unique: UpaXNTL1Oe6ZI-Mr5uhv1Q-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 1 Jun
- 2024 14:51:15 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 1 Jun 2024 14:51:15 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Arnd Bergmann
-	<arnd@arndb.de>
-CC: "Maciej W. Rozycki" <macro@orcam.me.uk>, "Paul E. McKenney"
-	<paulmck@kernel.org>, John Paul Adrian Glaubitz
-	<glaubitz@physik.fu-berlin.de>, Arnd Bergmann <arnd@kernel.org>,
-	"linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>, "Richard
- Henderson" <richard.henderson@linaro.org>, Ivan Kokshaysky
-	<ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Marc Zyngier <maz@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Cree
-	<mcree@orcon.net.nz>, Frank Scheiner <frank.scheiner@web.de>
-Subject: RE: [PATCH 00/14] alpha: cleanups for 6.10
-Thread-Topic: [PATCH 00/14] alpha: cleanups for 6.10
-Thread-Index: AQHas3geHvAQAz06HUaUVIZjte+qOLGy6zYA
-Date: Sat, 1 Jun 2024 13:51:15 +0000
-Message-ID: <7b84fcf6b64a4553a377c98fdcd48837@AcuMS.aculab.com>
-References: <20240503081125.67990-1-arnd@kernel.org>
- <272a909522f2790a30b9a8be73ab7145bf06d486.camel@physik.fu-berlin.de>
- <alpine.DEB.2.21.2405280041550.23854@angie.orcam.me.uk>
- <aa397ad5-a08a-48a1-a9c0-75cfd5f6a3a5@paulmck-laptop>
- <alpine.DEB.2.21.2405291432450.23854@angie.orcam.me.uk>
- <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com>
- <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wimJ2hQhKSq7+4O1EHtkg7eFBwY+fygxD+6sjWqgyDMTQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1717249960; c=relaxed/simple;
+	bh=x97TGYicuAOIiNkkbEMugsrQH1Uh8scFHklNqOBKDT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kxqqn6FpUfGp0INhvMhASSwHLgF5CS/8gRB37Sv9uwLj/h9BS7dW2fSHwToQ/K/cY0Bh1OOpXffSKlvngwiU9QwTxmtf3ehiHQJ5U9BY+zm4qmWMB+EjzZ2T2B5Jn/nRyziJC2zDEhP4sVdibhfG/MjTi2irE1ju4xYyCOwdRfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNO6tR3R; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNO6tR3R"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7e9c80adc25so138001439f.3;
+        Sat, 01 Jun 2024 06:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717249957; x=1717854757; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YSOWAUY88oC5lW5rvGSdvx6UaNHLnsYyAlMhcv2+2no=;
+        b=kNO6tR3Rqsp8MMDBY37XsmLAGnv4bx93iie6DG9GENgxOFrVQtCZok9KAuFOSUFnDN
+         2gMfmRyKeLjOMGYznW4JDKNXSj7UXkWJrnXD/w8ir93Sp4vZdCjCoaixBLg4IRuqRE+F
+         pu3QHW7jGguRxNht/nmln21yPxoTlKoT6ns4CMaSsr5fjblaavh0N4p5NWw9kPd3kwh2
+         a2U2EXeSb9OFM5AO3oGleUUx90ThtuyuGFkkR1CV/erqrbwq5igZUl8tRION7hq8/oG9
+         WHpNjuMWNHqVf97DKXQl2KhRmXYvRhowjfpDXdnANt7oCnVfhMKF7rQfXDtaEymGS96U
+         nc7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717249957; x=1717854757;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YSOWAUY88oC5lW5rvGSdvx6UaNHLnsYyAlMhcv2+2no=;
+        b=Xreye9vSMgfW8PyJV36BqRGgPtes239SZUwDlcFxvo2/Cjv4hQ7y0JeR5xLCzkh/Ex
+         0pmjUt6CM6Cir2R+r7qejd3iqMgYR8vkOzntPm98jNtT/brCx3hTbrJJ2kTQ5jdhsK4w
+         NQc0gGyHZrDYyOfSzTyR3PWmT2pllA+5QOVmO6pEfBrZpBJt4MReByzi+FTeSKhNTR3R
+         u24j++cgkCS6upfVxyI07pPj4kBopTN2kYChk1SLRM8b72USmT3KNXe5ZZN1aPwNZ/Cu
+         r9da+GTp1rbfBjROEU6QxJPQVfjeTLDM3tjRNWCsZUlb+p7IG4QNhwpfkq3GAR9m8Bz5
+         ga+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhBR/z1kdxsnovZiH5f6DTpdi5GGfRUsdA2Y12Aikd6Ab4UCwBLIz/juIHCId8NSdMhTJyOTjRJLHuojoJ0vACwpS5ROE3gSAy/GzYaYv9p1CY1SfK/cI+Gw565Wb8BxxJGBr6/8IIMA==
+X-Gm-Message-State: AOJu0Yy79NEsPP+Doah/1SsvogGs7fVjwwcBBwYFDarihcKF5hI88wPX
+	T+9e7HbU8zBToZi2rT0uvounnC7ck5DsWJ6+I8QULuB0jYHyP3gzfbgiuQ==
+X-Google-Smtp-Source: AGHT+IFu377v3BUIDc9piHIID8NWcbvXfFBcxu9yZ9fDFgRolnum/XAZM3rhhAySVW5+a3c2HcN5tA==
+X-Received: by 2002:a05:6602:2d88:b0:7ea:fadb:1cd5 with SMTP id ca18e2360f4ac-7eafff2b8e1mr639467839f.18.1717249956993;
+        Sat, 01 Jun 2024 06:52:36 -0700 (PDT)
+Received: from aford-System-Version.lan ([2601:447:d002:5be:e0b7:c613:ee:e8f3])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4b56e7824d4sm556349173.172.2024.06.01.06.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 06:52:36 -0700 (PDT)
+From: Adam Ford <aford173@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com,
+	Adam Ford <aford173@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V3 1/2] arm64: dts: imx8mp-beacon-kit: Enable ADV7535 Hot Plug Detect
+Date: Sat,  1 Jun 2024 08:52:28 -0500
+Message-ID: <20240601135230.89980-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-Li4uDQo+IFRoZSBmYWN0IGlzLCB0aGUgb3JpZ2luYWwgYWxwaGEgaXMgdGhlIHdvcnN0IGFyY2hp
-dGVjdHVyZSBldmVyIG1hZGUuDQo+IFRoZSBsYWNrIG9mIGJ5dGUgaW5zdHJ1Y3Rpb25zIGFuZCB0
-aGUgYWJzb2x1dGVseSBob3JyZW5kb3VzIG1lbW9yeQ0KPiBvcmRlcmluZyBhcmUgZmF0YWwgZmxh
-d3MuIEFuZCB3aGlsZSB0aGUgbWVtb3J5IG9yZGVyaW5nIGFyZ3VhYmx5IGhhZA0KPiBleGN1c2Vz
-IGZvciBpdCAoInRoZXkgZGlkbid0IGtub3cgYmV0dGVyIiksIHRoZSBsYWNrIG9mIGJ5dGUgb3Bz
-IHdhcw0KPiB3aWxmdWwgbWlzZGVzaWduIHRoYXQgdGhlIGRlc2lnbmVycyB3ZXJlIHByb3VkIG9m
-LCBhbmQgbWFkZSBhIGNlbnRyYWwNCj4gdGVuZXQgb2YgdGhlaXIgbWVzcy4NCg0KSWYgaXQgd2Fz
-bid0IGZyb20gREVDICh3aGVyZSB0aGUgcGRwLTExIGFuZCB2YXggd2VyZSBmaW5lKSBJJ2QgdGhp
-bmsNCml0IHdhcyBzb21lb25lIGhhcmtpbmcgYmFjayB0byB0aGUgb2xkIG1haW5mcmFtZSBkYXlz
-IHdoZXJlIGlzIHdhcw0KcGVyZmVjdGx5IG5vcm1hbCB0byBvbmx5IGhhdmUgJ3dvcmQgYWRkcmVz
-c2luZycgYW5kLCBmb3IgZXhhbXBsZSwNCnRvIHB1dCB0aHJlZSA2LWJpdCBjaGFyYWN0ZXJzIGlu
-dG8gYW4gMTgtYml0IHdvcmQgKGhpIFVuaXZhYyEpLg0KKERvbid0IGV2ZW4gdGhpbmsgaG93IDE4
-LWJpdCB3b3JkcyBnb3Qgd3JpdHRlbiB0byBtYWcgdGFwZSEpDQoNCkl0IGlzIGFsbW9zdCBhcyBp
-cyBzb21lb25lIGFzc3VtZWQgdGhhdCB0aGUgb25seSB1c2UgZm9yIGJ5dGUgYWNjZXNzZXMNCndh
-cyB3aXRoaW4gY2hhcmFjdGVyIGFycmF5cyAtIGFuZCB0aGV5IGNhbiBqb2xseSB3ZWxsIGFsaWdu
-IHRoZSBhcnJheXMuDQoNCk1pbmQgeW91LCBhbGwgdGhlIGJ5dGUgc2hpZnRpbmcgbmVlZGVkIHRv
-IGdldCB0aGUgZGF0YSBvbnRvIHRoZQ0KcmlnaHQgZGF0YSBidXMgbGluZXMgaXMgYSBQSVRBIGFu
-ZCB3aWxsIGFmZmVjdCB0aGUgbWF4IGNwdSBmcmVxdWVuY3kgWzFdLg0KU28gcGVyaGFwcyB0aGV5
-IGRlY2lkZWQgaXQgd2FzIGEgJ3NvZnR3YXJlIHByb2JsZW0nIHNvIHNvbWUgYmVuY2htYXJrcw0K
-Y291bGQgcnVuIGZhc3Rlci4NCg0KCURhdmlkDQoNClsxXSBJJ3ZlIGJlZW4gYnVzeSByZS1pbXBs
-ZW1lbnRpbmcgdGhlIE5pb3MtSUkgY3B1Lg0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+The DSI to HDMI bridge supports hot-plug-detect.The driver
+supports shared GPIO IRQ pins, so it's save to enable them
+which allows for hot-plug detect.
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+V3:  Update commit message, no functional changes.
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts b/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts
+index e5d3901f2913..da836172ae46 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-beacon-kit.dts
+@@ -304,6 +304,8 @@ adv_bridge: hdmi@3d {
+ 		compatible = "adi,adv7535";
+ 		reg = <0x3d>, <0x3c>, <0x3e>, <0x3f>;
+ 		reg-names = "main", "cec", "edid", "packet";
++		interrupt-parent = <&gpio4>;
++		interrupts = <27 IRQ_TYPE_EDGE_FALLING>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
+ 
+-- 
+2.43.0
 
