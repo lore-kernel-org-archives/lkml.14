@@ -1,66 +1,47 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9531514F4
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 14:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E426E14F9D4;
+	Sat,  1 Jun 2024 14:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717250938; cv=none; b=jg+EYPWH6hyzVzHnpe/di+dTQdRBQ8iFCMtWIoxV2ZNxkx7HTLKSM6Laats9of8WVZ4kyidEAk619OfvrYPY86tTlPQptbnbt0QB7+K/RPCFHm2z+nQpxRrTG2v3z0e+DFNkCOkiwYnhsTbTFC1Uz8ucTpZlp0Nekcbqg50lybo=
+	t=1717250973; cv=none; b=eN2UzAchL7PUlzzVWJHcKu9rAIMMzre1dR8Sp8PgSl5wA0gkHFrGSIqJKJ/kva1tApj5wpszVWMkG/3DHa+IwItr/XyNX5E8rXkKDOg6fPHWvEIEnEKY6JUE/Nsg6vI4btqy/jK8J/VV7PDe9XSFDFmUnHu1TFPa1hSL41FJuSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717250938; c=relaxed/simple;
-	bh=3t+BML06IVnV7ynV1fM/bPeYDyEkk1mlyGKdts2XJ/0=;
+	s=arc-20240116; t=1717250973; c=relaxed/simple;
+	bh=CH98rChsYVgD9QB6NwKsJnFDWE+xfbmZZktISZ08DXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pwtgpJhPHDePrJYKilbTphI9IfnLNfzOlQIxxG6LyNQSGiSYx9w3pRri+sz+jMIAQn++XGTphlVqxMwtmETdJaKYwbyyfgTb+5vH6H5VfKHTKOG+2aqzdwEl1nNtWnArIQ1rscLGbVyOZml58I7/a+pSO1K3XOiQcEoVIqCyIkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyDCi9Bh; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=omh9jPUboXH0n4yvR+52asvkqzuILT6bzjYDF106f+aocbJ0hGtxMdTuNTRY9UPMugINhIe1kZ3Tx0Nmo5kvf8tlM3IbjnPz5CvvBT/jdeLBUA9NUnsutrUCL3sdc52mtWHi+zNgmvwuYHovgFl0iIAMpH9WqGAjG86fjXmLot0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrdpjmcn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyDCi9Bh"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a68c2915d99so39285366b.2
-        for <linux-kernel@vger.kernel.org>; Sat, 01 Jun 2024 07:08:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717250935; x=1717855735; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=edATjeB/5g6MuT2r7fSukbeeRP93Yoi/adtnAt3XIII=;
-        b=eyDCi9Bh8xhscP++uegVZIIogS/pP4s/hSGCANWJ4hm2kZyfSU0eUWgCn1GEuAl659
-         HN9ylGADwQaIq1XkfcN4HALgw/aLyd8d7pHcopBVRlbCPrulXzhwLSr08x2oSiYuAJdv
-         dqwglFUPBCSz6zSVVtqE2I1XnMBg1l1S5hIjF2NbV1Lzv8qR0HS9fyp7yKhsi1BAtFsz
-         3pSq8arErgn3nAn4K9RJkH0G9fV9SKLjAEjf018bo4IUvD/hGR3GP5p5LgU6ku21/IJ0
-         SO1Ve2xZZewc87lPNItg29XdhDejbwxMYEkPuZShUZxkWA0FjdT/35lccTttQPb34x7A
-         vSiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717250935; x=1717855735;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=edATjeB/5g6MuT2r7fSukbeeRP93Yoi/adtnAt3XIII=;
-        b=VjlHSjXAMdBYo+0JQYlVOTILFGInSoAZ/Ni/3/MLTqsoE3xV7FkG9RIEs/slNVwxxh
-         6Gpu9TusQbrlBoYl/RJ5phpB+y8A2Eu8+3uZ9uCS5hCa50buKDq2b47erE4aVLneQ3ib
-         W9RRKn7jNrZVx8Qoqeo3m0oEX2GhuWVY4PWzw25SvSFffUQTGKjXS9cw0bV15NBX1nVw
-         yd02WyfW9adkPK/2x8BJu73si5ZoGxxyM06Lq/yStDXWH9YbDkX0hrRwGHYld8TF39tg
-         UDJEmyQD1Hki93RWXTAdfCA/B65RMHv2/6YZQnUYPgTJQ4bJlqCQbD6oS1Jx5xMXf96L
-         BPyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSwXXK3+Nl5WWOFbZTST0AB8VvlIZM+tBcG8g0kwZrihQUVkfG3Df1pl6da/fWN1PGzdWJwpBsBwKcpcfGWOWRt/DdRdhqOT2Bepr6
-X-Gm-Message-State: AOJu0YzQVKYkbK/2wtRqOumU6r6AnHhKHVDJWTHt+WKbcAHMnGnEEA3B
-	T8uAD4HHeANDE92+OXEddX22hpq7bIrHEzVRAQxa0+qs3xGQScLyJKzQtA==
-X-Google-Smtp-Source: AGHT+IGxLtxVd0IPAjW+Jh5EdJYjrO4L8rChjkDCAXcjpU9q6LvNUOlg+ipa4NZewPfxROT1kIZAjA==
-X-Received: by 2002:a17:906:e084:b0:a68:bb1b:4de2 with SMTP id a640c23a62f3a-a68bb1b4fa3mr87036566b.3.1717250934892;
-        Sat, 01 Jun 2024 07:08:54 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a2fc7707sm102544366b.98.2024.06.01.07.08.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 01 Jun 2024 07:08:54 -0700 (PDT)
-Date: Sat, 1 Jun 2024 14:08:53 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH] mm: userfaultfd: Use swap() in double_pt_lock()
-Message-ID: <20240601140853.n4k72xbjzhtgm4sn@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20240531091643.67778-1-jiapeng.chong@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrdpjmcn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C70C116B1;
+	Sat,  1 Jun 2024 14:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717250972;
+	bh=CH98rChsYVgD9QB6NwKsJnFDWE+xfbmZZktISZ08DXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RrdpjmcnkV2/UVGdrhtrRDAKS5XoJLVSB+XD6Rkp5SL+xy20olx0fADE185+Lqupp
+	 AcpZHOcxp0KpS8ZwwA7ySOiu8hnKeEfwGYKHeUtdy+3ZOMx81Lh0O9haS9W+oydxab
+	 eKXCgfIuDqcsWS4VJ3T8MDyfWdhq5zLvgQS02kkCXZUU4TVH8sR61lGGztvwhXr1qn
+	 t1OSYFQ3RkJoSEYM28oQexlnnUv5jmiiXf6uAq8vzN1XU9y/o35YfftTAeQ2vyMCAh
+	 7UjqsCnZE2M1OhRPXqq+obaxXzrdDbRKQseF2uRPHZctARLMSfLdaIFwzo8BpI9Wnn
+	 i5KmZkeZZl4iw==
+Date: Sat, 1 Jun 2024 07:09:32 -0700
+From: Kees Cook <kees@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs updates fro 6.10-rc1
+Message-ID: <202406010706.E3A0E963FE@keescook>
+References: <zhtllemg2gcex7hwybjzoavzrsnrwheuxtswqyo3mn2dlhsxbx@dkfnr5zx3r2x>
+ <202405191921.C218169@keescook>
+ <2uuhtn5rnrfqvwx7krec6lc57gptqearrwwbtbpedvlbor7ziw@zgbzssfacdbe>
+ <a1aa10f9d97b2d80048a26f518df2a4b90c90620.camel@HansenPartnership.com>
+ <ZlsHCzAPzp6XwTqw@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,20 +50,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240531091643.67778-1-jiapeng.chong@linux.alibaba.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <ZlsHCzAPzp6XwTqw@finisterre.sirena.org.uk>
 
-On Fri, May 31, 2024 at 05:16:43PM +0800, Jiapeng Chong wrote:
->Use existing swap() function rather than duplicating its implementation.
->
->/mm/userfaultfd.c:1006:13-14: WARNING opportunity for swap()
->
->Reported-by: Abaci Robot <abaci@linux.alibaba.com>
->Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9266
->Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+On Sat, Jun 01, 2024 at 12:33:31PM +0100, Mark Brown wrote:
+> On Mon, May 20, 2024 at 12:10:31PM -0400, James Bottomley wrote:
+> > On Sun, 2024-05-19 at 23:52 -0400, Kent Overstreet wrote:
+> 
+> > > I also do (try to) post patches to the list that are doing something
+> > > interesting and worth discussion; the vast majority this cycle has
+> > > been boring syzbot crap...
+> 
+> > you still don't say what problem not posting most patches solves?  You
+> > imply it would slow you down, but getting git-send-email to post to a
+> > mailing list can actually be automated through a pre-push commit hook
+> > with no slowdown in the awesome rate at which you apply patches to your
+> > own tree.
+> 
+> > Linux kernel process exists because it's been found to work over time.
+> > That's not to say it can't be changed, but it usually requires at least
+> > some stab at a reason before that happens.
+> 
+> Even if no meaningful review ever happens on the actual posts there's
+> still utility in having the patches on a list and findable in lore,
+> since everything is normally on the list people end up with workflows
+> that assume that they'll be able to find things there.  For example it's
+> common for test people who identify which patch introduces an issue to
+> grab the patch from lore in order to review any discussion of the patch,
+> then report by replying to the patch to help with context for their
+> report and get some help with figuring out a CC list.  Posting costs
+> very little and makes people's lives easier.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Exactly. This is the standard workflow that everyone depends on.
+
+So, for example, for my -next trees, I only ever add patches to them via
+"b4 am lore-url-here...".
+
+If I've got patches to add to -next from some devel tree, I don't
+cherry-pick them to my -next tree: I send them to lore, and then pull
+them back down.
+
+But the point is: send your stuff to lore. :)
 
 -- 
-Wei Yang
-Help you, Help me
+Kees Cook
