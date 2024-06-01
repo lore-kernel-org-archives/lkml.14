@@ -1,173 +1,316 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64256F2EB
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 10:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C192773C;
+	Sat,  1 Jun 2024 10:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717236619; cv=none; b=Lge/T4SvJuIaMU/o8F9LUCe2NCWA52nl77hlivL3Ceb+yVJfVEvAXrGoQEiT/84/QjtG3n6eUiEVoeioamSYcjdnpnoHbSdOoQwTyo8HnP8NoVoHd6etl7suhr0Ayfmrhf6lGsYHUK+onPKND9Q78PyagqtHRYfpYJ04l9z8rgg=
+	t=1717236786; cv=none; b=bmEUxJLyDblu4KMIp6MJ3Lt4ad9YPMqktyXGAFi31sMnlUmkBpZqftDQF9iBUArWjxfsjq9EdT6DSGhZBFKYo9uA6Z8NJWOr7sGyIpTA448eqmzr9NKc3FawT1+3xPdtRZZCIprrSggA+C3OXt+/ieAt06dVHmtUdQ2JaZaOwvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717236619; c=relaxed/simple;
-	bh=L2Fb0cA6egvQk7LSOeuXnq+6wOfz3vlPMZBefyOFWoU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=bpmTsf9kEcrOYC5dl3KW1Qq8+Rt/IyEMRsC9UkebeboXmiG4QrJWH595leVgfbYJ+zjw7KxgKfiASGwM9giCwUH4g7VP/VrXbINU5mgIS4+smsLbh8wLWMnD6maWEVSVEzZ3CDd1g3Ujz//ey7iPS/ZWintwmANF4Tm5LDeOTX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m0cfFzgC; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717236786; c=relaxed/simple;
+	bh=y8LFDIhCtkCTRkCYcSsuv/OeLC7SceD2Woukxe9WDvg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnZ7nnt22/UaIDPZQtlw+wbGleA/14kv7tfkkbrDtETqWZ2F49i/SCIT3nENJx17owEuVo+ocZK7Kyvd8VgZEp2/0rPKwRL/4Otlp3+D7XuXbmf1A+SwXocIPZKQ9gQj4FsWwp0UmcGi0diXR667ZWUF8jQF93sRWt1VNbqA8BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+bgHmRq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m0cfFzgC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717236617; x=1748772617;
-  h=date:from:to:cc:subject:message-id;
-  bh=L2Fb0cA6egvQk7LSOeuXnq+6wOfz3vlPMZBefyOFWoU=;
-  b=m0cfFzgCKaVaFaz7DfeAaX1Ch011HLbdJZwaiE0jbK0m87Zn5XupWJji
-   QAOuh/9V52MoNhTPT5fIMo7Jl6cU31mwE1mT9mXjHPA2jWm27BrZQH5kT
-   vaEWh+qd2b8m+CBJ5oKdeWRsDo/Q826KNL7cdFyO83bmu6dr3Z8cMcXp0
-   pdv3huUG5tOeU760gxKscNCjf7Y7NxjIiV1dO+64wz+9Tnf013uLDO4UK
-   tHnM3FIsMZy57GXgIhDtacTYZXkd0Ny6wlQUFQQu2XLP6grF6h4j5UgPj
-   0icQJxIkjV1yZSGCOadZmgDptZgC+oBo1UvpTHrno34aLnfEHR//pGOpr
-   w==;
-X-CSE-ConnectionGUID: aU1dSee4QPOVORFvcRYhTQ==
-X-CSE-MsgGUID: JNYzyoIQTOaDZQmyWCjVTA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="17610817"
-X-IronPort-AV: E=Sophos;i="6.08,207,1712646000"; 
-   d="scan'208";a="17610817"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2024 03:10:16 -0700
-X-CSE-ConnectionGUID: GtDHBXNmSceh5tcEEb0PaQ==
-X-CSE-MsgGUID: U3R2FK/fQ4SAdNIIGLl0ZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,207,1712646000"; 
-   d="scan'208";a="36317969"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 01 Jun 2024 03:10:15 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sDLgi-000IgV-2e;
-	Sat, 01 Jun 2024 10:10:12 +0000
-Date: Sat, 01 Jun 2024 18:09:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 0c2f6d04619ec2b53ad4b0b591eafc9389786e86
-Message-ID: <202406011841.3Agkafsx-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+bgHmRq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D739FC116B1;
+	Sat,  1 Jun 2024 10:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717236785;
+	bh=y8LFDIhCtkCTRkCYcSsuv/OeLC7SceD2Woukxe9WDvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q+bgHmRqpK9secEMpGmkvUrAp8EqcPx4c7pTF9sEEkxOD5FTLr6CZx49dg8bSvUJE
+	 IoGiMJ40rE1aLu3K6Mhfux0r/dfddJEHBWQwyLwQQr4toHEEzWCaYsgEvjtamm75on
+	 vIgt26c8bvBI/4WTSvtr06IOJJw4ny6Jh5minCb05lmcaEK+H0drCmbXKRg8i8Jj6q
+	 GSS5ER1rFKQt3WoOcAtLT4ubaenvt5P9kRcTkCyzv9N28g3Y/c/+gp9ib5V9K0ApAl
+	 KuCIjtoq3Eipcx1NgPa9eDoKwZACUI1pxHYbGwKiXtXjSvN0xMrKfn+dhXiI8El3mb
+	 Fh1E1PI4oVSXA==
+Date: Sat, 1 Jun 2024 11:13:00 +0100
+From: Simon Horman <horms@kernel.org>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH v4 7/7] net: ravb: Allocate RX buffers via page
+ pool
+Message-ID: <20240601101300.GA491852@kernel.org>
+References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
+ <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 0c2f6d04619ec2b53ad4b0b591eafc9389786e86  x86/topology/intel: Unlock CPUID before evaluating anything
+On Tue, May 28, 2024 at 04:03:39PM +0100, Paul Barker wrote:
+> This patch makes multiple changes that can't be separated:
+> 
+>   1) Allocate plain RX buffers via a page pool instead of allocating
+>      SKBs, then use build_skb() when a packet is received.
+>   2) For GbEth IP, reduce the RX buffer size to 2kB.
+>   3) For GbEth IP, merge packets which span more than one RX descriptor
+>      as SKB fragments instead of copying data.
+> 
+> Implementing (1) without (2) would require the use of an order-1 page
+> pool (instead of an order-0 page pool split into page fragments) for
+> GbEth.
+> 
+> Implementing (2) without (3) would leave us no space to re-assemble
+> packets which span more than one RX descriptor.
+> 
+> Implementing (3) without (1) would not be possible as the network stack
+> expects to use put_page() or page_pool_put_page() to free SKB fragments
+> after an SKB is consumed.
+> 
+> RX checksum offload support is adjusted to handle both linear and
+> nonlinear (fragmented) packets.
+> 
+> This patch gives the following improvements during testing with iperf3.
+> 
+>   * RZ/G2L:
+>     * TCP RX: same bandwidth at -43% CPU load (70% -> 40%)
+>     * UDP RX: same bandwidth at -17% CPU load (88% -> 74%)
+> 
+>   * RZ/G2UL:
+>     * TCP RX: +30% bandwidth (726Mbps -> 941Mbps)
+>     * UDP RX: +417% bandwidth (108Mbps -> 558Mbps)
+> 
+>   * RZ/G3S:
+>     * TCP RX: +64% bandwidth (562Mbps -> 920Mbps)
+>     * UDP RX: +420% bandwidth (90Mbps -> 468Mbps)
+> 
+>   * RZ/Five:
+>     * TCP RX: +217% bandwidth (145Mbps -> 459Mbps)
+>     * UDP RX: +470% bandwidth (20Mbps -> 114Mbps)
+> 
+> There is no significant impact on bandwidth or CPU load in testing on
+> RZ/G2H or R-Car M3N.
+> 
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
 
-elapsed time: 891m
+Hi Paul,
 
-configs tested: 96
-configs skipped: 135
+Some minor feedback from my side.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+...
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240601   gcc  
-arc                   randconfig-002-20240601   gcc  
-arm                   randconfig-003-20240601   gcc  
-arm                   randconfig-004-20240601   gcc  
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240601   gcc  
-arm64                 randconfig-004-20240601   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240601   gcc  
-csky                  randconfig-002-20240601   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240601   clang
-i386         buildonly-randconfig-002-20240601   gcc  
-i386         buildonly-randconfig-003-20240601   gcc  
-i386         buildonly-randconfig-004-20240601   gcc  
-i386         buildonly-randconfig-005-20240601   gcc  
-i386         buildonly-randconfig-006-20240601   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240601   clang
-i386                  randconfig-002-20240601   gcc  
-i386                  randconfig-003-20240601   clang
-i386                  randconfig-004-20240601   gcc  
-i386                  randconfig-005-20240601   clang
-i386                  randconfig-006-20240601   gcc  
-i386                  randconfig-011-20240601   gcc  
-i386                  randconfig-012-20240601   gcc  
-i386                  randconfig-013-20240601   gcc  
-i386                  randconfig-014-20240601   gcc  
-i386                  randconfig-015-20240601   clang
-i386                  randconfig-016-20240601   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240601   gcc  
-loongarch             randconfig-002-20240601   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240601   gcc  
-nios2                 randconfig-002-20240601   gcc  
-parisc                randconfig-001-20240601   gcc  
-parisc                randconfig-002-20240601   gcc  
-powerpc               randconfig-001-20240601   gcc  
-powerpc               randconfig-002-20240601   gcc  
-powerpc               randconfig-003-20240601   gcc  
-powerpc64             randconfig-003-20240601   gcc  
-riscv                 randconfig-002-20240601   gcc  
-s390                  randconfig-001-20240601   gcc  
-s390                  randconfig-002-20240601   gcc  
-sh                    randconfig-001-20240601   gcc  
-sh                    randconfig-002-20240601   gcc  
-sparc64               randconfig-001-20240601   gcc  
-sparc64               randconfig-002-20240601   gcc  
-um                               allyesconfig   gcc  
-um                    randconfig-001-20240601   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240601   clang
-x86_64       buildonly-randconfig-002-20240601   clang
-x86_64       buildonly-randconfig-004-20240601   gcc  
-x86_64       buildonly-randconfig-005-20240601   clang
-x86_64       buildonly-randconfig-006-20240601   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-002-20240601   clang
-x86_64                randconfig-003-20240601   clang
-x86_64                randconfig-004-20240601   clang
-x86_64                randconfig-006-20240601   clang
-x86_64                randconfig-011-20240601   clang
-x86_64                randconfig-012-20240601   clang
-x86_64                randconfig-013-20240601   clang
-x86_64                randconfig-071-20240601   clang
-x86_64                randconfig-073-20240601   clang
-x86_64                randconfig-075-20240601   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                randconfig-001-20240601   gcc  
-xtensa                randconfig-002-20240601   gcc  
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+...
+
+> @@ -298,13 +269,14 @@ static void ravb_ring_free(struct net_device *ndev, int q)
+>  		priv->tx_ring[q] = NULL;
+>  	}
+>  
+> -	/* Free RX skb ringbuffer */
+> -	if (priv->rx_skb[q]) {
+> -		for (i = 0; i < priv->num_rx_ring[q]; i++)
+> -			dev_kfree_skb(priv->rx_skb[q][i]);
+> +	/* Free RX buffers */
+> +	for (i = 0; i < priv->num_rx_ring[q]; i++) {
+> +		if (priv->rx_buffers[q][i].page)
+> +			page_pool_put_page(priv->rx_pool[q], priv->rx_buffers[q][i].page, 0, true);
+
+nit: Networking still prefers code to be 80 columns wide or less.
+     It looks like that can be trivially achieved here.
+
+     Flagged by checkpatch.pl --max-line-length=80
+
+>  	}
+> -	kfree(priv->rx_skb[q]);
+> -	priv->rx_skb[q] = NULL;
+> +	kfree(priv->rx_buffers[q]);
+> +	priv->rx_buffers[q] = NULL;
+> +	page_pool_destroy(priv->rx_pool[q]);
+>  
+>  	/* Free aligned TX buffers */
+>  	kfree(priv->tx_align[q]);
+> @@ -317,35 +289,56 @@ static void ravb_ring_free(struct net_device *ndev, int q)
+>  	priv->tx_skb[q] = NULL;
+>  }
+>  
+> +static int
+> +ravb_alloc_rx_buffer(struct net_device *ndev, int q, u32 entry, gfp_t gfp_mask,
+> +		     struct ravb_rx_desc *rx_desc)
+> +{
+> +	struct ravb_private *priv = netdev_priv(ndev);
+> +	const struct ravb_hw_info *info = priv->info;
+> +	struct ravb_rx_buffer *rx_buff = &priv->rx_buffers[q][entry];
+> +	dma_addr_t dma_addr;
+> +	unsigned int size;
+
+nit: I would appreciate it if some consideration could be given to
+     moving this driver towards rather than away from reverse xmas
+     tree - longest line to shortest - for local variable declarations.
+
+     I'm not suggesting a clean-up patch. Rather, that in cases
+     like this where new code is added, and also in cases where
+     code is modified, reverse xmas tree is preferred.
+
+     Here I would suggest separating the assinment of rx_buf from
+     it's declaration (completely untested!):
+
+	struct ravb_private *priv = netdev_priv(ndev);
+	const struct ravb_hw_info *info = priv->info;
+	struct ravb_rx_buffer *rx_buff;
+	dma_addr_t dma_addr;
+	unsigned int size;
+
+	rx_buff = &priv->rx_buffers[q][entry];
+
+     Edward Cree's xmastree tool can be helpful here:
+     https://github.com/ecree-solarflare/xmastree
+
+> +
+> +	size = info->rx_buffer_size;
+> +	rx_buff->page = page_pool_alloc(priv->rx_pool[q], &rx_buff->offset, &size,
+> +					gfp_mask);
+> +	if (unlikely(!rx_buff->page)) {
+> +		/* We just set the data size to 0 for a failed mapping
+> +		 * which should prevent DMA from happening...
+> +		 */
+> +		rx_desc->ds_cc = cpu_to_le16(0);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dma_addr = page_pool_get_dma_addr(rx_buff->page) + rx_buff->offset;
+> +	dma_sync_single_for_device(ndev->dev.parent, dma_addr,
+> +				   info->rx_buffer_size, DMA_FROM_DEVICE);
+> +	rx_desc->dptr = cpu_to_le32(dma_addr);
+> +
+> +	/* The end of the RX buffer is used to store skb shared data, so we need
+> +	 * to ensure that the hardware leaves enough space for this.
+> +	 */
+> +	rx_desc->ds_cc = cpu_to_le16(info->rx_buffer_size
+> +				     - SKB_DATA_ALIGN(sizeof(struct skb_shared_info))
+> +				     - ETH_FCS_LEN + sizeof(__sum16));
+> +	return 0;
+> +}
+
+...
+
+> @@ -816,14 +824,26 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>  			if (desc_status & MSC_CEEF)
+>  				stats->rx_missed_errors++;
+>  		} else {
+> +			struct ravb_rx_buffer *rx_buff = &priv->rx_buffers[q][entry];
+> +			void *rx_addr = page_address(rx_buff->page) + rx_buff->offset;
+>  			die_dt = desc->die_dt & 0xF0;
+> -			skb = ravb_get_skb_gbeth(ndev, entry, desc);
+> +			dma_sync_single_for_cpu(ndev->dev.parent, le32_to_cpu(desc->dptr),
+> +						desc_len, DMA_FROM_DEVICE);
+> +
+>  			switch (die_dt) {
+>  			case DT_FSINGLE:
+>  			case DT_FSTART:
+>  				/* Start of packet:
+> -				 * Set initial data length.
+> +				 * Prepare an SKB and add initial data.
+>  				 */
+> +				skb = napi_build_skb(rx_addr, info->rx_buffer_size);
+> +				if (unlikely(!skb)) {
+> +					stats->rx_errors++;
+> +					page_pool_put_page(priv->rx_pool[q],
+> +							   rx_buff->page, 0, true);
+
+Here skb is NULL.
+
+> +					break;
+> +				}
+> +				skb_mark_for_recycle(skb);
+>  				skb_put(skb, desc_len);
+>  
+>  				/* Save this SKB if the packet spans multiple
+> @@ -836,14 +856,23 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>  			case DT_FMID:
+>  			case DT_FEND:
+>  				/* Continuing a packet:
+> -				 * Move data into the saved SKB.
+> +				 * Add this buffer as an RX frag.
+>  				 */
+> -				skb_copy_to_linear_data_offset(priv->rx_1st_skb,
+> -							       priv->rx_1st_skb->len,
+> -							       skb->data,
+> -							       desc_len);
+> -				skb_put(priv->rx_1st_skb, desc_len);
+> -				dev_kfree_skb(skb);
+> +
+> +				/* rx_1st_skb will be NULL if napi_build_skb()
+> +				 * failed for the first descriptor of a
+> +				 * multi-descriptor packet.
+> +				 */
+> +				if (unlikely(!priv->rx_1st_skb)) {
+> +					stats->rx_errors++;
+> +					page_pool_put_page(priv->rx_pool[q],
+> +							   rx_buff->page, 0, true);
+
+And here skb seems to be uninitialised.
+
+> +					break;
+> +				}
+> +				skb_add_rx_frag(priv->rx_1st_skb,
+> +						skb_shinfo(priv->rx_1st_skb)->nr_frags,
+> +						rx_buff->page, rx_buff->offset,
+> +						desc_len, info->rx_buffer_size);
+>  
+>  				/* Set skb to point at the whole packet so that
+>  				 * we only need one code path for finishing a
+
+The code between the hunk above and the hunk below is:
+
+				/* Set skb to point at the whole packet so that
+				 * we only need one code path for finishing a
+				 * packet.
+				 */
+				skb = priv->rx_1st_skb;
+			}
+			switch (die_dt) {
+			case DT_FSINGLE:
+			case DT_FEND:
+				/* Finishing a packet:
+				 * Determine protocol & checksum, hand off to
+				 * NAPI and update our stats.
+				 */
+				skb->protocol = eth_type_trans(skb, ndev);
+				if (ndev->features & NETIF_F_RXCSUM)
+					ravb_rx_csum_gbeth(skb);
+				stats->rx_bytes += skb->len;
+				napi_gro_receive(&priv->napi[q], skb);
+				rx_packets++;
+
+It seems that the inter-hunk code above may dereference skb when it is NULL
+or uninitialised.
+
+Flagged by Smatch.
+
+> @@ -865,7 +894,16 @@ static int ravb_rx_gbeth(struct net_device *ndev, int budget, int q)
+>  				stats->rx_bytes += skb->len;
+>  				napi_gro_receive(&priv->napi[q], skb);
+>  				rx_packets++;
+> +
+> +				/* Clear rx_1st_skb so that it will only be
+> +				 * non-NULL when valid.
+> +				 */
+> +				if (die_dt == DT_FEND)
+> +					priv->rx_1st_skb = NULL;
+>  			}
+> +
+> +			/* Mark this RX buffer as consumed. */
+> +			rx_buff->page = NULL;
+>  		}
+>  	}
+>  
+
+...
