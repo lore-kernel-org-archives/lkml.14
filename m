@@ -1,110 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C73014E2E7;
-	Sat,  1 Jun 2024 09:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85AD6AAD;
+	Sat,  1 Jun 2024 09:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717234036; cv=none; b=l3A3f1QfgUijO+P9YNoWCb81038CJlXSiUNUwotQy+gCbUbmm90XF01PIX7IB6JAGI8G7641lrebPDn0a66JwGpIMJ5jjfgwePYzIeCwOk/GIqGfTagbXqN+NFZk7dHUvbrf6CYvYtLQjnBH1B9S+NgH+DrDURiNZmGnBA6yknI=
+	t=1717234359; cv=none; b=hpaZ/ws3gYK4y8t8H41TI04PrXvhydju5dTPG++UIHbQRcHK+RN+6AsuKP7AC0LHH7C1hBldC2j748TgGCKrv2kfs7MFaBRXz8+FziW2OsHnhf5ixvlCG+ihuLSBFh/KN/1aAogLj9wQTTei7Bed/4DEUolYmeAEknXPid7pj/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717234036; c=relaxed/simple;
-	bh=QBWnFCFndIQ273BjFNgpk2O53sifvVexYsbTKkuXgdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/ZQpzmnkLrFg7tJ2+FAgBs3xWSEwmIOO77h/kf3rBI2rsLVbXBotv23Eo8P2ZSptoLO18xgZsWjHpozpcD4cvAoKUiZrLqc8xFg+wfYgpu1QlWUv9CBz0lO3t+xUrapg5eeDpc8noioI2WPpJLKr3k239mJMxB89w1IXjEvtCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhqWE5Dq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717234359; c=relaxed/simple;
+	bh=8qeuq/9NyK9dd0k3Ody3dB9SOCFgZ5HrBOGAyz4hQwo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=e15RouO2EVSVxKGZ2XqhXIok4YKQbcFeCQRGxueUhniUR1u/TExvAsQVAdBRc/5wFFM9C80hW67Nn+r/KvlgdJ03sxJcfQzTzY2Ah75IRX8LvmmoHKFFWpCyJnSuP5C6zHYG1+YBaT8cR2idxcEMePkLDDQsWbZ+PT694NMybR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VHOLZ8D/; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhqWE5Dq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717234035; x=1748770035;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QBWnFCFndIQ273BjFNgpk2O53sifvVexYsbTKkuXgdc=;
-  b=jhqWE5DqIXDYWTwRgD2oxtFE/hEZrcK3Lp8JCW1q6kQ4cGIZyqXIMa99
-   m2Sqo/irms9HDld7FkrrqFNHFoyNZIV33oi/YIZeb0QNpzfcUpAAA6jN8
-   HlY5mrsDsBZEVZS0kPZb/dacI4Gz/zFb/ciHjO9SFPUTkWkAGwJHGuuOX
-   8gsvT5armneW0QhgvP95xWb6pVx2nyRST6SF/Vshj5HS4O4/qpi5SI1XJ
-   HalTak7KO6X/4jOFMTo7WfcJnth4YtxblgK+R+4vmyVg4hfNf5nBlaqf5
-   9BQETVe7q/P8tyGuSnKQCAyCu1n6MCHJJzhTTmb6NcKT2CBPV2s8l2Z4P
-   g==;
-X-CSE-ConnectionGUID: YlCGMHhLTVmR+2xc62rUyg==
-X-CSE-MsgGUID: 68TeEhH0RXGhdaMVyhOHLg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="24414515"
-X-IronPort-AV: E=Sophos;i="6.08,207,1712646000"; 
-   d="scan'208";a="24414515"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2024 02:27:14 -0700
-X-CSE-ConnectionGUID: 43VX1QtNQ36aoAqlDm2bFQ==
-X-CSE-MsgGUID: paCIO5gSS1O9d0DiF8e87Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,207,1712646000"; 
-   d="scan'208";a="41476726"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 01 Jun 2024 02:27:13 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sDL14-000Icf-1R;
-	Sat, 01 Jun 2024 09:27:10 +0000
-Date: Sat, 1 Jun 2024 17:26:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Daniel Mack <daniel@zonque.org>, gregkh@linuxfoundation.org,
-	hvilleneuve@dimonoff.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH] serial: sc16is7xx: set driver name
-Message-ID: <202406011748.tHQQJ8TB-lkp@intel.com>
-References: <20240531101959.181457-1-daniel@zonque.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHOLZ8D/"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f62fae8c3cso17325205ad.3;
+        Sat, 01 Jun 2024 02:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717234357; x=1717839157; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WfDan29VxVHZmK0WASWdz2aN4PE4yQZdFHSJZf8M3Io=;
+        b=VHOLZ8D/0MKfMb5/9DzrnPU4zL+fMrFJPRGS0Y6qh4JeOtR2cJMjwtDR2x16H52DuB
+         LgZuzG+IX0/awRRIBFQhoHO5lzI8zpClqokIZBFUcCW9CsTZu/cHJnnrxWaaIjnXoS2B
+         kCK8M/tSVqQ+buIRmE4aydUALXc8Mi/szGmrJnDAqAYgRSfS47WgtuxheWDBYt7Is380
+         RqplniEn1zRs4TVbP3vEnmcdEFJq9uiyQgO42d71NLuH38z3m7Xtu27Ee9VIJh+E908x
+         rvZSoQEuKQwzZRiG0FFqiWadXD79YfsmCs6LhpnGM6r8FQhY+sCt/Tx22KPg6IdASiTB
+         UVYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717234357; x=1717839157;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WfDan29VxVHZmK0WASWdz2aN4PE4yQZdFHSJZf8M3Io=;
+        b=sMfo8sAEXFtVhj84AfQWvwOpIrxBRQD18wlDsb1zSMtklMtNstNvOFjjtGLNG1STQi
+         7D2uxDRq45df/zH9RGs1ryBTHM5FIWap/4vHngaWZ7WeGYbP5f3ghFvdqMtvd1kFjA4a
+         6ZQGFDkE9sQPXbJS5uWPfpoqqEiPHVtIccbsaydyhWEcbR0ue6vE4l8pA/OmsYTll5p5
+         RyYaelWP8pZyMdTAyM92YrhV3kys++d0ZR7Or9qYmmRFoYLanWPXfwUMhGifQGHg+Trf
+         dee7OEe/rkKrNrQ0/NP0rBaVjYY7Om0l6MkfnKVMxQAPIYxf14Dl3VEsMV5VOtAUnzkP
+         jLwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUtU2kTDp4c+Sw7TqLvf43Qu2g0ZjmVHg6top6oaoXPCHFxvhK0OSTRnVOMOCAAVUsJdCDHFDgxqqgHh+IXUz/FQfkvUzCaOQuclTkCq+npgIb1x493s+xClBGIgpeESjknEn/uzg7N
+X-Gm-Message-State: AOJu0Ywqz+ENoMp4T0cGj1FkXEQl92OgLZEoHVXi9jr7h0KK42kis88N
+	uYPdApCrZjD4meKulfLo/HFDYymOc/XtX9Dhe8yL45WJySoG51lt
+X-Google-Smtp-Source: AGHT+IF2Y/lvJC2CHSbJ8VM+i+/4AWA1oMbbO9ctIjt+vHM9XrZrC5hZywfN/zjx0YrFt+wiVtSrww==
+X-Received: by 2002:a17:903:22c3:b0:1f4:bb5c:b7bd with SMTP id d9443c01a7336-1f6370b8aa1mr45185795ad.61.1717234357015;
+        Sat, 01 Jun 2024 02:32:37 -0700 (PDT)
+Received: from localhost ([219.144.1.218])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323feaa0sm30271675ad.230.2024.06.01.02.32.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 01 Jun 2024 02:32:36 -0700 (PDT)
+From: joswang <joswang1221@gmail.com>
+To: Thinh.Nguyen@synopsys.com
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	joswang <joswang@lenovo.com>
+Subject: [PATCH 2/2] usb: dwc3: core: Workaround for CSR read timeout
+Date: Sat,  1 Jun 2024 17:32:32 +0800
+Message-Id: <20240601093232.52319-1-joswang1221@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240601092646.52139-1-joswang1221@gmail.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531101959.181457-1-daniel@zonque.org>
 
-Hi Daniel,
+From: joswang <joswang@lenovo.com>
 
-kernel test robot noticed the following build warnings:
+DWC31 version 2.00a have an issue that would cause
+a CSR read timeout When CSR read coincides with RAM
+Clock Gating Entry.
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.10-rc1 next-20240531]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This workaround solution disable Clock Gating, sacrificing
+power consumption for normal operation.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Mack/serial-sc16is7xx-set-driver-name/20240531-182824
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20240531101959.181457-1-daniel%40zonque.org
-patch subject: [PATCH] serial: sc16is7xx: set driver name
-config: x86_64-randconfig-123-20240601 (https://download.01.org/0day-ci/archive/20240601/202406011748.tHQQJ8TB-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406011748.tHQQJ8TB-lkp@intel.com/reproduce)
+Signed-off-by: joswang <joswang@lenovo.com>
+---
+ drivers/usb/dwc3/core.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406011748.tHQQJ8TB-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/tty/serial/sc16is7xx.c:352:10: sparse: sparse: Initializer entry defined twice
-   drivers/tty/serial/sc16is7xx.c:354:10: sparse:   also defined here
-
-vim +352 drivers/tty/serial/sc16is7xx.c
-
-c64349722d1417 Jakub Kicinski  2015-07-31  349  
-c64349722d1417 Jakub Kicinski  2015-07-31  350  static struct uart_driver sc16is7xx_uart = {
-c64349722d1417 Jakub Kicinski  2015-07-31  351  	.owner		= THIS_MODULE,
-d9ffadaf9df1c8 Hugo Villeneuve 2023-12-21 @352  	.driver_name    = SC16IS7XX_NAME,
-c64349722d1417 Jakub Kicinski  2015-07-31  353  	.dev_name	= "ttySC",
-cb1c18ea6be1d7 Daniel Mack     2024-05-31  354  	.driver_name	= SC16IS7XX_NAME,
-c64349722d1417 Jakub Kicinski  2015-07-31  355  	.nr		= SC16IS7XX_MAX_DEVS,
-c64349722d1417 Jakub Kicinski  2015-07-31  356  };
-c64349722d1417 Jakub Kicinski  2015-07-31  357  
-
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 3a8fbc2d6b99..1df85c505c9e 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -978,11 +978,22 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
+ 		 *
+ 		 * STAR#9000588375: Clock Gating, SOF Issues when ref_clk-Based
+ 		 * SOF/ITP Mode Used
++		 *
++		 * WORKAROUND: DWC31 version 2.00a have an issue that would
++		 * cause a CSR read timeout When CSR read coincides with RAM
++		 * Clock Gating Entry.
++		 *
++		 * This workaround solution disable Clock Gating, sacrificing
++		 * power consumption for normal operation.
+ 		 */
+ 		if ((dwc->dr_mode == USB_DR_MODE_HOST ||
+ 				dwc->dr_mode == USB_DR_MODE_OTG) &&
+ 				DWC3_VER_IS_WITHIN(DWC3, 210A, 250A))
+ 			reg |= DWC3_GCTL_DSBLCLKGTNG | DWC3_GCTL_SOFITPSYNC;
++		else if ((dwc->dr_mode == USB_DR_MODE_HOST ||
++				dwc->dr_mode == USB_DR_MODE_OTG) &&
++				DWC3_VER_IS(DWC31, 200A))
++			reg |= DWC3_GCTL_DSBLCLKGTNG;
+ 		else
+ 			reg &= ~DWC3_GCTL_DSBLCLKGTNG;
+ 		break;
+@@ -992,6 +1003,18 @@ static void dwc3_core_setup_global_control(struct dwc3 *dwc)
+ 		 * will work. Device-mode hibernation is not yet implemented.
+ 		 */
+ 		reg |= DWC3_GCTL_GBLHIBERNATIONEN;
++
++		/*
++		 * WORKAROUND: DWC31 version 2.00a have an issue that would
++		 * cause a CSR read timeout When CSR read coincides with RAM
++		 * Clock Gating Entry.
++		 *
++		 * This workaround solution disable Clock Gating, sacrificing
++		 * power consumption for normal operation.
++		 */
++		if ((dwc->dr_mode == USB_DR_MODE_HOST ||
++		     dwc->dr_mode == USB_DR_MODE_OTG) && DWC3_VER_IS(DWC31, 200A))
++			reg |= DWC3_GCTL_DSBLCLKGTNG;
+ 		break;
+ 	default:
+ 		/* nothing */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
