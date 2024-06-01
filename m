@@ -1,236 +1,2460 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5EE4A29;
-	Sat,  1 Jun 2024 01:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE106A38
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Jun 2024 01:31:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717205436; cv=none; b=EaX0m7j7tR09S0KL3/J8EhSHxgBmHJLr+QEQksO/1bJIDs6CmL9pRoQNyaUbXSi4BwQX3LfGk848XTww//C9u5+PPx32NJ1cq6G3dE6xQAxEppm6rxGOOrnt/VGPOu25vF5ePPeuLjm5sEjTCDdAUBaUz7YI3UA/pc5PX/E9HWc=
+	t=1717205502; cv=none; b=sO+UNzEqa6EkeVVAakYSvzRIcBC+zr6AfhaMVsh4KeQFmRnhGMtNsmOe2dUbJLZqwohUZ0fJN3+uX9Fm7SCTWfsenC14FtMkl9BCabBNX2xYX6E2kmO6ZvU338zasaHbZ4BVnPfENN0qGFURLecoKcxQvdRdYEThck78Vedu6Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717205436; c=relaxed/simple;
-	bh=4vVXCbo2qncyG62dU78GhZ9CGyoVD8kLIL49/nRG1sw=;
+	s=arc-20240116; t=1717205502; c=relaxed/simple;
+	bh=0T/Y7LbNkoDu0akjK5kDbgTC2pIzgsPhGg1U9sTUhm4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMVK21HT43jhoRnuT+aFuX/LSv3n5QsGhO7wWXf072akuZ8Ayf4Pxww/1tHqnlvTKZIojaK4y2dVOstpmFL+I/VxH/zo9Y21Wp8ZFSybIVWprSxfA9cxIFkHZsEy1lfJeK3GA2lyVxG5VXyJaYV9NwMu9+/5TBeMxVoGbcQHRjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PXQxvuF7; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZhIUqPdRzA+P4KzShybt1qcWZU9wJDBmDYdayO9tXBfGKGpEdmp6A603KxEYsqwxK4GLYbtRCS9IWwSVBKGbF7N5Zx4rXUQP+C8iX2Z/kKjxMDI8XUr2Wwdi0/8ZXyaywq3UwIbImdOD88OpUPrABQLjxuoje7AiGOPnrYC/3aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lEGHwaVy; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PXQxvuF7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717205435; x=1748741435;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4vVXCbo2qncyG62dU78GhZ9CGyoVD8kLIL49/nRG1sw=;
-  b=PXQxvuF7A93zyP5H3Mmxyn4hUwKjxzw3pYr5xll7OcpKx83EyjUpzXn8
-   fFB+cnkCna3nvP7tSmDYvUuuGBoUDk2Wv4RNJm8aPQ9yIa6s/ctfxVMoa
-   U+a8SE5w23HwCnF1szevLCT/ZVeZs3ydW22+cbi3af1e8kVaC39k/9MmS
-   xAdvE/9K/9UamW5T6PxgS2QXIJH5sTF98Mbp+2vLdaXG2o6o64qvAt9yp
-   8KgeleZzphsFhvXdaB75vYW2B/KdFCLkw1DYTc7DmthL2CReeDJaIMkMS
-   C1fdYBXpQXcKXBoBkRyR9uaEiVxtobBYkhLVRIMBelm6ZtXarZm66GAWl
-   A==;
-X-CSE-ConnectionGUID: vIVKyp12QWKPOT4jeLK6qg==
-X-CSE-MsgGUID: ImO9eS+4TZmnLIqueKnrLg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11089"; a="25170707"
-X-IronPort-AV: E=Sophos;i="6.08,206,1712646000"; 
-   d="scan'208";a="25170707"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2024 18:30:35 -0700
-X-CSE-ConnectionGUID: 1slEms+9R0CyL8fdyJBZAg==
-X-CSE-MsgGUID: eNanURYwRpeQz6Zks9h0JQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,206,1712646000"; 
-   d="scan'208";a="36414964"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 31 May 2024 18:30:33 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sDDZk-000I5X-2S;
-	Sat, 01 Jun 2024 01:30:28 +0000
-Date: Sat, 1 Jun 2024 09:28:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shivnandan Kumar <quic_kshivnan@quicinc.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Ramakrishna Gottimukkula <quic_rgottimu@quicinc.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	Shivnandan Kumar <quic_kshivnan@quicinc.com>
-Subject: Re: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in
- bwmon_intr_thread
-Message-ID: <202406010720.b2TIAmY8-lkp@intel.com>
-References: <20240531105404.879267-1-quic_kshivnan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lEGHwaVy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=1sjp
+	rW4d5GlX33CboM0Xr5N4sP9JPj+by1bw53Wwjlo=; b=lEGHwaVyP1rfKZuA3vWp
+	Zg3od61EzKbaNSYWy1n4/uAGcerHCV8gCx0M+AzixrwU3ZVouDn58nS1oCKM5XmA
+	mnQZhueBWIIw3ZCMZ1rCiw05Fxjl9sROE729liCE5C66FnZSVNzPwjWWwKhQoXS4
+	w+TazAqvteNeaJPGgSYFZkfetELhpySGaQSgHlWjW8HH5z8OnqovQJ8IOk1fXgeh
+	FNIaNTyLd/ENvj8nXXEcwyRJx2bn/nofG5zUuewaw7UHgbguJcqpLDoj0d0Dyt56
+	tPi0rhJGYxWivNqW4UjOwUNBIldD2DvS0fdMpW8uTR+dkQsoNpcBt8aWI4S++Owr
+	pw==
+Received: (qmail 1314975 invoked from network); 1 Jun 2024 03:31:36 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 Jun 2024 03:31:36 +0200
+X-UD-Smtp-Session: l3s3148p1@hmGeD8oZJJZehhtB
+Date: Sat, 1 Jun 2024 03:31:36 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Dell PowerEdge R930: `i2c i2c-0: More than 8 memory slots on a
+ single bus, contact i801 maintainer to add missing mux config`
+Message-ID: <ykeksv7wbrxvuju37vdrrnalrbkvtvq3fqjsbhcaqtm3uignzj@ihuihrgxsq3t>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Jean Delvare <jdelvare@suse.com>, linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <b45ec360-9f3d-4f17-9d39-78f60890e865@molgen.mpg.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="phkxij2pukidqtkg"
+Content-Disposition: inline
+In-Reply-To: <b45ec360-9f3d-4f17-9d39-78f60890e865@molgen.mpg.de>
+
+
+--phkxij2pukidqtkg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240531105404.879267-1-quic_kshivnan@quicinc.com>
-
-Hi Shivnandan,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.10-rc1 next-20240531]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Shivnandan-Kumar/soc-qcom-icc-bwmon-Add-tracepoints-in-bwmon_intr_thread/20240531-185658
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240531105404.879267-1-quic_kshivnan%40quicinc.com
-patch subject: [PATCH] soc: qcom: icc-bwmon: Add tracepoints in bwmon_intr_thread
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20240601/202406010720.b2TIAmY8-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project bafda89a0944d947fc4b3b5663185e07a397ac30)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406010720.b2TIAmY8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406010720.b2TIAmY8-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/soc/qcom/icc-bwmon.c:11:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     548 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:11:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:11:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:14:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     585 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:102:
-   In file included from include/trace/trace_events.h:21:
-   In file included from include/linux/trace_events.h:6:
-   In file included from include/linux/ring_buffer.h:5:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:102:
-   In file included from include/trace/trace_events.h:419:
->> drivers/soc/qcom/trace_icc-bwmon.h:28:22: error: too many arguments provided to function-like macro invocation
-      28 |                 __assign_str(name, name);
-         |                                    ^
-   include/trace/stages/stage6_event_callback.h:34:9: note: macro '__assign_str' defined here
-      34 | #define __assign_str(dst)                                               \
-         |         ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:102:
-   In file included from include/trace/trace_events.h:419:
->> drivers/soc/qcom/trace_icc-bwmon.h:28:3: error: use of undeclared identifier '__assign_str'
-      28 |                 __assign_str(name, name);
-         |                 ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:102:
-   In file included from include/trace/trace_events.h:469:
->> drivers/soc/qcom/trace_icc-bwmon.h:28:22: error: too many arguments provided to function-like macro invocation
-      28 |                 __assign_str(name, name);
-         |                                    ^
-   include/trace/stages/stage6_event_callback.h:34:9: note: macro '__assign_str' defined here
-      34 | #define __assign_str(dst)                                               \
-         |         ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:103:
-   In file included from include/trace/perf.h:75:
->> drivers/soc/qcom/trace_icc-bwmon.h:28:22: error: too many arguments provided to function-like macro invocation
-      28 |                 __assign_str(name, name);
-         |                                    ^
-   include/trace/stages/stage6_event_callback.h:34:9: note: macro '__assign_str' defined here
-      34 | #define __assign_str(dst)                                               \
-         |         ^
-   In file included from drivers/soc/qcom/icc-bwmon.c:21:
-   In file included from drivers/soc/qcom/trace_icc-bwmon.h:49:
-   In file included from include/trace/define_trace.h:103:
-   In file included from include/trace/perf.h:75:
->> drivers/soc/qcom/trace_icc-bwmon.h:28:3: error: use of undeclared identifier '__assign_str'
-      28 |                 __assign_str(name, name);
-         |                 ^
-   7 warnings and 5 errors generated.
+Content-Transfer-Encoding: quoted-printable
 
 
-vim +28 drivers/soc/qcom/trace_icc-bwmon.h
+Adding Heiner to CC...
 
-    14	
-    15		TP_PROTO(const char *name,
-    16			 unsigned int meas_kbps, unsigned int up_kbps, unsigned int down_kbps),
-    17	
-    18		TP_ARGS(name, meas_kbps, up_kbps, down_kbps),
-    19	
-    20		TP_STRUCT__entry(
-    21			__string(name, name)
-    22			__field(unsigned int, meas_kbps)
-    23			__field(unsigned int, up_kbps)
-    24			__field(unsigned int, down_kbps)
-    25		),
-    26	
-    27		TP_fast_assign(
-  > 28			__assign_str(name, name);
-    29			__entry->meas_kbps = meas_kbps;
-    30			__entry->up_kbps = up_kbps;
-    31			__entry->down_kbps = down_kbps;
-    32		),
-    33	
-    34		TP_printk("name=%s meas_kbps=%u up_kbps=%u down_kbps=%u",
-    35			__get_str(name),
-    36			__entry->meas_kbps,
-    37			__entry->up_kbps,
-    38			__entry->down_kbps)
-    39	);
-    40	
+On Tue, May 14, 2024 at 12:45:04PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
+>=20
+>=20
+> On a Dell PowerEdge R930
+>=20
+>     DMI: Dell Inc. PowerEdge R930/0T55KM, BIOS 2.8.1 01/02/2020
+>=20
+> Linux 5.15.131 warns:
+>=20
+>     i2c i2c-0: Systems with more than 4 memory slots not supported yet, n=
+ot
+> instantiating SPD
+>=20
+> and Linux 6.9 warns:
+>=20
+>     i2c i2c-0: More than 8 memory slots on a single bus, contact i801
+> maintainer to add missing mux config
+>=20
+> What information can I provide, so the mux config can be added?
+>=20
+>=20
+> Kind regards,
+>=20
+> Paul
+>=20
+>=20
+> PS: Some output:
+>=20
+> ```
+> $ ls -lR /sys/bus/i2c/devices/
+> /sys/bus/i2c/devices/:
+> total 0
+> lrwxrwxrwx 1 root root 0 May 14 12:20 i2c-0 ->
+> ../../../devices/pci0000:00/0000:00:1f.3/i2c-0
+> lrwxrwxrwx 1 root root 0 May 14 12:42 i2c-1 ->
+> ../../../devices/pci0000:00/0000:00:1c.0/0000:03:00.0/i2c-1
+> lrwxrwxrwx 1 root root 0 May 14 12:42 i2c-2 -> ../../../devices/pci0000:0=
+0/0000:00:1c.6/0000:06:00.0/0000:07:00.0/0000:08:00.0/0000:09:00.0/i2c-2
+> lrwxrwxrwx 1 root root 0 May 14 12:42 i2c-3 ->
+> ../../../devices/pci0000:00/0000:00:1c.0/0000:03:00.1/i2c-3
+> ```
+>=20
+> ```
+> $ sudo dmidecode -t memory
+> # dmidecode 3.3
+> Getting SMBIOS data from sysfs.
+> SMBIOS 2.8 present.
+>=20
+> Handle 0x1000, DMI type 16, 23 bytes
+> Physical Memory Array
+> 	Location: System Board Or Motherboard
+> 	Use: System Memory
+> 	Error Correction Type: Multi-bit ECC
+> 	Maximum Capacity: 12 TB
+> 	Error Information Handle: Not Provided
+> 	Number Of Devices: 96
+>=20
+> Handle 0x1100, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 1
+> 	Locator: A1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125734A
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1101, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 1
+> 	Locator: A2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573BF
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1102, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 1
+> 	Locator: A3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257315
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1103, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 1
+> 	Locator: A4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572D4
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1104, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 2
+> 	Locator: A5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257318
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1105, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 2
+> 	Locator: A6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572D2
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1106, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 2
+> 	Locator: A7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257350
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1107, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 2
+> 	Locator: A8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257349
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1108, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 3
+> 	Locator: A9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1109, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 3
+> 	Locator: A10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x110A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 3
+> 	Locator: A11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x110B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 3
+> 	Locator: A12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x110C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 4
+> 	Locator: B1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572A7
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x110D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 4
+> 	Locator: B2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572A1
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x110E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 4
+> 	Locator: B3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125728D
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x110F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 4
+> 	Locator: B4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125728C
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1110, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 5
+> 	Locator: B5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125728F
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1111, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 5
+> 	Locator: B6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257352
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1112, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 5
+> 	Locator: B7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257294
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1113, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 5
+> 	Locator: B8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125728E
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1114, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 6
+> 	Locator: B9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1115, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 6
+> 	Locator: B10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1116, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 6
+> 	Locator: B11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1117, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 6
+> 	Locator: B12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1118, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 7
+> 	Locator: C1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125734D
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1119, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 7
+> 	Locator: C2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572AB
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 7
+> 	Locator: C3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125734F
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 7
+> 	Locator: C4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572D6
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 8
+> 	Locator: C5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125734E
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 8
+> 	Locator: C6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125731D
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 8
+> 	Locator: C7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573FF
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x111F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 8
+> 	Locator: C8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572D5
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1120, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 9
+> 	Locator: C9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1121, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 9
+> 	Locator: C10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1122, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 9
+> 	Locator: C11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1123, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 9
+> 	Locator: C12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1124, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 10
+> 	Locator: D1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257409
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1125, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 10
+> 	Locator: D2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257293
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1126, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 10
+> 	Locator: D3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740D
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1127, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 10
+> 	Locator: D4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572AD
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1128, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 11
+> 	Locator: D5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740C
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1129, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 11
+> 	Locator: D6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573C1
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x112A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 11
+> 	Locator: D7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112572A6
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x112B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 11
+> 	Locator: D8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740B
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x112C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 12
+> 	Locator: D9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x112D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 12
+> 	Locator: D10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x112E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 12
+> 	Locator: D11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x112F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 12
+> 	Locator: D12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1130, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 13
+> 	Locator: E1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573E6
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1131, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 13
+> 	Locator: E2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD64
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1132, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 13
+> 	Locator: E3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573D3
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1133, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 13
+> 	Locator: E4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573D7
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1134, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 14
+> 	Locator: E5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573A1
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1135, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 14
+> 	Locator: E6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD20
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1136, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 14
+> 	Locator: E7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573D4
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1137, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 14
+> 	Locator: E8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 112573D8
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1138, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 15
+> 	Locator: E9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1139, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 15
+> 	Locator: E10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x113A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 15
+> 	Locator: E11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x113B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 15
+> 	Locator: E12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x113C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 16
+> 	Locator: F1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740A
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x113D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 16
+> 	Locator: F2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257292
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x113E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 16
+> 	Locator: F3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740E
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x113F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 16
+> 	Locator: F4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257408
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1140, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 17
+> 	Locator: F5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257414
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1141, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 17
+> 	Locator: F6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257406
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1142, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 17
+> 	Locator: F7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125741A
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1143, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 17
+> 	Locator: F8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257314
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1144, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 18
+> 	Locator: F9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1145, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 18
+> 	Locator: F10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1146, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 18
+> 	Locator: F11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1147, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 18
+> 	Locator: F12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1148, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 19
+> 	Locator: G1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD1F
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1149, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 19
+> 	Locator: G2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257417
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 19
+> 	Locator: G3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD36
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 19
+> 	Locator: G4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD38
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 20
+> 	Locator: G5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AD1B
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 20
+> 	Locator: G6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257319
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 20
+> 	Locator: G7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129AC49
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x114F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 20
+> 	Locator: G8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1129ADB0
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1150, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 21
+> 	Locator: G9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1151, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 21
+> 	Locator: G10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1152, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 21
+> 	Locator: G11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1153, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 21
+> 	Locator: G12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x1154, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 22
+> 	Locator: H1
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125740F
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1155, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 22
+> 	Locator: H2
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125731A
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1156, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 22
+> 	Locator: H3
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257316
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1157, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 22
+> 	Locator: H4
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257411
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1158, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 23
+> 	Locator: H5
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257287
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x1159, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 23
+> 	Locator: H6
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257412
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x115A, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 23
+> 	Locator: H7
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 1125728B
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x115B, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: 72 bits
+> 	Data Width: 64 bits
+> 	Size: 16 GB
+> 	Form Factor: DIMM
+> 	Set: 23
+> 	Locator: H8
+> 	Bank Locator: Not Specified
+> 	Type: DDR4
+> 	Type Detail: Synchronous Registered (Buffered)
+> 	Speed: 2133 MT/s
+> 	Manufacturer: 002C00B3002C
+> 	Serial Number: 11257317
+> 	Asset Tag: 0F154830
+> 	Part Number: 36ASF2G72PZ-2G1A2
+> 	Rank: 2
+> 	Configured Memory Speed: 1600 MT/s
+> 	Minimum Voltage: 1.2 V
+> 	Maximum Voltage: 1.2 V
+> 	Configured Voltage: 1.2 V
+>=20
+> Handle 0x115C, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 24
+> 	Locator: H9
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x115D, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 24
+> 	Locator: H10
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x115E, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 24
+> 	Locator: H11
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+>=20
+> Handle 0x115F, DMI type 17, 40 bytes
+> Memory Device
+> 	Array Handle: 0x1000
+> 	Error Information Handle: Not Provided
+> 	Total Width: Unknown
+> 	Data Width: Unknown
+> 	Size: No Module Installed
+> 	Form Factor: Unknown
+> 	Set: 24
+> 	Locator: H12
+> 	Bank Locator: Not Specified
+> 	Type: Unknown
+> 	Type Detail: None
+> 	Speed: Unknown
+> 	Manufacturer: Not Specified
+> 	Serial Number: Not Specified
+> 	Asset Tag: Not Specified
+> 	Part Number: Not Specified
+> 	Rank: Unknown
+> 	Configured Memory Speed: Unknown
+> 	Minimum Voltage: Unknown
+> 	Maximum Voltage: Unknown
+> 	Configured Voltage: Unknown
+> ```
+>=20
+> ```
+> $ lsmem
+> RANGE                                  SIZE  STATE REMOVABLE BLOCK
+> 0x0000000000000000-0x000000007fffffff    2G online       yes     0
+> 0x0000000100000000-0x000001007fffffff 1022G online       yes 2-512
+>=20
+> Memory block size:         2G
+> Total online memory:       1T
+> Total offline memory:      0B
+> ```
+>=20
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--phkxij2pukidqtkg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZaefgACgkQFA3kzBSg
+KbbVfg/+LKVi55lVvjQpPoqXH8KXmWNDbxcxs6eAIG8RQnCMsqBBfBKNdNwFWjDC
+7O0H4SC9R///iNRf2tro2o0qeqv/Gufh/kbcEo4yyhR4+WM9pI/svETk2N0LIOYM
+yw5FQpPWnbgF97c7kwdnOcElGi5JNa2H/tqutq1zxnMQCx9tS3u80C/PejhdNIHb
+lI3wYHUOmCX8S0VH+EI8ACtN1azlfx7pZhFO0J1+y39TgDCrRMORcA5dSmK5Jlwo
+mSAYz3Ns+Ne1daXQETbIKPm0JT3Hw/o+fHOSxUa+xESWFqbSqmbnDXGYfAl+Feq0
+tjv6hSPpCZcC4Zxx03cPN1V0nbEFgMQzrkz/ke8Bm+qBIEsiwBqo58yZPnP2Jgwj
+akB8dLoLqt35aShY27JU8aMlh1V5LCmopWOAa3bkXXxANS/VuRDTfvgZF/OOpzLy
+9IpTsV2GaYr7EbI+Rj93yIdI257RLstJL8uGIWF17xt/Z8tFIEzzTy9eJilB/YVf
++ZT4nj3Mmjc4nQDkF7Xs035y4WVsZhaPScushByAixulI0vOb9CzF4SrdTXWbl6f
+nUjo5vTWna+rrBBqBvoNjaagPxJyFVYRKEloBUUKNq/w9V8Ukhdo+eAhyQkCTWvq
+RlA0TxTqGKNmvLi5eAbgPgF5PCQN/HqXnLAjJi8VcHU56nGrRvg=
+=+ftV
+-----END PGP SIGNATURE-----
+
+--phkxij2pukidqtkg--
