@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD651C42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0E254656
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717346474; cv=none; b=dor42PnLMbOwMv4b3EgSXov15QcCquh5Epy1OhmWYExRfdvStU78bKfR0oeZZWTWPpWuaBWmqNHqml+Yj4EmuvYQEX4poCPczaLgMeBYLi7xMNKLXjZOG/VME55GZeiYW68IJY7k4YJgd0HHnvRjDiVGTs6mtW8GzfB9+0f14I0=
+	t=1717346474; cv=none; b=fICxWk8P9jKEPHUhZrw6VJtzM7PAe21zdthw43+orbXYbbU/gt091EDjXTocHlMgABz1Oz2NERJY1boACHt3lso2Gf1KwB41N2xpQEZKn3heFQlV/Jn+x7T9JAIPffmLeXFF1Wca0Vn8aIUSEALk8ueraXbGwqghxavuVY6hnmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717346474; c=relaxed/simple;
-	bh=CindYV08YwNVlgv5Jkcxcl86mPBIYnSvQpQAFG6Pvc8=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kJ+ak/0dADf73qrSybNwoe5oD+PF2aY9cqlHXZTLQcQgnKKQAejICQJPNRRQ/4SwIfrzD5iObv9yQPCcyfD++Up9wBGZR0uWc6oIeXeDuZh/bme5t9+h8Fu4bovvQ67/+2Wqph+ykhreZScSn7qyBgPArAWNAho1h5vJ86Q0STs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JL0LpSb/; arc=none smtp.client-ip=10.30.226.201
+	bh=LysSa9HPDqTq6yFrabmC++Ggr9y9UpNkiFGB8ZURzmw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=vCI8t0OX22pfXcxwU2cDL0fYIBjoH3xqwZnZ01B5ouGOncmtE8d7ne0puyaGLwt8kB9hatHihhKm9qsVR5XGsgkR6W7gqpFux+GISXWW4xVOzcIi0KtsapOhJ/EmygE+Sqvablr0g3MQx7zqZQoriug9yAYvwmRHyzBPmaWDyis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpdN+cXJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JL0LpSb/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 38A54C32786;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpdN+cXJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 690BBC4AF0D;
 	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717346474;
-	bh=CindYV08YwNVlgv5Jkcxcl86mPBIYnSvQpQAFG6Pvc8=;
+	bh=LysSa9HPDqTq6yFrabmC++Ggr9y9UpNkiFGB8ZURzmw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JL0LpSb/R8gqK61Hmc7YU7xKb98FfvNI4GfM4TQQcfroZMoZsw4kbwHZSsj3VH2Fm
-	 0+isZ8kllrNAIa0s09ReP81EkmLGZcDXw9LsWLoI2k6PsukhkG8pTMxd6m65AKWNMX
-	 brt7gqnHtrTBYxEOjsRIRB080TjfbuMVs45YU8MAkd+Hdcy5qlmQRbB73o8h6LYUu4
-	 OMkPKqLFcmPJs5X6AALtas8Pdp8035kRUcCpwBh3ex8NlkbcSfCqvlGh3KlZFh6PNZ
-	 vH7+3MnHKZzK7kwWEVIcYnV8eMfqu+ZbKYEvsk13CAkc69R3QQJfJJrH1n2YnBnMio
-	 7G/l01+HMILAA==
+	b=mpdN+cXJpAOlKWB+EtY/mkPd4yAmGCSVOSWXH6Av57XgPA5Bo1NO8YA82WSO0Ux/f
+	 UVl2l64BtO9W8tujqRL/Nu6K2bXHvgr+hYO765uPNJZfHCxFcU7qKnqH9vaFu6lQZE
+	 YmeWAbZRSMZaAFQkqzpCxz8WCbAljQ7vibGk4cli9r6gKgvPObZBdhfQ1196HfsJHz
+	 uO7KIXYU3K0rZRfijDsHhN7Njun9B0YAK4+KaK3p8IG+/zAqrs0kcNQO7Mx55Bn+n7
+	 Sjt1KC1jxkZ0iNLMgksgNRIZMVnwfEmBfmxVMjZFx9LFdeRQzNxkpIs/EYCWTcQVoP
+	 cB0NdEP//hz8g==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 25190C4361B;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5E6F6C4361B;
 	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
-Subject: Re: [GIT PULL] perf events fixes
+Subject: Re: [GIT PULL] x86 fixes
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZlwahYzxhwYTa7IP@gmail.com>
-References: <ZlwahYzxhwYTa7IP@gmail.com>
+In-Reply-To: <ZlweciPk77ra9W7H@gmail.com>
+References: <ZlweciPk77ra9W7H@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZlwahYzxhwYTa7IP@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2024-06-02
-X-PR-Tracked-Commit-Id: dc8e5dfb52d56e955ad09174330252710845b8d2
+X-PR-Tracked-Message-Id: <ZlweciPk77ra9W7H@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2024-06-02
+X-PR-Tracked-Commit-Id: 0c2f6d04619ec2b53ad4b0b591eafc9389786e86
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: efa8f11a7ebeb8758dcd847a4b9a0cdcb68d9d87
-Message-Id: <171734647414.21593.17250070694542433855.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: a693b9c95abd4947c2d06e05733de5d470ab6586
+Message-Id: <171734647438.21593.10917621670013143458.pr-tracker-bot@kernel.org>
 Date: Sun, 02 Jun 2024 16:41:14 +0000
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 2 Jun 2024 09:08:53 +0200:
+The pull request you sent on Sun, 2 Jun 2024 09:25:38 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2024-06-02
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2024-06-02
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/efa8f11a7ebeb8758dcd847a4b9a0cdcb68d9d87
+https://git.kernel.org/torvalds/c/a693b9c95abd4947c2d06e05733de5d470ab6586
 
 Thank you!
 
