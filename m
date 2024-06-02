@@ -1,96 +1,103 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta9.mxroute.com (mail-108-mta9.mxroute.com [136.175.108.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C364757E8
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 20:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBEC974E25
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 20:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717359511; cv=none; b=NSmyUbDXL2GayGsQNwGT+235uoSq+pvSb0r7t9j07uO5dQSqDdSf8eivEy3C2qeYT953OqAkJ/31b7dZumaV0pJ1Fn7W9286ReWnfJyrkwTOqkGVLjWr9jsU2F8lGL+de3zak1FN3V47vYGEcSeMm4K6y1UWOTYNFvuQmjQuihw=
+	t=1717359545; cv=none; b=Xnm0xxqTDnlmV3WjgVlUG6j9/zr2B/7vutTYSNaogDWtYbDEgRzvdk2bzdfXWMqyblAyMdFFk6pO82QXTGhsNOFLnr0btk/bgJffmF8puCN2UyGto1peEyT/Viv04+IR2QNvOYOvZLgGI1+PhM7o6ChbNmelhf1jPgtbJ088tFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717359511; c=relaxed/simple;
-	bh=mtPx8u7Uu9tuEappI7gmzj7YNw+G8ZFnAW4+i304kzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O8wNjbTmIcD4QYmzC9aiw7kWQ9DfYQiWbePyXfVdOHSxx/+fUW5SecoOwBacPyPZSr6jrC23CLlHB8wJm9f+QOZxcZYDYFnzYYUAvTtv6hxeNN9zy9hCEsO+R/CYfX01/bSfy64z72X4vlPmKVBb4jKSrNbz4BRzzH8apXytQVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QgkUH0cD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1717359545; c=relaxed/simple;
+	bh=+sFbuAZg5yu7TysrDNdaOxjpNwDMCdp+9SgLS1wKCEQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=skwZNKRBm3dLEUtPZ+loCx+8tM/sX2HeoGXkKh+MWH3uGHI+aOWvKAbAwcUnFGLMqyrNM3/alBEON8IRMebVvNPvxtJep5LFIhKhZbYJoEA5VJ+vBa+sW5dYC7cncMlfUIzO0ILqKrwigqS4jlsw181hYNHuAnveIrTbf198IW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=CuBtp1f6; arc=none smtp.client-ip=136.175.108.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QgkUH0cD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=mtPx
-	8u7Uu9tuEappI7gmzj7YNw+G8ZFnAW4+i304kzs=; b=QgkUH0cDEtW1qKOiXyf0
-	vNIKB3sII/MUl8O+PrFQkACbE3p/6T/Vd8HYkxCaQc9dhjafD5f5vpuzz5cFi1DQ
-	hc/hpUF2WYkJgDTVnkgtSSsKxjOwzVY8v+SYxH3sfr284cqhXu2/JTwDyOWKPGPx
-	8ZpuhO2p56kMpiHhh3erAxk18KYw2RjpM5NySuvcQuAIZr5wIQcS8CvOrsKxexo2
-	GxQa8AYaG0OPhD/9qH+lWoYRKOEMNbPhrvml+vbDaqYBMCF2VUzaf2njA+bWT5ZF
-	Z3zkVKHLwECBdRSpvhG1ZnLPrebugfv7fyh83qA8lXYi2i2bTEVywD8aMX23eb35
-	2Q==
-Received: (qmail 1741334 invoked from network); 2 Jun 2024 22:18:19 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 2 Jun 2024 22:18:19 +0200
-X-UD-Smtp-Session: l3s3148p1@wIPf6u0ZOOlehhtB
-Date: Sun, 2 Jun 2024 22:18:17 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, =?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>
-Subject: Re: [PATCH v3 2/4] hwmon: Add support for SPD5118 compliant
- temperature sensors
-Message-ID: <baktuhx525cyrxam63z4oyy62p35s3n7n7wsv3yz6opyoprp6z@vtxlfwdejdmt>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, Armin Wolf <W_Armin@gmx.de>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, =?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>
-References: <20240531230556.1409532-1-linux@roeck-us.net>
- <20240531230556.1409532-3-linux@roeck-us.net>
- <uvikiflwuoz3szchmvke7p3ymqvcngkydehk6cctdv24cxsh6r@7d5vxcvdca6l>
- <e5d95d3d-1ca5-43f1-8c17-d24bd38f28b7@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="CuBtp1f6"
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta9.mxroute.com (ZoneMTA) with ESMTPSA id 18fda9650cd000e2b6.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Sun, 02 Jun 2024 20:13:55 +0000
+X-Zone-Loop: ea2eb56014dfce4c099a326edfd2d83e49c32e0f46aa
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tNSp6sgHgm0/xBY9U4t7Qdk6wqjer/597ZfqTYMH0pE=; b=CuBtp1f6LVQEjtTfHGm2/CeIQi
+	YfIOT7zQKYGgdVqRUdDMj7BVmWBg3PLGhDsvZR7WiL/XthUGxxb0mpjdPZhWV4UShu3aaGF2SbFfd
+	maK/r8QGrEi9RH1yvHeHXeN7mTki8pSaKf5tOF0iRLA5Y+8crPeTAnZHPuqYqX7JcIO43Q7iC+HCj
+	Fa+IMA/rjbHVmwXUMwbA301XTd6GFqtRkDi6O4Vcyfm779SfW7peNggMbr6MExHTWU800RwjXD/3d
+	IVKae+TBpLo/7OkMpfjDyzmNHB326N14szGaYKbW1puf0pmytoHkKPWTBxwVmz+sF/DZiSI6jOA8Q
+	48uiBMfw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v6 01/23] media: i2c: imx258: Remove unused defines
+Date: Sun,  2 Jun 2024 14:13:23 -0600
+Message-ID: <20240602201345.328737-2-git@luigi311.com>
+In-Reply-To: <20240602201345.328737-1-git@luigi311.com>
+References: <20240602201345.328737-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oxluy5kl3unneebw"
-Content-Disposition: inline
-In-Reply-To: <e5d95d3d-1ca5-43f1-8c17-d24bd38f28b7@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
---oxluy5kl3unneebw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The IMX258_FLL_* defines are unused. Remove them.
 
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+---
+ drivers/media/i2c/imx258.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-> would introduce a cross-subsystem dependency. Of course, that depends a bit
-> on your position about such dependencies. If I do that as part of this series,
-> would you Ack it, or would you want to handle that through the i2c tree ?
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index a577afb530b7..2dbafd21dd70 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -29,12 +29,6 @@
+ #define IMX258_VTS_30FPS_VGA		0x034c
+ #define IMX258_VTS_MAX			0xffff
+ 
+-/*Frame Length Line*/
+-#define IMX258_FLL_MIN			0x08a6
+-#define IMX258_FLL_MAX			0xffff
+-#define IMX258_FLL_STEP			1
+-#define IMX258_FLL_DEFAULT		0x0c98
+-
+ /* HBLANK control - read only */
+ #define IMX258_PPL_DEFAULT		5352
+ 
+-- 
+2.44.0
 
-I would ack it. If I'd have a conflicting commit in my tree (unlikely),
-I'd ask you for an immutable branch to pull into my tree.
-
-
---oxluy5kl3unneebw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZc04UACgkQFA3kzBSg
-KbZinxAAqHFAFPtmwofD9up/UTGj2j9gC7X1COlNcXHK+tz5JQF+l0L5znQ9zUhz
-HRWxQDpC8OdW5k372rRcY1YTs+mLFfWCteDcjlUTLcP2c/jNqKg+Yqd/FS/fawaZ
-Pq+n4GZdp7LGTQG8GePfKo4UfrAFhVidepVZU5Fq2Q/faMX3OVe4H3vqpHXxWS2K
-IUYTlHtBJ6nmlViakbuopRkiMPeIFaCF1/9fJs/iQewExRtv/35zfTW0fBUa9DAR
-ThoTDjTqZ1SlrozOLQVszqjJl4bjdYPxaDCUOPyhwRvo/x7AuNooHBY3H3NnhwY+
-hfrRp9Z7iORXjTdJxqIiG01OjMXlXLl1s5pQ44kb0lFydp+eqnR1po/trqIaOGF3
-UWc6T5BDQUE04z2bwmFmN6iKx+kqCiYsmsscFUewSUxBT4n0kxxYRi3Y2BduAIWA
-5g024LHEobJ335ZFjC4Q+UXE+XCtnwr1g1F/LP0OHOzt9L9KOvELixDVXekGN4Is
-Qrcv11YdF1JKGjUVMRpSAV2m5tTdRbpqKaMSBljOVuLEqDsB92esbayaQksACOhG
-b3Zo+sqy3OhM2OXN5hYSQfdL9gAF9NsmmDEglLKUhsY5EgGuCz/tJ5AEhaulVdU8
-DPgWwfzqIlYv7lEaf/qjmVZfvuV1h+0guNItsXba+7JRbwXc7RE=
-=Kthw
------END PGP SIGNATURE-----
-
---oxluy5kl3unneebw--
