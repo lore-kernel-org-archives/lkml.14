@@ -1,549 +1,393 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E5D7FBC4
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 23:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE22C76EEA;
+	Sun,  2 Jun 2024 23:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717370705; cv=none; b=rXK4e45g6o6ecxneVkzNW0qJvk6FebsyiB2OTTTJySaSINsR0UE/dc70ugySkvISQC+gsXJgcocytU7O5iza45zMMMPXZ4n4w/9QbgfeIGnpqIveGEeuS36SxwjM33R9DLYFQf/U4KndXYjkGw2X75jEiLhMgl6MB93eR82w9o4=
+	t=1717370727; cv=none; b=g8H3V8DJdLS5uih1e7SK/o0oFeSFq0bd70hB/sgciP83OYqh9xMiUsZvFTQQRpZd1R9Co+lCZyFwWdPKxIQtVbAIODlIffUvjq+7zUf4RYz2VzOSinnrgjMaVQYPRdSlsfR3/6reLDe7L02gak04MQqCrhW61S5hFDMMhzRtGAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717370705; c=relaxed/simple;
-	bh=xsVlzflUb/Qp1trYi1IqtQRk3wSvC2VlMHb1s/cNflQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ivnKUFAG/WWqsmxrn4v6L59g3ddWdmqVLsXjkDdzkP3TVY5fHAGwiaVZrWtjVgcKsnkT9tvA04ymq/6UUEj3C92YephH4i0ZELT5IUZ/jRYwwrOuyRd+7j9HWUSxJl7sVHdJP+N0HS4eKFx0nLlfOTbDh5dOZxmZdDgqIcEJxHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uPxRVO+l; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717370727; c=relaxed/simple;
+	bh=srZOFvFuhh1jB+7qrg/oRblRSByV+dBeoIqn4qezeYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BYi5MjYkjqP/6LMOw3BkQaJ+qCc8Q1NwSYyRe3EQSfw81lIlP2zUo5w6kMXhM0aT50eJWHQpccHOZQrzd3LmByjciBBVIlyTF3DUspm2rWtiooA3pUHygI2uLU3NJrNS6WGyGIDz+0L1SW6ag81gRBh4rr0Ug+LEQmov3APRPWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbuYVn+f; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uPxRVO+l"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b88335dd7so3231773e87.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 16:25:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbuYVn+f"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e724bc466fso43104081fa.3;
+        Sun, 02 Jun 2024 16:25:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717370701; x=1717975501; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fLTVeDBunzWZL7NXj62dRVbdmskQ6vEkyJgavqsHljg=;
-        b=uPxRVO+lniez5ZVbPpE/X6n+QNn05/FaRWhTv5Ff+leZ21Eu62D+hi4Vr2ICldGEu7
-         UevGXut9+nuWQWmq07gvD71Pr9NfvgPPIiGGFVLUORlZ/zUm9eKuG8KKPF+U1r0hmTk+
-         Xao7kaGzxcTRkUHNwz3N0KT1078iGmlqRYFdis+nlsYYsilucmtY2bQao1Rias7XnMeb
-         Mu2XI1kR8U9eXoSQWO9UHZmn5qJfAu55snDTtz9B9Es+8augVHWR4VZVulwNtWws1v0T
-         mzERSW+C1TNYc0AFuuaJgtoJyQxFcJ+d7YYGyku6sGOrqXfHw5SGEfEFf5gzwYKhDAxt
-         FTPw==
+        d=gmail.com; s=20230601; t=1717370722; x=1717975522; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eCJ3/UMYS40bUTEzpbEGEN5IgufP139pAuhlqfFxKiA=;
+        b=kbuYVn+fPy31QX2AiziGhCPxp7kzGCz/zb0+yVuv9WrzVpyf25wJwf/TDQAovuxnEg
+         pbCR99kwtfcV56tHURASzoz2eLBgwUdkcjvQ0miQYRg3wZh/yOz4vVSWaaVfDmrJKD/x
+         uEo/wuPIbJuOW/TLxUSx/CPzgN5QB3OkNvhh4rhfSPJcx2spUexWEuPUdrpy33L7lziu
+         fRfnnJgv705w5rm+jZbjmoasI4f2VH1U5/rWpH+WqLg9rbljroDHzTV46bJbsL7ScIu+
+         fQIzGFh91eB+79yz4yEkWMe1Do+6+XDM/zwxYnSU+4OF2vyIJG/wfaI+8lHmF4NPvQ0R
+         WmoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717370701; x=1717975501;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fLTVeDBunzWZL7NXj62dRVbdmskQ6vEkyJgavqsHljg=;
-        b=wL8NCb2R366vtpNX/Et4rL9ITmsb6/Why4tK+sBNNxsPFO0QSJtVci1Dqjy1m/MY0G
-         JSRLViHi8Rk0RJb51+lrIueA31Vop8HhML4LCQ2z/K+cyAjCB/yUUHFpIjtWST9JmekT
-         nEkaz2WYIgPqoa5+FWL0OUULhD7yl7apuZfFMrSWD4a1VtnsmhvwSPRDKyoe3ySl7cIF
-         v7xPxcviuuJXYrSoO31ES8dIsQkg+YfEdcPJpK5FFcrb9eBDPyWpm5+ZaHnpP96ZDXYD
-         wP9PhFTs4cOXsQHcaSXkfpovhsta4tmWGzg5Az6nj/KlcuGdVxCYe2p+vH2pNTHhSOmb
-         Tk7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUn88g/8C9jr2DHgGzg4pAa7cA9Xyfl/ityFIRUsV5tJUFwwHwZRNKY1zi6W+7XFrG7m8jA43YFNEzWY5g5DbUCkKlsP0x5Xyb39YYh
-X-Gm-Message-State: AOJu0YzdWihrxrAnxHTcfnWw0F10RVe9VkjMEVTnmBMMRu4E5VvTzJHd
-	SdGgZEw2DMZnPFbLphGnXG5waQOcVXIGFdQCRXIO/uJ3bZ0ughD8W8NpBsPQi5M5+Q04v/6UFg3
-	/
-X-Google-Smtp-Source: AGHT+IHY6hl3fA/aTU7/5Qs5jHutGO3eYNynfRaMh7gFJxG/9+xPnjuSt6dd6ciGptalIyviyk3Uvw==
-X-Received: by 2002:a05:6512:1152:b0:52b:9c8a:735a with SMTP id 2adb3069b0e04-52b9c8a74fcmr205388e87.40.1717370700848;
-        Sun, 02 Jun 2024 16:25:00 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b959008aasm392369e87.269.2024.06.02.16.25.00
+        d=1e100.net; s=20230601; t=1717370722; x=1717975522;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eCJ3/UMYS40bUTEzpbEGEN5IgufP139pAuhlqfFxKiA=;
+        b=C7n1IA8FzYwXdFJn9lo6canA2rMkfLKqSuaezsJc1akCU3WUsMi29+IA+zwv7cUqn/
+         lDQuszu6fvNDEVjtxmo6TzZUhtN7JEYPujFZ0wTaA2uiMlEUrwHNr4vMT0Mn1ItKZM5O
+         CpZrCXQZDZ0aKFHJbjiNGDdHcTbm22+CrUhONiNZ6cELlepMYjv0Ql4eue1/J+cejzIQ
+         uMHbMdKqObz4Ixm9F/28CJIXBH4+LxJ2lZ6QhPZfvMIKAfAQkBeVogvxCwi4HKtzFTK2
+         +5vzHHa/SlRYCk5/fxxtpEYCL3d5eLoaXWV4csyafVMmvHV5v37dR/ZcI0aDXkNmT0Kt
+         UH9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhq6zcsXJxXOYxGJvO+m0ONeJBRsB/MfQ5gbFJDXMHsLHJ1Ib4mCCb9KpFScjAda9aRSN34Ztb7xVqnbyrA/CNk7UwqdN1lrdNFiwATwNbBfeOqQU1Hx8XUXm7AJengpvdXh08gYd/edDS1SF+q+6fG2mG+dQHN+aG
+X-Gm-Message-State: AOJu0Ywe5Fn5DwTeJ0B9FiHRkL1DL27iDaLjAR43/a5sMPf5QwIxhSIt
+	uKAh1cocBMMpy7tCKbT25+bv7EDlbD91byNcfKhGSVZD5L5I+OJX
+X-Google-Smtp-Source: AGHT+IF5EZAbemMtEV8HkFtTrIyv5z9PPS44uvwmLsCuxSCSXDhHTzTDN8jblZzPazJTWVEkkRPdwQ==
+X-Received: by 2002:a2e:3517:0:b0:2e7:16c9:2e0c with SMTP id 38308e7fff4ca-2ea9512fc2fmr58077251fa.15.1717370721932;
+        Sun, 02 Jun 2024 16:25:21 -0700 (PDT)
+Received: from mobilestation ([95.79.124.210])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea91b9db52sm10408021fa.26.2024.06.02.16.25.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Jun 2024 16:25:00 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 03 Jun 2024 02:24:59 +0300
-Subject: [PATCH RFC 6/7] usb: typec: ucsi: extract common code for command
- handling
+        Sun, 02 Jun 2024 16:25:21 -0700 (PDT)
+Date: Mon, 3 Jun 2024 02:25:18 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Byungho An <bh74.an@samsung.com>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, bpf@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC net-next 2/3] net: stmmac: Activate Inband/PCS flag
+ based on the selected iface
+Message-ID: <yk3ohf2cct3mbbk6ajmhnqrzeivimlz3kblayrsyoxsw26ewmg@fpuvru3paq7w>
+References: <ZkDuJAx7atDXjf5m@shell.armlinux.org.uk>
+ <20240524210304.9164-1-fancer.lancer@gmail.com>
+ <20240524210304.9164-2-fancer.lancer@gmail.com>
+ <ZlNoLHoHjt3BsFde@shell.armlinux.org.uk>
+ <ZlN4tkY8fNM8/D8p@shell.armlinux.org.uk>
+ <ukszpirecb3pwnz5bbmy7wl44ujh6t2ewrnodmrye5kjmonsz2@pgf5b2oy5n3p>
+ <ZlXmjKtKozXThPFv@shell.armlinux.org.uk>
+ <x4snwm24lqebfcu3xqipwnxcexxbxhfijw7ldsukk23tn5k3rc@g3tfmynhvm26>
+ <ZlolU6+lUaXQSQID@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240603-ucsi-rework-interface-v1-6-99a6d544cec8@linaro.org>
-References: <20240603-ucsi-rework-interface-v1-0-99a6d544cec8@linaro.org>
-In-Reply-To: <20240603-ucsi-rework-interface-v1-0-99a6d544cec8@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Nikita Travkin <nikita@trvn.ru>, 
- Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14654;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=xsVlzflUb/Qp1trYi1IqtQRk3wSvC2VlMHb1s/cNflQ=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ1rMf3fZKVbMvl/MvA4YZCjfVVleW3U9nju+f0XV2tjJe
- 17ZW27rZDRmYWDkYpAVU2TxKWiZGrMpOezDjqn1MINYmUCmMHBxCsBEFHdxMMyLKbipKsrvU3b1
- XdwubZecG8LTp9RNfLIn4AHP2+7vP63uPZD5J8+cyiOrxngkznOJWV1RumBn6NeZf1ezipzkfb1
- HnHftHiWnLc4PdVXFVwhs1P0t92qflabtpI37/VimvE80fLrGfHuDn72PfbJNb4e/6h/v566PGf
- 23Bh3fossgZrVWLD80J39fr0Ju6u34vy31dU9sD8dzZ0gt3HPDqsFb606YXsSX7bZ+Dd8dG76Jz
- TcyXSRgzWBk3F56Y01K8fR16ayKhmKl+afNzVdctzqm8W2L+6P/1xp+7T7Oocx7+5X/e50i///7
- vk07cmS/f1uWe9mxh1qqEXph7wp3sYRmds50cnz1zkoTAA==
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZlolU6+lUaXQSQID@shell.armlinux.org.uk>
 
-Extract common functions to handle command sending and to handle events
-from UCSI. This ensures that all UCSI glue drivers handle the ACKs in
-the same way.
+Hi Russel
 
-The CCG driver used DEV_CMD_PENDING both for internal
-firmware-related commands and for UCSI control handling. Leave the
-former use case intact.
+On Fri, May 31, 2024 at 08:30:27PM +0100, Russell King (Oracle) wrote:
+> Hi Serge,
+> 
+> Thanks for the reply. I've attempted to deal with most of these in my
+> v2 posting, but maybe not in the best way yet.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/usb/typec/ucsi/ucsi.c         | 43 ++++++++++++++++++++++++++++++++
- drivers/usb/typec/ucsi/ucsi.h         |  7 ++++++
- drivers/usb/typec/ucsi/ucsi_acpi.c    | 46 +++-------------------------------
- drivers/usb/typec/ucsi/ucsi_ccg.c     | 21 +++-------------
- drivers/usb/typec/ucsi/ucsi_glink.c   | 47 ++---------------------------------
- drivers/usb/typec/ucsi/ucsi_stm32g0.c | 44 ++------------------------------
- 6 files changed, 60 insertions(+), 148 deletions(-)
+I've got your v2 series. I'll have a look at it and test it out later
+on the next week, sometime around Wednesday.
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index ac4bd86b3fae..4d36a04dc63b 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -36,6 +36,48 @@
-  */
- #define UCSI_SWAP_TIMEOUT_MS	5000
- 
-+void ucsi_notify_common(struct ucsi *ucsi, u32 cci)
-+{
-+	if (UCSI_CCI_CONNECTOR(cci))
-+		ucsi_connector_change(ucsi, UCSI_CCI_CONNECTOR(cci));
-+
-+	if (cci & UCSI_CCI_ACK_COMPLETE &&
-+	    test_bit(ACK_PENDING, &ucsi->flags))
-+		complete(&ucsi->complete);
-+
-+	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
-+	    test_bit(COMMAND_PENDING, &ucsi->flags))
-+		complete(&ucsi->complete);
-+}
-+EXPORT_SYMBOL_GPL(ucsi_notify_common);
-+
-+int ucsi_sync_control_common(struct ucsi *ucsi, u64 command)
-+{
-+	bool ack = UCSI_COMMAND(command) == UCSI_ACK_CC_CI;
-+	int ret;
-+
-+	if (ack)
-+		set_bit(ACK_PENDING, &ucsi->flags);
-+	else
-+		set_bit(COMMAND_PENDING, &ucsi->flags);
-+
-+	ret = ucsi->ops->async_control(ucsi, command);
-+	if (ret)
-+		goto out_clear_bit;
-+
-+	if (!wait_for_completion_timeout(&ucsi->complete, 5 * HZ))
-+		ret = -ETIMEDOUT;
-+
-+out_clear_bit:
-+	if (ack)
-+		clear_bit(ACK_PENDING, &ucsi->flags);
-+	else
-+		clear_bit(COMMAND_PENDING, &ucsi->flags);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(ucsi_sync_control_common);
-+
- static int ucsi_acknowledge(struct ucsi *ucsi, bool conn_ack)
- {
- 	u64 ctrl;
-@@ -1858,6 +1900,7 @@ struct ucsi *ucsi_create(struct device *dev, const struct ucsi_operations *ops)
- 	INIT_WORK(&ucsi->resume_work, ucsi_resume_work);
- 	INIT_DELAYED_WORK(&ucsi->work, ucsi_init_work);
- 	mutex_init(&ucsi->ppm_lock);
-+	init_completion(&ucsi->complete);
- 	ucsi->dev = dev;
- 	ucsi->ops = ops;
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index f770e1070424..b08393417fa9 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -4,6 +4,7 @@
- #define __DRIVER_USB_TYPEC_UCSI_H
- 
- #include <linux/bitops.h>
-+#include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/power_supply.h>
- #include <linux/types.h>
-@@ -409,6 +410,9 @@ struct ucsi {
- 	/* PPM communication flags */
- 	unsigned long flags;
- #define EVENT_PENDING	0
-+#define COMMAND_PENDING	1
-+#define ACK_PENDING	2
-+	struct completion complete;
- 
- 	unsigned long quirks;
- #define UCSI_NO_PARTNER_PDOS	BIT(0)	/* Don't read partner's PDOs */
-@@ -473,6 +477,9 @@ int ucsi_send_command(struct ucsi *ucsi, u64 command,
- void ucsi_altmode_update_active(struct ucsi_connector *con);
- int ucsi_resume(struct ucsi *ucsi);
- 
-+void ucsi_notify_common(struct ucsi *ucsi, u32 cci);
-+int ucsi_sync_control_common(struct ucsi *ucsi, u64 command);
-+
- #if IS_ENABLED(CONFIG_POWER_SUPPLY)
- int ucsi_register_port_psy(struct ucsi_connector *con);
- void ucsi_unregister_port_psy(struct ucsi_connector *con);
-diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
-index 61dd28dae3a4..e8402fac70c8 100644
---- a/drivers/usb/typec/ucsi/ucsi_acpi.c
-+++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
-@@ -21,10 +21,6 @@ struct ucsi_acpi {
- 	struct device *dev;
- 	struct ucsi *ucsi;
- 	void *base;
--	struct completion complete;
--	unsigned long flags;
--#define UCSI_ACPI_COMMAND_PENDING	1
--#define UCSI_ACPI_ACK_PENDING		2
- 	guid_t guid;
- 	u64 cmd;
- };
-@@ -97,38 +93,11 @@ static int ucsi_acpi_async_control(struct ucsi *ucsi, u64 command)
- 	return ucsi_acpi_dsm(ua, UCSI_DSM_FUNC_WRITE);
- }
- 
--static int ucsi_acpi_sync_control(struct ucsi *ucsi, u64 command)
--{
--	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
--	bool ack = UCSI_COMMAND(command) == UCSI_ACK_CC_CI;
--	int ret;
--
--	if (ack)
--		set_bit(UCSI_ACPI_ACK_PENDING, &ua->flags);
--	else
--		set_bit(UCSI_ACPI_COMMAND_PENDING, &ua->flags);
--
--	ret = ucsi_acpi_async_control(ucsi, command);
--	if (ret)
--		goto out_clear_bit;
--
--	if (!wait_for_completion_timeout(&ua->complete, 5 * HZ))
--		ret = -ETIMEDOUT;
--
--out_clear_bit:
--	if (ack)
--		clear_bit(UCSI_ACPI_ACK_PENDING, &ua->flags);
--	else
--		clear_bit(UCSI_ACPI_COMMAND_PENDING, &ua->flags);
--
--	return ret;
--}
--
- static const struct ucsi_operations ucsi_acpi_ops = {
- 	.read_version = ucsi_acpi_read_version,
- 	.read_cci = ucsi_acpi_read_cci,
- 	.read_message_in = ucsi_acpi_read_message_in,
--	.sync_control = ucsi_acpi_sync_control,
-+	.sync_control = ucsi_sync_control_common,
- 	.async_control = ucsi_acpi_async_control
- };
- 
-@@ -164,7 +133,7 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
- 	.read_version = ucsi_acpi_read_version,
- 	.read_cci = ucsi_zenbook_read_cci,
- 	.read_message_in = ucsi_zenbook_read_message_in,
--	.sync_control = ucsi_acpi_sync_control,
-+	.sync_control = ucsi_sync_control_common,
- 	.async_control = ucsi_acpi_async_control
- };
- 
-@@ -189,15 +158,7 @@ static void ucsi_acpi_notify(acpi_handle handle, u32 event, void *data)
- 	if (ret)
- 		return;
- 
--	if (UCSI_CCI_CONNECTOR(cci))
--		ucsi_connector_change(ua->ucsi, UCSI_CCI_CONNECTOR(cci));
--
--	if (cci & UCSI_CCI_ACK_COMPLETE &&
--	    test_bit(UCSI_ACPI_ACK_PENDING, &ua->flags))
--		complete(&ua->complete);
--	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
--	    test_bit(UCSI_ACPI_COMMAND_PENDING, &ua->flags))
--		complete(&ua->complete);
-+	ucsi_notify_common(ua->ucsi, cci);
- }
- 
- static int ucsi_acpi_probe(struct platform_device *pdev)
-@@ -231,7 +192,6 @@ static int ucsi_acpi_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	init_completion(&ua->complete);
- 	ua->dev = &pdev->dev;
- 
- 	id = dmi_first_match(ucsi_acpi_quirks);
-diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
-index 6ccc394f268e..ba4db2310a05 100644
---- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-+++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-@@ -222,8 +222,6 @@ struct ucsi_ccg {
- 	u16 fw_build;
- 	struct work_struct pm_work;
- 
--	struct completion complete;
--
- 	u64 last_cmd_sent;
- 	bool has_multiple_dp;
- 	struct ucsi_ccg_altmode orig[UCSI_MAX_ALTMODES];
-@@ -637,7 +635,6 @@ static int ucsi_ccg_sync_control(struct ucsi *ucsi, u64 command)
- 
- 	mutex_lock(&uc->lock);
- 	pm_runtime_get_sync(uc->dev);
--	set_bit(DEV_CMD_PENDING, &uc->flags);
- 
- 	uc->last_cmd_sent = command;
- 
-@@ -649,15 +646,8 @@ static int ucsi_ccg_sync_control(struct ucsi *ucsi, u64 command)
- 		ucsi_ccg_update_set_new_cam_cmd(uc, con, &command);
- 	}
- 
--	ret = ucsi_ccg_async_control(ucsi, command);
--	if (ret)
--		goto err_clear_bit;
--
--	if (!wait_for_completion_timeout(&uc->complete, msecs_to_jiffies(5000)))
--		ret = -ETIMEDOUT;
-+	ret = ucsi_sync_control_common(ucsi, command);
- 
--err_clear_bit:
--	clear_bit(DEV_CMD_PENDING, &uc->flags);
- 	pm_runtime_put_sync(uc->dev);
- 	mutex_unlock(&uc->lock);
- 
-@@ -694,9 +684,6 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
- 	if (ret)
- 		goto err_clear_irq;
- 
--	if (UCSI_CCI_CONNECTOR(cci))
--		ucsi_connector_change(uc->ucsi, UCSI_CCI_CONNECTOR(cci));
--
- 	/*
- 	 * As per CCGx UCSI interface guide, copy CCI and MESSAGE_IN
- 	 * to the OpRegion before clear the UCSI interrupt
-@@ -708,9 +695,8 @@ static irqreturn_t ccg_irq_handler(int irq, void *data)
- err_clear_irq:
- 	ccg_write(uc, CCGX_RAB_INTR_REG, &intr_reg, sizeof(intr_reg));
- 
--	if (!ret && test_bit(DEV_CMD_PENDING, &uc->flags) &&
--	    cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))
--		complete(&uc->complete);
-+	if (!ret)
-+		ucsi_notify_common(uc->ucsi, cci);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1429,7 +1415,6 @@ static int ucsi_ccg_probe(struct i2c_client *client)
- 	uc->client = client;
- 	uc->irq = client->irq;
- 	mutex_init(&uc->lock);
--	init_completion(&uc->complete);
- 	INIT_WORK(&uc->work, ccg_update_firmware);
- 	INIT_WORK(&uc->pm_work, ccg_pm_workaround_work);
- 
-diff --git a/drivers/usb/typec/ucsi/ucsi_glink.c b/drivers/usb/typec/ucsi/ucsi_glink.c
-index 7f6a48624ee5..8b74da38d283 100644
---- a/drivers/usb/typec/ucsi/ucsi_glink.c
-+++ b/drivers/usb/typec/ucsi/ucsi_glink.c
-@@ -64,12 +64,8 @@ struct pmic_glink_ucsi {
- 	struct ucsi *ucsi;
- 	struct completion read_ack;
- 	struct completion write_ack;
--	struct completion sync_ack;
--	bool sync_pending;
- 	struct mutex lock;	/* protects concurrent access to PMIC Glink interface */
- 
--	int sync_val;
--
- 	struct work_struct notify_work;
- 	struct work_struct register_work;
- 
-@@ -170,35 +166,6 @@ static int pmic_glink_ucsi_async_control(struct ucsi *__ucsi, u64 command)
- 	return ret;
- }
- 
--static int pmic_glink_ucsi_sync_control(struct ucsi *__ucsi, u64 command)
--{
--	struct pmic_glink_ucsi *ucsi = ucsi_get_drvdata(__ucsi);
--	unsigned long left;
--	int ret;
--
--	/* TOFIX: Downstream forces recipient to CON when UCSI_GET_ALTERNATE_MODES command */
--
--	mutex_lock(&ucsi->lock);
--	ucsi->sync_val = 0;
--	reinit_completion(&ucsi->sync_ack);
--	ucsi->sync_pending = true;
--	ret = pmic_glink_ucsi_locked_write(ucsi, UCSI_CONTROL, &command, sizeof(command));
--	mutex_unlock(&ucsi->lock);
--
--	left = wait_for_completion_timeout(&ucsi->sync_ack, 5 * HZ);
--	if (!left) {
--		dev_err(ucsi->dev, "timeout waiting for UCSI sync write response\n");
--		/* return 0 here and let core UCSI code handle the CCI_BUSY */
--		ret = 0;
--	} else if (ucsi->sync_val) {
--		dev_err(ucsi->dev, "sync write returned: %d\n", ucsi->sync_val);
--	}
--
--	ucsi->sync_pending = false;
--
--	return ret;
--}
--
- static void pmic_glink_ucsi_update_connector(struct ucsi_connector *con)
- {
- 	struct pmic_glink_ucsi *ucsi = ucsi_get_drvdata(con->ucsi);
-@@ -232,7 +199,7 @@ static const struct ucsi_operations pmic_glink_ucsi_ops = {
- 	.read_version = pmic_glink_ucsi_read_version,
- 	.read_cci = pmic_glink_ucsi_read_cci,
- 	.read_message_in = pmic_glink_ucsi_read_message_in,
--	.sync_control = pmic_glink_ucsi_sync_control,
-+	.sync_control = ucsi_sync_control_common,
- 	.async_control = pmic_glink_ucsi_async_control,
- 	.update_connector = pmic_glink_ucsi_update_connector,
- 	.connector_status = pmic_glink_ucsi_connector_status,
-@@ -256,14 +223,12 @@ static void pmic_glink_ucsi_write_ack(struct pmic_glink_ucsi *ucsi, const void *
- 	if (resp->ret_code)
- 		return;
- 
--	ucsi->sync_val = resp->ret_code;
- 	complete(&ucsi->write_ack);
- }
- 
- static void pmic_glink_ucsi_notify(struct work_struct *work)
- {
- 	struct pmic_glink_ucsi *ucsi = container_of(work, struct pmic_glink_ucsi, notify_work);
--	unsigned int con_num;
- 	u32 cci;
- 	int ret;
- 
-@@ -273,14 +238,7 @@ static void pmic_glink_ucsi_notify(struct work_struct *work)
- 		return;
- 	}
- 
--	con_num = UCSI_CCI_CONNECTOR(cci);
--	if (con_num)
--		ucsi_connector_change(ucsi->ucsi, con_num);
--
--	if (ucsi->sync_pending &&
--		   (cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))) {
--		complete(&ucsi->sync_ack);
--	}
-+	ucsi_notify_common(ucsi->ucsi, cci);
- }
- 
- static void pmic_glink_ucsi_register(struct work_struct *work)
-@@ -362,7 +320,6 @@ static int pmic_glink_ucsi_probe(struct auxiliary_device *adev,
- 	INIT_WORK(&ucsi->register_work, pmic_glink_ucsi_register);
- 	init_completion(&ucsi->read_ack);
- 	init_completion(&ucsi->write_ack);
--	init_completion(&ucsi->sync_ack);
- 	mutex_init(&ucsi->lock);
- 
- 	ucsi->ucsi = ucsi_create(dev, &pmic_glink_ucsi_ops);
-diff --git a/drivers/usb/typec/ucsi/ucsi_stm32g0.c b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-index e3cfcb258e43..d948c3f579e1 100644
---- a/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-+++ b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
-@@ -61,11 +61,7 @@ struct ucsi_stm32g0 {
- 	struct i2c_client *i2c_bl;
- 	bool in_bootloader;
- 	u8 bl_version;
--	struct completion complete;
- 	struct device *dev;
--	unsigned long flags;
--#define COMMAND_PENDING	1
--#define ACK_PENDING 2
- 	const char *fw_name;
- 	struct ucsi *ucsi;
- 	bool suspended;
-@@ -407,35 +403,6 @@ static int ucsi_stm32g0_async_control(struct ucsi *ucsi, u64 command)
- 	return 0;
- }
- 
--static int ucsi_stm32g0_sync_control(struct ucsi *ucsi, u64 command)
--{
--	struct ucsi_stm32g0 *g0 = ucsi_get_drvdata(ucsi);
--	bool ack = UCSI_COMMAND(command) == UCSI_ACK_CC_CI;
--	int ret;
--
--	if (ack)
--		set_bit(ACK_PENDING, &g0->flags);
--	else
--		set_bit(COMMAND_PENDING, &g0->flags);
--
--	ret = ucsi_stm32g0_async_control(ucsi, command);
--	if (ret)
--		goto out_clear_bit;
--
--	if (!wait_for_completion_timeout(&g0->complete, msecs_to_jiffies(5000)))
--		ret = -ETIMEDOUT;
--	else
--		return 0;
--
--out_clear_bit:
--	if (ack)
--		clear_bit(ACK_PENDING, &g0->flags);
--	else
--		clear_bit(COMMAND_PENDING, &g0->flags);
--
--	return ret;
--}
--
- static irqreturn_t ucsi_stm32g0_irq_handler(int irq, void *data)
- {
- 	struct ucsi_stm32g0 *g0 = data;
-@@ -449,13 +416,7 @@ static irqreturn_t ucsi_stm32g0_irq_handler(int irq, void *data)
- 	if (ret)
- 		return IRQ_NONE;
- 
--	if (UCSI_CCI_CONNECTOR(cci))
--		ucsi_connector_change(g0->ucsi, UCSI_CCI_CONNECTOR(cci));
--
--	if (cci & UCSI_CCI_ACK_COMPLETE && test_and_clear_bit(ACK_PENDING, &g0->flags))
--		complete(&g0->complete);
--	if (cci & UCSI_CCI_COMMAND_COMPLETE && test_and_clear_bit(COMMAND_PENDING, &g0->flags))
--		complete(&g0->complete);
-+	ucsi_notify_common(g0->ucsi, cci);
- 
- 	return IRQ_HANDLED;
- }
-@@ -464,7 +425,7 @@ static const struct ucsi_operations ucsi_stm32g0_ops = {
- 	.read_version = ucsi_stm32g0_read_version,
- 	.read_cci = ucsi_stm32g0_read_cci,
- 	.read_message_in = ucsi_stm32g0_read_message_in,
--	.sync_control = ucsi_stm32g0_sync_control,
-+	.sync_control = ucsi_sync_control_common,
- 	.async_control = ucsi_stm32g0_async_control,
- };
- 
-@@ -665,7 +626,6 @@ static int ucsi_stm32g0_probe(struct i2c_client *client)
- 
- 	g0->dev = dev;
- 	g0->client = client;
--	init_completion(&g0->complete);
- 	i2c_set_clientdata(client, g0);
- 
- 	g0->ucsi = ucsi_create(dev, &ucsi_stm32g0_ops);
+> 
+> On Fri, May 31, 2024 at 08:13:49PM +0300, Serge Semin wrote:
+> > > Does this
+> > > mean it is true that these cores will never be used with an external
+> > > PCS?
+> > 
+> > Sorry, I was wrong to suggest the (priv->plat.has_gmac ||
+> > priv->plat.has_gmac4)-based statement. Indeed there is a case of having DW
+> > QoS Eth and DW XPCS synthesized together with the SGMII/1000Base-X
+> > downstream interface. Not sure why it was needed to implement that way
+> > seeing DW QoS Eth IP-core supports optional SGMII PHY interface out of
+> > box, but AFAICS Intel mGBE is that case. Anyway the correct way to
+> > detect the internal PCS support is to check the PCSSEL flag set in the
+> > HWFEATURE register (preserved in the stmmac_priv::dma_cap::pcs field).
+> 
+> We can only wonder why!
+> 
+> > > Please can you confirm that if an external PCS (e.g. xpcs, lynx PCS)
+> > > is being used, the internal PCS will not have been synthesized, and
+> > > thus priv->dma_cap.pcs will be false?
+> > 
+> > Alas I can't confirm that. priv->dma_cap.pcs only indicates the
+> > internal PCS availability. External PCS is an independent entity from
+> > the DW *MAC IP-core point of view. So the DW GMAC/QoS Eth/XGMAC
+> > controllers aren't aware of its existence. It's the low-level platform
+> > driver/code responsibility to somehow detect it being available
+> > ("pcs-handle" property, plat->mdio_bus_data->has_xpcs flag, etc).
+> > 
+> > Regarding the internal PCS, as long as the DW GMAC or DW QoS Eth is
+> > synthesized with the SGMII/TBI/RTBI PHY interface support
+> > priv->dma_cap.pcs will get to be true. Note the device can be
+> > synthesized with several PHY interfaces supported. As long as
+> > SGMII/TBI/RTBI PHY interface is any of them, the flag will be set
+> > irrespective from the PHY interface activated at runtime. 
+> 
+> I've been debating about this, and given your response, I'm wondering
+> whether we should change stmmac_mac_select_pcs() to instead do:
+> 
+> static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
+> 						 phy_interface_t interface)
+> {
+> 	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
+> 	struct phylink_pcs *pcs;
+> 
+> 	if (priv->plat->select_pcs) {
+> 		pcs = priv->plat->select_pcs(priv, interface);
+> 		if (!IS_ERR(pcs))
+> 			return pcs;
+> 	}
+> 
+> 	return stmmac_mac_phylink_select_pcs(priv, interface);
+> }
+> 
+> and push the problem of whether to provide a PCS that overrides
+> the MAC internal PCS into platform code. That would mean Intel mGBE
+> would be able to override with XPCS. rzn1 and socfpga can then do
+> their own thing as well.
 
--- 
-2.39.2
+Well, AFAICS the only device that currently have the DW XPCS
+connected to a non DW XGMAC controller is indeed the Intel mGBE with its
+DW QoS Eth+DW XPCS weird setup. At the same time the Intel mGBE
+controller can also support RGMII interface. Thus there is no internal
+SGMII/TBI/RTBI PCS in there.
 
+Qualcomm QoS Eth uses the internal SGMII PCS and by setting up the
+STMMAC_FLAG_HAS_INTEGRATED_PCS flag its driver almost completely
+disables the STMMAC PCS functionality (except the
+stmmac_pcs_ctrl_ane() being called in stmmac_hw_setup()).
+
+So from the perspective of these two devices the PCS selection looks
+quiet certain. It's either internal or external one. There is no
+device with both of them available.
+
+SoCFPGA... Well, it's another and more complicated story. Based on
+what said in a comment in
+socfpga_gen5_set_phy_mode()/socfpga_gen10_set_phy_mode() the only
+possibility to have some internal interface converted to the external
+one is when a "splitter" is available. But IMO the comment is
+misleading because the only thing that is then done with the
+"splitter" CSR is just the clock divider selection. What is actually
+done, if the "splitter" is available or if the SGMII/GMII/MII
+_MAC-interface_ is requested, then the internal interface is fixed to
+"GMII/MII". It looks weird because based on the "mac-mode" DT-property
+semantics it was supposed to indicate the internal interface only. But
+EMAC is never tuned to have the SGMII interface (see the values saved
+in the "*val" argument of socfpga_set_phy_mode_common()). So all of
+that makes me to conclude the next points:
+
+1. "mac-mode" property has never been utilized for the SoG-FPGA GMAC
+platform. The plat_stmmacenet_data::mac_interface field has always
+defaulted to plat_stmmacenet_data::phy_interface.
+
+2. SoG-FPGA GMAC IP-core itself doesn't support the native/internal
+SGMII interface.  It's implemented by means of the so called
+"gmii-to-sgmii"-converter, which is the Lynx PCS.
+
+Thus unless I've missed something the SoC-FPGA network controller
+structure can be depicted as follows:
+
+
+                   +---- SYSMGR:PHYSEL
+      phy_intf_sel |
++------------------+                     +--------------+ 
+|          RMII    |                     |              | Internal Interface
+|       +----------+                     |          off +--------------------------+
+|          RGMII   | Internal Interface  | SGMII        |                          | External Interface*
+| EMAC  +----------+---------------------+              |          +-------+       +--------+-----------
+|         GMII/MII |                     | adapter      | GMII/MII | Lynx  | SGMII |        |
+|       +----------+                     |           on +----------+       +-------+        |
+|                  +--+                  |              |          |  PCS  |                |
++------------------+  |                  +--------------+          +---+---+                |
+                      |                                                |                    |
+                      |              +------------+                    |                    |
+                      +--------------+ Splitter** +--------------------+--------------------+
+                                     +-----+------+
+                                           |
+                                     +-----+------+
+                                     | Oscillator |
+                                     +------------+
+
+* No idea whether the external interface is represented as a single IO
+port or as multiple interface ports handled by the same MAC.
+
+** As I explained above, judging by the SoC-FPGA driver code the
+"splitter" is just the reference clock divider responsible for the
+clock rate adjustment based on the requested link speed.
+
+Based on the logic depicted on the sketch above, I guess that there is
+no internal SGMII/TBI/RTBI PCS in SoC-FPGA GMAC either. The SGMII
+interface is implemented by means of the Lynx PCS.
+
+> 
+> I'm trying hard not to go down another rabbit hole... I've just
+> spotted that socfpga sets mac_interface to PHY_INTERFACE_MODE_SGMII.
+> That's another reason for pushing this down into platform drivers -
+> if platform drivers are doing weird stuff, then we can contain their
+> weirdness in the platform drivers moving it out of the core code.
+
+Oh, that damn "mac-mode" property... First of all as I already
+mentioned once AFAICS originally it was introduced for the SoC-FPGA
+GMAC, but the property has never been defined in any DT-node so far,
+neither in SoC-FPGA nodes nor in the rest of the DW *MAC-based nodes.
+Moreover based on my consideration above the SoC-FPGA internal
+interface is always determined based on the external one seeing
+plat_stmmacenet_data::mac_interface defaults to
+plat_stmmacenet_data::phy_interface. Secondly I also have much
+certainty that the rest of the glue drivers utilizing
+plat_stmmacenet_data::mac_interface field should in fact be using
+plat_stmmacenet_data::phy_interface instead. Based on the history of
+the mac_interface-related changes it's likely that all of them have
+just either been missed during the conversion to utilizing the
+phy_interface-field or incorrectly utilized the mac_interface field
+instead of phy_interface in the first place.
+
+So to speak before going further it might be worth re-checking once
+again the entire history of the "mac-mode" property-related change,
+but as an experimental A/B-test patch for net-next it may be a good
+idea to either drop the mac_interface field completely, or convert the
+driver to forgetting about the internal PCS if the external one is
+enabled, or, as a less invasive option, make SoC-FPGA explicitly
+setting up the mac_interface field to GMII/MII if it configures the
+internal interface to that value. Then, if these changes don't break
+any platform (most importantly the SoF-FPGA GMAC case), then we can go
+further and carefully convert the rest of the glue-drivers not using
+the mac_interface field.
+
+> 
+> > You can extend the priv->dma_cap.pcs flag semantics. So it could
+> > be indicating three types of the PCS'es:
+> > RGMII, SGMII, XPCS (or TBI/RTBI in future).
+> 
+> If TBI/RTBI gets supported, then this would have to be extended, but I
+> get the impression that this isn't popular.
+
+Irrespective from the TBI/RTBI interface support, using the
+priv->dma_cap.pcs field for all possible PCS'es shall also improve the
+code readability. Currently we have four versions of the PCS fields:
+dma_features::pcs
+mac_device_info::pcs
+mac_device_info::xpcs
+mac_device_info::lynx_pcs
+which are being checked here and there in the driver...
+
+> 
+> > I guess the DW XPCS implementation might be more preferable. From one
+> > side DW XPCS SGMII can support up to 2.5Gbps speed, while the DW
+> > GMAC/QoS Eth SGMII can work with up to 1Gbps speed only. On the other
+> > hand the DW XPCS might be available over the MDIO-bus, which is slower
+> > to access than the internal PCS CSRs available in the DW GMAC/QoS Eth
+> > CSRs space. So the more performant link speed seems more useful
+> > feature over the faster device setup process.
+> 
+> I think which should be used would depend on how the hardware is wired
+> up. This brings us back to platform specifics again, which points
+> towards moving the decision making into platform code as per the above.
+> 
+> > One thing I am not sure about is that there is a real case of having
+> > the DW GMAC/QoS Eth synthesized with the native SGMII/TBI/RTBI PHY
+> > interface support and being attached to the DW XPCS controller, which
+> > would have the SGMII downstream PHY interface. DW XPCS has only the
+> > XGMII or GMII/MII upstream interfaces over which the MAC can be
+> > attached.
+> 
+> That gives us another possibility, but needs platforms to be doing
+> the right thing. If mac_interface were set to XGMII or GMII/MII, then
+> that would exclude the internal MAC PCS.
+> 
+> > So DW GMAC/QoS Eth and DW XPCS can be connected via the
+> > GMII/MII interface only. Regarding Intel mGBE, it likely is having a
+> > setup like this:
+> > 
+> > +------------+          +---------+
+> > |            | GMII/MII |         |   SGMII
+> > | DW QoS Eth +----------+ DW XPCS +------------
+> > |            |          |         | 1000Base-X
+> > +------------+          +---------+
+> 
+> 
+> So as an alternative, 
+> 
+>      mac_interface            phy_interface
+> 
+>      XGMII/GMII/MII           SGMII/1000Base-X
+> MAC ---------------- DW XPCS ------------------
+> 
+>      INTERNAL                SGMII/TBI/RTBI
+> MAC ---------- Internal PCS ----------------
+> 
+>      INTERNAL                  RGMII
+> MAC ---------- Internal "PCS" --------------
+
++ SoC-FPGA (presumably)
+
+       GMII/MII                  SGMII
+  MAC ---------------- Lynx PCS --------------
+
+Please also note, based on the DW GMAC/QoS Eth hardware manual each
+internal interface block is connected to MAC by the GMII/MII
+interface. So the internal PCS cases more precisely could be
+represented as follows:
+
+       GMII                     SGMII (AN)
+  MAC ---------- Internal PCS ------------------
+
+       GMII                     TBI/RTBI (AN)
+  MAC ---------- Internal PCS ------------------
+  
+       GMII                      RGMII (In-band)
+  MAC ---------- Internal "PCS" ----------------
+
+       GMII                      RevMII
+  MAC ----------  RevMII block  ----------------
+
+       GMII                      GMII
+  MAC ------------------------------------------
+
+       MII                       SMII (In-band)
+  MAC ---------- Internal "PCS" ----------------
+
+       MII                       RMII
+  MAC ----------   RMII block   ----------------
+
+       MII                       MII
+  MAC ------------------------------------------
+
+There is a special input signal phy_intf_sel[2:0], which tells to MAC
+what interface to activate (grep -i the glue drivers for "intf",
+"physel", etc).
+
+> 
+> One of the problems here, though, is socfpga. It uses mac_interface
+> with RGMII*, MII, GMII, SGMII and RMII. I think it's confusing
+> mac_interface for phy_interface, but I haven't read through enough
+> of it to be certain.
+> 
+> So that again leads me back to my proposal above for
+> stmmac_mac_select_pcs() as the least likely to break proposition -
+> at least given how things are at the moment.
+
+Please see my notes above regarding the internal interface
+initialization in the SoC-FPGA glue driver. I guess we could at least
+try to A/B-test the SoC-FPGA code in the next net-next by setting
+mac_interface to GMII/MII when the internal interface is enabled as
+GMII/MII in the glue-driver, and converting the rest of the glue
+driver to using phy_interface. If nothing breaks, then SoC-FPGA has
+never used the "mac-mode" property and we could mark the property as
+deprecated and could carefully covert the rest of the STMMAC platform
+driver to using the phy_interface field.
+
+-Serge(y)
+
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
