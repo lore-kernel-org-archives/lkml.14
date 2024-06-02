@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608E82C182;
-	Sun,  2 Jun 2024 03:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B4311712;
+	Sun,  2 Jun 2024 03:37:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717299446; cv=none; b=VNy9/YzD3mopCnQftaSPSWVTvPPscA125uZLIQVUv9qTcjtDSaHMMMWprey0EUJXMgEEhmxumj9xukwiPC2Kgpuh7hvWgyFufJhSI1e73GjHkmC/UXuB61I49psU7xsKIui1tRzmiBXDrMQZ2B9hJiYq7VGBRmaMHi7OTyeFkJI=
+	t=1717299447; cv=none; b=MI8OSLvP3WrT33uo2mmK0OMRpXSwagLcnn/3Ge/e1VPZzXlcwOUX+vdcRKfNnP7JjYPGV4YOozy5MlKotPhN364oP6A4XSvSDITTWkkjVg7oCSw5rhIbRlvwiXwcmbzTZs8kS2JHVz38xWwm9sc6+YhLGUxEmCMSiadRuiLRm+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717299446; c=relaxed/simple;
-	bh=Fm3TVMR/+7OS/WQk9t15lRDftXgQgj7gbCXxiwcATKY=;
+	s=arc-20240116; t=1717299447; c=relaxed/simple;
+	bh=6xxEZTPjtuAvunSxyIUoXlUZBxO25j8sGdXoLzd16gA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=uZZcZDWArGbACzlqaNblC09ZBE0+Q8E6X309Guc+ta4eB0T9Zrhr7axas5nMVTmCSf5aDPUmU7M8rsHOMM5AdQk9EGlAUST9AVxstebIOmJ0FNGnLROPaUMaKFuRkGpbw7OQZyK9dy+NiGb634oFRqFO83xcO6pfAYxWNgNzmwE=
+	 Content-Type; b=b/AKg3GQHEBdUv1zA8Zuv2pdqr473Bivkr5pXn9n15pZtsCR50z+Fl6MFyQ9MVmbnLo2v43IcwcnLqnj8NQy1udasczbSvESd+A171HXYsvKiFDnl0xBpyJ06Km8/8yM369iSNKNhQfY43Vkj9n7rXs6ML8e63WribRVYaHd/ww=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB1DC4DE01;
-	Sun,  2 Jun 2024 03:37:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081E6C4AF0F;
+	Sun,  2 Jun 2024 03:37:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sDc3E-000000094Nw-3Z3x;
-	Sat, 01 Jun 2024 23:38:32 -0400
-Message-ID: <20240602033832.709653366@goodmis.org>
+	id 1sDc3G-000000094SR-1LbW;
+	Sat, 01 Jun 2024 23:38:34 -0400
+Message-ID: <20240602033834.178311823@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 01 Jun 2024 23:37:54 -0400
+Date: Sat, 01 Jun 2024 23:38:03 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -41,7 +41,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v2 10/27] ftrace: Add subops logic to allow one ops to manage many
+Subject: [PATCH v2 19/27] function_graph: Implement fgraph_reserve_data() and
+ fgraph_retrieve_data()
 References: <20240602033744.563858532@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,513 +54,328 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-There are cases where a single system will use a single function callback
-to handle multiple users. For example, to allow function_graph tracer to
-have multiple users where each can trace their own set of functions, it is
-useful to only have one ftrace_ops registered to ftrace that will call a
-function by the function_graph tracer to handle the multiplexing with the
-different registered  function_graph tracers.
+Added functions that can be called by a fgraph_ops entryfunc and retfunc to
+store state between the entry of the function being traced to the exit of
+the same function. The fgraph_ops entryfunc() may call
+fgraph_reserve_data() to store up to 32 words onto the task's shadow
+ret_stack and this then can be retrieved by fgraph_retrieve_data() called
+by the corresponding retfunc().
 
-Add a "subop_list" to the ftrace_ops that will hold a list of other
-ftrace_ops that the top ftrace_ops will manage.
+Co-developed with Masami Hiramatsu:
+Link: https://lore.kernel.org/linux-trace-kernel/171509109089.162236.11372474169781184034.stgit@devnote2
 
-The function ftrace_startup_subops() that takes the manager ftrace_ops and
-a subop ftrace_ops it will manage. If there are no subops with the
-ftrace_ops yet, it will copy the ftrace_ops subop filters to the manager
-ftrace_ops and register that with ftrace_startup(), and adds the subop to
-its subop_list. If the manager ops already has something registered, it
-will then merge the new subop filters with what it has and enable the new
-functions that covers all the subops it has.
-
-To remove a subop, ftrace_shutdown_subops() is called which will use the
-subop_list of the manager ops to rebuild all the functions it needs to
-trace, and update the ftrace records to only call the functions it now has
-registered. If there are no more functions registered, it will then call
-ftrace_shutdown() to disable itself completely.
-
-Note, it is up to the manager ops callback to always make sure that the
-subops callbacks are called if its filter matches, as there are times in
-the update where the callback could be calling more functions than those
-that are currently registered.
-
-This could be updated to handle other systems other than function_graph,
-for example, fprobes could use this (but will need an interface to call
-ftrace_startup_subops()).
-
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ftrace.h         |   1 +
- kernel/trace/fgraph.c          |   3 +-
- kernel/trace/ftrace.c          | 390 ++++++++++++++++++++++++++++++++-
- kernel/trace/ftrace_internal.h |   1 +
- kernel/trace/trace.h           |   1 +
- 5 files changed, 394 insertions(+), 2 deletions(-)
+ include/linux/ftrace.h |   3 +
+ kernel/trace/fgraph.c  | 191 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 186 insertions(+), 8 deletions(-)
 
 diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 586018744785..978a1d3b270a 100644
+index 82cfc8e09cfd..9f61556a9491 100644
 --- a/include/linux/ftrace.h
 +++ b/include/linux/ftrace.h
-@@ -334,6 +334,7 @@ struct ftrace_ops {
- 	unsigned long			trampoline;
- 	unsigned long			trampoline_size;
- 	struct list_head		list;
-+	struct list_head		subop_list;
- 	ftrace_ops_func_t		ops_func;
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	unsigned long			direct_call;
+@@ -1053,6 +1053,9 @@ struct fgraph_ops {
+ 	int				idx;
+ };
+ 
++void *fgraph_reserve_data(int idx, int size_bytes);
++void *fgraph_retrieve_data(int idx, int *size_bytes);
++
+ /*
+  * Stack of return addresses for functions
+  * of a thread.
 diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 54ed2ed2036b..e39042c40937 100644
+index baa08249ffd5..f207b7ae5f46 100644
 --- a/kernel/trace/fgraph.c
 +++ b/kernel/trace/fgraph.c
-@@ -21,7 +21,8 @@
- #ifdef CONFIG_DYNAMIC_FTRACE
- #define ASSIGN_OPS_HASH(opsname, val) \
- 	.func_hash		= val, \
--	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock),
-+	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock), \
-+	.subop_list		= LIST_HEAD_INIT(opsname.subop_list),
- #else
- #define ASSIGN_OPS_HASH(opsname, val)
- #endif
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b85f00b0ffe7..38fb2a634b04 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -74,7 +74,8 @@
- #ifdef CONFIG_DYNAMIC_FTRACE
- #define INIT_OPS_HASH(opsname)	\
- 	.func_hash		= &opsname.local_hash,			\
--	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock),
-+	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock), \
-+	.subop_list		= LIST_HEAD_INIT(opsname.subop_list),
- #else
- #define INIT_OPS_HASH(opsname)
- #endif
-@@ -161,6 +162,7 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
- #ifdef CONFIG_DYNAMIC_FTRACE
- 	if (!(ops->flags & FTRACE_OPS_FL_INITIALIZED)) {
- 		mutex_init(&ops->local_hash.regex_lock);
-+		INIT_LIST_HEAD(&ops->subop_list);
- 		ops->func_hash = &ops->local_hash;
- 		ops->flags |= FTRACE_OPS_FL_INITIALIZED;
- 	}
-@@ -3164,6 +3166,392 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
- 	return 0;
+@@ -31,12 +31,11 @@
+  * holds a bitmask and a type (called "bitmap"). The bitmap is defined as:
+  *
+  * bits:  0 -  9	offset in words from the previous ftrace_ret_stack
+- *			Currently, this will always be set to FGRAPH_FRAME_OFFSET
+- *			to get to the fgraph frame.
+  *
+  * bits: 10 - 11	Type of storage
+  *			  0 - reserved
+  *			  1 - bitmap of fgraph_array index
++ *			  2 - reserved data
+  *
+  * For type with "bitmap of fgraph_array index" (FGRAPH_TYPE_BITMAP):
+  *  bits: 12 - 27	The bitmap of fgraph_ops fgraph_array index
+@@ -49,10 +48,15 @@
+  * The top of the ret_stack (when not empty) will always have a reference
+  * word that points to the last fgraph frame that was saved.
+  *
++ * For reserved data:
++ *  bits: 12 - 17	The size in words that is stored
++ *  bits: 18 - 23	The index of fgraph_array, which shows who is stored
++ *
+  * That is, at the end of function_graph_enter, if the first and forth
+  * fgraph_ops on the fgraph_array[] (index 0 and 3) needs their retfunc called
+- * on the return of the function being traced, this is what will be on the
+- * task's shadow ret_stack: (the stack grows upward)
++ * on the return of the function being traced, and the forth fgraph_ops
++ * stored two words of data, this is what will be on the task's shadow
++ * ret_stack: (the stack grows upward)
+  *
+  *  ret_stack[SHADOW_STACK_OFFSET]
+  * | SHADOW_STACK_TASK_VARS(ret_stack)[15]      |
+@@ -62,11 +66,21 @@
+  * ...
+  * |                                            | <- task->curr_ret_stack
+  * +--------------------------------------------+
++ * | (3 << 12) | (3 << 10) | FGRAPH_FRAME_OFFSET|
++ * |         *or put another way*               |
++ * | (3 << FGRAPH_DATA_INDEX_SHIFT)| \          | This is for fgraph_ops[3].
++ * | ((2 - 1) << FGRAPH_DATA_SHIFT)| \          | The data size is 2 words.
++ * | (FGRAPH_TYPE_DATA << FGRAPH_TYPE_SHIFT)| \ |
++ * | (offset2:FGRAPH_FRAME_OFFSET+3)            | <- the offset2 is from here
++ * +--------------------------------------------+ ( It is 4 words from the ret_stack)
++ * |            STORED DATA WORD 2              |
++ * |            STORED DATA WORD 1              |
++ * +--------------------------------------------+
+  * | (9 << 12) | (1 << 10) | FGRAPH_FRAME_OFFSET|
+  * |         *or put another way*               |
+  * | (BIT(3)|BIT(0)) << FGRAPH_INDEX_SHIFT | \  |
+  * | FGRAPH_TYPE_BITMAP << FGRAPH_TYPE_SHIFT| \ |
+- * | (offset:FGRAPH_FRAME_OFFSET)               | <- the offset is from here
++ * | (offset1:FGRAPH_FRAME_OFFSET)              | <- the offset1 is from here
+  * +--------------------------------------------+
+  * | struct ftrace_ret_stack                    |
+  * |   (stores the saved ret pointer)           | <- the offset points here
+@@ -100,6 +114,7 @@
+ enum {
+ 	FGRAPH_TYPE_RESERVED	= 0,
+ 	FGRAPH_TYPE_BITMAP	= 1,
++	FGRAPH_TYPE_DATA	= 2,
+ };
+ 
+ /*
+@@ -110,6 +125,26 @@ enum {
+ #define FGRAPH_INDEX_MASK	GENMASK(FGRAPH_INDEX_BITS - 1, 0)
+ #define FGRAPH_INDEX_SHIFT	(FGRAPH_TYPE_SHIFT + FGRAPH_TYPE_BITS)
+ 
++/*
++ * For DATA type:
++ *  FGRAPH_DATA (12-17) bits hold the size of data (in words)
++ *  FGRAPH_INDEX (18-23) bits hold the index for which gops->idx the data is for
++ *
++ * Note:
++ *  data_size == 0 means 1 word, and 31 (=2^5 - 1) means 32 words.
++ */
++#define FGRAPH_DATA_BITS	5
++#define FGRAPH_DATA_MASK	GENMASK(FGRAPH_DATA_BITS - 1, 0)
++#define FGRAPH_DATA_SHIFT	(FGRAPH_TYPE_SHIFT + FGRAPH_TYPE_BITS)
++#define FGRAPH_MAX_DATA_SIZE (sizeof(long) * (1 << FGRAPH_DATA_BITS))
++
++#define FGRAPH_DATA_INDEX_BITS	4
++#define FGRAPH_DATA_INDEX_MASK	GENMASK(FGRAPH_DATA_INDEX_BITS - 1, 0)
++#define FGRAPH_DATA_INDEX_SHIFT	(FGRAPH_DATA_SHIFT + FGRAPH_DATA_BITS)
++
++#define FGRAPH_MAX_INDEX	\
++	((FGRAPH_INDEX_SIZE << FGRAPH_DATA_BITS) + FGRAPH_RET_INDEX)
++
+ #define FGRAPH_ARRAY_SIZE	FGRAPH_INDEX_BITS
+ 
+ /*
+@@ -178,16 +213,46 @@ static int fgraph_lru_alloc_index(void)
+ 	return idx;
  }
  
-+/* Simply make a copy of @src and return it */
-+static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
++/* Get the offset to the fgraph frame from a ret_stack value */
++static inline int __get_offset(unsigned long val)
 +{
-+	if (!src || src == EMPTY_HASH)
-+		return EMPTY_HASH;
-+
-+	return alloc_and_copy_ftrace_hash(src->size_bits, src);
++	return val & FGRAPH_FRAME_OFFSET_MASK;
 +}
 +
-+/*
-+ * Append @new_hash entries to @hash:
++/* Get the type of word from a ret_stack value */
++static inline int __get_type(unsigned long val)
++{
++	return (val >> FGRAPH_TYPE_SHIFT) & FGRAPH_TYPE_MASK;
++}
++
++/* Get the data_index for a DATA type ret_stack word */
++static inline int __get_data_index(unsigned long val)
++{
++	return (val >> FGRAPH_DATA_INDEX_SHIFT) & FGRAPH_DATA_INDEX_MASK;
++}
++
++/* Get the data_size for a DATA type ret_stack word */
++static inline int __get_data_size(unsigned long val)
++{
++	return ((val >> FGRAPH_DATA_SHIFT) & FGRAPH_DATA_MASK) + 1;
++}
++
++/* Get the word from the ret_stack at @offset */
++static inline unsigned long get_fgraph_entry(struct task_struct *t, int offset)
++{
++	return t->ret_stack[offset];
++}
++
+ /* Get the FRAME_OFFSET from the word from the @offset on ret_stack */
+ static inline int get_frame_offset(struct task_struct *t, int offset)
+ {
+-	return t->ret_stack[offset] & FGRAPH_FRAME_OFFSET_MASK;
++	return __get_offset(t->ret_stack[offset]);
+ }
+ 
+ /* Get FGRAPH_TYPE from the word from the @offset at ret_stack */
+ static inline int get_fgraph_type(struct task_struct *t, int offset)
+ {
+-	return (t->ret_stack[offset] >> FGRAPH_TYPE_SHIFT) & FGRAPH_TYPE_MASK;
++	return __get_type(t->ret_stack[offset]);
+ }
+ 
+ /* For BITMAP type: get the bitmask from the @offset at ret_stack */
+@@ -212,6 +277,25 @@ set_bitmap(struct task_struct *t, int offset, unsigned long bitmap)
+ 		(FGRAPH_TYPE_BITMAP << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+ }
+ 
++/* For DATA type: get the data saved under the ret_stack word at @offset */
++static inline void *get_data_type_data(struct task_struct *t, int offset)
++{
++	unsigned long val = t->ret_stack[offset];
++
++	if (__get_type(val) != FGRAPH_TYPE_DATA)
++		return NULL;
++	offset -= __get_data_size(val);
++	return (void *)&t->ret_stack[offset];
++}
++
++/* Create the ret_stack word for a DATA type */
++static inline unsigned long make_data_type_val(int idx, int size, int offset)
++{
++	return (idx << FGRAPH_DATA_INDEX_SHIFT) |
++		((size - 1) << FGRAPH_DATA_SHIFT) |
++		(FGRAPH_TYPE_DATA << FGRAPH_TYPE_SHIFT) | offset;
++}
++
+ /* ftrace_graph_entry set to this to tell some archs to run function graph */
+ static int entry_run(struct ftrace_graph_ent *trace, struct fgraph_ops *ops)
+ {
+@@ -245,6 +329,91 @@ static void ret_stack_init_task_vars(unsigned long *ret_stack)
+ 	memset(gvals, 0, sizeof(*gvals) * FGRAPH_ARRAY_SIZE);
+ }
+ 
++/**
++ * fgraph_reserve_data - Reserve storage on the task's ret_stack
++ * @idx:	The index of fgraph_array
++ * @size_bytes: The size in bytes to reserve
 + *
-+ *  If @hash is the EMPTY_HASH then it traces all functions and nothing
-+ *  needs to be done.
++ * Reserves space of up to FGRAPH_MAX_DATA_SIZE bytes on the
++ * task's ret_stack shadow stack, for a given fgraph_ops during
++ * the entryfunc() call. If entryfunc() returns zero, the storage
++ * is discarded. An entryfunc() can only call this once per iteration.
++ * The fgraph_ops retfunc() can retrieve this stored data with
++ * fgraph_retrieve_data().
 + *
-+ *  If @new_hash is the EMPTY_HASH, then make *hash the EMPTY_HASH so
-+ *  that it traces everything.
-+ *
-+ *  Otherwise, go through all of @new_hash and add anything that @hash
-+ *  doesn't already have, to @hash.
++ * Returns: On success, a pointer to the data on the stack.
++ *   Otherwise, NULL if there's not enough space left on the
++ *   ret_stack for the data, or if fgraph_reserve_data() was called
++ *   more than once for a single entryfunc() call.
 + */
-+static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
++void *fgraph_reserve_data(int idx, int size_bytes)
 +{
-+	struct ftrace_func_entry *entry;
-+	int size;
-+	int i;
++	unsigned long val;
++	void *data;
++	int curr_ret_stack = current->curr_ret_stack;
++	int data_size;
 +
-+	/* An empty hash does everything */
-+	if (!*hash || *hash == EMPTY_HASH)
-+		return 0;
-+
-+	/* If new_hash has everything make hash have everything */
-+	if (!new_hash || new_hash == EMPTY_HASH) {
-+		free_ftrace_hash(*hash);
-+		*hash = EMPTY_HASH;
-+		return 0;
-+	}
-+
-+	size = 1 << new_hash->size_bits;
-+	for (i = 0; i < size; i++) {
-+		hlist_for_each_entry(entry, &new_hash->buckets[i], hlist) {
-+			/* Only add if not already in hash */
-+			if (!__ftrace_lookup_ip(*hash, entry->ip) &&
-+			    add_hash_entry(*hash, entry->ip) == NULL)
-+				return -ENOMEM;
-+		}
-+	}
-+	return 0;
-+}
-+
-+/* Add to @hash only those that are in both @new_hash1 and @new_hash2 */
-+static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash1,
-+			  struct ftrace_hash *new_hash2)
-+{
-+	struct ftrace_func_entry *entry;
-+	int size;
-+	int i;
-+
-+	/*
-+	 * If new_hash1 or new_hash2 is the EMPTY_HASH then make the hash
-+	 * empty as well as empty for notrace means none are notraced.
-+	 */
-+	if (!new_hash1 || new_hash1 == EMPTY_HASH ||
-+	    !new_hash2 || new_hash2 == EMPTY_HASH) {
-+		free_ftrace_hash(*hash);
-+		*hash = EMPTY_HASH;
-+		return 0;
-+	}
-+
-+	size = 1 << new_hash1->size_bits;
-+	for (i = 0; i < size; i++) {
-+		hlist_for_each_entry(entry, &new_hash1->buckets[i], hlist) {
-+			/* Only add if in both @new_hash1 and @new_hash2 */
-+			if (__ftrace_lookup_ip(new_hash2, entry->ip) &&
-+			    add_hash_entry(*hash, entry->ip) == NULL)
-+				return -ENOMEM;
-+		}
-+	}
-+	return 0;
-+}
-+
-+/* Return a new hash that has a union of all @ops->filter_hash entries */
-+static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
-+{
-+	struct ftrace_hash *new_hash;
-+	struct ftrace_ops *subops;
-+	int ret;
-+
-+	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
-+	if (!new_hash)
++	if (size_bytes > FGRAPH_MAX_DATA_SIZE)
 +		return NULL;
 +
-+	list_for_each_entry(subops, &ops->subop_list, list) {
-+		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
-+		if (ret < 0) {
-+			free_ftrace_hash(new_hash);
-+			return NULL;
-+		}
-+		/* Nothing more to do if new_hash is empty */
-+		if (new_hash == EMPTY_HASH)
-+			break;
-+	}
-+	return new_hash;
-+}
++	/* Convert the data size to number of longs. */
++	data_size = (size_bytes + sizeof(long) - 1) >> (sizeof(long) == 4 ? 2 : 3);
 +
-+/* Make @ops trace evenything except what all its subops do not trace */
-+static struct ftrace_hash *intersect_hashes(struct ftrace_ops *ops)
-+{
-+	struct ftrace_hash *new_hash = NULL;
-+	struct ftrace_ops *subops;
-+	int size_bits;
-+	int ret;
++	val = get_fgraph_entry(current, curr_ret_stack - 1);
++	data = &current->ret_stack[curr_ret_stack];
 +
-+	list_for_each_entry(subops, &ops->subop_list, list) {
-+		struct ftrace_hash *next_hash;
++	curr_ret_stack += data_size + 1;
++	if (unlikely(curr_ret_stack >= SHADOW_STACK_MAX_OFFSET))
++		return NULL;
 +
-+		if (!new_hash) {
-+			size_bits = subops->func_hash->notrace_hash->size_bits;
-+			new_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->notrace_hash);
-+			if (!new_hash)
-+				return NULL;
-+			continue;
-+		}
-+		size_bits = new_hash->size_bits;
-+		next_hash = new_hash;
-+		new_hash = alloc_ftrace_hash(size_bits);
-+		ret = intersect_hash(&new_hash, next_hash, subops->func_hash->notrace_hash);
-+		free_ftrace_hash(next_hash);
-+		if (ret < 0) {
-+			free_ftrace_hash(new_hash);
-+			return NULL;
-+		}
-+		/* Nothing more to do if new_hash is empty */
-+		if (new_hash == EMPTY_HASH)
-+			break;
-+	}
-+	return new_hash;
-+}
++	val = make_data_type_val(idx, data_size, __get_offset(val) + data_size + 1);
 +
-+/* Returns 0 on equal or non-zero on non-equal */
-+static int compare_ops(struct ftrace_hash *A, struct ftrace_hash *B)
-+{
-+	struct ftrace_func_entry *entry;
-+	int size;
-+	int i;
++	/* Set the last word to be reserved */
++	current->ret_stack[curr_ret_stack - 1] = val;
 +
-+	if (!A || A == EMPTY_HASH)
-+		return !(!B || B == EMPTY_HASH);
++	/* Make sure interrupts see this */
++	barrier();
++	current->curr_ret_stack = curr_ret_stack;
++	/* Again sync with interrupts, and reset reserve */
++	current->ret_stack[curr_ret_stack - 1] = val;
 +
-+	if (!B || B == EMPTY_HASH)
-+		return !(!A || A == EMPTY_HASH);
-+
-+	if (A->count != B->count)
-+		return 1;
-+
-+	size = 1 << A->size_bits;
-+	for (i = 0; i < size; i++) {
-+		hlist_for_each_entry(entry, &A->buckets[i], hlist) {
-+			if (!__ftrace_lookup_ip(B, entry->ip))
-+				return 1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
-+					   struct ftrace_hash **orig_hash,
-+					   struct ftrace_hash *hash,
-+					   int enable);
-+
-+static int ftrace_update_ops(struct ftrace_ops *ops, struct ftrace_hash *filter_hash,
-+			     struct ftrace_hash *notrace_hash)
-+{
-+	int ret;
-+
-+	if (compare_ops(filter_hash, ops->func_hash->filter_hash)) {
-+		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->filter_hash,
-+						      filter_hash, 1);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (compare_ops(notrace_hash, ops->func_hash->notrace_hash)) {
-+		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->notrace_hash,
-+						      notrace_hash, 0);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
++	return data;
 +}
 +
 +/**
-+ * ftrace_startup_subops - enable tracing for subops of an ops
-+ * @ops: Manager ops (used to pick all the functions of its subops)
-+ * @subops: A new ops to add to @ops
-+ * @command: Extra commands to use to enable tracing
++ * fgraph_retrieve_data - Retrieve stored data from fgraph_reserve_data()
++ * @idx:	the index of fgraph_array (fgraph_ops::idx)
++ * @size_bytes: pointer to retrieved data size.
 + *
-+ * The @ops is a manager @ops that has the filter that includes all the functions
-+ * that its list of subops are tracing. Adding a new @subops will add the
-+ * functions of @subops to @ops.
++ * This is to be called by a fgraph_ops retfunc(), to retrieve data that
++ * was stored by the fgraph_ops entryfunc() on the function entry.
++ * That is, this will retrieve the data that was reserved on the
++ * entry of the function that corresponds to the exit of the function
++ * that the fgraph_ops retfunc() is called on.
++ *
++ * Returns: The stored data from fgraph_reserve_data() called by the
++ *    matching entryfunc() for the retfunc() this is called from.
++ *   Or NULL if there was nothing stored.
 + */
-+int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
++void *fgraph_retrieve_data(int idx, int *size_bytes)
 +{
-+	struct ftrace_hash *filter_hash;
-+	struct ftrace_hash *notrace_hash;
-+	struct ftrace_hash *save_filter_hash;
-+	struct ftrace_hash *save_notrace_hash;
-+	int size_bits;
-+	int ret;
++	int offset = current->curr_ret_stack - 1;
++	unsigned long val;
 +
-+	if (unlikely(ftrace_disabled))
-+		return -ENODEV;
-+
-+	ftrace_ops_init(ops);
-+	ftrace_ops_init(subops);
-+
-+	if (WARN_ON_ONCE(subops->flags & FTRACE_OPS_FL_ENABLED))
-+		return -EBUSY;
-+
-+	/* Make everything canonical (Just in case!) */
-+	if (!ops->func_hash->filter_hash)
-+		ops->func_hash->filter_hash = EMPTY_HASH;
-+	if (!ops->func_hash->notrace_hash)
-+		ops->func_hash->notrace_hash = EMPTY_HASH;
-+	if (!subops->func_hash->filter_hash)
-+		subops->func_hash->filter_hash = EMPTY_HASH;
-+	if (!subops->func_hash->notrace_hash)
-+		subops->func_hash->notrace_hash = EMPTY_HASH;
-+
-+	/* For the first subops to ops just enable it normally */
-+	if (list_empty(&ops->subop_list)) {
-+		/* Just use the subops hashes */
-+		filter_hash = copy_hash(subops->func_hash->filter_hash);
-+		notrace_hash = copy_hash(subops->func_hash->notrace_hash);
-+		if (!filter_hash || !notrace_hash) {
-+			free_ftrace_hash(filter_hash);
-+			free_ftrace_hash(notrace_hash);
-+			return -ENOMEM;
-+		}
-+
-+		save_filter_hash = ops->func_hash->filter_hash;
-+		save_notrace_hash = ops->func_hash->notrace_hash;
-+
-+		ops->func_hash->filter_hash = filter_hash;
-+		ops->func_hash->notrace_hash = notrace_hash;
-+		list_add(&subops->list, &ops->subop_list);
-+		ret = ftrace_startup(ops, command);
-+		if (ret < 0) {
-+			list_del(&subops->list);
-+			ops->func_hash->filter_hash = save_filter_hash;
-+			ops->func_hash->notrace_hash = save_notrace_hash;
-+			free_ftrace_hash(filter_hash);
-+			free_ftrace_hash(notrace_hash);
-+		} else {
-+			free_ftrace_hash(save_filter_hash);
-+			free_ftrace_hash(save_notrace_hash);
-+			subops->flags |= FTRACE_OPS_FL_ENABLED;
-+		}
-+		return ret;
++	val = get_fgraph_entry(current, offset);
++	while (__get_type(val) == FGRAPH_TYPE_DATA) {
++		if (__get_data_index(val) == idx)
++			goto found;
++		offset -= __get_data_size(val) + 1;
++		val = get_fgraph_entry(current, offset);
 +	}
-+
-+	/*
-+	 * Here there's already something attached. Here are the rules:
-+	 *   o If either filter_hash is empty then the final stays empty
-+	 *      o Otherwise, the final is a superset of both hashes
-+	 *   o If either notrace_hash is empty then the final stays empty
-+	 *      o Otherwise, the final is an intersection between the hashes
-+	 */
-+	if (ops->func_hash->filter_hash == EMPTY_HASH ||
-+	    subops->func_hash->filter_hash == EMPTY_HASH) {
-+		filter_hash = EMPTY_HASH;
-+	} else {
-+		size_bits = max(ops->func_hash->filter_hash->size_bits,
-+				subops->func_hash->filter_hash->size_bits);
-+		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
-+		if (!filter_hash)
-+			return -ENOMEM;
-+		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
-+		if (ret < 0) {
-+			free_ftrace_hash(filter_hash);
-+			return ret;
-+		}
-+	}
-+
-+	if (ops->func_hash->notrace_hash == EMPTY_HASH ||
-+	    subops->func_hash->notrace_hash == EMPTY_HASH) {
-+		notrace_hash = EMPTY_HASH;
-+	} else {
-+		size_bits = max(ops->func_hash->filter_hash->size_bits,
-+				subops->func_hash->filter_hash->size_bits);
-+		notrace_hash = alloc_ftrace_hash(size_bits);
-+		if (!notrace_hash) {
-+			free_ftrace_hash(filter_hash);
-+			return -ENOMEM;
-+		}
-+
-+		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
-+				     subops->func_hash->filter_hash);
-+		if (ret < 0) {
-+			free_ftrace_hash(filter_hash);
-+			free_ftrace_hash(notrace_hash);
-+			return ret;
-+		}
-+	}
-+
-+	list_add(&subops->list, &ops->subop_list);
-+
-+	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
-+	free_ftrace_hash(filter_hash);
-+	free_ftrace_hash(notrace_hash);
-+	if (ret < 0)
-+		list_del(&subops->list);
-+	else
-+		subops->flags |= FTRACE_OPS_FL_ENABLED;
-+
-+	return ret;
++	return NULL;
++found:
++	if (size_bytes)
++		*size_bytes = __get_data_size(val) * sizeof(long);
++	return get_data_type_data(current, offset);
 +}
 +
-+/**
-+ * ftrace_shutdown_subops - Remove a subops from a manager ops
-+ * @ops: A manager ops to remove @subops from
-+ * @subops: The subops to remove from @ops
-+ * @command: Any extra command flags to add to modifying the text
-+ *
-+ * Removes the functions being traced by the @subops from @ops. Note, it
-+ * will not affect functions that are being traced by other subops that
-+ * still exist in @ops.
-+ *
-+ * If the last subops is removed from @ops, then @ops is shutdown normally.
-+ */
-+int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
-+{
-+	struct ftrace_hash *filter_hash;
-+	struct ftrace_hash *notrace_hash;
-+	int ret;
-+
-+	if (unlikely(ftrace_disabled))
-+		return -ENODEV;
-+
-+	if (WARN_ON_ONCE(!(subops->flags & FTRACE_OPS_FL_ENABLED)))
-+		return -EINVAL;
-+
-+	list_del(&subops->list);
-+
-+	if (list_empty(&ops->subop_list)) {
-+		/* Last one, just disable the current ops */
-+
-+		ret = ftrace_shutdown(ops, command);
-+		if (ret < 0) {
-+			list_add(&subops->list, &ops->subop_list);
-+			return ret;
-+		}
-+
-+		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
-+
-+		free_ftrace_hash(ops->func_hash->filter_hash);
-+		free_ftrace_hash(ops->func_hash->notrace_hash);
-+		ops->func_hash->filter_hash = EMPTY_HASH;
-+		ops->func_hash->notrace_hash = EMPTY_HASH;
-+
-+		return 0;
-+	}
-+
-+	/* Rebuild the hashes without subops */
-+	filter_hash = append_hashes(ops);
-+	notrace_hash = intersect_hashes(ops);
-+	if (!filter_hash || !notrace_hash) {
-+		free_ftrace_hash(filter_hash);
-+		free_ftrace_hash(notrace_hash);
-+		list_add(&subops->list, &ops->subop_list);
-+		return -ENOMEM;
-+	}
-+
-+	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
-+	if (ret < 0)
-+		list_add(&subops->list, &ops->subop_list);
-+	else
-+		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
-+
-+	free_ftrace_hash(filter_hash);
-+	free_ftrace_hash(notrace_hash);
-+	return ret;
-+}
-+
- static u64		ftrace_update_time;
- unsigned long		ftrace_update_tot_cnt;
- unsigned long		ftrace_number_of_pages;
-diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
-index 19eddcb91584..cdfd12c44ab4 100644
---- a/kernel/trace/ftrace_internal.h
-+++ b/kernel/trace/ftrace_internal.h
-@@ -15,6 +15,7 @@ extern struct ftrace_ops global_ops;
- int ftrace_startup(struct ftrace_ops *ops, int command);
- int ftrace_shutdown(struct ftrace_ops *ops, int command);
- int ftrace_ops_test(struct ftrace_ops *ops, unsigned long ip, void *regs);
-+int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
+ /**
+  * fgraph_get_task_var - retrieve a task specific state variable
+  * @gops: The ftrace_ops that owns the task specific variable
+@@ -464,13 +633,18 @@ int function_graph_enter(unsigned long ret, unsigned long func,
  
- #else /* !CONFIG_DYNAMIC_FTRACE */
+ 	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
+ 		struct fgraph_ops *gops = fgraph_array[i];
++		int save_curr_ret_stack;
  
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index a5070f9b977b..9a70beb2cc46 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1136,6 +1136,7 @@ extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
- 			     int len, int reset);
- extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
- 			      int len, int reset);
-+extern int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
- #else
- struct ftrace_func_command;
+ 		if (gops == &fgraph_stub)
+ 			continue;
  
++		save_curr_ret_stack = current->curr_ret_stack;
+ 		if (ftrace_ops_test(&gops->ops, func, NULL) &&
+ 		    gops->entryfunc(&trace, gops))
+ 			bitmap |= BIT(i);
++		else
++			/* Clear out any saved storage */
++			current->curr_ret_stack = save_curr_ret_stack;
+ 	}
+ 
+ 	if (!bitmap)
+@@ -626,7 +800,8 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 	 * curr_ret_stack is after that.
+ 	 */
+ 	barrier();
+-	current->curr_ret_stack -= FGRAPH_FRAME_OFFSET + 1;
++	current->curr_ret_stack = offset - FGRAPH_FRAME_OFFSET;
++
+ 	current->curr_ret_depth--;
+ 	return ret;
+ }
 -- 
 2.43.0
 
