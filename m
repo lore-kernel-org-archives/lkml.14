@@ -1,63 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0E254656
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D919047A79;
+	Sun,  2 Jun 2024 16:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717346474; cv=none; b=fICxWk8P9jKEPHUhZrw6VJtzM7PAe21zdthw43+orbXYbbU/gt091EDjXTocHlMgABz1Oz2NERJY1boACHt3lso2Gf1KwB41N2xpQEZKn3heFQlV/Jn+x7T9JAIPffmLeXFF1Wca0Vn8aIUSEALk8ueraXbGwqghxavuVY6hnmA=
+	t=1717346650; cv=none; b=my/aEj8oWLDpeynhZqsH5JGJexuMXPWZtGBEleNCKRDzqMCOVcdDtWbwYqBOHieO/m1jWYafX1V+zu4m4xuoMeMvNuNhaF9mbryd1SxHVsz7OSDld3YAFaZyGrHmQ20hhiOnCdBQJyhVVo+VubT+zjECAxCeHn2vRlsEn6pbBrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717346474; c=relaxed/simple;
-	bh=LysSa9HPDqTq6yFrabmC++Ggr9y9UpNkiFGB8ZURzmw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=vCI8t0OX22pfXcxwU2cDL0fYIBjoH3xqwZnZ01B5ouGOncmtE8d7ne0puyaGLwt8kB9hatHihhKm9qsVR5XGsgkR6W7gqpFux+GISXWW4xVOzcIi0KtsapOhJ/EmygE+Sqvablr0g3MQx7zqZQoriug9yAYvwmRHyzBPmaWDyis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mpdN+cXJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717346650; c=relaxed/simple;
+	bh=3lRC7NF4U+hNtp0qmNHZHQryjhMfF1jFLTorEqnHhRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tUldIftPR2fGvvhrspetC+KtHiiesIBCVxX9SG+Go32m4NmC3W8M+Vy96lDGHL0thsjBWJQtSG7MmKQpy7xpeZFGSP+4fHchvBVDWFH6pnQUadavVBgaAudenhG/IXoQHOLdN4idtrkIsmYqVu57cOWW7/nC/gUu7jUs9XUlwvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWhpsR21; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mpdN+cXJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 690BBC4AF0D;
-	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWhpsR21"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FDEC2BBFC;
+	Sun,  2 Jun 2024 16:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717346474;
-	bh=LysSa9HPDqTq6yFrabmC++Ggr9y9UpNkiFGB8ZURzmw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=mpdN+cXJpAOlKWB+EtY/mkPd4yAmGCSVOSWXH6Av57XgPA5Bo1NO8YA82WSO0Ux/f
-	 UVl2l64BtO9W8tujqRL/Nu6K2bXHvgr+hYO765uPNJZfHCxFcU7qKnqH9vaFu6lQZE
-	 YmeWAbZRSMZaAFQkqzpCxz8WCbAljQ7vibGk4cli9r6gKgvPObZBdhfQ1196HfsJHz
-	 uO7KIXYU3K0rZRfijDsHhN7Njun9B0YAK4+KaK3p8IG+/zAqrs0kcNQO7Mx55Bn+n7
-	 Sjt1KC1jxkZ0iNLMgksgNRIZMVnwfEmBfmxVMjZFx9LFdeRQzNxkpIs/EYCWTcQVoP
-	 cB0NdEP//hz8g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5E6F6C4361B;
-	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
-Subject: Re: [GIT PULL] x86 fixes
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZlweciPk77ra9W7H@gmail.com>
-References: <ZlweciPk77ra9W7H@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZlweciPk77ra9W7H@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2024-06-02
-X-PR-Tracked-Commit-Id: 0c2f6d04619ec2b53ad4b0b591eafc9389786e86
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a693b9c95abd4947c2d06e05733de5d470ab6586
-Message-Id: <171734647438.21593.10917621670013143458.pr-tracker-bot@kernel.org>
-Date: Sun, 02 Jun 2024 16:41:14 +0000
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+	s=k20201202; t=1717346650;
+	bh=3lRC7NF4U+hNtp0qmNHZHQryjhMfF1jFLTorEqnHhRo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KWhpsR21TnMMKRju3JzzUi0U7J6QorSjJP89VTMT6D2Awm9pDrm6R1mfXGC1ETuJV
+	 3ubPdXxZgih3euF2MwrjuhjRb3Vvn2+BA+3Odxi2PW9YxFVY76Rhh3Wmcy3HQLx5td
+	 e5Yfe9GVD9U+owrAOfkaBIAbBPc47mUNb83fN0hF3I80HmMPjptJcF4uuxxmLkBwOv
+	 LAPR+PJB5NQ8FN0I8PmH77BpKN/qpot1bjIKy2HYBgRZKeg7IjG0EuePh5cCJPVnRm
+	 DgYJ8hPll34O/AngN520F1Pkn97/niaO9Lo55YB+cuDAXjbz0X7ARfzQ39JOXsJzb5
+	 lZMC+R505D/ZQ==
+Message-ID: <ff8096f2-4c55-40a4-9d5c-009fd0bdaabe@kernel.org>
+Date: Sun, 2 Jun 2024 18:44:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: arm: mediatek: Add Bananapi BPI-R3 mini
+To: Chukun Pan <amadeus@jmu.edu.cn>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20240602104021.387713-1-amadeus@jmu.edu.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240602104021.387713-1-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Sun, 2 Jun 2024 09:25:38 +0200:
+On 02/06/2024 12:40, Chukun Pan wrote:
+> Add compatible for Bananapi BPI-R3 mini Router (Filogic 830).
+> 
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-2024-06-02
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a693b9c95abd4947c2d06e05733de5d470ab6586
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Thank you!
+Best regards,
+Krzysztof
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
