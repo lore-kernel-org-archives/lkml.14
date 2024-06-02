@@ -1,137 +1,79 @@
-Received: from smtp-out.freemail.hu (fmfe35.freemail.hu [46.107.16.240])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD9517736;
-	Sun,  2 Jun 2024 15:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8BC17736;
+	Sun,  2 Jun 2024 15:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717342755; cv=none; b=VfUFt+EOWDUPERSOfX4wK4qWKZMn23YWHyyWrvFJP0ZLo79c9XjaghMqufDkPITzWG7Elrd123SKfEfFcpTh6AiSACmxSGKTSuIm9oMyGSF1ynxi/IUt/unBaEVU6GgQ1Zmcz0bXCau/b1rf1ee+53IM0dFXc0Hac4Mo4a875Pw=
+	t=1717343148; cv=none; b=R6RcEGKDNUFEATpZlV+iApXBn0CoMBVImNlG+Ri+mv1DjjoRgapXfp+bGGw1jSCnnwU/cZJ9lf/ZvR1Gcuk43WbDfVXaIqoT8ZJv1bwtQri3oivy96OSGO6wTugPyzlo+MIhE8YTCHZdUwzrHOOWjKKIp2vl/7WnCstCsgq4Dsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717342755; c=relaxed/simple;
-	bh=cu1Ss0V90yPLtbBTiY5VNm7dU1DFjdCGGYetsr2pX8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JhT3+GoZ66EXL2U4auYIfJGg5HyLXScpoVssYTkpaIZc9U2XZcFAKIMcTSgzJ7NfAwzvEhmuHAP5hoU2VNKDupTeY41AbFgKRk/zUJZSo43r+9iiIDlRUnX5vZVjs6WeaIlhVYBz/KnBslf4ssxL87inNEHMBlw9o2Y1St6YYkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=vTjdqiLR reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
+	s=arc-20240116; t=1717343148; c=relaxed/simple;
+	bh=LZHz46gZY0Uo9hNwDp7vSBscpdT7ixIYgNYA5g2hde4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S4isz4kvxdWt5GELrVOeu92QPJCugFAbiXWZu+vTQmf09NmYaU9GrB1qWiF5NLqK70jZDrZig5raYja3yQ8N6Fkx1TFC8Tb7I/qc+1tRLNZ6OF1x0KHKMzICJBD23f0ewlpR+PnI/VKQeNEssM82OcDJdwAB55hWlrKmrghMZ7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qrwTJ06U; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="vTjdqiLR"
-Received: from [192.168.0.16] (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp.freemail.hu (Postfix) with ESMTPSA id 4Vsgmz6970z4F6;
-	Sun,  2 Jun 2024 17:31:15 +0200 (CEST)
-Message-ID: <30944fda-6d18-4fc1-8c73-bcda4814a417@freemail.hu>
-Date: Sun, 2 Jun 2024 17:31:10 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qrwTJ06U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=P0IunT5E4kP03Ju05n5fpl6v0D6JN754xrn2B0poXdM=; b=qrwTJ06UWxG9noO5YDvcSBOtGW
+	KHzgAILPHxG9rf1O2+ugBoT+4dlqXjVUo8zS+QF1uln9n8X7tUsb8tMV7CtXLfNcF0RvN5pSYIJgw
+	S3pMiySWVjkKPwHxnv6MP9gScyzIlYm1tgmmNwEWeyy/vM00ImWWwA7BhCUbQ1GxAXg0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1sDnOj-00GdQu-AP; Sun, 02 Jun 2024 17:45:29 +0200
+Date: Sun, 2 Jun 2024 17:45:29 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yojana Mallik <y-mallik@ti.com>
+Cc: schnelle@linux.ibm.com, wsa+renesas@sang-engineering.com,
+	diogo.ivo@siemens.com, rdunlap@infradead.org, horms@kernel.org,
+	vigneshr@ti.com, rogerq@ti.com, danishanwar@ti.com,
+	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+	davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, srk@ti.com, rogerq@kernel.org
+Subject: Re: [PATCH net-next v2 0/3] Introducing Intercore Virtual Ethernet
+ (ICVE) driver
+Message-ID: <8f5d2448-bfd7-48a5-be12-fb16cdc4de79@lunn.ch>
+References: <20240531064006.1223417-1-y-mallik@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] spidev: Introduce "linux,spidev-name" property for
- device tree of spidev.
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240519211346.30323-1-egyszeregy@freemail.hu>
- <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
- <9ae65e3c-f1fa-4ca9-8d74-12d92c51c5c6@freemail.hu>
- <e8837fe0-e93c-4133-aac1-f8f0a010f6de@sirena.org.uk>
-Content-Language: hu, en-US
-From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
-In-Reply-To: <e8837fe0-e93c-4133-aac1-f8f0a010f6de@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717342276;
-	s=20181004; d=freemail.hu;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-	l=3367; bh=Fd1Lsy5QNOanvMIRy/o0jKg+8qGYkFTM1ga4jW9aSxo=;
-	b=vTjdqiLR8mjuIVqAkyaMnTEB02XIsX9+HBbE21M3InL4/8FoE/GrIJM08VoYWTbL
-	OjGKneyr0KehwQ6onnMnK54diGTV3HJ84/KdyVXub9Ufx+qC9Wm5Qe+Qz6BIX81HsQ5
-	tip24fmmsj80XbUY9qcVWArgrz0H6slaQeQytsqyPuygYe+wm53aVIynEvZOL9AX6Cs
-	vk8jbemGU/DJK6kB6U4wlcZJiNdJCyKSryrToPwloFOyBbY3hXurdCfU6LHpZNMaLTf
-	/6yV4sfbvlH2Hs+IbxJTqfRxd/gLKrCjrkPUnk2YfzRQ8yrL6IOLCjEWQlb9cT3tsT9
-	dNuUv8Nujw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531064006.1223417-1-y-mallik@ti.com>
 
-2024. 05. 20. 22:14 keltezéssel, Mark Brown írta:
-> On Mon, May 20, 2024 at 07:20:12PM +0200, Szőke Benjamin wrote:
+On Fri, May 31, 2024 at 12:10:03PM +0530, Yojana Mallik wrote:
+> virtio-net provides a solution for virtual ethernet interface in a
+> virtualized environment.
 > 
->> So, in Yocto project build system point of view the best, if any Machine
->> specific settings is stored in the device tree files of the target machine
->> in driver levels/config, because it will be deterministic in 100% sure and
->> it will be nicely separated from the SW meta layers which may not contains
->> any machine specific hacking with udev and so on.
+> There might be a use-case for traffic tunneling between heterogeneous
+> processors in a non virtualized environment such as TI's AM64x that has
+> Cortex A53 and Cortex R5 where Linux runs on A53 and a flavour of RTOS
+> on R5(FreeRTOS) and the ethernet controller is managed by R5 and needs
+> to pass some low priority data to A53.
 > 
-> Given that with Yocto you're building a full system image it's not
-> super obvious to me that it is particularly harder to ship udev rules in
-> the image as opposed to modifying the DT.  It's a little more annoying
-> but not drastically so and it's not creating a burden on the ABI for
-> something that's mainly used within a vertically integrated software
-> stack.
-> 
+> One solution for such an use case where the ethernet controller does
+> not support DMA for Tx/Rx channel, could be a RPMsg based shared memory
+> ethernet driver.
 
-In Yocto and Buildroot it is harder and more ugly to provide MACHINE specific 
-settings in a rootfs config files than define it in the machine specific .dts 
-and .dtsi files because they are separated in meta-layers for SW recipes and HW 
-related machine recipes.
+virtio-net is very generic and vendor agnostic.
 
-As i know udev is much older than device-tree in Linux kernel history. For 
-embedded Linux image maintaining/developing for ARM, RISC-V etc. to solve this 
-kind of features/issues is more elegant to do in device-tree than with udev, 
-moreover for an embedded Linux developer it is more familiar to do in 
-device-tree then udev.
+Looking at icve, what is TI specific? Why not define a generic
+solution which could be used for any heterogeneous system? We are
+seeming more and more such systems, and there is no point everybody
+re-inventing the wheel. So what i would like to see is something
+similar to driver/tty/rpmsg_tty.c, a driver/net/ethernet/rpmsg_eth.c,
+with good documentation of the protocol used, so that others can
+implement it. And since you say you have FreeRTOS on the other end,
+you could also contribute that side to FreeRTOS as well. A complete
+open source solution everybody can use.
 
-I spent 3-4 days to understand udev rules files and i tried to do it via udev, 
-but i gave up it due to it complexity and incomplete documentation about it.
-
-axi_quad_spi_0: axi_quad_spi@a00a0000 {
-     bits-per-word = <8>;
-     clock-names = "ext_spi_clk", "s_axi_aclk";
-     clocks = <&zynqmp_clk 71>, <&zynqmp_clk 71>;
-     compatible = "xlnx,axi-quad-spi-3.2", "xlnx,xps-spi-2.00.a";
-     fifo-size = <16>;
-     interrupt-names = "ip2intc_irpt";
-     interrupt-parent = <&gic>;
-     interrupts = <0 106 1>;
-     num-cs = <0x1>;
-     reg = <0x0 0xa00a0000 0x0 0x10000>;
-     xlnx,num-ss-bits = <0x1>;
-     xlnx,spi-mode = <0>;
-
-     #address-cells = <1>;
-     #size-cells = <0>;
-
-     spidev@0 {
-         reg = <0>;
-         compatible = "rohm,dh2228fv";
-         spi-max-frequency = <1000000>;
-
-         // via my kernel patch -> /dev/spidev-mysensor
-         // linux,spidev-name = "mysensor";
-     };
-};
-
-As i understand "axi_quad_spi@a00a0000" can be mapped via udev to a custom 
-symlink name but in a new adaptive SoC HWs like AMD ZynqMP, Intel Stratix, 
-Microchip PolarFire Soc etc. it is not possible and not good solution because 
-this axi reg address can be different and become to non-deterministic in day to 
-next when there is a new PL FW update for their FPGA part in the silicon.
-
-What udev rules have to use for it if you say it can be perfectly done via udev 
-and "axi_quad_spi@a00a0000" cannot be used for making this rule?
-
->> DT binding would need to be documented later in a separated patch as a
->> guideline mentioned it in Linux repo.
-> 
-> No, that needs to happen along with the code change.
-
-The official documentation says totally different:
-"The Documentation/ and include/dt-bindings/ portion of the patch should be a 
-separate patch. ..."
-
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/submitting-patches.rst
-
-By the way where can i find .yml or .txt dt-bindings documentation of spidev driver?
-
+	Andrew
