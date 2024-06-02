@@ -1,23 +1,23 @@
 Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ADD219F3
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 09:02:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D1B29CEC
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 09:02:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717318974; cv=none; b=Uq39gtnMsg6CnSt3nkExvcked5/Hggz3nCgnrvpZM1tguk7VwDvtrvGJeKa1XTWRwPn/aXP8x+GNZIWItU7dm5+Wz3aP9w4e1HZcOBCUN9melsYNQDfJs4+8JFy86eaZ6IivHm9zYbEGcIu98Be9vdJ9pMOLp3UEE2XVKgxutLw=
+	t=1717318975; cv=none; b=mIZ9UK+TEXLUUyJgSMLAB6mwesh178iM0Bza6PnNDHphG5+J2oDQpPIt5ycYUVUpaW4X6CtZrEyqlCpP4j9vC0zLbDBBbVi2AIjRBAjxzBQxvXhr+/u0K2EuLrFMDsy4ImtmCy0lXnl5xistgFfK/NWXtBhTxYpZiMT/39axGJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717318974; c=relaxed/simple;
-	bh=ByJ2gn9CXxDqnzfeuHKTYoPy0ArsgzOsDRL+FAHDFKY=;
+	s=arc-20240116; t=1717318975; c=relaxed/simple;
+	bh=bQeuWPwSxT8QFhzr6uwQL9dUBoJgcUfr5QAmP07v+1Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OEDfX7nZ7Rgmm3VRBlLJFNsyTs7RaXWNOGiGgQ4w1V1NUqoPoDi94m6ETjDl4R4bPC/+Mquup82ysiArNPxTJhzNFQpyQjiWxuGd5ElErXwkIg4O71gYxVZaA6PLMcRtBblXRstkz4dqIfUOQO+lt/75FoK2/POGWXaBxcbHxvU=
+	 MIME-Version; b=EKP10oDuG/gyS+XoHcaftqG2xmjKYk2Rfw4uMQz9UpdQ8a5kKlZRicXEzNSOdt49gCLkM8yojuK0xOep5UzObEd1EFBGh9dBCX9n8EwHDZpp/Q0vkvdSOzp5RCX4UIEgPRxjsyq9uoKK8ufN0sPZMTeO+NkvESGTFocr1KVMaDI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id e2b70418-20be-11ef-ab01-005056bdd08f;
-	Sun, 02 Jun 2024 12:02:49 +0300 (EEST)
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id e40e5ddf-20be-11ef-8d47-005056bd6ce9;
+	Sun, 02 Jun 2024 12:02:51 +0300 (EEST)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
@@ -34,9 +34,9 @@ Cc: Corentin Chary <corentin.chary@gmail.com>,
 	"Luke D. Jones" <luke@ljones.dev>,
 	Mark Pearson <markpearson@lenovo.com>,
 	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Subject: [PATCH v1 1/7] platform/x86: asus-tf103c-dock: Use 2-argument strscpy()
-Date: Sun,  2 Jun 2024 11:57:54 +0300
-Message-ID: <20240602090244.1666360-2-andy.shevchenko@gmail.com>
+Subject: [PATCH v1 3/7] platform/x86: intel: chtwc_int33fe: Use 2-argument strscpy()
+Date: Sun,  2 Jun 2024 11:57:56 +0300
+Message-ID: <20240602090244.1666360-4-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240602090244.1666360-1-andy.shevchenko@gmail.com>
 References: <20240602090244.1666360-1-andy.shevchenko@gmail.com>
@@ -53,51 +53,40 @@ an additional check that destination buffer is an array.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/platform/x86/asus-tf103c-dock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/platform/x86/intel/chtwc_int33fe.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-tf103c-dock.c b/drivers/platform/x86/asus-tf103c-dock.c
-index 8f0f87637c5f..b441d8ca72d3 100644
---- a/drivers/platform/x86/asus-tf103c-dock.c
-+++ b/drivers/platform/x86/asus-tf103c-dock.c
-@@ -490,7 +490,7 @@ static void tf103c_dock_enable_touchpad(struct tf103c_dock_data *dock)
- 		return;
+diff --git a/drivers/platform/x86/intel/chtwc_int33fe.c b/drivers/platform/x86/intel/chtwc_int33fe.c
+index 93f75ba1dafd..11503b1c85f3 100644
+--- a/drivers/platform/x86/intel/chtwc_int33fe.c
++++ b/drivers/platform/x86/intel/chtwc_int33fe.c
+@@ -270,7 +270,7 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
  	}
  
--	strscpy(board_info.type, "elan_i2c", I2C_NAME_SIZE);
-+	strscpy(board_info.type, "elan_i2c");
- 	board_info.addr = TF103C_DOCK_TP_ADDR;
- 	board_info.dev_name = TF103C_DOCK_DEV_NAME "-tp";
- 	board_info.irq = dock->tp_irq;
-@@ -795,7 +795,7 @@ static int tf103c_dock_probe(struct i2c_client *client)
- 	 */
- 	dock->ec_client = client;
+ 	memset(&board_info, 0, sizeof(board_info));
+-	strscpy(board_info.type, "max17047", I2C_NAME_SIZE);
++	strscpy(board_info.type, "max17047");
+ 	board_info.dev_name = "max17047";
+ 	board_info.fwnode = fwnode;
+ 	data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
+@@ -361,7 +361,7 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
+ 	}
  
--	strscpy(board_info.type, "tf103c-dock-intr", I2C_NAME_SIZE);
-+	strscpy(board_info.type, "tf103c-dock-intr");
- 	board_info.addr = TF103C_DOCK_INTR_ADDR;
- 	board_info.dev_name = TF103C_DOCK_DEV_NAME "-intr";
+ 	memset(&board_info, 0, sizeof(board_info));
+-	strscpy(board_info.type, "typec_fusb302", I2C_NAME_SIZE);
++	strscpy(board_info.type, "typec_fusb302");
+ 	board_info.dev_name = "fusb302";
+ 	board_info.fwnode = fwnode;
+ 	board_info.irq = fusb302_irq;
+@@ -381,7 +381,7 @@ static int cht_int33fe_typec_probe(struct platform_device *pdev)
+ 	memset(&board_info, 0, sizeof(board_info));
+ 	board_info.dev_name = "pi3usb30532";
+ 	board_info.fwnode = fwnode;
+-	strscpy(board_info.type, "pi3usb30532", I2C_NAME_SIZE);
++	strscpy(board_info.type, "pi3usb30532");
  
-@@ -803,7 +803,7 @@ static int tf103c_dock_probe(struct i2c_client *client)
- 	if (IS_ERR(dock->intr_client))
- 		return dev_err_probe(dev, PTR_ERR(dock->intr_client), "creating intr client\n");
- 
--	strscpy(board_info.type, "tf103c-dock-kbd", I2C_NAME_SIZE);
-+	strscpy(board_info.type, "tf103c-dock-kbd");
- 	board_info.addr = TF103C_DOCK_KBD_ADDR;
- 	board_info.dev_name = TF103C_DOCK_DEV_NAME "-kbd";
- 
-@@ -846,8 +846,8 @@ static int tf103c_dock_probe(struct i2c_client *client)
- 	dock->hid->vendor = 0x0b05;  /* USB_VENDOR_ID_ASUSTEK */
- 	dock->hid->product = 0x0103; /* From TF-103-C */
- 	dock->hid->version = 0x0100; /* 1.0 */
--	strscpy(dock->hid->name, "Asus TF103C Dock Keyboard", sizeof(dock->hid->name));
--	strscpy(dock->hid->phys, dev_name(dev), sizeof(dock->hid->phys));
-+	strscpy(dock->hid->name, "Asus TF103C Dock Keyboard");
-+	strscpy(dock->hid->phys, dev_name(dev));
- 
- 	ret = hid_add_device(dock->hid);
- 	if (ret)
+ 	data->pi3usb30532 = i2c_acpi_new_device(dev, 3, &board_info);
+ 	if (IS_ERR(data->pi3usb30532)) {
 -- 
 2.45.1
 
