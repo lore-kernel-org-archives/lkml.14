@@ -1,112 +1,100 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1B26EB4C;
-	Sun,  2 Jun 2024 19:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008EE6EB56
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 19:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717355564; cv=none; b=VCoXZdy/r16m8RZRntPyfPwPme5axBKMokC3ixlCdgZh+E0tL8QSwG6SaNfr8/D4IaAVR+8e8ez5OyHBOvkZF3/75rYmoTL+EudAKXkommL6tFsHT7Cn7i3YbOUWbc25mAb4VhAab7zb/2CldxdvsYR9xubgBkriRi5zWi+Y7xc=
+	t=1717355588; cv=none; b=U8ckKFf8EIQ4x4+6BzfpX330KygUq26fX8IM8KZOGP62FQvuC9JQ/ID7fOUF6EVZEe5EcMbHxfCTQ03QCGNyFD7P9hUvUTUz5z/rlN/uIuiIFzhL9/3yBTiqy3iSXQgfP6+gGeKDwNgcQMwwhAbFgi+tScQPv20wtN0gptFh3Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717355564; c=relaxed/simple;
-	bh=qHG8QH+/mqunfB8u59RD3z93f1SMBtf8VW7kHlq4QEY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OtwGw9JaDf6yqq29dq4E1PpcrMpV1+n+c/2YdlwekwfT3xmBzhmxiaBZ0is9qqDYkaXhMLl4alLKxsf0Lfc2cr/1hJUhuOgeic8hYhoy/hV1rmHcH6wWki1XQJqfVi8gQvwxQp/OKLHe9fsq02EmDcM3tG9fRGY2VWUkqQAoUSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAHNBO8I; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717355588; c=relaxed/simple;
+	bh=rKvVyYSCxCQMA8ehm3RHTVkgQ/7MJe3SBF+8guMhULA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RBKhqOf9TT411T+bhWKm7FvLFggmaNn4x8yYVnZo9fenjEyIdc01X8pMETHdkP3A6Je999H0Llpkrgn8com+O+xPJvPVjZEBH3HJqV3K1uq1GypE5Fp8aU+2a0URT/xj+hxzlFg0V5M0OxBapOjJETj50JCwn/8jeyZfa07eWEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fjSEd6IE; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAHNBO8I"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35dce6102f4so2394540f8f.3;
-        Sun, 02 Jun 2024 12:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717355561; x=1717960361; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PuI3t+WrtTWNm+6l5EAvTGHIgvRSvsmXgaFgYPKJXa0=;
-        b=jAHNBO8IIrqXefUcl+YtE+l9Pc7UURhNR20P7bY/vv3MLi7KcdzkkRvPtrMAzlKZnu
-         nG9wIHayeysYnwMTg/9thinZD49r5Du8dreOBtongIoLUY8qQuxNXUrMhdS4Ff7kqqsX
-         BjGaGovIyXfuQm+QLXWSUy/vVaiRrA8WYPOPDXK+fbf9bgq17CnrIEkGKiv8GTxozGmk
-         W065xurskAnhle+imEAnQhlIFA05PIzkaDS/JotIdDfYz7+kvPjXIV50Vs1/45FRNS2q
-         70xpaT6Ft43CLm6RjCuV9Bw1QraotOUvwKivtGBS6H2k36oTpu55U0lT3DQchCkq2fOB
-         FTZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717355561; x=1717960361;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PuI3t+WrtTWNm+6l5EAvTGHIgvRSvsmXgaFgYPKJXa0=;
-        b=AVeDxSbrW2gcsjwXhOVuAMEy4JTwTsPrvKHlO4F7cMuzfz0WLVV04MhE55MeHSqMPz
-         S9JcEz6D4UP+/GBbZUjHWnfOFrYoEqgifPZNYh0SDaoJG7ydvSIXtYzTnHl3L+EcWqKc
-         7u4UPMg/IBM8lQCiY1hxwE6w1pi13A2a2/4ufwYDI9hyrF4fK61HOZpzTCsl33aRHAy8
-         WkHW/dqVbxVTCSj+F0bX6hMwqdgFOpp7bjUi+soV13hEaWKzdy0kSTjTWTWWp1qnRSsP
-         vOCusZw0OAczz/RJpjbyfn6qcb303TGJ0iEPFJ0fzMYEwaNU3mBu330L/p49zyaPSm/C
-         EnpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIFBg8mKLNv58p3QNRT+ttIc1R/eivjbTGL01lwQx2THQ54Cs/8XBBp/6C87MAxfCxYJdz8CxFBEvizMWp/pwueMcn5QvD9DWN/lfxSYQwf8FjJOmBVLlUpWA8f1+XNA2Zr04W2h4WeWrar18wYmM+T+Q2MukdPfZz5F916z5pCamkUr/F
-X-Gm-Message-State: AOJu0Ywuvqn8kxfXwSfj5Z5kXtACuydI+Evwvidvr67+llHAPFCSyek+
-	1HeCM/NqK/C6I50gWtq9/MIkox2/+ELlaYy3shEaIcAgmGNjuoSKfXyNJxY67P/fosnQU2awwec
-	jEu1cZ0pTkbCqfHRNvWMNfgdqvbm6KA==
-X-Google-Smtp-Source: AGHT+IFiy+Aq8rpwIXmxDOwPQr1QKSTA4FIutEelVYoty2l83FpwAbV8qqzqWM9bFCW6U2zGoJG7p6ue910tqwHWFlM=
-X-Received: by 2002:adf:f7cd:0:b0:355:2ae:d88d with SMTP id
- ffacd0b85a97d-35e0f285b12mr5495442f8f.34.1717355561135; Sun, 02 Jun 2024
- 12:12:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fjSEd6IE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717355587; x=1748891587;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rKvVyYSCxCQMA8ehm3RHTVkgQ/7MJe3SBF+8guMhULA=;
+  b=fjSEd6IEAL+tRs2/0On40SLMDDpC9ZFLyHiFr5GzU2pj/JlOiECiWC0O
+   lnYFE+V3qoS/TRNLNBJmaYFqc7S+RZg7Moh99nQOfd7b7c2e1k/9NLiBv
+   bjTz5KFRtw1ZoWaUIMhA4wzawGnpR4PEEGRnpBGUEvi7rZTSc/WoOGWJu
+   SEaMYzph8mnCR0ICTD1FZUPzKokRdQvLI1/L3nWffv4ixyIpO1TiMlrMr
+   O0CfCaP4oSpzpdHE6tWxPnH2cv4+xCjQMB+Xo2NaVss2UYnAQCTts68Jx
+   Lo3EIky/3yJorVy3nMvAaPNQOTkt7+iPmm57Z3icBAVUM9/OdUkO8354A
+   A==;
+X-CSE-ConnectionGUID: l04t5GsSQ2msTWTSMTRFCg==
+X-CSE-MsgGUID: K2jO1KGuSoGxcdHOA2K2fQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="17672839"
+X-IronPort-AV: E=Sophos;i="6.08,209,1712646000"; 
+   d="scan'208";a="17672839"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2024 12:10:36 -0700
+X-CSE-ConnectionGUID: JwjuhTSGR0CR2oAZY/9pjg==
+X-CSE-MsgGUID: blwVm64rRbCUlj2XhiZNTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,209,1712646000"; 
+   d="scan'208";a="67520106"
+Received: from dneilan-mobl1.ger.corp.intel.com (HELO fedora..) ([10.245.245.150])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2024 12:10:34 -0700
+From: =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+To: intel-xe@lists.freedesktop.org
+Cc: =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] MAINTAINERS: Update Xe driver maintainers
+Date: Sun,  2 Jun 2024 21:09:59 +0200
+Message-ID: <20240602190959.2981-1-thomas.hellstrom@linux.intel.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531-fault-injection-statickeys-v1-0-a513fd0a9614@suse.cz>
- <20240531-fault-injection-statickeys-v1-3-a513fd0a9614@suse.cz>
- <CAADnVQJ=bNg9nWQPXGjJ11pZnmjntt=zLBqtJng3328T1L-u0g@mail.gmail.com> <dd02a8cd-a554-4756-b229-656bfc218954@suse.cz>
-In-Reply-To: <dd02a8cd-a554-4756-b229-656bfc218954@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Sun, 2 Jun 2024 12:12:29 -0700
-Message-ID: <CAADnVQ+7=fAYh=Wk4eiOdQWfeZ5biLG9+YRDFH+t=3tX3RFA7Q@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/4] mm, slab: add static key for should_failslab()
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	bpf <bpf@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 1, 2024 at 1:57=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wro=
-te:
->
-> On 5/31/24 6:43 PM, Alexei Starovoitov wrote:
-> > On Fri, May 31, 2024 at 2:33=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz=
-> wrote:
-> >>         might_alloc(flags);
-> >>
-> >> -       if (unlikely(should_failslab(s, flags)))
-> >> -               return NULL;
-> >> +       if (static_branch_unlikely(&should_failslab_active)) {
-> >> +               if (should_failslab(s, flags))
-> >> +                       return NULL;
-> >> +       }
-> >
-> > makes sense.
-> > Acked-by: Alexei Starovoitov <ast@kernel.org>
->
-> Thanks :) but please note the cover letter where I explain how I need hel=
-p
-> with the bpftrace side (and ftrace, but that seems sorted). Without that
-> part, bpftrace will silently stop doing the injection as the static key w=
-ill
-> remain disabled.
+Add Rodrigo Vivi as an Xe driver maintainer.
 
-Right. That part was clear. Once this set lands we can add
-static key on/off logic either in the kernel directly, or in libbpf.
-In the kernel is certainly cleaner.
-How will ftrace handle it? I couldn't figure it out from this set.
-Ideally key toggle should be a part of generic kprobe attach logic
-and not bpf specific, then both bpf and kprobe will work.
+v2:
+- Cc also Lucas De Marchi (Rodrigo vivi)
+- Remove a blank line in commit the commit message (Lucas De Marchi)
+
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Acked-by: Lucas De Marchi <lucas.demarchi@intel.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 572be0546e21..8f9982c99257 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11037,6 +11037,7 @@ F:	include/uapi/drm/i915_drm.h
+ INTEL DRM XE DRIVER (Lunar Lake and newer)
+ M:	Lucas De Marchi <lucas.demarchi@intel.com>
+ M:	Thomas Hellström <thomas.hellstrom@linux.intel.com>
++M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
+ L:	intel-xe@lists.freedesktop.org
+ S:	Supported
+ W:	https://drm.pages.freedesktop.org/intel-docs/
+-- 
+2.44.0
+
