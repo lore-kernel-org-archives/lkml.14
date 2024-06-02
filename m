@@ -1,82 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEF77FB;
-	Sun,  2 Jun 2024 09:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA20374EA
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 09:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717320883; cv=none; b=Ikipq6PlQYD5CByy7BVgrQlLecc7FCN5thv096ZHXanSPxsvDTR+Z6akAS5tzSm/vtfM2Id/76S36wfaw5eDkmUitsk+6Rkenz2mHJk9U0w7aJktE3L1oGhhgnXhuSsLBQ8+pbOv75C+UYTtLhSJ6v8IoJrGEIZ5DueVIsOIGs8=
+	t=1717320894; cv=none; b=OdHUlq2t6qhM8QwGV9cbKYUBqFYomY9AysDbLntkbyoGxJDRQFKiSTWhILri3T3BIqkL0mAVD3TivdDUycbmCQR5n5EnHwpgCm6XpCmP6OVEYY+BdCfmHYAjYEwiFK91yvlrZLRbV+dPVhVjI/cmopdDeNP2YlbhuWvk2SnKZMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717320883; c=relaxed/simple;
-	bh=RpUxybf7+e/5kaixCHb2/K3rnNKdkoI54UxCGColZkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p4oSoTAKBnfA1C8cCdMUVBphA+TDVkQeyheOi8G3O8s6ZqXyXymdFJKLGPqhT7iRQVInlLsjGS4MqGbvM6skFGOP+4FBDtmpEIu+AgFYpVWsDZWIxilJo4Lzt/QKSkPSlsQIvA7X5xnko7rnzr/J9KtvRDYmC0EbI4apGU0pDGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4c4M/Ob; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717320894; c=relaxed/simple;
+	bh=DG07kVu5uLEH6rCgib444jqlM+vqDCQhpyzL5KaG49A=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=aNXVTnrNfdzLZTqQv3e7xaFu8IyOvhhBU7CM9rvY4rfXbxNUDSrqDMzAIqbedhs3Hy2VriuSR5UdP8l5Rx0IaqtwCI7vrAZAEJcASudM3ICMToR3Bvbnx6wnhEL0/KLP/9g/KP/F+bExF3qJmdxztbhBacDnAu0R1rfMudzQ3Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IbovmvmQ; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4c4M/Ob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31465C2BBFC;
-	Sun,  2 Jun 2024 09:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717320883;
-	bh=RpUxybf7+e/5kaixCHb2/K3rnNKdkoI54UxCGColZkI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e4c4M/ObLXRkhdvn/IQ0yL+CBUF2mqUmPtpl17h51A+M58V38y60o18pvBwbXD27+
-	 +yuwRBDgXcKrN/p3Jr50vfddfQe7fPLyDV/tnL91tWt81wAKRg7d19RArnRDRdg5bv
-	 wJd8k8HyJ4FNxvzhINJiwdDMKbJMGRQz8xSDIXlqglYp6CK6Qw7WdHX4kOPMoP/2Ow
-	 JTDY9cFCOQy1gQ28fOHrrV9WUSsbfp8GriDyJQb5+2IGujXOlz6Puiqcejnvb7HUJi
-	 g4KwVb9/g2QuMMn+S70zljAH1Se0dr6HpAvgDmgQEUnYABdq8lRBuDWDLAUvTubeh8
-	 LofUeCU41dBKA==
-Date: Sun, 2 Jun 2024 10:34:28 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Julien Stephan <jstephan@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, kernel test robot <lkp@intel.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
- Stefan Popa <stefan.popa@analog.com>
-Subject: Re: [PATCH v7 0/7] iio: adc: add new ad7380 driver
-Message-ID: <20240602103428.59608407@jic23-huawei>
-In-Reply-To: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
-References: <20240528-adding-new-ad738x-driver-v7-0-4cd70a4c12c8@baylibre.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IbovmvmQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1717320880; bh=1eR/ssQy8r6gHuYs6EKlYygeauTKQA7qHnuWA58hTXA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=IbovmvmQ26KIsyr/hvym0GhvKK7giLtcq2e1HS69PEWtjlVENH2lo8T1a2+ZzgRhP
+	 qNgQHYEI8Y44FOZMU2FJs6jzKHAzm+M4vnZ7rTMiAS7kQX06YO7EC/ZTqtEPucKcGT
+	 jaaeikoskX4x0SDCvUXDrKzZQ3iLKt5v0jkgQLFw=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
+	id 5943AE37; Sun, 02 Jun 2024 17:22:20 +0800
+X-QQ-mid: xmsmtpt1717320140taqnx0a2i
+Message-ID: <tencent_D0FA12FAC65F09B4AEC6AED04C8C67C38606@qq.com>
+X-QQ-XMAILINFO: MgAERLP4sJkUfzd64tplZ5GwFRzfCv0BJcRDVT8fxbNsZuZQqDOCRiYgepdP2G
+	 JLl66RoogXXcA3ZnsbvX23tSk2w4nqhuLIkJuq4rbvDXo7UcapWemHti0VP7Li231iOqzCiyy0te
+	 E+3liaTV6KWTG5NPtgb1d7dwSt2p7AruImFi7G3rH/SGkp2CyQkoHj3zvum6r4IXPHueF8SAKzoA
+	 As0HlGIESubZH/jbvyoPc6SSLCpH/GLm9EXAe7XyTCxShutNjabubqfkyFDmM5VhUVNcpaEBm3r/
+	 8bqHDLcy8orwyCglbYKx/MRx1LtD0RzhDFRSbJi6LEttWmH+WAghepz1nZjjUTpV0V6m303t0YCp
+	 qgqmjyGPqryRlm2x/ciAZtd/uUbPZry+LweB1lCotC0DfZ+JYTFG2b1+7Z4P9KZMGxkYqNKdzlxN
+	 u7EgrjR4fiTYRCViA+BMo79yZFKfREp8VJS1i4FwQZkl2pVD1OkJ2D7DpaIk82KNrWBz4lly1PYy
+	 22z9wkBdHxJ22NO1VLexl69uOm6hZppljdYTfuVsBOj+M2LDx81j1xIUXUxy6ee+LZ2wbHR0VBVC
+	 9O3SI2DX2M/Y3sjB6uMIbVSNdDF0NlkYmYpUctmN1d7YeGN8hd9Y/bu7MEXnGo5MGFJL6g1PiGcZ
+	 /eINv/K8xERpEwVwdVtk1q3VtcA2mbPEu5xFqg4FuZmHY0RJNJal1vLKSDrcWUvQwFcZPmNkCT3S
+	 aH1GJ2WnsIJ7BRVFXBovRAY0LLxPd2JpGVt7X0LhWZmrdM75xelLl+zip/jhsUNKRLnwuiIa1rpX
+	 1W6MRqbv72RG1QfDjvZV64fCPivBLc4ftauR1yzBaTwOefs9aekxWtr0VcgLRoh1cdbEMR8Ra0/b
+	 5dDVAcuWcEa68GSkIB9sDw8kBXxGTPCwF58Dr4WmQi5WJtpvCm4/SvJ4M+AjzA9F7JEMLG6sVgKB
+	 QWoUWGW34=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
+Date: Sun,  2 Jun 2024 17:22:21 +0800
+X-OQ-MSGID: <20240602092220.1495349-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000f386f90616fea5ef@google.com>
+References: <000000000000f386f90616fea5ef@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 28 May 2024 16:20:27 +0200
-Julien Stephan <jstephan@baylibre.com> wrote:
+please test uaf chrdev_open
 
-> Taking over this series with David Lechner's approval, to add some
-> fixes, proper handling of pseudo differential parts and
-> some extra commits to add support for 4-channel compatible parts.
-> 
-> Here is David's cover letter:
-> 
-> This series is adding a new driver for the Analog Devices Inc. AD7380,
-> AD7381, AD7383, and AD7384 ADCs. These chips are part of a family of
-> simultaneous sampling SAR ADCs.
-> 
-> To keep things simple, the initial driver implementation only supports
-> the 2/4-channel differential chips listed above. There are also 4-channel
-> single-ended chips in the family that can be added later.
-> 
-> Furthermore, the driver is just implementing basic support for capturing
-> data. Additional features like interrupts, CRC, etc. can be added later.
-> 
-> This work is being done by BayLibre and on behalf of Analog Devices Inc.
-> hence the maintainers are @analog.com.
-> 
-Applied + I'll pick up the series David posted with oversampling support
-now I have the precursor!  A tiny bit of noise in this one because
-of the reordering of the adc/Makefile
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e33c4963bf53
 
-Thanks,
+diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
+index 084d19d78397..293c37171d97 100644
+--- a/fs/ntfs3/namei.c
++++ b/fs/ntfs3/namei.c
+@@ -93,7 +93,7 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
+ 	 * If the MFT record of ntfs inode is not a base record, inode->i_op can be NULL.
+ 	 * This causes null pointer dereference in d_splice_alias().
+ 	 */
+-	if (!IS_ERR_OR_NULL(inode) && !inode->i_op) {
++	if (IS_ERR_OR_NULL(inode) || !inode->i_op) {
+ 		iput(inode);
+ 		inode = ERR_PTR(-EINVAL);
+ 	}
+
