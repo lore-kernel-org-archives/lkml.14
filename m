@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2073BBE8;
-	Sun,  2 Jun 2024 03:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAB944376;
+	Sun,  2 Jun 2024 03:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717299447; cv=none; b=EjdDcUVyqfG4UvKrAI0bor6GIfNE3s4wlQIBuzOoSA19aP7MPH7jPQaUOHrOtNXVMhan/7mo8wcp+L25GW+t9X8KhVohEXAFTNnLIyRNjmNpNTMH4vGQVvaByKWZPfC5s4hXmGv5sdQsVm1uhzp39iymsmdNHrH3XvodW8ltu6A=
+	t=1717299448; cv=none; b=F8WJJH+j89dDlJEYk9W02UK1GPsCXpXYsErR+tyG5zEQREdAGToLGAMh0zcMvoY/N4SFfAVyD4eQqUkcLRbgWTMkgWO5IBdlHIATsDzv6UUPKZerVYH43EekbUfTZXSevq6gfPpaJnrDlNSSJv5Xc7qJevHzsCdIuc0TgDt2URU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717299447; c=relaxed/simple;
-	bh=fTaaCzW/dX3tmDpJTRy222XLic23m/x+oc1DZLADNPI=;
+	s=arc-20240116; t=1717299448; c=relaxed/simple;
+	bh=IBvQ1EjeHUmg4YeF3oXh/rA5/gT95qKmM3/sG7PAKSE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=eGK8BNPy7qBN0XnE25TQaLY0WU2O5H14u31Qi/pceJJHRnCa9ETsPmBMBOqnFpO5n8SVt45e7zZs7NBhy0piwi8pNJ6TlVIRDs71LSRnvR3Yg2XUMOz+hzq57WkrHZkrKZHsCWXjnhHpu1cTH2SMlGPY15LBbao/9TeYmyfUpVA=
+	 Content-Type; b=aX3V3RCOSHOG9zZKpgXalzi/fhG7YjCwUTFXdHCGxK5mTlivU/zAIjB3mak8S60eM6apKpKA1H3wPFfYUaWUaMqRcRagRBPsWwva+OrXQE4yfeHsOHuI7XoyVNsMTFi7BZNMQ6URQ7m08za4zbUumm+m8FG9/f8cSjrcnhS3mGA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A2AC4AF09;
-	Sun,  2 Jun 2024 03:37:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545C6C4AF09;
+	Sun,  2 Jun 2024 03:37:28 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sDc3G-000000094TR-2ii6;
-	Sat, 01 Jun 2024 23:38:34 -0400
-Message-ID: <20240602033834.503106481@goodmis.org>
+	id 1sDc3H-000000094WR-2fw7;
+	Sat, 01 Jun 2024 23:38:35 -0400
+Message-ID: <20240602033835.489585837@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 01 Jun 2024 23:38:05 -0400
+Date: Sat, 01 Jun 2024 23:38:11 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,8 +40,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Alan Maguire <alan.maguire@oracle.com>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: [PATCH v2 21/27] ftrace: Add multiple fgraph storage selftest
+ Guo Ren <guoren@kernel.org>,
+ linux-kselftest@vger.kernel.org
+Subject: [PATCH v2 27/27] selftests/ftrace: Add fgraph-multi.tc test
 References: <20240602033744.563858532@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,287 +52,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a selftest for multiple function graph tracer with storage on a same
-function. In this case, the shadow stack entry will be shared among those
-fgraph with different data storage. So this will ensure the fgraph will
-not mixed those storage data.
+Add a test that creates 3 instances and enables function_graph tracer in
+each as well as the top instance, where each will enable a filter (but one
+that traces all functions) and check that they are filtering properly.
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509111465.162236.3795819216426570800.stgit@devnote2
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: linux-kselftest@vger.kernel.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_selftest.c | 171 +++++++++++++++++++++++++---------
- 1 file changed, 126 insertions(+), 45 deletions(-)
+ .../ftrace/test.d/ftrace/fgraph-multi.tc      | 103 ++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
 
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index fcdc744c245e..369efc569238 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -762,28 +762,32 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
- #define SHORT_NUMBER 12345
- #define WORD_NUMBER 1234567890
- #define LONG_NUMBER 1234567890123456789LL
--
--static int fgraph_store_size __initdata;
--static const char *fgraph_store_type_name __initdata;
--static char *fgraph_error_str __initdata;
--static char fgraph_error_str_buf[128] __initdata;
-+#define ERRSTR_BUFLEN 128
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+new file mode 100644
+index 000000000000..ff88f97e41fb
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+@@ -0,0 +1,103 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph filters
++# requires: set_ftrace_filter function_graph:tracer
 +
-+struct fgraph_fixture {
-+	struct fgraph_ops gops;
-+	int store_size;
-+	const char *store_type_name;
-+	char error_str_buf[ERRSTR_BUFLEN];
-+	char *error_str;
-+};
- 
- static __init int store_entry(struct ftrace_graph_ent *trace,
- 			      struct fgraph_ops *gops)
- {
--	const char *type = fgraph_store_type_name;
--	int size = fgraph_store_size;
-+	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
-+	const char *type = fixture->store_type_name;
-+	int size = fixture->store_size;
- 	void *p;
- 
- 	p = fgraph_reserve_data(gops->idx, size);
- 	if (!p) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Failed to reserve %s\n", type);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return 0;
- 	}
- 
--	switch (fgraph_store_size) {
-+	switch (size) {
- 	case 1:
- 		*(char *)p = BYTE_NUMBER;
- 		break;
-@@ -804,7 +808,8 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
- static __init void store_return(struct ftrace_graph_ret *trace,
- 				struct fgraph_ops *gops)
- {
--	const char *type = fgraph_store_type_name;
-+	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
-+	const char *type = fixture->store_type_name;
- 	long long expect = 0;
- 	long long found = -1;
- 	int size;
-@@ -812,20 +817,18 @@ static __init void store_return(struct ftrace_graph_ret *trace,
- 
- 	p = fgraph_retrieve_data(gops->idx, &size);
- 	if (!p) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Failed to retrieve %s\n", type);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return;
- 	}
--	if (fgraph_store_size > size) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+	if (fixture->store_size > size) {
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Retrieved size %d is smaller than expected %d\n",
--			 size, (int)fgraph_store_size);
--		fgraph_error_str = fgraph_error_str_buf;
-+			 size, (int)fixture->store_size);
- 		return;
- 	}
- 
--	switch (fgraph_store_size) {
-+	switch (fixture->store_size) {
- 	case 1:
- 		expect = BYTE_NUMBER;
- 		found = *(char *)p;
-@@ -845,45 +848,44 @@ static __init void store_return(struct ftrace_graph_ret *trace,
- 	}
- 
- 	if (found != expect) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "%s returned not %lld but %lld\n", type, expect, found);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return;
- 	}
--	fgraph_error_str = NULL;
-+	fixture->error_str = NULL;
- }
- 
--static struct fgraph_ops store_bytes __initdata = {
--	.entryfunc		= store_entry,
--	.retfunc		= store_return,
--};
--
--static int __init test_graph_storage_type(const char *name, int size)
-+static int __init init_fgraph_fixture(struct fgraph_fixture *fixture)
- {
- 	char *func_name;
- 	int len;
--	int ret;
- 
--	fgraph_store_type_name = name;
--	fgraph_store_size = size;
-+	snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
-+		 "Failed to execute storage %s\n", fixture->store_type_name);
-+	fixture->error_str = fixture->error_str_buf;
- 
--	snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
--		 "Failed to execute storage %s\n", name);
--	fgraph_error_str = fgraph_error_str_buf;
-+	func_name = "*" __stringify(DYN_FTRACE_TEST_NAME);
-+	len = strlen(func_name);
++# Make sure that function graph filtering works
 +
-+	return ftrace_set_filter(&fixture->gops.ops, func_name, len, 1);
++INSTANCE1="instances/test1_$$"
++INSTANCE2="instances/test2_$$"
++INSTANCE3="instances/test3_$$"
++
++WD=`pwd`
++
++do_reset() {
++    cd $WD
++    if [ -d $INSTANCE1 ]; then
++	echo nop > $INSTANCE1/current_tracer
++	rmdir $INSTANCE1
++    fi
++    if [ -d $INSTANCE2 ]; then
++	echo nop > $INSTANCE2/current_tracer
++	rmdir $INSTANCE2
++    fi
++    if [ -d $INSTANCE3 ]; then
++	echo nop > $INSTANCE3/current_tracer
++	rmdir $INSTANCE3
++    fi
 +}
 +
-+/* Test fgraph storage for each size */
-+static int __init test_graph_storage_single(struct fgraph_fixture *fixture)
-+{
-+	int size = fixture->store_size;
-+	int ret;
- 
- 	pr_cont("PASSED\n");
- 	pr_info("Testing fgraph storage of %d byte%s: ", size, size > 1 ? "s" : "");
- 
--	func_name = "*" __stringify(DYN_FTRACE_TEST_NAME);
--	len = strlen(func_name);
--
--	ret = ftrace_set_filter(&store_bytes.ops, func_name, len, 1);
-+	ret = init_fgraph_fixture(fixture);
- 	if (ret && ret != -ENODEV) {
- 		pr_cont("*Could not set filter* ");
- 		return -1;
- 	}
- 
--	ret = register_ftrace_graph(&store_bytes);
-+	ret = register_ftrace_graph(&fixture->gops);
- 	if (ret) {
- 		pr_warn("Failed to init store_bytes fgraph tracing\n");
- 		return -1;
-@@ -891,30 +893,109 @@ static int __init test_graph_storage_type(const char *name, int size)
- 
- 	DYN_FTRACE_TEST_NAME();
- 
--	unregister_ftrace_graph(&store_bytes);
-+	unregister_ftrace_graph(&fixture->gops);
- 
--	if (fgraph_error_str) {
--		pr_cont("*** %s ***", fgraph_error_str);
-+	if (fixture->error_str) {
-+		pr_cont("*** %s ***", fixture->error_str);
- 		return -1;
- 	}
- 
- 	return 0;
- }
++mkdir $INSTANCE1
++if ! grep -q function_graph $INSTANCE1/available_tracers; then
++    echo "function_graph not allowed with instances"
++    rmdir $INSTANCE1
++    exit_unsupported
++fi
 +
-+static struct fgraph_fixture store_bytes[4] __initdata = {
-+	[0] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 1,
-+		.store_type_name = "byte",
-+	},
-+	[1] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 2,
-+		.store_type_name = "short",
-+	},
-+	[2] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 4,
-+		.store_type_name = "word",
-+	},
-+	[3] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 8,
-+		.store_type_name = "long long",
-+	},
-+};
++mkdir $INSTANCE2
++mkdir $INSTANCE3
 +
-+static __init int test_graph_storage_multi(void)
-+{
-+	struct fgraph_fixture *fixture;
-+	bool printed = false;
-+	int i, ret;
-+
-+	pr_cont("PASSED\n");
-+	pr_info("Testing multiple fgraph storage on a function: ");
-+
-+	for (i = 0; i < ARRAY_SIZE(store_bytes); i++) {
-+		fixture = &store_bytes[i];
-+		ret = init_fgraph_fixture(fixture);
-+		if (ret && ret != -ENODEV) {
-+			pr_cont("*Could not set filter* ");
-+			printed = true;
-+			goto out;
-+		}
-+
-+		ret = register_ftrace_graph(&fixture->gops);
-+		if (ret) {
-+			pr_warn("Failed to init store_bytes fgraph tracing\n");
-+			printed = true;
-+			goto out;
-+		}
-+	}
-+
-+	DYN_FTRACE_TEST_NAME();
-+out:
-+	while (--i >= 0) {
-+		fixture = &store_bytes[i];
-+		unregister_ftrace_graph(&fixture->gops);
-+
-+		if (fixture->error_str && !printed) {
-+			pr_cont("*** %s ***", fixture->error_str);
-+			printed = true;
-+		}
-+	}
-+	return printed ? -1 : 0;
++fail() { # msg
++    do_reset
++    echo $1
++    exit_fail
 +}
 +
- /* Test the storage passed across function_graph entry and return */
- static __init int test_graph_storage(void)
- {
- 	int ret;
- 
--	ret = test_graph_storage_type("byte", 1);
-+	ret = test_graph_storage_single(&store_bytes[0]);
-+	if (ret)
-+		return ret;
-+	ret = test_graph_storage_single(&store_bytes[1]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("short", 2);
-+	ret = test_graph_storage_single(&store_bytes[2]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("word", 4);
-+	ret = test_graph_storage_single(&store_bytes[3]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("long long", 8);
-+	ret = test_graph_storage_multi();
- 	if (ret)
- 		return ret;
- 	return 0;
++disable_tracing
++clear_trace
++
++do_test() {
++    REGEX=$1
++    TEST=$2
++
++    # filter something, schedule is always good
++    if ! echo "$REGEX" > set_ftrace_filter; then
++	fail "can not enable filter $REGEX"
++    fi
++
++    echo > trace
++    echo function_graph > current_tracer
++    enable_tracing
++    sleep 1
++    # search for functions (has "{" or ";" on the line)
++    echo 0 > tracing_on
++    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep -v "$TEST" | wc -l`
++    echo 1 > tracing_on
++    if [ $count -ne 0 ]; then
++	fail "Graph filtering not working by itself against $TEST?"
++    fi
++
++    # Make sure we did find something
++    echo 0 > tracing_on
++    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
++    echo 1 > tracing_on
++    if [ $count -eq 0 ]; then
++	fail "No traces found with $TEST?"
++    fi
++}
++
++do_test '*sched*' 'sched'
++cd $INSTANCE1
++do_test '*lock*' 'lock'
++cd $WD
++cd $INSTANCE2
++do_test '*rcu*' 'rcu'
++cd $WD
++cd $INSTANCE3
++echo function_graph > current_tracer
++
++sleep 1
++count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
++if [ $count -eq 0 ]; then
++    fail "No traces found with all tracing?"
++fi
++
++cd $WD
++echo nop > current_tracer
++echo nop > $INSTANCE1/current_tracer
++echo nop > $INSTANCE2/current_tracer
++echo nop > $INSTANCE3/current_tracer
++
++do_reset
++
++exit 0
 -- 
 2.43.0
 
