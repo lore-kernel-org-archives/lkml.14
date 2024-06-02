@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA8711712;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13069445;
 	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717299444; cv=none; b=qg6R80zdPX2YsGlYFjfz9D+Ox3c/wXlXEcD02iqcvMmYcr5fKcxqHjdvwF0wAPIabE9nQg9T5sgv9evZ6pf1GFoSOOIXP/IBY9T5Z9q9guVx359pA6AwD5AqWneRE3cCwdL8G1dygtWh73YMh9RWfLGvr0Pe1LPs0HR/3SWEhXE=
+	t=1717299444; cv=none; b=lQCQzO0Cdvt2zMa6Xxfhc88ZPIX1paEwSQKj8EGwSI99wJ/Uqin+6Ok/uGX39oLc0rv6OggnpY0BMBEq0RVVcsP3rBpnKUvIF36kXrBO378tQyNooOnYmR+Gf0et63IVZKHpKQOIeGVH3wHtFMp6vDvA8ywTcLTTsA0EyGg6AdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717299444; c=relaxed/simple;
-	bh=o6pCTeFxqRUBIZAPxPfqyRNbjqPbTPyf32oB9WTLbbA=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=CTwsTdf3MqCIn99MP79qKSU1E30jKnqOkd0ps7XvX+cfGyIXGWbKcoBXu7w4wdGVGDFxpZo2iIbvnpSPahWRorus34kIBWc/usz6rwVMwTZ9aRY0+xNaDjaBxKDADR2DIBCZtlqUS5cbV1MJqVv90BZdxJa+NJiK6JiY2Kmk78s=
+	bh=cxxSM/VMsMhJL+nDS/iAO5zz7lQPJbtvfAZavgYyWdM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=n+ycZttH4ODyiP1CIhjWEvdjCyJhJ+xyKAzb84+5qZadKc3NojJUCvD68/JAebkgrreaPeZC6npo6cdnFHKPRlxbYvL+CluCwJMNv4/qg3LzIFf77lojzF3Y3AGJLsADEIDhmKlmGnpz2+XRKuyB6UYI7D/zH2r4A87WDs/OhR4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35E5BC3277B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B6A6C4AF18;
 	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sDc3D-000000094J0-0veg;
+	id 1sDc3D-000000094KU-2zOW;
 	Sat, 01 Jun 2024 23:38:31 -0400
-Message-ID: <20240602033744.563858532@goodmis.org>
+Message-ID: <20240602033831.570126043@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sat, 01 Jun 2024 23:37:44 -0400
+Date: Sat, 01 Jun 2024 23:37:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -40,88 +41,228 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v2 00/27] function_graph: Allow multiple users for function graph tracing 
+Subject: [PATCH v2 03/27] function_graph: Add an array structure that will allow multiple
+ callbacks
+References: <20240602033744.563858532@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+
+Add an array structure that will eventually allow the function graph tracer
+to have up to 16 simultaneous callbacks attached. It's an array of 16
+fgraph_ops pointers, that is assigned when one is registered. On entry of a
+function the entry of the first item in the array is called, and if it
+returns zero, then the callback returns non zero if it wants the return
+callback to be called on exit of the function.
+
+The array will simplify the process of having more than one callback
+attached to the same function, as its index into the array can be stored on
+the shadow stack. We need to only save the index, because this will allow
+the fgraph_ops to be freed before the function returns (which may happen if
+the function call schedule for a long time).
+
+Co-developed with Masami Hiramatsu:
+Link: https://lore.kernel.org/linux-trace-kernel/171509095075.162236.8272148192748284581.stgit@devnote2
+
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 114 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 81 insertions(+), 33 deletions(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index fdb206aeffe3..d2ce5d651cf0 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -52,6 +52,11 @@
+ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+ int ftrace_graph_active;
+ 
++static int fgraph_array_cnt;
++#define FGRAPH_ARRAY_SIZE	16
++
++static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
++
+ /* Both enabled by default (can be cleared by function_graph tracer flags */
+ static bool fgraph_sleep_time = true;
+ 
+@@ -75,6 +80,20 @@ int __weak ftrace_disable_ftrace_graph_caller(void)
+ }
+ #endif
+ 
++int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
++{
++	return 0;
++}
++
++static void ftrace_graph_ret_stub(struct ftrace_graph_ret *trace)
++{
++}
++
++static struct fgraph_ops fgraph_stub = {
++	.entryfunc = ftrace_graph_entry_stub,
++	.retfunc = ftrace_graph_ret_stub,
++};
++
+ /**
+  * ftrace_graph_stop - set to permanently disable function graph tracing
+  *
+@@ -161,7 +180,7 @@ int function_graph_enter(unsigned long ret, unsigned long func,
+ 		goto out;
+ 
+ 	/* Only trace if the calling function expects to */
+-	if (!ftrace_graph_entry(&trace))
++	if (!fgraph_array[0]->entryfunc(&trace))
+ 		goto out_ret;
+ 
+ 	return 0;
+@@ -276,7 +295,7 @@ static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs
+ 	trace.retval = fgraph_ret_regs_return_value(ret_regs);
+ #endif
+ 	trace.rettime = trace_clock_local();
+-	ftrace_graph_return(&trace);
++	fgraph_array[0]->retfunc(&trace);
+ 	/*
+ 	 * The ftrace_graph_return() may still access the current
+ 	 * ret_stack structure, we need to make sure the update of
+@@ -412,11 +431,6 @@ void ftrace_graph_sleep_time_control(bool enable)
+ 	fgraph_sleep_time = enable;
+ }
+ 
+-int ftrace_graph_entry_stub(struct ftrace_graph_ent *trace)
+-{
+-	return 0;
+-}
+-
+ /*
+  * Simply points to ftrace_stub, but with the proper protocol.
+  * Defined by the linker script in linux/vmlinux.lds.h
+@@ -654,37 +668,54 @@ static int start_graph_tracing(void)
+ int register_ftrace_graph(struct fgraph_ops *gops)
+ {
+ 	int ret = 0;
++	int i;
+ 
+ 	mutex_lock(&ftrace_lock);
+ 
+-	/* we currently allow only one tracer registered at a time */
+-	if (ftrace_graph_active) {
++	if (!fgraph_array[0]) {
++		/* The array must always have real data on it */
++		for (i = 0; i < FGRAPH_ARRAY_SIZE; i++)
++			fgraph_array[i] = &fgraph_stub;
++	}
++
++	/* Look for an available spot */
++	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
++		if (fgraph_array[i] == &fgraph_stub)
++			break;
++	}
++	if (i >= FGRAPH_ARRAY_SIZE) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+ 
+-	register_pm_notifier(&ftrace_suspend_notifier);
++	fgraph_array[i] = gops;
++	if (i + 1 > fgraph_array_cnt)
++		fgraph_array_cnt = i + 1;
+ 
+ 	ftrace_graph_active++;
+-	ret = start_graph_tracing();
+-	if (ret) {
+-		ftrace_graph_active--;
+-		goto out;
+-	}
+ 
+-	ftrace_graph_return = gops->retfunc;
++	if (ftrace_graph_active == 1) {
++		register_pm_notifier(&ftrace_suspend_notifier);
++		ret = start_graph_tracing();
++		if (ret) {
++			ftrace_graph_active--;
++			goto out;
++		}
++
++		ftrace_graph_return = gops->retfunc;
+ 
+-	/*
+-	 * Update the indirect function to the entryfunc, and the
+-	 * function that gets called to the entry_test first. Then
+-	 * call the update fgraph entry function to determine if
+-	 * the entryfunc should be called directly or not.
+-	 */
+-	__ftrace_graph_entry = gops->entryfunc;
+-	ftrace_graph_entry = ftrace_graph_entry_test;
+-	update_function_graph_func();
++		/*
++		 * Update the indirect function to the entryfunc, and the
++		 * function that gets called to the entry_test first. Then
++		 * call the update fgraph entry function to determine if
++		 * the entryfunc should be called directly or not.
++		 */
++		__ftrace_graph_entry = gops->entryfunc;
++		ftrace_graph_entry = ftrace_graph_entry_test;
++		update_function_graph_func();
+ 
+-	ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
++		ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
++	}
+ out:
+ 	mutex_unlock(&ftrace_lock);
+ 	return ret;
+@@ -692,19 +723,36 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 
+ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ {
++	int i;
++
+ 	mutex_lock(&ftrace_lock);
+ 
+ 	if (unlikely(!ftrace_graph_active))
+ 		goto out;
+ 
+-	ftrace_graph_active--;
+-	ftrace_graph_return = ftrace_stub_graph;
+-	ftrace_graph_entry = ftrace_graph_entry_stub;
+-	__ftrace_graph_entry = ftrace_graph_entry_stub;
+-	ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
+-	unregister_pm_notifier(&ftrace_suspend_notifier);
+-	unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
++	for (i = 0; i < fgraph_array_cnt; i++)
++		if (gops == fgraph_array[i])
++			break;
++	if (i >= fgraph_array_cnt)
++		goto out;
+ 
++	fgraph_array[i] = &fgraph_stub;
++	if (i + 1 == fgraph_array_cnt) {
++		for (; i >= 0; i--)
++			if (fgraph_array[i] != &fgraph_stub)
++				break;
++		fgraph_array_cnt = i + 1;
++	}
++
++	ftrace_graph_active--;
++	if (!ftrace_graph_active) {
++		ftrace_graph_return = ftrace_stub_graph;
++		ftrace_graph_entry = ftrace_graph_entry_stub;
++		__ftrace_graph_entry = ftrace_graph_entry_stub;
++		ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
++		unregister_pm_notifier(&ftrace_suspend_notifier);
++		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
++	}
+  out:
+ 	mutex_unlock(&ftrace_lock);
+ }
+-- 
+2.43.0
 
 
-This is a continuation of the function graph multi user code.
-I wrote a proof of concept back in 2019 of this code[1] and
-Masami started cleaning it up. I started from Masami's work v10
-that can be found here:
-
- https://lore.kernel.org/linux-trace-kernel/171509088006.162236.7227326999861366050.stgit@devnote2/
-
-This is *only* the code that allows multiple users of function
-graph tracing. This is not the fprobe work that Masami is working
-to add on top of it. As Masami took my proof of concept, there
-was still several things I disliked about that code. Instead of
-having Masami clean it up even more, I decided to take over on just
-my code and change it up a bit.
-
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20240525023652.903909489@goodmis.org/
-
-- Added ftrace helpers to allow an ftrace_ops to be a subop of a
-  managing ftrace_op. That is, the managing ftrace_op will enable
-  functions based off of the filters of the subops beneath it.
-  This could be extended for kprobes and fprobes, as the managing
-  ops does the multiplexing for the subops. This allows for only
-  adding a single callback to ftrace but have multiple ops that
-  represent many users.
-
-- At the end, I added static branch which also speeds up the
-  code quite a bit.
-
-Masami Hiramatsu (Google) (3):
-      function_graph: Handle tail calls for stack unwinding
-      function_graph: Use a simple LRU for fgraph_array index number
-      ftrace: Add multiple fgraph storage selftest
-
-Steven Rostedt (Google) (8):
-      ftrace: Allow subops filtering to be modified
-      function_graph: Add pid tracing back to function graph tracer
-      function_graph: Use for_each_set_bit() in __ftrace_return_to_handler()
-      function_graph: Use bitmask to loop on fgraph entry
-      function_graph: Use static_call and branch to optimize entry function
-      function_graph: Use static_call and branch to optimize return function
-      selftests/ftrace: Add function_graph tracer to func-filter-pid test
-      selftests/ftrace: Add fgraph-multi.tc test
-
-Steven Rostedt (VMware) (16):
-      function_graph: Convert ret_stack to a series of longs
-      fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
-      function_graph: Add an array structure that will allow multiple callbacks
-      function_graph: Allow multiple users to attach to function graph
-      function_graph: Remove logic around ftrace_graph_entry and return
-      ftrace/function_graph: Pass fgraph_ops to function graph callbacks
-      ftrace: Allow function_graph tracer to be enabled in instances
-      ftrace: Allow ftrace startup flags to exist without dynamic ftrace
-      ftrace: Add subops logic to allow one ops to manage many
-      function_graph: Have the instances use their own ftrace_ops for filtering
-      function_graph: Add "task variables" per task for fgraph_ops
-      function_graph: Move set_graph_function tests to shadow stack global var
-      function_graph: Move graph depth stored data to shadow stack global var
-      function_graph: Move graph notrace bit to shadow stack global var
-      function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
-      function_graph: Add selftest for passing local variables
-
-----
- include/linux/ftrace.h                             |   43 +-
- include/linux/sched.h                              |    2 +-
- include/linux/trace_recursion.h                    |   39 -
- kernel/trace/fgraph.c                              | 1044 ++++++++++++++++----
- kernel/trace/ftrace.c                              |  482 ++++++++-
- kernel/trace/ftrace_internal.h                     |    5 +-
- kernel/trace/trace.h                               |   94 +-
- kernel/trace/trace_functions.c                     |    8 +
- kernel/trace/trace_functions_graph.c               |   96 +-
- kernel/trace/trace_irqsoff.c                       |   10 +-
- kernel/trace/trace_sched_wakeup.c                  |   10 +-
- kernel/trace/trace_selftest.c                      |  259 ++++-
- .../selftests/ftrace/test.d/ftrace/fgraph-multi.tc |  103 ++
- .../ftrace/test.d/ftrace/func-filter-pid.tc        |   27 +-
- 14 files changed, 1916 insertions(+), 306 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
