@@ -1,80 +1,110 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA20374EA
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 09:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FB3F134A8;
+	Sun,  2 Jun 2024 09:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717320894; cv=none; b=OdHUlq2t6qhM8QwGV9cbKYUBqFYomY9AysDbLntkbyoGxJDRQFKiSTWhILri3T3BIqkL0mAVD3TivdDUycbmCQR5n5EnHwpgCm6XpCmP6OVEYY+BdCfmHYAjYEwiFK91yvlrZLRbV+dPVhVjI/cmopdDeNP2YlbhuWvk2SnKZMQ=
+	t=1717321059; cv=none; b=npYn3Gces/gt08EEgpDYP7a1pYr7M0oQBt9V95GQGCi46kLhfmqvMF+waPQvOMxbF9djfGFltPCWiJ7TBTQ/z3MzJLh4rrfvwZW0s+evLRQT/4qG7Zenx+PTDJ86vOTmg4hY+d8/QDfMd8ABk8OBsLEMxfy0UO1Nb6ZG+jYOtS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717320894; c=relaxed/simple;
-	bh=DG07kVu5uLEH6rCgib444jqlM+vqDCQhpyzL5KaG49A=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=aNXVTnrNfdzLZTqQv3e7xaFu8IyOvhhBU7CM9rvY4rfXbxNUDSrqDMzAIqbedhs3Hy2VriuSR5UdP8l5Rx0IaqtwCI7vrAZAEJcASudM3ICMToR3Bvbnx6wnhEL0/KLP/9g/KP/F+bExF3qJmdxztbhBacDnAu0R1rfMudzQ3Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=IbovmvmQ; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1717321059; c=relaxed/simple;
+	bh=/xKLEHAs1Wv0Z9ZQAQzXdBZp83/KzYOQwn3DIECc6NM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nhF4a4IPQTEXLyvsjzeY7UfvXP6DYML2hNnQRokcKI2OAq92Hyr4HhDnj5ZkzCaPLp4/7y0N/75uGN2ewIHrPgsUlB3HVXuWNfEpWVy5jVTkXk4q+znNpG9K0hAefBSi2suGG68OaBHPxAQ4H4FtawpW0yDT5oixqQ4jsv6G8xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYB5/ESR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="IbovmvmQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1717320880; bh=1eR/ssQy8r6gHuYs6EKlYygeauTKQA7qHnuWA58hTXA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IbovmvmQ26KIsyr/hvym0GhvKK7giLtcq2e1HS69PEWtjlVENH2lo8T1a2+ZzgRhP
-	 qNgQHYEI8Y44FOZMU2FJs6jzKHAzm+M4vnZ7rTMiAS7kQX06YO7EC/ZTqtEPucKcGT
-	 jaaeikoskX4x0SDCvUXDrKzZQ3iLKt5v0jkgQLFw=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb9-0.qq.com (NewEsmtp) with SMTP
-	id 5943AE37; Sun, 02 Jun 2024 17:22:20 +0800
-X-QQ-mid: xmsmtpt1717320140taqnx0a2i
-Message-ID: <tencent_D0FA12FAC65F09B4AEC6AED04C8C67C38606@qq.com>
-X-QQ-XMAILINFO: MgAERLP4sJkUfzd64tplZ5GwFRzfCv0BJcRDVT8fxbNsZuZQqDOCRiYgepdP2G
-	 JLl66RoogXXcA3ZnsbvX23tSk2w4nqhuLIkJuq4rbvDXo7UcapWemHti0VP7Li231iOqzCiyy0te
-	 E+3liaTV6KWTG5NPtgb1d7dwSt2p7AruImFi7G3rH/SGkp2CyQkoHj3zvum6r4IXPHueF8SAKzoA
-	 As0HlGIESubZH/jbvyoPc6SSLCpH/GLm9EXAe7XyTCxShutNjabubqfkyFDmM5VhUVNcpaEBm3r/
-	 8bqHDLcy8orwyCglbYKx/MRx1LtD0RzhDFRSbJi6LEttWmH+WAghepz1nZjjUTpV0V6m303t0YCp
-	 qgqmjyGPqryRlm2x/ciAZtd/uUbPZry+LweB1lCotC0DfZ+JYTFG2b1+7Z4P9KZMGxkYqNKdzlxN
-	 u7EgrjR4fiTYRCViA+BMo79yZFKfREp8VJS1i4FwQZkl2pVD1OkJ2D7DpaIk82KNrWBz4lly1PYy
-	 22z9wkBdHxJ22NO1VLexl69uOm6hZppljdYTfuVsBOj+M2LDx81j1xIUXUxy6ee+LZ2wbHR0VBVC
-	 9O3SI2DX2M/Y3sjB6uMIbVSNdDF0NlkYmYpUctmN1d7YeGN8hd9Y/bu7MEXnGo5MGFJL6g1PiGcZ
-	 /eINv/K8xERpEwVwdVtk1q3VtcA2mbPEu5xFqg4FuZmHY0RJNJal1vLKSDrcWUvQwFcZPmNkCT3S
-	 aH1GJ2WnsIJ7BRVFXBovRAY0LLxPd2JpGVt7X0LhWZmrdM75xelLl+zip/jhsUNKRLnwuiIa1rpX
-	 1W6MRqbv72RG1QfDjvZV64fCPivBLc4ftauR1yzBaTwOefs9aekxWtr0VcgLRoh1cdbEMR8Ra0/b
-	 5dDVAcuWcEa68GSkIB9sDw8kBXxGTPCwF58Dr4WmQi5WJtpvCm4/SvJ4M+AjzA9F7JEMLG6sVgKB
-	 QWoUWGW34=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+5d34cc6474499a5ff516@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] KASAN: slab-use-after-free Read in chrdev_open
-Date: Sun,  2 Jun 2024 17:22:21 +0800
-X-OQ-MSGID: <20240602092220.1495349-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000f386f90616fea5ef@google.com>
-References: <000000000000f386f90616fea5ef@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYB5/ESR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CA86C2BBFC;
+	Sun,  2 Jun 2024 09:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717321058;
+	bh=/xKLEHAs1Wv0Z9ZQAQzXdBZp83/KzYOQwn3DIECc6NM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kYB5/ESRhYugjxyAa9WpS5ZiPq7QgrAFIJJbHFJpzHx87UT2EgLzUz8+ol6q2Anji
+	 0JIYpMB9HOeIHTNdFHaYrNsl4ePbFO/02tvlnI7F3aWu453Piv2Y68diCr4CBRqZ47
+	 OTu689IAucA2QV2NkAvwG2iJmbnLKAJckoNi2U8iC0zfKDZ08HEbFDFveTVXQLKkfS
+	 ni59iCjyBP6JhJ8d2FB1004oGxvnbbFtWr7aMC3i2eTfjSnUFcgZH91rFY0jYi23ed
+	 nN+osBBEH5fA01cwv6MPME9qy8DyIzL4BWKJghUf3R43nF+wBeus86PLt4VRpA9AWb
+	 kPZxhdkB4zdjA==
+Date: Sun, 2 Jun 2024 10:37:27 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Julien Stephan <jstephan@baylibre.com>, Esteban Blanc
+ <eblanc@baylibre.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] iio: add support for multiple scan types
+Message-ID: <20240602103727.007e34d6@jic23-huawei>
+In-Reply-To: <20240602102726.35120347@jic23-huawei>
+References: <20240530-iio-add-support-for-multiple-scan-types-v3-0-cbc4acea2cfa@baylibre.com>
+	<20240602102517.438b51b8@jic23-huawei>
+	<20240602102726.35120347@jic23-huawei>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-please test uaf chrdev_open
+On Sun, 2 Jun 2024 10:27:26 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git e33c4963bf53
-
-diff --git a/fs/ntfs3/namei.c b/fs/ntfs3/namei.c
-index 084d19d78397..293c37171d97 100644
---- a/fs/ntfs3/namei.c
-+++ b/fs/ntfs3/namei.c
-@@ -93,7 +93,7 @@ static struct dentry *ntfs_lookup(struct inode *dir, struct dentry *dentry,
- 	 * If the MFT record of ntfs inode is not a base record, inode->i_op can be NULL.
- 	 * This causes null pointer dereference in d_splice_alias().
- 	 */
--	if (!IS_ERR_OR_NULL(inode) && !inode->i_op) {
-+	if (IS_ERR_OR_NULL(inode) || !inode->i_op) {
- 		iput(inode);
- 		inode = ERR_PTR(-EINVAL);
- 	}
+> On Sun, 2 Jun 2024 10:25:17 +0100
+> Jonathan Cameron <jic23@kernel.org> wrote:
+> 
+> > On Thu, 30 May 2024 10:14:07 -0500
+> > David Lechner <dlechner@baylibre.com> wrote:
+> >   
+> > > Up to now, the IIO subsystem has only supported a single scan type per
+> > > channel. This scan type determines the binary format of the data in the
+> > > buffer when doing buffered reads.
+> > > 
+> > > For simple devices, there is only one scan type and all is well. But
+> > > for more complex devices, there may be multiple scan types. For example,
+> > > ADCs with a resolution boost feature that adds more bits to the raw
+> > > sample data. Traditionally, for slow devices, we've just always used the
+> > > highest resolution mode, but for high performance ADCs, this may not be
+> > > always practical. Manipulating data after every read can hurt performance
+> > > and in the case of hardware buffers, it may not be possible to change the
+> > > format of the data in the buffer at all. There are also ADCs where
+> > > enabling the higher resolution can only be done if oversampling is also
+> > > enabled which may not be desireable.
+> > > 
+> > > To allow for more flexibility, we would like to add support for multiple
+> > > scan types per channel.
+> > > 
+> > > To avoid having to touch every driver, we implemented this in a way that
+> > > preserves the existing scan_type field. See the "iio: add support for
+> > > multiple scan types per channel" the details. The first couple of patches
+> > > are just preparation for this.
+> > > 
+> > > [1]: https://lore.kernel.org/linux-iio/CAMknhBHOXaff__QyU-wFSNNENvs23vDX5n_ddH-Dw3s6-sQ9sg@mail.gmail.com/    
+> > 
+> > Nice series. Applied to the togreg branch of iio.git and pushed out as
+> > testing for 0-day to poke at it.
+> > 
+> > Obviously this v3 hasn't been on list that long, but there is still time
+> > as I doubt I'll push out a non rebasing tree for a week or so.
+> > This week is looking too busy!  
+> 
+> oops. Goes to show I'm not keeping track of things very well today.
+> I haven't applied the driver this updates yet.
+> 
+> I'll look at that now and hopefully I can pick them both up.
+> 
+That was fine, so both now applied.
+> Jonathan
+> 
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> > 
+> >   
+> 
+> 
 
