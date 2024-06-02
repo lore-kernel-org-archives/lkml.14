@@ -1,307 +1,89 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9F620B35;
-	Sun,  2 Jun 2024 09:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C201F1AACC;
+	Sun,  2 Jun 2024 09:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717319668; cv=none; b=po2nCFmvZ5xweXlPkZA5PPnHyzyAdXgOfZEYcvHe33jpoCjE381uAwgsRGZBM0Xi0zqHj6nsGuiYbMkbt6Sm14esD362ESZTWWVzY9AiyLn1Ma9XaqNWHuq7WmdmSP5gmFFQvGuiHAtbUqfSZGzMmOJ3FmF6sJGjbAoY8W5W9zs=
+	t=1717320305; cv=none; b=d/A/JYrqOorvckuTI+FBVmbGRa1nIvppK0xIo3NoRVAulVYoeM6uDk1HJ/eImeMqZFs0hWdKvG+DBkdGb4hN7guoon8HQi8joJy1Lqa7QHCbZdlpIKcqZjyBw+3b6cIl5S23eeTiQfOx8OfEDyq5RUqCdWrB9dhv31gRxxTHB6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717319668; c=relaxed/simple;
-	bh=X36867+LpiBA9y43s3Y4dA8Y3wnrcdfe7wY2/ETK8YI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=azvHcEIbCpNbtn8F2tg+zcpYTwWFmcLtGFKDQIXQ138zfpi3nuuhj3g8o1eXZYR8/Se4RpG+tMwfjAsVfePo1VJPUYIWN42lq3FJ0VbCVAtHYmx6XbFoduYSY4GsKqxq11NPnQEiQL/tgyjsaVGsKe8QJ22Ut5xi9y+NRhFQQXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4lKiRSd; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717320305; c=relaxed/simple;
+	bh=KnYh/uIn/EyIgQppSeKU0rho3O4e8yMDZXchOjRbnKw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W099I3WWOCcfHiPOaZI4ufNNN2/B1h4O94M63Ssy477x0fyNSYz7+7PsVGkv4niu7SaP35xpaViqu2Gr7wnokwJ2e1IYXg07qVFeXHJWxywklLmCTkagPvXhZpnXijRsTTSWEjtzj/kGDtUvDYGqvEBeuxhUBHaBtpEbQBhSSSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE0dNHqL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4lKiRSd"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42108856c33so19738255e9.1;
-        Sun, 02 Jun 2024 02:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717319665; x=1717924465; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ut4+EM76gCxPMu4zioSx9KBeQbO+/vLZz5SwVBXNdx0=;
-        b=B4lKiRSdn52MUN+2KXIgCi/JIp0wnGFbbaWM2+r8TyP7h/Fu9nI8s4yVCSz9PrhUu9
-         L3B443dQvSVFTpsjrH+W6vEFAs4YbHo/ptA5ES8VSC3kT5O2+vCc32mWKvLo+zXUHtNd
-         u96tLC2ALI4TkV6dJNlJSzxIpD7GwV/jp9R9v2p3VTxHQyDowUBI2G7tNlWrPraYUNnB
-         WhiJVHoaOvgd6Rc3cXvNSDm1BsZSsPHzM8utYTVEpDWAEM27kivZuS8u4SRehD3ibMz+
-         rNOdzKaRve+1YFcueqyF/QO7jsnzs4q05wpNvMuGFudwIrPo/s5xBbKGY/SGtPmrN+N5
-         mKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717319665; x=1717924465;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ut4+EM76gCxPMu4zioSx9KBeQbO+/vLZz5SwVBXNdx0=;
-        b=UwQOO9MOYibKemqxi1ZAxJ6RqwzO3HOgb4GczrsnJiHOaaslnmu4nuDP4Hsozc/q+S
-         oKJTSq7tFUXm3vjMqTJB4OyXoHmBDy/Bek94mw03De8PaMkXZ+86F+vhF1bF9EENWSf/
-         zt1RJZOlNR66sIpGKUvMl0Rc7Ooj30bsJ8UYJXJybqnZGXVZ/TDzkHU2wzDzME9ZocgK
-         jMOOoGZFvdOPyDBIkA+sEthZyJN59RY6F6Rek6xsDImEP4Z7BP4+OXfIgxoFq/XlPpMl
-         fm3qqPp0wdiTQHm91FAXaRwHKS4kIW0hEmjK0sV/+3MUHra5b6CkChqmRUXZSAqWwvG7
-         2UqA==
-X-Forwarded-Encrypted: i=1; AJvYcCV43EL1fsHdqrC3kmBCUvnWhcV7lUctGUtQhjG1G/MTPG6P7zFE8g/89nd9WeL1zMqukZW4XT9SWw2ePo8Ttan4WS9+uYnCr4GduABgezevKKi6dSya0M5V3marX1GHz98sx2WgM8rrs4HH+B/H6KEeAno3px6jaUjxi+4+whKoPA==
-X-Gm-Message-State: AOJu0Yw+2S7BCLptVW/K6OLx7ie3cVIhmXPvAKkP6wBmiaauwI6jEV/n
-	3qcEcxOil0Dnr4REAnEN91uwbfmjP46Nglqg+ZptTXxMzzeWx9n8
-X-Google-Smtp-Source: AGHT+IHWgloFXlrvzr2nnL+svB3Bzs38WrQCZ6k2M0auFtqt55IYdlm20BgKbpAAv+VyT5IgGcXY4Q==
-X-Received: by 2002:a05:600c:1f81:b0:421:20e3:a25 with SMTP id 5b1f17b1804b1-4212dd322a8mr51976485e9.1.1717319664476;
-        Sun, 02 Jun 2024 02:14:24 -0700 (PDT)
-Received: from [172.27.19.72] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b84f8e7sm75315435e9.20.2024.06.02.02.14.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Jun 2024 02:14:24 -0700 (PDT)
-Message-ID: <5b3a0f6a-5a03-45d7-ab10-1f1ba25504d3@gmail.com>
-Date: Sun, 2 Jun 2024 12:14:21 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE0dNHqL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 486DEC2BBFC;
+	Sun,  2 Jun 2024 09:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717320305;
+	bh=KnYh/uIn/EyIgQppSeKU0rho3O4e8yMDZXchOjRbnKw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YE0dNHqLE7QkXosVSA6VOCbJVEn69Ck/iy4k09tIdCM8J8ihYKmQRsy6rm0kr79Ux
+	 9cb8geV1pptMrITeFeTyvY/bfmccfcfVP8zdaAVOu8KodjEy1fMeVOIzvwPPSyM4z+
+	 EliDp7pTdtGnwsYf3yLMCZawfaqMXQQkmStrK+1BL3bmACqzemZzqOa4GPBarRSYPN
+	 sOwjuIeyauB8dTcO3iY3bS1BGqQ/MbFod/otCUuF1roG6acU5b3EX0o2HOVlRzmlGD
+	 AhLrQlROXvuiP0czSL6XQORKGzbVH/7yXJPwvdAHU9LigDtm03WUnkgDrBSe/itHzY
+	 e5ikRLZV1TsaA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sDhSY-00HXO9-Gr;
+	Sun, 02 Jun 2024 10:25:02 +0100
+Date: Sun, 02 Jun 2024 10:25:01 +0100
+Message-ID: <86o78jlms2.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "harry.yu185" <harry.yu185@gmail.com>
+Cc: corbet@lwn.net,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	tglx@linutronix.de,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] irqchip/gic-v3: Add Allwinner sunxi001 erratum workaround
+In-Reply-To: <20240602071058.6405-1-harry.yu185@gmail.com>
+References: <20240602071058.6405-1-harry.yu185@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC net-next v3 2/2] net/mlx5e: Add per queue netdev-genl stats
-To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: nalramli@fastly.com, Saeed Mahameed <saeedm@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>,
- "open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>,
- Tariq Toukan <tariqt@nvidia.com>
-References: <20240529031628.324117-1-jdamato@fastly.com>
- <20240529031628.324117-3-jdamato@fastly.com>
-Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20240529031628.324117-3-jdamato@fastly.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: harry.yu185@gmail.com, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, tglx@linutronix.de, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-
-
-On 29/05/2024 6:16, Joe Damato wrote:
-> Add functions to support the netdev-genl per queue stats API.
+On Sun, 02 Jun 2024 08:10:58 +0100,
+"harry.yu185" <harry.yu185@gmail.com> wrote:
 > 
-> ./cli.py --spec netlink/specs/netdev.yaml \
->           --dump qstats-get --json '{"scope": "queue"}'
+> Allwinner A523 GIC600 integration does not support the
+> sharability feature. So assigned Erratum ID #sunxi001 for this
+> issue.
 > 
-> ...snip
+> That the 0x0201643b ID is not Allwinner specific and thus
+> there is an extra of_machine_is_compatible() check.
 > 
->   {'ifindex': 7,
->    'queue-id': 62,
->    'queue-type': 'rx',
->    'rx-alloc-fail': 0,
->    'rx-bytes': 105965251,
->    'rx-packets': 179790},
->   {'ifindex': 7,
->    'queue-id': 0,
->    'queue-type': 'tx',
->    'tx-bytes': 9402665,
->    'tx-packets': 17551},
+> Note, because more than one soc may have this problem, the 'sunxi'
+> name is used instead of a fixed soc name like A523.
 > 
-> ...snip
-> 
-> Also tested with the script tools/testing/selftests/drivers/net/stats.py
-> in several scenarios to ensure stats tallying was correct:
-> 
-> - on boot (default queue counts)
-> - adjusting queue count up or down (ethtool -L eth0 combined ...)
-> - adding mqprio TCs
+> Signed-off-by: harry.yu185 <harry.yu185@gmail.com>
 
-Please test also with interface down.
+No, this is all already handled by the driver already (since 6.6).
 
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> ---
->   .../net/ethernet/mellanox/mlx5/core/en_main.c | 132 ++++++++++++++++++
->   1 file changed, 132 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index ce15805ad55a..515c16a88a6c 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -39,6 +39,7 @@
->   #include <linux/debugfs.h>
->   #include <linux/if_bridge.h>
->   #include <linux/filter.h>
-> +#include <net/netdev_queues.h>
->   #include <net/page_pool/types.h>
->   #include <net/pkt_sched.h>
->   #include <net/xdp_sock_drv.h>
-> @@ -5293,6 +5294,136 @@ static bool mlx5e_tunnel_any_tx_proto_supported(struct mlx5_core_dev *mdev)
->   	return (mlx5_vxlan_allowed(mdev->vxlan) || mlx5_geneve_tx_allowed(mdev));
->   }
->   
-> +static void mlx5e_get_queue_stats_rx(struct net_device *dev, int i,
-> +				     struct netdev_queue_stats_rx *stats)
-> +{
-> +	struct mlx5e_priv *priv = netdev_priv(dev);
-> +	struct mlx5e_channel_stats *channel_stats;
-> +	struct mlx5e_rq_stats *xskrq_stats;
-> +	struct mlx5e_rq_stats *rq_stats;
-> +
-> +	if (mlx5e_is_uplink_rep(priv))
-> +		return;
-> +
-> +	channel_stats = priv->channel_stats[i];
-> +	xskrq_stats = &channel_stats->xskrq;
-> +	rq_stats = &channel_stats->rq;
-> +
-> +	stats->packets = rq_stats->packets + xskrq_stats->packets;
-> +	stats->bytes = rq_stats->bytes + xskrq_stats->bytes;
-> +	stats->alloc_fail = rq_stats->buff_alloc_err +
-> +			    xskrq_stats->buff_alloc_err;
-> +}
-> +
-> +static void mlx5e_get_queue_stats_tx(struct net_device *dev, int i,
-> +				     struct netdev_queue_stats_tx *stats)
-> +{
-> +	struct mlx5e_priv *priv = netdev_priv(dev);
-> +	struct mlx5e_channel_stats *channel_stats;
-> +	struct mlx5e_sq_stats *sq_stats;
-> +	int ch_ix, tc_ix;
-> +
-> +	mutex_lock(&priv->state_lock);
-> +	txq_ix_to_chtc_ix(&priv->channels.params, i, &ch_ix, &tc_ix);
-> +	mutex_unlock(&priv->state_lock);
-> +
-> +	channel_stats = priv->channel_stats[ch_ix];
-> +	sq_stats = &channel_stats->sq[tc_ix];
-> +
-> +	stats->packets = sq_stats->packets;
-> +	stats->bytes = sq_stats->bytes;
-> +}
-> +
-> +static void mlx5e_get_base_stats(struct net_device *dev,
-> +				 struct netdev_queue_stats_rx *rx,
-> +				 struct netdev_queue_stats_tx *tx)
-> +{
-> +	struct mlx5e_priv *priv = netdev_priv(dev);
-> +	int i, j;
-> +
-> +	if (!mlx5e_is_uplink_rep(priv)) {
-> +		rx->packets = 0;
-> +		rx->bytes = 0;
-> +		rx->alloc_fail = 0;
-> +
-> +		/* compute stats for deactivated RX queues
-> +		 *
-> +		 * if priv->channels.num == 0 the device is down, so compute
-> +		 * stats for every queue.
-> +		 *
-> +		 * otherwise, compute only the queues which have been deactivated.
-> +		 */
-> +		mutex_lock(&priv->state_lock);
-> +		if (priv->channels.num == 0)
-> +			i = 0;
+Please fix your DT to include the "dma-noncoherent" property in the
+GIC and ITS nodes, which should paper over the integration bug.
 
-This is not consistent with the above implementation of 
-mlx5e_get_queue_stats_rx(), which always returns the stats even if the 
-channel is down.
-This way, you'll double count the down channels.
+Thanks,
 
-I think you should always start from priv->channels.params.num_channels.
+	M.
 
-> +		else
-> +			i = priv->channels.params.num_channels;
-> +		mutex_unlock(&priv->state_lock);
-
-I understand that you're following the guidelines by taking the lock 
-here, I just don't think this improves anything... If channels can be 
-modified in between calls to mlx5e_get_base_stats / 
-mlx5e_get_queue_stats_rx, then wrapping the priv->channels access with a 
-lock can help protect each single deref, but not necessarily in giving a 
-consistent "screenshot" of the stats.
-
-The rtnl_lock should take care of that, as the driver holds it when 
-changing the number of channels and updating the real_numrx/tx_queues.
-
-This said, I would carefully say you can drop the mutex once following 
-the requested changes above.
-
-> +
-> +		for (; i < priv->stats_nch; i++) {
-> +			struct netdev_queue_stats_rx rx_i = {0};
-> +
-> +			mlx5e_get_queue_stats_rx(dev, i, &rx_i);
-> +
-> +			rx->packets += rx_i.packets;
-> +			rx->bytes += rx_i.bytes;
-> +			rx->alloc_fail += rx_i.alloc_fail;
-> +		}
-> +
-> +		if (priv->rx_ptp_opened) {
-> +			struct mlx5e_rq_stats *rq_stats = &priv->ptp_stats.rq;
-> +
-> +			rx->packets += rq_stats->packets;
-> +			rx->bytes += rq_stats->bytes;
-> +		}
-> +	}
-> +
-> +	tx->packets = 0;
-> +	tx->bytes = 0;
-> +
-> +	mutex_lock(&priv->state_lock);
-> +	for (i = 0; i < priv->stats_nch; i++) {
-> +		struct mlx5e_channel_stats *channel_stats = priv->channel_stats[i];
-> +
-> +		/* while iterating through all channels [0, stats_nch], there
-> +		 * are two cases to handle:
-> +		 *
-> +		 *  1. the channel is available, so sum only the unavailable TCs
-> +		 *     [mlx5e_get_dcb_num_tc, max_opened_tc).
-> +		 *
-> +		 *  2. the channel is unavailable, so sum all TCs [0, max_opened_tc).
-> +		 */
-
-I wonder why not call the local var 'tc'?
-
-> +		if (i < priv->channels.params.num_channels) {
-> +			j = mlx5e_get_dcb_num_tc(&priv->channels.params);
-> +		} else {
-> +			j = 0;
-> +		}
-
-Remove parenthesis, or use ternary op.
-
-> +
-> +		for (; j < priv->max_opened_tc; j++) {
-> +			struct mlx5e_sq_stats *sq_stats = &channel_stats->sq[j];
-> +
-> +			tx->packets += sq_stats->packets;
-> +			tx->bytes += sq_stats->bytes;
-> +		}
-> +	}
-> +	mutex_unlock(&priv->state_lock);
-> +
-
-Same comment regarding dropping the mutex.
-
-> +	if (priv->tx_ptp_opened) {
-> +		for (j = 0; j < priv->max_opened_tc; j++) {
-> +			struct mlx5e_sq_stats *sq_stats = &priv->ptp_stats.sq[j];
-> +
-> +			tx->packets    += sq_stats->packets;
-> +			tx->bytes      += sq_stats->bytes;
-> +		}
-> +	}
-> +}
-> +
-> +static const struct netdev_stat_ops mlx5e_stat_ops = {
-> +	.get_queue_stats_rx     = mlx5e_get_queue_stats_rx,
-> +	.get_queue_stats_tx     = mlx5e_get_queue_stats_tx,
-> +	.get_base_stats         = mlx5e_get_base_stats,
-> +};
-> +
->   static void mlx5e_build_nic_netdev(struct net_device *netdev)
->   {
->   	struct mlx5e_priv *priv = netdev_priv(netdev);
-> @@ -5310,6 +5441,7 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
->   
->   	netdev->watchdog_timeo    = 15 * HZ;
->   
-> +	netdev->stat_ops          = &mlx5e_stat_ops;
->   	netdev->ethtool_ops	  = &mlx5e_ethtool_ops;
->   
->   	netdev->vlan_features    |= NETIF_F_SG;
+-- 
+Without deviation from the norm, progress is not possible.
