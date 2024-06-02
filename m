@@ -1,118 +1,106 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393DE53AC
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 03:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE421173F;
+	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717299364; cv=none; b=K7Wv5pth0ild2PB8B5AOWLxxG8GR70yL21r9v2OdFCmbaFcy5Rgbw8nXIlz4CswAmnXe70Y01HQk4+vIzy2APpg2GAL8NlrpNuC+GjO7DHzI+C5Z1CZ8vsPSP+BWjLKO7iy+2OLdPltZZQBljjoxcQRkSOV7s7Y2ABmtH0So4wI=
+	t=1717299444; cv=none; b=U2CssKSem4O4+B9+Ny0Wf0bS0FIc+vxe4ZW24Ba6NAPJpPIRqzG/RuEkDRrZQagyepp6+2ffDN1LVkerfwXNNVCaqaOH8jmVeMExYNW3Hui+uOuL3VKvhfqJp/5MtwMZC28HWCkrbkmvb8WYQz+ofPjnhIcN5w6TY8r0VxDM47A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717299364; c=relaxed/simple;
-	bh=OQf6M4tF0ZWxSgVI5UrjMjHF0y9AkvZRl3Xq1E4gGpg=;
-	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=psVDAEmgnUlXCPa+CZJ7pXee4LMCA3o4fbC1pI6YvfY8whfa6Be6xuDDw5TQuF+rczvRH5XZcdbNqHRJmBtEmkyQn0RD2sr9GxHFxPdOuCaS+4Zx3f8GP8lqSLi2MrBLzxNq3++Tm3KsPL2RdvST7jv4xDWKfOiYCHc+Wjj6Buo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool; spf=pass smtp.mailfrom=packett.cool; dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b=REwyQdi8; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=packett.cool
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=packett.cool
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=packett.cool header.i=@packett.cool header.b="REwyQdi8"
-X-Envelope-To: heiko@sntech.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=packett.cool;
-	s=key1; t=1717299358;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4WnZLNXTxyDKxHBiNiWfRKN88LzF8Z4jtB2f1P6shSE=;
-	b=REwyQdi8bfi4u4XEBzbddwpO0MQxQfI9ErTXsxtufVF9fIcdf6NS62jw1lycOEWsOrB+Ju
-	GbI7Z85iRrcIVZZWL+MZnawhnmmEPmq/H6kwagha1ddxTkI3T78CuM81ffieSFZ4vKgAG3
-	KS5IOylF+9a+kyXEq5VA9pea0auYbzv63Suyqgx0iiFBh+zwhA1zVr7xuac0PUa1UbFiAm
-	IacXBPMpjGCXAEKzblB2h6LiBECq8s3INeyYTbisOIlICFVa4d+4YV6I1qxgSot231et1i
-	LvQnvfIGsgY4kNiCaZaqwEBaLxsBSlNIzHSShbwRW52eLxdU/I3sOEa8mrWzWQ==
-X-Envelope-To: stable@vger.kernel.org
-X-Envelope-To: hjc@rock-chips.com
-X-Envelope-To: andy.yan@rock-chips.com
-X-Envelope-To: maarten.lankhorst@linux.intel.com
-X-Envelope-To: mripard@kernel.org
-X-Envelope-To: tzimmermann@suse.de
-X-Envelope-To: airlied@gmail.com
-X-Envelope-To: daniel@ffwll.ch
-X-Envelope-To: dri-devel@lists.freedesktop.org
-X-Envelope-To: linux-arm-kernel@lists.infradead.org
-X-Envelope-To: linux-rockchip@lists.infradead.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-Date: Sun, 02 Jun 2024 00:35:36 -0300
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Val Packett <val@packett.cool>
-Subject: Re: [PATCH v3 1/2] drm/rockchip: vop: clear DMA stop bit upon vblank
- on RK3066
-To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Cc: stable@vger.kernel.org, Sandy Huang <hjc@rock-chips.com>, Andy Yan
-	<andy.yan@rock-chips.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Message-Id: <CNOFES.QFA1L3UJ3SH82@packett.cool>
-In-Reply-To: <20240527231202.23365-1-val@packett.cool>
-References: <20240527231202.23365-1-val@packett.cool>
+	s=arc-20240116; t=1717299444; c=relaxed/simple;
+	bh=9lgCYOF+tkC1R4x/Mh3CLz0Erih4ZZSea1s6G/+5Llo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=cpuEfqD4giBrVUVcVN5OtxO0t++wbo234K0B/ItZw3tlPa2ATJklDf4vn5qwjQI/PemH6/rlaf4i/GE/Y9c+77l0MuXnzYkyeycuMQJuqPDaQaDiA7opQCEQygjKgdjbkajrUr+6qItVJxZVdca5jFZfjE7HJw5w0zrcaYBgovY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C0FC4AF0D;
+	Sun,  2 Jun 2024 03:37:24 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sDc3D-000000094K0-2Ieq;
+	Sat, 01 Jun 2024 23:38:31 -0400
+Message-ID: <20240602033831.407508591@goodmis.org>
+User-Agent: quilt/0.68
+Date: Sat, 01 Jun 2024 23:37:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Guo Ren <guoren@kernel.org>
+Subject: [PATCH v2 02/27] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible
+ by long
+References: <20240602033744.563858532@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1251; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
 
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
+Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
+always be divisible by sizeof(long).
 
-On Mon, May 27 2024 at 20:11:49 -03:00:00, Val Packett=20
-<val@packett.cool> wrote:
-> The RK3066 VOP sets a dma_stop bit when it's done scanning out a frame
-> and needs the driver to acknowledge that by clearing the bit.
->=20
-> So unless we clear it "between" frames, the RGB output only shows=20
-> noise
-> instead of the picture. vblank seems to be the most appropriate place=20
-> to
-> do it, since it indicates exactly that: that the hardware is done
-> with the frame.
->=20
-> This seems to be a redundant synchronization mechanism that was=20
-> removed
-> in later iterations of the VOP hardware block.
->=20
-> Fixes: f4a6de8 ("drm: rockchip: vop: add rk3066 vop definitions")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Val Packett <val@packett.cool>
-> ---
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 6 ++++++
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.h | 1 +
->  drivers/gpu/drm/rockchip/rockchip_vop_reg.c | 1 +
->  3 files changed, 8 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c=20
-> b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index a13473b2d..2731fe2b2 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -1766,6 +1766,12 @@ static void vop_handle_vblank(struct vop *vop)
->  	}
->  	spin_unlock(&drm->event_lock);
->=20
-> +	if (VOP_HAS_REG(vop, common, dma_stop)) {
-> +		spin_lock(&vop->reg_lock);
-> +		VOP_REG_SET(vop, common, dma_stop, 0);
-> +		spin_unlock(&vop->reg_lock);
-> +	}
-> +
+Co-developed with Masami Hiramatsu:
+Link: https://lore.kernel.org/linux-trace-kernel/171509093949.162236.14518699447151894536.stgit@devnote2
+Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
 
-Oops=85 so doing it here actually causes deadlocks, unless we also=20
-change all other reg_lock usages to be spin_lock_irq/spin_unlock_irq.
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Not sure if doing that or going back to v1 would be better.
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index c62e6db718a0..fdb206aeffe3 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -33,7 +33,7 @@
+  * SHADOW_STACK_MAX_OFFSET: The max offset of the stack for a new frame to be added
+  */
+ #define FGRAPH_FRAME_SIZE	sizeof(struct ftrace_ret_stack)
+-#define FGRAPH_FRAME_OFFSET	(ALIGN(FGRAPH_FRAME_SIZE, sizeof(long)) / sizeof(long))
++#define FGRAPH_FRAME_OFFSET	DIV_ROUND_UP(FGRAPH_FRAME_SIZE, sizeof(long))
+ #define SHADOW_STACK_SIZE (PAGE_SIZE)
+ #define SHADOW_STACK_OFFSET			\
+ 	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
+@@ -103,6 +103,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (!current->ret_stack)
+ 		return -EBUSY;
+ 
++	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
++
+ 	/*
+ 	 * We must make sure the ret_stack is tested before we read
+ 	 * anything else.
+@@ -326,6 +328,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ {
+ 	int index = task->curr_ret_stack;
+ 
++	BUILD_BUG_ON(FGRAPH_FRAME_SIZE % sizeof(long));
++
+ 	index -= FGRAPH_FRAME_OFFSET * (idx + 1);
+ 	if (index < 0)
+ 		return NULL;
+-- 
+2.43.0
 
 
