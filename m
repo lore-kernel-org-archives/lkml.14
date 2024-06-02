@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8595E4176E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884FB47A79
 	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717346474; cv=none; b=lKQSsF/dsGJxExLBw0HWnBDLox6SiOGcToQRtYB3zy8wHQZ+mBMzEv25sCQ9te5Jybnkzo6eRZTha2SSl13OcgPbbKBnLDSryhVZzR9pA4P1vEr9IOazltKUrIgZ1Gp/wHgcEnnxVL47kENw3QGXH7Z35/gQVKP+ALXlYL1eHdM=
+	t=1717346474; cv=none; b=F9yIFrli8VKL4bflQG/OiCVci5tC5GRS8qwfPYykFMmGwFfdAu7Ds2bSCC4AayX/nqgePJ72s2xFC6LDBftZ/VKvXggQBlQViMxMcwQFryRnFqxTjwwMGGqtfnBr5McnjLSi0us6VbLINdT2IKjJ/8vLyv/gqbnJGpY0HocltOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717346474; c=relaxed/simple;
-	bh=CioFMCzDs2fHy+u+/6O6hOPg9dCrcvs0t/vl2L7WBlU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=IckMdtknI/OyAnKZY27ZDk2TT1ywbqHqtyMNKFySF7T+V+9f5IDgya8PEFdTCNn7kYVsXQwQoYlxq9fNa5OXsO2qw9w/AWK25lrOwa9Nfmu82Thp90B5smtzd2LHCAB0mv7Pqb4Rnnk2bWtRy/trGuyrLG+oEh13+UiPryXo1h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADz9ozz7; arc=none smtp.client-ip=10.30.226.201
+	bh=WsFLhf24B0oa0n0gsVNTsZUczx2GmAiDwV4E5ynao4Q=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RZsFZEtPrJnwUPMt6FigxAMGaLBaPvN/d+2bzfRYocaJEHQHWw855Ca40sXsD4IoKrYuaMyJN9wQC9yCUW4ydNxe/M60L2wNhlDTHbXQnhXvlAvGaH1DgTbCNwCjA5UJh7JcdExVX/JacHaAQy3MgkUMbwG+i2DQWnB9P3kcQdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aSUZmKpB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADz9ozz7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2949EC2BBFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aSUZmKpB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5AC33C4AF09;
 	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717346474;
-	bh=CioFMCzDs2fHy+u+/6O6hOPg9dCrcvs0t/vl2L7WBlU=;
+	bh=WsFLhf24B0oa0n0gsVNTsZUczx2GmAiDwV4E5ynao4Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ADz9ozz7/2e/AE9E1T/fBpt1nlMJ0kg13kAsBj19m9HmD7w4llvLRqK1u+V45fGwi
-	 UeuF2S7x1T2Vrjjpmr75KujCxz63/UO9B2VrrT9tFr6ezhKPbM0EcEsbPx62Bwd3c2
-	 +lCTZsUrcS/TylR+3P7nIOLsGSSiCOl2GKV0oBduNaVJLpIyX0tC12PjFC48aJgxwR
-	 w9wTt12GoNtkSVT2fsv4xmTqz6Oa0k0W/7mBKsF7A0P9WtlD4M4tbQQMlro2V4Ct90
-	 NmVJcGtUXwEaE+gjaNLXXT144cBGj9cGWY+WjvIv1ni7zQRXR0HvhfDaFv7WydG0U1
-	 xRnLWG7oRrMZw==
+	b=aSUZmKpBWxdlMiYWaNLInyY+1BnLr+68VU3RCgGzbrNbCVSFl3foqPFKCLS83b6IF
+	 dnOeOaP3AmXsG+1Q5i48BfWx0aTf2mUEUM3a10CM0sZmaCiwZfj2o7yFGPxCYb5eXt
+	 6hu8e0YpU2nKl7mOPCbAoUyA2bgDZAhQ3o/FoMOMR5LdTCNRnQL3zCJIaiTe2OwEC+
+	 Yh4PIiJ5iBV1plS/qpVdt8yzTg+8wroFaLATy2ZiWySd9GXvX4ByT0lUYhRWQK0yPQ
+	 MI9Pc4gMMd4RrWwRfNiETb3CEVtvywWH5KWsYFlD5Ba4nxLHs4WWlG5ndClGUUewje
+	 0vWo4jCEn/hJQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 146BADEA712;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4DC88DEA716;
 	Sun,  2 Jun 2024 16:41:14 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening fixes for v6.10-rc2
+Subject: Re: [GIT PULL] scheduler fix
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <202405311350.388C0A398@keescook>
-References: <202405311350.388C0A398@keescook>
+In-Reply-To: <ZlwbdU0uaVMMra5f@gmail.com>
+References: <ZlwbdU0uaVMMra5f@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202405311350.388C0A398@keescook>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.10-rc2
-X-PR-Tracked-Commit-Id: 99a6087dfdc65303d26ab5fba2dacd8931b82b08
+X-PR-Tracked-Message-Id: <ZlwbdU0uaVMMra5f@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2024-06-02
+X-PR-Tracked-Commit-Id: d40605a6823577a6c40fad6fb1f10a40ea0389d7
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 00a8c352dd7581961fd0f284c6fc1a17b370d0f4
-Message-Id: <171734647407.21593.5801160929839546040.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 3fca58ffad37a06912d25e5a1818afb3183cff17
+Message-Id: <171734647431.21593.1738209370628265225.pr-tracker-bot@kernel.org>
 Date: Sun, 02 Jun 2024 16:41:14 +0000
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, "Ewan D. Milne" <emilne@redhat.com>, Kees Cook <kees@kernel.org>, Marco Patalano <mpatalan@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Vincent Guittot <vincent.guittot@linaro.org>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 31 May 2024 13:51:36 -0700:
+The pull request you sent on Sun, 2 Jun 2024 09:12:53 +0200:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.10-rc2
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-urgent-2024-06-02
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/00a8c352dd7581961fd0f284c6fc1a17b370d0f4
+https://git.kernel.org/torvalds/c/3fca58ffad37a06912d25e5a1818afb3183cff17
 
 Thank you!
 
