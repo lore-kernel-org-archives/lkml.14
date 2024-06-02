@@ -1,446 +1,133 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta175.mxroute.com (mail-108-mta175.mxroute.com [136.175.108.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994A52F50A
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 20:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120D66F076
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 20:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717358914; cv=none; b=qIjQtAQSbD8wJrEF7ARRwcZNuAznSLZUENhmS6a5cUTzeNMI6UigeWuFZpMJw3iPlOelHX/3j1qTK6VB1LWNqkM9r8RsFrHp5RS48WWh6YUyeB5ownLL+fq9kuKcxzuJzzvR73HHQ7rU4DJ0TCqZn0Ot8Y5gNvOJnEYaGtX4t2E=
+	t=1717359310; cv=none; b=YBs8IA2F2ULczc2cGALxx6eWs2xn9ZgJimWNYazey7D0cEwFwieh1GfDyCFwfAcWf2vTEhRtU331M+3iaeQ9nH4iCrQ4Ab1e2ejC/9Pzv5ynGelsip212Y6ZBsyhrlb5bx3b7S9i0DeRzTSeCuVoI/zGapseh69EvrQT0q7HRKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717358914; c=relaxed/simple;
-	bh=gv4I+6GwieHWb1tCZwkuxK2HBNpvWMgBBANkH9gcGFI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dKYCC9FZsNBapcJj7uLFUXN7OxMiwAiwtv5/Y2AQRIGgGMExg/Vz3xIiFuGK4K9h11xW6RD9k4rilA5D4CWY1ms7BYfzKAfc1xgdmUQuYhhwEaHiYHjt3Q5yf/timhRnuaRrMsiYBCrMor3wBmZd/HCFcJeqVP4R9yyOL069EaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TgkdRr5S; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1717359310; c=relaxed/simple;
+	bh=DW93lC9rSeEtaobf7itjE64XnEYnqZ7qSOk+RzOJB00=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PQlnrNcVIuEE89yVmkEh77Jnuu3RTVa4rOea6SkiPxXz59lUlvKZy0mc4xny1vmeGdYWfUs7NNudp5ZLSdDqmO5faAAcZCVKKIAy7PZl8DvvgLRiGXoWMaS9bI1/IgIPej8zCEN95S2pVHD02lT9xpY+7AaRBa7ZCV5ia5vHz+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=fbj3QI1M; arc=none smtp.client-ip=136.175.108.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TgkdRr5S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1717358903; x=1717618103;
-	bh=P2Rf7NAHbdic8e+BaXjdvaGsbpV8QnHus543Acbv554=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=TgkdRr5SQFQrB931NHcoVHOO5KrG9oBgwpsV+/vll9ZUdtM8Ja107iPjlTq6+CBJ4
-	 uF3Wk/VWzq0ItmfHzYphoGKuXhB2pbYWBwxkjn6UfsBnC7XCpMvMr4XBvyINmAd99K
-	 DWQDuE42AOeBoHRL0yiGmxaQf47kB4oBs4XJ+0NEx1kDqy8e7JUNmg+KJOVX+89gg5
-	 v96cqj+kPQtWTaVLZJfYWhnhK4bLLpTUtPJfRa6dbyjBTkdDMQz9y41ikuadiwPYz+
-	 VRMJmFctdSp9bcq+ZDooVmR6JjSEMUF7lzEW7HCnrtZ/AqEMkVpx087Ql9113ig2Nh
-	 Lstfc9XuqfKjg==
-Date: Sun, 02 Jun 2024 20:08:17 +0000
-To: Andreas Hindborg <nmi@metaspace.dk>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Andreas Hindborg <a.hindborg@samsung.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>, =?utf-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, Joel Granados <j.granados@samsung.com>, "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>, Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>, Johannes Thumshirn <Johannes.Thumshirn@wdc.com>, =?utf-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>, open list <linux-kernel@vger.kernel.org>,
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, "gost.dev@samsung.com" <gost.dev@samsung.com>
-Subject: Re: [PATCH v4 1/3] rust: block: introduce `kernel::block::mq` module
-Message-ID: <b6b8e3e6-a2b9-4ddd-bf0f-e924d5d65653@proton.me>
-In-Reply-To: <20240601134005.621714-2-nmi@metaspace.dk>
-References: <20240601134005.621714-1-nmi@metaspace.dk> <20240601134005.621714-2-nmi@metaspace.dk>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 4c05c8f4489a2cc3a02925d2bd580e9a09740315
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="fbj3QI1M"
+Received: from filter006.mxroute.com ([136.175.111.3] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta175.mxroute.com (ZoneMTA) with ESMTPSA id 18fda96ab6c000e2b6.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Sun, 02 Jun 2024 20:14:18 +0000
+X-Zone-Loop: d5bedf0b008c87e48c44bd66080a03a944154d111ed3
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bZhiRPeL9jOMw1N4B5HoYuhr3z7xt+xH2s8wek/zi98=; b=fbj3QI1MUQlAjKlCLDqlVaG9ki
+	mCsXhPfsL1bsoKBCjfvuf5WRny9EzmWdS6npIXyw2mxbtIUm1fRSgBOCrOQWfVBXvlxYX7ZDe6ciW
+	oWBeWbzzkY1UwYshFlLGDkHGX0Hu3TZleMLvNlv20K5zsSpki2wp+6xIKDh6Cu6/8YO31ObEH3D5j
+	gpqzxMRKjNzP8xKFU29x4fFDZRI6VfQ6z54G27FjL4HormhO+VQ/lpS5Z6H7M3NAkg5Mcsk/gFD+i
+	HX2DFohCTtQdIXj0JfgCdHUXd8kn+BPjWEMx4Cjd/QKDqJx0uEq4B5qKo5HS7akYTtY1EZlPSEE1r
+	96idcdqw==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v6 12/23] media: i2c: imx258: Allow configuration of clock lane behaviour
+Date: Sun,  2 Jun 2024 14:13:34 -0600
+Message-ID: <20240602201345.328737-13-git@luigi311.com>
+In-Reply-To: <20240602201345.328737-1-git@luigi311.com>
+References: <20240602201345.328737-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-On 01.06.24 15:40, Andreas Hindborg wrote:
-> +/// A generic block device.
-> +///
-> +/// # Invariants
-> +///
-> +///  - `gendisk` must always point to an initialized and valid `struct g=
-endisk`.
-> +pub struct GenDisk<T: Operations, S: GenDiskState =3D Added> {
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-I am curious, do you need the type state for this struct? AFAIU you are
-only using it to configure the `GenDisk`, so could you also use a config
-struct that is given to `GenDisk::new`. That way we can avoid the extra
-traits and generic argument.
+The sensor supports the clock lane either remaining in HS mode
+during frame blanking, or dropping to LP11.
 
-Since there are so many options, a builder config struct might be a good
-idea.
+Add configuration of the mode via V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK.
 
-> +    tagset: Arc<TagSet<T>>,
-> +    gendisk: *mut bindings::gendisk,
-> +    _phantom: core::marker::PhantomData<S>,
-> +}
-> +
-> +// SAFETY: `GenDisk` is an owned pointer to a `struct gendisk` and an `A=
-rc` to a
-> +// `TagSet` It is safe to send this to other threads as long as T is Sen=
-d.
-> +unsafe impl<T: Operations + Send, S: GenDiskState> Send for GenDisk<T, S=
-> {}
-> +
-> +/// Disks in this state are allocated and initialized, but are not yet
-> +/// accessible from the kernel VFS.
-> +pub enum Initialized {}
-> +
-> +/// Disks in this state have been attached to the kernel VFS and may rec=
-eive IO
-> +/// requests.
-> +pub enum Added {}
-> +
-> +mod seal {
-> +    pub trait Sealed {}
-> +}
-> +
-> +/// Typestate representing states of a `GenDisk`.
-> +///
-> +/// This trait cannot be implemented by downstream crates.
-> +pub trait GenDiskState: seal::Sealed {
-> +    /// Set to true if [`GenDisk`] should call `del_gendisk` on drop.
-> +    const DELETE_ON_DROP: bool;
-> +}
-> +
-> +impl seal::Sealed for Initialized {}
-> +impl GenDiskState for Initialized {
-> +    const DELETE_ON_DROP: bool =3D false;
-> +}
-> +impl seal::Sealed for Added {}
-> +impl GenDiskState for Added {
-> +    const DELETE_ON_DROP: bool =3D true;
-> +}
-> +
-> +impl<T: Operations> GenDisk<T, Initialized> {
-> +    /// Try to create a new `GenDisk`.
-> +    pub fn try_new(tagset: Arc<TagSet<T>>) -> Result<Self> {
-
-Since there is no non-try `new` function, I think we should name this
-function just `new`.
-
-> +        let lock_class_key =3D crate::sync::LockClassKey::new();
-> +
-> +        // SAFETY: `tagset.raw_tag_set()` points to a valid and initiali=
-zed tag set
-> +        let gendisk =3D from_err_ptr(unsafe {
-> +            bindings::__blk_mq_alloc_disk(
-> +                tagset.raw_tag_set(),
-> +                core::ptr::null_mut(), // TODO: We can pass queue limits=
- right here
-> +                core::ptr::null_mut(),
-> +                lock_class_key.as_ptr(),
-> +            )
-> +        })?;
-> +
-> +        const TABLE: bindings::block_device_operations =3D bindings::blo=
-ck_device_operations {
-> +            submit_bio: None,
-> +            open: None,
-> +            release: None,
-> +            ioctl: None,
-> +            compat_ioctl: None,
-> +            check_events: None,
-> +            unlock_native_capacity: None,
-> +            getgeo: None,
-> +            set_read_only: None,
-> +            swap_slot_free_notify: None,
-> +            report_zones: None,
-> +            devnode: None,
-> +            alternative_gpt_sector: None,
-> +            get_unique_id: None,
-> +            // TODO: Set to THIS_MODULE. Waiting for const_refs_to_stati=
-c feature to
-> +            // be merged (unstable in rustc 1.78 which is staged for lin=
-ux 6.10)
-> +            // https://github.com/rust-lang/rust/issues/119618
-> +            owner: core::ptr::null_mut(),
-> +            pr_ops: core::ptr::null_mut(),
-> +            free_disk: None,
-> +            poll_bio: None,
-> +        };
-> +
-> +        // SAFETY: gendisk is a valid pointer as we initialized it above
-> +        unsafe { (*gendisk).fops =3D &TABLE };
-> +
-> +        // INVARIANT: `gendisk` was initialized above.
-> +        // INVARIANT: `gendisk.queue.queue_data` is set to `data` in the=
- call to
-
-There is no `data` in the mentioned call above.
-
-> +        // `__blk_mq_alloc_disk` above.
-> +        Ok(GenDisk {
-> +            tagset,
-> +            gendisk,
-> +            _phantom: PhantomData,
-> +        })
-> +    }
-> +
-
-[...]
-
-> +impl<T: Operations> OperationsVTable<T> {
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// - The caller of this function must ensure `bd` is valid
-> +    ///   and initialized. The pointees must outlive this function.
-
-Until when do the pointees have to be alive? "must outlive this
-function" could also be the case if the pointees die immediately after
-this function returns.
-
-> +    /// - This function must not be called with a `hctx` for which
-> +    ///   `Self::exit_hctx_callback()` has been called.
-> +    /// - (*bd).rq must point to a valid `bindings:request` for which
-> +    ///   `OperationsVTable<T>::init_request_callback` was called
-
-Missing `.` at the end.
-
-> +    unsafe extern "C" fn queue_rq_callback(
-> +        _hctx: *mut bindings::blk_mq_hw_ctx,
-> +        bd: *const bindings::blk_mq_queue_data,
-> +    ) -> bindings::blk_status_t {
-> +        // SAFETY: `bd.rq` is valid as required by the safety requiremen=
-t for
-> +        // this function.
-> +        let request =3D unsafe { &*(*bd).rq.cast::<Request<T>>() };
-> +
-> +        // One refcount for the ARef, one for being in flight
-> +        request.wrapper_ref().refcount().store(2, Ordering::Relaxed);
-> +
-> +        // SAFETY: We own a refcount that we took above. We pass that to=
- `ARef`.
-> +        // By the safety requirements of this function, `request` is a v=
-alid
-> +        // `struct request` and the private data is properly initialized=
-.
-> +        let rq =3D unsafe { Request::aref_from_raw((*bd).rq) };
-
-I think that you need to require that the request is alive at least
-until `blk_mq_end_request` is called for the request (since at that
-point all `ARef`s will be gone).
-Also if this is not guaranteed, the safety requirements of
-`AlwaysRefCounted` are violated (since the object can just disappear
-even if it has refcount > 0 [the refcount refers to the Rust refcount in
-the `RequestDataWrapper`, not the one in C]).
-
-> +
-> +        // SAFETY: We have exclusive access and we just set the refcount=
- above.
-> +        unsafe { Request::start_unchecked(&rq) };
-> +
-> +        let ret =3D T::queue_rq(
-> +            rq,
-> +            // SAFETY: `bd` is valid as required by the safety requireme=
-nt for this function.
-> +            unsafe { (*bd).last },
-> +        );
-> +
-> +        if let Err(e) =3D ret {
-> +            e.to_blk_status()
-> +        } else {
-> +            bindings::BLK_STS_OK as _
-> +        }
-> +    }
-> +
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure.
-> +    unsafe extern "C" fn commit_rqs_callback(_hctx: *mut bindings::blk_m=
-q_hw_ctx) {
-> +        T::commit_rqs()
-> +    }
-> +
-> +    /// This function is called by the C kernel. It is not currently
-> +    /// implemented, and there is no way to exercise this code path.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure.
-> +    unsafe extern "C" fn complete_callback(_rq: *mut bindings::request) =
-{}
-> +
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure.
-> +    unsafe extern "C" fn poll_callback(
-> +        _hctx: *mut bindings::blk_mq_hw_ctx,
-> +        _iob: *mut bindings::io_comp_batch,
-> +    ) -> core::ffi::c_int {
-> +        T::poll().into()
-> +    }
-> +
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure. Thi=
-s
-> +    /// function may only be called onece before `exit_hctx_callback` is=
- called
-
-Typo: "onece"
-
-> +    /// for the same context.
-> +    unsafe extern "C" fn init_hctx_callback(
-> +        _hctx: *mut bindings::blk_mq_hw_ctx,
-> +        _tagset_data: *mut core::ffi::c_void,
-> +        _hctx_idx: core::ffi::c_uint,
-> +    ) -> core::ffi::c_int {
-> +        from_result(|| Ok(0))
-> +    }
-> +
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure.
-> +    unsafe extern "C" fn exit_hctx_callback(
-> +        _hctx: *mut bindings::blk_mq_hw_ctx,
-> +        _hctx_idx: core::ffi::c_uint,
-> +    ) {
-> +    }
-> +
-> +    /// This function is called by the C kernel. A pointer to this funct=
-ion is
-> +    /// installed in the `blk_mq_ops` vtable for the driver.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// This function may only be called by blk-mq C infrastructure. `se=
-t` must
-> +    /// point to an initialized `TagSet<T>`.
-> +    unsafe extern "C" fn init_request_callback(
-> +        _set: *mut bindings::blk_mq_tag_set,
-> +        rq: *mut bindings::request,
-> +        _hctx_idx: core::ffi::c_uint,
-> +        _numa_node: core::ffi::c_uint,
-> +    ) -> core::ffi::c_int {
-> +        from_result(|| {
-> +            // SAFETY: The `blk_mq_tag_set` invariants guarantee that al=
-l
-> +            // requests are allocated with extra memory for the request =
-data.
-
-What guarantees that the right amount of memory has been allocated?
-AFAIU that is guaranteed by the `TagSet` (but there is no invariant).
-
-> +            let pdu =3D unsafe { bindings::blk_mq_rq_to_pdu(rq) }.cast::=
-<RequestDataWrapper>();
-> +
-> +            // SAFETY: The refcount field is allocated but not initializ=
-ed, this
-> +            // valid for write.
-> +            unsafe { RequestDataWrapper::refcount_ptr(pdu).write(AtomicU=
-64::new(0)) };
-> +
-> +            Ok(0)
-> +        })
-> +    }
-
-[...]
-
-> +    /// Notify the block layer that a request is going to be processed n=
-ow.
-> +    ///
-> +    /// The block layer uses this hook to do proper initializations such=
- as
-> +    /// starting the timeout timer. It is a requirement that block devic=
-e
-> +    /// drivers call this function when starting to process a request.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The caller must have exclusive ownership of `self`, that is
-> +    /// `self.wrapper_ref().refcount() =3D=3D 2`.
-> +    pub(crate) unsafe fn start_unchecked(this: &ARef<Self>) {
-> +        // SAFETY: By type invariant, `self.0` is a valid `struct reques=
-t`. By
-> +        // existence of `&mut self` we have exclusive access.
-
-We don't have a `&mut self`. But the safety requirements ask for a
-unique `ARef`.
-
-> +        unsafe { bindings::blk_mq_start_request(this.0.get()) };
-> +    }
-> +
-> +    fn try_set_end(this: ARef<Self>) -> Result<ARef<Self>, ARef<Self>> {
-> +        // We can race with `TagSet::tag_to_rq`
-> +        match this.wrapper_ref().refcount().compare_exchange(
-> +            2,
-> +            0,
-> +            Ordering::Relaxed,
-> +            Ordering::Relaxed,
-> +        ) {
-> +            Err(_old) =3D> Err(this),
-> +            Ok(_) =3D> Ok(this),
-> +        }
-> +    }
-> +
-> +    /// Notify the block layer that the request has been completed witho=
-ut errors.
-> +    ///
-> +    /// This function will return `Err` if `this` is not the only `ARef`
-> +    /// referencing the request.
-> +    pub fn end_ok(this: ARef<Self>) -> Result<(), ARef<Self>> {
-> +        let this =3D Self::try_set_end(this)?;
-> +        let request_ptr =3D this.0.get();
-> +        core::mem::forget(this);
-> +
-> +        // SAFETY: By type invariant, `self.0` is a valid `struct reques=
-t`. By
-> +        // existence of `&mut self` we have exclusive access.
-
-Same here, but in this case, the `ARef` is unique, since you called
-`try_set_end`. You could make it a `# Guarantee` of `try_set_end`: "If
-`Ok(aref)` is returned, then the `aref` is unique."
-
-> +        unsafe { bindings::blk_mq_end_request(request_ptr, bindings::BLK=
-_STS_OK as _) };
-> +
-> +        Ok(())
-> +    }
-> +
-> +    /// Return a pointer to the `RequestDataWrapper` stored in the priva=
-te area
-> +    /// of the request structure.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// - `this` must point to a valid allocation.
-> +    pub(crate) unsafe fn wrapper_ptr(this: *mut Self) -> NonNull<Request=
-DataWrapper> {
-> +        let request_ptr =3D this.cast::<bindings::request>();
-> +        let wrapper_ptr =3D
-> +            // SAFETY: By safety requirements for this function, `this` =
-is a
-> +            // valid allocation.
-
-Formatting: move the safety comment above the `let`.
-
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
 ---
-Cheers,
-Benno
+ drivers/media/i2c/imx258.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> +            unsafe { bindings::blk_mq_rq_to_pdu(request_ptr).cast::<Requ=
-estDataWrapper>() };
-> +        // SAFETY: By C api contract, wrapper_ptr points to a valid allo=
-cation
-> +        // and is not null.
-> +        unsafe { NonNull::new_unchecked(wrapper_ptr) }
-> +    }
-
-[...]
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index 59a78a4cfe44..2429eb7b55c6 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -72,6 +72,8 @@
+ /* Test Pattern Control */
+ #define IMX258_REG_TEST_PATTERN		0x0600
+ 
++#define IMX258_CLK_BLANK_STOP		0x4040
++
+ /* Orientation */
+ #define REG_MIRROR_FLIP_CONTROL		0x0101
+ #define REG_CONFIG_MIRROR_FLIP		0x03
+@@ -632,6 +634,7 @@ struct imx258 {
+ 	const struct imx258_link_freq_config *link_freq_configs;
+ 	const s64 *link_freq_menu_items;
+ 	unsigned int nlanes;
++	unsigned int csi2_flags;
+ 
+ 	/*
+ 	 * Mutex for serialized access:
+@@ -1066,6 +1069,14 @@ static int imx258_start_streaming(struct imx258 *imx258)
+ 		return ret;
+ 	}
+ 
++	ret = imx258_write_reg(imx258, IMX258_CLK_BLANK_STOP,
++			       IMX258_REG_VALUE_08BIT,
++			       !!(imx258->csi2_flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK));
++	if (ret) {
++		dev_err(&client->dev, "%s failed to set clock lane mode\n", __func__);
++		return ret;
++	}
++
+ 	/* Apply default values of current mode */
+ 	reg_list = &imx258->cur_mode->reg_list;
+ 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
+@@ -1438,6 +1449,8 @@ static int imx258_probe(struct i2c_client *client)
+ 		goto error_endpoint_free;
+ 	}
+ 
++	imx258->csi2_flags = ep.bus.mipi_csi2.flags;
++
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+ 
+-- 
+2.44.0
 
