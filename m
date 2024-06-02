@@ -1,196 +1,295 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01olkn2074.outbound.protection.outlook.com [40.92.64.74])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972D1DFF8;
-	Sun,  2 Jun 2024 17:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.64.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717348269; cv=fail; b=a57AG4d37sBueEGnyRaOggD3OFz5ee/UpHcmgdl+S99QKzBzLSJGUCnham32VVfv8MYSmDFwhUamyrvd4u/AjPQEYibcvmslgxA9GfEaDLCvMMGQxFoyNUiRY/TfEomTQ/X/ouPjAcwNHiTbhxPRy636qpQwVI5ywcKdVXXIzY4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717348269; c=relaxed/simple;
-	bh=KHmW89Acb1Hw/39bfzA0Nu2TG1C20LQwC+0JLjG77eg=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IPxjl+HeVwNlJcgGCBz/NvVP4ss9Y1Q4Ga+vf3myn78kMBaUStWs2XuI5XcogI2tqYiss6yuGdB3GnvNpM3oPA9X8v3kxhySOtlWOXjN5oR1rrB6OBdb56t41zmO5LZXRp6YaONH36/XetgeOYgYN6C59B78CgjtPwj8wMHF7ys=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=pHxuNEJQ; arc=fail smtp.client-ip=40.92.64.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1267D57C8A;
+	Sun,  2 Jun 2024 17:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717348448; cv=none; b=O33MbMBXiHFAvsuVrz4/wkxaa9sRmIrzPudsequK01N3/eXL7PqZ8pZHm9N4G3+u/n3ymb6ezCFy6gMJoV9fZsMCXsVvMpk3VVjIRieqd7NgjLqglBlhuk//GgNDcC9MjQmquq3iPzASZW+ssWKo30vhugsHD9EfiElHSbXSe5Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717348448; c=relaxed/simple;
+	bh=zpbdsuEbsWtrVJubq9mjubZKUmGOCJhz+VMVxpCjAS8=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=K2ARVyhjUMujw4tqre42Ox/SNU06F9PIMFwf40UHbDDT+uleVK2mGpLkcRlp1Trffwh9pa6yAuTOjaTsolJJd6e5S5dvg0fu1BHARraXGXhSXRcEWvlhvUw2yHqZ6KcRcQ4jAv99uRUdifR74i14C1tFW0F4dG0hy/1/EH6zX7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MVnBqoQX; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="pHxuNEJQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lWMtqZeDgJ3m1wxOd+diK0Yi3ObVE/+9ZsUG0t0ErL6NxAS0nC1qD90QjDmABVjEOhpV5Rbbnn806Qv4ENDubGnHrVTtScFxrfGN38oIIwER3nwY/eska1finqQ2mMUA5/BSn9fD98NkI9kghUnb+cN1G5laYTRtm8+CIE4GtZrnaSV2xo1F14MCcCrC1mNBstjCKDCtutUk+XYm2BbxLCkFbCnli2a6e6B7Z4cwcxgUq0EFLLg6Q4kEjxeGK+E5MRoLBOroGQuqzurzpnoVWLW5NsLSm8pZbElAHlaRBpTpvtWKQc5R0w4EgOmDMcNCWIetD6O4sUmSgut/FaYivg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IW+RyyDSezOkgMbbv59Y/eiBcPUapSik8JC7GYf8+VE=;
- b=Uax17Ny9AKi5yNECiKJxrYSyHBrGKpX/+eampyxaCQ0+u3F/mUcJ8zl/RnHhqDf7yM3VCXEpqxdMsOH1e4SuH92+z8NOBT0soYp7HoF+MgLC54/uKsE/QcVToVNPI85Pvm5nYkDm0NXBhp5viuyWiaUGw84EBbXoZ7q9QO+5mWpNnsWnaRSIuqLroMDx6MdZK8UzgoSBzmh+aRE15XbUSB6pl+3VtAhdbqa51vB/y8PjOm04is4/Scx4kcFlXDEO0P1IaoAORJT70afMASe0rD1ADe5uzYeloVLN04lQ171WFtTka17TyKIsA+/d9q9tKwCQ30w3hGdtsuQ+VZWhTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IW+RyyDSezOkgMbbv59Y/eiBcPUapSik8JC7GYf8+VE=;
- b=pHxuNEJQlHLX5MT+eLzu4ff3ENhp5Gm+/UNj8uaqR0hawFHrOqwKrNNHrhmCpmBYlw7o4AXC1WiSvCGZG13AicKSV0X5CAkicvif+HinkpD20fe6K/VNvPUyhvT7KPLvPd1fHmlWQEFLvo3TZ79DKOrsRGCuvGhsRZcyFqbuTS97+3LLWYPQH2v+603hU/ZA6jppyJImMeWisaAc72NALowEykrAMZpOMt7ce88WLo2UCcGn5C0b1S0AS1jv+cnr5UdscVtFI57TA3HCfawKpLM9SrirBoTy9k1J0f/p9Q6vsuf0+CvCBnmQfW95n+fRcuWZBmcTZEGiHSkvt15Ryw==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by PAWPR02MB9709.eurprd02.prod.outlook.com (2603:10a6:102:2e1::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.29; Sun, 2 Jun
- 2024 17:11:05 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7633.021; Sun, 2 Jun 2024
- 17:11:05 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Julian Squires <julian@cipht.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] Input: tablet - use sizeof(*pointer) instead of sizeof(type)
-Date: Sun,  2 Jun 2024 19:10:47 +0200
-Message-ID:
- <AS8PR02MB7237B05083487507CFAF96B08BFE2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [qObYvI9HVNzCgr6TGBlgI2cko2faWttc]
-X-ClientProxiedBy: MA4P292CA0001.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:2d::20) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240602171047.10890-1-erick.archer@outlook.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MVnBqoQX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
+	Content-Type:Message-ID:Date:Subject:To:From:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=vtS1ALxA8bVJljw3ZcU9XA2sj+N1cCRdGjn7VQX5j/U=; t=1717348446; x=1717780446;
+	 b=MVnBqoQXPxmHf4cjuQYNRu8+xp2/Sn563ziDpHB9Fj/tgyKLsk18NCGRIFNI1WkDOKUvYUXjnK
+	ZR7Ush+j+FJNznE2nLGMTvrRO8gpxUJSGbjAWnmrK44CYoLxPP0YTgFJytxqgT8u1AlBQ6mCAfP3c
+	HGTdM5ltPIgEG0ZVVmzDAbbC4qqJORjrVEC0uQrVs9Adtjj/gHBpDW6KYwvDTl0j1os3FvXg0Ln3g
+	tpQ8hLVVyXzoFEEfGuymqd6vuP3qXwng3w/qailVvqGKHGsWh91Mt0zZpAGrI6eNUb2VLETj/nUVy
+	FppiV8wm80Ch3+6kolpzu3XZ0Be20WpJMXpkg==;
+Received: from [2a02:8108:8980:2478:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1sDoHA-0001Uh-B7; Sun, 02 Jun 2024 18:41:44 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2024-06-02]
+Date: Sun,  2 Jun 2024 16:41:43 +0000
+Message-ID: <171734646847.3801768.17100765308817567892@leemhuis.info>
+X-Mailer: git-send-email 2.45.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PAWPR02MB9709:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c890169-e3ad-433a-43c7-08dc8326fc75
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|3412199016|440099019|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	tmOcuAzJMBnieYN0Ss56eEOkxnuqfqMoylxXBq1viln0GLnPCFCrbK0h8DqPUMzOxjEyC+Zuc8DmdtR99jtfCMF/yhKnWQ4z2Hjil1dasNH7BK0ijIOnEDKq/1JNQ8YvPFGJlcyw4udjFjuA9InQVf7hs3KG4OUCOOH8j7k2jt6sD9Yk+9Is0gDz/a0ul11000kb1h9CCIKEW25vksu2BRYbnVSgjyGQK8Ql4lARmOk3RpWOoSNDgfqCoiXzsVb28Tj+t+OiaOSyZaVrblX3Faj5ETUoatqaowGYNK204MXrcvbj0+uQiEd/adicwDQawBJuuFvbqBtyHy7VQyGQjuBqhBuBw1XjjwMDSQ19pxmXsovuDpdUIcBDYtiJSdrq1Asb+jj/JfYYxJf2Hjg/pZC6lYUebdY+ptKwazbw4AzojCkIiW/AFxQDZ1cfcLcLGh8VF4+EToOUEGVmiCljuhN4QiIUkuKwiF9PqkDLBsBe2PQdWyseoa9qxSJt8LGwTL32Iw1PUrMQGwI/ULSjb9sNmAnVI3OvzQYV3tXE9NzA4zGOW1Ih9YQAR0BPgkuNm5f+AQ0S3DK/hSRAiNnF+op3ZVVWasPpM7XIDTqBO4mg8hRF+zR0U3Maq8lrpyaf
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IzondYzEPjmhmQ/EEGdHqFE2P34z2EflCXsRkf3iasIyQ0+/qneYpD2a44/m?=
- =?us-ascii?Q?PdTn5m817gGxgH8+CWXm0AfU/tzj60aY5KfLDokw1W+7Pve2b2t4+EmaLqsC?=
- =?us-ascii?Q?8oEUEsSViaNJoPztmvVIZKtFB8mMY7pyWx3U1B6zhJMsfjfcXJBUMeW1do2Q?=
- =?us-ascii?Q?WtjYD0FJEDga5m8Yzq3BYLCbmcXauAdx7WUNSHb7ocqfahkJJusqIkwI593N?=
- =?us-ascii?Q?YANnkL6KRiWqsVnzzOs3TwwwYo1feoBFklW3E62Nzqsp78cA+kXqolYjGVn4?=
- =?us-ascii?Q?KBRrk5oTDHgdst2f62gNG02jVgJegTwSOywktMjT1pGH+/W6fHEmTQtSw8UF?=
- =?us-ascii?Q?Oc58GLOC5HAtWuj86Yvy+hPdce1XRKoY8t92khrDLQGyi6amWlXsuTDum6z6?=
- =?us-ascii?Q?KSyQPvGy8bqlzEt5jK9gR8jy/+pMX/P8Z88piJj+GKea7de10VMP/AjkBN/w?=
- =?us-ascii?Q?GbFResZNHFjc9HKxjBtaKnU59bbfUMipn9pZX2MWoG1mJxCDvQwv9XvU+TzA?=
- =?us-ascii?Q?XfPAxo5OYXFR2OR4TN8/F6ltDVRLiPwCp9oK+shzcZz+SHP03ppstLclxIme?=
- =?us-ascii?Q?cyS25uC8rUrfiEuvbTkMBuZvzSYMi6DdQDX8rho2ferV1860VmCf1ecyjzTr?=
- =?us-ascii?Q?bDmNUKXjIJob29t31BMjjD3sFg4MsW/u4hfVDNpqw5VUoocOmdOH6LsOX7qO?=
- =?us-ascii?Q?o/7IsSEBpiaknlokCjy4ieEQEIshQlSVbR9X12Kx2uY2r4iAXsd3eFaDwuZn?=
- =?us-ascii?Q?5Li3albOQOXh9XaiGKGKCKV5OVJSoenvD1aLp+tFhRqOuY+E+dbp/8+1Rexn?=
- =?us-ascii?Q?+p8L3vocpLKxMXtZDFt7hhXlGj0Bgdnq9eHQQ5vGS3puJ50heDkFf/IdMrlM?=
- =?us-ascii?Q?KnKSl6BNYV9ZgggJtjGzcFcF5nwfgSzbl1bU0G2fVfsoPuYsDUsaj0qipI29?=
- =?us-ascii?Q?dzY/K/xAGGJvbm9Me5G258g4EVuaRYIuns75QWaV8cog0IFF6feAiN9duwRJ?=
- =?us-ascii?Q?xII2YPIrASBqscOTLXcwF/a3tWwggK74XxvRfG7ZIx1vZ8Cb+JQVCBitUTbp?=
- =?us-ascii?Q?VLWFGza/XxpoZYy74eqhMSNMkZi+rrH3iyQ4PxzPOD7vQ6/+2U/P7NeWEuq0?=
- =?us-ascii?Q?fYPcW4jQ+CM6tz5OMCDUN4QdjIo+2b6EiqngjnXEWQeVze9ESYAHrLvvmdiK?=
- =?us-ascii?Q?3N0K4pFmfpfYpgTrc4xJFJHJ9ZQjZgaEnQFS7Mzg72Uh3uwWwLIbk+5ncCsC?=
- =?us-ascii?Q?ZU4RMddpkwQpmuJTvjCw?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c890169-e3ad-433a-43c7-08dc8326fc75
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2024 17:11:04.8631
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR02MB9709
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1717348446;9e87345c;
+X-HE-SMSGID: 1sDoHA-0001Uh-B7
 
-It is preferred to use sizeof(*pointer) instead of sizeof(type)
-due to the type of the variable can change and one needs not
-change the former (unlike the latter). This patch has no effect
-on runtime behavior.
+Hi Linus, here is a quick weekly report for regressions introduced
+during this cycle. I lacked time to update each tracked regression 
+yesterday/today, but from a quick look there is nothing to worry.
+There is just one report where the reporter did not get an answer after
+a full week, but I'll prod it tomorrow.
 
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
+Ciao, Thorsten
+
 ---
- drivers/input/tablet/acecad.c        | 2 +-
- drivers/input/tablet/aiptek.c        | 2 +-
- drivers/input/tablet/hanwang.c       | 2 +-
- drivers/input/tablet/kbtab.c         | 2 +-
- drivers/input/tablet/wacom_serial4.c | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/tablet/acecad.c b/drivers/input/tablet/acecad.c
-index b20e5a1afbcc..0ac16f32b31f 100644
---- a/drivers/input/tablet/acecad.c
-+++ b/drivers/input/tablet/acecad.c
-@@ -129,7 +129,7 @@ static int usb_acecad_probe(struct usb_interface *intf, const struct usb_device_
- 	pipe = usb_rcvintpipe(dev, endpoint->bEndpointAddress);
- 	maxp = usb_maxpacket(dev, pipe);
- 
--	acecad = kzalloc(sizeof(struct usb_acecad), GFP_KERNEL);
-+	acecad = kzalloc(sizeof(*acecad), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!acecad || !input_dev) {
- 		err = -ENOMEM;
-diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-index baabc51547b8..2d176fbab251 100644
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -1673,7 +1673,7 @@ aiptek_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	 */
- 	speeds[0] = programmableDelay;
- 
--	aiptek = kzalloc(sizeof(struct aiptek), GFP_KERNEL);
-+	aiptek = kzalloc(sizeof(*aiptek), GFP_KERNEL);
- 	inputdev = input_allocate_device();
- 	if (!aiptek || !inputdev) {
- 		dev_warn(&intf->dev,
-diff --git a/drivers/input/tablet/hanwang.c b/drivers/input/tablet/hanwang.c
-index 9bc631518b92..42c1e5eaddd5 100644
---- a/drivers/input/tablet/hanwang.c
-+++ b/drivers/input/tablet/hanwang.c
-@@ -322,7 +322,7 @@ static int hanwang_probe(struct usb_interface *intf, const struct usb_device_id
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
- 		return -ENODEV;
- 
--	hanwang = kzalloc(sizeof(struct hanwang), GFP_KERNEL);
-+	hanwang = kzalloc(sizeof(*hanwang), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!hanwang || !input_dev) {
- 		error = -ENOMEM;
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index aa577898e952..38d36d25f6f4 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -121,7 +121,7 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	if (!usb_endpoint_is_int_in(endpoint))
- 		return -ENODEV;
- 
--	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
-+	kbtab = kzalloc(sizeof(*kbtab), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!kbtab || !input_dev)
- 		goto fail1;
-diff --git a/drivers/input/tablet/wacom_serial4.c b/drivers/input/tablet/wacom_serial4.c
-index 1cedb45ba497..cf7cea77dabc 100644
---- a/drivers/input/tablet/wacom_serial4.c
-+++ b/drivers/input/tablet/wacom_serial4.c
-@@ -521,7 +521,7 @@ static int wacom_connect(struct serio *serio, struct serio_driver *drv)
- 	struct input_dev *input_dev;
- 	int err = -ENOMEM;
- 
--	wacom = kzalloc(sizeof(struct wacom), GFP_KERNEL);
-+	wacom = kzalloc(sizeof(*wacom), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!wacom || !input_dev)
- 		goto free_device;
--- 
-2.25.1
+Hi, this is regzbot, the Linux kernel regression tracking bot.
 
+Currently I'm aware of 14 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+=======================================================
+current cycle (v6.9.. aka v6.10-rc), culprit identified
+=======================================================
+
+
+[ *NEW* ] iio: IIO channel read outs and thereby thermal mitigation on the Lenovo ThinkPad X13s broken
+------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240530074416.13697-1-johan+linaro@kernel.org/
+https://lore.kernel.org/lkml/20240530074416.13697-1-johan%2Blinaro@kernel.org/
+
+By Johan Hovold; 3 days ago; 2 activities, latest 1 days ago.
+Introduced in 3092bde731ca (v6.10-rc1)
+
+Fix incoming:
+* iio: inkern: fix channel read regression
+  https://lore.kernel.org/regressions/9631daef-8cb9-4632-ba8d-3ff9a6669e2b@leemhuis.info/
+
+
+[ *NEW* ] PCI: KASAN: use-after-free in lockdep_register_key+0x755/0x8f0
+------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/87v82y6wvi.fsf@kernel.org/
+https://lore.kernel.org/lkml/87v82y6wvi.fsf@kernel.org/
+
+By Kalle Valo; 5 days ago; 12 activities, latest 1 days ago.
+Introduced in 7e89efc6e9e4 (v6.10-rc1)
+
+Fix incoming:
+* PCI: Revert the cfg_access_lock lockdep mechanism
+  https://lore.kernel.org/regressions/144eb23f-ae27-46ff-83e7-9a764e58587e@leemhuis.info/
+
+
+[ *NEW* ] probe with driver acpi-fan failed with error -22
+----------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240530153727.843378-1-laura.nao@collabora.com/
+https://lore.kernel.org/lkml/20240530153727.843378-1-laura.nao@collabora.com/
+
+By Laura Nao; 3 days ago; 2 activities, latest 2 days ago.
+Introduced in 31a0fa0019 (v6.10-rc1)
+
+Recent activities from: Laura Nao (2)
+
+
+scsi: WARNING: [...] block/blk-settings.c:202 blk_validate_limits+0x28c/0x304
+-----------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
+https://lore.kernel.org/linux-block/ce2bf6af-4382-4fe1-b392-cc6829f5ceb2@roeck-us.net/
+https://bugzilla.kernel.org/show_bug.cgi?id=218858
+https://bugzilla.kernel.org/show_bug.cgi?id=218905
+
+By Guenter Roeck, doru iorgulescu, and doru iorgulescu; 17 days ago; 12 activities, latest 2 days ago.
+Introduced in afd53a3d8528 (v6.10-rc1)
+
+Recent activities from: Michael Ellerman (3), Christoph Hellwig (1),
+  Thorsten Leemhuis (1), Linux regression tracking (Thorsten
+  Leemhuis) (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH 04/23] scsi: initialize scsi midlayer limits before allocating the queue
+  https://lore.kernel.org/linux-block/7df05966-36ea-4d37-99bc-1cf01b4ed921@roeck-us.net/
+  17 days ago, by Guenter Roeck
+
+
+net: dsa: mt7530-mdio: mt7531 switch on Bananapi-R64 not detected
+-----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/20240516204847.171029-1-linux@fw-web.de/
+https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
+
+By Frank Wunderlich; 16 days ago; 9 activities, latest 2 days ago.
+Introduced in 868ff5f4944a (v6.10-rc1)
+
+Recent activities from: Arınç ÜNAL (3), Frank Wunderlich (1)
+
+One patch associated with this regression:
+* [PATCH] arm64: dts: mt7622: fix switch probe on bananapi-r64
+  https://lore.kernel.org/lkml/20240516204847.171029-1-linux@fw-web.de/
+  16 days ago, by Frank Wunderlich
+
+
+[ *NEW* ] iommu/vt-d: blktests block/008 lead kerne panic
+---------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CAHj4cs9KZJc6Wsp9t0fDc4fDBJB1TmwGT7-8peCGLiqW3J_Fqw@mail.gmail.com/
+https://lore.kernel.org/linux-block/CAHj4cs9KZJc6Wsp9t0fDc4fDBJB1TmwGT7-8peCGLiqW3J_Fqw@mail.gmail.com/
+https://lore.kernel.org/lkml/20240530120110.22141-1-00107082@163.com/
+
+By Yi Zhang and David Wang; 5 days ago; 11 activities, latest 2 days ago.
+Introduced in d74169ceb0d2 (v6.10-rc1)
+
+Fix incoming:
+* iommu/amd: Fix panic accessing amd_iommu_enable_faulting
+  https://lore.kernel.org/regressions/9631daef-8cb9-4632-ba8d-3ff9a6669e2b@leemhuis.info/
+
+
+mm: cause warning at mm/page_table_check.c:198 __page_table_check_ptes_set+0x306
+--------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsMB9A8-X+Np_Q+fWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsMB9A8-X%2BNp_Q%2BfWLURYL_0t3Y-MdoNabDM-Lzk58-DGA@mail.gmail.com/
+
+By Mikhail Gavrilov; 11 days ago; 23 activities, latest 2 days ago.
+Introduced in 8430557fc584 (v6.10-rc1)
+
+Fix incoming:
+* mm/debug_vm_pgtable: drop RANDOM_ORVALUE trick
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=ec3c2e591cbf7820c1fca9b5d572feed3063e752
+
+
+sifive_u boot failure
+---------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net/
+https://lore.kernel.org/lkml/7eda7621-0dde-4153-89e4-172e4c095d01@roeck-us.net/
+https://lore.kernel.org/lkml/d7f0c16a-0d83-4060-8d95-95b293d95dfd@leemhuis.info/
+
+By Guenter Roeck and Linux regression tracking (Thorsten Leemhuis); 15 days ago; 14 activities, latest 2 days ago.
+Introduced in 8d532528ff6a (v6.10-rc1)
+
+Fix incoming:
+* clk: sifive: Do not register clkdevs for PRCI clocks
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=2607133196c35f31892ee199ce7ffa717bea4ad1
+
+
+6.10/regression/bisected commit c4cb23111103 causes sleeping function called from invalid context at kernel/locking/mutex.c:585
+-------------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsN1z2gj99zSdhQWynpTXBymrqHejDfF8axxxoiZ_0g_-g@mail.gmail.com/
+https://bugzilla.kernel.org/show_bug.cgi?id=218900
+https://lore.kernel.org/lkml/20240527192159.GEZlTdV7OoOuJrHmI0@fat_crate.local/
+
+By Mikhail Gavrilov, Jean-Christophe Guillain, and Borislav Petkov; 12 days ago; 6 activities, latest 3 days ago.
+Introduced in c4cb23111103 (v6.10-rc1)
+
+Fix incoming:
+* iommu/amd: Check EFR[EPHSup] bit before enabling PPR
+  https://lore.kernel.org/regressions/66e2de37-99d7-411d-aa2b-8792a749895a@leemhuis.info/
+
+
+[ *NEW* ] usb: chipidea: USB broken on DragonBoard410c, msm8974-based devices, and sony yuga
+--------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com/
+https://lore.kernel.org/lkml/21ea292a-b1d1-43e2-92ab-9f1f63aaf729@samsung.com/
+https://lore.kernel.org/lkml/ecb8d3e8-d525-4a2d-a868-803202c16296@franken-peeters.be/
+
+By Marek Szyprowski and Wouter Franken; 37 days ago; 2 activities, latest 3 days ago.
+Introduced in 22ffd399e6e7 (v6.10-rc1)
+
+Recent activities from: Alexandre Messier (1)
+
+
+[ *NEW* ] net: igc: kernel crash
+--------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsOkiGxAfA9tPKjYX7wqjBZQxqK2PzTcW-RgLfgo8G74EQ@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsOkiGxAfA9tPKjYX7wqjBZQxqK2PzTcW-RgLfgo8G74EQ@mail.gmail.com/
+https://lore.kernel.org/intel-gfx/87o78rmkhu.fsf@intel.com/
+
+By Mikhail Gavrilov and Jani Nikula; 17 days ago; 4 activities, latest 4 days ago.
+Introduced in 86167183a17e (v6.10-rc1)
+
+Fix incoming:
+* Revert "igc: fix a log entry using uninitialized netdev"
+  https://lore.kernel.org/regressions/66e2de37-99d7-411d-aa2b-8792a749895a@leemhuis.info/
+
+
+:drm/amd: green flashing bar on top of screen
+---------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsNptxsQO=5=qi-JYiFX=rX8Ok5inK80Gn0qrUFWbtBGng@mail.gmail.com/
+
+By Mikhail Gavrilov; 7 days ago; 1 activities, latest 7 days ago.
+Introduced in bc87d666c05a (v6.10-rc1)
+
+
+====================================================
+current cycle (v6.9.. aka v6.10-rc), unknown culprit
+====================================================
+
+
+[ *NEW* ] drm/amdgpu: crash on playing videos
+---------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/lore/ebb3b35e631169041e70eb0a7efd6cecef609833.camel@sjtu.edu.cn/
+https://lore.kernel.org/amd-gfx/ebb3b35e631169041e70eb0a7efd6cecef609833.camel@sjtu.edu.cn/
+
+By Wang Yunchen; 4 days ago; 3 activities, latest 3 days ago.
+Introduced in v6.9..v6.10-rc1
+
+Recent activities from: Wang Yunchen (2), Alex Deucher (1)
+
+
+mm: WARNING: CPU: 13 PID: 7032 at lib/xarray.c:1024 xas_split_alloc+0xbd/0x110
+------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bugzilla.kernel.org/218861/
+https://bugzilla.kernel.org/show_bug.cgi?id=218861
+
+By sander44; 14 days ago; 3 activities, latest 12 days ago.
+Introduced in v6.9..0450d2083be6 (v6.9..v6.10-rc1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/171674601223.3216887.11973021776359474447@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
