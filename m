@@ -1,222 +1,123 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D36210795
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 19:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6985B74418;
+	Sun,  2 Jun 2024 19:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717357713; cv=none; b=M0rQq13IzA0bgKq7OZOGXGHog0Lu54Uq8iLP/j0uAi8XgFh+P29QMATzPErJIuOoSz82FvzjxulwopfTDgEy9LV6MH4nTX4215I8s+7QesibYvqix7zqhrcfYZS+m1M4foBP21bYxx5YCqduBdJ/1hI4KjA4XZ3TfmF8ox7+cao=
+	t=1717358003; cv=none; b=iGfgY0EABkXbmUjG/6oB8LcDNL7MFNYIx2xRtTDo410kIO+2F310yC/351ctxcPdzRrIAdlpa7ZG8TURlcvBA9YQdsPyXAM7SbHnTybCwYCm5dY28oyiTY2uFQpK1SFBlAdPsmR5yQAOMNPq2f3Fek9MwK8JmMiVOiaNdHnXKqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717357713; c=relaxed/simple;
-	bh=/CAFDMa+pw6FVmmTgabOwR/m6twBQ42kEkoz3ywnXEA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kgKlOXn9xzigfTGuKuRtK9TO7jw4KLxAVId+5V05gclBjrb9tORV/k3lMCKVC+JmaGoef7maEu1FzUqrMNYTqidhMrMKSOEzCKL+f3gTH+w2spogOiy7q60e1u4GoBVJTGLTcjZGDqUqk2BmhDA9ebjgI4VezVCyhAsscv888wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=maK5otCa; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1717358003; c=relaxed/simple;
+	bh=CYY5A6G/VL2aE4c33pLR5Q4/47P7mhJn6prtJvanTdQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8vdg0BHXYE82vST+u2vMS5YbQHQoeqDLV/hgC2H7wgWm39UG8YKyJ8cpBOJw/IKinIFiECjM64PZ8r7lywFUw5RbLaEYOnBwc3jt86hx6iNBzZAbVCMH67/zizqgrDfV3c4uWkTSeDH/lXbzcVYw2cDB9bZNRCigMTJnDRfWnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ACFuN8xF; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="maK5otCa"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e95a1eff78so48924131fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 12:48:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACFuN8xF"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57a4ea8058bso1176122a12.1;
+        Sun, 02 Jun 2024 12:53:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717357709; x=1717962509; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QQSzPio2R/73jHcq/X/sBS4Rsq01ybZmkuK5Z9CsC28=;
-        b=maK5otCabOTuIbGtNYHNlSK7pJyIXn8H97S/c5rxCOrwjlaiW7bFQD/4Ywn8ATDt91
-         aaMNxw334tz4NGcTUO+tJOzgR2eircNL13tQPjtw2FI/lA5lupi7pzII3BDUMxOxj1dU
-         Xq8MTdjNpEwzSs4cvkd+YkPyidL7r84mwdm+kvZUIDk6Lxx3KpKVG/OfmyGXm7zJsZUo
-         TIR4FZSjfNcWnukXy+ND3PowZ0xpe409YcrNtpC0Yplc+GYI6DW5Ul+EgZzSKSfNBrPR
-         F8pB1+gMjRyT9xvJ5/Mu3I6OfDB1gzWqgF70K5mU9jyDLdKzhnQAPnJMOutzsaKV+BCe
-         Ro6A==
+        d=gmail.com; s=20230601; t=1717357999; x=1717962799; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zywBRIwHMJzG8+KsIh69OEutro3/6BBZ2kza9TwS0IE=;
+        b=ACFuN8xF0Lqo7bxqO13+qNUPvvTIMXRz2DuCyT9y7CHiDR9jIsmL4mNVpaWaj0fN6S
+         O/parfTlPNxlZFSnWNBIgFk2mya6VesuxpxUeaosQ7U0vNDeHdXQi/aYoo5/aRAHupJl
+         dkZSdMmArAuGZ/4UEYp3DsGZ76uQhZ7qd5DCsMHXzj7w8QCuvoRoE6x+a02cwmIBJGsW
+         tQvfUu/caVkFPHDJAQOinkT3d23lM12VKDT2qFA21iYo525Nte3Ah6GmNDQ4e4mx5Tsn
+         ZwDufO1TDnDxZQnC/q+ana8RsZvgwmTlk6isIBFdjivcRzcu7cFPP57nwkr20WLKrByg
+         MvxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717357709; x=1717962509;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QQSzPio2R/73jHcq/X/sBS4Rsq01ybZmkuK5Z9CsC28=;
-        b=sRDJl48h05bDgBV3sbLAshyrihCLe73ngymX6OJHwbXuZy8+JuJyPEMo2m4GNMoiFX
-         Rn2Nem2XPTw4Td/EfB4RrIvFrBgc9ily3DBbGwFv8mePMzfURm1HnZO70PN8Y4f4hqHb
-         PM4nvOJm5AqIo/DURjo9ddKXB7cueK5bE3BGpWjzMkyf/YyDgO+AAYxypfueMnXF/+el
-         DawWqeD/zR9TYYsofn8RfuNXEkS1Wd0bSyI9LIJ3WBoPdkeldK02FDJL8vrsdXwGP45M
-         a9Q8YapqJEyQBb0pA0xC0KtHO2Tm2Efek3HWSV/52vK+F4Vg4uZ+pYu9iXDJdz9eO7AL
-         ENlA==
-X-Forwarded-Encrypted: i=1; AJvYcCXG6jN8Rdy+YfbMR+alDb0v+qh1XYDdmjTUQckJrF6iscNlWA2ifWGTCup73T6Mht/Zj3GxC9KeWnWC/q3sFXYnjqClEDbjT31Clz24
-X-Gm-Message-State: AOJu0Yx+UGGtEvybAxhTN0zfHdi43bMlI8jCmPYFlUj8r1d1mljLLVSH
-	w9U7ob+gUFqbf+2se2eRcUmNlmaq7aC+HjvHVI+doWPWFTqu2lRC
-X-Google-Smtp-Source: AGHT+IGn9CG22o94zA0w4wlgAaXoMTZqKB453JEhmX2ql7S/CETojc+nreFBfGdxNBMasOPV4s/J5g==
-X-Received: by 2002:a2e:988f:0:b0:2e9:87b4:f483 with SMTP id 38308e7fff4ca-2ea9510814dmr50174431fa.4.1717357708992;
-        Sun, 02 Jun 2024 12:48:28 -0700 (PDT)
-Received: from localhost.localdomain ([176.59.170.248])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea91cc7e19sm9677401fa.85.2024.06.02.12.48.26
+        d=1e100.net; s=20230601; t=1717357999; x=1717962799;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zywBRIwHMJzG8+KsIh69OEutro3/6BBZ2kza9TwS0IE=;
+        b=mF5NUK214AxgPns9Dtci10pc2L5KabvK5C6J8IN8+oCOQt+ShpXUC1On5XK6caUofE
+         p3hevnBvI7xFIj4Mdf3rWRIbbcqvRbMBGQ7uT0EJDh43BPQX+WLJrLF2nJ9Y7FlHVC6A
+         rNQKtI/NHu7gb4rq28uCqX9XdTvLnJQC6bw0YHMGYM0yYnaMYU83IAC/mPpVpQi7QmAe
+         CiWOcSRn+fuRXukMT/oF5Gz3hBuM1MjHFVNwM8eNwhK6NBfnaCS787iWrC4mUNfWpDmm
+         uGMJnoEY1m0C0ZSMODlIpMEAke9nIv8q9v0UAyt+hrajgZXu6D1RiGW/tcJ8dAs2R1lz
+         +bZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDx3OMr+QXTnyx5lPv8Z812CzbTL3GSRp5i49Cei+du9VeX05EZ8kM2JPWBYPauz8GmNIgpNzwLV2hHrMGpnpYP6c0HQr3xEjVUkg5oCzhmIWRi+5YHSTM8wl1FdlkkbM6Dv23Oc3k
+X-Gm-Message-State: AOJu0YyL2MZkJSGeEDZgQnwaRybGDsh9Sp/hrqfk5nARXCPzw/lIrS6x
+	u4DAjD2m0t+L2XPGRUa/TXAvMvmNN0C8CJ/v960zUvixma2FuR6u
+X-Google-Smtp-Source: AGHT+IHbDlzUD3w+gowcZ+M0aHXNmsSVRDhE2nSzStxg/VMqtj/sJw15jeedIMZ//DrBOP9ILTdVjw==
+X-Received: by 2002:a50:ab03:0:b0:572:4702:2227 with SMTP id 4fb4d7f45d1cf-57a36450a5bmr4741579a12.35.1717357999483;
+        Sun, 02 Jun 2024 12:53:19 -0700 (PDT)
+Received: from vamoiridPC ([2a04:ee41:82:7577:add1:b1ad:7182:3e90])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a5ef86458sm922814a12.78.2024.06.02.12.53.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Jun 2024 12:48:28 -0700 (PDT)
-From: Alex Rusuf <yorha.op@gmail.com>
-To: sj@kernel.org
-Cc: damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	yorha.op@gmail.com
-Subject: Re: [PATCH v2 2/2] mm/damon/core: implement multi-context support
-Date: Sun,  2 Jun 2024 22:48:14 +0300
-Message-ID: <20240602194814.929457-1-yorha.op@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240602154848.91322-1-sj@kernel.org>
-References: <20240602154848.91322-1-sj@kernel.org>
+        Sun, 02 Jun 2024 12:53:19 -0700 (PDT)
+From: Vasileios Amoiridis <vassilisamir@gmail.com>
+X-Google-Original-From: Vasileios Amoiridis <vamoirid@vamoiridPC>
+Date: Sun, 2 Jun 2024 21:53:17 +0200
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Vasileios Amoiridis <vassilisamir@gmail.com>, lars@metafoo.de,
+	himanshujha199640@gmail.com, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 17/17] iio: chemical: bme680: Refactorize reading
+ functions
+Message-ID: <20240602195317.GG387181@vamoiridPC>
+References: <20240527183805.311501-1-vassilisamir@gmail.com>
+ <20240527183805.311501-18-vassilisamir@gmail.com>
+ <20240602140405.7d6a71d0@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240602140405.7d6a71d0@jic23-huawei>
 
-[...]
-
+On Sun, Jun 02, 2024 at 02:04:05PM +0100, Jonathan Cameron wrote:
+> On Mon, 27 May 2024 20:38:05 +0200
+> Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> 
+> > The reading of the pressure and humidity value, requires an update
+> > of the t_fine variable which happens by reading the temperature
+> > value.
 > > 
-> > > 
-> > > >  
-> > > >  /* private: */
-> > > >  	/* for waiting until the execution of the kdamond_fn is started */
-> > > > @@ -634,7 +632,10 @@ struct damon_ctx {
-> > > >  	 * update
-> > > >  	 */
-> > > >  	unsigned long next_ops_update_sis;
-> > > > +	/* upper limit for each monitoring region */
-> > > >  	unsigned long sz_limit;
-> > > > +	/* marker to check if context is valid */
-> > > > +	bool valid;
-> > > 
-> > > What is the validity?
+> > So the bme680_read_{press/humid}() functions of the above sensors
+> > are internally calling the equivalent bme680_read_temp() function
+> > in order to update the t_fine value. By just looking at the code
+> > this relation is a bit hidden and is not easy to understand why
+> > those channels are not independent.
 > > 
-> > This is a "flag" which indicates that the context is "valid" for kdamond
-> > to be able to call ->check_accesses() on it. Because we have many contexts
-> > we need a way to identify which context is valid while iterating over
-> > all of them (please, see kdamond_prepare_access_checks_ctx() function).
-> 
-> It's still not very clear to me.  When it is "valid" or not for kdamond to be
-> able to call ->check_accesses()?  I assume you mean it is valid if the
-> monitoring operations set's ->target_valid() returns zero?
-> 
-> The callback is not for preventing unnecessary ->check_accesses(), but for
-> knowing if continuing the monitoring makes sense or not.  For example, the
-> callback of 'vaddr' operation set checks if the virtual address space still
-> exists (whether the target process is still running)  Calling
-> ->check_accesses() for ->target_valid() returned non-zero target is totally ok,
-> though it is meaningless.  And therefore kdamond stops if it returns non-zero.
-> 
+> > This commit tries to clear these thing a bit by splitting the
+> > bme680_{read/compensate}_{temp/press/humid}() to the following:
 > > 
-> > Maybe name should be changed,
-> 
-> At least some more detailed comment would be appreciated, imo.
-> 
-> > but now I don't see a way how we could merge
-> > this into kdamond_valid_ctx() or so, because the main cause of this "valid"
-> > bit is that there's no more "valid" targets for this context, but also we could
-> > have ->after_sampling() returned something bad.
-> 
-> As mentioned above, calling ->check_accesses() or others towards invalidated
-> targets (e.g., terminated processes's virtual address spaces) should be ok, if
-> any of the targets are still valid.  So I don't show special technical
-> difficulties here.  Please let me know if I'm missing something.
-
-This is true in case of only 1 context. kdamond can be stopped if there's
-no valid targets for this context (e.g. no address space exists anymore),
-but when there are many contexts we need to check if any of contexts has
-valid target(s). For example, we have 3 contexts per kdamond, at some
-point of time we have 1st context having no valid targets (process has been
-finished), but other 2 contexts do have valid targets, so we don't need
-to call ->prepare_access_checks() and ->check_accesses() as well for 1st
-context, but we do need to call them for other contexts.
-
-We can call ->kdamond_valid_ctx() before calling ->check_accesses(),
-but then we also need to check if nothing bad has been returned from
-->after_sampling() call, so that we're allowed to further call
-->check_accesses().
-
-I decided to use a "valid" flag inside damon_ctx structure, so
-that if this context isn't valid, we will just skip it while
-iterating over all contexts. In case of just 1 context
-kdamond_prepare_access_checks() will return false, so that
-nr_valid_ctxs will remain zero, so we will break "while"
-loop, otherwise we'll see that there's at least one valid
-context to call ->check_accesses() for.
-
-The last point is that we need to understand for which
-context we can call ->check_accesses(), this is done
-by checking ctx->valid bit, if it is "false" (we already called
-kdamond_valid_ctx() and ->after_sampling(), and one of this calls
-failed) we just skip this context by doing "goto next_ctx;"
-in main kdamond loop.
-
-> 
+> > i. bme680_read_{temp/press/humid}_adc(): read the raw value from
+> > the sensor.
 > > 
-> > > 
-> > > >  
-> > > >  /* public: */
-> > > >  	struct kdamond *kdamond;
-> > > > @@ -682,6 +683,12 @@ static inline struct damon_ctx *damon_first_ctx(struct kdamond *kdamond)
-> > > >  	return list_first_entry(&kdamond->contexts, struct damon_ctx, list);
-> > > >  }
-> > > >  
-> > > > +static inline bool damon_is_last_ctx(struct damon_ctx *ctx,
-> > > > +				     struct kdamond *kdamond)
-> > > > +{
-> > > > +	return list_is_last(&ctx->list, &kdamond->contexts);
-> > > > +}
-> > > > +
-> > > >  #define damon_for_each_region(r, t) \
-> > > >  	list_for_each_entry(r, &t->regions_list, list)
-> > > >  
-> > > > diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-> > > > index 23200aabc..d5287566c 100644
-> > > > --- a/include/trace/events/damon.h
-> > > > +++ b/include/trace/events/damon.h
-> > > 
-> > > Let's separate this change to another patch.
+> > ii. bme680_calc_t_fine(): calculate the t_fine variable.
 > > 
-> > Separating patches we hardly be able to reach at least build
-> > consistency between patches. Moreover DAMON won't be able
-> > to function corretly in between.
-> 
-> I agree that it's not very easy, indeed.  But let's try.  In terms of
-> functionality, we need to keep the old behavior that visible to users.  For
-> example, this change tries to make the traceevent changed for the multi
-> contexts support.  It is for making the behavior _better_, not for keeping old
-> behavior.  Rather than that, this is introducing a new change to the tracepoint
-> output.  Just make no change here.  Users may get confused when they use
-> multiple contexts, but what they see is not changed.
-> 
-> Further, you can delay letting users (user-space) using the multiple contexts
-> (allowing >1 input to nr_contexts of DAMON sysfs interface) after making this
-> change in a separate patch.
-> 
+> > iii. bme680_get_t_fine(): get the t_fine variable.
 > > 
-> > > 
-
-[...]
-
-> > > >  
-> > > > -static void damos_apply_scheme(struct damon_ctx *c, struct damon_target *t,
-> > > > -		struct damon_region *r, struct damos *s)
-> > > > +static void damos_apply_scheme(unsigned int cidx, struct damon_ctx *c,
-> > > > +			       struct damon_target *t, struct damon_region *r,
-> > > > +			       struct damos *s)
-> > > 
-> > > Unnecesary change.
+> > iv. bme680_compensate_{temp/press/humid}(): compensate the adc
+> > values and return the calculated value.
 > > 
-> > What do you mean? Why is this unnecessary? Now DAMON iterates over
-> > contexts and calls kdamond_apply_schemes(ctx), so how can we know
-> > which context we print trace for? Sorry, maybe I misunderstood
-> > how DAMON does it, but I'm a bit confused.
+> > v. bme680_read_{temp/press/humid}(): combine calls of the
+> > aforementioned functions to return the requested value.
+> > 
+> > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+> This and patches I didn't comment on (1-3, 6-9, 12, 15-17)
+> all look good to me. 
 > 
-> I believe the above comment to tracevent change explains this.
+> Thanks,
+> 
+> Jonathan
 
-Just to make it clear, you mean separating this change into different
-smaller patch?
+Hi Jonathan,
 
-[...]
+Thank you very much for the quick and thorough review, it is
+always extremely helpful. I will check a bit more on the
+alignment thing internally in the I2C and SPI busses and I
+will wait for your answer as well.
 
-BR,
-Alex
+Cheers,
+Vasilis
