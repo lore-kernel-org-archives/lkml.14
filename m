@@ -1,99 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF781EB27;
-	Sun,  2 Jun 2024 14:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972381EB27
+	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 14:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717337067; cv=none; b=V3Wot0hMPVskBYQfYF5ZKIAGGZEEnx1StHg+HMS5XLOBMlxJjkZd2u6ejKoLU3JD/NJd09LJn3ZtxK+UQxayf2zh4MxGqAq2J+1i9YCO0MC5KUvqGfzfUi4Pf2ifVtXRQqJN+I+EBhnkvfprC2PJNFkF9RmrRTBdgaCeLIvjU4U=
+	t=1717337365; cv=none; b=Jf9i42ykenGP2DqmUI2k/g5cLsUduABSew5bmUUon4uXNMs6zYc/HWji5vNZISXV3NslXEtt3Qhz2ZlHMfjplTNwNl4fch9o5dGPZS68aqxaw7btY8tzxom39oxY7wPZqi3W371XaM5h84vW2vyoZiKRe+nXssUWRJRP8YzUdRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717337067; c=relaxed/simple;
-	bh=U4yjLreSOOGoCiVvZlQXfcer8ge1DPm9T8ADtuy70LM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ElAJYaSGuyx+cDgbPJD7IMpXXc+ptfXcGecunH7dPn7n9bh8KRiv5bCdpkMfQLw4q3TopmmdAB9YXHreRocUwQ1gmBk5/F+oIP5IBCyWpR1MmX+TZjTzpBNk5qAHDpZKtF8MK8ezHxqZPPmyC8/kYn5lxD8UDvZPSrjLTT0SDoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4GkLI47; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4GkLI47"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717337066; x=1748873066;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=U4yjLreSOOGoCiVvZlQXfcer8ge1DPm9T8ADtuy70LM=;
-  b=E4GkLI47Le5DDB9u5n3Y3vMHmydxxis+SMyxsGnMXxjPwc4UUn4Ui27Z
-   g2xuD9KslS5KrQLmzYw6lrLhUWscswGh/a8OI7dP3jW1ze5puyP18kht/
-   9Yf24fvuMI6jj7rxCCl5r0OWUqx90Bd/PgN5IsQTbP8J+4wtimVvWwTVE
-   atg/YsdL3iPkl/EnUln8vEZoWCquw04M6fEGaJD6m2N5B+04h3XSyvwe1
-   AyKhtdkSJUCo/k1xvAGbJOAu/z/mB6fBcda4mEWN7WuqLOaveiDu86wLo
-   YFbcQzJjdI0vuN/occtJWfLnMlJ0JVnyLHY7DR4tGiwkKZ/6+++j7XgJ5
-   A==;
-X-CSE-ConnectionGUID: 3NR5D4i0R0ytBgwiUtaRHA==
-X-CSE-MsgGUID: iY9Mp4zPStmQ1Pwsg+nEVg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="17677455"
-X-IronPort-AV: E=Sophos;i="6.08,209,1712646000"; 
-   d="scan'208";a="17677455"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2024 07:04:25 -0700
-X-CSE-ConnectionGUID: elZrqPxfReO6dXOVKzco2w==
-X-CSE-MsgGUID: VQkGPSUHTSOYTGSZRKnmyA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,209,1712646000"; 
-   d="scan'208";a="36724235"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 02 Jun 2024 07:04:22 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id AF6261CB; Sun, 02 Jun 2024 17:04:21 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: mpi3mr-linuxdrv.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
-	Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] scsi: mpi3mr: Fix printf() specifier
-Date: Sun,  2 Jun 2024 17:04:20 +0300
-Message-ID: <20240602140420.3247493-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	s=arc-20240116; t=1717337365; c=relaxed/simple;
+	bh=kJxeVbEqQW7ysv/Z1X5ieihf48ygtv9hKGZbBclL57c=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=tBfPx9ahNtAQxpHVwymvHeU1Awa9pBYGXh/yG7ILt/X/nUfKAYsFqbuuBFAxWKW6BHUX5YYdx2ctfPJLlqrMX1Is6oKne636JBzSeJh7XogMDJqAhh8/J7iDcdrVxlARjrEEAD/0borncYQ0dZ0AqZyu6utq2730fKETZUGHfPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3748a38e71bso19451365ab.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 07:09:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717337363; x=1717942163;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EmIyVt3WKHxn0afBt5IKOYUapABvxb3wOIfnd2NiOKU=;
+        b=p5NuJAYFm1wH+WZh7MZG8t5GqUKKt/nYX91paiZpE2ehBUD30ihyMQGcsyCSZ06b0c
+         GRWvvoSCZlNxOKdAbfHxLWa7iEr9xlpjJqPwcGwNJip2pJWAH5JxWfl+OykMea5OzV43
+         0x0/twnQ2uqrsno7GSXMCliipaGWRnm/6WNfzMxF5SEZ0zcf5U/UesooTHfp+GhbGXKh
+         4FAyEpjjWi5+92uEZJfIdI68yOEsm//ZRzOrFxEAGh8jMz3fkRSyBx4Ssy3PIxX4zp6V
+         BsJFRC1t2hRTvp9WDSTsCzopO+2dnlhSQhB+0wiC5EATZyLsBiKHZJSbl5isf/b7aG4S
+         YAZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVkPjrVS6nHdKrXmBS32coQPK2iV9j7Cm8WBUrTNYGwU7mCmpdSW1iSfUUyV3feBAClAFz16WlYpQdNki3cO7M9L3xLz6kgvPliWwr
+X-Gm-Message-State: AOJu0YyPYw+QSoxQxxz6Ji9VixQ5e2LNtgx7xwLxvZAHVsSeA5pj06oa
+	EhVqw6/7abPebgGA+QrkORs4jo/+TBaEo46zHXko9PKAl6Mtbc1Cqu0qxuWBQubvb7i9I1gCgle
+	Xei1TMDWyl4wC7mhTDw9mEfN4+i4fHfHU37NP2sQaEN5g+JsN0eFLkbI=
+X-Google-Smtp-Source: AGHT+IEc4x0OYbFZzOWOTZqTcZjZDZpUevfECQm4f4kBd6Hggep4jD8b8Tn/aRkAU4ZZksw1/skgZ+6BjGgNEkFKk/J+EcatIKTv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:2185:b0:374:491c:654a with SMTP id
+ e9e14a558f8ab-3748b97c4d4mr2600685ab.1.1717337362961; Sun, 02 Jun 2024
+ 07:09:22 -0700 (PDT)
+Date: Sun, 02 Jun 2024 07:09:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007aa62a0619e8c330@google.com>
+Subject: [syzbot] [kernfs?] [bcachefs?] [exfat?] INFO: task hung in
+ do_unlinkat (5)
+From: syzbot <syzbot+08b113332e19a9378dd5@syzkaller.appspotmail.com>
+To: brauner@kernel.org, gregkh@linuxfoundation.org, jack@suse.cz, 
+	kent.overstreet@linux.dev, linkinjeon@kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, sj1557.seo@samsung.com, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-Compiler is not happy about format string
+Hello,
 
-  format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘unsigned int’ [-Werror=format=]
-  note: in expansion of macro ‘ioc_warn’
-  1367 |       ioc_warn(mrioc, "skipping port %u, max allowed value is %lu\n",
+syzbot found the following issue on:
 
-Fix the specifier to make it possible to build.
+HEAD commit:    b6394d6f7159 Merge tag 'pull-misc' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=146989a4980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=713476114e57eef3
+dashboard link: https://syzkaller.appspot.com/bug?extid=08b113332e19a9378dd5
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e8e1377d4772/disk-b6394d6f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/19fbbb3b6dd5/vmlinux-b6394d6f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4dcce16af95d/bzImage-b6394d6f.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+08b113332e19a9378dd5@syzkaller.appspotmail.com
+
+INFO: task syz-executor.2:9894 blocked for more than 143 seconds.
+      Not tainted 6.9.0-syzkaller-10729-gb6394d6f7159 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor.2  state:D stack:24688 pid:9894  tgid:9893  ppid:9055   flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x1796/0x4a00 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ inode_lock_nested include/linux/fs.h:826 [inline]
+ do_unlinkat+0x26a/0x830 fs/namei.c:4394
+ __do_sys_unlink fs/namei.c:4455 [inline]
+ __se_sys_unlink fs/namei.c:4453 [inline]
+ __x64_sys_unlink+0x49/0x60 fs/namei.c:4453
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7faae4e7cee9
+RSP: 002b:00007faae5c910c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
+RAX: ffffffffffffffda RBX: 00007faae4fabf80 RCX: 00007faae4e7cee9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000a80
+RBP: 00007faae4ec949e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007faae4fabf80 R15: 00007ffee8d5b6f8
+ </TASK>
+
+Showing all locks held in the system:
+3 locks held by kworker/u8:1/12:
+1 lock held by khungtaskd/30:
+ #0: ffffffff8e333d20 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #0: ffffffff8e333d20 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #0: ffffffff8e333d20 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6614
+2 locks held by kworker/u8:7/2801:
+2 locks held by getty/4839:
+ #0: ffff88802f9390a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc90002f162f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6b5/0x1e10 drivers/tty/n_tty.c:2201
+2 locks held by syz-fuzzer/5091:
+3 locks held by kworker/1:6/5155:
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3206 [inline]
+ #0: ffff888015080948 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x90a/0x1830 kernel/workqueue.c:3312
+ #1: ffffc90003a8fd00 (free_ipc_work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3207 [inline]
+ #1: ffffc90003a8fd00 (free_ipc_work){+.+.}-{0:0}, at: process_scheduled_works+0x945/0x1830 kernel/workqueue.c:3312
+ #2: ffffffff8e3390f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:291 [inline]
+ #2: ffffffff8e3390f8 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x381/0x830 kernel/rcu/tree_exp.h:939
+2 locks held by syz-executor.2/9894:
+ #0: ffff888063566420 (sb_writers#35){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff88805ef856a8 (&type->i_mutex_dir_key#29/1){+.+.}-{3:3}, at: inode_lock_nested include/linux/fs.h:826 [inline]
+ #1: ffff88805ef856a8 (&type->i_mutex_dir_key#29/1){+.+.}-{3:3}, at: do_unlinkat+0x26a/0x830 fs/namei.c:4394
+2 locks held by syz-executor.2/9897:
+3 locks held by syz-executor.4/11013:
+2 locks held by syz-executor.4/11026:
+ #0: ffff888021986420 (sb_writers#25){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20/1){+.+.}-{3:3}, at: inode_lock_nested include/linux/fs.h:826 [inline]
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20/1){+.+.}-{3:3}, at: filename_create+0x260/0x540 fs/namei.c:3900
+1 lock held by syz-executor.4/11030:
+ #0: ffff88805505afe0 (&type->i_mutex_dir_key#20){++++}-{3:3}, at: inode_lock_shared include/linux/fs.h:801 [inline]
+ #0: ffff88805505afe0 (&type->i_mutex_dir_key#20){++++}-{3:3}, at: lookup_slow+0x45/0x70 fs/namei.c:1708
+2 locks held by syz-executor.4/11037:
+ #0: ffff888021986420 (sb_writers#25){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20/1){+.+.}-{3:3}, at: inode_lock_nested include/linux/fs.h:826 [inline]
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20/1){+.+.}-{3:3}, at: filename_create+0x260/0x540 fs/namei.c:3900
+2 locks held by syz-executor.4/11038:
+ #0: ffff888021986420 (sb_writers#25){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:409
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20){++++}-{3:3}, at: inode_lock_shared include/linux/fs.h:801 [inline]
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20){++++}-{3:3}, at: open_last_lookups fs/namei.c:3573 [inline]
+ #1: ffff88805505afe0 (&type->i_mutex_dir_key#20){++++}-{3:3}, at: path_openat+0x7c4/0x3280 fs/namei.c:3804
+4 locks held by kworker/0:2/11663:
+ #0: ffff8880b943e798 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:559
+ #1: ffff8880b9428948 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x441/0x770 kernel/sched/psi.c:988
+ #2: ffff8880b942a718 (&base->lock){-.-.}-{2:2}, at: __debug_check_no_obj_freed lib/debugobjects.c:978 [inline]
+ #2: ffff8880b942a718 (&base->lock){-.-.}-{2:2}, at: debug_check_no_obj_freed+0x234/0x580 lib/debugobjects.c:1019
+ #3: ffffffff94a429d8 (&obj_hash[i].lock){-.-.}-{2:2}, at: debug_object_activate+0x16d/0x510 lib/debugobjects.c:708
+
+
 ---
- drivers/scsi/mpi3mr/mpi3mr_transport.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/scsi/mpi3mr/mpi3mr_transport.c b/drivers/scsi/mpi3mr/mpi3mr_transport.c
-index 329cc6ec3b58..82aa4e418c5a 100644
---- a/drivers/scsi/mpi3mr/mpi3mr_transport.c
-+++ b/drivers/scsi/mpi3mr/mpi3mr_transport.c
-@@ -1364,7 +1364,7 @@ static struct mpi3mr_sas_port *mpi3mr_sas_port_add(struct mpi3mr_ioc *mrioc,
- 			continue;
- 
- 		if (i > sizeof(mr_sas_port->phy_mask) * 8) {
--			ioc_warn(mrioc, "skipping port %u, max allowed value is %lu\n",
-+			ioc_warn(mrioc, "skipping port %u, max allowed value is %zu\n",
- 			    i, sizeof(mr_sas_port->phy_mask) * 8);
- 			goto out_fail;
- 		}
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
