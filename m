@@ -1,361 +1,253 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E9845C18;
-	Sun,  2 Jun 2024 15:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0C0433D8;
+	Sun,  2 Jun 2024 15:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717341878; cv=none; b=iT1SD0ARzTGiifNq7m5mWfNvuwFEufWp4M+o6UfPFF/k4eYmOrOUq3GCgYK/mkRB9PUxGtaOj3y0QTKs7K5/YHeSv6/DgRoKpt2xDtgOvd2k3YJJK6rg/xlYZzc55QAkmcDubsfeOIP/okFoK1YstcolKNNEe8OKGPf7nFRPFkk=
+	t=1717341956; cv=none; b=iUKXxqCa1Vu0zXqgZvpVd0vrqYEAD2gV+TLsg8P8ou/EPSXdSbnPaHM+dGwoRE5M/cquGApb37Owd1c3j/WSVGWidwELOlxVnxmB3uJYShlY8ZgBHjizUx9gSkBJMvWBBvWtRFQ4wQho4HE7jlBL3I/b8xA7Z/V6oFlMNWnRJt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717341878; c=relaxed/simple;
-	bh=lcAAS8zGkvVNH7T8d8AHYO9lew0wYOyWYsKBW6B8qyU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RvnczD7Xvolv1AbvyXewlU6wNHuf/aWwzvOlAYUes6d+CQRxcxUDUjDXz/sJqiRj7zVwQRe+Ih9NsUNPZe0I+Jt5o7UgCWERgHLlio3DvASVdLBtN5a0qMH9F1WH+YBB95KbrekH+h5ISeW43QVQ1wChXpd68DAlvJ4DKopOiAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=m7Q2qhwZ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1717341956; c=relaxed/simple;
+	bh=lpZusebmPPOM2E+bgMGI8hFwQqWLWhfREgwS2GZgn1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PKF/W8aqNv0DSPDw6oT7XcPiIDUE0TK2YdlcCa0gBEmgznld6KueLfQXH2tU7aoAHqhZjX1GJO1ZEDMuWHbz1jaUNSh8tVyPi/ZmvhVhF+xY5mJx8WSoUKlw7jLVUyC3ULwMk1lYgsfnPQ1nfSQ/qxQpII9To0Ln3Bo9he4ndUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipho9KgC; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="m7Q2qhwZ"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8ACFD39F;
-	Sun,  2 Jun 2024 17:24:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1717341866;
-	bh=lcAAS8zGkvVNH7T8d8AHYO9lew0wYOyWYsKBW6B8qyU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=m7Q2qhwZLWqSkL8nt97ejRoj3wPlPg6t4MwcPhiFCfM2gEf5yJ8DdK0ozjuhysjeE
-	 UqIpTeYiCLUIyVub1C9ElwGu45r2xR16hzwMcgTCpVFOMMR3eVGKFJmBAujURgrEp4
-	 YAiNVtIHCQlpM+StA0LFncGllWVVw4BnQiYrqTIw=
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Clark Wang <xiaoning.wang@nxp.com>
-Subject: [PATCH v3 4/4] pwm: adp5585: Add Analog Devices ADP5585 support
-Date: Sun,  2 Jun 2024 18:24:12 +0300
-Message-ID: <20240602152412.29136-5-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.44.2
-In-Reply-To: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com>
-References: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipho9KgC"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2bfffa3c748so2787841a91.3;
+        Sun, 02 Jun 2024 08:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717341954; x=1717946754; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=7EvfgY6PKPV319I7n7pojRWg9bK+qmS6AU4WZVV7aVM=;
+        b=ipho9KgC1tbZVt7ZI2gRG0k/ufUPyNhVDOpVw6Fx6ESIBV9Xqs/mztFkF6za9SoQUG
+         VnR+lF0BbisG38WFjSF4bxx+0Q3Ml8pFZeqBvYtOG/7Ks74GZscbt7Q0afDpBRMGb3vS
+         fIr1rKgyhU503NmpjOZfp+K31BJq4FJEyi/YaVOP0soT8GbuqcG8NOGcSZHGjpCmpC50
+         KxFVdcSWoA0jrD3TSIrC4fZUvHTMdtF+3acaO9RS4lLsZ1vz9hOxTsXzjSBJGjeogm5d
+         RYWa4QEL/VCoPu9q6QI/W/U46e668wXNNZ3xROFo/B2ZYoFr8IlZLjTFNhTWbg5eXYyF
+         QrWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717341954; x=1717946754;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7EvfgY6PKPV319I7n7pojRWg9bK+qmS6AU4WZVV7aVM=;
+        b=Yx8KsYki8s/F0XvPRJI03gzhcaXYsO+3II3mdt2zijH1Gdb0CM7HQ87wHG5FAQ46Xa
+         f/6spyNEmZl9kv/UpoxvuRJqzi9/YnRCsP80X2xhC4TFAqMejwqZrpl5rstkuevGl+EB
+         RSeJt/UWXrZSRgQaqaw+GmWNLuYDVp7lkFPvT1jxELXqKVmonlMFwm3SNbOmQaYgvkNV
+         ZBPOVDOSJdlY5PRG9UNYXBAM1jpk20DHcWFgx/ruLZnZsXfxnxfWOn7DSx2SMKA7BeMZ
+         yo6ZdA7hWRIhUEvBw95reuUG9pxRAB9bvPi2wh5MkHF8RGBXj/U/+SwHQjSkqBM3TMOf
+         kyfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV6wDAQDrF4/ZN1AZO99ScA8t7ml3inLrfA0jfKv3oVR7vwa0UN+IHGjL53wYh4M/VO2gTWtTTgnIllkSEC0YV90/s8wsarBYvyMcjwhvYebbvqZ3OFn+xPXEzuBys1ZJbeM8JwSvzcVw==
+X-Gm-Message-State: AOJu0Yw3az1RoVyUQZWSTZrmfZqdP2y4civ9K4w/yehsuQqrS3mUUcLX
+	DU7CH/GE2fltAhd09Bio2smQKhpE7tR26LdPT37Nw9DDEnvby+0y
+X-Google-Smtp-Source: AGHT+IFNFERJLu6/bVivQr8BqWc1QDkhDhgUlQXy0ugJKAZkmgT90HOsXC1orsEYDfVCS4y9r8/D/A==
+X-Received: by 2002:a17:903:187:b0:1f6:7f37:c116 with SMTP id d9443c01a7336-1f67f37c64cmr1603585ad.63.1717341954080;
+        Sun, 02 Jun 2024 08:25:54 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dda6esm48118785ad.141.2024.06.02.08.25.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Jun 2024 08:25:53 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <5baf4a58-0926-4d7c-bd4b-c755aced6d50@roeck-us.net>
+Date: Sun, 2 Jun 2024 08:25:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT v3 4/4] hwmon: (spd5118) Add support for reading SPD
+ data
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Armin Wolf <W_Armin@gmx.de>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20240531230556.1409532-1-linux@roeck-us.net>
+ <20240531230556.1409532-5-linux@roeck-us.net>
+ <4cc979c3-3ce0-4f31-b5d0-508e1af5fdf4@roeck-us.net>
+ <cf9d752e-0137-4a6d-85d3-fbe69293a43e@t-8ch.de>
+ <f5f28ef1-53ef-4f82-abb3-2b60dc468793@roeck-us.net>
+ <4e4341e4-2165-40d4-909c-9d5164e97942@t-8ch.de>
+ <b3109c26-dde1-44cf-b431-80957c97de5f@gmx.de>
+ <04d55009-c4a7-49e6-b098-545f20719f83@t-8ch.de>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <04d55009-c4a7-49e6-b098-545f20719f83@t-8ch.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Clark Wang <xiaoning.wang@nxp.com>
+On 6/2/24 00:55, Thomas Weißschuh wrote:
+> On 2024-06-01 21:23:24+0000, Armin Wolf wrote:
+>> Am 01.06.24 um 16:08 schrieb Thomas Weißschuh:
+>>
+>>> On 2024-06-01 06:48:29+0000, Guenter Roeck wrote:
+>>>
+>>> <snip>
+>>>
+>>>> Makes sense. Another question:
+>>>>
+>>>> This:
+>>>>
+>>>> +        struct nvmem_config nvmem_config = {
+>>>> +               .type = NVMEM_TYPE_EEPROM,
+>>>> +               .name = dev_name(dev),
+>>>> +               .id = NVMEM_DEVID_AUTO,
+>>>>
+>>>> results in:
+>>>>
+>>>> $ ls /sys/bus/nvmem/devices
+>>>> 0-00501  0-00512  0-00523  0-00534  cmos_nvram0
+>>>> ^^^^^^^  ^^^^^^^  ^^^^^^^  ^^^^^^^
+>>>>
+>>>> which really doesn't look good. My current plan is to go with NVMEM_DEVID_NONE,
+>>>> which results in
+>>>>
+>>>> $ ls /sys/bus/nvmem/devices
+>>>> 0-0050	0-0051	0-0052	0-0053	cmos_nvram0
+>>>>
+>>>> We could also used fixed strings, but "spd" results in "spd[1-4]" which
+>>>> I think would be a bit misleading since the DDR3/4 SPD data format is
+>>>> different, and "spd5118" would result in "spd5118[1-4]" which again would
+>>>> look odd. Any suggestions ?
+>>> In order of descending, personal preference:
+>>>
+>>> * spd-ddr5-[0-3] (.id = client->address - 0x50)
+>>
+>> Hi,
+>>
+>> this will break as soon as more than 8 DDR5 DIMMs are installed.
+> 
+> i2c_register_spd() only handles 8 DIMMs, too.
+> JESD 300-5B.01 (section 2.6.5) also defines i2c addresses for 8 DIMMS only.
+> 
+> Outside of that range we could fall back to something else.
+> 
+>>> * spd-ddr5-[0-3] (NVMEM_DEVID_AUTO)
+>>> * Same with only "ddr5-"
+>>> * spd5118-[0-3]
+>>> * Your proposal from above
+>>> * nvmem[0-3] (default handling)
+>>> * 0-0050-[0-3]
+>>>
+>>> Also can't a user of the eeprom already figure out which kind of module
+>>> it is by looking at the eeprom contents?
+>>> The first few bytes used for that seem to be compatible between at least
+>>> DDR4 and DDR5.
+>>>
+>>> So using plain spd[1-4] could be enough.
+>>
+>> This could cause problems when DDR6 arrives.
+>> Personally i would prefer the spd5118-X (NVMEM_DEVID_AUTO) format.
+> 
+> I have the impression that the eeprom layouts are designed to be
+> forward and backward compatible.
+> 
+> If a non-DDR5-aware parser reads the contents of a DDR5 eeprom it will
+> fail the CRC check, so there can be no accidental misinterpretation.
+> (Because the CRC'ed area is larger and the CRC is at another location)
+> 
+> On the other hand the first bytes of DDR4 and DDR5 are compatible, so
+> even an unaware parser can recognize that a SPD eeprom is being read and
+> which DIMM type and specification revision it is.
+> 
+> This seems intentional and therefore should also hold true for DDR5 to DDR6.
+>
 
-The ADP5585 is a 10/11 input/output port expander with a built in keypad
-matrix decoder, programmable logic, reset generator, and PWM generator.
-This driver supports the PWM function using the platform device
-registered by the core MFD driver.
+Looking into how this is handled by other drivers:
 
-The driver is derived from an initial implementation from NXP, available
-in commit 113113742208 ("MLK-25922-1 pwm: adp5585: add adp5585 PWM
-support") in their BSP kernel tree. It has been extensively rewritten.
+- at24 generates directories named {bus}-005{0-7}X, where X is from NVMEM_DEVID_AUTO.
+   Alternatively, it uses the 'label' devicetree property. In that case, the name
+   will be <label>X, with X again determined by NVMEM_DEVID_AUTO.
+   It does that to prevent duplicate file names due to duplicate labels.
 
-Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-Changes since v2:
+- ee1004 does not use the nvmem subsystem, and thus there will be no
+   entries in /sys/bus/nvmem/devices/.
 
-- Add missing headers
-- Sort headers
+NVMEM_DEVID_AUTO counts up from 0, and affects every nvmem device. That means
+the assigned ID is not fixed but simply reflects the n-th device using it,
+in the order of registration. Effectively this means that any fixed name
+plus NVMEM_DEVID_AUTO can not be associated with the originating device,
+and there would be no guarantee that it was static (meaning it could change
+from boot to boot). spd5118-X would not mean the Xth DIMM, it would be the
+Xth device registering with the nvmem subsystem.
 
-Changes since v1:
+At the same time, something like spd5118-X, with X derived only from the
+i2c address, would not work large systems because there could be DIMMs on
+multiple I2C busses. X would have to derived from the bus number plus
+the I2C address, such as '(bus << 3) | (address & 7)'. Even that would
+not be static since the bus number could change from boot to boot
+depending on the i2c bus instantiation order. It would also require extra
+code since the name would have to be generated in the driver.
 
-- Drop mutex
-- Restore R3 pinconfig to known value
-- Simplify error check in pwm_adp5585_request()
-- Don't fake PWM_POLARITY_INVERSED
-- Fix rounding of period and duty cycle
-- Drop OF match table
-- Drop empty .remove() handler
-- Allocate pwm_chip dynamically
-- Document limitations
-- Add platform ID table
-- Set struct device of_node manually
-- Merge child DT node into parent node
+In the context of at24.c not really caring and ee1004.c not even using
+the nvmem subsystem, I think it doesn't really matter how the nvmem device
+subdirectories are named as long as they are unique. decode-dimms won't
+use it, and I guess no one else really cares because, after all, ee1004
+doesn't even support /sys/bus/nvmem/ in the first place and at24 uses the
+odd/unusual form of {bus}-005{0-7}X.
 
-Changes compared to the NXP original version
+Given all that, I'll just stick with the simple dev_name(dev) and
+NVMEM_DEVID_NONE. That creates a clear association to i2c bus and address
+without requiring extra code or a lengthy explanation how the index is
+generated while at the same time guaranteeing uniqueness. I _could_ add
+code to use the devicetree label if provided, but that would require using
+the same mechanism as used by at24, i.e., we'd end up with {bus}-005{0-7}X
+default names (after all, someone could provide duplicate labels or labels
+such as "0-0050"). If that is deemed useful it could be added later.
 
-- Add MAINTAINERS entry
-- Drop pwm_ops.owner
-- Fix compilation
-- Add prefix to compatible string
-- Switch to regmap
-- Use devm_pwmchip_add()
-- Cleanup header includes
-- White space fixes
-- Drop ADP5585_REG_MASK
-- Fix register field names
-- Use mutex scope guards
-- Clear OSC_EN when freeing PWM
-- Reorder functions
-- Clear PWM_IN_AND and PWM_MODE bits
-- Support inverted polarity
-- Clean up on/off computations
-- Fix duty cycle computation in .get_state()
-- Destroy mutex on remove
-- Update copyright
-- Update license to GPL-2.0-only
----
- MAINTAINERS               |   1 +
- drivers/pwm/Kconfig       |   7 ++
- drivers/pwm/Makefile      |   1 +
- drivers/pwm/pwm-adp5585.c | 189 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 198 insertions(+)
- create mode 100644 drivers/pwm/pwm-adp5585.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9c560d9a590a..9877fa342931 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -534,6 +534,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
- F:	drivers/gpio/gpio-adp5585.c
- F:	drivers/mfd/adp5585.c
-+F:	drivers/pwm/pwm-adp5585.c
- F:	include/linux/mfd/adp5585.h
- 
- ADP5588 QWERTY KEYPAD AND IO EXPANDER DRIVER (ADP5588/ADP5587)
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 1dd7921194f5..b778ecee3e9b 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -47,6 +47,13 @@ config PWM_AB8500
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-ab8500.
- 
-+config PWM_ADP5585
-+	tristate "ADP5585 PWM support"
-+	depends on MFD_ADP5585
-+	help
-+	  This option enables support for the PWM function found in the Analog
-+	  Devices ADP5585.
-+
- config PWM_APPLE
- 	tristate "Apple SoC PWM support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 90913519f11a..f24d518d20f2 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PWM)		+= core.o
- obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
-+obj-$(CONFIG_PWM_ADP5585)	+= pwm-adp5585.o
- obj-$(CONFIG_PWM_APPLE)		+= pwm-apple.o
- obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
- obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+= pwm-atmel-hlcdc.o
-diff --git a/drivers/pwm/pwm-adp5585.c b/drivers/pwm/pwm-adp5585.c
-new file mode 100644
-index 000000000000..0d201bf04d27
---- /dev/null
-+++ b/drivers/pwm/pwm-adp5585.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices ADP5585 PWM driver
-+ *
-+ * Copyright 2022 NXP
-+ * Copyright 2024 Ideas on Board Oy
-+ *
-+ * Limitations:
-+ * - The .apply() operation executes atomically, but may not wait for the
-+ *   period to complete (this is not documented and would need to be tested).
-+ * - Disabling the PWM drives the output pin to a low level immediately.
-+ * - The hardware can only generate normal polarity output.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/math64.h>
-+#include <linux/mfd/adp5585.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+#define ADP5585_PWM_CHAN_NUM		1
-+
-+#define ADP5585_PWM_OSC_FREQ_HZ		1000000U
-+#define ADP5585_PWM_MIN_PERIOD_NS	(2ULL * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-+#define ADP5585_PWM_MAX_PERIOD_NS	(2ULL * 0xffff * NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ)
-+
-+static int pwm_adp5585_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-+				 ADP5585_R3_EXTEND_CFG_MASK,
-+				 ADP5585_R3_EXTEND_CFG_PWM_OUT);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-+				  ADP5585_OSC_EN, ADP5585_OSC_EN);
-+}
-+
-+static void pwm_adp5585_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+
-+	regmap_update_bits(regmap, ADP5585_PIN_CONFIG_C,
-+			   ADP5585_R3_EXTEND_CFG_MASK,
-+			   ADP5585_R3_EXTEND_CFG_GPIO4);
-+	regmap_update_bits(regmap, ADP5585_GENERAL_CFG,
-+			   ADP5585_OSC_EN, 0);
-+}
-+
-+static int pwm_adp5585_apply(struct pwm_chip *chip,
-+			     struct pwm_device *pwm,
-+			     const struct pwm_state *state)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	u64 period, duty_cycle;
-+	u32 on, off;
-+	int ret;
-+
-+	if (!state->enabled)
-+		return regmap_update_bits(regmap, ADP5585_PWM_CFG,
-+					  ADP5585_PWM_EN, 0);
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL)
-+		return -EINVAL;
-+
-+	if (state->period < ADP5585_PWM_MIN_PERIOD_NS)
-+		return -EINVAL;
-+
-+	period = min(state->period, ADP5585_PWM_MAX_PERIOD_NS);
-+	duty_cycle = min(state->duty_cycle, period);
-+
-+	/*
-+	 * Compute the on and off time. As the internal oscillator frequency is
-+	 * 1MHz, the calculation can be simplified without loss of precision.
-+	 */
-+	on = div_u64(duty_cycle, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+	off = div_u64(period, NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ) - on;
-+
-+	ret = regmap_write(regmap, ADP5585_PWM_OFFT_LOW,
-+			   off & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_OFFT_HIGH,
-+			   (off >> 8) & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_ONT_LOW,
-+			   on & 0xff);
-+	if (ret)
-+		return ret;
-+	ret = regmap_write(regmap, ADP5585_PWM_ONT_HIGH,
-+			   (on >> 8) & 0xff);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable PWM in continuous mode and no external AND'ing. */
-+	ret = regmap_update_bits(regmap, ADP5585_PWM_CFG,
-+				 ADP5585_PWM_IN_AND | ADP5585_PWM_MODE |
-+				 ADP5585_PWM_EN, ADP5585_PWM_EN);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int pwm_adp5585_get_state(struct pwm_chip *chip,
-+				 struct pwm_device *pwm,
-+				 struct pwm_state *state)
-+{
-+	struct regmap *regmap = pwmchip_get_drvdata(chip);
-+	unsigned int on, off;
-+	unsigned int val;
-+
-+	regmap_read(regmap, ADP5585_PWM_OFFT_LOW, &off);
-+	regmap_read(regmap, ADP5585_PWM_OFFT_HIGH, &val);
-+	off |= val << 8;
-+
-+	regmap_read(regmap, ADP5585_PWM_ONT_LOW, &on);
-+	regmap_read(regmap, ADP5585_PWM_ONT_HIGH, &val);
-+	on |= val << 8;
-+
-+	state->duty_cycle = on * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+	state->period = (on + off) * (NSEC_PER_SEC / ADP5585_PWM_OSC_FREQ_HZ);
-+
-+	state->polarity = PWM_POLARITY_NORMAL;
-+
-+	regmap_read(regmap, ADP5585_PWM_CFG, &val);
-+	state->enabled = !!(val & ADP5585_PWM_EN);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops adp5585_pwm_ops = {
-+	.request = pwm_adp5585_request,
-+	.free = pwm_adp5585_free,
-+	.apply = pwm_adp5585_apply,
-+	.get_state = pwm_adp5585_get_state,
-+};
-+
-+static int adp5585_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct adp5585_dev *adp5585 = dev_get_drvdata(dev->parent);
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	chip = devm_pwmchip_alloc(dev, ADP5585_PWM_CHAN_NUM, 0);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	device_set_of_node_from_dev(dev, dev->parent);
-+
-+	pwmchip_set_drvdata(chip, adp5585->regmap);
-+	chip->ops = &adp5585_pwm_ops;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id adp5585_pwm_id_table[] = {
-+	{ "adp5585-pwm" },
-+	{ /* Sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(platform, adp5585_pwm_id_table);
-+
-+static struct platform_driver adp5585_pwm_driver = {
-+	.driver	= {
-+		.name = "adp5585-pwm",
-+	},
-+	.probe = adp5585_pwm_probe,
-+	.id_table = adp5585_pwm_id_table,
-+};
-+module_platform_driver(adp5585_pwm_driver);
-+
-+MODULE_AUTHOR("Xiaoning Wang <xiaoning.wang@nxp.com>");
-+MODULE_DESCRIPTION("ADP5585 PWM Driver");
-+MODULE_LICENSE("GPL");
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Guenter
 
