@@ -1,109 +1,165 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F69A3207;
-	Sun,  2 Jun 2024 22:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD36D3EA7B;
+	Sun,  2 Jun 2024 22:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717367842; cv=none; b=i7YsiPBzbmuskpni+s0UtENGC1XL4jVkC/m4+DjrrcShtezg5vE+BORg0LKMCH4fEb2AYGAvIj5w7XDeftnW82/9+ZlMNZ5cADPNENEFiHQQx0+nAJ8kkhOGOgqK9q/tffHvjboA9pRmBuxN8PHILeNgk5YeIL7WbUklnJTafhI=
+	t=1717368025; cv=none; b=SjKeAXdSrE7dzyJuvwFssMPFOxr2V+h5M9m4vws8uZuNFPB2BHrs+g+ds3dfzlW9JJ5JcJwan+s9W9tEFHDOVknhMqO2dZKrRPmYZ/Cx+3p/Iaa3+9k8JNqjFOZdFtLecdIMR0wq7SLyrtBypLunY61KNsuKsDyh+6mlBEkh7ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717367842; c=relaxed/simple;
-	bh=G3+pi39DXsLu5GOB3nNvWBkhX6gdL40MBr+mzLc1pEE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=e8nQUYh4jYQE+jO7IpaLTgXjyAkJO0Ds2ywCXWJgIVDePuOyJLDqfCUQoMc0JfOixcdbQVtyvUn47nANx0a6FdT30Dn10mKlb+qKQo6/1A2uyRBGa+/jtaw57jAmXnihX3afcIZ72K1F5pil7X2+DJEfHK9u79EssQecANwUUm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VSvO28yI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717368025; c=relaxed/simple;
+	bh=To7mGo/owzLvX5xUigMpm7M8kw8jHdspRx1v+79dzYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2ftocTrPDdtwkdTyIn8K0yGcMCuNJVhaB49fOtHHMxRNfAxGtA+tz0wqjANB/M3ssf9QjB65JnLEq701mxq3LlDq5TTPxm1OrIgFX7ztXzRrpJ4xOWw4zsip61jVpJ4kcvh2wjUNAAIowurX87TFFN/Md/HI1N1/ft5ive2dFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=whACvm+5; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VSvO28yI"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452MbBIb011223;
-	Sun, 2 Jun 2024 22:37:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=MmX33+HbK0PEuGl6iJkxQw
-	3i/jTUFnwPy5XrXhmZi5Y=; b=VSvO28yImd+ddpkrvUb4Kqq7GR24bkT0taVCLg
-	GC6ZVVv5Zt1HG6dh3vAc599LVBZxbWqJ69Kq5fDC3edWOWx1jdzwD/mnAtrYm1h9
-	TFKgG2Ur/9zjML9O9tZkxjZROhF/rWmLZrts2F9/UGLhJ1f+/xhpdk0y0YUwzXJt
-	XJpCsztUmgbu5g/pneNCfiDskoLk/3D/6hxFZaXk3C/Fu7SGfVOCX5LPryj3+E0o
-	ORNo/Z9+YL2fZFqAVqGffRQ/k8/cLhcWL3v6IgZCd68zmwIbCk5E5DwcsK2wXVz2
-	un15l95+e5PYpZLJHIzCKuM4zWdrfTeByvV6UpOpUWRfxnvA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw6v2md6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 02 Jun 2024 22:37:11 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 452MbAVh023345
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 2 Jun 2024 22:37:10 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 2 Jun 2024
- 15:37:09 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sun, 2 Jun 2024 15:33:39 -0700
-Subject: [PATCH] crypto: atmel-sha204a - add missing MODULE_DESCRIPTION()
- macro
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="whACvm+5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717368021;
+	bh=To7mGo/owzLvX5xUigMpm7M8kw8jHdspRx1v+79dzYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=whACvm+54yIA2WDMF7neBAFOQrY9Rt16RksWO0h1moCmCqECGlpntwlFPr07mXtfU
+	 ELW8QlCqwAhjkQyNMS3JUy0LjOqX2B0yY4Tgv4mJkUErgi9YuRNOIHQdNq0QW92MIL
+	 brDyNL9aQAWwtTDd6C33+kWucOlPsgyI6fix4oSZLaE+XfH5ePRiz4jCQqpdoOvDyA
+	 5Cs+N8x5Ihf/bZIiS5qDbMvY32F36yJNVoAEk7yirBSIHVJw7qg2CYy/hwri2PiewA
+	 jCkoYVsDn9WwQ8KR7mSmIuJ0Ow4AMLA7uq6n9Wv2lpLjMbVXGozrEXZSsl5F7WhyXQ
+	 PR9Sap9o8k9LA==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B096D378148F;
+	Sun,  2 Jun 2024 22:40:21 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id 24CFD10611D2; Mon, 03 Jun 2024 00:40:21 +0200 (CEST)
+Date: Mon, 3 Jun 2024 00:40:20 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 5/5] power: supply: ltc3350-charger: Add driver
+Message-ID: <wqvc3uasq4bzkwuhdpaeu34hyhag2h2trff4ryhecenjvx6nei@bx4sdp66oxew>
+References: <20240416121818.543896-1-mike.looijmans@topic.nl>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.4a7cccf3-e7cb-4980-be8e-de8bd2795354@emailsignatures365.codetwo.com>
+ <20240416121818.543896-5-mike.looijmans@topic.nl>
+ <t4avn7fmzw355a73hu3yu4wzdxyc5gkupi5s4yfio5iyiygkx6@5eubzdbqthqx>
+ <fb93cdd9-0c9b-4cb1-91c1-ccf832fcba75@topic.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240602-md-atmel-sha204a-v1-1-ab02640a0cf2@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAELzXGYC/x3MwQrCMAyA4VcZORuosfTgq4iHbM1sYK2STBmMv
- bvV43f4/x1cTMXhOuxg8lHXZ+s4nwaYCreHoOZuoEAxpEBYM/JaZUEvTCEyZqb5wokoJoGevUx
- m3f7L2717ZBccjdtUfqNF23vDyr6KwXF8AZBNHa6BAAAA
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>
-CC: <linux-crypto@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: QT5x1BqUQwaW_cE8jeMcjplxIs-Qu_z6
-X-Proofpoint-ORIG-GUID: QT5x1BqUQwaW_cE8jeMcjplxIs-Qu_z6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-02_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
- clxscore=1011 spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406020198
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hnayuqdj26rfnhzn"
+Content-Disposition: inline
+In-Reply-To: <fb93cdd9-0c9b-4cb1-91c1-ccf832fcba75@topic.nl>
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/atmel-sha204a.o
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+--hnayuqdj26rfnhzn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/crypto/atmel-sha204a.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi,
 
-diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
-index 24ffdf505023..1fd836eb2d89 100644
---- a/drivers/crypto/atmel-sha204a.c
-+++ b/drivers/crypto/atmel-sha204a.c
-@@ -232,4 +232,5 @@ module_init(atmel_sha204a_init);
- module_exit(atmel_sha204a_exit);
- 
- MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
-+MODULE_DESCRIPTION("Microchip / Atmel SHA204A (I2C) driver");
- MODULE_LICENSE("GPL v2");
+On Tue, May 28, 2024 at 11:41:36AM +0200, Mike Looijmans wrote:
+> On 27-05-2024 22:40, Sebastian Reichel wrote:
+> > > ...
+> > > +static int ltc3350_get_property(struct power_supply *psy, enum power=
+_supply_property psp,
+> > > +				union power_supply_propval *val)
+> > > +{
+> > > +	struct ltc3350_info *info =3D power_supply_get_drvdata(psy);
+> > > +
+> > > +	switch (psp) {
+> > > +	case POWER_SUPPLY_PROP_STATUS:
+> > > +		return ltc3350_get_status(info, val);
+> > > +	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+> > > +		return ltc3350_get_charge_type(info, val);
+> > > +	case POWER_SUPPLY_PROP_ONLINE:
+> > > +		return ltc3350_get_online(info, val);
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> > > +		return ltc3350_get_scaled(info, LTC3350_REG_MEAS_VOUT, 22100, &val=
+->intval);
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
+> > > +		return ltc3350_get_scaled(info, LTC3350_REG_VOUT_UV_LVL, 22100, &v=
+al->intval);
+> > > +	case POWER_SUPPLY_PROP_VOLTAGE_MAX:
+> > > +		return ltc3350_get_scaled(info, LTC3350_REG_VOUT_OV_LVL, 22100, &v=
+al->intval);
+> > For USB chargers VOLTAGE_NOW/MIN/MAX refers to VBUS, which is the
+> > voltage on the USB lines and thus the input voltage. From my
+> > understanding of the LTC3350 this would be VIN and not VOUT. With
+> > VOUT being supplied by either VIN or the Capacitors.
+> >=20
+> > So I think your custom vin/vin_uv/vin_ov should be exposed with the
+> > above properties.
+>=20
+> Yeah, power supplies report their input voltage. So this should
+> report VIN.
+>=20
+> > My understanding for VOUT is, that this is basically the system
+> > supply - I would expect more regulators to follow, which convert
+> > it to typical voltages like 3.3V or 1.8V. In that case it would
+> > make sense to expose VOUT as regulator, so that it can be referenced
+> > as vin-supply. You can find a few examples for charger drivers doing
+> > that for USB-OTG functionality.
+>=20
+> Looked at other drivers for that. Significant difference is that those ha=
+ve
+> something useful to supply to other drivers, e.g. being able to
+> enable/disable the output for one thing.
+>=20
+> For the LTC3350, the output (voltage) is just a measurement and there's
+> nothing for the driver to configure. Any regulator_ops would be completely
+> empty.
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240602-md-atmel-sha204a-da2f3a62246e
+Which is also true for fixed regulators, see fixed_voltage_ops in
+drivers/regulator/fixed.c. Not having any control options is not a
+problem per se.
 
+Note, that regulators have pre-defined events for the functionality
+you are trying to provide for VOUT, e.g.
+ - REGULATOR_EVENT_OVER_VOLTAGE_WARN
+ - REGULATOR_EVENT_UNDER_VOLTAGE
+ - REGULATOR_EVENT_UNDER_VOLTAGE_WARN
+
+> Given that, I think it should get the same treatment as GPI, so either a
+> custom property or some other device (IIO). Or maybe add a VOLTAGE_OUT
+> property? It's not uncommon for power management devices to report their
+> output voltage.
+
+power-supply handles batteries and battery chargers. For both cases
+the kernel already has properties for the output voltage (which
+would be the charging voltage in case of a charger). Other PM voltage
+regulation elements are so far handled via the regulator subsystem
+and hwmon is used for monitoring.
+
+Greetings,
+
+-- Sebastian
+
+--hnayuqdj26rfnhzn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZc9NEACgkQ2O7X88g7
++prK8g/+KrIg6jyostU7AAlJ6XQjuFjR/XRqyoLCaZ9VZvfEudd4volkjse8Oxrp
+T95sQd0cJXRP6rzXNAhmKZjY+XmNMW3zJIO99rLArWjsTIc0ryru2K/dc3kyL3OZ
+Z1hVyvi9qUqHjXg5Ci1A34etVNOAqbo4n4taAg3Z8PC/crL34zFClUlcshhIgrZ6
+qDyGw/ZzFWW3FXlvMxuxpeYQkIxnhnvMzhk08fcDmbOmLxGjvK9INBIDIzt67Xci
+TiE+uZemOcvOZA65CiqXIxw1XtHv4IOjA3bZ96YmqP7mdERsXkbYkjlWZKVRR+9K
+n9QLdLdexWwK7xr8IxETj894B9JCM3Of9pUkuq6tJzZWu4k4sWL40un0RAZTMDpl
+78mIJ3USM0kFrFmLRgJNQWmb5V8v6NCtEKM+yARL3G/x9OPp4yc0c1iCnNgHCoMT
+sEVVc1PQy/Jt/TUz0AB7MeNJvS7CcK57/iygHP/Gny5DqmTCbC+rNvuvbp+3CoGs
+48oFoazcvsclCNNfUBo+cqr0uEnPt9sCZlb2+aoEkKr4FXDFBIA/j8fCoX6pVeh0
+f0VsHj2b/LALV8TLORWjBz9SDptMEFxAigYbhKaAzPF7h/zc+44euj93OkI9vG2E
+/Z4idtNcFxvhTMRkedkU3sefOcvIbcAL2Lqg3Hbhp7UmHSE8/PU=
+=P2wV
+-----END PGP SIGNATURE-----
+
+--hnayuqdj26rfnhzn--
