@@ -1,127 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp-out.freemail.hu (fmfe35.freemail.hu [46.107.16.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9DC41C73;
-	Sun,  2 Jun 2024 15:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD9517736;
+	Sun,  2 Jun 2024 15:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.107.16.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717342720; cv=none; b=tnGtcMfjNLc+n92asqmgXimqdfEuT++2Km2UOpQkvQJDRTtDMhtJBUO4W4eft3Q7RsjRHzwaDojS2IhXIeNe1wT0gPgU5h6keM8lsroOHFrMULqVnjRaY0w29OeHSbAK7ntQt5GGb3t9jzUULyWwFfbOFIGL/1sruZ0apwca1g4=
+	t=1717342755; cv=none; b=VfUFt+EOWDUPERSOfX4wK4qWKZMn23YWHyyWrvFJP0ZLo79c9XjaghMqufDkPITzWG7Elrd123SKfEfFcpTh6AiSACmxSGKTSuIm9oMyGSF1ynxi/IUt/unBaEVU6GgQ1Zmcz0bXCau/b1rf1ee+53IM0dFXc0Hac4Mo4a875Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717342720; c=relaxed/simple;
-	bh=pwAJbNQvwEo6mxmgDhPYLNjCssIRxYFcs+epU6gjaRQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=dPICDWsMK1Weyuv0ryExvzypmLPgDNyd8+Bjh2Ys4rtJT4Kj5EIEZ33DXNlH/tmjItf2CHiw7DxL6C9CcvwFDU8Ie/V8RcncMgA3/HWQNShszvJNlGaxrrNTvqVgaCR8d35eDReycx8AXgPuFYY4ldXjfv0D26NrRpvRQlkN3vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N63/J8g2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717342755; c=relaxed/simple;
+	bh=cu1Ss0V90yPLtbBTiY5VNm7dU1DFjdCGGYetsr2pX8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JhT3+GoZ66EXL2U4auYIfJGg5HyLXScpoVssYTkpaIZc9U2XZcFAKIMcTSgzJ7NfAwzvEhmuHAP5hoU2VNKDupTeY41AbFgKRk/zUJZSo43r+9iiIDlRUnX5vZVjs6WeaIlhVYBz/KnBslf4ssxL87inNEHMBlw9o2Y1St6YYkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu; spf=pass smtp.mailfrom=freemail.hu; dkim=fail (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b=vTjdqiLR reason="signature verification failed"; arc=none smtp.client-ip=46.107.16.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=freemail.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freemail.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N63/J8g2"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452EtrQq028110;
-	Sun, 2 Jun 2024 15:38:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=WK297UvNPvF2mI8OYsa3SF
-	RUH8FtRbSzi4oowt38h+M=; b=N63/J8g2G75TwDg/QS8dJbCTakEhxYm8TS7ttx
-	7do6D9EZcGhpy8tnFy/FVLECWF8/Guabg2re3AAl8iHc0W+/VdOt4onX3NO+n1Kc
-	YNGk+27Skq9yyZFSaDasv9+Ea9EC6I5m6Y/8o1JJ4IOfVHEhrAID9NO7YD14KLVW
-	JQ/CHTRuCXb/xIJiNwQC4ZWC3Klsu32RvYXMOEihbr8VE30AfeEM+xJBbJLAsY3T
-	FM8eSm2JtAR1Lti469i+6dCzSRubuNDW+/EvmmCDJcjZoySaHYJWtY2XrZkAgHUC
-	Tg53dCcYz8fiRmETfDUGez4/Yim8HVTHZ1fEngNJyrRBTunw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5t24mu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 02 Jun 2024 15:38:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 452FcYm1015353
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 2 Jun 2024 15:38:34 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 2 Jun 2024
- 08:38:34 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sun, 2 Jun 2024 08:38:33 -0700
-Subject: [PATCH] clk: test: add missing MODULE_DESCRIPTION() macros
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=freemail.hu header.i=@freemail.hu header.b="vTjdqiLR"
+Received: from [192.168.0.16] (catv-80-98-74-198.catv.fixed.vodafone.hu [80.98.74.198])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp.freemail.hu (Postfix) with ESMTPSA id 4Vsgmz6970z4F6;
+	Sun,  2 Jun 2024 17:31:15 +0200 (CEST)
+Message-ID: <30944fda-6d18-4fc1-8c73-bcda4814a417@freemail.hu>
+Date: Sun, 2 Jun 2024 17:31:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240602-md-clk-test-v1-1-a6afd4793337@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAPmRXGYC/x3MTQrCQAxA4auUrA1kpqUUryIu5ifaYDtKMkqh9
- O6OLr/FezsYq7DBudtB+SMmz9LgTh2kOZQ7o+Rm8OQHGsnjmjEtD6xsFV0/DlN2kfqJoBUv5Zt
- s/9vl2hyDMUYNJc2/xyLlveEarLLCcXwBjgNMhHwAAAA=
-To: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>
-CC: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: YGPo82ArNhEpBBykSqBvZytcBLop_roY
-X-Proofpoint-GUID: YGPo82ArNhEpBBykSqBvZytcBLop_roY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-02_10,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=880 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406020135
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] spidev: Introduce "linux,spidev-name" property for
+ device tree of spidev.
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240519211346.30323-1-egyszeregy@freemail.hu>
+ <1ec9e8e5-0818-42b0-8776-d9cfb0585f42@sirena.org.uk>
+ <9ae65e3c-f1fa-4ca9-8d74-12d92c51c5c6@freemail.hu>
+ <e8837fe0-e93c-4133-aac1-f8f0a010f6de@sirena.org.uk>
+Content-Language: hu, en-US
+From: =?UTF-8?Q?Sz=C5=91ke_Benjamin?= <egyszeregy@freemail.hu>
+In-Reply-To: <e8837fe0-e93c-4133-aac1-f8f0a010f6de@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=simple/relaxed; t=1717342276;
+	s=20181004; d=freemail.hu;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+	l=3367; bh=Fd1Lsy5QNOanvMIRy/o0jKg+8qGYkFTM1ga4jW9aSxo=;
+	b=vTjdqiLR8mjuIVqAkyaMnTEB02XIsX9+HBbE21M3InL4/8FoE/GrIJM08VoYWTbL
+	OjGKneyr0KehwQ6onnMnK54diGTV3HJ84/KdyVXub9Ufx+qC9Wm5Qe+Qz6BIX81HsQ5
+	tip24fmmsj80XbUY9qcVWArgrz0H6slaQeQytsqyPuygYe+wm53aVIynEvZOL9AX6Cs
+	vk8jbemGU/DJK6kB6U4wlcZJiNdJCyKSryrToPwloFOyBbY3hXurdCfU6LHpZNMaLTf
+	/6yV4sfbvlH2Hs+IbxJTqfRxd/gLKrCjrkPUnk2YfzRQ8yrL6IOLCjEWQlb9cT3tsT9
+	dNuUv8Nujw==
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-gate_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/clk-fractional-divider_test.o
+2024. 05. 20. 22:14 keltezéssel, Mark Brown írta:
+> On Mon, May 20, 2024 at 07:20:12PM +0200, Szőke Benjamin wrote:
+> 
+>> So, in Yocto project build system point of view the best, if any Machine
+>> specific settings is stored in the device tree files of the target machine
+>> in driver levels/config, because it will be deterministic in 100% sure and
+>> it will be nicely separated from the SW meta layers which may not contains
+>> any machine specific hacking with udev and so on.
+> 
+> Given that with Yocto you're building a full system image it's not
+> super obvious to me that it is particularly harder to ship udev rules in
+> the image as opposed to modifying the DT.  It's a little more annoying
+> but not drastically so and it's not creating a burden on the ABI for
+> something that's mainly used within a vertically integrated software
+> stack.
+> 
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+In Yocto and Buildroot it is harder and more ugly to provide MACHINE specific 
+settings in a rootfs config files than define it in the machine specific .dts 
+and .dtsi files because they are separated in meta-layers for SW recipes and HW 
+related machine recipes.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/clk/clk-fractional-divider_test.c | 1 +
- drivers/clk/clk-gate_test.c               | 1 +
- drivers/clk/clk_test.c                    | 1 +
- 3 files changed, 3 insertions(+)
+As i know udev is much older than device-tree in Linux kernel history. For 
+embedded Linux image maintaining/developing for ARM, RISC-V etc. to solve this 
+kind of features/issues is more elegant to do in device-tree than with udev, 
+moreover for an embedded Linux developer it is more familiar to do in 
+device-tree then udev.
 
-diff --git a/drivers/clk/clk-fractional-divider_test.c b/drivers/clk/clk-fractional-divider_test.c
-index 929eec927548..1028e2002074 100644
---- a/drivers/clk/clk-fractional-divider_test.c
-+++ b/drivers/clk/clk-fractional-divider_test.c
-@@ -144,4 +144,5 @@ static struct kunit_suite clk_fd_approximation_suite = {
- kunit_test_suites(
- 	&clk_fd_approximation_suite
- );
-+MODULE_DESCRIPTION("Kunit test for clock fractional divider");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/clk/clk-gate_test.c b/drivers/clk/clk-gate_test.c
-index c96d93b19ddf..e4ddad532ff1 100644
---- a/drivers/clk/clk-gate_test.c
-+++ b/drivers/clk/clk-gate_test.c
-@@ -461,4 +461,5 @@ kunit_test_suites(
- 	&clk_gate_test_hiword_suite,
- 	&clk_gate_test_enabled_suite
- );
-+MODULE_DESCRIPTION("Kunit test for clk gate basic type");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
-index 39e2b5ff4f51..b17147a4a257 100644
---- a/drivers/clk/clk_test.c
-+++ b/drivers/clk/clk_test.c
-@@ -2674,4 +2674,5 @@ kunit_test_suites(
- 	&clk_single_parent_mux_test_suite,
- 	&clk_uncached_test_suite
- );
-+MODULE_DESCRIPTION("Kunit test for clk rate management");
- MODULE_LICENSE("GPL v2");
+I spent 3-4 days to understand udev rules files and i tried to do it via udev, 
+but i gave up it due to it complexity and incomplete documentation about it.
 
----
-base-commit: 83814698cf48ce3aadc5d88a3f577f04482ff92a
-change-id: 20240602-md-clk-test-13648d1b0380
+axi_quad_spi_0: axi_quad_spi@a00a0000 {
+     bits-per-word = <8>;
+     clock-names = "ext_spi_clk", "s_axi_aclk";
+     clocks = <&zynqmp_clk 71>, <&zynqmp_clk 71>;
+     compatible = "xlnx,axi-quad-spi-3.2", "xlnx,xps-spi-2.00.a";
+     fifo-size = <16>;
+     interrupt-names = "ip2intc_irpt";
+     interrupt-parent = <&gic>;
+     interrupts = <0 106 1>;
+     num-cs = <0x1>;
+     reg = <0x0 0xa00a0000 0x0 0x10000>;
+     xlnx,num-ss-bits = <0x1>;
+     xlnx,spi-mode = <0>;
+
+     #address-cells = <1>;
+     #size-cells = <0>;
+
+     spidev@0 {
+         reg = <0>;
+         compatible = "rohm,dh2228fv";
+         spi-max-frequency = <1000000>;
+
+         // via my kernel patch -> /dev/spidev-mysensor
+         // linux,spidev-name = "mysensor";
+     };
+};
+
+As i understand "axi_quad_spi@a00a0000" can be mapped via udev to a custom 
+symlink name but in a new adaptive SoC HWs like AMD ZynqMP, Intel Stratix, 
+Microchip PolarFire Soc etc. it is not possible and not good solution because 
+this axi reg address can be different and become to non-deterministic in day to 
+next when there is a new PL FW update for their FPGA part in the silicon.
+
+What udev rules have to use for it if you say it can be perfectly done via udev 
+and "axi_quad_spi@a00a0000" cannot be used for making this rule?
+
+>> DT binding would need to be documented later in a separated patch as a
+>> guideline mentioned it in Linux repo.
+> 
+> No, that needs to happen along with the code change.
+
+The official documentation says totally different:
+"The Documentation/ and include/dt-bindings/ portion of the patch should be a 
+separate patch. ..."
+
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/submitting-patches.rst
+
+By the way where can i find .yml or .txt dt-bindings documentation of spidev driver?
 
