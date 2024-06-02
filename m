@@ -1,31 +1,31 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219F343ADC;
-	Sun,  2 Jun 2024 15:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A4251016;
+	Sun,  2 Jun 2024 15:24:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717341871; cv=none; b=sND1f5fNMsq/UpzXeDiC/qwmDDlElelMrWnC72BB22KBm2Blsrnf/RSYrn1mrWgBgmXGJamMxv9P3y5MdAah929y65f9dsBFTnURIZIBRTwR130efEE3zslM7L8eEjmzaXO2F3n+6MzLHSY8DCtpLxzIvXzDD3SqAYV2W453YKw=
+	t=1717341875; cv=none; b=CSC6Qjp4OZUSjXzQUi/jNFY7VhQ7FkvGKPv2jN4Gs4RtwsybMfjvelrmHJGspGtAVRwFssKdOwkpUjk9Ye6I6GcsntpgddSfyF2dg6u9R78gWzWOthyrFITKG12Y9I97TsF+H4A8AM/O8qDnpoU+pC2BRpbnZ/rHMnEcPSl3LH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717341871; c=relaxed/simple;
-	bh=RslwYpWtUoP6UTqhpJlXNDVK/DEg4vaqveTdFpJR3tg=;
+	s=arc-20240116; t=1717341875; c=relaxed/simple;
+	bh=kzWu1Thb7W6RFRoFvm+lVk5umASjBKEVJc8/pXUcKYE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D9ADa1/a+rPE85IuVcZ5y/lUnaEFqq0Ui1yASejirGN9mxTjuvA2CNFj7hUt7tlsGy8VzrZj4KHAyowy0GwQF6i+qa2cWpWNLa4Rx5CmCrNVT4IoQfbvkZPlsjRRtYNxE1yyF8RASXBFHQaxfocTaoM0KHNjUxjOJGt50hM5iJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NiERxu7a; arc=none smtp.client-ip=213.167.242.64
+	 MIME-Version; b=R1FaTmT48hKxPhDIpVgK/WXXLZlLeZ6wCr02AlrLSecrZ0GcY1hJhSfzgJwuVfTK+RwsgK+9ODNVqqnQMufNao4rAoUTxlurnhRkd4sB+TisPPrLVbxDP73RqBCDNPPpD6Nf6LkVK10XpeLGh0I9trS7994eD0+IhtE+lrl1afk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fb0gbjL/; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NiERxu7a"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fb0gbjL/"
 Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E848166B;
-	Sun,  2 Jun 2024 17:24:21 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1EEC1C58;
+	Sun,  2 Jun 2024 17:24:25 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1717341862;
-	bh=RslwYpWtUoP6UTqhpJlXNDVK/DEg4vaqveTdFpJR3tg=;
+	s=mail; t=1717341865;
+	bh=kzWu1Thb7W6RFRoFvm+lVk5umASjBKEVJc8/pXUcKYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NiERxu7at+bdC2d8iYGtslAPiPgBl0Z7BCDP/rohEcPSQJhaEh+UXjty5DNY3iM/a
-	 1ExVd6BJ9Y8W8/mERGBLe7OGtee3IRM2MJzAU5nyEpQNEZ5DIlcaUv+Voz5MR/oWMS
-	 NyUaWLuEcqOt0qEPgRbfRU202q8tHLXhe6FjMmCs=
+	b=fb0gbjL/TlecHNvYFZNgyrEGwJ/TFJRUARHjg3u9iJkzK9QT3F8iTfJEwcGumyAYu
+	 oViwR8HwK63FniImh9xIttc55Crnzcrh5YOyU8Yh4e4S3K1AYl/SmYqstLQuZVGcxW
+	 gGtVneAP09E36SViJbfJvrSk1/M3HNkaX4ImUKng=
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
@@ -37,10 +37,11 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
 	Lee Jones <lee@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Subject: [PATCH v3 1/4] dt-bindings: Add bindings for the Analog Devices ADP5585
-Date: Sun,  2 Jun 2024 18:24:09 +0300
-Message-ID: <20240602152412.29136-2-laurent.pinchart@ideasonboard.com>
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Haibo Chen <haibo.chen@nxp.com>
+Subject: [PATCH v3 3/4] gpio: adp5585: Add Analog Devices ADP5585 support
+Date: Sun,  2 Jun 2024 18:24:11 +0300
+Message-ID: <20240602152412.29136-4-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.44.2
 In-Reply-To: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com>
 References: <20240602152412.29136-1-laurent.pinchart@ideasonboard.com>
@@ -52,169 +53,344 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+From: Haibo Chen <haibo.chen@nxp.com>
+
 The ADP5585 is a 10/11 input/output port expander with a built in keypad
 matrix decoder, programmable logic, reset generator, and PWM generator.
-These bindings model the device as an MFD, and support the GPIO expander
-and PWM functions.
+This driver supports the GPIO function using the platform device
+registered by the core MFD driver.
 
-These bindings support the GPIO and PWM functions.
+The driver is derived from an initial implementation from NXP, available
+in commit 451f61b46b76 ("MLK-25917-2 gpio: adp5585-gpio: add
+adp5585-gpio support") in their BSP kernel tree. It has been extensively
+rewritten.
 
-Drop the existing adi,adp5585 and adi,adp5585-02 compatible strings from
-trivial-devices.yaml. They have been added there by mistake as the
-driver that was submitted at the same time used different compatible
-strings. We can take them over safely.
-
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-I've limited the bindings to GPIO and PWM as I lack hardware to design,
-implement and test the rest of the features the chip supports.
+Changes compared to v2:
 
-Changes since v2:
+- Add missing headers
+- Drop platform_set_drvdata()
+- Fix bit shift in bias configuration
 
-- Drop gpio property from required
-- Drop second example
+Changes compared to v1:
 
-Changes since v1:
+- Drop OF match table
+- Fix .get() for GPOs
+- Add platform ID table
+- Set struct device of_node manually
+- Merge child DT node into parent node
+- Implement .get_direction()
+- Drop mutex
 
-- Squash "dt-bindings: trivial-devices: Drop adi,adp5585 and
-  adi,adp5585-02" into this patch
-- Merge child nodes into parent node
+Changes compared to the NXP original version
+
+- Add MAINTAINERS entry
+- Add prefix to compatible string
+- Switch to regmap
+- White space fixes
+- Use sizeof(*variable)
+- Initialize variables at declaration time
+- Use mutex scope guards
+- Cleanup header includes
+- Support R5 GPIO pin
+- Reorder functions
+- Add bias support
+- Return real pin value from .get()
+- Add debounce support
+- Add drive mode support
+- Destroy mutex on remove
+- Update copyright
+- Update license to GPL-2.0-only
 ---
- .../devicetree/bindings/mfd/adi,adp5585.yaml  | 90 +++++++++++++++++++
- .../devicetree/bindings/trivial-devices.yaml  |  4 -
- MAINTAINERS                                   |  7 ++
- 3 files changed, 97 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
+ MAINTAINERS                 |   1 +
+ drivers/gpio/Kconfig        |   7 ++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-adp5585.c | 231 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 240 insertions(+)
+ create mode 100644 drivers/gpio/gpio-adp5585.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-new file mode 100644
-index 000000000000..c484a263dea7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/adi,adp5585.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/adi,adp5585.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADP5585 Keypad Decoder and I/O Expansion
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description:
-+  The ADP5585 is a 10/11 input/output port expander with a built in keypad
-+  matrix decoder, programmable logic, reset generator, and PWM generator.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - adi,adp5585-00  # Default
-+          - adi,adp5585-01  # 11 GPIOs
-+          - adi,adp5585-02  # No pull-up resistors by default on special pins
-+          - adi,adp5585-03  # Alternate I2C address
-+          - adi,adp5585-04  # Pull-down resistors on all pins by default
-+      - const: adi,adp5585
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  gpio-reserved-ranges: true
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - "#gpio-cells"
-+  - "#pwm-cells"
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: adi,adp5585-01
-+    then:
-+      properties:
-+        gpio-reserved-ranges: false
-+    else:
-+      properties:
-+        gpio-reserved-ranges:
-+          items:
-+            - const: 5
-+            - const: 1
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mfd@34 {
-+            compatible = "adi,adp5585-00", "adi,adp5585";
-+            reg = <0x34>;
-+
-+            vdd-supply = <&reg_3v3>;
-+
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            gpio-reserved-ranges = <5 1>;
-+
-+            #pwm-cells = <3>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 0a419453d183..91e62df4b296 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -39,10 +39,6 @@ properties:
-             # AD5110 - Nonvolatile Digital Potentiometer
-           - adi,ad5110
-             # Analog Devices ADP5585 Keypad Decoder and I/O Expansion
--          - adi,adp5585
--            # Analog Devices ADP5585 Keypad Decoder and I/O Expansion with support for Row5
--          - adi,adp5585-02
--            # Analog Devices ADP5589 Keypad Decoder and I/O Expansion
-           - adi,adp5589
-             # Analog Devices LT7182S Dual Channel 6A, 20V PolyPhase Step-Down Silent Switcher
-           - adi,lt7182s
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..3016b003ead3 100644
+index 77b93fbdf5cc..9c560d9a590a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -526,6 +526,13 @@ F:	drivers/leds/leds-adp5520.c
- F:	drivers/mfd/adp5520.c
- F:	drivers/video/backlight/adp5520_bl.c
+@@ -532,6 +532,7 @@ L:	linux-gpio@vger.kernel.org
+ L:	linux-pwm@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
++F:	drivers/gpio/gpio-adp5585.c
+ F:	drivers/mfd/adp5585.c
+ F:	include/linux/mfd/adp5585.h
  
-+ADP5585 GPIO EXPANDER, PWM AND KEYPAD CONTROLLER DRIVER
-+M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+L:	linux-gpio@vger.kernel.org
-+L:	linux-pwm@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/*/adi,adp5585*.yaml
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 3dbddec07028..67286886db5e 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1233,6 +1233,13 @@ config GPIO_ADP5520
+ 	  This option enables support for on-chip GPIO found
+ 	  on Analog Devices ADP5520 PMICs.
+ 
++config GPIO_ADP5585
++	tristate "GPIO Support for ADP5585"
++	depends on MFD_ADP5585
++	help
++	  This option enables support for the GPIO function found in the Analog
++	  Devices ADP5585.
 +
- ADP5588 QWERTY KEYPAD AND IO EXPANDER DRIVER (ADP5588/ADP5587)
- M:	Michael Hennerich <michael.hennerich@analog.com>
- S:	Supported
+ config GPIO_ALTERA_A10SR
+ 	tristate "Altera Arria10 System Resource GPIO"
+ 	depends on MFD_ALTERA_A10SR
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index e2a53013780e..04bfa2bc7e11 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
+ obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
+ obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
++obj-$(CONFIG_GPIO_ADP5585)		+= gpio-adp5585.o
+ obj-$(CONFIG_GPIO_AGGREGATOR)		+= gpio-aggregator.o
+ obj-$(CONFIG_GPIO_ALTERA_A10SR)		+= gpio-altera-a10sr.o
+ obj-$(CONFIG_GPIO_ALTERA)  		+= gpio-altera.o
+diff --git a/drivers/gpio/gpio-adp5585.c b/drivers/gpio/gpio-adp5585.c
+new file mode 100644
+index 000000000000..49f8d91623ba
+--- /dev/null
++++ b/drivers/gpio/gpio-adp5585.c
+@@ -0,0 +1,231 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Analog Devices ADP5585 GPIO driver
++ *
++ * Copyright 2022 NXP
++ * Copyright 2024 Ideas on Board Oy
++ */
++
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++#include <linux/mfd/adp5585.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/types.h>
++
++#define ADP5585_GPIO_MAX	11
++
++struct adp5585_gpio_dev {
++	struct gpio_chip gpio_chip;
++	struct regmap *regmap;
++};
++
++static int adp5585_gpio_get_direction(struct gpio_chip *chip, unsigned int off)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++	unsigned int val;
++
++	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
++
++	return val & bit ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
++}
++
++static int adp5585_gpio_direction_input(struct gpio_chip *chip, unsigned int off)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++
++	return regmap_update_bits(adp5585_gpio->regmap,
++				  ADP5585_GPIO_DIRECTION_A + bank,
++				  bit, 0);
++}
++
++static int adp5585_gpio_direction_output(struct gpio_chip *chip, unsigned int off, int val)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++	int ret;
++
++	ret = regmap_update_bits(adp5585_gpio->regmap,
++				 ADP5585_GPO_DATA_OUT_A + bank, bit,
++				 val ? bit : 0);
++	if (ret)
++		return ret;
++
++	return regmap_update_bits(adp5585_gpio->regmap,
++				  ADP5585_GPIO_DIRECTION_A + bank,
++				  bit, bit);
++}
++
++static int adp5585_gpio_get_value(struct gpio_chip *chip, unsigned int off)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++	unsigned int reg;
++	unsigned int val;
++
++	/*
++	 * The input status register doesn't reflect the pin state when the
++	 * GPIO is configured as an output. Check the direction, and read the
++	 * input status from GPI_STATUS or output value from GPO_DATA_OUT
++	 * accordingly.
++	 *
++	 * We don't need any locking, as concurrent access to the same GPIO
++	 * isn't allowed by the GPIO API, so there's no risk of the
++	 * .direction_input(), .direction_output() or .set() operations racing
++	 * with this.
++	 */
++	regmap_read(adp5585_gpio->regmap, ADP5585_GPIO_DIRECTION_A + bank, &val);
++	reg = val & bit ? ADP5585_GPO_DATA_OUT_A : ADP5585_GPI_STATUS_A;
++	regmap_read(adp5585_gpio->regmap, reg + bank, &val);
++
++	return !!(val & bit);
++}
++
++static void adp5585_gpio_set_value(struct gpio_chip *chip, unsigned int off, int val)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++
++	regmap_update_bits(adp5585_gpio->regmap, ADP5585_GPO_DATA_OUT_A + bank,
++			   bit, val ? bit : 0);
++}
++
++static int adp5585_gpio_set_bias(struct adp5585_gpio_dev *adp5585_gpio,
++				 unsigned int off, unsigned int bias)
++{
++	unsigned int bit, reg, mask, val;
++
++	/*
++	 * The bias configuration fields are 2 bits wide and laid down in
++	 * consecutive registers ADP5585_RPULL_CONFIG_*, with a hole of 4 bits
++	 * after R5.
++	 */
++	bit = off * 2 + (off > 5 ? 4 : 0);
++	reg = ADP5585_RPULL_CONFIG_A + bit / 8;
++	mask = ADP5585_Rx_PULL_CFG_MASK << (bit % 8);
++	val = bias << (bit % 8);
++
++	return regmap_update_bits(adp5585_gpio->regmap, reg, mask, val);
++}
++
++static int adp5585_gpio_set_drive(struct adp5585_gpio_dev *adp5585_gpio,
++				  unsigned int off, enum pin_config_param drive)
++{
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++
++	return regmap_update_bits(adp5585_gpio->regmap,
++				  ADP5585_GPO_OUT_MODE_A + bank, bit,
++				  drive == PIN_CONFIG_DRIVE_OPEN_DRAIN ? 1 : 0);
++}
++
++static int adp5585_gpio_set_debounce(struct adp5585_gpio_dev *adp5585_gpio,
++				     unsigned int off, unsigned int debounce)
++{
++	unsigned int bank = ADP5585_BANK(off);
++	unsigned int bit = ADP5585_BIT(off);
++
++	return regmap_update_bits(adp5585_gpio->regmap,
++				  ADP5585_DEBOUNCE_DIS_A + bank, bit,
++				  debounce ? 0 : 1);
++}
++
++static int adp5585_gpio_set_config(struct gpio_chip *chip, unsigned int off,
++				   unsigned long config)
++{
++	struct adp5585_gpio_dev *adp5585_gpio = gpiochip_get_data(chip);
++	enum pin_config_param param = pinconf_to_config_param(config);
++	u32 arg = pinconf_to_config_argument(config);
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_DISABLE:
++		return adp5585_gpio_set_bias(adp5585_gpio, off,
++					     ADP5585_Rx_PULL_CFG_DISABLE);
++
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		return adp5585_gpio_set_bias(adp5585_gpio, off, arg ?
++					     ADP5585_Rx_PULL_CFG_PD_300K :
++					     ADP5585_Rx_PULL_CFG_DISABLE);
++
++	case PIN_CONFIG_BIAS_PULL_UP:
++		return adp5585_gpio_set_bias(adp5585_gpio, off, arg ?
++					     ADP5585_Rx_PULL_CFG_PU_300K :
++					     ADP5585_Rx_PULL_CFG_DISABLE);
++
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return adp5585_gpio_set_drive(adp5585_gpio, off, param);
++
++	case PIN_CONFIG_INPUT_DEBOUNCE:
++		return adp5585_gpio_set_debounce(adp5585_gpio, off, arg);
++
++	default:
++		return -ENOTSUPP;
++	};
++}
++
++static int adp5585_gpio_probe(struct platform_device *pdev)
++{
++	struct adp5585_dev *adp5585 = dev_get_drvdata(pdev->dev.parent);
++	struct adp5585_gpio_dev *adp5585_gpio;
++	struct device *dev = &pdev->dev;
++	struct gpio_chip *gc;
++	int ret;
++
++	adp5585_gpio = devm_kzalloc(dev, sizeof(*adp5585_gpio), GFP_KERNEL);
++	if (!adp5585_gpio)
++		return -ENOMEM;
++
++	adp5585_gpio->regmap = adp5585->regmap;
++
++	device_set_of_node_from_dev(dev, dev->parent);
++
++	gc = &adp5585_gpio->gpio_chip;
++	gc->parent = dev;
++	gc->get_direction = adp5585_gpio_get_direction;
++	gc->direction_input = adp5585_gpio_direction_input;
++	gc->direction_output = adp5585_gpio_direction_output;
++	gc->get = adp5585_gpio_get_value;
++	gc->set = adp5585_gpio_set_value;
++	gc->set_config = adp5585_gpio_set_config;
++	gc->can_sleep = true;
++
++	gc->base = -1;
++	gc->ngpio = ADP5585_GPIO_MAX;
++	gc->label = pdev->name;
++	gc->owner = THIS_MODULE;
++
++	ret = devm_gpiochip_add_data(dev, &adp5585_gpio->gpio_chip,
++				     adp5585_gpio);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add GPIO chip\n");
++
++	return 0;
++}
++
++static const struct platform_device_id adp5585_gpio_id_table[] = {
++	{ "adp5585-gpio" },
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(platform, adp5585_gpio_id_table);
++
++static struct platform_driver adp5585_gpio_driver = {
++	.driver	= {
++		.name = "adp5585-gpio",
++	},
++	.probe = adp5585_gpio_probe,
++	.id_table = adp5585_gpio_id_table,
++};
++module_platform_driver(adp5585_gpio_driver);
++
++MODULE_AUTHOR("Haibo Chen <haibo.chen@nxp.com>");
++MODULE_DESCRIPTION("GPIO ADP5585 Driver");
++MODULE_LICENSE("GPL");
 -- 
 Regards,
 
