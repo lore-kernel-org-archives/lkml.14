@@ -1,58 +1,121 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shout12.mail.de (shout12.mail.de [62.201.172.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70335AD59
-	for <linux-kernel@vger.kernel.org>; Sun,  2 Jun 2024 22:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAB9374C4;
+	Sun,  2 Jun 2024 22:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.201.172.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717366761; cv=none; b=dEZFzZRiOp1R3IPecazCH8Vt6g++z2UjIEiEDSFexSROwXQOjeRiHeK7vh9ometP6PV4PwysTnOfJ4gxSBc/Fnfcmm9delYSw0UdxwArcBnKUk8Kg+SvXXtbrx4Ozl68u0ofLivng9iBR/OrOMLK/C8laBJuN34M6/jyT3cDy7E=
+	t=1717366826; cv=none; b=jeuWozunod6osJ0y4ZjsA0psekR6VymCcsklwTom25rqX2u0hHcxWUeAKb0b5+cdCiMCCmWODmwlIxIwqdb+mXeurzFsdUCd8KX8TCBH5jMrIjDwKk1Bi7LF6zxqGubiPLegdqVqDxXHB2ubTxE0Lp8+1dfUyqI+fPXanfF0E6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717366761; c=relaxed/simple;
-	bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Qy+I/J/egoDYL4J91NbJ4gQDYHH7GhPDxFWNwnz8XvO7uAaLQIrtsdZ0gjP0g8A2T8S2buOQ0nVYtJfixepVmx+HuMiUpUqKJ5CL4p0WvmoPRUC7ZAf62+wu6eEsqXExXGo+mgYJC8/h4bbfaEYV6qWfMjD00scO644VLMeyO4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3748be0ae92so25812155ab.0
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 15:19:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717366759; x=1717971559;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fHKEKHdPjoZhYVJRZoCAKKckDq3mCm+7VXF61UEPMbE=;
-        b=BXsusXfstMqo2ullegWfeL7Tjl6n9LbHusCLkEN1bMzCzbv1J2ajwhVeoLfoDGvvFv
-         wIh6lWEl6RjC1tMqs5IEe8UE8gKBJvH9cj7XWvS0LRfhl3HfYeRajycLDH+ahZWXsgrU
-         qh9MxE1RS9H7jJm7pp8eLJs2mn5f+dDJp3uFj0r2Vrvov/7qMRmjfP3yLilDfiCtnJI5
-         j7ZFxTenZTx4GiQLk4Bar5dGuwAtB6QtNeYAsMK4upJ5+ke0I98xzIkg61lZASm+r9fg
-         TLFpObTgmOqTjcIzDUJmUjcGHSBl7+bBJkX72MsYyK/HspVw6vD7vaIkHJ1YCJl9BzwO
-         iHiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsc6iguSOeQ+j83/hirRSnbG2elaZMD/g/CgTbOQ2NdXqSMvCm8siYOSrId13PFA7yfHR0uZmPHhTRxKSWWqXPA3l90eC44WEa0XIF
-X-Gm-Message-State: AOJu0Yx8O0/dMNJEAzvGKkYaYqv5QUT7xbJKWVWFzCDdcb8rumQS2Xua
-	LOrgjjstOTQpmw+sett5AvZvm2MVHjG90HGR4oUNsLmOC6Llo8GTi/4tzPf9lIkdQuqzvJ+pcZj
-	9S4LflisHOTUQD9RXBoCOJ51MkcR2EHnPdPSsOAP8oq/W73oNwmmnZJY=
-X-Google-Smtp-Source: AGHT+IF94pz2QiRNUNQugKVRXmOZZ4w9OVV2p0rLYKOzOEnR7kZwWSX70iIiwndxnrKbnOosg1ARCAC1MejFPHqJyvVKW89qXlj9
+	s=arc-20240116; t=1717366826; c=relaxed/simple;
+	bh=0PpPfOnAV9dATDb1aHsLlHM/c47rHUIRIb9Xva8BQM8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DhYVz7Y6S9cBt0Nmw0+zzUl4eYazqgfwF4C9gDWUsDBZJAlbuP10PAuJUOoOG1hJZvrvvxLLrO8+qy3j+gyXHSXC1oVnZr5dGiuB5mNNdx6m+zhn+wIRtw2DcNCLMLWfOR0terVMid0KQNqOeQkY760X+cp4GOt57rE9hUhNEPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de; spf=pass smtp.mailfrom=mail.de; dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b=Wgv3/K+N; arc=none smtp.client-ip=62.201.172.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b="Wgv3/K+N"
+Received: from shout01.mail.de (unknown [10.0.120.221])
+	by shout12.mail.de (Postfix) with ESMTPS id 3DAFE240AD8;
+	Mon,  3 Jun 2024 00:20:23 +0200 (CEST)
+Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
+	by shout01.mail.de (Postfix) with ESMTP id 131B1240B53;
+	Mon,  3 Jun 2024 00:20:23 +0200 (CEST)
+Received: from smtp01.mail.de (smtp04.bt.mail.de [10.0.121.214])
+	by postfix02.mail.de (Postfix) with ESMTP id DF7CDA03C4;
+	Mon,  3 Jun 2024 00:20:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
+	s=mailde202009; t=1717366822;
+	bh=0PpPfOnAV9dATDb1aHsLlHM/c47rHUIRIb9Xva8BQM8=;
+	h=From:To:Cc:Subject:Date:Message-ID:From:To:CC:Subject:Reply-To;
+	b=Wgv3/K+N2SJ/BixD9oLK5+SRzYFf1/rkJEIfUmAQawIVwbiBBsTPdcT5bVsTFDBFF
+	 uIC06QYIBfnYHrOXQGNEEE0jDSA6E37GfsaJ1Gjie589N/ammTgsSX+32phwfNRvTi
+	 sGqBx/1BHvdlRElXujJyMW1bBO2Gfxu66/CXHb8xw/zm+hday76083ihUBxeEbkHKd
+	 sfBrkiJWjn4tfYVexGDybyT+YVWVEy7d129wmVM+V5FkUH/THaWLkmYs7Xiao1sNDp
+	 ocJxe+Ed35ArE+Et6Cr/fKnD6zYoaCyHnyT4XjGA0Gnc7H98BJHPQ+gdzfVuCrVJJ0
+	 1o1WylOpdzQeQ==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp01.mail.de (Postfix) with ESMTPSA id C579B240099;
+	Mon,  3 Jun 2024 00:20:21 +0200 (CEST)
+From: Sebastian Kropatsch <seb-dev@mail.de>
+To: Heiko Stuebner <heiko@sntech.de>,
+	linux-rockchip@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Dragan Simic <dsimic@manjaro.org>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Kropatsch <seb-dev@web.de>
+Subject: [PATCH v2 1/2] dt-bindings: arm: rockchip: Add FriendlyElec CM3588 NAS
+Date: Sun,  2 Jun 2024 22:20:40 +0200
+Message-ID: <20240602202132.2012-1-seb-dev@mail.de>
+In-Reply-To: <20240602211901.237769-1-seb-dev@mail.de>
+References: <20240602211901.237769-1-seb-dev@mail.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:ca0e:0:b0:374:5315:95de with SMTP id
- e9e14a558f8ab-3748ba1fedbmr7166545ab.6.1717366759692; Sun, 02 Jun 2024
- 15:19:19 -0700 (PDT)
-Date: Sun, 02 Jun 2024 15:19:19 -0700
-In-Reply-To: <000000000000bb370306101a25a7@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a931d50619ef9b98@google.com>
-Subject: Re: [moderation] KCSAN: data-race in dev_uevent / really_probe (6)
-From: syzbot <syzbot+ffa8143439596313a85a@syzkaller.appspotmail.com>
-To: a.sangwan@samsung.com, dirk.behme@de.bosch.com, erosca@de.adit-jv.com, 
-	eugeniu.rosca@bosch.com, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org, namjae.jeon@samsung.com, rafael@kernel.org, 
-	roscaeugeniu@gmail.com, syzkaller-upstream-moderation@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-purgate: clean
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 1422
+X-purgate-ID: 154282::1717366822-B4FEA338-D6DC935A/0/0
 
-Auto-closing this bug as obsolete.
-Crashes did not happen for a while, no reproducer and no activity.
+From: Sebastian Kropatsch <seb-dev@web.de>
+
+Add devicetree bindings for the FriendlyElec CM3588 NAS board.
+
+The CM3588 NAS by FriendlyElec pairs the CM3588 compute module, based on
+the Rockchip RK3588 SoC, with the CM3588 NAS Kit carrier board.
+
+Signed-off-by: Sebastian Kropatsch <seb-dev@mail.de>
+---
+
+The format (const for the SoM + enum with one entry with the baseboard)
+was suggested by Heiko.
+I did not collect "Acked-by: Krzysztof" since the diff changed. Please
+have a look at this new change.
+
+
+Changes in v2 (this patch):
+- split devicetree into two (SoM and baseboard)
+
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index e04c213a0dee..2b8aff11fc73 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -248,6 +248,13 @@ properties:
+           - const: friendlyarm,nanopc-t6
+           - const: rockchip,rk3588
+ 
++      - description: FriendlyElec CM3588-based boards
++        items:
++          - enum:
++              - friendlyarm,cm3588-nas
++          - const: friendlyarm,cm3588
++          - const: rockchip,rk3588
++
+       - description: GameForce Chi
+         items:
+           - const: gameforce,chi
+-- 
+2.43.0
+
