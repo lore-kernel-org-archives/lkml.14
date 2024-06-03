@@ -1,64 +1,58 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61FA12D767;
-	Mon,  3 Jun 2024 13:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CD912D766
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717422119; cv=none; b=Hbd81G59Y3Ot4yHfoCLfsiHoHaPRPv0pX9xeY0R1B9adeavl/ULGqjwMiUfI9GZ9bpJTey0rFreRgep+dZ5i+EpbcYIm7qT/deieU3OX9sPmrf6w27Stohy/0b7vdeGOusrXXmwWjEH1reXz3QGNAdkHd9C5IauA0lnAMPF5V44=
+	t=1717422160; cv=none; b=PWJSb2THq4GeDA1PDyWgCjVHvyjI/51Bq1awYEWcK44fAXR30olSU83PGe2eElug00BcRuv5Ttg45W0icPwthJ2xNweWbHThm4SQr1eSy5SENCK5dJYh0e9/eCts47UppsR+llsLEG2PoVUJiD5BtLWUBj20ucPLfKxS29MLa74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717422119; c=relaxed/simple;
-	bh=OhRPQVA+nlxtKCwbRW1dsWRDMm4egZj4cJ4Hhi74VsU=;
+	s=arc-20240116; t=1717422160; c=relaxed/simple;
+	bh=fucPh4NT8afq/yJKF9Csi293Nc1OxsYl4BBLX3mkZgA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GngKyfBXQ3EpElaw/lIoNCLRHpF8Ob74/srqjG94VdO9/8QipgG+jHkEzXEPMDtlp38l+MbXYC2/koAk8Mj0Dj18FT9GfqzFSuBHgsTOHTGEuxhbp40OJDdkWNxPGuQqAeIgIzdjkmX1t31RYWHCS5uV1XBEGyMT5XwjslV6uJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HQNIuOPp; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tgu8BhcxIHurrmQ802sZuXkJSSje8cRDrlNyG4U+INUbiB2wPpkfKkcnvTtA0Js76HPQDBESatX7kTGDbnPTXgc0YcbEHZoC9BV5JyHXtmPGA3Ee755DGxCDcsFCDY90/D/Wj7LPUv8mLCzeskQT3r8wDNbTdDkH9XniKoIWJ4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=acmdbPFN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HQNIuOPp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=M5ah77INyaKh5P58D9AxRt+KkH3818+oFIrbjxKeZn4=; b=HQNIuOPpNyUPOdCjHpx4IOa0dA
-	1d1T3e6XNFKcNIxNLB1yd+IcAdrHeeja7KY6gJQ8l7EnkmT8TkcE9fRwvoZiKrE4UuKeIbXS+p1Pz
-	hIqFe9H/0nX7W2GCfUdm2Kj8nfTTCEL5bkiwai7t1IBmiyMRVfN4c/Gn+p+NAp6YMPrzOhP5Pm4/3
-	yte5ny25yih4EIAs2voq8DE2Gft6jYXx5j1s90s5LHVA0s4t0yptm2gA2ZiR883rRPOuUzK6K6qE5
-	iDr0MVNU3OSf0zG9M9/YIIIHxz6Y/jDLlcpKPwEgFuEAlfHJ8ylbsk5n9oMsIIBzwYU5aAvNZ/6Wn
-	GlQqp5Wg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52728)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sE7wW-0002oi-0I;
-	Mon, 03 Jun 2024 14:41:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sE7wW-0000UV-T1; Mon, 03 Jun 2024 14:41:44 +0100
-Date: Mon, 3 Jun 2024 14:41:44 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: Sky Huang <SkyLake.Huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v6 5/5] net: phy: add driver for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <Zl3IGN5ZHCQfQfmt@shell.armlinux.org.uk>
-References: <20240603121834.27433-1-SkyLake.Huang@mediatek.com>
- <20240603121834.27433-6-SkyLake.Huang@mediatek.com>
- <Zl3ELbG8c8y0/4DN@shell.armlinux.org.uk>
- <Zl3Fwoiv1bJlGaQZ@makrotopia.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acmdbPFN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717422158;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0XiDMYcq96Z7HWc66TmciFozG2sGDtvjwN27J1yBx8E=;
+	b=acmdbPFNBEppepSlZCniWH1t8w8HBMilHLFaUbdyOsWn9zY/onkyGzstJkBBLgZrZnnsnQ
+	BgG3HFr+wlOsesInihjgl+lRXuEoadjxq0Y8UwYE+g9uBVY59a8MW/igo601PROwjy3G21
+	grQw1+sHb08au+F2rH1FM166AUKI4cE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-414-HxOPD2R1O7ylb4JT3OAfXw-1; Mon, 03 Jun 2024 09:42:32 -0400
+X-MC-Unique: HxOPD2R1O7ylb4JT3OAfXw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1F697800CA5;
+	Mon,  3 Jun 2024 13:42:32 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.103])
+	by smtp.corp.redhat.com (Postfix) with SMTP id B788E2011C42;
+	Mon,  3 Jun 2024 13:42:30 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon,  3 Jun 2024 15:41:03 +0200 (CEST)
+Date: Mon, 3 Jun 2024 15:41:01 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tick: shift tick_nohz_switch_to_nohz() from
+ tick_check_oneshot_change() to hrtimer_run_queues()
+Message-ID: <20240603134100.GA388@redhat.com>
+References: <20240530124203.GA26990@redhat.com>
+ <20240602102007.GA27454@redhat.com>
+ <87jzj6789b.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,46 +61,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zl3Fwoiv1bJlGaQZ@makrotopia.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <87jzj6789b.ffs@tglx>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Mon, Jun 03, 2024 at 02:31:46PM +0100, Daniel Golle wrote:
-> On Mon, Jun 03, 2024 at 02:25:01PM +0100, Russell King (Oracle) wrote:
-> > On Mon, Jun 03, 2024 at 08:18:34PM +0800, Sky Huang wrote:
-> > > Add support for internal 2.5Gphy on MT7988. This driver will load
-> > > necessary firmware, add appropriate time delay and figure out LED.
-> > > Also, certain control registers will be set to fix link-up issues.
-> > 
-> > Based on our previous discussion, it may be worth checking in the
-> > .config_init() method whether phydev->interface is one of the
-> > PHY interface modes that this PHY supports. As I understand from one
-> > of your previous emails, the possibilities are XGMII, USXGMII or
-> > INTERNAL. Thus:
-> > 
-> > > +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> > > +{
-> > > +	struct pinctrl *pinctrl;
-> > > +	int ret;
-> > 
-> > 	/* Check that the PHY interface type is compatible */
-> > 	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL &&
-> > 	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
-> > 	    phydev->interface != PHY_INTERFACE_MODE_USXGMII)
-> > 		return -ENODEV;
-> 
-> The PHY is built-into the SoC, and as such the connection type should
-> always be "internal". The PHY does not exist as dedicated IC, only
-> as built-in part of the MT7988 SoC.
+On 06/03, Thomas Gleixner wrote:
+>
+> On Sun, Jun 02 2024 at 12:20, Oleg Nesterov wrote:
+> > @@ -1891,8 +1891,11 @@ void hrtimer_run_queues(void)
+> >  	 * there only sets the check bit in the tick_oneshot code,
+> >  	 * otherwise we might deadlock vs. xtime_lock.
+> >  	 */
+> > -	if (tick_check_oneshot_change(!hrtimer_is_hres_enabled())) {
+> > -		hrtimer_switch_to_hres();
+> > +	if (tick_check_oneshot_change()) {
+> > +		if (hrtimer_is_hres_enabled())
+> > +			hrtimer_switch_to_hres();
+> > +		else
+> > +			tick_nohz_switch_to_nohz();
+>
+> hrtimers have no business with tick_nohz_switch_to_nohz(),
+> really. That's a strict tick/nohz specific thing. hrtimers do not care
+> about NOHZ much. They care about whether they can switch to high
+> resolution mode.
 
-That's not how it was described to me by Sky.
+OK, lets forget this patch then.
 
-If what you say is correct, then the implementation of
-mt798x_2p5ge_phy_get_rate_matching() which checks for interface modes
-other than INTERNAL is not correct. Also it means that config_init()
-should not permit anything but INTERNAL.
+But note that the comment above the tick_check_oneshot_change() says
+"switch to highres and / or nohz mode".
 
-Thanks.
+Thanks,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Oleg.
+
