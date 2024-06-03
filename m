@@ -1,54 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEB483CDC
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6029713D2B3
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:24:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457099; cv=none; b=E/rMNqjraj5SBJDnuO6DlDqzWUbkRktEwftGQIcKv91pqV+tmsKjBCCcQpeqHzOi82xE9+4/hm9WmDfM0wpeZcWrSwu7ZoW+SweVu2kT4bJUDUgNgkUpLCQ8jHs55NEkArVWLk4ua0+3mPp1WCZPpHQZr6T+NtTofXCgBosF5Ng=
+	t=1717457100; cv=none; b=Q3AW6nT94bsnMAHwZSLvcWor+Y9B2QYuyU9Nij+s3xA0cAlP8u698UkL57a9wCiMUexd8ivRuH9mVDt+nEpuRT5YEKtmq3eDH5W2Mesz+XmDsixRCl3BCjq1SAnm9CXB9lvxZWS1eilvNjdfj4JkShz2uop1/Q4B/NAEW6k/6kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457099; c=relaxed/simple;
-	bh=H5QlAlECNprYLrNRQeJIyWXcYhJVcMnspTIa3/fXvfg=;
+	s=arc-20240116; t=1717457100; c=relaxed/simple;
+	bh=1GPxJsazjgFSmtvziKA2daYP2cJk4PeD/79aElPpmV8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=okvEblFU87IERi9ztQDw1JCugn1KpdfSr/ZoMrpDpnXF3YdbtgOyLRn8h5x879G8Olm43aqr720e517uizBbeUxrmJCnEJWCxQ3HMCYk/GWz2ePrrV/rpiGLmCG33eZ6v1EgR4YM7s8TJhUZg0SOP4h2DmPziGQRv1W3QtHV7Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u3XmvNih; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=idnfsnZA; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=ZL2POwXgCnrKRTOpMOCa6wqt1u35Nqb2QCe2ghp8BoI3I0WSbHM9A8G0Y/gAuffnxL4H86iVjOIFk7SWLgSr1RH8RVX/sYMmIhxp9QFtKJSonlNM8TWbkvo0Tgjk7aSoWpZExo9+h86WevrzQrG3+uZ0IvvNBtQZq6FmWZEO4So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ugy8mT27; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EoHxWt/n; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u3XmvNih";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="idnfsnZA"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ugy8mT27";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EoHxWt/n"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717457095;
+	s=2020; t=1717457097;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BpQSbTrOL8EbyodmIDDlAP8Rc/tLKsI5HokOE/M69OM=;
-	b=u3XmvNihKfrTxt4EoQtYUJsuYjXE9hrnlrkGwC8oi5dPhZEZoo+BD0bMYRbKkQ2wfbGrw8
-	CbHEqbVfKDlwlIU912YM5Ebt9TsT88kdQh3nwdP/8fXh/b4AyGzCdpUQ8bPRqJ1A0Np95b
-	2zGBW0muzJxj1OdGhTHliF8MKC2zKrIz/x5FEp/opogVJq1u9w1jool9UfbtvQmmmDNzFW
-	pxsm5gM9sNtd2IGb+pcGF48Buy4Pl16e/KBWhuCPJJg6Fnf3WTsL0yTSgL/ifgE8izYnxp
-	6R7p7kF1EouwY8SLN+oszSahfCV4Y9UnyF3iBhxNjA2WlaybaDcWQKYfrVb8Aw==
+	bh=J3r539HPiGZ1ucztmTvwYfwwdyMDVQwx7ANJGpwQWgU=;
+	b=Ugy8mT27KdRZEzx99VjJZzeebPpUyaWC554x2HvHaMK4xKaZlrkbdIG9Wu+Dy2RX6Iz9yv
+	s2+BZXyqq6sENqhYcb/RJWKGbowNN9x3mY/UtKgP6Rs/mt3FGsizQsS85ePBz7tHJtkFxC
+	LWl+rJPaNYFv1QRjKqMmKSaIxhP8NfWPCCAG/Zfj0Z+yB4eqm29PhYqs0Worv2Eif0q/tM
+	zVVWNzDo/183+vRmg+t1PyDpSXfNHpQ7bUkxJs8WRJLV/DObJS8epL3+ayvhBbsEA0Vndn
+	ro72ykqUn7MT2Hle36AmdHKC4vTH4AxWsYQU/agXxugV0wBoBbklm3qKf+TPXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717457095;
+	s=2020e; t=1717457097;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BpQSbTrOL8EbyodmIDDlAP8Rc/tLKsI5HokOE/M69OM=;
-	b=idnfsnZAzIcpW0ceZivFHDsf4DDEHPTdcve0XifhuamXG2AIo9ODP2Idg46NYZIP3ki8TH
-	05qXqfi/T9mHp0Cg==
+	bh=J3r539HPiGZ1ucztmTvwYfwwdyMDVQwx7ANJGpwQWgU=;
+	b=EoHxWt/nLPkRcB9vqfRfKnHhGNiNmYiGJ/6KIay44Uw62QdQGjp8cqwYhJAlcfxXNWi6sb
+	RSJc4NUoFRAcAqBg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Sreenath Vijayan <sreenath.vijayan@sony.com>,
-	Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-Subject: [PATCH printk v2 03/18] printk: Rename console_replay_all() and update context
-Date: Tue,  4 Jun 2024 01:30:38 +0206
-Message-Id: <20240603232453.33992-4-john.ogness@linutronix.de>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH printk v2 08/18] printk: nbcon: Stop threads on shutdown/reboot
+Date: Tue,  4 Jun 2024 01:30:43 +0206
+Message-Id: <20240603232453.33992-9-john.ogness@linutronix.de>
 In-Reply-To: <20240603232453.33992-1-john.ogness@linutronix.de>
 References: <20240603232453.33992-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -59,85 +57,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
+Register a syscore_ops shutdown function to stop all threaded
+printers on shutdown/reboot. This allows printk to cleanly
+transition back to atomic printing in order to provide a robust
+mechanism for outputting the final messages.
 
-Rename console_replay_all() to console_try_replay_all() to make
-clear that the implementation is best effort. Also, the function
-should not be called in NMI context as it takes locks, so update
-the comment in code.
-
-Fixes: 693f75b91a91 ("printk: Add function to replay kernel log on consoles")
-Fixes: 1b743485e27f ("tty/sysrq: Replay kernel log messages on consoles via sysrq")
-Suggested-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Link: https://lore.kernel.org/r/Zlguq/wU21Z8MqI4@sreenath.vijayan@sony.com
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- drivers/tty/sysrq.c    | 2 +-
- include/linux/printk.h | 4 ++--
- kernel/printk/printk.c | 6 +++---
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/printk/nbcon.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index e5974b8239c9..53f8c2329c30 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -452,7 +452,7 @@ static const struct sysrq_key_op sysrq_unrt_op = {
- 
- static void sysrq_handle_replay_logs(u8 key)
- {
--	console_replay_all();
-+	console_try_replay_all();
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 4ab47cc014a3..f60d47b5db8a 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -18,6 +18,7 @@
+ #include <linux/smp.h>
+ #include <linux/stddef.h>
+ #include <linux/string.h>
++#include <linux/syscore_ops.h>
+ #include <linux/types.h>
+ #include "internal.h"
+ #include "printk_ringbuffer.h"
+@@ -1703,3 +1704,33 @@ void nbcon_device_release(struct console *con)
+ 	console_srcu_read_unlock(cookie);
  }
- static struct sysrq_key_op sysrq_replay_logs_op = {
- 	.handler        = sysrq_handle_replay_logs,
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 784d2298f4cf..20e1942f63ae 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -195,7 +195,7 @@ void show_regs_print_info(const char *log_lvl);
- extern asmlinkage void dump_stack_lvl(const char *log_lvl) __cold;
- extern asmlinkage void dump_stack(void) __cold;
- void printk_trigger_flush(void);
--void console_replay_all(void);
-+void console_try_replay_all(void);
- void printk_legacy_allow_panic_sync(void);
- extern bool nbcon_device_try_acquire(struct console *con);
- extern void nbcon_device_release(struct console *con);
-@@ -280,7 +280,7 @@ static inline void printk_trigger_flush(void)
- {
- }
- 
--static inline void console_replay_all(void)
-+static inline void console_try_replay_all(void)
- {
- }
- 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b3fe1b6d7dbd..5dcc05e1aa56 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -4460,15 +4460,15 @@ void kmsg_dump_rewind(struct kmsg_dump_iter *iter)
- EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
- 
- /**
-- * console_replay_all - replay kernel log on consoles
-+ * console_try_replay_all - try to replay kernel log on consoles
-  *
-  * Try to obtain lock on console subsystem and replay all
-  * available records in printk buffer on the consoles.
-  * Does nothing if lock is not obtained.
-  *
-- * Context: Any context.
-+ * Context: Any, except for NMI.
-  */
--void console_replay_all(void)
-+void console_try_replay_all(void)
- {
- 	if (console_trylock()) {
- 		__console_rewind_all();
+ EXPORT_SYMBOL_GPL(nbcon_device_release);
++
++/**
++ * printk_kthread_shutdown - shutdown all threaded printers
++ *
++ * On system shutdown all threaded printers are stopped. This allows printk
++ * to transition back to atomic printing, thus providing a robust mechanism
++ * for the final shutdown/reboot messages to be output.
++ */
++static void printk_kthread_shutdown(void)
++{
++	struct console *con;
++
++	console_list_lock();
++	for_each_console(con) {
++		if (con->flags & CON_NBCON)
++			nbcon_kthread_stop(con);
++	}
++	console_list_unlock();
++}
++
++static struct syscore_ops printk_syscore_ops = {
++	.shutdown = printk_kthread_shutdown,
++};
++
++static int __init printk_init_ops(void)
++{
++	register_syscore_ops(&printk_syscore_ops);
++	return 0;
++}
++device_initcall(printk_init_ops);
 -- 
 2.39.2
 
