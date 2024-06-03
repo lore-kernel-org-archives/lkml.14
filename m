@@ -1,150 +1,387 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1270482891;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FEC7E0FC;
 	Mon,  3 Jun 2024 11:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717412637; cv=none; b=HHdnBbfAjjcDtLZdOmW814Ca0+gThb3NBDSBz32n2tXuuHG14R6LiTTXJrVBTk3/p4dEhvm1myAGeztYUkYJwxQ5b4A9Ctka4oy7QNHMNJXmTajhasK3l2L8xfz6CIzVsCOtv9F59beksq8CF7sS7KlCD4my31T7Gz4fqAa0dj8=
+	t=1717412636; cv=none; b=RCTr/3Tdjt+ZQAxqXmG+3OW0ib7bzSM1SnVrXShUZc7uKWESSVvjm7PgYVdXNLVK+MpKqT6yal62pTYv7pgwzHTr8odTE0AK8tZBbP4qH+uLei5XHnco1gbj/wWerlXxcF8esGcUGNIIX4KFfjPur/IrLY6xCacBNP/2g8aPf6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717412637; c=relaxed/simple;
-	bh=bQPnQcAIRDKBdTp8lMVtsR76hFtMqgQtFqFIcPainMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VAxjHIgW41wyJO4yJHM4ZJ9ACYJXi6rYOQBQLdMWzYuIeIapqQp8TUOwsXOWcXyn8B3Eo6XQpax8AftSuiNrbOBIPit24hr+CUTTPpX0rH/XhHIEwnJOmGJGTXETgc8PBiv1He9N/sPSiWOsQHgbtzCkvXJ/LK700KwrA2AgrCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nh7Jx1bh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1iUSXdMP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nh7Jx1bh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1iUSXdMP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717412636; c=relaxed/simple;
+	bh=NpkjSkHGZeUe9c7hsdeK5vwkf+TbCfa8VW5GwxruLCU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d/cpFzOKLKGJCtXHIL+TZDsX8MH3wHFft1cmBUTimjUlZM5JAO7Hx7+NR520Pgi2GRSs4WioUDRAVu4ysSeiQE2xyPc+DH19omSjTMW+ACX+DuVgGnrfliWGFTEc9WyDXNHEMEUXLlhLIdeQmgPelY0tLeWQfvIumZJS9nXWiwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=cy1pEwp0; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nh7Jx1bh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1iUSXdMP";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nh7Jx1bh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1iUSXdMP"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="cy1pEwp0"
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2815C20031;
-	Mon,  3 Jun 2024 11:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717412633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
-	b=Nh7Jx1bhwQOzWC/cAEBaBv9sKXguMByr35SycoUAom89Kq49Sem/mNaa7AuAUtUAzM3HCB
-	oXNmoRWYGFDGdmULGcmcO6gZU/tCthgmu2YGaKENOef/hJo0G64bEEY8NI6Thb8VGcryvO
-	hJ+RYydNYLtYe1F04WZnCVG04tVNWmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717412633;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
-	b=1iUSXdMPGHYkVyXbvZjtcYCsEeoal+Q2EaMTFibvUMei9mIIFGSPz/vFU5HWxO980EDFZK
-	xDZd6aS7rG9Ck9Cw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717412633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
-	b=Nh7Jx1bhwQOzWC/cAEBaBv9sKXguMByr35SycoUAom89Kq49Sem/mNaa7AuAUtUAzM3HCB
-	oXNmoRWYGFDGdmULGcmcO6gZU/tCthgmu2YGaKENOef/hJo0G64bEEY8NI6Thb8VGcryvO
-	hJ+RYydNYLtYe1F04WZnCVG04tVNWmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717412633;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
-	b=1iUSXdMPGHYkVyXbvZjtcYCsEeoal+Q2EaMTFibvUMei9mIIFGSPz/vFU5HWxO980EDFZK
-	xDZd6aS7rG9Ck9Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 102CD13A93;
-	Mon,  3 Jun 2024 11:03:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KrWlAxmjXWagIAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 03 Jun 2024 11:03:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A10FFA087F; Mon,  3 Jun 2024 13:03:44 +0200 (CEST)
-Date: Mon, 3 Jun 2024 13:03:44 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thorsten Blum <thorsten.blum@toblux.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] readdir: Add missing quote in macro comment
-Message-ID: <20240603110344.weobnu6augggrbdw@quack3>
-References: <20240602004729.229634-2-thorsten.blum@toblux.com>
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id EC62787D1D;
+	Mon,  3 Jun 2024 13:03:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1717412632;
+	bh=xJ45bh48GVqYlmdtTWZwWBUq4raxArSg1WSjXgO6nic=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cy1pEwp0zWhrg6jNFYLvQMFMt6XJ+TgWxC5sTYgKXN9jaA2wStRofFcvRSXGvRRcy
+	 Iuw+l4kcxgyL0t6Bqci4ZUE/5wEriFX5+lh930+mE4/MZYr2FnLZggOrtCjcZxlU5K
+	 AxEFG/qLJF16Y+RIX/25xRJvgguRl0G/36WJyJxwspkkwv5RyhbVthtCfyohRHaGzx
+	 vN/7IkAcA6YzOVdiyCHNrB8PHEJ6PLP1hnRA3vNmuOs1Z9kPW578BFMsGKD3p32Z3U
+	 BvgNAQlR2zGn+SwOcPFe9ir+d0yAnz2uGqBWIFgepK+p74fGJhIjjM03dge5G7TDkl
+	 acWhNnRY+BsOw==
+From: Lukasz Majewski <lukma@denx.de>
+To: Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Ravi Gunasekaran <r-gunasekaran@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Murali Karicheri <m-karicheri2@ti.com>,
+	Arvid Brodin <Arvid.Brodin@xdin.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Casper Andersson <casper.casan@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	Geliang Tang <tanggeliang@kylinos.cn>,
+	Shuah Khan <shuah@kernel.org>,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v1 net-next] net: hsr: Send supervisory frames to HSR network with ProxyNodeTable data
+Date: Mon,  3 Jun 2024 13:03:29 +0200
+Message-Id: <20240603110329.3157458-1-lukma@denx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240602004729.229634-2-thorsten.blum@toblux.com>
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Sun 02-06-24 02:47:30, Thorsten Blum wrote:
-> Add a missing double quote in the unsafe_copy_dirent_name() macro
-> comment.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+This patch provides support for sending supervision HSR frames with
+MAC addresses stored in ProxyNodeTable when RedBox (i.e. HSR-SAN) is
+enabled.
 
-Looks good. Feel free to add:
+Supervision frames with RedBox MAC address (appended as second TLV)
+are only send for ProxyNodeTable nodes.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+This patch series shall be tested with hsr_redbox.sh script.
 
-								Honza
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ net/hsr/hsr_device.c   | 63 ++++++++++++++++++++++++++++++++++--------
+ net/hsr/hsr_forward.c  | 40 +++++++++++++++++++++++++--
+ net/hsr/hsr_framereg.c | 15 ++++++++++
+ net/hsr/hsr_framereg.h |  2 ++
+ net/hsr/hsr_main.h     |  4 ++-
+ net/hsr/hsr_netlink.c  |  1 +
+ 6 files changed, 111 insertions(+), 14 deletions(-)
 
-> ---
->  fs/readdir.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/readdir.c b/fs/readdir.c
-> index 278bc0254732..5045e32f1cb6 100644
-> --- a/fs/readdir.c
-> +++ b/fs/readdir.c
-> @@ -72,7 +72,7 @@ int wrap_directory_iterator(struct file *file,
->  EXPORT_SYMBOL(wrap_directory_iterator);
->  
->  /*
-> - * Note the "unsafe_put_user() semantics: we goto a
-> + * Note the "unsafe_put_user()" semantics: we goto a
->   * label for errors.
->   */
->  #define unsafe_copy_dirent_name(_dst, _src, _len, label) do {	\
-> -- 
-> 2.45.1
-> 
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index e6904288d40d..f85331d75454 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -73,9 +73,15 @@ static void hsr_check_announce(struct net_device *hsr_dev)
+ 			mod_timer(&hsr->announce_timer, jiffies +
+ 				  msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
+ 		}
++
++		if (hsr->redbox && !timer_pending(&hsr->announce_proxy_timer))
++			mod_timer(&hsr->announce_proxy_timer, jiffies +
++				  msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL) / 2);
+ 	} else {
+ 		/* Deactivate the announce timer  */
+ 		timer_delete(&hsr->announce_timer);
++		if (hsr->redbox)
++			timer_delete(&hsr->announce_proxy_timer);
+ 	}
+ }
+ 
+@@ -279,10 +285,11 @@ static struct sk_buff *hsr_init_skb(struct hsr_port *master)
+ 	return NULL;
+ }
+ 
+-static void send_hsr_supervision_frame(struct hsr_port *master,
+-				       unsigned long *interval)
++static void send_hsr_supervision_frame(struct hsr_port *port,
++				       unsigned long *interval,
++				       const unsigned char addr[ETH_ALEN])
+ {
+-	struct hsr_priv *hsr = master->hsr;
++	struct hsr_priv *hsr = port->hsr;
+ 	__u8 type = HSR_TLV_LIFE_CHECK;
+ 	struct hsr_sup_payload *hsr_sp;
+ 	struct hsr_sup_tlv *hsr_stlv;
+@@ -296,9 +303,9 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 		hsr->announce_count++;
+ 	}
+ 
+-	skb = hsr_init_skb(master);
++	skb = hsr_init_skb(port);
+ 	if (!skb) {
+-		netdev_warn_once(master->dev, "HSR: Could not send supervision frame\n");
++		netdev_warn_once(port->dev, "HSR: Could not send supervision frame\n");
+ 		return;
+ 	}
+ 
+@@ -321,11 +328,12 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 	hsr_stag->tlv.HSR_TLV_length = hsr->prot_version ?
+ 				sizeof(struct hsr_sup_payload) : 12;
+ 
+-	/* Payload: MacAddressA */
++	/* Payload: MacAddressA / SAN MAC from ProxyNodeTable */
+ 	hsr_sp = skb_put(skb, sizeof(struct hsr_sup_payload));
+-	ether_addr_copy(hsr_sp->macaddress_A, master->dev->dev_addr);
++	ether_addr_copy(hsr_sp->macaddress_A, addr);
+ 
+-	if (hsr->redbox) {
++	if (hsr->redbox &&
++	    hsr_is_node_in_db(&hsr->proxy_node_db, addr)) {
+ 		hsr_stlv = skb_put(skb, sizeof(struct hsr_sup_tlv));
+ 		hsr_stlv->HSR_TLV_type = PRP_TLV_REDBOX_MAC;
+ 		hsr_stlv->HSR_TLV_length = sizeof(struct hsr_sup_payload);
+@@ -340,13 +348,14 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 		return;
+ 	}
+ 
+-	hsr_forward_skb(skb, master);
++	hsr_forward_skb(skb, port);
+ 	spin_unlock_bh(&hsr->seqnr_lock);
+ 	return;
+ }
+ 
+ static void send_prp_supervision_frame(struct hsr_port *master,
+-				       unsigned long *interval)
++				       unsigned long *interval,
++				       const unsigned char addr[ETH_ALEN])
+ {
+ 	struct hsr_priv *hsr = master->hsr;
+ 	struct hsr_sup_payload *hsr_sp;
+@@ -396,7 +405,7 @@ static void hsr_announce(struct timer_list *t)
+ 
+ 	rcu_read_lock();
+ 	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
+-	hsr->proto_ops->send_sv_frame(master, &interval);
++	hsr->proto_ops->send_sv_frame(master, &interval, master->dev->dev_addr);
+ 
+ 	if (is_admin_up(master->dev))
+ 		mod_timer(&hsr->announce_timer, jiffies + interval);
+@@ -404,6 +413,37 @@ static void hsr_announce(struct timer_list *t)
+ 	rcu_read_unlock();
+ }
+ 
++/* Announce (supervision frame) timer function for RedBox
++ */
++static void hsr_proxy_announce(struct timer_list *t)
++{
++	struct hsr_port *interlink;
++	unsigned long interval = 0;
++	struct hsr_node *node;
++	struct hsr_priv *hsr = from_timer(hsr, t, announce_proxy_timer);
++
++	rcu_read_lock();
++	/* RedBOX sends supervisory frames to HSR network with MAC addresses
++	 * of SAN nodes stored in ProxyNodeTable.
++	 */
++	interlink = hsr_port_get_hsr(hsr, HSR_PT_INTERLINK);
++	list_for_each_entry_rcu(node, &hsr->proxy_node_db, mac_list) {
++		if (hsr_addr_is_redbox(hsr, node->macaddress_A))
++			continue;
++		hsr->proto_ops->send_sv_frame(interlink, &interval,
++					      node->macaddress_A);
++	}
++
++	if (is_admin_up(interlink->dev)) {
++		if (interval == 0)
++			interval = msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL);
++
++		mod_timer(&hsr->announce_proxy_timer, jiffies + interval);
++	}
++
++	rcu_read_unlock();
++}
++
+ void hsr_del_ports(struct hsr_priv *hsr)
+ {
+ 	struct hsr_port *port;
+@@ -590,6 +630,7 @@ int hsr_dev_finalize(struct net_device *hsr_dev, struct net_device *slave[2],
+ 	timer_setup(&hsr->announce_timer, hsr_announce, 0);
+ 	timer_setup(&hsr->prune_timer, hsr_prune_nodes, 0);
+ 	timer_setup(&hsr->prune_proxy_timer, hsr_prune_proxy_nodes, 0);
++	timer_setup(&hsr->announce_proxy_timer, hsr_proxy_announce, 0);
+ 
+ 	ether_addr_copy(hsr->sup_multicast_addr, def_multicast_addr);
+ 	hsr->sup_multicast_addr[ETH_ALEN - 1] = multicast_spec;
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index 05a61b8286ec..2aa2621d8517 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -117,6 +117,38 @@ static bool is_supervision_frame(struct hsr_priv *hsr, struct sk_buff *skb)
+ 	return true;
+ }
+ 
++static bool is_proxy_supervision_frame(struct hsr_priv *hsr,
++				       struct sk_buff *skb)
++{
++	struct hsr_sup_payload *payload;
++	struct ethhdr *eth_hdr;
++	u16 total_length = 0;
++
++	eth_hdr = (struct ethhdr *)skb_mac_header(skb);
++
++	/* Get the HSR protocol revision. */
++	if (eth_hdr->h_proto == htons(ETH_P_HSR))
++		total_length = sizeof(struct hsrv1_ethhdr_sp);
++	else
++		total_length = sizeof(struct hsrv0_ethhdr_sp);
++
++	if (!pskb_may_pull(skb, total_length))
++		return false;
++
++	skb_pull(skb, total_length);
++	payload = (struct hsr_sup_payload *)skb->data;
++	skb_push(skb, total_length);
++
++	/* For RedBox (HSR-SAN) check if we have received the supervision
++	 * frame with MAC addresses from own ProxyNodeTable.
++	 */
++	if (hsr_is_node_in_db(&hsr->proxy_node_db,
++			      payload->macaddress_A))
++		return true;
++
++	return false;
++}
++
+ static struct sk_buff *create_stripped_skb_hsr(struct sk_buff *skb_in,
+ 					       struct hsr_frame_info *frame)
+ {
+@@ -499,7 +531,8 @@ static void hsr_forward_do(struct hsr_frame_info *frame)
+ 					   frame->sequence_nr))
+ 			continue;
+ 
+-		if (frame->is_supervision && port->type == HSR_PT_MASTER) {
++		if (frame->is_supervision && port->type == HSR_PT_MASTER &&
++		    !frame->is_proxy_supervision) {
+ 			hsr_handle_sup_frame(frame);
+ 			continue;
+ 		}
+@@ -637,6 +670,9 @@ static int fill_frame_info(struct hsr_frame_info *frame,
+ 
+ 	memset(frame, 0, sizeof(*frame));
+ 	frame->is_supervision = is_supervision_frame(port->hsr, skb);
++	if (frame->is_supervision && hsr->redbox)
++		frame->is_proxy_supervision =
++			is_proxy_supervision_frame(port->hsr, skb);
+ 
+ 	n_db = &hsr->node_db;
+ 	if (port->type == HSR_PT_INTERLINK)
+@@ -688,7 +724,7 @@ void hsr_forward_skb(struct sk_buff *skb, struct hsr_port *port)
+ 	/* Gets called for ingress frames as well as egress from master port.
+ 	 * So check and increment stats for master port only here.
+ 	 */
+-	if (port->type == HSR_PT_MASTER) {
++	if (port->type == HSR_PT_MASTER || port->type == HSR_PT_INTERLINK) {
+ 		port->dev->stats.tx_packets++;
+ 		port->dev->stats.tx_bytes += skb->len;
+ 	}
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 614df9649794..8d2a5e8adf83 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -36,6 +36,17 @@ static bool seq_nr_after(u16 a, u16 b)
+ #define seq_nr_before(a, b)		seq_nr_after((b), (a))
+ #define seq_nr_before_or_eq(a, b)	(!seq_nr_after((a), (b)))
+ 
++bool hsr_addr_is_redbox(struct hsr_priv *hsr, unsigned char *addr)
++{
++	if (!hsr->redbox || !is_valid_ether_addr(hsr->macaddress_redbox))
++		return false;
++
++	if (ether_addr_equal(addr, hsr->macaddress_redbox))
++		return true;
++
++	return false;
++}
++
+ bool hsr_addr_is_self(struct hsr_priv *hsr, unsigned char *addr)
+ {
+ 	struct hsr_self_node *sn;
+@@ -591,6 +602,10 @@ void hsr_prune_proxy_nodes(struct timer_list *t)
+ 
+ 	spin_lock_bh(&hsr->list_lock);
+ 	list_for_each_entry_safe(node, tmp, &hsr->proxy_node_db, mac_list) {
++		/* Don't prune RedBox node. */
++		if (hsr_addr_is_redbox(hsr, node->macaddress_A))
++			continue;
++
+ 		timestamp = node->time_in[HSR_PT_INTERLINK];
+ 
+ 		/* Prune old entries */
+diff --git a/net/hsr/hsr_framereg.h b/net/hsr/hsr_framereg.h
+index 7619e31c1d2d..993fa950d814 100644
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -22,6 +22,7 @@ struct hsr_frame_info {
+ 	struct hsr_node *node_src;
+ 	u16 sequence_nr;
+ 	bool is_supervision;
++	bool is_proxy_supervision;
+ 	bool is_vlan;
+ 	bool is_local_dest;
+ 	bool is_local_exclusive;
+@@ -35,6 +36,7 @@ struct hsr_node *hsr_get_node(struct hsr_port *port, struct list_head *node_db,
+ 			      enum hsr_port_type rx_port);
+ void hsr_handle_sup_frame(struct hsr_frame_info *frame);
+ bool hsr_addr_is_self(struct hsr_priv *hsr, unsigned char *addr);
++bool hsr_addr_is_redbox(struct hsr_priv *hsr, unsigned char *addr);
+ 
+ void hsr_addr_subst_source(struct hsr_node *node, struct sk_buff *skb);
+ void hsr_addr_subst_dest(struct hsr_node *node_src, struct sk_buff *skb,
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index 23850b16d1ea..ab1f8d35d9dc 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -170,7 +170,8 @@ struct hsr_node;
+ 
+ struct hsr_proto_ops {
+ 	/* format and send supervision frame */
+-	void (*send_sv_frame)(struct hsr_port *port, unsigned long *interval);
++	void (*send_sv_frame)(struct hsr_port *port, unsigned long *interval,
++			      const unsigned char addr[ETH_ALEN]);
+ 	void (*handle_san_frame)(bool san, enum hsr_port_type port,
+ 				 struct hsr_node *node);
+ 	bool (*drop_frame)(struct hsr_frame_info *frame, struct hsr_port *port);
+@@ -197,6 +198,7 @@ struct hsr_priv {
+ 	struct list_head	proxy_node_db;	/* RedBox HSR proxy nodes */
+ 	struct hsr_self_node	__rcu *self_node;	/* MACs of slaves */
+ 	struct timer_list	announce_timer;	/* Supervision frame dispatch */
++	struct timer_list	announce_proxy_timer;
+ 	struct timer_list	prune_timer;
+ 	struct timer_list	prune_proxy_timer;
+ 	int announce_count;
+diff --git a/net/hsr/hsr_netlink.c b/net/hsr/hsr_netlink.c
+index 898f18c6da53..f6ff0b61e08a 100644
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -131,6 +131,7 @@ static void hsr_dellink(struct net_device *dev, struct list_head *head)
+ 	del_timer_sync(&hsr->prune_timer);
+ 	del_timer_sync(&hsr->prune_proxy_timer);
+ 	del_timer_sync(&hsr->announce_timer);
++	timer_delete_sync(&hsr->announce_proxy_timer);
+ 
+ 	hsr_debugfs_term(hsr);
+ 	hsr_del_ports(hsr);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
