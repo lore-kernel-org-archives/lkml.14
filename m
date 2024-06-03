@@ -1,122 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2C581735;
-	Mon,  3 Jun 2024 10:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBAF7FBA3;
+	Mon,  3 Jun 2024 10:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717409457; cv=none; b=Ti+JhjL4xO9HwXk4buACnl7b6TeyDQDYCHxNdQdJurPeQ1oWXFR3ce3Aab1UfR8Stz6Rmy2gSnNXSunQhkV3usWqhZI17xIxflyC0bz81Lb7EO84Mg4THsKnj8qhMSJMsZ1jdnPn/nVn4Jh2oz9RKDtGwrDb3L4RLEtz8wGAMfQ=
+	t=1717409486; cv=none; b=Csw0LVM0R04wrk6f8X+wuHvYoUjp+X/2a2jglnv6w51wIBaMZVYOfF7pNWpQjdtfASlfpR5B1dPW5Ahv3EMirL7Eq5ZkD5jsBQNwXxmDGPO4IvPko/qu/C2NoCZKm0y/Noh5Pw4/KrWhsEwuaXjv9+Vt6GvKBxoYOuqvLTHt8pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717409457; c=relaxed/simple;
-	bh=f+W5jOGxLJ2ONFfis6RiM4MTi/XGMzqB73fbGqWIWDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fTiutGAhfiYZ99XXiRvHMEZ9oB2POuqWft/jUUEnoa1zcosGpMt8fhwi/+SvqQ7l7Xrl0dzHq0V8wKloXntDLRszJUSCj7Z8gRlA47geK4DqUJsbmXe0ZfTatEeArfAJylZoKsvW4L6P3hSPV9y6zEncR3dB1ItSUBKeDFSE/pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWLmI6CT; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1717409486; c=relaxed/simple;
+	bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tsOO0iLk3wvBKgTD5q9dJU4AAGA32wW9XJTPQYGQ3XYsHO7+CM0L8hqrhlSl2FswotJpRR0DQ6I/AXmUCwHcGnWslIQhXteo/hRCgo/0hj6SkTl1uNMq0ftzooJGS/Nb2xLEeR8urptC9OogqjQBNcsOHe9hT144YmZeC4BnPLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XwSwei1s; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWLmI6CT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XwSwei1s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717409455; x=1748945455;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f+W5jOGxLJ2ONFfis6RiM4MTi/XGMzqB73fbGqWIWDY=;
-  b=iWLmI6CT5ofUe149UaWYk+yBzUhZexX4KMw4xuPyX4YSS8diq3nn8i3Y
-   ZRd2ZtHdSxRCcrfkrzE7Zv40YzR/OYPCy0U7DARom5kwrXQUxqknmub5T
-   lmIvd2hKSzLk1G3cn5TAs5Mel3N7zMHPDBpQhsJ9hyoBtZnavAV/Q/p2r
-   LVlSZ9Eg8D0njcl8wwDpjojmI8MxZKe1SEtXuSSfZTysK6musbbiPoQ2G
-   dSmleUeBMJ30aguPd+eghTlqRsQJXsWTkmWaRsUqU1LT4B2DqRjEeOKNk
-   UJbH4oCRwhg6ybXHwxeVEP+5Y1Ijjru/3dtkdDbRz7TeIFCltGSGJop5g
+  t=1717409485; x=1748945485;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=LXJ5YB9dO8bdDQzIQLLZk5NeS3HkpILHWFU/5/MlRzI=;
+  b=XwSwei1s/O8UgiK7HiYXa8OzmINZAv8oBKDcw2SJLFsHA0KBhVg+GVeR
+   j9kcNPiGVYhSNvA1dnkDq2LFQyMCvIJhDv6Kpez5bWr6eetEK8xMS6rl1
+   /CcYZor/EQgWmxuFndOFdb65fdLIYuLkxLuqDA8CNMryAUos6sM5i3LyL
+   EDbUdI55K5O4FFDIUziN52EVOXxseM2JQCQVE7kRRImZsNqSysU+L3J4y
+   gD2fhGtsCsUydCyPBBBlvT8i43gcbXWdS/RtCZGDFwL02VTcSmCyqTJ3F
+   k/gbLHptIaVKjY/ZKvDaRY52XejVfXjO92l/O1mIflJuPR0fctR3VcflS
    Q==;
-X-CSE-ConnectionGUID: xUWw2ITLReiZd44dZghJzg==
-X-CSE-MsgGUID: DJBzUZkNT5iqvOCtBTXojw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="13760352"
+X-CSE-ConnectionGUID: ro3fiQByT4GrsZr3nnc5Cw==
+X-CSE-MsgGUID: ZuWRFJn+SBqpQzIrSwFj0Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="36417814"
 X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="13760352"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:10:50 -0700
-X-CSE-ConnectionGUID: HKVzVmnUS8Wg9qUz9TNufA==
-X-CSE-MsgGUID: rNG5L8TeQ3im08l4J9VCCw==
+   d="scan'208";a="36417814"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:24 -0700
+X-CSE-ConnectionGUID: UxAv791oS8mk3WmdWhwBxQ==
+X-CSE-MsgGUID: B85axv69RP2GwBoopIV9lg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="36907601"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by orviesa009.jf.intel.com with SMTP; 03 Jun 2024 03:10:47 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 03 Jun 2024 13:10:45 +0300
-Date: Mon, 3 Jun 2024 13:10:45 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: gregkh@linuxfoundation.org, dmitry.baryshkov@linaro.org,
-	jthies@google.com, bleung@chromium.org, abhishekpandit@chromium.org,
-	saranya.gopal@intel.com, lk@c--e.de, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, pmalani@chromium.org
-Subject: Re: [PATCH 2/2] usb: typec: ucsi: Enable UCSI v2.0 notifications
-Message-ID: <Zl2WpdJvH4koI2mK@kuha.fi.intel.com>
-References: <20240524105837.15342-1-diogo.ivo@tecnico.ulisboa.pt>
- <20240524105837.15342-3-diogo.ivo@tecnico.ulisboa.pt>
+   d="scan'208";a="36915625"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.161])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 03:11:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Jun 2024 13:11:16 +0300 (EEST)
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org, 
+    platform-driver-x86@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+    bp@alien8.de, dave.hansen@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, tony.luck@intel.com, 
+    ashok.raj@intel.com, jithu.joseph@intel.com, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH v3 0/3] x86/fpu: Allow the In-Field Scan driver to
+ initialize FPU state
+In-Reply-To: <20240530192739.172566-1-chang.seok.bae@intel.com>
+Message-ID: <676bfc09-c1f4-9272-a198-3fb865868c10@linux.intel.com>
+References: <20240530192739.172566-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240524105837.15342-3-diogo.ivo@tecnico.ulisboa.pt>
+Content-Type: multipart/mixed; BOUNDARY="8323328-81316292-1717409305=:1529"
+Content-ID: <afc06685-6e39-74d5-a470-df656471d706@linux.intel.com>
 
-On Fri, May 24, 2024 at 11:58:21AM +0100, Diogo Ivo wrote:
-> UCSI version 2.0 and above define new PPM notifications. Update the
-> logic to determine which notifications to enable taking into account
-> these changes.
-> 
-> Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+--8323328-81316292-1717409305=:1529
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <0a16be6f-9c4b-800e-b144-cd96f45b85a3@linux.intel.com>
 
-> ---
->  drivers/usb/typec/ucsi/ucsi.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index cb52e7b0a2c5..0cc1c49da4a0 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1664,7 +1664,7 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
->  
->  static u64 ucsi_get_supported_notifications(struct ucsi *ucsi)
->  {
-> -	u8 features = ucsi->cap.features;
-> +	u16 features = ucsi->cap.features;
->  	u64 ntfy = UCSI_ENABLE_NTFY_ALL;
->  
->  	if (!(features & UCSI_CAP_ALT_MODE_DETAILS))
-> @@ -1680,6 +1680,23 @@ static u64 ucsi_get_supported_notifications(struct ucsi *ucsi)
->  	if (!(features & UCSI_CAP_PD_RESET))
->  		ntfy &= ~UCSI_ENABLE_NTFY_PD_RESET_COMPLETE;
->  
-> +	if (ucsi->version <= UCSI_VERSION_1_2)
-> +		return ntfy;
-> +
-> +	ntfy |= UCSI_ENABLE_NTFY_SINK_PATH_STS_CHANGE;
-> +
-> +	if (features & UCSI_CAP_GET_ATTENTION_VDO)
-> +		ntfy |= UCSI_ENABLE_NTFY_ATTENTION;
-> +
-> +	if (features & UCSI_CAP_FW_UPDATE_REQUEST)
-> +		ntfy |= UCSI_ENABLE_NTFY_LPM_FW_UPDATE_REQ;
-> +
-> +	if (features & UCSI_CAP_SECURITY_REQUEST)
-> +		ntfy |= UCSI_ENABLE_NTFY_SECURITY_REQ_PARTNER;
-> +
-> +	if (features & UCSI_CAP_SET_RETIMER_MODE)
-> +		ntfy |= UCSI_ENABLE_NTFY_SET_RETIMER_MODE;
-> +
->  	return ntfy;
->  }
->  
-> -- 
-> 2.45.1
+On Thu, 30 May 2024, Chang S. Bae wrote:
 
--- 
-heikki
+> This revision switches to a new approach by providing a helper to
+> initialize user FPU states for the driver, which is considerably simpler.
+> This approach could serve as an example for addressing similar situations
+> from a non-critical path.
+>=20
+> I thought fpu_reset_fpregs() as the helper name. There is already one
+> with this name. Then, I realized the existing one is a bit misaligned, so
+> renamed it first here.
+>=20
+> Thanks to Dave for the reviews and the suggestion.
+>=20
+> Thanks,
+> Chang
+>=20
+> The previous postings:
+> V2: https://lore.kernel.org/all/20240507235344.249103-1-chang.seok.bae@in=
+tel.com
+> V1: https://lore.kernel.org/all/20240430212508.105117-1-chang.seok.bae@in=
+tel.com
+>=20
+> Chang S. Bae (3):
+>   x86/fpu: Rename fpu_reset_fpregs() to fpu_reset_fpstate_regs()
+>   x86/fpu: Allow FPU users to initialize FPU state
+>   platform/x86/intel/ifs: Initialize FPU states for the scan test
+>=20
+>  arch/x86/include/asm/fpu/api.h           |  2 ++
+>  arch/x86/kernel/fpu/core.c               | 17 ++++++++++++++---
+>  drivers/platform/x86/intel/ifs/ifs.h     |  1 +
+>  drivers/platform/x86/intel/ifs/runtest.c |  7 +++++++
+>  4 files changed, 24 insertions(+), 3 deletions(-)
+
+Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+Do x86 maintainers plan to take these through their tree?
+
+--=20
+ i.
+--8323328-81316292-1717409305=:1529--
