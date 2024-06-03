@@ -1,104 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05ED45250;
-	Mon,  3 Jun 2024 02:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC505250
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 02:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717383031; cv=none; b=cJt6K51iXK+k2HZy0G/TX84zeNCSmx1Pi9COn9hxlOxfJ7kt5AAMs8vel57BgFlpHrizz31JTFuGTu8PjJwDLg9xeByicyfPSVfTCViRkYqdg6Y/WgIOsJwsl79DncQEHJIiCNPBFYlpFgHE7MTNbycRf58zohiJ9qiIkWBdqZM=
+	t=1717383047; cv=none; b=XdENZNV1OQT0FJxUpkvM9MG/cwoD1S96KiutrcLuKjlwZ8VZJ3cU1bTB5UHJtet+syReRl+3XCPhblRkRloJTMJL3kiJFG2OPJgVo0nD2JGnmhO6qg8sV91Z9BpF/zWRx2vwUNv5IovbsTL8ZL3C5QA1uqVoWnZY7yF3wK0+1vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717383031; c=relaxed/simple;
-	bh=6uvSY3SwAc38IQogftaZ7RpTV6ON0Jubfb3GR7ZfSHw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=oL+deSSoPsyqs5KPqp1phBBMVLatgpeWyFF7MEt+etqzuMHfEBMPIV0uOlJ3iCvy761DmScEG37ikbTLsmahYlR9uxDitX1rhW/SibqYipoW+v0hdUs3a36cMKZQKdY4ChK6B3v8LgpzXIa1ifOHumPL8aJNs1s+OzoLsiRJiY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iVLyEF3u; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iVLyEF3u"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452NdYBw007549;
-	Mon, 3 Jun 2024 02:50:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=AyV4HEOEcvfq3ISoGaKKge
-	6HVEEr9S/6kBh7HMdcDRk=; b=iVLyEF3u53bcfn8LfQVj6HONsXMVbjR/M1lRfo
-	flSwTeiLpd1PLXdTKjkqvCSDTHx9GsyF9pnCJU7Nv5TO3ydt+XrelC7WZY7ivcIy
-	A9Dk4Bv4T7SpTSdZWt6Fg/Iwd0xrAJ5d09hT5svY22OYhl6zrEoY9bYyQcxE+mht
-	nvriAJ3LsliaayjhfSVMgHajlfWdJ0y27iR6Kbso/0uYIUUykiQFDD/eLzl/NVkv
-	2N3fUm8KvVFqRUo0hizD81p/hgLDrx/n7ZDoNrbeug0l8tjSPfneivD1BSOclsUo
-	HOaED+PFqOcd58O4XtdwMEVXziGhx1HQgU6p5d1JjNPzMCQA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw6qjsyh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 02:50:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4532oHnn030908
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 02:50:17 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 2 Jun 2024
- 19:50:16 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Sun, 2 Jun 2024 19:50:15 -0700
-Subject: [PATCH] auxdisplay: hd44780: add missing MODULE_DESCRIPTION()
- macro
+	s=arc-20240116; t=1717383047; c=relaxed/simple;
+	bh=9Cuj767uAqO5fKjEM1oY17xabYsz8+VeUEz+oc7TZpc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gPDKM+PYxsvAyaQhV8RGDXfmRYUK/A3PbK/VvcXKuBEyVRr98lSNNj5QH/LpBUe5ebecyx5jBc5xBop2pAwUJCaJY1M/TozIe70+HcUOUMVnBy8n4B0ZN5Syjo2lzyPtFLv5Hb0rpB5tMhpI5mtwi9rhSJmD+7WPNk+PIt9sGzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vsyrj1ZGcz4f3lCm
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:50:29 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 3ED6F1A06E0
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:50:40 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBF9L11mxJ2vOQ--.46547S3;
+	Mon, 03 Jun 2024 10:50:40 +0800 (CST)
+Subject: Re: [PATCH] md/dm-raid: don't clear MD_RECOVERY_FROZEN after setting
+ frozen
+To: linan666@huaweicloud.com, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, xni@redhat.com
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ yi.zhang@huawei.com, houtao1@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240601090608.2847814-1-linan666@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d20a99fa-965d-936d-1492-df87bba3da62@huaweicloud.com>
+Date: Mon, 3 Jun 2024 10:50:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240602-md-drivers-auxdisplay-hd44780-v1-1-0f15bd19f949@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGYvXWYC/x3MwQqDMAwA0F+RnBeopVjZr4wdUpvNgHaSTHGI/
- 75ux3d5BxirsMG1OUB5E5NXqWgvDQwjlSej5GrwzgfXOY9zxqyysRrSumexZaIPjjmE2DuM3KV
- +6PrWxwj1WJQfsv//2706kTEmpTKMv3WSsu44k71Z4Ty/mWVU3o4AAAA=
-To: Andy Shevchenko <andy@kernel.org>,
-        Geert Uytterhoeven
-	<geert@linux-m68k.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _V14EhOMqn0F1e0fHOkE3NY3OUZp2kmF
-X-Proofpoint-ORIG-GUID: _V14EhOMqn0F1e0fHOkE3NY3OUZp2kmF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-02_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 mlxlogscore=934 clxscore=1011 impostorscore=0 malwarescore=0
- mlxscore=0 adultscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030024
+In-Reply-To: <20240601090608.2847814-1-linan666@huaweicloud.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHGBF9L11mxJ2vOQ--.46547S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrZFy3JFy8uw15uFW3WFyrCrg_yoW8Jr4rpF
+	4kCa9xAr48Ar47Za9rXF1q9ayFv3ZFqr90krW7C3s5XryfGF9rW3WFgw42qFWkJFyrGFW7
+	JF47JF4rZF15KaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/hd44780_common.o
+ÔÚ 2024/06/01 17:06, linan666@huaweicloud.com Ð´µÀ:
+> From: Li Nan <linan122@huawei.com>
+> 
+> MD_RECOVERY_FROZEN should always remain set after array is frozen. But
+> in raid_message(), this flag is cleared soon after frozen. Fix it. This
+> flag will be cleared in md_idle_sync_thread(), there is no need to clear
+> it again for idle.
+> 
+> Fixes: cd32b27a66db ("md/dm-raid: don't call md_reap_sync_thread() directly")
+> Signed-off-by: Li Nan <linan122@huawei.com>
+> ---
+>   drivers/md/dm-raid.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+> index abe88d1e6735..466740a3a522 100644
+> --- a/drivers/md/dm-raid.c
+> +++ b/drivers/md/dm-raid.c
+> @@ -3744,9 +3744,10 @@ static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
+>   
+>   		md_idle_sync_thread(mddev);
+>   		mddev_unlock(mddev);
+> +	} else {
+> +		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>   	}
+>   
+> -	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+LGTM
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/auxdisplay/hd44780_common.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/auxdisplay/hd44780_common.c b/drivers/auxdisplay/hd44780_common.c
-index 7cbf375b0fa5..4ef87c3118c0 100644
---- a/drivers/auxdisplay/hd44780_common.c
-+++ b/drivers/auxdisplay/hd44780_common.c
-@@ -366,4 +366,5 @@ struct hd44780_common *hd44780_common_alloc(void)
- }
- EXPORT_SYMBOL_GPL(hd44780_common_alloc);
- 
-+MODULE_DESCRIPTION("Common functions for HD44780 (and compatibles) LCD displays");
- MODULE_LICENSE("GPL");
-
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240602-md-drivers-auxdisplay-hd44780-7e6b8c681277
+>   	if (decipher_sync_action(mddev, mddev->recovery) != st_idle)
+>   		return -EBUSY;
+>   	else if (!strcasecmp(argv[0], "resync"))
+> 
 
