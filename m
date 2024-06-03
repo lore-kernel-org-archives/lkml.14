@@ -1,107 +1,103 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C347312DDAE;
-	Mon,  3 Jun 2024 13:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F612DD8A;
+	Mon,  3 Jun 2024 13:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717422066; cv=none; b=VCjlDR0Q51ig4Bfy8pieOyhHeE+kzcSw1ThH4r6JzujZbH9mNp2EgK51vSyVa+8qo6LKh+N+yHi1AiSHP9mRVia3axsR7qGzXlKyupdYPXN7zqIOeZl/YYaFRshqstxIKzJxFOzzqkF7LDrUOgZ3cGIQtl7ZilkwR+0mygmfeKg=
+	t=1717422070; cv=none; b=bna4rhpjOY0Xxmaie7c0hRz0arZySf36MDU6qzBeWmXw5Cxd0ZeFbKNaVSjHuxL/TQotRf7W+ss3mPiOvX16Dzy6sBAeYd3dtDfTu1l7hXm0PFnrx1U15pk2WTmOCriskGVaWogvdocC0O1y2SSKWBqfAEYThZJb/fJTzfML0fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717422066; c=relaxed/simple;
-	bh=r5pwoduVxbJX4Ywc5rdi0LpioEmEMdP+bmmKp5Fr1CI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TkvbieZgYRRUMM0Z2eb78pE08b07KR74GgfxgOxm8VeiTvxQCBKV1Rl29xCI4C210YgPT4CZA8vuKRtVGFG4n3u6cji0RfNQJCwOORH5s6cWKTqw45fMeJhfpgpap5apo/xFjI49kAT7IXRTHka3K5giMtkZpwaLYl1NycCfcH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hkl8LqJi; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717422070; c=relaxed/simple;
+	bh=Ha1Vb6zLDIgl3FT1iTLBIO/NlIPS2ToAgX6Msao0hhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPTw9LZEEqY6LSq+6mtfwi63i9NdVNpdC+WkyNGX/zi81XvURL16KnwU0T3Lw1FflLWC4Pu/CHTjFVmykqlywkNUVJNj8XhrmNbb1ov5519TJB09Y7wdVd57BgjyrE4VsTjoSLmLrNzYSJOfzSDLb6wl1zqSHji+yxDnKNGEtKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ESftPgcR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hkl8LqJi"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-35dca73095aso3629300f8f.0;
-        Mon, 03 Jun 2024 06:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717422063; x=1718026863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nksobxv4wDiGzDjs9z1NAwTrGKR9f/JDq3ZaL9PNEKw=;
-        b=hkl8LqJiH/FDXe4qunKwzwYjR6O7lNxLeyHqhSSqDML/2yEUR++luiYsz1X9TCQM56
-         jtZi2Ov5XKN3FTlImGIl/HV6lBWf8JPtW8dNRY7q8OLOwhlIIE1CYYlg7SM3IhatGfsE
-         382fvr4gZ/vu1SU3Vm3/dqb5jvt2/oDDM0CwgzsAjOIeSEY0IYbh00MNAoO54eaAFEQD
-         U6jWIb+mjy5rd8wH3g2Vp+AsoyU3kD/YZg0vdq9KhvMLV2en41NKPGra2SnzH7sSz4h4
-         KjcKhQv5U4Q2gFSRv6/EZg6pNFjva+9LD0lvfVjCOWJeixXq1hcsjcCSNh3bf40jVBDQ
-         i6PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717422063; x=1718026863;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nksobxv4wDiGzDjs9z1NAwTrGKR9f/JDq3ZaL9PNEKw=;
-        b=WsCtgDyZMPCigN7sbi5k64k6I96BPzula1Ljsv+gRLl2evgUEmR2aSvKMwCeDfpxeh
-         SNSQ0JRTf0B4LJTnAP7pTT8IxMLZQa5MuMH3IW2LC/hyGUknmN0i9T8mRdr6ZdC2fgl0
-         ac5mqprUO4GflRNCgueQCrg97hxq47/Zlso6mhXEJ4i2C1lEJJ4mMwfKMS2uEYpzjnUm
-         xJzxtLOtZo4a2Qsp/wTlMPKTAkKK5fikVQcJvUYJi+iLVzxXABBNOFB9CqXoaCEgElwe
-         4z76NwgVpZnK+1C4mVqw2hn/EyOu3/2fUIeyWb90X3w9H6BHFuHjhzPFAZkLIrkK7y+v
-         CI0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXMT8x3nG4ijTMbn0Dy/FQ71YlYkLy7nOfgXvpMpZcOpYNcmIkG4xgqvzi7I5xd1boSc+8Y2EK1A52f6u8P1RSBABvLQUMLBKmibENSM9okZZIbAGgxWaChyW9M8t1nmWmuHW3Ew6yaB5os1Qu3DVpfgC/31EjT45OI9yI1tyIdpDGcWg==
-X-Gm-Message-State: AOJu0YymySMyS1+hT/0pnNCH4E4cKaeg01/gHL5vdvW/Na68mYv5b7rC
-	fYdup0yUXs6iSS0CBAnucsBiTaio9LEPuGT8dPJcY2hGfruS52dU
-X-Google-Smtp-Source: AGHT+IF0VMa8sCOW1Xdd+cQOW+CCAJRSpmGwhO221NJKn9VSaj/y8ESRMClIsFwMsvbT8BXo2TGKlg==
-X-Received: by 2002:adf:ef0c:0:b0:357:8fe9:4d6c with SMTP id ffacd0b85a97d-35e0f30dfb1mr6555108f8f.49.1717422062952;
-        Mon, 03 Jun 2024 06:41:02 -0700 (PDT)
-Received: from localhost.localdomain ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e5e3d1902sm1868361f8f.32.2024.06.03.06.41.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 06:41:02 -0700 (PDT)
-From: Mudit Sharma <muditsharma.info@gmail.com>
-To: ivan.orlov0322@gmail.com,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org
-Cc: Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 3/3] MAINTAINERS: Add maintainer for ROHM BH1745
-Date: Mon,  3 Jun 2024 14:40:15 +0100
-Message-ID: <20240603134015.70388-3-muditsharma.info@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240603134015.70388-1-muditsharma.info@gmail.com>
-References: <20240603134015.70388-1-muditsharma.info@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ESftPgcR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E95C32781;
+	Mon,  3 Jun 2024 13:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717422069;
+	bh=Ha1Vb6zLDIgl3FT1iTLBIO/NlIPS2ToAgX6Msao0hhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ESftPgcRwAW263OfIBCOhYLZOuMreNuvfXqqXkvt6Cmf7vzo5PeOYZ6DoRRNP3JZ/
+	 lyssP0SZncpQ3xya77ugCf4jlN8PPSxFKMqvywN23AcgXS4MgFIt3AFzpnqHG4mj1C
+	 qfrjFZKJql+XdFwMAueRJ+8ZVDQa7J+DnJOZ6tD1EH+tLJyZ7R38rmczDS421jq+c/
+	 PWNGF2/EOyVowAxI+Y9wWYMJkq7H0TD+iI17mH1o9U/MOfm2TP6nvmVx6wUKyY2wBp
+	 WlwNjnjt9JamFdbyy2R0Vk4kEIQnx47+nuTqhjSjYBgTkYWPrN2VD6hbTNUPEJW2Uj
+	 jqsetzuLS3xPQ==
+Date: Mon, 3 Jun 2024 16:39:10 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <Zl3HfiQ6oHdTdOdA@kernel.org>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <cover.1717111180.git.ashish.kalra@amd.com>
+ <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+ <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
 
-Add myself as maintainer for ROHM BH1745 colour sensor driver.
+On Mon, Jun 03, 2024 at 08:06:56AM -0500, Kalra, Ashish wrote:
+> On 6/3/2024 3:56 AM, Borislav Petkov wrote
+> 
+> > > EFI memory map and due to early allocation it uses memblock allocation.
+> > > 
+> > > Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+> > > in case of a kexec-ed kernel boot.
+> > > 
+> > > This function kexec_enter_virtual_mode() installs the new EFI memory map by
+> > > calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
+> > > in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
+> > > 
+> > > Subsequently, when memblock is freed later in boot flow, this remapped
+> > > efi_memmap will have random corruption (similar to a use-after-free scenario).
+> > > 
+> > > The corrupted EFI memory map is then passed to the next kexec-ed kernel
+> > > which causes a panic when trying to use the corrupted EFI memory map.
+> > This sounds fishy: memblock allocated memory is not freed later in the
+> > boot - it remains reserved. Only free memory is freed from memblock to
+> > the buddy allocator.
+> > 
+> > Or is the problem that memblock-allocated memory cannot be memremapped
+> > because *raisins*?
+> 
+> This is what seems to be happening:
+> 
+> efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
+> EFI memory map and due to early allocation it uses memblock allocation.
+> 
+> And later efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+> in case of a kexec-ed kernel boot.
+> 
+> This function kexec_enter_virtual_mode() installs the new EFI memory map by
+> calling efi_memmap_init_late() which does memremap() on memblock-allocated memory.
 
-Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Does the issue happen only with SNP?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d6c90161c7bf..945873321fef 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19407,6 +19407,13 @@ S:	Supported
- F:	drivers/power/supply/bd99954-charger.c
- F:	drivers/power/supply/bd99954-charger.h
+I didn't really dig, but my theory would be that it has something to do
+with arch_memremap_can_ram_remap() in arch/x86/mm/ioremap.c
  
-+ROHM BH1745 COLOUR SENSOR
-+M:	Mudit Sharma <muditsharma.info@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-+F:	drivers/iio/light/bh1745.c
-+
- ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
- M:	Tomasz Duszynski <tduszyns@gmail.com>
- S:	Maintained
--- 
-2.43.0
+> Thanks, Ashish
 
+-- 
+Sincerely yours,
+Mike.
