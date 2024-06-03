@@ -1,94 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 135BC82487;
-	Mon,  3 Jun 2024 09:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE8B84FD8;
+	Mon,  3 Jun 2024 09:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.47.171.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407576; cv=none; b=CVCvYaT3h9DIcKGDLaxxDxAz6zXYVaBZhE1uOazcpI/ep0KzQLwIGlYWRHCNI3PU6nNdZt6i9FACzdf6vvuAPk1/mHPaQeDNw3Bkegv9TDK4Wxi0/bktLin90Xkf0PYwwhbLWvcB4RNgW0PJXGR5iQtoT13xR1scqsAWIXaoTDc=
+	t=1717407632; cv=none; b=M3iW45BqTi6pwt2iRVxz1ZLBs4CarQZp72eJa+s5r84/I0p4fe40fDCnel3eYR3i0fyuNvGLHa3P1e9MAXIn7bb46XySjtXustfCKT9XxduPkHJr606XyFHijYr+rSjCuYk+Y4NPGQVOrIUwvGDAhV9h+YwA523SSRIWg7fBmiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407576; c=relaxed/simple;
-	bh=qMkXAFv9lGGixL1rgvPjKdZzgR+KXcK9HaCAo6EOfrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HXlHCK9QAi74ctmQBKO+MYI4BudjIfZ8cO0axZMnhukxJ1wW0ahUjZ2n1N2KL6AoPH1pPfdi9uV69uS+ddi4iGx1pFbRuDcoVeKJV0fnox5nfs16zeMBIiJHHp7KwoQoBW742c1KxGI2UddDVtI6QVtfqBHqz3mY3HkVwajn9bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7C0D1042;
-	Mon,  3 Jun 2024 02:39:58 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CD153F762;
-	Mon,  3 Jun 2024 02:39:32 -0700 (PDT)
-Date: Mon, 3 Jun 2024 10:39:30 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: James Clark <james.clark@arm.com>, Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com
-Subject: Re: [PATCH V17 0/9] arm64/perf: Enable branch stack sampling
-Message-ID: <Zl2PUoGb3lFBRSqo@J2N7QTR9R3>
-References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
- <5f8fdfd2-a4f9-4fde-ad24-3b76231e61c8@arm.com>
- <eab504ab-1563-4235-aef0-62525b2813eb@arm.com>
+	s=arc-20240116; t=1717407632; c=relaxed/simple;
+	bh=oVDr4kqufAv/dxzz5Lxq0u/Ascj3+Nvd6O3eZYaIXi4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DKzkhEnMlebmBVJQ9G5Oj5rCk+kNf8VvUW9bQJxCfHa/HG6vr5tm/3Gmdx9BuqmBGaTixV6+bU9K51mikxXI+wnx8B7FxtFe3fodVilJdm8Qj92ddL1Uz2BzJ3+WL/sIFcPkQTxBfrsPWia8ALxBX/Gr96R/YgZ9c/nHq/4/vEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org; spf=pass smtp.mailfrom=datenfreihafen.org; dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b=EJ61GY7M; arc=none smtp.client-ip=78.47.171.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=datenfreihafen.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b="EJ61GY7M"
+Received: from [192.168.2.51] (unknown [45.118.184.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: stefan@datenfreihafen.org)
+	by proxima.lasnet.de (Postfix) with ESMTPSA id D8BCDC063F;
+	Mon,  3 Jun 2024 11:33:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=datenfreihafen.org;
+	s=2021; t=1717407209;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3nWKy6AKKd5kBCqS4Y/8g3wOqFQkOvvYM77V/sj1yk4=;
+	b=EJ61GY7Mjdnz4zlqQCfRKO0kKsMMgfxuNIV77s8WH2+buDVSdhFI9jBEksT4vaHhzgSTU8
+	M+CCD72vV+LLeHk90K2xcf9/Uo8oLScKiaU5d9QPJBDMPymDXjhbQcEYUpVgKM2ejD8wnK
+	+cS2KGFGquZtu1UrFPmviX332DzaRqpyRU5d77CgkL+H5T/h498dQ34qQrmVBm2YP9Ce1s
+	5LGnkbhY3ElztedPf86I09ypKV1JoGl3C6U93c3YGz7GxHV9dn6fsj4hns8retU3z3gc07
+	FYpZOvZohcH1Y3+vGTu5X6oS586w68ltei+5vdJLK3oGQvAhEJLFGlFighqv1g==
+Message-ID: <41e4b0e3-ecc0-43ca-a6cd-4a6beb0ceb8f@datenfreihafen.org>
+Date: Mon, 3 Jun 2024 11:33:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eab504ab-1563-4235-aef0-62525b2813eb@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: mac802154: Fix racy device stats updates by
+ DEV_STATS_INC() and DEV_STATS_ADD()
+To: Yunshui Jiang <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-wpan@vger.kernel.org
+Cc: alex.aring@gmail.com, miquel.raynal@bootlin.com, davem@davemloft.net
+References: <20240531080739.2608969-1-jiangyunshui@kylinos.cn>
+Content-Language: en-US
+From: Stefan Schmidt <stefan@datenfreihafen.org>
+In-Reply-To: <20240531080739.2608969-1-jiangyunshui@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 03, 2024 at 02:48:58PM +0530, Anshuman Khandual wrote:
-> 
-> 
-> On 5/30/24 15:33, James Clark wrote:
-> > 
-> > 
-> > On 05/04/2024 03:46, Anshuman Khandual wrote:
-> >> This series enables perf branch stack sampling support on arm64 platform
-> >> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> >> the relevant register definitions could be accessed here.
-> >>
-> >> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
-> >>
-> >> This series applies on 6.9-rc2.
-> >>
-> >> Also this series is being hosted below for quick access, review and test.
-> >>
-> >> https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (brbe_v17)
-> >>
-> >> There are still some open questions regarding handling multiple perf events
-> >> with different privilege branch filters getting on the same PMU, supporting
-> >> guest branch stack tracing from the host etc. Finally also looking for some
-> >> suggestions regarding supporting BRBE inside the guest. The series has been
-> >> re-organized completely as suggested earlier.
-> > 
-> > For guest support I'm still of this opinion:
-> > 
-> >   * No support for the host looking into guests (the addresses don't
-> >     make sense anyway without also running Perf record in the guest)
-> >   * Save and restore the host buffer and registers on guest switch (if
-> >     it was ever used by either host or guest)
-> >   * Let the guest do whatever it wants with BRBE without any
-> >     virtualisation
-> > 
-> > Merging this with the current PMU virtualistion stuff seems like a lot
-> > of work for no use case (host looking into guests). Having said that, it
-> > might not even be worth discussing on this patchset apart from "no guest
-> > support", and we can do it later to avoid confusion that it's being
-> > proposed for this version.
-> 
-> Agreed, let's just have "no guest support" for now in this proposed series
-> without any more additional changes to keep things simpler and separated.
-> I will also update the cover letter next time around making this clear.
+Hello.
 
-FWIW, that sounds good to me.
+On 31.05.24 10:07, Yunshui Jiang wrote:
+> mac802154 devices update their dev->stats fields locklessly. Therefore
+> these counters should be updated atomically. Adopt SMP safe DEV_STATS_INC()
+> and DEV_STATS_ADD() to achieve this.
+> 
+> Signed-off-by: Yunshui Jiang <jiangyunshui@kylinos.cn>
+> ---
+>   net/mac802154/tx.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/mac802154/tx.c b/net/mac802154/tx.c
+> index 2a6f1ed763c9..6fbed5bb5c3e 100644
+> --- a/net/mac802154/tx.c
+> +++ b/net/mac802154/tx.c
+> @@ -34,8 +34,8 @@ void ieee802154_xmit_sync_worker(struct work_struct *work)
+>   	if (res)
+>   		goto err_tx;
+>   
+> -	dev->stats.tx_packets++;
+> -	dev->stats.tx_bytes += skb->len;
+> +	DEV_STATS_INC(dev, tx_packets);
+> +	DEV_STATS_ADD(dev, tx_bytes, skb->len);
+>   
+>   	ieee802154_xmit_complete(&local->hw, skb, false);
+>   
+> @@ -90,8 +90,8 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
+>   		if (ret)
+>   			goto err_wake_netif_queue;
+>   
+> -		dev->stats.tx_packets++;
+> -		dev->stats.tx_bytes += len;
+> +		DEV_STATS_INC(dev, tx_packets);
+> +		DEV_STATS_ADD(dev, tx_bytes, len);
+>   	} else {
+>   		local->tx_skb = skb;
+>   		queue_work(local->workqueue, &local->sync_tx_work);
 
-Mark.
+This patch has been applied to the wpan tree and will be
+part of the next pull request to net. Thanks!
+
+regards
+Stefan Schmidt
