@@ -1,208 +1,93 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E112E1F9;
-	Mon,  3 Jun 2024 17:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9889E12E1F9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434747; cv=none; b=q+5Qz5jz6sAT9sMW+LU1AivG3/nNDJYf9de3b7jJIxR5YB0dmgo9DSCKtf+41nz8RY+17LZrC3osV7zDEByuHKZt8VX1XTQotrwY3bKAmOKhNf6r8s00d2uVTFzdz3C1uL9BV71UQYInIZhaUjy7xguVsyDlvkzqxll40tnHSyU=
+	t=1717434788; cv=none; b=iHTOU+LKvh4UFXFDGVx/ytuVnLSIB/V+ewfIBtAtt037cEPCYzSXkihhJrpI7i42hwQIbWRfglXnZadvJwDlnF28qrajv7EZJR7Al5UO1nhPWvTm0utAOrwLo6aaHcjXeAcsxPZyskjuV6ADUmpvQoGmNk+Jn8bFWEKnbZ/7g/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717434747; c=relaxed/simple;
-	bh=rbtH+DpYhqBMd0xLDXJmN7RirgQ6wnLGRMVHaZoyBt8=;
+	s=arc-20240116; t=1717434788; c=relaxed/simple;
+	bh=rarbm4FivPkK3sgMveXhHZcTE4JvgYqXKWIDIqdUVhY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2fu9gnHjrB50ZABF1paHfxKsjU6/3IypSyEi2nSVIxqKQofKr17i7ExeJ0n3ebbb/a8Ffu92nb0UU2UNxCv9u5QlRMewSAwhze+6I7WODemrsNOwH7Ge2Uv5WcE5hUXd/kqjsG4VWCXVdH/ZgdMlh9JLnRN5UHMy3XngcdI7Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HzHULEMQ; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sq2DKvy1Rg4/uoBM6b0yIMocnQHL5otl3Demb1bHtGlR3GbrS420s2VohBiYw51xpMp0LvaQuoI0Y5PvG6rptMlkLVMZ1MOOpezUKDGuWG3Ar8JxYGOz1fopCBAS+F9+40H7O/F0Hm87XR64lGA708yzSevJe64WnyZfm4zFeCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=UoaF02iA; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzHULEMQ"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-794ab01e747so8949185a.1;
-        Mon, 03 Jun 2024 10:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717434745; x=1718039545; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xowQVtG5FrDvjNgj7LbV6txQKMGt2SxrGC16ykxcKRw=;
-        b=HzHULEMQf7QqvnzkLcLLAgGbu/mBmi1Tho5Hhkw896d6Jmrr8IW9w01JGStFtXnN04
-         oTr5GelT9OtR8hW6uFfsMMR/gonjw42VQHGfHjoRitNYFhzz9ECNpQ0n6pYrdjGJYmR6
-         wQdEq8VYRoCooSr0/isdHKfPgP4J5gJ79hyMBIZCDF4hvDWIb29ZpsCf9AzJs/Fkl4hf
-         fy7vioXn06EpD/yFInaQ32LFb+mLF17fSIXIulQ+wzOmZcMahAuUUpyK2HbXuQnM/wiN
-         xb1h/Mg+Vh69quNxGHMkLvqSWKtfC4r35vtxgiZZSX/bkDSaga4/YVBJU7H2Ce+DqS/h
-         ttGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717434745; x=1718039545;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xowQVtG5FrDvjNgj7LbV6txQKMGt2SxrGC16ykxcKRw=;
-        b=XROeovn/HTZGgFGctQDtLxzj+vaHA6ZcsK9JWgM1ExhaOySh1yMKLVZyrAtWhJADeI
-         PgXskJyGEU+2tYlsZlaxHR099cbPlIlBGcfS5akrD2rkr4G1hRDCPUxGqO9v1U98CtPg
-         Bd0R9WhbdbHPlBhfh9snld1lSSqPK+mNpqSI8YHU/CIRXrtnoY9rwMpsTJS4vPOUq4uO
-         6HTc4Hp0q24HIT1HFdViZR1i84pH5QydN8y5yMueiHeZwyU8bQG76xPJLihzvwPU4/Pv
-         TraqTHBb0xvTWaFwzKkfkn8dTd3tRM3qOlsTSm7OhYANWYNAAagKiMDowGhgUE6yc+Uk
-         jMFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWeabnqRFUo07INiKuww9jiI2UbUsedYaj8UyfwC/N1IdjWYtsryDFgowxBDtQNded1/UTs5ehTcyJhcGEW9dIXvCqhiitQnzWEkSdYIh7E6Yh5lPDjJvT1h/q/Ac6RGuajfL589Nw+lUVsupM=
-X-Gm-Message-State: AOJu0YxfZsSf1gg0LLFDR4hJuiw5PVvOP8HpJPKCevrT1U+plYkBnRVk
-	lWhegwdP3uimGAcAWjlMOMoVJDIpctIvtdyOKjY/Vnb1CcCB9KF6rEYYmQ==
-X-Google-Smtp-Source: AGHT+IG1+ImgQlShZJjOVinqc19ZW7tffsoXk/S/ELVIsV9v9S0BiFRQszbLq8XpL1zK1XQ8didDJQ==
-X-Received: by 2002:a05:620a:4691:b0:78e:c890:1aa9 with SMTP id af79cd13be357-794f5c97363mr1194128685a.39.1717434745113;
-        Mon, 03 Jun 2024 10:12:25 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff2593ba4sm40794651cf.90.2024.06.03.10.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 10:12:24 -0700 (PDT)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id DC78E1200043;
-	Mon,  3 Jun 2024 13:12:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Mon, 03 Jun 2024 13:12:23 -0400
-X-ME-Sender: <xms:d_ldZu-pV7_Pvupb69iz5JKxoz354vxmfK5THE5C7DFvk1j7K4ctrg>
-    <xme:d_ldZuswSm17kqi6ADV-Jnq_2IERMhLmD15C4Cdb0jNENJTTolq3_yjHyH-s3ZAg3
-    ZsHNuDBRd9paEI-oA>
-X-ME-Received: <xmr:d_ldZkBOjgqOhxKuETdhi_dfohwyf-vePb0boAxnAOxNwfzJXTBbJ2QxWf38ZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelvddguddtlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepgfelfeetleeivdeigfektddvhefhjeevfeeujeelleejgedtvdfggfff
-    jefftdevnecuffhomhgrihhnpehnohguvgdrrghspdhruhhsthdqlhgrnhhgrdhorhhgne
-    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
-    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
-    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
-    nhgrmhgv
-X-ME-Proxy: <xmx:d_ldZmc9yED-qrYV6w3qJyFagxFhvrH7Vr466_PKVFMTWrSEHinVWA>
-    <xmx:d_ldZjNzpKX9S1a4k8H6hOZ4f7GpiLdbxGQGKkcODx2SR2VMnRNyJw>
-    <xmx:d_ldZgl7bzS34JlitWJRMef1cnQK8Jz91q2kXu3RWMelAVTw0I_B7w>
-    <xmx:d_ldZlsK6yg7Q0vmGOfdklzI5O68Y7AKchREJk73SjVsHv1T0QdhVg>
-    <xmx:d_ldZpv39RV6RJcBadnjxSr5fkCoeCeUBeMYYcSqKjLh69HvaiHDJtwy>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Jun 2024 13:12:23 -0400 (EDT)
-Date: Mon, 3 Jun 2024 10:11:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Matt Gilbride <mattgilbride@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Rob Landley <rob@landley.net>, Davidlohr Bueso <dave@stgolabs.net>,
-	Michel Lespinasse <michel@lespinasse.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] rust: rbtree: add red-black tree implementation
- backed by the C version
-Message-ID: <Zl35PQ8LAdw67xaS@boqun-archlinux>
-References: <20240603-b4-rbtree-v4-0-308e43d6abfc@google.com>
- <20240603-b4-rbtree-v4-2-308e43d6abfc@google.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="UoaF02iA"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6CDD140E0177;
+	Mon,  3 Jun 2024 17:13:05 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id zLdRqpM4nFQ2; Mon,  3 Jun 2024 17:13:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717434781; bh=wOb77vMkzvVjJuhfqxH+VEthZC7Q6K8Sm8HZ2/2VE40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UoaF02iA3K/R2Ga4rSD8TjWmvRmhPDxfX3vDeaXd+3U9e5ZSUahv33jd7fe/EXJJM
+	 8FTXfVfhfDQ4u+ust1pO7uax3JgQB5Uy44DW5H0XNR2lM4uBglT0SYhpNdQfMFj9qB
+	 k0p9ZBF7cXCZMVWwKeNuM4XF5sM6uu4n3WfmKQ81sXI7yr2lBKmGDYgoaeSTMsGYYs
+	 K2PA9a7pxIqXSvg1/+10b+ty69rzST/Zxs2Zcc6OrhoS4wljm2MTV/KBFKTGiA52hf
+	 ONf5o4GGnDJQy6MKh97jSpYf6SdlTqR2OyYNR1cUbO+Z7YCoQexsCcuGXASVFspuEM
+	 jGXqeZp6cHr3WIcHxQNJTH1jPIj/A7p96BHaU2FtwDkolplAUBoPsC31O/DnJSdB5v
+	 IVDfUcdNnyxZBmfkhHsndJMdywSZ1ZapwYxABiZ6HNZfxs8yvqmOB+xKhG3fBlDuIM
+	 la4gCiMeTcbV9X5vmPNcpFoPDuaDNiH0+8uED+H9Hwe4J2gmUbf531rX6Ep1y3yuMy
+	 +NIPKYBNT8e8/wcXaeLzVN2mBe+kCUM3n9EYAUBlLs62YERvkpwRJKpUoQfKoZcRQC
+	 j9nOG6K/KO1JGOpwggSeu95jo3dbAmo5xBRBi91Ag8xR3he86BMG6WLrTrqrdUV0CV
+	 Dz1+sR6jE5uHY8WXwPpf0LsA=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5AFA940E016A;
+	Mon,  3 Jun 2024 17:12:32 +0000 (UTC)
+Date: Mon, 3 Jun 2024 19:12:31 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Mike Rapoport <rppt@kernel.org>, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
+References: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+ <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
+ <Zl3HfiQ6oHdTdOdA@kernel.org>
+ <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
+ <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
+ <Zl3hwYL2GDiyUfGo@kernel.org>
+ <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
+ <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
+ <2343889c-887a-49ce-86df-343737d70d37@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240603-b4-rbtree-v4-2-308e43d6abfc@google.com>
+In-Reply-To: <2343889c-887a-49ce-86df-343737d70d37@amd.com>
 
-On Mon, Jun 03, 2024 at 04:05:17PM +0000, Matt Gilbride wrote:
-[...]
-> +/// A memory reservation for a red-black tree node.
-> +///
-> +///
-> +/// It contains the memory needed to hold a node that can be inserted into a red-black tree. One
-> +/// can be obtained by directly allocating it ([`RBTreeNodeReservation::new`]).
-> +pub struct RBTreeNodeReservation<K, V> {
-> +    node: Box<MaybeUninit<Node<K, V>>>,
-> +}
-> +
-> +impl<K, V> RBTreeNodeReservation<K, V> {
-> +    /// Allocates memory for a node to be eventually initialised and inserted into the tree via a
-> +    /// call to [`RBTree::insert`].
-> +    pub fn new(flags: Flags) -> Result<RBTreeNodeReservation<K, V>> {
-> +        Ok(RBTreeNodeReservation {
-> +            node: Box::new_uninit(flags)?,
-> +        })
-> +    }
-> +}
-> +
-> +// SAFETY: This doesn't actually contain K or V, and is just a memory allocation. Those can always
-> +// be moved across threads.
-> +unsafe impl<K, V> Send for RBTreeNodeReservation<K, V> {}
-> +
-> +// SAFETY: This doesn't actually contain K or V, and is just a memory allocation.
-> +unsafe impl<K, V> Sync for RBTreeNodeReservation<K, V> {}
-> +
-> +impl<K, V> RBTreeNodeReservation<K, V> {
-> +    /// Initialises a node reservation.
-> +    ///
-> +    /// It then becomes an [`RBTreeNode`] that can be inserted into a tree.
-> +    pub fn into_node(mut self, key: K, value: V) -> RBTreeNode<K, V> {
-> +        let node_ptr = self.node.as_mut_ptr();
-> +        // SAFETY: `node_ptr` is a valid pointer to a tree node.
-> +        unsafe {
-> +            node_ptr.write(Node {
-> +                key,
-> +                value,
-> +                links: bindings::rb_node::default(),
-> +            })
-> +        }
-> +        RBTreeNode {
-> +            // SAFETY: The pointer came from a `MaybeUninit<Node>` whose fields have all been
-> +            // initialised. Additionally, it has the same layout as `Node`.
-> +            node: unsafe { Box::<MaybeUninit<_>>::assume_init(self.node) },
-> +        }
+On Mon, Jun 03, 2024 at 12:08:48PM -0500, Kalra, Ashish wrote:
+> efi_arch_mem_reserve().
 
-nit: could you use Box::write()[1] here? It saves two `unsafe` blocks.
+Now it only remains for you to explain why...
 
-[1]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.write 
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-Boqun
-
-> +    }
-> +}
-> +
-> +/// A red-black tree node.
-> +///
-> +/// The node is fully initialised (with key and value) and can be inserted into a tree without any
-> +/// extra allocations or failure paths.
-> +pub struct RBTreeNode<K, V> {
-> +    node: Box<Node<K, V>>,
-> +}
-> +
-> +impl<K, V> RBTreeNode<K, V> {
-> +    /// Allocates and initialises a node that can be inserted into the tree via
-> +    /// [`RBTree::insert`].
-> +    pub fn new(key: K, value: V, flags: Flags) -> Result<RBTreeNode<K, V>> {
-> +        Ok(RBTreeNodeReservation::new(flags)?.into_node(key, value))
-> +    }
-> +}
-> +
-> +// SAFETY: If K and V can be sent across threads, then it's also okay to send [`RBTreeNode`] across
-> +// threads.
-> +unsafe impl<K: Send, V: Send> Send for RBTreeNode<K, V> {}
-> +
-> +// SAFETY: If K and V can be accessed without synchronization, then it's also okay to access
-> +// [`RBTreeNode`] without synchronization.
-> +unsafe impl<K: Sync, V: Sync> Sync for RBTreeNode<K, V> {}
-> +
-> +struct Node<K, V> {
-> +    links: bindings::rb_node,
-> +    key: K,
-> +    value: V,
-> +}
-> 
-> -- 
-> 2.45.1.288.g0e0cd299f1-goog
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
