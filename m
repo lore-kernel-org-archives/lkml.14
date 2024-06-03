@@ -1,98 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE0113C91F;
-	Mon,  3 Jun 2024 22:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADAA84FB7
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 22:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717452124; cv=none; b=Bu+ZgwHxxbiVTdWNgdK1YkLS7ornT+DeL+Ifoq3Jik04SDRLBAatKN8UJqaM3ekf8yfG0JZrh8wWsDEcpbNcueeLRpPG17I+wasB+lrN8an6ljje9DLLTvhXSJBaTRsUiAeP058LYFUHW/dFQBjUYhv/d5VZD1yukP4FSlTWsdA=
+	t=1717452382; cv=none; b=T56cQ+iD+aXIJqVSOynkf1bVDmuDppy0sLBfZyGVeZUU5Zdk4e/8ZFF/LQ9JwNijR6dxl0SBOJeyO/P/5XUdut69OoEciOpe4gPUcLdQUsHtKRvB2StI4e3lPjXgeBfL5Pz5Jvpee96Al3YCicylhBisqfoTjmz4ICQAC3xgZtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717452124; c=relaxed/simple;
-	bh=djC34ORqw2xb3Cf7QYPDabOUVU/AAmQubNKuizP0gBg=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=MME8c1aDgZzKR2dIU1T57v79dehSE+yCQCAKIPQpesZb/JB/Y1Nw9E24Y6NZGVB4yYouts4rz9Bc8EG5mmEDFV6xX/mmYTTkgRmhhKMLvfiZ5naIA3AXRORPvmMrYSPBi4E5OeMCX4gjqR6geNMj7uHcka5WlWWcELEY3mpZYRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tbRzgWfi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717452382; c=relaxed/simple;
+	bh=w/5x4WMYBQSub464dP7QnggplP3WH1UzvXVybHVdiTI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wrglxtdy3e2ybTX8Vz0xRJhKgh+dqLZ3k5WuPdh+vXgcS3FNl0Uat0tkU/Lv+cqnSYZe4FMxJDwqpCkYQGExf0xCqHDIcybTsHAkky11JG1aeG5gTZ1KdsQ7SmcCDkI24PGi/Il11i4nZl8zikWFhLR5O3EsjWymf2MGRd83m+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Gfxucmz3; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tbRzgWfi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 867CAC2BD10;
-	Mon,  3 Jun 2024 22:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717452123;
-	bh=djC34ORqw2xb3Cf7QYPDabOUVU/AAmQubNKuizP0gBg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=tbRzgWfixxLCCAnv86IJhJm3P/kq8T5W9Nv/ov0UFl8E8KFqBurN17GHgyofXsMrD
-	 pgEPlwTODDI97U0KPzHTUvLA7ro/O/NMFPJrBkuEgEaok154AUrdZQMLkqhmgBH04b
-	 F2nARv+gmHL8NxRGcT+bgM6wnJIvk45H8jqzl7soKWoFCwPpiwJIlR2OQ73F7cwkLG
-	 /rVtdIACiJNv8VJjbNht4RoaTqve4DGL4AapG1+dsnMuOJaIIAAxFwdDVJhgSRuhKl
-	 nduLa666srYuD7qNk06xHNEAfGKdiRszER/GhC/naKhAWhdng7C+rirXbplWGnD9E+
-	 APXqfKXj/LK8A==
-Message-ID: <ac141363f0b6c44b11c421f752776ef9.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Gfxucmz3"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b82d57963so4983786e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 15:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1717452378; x=1718057178; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=88HkfhteX1tORBOVLSUiwb3Ab8uk/Fd1+xWCSdTOy34=;
+        b=Gfxucmz3bBgRpC4u5GZRpS7RxOJhVF5u44HUdJnBEeqEO8oPsoVYcxFwjaolWJF6/M
+         WX5DFr5ZTg+rRso6FQAtlu6V10l2h4KTNPzHjCQTFgFemAj80KGN7XS4jBAjhY91+K74
+         kVZxmHYD6fSPfvfrPVl/OOaH3KQAPgCgrcUto=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717452378; x=1718057178;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=88HkfhteX1tORBOVLSUiwb3Ab8uk/Fd1+xWCSdTOy34=;
+        b=XrcyKlKZylpbUQg+l/gKgiWlKmFsBQwJDUg9IBH9HM+yLaeyBzrLjYIzgglycvmINr
+         l/g5NmmS/S+11brkXV/5I5vK/S3F8AfVfeerkwNVXnDWf66JfUmR+4Gcoo4eO4r+M0Gv
+         bJkyn5RqOpvBjwQJp1epHdNNbtWceSd/XsYNdPFCSXW6lRw5Kn8rXCcyx6xmx6iZjdva
+         srqfqEN/JOM90/U83TcGmhPjZkfcQ1rqh2gPlFI8LXvHRtueFwyewnBjtK+asctZIeMt
+         PwkemmNPP2XMjXn1D/O+MLlbINDgyAN/Zvgma1+3+310dY7V3nB05p/G7lqwdSv7/d6b
+         JRhA==
+X-Gm-Message-State: AOJu0YwndSOqb7UVqOSq/2ik04vrGEdkRX4Gq1FRQ4h9lXDkZgQu9lW/
+	tog0b/k0q7LodeXy33+DR7t80SH55rDfY/5JmGVk9WiNgU3bZijlyWZy0H7m8oSz0sKEtfIKS4d
+	vbH4=
+X-Google-Smtp-Source: AGHT+IFLFV8Yy/LZ31RiNRdHqWlD/BpzJt05boQGKFBf343sn0xnipfzPctl6lHvXIrpHA/N6W257Q==
+X-Received: by 2002:ac2:5ecc:0:b0:52b:85bd:8de8 with SMTP id 2adb3069b0e04-52b89596691mr5865547e87.21.1717452377949;
+        Mon, 03 Jun 2024 15:06:17 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b9dce515esm260008e87.48.2024.06.03.15.06.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 15:06:17 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52b83225088so4580716e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 15:06:17 -0700 (PDT)
+X-Received: by 2002:ac2:4e04:0:b0:52b:9e2b:9e1 with SMTP id
+ 2adb3069b0e04-52b9e2b0a7fmr2203863e87.23.1717452376905; Mon, 03 Jun 2024
+ 15:06:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240422232404.213174-7-sboyd@kernel.org>
-References: <20240422232404.213174-1-sboyd@kernel.org> <20240422232404.213174-7-sboyd@kernel.org>
-Subject: Re: [PATCH v4 06/10] dt-bindings: kunit: Add fixed rate clk consumer test
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, patches@lists.linux.dev, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J . Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Daniel Latypov <dlatypov@google.com>, Christian Marangi <ansuelsmth@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Date: Mon, 03 Jun 2024 15:02:01 -0700
-User-Agent: alot/0.10
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 3 Jun 2024 15:06:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg5F99-GZPETsasJd0JB0JGcdmmPeHRxCtT4_i83h8avg@mail.gmail.com>
+Message-ID: <CAHk-=wg5F99-GZPETsasJd0JB0JGcdmmPeHRxCtT4_i83h8avg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with sysfs_match_string()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bjorn Helgaas <helgaas@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Quoting Stephen Boyd (2024-04-22 16:23:59)
-> diff --git a/Documentation/devicetree/bindings/test/test,clk-fixed-rate.y=
-aml b/Documentation/devicetree/bindings/test/test,clk-fixed-rate.yaml
-> new file mode 100644
-> index 000000000000..b9f58cba944c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/test/test,clk-fixed-rate.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/test/test,clk-fixed-rate.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: KUnit clk fixed rate test clk consumer
+On Mon, 3 Jun 2024 at 14:16, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Make two APIs look similar. Hence convert match_string() to be
+> a 2-argument macro. In order to avoid unneeded churn, convert
+> all users as well. There is no functional change intended.
 
-Removed KUnit from the title.
+No.
 
-> +
-> +maintainers:
-> +  - Stephen Boyd <sboyd@kernel.org>
-> +
-> +description:
-> +  A clk consumer of a fixed rate clk used to test the fixed rate clk
-> +  implementation.
-> +
-> +properties:
-> +  compatible:
-> +    const: test,clk-fixed-rate
+First off, please don't cc hundreds of people. It's just annoying.
+That's what mailing lists are for. And no, that doesn't mean "add
+every mailing list". If you can't find a specific one, use lkml.
 
-None of this is really fixed rate clk specific. I'm going to rename this
-to "test,single-clk-consumer" so that it can be used anywhere we want to
-consume a single clock cell. Someone can introduce a double/multiple
-binding as needed.
+Secondly, we're not going to encourage people to use some double
+underscore version of a function just because they don't have an
+explicitly sized array. The existing users of "match_string()" are
+fine, and changing them to use a new - and *bad* - name for the same
+thing is crazy.
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clock-consumer {
-> +      compatible =3D "test,clk-fixed-rate";
-> +      clocks =3D <&fixed_clk>;
-> +    };
-> +...
+IOW, if we have two names for these things, where one is for a "fixed
+array with a fixed size", then it's the *new* use that needs to have a
+new name that actually describes that. Not the old use that gets
+renamed to use a worse name.
+
+Thirdly, for something like this, "no functional change intended" is
+not sufficient. It needs to show that it really is the same, because
+I'm not willing to take some patch that touches 50+ files for some
+syntactic cleanup with the _intention_ of not changing anything.
+
+In other words, what would fix all these issues - apart from the crazy
+cc list - is to use a coccinelle to make a provably identical
+transformation, ie thave
+
+   #define match_string_array(a,b) match_string(a ARRAY_SIZE(a), b)
+
+and have the coccinelle scrtipt that does the obvious identity
+transformation from
+
+    match_string(xyzzy, ARRAY_SIZE(xyzzy), name);
+
+into
+
+    match_string_array(xyzzy, name);
+
+and not make other places uglier and worse.
+
+And then you can separately take the ones that you have to *think*
+about and that aren't locally obvious, and fix them individually, ie
+
+-       ret = match_string(vmpressure_str_levels, VMPRESSURE_NUM_LEVELS, token);
++       ret = match_string_array(vmpressure_str_levels, token);
+
+but where it's important to somehow verify that yes,
+VMPRESSURE_NUM_LEVELS is indeed ARRAY_SIZE(vmpressure_str_levels).
+
+Because your patch also has
+
+-               idx = match_string(hash_algo_name, HASH_ALGO__LAST, token);
++               idx = __match_string(hash_algo_name, HASH_ALGO__LAST, token);
+
+and I have *NO* idea why you did that completely garbage
+transformation. Because we have
+
+   const char *const hash_algo_name[HASH_ALGO__LAST] = {
+
+so as far as I can see, that one should have used the "automatic array
+size" model too.
+
+And these kinds of examples are *exactly* why I refuse to apply this
+patch. The patch not only makes several places uglier, it *also* is
+incomprehensible in which ones it converts and why.
+
+So a big NAK on this, and it very much needs to be done differently.
+
+             Linus
