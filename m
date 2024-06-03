@@ -1,40 +1,74 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC02F82D8E;
-	Mon,  3 Jun 2024 14:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BF382D8E;
+	Mon,  3 Jun 2024 14:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717425671; cv=none; b=lmnDSPPDhy1ktSQUn6Dy26ltI6F9bRo1gay/LrjIOjfXnILsd1tzze8VMvFwDbGpOIhaZZHuBJFWM9E/5JXB+3HJg3UiQ1WAtbD5na2JXyWAXbZIrY5Y0nK5nT0gKahLlgpsZ2vpiZyYzc08VIOPbXjYAKXy1/dkCH0H5+l9TRo=
+	t=1717425804; cv=none; b=KRzvlavfvr5pu8xK8ALmj1vI6wnHijJLro16YZB7V/5wJu+Q5HNrPK3hvEa9VoOEe0vNJQLltqiyKnJ1UBkUQCMp03dzj30g2S9Q1u0mXAkUxYWaMXqsRILFRiHxPRGrVT1/heO60yknyuXeDr3Wg7fgL58OLeI6lw0SvEMA5eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717425671; c=relaxed/simple;
-	bh=2U6Ww/ElEtbcuJBm40iFuywuFkm2IwWESN+oydX5p7Q=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=F5zLtFRPIKBHzS+Nfwsz31R0D3F+SOtVA+5FygdzJNyEVAT8+v0qJDasaxsJLtUA4NJ9BoilPuaYGtJUpV4edVU6leWTevmQkxl/DQFUhNqhmzfPbopJ1E8k+KaX5IZ0iMOMIAd1xrWW+MrNOTIoZA6iRa54ViFhSJ6iurQ1Oys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=woEGFp09; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717425804; c=relaxed/simple;
+	bh=x/CF7EMgxMegQrau/qgJVCCmxuGZ9Rq54sjL7tyxb9s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJ8EGcAeNAhk2lprlo0r4ArgbbUux1Sg2Z5NZt2aeCSx9ckJJ00JEp3FAOVW2So6cl97DIXX8SpSCbLXbxgZskim0E409X6nuR5G7Go41xXx3HyLwF9tAiNM1rHMPpgm9IqX0CySYGJ8xXBsSsZTUI6EsEvsZXjLlPC6+mm3uT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=BRhvmta0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WF92i/Fn; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="woEGFp09"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717425650; x=1718030450; i=markus.elfring@web.de;
-	bh=XqqTZCHeurhCB0Bc08xb2KzKAyoPa4GFLU41PH/vPdI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=woEGFp09PCwgXGAMEzPTw+Cz0/Aj5cLxNm6cadtTL9/dij9S2cOtDPu4p7uMm4jO
-	 NqFupNEEKhdSR7ZwDTKr74igMx47+hfBMIRHVoksFeQr6hrIXCDoHZ6BrLyh1Zz/H
-	 NG6vuC/dDf/FumDgKDbu+ysWubtGaG/4t4jq82IlrV9QmDZgNe6WGLF+usuCY1l7E
-	 mmVqgWHua1WXeSPANkWLynrNA5+/KUfl2GpZ3Z3JL7QitUCExsM5T+/w1KCC5cPTM
-	 VYwmFuTiexes31cPXeTSYHxU6HJ1S1rkc/3CEHSR0OVdWepkoNGMw0w+wmPu2p3Zb
-	 YZrTIyUs6WbGmPlk6A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N8n08-1sZOlQ1psU-00rc9C; Mon, 03
- Jun 2024 16:40:50 +0200
-Message-ID: <b828257d-5c69-4ff5-89e1-5d2aaf53a5e4@web.de>
-Date: Mon, 3 Jun 2024 16:40:48 +0200
+	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="BRhvmta0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WF92i/Fn"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 00D9911400CE;
+	Mon,  3 Jun 2024 10:43:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 03 Jun 2024 10:43:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1717425801;
+	 x=1717512201; bh=Z2qo5O2k2PV/eacvQhlYA1E6BZbR+GCOSqbcm9k3pUE=; b=
+	BRhvmta0Zr5xeYoSLdERexWYunCelEx4bLh5nDmWEqsv2A/kuVwBad965jHfwU/a
+	lY7H4kzOfx5yoGYPd67cC0rw2E/CVHoeH6Qeagg72iMizFVaUMFm3swt7YCnKeSU
+	JGeKAcxDbkNoeXZlUwjP8mkUxYgOIDD295DrE1tBusrw8kgjoWkptNnUiBxMa1HW
+	mWg9Mk+cKyC0jMGr9zTcS81HXg/fzGW9xM8Ae3CsNFL96DcIkwAGk68ruMj2AABQ
+	DYYz4JDuVgGreIqH8VFOZdRgAZKHz6j1A+JYHoUoN/JOTojmL827l2RPdFWE2vl1
+	he1YJ5qNdNshXBMLvmJBtA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717425801; x=
+	1717512201; bh=Z2qo5O2k2PV/eacvQhlYA1E6BZbR+GCOSqbcm9k3pUE=; b=W
+	F92i/FnHa1dThyQGV3iOfgULSWtNWxdTZBaJGdkYsXWXZJto9E2WKyF3eq1FDsum
+	wjXonE0e3QoK6LsP2W2fM2NKTASxNscxI/Ic8u0HP3oRVnArur3OhP/Sa3WPdzOG
+	rAwl9hV11WZnG8d8WMCRj5j24dFCHVaOje1VgQIFY/YpGBhSiaLtTt2JzZ+YnLBA
+	F+300Z71T/sVELAl5Cp2OSMCn/91MM7HJorNcX8txK2zJe9MzmDXZeZzy2/7CcnT
+	ShWhNbalSb+PC0lfHxviHZjWQaAVLDV9ynIiK4nZ+oZTmTS37iXFKvDi6IoleySI
+	LgXRTWm8kcQtilDUfBP7Q==
+X-ME-Sender: <xms:h9ZdZtqtSsaVvbfuFjXwHpN72umyd1xJyFqtv3Elq5MVEFunQyXGYA>
+    <xme:h9ZdZvr96x7QSjLi8DLt8x8JTBnIiOYavGy25HLUctHhDjwBYGRJV3ny32cTnOVEH
+    bCMaahX2Cef8Z82>
+X-ME-Received: <xmr:h9ZdZqMXghb73yNaZQtU5oj1UEW6RVJyLAq_zm2H-Lt6K1PcSdv7XaFYIMs6-fYzMR5g_UzhxpUD4IpJ9ESrTGiPCbvZAKEeU9FXZFZBIswpse-cKnwX>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelvddgjeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeeuvghr
+    nhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrih
+    hlrdhfmheqnecuggftrfgrthhtvghrnhepvedvfffhleettddtleffheduieeuveeghfdv
+    gfefudeiheduffehudetlefhgfeunecuffhomhgrihhnpehgihhthhhusgdrtghomhdpkh
+    gvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepsggvrhhnugdrshgthhhusggvrhhtsehfrghsthhmrghilhdrfhhm
+X-ME-Proxy: <xmx:iNZdZo7ux98_i0mJ4C-duUlMuKr012XttqXOIonFl4PAhsrBOzyxdA>
+    <xmx:iNZdZs7qnzMuC322vRwc0VlD-Z_y9Suu2amjuOK_sfGWKV_mkHtkgw>
+    <xmx:iNZdZgiq2kJYp1lWrPn0ASVYiMgrQIKB4yXGq0SWY47RQ3A0stBuqg>
+    <xmx:iNZdZu4m2w2d1qzPEplIihjaCEy2X3uDmzNtxfzRInw5f7DGHvkIEQ>
+    <xmx:idZdZmR6v393Jt-fr8g88Dg6Eg29_tnmMK3tUEET0hzYYWwRObooCDTd>
+Feedback-ID: id8a24192:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Jun 2024 10:43:19 -0400 (EDT)
+Message-ID: <67771830-977f-4fca-9d0b-0126abf120a5@fastmail.fm>
+Date: Mon, 3 Jun 2024 16:43:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,63 +76,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: tip-bot2@linutronix.de, Hagar Hemdan <hagarhem@amazon.com>,
- Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- stable@vger.kernel.org, x86@kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <171741750653.10875.4371546608500601999.tip-bot2@tip-bot2>
-Subject: Re: [tip: irq/urgent] irqchip/gic-v3-its: Fix potential race
- condition in its_vlpi_prop_update()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <171741750653.10875.4371546608500601999.tip-bot2@tip-bot2>
+Subject: Re: [HELP] FUSE writeback performance bottleneck
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, Miklos Szeredi
+ <miklos@szeredi.hu>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ lege.wang@jaguarmicro.com
+References: <495d2400-1d96-4924-99d3-8b2952e05fc3@linux.alibaba.com>
+From: Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <495d2400-1d96-4924-99d3-8b2952e05fc3@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:75B7HC4z0qk4z/+G1CLRcW84vk0vRFTpabSPUpMkGPpEA52xMq9
- KOTSeRNEuNWDKOoqn+J19rvF4ju1yHxR6oGe/q+1PiUypyW/zmA/rpD1jz20WBMSEPzMWHj
- udWy1udL2vDhU5K3Qo4bHLYTM0/ILf/+Aq0+NvJXJseN/7bYAagu2K5Gts4HIS6MKZKXZ7J
- yc/zDavEv6TjitELi7AMQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/PJWt2+d6UY=;8WOA5ctY9ICUVRL4jFoyBeHk3iw
- iU5ZxuYx2k5hP5i4LXBu1lwgCtUy8OJ0UvNtZUl3AuZB3REfcd1nmNVGxmktbhEptqEpSw95H
- n4yQeQDD3ppwydsi+TjW/pangjZlaXwSFvdeHA0FtdhvsRn7PIrqMTJtrEeGSdsr/57FWoTzT
- IiYGZMB+nU6WihWc/nHPrPIZDQ7ZhMbSFe86AG1H64ux2d2k6Mn5Z+Kxsk9l4DSStDI2x+Hs6
- u0/JtaA7I6bX6LtgETtxtym1PNOSTVyzJgXQuNP1KjeGRzapbyMhIWAmRAAxvy5Gwa/tBDUSm
- t5k9iTylaBho2RmcPKfI/VHlJ8HpiNycE2Ub/5iqdQSf1lCq/aX+8nbY54PXr8LGTMAof2zOF
- jrOmplV3cn4gjviHx+ZOHl274T/Kt7j9bv4FI/yG4Kt1VbhjasY4lf+cD2LFv1E+H0vs6w5gP
- yk6vZxvIdJBmOlqlFHOvyhblu9Qnn6qPl4Fe6U3UnpAGo1/rt1BYwxxneIzYUdnZmRMj4JNws
- FD/DFa6Kes4evCRWW1+LiDfy7odiqFV4MDCnQL/1y1xcjfQQLeYP1pSW9Krf0XZksa522YWE/
- Ij7Rru+IKQ8Enlms2vUNXMN6vw+zutjKGBQr0/j+LmfjgEV6gbl82Uf/CEj9iutj98d6y9zG7
- Dy8Wx7F5VZ65j+cRTqiA9a+QcBUyGUN1Y7CfNeCcqhijdJG1hyLytKCqVC/Qai5gsBD+6Hcqg
- GwkWOFVd2YLeSKVEPiQX6w+ZwmCJn9LUHeKpOSYw7wWlk6fLV3NFr7lg9G3XjLdd99Up4dYuk
- 583uZT04GkYIBK6mTYGFWOaTn6RgCCC1rYMNTJ2bJwdyg=
-
-=E2=80=A6
-> [ tglx: Use guard() instead of goto ]
-=E2=80=A6
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-=E2=80=A6
-> @@ -1992,6 +1970,8 @@ static int its_irq_set_vcpu_affinity(struct irq_da=
-ta *d, void *vcpu_info)
->  	if (!is_v4(its_dev->its))
->  		return -EINVAL;
->
-> +	guard(raw_spinlock_irq, &its_dev->event_map.vlpi_lock);
-> +
->  	/* Unmap request? */
->  	if (!info)
->  		return its_vlpi_unmap(d);
-
-I found a similar guard() call in the implementation of the function =E2=
-=80=9Ctask_state_match=E2=80=9D.
-https://elixir.bootlin.com/linux/v6.10-rc2/source/kernel/sched/core.c#L226=
-4
-
-A slightly different combination of parentheses is applied there.
-How do you think about to apply the following code variant accordingly?
-
-+	guard(raw_spinlock_irq)(&its_dev->event_map.vlpi_lock);
+Content-Transfer-Encoding: 7bit
 
 
-Regards,
-Markus
+
+On 6/3/24 08:17, Jingbo Xu wrote:
+> Hi, Miklos,
+> 
+> We spotted a performance bottleneck for FUSE writeback in which the
+> writeback kworker has consumed nearly 100% CPU, among which 40% CPU is
+> used for copy_page().
+> 
+> fuse_writepages_fill
+>   alloc tmp_page
+>   copy_highpage
+> 
+> This is because of FUSE writeback design (see commit 3be5a52b30aa
+> ("fuse: support writable mmap")), which newly allocates a temp page for
+> each dirty page to be written back, copy content of dirty page to temp
+> page, and then write back the temp page instead.  This special design is
+> intentional to avoid potential deadlocked due to buggy or even malicious
+> fuse user daemon.
+
+I also noticed that and I admin that I don't understand it yet. The commit says
+
+<quote>
+    The basic problem is that there can be no guarantee about the time in which
+    the userspace filesystem will complete a write.  It may be buggy or even
+    malicious, and fail to complete WRITE requests.  We don't want unrelated parts
+    of the system to grind to a halt in such cases.
+</quote>
+
+
+Timing - NFS/cifs/etc have the same issue? Even a local file system has no guarantees
+how fast storage is?
+
+Buggy - hmm yeah, then it is splice related only? But I think splice feature was
+not introduced yet when fuse got mmap and writeback in 2008? 
+Without splice the pages are just copied into a userspace buffer? So what can
+userspace do wrong with its copy?
+
+Failure - why can't it do what nfs_mapping_set_error() does?
+
+I guess I miss something, but so far I don't understand what that is.
+
+
+> 
+> There was a proposal of removing this constraint for virtiofs [1], which
+> is reasonable as users of virtiofs and virtiofs daemon don't run on the
+> same OS, and virtiofs daemon is usually offered by cloud vendors that
+> shall not be malicious.  While for the normal /dev/fuse interface, I
+> don't think removing the constraint is acceptable.
+> 
+> 
+> Come back to the writeback performance bottleneck.  Another important
+> factor is that, (IIUC) only one kworker at the same time is allowed for
+> writeback for each filesystem instance (if cgroup writeback is not
+> enabled).  The kworker is scheduled upon sb->s_bdi->wb.dwork, and the
+> workqueue infrastructure guarantees that at most one *running* worker is
+> allowed for one specific work (sb->s_bdi->wb.dwork) at any time.  Thus
+> the writeback is constraint to one CPU for each filesystem instance.
+> 
+> I'm not sure if offloading the page copying and then FUSE requests
+> sending to another worker (if a bunch of dirty pages have been
+> collected) is a good idea or not, e.g.
+> 
+> ```
+> fuse_writepages_fill
+>   if fuse_writepage_need_send:
+>     # schedule a work
+> 
+> # the worker
+> for each dirty page in ap->pages[]:
+>     copy_page
+> fuse_writepages_send
+> ```
+> 
+> Any suggestion?
+> 
+> 
+> 
+> This issue can be reproduced by:
+> 
+> 1 ./libfuse/build/example/passthrough_ll -o cache=always -o writeback -o
+> source=/run/ /mnt
+> ("/run/" is a tmpfs mount)
+> 
+> 2 fio --name=write_test --ioengine=psync --iodepth=1 --rw=write --bs=1M
+> --direct=0 --size=1G --numjobs=2 --group_reporting --directory=/mnt
+> (at least two threads are needed; fio shows ~1800MiB/s buffer write
+> bandwidth)
+
+
+That should quickly run out of tmpfs memory. I need to find time to improve
+this a bit, but this should give you an easier test:
+
+https://github.com/libfuse/libfuse/pull/807
+
+> 
+> 
+> [1]
+> https://lore.kernel.org/all/20231228123528.705-1-lege.wang@jaguarmicro.com/
+> 
+> 
+
+
+Thanks,
+Bernd
