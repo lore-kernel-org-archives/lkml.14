@@ -1,64 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E22839EA;
-	Mon,  3 Jun 2024 12:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36896286A6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419082; cv=none; b=pirTqgphTnSmV08ixj86nhHrqolKXaYbQY/rUXmZDIe7IuGXEmC09Jwnd262PXDRKjiRWG0NM9zEbZMFPnm1Yv5CY3bAVLLgXekdBXkVeNzS1/cVzWxf7N+oJNsYODVooxN8IGyoTfQQMlCgSm3O7fd2uY9Tx1LduIMhrP+S99I=
+	t=1717419153; cv=none; b=o8kYOjY9hjMP7T4z+9nAX4Tu1zJQkln68DS2cNKPhW02dP1W6Jkt2/MT70Lj4Z66A97QvbQ6E1Pg/cwOorhV/zbbS7sRj1mB/G5BQVF9mMv6sagtFlrAFsnTaVcBReq7celk6jLN8pxSR93brugeaVt4ibix6/G3IAUBf1RI47c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419082; c=relaxed/simple;
-	bh=TlAVZ3zRGmLoisDz6SoULUOuNUe2YF4FM1TqMY33sLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pr90UfpR8/tMMVfrvFkFuISm8GnovOmTrVv7nZ3ozRy6t3wW6EnaWvzPUggJS+FP2URIC6NetR0QJrTJ5e0AbVdEvrmqsWCHpcKlD5zaqYjxIrOtbNsGoVTFT2FEnGt4Mqlz594xgYSJn4kqEvkNnJyZ90otcH1nUPMJt+wJ0mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 411821063;
-	Mon,  3 Jun 2024 05:51:45 -0700 (PDT)
-Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 54DBC3F64C;
-	Mon,  3 Jun 2024 05:51:19 -0700 (PDT)
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,juno-fpga-apb-regs: document FPGA syscon
-Date: Mon,  3 Jun 2024 13:51:12 +0100
-Message-ID: <171741897752.2195655.18414699008765504203.b4-ty@arm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240518203903.119608-1-krzysztof.kozlowski@linaro.org>
-References: <20240518203903.119608-1-krzysztof.kozlowski@linaro.org>
+	s=arc-20240116; t=1717419153; c=relaxed/simple;
+	bh=JadfoHdtygKM61WU7kYRFYh3wqb4hbUSntCtUEQugPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R1RwD6aXKzCnjvEbWpsRzgBbm03WRUmsij5tArByOMA/tSpXEvAH+58ZgWBaZKQbloD6sJ31AN6gpZyl9DGPolcnAwy1JY1OE94h4VnTp94PmbIXalesfNdisbWk3apmWHAu3erDazUlCRkhZwNdyPBCk/8PgzJE9W+My3GCoHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HL1QWV2I; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HL1QWV2I"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a68ee841138so158193966b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717419150; x=1718023950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JadfoHdtygKM61WU7kYRFYh3wqb4hbUSntCtUEQugPM=;
+        b=HL1QWV2I3Zn80z8vfxR5iVwLi2g097ZSkz2N8Zm2i1hI1zbMhA/sC4XaqYRCuSRGzm
+         HmVhLZDvZU94iL7Dv7fg38UeUtGpaGktLDBrkEEqnpIvfY/hAg6KhMep1/EoSUzUXSfd
+         YXGnv42W/wnDeYzLZmPTG03XXC+/t0G5h5OgpBaTqv1SVpsrcAXg04owWhTvKCQA0B47
+         1t6CvR/s82zZki/b1AdS5OMAC1ja/DSNryN3F3h0jCPlkyhdggJ0zIaQBQSVgK307f25
+         97R8QGvlmpWPrsGewbstN9j/3KKozb0GZvjadwPZZgln96mm6mdIZLKvbMg6BfBupQD/
+         LH0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717419150; x=1718023950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JadfoHdtygKM61WU7kYRFYh3wqb4hbUSntCtUEQugPM=;
+        b=rvNhKxbFzm1+xdfYWhLnUrnl2LseLYjAZwEu809TdZyjK0HabtmDRGGzXmuQVSb3hW
+         +lBx8OGZZ0dF5UH/rwiTI6P2ES9DdIwIZ2SIvGmgHFFO+XwkWHvohVwksRlsR6tLxcrz
+         9mdyVFMzI9rNv2cAX+mbUJcgNwvr1ZOxCx2M1frh2XyH1UfoQuJPpl3NgD15evONfHPh
+         wQvY0T2tu6V9ZjI7S/dTG5NymjlHL5UdmZfQiRvLhq+QwjGHDDQYYykm48bElI5o6QkM
+         bJhegpZSTB5ijqXM0p5OR+I26PsWi1XnVwFGos0a/tmPhvqtP592igDBfx7RlSN2mIO2
+         gxng==
+X-Forwarded-Encrypted: i=1; AJvYcCXceDW0pu+XjmFK2H6K290tdEOHh2Hu5/rbE1kooTQFfsuRdS35VbbCkrDSKJ1oZ8PYwN4ZK8YMsgqGoisxFQWhJrnb53QcteYFRdiQ
+X-Gm-Message-State: AOJu0YzVpwdr2PVFtl7kzD1Olh3M8JQn05kyQVaYLd6iYwJbF1mM38dJ
+	fSTaY8R9QRrFSIievJlJpvH9Whdqs15yns+VQzQgd+Nlv7q5D6aBgeToRXFF40UV66dI8VVQR8x
+	CRTOWxxYKxNbsJW3aHOl31rFQd8Y=
+X-Google-Smtp-Source: AGHT+IH+hFOoB5n9mksl1sTJcqgRo5z8ZFztQ7reoKx7ztNpC8OUPWrAL4RoN66lVacXrfm8Whe41NrkKqRo2+hvnNw=
+X-Received: by 2002:a17:907:516:b0:a59:b88c:2b2a with SMTP id
+ a640c23a62f3a-a6821b71cdemr466092666b.50.1717419150212; Mon, 03 Jun 2024
+ 05:52:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230601075333.14021-1-ihuguet@redhat.com> <CAMZ6RqLoRVHD_M8Jh2ELurhL8E=HWt2DZZFGQvmfFyxKjtNKhg@mail.gmail.com>
+ <874jiikr6e.fsf@meer.lwn.net> <CAMZ6RqLJmTjM0dYvixMEAo+uW+zfhdL1n4rnajsHCZcq971oRA@mail.gmail.com>
+ <CACT4oudYAK07+PJzJMhTazKe3LP-F4tpQf8CF0vs1pJLEE_4aA@mail.gmail.com>
+ <CAK7LNATqNNVX8ECNoO82kY503ArfRPa9GdbYd9tOok_6tGOsew@mail.gmail.com>
+ <thbrfziusf37nj5mwsj2a6zmjtenj5b5vhzwu2z5zkhr7ajsg6@whvx46y6mxbz> <20240603121853.GA19897@nvidia.com>
+In-Reply-To: <20240603121853.GA19897@nvidia.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Mon, 3 Jun 2024 14:52:18 +0200
+Message-ID: <CAGudoHEe=AiRpkyLJTZzU8MtiGC86Kivbyi1xF-Hh0hGJKWhCg@mail.gmail.com>
+Subject: Re: [PATCH v4] Add .editorconfig file for basic formatting
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>, 
+	Vincent MAILHOL <mailhol.vincent@wanadoo.fr>, Jonathan Corbet <corbet@lwn.net>, ojeda@kernel.org, 
+	danny@kdrag0n.dev, mic@digikod.net, linux-kernel@vger.kernel.org, 
+	joe@perches.com, linux@rasmusvillemoes.dk, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 18 May 2024 22:39:02 +0200, Krzysztof Kozlowski wrote:
-> Add dedicated bindings for the FPGA syscon registers on ARM Juno board,
-> to fully document the block and also fix dtbs_check warning:
+On Mon, Jun 3, 2024 at 2:18=E2=80=AFPM Jason Gunthorpe <jgg@nvidia.com> wro=
+te:
 >
->   juno.dtb: apbregs@10000: compatible: ['syscon', 'simple-mfd'] is too short
+> On Sun, Jun 02, 2024 at 05:30:51PM +0200, Mateusz Guzik wrote:
+>
+> > As is I think the config mostly gets in the way and most people have a
+> > setup which does not use it (for example my vim does not). Alternativel=
+y
+> > maye it is neovim which is overzalous here and other editors don't trea=
+t
+> > the entire file. If there is a way to convince the thing to only tend t=
+o
+> > whitespace issues in edited lines that would be great.
+>
+> Yes, I think that is quite overzealous, I'd view it as a vim issue.
+>
 
-Applied to sudeep.holla/linux (for-next/vexpress/updates), thanks!
+I don't know about vim specifically, it was neovim here, for the record.
 
-[1/2] dt-bindings: arm: arm,juno-fpga-apb-regs: document FPGA syscon
-      https://git.kernel.org/sudeep.holla/c/3e295d8b4731
-[2/2] arm64: dts: juno: add dedicated FPGA syscon compatible
-      https://git.kernel.org/sudeep.holla/c/2e84e7ed7b02
---
-Regards,
-Sudeep
+Anyhow I put on latex gloves and typed in "apt install emacs", added
+the plugin as documented on github
+(https://github.com/editorconfig/editorconfig-emacs + entries to
+.emacs.d/init.el) and got precisely the same behavior.
 
+There is no way I'm trying to other editors.
+
+At this point I suspect this *is* the intended behavior and other
+people don't run into it because their editor does not look at
+.editorconfig to begin with.
+
+Note my vim does not either, I only ran into it after experimenting with ne=
+ovim.
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
