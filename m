@@ -1,119 +1,78 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2A0130496
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6002566;
+	Mon,  3 Jun 2024 15:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717426806; cv=none; b=pgWfCpa7H7ITl1EFR/tDVj/9bezBU/S3NIvXIGWdaSqpcMmqFN4V2k+JedhSo0jhIiDUTvz0maLG1g7hGsder1bfSA/oeQI3BhtUab523QJfppgRPmZcTzEiVbT1x8cLk5lnJQjNMmu7Y3qTfR/9k7NCRaCpHAty4X8h2+Dv7Dk=
+	t=1717426832; cv=none; b=ghR/KaTWDcKQmDLUArDNyeAZEaaGBH6/JCEphJTCqlLndlGQNWMMNo8zRf95buDOgVgMqWMBp1yeOWikhZxbGSYJoQo1veoye+iQymA0mTHuS3YvUsS+d9DTxXU3wfO4FwrJco+6bl0byTf840U1e74ZZTb1gYT36SmEtkwbxLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717426806; c=relaxed/simple;
-	bh=iItJbynoZG2fkDdvd+Fuk2y4lnLKFsONk8y9DX7sdwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=icBtBy11QdMOF4DYU47w7Q4wRTAVlwb/C4Zlop0cPc4g+HJIibpINpWipg6QS4quoZq4CLQY2Zkm42S1r7VpUGlECcebbxjjnn5KXBMYVaozZwpAaXqG40au9zfu0r4FZ2fSm+JRpV07YnXYwJCiEFs7viP48goetZiDBYAPxmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YvkQ8+eY; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717426832; c=relaxed/simple;
+	bh=nQ/ZC0HkSNtdKvXFuFNnWNPgedzKv4BHuHlR+3NHmXQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=qqbM/LcOPscOodjLz7obmc28ZG39GNmkdRSyDBhOn8nGV9PUB8Cz7kESgjsp8BJU6BtXgay522zHG4NLEQCWPL9dEZZt0C9tdlm0oLBmiCMu2CJZ9r1XkoVP2Tn0sptK+7kwDWnxZeStPmoDa6KvwIdMK0z9PstQ+ENoycl3Hkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HiNcT0Ug; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YvkQ8+eY"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e95a75a90eso48552761fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 08:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717426802; x=1718031602; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HYRUUR3cLiWnEE1d3GCHu28TWvhvOquyXAvutcjzmXU=;
-        b=YvkQ8+eYdscLveLGy2lWIcf5kpoEBPgUWov+0Qgy+VnjtZxlW/ttMAp2ujijV8Tzvc
-         oKJ4tcKdWwiWKr46V4ePMGP2p3xxPUmp5u1QXKzBb3v+irkiCfbxCKpEJu4ZQ2FLlr9Z
-         N7wABB/1D/hurVn136jC913Qhb4aD1o9UBRdry0OsZnff7mauIh55bDyLdm6iWGoeTCr
-         k+R+J7LQKmj6xU90s31b55PBohOT4Jv/Gu7VhapmCVEgw0lTAxcvxYkdOCuh5x0xeQxw
-         CYV3fX4jKJq+ozG/uaYCaOixm0uGFeRh27QCea92rpyoww64l244nqwYhbS+ai+iZaZ9
-         1n0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717426802; x=1718031602;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYRUUR3cLiWnEE1d3GCHu28TWvhvOquyXAvutcjzmXU=;
-        b=djrIXaithdX+Kws7KHEeRxgEx/CzCUl3tJk1wTWELJTEuOE7TlTpFv0PKZ0tpUUEAF
-         1w+MD0snNHgPF77Ae+FuD0H5oLqMrhoiwDnnqp6KPfyyXfUBMscpr3A6fzEUuOIM1Qv0
-         n1FjKhw9AaUVdWDBHWIgmrHXpbub+6ApEoN4RjLkARwCZe1uDlXcbir99DEDUFLRLX9x
-         3EIdMzyDD3ObUtjUnKAqIfP99JEJ6B9XyA6wgeTRkUk/ROpP5Zmu6jOuQcIZnven5h8i
-         Na7E8DMBvt9NWLkwADgEUmpfIIc2Uue3PYelmwGSd/WilkMaakfcnSESu+3Vhlzjf5Pj
-         g7pg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPQHrXqovtgZIJtAZfCIXEIJextj8V5dQyUpleypbDQphnfmTMuF4rWHjUqDgPWT2XOoFAdApZ337Uad+DrGtB4obDJeEa/HU7OJtB
-X-Gm-Message-State: AOJu0YyepStKKGBPj7Q9uZy0i6yFxkYNLpb1EfgXBOYKeL3eso1CQ4+Y
-	x9fkx7VNH2nv5P6wfInWyTkT267FQuQY4BJAD4hqJkT7oMlJsODSMFknNmfjSd8=
-X-Google-Smtp-Source: AGHT+IH5Dxat+Ix87X+1jaKmBYce6fT9DMH7CdUkz2iRRzf15OpyFBvw1q/h6mcTd2CZk0Bn0nrFSQ==
-X-Received: by 2002:a05:651c:10d4:b0:2e4:a929:78bf with SMTP id 38308e7fff4ca-2ea951d794amr54500371fa.43.1717426802016;
-        Mon, 03 Jun 2024 08:00:02 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b0518csm5785580b3a.147.2024.06.03.07.59.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 08:00:01 -0700 (PDT)
-Date: Mon, 3 Jun 2024 16:59:51 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "gxxa03070307@gmail.com" <gxxa03070307@gmail.com>
-Cc: "john.ogness" <john.ogness@linutronix.de>,
-	rostedt <rostedt@goodmis.org>,
-	senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	fengqi <fengqi@xiaomi.com>,
-	=?utf-8?B?6auY57+U?= <gaoxiang19870307@163.com>
-Subject: Re: [PATCH] printk: Increase PRINTK_PREFIX_MAX and the buf size in
- print_caller.
-Message-ID: <Zl3aZ1bfsUyX-7I4@pathway.suse.cz>
-References: <20240527091929.316471-1-gxxa03070307@gmail.com>
- <ZlSewPTyQ-jMpW5n@pathway.suse.cz>
- <87y17tktze.fsf@jogness.linutronix.de>
- <1717404421510.qmo40jy5kubcunlrdknzajsf@android.mail.163.com>
- <Zl26LDOV_v946kOv@pathway.suse.cz>
- <1717420513010.hwqncbrma24lbz30knw4rdzi@android.mail.163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HiNcT0Ug"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D262C4AF0B;
+	Mon,  3 Jun 2024 15:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717426831;
+	bh=nQ/ZC0HkSNtdKvXFuFNnWNPgedzKv4BHuHlR+3NHmXQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=HiNcT0Ug3FVpzNp4ucjQksj1coDpSMGHh1erHFHb9zwSNDrEHCGXpNmQmxwQFdnIh
+	 C2ZjLq1gJUa+hkGkoEBJdfaAFrgkgt4nSV5WyaaFYvPTLkExvKangYEYbJ8HG/40xf
+	 Qc3tJRJDF4we6kINiCC5Isp6tzEn39bSLuIgQUms9IrYLUzr4KJA5HQ/E5Y5thJVIa
+	 2kWEb8DBUVdEAh/C2BhWAm+u+A2S6zEpBK1qnAUS8gsO2F0lF/hIEybTeRbM2wj+66
+	 +pMGDWvDnsDGFyVEDnj49oBFAPbyZzFlH0HZRqEgqaTXznYGftjKrpSx/+OE4f2Gd6
+	 L3gIt5BwUnqeg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 66D18CF21F9;
+	Mon,  3 Jun 2024 15:00:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1717420513010.hwqncbrma24lbz30knw4rdzi@android.mail.163.com>
+Subject: Re: [PATCH] tools/bpf: matric typo erro
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171742683141.27164.14897538327066785184.git-patchwork-notify@kernel.org>
+Date: Mon, 03 Jun 2024 15:00:31 +0000
+References: <20240602225812.81171-1-beaujardswan@gmail.com>
+In-Reply-To: <20240602225812.81171-1-beaujardswan@gmail.com>
+To: Swan Beaujard <beaujardswan@gmail.com>
+Cc: qmo@kernel.org, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-On Mon 2024-06-03 21:15:13, gxxa03070307@gmail.com wrote:
-> https://android.googlesource.com/kernel/common/+/refs/heads/android15-6.6/kernel/printk/printk.c
-> We are based on google source code development, this is the link to google source code printk.c, which adds trace_android_vh_printk_caller, if we want to change the buf size must first merge into linux main line.
+Hello:
 
-trace_android_vh_printk_caller() is not in the mainline
-=> there is no reason to change the buffer size in the mainline.
+This patch was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-You might try to get the change of the buffer size into the android
-google sources.
+On Mon,  3 Jun 2024 00:58:12 +0200 you wrote:
+> Corrected typo in bpftool profiler.
+> 
+> Changed all instances of 'MATRICS' to 'METRICS' in the profiler.bpf.c file.
+> 
+> Signed-off-by: Swan Beaujard <beaujardswan@gmail.com>
+> ---
+>  tools/bpf/bpftool/skeleton/profiler.bpf.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
 
-If you want an upstream support then please try to upstream
-the entire solution.
+Here is the summary with links:
+  - tools/bpf: matric typo erro
+    https://git.kernel.org/bpf/bpf-next/c/ce5249b91e34
 
-But the use of trace_android_vh_printk_caller() is a hack. And upstream
-will not support such hacks.
-
-Best Regards,
-Petr
-
-
-> gxxa03070307@gmail.com
-> 邮箱：gxxa03070307@gmail.com
-> ---- Replied Message ----
-> From Petr Mladek<pmladek@suse.com> Date 06/03/2024 20:42 To gxxa03070307@gmail.com Cc john.ogness<john.ogness@linutronix.de>、rostedt<rostedt@goodmis.org>、senozhatsky<senozhatsky@chromium.org>、linux-kernel<linux-kernel@vger.kernel.org>、fengqi<fengqi@xiaomi.com>、高翔<gaoxiang19870307@163.com> Subject Re: [PATCH] printk: Increase PRINTK_PREFIX_MAX and the buf size in print_caller. 
-> On Mon 2024-06-03 16:47:01, gxxa03070307@gmail.com wrote: 
-> > I need to populate the temporary variable "caller" in "print_caller" func with the additional information. And it's no use defining a buf in out-of-tree patch. 
-> > In out-of-tree patch, I can only add hooks (special cases), I can't change anything else, because it needs to be consistent with mainline linux. 
-> > caller buf in mainline linux is it better to make the buf bigger and leave some space? 
-> I do not understand. Why the buffer size has to be consistent with 
-> mainline linux? 
-> Really, it does not make much sense to upstream just this part 
-> of your out-of-tree patch? 
-> Best Regards, 
-> Petr
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
