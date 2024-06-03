@@ -1,102 +1,115 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE8B84FD8;
-	Mon,  3 Jun 2024 09:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.47.171.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241BD85656
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407632; cv=none; b=M3iW45BqTi6pwt2iRVxz1ZLBs4CarQZp72eJa+s5r84/I0p4fe40fDCnel3eYR3i0fyuNvGLHa3P1e9MAXIn7bb46XySjtXustfCKT9XxduPkHJr606XyFHijYr+rSjCuYk+Y4NPGQVOrIUwvGDAhV9h+YwA523SSRIWg7fBmiQ=
+	t=1717407658; cv=none; b=dyXvC2mzpbhkv0iID3AJeMxPN8cKsteVf1TyP7xF5Yv+GPzJ5fEj1/UXGaVwvJMeIGk3sih4xURU10EvO9oIWKAwfbfQPleEEQnq/FCDAe3i6l9NNrRirx2pDIkYDdrzJ/IgKTDnZtNFGtU3MHNexMLO37CcRn4E9Vpn2OpecgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407632; c=relaxed/simple;
-	bh=oVDr4kqufAv/dxzz5Lxq0u/Ascj3+Nvd6O3eZYaIXi4=;
+	s=arc-20240116; t=1717407658; c=relaxed/simple;
+	bh=7/PBozWCZM+mgFS0nmYdbE6Ut8V9eeR4o/kX9YbofnY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DKzkhEnMlebmBVJQ9G5Oj5rCk+kNf8VvUW9bQJxCfHa/HG6vr5tm/3Gmdx9BuqmBGaTixV6+bU9K51mikxXI+wnx8B7FxtFe3fodVilJdm8Qj92ddL1Uz2BzJ3+WL/sIFcPkQTxBfrsPWia8ALxBX/Gr96R/YgZ9c/nHq/4/vEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org; spf=pass smtp.mailfrom=datenfreihafen.org; dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b=EJ61GY7M; arc=none smtp.client-ip=78.47.171.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=datenfreihafen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=datenfreihafen.org
+	 In-Reply-To:Content-Type; b=kMUSATPMgKjc4YhVTf4SvRNnUIFkIkE17hGvUtZmJ1+ulw93FtUXd+u5weXEbn/qFvtf0H8VPaeXrZUZwNJUaG10Q3oclrxrdBTNbWW6GxpTs3ptRRpdWEfG8miptv41pae6AWo7qOsHY1n1bMV1Feda10YLCa/VrRp48wnDwJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k1bopM9b; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=datenfreihafen.org header.i=@datenfreihafen.org header.b="EJ61GY7M"
-Received: from [192.168.2.51] (unknown [45.118.184.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: stefan@datenfreihafen.org)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id D8BCDC063F;
-	Mon,  3 Jun 2024 11:33:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=datenfreihafen.org;
-	s=2021; t=1717407209;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k1bopM9b"
+X-Envelope-To: vbabka@suse.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717407654;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3nWKy6AKKd5kBCqS4Y/8g3wOqFQkOvvYM77V/sj1yk4=;
-	b=EJ61GY7Mjdnz4zlqQCfRKO0kKsMMgfxuNIV77s8WH2+buDVSdhFI9jBEksT4vaHhzgSTU8
-	M+CCD72vV+LLeHk90K2xcf9/Uo8oLScKiaU5d9QPJBDMPymDXjhbQcEYUpVgKM2ejD8wnK
-	+cS2KGFGquZtu1UrFPmviX332DzaRqpyRU5d77CgkL+H5T/h498dQ34qQrmVBm2YP9Ce1s
-	5LGnkbhY3ElztedPf86I09ypKV1JoGl3C6U93c3YGz7GxHV9dn6fsj4hns8retU3z3gc07
-	FYpZOvZohcH1Y3+vGTu5X6oS586w68ltei+5vdJLK3oGQvAhEJLFGlFighqv1g==
-Message-ID: <41e4b0e3-ecc0-43ca-a6cd-4a6beb0ceb8f@datenfreihafen.org>
-Date: Mon, 3 Jun 2024 11:33:28 +0200
+	bh=cepglRJZ1mK8dA8kcnRQrvV4Tmkczc4BSDaYLYlAPNA=;
+	b=k1bopM9b1+hOyhZunW8ZQd2QhXGgzm8Jf48bOWur2dYlvOBN/r2gFwzuesMSdeYB8+i/bv
+	mAFoSSRBwj+H47F5ZpUpydINRt/BSs5y19NIjKOHO+oJPVqnjlp2ClcInGXcbI1Z/QBRzB
+	tVM+iWLaFV6nPnCet+3Qi6z76mO5xfM=
+X-Envelope-To: cl@linux.com
+X-Envelope-To: penberg@kernel.org
+X-Envelope-To: rientjes@google.com
+X-Envelope-To: iamjoonsoo.kim@lge.com
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: roman.gushchin@linux.dev
+X-Envelope-To: 42.hyeyoo@gmail.com
+X-Envelope-To: feng.tang@intel.com
+X-Envelope-To: linux-mm@kvack.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: zhouchengming@bytedance.com
+Message-ID: <4c8406b7-f5eb-4907-8ee1-f997bdeb157c@linux.dev>
+Date: Mon, 3 Jun 2024 17:40:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: mac802154: Fix racy device stats updates by
- DEV_STATS_INC() and DEV_STATS_ADD()
-To: Yunshui Jiang <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-wpan@vger.kernel.org
-Cc: alex.aring@gmail.com, miquel.raynal@bootlin.com, davem@davemloft.net
-References: <20240531080739.2608969-1-jiangyunshui@kylinos.cn>
+Subject: Re: [PATCH 2/3] slab: don't put freepointer outside of object if only
+ orig_size
 Content-Language: en-US
-From: Stefan Schmidt <stefan@datenfreihafen.org>
-In-Reply-To: <20240531080739.2608969-1-jiangyunshui@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+ Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ zhouchengming@bytedance.com
+References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev>
+ <20240528-b4-slab-debug-v1-2-8694ef4802df@linux.dev>
+ <5a09e348-9eeb-4502-9aa9-ef5da2f94218@suse.cz>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <5a09e348-9eeb-4502-9aa9-ef5da2f94218@suse.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello.
-
-On 31.05.24 10:07, Yunshui Jiang wrote:
-> mac802154 devices update their dev->stats fields locklessly. Therefore
-> these counters should be updated atomically. Adopt SMP safe DEV_STATS_INC()
-> and DEV_STATS_ADD() to achieve this.
+On 2024/6/3 17:25, Vlastimil Babka wrote:
+> On 5/28/24 9:16 AM, Chengming Zhou wrote:
+>> The commit 946fa0dbf2d8 ("mm/slub: extend redzone check to extra
+>> allocated kmalloc space than requested") will extend right redzone
+>> when allocating for orig_size < object_size. So we can't overlay the
+>> freepointer in the object space in this case.
+>>
+>> But the code looks like it forgot to check SLAB_RED_ZONE, since there
+>> won't be extended right redzone if only orig_size enabled.
+>>
+>> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
 > 
-> Signed-off-by: Yunshui Jiang <jiangyunshui@kylinos.cn>
-> ---
->   net/mac802154/tx.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+> Seems OK.
 > 
-> diff --git a/net/mac802154/tx.c b/net/mac802154/tx.c
-> index 2a6f1ed763c9..6fbed5bb5c3e 100644
-> --- a/net/mac802154/tx.c
-> +++ b/net/mac802154/tx.c
-> @@ -34,8 +34,8 @@ void ieee802154_xmit_sync_worker(struct work_struct *work)
->   	if (res)
->   		goto err_tx;
->   
-> -	dev->stats.tx_packets++;
-> -	dev->stats.tx_bytes += skb->len;
-> +	DEV_STATS_INC(dev, tx_packets);
-> +	DEV_STATS_ADD(dev, tx_bytes, skb->len);
->   
->   	ieee802154_xmit_complete(&local->hw, skb, false);
->   
-> @@ -90,8 +90,8 @@ ieee802154_tx(struct ieee802154_local *local, struct sk_buff *skb)
->   		if (ret)
->   			goto err_wake_netif_queue;
->   
-> -		dev->stats.tx_packets++;
-> -		dev->stats.tx_bytes += len;
-> +		DEV_STATS_INC(dev, tx_packets);
-> +		DEV_STATS_ADD(dev, tx_bytes, len);
->   	} else {
->   		local->tx_skb = skb;
->   		queue_work(local->workqueue, &local->sync_tx_work);
+>> ---
+>>  mm/slub.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index de57512734ac..b92d9a557852 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -5150,7 +5150,7 @@ static int calculate_sizes(struct kmem_cache *s)
+>>  	 */
+>>  	s->inuse = size;
+>>  
+>> -	if (slub_debug_orig_size(s) ||
+>> +	if (((flags & SLAB_RED_ZONE) && slub_debug_orig_size(s)) ||
+>>  	    (flags & (SLAB_TYPESAFE_BY_RCU | SLAB_POISON)) ||
+>>  	    ((flags & SLAB_RED_ZONE) && s->object_size < sizeof(void *)) ||
+> 
+> Should we consolidate the two cases with flags & SLAB_RED_ZONE?
 
-This patch has been applied to the wpan tree and will be
-part of the next pull request to net. Thanks!
+Yes, we can.
 
-regards
-Stefan Schmidt
+> 
+> Also below this is a comment that could also mention the slub_debug_orig_size().
+
+Ok, will add.
+
+Thanks.
+
+> 
+>>  	    s->ctor) {
+>>
+> 
