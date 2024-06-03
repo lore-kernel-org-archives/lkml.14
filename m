@@ -1,276 +1,510 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2049.outbound.protection.outlook.com [40.107.244.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2A41369A0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434356; cv=fail; b=KHZ3/vuixzRUGQLOgk0/qk3nIEj6Uj5gS9aJKALp3AeH8Z6ckluTwWfAoeI6YdnlSHON2D4YRb0c2nwrPVQgr4WZd2LwmDH4WrQHvqzdqDmP+Rv+2priFTl87bP4ljNhGz8n3lE/2l5TJe3J4MFZ/IafNHEXW752lUuhM9k2TTA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717434356; c=relaxed/simple;
-	bh=3bEa3oso+pzYVawVHAmlzDh5yWtO2KfRJdVtNOPy3iY=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=dc1DQ5Us/zsq8rjOmW4KxmfdRd6l+/a70BFqR3kR9XGuatlNzJfVjW3EbNua3fPwWBsEYdZFZCMpp5pYyn12aBr9wWHHMy87ctWo1VuJcPjezSdJyzAKWgphd8nzb5zPlCNCPlfAEpYKxbNb5YfbV/F5V57OstfAxyn4R6WKq5c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=y8Rp+kk6; arc=fail smtp.client-ip=40.107.244.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444FD137C20;
+	Mon,  3 Jun 2024 17:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717434381; cv=none; b=kzlTvlqCo/kf3AmBwKhV5rAZ0bE+e9KXEgOgHIE4MjoDhLA9AAs28TLn8PZvruo0G41/eYOmuWm0jbiN6FRBgkp/jFoZXZL5hzd1Yc9btqjrOF2fs5cEw2XrABYksTfDDyFn1YZaTHlTn40Yp+LUD88QleuuLfqX6yytOGWbQq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717434381; c=relaxed/simple;
+	bh=IUBCEICUyhwcICO0LM0dlov6BuMUOPZDhUGcBA1nDQw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bhLSnNWd4vz9p4V8p7KlnRDBY0CMLH9r8/IAWA05HLVjxuFUDdT+/GT32Kv4LtwI0mTK+vhKzSDVOAyQc9JB0CSWsPltrg1sXnlYBNWeMXtB/aqHx/9CARJJguhhYR1LgVzn7HXZP0YluxDbbggZNNwKg43+oBZ+BdAa3GLw8KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VFAWX+oa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2Bm1TWAB; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jGuH3Th/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Q7g3X6iK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="y8Rp+kk6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LgY5sdTTK7En9dUyJ1se5Gzs6dZ0uwb39rfYHPpXQd+JmY3PB3U/HeL1toN6h8hgKlX3m0px8CyRb96BMyFy8hazGxCQ3U1j4w6sUzDcfrCDqsZ5X5Odl7vfM0LP39XDAvjjQsDnDoTPxRnG8oR/5WzDgnCTwC67+jm5NhWpnssLWobB5vDJ14sA1AA5ml2RFUTgxv/BwzodlMdpLQ2JcyrB/y/tQq0Efn/twcnNRziYHoLKhxrRKNOXORueKE+QMA1fUVKJklN+7QGRYur8qyB5gm4L4VbMRrFjStqXvf5y8alt9E3wbBaIqqJHuc9AnJp0XRT1Hrvvyf+7THbmDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+90rgciA3JSzBk2mJ7LZQRDtYXyGCCaFarB538BA+3k=;
- b=PvFiJok7SHqAWhCgAXvXn8YFJKON/Of6VSY7gOuH+M89qWAniSLfyNX0QWh262tQ5xPmWLUJx+a4br33ueCmz5P4bC5ERwLm4VqraduqzCAHwoh/O1kNyWceI/lBwIq8xd1ibpe405JSCo6bsloNDBjX7WziITg6v9QuIGoUEo2xbTzMgW1cLHom3Oqy/iAqX0OC9zIsDojlZ4aMFm91w1eB1NeDjmRAe774WdPCArsuznSB2r/M5hFLvwnXp7h69VbV8U3BsyNortT0MIKO6VTliASRxEvuUa96zPPO4xvsbqL34CxIFC5V25Ex8QZkXQ4KwePkjQz5RUZauKBq1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+90rgciA3JSzBk2mJ7LZQRDtYXyGCCaFarB538BA+3k=;
- b=y8Rp+kk6jEnHbU8Q/Yd03xplRx6Zqd0ziBJmGfTe23oz2d6Jra+9SmVjPVv0mXDAyCBVeKDJMeIb29h7EzkNRSt0FPP7nxkJ0NCxNwNsghzp9F+noX4NCVf4D6scRc8QuRNVT0wjDypb9dedvS8X2O/bM6I3yWB1AErsaohj1ZQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
- by CY5PR12MB6549.namprd12.prod.outlook.com (2603:10b6:930:43::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.19; Mon, 3 Jun
- 2024 17:05:51 +0000
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::e441:89a7:4dd:dce7]) by SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::e441:89a7:4dd:dce7%5]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
- 17:05:51 +0000
-Message-ID: <1d03466a-052c-4152-9dc4-0b72d95cde6d@amd.com>
-Date: Mon, 3 Jun 2024 12:05:45 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-To: Mike Rapoport <rppt@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, rafael@kernel.org, hpa@zytor.com, peterz@infradead.org,
- adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
- michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
- bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
- vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
- jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
- Dave Young <dyoung@redhat.com>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com>
- <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
- <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
- <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com> <Zl3HfiQ6oHdTdOdA@kernel.org>
- <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
- <Zl3hwYL2GDiyUfGo@kernel.org> <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
-In-Reply-To: <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DS7PR05CA0010.namprd05.prod.outlook.com
- (2603:10b6:5:3b9::15) To SN6PR12MB2767.namprd12.prod.outlook.com
- (2603:10b6:805:75::23)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VFAWX+oa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2Bm1TWAB";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jGuH3Th/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Q7g3X6iK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D58DC1F381;
+	Mon,  3 Jun 2024 17:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717434376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=F/FTZPd1cZ3bUSIu2pf129jevvswA0mEkhduMTvacaw=;
+	b=VFAWX+oaKNn9M4yCwS1jrIQWPKc0mwKuQt31slrpN6RfJ7uYz/txQZ6UWFAKdCq7Gcpx7+
+	NMGwYppT2K+R90gL3H+SKwrKAvXayht0/woF7tai3qszCcvY8kaJh7EIUR43j1bY+p65If
+	41swwId5q6zzecpGaUAn0rPzl4bS//M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717434376;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=F/FTZPd1cZ3bUSIu2pf129jevvswA0mEkhduMTvacaw=;
+	b=2Bm1TWAB8hH3ulRFB/K0S+O9Qww3xwaqFmKEuCKNrs96XTEP98peWbFhX6ecd7myz6tM1x
+	RokScJDQMouPegAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="jGuH3Th/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Q7g3X6iK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717434375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=F/FTZPd1cZ3bUSIu2pf129jevvswA0mEkhduMTvacaw=;
+	b=jGuH3Th/D2ewU7HTzivwZfdr5SKlYA778oQldl44AoH0cQn6Ai7Q1NmaNt3f0emp/GMGrr
+	f1b1krBlYwU5aCm9YvIDfYKG3gDcx89gEent1W2KHXqTcD+PkOc98mrn4ht7KR9rHNS1UN
+	3IQ62pr8C6FDG1nYI03dzpzLLpHlNx8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717434375;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=F/FTZPd1cZ3bUSIu2pf129jevvswA0mEkhduMTvacaw=;
+	b=Q7g3X6iKTw9lkbIlyPe8rgG8vSPebQA8X4XX2YTmuAEk/R/PYtXEPnwjFE1htec2mqs2H0
+	65dv0RIz7mjYmGAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6F8713A93;
+	Mon,  3 Jun 2024 17:06:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MBUUKAf4XWbFGQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Mon, 03 Jun 2024 17:06:15 +0000
+Message-ID: <8c0c4af3-4782-4dbc-b413-e2f3b79c0246@suse.cz>
+Date: Mon, 3 Jun 2024 19:06:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|CY5PR12MB6549:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cd4209c-0ffc-4a36-df15-08dc83ef6c19
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|7416005|376005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WEVkTC82NDBpcnU3ZVJtMENORm1wMlhNcXd4YkZuRFVDZnh5ZnhxKzBSUWNJ?=
- =?utf-8?B?cnViaGZySyt1blo3bUZOVXBFNk4rc0JCZ3RkL3RkNUZGRGYyQ3lBa3p4VkZk?=
- =?utf-8?B?bGtqNlVueThKQmhJTTY5dTlVT2RuUXFLaHVTRTVwQkwrdzAwV0JmdmpjK0NW?=
- =?utf-8?B?WlYweVp2d2dSdVhSa3paa285Ykk1ZzIzdXNWbnVrZlIyMVk2ZWVXZTJUZFVX?=
- =?utf-8?B?eWhwWlZ4MVEyenJzaE4vMHdtcERvb3Z6b2U3cWVTbk5ZTzFySnBJbG53UHJD?=
- =?utf-8?B?dDFJb0ZVS3N2NldsanpGT1M0VGw3cllESFJpaUhheDhZUUlqaU9ORlZmMWVn?=
- =?utf-8?B?aE93b25TVzBhNVZyYWlHekVYbE1Uenp4WmZiNTROeUZPMXE1bk5hVGdNSkFi?=
- =?utf-8?B?bWlUVnV0eTBVSEE4Z0FRNVBZVExXWnNGYU5TR1lIWDRFWmJXNmRPMlcwR0lJ?=
- =?utf-8?B?eTNoa0dNdFhkdXJqSFlMcW9lUTQ5ajNvclVkS3pPOXF1cVV5WmpJdkdRczR0?=
- =?utf-8?B?L3lrT1hBTU85OW0yZUFUOFZaMHd5bWQyOGNTRU5Bc3VNUGVYNEFzSmhjc1Av?=
- =?utf-8?B?eUdVNG1FUzVNTnNSL0czQUZQZFEzWEF1TFp5RDB6VHNueDlpWGVua3FLNm11?=
- =?utf-8?B?UTNBbUVIRzBjdk4rSmliWW1HQlIwNEJqbUcwV3doRFF3N0krYml0amNwaTdm?=
- =?utf-8?B?ZTNyU2hjSlB0dDV2Q1hISGFXQzh0bFNUb3JIMnlUUDFKWUt0QUtEU0JyQVJp?=
- =?utf-8?B?aHYzenkvWG5JejZpWHI1UnRhTFhDRFg5V1owbUs0eUp2L0s5dGZUdUlMRTN4?=
- =?utf-8?B?UWhzUS8xR2Jld1RZQVYzK1RKZnlocHVmdjFybjVlbDk0eG1sa2FUSlNJK0Vw?=
- =?utf-8?B?YTZlbkpua2RzZ01aemNPdlNwdE00UHpPZHZlRnFhSDlUTGZ5RktvKzVPVDNX?=
- =?utf-8?B?RW9WNHhueGt5eGR2RnJmNGxZeitsTUl5UlNoUWFmRmFHV3FFKy83TkVDc29V?=
- =?utf-8?B?dko3OGZLdGlsemlGdzROVjZ2cVFwbGtmTlNObENrRGlqa3NaM0RZdk1RYzYx?=
- =?utf-8?B?RklNSzVVYS9YcEJwdDhZSWNlUlFwS1FRRjFUYmw4czlLMVdMeDM0QjRlOUZo?=
- =?utf-8?B?VnRReXJ0TERDWDA1VWM2dkx6Q29BUkx3aEpZTTBWN1ptZi9KZ2k3UmVkNEtD?=
- =?utf-8?B?aWtIVDlBWEtxbEJtK2FlcVlEZHc5cldQR0tBRWFac2huVjc3bjFWRDFCcnp1?=
- =?utf-8?B?WktmQzVZOXpHLzNCMmlscFhyazR0Vmx2ODQ2RDlDN0UwRjRTTExQQTV3d1lJ?=
- =?utf-8?B?dk50QllKME1nYW9YcUtVdEtabU9DR1M4M0RTZkQra1g2aWJZbHZFd0pGNzNR?=
- =?utf-8?B?cG5VejA1dlB0V2s4ZlFRWEk2MTJvSGV1YnAxM044MERBRk1TNEhnNWdpVDhp?=
- =?utf-8?B?M1hqMFh1QUMvTUxjNXNvTjFxaEMwbGdpbnJibUV0ZkZjUzdDbS9jbWlsb1kv?=
- =?utf-8?B?UzBvQTJJNmFpWHFkT2h6VFFqbHFJT2hrSjNNTFAwWWZOOVRMMmtuOHlCVDVJ?=
- =?utf-8?B?NTJDNUIxaHIycm4vcGRqTWk3S2VWUXQ5R0ZaWU1COCtYV2dCQzJFbTZsYXls?=
- =?utf-8?B?TExDT3BmQTNqeW5XYjZReUpEalJpUmNYSEFCMkdSWUVpV1hXUkFWME9JVk1I?=
- =?utf-8?B?VXJabEVZS2wyVzFwTllnTnYydThSSUp6c3dPb0RHdUI5THdyQS9wQzl3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UUk0RGlQWlNmY0dDUDVwMVZjaW1PbS8yMUZOdSs3dXZNMUp0RFk1eVlOZTFW?=
- =?utf-8?B?ck9RSXFrQjNLWUhOejBqQ1hTdmFYaHM0ZjNpSnJ6ZnhpV1RIRTVyK0dnTi9J?=
- =?utf-8?B?RVpKU1hzaDYxYUJmRU1iYWJuZnp0NWJQbEF6RFNvME5KSEpTK2I3am5JQURn?=
- =?utf-8?B?RERMVE5hV2lseXc1ZUZTdUpia1FDdlBJc2pXV3ljOXVtQmdTT2FDZTY2eXpy?=
- =?utf-8?B?WmdKbklpd0w5RCtsU0h6RjkvK1gxTTFkNk1XUC9LaDFlSDllOWxKNTI2YmRO?=
- =?utf-8?B?RW9YYUcydUE4OTl6OXptQTNQVCszdjBrQzEzNmFHbVY3bG9RL0RWN0hDbkxG?=
- =?utf-8?B?dTNmN3ErN0ZQMlNKUlppelRCZm10VGROaUJiSzE1WERTTmVudjlkSVZ2MGtY?=
- =?utf-8?B?RitmVTVyUTM5R3VuSG5aUlMzTDFKZGltMS9PcTdEaFgvcmI1RmV1SVlpZU9X?=
- =?utf-8?B?eitCK0xyT1hLcXVnaG1Bd1pReEZ5clZVYnQrM2ZxZVl5U0E2S0ZML1pRclJU?=
- =?utf-8?B?akpMa2ZYMDVFVTFRUzRXVnNqMUE4ZHdidzgvYTYwaFRiYkU4L3RpL0t1cDlv?=
- =?utf-8?B?ZzdHdkZBK01BcjZzR3NmYVdWb2JTNGpZY283aG5yL3RjNkFvYjRYTzNDdCtX?=
- =?utf-8?B?WlNyZGdiSGF2YlEzRzlnNmR1UHhJMkVSQjlVVTBwRUhLbTJnVThFbmgwM3Fj?=
- =?utf-8?B?eUNkRFFZZGVzdUtUVHJQcElkYnRKTm94dHQ4eVdqVk5RSlVKR3BvNU96ckN2?=
- =?utf-8?B?eFUrckRsWkxJcTNzVGQwL3dkOThLbmNiN3pWVTg1NnhwNzNXMktidUk3VmFV?=
- =?utf-8?B?VjJQYUdxMW1vcHpsRHlYSVcvWC9PWHAxb2VwcVZqMjlHQ01BQU93ZDBqVmti?=
- =?utf-8?B?RURqY0JZSUdta3hnMDVXM1d0K0Mrbi9BbTBlUmtvMzJVaWQ4Mll5Mi9EUXRw?=
- =?utf-8?B?UHk1bnY0NEVxRUNScmE1NmNjbE1TL3ROY3RPMSt1TFRyS3REQXMrZm43dWhV?=
- =?utf-8?B?SUU4NGI4OElMSy9wVHd3U2dwNTQwQ2dXWHk0YU1ka213cWo3cERoWW02QXRx?=
- =?utf-8?B?cC8zNUxReFBvMURUR3E5S0JCRFgzUk1BeklKQ2pZSzVINWlybWlzMnBJWmZC?=
- =?utf-8?B?TkpHN3VRU1dQY1pmRWVGVk1iS1RJblVrMWpCUWJwUDN3THpneTdjSlc2MWY4?=
- =?utf-8?B?SlQxb1hLMzR6QUtHdVk0Lyt1d2t4cTdXdzMvdlFTRGpINHE4bUlFV2JHSUl0?=
- =?utf-8?B?aVJRVEdJa0FXZWwrS2lmanZON09ESzFjM0NFVHVzSVREQ1M1MHplanBTMTlQ?=
- =?utf-8?B?U1B2TVhxTEZFWkFnL084cGovY1Bta1RQczdtRUQvT0xyZkx0dFUyaTdKNUlW?=
- =?utf-8?B?WkdkaWNITHNwRy9hRzJTbUFNK2s4TmYzVTMyNnorL1liY1ZZOFhZWVZCWUFp?=
- =?utf-8?B?THNZNXllUHFMQmJYb1VFNUplOTBrNnNXUE5INzFCU0xZc0Q1cGNqaUdLU1Qz?=
- =?utf-8?B?MVN4RGNOZzNFTGtuZlhXNGFYNnd0eUVRK2pLa1lhRjRmNDRwMWFXQ3Yzclp4?=
- =?utf-8?B?L3RmeXYxL3JvUWo2MW5iUUZLaFRCM3FmNTVQZG5pSThPckhUd2w4aUZDUE9r?=
- =?utf-8?B?MUlDeml0MFVaeDB0b0ZJSVpGWThWajlUZUpiaXdoVGZhMUgySVpqSk95TG4v?=
- =?utf-8?B?d1VIbEsxb0tOQWxVU0pJc1R1VXFtTnRTcUlUWVQ4MHZqTFhoUUJ1NWhJRUw0?=
- =?utf-8?B?RmhLNHRDQ2xFRUxsRFVYZHdtTm9vKzF3ZzdQa0ZKSHBybENvVkR0RHhaUVJ2?=
- =?utf-8?B?REV5R3FXUDliMkNwVTlFaVhVSEJSK1NYVUgvcXlsSmZhSUdLZFVvTC9rVHg0?=
- =?utf-8?B?M0Jpb1BobWk0bGtZdjVpZHBWajFrcFhRc2t3cjZSRCsyZW9tZ01vc0VvWkxO?=
- =?utf-8?B?b1NsSWg5RzE4M2xEZ3pZWUVDeE1iWmJZcjNvakU0UE5BdU54dnd0UUMzeE5O?=
- =?utf-8?B?dzF3UzFtVjdYOXczOVJiVTVYc2hxZmhKRWVwdTcrZis3TVBIRXhnT0w1aG04?=
- =?utf-8?B?eWlLMGJEdlp5amxNZFhiQnZURzdOYWhibGpUbUhkNWo5dzFNTE9JV0FIZStE?=
- =?utf-8?Q?6pGUsF9gbLgsW5wDdDuLxt8+N?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cd4209c-0ffc-4a36-df15-08dc83ef6c19
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 17:05:51.4867
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tw7ydBLh+gTxOlPyipovyGShVDYDzz5g1MQv5HJawJ3OKuYnG72+qC7ALxvxDm2DoAnw+dq3nbOq/LxXVN/7WA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6549
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/6] mm/slab: Plumb kmem_buckets into
+ __do_kmalloc_node()
+To: Kees Cook <kees@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ jvoisin <julien.voisin@dustri.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-hardening@vger.kernel.org, "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+ Xiu Jianfeng <xiujianfeng@huawei.com>, Suren Baghdasaryan
+ <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>,
+ Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+ Thomas Graf <tgraf@suug.ch>, Herbert Xu <herbert@gondor.apana.org.au>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20240531191304.it.853-kees@kernel.org>
+ <20240531191458.987345-2-kees@kernel.org>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240531191458.987345-2-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	XM_UA_NO_VERSION(0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[21];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[linux.com,kernel.org,google.com,lge.com,dustri.org,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org,huaweicloud.com,huawei.com,suug.ch,gondor.apana.org.au];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,linux-foundation.org:email,suse.cz:dkim,suse.cz:email]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: D58DC1F381
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -3.00
 
-Re-sending this, last response got garbled.
+On 5/31/24 9:14 PM, Kees Cook wrote:
+> Introduce CONFIG_SLAB_BUCKETS which provides the infrastructure to
+> support separated kmalloc buckets (in the follow kmem_buckets_create()
+> patches and future codetag-based separation). Since this will provide
+> a mitigation for a very common case of exploits, enable it by default.
 
-On 6/3/2024 11:48 AM, Kalra, Ashish wrote:
-> On 6/3/2024 10:31 AM, Mike Rapoport wrote:
->
->> On Mon, Jun 03, 2024 at 04:46:39PM +0200, Borislav Petkov wrote:
->>> On Mon, Jun 03, 2024 at 09:01:49AM -0500, Kalra, Ashish wrote:
->>>> If we skip efi_arch_mem_reserve() (which should probably be anyway 
->>>> skipped
->>>> for kexec case), then for kexec boot, EFI memmap is memremapped in 
->>>> the same
->>>> virtual address as the first kernel and not the allocated memblock 
->>>> address.
->>> Are you saying that we should simply do
->>>
->>> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->>> index fdf07dd6f459..410cb0743289 100644
->>> --- a/drivers/firmware/efi/efi.c
->>> +++ b/drivers/firmware/efi/efi.c
->>> @@ -577,6 +577,9 @@ void __init efi_mem_reserve(phys_addr_t addr, 
->>> u64 size)
->>>       if (WARN_ON_ONCE(efi_enabled(EFI_PARAVIRT)))
->>>           return;
->>>   +    if (kexec_in_progress)
->>> +        return;
->>> +
->>>       if (!memblock_is_region_reserved(addr, size))
->>>           memblock_reserve(addr, size);
->>>   and skip that whole call?
->> I think Ashish suggested rather
->>
->> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->> index fdf07dd6f459..eccc10ab15a4 100644
->> --- a/drivers/firmware/efi/efi.c
->> +++ b/drivers/firmware/efi/efi.c
->> @@ -580,6 +580,9 @@ void __init efi_mem_reserve(phys_addr_t addr, u64 
->> size)
->>       if (!memblock_is_region_reserved(addr, size))
->>           memblock_reserve(addr, size);
->>   +    if (kexec_in_progress)
->> +        return;
->> +
->>       /*
->>        * Some architectures (x86) reserve all boot services ranges
->>        * until efi_free_boot_services() because of buggy firmware
-> Yes, something similar as above, as efi_mem_reserve() is used to 
-> reserve boot service memory and is not necessary for kexec boot.
->
-> So, Dave Young (dyoung@redhat.com) had suggested that we skip 
-> efi_arch_mem_reserve() for kexec by checking the set 
-> EFI_MEMORY_RUNTIME attribute as below:
->
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index f0cc00032751..6f398c59278a 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -255,15 +255,39 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, 
-u64 size)
-         struct efi_memory_map_data data = { 0 };
-         struct efi_mem_range mr;
-         efi_memory_desc_t md;
--       int num_entries;
-+       int num_entries, ret;
-         void *new;
+Are you sure? I thought there was a policy that nobody is special enough
+to have stuff enabled by default. Is it worth risking Linus shouting? :)
+ 
+> To be able to choose which buckets to allocate from, make the buckets
+> available to the internal kmalloc interfaces by adding them as the
+> first argument, rather than depending on the buckets being chosen from
+> the fixed set of global buckets. Where the bucket is not available,
+> pass NULL, which means "use the default system kmalloc bucket set"
+> (the prior existing behavior), as implemented in kmalloc_slab().
+> 
+> To avoid adding the extra argument when !CONFIG_SLAB_BUCKETS, only the
+> top-level macros and static inlines use the buckets argument (where
+> they are stripped out and compiled out respectively). The actual extern
+> functions can then been built without the argument, and the internals
+> fall back to the global kmalloc buckets unconditionally.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: jvoisin <julien.voisin@dustri.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>  include/linux/slab.h | 34 ++++++++++++++++++++++++++--------
+>  mm/Kconfig           | 15 +++++++++++++++
+>  mm/slab.h            |  6 ++++--
+>  mm/slab_common.c     |  4 ++--
+>  mm/slub.c            | 34 ++++++++++++++++++++++++----------
+>  mm/util.c            |  2 +-
+>  6 files changed, 72 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index de2b7209cd05..b1165b22cc6f 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -569,8 +569,17 @@ static __always_inline void kfree_bulk(size_t size, void **p)
+>  	kmem_cache_free_bulk(NULL, size, p);
+>  }
+>  
+> -void *__kmalloc_node_noprof(size_t size, gfp_t flags, int node) __assume_kmalloc_alignment
+> -							 __alloc_size(1);
+> +#ifdef CONFIG_SLAB_BUCKETS
+> +void *__kmalloc_buckets_node_noprof(kmem_buckets *b, size_t size, gfp_t flags, int node)
+> +				__assume_kmalloc_alignment __alloc_size(2);
+> +# define __kmalloc_node_noprof(b, size, flags, node)	\
+> +	__kmalloc_buckets_node_noprof(b, size, flags, node)
+> +#else
+> +void *__kmalloc_buckets_node_noprof(size_t size, gfp_t flags, int node)
+> +				__assume_kmalloc_alignment __alloc_size(1);
+> +# define __kmalloc_node_noprof(b, size, flags, node)	\
+> +	__kmalloc_buckets_node_noprof(size, flags, node)
+> +#endif
+>  #define __kmalloc_node(...)			alloc_hooks(__kmalloc_node_noprof(__VA_ARGS__))
 
--       if (efi_mem_desc_lookup(addr, &md) ||
--           md.type != EFI_BOOT_SERVICES_DATA) {
-+       /*
-+        * efi_mem_reserve() is used to reserve boot service memory, eg. 
-bgrt,
-+        * but it is not neccasery for kexec, as there are no boot 
-services in
-+        * kexec reboot at all after the first kernel's ExitBootServices().
-+        *
-+        * Therefore, skip efi_mem_reserve for kexec booting by checking the
-+        * EFI_MEMORY_RUNTIME attribute which indicates boot service memory
-+        * ranges reserved by the first kernel using efi_mem_reserve and 
-marked
-+        * with EFI_MEMORY_RUNTIME attribute.
-+        */
-+
-+       ret = efi_mem_desc_lookup(addr, &md);
+I found this too verbose and tried a different approach, in the end rewrote
+everything to verify the idea works. So I'll just link to the result in git:
 
-+       if (ret) {
+https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/linux.git/log/?h=slab-buckets-v4-rewrite
 
-                 pr_err("Failed to lookup EFI memory descriptor for 
-%pa\n", &addr);
-                 return;
-         }
+It's also rebased on slab.git:slab/for-6.11/cleanups with some alloc_hooks()
+cleanups that would cause conflicts otherwkse.
 
-+       if (md.type != EFI_BOOT_SERVICES_DATA) {
-+               pr_err("Skip reserving non EFI Boot Service Data memory 
-for %pa\n", &addr);
-+               return;
-+       }
-+
-+       /* Kexec copied the efi memmap from the first kernel, thus skip 
-the case */
-+       if (md.attribute & EFI_MEMORY_RUNTIME)
-+               return;
-+
-         if (addr + size > md.phys_addr + (md.num_pages << 
-EFI_PAGE_SHIFT)) {
-                 pr_err("Region spans EFI memory descriptors, %pa\n", 
-&addr);
-                 return;
+But the crux of that approach is:
 
-Thanks, Ashish
+/*
+ * These macros allow declaring a kmem_buckets * parameter alongside size, which
+ * can be compiled out with CONFIG_SLAB_BUCKETS=n so that a large number of call
+ * sites don't have to pass NULL.
+ */
+#ifdef CONFIG_SLAB_BUCKETS
+#define DECL_BUCKET_PARAMS(_size, _b)   size_t (_size), kmem_buckets *(_b)
+#define PASS_BUCKET_PARAMS(_size, _b)   (_size), (_b)
+#define PASS_BUCKET_PARAM(_b)           (_b)
+#else
+#define DECL_BUCKET_PARAMS(_size, _b)   size_t (_size)
+#define PASS_BUCKET_PARAMS(_size, _b)   (_size)
+#define PASS_BUCKET_PARAM(_b)           NULL
+#endif
+
+Then we have declaration e.g.
+
+void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+                                __assume_kmalloc_alignment __alloc_size(1);
+
+and the function is called like (from code not using buckets)
+return __kmalloc_node_noprof(PASS_BUCKET_PARAMS(size, NULL), flags, node);
+
+or (from code using buckets)
+#define kmem_buckets_alloc(_b, _size, _flags)   \
+        alloc_hooks(__kmalloc_node_noprof(PASS_BUCKET_PARAMS(_size, _b), _flags, NUMA_NO_NODE))
+
+And implementation looks like:
+
+void *__kmalloc_node_noprof(DECL_BUCKET_PARAMS(size, b), gfp_t flags, int node)
+{
+        return __do_kmalloc_node(size, PASS_BUCKET_PARAM(b), flags, node, _RET_IP_);
+}
+
+The size param is always the first, so the __alloc_size(1) doesn't need tweaking.
+size is also used in the macros even if it's never mangled, because it's easy
+to pass one param instead of two, but not zero params instead of one, if we want
+the ending comma not be part of the macro (which would look awkward).
+
+Does it look ok to you? Of course names of the macros could be tweaked. Anyway feel
+free to use the branch for the followup. Hopefully this way is also compatible with
+the planned codetag based followup.
+
+>  
+>  void *kmem_cache_alloc_node_noprof(struct kmem_cache *s, gfp_t flags,
+> @@ -679,7 +688,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node_noprof(size_t size, gf
+>  				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+>  				flags, node, size);
+>  	}
+> -	return __kmalloc_node_noprof(size, flags, node);
+> +	return __kmalloc_node_noprof(NULL, size, flags, node);
+>  }
+>  #define kmalloc_node(...)			alloc_hooks(kmalloc_node_noprof(__VA_ARGS__))
+>  
+> @@ -730,10 +739,19 @@ static inline __realloc_size(2, 3) void * __must_check krealloc_array_noprof(voi
+>   */
+>  #define kcalloc(n, size, flags)		kmalloc_array(n, size, (flags) | __GFP_ZERO)
+>  
+> -void *kmalloc_node_track_caller_noprof(size_t size, gfp_t flags, int node,
+> -				  unsigned long caller) __alloc_size(1);
+> +#ifdef CONFIG_SLAB_BUCKETS
+> +void *__kmalloc_node_track_caller_noprof(kmem_buckets *b, size_t size, gfp_t flags, int node,
+> +					 unsigned long caller) __alloc_size(2);
+> +# define kmalloc_node_track_caller_noprof(b, size, flags, node, caller)	\
+> +	__kmalloc_node_track_caller_noprof(b, size, flags, node, caller)
+> +#else
+> +void *__kmalloc_node_track_caller_noprof(size_t size, gfp_t flags, int node,
+> +					 unsigned long caller) __alloc_size(1);
+> +# define kmalloc_node_track_caller_noprof(b, size, flags, node, caller)	\
+> +	__kmalloc_node_track_caller_noprof(size, flags, node, caller)
+> +#endif
+>  #define kmalloc_node_track_caller(...)		\
+> -	alloc_hooks(kmalloc_node_track_caller_noprof(__VA_ARGS__, _RET_IP_))
+> +	alloc_hooks(kmalloc_node_track_caller_noprof(NULL, __VA_ARGS__, _RET_IP_))
+>  
+>  /*
+>   * kmalloc_track_caller is a special version of kmalloc that records the
+> @@ -746,7 +764,7 @@ void *kmalloc_node_track_caller_noprof(size_t size, gfp_t flags, int node,
+>  #define kmalloc_track_caller(...)		kmalloc_node_track_caller(__VA_ARGS__, NUMA_NO_NODE)
+>  
+>  #define kmalloc_track_caller_noprof(...)	\
+> -		kmalloc_node_track_caller_noprof(__VA_ARGS__, NUMA_NO_NODE, _RET_IP_)
+> +		kmalloc_node_track_caller_noprof(NULL, __VA_ARGS__, NUMA_NO_NODE, _RET_IP_)
+>  
+>  static inline __alloc_size(1, 2) void *kmalloc_array_node_noprof(size_t n, size_t size, gfp_t flags,
+>  							  int node)
+> @@ -757,7 +775,7 @@ static inline __alloc_size(1, 2) void *kmalloc_array_node_noprof(size_t n, size_
+>  		return NULL;
+>  	if (__builtin_constant_p(n) && __builtin_constant_p(size))
+>  		return kmalloc_node_noprof(bytes, flags, node);
+> -	return __kmalloc_node_noprof(bytes, flags, node);
+> +	return __kmalloc_node_noprof(NULL, bytes, flags, node);
+>  }
+>  #define kmalloc_array_node(...)			alloc_hooks(kmalloc_array_node_noprof(__VA_ARGS__))
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index b4cb45255a54..8c29af7835cc 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -273,6 +273,21 @@ config SLAB_FREELIST_HARDENED
+>  	  sacrifices to harden the kernel slab allocator against common
+>  	  freelist exploit methods.
+>  
+> +config SLAB_BUCKETS
+> +	bool "Support allocation from separate kmalloc buckets"
+> +	default y
+> +	depends on !SLUB_TINY
+> +	help
+> +	  Kernel heap attacks frequently depend on being able to create
+> +	  specifically-sized allocations with user-controlled contents
+> +	  that will be allocated into the same kmalloc bucket as a
+> +	  target object. To avoid sharing these allocation buckets,
+> +	  provide an explicitly separated set of buckets to be used for
+> +	  user-controlled allocations. This may very slightly increase
+> +	  memory fragmentation, though in practice it's only a handful
+> +	  of extra pages since the bulk of user-controlled allocations
+> +	  are relatively long-lived.
+> +
+>  config SLUB_STATS
+>  	default n
+>  	bool "Enable performance statistics"
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 5f8f47c5bee0..f459cd338852 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -403,16 +403,18 @@ static inline unsigned int size_index_elem(unsigned int bytes)
+>   * KMALLOC_MAX_CACHE_SIZE and the caller must check that.
+>   */
+>  static inline struct kmem_cache *
+> -kmalloc_slab(size_t size, gfp_t flags, unsigned long caller)
+> +kmalloc_slab(kmem_buckets *b, size_t size, gfp_t flags, unsigned long caller)
+>  {
+>  	unsigned int index;
+>  
+> +	if (!b)
+> +		b = &kmalloc_caches[kmalloc_type(flags, caller)];
+>  	if (size <= 192)
+>  		index = kmalloc_size_index[size_index_elem(size)];
+>  	else
+>  		index = fls(size - 1);
+>  
+> -	return kmalloc_caches[kmalloc_type(flags, caller)][index];
+> +	return (*b)[index];
+>  }
+>  
+>  gfp_t kmalloc_fix_flags(gfp_t flags);
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index e0b1c109bed2..b5c879fa66bc 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -702,7 +702,7 @@ size_t kmalloc_size_roundup(size_t size)
+>  		 * The flags don't matter since size_index is common to all.
+>  		 * Neither does the caller for just getting ->object_size.
+>  		 */
+> -		return kmalloc_slab(size, GFP_KERNEL, 0)->object_size;
+> +		return kmalloc_slab(NULL, size, GFP_KERNEL, 0)->object_size;
+>  	}
+>  
+>  	/* Above the smaller buckets, size is a multiple of page size. */
+> @@ -1179,7 +1179,7 @@ __do_krealloc(const void *p, size_t new_size, gfp_t flags)
+>  		return (void *)p;
+>  	}
+>  
+> -	ret = kmalloc_node_track_caller_noprof(new_size, flags, NUMA_NO_NODE, _RET_IP_);
+> +	ret = kmalloc_node_track_caller_noprof(NULL, new_size, flags, NUMA_NO_NODE, _RET_IP_);
+>  	if (ret && p) {
+>  		/* Disable KASAN checks as the object's redzone is accessed. */
+>  		kasan_disable_current();
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 0809760cf789..ec682a325abe 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4099,7 +4099,7 @@ void *kmalloc_large_node_noprof(size_t size, gfp_t flags, int node)
+>  EXPORT_SYMBOL(kmalloc_large_node_noprof);
+>  
+>  static __always_inline
+> -void *__do_kmalloc_node(size_t size, gfp_t flags, int node,
+> +void *__do_kmalloc_node(kmem_buckets *b, size_t size, gfp_t flags, int node,
+>  			unsigned long caller)
+>  {
+>  	struct kmem_cache *s;
+> @@ -4115,7 +4115,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node,
+>  	if (unlikely(!size))
+>  		return ZERO_SIZE_PTR;
+>  
+> -	s = kmalloc_slab(size, flags, caller);
+> +	s = kmalloc_slab(b, size, flags, caller);
+>  
+>  	ret = slab_alloc_node(s, NULL, flags, node, caller, size);
+>  	ret = kasan_kmalloc(s, ret, size, flags);
+> @@ -4123,24 +4123,38 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node,
+>  	return ret;
+>  }
+>  
+> -void *__kmalloc_node_noprof(size_t size, gfp_t flags, int node)
+> +#ifdef CONFIG_SLAB_BUCKETS
+> +# define __do_kmalloc_buckets_node(b, size, flags, node, caller)	\
+> +	__do_kmalloc_node(b, size, flags, node, caller)
+> +void *__kmalloc_buckets_node_noprof(kmem_buckets *b, size_t size, gfp_t flags, int node)
+> +#else
+> +# define __do_kmalloc_buckets_node(b, size, flags, node, caller)	\
+> +	__do_kmalloc_node(NULL, size, flags, node, caller)
+> +void *__kmalloc_buckets_node_noprof(size_t size, gfp_t flags, int node)
+> +#endif
+>  {
+> -	return __do_kmalloc_node(size, flags, node, _RET_IP_);
+> +	return __do_kmalloc_buckets_node(b, size, flags, node, _RET_IP_);
+>  }
+> -EXPORT_SYMBOL(__kmalloc_node_noprof);
+> +EXPORT_SYMBOL(__kmalloc_buckets_node_noprof);
+>  
+>  void *__kmalloc_noprof(size_t size, gfp_t flags)
+>  {
+> -	return __do_kmalloc_node(size, flags, NUMA_NO_NODE, _RET_IP_);
+> +	return __do_kmalloc_buckets_node(NULL, size, flags, NUMA_NO_NODE, _RET_IP_);
+>  }
+>  EXPORT_SYMBOL(__kmalloc_noprof);
+>  
+> -void *kmalloc_node_track_caller_noprof(size_t size, gfp_t flags,
+> -				       int node, unsigned long caller)
+> +#ifdef CONFIG_SLAB_BUCKETS
+> +void *__kmalloc_node_track_caller_noprof(kmem_buckets *b, size_t size, gfp_t flags,
+> +					 int node, unsigned long caller)
+> +#else
+> +void *__kmalloc_node_track_caller_noprof(size_t size, gfp_t flags,
+> +					 int node, unsigned long caller)
+> +#endif
+>  {
+> -	return __do_kmalloc_node(size, flags, node, caller);
+> +	return __do_kmalloc_buckets_node(b, size, flags, node, caller);
+> +
+>  }
+> -EXPORT_SYMBOL(kmalloc_node_track_caller_noprof);
+> +EXPORT_SYMBOL(__kmalloc_node_track_caller_noprof);
+>  
+>  void *kmalloc_trace_noprof(struct kmem_cache *s, gfp_t gfpflags, size_t size)
+>  {
+> diff --git a/mm/util.c b/mm/util.c
+> index c9e519e6811f..80430e5ba981 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -128,7 +128,7 @@ void *kmemdup_noprof(const void *src, size_t len, gfp_t gfp)
+>  {
+>  	void *p;
+>  
+> -	p = kmalloc_node_track_caller_noprof(len, gfp, NUMA_NO_NODE, _RET_IP_);
+> +	p = kmalloc_node_track_caller_noprof(NULL, len, gfp, NUMA_NO_NODE, _RET_IP_);
+>  	if (p)
+>  		memcpy(p, src, len);
+>  	return p;
+
