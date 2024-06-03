@@ -1,108 +1,79 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDEC4A12;
-	Mon,  3 Jun 2024 14:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255EE82D8E;
+	Mon,  3 Jun 2024 14:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717426655; cv=none; b=cp0hGji7PB+PF/R06SsQOkucp7zG9NbvwVzgvcldyIsI4NkFuebC8cujqDpaD6eVErfPWXdOdy5s13Qbl3T/k+yWPRK+eXaONiCRCqVIuVfXHVEWvviF2IqtQSHU1V5ucKKKJW4js5qNycCZlfDexyI5ptO+6DEdreHRrfzl7Dk=
+	t=1717426755; cv=none; b=IMSHv0ik0ILYQi8OmthABXVW3gyLzFwEOUFFIF9A3PVzbPo/kU4ClL7szOXsMOmGSVQudw9d2nOUwypPdGnEQ357ffcUrRmt0qbJSkKcWDr56xg+UTgV77OPjlOZAFHQeR5pFPasJKYd9iyxyEbabQHS39GesvM74rq3QEQZRC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717426655; c=relaxed/simple;
-	bh=XxQOFTFoETaApC1cOL3VI9vHYDh/3zcRncz7EKtboyY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=jaJF2jkgqc5Uxkhj5ds4T4WXMImN7kSbixl9K0wP77HxpfGShASuqloPJopwOzBRrOL6xRFQ96GQB+Rm5WlxsleHkFGRPdDVgolgP84blhS77yhoCx5NmVb2PwsjeMYNYN8wIlQ1y8Ok5Hg1+AnoFNYSPCacbqGO2zN0j6glwIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=puVrGSra; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="puVrGSra"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717426651;
-	bh=XxQOFTFoETaApC1cOL3VI9vHYDh/3zcRncz7EKtboyY=;
-	h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-	b=puVrGSraQ2BTNhqJXtmrCAtWWnWOGs84SAif9IB6w1H/VwBBhw/C4RSdSUgieT69D
-	 01D2VwK9btyiIcmFQf8JJXJhfjbG2hvER1bSnGGkcCNpOW0ELhoXJVFtNThvFriwO5
-	 QqzoVl7/NLPubt7e4aOfJ4pIMtIdbAx3wbZgttEiYyVA/RnIgAjoIwnRkrjvvXgpnD
-	 wvyelex7+9RYkhUsct/ljpH1GhEsh6mBG8vvYZgyw+tMsNsAPF7XYNTkdeWu7fO+2v
-	 d8lJ8mpP6kQ3SVOw3OcI0OmJGCELXtbiPfTfgPJ3Kst3MUcMuT6VukeGLJLHCtMpBC
-	 Z/8yk2gSEh8sA==
-Received: from smtpclient.apple (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1539B378216D;
-	Mon,  3 Jun 2024 14:57:28 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1717426755; c=relaxed/simple;
+	bh=DBDHC1nWAFD49PJim5SC6PnxIBcdo9JUB9EaWjVgVdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ALfkmID1jDe50mKnHzT/1EreJiADrMzocU/MKs7Un7ASXS7HXTcvCquOmSGmThy/GfzZf4Am8Z0dKS+c+US2df3xxebT6p0aD6qtQPMp1CNNacB5UU3WkXww3Bq48gIpqtMEL1ElOsewPtoo57kSNMvEQ+4TxOckZmy1pxVi66E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCDD1C2BD10;
+	Mon,  3 Jun 2024 14:59:09 +0000 (UTC)
+Date: Mon, 3 Jun 2024 11:00:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Alexei Starovoitov
+ <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v2 24/27] function_graph: Use static_call and branch to
+ optimize entry function
+Message-ID: <20240603110018.1cdd6746@gandalf.local.home>
+In-Reply-To: <20240603121107.42f98858ebb790805f75c9b1@kernel.org>
+References: <20240602033744.563858532@goodmis.org>
+	<20240602033834.997761817@goodmis.org>
+	<20240603121107.42f98858ebb790805f75c9b1@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH] media: mediatek: jpeg: support 34bits
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20240327040145.7155-1-jianhua.lin@mediatek.com>
-Date: Mon, 3 Jun 2024 11:57:15 -0300
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
- matthias.bgg@gmail.com,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Linux Media Mailing List <linux-media@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D76FE1CB-1EF9-4F38-8D73-F3E0D7942A6C@collabora.com>
-References: <20240327040145.7155-1-jianhua.lin@mediatek.com>
-To: Jianhua Lin <jianhua.lin@mediatek.com>
-X-Mailer: Apple Mail (2.3774.600.62)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Jianhua,
+On Mon, 3 Jun 2024 12:11:07 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > In most cases function graph is used by a single user. Instead of calling
+> > a loop to call function graph callbacks in this case, call the function
+> > entry callback directly.
+> > 
+> > Add a static_key that will be used to set the function graph logic to
+> > either do the loop (when more than one callback is registered) or to call
+> > the callback directly if there is only one registered callback.  
+> 
+> I understand this works, but my concern is that, if we use fprobe
+> and function_graph at the same time, does it always loop on both gops?
+> 
+> I mean if those are the subops of one ftrace_ops, ftrace_trampoline
+> will always call the same function_graph_enter() for both gops, and loop
+> on the gops list.
+> 
+> For example, if there are 2 fgraph_ops, one has "vfs_*" filter and
+> another has "sched_*" filter, those does not cover each other.
+> 
+> Are there any way to solve this issue? I think my previous series
+> calls function_graph_enter_ops() directly from trampoline (If it works
+> correctly...)
 
-> + ret =3D of_property_read_u32(pdev->dev.of_node, "mediatek,34bits",
-> + &jpeg->support_34bit);
-> + if (ret !=3D 0) {
-> + dev_info(&pdev->dev, "default for 32bits");
-> + jpeg->support_34bit =3D 0;
-> + }
-> + dev_info(&pdev->dev, "use 34bits: %d", jpeg->support_34bit);
-> +
+Yes, but that gets a bit complex, and requires the changing of all archs.
+If it starts to become a problem, I rather add that as a feature. That is,
+we can always go back to it. But for now, lets keep the complexity down.
 
-Please use of_property_read_bool instead.
-
-
-> enc_get_file_size(void __iomem *base, u32 support_34bit)
-> {
-> - return readl(base + JPEG_ENC_DMA_ADDR0) -
-> + u32 value =3D 1;
-> +
-> + if (support_34bit)
-> + value =3D 4;
-> +
-> + return readl(base + JPEG_ENC_DMA_ADDR0) * value -
->       readl(base + JPEG_ENC_DST_ADDR0);
-> }
-
-Please use the ternary operator instead, there=E2=80=99s no need for two =
-assignments.
-
-Can you please add a comment inline to explain why this multiplier is =
-needed?
-
-
-> EXPORT_SYMBOL_GPL(mtk_jpeg_enc_get_file_size);
-> @@ -75,6 +80,9 @@ void mtk_jpeg_enc_start(void __iomem *base)
->=20
-> value =3D readl(base + JPEG_ENC_CTRL);
-> value |=3D JPEG_ENC_CTRL_INT_EN_BIT | JPEG_ENC_CTRL_ENABLE_BIT;
-> + value |=3D JPEG_ENC_CTRL_RDMA_PADDING_EN;
-> + value |=3D JPEG_ENC_CTRL_RDMA_RIGHT_PADDING_EN;
-> + value &=3D ~JPEG_ENC_CTRL_RDMA_PADDING_0_EN;
-> writel(value, base + JPEG_ENC_CTRL);
-> }
-
-These do not have to be gated by =E2=80=9Csupport_34bit=E2=80=9D ?
-
-=E2=80=94 Daniel=
+-- Steve
