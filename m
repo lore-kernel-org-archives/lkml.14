@@ -1,227 +1,151 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8690DF9E9;
-	Mon,  3 Jun 2024 18:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E961F9E9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 18:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717440523; cv=none; b=aDHpVOIEPYXoFQ3rA9hL13+d1WXWgvQWRHaez7cxofq3DmaGACd7gt/3Y8oHUhSicPqY2ddfLDofiA/Iuo3SDwPv3Rr0U4RpbbN4wb1k1rJr8+3D//G/8EuKzayCE//BKBG/NJmrrluKM2PXiwSKHz/FEzncG72z6V+wrLBZK7g=
+	t=1717440609; cv=none; b=RYD2OliQWwaVGBAfnqMzYiE+LktzeF623+Yv3DVhGPXER/2mhvEzURmuVZxLOMXBYPCZGLXds9Dco+TEsVa7FzuBUr6cXMJsH/yVGYxs4l5P3Exp0TmGlbE7h7X0qC/dykWfi7mBrpO+hpLV7N7WypH5cGhrLwWp0ueZjhpir7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717440523; c=relaxed/simple;
-	bh=K3G21/24zzUUViCEIjLWZ1Tg2KRYA6Z2/ct1+J+l1fQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bK1JqL0RW8ussHMfz+ESJPEUIoWfxfJTBtIctWIWPmk2hb744AoG7iqlin6TQHqtcdllSGJzq3VqlZqaWiXGWXBwLRS/33sIKxcXBzT6sECyahwBYvc5AWiT0Wgqlhas01HYiI6qGq0Aq42flO3cd32ejE5QybNaZTOZTbNYOb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MtO6To6f; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717440609; c=relaxed/simple;
+	bh=QA+vaRbtkGhWSrbG2wOmwjPkFyY/1qMbT6pd7+j4xe4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EdOLeqayK9p9ipJLcPHSAjNoW1cnouWOm3DVjFWWpBFB3fjUjevuzvqByGsI9+nK8kdpEg/cNzt5klt3cFDTopRnS4R2WM8MeF5asjFqifYb+nEnSJyyiAXiqLCrDRMZdTx7tFd6cBnDR9LqhHuT3wFnE0wNf5d+5s8htv8EKEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ES5fRWWZ; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MtO6To6f"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4538vsuB011909;
-	Mon, 3 Jun 2024 18:48:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	efodBSu3WxBGbSpwkD4Q7QpyR//IjG3Ok/8+uKaU8ww=; b=MtO6To6fZUGKErfC
-	CHSOBNLAgpY0uWUiuN5DLkrMZPjhRQ8pz9zkG2Mf1nAPlRF74wyuIP3Xa82FbIKf
-	f47WOqBzCP90ddsXWRqEFOyKvDldTI4nxozmjXsOSLSayhTdH/OEIae9jCj9HIsO
-	GdwMYPoVYsMmfxje7L+xdJitZeuFncna0fuZLbSiJxrIAXPc/IxCE+NnXMm9jwjk
-	GcAaGwgtvUbVyNxEFwehuSHNl/O6utzCBngb0FCsDUskEZteeGNjHF8KSWF8Q3pN
-	L8MH8+NLE3yYXNmDBCuShZ7HUM0q/3hjdl/oodQyW6sDV1h9PaquskWAry9Uv2fM
-	f+CLZA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw4bcqrt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 18:48:25 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453ImNlo021742
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 18:48:23 GMT
-Received: from [10.131.33.37] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 11:48:18 -0700
-Message-ID: <89a56998-51f2-0dc3-54e8-2bc2217d265d@quicinc.com>
-Date: Tue, 4 Jun 2024 00:18:14 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ES5fRWWZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717440607; x=1748976607;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QA+vaRbtkGhWSrbG2wOmwjPkFyY/1qMbT6pd7+j4xe4=;
+  b=ES5fRWWZVEpi8a30XIua0zhjBkz6CooArLMc4vQYD/hX7bs3+uss0nL6
+   3ACJRpf4+FKwaLqn4QJb6DcHnxlmnix0N1M6ghlQzyrbGs3NTvswhmKS9
+   0OE6BgZ1n/THJkAOqkjRYpdcVg/By3CKp3/IIhCIssmHZtP8d5hnU/C+l
+   5GuVGqSBJIKup0467NlXE5tkPb2lSgkzyVvNNU2rPgMq4ocZ+yCaaMfn6
+   cRq0KWLBn7CHPRpgNm1SetYdRhhEQKPplZPBZpzuI13sEiQbv0bPDEO23
+   8gNmsnFteFdzBkF3lkpq988LGw84deBO9cpJgD2CWGes6pQlyxRTUlSHL
+   w==;
+X-CSE-ConnectionGUID: 1TMsLRRJQ3ikRwntNIv/6g==
+X-CSE-MsgGUID: 0omL4f7LRbKhoxGsX/oQrQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="36471470"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="36471470"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 11:50:06 -0700
+X-CSE-ConnectionGUID: ErXB3GqMR9Sm9HFD+ljFMA==
+X-CSE-MsgGUID: 73TKcnPTTm6f6CffGCOeTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37031198"
+Received: from ibganev-desk.amr.corp.intel.com (HELO [10.125.108.143]) ([10.125.108.143])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 11:50:07 -0700
+Message-ID: <9e9669a6-de37-4140-bdc5-7d660b8427c3@intel.com>
+Date: Mon, 3 Jun 2024 11:50:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V4 2/2] cpufreq: scmi: Register for limit change
- notifications
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3] x86/head/64: remove redundant check on
+ level2_kernel_pgt's _PAGE_PRESENT bit
+To: Wei Yang <richard.weiyang@gmail.com>, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Ingo Molnar <mingo@kernel.org>, Steve Wahl <steve.wahl@hpe.com>
+References: <20240523123539.14260-1-richard.weiyang@gmail.com>
 Content-Language: en-US
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <morten.rasmussen@arm.com>,
-        <dietmar.eggemann@arm.com>, <lukasz.luba@arm.com>,
-        <pierre.gondois@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_mdtipton@quicinc.com>, <linux-arm-msm@vger.kernel.org>
-References: <20240328074131.2839871-1-quic_sibis@quicinc.com>
- <20240328074131.2839871-3-quic_sibis@quicinc.com>
- <CAKfTPtDtnCm2NqhiXZLODXH5A9Hc9ryP==3LFZUcNnKE4J+PEg@mail.gmail.com>
-From: Sibi Sankar <quic_sibis@quicinc.com>
-In-Reply-To: <CAKfTPtDtnCm2NqhiXZLODXH5A9Hc9ryP==3LFZUcNnKE4J+PEg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240523123539.14260-1-richard.weiyang@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qDl1N6TAfhcADbzTCjj104iEoB-_YvRp
-X-Proofpoint-GUID: qDl1N6TAfhcADbzTCjj104iEoB-_YvRp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 impostorscore=0
- bulkscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406030154
 
+On 5/23/24 05:35, Wei Yang wrote:
+> --- a/arch/x86/kernel/head64.c
+> +++ b/arch/x86/kernel/head64.c
+> @@ -260,8 +260,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
+>  
+>  	/* fixup pages that are part of the kernel image */
+>  	for (; i <= pmd_index((unsigned long)_end); i++)
+> -		if (pmd[i] & _PAGE_PRESENT)
+> -			pmd[i] += load_delta;
+> +		pmd[i] += load_delta;
 
+So, I think this is correct.  But, man, I wish folks would go through
+the git history and make it clear that they understand _how_ the code
+got the way it is.
 
-On 5/28/24 14:38, Vincent Guittot wrote:
-> Hi Sibi,
-> 
+I suspect that the original _PAGE_PRESENT check wasn't even necessary if
+cleanup_highmap() really did fix things up.  But this commit:
 
-Hey Vincent,
-Thanks for taking time to review the series :)
+	2aa85f246c18 ("x86/boot/64: Make level2_kernel_pgt pages invalid
+		       outside kernel area")
 
-> On Thu, 28 Mar 2024 at 08:42, Sibi Sankar <quic_sibis@quicinc.com> wrote:
->>
->> Register for limit change notifications if supported and use the throttled
->> frequency from the notification to apply HW pressure.
->>
->> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
->> ---
->>
->> v4:
->> * Use a interim variable to show the khz calc. [Lukasz]
->> * Use driver_data to pass on the handle and scmi_dev instead of using
->>    global variables. Dropped Lukasz's Rb due to adding these minor
->>    changes.
->>
->>   drivers/cpufreq/scmi-cpufreq.c | 44 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>
->> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
->> index 3b4f6bfb2f4c..d946b7a08258 100644
->> --- a/drivers/cpufreq/scmi-cpufreq.c
->> +++ b/drivers/cpufreq/scmi-cpufreq.c
->> @@ -21,11 +21,18 @@
->>   #include <linux/types.h>
->>   #include <linux/units.h>
->>
->> +struct scmi_cpufreq_driver_data {
->> +       struct scmi_device *sdev;
->> +       const struct scmi_handle *handle;
->> +};
->> +
->>   struct scmi_data {
->>          int domain_id;
->>          int nr_opp;
->>          struct device *cpu_dev;
->> +       struct cpufreq_policy *policy;
->>          cpumask_var_t opp_shared_cpus;
->> +       struct notifier_block limit_notify_nb;
->>   };
->>
->>   static struct scmi_protocol_handle *ph;
->> @@ -174,6 +181,22 @@ static struct freq_attr *scmi_cpufreq_hw_attr[] = {
->>          NULL,
->>   };
->>
->> +static int scmi_limit_notify_cb(struct notifier_block *nb, unsigned long event, void *data)
->> +{
->> +       struct scmi_data *priv = container_of(nb, struct scmi_data, limit_notify_nb);
->> +       struct scmi_perf_limits_report *limit_notify = data;
->> +       struct cpufreq_policy *policy = priv->policy;
->> +       unsigned int limit_freq_khz;
->> +
->> +       limit_freq_khz = limit_notify->range_max_freq / HZ_PER_KHZ;
->> +
->> +       policy->max = clamp(limit_freq_khz, policy->cpuinfo.min_freq, policy->cpuinfo.max_freq);
->> +
->> +       cpufreq_update_pressure(policy);
-> 
-> I noticed your patch while looking for other things in the archive but
-> I don't think this is the right way to do it.
-> 
-> cpufreq_update_pressure() aims to set to the scheduler the aggregation
-> of all cappings set to cpufreq through the pm_qos and
-> freq_qos_add_request(). Calling this function directly in scmi
-> notification callback will overwrite the pm_qos aggregation. And at
-> the opposite, any update of a pm_qos constraint will overwrite scmi
-> notification. Instead you should better set a pm_qos constraint like
-> others
+tweaked things to actively clear out PMDs that weren't populated in
+Kirill's original loop.  It didn't touch the _PAGE_PRESENT check.  But
+it certainly did imply that the PMD doesn't have any holes in it and
+there's nothing int he middle that needs _PAGE_PRESENT cleared.
 
-Sure, I'll drop update_pressue and use the freq_qos_update_request to
-update the policy->max_freq_req with the new policy->max.
+> level2_kernel_pgt compiled with _PAGE_PRESENT set. The check is
+> redundant
 
--Sibi
+This isn't super reassuring.  It also depends on nothing having munged
+the page tables up to this point.  The code is also a bit cruel in that
+it manipulates two different sets of PMDs with the same 'pmd' variable.
 
-> 
->> +
->> +       return NOTIFY_OK;
->> +}
->> +
->>   static int scmi_cpufreq_init(struct cpufreq_policy *policy)
->>   {
->>          int ret, nr_opp, domain;
->> @@ -181,6 +204,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
->>          struct device *cpu_dev;
->>          struct scmi_data *priv;
->>          struct cpufreq_frequency_table *freq_table;
->> +       struct scmi_cpufreq_driver_data *data = cpufreq_get_driver_data();
->>
->>          cpu_dev = get_cpu_device(policy->cpu);
->>          if (!cpu_dev) {
->> @@ -294,6 +318,17 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
->>                  }
->>          }
->>
->> +       priv->limit_notify_nb.notifier_call = scmi_limit_notify_cb;
->> +       ret = data->handle->notify_ops->devm_event_notifier_register(data->sdev, SCMI_PROTOCOL_PERF,
->> +                                                       SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED,
->> +                                                       &domain,
->> +                                                       &priv->limit_notify_nb);
->> +       if (ret)
->> +               dev_warn(cpu_dev,
->> +                        "failed to register for limits change notifier for domain %d\n", domain);
->> +
->> +       priv->policy = policy;
->> +
->>          return 0;
->>
->>   out_free_opp:
->> @@ -366,12 +401,21 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
->>          int ret;
->>          struct device *dev = &sdev->dev;
->>          const struct scmi_handle *handle;
->> +       struct scmi_cpufreq_driver_data *data;
->>
->>          handle = sdev->handle;
->>
->>          if (!handle)
->>                  return -ENODEV;
->>
->> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->> +       if (!data)
->> +               return -ENOMEM;
->> +
->> +       data->sdev = sdev;
->> +       data->handle = handle;
->> +       scmi_cpufreq_driver.driver_data = data;
->> +
->>          perf_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PERF, &ph);
->>          if (IS_ERR(perf_ops))
->>                  return PTR_ERR(perf_ops);
->> --
->> 2.34.1
->>
->>
+Also, is this comment still accurate after '2aa85f246c18'?
+
+>          * Fixup the kernel text+data virtual addresses. Note that
+>          * we might write invalid pmds, when the kernel is relocated
+>          * cleanup_highmap() fixes this up along with the mappings
+>          * beyond _end.
+
