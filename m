@@ -1,26 +1,25 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D916777A1E;
-	Mon,  3 Jun 2024 10:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C507177A1E;
+	Mon,  3 Jun 2024 10:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717409261; cv=none; b=THZlont+36FGh6VtTjMtRr+MrkRd8EajwjW9q5Jk+8uERRCVQFhyU+dTrktfH4Ja5fuqBfokVJ2ZoLP1el/mMJSjC06irT0WcmAoysVMg8AEoznyEtOYq6Tk1sgFjeQG3nRyjHA6BJHSW8oFih55lwN+GIRHtmndVzUGs1JYx+g=
+	t=1717409284; cv=none; b=UMAhA1Pb020xISq8ecoZQF1WoYXsc6jjjYRPlCC/PxavAcoMcQ5ItcGIaz+JFuo/4WHPN6Ys1bBBmKc8v+YI7BxR6qlWSPtuKl89nN/8QF0sPVGaVv0YKk3qjOHzMG7UmLJu/pFe79k15bGn9m9cCrHxbcO1cblMGT6PBP7Diz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717409261; c=relaxed/simple;
-	bh=WkGkWlLz+ddnb+cr6XBvYh1+pFbDK5fqTU5ItH7OpJc=;
+	s=arc-20240116; t=1717409284; c=relaxed/simple;
+	bh=8qBYXdJrDRJA+p+7GoU2rvppnvWsbbP8MLHmqvz8jA8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OGI7mUPCsQu6V23d/EouTua9ygAVTLQz1BrECH6YyoLx4nmI3eKYQCqOChTLJgnTKvAhCCPt1V42UnS5+93vSZo+jWaD2tTu1q1oQj2N5Enff59gUZOMP1INUp46Fk496wHNYuEAzkOWxZkuo+HHoeL/+UEWoLFFx6jHzMDISA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: from relay1-d.mail.gandi.net (unknown [217.70.183.193])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id B8881C57AD;
-	Mon,  3 Jun 2024 09:49:18 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 50B3024000D;
-	Mon,  3 Jun 2024 09:49:06 +0000 (UTC)
-Message-ID: <b6b6d273-4d57-4611-8c67-1a67d443b7d0@ghiti.fr>
-Date: Mon, 3 Jun 2024 11:49:05 +0200
+	 In-Reply-To:Content-Type; b=mPqpo8hE8oKRfayW5eYkxhBixzmaGRf0EMT+Gu+UryHG/rYalEhoMQMtsrHwSzEejGUjjxsGN01szUf4p06EQwMxhNx18vdvx3rYAGfbfznjWvWmszDtblyDtDpGPU879FYKln4P5Yf39gmioMRGYBwCExbVQvDjisuEc5mxPIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FB711042;
+	Mon,  3 Jun 2024 03:08:26 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CCB23F792;
+	Mon,  3 Jun 2024 03:08:00 -0700 (PDT)
+Message-ID: <1802b338-e2e5-4b9b-b914-869651fa886c@arm.com>
+Date: Mon, 3 Jun 2024 11:07:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,270 +27,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] riscv: Add qspinlock support based on Zabha extension
+Subject: Re: [PATCH v2 3/3] coresight: dummy: Add reserve atid support for
+ dummy source
+To: Mao Jinlong <quic_jinlmao@quicinc.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Tao Zhang <quic_taozha@quicinc.com>, songchai <quic_songchai@quicinc.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <20240603094354.2348-1-quic_jinlmao@quicinc.com>
+ <20240603094354.2348-4-quic_jinlmao@quicinc.com>
 Content-Language: en-US
-To: Guo Ren <guoren@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, Leonardo Bras <leobras@redhat.com>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org
-References: <20240528151052.313031-1-alexghiti@rivosinc.com>
- <20240528151052.313031-8-alexghiti@rivosinc.com>
- <CAJF2gTQgg-7Fzoz9TsjWD-_8ABbS7M66aEztCsZ9Ejk8LOvmiQ@mail.gmail.com>
- <CAHVXubg=T3AMER0z8-iRqqFmDQp8iEM92cXwPZcW2Sfm=_KOHQ@mail.gmail.com>
- <CAJF2gTT51oZqEq-1TV_UEUufsrq=jRr4FAbmdtrChAHyUC1rXg@mail.gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <CAJF2gTT51oZqEq-1TV_UEUufsrq=jRr4FAbmdtrChAHyUC1rXg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
-
-Hi Guo,
-
-On 31/05/2024 15:10, Guo Ren wrote:
-> On Wed, May 29, 2024 at 9:03 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
->> Hi Guo,
->>
->> On Wed, May 29, 2024 at 11:24 AM Guo Ren <guoren@kernel.org> wrote:
->>> On Tue, May 28, 2024 at 11:18 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
->>>> In order to produce a generic kernel, a user can select
->>>> CONFIG_QUEUED_SPINLOCKS which will fallback at runtime to the ticket
->>>> spinlock implementation if Zabha is not present.
->>>>
->>>> Note that we can't use alternatives here because the discovery of
->>>> extensions is done too late and we need to start with the qspinlock
->>>> implementation because the ticket spinlock implementation would pollute
->>>> the spinlock value, so let's use static keys.
-> Zabha is not a prerequisite for qspinlock; the prerequisite for
-> qspinlock is the *forward progress guarantee* in the atomic operation
-> loop during intense contention. Even with Zabha enabled to meet the
-> requirements of xchg_tail, that still only applies when the number of
-> CPUs is less than 16K. The qspinlock uses cmpxchg loop instead of
-> xchg_tail when the number of cores is more than 16K. Thus, hardware
-> support for Zabha does not equate to the safe use of qspinlock.
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240603094354.2348-4-quic_jinlmao@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-But if we have Zacas to implement cmpxchg(), we still provide the 
-"forward progress guarantee" then right? Let me know if I missed something.
 
-Thanks,
+On 03/06/2024 10:43, Mao Jinlong wrote:
+> Some dummy source has static trace id configured in HW and it cannot
+> be changed via software programming. Configure the trace id in device
+> tree and reserve the id when device probe.
+> 
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>  .../sysfs-bus-coresight-devices-dummy-source  | 15 +++++
+>  drivers/hwtracing/coresight/coresight-dummy.c | 58 +++++++++++++++++--
+>  2 files changed, 69 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-dummy-source
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-dummy-source b/Documentation/ABI/testing/sysfs-bus-coresight-devices-dummy-source
+> new file mode 100644
+> index 000000000000..d93c198115c9
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-dummy-source
+> @@ -0,0 +1,15 @@
+> +What:		/sys/bus/coresight/devices/dummy_source<N>/enable_source
+> +Date:		June 2024
+> +KernelVersion:	6.9
+> +Contact:	Mao Jinlong <quic_jinlmao@quicinc.com>
+> +Description:	(RW) Enable/disable tracing of dummy source. A sink should be activated
+> +		before enabling the source. The path of coresight components linking
+> +		the source to the sink is configured and managed automatically by the
+> +		coresight framework.
+> +
+> +What:		/sys/bus/coresight/devices/dummy_source<N>/traceid
+> +Date:		June 2024
+> +KernelVersion:	6.9
+> +Contact:	Mao Jinlong <quic_jinlmao@quicinc.com>
+> +Description:	(R) Show the trace ID that will appear in the trace stream
+> +		coming from this trace entity.
+> diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
+> index ac70c0b491be..1f7133ac2c0b 100644
+> --- a/drivers/hwtracing/coresight/coresight-dummy.c
+> +++ b/drivers/hwtracing/coresight/coresight-dummy.c
+> @@ -11,10 +11,12 @@
+>  #include <linux/pm_runtime.h>
+>  
+>  #include "coresight-priv.h"
+> +#include "coresight-trace-id.h"
+>  
+>  struct dummy_drvdata {
+>  	struct device			*dev;
+>  	struct coresight_device		*csdev;
+> +	u8				traceid;
+>  };
+>  
+>  DEFINE_CORESIGHT_DEVLIST(source_devs, "dummy_source");
+> @@ -67,6 +69,32 @@ static const struct coresight_ops dummy_sink_cs_ops = {
+>  	.sink_ops = &dummy_sink_ops,
+>  };
+>  
+> +/* User can get the trace id of dummy source from this node. */
+> +static ssize_t traceid_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	unsigned long val;
+> +	struct dummy_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +
+> +	val = drvdata->traceid;
+> +	return scnprintf(buf, PAGE_SIZE, "%#lx\n", val);
+> +}
+> +static DEVICE_ATTR_RO(traceid);
+> +
+> +static struct attribute *coresight_dummy_attrs[] = {
+> +	&dev_attr_traceid.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group coresight_dummy_group = {
+> +	.attrs = coresight_dummy_attrs,
+> +};
+> +
+> +static const struct attribute_group *coresight_dummy_groups[] = {
+> +	&coresight_dummy_group,
+> +	NULL,
+> +};
+> +
+>  static int dummy_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -74,6 +102,11 @@ static int dummy_probe(struct platform_device *pdev)
+>  	struct coresight_platform_data *pdata;
+>  	struct dummy_drvdata *drvdata;
+>  	struct coresight_desc desc = { 0 };
+> +	int ret, trace_id;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+>  
+>  	if (of_device_is_compatible(node, "arm,coresight-dummy-source")) {
+>  
+> @@ -85,6 +118,24 @@ static int dummy_probe(struct platform_device *pdev)
+>  		desc.subtype.source_subtype =
+>  					CORESIGHT_DEV_SUBTYPE_SOURCE_OTHERS;
+>  		desc.ops = &dummy_source_cs_ops;
+> +		desc.groups = coresight_dummy_groups;
+> +
+> +		ret = coresight_get_source_traceid(dev, &trace_id);
+> +		if (!ret) {
+> +			ret = coresight_trace_id_get_system_id(trace_id);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			drvdata->traceid = ret;
+> +		} else {
+> +			trace_id = coresight_trace_id_get_system_id(0);
+> +			if (trace_id < 0) {
+> +				ret = trace_id;
+> +				return ret;
+> +			}
+> +			drvdata->traceid = (u8)trace_id;
+> +		}
+> +
 
-Alex
+It's a bit weird to use ret in one version and trace_id in the other.
+And one casts to (u8) but the other doesn't. I'm sure it all compiles to
+the same in the end but it would be a bit more readable if it was more
+consistent.
 
-
->
-> Therefore, I would like to propose a new ISA extension: Zafpg(Atomic
-> Forward Progress Guarantee). If RISC-V vendors can ensure the progress
-> of LR/SC or CMPXCHG LOOP at the microarchitectural level or if cache
-> lines are sufficiently sticky, they could then claim support for this
-> extension. Linux could then select different spinlock implementations
-> based on this extension's support or not.
->
->>>> This is largely based on Guo's work and Leonardo reviews at [1].
->>>>
->>>> Link: https://lore.kernel.org/linux-riscv/20231225125847.2778638-1-guoren@kernel.org/ [1]
->>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>>> ---
->>>>   .../locking/queued-spinlocks/arch-support.txt |  2 +-
->>>>   arch/riscv/Kconfig                            |  1 +
->>>>   arch/riscv/include/asm/Kbuild                 |  4 +-
->>>>   arch/riscv/include/asm/spinlock.h             | 39 +++++++++++++++++++
->>>>   arch/riscv/kernel/setup.c                     | 18 +++++++++
->>>>   include/asm-generic/qspinlock.h               |  2 +
->>>>   include/asm-generic/ticket_spinlock.h         |  2 +
->>>>   7 files changed, 66 insertions(+), 2 deletions(-)
->>>>   create mode 100644 arch/riscv/include/asm/spinlock.h
->>>>
->>>> diff --git a/Documentation/features/locking/queued-spinlocks/arch-support.txt b/Documentation/features/locking/queued-spinlocks/arch-support.txt
->>>> index 22f2990392ff..cf26042480e2 100644
->>>> --- a/Documentation/features/locking/queued-spinlocks/arch-support.txt
->>>> +++ b/Documentation/features/locking/queued-spinlocks/arch-support.txt
->>>> @@ -20,7 +20,7 @@
->>>>       |    openrisc: |  ok  |
->>>>       |      parisc: | TODO |
->>>>       |     powerpc: |  ok  |
->>>> -    |       riscv: | TODO |
->>>> +    |       riscv: |  ok  |
->>>>       |        s390: | TODO |
->>>>       |          sh: | TODO |
->>>>       |       sparc: |  ok  |
->>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->>>> index 184a9edb04e0..ccf1703edeb9 100644
->>>> --- a/arch/riscv/Kconfig
->>>> +++ b/arch/riscv/Kconfig
->>>> @@ -59,6 +59,7 @@ config RISCV
->>>>          select ARCH_SUPPORTS_SHADOW_CALL_STACK if HAVE_SHADOW_CALL_STACK
->>>>          select ARCH_USE_MEMTEST
->>>>          select ARCH_USE_QUEUED_RWLOCKS
->>>> +       select ARCH_USE_QUEUED_SPINLOCKS if TOOLCHAIN_HAS_ZABHA
->>> Using qspinlock or not depends on real hardware capabilities, not the
->>> compiler flag. That's why I introduced combo-spinlock, ticket-spinlock
->>> & qspinlock three Kconfigs, and the combo-spinlock would compat all
->>> hardware platforms but waste some qspinlock code size.
->> You're right, and I think your comment matches what Conor mentioned
->> about the lack of clarity with some extensions: TOOLCHAIN_HAS_ZABHA
->> will allow a platform with Zabha capability to use qspinlocks. But if
->> the hardware does not, it will fallback to the ticket spinlocks.
->>
->> But I agree that looking at the config alone may be misleading, even
->> though it will work as expected at runtime. So I agree with you:
->> unless anyone is strongly against the combo spinlocks, I will do what
->> you suggest and add them.
->>
->> Thanks again for your initial work,
->>
->> Alex
->>
->>>>          select ARCH_USES_CFI_TRAPS if CFI_CLANG
->>>>          select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
->>>>          select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
->>>> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
->>>> index 504f8b7e72d4..ad72f2bd4cc9 100644
->>>> --- a/arch/riscv/include/asm/Kbuild
->>>> +++ b/arch/riscv/include/asm/Kbuild
->>>> @@ -2,10 +2,12 @@
->>>>   generic-y += early_ioremap.h
->>>>   generic-y += flat.h
->>>>   generic-y += kvm_para.h
->>>> +generic-y += mcs_spinlock.h
->>>>   generic-y += parport.h
->>>> -generic-y += spinlock.h
->>>>   generic-y += spinlock_types.h
->>>> +generic-y += ticket_spinlock.h
->>>>   generic-y += qrwlock.h
->>>>   generic-y += qrwlock_types.h
->>>> +generic-y += qspinlock.h
->>>>   generic-y += user.h
->>>>   generic-y += vmlinux.lds.h
->>>> diff --git a/arch/riscv/include/asm/spinlock.h b/arch/riscv/include/asm/spinlock.h
->>>> new file mode 100644
->>>> index 000000000000..e00429ac20ed
->>>> --- /dev/null
->>>> +++ b/arch/riscv/include/asm/spinlock.h
->>>> @@ -0,0 +1,39 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +
->>>> +#ifndef __ASM_RISCV_SPINLOCK_H
->>>> +#define __ASM_RISCV_SPINLOCK_H
->>>> +
->>>> +#ifdef CONFIG_QUEUED_SPINLOCKS
->>>> +#define _Q_PENDING_LOOPS       (1 << 9)
->>>> +
->>>> +#define __no_arch_spinlock_redefine
->>>> +#include <asm/ticket_spinlock.h>
->>>> +#include <asm/qspinlock.h>
->>>> +#include <asm/alternative.h>
->>>> +
->>>> +DECLARE_STATIC_KEY_TRUE(qspinlock_key);
->>>> +
->>>> +#define SPINLOCK_BASE_DECLARE(op, type, type_lock)                     \
->>>> +static __always_inline type arch_spin_##op(type_lock lock)             \
->>>> +{                                                                      \
->>>> +       if (static_branch_unlikely(&qspinlock_key))                     \
->>>> +               return queued_spin_##op(lock);                          \
->>>> +       return ticket_spin_##op(lock);                                  \
->>>> +}
->>>> +
->>>> +SPINLOCK_BASE_DECLARE(lock, void, arch_spinlock_t *)
->>>> +SPINLOCK_BASE_DECLARE(unlock, void, arch_spinlock_t *)
->>>> +SPINLOCK_BASE_DECLARE(is_locked, int, arch_spinlock_t *)
->>>> +SPINLOCK_BASE_DECLARE(is_contended, int, arch_spinlock_t *)
->>>> +SPINLOCK_BASE_DECLARE(trylock, bool, arch_spinlock_t *)
->>>> +SPINLOCK_BASE_DECLARE(value_unlocked, int, arch_spinlock_t)
->>>> +
->>>> +#else
->>>> +
->>>> +#include <asm/ticket_spinlock.h>
->>>> +
->>>> +#endif
->>>> +
->>>> +#include <asm/qrwlock.h>
->>>> +
->>>> +#endif /* __ASM_RISCV_SPINLOCK_H */
->>>> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
->>>> index 4f73c0ae44b2..31ce75522fd4 100644
->>>> --- a/arch/riscv/kernel/setup.c
->>>> +++ b/arch/riscv/kernel/setup.c
->>>> @@ -244,6 +244,23 @@ static void __init parse_dtb(void)
->>>>   #endif
->>>>   }
->>>>
->>>> +DEFINE_STATIC_KEY_TRUE(qspinlock_key);
->>>> +EXPORT_SYMBOL(qspinlock_key);
->>>> +
->>>> +static void __init riscv_spinlock_init(void)
->>>> +{
->>>> +       asm goto(ALTERNATIVE("nop", "j %[qspinlock]", 0, RISCV_ISA_EXT_ZABHA, 1)
->>>> +                : : : : qspinlock);
->>>> +
->>>> +       static_branch_disable(&qspinlock_key);
->>>> +       pr_info("Ticket spinlock: enabled\n");
->>>> +
->>>> +       return;
->>>> +
->>>> +qspinlock:
->>>> +       pr_info("Queued spinlock: enabled\n");
->>>> +}
->>>> +
->>>>   extern void __init init_rt_signal_env(void);
->>>>
->>>>   void __init setup_arch(char **cmdline_p)
->>>> @@ -295,6 +312,7 @@ void __init setup_arch(char **cmdline_p)
->>>>          riscv_set_dma_cache_alignment();
->>>>
->>>>          riscv_user_isa_enable();
->>>> +       riscv_spinlock_init();
->>>>   }
->>>>
->>>>   bool arch_cpu_is_hotpluggable(int cpu)
->>>> diff --git a/include/asm-generic/qspinlock.h b/include/asm-generic/qspinlock.h
->>>> index 0655aa5b57b2..bf47cca2c375 100644
->>>> --- a/include/asm-generic/qspinlock.h
->>>> +++ b/include/asm-generic/qspinlock.h
->>>> @@ -136,6 +136,7 @@ static __always_inline bool virt_spin_lock(struct qspinlock *lock)
->>>>   }
->>>>   #endif
->>>>
->>>> +#ifndef __no_arch_spinlock_redefine
->>>>   /*
->>>>    * Remapping spinlock architecture specific functions to the corresponding
->>>>    * queued spinlock functions.
->>>> @@ -146,5 +147,6 @@ static __always_inline bool virt_spin_lock(struct qspinlock *lock)
->>>>   #define arch_spin_lock(l)              queued_spin_lock(l)
->>>>   #define arch_spin_trylock(l)           queued_spin_trylock(l)
->>>>   #define arch_spin_unlock(l)            queued_spin_unlock(l)
->>>> +#endif
->>>>
->>>>   #endif /* __ASM_GENERIC_QSPINLOCK_H */
->>>> diff --git a/include/asm-generic/ticket_spinlock.h b/include/asm-generic/ticket_spinlock.h
->>>> index cfcff22b37b3..325779970d8a 100644
->>>> --- a/include/asm-generic/ticket_spinlock.h
->>>> +++ b/include/asm-generic/ticket_spinlock.h
->>>> @@ -89,6 +89,7 @@ static __always_inline int ticket_spin_is_contended(arch_spinlock_t *lock)
->>>>          return (s16)((val >> 16) - (val & 0xffff)) > 1;
->>>>   }
->>>>
->>>> +#ifndef __no_arch_spinlock_redefine
->>>>   /*
->>>>    * Remapping spinlock architecture specific functions to the corresponding
->>>>    * ticket spinlock functions.
->>>> @@ -99,5 +100,6 @@ static __always_inline int ticket_spin_is_contended(arch_spinlock_t *lock)
->>>>   #define arch_spin_lock(l)              ticket_spin_lock(l)
->>>>   #define arch_spin_trylock(l)           ticket_spin_trylock(l)
->>>>   #define arch_spin_unlock(l)            ticket_spin_unlock(l)
->>>> +#endif
->>>>
->>>>   #endif /* __ASM_GENERIC_TICKET_SPINLOCK_H */
->>>> --
->>>> 2.39.2
->>>>
->>>
->>> --
->>> Best Regards
->>>   Guo Ren
->
->
+>  	} else if (of_device_is_compatible(node, "arm,coresight-dummy-sink")) {
+>  		desc.name = coresight_alloc_device_name(&sink_devs, dev);
+>  		if (!desc.name)
+> @@ -103,10 +154,6 @@ static int dummy_probe(struct platform_device *pdev)
+>  		return PTR_ERR(pdata);
+>  	pdev->dev.platform_data = pdata;
+>  
+> -	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> -	if (!drvdata)
+> -		return -ENOMEM;
+> -
+>  	drvdata->dev = &pdev->dev;
+>  	platform_set_drvdata(pdev, drvdata);
+>  
+> @@ -126,7 +173,10 @@ static void dummy_remove(struct platform_device *pdev)
+>  {
+>  	struct dummy_drvdata *drvdata = platform_get_drvdata(pdev);
+>  	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+>  
+> +	if (of_device_is_compatible(node, "arm,coresight-dummy-source"))
+> +		coresight_trace_id_put_system_id(drvdata->traceid);
+>  	pm_runtime_disable(dev);
+>  	coresight_unregister(drvdata->csdev);
+>  }
