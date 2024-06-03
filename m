@@ -1,109 +1,215 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2059.outbound.protection.outlook.com [40.107.92.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB21712D775;
-	Mon,  3 Jun 2024 13:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717421429; cv=none; b=Y/beNS7kGKbxdwwDOnLQNzz7ppKg8IkRL3UVEXus2eWD7vDY8SxTDVYn8kg+d9pOIJGjCmx/Z0TYSw97tm/GiPPd256a7SsPq6qSZ03zOygwh72kRcmNSskQEDTeyVFnnoZf3BLMD2vZBA1eQ9SCC46oB4ssBcxxwPQAzYfPN8Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717421429; c=relaxed/simple;
-	bh=siHlBxO9wikWFyrTMkjcWyiEolJXNVR3qUS+thQ+tXU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Z7jQu0XPpd/qKXzIiIcWB2Bz9aJSDjD0ERZq9RwhSLMSP0lhPKeKTVsKdNwUGVmn4cBO5ojfVw27k6eGejL097SDVzSfMXm8tmcf4M1d+PWCLTa8WpoFwbb0I+rdaQLuAbfriH/Xinl6uW3Dq/VLMneJOZYdXJi1KvHPdXQq3x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FBO4yeRI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE91012DDBC
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717421433; cv=fail; b=uJSI6ZRfCroTlD1V2OMwqYHz4TyEIhgX5AdK8wAIjGOIoMXcV0S0SL0ExNF1TRxN5NBqnigCykQS/kprlxTbcCw7ECLrNK6PBpwiAIFlD1ckbEVElF/jmUdEoboSvnU+6ClbjZLpaaDT3HVWTFPaeCcFZ11JtLHi3gnR8+ceLSI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717421433; c=relaxed/simple;
+	bh=dc3CepVevvZJzD7tFWZCcFN0h2mo2mWB+hzZAb0LJZc=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z4KQbgm7VR256jUaHcej3M3QoxiyoPZcbxPtLKfMUoQjHKEtyT5vde8FdPwWWxw+xFWfxQIZd8Ch7McYSrvWWN1kpFSLLCmgX5fm9rwlKDaR/q7AZs/2sXl0tJhsY3dLQ76xMMnlofAxOXzkiU2INwvG1vdmOQo6mD4Q75xkgxU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VcNDLSQE; arc=fail smtp.client-ip=40.107.92.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FBO4yeRI"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453BS7DP009764;
-	Mon, 3 Jun 2024 13:30:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=OXLYl3qnVo2Nxrdc054HxK
-	lC5QU9ymtPYz5OD7x+IJw=; b=FBO4yeRIYouwqmED7f3XTl2K61oG7TWh+4PudG
-	gpjHdUhZkfjGJLTMCn+m5jnwB1lGAQCcG/86JQINAQtyTRiOzvrBO7L2qQx9fDWb
-	bxt6IhIDyUzbsPKxHq0It4vjUlJG3WU+Pac/jZpOv9PtuKAfe0s3C1sQEDud6JWx
-	k1ml1ce8SSYJaxwhbio1R3aWzNuQkNvvVw5sQwBvdkQA2ioIDB2iTQz2eIgeuuJa
-	qFL6tGECZRHed4tqJsz+DaOmUC0H++QjXxUH3rmgprQg8A/ZUNRGY/lKNi6KUvhn
-	orPadkazbAqoYsNpm551YPDVQ7uvlpse62m5LQ+lZbhAKz9g==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw3r483t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 13:30:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453DULhW025511
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 13:30:21 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 06:30:21 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 3 Jun 2024 06:30:20 -0700
-Subject: [PATCH] ACPI: NFIT: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VcNDLSQE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MDNSmXnKWYbLayGxHC2gWYgTPYmGgsNt+jTcmiCzk7tn4854Pfm9w5WW9M7wTCm6zVdg6OaT0fV+lEXM7iIQu5BZ78Gywf8u+7IdSuuT5KSBGboe6LXzogwaRAPpNpJWZLNCkdHp4VHFWkeAe35aisYjWB3Aj5470B1m+rnF2/uxh+1Kijv4NGRJIkc72E5vcTiYP03n3TdUwRBT6Pfx6pGEHpvmz4AlJFDjxf8bibd9/xAO+E+CGjyVWczo2kRGMqhQV0RgvW7WKt89rb72L3G7semY+m6je5+ydUP1huRmOMhGnqAv16F5ubaZUcmaethujLYXZArrsXixRHtevQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eOOGQAv4JINuuFp3Y6y2+VVhOQLpJFGjRbhuC4jRbjA=;
+ b=Zb8eCo2p4tNRTkp4//iqJAXfLwzqLFcsc7fn7IGKvjtId2q1Zo00wVY4QybHhHIYoJ5cllpkJyFlG/I0cX8muZdopcBZKZOKte/GSSdZwetM0w/qLa0wczQ6Xwnk/tkyG5AQgKk20DbZDfpb8CW7oIi1IgxneMjZb7LJeaC7NCUUhY5RH8/c09FZmUat/kTHoZJRJfmO95zx/ReEX0J6y8lOZ/qR0qSHvMPkunmAq0PW2eF+OWUuPB2o+Jp5CDtwaeM2E56/X4UFS2psqVi2ohN/dAtusfAqG7gXc3uykiCCOb5s8cKQhTgIRj3Bq70T4mX0ZuJM7+F67NYI+xv0gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eOOGQAv4JINuuFp3Y6y2+VVhOQLpJFGjRbhuC4jRbjA=;
+ b=VcNDLSQEsGO8NdeDw+xKY3hZ3R9x8+3a7znQbu871MpGAUEr7ABNap74UCbBvJUPQMqafAVNyQQw2NGkiGEOMeSmpjDvDfUpcTWUNyki/XUzuDxOTAEg2xYN0H7IDyQgZAmxpZDSM+JK78rn0+Ls8jS3mNCxtPnKNGkrpCOrYaQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
+ by DS7PR12MB8371.namprd12.prod.outlook.com (2603:10b6:8:e9::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
+ 2024 13:30:28 +0000
+Received: from BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52]) by BL1PR12MB5732.namprd12.prod.outlook.com
+ ([fe80::bf0:d462:345b:dc52%7]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
+ 13:30:28 +0000
+Message-ID: <16622c3a-034e-9f78-3afa-b0c273ee4949@amd.com>
+Date: Mon, 3 Jun 2024 08:30:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+To: Borislav Petkov <bp@kernel.org>, X86 ML <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, David Kaplan <david.kaplan@amd.com>,
+ Borislav Petkov <bp@alien8.de>
+References: <20240603083036.637-1-bp@kernel.org>
+Content-Language: en-US
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH] x86/kexec: Fix bug with call depth tracking
+In-Reply-To: <20240603083036.637-1-bp@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA1PR04CA0021.namprd04.prod.outlook.com
+ (2603:10b6:806:2ce::24) To BL1PR12MB5732.namprd12.prod.outlook.com
+ (2603:10b6:208:387::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240603-md-drivers-acpi-nfit-v1-1-11a5614a8dbe@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGvFXWYC/x3MQQrCQAxA0auUrA2kUxH1KuIiM5PagB1L0pZC6
- d0dXb7F/zu4mIrDvdnBZFXXT6loTw2kgctLUHM1BApnulCHY8Zsuoo5cpoUS68zCnUhcqbYXm9
- Q08mk1+2/fTyrI7tgNC5p+M3eWpYNR/ZZDI7jC9V7ZOeFAAAA
-To: Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma
-	<vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, Ira Weiny
-	<ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
-	<lenb@kernel.org>
-CC: <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Y7V3rKMVbrXmgvnvhVJKm6m2dUQiV_zl
-X-Proofpoint-GUID: Y7V3rKMVbrXmgvnvhVJKm6m2dUQiV_zl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_09,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030111
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|DS7PR12MB8371:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3315204-6339-40cc-5e33-08dc83d1553e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZTl5bzVzWnN0T1pVcFJocFNodGROdjFJNUticURwdHlLNzNSemNKaU5Ecjgx?=
+ =?utf-8?B?VUJTbXY0OHU0cnZGZm5kYVhpVEZ3MlV1RnVPKzFwUThvdXo4dEMyUXpxNzI4?=
+ =?utf-8?B?cHM1dlJ2b0tONHdOUEJLcGQrNnlOQk1EQ0RWVlFrTTFhQ1FXWFcwS2JCbDJ3?=
+ =?utf-8?B?MVhMUllBbnpUQVBjWS8rOWxlOXFhL1VLbFFsY3Zuei8yMFl4UEZVU3BUaWNo?=
+ =?utf-8?B?TEx4a1lwc0dsT2V0d2RRNXpiWllMSmY2SC9uZDd0dEJzR0NlUXdpYlJDTi9U?=
+ =?utf-8?B?K1lHQjYrc1RMcXVNdTNEajYrRGt6RjZJR0JQYzNnamwwbFRwdHRsUDJqUVJH?=
+ =?utf-8?B?dFRKcnBFQlEvVlZZUk03UW5oT2o0MS8xOUVBR1Z0U3hMTmhLajNkaGViaTBZ?=
+ =?utf-8?B?ZE9oaGZuQjd3c1N1RDhkSmpPVVF1T2RPZnVBbTNQVXUvWU8wZFpKbWJMSFpj?=
+ =?utf-8?B?QnFtckMreGZHaUoxN294R3NQY25kNE45eUxtRTFaUTI1MUtiQjlnYkd2UG5n?=
+ =?utf-8?B?OHVxRDhCeGVTSHZyNzhiMlNTUXBZTEFGL0loMklwQVlwMVQyS0VaNEtuUnk1?=
+ =?utf-8?B?SXQzS2FubU9zR29LSmJ4QkxPNGdQZTBKcmd3eTExaEhSOGR1L2g5Y0JPVS9K?=
+ =?utf-8?B?bng5aERyeTRTRW02MXBGK002bDh5aXovaXlXUUdYbFdFTnFjRm8zaFEyNW44?=
+ =?utf-8?B?cGFObktLclVPTjFOcEIwUEo4V21KVXZMVmxuZ0tGM3Y1YUFUMVczSWIzUmsr?=
+ =?utf-8?B?ZGNOVS9hOXJnK2ZLV0hXQktkSUJaUDBRV2h0UGZZZThZVlp2OG9SZDc5VjJm?=
+ =?utf-8?B?Vmh6b2JvdGJIWjZlYWkvVUxkKzkxVHNQby9MbE9oR1owOWZDbUF1RmlsTkhN?=
+ =?utf-8?B?aU9idjBUY2MxbDlBZWpRNzhGMTZBUG5WWk5RbHJNM0pZY3pZZUtHbFNiRnlM?=
+ =?utf-8?B?ckZRckFIMHltU3AzNTAzV2g4MnZhcjc2UjNLWGFhdVZXUmtlVUZuTFg4ZkRW?=
+ =?utf-8?B?bm1PNHA4ZDhia2tJZzlSNld1bGhtbXY0NW9hVjZWZDcvNk9FM1FFc3BiT0lq?=
+ =?utf-8?B?bEp1UTVRbVBnVTB2amcyTnhPVjR0MGR3Nk5rQ0MrYTB6dUQ4Y1doczJCd0lq?=
+ =?utf-8?B?a1lNaGpuSFUzcEMzZkVTSHZCUjZSQ3Q4UnBWT2J2S25mN25MWHRHNDBzYVds?=
+ =?utf-8?B?aEt0SW02NXJ5THNJQnpGd1pZdUdjMlh2UkFicmpIZ3JtWHhBNlUwKzhDK3RS?=
+ =?utf-8?B?ZTJ6WVZ4K2lQekJQTXhrVW93eXR6YnA1N0lRbjhLZ3JFbG1VS0pwbmhXcVJG?=
+ =?utf-8?B?RW5taTNUb0pQN3lDRDBRcHFWM3UrVTNxeUxOLzhoMjE1cTAyTzc0NW5hWThU?=
+ =?utf-8?B?TUJ1bDIyVFN2bEVlNURpcTFaSGVMcEJuU2NrTmUwTTgrdGFyT0U5MTdYV2Vo?=
+ =?utf-8?B?WGpRZ05CYzl2MWNlUHVlNHhjSUxzWk5VMitZelEwSWgva3N1VUZQeEdwL0VY?=
+ =?utf-8?B?LzUzZEhHZTFtU1h1bjU5cFc2QU9UamZFN0tReTQ0ZjJNcDNrdmxaQ0lhZ1Fw?=
+ =?utf-8?B?d1hJRzlZWGFIQzJ3Zk9UanRkNnFQc3FrQ2hlblFmNXBISEQyU0J2V0JLajla?=
+ =?utf-8?B?MUxJb3VlaWVHUytXMk1iU3RQZzVGbWVDc3F1b2dpcEJFUitjbmFPdkVHN0Nz?=
+ =?utf-8?B?ZkY0VzBXeWJEZU9lYW1jMDR0cko0SlpNd2dpdkllc2graTJZVHNaM1h3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Rjk2WnpvamRlcEhORUNTUkh4TEVKaXZydGVmbGpmeitKS0VncDR0alVuNzFJ?=
+ =?utf-8?B?TzFGYWZWTVFLc2tBeDRIOFZtWitUVTNzMzhLL3lDdFhpMkdXcmpZQm1FaUZm?=
+ =?utf-8?B?SHA3M3p5bDI4RUtMSk90MzF4M3R6Z1VlUGMxTmpLdHV2S1hMN28vVkF5dzhK?=
+ =?utf-8?B?NUxQY3JHWWswVUdwSVZXZGZjSWFEZWIrV1N6RWpMK3F6NEFvWkt0T1FOMTI1?=
+ =?utf-8?B?ZUNIZG5NdjdkRllzRFFzNTNhSEsyc1N0bUl2NGJYM3VhYXQ2U2JKZitCdDdW?=
+ =?utf-8?B?eGVWRnpFK3BqTFhKTHhlZFpKNjVrek9aV0RUMkxLZDgrOUNONVVUTmgzQjg0?=
+ =?utf-8?B?YWx1MWZZVzhNeUhpM2xjUGNJaExacmc2V21LNzdmaGNLQkk4OEtyUjFEa3dW?=
+ =?utf-8?B?Z05xNnIwR0J3WlhLS3p2WFBNdDFGeHBoQnBCZ1VTdFQ1U25JVzRNSzM0aDBL?=
+ =?utf-8?B?dzhJMGI5VVVNOUY3OEtrTjFTUDBodFIrcjdHM3ltSUg0bGZ6aVNxOERUZFEz?=
+ =?utf-8?B?R3U0RzlOdGM5R1A1WDZjSmFUTlltQnpHOEVWbWFYME04WnlmeDN5Z3k4dUVx?=
+ =?utf-8?B?T0txL3lNa3BRdVZpU29RRFk0cE9YYzVCTEgvRFF6b2Y4L3IzcWQxNjYycVc5?=
+ =?utf-8?B?bWhqNWk5a1pKc3pjc0ZtdTZHT1dJdTZ2VWxkTjk3VTUwVWI2TXQyd2FIOHRQ?=
+ =?utf-8?B?Wk1OUnBBRGQvSVY0eWJ1akNYV1l6a2ZzV3h6ZHdLM1dIUDJyMWplQWR6VVcz?=
+ =?utf-8?B?aE1GSjJESFlrNGtQNHNuNXludGtma3BQSHJpSngxc1M2YVJURk9mVWdPamcz?=
+ =?utf-8?B?eE01bEtMSTRjR2FoZjlrKzA5dE9vSC9EUVZEYjRKdHAwVDFEdm4zRmhjQ1pR?=
+ =?utf-8?B?SDR5bDZiQ0ZsZ1oxMktCeGhNRTFQQ0dHVUdmV3VQOEFJWEtOajN4TkxIYk42?=
+ =?utf-8?B?ZityT2VkcXAyS3ltcThzV3FieHQyaEk0dXNzanVLZWFZZkRRVUpQQ3Ixejls?=
+ =?utf-8?B?b2kwMXpEZVJkMHRWdmo2MlBicFgxY200cFVYYXhML25DcHNSNXZ1eXlOSFVO?=
+ =?utf-8?B?RFBrWXdMVkIydVk4cGJvRDRJU2Yrb0dOSUlMcnR5Kzh1WUZBemxaK1MveGtp?=
+ =?utf-8?B?T0dhLzM2UlNxZ25uNGNZdzF1eWdPbkFPNms2VHZOMG90cnFpV1dBYXNZTVRL?=
+ =?utf-8?B?dEUrUFNGS01lTktGQmpNd2dkc2VSeWVnZWVkYnM1VU9DVGpCM0xUbU1PY1Vp?=
+ =?utf-8?B?czFNZ3Y3dnZ3RDhlT2lmdjMrK0tNcmNXanI2ZWY0dHVsUTJ0TklwWEZ4NWxz?=
+ =?utf-8?B?Y2FHQ2FUN0V4Q1lhd0lwRDlJN3R0Y0JBcUZpOHpldFVSbU1QMm5GekFyc1FG?=
+ =?utf-8?B?bVljUEg5WGFLeEIzdStMTmM1SGZ1VTdnSWhiQWF0N0NLU1BJSEk0ZFhhRjdl?=
+ =?utf-8?B?KzRLMFkwS1FNc1AvaEN2RmhlRnNqY2dlN2hwaG9CbGFnek9BNVp3cE1HRU84?=
+ =?utf-8?B?SHBZRTJZR25rSnJVWjJxSndQd1MyeWZQcFl3N3lPWmlSNWE0L3B0czRTZTBS?=
+ =?utf-8?B?RmNuN1NWcnM4VHR6Q1IvQW02eU1rU0lsTldUVm9JdlFnNTdocUpQR1FveVh6?=
+ =?utf-8?B?Q1pwVG5YaVExUHkyam1TWVlkZGFxS1QwYjNhRENuelAvb0ljQzhHN2VSdFJp?=
+ =?utf-8?B?ZGtFQlFRa2N1RzhWUHRBem5hOUVTdFZBUUxEL1NtK3RJUkhuVWxqR3pldS9H?=
+ =?utf-8?B?cUJybm5EelpDNzdHelNuTCs5S0M4S2txbU5YWWNFMEhZR2hZanhMSUdaeVA4?=
+ =?utf-8?B?VkZ0RmEyazZEc1cweXN2Mm1McmREUlhhUU1WSzdNTXA0dUl3TjFXbzgzUFF1?=
+ =?utf-8?B?QTUyQllvMFpwSEJucTB3UmJUeVlUUEtpczcxdk14dzA2YzFNdnVNRFRTdEZJ?=
+ =?utf-8?B?Vi8za2xVNytjTnJsbnFWQ1BIVTc0NDVsWWM1c2x5R0loRE55SmtxN3dMVDZD?=
+ =?utf-8?B?d1pqWEFhaFpTY2ZIWDZtbmdWSTM5NUhsZDE4ZVpESDU2RXFhSVQ1SjJwSXVq?=
+ =?utf-8?B?NDlVUkd6SVczUHBFbytwdjFhT2w0YkphOUY1bUw3YUF6NzhMQ2RESVBPNWVk?=
+ =?utf-8?Q?XMaDW6PiS2EBKl/pc8Q9xfxA4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3315204-6339-40cc-5e33-08dc83d1553e
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 13:30:28.4484
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r3FYgbdMMSvI6npFli4+C7RBMYPYSeIwup0EOwd52x0LEk5ZUiBA0nwP2gRRK9IJkjSdzhQlhjLQWg0rk5cn4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8371
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/acpi/nfit/nfit.o
+On 6/3/24 03:30, Borislav Petkov wrote:
+> From: David Kaplan <david.kaplan@amd.com>
+> 
+> The call to cc_platform_has() triggers a fault and system crash if call depth
+> tracking is active because the GS segment has been reset by load_segments() and
+> GS_BASE is now 0 but call depth tracking uses per-CPU variables to operate.
+> 
+> Call cc_platform_has() earlier in the function when GS is still valid.
+> 
+>    [ bp: Massage. ]
+> 
+> Signed-off-by: David Kaplan <david.kaplan@amd.com>
+> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+Minor nit below, otherwise:
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/acpi/nfit/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index d4595d1985b1..e8520fb8af4f 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -3531,5 +3531,6 @@ static __exit void nfit_exit(void)
- 
- module_init(nfit_init);
- module_exit(nfit_exit);
-+MODULE_DESCRIPTION("ACPI NVDIMM Firmware Interface Table (NFIT) module");
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Intel Corporation");
+Does it need a Fixes: tag for call depth tracking (before the change to 
+cc_platform_has() it was a call to sme_active())?
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240603-md-drivers-acpi-nfit-e032bad0b189
+> ---
+>   arch/x86/kernel/machine_kexec_64.c | 11 +++++++++--
+>   1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index b180d8e497c3..90b1946c06e5 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -295,8 +295,15 @@ void machine_kexec_cleanup(struct kimage *image)
+>   void machine_kexec(struct kimage *image)
+>   {
+>   	unsigned long page_list[PAGES_NR];
+> -	void *control_page;
+> +        unsigned int host_mem_enc_active;
 
+Looks like spaces used here instead of tabs.
+
+Thanks,
+Tom
+
+>   	int save_ftrace_enabled;
+> +	void *control_page;
+> +
+> +	/*
+> +	 * This must be done before load_segments() since if call depth tracking
+> +	 * is used then GS must be valid to make any function calls.
+> +	 */
+> +	host_mem_enc_active = cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT);
+>   
+>   #ifdef CONFIG_KEXEC_JUMP
+>   	if (image->preserve_context)
+> @@ -358,7 +365,7 @@ void machine_kexec(struct kimage *image)
+>   				       (unsigned long)page_list,
+>   				       image->start,
+>   				       image->preserve_context,
+> -				       cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT));
+> +				       host_mem_enc_active);
+>   
+>   #ifdef CONFIG_KEXEC_JUMP
+>   	if (image->preserve_context)
