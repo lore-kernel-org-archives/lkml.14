@@ -1,83 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A6512E1E9;
-	Mon,  3 Jun 2024 14:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7D12EBF5;
+	Mon,  3 Jun 2024 14:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717424968; cv=none; b=A1o9Mny5i5Jhnioqpl+DGeIX70SIuQPkgSN5creOM4VAbhHXrze7Gv98zSaKhzcD6CNTMCtZ4Ujq5ucohJHebnZmGtTj81A5xKCvTUzaMXmBJE2aiYQeJvBi7TeHub376EbIfZ+0JI1EX/d6BljKnjaelGGa+ag51lfLJSspykE=
+	t=1717425012; cv=none; b=FPfeeB13mdhnccHPXGdMkC190PtJOKnhKbkszS8MKWYL8/zriV9nQ+zavca4515RHuZzegfE9eBg8BZe2TJupfT4ewomHc6be8ej7/x1C0kE+dRTXio/bKw0I9USF+oXKRw3W6tXkWEV4eZzSDU2w5ayAmqxz8wxhY/UW8klLNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717424968; c=relaxed/simple;
-	bh=FRO1GsThD+8G3ac6c2VNDgi7xDQo7ElrPAWbCxkiGG0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=WQ6LHeLKmtkwVAHQ/1NHytFRD3xE8YPKRNaJWiLmJ2mUVH/gja7quyupV6CDbaQPiKiyP1wO2Bkjw9TYXchDc9C98gcJOoSVBM1rGpMCUVraM+WaGBvEniZXXItCdBJWFtfTXzkkuNId8DXkvtRhBDnsw/aevQyWwUt8PA+gIOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogNirmqU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717425012; c=relaxed/simple;
+	bh=v2cZ/gm0pQ+mp42tOs97sf9MG+F1s6qk/Ct0nVZxUlU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eORDW784kuK7myFLLoFgfFzibKcI3LwA8jkxmNKRRzN9M6SP0iVRS0nNM/vvNzPVE01MaH0hh/CV/Z77g0cQIFf2OV1o6mV25tX8RovfPqK7Mzbf0wLVrBU76AFEDHRqucc6q3Fyv5yWQaOct3PBOtAFTYkfvwPI4ikeTvD+JvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=IyVcxsq+; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogNirmqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF2FC2BD10;
-	Mon,  3 Jun 2024 14:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717424968;
-	bh=FRO1GsThD+8G3ac6c2VNDgi7xDQo7ElrPAWbCxkiGG0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ogNirmqUkVsYlwIKWmQp/sxqgb3P266qOK+5Hpg8XuR3mz4AEnx8KK7TdN82IGzAy
-	 xpP+nI6h55UFDSimz6k0e0J97KBzMlB1ZbwF0KcKBCSP6ntFjtawTtM17r1bz7Qdj7
-	 ZZR+/CZLfNhxoWR1qkRWJpoVpAK2r0R3OWW0ZbOmLV7GLI9B+utj3TKbuIrAa0M3P/
-	 6J+gJlFARURNtb9VO0JRadA/Pvir73AJfVRhjM7qqUTQ4s1CrZDLzS4dtAG8SE0npR
-	 JEz2UxLmXqcz3fYfhOB2bnwZ+bIKvHG2Nn72Ig9RZ2WI7HDBzOGTEsmWDx7OkcWtfY
-	 lfkBVQ4sxEKKg==
-Date: Mon, 03 Jun 2024 09:29:25 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="IyVcxsq+"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 22234882EF;
+	Mon,  3 Jun 2024 16:30:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1717425009;
+	bh=SfqsBTN3MtJf9fvXPp4/6/xuI3PMILN+3xSeSA4Cei4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IyVcxsq+9lZG5RBF3xAWjE/kj1VnNaYETJnaQiVRIJnjT1A02Fzz9O1IivX2ORKZa
+	 sQZ6WrChIsT1BmvyyBsJHKFaj9kjcM4F1W4Xwm9KZ3sve/nvsUQOEKeUKUHuvFu71o
+	 7atXrfHkATgEPxXQlLYVPW8FGXAZBOarUZ9GHuvp5XKh84bhycEgJoZ9+DFlqTjHGR
+	 cYBe8IX5dETTrSUklIVoalCPYR/2PBkd6j0t35Ev3qCOydst78xISHQA4TpO7BhVT4
+	 MKghslcyFkCJ5g1Pr3BB3ABga4u29i56ObCJlSLTXXehD8FlZqtSSiQcwh9tVd8b0s
+	 0eoHhFY7qS92w==
+Message-ID: <e753d3fa-cdfd-426c-9e66-859a4897ec3b@denx.de>
+Date: Mon, 3 Jun 2024 15:03:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Mudit Sharma <muditsharma.info@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, lars@metafoo.de, 
- ivan.orlov0322@gmail.com, jic23@kernel.org, conor+dt@kernel.org, 
- linux-kernel@vger.kernel.org, krzk+dt@kernel.org
-In-Reply-To: <20240603134015.70388-1-muditsharma.info@gmail.com>
-References: <20240603134015.70388-1-muditsharma.info@gmail.com>
-Message-Id: <171742496559.385807.12490894623691830136.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: light: ROHM BH1745
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/11] ARM: dts: stm32: add ethernet1 and ethernet2
+ support on stm32mp13
+To: Christophe Roullier <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240603092757.71902-1-christophe.roullier@foss.st.com>
+ <20240603092757.71902-9-christophe.roullier@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <20240603092757.71902-9-christophe.roullier@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-
-On Mon, 03 Jun 2024 14:40:13 +0100, Mudit Sharma wrote:
-> Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
+On 6/3/24 11:27 AM, Christophe Roullier wrote:
+> Both instances ethernet based on GMAC SNPS IP on stm32mp13.
+> GMAC IP version is SNPS 4.20.
 > 
-> Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
-> ---
->  .../bindings/iio/light/rohm,bh1745.yaml       | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml: maintainers: 'Mudit Sharma <muditsharma.info@gmail.com>' is not of type 'array'
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240603134015.70388-1-muditsharma.info@gmail.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+I think it would be best to split off the DT patches into separate 
+series so they can go through Alexandre and have the netdev patches go 
+through netdev . In the next round, please send 01..07 as separate 
+series and 08..10 as another one , and I suspect 11 as a separate patch.
