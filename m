@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5435185928;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9668592E;
 	Mon,  3 Jun 2024 09:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407012; cv=none; b=fEbLqe3dtbtRrHzXj7VT/bopaIz8nqdCyFczmVIsxV7DVUJSfdDEu5mtGzfRp8rV9SaEAYp37jxOp55gBGREcD2S3SoD19dzFW68e4Ynd+TvCvWN7T4EYQKpY8llRshMR0SecrFUW24CSbzR1GUJWz8wRnRRoMWCE6Sh5oCvl5g=
+	t=1717407013; cv=none; b=ucYIBAsrJXpe9HSfVRlwx5fmIpAoXwGTogdAjZbHhCiJ/toywKztlXigcPZHYPLyA9Hlez2JBNFa59c0bZSOb5k6ZJmb8UannPUDl+EbPOi7VyAbMOuVw0l2lOKaQ6N2OUy6vxwUI9nnEX0l7kcswC88m6pnldPqND1DcoSF68o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407012; c=relaxed/simple;
-	bh=9MTQrwzkD9pYsjn+hfo3EjM7hxX+lCcbpkbaAzoiwFA=;
+	s=arc-20240116; t=1717407013; c=relaxed/simple;
+	bh=+p8BxJD+68L24HPRnqXuSQhmyp/9HF25yN1AjkfExzw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nNyj29u5REvxb3MXA4SBlYUmgn4a7V4sdP4qo0RgGggSFh3b/m29/CkttICJOklPhRmVTANMy+vRQsXZq2ANospAC5R7knB9w1ylRv6zFsV48FhUKTh7riWACSyU9wz6RGEi1hhHQjVXK7ZVhRssUfOCbRjiAeh8gnEJcPPJQqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c41ndSlt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=11JNGyiK; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JkSacqEC0xWGfBy3Ayi76JojkRkbnUpEiHb4Qk+l+vPl5a50v88PFCn3zlm3PpqRXPWZRIPhJp5lYaCwlJZhijQtHF/CPEEK/cdNvSaf49l9v0/zCpT/h07uLgxD7O0qmDwfoNndWYyDaRM3un9CYRy2OmbXSiykwpl4cVNT4DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5TrLINk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UyGllTyQ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c41ndSlt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="11JNGyiK"
-Date: Mon, 03 Jun 2024 09:30:07 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y5TrLINk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UyGllTyQ"
+Date: Mon, 03 Jun 2024 09:30:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1717407008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JWzFvI1IdX1Ff6cp99AHs3tSAAGsWrvDrbhgbqDKY5Q=;
-	b=c41ndSltGkml1JlQobzjXdm/wDsaTq7/ylxYUcfMZhvatYLSFYnmpl569TotqCcrSGxEpm
-	U9pz7XOdXIOpOIu8/W/wmXUNS98xUBQi9BZWgRD5akrFuYd6smSqSeWAgbafTFLCbeVpqN
-	fSFCMJduONFjfF2Tfvfmf80M3iudi81F0V3DqA2jW6XwYk0UWOtW6HAHftsX6zgXQtzX6I
-	/xgH/hyAU0s0hRkOy2qEnHYs7nApF6xajsph3hdV56qeeAScV8PdA1Z3PBkpUb/gMhTDAK
-	Qs+69VZSbTJaBPJrX2/5L2CmlDyn8GkJJ3+3YpbAvlt3Wf9OgiTMo3/fCE6jhw==
+	bh=MqcLKvtYJ9TZ1EDrZbzL4x3uPENnbcq726v8T9HD24c=;
+	b=Y5TrLINk4ymXQjvlWARXqcNIVVwjVci/+M8NF41AyeRHk1Be4F4N0wXsB3Rtq8NT2pUK40
+	cPM6dsPRhYY3vTLrui/U8K2gz46v4/dZKAG3P9K949POZXLY9UFngUJBaTbG/ZoGqKd4JR
+	SDuconcIKptjCw/r4PBFJpXIEJL/ypQYsZQO+ejrDZv4jdRbwMn4vCFQwMW/sYCfFdKK2g
+	6DdRtquqLHVJq7QSYoQagCyLkotoKlaKGbsZhGFoOCFOOQPQ4zk8wFHRC8Og2evKbgSA4Z
+	179tb45ggEr/r6u0urQBTFMntSGs6L+5yTTpqERvjS+bRwtQvRH0LWGV50QRoQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1717407008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,28 +38,26 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JWzFvI1IdX1Ff6cp99AHs3tSAAGsWrvDrbhgbqDKY5Q=;
-	b=11JNGyiKrH955nQUFGAgscSpHi+KreC3S16bS2ocGeKoqIp+HuvfdYrbcyNfoQhVJVg/cK
-	bQsgOJESfNdpiIBQ==
-From: "tip-bot2 for Lakshmi Sowjanya D" <tip-bot2@linutronix.de>
+	bh=MqcLKvtYJ9TZ1EDrZbzL4x3uPENnbcq726v8T9HD24c=;
+	b=UyGllTyQxSfD+7zVteqYs8IZgmRMZ6OnEEjIcP424h3uDRTUbKsvPp8KhVBzpCZKA0qsT2
+	Ja1V1njRrtWvNgBw==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timekeeping: Add function to convert realtime to
- base clock
+Subject: [tip: timers/core] ALSA: hda: Remove convert_art_to_tsc()
 Cc: Thomas Gleixner <tglx@linutronix.de>,
- "Christopher S. Hall" <christopher.s.hall@intel.com>,
  Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240513103813.5666-10-lakshmi.sowjanya.d@intel.com>
-References: <20240513103813.5666-10-lakshmi.sowjanya.d@intel.com>
+In-Reply-To: <20240513103813.5666-7-lakshmi.sowjanya.d@intel.com>
+References: <20240513103813.5666-7-lakshmi.sowjanya.d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171740700790.10875.12830194730255026022.tip-bot2@tip-bot2>
+Message-ID: <171740700865.10875.2013333477065427380.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,170 +67,43 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     02ecee07ca30f76f2a0f1381661a688b8e501ab0
-Gitweb:        https://git.kernel.org/tip/02ecee07ca30f76f2a0f1381661a688b8e501ab0
-Author:        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-AuthorDate:    Mon, 13 May 2024 16:08:10 +05:30
+Commit-ID:     b3266ed85f77047a9674100f0da8058750e5bc62
+Gitweb:        https://git.kernel.org/tip/b3266ed85f77047a9674100f0da8058750e5bc62
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 13 May 2024 16:08:07 +05:30
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 03 Jun 2024 11:18:51 +02:00
+CommitterDate: Mon, 03 Jun 2024 11:18:50 +02:00
 
-timekeeping: Add function to convert realtime to base clock
+ALSA: hda: Remove convert_art_to_tsc()
 
-PPS (Pulse Per Second) generates a hardware pulse every second based on
-CLOCK_REALTIME. This works fine when the pulse is generated in software
-from a hrtimer callback function.
+The core code now provides a mechanism to convert the ART base clock to the
+corresponding TSC value without requiring an architecture specific
+function.
 
-For hardware which generates the pulse by programming a timer it is
-required to convert CLOCK_REALTIME to the underlying hardware clock.
+Replace the direct conversion by filling in the required data.
 
-The X86 Timed IO device is based on the Always Running Timer (ART), which
-is the base clock of the TSC, which is usually the system clocksource on
-X86.
+No functional change intended.
 
-The core code already has functionality to convert base clock timestamps to
-system clocksource timestamps, but there is no support for converting the
-other way around.
-
-Provide the required functionality to support such devices in a generic
-way to avoid code duplication in drivers:
-
-  1) ktime_real_to_base_clock() to convert a CLOCK_REALTIME timestamp to a
-     base clock timestamp
-
-  2) timekeeping_clocksource_has_base() to allow drivers to validate that
-     the system clocksource is based on a particular clocksource ID.
-
-[ tglx: Simplify timekeeping_clocksource_has_base() and add missing READ_ONCE() ]
-
-Co-developed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Co-developed-by: Christopher S. Hall <christopher.s.hall@intel.com>
-Signed-off-by: Christopher S. Hall <christopher.s.hall@intel.com>
 Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240513103813.5666-10-lakshmi.sowjanya.d@intel.com
+Link: https://lore.kernel.org/r/20240513103813.5666-7-lakshmi.sowjanya.d@intel.com
 
 ---
- include/linux/timekeeping.h |  4 ++-
- kernel/time/timekeeping.c   | 86 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 90 insertions(+)
+ sound/pci/hda/hda_controller.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index b2ee182..fc12a9b 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -318,6 +318,10 @@ struct system_counterval_t {
- 	bool			use_nsecs;
- };
+diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
+index 766734d..5d86e5a 100644
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -463,7 +463,8 @@ static int azx_get_sync_time(ktime_t *device,
+ 	*device = ktime_add_ns(*device, (wallclk_cycles * NSEC_PER_SEC) /
+ 			       ((HDA_MAX_CYCLE_VALUE + 1) * runtime->rate));
  
-+extern bool ktime_real_to_base_clock(ktime_t treal,
-+				     enum clocksource_ids base_id, u64 *cycles);
-+extern bool timekeeping_clocksource_has_base(enum clocksource_ids id);
-+
- /*
-  * Get cross timestamp between system clock and device clock
-  */
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index 3096e10..da984a3 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -1235,6 +1235,68 @@ static bool convert_base_to_cs(struct system_counterval_t *scv)
- 	return true;
+-	*system = convert_art_to_tsc(tsc_counter);
++	system->cycles = tsc_counter;
++	system->cs_id = CSID_X86_ART;
+ 
+ 	return 0;
  }
- 
-+static bool convert_cs_to_base(u64 *cycles, enum clocksource_ids base_id)
-+{
-+	struct clocksource *cs = tk_core.timekeeper.tkr_mono.clock;
-+	struct clocksource_base *base;
-+
-+	/*
-+	 * Check whether base_id matches the base clock. Prevent the compiler from
-+	 * re-evaluating @base as the clocksource might change concurrently.
-+	 */
-+	base = READ_ONCE(cs->base);
-+	if (!base || base->id != base_id)
-+		return false;
-+
-+	*cycles -= base->offset;
-+	if (!convert_clock(cycles, base->denominator, base->numerator))
-+		return false;
-+	return true;
-+}
-+
-+static bool convert_ns_to_cs(u64 *delta)
-+{
-+	struct tk_read_base *tkr = &tk_core.timekeeper.tkr_mono;
-+
-+	if (BITS_TO_BYTES(fls64(*delta) + tkr->shift) >= sizeof(*delta))
-+		return false;
-+
-+	*delta = div_u64((*delta << tkr->shift) - tkr->xtime_nsec, tkr->mult);
-+	return true;
-+}
-+
-+/**
-+ * ktime_real_to_base_clock() - Convert CLOCK_REALTIME timestamp to a base clock timestamp
-+ * @treal:	CLOCK_REALTIME timestamp to convert
-+ * @base_id:	base clocksource id
-+ * @cycles:	pointer to store the converted base clock timestamp
-+ *
-+ * Converts a supplied, future realtime clock value to the corresponding base clock value.
-+ *
-+ * Return:  true if the conversion is successful, false otherwise.
-+ */
-+bool ktime_real_to_base_clock(ktime_t treal, enum clocksource_ids base_id, u64 *cycles)
-+{
-+	struct timekeeper *tk = &tk_core.timekeeper;
-+	unsigned int seq;
-+	u64 delta;
-+
-+	do {
-+		seq = read_seqcount_begin(&tk_core.seq);
-+		if ((u64)treal < tk->tkr_mono.base_real)
-+			return false;
-+		delta = (u64)treal - tk->tkr_mono.base_real;
-+		if (!convert_ns_to_cs(&delta))
-+			return false;
-+		*cycles = tk->tkr_mono.cycle_last + delta;
-+		if (!convert_cs_to_base(cycles, base_id))
-+			return false;
-+	} while (read_seqcount_retry(&tk_core.seq, seq));
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(ktime_real_to_base_clock);
-+
- /**
-  * get_device_system_crosststamp - Synchronously capture system/device timestamp
-  * @get_time_fn:	Callback to get simultaneous device time and
-@@ -1347,6 +1409,30 @@ int get_device_system_crosststamp(int (*get_time_fn)
- EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
- 
- /**
-+ * timekeeping_clocksource_has_base - Check whether the current clocksource
-+ *				      is based on given a base clock
-+ * @id:		base clocksource ID
-+ *
-+ * Note:	The return value is a snapshot which can become invalid right
-+ *		after the function returns.
-+ *
-+ * Return:	true if the timekeeper clocksource has a base clock with @id,
-+ *		false otherwise
-+ */
-+bool timekeeping_clocksource_has_base(enum clocksource_ids id)
-+{
-+	/*
-+	 * This is a snapshot, so no point in using the sequence
-+	 * count. Just prevent the compiler from re-evaluating @base as the
-+	 * clocksource might change concurrently.
-+	 */
-+	struct clocksource_base *base = READ_ONCE(tk_core.timekeeper.tkr_mono.clock->base);
-+
-+	return base ? base->id == id : false;
-+}
-+EXPORT_SYMBOL_GPL(timekeeping_clocksource_has_base);
-+
-+/**
-  * do_settimeofday64 - Sets the time of day.
-  * @ts:     pointer to the timespec64 variable containing the new time
-  *
