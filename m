@@ -1,109 +1,104 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7516135A46
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 18:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C57135A46;
+	Mon,  3 Jun 2024 18:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717437822; cv=none; b=cUGkAYcdXJzdywteaUuGnhBZtQMvia6HCTcH6VvLgymFY0Yppo22vWpFGtybUvKVDH1f7krYDy/yflBTwzWZ+jXNKgBzIcMrj5hARQROz12w33vh8cpibqk7CIhjqqLcYnAgjV6sAodxV/uw8PZ1Qa6GwQS8izVGQ+SyEfSFToc=
+	t=1717437866; cv=none; b=XAq1Snz04eZ3f8pT2Tah514+MflnoKAb1gHP2T2BCSMgwOSf9xs7WcFBU+8Lwf0Si6xepJawStHqnlS3tvTBG2igDJBiTlheVoY9kusXNSjJvqBS8rzWWb1yg4CnIomMCafqiuXGoxnPq9jz8lwwY0L75WBKJsOUkDY/8+iXiXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717437822; c=relaxed/simple;
-	bh=qkR+XwK2cnQzgCZgDWp8dL3MNwc2lgcgu16NqnlBhRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ufZwPS8bEFKJmq2CNUWNeN2XKfAGdpj9LzTE8ZehO1X1fhp3+qp8Mk9/KsgMesuYg0RP6UOjdA5GNnptio3waOdfsG6uFGPY3hVkSHBQAZP3tYpd/c3UL5xQmjrhk+mlzFPkwWDQXZ1Z4azgPbzfAt8T0hQ7yBIswPRPuaoAczU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=j2qs75v7; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1717437866; c=relaxed/simple;
+	bh=iSLvysiHpIUDNB9sp98jI6aLd04HDr3RBKBhJUiy1Zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlvVvwZcgETFF3HCGCulPxRnxO42b7tvkoFU32O9ojXVabBiuYng/W/A9O8tM818Ap3WelENzh49wwOS2IbNfEYKlUzqOJ+fzUj54iJ0mBJiIN06U9MuGl4OTi/guQqbOvOUg73SEDSucC7lKEd2YmZm21G8g+rqRUDA+5odE28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VEsXIV2u; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="j2qs75v7"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a32b0211aso144867a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 11:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717437819; x=1718042619; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7TPkYuHgg+gLnBsrbKhRQC0OqluG4mID27p8/iWKRL4=;
-        b=j2qs75v7IyagH3DJAwm3MpTe3MrGGVdXlA936x32HT+27zkaWTXfwwboXb58IyLbvj
-         0B/rNIeS1NQ0N25/RQ1biTKtvqU5mVCvyFHbJE7R9XGr7y2FUYOd9gHIvz6sYXVPeOA5
-         41QzT7Ze/t7gd8jJfKb8pmcXYtb7gqoS0GSU9uzIB2Y4zcwdRbJ/Wt0vUoCz7zXhGBFc
-         B0DVBXHJa4+53jh5QFX4i4PLwZHI8W141Dln8P9nKiy3023FRf4mrxpMXbzGzy/krB33
-         rmOg1LBe6Iuyub5Ic/VziCWE4bGNGiUeu1sAkucWTdrTwomxaINCD++ZjtU36e0qHNCu
-         erKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717437819; x=1718042619;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7TPkYuHgg+gLnBsrbKhRQC0OqluG4mID27p8/iWKRL4=;
-        b=igacPOTwqrCWP6XbWnWPKwdlPRX3TsLzfxTcmzLUkKYhDL13aSTE0/ICQFyQgOF/Vy
-         tqEzQybE6R6NuDUdk3bpx7+m9H/CQJBpFgBqQdf/cBXiMZ+wV5tliFfu9IHrq4WAi2Np
-         aVRJPu5oV0B1bz8VAV1GJzTm3m9pl5qDVqCkPdOj5wrJkPd4n0Q/hzVpFqoLcT6fNYta
-         7Jp6e6AllHEIhDK5RTETaaVawHDO2wBV3zL7bvn5C/Pva8CiJGgKqJ+rcayan+lizZ1v
-         kExCdQgDfej5i4sS4kAV6wJ0HloV6j/+ZVamk53aY/EeMdZthwtcJJbfd9LG/TZghM2h
-         Y4lg==
-X-Forwarded-Encrypted: i=1; AJvYcCWe3V1SlKgpmKoepNMN+VmeD6w2MNwHyFS8jfJr9AcbO4Bu8yxmmET7PdLYn93t+mf/En4fpee6VHDHv23N6Z5o0U8BCRvbG907s3gQ
-X-Gm-Message-State: AOJu0YwoRuAxgjFNa8ce6bQ1s4SugMXSezkh07/ODtOyWe580STcAYN1
-	pM0ZG/D1l+9tV74Ycl/9aUxieuArEqxFpWgYKGZnW1fO7YoJ+qJsWormThqK8oU=
-X-Google-Smtp-Source: AGHT+IF3e1jIAkkZakp9bDQCCh8sQNC6LAEwH/bHwmzy6c4E4ZcH5ahX5INbvrL04dlbGKPBJ578ZQ==
-X-Received: by 2002:a17:906:f8c4:b0:a59:e52b:39dc with SMTP id a640c23a62f3a-a682234b8d4mr621238766b.67.1717437818913;
-        Mon, 03 Jun 2024 11:03:38 -0700 (PDT)
-Received: from debian.fritz.box. (aftr-82-135-80-81.dynamic.mnet-online.de. [82.135.80.81])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b4b09cb9sm391917366b.178.2024.06.03.11.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 11:03:38 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: lucas.demarchi@intel.com,
-	ogabbay@kernel.org,
-	thomas.hellstrom@linux.intel.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] drm/xe/vm: Simplify if condition
-Date: Mon,  3 Jun 2024 20:00:07 +0200
-Message-Id: <20240603180005.191578-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VEsXIV2u"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 23CF940E016A;
+	Mon,  3 Jun 2024 18:04:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id II8VaZrWSY0M; Mon,  3 Jun 2024 18:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717437857; bh=1Wz3be5zoCCkseKFccounPGdkg1wa4c11aRuLRVcct8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VEsXIV2uc8AXhKfe1xqjW5vdvg+EuA8mkdYDyZVkWCsCIUmMZS5RQgB8s2SmMfXDk
+	 3cVsJ4Uiq0eNZkAkkH6jkvd8sbm90VL2UOQRrB5KBiJilh1dXGmVat4TnHTv0HS0Zn
+	 vJbbZtQaIKPjZ1LVrJznZm8jWxoUdDIFJulG8JpW/dqA7ryvlASHY8LL2j+ml5hdda
+	 GLQDRIei/130IYh52YjOAc0NA1w7etpO+qVMjEJOKai89OSAZSCeVahE+9ushd2pCz
+	 LgTOk4GErCw30HyoQWmOS/tErwxwhG3zxKKQBtO/ExveIjyquAMK5Y11If6AoTlOnQ
+	 VJEhSzl4DUdLrlHx5XlWZQgc/RsvOYqr3XjHovPCV3PcPFEYM9nSsqHGOjRYqYt54u
+	 WYqPEPQLo77VUeCgT4jb5uOLGB13gD7ryBEIKVJZMWRSZoe9ZVJ4G4lSzwXXEpzFBA
+	 HNbdx8QdL5hUdYoJ8tJTdBnRbLNI4F+ttVTuX4NClR/rJj6SuX7pm0AIOSdZpztIWX
+	 OHGVr0hFGPwob6Tgzhm9dXOlfETks/Iyq/osoezvv0lEaWouLp+AZPadB5cew3HVxJ
+	 86ZYC2yy68oQF4yHtCJXRejfZuEZzUcsayBh/tkowJRTMvUlE/x6/7Zxn5hyXsKrvF
+	 uMd04d1sUthvPkdkjza5OKjk=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 239E340E00C9;
+	Mon,  3 Jun 2024 18:04:10 +0000 (UTC)
+Date: Mon, 3 Jun 2024 20:04:09 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tony.luck@intel.com, x86@kernel.org, avadhut.naik@amd.com,
+	john.allen@amd.com
+Subject: Re: [PATCH 6/9] x86/mce: Unify AMD THR handler with MCA Polling
+Message-ID: <20240603180409.GPZl4FmUZhYJHmcj2I@fat_crate.local>
+References: <20240523155641.2805411-1-yazen.ghannam@amd.com>
+ <20240523155641.2805411-7-yazen.ghannam@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240523155641.2805411-7-yazen.ghannam@amd.com>
 
-The if condition !A || A && B can be simplified to !A || B.
+On Thu, May 23, 2024 at 10:56:38AM -0500, Yazen Ghannam wrote:
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 58b8efdcec0b..d6517b93c903 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -660,6 +660,12 @@ static noinstr void mce_read_aux(struct mce *m, int i)
+>  	}
+>  }
+>  
+> +static void reset_thr_limit(unsigned int bank)
+> +{
+> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
+> +		return amd_reset_thr_limit(bank);
+> +}
+> +
+>  DEFINE_PER_CPU(unsigned, mce_poll_count);
+>  
+>  static bool ser_log_poll_error(struct mce *m)
+> @@ -769,6 +775,8 @@ void machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+>  			mce_log(&m);
+>  
+>  clear_it:
+> +		reset_thr_limit(i);
 
-Fixes the following Coccinelle/coccicheck warning reported by
-excluded_middle.cocci:
+	if (mca_cfg.thresholding)
+		reset_thr_limit(i);
 
-	WARNING !A || A && B is equivalent to !A || B
+and then you don't have to do a vendor check but simply set
+mca_cfg.thresholding on AMD after having defined it in the patch.
 
-Compile-tested only.
+Thx.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/gpu/drm/xe/xe_vm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_vm.c b/drivers/gpu/drm/xe/xe_vm.c
-index 4aa3943e6f29..3137cbbaabde 100644
---- a/drivers/gpu/drm/xe/xe_vm.c
-+++ b/drivers/gpu/drm/xe/xe_vm.c
-@@ -85,8 +85,8 @@ static bool preempt_fences_waiting(struct xe_vm *vm)
- 
- 	list_for_each_entry(q, &vm->preempt.exec_queues, compute.link) {
- 		if (!q->compute.pfence ||
--		    (q->compute.pfence && test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
--						   &q->compute.pfence->flags))) {
-+		    test_bit(DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
-+			     &q->compute.pfence->flags)) {
- 			return true;
- 		}
- 	}
 -- 
-2.39.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
