@@ -1,131 +1,139 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA8E12C7F8
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602FC12E1C6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717420175; cv=none; b=UnAat8bysS3ntDiA77l4vyVV5/tFLDkLsSSeqb5wYYKWNhG6Ajgvz5C6dXNDwnBxm0dgHBXCC2DK3drbLd2G57XoaM3d+tHUMqIg1d7NmkXfsGHzTDj+Ktr4dulDSRjGEHK17o75l/3a+15hks2HIyhsr6ADkNypVXTqvy4kP5M=
+	t=1717420189; cv=none; b=mQxLM77yPN8o1E1E5tlKF9HLvISxMEV66rA2zUvNzL0IXzW/WefkrvUNIijXCKWKm1WzTWlC9PnTg49kS5otA7ZiCoB2dmqms3AnzZHH/M+0WysMHg1yU4ENjQDxNZAWfluTqPq8gSu+st2i3IFEhFnyiVrDFKvvmRD+qP4tVcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717420175; c=relaxed/simple;
-	bh=JrPkztMV1oVuJInQdJCGTwXrnR2sny7JLQNFMwZiGqI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZTI2PQj7v0Fli+J4J08yWqZo0w9Gs/WEXZlvh534PT13fB+7rPCcZnQD8wSF0qFCgKdiZ1oOCfiY1Pw34eYgu/twzneBtIaEFyQ5zIsC2sW5o7HJaaQbaA1JHFqvk2e6ilWn40zkUKvTaqE8xZUEYeTqlc94+QzlnuHK180RsWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=X42HGf6f; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1717420189; c=relaxed/simple;
+	bh=YhcdwzH90218JoOWdcc1NwAP0Li4AXv2Tb893sr7v9I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GNIjhjShwzbS4KajdZ+yoPMKYx4XI+g/1WaSFrDP0nfDjsf/nm5YM7TNE0CWaXwmZ3pb+G4IVpVXK+b/OP1i1qV4uCRuvLbYz80h5uZFiq2XGGyeTNm+B6x3QZLvhtaBaGD+HGzTZrJSikIE6D3b1Lu2RH334zfPfyPzAtfPtyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drm6WUCS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="X42HGf6f"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=yWPnlogaHh1JsL53cSK4pYNGOrysHKRUndRnVu5uc+I=; b=X42HGf6fDs6AH4hrcHpFTigVUQ
-	JXBhAayDNx6JW6H4at5aHlLCPGP2MEI3wn8YvMOR22uVY3txUxIyONQq+3lo5bM4LEufvzJFDou0y
-	hHfUeCp+m5gF44noUEln3sMNjCVmp+psws+7Kj4Oyk67j2ogboIp+dsBu032A/3lRmFE/fL/S/ara
-	lm+EZcywGMlgNi1IZbCoOahGx/vvZexFSH1JIkFnyIfv4ctDB5g9zQFc4LuZR56jcObETxzwNlUjv
-	0FfdJyNFZC/XPrfetYVV/t/C9tOSw3ZjS+kp2RIdegdi008Npw7a/hwaL/9NHz0PqBFIFoiq9eIj1
-	ygKxbjIg==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1sE7RG-000Jq5-Rc; Mon, 03 Jun 2024 15:09:23 +0200
-Received: from [185.17.218.86] (helo=localhost)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <esben@geanix.com>)
-	id 1sE7RD-000OBK-0M;
-	Mon, 03 Jun 2024 15:09:22 +0200
-From: Esben Haabendal <esben@geanix.com>
-Date: Mon, 03 Jun 2024 15:09:16 +0200
-Subject: [PATCH v2 2/2] mtd: spi-nor: macronix: enable quad/dual speed for
- mx25l3205d chips
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drm6WUCS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717420177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cXAmMQrgrXIFLyB/yIKENXCHvnmz0ML8IZSHNgowrl8=;
+	b=drm6WUCSFiAUQ/Yy/lMllPY2nvmPDWVFRy4cmi/kGzfJ7KSlGPk1jvbj8Hp/zAAmAd8tMD
+	cnPjIFsjzbsu2olvDBbySfP1Nv27ekhNgHA3CI5OjgbfMjdpXJKLBHs7CerldCm5yALepa
+	0xzsN3cSYqeoG9aLy+fsfW6NIXf+whY=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-5-AzBsRabIO4SWrz_DQFw8JA-1; Mon, 03 Jun 2024 09:05:32 -0400
+X-MC-Unique: AzBsRabIO4SWrz_DQFw8JA-1
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-43ff7b96a3fso33491541cf.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:05:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717419926; x=1718024726;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cXAmMQrgrXIFLyB/yIKENXCHvnmz0ML8IZSHNgowrl8=;
+        b=OcpZhrNOhWvhPd5BZ/5kHEl1cGq2kkse0fw3SM4e8HGd7CZBDpXcb/SH0rQrXeBsRV
+         zwOMm7ZLZL5JLAdrEVvzum4mMFyf4I2sp//5NTXJ1HKFSX0NBOmj3VB5wRf7Gv/po9CC
+         W9w5eyJus2M5bTsDd4TdzKdL8pmIaqipXAfE529BJbrtjTQuOEeYNtIVOL9K8RJYq5EM
+         3E62QenpqnKKfGH8bhAakkclBqG0iy8egg8uFa87VEePWvkYCjOH3fpoIDE1oDv0/sgp
+         KMOh92Dqgeyd8rl8iTjHsmrt/7dKQNk6R4/3DUNURBBYA5HBsKxCLuV7QvIpJ1CYj23J
+         w1Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWdd5iemjEeeU1ZweFg1V3oJwUM82RzM6zHNhYG8B3QKUlf0qvG8ssuDs+meXDjTvWKu0U9cEkOQ8NV7hfAihtU3TNHnnoyt9NHM2j
+X-Gm-Message-State: AOJu0YzTqy2TAk6lRPxLjgH8StJ9nAVRa01unNN1Lb6mSURroBLNPyDY
+	N/xpJ3DMEwC0yBJ/ZiT0qPrtLxfuRA//qK0EqvzeDP0uCxFrSwanhLZg95Ly6RF+aarkw1l600P
+	LNAr898DGQV4vhyLwfpG1KnzC8Yed/CxRITywCU7yiXaIA4nmc3JMGdiDxqirCA==
+X-Received: by 2002:a05:6214:3b87:b0:6af:b70d:55e9 with SMTP id 6a1803df08f44-6afb70d56b0mr37258186d6.42.1717419926036;
+        Mon, 03 Jun 2024 06:05:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHLGteIxc3SVsMMA5OIbdqpk/I/qYvB4QX9ht7y8iaF54/X1TCt3zDCTxhbKhkVly5RHbTheQ==
+X-Received: by 2002:a05:6214:3b87:b0:6af:b70d:55e9 with SMTP id 6a1803df08f44-6afb70d56b0mr37257636d6.42.1717419925390;
+        Mon, 03 Jun 2024 06:05:25 -0700 (PDT)
+Received: from rh.redhat.com (p200300c93f02d1004c157eb0f018dd01.dip0.t-ipconnect.de. [2003:c9:3f02:d100:4c15:7eb0:f018:dd01])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4b4179f4sm30558826d6.113.2024.06.03.06.05.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 06:05:25 -0700 (PDT)
+From: Sebastian Ott <sebott@redhat.com>
+To: linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Shaoqin Huang <shahuang@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>
+Subject: [PATCH v4 4/6] KVM: arm64: show writable masks for feature registers
+Date: Mon,  3 Jun 2024 15:05:05 +0200
+Message-ID: <20240603130507.17597-5-sebott@redhat.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240603130507.17597-1-sebott@redhat.com>
+References: <20240603130507.17597-1-sebott@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240603-macronix-mx25l3205d-fixups-v2-2-ff98da26835c@geanix.com>
-References: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
-In-Reply-To: <20240603-macronix-mx25l3205d-fixups-v2-0-ff98da26835c@geanix.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Rasmus Villemoes <rasmus.villemoes@prevas.dk>, 
- Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717420161; l=2314;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=JrPkztMV1oVuJInQdJCGTwXrnR2sny7JLQNFMwZiGqI=;
- b=r2twQhKkwoLRO9cMomnNAR7zW1jlOojkKaQjaxiKs/NC9BJ0HTW+Q9gAyyyswv9wpH1yGlWfo
- iSRfVKgPE95AD6kemUU69utK5WxyRHanyPX/DbQbDTmjjaq++aFWYDq
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27295/Mon Jun  3 10:28:26 2024)
+Content-Transfer-Encoding: 8bit
 
-Macronix engineers apparantly do not understand the purpose of having
-an ID actually identify the chip and its capabilities. Sigh.
+Instead of using ~0UL provide the actual writable mask for
+non-id feature registers in the output of the
+KVM_ARM_GET_REG_WRITABLE_MASKS ioctl.
 
-The original Macronix SPI NOR flash that identifies itself as 0xC22016
-with RDID was MX25L3205D. This chip does not support SFDP, but does
-support the 2READ command (1-2-2).
+This changes the mask for the CTR_EL0 and CLIDR_EL1 registers.
 
-When Macronix announced EoL for MX25L3205D, the recommended
-replacement part was MX25L3206E, which conveniently also identifies
-itself as 0xC22016. It does not support 2READ, but supports DREAD
-(1-1-2) instead, and supports SFDP for discovering this.
-
-When Macronix announced EoL for MX25L3206E, the recommended
-replacement part was MX25L3233F, which also identifies itself as
-0xC22016. It supports DREAD, 2READ, and the quad modes QREAD (1-1-4)
-and 4READ (1-4-4). This also support SFDP.
-
-So far, all of these chips have been handled the same way by the Linux
-driver. The SFDP information have not been read, and no dual and quad
-read modes have been enabled.
-
-The trouble begins when we want to enable the faster read modes. The
-RDID command only return the same 3 bytes for all 3 chips, so that
-doesn't really help.
-
-Instead, we can use the SPI_NOR_TRY_SFDP flag, which forces the spi-nor
-system to try using SFDP, but fallback to the parameters specified in
-struct flash_info.
-
-This way, boards using MX25L3205D will continue as before this change.
-That is without taking advantage of the 1-2-2 that it supports.
-
-For MX25L3206E and MX25L3233F, the SFDP parameters are used, and they will
-therefore be using the optimal dual or quad mode supported by the flash
-and the SPI controller it is attached to.
-
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: Sebastian Ott <sebott@redhat.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 ---
- drivers/mtd/spi-nor/macronix.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kvm/sys_regs.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index ea6be95e75a5..090f28e05a5d 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -61,7 +61,7 @@ static const struct flash_info macronix_nor_parts[] = {
- 		.id = SNOR_ID(0xc2, 0x20, 0x16),
- 		.name = "mx25l3205d",
- 		.size = SZ_4M,
--		.no_sfdp_flags = SECT_4K,
-+		.no_sfdp_flags = SECT_4K | SPI_NOR_TRY_SFDP,
- 	}, {
- 		.id = SNOR_ID(0xc2, 0x20, 0x17),
- 		.name = "mx25l6405d",
-
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 39057718fbcd..8008120d021b 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -2566,7 +2566,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 
+ 	{ SYS_DESC(SYS_CCSIDR_EL1), access_ccsidr },
+ 	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
+-	  .set_user = set_clidr },
++	  .set_user = set_clidr, .val = ~CLIDR_EL1_RES0 },
+ 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
+ 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
+ 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
+@@ -4125,20 +4125,11 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
+ 		if (!is_feature_id_reg(encoding) || !reg->set_user)
+ 			continue;
+ 
+-		/*
+-		 * For ID registers, we return the writable mask. Other feature
+-		 * registers return a full 64bit mask. That's not necessary
+-		 * compliant with a given revision of the architecture, but the
+-		 * RES0/RES1 definitions allow us to do that.
+-		 */
+-		if (is_vm_ftr_id_reg(encoding)) {
+-			if (!reg->val ||
+-			    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0()))
+-				continue;
+-			val = reg->val;
+-		} else {
+-			val = ~0UL;
++		if (!reg->val ||
++		    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0())) {
++			continue;
+ 		}
++		val = reg->val;
+ 
+ 		if (put_user(val, (masks + KVM_ARM_FEATURE_ID_RANGE_INDEX(encoding))))
+ 			return -EFAULT;
 -- 
-2.45.2
+2.42.0
 
