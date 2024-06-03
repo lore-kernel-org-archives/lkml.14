@@ -1,105 +1,83 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A203F13791A;
-	Mon,  3 Jun 2024 18:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799C21CD38;
+	Mon,  3 Jun 2024 18:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717439595; cv=none; b=Li7rn1V2PUTAR2qHLblcI13rf0SzQCc7vdP8VgrJFVTy6R7DK5JrebpUf0tEu/IoEfX/z9Y2GMpNjEvDPdf/gNL7H8B8W69bN3TZI5/SnBUh19icjvOQpaPqjjP4/4CHKBCADk7Prj4fmetREZIsUsBPG8+y72sZyhGaNiTAzpc=
+	t=1717439931; cv=none; b=mKl3BBh1VdY2WGkBkr7R4ctg1SrN8ToKZf2uE6hXH/OBqJ5uKMFLQeNO2bEPsNkyjYqCmaP8klUxX+Z6LF/FhxBJmGw+kFJeKaMKNb9oG4LqDNvCK6JzunhSnXIVWWr8edi1IhGcbyu9tejd7YTJrS5boyUPo0EVCZQqqYUr52o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717439595; c=relaxed/simple;
-	bh=z9OG0rGlDMMNgbj7ZWonTU7Gl7/Rke3ruI8BwO2c/Fg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=rhMzIcAWRJcaSyhDNvyd1rg3yv6OfftxSjnIZnfQAgo5Hd6STGyK+khaZcJaUig53BLjXzAK/BgugKzXea3GLvmywYqL2b3yXxmXk9ss4gtS8+Wb8ieQVZy3jsjhXlQ7mI1y1PcT8o+FUDhUkeIJ9fwIN7HAunUBmC5e3VhSmV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lGEtJFo+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717439931; c=relaxed/simple;
+	bh=4yr4QQIdurPtFUFFeSUfFHi9As9eyEuhMm4OE8L2If8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tziZvhpQdVHBJ47vZfJK1lgxBUusL/ZyTCg2d/aDRKUFl1me0kzcHgPoNkKV+iz2Khf1ohey51w3/0QyjUCpDkud8AZTmQWXytDYqMz7Swvfze7Eab6uAJKCCwpheAigQHLdfDZXuSbAmOegzuCjtKf4MAXgydyICQX5XcdwODg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9qUq3RU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lGEtJFo+"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453CUN2T029983;
-	Mon, 3 Jun 2024 18:33:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=H893BLcXtVS2grWRtE4rl+
-	b6Y75bt8k59HC6jwbX5Zo=; b=lGEtJFo+MqyLAd5E29hBYUKP3OBkqTwipSRqkL
-	WdixfPWTZu2fT98Plixhe5yX8lAQGNiVDQ4HsIwDT25XPmgYFqBNQH7ANDKA8Li6
-	yVFoL8n0rb/EV5Pkf+Lu8gaNVlWlgE3CHEFgVoMFHHfM3buCOvjqHJ4uFXgGWXUY
-	Y4Go8b4jEQH6qLgGJC9QWEfif9h/Ir28myWM+kpPG68jd7pKiwbQArRSD63b30Yn
-	gnqZ+ulfSpT65C4VGkIqdUlO8aQIu3JUd+NHDz+IY1/KqvqvHqJQdZ99Q4TjCUK7
-	oHVO2N05+gPgw+gt5kXzL5iieYK+gprraE6EGZpeD2/MGiJA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw7dmphf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 18:33:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453IX5cS013087
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 18:33:06 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 11:33:05 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 3 Jun 2024 11:33:05 -0700
-Subject: [PATCH] tlclk: add missing MODULE_DESCRIPTION() macro
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9qUq3RU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A2EC2BD10;
+	Mon,  3 Jun 2024 18:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717439931;
+	bh=4yr4QQIdurPtFUFFeSUfFHi9As9eyEuhMm4OE8L2If8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=k9qUq3RUnXeNwmd39li0X8sX8iIaEBGMYnwLDY+/SUQjYkJwi2TLwFlbH/YNw1IRn
+	 veSJEVOedXqtdx4Hahp8+rIxs17SqeGAYJg6dXZG4CJ10HPLQ4OQcNwZpKyKKMgOf2
+	 xuE3ZvWsqMSgjnODErzkQP0JFolRtCd6Mt3n3aedkTQLKK8OmxzPGdq7NupmlfaJ+x
+	 FYuc8jDOBRgl6BvEC8JGJ0z0QH7s0Nyp5qEAXPVkguGWpMcopCPO8lu2Ba0vA+Ya2T
+	 KX0e4lIckQ8QUvKWCC0pyoT1F0b/M2L4LXfpI9H50S2DpLy5uIkn4qv2Hjac3oZGlv
+	 PDck93zTcpAHg==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-250aa23752dso85965fac.3;
+        Mon, 03 Jun 2024 11:38:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV7QGTD+8e+/VZrAWwpXbpEozZTH8CuMurmcD6PH4BMkqQdSG+h5AVMZLS+cv6PIya/EY0tXFMKQ/WG2XXDFr0ylW+di/tAvTBgn3mPjM4U456OWCv7O+yD8IrRojmiJ++RUdjziZ8=
+X-Gm-Message-State: AOJu0YxKWZhqQb9wdNpYUVOgl9Wv4waXGj+nJmNUUod1kadlgh/BUWX3
+	4osoCTuh2w5xSChrfN1qX6T2JE2OresDa/IYDbL+cLfqZGStMFFuXoFg4HmDILeiJmrrGDASvMa
+	gGrLDQiDw/LsqBH+Ij01RUDKkZk4=
+X-Google-Smtp-Source: AGHT+IFXo2Sxmq6NGsIJL4TZKFcFTzyZ2geDQBH/dxhK1Kdg6g6/89vdmXluYReeqUcBM5Oj9uRcXgI7Y1ZlwKtwiFY=
+X-Received: by 2002:a05:6870:f145:b0:24f:bd2f:28d0 with SMTP id
+ 586e51a60fabf-2510281e316mr182471fac.0.1717439930125; Mon, 03 Jun 2024
+ 11:38:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240603-md-char-tlclk-v1-1-d395aa93da86@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAGAMXmYC/x3M0QqDMAyF4VeRXC/QqTjZq4xdpG2cYbUbqQ5Bf
- PdFLz8O59+gsAoXuFcbKP+kyCcbrpcKwkj5xSjRDLWrW9e5BqeINijOKaQ3Dn3nomuovfke7PN
- VHmQ9e4+n2VNh9Eo5jEclSV5WnKjMrLDvfxce9C5+AAAA
-To: Mark Gross <markgross@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Lxz82xNcl4tshzdlpPe2tHTNSD0mdjqv
-X-Proofpoint-GUID: Lxz82xNcl4tshzdlpPe2tHTNSD0mdjqv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 phishscore=0 adultscore=0
- clxscore=1011 bulkscore=0 priorityscore=1501 lowpriorityscore=0
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030151
+References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
+ <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de> <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
+ <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+In-Reply-To: <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Jun 2024 20:38:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+Message-ID: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+Subject: Re: Regression, thermal: core: battery reading wrong after wake from
+ S3 [Was: Bug Report according to thermal_core.c]
+To: "fhortner@yahoo.de" <fhortner@yahoo.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/tlclk.o
+On Thu, May 30, 2024 at 1:10=E2=80=AFPM fhortner@yahoo.de <fhortner@yahoo.d=
+e> wrote:
+>
+> Thanks Thorsten for the side note.
+>
+> I have compiled kernel 6.8.11 with reverted commit
+> 5a5efdaffda5d23717d9117cf36cda9eafcf2fae.
+>
+> Battery Status works fine now with reverted commit after S3 Sleep and
+> Wake cycles.
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+Well, the connection between the battery status and the resume of
+thermal zones is somewhat unclear to me at the moment.
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/char/tlclk.c | 1 +
- 1 file changed, 1 insertion(+)
+Most likely, the commit in question changes the timing of system
+resume which affects the battery behavior and it seems to be related
+to the EC somehow.
 
-diff --git a/drivers/char/tlclk.c b/drivers/char/tlclk.c
-index 896a3550fba9..377bebf6c925 100644
---- a/drivers/char/tlclk.c
-+++ b/drivers/char/tlclk.c
-@@ -47,6 +47,7 @@
- #include <linux/uaccess.h>
- 
- MODULE_AUTHOR("Sebastien Bouchard <sebastien.bouchard@ca.kontron.com>");
-+MODULE_DESCRIPTION("Telecom Clock driver for Intel NetStructure(tm) MPCBL0010");
- MODULE_LICENSE("GPL");
- 
- /*Hardware Reset of the PLL */
+Let's first see what thermal zones there are on your system, so please
+send the output of
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240603-md-char-tlclk-f860d03a47b8
-
+$ cat /sys/class/thermal/thermal_zone*/type
