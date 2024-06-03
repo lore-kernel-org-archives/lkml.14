@@ -1,229 +1,236 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EC44DA06
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 07:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717401150; cv=none; b=jgA1XG8NPe8N6ePL3QwuFqk2IfcV6u+r1THws7MgYKV6CUyxdUfcdJ+RZ9YvCIRql+5DLEHZvRGqWFr+Wb5V8C0XpFN1Njctwx+28b9tVLSpg/0mTmx3ro2kH+hqfKwzPtAWwH9tCntJJpxlpGg1+k/jtBwSc0DaXEhzhHf8dyI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717401150; c=relaxed/simple;
-	bh=EasYFqeOqEz2XMj0eBIehUFvDd/gDZ6qmd6Ory/qY48=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cHKxBFgRwFDiMlDTas3cxYdBJSY8m9YX/XNWPp5u/mzDqkI7AAoSXDQtcB2s5FXSXnEz2RrMHqe70AXpk8Zy1pYrdlcL7PmGYFbspVN8sfnlfj1dJFzGk2EolEDq/Bwzj6mwD8Auu/h4qjb7DRXQjN2tDH0Jgl6EIlOUeVxk4qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jqJ2WTOn; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730C76BB4E;
+	Mon,  3 Jun 2024 07:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717401183; cv=fail; b=scXa6NFETKPWsicjk7MmalGRMM+TRYSmyX7vE70uwM4SRNxlH09LB93LacC9OiwtIOUel0SxjOH/wWpPRWetQj+iWeMgkgJ4/dGy5V30ZShH8WkwfvZoGrYec1++YUqpU79yfVuLvTnRxW/0Yf/KJ1SC9k4wKg/tMSaWMepOh84=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717401183; c=relaxed/simple;
+	bh=s9c8o07BOeQzgsdd+8w/4cFojNUt++pEWrTBO53fpZE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tbT8f/0bT2KbQ555r/vMZQMwoZhOqVtY1t/OfVPSBcyq46G0FTZVyaK6ouMbRelAgKHgOtO3gaCzABTM099W5glYKZbFGfXpzsyGlDXgtv8J4DKZwHb4gcw5BOjj13sepqwlo5sSJ+KgE47slA+oqZ33ojyXWHy7cgV05E4cFyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MjH12fu8; arc=fail smtp.client-ip=40.107.243.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jqJ2WTOn"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-627ea4e0becso38553827b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 00:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717401147; x=1718005947; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RMbAbJUJRVwX4BQuP5CnsSXY8BFtWrQGAFlKLZmvST0=;
-        b=jqJ2WTOnVPYt9eQfUDTzq6Z12zflO5w+Ke56VBU8uviSWmrZx7h/xwqEbiTCQ05rqG
-         A62tQI+2p3eFDgXpJ4yBcG9cW8DkY/6el28zCkZuyaBNfiKpYNQ3jJC6J5ISag0ivNes
-         9g94Z1cskILe6THjxKvlX6ZXQgRfgNSe13IeO2/5pPNYnMi+LmNqtyiIsyjV3TJrMZs/
-         XHEJcMChm6aWy/CEpHXlK2q3aQ+bHYZ5XgqQOMsRfXIoC498yVeszSre8La96zMqiE2d
-         FxMBBHW18JWQX1en+FdLlkxRRUopfK+5HpHpFWuw+RMOaIsjro0Nc9WxAgXi0/3fysft
-         qFVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717401147; x=1718005947;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RMbAbJUJRVwX4BQuP5CnsSXY8BFtWrQGAFlKLZmvST0=;
-        b=QcVy0l6WA9ycLcQ8/YbQRGL1M5d/5yogcN4C5ubeAkWg9X5NDp1nBmNADUcarQGAqd
-         xcdelc9EtIfCo3846I8UqSZn7SkRRPxocDjDb/Yh150JvDvZts6H1Y7sC5T4S77P/fKp
-         QX1+wsV2PTZMH4RNSWux6yibgNPDWe6a1ffnlG9/7HNGQNCWFAee8TgKwSZ3GTF1CQ1U
-         KPzLvE3OoC7z09gWrcx/bu7YiW7wsY6hS2z8ACPtnqS5sPW99ycbBv6/z+znD1Xx2+Vp
-         yVSi5ADLusm6cAE4SxechmxT4QPHFaTXZ3gLPMKRf1zxWKa3UE/WH6Ek4LmsdaA7Asyx
-         eacA==
-X-Forwarded-Encrypted: i=1; AJvYcCUs/AadTv7ntKzsQWoph7Eb18crP/+bRcvjJj/e6LFyr+WIch3t1GMU22q2tKmpubg/3+T6rLdCx/7QKFusDeqegra1XObreO3oeGcY
-X-Gm-Message-State: AOJu0YwUrJCJ0hKVlJ2U0CCckxlkHwTilm450KeqRb4LamSs/dzOvgDB
-	jpruoe8lMlpwpwe6WO9dbWLK86X4K8C0xDKg8u8PIoTtNjM0lRKMC9iTm3lweH6zCav2s6ianrT
-	p3nX+CFu1VJVyp8TBj7LEM6cDAKyH1yukqFYJkQ==
-X-Google-Smtp-Source: AGHT+IFlOZnjvHXI27nltZLKKPabNPuVcaQaCuOztS1tt22EDADTyNFLd9Mut2KnQUbH8mNQ0TOnrISHuT8xGerJKjA=
-X-Received: by 2002:a25:d3d3:0:b0:dcd:19ba:10df with SMTP id
- 3f1490d57ef6-dfa73dbc904mr7760984276.56.1717401146985; Mon, 03 Jun 2024
- 00:52:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MjH12fu8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MW7kjG5dBaH9FTCg9CBtr8RsZeo37R2tXOZmysVpAzDHLZm7llCZgsGk+v1WJSHsgUgaGi7wjRthH0VESecrzrXrtXMcBPigq6aXVBKOjUlxlGLdxJ2K7yH9+//cNHWMJV1Mc/bRpdhLS+hfhlmxwyPF6MLYzmMsbdMmgZpufYoqeFPcURzlcyx71rNhxCUFcsV8XbQEASnOQd6FdWwA/76t+ZRaCPC9VjgArKfTjCLQ2ODPovwMzoL3WIwZ1jjnqe+JflJ21AOGAIcUvgIqS3QSbN/9yZxZDdkQ13zOMkjyeOSQdC9R4j7ZoUQIfrs0zoead1CXXw7St+9qR+e2Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hGSPdTuE87TTSvIOBV26ElmtH7B+kkWNajplHI+HIpU=;
+ b=LydB/PHl9Uig5CzrXeSMZs0xPL7LkloRDRlhvwcYO6sWB3CjaGCeDj3OfZ0izpuKta4HpOPX2CmiUWloe3eCVtQy+11jXYXBpYFC1haFIySnQMJrQlE+4ZqS2oG66yMCUQKVFG4f+XddCjVU2JG0fJ3mn5umEQUAgnQasYFRdMs2ZqtrMIvZ0oNQWOQttUx2z/su3vYrSlqtUCWSfHafwKBTxxtPJxA68IrdulGAKWSWihLTrYh4W97LsRYutHP759oVakDDakpbb5RPkWpiyuclbmrR9xAbFGlL1VEFTVT24sl43RFxwdthwfkFTqI34JbptIbSaS317grcRYg4iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hGSPdTuE87TTSvIOBV26ElmtH7B+kkWNajplHI+HIpU=;
+ b=MjH12fu8jQdZYlKvn1fZZA9wspzqtGAmVzctlV65bKV2tiCszQRFlPlQaiwHrY/EGds1hWMbi3eYIzD/rIe4Vb+5OKM8q4SRye3HXOfrTsjevs1Atnz653Pz1PcwcvHSfuKfBlQNDpvuRO1z7Y2tmWHyudGUk6V7CZxU2SC29HNnEMK79EB5sm0yYc8KbOoVaK+BM8qilqqSsTfXUJkJ9UBSf/QIHy4Yy7/ziQAJr7XG5AYLnaiuU6qjBhC2XRpV0bzVjgF01pRnNyAl01dNDNk1yS5GAn3ymYBZq3ADMrTJHNZc0+zc0cEoPSY3uqN6WYDNu4GbVKich4KT8UVr/g==
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com (2603:10b6:510:1c1::18)
+ by SA0PR12MB4432.namprd12.prod.outlook.com (2603:10b6:806:98::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
+ 2024 07:52:58 +0000
+Received: from PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::780:77f6:e0af:5b5c]) by PH8PR12MB6674.namprd12.prod.outlook.com
+ ([fe80::780:77f6:e0af:5b5c%5]) with mapi id 15.20.7611.025; Mon, 3 Jun 2024
+ 07:52:58 +0000
+From: Vidya Sagar <vidyas@nvidia.com>
+To: Vidya Sagar <vidyas@nvidia.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "will@kernel.org" <will@kernel.org>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+	<kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, "frowand.list@gmail.com"
+	<frowand.list@gmail.com>
+CC: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Jon Hunter
+	<jonathanh@nvidia.com>, Krishna Thota <kthota@nvidia.com>, Manikanta
+ Maddireddy <mmaddireddy@nvidia.com>, "sagar.tv@gmail.com"
+	<sagar.tv@gmail.com>
+Subject: RE: [PATCH V7 0/4] PCI: Add support for preserving boot configuration
+Thread-Topic: [PATCH V7 0/4] PCI: Add support for preserving boot
+ configuration
+Thread-Index: AQHaoW8O6T9QgBu4DUGMsjcflgWlrrGa9G9ggBrenNA=
+Date: Mon, 3 Jun 2024 07:52:58 +0000
+Message-ID:
+ <PH8PR12MB66741EEDF5CEF80F44973A02B8FF2@PH8PR12MB6674.namprd12.prod.outlook.com>
+References: <20240508174138.3630283-1-vidyas@nvidia.com>
+ <PH8PR12MB667485001077FF106E728320B8EE2@PH8PR12MB6674.namprd12.prod.outlook.com>
+In-Reply-To:
+ <PH8PR12MB667485001077FF106E728320B8EE2@PH8PR12MB6674.namprd12.prod.outlook.com>
+Accept-Language: en-US, en-IN
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH8PR12MB6674:EE_|SA0PR12MB4432:EE_
+x-ms-office365-filtering-correlation-id: a395bde8-a53f-4616-287f-08dc83a22fa5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230031|366007|1800799015|7416005|376005|38070700009;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?UpNxaTrtPvMrC8y6nFg7NpYEUFm8tpVhUxTdIVSIpsS82KkbeviiR6VeFDad?=
+ =?us-ascii?Q?4QLBz+JE2nbC8+2XYQQtVCtMe3e08wrhubOq5QhqTlFFFMncY0JiBv5fFrZx?=
+ =?us-ascii?Q?MXoF7GDnkLq9a+4nNA4iZH6NwrIkLv75y3jRYuaXtCG9TYg9vdSY2GDilewT?=
+ =?us-ascii?Q?jUBr/Lh30Tsg5ruyZ6rj+0qM+Rozh8lrK2OsFgyZsnwM850JE9jx6GaXS0aQ?=
+ =?us-ascii?Q?cFpMRaHYSpuegNzuDYfx7/fbL7aw9yV2WwqSUyV2iHYwsnCdQhWx70iMxBDK?=
+ =?us-ascii?Q?Hg613weAaBmxM3ATV7uCwdCPn72GHV6DZgZ5oR2VDGoDGWufOW/2NZtWjsRp?=
+ =?us-ascii?Q?ZLeBk/hvB+G3Zy5enZCIf1TL4ER3z43U/7JT01GV4Qj/DkxUrdvrXFtwh+Qm?=
+ =?us-ascii?Q?bIV8TiQ8ii4EVnRTbNqKqct2bZUvL162MeNfsE7qGXrLr7pd9ztu0M/NWS28?=
+ =?us-ascii?Q?pCFppTtVtaUFVQgQuzCO7BlHi4mzBXkHFEe2kfmo4thb5C9lUy91MTBPnwbg?=
+ =?us-ascii?Q?1WNhrriT7Zpvf0hU79TbGPnjA3h+gpP8Db8T7wdX/jP/zXhvXKLexwv0DPW4?=
+ =?us-ascii?Q?/hcPn6i4Qa4Ws1RUiUiFjWNfR5pnSqxJXXJw88LjVGYwPs3gbEDHSY8ry1MR?=
+ =?us-ascii?Q?wvo7l3LmQuOtOBt9e4dZ/BZetoHdttEZg1+8JYNzPTpZx2pPE3MKg27FfxtX?=
+ =?us-ascii?Q?wyYvB4xs2H3FEBKV+hJZFXJoReMk4C2KQ/9owx9vpPYoyuIcC3F9MenGJ/Re?=
+ =?us-ascii?Q?zOzssBksWq4RIlW4HJ0mHVfRbVsBosUNxNtJydKNQB4XiABKTiuKsSBQwRxi?=
+ =?us-ascii?Q?M76XLtPHj3x/RIDqwp1/W4RKKSz2DBW3VPRCXhMlY8u6TdyXUWRJ5SSQMaRg?=
+ =?us-ascii?Q?phhYd4Hu6NWShfhAUw5WOxcTMUmFnLsPyIOtMyUFFGGkU06ClrhLE6GM3Ava?=
+ =?us-ascii?Q?VwMci+Wkbv1gL08xoTvHSqMs7QOLGpZeF8J9fOToO8TRRz5uJIEEsllebN61?=
+ =?us-ascii?Q?XE8qxvTmkG+TKZEOFSdRg0hDXMrmRFOArzx0jIrUSrw6uHdg9ojynoTfStvc?=
+ =?us-ascii?Q?bO6MmOGZx7jNQ/MrAMePQ2Oo3cS2KpNgRmEXyd8lMWA+LymT7XywGRcrkQcC?=
+ =?us-ascii?Q?JmHFq4bosiS3TIYZIO8Xnt6HJH+Zgnq9ALDial5fvV4ntE9PTU6iqROiKazt?=
+ =?us-ascii?Q?KZ9PdfVpiWL60YyFlTiKPmTIQ5cmMmGHghJ6lF2LL2tr2CnwVi3DzxCwKlQa?=
+ =?us-ascii?Q?jsQUzjauybsd9RArNfoB+cBTOT5qJYLys5iJPvrVLi0yd8ioEdiKR2lkUu5g?=
+ =?us-ascii?Q?CUEUzUN068heQCP7cwx+7Xu39B++9IEBUnv+MMrKbhaV7w=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6674.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?lekQr3ysjubWA3u1rcYq3ySn3DCFPsO7Gh0KGauDRtJQI1WEjAqa6RqBfj/e?=
+ =?us-ascii?Q?KyzEItWNi4+u/ixFFoxMz90Chpq/iAVCGlAmbr0AFRYjsBUjargQYC160uEz?=
+ =?us-ascii?Q?vKIsZcFU1FBL7BqMQ9MVTdYRDIZ7ynvvteSxRUqJB7OuMbDp+99wqUiA8Oqt?=
+ =?us-ascii?Q?uddE+QrozEkJPN8rnGmN8NdL2Ml/1SrKDb4rENIi7TmjNkOFnc1aYQlb0XQj?=
+ =?us-ascii?Q?rTj49oy6yN58iqd94J0nIXMWFH73Q6fnCbU3PW/OvOPpvo4BUabo+ObdjlyF?=
+ =?us-ascii?Q?f46USfsM5i6ehZ0oOz5qQI8CSQIU4iZT2xIgSkY+Xcu72Qv8yBFYYDoWWAHy?=
+ =?us-ascii?Q?WPTr2Gag6hIiZ+6qN2SN3Ax6wE4oLgQoFZwmFaS2eUz1Fu9X6y/wG5ZGAnfp?=
+ =?us-ascii?Q?HvDGspVI9YHaQX/HtdtzaXCrPdItlhPBVVfchl3JXhDDPeCJ4PEPLYPthulq?=
+ =?us-ascii?Q?I3YybouJNnESF6kl5VNds7PRNF5rIaNFBucoDuNb0Cx3wmBifShHZ57mnMFK?=
+ =?us-ascii?Q?XT24yclhwIXIKdzCMNUeNM3J9IUYM91hoWUV2dhV3so+TAUSx1L0F75oUxf0?=
+ =?us-ascii?Q?HLxozKd8rkRjfQ6FKBqpVdbC7Tr3ns+by0Kr3PpOh1U6H1kFZNalpT//Yt9k?=
+ =?us-ascii?Q?Tig1kSaMYE3XYaPOi3MzmBIWBiLs6TWuTgYgMU7oxqySiIAsjNfduCQDepuB?=
+ =?us-ascii?Q?B9Q4WIUezVh9bVAWP10gAeiBRRKVnCTlNYKFJKbxd/xGgngmS9whpSeVvOKW?=
+ =?us-ascii?Q?I/9fJN+k+2rKr3zjLcJa0In1TBU3Q9c6VtxrIedD8fRhQqOYMNSNxoW/jZQd?=
+ =?us-ascii?Q?23f2c5ObFIM3Knf5j5zM8bEC2HWiSaP0yvS2h+m+XZj1cH9c+6b+qSkTHDdd?=
+ =?us-ascii?Q?afJeQbjs3TFuRudfWw4/dsK5Qy69WACuItvHRJCOWlFoH/GnA8FHFF1Cia48?=
+ =?us-ascii?Q?eAtHoP0AWzZMRabnNJ6g6y5T0ewRabaq44JiwVSDX+zG7h1myG8jlJLSf+ip?=
+ =?us-ascii?Q?105r+jISwkevDujgxgMkYREm0tBkH6HdAW9Sx2hA4dt6hGqMK7teCtr1VLN+?=
+ =?us-ascii?Q?NohvnpDI7XIgH2ekkrOl6/t23kPD74PfWiOcytMZ+DYQkWXPPorV7ARyZc28?=
+ =?us-ascii?Q?RBpg91glX34xnkQe+0iygDx0xOutZ23pGXhp9Co7Fvlc1xXcjC4ZcNiTYGFV?=
+ =?us-ascii?Q?+QHhwbhblmBlyKlEmW8n8BJk5hzUgynTXFTU+Dg26DQwZbgCQyAmXx+k7Z9s?=
+ =?us-ascii?Q?HXNrawm7mGFHN/FGllnOCfWuylhvDKCV9MzmOo8bPkgbnFosQjtWhqtolOl9?=
+ =?us-ascii?Q?Poeybh2j9jas7C4b+S8JYcH5uhYaxWexxRq4jum2/3swp7GHscXBHOG80uQH?=
+ =?us-ascii?Q?wN15fWIzc65GcklZyeT0LuzhVU14zDn2rk071gYSysJdYVC3pAMgiKgwtMCf?=
+ =?us-ascii?Q?h088V1V0svCdx1p6ja6XIKFOnzLBQ9zwD33nFGDk3wUaESP+W0IX+Xjm7yUr?=
+ =?us-ascii?Q?wMlh5IHtYmr4ICE3M9ksXw/pmwshEV6i93PPCSLxeBGph4nM8nx96aXLFUi1?=
+ =?us-ascii?Q?YxMkPmuy6i4Ls8fGoqE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529100926.3166325-1-quic_tengfan@quicinc.com>
- <20240529100926.3166325-5-quic_tengfan@quicinc.com> <s5gt3p6zsd5ebrkop4dhd33tykln33f6ahu3pibymecxsmakyd@lg5wfgec6dat>
- <205de8b7-507f-45c9-83ce-6eceb1466cb2@quicinc.com> <CAA8EJpqFq=6YFcUpjdkKikN54iQ76i8Rk_z+mLH1Tt0zFFmciQ@mail.gmail.com>
- <89c5c663-df8a-43d4-91b3-0a84b0c9a324@quicinc.com>
-In-Reply-To: <89c5c663-df8a-43d4-91b3-0a84b0c9a324@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 3 Jun 2024 10:52:13 +0300
-Message-ID: <CAA8EJpoBi+iWeZz3JLQkRXCTP-9xnCV1hGAGr8J37W=GUd5CPw@mail.gmail.com>
-Subject: Re: [PATCH v9 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com, 
-	Qiang Yu <quic_qianyu@quicinc.com>, Ziyue Zhang <quic_ziyuzhan@quicinc.com>, 
-	quic_chenlei@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6674.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a395bde8-a53f-4616-287f-08dc83a22fa5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2024 07:52:58.6617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CaoCJCkFTDgBRhmdbMIaBlEyySBemH0+Q76jSvfBwpMdkkRbrFWKWsJXgQQ44zaTlKXR4T3k6xIG8cGf0j8gww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4432
 
-On Mon, 3 Jun 2024 at 10:38, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
->
->
->
-> On 5/31/2024 4:38 PM, Dmitry Baryshkov wrote:
-> > On Fri, 31 May 2024 at 11:35, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
-> >>
-> >>
-> >>
-> >> On 5/29/2024 11:18 PM, Dmitry Baryshkov wrote:
-> >>> On Wed, May 29, 2024 at 06:09:26PM +0800, Tengfei Fan wrote:
-> >>>> Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
-> >>>> I2C functions support.
-> >>>> Here is a diagram of AIM300 AIoT Carrie Board and SoM
-> >>>>    +--------------------------------------------------+
-> >>>>    |             AIM300 AIOT Carrier Board            |
-> >>>>    |                                                  |
-> >>>>    |           +-----------------+                    |
-> >>>>    |power----->| Fixed regulator |---------+          |
-> >>>>    |           +-----------------+         |          |
-> >>>>    |                                       |          |
-> >>>>    |                                       v VPH_PWR  |
-> >>>>    | +----------------------------------------------+ |
-> >>>>    | |                          AIM300 SOM |        | |
-> >>>>    | |                                     |VPH_PWR | |
-> >>>>    | |                                     v        | |
-> >>>>    | |   +-------+       +--------+     +------+    | |
-> >>>>    | |   | UFS   |       | QCS8550|     |PMIC  |    | |
-> >>>>    | |   +-------+       +--------+     +------+    | |
-> >>>>    | |                                              | |
-> >>>>    | +----------------------------------------------+ |
-> >>>>    |                                                  |
-> >>>>    |                    +----+          +------+      |
-> >>>>    |                    |USB |          | UART |      |
-> >>>>    |                    +----+          +------+      |
-> >>>>    +--------------------------------------------------+
-> >>>>
-> >>>> Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
-> >>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> >>>> Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> >>>> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> >>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> >>>> ---
-> >>>>    arch/arm64/boot/dts/qcom/Makefile             |   1 +
-> >>>>    .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 322 ++++++++++++++++++
-> >>>>    2 files changed, 323 insertions(+)
-> >>>>    create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
-> >>>
-> >>> [trimmed]
-> >>>
-> >>>> +&remoteproc_adsp {
-> >>>> +    firmware-name = "qcom/qcs8550/adsp.mbn",
-> >>>> +                    "qcom/qcs8550/adsp_dtbs.elf";
-> >>>
-> >>> Please excuse me, I think I missed those on the previous run.
-> >>>
-> >>> adsp_dtb.mbn
-> >>
-> >> Currently, waht we have released is adsp_dtbs.elf. If we modify it to
-> >> adsp_dtb.mbn, it may cause the ADSP functionality can not boot normally.
+Hi Bjorn,
+Sorry to bug you.
+Please let me know if you need more information for this series.
+
+Thanks,
+Vidya Sagar
+
+> -----Original Message-----
+> From: Vidya Sagar <vidyas@nvidia.com>
+> Sent: Friday, May 17, 2024 11:05 AM
+> To: bhelgaas@google.com; rafael@kernel.org; lenb@kernel.org; will@kernel.=
+org;
+> lpieralisi@kernel.org; kw@linux.com; robh@kernel.org; frowand.list@gmail.=
+com
+> Cc: linux-pci@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; Thierry Reding <treding@nvidia.com>; Jon Hunt=
+er
+> <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>; Manikanta
+> Maddireddy <mmaddireddy@nvidia.com>; sagar.tv@gmail.com
+> Subject: RE: [PATCH V7 0/4] PCI: Add support for preserving boot configur=
+ation
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> Hi Bjorn,
+> Thanks for reviewing and refactoring V6 patch.
+> Could you please review this V7 series as well?
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+> > -----Original Message-----
+> > From: Vidya Sagar <vidyas@nvidia.com>
+> > Sent: Wednesday, May 8, 2024 11:12 PM
+> > To: bhelgaas@google.com; rafael@kernel.org; lenb@kernel.org;
+> > will@kernel.org; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > frowand.list@gmail.com
+> > Cc: linux-pci@vger.kernel.org; linux-acpi@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; Thierry Reding <treding@nvidia.com>; Jon
+> > Hunter <jonathanh@nvidia.com>; Krishna Thota <kthota@nvidia.com>;
+> > Manikanta Maddireddy <mmaddireddy@nvidia.com>; Vidya Sagar
+> > <vidyas@nvidia.com>; sagar.tv@gmail.com
+> > Subject: [PATCH V7 0/4] PCI: Add support for preserving boot
+> > configuration
 > >
-> > Released where? linux-firmware doesn't have such a file. And the modem
-> > partition most likely has a different path for it anyway.
->
-> Firmware releases can be obtained from
-> https://qpm-git.qualcomm.com/home2/git/qualcomm/qualcomm-linux-spf-1-0_test_device_public.git
-> after users sign up for free accounts on both
-> https://qpm-git.qualcomm.com and https://chipmaster2.qti.qualcomm.com.
-
-I'm getting 403 when accessing qpm-git (both with my Linaro
-credentials and with gmail ones).
-If I try to git-clone the URL you've provided, I'm getting "Not found"
-when using a gmail account and CURL error when using Linaro
-createntials.
-
-error: RPC failed; HTTP 302 curl 22 The requested URL returned error: 302
-
-Not to mention that the URL wasn't mentioned anywhere beforehand. So I
-can hardly call that 'released'
-
->
+> > Add support for preserving the boot configuration done by the platform
+> > firmware per host bridge basis, based on the presence of
+> > 'linux,pci-probe-only' property in the respective PCI host bridge
+> > device-tree node. It also unifies the ACPI and DT based boot flows in t=
+his regard.
 > >
-> >>
-> >>>
-> >>>> +    status = "okay";
-> >>>> +};
-> >>>> +
-> >>>> +&remoteproc_cdsp {
-> >>>> +    firmware-name = "qcom/qcs8550/cdsp.mbn",
-> >>>> +                    "qcom/qcs8550/cdsp_dtbs.elf";
-> >>>
-> >>> cdsp_dtb.mbn
-> >>
-> >> CDSP also as above ADSP.
-> >>
-> >>>
+> > This patch series is a complete version of the incomplete series (
+> > https://lore.kernel.org/linux-pci/20240421190914.374399-1-
+> > helgaas@kernel.org/ ) posted by Bjorn which in turn was an attempted
+> > split work of the single V6 patch ( https://lore.kernel.org/linux-
+> > pci/20240418174043.3750240-1-vidyas@nvidia.com/ ) posted by me.
 > >
-> >>>> +
-> >>>> +    te_active: te-active-state {
-> >>>> +            pins = "gpio86";
-> >>>> +            function = "mdp_vsync";
-> >>>> +            drive-strength = <2>;
-> >>>> +            bias-pull-down;
-> >>>> +    };
-> >>>> +
-> >>>> +    te_suspend: te-suspend-state {
-> >>>> +            pins = "gpio86"
-> >>>> +            function = "mdp_vsync";
-> >>>> +            drive-strength = <2>;
-> >>>> +            bias-pull-down;
-> >>>> +    };
-> >>>
-> >>> What is the difference between these two?
-> >>
-> >> TE pin needs to be pulled down for both active and suspend states. There
-> >> is no difference.
+> > Vidya Sagar (4):
+> >   PCI: Move PRESERVE_BOOT_CONFIG _DSM evaluation to
+> >     pci_register_host_bridge()
+> >   PCI: of: Add of_pci_preserve_config() for per-host bridge support
+> >   PCI: Unify ACPI and DT 'preserve config' support
+> >   PCI: Use preserve_config in place of pci_flags
 > >
-> > So why do you need two different states for it?
->
-> Dividing into two different states can provide a clearer expression of
-> whether the corresponging functionality is avtive or suspend.
-
-How?
-
->
-> We can also find similar settings in the other SM8550 and SM8650
-> platform dts files, such as sm8550-qrd.dts and sm8650-qrd.dts.
-
-Which means more items to cleanup.
-
-See the discussion starting from
-https://lore.kernel.org/linux-arm-msm/36f22383-79a3-427e-bf17-35ce2e1dd620@linaro.org/
-
->
-> [1] sm8550-qrd.dts:
-> https://elixir.bootlin.com/linux/v6.9.3/source/arch/arm64/boot/dts/qcom/sm8550-qrd.dts#L1052
->
-> [2] sm8650-qrd.dts:
-> https://elixir.bootlin.com/linux/v6.9.3/source/arch/arm64/boot/dts/qcom/sm8650-qrd.dts#L1098
->
+> >  drivers/acpi/pci_root.c                  | 12 ------
+> >  drivers/pci/controller/pci-host-common.c |  4 --
+> >  drivers/pci/of.c                         | 54 +++++++++++++++++++-----
+> >  drivers/pci/pci-acpi.c                   | 22 ++++++++++
+> >  drivers/pci/pci.h                        | 12 ++++++
+> >  drivers/pci/probe.c                      | 34 ++++++++++-----
+> >  6 files changed, 101 insertions(+), 37 deletions(-)
 > >
-> >
-> >
-> >
-> >
->
-> --
-> Thx and BRs,
-> Tengfei Fan
+> > --
+> > 2.25.1
+>=20
 
-
-
--- 
-With best wishes
-Dmitry
