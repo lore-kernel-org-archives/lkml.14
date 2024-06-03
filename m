@@ -1,168 +1,87 @@
-Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C4184DF3
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7948B667;
+	Mon,  3 Jun 2024 09:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407483; cv=none; b=KPfEN646gx5q9zoBxaZmTez4Fp3gf2pjwxo1CL1IG7OLHGYTDe8UmL2fyIF2/vZfRG17Tp4Klgbrv+RARcgqfLOM+SKigTDDcAwEMaQMgCmvjzd1J1/Z2jzE/jVGUzKHv+mUtQiObbj16yCCaN4/r4Tcco/qai83ZmIaxC4NNy8=
+	t=1717407503; cv=none; b=W2xabk+ESShePnQVum+2UtgtYXabC6N6Bmx8ZJbIZ43HTHaETcmJZRZYpuelHJwicWyiqkHiEquvePZ9ri2a97yXuSuBlnZ+17r2koCA4UL0wA3cZC0LCnC+1VaG7SJSWXPBArksloSeOMkHSKGObJzJSF6iXHnSS6M5ZxOAR6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407483; c=relaxed/simple;
-	bh=h7pvcv2wUIwxg5FjjMtUOu3oVIVM6kON7vpUPbXH9iw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R4fc5N2VA41E3FVf77NtnfyOP+5E0LMN/uEedkBhWWV6cBcanggYaAPmipyl+1dw0xLt6eqrbgfch2blXbOFJmAsNCd9S3ta+HnHQxf/tUsgJvAm8lBrNuYrri4u+SepBMIZuQHl8EL6VMv3W9WDHJMqD7KPpixyg5jg/Y235y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B+wObRyz; arc=none smtp.client-ip=209.85.218.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717407503; c=relaxed/simple;
+	bh=nsLDjTZTaB6IlVf1YN+Z1Ok82/GbhJFUrL0xBcqN0mA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uADUAhITw3PJJP0CnxXmboeRGAEvdXfEHlBxjMB8M3qNC0+HqQRU8DwgpD3SNoZ/hUY+jk4p87RvowI8WfZVPMACJ01yluB85kPLWllAXktURPUihBCLM4oVYmMMQt1A4rDQ968cw+cgKLQuSxueVIDuk7AzoUSs6Q69UqUzDRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ByhlWGRI; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+wObRyz"
-Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-a62ef52e837so535921566b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 02:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717407479; x=1718012279; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g9d+5H25Ten2eOIeRZkbLmX7bV0HE+CLqvNWqi7UnNQ=;
-        b=B+wObRyz2sfwjbGrXQ+BiofClza+p1fh9A3FQglgo8AhSJiylrX8RZh+I4AF/SxuOy
-         AQ3Vyk2aeNkiHQ3xg4SWpjg+XKpXw3r3HzmUwVOjpoCdlNJta1oZfnerOwMlbUsDsJtt
-         4467p6LHJ+ShWwVm0x8McsO9VfLp7cW78G8wRE68TMR91azeX0cJXhUmb8X1St+sT6vy
-         IC7WHCLJ/utGfbtL7uZ5cbJvf9SgSNLEPMrFmJ9wCltw5565fXf1o2jM6MnWdcvWN6g2
-         r5tGIe6tJxyEgULLtepYvr1r31H+iHuLJkRpxBonwcOhK5Ag8ELRpq3jyRCdAcVZ3co5
-         JMUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717407479; x=1718012279;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g9d+5H25Ten2eOIeRZkbLmX7bV0HE+CLqvNWqi7UnNQ=;
-        b=D5kVlZYPVy4yXmDxrTPpaQdrgjdyK7Q/td7j2nW5As70ICLTbEPaW46QNgt0+FJOL6
-         VvYvPmUJuB3/6V+1HBop3bK1xmQh4L5tx7nkXXkofRiGOgBt7rbltYPZnH1SWOz6GeGA
-         0LACTI22L0V84MUmgFt+UIwY1GIc/sWLg4wx37d7yq87MS96Sw8OS336+ipBpMiNK5OE
-         QbyGKJWKtIQ61wF/5EoBKkiqXkb6+65fYVD4iJpxAxqylAxPwuAU91DZuho5ORaEJ9za
-         JfruvsoNDtweqFjKfHVX1kKbLqRk9t/jSMUFBuykFXLS7y4PylRmytCM5O4WOiDA8gQv
-         +KKQ==
-X-Gm-Message-State: AOJu0YxFaVPbdQOMpFA3fOMx01wWjxi1K3Gyj5yx7p8yPszfheIX/QZk
-	tCS602S1AexH5GQCqIDzRFrSAZ2oHG6AgIa78lreJL1qOJbSiGpz9RmKbF0wKEvSh1kV/IP7T5i
-	27ARxx0aiJj8=
-X-Google-Smtp-Source: AGHT+IGauRclnKJ4NqP6GHjMYnneZuZd6cbrluXWMBwQLcLi9qepV4La1NifMc6ZOsWL//kjewVVxA==
-X-Received: by 2002:a17:907:cc90:b0:a68:baaa:b290 with SMTP id a640c23a62f3a-a68baaab464mr271957866b.37.1717407478931;
-        Mon, 03 Jun 2024 02:37:58 -0700 (PDT)
-Received: from ?IPV6:2a02:8109:aa0d:be00::8090? ([2a02:8109:aa0d:be00::8090])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a67eab85ea3sm467597766b.174.2024.06.03.02.37.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 02:37:58 -0700 (PDT)
-Message-ID: <8d10fbbb-471e-4960-a52a-1658df9fbc0c@linaro.org>
-Date: Mon, 3 Jun 2024 11:37:57 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ByhlWGRI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=U7Ho4zKhkkiYFTzTY91pGPL2i6KvNE8h4Vbogb5wZs0=; b=ByhlWGRI2Ktx47DAPDLPq8dnm1
+	B+CX9jUK47LjL+lCl8e6Mu8Syjci2Ufq1RkI4Z127sWqr85wz6jhqmCKiL0uopS32LmM8l6iaRhUp
+	2x5rRl0dhueE2SS1UwhflKFjjY+lm5ObcN3H1OykMtzbKp/UFET4iJldTTwxKTymYbOYYQcQCIMMV
+	YCknfBryxH45AJqMzIsExz4ZGIES33S6GCQlD/WLTB6ljQw1Lk20MBTSqmdIws+jFyOsKe98OaqXb
+	xpLDDT54wpVXB5pdsJGyFsl9lmfw0cdeQGASvSQKYp/Zu6qb9+tqTavOkS7Dz1Drpgtqh0aeQUX7o
+	pdWUlSew==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44764)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1sE48g-0002Xl-1z;
+	Mon, 03 Jun 2024 10:38:02 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1sE48g-0000Jm-09; Mon, 03 Jun 2024 10:38:02 +0100
+Date: Mon, 3 Jun 2024 10:38:01 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Christophe Roullier <christophe.roullier@foss.st.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/11] net: stmmac: dwmac-stm32: Separate out external
+ clock rate validation
+Message-ID: <Zl2O+eJF9vOTqFx2@shell.armlinux.org.uk>
+References: <20240603092757.71902-1-christophe.roullier@foss.st.com>
+ <20240603092757.71902-3-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] rpmsg: glink: Make glink smem interrupt wakeup capable
-To: Deepak Kumar Singh <quic_deesin@quicinc.com>, quic_bjorande@quicinc.com,
- andersson@kernel.org, quic_clew@quicinc.com, mathieu.poirier@linaro.org
-Cc: linux-kernel@vger.kernel.org, quic_sarannya@quicinc.com,
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org
-References: <20240603073648.3475123-1-quic_deesin@quicinc.com>
-Content-Language: en-US
-From: Caleb Connolly <caleb.connolly@linaro.org>
-In-Reply-To: <20240603073648.3475123-1-quic_deesin@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603092757.71902-3-christophe.roullier@foss.st.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi Deepak,
+On Mon, Jun 03, 2024 at 11:27:48AM +0200, Christophe Roullier wrote:
+> +static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
+> +{
+> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+> +	const u32 clk_rate = clk_get_rate(dwmac->clk_eth_ck);
+> +
+> +	switch (plat_dat->mac_interface) {
 
-On 03/06/2024 09:36, Deepak Kumar Singh wrote:
-> There are certain usecases which require glink interrupt to be
-> wakeup capable. For example if handset is in sleep state and
-> usb charger is plugged in, dsp wakes up and sends glink interrupt
-> to host for glink pmic channel communication. Glink is suppose to
-> wakeup host processor completely for further glink data handling.
-> IRQF_NO_SUSPEND does not gurantee complete wakeup, system may again
-> enter sleep after interrupt handling and glink data may not be
-> handled by pmic client driver.
-> 
-> To ensure data handling by client configure glink smem device as
-> wakeup source and attach glink interrupt as wakeup irq. Remove
-> IRQF_NO_SUSPEND flag as it is no longer required.
-
-I'm not sure I agree with this approach, glink is used for lots of 
-things -- like QRTR, where the sensor DSP and modem may also need to 
-wake the system up (e.g. for "wake on pickup" on mobile, or for incoming 
-calls/sms).
-
-Configuring this to always wake up the system fully will result in a lot 
-of spurious wakeups for arbitrary modem notifications (e.g. signal 
-strength changes) if userspace hasn't properly configured these 
-(something ModemManager currently lacks support for).
-
-IRQF_NO_SUSPEND is presumably necessary to keep the DSPs happy? iirc 
-downstream Qualcomm kernels have historically taken this approach to 
-avoid spurious wakeups.
-
-I proposed an alternative approach some time back that would allow the 
-wakeup to be configured on a per-channel basis.
-
-https://lore.kernel.org/linux-arm-msm/20230117142414.983946-1-caleb.connolly@linaro.org/
-
-Back then Bjorn proposed using some socket specific mechanism to handle 
-this for QRTR, but given this is now a common issue for multiple glink 
-channels, maybe it's something we could revisit.
-
-Requiring the wakeup be enabled by userspace clearly doesn't make sense 
-for your proposed usecase, perhaps there's a way to configure this on a 
-per-channel basis in-kernel (maybe as the rpmsg API?).
-
-Thanks and regards,
-> 
-> Signed-off-by: Deepak Kumar Singh <quic_deesin@quicinc.com>
-> ---
->   drivers/rpmsg/qcom_glink_smem.c | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-> index 7a982c60a8dd..f1b553efab13 100644
-> --- a/drivers/rpmsg/qcom_glink_smem.c
-> +++ b/drivers/rpmsg/qcom_glink_smem.c
-> @@ -22,6 +22,7 @@
->   #include <linux/regmap.h>
->   #include <linux/workqueue.h>
->   #include <linux/list.h>
-> +#include <linux/pm_wakeirq.h>
->   
->   #include <linux/rpmsg/qcom_glink.h>
->   
-> @@ -306,8 +307,7 @@ struct qcom_glink_smem *qcom_glink_smem_register(struct device *parent,
->   
->   	smem->irq = of_irq_get(smem->dev.of_node, 0);
->   	ret = devm_request_irq(&smem->dev, smem->irq, qcom_glink_smem_intr,
-> -			       IRQF_NO_SUSPEND | IRQF_NO_AUTOEN,
-> -			       "glink-smem", smem);
-> +			       IRQF_NO_AUTOEN, "glink-smem", smem);
->   	if (ret) {
->   		dev_err(&smem->dev, "failed to request IRQ\n");
->   		goto err_put_dev;
-> @@ -346,6 +346,8 @@ struct qcom_glink_smem *qcom_glink_smem_register(struct device *parent,
->   
->   	smem->glink = glink;
->   
-> +	device_init_wakeup(dev, true);
-> +	dev_pm_set_wake_irq(dev, smem->irq);
->   	enable_irq(smem->irq);
->   
->   	return smem;
-> @@ -365,6 +367,8 @@ void qcom_glink_smem_unregister(struct qcom_glink_smem *smem)
->   	struct qcom_glink *glink = smem->glink;
->   
->   	disable_irq(smem->irq);
-> +	dev_pm_clear_wake_irq(&smem->dev);
-> +	device_init_wakeup(&smem->dev, false);
->   
->   	qcom_glink_native_remove(glink);
->   
+Should these be phy_interface? Does this clock depend on the interface
+mode used with the PHY?
 
 -- 
-// Caleb (they/them)
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
