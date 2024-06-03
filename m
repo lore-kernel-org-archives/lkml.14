@@ -1,135 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3017E12EBCA;
-	Mon,  3 Jun 2024 17:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C056012EBCA;
+	Mon,  3 Jun 2024 17:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434678; cv=none; b=epLSe1HCoCppaF/im8DZSkgLn3zSwuaJgviQPEzCEmX/E6ejS1SEhkw18SDNidyAQyao8bu5ztfwmSDwc7u7d84Dg+09BVueBYjWJ8igXKFrPao21wZ8RXgOJtpFOW4WV0kD+h6yjbvgXyWmFAsfkdYc6N4/iwyVML+Rm8TMSyk=
+	t=1717434711; cv=none; b=e22L1we2FdgaX3mbFu+8h8B5vdY22O4szrtOfjtSSPAeNvTlY/0tZBVlzBgSegS9nnDL3jsaBLqCTEADfjAgOK9NL5YpUgVMzOS0UmJcjXGJCO0dlSboH5P2fJxtVDLpMm2nV4WeceLabAmNpujsYi/sD+qn9vOdAHNeohAvIz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717434678; c=relaxed/simple;
-	bh=NjLDT7cs+dCU+pDcUFffYxuBdRTC85LI9u06hQm0TKk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KU23ABoJGxYZ8Cd8NYcKOYQ2KvvG+tkBTTYrRjBTlWx9DXhFtBCkKWPxTFhdG0V4R3Dgzf4cQUxjH1XzmPmSj2Mw2vYlWqBNTBkh4nhc68gTStKcXnaV/FgR40QZJtH982/8qQMaKQ/qUJe4Qll7u1xOHOF3LxK25x+9PLj6r/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOk2zbJY; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717434711; c=relaxed/simple;
+	bh=i4qNqKBBW9MS/3cabi3B6YUjPjcvwTN3tabqpknsbok=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=GmcfXsDjsC5unGgWfPDC/O18Ld91yPErlrTvH2nBVsRfe8P/HliT9JKanHUIp4T+T+CwLGr6H9gOId6JAKpBcJJ9RfnYIN7ag31UJDE+V02d9d+qxS1ozbz+Ep+Yz66CJtd7kCRtH2obdEo2tB2QRHzwK0itkkhoH6SmV92jd/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IskPVtkR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOk2zbJY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717434676; x=1748970676;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=NjLDT7cs+dCU+pDcUFffYxuBdRTC85LI9u06hQm0TKk=;
-  b=fOk2zbJYRxDEBSs+xHr4aavFJ0Ipd2GUXsCNxApaHu/hDVjeqxt8ldfS
-   jVOISHlT6JzHks6B9MOayCtrPmFimrLegSnRcZYpHL0QBPjKKmE2o95KQ
-   +Li66xC7oBXqT8jd/ekd34xcDgvfy7kUtOTCVCyjxrYlD1EJcybgzNJ2B
-   8w/qStwh9uDaT5gD6XUc80W36Pvxje3/Bwu3vHOX2QDPdaK19cPrvU3Cd
-   KffnMeKjVNyAvidzEPOoWWw9LNqBMTf5eTrnv0+zv8hazhl4oRsku5n+A
-   qKzeup7gYO4qVAZs90NMfeilC6iNCJm4GITr4bQczmNLGy+kwJIzplhIK
-   g==;
-X-CSE-ConnectionGUID: icVCUYzTRQ69QXxGG0F9eA==
-X-CSE-MsgGUID: TG/8zJD5SOO/ODdTbk6iHQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="31470633"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="31470633"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 10:11:06 -0700
-X-CSE-ConnectionGUID: EnnN1zeSQouECDC9nrVcig==
-X-CSE-MsgGUID: MDItepmySAyA8KC7ZsTgsA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="41881074"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 10:11:02 -0700
-Message-ID: <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
-Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
- global.turbo_disabled after initialization
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-  Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Date: Mon, 03 Jun 2024 10:11:02 -0700
-In-Reply-To: <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
-References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
-	 <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
-	 <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
-	 <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
-	 <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
-	 <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
-	 <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
-	 <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IskPVtkR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09183C2BD10;
+	Mon,  3 Jun 2024 17:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717434711;
+	bh=i4qNqKBBW9MS/3cabi3B6YUjPjcvwTN3tabqpknsbok=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=IskPVtkRLcXqswqt5Z9Yt26xtJugDU7NoYLA91Xz03aHeSf/68YOcGpeyet22K/uN
+	 CGJKU4Ax6gmVP+obsNuJYi7dLS8e9l6ikQQ90IkHuNMKf5SoHLo9nE+NfggMAjev9k
+	 U/byZZkYySDjwi0TZ3xGln2UbTSnd5sfIZMNIHEm1GRs4/LSVHe5Opn7S+l9+0cJK+
+	 mu+RXG9X3oFm5sXPwDXDSO7oeIVGdYZuNtdGN8PCh3PaFXdZdk/c/pFAyZL7vdowqb
+	 +kmhi3NJoYyTFwyIQFYsz8d2bophoijGhIb0k4JqhWe7qCwFI7ZEmhzsRxx1OVoR8l
+	 yfQkIEXIb7H5Q==
+Date: Mon, 3 Jun 2024 12:11:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	devicetree@vger.kernel.org, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v5 08/12] PCI: imx6: Config look up table(LUT) to support
+ MSI ITS and IOMMU for i.MX95
+Message-ID: <20240603171149.GA685507@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zln3WkiHC3AUPocL@lizhi-Precision-Tower-5810>
 
-On Mon, 2024-06-03 at 21:12 +0800, Xi Ruoyao wrote:
-> On Sun, 2024-06-02 at 16:11 -0700, srinivas pandruvada wrote:
->=20
-> /* snip */
->=20
-> > What is the output of:
-> > grep . /sys/devices/system/cpu/intel_pstate/*
-> >=20
-> > Also=C2=A0
-> > rdmsr 0x771
-> > rdmsr 0x774
-> >=20
-> >=20
-> > Try these three patches. Don't worry about the commit description
-> > for
-> > this issue.
->=20
-> Unfortunately they still do not fix the issue for me.
->=20
-> The outputs of grep and rdmsr commands are initially:
->=20
-> /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost:0
-> /sys/devices/system/cpu/intel_pstate/max_perf_pct:100
-> /sys/devices/system/cpu/intel_pstate/min_perf_pct:9
-> /sys/devices/system/cpu/intel_pstate/no_turbo:1
-> /sys/devices/system/cpu/intel_pstate/num_pstates:41
-> /sys/devices/system/cpu/intel_pstate/status:active
-> /sys/devices/system/cpu/intel_pstate/turbo_pct:33
-> rdmsr 0x771: 10d1f2c
-> rdmsr 0x774: 1f04
->=20
-> But it then changes to:
->=20
-> /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost:0
-> /sys/devices/system/cpu/intel_pstate/max_perf_pct:100
-> /sys/devices/system/cpu/intel_pstate/min_perf_pct:9
-> /sys/devices/system/cpu/intel_pstate/no_turbo:1
-> /sys/devices/system/cpu/intel_pstate/num_pstates:41
-> /sys/devices/system/cpu/intel_pstate/status:active
-> /sys/devices/system/cpu/intel_pstate/turbo_pct:33
-> rdmsr 0x771: 10c1f2c
-> rdmsr 0x774: 1f04
->=20
-> It seems only the output of rdmsr 0x771 has changed.=C2=A0 And if I read
-> the
-> SDM correctly it's a "Most_Efficient_Performance" change.
-That is fine.
+On Fri, May 31, 2024 at 12:14:18PM -0400, Frank Li wrote:
+> On Thu, May 30, 2024 at 06:08:32PM -0500, Bjorn Helgaas wrote:
+> > On Tue, May 28, 2024 at 03:39:21PM -0400, Frank Li wrote:
+> > > For the i.MX95, configuration of a LUT is necessary to convert Bus Device
+> > > Function (BDF) to stream IDs, which are utilized by both IOMMU and ITS.
+> > > This involves examining the msi-map and smmu-map to ensure consistent
+> > > mapping of PCI BDF to the same stream IDs. Subsequently, LUT-related
+> > > registers are configured. In the absence of an msi-map, the built-in MSI
+> > > controller is utilized as a fallback.
+> > > 
+> > > Additionally, register a PCI bus notifier to trigger imx_pcie_add_device()
+> > > upon the appearance of a new PCI device and when the bus is an iMX6 PCI
+> > > controller. This function configures the correct LUT based on Device Tree
+> > > Settings (DTS).
+> > 
+> > This scheme is pretty similar to apple_pcie_bus_notifier().  If we
+> > have to do this, I wish it were *more* similar, i.e., copy the
+> > function names, bitmap tracking, code structure, etc.
+> 
+> Actually, I refer apple_pcie_bus_notifier(). I can't direct use apple's
+> implement because in imx95 have difference PCI host controller, another one
+> is PCI ECAM netc controller. At lease function name should be similar with
+> apple. 
 
-We don't have any notifications either via ACPI or via HWP interrupt.
-I think it was working by chance before this change as by the cpufreq
-core is trying to set policy, the turbo is enabled by the firmware.
+I know it's different hardware, so obviously it can't be exactly the
+same.  These are the differences that looked possibly unnecessary:
 
-What is this laptop make and model?
+  - registering from initcall instead of .probe():
 
-Thanks,
-Srinivas
+      apple_pcie_probe                  # .probe() method
+        bus_register_notifier(&pci_bus_type, &apple_pcie_nb)
 
->=20
-> > Please send me full dmesg after you see the issue.
->=20
-> Attached.=C2=A0=20
->=20
+      imx_pcie_init                     # device_initcall()
+        bus_register_notifier(&pci_bus_type, &imx_pcie_nb)
 
+  - naming BUS_NOTIFY_DEL_DEVICE function:
+
+      apple_pcie_release_device()
+      imx_pcie_del_device()
+
+  - tracking entries in use via bitmap vs scanning hardware for
+    invalid entries:
+
+      bitmap_find_free_region           # apple
+
+      imx_pcie_config_lut               # imx
+        for (i = 0; i < IMX95_MAX_LUT; i++)
+          regmap_read(imx_pcie->iomuxc_gpr, IMX95_PE0_LUT_DATA1, &data1)
+          if (data1 & IMX95_PE0_LUT_VLD)
+            continue
+
+When we fix a bug in one driver, it's easier to check whether other
+drivers also need the fix if they use the same structure and names.
+
+Bjorn
