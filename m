@@ -1,544 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2123.outbound.protection.outlook.com [40.107.21.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1D012C550;
-	Mon,  3 Jun 2024 13:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717420401; cv=none; b=GCbW8/SzSwsb+GWcDdtujw8q8bB/PLTL7IGPVEWJHekcjY3KhCDs9nJsggizVyoa8SYHqksJ6TCORrPKhMlDoeOZkQX54uofM/ia/9E8bkf8O4OamTx65vlfB52CAf8ZlxnX9AJ0RrC6XaGZyz5+YhYHxYVhTjfuL0B99qVH/2w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717420401; c=relaxed/simple;
-	bh=o1YRPJ6qJEZ1CMAFtxumb6TtfEE5pv+lHDiHuw1PFEk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZUcAhtOqSa3FJOrLN3wRBrJzN0e1bcxx9mfhDt8AvcYhGZb4Hz4wadMt3wlp0S0Dcqt8KDcIjUcCyGsWW5vKDfubHXu0KabX7YjuhPdmZjR9tP8NisEKBo3jOuYc7nircCnAe31vF7O2VWzoAlqq72q9oPzL2rQgrZDZS/gViYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqwCPCKX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqwCPCKX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A14E1C2BD10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A546A12CD91;
 	Mon,  3 Jun 2024 13:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717420400;
-	bh=o1YRPJ6qJEZ1CMAFtxumb6TtfEE5pv+lHDiHuw1PFEk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=XqwCPCKX92S0V0n2hk8gqca7Q80siGY7IyYeqsDcDKplKoaLuETUnF5Eb4+hIp8Se
-	 EMjE4Wv98oEVq25AEPIcNhc5Rv4Vp5amzbDKBsi8kieRM2j5opYqvBiRJiJuJ7Gebi
-	 6BrU0o5zCEeM5G73fgw1BHNTLM5dwUoFBXQZILY7sxz6kaSSGiWmWzy2d/rD/xoHEZ
-	 4GQBZp+JvQzEHI+EYhEcTEInAclvA+3A4Qpr9vLKDAqw26NX9kXyo/khVV8ubT6NHr
-	 Uvj+fRvVcl+CtQkpQYsdFC8u1KhyQNUFuBuc4JkOnW5zoUyxBPZygzXtmts3QyjDdk
-	 64SG8oh+K3S8g==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	UNGLinuxDriver@microchip.com,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2] dt-bindings: mfd: syscon: Add more simple compatibles
-Date: Mon,  3 Jun 2024 08:12:27 -0500
-Message-ID: <20240603131230.136196-2-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717420406; cv=fail; b=F8wRcFL1UkRQi/gbUZOnGxWE6jLPe9vXUpKUPfBwe7ZxqqyaIomiaYyJLcp2phyKyqg3FDsQQ6xP1uFsvtSz6VHqqOPFI2VdLNE9BDqwgElNfeFKMyTOy3XQ6oK7rAgvqRcgjuY0z6YceGqovVvboD7U65T8Rt5OeIIuu7qpeR8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717420406; c=relaxed/simple;
+	bh=6wc4D+AYyJCfpfCMudtNcBWwKmuFCHGV1pb3P+xnQH4=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
+	 References; b=slaMz4IxYf3V5aCubKJY5jQjIL7l9cEGVChFzyxxlMihGI8ZCI70d1GlZNmqLFy7i4enZ9oZY8JsneQhJ9XPP9A6Wxg3Ai1qaTiTxEMt2TZgzfQoym+qyuRrjOXPlI9zes/PoULNinvoRmVqttScNGfghNLWh+bYlpWkc1PMLhY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=T6ZYYCvG; arc=fail smtp.client-ip=40.107.21.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="T6ZYYCvG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ffTVXmHhRsDEbytjYSIveFTEeISHxh+ZSPISSvmCbGhsGZdvzVLMApk8uWj2Tejny+QcNZ4j2ZK/6/EBy2DNQ/pXowDSdLzgRccKf5jNoMMKX14k8WxnD/HbJGxb1w9P++OOSExzveByNekV4UkTw4eUx0J25AR+e5EXjWZgkxjcttIiW3w4gJs9puuIyzkTOuDTHUtesqTdWprR/rQ3glPvrlu29kbC//llxsNp7fbEA9hLCAnk2JbSYEnxqmPizoFhIlSiqnTJqY0ZLR/L32570Sz5UDMuIyqoMig159uznzZzyPz52Qtfenhgv38ZU0zSkzXEk66Cj/Wr7ikHRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gtdp2ZAXSM5r0CL9MWQWysyXPkttpo1nT4lYWbQTGoE=;
+ b=ekfBWqNrRBf4uoKH5Gzn12iBUEZUC8MFxV1cB7TYaEPutzLURH5eVlSCEifjx7IF4v7M64LzGGfFq4bxdVFmsSiO3X1sxodFmWplOqMLOITYUgupIa1YvMP/r1sJkyREZjMQWnmJDOVLfXxfnlPeNjCFDseiOqeK6nczsfWC/WkR49CKAxKAsObkWwqXVqlZxvQct5+a2hS+u01Gmjry5vyr3Pp1IUKqw45xBBCWm15RPMt1NWLj2IGpi7V5F2rhOSVcQhV7EAhmaNkv50pzMztcUGwSMsk8oEpu8KC63guTHTBGkZiRdaxDpfoYXVXgIgHog55/8FHoOGZdevga/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 13.93.42.39) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=topic.nl;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=topic.nl;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gtdp2ZAXSM5r0CL9MWQWysyXPkttpo1nT4lYWbQTGoE=;
+ b=T6ZYYCvG4sJV0GOVuNFGPAjZRYg5NTI6xzn82iduCXPhc3JuCpEOQkm/MdfJF37hbEWUieBMjBGUuxRvT0se00eB4/fdtbnHfyFwaY+6FUb/LP98eRkg6Yrm7CxY6M1itv2WqzRW+tbsbhTsj3jDXJcCudDr/jQjf4WEe8t7SHzwqfShobHjP5/j0RTBzRv/YPxfiEZUUoyAJCYANRusyCR3H5rsTk8brZvtZ1C7ilITU4hSOUmWoQaWp+DI3jooho94c5cM1fZhaS293/VS6Z+wAeICeI1l/GQw0ObdWdQRYxBcKqvCUGQTwM4hOKXjiCKziWIq1s7EuqRQZFq64g==
+Received: from DU2P251CA0019.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:230::26)
+ by PAXPR04MB9091.eurprd04.prod.outlook.com (2603:10a6:102:229::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Mon, 3 Jun
+ 2024 13:13:16 +0000
+Received: from DB3PEPF0000885C.eurprd02.prod.outlook.com
+ (2603:10a6:10:230:cafe::5a) by DU2P251CA0019.outlook.office365.com
+ (2603:10a6:10:230::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.28 via Frontend
+ Transport; Mon, 3 Jun 2024 13:13:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
+Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
+ DB3PEPF0000885C.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.15 via Frontend Transport; Mon, 3 Jun 2024 13:13:15 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (104.47.13.40) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Mon, 03 Jun 2024 13:13:14 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com (2603:10a6:20b:42b::12)
+ by DBBPR04MB7929.eurprd04.prod.outlook.com (2603:10a6:10:1ec::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.23; Mon, 3 Jun
+ 2024 13:13:10 +0000
+Received: from AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a]) by AS8PR04MB8644.eurprd04.prod.outlook.com
+ ([fe80::e86d:f110:534e:480a%5]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
+ 13:13:10 +0000
+From: Mike Looijmans <mike.looijmans@topic.nl>
+To: linux-usb@vger.kernel.org
+CC: Mike Looijmans <mike.looijmans@topic.nl>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: gadget: Inform system of suspended state
+Date: Mon, 3 Jun 2024 15:13:04 +0200
+Message-ID: <20240603131304.233403-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR03CA0101.eurprd03.prod.outlook.com
+ (2603:10a6:208:69::42) To AS8PR04MB8644.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-TrafficTypeDiagnostic:
+	AS8PR04MB8644:EE_|DBBPR04MB7929:EE_|DB3PEPF0000885C:EE_|PAXPR04MB9091:EE_
+X-MS-Office365-Filtering-Correlation-Id: faacfcce-b147-4a05-a53e-08dc83ceedad
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230031|1800799015|366007|52116005|376005|38350700005;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?R24Miv8hDYuzJVIsetTrBo10R1XKUpIVcZyNSuMepDG8bdiWnxMu6TkyfWO9?=
+ =?us-ascii?Q?hE1mSfCbiCpftqgqh2GujGySqOu8FZUETFXPcTsNs+LuV1Uihj6XuBDxGjym?=
+ =?us-ascii?Q?RSB/unRvh2VbtxOJwVcmUISM1Gf+oQZaRuILWWJw+4iNbaHEXo7Y/rxs9f2+?=
+ =?us-ascii?Q?JuOOfEFFheKd6/j1VSG/rFZvPknSmzVTlhxyPMva6eGykA6p2dYKSF3OclQv?=
+ =?us-ascii?Q?NKq00SdiNTcmJyTgni8101VoWamNmgwLciD/IDRCcpvU8YDehg6h4H5MGu8M?=
+ =?us-ascii?Q?8wzpl+ra0PmIIpgo4dQxqbv8AUFE2UEoVmwzDOWXDJW5X1ql2cM+SRSZQGY8?=
+ =?us-ascii?Q?hAq1pcWkEOCN20/wjA7/KauysDeOqC6QAA84xSKvw3Axp7ig3CXSb2OA7OmT?=
+ =?us-ascii?Q?Z92W6cY3wIo/2OvZ0A8BoOa/MqzoqlUg1NJm4vVR1NTEsWYBKXoFwzGMfNFQ?=
+ =?us-ascii?Q?TG/6exJK+PyxaT3YUe8OyA1uebZfc1Icdk2dXZlgHzACGPdVzaGhvPSeEdD7?=
+ =?us-ascii?Q?uCo9WNqZsbnAYw8ip6GoGkWx/NzNINXrNBKuXFZdjret2SGl00BY9BYhvSKm?=
+ =?us-ascii?Q?kOb0JB0u5PFN5G4wBDLGZaoWKUEymZrsWgwfOkyY+Iifgc425wDCfRlBX90r?=
+ =?us-ascii?Q?BCHhRfYkUL07Hq4WemX7YORnAe19l/cIqe3xbp7FF44FVstKDcnxNXo6tYzR?=
+ =?us-ascii?Q?TzX0WHF+n9bCcN4BTPnwvFrU5X7LVa1Ii5CriY8qHZamouA+mLKft7QIjN6Y?=
+ =?us-ascii?Q?2shBw5eTp8xnvZ5JzNGlL0OZA+/Lqd+X66gV39I3LIdepLpP8GeFKPkwc+y+?=
+ =?us-ascii?Q?cNHcF+LMvKd/dQTMSP9gUOFU+BlvonBdm3Y30w3fotFJzx5HclNBjjljKNXm?=
+ =?us-ascii?Q?sX5pbbWGwV084w3YH683+2QJJYLQ5oDejdC7Bdg7SR7ZlxECVUmRfnl6QSsh?=
+ =?us-ascii?Q?alGBoX7UFa2gCfoFUNpifxs1DYx4e6XKqISDRvlrUrixYpQ0Ar8fgh+gjpCb?=
+ =?us-ascii?Q?V3xKUqDEkZf1cJWVdN4MAjcgw9NlJ7FNNoqRXnWb3jAnUGaVDcQMbFNi25ty?=
+ =?us-ascii?Q?R6+v5kauhD/n3SwJcsEWvV2l9io6AtCQr4Kjb4QgHgu2niCQ/GHpNdGI1Uss?=
+ =?us-ascii?Q?KlOvrYrjvM5Z7cpocjgrZj1IGT/fc9zjw7g97FOk4M94ryiAfQ6Et/J15Sns?=
+ =?us-ascii?Q?FEnlKZsFvJb/61AqAFLfbpGtvEfedX8RWuW9Sas9gBv3dShydkd7F2aidDPn?=
+ =?us-ascii?Q?UBMFggn97URHdfNpVrb7oklW9L95N03Iw33pHpSiHLf5v0D4N0fk41f5QUTt?=
+ =?us-ascii?Q?gJ+8WSruFSXuqoak5mhjhsauWocNIJwBsDNo5nlce/dUBg=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8644.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(52116005)(376005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7929
+X-CodeTwo-MessageID: 12ebd205-b4a2-4b8c-bc9c-a3e90792ead2.20240603131314@westeu12-emailsignatures-cloud.codetwo.com
+References:
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.c5f44c79-75b2-43c1-a791-806fe8b693cd@emailsignatures365.codetwo.com>
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB3PEPF0000885C.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	3b6bf983-709d-490e-fe52-08dc83ceeac3
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|1800799015|82310400017|35042699013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?raoQRY2ZEe/cZ5AYotKnhFooOvLL1BS8kD+fApGyHr0duivoWGRyCRPuUhTH?=
+ =?us-ascii?Q?zLgIIX4M9EUfVc9YPTKLBUSXm4xcQoMqs0/tebTBg/1G6+t8drFlmscJs1KO?=
+ =?us-ascii?Q?35/VHeI8YH/eqs4lJlq9fa/q/8TlrJYONundkIhdG/6ol57K0ERhE5tMw8Oz?=
+ =?us-ascii?Q?YMdj25/hM8RiUldJfPpyChlF9/N9nlPYlWA0jkE6D7UgVssCWzjcdMcTDVn1?=
+ =?us-ascii?Q?Xb6sKAF6sfh9PI94vPpjZh4qrRIOkPvdBEQPo9T93bbe16iqsemv+uh8coce?=
+ =?us-ascii?Q?7F0ZziyLNJywRCWoPKTNVTV/MMVtVk8LVh2Ej8HYyOMSrhbNs1umfy4UpBpi?=
+ =?us-ascii?Q?yJFc1szSCRRNJfr9dmSgT++jSbwrPQEc083dKMfwIANPoEQ9GrKNZNkbgFQn?=
+ =?us-ascii?Q?GiZ9EHwLF5Sgkaj3Ytg4WxZ9pBquScMLU9CI4XBsYhDldvHuFkFiESDmeOyx?=
+ =?us-ascii?Q?9qKL6Kd4ugOfIFGkGNocU6crLI/TIQOD+eYGYi0zvep6DWJ/OJ0Agp++wABu?=
+ =?us-ascii?Q?9bee6tieKtLVf9AqJSDgaLwBjAN/Rf6K1kwKhbQU3FK9AAOLgQ634ewTaMbl?=
+ =?us-ascii?Q?JYTzhZtu/qyHjVt7JE85iO5q2kilUojXjSYycfJ6USd8M9FExFlffJHzoNW1?=
+ =?us-ascii?Q?N9c1FwPe43kfIXXr0w9VegvqBuhTjUVa6QimV7u9wW1B0zhsnNHjQeYSk4m/?=
+ =?us-ascii?Q?uxdT79NcJnkSHweo0PrmZwjD5Zsr+5as3J4K1X9pHViBvfQb9P5r8d9X+eax?=
+ =?us-ascii?Q?cjDKHkSzJFOH2D5LtV0BXj7Bjb0K2wVFQjL99SUDbMPOzumVBLk08NL0rqiP?=
+ =?us-ascii?Q?uMXXgYfq7UQbt55GHUXs2uBe5IqldahhhJPa5JUg2i7+pLJIKHMijCgeOIqt?=
+ =?us-ascii?Q?CIEi+GrqOCzkDDOpHZQJZcUn1DgR7XnFJMaobzFQuAifJHUEgd6YohwX93EW?=
+ =?us-ascii?Q?qa60ah6rX3zZpdE1/5sqv039xm5fOiqdUk6GxfwRlcmKXV3LaUPoa0WIbf46?=
+ =?us-ascii?Q?N6U3kNwK34TtshUV6AKMXT0y3u0fB2x0zB2fNrhsVjaqY3WwbDBM8OpFtRZn?=
+ =?us-ascii?Q?Yci5RYBURvuCyDf15Ou+UKEc7FMOfga1S8pbHn/WpyqASxbKkGGzhjYm6KZz?=
+ =?us-ascii?Q?opTeT6Qx8MLc7rE+YCCymfZV71R78t5qkyyr/i/xGK9rFJXK7ymMeStkF6rH?=
+ =?us-ascii?Q?u0106RNcYKVtUUoEsp2pPf4lMHXCCOf0nbsSugRMu9E5ZpoUPuSBS0Uhqx1B?=
+ =?us-ascii?Q?zK4NTEd0ac6+pk8+wXq2mLJPKDKbafksylvyFmESsHuE5pki1Q8rCb8Ia2YD?=
+ =?us-ascii?Q?cMPy5VBHX+wpvrkn/BvNraqJ?=
+X-Forefront-Antispam-Report:
+	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(1800799015)(82310400017)(35042699013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 13:13:15.2287
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: faacfcce-b147-4a05-a53e-08dc83ceedad
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB3PEPF0000885C.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9091
 
-Add another batch of various "simple" syscon compatibles which were
-undocumented or still documented with old text bindings. Remove the old
-text binding docs for the ones which were documented.
+When disconnecting the USB cable on an LS1028 device, nothing happens
+in userspace, which keeps thinking everything is still up and running.
+Turns out that the DWC3 controller only sends DWC3_DEVICE_EVENT_SUSPEND
+in that case, and not a DWC3_DEVICE_EVENT_DISCONNECT as one would
+expect. As a result, sysfs attribute "state" remains "configured"
+until something resets it.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com> # mtd
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+Forward the "suspended" state to sysfs, so that the "state" at least
+changes into "suspended" when one removes the cable, and hence also
+matches the gadget's state when really suspended.
+
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 ---
-v2:
-- Rebase on mfd next branch
 
- .../bindings/arm/amlogic/analog-top.txt       | 20 -------------
- .../bindings/arm/amlogic/assist.txt           | 17 -----------
- .../bindings/arm/amlogic/bootrom.txt          | 17 -----------
- .../devicetree/bindings/arm/amlogic/pmu.txt   | 18 ------------
- .../devicetree/bindings/arm/atmel-sysregs.txt | 29 -------------------
- .../devicetree/bindings/arm/axis.txt          | 16 ----------
- .../arm/cpu-enable-method/al,alpine-smp       | 10 -------
- .../arm/freescale/fsl,vf610-mscm-cpucfg.txt   | 14 ---------
- .../bindings/arm/marvell/marvell,dove.txt     | 15 ----------
- .../devicetree/bindings/arm/spear-misc.txt    |  9 ------
- .../bindings/clock/ti-keystone-pllctrl.txt    | 20 -------------
- .../devicetree/bindings/mfd/syscon.yaml       | 29 +++++++++++++++++++
- .../devicetree/bindings/mips/mscc.txt         | 17 -----------
- .../devicetree/bindings/mtd/atmel-nand.txt    |  9 ------
- .../bindings/net/hisilicon-hip04-net.txt      | 10 -------
- 15 files changed, 29 insertions(+), 221 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/analog-top.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/assist.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/bootrom.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
- delete mode 100644 Documentation/devicetree/bindings/arm/spear-misc.txt
- delete mode 100644 Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
+ drivers/usb/dwc3/gadget.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/analog-top.txt b/Documentation/devicetree/bindings/arm/amlogic/analog-top.txt
-deleted file mode 100644
-index 101dc21014ec..000000000000
---- a/Documentation/devicetree/bindings/arm/amlogic/analog-top.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--Amlogic Meson8 and Meson8b "analog top" registers:
----------------------------------------------------
--
--The analog top registers contain information about the so-called
--"metal revision" (which encodes the "minor version") of the SoC.
--
--Required properties:
--- reg: the register range of the analog top registers
--- compatible: depending on the SoC this should be one of:
--		- "amlogic,meson8-analog-top"
--		- "amlogic,meson8b-analog-top"
--		along with "syscon"
--
--
--Example:
--
--	analog_top: analog-top@81a8 {
--		compatible = "amlogic,meson8-analog-top", "syscon";
--		reg = <0x81a8 0x14>;
--	};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/assist.txt b/Documentation/devicetree/bindings/arm/amlogic/assist.txt
-deleted file mode 100644
-index 7656812b67b9..000000000000
---- a/Documentation/devicetree/bindings/arm/amlogic/assist.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Amlogic Meson6/Meson8/Meson8b assist registers:
-------------------------------------------------
--
--The assist registers contain basic information about the SoC,
--for example the encoded SoC part number.
--
--Required properties:
--- reg: the register range of the assist registers
--- compatible: should be "amlogic,meson-mx-assist" along with "syscon"
--
--
--Example:
--
--	assist: assist@7c00 {
--		compatible = "amlogic,meson-mx-assist", "syscon";
--		reg = <0x7c00 0x200>;
--	};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/bootrom.txt b/Documentation/devicetree/bindings/arm/amlogic/bootrom.txt
-deleted file mode 100644
-index 407e27f230ab..000000000000
---- a/Documentation/devicetree/bindings/arm/amlogic/bootrom.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--Amlogic Meson6/Meson8/Meson8b bootrom:
----------------------------------------
--
--The bootrom register area can be used to access SoC specific
--information, such as the "misc version".
--
--Required properties:
--- reg: the register range of the bootrom registers
--- compatible: should be "amlogic,meson-mx-bootrom" along with "syscon"
--
--
--Example:
--
--	bootrom: bootrom@d9040000 {
--		compatible = "amlogic,meson-mx-bootrom", "syscon";
--		reg = <0xd9040000 0x10000>;
--	};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/pmu.txt b/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
-deleted file mode 100644
-index 72f8d08198b6..000000000000
---- a/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--Amlogic Meson8 and Meson8b power-management-unit:
---------------------------------------------------
--
--The pmu is used to turn off and on different power domains of the SoCs
--This includes the power to the CPU cores.
--
--Required node properties:
--- compatible value : depending on the SoC this should be one of:
--			"amlogic,meson8-pmu"
--			"amlogic,meson8b-pmu"
--- reg : physical base address and the size of the registers window
--
--Example:
--
--	pmu@c81000e4 {
--		compatible = "amlogic,meson8b-pmu", "syscon";
--		reg = <0xc81000e0 0x18>;
--	};
-diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-index 67a66bf74895..7374beb5a613 100644
---- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-+++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
-@@ -41,35 +41,6 @@ Examples:
- 		reg = <0xffffe800 0x200>;
- 	};
- 
--RAMC PHY Controller required properties:
--- compatible: Should be "microchip,sama7g5-ddr3phy", "syscon"
--- reg: Should contain registers location and length
--
--Example:
--
--	ddr3phy: ddr3phy@e3804000 {
--		compatible = "microchip,sama7g5-ddr3phy", "syscon";
--		reg = <0xe3804000 0x1000>;
--};
--
--Special Function Registers (SFR)
--
--Special Function Registers (SFR) manage specific aspects of the integrated
--memory, bridge implementations, processor and other functionality not controlled
--elsewhere.
--
--required properties:
--- compatible: Should be "atmel,<chip>-sfr", "syscon" or
--	"atmel,<chip>-sfrbu", "syscon"
--  <chip> can be "sama5d3", "sama5d4" or "sama5d2".
--  It also can be "microchip,sam9x60-sfr", "syscon".
--- reg: Should contain registers location and length
--
--	sfr@f0038000 {
--		compatible = "atmel,sama5d3-sfr", "syscon";
--		reg = <0xf0038000 0x60>;
--	};
--
- Security Module (SECUMOD)
- 
- The Security Module macrocell provides all necessary secure functions to avoid
-diff --git a/Documentation/devicetree/bindings/arm/axis.txt b/Documentation/devicetree/bindings/arm/axis.txt
-index ae345e1c8d2b..ebd33a88776f 100644
---- a/Documentation/devicetree/bindings/arm/axis.txt
-+++ b/Documentation/devicetree/bindings/arm/axis.txt
-@@ -7,22 +7,6 @@ ARTPEC-6 ARM SoC
- Required root node properties:
- - compatible = "axis,artpec6";
- 
--ARTPEC-6 System Controller
----------------------------
--
--The ARTPEC-6 has a system controller with mixed functions controlling DMA, PCIe
--and resets.
--
--Required properties:
--- compatible: "axis,artpec6-syscon", "syscon"
--- reg: Address and length of the register bank.
--
--Example:
--	syscon {
--		compatible = "axis,artpec6-syscon", "syscon";
--		reg = <0xf8000000 0x48>;
--	};
--
- ARTPEC-6 Development board:
- ---------------------------
- Required root node properties:
-diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
-index 35e5afb6d9ad..cc7b1402a31f 100644
---- a/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
-+++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
-@@ -27,16 +27,6 @@ Properties:
- - reg : Offset and length of the register set for the device
- 
- 
--* Alpine System-Fabric Service Registers
--
--The System-Fabric Service Registers allow various operation on CPU and
--system fabric, like powering CPUs off.
--
--Properties:
--- compatible : Should contain "al,alpine-sysfabric-service" and "syscon".
--- reg : Offset and length of the register set for the device
--
--
- Example:
- 
- cpus {
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
-deleted file mode 100644
-index 44aa3c451ccf..000000000000
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-mscm-cpucfg.txt
-+++ /dev/null
-@@ -1,14 +0,0 @@
--Freescale Vybrid Miscellaneous System Control - CPU Configuration
--
--The MSCM IP contains multiple sub modules, this binding describes the first
--block of registers which contains CPU configuration information.
--
--Required properties:
--- compatible:	"fsl,vf610-mscm-cpucfg", "syscon"
--- reg:		the register range of the MSCM CPU configuration registers
--
--Example:
--	mscm_cpucfg: cpucfg@40001000 {
--		compatible = "fsl,vf610-mscm-cpucfg", "syscon";
--		reg = <0x40001000 0x800>;
--	}
-diff --git a/Documentation/devicetree/bindings/arm/marvell/marvell,dove.txt b/Documentation/devicetree/bindings/arm/marvell/marvell,dove.txt
-index aaaf64c56e44..e10e8525eabd 100644
---- a/Documentation/devicetree/bindings/arm/marvell/marvell,dove.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/marvell,dove.txt
-@@ -5,18 +5,3 @@ Boards with a Marvell Dove SoC shall have the following properties:
- 
- Required root node property:
- - compatible: must contain "marvell,dove";
--
--* Global Configuration registers
--
--Global Configuration registers of Dove SoC are shared by a syscon node.
--
--Required properties:
--- compatible: must contain "marvell,dove-global-config" and "syscon".
--- reg: base address and size of the Global Configuration registers.
--
--Example:
--
--gconf: global-config@e802c {
--	compatible = "marvell,dove-global-config", "syscon";
--	reg = <0xe802c 0x14>;
--};
-diff --git a/Documentation/devicetree/bindings/arm/spear-misc.txt b/Documentation/devicetree/bindings/arm/spear-misc.txt
-deleted file mode 100644
-index e404e2556b4a..000000000000
---- a/Documentation/devicetree/bindings/arm/spear-misc.txt
-+++ /dev/null
-@@ -1,9 +0,0 @@
--SPEAr Misc configuration
--===========================
--SPEAr SOCs have some miscellaneous registers which are used to configure
--few properties of different peripheral controllers.
--
--misc node required properties:
--
--- compatible Should be	"st,spear1340-misc", "syscon".
--- reg: Address range of misc space up to 8K
-diff --git a/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt b/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
-deleted file mode 100644
-index c35cb6c4af4d..000000000000
---- a/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
-+++ /dev/null
-@@ -1,20 +0,0 @@
--* Device tree bindings for Texas Instruments keystone pll controller
--
--The main pll controller used to drive theC66x CorePacs, the switch fabric,
--and a majority of the peripheral clocks (all but the ARM CorePacs, DDR3 and
--the NETCP modules) requires a PLL Controller to manage the various clock
--divisions, gating, and synchronization.
--
--Required properties:
--
--- compatible:		"ti,keystone-pllctrl", "syscon"
--
--- reg:			contains offset/length value for pll controller
--			registers space.
--
--Example:
--
--pllctrl: pll-controller@02310000 {
--	compatible = "ti,keystone-pllctrl", "syscon";
--	reg = <0x02310000 0x200>;
--};
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 6a5834b11a35..79830dd51ac3 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -34,36 +34,59 @@ properties:
-     anyOf:
-       - items:
-           - enum:
-+              - al,alpine-sysfabric-service
-               - allwinner,sun8i-a83t-system-controller
-               - allwinner,sun8i-h3-system-controller
-               - allwinner,sun8i-v3s-system-controller
-               - allwinner,sun50i-a64-system-controller
-+              - altr,l3regs
-               - altr,sdr-ctl
-               - amd,pensando-elba-syscon
-+              - amlogic,meson-mx-assist
-+              - amlogic,meson-mx-bootrom
-+              - amlogic,meson8-analog-top
-+              - amlogic,meson8b-analog-top
-+              - amlogic,meson8-pmu
-+              - amlogic,meson8b-pmu
-               - apm,xgene-csw
-               - apm,xgene-efuse
-               - apm,xgene-mcb
-               - apm,xgene-rb
-               - apm,xgene-scu
-+              - atmel,sama5d2-sfrbu
-+              - atmel,sama5d3-nfc-io
-+              - atmel,sama5d3-sfrbu
-+              - atmel,sama5d4-sfrbu
-+              - axis,artpec6-syscon
-               - brcm,cru-clkset
-               - brcm,sr-cdru
-               - brcm,sr-mhb
-+              - cirrus,ep7209-syscon1
-+              - cirrus,ep7209-syscon2
-+              - cirrus,ep7209-syscon3
-+              - cnxt,cx92755-uc
-               - freecom,fsg-cs2-system-controller
-               - fsl,imx93-aonmix-ns-syscfg
-               - fsl,imx93-wakeupmix-syscfg
-               - fsl,ls1088a-reset
-+              - fsl,vf610-anatop
-+              - fsl,vf610-mscm-cpucfg
-               - hisilicon,dsa-subctrl
-               - hisilicon,hi6220-sramctrl
-+              - hisilicon,hip04-ppe
-               - hisilicon,pcie-sas-subctrl
-               - hisilicon,peri-subctrl
-               - hpe,gxp-sysreg
-               - intel,lgm-syscon
-               - loongson,ls1b-syscon
-               - loongson,ls1c-syscon
-+              - lsi,axxia-syscon
-               - marvell,armada-3700-cpu-misc
-               - marvell,armada-3700-nb-pm
-               - marvell,armada-3700-avs
-               - marvell,armada-3700-usb2-host-misc
-+              - marvell,dove-global-config
-+              - mediatek,mt2701-pctl-a-syscfg
-               - mediatek,mt2712-pctl-a-syscfg
-               - mediatek,mt6397-pctl-pmic-syscfg
-               - mediatek,mt8135-pctl-a-syscfg
-@@ -71,7 +94,10 @@ properties:
-               - mediatek,mt8173-pctl-a-syscfg
-               - mediatek,mt8365-syscfg
-               - microchip,lan966x-cpu-syscon
-+              - microchip,sam9x60-sfr
-+              - microchip,sama7g5-ddr3phy
-               - microchip,sparx5-cpu-syscon
-+              - mscc,ocelot-cpu-syscon
-               - mstar,msc313-pmsleep
-               - nuvoton,ma35d1-sys
-               - nuvoton,wpcm450-shm
-@@ -86,6 +112,8 @@ properties:
-               - rockchip,rk3568-qos
-               - rockchip,rk3588-qos
-               - rockchip,rv1126-qos
-+              - st,spear1340-misc
-+              - stericsson,nomadik-pmu
-               - starfive,jh7100-sysmain
-               - ti,am62-usb-phy-ctrl
-               - ti,am625-dss-oldi-io-ctrl
-@@ -93,6 +121,7 @@ properties:
-               - ti,am654-dss-oldi-io-ctrl
-               - ti,am654-serdes-ctrl
-               - ti,j784s4-pcie-ctrl
-+              - ti,keystone-pllctrl
- 
-           - const: syscon
- 
-diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
-index cc916eaeed0a..e74165696b76 100644
---- a/Documentation/devicetree/bindings/mips/mscc.txt
-+++ b/Documentation/devicetree/bindings/mips/mscc.txt
-@@ -25,23 +25,6 @@ Example:
- 		reg = <0x71070000 0x1c>;
- 	};
- 
--
--o CPU system control:
--
--The SoC has a few registers (ICPU_CFG:CPU_SYSTEM_CTRL) handling configuration of
--the CPU: 8 general purpose registers, reset control, CPU en/disabling, CPU
--endianness, CPU bus control, CPU status.
--
--Required properties:
--- compatible: Should be "mscc,ocelot-cpu-syscon", "syscon"
--- reg : Should contain registers location and length
--
--Example:
--	syscon@70000000 {
--		compatible = "mscc,ocelot-cpu-syscon", "syscon";
--		reg = <0x70000000 0x2c>;
--	};
--
- o HSIO regs:
- 
- The SoC has a few registers (HSIO) handling miscellaneous functionalities:
-diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-index 4598930851d9..e36c35b17873 100644
---- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-@@ -60,15 +60,6 @@ Required properties:
- - reg: should contain 2 register ranges. The first one is pointing to the PMECC
-        block, and the second one to the PMECC_ERRLOC block.
- 
--* SAMA5 NFC I/O bindings:
--
--SAMA5 SoCs embed an advanced NAND controller logic to automate READ/WRITE page
--operations. This interface to this logic is placed in a separate I/O range and
--should thus have its own DT node.
--
--- compatible: should be "atmel,sama5d3-nfc-io", "syscon".
--- reg: should contain the I/O range used to interact with the NFC logic.
--
- Example:
- 
- 	nfc_io: nfc-io@70000000 {
-diff --git a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-index 464c0dafc617..c09eec6422ac 100644
---- a/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-+++ b/Documentation/devicetree/bindings/net/hisilicon-hip04-net.txt
-@@ -19,16 +19,6 @@ Optional properties:
- [1] Documentation/devicetree/bindings/net/ethernet.txt
- 
- 
--* Ethernet ppe node:
--Control rx & tx fifos of all ethernet controllers.
--Have 2048 recv channels shared by all ethernet controllers, only if no overlap.
--Each controller's recv channel start from channel * number (RX_DESC_NUM).
--
--Required properties:
--- compatible: "hisilicon,hip04-ppe", "syscon".
--- reg: address and length of the register set for the device.
--
--
- * MDIO bus node:
- 
- Required properties:
--- 
-2.43.0
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 4df2661f6675..99e8ea9db600 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -4343,6 +4343,7 @@ static void dwc3_gadget_suspend_interrupt(struct dwc3=
+ *dwc,
+ 	if (!dwc->suspended && next =3D=3D DWC3_LINK_STATE_U3) {
+ 		dwc->suspended =3D true;
+ 		dwc3_suspend_gadget(dwc);
++		usb_gadget_set_state(dwc->gadget, USB_STATE_SUSPENDED);
+ 	}
+=20
+ 	dwc->link_state =3D next;
+--=20
+2.34.1
 
+
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topic.nl=0A=
+W: www.topic.nl=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
