@@ -1,81 +1,63 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F01320ED;
-	Mon,  3 Jun 2024 19:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C1620ED;
+	Mon,  3 Jun 2024 19:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444020; cv=none; b=Ego+edtw53PTFSQO6wO9D92Wm76RRuLBR2SwrhDFgTob4SzgACjMCxaHWkwlAOBO7MVDbh4cvphaEGtOxsGNuKEQFjcqGq/7Ka4O7PWge0VJNbGcfMh9pOp3uOmRer1knPIeKzVjKC8ybZB2MwuMWtCF2pb8b+PRDhjVuxWNpYA=
+	t=1717444040; cv=none; b=AkL8mfQGad28RddTdqpCal5kHA7hkfz0IoZZbr2DK4LKa1ZtdNSWQoBUExJxSh95ea/Y3O1f/bLNxKBJRW5TrRS/SOTzjZOOUDmXa9uFtTsttJp57cFM8aJ/S+n1Vwj5wetRpYzC/qpnBjIXuAIXscHDAaSWWXqm+sywWUGALig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444020; c=relaxed/simple;
-	bh=D8qS2P6s0c2Xb/N2Iq0bMwfDy0LCuH+Ng0vJhxlUKmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Irz0LuMOh+JSIUsIl9RGZVsHZk37IKLTUm+Z/GHhTL6PZpZV4LcsLURcRkg8SaHc7aonUhEfgUwYISjFWH6ZG6tE/0FyrwBfnk15FqN7+TVvskuzvm89w2s9JobCXK4VLfqrVPUSvmsH8TYIkg2yjzvFPpypQV+X6hmT1TKNTh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A99C11042;
-	Mon,  3 Jun 2024 12:47:20 -0700 (PDT)
-Received: from [10.57.71.49] (unknown [10.57.71.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB91F3F64C;
-	Mon,  3 Jun 2024 12:46:49 -0700 (PDT)
-Message-ID: <a4105d70-bec5-4fff-b9bf-04d0b03f81d6@arm.com>
-Date: Mon, 3 Jun 2024 20:46:48 +0100
+	s=arc-20240116; t=1717444040; c=relaxed/simple;
+	bh=v+0RbsfKdGgk/6XvGRknMDTc2wiUcVUl6dcouRw8NJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PsZz++ekOgyEsZFwTkJi7ONr/YQ0PYJEeUSb70SPUgiZoTo4s5Vs3o7ZjLqW/iCCJGrZ5RY5VUkr3Vf/ekSq4VuWE1o6gpO2wUHaX20/JjlRhs1PJEu4qrfonZ0CVpFKHvzheTfEvXjsrm0GvCSVm8b/XVSl859VBjJFxumVMWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPmyw51K; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPmyw51K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F955C2BD10;
+	Mon,  3 Jun 2024 19:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717444039;
+	bh=v+0RbsfKdGgk/6XvGRknMDTc2wiUcVUl6dcouRw8NJ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QPmyw51KfG4g3+7Ei/p0tAOrX7io955hQRR8FthZq/gWvI/n9Z4SxaNt68zwa9g2O
+	 6POAii0RDLzdMk6TOEGtP6JwF5VGbu8HblqBBvmbEsCBnq5G9jnhtcvfR9FbQt5J9y
+	 ZzilGkhi05j99m90Sc7r6s825ay12VRbAlQT0PBMtVssCYPiCXhQcNhfeAJ1Z0h73D
+	 Jj1MTDr0pITf2p+a8k0YPApfPUETkikOq2zpjH++zD/cm2JJxJiRZaQa2+Uuv2tzks
+	 wmQnrmI67Ev7VkJhZmKyW1y6pLrq45fYlTzCEDAdFHPdvpqzkjt+Vi3tvASCycWAPE
+	 GrirwzVbQAuKQ==
+Date: Mon, 3 Jun 2024 13:47:17 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Andreas Hindborg <nmi@metaspace.dk>
+Cc: Jens Axboe <axboe@kernel.dk>, Andreas Hindborg <a.hindborg@samsung.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Damien Le Moal <dlemoal@kernel.org>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] null_blk: fix validation of block size
+Message-ID: <Zl4dxaQgPbw19Irk@kbusch-mbp.dhcp.thefacebook.com>
+References: <20240603192645.977968-1-nmi@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] iommu/dma: Make limit checks self-contained
-To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
- Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@lst.de>
-Cc: Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
- <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>,
- Matthew Rosato <mjrosato@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
-References: <cover.1713523152.git.robin.murphy@arm.com>
- <e28a114243d1e79eb3609aded034f8529521333f.1713523152.git.robin.murphy@arm.com>
- <aeb13631-7504-4c3c-ba7b-812bf121a60f@oldschoolsolutions.biz>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <aeb13631-7504-4c3c-ba7b-812bf121a60f@oldschoolsolutions.biz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603192645.977968-1-nmi@metaspace.dk>
 
-Hi Jens,
+On Mon, Jun 03, 2024 at 09:26:45PM +0200, Andreas Hindborg wrote:
+> -	dev->blocksize = round_down(dev->blocksize, 512);
+> -	dev->blocksize = clamp_t(unsigned int, dev->blocksize, 512, 4096);
+> +	if (blk_validate_block_size(dev->blocksize) != 0) {
+> +		return -EINVAL;
+> +	}
 
-On 2024-06-03 8:37 pm, Jens Glathe wrote:
-> Hi Robin,
-> 
-> an observation from 6.10-rc1: On sc8280xp (Lenovo X13s, Windows Dev Kit
-> 2023), when booted to EL2 with the arm-smmuv3 under control of Linux, it
-> fails to set up DMA transfers to nvme. My box boots from nvme, so I only
-> got a black screen. @craftyguy booted from USB, and got this:
+No need for the { } brackets for a one-line if.
 
-Indeed, I see there's a dma-ranges property with a base of 0 in that DT, 
-so all manner of hilarity may ensue. The fix is here, just waiting to be 
-picked up:
-
-https://lore.kernel.org/linux-iommu/159193e80b6a7701c61b32d6119ac68989d457bd.1716997607.git.robin.murphy@arm.com/
-
-Thanks,
-Robin.
+It also looks like a good idea if this check was just done in
+blk_validate_limits() so that each driver doesn't have to do their own
+checks. That block function is kind of recent though. Your patch here
+looks fine if you want stable back-ports, but I haven't heard any
+complaints till recently :)
