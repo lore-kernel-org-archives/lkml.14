@@ -1,104 +1,132 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5039FE5;
-	Mon,  3 Jun 2024 06:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD773D0D9
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396776; cv=none; b=mZ3zalrvab12V/uqymOuuXSsgD0EIVxdwglVZDxXBQwsAYh1ueE05DSt8dLG/k9xUA06o+ty4o12AwC6wkZmbK9iT+BOPzzENu4cugy5Qqh01q/djG9wg1BWmGo3F2gbKIGJzQZRR2DTkMiZrN4lNV6b40e42U1PSd0xbtlGtrA=
+	t=1717396789; cv=none; b=QjuU41sCDId4LN7bwWps/klk/zQpHrQauxH9r0SRlr5Sk9lt3LuM4X5Q9ITQpPfwyWE9X4x8WIjMHwszmNN+REc3n1tIwRDBgUAdfGKLZS7RXRkmcVK4ptioyFfOtR8BmCtN/xnD7GpOWnBxJDCdu0I++EINQv9hcHr0z7MMSBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396776; c=relaxed/simple;
-	bh=ZpTAvN6hUerwIfZ9CtWKHnQuSfPH3c/DikGOy5+AIjg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Oh4ByXzz9fVkm+fMF8y1/8T4k3Ps3nOmTSvFVESvVIT5dzmAVQujj5uhOExJyOoaVsELLU9n/xIAXCOK56FUUCLHuNyNm2hXB6adfG3JefVrgy9xo2uPI/B5ssk8KR53PrKDVK47QtuKUZZJ1m/nqEpYMJSPvCKF5JTSkp1fRS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4536d2vO52498792, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4536d2vO52498792
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Jun 2024 14:39:02 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 3 Jun 2024 14:39:03 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 3 Jun 2024 14:39:02 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Mon, 3 Jun 2024 14:39:02 +0800
-From: Hayes Wang <hayeswang@realtek.com>
-To: Douglas Anderson <dianders@chromium.org>,
-        "David S . Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-CC: "danielgeorgem@google.com" <danielgeorgem@google.com>,
-        Andrew Lunn
-	<andrew@lunn.ch>, Grant Grundler <grundler@chromium.org>,
-        Heiner Kallweit
-	<hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org"
-	<linux-usb@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>
-Subject: RE: [PATCH REPOST net-next 1/2] r8152: If inaccessible at resume time, issue a reset
-Thread-Topic: [PATCH REPOST net-next 1/2] r8152: If inaccessible at resume
- time, issue a reset
-Thread-Index: AQHasuswBg+aoM1vbkGYnO9BBos/N7G1mwVQ
-Date: Mon, 3 Jun 2024 06:39:02 +0000
-Message-ID: <c885d8b6ade4442d9cacf36c55d81be5@realtek.com>
-References: <66590f22.170a0220.8b5ad.1750@mx.google.com>
-In-Reply-To: <66590f22.170a0220.8b5ad.1750@mx.google.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1717396789; c=relaxed/simple;
+	bh=6zIG1+ce+MFr3YKcNcxLW9ehBTfd0YUfDO7c/QJPUfc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JPUmgOzfZTy8iV2fj23uMBa5m3SofTI8BDZECP1fbJ+rXWITSQ4w76vD8v4S0zYmGP+XhtZVHWSM1mJxWYrWppxiHx4Dj0TIlp1Y0cwB24rvx2qlsgRG5eBm4bh7UojPK/4kJuUKalpdWvciqAEov6H62gKeJEUCGAdjRkFNim8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=Wj3ii0ir; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="Wj3ii0ir"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-57a196134d1so4431026a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 23:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1717396785; x=1718001585; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4/kSWlsZgItMKs0n3WD4Nrf7fVlEdWxgIbQ1jzkl5d4=;
+        b=Wj3ii0irnq4Z9rAan3f6ck/rRUr308vMh2w808luWnsz6kErhJ/vcaf+q+QxQWco5U
+         hWbguK9Ich9Ac+qIwNqGoqqxCbKelhpqB42vpR/mrTX5/YWx24FnOcWe6ePzrhJRsW/m
+         c70RfESusN8DRhTcchefkuQp+gQ6vQtBd7R1zAIu+NvQZ2dhskmquek2SJ/YqUKdm+c0
+         9waOd4iKez4bMc4qfaMOeWtQIG66tcAQz3zChCkn7lUD+RPcxDndj8ZK9TLum3u3JQzw
+         gs8ksD2bus8gXQZbv7i+Lt9kVpokJqnMpPrP4xB9Vyd1tjDFQhhriDd/gOGs5VGnp8df
+         uRWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717396785; x=1718001585;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4/kSWlsZgItMKs0n3WD4Nrf7fVlEdWxgIbQ1jzkl5d4=;
+        b=Smz9e6ifvD/1ITyv5UwD9zfd13PDqjeM94Dszyw/AYH1rH6WC9NIOuzK38ieYgF7cw
+         UraAVQ4SoTrD7MaeFBlW9s9osfDuSUDHOKECpR4rTrVWp6LzN+IJBQRJQIrdxwAThM2W
+         uqXWb3TLB+xR88u/kMTcal5EI3i6fVJ7gFLEB47mxRKeVVpPrEhrc7ZnLANJtal2x7l2
+         T3a8p6X6AVpg5QgmnSuuvB8EhcpfY09b0CqMZ7LgM+aiG7V2+BNWyiyt0aClIJiRFKHD
+         PPpeEag/unOJdFlGJeLELeQ4NHgP51WP+IitKHRE1OwJr5GiPQNFuTbAi9lC/GixTUwG
+         KwEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKhTMEBaOIFgaWHJDSR8el0RKZKmy/kMfljXpRlowjiGL/GOyQMw3FQROezdTcqdfzDoDimgIApSIUheaesVxC9XmXcywFQNRGiXvS
+X-Gm-Message-State: AOJu0YziKZD+c+Hk2rL0cxaZda5CEqQZBGx8uIBCUBhQJiNtGyOTxNUp
+	yHMkBduIBMOxwLXcUDn6NZ8LsVXKXu4SL4XBQ7ADOeO7ZyeCJSUXncokN2XB2p8=
+X-Google-Smtp-Source: AGHT+IHPI42I+wiDmrMQUuBnkODfjkjRd3F/AhQNQPxFvtXVyYyNTCx5IjDc+RZbp/mfvvWlLxUi5w==
+X-Received: by 2002:a17:906:15db:b0:a68:a2d7:3872 with SMTP id a640c23a62f3a-a68a2d73920mr313157566b.45.1717396785032;
+        Sun, 02 Jun 2024 23:39:45 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68e2d1333fsm234930866b.219.2024.06.02.23.39.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Jun 2024 23:39:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 03 Jun 2024 08:39:44 +0200
+Message-Id: <D1Q6CMZM78VI.ABYGRRV5E61B@fairphone.com>
+Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ "Stanimir Varbanov" <stanimir.varbanov@linaro.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-media@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2] media: dt-bindings: qcom,sc7280-venus: Allow one
+ IOMMU entry
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Luca Weiss" <luca.weiss@fairphone.com>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+ "Stanimir Varbanov" <stanimir.k.varbanov@gmail.com>, "Vikash Garodia"
+ <quic_vgarodia@quicinc.com>, "Bryan O'Donoghue"
+ <bryan.odonoghue@linaro.org>, "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240412-sc7280-venus-bindings-v2-1-48ca8c2ec532@fairphone.com>
+In-Reply-To: <20240412-sc7280-venus-bindings-v2-1-48ca8c2ec532@fairphone.com>
 
-Douglas Anderson <dianders@chromium.org>
-> Sent: Friday, May 31, 2024 7:43 AM
-[...]
-> If we happened to get a USB transfer error during the transition to
-> suspend then the usb_queue_reset_device() that r8152_control_msg()
-> calls will get dropped on the floor. This is because
-> usb_lock_device_for_reset() (which usb_queue_reset_device() uses)
-> silently fails if it's called when a device is suspended or if too
-> much time passes.
->=20
-> Let's resolve this by resetting the device ourselves in r8152's
-> resume() function.
->=20
-> NOTE: due to timing, it's _possible_ that we could end up with two USB
-> resets: the one queued previously and the one called from the resume()
-> patch. This didn't happen in test cases I ran, though it's conceivably
-> possible. We can't easily know if this happened since
-> usb_queue_reset_device() can just silently drop the reset request. In
-> any case, it's not expected that this is a problem since the two
-> resets can't run at the same time (because of the device lock) and it
-> should be OK to reset the device twice. If somehow the double-reset
-> causes problems we could prevent resets from being queued up while
-> suspend is running.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Fri Apr 12, 2024 at 4:19 PM CEST, Luca Weiss wrote:
+> Some SC7280-based boards crash when providing the "secure_non_pixel"
+> context bank, so allow only one iommu in the bindings also.
 
-Acked-by: Hayes Wang <hayeswang@realtek.com>
+Hi all,
 
-Best Regards,
-Hayes
+This patch is still pending and not having it causes dt validation
+warnings for some qcom-sc7280 boards.
+
+Regards
+Luca
+
+>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> Reference:
+> https://lore.kernel.org/linux-arm-msm/20231201-sc7280-venus-pas-v3-2-bc13=
+2dc5fc30@fairphone.com/
+> ---
+> Changes in v2:
+> - Pick up tags
+> - Otherwise just a resend, v1 was sent in January
+> - Link to v1: https://lore.kernel.org/r/20240129-sc7280-venus-bindings-v1=
+-1-20a9ba194c60@fairphone.com
+> ---
+>  Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.ya=
+ml b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
+> index 8f9b6433aeb8..10c334e6b3dc 100644
+> --- a/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
+> +++ b/Documentation/devicetree/bindings/media/qcom,sc7280-venus.yaml
+> @@ -43,6 +43,7 @@ properties:
+>        - const: vcodec_bus
+> =20
+>    iommus:
+> +    minItems: 1
+>      maxItems: 2
+> =20
+>    interconnects:
+>
+> ---
+> base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
+> change-id: 20240129-sc7280-venus-bindings-6e62a99620de
+>
+> Best regards,
 
