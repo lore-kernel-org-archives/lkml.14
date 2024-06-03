@@ -1,233 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408EF3FBB7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 07:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BA744C94
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 07:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717399556; cv=none; b=VqSmujUQVpBRinpjEnOmBvou6pngljMTd+HSqekkyLh6Ye4VxTvZKOzj5MCYVncVPl200ukyPGaM7WX92zuwJPLtIeaUm3gnYNFxmLkrM4RyTQUz8Ncs1YzW/zdFVdtXkssOOd9Tcu5k/r5Il0JFOTJ6XCsvB+TFnZ9GVzxc+a4=
+	t=1717399717; cv=none; b=WYEHAQjA1YycGq+tH1dKB+vW25bYJ5/WBwS78yyH3hG1Xl0W2PGd7Ep+XCjZOJKNONYJo8sIiSyPjBQoIrZPcOcrC6i8wjpVwp+463N7Q9uZGpSLrH6RJO0dX7gCyQd8VLernO7cZj1nfxBWrxP6hwAOuRJd8SS8jnJtIEjzFwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717399556; c=relaxed/simple;
-	bh=fEr+RytRIwgb/dvHPPXLkBVdzxQTfCtF/89gxECoHJ4=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=TRjkn401F3oqJOtYW/fKxfKqmXJ5mvFdM6ywebCsXwe8vAJ9+jSywSnZM3hwOD1GgGnxTM9aqFp9eaYsTo4euEHo5vD7r4w+2cjsTE6P09oFX4458RKsL6USKeWbbCMzqYbVOP0yIdq9/Xam8CTe5uHkTcr0qdABVvPuE5cX/CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaH5Gd7K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717399717; c=relaxed/simple;
+	bh=1uOBZ9DNGL1aMDu+BZY8z4um2Jts/ZdBXBPYGo1v13Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Aet4gc6s6Hhhlkff+rRRAR1I8hcF+VMMhaIHubYYn6llKHVHPZAvxmdT2fRZkNd+4ptQftbVovI90vi8jku/3f6B//BsKjJNsu1FWdMbOmZDU7Fh5vghdKL9CRau56Jym/UgNM5QDlkUPV9Bk19zhbj9/w5xiqxCFLlTExtETrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JfwCjBjW; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaH5Gd7K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6C6C2BD10;
-	Mon,  3 Jun 2024 07:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717399555;
-	bh=fEr+RytRIwgb/dvHPPXLkBVdzxQTfCtF/89gxECoHJ4=;
-	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
-	b=NaH5Gd7KT62gYBVqbgKqORFkGKaQUYYE1wWSR/XUDsxkXAFnN6L5wOwaX+0O5OKnb
-	 JnUgBMjbL7hm/8N0EaDhWRXlLDBq4r79XakcmJ2kM2th9eHiBMA3jZCTjtdgtH7foC
-	 DaQeAAJkoNDTGscVVzADdhlGQuUo1ilyMNBP7D4+Jdt57BfPBuY6ER8Q5hOUA8GeDc
-	 YajMHlvyXB3wtcYMkItOyrEVFtCih6AZX6Z0UGGSaYxrzrVv5OZScqCpsqEKC6HPS7
-	 bK7EKaeGrcoLMbJJ+3FJeOqs34Tj5qvj8aJVPZf+4knIg/6LQei+WwsjNvAPNhp2IN
-	 IYrlOLYucE08g==
-Content-Type: multipart/signed;
- boundary=62dfc1cd91faea84d32d705095127aab3d83287f351da8bd6655d6784688;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 03 Jun 2024 09:25:42 +0200
-Message-Id: <D1Q7BU6PJ356.1CTXPUZE8U6XX@kernel.org>
-Subject: Re: [PATCH] mtd: spi-nor: macronix: workaround for device id re-use
-Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Rasmus
- Villemoes" <rasmus.villemoes@prevas.dk>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Esben Haabendal" <esben@geanix.com>, "Tudor Ambarus"
- <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
- Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>
-X-Mailer: aerc 0.16.0
-References: <20240524-macronix-mx25l3205d-fixups-v1-1-ee152e56afb3@geanix.com>
-In-Reply-To: <20240524-macronix-mx25l3205d-fixups-v1-1-ee152e56afb3@geanix.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JfwCjBjW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717399716; x=1748935716;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=1uOBZ9DNGL1aMDu+BZY8z4um2Jts/ZdBXBPYGo1v13Y=;
+  b=JfwCjBjWaxI+G+WgPLj+N0y57v3JrWDavVVHzyrYZrrHz8zeSLrUxBbj
+   YUTMpQyuBE/XKF9cq5L2hy70uKiqZSQ/VcWJe4E4zPUw2zmL2TJ/pkUDw
+   N5FgdsvdiyfW8SUMQ7no+V5YiWkTJgoZ2jJK7JETDatI0gVjJkFcRW9pd
+   KMKWFtQdhIE4O2/5Y6Eru0r3O+lN0+5ILFbQzHvQA8gsZpgvBrVuq+DRf
+   MCEGrlZNByjuO9QpQsUyjf73e+WYnqa1UKvH4Zhph68mrOcscDlSaGrV/
+   StCr43wQpZgvUHm/LVtmFmGTo0DVAnCqYcftZ2Zl2JglyzV9hDCN9TkbR
+   Q==;
+X-CSE-ConnectionGUID: x5lus0exQrufWzH2pyrwvA==
+X-CSE-MsgGUID: movw7jiLTdmACio2fBxjTg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="24506600"
+X-IronPort-AV: E=Sophos;i="6.08,210,1712646000"; 
+   d="scan'208";a="24506600"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 00:28:35 -0700
+X-CSE-ConnectionGUID: BDzlFZdESZe9aQx9tWMGsg==
+X-CSE-MsgGUID: UpGVzFjxRRSssFOT0fwLWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,210,1712646000"; 
+   d="scan'208";a="67631644"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.161])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 00:28:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 3 Jun 2024 10:28:27 +0300 (EEST)
+To: Chia-I Wu <olvaffe@gmail.com>
+cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+    christian.koenig@amd.com, alexander.deucher@amd.com, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Alison Schofield <alison.schofield@intel.com>, 
+    Dave Jiang <dave.jiang@intel.com>, Baoquan He <bhe@redhat.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kernel/resource: optimize find_next_iomem_res
+In-Reply-To: <CAPaKu7SsD+X7KAO=3vEYU_7YGM_f+7k1fdC9nEK=-NaJw8oYaA@mail.gmail.com>
+Message-ID: <492bba9e-2e22-e6dd-e2e3-c218ec413c3e@linux.intel.com>
+References: <20240531053704.2009827-1-olvaffe@gmail.com> <ZlmQ3_wcL3cgp4Hb@smile.fi.intel.com> <CAPaKu7SsD+X7KAO=3vEYU_7YGM_f+7k1fdC9nEK=-NaJw8oYaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323328-2104200125-1717399707=:1529"
 
---62dfc1cd91faea84d32d705095127aab3d83287f351da8bd6655d6784688
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-2104200125-1717399707=:1529
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi,
-
-On Fri May 24, 2024 at 12:48 PM CEST, Esben Haabendal wrote:
-> Macronix engineers apparantly do not understand the purpose of having
-> an ID actually identify the chip and its capabilities. Sigh.
+On Fri, 31 May 2024, Chia-I Wu wrote:
+> On Fri, May 31, 2024 at 1:57=E2=80=AFAM Andy Shevchenko <andriy.shevchenk=
+o@linux.intel.com>
+> wrote:
+>       On Thu, May 30, 2024 at 10:36:57PM -0700, Chia-I Wu wrote:
+>       > We can skip children resources when the parent resource does not =
+cover
+>       > the range.
+>       >
+>       > This should help vmf_insert_* users on x86, such as several DRM
+>       drivers.
+>       > On my AMD Ryzen 5 7520C, when streaming data from cpu memory into
+>       amdgpu
+>       > bo, the throughput goes from 5.1GB/s to 6.6GB/s.=C2=A0 perf repor=
+t says
+>       >
+>       >=C2=A0 =C2=A034.69%--__do_fault
+>       >=C2=A0 =C2=A034.60%--amdgpu_gem_fault
+>       >=C2=A0 =C2=A034.00%--ttm_bo_vm_fault_reserved
+>       >=C2=A0 =C2=A032.95%--vmf_insert_pfn_prot
+>       >=C2=A0 =C2=A025.89%--track_pfn_insert
+>       >=C2=A0 =C2=A024.35%--lookup_memtype
+>       >=C2=A0 =C2=A021.77%--pat_pagerange_is_ram
+>       >=C2=A0 =C2=A020.80%--walk_system_ram_range
+>       >=C2=A0 =C2=A017.42%--find_next_iomem_res
+>       >
+>       > before this change, and
+>       >
+>       >=C2=A0 =C2=A026.67%--__do_fault
+>       >=C2=A0 =C2=A026.57%--amdgpu_gem_fault
+>       >=C2=A0 =C2=A025.83%--ttm_bo_vm_fault_reserved
+>       >=C2=A0 =C2=A024.40%--vmf_insert_pfn_prot
+>       >=C2=A0 =C2=A014.30%--track_pfn_insert
+>       >=C2=A0 =C2=A012.20%--lookup_memtype
+>       >=C2=A0 =C2=A09.34%--pat_pagerange_is_ram
+>       >=C2=A0 =C2=A08.22%--walk_system_ram_range
+>       >=C2=A0 =C2=A05.09%--find_next_iomem_res
+>       >
+>       > after.
+>=20
+>       Is there any documentation that explicitly says that the children
+>       resources
+>       must not overlap parent's one? Do we have some test cases? (Either =
+way
+>       they
+>       needs to be added / expanded).
+>=20
+> I think it's the opposite.=C2=A0 The assumption here is that a child=C2=
+=A0is always a subset of
+> its parent.=C2=A0 Thus, if the range to be checked is not covered by a pa=
+rent, we can skip
+> the children.
 >
-> The original Macronix SPI NOR flash that identifies itself as 0xC22016
-> with RDID was MX25L3205D. This chip does not support SFDP, but does
-> support the 2READ command (1-2-2).
->
-> When Macronix announced EoL for MX25L3205D, the recommended
-> replacement part was MX25L3206E, which conveniently also identifies
-> itself as 0xC22016. It does not support 2READ, but supports DREAD
-> (1-1-2) instead, and supports SFDP for discovering this.
->
-> When Macronix announced EoL for MX25L3206E, the recommended
-> replacement part was MX25L3233F, which also identifies itself as
-> 0xC22016. It supports DREAD, 2READ, and the quad modes QREAD (1-1-4)
-> and 4READ (1-4-4). This also support SFDP.
+> That's guaranteed by=C2=A0__request_resource.=C2=A0 I am less sure about=
+=C2=A0__insert_resource but
+> it appears to be the case too.=C2=A0 FWIW, resource_is_exclusive has the =
+same assumption
+> already.
 
-Thanks for collecting all this info!
+Yes, the children resources are contained within the parent resource (at=20
+least in PCI but given the code, I'd expect that to be general state of=20
+affairs).
 
-> So far, all of these chips have been handled the same way by the Linux
-> driver. The SFDP information have not been read, and no dual and quad
-> read modes have been enabled.
->
-> The trouble begins when we want to enable the faster read modes. The
-> RDID command only return the same 3 bytes for all 3 chips, so that
-> doesn't really help.
->
-> But we can take advantage of the fact that only the old MX25L3205D
-> chip does not support SFDP, so by triggering the old initialization
-> mechanism where we try to read and parse SFDP, but has a fall-back
-> configuration in place, we can configure all 3 chips to their optimal
-> configurations.
+> It looks like I need to do some refactoring to add tests.
+>=20
+>=20
+>       P.S> I'm not so sure about this change. It needs a thoroughly testi=
+ng,
+>       esp.
+>       in PCI case. Cc'ing to Ilpo.
+>=20
+> What's special about PCI?
 
-You are (mis)using the quad info bits to trigger an sfdp read,
-correct? In that case, I'd rather see a new flag in .no_sfdp_flags
-to explicitly trigger the SFDP read. Then your new flash would only
-need this flag and doesn't require the shenanigans with the fixup,
-right?
+--=20
+ i.
 
-> With this, MX25L3205D will get the faster 2READ command enabled,
-> speading up reads. This should be safe.
->
-> MX25L3206E will get the faster DREAD command enabled. This should also
-> be safe.
->
-> MX25L3233F will get all of DREAD, 2READ, QREAD and 4READ enabled. In
-> order for this to actually work, the WP#/SIO2 and HOLD#/SIO3 pins must
-> be correctly wired to the SPI controller.
-
-That should already be taken care of with the spi-{tx,rx}-bus-width.
-
--michael
-
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
-> ---
-> I only have access to boards with MX25L3233F flashes, so haven't been
-> able to test the backwards compatibility. If anybody has boards with
-> MX25L3205D and/or MX25L3206E, please help test this patch. Keep an eye
-> for read performance regression.
->
-> It is worth nothing that both MX25L3205D and MX25L3206E are
-> end-of-life, and is unavailable from Macronix, so any new boards
-> featuring a Macronix flash with this ID will likely be using
-> MX25L3233F.
-> ---
->  drivers/mtd/spi-nor/macronix.c | 60 ++++++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 59 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macroni=
-x.c
-> index ea6be95e75a5..c1e64ee3baa3 100644
-> --- a/drivers/mtd/spi-nor/macronix.c
-> +++ b/drivers/mtd/spi-nor/macronix.c
-> @@ -8,6 +8,63 @@
-> =20
->  #include "core.h"
-> =20
-> +/*
-> + * There is a whole sequence of chips from Macronix that uses the same d=
-evice
-> + * id. These are recommended as EoL replacement parts by Macronix, altho=
-ugh they
-> + * are only partly software compatible.
-> + *
-> + * Recommended replacement for MX25L3205D was MX25L3206E.
-> + * Recommended replacement for MX25L3206E was MX25L3233F.
-> + *
-> + * MX25L3205D does not support RDSFDP. The other two does.
-> + *
-> + * MX25L3205D supports 1-2-2 (2READ) command.
-> + * MX25L3206E supports 1-1-2 (DREAD) command.
-> + * MX25L3233F supports 1-1-2 (DREAD), 1-2-2 (2READ), 1-1-4 (QREAD), and =
-1-4-4
-> + * (4READ) commands.
-> + *
-> + * In order to trigger reading optional SFDP configuration, the
-> + * SPI_NOR_DUAL_READ|SPI_NOR_QUAD_READ flags are set, seemingly enabling=
- 1-1-2
-> + * and 1-1-4 for MX25L3205D. The other chips supporting RDSFDP will have=
- the
-> + * correct read commands configured based on SFDP information.
-> + *
-> + * As none of the other will enable 1-1-4 and NOT 1-4-4, so we identify
-> + * MX25L3205D when we see that.
-> + */
-> +static int
-> +mx25l3205d_late_init(struct spi_nor *nor)
-> +{
-> +	struct spi_nor_flash_parameter *params =3D nor->params;
-> +
-> +	/*                          DREAD  2READ  QREAD  4READ
-> +	 *                          1-1-2  1-2-2  1-1-4  1-4-4
-> +	 * Before SFDP parse          1      0      1      0
-> +	 * 3206e after SFDP parse     1      0      0      0
-> +	 * 3233f after SFDP parse     1      1      1      1
-> +	 * 3205d after this func      0      1      0      0
-> +	 */
-> +	if ((params->hwcaps.mask & SNOR_HWCAPS_READ_1_1_4) &&
-> +	    !(params->hwcaps.mask & SNOR_HWCAPS_READ_1_4_4)) {
-> +		/* Should be MX25L3205D */
-> +		params->hwcaps.mask &=3D ~SNOR_HWCAPS_READ_1_1_2;
-> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_2],
-> +					  0, 0, 0, 0);
-> +		params->hwcaps.mask &=3D ~SNOR_HWCAPS_READ_1_1_4;
-> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_1_4],
-> +					  0, 0, 0, 0);
-> +		params->hwcaps.mask |=3D SNOR_HWCAPS_READ_1_2_2;
-> +		spi_nor_set_read_settings(&params->reads[SNOR_CMD_READ_1_2_2],
-> +					  0, 4, SPINOR_OP_READ_1_2_2,
-> +					  SNOR_PROTO_1_2_2);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct spi_nor_fixups mx25l3205d_fixups =3D {
-> +	.late_init =3D mx25l3205d_late_init,
-> +};
-> +
->  static int
->  mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
->  			    const struct sfdp_parameter_header *bfpt_header,
-> @@ -61,7 +118,8 @@ static const struct flash_info macronix_nor_parts[] =
-=3D {
->  		.id =3D SNOR_ID(0xc2, 0x20, 0x16),
->  		.name =3D "mx25l3205d",
->  		.size =3D SZ_4M,
-> -		.no_sfdp_flags =3D SECT_4K,
-> +		.no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ,
-> +		.fixups =3D &mx25l3205d_fixups
->  	}, {
->  		.id =3D SNOR_ID(0xc2, 0x20, 0x17),
->  		.name =3D "mx25l6405d",
->
-> ---
-> base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
-> change-id: 20240524-macronix-mx25l3205d-fixups-882e92eed7d7
->
-> Best regards,
-
-
---62dfc1cd91faea84d32d705095127aab3d83287f351da8bd6655d6784688
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZl1v9xIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/gMxwGAvrjWMLnmjxWYUHiaiERNrQqk9PERyYF8
-ZttkIypS4wKL0tvNNNDWENLL9KwJu/yJAYCbHkiwVlZGfD+dI9XKXdXXu/SMT363
-c1pHCkOvDZ82nN21GLn+EMMOYVTEswg+beg=
-=u1Gm
------END PGP SIGNATURE-----
-
---62dfc1cd91faea84d32d705095127aab3d83287f351da8bd6655d6784688--
+--8323328-2104200125-1717399707=:1529--
