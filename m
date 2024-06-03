@@ -1,133 +1,183 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC1D46A4;
-	Mon,  3 Jun 2024 20:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF3A46A4;
+	Mon,  3 Jun 2024 20:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444954; cv=none; b=F0wk3INgurKel+LKp4DKPskOLU08b7VNVPlXtvV1wFpAUXvDQCjG0QbM9Z3rNPZ093Kwq3S2v+XNW8CQmDrNlhzq8oIRN5vJ1IORQJPvtkSPjYmvtbOzsRW3t+j3pY4jsH7UwP/ay4bozrMQZDR/BU7kdn2qA8sU5OgG5TDBvIY=
+	t=1717445272; cv=none; b=WD7qxMBLOJwm7P7u2lR2Rht60Li3Xw8NmEJPgekKlNtZaav8tgNheEfdW6pU4We9y5yZ+wgbWV1jCyVoWNiWcC76Kf3blL0qbrBlv80xYbwP3NotkN6IbiRcYP4Jr4PSbJaklehnMOm+Ujh4BKG37/nYK7bWcsIw7ZLCKEuk4mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444954; c=relaxed/simple;
-	bh=AYBltyibmcS4U4asfxC/o8WuJGFyFsZjjosU4fSNOks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GczYloGZjRroDsjzOAWfzpgEf5ST0aOhTdszo/qWy6K87MyMUduoqb2IMe54WM/mWOfTy3m9fT8hXkoUbjOR4Ora76QczFCRxpz4apjj74PEMibZqVWVmTfaejq3IFRnOt0+jBYIhjtW9vUR0iK8m5VeKtUnURdWExPgSyanXAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=IWYq40oB; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1717445272; c=relaxed/simple;
+	bh=xbP3NEx923MmK1rOGQkQZGfcDONB0sYHOQ7X3kICkbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SZ90zojiUPbSJ627NnAMBvzko9AHmOmmORtNjlbQ+ddGIulkoy8hxIXRR3w6Aj4mokdVG2OapeJ+WzUBuG6STbWY0S6pK170o17AbJJLLskBIU9VwnSnNP/r7ZhfadppKvAgvSDGrJWHrlCLyPc794WIXtS8h7B9NRRP1IYuQU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF6ixkfd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="IWYq40oB"
-Received: from fpc (unknown [5.228.116.47])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 79F9C4076749;
-	Mon,  3 Jun 2024 19:54:52 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 79F9C4076749
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1717444492;
-	bh=PcR2bwlZQti/encT2nDoXfnro9OdenjYjbHAMNVXpYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IWYq40oBY/kBriaYjrguGEQPgQHJNTs1L3nJCnOvYRDD7mfHqTd/QM68t0w45kGN3
-	 kmLLTStm3qw64DiVhXnzKdUJ+c9eKCXGbsV3q//0igVRu5IlAlCCCdTXQxUpv7ooSD
-	 /tstzyUTlNyEJQyM7xBXImsSIegkTc+1KDWeHZyI=
-Date: Mon, 3 Jun 2024 22:54:47 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: David Hildenbrand <david@redhat.com>
-Cc: Anastasia Belova <abelova@astralinux.ru>, lvc-project@linuxtesting.org,
-	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm/memory_hotplug: prevent accessing by index=-1
-Message-ID: <20240603-4f7a5fd957aa1f9cbc8d5f14-pchelkin@ispras.ru>
-References: <20240603112830.7432-1-abelova@astralinux.ru>
- <3c2b1b1e-c9b3-442e-8f7b-5c7518d3fbdb@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF6ixkfd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66D8C2BD10;
+	Mon,  3 Jun 2024 20:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717445272;
+	bh=xbP3NEx923MmK1rOGQkQZGfcDONB0sYHOQ7X3kICkbs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eF6ixkfdNG3aSUtnYDQ+Hr0Niz083LutVFYg5zYucMgoEnG37y4QDmQVAZAM3PmLc
+	 EIkLwBJ6pdcWxGOiNsTvmFaT9zeQVnkrZ8PIR1XlxH/cURC+/VK9SZQZ4+1VAZ5R8V
+	 OdheL7QY48b/DWwbfCvS1hx7CKY/Ve0gY1cHqv48YR/dL9wbWhUQ46FOkUph1X0YbJ
+	 Nmvmq94Eu/SzRMJFiZKh9Mtz5vVGvzCWezgLeY2GIJpmXD06sN6Z9sIEHrZesPL9AQ
+	 iDy0inifqx+eGmUILYOi2OTX/05+Nm/PUG5639trow7w1dueju5tBBKBlLeXKRsINL
+	 WVrpDKFKWk8pw==
+Date: Mon, 3 Jun 2024 21:07:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+Cc: Dumitru Ceclan via B4 Relay
+ <devnull+dumitru.ceclan.analog.com@kernel.org>, dumitru.ceclan@analog.com,
+ Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+ <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/6] iio: adc: ad7173: Add support for AD411x devices
+Message-ID: <20240603210738.3880f1cc@jic23-huawei>
+In-Reply-To: <93ebe75b-5a7d-4d69-9515-7cbeb66c8e7e@gmail.com>
+References: <20240531-ad4111-v4-0-64607301c057@analog.com>
+	<20240531-ad4111-v4-6-64607301c057@analog.com>
+	<20240601201912.32fe3524@jic23-huawei>
+	<93ebe75b-5a7d-4d69-9515-7cbeb66c8e7e@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3c2b1b1e-c9b3-442e-8f7b-5c7518d3fbdb@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 03. Jun 18:07, David Hildenbrand wrote:
-> On 03.06.24 13:28, Anastasia Belova wrote:
-> > nid may be equal to NUMA_NO_NODE=-1. Prevent accessing node_data
-> > array by invalid index with check for nid.
+On Mon, 3 Jun 2024 13:11:33 +0300
+"Ceclan, Dumitru" <mitrutzceclan@gmail.com> wrote:
+
+> On 01/06/2024 22:19, Jonathan Cameron wrote:
+> > On Fri, 31 May 2024 22:42:32 +0300
+> > Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
+> >   
+> >> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+> >>
+> >> Add support for AD4111/AD4112/AD4114/AD4115/AD4116.
+> >>
+> >> The AD411X family encompasses a series of low power, low noise, 24-bit,
+> >> sigma-delta analog-to-digital converters that offer a versatile range of
+> >> specifications.
+> >>
+> >> This family of ADCs integrates an analog front end suitable for processing
+> >> both fully differential and single-ended, bipolar voltage inputs
+> >> addressing a wide array of industrial and instrumentation requirements.
+> >>
+> >> - All ADCs have inputs with a precision voltage divider with a division
+> >>   ratio of 10.
+> >> - AD4116 has 5 low level inputs without a voltage divider.
+> >> - AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
+> >>   shunt resistor.
+> >>
+> >> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>  
+> > Hi Dumitru,
 > > 
-> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > A follow on comment on the validation code.
+> > Also there is some good docs for the sampling frequency but are they
+> > actually related to the rest of this change?  They also raise
+> > questions about ABI compliance that we may want to deal with as
+> > a follow up patch.
 > > 
-> > Fixes: e83a437faa62 ("mm/memory_hotplug: introduce "auto-movable" online policy")
-> > Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
-> > ---
-> >   mm/memory_hotplug.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > A few other trivial things inline.
 > > 
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index 431b1f6753c0..bb98ee8fe698 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -846,7 +846,7 @@ static bool auto_movable_can_online_movable(int nid, struct memory_group *group,
-> >   	unsigned long kernel_early_pages, movable_pages;
-> >   	struct auto_movable_group_stats group_stats = {};
-> >   	struct auto_movable_stats stats = {};
-> > -	pg_data_t *pgdat = NODE_DATA(nid);
-> > +	pg_data_t *pgdat = (nid != NUMA_NO_NODE) ? NODE_DATA(nid) : NULL;
-> >   	struct zone *zone;
-> >   	int i;
+> > This is looking pretty good, so hopefully we'll get the last few corners
+> > sorted in v5.
+> > 
+> > Thanks,
+> > 
+> > Jonathan
+> > 
+> >   
+> >> ---
+> >>  drivers/iio/adc/ad7173.c | 336 +++++++++++++++++++++++++++++++++++++++++++----
+> >>  1 file changed, 307 insertions(+), 29 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+> >> index ed8ff8c5f343..91ff984eedf4 100644
+> >> --- a/drivers/iio/adc/ad7173.c
+> >> +++ b/drivers/iio/adc/ad7173.c
+> >> @@ -1,8 +1,9 @@  
+> >   
+> >>  #define AD7173_INTERFACE_DATA_STAT	BIT(6)
+> >> @@ -125,26 +132,46 @@
+> >>  #define AD7173_VOLTAGE_INT_REF_uV	2500000
+> >>  #define AD7173_TEMP_SENSIIVITY_uV_per_C	477
+> >>  #define AD7177_ODR_START_VALUE		0x07
+> >> +#define AD4111_SHUNT_RESISTOR_OHM	50
+> >> +#define AD4111_DIVIDER_RATIO		10
+> >> +#define AD411X_VCOM_INPUT		0X10  
+> > 
+> > AD4111_VCOM_INPUT . Looks like one wildcard escaped an earlier edit?
+> >   
+> >> +#define AD4111_CURRENT_CHAN_CUTOFF	16
+> >>  
+> >> @@ -736,6 +918,21 @@ static int ad7173_write_raw(struct iio_dev *indio_dev,
+> >>  		return ret;
+> >>  
+> >>  	switch (info) {
+> >> +	/*
+> >> +	 * This attribute sets the sampling frequency to each channel individually.  
+> > 
+> > frequency for each channel?
+> >   
+> >> +	 * There are no issues for raw or buffered reads of an individual channel.
+> >> +	 *
+> >> +	 * When multiple channels are enabled in buffered mode, the effective
+> >> +	 * sampling rate of a channel is lowered in correlation to the number
+> >> +	 * of channels enabled and the sampling rate of the other channels.
+> >> +	 *
+> >> +	 * Example: 3 channels enabled with rates CH1:6211sps CH2,CH3:10sps
+> >> +	 * While the reading of CH1 takes only 0.16ms, the reading of CH2 and CH3
+> >> +	 * will take 100ms each.
+> >> +	 *
+> >> +	 * This will cause the reading of CH1 to be actually done once every
+> >> +	 * 200.16ms, an effective rate of 4.99sps.  
+> > 
+> > Hmm. This is a bit unfortunate as if I understand correctly that's not really what
+> > people will expect when they configure the sampling frequency.  However I can't immediately
+> > think of a better solution.  You could let userspace write a value that is cached
+> > then attempt to get as near as possible as channels are enabled.
+> > 
+> > Still this looks like a documentation enhancement of existing behavior
+> > in which case any functional change can be in a future patch.
+> > However I don't think the docs update belongs in this patch unless
+> > I'm missing some reason for it?
+> >  
 > 
+> Well, it would seem like this exact behaviour is already documented:
 > 
-> pgdat is never dereferenced when "nid == NUMA_NO_NODE".
-> 
-> NODE_DATA is defined as
-> 
-> arch/arm64/include/asm/mmzone.h:#define NODE_DATA(nid)          (node_data[(nid)])
-> arch/loongarch/include/asm/mmzone.h:#define NODE_DATA(nid)      (node_data[(nid)])
-> arch/mips/include/asm/mach-ip27/mmzone.h:#define NODE_DATA(n)           (&__node_data[(n)]->pglist)
-> arch/mips/include/asm/mach-loongson64/mmzone.h:#define NODE_DATA(n)             (__node_data[n])
-> arch/powerpc/include/asm/mmzone.h:#define NODE_DATA(nid)                (node_data[nid])
-> arch/riscv/include/asm/mmzone.h:#define NODE_DATA(nid)          (node_data[(nid)])
-> arch/s390/include/asm/mmzone.h:#define NODE_DATA(nid) (node_data[nid])
-> arch/sh/include/asm/mmzone.h:#define NODE_DATA(nid)             (node_data[nid])
-> arch/sparc/include/asm/mmzone.h:#define NODE_DATA(nid)          (node_data[nid])
-> arch/x86/include/asm/mmzone_32.h:#define NODE_DATA(nid) (node_data[nid])
-> arch/x86/include/asm/mmzone_64.h:#define NODE_DATA(nid)         (node_data[nid])
+>  "
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_voltageX_sampling_frequency
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_powerY_sampling_frequency
+>  What:		/sys/bus/iio/devices/iio:deviceX/in_currentZ_sampling_frequency
+>  KernelVersion:	5.20
+>  Contact:	linux-iio@vger.kernel.org
+>  Description:
+> 		Some devices have separate controls of sampling frequency for
+> 		individual channels. If multiple channels are enabled in a scan,
+> 		then the sampling_frequency of the scan may be computed from the
+> 		per channel sampling frequencies.
+>  "
 
-node_data array is declared as follows on most archs:
+I guess we've hit this before and added very specific documentation around this
+that I'd forgotten about.  Thanks for pointing it out!
 
-  struct pglist_data *node_data[MAX_NUMNODES];
+> Does it still make sense to keep this comment here? But if kept, yeah, a different patch
+I think there is no harm in having the additional info.  Not as if everyone will
+check the ABI docs whilst trying to understand the driver code. I didn't for one :(
 
-It's an array of pointers to struct pglist_data. When doing node_data[-1],
-it is actually dereferencing something before the start of the array in
-order to obtain a pointer to struct pglist_data, isn't it?
-
-   (C99, 6.5.2.1) The definition of the subscript operator [] is that
-   E1[E2] is identical to (*((E1)+(E2))).
+Jonathan
 
 > 
-> Regarding architectures that's actually support memory hotplug, this is pure pointer arithmetic.
-> (it is for mips as well, just less obvious)
+> ...
 
-Speaking in a dry language of C standard, pointer arithmetic with one
-before the first array element is also considered undefined behaviour:
-
-  (C99, 6.5.6p8) "If both the pointer operand and the result point to
-  elements of the same array object, or one past the last element of the
-  array object, the evaluation shall not produce an overflow; otherwise,
-  the behavior is undefined."
-
-Although it doesn't ever crash and probably never won't give any problems,
-but who knows what the compiler optimisations would do with this.
-
-> 
-> So how is that a real problem? Do we have a reproducer?
-
-This code looks to be executed with memory_hotplug.online_policy=auto-movable,
-I suppose it's not a real big problem due to the fact that node_data is a
-global variable as otherwise [-1] array access would lead to crashes..
-
-I've triggered the code with node_data[-1] on kernel with UBSAN enabled,
-and no splats were observed. Is it due to that node_data is a global
-variable or I somehow managed to misuse UBSAN for catching oob access?
-Cc'ing linux-hardening.
-
-Nonetheless, maybe it'd be better to define pgdat inside the else-block
-in auto_movable_can_online_movable() where it's only used?
