@@ -1,121 +1,166 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CF63F8F7
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D809433AF;
+	Mon,  3 Jun 2024 06:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396745; cv=none; b=RZCwz7W6H6iWJSSEyeF6dXeiGXYk7g790SoeOTg8dOVkIh5M5Y0G6WQqWTtVzsL62go7HNcPqqX8gtYqR51stS1nIHdFfyIUbBRcV15YeTFpQD40uuIQPF6+NMzI9EMY4iPDtNp+2GS/uZczMcJUP4HqBN9yq++MGi4M+Xn3rDM=
+	t=1717396747; cv=none; b=OfUOwt8u0QZYHEZTYYJv+rEEdIIwJP6zCzTYj3tPTDf+R0BatTF8wZVjkvdJR0uG4w8460XKh+XAXPLuKUUji+qHoFF1KeeVkq413Ne1S380zRIyyZ7rzMuimpXE56HAX+MJ5BHreSVAz197OQZ2SJbBwNzX0Cgm4FgdZXDKxAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396745; c=relaxed/simple;
-	bh=hkNs5q0Ag3u8/av4iTBEluUDEHvKgcU6hIRJDGCuqBk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fGeo6xsvPC65dvuwM5Fh4FFmlenTvDtC+xeLjTODofWnbwhBLHcqG4te3sHYt/yLvlpTD/MC36yVDZH3sEBshSDfglyPlVza1dJnGcU/nGkwMLo4ldb8dwTP0OHyB4ahjncbzRJy1aOjZ2aZ+TH3sHuq4rs6M/VbzEhh9tQxaXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=vHPS4Tah; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
+	s=arc-20240116; t=1717396747; c=relaxed/simple;
+	bh=ZT6dL4d//FjLhDkxode/yAzXBWXhRnvKcaaQGukyPg0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y1CQFZMkBKhBvwVuUK+aBTAgeGYrjw/6ize7b5QqM+4toAbavp+HyeHi0Zb8gmxKR2j75SF0JR4Q17QSqT39A+rKFCdZoUINhOljJM3wg6NMy4VZWznZOueddDGmqq035xH30BocuQ9Jxb5b7abTu7oLFjbPW1V1pY9aIJHwdbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qokBEjEY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vKuCjHtU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qokBEjEY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vKuCjHtU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="vHPS4Tah"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qokBEjEY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vKuCjHtU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qokBEjEY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vKuCjHtU"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Vt3wJ5W4Bz9sT7;
-	Mon,  3 Jun 2024 08:38:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
-	t=1717396736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 9CAED20015;
+	Mon,  3 Jun 2024 06:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717396743; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=27yHvoqXvTKgDtibjbQpIqsEZ0fGGVbEGRHK5/yVtA0=;
-	b=vHPS4TahH1ywsnpjIC/gz2MLCRnPUnGVg8OXoyzlUWg6fQKUjnPJOOaOygoKujO1heUODL
-	UmCK8uCIPaGkevvzAG30lvFSY08XDM3QahnqNJ+JRYvRVBW72eSPlY3DzORgiXloyGat+2
-	haE39ARYb406DPPYK3FZmj0+aND9GefcnxgYMWE6h2w+K3tExVeM3mwcw1Q5cP7Qc+9P1U
-	9epBHYLFYkiKDNSZx4EdPDhlH03VAWwqYeIDtXzP+GCZ6ZI2+O6DpGpS6+bI0bUVo2VVei
-	hj+Byj8O7J531Q4wpQNcZWEiBZS/QMRKCcYC8ar+AmKMUY/zrvSbl7WUy/0q9g==
-From: Ben Walsh <ben@jubnut.com>
-To: Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	"Dustin L. Howett" <dustin@howett.net>,
-	Kieran Levin <ktl@frame.work>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Ben Walsh <ben@jubnut.com>
-Subject: [PATCH v2 4/5] platform/chrome: cros_ec_lpc: Add a new quirk for AML mutex
-Date: Mon,  3 Jun 2024 07:38:33 +0100
-Message-ID: <20240603063834.5580-5-ben@jubnut.com>
-In-Reply-To: <20240603063834.5580-1-ben@jubnut.com>
-References: <20240603063834.5580-1-ben@jubnut.com>
+	bh=F/WIwD4qTfaup/BG/pV6m14+Ga7Rz6PNCOD3C8SNn1Q=;
+	b=qokBEjEYAu2dP8hhiCZwvB2NmNhle2NdDioW32fu6uoeHAyHZiUaIk0VV0naz7tZMu45Y1
+	22mhF4+92OhTw0cT1vVy4kzlXp/8yiJtgIETvpvRf7Gd/e67k+cv1LI+AH4ytalrOikmZh
+	TlHkdtfsFv3KS03kOhn26Av40pj6AF0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717396743;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/WIwD4qTfaup/BG/pV6m14+Ga7Rz6PNCOD3C8SNn1Q=;
+	b=vKuCjHtUAbnxImGJDqqugwXRevbB+wGspEGC4XkzKQKq1Wg21bgN4BNYAlzMkr+RkTag06
+	ZBH8RRwXiSStY2CQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717396743; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/WIwD4qTfaup/BG/pV6m14+Ga7Rz6PNCOD3C8SNn1Q=;
+	b=qokBEjEYAu2dP8hhiCZwvB2NmNhle2NdDioW32fu6uoeHAyHZiUaIk0VV0naz7tZMu45Y1
+	22mhF4+92OhTw0cT1vVy4kzlXp/8yiJtgIETvpvRf7Gd/e67k+cv1LI+AH4ytalrOikmZh
+	TlHkdtfsFv3KS03kOhn26Av40pj6AF0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717396743;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F/WIwD4qTfaup/BG/pV6m14+Ga7Rz6PNCOD3C8SNn1Q=;
+	b=vKuCjHtUAbnxImGJDqqugwXRevbB+wGspEGC4XkzKQKq1Wg21bgN4BNYAlzMkr+RkTag06
+	ZBH8RRwXiSStY2CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D339313A93;
+	Mon,  3 Jun 2024 06:39:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jkATMQZlXWZrSwAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 03 Jun 2024 06:39:02 +0000
+Message-ID: <c209f283-5078-4969-a69f-bd6b4fd49274@suse.de>
+Date: Mon, 3 Jun 2024 08:39:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 07/11] iomap: fix iomap_dio_zero() for fs bs > system
+ page size
+Content-Language: en-US
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, david@fromorbit.com,
+ chandan.babu@oracle.com, akpm@linux-foundation.org, brauner@kernel.org,
+ willy@infradead.org, djwong@kernel.org
+Cc: linux-kernel@vger.kernel.org, john.g.garry@oracle.com,
+ gost.dev@samsung.com, yang@os.amperecomputing.com, p.raghav@samsung.com,
+ cl@os.amperecomputing.com, linux-xfs@vger.kernel.org, hch@lst.de,
+ mcgrof@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+References: <20240529134509.120826-1-kernel@pankajraghav.com>
+ <20240529134509.120826-8-kernel@pankajraghav.com>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20240529134509.120826-8-kernel@pankajraghav.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,samsung.com:email,suse.de:email]
 
-Add a new quirk "CROS_EC_LPC_QUIRK_AML_MUTEX" which provides the name
-of an AML mutex to protect MEC memory access.
+On 5/29/24 15:45, Pankaj Raghav (Samsung) wrote:
+> From: Pankaj Raghav <p.raghav@samsung.com>
+> 
+> iomap_dio_zero() will pad a fs block with zeroes if the direct IO size
+> < fs block size. iomap_dio_zero() has an implicit assumption that fs block
+> size < page_size. This is true for most filesystems at the moment.
+> 
+> If the block size > page size, this will send the contents of the page
+> next to zero page(as len > PAGE_SIZE) to the underlying block device,
+> causing FS corruption.
+> 
+> iomap is a generic infrastructure and it should not make any assumptions
+> about the fs block size and the page size of the system.
+> 
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> ---
+> 
+> After disucssing a bit in LSFMM about this, it was clear that using a
+> PMD sized zero folio might not be a good idea[0], especially in platforms
+> with 64k base page size, the huge zero folio can be as high as
+> 512M just for zeroing small block sizes in the direct IO path.
+> 
+> The idea to use iomap_init to allocate 64k zero buffer was suggested by
+> Dave Chinner as it gives decent tradeoff between memory usage and efficiency.
+> 
+> This is a good enough solution for now as moving beyond 64k block size
+> in XFS might take a while. We can work on a more generic solution in the
+> future to offer different sized zero folio that can go beyond 64k.
+> 
+> [0] https://lore.kernel.org/linux-fsdevel/ZkdcAsENj2mBHh91@casper.infradead.org/
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Signed-off-by: Ben Walsh <ben@jubnut.com>
----
- drivers/platform/chrome/cros_ec_lpc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Cheers,
 
-diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index c1c26a7ba6d4..60627c5a596b 100644
---- a/drivers/platform/chrome/cros_ec_lpc.c
-+++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -44,6 +44,11 @@ static bool cros_ec_lpc_acpi_device_found;
-  * the ACPI device.
-  */
- #define CROS_EC_LPC_QUIRK_ACPI_ID                   BIT(1)
-+/*
-+ * Indicates that lpc_driver_data.quirk_aml_mutex_name should be used
-+ * to find an AML mutex to protect access to Microchip EC.
-+ */
-+#define CROS_EC_LPC_QUIRK_AML_MUTEX                 BIT(2)
- 
- /**
-  * struct lpc_driver_data - driver data attached to a DMI device ID to indicate
-@@ -52,11 +57,14 @@ static bool cros_ec_lpc_acpi_device_found;
-  * @quirk_mmio_memory_base: The first I/O port addressing EC mapped memory (used
-  *                          when quirk ...REMAP_MEMORY is set.)
-  * @quirk_acpi_id: An ACPI HID to be used to find the ACPI device.
-+ * @quirk_aml_mutex_name: The name of an AML mutex to be used to protect access
-+ *                        to Microchip EC.
-  */
- struct lpc_driver_data {
- 	u32 quirks;
- 	u16 quirk_mmio_memory_base;
- 	const char *quirk_acpi_id;
-+	const char *quirk_aml_mutex_name;
- };
- 
- /**
-@@ -484,6 +492,18 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
- 			}
- 			ACPI_COMPANION_SET(dev, adev);
- 		}
-+
-+		if (quirks & CROS_EC_LPC_QUIRK_AML_MUTEX) {
-+			const char *name
-+				= driver_data->quirk_aml_mutex_name;
-+			ret = cros_ec_lpc_mec_acpi_mutex(adev, name);
-+			if (ret) {
-+				dev_err(dev, "failed to get AML mutex '%s'", name);
-+				return ret;
-+			}
-+
-+			dev_info(dev, "got AML mutex '%s'", name);
-+		}
- 	}
- 
- 	/*
+Hannes
 -- 
-2.45.1
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
