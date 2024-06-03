@@ -1,402 +1,162 @@
-Received: from mail-m127109.qiye.163.com (mail-m127109.qiye.163.com [115.236.127.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F6C763E4;
-	Mon,  3 Jun 2024 09:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B203BBE0
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717408395; cv=none; b=MZ6e5GfFfbP14mklXt/MUtB39MLjJ9GwRe0MswIUgmIXNptgCt7WV1G00uxZsJyD4USBYJqIuu0hWOzerW+da1lnLRABwvrCa4/vaLq/bKjvJ+WO5LY5GVsvbF1c+SHqEEj30ulwvabFK0HjlMx+tXWdSQKjSJNW/qJP5VnwIiA=
+	t=1717408455; cv=none; b=WCXjr8mKAx0AZdIl0b+BFZ6tlevI7HJ84sH7KAfDEI7m0K/sm7/RDA+fLJF5B6UcEJKQjdFRzp63sIHuQ+X1q4luFJPLE751PwXBRFzxD4XjbT3g+4bIasCYxG7Z0LWcPsn2gWJp+xSjV3uz7+zX+9aM11TPY8RxV6BwfYm2vIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717408395; c=relaxed/simple;
-	bh=6hvv4jqC8Za+2zbPosS6Bl+fq1y+ZlgTdZmqjdd4nGM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c0ftNJ7v18a3SA2htMpKXAl6rjl/1eyCg+f4E7gH+85DOheQ2J1D4zPDMtVaRCEitUV1CFE/6FCOgKY4ArwbmiJzgsRW3cBGZb0ZyaQ93GKAHMmrjA3IgGqDwnDJeB/jd4pvCyFAErSpcXobi3FN1eSB4zg51v1GIAgOiM78XSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com; spf=pass smtp.mailfrom=senarytech.com; arc=none smtp.client-ip=115.236.127.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=senarytech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=senarytech.com
-Received: from book-ThinkStation-P328.. (unknown [61.183.143.78])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 46DE19005D5;
-	Mon,  3 Jun 2024 17:34:36 +0800 (CST)
-From: bo liu <bo.liu@senarytech.com>
-To: perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bo liu <bo.liu@senarytech.com>
-Subject: [PATCH] ALSA: hda/senarytech: add senarytech codec support
-Date: Mon,  3 Jun 2024 17:34:29 +0800
-Message-Id: <20240603093429.25511-1-bo.liu@senarytech.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717408455; c=relaxed/simple;
+	bh=+peIGDXHdxeIlHYyGTPXWwFskoqIlU2pSwAvTqgsXzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P45CXItqBE5IL72/qLxLGyA0UscJH+aL3pHIhvmQWuXWErZE0VPuXP8kuZgp1FoPU4UIgskAe3yeaEoK4NOr/6Kq8pk6YVFkuuBKqzLG4bN1K3IdsNYLL95S8I3g4Z7+p9Bodg/78CUUMqZhpY65XkSrqtVUXGbZyQ/+rJCbT4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k3Z/h0EE; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k3Z/h0EE"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52b8b7b8698so3184211e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 02:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717408451; x=1718013251; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qLkk+c5ginN4XRe+KwhOHqTxhUkkoXVpQz89rhzf+lE=;
+        b=k3Z/h0EEiOqQcw4cIR6sOF5UTDvFCRZJbm5c+PiGTJxEVYzy2JG6OYe4BB1tZqAygN
+         wDkVmGqhRqG4bXaqPy8IIQ2mxv9wmJh611vMsf8Emk1YSq+htgdqrgOVrY6v3boQHt6A
+         sXzYEZEhysPWnNRVl4F67ivBsvKewwB1tborioPrmBmNNMgyNL4ngGQmt9SUF/OAoF/T
+         wpOhhMiU8+O5FyG5O/ZfWHjeBpj3wWNftTk3g3QEl5Dh6MMn/hHaZVgnN1WSdvhBIhx0
+         gREISJTcnxKywPLqzkE/7hvgBq6mI/9SXK/qYFIprCXK5d3m0Pg+KBUlWvYR/Q+oMBvZ
+         vycA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717408451; x=1718013251;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qLkk+c5ginN4XRe+KwhOHqTxhUkkoXVpQz89rhzf+lE=;
+        b=l9C7PQDcRTpyXkqdHXXD702EOmgVcN6g7qlHoWuuIh1/hZrvvneM4kanzcxHyDGopf
+         F5qSXyjvhVXEc3w3BMXh1h1AkKFuyxPnSlBdG69kQJt3FkjASGfUnGqW4VhGlXdHjD+0
+         UbP5WZJQBU4GCVkHeCPl6wbXccGO4CqPpq4P0kxFDW8MMZQy43IyK8w8vTwhzShLaDMs
+         6W23zlRzdYc9Rs6NLmTB8atAWYUBts33J/dMnMHwBcC+lFH0AJddZZ87/a6n+FKD7nsf
+         CWbw9nXSPgoTUmIU9XDWH53Qee4Pjs3cHYWoW4hWnGZvCJei0dFo1qwgED20jF88ROw3
+         GSmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJEXdfzG2KoWWZdM9s1M6YJY1jeM1jaWPafVElyVqXB2axEI/oOLqRg3/KoIuJ2Nu+dyy5w6Es6mFZkB4naHGHvi/VV5ddWtySOO32
+X-Gm-Message-State: AOJu0YzpUItJFDYTLbDvFSaPUsoi24GvVf+mmKIJv8B4WaBPx/rXUKhy
+	qSRqvgLEsBa28mdYrQXQZlH5KRUMzCRdmTXKw4GxmIOIbxdzwdKnWfMl8zCn5mo=
+X-Google-Smtp-Source: AGHT+IEaQX/VHX/ClC4Jp5IPRoDYLsC8l7YUQq5F60Zuf49fhGK2CHsKvXUoSGC4g/yJ5Pnq14Jckg==
+X-Received: by 2002:ac2:599c:0:b0:520:5261:9cd0 with SMTP id 2adb3069b0e04-52b896cd4f6mr5309075e87.57.1717408451359;
+        Mon, 03 Jun 2024 02:54:11 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b98ffe95bsm368371e87.293.2024.06.03.02.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 02:54:11 -0700 (PDT)
+Date: Mon, 3 Jun 2024 12:54:09 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
+	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
+	quic_chennak@quicinc.com, stable <stable@kernel.org>
+Subject: Re: [PATCH v3 2/9] misc: fastrpc: Fix DSP capabilities request
+Message-ID: <vbpvi2kf3bo7w6fkpz4axq66ql353ypa5e73l5vsgsdm64cevl@ldehdkav75qg>
+References: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
+ <20240530102032.27179-3-quic_ekangupt@quicinc.com>
+ <zcqc4dgc6pippwiysybmkbvogfd6gbinnrw65kiulie3wlup5y@wq4dexvamo7t>
+ <1272b70e-fe2f-47cd-af77-6d3461b8596c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGk5IVkgYQk0fHhodTB9IHVUTARMWGhIXJBQOD1
-	lXWRgSC1lBWU1KVUpDSFVKT0hVTENZV1kWGg8SFR0UWUFZT0tIVUpNQ0xMT1VKS0tVSkJLS1kG
-X-HM-Tid: 0a8fdd735d6f03a9kunm46de19005d5
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PyI6MQw4KTNJODg9OTkhCyk4
-	CxVPCyxVSlVKTEpMT0tMSUxMS0tKVTMWGhIXVRkUVRcSDjsIHhUaCQIPHhgTVRgUFkVZV1kSC1lB
-	WU1KVUpDSFVKT0hVTENZV1kIAVlBSkpOTks3Bg++
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1272b70e-fe2f-47cd-af77-6d3461b8596c@quicinc.com>
 
-Add initial Senarytech codec support for SN6180. Note that this hda
-patch relies on the configuration default registers to be set correctly
-(normally by BIOS/firmware) in order for it to set up pin widgets
-properly.
+On Mon, Jun 03, 2024 at 11:45:26AM +0530, Ekansh Gupta wrote:
+> 
+> On 5/30/2024 4:29 PM, Dmitry Baryshkov wrote:
+> > On Thu, May 30, 2024 at 03:50:20PM +0530, Ekansh Gupta wrote:
+> > > Incorrect remote arguments are getting passed when requesting for
+> > > capabilities from DSP.
+> > Describe why and how they are incorrect.
+> 
+> Sure, I'll update this information in the next spin.
+> 
+> > 
+> > > Also there is no requirement to update the
+> > > PD type as it might cause problems for any PD other than user PD.
+> > Also... means that these are two separate issues. There should be two
+> > separate commits.
+> 
+> Okay, I'll separate out the PD type change.
+> 
+> > 
+> > > In addition to this, the collected capability information is not
+> > > getting copied properly to user. Add changes to address these
+> > > problems and get correct DSP capabilities.
+> > > 
+> > > Fixes: 6c16fd8bdd40 ("misc: fastrpc: Add support to get DSP capabilities")
+> > > Cc: stable <stable@kernel.org>
+> > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> > > ---
+> > >   drivers/misc/fastrpc.c | 7 +++----
+> > >   1 file changed, 3 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> > > index 4028cb96bcf2..61389795f498 100644
+> > > --- a/drivers/misc/fastrpc.c
+> > > +++ b/drivers/misc/fastrpc.c
+> > > @@ -1700,9 +1700,8 @@ static int fastrpc_get_info_from_dsp(struct fastrpc_user *fl, uint32_t *dsp_attr
+> > >   	args[0].length = sizeof(dsp_attr_buf_len);
+> > >   	args[0].fd = -1;
+> > >   	args[1].ptr = (u64)(uintptr_t)&dsp_attr_buf[1];
+> > > -	args[1].length = dsp_attr_buf_len;
+> > > +	args[1].length = dsp_attr_buf_len * sizeof(uint32_t);
+> > As you are skipping first entry, should there be (dsp_attr_buf_len - 1)
+> > * sizeof(uint32_t).
+> 
+> This was done in the next patch of the series, I'll bring it here.
+> 
+> > 
+> > >   	args[1].fd = -1;
+> > > -	fl->pd = USER_PD;
+> > >   	return fastrpc_internal_invoke(fl, true, FASTRPC_DSP_UTILITIES_HANDLE,
+> > >   				       FASTRPC_SCALARS(0, 1, 1), args);
+> > > @@ -1730,7 +1729,7 @@ static int fastrpc_get_info_from_kernel(struct fastrpc_ioctl_capability *cap,
+> > >   	if (!dsp_attributes)
+> > >   		return -ENOMEM;
+> > > -	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES_LEN);
+> > > +	err = fastrpc_get_info_from_dsp(fl, dsp_attributes, FASTRPC_MAX_DSP_ATTRIBUTES);
+> > So it looks like the argument was correct. It was passing length, not
+> > the number of attributes. The only thing to fix is that args[1].length
+> > should be dsp_attr_buf_len - sizeof(*dsp_attr_buf).
+> 
+> args[0] is expected to carry the information about the total number of attributes to be copied from DSP
+> and not the information about the size to be copied. Passing the size information leads to a failure
+> suggesting bad arguments passed to DSP.
 
-Signed-off-by: bo liu <bo.liu@senarytech.com>
----
- MAINTAINERS                      |   6 +
- sound/hda/hdac_device.c          |   1 +
- sound/pci/hda/Kconfig            |  11 ++
- sound/pci/hda/Makefile           |   2 +
- sound/pci/hda/patch_senarytech.c | 263 +++++++++++++++++++++++++++++++
- 5 files changed, 283 insertions(+)
- create mode 100644 sound/pci/hda/patch_senarytech.c
+AH, so it gets passed twice. As a pointer to u64 (for the number ofh
+attributes) and as a size for those attributes (via args[1].length).
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6a011792167..82ea8c8f74c1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24949,6 +24949,12 @@ F:	mm/zpool.c
- F:	mm/zswap.c
- F:	tools/testing/selftests/cgroup/test_zswap.c
- 
-+SENARYTECH AUDIO CODEC DRIVER
-+M:	bo liu <bo.liu@senarytech.com>
-+S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git
-+F:	sound/pci/hda/patch_senarytech.c
-+
- THE REST
- M:	Linus Torvalds <torvalds@linux-foundation.org>
- L:	linux-kernel@vger.kernel.org
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index 068c16e52dff..3fbb9793dcfc 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -665,6 +665,7 @@ static const struct hda_vendor_id hda_vendor_ids[] = {
- 	{ 0x19e5, "Huawei" },
- 	{ 0x1aec, "Wolfson Microelectronics" },
- 	{ 0x1af4, "QEMU" },
-+	{ 0x1fa8, "Senarytech" },
- 	{ 0x434d, "C-Media" },
- 	{ 0x8086, "Intel" },
- 	{ 0x8384, "SigmaTel" },
-diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
-index 0da625533afc..1252632f0ffa 100644
---- a/sound/pci/hda/Kconfig
-+++ b/sound/pci/hda/Kconfig
-@@ -292,6 +292,17 @@ config SND_HDA_CODEC_CONEXANT
- comment "Set to Y if you want auto-loading the codec driver"
- 	depends on SND_HDA=y && SND_HDA_CODEC_CONEXANT=m
- 
-+config SND_HDA_CODEC_SENARYTECH
-+	tristate "Build Senarytech HD-audio codec support"
-+	select SND_HDA_GENERIC
-+	select SND_HDA_GENERIC_LEDS
-+	help
-+	  Say Y or M here to include Senarytech HD-audio codec support in
-+	  snd-hda-intel driver, such as SN6186.
-+
-+comment "Set to Y if you want auto-loading the codec driver"
-+	depends on SND_HDA=y && SND_HDA_CODEC_SENARYTECH=m
-+
- config SND_HDA_CODEC_CA0110
- 	tristate "Build Creative CA0110-IBG codec support"
- 	select SND_HDA_GENERIC
-diff --git a/sound/pci/hda/Makefile b/sound/pci/hda/Makefile
-index 058ca0a289e4..7ac2105c2e00 100644
---- a/sound/pci/hda/Makefile
-+++ b/sound/pci/hda/Makefile
-@@ -24,6 +24,7 @@ snd-hda-codec-cs8409-y :=	patch_cs8409.o patch_cs8409-tables.o
- snd-hda-codec-ca0110-y :=	patch_ca0110.o
- snd-hda-codec-ca0132-y :=	patch_ca0132.o
- snd-hda-codec-conexant-y :=	patch_conexant.o
-+snd-hda-codec-senarytech-objs :=patch_senarytech.o
- snd-hda-codec-via-y :=		patch_via.o
- snd-hda-codec-hdmi-y :=		patch_hdmi.o hda_eld.o
- 
-@@ -55,6 +56,7 @@ obj-$(CONFIG_SND_HDA_CODEC_CS8409) += snd-hda-codec-cs8409.o
- obj-$(CONFIG_SND_HDA_CODEC_CA0110) += snd-hda-codec-ca0110.o
- obj-$(CONFIG_SND_HDA_CODEC_CA0132) += snd-hda-codec-ca0132.o
- obj-$(CONFIG_SND_HDA_CODEC_CONEXANT) += snd-hda-codec-conexant.o
-+obj-$(CONFIG_SND_HDA_CODEC_SENARYTECH) += snd-hda-codec-senarytech.o
- obj-$(CONFIG_SND_HDA_CODEC_VIA) += snd-hda-codec-via.o
- obj-$(CONFIG_SND_HDA_CODEC_HDMI) += snd-hda-codec-hdmi.o
- 
-diff --git a/sound/pci/hda/patch_senarytech.c b/sound/pci/hda/patch_senarytech.c
-new file mode 100644
-index 000000000000..21756f1e946b
---- /dev/null
-+++ b/sound/pci/hda/patch_senarytech.c
-@@ -0,0 +1,263 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * HD audio interface patch for Senary HDA audio codec
-+ *
-+ * Initially based on sound/pci/hda/patch_conexant.c
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+
-+#include <sound/hda_codec.h>
-+#include "hda_local.h"
-+#include "hda_auto_parser.h"
-+#include "hda_beep.h"
-+#include "hda_jack.h"
-+#include "hda_generic.h"
-+
-+struct senary_spec {
-+	struct hda_gen_spec gen;
-+
-+	/* extra EAPD pins */
-+	unsigned int num_eapds;
-+	hda_nid_t eapds[4];
-+	bool dynamic_eapd;
-+	hda_nid_t mute_led_eapd;
-+
-+	unsigned int parse_flags; /* flag for snd_hda_parse_pin_defcfg() */
-+
-+	int mute_led_polarity;
-+	unsigned int gpio_led;
-+	unsigned int gpio_mute_led_mask;
-+	unsigned int gpio_mic_led_mask;
-+};
-+
-+#ifdef CONFIG_SND_HDA_INPUT_BEEP
-+/* additional beep mixers; private_value will be overwritten */
-+static const struct snd_kcontrol_new senary_beep_mixer[] = {
-+	HDA_CODEC_VOLUME_MONO("Beep Playback Volume", 0, 1, 0, HDA_OUTPUT),
-+	HDA_CODEC_MUTE_BEEP_MONO("Beep Playback Switch", 0, 1, 0, HDA_OUTPUT),
-+};
-+
-+static int set_beep_amp(struct senary_spec *spec, hda_nid_t nid,
-+			int idx, int dir)
-+{
-+	struct snd_kcontrol_new *knew;
-+	unsigned int beep_amp = HDA_COMPOSE_AMP_VAL(nid, 1, idx, dir);
-+	int i;
-+
-+	spec->gen.beep_nid = nid;
-+	for (i = 0; i < ARRAY_SIZE(senary_beep_mixer); i++) {
-+		knew = snd_hda_gen_add_kctl(&spec->gen, NULL,
-+					    &senary_beep_mixer[i]);
-+		if (!knew)
-+			return -ENOMEM;
-+		knew->private_value = beep_amp;
-+	}
-+	return 0;
-+}
-+
-+static int senary_auto_parse_beep(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec = codec->spec;
-+	hda_nid_t nid;
-+
-+	for_each_hda_codec_node(nid, codec)
-+		if ((get_wcaps_type(get_wcaps(codec, nid)) == AC_WID_BEEP) &&
-+			(get_wcaps(codec, nid) & (AC_WCAP_OUT_AMP | AC_WCAP_AMP_OVRD)))
-+			return set_beep_amp(spec, nid, 0, HDA_OUTPUT);
-+	return 0;
-+}
-+#else
-+#define senary_auto_parse_beep()	0
-+#endif
-+
-+/* parse EAPDs */
-+static void senary_auto_parse_eapd(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec = codec->spec;
-+	hda_nid_t nid;
-+
-+	for_each_hda_codec_node(nid, codec) {
-+		if (get_wcaps_type(get_wcaps(codec, nid)) != AC_WID_PIN)
-+			continue;
-+		if (!(snd_hda_query_pin_caps(codec, nid) & AC_PINCAP_EAPD))
-+			continue;
-+		spec->eapds[spec->num_eapds++] = nid;
-+		if (spec->num_eapds >= ARRAY_SIZE(spec->eapds))
-+			break;
-+	}
-+
-+	/* NOTE: below is a wild guess; if we have more than two EAPDs,
-+	 * it's a new chip, where EAPDs are supposed to be associated to
-+	 * pins, and we can control EAPD per pin.
-+	 * OTOH, if only one or two EAPDs are found, it's an old chip,
-+	 * thus it might control over all pins.
-+	 */
-+	if (spec->num_eapds > 2)
-+		spec->dynamic_eapd = 1;
-+}
-+
-+static void senary_auto_turn_eapd(struct hda_codec *codec, int num_pins,
-+			      const hda_nid_t *pins, bool on)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_pins; i++) {
-+		if (snd_hda_query_pin_caps(codec, pins[i]) & AC_PINCAP_EAPD)
-+			snd_hda_codec_write(codec, pins[i], 0,
-+					    AC_VERB_SET_EAPD_BTLENABLE,
-+					    on ? 0x02 : 0);
-+	}
-+}
-+
-+/* turn on/off EAPD according to Master switch */
-+static void senary_auto_vmaster_hook(void *private_data, int enabled)
-+{
-+	struct hda_codec *codec = private_data;
-+	struct senary_spec *spec = codec->spec;
-+
-+	senary_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, enabled);
-+}
-+
-+static void senary_init_gpio_led(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec = codec->spec;
-+	unsigned int mask = spec->gpio_mute_led_mask | spec->gpio_mic_led_mask;
-+
-+	if (mask) {
-+		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_MASK,
-+				    mask);
-+		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_DIRECTION,
-+				    mask);
-+		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_DATA,
-+				    spec->gpio_led);
-+	}
-+}
-+
-+static int senary_auto_init(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec = codec->spec;
-+
-+	snd_hda_gen_init(codec);
-+	if (!spec->dynamic_eapd)
-+		senary_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, true);
-+
-+	senary_init_gpio_led(codec);
-+	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_INIT);
-+
-+	return 0;
-+}
-+
-+static void senary_auto_shutdown(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec = codec->spec;
-+
-+	/* Turn the problematic codec into D3 to avoid spurious noises
-+	 * from the internal speaker during (and after) reboot
-+	 */
-+	senary_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
-+}
-+
-+static void senary_auto_free(struct hda_codec *codec)
-+{
-+	senary_auto_shutdown(codec);
-+	snd_hda_gen_free(codec);
-+}
-+
-+#ifdef CONFIG_PM
-+static int senary_auto_suspend(struct hda_codec *codec)
-+{
-+	senary_auto_shutdown(codec);
-+	return 0;
-+}
-+#endif
-+
-+static const struct hda_codec_ops senary_auto_patch_ops = {
-+	.build_controls = snd_hda_gen_build_controls,
-+	.build_pcms = snd_hda_gen_build_pcms,
-+	.init = senary_auto_init,
-+	.free = senary_auto_free,
-+	.unsol_event = snd_hda_jack_unsol_event,
-+#ifdef CONFIG_PM
-+	.suspend = senary_auto_suspend,
-+	.check_power_status = snd_hda_gen_check_power_status,
-+#endif
-+};
-+
-+static int patch_senary_auto(struct hda_codec *codec)
-+{
-+	struct senary_spec *spec;
-+	int err;
-+
-+	codec_info(codec, "%s: BIOS auto-probing.\n", codec->core.chip_name);
-+
-+	spec = kzalloc(sizeof(*spec), GFP_KERNEL);
-+	if (!spec)
-+		return -ENOMEM;
-+	snd_hda_gen_spec_init(&spec->gen);
-+	codec->spec = spec;
-+	codec->patch_ops = senary_auto_patch_ops;
-+
-+	senary_auto_parse_eapd(codec);
-+	spec->gen.own_eapd_ctl = 1;
-+
-+	if (!spec->gen.vmaster_mute.hook && spec->dynamic_eapd)
-+		spec->gen.vmaster_mute.hook = senary_auto_vmaster_hook;
-+
-+	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_PRE_PROBE);
-+
-+	err = snd_hda_parse_pin_defcfg(codec, &spec->gen.autocfg, NULL,
-+				       spec->parse_flags);
-+	if (err < 0)
-+		goto error;
-+
-+	err = senary_auto_parse_beep(codec);
-+	if (err < 0)
-+		goto error;
-+
-+	err = snd_hda_gen_parse_auto_config(codec, &spec->gen.autocfg);
-+	if (err < 0)
-+		goto error;
-+
-+	/* Some laptops with Senary chips show stalls in S3 resume,
-+	 * which falls into the single-cmd mode.
-+	 * Better to make reset, then.
-+	 */
-+	if (!codec->bus->core.sync_write) {
-+		codec_info(codec,
-+			   "Enable sync_write for stable communication\n");
-+		codec->bus->core.sync_write = 1;
-+		codec->bus->allow_bus_reset = 1;
-+	}
-+
-+	snd_hda_apply_fixup(codec, HDA_FIXUP_ACT_PROBE);
-+
-+	return 0;
-+
-+ error:
-+	senary_auto_free(codec);
-+	return err;
-+}
-+
-+/*
-+ */
-+
-+static const struct hda_device_id snd_hda_id_senary[] = {
-+	HDA_CODEC_ENTRY(0x1fa86186, "SN6186", patch_senary_auto),
-+	{} /* terminator */
-+};
-+MODULE_DEVICE_TABLE(hdaudio, snd_hda_id_senary);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Senarytech HD-audio codec");
-+
-+static struct hda_codec_driver senary_driver = {
-+	.id = snd_hda_id_senary,
-+};
-+
-+module_hda_codec_driver(senary_driver);
+Please explain this in the commit message.
+
+> 
+> > 
+> > >   	if (err == DSP_UNSUPPORTED_API) {
+> > >   		dev_info(&cctx->rpdev->dev,
+> > >   			 "Warning: DSP capabilities not supported on domain: %d\n", domain);
+> > > @@ -1783,7 +1782,7 @@ static int fastrpc_get_dsp_info(struct fastrpc_user *fl, char __user *argp)
+> > >   	if (err)
+> > >   		return err;
+> > > -	if (copy_to_user(argp, &cap.capability, sizeof(cap.capability)))
+> > > +	if (copy_to_user(argp, &cap, sizeof(cap)))
+> > >   		return -EFAULT;
+> > >   	return 0;
+> > > -- 
+> > > 2.43.0
+> > > 
+
 -- 
-2.34.1
-
+With best wishes
+Dmitry
