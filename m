@@ -1,155 +1,111 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAA23FB1C;
-	Mon,  3 Jun 2024 06:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92F17F7EF;
+	Mon,  3 Jun 2024 06:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396799; cv=none; b=mm+kbQIZqHBG3Kyzj/41bz4lNTm91dhANJsUTjyhmMcC1zeIPI9zBeRTf8uj7/sY2p56RYhkuqe4nGWIGaOmEj/3rCucqS2kQz/exozQCSkNSgctmG4zSiG/nZ20a/AlKvBvDKNvyfNSNaaVKrhweJgHsIhuJgzO1peD+Lm+LRU=
+	t=1717396803; cv=none; b=T5Mbu2UCxFpBHbI2S4dNi9/GPZvl1ERb2ZiUfcs4Jsz0aoUI0MClqx1SPK0lnu6n4aLOJxdh0NDyGhZZK9tPmHEdz2ALzWJbSmOZ5bJVE6Vf1nQv2BtcbR5y34TwbVzT8v9DrOVhJWkfM7XAv6x2WtfXuegSiakOFpoXATyxp0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396799; c=relaxed/simple;
-	bh=wy1kEIFNWuIKDXwii9P9BWgUPVTkXwG6PerXplT8Hik=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZZyroz+m0qkzelszAII5nI9g55+Kj5r8gXYNpnCtvzLzaXtytwRMVADu0xo6O9JE8Y2PS2F4JiPdcxEQ7QRI8/+VUVTm8qbpaykV6E/6qDpbO7PgJlb0awGUJ5cxCI/zQRC4BLDx1WsSAJjfNgfSPxbMPTMJpnWZ9GMybZLY6Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5D3301A155E;
-	Mon,  3 Jun 2024 08:39:56 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 237E51A153F;
-	Mon,  3 Jun 2024 08:39:56 +0200 (CEST)
-Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id B3F9A180222A;
-	Mon,  3 Jun 2024 14:39:54 +0800 (+08)
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	rohit.fule@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	ziniu.wang_1@nxp.com,
-	haibo.chen@nxp.com,
-	LnxRevLi@nxp.com
-Subject: [PATCH v1 1/1] Bluetooth: btnxpuart: Add handling for boot-signature timeout errors
-Date: Mon,  3 Jun 2024 12:07:53 +0530
-Message-Id: <20240603063753.134272-1-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717396803; c=relaxed/simple;
+	bh=lets7R8QabYAyvZ/BA5K2o0vh78I6YznD7kMrzkB61s=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=VlG1MVP24LrkCGn7rilBQeD6N6QSadJ2VXIlYD2FVx1WG0E9UqvZziaNHXr6HGMY4MnNMrlVhs2gZrjuRT3miTJqF4Z4syTP1w1gKw1QUJ3ffEVFDZtFh/ZHFPOoJx0ZjpfLvrKrZInjQO0FHB3cDubNbOizJblcIhw6U5/i4Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vt3xH0P3hz4f3jrn;
+	Mon,  3 Jun 2024 14:39:47 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9AACF1A0189;
+	Mon,  3 Jun 2024 14:39:56 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP1 (Coremail) with SMTP id cCh0CgAnQAk8ZV1mZHu+OQ--.43911S2;
+	Mon, 03 Jun 2024 14:39:56 +0800 (CST)
+Subject: Re: [PATCH v2 8/8] writeback: factor out balance_wb_limits to remove
+ repeated code
+To: Tejun Heo <tj@kernel.org>
+Cc: willy@infradead.org, akpm@linux-foundation.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240514125254.142203-1-shikemeng@huaweicloud.com>
+ <20240514125254.142203-9-shikemeng@huaweicloud.com>
+ <ZljGiunxmVAlW6EE@slm.duckdns.org>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <cfbbcc80-7db1-8277-98ab-1f32c3a629ab@huaweicloud.com>
+Date: Mon, 3 Jun 2024 14:39:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <ZljGiunxmVAlW6EE@slm.duckdns.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAnQAk8ZV1mZHu+OQ--.43911S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ArWDJr1UtFy7KrW3AryfCrg_yoW8Jw1fpr
+	WIyanFyF4DtF4Ig3ZxCayxZr9IqrsxZry3JryrJrs3tr1a9rn7KF9xZrWruFy7Cr1DGa15
+	Zr4DKas7Gws5CFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-This handles the timeout errors seen in the bootloader signatures during
-FW download.
 
-When the bootloader does not receive a response packet from the host
-within a specific time, it adds an error code to the bootloader
-signature while requesting for the FW chunk from the same offset.
+Hello,
+on 5/31/2024 2:33 AM, Tejun Heo wrote:
+> Hello,
+> 
+> On Tue, May 14, 2024 at 08:52:54PM +0800, Kemeng Shi wrote:
+>> +static void balance_wb_limits(struct dirty_throttle_control *dtc,
+>> +			      bool strictlimit)
+>> +{
+>> +	wb_dirty_freerun(dtc, strictlimit);
+>> +	if (dtc->freerun)
+>> +		return;
+>> +
+>> +	wb_dirty_exceeded(dtc, strictlimit);
+>> +	wb_position_ratio(dtc);
+>> +}
+> ...
+>> @@ -1869,12 +1880,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
+>>  		 * Calculate global domain's pos_ratio and select the
+>>  		 * global dtc by default.
+>>  		 */
+>> -		wb_dirty_freerun(gdtc, strictlimit);
+>> +		balance_wb_limits(gdtc, strictlimit);
+>>  		if (gdtc->freerun)
+>>  			goto free_running;
+>> -
+>> -		wb_dirty_exceeded(gdtc, strictlimit);
+>> -		wb_position_ratio(gdtc);
+>>  		sdtc = gdtc;
+> 
+> Isn't this a bit nasty? The helper skips updating states because it knows
+> the caller is not going to use them? I'm not sure the slight code reduction
+> justifies the added subtlety.
 
-The host is expected to clear this error code with a NAK, and reply to
-only those bootloader signatures which have error code 0.
+It's a general rule that wb should not be limited if the wb is in freerun state.
+So I think it's intuitive to obey the rule in both balance_wb_limits and it's
+caller in which case balance_wb_limits and it's caller should stop to do anything
+when freerun state of wb is first seen.
+But no insistant on this...
 
-This error handling is valid for data_req bootloader signatures for V3
-and future bootloader versions.
-
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
- drivers/bluetooth/btnxpuart.c | 46 ++++++++++++++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 0b93c2ff29e4..2018513fb961 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -187,6 +187,10 @@ struct btnxpuart_dev {
- #define NXP_NAK_V3		0x7b
- #define NXP_CRC_ERROR_V3	0x7c
- 
-+#define NXP_ACK_RX_TIMEOUT	0x0002
-+#define NXP_HDR_RX_TIMEOUT	0x0003
-+#define NXP_DATA_RX_TIMEOUT	0x0004
-+
- #define HDR_LEN			16
- 
- #define NXP_RECV_CHIP_VER_V1 \
-@@ -277,6 +281,12 @@ struct nxp_bootloader_cmd {
- 	__be32 crc;
- } __packed;
- 
-+struct nxp_v3_rx_timeout_nak {
-+	u8 nak;
-+	__le32 offset;
-+	u8 crc;
-+} __packed;
-+
- static u8 crc8_table[CRC8_TABLE_SIZE];
- 
- /* Default configurations */
-@@ -899,6 +909,32 @@ static int nxp_recv_chip_ver_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	return 0;
- }
- 
-+static void nxp_handle_fw_dnld_error(struct hci_dev *hdev, struct v3_data_req *req)
-+{
-+	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-+	__u32 offset = __le32_to_cpu(req->offset);
-+	__u16 err = __le16_to_cpu(req->error);
-+	struct nxp_v3_rx_timeout_nak nak_tx_buf;
-+
-+	switch (err) {
-+	case NXP_ACK_RX_TIMEOUT:
-+	case NXP_HDR_RX_TIMEOUT:
-+	case NXP_DATA_RX_TIMEOUT:
-+		nak_tx_buf.nak = NXP_NAK_V3;
-+		nak_tx_buf.offset = __cpu_to_le32(offset);
-+		nak_tx_buf.crc = crc8(crc8_table, (u8 *)&nak_tx_buf,
-+				      sizeof(nak_tx_buf) - 1, 0xff);
-+		serdev_device_write_buf(nxpdev->serdev, (u8 *)&nak_tx_buf,
-+					sizeof(nak_tx_buf));
-+		break;
-+	default:
-+		bt_dev_dbg(hdev, "Unknown bootloader error: %d", err);
-+		break;
-+
-+	}
-+
-+}
-+
- static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- {
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
-@@ -913,7 +949,12 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	if (!req || !nxpdev->fw)
- 		goto free_skb;
- 
--	nxp_send_ack(NXP_ACK_V3, hdev);
-+	if (!req->error) {
-+		nxp_send_ack(NXP_ACK_V3, hdev);
-+	} else {
-+		nxp_handle_fw_dnld_error(hdev, req);
-+		goto free_skb;
-+	}
- 
- 	len = __le16_to_cpu(req->len);
- 
-@@ -940,9 +981,6 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 		wake_up_interruptible(&nxpdev->fw_dnld_done_wait_q);
- 		goto free_skb;
- 	}
--	if (req->error)
--		bt_dev_dbg(hdev, "FW Download received err 0x%02x from chip",
--			   req->error);
- 
- 	offset = __le32_to_cpu(req->offset);
- 	if (offset < nxpdev->fw_v3_offset_correction) {
--- 
-2.34.1
+Thanks.
+> 
+> Thanks.
+> 
 
