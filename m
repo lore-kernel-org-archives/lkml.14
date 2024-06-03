@@ -1,49 +1,49 @@
 Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EA612F5A0;
-	Mon,  3 Jun 2024 14:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E488132110;
+	Mon,  3 Jun 2024 14:44:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717425871; cv=none; b=U3Qtgdfw8z0rcF1HSxZ/v5oketHFM9LrKv2J1NOI7yn+28+fOyOXXBpG+21mRuUApSM9ipowDntlhojYn8GxsXjK5lpnXpyPl2aHDO7qwCe/hf6lvKi2IWBXDFEN8OwTzFTsQ1IbtpFVfbg7aBMs30BmIrGmBW7zZeumLojGVuU=
+	t=1717425876; cv=none; b=t0tX9/E330pgkdzJT8hwh+adTmZLuO8KWqln4+iM3LOQOARyFlgxbLWXpPdV7vSUcaQ1Vm+BrnBsY0Pzx1lPSRiWhsMmRfaZ7cUbs+hoBZ4k9+Kmg9osJEUCDt5KubV9jtV6wB6DnPhjF4YZI9UP3VbcRw9jzFsMAp+QysgCAWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717425871; c=relaxed/simple;
-	bh=YCFJH9i8CYXUpt91sYS6Dq7QkAvQFkMqR1g//KHWhBk=;
+	s=arc-20240116; t=1717425876; c=relaxed/simple;
+	bh=nMNg8q3S5J9D9ytoDoOy6OuUruVXINyBaiIQVaqduVA=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ET/Y3fL9cnuhZgHeeo1AD5M/VXafXXXlshsnTQHz0EmtHJHNwNaOLvibjbw2vYqfL4Up1XeK9E4MyUmlF7yS+D3HmLhFbgS/NzLMBxxbaPLXv9hZ1M+LaVsEfZ3POq7ifoYoUbYs/kXhuRxcKeAVP4vaoqfpSaxByaYhmNvuVd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=j8BbcaRf; arc=none smtp.client-ip=161.97.139.27
+	 MIME-Version; b=eqGQxs0k7riMSQ6qAdoHWdUwnGlRxaWBm8POyTXUEMj4l7JOJRFkP7i54iiPNSRCX1NSjM1UnnLenpiGJDLpmycLU8548R9cLYGDN9x7xM179lkAtljLxjzLEqFkLjKd/PYQQoqJryC3LS+90ausW21tYp8X1HjMTyjVLvKSfYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=45L9c8K5; arc=none smtp.client-ip=161.97.139.27
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="j8BbcaRf"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="45L9c8K5"
 Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
 	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1sE8v6-008hAg-2w;
-	Mon, 03 Jun 2024 16:44:22 +0200
+	id 1sE8vB-008hAw-2v;
+	Mon, 03 Jun 2024 16:44:27 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
 	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tmLRwCw5fvmkHYewvTmSzsnpuIGD6xKMMA1I4DUGgaI=; b=j8BbcaRfNS6Vdc/k6w/nI8VkuC
-	0eec8EBLSp3jKXLaKdO74cuXgv6sJ35uh6E7DBtiw9rSZzl/w1o4/ScXen/Kmnti9PglxBLO7w44t
-	D0aVM6F3Pf4cabos37gLovHDgt9EvxlvSWnpyPJiSO93nC+qZO9edKhdoici7c0A81TAxjZIRsJM4
-	HzEchyNJVLcr8+k46Yjo6gt16rvLTfhijw0qQ3uHt96IFSwejtO645H3WWHo2GK9b4QhJvv0vIiL1
-	gAEPoilLNzlVFAkeqT5OTKN/wx2Bx8jkxry4Jek3IqtZDqciwkiTyza33Hk3FG8xrtE+0teTn489b
-	X9rOMx9w==;
+	bh=Fk7G13HeRimY6DRpUituC/NmHzEEmRRr1a/ukg9SBGM=; b=45L9c8K5xSufwauaZZEQ5Ezfpp
+	HQGoHopTEzBWCystnXWBZ9n70yVN3n+eJTT0GIyadQWPti4VspeQ733X6KD06RMHZA5Whwvcs5C8g
+	QP+n+LHoUD9icF69QeK79FAQpd/SSLocdOBs+BTImX01eFzsq06AfmKu0QHkApxb15z1nRIoqnbGL
+	T22328hYwn30Eb2E9z/Hx13ZYy9JhKcsCuQUMFW/1bpeojfcgUEE9AWB+XtAWARJ6CsTdegYsK80W
+	hwQYx0QYYerG0XxALNH8xHvNl/JpHqcqNG+TvSSPoTGmEVh6aDQ530YlXeu75vpbNciq1IDkLu1Ka
+	wkGKsJsg==;
 Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
 	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1sE8v5-002Uep-0m;
-	Mon, 03 Jun 2024 16:44:20 +0200
+	id 1sE8vA-002UfX-1K;
+	Mon, 03 Jun 2024 16:44:25 +0200
 Received: from andi by aktux with local (Exim 4.96)
 	(envelope-from <andreas@kemnade.info>)
-	id 1sE8v6-009DAs-0n;
-	Mon, 03 Jun 2024 16:44:20 +0200
+	id 1sE8vB-009DB2-1P;
+	Mon, 03 Jun 2024 16:44:25 +0200
 From: Andreas Kemnade <andreas@kemnade.info>
 To: marcel@holtmann.org,
 	luiz.dentz@gmail.com,
@@ -60,9 +60,9 @@ To: marcel@holtmann.org,
 	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@gmail.com>,
 	robh@kernel.org,
 	hns@goldelico.com
-Subject: [PATCH v3 2/4] Bluetooth: ti-st: Add GNSS subdevice for TI Wilink chips
-Date: Mon,  3 Jun 2024 16:43:58 +0200
-Message-Id: <20240603144400.2195564-3-andreas@kemnade.info>
+Subject: [PATCH RFC v3 4/4] gnss: ai2: replace long sleeps by wait for acks
+Date: Mon,  3 Jun 2024 16:44:00 +0200
+Message-Id: <20240603144400.2195564-5-andreas@kemnade.info>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240603144400.2195564-1-andreas@kemnade.info>
 References: <20240603144400.2195564-1-andreas@kemnade.info>
@@ -74,181 +74,259 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some of these chips have GNSS support. GNSS support is available through
-channel 9 whilst FM is through channel 8. Add a platform subdevice for
-GNSS so that a driver for that functionality can be build. To avoid having
-useless GNSS devices, do it only when the devicetree node name contains
-gnss.
+Previously there were long sleeps for everything sent out.
+Replace the sleeps by some wait for completion.
+Wait times like 60ms are seen.
+There are ack packets sent out if requested. Unfortunately
+just waiting for them seems not stable, some open()/close()
+loop stress-testing brings the communication into complete
+disorder. Unfortunately these ack packets arrive before
+a complete answer of the command has been received but
+apparently after some processing has been done.
+Properly declaring expected answers might help but adding
+that can only be justified after some wider testing.
+
+So leaving this part of the series as a RFC and base
+for future optimzations.
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
- drivers/bluetooth/hci_ll.c   | 81 ++++++++++++++++++++++++++++++++++++
- include/linux/ti_wilink_st.h |  8 ++++
- 2 files changed, 89 insertions(+)
+ drivers/gnss/ai2.c | 111 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 72 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_ll.c b/drivers/bluetooth/hci_ll.c
-index 4a0b5c3160c2b..09e5a4dbd2f8c 100644
---- a/drivers/bluetooth/hci_ll.c
-+++ b/drivers/bluetooth/hci_ll.c
-@@ -32,6 +32,7 @@
- #include <linux/signal.h>
- #include <linux/ioctl.h>
- #include <linux/of.h>
-+#include <linux/platform_device.h>
- #include <linux/serdev.h>
- #include <linux/skbuff.h>
- #include <linux/ti_wilink_st.h>
-@@ -68,6 +69,9 @@ struct ll_device {
- 	struct gpio_desc *enable_gpio;
- 	struct clk *ext_clk;
- 	bdaddr_t bdaddr;
+diff --git a/drivers/gnss/ai2.c b/drivers/gnss/ai2.c
+index 0cc21b64b7c3f..19597ee891881 100644
+--- a/drivers/gnss/ai2.c
++++ b/drivers/gnss/ai2.c
+@@ -5,6 +5,8 @@
+  *
+  * Copyright (C) 2024 Andreas Kemnade <andreas@kemnade.info>
+  */
++#define DEBUG
++#include <linux/completion.h>
+ #include <linux/errno.h>
+ #include <linux/gnss.h>
+ #include <linux/init.h>
+@@ -67,6 +69,16 @@ struct ai2_device {
+ 	struct device *dev;
+ 	struct sk_buff *recv_skb;
+ 	bool recv_esc;
++	/*
++	 * completion for the lower level around
++	 * GPS_CH9_OP_COMPLETED_EVT
++	 * probably more important if we send large
++	 * fragmented packets
++	 */
++	struct completion ch9_complete;
 +
-+	void (*gnss_recv_func)(struct device *dev, struct sk_buff *skb);
-+	struct platform_device *gnssdev;
++	/* completion for AI2 ack packets */
++	struct completion ai2_ack_complete;
  };
  
- struct ll_struct {
-@@ -78,6 +82,8 @@ struct ll_struct {
- 	struct sk_buff_head tx_wait_q;	/* HCILL wait queue	*/
- };
+ static struct sk_buff *ai2_skb_alloc(unsigned int len, gfp_t how)
+@@ -86,6 +98,7 @@ static int ai2_send_frame(struct ai2_device *ai2dev,
+ 	int len;
+ 	struct gps_event_hdr *gnssdrv_hdr;
+ 	struct hci_dev *hdev;
++	int ret;
  
-+static int ll_gnss_register(struct ll_device *lldev);
-+static int ll_gnss_recv_frame(struct hci_dev *hdev, struct sk_buff *skb);
- /*
-  * Builds and sends an HCILL command packet.
-  * These are very simple packets with only 1 cmd byte
-@@ -411,6 +417,13 @@ static int ll_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
- 	.lsize = 0, \
- 	.maxlen = 0
- 
-+#define LL_RECV_GNSS \
-+	.type = 9, \
-+	.hlen = 3, \
-+	.loff = 1, \
-+	.lsize = 2
+ 	if (skb->len >= U16_MAX)
+ 		return -EINVAL;
+@@ -95,13 +108,25 @@ static int ai2_send_frame(struct ai2_device *ai2dev,
+ 	 * not needed for simple config commands
+ 	 */
+ 	len = skb->len;
++	print_hex_dump_bytes("ai2 send frame: ", DUMP_PREFIX_OFFSET, skb->data, skb->len);
 +
+ 	gnssdrv_hdr = skb_push(skb, sizeof(struct gps_event_hdr));
+ 	gnssdrv_hdr->opcode = GPS_CH9_OP_WRITE;
+ 	gnssdrv_hdr->plen = __cpu_to_le16(len);
+-
+ 	hci_skb_pkt_type(skb) = GPS_CH9_PKT_NUMBER;
+ 	hdev = st_get_hci(ai2dev->dev->parent);
+-	return hdev->send(hdev, skb);
++	reinit_completion(&ai2dev->ch9_complete);
 +
- static const struct h4_recv_pkt ll_recv_pkts[] = {
- 	{ H4_RECV_ACL,       .recv = hci_recv_frame },
- 	{ H4_RECV_SCO,       .recv = hci_recv_frame },
-@@ -419,6 +432,7 @@ static const struct h4_recv_pkt ll_recv_pkts[] = {
- 	{ LL_RECV_SLEEP_ACK, .recv = ll_recv_frame  },
- 	{ LL_RECV_WAKE_IND,  .recv = ll_recv_frame  },
- 	{ LL_RECV_WAKE_ACK,  .recv = ll_recv_frame  },
-+	{ LL_RECV_GNSS,      .recv = ll_gnss_recv_frame },
- };
- 
- /* Recv data */
-@@ -677,9 +691,69 @@ static int ll_setup(struct hci_uart *hu)
- 		}
- 	}
- 
-+	if (strstr(of_node_full_name(serdev->dev.of_node), "gnss"))
-+		ll_gnss_register(lldev);
++	ret = hdev->send(hdev, skb);
++	if (ret)
++		return ret;
++
++	if (!wait_for_completion_timeout(&ai2dev->ch9_complete,
++					 msecs_to_jiffies(2000)))
++		return -ETIMEDOUT;
++	dev_dbg(ai2dev->dev, "send finished\n");
 +
 +	return 0;
-+}
+ }
+ 
+ static void ai2_put_escaped(struct sk_buff *skb, u8 d)
+@@ -150,30 +175,50 @@ static struct sk_buff *ai2_compose_frame(bool request_ack,
+ 	return skb;
+ }
+ 
+-static int ai2_set_receiver_state(struct ai2_device *ai2dev,
+-					      uint8_t state)
++static int ai2_compose_send_frame(struct ai2_device *ai2dev,
++				  bool request_ack,
++				  u8 cmd,
++				  const u8 *data,
++				  int len)
+ {
+-	struct sk_buff *skb = ai2_compose_frame(true, AI2_CMD_RECEIVER_STATE,
+-						&state, 1);
++	struct sk_buff *skb = ai2_compose_frame(request_ack, cmd, data, len);
+ 	if (!skb)
+ 		return -ENOMEM;
+ 
++	if (request_ack) {
++		int ret;
 +
-+struct hci_dev *st_get_hci(struct device *dev)
-+{
-+	struct ll_device *lldev = dev_get_drvdata(dev);
++		reinit_completion(&ai2dev->ai2_ack_complete);
 +
-+	return lldev->hu.hdev;
-+}
-+EXPORT_SYMBOL(st_get_hci);
++		ret = ai2_send_frame(ai2dev, skb);
++		if (ret)
++			return ret;
 +
-+void st_set_gnss_recv_func(struct device *dev,
-+			   void (*recv_frame)(struct device *, struct sk_buff *))
-+{
-+	struct ll_device *lldev = dev_get_drvdata(dev);
++		if (!wait_for_completion_timeout(&ai2dev->ai2_ack_complete,
++						 msecs_to_jiffies(2000)))
++			return -ETIMEDOUT;
 +
-+	lldev->gnss_recv_func = recv_frame;
-+}
-+EXPORT_SYMBOL(st_set_gnss_recv_func);
-+
-+static int ll_gnss_recv_frame(struct hci_dev *hdev, struct sk_buff *skb)
-+{
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	struct ll_device *lldev = container_of(hu, struct ll_device, hu);
-+
-+	if (!lldev->gnssdev)
-+		return 0;
-+
-+	if (lldev->gnss_recv_func) {
-+		lldev->gnss_recv_func(&lldev->gnssdev->dev, skb);
 +		return 0;
 +	}
-+	kfree_skb(skb);
 +
- 	return 0;
+ 	return ai2_send_frame(ai2dev, skb);
  }
  
-+static int ll_gnss_register(struct ll_device *lldev)
++static int ai2_set_receiver_state(struct ai2_device *ai2dev,
++				  uint8_t state)
 +{
-+	struct platform_device *pdev;
-+	int ret;
-+
-+	pdev = platform_device_alloc("ti-ai2-gnss", PLATFORM_DEVID_AUTO);
-+	if (!pdev)
-+		return -ENOMEM;
-+
-+	pdev->dev.parent = &lldev->serdev->dev;
-+	lldev->gnssdev = pdev;
-+	ret = platform_device_add(pdev);
-+	if (ret)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	lldev->gnssdev = NULL;
-+	platform_device_put(pdev);
-+	return ret;
++	return ai2_compose_send_frame(ai2dev, true, AI2_CMD_RECEIVER_STATE,
++				      &state, 1);
 +}
 +
- static const struct hci_uart_proto llp;
+ static int ai2_config_nmea_reports(struct ai2_device *ai2dev,
+ 				   uint8_t mask)
+ {
+ 	u8 buf[4] = {0};
+-	struct sk_buff *skb;
  
- static int hci_ti_probe(struct serdev_device *serdev)
-@@ -757,12 +831,19 @@ static int hci_ti_probe(struct serdev_device *serdev)
+ 	buf[0] = mask;
+-	skb = ai2_compose_frame(true, AI2_CMD_CONFIG_NMEA,
+-				buf, sizeof(buf));
+-	if (!skb)
+-		return -ENOMEM;
+-
+-	return ai2_send_frame(ai2dev, skb);
++	return ai2_compose_send_frame(ai2dev, true, AI2_CMD_CONFIG_NMEA,
++				      buf, sizeof(buf));
+ }
+ 
+ /*
+@@ -186,22 +231,12 @@ static int gnss_ai2_init(struct ai2_device *ai2dev)
+ {
+ 	int ret;
+ 	u8 d = 0x01;
+-	struct sk_buff *skb = ai2_compose_frame(true, 0xf5, &d, 1);
+-
+-	if (!skb)
+-		return -ENOMEM;
+-
+-	ret = ai2_send_frame(ai2dev, skb);
++	ret = ai2_compose_send_frame(ai2dev, true, 0xf5, &d, 1);
+ 	if (ret)
+ 		return ret;
+ 
+-	msleep(200); /* seen some 60ms response time here, so wait a bit */
+ 	d = 5;
+-	skb = ai2_compose_frame(true, 0xf1, &d, 1);
+-	if (!skb)
+-		return -ENOMEM;
+-
+-	return ai2_send_frame(ai2dev, skb);
++	return ai2_compose_send_frame(ai2dev, true, 0xf1, &d, 1);
+ }
+ 
+ static int gnss_ai2_open(struct gnss_device *gdev)
+@@ -219,18 +254,14 @@ static int gnss_ai2_open(struct gnss_device *gdev)
+ 	if (ret)
+ 		goto err;
+ 
+-	/* TODO: find out on what kind of ack we should wait */
+-	msleep(50);
+ 	ret = ai2_set_receiver_state(ai2dev, RECEIVER_STATE_IDLE);
+ 	if (ret)
+ 		goto err;
+ 
+-	msleep(100);
+ 	ret = ai2_config_nmea_reports(ai2dev, NMEA_MASK_ALL);
+ 	if (ret)
+ 		goto err;
+ 
+-	msleep(50);
+ 	ret = ai2_set_receiver_state(ai2dev, RECEIVER_STATE_ON);
+ 	if (ret)
+ 		goto err;
+@@ -253,13 +284,9 @@ static void gnss_ai2_close(struct gnss_device *gdev)
+ {
+ 	struct ai2_device *ai2dev = gnss_get_drvdata(gdev);
+ 
+-	/* TODO: find out on what kind of ack we should wait */
+ 	if (!ai2raw) {
+-		msleep(50);
+ 		ai2_set_receiver_state(ai2dev, RECEIVER_STATE_IDLE);
+-		msleep(50);
+ 		ai2_set_receiver_state(ai2dev, RECEIVER_STATE_OFF);
+-		msleep(200); /* seen some longer response time here, so wait */
  	}
  
- 	return hci_uart_register_device(hu, &llp);
+ 	mutex_lock(&ai2dev->gdev_mutex);
+@@ -344,8 +371,10 @@ static void process_ai2_frame(struct ai2_device *ai2dev)
+ 	}
+ 
+ 	/* reached if byte 1 in the command packet is set to 1 */
+-	if (data[1] == AI2_ACK)
++	if (data[1] == AI2_ACK) {
++		complete(&ai2dev->ai2_ack_complete);
+ 		return;
++	}
+ 
+ 	head = skb_pull(ai2dev->recv_skb, 2); /* drop frame start marker */
+ 	while (head && (ai2dev->recv_skb->len >= 3)) {
+@@ -433,11 +462,9 @@ static void gnss_recv_frame(struct device *dev, struct sk_buff *skb)
+ 	gnss_hdr = (struct gps_event_hdr *)skb->data;
+ 
+ 	data = skb_pull(skb, sizeof(*gnss_hdr));
+-	/*
+-	 * REVISIT: maybe do something with the completed
+-	 * event
+-	 */
+-	if (gnss_hdr->opcode ==	GPS_CH9_OP_READ) {
 +
-+
-+	return 0;
++	switch (gnss_hdr->opcode) {
++	case GPS_CH9_OP_READ:
+ 		mutex_lock(&ai2dev->gdev_mutex);
+ 		if (ai2dev->gdev_open) {
+ 			if (ai2raw)
+@@ -449,6 +476,10 @@ static void gnss_recv_frame(struct device *dev, struct sk_buff *skb)
+ 				"receiving data while chip should be off\n");
+ 		}
+ 		mutex_unlock(&ai2dev->gdev_mutex);
++		break;
++	case GPS_CH9_OP_COMPLETED_EVT:
++		complete(&ai2dev->ch9_complete);
++		break;
+ 	}
+ 	kfree_skb(skb);
  }
+@@ -474,6 +505,8 @@ static int gnss_ai2_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, ai2dev);
+ 	st_set_gnss_recv_func(pdev->dev.parent, gnss_recv_frame);
+ 	mutex_init(&ai2dev->gdev_mutex);
++	init_completion(&ai2dev->ch9_complete);
++	init_completion(&ai2dev->ai2_ack_complete);
  
-+
- static void hci_ti_remove(struct serdev_device *serdev)
- {
- 	struct ll_device *lldev = serdev_device_get_drvdata(serdev);
- 
-+	if (lldev->gnssdev)
-+		platform_device_unregister(lldev->gnssdev);
-+
- 	hci_uart_unregister_device(&lldev->hu);
- }
- 
-diff --git a/include/linux/ti_wilink_st.h b/include/linux/ti_wilink_st.h
-index 10642d4844f0c..eccc2db004069 100644
---- a/include/linux/ti_wilink_st.h
-+++ b/include/linux/ti_wilink_st.h
-@@ -381,6 +381,14 @@ unsigned long st_ll_getstate(struct st_data_s *);
- unsigned long st_ll_sleep_state(struct st_data_s *, unsigned char);
- void st_ll_wakeup(struct st_data_s *);
- 
-+/**
-+ * various funcs used to interact between FM, GPS and BT
-+ */
-+struct hci_dev *st_get_hci(struct device *dev);
-+void st_set_gnss_recv_func(struct device *dev,
-+			   void (*recv_frame)(struct device *, struct sk_buff *));
-+
-+
- /*
-  * header information used by st_core.c for FM and GPS
-  * packet parsing, the bluetooth headers are already available
+ 	ret = gnss_register_device(gdev);
+ 	if (ret)
 -- 
 2.39.2
 
