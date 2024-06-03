@@ -1,145 +1,159 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ABC135A6F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:42:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA2137902;
+	Mon,  3 Jun 2024 17:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717436569; cv=none; b=ok9/4XIT3i1sG2HEDo4TOa1XEr1fgyN3/PheDm3aBYdME5iMMu2RcxTx4qtEO5TCKBNPNnYL7JyboxEK43E9KJtaT2U4erKZeCAxrcZN8/Sxe6yitSnciHz/mOl7atq48LD7sW99TeeB6OzDzRtOGV8EGDtmwKVvSjZv61HBZsk=
+	t=1717436611; cv=none; b=HkrdqHG56+80PIqJDO4JMnyOTRS6oFurV0cD0j34bFBD/JCeU3UKup4TwTzs33pOh29qKkceAIYMe0eP1E0ZfOkWODZmxiF5rMiHBca8gQqWj+QbQ14hRJeCAI6Y0MouRZ5Ajbh90i1GBuMHMzZs3W3/6AOjUGhsq9sVoxtgGt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717436569; c=relaxed/simple;
-	bh=rPAoZy6vxBtVU7x0pj3UdhVhA7bFxTF9Tss9xmCjp8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WJq3iof6nvE51isYCe+YhusoW7QcsOWaw0r6Qx6zBeDbYC/VRuejgb/OeUOcrK6h7suLBLKKXxqgC2uyq/OffZezzx1sloNx5EajixovmcZE7ohElsts86EXjoLyj1U69E071xG0GIpfWmn4a9OiB7njJnYAxhX7ZdqHS6MrxNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oIaFus9/; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717436611; c=relaxed/simple;
+	bh=j2giooDoELICQ3uc1GkFOkfhcLltnqQzqVBJAIjeHJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdOooymZc6TTtU0AU+vKKVRnGfai5E6EF6cS2taPfmov5Z/oFCotkDEHr8CgMw9gQXJL4zkjQt+vYwbfkv6PLblWpmwVfn2m44tYnH8Yd9pw27Ybg1lhqHm9XoNT6LgmXZYOl2sZo2YeaygisfM0M3fZfwa/thFkWL20d2zbDFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn9hWA6d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIaFus9/"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a2f27090aso5938445a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 10:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717436566; x=1718041366; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cX46hsOnvcHYWQ2/08aJP6HMfOKz/H2iKz5LdOxxIiY=;
-        b=oIaFus9/oBerxQMTo6NcQ0OmtrzbzjrX9z6s6pVYRayTVWbyOzBtKMKYikdhUbIHMy
-         FouGfFbcoFPRiDM90aN7G5K9zMwgRTir1toWGRZJhiPhGLnWF5vHTzAup2pMCtM+s/lQ
-         ZsIU7T+Vo22Vcf2SjHcPRy+4RT0zfXJyDGDxeN+uIfJOMtjGxbi81v7jVQT9NitPLwVs
-         475SNAT5R4WXf5pd0UNvBFi92f5iJCKi76ZLEeujm13QGLtyX8BcwahjYi+Xj6qgAuXw
-         8lERZebgRkK0rWX4KNFuLB0uF83QOO5W7Wxvp5AoDkvxOhm6pWrQr4hbYlb3D+9eiZK0
-         hi4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717436566; x=1718041366;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cX46hsOnvcHYWQ2/08aJP6HMfOKz/H2iKz5LdOxxIiY=;
-        b=MsztaVjyooKk90leWEIlh79MSUB41BnofWYYYfXZrJdeL5RNha0MQk//6iZWelePzm
-         TY0kuc8LEbyzTcsPZ+aHLGWer72qZ3y3X0K2VAUlKvkaHk7w/f28Y2fV1XqHSXSYPw/c
-         UfVT6Y7bzJuEPEm768DY8DsOYUl9W2PzEsbhfHdSLLG2Rqu9pwIzZOCXLyBwUMLsF6qw
-         E2JsiVKAwXfoxQhiiKPA4WgDgXBJeJX0mgL82vhZ4O5H/oWg9L3B/Iug3Ze6/S1W9aU5
-         AEKoAaTc3G1hMTGxhk0bW0Rcq7LvIopOb99WuCnBwDk/Gdh6/IghXf5Wy1qyv8oWE/pZ
-         jG6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVG3moLJM1coDbG4oNge9CoPcLZHl6vTtnV+FhZzyq+5WJn5BzkKhpf4IFQBB4ga1N3rCEqCtjoN53w9YkqACkzQW2ZlvwUh5wbw9mT
-X-Gm-Message-State: AOJu0YwQiVOXssv8t930r0OBQSBLOJVN2RzZ3sY1TBkXwH6LhPqpKrjw
-	mpXVKJh5quLmZHBgsTEAGLxN1VlbLwKXdlbJvptKlE4yQoU5jhTsP7cb+aaWECIaD1Zv7XGeKOC
-	2fnClwjnVe6pafh8i445kq9lI9rzk+yth/mQa
-X-Google-Smtp-Source: AGHT+IHi+ZsXWMd56cnJoCCuxUXLuaKUiF6CkEcw+xlGa1Gq7gdbgvhyC/+OuXMSzHHUjT2c42a3lstZlU6g7HMSpZw=
-X-Received: by 2002:a17:906:d0d4:b0:a59:be21:3587 with SMTP id
- a640c23a62f3a-a69541453d3mr31147066b.8.1717436565933; Mon, 03 Jun 2024
- 10:42:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn9hWA6d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B072AC2BD10;
+	Mon,  3 Jun 2024 17:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717436610;
+	bh=j2giooDoELICQ3uc1GkFOkfhcLltnqQzqVBJAIjeHJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dn9hWA6dMSiBGPUDMEWP9UIEij5v/bfQHq6dKecKjdLT4o4xF9krfA07ri6VVunxE
+	 4bkjIi0t07Rdx0fuUbeoNfVqxtHB4jCTCodT21dDg9EwLF+sHwtOvTxZaBDdYHu7A+
+	 MPZ6I1itabOTmR5aSmjeztm99+G3aBKTXTa/6KY4kZh+KqC65MRO+arsYQtsH8Q7w6
+	 aL9f1v1HYECrErCeXbf99FAoSpo/PGu3LFHJ64hsUnzXNU56M+VPjGrWrGUHlJ2W3w
+	 buv7fKlUVL+U8OQFLzz1tfcCMEXCVv6CnEfVZ5emUTfC9xIY1d+5mObAeNL2faM4le
+	 a1J8qUIjctEEA==
+Date: Mon, 3 Jun 2024 20:41:29 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org,
+	hpa@zytor.com, peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <Zl4ASZfWMkvAcJXO@kernel.org>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <cover.1717111180.git.ashish.kalra@amd.com>
+ <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+ <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
+ <Zl3HfiQ6oHdTdOdA@kernel.org>
+ <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
+ <Zl3hPefvOwPv0Mjn@kernel.org>
+ <141a9666-f3cf-4323-9536-4367f489be43@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGFP0L+BaNAtCF7c7cJ1bvbjomp03Fy0=6=w6dj29Fnr0ygSCA@mail.gmail.com>
- <CAJHvVchjzxLVfg844SNjK9EWmC+yhVneGaf1vVscmjomH_aaow@mail.gmail.com>
-In-Reply-To: <CAJHvVchjzxLVfg844SNjK9EWmC+yhVneGaf1vVscmjomH_aaow@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 3 Jun 2024 10:42:07 -0700
-Message-ID: <CAJD7tkaV8a-fVv4D_6_5LgmOHnMFXJWy-DwqvRDCTjEqyJkdKA@mail.gmail.com>
-Subject: Re: [PATCH] fix: Prevent memory leak by checking for NULL buffer
- before calling css_put()
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: Geunsik Lim <geunsik.lim@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, Ingo Molnar <mingo@elte.hu>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <a.p.zijlstra@chello.nl>, Hugh Dickins <hughd@google.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <141a9666-f3cf-4323-9536-4367f489be43@amd.com>
 
-On Mon, Jun 3, 2024 at 10:32=E2=80=AFAM Axel Rasmussen <axelrasmussen@googl=
-e.com> wrote:
->
-> On Mon, Jun 3, 2024 at 5:33=E2=80=AFAM Geunsik Lim <geunsik.lim@gmail.com=
-> wrote:
-> >
-> > This commit addresses a potential memory leak in the
-> > `get_mm_memcg_path()` function
-> > by explicitly checking if the allocated buffer (`buf`) is NULL before
-> > calling the
-> > `css_put()` function. The prefix 'css' means abbreviation of cgroup_sub=
-sys_state
-> >
-> > Previously, the code would directly call `css_put()` without checking
-> > the value of
-> > `buf`, which could lead to a memory leak if the buffer allocation faile=
-d.
-> > This commit introduces a conditional check to ensure that `css_put()`
-> > is only called
-> > if `buf` is not NULL.
-> >
-> > This change enhances the code's robustness and prevents memory leaks, i=
-mproving
-> > overall system stability.
-> >
-> > **Specific Changes:**
-> >
-> > * In the `out_put` label, an `if` statement is added to check
-> >   if `buf` is not NULL before calling `css_put()`.
-> >
-> > **Benefits:**
-> >
-> > * Prevents potential memory leaks
-> > * Enhances code robustness
-> > * Improves system stability
-> >
-> > Signed-off-by: Geunsik Lim <leemgs@gmail.com>
-> > Signed-off-by: Geunsik Lim <geunsik.lim@samsung.com>
-> > ---
-> >  mm/mmap_lock.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
-> > index 1854850b4b89..7314045b0e3b 100644
-> > --- a/mm/mmap_lock.c
-> > +++ b/mm/mmap_lock.c
-> > @@ -213,7 +213,8 @@ static const char *get_mm_memcg_path(struct mm_stru=
-ct *mm)
-> >         cgroup_path(memcg->css.cgroup, buf, MEMCG_PATH_BUF_SIZE);
-> >
-> >  out_put:
-> > -       css_put(&memcg->css);
-> > +        if (buf !=3D NULL)
-> > +                css_put(&memcg->css);
-> >  out:
-> >         return buf;
-> >  }
->
-> I think the existing code is correct, and this change actually
-> introduces a memory leak where there was none before.
->
-> In the case where get_memcg_path_buf() returns NULL, we *still* need
-> to css_put() what we got from get_mem_cgroup_from_mm() before.
->
-> NAK, unless I'm missing something.
+On Mon, Jun 03, 2024 at 11:56:01AM -0500, Kalra, Ashish wrote:
+> On 6/3/2024 10:29 AM, Mike Rapoport wrote:
+> 
+> > On Mon, Jun 03, 2024 at 09:01:49AM -0500, Kalra, Ashish wrote:
+> > > On 6/3/2024 8:39 AM, Mike Rapoport wrote:
+> > > 
+> > > > On Mon, Jun 03, 2024 at 08:06:56AM -0500, Kalra, Ashish wrote:
+> > > > > On 6/3/2024 3:56 AM, Borislav Petkov wrote
+> > > > > 
+> > > > > > > EFI memory map and due to early allocation it uses memblock allocation.
+> > > > > > > 
+> > > > > > > Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+> > > > > > > in case of a kexec-ed kernel boot.
+> > > > > > > 
+> > > > > > > This function kexec_enter_virtual_mode() installs the new EFI memory map by
+> > > > > > > calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
+> > > > > > > in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
+> > > > > > > 
+> > > > > > > Subsequently, when memblock is freed later in boot flow, this remapped
+> > > > > > > efi_memmap will have random corruption (similar to a use-after-free scenario).
+> > > > > > > 
+> > > > > > > The corrupted EFI memory map is then passed to the next kexec-ed kernel
+> > > > > > > which causes a panic when trying to use the corrupted EFI memory map.
+> > > > > > This sounds fishy: memblock allocated memory is not freed later in the
+> > > > > > boot - it remains reserved. Only free memory is freed from memblock to
+> > > > > > the buddy allocator.
+> > > > > > 
+> > > > > > Or is the problem that memblock-allocated memory cannot be memremapped
+> > > > > > because *raisins*?
+> > > > > This is what seems to be happening:
+> > > > > 
+> > > > > efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
+> > > > > EFI memory map and due to early allocation it uses memblock allocation.
+> > > > > 
+> > > > > And later efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+> > > > > in case of a kexec-ed kernel boot.
+> > > > > 
+> > > > > This function kexec_enter_virtual_mode() installs the new EFI memory map by
+> > > > > calling efi_memmap_init_late() which does memremap() on memblock-allocated memory.
+> > > > Does the issue happen only with SNP?
+> > > This is observed under SNP as efi_arch_mem_reserve() is only being called
+> > > with SNP enabled and then efi_arch_mem_reserve() allocates EFI memory map
+> > > using memblock.
+> > I don't see how efi_arch_mem_reserve() is only called with SNP. What did I
+> > miss?
+> 
+> This is the call stack for efi_arch_mem_reserve():
+> 
+> [    0.310010]  efi_arch_mem_reserve+0xb1/0x220
+> [    0.311382]  efi_mem_reserve+0x36/0x60
+> [    0.311973]  efi_bgrt_init+0x17d/0x1a0
+> [    0.313265]  acpi_parse_bgrt+0x12/0x20
+> [    0.313858]  acpi_table_parse+0x77/0xd0
+> [    0.314463]  acpi_boot_init+0x362/0x630
+> [    0.315069]  setup_arch+0xa88/0xf80
+> [    0.315629]  start_kernel+0x68/0xa90
+> [    0.316194]  x86_64_start_reservations+0x1c/0x30
+> [    0.316921]  x86_64_start_kernel+0xbf/0x110
+> [    0.317582]  common_startup_64+0x13e/0x141
+> 
+> So, probably it is being invoked specifically for AMD platform ?
 
-+1
+AFAIU, efi_bgrt_init() can be called for any x86 platform, with or without
+encryption. 
+So if my understating is correct, efi_arch_mem_reserve() will be called with SNP
+disabled as well. And if kexec works ok without SNP but fails with SNP this
+may give as a clue to the root cause of the failure.
+ 
+> > > If we skip efi_arch_mem_reserve() (which should probably be anyway skipped
+> > > for kexec case), then for kexec boot, EFI memmap is memremapped in the same
+> > > virtual address as the first kernel and not the allocated memblock address.
+> > Maybe we should skip efi_arch_mem_reserve() for kexec case, but I think we
+> > still need to understand what's causing memory corruption.
+> 
+> When, efi_arch_mem_reserve() allocates memory for EFI memory map using
+> memblock and then later in boot, kexec_enter_virtual_mode() does memremap on
+> this memblock allocated memory, subsequently after this i see EFI memory map
+> corruption, so are there are any issues doing memremap on memblock-allocated
+> memory ?
 
-We already skip css_put() if get_mem_cgroup_from_mm() returns NULL.
-Whether or not get_memcg_path_buf() succeeds is irrelevant here.
+memblock-allocated memory is just RAM, so my take is that memremap() cannot
+figure out the encryption bits properly.
+
+You can check if there are issues with memrmapp()ing memblock-allocated
+memory by sticking memblock_phys_alloc() somewhere, filling that memory with a
+pattern and then calling memremap(addr, size, MEMREMAP_WB) and checking if
+the pattern is still there.
+ 
+> Thanks, Ashish
+> 
+> > > > I didn't really dig, but my theory would be that it has something to do
+> > > > with arch_memremap_can_ram_remap() in arch/x86/mm/ioremap.c
+> > > > > Thanks, Ashish
+
+-- 
+Sincerely yours,
+Mike.
