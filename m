@@ -1,217 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9871F84A57;
-	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50336137931
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457720; cv=none; b=HpQ2HkkLrBbQykVvZPVBuJP5rlc6ips8tDN9k+sJoM9u4cKVQSuHl2NVw9YOwKNkzvaPb0lbGR0x3wON48aglZshSmfr7DPINFDoZZUlhhbSlQCDEOvnDRwAvXi1iTnEgF4qFlVOj57PN8jtdecrquauNyxfRkh6HBw3b/H/qS4=
+	t=1717458182; cv=none; b=pS/A599XmLikowB1dh2GDfzOI80z6qO2v6dNHNe2r0lDLluZ7RpUfxOOlI1VGfdWwp9S86AEnuOO+uC2LoOixkfKeXu0tPyiAi4t5pbXdoYEEuCdpeAaJ2Le8zgdEyr7btMXCg4rNddNjKAo6Dj8S3vzDd4AslonURCsf27fj8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457720; c=relaxed/simple;
-	bh=eWBjKJRF5h2cWMB6Cc78e4cL4T+NZraCLmL1rV+JdrQ=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Ic+NTOfoiIQMBSE+RlKO9f9U39Lkh7N7faDnKxCO9gUy4oiN3NRjqWdwRqP9ZvlndB7enxDSjX9AZfAe8dKNSXW1MhFKyUds+gkl8B/UobPUZjmYJqHOedjLTxuvUdA19OBMXsJTAbX32Ij+/J4drcCQW6Z5j3e4KRL1+XlKg8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D25C32781;
-	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sEHE7-00000009cvT-2ViM;
-	Mon, 03 Jun 2024 19:36:31 -0400
-Message-ID: <20240603233631.452433539@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 19:33:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Mike Rapoport <rppt@kernel.org>
-Subject: [PATCH 1/2] mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-References: <20240603233330.801075898@goodmis.org>
+	s=arc-20240116; t=1717458182; c=relaxed/simple;
+	bh=V3fEIuQymV976CLe41KoEQSFCwFNlwcObBa1MX7WNZM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uPorHFFoUMBrEZuTi3WqVo4nftZI5CfZ9hs9XmAOvhGE0TDG9wlw72q/eVlVxbuG7HTh8eSIoqFGyIagrfpO+6qtzP9fInEYW43VMHPeHLRweaqEvpNoHYvFQMkAU3alyTrQOiLGZHboF5ab1KFydFsiwibdowHsy6fhQ/JVYzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hYd2cOdp; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hYd2cOdp"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7026fe79eeaso1431986b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 16:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717458180; x=1718062980; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ix1wBJXtB+Dz1uENt+vCOboXGMIz++QIsMDaGY5XcG0=;
+        b=hYd2cOdpnCzmLdJLRRINBKE9ll/K0coq7EHE01h2Kr7JbF0I7lp7qVDOyu2jYXl3Vc
+         4HWppem3GP2StIs0KtnUNVN0Nw7AASYRN08pheXyVX90hM5sc1DNxxAwrneiFF7EXQIF
+         3U0VmiusJiuzZMe0lBnemMDPG/yW34VEM6qpW3Q29bvv0WPnu3q0UhTGLkLjQa4ULAj4
+         oIJs56oGOn9PaPUYf1MV7u0uG6ugHHkCG53/TAyTTkx6Ec3YJloky1d6Cik7ocZd9Yqi
+         5Yv2zBM/ulvMXm5MI91wm3Y69czS10eLIuvChTXz/h7I3sYgG5grRI+RTynx2GRdsQk+
+         9LBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717458180; x=1718062980;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ix1wBJXtB+Dz1uENt+vCOboXGMIz++QIsMDaGY5XcG0=;
+        b=STbhaVED1x6YmffNaCr2sIvqjm6eCIFB4FkdxHEY/RUMkXOnXKccN0Gl8ydtx9jdoM
+         yWHpSpY6QFLjgZ4NJ3RPjTxKyXYVuqh1EwBdt/uUxmgwQKA7jJD2vC/tORucR5FCAaF+
+         YlmEu+2iau0VKq0kLceGZsxl+d/YbpTksH8EeD2zlNDke/3Wt7h4xihipPkwgA4jUOzs
+         qW6865bVUS+7mYcEHU/KNz/k24Fw9WY/fNO/GIyhSWgEeK9rholqTXALulKi0lCiFvVf
+         xVBk25ozrx5KPPFQ5QzVCIhk+3s84LSo4HHJUaNMSCl6MBOYgiH3/BpIJh/eDCV/nTgH
+         26rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzB3ZjWP8E6a6o9wuZnnIdJbLh7X2ek2P1e/xT+IldHMVFgVqhDTNkYQKao0cgwevLotgCR4f1WRP3wJtOv5yScHIqrIxWQnHZW7qx
+X-Gm-Message-State: AOJu0Yw5bBy0Qwk46KN0iZRxWXVixVbDJ3nvNcrwBwxRtGlrZdferDlu
+	glL/zSMIEWz2zXwSVn41Kx4tWjQsQcq29bB/cxxU84JPXUmh4FkUFfR6vITeT+2Z3ou7LgWsUuA
+	tkg==
+X-Google-Smtp-Source: AGHT+IHqaNu096+Zwzp8CVw1P6SzEE6P0P87czRc7jhnRB8aCHCFmhBfG3lGqTDH2L6pdWw4pe0K6jzFHnw=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:847:b0:6f4:47dd:5f41 with SMTP id
+ d2e1a72fcca58-70247a9eb6bmr511116b3a.6.1717458179407; Mon, 03 Jun 2024
+ 16:42:59 -0700 (PDT)
+Date: Mon, 3 Jun 2024 16:42:57 -0700
+In-Reply-To: <20240503142548.194585-1-wei.w.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+References: <20240503142548.194585-1-wei.w.wang@intel.com>
+Message-ID: <Zl5VAWlw5XfkqLC-@google.com>
+Subject: Re: [PATCH v1] KVM: x86: 0-initialize kvm_caps.supported_xss on definition
+From: Sean Christopherson <seanjc@google.com>
+To: Wei Wang <wei.w.wang@intel.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, May 03, 2024, Wei Wang wrote:
+> 0-initialize kvm_caps.supported_xss on definition, so that it doesn't
+> need to be explicitly zero-ed either in the common x86 or VMX/SVM
+> initialization paths. This simplifies the code and reduces LOCs.
 
-In order to allow for requesting a memory region that can be used for
-things like pstore on multiple machines where the memory layout is not the
-same, add a new option to the kernel command line called "reserve_mem".
+Heh, nope, see commit 40269c03fdbf ("KVM: x86: Explicitly zero kvm_caps during
+vendor module load").
 
-The format is:  reserve_mem=nn:align:name
+I do agree the code in kvm_x86_vendor_init() in particular is a bit odd, but it's
+there because KVM support for XSAVES could be cleared by ->hardware_setup()
+(XSAVES has a VMX knob, XSAVE for XCR0 does not).
 
-Where it will find nn amount of memory at the given alignment of align.
-The name field is to allow another subsystem to retrieve where the memory
-was found. For example:
+And while I agree it's also odd that vendor code explicitly zeros supported_xss,
+that too serves a purpose.  It reduces the probability of advertising XSS support
+in vendor code that doesn't yet fully support the feature, e.g. if KVM VMX supports
+CET before KVM SVM, then KVM SVM "needs" to clear supported_xss.  In quotes because
+common KVM should also do the clearing based on CET CPUID features.  But, it's
+still a nice reminder that vendor code likely needs additional support.
 
-  reserve_mem=12M:4096:oops ramoops.mem_name=oops
-
-Where ramoops.mem_name will tell ramoops that memory was reserved for it
-via the reserve_mem option and it can find it by calling:
-
-  if (reserve_mem_find_by_name("oops", &start, &size)) {
-	// start holds the start address and size holds the size given
-
-Link: https://lore.kernel.org/all/ZjJVnZUX3NZiGW6q@kernel.org/
-
-Suggested-by: Mike Rapoport <rppt@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/mm.h |  2 +
- mm/memblock.c      | 97 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 99 insertions(+)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 9849dfda44d4..b4455cc02f2c 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4263,4 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- void vma_pgtable_walk_begin(struct vm_area_struct *vma);
- void vma_pgtable_walk_end(struct vm_area_struct *vma);
- 
-+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size);
-+
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index d09136e040d3..a8bf0ee9e2b4 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2244,6 +2244,103 @@ void __init memblock_free_all(void)
- 	totalram_pages_add(pages);
- }
- 
-+/* Keep a table to reserve named memory */
-+#define RESERVE_MEM_MAX_ENTRIES		8
-+#define RESERVE_MEM_NAME_SIZE		16
-+struct reserve_mem_table {
-+	char			name[RESERVE_MEM_NAME_SIZE];
-+	unsigned long		start;
-+	unsigned long		size;
-+};
-+static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
-+static int reserved_mem_count;
-+
-+/* Add wildcard region with a lookup name */
-+static int __init reserved_mem_add(unsigned long start, unsigned long size,
-+				   const char *name)
-+{
-+	struct reserve_mem_table *map;
-+
-+	if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
-+		return -EINVAL;
-+
-+	if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
-+		return -1;
-+
-+	map = &reserved_mem_table[reserved_mem_count++];
-+	map->start = start;
-+	map->size = size;
-+	strscpy(map->name, name);
-+	return 0;
-+}
-+
-+/**
-+ * reserve_mem_find_by_name - Find reserved memory region with a given name
-+ * @name: The name that is attached to a reserved memory region
-+ * @start: If found, holds the start address
-+ * @size: If found, holds the size of the address.
-+ *
-+ * Returns: 1 if found or 0 if not found.
-+ */
-+int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
-+{
-+	struct reserve_mem_table *map;
-+	int i;
-+
-+	for (i = 0; i < reserved_mem_count; i++) {
-+		map = &reserved_mem_table[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0) {
-+			*start = map->start;
-+			*size = map->size;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Parse early_reserve_mem=nn:align:name
-+ */
-+static int __init reserve_mem(char *p)
-+{
-+	phys_addr_t start, size, align;
-+	char *oldp;
-+	int err;
-+
-+	if (!p)
-+		return -EINVAL;
-+
-+	oldp = p;
-+	size = memparse(p, &p);
-+	if (p == oldp)
-+		return -EINVAL;
-+
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	align = memparse(p+1, &p);
-+	if (*p != ':')
-+		return -EINVAL;
-+
-+	start = memblock_phys_alloc(size, align);
-+	if (!start)
-+		return -ENOMEM;
-+
-+	p++;
-+	err = reserved_mem_add(start, size, p);
-+	if (err) {
-+		memblock_phys_free(start, size);
-+		return err;
-+	}
-+
-+	p += strlen(p);
-+
-+	return *p == '\0' ? 0: -EINVAL;
-+}
-+__setup("reserve_mem=", reserve_mem);
-+
- #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
- static const char * const flagname[] = {
- 	[ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
--- 
-2.43.0
-
-
+> No functional changes intended.
+> 
+> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+> ---
+>  arch/x86/kvm/svm/svm.c | 1 -
+>  arch/x86/kvm/vmx/vmx.c | 2 --
+>  arch/x86/kvm/x86.c     | 4 +---
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 9aaf83c8d57d..8105e5383b62 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -5092,7 +5092,6 @@ static __init void svm_set_cpu_caps(void)
+>  	kvm_set_cpu_caps();
+>  
+>  	kvm_caps.supported_perf_cap = 0;
+> -	kvm_caps.supported_xss = 0;
+>  
+>  	/* CPUID 0x80000001 and 0x8000000A (SVM features) */
+>  	if (nested) {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 22411f4aff53..495125723c15 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7952,8 +7952,6 @@ static __init void vmx_set_cpu_caps(void)
+>  	if (vmx_umip_emulated())
+>  		kvm_cpu_cap_set(X86_FEATURE_UMIP);
+>  
+> -	/* CPUID 0xD.1 */
+> -	kvm_caps.supported_xss = 0;
+>  	if (!cpu_has_vmx_xsaves())
+>  		kvm_cpu_cap_clear(X86_FEATURE_XSAVES);
+>  
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 91478b769af0..6a97592950ff 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -94,6 +94,7 @@
+>  
+>  struct kvm_caps kvm_caps __read_mostly = {
+>  	.supported_mce_cap = MCG_CTL_P | MCG_SER_P,
+> +	.supported_xss = 0,
+>  };
+>  EXPORT_SYMBOL_GPL(kvm_caps);
+>  
+> @@ -9795,9 +9796,6 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
+>  
+>  	kvm_register_perf_callbacks(ops->handle_intel_pt_intr);
+>  
+> -	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+> -		kvm_caps.supported_xss = 0;
+> -
+>  #define __kvm_cpu_cap_has(UNUSED_, f) kvm_cpu_cap_has(f)
+>  	cr4_reserved_bits = __cr4_reserved_bits(__kvm_cpu_cap_has, UNUSED_);
+>  #undef __kvm_cpu_cap_has
+> 
+> base-commit: 16c20208b9c2fff73015ad4e609072feafbf81ad
+> -- 
+> 2.27.0
+> 
