@@ -1,144 +1,134 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383BF107A8;
-	Mon,  3 Jun 2024 16:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C68813699A;
+	Mon,  3 Jun 2024 16:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717431720; cv=none; b=GAqXaDmMznDZH95q4zWOSGtubnu6y5T5KiZJjRZdY37Iv484iLzKOfXdnzNr2A0Jzh1d+i0yF2S475wzZGkI68eGKh2Eb5iA4OCvvKrqkXtk0bUagvjRJkT/jiySc/l5gcGqsOrDzLUtZHcWvTVZ3UVApz0UtXT/Y0hh8zxRa5I=
+	t=1717431728; cv=none; b=i+jupjcX8WYNw30scZ1at4ukDYUDJ3pylgwGzcAg4Igm4KLQKl9Gpitevtk0XfcnXjineCypgTQ5FTwlCL6IwDJntucBvfYM59zp66A9Rg92r+Ta5leEzQGMSkGLTafmEs5SLAiZdM4NoTYzTIkiIv27Ov94yX07UELZPzDyfE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717431720; c=relaxed/simple;
-	bh=5UdqhTYDdJ6XCunroqHqe5/BwihyhEMQZXMlLIW0q2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=md5sDV+8WZxPJepjkhkARk1cPzvZTwlll2v7wV9QDA5F3cMCbI3GZvsE8c8Hlvv8mY/eizIS3oaBLBGVnTY236+B3hKaNCMWfuvRntpx5opNQ/flKFqAXbHK5yuYrnXuRPlapuLhXAeNaWDk3drhwX6gDvLGiqqKwu8Uvq7noMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhPEccFU; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717431728; c=relaxed/simple;
+	bh=J9BtwLiH5m/8yi2TzzknIpSb4dbESwBD7BOkieFUAmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFmlHtPXoBXui8jkYb60ug24jv6vI1DPAK7opPM9j/o1Xvtey6TxgXyzMbHzCtSuDkU54e6oPhBZqKU9EDfxGFyfeJKhSrkDhVmmdxcK9f3QiaPwNUS0YSAzo7m02bNCq81W4dxIA5gUiR4V+jeeMYWl2iLVFp1tpiFpxCgn3gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bu+lz/1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhPEccFU"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ea903cd11bso47115971fa.1;
-        Mon, 03 Jun 2024 09:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717431717; x=1718036517; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UT/n64RkdFWABWe/J3nAKJc1oXeovt/hfh7Nn3LCSOg=;
-        b=IhPEccFUqxfqvdQv8f7Il+3av/iWODU7tlrcxWHF74lhcp9Lp3Yx3YWP+R5CbWkGBp
-         AwcD6QQYiOVZnIfidzL9bPnwKxySAY/XD6sieHqlJaWghJtJsFXHZ+U3kpmukBEQ96Zn
-         6wcM/0NSQlUy5LIQbCAetnrTpDGYqOR1+2J4/PonqKRhaziaGxL+v/07NmcOPTrAaBjc
-         fheUa9BXGITRcE4kBpt+fSmbMGAUmb7Qzc+KPV94wvAGq7WnGa9th3GsFuu6U4pJMTaE
-         +hMC/mUYC6ejUVnxW12N4YgihC1OcicXzLRCiyVdKNClJ4oLxq7J0WZ6/N4WUpTOG7F6
-         ZpGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717431717; x=1718036517;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UT/n64RkdFWABWe/J3nAKJc1oXeovt/hfh7Nn3LCSOg=;
-        b=p0j8Vm3pMaiK0owxahBDW214vfcplpd1mzYbwfGWrGgpDp/gVV5KUm5Tv0AhSug8BW
-         6L6IaR5UVsG7xwRFrOeyFexweUuta8M+jy/oJb2ZsVwFKAP+FjGZKtIIIhhD86VVZqVT
-         KIxEPaMQdayiUD0wzcbfxowJUBFMUHDNjutJuPa7ebpGsak2cxrRSfXXDd0TPzRH9/js
-         0YOyjtYuP2h3oMvd2Be+2/WPGvOSVJxeMFfoY+WEqfKvLb2xQ7AGJ0OB4tnZf4n7pSt0
-         Ozr0gAigwPDCPVT7Yg9Pnagy64Z7EYjdjMQ6cUohKXB1qISka8FJ7Piu4keTEYy6OoY4
-         C7eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXQL2d4rC+SZpdIuNj4AXmKOCn3Uvnm46CELpuE3yxQT3ks+w+QT85m3GTpAWeiDvu/ljKS7ZpxnmWVCINVwNfNyzILacqn+YURlR8SuPFf9G40JVbeYCmVUveOCWC/AaCPXK8Ia9MCOwgISVytSxqZNJO1lVLSCs79p3MK4tbo+HcQQw==
-X-Gm-Message-State: AOJu0YxXghjG4ewCs8e4oWjMW2FcXOqOstiBhmdvsMG1avTUYBYkUuip
-	BYGoGmwyUQCpGLQeBqzvd6pFtPi7kMmgAc78KghmXsw7PLNxg8SH
-X-Google-Smtp-Source: AGHT+IHt7Kf9ZH7iwEqH8mZHyCmmBac2J8bezy5Ix5RpF+bJ6OCeEuOCUbk2YVM8MpEs2KAuu1IwIg==
-X-Received: by 2002:a2e:b693:0:b0:2e9:8852:3d20 with SMTP id 38308e7fff4ca-2ea951e4c52mr77531291fa.41.1717431716922;
-        Mon, 03 Jun 2024 09:21:56 -0700 (PDT)
-Received: from localhost.localdomain ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4213cd1c075sm43697765e9.0.2024.06.03.09.21.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 09:21:56 -0700 (PDT)
-From: Mudit Sharma <muditsharma.info@gmail.com>
-To: ivan.orlov0322@gmail.com,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org
-Cc: Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 1/3] dt-bindings: iio: light: ROHM BH1745
-Date: Mon,  3 Jun 2024 17:21:20 +0100
-Message-ID: <20240603162122.165943-1-muditsharma.info@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bu+lz/1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75055C32786;
+	Mon,  3 Jun 2024 16:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717431728;
+	bh=J9BtwLiH5m/8yi2TzzknIpSb4dbESwBD7BOkieFUAmo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bu+lz/1XWvQlr8sMasYuBapx64iWXKhYYuE32EKqwkwTOey+HseXz0BB7MFLlI85O
+	 kPe8OuoeQLtatj+0dQnBSE11+aHY/uHissu22mA7QPGEup2Hllay2U8y+LkCtZp4DG
+	 3aefv6kQfoqF4xAaZe7pVlIWmWF9Y+GsLK2MFHFI5c7JgUKtJ0WrFs/K8XnjqwOkkr
+	 QQUfznd4Do66OiqXK5PtilHsFIryvPsWf1JLlvAjJh9pUXy6R4D1bjcz5BAa/bb2oq
+	 5pJ2MF5f1AcMYkEi5sQdEjOy3hr3+xaolC+z5Rg7kItsSw7297BoxsKLfJ0vkFmy3K
+	 V+pk2YU6AvVRw==
+Date: Mon, 3 Jun 2024 18:22:05 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: neil.armstrong@linaro.org, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Sandy Huang <hjc@rock-chips.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mark Yao <markyao0591@gmail.com>, Andy Yan <andy.yan@rock-chips.com>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, 
+	kernel@collabora.com, Alexandre ARNOUD <aarnoud@me.com>, 
+	Luis de Arquer <ldearquer@gmail.com>, Algea Cao <algea.cao@rock-chips.com>
+Subject: Re: [PATCH 00/14] Add initial support for the Rockchip RK3588 HDMI
+ TX Controller
+Message-ID: <20240603-noisy-convivial-boa-d3d862@houat>
+References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
+ <a4b22708-e85d-448a-8145-244b49bca053@linaro.org>
+ <ab0a6372-091b-4293-8907-a4b3ff4845c0@rock-chips.com>
+ <11359776.NyiUUSuA9g@phil>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="hjyaj4zwc26gvppm"
+Content-Disposition: inline
+In-Reply-To: <11359776.NyiUUSuA9g@phil>
 
-Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
 
-Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
----
-v1->v2:
-- Fix yaml issue: Make `maintainers` a list
+--hjyaj4zwc26gvppm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- .../bindings/iio/light/rohm,bh1745.yaml       | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+On Mon, Jun 03, 2024 at 03:03:12PM GMT, Heiko Stuebner wrote:
+> Am Montag, 3. Juni 2024, 14:14:17 CEST schrieb Andy Yan:
+> > Hi Neil:
+> >=20
+> > On 6/3/24 16:55, Neil Armstrong wrote:
+> > > Hi Christian,
+> > >=20
+> > > On 01/06/2024 15:12, Cristian Ciocaltea wrote:
+> > >> The RK3588 SoC family integrates a Quad-Pixel (QP) variant of the
+> > >> Synopsys DesignWare HDMI TX controller used in the previous SoCs.
+> > >>
+> > >> It is HDMI 2.1 compliant and supports the following features, among
+> > >> others:
+> > >>
+> > > .
+> > >=20
+> > > ..
+> > >=20
+> > >> * SCDC I2C DDC access
+> > >> * TMDS Scrambler enabling 2160p@60Hz with RGB/YCbCr4:4:4
+> > >> * YCbCr4:2:0 enabling 2160p@60Hz at lower HDMI link speeds
+> > >> * Multi-stream audio
+> > >> * Enhanced Audio Return Channel (EARC)
+> > > -> Those features were already supported by the HDMI 2.0a compliant H=
+W, just
+> > > list the _new_ features for HDMI 2.1
+> > >=20
+> > > I did a quick review of your patchset and I don't understand why you =
+need
+> > > to add a separate dw-hdmi-qp.c since you only need simple variants of=
+ the I2C
+> > > bus, infoframe and bridge setup.
+> > >=20
+> > > Can you elaborate further ? isn't this Quad-Pixel (QP) TX controller =
+version
+> > > detectable at runtime ?
+> > >=20
+> > > I would prefer to keep a single dw-hdmi driver if possible.
+> >
+> > The QP HDMI controller is a completely different variant with totally d=
+ifferent
+> > registers layout, see PATCH 13/14.
+> > I think make it a separate driver will be easier for development and ma=
+intenance.
+>=20
+> I'm with Andy here. Trying to navigate a driver for two IP blocks really
+> sounds taxing especially when both are so different.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-new file mode 100644
-index 000000000000..ac5c4d160513
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/rohm,bh1745.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BH1745 colour sensor
-+
-+maintainers:
-+  - Mudit Sharma <muditsharma.info@gmail.com>
-+
-+description: |
-+  BH1745 is an I2C colour sensor with red, green, blue and clear
-+  channels. It has a programmable active low interrupt pin.
-+  Interrupt occurs when the signal from the selected interrupt
-+  source channel crosses set interrupt threshold high/low level.
-+
-+properties:
-+  compatible:
-+    const: rohm,bh1745
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        colour-sensor@38 {
-+            compatible = "rohm,bh1745";
-+            reg = <0x38>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+        };
-+    };
-+
-+...
--- 
-2.43.0
+If it's a completely new controller, I agree that it needs a new driver,
+but then why do we need to share code between the two?
 
+Maxime
+
+--hjyaj4zwc26gvppm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZl3tqAAKCRAnX84Zoj2+
+dtR8AYCrl/MU0AvHJWAGUIyy2KX4WDHpvmSlO0r/dHofLBLuPbECLxs/Y4Xrv9aj
+dKaN4FEBgKcHcNQQuLzVnSmBEdP8BYecOgEiTEgRvexLG3nvcO9BpScGHjOp+i9W
+SoX1pl9lAQ==
+=Yfg6
+-----END PGP SIGNATURE-----
+
+--hjyaj4zwc26gvppm--
