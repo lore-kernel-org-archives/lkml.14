@@ -1,124 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33703135A7F
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 16:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC97134409;
+	Mon,  3 Jun 2024 16:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717431773; cv=none; b=l6GKcqLVxPGANR7DzaWvo+l1YYgdIbTray6V62A/5PutE79Kc4/ZRGEDpEICaEd5x0D5ymxUTkFDWDHCIc9z6duakK3y27ssS/YCIhwKK9rYNBcy63iBw/j7ESEl3O+DH4iHn4X+g6O/vL5pb9aSMgU86GsxVygs3iLattO/wJY=
+	t=1717431794; cv=none; b=TrI8Rh+s9kAZDFsI2FuQQnYS8LDLsdYu/xzmwJd5TFBxKurMgPJ5y73CUtC+6XxPU9aMnF9I6ypPD1FWrgkMOQXbUcgUUdegZpPKTTBfiFXiurqt/qlSRqZVLd8e3bAuMhmbkxx5N7MBQ6hgSlUnYOBP5jiTs9/t5FN6ZTOAG7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717431773; c=relaxed/simple;
-	bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=oJcMB3TxJa+sLihT6r3AgUcLwKhA5c9T7M922J7qeJhaI9fzlJZ3pQJrkjZ4INNQVFr+0yFlaRWkBClgE1QIZTXS/kOvT0rMp0ZLLwM/+aEa6HcM8IVmQ4e1Ynen4FjRYlpNkV6NDL9DZ2MKmycuflucfMXRzwXGr8HKBkWqo6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LE2p4wCx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717431794; c=relaxed/simple;
+	bh=HfO/yuYx9sp/Ilgrbzk8A2s9uHxyK412PuzRVCvRPTI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=T8YchUTBKR2ENocgTfqiPQpk2tBg9UBXyiug62lSgfh6QWbvNoEnQFC7MbE9H4tPZDvUYSuNG8C+hN2q5Kcg/9Y9V6rG0NFe5cY6ihzIaAItMEbaq4zPKEXPyanfdoXnHD4mWn34QMParRGf3ThjfFqOiohuUIteEP1zgfLz7PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UACeeEkz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LE2p4wCx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717431771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
-	b=LE2p4wCx9y3jStXO83M574/ejKft2cx9G+k6mAlEIp36LnkXmIEqDpitDggkZjq7OMlMki
-	6azsjFUX+JZ4c0QW3ZhHqxe6wi6mea3SBkWzSRiFanOHn50z1c6N/I+hlROD9FNW3eP8MX
-	qHCyUrufBGURdvQtU9CCnGGGbN0qdCU=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-18-03Fjhcy-M2eSd86ybFd_lA-1; Mon, 03 Jun 2024 12:22:49 -0400
-X-MC-Unique: 03Fjhcy-M2eSd86ybFd_lA-1
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3d1d364062dso4528784b6e.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 09:22:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717431769; x=1718036569;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/OvWAYH0P6ogYo10xALQ7QIqAZoR01AAJjOIOUVXozM=;
-        b=YrCLv6tAUmOWj101cUHj4vE5Il75TbD2eFsEhRme0vzo6Rig2GcxILuKs+vbk02WMn
-         BUSkR6d/jBAczSbcsL7Nt2dWCHErw8gV3NGjbj4OtPoBwWvFqY+8Vxs439rOBg4YmHb1
-         8ccvb+DWduAs5PLwzwenkY4IlqqtBx1BW8dc7NXwscOOeK5WcPM8W3+5g0eg3C2vuoH1
-         7mQx5c9ojo4D8OpqRVftZtYnRZ5Wo1ty6VNk6ixUG59WSOLlAVe/7a+jIdaU5+FXBM7R
-         F6rk1u9Yil8dJQWVEx2ZkvaXDzqkZtZSisdTUQ+dCANzwBsmGXXyLDrA5DnTOFZKDcAR
-         yzXg==
-X-Forwarded-Encrypted: i=1; AJvYcCX38U9N6cXdyRa0yDgvKBv6BqwAWM0rOl17hjn9NU3Cux0QbIvjEOXJLCg3G1W2G5QN+gEwebbx1ARZBavX2fsB4cyoqmGVMChtrD45
-X-Gm-Message-State: AOJu0Yw2Yi9S+g65GT3sqgnIPeQIl4/kpYktXjqGNhfzJ+40SioNQnSV
-	KKo6kacoklQ/nQ2aYI0OCeHub23wtqCIl68SXBEyILCOh3CpONs3MawCj4a8Q/KXtl5/CwMYDc2
-	3GAS9ufgZ5JScCjkgbb9ExyvoBwYpWoBc1rnigPgLsOs3fkcy4ydodgu+nNQ3ObocjgdWag==
-X-Received: by 2002:aca:2403:0:b0:3ca:babd:76b3 with SMTP id 5614622812f47-3d1e3480ad6mr8825718b6e.12.1717431767335;
-        Mon, 03 Jun 2024 09:22:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHkujB40JEGLJSPMS+fMp8vyiKXzC2SKC+YUf1vVWP9Xydkf1K8gO5okq9R6izLX6WhDGmLmw==
-X-Received: by 2002:aca:2403:0:b0:3ca:babd:76b3 with SMTP id 5614622812f47-3d1e3480ad6mr8825619b6e.12.1717431765478;
-        Mon, 03 Jun 2024 09:22:45 -0700 (PDT)
-Received: from ?IPv6:2600:4040:5c4c:a000:270f:2a70:881d:60b9? ([2600:4040:5c4c:a000:270f:2a70:881d:60b9])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4a750441sm32138096d6.71.2024.06.03.09.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 09:22:44 -0700 (PDT)
-Message-ID: <0533e9a6d05b10a00c760142cf268cfd5db0d52f.camel@redhat.com>
-Subject: Re: Early boot regression from f0551af0213 ("x86/topology: Ignore
- non-present APIC IDs in a present package")
-From: Lyude Paul <lyude@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, "Linux regression tracking
- (Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Mario Limonciello
-	 <mario.limonciello@amd.com>, Borislav Petkov <bp@alien8.de>, Linux kernel
- regressions list <regressions@lists.linux.dev>
-Date: Mon, 03 Jun 2024 12:22:25 -0400
-In-Reply-To: <87ttiha77b.ffs@tglx>
-References: <3d77cb89857ee43a9c31249f4eab7196013bc4b4.camel@redhat.com>
-	 <abbb7d7ca781f6c664e4c5b1dffc19394ac79691.camel@redhat.com>
-	 <87le59vw1y.ffs@tglx>
-	 <3a0afe545747e5314a9cb6bbaa9ce90b259ddfac.camel@redhat.com>
-	 <87edautcmz.ffs@tglx>
-	 <3b1d16e357c1f9badeef405366492f05af26c085.camel@redhat.com>
-	 <878r11t8zu.ffs@tglx> <016902d9-3858-4c65-b3ec-f7a5103af63c@amd.com>
-	 <51d0dff8-2888-463c-95ab-71b491f12a8f@leemhuis.info> <877cg4ppd5.ffs@tglx>
-	 <ea927dad269cc21de1d0baf3d6c9f66ee025b862.camel@redhat.com>
-	 <d2c6f335a6eb5892b0d894d5df4a6e713fa013b5.camel@redhat.com>
-	 <87jzjxn6s5.ffs@tglx>
-	 <d3fe5278e7cd5af6c62b470b281b547b67e3959a.camel@redhat.com>
-	 <97bd95480a8b9951edc9ee2d2648d1b9c574e3b0.camel@redhat.com>
-	 <87bk58n6le.ffs@tglx>
-	 <2fd6009d21d606d13f0c472dbaa754a21f3105d9.camel@redhat.com>
-	 <87wmntkhak.ffs@tglx>
-	 <d4496b4ed8a8a7bb34cf12e4cce65a6ad6705bc0.camel@redhat.com>
-	 <874japh4ww.ffs@tglx> <87sey8g5z6.ffs@tglx> <87ttiha77b.ffs@tglx>
-Organization: Red Hat Inc.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UACeeEkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DF0B4C4AF0A;
+	Mon,  3 Jun 2024 16:23:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717431793;
+	bh=HfO/yuYx9sp/Ilgrbzk8A2s9uHxyK412PuzRVCvRPTI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=UACeeEkzYa50AY9lqhgIgAUcc+WWdaRaqM3//bEKhI08zDrhIyGca4go9QBVzWXoY
+	 N/HhNemrYbBFVKTI3j9SV6sbY7oXkLiDSS10DCx/oKPyadgeHTV3W4l1WAgOqLr2/2
+	 qs8LBzJGW1ZUogfXoFpT3NB+N0KUV9Ov+gqjLsWMaaPEQVL4+fDzs6LWCuJ3b1A0Jp
+	 PGImNAYiqKNQbo2t2ZioWYx2p5qakOdgmGiOTrcE53eiKtoReeKkOIHwlI6AgO+a/S
+	 7GpjOW67SJHW+iQMr3LRgVSF//4YaE7ek0qHooWZ/C7gJ73ymNu8S2Eiuvj0NCzV0L
+	 c+oomU+EBhesw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2B3C27C50;
+	Mon,  3 Jun 2024 16:23:13 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Date: Mon, 03 Jun 2024 19:22:59 +0300
+Subject: [PATCH v5 1/9] dt-bindings: iio: adc: Add common-mode-channel
+ property
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240603-ad4111-v5-1-9a9c54d9ac78@analog.com>
+References: <20240603-ad4111-v5-0-9a9c54d9ac78@analog.com>
+In-Reply-To: <20240603-ad4111-v5-0-9a9c54d9ac78@analog.com>
+To: Ceclan Dumitru <dumitru.ceclan@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717431792; l=1609;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=yba6tP7JS+6mHrdlyW824eKSL9BwktJrw/w3K4BKVMQ=;
+ b=UMNtbTu2auA50gLwkPnJfIR725zXZRSZvm72Yngt4yYk58WXq+zrgy+iiwOmaQet+V06k34p7
+ X5iBXxgrvDrAPcAy+sPjeqDQwHT4CqvEZH+jhRhai4D0/Rk0pYTV4iH
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-Ah whoops! Sorry I totally missed this question, thank you for poking
-again
-I'm not sure it is but I will double check tomorrow and let you know.
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-On Wed, 2024-05-29 at 00:43 +0200, Thomas Gleixner wrote:
-> Lyude!
->=20
-> On Thu, May 23 2024 at 12:47, Thomas Gleixner wrote:
-> > Something I wanted to ask before. Is the BIOS of that machine up to
-> > date?
->=20
-> Any update on this? I really don't want to add magic workarounds if
-> there is a BIOS update which fixes it.
->=20
-> Thanks,
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
->=20
+There are ADCs that are differential but support to measure single-ended
+signals on the same channels by connecting a constant voltage to the
+negative input pin.
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+This property allows to properly define a single-ended channel that
+requires two inputs to be specified. Software can use the presence of
+this property to mark the channel as not differential.
+
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+---
+ Documentation/devicetree/bindings/iio/adc/adc.yaml | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adc.yaml b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+index 0a77592f7388..8e7835cf36fd 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adc.yaml
+@@ -46,6 +46,17 @@ properties:
+       differential channels). If this and diff-channels are not present reg
+       shall be used instead.
+ 
++  common-mode-channel:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Some ADCs have differential input pins that can be used to measure
++      single-ended or pseudo-differential inputs. This property can be used
++      in addition to single-channel to signal software that this channel is
++      not differential but still specify two inputs.
++
++      The input pair is specified by setting single-channel to the positive
++      input pin and common-mode-channel to the negative pin.
++
+   settling-time-us:
+     description:
+       Time between enabling the channel and first stable readings.
+
+-- 
+2.43.0
+
 
