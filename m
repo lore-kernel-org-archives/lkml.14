@@ -1,188 +1,144 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA52D134415
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 16:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 383BF107A8;
+	Mon,  3 Jun 2024 16:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717431654; cv=none; b=k7+rIN4uVWNhXFcBaFC1Hl+IwYJlD1bRdHI/TUGuhXztDVA2UUxwTy+FUz/2EGmtd5uvKcG7/umInge/wAeHOPjf6dk5QPHx6ZxH6xUiWk4uz1HRmpnbu6KBYJ/Ztrg78xfgkXq9VNHMl/gf69v0q3adjbKWmoZzfzYmCE4QNeM=
+	t=1717431720; cv=none; b=GAqXaDmMznDZH95q4zWOSGtubnu6y5T5KiZJjRZdY37Iv484iLzKOfXdnzNr2A0Jzh1d+i0yF2S475wzZGkI68eGKh2Eb5iA4OCvvKrqkXtk0bUagvjRJkT/jiySc/l5gcGqsOrDzLUtZHcWvTVZ3UVApz0UtXT/Y0hh8zxRa5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717431654; c=relaxed/simple;
-	bh=T2gNsKce5V5Lv2N/ccwwI2fXXc+DZkZApRpy0OskDH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pE1phJ7EDpsgGYNU8WJSLhd9p1oNwhVg4rirfRr8oWQuU9D7qWX66R90KcKBzBITXinQ2rgYZjrhUZtSfBibAEb+eA5d7BxrQdhTcRlZKPe5YmP7xKokkx3vFPOCHue2qBPYu8GWWrpX0XEhJAWKEcKdv3u7tdgp0KHG2YjTzI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0chrc6Nv; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717431720; c=relaxed/simple;
+	bh=5UdqhTYDdJ6XCunroqHqe5/BwihyhEMQZXMlLIW0q2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=md5sDV+8WZxPJepjkhkARk1cPzvZTwlll2v7wV9QDA5F3cMCbI3GZvsE8c8Hlvv8mY/eizIS3oaBLBGVnTY236+B3hKaNCMWfuvRntpx5opNQ/flKFqAXbHK5yuYrnXuRPlapuLhXAeNaWDk3drhwX6gDvLGiqqKwu8Uvq7noMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhPEccFU; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0chrc6Nv"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-374991c4aa1so231775ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 09:20:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhPEccFU"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2ea903cd11bso47115971fa.1;
+        Mon, 03 Jun 2024 09:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717431652; x=1718036452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MixTtELLiJH8L+d2LmDPMTf5TZnTl8TAimQ8PPeUMRo=;
-        b=0chrc6NvO3c1/96ZButz9uSCEwmFy1ArkRHOOHM/vf/tC3C0oqUvtKQNAaoKFcTDw+
-         K1P0egJWSUsiIimzmcoLQNRL9V89SDDJMcQz5pqBP6nfBXkuYw7GLrEeeuaXb/mZQtcO
-         DH7UykEe96Lv/CmDSRpIhTD1YZ68z6xXgVtmYf+D5BzEfUOa3wi/lGPaqzM5ti/aWaSh
-         VuS2UM6sM0vQMPIJ8vIWnUip5s59A+icIzmwPQX8oVsWM9A/Zgk+yhHd8QDiRYEXEgBt
-         FrJ8tu7fi3w/OFzZha4m8ka/Xy+icAZQEyJDdGJ1H64v9ukQAQ05fi6XMoyribg+2n+6
-         i3xw==
+        d=gmail.com; s=20230601; t=1717431717; x=1718036517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UT/n64RkdFWABWe/J3nAKJc1oXeovt/hfh7Nn3LCSOg=;
+        b=IhPEccFUqxfqvdQv8f7Il+3av/iWODU7tlrcxWHF74lhcp9Lp3Yx3YWP+R5CbWkGBp
+         AwcD6QQYiOVZnIfidzL9bPnwKxySAY/XD6sieHqlJaWghJtJsFXHZ+U3kpmukBEQ96Zn
+         6wcM/0NSQlUy5LIQbCAetnrTpDGYqOR1+2J4/PonqKRhaziaGxL+v/07NmcOPTrAaBjc
+         fheUa9BXGITRcE4kBpt+fSmbMGAUmb7Qzc+KPV94wvAGq7WnGa9th3GsFuu6U4pJMTaE
+         +hMC/mUYC6ejUVnxW12N4YgihC1OcicXzLRCiyVdKNClJ4oLxq7J0WZ6/N4WUpTOG7F6
+         ZpGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717431652; x=1718036452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MixTtELLiJH8L+d2LmDPMTf5TZnTl8TAimQ8PPeUMRo=;
-        b=c4Y7IQI5NWNeOBnl/GgMif/Rp7gxZp3TBwQGSDV3NgRUsStE1Fv+fL27Hx3VF75I7P
-         gecyuTXq2m7v8EZGYStxs+57fUqNi8Eu9yrt6Ok4NYUMUG4oqhzC3WEuuFCRj+im6YcK
-         X6x4Pm0J+MKu9c7hz0vB9DILW937o07dQ6mH1OOE0JVmvNDf5s3hc6pwnpTkvTUPHnk8
-         nyfl4Mubskuae4HcZzszYXeDm6+9qX2rUI0404AX6WX80BVmUa81PWhC1q82VYty7uwi
-         UCgVVuJOHy7z02hrb7w/oYVsfwRHYCTdKZQz/OjY94HsSzFmaXsWzF6yz6kfU14QygiI
-         8VOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnJRYtY+Id8L9GrQtjpMFuOMYRx25nGSzpZWNjAHd/qvvL0GPn9VrdRicgFJGL7Jk8zPUYjo2IRV16xEN2dwFDPdBEWiHG1S0yVvdO
-X-Gm-Message-State: AOJu0Yx98WzN+9Mb/xfxuEdING/KikOgmjlKfTWaEjLURlDvwj/v7+pv
-	CZKdOQWBD8+pgAKsG/U1wKWj7hpq2ydQ64W5GGbd20UWkA2ecD4M4rcoV6HWw1AASUZIOUZnJnT
-	wJlXCQxGt+R/ggcXiVrmM2TSXZgU+RAepDUUb
-X-Google-Smtp-Source: AGHT+IFjSaIwObKyMMLujEN+lZ6Fx2EjPMX8NbkZ3LpQRkc6mjv+m00ZkIgsew9FvkrzvqOj0ZWOO37Q/gb3dyTp9QA=
-X-Received: by 2002:a05:6e02:5d1:b0:374:930f:e49b with SMTP id
- e9e14a558f8ab-374930fe61amr4218035ab.24.1717431651802; Mon, 03 Jun 2024
- 09:20:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717431717; x=1718036517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UT/n64RkdFWABWe/J3nAKJc1oXeovt/hfh7Nn3LCSOg=;
+        b=p0j8Vm3pMaiK0owxahBDW214vfcplpd1mzYbwfGWrGgpDp/gVV5KUm5Tv0AhSug8BW
+         6L6IaR5UVsG7xwRFrOeyFexweUuta8M+jy/oJb2ZsVwFKAP+FjGZKtIIIhhD86VVZqVT
+         KIxEPaMQdayiUD0wzcbfxowJUBFMUHDNjutJuPa7ebpGsak2cxrRSfXXDd0TPzRH9/js
+         0YOyjtYuP2h3oMvd2Be+2/WPGvOSVJxeMFfoY+WEqfKvLb2xQ7AGJ0OB4tnZf4n7pSt0
+         Ozr0gAigwPDCPVT7Yg9Pnagy64Z7EYjdjMQ6cUohKXB1qISka8FJ7Piu4keTEYy6OoY4
+         C7eA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQL2d4rC+SZpdIuNj4AXmKOCn3Uvnm46CELpuE3yxQT3ks+w+QT85m3GTpAWeiDvu/ljKS7ZpxnmWVCINVwNfNyzILacqn+YURlR8SuPFf9G40JVbeYCmVUveOCWC/AaCPXK8Ia9MCOwgISVytSxqZNJO1lVLSCs79p3MK4tbo+HcQQw==
+X-Gm-Message-State: AOJu0YxXghjG4ewCs8e4oWjMW2FcXOqOstiBhmdvsMG1avTUYBYkUuip
+	BYGoGmwyUQCpGLQeBqzvd6pFtPi7kMmgAc78KghmXsw7PLNxg8SH
+X-Google-Smtp-Source: AGHT+IHt7Kf9ZH7iwEqH8mZHyCmmBac2J8bezy5Ix5RpF+bJ6OCeEuOCUbk2YVM8MpEs2KAuu1IwIg==
+X-Received: by 2002:a2e:b693:0:b0:2e9:8852:3d20 with SMTP id 38308e7fff4ca-2ea951e4c52mr77531291fa.41.1717431716922;
+        Mon, 03 Jun 2024 09:21:56 -0700 (PDT)
+Received: from localhost.localdomain ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4213cd1c075sm43697765e9.0.2024.06.03.09.21.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 09:21:56 -0700 (PDT)
+From: Mudit Sharma <muditsharma.info@gmail.com>
+To: ivan.orlov0322@gmail.com,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	robh@kernel.org
+Cc: Mudit Sharma <muditsharma.info@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 1/3] dt-bindings: iio: light: ROHM BH1745
+Date: Mon,  3 Jun 2024 17:21:20 +0100
+Message-ID: <20240603162122.165943-1-muditsharma.info@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603092812.46616-1-yangyicong@huawei.com> <20240603092812.46616-3-yangyicong@huawei.com>
-In-Reply-To: <20240603092812.46616-3-yangyicong@huawei.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 3 Jun 2024 09:20:40 -0700
-Message-ID: <CAP-5=fXDPor-WsO-TGB3z6QpSWZOFJC31GJpuwZUA3qz_3WsYQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf: arm_pmu: Only show online CPUs in device's
- "cpus" attribute
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: will@kernel.org, mark.rutland@arm.com, acme@kernel.org, 
-	namhyung@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, james.clark@arm.com, dongli.zhang@oracle.com, 
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com, linuxarm@huawei.com, 
-	yangyicong@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 3, 2024 at 2:33=E2=80=AFAM Yicong Yang <yangyicong@huawei.com> =
-wrote:
->
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> When there're CPUs offline after system booting, perf will failed:
-> [root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
-> Error:
-> The sys_perf_event_open() syscall returned with 19 (No such device) for e=
-vent (cpu-clock).
-> /bin/dmesg | grep -i perf may provide additional information.
+Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
 
-Thanks for debugging this Yicong! The fact cycles is falling back on
-cpu-clock I'm confused by, on ARM the PMU type generally isn't
-PERF_TYPE_HARDWARE and so this fallback shouldn't happen:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/evsel.c?h=3Dperf-tools-next#n2900
-I note your command line is for system wide event opening rather than
-for a process. It is more strange the fallback is giving "No such
-device".
+Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
+---
+v1->v2:
+- Fix yaml issue: Make `maintainers` a list
 
-> This is due to PMU's "cpus" is not updated and still contains offline
-> CPUs and perf will try to open perf event on the offlined CPUs.
+ .../bindings/iio/light/rohm,bh1745.yaml       | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
 
-The perf tool will try to only open online CPUs. Unfortunately the
-naming around this is confusing:
+diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+new file mode 100644
+index 000000000000..ac5c4d160513
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/rohm,bh1745.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BH1745 colour sensor
++
++maintainers:
++  - Mudit Sharma <muditsharma.info@gmail.com>
++
++description: |
++  BH1745 is an I2C colour sensor with red, green, blue and clear
++  channels. It has a programmable active low interrupt pin.
++  Interrupt occurs when the signal from the selected interrupt
++  source channel crosses set interrupt threshold high/low level.
++
++properties:
++  compatible:
++    const: rohm,bh1745
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        colour-sensor@38 {
++            compatible = "rohm,bh1745";
++            reg = <0x38>;
++            interrupt-parent = <&gpio>;
++            interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
++        };
++    };
++
++...
+-- 
+2.43.0
 
-- any - an event may follow a task and schedule on "any" CPU. We
-encode this with -1.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n24
-- online - the set of online CPU.
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n33
-- all - I try to avoid this but it may still be in the code, "all"
-usually is another name for online. Hopefully when we use this name it
-is clearly defined:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/include/internal/evlist.h?h=3Dperf-tools-next#n23
-
-> Make "cpus" attribute only shows online CPUs and introduced a new
-> "supported_cpus" where users can get the range of the CPUs this
-> PMU supported monitoring.
-
-I don't think this should be necessary as by default the CPUs the perf
-tool will use will be the "online" CPUs:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/evlist.c?h=3Dperf-tools-next#n40
-
-Could you create a reproduction of the problem you are encountering?
-My expectation is for a core PMU to advertise the online and offline
-CPUs it is valid for, and for perf to intersect:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/lib/perf/include/perf/cpumap.h?h=3Dperf-tools-next#n44
-those CPUs with the online CPUs so the perf_event_open doesn't fail.
-
-Thanks,
-Ian
-
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  drivers/perf/arm_pmu.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index 8458fe2cebb4..acbb0e1d0414 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -558,13 +558,35 @@ static ssize_t cpus_show(struct device *dev,
->                          struct device_attribute *attr, char *buf)
->  {
->         struct arm_pmu *armpmu =3D to_arm_pmu(dev_get_drvdata(dev));
-> -       return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus=
-);
-> +       cpumask_var_t mask;
-> +       ssize_t n;
-> +
-> +       /* If allocation failed then show the supported_cpus */
-> +       if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-> +               return cpumap_print_to_pagebuf(true, buf, &armpmu->suppor=
-ted_cpus);
-> +
-> +       cpumask_and(mask, &armpmu->supported_cpus, cpu_online_mask);
-> +       n =3D cpumap_print_to_pagebuf(true, buf, mask);
-> +       free_cpumask_var(mask);
-> +
-> +       return n;
->  }
->
->  static DEVICE_ATTR_RO(cpus);
->
-> +static ssize_t supported_cpus_show(struct device *dev,
-> +                                  struct device_attribute *attr, char *b=
-uf)
-> +{
-> +       struct arm_pmu *armpmu =3D to_arm_pmu(dev_get_drvdata(dev));
-> +
-> +       return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus=
-);
-> +}
-> +
-> +static DEVICE_ATTR_RO(supported_cpus);
-> +
->  static struct attribute *armpmu_common_attrs[] =3D {
->         &dev_attr_cpus.attr,
-> +       &dev_attr_supported_cpus.attr,
->         NULL,
->  };
->
-> --
-> 2.24.0
->
