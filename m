@@ -1,163 +1,204 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FE4137C44
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 18:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717438027; cv=none; b=QVZOBApwPgaGBaHScB5cOmmnjYQBwHhxLwOANfI24hsPk9PruIsVER7ABUbXmCpg1xCAbCUSTCdDQfY+d+VcImqDm6Go1ekePGYXqpbAIjdcsuQQrpTmmWbm/ExUucdSAl1gRrrpT2ig2aJlG0sbzDZ7q7DIwNkG7ON0eLdE8R0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717438027; c=relaxed/simple;
-	bh=TaXhlRDjNJLhHW4iws7eb0uy7NSOvaguvsnI7PxZ9U0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ma1eWS3Rmqr8StVLy4Bof8JLynS2w7nHhrQw52tzESb6fxok7+kk0z5DrWaz/sNwE1CP5m8TQvUY42agDorpMyWNaLSUNzp65WFTbYkftAjJ0P2FuRgPQOgwsNnZ+pRly/5UAJbEAYkyXsCB86oxFBpCWiEEANgwzkNwLdPaVXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zJ6pXOre; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27872137C36
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 18:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717438038; cv=fail; b=LnPtJ6YagGGm5RKr/9BCk7PZC2Ne6yLeCXgCMiogwb5CMHEY6cC2cY0IbsmaAeYoHxfULTPfXflhiVwrRaPJ0nbODE2aVR4tisXSL7/KAQ3Da4uVRvSLNXG034CoU6HL9JFfeM08cCmUimNhbMvnd/ZkxIFrs6mK8mTNTN0t6yY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717438038; c=relaxed/simple;
+	bh=RPRO6rpjbQFLzfa8gjPWtMbjPCoBelxmdABjGzVNYa4=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b214WuWB/m4WA7iKn8hIsqa+dwqOBgR0flb4SnPhwpNY2h6KmiSf1a0ElijZarzHOGni1gaaO2Bf1znfzbO7+CxAbptdp+mlonLAuCA8OhCP1zN6cn57U9qTlCjyNdvTGZtlCbLB4huGmfdgfcamgK07AnNgkqSF01YCzLh7oCU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEnrSV9+; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zJ6pXOre"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57a1b122718so890a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 11:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717438024; x=1718042824; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxEtH6ksqOT/HFLTQs72uRkOcc2agItJ6FV9YxsG9ic=;
-        b=zJ6pXOreDlBGkhJHkY1qeKJ2L0Liuz3+u0WtJe52qgVVScAUEd+Y0kpFBDVIhz89oY
-         7CIYEumlPhJBrcL0yi3lm5/Ck9VaVQQiDD6xiVsqWbsg1qS1ef0TJyI0eFFppLF0fjAa
-         wouoNsJCLSa5R7+3wuLM2tMBOSaZNSb+bcrkb47yRJm2QdPRQq0RuFMUmziEnWg3lxG4
-         XnU8KW4Lfeemp3VHTcQ8A+APMtVYNFIFulprkQQK5vnOSY02YlQ4Av5MnXaYPMbzQ8oi
-         izZe7tY5MI4xnZ9K7xCJOTouXm6aHS1ncKVv21wxXefpRqqESlauuwToBHk4AsfYLZrW
-         Cg+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717438024; x=1718042824;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lxEtH6ksqOT/HFLTQs72uRkOcc2agItJ6FV9YxsG9ic=;
-        b=lCPypMGEzpKk3x/OqTSQs+ydjSP0Hl3TbU/+1gYhunfOmOcpbOGqgxtuMVZnZ+G8+t
-         s/S7iiMFb2twRrOlHAe8nA/qXApUoZoa9C0S0BBKpwSNLiunEl6SeBnaUxaRO3wLz5f7
-         S3A23XZc0De3Bmp9ZZKH6A0+uqFUq69bQ8pPqTnvrLWcp64XYyYbeVshFEwqy2EI6gtn
-         jxQur7N+Yu3Uq+hQKkTFSHoGybSWE8Hm19S0DNjEewXEGrNRhqfbClnHhoavgPqio63u
-         fw5G0nTMXGrWa2PMrq1A6ULDbGNayzOyC1eupd9ZBfuKjOfCI/GhSZE4U2z1/31Mowpa
-         tsOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNtDEFdZdZczY22cESHB7nvwK038w5YXSIgg3zxK5xEGLNNZG+aloaBiqbPNQ73Eo1Zt+JXr/IO7MtNDxy0g16Kj8JrTgiAMwvn1U/
-X-Gm-Message-State: AOJu0YzyLlh+fqhZarhKDScDcr2dtP/6zGdlDiBBwe67VaW0i0ux8pIg
-	yiPl3IbD1ZWZkYxW2iHi4km1a0OS9GQ3ZaILiSj57WbayvYlZGV/ygDfmJRui6Q95PzCq7ro2z2
-	JJN6ESFMR4qg9CpiFGJbgy4tpzi+Lj+d4UUY=
-X-Google-Smtp-Source: AGHT+IHh/FTn18V927nX7mLu4AOxZc/5TfIty1nDwy6MfFqeiSDSbjo6v1NtdviT15GPtNUFxHU2jnhiN9DQRoaPf/Q=
-X-Received: by 2002:a05:6402:12ca:b0:57a:2276:2a86 with SMTP id
- 4fb4d7f45d1cf-57a7dad73dbmr6429a12.4.1717438023960; Mon, 03 Jun 2024 11:07:03
- -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEnrSV9+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717438037; x=1748974037;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=RPRO6rpjbQFLzfa8gjPWtMbjPCoBelxmdABjGzVNYa4=;
+  b=EEnrSV9+Ukl6DyFl+GY4fkOHvan36QAm8ISfNmOYTDsH1hJM+BSOzYYU
+   UvL5pBda1VQ/JEFpvDB6ERzzn1H5pyiIBCkTzF6O/XySAMASdSLtFFLm2
+   boDA3HW9ng46TxUG0LU0L8pFu5Cad3aKvmsSi8N9KYWG8nzhgUJzDQote
+   dZavLubrEtGpI4UaRKfFrRJ1f5O3iJkOVVx0v32eZRxgxEcCzhb6Kl136
+   LdnDHKOh+ASNNT5IouT+CT3ymcwiI5QqwX/Oz8lhDwwjYqFpIY2Y+DMYS
+   k1SjQybhUBChYNNz2RfmDBwT+3iriyLZPRS6AEFx2rxoxGFOZOMTEHhO4
+   w==;
+X-CSE-ConnectionGUID: //68qYpeSxq7mtoTXBbJEg==
+X-CSE-MsgGUID: /REOl+37Sii24ULfP7XoSQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13819992"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="13819992"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 11:07:17 -0700
+X-CSE-ConnectionGUID: 8rWc3SAaQOiYxjNG97SDNw==
+X-CSE-MsgGUID: qzTGAgPcSKmyDZuePL63wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37547827"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jun 2024 11:07:17 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 3 Jun 2024 11:07:15 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 3 Jun 2024 11:07:15 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 3 Jun 2024 11:07:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AlqAVCouO8QXazJMwZ5s6FDfuuPtqK1NeIuoaMYOj+35RsV6FiSuAKGOxlqDoAytkHNA4qB3yTZMlCw+c9qqhasco7b6cukpf4jFsgaDXxnkFlZoVU7J8nWmgZEtFdRzPiNmpCfVSvlz/+qbLsF82CxMzxTXevKR9Q7+a7VCWU9OfHw6cAzhPdDLPaOOZfFahAPpy1Wk1w0AX1blPRL+IvqCyUfCfCKPjqILjeX/zwIwcC/qpGRJAbBQPYx3oDdqODLWxKomAJpoubome4wsycmdxl+9K9Ihy3iSzclHCvsUHT/kiIxPjOAjkkoRjcmoqLr0RQyp/saa9DcOeEJuWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pDjJFUdRpcEA+RO/Ahh4V+9MTy3bwo6YwXOU+wSvKow=;
+ b=Sb8oZWbpiBd0PQ/p/eLUcBJbuodAYq7wLWjKDsi8qWZ4658P4L+c37HYpvEaPy1zcmq/UyqjyPUAMvo0XNNk/fb0S/yCQl4f/4IpUQO4VeBF1MbzcZ/WewSnwUhl3zSHs/EsSJdTT8CunWI+kZnbjfrPHBt3q+oJE/iYSQfmifILMIdtMCR8Q3iJ1ZRYGXm7OuQlY6lMjnmc4eXuCLSYlL6fd9ens7Vdy7G85pjQ1YRUgTHI/lQB0IER225laEQhSWP3KNGDIDqug0sn19Qht9uL0nYcHy39GCIpHzub+m47DDT1+z7uMJEiZZPuWGWuZjJ+n4AJgkKzUTn3+xeHcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by DS0PR11MB7383.namprd11.prod.outlook.com (2603:10b6:8:133::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Mon, 3 Jun
+ 2024 18:07:13 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.7633.017; Mon, 3 Jun 2024
+ 18:07:13 +0000
+Message-ID: <f4196f47-179e-454a-866c-1f4b6047ae31@intel.com>
+Date: Mon, 3 Jun 2024 11:07:11 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] x86/resctrl: Replace open code cacheinfo search in
+ pseudo_lock_region_init()
+To: Tony Luck <tony.luck@intel.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>
+CC: Fenghua Yu <fenghua.yu@intel.com>, Maciej Wieczor-Retman
+	<maciej.wieczor-retman@intel.com>, Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, "Drew
+ Fustini" <dfustini@baylibre.com>, Dave Martin <Dave.Martin@arm.com>,
+	<linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>
+References: <20240531195720.232561-1-tony.luck@intel.com>
+ <20240531195720.232561-3-tony.luck@intel.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <20240531195720.232561-3-tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0376.namprd04.prod.outlook.com
+ (2603:10b6:303:81::21) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603114008.16235-1-hailong.liu@oppo.com> <CANDhNCq50zPB+TS+_Oo0HY0aUuBAdik2KrC8eJRTygbis293sw@mail.gmail.com>
- <20240603172148.gb7txpg2ya43jyxn@oppo.com>
-In-Reply-To: <20240603172148.gb7txpg2ya43jyxn@oppo.com>
-From: John Stultz <jstultz@google.com>
-Date: Mon, 3 Jun 2024 11:06:51 -0700
-Message-ID: <CANDhNCrwgce7G5_-4tNfgTHcdL12zt3JKBg=o3bHrzMmfFMctg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] dma-buf: heaps: move the verification of
- heap_flags to the corresponding heap
-To: Hailong Liu <hailong.liu@oppo.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	"T.J. Mercier" <tjmercier@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	21cnbao@gmail.com, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DS0PR11MB7383:EE_
+X-MS-Office365-Filtering-Correlation-Id: a542f8ef-3518-450a-9fad-08dc83f7fe78
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RFQ0ckE0akgrUEp0UEcvU1pqUEZPdHZCSVZHZi9nZnRFWjljVzNqMTFEQzB5?=
+ =?utf-8?B?Q1M4OTB2Qm82S1lYWTJWK3RmSE15Vm5TME5OUlJPckluaFgvYlpBZXYxQ0NC?=
+ =?utf-8?B?OUtoTzExK2tvMU1nZVFPeFZCYXlWZXl3SGN4QzdYSE9OQXlyRUVoT0wwWkZk?=
+ =?utf-8?B?cGFLaXlOMGhKMUQwT0Nwc0pyaEFIMFdSZktudFNTUDJtTVNtWWJnN1Z3cHhn?=
+ =?utf-8?B?a0VKOTBlVHNtTjE0Sm1CVzBxOHhNb0FzaVN5dzhxbFFEUnUyMnZoT3V1WERD?=
+ =?utf-8?B?bHY0aDVQa01JeVgrdFV6Y1R4emNrTlMxU3pTem9iUUFicURUb0xRMFkzVVFq?=
+ =?utf-8?B?QldGK0xuemVDYVJpVnNCMUMvQnF6bjJXSnRQOHFRenI1eEhJTDN6MXp0UHVF?=
+ =?utf-8?B?N2toVkQ4b0xhcTJMaldvRldRdGViY09SMGFYbm5DS2dyUzFXYWtyRnJGam9W?=
+ =?utf-8?B?REFhTzE3S1d0cDg0b3J4WUFhdWppQmcwZm1mNGdqdlVaUWZJWEZ2SFQvUDRF?=
+ =?utf-8?B?L0JNVXBmVUFmaGx0L1dPNWpxZnNtbHNaSlhmRlh0emh1TTdjeElnaVNscUtD?=
+ =?utf-8?B?bVZqTjcvRzhWa0Y1NlM3eDFTM0p2bGc2RDBqbkUyOGlXOWx5WGxmS1B4Zmxs?=
+ =?utf-8?B?SlBPSFB4bnZVM3BxSXI5dmxlanF6U0JPMm84blBibko2VndaazVhTmo0bzRF?=
+ =?utf-8?B?UXgzYW05akpLTGtJM0V2eVZ1RFNQRlA3RnAxQ29OUmhzbnZINUx5c3BZTWxH?=
+ =?utf-8?B?cVlTRkhOcVB0cndyb2N0dWpPYlNzNC9LRnI2dVlzQWdKV1pqMS9tR0dYZSsy?=
+ =?utf-8?B?bTVNUzRyTTdueHY5VVYybE5KT2o5M21LZGZkYUttZG9NMGFJVmhmRGY2dmQ5?=
+ =?utf-8?B?N3ExaXdjbnNqbVppanJDVk1Cc280VzBadnZFM3Q4RGt2d0pCRkpWUEtoYzJv?=
+ =?utf-8?B?OGpEWS90R3RBaVJ0SzRKbWNxY0loSmgvMjVlM2ZsYVpFVER2NndOdm9LSjIw?=
+ =?utf-8?B?K1M2WVF1VFUwYlI0T2tNZ3A4TzNpSFlDWnlFOHoyTm5wTWM2TFZSd1NpUTFD?=
+ =?utf-8?B?eFVNaVNQODUyY2EvU1RpZU5BTmNOa2dtMGNwNEJLd0lWR2xpQ1RqZGpMcllN?=
+ =?utf-8?B?SC9WT2NIRGhYZU8xNE1tTU5HOERsSmZ5NHp1QnBCdlFwVE0wRndUbnN3Lzli?=
+ =?utf-8?B?UXM1T0l2TnNXTVhKZndzT2RPc1BPTmpWZ1BadzZkaGxJc3ZST1JSNVh0RnJK?=
+ =?utf-8?B?bjFSQWdIa0ZkeVREbEtBclQ2Wkl4cE0rSXBDYTZKTHl5citSWVEwaU5DOHdM?=
+ =?utf-8?B?S0NnRnU1UU44ajZrZE5kL0Q2OTZSM1pKTDMya2tyQVd2QjhreUxaTzdJdnhC?=
+ =?utf-8?B?NW8xRVdtbU9XUWdjNkZiYzFsWUU0SzVrRFZidVZYeEdlaGlXaXdpMlc4R1A5?=
+ =?utf-8?B?TXIvYXJJR3lvU0N3cnk5eUVpakg2dXJMdzFzTkhVV0hjckpoNUhJN1h3R09x?=
+ =?utf-8?B?aktuUmtuWVNMSGNmRGY5QzR4TWhUakNvOWtHY1NQV2RwOVJ5QzZMMm1JUXdk?=
+ =?utf-8?B?RDZ4TG9ZbHQ4QktTQ0Y1VHZreG1lL3JNeENhNzRWUWpyeFlGM3llcUxsRkpu?=
+ =?utf-8?B?RFNaeUFyajREdmtTaXBHTkd1Q0cxWjhJSXNtN1RhZ0JUY2ZFMVplaFpTOHNi?=
+ =?utf-8?B?UlNGN29oZStHVlBqV1J6UnhWMmY3ZHVoTm1FVWJHTC9CQnFidFEyR2FRPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFRJMFZpQnQzSFpIRWc0YndCUUt5RHh5VEt6SXpzWEw1Mkh2dmNqYW5qeXBw?=
+ =?utf-8?B?all3VnZwMlovTWVlTk5iSmh2MktDcGM1YU4rcnIrd09JclJ6V3E3a2JRZys0?=
+ =?utf-8?B?TGF6a1VjR2MvSkhEK3U1SDVvd1VZb211Z2pzeUFpckFRd09LVlNEWitjZWlL?=
+ =?utf-8?B?OGt6SnZFODdDU1NLdFM1NlZ2S1Brcnd1T0lBZStIbDVYNVhhWmRVVnFLTWZu?=
+ =?utf-8?B?VXdIeHgzZWV3V1IyakxUS2xOUzgvU25xN3BHWWtwSmpVOXp1Ylord214T1ZI?=
+ =?utf-8?B?TFRLZmwrcGJRUzhncUVmN3J4TlJSREl3Q05BekdWVGs5L1VLUEVlODlDUDNu?=
+ =?utf-8?B?Rnk0N0JnTi80ZUtxVnNIdnVlM01zb3ltdkh3ZmJ3dERDcFA5cHV6NnJXaTJ1?=
+ =?utf-8?B?cVBLUlI2N3FJMjF4SVJQZ0VKeVJEOFJkYWZJRHdsZ28wbmtCWE5lTVM4TVFE?=
+ =?utf-8?B?VFRRM3A2UjBzSzhDaWlZNytxZWFsQzVvOHJyVGRmS04ralFJN015STRULzRv?=
+ =?utf-8?B?R0FRTHFBY3c3aHdmLzVLMkgzeWE0NmFxTE5JNmMxYS9nVVJWMDByek15ZnN6?=
+ =?utf-8?B?ZkwvTTVQS2pWdzBhWHFrRWlKaEgwSEtMVWM4NTFYdGZsTkZYSTdCcEd5ZjF2?=
+ =?utf-8?B?Qkd6WXkwbHlra3JMVVJVWGVwMUorWlUxcXVpNDNpbnNsZHlPY3hMNnJ1WllT?=
+ =?utf-8?B?bUNRTXpFa3ZFekcweXRQaTJ2UFBEQnRYRGlkSVRwTTJ5NjloU2J0bjhkWTI1?=
+ =?utf-8?B?VmZJNGpVYm1xaHRXc3ZZbXdnWFZiZWo0QlArZWpkTTIvUmtsMFR5cVllRmRk?=
+ =?utf-8?B?VGgwNFdRUGNvUW9RNWE1M2lDck9YOVhzMGRZeFhQWERXNzA0Z0NwZHZ6YkNt?=
+ =?utf-8?B?Q0dlc2Q1aFZSaldib04zQ1AwVVhPbklVbVFyelJqcHN3YVdHZnNVRFpvcC85?=
+ =?utf-8?B?MGt1WnZxTHJxa1hkLzhKL2dCMXNPb1dlcXAxbDZPSnpsWDlma3J4WXhCdE9S?=
+ =?utf-8?B?VGxYS0dsTHBJRzcvV0pWVkJNbVFnWkVqOFJzbHBIc3VHRnJ2czdKVEFpaTg2?=
+ =?utf-8?B?b3c0OVVZMWFJS0VoeUk2aG44VDlyZlNsZE1sbFl5YWRaRnZPWEljUXlXWkZR?=
+ =?utf-8?B?dVhScTdBbHA4N2xEaDNwZy83RFdqL1V1ME5FK3k3bzRpbDhxcWZ0eTdwVDBq?=
+ =?utf-8?B?OVRRSWJCSFhPMFF3QWpIdVpvaTUxUXRPVmZ5YlNCQkU3RlBKWjA1V083T3M0?=
+ =?utf-8?B?RiszbVp6bElGN2pBSW1QZ3JuQVdneUUxZkROSTRYSFc2U2dwR2ZPUkZxZk91?=
+ =?utf-8?B?dWlkZmozTEJ2OThWejhOZHFIa2ZXY2FwYytuUVBtYUxJTGFhMWZScG10ZUFT?=
+ =?utf-8?B?WXRKRk5QdUZmQnl3VEVKc3puRDRlZ3FOV2xCeWlTMDlWOFYybG96cjNGTG41?=
+ =?utf-8?B?a05OL3IxMm55dnNOeXRidzl1ZnBMMzRDTmNmTE5BVVFYRndlN0FFQ3c2emln?=
+ =?utf-8?B?OFFPY3hSaU04RnU0SkZvb3RoZ3ZrQ090cm5NbDdCOVVVZy91MXVSUmJHL0tT?=
+ =?utf-8?B?Vkk3V2x4b3JxdTBrUVdUNVdqV2d6YTVLUkpsMUxOdi80Smlvd2ZXVlczVys4?=
+ =?utf-8?B?RThsYUVWTGxTQ1p3cElqNGd6NWMrRHNxTjdhS3dDOU5TNG1VbW5qNGFROXMy?=
+ =?utf-8?B?Z3hiMHFyWHNiUXVHekZQU1lEZWN3MG1FVFVGMk8vODBrRkJ4ODVQR1piWlhI?=
+ =?utf-8?B?cFZFcXc4UDNacXQ2MVVSSXlOSHhvQWtNREZFN2dNS1BaOUhuSks0L1QzUmNa?=
+ =?utf-8?B?SVo2RkpWaFFYTUJOMUFBMk5XcllCRmdBMUM0NmdqOE1HQjNPMHZGR3I5d0V1?=
+ =?utf-8?B?VDZwWmxKZS9WRXJWOUVDOVRMZzlTWHN1Zng3eFJMSGdLajZNL25yN1NEU1h3?=
+ =?utf-8?B?ckcvQ3MwaUlnZkxaMHp3dFNKRkpteU5kOExUc1ZRWVdNZXZ1OUFWMkxYQS90?=
+ =?utf-8?B?bzRuME9jdDZoVDBLNml0Y3ZmV2lDMW9UUGliak5lam1KWUg5a3lKNmcwNTdD?=
+ =?utf-8?B?Q1RIVmYrVU1TS216NzJYYW1WWjAzeWVVaWdwbENCRXFlQ0N0ZzNTcVpzTlRx?=
+ =?utf-8?B?MjFac1l5Ujc1VG16akV3UmoyaGFwOEs2ZGxqbjdIWEYwalRRZTlGeEFmdHpO?=
+ =?utf-8?B?OGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a542f8ef-3518-450a-9fad-08dc83f7fe78
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 18:07:13.0885
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d7nx0MW/Fz0F+4shFdKJF4lAbz/F9e4nsiOGADbvKoZRThkSkXxYgNNwnXi6VSRGPK3QRZ7qWXSz8fQLSUr9+ptnReW3VgqzJfPszSaqi0g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7383
+X-OriginatorOrg: intel.com
 
-On Mon, Jun 3, 2024 at 10:21=E2=80=AFAM Hailong Liu <hailong.liu@oppo.com> =
-wrote:
-> On Mon, 03. Jun 09:01, John Stultz wrote:
-> > On Mon, Jun 3, 2024 at 4:40=E2=80=AFAM <hailong.liu@oppo.com> wrote:
-> > >
-> > > From: "Hailong.Liu" <hailong.liu@oppo.com>
-> > >
-> > > This help module use heap_flags to determine the type of dma-buf,
-> > > so that some mechanisms can be used to speed up allocation, such as
-> > > memory_pool, to optimize the allocation time of dma-buf.
-> >
-> > This feels like it's trying to introduce heap specific flags, but
-> > doesn't introduce any details about what those flags might be?
-> >
-> > This seems like it would re-allow the old opaque vendor specific heap
-> > flags that we saw in the ION days, which was problematic as different
-> > userspaces would use the same interface with potentially colliding
-> > heap flags with different meanings. Resulting in no way to properly
-> > move to an upstream solution.
-> >
-> > With the dma-heaps interface, we're trying to make sure it is well
-> > defined. One can register a number of heaps with different behaviors,
-> > and the heap name is used to differentiate the behavior. Any flags
-> > introduced will need to be well defined and behaviorally consistent
-> > between heaps. That way when an upstream solution lands, if necessary
-> > we can provide backwards compatibility via symlinks.
-> >
-> > So I don't think this is a good direction to go for dma-heaps.
-> >
-> > It would be better if you were able to clarify what flag requirements
-> > you need, so we can better understand how they might apply to other
-> > heaps, and see if it was something we would want to define as a flag
-> > (see the discussion here for similar thoughts:
-> > https://lore.kernel.org/lkml/CANDhNCoOKwtpstFE2VDcUvzdXUWkZ-Zx+fz6xrdPW=
-TyciVXMXQ@mail.gmail.com/
-> > )
-> >
-> > But if your vendor heap really needs some sort of flags argument that
-> > you can't generalize, you can always implement your own dmabuf
-> > exporter driver with whatever ioctl interface you'd prefer.
->
-> Thanks for your reply. Let=E2=80=99s continue our discussion here instead
-> of on android-review. We aim to enhance memory allocation on each
-> all heaps. Your pointer towards heap_flags used in /dev/ion for heap
-> identification was helpful.
->
-> We now aim to improve priority dma-buf allocation. Consider android
-> animations scene:
->
-> when device is in low memory, Allocating dma-buf as animation
-> buffers enter direct_reclaimation, longer allocation time result in a
-> laggy UI. But if we know the usage of the dma-buf, we can use some
-> mechanisms to boost, e.g. animation-memory-pool.
 
-Can you generalize this a bit further? When would userland know to use
-this new flag?
-If it is aware, would it make sense to just use a separate heap name instea=
-d?
 
-(Also: These other mechanisms you mention should probably also be
-submitted upstream, however for upstream there's also the requirement
-that we have open users and are not just enabling proprietary blob
-userspace, which makes any changes to dma-buf heaps for out of tree
-code quite difficult)
+On 5/31/24 12:57 PM, Tony Luck wrote:
+> Use get_cpu_cacheinfo_level() instead of open coded search.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
 
-> However, dma-buf usage identification becomes a challenge. A potential
-> solution could be heap_flags. the use of heap_flags seems ugly and
-> contrary to the intended design as you said, How aboult extending
-> dma_heap_allocation_data as follows?
->
-> struct dma_heap_allocation_data {
->         __u64 len;
->         __u32 fd;
->         __u32 fd_flags;
->         __u64 heap_flags;
->         __u64 buf_flags: // buf usage
-> };
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 
-This would affect the ABI (forcing a new ioctl number).  And it's
-unclear what flags you envision as buffer specific (rather than heap
-specific as this patch suggested).
-
-I think we need more details about the specific problem you're seeing
-and trying to resolve.
-
-thanks
--john
+Reinette
