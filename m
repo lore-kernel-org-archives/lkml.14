@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCE113A261;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D8013A89C;
 	Mon,  3 Jun 2024 19:07:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441630; cv=none; b=Pu2LULdwzX8AeJA0zmL2GbKBvFC2gBiT3Q/j5wnL87utiWPRj1PkYN+b0xRRrmjegn9IRZ8g7OxjV2QtwWojaykcrTzMTMqD8M0aeCOQ7WnVIsraKjOYmOz/6j4MKBmNCop4HkASc6OBKJF13BbSAl4G8uGWzyZe234mfRxARWE=
+	t=1717441631; cv=none; b=lyRMhIfnygbP35rIFydRH92uSj/rYbCNjv1NjrP42WM92v6uit+0zfb6akOvB7UZoaiQx9+yfETuZ/kCHBdIsa7NrnRBlIqO+4/gejDTdJ2ZljjR9PYnhsYEaF7AAsrbB2sjAeLc8LzeyP51ILuuoNj9W2X5m0cEqPSXSk/69kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717441630; c=relaxed/simple;
-	bh=9lgCYOF+tkC1R4x/Mh3CLz0Erih4ZZSea1s6G/+5Llo=;
+	s=arc-20240116; t=1717441631; c=relaxed/simple;
+	bh=+XVWQMr+hU4z3RnWRxUzZ1vSdPsxWu1k8ObP/Bx7w9A=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=sop0rcxGoGl8ffeBs+cit1P75hGoOWN/okyiC+vHoM3HaAyIbQUmqC8n9VSsiK2HwWGdPii2Fdo4gPc9dWXnQVqhUl+eso/FblKbdLW8eDgeymaSbwJBPFzQhY9xrq4YioDTamiPu/9zmkPHSITfJlWW9on0VAIOE+mgktp79sk=
+	 Content-Type; b=ZVOvKak/LU/qA+y386Vb4IN07OJMAxuvY2m/vRo4VBLLLd2qVWhyuyepE6TlsscscORuqH/+bVDao6eshO5+sY+X7eEHfeGHZeROZilddgyb5mF9iXyeUBCPna+UeDv24cSX0Qa1zg+4f5JBmM2LWwCTtasHJvQfaBbO01nst+o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB58C4AF07;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABA9C4AF48;
 	Mon,  3 Jun 2024 19:07:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sED2b-00000009Tn1-1YOC;
+	id 1sED2b-00000009ToT-3ZSg;
 	Mon, 03 Jun 2024 15:08:21 -0400
-Message-ID: <20240603190821.232168933@goodmis.org>
+Message-ID: <20240603190821.717065217@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 15:07:06 -0400
+Date: Mon, 03 Jun 2024 15:07:09 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -41,8 +41,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 02/27] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible
- by long
+Subject: [PATCH v3 05/27] function_graph: Handle tail calls for stack unwinding
 References: <20240603190704.663840775@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -52,54 +51,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 
-Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
-always be divisible by sizeof(long).
+For the tail-call, there would be 2 or more ftrace_ret_stacks on the
+ret_stack, which records "return_to_handler" as the return address except
+for the last one.  But on the real stack, there should be 1 entry because
+tail-call reuses the return address on the stack and jump to the next
+function.
 
-Co-developed with Masami Hiramatsu:
-Link: https://lore.kernel.org/linux-trace-kernel/171509093949.162236.14518699447151894536.stgit@devnote2
-Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
+In ftrace_graph_ret_addr() that is used for stack unwinding, skip tail
+calls as a real stack unwinder would do.
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/linux-trace-kernel/171509096221.162236.8806372072523195752.stgit@devnote2
+
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/trace/fgraph.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index c62e6db718a0..fdb206aeffe3 100644
+index aae51f746828..8de2a2662281 100644
 --- a/kernel/trace/fgraph.c
 +++ b/kernel/trace/fgraph.c
-@@ -33,7 +33,7 @@
-  * SHADOW_STACK_MAX_OFFSET: The max offset of the stack for a new frame to be added
-  */
- #define FGRAPH_FRAME_SIZE	sizeof(struct ftrace_ret_stack)
--#define FGRAPH_FRAME_OFFSET	(ALIGN(FGRAPH_FRAME_SIZE, sizeof(long)) / sizeof(long))
-+#define FGRAPH_FRAME_OFFSET	DIV_ROUND_UP(FGRAPH_FRAME_SIZE, sizeof(long))
- #define SHADOW_STACK_SIZE (PAGE_SIZE)
- #define SHADOW_STACK_OFFSET			\
- 	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
-@@ -103,6 +103,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
- 	if (!current->ret_stack)
- 		return -EBUSY;
- 
-+	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
-+
- 	/*
- 	 * We must make sure the ret_stack is tested before we read
- 	 * anything else.
-@@ -326,6 +328,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+@@ -594,16 +594,26 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 				    unsigned long ret, unsigned long *retp)
  {
- 	int index = task->curr_ret_stack;
+ 	struct ftrace_ret_stack *ret_stack;
++	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
+ 	int i = task->curr_ret_stack;
  
-+	BUILD_BUG_ON(FGRAPH_FRAME_SIZE % sizeof(long));
-+
- 	index -= FGRAPH_FRAME_OFFSET * (idx + 1);
- 	if (index < 0)
- 		return NULL;
+-	if (ret != (unsigned long)dereference_kernel_function_descriptor(return_to_handler))
++	if (ret != return_handler)
+ 		return ret;
+ 
+ 	while (i > 0) {
+ 		ret_stack = get_ret_stack(current, i, &i);
+ 		if (!ret_stack)
+ 			break;
+-		if (ret_stack->retp == retp)
++		/*
++		 * For the tail-call, there would be 2 or more ftrace_ret_stacks on
++		 * the ret_stack, which records "return_to_handler" as the return
++		 * address except for the last one.
++		 * But on the real stack, there should be 1 entry because tail-call
++		 * reuses the return address on the stack and jump to the next function.
++		 * Thus we will continue to find real return address.
++		 */
++		if (ret_stack->retp == retp &&
++		    ret_stack->ret != return_handler)
+ 			return ret_stack->ret;
+ 	}
+ 
+@@ -614,10 +624,11 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 				    unsigned long ret, unsigned long *retp)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
++	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
+ 	int offset = task->curr_ret_stack;
+ 	int i;
+ 
+-	if (ret != (unsigned long)dereference_kernel_function_descriptor(return_to_handler))
++	if (ret != return_handler)
+ 		return ret;
+ 
+ 	if (!idx)
+@@ -626,6 +637,8 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 	i = *idx;
+ 	do {
+ 		ret_stack = get_ret_stack(task, offset, &offset);
++		if (ret_stack && ret_stack->ret == return_handler)
++			continue;
+ 		i--;
+ 	} while (i >= 0 && ret_stack);
+ 
 -- 
 2.43.0
 
