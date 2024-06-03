@@ -1,117 +1,294 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA9413213E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 16:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC64D1369A0;
+	Mon,  3 Jun 2024 16:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717433885; cv=none; b=PtHA8wDg2qbAMtpezV3p3sSZRdtOD3nL21ewLjXEM13Mf1o0217XAD9zTSFuryrGKyQb+K1GevfF3IrIrB3RGXsYMYcu0Uhk/hxOEYScfMQX2hR0kjdy+FB69BFCln+sOgiwzxG8N9UXNzGRa0EFwbTNeXZpNx0ZORfaoa6e+lU=
+	t=1717433902; cv=none; b=Wxzlcu+06p6D28xWWVvW0fTxHamPyFNVSizGzYhikgr4652X2ZgJUnUPgID2r1o/8LFFxYligXBg6sY7UkOv29nRdtFjbLF+AGVi82TJbAH1PBxjoS2P7/4Og8z0dZJ+2t4kJGQNSTKF6fOVnNmfT7uftsaBUcuLtl3wV3WOPKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717433885; c=relaxed/simple;
-	bh=YmfhrGKR576T+lERklhD3qCbieB1UQ/6RTgNn0+mM/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d8PkDSQx2/WJUGabMDQt3pbcZvg3L+068jvQJ1btIgY2mrDjgrF90PHDAWF7nwfoTPx0aJyJ8ikJvPBpIYLXX0o5fwGmuuPJlm0Rq5k4Nn0x2J8UikoWoOVGGCnlqwyBiMBQpOdjNqpXjgvYQfyNH41n+ebvKmcpcbYKP/nKJv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a7KIZvvx; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1717433902; c=relaxed/simple;
+	bh=ojs+BBl2wRyth1o2ZiKYXRCu771Apw2r+/u830cNuhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dg1DuPOHK6m6rjcu7yi7iNTCYMa+wJmoGUbji2MHejWaesJRKRd+8EGpKvLdZkChgw/0W3FnU2SoO30Daj6RLjA+ih/CWzzlhtnNOw2BILu8LztI1VkT95g8VWWL7hRkHbsWDA83uZ3n6E+ayKkeWke7eYOXOQc+WArhhK8bq1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqsiot7F; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a7KIZvvx"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso105387a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 09:58:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1717433881; x=1718038681; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u5ebltTeVjJmxSwR146N9eCu8AyLuoasTttIxwHglR0=;
-        b=a7KIZvvxBugNNfA/aUlr+aOMfzFDM8ip7JlhYDfPW5ZPWIY3om445LAw6aFOm4DxNY
-         tVYk+W0zurXUXbo5qrf34Y9dSkJnlsI0/NHxEO1xgF2KItCYSBo5hyHCkGRu6ZvUX4Vi
-         ilZDkU/503KC5lScK8mEiMV+5hP9nX8oRlqPs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717433881; x=1718038681;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u5ebltTeVjJmxSwR146N9eCu8AyLuoasTttIxwHglR0=;
-        b=FbLCLVVteUoIHm5SivCVD+CYyW8dc0mnVFifrHBf4gumQMGOP0JpVaQZSF3Z/JTI5+
-         zngutPllDiazRNak+XjkJnzftotexg1qv4VulEUsV273cc0z2jvqMVXiCi1Ag50yt52r
-         PR0korAGfGvXD7EYWotCV5CcAAcRwvSRIQmJ6W3KH/08dyF54G5f8T2fCc5iFuKjWROe
-         VvfHQeBvXhUwiv+gR/OCtEXOeREyTbuYu0BoIlhlnenaGVf8z+mKKOaBk2+llIvJ/G7Z
-         J0FLzIwvdl5hySvELRSLpz67YiL8zHBWdtiWoQtxOtXiPft98sc5m4nmLFk2HAmtkHVT
-         mSDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAzHn7ZQHZNfHGW1BVhmwWaQM+lCEGiGZ8i9zazzNYLcmwGiwL+vPuHsmCb8vTbvxRaGPdQTcwS/AvPiro8I2fa7pSGZ4MAj4xg9t/
-X-Gm-Message-State: AOJu0Yz/V/OXVYxjVm/aTMwv3PbaRZdFUJDjZr+BtD4cR5mEn2ERCrdV
-	7qrRpThgklYXvg1aN2IXuF9o7IR15wd49YUdxKUsnsuD09wXeVP3bx9lA0t5sScG7RKCll5o0HX
-	g7SfqjA==
-X-Google-Smtp-Source: AGHT+IFz1axEfH4xDGwudD3qEvikGkEP6LR9qZ4uqOslbtC3utns5JLtmviPo9YBIQtrzLWV/ALuQw==
-X-Received: by 2002:a50:cd55:0:b0:57a:1d0f:47f7 with SMTP id 4fb4d7f45d1cf-57a36389d9dmr6613413a12.17.1717433880633;
-        Mon, 03 Jun 2024 09:58:00 -0700 (PDT)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a690678bcsm1237980a12.65.2024.06.03.09.57.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 09:58:00 -0700 (PDT)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso105356a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 09:57:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUTwtG0/87uSrADvvlwuvFX/cc2dJGg73tuLG/PfSw7aeOrbpG/EGCSq2GQs1Q0Aj3qW/ymRiTcQCEt+rZv2W8zfScCrjRM4hbczTWe
-X-Received: by 2002:a17:906:2855:b0:a68:a2e7:118b with SMTP id
- a640c23a62f3a-a68a2e7230bmr456124266b.19.1717433879674; Mon, 03 Jun 2024
- 09:57:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqsiot7F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717433901; x=1748969901;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ojs+BBl2wRyth1o2ZiKYXRCu771Apw2r+/u830cNuhg=;
+  b=bqsiot7FH5IcIeorC6+gGNHyAmyffDCbfJUGvmFM0uBknqqc7JKgqgdQ
+   1vwWIyGb8FiY6GHAk5TJ+M9BPhmYOMUVVjjq5jK2lHdLQ2VyB1LzJYaxJ
+   NS4Tu9oo+Yl2LssEJuI13rqvIhmh9sTkxyY3xQiZSlsM0Ni+sOJDfH6hh
+   YLhk6PPplNSYgd0UAnPGe9ZmxUMnDnM2oAUgbPQe09xE1E4MtDKwbvJpP
+   i54SB72TyU1seOfXLwe52HexMQighhRmBg2HSKVrWT8Qo3BmPqloHPA0g
+   eiwyNrPwcoiatrAafUOPCDdZymeYQHR+OdPsfA9Mbdo9PJ9n256x33z/Y
+   Q==;
+X-CSE-ConnectionGUID: keV536WxRyuwa6TkNmzOWQ==
+X-CSE-MsgGUID: rvSv6e7/RUi1/21vMLvJwA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13748171"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="13748171"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 09:58:19 -0700
+X-CSE-ConnectionGUID: smcFJOSgQqWWsoHaoyB43g==
+X-CSE-MsgGUID: kVdT+ElDSQ2YskJCGdLL+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37005745"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.248.18])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 09:58:15 -0700
+Message-ID: <c383b404-727c-4564-a66e-0906348891b3@intel.com>
+Date: Mon, 3 Jun 2024 19:58:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503081125.67990-1-arnd@kernel.org> <272a909522f2790a30b9a8be73ab7145bf06d486.camel@physik.fu-berlin.de>
- <alpine.DEB.2.21.2405280041550.23854@angie.orcam.me.uk> <aa397ad5-a08a-48a1-a9c0-75cfd5f6a3a5@paulmck-laptop>
- <alpine.DEB.2.21.2405291432450.23854@angie.orcam.me.uk> <CAHk-=wi7WfDSfunEXmCqDnH+55gumjhDar-KO_=66ziuP33piw@mail.gmail.com>
- <alpine.DEB.2.21.2405302115130.23854@angie.orcam.me.uk> <CAHk-=whiH6g+T7+YWSYgAhJ9HsJ2bUUDJfLLo_Yhbi8CVgkHDg@mail.gmail.com>
- <alpine.DEB.2.21.2405310457060.23854@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2405310457060.23854@angie.orcam.me.uk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 3 Jun 2024 09:57:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wha2rH2UcTvHUYK+dNnP6UCDRkYM0atvw_GTP5Sz3OZrQ@mail.gmail.com>
-Message-ID: <CAHk-=wha2rH2UcTvHUYK+dNnP6UCDRkYM0atvw_GTP5Sz3OZrQ@mail.gmail.com>
-Subject: Re: [PATCH 00/14] alpha: cleanups for 6.10
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Arnd Bergmann <arnd@kernel.org>, 
-	linux-alpha@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org, 
-	Michael Cree <mcree@orcon.net.nz>, Frank Scheiner <frank.scheiner@web.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 11/14] tools/perf: Add support to use libcapstone in
+ powerpc
+To: Ian Rogers <irogers@google.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
+Cc: acme@kernel.org, jolsa@kernel.org, segher@kernel.crashing.org,
+ christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+ disgoel@linux.vnet.ibm.com
+References: <20240601060941.13692-1-atrajeev@linux.vnet.ibm.com>
+ <20240601060941.13692-12-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAP-5=fXGPHMF+5cUu42ns0=qm9QCPg0LNUveLLnjdGHPCnVg3w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 3 Jun 2024 at 04:09, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
->
->  Anyway, back to my point.  A feasible solution non-intrusive for Linux
-> and low-overhead for GCC has been found.  I can expedite implementation
-> and I'll see if I can regression-test it too, but I may have to rely on
-> other people to complete it after all, as I haven't been prepared for this
-> effort in the light of certain issues I have recently suffered from in my
-> lab.
+On 3/06/24 19:30, Ian Rogers wrote:
+> On Fri, May 31, 2024 at 11:10 PM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+>>
+>> Now perf uses the capstone library to disassemble the instructions in
+>> x86. capstone is used (if available) for perf annotate to speed up.
+>> Currently it only supports x86 architecture. Patch includes changes to
+>> enable this in powerpc. For now, only for data type sort keys, this
+>> method is used and only binary code (raw instruction) is read. This is
+>> because powerpc approach to understand instructions and reg fields uses
+>> raw instruction. The "cs_disasm" is currently not enabled. While
+>> attempting to do cs_disasm, observation is that some of the instructions
+>> were not identified (ex: extswsli, maddld) and it had to fallback to use
+>> objdump. Hence enabling "cs_disasm" is added in comment section as a
+>> TODO for powerpc.
+>>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>>  tools/perf/util/disasm.c | 148 ++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 146 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+>> index d8b357055302..915508d2e197 100644
+>> --- a/tools/perf/util/disasm.c
+>> +++ b/tools/perf/util/disasm.c
+>> @@ -1540,12 +1540,18 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
+>>  {
+>>         struct annotation_options *opt = args->options;
+>>         cs_mode mode = is_64bit ? CS_MODE_64 : CS_MODE_32;
+>> +       int ret;
+>>
+>>         /* TODO: support more architectures */
+>> -       if (!arch__is(args->arch, "x86"))
+>> +       if ((!arch__is(args->arch, "x86")) && (!arch__is(args->arch, "powerpc")))
+>>                 return -1;
+>>
+>> -       if (cs_open(CS_ARCH_X86, mode, handle) != CS_ERR_OK)
+>> +       if (arch__is(args->arch, "x86"))
+>> +               ret = cs_open(CS_ARCH_X86, mode, handle);
+>> +       else
+>> +               ret = cs_open(CS_ARCH_PPC, mode, handle);
+>> +
+>> +       if (ret != CS_ERR_OK)
+>>                 return -1;
+> 
+> There looks to be a pretty/more robust capstone_init function in
+> print_insn.c, should we factor this code out and recycle:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/print_insn.c?h=perf-tools-next#n40
 
-Yeah, if compiler support makes us not have to care, then I don't
-think the difference between pre-BWX and BWX is going to matter much
-for the kernel.
+On a slightly related note, there is a compile error
+been around for a while in util/disasm.c on Ubuntu 22.04
 
-The real pain with alpha has been that it's special enough that it
-affects non-alpha code, and BWX was one big piece of that.
+In file included from /usr/include/capstone/capstone.h:279,
+                 from util/disasm.c:1354:
+/usr/include/capstone/bpf.h:94:14: error: ‘bpf_insn’ defined as wrong
+kind of tag
+   94 | typedef enum bpf_insn {
+      |              ^~~~~~~~
 
-That said, some of the EV4 misfeatures end up being a huge pain inside
-the alpha code either because of the horrible hoops that the IO
-accessors have to jump through, or because of the broken ASID's.
+> 
+> Thanks,
+> Ian
+> 
+>>         if (!opt->disassembler_style ||
+>> @@ -1635,6 +1641,139 @@ static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
+>>         }
+>>  }
+>>
+>> +static int symbol__disassemble_capstone_powerpc(char *filename, struct symbol *sym,
+>> +                                       struct annotate_args *args)
+>> +{
+>> +       struct annotation *notes = symbol__annotation(sym);
+>> +       struct map *map = args->ms.map;
+>> +       struct dso *dso = map__dso(map);
+>> +       struct nscookie nsc;
+>> +       u64 start = map__rip_2objdump(map, sym->start);
+>> +       u64 end = map__rip_2objdump(map, sym->end);
+>> +       u64 len = end - start;
+>> +       u64 offset;
+>> +       int i, fd, count;
+>> +       bool is_64bit = false;
+>> +       bool needs_cs_close = false;
+>> +       u8 *buf = NULL;
+>> +       struct find_file_offset_data data = {
+>> +               .ip = start,
+>> +       };
+>> +       csh handle;
+>> +       char disasm_buf[512];
+>> +       struct disasm_line *dl;
+>> +       u32 *line;
+>> +
+>> +       if (args->options->objdump_path)
+>> +               return -1;
+>> +
+>> +       nsinfo__mountns_enter(dso->nsinfo, &nsc);
+>> +       fd = open(filename, O_RDONLY);
+>> +       nsinfo__mountns_exit(&nsc);
+>> +       if (fd < 0)
+>> +               return -1;
+>> +
+>> +       if (file__read_maps(fd, /*exe=*/true, find_file_offset, &data,
+>> +                           &is_64bit) == 0)
+>> +               goto err;
+>> +
+>> +       if (open_capstone_handle(args, is_64bit, &handle) < 0)
+>> +               goto err;
+>> +
+>> +       needs_cs_close = true;
+>> +
+>> +       buf = malloc(len);
+>> +       if (buf == NULL)
+>> +               goto err;
+>> +
+>> +       count = pread(fd, buf, len, data.offset);
+>> +       close(fd);
+>> +       fd = -1;
+>> +
+>> +       if ((u64)count != len)
+>> +               goto err;
+>> +
+>> +       line = (u32 *)buf;
+>> +
+>> +       /* add the function address and name */
+>> +       scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+>> +                 start, sym->name);
+>> +
+>> +       args->offset = -1;
+>> +       args->line = disasm_buf;
+>> +       args->line_nr = 0;
+>> +       args->fileloc = NULL;
+>> +       args->ms.sym = sym;
+>> +
+>> +       dl = disasm_line__new(args);
+>> +       if (dl == NULL)
+>> +               goto err;
+>> +
+>> +       annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +       /*
+>> +        * TODO: enable disassm for powerpc
+>> +        * count = cs_disasm(handle, buf, len, start, len, &insn);
+>> +        *
+>> +        * For now, only binary code is saved in disassembled line
+>> +        * to be used in "type" and "typeoff" sort keys. Each raw code
+>> +        * is 32 bit instruction. So use "len/4" to get the number of
+>> +        * entries.
+>> +        */
+>> +       count = len/4;
+>> +
+>> +       for (i = 0, offset = 0; i < count; i++) {
+>> +               args->offset = offset;
+>> +               sprintf(args->line, "%x", line[i]);
+>> +
+>> +               dl = disasm_line__new(args);
+>> +               if (dl == NULL)
+>> +                       goto err;
+>> +
+>> +               annotation_line__add(&dl->al, &notes->src->source);
+>> +
+>> +               offset += 4;
+>> +       }
+>> +
+>> +       /* It failed in the middle */
+>> +       if (offset != len) {
+>> +               struct list_head *list = &notes->src->source;
+>> +
+>> +               /* Discard all lines and fallback to objdump */
+>> +               while (!list_empty(list)) {
+>> +                       dl = list_first_entry(list, struct disasm_line, al.node);
+>> +
+>> +                       list_del_init(&dl->al.node);
+>> +                       disasm_line__free(dl);
+>> +               }
+>> +               count = -1;
+>> +       }
+>> +
+>> +out:
+>> +       if (needs_cs_close)
+>> +               cs_close(&handle);
+>> +       free(buf);
+>> +       return count < 0 ? count : 0;
+>> +
+>> +err:
+>> +       if (fd >= 0)
+>> +               close(fd);
+>> +       if (needs_cs_close) {
+>> +               struct disasm_line *tmp;
+>> +
+>> +               /*
+>> +                * It probably failed in the middle of the above loop.
+>> +                * Release any resources it might add.
+>> +                */
+>> +               list_for_each_entry_safe(dl, tmp, &notes->src->source, al.node) {
+>> +                       list_del(&dl->al.node);
+>> +                       free(dl);
+>> +               }
+>> +       }
+>> +       count = -1;
+>> +       goto out;
+>> +}
+>> +
+>>  static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+>>                                         struct annotate_args *args)
+>>  {
+>> @@ -1987,6 +2126,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+>>                         err = symbol__disassemble_dso(symfs_filename, sym, args);
+>>                         if (err == 0)
+>>                                 goto out_remove_tmp;
+>> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
+>> +                       err = symbol__disassemble_capstone_powerpc(symfs_filename, sym, args);
+>> +                       if (err == 0)
+>> +                               goto out_remove_tmp;
+>> +#endif
+>>                 }
+>>         }
+>>
+>> --
+>> 2.43.0
+>>
 
-So even with enw compiler support, maybe it's worth trying to
-re-introduce any support for older cpu's incrementally.
-
-For example, the ASID hw issue is _claimed_ to have been fixed in
-PALcode, and maybe the games we played for ev4-era cpus aren't
-actually needed any more?
-
-And the various odd IO platforms should only be re-introduced when
-there are people who actually have access to the relevant hardware and
-will test.
-
-           Linus
