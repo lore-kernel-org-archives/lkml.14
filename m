@@ -1,156 +1,145 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085B3135A6F;
-	Mon,  3 Jun 2024 17:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1ABC135A6F
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717436563; cv=none; b=apXD1M23RVEWF94N77fxsnk9fMbMi+Do1G+pAYnB5qxMysTs1CODJ1KSd17rgy/n3k/D99+5AXue1zY+RpBqdFlR9EKT7+R8QV/JEfuc6Fj7/LR5N6vOn5wr6XpyXJBX5oMFnw9lyN2PJ6ynfIwNyN0h6xbQ+4+Gusv/rFV4ICU=
+	t=1717436569; cv=none; b=ok9/4XIT3i1sG2HEDo4TOa1XEr1fgyN3/PheDm3aBYdME5iMMu2RcxTx4qtEO5TCKBNPNnYL7JyboxEK43E9KJtaT2U4erKZeCAxrcZN8/Sxe6yitSnciHz/mOl7atq48LD7sW99TeeB6OzDzRtOGV8EGDtmwKVvSjZv61HBZsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717436563; c=relaxed/simple;
-	bh=epvhLo1mWE99TSJ4TRY/EC7cNxGbjrIEgwOICO3Bt3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVf/lAxI/UFs4s8DoaNwhh0+zn8DcoFLABp/qjvnbHUb2dx9td8VIOBvAaHJ/9p2t3/lck1lfl+VrHSgEN93OhTeb5jdVFzz/4lR7KG+FOy421R3jTy8mdK9Tazh8HOLcy0q7pUETAJo/hn6bAyAhLIL04Hzb1oDfXR5x3BDZJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lcATzdGS; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717436569; c=relaxed/simple;
+	bh=rPAoZy6vxBtVU7x0pj3UdhVhA7bFxTF9Tss9xmCjp8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJq3iof6nvE51isYCe+YhusoW7QcsOWaw0r6Qx6zBeDbYC/VRuejgb/OeUOcrK6h7suLBLKKXxqgC2uyq/OffZezzx1sloNx5EajixovmcZE7ohElsts86EXjoLyj1U69E071xG0GIpfWmn4a9OiB7njJnYAxhX7ZdqHS6MrxNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oIaFus9/; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcATzdGS"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-794ab0ae817so265299685a.2;
-        Mon, 03 Jun 2024 10:42:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oIaFus9/"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-57a2f27090aso5938445a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 10:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717436561; x=1718041361; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1717436566; x=1718041366; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lqo8/N2WL4gT1OcLo3qtSeNxyML4fela4YEeG8cnJxQ=;
-        b=lcATzdGSJn1yZ9xfDVR6N6R4EueZpZapx8iH0pgOKSvAtC9RxkEsvoUs9cvKw92upk
-         QDldr6/a+UGs5cjW0FNdytMnobzrtF0AuKQFPeCGmZWyBE3IUiamqJt+46nRYPy5o6nz
-         lz4Qi3PfJwkyC71SIiy8jI4kWorux0JIEoJT4tc08c8/3/x+fPpkaiBG7adZuUpVusOG
-         270o9nqUkxCcsf4LgwrybRYDNGKRK2VlaVgi3JkJoH3qVzyitZ3vKOQWyhow+q7VZWyd
-         A+3+ZmcrdHjSd73ks/k7NZhPmL7rnTKbKLqlg073tVvpupd5tYFashWF9SP5X0VoRYSN
-         ThrA==
+        bh=cX46hsOnvcHYWQ2/08aJP6HMfOKz/H2iKz5LdOxxIiY=;
+        b=oIaFus9/oBerxQMTo6NcQ0OmtrzbzjrX9z6s6pVYRayTVWbyOzBtKMKYikdhUbIHMy
+         FouGfFbcoFPRiDM90aN7G5K9zMwgRTir1toWGRZJhiPhGLnWF5vHTzAup2pMCtM+s/lQ
+         ZsIU7T+Vo22Vcf2SjHcPRy+4RT0zfXJyDGDxeN+uIfJOMtjGxbi81v7jVQT9NitPLwVs
+         475SNAT5R4WXf5pd0UNvBFi92f5iJCKi76ZLEeujm13QGLtyX8BcwahjYi+Xj6qgAuXw
+         8lERZebgRkK0rWX4KNFuLB0uF83QOO5W7Wxvp5AoDkvxOhm6pWrQr4hbYlb3D+9eiZK0
+         hi4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717436561; x=1718041361;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717436566; x=1718041366;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lqo8/N2WL4gT1OcLo3qtSeNxyML4fela4YEeG8cnJxQ=;
-        b=NfNGqc6MFQv55FCDbribHj3auNATqWduNQjoazwlR5AJ/JqlOeQLUxp6LfV5XTzZ8U
-         tRVR9O/WSsh+JXsc4KbarS4uT9XzJaeN8UeJeYDBkl0A0PXzs+AMKMjX9onmoA4chSvm
-         kAzweIW+/in3wQgSexyMrNwN6GKjEP+PqkdusY9IgJNLZYQBYdwKyGwVGxFQARqgXwBd
-         jzxm76yLL1AdYCtA3LDMy7b3LvUnj/A58mUWJrV/2ppa94edSOjW6fscPcCRFaG141vb
-         h8gAQJQFWMLY21l0ZDzJABw+NhmtGmyZ3KnOna9KDuGzAIw5WW9YZJiBYXPvnnbOrla+
-         YTVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuGB9T/g2rh+gsLSgHrQJwIcpOPsXAWyr24LHBS4X8PLJlu2XED1QK6MS2hiEHSxq+voQbOjAoMaGqKSVcnqXaiguaM6A186mY61DJWn0iyZmjRWLbPQqIt+MifhTttuCpy2j16xMuXnInrd0=
-X-Gm-Message-State: AOJu0YyPF2nzA1no6uN2GIy1FRqZ8h1LoHq3i6MsgKYrzIXHEQwNcmET
-	t7NOGaE3r9vFGVMIcZtKU+1xvYheMurqaDqos1SKTdYKlX3/7bS7
-X-Google-Smtp-Source: AGHT+IEmh2P7iFc4eHQR6V8pIF45N/E5P3S8BMMDUYIxJmX1LvdjLvcw/Fv4sfFtQsIF/XDScyoEpA==
-X-Received: by 2002:a05:620a:4720:b0:790:ef5d:25ae with SMTP id af79cd13be357-794f5ebf4f1mr1306054385a.56.1717436560788;
-        Mon, 03 Jun 2024 10:42:40 -0700 (PDT)
-Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-794f328fcc9sm298141885a.129.2024.06.03.10.42.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 10:42:40 -0700 (PDT)
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 76B861200032;
-	Mon,  3 Jun 2024 13:42:39 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Mon, 03 Jun 2024 13:42:39 -0400
-X-ME-Sender: <xms:jwBeZvliBAJQ0jP-BL4p-l7CeLV7KYQdICONxbrU2Ewc_G8L3GIXew>
-    <xme:jwBeZi32S0DdEk9I-SzRsdREWh6B1uDORSNy10puQGJ8_dQ0kNkPkKmDqOGfDDZKK
-    UG-R8JnzAMdr5jD7A>
-X-ME-Received: <xmr:jwBeZlqXYI4edETMm1XtM9OTjx3cp09au2r8qClcbPBjNod4N4Y6bZcG_4D9PA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelvddgudduhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhepkeekledtgeffgeduvefgffelieetgfeuudevudefleeugeekkedutdeg
-    heejveelnecuffhomhgrihhnpehnvgigthdrmhgrphenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
-    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrd
-    hfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:jwBeZnm59j4LA_c1AdI-Aa8Txi-EcRsYRibQmayXtKiTUm7BWI4X3w>
-    <xmx:jwBeZt1yf5-CSsgvJT8RpzyqV3qUmvhFh2vrUsTx821XdpgjL8cv8g>
-    <xmx:jwBeZmsSGXVyLnSFdKtMZw0B3ova98VK2txeU52tz4ETF_uxM60fHA>
-    <xmx:jwBeZhWLepnyZdiN8bnxj5y1fCMpRjHaTfp9KeedynaRJy8nLGafcw>
-    <xmx:jwBeZs3iLugazPjHs1ztSUEElg-VohepnO5UAEcHAFoj3aPjL0n3yKGT>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Jun 2024 13:42:38 -0400 (EDT)
-Date: Mon, 3 Jun 2024 10:41:41 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Matt Gilbride <mattgilbride@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Rob Landley <rob@landley.net>, Davidlohr Bueso <dave@stgolabs.net>,
-	Michel Lespinasse <michel@lespinasse.org>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] rust: rbtree: add mutable iterator
-Message-ID: <Zl4AVUqq8Hd-a230@boqun-archlinux>
-References: <20240603-b4-rbtree-v4-0-308e43d6abfc@google.com>
- <20240603-b4-rbtree-v4-4-308e43d6abfc@google.com>
+        bh=cX46hsOnvcHYWQ2/08aJP6HMfOKz/H2iKz5LdOxxIiY=;
+        b=MsztaVjyooKk90leWEIlh79MSUB41BnofWYYYfXZrJdeL5RNha0MQk//6iZWelePzm
+         TY0kuc8LEbyzTcsPZ+aHLGWer72qZ3y3X0K2VAUlKvkaHk7w/f28Y2fV1XqHSXSYPw/c
+         UfVT6Y7bzJuEPEm768DY8DsOYUl9W2PzEsbhfHdSLLG2Rqu9pwIzZOCXLyBwUMLsF6qw
+         E2JsiVKAwXfoxQhiiKPA4WgDgXBJeJX0mgL82vhZ4O5H/oWg9L3B/Iug3Ze6/S1W9aU5
+         AEKoAaTc3G1hMTGxhk0bW0Rcq7LvIopOb99WuCnBwDk/Gdh6/IghXf5Wy1qyv8oWE/pZ
+         jG6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVG3moLJM1coDbG4oNge9CoPcLZHl6vTtnV+FhZzyq+5WJn5BzkKhpf4IFQBB4ga1N3rCEqCtjoN53w9YkqACkzQW2ZlvwUh5wbw9mT
+X-Gm-Message-State: AOJu0YwQiVOXssv8t930r0OBQSBLOJVN2RzZ3sY1TBkXwH6LhPqpKrjw
+	mpXVKJh5quLmZHBgsTEAGLxN1VlbLwKXdlbJvptKlE4yQoU5jhTsP7cb+aaWECIaD1Zv7XGeKOC
+	2fnClwjnVe6pafh8i445kq9lI9rzk+yth/mQa
+X-Google-Smtp-Source: AGHT+IHi+ZsXWMd56cnJoCCuxUXLuaKUiF6CkEcw+xlGa1Gq7gdbgvhyC/+OuXMSzHHUjT2c42a3lstZlU6g7HMSpZw=
+X-Received: by 2002:a17:906:d0d4:b0:a59:be21:3587 with SMTP id
+ a640c23a62f3a-a69541453d3mr31147066b.8.1717436565933; Mon, 03 Jun 2024
+ 10:42:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603-b4-rbtree-v4-4-308e43d6abfc@google.com>
+References: <CAGFP0L+BaNAtCF7c7cJ1bvbjomp03Fy0=6=w6dj29Fnr0ygSCA@mail.gmail.com>
+ <CAJHvVchjzxLVfg844SNjK9EWmC+yhVneGaf1vVscmjomH_aaow@mail.gmail.com>
+In-Reply-To: <CAJHvVchjzxLVfg844SNjK9EWmC+yhVneGaf1vVscmjomH_aaow@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Mon, 3 Jun 2024 10:42:07 -0700
+Message-ID: <CAJD7tkaV8a-fVv4D_6_5LgmOHnMFXJWy-DwqvRDCTjEqyJkdKA@mail.gmail.com>
+Subject: Re: [PATCH] fix: Prevent memory leak by checking for NULL buffer
+ before calling css_put()
+To: Axel Rasmussen <axelrasmussen@google.com>
+Cc: Geunsik Lim <geunsik.lim@gmail.com>, Vlastimil Babka <vbabka@suse.cz>, Ingo Molnar <mingo@elte.hu>, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Peter Zijlstra <a.p.zijlstra@chello.nl>, Hugh Dickins <hughd@google.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024 at 04:05:19PM +0000, Matt Gilbride wrote:
-[...]
-> +/// A mutable iterator over the nodes of a [`RBTree`].
-> +///
-> +/// Instances are created by calling [`RBTree::iter_mut`].
-> +pub struct IterMut<'a, K, V> {
-> +    _tree: PhantomData<&'a mut RBTree<K, V>>,
-> +    iter_raw: IterRaw<K, V>,
-> +}
-> +
-> +// SAFETY: The [`RBTreeIterator`] gives out mutable references to K and V, so it has the same
+On Mon, Jun 3, 2024 at 10:32=E2=80=AFAM Axel Rasmussen <axelrasmussen@googl=
+e.com> wrote:
+>
+> On Mon, Jun 3, 2024 at 5:33=E2=80=AFAM Geunsik Lim <geunsik.lim@gmail.com=
+> wrote:
+> >
+> > This commit addresses a potential memory leak in the
+> > `get_mm_memcg_path()` function
+> > by explicitly checking if the allocated buffer (`buf`) is NULL before
+> > calling the
+> > `css_put()` function. The prefix 'css' means abbreviation of cgroup_sub=
+sys_state
+> >
+> > Previously, the code would directly call `css_put()` without checking
+> > the value of
+> > `buf`, which could lead to a memory leak if the buffer allocation faile=
+d.
+> > This commit introduces a conditional check to ensure that `css_put()`
+> > is only called
+> > if `buf` is not NULL.
+> >
+> > This change enhances the code's robustness and prevents memory leaks, i=
+mproving
+> > overall system stability.
+> >
+> > **Specific Changes:**
+> >
+> > * In the `out_put` label, an `if` statement is added to check
+> >   if `buf` is not NULL before calling `css_put()`.
+> >
+> > **Benefits:**
+> >
+> > * Prevents potential memory leaks
+> > * Enhances code robustness
+> > * Improves system stability
+> >
+> > Signed-off-by: Geunsik Lim <leemgs@gmail.com>
+> > Signed-off-by: Geunsik Lim <geunsik.lim@samsung.com>
+> > ---
+> >  mm/mmap_lock.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
+> > index 1854850b4b89..7314045b0e3b 100644
+> > --- a/mm/mmap_lock.c
+> > +++ b/mm/mmap_lock.c
+> > @@ -213,7 +213,8 @@ static const char *get_mm_memcg_path(struct mm_stru=
+ct *mm)
+> >         cgroup_path(memcg->css.cgroup, buf, MEMCG_PATH_BUF_SIZE);
+> >
+> >  out_put:
+> > -       css_put(&memcg->css);
+> > +        if (buf !=3D NULL)
+> > +                css_put(&memcg->css);
+> >  out:
+> >         return buf;
+> >  }
+>
+> I think the existing code is correct, and this change actually
+> introduces a memory leak where there was none before.
+>
+> In the case where get_memcg_path_buf() returns NULL, we *still* need
+> to css_put() what we got from get_mem_cgroup_from_mm() before.
+>
+> NAK, unless I'm missing something.
 
-s/RBTreeIterator/IterMut ?
++1
 
-Also `IterMut` doesn't give out mutable references to K, which makes
-me think...
-
-> +// thread safety requirements as mutable references.
-> +unsafe impl<'a, K: Send, V: Send> Send for IterMut<'a, K, V> {}
-> +
-
-we can lose the constrains to `K: Sync`, right?
-
-Regards,
-Boqun
-
-> +// SAFETY: The [`RBTreeIterator`] gives out mutable references to K and V, so it has the same
-> +// thread safety requirements as mutable references.
-> +unsafe impl<'a, K: Sync, V: Sync> Sync for IterMut<'a, K, V> {}
-> +
-> +impl<'a, K, V> Iterator for IterMut<'a, K, V> {
-> +    type Item = (&'a K, &'a mut V);
-> +
-> +    fn next(&mut self) -> Option<Self::Item> {
-> +        self.iter_raw.next().map(|(k, v)|
-> +            // SAFETY: Due to `&mut self`, we have exclusive access to `k` and `v`, for the lifetime of `'a`.
-> +            unsafe { (&*k, &mut *v) })
-> +    }
-> +}
-> +
-[...]
+We already skip css_put() if get_mem_cgroup_from_mm() returns NULL.
+Whether or not get_memcg_path_buf() succeeds is irrelevant here.
