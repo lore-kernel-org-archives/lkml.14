@@ -1,97 +1,91 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B42F12C48A;
-	Mon,  3 Jun 2024 13:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1CC12D210
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717421120; cv=none; b=hfhyTNorjApPaqNmlrn2YjFjA3Q7TuslrCa1jhrH66I9NHFvoUxkJuyrDmENGF+0faKplReCPbaeoRSd/EU6HrFP8Bw/Pop6J+vo2DH7BtFl4h3hWpCvpSOe43o75SSApOBOxUrP0XT0/lm72FCgxebrGa/yx72L+sK4v9IAGxo=
+	t=1717421121; cv=none; b=C8xTFIym/NEogmzA9/eVFpCT1/9bITy/FpKBJocK7apR9bmVeT+vt9zH7WONmAU1GgJxog67LmaPzpRL25MPs7Uc+MLfDtEanfgksNVqzLupfiX1vFEJaf+MnYZ7vDOlUu3jAvlNDMoyfZLiPp/CSdaZct/x3c5nppaLZCP5FQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717421120; c=relaxed/simple;
-	bh=bMPPMt40JcCI7qT1Vp8JvvHPnPCsgx0PvHanmVERJPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pesHdVEQRjEXVXTgnfgqTEdcVhlDbNAaersirK2GCnNxhf7quE1+B80yUqEv2+f/GXYFYMXOr+OSbSkuqrOdg4nppOD89hRgWNB8tM3M15nC1WCmuIpS2DIEPnrVf6wKZE5EQWM0ZLgevBbD8iQdJc/NYfFisEcOip0dsePAxLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KEveu3xA; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1717421121; c=relaxed/simple;
+	bh=RoPZ7OtHwd67JQKS3Bxn9QyWtOUZRPsQ7lKzHfuSPnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mSxeAx6vfLLrxTnGRvEbclqrvPhlMHT99r7khgtgfL55N+GJ18p6ftNuN6dhTM/mL75xjqhvIxACKHp7iA9kvQcv/r2rL4Vftd6PUq6kf0qORm/oVTQEn+wn1Q6sz1erooJMACcybLORfPQkfYpG3kbzlYc/ywF6PL3dB+5Sjis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ZgcVGsgW; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KEveu3xA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tWf90TqEv33tkhaPkxRH0Ei2G5Na7AiQ0T1KjGRgchw=; b=KEveu3xARg02n//HGVdyAS3k0L
-	0+OpND2w3tEvWcNfABvyknDo0o4Q3G8SkiWap/eZf6kwJ+ySQmBG9ZX/j3s5aiUwRrTDge/PuDKf3
-	JKEvayPNO0SyM13/UbRXnO51WTWvW7FDqovIWEDp0OyYn8kqbL4e9Su8kHXIK2NiyP6TKYfVGKRr1
-	VQZSW8WjTL5OHx5X6+TOjBiHSpNEFf5Fp+Y4UFRQgBFxC6/wbJ3hhIgski9LdhdeUEgQf6pyPNMMW
-	0IlL2dpuX5/ambYbTQEFw52BvsCWq+Y3KeCUMTWLtL2DA2irbleJ9rTIRye4KE1/OoykgFQHk5Eas
-	Pb+GEH2g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52102)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sE7gL-0002mY-2H;
-	Mon, 03 Jun 2024 14:25:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sE7gL-0000T6-H9; Mon, 03 Jun 2024 14:25:01 +0100
-Date: Mon, 3 Jun 2024 14:25:01 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sky Huang <SkyLake.Huang@mediatek.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v6 5/5] net: phy: add driver for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <Zl3ELbG8c8y0/4DN@shell.armlinux.org.uk>
-References: <20240603121834.27433-1-SkyLake.Huang@mediatek.com>
- <20240603121834.27433-6-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ZgcVGsgW"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4213373568dso22683995e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:25:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717421117; x=1718025917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2P2nwrZKdBj15mvgcJuR9vi5zzVRhf+Cue2wFYJyTjI=;
+        b=ZgcVGsgW2uqA7nd6s4HgqFRZSie5quyjR95ztOnoG33HLZ8yAyPdFOja8lIrlaAmtI
+         soSfzyYA6zW2Rt2RQPrlFX1etsFT2zcCam56fig7qsYsWhNEMDhhGuW/NuJ2mEWQYGr4
+         ata0f5yFBk1O82LQCb4SvGkVsKdlSMg48Lx6okNsGby3s/C8PGC8KIEfFym9BAHIYDlw
+         n65OQMyV2Cd6C67r3kyPr0TPKFUMDazoZtYL/2sHjXcCa31r32NhQMFEJfMa2pmMXvNn
+         mXCaZFdOB+VmiwSjKJzcSffC+7NYCmmRNrkkLAgoxRetVM3dmQQlbnZ8VhcQsd7mLoOr
+         TKlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717421117; x=1718025917;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2P2nwrZKdBj15mvgcJuR9vi5zzVRhf+Cue2wFYJyTjI=;
+        b=SCWJE7sRIlH2Ozzf1XBTp4bXGUMzKVvlANCaZ+Rx2vbw3U8sTScP8yOINR3eljGQw4
+         XXAafJN+7Jrb6Yww8LME3d6IlAfYnVfv5Fn4Whipo9K1XNPVjLRwDch4Jqz6hH7lnAA1
+         byGyCirw58cyQ1rufguy6nkvu9hHJTi10x+BkEK0RWZC1258yFWsHSHThG54Q890sUvC
+         mchAeXzNgtTpUazDcVTomNFxhYZwrwUI4qkEOWKG2ElTnwGfOuHX1TFNUnA+QZI6fx2Q
+         kDCCPSKPqr86FCRHp+r/X1LKhF0wqBORm1fiLvKxO4IJZUD3YoloJ7EmQWMPDYaveGLP
+         YNqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDZBDF4e82i4jesefZZCOzdI1br9tM4i83F7fqcc3iHr56VI/9sQNWmM603HmT48rfRrmMmy/amuqJtFIv5NH+4w9nFQBDXgOsmrLa
+X-Gm-Message-State: AOJu0YzZ+Uu1d23c0fp3S/IPrL8N6DhJK6Q09szCGwnhynuA5LlVz2/Q
+	hk1x1rTwooZDdzSjKTtjnF/UiGdTjUmKUB4u8Vq56EXPT8slUhgjjvdUrj1QUuk=
+X-Google-Smtp-Source: AGHT+IHCoCO6DEuGsOccYDm5/ZkSHsUmm7OTMtTgMzLzeaEljHePUFoXDVgzjeY4+rVjXEay5zGTQA==
+X-Received: by 2002:a05:600c:4595:b0:41c:97e:2100 with SMTP id 5b1f17b1804b1-4212e045524mr72536285e9.3.1717421117078;
+        Mon, 03 Jun 2024 06:25:17 -0700 (PDT)
+Received: from toaster.lan ([2a01:e0a:3c5:5fb1:638a:e591:7142:7b85])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4212b84de44sm117381195e9.11.2024.06.03.06.25.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 06:25:16 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-amlogic@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Jan Dakinevich <jan.dakinevich@salutedevices.com>,
+	Alexander Stein <alexander.stein@mailbox.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v2] dt-bindings: clock: meson: Convert axg-audio-clkc to YAML format
+Date: Mon,  3 Jun 2024 15:24:44 +0200
+Message-ID: <171742077914.140081.9416853265361727678.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240513224552.800153-1-jan.dakinevich@salutedevices.com>
+References: <20240513224552.800153-1-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603121834.27433-6-SkyLake.Huang@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 03, 2024 at 08:18:34PM +0800, Sky Huang wrote:
-> Add support for internal 2.5Gphy on MT7988. This driver will load
-> necessary firmware, add appropriate time delay and figure out LED.
-> Also, certain control registers will be set to fix link-up issues.
+Applied to clk-meson (v6.11/drivers), thanks!
 
-Based on our previous discussion, it may be worth checking in the
-.config_init() method whether phydev->interface is one of the
-PHY interface modes that this PHY supports. As I understand from one
-of your previous emails, the possibilities are XGMII, USXGMII or
-INTERNAL. Thus:
+[1/1] dt-bindings: clock: meson: Convert axg-audio-clkc to YAML format
+      https://github.com/BayLibre/clk-meson/commit/23dc5f7e181a
 
-> +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> +{
-> +	struct pinctrl *pinctrl;
-> +	int ret;
-
-	/* Check that the PHY interface type is compatible */
-	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL &&
-	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
-	    phydev->interface != PHY_INTERFACE_MODE_USXGMII)
-		return -ENODEV;
-
-Thanks.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Best regards,
+--
+Jerome
