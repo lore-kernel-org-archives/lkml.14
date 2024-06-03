@@ -1,159 +1,110 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E90E757E0;
-	Mon,  3 Jun 2024 09:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126B88062B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717406859; cv=none; b=kqnnh95iyNoDPmxe0WLbxAG4TYbBQt5wn1WJq9cxWKYI3uXZCAgs0VYUvRyOYKODOu72WSP7+ERNyZbuoYvD6dCSf3+CsKKZpioxdvguT8+RpvAYIgPQvhdmqsO0zRcI0z14g/ntryWyHoV9uoUNlgPOfwqMxuIfYP70JPE+Nuo=
+	t=1717406930; cv=none; b=RiDeWdAzcbtnrceVhtYmlBYhAjxvp46q24p4fn0C3yqYPUQNXM34TnZ3rYh+/KzG/NLgRITYbICiMGesaA4kze81o5LYu+J+h1q/l5pm489QTzO7YXAZ62R7ZjLWf6iiKL1+8cSYKp84c9KKGwLlHLRrPGYVKk7H6GZnQgHspdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717406859; c=relaxed/simple;
-	bh=x9ikFYNncfJUkrFfp9JJ8ryQsRSyVgqBkaGtU/Z/r4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=otrmccm3c8Kw+kqCXZpcS36j152enVasl3uy6nm2Dgz6vnFU5giHFFQheFfW5wR9LeNHHaN5tk6FPIzubCEo/+NtXl7UYGFwlCY7sHG4dqzHxbsclQQcZ4DI+t6FfgQHyUfQQmwVV+aQukqqsy1uM36BXvPmrxkjfZGCRKZ72so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PdLafWwM; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717406930; c=relaxed/simple;
+	bh=9j/1lmebo/z19m1KypYAjU75AQb3RkUc+Qhh2gWNLJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qB3VxTjqxfwSJTDOe/QlE1uUO9L4kibZKUQCSiRE+aaVDQSCn9rwB2YX0BflHsx+3WwHhlSkp36UKo53E9WX0vh48P9ps1uTHhieXh/Zp0efdgUt2h7JpkvkChJehpuCcb2M7uUWGwrEl9jiwVl3HGOvclS8e3RgicaCGtdKhdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=BN8Av7d2; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PdLafWwM"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4539R1xf081601;
-	Mon, 3 Jun 2024 04:27:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717406821;
-	bh=SB5jmnTW30z7D427AIs51/dYcHrGUq+FjEIld/CWbLY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=PdLafWwMwv4a4/btdJOZNlxq40sxLkDWcVu8S6JJci8GPFuqmKiNi1Zi9ycjoEiy9
-	 KaqJotzBQ8VgW3hK52PLTDCu2zBJ60yxLZzxQfCdz7/5SBaTFBE/5EA9TffFE17Ge4
-	 V8U+2IqNS9TwWaCtaYPGjaxijP8HeoCoOkm6czLM=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4539R1ec110664
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 3 Jun 2024 04:27:01 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
- Jun 2024 04:27:00 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 3 Jun 2024 04:27:00 -0500
-Received: from [172.24.227.57] (linux-team-01.dhcp.ti.com [172.24.227.57])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4539Qsjq056761;
-	Mon, 3 Jun 2024 04:26:55 -0500
-Message-ID: <c1380aa4-d8ae-4e77-88a8-59555dffdd57@ti.com>
-Date: Mon, 3 Jun 2024 14:56:53 +0530
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="BN8Av7d2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=Cg0RSHzMUEKoay
+	W0txderNSqwftiCY7G+69iwzXz2TM=; b=BN8Av7d2legDZ1XEcvpSV8644KOEUL
+	zg5h3xDYrnnJrzscjs5PdRQ3vZpGPBYyUTcttkG8Dmgb9lYcrK5sxGxbC5SV8U+6
+	MbDPTTizOgQEtW2a4V3dYuh6wK3VkXFOOThdZRJTYVuY6hyXUUHFKTZwBcDC4UfA
+	AkguzOg0jXd2TyJ4zaEoiAkFz0uQ9aLrqTlAGw0aL849zXaUiZSfAAv2hmKNoZ6R
+	KiPvr4eG/YnQnxv5WY9COxXbEW8kBSU86z3RQ0ffP3JB0hHJYN5K/x/0zbauP6/t
+	BsJ7vGhCjrtOZCq/pdMwtqWLRjQhRMecRLp6t9VDlzLNdegGgunwheOg==
+Received: (qmail 1903014 invoked from network); 3 Jun 2024 11:28:46 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Jun 2024 11:28:46 +0200
+X-UD-Smtp-Session: l3s3148p1@ITXK9fgZGJEgAwDPXzLGAH1eNELjOc3g
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Andrey Utkin <andrey_utkin@fastmail.com>,
+	Anton Sviridenko <anton@corp.bluecherry.net>,
+	Benoit Parrot <bparrot@ti.com>,
+	Bluecherry Maintainers <maintainers@bluecherrydvr.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Dmitry Osipenko <digetx@gmail.com>,
+	Eugen Hristev <eugen.hristev@collabora.com>,
+	Fabien Dessenne <fabien.dessenne@foss.st.com>,
+	Ismael Luceno <ismael@iodev.co.uk>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-media@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Michael Tretter <m.tretter@pengutronix.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 0/8] media: use 'time_left' instead of 'timeout' with wait_*() functions
+Date: Mon,  3 Jun 2024 11:28:31 +0200
+Message-ID: <20240603092841.9500-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 2/3] net: ethernet: ti: Register the RPMsg
- driver as network device
-To: kernel test robot <lkp@intel.com>, <schnelle@linux.ibm.com>,
-        <wsa+renesas@sang-engineering.com>, <diogo.ivo@siemens.com>,
-        <rdunlap@infradead.org>, <horms@kernel.org>, <vigneshr@ti.com>,
-        <rogerq@ti.com>, <danishanwar@ti.com>, <pabeni@redhat.com>,
-        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>
-CC: <llvm@lists.linux.dev>, <oe-kbuild-all@lists.linux.dev>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        <rogerq@kernel.org>, <s-vadapalli@ti.com>, <y-mallik@ti.com>
-References: <20240531064006.1223417-3-y-mallik@ti.com>
- <202406011038.AwLZhQpy-lkp@intel.com>
-Content-Language: en-US
-From: Yojana Mallik <y-mallik@ti.com>
-In-Reply-To: <202406011038.AwLZhQpy-lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
+There is a confusing pattern in the kernel to use a variable named 'timeout' to
+store the result of wait_*() functions causing patterns like:
 
+        timeout = wait_for_completion_timeout(...)
+        if (!timeout) return -ETIMEDOUT;
 
-On 6/1/24 08:43, kernel test robot wrote:
-> Hi Yojana,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on net-next/main]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Yojana-Mallik/net-ethernet-ti-RPMsg-based-shared-memory-ethernet-driver/20240531-144258
-> base:   net-next/main
-> patch link:    https://lore.kernel.org/r/20240531064006.1223417-3-y-mallik%40ti.com
-> patch subject: [PATCH net-next v2 2/3] net: ethernet: ti: Register the RPMsg driver as network device
-> config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240601/202406011038.AwLZhQpy-lkp@intel.com/config)
-> compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240601/202406011038.AwLZhQpy-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202406011038.AwLZhQpy-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->>> drivers/net/ethernet/ti/inter_core_virt_eth.c:76:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
->       76 |         if (wait) {
->          |             ^~~~
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:87:9: note: uninitialized use occurs here
->       87 |         return ret;
->          |                ^~~
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:76:2: note: remove the 'if' if its condition is always true
->       76 |         if (wait) {
->          |         ^~~~~~~~~
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:65:9: note: initialize the variable 'ret' to silence this warning
->       65 |         int ret;
->          |                ^
->          |                 = 0
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:330:24: error: use of undeclared identifier 'icve_del_mc_addr'
->      330 |         __dev_mc_unsync(ndev, icve_del_mc_addr);
->          |                               ^
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:331:26: error: no member named 'mc_list' in 'struct icve_common'
->      331 |         __hw_addr_init(&common->mc_list);
->          |                         ~~~~~~  ^
->    drivers/net/ethernet/ti/inter_core_virt_eth.c:337:28: error: no member named 'rx_mode_work' in 'struct icve_common'
->      337 |         cancel_work_sync(&common->rx_mode_work);
->          |                           ~~~~~~  ^
->    1 warning and 3 errors generated.
-> 
-> 
-> vim +76 drivers/net/ethernet/ti/inter_core_virt_eth.c
-> 
->     59	
->     60	static int icve_create_send_request(struct icve_common *common,
->     61					    enum icve_rpmsg_type rpmsg_type,
->     62					    bool wait)
->     63	{
->     64		unsigned long flags;
->     65		int ret;
->     66	
->     67		if (wait)
->     68			reinit_completion(&common->sync_msg);
->     69	
->     70		spin_lock_irqsave(&common->send_msg_lock, flags);
->     71		create_request(common, rpmsg_type);
->     72		rpmsg_send(common->rpdev->ept, (void *)(&common->send_msg),
->     73			   sizeof(common->send_msg));
->     74		spin_unlock_irqrestore(&common->send_msg_lock, flags);
->     75	
->   > 76		if (wait) {
->     77			ret = wait_for_completion_timeout(&common->sync_msg,
->     78							  ICVE_REQ_TIMEOUT);
->     79	
->     80			if (!ret) {
->     81				dev_err(common->dev, "Failed to receive response within %ld jiffies\n",
->     82					ICVE_REQ_TIMEOUT);
->     83				ret = -ETIMEDOUT;
->     84				return ret;
->     85			}
->     86		}
->     87		return ret;
->     88	}
->     89	
-> 
+with all kinds of permutations. Use 'time_left' as a variable to make the code
+obvious and self explaining.
 
-I will fix all these issues in v3.
+This is part of a tree-wide series. The rest of the patches can be found here:
 
-Regards,
-Yojana Mallik
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/time_left
+
+Because these patches are generated, I audit them before sending. This is why I
+will send series step by step. Build bot is happy with these patches, though.
+No functional changes intended.
+
+Wolfram Sang (8):
+  media: allegro: use 'time_left' variable with
+    wait_for_completion_timeout()
+  media: atmel-isi: use 'time_left' variable with
+    wait_for_completion_timeout()
+  media: bdisp: use 'time_left' variable with wait_event_timeout()
+  media: fimc-is: use 'time_left' variable with wait_event_timeout()
+  media: platform: exynos-gsc: use 'time_left' variable with
+    wait_event_timeout()
+  media: solo6x10: use 'time_left' variable with
+    wait_for_completion_timeout()
+  media: tegra-vde: use 'time_left' variable with
+    wait_for_completion_interruptible_timeout()
+  media: ti: cal: use 'time_left' variable with wait_event_timeout()
+
+ drivers/media/pci/solo6x10/solo6x10-p2m.c        |  8 ++++----
+ .../media/platform/allegro-dvt/allegro-core.c    | 16 ++++++++--------
+ drivers/media/platform/atmel/atmel-isi.c         |  8 ++++----
+ drivers/media/platform/nvidia/tegra-vde/h264.c   | 10 +++++-----
+ .../media/platform/samsung/exynos-gsc/gsc-core.c | 10 +++++-----
+ .../platform/samsung/exynos4-is/fimc-core.c      | 10 +++++-----
+ drivers/media/platform/st/sti/bdisp/bdisp-v4l2.c | 10 +++++-----
+ drivers/media/platform/ti/cal/cal.c              |  8 ++++----
+ 8 files changed, 40 insertions(+), 40 deletions(-)
+
+-- 
+2.43.0
+
