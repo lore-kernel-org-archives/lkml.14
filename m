@@ -1,112 +1,69 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCE812C54A;
-	Mon,  3 Jun 2024 09:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0A612D1F1;
+	Mon,  3 Jun 2024 09:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407076; cv=none; b=eFFZUgqXw0n9G64yCPZEBPUrqmSFRvdYnnZ/EkQGQUQf9DeYFMVUm0MpzuuEurZHbPPg3/tXOHA4lsOEIpTc7+ZZfQYKAuFKkv3TFJahvIAdhTp7jOlDn03093VqvdXFzWf3tL9AcX++EcHV4M3c0OyDDZiGl+CcEoYTFZ8DMR4=
+	t=1717407077; cv=none; b=oVnm1kiz2U77EZE4nbeUF1JOBOcix/jcN/MOWgplIfx/sByU3tTndUqA2jhCc1UT1l0cSwY6tDdmrS7uJJDqX6mcKRQ9/Xcrh8STq6vfLTmF7uJm9/rWhg3jtz5klPKIeemRkKMb47JBKXFMLjuQAcj9HEzkzaysqHnby7WsYIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407076; c=relaxed/simple;
-	bh=ASPyOvafeU8VnD2cU1j9pdX2DUV8CS9oyXQ6p597/n4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=npHJKZyBgHY2C7MnjdhkqhQtII/ARKhPkYB0b/5DQBcnmrkaGkEyq7pNoFri+kE3DT2bxMrVCETeuZmAOcHHmAo5Op8bGW0h02tkJGhdz+u1Oh1oUF/3M47/04GgoVvFBmzKBHsETZN+oGJP1PgFRFx7r91XQ1/LquAM2qMcI94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=1WOse9Dz; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1717407077; c=relaxed/simple;
+	bh=BsLJdnlkFFhzy+R+5F1gs9LZdADpHVjySvSC8PzkZDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VDXhy98iihwlFr5Kz6nrNLIN6liQDdnQVOZoYa0whyRQGr2ZjE4/GuggJdiZJeH4qDba9OKA4gxgtluj7gfbEuD+FmWzOTboUZ+FZ63dsLIOSUW7mDnaXw4Mjgmolj/hvKPXjE7+eqZI66ASIqjDqDlQz1a/U4f/ft3onpG0nCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxZX9nYT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="1WOse9Dz"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4539Bmdg019015;
-	Mon, 3 Jun 2024 11:30:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	lPzEVJUMCFm6veKb1Y3KHWri4JNgUORxCYZTZgJtc6A=; b=1WOse9DzLaP1JAMS
-	tqBuxIXpldlrNPWUvpBGL00H8nejHMZJjFTs3c/T3I5RG354hqcbQ+aQ6em38BmI
-	GDZ+hRGNdbCr/rN4Dby2/5jyWp5ngu5VVKWK2UJ4emd+aQpK8X9Peve9Ie0kHxPT
-	6iuUhEdifH1WI+X5U4MyEgsJLYqhg7Td9fg13oVmY0VguSKizkBahOq5Le7LcmKn
-	vovD/daNOsSSc2ARFgK7gsd3MjOliUYDcGLN0P0tRPXn+EqZjJTzA0y2rn4MhApu
-	8+rNtecO7lZMdjHphmq3yi4QRhCJiBtfdPZL9wFdldMalQ8lG+UdPolfc3+SwuRK
-	0m603Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yfw9164kn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 11:30:52 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 17BC840046;
-	Mon,  3 Jun 2024 11:30:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6131C21514D;
-	Mon,  3 Jun 2024 11:30:44 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 3 Jun
- 2024 11:30:44 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 11/11] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
-Date: Mon, 3 Jun 2024 11:27:57 +0200
-Message-ID: <20240603092757.71902-12-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240603092757.71902-1-christophe.roullier@foss.st.com>
-References: <20240603092757.71902-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxZX9nYT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A01C2BD10;
+	Mon,  3 Jun 2024 09:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717407076;
+	bh=BsLJdnlkFFhzy+R+5F1gs9LZdADpHVjySvSC8PzkZDs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LxZX9nYT6geBpzdM+OfBR8qWuwkyx+LAtSLqmb1P/t00ELAgLRK7f7YImDOj9gtok
+	 ujTqKjxtSZ6t/z44BjM/llo62qWUsH8P2b/RFn9b5oGxSEGDWyG6yNwkcZQvejLdku
+	 rdxi4uYBJX0RnUz+OX2h6fV0Ngpr/sqnC32nreBToxITpOYsmoXuXIJgrfbFROaCVP
+	 UeS6rIwLMOXKtE1er918iA5gHEG24H5MekUqdwBPXeEJs6MBm/qSgwJAclCaIxsf1K
+	 xhmT1r5xyQjHc9mKbmZC3SwWdEk0jlgO1YbK4iXUkLmMzg0h/0qNwlJO2/No+GyyGt
+	 2B8hqbFDmrUDw==
+Date: Mon, 3 Jun 2024 09:31:13 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Ben Walsh <ben@jubnut.com>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	"Dustin L. Howett" <dustin@howett.net>,
+	Kieran Levin <ktl@frame.work>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] platform/chrome: cros_ec_lpc: Add a new quirk for
+ AML mutex
+Message-ID: <Zl2NYTIWtt604WXm@google.com>
+References: <20240603063834.5580-1-ben@jubnut.com>
+ <20240603063834.5580-5-ben@jubnut.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_06,2024-05-30_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603063834.5580-5-ben@jubnut.com>
 
-Need to enable MCP23S08 I/O expanders to manage Ethernet phy
-reset in STM32MP135F-DK board
-STMMAC driver defer is not silent, need to put this config in
-built-in to avoid huge of Ethernet messages
+On Mon, Jun 03, 2024 at 07:38:33AM +0100, Ben Walsh wrote:
+> @@ -484,6 +492,18 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
+>  			}
+>  			ACPI_COMPANION_SET(dev, adev);
+>  		}
+> +
+> +		if (quirks & CROS_EC_LPC_QUIRK_AML_MUTEX) {
+> +			const char *name
+> +				= driver_data->quirk_aml_mutex_name;
+> +			ret = cros_ec_lpc_mec_acpi_mutex(adev, name);
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+* Assuming the `adev = ACPI_COMPANION(dev);` didn't move in previous patch,
+  `adev` here could be uninitialized.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 86bf057ac3663..9758f3d41ad70 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
- CONFIG_SPI_SPIDEV=y
- CONFIG_SPMI=y
- CONFIG_PINCTRL_AS3722=y
-+CONFIG_PINCTRL_MCP23S08=y
- CONFIG_PINCTRL_MICROCHIP_SGPIO=y
- CONFIG_PINCTRL_OCELOT=y
- CONFIG_PINCTRL_PALMAS=y
--- 
-2.25.1
+* Also, it shouldn't rely on CROS_EC_LPC_QUIRK_ACPI_ID to set the `adev`.
 
+To keep it simple, I would suggest to use ACPI_COMPANION() instead.
