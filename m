@@ -1,171 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B416982D9C;
-	Mon,  3 Jun 2024 23:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB34B374C6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717456357; cv=none; b=aSzCBKbLISftVEzSFAOI1qEfb5oechzVEU+TwIIbaA2VF59YkaYD9FxP3JAM95looKhJJe/Icop4XRWsW6GbRb6JUbrxEmmhc3BOXVoXHc9IiEscIxcbf6AJ5Dn8KM3bRWjcMolRfCv55LFnaKrEb+GcHX8eRxG+eC4oOeD1sp8=
+	t=1717456541; cv=none; b=BdqTHST5/bxapZB4VUDD3+hv/EA5ung9w6X4pV5/oBW+sKlrKVQjHefUBVdHKyKwiLkJ++tfKz9mORamOIfWpcL6W4mEciF0N6ShMznR0LeTFNojr76Ex2715kq9UW1hvjCx342tNhz2J/f92s9A0Ocqq6BaxIiPeKlY5qBUvL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717456357; c=relaxed/simple;
-	bh=jlMa/1KQP8AgPUAWk/zBkqIn2aacp2s+DjgzIqxPWDQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XK5R+MCyeKBhePV18DG+ncJlb6a1nb8o16IrUvmsG/xRa5sq4SyGE3QYC3Wg8a3KQimcAeorhVnZIEu2YwlLiFEE8ZD40Voqwi9tqXx+WzR3Wp3Njzg1RWhxt+2Odhszz/ibrW28jvc8JG7/aV5wLnqtLPiBu5N8nXxzqAAu1Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ca6KCx7a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717456541; c=relaxed/simple;
+	bh=8oem86It5+4h0XVIcJq2Hk0hjpuSoibDwTR1LSjFAg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=niSsZ8+lYay3/JoBC6Q+gzX3zeI57WhsVCLYYzOgpETTdGEey8X9h72v+mSQnIgRlqHNopnqOvrNoaJfGKkvad4lvBHDpf3DoPa7xnReVvqVRgl3K3aFb7SxT4W/YHjjxhYnmD/qwCh6i4mlGTJf3FG1Nejyqya9ZIZpUJZpye4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlHGu8eb; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ca6KCx7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3704FC2BD10;
-	Mon,  3 Jun 2024 23:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717456357;
-	bh=jlMa/1KQP8AgPUAWk/zBkqIn2aacp2s+DjgzIqxPWDQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ca6KCx7aqJRwWApIMM8vrwvbTX4Ut/P0HwSeC/htl1BQTTajA27H4YD7Z+Xaoet7A
-	 sO5FwBevKqVeMkVJG6gSMVKADMrcXl5hBmZ+mW75wj3y1UB83Ft15FRaTDhBo/MYBG
-	 Zs/0CKWlEhzYsta8V/LGbJWpeV1IFM69VGHixhji+61vB5H2TfqJxtWiMJOGq0nDnR
-	 gbvDZV+Ze4dC4w8SbhjmhSYIdyMjtMLXwsH/F5m6EB61cWL06S2w/5Dic5ohwnWBY6
-	 5aJ6jJFO1GfkS4lYrITdQaV4xdo36T/QqgfhMcHjGfwZGKikYlg7eO/2WSTJ2YnmvQ
-	 ZM/TEkwCNZgTw==
-Date: Tue, 4 Jun 2024 08:12:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v2 11/27] ftrace: Allow subops filtering to be modified
-Message-Id: <20240604081229.8d80bee75a29663f3b61322d@kernel.org>
-In-Reply-To: <20240603105250.52ea24f2@gandalf.local.home>
-References: <20240602033744.563858532@goodmis.org>
-	<20240602033832.870736657@goodmis.org>
-	<20240603113723.b192c8c346e0ed55cb94b61a@kernel.org>
-	<20240603105250.52ea24f2@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlHGu8eb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717456540; x=1748992540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8oem86It5+4h0XVIcJq2Hk0hjpuSoibDwTR1LSjFAg0=;
+  b=LlHGu8eboKLsN/WRE7eYtcdRcZZsk8O5Ve1t7a8RgvxF6prQf3vpGmyJ
+   +mfCT3jPMqDq22q69PN37KSX3b+syX3on0x72/WvUoi8cBvF92XgpnZ+5
+   7vQwt1TKypu/XvYohqwvIIyV2+nF7w1MCqyLkmqMBLDNVe6i/fttBejc/
+   AVwu3kRqcpD15uDc8U9A35dOY2JZYsgLMShk6KYL3ffVecX5c6JPy4rxb
+   XK+AET/B7M/iMe+2fbAu6Zm3+r3PK0mG/1H3H2T08Hme8BPJ8y1SFQiGj
+   AjLvnI0rlHqC9eTBUdNLJraA4xP9+2rz4E4wNW8C5lSIvVrrKwM2sWCdF
+   w==;
+X-CSE-ConnectionGUID: 6ypYnBW9Tbi2KsayzkGF5g==
+X-CSE-MsgGUID: ZaLCZbXkQ7OQ4+FL2bJklQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="24599709"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="24599709"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 16:15:39 -0700
+X-CSE-ConnectionGUID: uZc91RJCTIeBnvfs/FjpgA==
+X-CSE-MsgGUID: qG5yKnFLQ0WqpNYOBzRnNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37481514"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 16:15:39 -0700
+Date: Mon, 3 Jun 2024 16:15:37 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Subject: Re: [PATCH v19 16/20] x86/resctrl: Make resctrl_arch_rmid_read()
+ handle sum over domains
+Message-ID: <Zl5OmVWFpBtA509j@agluck-desk3.sc.intel.com>
+References: <20240528222006.58283-1-tony.luck@intel.com>
+ <20240528222006.58283-17-tony.luck@intel.com>
+ <9818c304-9056-4d79-acbe-2b35cb847ecd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9818c304-9056-4d79-acbe-2b35cb847ecd@intel.com>
 
-On Mon, 3 Jun 2024 10:52:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 3 Jun 2024 11:37:23 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Thu, May 30, 2024 at 01:24:57PM -0700, Reinette Chatre wrote:
+> Hi Tony,
 > 
-> > On Sat, 01 Jun 2024 23:37:55 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> On 5/28/24 3:20 PM, Tony Luck wrote:
+> > Legacy resctrl monitor files must provide the sum of event values across
+> > all Sub-NUMA Cluster (SNC) domains that share an L3 cache instance.
 > > 
-> > [...]
-> > >  
-> > > +static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
-> > > +					      struct ftrace_hash **orig_subhash,
-> > > +					      struct ftrace_hash *hash,
-> > > +					      int enable)
-> > > +{
-> > > +	struct ftrace_ops *ops = subops->managed;
-> > > +	struct ftrace_hash **orig_hash;
-> > > +	struct ftrace_hash *save_hash;
-> > > +	struct ftrace_hash *new_hash;
-> > > +	int ret;
-> > > +
-> > > +	/* Manager ops can not be subops (yet) */
-> > > +	if (WARN_ON_ONCE(!ops || ops->flags & FTRACE_OPS_FL_SUBOP))
-> > > +		return -EINVAL;  
-> > 
-> > This does return if ops->flags & FTRACE_OPS_FL_SUBOP, but --> (1)
+> > Rename the existing resctrl_arch_rmid_read() function as
+> > resctrl_arch_rmid_read_one() (with some small refactoring to drop
+> > arguments that are not needed.
 > 
-> Yes, because what is passed in is "subops" and "ops" is subops->managed.
+> Missing closing ")".
 
-Ah, I missed that point. OK, I got it.
-
-
-> 
-> > 
-> > > +
-> > > +	/* Move the new hash over to the subops hash */
-> > > +	save_hash = *orig_subhash;
-> > > +	*orig_subhash = __ftrace_hash_move(hash);
-> > > +	if (!*orig_subhash) {
-> > > +		*orig_subhash = save_hash;
-> > > +		return -ENOMEM;
-> > > +	}
-> > > +
-> > > +	/* Create a new_hash to hold the ops new functions */
-> > > +	if (enable) {
-> > > +		orig_hash = &ops->func_hash->filter_hash;
-> > > +		new_hash = append_hashes(ops);
-> > > +	} else {
-> > > +		orig_hash = &ops->func_hash->notrace_hash;
-> > > +		new_hash = intersect_hashes(ops);
-> > > +	}
-> > > +
-> > > +	/* Move the hash over to the new hash */
-> > > +	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, new_hash, enable);  
-
-So this `ops` is managed ops of this subops.
+Will add.
 
 > > 
-> > This also a bit wired to me. maybe we need simple version like
+> > Create a new resctrl_arch_rmid_read() that iterates across
+> > domains when necessary. Pass a CPU number from the right domain to
+> > resctrl_arch_rmid_read_one().
+> 
+> "when necessary"? Can you elaborate?
+> "Pass a CPU ..." that just describes code that can be learned from patch.
+> Please describe the changes not the code.
+
+Will re-write.
+
 > > 
-> > `__ftrace_hash_move_and_update_ops()`
+> > Signed-off-by: Tony Luck <tony.luck@intel.com>
+> > ---
+> >   arch/x86/kernel/cpu/resctrl/monitor.c | 41 ++++++++++++++++++++-------
+> >   1 file changed, 31 insertions(+), 10 deletions(-)
 > > 
-> > And call it from ftrace_hash_move_and_update_ops() and here?
+> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > index 5f89ed4823ee..c9dd6ec68fcd 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > @@ -200,10 +200,9 @@ static inline struct rmid_entry *__rmid_entry(u32 idx)
+> >    * Caller is responsible to make sure execution running on a CPU in
+> >    * the domain to be read.
+> >    */
+> > -static int logical_rmid_to_physical_rmid(int lrmid)
+> > +static int logical_rmid_to_physical_rmid(int cpu, int lrmid)
+> >   {
+> >   	struct rdt_resource *r = &rdt_resources_all[RDT_RESOURCE_L3].r_resctrl;
+> > -	int cpu = smp_processor_id();
+> >   	if (snc_nodes_per_l3_cache  == 1)
+> >   		return lrmid;
+> > @@ -211,13 +210,13 @@ static int logical_rmid_to_physical_rmid(int lrmid)
+> >   	return lrmid + (cpu_to_node(cpu) % snc_nodes_per_l3_cache) * r->num_rmid;
+> >   }
+> > -static int __rmid_read(u32 lrmid,
+> > +static int __rmid_read(int cpu, u32 lrmid,
+> >   		       enum resctrl_event_id eventid, u64 *val)
+> >   {
+> >   	u64 msr_val;
+> >   	int prmid;
+> > -	prmid = logical_rmid_to_physical_rmid(lrmid);
+> > +	prmid = logical_rmid_to_physical_rmid(cpu, lrmid);
+> >   	/*
 > 
-> We could do that. I almost did due to other issues but I reworked the code
-> where I didn't need to.
+> Passing CPU as parameter to __rmid_read(), which is run via IPI, really
+> obfuscates the code. How about renaming it to "__rmid_read_phys()"
+> and provide it the "physical RMID" as parameter to make it clear what it is
+> doing?
+> That would mean an extra call to determine "physical RMID" before calling
+> __rmid_read_phys() but making it clear that it needs a physical RMID should
+> help to explain what is going on.
 > 
-> > 
-> > > +
-> > > +	free_ftrace_hash(new_hash);
-> > > +
-> > > +	if (ret) {
-> > > +		/* Put back the original hash */
-> > > +		free_ftrace_hash_rcu(*orig_subhash);
-> > > +		*orig_subhash = save_hash;
-> > > +	} else {
-> > > +		free_ftrace_hash_rcu(save_hash);
-> > > +	}
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +
-> > >  static u64		ftrace_update_time;
-> > >  unsigned long		ftrace_update_tot_cnt;
-> > >  unsigned long		ftrace_number_of_pages;
-> > > @@ -4770,8 +4823,33 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
-> > >  {
-> > >  	struct ftrace_ops_hash old_hash_ops;
-> > >  	struct ftrace_hash *old_hash;
-> > > +	struct ftrace_ops *op;
-> > >  	int ret;
-> > >  
-> > > +	if (ops->flags & FTRACE_OPS_FL_SUBOP)
-> > > +		return ftrace_hash_move_and_update_subops(ops, orig_hash, hash, enable);  
-> > 
-> > (1) This calls ftrace_hash_move_and_update_subops() if ops->flags & FTRACE_OPS_FL_SUBOP ?
 > 
-> Yes, because ops turns into subops, and the ops above it is its manager ops.
-
-Ah, OK. This `ops` is a subops. 
-
-
-Thank you,
-
+> >   	 * As per the SDM, when IA32_QM_EVTSEL.EvtID (bits 7:0) is configured
+> >   	 * with a valid event code for supported resource type and the bits
+> > @@ -269,7 +268,7 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+> >   		memset(am, 0, sizeof(*am));
+> >   		/* Record any initial, non-zero count value. */
+> > -		__rmid_read(rmid, eventid, &am->prev_msr);
+> > +		__rmid_read(smp_processor_id(), rmid, eventid, &am->prev_msr);
+> >   	}
+> >   }
+> > @@ -298,9 +297,8 @@ static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
+> >   	return chunks >> shift;
+> >   }
+> > -int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+> > -			   u32 unused, u32 rmid, enum resctrl_event_id eventid,
+> > -			   u64 *val, bool sum, struct cacheinfo *ci, void *ignored)
+> > +static int resctrl_arch_rmid_read_one(struct rdt_resource *r, struct rdt_mon_domain *d,
+> > +				      int cpu, u32 rmid, enum resctrl_event_id eventid, u64 *val)
+> >   {
+> >   	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
+> >   	struct rdt_hw_resource *hw_res = resctrl_to_arch_res(r);
+> > @@ -313,7 +311,7 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+> >   	if (!cpumask_test_cpu(smp_processor_id(), &d->hdr.cpu_mask))
+> >   		return -EINVAL;
+> > -	ret = __rmid_read(rmid, eventid, &msr_val);
+> > +	ret = __rmid_read(cpu, rmid, eventid, &msr_val);
+> >   	if (ret)
+> >   		return ret;
+> > @@ -327,7 +325,30 @@ int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+> >   		chunks = msr_val;
+> >   	}
+> > -	*val = chunks * hw_res->mon_scale;
+> > +	*val += chunks * hw_res->mon_scale;
 > 
-> -- Steve
+> The various new layers of indirection with SNC logic scattered between them
+> makes this change hard to understand.
 > 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int resctrl_arch_rmid_read(struct rdt_resource *r, struct rdt_mon_domain *d,
+> > +			   u32 unused, u32 rmid, enum resctrl_event_id eventid,
+> > +			   u64 *val, bool sum, struct cacheinfo *ci, void *ignored)
+> 
+> This is not architecture specific code.
 
+Can you explain further? I've dropped the "sum" argument. As you pointed
+out elsewhere this can be inferred from "d == NULL".  But I do need the
+cacheinfo information in resctrl_arch_rmid_read() to:
+1) determine which domains to sum (those that match ci->id).
+2) sanity check code is executing on a CPU in ci->shared_cpu_map.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > +{
+> > +	int cpu = smp_processor_id();
+> > +	int ret;
+> > +
+> > +	*val = 0;
+> > +	if (!sum)
+> > +		return resctrl_arch_rmid_read_one(r, d, cpu, rmid, eventid, val);
+> > +
+> 
+> 	/* SNC quirk that needs to be documented */
+> 
+> > +	list_for_each_entry(d, &r->mon_domains, hdr.list) {
+> > +		if (d->ci->id != ci->id)
+> > +			continue;
+> > +		cpu = cpumask_any(&d->hdr.cpu_mask);
+> > +		ret = resctrl_arch_rmid_read_one(r, d, cpu, rmid, eventid, val);
+> 
+> The cpu parameter can be dropped, no? With the domain provided to resctrl_arch_rmid_read_one()
+> it is not necessary to again split the SNC logic (in this case the "reading from any CPU
+> in the cache domain is ok but still need accurate arch state") across multiple layers,
+> just contain this in (documented portion of) resctrl_arch_rmid_read_one().
+
+You are correct. I will drop the cpu argument.
+
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> >   	return 0;
+> >   }
+> 
+> Reinette
+
+-Tony
