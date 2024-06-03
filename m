@@ -1,115 +1,81 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8857A374D3;
-	Mon,  3 Jun 2024 06:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7581862
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717395468; cv=none; b=tg7xv3D7MTmn8ftzUurq6GRyPtZqX6hosa7Bg+qIV3ZZ6CBwmnuMP9HLjpXAbyBD5FGx0uCrFe0J9KagKwUodIJPbZMmLHeXSNFMpSzCF2ABgdKDI+gd2OZ2Te+Q3EF6kAP/ds2od7kyzGBQCyr6o8ONBXmUUx3y7QSgjpjM+LI=
+	t=1717395588; cv=none; b=mHn4m0LtOsFI1jntKgnw7zija+11GbOB+6s3Zcw3QqWrs1ob/OvBjoLk333WeGA+8IAULA9doSRuzmY16UBfuqpqIG0/TlYDT0xpOK3DvLLfbV5CDkAqNJa6zGxZEDTk0CScu/quNvNZvM5NCCPtEIZm2l0eRiwiSuujHuyhVE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717395468; c=relaxed/simple;
-	bh=bqwooavz5h0SpmZqW29Anepz6kxXdC3/Q984SNlb9II=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=LvEVEoPbqObaXvLpKF/iQXCBlMq7PRPoKkWg8rdjahgpRIz1pxEQE4QH6n/hr4Gi4YToZJapC9io1q33pjWzCAtlJurWIp8DQkAzEeAlSCpw/BUMIcU8HVMbICcus+6Uc2fBFs5XKaGrUXl1OVZGMrKrw0Tcohw6YkiMXpbZ/WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xBzjubuY; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xBzjubuY"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717395461; h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type;
-	bh=U1l92gV1h3f4v8wWLEoiitFuPVp+n9cdp6+tTytlorw=;
-	b=xBzjubuYgeoNu5ATdLTjjaM5sFFicVeGP1LPMCK8PvzihZoq/Ehn+xBPJfk6mDPYmfPxFHK1RMFrWcDraWKDysVPMDlOkJpfPFCfV9+wOJFmIGdYo2y+3wmQ8NcJT0S/PzD21KXCI5npg8wTlfxLuykmYNdoAs2GgT0jrXCmtT0=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W7j3tcA_1717395460;
-Received: from 30.221.146.1(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W7j3tcA_1717395460)
-          by smtp.aliyun-inc.com;
-          Mon, 03 Jun 2024 14:17:41 +0800
-Message-ID: <495d2400-1d96-4924-99d3-8b2952e05fc3@linux.alibaba.com>
-Date: Mon, 3 Jun 2024 14:17:39 +0800
+	s=arc-20240116; t=1717395588; c=relaxed/simple;
+	bh=ERpoqRuEgORZysCLk8j55EXajPRul8XJuKC6ZTZrYB4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YSo3tJqLnrEpyF4mLwc6hZxSmYsVDyE/kaSk1G/atD9g5Ug0w/agv4MJtZtPcGfyO/85RG/SzgNGn2dca8DibueGW0fKyz4d2k0irphJLFjFy7q4c5Bvc7BlyUPAsO+pyk8lxu6jhOHIV5tJ9Q9ztkNofaFhGwFf0YtdzJlhnIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-37497a1aff0so12004465ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 23:19:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717395586; x=1718000386;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=S60wj1E9PIFQ4v7IFpqz93cVCy0cxZgNjz23WFAjpzE=;
+        b=njmPu2lh9VsdI5ypZtnFBdVnhyzXmcGlj0hD45q7wN4x6B8Qj8oK+Z7OwjXBYaBkf/
+         WeEmU/qJaO1DL8QzEshvmlUfXmDbv7eZxhEb36F0ULW5R2v2GYiH65tk7BI/TeXuvFqv
+         LVfIcFviSzOgy+S5mJRwHOMWCynkJO/jpkXia+1kkMMV3GK4Hhr/Hp+4BOIPaZiRSb2+
+         zDt3IB+D/Vfs8/znztjbU3ziAmvRr+sPvJnaW0fMZf3JRTIFEDAOJQtzXT3SyP9Dm9NT
+         zIuJLlumhZ/NNFzrskmazXJgA6IHp8drqQqP0MMqVyX9Yb7Vr32t9CatYWT/2atgBnSH
+         xJNA==
+X-Gm-Message-State: AOJu0YxDdC99+amWIZM+JrcNgyeIJbotJOjRbw+rFo1zSrFxvLw5Tveu
+	zJWdjxX4/8rHUOx831c/1d04ykgiGrzlErFlkaCzO84X1FcVksOSjc2nx1DQI1IwOVGIS3TQ4RB
+	xZ2aArR2an00079wssesOEur+1OVXQ2A8br01/bWLwr4JJRmJlNaM7DA=
+X-Google-Smtp-Source: AGHT+IGmWTxSBFCulhzNPbvFleywuj967c1HWLXTIbtvk1F8z93ITsxy68rITkORqpkugtgyvdhDVNEfZYbIx1NeBHfxmQ69a/vC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Miklos Szeredi <miklos@szeredi.hu>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- lege.wang@jaguarmicro.com
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: [HELP] FUSE writeback performance bottleneck
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1887:b0:374:9aa2:9155 with SMTP id
+ e9e14a558f8ab-3749aa2952bmr3312215ab.2.1717395586780; Sun, 02 Jun 2024
+ 23:19:46 -0700 (PDT)
+Date: Sun, 02 Jun 2024 23:19:46 -0700
+In-Reply-To: <000000000000a82e6e0619e9c192@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e39ee90619f65123@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [squashfs?] VFS: Close: file count is zero (use-after-free)
+From: syzbot <syzbot+b2cfdac9ae5278d4b621@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Miklos,
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-We spotted a performance bottleneck for FUSE writeback in which the
-writeback kworker has consumed nearly 100% CPU, among which 40% CPU is
-used for copy_page().
+***
 
-fuse_writepages_fill
-  alloc tmp_page
-  copy_highpage
+Subject: Re: [syzbot] [squashfs?] VFS: Close: file count is zero (use-after-free)
+Author: nightu.pwn@gmail.com
 
-This is because of FUSE writeback design (see commit 3be5a52b30aa
-("fuse: support writable mmap")), which newly allocates a temp page for
-each dirty page to be written back, copy content of dirty page to temp
-page, and then write back the temp page instead.  This special design is
-intentional to avoid potential deadlocked due to buggy or even malicious
-fuse user daemon.
+please test file uaf in udmabuf_create
 
-There was a proposal of removing this constraint for virtiofs [1], which
-is reasonable as users of virtiofs and virtiofs daemon don't run on the
-same OS, and virtiofs daemon is usually offered by cloud vendors that
-shall not be malicious.  While for the normal /dev/fuse interface, I
-don't think removing the constraint is acceptable.
+#syz test
 
+---
+ drivers/dma-buf/udmabuf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Come back to the writeback performance bottleneck.  Another important
-factor is that, (IIUC) only one kworker at the same time is allowed for
-writeback for each filesystem instance (if cgroup writeback is not
-enabled).  The kworker is scheduled upon sb->s_bdi->wb.dwork, and the
-workqueue infrastructure guarantees that at most one *running* worker is
-allowed for one specific work (sb->s_bdi->wb.dwork) at any time.  Thus
-the writeback is constraint to one CPU for each filesystem instance.
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index afa8bfd2a2a9..53035c601e92 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -382,6 +382,7 @@ static long udmabuf_create(struct miscdevice *device,
 
-I'm not sure if offloading the page copying and then FUSE requests
-sending to another worker (if a bunch of dirty pages have been
-collected) is a good idea or not, e.g.
+                kfree(folios);
+                fput(memfd);
++               memfd = NULL;
+        }
 
-```
-fuse_writepages_fill
-  if fuse_writepage_need_send:
-    # schedule a work
-
-# the worker
-for each dirty page in ap->pages[]:
-    copy_page
-fuse_writepages_send
-```
-
-Any suggestion?
-
-
-
-This issue can be reproduced by:
-
-1 ./libfuse/build/example/passthrough_ll -o cache=always -o writeback -o
-source=/run/ /mnt
-("/run/" is a tmpfs mount)
-
-2 fio --name=write_test --ioengine=psync --iodepth=1 --rw=write --bs=1M
---direct=0 --size=1G --numjobs=2 --group_reporting --directory=/mnt
-(at least two threads are needed; fio shows ~1800MiB/s buffer write
-bandwidth)
-
-
-[1]
-https://lore.kernel.org/all/20231228123528.705-1-lege.wang@jaguarmicro.com/
-
-
--- 
-Thanks,
-Jingbo
+        flags = head->flags & UDMABUF_FLAGS_CLOEXEC ? O_CLOEXEC : 0;
+--
