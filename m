@@ -1,96 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CD912D766
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634151E4A2;
+	Mon,  3 Jun 2024 13:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717422160; cv=none; b=PWJSb2THq4GeDA1PDyWgCjVHvyjI/51Bq1awYEWcK44fAXR30olSU83PGe2eElug00BcRuv5Ttg45W0icPwthJ2xNweWbHThm4SQr1eSy5SENCK5dJYh0e9/eCts47UppsR+llsLEG2PoVUJiD5BtLWUBj20ucPLfKxS29MLa74=
+	t=1717422205; cv=none; b=VNzpkXupP0HO0brBlj2DMY83YnoABM1I5NuIhTpPDKIyYiiMI0E6CCPTZUuzWL89I3s3/l3YYeXzjemBMyPV8XeXNBvvzJrbm/xMirEhs4xXDEiJpTmdr2gGBa5k6PnWLbMzGvYW+ZeInC2FHlzUVDImpV/SfjSQXND7LBbuWWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717422160; c=relaxed/simple;
-	bh=fucPh4NT8afq/yJKF9Csi293Nc1OxsYl4BBLX3mkZgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tgu8BhcxIHurrmQ802sZuXkJSSje8cRDrlNyG4U+INUbiB2wPpkfKkcnvTtA0Js76HPQDBESatX7kTGDbnPTXgc0YcbEHZoC9BV5JyHXtmPGA3Ee755DGxCDcsFCDY90/D/Wj7LPUv8mLCzeskQT3r8wDNbTdDkH9XniKoIWJ4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=acmdbPFN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717422205; c=relaxed/simple;
+	bh=h8Ofj8K4e+BTkQzzttTwJ0M9l8oUEQowz/5cfcCkpdI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BiBSnRcZJOZhkR5WftOYhWUIdbRgSeMRgNdA/GxbGkgSLLI04/UOKFktPku/xU45JtdLpqzVXYFCg1ocKBTlaUNc8HnMgmPR4LVmqKxMYx63zulukUMVgzggKx+k0C8kGVjKV317Jj18PsqA1C5FAtie3iiD7lQk0NyALt3AB40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R83iDg97; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acmdbPFN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717422158;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0XiDMYcq96Z7HWc66TmciFozG2sGDtvjwN27J1yBx8E=;
-	b=acmdbPFNBEppepSlZCniWH1t8w8HBMilHLFaUbdyOsWn9zY/onkyGzstJkBBLgZrZnnsnQ
-	BgG3HFr+wlOsesInihjgl+lRXuEoadjxq0Y8UwYE+g9uBVY59a8MW/igo601PROwjy3G21
-	grQw1+sHb08au+F2rH1FM166AUKI4cE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-414-HxOPD2R1O7ylb4JT3OAfXw-1; Mon, 03 Jun 2024 09:42:32 -0400
-X-MC-Unique: HxOPD2R1O7ylb4JT3OAfXw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1F697800CA5;
-	Mon,  3 Jun 2024 13:42:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.103])
-	by smtp.corp.redhat.com (Postfix) with SMTP id B788E2011C42;
-	Mon,  3 Jun 2024 13:42:30 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Jun 2024 15:41:03 +0200 (CEST)
-Date: Mon, 3 Jun 2024 15:41:01 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tick: shift tick_nohz_switch_to_nohz() from
- tick_check_oneshot_change() to hrtimer_run_queues()
-Message-ID: <20240603134100.GA388@redhat.com>
-References: <20240530124203.GA26990@redhat.com>
- <20240602102007.GA27454@redhat.com>
- <87jzj6789b.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R83iDg97"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A86C32781;
+	Mon,  3 Jun 2024 13:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717422205;
+	bh=h8Ofj8K4e+BTkQzzttTwJ0M9l8oUEQowz/5cfcCkpdI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=R83iDg979Ny/Cvx771e038nDC1MGkQ1EybRvGkDJw6MDEwWgPagdhBHwfZtX85TbL
+	 t9EmPK7tTZrYANH4qj2Adsdt9Iv1I+xsWcj4FJ+cmZiG9KRTQcTogz1/Rz/s3T3tPw
+	 fzmLG2X0ziqDBUhJn9CWBwfnZ/6O82MTRjJ2LuX+UgxWqqzuyEnNdz6+ANpD1Ug+mP
+	 LznIiZ5kBQHQnaGfVbBvaSRJofT3DnCqvxUqkfYTmQFfM7W0oo8kGjNvODN0L4q+HT
+	 MniI+I7RTysD9lQrESjP859D2tNzL4Jhw/XGlY4KeMdjBMg/Sb/N4LsMeQBB8S3Ps7
+	 PlCfGnYD552wg==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5ba3201c209so65403eaf.3;
+        Mon, 03 Jun 2024 06:43:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXpVXNE1xT3CWNCc5axe36fSeNn5mJvVJXF/hT5RgeFz3BBU/UKLCH4h+OG4FxEl804p9t8Tq6pcz+5biWwmcLWP74ljGLOXHWSTbPRskvDAYQQIe2ZqDBUnSZ5GPEiUsy2Ucrl5Dk=
+X-Gm-Message-State: AOJu0YzfAcaYWSm9CX9i35QqjI9+nDrQGuxFBbjNPWmNAkn4FfmdOlqD
+	SZrlQ9pyxq+foNKiyrZtUx7g4C8DfG11Jns6f3e1RpmZrUGppj2t/SRIszgs/d6cS9Uo48LW/OH
+	0EK8qixvCR1SsbHT6WSJbjjjWLTQ=
+X-Google-Smtp-Source: AGHT+IEWM5TA89pH8jZ9tKeiIYCH61QlC02EvkKdKvNEBD5hfm/gUVpb0gbCxz8WjGrxQGu4C9AolcAgJC8MA1fn0BI=
+X-Received: by 2002:a05:6820:d86:b0:5af:be60:ccdc with SMTP id
+ 006d021491bc7-5ba053a8cebmr9838281eaf.0.1717422204079; Mon, 03 Jun 2024
+ 06:43:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87jzj6789b.ffs@tglx>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+References: <20240603081331.3829278-1-beata.michalska@arm.com>
+ <20240603081331.3829278-2-beata.michalska@arm.com> <20240603114811.oio3uemniib5uaa2@vireshk-i7>
+In-Reply-To: <20240603114811.oio3uemniib5uaa2@vireshk-i7>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 3 Jun 2024 15:43:12 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com>
+Message-ID: <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] cpufreq: Rewire arch specific feedback for cpuinfo/scaling_cur_freq
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Beata Michalska <beata.michalska@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, rafael@kernel.org, len.brown@intel.com, 
+	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com, 
+	sumitg@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/03, Thomas Gleixner wrote:
+On Mon, Jun 3, 2024 at 1:48=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
 >
-> On Sun, Jun 02 2024 at 12:20, Oleg Nesterov wrote:
-> > @@ -1891,8 +1891,11 @@ void hrtimer_run_queues(void)
-> >  	 * there only sets the check bit in the tick_oneshot code,
-> >  	 * otherwise we might deadlock vs. xtime_lock.
-> >  	 */
-> > -	if (tick_check_oneshot_change(!hrtimer_is_hres_enabled())) {
-> > -		hrtimer_switch_to_hres();
-> > +	if (tick_check_oneshot_change()) {
-> > +		if (hrtimer_is_hres_enabled())
-> > +			hrtimer_switch_to_hres();
-> > +		else
-> > +			tick_nohz_switch_to_nohz();
+> Hi Beata,
 >
-> hrtimers have no business with tick_nohz_switch_to_nohz(),
-> really. That's a strict tick/nohz specific thing. hrtimers do not care
-> about NOHZ much. They care about whether they can switch to high
-> resolution mode.
+> Thanks for taking this forward.
+>
+> On 03-06-24, 09:13, Beata Michalska wrote:
+> > Some architectures provide a way to determine an average frequency over
+> > a certain period of time, based on available performance monitors (AMU =
+on
+> > ARM or APERF/MPERf on x86). With those at hand, enroll arch_freq_get_on=
+_cpu
+> > into cpuinfo_cur_freq policy sysfs attribute handler, which is expected=
+ to
+> > represent the current frequency of a given CPU,as obtained by the hardw=
+are.
+> > This is the type of feedback that counters do provide.
+>
+> Please add blank line between paragraphs, it makes it easier to read
+> them.
+>
+> > At the same time, keep the scaling_cur_freq attribute align with the do=
+cs
+> > and make it provide most recently requested frequency, still allowing t=
+o
+> > fallback to using arch_freq_get_on_cpu for cases when cpuinfo_cur_freq =
+is
+> > not available.
+>
+> Please split this patch into two parts, they are very distinct changes
+> and should be kept separate.
+>
+> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > ---
+> >  drivers/cpufreq/cpufreq.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index a45aac17c20f..3b0eabe4a983 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -758,7 +758,8 @@ static ssize_t show_scaling_cur_freq(struct cpufreq=
+_policy *policy, char *buf)
+> >       ssize_t ret;
+> >       unsigned int freq;
+> >
+> > -     freq =3D arch_freq_get_on_cpu(policy->cpu);
+> > +     freq =3D !cpufreq_driver->get ? arch_freq_get_on_cpu(policy->cpu)
+> > +                                 : 0;
+>
+> This is getting trickier than I thought as I dived into more details
+> of all the changes to the file.
+>
+> Rafael,
+>
+> We probably need to decide on a policy for these two files, it is
+> getting a bit confusing.
+>
+> cpuinfo_cur_freq:
+>
+> The purpose of this file is abundantly clear. This returns the best
+> possible guess of the current hardware frequency. It should rely on
+> arch_freq_get_on_cpu() or ->get() to get the value.
 
-OK, lets forget this patch then.
+Let me quote the documentation:
 
-But note that the comment above the tick_check_oneshot_change() says
-"switch to highres and / or nohz mode".
+"This is expected to be the frequency the hardware actually runs at.
+If that frequency cannot be determined, this attribute should not be
+present."
 
-Thanks,
+In my reading, this has nothing to do with arch_freq_get_on_cpu(), at
+least on x86.
 
-Oleg.
+> Perhaps we can
+> make this available all the time, instead of conditionally on ->get()
+> callback (which isn't present for intel-pstate for example).
 
+We could, but then on x86 there is no expectation that this file will
+be present and changing this may introduce significant confusion
+because of the way it is documented (which would need to be changed,
+but people might be forgiven for failing to notice the change of
+interpretation of this file).
+
+> scaling_cur_freq:
+>
+> This should better reflect the last requested frequency, but since a
+> significant time now it is trying to show what cpuinfo_cur_freq shows.
+
+Well, not really.
+
+> commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file for set=
+_policy() drivers")
+> commit f8475cef9008 ("x86: use common aperfmperf_khz_on_cpu() to calculat=
+e KHz using APERF/MPERF")
+
+"In the majority of cases, this is the frequency of the last P-state
+requested by the scaling driver from the hardware using the scaling
+interface provided by it, which may or may not reflect the frequency
+the CPU is actually running at (due to hardware design and other
+limitations).
+
+Some architectures (e.g. x86) may attempt to provide information more
+precisely reflecting the current CPU frequency through this attribute,
+but that still may not be the exact current CPU frequency as seen by
+the hardware at the moment."
+
+So the problem is that on Intel x86 with HWP and intel_pstate in the
+active mode, say, "the frequency of the last P-state requested by the
+scaling driver from the hardware" is actually never known, so exposing
+it via scaling_cur_freq is not possible.
+
+Moreover, because cpuinfo_cur_freq is not present at all in that case,
+scaling_cur_freq is the only way to allow user space to get an idea
+about the CPU current frequency.  I don't think it can be changed now
+without confusing users.
+
+> What should we do ? I wonder if we will break some userspace tools
+> (which may have started relying on these changes).
+
+We will.
+
+IIUC, it is desirable to expose "the frequency of the last P-state
+requested by the scaling driver from the hardware" via
+scaling_cur_freq on ARM, but it is also desirable to expose an
+approximation of the actual current CPU frequency, so the only way to
+do that without confusing the heck out of everybody downstream would
+be to introduce a new attribute for this purpose and document it
+precisely.
