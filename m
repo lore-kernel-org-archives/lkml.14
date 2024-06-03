@@ -1,50 +1,31 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mail-m1027.netease.com (mail-m1027.netease.com [154.81.10.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E961F9E9
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 18:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD51F9E9;
+	Mon,  3 Jun 2024 18:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.81.10.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717440609; cv=none; b=RYD2OliQWwaVGBAfnqMzYiE+LktzeF623+Yv3DVhGPXER/2mhvEzURmuVZxLOMXBYPCZGLXds9Dco+TEsVa7FzuBUr6cXMJsH/yVGYxs4l5P3Exp0TmGlbE7h7X0qC/dykWfi7mBrpO+hpLV7N7WypH5cGhrLwWp0ueZjhpir7E=
+	t=1717440672; cv=none; b=A1azOuSjrtaPawRfLR3HWxpenT8V486AyDQUH9VkPa4UB020S/8mX2sNRZTXjGMBr98OQHP5Vkah4GUyTFej6UGafVqZzzX1eM+hFzD760Ak8ChKv398Jt7YbzNlNklTHZbSRNSWe6A6IFjPHoxukCU8ogTBRR0OAEkdoMX31zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717440609; c=relaxed/simple;
-	bh=QA+vaRbtkGhWSrbG2wOmwjPkFyY/1qMbT6pd7+j4xe4=;
+	s=arc-20240116; t=1717440672; c=relaxed/simple;
+	bh=Ao8aNrolKuITBT7pf5WIDPS3xcO1DyqIzHe1q+0Yd78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EdOLeqayK9p9ipJLcPHSAjNoW1cnouWOm3DVjFWWpBFB3fjUjevuzvqByGsI9+nK8kdpEg/cNzt5klt3cFDTopRnS4R2WM8MeF5asjFqifYb+nEnSJyyiAXiqLCrDRMZdTx7tFd6cBnDR9LqhHuT3wFnE0wNf5d+5s8htv8EKEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ES5fRWWZ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=fHqHt3cNQ7wxC2bSbtzF/siiF0bOCMlhCrrKtB7fUza6KA8AOOcVVasVGxEcLM0PZ02bW38WktytcCWpue4HO+bE9HamTX/rMuZfGqWewJD7EL/hfdIVS2d8x585/FAmFSmGfPDv34GBxBw70Z1ySTlW8zqiau7jcApzgwRYeAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=T42Oqge3; arc=none smtp.client-ip=154.81.10.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ES5fRWWZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717440607; x=1748976607;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QA+vaRbtkGhWSrbG2wOmwjPkFyY/1qMbT6pd7+j4xe4=;
-  b=ES5fRWWZVEpi8a30XIua0zhjBkz6CooArLMc4vQYD/hX7bs3+uss0nL6
-   3ACJRpf4+FKwaLqn4QJb6DcHnxlmnix0N1M6ghlQzyrbGs3NTvswhmKS9
-   0OE6BgZ1n/THJkAOqkjRYpdcVg/By3CKp3/IIhCIssmHZtP8d5hnU/C+l
-   5GuVGqSBJIKup0467NlXE5tkPb2lSgkzyVvNNU2rPgMq4ocZ+yCaaMfn6
-   cRq0KWLBn7CHPRpgNm1SetYdRhhEQKPplZPBZpzuI13sEiQbv0bPDEO23
-   8gNmsnFteFdzBkF3lkpq988LGw84deBO9cpJgD2CWGes6pQlyxRTUlSHL
-   w==;
-X-CSE-ConnectionGUID: 1TMsLRRJQ3ikRwntNIv/6g==
-X-CSE-MsgGUID: 0omL4f7LRbKhoxGsX/oQrQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="36471470"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="36471470"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 11:50:06 -0700
-X-CSE-ConnectionGUID: ErXB3GqMR9Sm9HFD+ljFMA==
-X-CSE-MsgGUID: 73TKcnPTTm6f6CffGCOeTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="37031198"
-Received: from ibganev-desk.amr.corp.intel.com (HELO [10.125.108.143]) ([10.125.108.143])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 11:50:07 -0700
-Message-ID: <9e9669a6-de37-4140-bdc5-7d660b8427c3@intel.com>
-Date: Mon, 3 Jun 2024 11:50:06 -0700
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="T42Oqge3"
+DKIM-Signature: a=rsa-sha256;
+	b=T42Oqge3PEKYoJZXUq145DpeXsYrv+O067D/RS3vs6er2i0GA9sHqtmJ2luQq/kKwOfxPS4hp4qOSW9yZB4mpzODOhjHcaPwF8cFq4XoUwB2wrjOg9yyike18UrWIT+DWHb0ioInMIqp8AxgUWvkFrJYqgAxDQ7A7XzlBa2y6jI=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=G3q+TZ2VuSr0ymGPTBfWfAom9TrDoxMifWuUO2g/VJI=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.141] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id A0E6F840DD8;
+	Mon,  3 Jun 2024 20:14:33 +0800 (CST)
+Message-ID: <ab0a6372-091b-4293-8907-a4b3ff4845c0@rock-chips.com>
+Date: Mon, 3 Jun 2024 20:14:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,100 +33,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3] x86/head/64: remove redundant check on
- level2_kernel_pgt's _PAGE_PRESENT bit
-To: Wei Yang <richard.weiyang@gmail.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, Steve Wahl <steve.wahl@hpe.com>
-References: <20240523123539.14260-1-richard.weiyang@gmail.com>
+Subject: Re: [PATCH 00/14] Add initial support for the Rockchip RK3588 HDMI TX
+ Controller
+To: neil.armstrong@linaro.org,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Mark Yao <markyao0591@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, kernel@collabora.com,
+ Alexandre ARNOUD <aarnoud@me.com>, Luis de Arquer <ldearquer@gmail.com>,
+ Algea Cao <algea.cao@rock-chips.com>
+References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
+ <a4b22708-e85d-448a-8145-244b49bca053@linaro.org>
 Content-Language: en-US
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240523123539.14260-1-richard.weiyang@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Andy Yan <andy.yan@rock-chips.com>
+In-Reply-To: <a4b22708-e85d-448a-8145-244b49bca053@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkJJSlZKQ0sYTh4eQk9PQ0tVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5JVUpLS1VKQl
+	kG
+X-HM-Tid: 0a8fde05d55303a4kunma0e6f840dd8
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxg6Fww6EzMCEjghC00pNxhP
+	NDkwFChVSlVKTEpMT0pNQ0xOQ0pNVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBQ09PTTcG
 
-On 5/23/24 05:35, Wei Yang wrote:
-> --- a/arch/x86/kernel/head64.c
-> +++ b/arch/x86/kernel/head64.c
-> @@ -260,8 +260,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
->  
->  	/* fixup pages that are part of the kernel image */
->  	for (; i <= pmd_index((unsigned long)_end); i++)
-> -		if (pmd[i] & _PAGE_PRESENT)
-> -			pmd[i] += load_delta;
-> +		pmd[i] += load_delta;
+Hi Neil:
 
-So, I think this is correct.  But, man, I wish folks would go through
-the git history and make it clear that they understand _how_ the code
-got the way it is.
+On 6/3/24 16:55, Neil Armstrong wrote:
+> Hi Christian,
+> 
+> On 01/06/2024 15:12, Cristian Ciocaltea wrote:
+>> The RK3588 SoC family integrates a Quad-Pixel (QP) variant of the
+>> Synopsys DesignWare HDMI TX controller used in the previous SoCs.
+>>
+>> It is HDMI 2.1 compliant and supports the following features, among
+>> others:
+>>
+> .
+> 
+> ..
+> 
+>> * SCDC I2C DDC access
+>> * TMDS Scrambler enabling 2160p@60Hz with RGB/YCbCr4:4:4
+>> * YCbCr4:2:0 enabling 2160p@60Hz at lower HDMI link speeds
+>> * Multi-stream audio
+>> * Enhanced Audio Return Channel (EARC)
+> -> Those features were already supported by the HDMI 2.0a compliant HW, just
+> list the _new_ features for HDMI 2.1
+> 
+> I did a quick review of your patchset and I don't understand why you need
+> to add a separate dw-hdmi-qp.c since you only need simple variants of the I2C
+> bus, infoframe and bridge setup.
+> 
+> Can you elaborate further ? isn't this Quad-Pixel (QP) TX controller version
+> detectable at runtime ?
+> 
+> I would prefer to keep a single dw-hdmi driver if possible.
 
-I suspect that the original _PAGE_PRESENT check wasn't even necessary if
-cleanup_highmap() really did fix things up.  But this commit:
 
-	2aa85f246c18 ("x86/boot/64: Make level2_kernel_pgt pages invalid
-		       outside kernel area")
 
-tweaked things to actively clear out PMDs that weren't populated in
-Kirill's original loop.  It didn't touch the _PAGE_PRESENT check.  But
-it certainly did imply that the PMD doesn't have any holes in it and
-there's nothing int he middle that needs _PAGE_PRESENT cleared.
-
-> level2_kernel_pgt compiled with _PAGE_PRESENT set. The check is
-> redundant
-
-This isn't super reassuring.  It also depends on nothing having munged
-the page tables up to this point.  The code is also a bit cruel in that
-it manipulates two different sets of PMDs with the same 'pmd' variable.
-
-Also, is this comment still accurate after '2aa85f246c18'?
-
->          * Fixup the kernel text+data virtual addresses. Note that
->          * we might write invalid pmds, when the kernel is relocated
->          * cleanup_highmap() fixes this up along with the mappings
->          * beyond _end.
-
+The QP HDMI controller is a completely different variant with totally different
+registers layout, see PATCH 13/14.
+I think make it a separate driver will be easier for development and maintenance.
+> 
+> Thanks,
+> Neil
+> 
+>>
+>> This is the last required component that needs to be supported in order
+>> to enable the HDMI output functionality on the RK3588 based SBCs, such
+>> as the RADXA Rock 5B. The other components are the Video Output
+>> Processor (VOP2) and the Samsung IP based HDMI/eDP TX Combo PHY, for
+>> which basic support has been already made available via [1] and [2],
+>> respectively.
+>>
+>> The patches are grouped as follows:
+>> * PATCH 1..7: DW HDMI TX driver refactor to minimize code duplication in
+>>    the new QP driver (no functional changes intended)
+>>
+>> * PATCH 8..11: Rockchip DW HDMI glue driver cleanup/improvements (no
+>>    functional changes intended)
+>>
+>> * PATCH 12..13: The new DW HDMI QP TX driver reusing the previously
+>>    exported functions and structs from existing DW HDMI TX driver
+>>
+>> * PATCH 14: Rockchip DW HDMI glue driver update to support RK3588 and
+>>    make use of DW HDMI QP TX
+>>
+>> They provide just the basic HDMI support for now, i.e. RGB output up to
+>> 4K@60Hz, without audio, CEC or any of the HDMI 2.1 specific features.
+>> Also note the vop2 driver is currently not able to properly handle all
+>> display modes supported by the connected screens, e.g. it doesn't cope
+>> with non-integer refresh rates.
+>>
+>> A possible workaround consists of enabling the display controller to
+>> make use of the clock provided by the HDMI PHY PLL. This is still work
+>> in progress and will be submitted later, as well as the required DTS
+>> updates.
+>>
+>> To facilitate testing and experimentation, all HDMI output related
+>> patches, including those part of this series, are available at [3].
+>> So far I could only verify this on the RADXA Rock 3A and 5B boards.
+>>
+>> Thanks,
+>> Cristian
+>>
+>> [1]: 5a028e8f062f ("drm/rockchip: vop2: Add support for rk3588")
+>> [2]: 553be2830c5f ("phy: rockchip: Add Samsung HDMI/eDP Combo PHY driver")
+>> [3]: https://gitlab.collabora.com/hardware-enablement/rockchip-3588/linux/-/commits/rk3588-hdmi-bridge-v6.10-rc1
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>> Cristian Ciocaltea (14):
+>>        drm/bridge: dw-hdmi: Simplify clock handling
+>>        drm/bridge: dw-hdmi: Add dw-hdmi-common.h header
+>>        drm/bridge: dw-hdmi: Commonize dw_hdmi_i2c_adapter()
+>>        drm/bridge: dw-hdmi: Factor out AVI infoframe setup
+>>        drm/bridge: dw-hdmi: Factor out vmode setup
+>>        drm/bridge: dw-hdmi: Factor out hdmi_data_info setup
+>>        drm/bridge: dw-hdmi: Commonize dw_hdmi_connector_create()
+>>        drm/rockchip: dw_hdmi: Use modern drm_device based logging
+>>        drm/rockchip: dw_hdmi: Simplify clock handling
+>>        drm/rockchip: dw_hdmi: Use devm_regulator_get_enable()
+>>        drm/rockchip: dw_hdmi: Drop superfluous assignments of mpll_cfg, cur_ctr and phy_config
+>>        dt-bindings: display: rockchip,dw-hdmi: Add compatible for RK3588
+>>        drm/bridge: synopsys: Add DW HDMI QP TX controller driver
+>>        drm/rockchip: dw_hdmi: Add basic RK3588 support
+>>
+>>   .../display/rockchip/rockchip,dw-hdmi.yaml         | 127 +++-
+>>   drivers/gpu/drm/bridge/synopsys/Makefile           |   2 +-
+>>   drivers/gpu/drm/bridge/synopsys/dw-hdmi-common.h   | 179 +++++
+>>   drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c       | 787 +++++++++++++++++++
+>>   drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.h       | 831 +++++++++++++++++++++
+>>   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          | 353 +++------
+>>   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 351 +++++++--
+>>   include/drm/bridge/dw_hdmi.h                       |   8 +
+>>   8 files changed, 2290 insertions(+), 348 deletions(-)
+>> ---
+>> base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+>> change-id: 20240601-b4-rk3588-bridge-upstream-a27baff1b8fc
+>>
+> 
