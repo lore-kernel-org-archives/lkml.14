@@ -1,153 +1,495 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2071.outbound.protection.outlook.com [40.107.92.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28A73FBA7;
-	Mon,  3 Jun 2024 10:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717411974; cv=fail; b=Bp9lQNpPFHqYSTm29I2utLm22Zsh3gxRjQ/i/LaCzSTg980qE0F1Wsj0cCf7vW42catHP2ZB906wZiFL2goCeMGP+20PDs3i4sbKnzdPoX7StB5n/zVydxs0q0S8nlBJjc2YgXTr1CBCCA1sn9BMuSZwe+1NtWvPKEJjRgr+ap0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717411974; c=relaxed/simple;
-	bh=Iea2wI3rYCF0fB0eERcTDeYNbUa2cPR2v0rSOxfcK9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=u9ZVx8/QmONI9HpUmKd2cQjow2UtpGnLHorGoQLlB5vt0kQf8dwRV5uvxdsy3R1vpCnLGTLU+zCHdzFiEyWh1sGsJHBvVqExmtkWmlgtcyQPevaY71CAHKaFwfV8HUnmloDQBMkEmakxr0UPMg05okfP+rYCJas3jUTHa0OeDO0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tgp9DeHW; arc=fail smtp.client-ip=40.107.92.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753B758AA5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.68
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717412010; cv=none; b=RaFlLl3W+PQgRkZPido7h4Ql0FuNFWB2v7Q/nJqN01X77Bt3TPUBjn/5Iqoru296HhTTyPp82+VeMk2cRCS4hBEH9l1YcmdI3iUh6UILeKLlUESVG6Nrfbid3SOVR41w0HsrZSgFE9ib5oUfGIqOZUxahmbvPEfVGHhzsU35aSY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717412010; c=relaxed/simple;
+	bh=US8/l6GXafYtCE4uYPr8wJq/FBX4ibcTG40y7Z0uKf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Quas2dsk1W6aleba82I33BHQTRIJmMIFEClmFuxQGXr9Wm1Cdhl9st4YO4WYx6zi8oFwh51sbE2dr6iT6kc7u8qVAaEqMFavnS2bHVfOgprrtfEMeepw9cUYMNYsszzU74ky7HH1n3W0kJw1o3tPmUx/6g/fWG4/x3nGibosxgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A8IoTd8c; arc=none smtp.client-ip=209.85.218.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tgp9DeHW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mS6bnpdSyGzHZ9/ia0NgvK/ozskyb0jAHtrQoV6BClqt3JaYT6GfpKD70ZjVbOwDtyZhyS9h9s9i4Ldn6XV38jtHKGPKe028AFuATvxfo352AQlzWeWS2RovYBBqQIE8i3DjVrlY52r/OJpN7o3mVckU5YkonW5b84swlzZ6LE+cDXVF5LoddsO4fjitmvdMpmGA90c5fzE+SFH6pIqrp4o1RhWW9UbFNFHgutHJTdzHa68VAWOtYmv2/wUc8vFOf0mv8kuhxyYdXc1sAW4aPUbTEdmaZvkmb1LcHbXhXPD98xth4xt2NIcDbty6NKoskfy8jIm+k63UsVWdRrmIpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3bxnjB3fGCB3+7uqgihJB0J1NC6APF5mH6vGXV1HKec=;
- b=nhfxZjIcONLnAoHCpfoa8d3jY/cIpmpO25aQ4dAPerU+tbhDQI4K019MlC0gyFt1kXAqq+Yy4PzBtGZN1xRJcHP/Ctoo2U9vmaI4Ot3W6PDCGBnW51YmHxA4y8HCtjW1KdFZNYv9ZTTATLOQgAY4z15Knnv4fKZ2go9EOAGouy9nIog74FZ9D7qXmKsuLKv5LfX1FXhlurNjAC10AzZXPG+k74CydkzTOUHAaaqNEzC+SqWkF2Cw0LHbkMjrPgKj4lG33U93mtFAArPY3jrWlvdpG0BfvD737mmnySzQX38TiO9Gh1NrYK/0/aKwZ49Nqjb0a3cQA2Apf24d7OXjIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3bxnjB3fGCB3+7uqgihJB0J1NC6APF5mH6vGXV1HKec=;
- b=tgp9DeHWh9k6n5LniJcgOGC38xZbwC9xNHhlT/VB49/9gi1CfQ13PduGNOpYZggqU0dhr3p0daYt87pFRMvUh3hFQwaQdkiPr7KtEYmdZcDa5Gfxg/rxSv4eLbfmcIcJI5mqqBJ8OM6zouAqZsVGg+5r9qefjT5C0kOjxkSoP7WVuWTrCkj22Bf32g3nXxzRaNKs0Hn3ur2Oh8bIgHe6uK/nphXfA0q1RWf9J+X+RSkVlZUkkqx6LgOZD6NdoQ6YwBtoHQBzNabid/YshxATW9iPq5I+x2B8tl1RO3p+0b+R6cD7VM/AIVIjfFRXFdVp1WV2qEBj3PvS0C9/GPCewg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com (2603:10b6:930:24::22)
- by MN0PR12MB6294.namprd12.prod.outlook.com (2603:10b6:208:3c1::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
- 2024 10:52:38 +0000
-Received: from CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f]) by CY5PR12MB6179.namprd12.prod.outlook.com
- ([fe80::9ec8:2099:689a:b41f%3]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
- 10:52:38 +0000
-Date: Mon, 3 Jun 2024 13:52:20 +0300
-From: Ido Schimmel <idosch@nvidia.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: petrm@nvidia.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jiri@resnulli.us,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2 net-next] devlink: Constify the 'table_ops' parameter
- of devl_dpipe_table_register()
-Message-ID: <Zl2gZETsnbh1dS7P@shredder>
-References: <cover.1717337525.git.christophe.jaillet@wanadoo.fr>
- <3d1deee6bb5a31ee1a41645223fa8b4df1eef7ba.1717337525.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d1deee6bb5a31ee1a41645223fa8b4df1eef7ba.1717337525.git.christophe.jaillet@wanadoo.fr>
-X-ClientProxiedBy: TL0P290CA0008.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:5::19) To CY5PR12MB6179.namprd12.prod.outlook.com
- (2603:10b6:930:24::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A8IoTd8c"
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a6302bdb54aso546747466b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 03:53:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717412007; x=1718016807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hwzveekuWwk2XlalkFz95t9+01SJnCPbZOtZsqrbFNo=;
+        b=A8IoTd8c56921hl6ESrikMld/27LxmcKVrbKcYyeiP0tLChqEEWtB5E97gyhUtavFy
+         LBxm7LcpnCMS9UJoFj4bYg59j9xHG5J2WuweIZAIupSHOzxHk/V1ZJKV9JgmbuwPXS2T
+         wolKmbsJYwZ9Sp5SqzDeWeOPRuoUYeGWQNT3f2Waj13x2KS5aNF1D5b3+1nP+ud9dj5W
+         BE7vEjuOT6bE/+PghBQRcXw+aP/lRwzvP1t3gy7QVMDIbe0NPnuHa9V6PTtPTFOvJ9ca
+         Gc6O0qzPhmkKSdZVWQhq2oG7lO61168voai1K3RGyCBwXB7nWYp4x02xtfegJltIli4b
+         FhKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717412007; x=1718016807;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hwzveekuWwk2XlalkFz95t9+01SJnCPbZOtZsqrbFNo=;
+        b=sE6ozaNKU2tEBsWg/3V0OX5llmL8iI+TN6FL46PdpcrJAe4fSe3t3XBnGa27/ul1s4
+         YXeUrwyhuRqblzTlJnNP6frveqljmWdFzshsWiwqyagVXUkCapY7FL8kWsIaUPprgk+k
+         2IdYAiwZ635Yy8xc0uCrpBEaS7mxysXUcRMAUeBtt6xRSnQ5s54WHz8thgSOEkHok7tG
+         KPCpDmMyXKYTkxMmputvFfu2t/2k5FqEeHKkNv+b+tMwUPFY3A6cFXgyXlEeiTolyIsb
+         qJEyoLQ+FqaY9TqX6ECTI6ZSpds/DBTbQEaoF4sEnZVcITbGI9PMabawxqeyEviJgoAn
+         kAKA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrh1Nz0iPUBAxV9vI8jyFZ15Jcea6jAqFv+svPwQEtyTQVHfsBAN3mLCojkNvU1oKj4qZRadlbcz7Q3AKvrL0kNCzJzADROU8Y1Dg8
+X-Gm-Message-State: AOJu0YwvjRlTaKdn6kiEX8XW2aXlnHui60VmwNG5zReLVXhgfqsCYR1H
+	TtaurXSY+1pnln7RzVTZ6Rwup2yKRTUoVmUOIAKWFf+1ZD2TvUXkEkgz7ZGo/MQ=
+X-Google-Smtp-Source: AGHT+IGwe4Q3nu3IhSTKnCBpW/4vXT9ThIlel0mtDkpm+QeIwUzhtbSv5LxEVE5c0VKGaNUOFtSFlQ==
+X-Received: by 2002:a17:906:1f07:b0:a65:19f1:6e50 with SMTP id a640c23a62f3a-a6821f52ca3mr569236966b.50.1717412006760;
+        Mon, 03 Jun 2024 03:53:26 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:aa0d:be00::8090? ([2a02:8109:aa0d:be00::8090])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a691a8f98ffsm90520266b.123.2024.06.03.03.53.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 03:53:26 -0700 (PDT)
+Message-ID: <f0dbb385-6aea-4721-92fa-a1f560fc7c5a@linaro.org>
+Date: Mon, 3 Jun 2024 12:53:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6179:EE_|MN0PR12MB6294:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7da6913-3a0d-403c-13d6-08dc83bb48f3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uqUuCTXTcl1l7ICOyEZPEeiVybHvM71ZlF7V/s4YpDZNqryjIU5hy8YztS6W?=
- =?us-ascii?Q?DMHcDKx7Efj3+7JgyDrqxZHpK8Y3cuj1z7DnGL50iicAqdKQcU05OJUz/15z?=
- =?us-ascii?Q?qaKtpMZVCErJiwoIiTUSKrOVNkI36lfR7QIiFkVohXXSNpT74ZLRcr8umAno?=
- =?us-ascii?Q?ezRJYuqYzRwHZ/V9s8jJyK4o5xTmi5GlS33U32g/8LKtfc4k1tmpztvP9Lj+?=
- =?us-ascii?Q?8qnHhlN1xfwHVSE81dQaXWUGP6efFw+Td8u7qisSNXALtFTZcFf47AqAn8l+?=
- =?us-ascii?Q?cu7Ut7mdBrxXj2qUhh2JQ1U/k0Ja6anQbQuN651uau4hRoftsyKRPAutnmvu?=
- =?us-ascii?Q?Mvy15nODk4h1kTLA4Il/5JDyw0YpHyROjguzHI/QVqVVNWxHQhIr2IlUd01x?=
- =?us-ascii?Q?d2qIrDcjeSmq9AMNBCXWCeAIQvdSv9Q/gNRyjBz8kAR8MYA2xqWxgxE2dAPP?=
- =?us-ascii?Q?svRk0nQYbcQhdhmS/VEz0LrtKaUVLCDZV695pe5FLKC/DgP15GfABqdTGQiY?=
- =?us-ascii?Q?jsLQMCb8WVmB779GbyrYGSbbKbhnSxzNsncaoVAaaoU6zaeXtR8rr2qQ2u+y?=
- =?us-ascii?Q?71Gc3zy03YIMROh+HgwANZUpv7TfIcNPphRIN30T7E/Xv2COGekNMhL9X3LJ?=
- =?us-ascii?Q?qxynlVlLHBgj6/M7evmO2PRm5FE2MGijRglo3v1ys8kOov5Uf8vuycjjNtrW?=
- =?us-ascii?Q?wZbKY5WBNT0vVcNiGhZi8DubteVQwSSn2L9d6dVsPrRcKMKdO9/eLAJTpX7B?=
- =?us-ascii?Q?7NXcLFVZfjc/3jBi4GeC22jtp5/P8ZJ8Fiye55ERgVjF6k+d4Zaf/6vlqPrv?=
- =?us-ascii?Q?HZZVVoDt2pyzpsM55OaVTjEWGI4JPJdfLkqofaaD3QqbT2qULqCjBYOevCAv?=
- =?us-ascii?Q?wb0DWQ8RvGDl0FwHwg0v1HkxDbe5lpUjDc4zGXGaQNU6CTM9Nmtasy8JQoyz?=
- =?us-ascii?Q?ciExv40F4ObFWTULEdPLsMesQJrUrNAwSeG8QIibgthCe1kQriF3hRb445im?=
- =?us-ascii?Q?GEWbyQwasGJT026k6Sp/ZwooG76difhwX6gksijeeugDgZ8m3svQM4JkZdxa?=
- =?us-ascii?Q?kFNF5+1H+FvUChKkyquZQ/RnbqhJ6XTsp75U72C7qgCmZD0wmJJ5hKnr6bF4?=
- =?us-ascii?Q?6vxTUZED6y8bdZuleEtpAQWjAICbqr7YcmcrhfID9WqUPIwovHBjwohgFby2?=
- =?us-ascii?Q?5dawPDDgBDpSP0Y7kPTOEvURrMckGrZ5RLwxXd1pxXXjA/Bxp7FzgB+qWoeN?=
- =?us-ascii?Q?McPoH2mmmxEaKK0wgB8G5sV9dHmzRZ10JKQlrs7tzw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0JoZhR/TQrGERb1y9H5Z+iATj85knhWbE93tv0YVF5Odv6JalND2mpRAsucC?=
- =?us-ascii?Q?H9daecSHSJMJ7pFzCP0Ea18zBanCdK5RoQIPqmMkiJCazvF3rlarLqQL2D5A?=
- =?us-ascii?Q?LhyzUhSJk7wfcb6Ik4XBWRlu6gW7CVqfVlTMCxtRjIX4Lni6RCcsAJ/ZrLU0?=
- =?us-ascii?Q?edJjjSlTczn2sx2IgberLUqik4WKDnWTZfMHiYUbJfTL5cpcMpPtAB9n2HqA?=
- =?us-ascii?Q?Y6pJQN47lQSOEV3wR+HHGJLJ1+AzxLrNbwQneKePvI3RnN4sTh+4uZKWO89w?=
- =?us-ascii?Q?2zVyOQiZp0hGfQ5ojVxeUklaRq1aGZSG6PqRkO3MfHX+YLC4nEJOjzNRgLlc?=
- =?us-ascii?Q?6yjgsSMFVMaNtZWyMS0VYBJJSpBnUHz9gLo50E/z8EDZQSfaR52B7KCCXFkG?=
- =?us-ascii?Q?yS7aKjzgHUhs8vO3puMt7AnqjuGDgoefyhGwb5aQHtmaNKjr5QNhVmogBVux?=
- =?us-ascii?Q?i5g5DkPoBC/zrr0Ds8/797EXs4ULh5lEdtM16KiUYx83fbwG66VBCpRv4xRI?=
- =?us-ascii?Q?Au7/sjavubTM8GCgbkLQgsGDeXFIsf3XwQK998TeyBWb2qtaWpYVjbkY2OPz?=
- =?us-ascii?Q?sKw6Toufw0DnS1pJFeIjXA0disWe1PPyHDJwOs9MXNm6yZWQLzuDmTpdsmZl?=
- =?us-ascii?Q?HFc28uH1/DNiDBaQ9MZYaq7tjPg+BgQNkfKchMYBlWddBZZta1CJtx6VbCw9?=
- =?us-ascii?Q?HHw++BmN1OWGi5oRJLo/GNkRaGQCZawF7gxBJiXs9A/f0dc+7dy95IuSmlrZ?=
- =?us-ascii?Q?vrO/oMceOnNjnOxLjepoUMAbzh/EsBk/qbJDAFEGVLWkUpFTGK7o0MTZl+/N?=
- =?us-ascii?Q?XMbCWhdP/saHRc8zXT2fZXCkJUlW7OeVpPO4O2WDA7uuW9UF7OtKu7WSkWlr?=
- =?us-ascii?Q?1Nmhhg9nCfDC78siQiWCD+ePRgTmhWRYhpKkFCxtfE6/Xp+RVgJdMXe8fenQ?=
- =?us-ascii?Q?7PbKbyckbhTcOIwiJOw5RdO+ePEzAOAYlc8bkv1kC/OJTQW551P4MmtlU975?=
- =?us-ascii?Q?qey7cLOaj5ATBuOEtPaVP4GjUbcPTr3hjaIygPzxOFZXu40MbDuXfJz0puUF?=
- =?us-ascii?Q?QUHP2MtQAVxgCGc55PAiK9iWKBz/ctTr3+2hbcd2CIZGhOPIyL68Zmt23GVt?=
- =?us-ascii?Q?uZymw3TEr5L/nOYt/LzSyu01RwIzlbpXepRFFkAtlj1P+Cu8gqk1+kWF+ncs?=
- =?us-ascii?Q?PGODGv6T3TLc5KTZtP1A3LYZ/LlyLVTA/HuyHe/ZLjPsFTv5Ls+ua6PGkfOD?=
- =?us-ascii?Q?AZn522gASAx/HJmSctBj6RJ9RaMcue2lTEXleoM8fnTbzgWeXw4GlgblEvrR?=
- =?us-ascii?Q?lWOh9jJ5H2e21Q+AwYfbdwdCdR5TJ/SWmUxnHUIXmktc90EBjDtk+2fJrstk?=
- =?us-ascii?Q?yGQu1V6nzCAgviIFUUMBpfy2z/5+0yiQmgjPfT6THVjSlfksKOOrUahBDvRs?=
- =?us-ascii?Q?ReGzA6QOLcLEyfQPDGc7muVIwPr8LWEsVxnYScnxvaCo5dQM9TAW0YB3kdA9?=
- =?us-ascii?Q?wRJB1BDVcsN3jpU3/Ui0lFhIJjvMhKiv8AnzVCG4jWtv2QSiZJooZ1pf385O?=
- =?us-ascii?Q?TTmklzvJCOCpwc7l1y7jg/bIjqVK5GhVHTgrZOhY?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7da6913-3a0d-403c-13d6-08dc83bb48f3
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6179.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 10:52:38.6526
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tO3JlnLAw9COE9O9jOwwdYRLoRiDLQ4sVtzr7ipwYQjgggUY65kecfdVpb9hGcVA5vr1En7W8kAiNv3GJG3jjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6294
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/9] misc: fastrpc: Add static PD restart support
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>, srinivas.kandagatla@linaro.org,
+ linux-arm-msm@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+ linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
+ <20240530102032.27179-5-quic_ekangupt@quicinc.com>
+Content-Language: en-US
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <20240530102032.27179-5-quic_ekangupt@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 02, 2024 at 04:18:52PM +0200, Christophe JAILLET wrote:
-> "struct devlink_dpipe_table_ops" only contains some function pointers.
-> 
-> Update "struct devlink_dpipe_table" and the 'table_ops' parameter of
-> devl_dpipe_table_register() so that structures in drivers can be
-> constified.
-> 
-> Constifying these structures will move some data to a read-only section, so
-> increase overall security.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Hi Ekansh,
 
-Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+On 30/05/2024 12:20, Ekansh Gupta wrote:
+> Static PDs on the audio and sensor domains are expected to support
+> PD restart. The kernel resource handling for the PDs are expected
+> to be handled by fastrpc driver. For this, there is a requirement
+> of PD service locator to get the event notifications for static PD
+> services. Also when events are received, the driver needs to handle
+> based on PD states. Added changes to add service locator for audio
+> and sensor domain static PDs and handle the PD restart sequence.
+
+Thanks for the patch, I wanted to bring up a larger issue which I've 
+been noticing with the fastrpc driver.
+
+This file is now >2.5k LOC, and to my knowledge it features:
+
+* Two different memory mapping/unmapping interfaces to the DSP (three if 
+you count dmabufs!)
+* Different branching codepaths for static vs dynamic processes (with 
+totally different lifetimes).
+* Over 8 structs just for state management, with the largest being >1500 
+bytes
+* Zero context for which code paths are relevant for which contexts
+
+Your series is a combination of bug fixes and cleanup which span most of 
+the file -- suggesting that the state management is also spread all ove 
+rthe file. Even for someone with some familiarity with the driver these 
+patches are really non-trivial to review (patch 5 being a good example 
+of this), while in addition you introduce new features like this in 
+patch. This doesn't make for a coherent story for reviewers.
+
+On top of that, there is very minimal, if any comments in this hugely 
+complex code, and seemingly zero consideration for how to model state or 
+the lifetime of objects.
+
+Finally, there is next-to-no public documentation or easily obtained 
+(and used) userspace for this driver. Certainly nothing that I could use 
+to offer a Tested-by on your patches.
+
+I am not the maintainer, so while it's not my place, I want to offer 
+some suggestions here:
+
+1. Split the fastrpc driver up into more bite-size chunks which can 
+actually be reasoned about (I would start by splitting the 
+implementation details out from the business logic, and then further 
+abstracting out the static PD support, PDR, etc. Just the "invoke" 
+mechanism should be in it's own file with it's own state...).
+
+2. Add detailed documentation explaining fastrpc from at least a high 
+level (ideally with lower level and driver details too), and code 
+comments (where relevant).
+
+3. Release (and maintain) a reference tool(s) that can be used to 
+validate the driver and better understand proposed new features (you 
+could take inspiration from https://gitlab.com/flamingradian/sensh/).
+
+A mechanism to test at least parts of this driver without needing a DSP 
+on the other end would likely help a lot here, but that's obviously a 
+much larger scope.
+
+Please let me know your thoughts.
+
+Kind Regards,
+> 
+> Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> ---
+>   drivers/misc/Kconfig   |   2 +
+>   drivers/misc/fastrpc.c | 205 ++++++++++++++++++++++++++++++++++++++---
+>   2 files changed, 195 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index faf983680040..e2d83cd085b5 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -280,8 +280,10 @@ config QCOM_FASTRPC
+>   	tristate "Qualcomm FastRPC"
+>   	depends on ARCH_QCOM || COMPILE_TEST
+>   	depends on RPMSG
+> +	depends on NET
+>   	select DMA_SHARED_BUFFER
+>   	select QCOM_SCM
+> +	select QCOM_PDR_HELPERS
+>   	help
+>   	  Provides a communication mechanism that allows for clients to
+>   	  make remote method invocations across processor boundary to
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 3e1ab58038ed..d115860fc356 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/firmware/qcom/qcom_scm.h>
+>   #include <uapi/misc/fastrpc.h>
+>   #include <linux/of_reserved_mem.h>
+> +#include <linux/soc/qcom/pdr.h>
+>   
+>   #define ADSP_DOMAIN_ID (0)
+>   #define MDSP_DOMAIN_ID (1)
+> @@ -29,6 +30,7 @@
+>   #define CDSP_DOMAIN_ID (3)
+>   #define FASTRPC_DEV_MAX		4 /* adsp, mdsp, slpi, cdsp*/
+>   #define FASTRPC_MAX_SESSIONS	14
+> +#define FASTRPC_MAX_SPD		4
+>   #define FASTRPC_MAX_VMIDS	16
+>   #define FASTRPC_ALIGN		128
+>   #define FASTRPC_MAX_FDLIST	16
+> @@ -105,6 +107,18 @@
+>   
+>   #define miscdev_to_fdevice(d) container_of(d, struct fastrpc_device, miscdev)
+>   
+> +#define AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME   "audio_pdr_adsp"
+> +#define AUDIO_PDR_ADSP_SERVICE_NAME              "avs/audio"
+> +#define ADSP_AUDIOPD_NAME                        "msm/adsp/audio_pd"
+> +
+> +#define SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME   "sensors_pdr_adsp"
+> +#define SENSORS_PDR_ADSP_SERVICE_NAME              "tms/servreg"
+> +#define ADSP_SENSORPD_NAME                       "msm/adsp/sensor_pd"
+> +
+> +#define SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME "sensors_pdr_slpi"
+> +#define SENSORS_PDR_SLPI_SERVICE_NAME            SENSORS_PDR_ADSP_SERVICE_NAME
+> +#define SLPI_SENSORPD_NAME                       "msm/slpi/sensor_pd"
+> +
+>   static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
+>   						"sdsp", "cdsp"};
+>   struct fastrpc_phy_page {
+> @@ -259,6 +273,15 @@ struct fastrpc_session_ctx {
+>   	bool valid;
+>   };
+>   
+> +struct fastrpc_static_pd {
+> +	char *servloc_name;
+> +	char *spdname;
+> +	void *pdrhandle;
+> +	struct fastrpc_channel_ctx *cctx;
+> +	struct fastrpc_user *fl;
+> +	bool ispdup;
+> +};
+> +
+>   struct fastrpc_channel_ctx {
+>   	int domain_id;
+>   	int sesscount;
+> @@ -266,6 +289,7 @@ struct fastrpc_channel_ctx {
+>   	struct qcom_scm_vmperm vmperms[FASTRPC_MAX_VMIDS];
+>   	struct rpmsg_device *rpdev;
+>   	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
+> +	struct fastrpc_static_pd spd[FASTRPC_MAX_SPD];
+>   	spinlock_t lock;
+>   	struct idr ctx_idr;
+>   	struct list_head users;
+> @@ -297,10 +321,12 @@ struct fastrpc_user {
+>   	struct fastrpc_channel_ctx *cctx;
+>   	struct fastrpc_session_ctx *sctx;
+>   	struct fastrpc_buf *init_mem;
+> +	struct fastrpc_static_pd *spd;
+>   
+>   	int tgid;
+>   	int pd;
+>   	bool is_secure_dev;
+> +	char *servloc_name;
+>   	/* Lock for lists */
+>   	spinlock_t lock;
+>   	/* lock for allocations */
+> @@ -1230,12 +1256,33 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
+>   	return false;
+>   }
+>   
+> +static struct fastrpc_static_pd *fastrpc_get_spd_session(
+> +				struct fastrpc_user *fl)
+> +{
+> +	int i;
+> +	struct fastrpc_static_pd *spd = NULL;
+> +	struct fastrpc_channel_ctx *cctx = fl->cctx;
+> +
+> +	for (i = 0; i < FASTRPC_MAX_SPD ; i++) {
+> +		if (!cctx->spd[i].servloc_name)
+> +			continue;
+> +		if (!strcmp(fl->servloc_name, cctx->spd[i].servloc_name)) {
+> +			spd = &cctx->spd[i];
+> +			spd->fl = fl;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return spd;
+> +}
+> +
+>   static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+>   					      char __user *argp)
+>   {
+>   	struct fastrpc_init_create_static init;
+>   	struct fastrpc_invoke_args *args;
+>   	struct fastrpc_phy_page pages[1];
+> +	struct fastrpc_static_pd *spd = NULL;
+>   	char *name;
+>   	int err;
+>   	struct {
+> @@ -1270,6 +1317,19 @@ static int fastrpc_init_create_static_process(struct fastrpc_user *fl,
+>   		goto err_name;
+>   	}
+>   
+> +	fl->servloc_name = AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME;
+> +
+> +	spd = fastrpc_get_spd_session(fl);
+> +	if (!spd) {
+> +		err = -EUSERS;
+> +		goto err_name;
+> +	}
+> +
+> +	if (!spd->ispdup) {
+> +		err = -ENOTCONN;
+> +		goto err_name;
+> +	}
+> +	fl->spd = spd;
+>   	if (!fl->cctx->remote_heap) {
+>   		err = fastrpc_remote_heap_alloc(fl, fl->sctx->dev, init.memlen,
+>   						&fl->cctx->remote_heap);
+> @@ -1645,6 +1705,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+>   static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+>   {
+>   	struct fastrpc_invoke_args args[1];
+> +	struct fastrpc_static_pd *spd = NULL;
+>   	int tgid = fl->tgid;
+>   	u32 sc;
+>   
+> @@ -1654,6 +1715,22 @@ static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+>   	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
+>   	fl->pd = pd;
+>   
+> +	if (pd == SENSORS_PD) {
+> +		if (fl->cctx->domain_id == ADSP_DOMAIN_ID)
+> +			fl->servloc_name = SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME;
+> +		else if (fl->cctx->domain_id == SDSP_DOMAIN_ID)
+> +			fl->servloc_name = SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME;
+> +
+> +		spd = fastrpc_get_spd_session(fl);
+> +		if (!spd)
+> +			return -EUSERS;
+> +
+> +		if (!spd->ispdup)
+> +			return -ENOTCONN;
+> +
+> +		fl->spd = spd;
+> +	}
+> +
+>   	return fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
+>   				       sc, &args[0]);
+>   }
+> @@ -2129,6 +2206,64 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+>   	return err;
+>   }
+>   
+> +static void fastrpc_notify_users(struct fastrpc_user *user)
+> +{
+> +	struct fastrpc_invoke_ctx *ctx;
+> +
+> +	spin_lock(&user->lock);
+> +	list_for_each_entry(ctx, &user->pending, node) {
+> +		ctx->retval = -EPIPE;
+> +		complete(&ctx->work);
+> +	}
+> +	spin_unlock(&user->lock);
+> +}
+> +
+> +static void fastrpc_notify_pdr_drivers(struct fastrpc_channel_ctx *cctx,
+> +		char *servloc_name)
+> +{
+> +	struct fastrpc_user *fl;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cctx->lock, flags);
+> +	list_for_each_entry(fl, &cctx->users, user) {
+> +		if (fl->servloc_name && !strcmp(servloc_name, fl->servloc_name))
+> +			fastrpc_notify_users(fl);
+> +	}
+> +	spin_unlock_irqrestore(&cctx->lock, flags);
+> +}
+> +
+> +static void fastrpc_pdr_cb(int state, char *service_path, void *priv)
+> +{
+> +	struct fastrpc_static_pd *spd = (struct fastrpc_static_pd *)priv;
+> +	struct fastrpc_channel_ctx *cctx;
+> +
+> +	if (!spd)
+> +		return;
+> +
+> +	cctx = spd->cctx;
+> +	switch (state) {
+> +	case SERVREG_SERVICE_STATE_DOWN:
+> +		dev_info(&cctx->rpdev->dev,
+> +			"%s: %s (%s) is down for PDR on %s\n",
+> +			__func__, spd->spdname,
+> +			spd->servloc_name,
+> +			domains[cctx->domain_id]);
+> +		spd->ispdup = false;
+> +		fastrpc_notify_pdr_drivers(cctx, spd->servloc_name);
+> +		break;
+> +	case SERVREG_SERVICE_STATE_UP:
+> +		dev_info(&cctx->rpdev->dev,
+> +			"%s: %s (%s) is up for PDR on %s\n",
+> +			__func__, spd->spdname,
+> +			spd->servloc_name,
+> +			domains[cctx->domain_id]);
+> +		spd->ispdup = true;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>   static const struct file_operations fastrpc_fops = {
+>   	.open = fastrpc_device_open,
+>   	.release = fastrpc_device_release,
+> @@ -2248,6 +2383,39 @@ static int fastrpc_device_register(struct device *dev, struct fastrpc_channel_ct
+>   	return err;
+>   }
+>   
+> +static int fastrpc_setup_service_locator(struct fastrpc_channel_ctx *cctx, char *client_name,
+> +			char *service_name, char *service_path, int domain, int spd_session)
+> +{
+> +	int err = 0;
+> +	struct pdr_handle *handle = NULL;
+> +	struct pdr_service *service = NULL;
+> +
+> +	/* Register the service locator's callback function */
+> +	handle = pdr_handle_alloc(fastrpc_pdr_cb, &cctx->spd[spd_session]);
+> +	if (IS_ERR(handle)) {
+> +		err = PTR_ERR(handle);
+> +		goto bail;
+> +	}
+> +	cctx->spd[spd_session].pdrhandle = handle;
+> +	cctx->spd[spd_session].servloc_name = client_name;
+> +	cctx->spd[spd_session].spdname = service_path;
+> +	cctx->spd[spd_session].cctx = cctx;
+> +	service = pdr_add_lookup(handle, service_name, service_path);
+> +	if (IS_ERR(service)) {
+> +		err = PTR_ERR(service);
+> +		goto bail;
+> +	}
+> +	pr_info("fastrpc: %s: pdr_add_lookup enabled for %s (%s, %s)\n",
+> +		__func__, service_name, client_name, service_path);
+> +
+> +bail:
+> +	if (err) {
+> +		pr_warn("fastrpc: %s: failed for %s (%s, %s)with err %d\n",
+> +				__func__, service_name, client_name, service_path, err);
+> +	}
+> +	return err;
+> +}
+> +
+>   static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>   {
+>   	struct device *rdev = &rpdev->dev;
+> @@ -2326,6 +2494,25 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>   		goto fdev_error;
+>   	}
+>   
+> +	if (domain_id == ADSP_DOMAIN_ID) {
+> +		err = fastrpc_setup_service_locator(data, AUDIO_PDR_SERVICE_LOCATION_CLIENT_NAME,
+> +			AUDIO_PDR_ADSP_SERVICE_NAME, ADSP_AUDIOPD_NAME, domain_id, 0);
+> +		if (err)
+> +			goto populate_error;
+> +
+> +		err = fastrpc_setup_service_locator(data,
+> +			SENSORS_PDR_ADSP_SERVICE_LOCATION_CLIENT_NAME,
+> +			SENSORS_PDR_ADSP_SERVICE_NAME, ADSP_SENSORPD_NAME, domain_id, 1);
+> +		if (err)
+> +			goto populate_error;
+> +	} else if (domain_id == SDSP_DOMAIN_ID) {
+> +		err = fastrpc_setup_service_locator(data,
+> +			SENSORS_PDR_SLPI_SERVICE_LOCATION_CLIENT_NAME,
+> +			SENSORS_PDR_SLPI_SERVICE_NAME, SLPI_SENSORPD_NAME, domain_id, 0);
+> +		if (err)
+> +			goto populate_error;
+> +	}
+> +
+>   	kref_init(&data->refcount);
+>   
+>   	dev_set_drvdata(&rpdev->dev, data);
+> @@ -2355,24 +2542,13 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>   	return err;
+>   }
+>   
+> -static void fastrpc_notify_users(struct fastrpc_user *user)
+> -{
+> -	struct fastrpc_invoke_ctx *ctx;
+> -
+> -	spin_lock(&user->lock);
+> -	list_for_each_entry(ctx, &user->pending, node) {
+> -		ctx->retval = -EPIPE;
+> -		complete(&ctx->work);
+> -	}
+> -	spin_unlock(&user->lock);
+> -}
+> -
+>   static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+>   {
+>   	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
+>   	struct fastrpc_buf *buf, *b;
+>   	struct fastrpc_user *user;
+>   	unsigned long flags;
+> +	int i;
+>   
+>   	/* No invocations past this point */
+>   	spin_lock_irqsave(&cctx->lock, flags);
+> @@ -2393,6 +2569,11 @@ static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
+>   	if (cctx->remote_heap)
+>   		fastrpc_buf_free(cctx->remote_heap);
+>   
+> +	for (i = 0; i < FASTRPC_MAX_SPD; i++) {
+> +		if (cctx->spd[i].pdrhandle)
+> +			pdr_handle_release(cctx->spd[i].pdrhandle);
+> +	}
+> +
+>   	of_platform_depopulate(&rpdev->dev);
+>   
+>   	fastrpc_channel_ctx_put(cctx);
+
+-- 
+// Caleb (they/them)
