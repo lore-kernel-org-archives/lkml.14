@@ -1,309 +1,227 @@
-Received: from r3-19.sinamail.sina.com.cn (r3-19.sinamail.sina.com.cn [202.108.3.19])
+Received: from AUS01-SY4-obe.outbound.protection.outlook.com (mail-sy4aus01olkn2176.outbound.protection.outlook.com [40.92.62.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4A4126F2A
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717417910; cv=none; b=Oha+iFdf/euvQTjrDT0cmiSeeEjyn3enJdiXxkBvqq0lOCCXeo/O4Q0Z7vVmWaanoGEE//3Pvgv81gNbTCC0GZhamT4RNGNhyAE4OAT3WSM/GuBR8FzK8BECogu+dq/xTldmv5qDJa1bPvy/cXV4JBBJw9X/f+We+1T+NfYRM60=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717417910; c=relaxed/simple;
-	bh=F0Jf8OiTTvwdi30OQ3QHk+13cYz4+woNcq0c6+ItnoY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mRsxsf6m//jD1E7oVJ8VGpuLdeqd5mHFigovaCv4P+Rhws7+jwvcAs1moUI5Qq/oUeUWteXH01LqiaAKyeePDs7qhqxEsJ8s9OM+fGMqXAXVLpgwmLcOC5kfmDvTsz32GKO347z362yUPA2/Y9u4iZxGdW8UjkK3QE8cTD9nmHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost
-Received: from unknown (HELO localhost)([101.132.132.191])
-	by sina.com (10.182.253.24) with ESMTP
-	id 665DB788000035BE; Mon, 3 Jun 2024 20:31:05 +0800 (CST)
-X-Sender: ghostxavier@sina.com
-X-Auth-ID: ghostxavier@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=ghostxavier@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=ghostxavier@sina.com
-X-SMAIL-MID: 4516241049099
-X-SMAIL-UIID: 12FB1F5EF9944B87A4329F8B41F467E7-20240603-203105-1
-From: Xavier <ghostxavier@sina.com>
-To: longman@redhat.com
-Cc: lizefan.x@bytedance.com,
-	tj@kernel.org,
-	hannes@cmpxchg.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xavier <ghostxavier@sina.com>
-Subject: [PATCH v3] cpuset: use Union-Find to optimize the merging of cpumasks
-Date: Mon,  3 Jun 2024 20:31:01 +0800
-Message-Id: <20240603123101.590760-1-ghostxavier@sina.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240531024837.255293-1-ghostxavier@sina.com>
-References: <20240531024837.255293-1-ghostxavier@sina.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CFD8060D;
+	Mon,  3 Jun 2024 12:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.62.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717417921; cv=fail; b=taAjcJPqbX/OhQBjI/o5Ylx3/s+urAGqyG5pVX1jKkOWNSTpt7p5hpqNSdhTxdo7Cy4DVhS0u7l/WZs0DzodDWEznbeHruibWMDFobeIlvLbminASnYRAyovEmFcjiNMwZiVjxmjxAbU/PDtOqZZpAzqPGkPEZxqdJCmvL8ogHg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717417921; c=relaxed/simple;
+	bh=JbCtl178Sb4OKM7R04qsA6KleFuUPQxilHm1z46IxQM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XHyAXj5lKgr2d7Y/2veUpw7y4mO7jUOh2tNBTp1lC1N+5lhj0UjJTBrpqXmJeKAOCUpWH7i20GGIJ7ZHa7AYy66u2OmFGozWyKbBLPtmVPy6HH0MByNYgRtr8Y4/iz0f0Q9n63aLLyJmE+KxQHai86hKiUkvnHMHvK1UPhZkE3A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au; spf=pass smtp.mailfrom=outlook.com.au; dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b=MWGe5PeM; arc=fail smtp.client-ip=40.92.62.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=OUTLOOK.COM.AU header.i=@OUTLOOK.COM.AU header.b="MWGe5PeM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=emKlwN8ptZ1XadpLr7qrnRAoOqN5ZtjjwVo71SRKh+DHptOJ8Hmcyuy2LzyIktIvdKRsM0Asbo5ZrmEVB056jOr2nZU2Wuj24KfWwpU5D+g3fbet5Ni1frajXvVsOw2PDivQlArjdVjvDw2bGTYti/4tylKg5miFV2z95EEym06wp/d7LsOJHSYvVnadUQgXkrENc1KMohblqmUapJjYjWqRJ0dPA0ZnyURQWw1L8aB2pa+wFnhDdP5lRDQdh/2c1ItpdGyD7zBW4XnyqCPnO9ml1k8Jy8Yu1AB4JTKqm2Z5/VhzTPEVNC4eY6KRFc5CuomVlyGK+C6OWc+dK3+hLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mPZ9AhXQOPpv11GjrYqc+CLAJ54dgjbr5HJKAD89fRU=;
+ b=cRMWWeQjCekhmB7Jd4JOzPmwwMkbzauM/+drUJDWcF1EEdpmAzMgShZoxGmjUIyNYJXDubcdQAgqhSJDx8IeWZzNXAluAuG/83jlg2zQk0kIsoNlZrGe4lO5aroEiHpoABRK0PWnvKXKsJEM7PNAdMAPCVja1NQyjQRutHguAugEGgJE13tesR6ahV3A7d9mQQHYJujWuTylHejt/fi7IiB4CUL1XrZpE+p2lH7SzYGJ8BBw7cz1n4buhlad9VmOkO7x617TdZJQk6gAVrm1B2gFNxr8svLs/U+v/BIjOEW5MOZWUM3epPUkgnRuXIeeble88VAUjKKoR4PKq1NL4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=OUTLOOK.COM.AU;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mPZ9AhXQOPpv11GjrYqc+CLAJ54dgjbr5HJKAD89fRU=;
+ b=MWGe5PeMGq4lCTrI6tLxvkLKp32rbLIdKYmeA7GzRV/aZH60srmIx7+tnTCXXsjDIhNlSj2eAoSqQuLzBGytidF7DlDZCFkZBzJ51Olz+e8G+5MmaA9tpws1OfQimuk32vyWhwa1zsxxpT7AEhSfF413SbgqrNnYtZ8KS7GslcaAMCWFeT7PHM8SkDAbsacoE2jWtpDwOydpqtWwvh4tIbweTSaVyfQBPUCpjOszVeaaal65AlPRtqBopEW+xgods+8Mb3t4P0OuFQqz4FwAJPaZHNb8Yg1Ojc6pmIasVIJVo3h/nO26btpYVKybf8T+W/zB3aD5egarKZopGDXDZA==
+Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:159::9) by
+ ME0P282MB4880.AUSP282.PROD.OUTLOOK.COM (2603:10c6:220:228::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7409.46; Mon, 3 Jun 2024 12:31:53 +0000
+Received: from SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::37cc:3733:d1e9:d8e4]) by SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
+ ([fe80::37cc:3733:d1e9:d8e4%3]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
+ 12:31:53 +0000
+Message-ID:
+ <SY4P282MB30638F9B99B76CB33DB6C115C5FF2@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+Date: Mon, 3 Jun 2024 22:31:50 +1000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFT v3 3/4] hwmon: (spd5118) Add suspend/resume support
+To: Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ Armin Wolf <W_Armin@gmx.de>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>, =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+References: <20240531230556.1409532-1-linux@roeck-us.net>
+ <20240531230556.1409532-4-linux@roeck-us.net>
+Content-Language: en-AU, en-US, en-GB
+From: Stephen Horvath <s.horvath@outlook.com.au>
+In-Reply-To: <20240531230556.1409532-4-linux@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN:
+ [vDfmsyOYtmOU0t3nkPUJQQRdNkxsCPsQrcfsYd/EWjdDMnUjEd+fPdFVhdbiklidD4ZXHI+CKB8=]
+X-ClientProxiedBy: SY5P282CA0192.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:249::18) To SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:159::9)
+X-Microsoft-Original-Message-ID:
+ <8884b0f5-17fb-4e40-ba78-375e1637a496@outlook.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SY4P282MB3063:EE_|ME0P282MB4880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e3d50cb-8164-4009-9429-08dc83c925f9
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	uSLmJFy5ScjcBU6yxKFLgba9ZrHUACdcABe9Qidd5GXolV67mNEZXr4aPwMD5DeIUpBmvSeX8ex5cS8xu4SdTDNuPxbHMTsTtFUU1SEq1uFcn/FFbuNAhI3bGfRwnezg5RE1ZcxyrEB9UiQvDKsULxqB6zArHX8Z9Pmbm1hsXZu8dO09PeT85Rj/AomPtpgE0d7RoX3rcYZ516YXASMi/2/y8oSn8W8nlwsARIopt9FnHaVCrmBgtqMQeYIKtXOQljPqWr3PvrcQa3mcy1aAmOVBrKSPegcxhnrt0/DfAWxdH6OMtQfxN0My6LdmnEfzB6zG9vygD9a74WHoVUJghBr/UCRugQ3cJu44wIPu8CYYBBSzRq1tKWi9uGSWQjXQBVX2B+f+K2EhQ2AFKbYrPYXvfHydQezqmbTvt0oNJGksNBLkn5KLbjJfm/1+VozfeXhFdVV9pXyjRHgWrGhvl+IBw2Grd0ZI5D1erWp1+W2dYcytX3yUsb+xBy8d3BcpfS3ExsWYDb+ncLzYIfsRXZNreAsnfkH9tWwjrq1monJk1J2q6oRPM8QNhnUzNA8d
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NEZxbmtCTHd6WUdLRzdJYnlVZDdRMWgyYVc4dUdDK2ZtMkk3VU1IYVZnSVpU?=
+ =?utf-8?B?Y1hCTzhGeXlqRGVUVjE2SzZPOUhPbGtFSWZydURKamlTMUgyVzRCMUdKWjM3?=
+ =?utf-8?B?Qkt1OEhuQjV2SmZqbStHcEtZRXQvdGhtb0xDWXpHZEhuN1k5WnVBN1VkZVN6?=
+ =?utf-8?B?L25idzVZWmZPQTNxM0lFYmUreUg0VWFYMzdRbDhFcWl4by85WTBLMFJUeXpD?=
+ =?utf-8?B?WFQwRmIzUWNXdElCNnBpWWFqOS93Wnc0TVdqSXlOYld2YTB1U0k3WExaQlYr?=
+ =?utf-8?B?MlJqYnhiVzMrNkFyeHE4N3lyaVlJL1NQWjhPNjlXc1Exd21lc1YzRUJUdXRv?=
+ =?utf-8?B?RVR6SnByYkFOVDZrRjl4NHNLaWI0c3ViVlpQbXpwU0dVYmJmTDk5ejRlNmY5?=
+ =?utf-8?B?NzVyU0hRUGhnaWZhV1U1d1B6eXFLR3FwMWdTNmxvZUk4L3QyVG9ORktFZDJY?=
+ =?utf-8?B?ZVIyL2ovWUxMNE8yajlOdEw1L0hGcm9KaHpPRzlYbWdwVEY4dzZJcGtVRWwy?=
+ =?utf-8?B?VExuQ1VNOXRrSjZ1UHRia29ld2dEcEJoY2thbEV1N1hHRy9nenFQanArKytU?=
+ =?utf-8?B?d2VwYVpnelVPU0E3Z3RET1AyUDh3Z24wNTBodlBUUnpuSExSci9ybzdUTnJl?=
+ =?utf-8?B?Vmg0SFRRY2lONkZTY0JXSFQwYi9LOEhQSEk0QUd6SXpQRWwxbSsrMEpZNStz?=
+ =?utf-8?B?NlFpODBFS0EyTzYvUGZLSzkvMFd1WEZDQ3E5dkgwRnRIVlFFU1VUczQ4ei8r?=
+ =?utf-8?B?L2JTMzdVeCt4SWI2cGYwYnJJcGJtcTFoU3VJbXNHU0lSMG8wQ3U4SDRXT1NS?=
+ =?utf-8?B?ZldBNEx2bGtEdktIOHZxWHV1RnFWWlV0c295cjN2RWpNdG5TS2VkMHFJTi9z?=
+ =?utf-8?B?L0JRVkdTZnl3N2Q1SXcybnE3YzlrZFB2R1BwZ1hxT1JvbUQvRmp2RXNZU1d0?=
+ =?utf-8?B?c1FEN3BEdkFMMzdwWTlJODRkVjVNc3BmNmtqRS9LclNQamUxMlE3dy9ZOUpr?=
+ =?utf-8?B?R0xTMVRDdVkrYVdnR0x6VllyT0pDaE93TWZzZlF5aTBYajFLdnNNSy9GbGRy?=
+ =?utf-8?B?L3BxN2IvcWpVbzVPamZtNzVHT0tUQWsyeXdpRDMzVit0ektlSmwvaFpyMkNt?=
+ =?utf-8?B?OTZLRkJKWEVnTG5tWkwzUlRFYnd2WnovZ3pTeFNIdmtWcHBreGF1bDRVd1Zo?=
+ =?utf-8?B?cDdyT3hRUmo3aWFyV3gvamcxSVliYTBGWWtJQjJLTm5icTR1QWVZekc2alJv?=
+ =?utf-8?B?dkxhNG5RY3ozZzBkdHNSd1kwU2FiYzErRWhNTTZXZFZ5ay9KR3BHVEpJL3Fy?=
+ =?utf-8?B?dzJvWW1ZNFFER3BEelVhZXhOeGdKRWozNWlxZmpvZXBSaWk4T2ZWTDNqK0RX?=
+ =?utf-8?B?LytKK0dVQWhuRWxLcllyK3FWOXdNUGNMQlR1TkFvNGJGRkV2d3pTSFZoREsv?=
+ =?utf-8?B?T281b2dWemRxcEIrQm1VdG5EZ2QrbFR1V0NXT2owTWlYRENYL05WNTllSFcx?=
+ =?utf-8?B?Z0lnRFVJazVIcUh0WVZtSGpNeWJOYXhuQTdYejE3UDJuOXA0cmtLcnJCYXpa?=
+ =?utf-8?B?SGx1bytESHR2ZjFxQktEbE14RGVXbjg2QWZTc3EzNktTVWpyYWNWeVpqVERL?=
+ =?utf-8?B?WXdHMks5N3NiTWNyRDFtUGZwNTFWU2FyejV6Qlk1RjRKSXVWTmwrejN5cEEw?=
+ =?utf-8?B?M2gyWU5NdkRxVHZONXFheXdnZnJaU3U5aWJWdDJTdklXSFJvNkpINGRldGtY?=
+ =?utf-8?Q?dElEu7Ht3ef067mnyLDNuQMIPwhrxHM7w0ugK1u?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-746f3.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3d50cb-8164-4009-9429-08dc83c925f9
+X-MS-Exchange-CrossTenant-AuthSource: SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 12:31:53.1344
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ME0P282MB4880
 
-The process of constructing scheduling domains involves multiple loops
-and repeated evaluations, leading to numerous redundant and ineffective
-assessments that impact code efficiency.
+Hi,
 
-Here, we use Union-Find to optimize the merging of cpumasks. By employing
-path compression and union by rank, we effectively reduce the number of
-lookups and merge comparisons.
+On 1/6/24 09:05, Guenter Roeck wrote:
+> Add suspend/resume support to ensure that limit and configuration
+> registers are updated and synchronized after a suspend/resume cycle.
+> 
+> Cc: Armin Wolf <W_Armin@gmx.de>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v3: No change
+> 
+> v2: New patch
+> 
+> RFT: I tested the patch through a suspend/resume cycle, and it seems
+>       to work, but I am not sure if that had any effect because,
+>       after all, the memory is still active during suspend/resume.
+>       I was unable to test a hibernation cycle with my system.
+> 
 
-Signed-off-by: Xavier <ghostxavier@sina.com>
+For me, the driver just reports 0°C after suspend/resume, but works fine 
+beforehand, tested on both my desktop and laptop, with kernel 6.9.3 and 
+6.10.0-rc2 (on the laptop only).
 
-Hi Longman,
+Hibernation does seem to work fine though (at least on 6.9.3).
 
-Thank you for your feedback on the previous version of the patch.
+>   drivers/hwmon/spd5118.c | 29 +++++++++++++++++++++++++++++
+>   1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
+> index d3fc0ae17743..baa315172298 100644
+> --- a/drivers/hwmon/spd5118.c
+> +++ b/drivers/hwmon/spd5118.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/i2c.h>
+>   #include <linux/hwmon.h>
+>   #include <linux/module.h>
+> +#include <linux/pm.h>
+>   #include <linux/regmap.h>
+>   #include <linux/units.h>
+>   
+> @@ -432,6 +433,8 @@ static int spd5118_probe(struct i2c_client *client)
+>   	if (!spd5118_vendor_valid(bank, vendor))
+>   		return -ENODEV;
+>   
+> +	dev_set_drvdata(dev, regmap);
+> +
+>   	hwmon_dev = devm_hwmon_device_register_with_info(dev, "spd5118",
+>   							 regmap, &spd5118_chip_info,
+>   							 NULL);
+> @@ -449,6 +452,31 @@ static int spd5118_probe(struct i2c_client *client)
+>   	return 0;
+>   }
+>   
+> +static int spd5118_suspend(struct device *dev)
+> +{
+> +	struct regmap *regmap = dev_get_drvdata(dev);
+> +
+> +	regcache_cache_bypass(regmap, true);
+> +	regmap_update_bits(regmap, SPD5118_REG_TEMP_CONFIG, SPD5118_TS_DISABLE,
+> +			   SPD5118_TS_DISABLE);
+> +	regcache_cache_bypass(regmap, false);
+> +
+> +	regcache_cache_only(regmap, true);
+> +	regcache_mark_dirty(regmap);
+> +
+> +	return 0;
+> +}
+> +
+> +static int spd5118_resume(struct device *dev)
+> +{
+> +	struct regmap *regmap = dev_get_drvdata(dev);
+> +
+> +	regcache_cache_only(regmap, false);
 
-Now I will respond to the three questions you raised:
-1) The function comment describes the algorithm to find the set of
-domains. If you change the algorithm, you have to update the comment as
-well.
+Adding something like this fixes the readings after resume for me:
 
-Reply: Sorry for not paying attention to the comments before. The new patch (v3) has updated the comment content. 
+	regmap_update_bits(regmap, SPD5118_REG_TEMP_CONFIG, SPD5118_TS_DISABLE, 0);
 
-2) generate_sched_domains() is not in a performance critical path, so
-its performance is not as important. Also the csn array is typically not
-that big. Changing the algorithm may introduce new bugs which leads to
-the next point.
+But that was just the naive solution I thought of.
 
-Reply: Indeed, this function is not a critical path impacting performance, but it's always good to optimize efficiency. The optimization is limited to the internals of this function and does not affect other modules, so fixing the internal bug should have manageable risks.
+> +	return regcache_sync(regmap);
+> +}
+> +
+> +static DEFINE_SIMPLE_DEV_PM_OPS(spd5118_pm_ops, spd5118_suspend, spd5118_resume);
+> +
+>   static const struct i2c_device_id spd5118_id[] = {
+>   	{ "spd5118", 0 },
+>   	{ }
+> @@ -466,6 +494,7 @@ static struct i2c_driver spd5118_driver = {
+>   	.driver = {
+>   		.name	= "spd5118",
+>   		.of_match_table = spd5118_of_ids,
+> +		.pm = pm_sleep_ptr(&spd5118_pm_ops),
+>   	},
+>   	.probe		= spd5118_probe,
+>   	.id_table	= spd5118_id,
 
-3) How do you test your code to ensure its correctness?
-I applied your patch and run the ./test_cpuset_prs.sh got the following...
 
-Reply: I'm very sorry, this is my first time submitting a kernel patch and I don't know which test cases need to be run. I just constructed some scenarios locally to test, so the testing scope is limited. Thank you for providing the test cases. I have reproduced and resolved the issue, and have passed several other test cases in CGroup. But currently, I only have QEMU simulation environment, so my testing ability is limited. I hope you can help me with some comprehensive testing of my new version patch. Thank you very much.
+For reference: I believe both my devices also have Montage Technology 
+M88SPD5118 chips; the desktop has Kingston KF560C36-32 RAM, the laptop 
+has Crucial CT16G56C46S5.
 
-I hope you can pay further attention to the new patch.
-
-Best regards,
-Xavier
-
----
- kernel/cgroup/cpuset.c | 148 +++++++++++++++++++++++------------------
- 1 file changed, 82 insertions(+), 66 deletions(-)
-
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index c12b9fdb2..c2d030a30 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -891,6 +891,44 @@ static inline int nr_cpusets(void)
- 	return static_key_count(&cpusets_enabled_key.key) + 1;
- }
- 
-+/*define a union find node struct*/
-+struct uf_node {
-+	int parent;
-+	int rank;
-+};
-+
-+static int find_root(struct uf_node *nodes, int x)
-+{
-+	int root = x;
-+	int parent;
-+
-+	/*Find the root node and perform path compression at the same time*/
-+	while (nodes[root].parent != root) {
-+		parent = nodes[root].parent;
-+		nodes[root].parent = nodes[parent].parent;
-+		root = parent;
-+	}
-+	return root;
-+}
-+
-+/*Function to merge two sets, using union by rank*/
-+static void union_sets(struct uf_node *nodes, int a, int b)
-+{
-+	int root_a = find_root(nodes, a);
-+	int root_b = find_root(nodes, b);
-+
-+	if (root_a != root_b) {
-+		if (nodes[root_a].rank < nodes[root_b].rank) {
-+			nodes[root_a].parent = root_b;
-+		} else if (nodes[root_a].rank > nodes[root_b].rank) {
-+			nodes[root_b].parent = root_a;
-+		} else {
-+			nodes[root_b].parent = root_a;
-+			nodes[root_a].rank++;
-+		}
-+	}
-+}
-+
- /*
-  * generate_sched_domains()
-  *
-@@ -930,17 +968,13 @@ static inline int nr_cpusets(void)
-  *	   value to determine what partition elements (sched domains)
-  *	   were changed (added or removed.)
-  *
-- * Finding the best partition (set of domains):
-- *	The triple nested loops below over i, j, k scan over the
-- *	load balanced cpusets (using the array of cpuset pointers in
-- *	csa[]) looking for pairs of cpusets that have overlapping
-- *	cpus_allowed, but which don't have the same 'pn' partition
-- *	number and gives them in the same partition number.  It keeps
-- *	looping on the 'restart' label until it can no longer find
-- *	any such pairs.
-+ *  By creating a union-find data structure for all load-balanced cpusets,
-+ *  cpusets with overlapping cpus_allowed are found and marked with the
-+ *  same parent node. Path compression is performed during the search to
-+ *  improve comparison efficiency.
-  *
-  *	The union of the cpus_allowed masks from the set of
-- *	all cpusets having the same 'pn' value then form the one
-+ *	all cpusets having the same parent then form the one
-  *	element of the partition (one sched domain) to be passed to
-  *	partition_sched_domains().
-  */
-@@ -950,13 +984,15 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	struct cpuset *cp;	/* top-down scan of cpusets */
- 	struct cpuset **csa;	/* array of all cpuset ptrs */
- 	int csn;		/* how many cpuset ptrs in csa so far */
--	int i, j, k;		/* indices for partition finding loops */
-+	int i, j;		/* indices for partition finding loops */
- 	cpumask_var_t *doms;	/* resulting partition; i.e. sched domains */
- 	struct sched_domain_attr *dattr;  /* attributes for custom domains */
- 	int ndoms = 0;		/* number of sched domains in result */
- 	int nslot;		/* next empty doms[] struct cpumask slot */
- 	struct cgroup_subsys_state *pos_css;
- 	bool root_load_balance = is_sched_load_balance(&top_cpuset);
-+	struct uf_node *nodes;
-+	int nslot_update;
- 
- 	doms = NULL;
- 	dattr = NULL;
-@@ -1022,40 +1058,38 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 	}
- 	rcu_read_unlock();
- 
--	for (i = 0; i < csn; i++)
--		csa[i]->pn = i;
--	ndoms = csn;
--
--restart:
--	/* Find the best partition (set of sched domains) */
--	for (i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		int apn = a->pn;
-+	nodes = kmalloc_array(csn, sizeof(struct uf_node), GFP_KERNEL);
-+	if (!nodes)
-+		goto done;
- 
--		for (j = 0; j < csn; j++) {
--			struct cpuset *b = csa[j];
--			int bpn = b->pn;
- 
--			if (apn != bpn && cpusets_overlap(a, b)) {
--				for (k = 0; k < csn; k++) {
--					struct cpuset *c = csa[k];
-+	/* Each node is initially its own parent */
-+	for (i = 0; i < csn; i++) {
-+		nodes[i].parent = i;
-+		nodes[i].rank = 0;
-+	}
- 
--					if (c->pn == bpn)
--						c->pn = apn;
--				}
--				ndoms--;	/* one less element */
--				goto restart;
--			}
-+	/* Merge overlapping cpusets */
-+	for (i = 0; i < csn; i++) {
-+		for (j = i + 1; j < csn; j++) {
-+			if (cpusets_overlap(csa[i], csa[j]))
-+				union_sets(nodes, i, j);
- 		}
- 	}
- 
-+	/* Calculate the number of domains after merging */
-+	for (i = 0; i < csn; i++) {
-+		if (nodes[i].parent == i)
-+			ndoms++;
-+	}
-+
- 	/*
- 	 * Now we know how many domains to create.
- 	 * Convert <csn, csa> to <ndoms, doms> and populate cpu masks.
- 	 */
- 	doms = alloc_sched_domains(ndoms);
- 	if (!doms)
--		goto done;
-+		goto free;
- 
- 	/*
- 	 * The rest of the code, including the scheduler, can deal with
-@@ -1065,47 +1099,29 @@ static int generate_sched_domains(cpumask_var_t **domains,
- 			      GFP_KERNEL);
- 
- 	for (nslot = 0, i = 0; i < csn; i++) {
--		struct cpuset *a = csa[i];
--		struct cpumask *dp;
--		int apn = a->pn;
--
--		if (apn < 0) {
--			/* Skip completed partitions */
--			continue;
--		}
--
--		dp = doms[nslot];
--
--		if (nslot == ndoms) {
--			static int warnings = 10;
--			if (warnings) {
--				pr_warn("rebuild_sched_domains confused: nslot %d, ndoms %d, csn %d, i %d, apn %d\n",
--					nslot, ndoms, csn, i, apn);
--				warnings--;
--			}
--			continue;
--		}
--
--		cpumask_clear(dp);
--		if (dattr)
--			*(dattr + nslot) = SD_ATTR_INIT;
-+		nslot_update = 0;
- 		for (j = i; j < csn; j++) {
--			struct cpuset *b = csa[j];
--
--			if (apn == b->pn) {
--				cpumask_or(dp, dp, b->effective_cpus);
-+			if (find_root(nodes, j) == i) {
-+				struct cpumask *dp = doms[nslot];
-+
-+				if (i == j) {
-+					nslot_update = 1;
-+					cpumask_clear(dp);
-+					if (dattr)
-+						*(dattr + nslot) = SD_ATTR_INIT;
-+				}
-+				cpumask_or(dp, dp, csa[j]->effective_cpus);
- 				cpumask_and(dp, dp, housekeeping_cpumask(HK_TYPE_DOMAIN));
- 				if (dattr)
--					update_domain_attr_tree(dattr + nslot, b);
--
--				/* Done with this partition */
--				b->pn = -1;
-+					update_domain_attr_tree(dattr + nslot, csa[j]);
- 			}
- 		}
--		nslot++;
-+		if (nslot_update)
-+			nslot++;
- 	}
- 	BUG_ON(nslot != ndoms);
--
-+free:
-+	kfree(nodes);
- done:
- 	kfree(csa);
- 
--- 
-2.34.1
-
+Thanks,
+Steve
