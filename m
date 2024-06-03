@@ -1,144 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E841A1799B
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA892942A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396700; cv=none; b=Ntd2vdGikfZYtd7OowkFmUkVcFwr8foSa567MVMPrICB+PLpIP8zpfLLQS3bQUANf7ngDjCWqdlZv6eeQnRI82F5DTBowzGN0y96dMt8dyE3UzhC1ccBmOGbdXd2zCTVz7BqIFVtTeuHs3XfFzSEoCSjgpX8PRZ12yRukxau9II=
+	t=1717396734; cv=none; b=oNBPHdIpOeFpkeOJM/zH2BP6EJ4qBN8Nd+2e5Y171nuXVfwCnwe4AQKkAkrH/hjGInzn1UVBEfBxMT1BlvfX/3NBbUYH0r7muV+kH09Rg9UDOcy5GFu5pJnWq9gIVjv+zzyzl0FtITACmqFsECKQatm6NHzN1A7dyzxXKAILN9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396700; c=relaxed/simple;
-	bh=sWk1wjilan0FFkoMfarqiXPdTbXDabBugnGDpneW2S0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NLZZGpTmZLvNVbWFoMH1PEI9PFIRDjfTlTTovqjp395lqYJ45UbxcXwZDV/FdaK7OUkhOSrcKX60U9ioU0II6bRBXxsY4ntV2LDXfHnhwubHvLFxyZQ7nayoFrSp7CEQvzj0+KmBbRehRBCIm9kVDFOMsfHcyEKsWaPuOLsSUaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iDt2XIKu; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717396734; c=relaxed/simple;
+	bh=yibBB4lOxd9vur4SNzElTohzttt2uGk9m3X60fKMBOA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QkjNTXjuBn/GeEjZk4ZgpFw+F5Nkjaw5xroAjKFzX1zdbystzg7xaBz0sg+RBUaqtUJVGJvpdm7oELANmlHQ1mPEU5yT89uT+8XQRseA23UwWrAN9P5GsnNveyWHvQeeWsE5KDcSbXcYWUc62YaIn5R6EXkAyC3Qrb0MV1TkwTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=ELqibcfm; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iDt2XIKu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717396698; x=1748932698;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=sWk1wjilan0FFkoMfarqiXPdTbXDabBugnGDpneW2S0=;
-  b=iDt2XIKuLmqfIPMz9OdEzxKFbGqSj0MkHrylYdUiQdsZg5rytjoSxtdr
-   vCbyNNVBX1fe1LX5d/KYHtTdAe13ifgSS1Oqh56dKas+FJsxVf6T93QxK
-   Z+aPT217z2mpn3THc+DH/w+TmVxlNBl86PR0fvU92skjAX43KAQma2u/D
-   8adzqUUvRzM9mHX7nf2MZz+JVApXfplzCpRz1uJgLdffAIBdqHtOAuHGj
-   UbSZfbSC86Z05bOw2guW1A4CF42mSn9OfHCQzDyG7CGCiFggBaLpK9W9U
-   oorctdw6lB7suJNylpHGz10xQzkRswqc3JX5yr9lc5C3oTIkk5cjRoVgT
-   A==;
-X-CSE-ConnectionGUID: PAzzZ8H2Qn+oPV4d0MBeYg==
-X-CSE-MsgGUID: K+XXk+UGROiUdfU+l3nJdA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="24450898"
-X-IronPort-AV: E=Sophos;i="6.08,210,1712646000"; 
-   d="scan'208";a="24450898"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2024 23:38:17 -0700
-X-CSE-ConnectionGUID: 0LpvD4CmR6efmfyTX6pFjg==
-X-CSE-MsgGUID: cfxoBYY6Ql25MZ5fM1ITyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,210,1712646000"; 
-   d="scan'208";a="67620487"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 02 Jun 2024 23:38:16 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sE1KX-000L6z-16;
-	Mon, 03 Jun 2024 06:38:10 +0000
-Date: Mon, 3 Jun 2024 14:37:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Kees Cook <keescook@chromium.org>
-Subject: drivers/iommu/io-pgtable-arm.c:330:13: error: void value not ignored
- as it ought to be
-Message-ID: <202406031408.wNSVlKLV-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="ELqibcfm"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Vt3w843L9z9sjN;
+	Mon,  3 Jun 2024 08:38:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
+	t=1717396728;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5oSTVWW+H1Kox75DhQW50O5IADS4+f1wVfp/EM0Cd5Q=;
+	b=ELqibcfmUUMwKNXGnPXIjv4XG443YVpasOMeWUyq0b5jYyVlDtpzF0P8xGhKVgUB0yttLi
+	dur7rsI42KOx7pLNWwLp/MtE9806W+HUGXDSq2O4PK7onuFQ8Cba/KKhShSGVDnXYijx8B
+	CulpmeSWEo1Vz9NFSCJ5x3EKchm1lBWfncKd4l7LE0ZsJxfvUuys376w0vI4lFRW6kOZoU
+	/hJzu7a4TeCPEJKRR33Vjn+Gd6XofH93JWHSEA7F2s7dC9JP8VDaEYbyCyjAW/zEtgS46a
+	lO5cSazTfOLXBZ+NpChflWmtCvtwy3I2FBdNQGt3ZLM6ndqMXGMfwPRrEFJPwg==
+From: Ben Walsh <ben@jubnut.com>
+To: Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	"Dustin L. Howett" <dustin@howett.net>,
+	Kieran Levin <ktl@frame.work>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Ben Walsh <ben@jubnut.com>
+Subject: [PATCH v2 0/5] platform/chrome: Fix MEC concurrency problems for Framework Laptop
+Date: Mon,  3 Jun 2024 07:38:29 +0100
+Message-ID: <20240603063834.5580-1-ben@jubnut.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4Vt3w843L9z9sjN
 
-Hi Mark,
+Framework Laptops with the Microchip EC have a problem where the EC
+"stops working" after a while. Symptoms include the Fn key not
+working, and "bad packet checksum" errors appearing in the system log.
 
-FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+The problem is caused by ACPI code which accesses the Microchip EC
+(MEC) memory using the Microchip EMI protocol. It uses an AML mutex to
+prevent concurrent access. But the cros_ec_lpc driver is not aware of
+this mutex. The ACPI code and LPC driver both attempt to talk to the
+EC at the same time, messing up communication with the EC.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c3f38fa61af77b49866b006939479069cd451173
-commit: 9257959a6e5b4fca6fc8e985790bff62c2046f20 locking/atomic: scripts: restructure fallback ifdeffery
-date:   12 months ago
-config: arc-randconfig-r022-20230104 (https://download.01.org/0day-ci/archive/20240603/202406031408.wNSVlKLV-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240603/202406031408.wNSVlKLV-lkp@intel.com/reproduce)
+The solution is to have the cros_ec_lpc_mec code find and use the AML
+mutex. But to make it all work we have to do a few more things:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406031408.wNSVlKLV-lkp@intel.com/
+  * Allow the cros_ec_lpc_mec code to return error codes in case it
+    can't lock the mutex.
 
-All errors (new ones prefixed by >>):
+  * Have the cros_ec_lpc code find the correct ACPI device (PNP0C09)
+    and then the AML mutex itself.
 
-   drivers/iommu/io-pgtable-arm.c: In function 'arm_lpae_install_table':
->> drivers/iommu/io-pgtable-arm.c:330:13: error: void value not ignored as it ought to be
-     330 |         old = cmpxchg64_relaxed(ptep, curr, new);
-         |             ^
---
-   drivers/iommu/io-pgtable-dart.c: In function 'dart_install_table':
->> drivers/iommu/io-pgtable-dart.c:168:13: error: void value not ignored as it ought to be
-     168 |         old = cmpxchg64_relaxed(ptep, curr, new);
-         |             ^
-   drivers/iommu/io-pgtable-dart.c:157:25: warning: variable 'new' set but not used [-Wunused-but-set-variable]
-     157 |         dart_iopte old, new;
-         |                         ^~~
+  * Use the quirks mechanism to specify the AML mutex name.
+
+The code has been tested on an 11th-generation Intel Framework Laptop
+(with Microchip EC) and an AMD Framework Laptop (without Microchip
+EC). It has _not_ been tested on any Chromebook devices.
+
+Changes in v2:
+
+  * Put ACPI id in a quirk, not the acpi_match_table.
+  * Add return code check for mutex unlock.
+  * Remove "in_range" check which belongs in a separate patch.
+  * Use "ret" not "sum" variable (same value but clearer).
+  * Remove excessive error logging.
+  * Rebase to latest ChromeOS for-next branch.
+
+Ben Walsh (5):
+  platform/chrome: cros_ec_lpc: MEC access can return error code
+  platform/chrome: cros_ec_lpc: MEC access can use an AML mutex
+  platform/chrome: cros_ec_lpc: Add a new quirk for ACPI id
+  platform/chrome: cros_ec_lpc: Add a new quirk for AML mutex
+  platform/chrome: cros_ec_lpc: Add quirks for Framework Laptop
+
+ drivers/platform/chrome/cros_ec_lpc.c      | 210 +++++++++++++++------
+ drivers/platform/chrome/cros_ec_lpc_mec.c  |  87 ++++++++-
+ drivers/platform/chrome/cros_ec_lpc_mec.h  |  18 +-
+ drivers/platform/chrome/wilco_ec/mailbox.c |  22 ++-
+ 4 files changed, 264 insertions(+), 73 deletions(-)
 
 
-vim +330 drivers/iommu/io-pgtable-arm.c
-
-c896c132b01895 Laurent Pinchart   2014-12-14  310  
-fb3a95795da53d Robin Murphy       2017-06-22  311  static arm_lpae_iopte arm_lpae_install_table(arm_lpae_iopte *table,
-fb3a95795da53d Robin Murphy       2017-06-22  312  					     arm_lpae_iopte *ptep,
-2c3d273eabe8b1 Robin Murphy       2017-06-22  313  					     arm_lpae_iopte curr,
-9abe2ac834851a Hector Martin      2021-11-20  314  					     struct arm_lpae_io_pgtable *data)
-fb3a95795da53d Robin Murphy       2017-06-22  315  {
-2c3d273eabe8b1 Robin Murphy       2017-06-22  316  	arm_lpae_iopte old, new;
-9abe2ac834851a Hector Martin      2021-11-20  317  	struct io_pgtable_cfg *cfg = &data->iop.cfg;
-e1d3c0fd701df8 Will Deacon        2014-11-14  318  
-9abe2ac834851a Hector Martin      2021-11-20  319  	new = paddr_to_iopte(__pa(table), data) | ARM_LPAE_PTE_TYPE_TABLE;
-fb3a95795da53d Robin Murphy       2017-06-22  320  	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS)
-fb3a95795da53d Robin Murphy       2017-06-22  321  		new |= ARM_LPAE_PTE_NSTABLE;
-e1d3c0fd701df8 Will Deacon        2014-11-14  322  
-77f3445866c39d Will Deacon        2017-06-23  323  	/*
-77f3445866c39d Will Deacon        2017-06-23  324  	 * Ensure the table itself is visible before its PTE can be.
-77f3445866c39d Will Deacon        2017-06-23  325  	 * Whilst we could get away with cmpxchg64_release below, this
-77f3445866c39d Will Deacon        2017-06-23  326  	 * doesn't have any ordering semantics when !CONFIG_SMP.
-77f3445866c39d Will Deacon        2017-06-23  327  	 */
-77f3445866c39d Will Deacon        2017-06-23  328  	dma_wmb();
-2c3d273eabe8b1 Robin Murphy       2017-06-22  329  
-2c3d273eabe8b1 Robin Murphy       2017-06-22 @330  	old = cmpxchg64_relaxed(ptep, curr, new);
-2c3d273eabe8b1 Robin Murphy       2017-06-22  331  
-4f41845b340783 Will Deacon        2019-06-25  332  	if (cfg->coherent_walk || (old & ARM_LPAE_PTE_SW_SYNC))
-2c3d273eabe8b1 Robin Murphy       2017-06-22  333  		return old;
-2c3d273eabe8b1 Robin Murphy       2017-06-22  334  
-2c3d273eabe8b1 Robin Murphy       2017-06-22  335  	/* Even if it's not ours, there's no point waiting; just kick it */
-41e1eb2546e9c8 Isaac J. Manjarres 2021-06-16  336  	__arm_lpae_sync_pte(ptep, 1, cfg);
-2c3d273eabe8b1 Robin Murphy       2017-06-22  337  	if (old == curr)
-2c3d273eabe8b1 Robin Murphy       2017-06-22  338  		WRITE_ONCE(*ptep, new | ARM_LPAE_PTE_SW_SYNC);
-2c3d273eabe8b1 Robin Murphy       2017-06-22  339  
-2c3d273eabe8b1 Robin Murphy       2017-06-22  340  	return old;
-e1d3c0fd701df8 Will Deacon        2014-11-14  341  }
-e1d3c0fd701df8 Will Deacon        2014-11-14  342  
-
-:::::: The code at line 330 was first introduced by commit
-:::::: 2c3d273eabe8b1ed3b3cffe2c79643b1bf7e2d4a iommu/io-pgtable-arm: Support lockless operation
-
-:::::: TO: Robin Murphy <robin.murphy@arm.com>
-:::::: CC: Will Deacon <will.deacon@arm.com>
-
+base-commit: bc3e45258096f2ea2116302abefde4b1cb9bc3c1
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.1
+
