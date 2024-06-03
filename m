@@ -1,90 +1,104 @@
-Received: from xmailer.gwdg.de (xmailer.gwdg.de [134.76.10.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F0D374EA;
-	Mon,  3 Jun 2024 19:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3223374EA;
+	Mon,  3 Jun 2024 19:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717443204; cv=none; b=DfvIrzAcod4y2olu4UFwl0RaMECxLo6zTL25CDWV5izg5WF+eOpO+k53yVR+AXt9zzCkcyjckblCVccjJVFhv6ReEOEkp377L/UZf75CsiCd8gyemQwkskHpYT7pJofGlkh0pX9Capd0OSNy1661kv8eLjqgS3QsQ8gwcO/ouOA=
+	t=1717443239; cv=none; b=pSjh/hdWS2TOvDl/z34txmmxRU6sAzWR8i/pHOfC+E4qHcb0OwIHS0/BEfAa62Tr3NTXoJsFV49tYocYPTyAM5YBIvZDK+DEvUruY99NXbR3yVKoJNo8lIVDIP5AvUJDddEKb6sqQlDa4qaixYZJwHUkTpuHtAbB5xF9NLo4gso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717443204; c=relaxed/simple;
-	bh=ZFG0RzAoaOkp+zsaLv13A2Z5uR/A9GDeP1h90WlRyV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQHsKGh3tfZeqUIazFYkR6t1hAod/SiHKqUT//T0zsdGldbGICF7VUj4l7yJQe1Q8z7gc017vHdn4MTtiZam5p8NPxKPXeYnzG7URRCK2pC5vDYKbYCvQP3l03f7AVV39nIgr1NYPoHspOZcqloqxHBviISZrv8LKbO/JG9DrPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuebingen.mpg.de; spf=pass smtp.mailfrom=tuebingen.mpg.de; arc=none smtp.client-ip=134.76.10.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuebingen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuebingen.mpg.de
-Received: from mailgw.tuebingen.mpg.de ([192.124.27.5] helo=tuebingen.mpg.de)
-	by mailer.gwdg.de with esmtp (GWDG Mailer)
-	(envelope-from <maan@tuebingen.mpg.de>)
-	id 1sECtE-0005IN-0g;
-	Mon, 03 Jun 2024 20:58:40 +0200
-Received: from [10.35.40.80] (HELO mailhost.tuebingen.mpg.de)
-  by tuebingen.mpg.de (CommuniGate Pro SMTP 6.2.6)
-  with SMTP id 55632179; Mon, 03 Jun 2024 20:58:39 +0200
-Received: by mailhost.tuebingen.mpg.de (sSMTP sendmail emulation); Mon, 03 Jun 2024 20:58:39 +0200
-Date: Mon, 3 Jun 2024 20:58:39 +0200
-From: Andre Noll <maan@tuebingen.mpg.de>
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jonathan Corbet <corbet@lwn.net>, Andre Noll <maan@systemlinux.org>,
-	linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH v2] docs: crypto: async-tx-api: fix broken code example
-Message-ID: <Zl4SX4mF0EFuJLnc@tuebingen.mpg.de>
-References: <20240529-async-dma-docs-v2-1-8faf87e72e6d@pengutronix.de>
+	s=arc-20240116; t=1717443239; c=relaxed/simple;
+	bh=haGlENCzcFeEXC5BXPb/UFco0FCHDxQhg1Se5YhH8qE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R3/1MJ0EK0K9QN8/jl/KAvzx3QKh5z2/4AQH3iNjVRZP9XnavBLCerJnF4FF2XJIhmeXAgCSGfYhUZ2sj6q2yoxshtIOUHYPBm9kMdAQNxmo89drB3xi+IFVyfFQbg0crBiE+3Mt/mVWTu/nGvXIjAuH5aVu/AtSuhQnxcodzh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8A992Fi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8A992Fi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84DC7C2BD10;
+	Mon,  3 Jun 2024 19:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717443239;
+	bh=haGlENCzcFeEXC5BXPb/UFco0FCHDxQhg1Se5YhH8qE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Q8A992FibBYI/zwb/sU6+7SmTf3NUsSL0fhlEw+0WRb73i5bNOzn8ay2tT/zzHAa1
+	 ngW4j2IEQW1b0bo5ZtE27BQtILZ8F9TkgANV8GS+YIrlH9yukecLDsoIntYk/7Wvc4
+	 BeGYdi1mManqWYbuazFX0Ga1kHBnWCHvRcSbqI8nlGiJ/Opsl1+AIPZNqdpcb5QCzO
+	 SDPBXHt5sWkAYvYqtQV1nplQ0DDbmbouIh4h/PJfKpHOGzlCtiHCzuRl+C7TmLCsQb
+	 ouTw/G2BY6/xuQyD6tO+gXJaKUHJn5DN1dAIL/7dgDBdgZ5o1RlrbbUo3LV68sAmqO
+	 v1i8moNnZW9pQ==
+Date: Mon, 3 Jun 2024 20:33:47 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Lars-Peter Clausen
+ <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Nuno Sa <nuno.sa@analog.com>
+Subject: Re: [PATCH] iio: inkern: fix channel read regression
+Message-ID: <20240603203347.46500fb4@jic23-huawei>
+In-Reply-To: <Zl1vttlXz3FRVyYS@hovoldconsulting.com>
+References: <20240530074416.13697-1-johan+linaro@kernel.org>
+	<20240601142147.3ac40207@jic23-huawei>
+	<Zl1vttlXz3FRVyYS@hovoldconsulting.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240529-async-dma-docs-v2-1-8faf87e72e6d@pengutronix.de>
-User-Agent: Mutt/2.2.13 (00d56288) (2024-03-09)
-X-Spam-Level: $
-X-Virus-Scanned: (clean) by clamav
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 29, 10:08, Ahmad Fatoum wrote
-> The code example fails to compile:
-> 
->   1) addr_conv is defined twice, once as a VLA, which have been phased out
-> 
->   2) submit is not a pointer, but is still dereferenced with ->
-> 
->   3) The first call to async_xor() lacked the trailing semicolon
-> 
-> Fix these issues and while at it, fix some code style nitpicks as well:
-> 
->   1) make the functions static as users are unlikely to export them
-> 
->   2) include the relevant header
-> 
->   3) Shorten the example a bit by removing a redundant variable
->      definition
-> 
-> Fixes: 04ce9ab385dc ("async_xor: permit callers to pass in a 'dma/page scribble' region")
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> ---
-> Changes in v2:
-> - commit message: fix addr_conv typo (Andre)
-> - commit message: note addition of missing semicolon (Andre)
-> - add header include (Andre)
-> - shorten code by removing redundant variable definition (Andre)
-> - Link to v1: https://lore.kernel.org/r/20240523-async-dma-docs-v1-1-b900e0804e11@pengutronix.de
+On Mon, 3 Jun 2024 09:24:38 +0200
+Johan Hovold <johan@kernel.org> wrote:
 
-Looks good to me now. Feel free to add
+> Hi Jonathan,
+> 
+> On Sat, Jun 01, 2024 at 02:21:47PM +0100, Jonathan Cameron wrote:
+> > On Thu, 30 May 2024 09:44:16 +0200
+> > Johan Hovold <johan+linaro@kernel.org> wrote:
+> >   
+> > > A recent "cleanup" broke IIO channel read outs and thereby thermal
+> > > mitigation on the Lenovo ThinkPad X13s by returning zero instead of the
+> > > expected IIO value type in iio_read_channel_processed_scale():
+> > > 
+> > > 	thermal thermal_zone12: failed to read out thermal zone (-22)
+> > > 
+> > > Fixes: 3092bde731ca ("iio: inkern: move to the cleanup.h magic")
+> > > Cc: Nuno Sa <nuno.sa@analog.com>
+> > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>  
+> 
+> > In meantime, Nuno please take another look at these and see if
+> > we have additional problem cases like this.  Given the patch
+> > queue I have and a busy few days it will be a while before I
+> > get to it but I'll try and take a close look soon as well.  
+> 
+> Please consider getting this one into mainline as soon as possible as it
+> breaks thermal mitigation, which can cause literal skin burns, on all
+> Qualcomm platforms (and probably other platforms too).
 
-	Reviewed-by: Andre Noll <maan@tuebingen.mpg.de>
+I'll queue this fix and we can follow with any others that surface
+from reviews.
 
-Best
-Andre
--- 
-Max Planck Institute for Biology
-Tel: (+49) 7071 601 829
-Max-Planck-Ring 5, 72076 Tübingen, Germany
-http://people.tuebingen.mpg.de/maan/
+Need it to sit in linux-next for a day or two before a pull request though
+as I've just pushed some other fixes out that needs some build coverage.
+
+> 
+> > Longer term, in my view the readability and chance of bugs
+> > is reduced, but churn always introduces the possibility of
+> > issues like this in the short term :(  
+> 
+> I just worry about some of the cleanup.h conversion I've seen where
+> inexperienced developers potentially break tested and reviewed code for
+> something which is often not very readable and for very little gain.
+> 
+
+Fair comment. There have been some 'interesting' patches.
+On the plus side this one highlighted that our docs are wrong.
+
+Applied to the fixes-togreg branch of iio.git
+
+Jonathan
+
+
+> Johan
+
