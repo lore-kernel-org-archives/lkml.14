@@ -1,136 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03A184FD0;
-	Mon,  3 Jun 2024 09:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30223823AF;
+	Mon,  3 Jun 2024 09:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717406946; cv=none; b=AKkyemBnzMke2tYvbwlzWFFojKap+ndUiZ9JAIeqtiMq7Xng5EOO5JbqKWNhTHnWW2txQyQ07mmeG4TkfVm0kKQoZrDHgFQLjdW6uW1jGp8eEigX3D3i0GTBguQ6cT9TUHpxwTrOQK4H+xHXrsJl3IWKkB+n+odovdv0JjOxJN8=
+	t=1717406979; cv=none; b=gD9y13xyYHYZ4pDw+U8Jq0y3vZNNhY2UHN9XZY22fMjNHfps/YMIGUc8oeg6jN6QRzFoiVR6ON3+NvANHbzvJT8fMFerHIgtgkCSACoz6Rc8WruIiPQLg6re6s7r1yOB8HXA+hW7/ojk49ODt7S8MqtBwklI1fF/HawCgtunh/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717406946; c=relaxed/simple;
-	bh=j4w9K5djQp5xn5C5Ueh22RoGjSGi1Sn90cfAUmAMli4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hn1GpXlDpekCemwUwWcF5Es6pC7i5CcPe34v6cW5eXZb9twHqjIR6qRhDUwcmbIdjsjXw70t/Wi0JLdO5g4P6FUwqDgHSvNcRbJuGnqNDYThFXzwbRRW66s2h+cZGRgvgbtp6waLppNpMAM/YAO7HGU3bW+50icCHjC1d2l+O5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lFilpSOG; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717406979; c=relaxed/simple;
+	bh=/RwLt37mZinhQXbN/cqOQ0+EvPSbkY9p9MAGa8qCzqM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LtAqAREfQy4BrFttLCFVpF/LWt4Yx3Dsk20/NvU5g50qyDhXyffTTSML46EPok4UiVeXa2Sa2TrFZjUj/QFnwI83+tOkG6xEcJoR3ZOy8kaFbR65OMTkVgXaBlI3DVulxQ8LQ0ifoLbuX7VaOwg8dtoYuMZAx10YXFoN1v5iAsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vzcIOIxy; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lFilpSOG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717406945; x=1748942945;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=j4w9K5djQp5xn5C5Ueh22RoGjSGi1Sn90cfAUmAMli4=;
-  b=lFilpSOGxrfLNOKxpc/CNnfBwzqocMvPZR4dSypSOU3DjhubFaCLzd8N
-   4Z7n5+YKAuLe4z8KUXvdYUTBQ6Yvk3JcUwQZ/6gzH2Pay74xm22hd4s4F
-   csy/NN8tK+Gwao6uYf4N1+Uv85fh3m5aNklZ7uyAKdkW1nLr+joPJhgpN
-   CFFEqfIpPUrYqJCNkfDwWRn0uXfaFAR15xWRj5ktXGkAcmhNPS6hGyqgJ
-   RnKUU2uifJm+4SB4ysKZS1a0CpdEhoqeCFFo5aq5IPt5+GEr/wLBkF01d
-   GemgXgIKWj7isaMD0wROVkhlCKy33U3qOeOD8KdOFBAAffA+cQ8FVfAjx
-   w==;
-X-CSE-ConnectionGUID: ukm52QiCTa+NpmU/vXCI3Q==
-X-CSE-MsgGUID: pSBL4CKcRxSDAxLyy8fRPQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="17731587"
-X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="17731587"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 02:29:04 -0700
-X-CSE-ConnectionGUID: eWA6METETtCUr4cLJQgSJw==
-X-CSE-MsgGUID: MRakdQpsR5CfCmhg/Ux7PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
-   d="scan'208";a="37444940"
-Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.246.39])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 02:28:54 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter
- <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, Sandy Huang
- <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
- Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>, Hans Verkuil
- <hverkuil@xs4all.nl>, Sebastian Wick <sebastian.wick@redhat.com>, Ville
- =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev, Dave
- Stevenson <dave.stevenson@raspberrypi.com>, Sui Jingfeng
- <sui.jingfeng@linux.dev>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Pekka Paalanen <pekka.paalanen@collabora.com>, =?utf-8?Q?Ma=C3=ADra?= Canal
- <mcanal@igalia.com>, Andy Yan <andyshrk@163.com>
-Subject: Re: [PATCH v15 00/29] drm/connector: Create HDMI Connector
- infrastructure
-In-Reply-To: <20240603-nippy-ludicrous-caracara-e02e3c@houat>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240527-kms-hdmi-connector-state-v15-0-c5af16c3aae2@kernel.org>
- <874jadesaj.fsf@intel.com>
- <20240603-nippy-ludicrous-caracara-e02e3c@houat>
-Date: Mon, 03 Jun 2024 12:28:51 +0300
-Message-ID: <87zfs2cr3g.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vzcIOIxy"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4537cWVc004745;
+	Mon, 3 Jun 2024 11:28:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=W4T/YoU6NKIK7mMSN7BvQl
+	A9NuSsgbgmhksWstWhGaA=; b=vzcIOIxyNo5aha17vMDuOfTuxg5AqMKs+ePYLr
+	ez7TccT5jAlFE0GQnS9DSIxgdhPYPVFzsOXgwu1g2bLS7nxSK9EEHvCm99HSbhQ3
+	L5TmntEfcF9UhPXrDcnTYiDNGPavJ0mNzeaKLfWjI9FnvZMo9pZWgIG66gNBIekw
+	cw1Mp3TpdL9iX4+JHUQAzP8GndyTuJ6wuwht2Er+gPIvldqdR65xm23joKcpKWrE
+	aaYPZY4V4ZIb6H0y6cCcpL+HZZsiecr4K7CUZOXLujdxpRaXEgGCY6SfH8KQk9b4
+	aAtPBlNjkeAwx7IPsmuGYAI3xr9xgPGZiZ7m/6ETs9iGt/4w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ygekhm92p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Jun 2024 11:28:42 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 14CCE4005D;
+	Mon,  3 Jun 2024 11:28:15 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3EE222165E7;
+	Mon,  3 Jun 2024 11:28:15 +0200 (CEST)
+Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 3 Jun
+ 2024 11:28:14 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 00/11] Series to deliver Ethernet for STM32MP13
+Date: Mon, 3 Jun 2024 11:27:46 +0200
+Message-ID: <20240603092757.71902-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-03_06,2024-05-30_01,2024-05-17_01
 
-On Mon, 03 Jun 2024, Maxime Ripard <mripard@kernel.org> wrote:
-> Hi Jani,
->
-> On Fri, May 31, 2024 at 09:43:16PM GMT, Jani Nikula wrote:
->> On Mon, 27 May 2024, Maxime Ripard <mripard@kernel.org> wrote:
->> > Let me know what you think,
->> 
->> Sorry to report that this series generates a bunch of kernel-doc
->> warnings in include/drm/drm_connector.h. Documenting nested struct
->> members doesn't work as smoothly as you'd expect:
->>
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'broadcast_rgb' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'infoframes' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'avi' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'hdr_drm' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'spd' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'vendor' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'is_limited_range' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'output_bpc' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'output_format' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:1138: warning: Excess struct member 'tmds_char_rate' description in 'drm_connector_state'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'vendor' description in 'drm_connector'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'product' description in 'drm_connector'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'supported_formats' description in 'drm_connector'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'infoframes' description in 'drm_connector'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'lock' description in 'drm_connector'
->> ../include/drm/drm_connector.h:2112: warning: Excess struct member 'audio' description in 'drm_connector'
->> 
->> Noticed this when I was rebasing [1]. Having that merged would find
->> issues in headers at build time instead of 'make htmldocs'.
->> 
->> In the mean time, this is the quick reproducer:
->> 
->> $ scripts/kernel-doc -none include/drm/drm_connector.h
->
-> Thanks for the report and the reproducer. I have to admit I have no idea
-> how to fix it, do you have a suggestion?
+STM32MP13 is STM32 SOC with 2 GMACs instances
+    GMAC IP version is SNPS 4.20.
+    GMAC IP configure with 1 RX and 1 TX queue.
+    DMA HW capability register supported
+    RX Checksum Offload Engine supported
+    TX Checksum insertion supported
+    Wake-Up On Lan supported
+    TSO supported
+Rework dwmac glue to simplify management for next stm32 (integrate RFC from Marek)
 
-Some of them can be fixed by adding the parent struct name, like so:
+V2: - Remark from Rob Herring (add Krzysztof's ack in patch 02/11, update in yaml)
+      Remark from Serge Semin (upate commits msg)
+V3: - Remove PHY regulator patch and Ethernet2 DT because need to clarify how to
+      manage PHY regulator (in glue or PHY side)
+    - Integrate RFC from Marek
+    - Remark from Rob Herring in YAML documentation
 
--                * @broadcast_rgb: Connector property to pass the
-+                * @hdmi.broadcast_rgb: Connector property to pass the
+Christophe Roullier (6):
+  dt-bindings: net: add STM32MP13 compatible in documentation for stm32
+  net: ethernet: stmmac: add management of stm32mp13 for stm32
+  ARM: dts: stm32: add ethernet1 and ethernet2 support on stm32mp13
+  ARM: dts: stm32: add ethernet1/2 RMII pins for STM32MP13F-DK board
+  ARM: dts: stm32: add ethernet1 for STM32MP135F-DK board
+  ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
 
-but I think even that falls apart at some point. :(
+Marek Vasut (5):
+  net: stmmac: dwmac-stm32: Separate out external clock rate validation
+  net: stmmac: dwmac-stm32: Separate out external clock selector
+  net: stmmac: dwmac-stm32: Extract PMCR configuration
+  net: stmmac: dwmac-stm32: Clean up the debug prints
+  net: stmmac: dwmac-stm32: Fix Mhz to MHz
 
-In the end might be easier to separate the struct definitions to reduce
-nesting.
-
-
-BR,
-Jani.
-
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |  41 +++-
+ arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi   |  71 +++++++
+ arch/arm/boot/dts/st/stm32mp131.dtsi          |  31 +++
+ arch/arm/boot/dts/st/stm32mp133.dtsi          |  30 +++
+ arch/arm/boot/dts/st/stm32mp135f-dk.dts       |  24 +++
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 176 ++++++++++++++----
+ 7 files changed, 327 insertions(+), 47 deletions(-)
 
 -- 
-Jani Nikula, Intel
+2.25.1
+
