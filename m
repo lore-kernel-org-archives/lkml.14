@@ -1,119 +1,149 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86BDD288DF;
-	Mon,  3 Jun 2024 11:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9527284A23
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717414410; cv=none; b=EdWhytaZAY2fXZsd4wU40EvGjuP/X6Uwjf/NsMsdzdY9gmKuz5/SV/7c0uyuD3JE9PvB1ZYQl6+MSZxgXwjU1sb+iran+ED2qkxwCCbgNZOXfQmhhrcP/du7DHFrV0KxElAmajUgDAclpQJ0VOuBPT30k9DtW8Rv18yHR38EThQ=
+	t=1717414474; cv=none; b=KDIC47ZGogsRI6pQl48EZdTXM3TVg9Ub0GTQ1MPLyXgrfrpYcBiwH5OjA5xGdJSbHEFD7xkPfPlQX4qVwzR6yRVFQqPN9pnGEWFhxAJfeHOapjASDzMV1bT+k2/4I5pXzQpsMdTX5104ZHLKVhdF0uDIEs9pUeuq01DVXCvS+wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717414410; c=relaxed/simple;
-	bh=mcb1k5EXFcI1/eY8+Oa4jSG6lo0jp4sHE+okiXL//FA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BhEOI3jPdRYv8MQ5O7Orwv7agxl3LZ0BAxMYBKmtzdmUjeB34jDpf/u3tc+XrDKouiZIOxMDGaIF0AKIU50qnttu8N63XbCT/mtfZZI47ykMpnpHByzHVrIWJj91g29PL8H6oFotEJdr7wM32XZhylTSSEP2JBVHopsjs7E3DzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 954AF92009C; Mon,  3 Jun 2024 13:33:26 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8676C92009B;
-	Mon,  3 Jun 2024 12:33:26 +0100 (BST)
-Date: Mon, 3 Jun 2024 12:33:26 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Arnd Bergmann <arnd@arndb.de>
-cc: "Paul E. McKenney" <paulmck@kernel.org>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    Arnd Bergmann <arnd@kernel.org>, linux-alpha@vger.kernel.org, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-    Matt Turner <mattst88@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-    Marc Zyngier <maz@kernel.org>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    linux-kernel@vger.kernel.org, Michael Cree <mcree@orcon.net.nz>, 
-    Frank Scheiner <frank.scheiner@web.de>
-Subject: Re: [PATCH 00/14] alpha: cleanups for 6.10
-In-Reply-To: <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com>
-Message-ID: <alpine.DEB.2.21.2406031209560.9248@angie.orcam.me.uk>
-References: <20240503081125.67990-1-arnd@kernel.org> <272a909522f2790a30b9a8be73ab7145bf06d486.camel@physik.fu-berlin.de> <alpine.DEB.2.21.2405280041550.23854@angie.orcam.me.uk> <aa397ad5-a08a-48a1-a9c0-75cfd5f6a3a5@paulmck-laptop>
- <alpine.DEB.2.21.2405291432450.23854@angie.orcam.me.uk> <4bb50dc0-244a-4781-85ad-9ebc5e59c99a@app.fastmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1717414474; c=relaxed/simple;
+	bh=PYZ3fAE04wecLkCKNrUMiR9WFirhxYWu3OqH0XHIlAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ig+7HqLZudzBkYKLh6ggTusWGEOE9yBdhwsxb7uMD1tNbTY0FTHSTpVo1Us32XxzNViPRrIjeOMkhnd3NBqf2RIu34rRXRFNoBlHiqxKbHhkX0ns0tCNmpk0Z7stWPOGK4Ci93HLkvJ1agjGkebrHZFVxue0FPRZ5Vyx/cr3u94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/moPXJ0; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/moPXJ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717414472; x=1748950472;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PYZ3fAE04wecLkCKNrUMiR9WFirhxYWu3OqH0XHIlAI=;
+  b=e/moPXJ03Jf56LlEwXWIQMU6xEj2COsCht2HFqcldQp5M9cq4gvEOymJ
+   iiXF4IDFoVkIb01VmebBbGlyDRs0nPtWS5e0H9pCbws/SvAN4ErhTbhhz
+   BOqcaeeuwWQct2JzMjjpEWImKasFeWP/A4bPKPsh1lV31CI1HQxGaOpoe
+   ZiSkpGw5xpPW1e66v84wSz2DfB2b1EydbgMJ+6iV3mWQQksPl5zk9zfFa
+   jggXCeSOCQgVi9GX4kgDtBk0YAup5l8wtpFBCBq/2zYrzkH92Ttj5bJYn
+   sjayeqx4forv6a8xNpxIMMtW55uMMaMIDV4dgbgszSgIgNnpXKiiG5aK3
+   Q==;
+X-CSE-ConnectionGUID: hibIbrRaTo+Elkghe77myg==
+X-CSE-MsgGUID: BXcsZNM8QeWTUnfZ97JCVA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11091"; a="13741856"
+X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
+   d="scan'208";a="13741856"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 04:34:32 -0700
+X-CSE-ConnectionGUID: 6XvhOL2RRr+HfSf5Mcqyqw==
+X-CSE-MsgGUID: jc1GOTNPRECClW8quqtyTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,211,1712646000"; 
+   d="scan'208";a="36837724"
+Received: from dev2 (HELO DEV2.igk.intel.com) ([10.237.148.94])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Jun 2024 04:34:30 -0700
+From: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>
+To: Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>
+Cc: linux-kernel@vger.kernel.org,
+	cocci@inria.fr,
+	=?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amadeuszx.slawinski@linux.intel.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>
+Subject: [PATCH] Coccinelle: Add api/list_move.cocci
+Date: Mon,  3 Jun 2024 13:35:13 +0200
+Message-Id: <20240603113513.48045-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 31 May 2024, Arnd Bergmann wrote:
+Use list_move(_tail) rather than open coding it.
 
-> I then tried changing the underlying variables to 32-bit ones
-> to see how many changes are needed, but I gave up after around
-> 150 of them, as I was only scratching the surface. To do this
-> right, you'd need to go through each one of them and come up
-> with a solution that is the best trade-off in terms of memory
-> usage and performance for that one. There are of course
-> others that should be using WRITE_ONCE() and are missing
-> this, so the list is not complete either. See below for
-> the ones I could find quickly.
+Reviewed-by: Cezary Rojewski <cezary.rojewski@intel.com>
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
+---
+ scripts/coccinelle/api/list_move.cocci | 67 ++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 scripts/coccinelle/api/list_move.cocci
 
- Thank you for your attempt, and I agree this is excessive and beyond what 
-we can reasonably handle.
+diff --git a/scripts/coccinelle/api/list_move.cocci b/scripts/coccinelle/api/list_move.cocci
+new file mode 100644
+index 0000000000000..c157a298cdf57
+--- /dev/null
++++ b/scripts/coccinelle/api/list_move.cocci
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Use list_move or list_move_tail rather than list_del or list_del_init
++// followed by either list_add or list_add_tail.
++//
++// Copyright (c) 2023, Intel Corporation
++// Confidence: High
++// Options: --no-includes --include-headers
++//
++// Keywords: list_move, list_move_tail
++//
++
++virtual context
++virtual org
++virtual patch
++virtual report
++
++@rmove depends on !patch@
++expression E, H;
++position p;
++@@
++
++(
++- list_del@p(E);
++|
++- list_del_init@p(E);
++)
++- list_add(E, H);
+++ list_move(E, H);
++
++@rmove_tail depends on !patch@
++expression E, H;
++position p;
++@@
++
++(
++- list_del@p(E);
++|
++- list_del_init@p(E);
++)
++- list_add_tail(E, H);
+++ list_move_tail(E, H);
++
++@script:python depends on report@
++p << rmove.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING opportunity for list_move()")
++
++@script:python depends on org@
++p << rmove.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING opportunity for list_move()")
++
++@script:python depends on report@
++p << rmove_tail.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING opportunity for list_move_tail()")
++
++@script:python depends on org@
++p << rmove_tail.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING opportunity for list_move_tail()")
++
+-- 
+2.34.1
 
-> >  FWIW even if it was only me I think that depriving the already thin Alpha 
-> > port developer base of any quantity of the remaining manpower, by dropping 
-> > support for a subset of the hardware available, and then a subset that is 
-> > not just as exotic as the original i386 became to the x86 platform at the 
-> > time support for it was dropped, is only going to lead to further demise 
-> > and eventual drop of the entire port.
-> 
-> I know you like you museum pieces to be older than everyone
-> else's, and I'm sorry that my patch series is causing you
-> problems, but I don't think the more general criticism is
-> valid here. My hope was mainly to help our with both keeping
-> Alpha viable for a few more years while also allowing Paul
-> to continue with his RCU changes.
-
- Appreciated and thank you for your appreciation as well.
-
-> As far as I can tell, nobody else is actually using EV4
-> machines or has been for years now, but the presence of that
-> code did affect both the performance and correctness of the
-> kernel code for all EV56+ users since distros have no way
-> of picking the ISA level on alpha for a generic kernel.
-
- Well, at least John Paul Adrian complained as well, and who knows who 
-else is there downstream.  I'd expect most people (i.e. all except for 
-core Linux developers) not to track upstream development in a continuous 
-manner.
-
-> The strongest argument I see for assuming non-BWX alphas
-> are long dead is that gcc-4.4 added support for C11 style
-> _Atomic variables for alpha, but got the stores wrong
-> without anyone ever noticing the problem. Even one makes
-> the argument that normal byte stores and volatiles ones
-> should not need atomic ll/st sequenes, the atomics
-> clearly do. Building BWX-enabled kernels and userland
-> completely avoids this problem, which make debugging
-> easier for the remaining users when stuff breaks.
-
- This only shows the lack of proper verification here rather than just 
-use.  I'm not even sure if the nature of this problem is going to make it 
-trigger in GCC regression testing.  Which BTW I have wired my EV45 system 
-for in my lab last year and which would be going by now if not for issues 
-with support network automation equipment (FAOD, state of the art and 
-supported by the manufacturer).  We shall see once I'm done.
-
- As John Paul Adrian has pointed out the removal was expedited with no 
-attempt made to find a proper solution that would not affect other users.  
-As you can see it took me one e-mail exchange with Linus to understand 
-what the underlying issue has been and then just a little bit of thinking, 
-maybe half an hour, likely even less, to identify a feasible solution.
-
- Yes, I could have come up with it maybe a month ago if I wasn't so much 
-behind on mailing list traffic.  But it's not my day job and since we had 
-this issue for years now, it wasn't something that had to be handled as a 
-matter of urgency.  We all are people and have our limitations.  We could 
-have waited with the RFC out for another development cycle.  This has been 
-the point of my complaint.
-
-  Maciej
