@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D58A8BFD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AE713CFA1;
 	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457720; cv=none; b=tzEFvilbnMntgBDqfWCc8VcKywZ0tl5dR7o+IMmNJRUEioO/9EhNLhx+mK+0q0i/CgqWeHGPIkxCVatl8/iFBGtMhR1R3j0oAllwwSM0hAFA3MMOjsgTHUkXMqAhlXg4ihIUj/9s9XoQohncoaV4tVcKPjvUEBVfOZ5rxv8e8V0=
+	t=1717457720; cv=none; b=UwBG4829H7LhV2wabVkD9nhaud2VXq8CO3TZ9HfQSlpKLRYwpen4EdEZgzm4Qsq5GK7AHaQftYjcokkQDUw+KaYXVO7pb3HhaJaIyFIxNQX4xoclVtqRmPBV4VhvxFuKOqOKS7SkQLl9bX89xsxe4bpJOjGLhwDIkCxNVVgPne8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717457720; c=relaxed/simple;
-	bh=1dMFOe+xbS+TUyK3xZQGgujFUJjG1tCcfG92qGYpPpo=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=sEgRpk3VPRGiHCRoa1DUE5mlY5TP1nvPMPUFl+Vg6VrmJKYnmwDDApaFI2pbcYG+7MWnzmZpgaaF2tPC5+k6YB0dIBnkbdK+8zlba3fx8r0X+yx+CnFUBz4BWxXAx5uXGdJYcSF6gXzpzrhM7wdl1DJYjFo23ZfOiFgok93KFVc=
+	bh=E4KMQm1Ogt1CyuBV5VilL6zJcZs1kYG26oi9sWfoFBA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=uBP6JqTmy8rluHnvSNjXNv4eCLRVHorRZ739U1a4+d3gu6W+3jq2PezPrE1pakR55khkS4r/VIHGQb4W41+37K7reCLsmDYlP8fG4hYDBI9eG1LTr3j/AzidqzlhgG/LbGqfmmQ+X1Q2wbifbbCP+SJCKl/CNXazdr8LjkwFrX4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21208C2BD10;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 681D3C4AF0F;
 	Mon,  3 Jun 2024 23:35:20 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEHE7-00000009cuy-1lvA;
+	id 1sEHE7-00000009cvy-3A89;
 	Mon, 03 Jun 2024 19:36:31 -0400
-Message-ID: <20240603233330.801075898@goodmis.org>
+Message-ID: <20240603233631.619438489@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 19:33:30 -0400
+Date: Mon, 03 Jun 2024 19:33:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -51,101 +52,69 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linuxfoundation.org>,
  Catalin Marinas <catalin.marinas@arm.com>,
  Will Deacon <will@kernel.org>
-Subject: [PATCH 0/2] mm/pstore: Reserve named unspecified memory across boots
+Subject: [PATCH 2/2] pstore/ramoops: Add ramoops.mem_name= command line option
+References: <20240603233330.801075898@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Reserve unspecified location of physical memory from kernel command line
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Background:
+Add a method to find a region specified by reserve_mem=nn:align:name for
+ramoops. Adding a kernel command line parameter:
 
-In ChromeOS, we have 1 MB of pstore ramoops reserved so that we can extract
-dmesg output and some other information when a crash happens in the field.
-(This is only done when the user selects "Allow Google to collect data for
- improving the system"). But there are cases when there's a bug that
-requires more data to be retrieved to figure out what is happening. We would
-like to increase the pstore size, either temporarily, or maybe even
-permanently. The pstore on these devices are at a fixed location in RAM (as
-the RAM is not cleared on soft reboots nor crashes). The location is chosen
-by the BIOS (coreboot) and passed to the kernel via ACPI tables on x86.
-There's a driver that queries for this to initialize the pstore for
-ChromeOS:
+  reserve_mem=12M:4096:oops ramoops.mem_name=oops
 
-  See drivers/platform/chrome/chromeos_pstore.c
+Will use the size and location defined by the memmap parameter where it
+finds the memory and labels it "oops". The "oops" in the ramoops option
+is used to search for it.
 
-Problem:
+This allows for arbitrary RAM to be used for ramoops if it is known that
+the memory is not cleared on kernel crashes or soft reboots.
 
-The problem is that, even though there's a process to change the kernel on
-these systems, and is done regularly to install updates, the firmware is
-updated much less frequently. Choosing the place in RAM also takes special
-care, and may be in a different address for different boards. Updating the
-size via firmware is a large effort and not something that many are willing
-to do for a temporary pstore size change.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/pstore/ram.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Requirement:
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index b1a455f42e93..bae8486045eb 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -50,6 +50,11 @@ module_param_hw(mem_address, ullong, other, 0400);
+ MODULE_PARM_DESC(mem_address,
+ 		"start of reserved RAM used to store oops/panic logs");
+ 
++static char *mem_name;
++module_param_named(mem_name, mem_name, charp, 0400);
++MODULE_PARM_DESC(mem_name,
++		"name of kernel param that holds addr (builtin only)");
++
+ static ulong mem_size;
+ module_param(mem_size, ulong, 0400);
+ MODULE_PARM_DESC(mem_size,
+@@ -914,6 +919,16 @@ static void __init ramoops_register_dummy(void)
+ {
+ 	struct ramoops_platform_data pdata;
+ 
++	if (mem_name) {
++		unsigned long start;
++		unsigned long size;
++
++		if (reserve_mem_find_by_name(mem_name, &start, &size)) {
++			mem_address = start;
++			mem_size = size;
++		}
++	}
++
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+ 	 * parameters. If mem_size isn't set, then there are no module
+-- 
+2.43.0
 
-Need a way to reserve memory that will be at a consistent location for
-every boot, if the kernel and system are the same. Does not need to work
-if rebooting to a different kernel, or if the system can change the
-memory layout between boots.
 
-The reserved memory can not be an hard coded address, as the same kernel /
-command line needs to run on several different machines. The picked memory
-reservation just needs to be the same for a given machine, but may be
-different for different machines.
-
-Solution:
-
-The solution I have come up with is to introduce a new "reserve_mem=" kernel
-command line. This parameter takes the following format:
-
-  reserve_mem=nn:align:label
-
-Where nn is the size of memory to reserve, the align is the alignment of
-that memory, and label is the way for other sub-systems to find that memory.
-This way the kernel command line could have:
-
-  reserve_mem=12M:4096:oops   ramoops.mem_name=oops
-
-At boot up, the kernel will search for 12 megabytes in usable memory regions
-with an alignment of 4096. It will start at the highest regions and work its
-way down (for those old devices that want access to lower address DMA). When
-it finds a region, it will save it off in a small table and mark it with the
-"oops" label. Then the pstore ramoops sub-system could ask for that memory
-and location, and it will map itself there.
-
-This prototype allows for 8 different mappings (which may be overkill, 4 is
-probably plenty) with 16 byte size to store the label.
-
-I have tested this and it works for us to solve the above problem. We can
-update the kernel and command line and increase the size of pstore without
-needing to update the firmware, or knowing every memory layout of each
-board. I only tested this locally, it has not been tested in the field.
-
-Changes since the POC: https://lore.kernel.org/all/20240409210254.660888920@goodmis.org/
-
-- Used Mike Rapoport's suggesting to use the later call to
-  memblock_phys_alloc() instead of messing with the e820 tables.
-
-- No longer uses the " memmap" kernel command line and instead uses
-  "reserve_mem". This also removes the issue of booting a kernel without it
-  crashing due to "memmap" defaulting to using only the specified memory
-  when it doesn't know what the extra option is.
-
-- No longer keeping the table as __initdata so that pstore can use it via
-  a module.
-
-- This is no longer a proof of concept patch series.
-
-Steven Rostedt (Google) (2):
-      mm/memblock: Add "reserve_mem" to reserved named memory at boot up
-      pstore/ramoops: Add ramoops.mem_name= command line option
-
-----
- fs/pstore/ram.c    | 15 +++++++++
- include/linux/mm.h |  2 ++
- mm/memblock.c      | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 114 insertions(+)
