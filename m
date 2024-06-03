@@ -1,79 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79ED081207
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 08:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8484581207;
+	Mon,  3 Jun 2024 08:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717404308; cv=none; b=JeIKAdw9k5um3UrMm19mBEGXqCQZHQNF4UEpYIgUF9WHEBfdQ+58xFzMtyX83op+YK79GW/a22/ZmfkBtVYwlWakC6TPkAGrxlS9nt5gEm4BGeoo0F1OqVAAYfzcGlX0oYXqJXQe9lmNrKu8NTKrUEiSA7xdq2iQpYmdASpcoNg=
+	t=1717404328; cv=none; b=YVHHUGfn74nMzt/XOxguiA9A1Dug0u2el4M8U9U9ZryEPboHCdciKLQq3AaP2NEpb1ES/3FdwEnL7Yc4snRc7iARm2jHklhlMoXfYJFZXq78Whitsx38GwabfNpJcf1WINEkOM+ETf8u3Ooec2fai7e9L5+teHjtVv3ToEU3HTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717404308; c=relaxed/simple;
-	bh=DtNIZfROdplNeZsgvghfwPSPMTakJhkrJ4zAqFAyKZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6f5nnWWp5GCagtqRSRirwsFWW+0epf15kdzBNtECjNmaKPtpBYiklCmJkc3eISuNJ8xxP6gLOxCtxP950akO2SZij5fd68cCocGssNZOTCtJoRwXstgOQGWAF3VjbIARwbIqEroiZu3JnD72JMdPvi2rWQvffj057qDCbb+tto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C93E1042;
-	Mon,  3 Jun 2024 01:45:29 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6FC93F7BD;
-	Mon,  3 Jun 2024 01:45:03 -0700 (PDT)
-Date: Mon, 3 Jun 2024 09:45:01 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
-Cc: gregkh@linuxfoundation.org, javier.carrasco.cruz@gmail.com,
-	julia.lawall@inria.fr, linux-kernel@vger.kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>, rafael@kernel.org,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH 0/2 v4] drivers: arch_topology: introduce automatic
- cleanup feature
-Message-ID: <Zl2CjZ9mCpK1ylMf@bogus>
-References: <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
- <20240513081304.499915-1-vincenzo.mezzela@gmail.com>
- <ZkHlHAj1aPEToEYO@bogus>
- <bf963861-cc26-45e3-a4a1-82e2ea51a74a@gmail.com>
+	s=arc-20240116; t=1717404328; c=relaxed/simple;
+	bh=kYOMJ8lUSMxsB+13SlxbtNNgUEYoyE9Ax8jz0e/dWF8=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X4ycdewZL1pVLJaVRhOeQpeUZR7gPSj3yJzk/wVam+Wwvq4g7x2vmWYrH2g5i/crI8AWJJX+vCKaXRwP2nNAIFwz+OcYPfMYFrO9kRwhou9YZz/vjWSkB34bUy4oUhJvRIMPvkUYmDOOPHRFDyjSk9G9pwlwcoeuB4hBpAo4UMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Vt6B31B6Gz6JBJg;
+	Mon,  3 Jun 2024 16:20:59 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 586261400CD;
+	Mon,  3 Jun 2024 16:25:11 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Jun
+ 2024 09:25:10 +0100
+Date: Mon, 3 Jun 2024 09:25:11 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Arthur Becker <arthur.becker@sentec.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Krzysztof Kozlowski
+	<krzk@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org"
+	<linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: iio: light: add VEML6040 RGBW-LS
+ bindings
+Message-ID: <20240603092511.0000391e@Huawei.com>
+In-Reply-To: <ZR1P278MB1117EE8AFDD8891EE6459CEC81FF2@ZR1P278MB1117.CHEP278.PROD.OUTLOOK.COM>
+References: <20240527-veml6040-v3-0-6f3bbfd42960@sentec.com>
+	<20240527-veml6040-v3-2-6f3bbfd42960@sentec.com>
+	<e47de936-8cb4-4cef-a346-74835767e203@kernel.org>
+	<ZR1P278MB111779FE0C84DB465C54EEFF81F12@ZR1P278MB1117.CHEP278.PROD.OUTLOOK.COM>
+	<20240602141617.533558c4@jic23-huawei>
+	<ZR1P278MB1117EE8AFDD8891EE6459CEC81FF2@ZR1P278MB1117.CHEP278.PROD.OUTLOOK.COM>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf963861-cc26-45e3-a4a1-82e2ea51a74a@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, May 28, 2024 at 10:23:37AM +0200, Vincenzo Mezzela wrote:
-> On 13/05/24 12:02, Sudeep Holla wrote:
+On Mon, 3 Jun 2024 08:23:55 +0000
+Arthur Becker <arthur.becker@sentec.com> wrote:
 
-[...]
-
-> > > changes in v4:
-> > >      - fix commit subject
-> > >      - fix coding style
-> > > 
-> > Looks good now to me.
-> > 
-> > Acked-by: Sudeep Holla<sudeep.holla@arm.com>
-> > 
-> > It is merge window now, so there is a chance that it may get lost. You
-> > may have to post it again at -rc1. Greg can then pick it up for v6.11
-> > 
-> > --
-> > Regards,t
-> > Sudeep
+> From: Jonathan Cameron <jic23@kernel.org>
+> Sent: 02 June 2024 15:16
+> To: Arthur Becker
+> Cc: Krzysztof Kozlowski; Lars-Peter Clausen; Rob Herring; Krzysztof Kozlowski; Conor Dooley; linux-kernel@vger.kernel.org; linux-iio@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [EXTERNAL]Re: [PATCH v3 2/2] dt-bindings: iio: light: add VEML6040 RGBW-LS bindings
 > 
-> Hi Greg,
+> > On Tue, 28 May 2024 07:23:03 +0000
+> > Arthur Becker <arthur.becker@sentec.com> wrote:
+> >   
+> > > Thanks for the Review!
+> > > Right, I wasn't sure if and how to add the veml6040 to the veml6075 dt-binding file.
+> > > I'll modify that the next time I make adjustments to the driver.  
+> >
+> > Hi Arthur,
+> >
+> > If I read the above correctly you are hoping this merges as it stands and
+> > we come back later. If we are going to combine them long term,
+> > I'd rather we avoided the churn and had a combined DT binding from the start.  
 > 
-> hope this message finds you well. I wanted to kindly follow up on the patch
-> [1] I
-> submitted to introduce the __free attribute in drivers/base/arch_topology.c
+> Hi Jonathan,
+> 
+> I could have phrased that better, what I meant was that I was waiting for the next
+> feedback on the driver to make the adjustments all at once.
+> I'll get to it shortly!
+
+Great :)
+
+Thanks,
+
+Jonathan
+
+> 
+> Kind Regards,
+> Arthur
+> 
+> >
+> > Jonathan
+> >  
+> > >
+> > > Kind regards,
+> > > Arthur
+> > >
+> > > ________________________________________
+> > > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > > Sent: 27 May 2024 18:31
+> > > To: Arthur Becker; Jonathan Cameron; Lars-Peter Clausen; Rob Herring; Krzysztof Kozlowski; Conor Dooley
+> > > Cc: linux-kernel@vger.kernel.org; linux-iio@vger.kernel.org; devicetree@vger.kernel.org
+> > > Subject: [EXTERNAL]Re: [PATCH v3 2/2] dt-bindings: iio: light: add VEML6040 RGBW-LS bindings
+> > >
+> > > On 27/05/2024 17:12, Arthur Becker via B4 Relay wrote:  
+> > > > From: Arthur Becker <arthur.becker@sentec.com>
+> > > >
+> > > > Device tree bindings for the vishay VEML6040 RGBW light sensor iio
+> > > > driver
+> > > >
+> > > > Signed-off-by: Arthur Becker <arthur.becker@sentec.com>
+> > > > ---
+> > > > V1 -> V3: Addressed review comments (v1 of the dt-bindings was sent
+> > > > along with v2 of the driver but not in a set)  
+> > >
+> > > It's basically the same as veml6075, so should be put there...
+> > >
+> > > Eh,
+> > >
+> > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > >
+> > > Best regards,
+> > > Krzysztof
+> > >  
 > 
 
-Hi Vincenzo,
-
-Just rebase on -rc1/rc2 and resend the code as the original patch might
-have got lost deep in the mbox.
-
---
-Regards,
-Sudeep
