@@ -1,249 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8132313D244;
-	Mon,  3 Jun 2024 22:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AC013D62B;
+	Mon,  3 Jun 2024 22:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717454655; cv=none; b=AU/uNDTA2AUsW6+b7dChua5FKs71FMip/ktJr4jeRi5ATUDrHFXmnoWZ6S/Zk8VmFKiK9pC7Wdf+ejdw6/jxPvwsK2TqeWKJ+xAhQXx5ixH7kaCkH4npSPlyUtdVJEhcKEm7Gtt5xV4gDzZ2gpG4nQIk3bINpPkrsmeb/9RfkbM=
+	t=1717454678; cv=none; b=YW5AWozDOPc7EzK7GJ/1WcvO5U55OFi80x3cTon7Bgs7aXpW3EyHw8kZ7Om3WTLevVRqs+zwKaM7kiiYF6+7KEqB2xMehyg8b9JiiaS1oLRs498kCbz3MYNfhw6fz9vfvTpHk6M6CgR4yK/FC+K0MHK63hTGipVBMnjGRYhagyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717454655; c=relaxed/simple;
-	bh=LRfIPWtEHi1TeH+Xj5dcWGvd3NaKK+FQJi7DsB6BcZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DwXP5QEX7xTh5eeBgWJg3K/K7KfgK/xUmWrGDlb8q6Yg8GpurumjbSXAHBsx17cIuPD2Ry2R8adIeFI6SciLAEHkvfUAJh7IFHNGWfBW4+Zrd+EBqitDEf5v8vP5cgEXzZ9/mHMcERPoslZd6PY2G7IgYtIbxxloLyXX2NuW/ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPiTUc77; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717454678; c=relaxed/simple;
+	bh=K/fF6I8MZdCib446ViiMP2IBrSRBDtB529m5Q/j4YFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nR8hpvLxn8gPVRhANnNFiFSOTUfXz5vXdb36PpWOexpuvMEoqNeVbaLJnIlf+tUc9jhQwA4ySFJxZsnE8lCM+FK+tIdZvZm4foPgj5HMQXjcexYimGQNJ8+YlEg/SXIpIOjJ02XT8HIeY+NFZcfsaZ27WvPJ5BPfDWp2uExUeOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=At6Gh0lz; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPiTUc77"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06319C4AF07;
-	Mon,  3 Jun 2024 22:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717454655;
-	bh=LRfIPWtEHi1TeH+Xj5dcWGvd3NaKK+FQJi7DsB6BcZc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TPiTUc77pd5WmM5jqZaaiChxDeEZ2Tf3CysgdDgVbCKebjN5+bXEYcQs1F0TemGGj
-	 Z+UBpM+rvIKRII5JvbYGcKoALZVgKGHQLXzhlVN0erDBIPQNTRSuIqfbjCb7xFQuPE
-	 UkpXgcspeTSHJWsfi06pu4pDRAPkqoJY3j89QQ7RXys/VEc0eYY9i/wFLKy1zyxahK
-	 OGp90yxjgltln8/ooVSsWoScHE4OEVqSmuIIN1PwhqxkEerLE9cxKTjWM+RCJwVV7U
-	 w3wHwa8FUVF8P5PGADRT0mgu3LyO0hdV+QFWAV8ME537VC8wpOH/azVgvMj/U2HEge
-	 SQKMZj5fqtEqw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/4] perf hist: Add symbol_conf.skip_empty
-Date: Mon,  3 Jun 2024 15:44:11 -0700
-Message-ID: <20240603224412.1910049-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-In-Reply-To: <20240603224412.1910049-1-namhyung@kernel.org>
-References: <20240603224412.1910049-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At6Gh0lz"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f4603237e0so3202931b3a.0;
+        Mon, 03 Jun 2024 15:44:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717454676; x=1718059476; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=b6MFsrdOqti0fLHOpjLFRquYHGOzZCKkTJvH51/EUg8=;
+        b=At6Gh0lzQobV9jtbxy2uavJkNRc4STe2Lt7Q/x7chdtFH40584Gn9xnOpPQB1vz1Nx
+         YG10vfrBIoCTUrj45ZZmpZ4X/+bLi7+ioGVeIqaPXBKpIarfmDc4pi8E8+6cqtfNLXpN
+         QgGtMBUcv4j4ImCJhhOFyfih1URMKa2RZNxKou9sQGWIVIa4JftnlCgWERswYLqEFQcz
+         +3sJsxe9UJ8Bwf+P6Q3XqeX+d4MChIDh0x4bXFJj1mm8I5iNFMg0y9y//RJ6dUM2ENiP
+         ksfugvTZdsyB2sg7viBV/YOO3XUmuOM3h4W8ZRMLMAirtD9Dx+Nck2dJc5kh0LAeRXjw
+         e3ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717454676; x=1718059476;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b6MFsrdOqti0fLHOpjLFRquYHGOzZCKkTJvH51/EUg8=;
+        b=M2lmjj3XPlUysutisur5yTjzquf1qj8WpW4z5NvwxPeLA5jnvJQEF9MELf86LxXX4b
+         9mWNUG7b3ztWPAlYM/aO3ZLks0KIUhNmF8N7AFsXZ1bca+t/xUSOVFjanLlT/34zEpeY
+         OaUCDvyRwKLn26Jnd5n7gjktJEIiplA1pfAmFgrvhAtvUYcgbgME9GrU64z8n4H02YlJ
+         aNmdcCGJarDkWiky0lUBvuB5E3XrJtaPe0YHR2qCj8sceJ4sTmKyWHIayrj8RAV9+XLv
+         th4Ok2/kY0heRCH0yXzjqMlYvkaB8mSikQZYnKPqrZ5r0YuCYMNtup5555w+EO2KbbJs
+         nabw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYU2i9mPAWca5OvMtSG42WFHNIfpzKFZbpsvuvXH+7WtRnt2dCsOk6npeT11LNdl/qHR8banZLu1E2/T2wbJDrcIlgkPGq1bblR2qQUTYKWTXbdLXVEMM8IJvBoDX4zKFSSNf2z9tYpoumA1TQ/vFOgwAShgGSYlA5Bx4j+Y+Wq/zYIjh7
+X-Gm-Message-State: AOJu0Yz7+kt+2kDh+xS/KpIncsXy9iAGXLLlyL0zMNH1OqX3pVv8anPw
+	vIFTuT562IdlkzFt5AaJzVmocta9qmkSy2i1FrT08fpEfSIBRFweUgUPdw==
+X-Google-Smtp-Source: AGHT+IFEWfmnqW/lKBXXcKRUlmP/KHFs6IAz3nIGtYOHq6iSbp/r+3uFtnxQ/Oe3U4rGxCdKbvAcKQ==
+X-Received: by 2002:a05:6a00:b44:b0:6ea:c7bd:90e3 with SMTP id d2e1a72fcca58-7027fc4308amr1276552b3a.14.1717454675830;
+        Mon, 03 Jun 2024 15:44:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b2c262sm5991741b3a.190.2024.06.03.15.44.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 15:44:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <588c68da-1129-43e2-89a9-4edbabfd018b@roeck-us.net>
+Date: Mon, 3 Jun 2024 15:44:32 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ti,ina2xx: Add alert-polarity
+ property
+To: Rob Herring <robh@kernel.org>, Amna Waseem <Amna.Waseem@axis.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, linux-hwmon@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@axis.com
+References: <20240529-apol-ina2xx-fix-v1-0-77b4b382190f@axis.com>
+ <20240529-apol-ina2xx-fix-v1-1-77b4b382190f@axis.com>
+ <20240603154728.GA480397-robh@kernel.org>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <20240603154728.GA480397-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the skip_empty flag to symbol_conf and set the value from the report
-command to preserve the existing behavior.  This makes the code simpler
-and will be needed other code which is hard to add a new argument.
+On 6/3/24 08:47, Rob Herring wrote:
+> On Wed, May 29, 2024 at 08:07:14AM +0200, Amna Waseem wrote:
+>> Add a property to the binding to configure the Alert Polarity.
+>> Alert pin is asserted based on the value of Alert Polarity bit of
+>> Mask/Enable register. It is by default 0 which means Alert pin is
+>> configured to be active low. To configure it to active high, set
+>> alert-polarity property value to 1.
+>>
+>> Signed-off-by: Amna Waseem <Amna.Waseem@axis.com>
+>> ---
+>>   Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml | 9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>> index df86c2c92037..a3f0fd71fcc6 100644
+>> --- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>> +++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
+>> @@ -66,6 +66,14 @@ properties:
+>>       description: phandle to the regulator that provides the VS supply typically
+>>         in range from 2.7 V to 5.5 V.
+>>   
+>> +  alert-polarity:
+>> +    description: |
+>> +      Alert polarity bit value of Mask/Enable register. Alert pin is asserted
+>> +      based on the value of Alert polarity Bit. Default value is active low.
+>> +      0 selects active low, 1 selects active high.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    enum: [0, 1]
+> 
+> This is alert as in SMBus Alert? That's handled as an interrupt, but
+> this binding has no interrupt property. And the interrupt binding
+> provides a way already to specify active trigger state. Why do we need a
+> second way to do this?
+> 
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-annotate.c  |  4 ++--
- tools/perf/builtin-report.c    | 12 ++++++------
- tools/perf/ui/stdio/hist.c     |  5 ++---
- tools/perf/util/events_stats.h |  3 +--
- tools/perf/util/hist.c         |  6 +++---
- tools/perf/util/hist.h         |  3 +--
- tools/perf/util/session.c      |  5 ++---
- tools/perf/util/session.h      |  3 +--
- tools/perf/util/symbol_conf.h  |  3 ++-
- 9 files changed, 20 insertions(+), 24 deletions(-)
+SMBus alert is a single interrupt/alert line for all chips in a single I2C/SMBus.
+it is handled by drivers/i2c/i2c-smbus.c. It can not be handled by an individual
+driver since it affects all chips on a single bus. A driver supporting it
+is supposed to implement an alert callback in struct i2c_driver.
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 50d2fb222d48..b10b7f005658 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -571,8 +571,8 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 		goto out;
- 
- 	if (dump_trace) {
--		perf_session__fprintf_nr_events(session, stdout, false);
--		evlist__fprintf_nr_events(session->evlist, stdout, false);
-+		perf_session__fprintf_nr_events(session, stdout);
-+		evlist__fprintf_nr_events(session->evlist, stdout);
- 		goto out;
- 	}
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 69618fb0110b..9718770facb5 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -810,8 +810,8 @@ static int stats_print(struct report *rep)
- {
- 	struct perf_session *session = rep->session;
- 
--	perf_session__fprintf_nr_events(session, stdout, rep->skip_empty);
--	evlist__fprintf_nr_events(session->evlist, stdout, rep->skip_empty);
-+	perf_session__fprintf_nr_events(session, stdout);
-+	evlist__fprintf_nr_events(session->evlist, stdout);
- 	return 0;
- }
- 
-@@ -1089,10 +1089,8 @@ static int __cmd_report(struct report *rep)
- 			perf_session__fprintf_dsos(session, stdout);
- 
- 		if (dump_trace) {
--			perf_session__fprintf_nr_events(session, stdout,
--							rep->skip_empty);
--			evlist__fprintf_nr_events(session->evlist, stdout,
--						  rep->skip_empty);
-+			perf_session__fprintf_nr_events(session, stdout);
-+			evlist__fprintf_nr_events(session->evlist, stdout);
- 			return 0;
- 		}
- 	}
-@@ -1562,6 +1560,8 @@ int cmd_report(int argc, const char **argv)
- 	data.path  = input_name;
- 	data.force = symbol_conf.force;
- 
-+	symbol_conf.skip_empty = report.skip_empty;
-+
- repeat:
- 	session = perf_session__new(&data, &report.tool);
- 	if (IS_ERR(session)) {
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index b849caace398..9372e8904d22 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -897,8 +897,7 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
- 	return ret;
- }
- 
--size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
--			     bool skip_empty)
-+size_t events_stats__fprintf(struct events_stats *stats, FILE *fp)
- {
- 	int i;
- 	size_t ret = 0;
-@@ -910,7 +909,7 @@ size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
- 		name = perf_event__name(i);
- 		if (!strcmp(name, "UNKNOWN"))
- 			continue;
--		if (skip_empty && !stats->nr_events[i])
-+		if (symbol_conf.skip_empty && !stats->nr_events[i])
- 			continue;
- 
- 		if (i && total) {
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index 8fecc9fbaecc..f43e5b1a366a 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -52,7 +52,6 @@ struct hists_stats {
- 
- void events_stats__inc(struct events_stats *stats, u32 type);
- 
--size_t events_stats__fprintf(struct events_stats *stats, FILE *fp,
--			     bool skip_empty);
-+size_t events_stats__fprintf(struct events_stats *stats, FILE *fp);
- 
- #endif /* __PERF_EVENTS_STATS_ */
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 2e9e193179dd..f028f113c4fd 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2706,8 +2706,7 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
- 	}
- }
- 
--size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
--				 bool skip_empty)
-+size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp)
- {
- 	struct evsel *pos;
- 	size_t ret = 0;
-@@ -2715,7 +2714,8 @@ size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
--		if (skip_empty && !hists->stats.nr_samples && !hists->stats.nr_lost_samples)
-+		if (symbol_conf.skip_empty && !hists->stats.nr_samples &&
-+		    !hists->stats.nr_lost_samples)
- 			continue;
- 
- 		ret += fprintf(fp, "%s stats:\n", evsel__name(pos));
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 8fb3bdd29188..5273f5c37050 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -375,8 +375,7 @@ void hists__inc_nr_lost_samples(struct hists *hists, u32 lost);
- size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
- 		      int max_cols, float min_pcnt, FILE *fp,
- 		      bool ignore_callchains);
--size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp,
--				 bool skip_empty);
-+size_t evlist__fprintf_nr_events(struct evlist *evlist, FILE *fp);
- 
- void hists__filter_by_dso(struct hists *hists);
- void hists__filter_by_thread(struct hists *hists);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index a10343b9dcd4..0ec92d47373c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2696,8 +2696,7 @@ size_t perf_session__fprintf_dsos_buildid(struct perf_session *session, FILE *fp
- 	return machines__fprintf_dsos_buildid(&session->machines, fp, skip, parm);
- }
- 
--size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
--				       bool skip_empty)
-+size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp)
- {
- 	size_t ret;
- 	const char *msg = "";
-@@ -2707,7 +2706,7 @@ size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
- 
- 	ret = fprintf(fp, "\nAggregated stats:%s\n", msg);
- 
--	ret += events_stats__fprintf(&session->evlist->stats, fp, skip_empty);
-+	ret += events_stats__fprintf(&session->evlist->stats, fp);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 3b0256e977a6..4c29dc86956f 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -130,8 +130,7 @@ size_t perf_session__fprintf_dsos(struct perf_session *session, FILE *fp);
- size_t perf_session__fprintf_dsos_buildid(struct perf_session *session, FILE *fp,
- 					  bool (fn)(struct dso *dso, int parm), int parm);
- 
--size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp,
--				       bool skip_empty);
-+size_t perf_session__fprintf_nr_events(struct perf_session *session, FILE *fp);
- 
- void perf_session__dump_kmaps(struct perf_session *session);
- 
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index c114bbceef40..657cfa5af43c 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -46,7 +46,8 @@ struct symbol_conf {
- 			lazy_load_kernel_maps,
- 			keep_exited_threads,
- 			annotate_data_member,
--			annotate_data_sample;
-+			annotate_data_sample,
-+			skip_empty;
- 	const char	*vmlinux_name,
- 			*kallsyms_name,
- 			*source_prefix,
--- 
-2.45.1.288.g0e0cd299f1-goog
+The signal is supposed to be active-low open collector. Some chips, such as this
+series, make it configurable; in this case the alternative is active-high open
+collector. Presumably there is some wiring to attach it to the active-low open
+collector SMBus interrupt signal.
+
+Having said this, I don't really know what the use case is for this driver.
+It doesn't implement an alert callback, and it doesn't implement an interrupt
+handler either (after all, it might be conceivable that the alert signal _is_
+connected to a dedicated interrupt line). So your question is fair - with neither
+SMBus alert nor interrupt support by the driver, the alert signal polarity should
+not really matter.
+
+Thanks,
+Guenter
 
