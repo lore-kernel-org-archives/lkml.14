@@ -1,180 +1,96 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55612C816;
-	Mon,  3 Jun 2024 12:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34D12D1E8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419556; cv=none; b=Z0cyuaxisRmjPDMybOZ942AwCNsto9HpJbVCHzUMgj5ToJebAu4lqCibpi6+fxpRyOchlBcpPrAg3dzsvcEbFB2PHf5wlHJ2HlN44jQ7xz8H+BUCxM9kTf7gkHY+vL4ViVQDV4h6fAcj+2chYkTNcyYhYF9bDzZZT2mvYGvuhhE=
+	t=1717419563; cv=none; b=HuU1Of/XbfHonhRKCfXCkhRwJCkxgd4TtKcX29iNZhV6j810ngpO0+Mmf+efFW8tUp5JCt42JxYJk/wjEmRBRRG7+LB2hdQXjxy+pqVQXoFVoONqEDGIExWt5s4FQxPbain+NB2ehmKnUFREKX0vkBcdVruqdQNnM+9IdlTS9Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419556; c=relaxed/simple;
-	bh=25a+xXQ1heY5RNKMbD3/mNhgR1Z1gljogRR9UUG+yTE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QI2TqLnPMHAY4PrTaTWzwsPm6sTiBOileO8Qsx8rql4alWxvlbcXXaI4lWVLdKqqxd4eKqSOjLc+1tfY7YwTOvPWgrSFbWmqNVEi44JHU5mno05qNLQPgvzLNM0lTLr1/osg/XyVJ3xNHCuJyNlb2j/sMTQvGX1O3AWleb3vKgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VtDFt0q8WzmW8y;
-	Mon,  3 Jun 2024 20:54:42 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6A6AD140413;
-	Mon,  3 Jun 2024 20:58:57 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Jun
- 2024 20:58:14 +0800
-From: Yu Kuai <yukuai3@huawei.com>
-To: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
-	<song@kernel.org>, <xni@redhat.com>, <mariusz.tkaczyk@linux.intel.com>,
-	<l@damenly.org>
-CC: <dm-devel@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-raid@vger.kernel.org>, <yukuai3@huawei.com>,
-	<yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 05/12] md: replace sysfs api sync_action with new helpers
-Date: Mon, 3 Jun 2024 20:58:08 +0800
-Message-ID: <20240603125815.2199072-6-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240603125815.2199072-1-yukuai3@huawei.com>
-References: <20240603125815.2199072-1-yukuai3@huawei.com>
+	s=arc-20240116; t=1717419563; c=relaxed/simple;
+	bh=FyBQj0hG8ss9ZEv8V0JnRplnqLFC/O3chXUnsMv0bk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRUQdqGTFXmSVKSd8Dp9snIs23nSGD9NqFZwA9naUuAswWuIE5mGF115xH4fJrsO71g1SWovBLTXsNvWZMw7J1B4in5kVXJABUQCKZ03jx+ZnZq9s7D1MYUMmOxjYjRYASbk/Avwjh9uE6oyT401bTURANGnycYn55GyhE15/5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=JeLo/M+t; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="JeLo/M+t"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a692130eb19so79955366b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1717419560; x=1718024360; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IcEqjvHDHPrKWRNXO1NAMZemLV5LQ0B+lnFn7VKosBA=;
+        b=JeLo/M+twDSGb/+JKEc1ziAuPex3mhlraQxyeFJDnRlEYnOe9dFET2OjkDM/OuEYjq
+         cAxAtMI/ubK5Q+nt6wgCHg1qV9t/ucAeURl1PCk3SLSlC3ZeODP/o6FSd15Tfnx6WvIC
+         lHOnw7DgNoSt2TniBXE16XR3m/B2n7f6Op5plUm/7WN9ITfODxKpPc9IlqhQUHBgTFUh
+         Oo8LOAReVvhlw8lAZv5bHZ9JcFv/mgfanQd5MjrdJX3XG/did6lsU1UJgE7J1mu9v/ND
+         TTv9a0M47y99aiqTqwBI54VN10SrVk4bq9v3T3gwzfxXOoDs4beGC0Aa1zsYVF+XpiQy
+         j3QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717419560; x=1718024360;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IcEqjvHDHPrKWRNXO1NAMZemLV5LQ0B+lnFn7VKosBA=;
+        b=MkKAvsGHScbAbaKMHqFQDOd2JE042lkkY59193QKXXaDJhBasIpRwpmr8qKwhen9gh
+         CwjpoqEgwc5NRu3kX53jrAJ40c9f9hZg6OmkI5daMGQj6hpiUASQ41euKvUFZI0rSIoW
+         0L39YxdeHxjbwwabPxUs3PDdpIV1EDayVrm5cDuNYH6NbI4deYa/vILUxpb2nTgWToqF
+         Ig7mGOZRCjpk48BCqVUWt8D4bTFTCLl5dMwF7frNIQCzSCdB9CkUhj79t6VtZRYsvmlL
+         O+iU5qwasd2OZPkPmYgdAyn8qa+PdxuYYoe5mgFByXLziGTXlzHPE6jLfsnoQiEpDWfc
+         IPWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSPYO/2dYPDehfcgZ39dXBX16hRifr2xvbiLhCSxfJj5SLqFRnTNmi+STHyutq/xaVELOYWxV4HZCChM74bVI25WALiqLoaFIFTNJ0
+X-Gm-Message-State: AOJu0YzFbATpahPfqlXRYyzO4NQ6838q524HXd8CEKaSo8V4mI7yI3yC
+	zmq7DQdSb4mYggn4U3XddVMwnWOlISay1/PcPfZl53yLnWj0jL6O0clv+WqapYE=
+X-Google-Smtp-Source: AGHT+IHqmXxSxhfsZ5QLcPFpeXSzCRtTW99BPDOeKz6AZRkFkj434iSsteZACpuRGmGnksN+E2iRiA==
+X-Received: by 2002:a17:906:d7ac:b0:a68:bae4:d66f with SMTP id a640c23a62f3a-a68bae4e717mr359112966b.30.1717419560024;
+        Mon, 03 Jun 2024 05:59:20 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b66c0c87sm347330266b.73.2024.06.03.05.59.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 05:59:19 -0700 (PDT)
+Date: Mon, 3 Jun 2024 14:59:18 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux@rivosinc.com, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v6 2/7] iommu/riscv: Add RISC-V IOMMU platform device
+ driver
+Message-ID: <20240603-d622cdac0016f1f854bf2b4c@orel>
+References: <cover.1716578450.git.tjeznach@rivosinc.com>
+ <7dcd9a154625704cbf9adc4b4ac07ca0b9753b31.1716578450.git.tjeznach@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7dcd9a154625704cbf9adc4b4ac07ca0b9753b31.1716578450.git.tjeznach@rivosinc.com>
 
-To get rid of extrem long if else if usage, and make code cleaner.
+On Fri, May 24, 2024 at 12:34:42PM GMT, Tomasz Jeznach wrote:
+...
+> +static struct platform_driver riscv_iommu_platform_driver = {
+> +	.probe = riscv_iommu_platform_probe,
+> +	.remove_new = riscv_iommu_platform_remove,
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 94 +++++++++++++++++++++++++++----------------------
- 1 file changed, 52 insertions(+), 42 deletions(-)
+Hi Tomasz,
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 28f50a106566..8a54b56e3463 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4949,27 +4949,9 @@ const char *md_sync_action_name(enum sync_action action)
- static ssize_t
- action_show(struct mddev *mddev, char *page)
- {
--	char *type = "idle";
--	unsigned long recovery = mddev->recovery;
--	if (test_bit(MD_RECOVERY_FROZEN, &recovery))
--		type = "frozen";
--	else if (test_bit(MD_RECOVERY_RUNNING, &recovery) ||
--	    (md_is_rdwr(mddev) && test_bit(MD_RECOVERY_NEEDED, &recovery))) {
--		if (test_bit(MD_RECOVERY_RESHAPE, &recovery))
--			type = "reshape";
--		else if (test_bit(MD_RECOVERY_SYNC, &recovery)) {
--			if (!test_bit(MD_RECOVERY_REQUESTED, &recovery))
--				type = "resync";
--			else if (test_bit(MD_RECOVERY_CHECK, &recovery))
--				type = "check";
--			else
--				type = "repair";
--		} else if (test_bit(MD_RECOVERY_RECOVER, &recovery))
--			type = "recover";
--		else if (mddev->reshape_position != MaxSector)
--			type = "reshape";
--	}
--	return sprintf(page, "%s\n", type);
-+	enum sync_action action = md_sync_action(mddev);
-+
-+	return sprintf(page, "%s\n", md_sync_action_name(action));
- }
- 
- /**
-@@ -5112,35 +5094,63 @@ static int mddev_start_reshape(struct mddev *mddev)
- static ssize_t
- action_store(struct mddev *mddev, const char *page, size_t len)
- {
-+	int ret;
-+	enum sync_action action;
-+
- 	if (!mddev->pers || !mddev->pers->sync_request)
- 		return -EINVAL;
- 
-+	action = md_sync_action_by_name(page);
- 
--	if (cmd_match(page, "idle"))
--		idle_sync_thread(mddev);
--	else if (cmd_match(page, "frozen"))
--		frozen_sync_thread(mddev);
--	else if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery))
--		return -EBUSY;
--	else if (cmd_match(page, "resync"))
--		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--	else if (cmd_match(page, "recover")) {
--		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--		set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
--	} else if (cmd_match(page, "reshape")) {
--		int err = mddev_start_reshape(mddev);
--
--		if (err)
--			return err;
-+	/* TODO: mdadm rely on "idle" to start sync_thread. */
-+	if (test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
-+		switch (action) {
-+		case ACTION_FROZEN:
-+			frozen_sync_thread(mddev);
-+			return len;
-+		case ACTION_IDLE:
-+			idle_sync_thread(mddev);
-+			break;
-+		case ACTION_RESHAPE:
-+		case ACTION_RECOVER:
-+		case ACTION_CHECK:
-+		case ACTION_REPAIR:
-+		case ACTION_RESYNC:
-+			return -EBUSY;
-+		default:
-+			return -EINVAL;
-+		}
- 	} else {
--		if (cmd_match(page, "check"))
-+		switch (action) {
-+		case ACTION_FROZEN:
-+			set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-+			return len;
-+		case ACTION_RESHAPE:
-+			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-+			ret = mddev_start_reshape(mddev);
-+			if (ret)
-+				return ret;
-+			break;
-+		case ACTION_RECOVER:
-+			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-+			set_bit(MD_RECOVERY_RECOVER, &mddev->recovery);
-+			break;
-+		case ACTION_CHECK:
- 			set_bit(MD_RECOVERY_CHECK, &mddev->recovery);
--		else if (!cmd_match(page, "repair"))
-+			fallthrough;
-+		case ACTION_REPAIR:
-+			set_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
-+			set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
-+			fallthrough;
-+		case ACTION_RESYNC:
-+		case ACTION_IDLE:
-+			clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
-+			break;
-+		default:
- 			return -EINVAL;
--		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--		set_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
--		set_bit(MD_RECOVERY_SYNC, &mddev->recovery);
-+		}
- 	}
-+
- 	if (mddev->ro == MD_AUTO_READ) {
- 		/* A write to sync_action is enough to justify
- 		 * canceling read-auto mode
--- 
-2.39.2
+I think we should also support .shutdown (just turn the IOMMU off?),
+otherwise the IOMMU driver reports EBUSY and fails to initialize when
+rebooting.
 
+Same comment for the PCI driver.
+
+Thanks,
+drew
