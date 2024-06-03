@@ -1,146 +1,247 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FFC757E0
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 14:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073B8757E0;
+	Mon,  3 Jun 2024 14:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717424245; cv=none; b=YCpK2LyRx+qAMFZzd8DxKI9M/DK/8jagggb37kTCJuNAma22EjccpclU8RH4QZeGGWVHrgkx2DSM1CWzkW+8trPhK4gXWfqVkaSooTaReFAMwhNX1wdpnOmVnkhUBBrYSolDCv1j5hUUwfc/2neqno35/RfSlfsAJqSXsBsZUjM=
+	t=1717424287; cv=none; b=T4tM4HggBCvEG2/ULjFufo1Vi1v39XjUrJIRqiXxGILfScleyA7uBxO7nPSaCL9XEoKc1yYS6IQhNFQhA2Z/nw6NTk193JDB+zfdDnNEJg621myr01HJ10k5DsTKj1lqM5ZAUxt1zjGxQdpzvvvK1hE8+PSvJzcIuXAXX2XhQgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717424245; c=relaxed/simple;
-	bh=HKIk/fziZZuLGu58aSs/+3iSct4B2ZtBElSDQxdl5rg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Sn59ClksE7Y/E/n9SK/UK1dHj9P9dBPkxjL1FCIy60JT7FQsQw/yT4CjTaBu14CQsyU09ASki+JC4xThukPCmjb13oAT5tj8cEW4FERyimp2PmymxGRc5MEaj1dwrnvyL2jwTsPa8QZ2Id5aNHc4R/kaxBmgriBpFri2j4N7SjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rLzUrvJN; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717424287; c=relaxed/simple;
+	bh=Nf7EkE/DcmOXUWq7//w7j44DEIeDgmsYUhVl5I1q/G4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XdU/p6A7irn7ypVt0NIeTwaIVAI9aD76nXYi4//W7GSXGg2pOpvJljVJMpWJhtl9vYU3rrMOWTJeDdh6Ze54v559Ab/WSyCCSrns5HUYuVWyDSjsU5kwFu0t/lRusxTe8ByqIK+/JmZedXE9gmVbICFMrm6mqlwtVylocScRmeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=haLZJ04W; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rLzUrvJN"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a68b41ef3f6so199921366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 07:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717424241; x=1718029041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hX960fiFK86sEZShyroAmINX+eMw+I3MOlcUpYKxHw8=;
-        b=rLzUrvJNelG5IifUyrBqPAuZ27DXkGZdNLTVIgE2RqSs5A9CsgD5a0aaaIiKhm2CJ7
-         XSfqjyqppFk6v7c+gwrCBqMQoS1VNXZnknkjzOy6lORVOYwDrFYiGULyBnhFNNeiqSVM
-         ZtsYYdsil+io5g5BBgmWVjP4z3BMxEL7J8+gPKJ/9HdCDUV4IyE9094HWD/Bo/SrM1a8
-         fRPXzYAQHspXUsJcY1dNhiLnldU7POcqj89aVM7MPFMdukQSSPLkyqGgOdueDXL2AxHd
-         ya/iH/QiL7ZR1wMDVu/LdOm3wLpPYIYoDzqcaBmc+Uaoas13AP0GYWillEcgKkRA/G3K
-         6c5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717424242; x=1718029042;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hX960fiFK86sEZShyroAmINX+eMw+I3MOlcUpYKxHw8=;
-        b=IObKN/cG3Hxe7/UhZ6nSvUZVwSre2de54WDEMQyArOiZXaq2d1HhA6GxzE21WfppC8
-         7PoXQBmI68A3kshnld51dtbSoo44Drv0pnyDITdgyXpB7UKhB7G5Ja8CVzEnEAplHHAn
-         KWO5x1hDOstPJsE76Af7teU99nmOCTQ4J38mmcPhfbbaJMVond9ScRad9Js6ZbDRRVtB
-         BGi9BklYjSjaKm6t684ThM8GNOM4I3lb2H9xlbQU05KGWBfDTYA4AKAzd5RRIdGNZN0f
-         momvnvMHtcsqErbxo2tsOVwIwNsh45ALmBP87r/NA4ihjFie5hIBvQd66dxjBsXpt+ws
-         8UaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSIOgPVD/XdfhPqn+w1BwQxfgD8QX3cCiQaHtkd8dID6J4WtMkKCD9amdhvEX/YohVLKpn4rngZwwqg9gpXUxV39axLnTFMCpLpHnx
-X-Gm-Message-State: AOJu0YwIaEmlYOdi+wszT86Oyewjw8ZGb04GwWdAQ1e5G90Hu3nJcjJo
-	Umzyp7WhQYReN3k1pvjEyGV50cIym0wFfZY7AsBpieRvgOtrIlCABctfkkqC3TkiYR6GNoeotdE
-	l+Bvf2ddN4r9MVEyAC6UCHr+aSvKx9kqMXinN
-X-Google-Smtp-Source: AGHT+IF2dM971g+G40jgbxNlCnWLD2vDmcmV06zLLO0GJhjluR0VCD0WMHMSdMpVvOnlSN5qx4LmzaU7Z6g2TUlHcjM=
-X-Received: by 2002:a17:907:914e:b0:a68:9621:a93c with SMTP id
- a640c23a62f3a-a689621ab6fmr371329366b.8.1717424241215; Mon, 03 Jun 2024
- 07:17:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="haLZJ04W"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 453EHi6Y066799;
+	Mon, 3 Jun 2024 09:17:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717424264;
+	bh=WY81iHewcfaHm+CBu0+YMAJ6JRDKVaA92ColmoV1lgY=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=haLZJ04WXtZsjmFA6su4X4sqc1YmJ71x0Js+wWV0DpL1G+28UP/RxwglItNwAGbnL
+	 rCuhQAdmVgr9779Uoji5RhF4ynJp31GIkA+qzrOdP+jcTyI2Z9hJntCXIhX6r4l6v5
+	 7qwHt4O5KsvA+yUUiAhkfEnEGKSIphSi6PcsdDBI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 453EHigd009400
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Jun 2024 09:17:44 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Jun 2024 09:17:44 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Jun 2024 09:17:43 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 453EHhgd073081;
+	Mon, 3 Jun 2024 09:17:43 -0500
+Message-ID: <147d58a6-0cad-47b6-a069-755f835a77e9@ti.com>
+Date: Mon, 3 Jun 2024 09:17:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530201616.1316526-1-almasrymina@google.com>
- <20240530201616.1316526-3-almasrymina@google.com> <ZlqzER_ufrhlB28v@infradead.org>
-In-Reply-To: <ZlqzER_ufrhlB28v@infradead.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 3 Jun 2024 07:17:05 -0700
-Message-ID: <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
-Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
- custom page providers
-To: Christoph Hellwig <hch@infradead.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
-	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Jeroen de Borst <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/7] arm64: dts: ti: k3-j722s-main: Add SERDES and PCIe
+ support
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <rogerq@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>,
+        <danishanwar@ti.com>, <srk@ti.com>
+References: <20240601121554.2860403-1-s-vadapalli@ti.com>
+ <20240601121554.2860403-7-s-vadapalli@ti.com>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20240601121554.2860403-7-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, May 31, 2024 at 10:35=E2=80=AFPM Christoph Hellwig <hch@infradead.o=
-rg> wrote:
->
-> On Thu, May 30, 2024 at 08:16:01PM +0000, Mina Almasry wrote:
-> > I'm unsure if the discussion has been resolved yet. Sending the series
-> > anyway to get reviews/feedback on the (unrelated) rest of the series.
->
-> As far as I'm concerned it is not.  I've not seen any convincing
-> argument for more than page/folio allocator including larger order /
-> huge page and dmabuf.
->
+On 6/1/24 7:15 AM, Siddharth Vadapalli wrote:
+> J722S SoC has two instances of SERDES namely SERDES0 and SERDES1 and one
+> instance of PCIe namely PCIe0. Both SERDES0 and SERDES1 are single lane
+> SERDES. The PCIe0 instance of PCIe is a Gen3 single lane PCIe controller.
+> 
+> Since SERDES and PCIe are not present on AM62P SoC, add the device-tree
+> nodes corresponding to them in the J722S SoC specific "k3-j722s-main.dtsi"
+> file.
+> 
+> Co-developed-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> v3:
+> https://lore.kernel.org/r/20240524090514.152727-2-s-vadapalli@ti.com/
+> https://lore.kernel.org/r/20240524090514.152727-7-s-vadapalli@ti.com/
+> and
+> https://lore.kernel.org/r/20240524090514.152727-8-s-vadapalli@ti.com/
+> Changes since v3:
+> - The k3-j722s-main.dtsi specific changes in the above patches have been
+>    squashed into this patch.
+> 
+>   arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 131 ++++++++++++++++++++++
+>   1 file changed, 131 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> index 3ca3f0041956..91489014f09e 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+> @@ -4,7 +4,121 @@
+>    * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+>    */
+>   
+> +#include <dt-bindings/phy/phy-cadence.h>
+> +#include <dt-bindings/phy/phy-ti.h>
+> +
+> +/ {
+> +	serdes_refclk: clk-0 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <0>;
+> +	};
+> +};
+> +
+>   &cbass_main {
+> +	serdes_wiz0: phy@f000000 {
+> +		compatible = "ti,am64-wiz-10g";
+> +		ranges = <0x0f000000 0x0 0x0f000000 0x00010000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		power-domains = <&k3_pds 279 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 279 0>, <&k3_clks 279 1>, <&serdes_refclk>;
+> +		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
+> +		num-lanes = <1>;
+> +		#reset-cells = <1>;
+> +		#clock-cells = <1>;
+> +
+> +		assigned-clocks = <&k3_clks 279 1>;
+> +		assigned-clock-parents = <&k3_clks 279 5>;
+> +
+> +		serdes0: serdes@f000000 {
+> +			compatible = "ti,j721e-serdes-10g";
+> +			reg = <0x0f000000 0x00010000>;
+> +			reg-names = "torrent_phy";
+> +			resets = <&serdes_wiz0 0>;
+> +			reset-names = "torrent_reset";
+> +			clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
+> +				 <&serdes_wiz0 TI_WIZ_PHY_EN_REFCLK>;
+> +			clock-names = "refclk", "phy_en_refclk";
+> +			assigned-clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
+> +					  <&serdes_wiz0 TI_WIZ_PLL1_REFCLK>,
+> +					  <&serdes_wiz0 TI_WIZ_REFCLK_DIG>;
+> +			assigned-clock-parents = <&k3_clks 279 1>,
+> +						 <&k3_clks 279 1>,
+> +						 <&k3_clks 279 1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			#clock-cells = <1>;
+> +
+> +			status = "disabled"; /* Needs lane config */
 
-Thanks Christoph, this particular patch series adds dmabuf, so I
-assume no objection there. I assume the objection is that you want the
-generic, extensible hooks removed.
+Does the other SERDES (serdes1) not need this config? It looks like
+it does in the board file.. If so disable it too.
 
-To be honest, I don't think the hooks are an integral part of the
-design, and at this point I think we've argued for them enough. I
-think we can easily achieve the same thing with just raw if statements
-in a couple of places. We can always add the hooks if and only if we
-actually justify many memory providers.
+Andrew
 
-Any objections to me removing the hooks and directing to memory
-allocations via simple if statements? Something like (very rough
-draft, doesn't compile):
-
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index 92be1aaf18ccc..2cc986455bce6 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -557,8 +557,8 @@ netmem_ref page_pool_alloc_netmem(struct page_pool
-*pool, gfp_t gfp)
-                return netmem;
-
-        /* Slow-path: cache empty, do real allocation */
--       if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_op=
-s)
--               netmem =3D pool->mp_ops->alloc_pages(pool, gfp);
-+       if (unlikely(page_pool_is_dmabuf(pool)))
-+               netmem =3D mp_dmabuf_devmem_alloc_pages():
-        else
-                netmem =3D __page_pool_alloc_pages_slow(pool, gfp);
-        return netmem;
-
-
---=20
-Thanks,
-Mina
+> +		};
+> +	};
+> +
+> +	serdes_wiz1: phy@f010000 {
+> +		compatible = "ti,am64-wiz-10g";
+> +		ranges = <0x0f010000 0x0 0x0f010000 0x00010000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		power-domains = <&k3_pds 280 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 280 0>, <&k3_clks 280 1>, <&serdes_refclk>;
+> +		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
+> +		num-lanes = <1>;
+> +		#reset-cells = <1>;
+> +		#clock-cells = <1>;
+> +
+> +		assigned-clocks = <&k3_clks 280 1>;
+> +		assigned-clock-parents = <&k3_clks 280 5>;
+> +
+> +		serdes1: serdes@f010000 {
+> +			compatible = "ti,j721e-serdes-10g";
+> +			reg = <0x0f010000 0x00010000>;
+> +			reg-names = "torrent_phy";
+> +			resets = <&serdes_wiz1 0>;
+> +			reset-names = "torrent_reset";
+> +			clocks = <&serdes_wiz1 TI_WIZ_PLL0_REFCLK>,
+> +				 <&serdes_wiz1 TI_WIZ_PHY_EN_REFCLK>;
+> +			clock-names = "refclk", "phy_en_refclk";
+> +			assigned-clocks = <&serdes_wiz1 TI_WIZ_PLL0_REFCLK>,
+> +					  <&serdes_wiz1 TI_WIZ_PLL1_REFCLK>,
+> +					  <&serdes_wiz1 TI_WIZ_REFCLK_DIG>;
+> +			assigned-clock-parents = <&k3_clks 280 1>,
+> +						 <&k3_clks 280 1>,
+> +						 <&k3_clks 280 1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			#clock-cells = <1>;
+> +		};
+> +	};
+> +
+> +	pcie0_rc: pcie@f102000 {
+> +		compatible = "ti,j722s-pcie-host", "ti,j721e-pcie-host";
+> +		reg = <0x00 0x0f102000 0x00 0x1000>,
+> +		      <0x00 0x0f100000 0x00 0x400>,
+> +		      <0x00 0x0d000000 0x00 0x00800000>,
+> +		      <0x00 0x68000000 0x00 0x00001000>;
+> +		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
+> +		ranges = <0x01000000 0x00 0x68001000  0x00 0x68001000  0x00 0x0010000>,
+> +			 <0x02000000 0x00 0x68011000  0x00 0x68011000  0x00 0x7fef000>;
+> +		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
+> +		interrupt-names = "link_state";
+> +		interrupts = <GIC_SPI 99 IRQ_TYPE_EDGE_RISING>;
+> +		device_type = "pci";
+> +		max-link-speed = <3>;
+> +		num-lanes = <1>;
+> +		power-domains = <&k3_pds 259 TI_SCI_PD_EXCLUSIVE>;
+> +		clocks = <&k3_clks 259 0>, <&serdes1 CDNS_TORRENT_REFCLK_DRIVER>;
+> +		clock-names = "fck", "pcie_refclk";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		bus-range = <0x0 0xff>;
+> +		vendor-id = <0x104c>;
+> +		device-id = <0xb010>;
+> +		cdns,no-bar-match-nbits = <64>;
+> +		ti,syscon-pcie-ctrl = <&pcie0_ctrl 0x0>;
+> +		msi-map = <0x0 &gic_its 0x0 0x10000>;
+> +		status = "disabled";
+> +	};
+> +
+>   	usbss1: usb@f920000 {
+>   		compatible = "ti,j721e-usb";
+>   		reg = <0x00 0x0f920000 0x00 0x100>;
+> @@ -37,3 +151,20 @@ usb1: usb@31200000{
+>   		};
+>   	};
+>   };
+> +
+> +&main_conf {
+> +	serdes_ln_ctrl: mux-controller@4080 {
+> +		compatible = "reg-mux";
+> +		reg = <0x4080 0x14>;
+> +		#mux-control-cells = <1>;
+> +		mux-reg-masks = <0x00 0x3>, /* SERDES0 lane0 select */
+> +				<0x10 0x3>; /* SERDES1 lane0 select */
+> +	};
+> +};
+> +
+> +&wkup_conf {
+> +	pcie0_ctrl: pcie0-ctrl@4070 {
+> +		compatible = "ti,j784s4-pcie-ctrl", "syscon";
+> +		reg = <0x4070 0x4>;
+> +	};
+> +};
