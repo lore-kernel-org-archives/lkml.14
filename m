@@ -1,115 +1,190 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB277E792;
-	Mon,  3 Jun 2024 09:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503323BBF3;
+	Mon,  3 Jun 2024 09:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717405478; cv=none; b=nm78hbIYHCf0A+qCrp9zAYi9Fr1P95WxN53kbc02WXwdAmyzMTkhCKAm12NygQ4JUDEZiItZMXYitZku4WLAuqZKHzqNNhY7DTjlrUPiYuNkjJhaQQXozy8tpqGMmEAIqpi1rHXE+YPU2TXZT4o+rz+Ko6oTZBNsF5PrdCxkXCA=
+	t=1717405526; cv=none; b=UEzt4EhpFr1uLWLzdCLOL+0EfNei+LEJGKD8awbBD4+bF3msuMSznOGa6z5W3PuSRf4WZQluS78GxXsbVZIYFjfJTo7JJQZE2EMOCwZcqzI/8pdBPaeQHBHGLcaxGgCspR7s+mLlRNQxkFhJtPKLCO93X9JTjK/5b1OEXLC7NII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717405478; c=relaxed/simple;
-	bh=k7Hy66vX/C6sOWjPSgDZazgLPHPy3ibQ3Zr6PMgovpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KePc425jyShjkqFKFb0YmNssI6hliVjmoJcsz4E9IsnIBvK/5d6pajST28Yzl0qkdhx2CZAtNPRznGulAzzGTQUrV8sccLJTc3HOUJ6UjICu4/o5rjZvF4Uvgd5LEIC3xcSrYxlzjABCeSii/fh0PBWd0x/mm4EnR2eR7rACVPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=B/GXgkrR; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1717405526; c=relaxed/simple;
+	bh=z3NTm7cVxmNTzl47hibxjvllGfDTN9yK1sU3vj/kIsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=onaaPzZe6fZC21TLEuWBcbIJUs6HoxTAfYVuWlpendYRsWU0oRIH50F52aJnaRnf0hVY9R7fWVsfR7nBxecvQkLyODf3ko0CDKXW4KlPT8Tld3UYZhA1jU1ILGHYSga2kcVqeFE7sLJ9JvuXp6u1cdEsgh5G5H8ZLBUG8CK3HEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ee3GXsiY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ju5ZNMMN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ee3GXsiY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ju5ZNMMN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="B/GXgkrR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PL2tpWgubRP0I1wFdl1ZHWzMi0qsZ0DU3zEaEHooRQY=; b=B/GXgkrRVf4Kx2g9TuilFMzYS2
-	U9NTJ5sySISyPgH9X1HT28urmVye+m8mf3bX59ZQDteLTM3jnFc1Kzc+tmlAFyVnmxXtbYs0av3NO
-	OmLqHpnPC3byTnIq33a+gZJnip3nRKGZul8W89TBkvBRFJ3JHiAwenoET9L5h8IZwUzENpMQUAMOp
-	uZWQu6OKtFlZCvBAv4hF9G3Y3hTj/hTIKsrrPn661EXWRJZ/hIJmtTR9est5xH+53rgZ7RoQL2Dnr
-	KDSvpFP9+i3sAVYcUhzW8UeuDOaW9ZGHARWbtggPnAP4+E0DPiweET4f+R95aIdfxnRFa9XdvgzvH
-	ZnB0owOQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45002)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sE3bi-0002Tb-2G;
-	Mon, 03 Jun 2024 10:03:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sE3be-0000IR-OA; Mon, 03 Jun 2024 10:03:54 +0100
-Date: Mon, 3 Jun 2024 10:03:54 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
-	Abhishek Chauhan <quic_abchauha@quicinc.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Tomer Maimon <tmaimon77@gmail.com>, openbmc@lists.ozlabs.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v2 10/10] net: stmmac: Add DW XPCS specified via
- "pcs-handle" support
-Message-ID: <Zl2G+gK8qpBjGpb3@shell.armlinux.org.uk>
-References: <20240602143636.5839-1-fancer.lancer@gmail.com>
- <20240602143636.5839-11-fancer.lancer@gmail.com>
- <2lpomvxhmh7bxqhkuexukztwzjfblulobepmnc4g4us7leldgp@o3a3zgnpua2a>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ee3GXsiY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ju5ZNMMN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ee3GXsiY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ju5ZNMMN"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5FE4420011;
+	Mon,  3 Jun 2024 09:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717405521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l8dVW93I3hjqS2K8Xe8A47EbrmxilI3hZM/aZ3B81X0=;
+	b=ee3GXsiYW5a8UMiXPjPb/MtfihL5qsO+VszqwaRXVbVFnxhMz/ppUSKax3KFPyfX7BkLnV
+	OzWUJgnffGIV5u5sVBXMx7Ojzdn3527AYedNgKwN8Y1IGtJwl+ijHFaEebCdSnu7tC0WtI
+	u3hYozbT8DQFgwOXjsVH/VYEpV4+H/k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717405521;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l8dVW93I3hjqS2K8Xe8A47EbrmxilI3hZM/aZ3B81X0=;
+	b=Ju5ZNMMNvG8YRAb2KwGeHlV2hdGu0b2wVXM2LrEiZIr2qvEO8cEvG+ve+B8JhuuqM/yIRl
+	4Y1g3lqmSWkFryCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717405521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l8dVW93I3hjqS2K8Xe8A47EbrmxilI3hZM/aZ3B81X0=;
+	b=ee3GXsiYW5a8UMiXPjPb/MtfihL5qsO+VszqwaRXVbVFnxhMz/ppUSKax3KFPyfX7BkLnV
+	OzWUJgnffGIV5u5sVBXMx7Ojzdn3527AYedNgKwN8Y1IGtJwl+ijHFaEebCdSnu7tC0WtI
+	u3hYozbT8DQFgwOXjsVH/VYEpV4+H/k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717405521;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l8dVW93I3hjqS2K8Xe8A47EbrmxilI3hZM/aZ3B81X0=;
+	b=Ju5ZNMMNvG8YRAb2KwGeHlV2hdGu0b2wVXM2LrEiZIr2qvEO8cEvG+ve+B8JhuuqM/yIRl
+	4Y1g3lqmSWkFryCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EDFD613A93;
+	Mon,  3 Jun 2024 09:05:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id PQ9sOVCHXWY5eQAAD6G6ig
+	(envelope-from <hare@suse.de>); Mon, 03 Jun 2024 09:05:20 +0000
+Message-ID: <0a47eebd-2aca-494d-814b-bc949b08630b@suse.de>
+Date: Mon, 3 Jun 2024 11:05:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2lpomvxhmh7bxqhkuexukztwzjfblulobepmnc4g4us7leldgp@o3a3zgnpua2a>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] rust: block: add rnull, Rust null_blk
+ implementation
+To: Keith Busch <kbusch@kernel.org>, Andreas Hindborg <nmi@metaspace.dk>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Damien Le Moal <dlemoal@kernel.org>, Bart Van Assche <bvanassche@acm.org>,
+ Ming Lei <ming.lei@redhat.com>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ Andreas Hindborg <a.hindborg@samsung.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
+ <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>,
+ Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>,
+ =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>,
+ Joel Granados <j.granados@samsung.com>,
+ "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Daniel Gomez <da.gomez@samsung.com>, Niklas Cassel <Niklas.Cassel@wdc.com>,
+ Philipp Stanner <pstanner@redhat.com>, Conor Dooley <conor@kernel.org>,
+ Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+ =?UTF-8?Q?Matias_Bj=C3=B8rling?= <m@bjorling.me>,
+ open list <linux-kernel@vger.kernel.org>,
+ "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+ "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+ "gost.dev@samsung.com" <gost.dev@samsung.com>
+References: <20240601134005.621714-1-nmi@metaspace.dk>
+ <20240601134005.621714-3-nmi@metaspace.dk>
+ <ZlsvHV6y4DEdC8ja@kbusch-mbp.dhcp.thefacebook.com>
+ <875xusoetn.fsf@metaspace.dk>
+ <ZltF5NvDnKFphcOo@kbusch-mbp.dhcp.thefacebook.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ZltF5NvDnKFphcOo@kbusch-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.79
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,protonmail.com];
+	FREEMAIL_CC(0.00)[kernel.dk,lst.de,kernel.org,acm.org,redhat.com,vger.kernel.org,samsung.com,linuxfoundation.org,infradead.org,gmail.com,garyguo.net,protonmail.com,proton.me,google.com,nvidia.com,bupt.edu.cn,pankajraghav.com,wdc.com,bjorling.me,lists.linux-foundation.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLhytspa9b8ghbrab87o1fjg5u)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
-On Mon, Jun 03, 2024 at 11:54:22AM +0300, Serge Semin wrote:
-> >  	if (priv->plat->pcs_init) {
-> >  		ret = priv->plat->pcs_init(priv);
+On 6/1/24 18:01, Keith Busch wrote:
+> On Sat, Jun 01, 2024 at 05:36:20PM +0200, Andreas Hindborg wrote:
+>> Keith Busch <kbusch@kernel.org> writes:
+>>
+>>> On Sat, Jun 01, 2024 at 03:40:04PM +0200, Andreas Hindborg wrote:
+>>>> +impl kernel::Module for NullBlkModule {
+>>>> +    fn init(_module: &'static ThisModule) -> Result<Self> {
+>>>> +        pr_info!("Rust null_blk loaded\n");
+>>>> +        let tagset = Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
+>>>> +
+>>>> +        let disk = {
+>>>> +            let block_size: u16 = 4096;
+>>>> +            if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
+>>>> +                return Err(kernel::error::code::EINVAL);
+>>>> +            }
+>>>
+>>> You've set block_size to the literal 4096, then validate its value
+>>> immediately after? Am I missing some way this could ever be invalid?
+>>
+>> Good catch. It is because I have a patch in the outbound queue that allows setting
+>> the block size via a module parameter. The module parameter patch is not
+>> upstream yet. Once I have that up, I will send the patch with the block
+>> size config.
+>>
+>> Do you think it is OK to have this redundancy? It would only be for a
+>> few cycles.
 > 
-> > +	} else if (fwnode_property_present(devnode, "pcs-handle")) {
-> > +		pcsnode = fwnode_find_reference(devnode, "pcs-handle", 0);
-> > +		xpcs = xpcs_create_fwnode(pcsnode, mode);
-> > +		fwnode_handle_put(pcsnode);
-> > +		ret = PTR_ERR_OR_ZERO(xpcs);
+> It's fine, just wondering why it's there. But it also allows values like
+> 1536 and 3584, which are not valid block sizes, so I think you want the
+> check to be:
 > 
-> Just figured, we might wish to be a bit more portable in the
-> "pcs-handle" property semantics implementation seeing there can be at
-> least three different PCS attached:
-> DW XPCS
-> Lynx PCS
-> Renesas RZ/N1 MII
+> 	if !(512..=4096).contains(&block_size) || ((block_size & (block_size - 1)) != 0)
 > 
-> Any suggestion of how to distinguish the passed handle? Perhaps
-> named-property, phandle argument, by the compatible string or the
-> node-name?
+Can't we overload .contains() to check only power-of-2 values?
 
-I can't think of a reasonable solution to this at the moment. One
-solution could be pushing this down into the platform code to deal
-with as an interim solution, via the new .pcs_init() method.
+Cheers,
 
-We could also do that with the current XPCS code, since we know that
-only Intel mGBE uses xpcs. This would probably allow us to get rid
-of the has_xpcs flag.
+Hannes
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
