@@ -1,89 +1,142 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA1B12D754
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077384D10;
+	Mon,  3 Jun 2024 13:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717421130; cv=none; b=XFU7CyWIw97gfRFUPrOmHoGwgr8KdggWK/NFrLIfEa4uAQh8Jvf8giHOqIaCtmQAPwGRNjKel3iDWeKw3+S1PyW2P/fVkyucY8vRL8vlniVmbT80L0iZAnVg9wWP41sqhBKntlE1kgK3OMAnbLKM6HFxnsoH5nCHo9OhLkvSNVE=
+	t=1717421194; cv=none; b=c6GWzoVA6kSFWkN/Qav/NWDdt5YQCCqGQYfbHRBbR5KCxYGGBGd4rq0ZXrJC3mT2kndtbjmNoQW0B1nd04xZTPp9eL//Q9brg34g1DbBfls+Mw1rbZ8RYu0jLCnbjoZbxilKq9PHZIXN+cxcE+natl6HDUzWBT2K7oVLCbLssDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717421130; c=relaxed/simple;
-	bh=jHbFEWNzUZ0phj/jnjRR5KRXnUJ3RgKUe8Ef8YfiHO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ps1FgGVi5EI5qmkmclHtFZSKTmiU0qHBybtj7NCDxDNosKFMo0Aav8Zu6GUjDsCJ/oFJC7w0QeI6DeaWm7sjUi58FhWGpXzdRJimwzOEd6J7wJR538o+6FDkja+ZcQLVFd/d5gNZ9edF2w6Y0d0JDlZGzuq6kqNs+hOVWWlZ/k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zbk8qT2v; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1717421194; c=relaxed/simple;
+	bh=WGK8e6et2Jc1PekWJ5Q/87WxJ0aFOpzIdbL1g64OCrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KHUkd+PkQkKonYTnyUQtO/pynwOHu8nHFmtOoyS45CbKEg1EH/KQIK3u2+Z6/Vv9CVJhLMGKVBfo25XBa8dVzL58XHB7O05K3oG56jjmhRH5JKzfsZGWQUW8N7sN690MiJXPFCEmXWJXapy5SREQlNVPz2vADlywomxr+yzECpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W1Fq/MEo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zbk8qT2v"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4214053918aso4341625e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717421127; x=1718025927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=db83b7gtmge2A8js55gVAy2SLJKXwGxS2NmZR1LN6rQ=;
-        b=zbk8qT2vkCjl64UqrZz6W5sPDqdRLNanv5CfA1L9IYn+GkZJa1zlonQ2ZxEFQK70jm
-         92udH9VqMocARjyIwkzPTOO5TsY4UvlK6o+nHKspPgQje9aQsBtO7BzFSSUv5ous1gJc
-         9l9+nxi9rkQny+zsAW3vKuVSCnUuXk1KsCQLHA9U81rAfxrytI3zOOPYGxNunE9FUZ2j
-         Rl3MNZuC3b6aer0C4Q6GXB8uB9fmT970agwvAJHDiXNPDorDVrtGDrhd/wYn+JY+ZAf1
-         oEobo7Z+R7LKBRL/ssYK26pTzhs8QjW7KAyAsw9ba1rqwGizsdPKTmDjT2XBeVSbyFlo
-         NNgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717421127; x=1718025927;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=db83b7gtmge2A8js55gVAy2SLJKXwGxS2NmZR1LN6rQ=;
-        b=DN2UXBhir/+vR6KkUkDccNpAMWMQyRhzMJiqwmr00xov02YJMmhp5LwXQ1ILvcxqZi
-         3sSN+yS2fc70eLTKE0MyW70mTtc3EXSIk/G9EF52+iEYIJb027gRV5ic5/2cbervVJPs
-         pYyNLHZe+ZOOt1ByBDiJ9gT+0c1GsGuTV3tQBklhFaaj7LVG2yv3UBzcAzV7jtpe+F0r
-         SFuPwUpLjaVjoHcjgbGZb4FA5DaXejoqbxjBsJqmThYmjDg5qFmAORq4WLGdBjlKLRz0
-         783zH0YMoKvcKC0CiiEUUtm/TOwgkvpH7pYbpt4nO7Gp9NLdDsg/uH2Mf166Ut00n2CI
-         WHMg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+HvjnsZwYjkSN4gBq2byMiHCLuncfqvT+znc4sRxYVrOU010Dvc7get7P7oyiY0VbejMPv8SWcaMIJWknoupXg6TsJeZjE9aP/rXR
-X-Gm-Message-State: AOJu0YzyklQt0mUktrLcnOp6MdDyWJomh9Ce/n8jnR1PvxeC8bvBkFWP
-	T+eZXeKxnWso2H+MLX9hR9qkCfs0OWEdyev6wqBxrb4W5Tfa2AaWYoHQnNfo7uY=
-X-Google-Smtp-Source: AGHT+IGHeaI7RxPN2zI01909WUMu7NTmnnwuif16mRfbLRfurATUUS9YSD294/SZEB/sDpFHAOOXzg==
-X-Received: by 2002:a05:600c:424b:b0:421:29d7:f87 with SMTP id 5b1f17b1804b1-4212e09ba44mr67922705e9.27.1717421127539;
-        Mon, 03 Jun 2024 06:25:27 -0700 (PDT)
-Received: from toaster.lan ([2a01:e0a:3c5:5fb1:638a:e591:7142:7b85])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4212b84de44sm117381195e9.11.2024.06.03.06.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 06:25:27 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: linux-amlogic@lists.infradead.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Xianwei Zhao <xianwei.zhao@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Yu Tu <yu.tu@amlogic.com>
-Subject: Re: [PATCH] clk: meson: s4: fix pwm_j_div parent clock
-Date: Mon,  3 Jun 2024 15:24:46 +0200
-Message-ID: <171742077913.140081.16988283160317117182.b4-ty@baylibre.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240516071612.2978201-1-xianwei.zhao@amlogic.com>
-References: <20240516071612.2978201-1-xianwei.zhao@amlogic.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W1Fq/MEo"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453CbsnW000360;
+	Mon, 3 Jun 2024 13:26:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	bxrD1PBB/smpCbgN2RLudDCE7GpM9cWp7s3S21m9/4M=; b=W1Fq/MEo6LPXKptZ
+	MUyKS8bTM/0FEZlDMizmEYcX8LUayP847qHw99yHsHyYezBxhDdj0Dqktn51w6i4
+	exr0F5GkhVa1LBc/4rCZMNbtyR70aDkUZvxME7WXs4Q+hiuwPoao1Hx2dhfb9m71
+	7yzABhEIGDK4hK4wWNPh9pMnXk1u42/VcV8r1F80pYlShnrG6uLJoqOJA3mfX7fo
+	OoNmfb1EK30PeRUy5gQCwXvgPdyHGEckQCoBUxpQ3zB7Fpfep2ZfNW53usWQrWx/
+	w6eK67DLh9sBSUiAwBjF86s3o0lbWh1HB5JXmtCBi2cppQhaCw+2BUGLNRcQwQ0t
+	7ycMZw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw4bc0ae-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Jun 2024 13:26:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453DQQsT023911
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Jun 2024 13:26:26 GMT
+Received: from [10.216.21.127] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
+ 06:26:20 -0700
+Message-ID: <88b683c8-56c8-493c-8f22-832cd6d13279@quicinc.com>
+Date: Mon, 3 Jun 2024 18:56:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 6/8] dt-bindings: clock: qcom: Add SM8650 camera clock
+ controller
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Taniya Das
+	<quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>
+References: <20240602114439.1611-1-quic_jkona@quicinc.com>
+ <20240602114439.1611-7-quic_jkona@quicinc.com>
+ <9fdf4c46-a07e-4dfc-9992-4dd94d8dab5f@linaro.org>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <9fdf4c46-a07e-4dfc-9992-4dd94d8dab5f@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 2xrUARPnkj9-HyJSV7Zvj3_-ILPl18ru
+X-Proofpoint-GUID: 2xrUARPnkj9-HyJSV7Zvj3_-ILPl18ru
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-03_08,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ bulkscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=979 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406030110
 
-Applied to clk-meson (v6.11/drivers), thanks!
 
-[1/1] clk: meson: s4: fix pwm_j_div parent clock
-      https://github.com/BayLibre/clk-meson/commit/c591745831e7
 
-Best regards,
---
-Jerome
+On 6/2/2024 8:56 PM, Krzysztof Kozlowski wrote:
+> On 02/06/2024 13:44, Jagadeesh Kona wrote:
+>> Add device tree bindings for the camera clock controller on
+>> Qualcomm SM8650 platform.
+>>
+>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Acked-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+>> ---
+>>   .../bindings/clock/qcom,sm8450-camcc.yaml     |   3 +
+>>   include/dt-bindings/clock/qcom,sm8650-camcc.h | 195 ++++++++++++++++++
+>>   2 files changed, 198 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/qcom,sm8650-camcc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
+>> index 645080b848f0..f58edfc10f4c 100644
+>> --- a/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-camcc.yaml
+>> @@ -8,6 +8,7 @@ title: Qualcomm Camera Clock & Reset Controller on SM8450
+>>   
+>>   maintainers:
+>>     - Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+>> +  - Jagadeesh Kona <quic_jkona@quicinc.com>
+>>   
+>>   description: |
+>>     Qualcomm camera clock control module provides the clocks, resets and power
+>> @@ -17,6 +18,7 @@ description: |
+>>       include/dt-bindings/clock/qcom,sc8280xp-camcc.h
+>>       include/dt-bindings/clock/qcom,sm8450-camcc.h
+>>       include/dt-bindings/clock/qcom,sm8550-camcc.h
+>> +    include/dt-bindings/clock/qcom,sm8650-camcc.h
+>>       include/dt-bindings/clock/qcom,x1e80100-camcc.h
+> 
+> Just squash the other patch here or drop it completely.
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Sure, will squash it to this patch in next series.
+
+Thanks,
+Jagadeesh
