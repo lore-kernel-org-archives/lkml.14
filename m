@@ -1,137 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3696426AD5;
-	Mon,  3 Jun 2024 14:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4555512FB09;
+	Mon,  3 Jun 2024 14:52:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717426308; cv=none; b=YEZTsF7fynYMri1aMZHdwx/LhCeGq1zg+FJlx6TEPNQeM5mjKGwtw830xEUtszhtnfsT29bWD9G+oZ/5VewSKOWnNFT0KZ7a9b42AbsYyKSEhSrWqrtJr2wTeqfYobUzwcoUOiEIsAAsFG6qOxJrmZ0azk8IitQGgNS9Rl4N8Po=
+	t=1717426325; cv=none; b=l70FSMbn2XEYX8vJfArk9JbesAVWtKGjScUIWiA7D/1zMCdbGdOAE5x/UxexHZHY2+30LFRaQM5xJrK+JLfyY1V6K8L7kb7f/6BpR1xNvssA8ENmrCZj72b/wmWDuI9+Yg/2Q0FCdO8Sxy7FmVLAxxtHXzJbhEGLIGllzcNZusc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717426308; c=relaxed/simple;
-	bh=ca60k8sUpBG2JQiZ8IbblhTHdpHysARDcXRKjwBesDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BpmcYU3BBHYlwy7vJzza/szz4dcMX/mouapImVsXlg3Enp0PXORTEIuicEd26v7ndT5/7y49u86abSvlFSrwv6JQHF3NKjaSuK44Kpx6Fc7NGa504IRecDzH80fH04+y94egcVxaMXO4mT/f8sC2HgkziiTUlgC6RczdNhEoU0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59847C2BD10;
-	Mon,  3 Jun 2024 14:51:42 +0000 (UTC)
-Date: Mon, 3 Jun 2024 10:52:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v2 11/27] ftrace: Allow subops filtering to be modified
-Message-ID: <20240603105250.52ea24f2@gandalf.local.home>
-In-Reply-To: <20240603113723.b192c8c346e0ed55cb94b61a@kernel.org>
-References: <20240602033744.563858532@goodmis.org>
-	<20240602033832.870736657@goodmis.org>
-	<20240603113723.b192c8c346e0ed55cb94b61a@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717426325; c=relaxed/simple;
+	bh=mhH61b2GUcMaPuimjybrsTq1Ou2q7uk9/KoQVRqHTT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GqrymDraQBiWAIXDGx5QBsnk54YlKAN8LzLO+8Qk6G1cGyMK5kvZJvHhjioGXZE5myCYsNz3/UY1fkEJ/f84qY0tKfWVOdSYIlDIYu5JhK3HeOguTXrvUQvQNYJq4IXFuqYfAFOxWMyPL7p+mMweCWwvlZWiI/1S8xTlR2qxGQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkYkmz2G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkYkmz2G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69460C32781;
+	Mon,  3 Jun 2024 14:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717426324;
+	bh=mhH61b2GUcMaPuimjybrsTq1Ou2q7uk9/KoQVRqHTT4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AkYkmz2GHRngm4bSMAzP+8az4li4SpEY/u36P9GB3VgoM/yvWp5eogAmtJS5ZsyQE
+	 SvNdybErwGz4ryu7T6AneyrJ3j4nzTYxIx/8Hvrh6IbeOpNWUnk7g3Cq8eGBd8wuVA
+	 YVM6+5k6qXcbWVVXAZ7G4WS+SEUcjwhcRkmaZA6xhXArL6ThjDA044WFRkA5VNTqkt
+	 1QXlxAIPMu3xBRmuu4hC69YqYbP1x+/MR7vEwInYPSWzplB7AoTB3YxyqJkfkBIryf
+	 eeah3RN0Z9NkDdhanM4vNcz7Z/ZUIYz0xJE1KtG0MR+eViippP5QBZF3PYJD4VIQ5Y
+	 K2tmcDQ+LhHNQ==
+Date: Mon, 3 Jun 2024 09:52:01 -0500
+From: Rob Herring <robh@kernel.org>
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
+	git@xilinx.com, Conor Dooley <conor+dt@kernel.org>,
+	Kalyani Akula <kalyani.akula@amd.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Praveen Teja Kundanala <praveen.teja.kundanala@amd.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] dt-bindings: nvmem: Use soc-nvmem node name instead of
+ nvmem
+Message-ID: <20240603145201.GA414800-robh@kernel.org>
+References: <42c21f3bcd75f821061d047730dbbcd40233e256.1716800023.git.michal.simek@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42c21f3bcd75f821061d047730dbbcd40233e256.1716800023.git.michal.simek@amd.com>
 
-On Mon, 3 Jun 2024 11:37:23 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Mon, May 27, 2024 at 10:53:50AM +0200, Michal Simek wrote:
+> Based on commit d8764d347bd7 ("dt-bindings: firmware: xilinx: Describe
+> soc-nvmem subnode") soc-nvmem should be used instead of simple nvmem that's
+> why also update example to have it described correctly everywhere.
+> 
+> Fixes: a0cfd5e99782 ("dt-bindings: nvmem: Convert xlnx,zynqmp-nvmem.txt to yaml")
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.yaml
+> index 917c40d5c382..1cbe44ab23b1 100644
+> --- a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.yaml
+> +++ b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.yaml
+> @@ -28,7 +28,7 @@ unevaluatedProperties: false
+>  
+>  examples:
+>    - |
+> -    nvmem {
+> +    soc-nvmem {
 
-> On Sat, 01 Jun 2024 23:37:55 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> [...]
-> >  
-> > +static int ftrace_hash_move_and_update_subops(struct ftrace_ops *subops,
-> > +					      struct ftrace_hash **orig_subhash,
-> > +					      struct ftrace_hash *hash,
-> > +					      int enable)
-> > +{
-> > +	struct ftrace_ops *ops = subops->managed;
-> > +	struct ftrace_hash **orig_hash;
-> > +	struct ftrace_hash *save_hash;
-> > +	struct ftrace_hash *new_hash;
-> > +	int ret;
-> > +
-> > +	/* Manager ops can not be subops (yet) */
-> > +	if (WARN_ON_ONCE(!ops || ops->flags & FTRACE_OPS_FL_SUBOP))
-> > +		return -EINVAL;  
-> 
-> This does return if ops->flags & FTRACE_OPS_FL_SUBOP, but --> (1)
+This doesn't seem like an improvement. Is there another nvmem node at 
+this level? I would fix the binding instead if not.
 
-Yes, because what is passed in is "subops" and "ops" is subops->managed.
-
+>          compatible = "xlnx,zynqmp-nvmem-fw";
+>          nvmem-layout {
+>              compatible = "fixed-layout";
+> -- 
+> 2.40.1
 > 
-> > +
-> > +	/* Move the new hash over to the subops hash */
-> > +	save_hash = *orig_subhash;
-> > +	*orig_subhash = __ftrace_hash_move(hash);
-> > +	if (!*orig_subhash) {
-> > +		*orig_subhash = save_hash;
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	/* Create a new_hash to hold the ops new functions */
-> > +	if (enable) {
-> > +		orig_hash = &ops->func_hash->filter_hash;
-> > +		new_hash = append_hashes(ops);
-> > +	} else {
-> > +		orig_hash = &ops->func_hash->notrace_hash;
-> > +		new_hash = intersect_hashes(ops);
-> > +	}
-> > +
-> > +	/* Move the hash over to the new hash */
-> > +	ret = ftrace_hash_move_and_update_ops(ops, orig_hash, new_hash, enable);  
-> 
-> This also a bit wired to me. maybe we need simple version like
-> 
-> `__ftrace_hash_move_and_update_ops()`
-> 
-> And call it from ftrace_hash_move_and_update_ops() and here?
-
-We could do that. I almost did due to other issues but I reworked the code
-where I didn't need to.
-
-> 
-> > +
-> > +	free_ftrace_hash(new_hash);
-> > +
-> > +	if (ret) {
-> > +		/* Put back the original hash */
-> > +		free_ftrace_hash_rcu(*orig_subhash);
-> > +		*orig_subhash = save_hash;
-> > +	} else {
-> > +		free_ftrace_hash_rcu(save_hash);
-> > +	}
-> > +	return ret;
-> > +}
-> > +
-> > +
-> >  static u64		ftrace_update_time;
-> >  unsigned long		ftrace_update_tot_cnt;
-> >  unsigned long		ftrace_number_of_pages;
-> > @@ -4770,8 +4823,33 @@ static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
-> >  {
-> >  	struct ftrace_ops_hash old_hash_ops;
-> >  	struct ftrace_hash *old_hash;
-> > +	struct ftrace_ops *op;
-> >  	int ret;
-> >  
-> > +	if (ops->flags & FTRACE_OPS_FL_SUBOP)
-> > +		return ftrace_hash_move_and_update_subops(ops, orig_hash, hash, enable);  
-> 
-> (1) This calls ftrace_hash_move_and_update_subops() if ops->flags & FTRACE_OPS_FL_SUBOP ?
-
-Yes, because ops turns into subops, and the ops above it is its manager ops.
-
--- Steve
