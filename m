@@ -1,155 +1,141 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE80884D07
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE04D433AE;
+	Mon,  3 Jun 2024 11:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717413456; cv=none; b=KHkPL8mvBqSpKo/luspu0vwSkRlN99wu50ijq+QpXv+3laaxRZk3vG/n57suMOmWcL7a+ns/OcrEvOEotfYsdlZ1WZuOhjXHqQHBeFZUHLcqz3x1Wco6H1terOoM3UeVpijNgV243Ceh8PwDj02lSmDjWPVeF33cqaJt1K53G2w=
+	t=1717413483; cv=none; b=PkvJV0hYR6rXBLpASsCllNEw3wNCVsSba1PUZLHc/npRFnCaf2BtbYbBwZWL+SUXMoCMJrDl5K3CRWEDitgKvIm5aUJMT9KN1WxgBznZnL2RZIqjv7C8597eO5x/vV60fIfmoHre/3m8Q3m9dhCxcLHxHNc1vub3oRBS5D+yH4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717413456; c=relaxed/simple;
-	bh=D3gB42XtxeSBE/jlJ1UPPvQmW6H1Vaq5vTF/0Hf4J0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=C3tCQvq+lhee7JDMQ2oOqwMtmM4CKAWTjKUVpbu7BXrWtyQkukCEtTjzKvhEBDewC0+sUTMw6xMxurkUUJiU2fFYqz/qaZO+lx2PSgLEV1gJ6BebFXF5OiEMYWLPPEv2ATnU9RpESGcegvlr5zSWmO86o+vXpXNFvWFPkCJy9Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FOfTfbDi; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717413483; c=relaxed/simple;
+	bh=fNXSMsIfpEIa8xVCHoOcoT1rEHej/fTjnMleI/hRA2o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IvlgPEhD1xGmeuOe7k7qd+Xm4zwYxZuKkvZEIE9blmnHz8XFGcT/DKdGczx7GoXTouluadsXltAL+37d9pydbxt2Th+fe+R/h0jeM/z4LT6Mi3wp0kVPI/XMk+VW/6yLQE0JWRq6qe0C0FlN+Vg9B+e9wWCOkzHHfdgkKJfiA+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iEMLzZI6; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FOfTfbDi"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240603111733epoutp02b87607661fb70e465b61b84aa5710a85~Vem-AZrrj2907029070epoutp02X
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:17:33 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240603111733epoutp02b87607661fb70e465b61b84aa5710a85~Vem-AZrrj2907029070epoutp02X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717413453;
-	bh=D3gB42XtxeSBE/jlJ1UPPvQmW6H1Vaq5vTF/0Hf4J0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FOfTfbDiGYY8dC+XkOh6fGvoSgYi+VKu3PQWMQ3I+dOlNKYBCeRGLbpjOtBQAZ0j1
-	 F6yeyzcPhDg2vZJa+7qvRzQXw3aDosUaUS+74DZkxsPSvBuRU6ilXXPcbQ7PF2Cr6+
-	 xMGYE71BQ1t9xzuUlXsLW5XXhxthiawahnvDJUcw=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240603111732epcas5p1ccf2e0f93b02b557dd78df93aa32c170~Vem_YDuab0938609386epcas5p1y;
-	Mon,  3 Jun 2024 11:17:32 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4VtB5k1BY1z4x9Q0; Mon,  3 Jun
-	2024 11:17:30 +0000 (GMT)
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	00.39.09989.946AD566; Mon,  3 Jun 2024 20:17:29 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240603111120epcas5p32f11d320999cb72c11dd1a3eae7ddbb0~VehjYO1QI1720317203epcas5p36;
-	Mon,  3 Jun 2024 11:11:20 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240603111119epsmtrp2f707e276d7ee7977b7bd999f469b7c14~VehjVlxGB0717207172epsmtrp2i;
-	Mon,  3 Jun 2024 11:11:19 +0000 (GMT)
-X-AuditID: b6c32a4a-e57f970000002705-d6-665da649f8aa
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	88.BE.18846.7D4AD566; Mon,  3 Jun 2024 20:11:19 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240603111116epsmtip2cdcced5778a81386c3c2c6481e874bdf~Vehf6HtUx0894208942epsmtip2t;
-	Mon,  3 Jun 2024 11:11:16 +0000 (GMT)
-Date: Mon, 3 Jun 2024 11:04:15 +0000
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, martin.petersen@oracle.com, bvanassche@acm.org,
-	david@fromorbit.com, hare@suse.de, damien.lemoal@opensource.wdc.com,
-	anuj20.g@samsung.com, joshi.k@samsung.com, nitheshshetty@gmail.com,
-	gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 11/12] null: Enable trace capability for null block
-Message-ID: <20240603110415.7furv27qlemddzee@nj.shetty@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iEMLzZI6"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a68b0a229so480258a12.3;
+        Mon, 03 Jun 2024 04:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717413480; x=1718018280; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tl3ulKo5GJTw7HBOMHVnR1dxMRxq4LpVBTOeiObvY4Q=;
+        b=iEMLzZI6L0psMOZFXxkDtgFer225An3XKA5K0llVIC3UKC1xS9sJVhW79I+3wTjAEQ
+         vsBHKd2eIL+L4hL098uBSejQFeRj7Dq9uiL2TUHuUuQgp23tYFCpIfwBubqurnh13pAF
+         dTDl5tCRr1Uhwwsoyd49ICbB1A9nO9z/+2Y+HX1PMSmTIyFO0TZ/hJ+/S2xPiZK0Ap5L
+         eE906ZqFW5DUU6YvqrkFN0l+NW4Qaxd+Ho3I9O9zM1ayGF7Cr2ZqijOpDLmXxG/gFQNi
+         jG1+yg6CyNsyMevvJ+QjGaNpevyk88rpa4o5zuZaqiN4oPeAAmnmz6ZWDwDSnPJXhvT/
+         W0sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717413480; x=1718018280;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tl3ulKo5GJTw7HBOMHVnR1dxMRxq4LpVBTOeiObvY4Q=;
+        b=amGcQltsGvM4Crb2dHJGrOgBeL/JsSsDGulGlZ3GZD32zk0Dix+N+pDcfQ/1ewMMRS
+         9UhvEp2hC7fm/tZlhMIKinYbLJBJ8TZRrRj8MpJNlcp3qmvlhTi8QQodV+Jf1m5pFa4j
+         xQinpoVu3Jd+TbyZg3rnB+UP5/N4X7IFeeHqJavMHkKrNNWJzXyLkhiE80DMZpQkYgN6
+         i+Re8LowP2eFuIDeZ1qkk07+c9pi6pI+Uv1+1x5/kjEpa9W4PvpedNGgy5upR8ud+hmg
+         oH0dtWYc7FOu9uz+Z0jZzrLAOQb00vMokIKRt7ajV1yCmhQtI3MW22tc/wTX3EkRl+Ti
+         8e2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW6aUy3XN73lsZ4K2Pl0TS55C1FETRuoNd+KHgKQ0WHJbI/UnpnWeqWo5N/N2vWiZEETI5usOJCNx6RzgIyc8SYh7Hi4yVOTB72yUpK0r9NBsKBsnsKM8a7dh2zh5X5xU22FC5uw3X5Zkm3LePl
+X-Gm-Message-State: AOJu0YyGN7NXhQjwyCxQFWadscFsVxUx2esJS0DzepxKFS+uMwtyYFu1
+	K6Ya74IDkupbKjUUX41ToVbuAJTkUNHV4TeIgXKQVev8ge7YUlEDol6boc9iRgA=
+X-Google-Smtp-Source: AGHT+IH7ThME1P861evYzO3bn2mTV8SABwp5+HfMTEHS3eGeHuOpJXkBBO7KLO0pwIaFoGiwWdKZqw==
+X-Received: by 2002:a50:935c:0:b0:57a:4af6:3197 with SMTP id 4fb4d7f45d1cf-57a4af63298mr3451951a12.10.1717413479962;
+        Mon, 03 Jun 2024 04:17:59 -0700 (PDT)
+Received: from [10.67.234.135] ([91.90.123.30])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b99c42sm5074007a12.17.2024.06.03.04.17.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 04:17:59 -0700 (PDT)
+Message-ID: <5dfdfa17-d3b3-408e-a8a6-b8dc0756eac3@gmail.com>
+Date: Mon, 3 Jun 2024 13:17:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240601062343.GA6347@lst.de>
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te1BUZRTvu3f37sUJWoGGDwgGr/YQBHcV1g9GihkcujycMMJGGVo3uLDI
-	srvtQlLTJE8NFQQTnF3cQlghQECFmOWVvJ8hKYFJgliAjKQQYA3xapddrP9+5/ed3zm/c858
-	JG5ZxLEjY6TxjEIqklDEFlZt205n14Di8Chehxmq6u3EUUr2Ko7KR88TaKZtHqC8uSUcTTSf
-	Bmi5fwBHNZ1jABUUaljofnMdhhoLL2CotLwDQ/mXUjHUsf6UQBdahwGaHFJjqGnEBV05pWWh
-	xqYeFhqsv0ygb4snOaikaw1DOV8NYUg3kQxQ5cwsC3WP2KOB1S62jz09+HMg3VsI6Tr1KIce
-	GLvBogf7E+ibZRkEXa09SU9XqwDdcD+JoIuyvmbTmanPCLou/SGb/nNyhEXP/jBE0Fk1ZYD+
-	saCdE2x1NHa/mBFFMgonRhohi4yRRntTgSFCX6GHgMd35XuifZSTVBTHeFMHgoJd/WIk+t1Q
-	Tp+KJAl6KlikVFK7396vkCXEM05imTLem2LkkRK5u9xNKYpTJkij3aRMvBefx9vjoU88Fivu
-	mbmHy3M5iXeSa4kkkEacAWYk5LrDP1RL+BmwhbTkNgCYN6IljME8gMXpU5wXQc/0dc6mZOUf
-	Hdv4UAdgZVEeZgwWAGxeXNvIYnF3wPzaq+AMIEmC6wL71kkDbc2l4OSTfmDAODeXgOtqe0OK
-	FTcQJo9JDLQ51xfOjnSyjHgr7FFNbGAzfZWW+XmWoRXktpnBXx8vAqOhA7D01lPMiK3gk64a
-	k1E7uPCsyTTnCVh68TvCKE4DUH1PbRK/A9N7z+MGEzhXDKdGTbQDzO2txIw+LWDm8oSpvjnU
-	fbOJt8NrVQWm+rZw+O9kE6bh0sRp04IeAngq7RGWDRzV/xtI/V879UYLL5gxl8I20vawZI00
-	wp2wqn53AWCXAVtGroyLZpQe8j1S5sSLG0fI4m6Cjd/iHKADj8bn3FoBRoJWAEmcsjbP+jIs
-	ytI8UvTZ54xCJlQkSBhlK/DQXycHt3s1Qqb/btJ4Id/dk+cuEAjcPfcK+JSN+Uy6JtKSGy2K
-	Z2IZRs4oNnUYaWaXhLGbrg/fCGrTvJ5Y5b2txrHdd3Hw6qGDDZMK2pWui3grNaarvp1/bMW/
-	4uyH89c0KfmltCOZZ1GeofOJbQzVBaVrfrdYPPLbm91FLrsE2vAZbLS+r+aN7O1UzvcrV+4E
-	5HL9D3OqfUMrioYdnY7Lbl+yOSo9udrNrnoJUz3vuzvE12Yme81MTYerz9mO25Vn7HgQ+stK
-	kO/LH4/VqxQL7hd/Gremjk99cPDBF86v1IZq3sN8PFuOxIaJdjmEvFsi3Hb2r7vv7/MPO1yB
-	CSWD0fJbDpf3ftLHG3OOss9Peh6qwh/bxHxUNhbi10JaLvMPZSvEGbNufoHK3rWtt+1roxKL
-	X/PXUiylWMR3xhVK0b+vszxutgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsWy7bCSvO71JbFpBrv+mFmsP3WM2aJpwl9m
-	i9V3+9ksXh/+xGgx7cNPZosnB9oZLX6fPc9sseXYPUaLBYvmsljcPLCTyWLPoklMFitXH2Wy
-	mD29mcni6P+3bBaTDl1jtHh6dRaTxd5b2hYL25awWOzZe5LF4vKuOWwW85c9ZbdYfvwfk8XE
-	jqtMFjueNDJarHv9nsXixC1pi/N/j7M6SHtcvuLtcWqRhMfOWXfZPc7f28jicflsqcemVZ1s
-	HpuX1Hu82DyT0WP3zQY2j8V9k1k9epvfsXnsbL3P6vHx6S0Wj/f7rrJ59G1ZxehxZsER9gDh
-	KC6blNSczLLUIn27BK6M+9N6mQuOs1TMmL2atYHxAnMXIyeHhICJxJ9fO1i7GLk4hAS2M0oc
-	e7OCESIhKbHs7xGoImGJlf+es0MUfWSUuP9yPytIgkVARWL2tqVADRwcbALaEqf/c4CERQSU
-	JJ6+Ogs2h1lgJpvEmfm5ICXCAt4SjfdyQMK8As4S728dY4EYeZ9RYuXRJ0wQCUGJkzOfsED0
-	mknM2/yQGaSXWUBaYvk/sPGcQJsOfvrEMoFRYBaSjllIOmYhdCxgZF7FKJpaUJybnptcYKhX
-	nJhbXJqXrpecn7uJEZwMtIJ2MC5b/1fvECMTB+MhRgkOZiUR3r666DQh3pTEyqrUovz4otKc
-	1OJDjNIcLErivMo5nSlCAumJJanZqakFqUUwWSYOTqkGpvKn7V03VGSzm1eIF8TuFskSZ09l
-	ENG5vNnEY1rcNNb48wf8XgUHJkV96pTYGCPtqVa3beqNs69+5Fls27cy16L4erf6iltN+5yN
-	kmPLhLcnBr74cCh3ZSibdyK72TSheXcW1P9YvrWwff1/2WzGG3xRypn3Tt5PEF/W413zbjPj
-	2d7oZ8lsk3rC/spJsiZbq0tYP7va1ett91F4/sfwXVdqmF7+VQhqWW7zfWaY5pPDTDVTZFiu
-	3TNacmxjyql503ceVMp4umP7rs3HH9sebLHrtxepXzXzwD7pA538inollu/3VV/fxfDg7jKW
-	3umf1f47flJkP937MS0oxnvR5sPx+k7n+c7Laeo2++SKKbEUZyQaajEXFScCAKh+bmp1AwAA
-X-CMS-MailID: 20240603111120epcas5p32f11d320999cb72c11dd1a3eae7ddbb0
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_5215e_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240520103027epcas5p4789defe8ab3bff23bd2abcf019689fa2
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
-	<CGME20240520103027epcas5p4789defe8ab3bff23bd2abcf019689fa2@epcas5p4.samsung.com>
-	<20240520102033.9361-12-nj.shetty@samsung.com>
-	<20240601062343.GA6347@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: filesystems: fix warn_unused_result build
+ warnings
+From: Amer Al Shanawany <amer.shanawany@gmail.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Miklos Szeredi <mszeredi@redhat.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+References: <20240417184913.74734-1-amer.shanawany@gmail.com>
+ <58e0539d-423e-42e0-9ee4-8fc8e1eed94f@collabora.com>
+ <0910d537-c2e8-4932-8b0e-b5ce381e1ee1@gmail.com>
+Content-Language: en-US
+In-Reply-To: <0910d537-c2e8-4932-8b0e-b5ce381e1ee1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_5215e_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
-
-On 01/06/24 08:23AM, Christoph Hellwig wrote:
->On Mon, May 20, 2024 at 03:50:24PM +0530, Nitesh Shetty wrote:
->> This is a prep patch to enable copy trace capability.
->> At present only zoned null_block is using trace, so we decoupled trace
->> and zoned dependency to make it usable in null_blk driver also.
+On 5/4/24 19:17, Amer Al Shanawany wrote:
+> On 4/19/24 18:41, Muhammad Usama Anjum wrote:
+>> On 4/17/24 11:49 PM, Amer Al Shanawany wrote:
+>>> Fix the following warnings by adding return check and error messages.
+>>>
+>>> statmount_test.c: In function ‘cleanup_namespace’:
+>>> statmount_test.c:128:9: warning: ignoring return value of ‘fchdir’
+>>> declared with attribute ‘warn_unused_result’ [-Wunused-result]
+>>>   128 |         fchdir(orig_root);
+>>>       |         ^~~~~~~~~~~~~~~~~
+>>> statmount_test.c:129:9: warning: ignoring return value of ‘chroot’
+>>> declared with attribute ‘warn_unused_result’ [-Wunused-result]
+>>>   129 |         chroot(".");
+>>>       |         ^~~~~~~~~~~
+>>>
+>>> Signed-off-by: Amer Al Shanawany <amer.shanawany@gmail.com>
+>> Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>
+>>> ---
+>>>  .../selftests/filesystems/statmount/statmount_test.c | 12 ++++++++++--
+>>>  1 file changed, 10 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/filesystems/statmount/statmount_test.c b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+>>> index e6d7c4f1c85b..e8c019d72cbf 100644
+>>> --- a/tools/testing/selftests/filesystems/statmount/statmount_test.c
+>>> +++ b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+>>> @@ -125,8 +125,16 @@ static uint32_t old_root_id, old_parent_id;
+>>>  
+>>>  static void cleanup_namespace(void)
+>>>  {
+>>> -	fchdir(orig_root);
+>>> -	chroot(".");
+>>> +	int ret;
+>>> +
+>>> +	ret = fchdir(orig_root);
+>>> +	if (ret == -1)
+>>> +		ksft_perror("fchdir to original root");
+>>> +
+>>> +	ret = chroot(".");
+>>> +	if (ret == -1)
+>>> +		ksft_perror("chroot to original root");
+>>> +
+>>>  	umount2(root_mntpoint, MNT_DETACH);
+>>>  	rmdir(root_mntpoint);
+>>>  }
+> Hi,
 >
->No need to mention the "prep patch", just state what you are doing.
-Acked.
->Any this could just go out to Jens ASAP.
+> Can you please consider this patch?
 >
-There is no user of trace apart from zoned and copy offload.
-Hence this would not make sense as separate patch.
+> Thank  you
+>
+> Amer
+>
+>
+>
+Hello,
 
-Thank you,
-Nitesh Shetty
+Could you please consider this simple patch for fixing build warnings for kselftest ?
 
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_5215e_
-Content-Type: text/plain; charset="utf-8"
+Thank you
 
-
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_5215e_--
+Amer
