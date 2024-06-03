@@ -1,122 +1,118 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from w4.tutanota.de (w4.tutanota.de [81.3.6.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1762E40877
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 19:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ABE259C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 19:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.3.6.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717443541; cv=none; b=kwp8e3EEctK1Z1kDZi34aJ10i7/eqpxPQXNOfy6FQd+MHJI/impWsUrwA66iV/SOMKALD3XdqbovJ71JgmIAqY39eVp8+i9CCcmYPKxBt0gGkv+Nz9K1BZL6VEzEuKnS+37vQrK15VUFWTil3PeT3YRxE2GCftNMFNGqmkaV7VU=
+	t=1717443589; cv=none; b=lZrm9QQZpBoXo+DbTG9zaRTUbQiag1hW2X3kXSYZNAe9ujZndVoSVVOAsva6+vWYmkPX7WFeYjqK/GqR7OteHAmgVKNtWiqGWKwNFqPHsu/P7cRdgfHVm3mothWU5zLF2K5WLQ8t+xOye5YrgQ0TRlyYIPUjKGBOXmOwrr90tMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717443541; c=relaxed/simple;
-	bh=Vo3vFnuDp/3jbVXCcdqZvPOhcBUrDvsCcl2k481F8Pw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bDi/ZSQfhW6vhEhyZKpfQim8I7vG6x5q+BKGzGHaqjZKGX6/dd2q4Gj8AzcyQXpCxmnD3vd/yGHFXW/W7rUw6elA3RJtwu4Qq1VgsCTDBr8PTDSrwGYLw5oZo87X1jcP2Ba+pWIGJ3j5ttJ7Io5lIcnAn3Bx0t1usqPlTkefqIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CelqETK7; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717443589; c=relaxed/simple;
+	bh=2FaW7jU8Cx/GwNp4bNE8A3s5T06Tt97CBdNwcgcim9g=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=t7m83OE9izfPlWMY8x4vgTwXsHMMeFEYci3AC8fTcW4sVSnfJbyIggIcHfRQugRAE8idP4HvjMG2Y+18EKNtlbFkFgjGvskgG0qVY7Ircbwhpi05pWHGcn3IHbLVXyIAtKR1vpuRArd6JaaTRCCaSAEweXg+DM4pM9GxPm65Chk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus; spf=pass smtp.mailfrom=bens.haus; dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b=HBMnh5vl; arc=none smtp.client-ip=81.3.6.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bens.haus
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bens.haus
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CelqETK7"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dfa588f7283so4903633276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 12:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717443539; x=1718048339; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5+0v3cS2L8imGiJtp7mry/9OeR09ftWj8BQpNQZKrk4=;
-        b=CelqETK7B4qTOx2Ydmmx6h2zpxQ6Iq+9f5FEMPonCg1ptTVFvBS+DCb+gHx9HT38Nn
-         77pNSpcLteTCtwPL2QsCAA6hMk89sD9ZWG2IxzwSxMyn7mVz0y27Zk2f6UY+/8gziopD
-         HfOHCjxPZoCpU0UJ8Gi6MJsfKfR3e5C5QgdtirQaG3f2cdJQY3Da5Id27HbpnJMPJBa+
-         hFMy0etqC7nMq+I4fhRKoTS5y6KRo6DwXREaZ/FHf9OuHuJN2OjXuskGR8OMDrcj0iwd
-         FiWcnaehuT/SRPSZXYfo53XWr372EX09frWAbMEMQ24zMHBZd/W2t/OAy6WGNYNcUdOI
-         /KLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717443539; x=1718048339;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5+0v3cS2L8imGiJtp7mry/9OeR09ftWj8BQpNQZKrk4=;
-        b=N2YauA7QYu6slfCDKSw2IOlhh5YYr6l8UNhxUv9ugzgXI/1Zt/Fju/CB+QtZao7QWg
-         /EOxyjbjjfrZ6iJJVrSUzpZLiZjBQtoGoQ6UY4WaOSNAKpq2tC7JVIleMT25sucRYaOe
-         SAOiU6RUIV0H08qs+M20QL4x0VOCkNOtpvC2dK+0Phozvzy/gLkDycGjAnaRj8ZPrwcP
-         dR0s1KweTEyHljz48tIDf2xn+gimfmMeJhbBNLGtFRipWU6xELQj8o9ad4ob2Ni4g3D+
-         bKq2/pmqRY9w5xRYwLVLHHLIDVyl+OszpIFxxS70SOUN7gb+zNWUoDn29ZHoVI4L9Gdf
-         T3Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbzECOrBnR7X3pNjg2tb/qYhFppP6nY48UmFnhXCgKDyuRUduVLMg10jdIzlcWFDdjrz2WXJFnVRt/AP3cNKkPNMCJbU+mpIk/74IE
-X-Gm-Message-State: AOJu0Yx32Gk4sM+Nod37cqWj7CxRRH87S+E3fiRYWRzdUaMF9nXkvi7K
-	elsMdcrcFb5XGhjCRBgD7Hp59hFGEJcNNtP/9cqgydP/ew+SvWU7ffPsOm+h885PgEZsunHoJy0
-	yrdksb4X7Rq60Ew6zS21VMC9NNAMYkA==
-X-Google-Smtp-Source: AGHT+IGSqwrlreEwQ0oHR/E84e1KJnMxhzowFGzywMPgu+Ei8RVzerIQSHkRHGWS2LFaAghCSf3W1CG49D5wetXnjPU=
-X-Received: by 2002:a25:270a:0:b0:df7:7091:989e with SMTP id
- 3f1490d57ef6-dfa73dd2b17mr8942740276.60.1717443538993; Mon, 03 Jun 2024
- 12:38:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bens.haus header.i=@bens.haus header.b="HBMnh5vl"
+Received: from tutadb.w10.tutanota.de (unknown [192.168.1.10])
+	by w4.tutanota.de (Postfix) with ESMTP id 97FAD106013E;
+	Mon,  3 Jun 2024 19:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1717443199;
+	s=s1; d=bens.haus;
+	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
+	bh=2FaW7jU8Cx/GwNp4bNE8A3s5T06Tt97CBdNwcgcim9g=;
+	b=HBMnh5vleQlaTPovT+nccD1i9T6GqApnbvH/85UGMyoP4F2Sdm7o21gvPxdQVABI
+	LvYo/WP243sTk4GPHlXaX2yZW0IHtJZFrDkXXTc25AanJcz12qkOg+G7uPhekqgAO3T
+	iaXEA+2pSlJiqsrYTllR06Ue284+L7F8bxe/R5Z8OkOeR4xfN/K5avlZtjfWTZW70U0
+	kQtkt1tcaO12AcHWWU8J/JEu5m9xZgKqQA3fTD7UQ+bP+aettwgdMI53z9+5NJJ4r3W
+	ihQYQi2+5Fi0Px8VOq9NXQLS/NX35r3fDxprk4M8NN4QsAUSzHr9/mL7hskm++/swOU
+	nLlTdoBEiw==
+Date: Mon, 3 Jun 2024 21:33:19 +0200 (CEST)
+From: Ben Schneider <ben@bens.haus>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Benjamin Schneider <bschnei@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Linux Arm Kernel <linux-arm-kernel@lists.infradead.org>,
+	Linux Kernel <linux-kernel@vger.kernel.org>
+Message-ID: <NzURcjd--3-9@bens.haus>
+In-Reply-To: <f2284d6b-2e75-4896-9e10-caf2f72854a0@lunn.ch>
+References: <20240603012804.122215-1-ben@bens.haus> <20240603012804.122215-2-ben@bens.haus> <f2284d6b-2e75-4896-9e10-caf2f72854a0@lunn.ch>
+Subject: Re: [PATCH] cpufreq: enable 1200Mhz clock speed for armada-37xx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240520194749.334896-1-vishal.moola@gmail.com>
- <ZkvErLsj8Ngj4qM3@casper.infradead.org> <CAOzc2px9sWGUPbCM+pHuqt8eAUONrDcKnEybvM6k6ot2ftpmmg@mail.gmail.com>
-In-Reply-To: <CAOzc2px9sWGUPbCM+pHuqt8eAUONrDcKnEybvM6k6ot2ftpmmg@mail.gmail.com>
-From: Vishal Moola <vishal.moola@gmail.com>
-Date: Mon, 3 Jun 2024 12:38:47 -0700
-Message-ID: <CAOzc2pzvWaqkHLCMfQ=oMggVSDU7+0do1+u0BndbS2ijVeEZ5A@mail.gmail.com>
-Subject: Re: [PATCH] Convert __unmap_hugepage_range() to folios
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, muchun.song@linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 21, 2024 at 2:13=E2=80=AFPM Vishal Moola <vishal.moola@gmail.co=
-m> wrote:
->
-> On Mon, May 20, 2024 at 2:46=E2=80=AFPM Matthew Wilcox <willy@infradead.o=
-rg> wrote:
-> >
-> > On Mon, May 20, 2024 at 12:47:49PM -0700, Vishal Moola (Oracle) wrote:
-> > > Replaces 4 calls to compound_head() with one. Also converts
-> > > unmap_hugepage_range() and unmap_ref_private() to take in folios.
-> >
-> > This is great!
-> >
-> > >  void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_s=
-truct *vma,
-> > >                           unsigned long start, unsigned long end,
-> > > -                         struct page *ref_page, zap_flags_t zap_flag=
-s)
-> > > +                         struct folio *ref_folio, zap_flags_t zap_fl=
-ags)
-> > >  {
-> > >       struct mm_struct *mm =3D vma->vm_mm;
-> > >       unsigned long address;
-> > >       pte_t *ptep;
-> > >       pte_t pte;
-> > >       spinlock_t *ptl;
-> > > -     struct page *page;
-> > > +     struct folio *folio;
-> > >       struct hstate *h =3D hstate_vma(vma);
-> > >       unsigned long sz =3D huge_page_size(h);
-> >
-> > I would appreciate some further cleanup ...
-> >
-> >         size_t sz =3D folio_size(folio);
-> >
-> > I think there are further cleanups along those lines, eg
-> > pages_per_huge_page(), hugetlb_mask_last_page(), huge_page_mask().
-> >
->
-> Gotcha, I'll look into those and change them in v2.
+Jun 3, 2024, 05:46 by andrew@lunn.ch:
 
-I took a closer look at your suggestions for cleanups here. Most callers of
-unmap_hugepage_range() pass NULL as ref_folio - meaning we want to unmap
-all pages in the range. This means alot of the preparatory work is
-likely done without
-a reference to a folio, so using folio_size() is unsafe.
+> The problem is, most systems don't have the new bootloader. And so if
+> you enable 1.2GHz, they are going to be unstable.
+>
+Based on my testing, the A3720 was unstable using a bootloader built
+with Marvell's source without regard to clock speed or frequency scaling.
 
-For when we later have a reference to a folio, I think we should
-continue to use the
-hstate-defined values since using the folio in one place and hstate in
-another makes
-things harder to change (if we ever want to).
+That is, it didn't matter if 1.2Ghz was enabled or not, and it didn't matte=
+r
+if cpufreq-dt was loaded or not, my devices were reliably crashing when
+trying to use Marvell's source instead of Globalscale's for building the
+bootloader. When I dug in to find the difference, this DDRPHY setting
+was one of two that I found. I also found that setting it to the value in
+Globalscale's repos restored stability to the devices.
+
+I then tested 1.2Ghz bootloader speeds as well as frequency scaling and
+found that they worked fine. I've been keeping track here:
+https://github.com/bschnei/ebu-bootloader
+
+> Rather than making this unconditional, i think it needs to be
+> conditional on knowing the bootloader has been upgraded. Could you add
+> code which looks in the DDRPHY and see if 0xC0001004 has the correct
+> value. Only then enable the additional clock speed.
+>
+I think there are two potential issues with doing something like that. Firs=
+t,
+that DDRPHY=C2=A0value has been flipped back and forth. The change I
+submitted to Marvell just undoes this change from January 2021:
+https://github.com/MarvellEmbeddedProcessors/mv-ddr-marvell/commit/c3a8d3c7=
+ff4bd460770b0cf601e57a6f70cb1871
+Perhaps it would be OK if the older code is also stable, but I haven't
+tested it.
+
+Second, the value seems to be deliberately different for other memory
+configurations (DDR3) which makes the conditional logic more complex
+if it's meant to work for all A37XX variants, and I don't have other varian=
+ts
+to test.
+
+Given the history of this setting getting flipped back and forth, and
+having read through a few old threads on this subject, it's my theory
+that some of the instability issues that were attributed to kernel frequenc=
+y
+scaling and/or 1.2Ghz as a speed were more likely attributable to bad
+bootloaders all along. I've reached out to Armbian and Arch communities
+to let them know in the hope of finding other users of these devices
+that might be willing to test, but have not received any responses.
+
+It's also worth noting that my devices came from the factory with the
+bootloader clocked at 800Mhz. I'm pretty sure the OS cannot set a
+speed above=C2=A0the bootloader=C2=A0clock speed. As a result, at least for=
+ the
+ESPRESSObin Ultra, the only devices I would expect to break are those
+where users have put in the work to build (or taken the risk of flashing)
+a bootloader clocked at 1.2Ghz. When the kernel encounters one of
+those devices it currently disables frequency scaling entirely (cpufreq-dt
+will not load) leaving them to run at full speed constantly. If there are
+users who can't/won't update their bootloader and for which frequency
+scaling is unstable, it seems like it would make more sense and facilitate
+further testing to use kernel config or userspace tools as the place to
+disable scaling.
+
+Thanks!
+
+Ben
