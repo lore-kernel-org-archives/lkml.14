@@ -1,44 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32692E57B;
-	Mon,  3 Jun 2024 13:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF17E57B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717420513; cv=none; b=k6ip6MW9bRkEVinZ3cmTYn0ToH0BM8HZx0XnRyKZhBxtz5vrlH9xGBEwgh6siBxWM0BgQf2W2FXXtf06NLTiNpe7j0HcKqTG/y2a5RwgIayCdiyrKC/LvWjS5HB0QOTXnIpKMOP0ABAtZ6elf8DbQA9AQP9auZDROtQ0A8XkkP8=
+	t=1717420522; cv=none; b=MrzCpv7Rmjfut3psWPihx8U4e5rgeUA5d/ChK5hNwN294iMfcH+AXZVsxGMDl4yo6xsaCOOFtfXSf6y/gPP9qKqD8PShoQ8gAJX3OEMkWPDXBOHc5RJavme3End+vT3QKs9KUU/LZideTF7PN2fEumtc3XR+tbRK08ds03sOCz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717420513; c=relaxed/simple;
-	bh=DpiA1zvswJuCrGoJ7xJp9YJ3ZvV9Anvqhk6oAcantTk=;
+	s=arc-20240116; t=1717420522; c=relaxed/simple;
+	bh=Hfw/OFJv5jPhE+pjptCCl5HrbbJfqf+E2qR+4z6HYKM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o60tycpheBLF1+0Fw+aNsO0fo2VMIkfiny10xWRUVIIOCG3f5q/zaOfW/kBbTx/b0PKxk7jwE/6QJECGZK94I8WuvfU/JtA0LoyOjrsmM1jS1rtyWNZn4CtrkytbbbkTQA5MwBpwAA/LPpVj5zPJBbXBDhwtvaMU2e6GGhHPIXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPLYDLBA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XaOX30QTZT2BmOKsSvSJr/RZFqOOAFimfJCIhV7o2SDnBQvjQgW9RSnKs8AlwEPUb5GZLlM7YJD5MVaDTlLqfWpQBYT4F1Dyosvls2iaEtAlsGZ50M/gEUZ2B+moZFFjhr9RDCbC1DzudFonTLQY6+ky+/4wLitZ8cewXl7Qobg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XVzNI7fx; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPLYDLBA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 411C6C2BD10;
-	Mon,  3 Jun 2024 13:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717420512;
-	bh=DpiA1zvswJuCrGoJ7xJp9YJ3ZvV9Anvqhk6oAcantTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZPLYDLBAlZtETDFyeQVh9r88GG5nNhT0ZnpN7zW00pwTDb2HoiSPIf08CBfJa+viz
-	 LmTxc8DsyH09iYkbS2CdhhtvxU6+zqdEMpsg/vHeD7Vt7aL3PMy0Uwdl3Jj2+LKGJl
-	 woalZjzM7PAeBRH62t7yN3zfEk1YT1ya54BlUBgbjFjmPSQRYd7IoKnrAJXlTFfGln
-	 esG77yPUAInsv/UoHnvHkR3+L4OL86Ky62CrEYneAPXhpH8y3M5W0YloZKsT9x6r48
-	 jJHNmMDxAKmYvJihZZupLQZ45xWLcrkiGzCqrwpeyxlZ0nxBYPobf0DVPJXGA1+Spv
-	 XLlBDBReZG/Hw==
-Date: Mon, 3 Jun 2024 14:15:08 +0100
-From: Will Deacon <will@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/crypto: Raise priority of NEON crct10dif
- implementation
-Message-ID: <20240603131507.GD18991@willie-the-truck>
-References: <20240521-arm64-crct10dif-neon-prio-v1-1-e2975754b8f3@kernel.org>
- <e103fabb-6854-4ce1-b4f9-6f6b7f912895@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XVzNI7fx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:content-transfer-encoding
+	:in-reply-to; s=k1; bh=Hfw/OFJv5jPhE+pjptCCl5HrbbJfqf+E2qR+4z6HY
+	KM=; b=XVzNI7fxvwbsxg1kfm9oK51zLHah6fxb9GKGCsd+gWMxCwfncSwygzddT
+	SnDpFV0CarWdYmgnGCtWMM6bVVwBDXQS7y/FPns8/QNPG6hi6tuFfb1Lvjb58wZW
+	mLmmq/UW3l0qYdFQkyP9gDyAjG2HenLtKPnP3UM+TgCXp05kDTchQ4Ed0igJk/o4
+	aHBMNF/D7a0vLVDVUvj4oFaw66UOh0gTHxQUGICQ7ywo0EmR4OqanfTN5KI0TxYU
+	//lEJYFjo3T7xnV5KKCAqXYPNjpxVwTURoI98dW3gPPLEPVbsP9P3BPkg8E4cW8o
+	uiDHINxkpTEcxMFQe9X+KkVwahSnQ==
+Received: (qmail 1964875 invoked from network); 3 Jun 2024 15:15:15 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Jun 2024 15:15:15 +0200
+X-UD-Smtp-Session: l3s3148p1@bVS3H/wZ5NNehhtB
+Date: Mon, 3 Jun 2024 15:15:14 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>, 
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com
+Subject: Re: [PATCH 2/6] wifi: brcmfmac: use 'time_left' variable with
+ wait_event_timeout()
+Message-ID: <zelrtyr4kv75cfrt2ije3ifjdmaqy25zm4sa774w7v5sa5soy2@qvufjqml47m3>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Arend van Spriel <arend.vanspriel@broadcom.com>, linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>, 
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com
+References: <20240603091541.8367-1-wsa+renesas@sang-engineering.com>
+ <20240603091541.8367-3-wsa+renesas@sang-engineering.com>
+ <08985c11-3652-4699-81d9-8a6769b061da@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,22 +51,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e103fabb-6854-4ce1-b4f9-6f6b7f912895@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <08985c11-3652-4699-81d9-8a6769b061da@broadcom.com>
 
-On Wed, May 22, 2024 at 12:17:41PM +0100, Mark Brown wrote:
-> On Tue, May 21, 2024 at 09:22:49PM +0100, Mark Brown wrote:
-> > The NEON implementation of crctd10dif is registered with a priority of 100
-> > which is identical to that used by the generic C implementation. Raise the
-> > priority to 150, half way between the PMULL based implementation and the
-> > NEON one, so that it will be preferred over the generic implementation.
-> 
-> That second NEON should be PMULL, sorry.
 
-Sorry, I don't grok that now:
+> I feel this type of changes fall into the category of bike-shedding. Peop=
+le
 
-  | half way between the PMULL based implementation and the PMULL one
+I have two motivations for this change: One may be bike-shedding, yet
+"if (!timeout) return -ETIMEDOUT" looks stupid to me.
 
-doesn't mean anything?
+> should know how wait_event_timeout() works and then a variable name does =
+not
+> really matter.
 
-Will
+And for a new developer, I am quite sure the change will help to
+understand how wait_event-family() works. Especially given that
+wait_event_interruptible() returns 0 if condition is true and
+wait_event_interruptible_timeout() returns 0 if condition is false.
+
+> > Fix to the proper variable type 'long' while here.
+>=20
+> But it may have useful side-effects to go over the code with fresh look.
+
+:)
+
+> Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+
+Thank you!
+
