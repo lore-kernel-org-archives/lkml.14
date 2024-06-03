@@ -1,125 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59526AD0;
-	Mon,  3 Jun 2024 16:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81BE26AD0
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 16:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717430473; cv=none; b=bzSTfnFngEAhkUecHZ+x1YEk0ZWbGrEla7j/U+ppaBO/wdQHFSWiabdCuCuSCTAKfRiaotzXc8+orYy2sptfMyykIUC2JR6n/ES79mVbrh2ZIH1bAJYQh+NBBtnhKgjtumX/7NdUMu00eR+g7RPZlRgutQsj+NIX4CcJtt2OQJo=
+	t=1717430511; cv=none; b=WP6XDjHwwa6Kjsacaexx+pOAKx34Pr/NbMAMs4fswIzX8kqZ5Z04fJXIcw9gTumvZ2NBUawC4nKhcdJB3nuRw0uSI4AfHsk6J9JOpFti7CbJGTHGEli++ROnizo99jje+6Acb7N1xmvPE7toS2DQ3pfp23ZjV8lFUOC4lKamTNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717430473; c=relaxed/simple;
-	bh=Iv1Uc6RhMV8UTtYf+csBgZAea6pO/MLrB9bZpKUWHsw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PRpj8QVif61eaXBrEWhYtZ/2mHwqASkiS50p2KJGumJIJR53NGJh4S1xBINKF6UNwqtHth175EuCFeYVo6uHN7gMz18geW8QVvJkIWLnUiJeiB0rHtKQ5M86d8B5zreweQfJ4zzc/hT68fpqgw6/eMG5kYNGi9oEddvrjsOaLIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inVrbcEP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717430511; c=relaxed/simple;
+	bh=yQ4boFvPnvQcwgmXDQIyEU9BNujvXIdH7FsO0yBfRiA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RCeTkRya0dKMhzwG4dVc16r1LE2o8KqjctO4P511LYDA5revLvWOW+volLO3J66zd4ow8bCJTdWwNKuWltsKUnNZ6YWaHMjLNRfNJfKxetwQrXxmbZw2h4GL4WJIT+47ZAaGxQCT6Mt4bZmGPmGT6tIrPQmCiwHugfqBg9v2pAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=pVLDA/NY; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inVrbcEP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17E8C2BD10;
-	Mon,  3 Jun 2024 16:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717430472;
-	bh=Iv1Uc6RhMV8UTtYf+csBgZAea6pO/MLrB9bZpKUWHsw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=inVrbcEPSdpAHVrE7BOlBkaNG+nL0oLLR9ZPw9KHBGFHot8eCM6ep9LnM9H7WNkPM
-	 BT6Awd0gVdP2AG5W8PTk9E7B6VJKWIq0o0f7Ve/qNRGBvo8pt5xhV7d8tm+AAoaEqX
-	 447D0DasWT/TaXDLSowPzBcnN5i16DuSvy/OYrR1fReSiSp9sL1gJv1QuV5PxHnK9r
-	 VObMyOEdHQrTj09LxO2ZkzaIK0c2KAthaaOTkCCSVmeEtoof3hn0alU29hbzZSJ6qA
-	 N7/3QZCxQ4NcAYqjlZnoEA5/AvpDAovHNbSh9fm8BIM2ydVER7NbaKtoyYLQzFndp+
-	 BmsXHIRLsf0UA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sEA7S-000Hvn-Tk;
-	Mon, 03 Jun 2024 17:01:11 +0100
-Date: Mon, 03 Jun 2024 17:01:10 +0100
-Message-ID: <86h6eakoc9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org,
-	Hagar Hemdan <hagarhem@amazon.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	stable@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: irq/urgent] irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_update()
-In-Reply-To: <171741750653.10875.4371546608500601999.tip-bot2@tip-bot2>
-References: <20240531162144.28650-1-hagarhem@amazon.com>
-	<171741750653.10875.4371546608500601999.tip-bot2@tip-bot2>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="pVLDA/NY"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52965199234so5128745e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 09:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717430508; x=1718035308; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zHg396P/YPGmHPltoeNdcR8nbSib0Fn7VRKw1/3Bd/I=;
+        b=pVLDA/NY18Kmj27MBzkmLq5EtskQh2c+H2aigTaOuDGQgoXhMH08TaElACK1FVddQw
+         tqlSDue7yyg3vMKYUFW6rG4GqnE1OrtKSCAwj6ruxqM5oLPBKXkfzLiBJX/76I/Kq1WG
+         qd8j5Dl5qj4Y1K8IAUIh8WYx1xeQS2nTiRYg3jP+e9xEZT7pI3wCN+UjIX1qiHGQRPlw
+         w66k+0bmTHKdUXtxHADE32CpSg/OYg2aEIKkqyks4DLVRDVRpbtnqJN0+HBK+hTg/zWb
+         xP2TuOeiLtP25R3kbXZTDs2Eqod58bCyziK6XhuvYKrEBPQQsw9OreThrQ2/Zbxs8Xya
+         HudA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717430508; x=1718035308;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zHg396P/YPGmHPltoeNdcR8nbSib0Fn7VRKw1/3Bd/I=;
+        b=Ckc4XkZ4EY3DwKoGJPvE5FP2fNMk2RtNXJvWR5ozyRS+yfC5q+kvltPXwQy99aDTUk
+         ig3iQptWcuNDZz3g1JeQWDUM3e9qX/4yA7//SGA9+/BrWAv59V8n8wO9L7beNALTQ4uc
+         7Or6TzgypumDtw4nXPkzm7FpftwPn6+P9NlOSrtcdmetrSS6TuVlmxD0QzSLwLVtLUSu
+         FK6MxbBMnr68+4wCWSU3UxI5zY0UK26kxvCIdnjtO/32CRsuuREAJeMVy2Xu1a3n0K/N
+         zqF6Uki/0kZVqn3cYNHwpK2MdS86q5I+sA/1b89a00L98+ZUuASePZzAaBukKeNoNwYe
+         qA6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUDYs/03xih8t7JyYgedrc+RiqcZQ0Z9gkNIfqNTUTWrZDSTD6A4t7xOdMC4EvVuZJicIMbxnZ0HLeqEsithw1EB5zwJi3yuBIKvG1W
+X-Gm-Message-State: AOJu0Ywyef7WtVoVVXWvnMcm3iPiw+gK7yyTOWhotf2ZmpBUgHeT7IYX
+	Bw9vQx4QC7HLpLK+wkc5Psq93g7nObXXUPx+wce91gK6FEZzLcDL3Upx4mvxH08=
+X-Google-Smtp-Source: AGHT+IEh0bsSS8vrUR6qGlubgu2gswrVKG0VaWjk9mgrZvBcWQaqMiPZX30yHAP4PUFkVCVnBMhSYw==
+X-Received: by 2002:a05:6512:2024:b0:52b:9956:541a with SMTP id 2adb3069b0e04-52b99565636mr2481674e87.21.1717430507063;
+        Mon, 03 Jun 2024 09:01:47 -0700 (PDT)
+Received: from debian.fritz.box. (aftr-82-135-80-81.dynamic.mnet-online.de. [82.135.80.81])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31bbbe18sm5487702a12.37.2024.06.03.09.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 09:01:46 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Julia.Lawall@inria.fr,
+	nicolas.palix@imag.fr
+Cc: cocci@inria.fr,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] scripts: coccicheck: Replace http with https
+Date: Mon,  3 Jun 2024 17:56:49 +0200
+Message-Id: <20240603155648.93989-1-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, hagarhem@amazon.com, tglx@linutronix.de, stable@vger.kernel.org, x86@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 03 Jun 2024 13:25:06 +0100,
-"tip-bot2 for Hagar Hemdan" <tip-bot2@linutronix.de> wrote:
-> 
-> The following commit has been merged into the irq/urgent branch of tip:
-> 
-> Commit-ID:     8dd4302d37bb2fe842acb3be688d393254b4f126
-> Gitweb:        https://git.kernel.org/tip/8dd4302d37bb2fe842acb3be688d393254b4f126
-> Author:        Hagar Hemdan <hagarhem@amazon.com>
-> AuthorDate:    Fri, 31 May 2024 16:21:44 
-> Committer:     Thomas Gleixner <tglx@linutronix.de>
-> CommitterDate: Mon, 03 Jun 2024 14:19:42 +02:00
-> 
-> irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_update()
-> 
-> its_vlpi_prop_update() calls lpi_write_config() which obtains the
-> mapping information for a VLPI without lock held. So it could race
-> with its_vlpi_unmap().
-> 
-> Since all calls from its_irq_set_vcpu_affinity() require the same                                                                                                                                                                                                                                                            
-> lock to be held, hoist the locking there instead of sprinkling the
-> locking all over the place.
-> 
-> This bug was discovered using Coverity Static Analysis Security Testing
-> (SAST) by Synopsys, Inc.
-> 
-> [ tglx: Use guard() instead of goto ]
+The Coccinelle website is also available via https.
 
-Good call. Except that...
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ scripts/coccicheck | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> Fixes: 015ec0386ab6 ("irqchip/gic-v3-its: Add VLPI configuration handling")
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Hagar Hemdan <hagarhem@amazon.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/r/20240531162144.28650-1-hagarhem@amazon.com
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 44 ++++++++-----------------------
->  1 file changed, 12 insertions(+), 32 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 40ebf17..c696ac9 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-
-[...]
-
-> @@ -1992,6 +1970,8 @@ static int its_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
->  	if (!is_v4(its_dev->its))
->  		return -EINVAL;
->  
-> +	guard(raw_spinlock_irq, &its_dev->event_map.vlpi_lock);
-> +
-
-I don't think this compiles as is, due to the funky syntax required.
-
-Thanks,
-
-	M.
-
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e52cb43fede6..9b6b29fb8224 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -11,7 +11,7 @@ DIR="$(dirname $(readlink -f $0))/.."
+ SPATCH="`which ${SPATCH:=spatch}`"
+ 
+ if [ ! -x "$SPATCH" ]; then
+-    echo 'spatch is part of the Coccinelle project and is available at http://coccinelle.lip6.fr/'
++    echo 'spatch is part of the Coccinelle project and is available at https://coccinelle.lip6.fr/'
+     exit 1
+ fi
+ 
+@@ -233,7 +233,7 @@ coccinelle () {
+ 	echo " in $FILE."
+ 	echo ''
+ 	echo ' More information about semantic patching is available at'
+-	echo ' http://coccinelle.lip6.fr/'
++	echo ' https://coccinelle.lip6.fr/'
+ 	echo ''
+ 
+ 	if [ "`sed -ne 's|^//#||p' $COCCI`" ] ; then
 -- 
-Without deviation from the norm, progress is not possible.
+2.39.2
+
