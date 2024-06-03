@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0214713D26F;
-	Mon,  3 Jun 2024 19:07:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC31413D533;
+	Mon,  3 Jun 2024 19:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441634; cv=none; b=TGA8bVoguGGp8AM7y2ClqJQnq/I/MHBkmnDXPspAnXDxKrK6vMQBNOYpH4B09Ac3q+5akkRllaS5vY7FcPsPNn/vJijr1sro7gayfm/yMvYgPJ5jeHOgXGCCKKqMtXgOSLifJ6nuNijiD0pO3XPQFIImb+LKB3DVzpjda0Ttyyk=
+	t=1717441634; cv=none; b=H7RmO7s9v6U9E3TfQzxqsvopvPEuD8lwynJCMbf8gCpyg0PBkHT+OX2nJmBT2R8193QzzIHGEfQUxtazcrCsBwN+wi3eyCCzk++mKkrdZ9xw82rKBkM3+eWuX5RljlC/OKMRswbmHH7XkO5TCSOWHiQ/7a2ogfvEFYzaotPSTEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717441634; c=relaxed/simple;
-	bh=Mp/RBRnPhJxFELiieLyMmnfwMLk/QV2Kygzld2RQi0M=;
+	bh=k1HP8hCmLs5gvyhDOaCFwFm3nHs+PuYGEdirt95Vwq8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=AXsKKTZsonnl2CLMehgaqh/qkgGeLF08Ff8UOQGM54zxlybCrjhpj8SqUIhSQfO6eFVDTH2TJrwRbGRqT93rIdKU+84GNZ2cLZZPbs4pCfm3xLO1nAIm9lV1m2Tsyu8v9W1bNUFEgfThPSSL0z+3yGE0OuzxU2IseEqn2/NnRcc=
+	 Content-Type; b=IlETiHMohi+q3ig8Q4k1M2/E6vG+3evuC+I4sl0SFOMbjeMDsJ09vMzRQ4jfiUXk4xFiJKWHG0VmOM/ncjF5BRsKVVPkil58lcAac90rb757K42xzQJDAUXLe5krUtut3I8rTJ47JS3mYWxmK4IG6x6XG2XgDxb/2JO/B1cRJIQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC34C4AF0E;
-	Mon,  3 Jun 2024 19:07:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590F4C4AF07;
+	Mon,  3 Jun 2024 19:07:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sED2e-00000009Txw-3mfj;
-	Mon, 03 Jun 2024 15:08:24 -0400
-Message-ID: <20240603190824.766858241@goodmis.org>
+	id 1sED2f-00000009TzS-1dXK;
+	Mon, 03 Jun 2024 15:08:25 -0400
+Message-ID: <20240603190825.252845939@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 15:07:28 -0400
+Date: Mon, 03 Jun 2024 15:07:31 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -41,7 +41,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 24/27] function_graph: Use static_call and branch to optimize entry function
+Subject: [PATCH v3 27/27] selftests/ftrace: Add fgraph-multi.tc test
 References: <20240603190704.663840775@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,154 +53,125 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-In most cases function graph is used by a single user. Instead of calling
-a loop to call function graph callbacks in this case, call the function
-entry callback directly.
-
-Add a static_key that will be used to set the function graph logic to
-either do the loop (when more than one callback is registered) or to call
-the callback directly if there is only one registered callback.
+Add a test that creates 3 instances and enables function_graph tracer in
+each as well as the top instance, where each will enable a filter (but one
+that traces all functions) and check that they are filtering properly.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 77 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 66 insertions(+), 11 deletions(-)
+ .../ftrace/test.d/ftrace/fgraph-multi.tc      | 103 ++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 4d566a0a741d..7c3b0261b1bb 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -11,6 +11,7 @@
- #include <linux/jump_label.h>
- #include <linux/suspend.h>
- #include <linux/ftrace.h>
-+#include <linux/static_call.h>
- #include <linux/slab.h>
- 
- #include <trace/events/sched.h>
-@@ -511,6 +512,10 @@ static struct fgraph_ops fgraph_stub = {
- 	.retfunc = ftrace_graph_ret_stub,
- };
- 
-+static struct fgraph_ops *fgraph_direct_gops = &fgraph_stub;
-+DEFINE_STATIC_CALL(fgraph_func, ftrace_graph_entry_stub);
-+DEFINE_STATIC_KEY_TRUE(fgraph_do_direct);
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+new file mode 100644
+index 000000000000..ff88f97e41fb
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
+@@ -0,0 +1,103 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph filters
++# requires: set_ftrace_filter function_graph:tracer
 +
- /**
-  * ftrace_graph_stop - set to permanently disable function graph tracing
-  *
-@@ -636,21 +641,34 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 	if (offset < 0)
- 		goto out;
- 
--	for_each_set_bit(i, &fgraph_array_bitmask,
--			 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
--		struct fgraph_ops *gops = fgraph_array[i];
--		int save_curr_ret_stack;
--
--		if (gops == &fgraph_stub)
--			continue;
-+#ifdef CONFIG_HAVE_STATIC_CALL
-+	if (static_branch_likely(&fgraph_do_direct)) {
-+		int save_curr_ret_stack = current->curr_ret_stack;
- 
--		save_curr_ret_stack = current->curr_ret_stack;
--		if (ftrace_ops_test(&gops->ops, func, NULL) &&
--		    gops->entryfunc(&trace, gops))
--			bitmap |= BIT(i);
-+		if (static_call(fgraph_func)(&trace, fgraph_direct_gops))
-+			bitmap |= BIT(fgraph_direct_gops->idx);
- 		else
- 			/* Clear out any saved storage */
- 			current->curr_ret_stack = save_curr_ret_stack;
-+	} else
-+#endif
-+	{
-+		for_each_set_bit(i, &fgraph_array_bitmask,
-+					 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
-+			struct fgraph_ops *gops = fgraph_array[i];
-+			int save_curr_ret_stack;
++# Make sure that function graph filtering works
 +
-+			if (gops == &fgraph_stub)
-+				continue;
++INSTANCE1="instances/test1_$$"
++INSTANCE2="instances/test2_$$"
++INSTANCE3="instances/test3_$$"
 +
-+			save_curr_ret_stack = current->curr_ret_stack;
-+			if (ftrace_ops_test(&gops->ops, func, NULL) &&
-+			    gops->entryfunc(&trace, gops))
-+				bitmap |= BIT(i);
-+			else
-+				/* Clear out any saved storage */
-+				current->curr_ret_stack = save_curr_ret_stack;
-+		}
- 	}
- 
- 	if (!bitmap)
-@@ -1155,6 +1173,8 @@ void fgraph_update_pid_func(void)
- 			gops = container_of(op, struct fgraph_ops, ops);
- 			gops->entryfunc = ftrace_pids_enabled(op) ?
- 				fgraph_pid_func : gops->saved_func;
-+			if (ftrace_graph_active == 1)
-+				static_call_update(fgraph_func, gops->entryfunc);
- 		}
- 	}
- }
-@@ -1209,6 +1229,32 @@ static void init_task_vars(int idx)
- 	read_unlock(&tasklist_lock);
- }
- 
-+static void ftrace_graph_enable_direct(bool enable_branch)
-+{
-+	trace_func_graph_ent_t func = NULL;
-+	int i;
++WD=`pwd`
 +
-+	for_each_set_bit(i, &fgraph_array_bitmask,
-+			 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
-+		func = fgraph_array[i]->entryfunc;
-+		fgraph_direct_gops = fgraph_array[i];
-+	 }
-+	if (WARN_ON_ONCE(!func))
-+		return;
-+
-+	static_call_update(fgraph_func, func);
-+	if (enable_branch)
-+		static_branch_disable(&fgraph_do_direct);
++do_reset() {
++    cd $WD
++    if [ -d $INSTANCE1 ]; then
++	echo nop > $INSTANCE1/current_tracer
++	rmdir $INSTANCE1
++    fi
++    if [ -d $INSTANCE2 ]; then
++	echo nop > $INSTANCE2/current_tracer
++	rmdir $INSTANCE2
++    fi
++    if [ -d $INSTANCE3 ]; then
++	echo nop > $INSTANCE3/current_tracer
++	rmdir $INSTANCE3
++    fi
 +}
 +
-+static void ftrace_graph_disable_direct(bool disable_branch)
-+{
-+	if (disable_branch)
-+		static_branch_disable(&fgraph_do_direct);
-+	static_call_update(fgraph_func, ftrace_graph_entry_stub);
-+	fgraph_direct_gops = &fgraph_stub;
++mkdir $INSTANCE1
++if ! grep -q function_graph $INSTANCE1/available_tracers; then
++    echo "function_graph not allowed with instances"
++    rmdir $INSTANCE1
++    exit_unsupported
++fi
++
++mkdir $INSTANCE2
++mkdir $INSTANCE3
++
++fail() { # msg
++    do_reset
++    echo $1
++    exit_fail
 +}
 +
- int register_ftrace_graph(struct fgraph_ops *gops)
- {
- 	int command = 0;
-@@ -1235,7 +1281,11 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 
- 	ftrace_graph_active++;
- 
-+	if (ftrace_graph_active == 2)
-+		ftrace_graph_disable_direct(true);
++disable_tracing
++clear_trace
 +
- 	if (ftrace_graph_active == 1) {
-+		ftrace_graph_enable_direct(false);
- 		register_pm_notifier(&ftrace_suspend_notifier);
- 		ret = start_graph_tracing();
- 		if (ret)
-@@ -1292,6 +1342,11 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
- 
- 	ftrace_shutdown_subops(&graph_ops, &gops->ops, command);
- 
-+	if (ftrace_graph_active == 1)
-+		ftrace_graph_enable_direct(true);
-+	else if (!ftrace_graph_active)
-+		ftrace_graph_disable_direct(false);
++do_test() {
++    REGEX=$1
++    TEST=$2
 +
- 	if (!ftrace_graph_active) {
- 		ftrace_graph_return = ftrace_stub_graph;
- 		ftrace_graph_entry = ftrace_graph_entry_stub;
++    # filter something, schedule is always good
++    if ! echo "$REGEX" > set_ftrace_filter; then
++	fail "can not enable filter $REGEX"
++    fi
++
++    echo > trace
++    echo function_graph > current_tracer
++    enable_tracing
++    sleep 1
++    # search for functions (has "{" or ";" on the line)
++    echo 0 > tracing_on
++    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep -v "$TEST" | wc -l`
++    echo 1 > tracing_on
++    if [ $count -ne 0 ]; then
++	fail "Graph filtering not working by itself against $TEST?"
++    fi
++
++    # Make sure we did find something
++    echo 0 > tracing_on
++    count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
++    echo 1 > tracing_on
++    if [ $count -eq 0 ]; then
++	fail "No traces found with $TEST?"
++    fi
++}
++
++do_test '*sched*' 'sched'
++cd $INSTANCE1
++do_test '*lock*' 'lock'
++cd $WD
++cd $INSTANCE2
++do_test '*rcu*' 'rcu'
++cd $WD
++cd $INSTANCE3
++echo function_graph > current_tracer
++
++sleep 1
++count=`cat trace | grep -v '^#' | grep -e '{' -e ';' | grep "$TEST" | wc -l`
++if [ $count -eq 0 ]; then
++    fail "No traces found with all tracing?"
++fi
++
++cd $WD
++echo nop > current_tracer
++echo nop > $INSTANCE1/current_tracer
++echo nop > $INSTANCE2/current_tracer
++echo nop > $INSTANCE3/current_tracer
++
++do_reset
++
++exit 0
 -- 
 2.43.0
 
