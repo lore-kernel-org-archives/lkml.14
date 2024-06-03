@@ -1,159 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA2137902;
-	Mon,  3 Jun 2024 17:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8DB137902;
+	Mon,  3 Jun 2024 17:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717436611; cv=none; b=HkrdqHG56+80PIqJDO4JMnyOTRS6oFurV0cD0j34bFBD/JCeU3UKup4TwTzs33pOh29qKkceAIYMe0eP1E0ZfOkWODZmxiF5rMiHBca8gQqWj+QbQ14hRJeCAI6Y0MouRZ5Ajbh90i1GBuMHMzZs3W3/6AOjUGhsq9sVoxtgGt8=
+	t=1717436657; cv=none; b=qDiUAMfoBdaS9JwMlCbxjxB5QbesdmS9h21R14dmotMw1kZ+JLbzoFbH3m4VTyYaYoPIMhJXQ1D0CWh4bG3SO9gyQ3ramivcSD0g4AeYTjPQ0VHKGfXafWF0M2u1uSHOOC4k6I4Iv17tHjteELL+c0vUhEbxu0/m3XxmgJ0x1Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717436611; c=relaxed/simple;
-	bh=j2giooDoELICQ3uc1GkFOkfhcLltnqQzqVBJAIjeHJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IdOooymZc6TTtU0AU+vKKVRnGfai5E6EF6cS2taPfmov5Z/oFCotkDEHr8CgMw9gQXJL4zkjQt+vYwbfkv6PLblWpmwVfn2m44tYnH8Yd9pw27Ybg1lhqHm9XoNT6LgmXZYOl2sZo2YeaygisfM0M3fZfwa/thFkWL20d2zbDFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn9hWA6d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717436657; c=relaxed/simple;
+	bh=tmo0LZxMdzvSoYgPSGhR2ipRgjphQMohkpxHGkKaTFU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pOeONbOkdIeITjrFl27thMZZTeaabhFZC3bhsYrc2RXDrgHCuc9Brd7lXVm85BtTuRLd9SlKdlctqdyDRECYv35HbYLdwIBkMtqxCoIlnNmBmlJ99R1dwyBiICeZMoWawQ3CsTlnXezu/Q4oWbKdc8pcDd5wmiaa+/AU2qRLmUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=T6t9OcPu; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn9hWA6d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B072AC2BD10;
-	Mon,  3 Jun 2024 17:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717436610;
-	bh=j2giooDoELICQ3uc1GkFOkfhcLltnqQzqVBJAIjeHJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dn9hWA6dMSiBGPUDMEWP9UIEij5v/bfQHq6dKecKjdLT4o4xF9krfA07ri6VVunxE
-	 4bkjIi0t07Rdx0fuUbeoNfVqxtHB4jCTCodT21dDg9EwLF+sHwtOvTxZaBDdYHu7A+
-	 MPZ6I1itabOTmR5aSmjeztm99+G3aBKTXTa/6KY4kZh+KqC65MRO+arsYQtsH8Q7w6
-	 aL9f1v1HYECrErCeXbf99FAoSpo/PGu3LFHJ64hsUnzXNU56M+VPjGrWrGUHlJ2W3w
-	 buv7fKlUVL+U8OQFLzz1tfcCMEXCVv6CnEfVZ5emUTfC9xIY1d+5mObAeNL2faM4le
-	 a1J8qUIjctEEA==
-Date: Mon, 3 Jun 2024 20:41:29 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Kalra, Ashish" <ashish.kalra@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org,
-	hpa@zytor.com, peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Message-ID: <Zl4ASZfWMkvAcJXO@kernel.org>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com>
- <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
- <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
- <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
- <Zl3HfiQ6oHdTdOdA@kernel.org>
- <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <Zl3hPefvOwPv0Mjn@kernel.org>
- <141a9666-f3cf-4323-9536-4367f489be43@amd.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="T6t9OcPu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1717436654;
+	bh=tmo0LZxMdzvSoYgPSGhR2ipRgjphQMohkpxHGkKaTFU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=T6t9OcPue/Gq30YaSX3aQDQfihwjieNxwm9BETQhPd6cp27uZzkYR6KpHHXtbgxlk
+	 ezvofmMb0AxhkLkXaR+Atu74hu8NHWywohAoSI0Hx5FxeDdAdNuTOgY7yW91FxHN63
+	 oMeETO6JsnHpVo9tzQudIXoLnsGM/9Ap9Wak20J4=
+Received: from [IPv6:240e:358:117b:e900:dc73:854d:832e:4] (unknown [IPv6:240e:358:117b:e900:dc73:854d:832e:4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 0FD8A66E7C;
+	Mon,  3 Jun 2024 13:44:12 -0400 (EDT)
+Message-ID: <48eba83030e155f703b4248e9c1ae65aa44b1a83.camel@xry111.site>
+Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
+ global.turbo_disabled after initialization
+From: Xi Ruoyao <xry111@xry111.site>
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J.
+ Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Date: Tue, 04 Jun 2024 01:44:08 +0800
+In-Reply-To: <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
+References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
+	 <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
+	 <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
+	 <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
+	 <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
+	 <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
+	 <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
+	 <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
+	 <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <141a9666-f3cf-4323-9536-4367f489be43@amd.com>
 
-On Mon, Jun 03, 2024 at 11:56:01AM -0500, Kalra, Ashish wrote:
-> On 6/3/2024 10:29 AM, Mike Rapoport wrote:
-> 
-> > On Mon, Jun 03, 2024 at 09:01:49AM -0500, Kalra, Ashish wrote:
-> > > On 6/3/2024 8:39 AM, Mike Rapoport wrote:
-> > > 
-> > > > On Mon, Jun 03, 2024 at 08:06:56AM -0500, Kalra, Ashish wrote:
-> > > > > On 6/3/2024 3:56 AM, Borislav Petkov wrote
-> > > > > 
-> > > > > > > EFI memory map and due to early allocation it uses memblock allocation.
-> > > > > > > 
-> > > > > > > Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
-> > > > > > > in case of a kexec-ed kernel boot.
-> > > > > > > 
-> > > > > > > This function kexec_enter_virtual_mode() installs the new EFI memory map by
-> > > > > > > calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
-> > > > > > > in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
-> > > > > > > 
-> > > > > > > Subsequently, when memblock is freed later in boot flow, this remapped
-> > > > > > > efi_memmap will have random corruption (similar to a use-after-free scenario).
-> > > > > > > 
-> > > > > > > The corrupted EFI memory map is then passed to the next kexec-ed kernel
-> > > > > > > which causes a panic when trying to use the corrupted EFI memory map.
-> > > > > > This sounds fishy: memblock allocated memory is not freed later in the
-> > > > > > boot - it remains reserved. Only free memory is freed from memblock to
-> > > > > > the buddy allocator.
-> > > > > > 
-> > > > > > Or is the problem that memblock-allocated memory cannot be memremapped
-> > > > > > because *raisins*?
-> > > > > This is what seems to be happening:
-> > > > > 
-> > > > > efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
-> > > > > EFI memory map and due to early allocation it uses memblock allocation.
-> > > > > 
-> > > > > And later efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
-> > > > > in case of a kexec-ed kernel boot.
-> > > > > 
-> > > > > This function kexec_enter_virtual_mode() installs the new EFI memory map by
-> > > > > calling efi_memmap_init_late() which does memremap() on memblock-allocated memory.
-> > > > Does the issue happen only with SNP?
-> > > This is observed under SNP as efi_arch_mem_reserve() is only being called
-> > > with SNP enabled and then efi_arch_mem_reserve() allocates EFI memory map
-> > > using memblock.
-> > I don't see how efi_arch_mem_reserve() is only called with SNP. What did I
-> > miss?
-> 
-> This is the call stack for efi_arch_mem_reserve():
-> 
-> [    0.310010]  efi_arch_mem_reserve+0xb1/0x220
-> [    0.311382]  efi_mem_reserve+0x36/0x60
-> [    0.311973]  efi_bgrt_init+0x17d/0x1a0
-> [    0.313265]  acpi_parse_bgrt+0x12/0x20
-> [    0.313858]  acpi_table_parse+0x77/0xd0
-> [    0.314463]  acpi_boot_init+0x362/0x630
-> [    0.315069]  setup_arch+0xa88/0xf80
-> [    0.315629]  start_kernel+0x68/0xa90
-> [    0.316194]  x86_64_start_reservations+0x1c/0x30
-> [    0.316921]  x86_64_start_kernel+0xbf/0x110
-> [    0.317582]  common_startup_64+0x13e/0x141
-> 
-> So, probably it is being invoked specifically for AMD platform ?
+On Mon, 2024-06-03 at 10:11 -0700, srinivas pandruvada wrote:
+> On Mon, 2024-06-03 at 21:12 +0800, Xi Ruoyao wrote:
+> > On Sun, 2024-06-02 at 16:11 -0700, srinivas pandruvada wrote:
+> >=20
+> > /* snip */
+> >=20
+> > > What is the output of:
+> > > grep . /sys/devices/system/cpu/intel_pstate/*
+> > >=20
+> > > Also=C2=A0
+> > > rdmsr 0x771
+> > > rdmsr 0x774
+> > >=20
+> > >=20
+> > > Try these three patches. Don't worry about the commit description
+> > > for
+> > > this issue.
+> >=20
+> > Unfortunately they still do not fix the issue for me.
+> >=20
+> > The outputs of grep and rdmsr commands are initially:
+> >=20
+> > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost:0
+> > /sys/devices/system/cpu/intel_pstate/max_perf_pct:100
+> > /sys/devices/system/cpu/intel_pstate/min_perf_pct:9
+> > /sys/devices/system/cpu/intel_pstate/no_turbo:1
+> > /sys/devices/system/cpu/intel_pstate/num_pstates:41
+> > /sys/devices/system/cpu/intel_pstate/status:active
+> > /sys/devices/system/cpu/intel_pstate/turbo_pct:33
+> > rdmsr 0x771: 10d1f2c
+> > rdmsr 0x774: 1f04
+> >=20
+> > But it then changes to:
+> >=20
+> > /sys/devices/system/cpu/intel_pstate/hwp_dynamic_boost:0
+> > /sys/devices/system/cpu/intel_pstate/max_perf_pct:100
+> > /sys/devices/system/cpu/intel_pstate/min_perf_pct:9
+> > /sys/devices/system/cpu/intel_pstate/no_turbo:1
+> > /sys/devices/system/cpu/intel_pstate/num_pstates:41
+> > /sys/devices/system/cpu/intel_pstate/status:active
+> > /sys/devices/system/cpu/intel_pstate/turbo_pct:33
+> > rdmsr 0x771: 10c1f2c
+> > rdmsr 0x774: 1f04
+> >=20
+> > It seems only the output of rdmsr 0x771 has changed.=C2=A0 And if I rea=
+d
+> > the
+> > SDM correctly it's a "Most_Efficient_Performance" change.
+> That is fine.
+>=20
+> We don't have any notifications either via ACPI or via HWP interrupt.
+> I think it was working by chance before this change as by the cpufreq
+> core is trying to set policy, the turbo is enabled by the firmware.
+>=20
+> What is this laptop make and model?
 
-AFAIU, efi_bgrt_init() can be called for any x86 platform, with or without
-encryption. 
-So if my understating is correct, efi_arch_mem_reserve() will be called with SNP
-disabled as well. And if kexec works ok without SNP but fails with SNP this
-may give as a clue to the root cause of the failure.
- 
-> > > If we skip efi_arch_mem_reserve() (which should probably be anyway skipped
-> > > for kexec case), then for kexec boot, EFI memmap is memremapped in the same
-> > > virtual address as the first kernel and not the allocated memblock address.
-> > Maybe we should skip efi_arch_mem_reserve() for kexec case, but I think we
-> > still need to understand what's causing memory corruption.
-> 
-> When, efi_arch_mem_reserve() allocates memory for EFI memory map using
-> memblock and then later in boot, kexec_enter_virtual_mode() does memremap on
-> this memblock allocated memory, subsequently after this i see EFI memory map
-> corruption, so are there are any issues doing memremap on memblock-allocated
-> memory ?
+It's a Hasee X5-2021S5H.
 
-memblock-allocated memory is just RAM, so my take is that memremap() cannot
-figure out the encryption bits properly.
+Hasee is known for producing some laptops very cheap but often having
+"minor" issues.  So I guess the firmware is doing some stupid thing.
 
-You can check if there are issues with memrmapp()ing memblock-allocated
-memory by sticking memblock_phys_alloc() somewhere, filling that memory with a
-pattern and then calling memremap(addr, size, MEMREMAP_WB) and checking if
-the pattern is still there.
- 
-> Thanks, Ashish
-> 
-> > > > I didn't really dig, but my theory would be that it has something to do
-> > > > with arch_memremap_can_ram_remap() in arch/x86/mm/ioremap.c
-> > > > > Thanks, Ashish
+But turbo works just fine on Windows 11 so it'd be better if we could
+make it work for Linux too.
 
--- 
-Sincerely yours,
-Mike.
+
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
