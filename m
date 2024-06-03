@@ -1,66 +1,24 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649EB12F596
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58EF1EF1A
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717428535; cv=none; b=ZbXHwvyAdgune5NcU+sxlwzicckVDPFp77636S0L006nBSCe4pc9DwV/YJDq4sFlqujlfPkdo6Wzfvqwc9rOlhjuwNBbXDCxwIvJDkgBaEnz2u+EBf75CpjWpGbSyP/1gWlw5McG4YTuKoVzzGr0C5K1p1ZaS5HgsJikebXX+tI=
+	t=1717428646; cv=none; b=LQoovvryH7HAJuF+5ObcB4/RRClYvGNjfafv7I7tiug/ide5VTPg5xjvTsqK3zDNYhUCrhpNvDTxQfaq/WPNkBNns7cSqhJ9Bxrdx/QTOYG2bnbwAv2Jc4trGmHnA/RMFSbXCgbf+SsEnFKRVvAnW5vL7Q2vV/Nvgrhe0pg5cfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717428535; c=relaxed/simple;
-	bh=jgd88n1fpOCFhS0XRFLq5gBP6vDKq95S79LnrkHYpH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EJTIZ2h3dyyRGn34mS99fvwhqgJjkCwzJyEEBH7AkdDm9wCQCjRPV2ndM4U2PK5YND2WTJXjkpzBloaYi4C0SD8uazQWO5buLirD1GgYoKZztZtoKPMTeDTc/xdtiHOuFW+RS5Te370x9zL7NEvCwa4cX1ORepkn/evHIAb26XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aYs+R2d+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aYs+R2d+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717428527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ar9gzrik4rhckEVRPLbE8X2OcbLolgrz1g9vN29eeQg=;
-	b=aYs+R2d+gbC30DA6kMYBzxB9FjoLfxwTUrIx/S7ofhZWwjmbecQxrNhJhhrERsDyTNMUav
-	ecgYUfz64a/f7o55PgCCRQr11IkUtg15dISRDDHu2HnhM0kpAj7cD7FpWNF+fOpxfOcqnX
-	HG7u6wp8zzRcMoIL71KJj+SDq322sWY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-mVkyJwYbOEyO-MWxEc83YQ-1; Mon, 03 Jun 2024 11:27:42 -0400
-X-MC-Unique: mVkyJwYbOEyO-MWxEc83YQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4212941e244so10177225e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 08:27:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717428447; x=1718033247;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ar9gzrik4rhckEVRPLbE8X2OcbLolgrz1g9vN29eeQg=;
-        b=F9eML21knqN1rZRbG2MQnStT/LKvxP9yNot1T8XzlMOIMwSTzuHyum5o8e6A4rnz20
-         GRg+uJtEBRRUekuPdT2G74MpJ7BxRqgB/b7wvLcKKv2jMVEyzcMaVhT84GdcAoygCnjh
-         BrOXczga3eOhrSUcxOuVI/StzBiewhCbN3u+Sxap6VB+j/IgXPToNrjINavqHEtH2E4t
-         kTepd+Peqj3Kn54bAiJnKYDKJQY5KEIErpA1VHAAYaTxfJ8C6CFP7tXdoHWY4Imz2++O
-         gkkERlwuE85igjdccbwUnmcN581uyRhlBFMvFcXoJURLLrPfjDy9HrBDWrIjV25SNlhl
-         VsCA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8tsTyrhfNNLZhefrar5D3LB7hZkTV0K1ngeQwfdVpzqbUx+CWZztdQOlMxjjUyViSkM57AiKb1Afqvx4p+Hr9gQvw74fC9K3+VyEc
-X-Gm-Message-State: AOJu0Yx9as7QHRrajrXC3pQLgx5m/sEYXziWpaYcO62dqBBBU+rpsU5z
-	jeoWgfgr1KM2TyveOK78qvE+fo6V6W0F8cAnO//e4Un13wXI4uiJuD153YwetGmKUedZE5Fz7ng
-	nyAKBw9wREVcVw4jeHW0YJ7Lu7fFTSMV/VEnrdxqpv11Qh9mgoxJtGNcVNE3Ceg==
-X-Received: by 2002:a05:600c:3d8c:b0:420:fcd:10e0 with SMTP id 5b1f17b1804b1-4212e05dfa2mr72664665e9.15.1717428447502;
-        Mon, 03 Jun 2024 08:27:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFpBRQbamqxXLfeZ0zqOXC87vSWhwtU762ZehParQC2zaOtREMaeN0/9mqa3qf0Xr6Fcsku9w==
-X-Received: by 2002:a05:600c:3d8c:b0:420:fcd:10e0 with SMTP id 5b1f17b1804b1-4212e05dfa2mr72664475e9.15.1717428447161;
-        Mon, 03 Jun 2024 08:27:27 -0700 (PDT)
-Received: from ?IPV6:2a01:599:908:c963:af9b:c64c:dfd8:5999? ([2a01:599:908:c963:af9b:c64c:dfd8:5999])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b83d4e2sm121728565e9.2.2024.06.03.08.27.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 08:27:26 -0700 (PDT)
-Message-ID: <f85228ee-5e81-43ac-96c5-9687fc0c596f@redhat.com>
-Date: Mon, 3 Jun 2024 17:27:25 +0200
+	s=arc-20240116; t=1717428646; c=relaxed/simple;
+	bh=RBLBKM97OJ9PfjLoAidYZRfTjsq8OteewWEsvMvqYP4=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=dvJi3XjVhQuo5vDybD+6DJ4Et5V3JvY1pCnXLhT1AAQ1vQuOQgouplM8FcJxl/3K4sfhrINWqJBFwGMZWCR+ycwcgQAoFIUDvmT6M5xY1bKAMdjCfo05jDSA/beiwGlqk0zq9uaNutVLK76gtnnC3lY/mVZkJF2W1jxyUJDEWlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F41191042;
+	Mon,  3 Jun 2024 08:31:06 -0700 (PDT)
+Received: from [10.1.30.30] (e127648.arm.com [10.1.30.30])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CF7E3F792;
+	Mon,  3 Jun 2024 08:30:41 -0700 (PDT)
+Message-ID: <5b936388-47df-4050-9229-6617a6c2bba5@arm.com>
+Date: Mon, 3 Jun 2024 16:30:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,104 +26,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] mm/mlock: implement folio_mlock_step() using
- folio_pte_batch()
-To: Lance Yang <ioworker0@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org,
- ryan.roberts@arm.com, 21cnbao@gmail.com, baolin.wang@linux.alibaba.com,
- ziy@nvidia.com, fengwei.yin@intel.com, ying.huang@intel.com,
- libang.li@antgroup.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240603140745.83880-1-ioworker0@gmail.com>
- <Zl3Wjh9_aGY8Xxm7@casper.infradead.org>
- <c0309ab6-8bae-42b7-8d27-1df895689fb8@redhat.com>
- <CAK1f24n9UB=Xqj23vLG7fYKUfvZgLqFVF-tsyc_nDrwAKC98CQ@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAK1f24n9UB=Xqj23vLG7fYKUfvZgLqFVF-tsyc_nDrwAKC98CQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ Ingo Molnar <mingo@redhat.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+From: Christian Loehle <christian.loehle@arm.com>
+Subject: [PATCH] idle: Remove stale RCU comment
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 03.06.24 17:08, Lance Yang wrote:
-> On Mon, Jun 3, 2024 at 10:56 PM David Hildenbrand <david@redhat.com> wrote:
->>
->> On 03.06.24 16:43, Matthew Wilcox wrote:
->>> On Mon, Jun 03, 2024 at 10:07:45PM +0800, Lance Yang wrote:
->>>> +++ b/mm/mlock.c
->>>> @@ -307,26 +307,15 @@ void munlock_folio(struct folio *folio)
->>>>    static inline unsigned int folio_mlock_step(struct folio *folio,
->>>>               pte_t *pte, unsigned long addr, unsigned long end)
->>>>    {
->>>> -    unsigned int count, i, nr = folio_nr_pages(folio);
->>>> -    unsigned long pfn = folio_pfn(folio);
->>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>> +    unsigned int count = (end - addr) >> PAGE_SHIFT;
->>>
->>> This is a pre-existing bug, but ... what happens if you're on a 64-bit
->>> system and you mlock() a range that is exactly 2^44 bytes?  Seems to me
->>> that count becomes 0.  Why not use an unsigned long here and avoid the
->>> problem entirely?
->>>
->>> folio_pte_batch() also needs to take an unsigned long max_nr in that
->>> case, because you aren't restricting it to folio_nr_pages().
->>
->> Yeah, likely we should also take a look at other folio_pte_batch() users
->> like copy_present_ptes() that pass the count as an int. Nothing should
->> really be broken, but we might not batch as much as we could, which is
->> unfortunate.
-> 
-> Could I change folio_pte_batch() to take an unsigned long max_nr?
+The call of rcu_idle_enter() from within cpuidle_idle_call() was
+removed in commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle deeper
+into the idle path") which makes the comment out of place.
 
-It might be more future proof; see my other mail, I think currently all 
-is fine, because "end" is not the end of the VMA but the end of the PMD. 
-Please double-check.
+Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+---
+ kernel/sched/idle.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 6135fbe83d68..3cc1a592d9a1 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -179,12 +179,6 @@ static void cpuidle_idle_call(void)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * The RCU framework needs to be told that we are entering an idle
+-	 * section, so no more rcu read side critical sections and one more
+-	 * step to the grace period
+-	 */
+-
+ 	if (cpuidle_not_available(drv, dev)) {
+ 		tick_nohz_idle_stop_tick();
+ 
 -- 
-Cheers,
-
-David / dhildenb
-
+2.34.1
