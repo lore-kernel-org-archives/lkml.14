@@ -1,39 +1,39 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D323612FF8F;
-	Mon,  3 Jun 2024 14:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9A9134406;
+	Mon,  3 Jun 2024 14:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717425015; cv=none; b=Z6y9fJjvHX7LiXHQdyYm8d0g3OgaBFN4jHkbKkZfGpKFvtAj2wdW7G2hGbKaf8ctEef2MZiXcvevsH/429qiDkl62GzIKZQfzi+BQw3HZQirS1en2wO2p205Z4CHFOVNi73x40mdSCf5Qpnkkp82I58YXeXVPrclrtcLBlTAkSg=
+	t=1717425018; cv=none; b=IjQuYv9L9JPWHYQWATivkT6bDwE/s28rYiTOGUvLcx0thXLqmvt9Sc8p2keWCjEjhuilhrkAbarkb0HoVp0smMhDSokw+g+L9Jf/FE6/erqNdVrw4erWbjC0BUtTbymjjX3iv9Lqx8uu7hsE6kogw+DRgQlSMf0+C4TLHmLk5Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717425015; c=relaxed/simple;
-	bh=ME5S3rAewxYALP3zD16ZoCCOZWcPEkdGdMEBDqRV3k8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eSfdgOL9YSr54mHDtK4msptGmgklAuXuTX6U0G67WWBoRRevHYoMrb79mhSLPemBhlLMhVnxvGUgTFu54LlKGosgGOQZVmGH387TgEKJX5gxcVy+sPgh1vnpPJLuWnPdRHmhiFz0NQScFMzGK3WiyV5/Vr3+4tto52PHUu6SKQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=DswH2Hl4; arc=none smtp.client-ip=85.214.62.61
+	s=arc-20240116; t=1717425018; c=relaxed/simple;
+	bh=ca3PFMqvf2PEgoAA0VG4VlDQamgfG44SJn7TGmIqUT8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Qg96lQVlrSesoc1C4NHmM2wjeSJTPJ6no4ynXaHygDMwJ9EPTtAW/j3X0bxxlgb6zYnO5ZzAKx6aWFI7k7i3EKYquF6EQVirgzK0QIz89nS/rvbop4KFelVR5vXMFaH4i1XXu6IJg6Mlv2ov9j/PjDKzYpXDFpSZqD+9ndogOEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=U5JsTJpK; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="DswH2Hl4"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="U5JsTJpK"
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 02E8E88297;
-	Mon,  3 Jun 2024 16:30:10 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id E7E2D88308;
+	Mon,  3 Jun 2024 16:30:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717425012;
-	bh=tzwKWRYiq4hn9T72ICEyR6cTqBmlVIAQNA4M5kMLnKw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DswH2Hl4e4qu+NnV3vVaNwmvbrLFMnaoy4MtJ7XyQT0Jevcn1FxJDp198TJHuiWtf
-	 SRpsUjirB9iTqa2NLNNJL6mM/eHgeb7MwftO0vvTga7MNzgpDR4ocUvAC1DCWSaF66
-	 IhITTRRjiIIdmn2+pOsLQibUr8xJl1nG+Wu+lW3xQWI/c9Zp0MNe28puVzgJ7oXzyz
-	 VpyygSkmecDroHLAcd6nmaEeUaSnof8xNCUz0vnXpatowaO4fFC6aFv05C6g8sKSJW
-	 EdFCuBuinronpATl6Wr8mCEdDt1DhomPEsq80gGZBqpatm4mqFTQdSr0v9Z6m++XD+
-	 IpAShCtSL3VYg==
-Message-ID: <eaa69915-e356-47ac-859e-933fe430a750@denx.de>
-Date: Mon, 3 Jun 2024 15:09:15 +0200
+	s=phobos-20191101; t=1717425015;
+	bh=D1FOb8+LRm3aTJoqLkva7vJcqtsDNNOiof4KFRfCgww=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=U5JsTJpKB9XrS+tOJLOdQnsrjPnXzbEKxTliEtCsqgl9KiPEoZiH/ruyYK8A4xR6w
+	 6BTejiu4wQw10P32WDrayv4apql6SINcNU1zBEL1UleFpWvNjsXYUWPagQhgFk1d7C
+	 AOnA5FvELgXNYWpNKVmVbPMvFUvBhKE3FNFkFO46G1s3+Keqj69pNyCis9vnebE+Po
+	 QgJ8ePGlpDpOea5a0C3f+LEQF70txG3PZy1lQ4PqAlIjg1X4ztyN/N1vGSXaUIVHNp
+	 o1J7lMtU3Se4D24YoY8YTLAaEg06HeQdXRgkQrCEMt6L1j1I9L/B6n/KE25YxFMyM0
+	 t+0qPGhF12zDQ==
+Message-ID: <f1c30ac7-cec1-422f-9114-7b30321d3563@denx.de>
+Date: Mon, 3 Jun 2024 16:27:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,9 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl
- support
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v3 02/11] net: stmmac: dwmac-stm32: Separate out external
+ clock rate validation
 To: Christophe Roullier <christophe.roullier@foss.st.com>,
  "David S . Miller" <davem@davemloft.net>, Eric Dumazet
  <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
@@ -53,29 +54,99 @@ To: Christophe Roullier <christophe.roullier@foss.st.com>,
  Alexandre Torgue <alexandre.torgue@foss.st.com>,
  Richard Cochran <richardcochran@gmail.com>, Jose Abreu
  <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
+ Mark Brown <broonie@kernel.org>, Sai Krishna Gajula <saikrishnag@marvell.com>
 Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240603092757.71902-1-christophe.roullier@foss.st.com>
- <20240603092757.71902-12-christophe.roullier@foss.st.com>
+ <20240603092757.71902-3-christophe.roullier@foss.st.com>
 Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240603092757.71902-12-christophe.roullier@foss.st.com>
+In-Reply-To: <20240603092757.71902-3-christophe.roullier@foss.st.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
 On 6/3/24 11:27 AM, Christophe Roullier wrote:
-> Need to enable MCP23S08 I/O expanders to manage Ethernet phy
+> From: Marek Vasut <marex@denx.de>
+> 
+> Pull the external clock frequency validation into a separate function,
+> to avoid conflating it with external clock DT property decoding and
+> clock mux register configuration. This should make the code easier to
+> read and understand.
+> 
+> This does change the code behavior slightly. The clock mux PMCR register
+> setting now depends solely on the DT properties which configure the clock
+> mux between external clock and internal RCC generated clock. The mux PMCR
+> register settings no longer depend on the supplied clock frequency, that
+> supplied clock frequency is now only validated, and if the clock frequency
+> is invalid for a mode, it is rejected.
+> 
+> Previously, the code would switch the PMCR register clock mux to internal
+> RCC generated clock if external clock couldn't provide suitable frequency,
+> without checking whether the RCC generated clock frequency is correct. Such
+> behavior is risky at best, user should have configured their clock correctly
+> in the first place, so this behavior is removed here.
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
+> ---
+>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 54 +++++++++++++++----
+>   1 file changed, 44 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> index c92dfc4ecf570..43340a5573c64 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+> @@ -157,25 +157,57 @@ static int stm32_dwmac_init(struct plat_stmmacenet_data *plat_dat, bool resume)
+>   	return stm32_dwmac_clk_enable(dwmac, resume);
+>   }
+>   
+> +static int stm32mp1_validate_ethck_rate(struct plat_stmmacenet_data *plat_dat)
+> +{
+> +	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+> +	const u32 clk_rate = clk_get_rate(dwmac->clk_eth_ck);
 
-PHY in capitals.
+ From Sai in
+Re: [net-next,RFC,PATCH 1/5] net: stmmac: dwmac-stm32: Separate out 
+external clock rate validation
 
-> reset in STM32MP135F-DK board
-> STMMAC driver defer is not silent, need to put this config in
-> built-in to avoid huge of Ethernet messages
+Please check reverse x-mass tree is followed for these variables, if 
+possible.
 
-This second sentence is not correct, you are not enabling this GPIO 
-controller driver to silence a warning, you are enabling this driver to 
-let the PHY driver release the PHY from reset.
+> +	switch (plat_dat->mac_interface) {
+> +	case PHY_INTERFACE_MODE_MII:
+> +		if (clk_rate == ETH_CK_F_25M)
+> +			return 0;
+> +		break;
+> +	case PHY_INTERFACE_MODE_GMII:
+> +		if (clk_rate == ETH_CK_F_25M)
+> +			return 0;
+> +		break;
+
+ From Sai in
+Re: [net-next,RFC,PATCH 1/5] net: stmmac: dwmac-stm32: Separate out 
+external clock rate validation
+
+Please check, whether we can combine the two cases..
+
+> +	case PHY_INTERFACE_MODE_RMII:
+> +		if (clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M)
+> +			return 0;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		if (clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M)
+> +			return 0;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	dev_err(dwmac->dev, "Mode %s does not match eth-ck frequency %d Hz",
+> +		phy_modes(plat_dat->mac_interface), clk_rate);
+> +	return -EINVAL;
+> +}
+
+[...]
