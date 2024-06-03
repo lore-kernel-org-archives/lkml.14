@@ -1,139 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF98F6F2F2
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DDB6F2F2;
+	Mon,  3 Jun 2024 15:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717429782; cv=none; b=HuqmEB7XHc0ZLePQrGyyQ/ueeiWuO0FklepCB5Yyx3WCg6pWR7jeQVZ0UGXo6JEEulWW4MaiEdw9SpwjQZYXRD0WPEOc/QvQN3dQezTIXw+6MIlE8/FnU3Z8mTkcKzqJWtTv+UIjxIZyk5ZdbNe2Nkwu2Dx+4Nn+3i+56ilv+l4=
+	t=1717429821; cv=none; b=nBxbg26kHQyQquQRWDXuFOYF7/aWe+zKfiXmDZwPqzngfE/JGsjbsx14WRkKygu/qNJA6VzrCXFRnNmgwtl1tBHt8I2x2Z/uQ+/CM01cfDqI+lEuageRXWzKnC+ACx2bQAkGyeFuxUuBTJoToI0ga3uUokd9McjJfFU0gGAjTOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717429782; c=relaxed/simple;
-	bh=sAz/0G7IfCaSqCzpa1MGbHiAmlpqGZjbXMIKkPGrMlM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AuO+lRb380D9mv8e5pau7/zFbEP53bMH3DyB+YMpEqXKIpdWIvaN+XdwKYlCT4Z/KAfsc1R0sVuDbW0NYx1S7V4QFDjbp7VhvO3ZGpoW87jNgI4cV/odzzI97cnua3OB2q6S8UKTdZlcQsoLxxuR0H+jX6ZnMBMjY82xd5HCBh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WxbLk0Iu; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717429821; c=relaxed/simple;
+	bh=Rx5a8gcjyJ7ZSiIv7XBAZ+Rj0nWbBdD3FbeUn6UvyrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sH3Ai1zPAvkvxeh7vKvnl6OC+Xty+cAD6rmwJ7jvlf3ZDq8PcZ/TBCZucDBv9u4P+uZFv+DZl6vQzpSW3QdJaTsSNLGYydQKxUJPe5HomqxSd+M6LNY9hIJUGZVtIk1v+hWsI2p/gh2SpR/HlCTJy+0xleqf7nLPcE/bmPZGxTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QEERog17; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WxbLk0Iu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717429780; x=1748965780;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=sAz/0G7IfCaSqCzpa1MGbHiAmlpqGZjbXMIKkPGrMlM=;
-  b=WxbLk0IuepT9a12K2dN9L0pW0O07Ld63lCjRbl0biGNz5Z7w0ztQ3P0t
-   Kn4NpNDHuANf+y9MnVec/u1OuXipGkQr06l9NcWuWFB9DD1Opyqjlij8Y
-   kYQ9Tef5UJRxjtPFvXufF5LtS12PDrE2+GY4Fxl1pz3Qql+liTfZgLNzj
-   M4xPRFUKfQiHMcU9HOHWV3K3ZUcHZISNFU1kqPrKYr4dg6HOLJTTPBhxT
-   Tf4k2iBUna+PIijOUYZfmkVgqxDgfPy4JB/Y6+6pzRmcGp3XH2n7XQPT6
-   y/Et23t4gQ8JkqszrPc49Iky9NhrSYXvjFUY9jyp5n0Y5iHnNalUVQn90
-   w==;
-X-CSE-ConnectionGUID: LY/dM+8VT6Si90VMqMLkBQ==
-X-CSE-MsgGUID: PP6t5vqMT82ZjK4DzCXRig==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="39332393"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="39332393"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 08:49:39 -0700
-X-CSE-ConnectionGUID: gzsSLXcNRMSSgNwaN94Y3A==
-X-CSE-MsgGUID: Gga6ifBpTyWVypU7FalGog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="37027997"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 03 Jun 2024 08:49:32 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sE9w5-000LqJ-2g;
-	Mon, 03 Jun 2024 15:49:27 +0000
-Date: Mon, 3 Jun 2024 23:48:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hagar Hemdan <hagarhem@amazon.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Marc Zyngier <maz@kernel.org>
-Subject: [tip:irq/urgent 3/3] drivers/irqchip/irq-gic-v3-its.c:1973:62:
- error: macro "guard" passed 2 arguments, but takes just 1
-Message-ID: <202406032312.di8cohFZ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QEERog17"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E50EE0007;
+	Mon,  3 Jun 2024 15:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717429817;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GwTcq4IedeHLQXBXk1rloGqIPerrvErDu7RrUmu96H8=;
+	b=QEERog173eXk5OmgCX0zfGMBQMH3arOVasSjUWavLnk15brrZBeEFC8Oz8XDZQjNCkHsjR
+	sehVeAFHi50SOMGY1ea9upKz1box4M7r2hc5W/y6lx0PVzZiaBem4vgk8nLXlR3PjYKVvO
+	amy7jNuAtd8FPrH9koat0csVnxFiYiEEWXTMv/Sihxm/3y188V+Ntp+IkrBkWnbIcZkjGr
+	SUmsSY1MzbRPp5V1W09OKcHTsKdriPH2aOdFUw/Z0NB5dZgr+BTLncObHzBoZf6N7iATxp
+	BmN0CbyEQtYfnKT1LU4Mo1pS+rJF+sCWSNsRX5ZjNu3p605utwp2CfqYcqQJ5A==
+Date: Mon, 3 Jun 2024 17:50:14 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Dmitry Yashin <dmt.yashin@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman
+ <jonas@kwiboo.se>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] pinctrl: rockchip: add rk3308b SoC support
+Message-ID: <20240603175014.6a41d3d8@booty>
+In-Reply-To: <20240529143534.32402-3-dmt.yashin@gmail.com>
+References: <20240529143534.32402-1-dmt.yashin@gmail.com>
+	<20240529143534.32402-3-dmt.yashin@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
-head:   8dd4302d37bb2fe842acb3be688d393254b4f126
-commit: 8dd4302d37bb2fe842acb3be688d393254b4f126 [3/3] irqchip/gic-v3-its: Fix potential race condition in its_vlpi_prop_update()
-config: arm64-allnoconfig (https://download.01.org/0day-ci/archive/20240603/202406032312.di8cohFZ-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240603/202406032312.di8cohFZ-lkp@intel.com/reproduce)
+Hello Dmitry,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406032312.di8cohFZ-lkp@intel.com/
+On Wed, 29 May 2024 19:35:34 +0500
+Dmitry Yashin <dmt.yashin@gmail.com> wrote:
 
-All errors (new ones prefixed by >>):
+> Add pinctrl support for rk3308b. This pin controller much the same as
+> rk3308's, but with additional iomux routes and 3bit iomuxes selected
+> via gpio##_sel_src_ctrl registers. Set them up in the function
+> rk3308b_soc_sel_src_init to use new 3bit iomuxes over some 2bit old
+> ones and update iomux_recalced and iomux_routes for the new SoC's.
+> 
+> Fixes: 1f3e25a06883 ("pinctrl: rockchip: fix RK3308 pinmux bits")
+> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
 
-   drivers/irqchip/irq-gic-v3-its.c: In function 'its_irq_set_vcpu_affinity':
->> drivers/irqchip/irq-gic-v3-its.c:1973:62: error: macro "guard" passed 2 arguments, but takes just 1
-    1973 |         guard(raw_spinlock_irq, &its_dev->event_map.vlpi_lock);
-         |                                                              ^
-   In file included from include/linux/preempt.h:11,
-                    from include/linux/spinlock.h:56,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/slab.h:16,
-                    from include/linux/resource_ext.h:11,
-                    from include/linux/acpi.h:13,
-                    from drivers/irqchip/irq-gic-v3-its.c:7:
-   include/linux/cleanup.h:163: note: macro "guard" defined here
-     163 | #define guard(_name) \
-         | 
->> drivers/irqchip/irq-gic-v3-its.c:1973:9: error: 'guard' undeclared (first use in this function)
-    1973 |         guard(raw_spinlock_irq, &its_dev->event_map.vlpi_lock);
-         |         ^~~~~
-   drivers/irqchip/irq-gic-v3-its.c:1973:9: note: each undeclared identifier is reported only once for each function it appears in
+Thank you for adding runtime chip ID detection!
 
-
-vim +/guard +1973 drivers/irqchip/irq-gic-v3-its.c
-
-  1963	
-  1964	static int its_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-  1965	{
-  1966		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-  1967		struct its_cmd_info *info = vcpu_info;
-  1968	
-  1969		/* Need a v4 ITS */
-  1970		if (!is_v4(its_dev->its))
-  1971			return -EINVAL;
-  1972	
-> 1973		guard(raw_spinlock_irq, &its_dev->event_map.vlpi_lock);
-  1974	
-  1975		/* Unmap request? */
-  1976		if (!info)
-  1977			return its_vlpi_unmap(d);
-  1978	
-  1979		switch (info->cmd_type) {
-  1980		case MAP_VLPI:
-  1981			return its_vlpi_map(d, info);
-  1982	
-  1983		case GET_VLPI:
-  1984			return its_vlpi_get(d, info);
-  1985	
-  1986		case PROP_UPDATE_VLPI:
-  1987		case PROP_UPDATE_AND_INV_VLPI:
-  1988			return its_vlpi_prop_update(d, info);
-  1989	
-  1990		default:
-  1991			return -EINVAL;
-  1992		}
-  1993	}
-  1994	
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
