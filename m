@@ -1,146 +1,115 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFBE74069;
-	Mon,  3 Jun 2024 08:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC30F5A788
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 08:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717404515; cv=none; b=HRNvL+WzR60MgUxq+C0AfCotHlbFoP/3KwFUytpYOop7lyvgHWDh7852mZYB2XHhdaj4ebJRHXR2CvC2+F2Ft8Ahp3tI/N+5U7z7knV5AuD1kavehD+BXzbf29PVNQh4IBtSlFiV5hNcYtYM2PNPYhr0gXzoErlrakDJu/fEE4E=
+	t=1717404605; cv=none; b=aCJKSkZk6+HR4ACT99oP1axy8DeNqpeBph8woX76P4m9lRvTPD19YGu6Oa2vxy7FPuPwOkSMpHuj+EFgYmYHQWbH55CDltcZcYnko7SwwhUmvTUu1U+OXkdJgw5Ow34AOf+XursU1qdUNDEm6PuqVagsE0kOxyQ9F3ChqoRWLn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717404515; c=relaxed/simple;
-	bh=i/u0QhpikUU4tvXKtYsvQ33uX864CvXsbVERvLau4hQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AjJ21Mfu8Qm1bUuqZyXQxDr7Q6rQJQJFDHuyXVErrOb723+ze61FKlQl5a9+wFL4Us0zn98hhaypRjJjKbvalrb0QeT8qmgyHKUdWXDD9osjbkKNCMsZyx2X3o6MxHoUSYN35w0SR+vXpXTlu4D9wJ0376tFgQdPycu6CaeusAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=sZi5ZUBc; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1717404605; c=relaxed/simple;
+	bh=dfoQFsA6SLL4wcUbcBXpinLax5A25U36hCg32xNjGxI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dnMdaGjlSwRRA1SWvJYEDX0X/VAX2Fzef158WbPnQHK3RaJeMUSeUPb3voNutj6tpvboaCTYNVhegFbbVHGLbJW7rilJqDmTExQitnyblN4b/kPnJDfOsa43yMq2AkKXLzkUQ+jLun1zLS4tzMW+QUpxWZv5yv3MHa1y3thzh88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RvLIL4y4; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="sZi5ZUBc"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45383dHK009667;
-	Mon, 3 Jun 2024 10:48:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	xDFSp0bgHGnb5uhcwyLxi6wynGhrBTigGpLIvo69kPg=; b=sZi5ZUBc0IpoX7Uv
-	+UNd3CMChGZLD5/e2d6zXG4yZ4Ic8jUqNoAePYfGj+BAR3pRXGEGWkgN0xEMut5Z
-	HeFAhp76T1+bKQ2GcYIXlJcuO4yToJqOa3bwcvgsN/DwtbORWLxLxi5TcViayop/
-	+Y6m7E3/NEFOCLvX5ZyYNgYPHT7GngsOahD5BhO6DoC4l9SvjCSFT2P+GB0i6WKm
-	QEmbt3qCsp+a3mmEMkziSL6ZS2OT0eDG+O18IH+ex2g37zjmJMcAmt51YhJ3ZHqo
-	Dmy0GHBEaF0+6KRlvEMxveKwK2KYabqrafIIzj0neOrUcGK/XBxL7iFzK7I3mSXF
-	Aq4L8g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ygekhkq90-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 10:48:24 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 38FBC40046;
-	Mon,  3 Jun 2024 10:48:20 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9B607215BDB;
-	Mon,  3 Jun 2024 10:47:15 +0200 (CEST)
-Received: from [10.131.140.24] (10.131.140.24) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 3 Jun
- 2024 10:47:14 +0200
-Message-ID: <5e21a6a5-0003-4b6c-a051-25ebeb38e676@foss.st.com>
-Date: Mon, 3 Jun 2024 10:47:14 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RvLIL4y4"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-df78b040314so4217583276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 01:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717404603; x=1718009403; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TH62Yup3G9u8vLN8Ga3Ij8RqgPg+rX8ETtG6ob+WsZQ=;
+        b=RvLIL4y4zBQ5prmsgP2CaA6A+uwEUtXRNc58oP1U+YicLPhc2aI5/s3KiTGSQwF7KK
+         K5O/j5W6WDHKqyIQ9/84Rtgw8u0kCA8Z+ZQLgby5vkyme2OgNsFTK/99CTfYet79LxyL
+         oJGv/fWzI2m1KmH8RQsneW0ppPQpAhr4Ov6D9BDE2b10cqty/2AhAq2sujraBY2tdxIs
+         L3ycutcpTMv8BcLgdy5Y8NP01OcylZ6eJfRIktv7Th1+Ny5gCZ4yf6AJerVisOt9bIQN
+         2H4wdgM1xlXB3wG6n+4A4XNu+VQ8stqT/ZfcqTIf8hqb4OCMmQVvU8L2EdMV36TDzcg/
+         tQCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717404603; x=1718009403;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TH62Yup3G9u8vLN8Ga3Ij8RqgPg+rX8ETtG6ob+WsZQ=;
+        b=lOQng70KCZGBEZ9jOH6+RLkFl5TL28aJML+g+z8h5LDHCs2qeBnIDxKh01UycGH8Ov
+         QVPTyqfNqiXhpL4ueWb1BS9Pvo8IprPqIsySaOhJX2xBUXcvjTuY62QUtbKred0oZ0Uz
+         QWANvg8b1o2e2PRBg25Kj169fv1WbIX3/KLaLCC/P3jNFPvC/xizf0dMvO32Qik8LuhZ
+         82rXLKblul2TFjSf22US/EYwFnU/0I5/VqUnKO2zjG3jULC9z9qKqz8vWahpLA8FoYf3
+         oNPk3qm1okxKc+33u2pg6cXdlOmlhKo7b7kjw+Jf0eIxNX+UZLT7eNr5tYC30zPxCkhu
+         Xwvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaVqmgIjQcNfgN4QKIH9CV+PONx6KZMDEypS4utgDUFGLPxt55cx7kdC4d7MbXGCox4GaDSX7gYisL0nh55VvBb4YDQ1fkJi2StyMx
+X-Gm-Message-State: AOJu0Yy6TX/5C0Qx0blJRGI9yFflS9l46e4plKL3lJzOGScx9wFi7Gs2
+	z5dIJ/R2wYFvYuB+VZAU3UQOHIpiVzS7ZuZi0VSvMexdRVyIbevH6v2JO6VO5VYVqY8LBj8+ZIT
+	1lpqcwK6ZkKRtWCiSQhgfCn4qzTJz0AVcPa2QpZKIPU4nsnQ/
+X-Google-Smtp-Source: AGHT+IF8k6LvzxBQXvPeOtqCn1OCAasXTKSxbvnfog6OJ7lM/2LaGW7ZCPHxo6bcXahe6A5T83BMVLsZ3/yavZ95yUg=
+X-Received: by 2002:a25:ab45:0:b0:de8:a770:4812 with SMTP id
+ 3f1490d57ef6-dfa73db2ab8mr7409755276.40.1717404602753; Mon, 03 Jun 2024
+ 01:50:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] media: dt-bindings: Add ST VD56G3 camera sensor
- binding
-To: Sakari Ailus <sakari.ailus@iki.fi>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-CC: <benjamin.mugnier@foss.st.com>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240521162950.6987-1-sylvain.petinot@foss.st.com>
- <20240521162950.6987-2-sylvain.petinot@foss.st.com>
- <8afe1888-5886-45fc-b576-98db3d392d37@linaro.org>
- <ZlWiQTfag5yTA4YM@valkosipuli.retiisi.eu>
- <b6d3d336-5999-424a-9e38-3cf793b6627e@linaro.org>
- <ZlWrcTCNBWEz67Tj@valkosipuli.retiisi.eu>
-From: Sylvain Petinot <sylvain.petinot@foss.st.com>
-Content-Language: en-US
-In-Reply-To: <ZlWrcTCNBWEz67Tj@valkosipuli.retiisi.eu>
+References: <20240527-x1e80100-dts-pmic-glink-v1-0-7ea5c8eb4d2b@linaro.org>
+ <20240527-x1e80100-dts-pmic-glink-v1-2-7ea5c8eb4d2b@linaro.org> <Zl2DUXWUN0088-Af@hovoldconsulting.com>
+In-Reply-To: <Zl2DUXWUN0088-Af@hovoldconsulting.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Mon, 3 Jun 2024 11:49:51 +0300
+Message-ID: <CAA8EJpp2hK1P86vrZOwXfNBz3nBXugCcERE9yBRCaCE3aDbqOA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: x1e80100-crd: Add pmic-glink node
+ with all 3 connectors
+To: Johan Hovold <johan@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_05,2024-05-30_01,2024-05-17_01
 
-Hi Krzysztof, Sakari
+On Mon, 3 Jun 2024 at 11:48, Johan Hovold <johan@kernel.org> wrote:
+>
+> On Mon, May 27, 2024 at 11:07:28AM +0300, Abel Vesa wrote:
+> > Add the pmic-glink node and describe all 3 USB Type-C connectors. Do this
+> > for USB only, for now. The DP port will come at a later stage since it
+> > uses a retimer.
+> >
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/x1e80100-crd.dts | 143 ++++++++++++++++++++++++++++++
+> >  1 file changed, 143 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
+> > index c5c2895b37c7..2fcc994cbb89 100644
+> > --- a/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
+> > +++ b/arch/arm64/boot/dts/qcom/x1e80100-crd.dts
+> > @@ -49,6 +49,101 @@ chosen {
+> >               stdout-path = "serial0:115200n8";
+> >       };
+> >
+> > +     pmic-glink {
+> > +             compatible = "qcom,x1e80100-pmic-glink",
+> > +                          "qcom,sm8550-pmic-glink",
+> > +                          "qcom,pmic-glink";
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +             orientation-gpios = <&tlmm 121 GPIO_ACTIVE_HIGH>,
+> > +                                 <&tlmm 123 GPIO_ACTIVE_HIGH>,
+> > +                                 <&tlmm 125 GPIO_ACTIVE_HIGH>;
+>
+> With this series applied, I'm getting the following error on boot of the
+> CRD:
+>
+>         ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
+>
+> Known issue? Do you need to enable some quirk in the UCSI driver?
 
-On 5/28/2024 12:01 PM, Sakari Ailus wrote:
-> Hi Krzysztof,
-> 
-> On Tue, May 28, 2024 at 11:46:00AM +0200, Krzysztof Kozlowski wrote:
->> On 28/05/2024 11:22, Sakari Ailus wrote:
->>> Hi Krzysztof,
->>>
->>> On Mon, May 27, 2024 at 09:04:38PM +0200, Krzysztof Kozlowski wrote:
->>>> On 21/05/2024 18:29, Sylvain Petinot wrote:
->>>>> Add devicetree bindings Documentation for ST VD56G3 & ST VD66GY camera
->>>>> sensors. Update MAINTAINERS file.
->>>>>
->>>>> Signed-off-by: Sylvain Petinot <sylvain.petinot@foss.st.com>
->>>>
->>>>
->>>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>>> index ef6be9d95143..554e6861425b 100644
->>>>> --- a/MAINTAINERS
->>>>> +++ b/MAINTAINERS
->>>>> @@ -20885,6 +20885,15 @@ S:	Maintained
->>>>>  F:	Documentation/hwmon/stpddc60.rst
->>>>>  F:	drivers/hwmon/pmbus/stpddc60.c
->>>>>  
->>>>> +ST VD56G3 DRIVER
->>>
->>> I might add this is a sensor, i.e. "ST VD653G IMAGE SENSOR DRIVER".
->>>
->>>>> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
->>>>> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
->>>>> +L:	linux-media@vger.kernel.org
->>>>> +S:	Maintained
->>>>> +T:	git git://linuxtv.org/media_tree.git
->>>>
->>>> This is a friendly reminder during the review process.
->>>>
->>>> It seems my or other reviewer's previous comments were not fully
->>>> addressed. Maybe the feedback got lost between the quotes, maybe you
->>>> just forgot to apply it. Please go back to the previous discussion and
->>>> either implement all requested changes or keep discussing them.
->>>
->>> The above MAINTAINERS entry is roughly in line with what else we have for
->>> the Media tree. I'm in favour of listing the people who would look after
->>> the driver, not just those who merge the patches (or even send PRs to
->>> Linus).
->>
->> I did not propose to drop the entry.
->>
->>>
->>> In other words, I think the above entry is fine as-is.
->>
->> I propose to drop duplicated, redundant git entry. Maintainer of this
-> 
-> Ah, I agree, that makes sense.
+Not that I know. The message is caused by the UCSI not responding to
+the PPM_RESET command. A trace from pmic-glink would be helpful.
 
-Thanks for clarifying, git entry will be drop in V3.
-
-> 
->> driver does not have access to git tree and the git tree is already
->> explained in media subsystem entry. If you ever update the git tree, you
->> need to update 100 driver entries which is meaningless...
-> 
-
---
-Sylvain
+-- 
+With best wishes
+Dmitry
