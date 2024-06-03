@@ -1,169 +1,150 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E502778C80
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1270482891;
+	Mon,  3 Jun 2024 11:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717412579; cv=none; b=HAtSmOe1X8S7ysleSzrgpHcru/SyUWXOOMwAKYqQR4LYdz92sjqAQvykKlh0AI0iUfoH46nv56CTHhVst9BC7akrJf+AqMpwgLVEyfY2asRCNAKKqTj7Qu0MH3GLBzdafolCb2C5kSQ3wodJ5A/XwzUg9LYXRdY5h4PEIJ/cxHY=
+	t=1717412637; cv=none; b=HHdnBbfAjjcDtLZdOmW814Ca0+gThb3NBDSBz32n2tXuuHG14R6LiTTXJrVBTk3/p4dEhvm1myAGeztYUkYJwxQ5b4A9Ctka4oy7QNHMNJXmTajhasK3l2L8xfz6CIzVsCOtv9F59beksq8CF7sS7KlCD4my31T7Gz4fqAa0dj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717412579; c=relaxed/simple;
-	bh=Hz+QOiNXfdRocqqvM1P1Cz8l1xb0oLt1qoEdbTHesI4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=P3RpOKAnoJTtW+fvHkgDmRaLx7nTPzYeecjyKvxPfEmbOFy3ZSLbVdb5+1f0jl31hBV8G3vd7xLsKU2S8ioj51XEyHEQHB4sunjldVCbPzfp0HoTcrpWrwLWUvqmOEDygXyKJqMNmkZzFd/NRy4cA10e2iQbA/i5J/nyxd2in30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=aTBfsG3m; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717412637; c=relaxed/simple;
+	bh=bQPnQcAIRDKBdTp8lMVtsR76hFtMqgQtFqFIcPainMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAxjHIgW41wyJO4yJHM4ZJ9ACYJXi6rYOQBQLdMWzYuIeIapqQp8TUOwsXOWcXyn8B3Eo6XQpax8AftSuiNrbOBIPit24hr+CUTTPpX0rH/XhHIEwnJOmGJGTXETgc8PBiv1He9N/sPSiWOsQHgbtzCkvXJ/LK700KwrA2AgrCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nh7Jx1bh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1iUSXdMP; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Nh7Jx1bh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1iUSXdMP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aTBfsG3m"
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240603110253epoutp04ba1e2599c0251194a6b905c384254790~VeaL5k9hL0745507455epoutp04m
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:02:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240603110253epoutp04ba1e2599c0251194a6b905c384254790~VeaL5k9hL0745507455epoutp04m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717412573;
-	bh=4Q+U5KnyvuMp+bndOsiFnEHmV6Drv1tUz1F+LkhtJEI=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=aTBfsG3mj6DSuVWwkjWTfVVQr30SQJiugPYf1syuEjE9lWZkhIFvIMwoc5h1iWPrI
-	 K6IGDoCNnucv8H6XEvXY0vxJNqw53rzJgJFtj3H0HsdjILmMv1gGU3SsV9m6MoJDIS
-	 0Xb2QrqYpVLV9U21eu1PR4ZhXYdDi2dk7EhuOBSM=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240603110253epcas1p26050d248242c79711160803bb6c7b547~VeaLXprjV1917919179epcas1p2j;
-	Mon,  3 Jun 2024 11:02:53 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.38.250]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Vt9ms0swBz4x9Pq; Mon,  3 Jun
-	2024 11:02:53 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-	epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6E.96.09622.CD2AD566; Mon,  3 Jun 2024 20:02:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240603110252epcas1p4e0ead148f7e8c85728db2b6dc8d79dbf~VeaK1QOQr0343203432epcas1p4t;
-	Mon,  3 Jun 2024 11:02:52 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240603110252epsmtrp17cf406aa04674fc07c10c370c200cd76~VeaK0ltMN3072030720epsmtrp1K;
-	Mon,  3 Jun 2024 11:02:52 +0000 (GMT)
-X-AuditID: b6c32a37-075fa70000002596-23-665da2dcc06f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8D.ED.18846.CD2AD566; Mon,  3 Jun 2024 20:02:52 +0900 (KST)
-Received: from sgsupark03 (unknown [10.252.69.53]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240603110252epsmtip22f645a091fc0655b79b8045c8e7f07c6~VeaKohqhZ0468104681epsmtip2e;
-	Mon,  3 Jun 2024 11:02:52 +0000 (GMT)
-From: "Seongsu Park" <sgsu.park@samsung.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <ardb@kernel.org>,
-	<mark.rutland@arm.com>
-Cc: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<infinite.run@gmail.com>, <sgsu.park@samsung.com>
-In-Reply-To: <20240523122146.144483-1-sgsu.park@samsung.com>
-Subject: RE: [PATCH] arm64: Cleanup __cpu_set_tcr_t0sz()
-Date: Mon, 3 Jun 2024 20:02:52 +0900
-Message-ID: <000001dab5a5$94580a40$bd081ec0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nh7Jx1bh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1iUSXdMP";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Nh7Jx1bh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1iUSXdMP"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2815C20031;
+	Mon,  3 Jun 2024 11:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717412633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
+	b=Nh7Jx1bhwQOzWC/cAEBaBv9sKXguMByr35SycoUAom89Kq49Sem/mNaa7AuAUtUAzM3HCB
+	oXNmoRWYGFDGdmULGcmcO6gZU/tCthgmu2YGaKENOef/hJo0G64bEEY8NI6Thb8VGcryvO
+	hJ+RYydNYLtYe1F04WZnCVG04tVNWmo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717412633;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
+	b=1iUSXdMPGHYkVyXbvZjtcYCsEeoal+Q2EaMTFibvUMei9mIIFGSPz/vFU5HWxO980EDFZK
+	xDZd6aS7rG9Ck9Cw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1717412633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
+	b=Nh7Jx1bhwQOzWC/cAEBaBv9sKXguMByr35SycoUAom89Kq49Sem/mNaa7AuAUtUAzM3HCB
+	oXNmoRWYGFDGdmULGcmcO6gZU/tCthgmu2YGaKENOef/hJo0G64bEEY8NI6Thb8VGcryvO
+	hJ+RYydNYLtYe1F04WZnCVG04tVNWmo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1717412633;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n5/X7Y8BzC0MwNPhikLy5onR3o+8EW7j6LOz1oCOdHI=;
+	b=1iUSXdMPGHYkVyXbvZjtcYCsEeoal+Q2EaMTFibvUMei9mIIFGSPz/vFU5HWxO980EDFZK
+	xDZd6aS7rG9Ck9Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 102CD13A93;
+	Mon,  3 Jun 2024 11:03:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KrWlAxmjXWagIAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 03 Jun 2024 11:03:53 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A10FFA087F; Mon,  3 Jun 2024 13:03:44 +0200 (CEST)
+Date: Mon, 3 Jun 2024 13:03:44 +0200
+From: Jan Kara <jack@suse.cz>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] readdir: Add missing quote in macro comment
+Message-ID: <20240603110344.weobnu6augggrbdw@quack3>
+References: <20240602004729.229634-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH8m0kGjlO3sBEuOPUVgIk9EwDJ9wFU9gUNsWdr81A=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmnu6dRbFpBq9n21j8/PKe0eL9sh5G
-	iz8bdzNZbHp8jdXi8q45bBZLr19ksnjf0MVq0XLH1IHDY828NYweO2fdZffYtKqTzWPzknqP
-	vi2rGD0+b5ILYIvKtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLx
-	CdB1y8wBOkdJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BWoFecmFtcmpeul5da
-	YmVoYGBkClSYkJ3xYFlBwX/eip45K9kaGM9xdzFycEgImEjsPGfXxcjFISSwg1Fi84MrjBDO
-	J0aJrft/sXUxckI4i9ujQGyQhkWLl7FDFO1klHi8ZgcrhPOcUeLi3KnMIFVsAjoS375NYQGx
-	RQRiJa6enQI2iVmgXmLF4mesIDangI3E3Z3fwOLCAhYSx+b9AbNZBFQknj9ZyQRi8wpYSrz5
-	9wPKFpQ4OfMJC8QceYntb+cwQ1ykIPHz6TJWkHdEBKwkTl3RgSgRkZjd2cYMcpuEwFwOif7d
-	Oxgh6l0kjl+ezQRhC0u8Or6FHcKWknjZ3wZlF0vs+7IGan6NxIN5e6Bse4mOZ20sILuYBTQl
-	1u/Sh9jFJ/Huaw8rJER5JTrahCBMZYlzWx0hTEmJPwv0IGZ4SGz5f5J1AqPiLCRvzULy1iwk
-	989CWLWAkWUVo1hqQXFuemqxYYExPJ6T83M3MYITqZb5DsZpbz/oHWJk4mA8xCjBwawkwttX
-	F50mxJuSWFmVWpQfX1Sak1p8iNEUGNATmaVEk/OBqTyvJN7QxNLAxMzIxMLY0thMSZz3zJWy
-	VCGB9MSS1OzU1ILUIpg+Jg5OqQam+e1O105Gfy31tPIsqvzBdE4r5k5CZMP9uK1VcXaqP+0W
-	t/UWuO3z/jjPYdtxN6ltD7coBMwImdp3/sINvtf93YdvPzpkHBC8iK974sXDPa+fX/8q66aw
-	R+ZuuNGu5MnXH369PLP6ucyyA3/KPdyW+klE2mx44mMj0/rn8UnZi+7tMx8Y8bA0scR9/HHA
-	bPnjfp0XbqVzTmpmTMqyeeVeumV5gtydlUtmzPPh1qx8Vlcs86Ti2q1XJ64EruTRU7zAcG3a
-	bB+vyQ+3BB6My1p3YP3Mib4thbWT2S4n7WGRDDr2ICjcNeGJbUMewxQRuVpZq85HXtbsHuV7
-	JmpOfs19rOfEkVXO8crn1m1qTOXRUmIpzkg01GIuKk4EAPWlatwtBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXvfOotg0gxMbFSx+fnnPaPF+WQ+j
-	xZ+Nu5ksNj2+xmpxedccNoul1y8yWbxv6GK1aLlj6sDhsWbeGkaPnbPusntsWtXJ5rF5Sb1H
-	35ZVjB6fN8kFsEVx2aSk5mSWpRbp2yVwZTxYVlDwn7eiZ85KtgbGc9xdjJwcEgImEosWL2Pv
-	YuTiEBLYziix+MR/JoiEpET7u8ssXYwcQLawxOHDxRA1Txkl+rZMZQOpYRPQkfj2bQoLiC0i
-	kChx4upeZpAiZoFmRon/l48wQXT0Mkps+bgIrINTwEbi7s5vYLawgIXEsXl/wGwWARWJ509W
-	gm3mFbCUePPvB5QtKHFy5hOwDcwC2hJPbz6FsuUltr+dwwxxqYLEz6fLWEEuFRGwkjh1RQei
-	RERidmcb8wRG4VlIJs1CMmkWkkmzkLQsYGRZxSiaWlCcm56bXGCoV5yYW1yal66XnJ+7iREc
-	VVpBOxiXrf+rd4iRiYPxEKMEB7OSCG9fXXSaEG9KYmVValF+fFFpTmrxIUZpDhYlcV7lnM4U
-	IYH0xJLU7NTUgtQimCwTB6dUA5OA8/EDfGplex4fe+m6KqJA0/rrrwc3Hk3qvJ56X2OFE+vM
-	/dHPxZ3jF6l5xnscnmSyqC74zUfhGbEli68ceXYvK7y6LzGDL4JpwpOXSaovIo+q2jXsPrtM
-	9xlbWsT+7iM2DhdKM7w+eql8W1LzL/3HamaL2qOXmlxNH72IaDjkl7O1VMUgYuf1LIcZVY+4
-	Tx1fVP32ZV+TdMi6aJV9hy7qSE9Qs19hqvBvH6vxxYPsnRH6cVfn8vznMi5/ZiDz1eZRaSK3
-	R/Q59/zuM1rKv/lX9hW5Cj7fwR3rWTRpl0DFkcsML13776clmClNnhZ/bPrqbaoPZ0mdCxS9
-	rXin2LA31F4i+sKPs36/b4duna7EUpyRaKjFXFScCAB/2e1CGQMAAA==
-X-CMS-MailID: 20240603110252epcas1p4e0ead148f7e8c85728db2b6dc8d79dbf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240523122152epcas1p49d579e40d4ef0c442820cc01f79ab38b
-References: <CGME20240523122152epcas1p49d579e40d4ef0c442820cc01f79ab38b@epcas1p4.samsung.com>
-	<20240523122146.144483-1-sgsu.park@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240602004729.229634-2-thorsten.blum@toblux.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo]
 
-Dear All,
-
-Please check this patch.
-I think this patch is appropriate.
-
-Thanks.
-Seongsu Park.
-
-> -----Original Message-----
-> From: Seongsu Park <sgsu.park@samsung.com>
-> Sent: Thursday, May 23, 2024 9:22 PM
-> To: catalin.marinas@arm.com; will@kernel.org; ardb@kernel.org;
-> mark.rutland@arm.com
-> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> infinite.run@gmail.com; sgsu.park@samsung.com
-> Subject: [PATCH] arm64: Cleanup __cpu_set_tcr_t0sz()
+On Sun 02-06-24 02:47:30, Thorsten Blum wrote:
+> Add a missing double quote in the unsafe_copy_dirent_name() macro
+> comment.
 > 
-> The T0SZ field of TCR_EL1 occupies bits 0-5 of the register and encode the
-> virtual address space translated by TTBR0_EL1. When updating the field,
-> for example because we are switching to/from the idmap page-table,
-> __cpu_set_tcr_t0sz() erroneously treats its 't0sz' argument as unshifted,
-> resulting in harmless but confusing double shifts by 0 in the code.
-> 
-> Co-developed-by: Leem ChaeHoon <infinite.run@gmail.com>
-> Signed-off-by: Leem ChaeHoon <infinite.run@gmail.com>
-> Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  arch/arm64/include/asm/mmu_context.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/readdir.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/include/asm/mmu_context.h
-> b/arch/arm64/include/asm/mmu_context.h
-> index c768d16b81a4..bd19f4c758b7 100644
-> --- a/arch/arm64/include/asm/mmu_context.h
-> +++ b/arch/arm64/include/asm/mmu_context.h
-> @@ -72,11 +72,11 @@ static inline void __cpu_set_tcr_t0sz(unsigned long
-> t0sz)  {
->  	unsigned long tcr = read_sysreg(tcr_el1);
+> diff --git a/fs/readdir.c b/fs/readdir.c
+> index 278bc0254732..5045e32f1cb6 100644
+> --- a/fs/readdir.c
+> +++ b/fs/readdir.c
+> @@ -72,7 +72,7 @@ int wrap_directory_iterator(struct file *file,
+>  EXPORT_SYMBOL(wrap_directory_iterator);
+>  
+>  /*
+> - * Note the "unsafe_put_user() semantics: we goto a
+> + * Note the "unsafe_put_user()" semantics: we goto a
+>   * label for errors.
+>   */
+>  #define unsafe_copy_dirent_name(_dst, _src, _len, label) do {	\
+> -- 
+> 2.45.1
 > 
-> -	if ((tcr & TCR_T0SZ_MASK) >> TCR_T0SZ_OFFSET == t0sz)
-> +	if ((tcr & TCR_T0SZ_MASK) == t0sz)
->  		return;
-> 
->  	tcr &= ~TCR_T0SZ_MASK;
-> -	tcr |= t0sz << TCR_T0SZ_OFFSET;
-> +	tcr |= t0sz;
->  	write_sysreg(tcr, tcr_el1);
->  	isb();
->  }
-> --
-> 2.34.1
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
