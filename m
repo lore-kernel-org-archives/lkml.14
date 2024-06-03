@@ -1,132 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140712C491
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F2212E1CE
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419933; cv=none; b=drD4pmOIjtZjR8J7ebRGi2l+mWQKwM9T6sNAp6Oco41K5iErMGMZiorF3+eughdyn1VmCRCBdj5l9rAMJFiCK/qXIU6x6jKylhiCxSf3z+A0hJ1O/bcQu8Ue4lQOpGfSdy5MC1UiVlyzTfvgdjGrcR0lR7npmmBBS0/JzAOtL3w=
+	t=1717419935; cv=none; b=CfQJEE+SIeZG2GbPn3hjMWWC72jG/oGvv0Gk1cZcDeJB2hesWX94qige5kV93yv9jlGApI/LZln0IHNwBD/rmOoX9ESZTw4P7pMw5p47RhFxvaUeZifgWQNUjGRRb5DR+sMuXflyJMt3ykHaffekZ2ZI/idiF7CjkrfCyoim7F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419933; c=relaxed/simple;
-	bh=71m52FJi8Um7FJFoETG+FaMXe3M/vfBj7cNFVRSvdGg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z7kHskSLYO5Bp8xP2J3s+CYAvh1AywlpIsnAF752Rud8Efa4ftaRNeTyLjnimlGTBXp6D5kLmtpTxYw1b88y07n5vvQK+St/5Gc5uFxgXcHkkIHugOhEFNlBGir1X6olJks8n67ygtKR8BsKgZmOpnnb96iYQr5o7AQCa6aVyUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yg3efjl8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yg3efjl8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717419931;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2hDp3mJM+KL3UzD0Xul7NRSgkymM8l/Ae4m4/fkqIqo=;
-	b=Yg3efjl85g1Qp5zzEfL834tXrpUlox4SznO8JEiEdmx/KCJzcg2DCe+H4HI8GqZf+bcqU6
-	xn9G1Qtqa+62OTQINpAJ6ZWlXnAOmOI1S4yFABPbBvPDSgyPyF94w75JIuFTqd6qZ+7kjc
-	5N7ZigHqbCRDNAp9KFBzRNwo7DhZkwA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-HcoRjgNdMAqHB-X06LZWYg-1; Mon, 03 Jun 2024 09:05:30 -0400
-X-MC-Unique: HcoRjgNdMAqHB-X06LZWYg-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6af22efee18so35966776d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:05:30 -0700 (PDT)
+	s=arc-20240116; t=1717419935; c=relaxed/simple;
+	bh=GGXIS43I0zsX8f75IYYSxjD+wpX63LnGIkMT2rm3gOY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qkS3wv6QpZvWw/we6xxHDQBmCHc1sbyeXp+b9f8O+v7DVQii/sppQUABsZiE/SBFVFGL73ycU6JDN8ZYklJKG7FtFhLgzLWevvquSJiuxvCtEqQY44S/Mob4u44QautfC2qVAr3Pdn2xU49NXgJoJ1SGssA+PQ+rSWbbWfXtPc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7e94cac3c71so566403839f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:05:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717419930; x=1718024730;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2hDp3mJM+KL3UzD0Xul7NRSgkymM8l/Ae4m4/fkqIqo=;
-        b=iTPr6Ns/HNSpveKL/DS3rbagvBdg3WhiN5meVmhdNiVUeoJG/M4D0lVb/mxY8LYfRb
-         EA6JGdb/iWq+fzijfuOUvf8bJx2FYzAYUHRGlgIu7WOmo0QXGbFq+QpjtcbIL0dBGai9
-         qhMOSQv/cI9avQVebCURtlh3HpLBp8vnXsXz3BTCydBUG6/v+wtjdNi9n7kyn5Ly5hAS
-         DkngGZyrIy+hZFE84x0/D/4XqGKv1Lii4zallMn9wdnqkln0h2SE8N7ETimoevQbgDwd
-         HaGyukMTlaVgOkMsFNBe3FcvcJZxpsmu+8OAOkZbdxWbRi2taNNlvL+eJzz/u+G5RYX8
-         UJqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/5KaO+2dxPGB9va3pDKK9aDzVal4NJ2nEsz+i9bx6qfxNOLDGF1XLX7rmm9m0uwrFLsBuz1dlTlnt50NefzVNer0ZQGytbXCgynlh
-X-Gm-Message-State: AOJu0YwL+LgsXNUOz+S4KggxzGzC9FDNCVexmsYRm6mMieu91oOa4p0v
-	SG3nkUINf1Cm60o4xDEjrfhJW5n9PUInbKuh6jScPh0p5NqtvR3luvOr7VRU9WC9ivA/ypiAOzo
-	k4VNK3uHycs3FiI7rgp1KCheG/QdYhNLkVvCDTT4OcE06z/sCJvrcqorkPNLfoQ==
-X-Received: by 2002:a05:6214:53c2:b0:6ae:ba6:2136 with SMTP id 6a1803df08f44-6aecd69c655mr116485986d6.36.1717419928916;
-        Mon, 03 Jun 2024 06:05:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIqrN3yZy5lXpQG4/otUItFzer4jmPLCycJ2Rj//HPLUZeLLc+f0g23vFqngAb9IsidJe/Vg==
-X-Received: by 2002:a05:6214:53c2:b0:6ae:ba6:2136 with SMTP id 6a1803df08f44-6aecd69c655mr116485636d6.36.1717419928535;
-        Mon, 03 Jun 2024 06:05:28 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f02d1004c157eb0f018dd01.dip0.t-ipconnect.de. [2003:c9:3f02:d100:4c15:7eb0:f018:dd01])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4b4179f4sm30558826d6.113.2024.06.03.06.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 06:05:28 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH v4 5/6] KVM: arm64: rename functions for invariant sys regs
-Date: Mon,  3 Jun 2024 15:05:06 +0200
-Message-ID: <20240603130507.17597-6-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240603130507.17597-1-sebott@redhat.com>
-References: <20240603130507.17597-1-sebott@redhat.com>
+        d=1e100.net; s=20230601; t=1717419933; x=1718024733;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lyApTqVpnjHFauUmZhI6S1Q/5ll7GTJ71tXhGvRdsj8=;
+        b=EvYH678ZuB7X/YlSTwb7x0+oVNWq/I5yiKuTk47oQ4FU0yyRfZE1lYyz4mprSp6r52
+         q2rqbtliJgkUMyHvIVLgohai6kAcRODua/BJ5KGZkWnapM01qeyTtoRfxEsAeSEA6cO3
+         DhtQLIS0tlRMfQQ8VS6lIOM1Fx2MXarBw87n1B058EzsO/XdEsp/mojGMJsDZWGvxlPl
+         KEpLXlLBV3Y2Ph+lHIlB10EYZeWlFVgx1FVsf08exP2JWxREdfv3Ia1ty6LgdqPORw77
+         J00zvXLFgiQtBZaxQVja05nxl8Y/KJMVQ8O8s/ewGvw1/8LnurDjmXhCIVyQAwEAZ5pC
+         QnLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZ7gbUqI9onaPsazN9j8stTQkalcZkdj5qizB2yRTwm81lo6O40O++slzu1iRMWxjHDv/63StPoXVVLzKxq4cobYEnEI2z1oeCPeWO
+X-Gm-Message-State: AOJu0YzX7O/15KmPOclX/+UyhOuSDpqd4UUML6/bhh8CGx3BiVOkECGh
+	SGJc/bct8mRwC8Fe+vxgKqli5lX0/Q/hlKfKTZph9TPUClZPiYPzi/8NjwbI5iot1F/veSj6BZv
+	y4SJtitiv7ADxm7E/Hk3G6qJSzPVQYpaMLyo1UNdDQjumZkRy2P5Ajgc=
+X-Google-Smtp-Source: AGHT+IH8MHINmDPBrb3n7A7puYV/A4rJgDT2psoeD5h5FTpxh5hvA0lOdtCOPdHGlgq3Yai2wguaGKouoHI9wcCcoIq7DCdbNGbI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:3410:b0:7de:d6a0:d48b with SMTP id
+ ca18e2360f4ac-7eafff21485mr35457239f.3.1717419933470; Mon, 03 Jun 2024
+ 06:05:33 -0700 (PDT)
+Date: Mon, 03 Jun 2024 06:05:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000109e6b0619fbfd44@google.com>
+Subject: [syzbot] [mm?] kernel panic: corrupted stack end in userfaultfd_ioctl
+From: syzbot <syzbot+5a1cb2c00e895afca87e@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Invariant system id registers are populated with host values
-at initialization time using their .reset function cb.
+Hello,
 
-These are currently called get_* which is usually used by
-the functions implementing the .get_user callback.
+syzbot found the following issue on:
 
-Change their function names to reset_* to reflect what they
-are used for.
+HEAD commit:    4a4be1ad3a6e Revert "vfs: Delete the associated dentry whe..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=104284f2980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd6024aedb15e15c
+dashboard link: https://syzkaller.appspot.com/bug?extid=5a1cb2c00e895afca87e
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124e1664980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15683162980000
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-4a4be1ad.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/75957361122b/vmlinux-4a4be1ad.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6c766b0ec377/Image-4a4be1ad.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5a1cb2c00e895afca87e@syzkaller.appspotmail.com
+
+Kernel panic - not syncing: corrupted stack end detected inside scheduler
+CPU: 1 PID: 3188 Comm: syz-executor396 Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+Hardware name: linux,dummy-virt (DT)
+Call trace:
+ dump_backtrace+0x94/0xec arch/arm64/kernel/stacktrace.c:317
+ show_stack+0x18/0x24 arch/arm64/kernel/stacktrace.c:324
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x38/0x90 lib/dump_stack.c:114
+ dump_stack+0x18/0x24 lib/dump_stack.c:123
+ panic+0x39c/0x3d0 kernel/panic.c:347
+ schedule_debug kernel/sched/core.c:5962 [inline]
+ schedule+0x0/0x104 kernel/sched/core.c:6628
+ preempt_schedule_irq+0x3c/0x80 kernel/sched/core.c:7067
+ arm64_preempt_schedule_irq arch/arm64/kernel/entry-common.c:301 [inline]
+ __el1_irq arch/arm64/kernel/entry-common.c:539 [inline]
+ el1_interrupt+0x4c/0x64 arch/arm64/kernel/entry-common.c:551
+ el1h_64_irq_handler+0x18/0x24 arch/arm64/kernel/entry-common.c:556
+ el1h_64_irq+0x64/0x68 arch/arm64/kernel/entry.S:594
+ __rcu_read_lock+0x0/0x14 kernel/rcu/tree_stall.h:125
+ pte_offset_map_nolock+0x38/0xb0 mm/pgtable-generic.c:314
+ move_pages_pte mm/userfaultfd.c:1160 [inline]
+ move_pages+0x330/0x13a4 mm/userfaultfd.c:1733
+ userfaultfd_move fs/userfaultfd.c:2016 [inline]
+ userfaultfd_ioctl+0x6f4/0x1ed8 fs/userfaultfd.c:2134
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl fs/ioctl.c:893 [inline]
+ __arm64_sys_ioctl+0xac/0xf0 fs/ioctl.c:893
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x48/0x118 arch/arm64/kernel/syscall.c:48
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x34/0xf8 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:598
+SMP: stopping secondary CPUs
+Kernel Offset: disabled
+CPU features: 0x00,00000006,8f17bd7c,1767f6bf
+Memory Limit: none
+Rebooting in 86400 seconds..
+
+
 ---
- arch/arm64/kvm/sys_regs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 8008120d021b..12ce8461323a 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -3799,8 +3799,8 @@ id_to_sys_reg_desc(struct kvm_vcpu *vcpu, u64 id,
-  */
- 
- #define FUNCTION_INVARIANT(reg)						\
--	static u64 get_##reg(struct kvm_vcpu *v,			\
--			      const struct sys_reg_desc *r)		\
-+	static u64 reset_##reg(struct kvm_vcpu *v,			\
-+			       const struct sys_reg_desc *r)		\
- 	{								\
- 		((struct sys_reg_desc *)r)->val = read_sysreg(reg);	\
- 		return ((struct sys_reg_desc *)r)->val;			\
-@@ -3812,9 +3812,9 @@ FUNCTION_INVARIANT(aidr_el1)
- 
- /* ->val is filled in by kvm_sys_reg_table_init() */
- static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
--	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
--	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
--	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
-+	{ SYS_DESC(SYS_MIDR_EL1), NULL, reset_midr_el1 },
-+	{ SYS_DESC(SYS_REVIDR_EL1), NULL, reset_revidr_el1 },
-+	{ SYS_DESC(SYS_AIDR_EL1), NULL, reset_aidr_el1 },
- };
- 
- static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
--- 
-2.42.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
