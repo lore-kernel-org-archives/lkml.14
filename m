@@ -1,98 +1,95 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DCD282ED;
-	Mon,  3 Jun 2024 10:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E7B839FE;
+	Mon,  3 Jun 2024 10:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717410942; cv=none; b=rphhR+1O71GsXch+hQsAsycOyizN/28e1iEetyFCwAjD1iT2K0XGwd4w7g/PQr9eRImi2KbqmHBA3c8xf58PKS3p+jRz9HtDodY99kjt2+ZwsfSUlPx1qx6sUHgPYeU91RFIFllPU76/ZEWH+OXCrQp8u1yhyOM7mFNbQ1HAhBg=
+	t=1717410947; cv=none; b=WFQPrYDiDuYgBZ/peVSnxgvthMxSxLY3/j0qGv28ru2yKNUwXLbxKQ/uobfdP4zaxX08gQHgBp0ELvrzuoH3DNQfyjAxWGg8rJ7nZP+/yD5Q0O+fTaGSwXD3DUeqVYKUUDrxFsjW6L0+Vgc7dzrof2/XOLdO4OL72DT7YwZWaXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717410942; c=relaxed/simple;
-	bh=baScvVV423t4e+VkQ5YMVh9kY4BKIx6DRtRf9/Ehr8Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jXODK8XT6r/uI64qoIpEi2KDMo9DsOXGdh7/HbUUN7xfqBPWD2MRMRFVL9TksQ2XSPE+EfhDuWoGMAdnbwuTanAXWfPof/G76IHoL5eCbbbKzUr9qFr5pbRosOTuhVjrEq5A3TrKgTHYqZ/HrR4vklbHY3nH0Y8VxRqcnzCf+1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=H1LEL9pp; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="H1LEL9pp"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45350SKr024505;
-	Mon, 3 Jun 2024 05:35:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=W4exEjotWKI1CI+T
-	j8zwikkt7tJTdgTM16vK6Pqc+Sk=; b=H1LEL9ppJrnwiSBJ04eaMI9a5oXClPDJ
-	7Q4nn7o1XL8NaWCBVFVFklT9ZFy0tSrMJoNdI1Kty2sv+RTCTzTUQU1pVo1n2YHz
-	XO++C6I9aIucrFXE9ebPYQF24Nn88Kac7Ayv/eK8lh/6OiHikF70gIIUp2CQk/ye
-	eHYUESdRa5mo/El3BC+TgylVmUDS4f1p5VLyx2aE5dJDE6TlTEcQk9hQ9vHKmZEE
-	85IIp/8DkloXZWsY0J1ityXjBza6nNAYBICjvoCJnkbKjMFlfTsMtdNVxJFSwnGd
-	MszstPp896oJhjY62BVAP9cD1spFI/cwV4AwUgkHbd1pKbCRnQFPVw==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3yg02hhdrn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 05:35:28 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 11:35:26 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 3 Jun 2024 11:35:26 +0100
-Received: from EDIN6ZZ2FY3.ad.cirrus.com (EDIN6ZZ2FY3.ad.cirrus.com [198.61.64.166])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id CD11A820249;
-	Mon,  3 Jun 2024 10:35:25 +0000 (UTC)
-From: Simon Trimmer <simont@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <soyer@irl.hu>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, <kailang@realtek.com>,
-        Simon Trimmer
-	<simont@opensource.cirrus.com>
-Subject: [PATCH v2 0/7] ALSA: hda: Improvements to hda_component
-Date: Mon, 3 Jun 2024 11:35:17 +0100
-Message-ID: <20240603103524.32442-1-simont@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717410947; c=relaxed/simple;
+	bh=g03U2T+ZSiDQhRck4HsL2XZ+Ag9dfNCNHACg+gxiuJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=baSubHMeUuZIMlZzsp8c935vNTlG1GbNrpTgjXUfccO4txGGQ1pu+QSxSpqJ06/mMzi7Lx2KAbhbJJcMbnUFNQ19lkZp8I7OylJPF3l1D/hTVuGbqdFVtozOmoY4kO11Nwbw/eLnlQIa3+o3AM/OGBM9dcih5rbvYZyFUpXva7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42137366995so18082315e9.3;
+        Mon, 03 Jun 2024 03:35:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717410944; x=1718015744;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yQSggjIOQS2XbswQ4LbCkfSppAvW/BDbYHoAyzOGG3A=;
+        b=aToB/5W821gBp/7HH1EFEG9miTXw8FcoCRkyiX7N9YI3J7S3CZe1j8uU+iGFlZYWlx
+         CAp8wpXrl2qW4iit98VlymFPuZmfeLYNePrqOZuM0tXBaoEN0S3v5UDAFe2uSjvzTdEF
+         roWjgWxJa49JwgqZvhX6vAk6zp0KdfgCcwF+sgfCRtY45sMsBi8jmzftHCqfmf/JTudq
+         Sy4nEy/p5tcYIRUeil+X9Vm9BLBiNtLN5TQSuag9VCdzMIfMUnq7xHFNu2QNyhOpChEd
+         2oREhmLakMggYFmBUDdfza6M5TdNVjfYkTqnhHvFu3HXAyMhLdK1xyX04hPrNfxj5vMf
+         AnOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhjlrdkvSxGVBfdgBVNnKWSbfGZauhFnxjUHIpronZglVUjKQIpxCM27DNotb4I+0DuSUwdsQUAeCYemNgBdTXK3/QIha0l/rvMXDZSvTWragYeCWTPolXWhNOPzZbVHv4P3KPZjauMJ4V+4Db
+X-Gm-Message-State: AOJu0YzdruKvUp9uFa4kwh7g9Ajkyfl59vf4RPNLc+da65T1LAr2pbv7
+	uN6L8iZG3nn+2xLF+e8pE8kHR8dqEFXhbEYEnHPslyERW6QY0bpu
+X-Google-Smtp-Source: AGHT+IH3ijTEeyQxiZtNFYEU1o6Dtn6/zM66j2TUsJDbN6NpiEOXCDlWqxK3e2nmeIy4gb5/k94w/A==
+X-Received: by 2002:a05:600c:4704:b0:41b:eaf2:f7e6 with SMTP id 5b1f17b1804b1-4212e046c83mr84943375e9.2.1717410943697;
+        Mon, 03 Jun 2024 03:35:43 -0700 (PDT)
+Received: from [192.168.1.20] ([31.215.5.80])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b83d4e2sm113796005e9.2.2024.06.03.03.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 03:35:43 -0700 (PDT)
+Message-ID: <f3a27dbe-091a-43d0-aac8-eebb4e2833d4@linux.com>
+Date: Mon, 3 Jun 2024 14:35:40 +0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 0e99rMdBQF0miLEo9vYmj9jHyiB1CfhF
-X-Proofpoint-ORIG-GUID: 0e99rMdBQF0miLEo9vYmj9jHyiB1CfhF
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] floppy: add missing MODULE_DESCRIPTION() macro
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240602-md-block-floppy-v1-1-bc628ea5eb84@quicinc.com>
+Content-Language: en-US, ru-RU
+From: "Denis Efremov (Oracle)" <efremov@linux.com>
+In-Reply-To: <20240602-md-block-floppy-v1-1-bc628ea5eb84@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This series of patches makes sure that the existing consumers of
-the infrastructure unbind their interface before they begin
-destroying the driver, moves duplicated members from the
-instanced component structures into a new parent structure and
-introduces locking so that consumers of the interface do not use
-stale data.
+On 6/3/24 04:05, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/block/floppy.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> ---
+>  drivers/block/floppy.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+> index 25c9d85667f1..854a88cf56bd 100644
+> --- a/drivers/block/floppy.c
+> +++ b/drivers/block/floppy.c
+> @@ -5016,6 +5016,7 @@ module_param(floppy, charp, 0);
+>  module_param(FLOPPY_IRQ, int, 0);
+>  module_param(FLOPPY_DMA, int, 0);
+>  MODULE_AUTHOR("Alain L. Knaff");
+> +MODULE_DESCRIPTION("Normal floppy disk support");
+>  MODULE_LICENSE("GPL");
+>  
+>  /* This doesn't actually get used other than for module information */
+> 
+> ---
+> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+> change-id: 20240602-md-block-floppy-1984117350ec
+> 
 
-v2:
- - Correct application of sizeof to pointer flagged by kernel test robot
+Reviewed-by: Denis Efremov <efremov@linux.com>
 
-Simon Trimmer (7):
-  ALSA: hda: cs35l56: Component should be unbound before deconstruction
-  ALSA: hda: cs35l41: Component should be unbound before deconstruction
-  ALSA: hda/tas2781: Component should be unbound before deconstruction
-  ALSA: hda: hda_component: Introduce component parent structure
-  ALSA: hda: hda_component: Change codecs to use component parent
-    structure
-  ALSA: hda: hda_component: Move codec field into the parent
-  ALSA: hda: hda_component: Protect shared data with a mutex
-
- sound/pci/hda/cs35l41_hda.c     | 47 ++++++++++++---------
- sound/pci/hda/cs35l56_hda.c     | 29 +++++++------
- sound/pci/hda/hda_component.c   | 75 ++++++++++++++++++++-------------
- sound/pci/hda/hda_component.h   | 48 ++++++++++++++-------
- sound/pci/hda/patch_realtek.c   | 17 ++++----
- sound/pci/hda/tas2781_hda_i2c.c | 37 ++++++++--------
- 6 files changed, 147 insertions(+), 106 deletions(-)
-
--- 
-2.34.1
-
+Thanks,
+Denis
