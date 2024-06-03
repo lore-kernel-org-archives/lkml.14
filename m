@@ -1,137 +1,101 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3440413B7A1;
-	Mon,  3 Jun 2024 20:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0746F13C90B;
+	Mon,  3 Jun 2024 20:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717448393; cv=none; b=NVK0KunHov0xsPwZApI7IAMWAbW42uM4ZYEUUXavJjrjmF/JxkCFq/LhDZ8jFDKyKkayzejl2hdzwxwkQIxArmWczrHaCq0E3XWj/EjUtVZ2naqdrPfHgiTK6Y89bWTgUrfTaUrPSI3HPHCxj/ILIom89r9ukmpssVKykjoSXDo=
+	t=1717448396; cv=none; b=fA99S83JfJsssXX2iHgpCyb8XHm+1jEDOIqjRu95N9sEMeEe98684g+i707o8ry+WG7MzPNVzNKYLkO76j5+fOI8LKlzS642Lv6PTxpnrIJq/OPVHxoaEiXtFceauq9JPn9kfu+vo8cMhV/P3QbDUZfcEasr9TV34jAoHcAU3hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717448393; c=relaxed/simple;
-	bh=79lI7y45AFb/8pz18wznsrFWE3kFuIyOqtMdyaYcUEo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MHDcj9cRHtpZrsgs/9uvIId6LZRdNdSbffZuyzEbxKXGE2YgVlLxgcvJWe/Drhm7lf3hfy9gFYxoyIZAgApZi0GRnu0G+45lx0k3nOs73f8GSs23x2yGcsPdQjsbvkME5MN/psvrT1M4MftlaUDF1lX+FQn0Xi9TNnbCUJWUv4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LiUts5ct; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717448396; c=relaxed/simple;
+	bh=n83K36thiF+lJBy27bSJupNp7twUTuCmlxqyf9CdgCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lab/jPM9+Tv6NU19J0uXAfK8/cxfHEL4RC2LDA4A3uTxvjcDk7H6t49G6eiQx04y30kfF/jWLHEIbXVhkssx1BWpiRFnoTDAHWpSgbQN049iArE7RmGZq+gn59aa6s2v188lEUd97CqXK83vHtVnyyCUFRvfFJJlAz8WL1JnGto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gUcgaZjp; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LiUts5ct"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453HxYjl032193;
-	Mon, 3 Jun 2024 20:59:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	dIeBFOoIqVfXnxNM6S+vqDMhIDPiRyl61dtSrWNzsnk=; b=LiUts5ct7bn3556u
-	dNebxm/Dm65vcP8beKgLpglTdmtTe0A1axfDV9bQ4jwKhFbb0SjxIn8tRGQdb+4j
-	oajCAMFuQgB9Uzot4GXT2OQcg1gZrf++vtv3Vc9w0uZ15xovvvKd8xHt4kzoNAUl
-	yFeUlkKVQM573MSrfI7f+sIxWecWGk5emZlRQUKGAVRodVMtfC0AhXulr5MM6dJO
-	Kloc+jLzYtdKLlzYMv/3+75QNz92V/J5xrtBZhgXQp5LV13DyZXhK+XhuOs7vTlt
-	flBijPMbkNbpe35EjINx9FvPLTbeLOlyoMEB/IYRYoTWfX7OcffGvfK3wMkstvS9
-	SF8TnA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw4an81h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 20:59:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453KxhGf028445
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 20:59:43 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 3 Jun 2024 13:59:37 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-        <quic_kshivnan@quicinc.com>, <quic_sibis@quicinc.com>,
-        <conor+dt@kernel.org>, <quic_nkela@quicinc.com>,
-        <quic_psodagud@quicinc.com>, <abel.vesa@linaro.org>
-Subject: [PATCH V5 4/5] arm64: dts: qcom: x1e80100: Add cpucp mailbox and sram nodes
-Date: Tue, 4 Jun 2024 02:28:58 +0530
-Message-ID: <20240603205859.2212225-5-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240603205859.2212225-1-quic_sibis@quicinc.com>
-References: <20240603205859.2212225-1-quic_sibis@quicinc.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gUcgaZjp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1717448393;
+	bh=n83K36thiF+lJBy27bSJupNp7twUTuCmlxqyf9CdgCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gUcgaZjpWGlbqmbB65yifUBjyhvcJt0LTk69PJK6iiq7JDLZlp3XKwjsvvWohWWrT
+	 zBnRS1nc8f8fgYp58ru9UzuJxE3uSh3mFj2XhhPLjCYW4aeEY4aHtmjCyVpzAfzCxa
+	 Yowh9W5kkjcJFD0CR26ADM9DGO4KusR8y0rNhllQ=
+Date: Mon, 3 Jun 2024 22:59:52 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Dustin Howett <dustin@howett.net>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Mario Limonciello <mario.limonciello@amd.com>, Stephen Horvath <s.horvath@outlook.com.au>, 
+	Rajas Paranjpe <paranjperajas@gmail.com>
+Subject: Re: [PATCH v2 0/3] ChromeOS Embedded Controller charge control driver
+Message-ID: <5baf3caf-dc09-4829-96db-2666fc902710@t-8ch.de>
+References: <20240528-cros_ec-charge-control-v2-0-81fb27e1cff4@weissschuh.net>
+ <CA+BfgNJByawxkZukaCXYcmOo_K9aQ0W1x8B6Y+Hyg_fZaJ4axw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: IbdOVJG5KdaXIMtWxv_fLMY2KlZIeMK6
-X-Proofpoint-ORIG-GUID: IbdOVJG5KdaXIMtWxv_fLMY2KlZIeMK6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=970 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030169
+In-Reply-To: <CA+BfgNJByawxkZukaCXYcmOo_K9aQ0W1x8B6Y+Hyg_fZaJ4axw@mail.gmail.com>
 
-Add the cpucp mailbox and sram nodes required by SCMI perf protocol
-on X1E80100 SoCs.
+On 2024-06-02 18:40:18+0000, Dustin Howett wrote:
+> On Tue, May 28, 2024 at 3:05 PM Thomas Weißschuh <linux@weissschuh.net> wrote:
+> >
+> > Add a power supply driver that supports charge thresholds and behaviour
+> > configuration.
+> >
+> > This is a complete rework of
+> > "platform/chrome: cros_ec_framework_laptop: new driver" [0], which used
+> > Framework specific EC commands.
+> >
+> > The driver propsed in this series only uses upstream CrOS functionality.
+> >
+> > Tested on a Framework 13 AMD, Firmware 3.05.
+> >
+> 
+> I've tested this out on the Framework Laptop 13, 11th gen intel core
+> and AMD Ryzen 7040 editions.
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Thanks!
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index a537f3117c9d..df31ca0f497c 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -5105,6 +5105,13 @@ gic_its: msi-controller@17040000 {
- 			};
- 		};
- 
-+		cpucp_mbox: mailbox@17430000 {
-+			compatible = "qcom,x1e80100-cpucp-mbox";
-+			reg = <0 0x17430000 0 0x10000>, <0 0x18830000 0 0x10000>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		apps_rsc: rsc@17500000 {
- 			compatible = "qcom,rpmh-rsc";
- 			reg = <0 0x17500000 0 0x10000>,
-@@ -5288,6 +5295,25 @@ frame@1780d000 {
- 			};
- 		};
- 
-+		sram: sram@18b4e000 {
-+			compatible = "mmio-sram";
-+			reg = <0x0 0x18b4e000 0x0 0x400>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x18b4e000 0x400>;
-+
-+			cpu_scp_lpri0: scp-sram-section@0 {
-+				compatible = "arm,scmi-shmem";
-+				reg = <0x0 0x200>;
-+			};
-+
-+			cpu_scp_lpri1: scp-sram-section@200 {
-+				compatible = "arm,scmi-shmem";
-+				reg = <0x200 0x200>;
-+			};
-+		};
-+
- 		system-cache-controller@25000000 {
- 			compatible = "qcom,x1e80100-llcc";
- 			reg = <0 0x25000000 0 0x200000>,
--- 
-2.34.1
+> The problem is that the AMD framework laptop *reports* support for the
+> CrOS charge controller, but it does not truly support it.
+> As with the 11th Gen Intel Core (and by proxy the 12th, 13th) it still
+> does require the OEM-specific command.
 
+This is surpising, it works on my machine, which is also a AMD 7040.
+
+> This is evinced by a mismatch between the firmware-configured value
+> and the value reported by the charge control subsystem through this
+> driver.
+> 
+> $ cat /sys/class/power_supply/BAT1/charge_control_end_threshold
+> 100
+> 
+> $ ectool raw 0x3E03 b8 # OEM command 0x3E03 with BIT(3) in the payload
+> is Framework's charge limit query host command
+> Read 2 bytes
+>  50 00                                           |P.              |
+> (in my case, 80 in decimal)
+> 
+> The charge limit is managed at [1], and it does not appear to
+> integrate with the standard charge control machinery.
+> 
+> I'll pursue getting this board not to report support for CrOS charge
+> control. This driver is still entirely fit for purpose, just not for
+> this board.
+
+Can you try disabling all of the Framework-specific charge control
+settings and test again?
+Probably the different, disparate logics in the Framework ECs are
+conflicting with each other.
+
+Thomas
