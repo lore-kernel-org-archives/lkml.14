@@ -1,221 +1,107 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F7412CD8E
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D56E7BAE5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419182; cv=none; b=gzPYAyE8W2nshP5hCCXg9Zx4d6WbHs+MqcohuEEBklX8fIMRf2SDazSrWrqVrLRhP/LnuTOxwtMFDmPQJoYhVYmFmGmixGFsctsc8EjbJLgCDh9Ozz9KFzVBRlcYRmTSYspszjQRf2y9qi1C1naOK37H88+9d86qfh8DFwczHoY=
+	t=1717419193; cv=none; b=IyO2artySJPeaPpDWRv1r2MCn8MXY0nTxX8Gn1M7GP51EWw3wRUZtOJnU5DpqrCElvj7feE8MgbdArHIhY8nEWyLjB2qTMCAI80FOaz9gEv4PfjaDFHmsv0/AEwgvNz5tI0vjLQ+erIXMzVRvCPC5Go/mgWWWGIH9aXzYKqEuTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419182; c=relaxed/simple;
-	bh=pNq1s3DpJNlX0e3eT1st05PC02KAmTuKksptOpchj0Y=;
+	s=arc-20240116; t=1717419193; c=relaxed/simple;
+	bh=QX4iMKVssxoVyavrTllOasYtXwgAZT/oiXydBXbLzW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtzyTUQG+07g33BKV9bKco+xNqPgtu/rr0BrxlsX02r5/3JxhAFSSB679Fhk3yNFAgYSukY7m/7iPdFOw4I2znYjGsfCMfLwQki/X0dUW3YE/8yuBjcyYN4VA61SzuBbzEUTH2rw8O5vklAgWeDBuP12sLkzi8aYZikwm+ghBKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DIxv5Akl; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ON8dSeKDhouPEquMbYOyx9LS/Ng1W3y5+L05CUAWWdABvs7+hTVeLdrCQG0vQj1+M70n5IzblW+PpFgYwb/bMfkeFXNAyG3ErwMsirukHelppoNYfo0iiotkxNvwEJk2LS/T57FFIyS7vc54ek7AdsyZGSPbGW4tr9i/jJpw7uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Ez+VBXno; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DIxv5Akl"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2eaa80cb4d3so27666921fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:52:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Ez+VBXno"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4212e341818so26757415e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:53:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717419177; x=1718023977; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L1vdMIjKLbGuERAwMMc+hoHFnU3loELjM3GLOoEq1gI=;
-        b=DIxv5AkleP4d8CCcenZvq+9lRtAnNfFmxcY651Qe7/V8ekSYlnNWELc6syxICXonk6
-         h2bgBVQ6LRpfH7jV6quATxfM78h3d4RSdSzcvxkYq/UKJ5ZmgtXwNXa5l07QVkUxgWAh
-         i/+OE7b4GetTRBKkQ9LlioPcVDmfCxYVT+Hc64ZZl9uMGrKmovRPkPiaHUzpJqjOiVDu
-         AhrAwT6cs+UkeYbBdiy9ew3ejWBzffcpWfwCTK3ZFDGdyIj0Q9lTTb6pAhvTxJuBZR4b
-         QeWb6JdRQbyF1hbxUBjavoK4xS9agWS5sjbwj8OqYOzQSTRSpLTaoO+2m/QJOPR+zTwB
-         caMA==
+        d=ventanamicro.com; s=google; t=1717419191; x=1718023991; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9bimdtL/8Yb4rbSFpMqz1UL6qiGEqUPhGsLy+D1hTls=;
+        b=Ez+VBXno0jjdT76WqdiNRuzx4L/KRlRH4RvGnoJvTaZ2pFcFBs27atkXHhdVqECERZ
+         kr50I1KKC3Ntf2zGLDL7PP3XGAPxpoSREQgQLOxYEwKi967lqZh0ammmBzVYM9WNWsSH
+         pJpw9kjjGbZJBFI7wd0CP5ZsCpUphxctHj030JSZNadtshvyNmj8RS379aL0MXR4HR8n
+         Ed7l0Ph/t8duPQGBp0UPCnmPIpll6dMseZmXTDkVRJbwUv/+406ngFMx6OE0O1LQCwwB
+         0Xfej9P1xuBWgOMvkTUMnnsINd4KdR/kxLmjelkSOsbmTlLxYq8e6ecXJTrY08GmTqfo
+         IvPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717419177; x=1718023977;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L1vdMIjKLbGuERAwMMc+hoHFnU3loELjM3GLOoEq1gI=;
-        b=Ifi4/X0jU7hVzjb9us0TwltauIO030Vsr451kxxK+dB/p/j4nKoQvXZYxjYuwhr5gA
-         4keB/zsQzuqKuefTlj8RTY9eol4Iczjbhac7xTy0d2v2E9ZJ0hOQlCf+V0SYRVeH0PcF
-         4DnMiPr2ngWNJG0aAk2+jp4Sz3hQCX22cOiGkQtpw8fEOYFf5T93xPNvKNLDezWd4i9t
-         LVzsQr4YE1pl0upCI7YejJQE9s3wF5cO3JEWEJZufzAQYNigyUyqqVXDRbHSerPSMInu
-         WaipThua3zdSOmJHqeVh644lEZfPfU/E9glZpQJjKVFUA2esbmFRGo9DBPzQhXrU1bQz
-         Tc/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUWVfe6O/0gHTf7pil+3RxFxoyHgLKe9AypGLl7xTrMLJaNjyoQt7JMwy3Wru22AN/Tntk2UGOQtXbh6xM313XZlmXXBdjQPBqlSL5o
-X-Gm-Message-State: AOJu0YxiBiqO5OgZnd1v3S4EZ2i3BkvAOxA923Nx7mXPl5s/M4OlEIec
-	nUlLf8qO8KKeyrzjn9sCKfIjRq9Dw7lzlW0WEW2NdJhmgb5rKd7B77mIlAINTmg=
-X-Google-Smtp-Source: AGHT+IFexEDdIc9suGe8USwivPE4g3apQQFJLnkcTrlu4EUxJ9iQoDZJj4mPTRlDUrxswZmvnGocOQ==
-X-Received: by 2002:a2e:818c:0:b0:2ea:8163:5f4f with SMTP id 38308e7fff4ca-2ea951ddf8emr83938091fa.41.1717419176882;
-        Mon, 03 Jun 2024 05:52:56 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c35a88cfaasm5213953a12.94.2024.06.03.05.52.50
+        d=1e100.net; s=20230601; t=1717419191; x=1718023991;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9bimdtL/8Yb4rbSFpMqz1UL6qiGEqUPhGsLy+D1hTls=;
+        b=GVzfWwM2oNiX/qDJxrsWC9++qTTB6ThlkO/2rj4JML+AljFSILdlGoOpaishw3ko6F
+         /ChGxFcVt3QqUdl1uZJSQJ/eJxDjpe+j4kbePToMm/eCU9SirxdtRUyPlr6dLUHe6WcT
+         WhnEWKYY6W0SGriS6I4A+njp+5iuxtLxvhXzZdsRP8X7JCq/S/piYPH6WmPQO4FbAyuU
+         ygdHEsS9Vr0iD9mOdVHPYE8iVIhxrqqbjoLYsGB4WO3AwFROZRE36HYXzRmgLSmIOt4C
+         I4cxP7sCcrPYMnXRglanfcJInKwCDKqoUluhxrh/pGzxZCrHtuTyddfMJt1wTs2AzAJy
+         v+sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFg30gCU5XMFm3O7gL6dW1Uh+icXUaPIx9TIpCrAwuDcyoBAwPDXabUiWh+jc0ZHVsH1NjMSoXf/TziUiDleVexBMuZcfmJ5Pc6VP+
+X-Gm-Message-State: AOJu0YyIb5vdz0fBemABED9ibTUHd3ZewTJMRsw08mpBGVmQqXpt7LKG
+	lUlk/D7Luy0pvrSwhywmiTRzNQ+oYt0PW0Hvn2jmcTvtXvgetMK1N+Hu6NKE2os=
+X-Google-Smtp-Source: AGHT+IGr2qULxcr2ltWgvnytabKWi1pfPCuyLwlDBqb6eNha2uciqvGkQ3OnCBvDSIF3/JuDzfDAZw==
+X-Received: by 2002:a05:600c:3510:b0:421:3674:7933 with SMTP id 5b1f17b1804b1-421367479e1mr41938045e9.27.1717419190599;
+        Mon, 03 Jun 2024 05:53:10 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e5e3d1902sm1783031f8f.32.2024.06.03.05.53.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 05:52:56 -0700 (PDT)
-Date: Mon, 3 Jun 2024 14:52:45 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Marcos Paulo de Souza <mpdesouza@suse.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
-	Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: livepatch: Test atomic replace against
- multiple modules
-Message-ID: <Zl28ne_laBawq-KP@pathway.suse.cz>
-References: <20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com>
- <ZloormpDnnc4SDub@redhat.com>
- <92d683bd138a76e6c7100f4984be202dd06c9424.camel@suse.com>
+        Mon, 03 Jun 2024 05:53:10 -0700 (PDT)
+Date: Mon, 3 Jun 2024 14:53:09 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Anup Patel <apatel@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux@rivosinc.com, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [PATCH v6 2/7] iommu/riscv: Add RISC-V IOMMU platform device
+ driver
+Message-ID: <20240603-c4a8257697f83cd3bace6ce5@orel>
+References: <cover.1716578450.git.tjeznach@rivosinc.com>
+ <7dcd9a154625704cbf9adc4b4ac07ca0b9753b31.1716578450.git.tjeznach@rivosinc.com>
+ <20240529-08fd52a8e703418142bdfa84@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <92d683bd138a76e6c7100f4984be202dd06c9424.camel@suse.com>
+In-Reply-To: <20240529-08fd52a8e703418142bdfa84@orel>
 
-On Fri 2024-05-31 18:06:48, Marcos Paulo de Souza wrote:
-> On Fri, 2024-05-31 at 15:44 -0400, Joe Lawrence wrote:
-> > On Sat, May 25, 2024 at 11:34:08AM -0300, Marcos Paulo de Souza
-> > wrote:
-> > > Adapt the current test-livepatch.sh script to account the number of
-> > > applied livepatches and ensure that an atomic replace livepatch
-> > > disables
-> > > all previously applied livepatches.
-> > > 
-> > > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> > > ---
-> > > Changes since v1:
-> > > * Added checks in the existing test-livepatch.sh instead of
-> > > creating a
-> > >   new test file. (Joe)
-> > > * Fixed issues reported by ShellCheck (Joe)
-> > > ---
-> > >  .../testing/selftests/livepatch/test-livepatch.sh  | 46
-> > > ++++++++++++++++++++--
-> > >  1 file changed, 42 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh
-> > > b/tools/testing/selftests/livepatch/test-livepatch.sh
-> > > index e3455a6b1158..d85405d18e54 100755
-> > > --- a/tools/testing/selftests/livepatch/test-livepatch.sh
-> > > +++ b/tools/testing/selftests/livepatch/test-livepatch.sh
-> > > @@ -107,9 +107,12 @@ livepatch: '$MOD_LIVEPATCH': unpatching
-> > > complete
-> > >  
-> > >  # - load a livepatch that modifies the output from /proc/cmdline
-> > > and
-> > >  #   verify correct behavior
-> > > -# - load an atomic replace livepatch and verify that only the
-> > > second is active
-> > > -# - remove the first livepatch and verify that the atomic replace
-> > > livepatch
-> > > -#   is still active
-> > > +# - load two addtional livepatches and check the number of
-> > > livepatch modules
-> > > +#   applied
-> > > +# - load an atomic replace livepatch and check that the other
-> > > three modules were
-> > > +#   disabled
-> > > +# - remove all livepatches besides the atomic replace one and
-> > > verify that the
-> > > +#   atomic replace livepatch is still active
-> > >  # - remove the atomic replace livepatch and verify that none are
-> > > active
-> > >  
-> > >  start_test "atomic replace livepatch"
-> > > @@ -119,12 +122,31 @@ load_lp $MOD_LIVEPATCH
-> > >  grep 'live patched' /proc/cmdline > /dev/kmsg
-> > >  grep 'live patched' /proc/meminfo > /dev/kmsg
-> > >  
-> > > +for mod in test_klp_syscall test_klp_callbacks_demo; do
-> > 
-> > Slightly nitpicky here, but the tests were originally written with
-> > the
-> > livepatch module names via variables like $MOD_LIVEPATCH.  Would
-> > using
-> > $MOD_LIVEPATCH{1,2,3} help indicate that their specifics aren't
-> > really
-> > interesting, that we just need 3 of them?
+...
+> > +/* 5.19 Performance monitoring counter overflow status (32bits) */
+> > +#define RISCV_IOMMU_REG_IOCOUNTOVF	0x0058
+> > +#define RISCV_IOMMU_IOCOUNTOVF_CY	BIT(0)
+> > +#define RISCV_IOMMU_IOCOUNTOVF_HPM	GENMASK_ULL(31, 1)
 > 
-> Makes sense. I thought about it when I was changing the code, but I
-> didn't want to change it too much, so it was the result. But that makes
-> sense to have the modules better named.
-
-I like this.
-
-> > > +	load_lp $mod
-> > > +done
-> > > +
-> > > +mods=(/sys/kernel/livepatch/*)
-> > > +nmods=${#mods[@]}
-> > > +if [ "$nmods" -ne 3 ]; then
-> > > +	die "Expecting three modules listed, found $nmods"
-> > > +fi
-> > > +
-> > 
-> > I was going to suggest that we might protect against a situation
-> > where
-> > other livepatch modules were active, that a simple count wouldn't be
-> > sufficient.  But then I thought about this test, atomic replace!
-> > Anything previously loaded is going to be pushed aside anyway.
-> > 
-> > So maybe (in another patch or set) it would be worth enhancing
-> > functions.sh :: start_test() do a quick sanity check to see that the
-> > initial conditions are safe?  That might also prevent some collateral
-> > damage when test A fails and leaves the world a strange place for
-> > tests
-> > B, C, etc.
+> RISCV_IOMMU_REG_IOCNTOVF* for all above. It looks like this
+> got renamed and the header of the spec subsection still has
+> the old name, but otherwise the new name is referenced.
 > 
-> We have been discussing about start/end functions that would check for
-> leftover modules... maybe should be a good think to implement soon as
-> we land more tests.
-
-Makes sense :-)
-
-> > >  load_lp $MOD_REPLACE replace=1
-> > >  
-> > >  grep 'live patched' /proc/cmdline > /dev/kmsg
-> > >  grep 'live patched' /proc/meminfo > /dev/kmsg
-> > >  
-> > > -unload_lp $MOD_LIVEPATCH
-> > > +mods=(/sys/kernel/livepatch/*)
-> > > +nmods=${#mods[@]}
-> > > +if [ "$nmods" -ne 1 ]; then
-> > > +	die "Expecting only one moduled listed, found $nmods"
-> > > +fi
-> > > +
-> > > +# These modules were disabled by the atomic replace
-> > > +for mod in test_klp_callbacks_demo test_klp_syscall
-> > > $MOD_LIVEPATCH; do
-> > > +	unload_lp "$mod"
-> > > +done
-> > >  
-> > >  grep 'live patched' /proc/cmdline > /dev/kmsg
-> > >  grep 'live patched' /proc/meminfo > /dev/kmsg
-> > > @@ -142,6 +164,20 @@ livepatch: '$MOD_LIVEPATCH': starting patching
-> > > transition
-> > >  livepatch: '$MOD_LIVEPATCH': completing patching transition
-> > >  livepatch: '$MOD_LIVEPATCH': patching complete
-> > >  $MOD_LIVEPATCH: this has been live patched
-> > > +% insmod test_modules/test_klp_syscall.ko
-> > 
-> > Similar minor nit here, too.  If we think copy/pasting all the
-> > $MOD_FOO
-> > is annoying, I am fine with leaving this as is.  I don't have a
-> > strong
-> > opinion other than following some convention.
-> > 
-> > With that, I'm happy to ack as-is or with variable names.
+> > +
+> > +/* 5.20 Performance monitoring counter inhibits (32bits) */
+> > +#define RISCV_IOMMU_REG_IOCOUNTINH	0x005C
+> > +#define RISCV_IOMMU_IOCOUNTINH_CY	BIT(0)
+> > +#define RISCV_IOMMU_IOCOUNTINH_HPM	GENMASK(31, 1)
 > 
-> Thanks Joe! I think that is Petr's call, either way I can rework this
-> patch, or send additional ones to adjust the tests.
+> RISCV_IOMMU_IOCNTINH* for all above. Same header with old
+> name spec issue.
+>
 
-I would prefer if you did respin this patch. The use of
-$MOD_LIVEPATCH{1,2,3} would make even the patch easier to follow.
+Scratch these suggestions. Based on IOMMU spec PR#243 ("Clarification
+updates to IOMMU v1.0.0") it looks like the iocnt* names are getting
+fixed up to be iocount* names.
 
-Best Regards,
-Petr
+Thanks,
+drew
