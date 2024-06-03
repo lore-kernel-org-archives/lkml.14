@@ -1,151 +1,125 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A56286A6;
-	Mon,  3 Jun 2024 12:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A55012D742;
+	Mon,  3 Jun 2024 12:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419162; cv=none; b=hBrB8hbcAPmq+hF/yGCDQfxmNLa9t6Ynw6rz+kFGpJD8Rtf9Qk6ftm2HNE34uoU41r5m4vjeuIrlSDGN5PWL8SLZOb6tJOaemJaw/F0WW4mGi2nffMZY9BDo6kKi44z/u/kqn3fZWKKnHMwIepuFgi5+/qxsqzd7oGai4ZJCJoQ=
+	t=1717419169; cv=none; b=BVTowF2xmPO3d1Qxfe1Zyxj/3TFQ+tHR3Av1l4PItyVPRLii9uPBfV+dV+mMYeuqXi/I/9DPyJv8++MyVKnVXhEqWI7ovxgIZt64iFMXAHtlHG1MpAXEBT9WU2P7SnhFvk5Yw+X0HWHzYOs1jenlP0pQhBtrShudeFu4bEvWpcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419162; c=relaxed/simple;
-	bh=RQVuKO8KsmnX+HwIJQMFQ5nya3BRk3afvXUxYEj9As8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JzCP0Y8JsADxqLjwPxQgrU/i+cKAnGqcPnDN2IsPm8nyjFCoq/3nzWNdJbTofF8MaPfESkHko30A+bkF27tIYu+5qN5ZPynRR24ITNlzM2VKWD2MFoOW1okzQ+klUIxZr70fmyq9ckz0Cxsa9Rvwx6amXryvMtU8wRTgJabQ9IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDNXqg0d; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717419169; c=relaxed/simple;
+	bh=ywpaA1EH3oNy9EEn3g4JabojjmcP8mrY7cp3FkFdaz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gN1hG+izQEqpxYZM9o0dd5iE1GjZKMjAWwJOtoVhFT+t8qh/7rjO4zCDM5gFfBVHR7ZCzbani3Tql8JHYmTr9eXS1kdI3Imeg45v6PtBYdHPGsrR6xQ44GXnl+RXHPRrxS4kztGnX5OBNH0NPopbxmp4EMitBMVO9vgSNvVzSoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIUDWMUB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDNXqg0d"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a1fe63947so3594221a12.1;
-        Mon, 03 Jun 2024 05:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717419159; x=1718023959; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yfniF8fjsy176YDZGpwH9nU2UAljfW8YFG1uj+a6gnk=;
-        b=TDNXqg0dX/3loM6vbYTEyr1NEGurqH87sB+5Oad9YsQO8kzzevhnRIRepwpE7gcsTD
-         e35nWwMYzenHkE5RIg/I3W++ZCaUWmCHDc1PYl8lKDIvH83bHoZYpGMASE03KWWrSjji
-         CjyrVXtKVNa7ohmdSp8PJQPjpdJzHNBGK4rUgrNIwizcuiq7I0JxYEIdqWHlzdo0/+sD
-         m/0PtAF1kQlVSAjGBJK8iuo/OnY04hxEm+FLtW3zpw3TIH9jYpFgBSJ2faayxzSEB1xe
-         uMfTNgUHmWmwXabtHngny8PAph91C3UmTyfTr7thPkahB2ma8jCLC4QZGgwTjvsohHff
-         xwqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717419159; x=1718023959;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yfniF8fjsy176YDZGpwH9nU2UAljfW8YFG1uj+a6gnk=;
-        b=u25CydszaufKfcB2/I18ZPBtqNFaIDHz1T5R9Q2Kl0Ki7T4ZKAwNzj/M5BmKD3XmCb
-         LmtTcQJKVBOXA49Q/G6C6y4FUKUlASPF79RaoLFt8v17VdN20SmptVaGVsJF3TOAL0oX
-         fZSJkRm/+oVbp2nD6Isk75sUcCqFhB5aMfWyECMu6Z9I80+ZCxvNhv9km4Qg1BF3gkQF
-         9PGsEi6DZPKeLST8SsdTU7sj0/nE7aLPsze1TmdxCT4Oi3QwUPoEN5L++3HMkEmd5mQ7
-         dQf+ZacAe324iygpFgq+2XCbCq21I+/uAhhpIzYAFfqjUCuhh0WogjstPHndOY4G7lRv
-         770g==
-X-Forwarded-Encrypted: i=1; AJvYcCWxw9rRkDB0Ogq5peLF4uM8jksb5/RtXSVu8ITqP2Etf3tLyGu+DWlW1dC+Zz2kGkoshPRsqdqePi/0fqen2YacgddH3J5glwTMXdAhjdX/agIuDjMAWLo+VY81ypL4Jt4VtnFmH/q2obWvnxz4gs0ZjwkfUrzb7Zc7fEf0eFs5YY+ab+is2zHMVlvRUNFllAoN493jnbwkorxZVc2+fG4+biCgDD3mS/Ln+w3YHUzN2q2TGVo+sgWVfkmAgYLL+njjpwQKCuIQgMMc4q+bq4l2I8yGuEQ2uTvZQG5pOX2kTlXr3OD266ValHOnniLgQlQP2pVwxa2g7Ae5Ci4WFavLWY5RbC6xgkyt/ThfdA54olLUvmuAUVgwUgGfYPZixx/GdoWPfsVf4rqEBizzCenvpeQFgLcrYpFzOkCfwEH6pd92OUltjgem5zpPQJIw0NxAKaAic4Ejs8SDNzSuHJH8jFoPJbApd6sOfZboxmIZJDYYoIQHBiEyWNSRRbwhxZx+zYD9OQ==
-X-Gm-Message-State: AOJu0YyMk7f/HGvHRoBNrtTmSTQhhL7dLdBoe3vGrkHSQvcZCq+G46QV
-	Ptgn7ehM2OwFl+HGMzvZWG329x/hS0LtTkpQ6wvQ7HDPTBfowNCy0NeWUGFe
-X-Google-Smtp-Source: AGHT+IHWekmH9nbBwxtAyBA3aP0bAtq3ZvyaOoiHlV8Yt/cXh+LsKG2d/23Eymxd3zWFCpXjqiJUYw==
-X-Received: by 2002:a50:9b19:0:b0:56e:238e:372c with SMTP id 4fb4d7f45d1cf-57a3653a3d7mr5229810a12.26.1717419158381;
-        Mon, 03 Jun 2024 05:52:38 -0700 (PDT)
-Received: from [192.168.42.59] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b990easm5173294a12.6.2024.06.03.05.52.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 05:52:38 -0700 (PDT)
-Message-ID: <fb8fd578-96b8-45b9-b6a9-fe407157122f@gmail.com>
-Date: Mon, 3 Jun 2024 13:52:41 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIUDWMUB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCE6C2BD10;
+	Mon,  3 Jun 2024 12:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717419168;
+	bh=ywpaA1EH3oNy9EEn3g4JabojjmcP8mrY7cp3FkFdaz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CIUDWMUBnfcAJ28QxhZIYAQWijx7MXKlOCQwvau55PtvY0v3JysjrqkHToHEsLJOz
+	 Zy+TrfIrXPDbkkk8TM10LoSvA/JdL33yKUFPj1ESFYLxPy3up44tzsZKrmUY5DF4Dt
+	 t+QmmCredUCOVuiN5ZC/38n70eVsL+dpmQevX8ceeKNUCjnoiFf1K6QoQ7oU27monU
+	 ZuH+RNyX8T8QWQwHXE8dN5x+wOtfgfTauzGuQn4O2tNW4LogD+rNza2/ebroDf4yLW
+	 LUCVP4k+bY3fm3Jj6LlYMsjekANUYWpHNSlUwV+RS7YG4ci3FN9cHGXe34z8kURd3l
+	 VM7M9e66Clklg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sE7B8-000000000po-12ID;
+	Mon, 03 Jun 2024 14:52:46 +0200
+Date: Mon, 3 Jun 2024 14:52:46 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100: Make the PCIe 6a PHY
+ support 4 lanes mode
+Message-ID: <Zl28nvnpGFRsYpGh@hovoldconsulting.com>
+References: <20240531-x1e80100-dts-fixes-pcie6a-v1-0-1573ebcae1e8@linaro.org>
+ <20240531-x1e80100-dts-fixes-pcie6a-v1-2-1573ebcae1e8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v10 01/14] netdev: add netdev_rx_queue_restart()
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240530201616.1316526-1-almasrymina@google.com>
- <20240530201616.1316526-2-almasrymina@google.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20240530201616.1316526-2-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531-x1e80100-dts-fixes-pcie6a-v1-2-1573ebcae1e8@linaro.org>
 
-On 5/30/24 21:16, Mina Almasry wrote:
-> Add netdev_rx_queue_restart() function to netdev_rx_queue.h
+On Fri, May 31, 2024 at 08:00:32PM +0300, Abel Vesa wrote:
+> So the PCIe 6 can be configured in 4-lane mode or 2-lane mode. For
+
+s/So the PCIe 6/The PCIe 6a controller and PHY/
+
+> 4-lane mode, it fetches the lanes provided by PCIe 6b. For 2-lane mode,
+
+s/fetches/uses/
+
+> PCIe 6a uses 2 lanes and then PCIe 6b uses the other 2 lanes. Configure
+> it in 4-lane mode and then each board can configure it depending on the
+> design. Both the QCP and CRD boards, currently upstream, use the 6a for
+
+s/use the/use PCIe 6a/
+
+> NVMe in 4-lane mode. Also, mark the controller as 4-lane as well.
 > 
-> Signed-off-by: David Wei <dw@davidwei.uk>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
-...
-> diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
-> new file mode 100644
-> index 0000000000000..b3899358e5a9c
-> --- /dev/null
-> +++ b/net/core/netdev_rx_queue.c
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +#include <linux/netdevice.h>
-> +#include <net/netdev_queues.h>
-> +#include <net/netdev_rx_queue.h>
-> +
-> +int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
-> +{
-> +	void *new_mem, *old_mem;
-> +	int err;
+> Fixes: 5eb83fc10289 ("arm64: dts: qcom: x1e80100: Add PCIe nodes")
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 
-I believe it should also do:
+> @@ -2903,19 +2903,21 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+>  		};
+>  
+>  		pcie6a_phy: phy@1bfc000 {
+> -			compatible = "qcom,x1e80100-qmp-gen4x2-pcie-phy";
+> -			reg = <0 0x01bfc000 0 0x2000>;
+> +			compatible = "qcom,x1e80100-qmp-gen4x4-pcie-phy";
+> +			reg = <0 0x01bfc000 0 0x2000>,
+> +			      <0 0x01bfe000 0 0x2000>;
+>  
+>  			clocks = <&gcc GCC_PCIE_6A_PHY_AUX_CLK>,
+>  				 <&gcc GCC_PCIE_6A_CFG_AHB_CLK>,
+>  				 <&rpmhcc RPMH_CXO_CLK>,
+>  				 <&gcc GCC_PCIE_6A_PHY_RCHNG_CLK>,
+> -				 <&gcc GCC_PCIE_6A_PIPE_CLK>;
 
-if (!dev->queue_mgmt_ops)
-	return -EOPNOTSUPP;
+This one should not be removed as was already pointed out.
 
+> +				 <&gcc GCC_PCIE_6A_PIPEDIV2_CLK>;
+>  			clock-names = "aux",
+>  				      "cfg_ahb",
+>  				      "ref",
+>  				      "rchng",
+> -				      "pipe";
+> +				      "pipe",
+> +				      "pipediv2";
+>  
+>  			resets = <&gcc GCC_PCIE_6A_PHY_BCR>,
+>  				 <&gcc GCC_PCIE_6A_NOCSR_COM_PHY_BCR>;
+> @@ -2927,6 +2929,8 @@ pcie6a_phy: phy@1bfc000 {
+>  
+>  			power-domains = <&gcc GCC_PCIE_6_PHY_GDSC>;
+>  
+> +			qcom,4ln-config-sel = <&tcsr 0x1a000 0>;
 > +
-> +	if (!dev->queue_mgmt_ops->ndo_queue_stop ||
-> +	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
-> +	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
-> +	    !dev->queue_mgmt_ops->ndo_queue_start)
-> +		return -EOPNOTSUPP;
-> +
-> +	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
+>  			#clock-cells = <0>;
+>  			clock-output-names = "pcie6a_pipe_clk";
 
--- 
-Pavel Begunkov
+As I just mentioned in my reply on the PHY patch, this does not seem to
+work on the CRD were the link still come up as 2-lane (also with the
+clocks fixed):
+
+	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
+
+So something appears to be wrong here or in the PHY changes.
+
+Johan
