@@ -1,56 +1,52 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F8B4C8A;
-	Mon,  3 Jun 2024 01:23:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8B2EAC2;
+	Mon,  3 Jun 2024 01:23:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717377783; cv=none; b=BofS1bQratk47p+WyPjRVrs3jqCT+SVRfWdc+6pfSfSwXSqFccnSl62wY0/8sJG1JHffiGz8YIrGQehJCTb6x2kN1QrAOrYBZuI3GnK4rrHcxa+VXamipsKMJ7qY3Fay2CQsk1qT4qrqAG76ZqhS+pI9Dy6DGWi9ly4d+WKmExQ=
+	t=1717377788; cv=none; b=J/AMqGk7vTsMhDC5ASodk8FbeiKy10HlE0IagK2v+hOLrD1FylPsSoK17rYFRZmoe0iR7z1C8ETuKC2KJr3eg9Lig/fZtu0w8bmMNsP7n+1RCi3mcmc77tihNWwsv8EjGM+kzNhZh0sLVzhDABKfPdI7ZpgEiMUIe/OiL/2z6DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717377783; c=relaxed/simple;
-	bh=6PXKqYL85FdKzAhRz1TtXT3LipceCNkTw6h/cR19t9A=;
+	s=arc-20240116; t=1717377788; c=relaxed/simple;
+	bh=ijjqGPElYLRhuKa5c8Ojp85OLzzdBGyM0LKd+DFO/m4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y3KDb+211WXa0dWpCqNGk/IMKjtN/zFsh1Mw29wENb1YC7S+yDuFP6/b2+jV1TfqkX6jsgNltatraegXq8kB7HfEdaKiIQEXv7aBTvbjIfHPXHUx4S68haJLwqIf449vu978ORMP5atS+k5HZQOdsPv23sYSFQJ7gFW7ErnTNF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Bf6XtVjl; arc=none smtp.client-ip=148.163.135.77
+	 MIME-Version:Content-Type; b=kQJH6WqCmSglo5txPM86sm2dLJzKfe9OIH7NHyshs2/wUyunyEsbBd9yUrwU2bf6jj9iAtE2nsa8gGBfZ2+8I3bSyRTxpi/4sQdGS4A1O6L3orceN2cAcui0PiVOxhpFU0W0j6nY1TTcoXBjk0NtdoyFqZDTW379hZw9UHaG8YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=OJod3pSy; arc=none smtp.client-ip=148.163.135.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Bf6XtVjl"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452J2cdT016607;
-	Sun, 2 Jun 2024 21:22:40 -0400
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="OJod3pSy"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452Hqnh2010836;
+	Sun, 2 Jun 2024 21:22:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=VBbd3
-	88Cd6azu/vWhRc++DQlQ36Je8FpWpOn9E91i90=; b=Bf6XtVjlV10lVSHTBNJUN
-	5zi6cTSOtn4ERD4Bxmo3Q4gh6JJuj1xEhCp1/BntBg/j2s1H9ep3GFlPY8LoiDju
-	VLMNmuGsXw8AIKc7pHEZrQ+2YX/9uGQ1us5VLpErrmWf1501nyvPkQZZP9snixX0
-	Y3dKGePAfAk/1VYg7azGeZis1WcTXdwxyNQ9nxyxNpgxcm5Jj4Q8576xDRJIhFP7
-	7KXXpkrBAS6sO8z5jtXp6WAHTULSrGM0sAtz909K1TgaEZds0+Uzv5BB3fgpvpp0
-	r6cB83nrywanTfSk/6a/CQpYgUKt2HqsLmBkRDs1Q0gn3um90gHAAR+wsa+1fg3C
-	w==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yfwg24g7n-1
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=r5I5C
+	5jMkteAljHein3E6ZsKuZ6vG2pYowL71tH8n+c=; b=OJod3pSyYHujRYcB1DE2i
+	NfvtYFuSQmVLua9iqpN+JdInLZhiYWmqhLqFXzHaf1NAR0E0l1NKpEB+tnrKI5Kv
+	xwKn//NQJwajw0mJb1sdcaVV+leD/hqwlWuk4hRlziT6LjFBVF0598R1XkMwpGOJ
+	Ftjj2gi5DbInr/1OTsfQD0rBQDYgk3Zo4BL2KqU4lB1KkD6OTRdO7dh8hRMRdpOg
+	E9FckcFmFUYi/eV4ny8IU9ZeDmmp90X8zQcym4J7BemCCZrV5weU3otG/FYRcOTt
+	/Ri2hrVUy/Bs0VMno+QpXRYLozu4vlob/zRfIFQRhcs5NZymxl/QlvNVMe0clDJM
+	Q==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3yghydt1pe-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 02 Jun 2024 21:22:40 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 4531McHi049823
+	Sun, 02 Jun 2024 21:22:50 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 4531Mn54065166
 	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 2 Jun 2024 21:22:38 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Sun, 2 Jun 2024 21:22:37 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Sun, 2 Jun 2024 21:22:37 -0400
+	Sun, 2 Jun 2024 21:22:49 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Sun, 2 Jun 2024
+ 21:22:48 -0400
 Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
  (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Sun, 2 Jun 2024 21:22:37 -0400
+ Transport; Sun, 2 Jun 2024 21:22:48 -0400
 Received: from kim-VirtualBox.ad.analog.com (KPALLER2-L03.ad.analog.com [10.116.242.67])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4531MFWP007966;
-	Sun, 2 Jun 2024 21:22:27 -0400
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 4531MFWR007966;
+	Sun, 2 Jun 2024 21:22:39 -0400
 From: Kim Seer Paller <kimseer.paller@analog.com>
 To: <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
         <devicetree@vger.kernel.org>
@@ -63,16 +59,16 @@ CC: Jonathan Cameron <jic23@kernel.org>,
         Dimitri Fedrau
 	<dima.fedrau@gmail.com>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Rob
- Herring" <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        "Michael
- Hennerich" <michael.hennerich@analog.com>,
+        Rob
+ Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+        Michael
+ Hennerich <michael.hennerich@analog.com>,
         =?UTF-8?q?Nuno=20S=C3=A1?=
 	<noname.nuno@gmail.com>,
         Kim Seer Paller <kimseer.paller@analog.com>
-Subject: [PATCH v3 1/5] iio: ABI: Generalize ABI documentation for DAC
-Date: Mon, 3 Jun 2024 09:21:56 +0800
-Message-ID: <20240603012200.16589-2-kimseer.paller@analog.com>
+Subject: [PATCH v3 3/5] dt-bindings: iio: dac: Add adi,ltc2664.yaml
+Date: Mon, 3 Jun 2024 09:21:58 +0800
+Message-ID: <20240603012200.16589-4-kimseer.paller@analog.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240603012200.16589-1-kimseer.paller@analog.com>
 References: <20240603012200.16589-1-kimseer.paller@analog.com>
@@ -82,139 +78,223 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: T7eePbmTrPq3oQIhNuM8DExELFrfb07i
-X-Proofpoint-GUID: T7eePbmTrPq3oQIhNuM8DExELFrfb07i
+X-Proofpoint-GUID: 86b4mxkvuwGkWEon8rGDXEI94pg4V4JL
+X-Proofpoint-ORIG-GUID: 86b4mxkvuwGkWEon8rGDXEI94pg4V4JL
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
  definitions=2024-06-02_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- adultscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=967
- impostorscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406030010
 
-Introduces a more generalized ABI documentation for DAC. Instead of
-having separate ABI files for each DAC, we now have a single ABI file
-that covers the common sysfs interface for all DAC.
+Add documentation for ltc2664.
 
 Co-developed-by: Michael Hennerich <michael.hennerich@analog.com>
 Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
 Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 ---
- Documentation/ABI/testing/sysfs-bus-iio-dac   | 61 +++++++++++++++++++
- .../ABI/testing/sysfs-bus-iio-dac-ltc2688     | 31 ----------
- 2 files changed, 61 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-dac
+ .../bindings/iio/dac/adi,ltc2664.yaml         | 167 ++++++++++++++++++
+ MAINTAINERS                                   |   8 +
+ 2 files changed, 175 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac b/Documentation/ABI/testing/sysfs-bus-iio-dac
+diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
 new file mode 100644
-index 000000000000..36d316bb75f6
+index 000000000000..73b1d7ac219a
 --- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-dac
-@@ -0,0 +1,61 @@
-+What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_toggle_en
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+       		Toggle enable. Write 1 to enable toggle or 0 to disable it. This
-+		is useful when one wants to change the DAC output codes. The way
-+		it should be done is:
++++ b/Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
+@@ -0,0 +1,167 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/dac/adi,ltc2664.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+        	- disable toggle operation;
-+        	- change out_currentY_rawN, where N is the integer value of the symbol;
-+        	- enable toggle operation.
++title: Analog Devices LTC2664 DAC
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_rawN
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		This attribute has the same meaning as out_currentY_raw. It is
-+		specific to toggle enabled channels and refers to the DAC output
-+		code in INPUT_N (_rawN), where N is the integer value of the symbol.
-+		The same scale and offset as in out_currentY_raw applies.
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Kim Seer Paller <kimseer.paller@analog.com>
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_currentY_symbol
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Performs a SW switch to a predefined output symbol. This attribute
-+		is specific to toggle enabled channels and allows switching between
-+		multiple predefined symbols. Each symbol corresponds to a different
-+		output, denoted as out_currentY_rawN, where N is the integer value
-+		of the symbol. Writing an integer value N will select out_currentY_rawN.
++description: |
++  Analog Devices LTC2664 4 channel, 16 bit, +-10V DAC
++  https://www.analog.com/media/en/technical-documentation/data-sheets/2664fa.pdf
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_toggle_en
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+       		Toggle enable. Write 1 to enable toggle or 0 to disable it. This
-+		is useful when one wants to change the DAC output codes. The way
-+		it should be done is:
++properties:
++  compatible:
++    enum:
++      - adi,ltc2664
 +
-+        	- disable toggle operation;
-+        	- change out_voltageY_rawN, where N is the integer value of the symbol;
-+        	- enable toggle operation.
++  reg:
++    maxItems: 1
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_rawN
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		This attribute has the same meaning as out_currentY_raw. It is
-+		specific to toggle enabled channels and refers to the DAC output
-+		code in INPUT_N (_rawN), where N is the integer value of the symbol.
-+		The same scale and offset as in out_currentY_raw applies.
++  spi-max-frequency:
++    maximum: 50000000
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_symbol
-+KernelVersion:	5.18
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Performs a SW switch to a predefined output symbol. This attribute
-+		is specific to toggle enabled channels and allows switching between
-+		multiple predefined symbols. Each symbol corresponds to a different
-+		output, denoted as out_voltageY_rawN, where N is the integer value
-+		of the symbol. Writing an integer value N will select out_voltageY_rawN.
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dac-ltc2688 b/Documentation/ABI/testing/sysfs-bus-iio-dac-ltc2688
-index 1c35971277ba..ae95a5477382 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-dac-ltc2688
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-dac-ltc2688
-@@ -53,34 +53,3 @@ KernelVersion:	5.18
- Contact:	linux-iio@vger.kernel.org
- Description:
- 		Returns the available values for the dither phase.
--
--What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_toggle_en
--KernelVersion:	5.18
--Contact:	linux-iio@vger.kernel.org
--Description:
--		Toggle enable. Write 1 to enable toggle or 0 to disable it. This is
--		useful when one wants to change the DAC output codes. The way it should
--		be done is:
--
--		- disable toggle operation;
--		- change out_voltageY_raw0 and out_voltageY_raw1;
--		- enable toggle operation.
--
--What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_raw0
--What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_raw1
--KernelVersion:	5.18
--Contact:	linux-iio@vger.kernel.org
--Description:
--		It has the same meaning as out_voltageY_raw. This attribute is
--		specific to toggle enabled channels and refers to the DAC output
--		code in INPUT_A (_raw0) and INPUT_B (_raw1). The same scale and offset
--		as in out_voltageY_raw applies.
--
--What:		/sys/bus/iio/devices/iio:deviceX/out_voltageY_symbol
--KernelVersion:	5.18
--Contact:	linux-iio@vger.kernel.org
--Description:
--		Performs a SW toggle. This attribute is specific to toggle
--		enabled channels and allows to toggle between out_voltageY_raw0
--		and out_voltageY_raw1 through software. Writing 0 will select
--		out_voltageY_raw0 while 1 selects out_voltageY_raw1.
++  vcc-supply:
++    description: Analog Supply Voltage Input.
++
++  v-pos-supply:
++    description: Positive Supply Voltage Input.
++
++  v-neg-supply:
++    description: Negative Supply Voltage Input.
++
++  iovcc-supply:
++    description: Digital Input/Output Supply Voltage.
++
++  ref-supply:
++    description:
++      Reference Input/Output. The voltage at the REF pin sets the full-scale
++      range of all channels. If not provided the internal reference is used and
++      also provided on the VREF pin.
++
++  reset-gpios:
++    description:
++      Active-low Asynchronous Clear Input. A logic low at this level-triggered
++      input clears the part to the reset code and range determined by the
++      hardwired option chosen using the MSPAN pins. The control registers are
++      cleared to zero.
++    maxItems: 1
++
++  adi,manual-span-operation-config:
++    description:
++      This property must mimic the MSPAN pin configurations. By tying the MSPAN
++      pins (MSP2, MSP1 and MSP0) to GND and/or VCC, any output range can be
++      hardware-configured with different mid-scale or zero-scale reset options.
++      The hardware configuration is latched during power on reset for proper
++      operation.
++        0 - MPS2=GND, MPS1=GND, MSP0=GND (+-10V, reset to 0V)
++        1 - MPS2=GND, MPS1=GND, MSP0=VCC (+-5V, reset to 0V)
++        2 - MPS2=GND, MPS1=VCC, MSP0=GND (+-2.5V, reset to 0V)
++        3 - MPS2=GND, MPS1=VCC, MSP0=VCC (0V to 10, reset to 0V)
++        4 - MPS2=VCC, MPS1=GND, MSP0=GND (0V to 10V, reset to 5V)
++        5 - MPS2=VCC, MPS1=GND, MSP0=VCC (0V to 5V, reset to 0V)
++        6 - MPS2=VCC, MPS1=VCC, MSP0=GND (0V to 5V, reset to 2.5V)
++        7 - MPS2=VCC, MPS1=VCC, MSP0=VCC (0V to 5V, reset to 0V, enables SoftSpan)
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3, 4, 5, 6, 7]
++    default: 7
++
++  io-channels:
++    description:
++      ADC channel to monitor voltages and temperature at the MUXOUT pin.
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++patternProperties:
++  "^channel@[0-3]$":
++    type: object
++    additionalProperties: false
++
++    properties:
++      reg:
++        description: The channel number representing the DAC output channel.
++        maximum: 3
++
++      adi,toggle-mode:
++        description:
++          Set the channel as a toggle enabled channel. Toggle operation enables
++          fast switching of a DAC output between two different DAC codes without
++          any SPI transaction.
++        type: boolean
++
++      adi,output-range-microvolt:
++        description: Specify the channel output full scale range.
++        oneOf:
++          - items:
++              - const: 0
++              - enum: [5000000, 10000000]
++          - items:
++              - const: -5000000
++              - const: 5000000
++          - items:
++              - const: -10000000
++              - const: 10000000
++          - items:
++              - const: -2500000
++              - const: 2500000
++
++    required:
++      - reg
++      - adi,output-range-microvolt
++
++required:
++  - compatible
++  - reg
++  - spi-max-frequency
++  - vcc-supply
++  - iovcc-supply
++  - v-pos-supply
++  - v-neg-supply
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++additionalProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        dac@0 {
++            compatible = "adi,ltc2664";
++            reg = <0>;
++            spi-max-frequency = <10000000>;
++
++            vcc-supply = <&vcc>;
++            iovcc-supply = <&vcc>;
++            ref-supply = <&vref>;
++            v-pos-supply = <&vpos>;
++            v-neg-supply = <&vneg>;
++
++            io-channels = <&adc 0>;
++
++            #address-cells = <1>;
++            #size-cells = <0>;
++            channel@0 {
++                    reg = <0>;
++                    adi,toggle-mode;
++                    adi,output-range-microvolt = <(-10000000) 10000000>;
++            };
++
++            channel@1 {
++                    reg = <1>;
++                    adi,output-range-microvolt = <0 10000000>;
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d6c90161c7bf..c7a102d7fd6a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13063,6 +13063,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
+ F:	drivers/iio/dac/ltc1660.c
+ 
++LTC2664 IIO DAC DRIVER
++M:	Michael Hennerich <michael.hennerich@analog.com>
++M:	Kim Seer Paller <kimseer.paller@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/dac/adi,ltc2664.yaml
++
+ LTC2688 IIO DAC DRIVER
+ M:	Nuno Sá <nuno.sa@analog.com>
+ L:	linux-iio@vger.kernel.org
 -- 
 2.34.1
 
