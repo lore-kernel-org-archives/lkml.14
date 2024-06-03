@@ -1,255 +1,258 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6C512DDAF;
-	Mon,  3 Jun 2024 16:11:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC4FF9EF;
+	Mon,  3 Jun 2024 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717431068; cv=none; b=b9jM8Tqb9chgY4PuuxijUZgTxrB6CTjmjRkXH3QxmRQYaV6wMBwMBo2ayRTl5OmNUDK2bHu9QQrNIYnXog2zP26pAWxDVpz2YdkOmB56HNrt21bZE2dvIGbqrvbKjb9K1q95tlqt9WRq9lDmKxA+3dE2TzQPfzqpk6uKxQxRJ4I=
+	t=1717431239; cv=none; b=nD31sSjUN/iVhSu+Li8+Wd5lLmZClQVHxM8JZm7zfpiV1EL6goiqo5oWzuFJnvS317lKkc32yK/6cuCMRcKeSwESK97UT1ZONIbMbbH78SWtCJzAzDpHZQ9nVWQEUHCxkrmIe/fbPsK/vilQwVlZZmR5OuzDqu2xdfbomTutHb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717431068; c=relaxed/simple;
-	bh=9TtpEg0d9jwyQuUY93dODJHGQxosbUK9a3fXAOtQvA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cscFbmLZpdHu1KDwfG1zWnOVvdBB1vqhWB2kfXbq9rkyGk+/ZXTRB//9hfDhBJFx80oTVCTUUyuFAu217iKHtXRF8VmEbnVbdKpf1X/yu5BHClSlR505HrWFZIBrVAQ3ZQ6z2Lqti0RJ5bA4QDgaJKdqkTKPzyI01WI7IkyqQ3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49D2F1042;
-	Mon,  3 Jun 2024 09:11:30 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5615D3F64C;
-	Mon,  3 Jun 2024 09:11:04 -0700 (PDT)
-Date: Mon, 3 Jun 2024 17:11:01 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 2/2] firmware: arm_scmi: mailbox: support P2A channel
- completion
-Message-ID: <Zl3rFTKrctdWcDBZ@pluto>
-References: <20240510-scmi-notify-v2-0-e994cf14ef86@nxp.com>
- <20240510-scmi-notify-v2-2-e994cf14ef86@nxp.com>
+	s=arc-20240116; t=1717431239; c=relaxed/simple;
+	bh=/Nbr+owWYREElZ+Q0mbfwVbveFRjO/m10UrMZYRRH8s=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nqxlwkPQRfPB/OqA7pk9JOEFHZHYriEVw3yfjve/+dcWb7yLzf6I57rPIY+5jTgUaC24730kpLHsvfhv1WFMtfzw1p60eWM5qNw+u83gIFQ1v8BZ9KVrkPQJd5uPFlQmDHlGATZfkYGjCPXDFyKNGw3FSc/TroRoRkysDeCv4uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jtIS63tC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=me2lGRgz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jtIS63tC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="me2lGRgz"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717431233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCBBZJLHh7XXomoDX6GxiwpPupsy6ADT629bR0qasGs=;
+	b=jtIS63tCYfjWvRU2Igs6e0UiizUnhuCkfFZs3qPlIHqtVqv1P2rvMXYBDu6Ho4ip2ZJiIs
+	QQrKBiytMw7j3yAMyee/qzLdmx0rNLosIMUbpnSKhOCwpmZCbIRX6xravFOxE/LpfzmM4Y
+	nVI+FwbEQ8bXE0EbKpcMDBDl0uJku8JxpFg+CB54Tk0h05oW8UostXsaqlqRopamZwyPMi
+	SuJQOlRGbSJIELdLuGNTICffRgkvnxuMXzUgrD85EzMfwdYhu56+Nq8G+/x5YRg6tDSFgo
+	cFkX5cuiDnFsBeRWAeKYDtk5XvcgbGA862p2FvGlTiXCyxaQKkTD56dGhIGCdg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717431233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QCBBZJLHh7XXomoDX6GxiwpPupsy6ADT629bR0qasGs=;
+	b=me2lGRgztqsDfCutkLB/uTn+8yycRq2sYAB3UNAJXjHf2Mj3i961nVH4l7zjVaer9RHxe2
+	tiaYHkoHLSmsmrBg==
+To: Gatlin Newhouse <gatlin.newhouse@gmail.com>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Kees Cook <keescook@chromium.org>, Marco Elver
+ <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Andrey
+ Ryabinin <ryabinin.a.a@gmail.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Gatlin Newhouse
+ <gatlin.newhouse@gmail.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, Baoquan He <bhe@redhat.com>,
+ Changbin Du <changbin.du@huawei.com>, Pengfei Xu <pengfei.xu@intel.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Xin Li <xin3.li@intel.com>, Jason
+ Gunthorpe <jgg@ziepe.ca>, Tina Zhang <tina.zhang@intel.com>, Uros Bizjak
+ <ubizjak@gmail.com>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH v2] x86/traps: Enable UBSAN traps on x86
+In-Reply-To: <20240601031019.3708758-1-gatlin.newhouse@gmail.com>
+References: <20240601031019.3708758-1-gatlin.newhouse@gmail.com>
+Date: Mon, 03 Jun 2024 18:13:53 +0200
+Message-ID: <878qzm6m2m.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510-scmi-notify-v2-2-e994cf14ef86@nxp.com>
+Content-Type: text/plain
 
-On Fri, May 10, 2024 at 11:19:48AM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> i.MX95 System Manager firmware is fully interrupt driven. The notification
-> channel needs completion interrupt to drive its notification queue. Without
-> completion interrupt, the notification will work abnormal.
-> 
+On Sat, Jun 01 2024 at 03:10, Gatlin Newhouse wrote:
 
-Hi Peng,
+> Bring x86 to parity with arm64, similar to commit 25b84002afb9
+> ("arm64: Support Clang UBSAN trap codes for better reporting").
+> Enable the output of UBSAN type information on x86 architectures
+> compiled with clang when CONFIG_UBSAN_TRAP=y. Currently ARM
+> architectures output which specific sanitizer caused the trap,
+> via the encoded data in the trap instruction. Clang on x86
+> currently encodes the same data in ud1 instructions but the x86
+> handle_bug() and is_valid_bugaddr() functions currently only look
+> at ud2s.
 
-Thanks to have addressed also the case of mailbox controllers with unidirectional
-channels for P2A completion, but I have a further observation down
-below, which I missed last time.
+Please structure your change log properly instead of one paragraph of
+unstructured word salad. See:
 
-> - Add an optional unidirectional mailbox channel. If the channel flag has
->   INTR set, and the completion interrupt channel is provided, issue the
->   mbox message to Platform after the channel is freed.
-> - Support bidirectional channel completion interrupt.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/arm_scmi/common.h  |  1 +
->  drivers/firmware/arm_scmi/mailbox.c | 60 +++++++++++++++++++++++++++++++++----
->  drivers/firmware/arm_scmi/shmem.c   |  5 ++++
->  3 files changed, 60 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-> index b5ac25dbc1ca..4b8c5250cdb5 100644
-> --- a/drivers/firmware/arm_scmi/common.h
-> +++ b/drivers/firmware/arm_scmi/common.h
-> @@ -326,6 +326,7 @@ void shmem_clear_channel(struct scmi_shared_mem __iomem *shmem);
->  bool shmem_poll_done(struct scmi_shared_mem __iomem *shmem,
->  		     struct scmi_xfer *xfer);
->  bool shmem_channel_free(struct scmi_shared_mem __iomem *shmem);
-> +bool shmem_channel_intr_enabled(struct scmi_shared_mem __iomem *shmem);
->  
->  /* declarations for message passing transports */
->  struct scmi_msg_payld;
-> diff --git a/drivers/firmware/arm_scmi/mailbox.c b/drivers/firmware/arm_scmi/mailbox.c
-> index 615a3b2ad83d..adb69a6a0223 100644
-> --- a/drivers/firmware/arm_scmi/mailbox.c
-> +++ b/drivers/firmware/arm_scmi/mailbox.c
-> @@ -21,6 +21,7 @@
->   * @cl: Mailbox Client
->   * @chan: Transmit/Receive mailbox uni/bi-directional channel
->   * @chan_receiver: Optional Receiver mailbox unidirectional channel
-> + * @chan_platform_receiver: Optional Platform Receiver mailbox unidirectional channel
->   * @cinfo: SCMI channel info
->   * @shmem: Transmit/Receive shared memory area
->   */
-> @@ -28,6 +29,7 @@ struct scmi_mailbox {
->  	struct mbox_client cl;
->  	struct mbox_chan *chan;
->  	struct mbox_chan *chan_receiver;
-> +	struct mbox_chan *chan_platform_receiver;
->  	struct scmi_chan_info *cinfo;
->  	struct scmi_shared_mem __iomem *shmem;
->  };
-> @@ -91,6 +93,8 @@ static bool mailbox_chan_available(struct device_node *of_node, int idx)
->   *		 for replies on the a2p channel. Set as zero if not present.
->   * @p2a_chan: A reference to the optional p2a channel.
->   *	      Set as zero if not present.
-> + * @p2a_rx_chan: A reference to the optional p2a completion channel.
-> + *	      Set as zero if not present.
->   *
->   * At first, validate the transport configuration as described in terms of
->   * 'mboxes' and 'shmem', then determin which mailbox channel indexes are
-> @@ -98,8 +102,8 @@ static bool mailbox_chan_available(struct device_node *of_node, int idx)
->   *
->   * Return: 0 on Success or error
->   */
-> -static int mailbox_chan_validate(struct device *cdev,
-> -				 int *a2p_rx_chan, int *p2a_chan)
-> +static int mailbox_chan_validate(struct device *cdev, int *a2p_rx_chan,
-> +				 int *p2a_chan, int *p2a_rx_chan)
+  https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
+  
+> +/*
+> + * Check for UD1, UD2, with or without Address Size Override Prefixes instructions.
+> + */
+>  __always_inline int is_valid_bugaddr(unsigned long addr)
 >  {
->  	int num_mb, num_sh, ret = 0;
->  	struct device_node *np = cdev->of_node;
-> @@ -109,8 +113,9 @@ static int mailbox_chan_validate(struct device *cdev,
->  	dev_dbg(cdev, "Found %d mboxes and %d shmems !\n", num_mb, num_sh);
->  
->  	/* Bail out if mboxes and shmem descriptors are inconsistent */
-> -	if (num_mb <= 0 || num_sh <= 0 || num_sh > 2 || num_mb > 3 ||
-> -	    (num_mb == 1 && num_sh != 1) || (num_mb == 3 && num_sh != 2)) {
-> +	if (num_mb <= 0 || num_sh <= 0 || num_sh > 2 || num_mb > 4 ||
-> +	    (num_mb == 1 && num_sh != 1) || (num_mb == 3 && num_sh != 2) ||
-> +	    (num_mb == 4 && num_sh != 2)) {
->  		dev_warn(cdev,
->  			 "Invalid channel descriptor for '%s' - mbs:%d  shm:%d\n",
->  			 of_node_full_name(np), num_mb, num_sh);
-> @@ -139,6 +144,7 @@ static int mailbox_chan_validate(struct device *cdev,
->  		case 1:
->  			*a2p_rx_chan = 0;
->  			*p2a_chan = 0;
-> +			*p2a_rx_chan = 0;
->  			break;
->  		case 2:
->  			if (num_sh == 2) {
-> @@ -148,10 +154,17 @@ static int mailbox_chan_validate(struct device *cdev,
->  				*a2p_rx_chan = 1;
->  				*p2a_chan = 0;
->  			}
-> +			*p2a_rx_chan = 0;
->  			break;
->  		case 3:
->  			*a2p_rx_chan = 1;
->  			*p2a_chan = 2;
-> +			*p2a_rx_chan = 0;
-> +			break;
-> +		case 4:
-> +			*a2p_rx_chan = 1;
-> +			*p2a_chan = 2;
-> +			*p2a_rx_chan = 3;
->  			break;
->  		}
->  	}
-> @@ -166,12 +179,12 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
->  	struct device *cdev = cinfo->dev;
->  	struct scmi_mailbox *smbox;
->  	struct device_node *shmem;
-> -	int ret, a2p_rx_chan, p2a_chan, idx = tx ? 0 : 1;
-> +	int ret, a2p_rx_chan, p2a_chan, p2a_rx_chan, idx = tx ? 0 : 1;
->  	struct mbox_client *cl;
->  	resource_size_t size;
->  	struct resource res;
->  
-> -	ret = mailbox_chan_validate(cdev, &a2p_rx_chan, &p2a_chan);
-> +	ret = mailbox_chan_validate(cdev, &a2p_rx_chan, &p2a_chan, &p2a_rx_chan);
->  	if (ret)
->  		return ret;
->  
-> @@ -229,6 +242,17 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
->  		}
->  	}
->  
-> +	if (!tx && p2a_rx_chan) {
-> +		smbox->chan_platform_receiver = mbox_request_channel(cl, p2a_rx_chan);
-> +		if (IS_ERR(smbox->chan_platform_receiver)) {
-> +			ret = PTR_ERR(smbox->chan_platform_receiver);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(cdev, "failed to request SCMI P2A Receiver mailbox\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +
->  	cinfo->transport_info = smbox;
->  	smbox->cinfo = cinfo;
->  
-> @@ -243,9 +267,11 @@ static int mailbox_chan_free(int id, void *p, void *data)
->  	if (smbox && !IS_ERR(smbox->chan)) {
->  		mbox_free_channel(smbox->chan);
->  		mbox_free_channel(smbox->chan_receiver);
-> +		mbox_free_channel(smbox->chan_platform_receiver);
->  		cinfo->transport_info = NULL;
->  		smbox->chan = NULL;
->  		smbox->chan_receiver = NULL;
-> +		smbox->chan_platform_receiver = NULL;
->  		smbox->cinfo = NULL;
->  	}
->  
-> @@ -300,8 +326,30 @@ static void mailbox_fetch_notification(struct scmi_chan_info *cinfo,
->  static void mailbox_clear_channel(struct scmi_chan_info *cinfo)
+>  	if (addr < TASK_SIZE_MAX)
+> @@ -88,7 +92,13 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
+>  	 * We got #UD, if the text isn't readable we'd have gotten
+>  	 * a different exception.
+>  	 */
+> -	return *(unsigned short *)addr == INSN_UD2;
+> +	if (*(u16 *)addr == INSN_UD2)
+> +		return INSN_UD2;
+> +	if (*(u16 *)addr == INSN_UD1)
+> +		return INSN_UD1;
+> +	if (*(u8 *)addr == INSN_ASOP && *(u16 *)(addr + 1) == INSN_UD1)
+
+	s/1/LEN_ASOP/ ?
+
+> +		return INSN_ASOP;
+> +	return 0;
+
+I'm not really a fan of the reuse of the INSN defines here. Especially
+not about INSN_ASOP. Also 0 is just lame.
+
+Neither does the function name make sense anymore. is_valid_bugaddr() is
+clearly telling that it's a boolean check (despite the return value
+being int for hysterical raisins). But now you turn it into a
+non-boolean integer which returns a instruction encoding. That's
+hideous. Programming should result in obvious code and that should be
+pretty obvious to people who create tools to validate code.
+
+Also all UBSAN cares about is the actual failure type and not the
+instruction itself:
+
+#define INSN_UD_MASK		0xFFFF
+#define INSN_ASOP_MASK		0x00FF
+
+#define BUG_UD_NONE		0xFFFF
+#define BUG_UD2			0xFFFE
+
+__always_inline u16 get_ud_type(unsigned long addr)
+{
+	u16 insn;
+
+	if (addr < TASK_SIZE_MAX)
+        	return BUD_UD_NONE;
+
+        insn = *(u16 *)addr;
+        if ((insn & INSN_UD_MASK) == INSN_UD2)
+        	return BUG_UD2;
+
+	if ((insn & INSN_ASOP_MASK) == INSN_ASOP)
+        	insn = *(u16 *)(++addr);
+
+	// UBSAN encodes the failure type in the two bytes after UD1
+        if ((insn & INSN_UD_MASK) == INSN_UD1)
+        	return *(u16 *)(addr + LEN_UD1);
+
+	return BUG_UD_NONE;
+}
+
+No?
+
+>  static nokprobe_inline int
+> @@ -216,6 +226,7 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+>  static noinstr bool handle_bug(struct pt_regs *regs)
 >  {
->  	struct scmi_mailbox *smbox = cinfo->transport_info;
-> +	struct device *cdev = cinfo->dev;
-> +	struct mbox_chan *intr;
-> +	int ret;
+>  	bool handled = false;
+> +	int insn;
 >  
->  	shmem_clear_channel(smbox->shmem);
+>  	/*
+>  	 * Normally @regs are unpoisoned by irqentry_enter(), but handle_bug()
+> @@ -223,7 +234,8 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+>  	 * irqentry_enter().
+>  	 */
+>  	kmsan_unpoison_entry_regs(regs);
+> -	if (!is_valid_bugaddr(regs->ip))
+> +	insn = is_valid_bugaddr(regs->ip);
+> +	if (insn == 0)
+
+Sigh.
+
+But with the above sanitized (pun intended) this becomes obvious by
+itself:
+
+        ud_type = get_ud_type(regs->ip);
+        if (ud_type == BUG_UD_NONE)
+        	return false;
+
+See?
+
+>  		return handled;
+>  
+>  	/*
+> @@ -236,10 +248,15 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+>  	 */
+>  	if (regs->flags & X86_EFLAGS_IF)
+>  		raw_local_irq_enable();
+> -	if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> -	    handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+> -		regs->ip += LEN_UD2;
+> -		handled = true;
 > +
-> +	if (!shmem_channel_intr_enabled(smbox->shmem))
-> +		return;
-> +
-> +	if (smbox->chan_platform_receiver)
-> +		intr = smbox->chan_platform_receiver;
-> +	else if (smbox->chan)
-> +		intr = smbox->chan;
-> +	else {
-> +		dev_err(cdev, "Channel INTR wrongly set?\n");
-> +		return;
+> +	if (insn == INSN_UD2) {
+> +		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN ||
+> +		handle_cfi_failure(regs) == BUG_TRAP_TYPE_WARN) {
+
+Please indent the second condition properly:
+
+       if (a ||
+           b) {
+
+I know you just added another tab, but when touching code, then please
+do it right.
+
+> +			regs->ip += LEN_UD2;
+> +			handled = true;
+
+> +/*
+> + * Checks for the information embedded in the UD1 trap instruction
+> + * for the UB Sanitizer in order to pass along debugging output.
+> + */
+> +void handle_ubsan_failure(struct pt_regs *regs, int insn)
+> +{
+> +	u32 type = 0;
+
+Pointless initialization.
+
+> +	if (insn == INSN_ASOP) {
+> +		type = (*(u16 *)(regs->ip + LEN_ASOP + LEN_UD1));
+> +		if ((type & 0xFF) == 0x40)
+
+No magic constants please. What does 0x40 mean?
+
+> +			type = (type >> 8) & 0xFF;
+
+That mask is pointless as u16 is zero extended when assigned to u32, but
+why not using u16 in the first place to make it clear?
+
+> +	} else {
+> +		type = (*(u16 *)(regs->ip + LEN_UD1));
+> +		if ((type & 0xFF) == 0x40)
+> +			type = (type >> 8) & 0xFF;
 > +	}
-> +
-> +	ret = mbox_send_message(intr, NULL);
-> +	/* mbox_send_message returns non-negative value on success, so reset */
-> +	if (ret > 0)
-> +		ret = 0;
-> +
-> +	mbox_client_txdone(intr, ret);
 
-Looking at mbox_client_txdone() implementation this call is allowed only
-if the txdone_method is TXDONE_BY_ACK, which in turn depend on the type of
-underlying mbox controller that you are using AND/OR the SCMI client configuration
-(knows_tx_done), so I dont think you can call this unconditionally without the
-risk of hitting the related dev_err() in mbox_client_txdone if the underlying
-mbox controller was instead supposed to issue an mbox_chan_txdone() on its own.
+Copy & pasta rules!
 
-IOW, if the mbox controller is operating in TXDONE_BY_IRQ mode or in
-TXDONE_BY_POLL (and that would be the case if polling is used since the RX channel
-does NOT set the client flag cl->knows_txdone to true, so TXDONE_BY_ACK is not used
-as an override) this should hit the dev_err() mentioned above...
+	unsigned long addr = regs->ip + LEN_UD1;
+	u16 type;
 
-dont you see any error ?
+        type = insn == INSN_UD1 ? *(u16 *)addr : *(u16 *)(addr + LEN_ASOP);
 
-which mailbox controller do you use ?
+	if ((type & 0xFF) == UBSAN_MAGICALLY_USE_2ND_BYTE)
+		type >>= 8;
+	pr_crit("%s\n", report_ubsan_failure(regs, type));
 
-does your mailbox controller NOT set txdone_irq and NEITHER txdone_poll ? 
-(so defaulting to TDONE_BY_ACK in your case ?)
+I don't see the point for printing regs->ip as this is followed by a
+stack trace anyway, but I don't have a strong opinion about it either.
+
+Though with the above get_ud_type() variant this becomes even simpler:
+
+void handle_ubsan_failure(struct pt_regs *regs, u16 type)
+{
+	if ((type & 0xFF) == UBSAN_MAGICALLY_USE_2ND_BYTE)
+		type >>= 8;
+	pr_crit("%s\n", report_ubsan_failure(regs, type));
+}
 
 Thanks,
-Cristian
 
+        tglx
