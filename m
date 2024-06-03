@@ -1,111 +1,72 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92F17F7EF;
-	Mon,  3 Jun 2024 06:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087303FB1C
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396803; cv=none; b=T5Mbu2UCxFpBHbI2S4dNi9/GPZvl1ERb2ZiUfcs4Jsz0aoUI0MClqx1SPK0lnu6n4aLOJxdh0NDyGhZZK9tPmHEdz2ALzWJbSmOZ5bJVE6Vf1nQv2BtcbR5y34TwbVzT8v9DrOVhJWkfM7XAv6x2WtfXuegSiakOFpoXATyxp0k=
+	t=1717396805; cv=none; b=siKe8jjpGH7uTQfZiulg1Ebr9B4hVz/PvdTx2ZRHTd/rGcS3Vy4+50fllFh8Nfxz2J2tPSdnf0FJQ75aXqxyG58usVq7RfajwKh7ByWq6DfJ6xLjw+xydN20GYrEODren0gm9KkO6qu9yEf7FrZUPWqzAarm3H9yoncGyK9DmV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396803; c=relaxed/simple;
-	bh=lets7R8QabYAyvZ/BA5K2o0vh78I6YznD7kMrzkB61s=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VlG1MVP24LrkCGn7rilBQeD6N6QSadJ2VXIlYD2FVx1WG0E9UqvZziaNHXr6HGMY4MnNMrlVhs2gZrjuRT3miTJqF4Z4syTP1w1gKw1QUJ3ffEVFDZtFh/ZHFPOoJx0ZjpfLvrKrZInjQO0FHB3cDubNbOizJblcIhw6U5/i4Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vt3xH0P3hz4f3jrn;
-	Mon,  3 Jun 2024 14:39:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 9AACF1A0189;
-	Mon,  3 Jun 2024 14:39:56 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP1 (Coremail) with SMTP id cCh0CgAnQAk8ZV1mZHu+OQ--.43911S2;
-	Mon, 03 Jun 2024 14:39:56 +0800 (CST)
-Subject: Re: [PATCH v2 8/8] writeback: factor out balance_wb_limits to remove
- repeated code
-To: Tejun Heo <tj@kernel.org>
-Cc: willy@infradead.org, akpm@linux-foundation.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240514125254.142203-1-shikemeng@huaweicloud.com>
- <20240514125254.142203-9-shikemeng@huaweicloud.com>
- <ZljGiunxmVAlW6EE@slm.duckdns.org>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <cfbbcc80-7db1-8277-98ab-1f32c3a629ab@huaweicloud.com>
-Date: Mon, 3 Jun 2024 14:39:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1717396805; c=relaxed/simple;
+	bh=tCEFDNCtU4kyih6I5/tTRMmRIK4lL5BSpzOjWhYQVqY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Ui3Osld573FLvNux9kc5aNEvYJ2Kacs0i6WTWMqSoIBOwhDE1T0vzkHNsnXsOSwvugQ7kirAFvrF2KdH5zUfZn2YngsC9OxAv1Qia9DGeBu3TufMtG1uQ2dB1WT0lbsYV6qTIFGA1glDD+i2RHuE7GiKhds7gBjt/G3yjW1miyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7eb10ca258eso188979939f.1
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 23:40:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717396803; x=1718001603;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P0t8wwmBsbHGb0/ZeZAIbcOtAtOvGwdxIUvrebAW9I4=;
+        b=Vzx3oQWkvzcppng7OzmW6uAmIXluird1qI5IP+NKRDPQWTznLzMk6iWi+HdOgc+CP3
+         x6MFF1HziVEiaQdxA5ZKQZf3KzyTQ7WyXelUnULDJp7Qn2JxD7nOaNBDeVicheJ8R73N
+         3y6v5svQJT5kEFp/mRKku+sZ+py8fu6mNs7tLne+wunQsJfkCLz+75jbRLKRp8nwv0le
+         SdKoHYfXvDXV10kkGBAglH/y/YPvfuscddDttN3UhC6FDDQdDAYwo8cWmgPGe374dOmw
+         u+ZywBGDozSC8oFbT9Vs+KrAnf2G9VJu+xvWT1Lm17IoqwSudD55WgauKoOrkowvekNu
+         g3Qg==
+X-Gm-Message-State: AOJu0YwsYS3P+lyZq338MSyJqKtTTIUR1vCzHHS3K4Phwr1fxr0c+xl3
+	3QWisrP4K17HeHqrhknsXYgSvAxDQgQMdN5zXe1/ZjYIWcMVU3sESIY80DqbfDLUoW50Y2lOmqh
+	wuC2KEpffBMrCtU9B/A1NXqpRn3BF7kR2Yk18Ape639uQoSpMn4FDInM=
+X-Google-Smtp-Source: AGHT+IHZ5bWxWmd3oHPrq0zW/nUxrCGYc/96WjbGLpuW/bQgh2XevJyqWgV0Y/sCQ4d7S6b9Tro2Z4xh6mloExHnWsXAlZq0a9MX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZljGiunxmVAlW6EE@slm.duckdns.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgAnQAk8ZV1mZHu+OQ--.43911S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ArWDJr1UtFy7KrW3AryfCrg_yoW8Jw1fpr
-	WIyanFyF4DtF4Ig3ZxCayxZr9IqrsxZry3JryrJrs3tr1a9rn7KF9xZrWruFy7Cr1DGa15
-	Zr4DKas7Gws5CFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
-
+X-Received: by 2002:a05:6602:3406:b0:7ea:fcf7:7b2e with SMTP id
+ ca18e2360f4ac-7eaffe970ebmr51329339f.1.1717396803318; Sun, 02 Jun 2024
+ 23:40:03 -0700 (PDT)
+Date: Sun, 02 Jun 2024 23:40:03 -0700
+In-Reply-To: <CAN-2BNRG3qMSVgBm=6jD3tv=nDAzByebEJF8k2UWUdo=vAEeSw@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006682760619f69aa8@google.com>
+Subject: Re: [syzbot] [squashfs?] VFS: Close: file count is zero (use-after-free)
+From: syzbot <syzbot+b2cfdac9ae5278d4b621@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, nightu.pwn@gmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
 Hello,
-on 5/31/2024 2:33 AM, Tejun Heo wrote:
-> Hello,
-> 
-> On Tue, May 14, 2024 at 08:52:54PM +0800, Kemeng Shi wrote:
->> +static void balance_wb_limits(struct dirty_throttle_control *dtc,
->> +			      bool strictlimit)
->> +{
->> +	wb_dirty_freerun(dtc, strictlimit);
->> +	if (dtc->freerun)
->> +		return;
->> +
->> +	wb_dirty_exceeded(dtc, strictlimit);
->> +	wb_position_ratio(dtc);
->> +}
-> ...
->> @@ -1869,12 +1880,9 @@ static int balance_dirty_pages(struct bdi_writeback *wb,
->>  		 * Calculate global domain's pos_ratio and select the
->>  		 * global dtc by default.
->>  		 */
->> -		wb_dirty_freerun(gdtc, strictlimit);
->> +		balance_wb_limits(gdtc, strictlimit);
->>  		if (gdtc->freerun)
->>  			goto free_running;
->> -
->> -		wb_dirty_exceeded(gdtc, strictlimit);
->> -		wb_position_ratio(gdtc);
->>  		sdtc = gdtc;
-> 
-> Isn't this a bit nasty? The helper skips updating states because it knows
-> the caller is not going to use them? I'm not sure the slight code reduction
-> justifies the added subtlety.
 
-It's a general rule that wb should not be limited if the wb is in freerun state.
-So I think it's intuitive to obey the rule in both balance_wb_limits and it's
-caller in which case balance_wb_limits and it's caller should stop to do anything
-when freerun state of wb is first seen.
-But no insistant on this...
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Thanks.
-> 
-> Thanks.
-> 
+failed to apply patch:
+checking file drivers/dma-buf/udmabuf.c
+patch: **** unexpected end of file in patch
+
+
+
+Tested on:
+
+commit:         861a3cb5 Add linux-next specific files for 20240603
+git tree:       linux-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d9c3ca4e54577b88
+dashboard link: https://syzkaller.appspot.com/bug?extid=b2cfdac9ae5278d4b621
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=171aa5f2980000
 
