@@ -1,44 +1,64 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70D585C77;
-	Mon,  3 Jun 2024 09:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C74C12EBDB;
+	Mon,  3 Jun 2024 09:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407231; cv=none; b=C+AcLVRNThe9B5egPUcbdIgx+evbkKl7WYEG6YwTf3PMFRvUKc76bThSVkHc9jeT+ffouPdR+8O2PAKAbNLxqpkyFhDbFHfl+LM8llQWhkuaHQ0zxxnJD83ugMMhw0xdR5o9R74/JX/EQ2gMEh4zNBSY957baiRbLniG5NT6zGw=
+	t=1717407235; cv=none; b=uD1YZXSfkcnZt5KfB/8Ngdydow/z6CSfONhZnAWDYAwKXzrmV3MohyteHono/mHd3df7OUHDZLMBlGREVlevF0jqr7ACPIQbXSc+ruQL/CZaCFGkThYJUBpbByGivkCd+fQnJzz2COc7i1D2c8W6gtvBOU1kzWCFV/ytlmZdxjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407231; c=relaxed/simple;
-	bh=XhEbvu4Og1P2n64dCfUrrOpcJR4T9pHKZ6Ww9X4yrKg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZVTtSFuyBfqwz5O+O1J7jBNZ2fGW7izR3FrF5U+Csg/rG9f0HhXsVA+rudDE9Jc7hwPyWQ3hOhSHKqx4MSc7DD+/ItCOFFkMCQ6YR48QSOh5OK2oZsLnlaaCGSspGKp5y12YJCSm/bon+4czqIX6g0ZoZ8kpZ8gg4U57bIUNpuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Vt7lw6C5Dz1HCv1;
-	Mon,  3 Jun 2024 17:31:56 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0306A1A0188;
-	Mon,  3 Jun 2024 17:33:42 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 3 Jun 2024 17:33:41 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <mark.rutland@arm.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <james.clark@arm.com>, <dongli.zhang@oracle.com>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
-	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH 3/3] perf: arm_spe: Only show online CPUs in device's "cpumask" attribute
-Date: Mon, 3 Jun 2024 17:28:12 +0800
-Message-ID: <20240603092812.46616-4-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20240603092812.46616-1-yangyicong@huawei.com>
-References: <20240603092812.46616-1-yangyicong@huawei.com>
+	s=arc-20240116; t=1717407235; c=relaxed/simple;
+	bh=i1+W9fRwSuY7cIzxg3UDgG1qLL/tZ34N8qpXL2awnyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ILLnUEcS+AO5pNsMN6UlL1ivvOrAvtDM8xIR7AxLNgfRWF82YqWcntJDY3Oxy/lFvbgnCsWpWUfVqKJRWDq9hX13P+Omi2kSllWHhdEBCG6i+I3FO6Qdl2Wc+zEceeiM/MoSm/dgqdLN4EYWycN4KPYYA7bPuuw0NnoUmd4mqXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=brt+wWA/; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="brt+wWA/"
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 1F1A687D2F;
+	Mon,  3 Jun 2024 11:33:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1717407231;
+	bh=I2oVJcFLXkPCNKP7PqlC/eM5qW7lVm4lSg1L40401TI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=brt+wWA/jQ+G5PMyeMQOk03ryMEGzHCQWbNukTz93hXQC9fip0hznUt3NChgz1ijl
+	 tNyovUR/JX3QjNfyMTn+EuLU7U71+IMNDXWvshwP0JTSZ7cgEOadkCOzw7WRll/Mch
+	 EFdgy+QANClX8ItbWxUJBv69yfUQnc+38v2si3K5aOUZWVKbXRugxtZOEeytFsz7sC
+	 jTgGqPmhk2ecmWh7HApr3dWkj6oiSbiEyGYmnMqnTp1e1zB38krqcbAfMMmnCmm+2b
+	 OPyHKxZybw0we54dCzoyQ5doNE/W+DeP/rBlNf0JNoJzBhD2aPejUWtxuzT/+Pg2KG
+	 698KWU+j8pc4Q==
+From: Lukasz Majewski <lukma@denx.de>
+To: Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Tristram.Ha@microchip.com,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Ravi Gunasekaran <r-gunasekaran@ti.com>,
+	Simon Horman <horms@kernel.org>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Murali Karicheri <m-karicheri2@ti.com>,
+	Arvid Brodin <Arvid.Brodin@xdin.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Casper Andersson <casper.casan@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	Geliang Tang <tanggeliang@kylinos.cn>,
+	Shuah Khan <shuah@kernel.org>,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH net-next] selftests: hsr: Extend the hsr_ping.sh test to use fixed MAC addresses
+Date: Mon,  3 Jun 2024 11:33:21 +0200
+Message-Id: <20240603093322.3150030-1-lukma@denx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,69 +66,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Fixed MAC addresses help with debugging as last four bytes identify the
+network namespace.
 
-When there're CPUs offline after system booting, perf will failed:
-[root@localhost ~]# /home/yang/perf record -e arm_spe_0//
-Error:
-The sys_perf_event_open() syscall returned with 19 (No such device) for event (arm_spe_0//).
-/bin/dmesg | grep -i perf may provide additional information.
-
-This is due to PMU's "cpumask" is not updated and still contains offline
-CPUs and perf will try to open perf event on the offlined CPUs.
-
-Make "cpumask" attribute only shows online CPUs and introduced a new
-"supported_cpus" where users can get the range of the CPUs this
-PMU supported monitoring.
-
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- drivers/perf/arm_spe_pmu.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/hsr/hsr_ping.sh | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 9100d82bfabc..2182f214c587 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -254,13 +254,33 @@ static ssize_t cpumask_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
- 	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
-+	cpumask_var_t mask;
-+	ssize_t n;
+diff --git a/tools/testing/selftests/net/hsr/hsr_ping.sh b/tools/testing/selftests/net/hsr/hsr_ping.sh
+index 3684b813b0f6..f5d207fc770a 100755
+--- a/tools/testing/selftests/net/hsr/hsr_ping.sh
++++ b/tools/testing/selftests/net/hsr/hsr_ping.sh
+@@ -152,6 +152,15 @@ setup_hsr_interfaces()
+ 	ip -net "$ns3" addr add 100.64.0.3/24 dev hsr3
+ 	ip -net "$ns3" addr add dead:beef:1::3/64 dev hsr3 nodad
  
--	return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
-+	/* If allocation failed then show the supported_cpus */
-+	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-+		return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
++	ip -net "$ns1" link set address 00:11:22:00:01:01 dev ns1eth1
++	ip -net "$ns1" link set address 00:11:22:00:01:02 dev ns1eth2
 +
-+	cpumask_and(mask, &spe_pmu->supported_cpus, cpu_online_mask);
-+	n = cpumap_print_to_pagebuf(true, buf, mask);
-+	free_cpumask_var(mask);
++	ip -net "$ns2" link set address 00:11:22:00:02:01 dev ns2eth1
++	ip -net "$ns2" link set address 00:11:22:00:02:02 dev ns2eth2
 +
-+	return n;
- }
- static DEVICE_ATTR_RO(cpumask);
- 
-+static ssize_t supported_cpus_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
++	ip -net "$ns3" link set address 00:11:22:00:03:01 dev ns3eth1
++	ip -net "$ns3" link set address 00:11:22:00:03:02 dev ns3eth2
 +
-+	return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
-+}
-+static DEVICE_ATTR_RO(supported_cpus);
-+
- static struct attribute *arm_spe_pmu_attrs[] = {
- 	&dev_attr_cpumask.attr,
-+	&dev_attr_supported_cpus.attr,
- 	NULL,
- };
- 
+ 	# All Links up
+ 	ip -net "$ns1" link set ns1eth1 up
+ 	ip -net "$ns1" link set ns1eth2 up
 -- 
-2.24.0
+2.20.1
 
