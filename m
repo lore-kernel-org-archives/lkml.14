@@ -1,132 +1,197 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663DB82887;
-	Mon,  3 Jun 2024 11:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7C9A21
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717413380; cv=none; b=k/I8rRKSB5+KtsffNFj1PpKyOjEFvfh7Rev/a9KMSHaVVqkkCfHtJvhE47bY4rsu1e7Ptip8c4zSJjgS7FcCdTZjabATnQXE4XqPqP8cOLI88+KFMul+afhopfqr0rWGMGaYCUeJkCEZoQ8w15cWvfwpwJaJinsrJYnE7XoPz/g=
+	t=1717413453; cv=none; b=X8/Wsn8n5LsAh+97/ZLJOfZ7bZAzYBgUw6GbhZwaCgu+S9m1eQnJ1uUQhoL5U/5e4krV5jFCm3VtxAnLORZvcPhFqodK3qwt33T5oYFz4Y7VfNyrJQ98wreNVdxfMW2dBhSt+9gbIMHXv3nzLLeLpLyue7TXuo+soSQUJt8cKzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717413380; c=relaxed/simple;
-	bh=nRZipdwaROuzknbfoTC6gTOb8SzX/WtVN3NQQWClArk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lhfgX2futEdE9QBzqMimsOLB8et3isNS96SbEuOJA6ZwLrh8GgptCIJUsXVTFQawqkxmczl1DwI/A5EDWmglzonAngCDIIJEyAzWuc5ogH3j29xCIo8RSUegpGH4o19cL3v60f6lFD+5Rn4PGayrH9qjpMh+YZQqMms97Z8Zw/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OR15NPJ8; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717413453; c=relaxed/simple;
+	bh=X9ILtM/+5hKq9Dskgzk3jggSkTrWGbcydimSrAcZB/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=PJXOA6SWSamLJLZ0a+Io2J1EtCc/H7lS0Pkx62ocETvYvSA/V/wTk+pmujyYqCKgV05dRpN3G7Grclg9m1cefsQ6XgRDYfJxwgjxPaK9wdyt8A/pPINLuf19JGlqjjlOJLJOOM4n0MtrIBClt7d4h/UdGTA/1Z1kZMBUpOp5RE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fBCyfFmm; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OR15NPJ8"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452NubkQ017720;
-	Mon, 3 Jun 2024 11:15:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4dBJ7CRFnEtRJnVMM/5nRbR4DBCRRfHzth9KUplaXFw=; b=OR15NPJ85m8dw4nX
-	CxLgZZ1jmE2iD13o2dHk+AV40nv2xuct3SPRFyoJoJhLqjKsbPKG6kJT1CFh4NFO
-	2gH+bqJ7foyqb7+TURaiK1oKt5sw1SP5Vhn4/TcrJ4Wg1R+JwvFg3fnJwHb7bndy
-	Rr0p5HwYZAaMisq9pyQZ3wJOKROdd0cFFMfq24HZD99d0g9+PiVHcMlpNZ7I1k59
-	PTLDC1blK8AHieZJmYmmZAVvf5C7PXpxMyrfh5Z6QJ59luFi1hINo9JAHwPzGyQD
-	UuhvBQ7eZKqu33zH+kNzYGeSYXPdUPfCkg7pJQqdZGpRkAp0DVSPUM+LG5yRjylQ
-	+IRBjA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw59kjx4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 11:15:42 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453BFfv5000885
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 11:15:41 GMT
-Received: from [10.217.90.34] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 04:15:33 -0700
-Message-ID: <0f0df372-29b5-4daf-8e54-4157e8ab1a98@quicinc.com>
-Date: Mon, 3 Jun 2024 16:45:30 +0530
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fBCyfFmm"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240603111728epoutp0420b264c6d944aa589af6365214c168cb~Vem6xfG6g1944519445epoutp04J
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 11:17:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240603111728epoutp0420b264c6d944aa589af6365214c168cb~Vem6xfG6g1944519445epoutp04J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717413448;
+	bh=NdbbPTU401HPnUoOaw/F+ZPaUI8FnwtrRdYBN1GmdNc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fBCyfFmmOdsx9UkBEa9C/gMGpiNyDk4AnmSWtZbFfDv+7gBM+/il6hdrezNZoUm6u
+	 brNd0Yu+RFdFsvyiRq3EIXyNs2rR5HOPiAJA2VvMW5i5ShY8k0rytDknHtWX3ygeiW
+	 3INEWIAMTs1GV2KS6JZWO4Og6VhdoTW05ZmMqKO8=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20240603111727epcas5p447c1effda385c696f1a1dab79263bc00~Vem6CshrS0313903139epcas5p4f;
+	Mon,  3 Jun 2024 11:17:27 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4VtB5f5Krnz4x9Pr; Mon,  3 Jun
+	2024 11:17:26 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F7.39.10035.646AD566; Mon,  3 Jun 2024 20:17:26 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240603110051epcas5p1210a0ffdd361216c504cc342c8d4f247~VeYaUA-3V1603316033epcas5p10;
+	Mon,  3 Jun 2024 11:00:51 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240603110051epsmtrp274773a1330edafc070774ea66a2e82c2~VeYaSaTm90159301593epsmtrp2H;
+	Mon,  3 Jun 2024 11:00:51 +0000 (GMT)
+X-AuditID: b6c32a4b-b11fa70000002733-8b-665da646c938
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2F.BD.18846.362AD566; Mon,  3 Jun 2024 20:00:51 +0900 (KST)
+Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240603110042epsmtip288f7ecce5d34cdfe18b68ceb823a3cdb~VeYRdfn010474404744epsmtip2K;
+	Mon,  3 Jun 2024 11:00:41 +0000 (GMT)
+Date: Mon, 3 Jun 2024 10:53:39 +0000
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
+	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
+	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Sagi Grimberg
+	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+	<jack@suse.cz>, martin.petersen@oracle.com, bvanassche@acm.org,
+	david@fromorbit.com, hare@suse.de, damien.lemoal@opensource.wdc.com,
+	anuj20.g@samsung.com, joshi.k@samsung.com, nitheshshetty@gmail.com,
+	gost.dev@samsung.com, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v20 00/12] Implement copy offload support
+Message-ID: <20240603105339.keuiudmeplxdmczj@nj.shetty@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: stmmac: dwmac-qcom-ethqos: Add support for
- 2.5G SGMII
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Andrew Lunn
-	<andrew@lunn.ch>
-CC: Andrew Halaney <ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S.
- Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>, <netdev@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20231218071118.21879-1-quic_snehshah@quicinc.com>
- <4zbf5fmijxnajk7kygcjrcusf6tdnuzsqqboh23nr6f3rb3c4g@qkfofhq7jmv6>
- <8b80ab09-8444-4c3d-83b0-c7dbf5e58658@quicinc.com>
- <wvzhz4fmtheculsiag4t2pn2kaggyle2mzhvawbs4m5isvqjto@lmaonvq3c3e7>
- <8f94489d-5f0e-4166-a14e-4959098a5c80@quicinc.com>
- <ZlNi11AsdDpKM6AM@shell.armlinux.org.uk>
- <d246bd64-18b3-4002-bc71-eccd67bbd61f@quicinc.com>
- <67553944-5d3f-4641-a719-da84554c0a9f@lunn.ch>
- <ZleMdFsmQzXGp1GM@shell.armlinux.org.uk>
-Content-Language: en-US
-From: Sneh Shah <quic_snehshah@quicinc.com>
-In-Reply-To: <ZleMdFsmQzXGp1GM@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: eljy9ZgYrskT4Ir30jUQ98wP83GwYNmB
-X-Proofpoint-ORIG-GUID: eljy9ZgYrskT4Ir30jUQ98wP83GwYNmB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_07,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- adultscore=0 clxscore=1011 mlxlogscore=978 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030094
+In-Reply-To: <20240601054701.GA5613@lst.de>
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHd+5tby9OSFeQHWAyUkkcEqBVigcGbAmM3Ag69jJOY6CDKyCl
+	bdoizi1bEXDQjbeFWYExROQlRGgWysMQHjJBRhwClilDUjYGE8pLtjBgLReN/31+33N+7/xI
+	nHed40wmSFW0QiqW8IldrJ+6Pd7yCqs6fUawsroPNfbfwdHFvA0c1T3OJdBc9xJAReZ/cWTq
+	/Aag9cEhHOnvTABUXlHKQsZOA4baKwowVFPXi6GrxWkY6t16SqCCrlGApkd0GOoY90Q/Xqpk
+	ofaOuyw03FpCoB+qpjnoRt8mhvIzRzDUYkoFqGFugYV+HndBQxt97HddqOEH4VR/BaQMuscc
+	amjiFosaHkymmmqzCKq58mtqpvkKoNqMaoK6llPIprLT5gnKkPE7m1qcHmdRC7dHCCpHXwuo
+	e+U9nEj7k4mB8bQ4lla40dIYWWyCNC6IH/5RVEiUyE8g9BL6o8N8N6k4iQ7ih0ZEeoUlSCzD
+	4budE0uSLVKkWKnk+wQHKmTJKtotXqZUBfFpeaxE7iv3VoqTlMnSOG8prQoQCgQHRZaP0Ynx
+	xrV6XK53PG9Qa3A1aOBpgA0Jub5wYWOcZWUetw3A4jpPDdhl4SUAq41m4oUx3ToGNIDc9vi+
+	3IXRDQBmG9IxxlgGcLJnHLeGYnHdYeb6M8zqQHA94cAWaZUduHw4PTsIrIxztQTc0rlY2Z4b
+	BB8Z0jlWtuWGQM3NX9gMvwbvXjFtV2djCbOVVcay5oLcbhtYrF7FmRZC4dMnjzgM28PZPv0O
+	O8Pl+Q6C4RRYc7maYJzTAdSN6QDz8A7M6M/FmYriYf53uWxG3wu1/Q0Yo9vB7HUTxui2sKXs
+	Oe+D9Y3lOwmc4Oha6g5T8B9DEYuZSj2A2sJMkAdcdS91pHspH8MBMMt80cKkhV3gjU2SQQ/Y
+	2OpTDti1wImWK5PiaKVIfkhKp7xYcowsqQls38uB8BYwNWn27gIYCboAJHG+g23OV6fO8Gxj
+	xZ9foBWyKEWyhFZ2AZFlQfm4854YmeXgpKoooa+/wNfPz8/X/5CfkP+67VxGaSyPGydW0Yk0
+	LacVz/0w0sZZjb0nQidHP/6vLUtysPJIxG52WrNaqx345Bbvr0vVwYE+JZKZ/pnmtxtOzM27
+	hx6btdfrucvHg7X3H+ZoTkx0NmUeKZy3Xzmv+yJHL8j+M6YwoyAsYtgMvDP17qbotr72cyub
+	xN6JJfKD0T+qJn1MxoCzu/Ubixd0ZYtRutknzbMxqa7Hist//XDt6LPj1Gqz/5RScjXvjW+F
+	sOhU18M3Py0tM3V3hxyVgmDDkpvA10MD3/dTO4X08FJXzKU1Zx1faT1sU8ZZfjCWYzfQc+3m
+	7czeXNeUtLXl03bZX/69qBjec490d7xfMph62Ri91eiwXxTx6vXfCj+bj7Hr3L/iTU7hcxl8
+	ljJeLDyAK5Ti/wH/DoZ6uAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe897dnY0xOOsfGtFsRJKa2ZEvZGZIOWhqwZBF8yGntRyKptK
+	N0ydWY4yXVG6zKaGppKR95W3vJXpWmaGqSnaVpYsL6BdbFpzRH378/yf3+/58tBQMEQuoUPD
+	ozhZuCRMRNmSFY2i5esCc/xPrC9+vQY/fNECcUKqGeKi99coPNI4AfDNsR8QG+ovATyt00Nc
+	1tIPsCbnDonf1WsJXJ2jInBBUTOBb99SELh51kRhVcNbgI1dagLX9Lji7KR7JK6uaSVx5+NM
+	Ct/NM/Jx/rMZAqdd7iJwlSEe4OKRURI/7xFivfkZz0vIdr7Zzb7IQaxW/Z7P6vsfkWynLpot
+	KUym2NJ7F9jh0gzAPnkXR7G5Kdd57FXFV4rVXhzgsePGHpIdre2i2JSyQsC2a5r4vo5HbD2C
+	uLDQGE7m5nncNiTtzSSM/Oh4+pUpHsaBn/ZKQNOI2YjSNUIlsKUFTCVAU0kaoAQ2f+aLUZ65
+	CVqzIyqY+cS3Lo0DlParl7IUJLMKXZ6eIiwiinFFbbO0ZbyAESHjF92cBzIZFGq/K7VkR2Yb
+	6tMm8i3ZjvFGygcveVZnMUATug7KWjig1gwDaYU3oazSQWjxQ0aI8mfm/DZ/Ts0mZ5GpgFH/
+	R6j/I9T/CA2AhWAhFymXBksDI93FcolUHh0eLA6MkJaAuTdwOVAF8h6axQ2AoEEDQDQULbBL
+	iT16QmAXJDlzlpNFBMiiwzh5AxDSpMjJbmVYcpCACZZEcac4LpKT/W0J2mZJHOEcXxck2Pnj
+	RsXgMpW9h+LLPi+uT/C5XjI0lPi0dsywM9VZNfw6pm7qW1tiwOihRZPrH+gdmkM2+/Wq0n+2
+	d7tFB4bejPWpluY2yUIcYMyq4fjpiOzTwerNHU3MYdGy3pbDWr/z4+f3KHwmfHJXCCeieN6v
+	GpeuXVq+McVTW1F00XQrf/7qWuPKgYCWc7vGElCsl7D8ujIrs1vX4X7QO1Fvr1gBObHO5Jm9
+	/9jyAH/z99X9hbvNb8XqHsP4d+xrSuoe0eaNeoSehO5tNbvcPsw7g2euODlzGemyrcIhp0d1
+	8ytbJ/f2VSTlZm7ZMLCDBE8y2xNcpxy2p7sUzLvf9WtQRMpDJO4uUCaX/AYjgqMpdQMAAA==
+X-CMS-MailID: 20240603110051epcas5p1210a0ffdd361216c504cc342c8d4f247
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_520e5_"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240520102747epcas5p33497a911ca70c991e5da8e22c5d1336b
+References: <CGME20240520102747epcas5p33497a911ca70c991e5da8e22c5d1336b@epcas5p3.samsung.com>
+	<20240520102033.9361-1-nj.shetty@samsung.com> <20240601054701.GA5613@lst.de>
+
+------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_520e5_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
+
+On 01/06/24 07:47AM, Christoph Hellwig wrote:
+>On Mon, May 20, 2024 at 03:50:13PM +0530, Nitesh Shetty wrote:
+>> So copy offload works only for request based storage drivers.
+>
+>I don't think that is actually true.  It just requires a fair amount of
+>code in a bio based driver to match the bios up.
+>
+>I'm missing any kind of information on what this patch set as-is
+>actually helps with.  What operations are sped up, for what operations
+>does it reduce resource usage?
+>
+The major benefit of this copy-offload/emulation framework is
+observed in fabrics setup, for copy workloads across the network.
+The host will send offload command over the network and actual copy
+can be achieved using emulation on the target (hence patch 4).
+This results in higher performance and lower network consumption,
+as compared to read and write travelling across the network.
+With this design of copy-offload/emulation we are able to see the
+following improvements as compared to userspace read + write on a
+NVMeOF TCP setup:
+
+Setup1: Network Speed: 1000Mb/s
+	Host PC: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz
+	Target PC: AMD Ryzen 9 5900X 12-Core Processor
+	block size 8k:
+	Improvement in IO BW from 106 MiB/s to 360 MiB/s
+	Network utilisation drops from  97% to 6%.
+	block-size 1M:
+	Improvement in IO BW from 104 MiB/s to 2677 MiB/s
+	Network utilisation drops from 92% to 0.66%.
+
+Setup2: Network Speed: 100Gb/s
+	Server: Intel(R) Xeon(R) Gold 6240 CPU @ 2.60GHz, 72 cores
+	(host and target have the same configuration)
+	block-size 8k:
+	17.5% improvement in IO BW (794 MiB/s to 933 MiB/s).
+	Network utilisation drops from  6.75% to 0.16%.
+
+>Part of that might be that the included use case of offloading
+>copy_file_range doesn't seem particularly useful - on any advance
+>file system that would be done using reflinks anyway.
+>
+Instead of coining a new user interface just for copy,
+we thought of using existing infra for plumbing.
+When this series gets merged, we can add io-uring interface.
+
+>Have you considered hooking into dm-kcopyd which would be an
+>instant win instead?  Or into garbage collection in zoned or other
+>log structured file systems?  Those would probably really like
+>multiple source bios, though.
+>
+Our initial few version of the series had dm-kcopyd use case.
+We dropped it, to make overall series lightweight and make it
+easier to review and test.
+When the current series gets merged, we will start adding
+more in-kernel users in next phase.
+
+Thank you,
+Nitesh Shetty
+
+------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_520e5_
+Content-Type: text/plain; charset="utf-8"
 
 
-
-On 5/30/2024 1:43 AM, Russell King (Oracle) wrote:
-> On Wed, May 29, 2024 at 04:28:16PM +0200, Andrew Lunn wrote:
->>> Qualcomm ethernet HW supports 2.5G speed in overclocked SGMII mode.
->>> we internally term it as OCSGMII.
->>
->> So it still does SGMII inband signalling? Not 2500BaseX signalling? It
->> is not actually compatible with 2500BaseX?
->>
->>> End goal of these patches is to enable SGMII with 2.5G speed support.
->>> The patch in these series enabled up SGMII with 2.5 for cases where we
->>> don't have external phy. ( mac-to-mac connectivity)
->>
->> So the other end needs to be an over clocked SGMII MAC, not 2500BaseX?
->>
->>> The new patch posted extends this for the case when the MAC has an
->>> external phy connected. ( hence we are advertising fr 2.5G speed by adding
->>> 2500BASEX as supported interface in phylink)
->>
->> And i assume it does not actually work against a true 2500BaseX
->> device, because it is doing SGMII inband signalling?
-> 
-> I really hope the hardware isn't using any SGMII inband signalling
-> at 2.5G speeds. Other devices explicitly state that SGMII inband
-> signalling while operating the elevated 2.5G speed is *not* supported!
-
-Do we mean SGMII autoneg by SGMII inband signalling? Our hardware doesn't
-support autoneg for 2.5G mode in SGMII.
-> 
+------atUsqPFm-1W_PDIhMRaVeMNpJ8wr1jcbO3GdUizRktR65zpR=_520e5_--
