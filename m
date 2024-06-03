@@ -1,108 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CF020ED;
-	Mon,  3 Jun 2024 19:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6CB20ED;
+	Mon,  3 Jun 2024 19:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444514; cv=none; b=k+4uP8emU9N5ffHj2Xq5VAZ0zxu2gyQyOqoM8Ul4L52JU0amevB2U1cto8hVZEYv5N/05Dwyt+AE0xWSC3n3ylzcayiOthBkTDDquL/tR49wtkCLucGX5cz6axX6DgrK2tluM4qv05fYv52AbYcztBrg7z01YbVOTQp1mQ5bdC8=
+	t=1717444564; cv=none; b=WHOzI9EHZMa+Iuy4nkC7ownMTxmoQlMAe3bXUiB/ND5HEAgEza0+4zP3Fj77PHLzAQ0iTv0w+fHf0ZKK4sHnq8wvBUgx/zsMvd1dFAfpHB02dWbqvbQLtc1udxyLgAzkMaMxtu+t2UU3LfpxpOWQDQwl/BaqvdRAoxucq2DMy1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444514; c=relaxed/simple;
-	bh=1fIiUaMhINY/BVkZO99M6/eSuzyKLzaI9qYzq+ht54o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qIinmGBQXVpwwYHiRn9UEB49UPgoxoSV2gXBsHIIPHjjtlSknN6uGAsHEKa//DjC7glPhxapviQGXtAMOUh094slL5xql3oqm9jPkkwLAv4JPWcyUs1mU39Rkeh0WSuCs7X3D34+/FPuVXYvKqoMz+JcYRMAYV2DkMbvPCURy38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GU2WgC73; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717444564; c=relaxed/simple;
+	bh=X02/WrcKG3y6tPosHO5YUNSdqDVkQDTVr3S+20CPbGQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KA8YtshiV92Q2NOZqKnkZGg+Dw+Y6mxTM6WYy2adSwRViVVMWDtI8OI4uAcP5V+UgrHMj+z8yp15ZHGwg/S+8VEKhJLJqhb8nLqKxSusF1iq3lJvg5yDYmaRwp2wyHKryfn1Y4Ih0icJvx0BbsXZedZq54SMqCtA4zdrDU5XshE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=HNQZFbxv; arc=none smtp.client-ip=217.72.192.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GU2WgC73"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA74DC2BD10;
-	Mon,  3 Jun 2024 19:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717444513;
-	bh=1fIiUaMhINY/BVkZO99M6/eSuzyKLzaI9qYzq+ht54o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GU2WgC73jIvh4bn4NaorEWg2xhgW+IYbR0ift7S+6CWOfDNzNUePA/ofMhkB6uCtV
-	 PdhhHFocOtzJNrBIgJkPIupD4qgeAArOL51ZWV0Ue4sloDKOTCvja0mLk9yeTDTfDS
-	 xDESPcMEP5EAobL3A8DrOMQOlcdpQYLelBRzaY6vSjKmkPKgJyUbGNzrK3UjvxmeOl
-	 YxBkRc99cANRbATQXqoDwLLpj1c+WsDo6jFhUgf3mru8YKznT1RdPpLZSukc+pdHNY
-	 s1rYGFcsqSc9CXyAs+QwS2OpzqMeCB5RSWK1b08DFToFMpKqotXcOR0qeJYBRGe7N6
-	 ClPT7F0bWCBew==
-Date: Mon, 3 Jun 2024 20:55:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Julien Stephan <jstephan@baylibre.com>, Esteban Blanc
- <eblanc@baylibre.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] iio: add support for multiple scan types
-Message-ID: <20240603205502.5e6155f4@jic23-huawei>
-In-Reply-To: <11841924e4e1db49001a2fe52f5985f3c044c184.camel@gmail.com>
-References: <20240530-iio-add-support-for-multiple-scan-types-v3-0-cbc4acea2cfa@baylibre.com>
-	<20240602102517.438b51b8@jic23-huawei>
-	<11841924e4e1db49001a2fe52f5985f3c044c184.camel@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="HNQZFbxv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1717444555; x=1718049355;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=X02/WrcKG3y6tPosHO5YUNSdqDVkQDTVr3S+20CPbGQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=HNQZFbxv4wWkrF+W7wobqlWCXDH3m4+DT87C2AGRVIWtdylbvLh6n2UwQsIt1SiX
+	 HlmzQk+5pzrCYnu1g3nPgBj/ALYjf3zmVhMZwieaQprmtzdyX0lMBmc+6qArBtrnW
+	 cxRcxvKEVUadMvJF1s9flL4Ga1DQPPKdWEDyPGxCsPFX5l2yFcwG/96N+n5zNVB+z
+	 mRCR7fZzqYHVwYmFHtsqOgeJcKTYYxbBwPVdMk/Hfp2QUH4oo4xbCIKHjWuBK/L9/
+	 +l87GaNi1vCod6gzM1wXzuG5HDjkNK4MzeR7E2eo+EXH04zrxGmGtFOnWj4eOVjCQ
+	 bsdBeWgpsQdSJ6mzGQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.174] ([91.64.229.215]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M42X0-1sEDgf3Pua-0002kL; Mon, 03 Jun 2024 21:49:45 +0200
+Message-ID: <753fd496-ea66-42dd-a607-a879c3cce6b6@oldschoolsolutions.biz>
+Date: Mon, 3 Jun 2024 21:49:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/7] iommu/dma: Make limit checks self-contained
+To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Christoph Hellwig <hch@lst.de>
+Cc: Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
+ <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Niklas Schnelle <schnelle@linux.ibm.com>,
+ Matthew Rosato <mjrosato@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
+ devicetree@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.1713523152.git.robin.murphy@arm.com>
+ <e28a114243d1e79eb3609aded034f8529521333f.1713523152.git.robin.murphy@arm.com>
+ <aeb13631-7504-4c3c-ba7b-812bf121a60f@oldschoolsolutions.biz>
+ <a4105d70-bec5-4fff-b9bf-04d0b03f81d6@arm.com>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <a4105d70-bec5-4fff-b9bf-04d0b03f81d6@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iScz297IREJFID4bB3dtWwm3UthsXvjTmxRXzgKye5unhq4O8El
+ UAp0YhhOkMt18jGteSmf+HbA5IqXBght1LGj55BFwT5gKovF2QMJd2VLv6ju+yQgF8OEFS2
+ 6TaC7X10u8+U2BtvRcbGKRdmDiXJzZtuViJBoL2mdaHA+YN3BjKzQAkCp4jPPCqkuGrfhjb
+ TmZJ62CruJPxm1u+aLqdg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qGcpoOb2bMA=;OYMmfwCyP4ATmR7YLDzYf0NQvOT
+ Vq4EF7Zw55G8zloA1nBYhi3PnJpDKhr6DQuKVQr3x/OZ4bVovUeOP9Yt8JkF/Y3cuKHRYd3pm
+ z4EcOGd2xQWOmhytIzyqyIMwTugk4WHA4YgupoSI1ss7Myt9hMlbYsWlRzM3OScGnvMS+UoGb
+ 85l5GjXASHV/+xZMzoM6p+FGBmXvmTDYF/19wfEPLgPQgUwiwgn0esCVk1U2P2+j3SWunOhkO
+ BiT6hEAASzaCLrCGWU+YcKfGZaLrBXIACblUeG+jswWpEWNOrFotuhFFZvyD53sAJpqX493Uo
+ RwJKpMm5DOvg8pEw0YqLojiX34HiIKBwZNUFhtu/mUXR0n5InMvQnYnX/U6uuuySmdovXF0y7
+ 2r7d6YthJBJD03qjdVn0/V7C8YoLzH6jOWNXhF0vKkw6oMAbh2hCOgCLqReGEcgt+M/4D9F9K
+ nfzg//8+1S/scX2BM1ehQRkwh8TwpKYkML4JgnLavGn/9ip6PmTXKuwq/6K1W4sXNnNRxKVyq
+ s0Yp07QJy+Qh5Z7VDbTO8oCxx5Yh+p07HDY03lTpxYjerStd4Si+JiqgDPWwnYjn5wbZXoS8u
+ EbH9hA1EUtv6nU1AfKSZz3WaDCCSBkvdbKGvcmcMOOq/X64/O4yyJOlRFwLHBqpf3XkEVVasK
+ BUOxk3YQFpJRwFmpdawerEUUjoxOvJEPg1NzAFRaW45XQGnAIaKA9KuFwTxAmHyr1msW30x/l
+ h0Pf1q34pySadLyjOAfbs/cNEk2HLfWCTQtmVOKYuIwDbsfKzG6Z8M=
 
-On Mon, 03 Jun 2024 12:25:55 +0200
-Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+Hi Robin,
 
-> On Sun, 2024-06-02 at 10:25 +0100, Jonathan Cameron wrote:
-> > On Thu, 30 May 2024 10:14:07 -0500
-> > David Lechner <dlechner@baylibre.com> wrote:
-> >  =20
-> > > Up to now, the IIO subsystem has only supported a single scan type per
-> > > channel. This scan type determines the binary format of the data in t=
-he
-> > > buffer when doing buffered reads.
-> > >=20
-> > > For simple devices, there is only one scan type and all is well. But
-> > > for more complex devices, there may be multiple scan types. For examp=
-le,
-> > > ADCs with a resolution boost feature that adds more bits to the raw
-> > > sample data. Traditionally, for slow devices, we've just always used =
-the
-> > > highest resolution mode, but for high performance ADCs, this may not =
-be
-> > > always practical. Manipulating data after every read can hurt perform=
-ance
-> > > and in the case of hardware buffers, it may not be possible to change=
- the
-> > > format of the data in the buffer at all. There are also ADCs where
-> > > enabling the higher resolution can only be done if oversampling is al=
-so
-> > > enabled which may not be desireable.
-> > >=20
-> > > To allow for more flexibility, we would like to add support for multi=
-ple
-> > > scan types per channel.
-> > >=20
-> > > To avoid having to touch every driver, we implemented this in a way t=
-hat
-> > > preserves the existing scan_type field. See the "iio: add support for
-> > > multiple scan types per channel" the details. The first couple of pat=
-ches
-> > > are just preparation for this.
-> > >=20
-> > > [1]:
-> > > https://lore.kernel.org/linux-iio/CAMknhBHOXaff__QyU-wFSNNENvs23vDX5n=
-_ddH-Dw3s6-sQ9sg@mail.gmail.com/ =20
-> >=20
-> > Nice series. Applied to the togreg branch of iio.git and pushed out as
-> > testing for 0-day to poke at it.
-> >=20
-> > Obviously this v3 hasn't been on list that long, but there is still time
-> > as I doubt I'll push out a non rebasing tree for a week or so.
-> > This week is looking too busy! =20
->=20
-> If there's still time, feel free to add my tag:
->=20
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
->=20
-Done
+oh that was fast. Will test, thanks!
+
+with best regards
+
+Jens
+
+On 6/3/24 21:46, Robin Murphy wrote:
+> Hi Jens,
+>
+> On 2024-06-03 8:37 pm, Jens Glathe wrote:
+>> Hi Robin,
+>>
+>> an observation from 6.10-rc1: On sc8280xp (Lenovo X13s, Windows Dev Kit
+>> 2023), when booted to EL2 with the arm-smmuv3 under control of Linux, i=
+t
+>> fails to set up DMA transfers to nvme. My box boots from nvme, so I onl=
+y
+>> got a black screen. @craftyguy booted from USB, and got this:
+>
+> Indeed, I see there's a dma-ranges property with a base of 0 in that
+> DT, so all manner of hilarity may ensue. The fix is here, just waiting
+> to be picked up:
+>
+> https://lore.kernel.org/linux-iommu/159193e80b6a7701c61b32d6119ac68989d4=
+57bd.1716997607.git.robin.murphy@arm.com/
+>
+>
+> Thanks,
+> Robin.
