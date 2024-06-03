@@ -1,81 +1,35 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd14161.aruba.it (smtpcmd14161.aruba.it [62.149.156.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97064282ED;
-	Mon,  3 Jun 2024 06:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA7B1799B
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 06:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396473; cv=none; b=obmWZQjimpKAXO5Lv57Z5jPyjRmwDLieGw/HjqLT2ScZ0zA3bWzFqoA8tMDI8bA3N/9KjjlgVBfSoyctfjbZZUqT6MUiJHPul0a5j/tNcSysK13RKu5SENSNtw/MChdrdy/msZjEWmtYLBQ8FW2HJURbftelIMkyjzlCvNc60qY=
+	t=1717396555; cv=none; b=m/Y/FrxLMgKRzW7tdNNWNXjf+slEz88zdrZJwjuBVxpedB6H1oaNmX2Y2IGsh0fC8I8nfIToZThkK88OfSYK5SqSpnxjuRzLl3A7x3kEbjsTFgKPxK5Bc//apoYmZ5lroXXb1Eu2JbWBzurtqKcjy9EYW1f1yv+tCKr33GFL1ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396473; c=relaxed/simple;
-	bh=K41t5cNRMJLN6M4X4/lP/7QcNoH1790LXPikMhXwLtE=;
+	s=arc-20240116; t=1717396555; c=relaxed/simple;
+	bh=IM6Q+jA0EDWL/Yao5Tt0wSFrGtRBBIHLONyz8WNHFYQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YTEzGN2+dqWPpLx6Bm2Ssoo4cJpudeunb7r7X/qnJLB/hNRFWcjDJRchqYM5RZZvJVyuG3Epy1hFurOyfXdLmLmvnUCUxo0xJJwLSioiqQ4fVKZ5yAPokJxjSCD6eNV7ZrvcDr7CG7hunT6Q7KUyVrgSo2nfBNCdlGXRQ6DtwWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r4J9r/CI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cbW6GPde; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Qgx72MX3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=D5HwuqG8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=VcrjJ3ZXmWrs5YLRE6DmYxNcHkTvLAV+A0y2y5Dog+1pX1W7I95LCU3XmCIm6DcSXOhcoivSBT+5OrUvwo1FONgUhDF7R3XEcfdI0Z7P5+ZHRBEzoJVaZ8+9HoSwwVLNrC49lYhS4ird1onu1nc6HhfgD+yTytaI9Ndh9NIx3ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=R9DzqFpB; arc=none smtp.client-ip=62.149.156.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r4J9r/CI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cbW6GPde";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Qgx72MX3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="D5HwuqG8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DD1C320027;
-	Mon,  3 Jun 2024 06:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1717396463; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1NqOg7+SmYpFyjN12bPuX9ZLErrX3Av3tfkALul2/E=;
-	b=r4J9r/CIvwHDeheLN2a050SoQfn2+So/cNvfWhw6aOYdKr3A6umYNgaIXzGG42rN3QgAQf
-	jLhDPOE/EHjZgBKTV8bLkV3J5Ds/gpwEDKzW9zDyRUoCHKqc1lfbfor2VXhwy7FQalXRH0
-	Xo7z5vEQ55wj5XDlDrmCQVI5CA1fiGQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1717396463;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1NqOg7+SmYpFyjN12bPuX9ZLErrX3Av3tfkALul2/E=;
-	b=cbW6GPdeTLjLomVb5oiQO142BbmYOiNZ88KSCzXoX1j9lhKTzYMMEWinEXr1YbggaWB8SV
-	MWk2kbbOkbWcTIDg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Qgx72MX3;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=D5HwuqG8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1717396462; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1NqOg7+SmYpFyjN12bPuX9ZLErrX3Av3tfkALul2/E=;
-	b=Qgx72MX3w67PvEi5K8DJutGCGrSl2FCeX35/kfSrHgQCMDUhvqgFzEmhxxKXPE0wTuxmLa
-	eyw8IFi8ihMY0flHrSe/QJlT8fTen0xYrvuerObm2F4ETudNhigdyiX9AK6AAGuNd7guaC
-	x6uEfbRA6zUITF7Y+yQX7RuvgrS6SfM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1717396462;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f1NqOg7+SmYpFyjN12bPuX9ZLErrX3Av3tfkALul2/E=;
-	b=D5HwuqG8QbxGFpn9vFMdUXs0v6Ip+6S02HIMBWpOjP570u/2LccW+aRraxc3XHeqZ6WEK/
-	8Dqy/lIqobxYQfDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 32B6113A93;
-	Mon,  3 Jun 2024 06:34:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 8RsMCe5jXWbTSQAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 03 Jun 2024 06:34:22 +0000
-Message-ID: <55610402-74c3-44fe-ac0d-37958f2f86b5@suse.de>
-Date: Mon, 3 Jun 2024 08:34:21 +0200
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="R9DzqFpB"
+Received: from [192.168.1.56] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id E1FJsoTyL0ADeE1FKsVFMb; Mon, 03 Jun 2024 08:32:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1717396362; bh=IM6Q+jA0EDWL/Yao5Tt0wSFrGtRBBIHLONyz8WNHFYQ=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=R9DzqFpBL/BMy8BlyD0N7Np5fqJtWAhCKQoyuTf0ef8tJHutAorq5OgNG8LG3852i
+	 I4Os30PLVPECdrLroDoROQDho1lnKfYOyo4/0B+M+f0/j2HgfQC0iBbJamROyMIFv3
+	 TWz4LdgBIGRKcXgRbONb3vSYDb9bHMVSb6xNAgS2f+uIPaH56W8+/ihzWJeEMvYW4U
+	 FAWq4ylezYjQkw7sy+zxkMCXxc9RJuxF6BjJkKvqU4qVVVnKYXSA+b061VJwja7LSm
+	 6FR+UVl1apAoFTvMYdoBWVJEg14p/TvsvWjSuPfMCGy9MFU8kh3O8EnHcO/fVSrfP2
+	 W5z7NkxcHSuyw==
+Message-ID: <177dd111-fb1a-4650-9c81-ab5903859c77@enneenne.com>
+Date: Mon, 3 Jun 2024 08:32:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,86 +37,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/11] mm: split a folio in minimum folio order chunks
+Subject: Re: [PATCH] pps: clients: gpio: Continue after failing to get
+ optional ECHO pin
+To: Curtis Klein <curtis.klein@hpe.com>
+Cc: linux-kernel@vger.kernel.org
+References: <20240531224411.3515712-1-curtis.klein@hpe.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
 Content-Language: en-US
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, david@fromorbit.com,
- chandan.babu@oracle.com, akpm@linux-foundation.org, brauner@kernel.org,
- willy@infradead.org, djwong@kernel.org
-Cc: linux-kernel@vger.kernel.org, john.g.garry@oracle.com,
- gost.dev@samsung.com, yang@os.amperecomputing.com, p.raghav@samsung.com,
- cl@os.amperecomputing.com, linux-xfs@vger.kernel.org, hch@lst.de,
- mcgrof@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
-References: <20240529134509.120826-1-kernel@pankajraghav.com>
- <20240529134509.120826-6-kernel@pankajraghav.com>
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20240529134509.120826-6-kernel@pankajraghav.com>
+In-Reply-To: <20240531224411.3515712-1-curtis.klein@hpe.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -6.50
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: DD1C320027
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-6.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,samsung.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfHC5lwTERhkIDSX7sQY/7yTkARytNhgs87Le2gvIhIo+Nta0N5pjDUOMNooL1wd6RndHBaD0eTU8jIjM09nwNIG4KxOg01t1MWRxj3yaKxXpaQC2PsM3
+ 2HzzsLA0v0+M5AZJPJ6RrmUuk4mRFriTYpCrYALidwW5uDVDAu6d8xYq2pHWRXFAvl/xBQFfSr6cDkcIxwisKlamY+HgbHfONbVOmUrrhyCmXkfLMe9wHyoV
 
-On 5/29/24 15:45, Pankaj Raghav (Samsung) wrote:
-> From: Luis Chamberlain <mcgrof@kernel.org>
+On 01/06/24 00:44, Curtis Klein wrote:
+> Warn but do not fail when devm_gpiod_get_optional returns an error when
+> trying to get the ECHO pin. When creating a pps-gpio device using
+> platform data and GPIO lookup tables, the call to gpiod_get_optional
+> will match on the unlabeled pin meant as the input when searching for
+> the "echo" pin. Since it is already in use as the PPS input, it will
+
+I'm not sure to well understand what you mean here: why the "echo" pin should be 
+already in use as the PPS input?
+
+Can you please explain better this situation with a real example?
+
+> fail with -EBUSY. As the ECHO pin is optional, we just warn on the error
+> and continue the initialization. This allows us to support devices
+> created using GPIO lookup tables instead of ACPI, DT, swnode, etc.
 > 
-> split_folio() and split_folio_to_list() assume order 0, to support
-> minorder we must expand these to check the folio mapping order and use
-> that.
-> 
-> Set new_order to be at least minimum folio order if it is set in
-> split_huge_page_to_list() so that we can maintain minimum folio order
-> requirement in the page cache.
-> 
-> Update the debugfs write files used for testing to ensure the order
-> is respected as well. We simply enforce the min order when a file
-> mapping is used.
-> 
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> Signed-off-by: Curtis Klein <curtis.klein@hpe.com>
 > ---
->   include/linux/huge_mm.h | 14 ++++++++----
->   mm/huge_memory.c        | 50 ++++++++++++++++++++++++++++++++++++++---
->   2 files changed, 57 insertions(+), 7 deletions(-)
+>   drivers/pps/clients/pps-gpio.c | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+> index 2f4b11b4dfcd..b7db4a3ee97e 100644
+> --- a/drivers/pps/clients/pps-gpio.c
+> +++ b/drivers/pps/clients/pps-gpio.c
+> @@ -114,9 +114,12 @@ static int pps_gpio_setup(struct device *dev)
+>   		device_property_read_bool(dev, "assert-falling-edge");
+>   
+>   	data->echo_pin = devm_gpiod_get_optional(dev, "echo", GPIOD_OUT_LOW);
+> -	if (IS_ERR(data->echo_pin))
+> -		return dev_err_probe(dev, PTR_ERR(data->echo_pin),
+> -				     "failed to request ECHO GPIO\n");
+> +	if (IS_ERR(data->echo_pin)) {
+> +		dev_warn(dev, "failed to request ECHO GPIO: %ld\n",
+> +			 PTR_ERR(data->echo_pin));
+> +		data->echo_pin = NULL;
+> +		return 0;
+> +	}
+>   
+>   	if (!data->echo_pin)
+>   		return 0;
 
-Cheers,
+Thanks,
 
-Hannes
+Rodolfo
+
 -- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
