@@ -1,110 +1,207 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6505E487BF
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 08:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FC34EB30;
+	Mon,  3 Jun 2024 08:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717401977; cv=none; b=Tr9c8yz0Dsg4Xodac2z+dvMYGb/Cifr3AbhRVtAkMR+Rrk85BWD3VK30qzPEIuHvSebprzpO8OPwyref+ydR/Z6H1q3076lQS/A7vpIAOk6leatauhRrepB14nCNUTw+KgM60DVkVkw67yWyPe5jun1ZV6UKkN/qigskYw5eqno=
+	t=1717402006; cv=none; b=enB3jlLMeWa4STOg9D7yDkG74ymbZiH5IF6bKvGm2TRV0fYbMiEd61jI1KxLzOgkNNLpitj7lcEeird6si2cr8wPdYDEk69AlA1OCliDI/lOXwX182WOV0iisYsX4JRdfFLQbQw0k1O8t+VdYQSVlDQeTp0DtMYQCZrOGPH6lSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717401977; c=relaxed/simple;
-	bh=MIF84jAmIzDg4Wz6TnMTbmZnsvgXm/Bb1xUd8UhNtFo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jty/hQEF9YAPYRz6uqbcsLGediqVLs80UDaeZ/8njRYmPY8KUIt87bmF3fL0oXvGlICAy+3dHKgMsnECp0J8LwRy4ts6fzjIAai/1lIlaLMzNH0hnjxKQ7aN8M/Ih9hon/vmwaHwOKTJARyb2WEfipFeFBn5fzKw5VPeE+MbSWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FX5i62F8; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717402006; c=relaxed/simple;
+	bh=Tw661DcLrL32BiuFUViIhHCb+H0PLMasetFtQXJTuE0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ga9I1F8DxRAEgUGi2ngPQjR4ideL9i+XET/Z7R1i7YiF8MriStGlrWablNr07y0VbNuqWwAFwdA0gxyr2DQ+HT6S3zYU3rWOuAii7DpzKvYKVy7rmUq/i+CTiWstJlcODifeTmzX08FYXhwCrGehfH5y6mABIFhIYndmX+IhCoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ghEdjv20; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FX5i62F8"
-X-Envelope-To: vbabka@suse.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717401972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RzieQJ4BnZ2O+k2Yxxz/okFmp27lskeHqZjRJMv514E=;
-	b=FX5i62F8fKahV2di7nQq0WGf6YGLs0O3dOslRmI/ZZJUdPAXnv0U2qwRCaNzwIoGNu+ZAd
-	UeXA0Zrs/2oNq8IYXl5OEO6CwiyTPMfzKHZNYM8Np5dg8QLl0TzjUhlVkW+aUfNkG682Kv
-	eACi2gCe6KmweGHY9JCpbno0ZJzscWI=
-X-Envelope-To: cl@gentwo.org
-X-Envelope-To: penberg@kernel.org
-X-Envelope-To: rientjes@google.com
-X-Envelope-To: iamjoonsoo.kim@lge.com
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Envelope-To: 42.hyeyoo@gmail.com
-X-Envelope-To: feng.tang@intel.com
-X-Envelope-To: linux-mm@kvack.org
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: zhouchengming@bytedance.com
-Message-ID: <0df9277d-6f10-4af6-abd7-50a275489a72@linux.dev>
-Date: Mon, 3 Jun 2024 16:05:41 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghEdjv20"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7026ad046a2so501501b3a.2;
+        Mon, 03 Jun 2024 01:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717402004; x=1718006804; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7+YI0NLfFFhJ1Ir8e+Xv+54jNSfB0DM2jKBTzfdKYSc=;
+        b=ghEdjv20CO2EjShT5mNaXCyiQJ6rVavKCGfWRBW6DFci7PJTDMKE95NGROerlqg/Vk
+         d0W6LcttXlBgNbapQlLizhmumPn/O8buzf9kAeyLhyH/7Uk4Y6oPebPe+TCPuhv9XuLx
+         UZ8FYb2k3kzpDa52jX5It5CDPFIJjcUuHS+iZDeupm5CspDQC9RzN+yOTm9RVUKKUjb7
+         /RItVVpW1xweJoCUXzdOZ6EJ2tRcw7POmivqQW1CP6tb0eDiEyN4DkXnJ64lLaeDr3gb
+         qjti5s/EdHeZxV+Ssb+I1qtK95Z07O87c2BdKQW9DfmaeWt5NKq/0Yvzqb2gG8Izyzs0
+         Z5DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717402004; x=1718006804;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7+YI0NLfFFhJ1Ir8e+Xv+54jNSfB0DM2jKBTzfdKYSc=;
+        b=dyUTh0zLhB0dG8+HQOVhl5C/xuhFrAPXD/5wJLmlJHOtbRlPcBAjqlRY6veR9hcLZq
+         Fpk4Pi4Z+SA0EzjLi2OkHYeug5xnJMuoFrqBDmquhPrXERv6wFgfLsk6bPKTP59rMcRV
+         2Qq/z5qWs2G7Nn7E0yW5Wlx6ESb/m30+IgX6LZk1MYPZd/ztNLlSkIm98P8b7W/Kzpwa
+         v1AfuUBKvJ74nXQ3SNvJCoLL95TH0bySvGaBMQoU0M8JKsrtHgeiyTZdwTDUGmCdPNd8
+         8Aw+5urdciecclnuA25KKdIaqig8Cy1GOElnCiYesNtwbVumwY+Oh5wLhIH9TL0uMx+f
+         ZLPw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0M9AROeMQ2LDKG7hNRaDTA6Zc5fDctU5Xx1WaZFmf+4xJoDI2M8qvur2iMvZkKUY9h+uQzOSVI6EsxUVXLwPz3HPv99CJwP8G3jlx5BGlpItGFtMQjYtAiTCk3d5q8b6O/YZltKGyMX2q27U7IFvB0uIP9D4I0TPPPfq6tWPCyII13ofqMoR6pU5LN//eigNdX8xQ
+X-Gm-Message-State: AOJu0YwBo8MkDtsqgZGs5xdKa8vSEeyAIw80Du+plHi0ApmY+s09RuAs
+	u4aFnuy71St3/lUocXJSdEo5zaGCbsgFfStqnUKjGAb6Res7gaWK
+X-Google-Smtp-Source: AGHT+IFaSCiBLUqxuj94VGdEbKH32ndbrZ5lhrXNp1WeqlQIk5zQGJLCHuJbczmyaB3iwXX3V10u8g==
+X-Received: by 2002:a05:6a20:1585:b0:1b2:5674:2225 with SMTP id adf61e73a8af0-1b26f205176mr8935937637.28.1717402003835;
+        Mon, 03 Jun 2024 01:06:43 -0700 (PDT)
+Received: from localhost ([1.128.198.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dd824sm59986955ad.128.2024.06.03.01.06.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jun 2024 01:06:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] slab: check the return value of
- check_bytes_and_report()
-Content-Language: en-US
-To: Vlastimil Babka <vbabka@suse.cz>,
- "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, zhouchengming@bytedance.com
-References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev>
- <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
- <4e4d45b5-c684-2d93-49d2-b179a088c2d5@gentwo.org>
- <dc7181fc-5b16-46f1-a267-0eb5781f692a@linux.dev>
- <2ff52c5e-4b6b-4b3d-9047-f00967315d3e@suse.cz>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <2ff52c5e-4b6b-4b3d-9047-f00967315d3e@suse.cz>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Date: Mon, 03 Jun 2024 18:06:34 +1000
+Message-Id: <D1Q874JKY23A.3LB0GHUQQEEAW@gmail.com>
+Cc: <mpe@ellerman.id.au>, <christophe.leroy@csgroup.eu>,
+ <aneesh.kumar@kernel.org>, <naveen.n.rao@linux.ibm.com>, <corbet@lwn.net>,
+ <linuxppc-dev@lists.ozlabs.org>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH v1 RESEND] arch/powerpc/kvm: Fix doorbell emulation by
+ adding DPDES support
+From: "Nicholas Piggin" <npiggin@gmail.com>
+To: "Gautam Menghani" <gautam@linux.ibm.com>
+X-Mailer: aerc 0.17.0
+References: <20240522084949.123148-1-gautam@linux.ibm.com>
+ <D1Q54PY40E3B.22QS5DMQRA58N@gmail.com>
+ <r74chlv6bgs5csvuf4nxxtylmgartvibftp3xuztyfuynqetp5@ythddpzo6yfi>
+In-Reply-To: <r74chlv6bgs5csvuf4nxxtylmgartvibftp3xuztyfuynqetp5@ythddpzo6yfi>
 
-On 2024/6/3 15:46, Vlastimil Babka wrote:
-> On 5/31/24 10:31 AM, Chengming Zhou wrote:
->> On 2024/5/30 23:20, Christoph Lameter (Ampere) wrote:
->>> On Tue, 28 May 2024, Chengming Zhou wrote:
->>>
->>>> diff --git a/mm/slub.c b/mm/slub.c
->>>> index 0809760cf789..de57512734ac 100644
->>>> --- a/mm/slub.c
->>>> +++ b/mm/slub.c
->>>> @@ -1324,9 +1324,10 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
->>>>         }
->>>>     } else {
->>>>         if ((s->flags & SLAB_POISON) && s->object_size < s->inuse) {
->>>> -            check_bytes_and_report(s, slab, p, "Alignment padding",
->>>> +            if (!check_bytes_and_report(s, slab, p, "Alignment padding",
->>>>                 endobject, POISON_INUSE,
->>>> -                s->inuse - s->object_size);
->>>> +                s->inuse - s->object_size))
->>>> +                return 0;
->>>>         }
->>>>     }
->>>
->>> This change means we will then skip the rest of the checks in check_object() such as the poison check.
->>
->> Yeah, only when this padding checking failed.
->>
->> Now, we always abort checking and return 0 when the first checking error happens,
->> such as redzones checking above.
-> 
-> Yes your patch will make it consistent. But IMHO it would be better to do
-> all the checks without skipping, report their specific error findings in
-> check_bytes_and_report() but not print_trailer(). Once all checks were done,
-> if any found an error, print the trailer once from check_object(). Thoughts?
+On Mon Jun 3, 2024 at 5:09 PM AEST, Gautam Menghani wrote:
+> On Mon, Jun 03, 2024 at 03:42:22PM GMT, Nicholas Piggin wrote:
+> > On Wed May 22, 2024 at 6:49 PM AEST, Gautam Menghani wrote:
+> > > Doorbell emulation is broken for KVM on PowerVM guests as support for
+> > > DPDES was not added in the initial patch series. Due to this, a KVM o=
+n
+> > > PowerVM guest cannot be booted with the XICS interrupt controller as
+> > > doorbells are to be setup in the initial probe path when using XICS
+> > > (pSeries_smp_probe()). Add DPDES support in the host KVM code to fix
+> > > doorbell emulation.
+> >=20
+> > This is broken when the KVM guest has SMT > 1? Or is it broken for SMT=
+=3D1
+> > as well? Can you explain a bit more of what breaks if it's the latter?
+>
+> Yes, doorbells are only setup when we use SMT>1 and interrupt controller
+> is XICS. So without this patch, L2 KOP guest with XICS IC mode and SMT>1=
+=20
+> does not boot. SMT 1 is fine in all cases.
 
-Ok, it's feasible, will change to this.
+Okay good. Make that clear in the changelog, ideally if you can give
+a recipe the reader is able to recreate is good too, (e.g., run the
+guest machine with -smp 4,threads=3D4 and xive=3Doff boot parameter).
 
-> 
->> Thanks.
-> 
+> > > Fixes: 6ccbbc33f06a ("KVM: PPC: Add helper library for Guest State Bu=
+ffers")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > > ---
+> > > v1 -> v1 resend:
+> > > 1. Add the stable tag
+> > >
+> > >  Documentation/arch/powerpc/kvm-nested.rst     |  4 +++-
+> > >  arch/powerpc/include/asm/guest-state-buffer.h |  3 ++-
+> > >  arch/powerpc/include/asm/kvm_book3s.h         |  1 +
+> > >  arch/powerpc/kvm/book3s_hv.c                  | 14 +++++++++++++-
+> > >  arch/powerpc/kvm/book3s_hv_nestedv2.c         |  7 +++++++
+> > >  arch/powerpc/kvm/test-guest-state-buffer.c    |  2 +-
+> > >  6 files changed, 27 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/arch/powerpc/kvm-nested.rst b/Documentatio=
+n/arch/powerpc/kvm-nested.rst
+> > > index 630602a8aa00..5defd13cc6c1 100644
+> > > --- a/Documentation/arch/powerpc/kvm-nested.rst
+> > > +++ b/Documentation/arch/powerpc/kvm-nested.rst
+> > > @@ -546,7 +546,9 @@ table information.
+> > >  +--------+-------+----+--------+----------------------------------+
+> > >  | 0x1052 | 0x08  | RW |   T    | CTRL                             |
+> > >  +--------+-------+----+--------+----------------------------------+
+> > > -| 0x1053-|       |    |        | Reserved                         |
+> > > +| 0x1053 | 0x08  | RW |   T    | DPDES                            |
+> > > ++--------+-------+----+--------+----------------------------------+
+> > > +| 0x1054-|       |    |        | Reserved                         |
+> > >  | 0x1FFF |       |    |        |                                  |
+> > >  +--------+-------+----+--------+----------------------------------+
+> > >  | 0x2000 | 0x04  | RW |   T    | CR                               |
+> > > diff --git a/arch/powerpc/include/asm/guest-state-buffer.h b/arch/pow=
+erpc/include/asm/guest-state-buffer.h
+> > > index 808149f31576..d107abe1468f 100644
+> > > --- a/arch/powerpc/include/asm/guest-state-buffer.h
+> > > +++ b/arch/powerpc/include/asm/guest-state-buffer.h
+> > > @@ -81,6 +81,7 @@
+> > >  #define KVMPPC_GSID_HASHKEYR			0x1050
+> > >  #define KVMPPC_GSID_HASHPKEYR			0x1051
+> > >  #define KVMPPC_GSID_CTRL			0x1052
+> > > +#define KVMPPC_GSID_DPDES			0x1053
+> > > =20
+> > >  #define KVMPPC_GSID_CR				0x2000
+> > >  #define KVMPPC_GSID_PIDR			0x2001
+> > > @@ -110,7 +111,7 @@
+> > >  #define KVMPPC_GSE_META_COUNT (KVMPPC_GSE_META_END - KVMPPC_GSE_META=
+_START + 1)
+> > > =20
+> > >  #define KVMPPC_GSE_DW_REGS_START KVMPPC_GSID_GPR(0)
+> > > -#define KVMPPC_GSE_DW_REGS_END KVMPPC_GSID_CTRL
+> > > +#define KVMPPC_GSE_DW_REGS_END KVMPPC_GSID_DPDES
+> > >  #define KVMPPC_GSE_DW_REGS_COUNT \
+> > >  	(KVMPPC_GSE_DW_REGS_END - KVMPPC_GSE_DW_REGS_START + 1)
+> > > =20
+> > > diff --git a/arch/powerpc/include/asm/kvm_book3s.h b/arch/powerpc/inc=
+lude/asm/kvm_book3s.h
+> > > index 3e1e2a698c9e..10618622d7ef 100644
+> > > --- a/arch/powerpc/include/asm/kvm_book3s.h
+> > > +++ b/arch/powerpc/include/asm/kvm_book3s.h
+> > > @@ -594,6 +594,7 @@ static inline u##size kvmppc_get_##reg(struct kvm=
+_vcpu *vcpu)		\
+> > > =20
+> > > =20
+> > >  KVMPPC_BOOK3S_VCORE_ACCESSOR(vtb, 64, KVMPPC_GSID_VTB)
+> > > +KVMPPC_BOOK3S_VCORE_ACCESSOR(dpdes, 64, KVMPPC_GSID_DPDES)
+> > >  KVMPPC_BOOK3S_VCORE_ACCESSOR_GET(arch_compat, 32, KVMPPC_GSID_LOGICA=
+L_PVR)
+> > >  KVMPPC_BOOK3S_VCORE_ACCESSOR_GET(lpcr, 64, KVMPPC_GSID_LPCR)
+> > >  KVMPPC_BOOK3S_VCORE_ACCESSOR_SET(tb_offset, 64, KVMPPC_GSID_TB_OFFSE=
+T)
+> > > diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_h=
+v.c
+> > > index 35cb014a0c51..cf285e5153ba 100644
+> > > --- a/arch/powerpc/kvm/book3s_hv.c
+> > > +++ b/arch/powerpc/kvm/book3s_hv.c
+> > > @@ -4116,6 +4116,11 @@ static int kvmhv_vcpu_entry_nestedv2(struct kv=
+m_vcpu *vcpu, u64 time_limit,
+> > >  	int trap;
+> > >  	long rc;
+> > > =20
+> > > +	if (vcpu->arch.doorbell_request) {
+> > > +		vcpu->arch.doorbell_request =3D 0;
+> > > +		kvmppc_set_dpdes(vcpu, 1);
+> > > +	}
+> >=20
+> > This probably looks okay... hmm, is the v1 KVM emulating doorbells
+> > correctly for SMT L2 guests? I wonder if doorbell emulation isn't
+> > broken there too because the L1 code looks to be passing in vc->dpdes
+> > but all the POWER9 emulation code uses doorbell_request.
+> >=20
+>
+> Yes launching SMT L2 on V1 API fails with a kernel Oops, I'll see if I
+> can fix that as well.
+
+Okay then I didn't miss something. Thanks v1 fix would be good too.
+I think it should look something like putting doorbell_request into
+hv_guest_state->dpdes that make the H_ENTER_NESTED call with.
+
+For v1 you will need to restore the state back from dpdes back to
+doorbell_request on exit, because the L0 doesn't keep it for you.
+
+Thanks,
+Nick
