@@ -1,136 +1,115 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CD284A31;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9548F12BF32;
 	Mon,  3 Jun 2024 13:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419616; cv=none; b=DQi1Jb4+HpMWZXbZUid7YmjtCkIrsXbu7Xwi8mVy3jZvmR3V5GaJ2a05eLL7wQrgou4XGy1qaYCXEVYZ9b80ZwDoTSKOFdRY/KOBAWgcjXFr8TBNtqlFm7y8VQ4VBLgctzGTUFbgVIQL4wJ4kN7vT8wD8bLajaPpDGbM0iyLO8E=
+	t=1717419616; cv=none; b=EJgJ6fHenmvE1bR6iILfTFyvAqxAJs/weGVF3RjqoqoJMtOlOFNljj0Ins6DSPya+4xSM6Y0ZCA+yMHsgtTR4kPxcBUswphXqXQEmtEeX0mjpDDlUFMaGaqk1jrYHBCLu3oodYOmXMyVNIsAUZgVAMjx+sIlzvfuE0tIwsuWgkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717419616; c=relaxed/simple;
-	bh=4zakUcF0MFcOmck4ftv9hkRUFHgaYL5eZRBK1OfzTbI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=az1O3uiUoYX+vaQw0aXOchhoNvN1ktxfbdMV8clrqSHQ5IHpGFKPmPNTqOpydriEChTlQHi6z2LQVbNYA08HIouRORU9wBKOISauVQbW+RDAyw/+aZw04Imofqn1/SYgJqn0IaA8dOxP2bzUCpyl8jeSuJ2aayCNt/PpuuRqAAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VtDHk4bwHz1S8qP;
-	Mon,  3 Jun 2024 20:56:18 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9770814037B;
-	Mon,  3 Jun 2024 20:59:57 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Jun
- 2024 20:58:17 +0800
-From: Yu Kuai <yukuai3@huawei.com>
-To: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
-	<song@kernel.org>, <xni@redhat.com>, <mariusz.tkaczyk@linux.intel.com>,
-	<l@damenly.org>
-CC: <dm-devel@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-raid@vger.kernel.org>, <yukuai3@huawei.com>,
-	<yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 09/12] md: replace last_sync_action with new enum type
-Date: Mon, 3 Jun 2024 20:58:12 +0800
-Message-ID: <20240603125815.2199072-10-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240603125815.2199072-1-yukuai3@huawei.com>
-References: <20240603125815.2199072-1-yukuai3@huawei.com>
+	bh=k2wgTL18kuSKqyNl5dkcq1HYWU5kQFEoQcxxyP7yN6I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Mp6DusrHpeGzWtVGF9vp+t/WYCxBlTbCEma6j8+hwxjqUNVhJSYuY2NDxR4hneKT6EswXTbLs4QEhs9eXitjYwyHwbZDr7iZ7XdHaDZ6hdhNQiDBzPe4fzodzGV+cEF43+JFukG3wskbq1Qozo1G9F/S8X0h/Ckzbb0XZaOAzk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KJD2rqM3; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJD2rqM3"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f6342c5fa8so22089135ad.1;
+        Mon, 03 Jun 2024 06:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717419614; x=1718024414; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=H53in9T6bqMlipskp/q0AgS6bzBlQnqYSzHHwGRdlB8=;
+        b=KJD2rqM3G2SLpoM6VGFf/+EuKNU5+2plmx9QzHLyj4thpKntdh9hMD68Hbu142O5Pn
+         H5jzU/E40f9SDA0MgL469xL3YRRQ87AmN7W9+zVENAS/tS3Fb2BZigr/zuuVKl7mak0F
+         xLaV3BcDXkyIxAxXfm5zfOE0TTRScCLPGxGVtuAzrwEf6XlHwTXu1x493slKW+wgvwtv
+         z47nOFS0huwNF4cR5gklnd5ye6DT6iN++zxpXwv31B1k+I/EGY5ISlIlu7P+rntyRytE
+         1c3QWKzAfr93pY6EMKB6c9Cj2pGFcImwalneUsDYFqr8+lEgDTaZpZGqYzCv0vbdnsPQ
+         l4Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717419614; x=1718024414;
+        h=references:in-reply-to:message-id:date:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H53in9T6bqMlipskp/q0AgS6bzBlQnqYSzHHwGRdlB8=;
+        b=A8nJ4fJnXcmK3pz7oDE9hehLk79EEhm09Q6JrZNQTLJlTbIA8fcQKV5j5+yDSlRGd6
+         6XAITSyUHgwYWk8wawhqf2zSBoPTPiJL5YYEoUphoPXIq4FMsjDcETcEnKVpjMx3EkjS
+         OM5xMGLclKfNgnkAs9PteXT6GYxz+AzAdokMGa68rgvktachYEOMTCZy1ZyDjKAz/uzx
+         2BrBTSRhuNqeUmgmJUt0a17On7u6lUQiS9u4o3qgCP3CpRp8Q7N6mjEiYESSaA0V6R+5
+         FBUtaSr+GapJtNV/oOZwJdE7CiLSSF94cRu1VyVF8OWB2/asNz5gXr9hd7VJi8++d/nD
+         dbDA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeeBD2dbld8W5fm8/jxgFkAKjXvsIpZpx3Ykk6Lgh0Ctg2pHZrVCJeRosEhWsuc5IsbYBcF785agqm4jvp7a+J7gY/97LQ3HmI+LBDYFXB+r/wA8HomVwMK1ppRy633tukbDVD/1ajbvjFF4PkKGr19m0aZkhfMMaWAMjDAUOtnt3Axw==
+X-Gm-Message-State: AOJu0YzYUs5ApTRX5dgpWMTcLVRlYMLvAtaJE2LNsd5yKjiwM90BHBBR
+	TbQhi9dsjDfH0MJvlgWO2NUOCWIo/SF2KrR0T21EdKJ/JiQXPYy+
+X-Google-Smtp-Source: AGHT+IEuN+ni+k7sWZttBLUG3sRQkp0r0Le5gqTRQZF9jyJjmU1FWhgBWZslNT6ZKtaEwegZmN6ACA==
+X-Received: by 2002:a17:902:c781:b0:1f4:6ad9:39e1 with SMTP id d9443c01a7336-1f6370b1218mr68319365ad.54.1717419613692;
+        Mon, 03 Jun 2024 06:00:13 -0700 (PDT)
+Received: from localhost ([36.45.244.211])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f665929689sm31205285ad.151.2024.06.03.06.00.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Jun 2024 06:00:13 -0700 (PDT)
+From: joswang <joswang1221@gmail.com>
+To: Thinh.Nguyen@synopsys.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	balbi@kernel.org,
+	devicetree@vger.kernel.org,
+	joswang <joswang@lenovo.com>
+Subject: [PATCH v2, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
+Date: Mon,  3 Jun 2024 21:00:04 +0800
+Message-Id: <20240603130004.25662-1-joswang1221@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240601092646.52139-1-joswang1221@gmail.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600009.china.huawei.com (7.193.23.164)
 
-The only difference is that "none" is removed and initial
-last_sync_action will be idle.
+From: joswang <joswang@lenovo.com>
 
-On the one hand, this value is introduced by commit c4a395514516
-("MD: Remember the last sync operation that was performed"), and the
-usage described in commit message is not affected. On the other hand,
-last_sync_action is not used in mdadm or mdmon, and none of the tests
-that I can find.
+There is an issue with the DWC31 2.00a and earlier versions
+where the controller link power state transition from
+P3/P3CPM/P4 to P2 may take longer than expected, ultimately
+resulting in the hibernation D3 entering time exceeding the
+expected 10ms.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
+for enable the controller transitions directly from phy
+power state P2 to P3 or from state P3 to P2.
+
+Note that this can only be set if the USB3 PHY supports
+direct p3 to p2 or p2 to p3 conversion.
+
+Signed-off-by: joswang <joswang@lenovo.com>
 ---
- drivers/md/dm-raid.c | 2 +-
- drivers/md/md.c      | 7 ++++---
- drivers/md/md.h      | 9 ++++-----
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index abe88d1e6735..052c00c1eb15 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3542,7 +3542,7 @@ static void raid_status(struct dm_target *ti, status_type_t type,
- 		recovery = rs->md.recovery;
- 		state = decipher_sync_action(mddev, recovery);
- 		progress = rs_get_progress(rs, recovery, state, resync_max_sectors);
--		resync_mismatches = (mddev->last_sync_action && !strcasecmp(mddev->last_sync_action, "check")) ?
-+		resync_mismatches = mddev->last_sync_action == ACTION_CHECK ?
- 				    atomic64_read(&mddev->resync_mismatches) : 0;
+diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+index 1cd0ca90127d..721927495887 100644
+--- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+@@ -242,6 +242,13 @@ properties:
+       When set, all HighSpeed bus instances in park mode are disabled.
+     type: boolean
  
- 		/* HM FIXME: do we want another state char for raid0? It shows 'D'/'A'/'-' now */
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index e44016055b56..28977595b7ba 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -767,7 +767,7 @@ int mddev_init(struct mddev *mddev)
- 	init_waitqueue_head(&mddev->recovery_wait);
- 	mddev->reshape_position = MaxSector;
- 	mddev->reshape_backwards = 0;
--	mddev->last_sync_action = "none";
-+	mddev->last_sync_action = ACTION_IDLE;
- 	mddev->resync_min = 0;
- 	mddev->resync_max = MaxSector;
- 	mddev->level = LEVEL_NONE;
-@@ -5148,7 +5148,8 @@ __ATTR_PREALLOC(sync_action, S_IRUGO|S_IWUSR, action_show, action_store);
- static ssize_t
- last_sync_action_show(struct mddev *mddev, char *page)
- {
--	return sprintf(page, "%s\n", mddev->last_sync_action);
-+	return sprintf(page, "%s\n",
-+		       md_sync_action_name(mddev->last_sync_action));
- }
- 
- static struct md_sysfs_entry md_last_scan_mode = __ATTR_RO(last_sync_action);
-@@ -8968,7 +8969,7 @@ void md_do_sync(struct md_thread *thread)
- 
- 	action = md_sync_action(mddev);
- 	desc = md_sync_action_name(action);
--	mddev->last_sync_action = desc;
-+	mddev->last_sync_action = action;
- 
- 	/*
- 	 * Before starting a resync we must have set curr_resync to
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 614011651f79..296a78568fc4 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -426,13 +426,12 @@ struct mddev {
- 	struct md_thread __rcu		*thread;	/* management thread */
- 	struct md_thread __rcu		*sync_thread;	/* doing resync or reconstruct */
- 
--	/* 'last_sync_action' is initialized to "none".  It is set when a
--	 * sync operation (i.e "data-check", "requested-resync", "resync",
--	 * "recovery", or "reshape") is started.  It holds this value even
-+	/*
-+	 * Set when a sync operation is started. It holds this value even
- 	 * when the sync thread is "frozen" (interrupted) or "idle" (stopped
--	 * or finished).  It is overwritten when a new sync operation is begun.
-+	 * or finished). It is overwritten when a new sync operation is begun.
- 	 */
--	const char			*last_sync_action;
-+	enum sync_action		last_sync_action;
- 	sector_t			curr_resync;	/* last block scheduled */
- 	/* As resync requests can complete out of order, we cannot easily track
- 	 * how much resync has been completed.  So we occasionally pause until
++  snps,p2p3tranok-quirk:
++    description:
++      When set, the controller transitions directly from phy power state
++      P2 to P3 or from state P3 to P2. Note that this can only be set
++      if the USB3 PHY supports direct p3 to p2 or p2 to p3 conversion.
++    type: boolean
++
+   snps,dis_metastability_quirk:
+     description:
+       When set, disable metastability workaround. CAUTION! Use only if you are
 -- 
-2.39.2
+2.17.1
 
