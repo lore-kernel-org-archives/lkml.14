@@ -1,195 +1,194 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E1C2913
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717435852; cv=fail; b=qndNSGxfBFo5pYFKWU1Y5+NONbazCPlCx/J5u0Cfub5z4GxSPDJLPJtY+cGqwdaFxaKsdtogbffZHY5qmIb13BzIPuOsGdLcQ+JetRSAba5vdmGGOIoeFSyhOMTKK+LKTMusCBWVbV0bFiWZ09F5BwwuQ58g4lp5cNrV0tHQQ70=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717435852; c=relaxed/simple;
-	bh=lSEMEvqfj6TA8Z7AFN33vJd04hrpuean2xSsWzNk2Pk=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=G67nTBtruXX6adnyq5QR2OYihS7KSOUx9XdOXSTDhHYiN/fPcyZk2S1Dj1rEzXdGD0Ac2DKmR7PKeXuf98j1PzAA8WAZ0tYicLG/4dLJuUQxKymHAx88jYyMFv7rxpblGRSJEfmyEKXId7fxd+K9SdIyt02cFE9ScdU3niEhuy8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rLYv1Oj4; arc=fail smtp.client-ip=40.107.93.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6248F14294;
+	Mon,  3 Jun 2024 17:31:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717435866; cv=none; b=nYdrHoY3KTNS/7bOcD+C4jfM1bbFXGH5Ci1Xig8PBTRk8x6kJE+mbopQeZznjCx/aenIVxCugxLiyryZnLcOf/cQT25XhidbD10Yvz4P3PDYqvx0VDPhbeZllk00I5HqudBo61BnpZfgx88Xtkx5Fp5Bfwse44bBPUexTSzziy0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717435866; c=relaxed/simple;
+	bh=pwSV0zPCmCA2tn7dOrG5bx7PQ9nHY8IAveWJEcyA5FM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o3XdcLD85tGKCHMCuHhpZWaT0nKRMZrvlBMvXyHNOPzBAwRIoUbPWUqKViPRwPdDNPv2zAUd7B+qQGFameNO7MxinJXaRCSOCn11qAbTAoZc96GCNrRO8kP/XDwYBzwhfgJ3Lj5+MH32GMtxGlkro/tanKfcsa+JQM0hAgQTmk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PWST56TI; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rLYv1Oj4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dDpG8G+yL/T/NOv9JVnNo1/6+Bgn0oc9k46Wz1CVr0WSgvlQWlDLG8l3A5OdUuKq3E/XXMNHp5MNzyWjd/DcCdxeldXcUEUJI3zqpEZgbz3xazbIpmg6y14Yw8Joe/ZNW+SSlPvUPBZzjAEHHp+2jqGCYGKkUHv1fq7e7DQ9o/zKeDl2IP28FDeQjDPn6o9ebjJ7tlk+vEGVNJZbYh+H0Y088U+1+k8MwvJdaYw/O792+CNaVq+cBszLkabKpaMZELox3TIflW8Lzz/uX5Jh6qpkffDGCuN0m47fIIJ9JyqthCyAEHJO6Jouxj9a8BPjqsvFluPBSVinhtdjTbZBPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O3xn7fYNYS4Jtm6bZr51fqoA40jZaUxKzpyvaUfgYI0=;
- b=BtP875vPrKshJSpZvuvk9+w7uDPplT5cgHvRJ1UhDiwVmw5a5NUZErwhqeaFISFtbbPMUwg5n5JDASAvz31NjfSfh4qvJoc7o29mRltJdDnI+ys7niNNpRz8TMLRazTMou9++SxKMtbMYp57h/XnAtqHw6Wx9KJEjhiuPjzuqiwwivRKk89UCZ9vVyUrSUse+l0f0zRbQx2JuYZqvUQKKb//H+ZWR5WEGrwyq1pcSGRw7mk0rk3dAiJJEbBdGdUx7rpRxGcmUJj442emOGOwGSicZouwg/Phyc5oJg/ScCPC/DwLoNFWwzvo/pjFuCkltIFZTFS/eSMR18+EunTqPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O3xn7fYNYS4Jtm6bZr51fqoA40jZaUxKzpyvaUfgYI0=;
- b=rLYv1Oj495G5AtX46786DfEcWBHJs4AI1mfuR0Ijl0Vl548dE6+31lJkz/KkNhFcJnS5R/BpoQmLoT+8387WSpyrvOM364pRRdIieoj9DHien5lIM+1wmKjVWCueIkAKcEN7Hsb2JJNIRutvBqtUE1kqTuY0lIWe9Xg4QaTXtCiQTZ2QzBXIbGHlFIStEV/4iBy/AY+vfkCzV8eSSv21W/Z9VZbHnZI/UR584fDUUysLrlYkEGVNvmByDaECO0WumkGycDaZd0jhIVayG/PxjFVSHahX3VJTC42FV1tulZ6w3RcdFflfcA8D63D7s7RNfwHjo1jN0jpubHnxWDqBYg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by LV8PR12MB9153.namprd12.prod.outlook.com (2603:10b6:408:185::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Mon, 3 Jun
- 2024 17:30:47 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::c296:774b:a5fc:965e%4]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
- 17:30:46 +0000
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Lukas Wunner <lukas@wunner.de>,
-	patches@lists.linux.dev,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH] sysfs: Add stub sysfs_bin_attr_simple_read() for !CONFIG_SYSFS
-Date: Mon,  3 Jun 2024 14:30:45 -0300
-Message-ID: <0-v1-44baae71b833+ab-sysfs_simple_read_jgg@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: YT4PR01CA0473.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:d6::6) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWST56TI"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f48b825d8cso1749075ad.2;
+        Mon, 03 Jun 2024 10:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717435863; x=1718040663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BlqejD3GqjO+jh/6mutibFwYSOg/CEmaS2z9WmEzOgI=;
+        b=PWST56TIq4r8Q5gT2ot1cZHCH73wSVMLyrX/ch3Zkinqo7SDs3cN2sfBXb+xh4Okti
+         C0C6XzvY7kHDMLhZ06ngPiv2nVnbL5ARayvckC2oYefcnTdv/JR0iX5UJsemm7RDBBn6
+         elnFeWObvFHv4gxfVKdPTg//tR68OPmVaLMxDtUOIt+oYnK66AlL8BrOPsZqIgfTgW9n
+         EjY6i5qdDlVDjtxmMviwtCkxWGgdmdqbs03uXm+861+KmG3RsZ66QMVyjF3CGnLrG6Bb
+         TRcl0XFsspt1Wcz45mIk22rvtdDgwIO4Uxf8IMI+snYku/pf6Gz9FXkrNp3araLwYWsO
+         uV/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717435863; x=1718040663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BlqejD3GqjO+jh/6mutibFwYSOg/CEmaS2z9WmEzOgI=;
+        b=kVKHl0M/1VN8UhI54TzCO90uMJCnS3l8o5xXW56ndJ2b8QJPWS8BO/4faGFULBXzZi
+         EyUv06gqsQWhNIGC16snraTbjFVrwVTwwYHVhEuU3GWVZbR8P/221bfDuo3lqgxfFYHC
+         tf5ALxrcwqU3KSoQvdGnhZXk4KtKsSqBQwRYc+JuFLQ+CDphZV5Iic6oqfqlFa11JlSv
+         UCCP2Ym1MmlMsGfNKwEFlscjNfBiUDmcGylH5L+1XZ7kVcmlYkDSvhW8bVQ9wW45dOZk
+         z5VXpWw/JBZQSwWBsassvLR+zVdRogxAzY8N8ubYuwvHDZUZlMGAmQTFmqV8a1LeIveq
+         f6ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTIbLEA5MS1btZgSfPyeAwYDM5+uK+pirXVEhwSWdgyexnUMqgfY7XMQal+KF3DN11IU66t4JeyuiZ05cIAZozmLRiT5HFbVsAAvc6rKJFMw+JnADLj+ALW3bWIBffO8MCE9otW7GwAaV7n8irTrIC8olqWO9hSCEUV4kNE/NtG/UVyA==
+X-Gm-Message-State: AOJu0Yzq1q4P5Po4V/xIcadQCyJN+QNQ8hPOtyjaY+YICw9VYTyr6KSM
+	Sg4na8IDb3bBRBhjt3079Ci+WQVEL5vjOQkrKRqEE+2Zfdt8l4Q8
+X-Google-Smtp-Source: AGHT+IFuMod0eixSR8fmXTpn1C9vn/hUhfkZtnab8m1tGC1c71CU5vfPjYQlBFE59rUzGaq7KoRiRw==
+X-Received: by 2002:a17:902:ea02:b0:1f6:6a9c:895e with SMTP id d9443c01a7336-1f66a9c8c1bmr55707485ad.65.1717435863352;
+        Mon, 03 Jun 2024 10:31:03 -0700 (PDT)
+Received: from localhost.localdomain ([223.178.83.142])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1f632338ca4sm67272015ad.50.2024.06.03.10.30.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 10:31:02 -0700 (PDT)
+From: Kanak Shilledar <kanakshilledar@gmail.com>
+X-Google-Original-From: Kanak Shilledar <kanakshilledar111@protonmail.com>
+To: 
+Cc: Kanak Shilledar <kanakshilledar@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Kanak Shilledar <kanakshilledar111@protonmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [RESEND v3] dt-bindings: spi: brcm,bcm2835-spi: convert to dtschema
+Date: Mon,  3 Jun 2024 23:00:23 +0530
+Message-Id: <20240603173028.2787-1-kanakshilledar111@protonmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|LV8PR12MB9153:EE_
-X-MS-Office365-Filtering-Correlation-Id: d96bd659-69d1-4d94-8f4b-08dc83f2e771
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZGsGUgM5Dejs+kalWgLWVHKsOa1dkq41+TXF41CQPvsAn2CCrE5bv2Bw5JBC?=
- =?us-ascii?Q?D2eGkTIEIUrm3rxl3tGmTG7VOik6WqmSHS8tPDy7bOBnmlJE9WJ5UPdTRrR7?=
- =?us-ascii?Q?UsSaQiS75sT+HF37kJtFVvcOsu+9Jm3u3BVgZCNWr3gqTBT2nTyzVRuy9EtJ?=
- =?us-ascii?Q?DRQ/yQjAEk+zy1O4gnnOhP9JSNir3sb7CPpXt9CcW6yuAlKLRecd1up6EL/p?=
- =?us-ascii?Q?Ad6g4o45eXrvgd9JFhZj+6aG1Sqp73DJU2CEZz03Hyi6vnaR3rESeOJiVVyW?=
- =?us-ascii?Q?CBieH+lSBbqZYCM6VHnj110sJa5FQqUl6HDaVVKl6qvAh8cDYvDMTdLmUppN?=
- =?us-ascii?Q?YqrYX9X3Av1S2lXgflN7S0ozjUVrBg5cwYicQDtti+uQc4IKFRud3qaZzMtE?=
- =?us-ascii?Q?l48++wWavNEy6LHID5ORfBXv1LNFQWL1UaDWuW9P/SRrXveVRU1A8Ix+ZEzc?=
- =?us-ascii?Q?w7I7hbYSgMObXxSoCSPnuJ/5OD1apj1eOyKJwlJKHlO4seLc3QmXILdu8L+o?=
- =?us-ascii?Q?4jz0tL2dOpjnb9qqZCf92UvhP0XebKPr6/mQPG3qC26jeOjgYXL0/026TdU0?=
- =?us-ascii?Q?URhK6IbK+Qh28DrcstnBUfLPQqdS/TTLaXDkQuAxbF/MuPwwbUJ95sdw6Qo/?=
- =?us-ascii?Q?S78yqxrWA7D5yf5xocdaqo2//2id1XACUh4AvUfEMaf0EEnw/nhnijalj8ah?=
- =?us-ascii?Q?HSpu+jNL7BLbaaZzoW3898ZG5UKgB/Bk1Gg82aM847NUcpi+CqbONF5SS7v5?=
- =?us-ascii?Q?F4opDKOzhcbeZGElGxfkEuO2/Sd0xBCUzDLad0S9HZeivceeaqYx8s61ccf8?=
- =?us-ascii?Q?WUX4/NPepgLUiPU2/9pZog/nNCeftGB2HR/AYk6VaxZSXJXnX8J+LmzpAayH?=
- =?us-ascii?Q?Eu5P8DZXjpc5e6YmIcKtccTl2lBeuy9a+BsF6iyTRzUdhHsFUmazkBvkY1Jl?=
- =?us-ascii?Q?KhirLW3XegcztKQcsAqEccggxHPaIFWnzPpXou7bcMvm542ZkkM1P3Hwlh7M?=
- =?us-ascii?Q?7DiUXHrZHgFyMAfmkg6STAbbBORzfLfphrVRM5EafLzBGseCxfLGq6RCtt05?=
- =?us-ascii?Q?SqIlWF7qdmLXJt8KPj0H9hPJsJWXsoP+0ARheS7FPbwoI8jepEgokP6AO29F?=
- =?us-ascii?Q?b6AFHF8IZ7R8pS2xmFNHVW7ZpAxZgcv9xw+Y4okm+HqfIln/7bXhhovjd3aJ?=
- =?us-ascii?Q?+pYlelUITtr4OlSRrFVeCAYQjKSS0kGnIPxK20sXXDT4WdoNV2Fda8+9TzM9?=
- =?us-ascii?Q?KgXtMa6Ba2EAhAT127YpNEYWNurtYuVzFa9SZKmP7A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RIFn/ufITVfWoO7AeiPMWIMPIUI7hGml5+0i79CceikT2GypO0+fU+95Ioiz?=
- =?us-ascii?Q?3JLm7QxexdOlwTRPLhsdKe9yNMpXXKMhLY+cBNtWKspH0gFdFOLD/WI2gsVU?=
- =?us-ascii?Q?MaGb1crs72dmQNnFgZ+zMiW9e+pBQOltg5Siq55tvhzkWS3JATmCRBN9cJBt?=
- =?us-ascii?Q?3TYAG2VJY+zLKTsvL0W4leY3njnprpD6gGmUyW5LJMNRhmGmWhpYL1KXLbtc?=
- =?us-ascii?Q?IyEiOPdB8PIpohrGfk0NoqDN26jQOiweWXVXbALShjx8FXNRrXr+hdV+nHgh?=
- =?us-ascii?Q?e1UUkiNLsMOwJlgtn/wFhXLFscFxLO2nTaA7Je61yC/hr1CGumgXOrj1aiIs?=
- =?us-ascii?Q?wTWXENsuPeuVv13Buw/cfrLGPg/Yp95CGxbBPGTaafVoTRDSnVkwRVqBLaoz?=
- =?us-ascii?Q?kbH3FKnoT3hC6SIZeXnXfkeapbs73KogLYQVcl/LV2PGXXb5WeyPUvLIRv92?=
- =?us-ascii?Q?GV5abmN3N1c6uw+idAppfc0CxVT6TZE4KxsrTcD4NKY6/ACJj+ffyvOzJ/M8?=
- =?us-ascii?Q?tOiIRAaqS/o306DP9XcAKWKIOrs4Sw2Abo9WvjLiTUFfG0FQloev99Filnp4?=
- =?us-ascii?Q?xf/0hLIbALHm2dYrClA8wkTI7FnVpv425B8uRWfGQV08ZUKHy/TofxZDV2jN?=
- =?us-ascii?Q?AZ6aHRs0NlnHMUb+cGTBSrUJznptHgy8iHJvAxrdeF1nTadqqbG/xoUsMdA3?=
- =?us-ascii?Q?laHJkDVEQeRavX+O+uMNOKCmBGz0OeMN+RhV9EgZhGUjqGEsP6cOjPGp5zYm?=
- =?us-ascii?Q?ii7x0Q3wIFegoTwn25/81I+E8lKgSDNDyHytUxOWRXOpn1gKn6NQsInvezP4?=
- =?us-ascii?Q?6MLzgBY8nV8OsR9/7t/B8s3Yug8NVvzgyaOlBYBEqiHFrSJmcK758K1dGjnO?=
- =?us-ascii?Q?UUyVBI9HD6159YNSpgJe7pY69GMmZLKXIrBdZCe+Rb5/Eg7tHdGdQD1IDsE8?=
- =?us-ascii?Q?b+VNiiO70/6BYJOnE7BP13f011VEXUB4MfEvuxScUH5MQD91ops/1SaQ7SbK?=
- =?us-ascii?Q?JUw9EDOLcm4YwzOMzVKpkbU9ZApnMqHRWY4PQAr6Wws1ChwdJPpsqHs4aWVp?=
- =?us-ascii?Q?NQZWg9NETthEoA3OOvgi82ATtBFxNRPxhHiEsQGH6Ar3dxLzQLMy64xo9TKO?=
- =?us-ascii?Q?Ifs/fdzmw7zWiwSTDwoaofc5wj9oXZUPpG2Ucou4wi+Jjcr9FXndOEFPAN/e?=
- =?us-ascii?Q?pD3UFp2kYh7Kp7Jnht7f8AJKS/pq+SiNi4rLbrGm2cXsvbT9tTMXJ0pPIXjP?=
- =?us-ascii?Q?CkGYiWXDVxs1JNCWCYIBi3j4kzYdT4VBWu15ddM2A3RnssszW3j/VNu09448?=
- =?us-ascii?Q?yZ4T4ZN/qycDYw0ms7+WgRfi72+fEv8UzIUs0VdLR9voEz0MCTtIzH2xlPLT?=
- =?us-ascii?Q?SMODUEDQetvmbO4gEXEJr/RN47vYMsCQm7I109ZbEmWu2VFihelMdTFFm5fP?=
- =?us-ascii?Q?sOEr4ypbKaoNMUfB9g/vPUwSA81IZrrE+aQTQnBNDnDdNJB5HeHv67c+m3T8?=
- =?us-ascii?Q?Bsyuhnr49vDsK2KcFQv6DdQzFrYPP8J5UgRhceQIob4BPF4PK/3HWTMcQPGQ?=
- =?us-ascii?Q?LwjW2J0Wjs2+QY/Hwh1phrcNtwahJTHPLHfG88dB?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d96bd659-69d1-4d94-8f4b-08dc83f2e771
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 17:30:46.9067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5/xFeBFZgkf7HTK9TlV7EfzsIz0SClUbNtKjm6++SCUHsL+gCoytGGYYMEKjPTP8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9153
+Content-Transfer-Encoding: 8bit
 
-At least dmi_scan.c fails to compile:
+From: Kanak Shilledar <kanakshilledar@gmail.com>
 
-../drivers/firmware/dmi_scan.c:764:8: error: use of undeclared identifier 'sysfs_bin_attr_simple_read'
-  764 | static BIN_ATTR_SIMPLE_ADMIN_RO(smbios_entry_point);
-      |        ^
-../include/linux/sysfs.h:383:41: note: expanded from macro 'BIN_ATTR_SIMPLE_ADMIN_RO'
-  383 | struct bin_attribute bin_attr_##_name = __BIN_ATTR_SIMPLE_RO(_name, 0400)
-      |                                         ^
-../include/linux/sysfs.h:376:10: note: expanded from macro '__BIN_ATTR_SIMPLE_RO'
-  376 |         .read   = sysfs_bin_attr_simple_read,                           \
-      |                   ^
-../drivers/firmware/dmi_scan.c:765:8: error: use of undeclared identifier 'sysfs_bin_attr_simple_read'
-  765 | static BIN_ATTR_SIMPLE_ADMIN_RO(DMI);
-      |        ^
-../include/linux/sysfs.h:383:41: note: expanded from macro 'BIN_ATTR_SIMPLE_ADMIN_RO'
-  383 | struct bin_attribute bin_attr_##_name = __BIN_ATTR_SIMPLE_RO(_name, 0400)
-      |                                         ^
-../include/linux/sysfs.h:376:10: note: expanded from macro '__BIN_ATTR_SIMPLE_RO'
-  376 |         .read   = sysfs_bin_attr_simple_read,                           \
-      |                   ^
+Convert the Broadcom BCM2835 SPI0 controller to newer DT
+schema. Created DT schema based on the .txt file which had
+`comaptible`, `reg`, `interrupts`, `clocks` as required
+properties.
+Added GPL-2.0 OR BSD-2-Clause License
 
-Since the only declaration for sysfs_bin_attr_simple_read() is inside the
-"#ifdef CONFIG_SYSFS". Add a stub to the #else section too.
-
-Fixes: d48c03198a92 ("sysfs: Add sysfs_bin_attr_simple_read() helper")
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Kanak Shilledar <kanakshilledar111@protonmail.com>
 ---
- include/linux/sysfs.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes in v3:
+- Updated DCO email address
+Changes in v2:
+- Updated the maintainers
+---
+ .../bindings/spi/brcm,bcm2835-spi.txt         | 23 ---------
+ .../bindings/spi/brcm,bcm2835-spi.yaml        | 50 +++++++++++++++++++
+ 2 files changed, 50 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
 
-I don't see a patch for this yet, but I did find a 0-day robot complaint:
-
-https://lore.kernel.org/all/202404200345.eGdn5uxW-lkp@intel.com/
-
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index a7d725fbf73937..e672a927d650a3 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -750,6 +750,15 @@ static inline int sysfs_emit_at(char *buf, int at, const char *fmt, ...)
- {
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
+deleted file mode 100644
+index 3d55dd64b1be..000000000000
+--- a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Broadcom BCM2835 SPI0 controller
+-
+-The BCM2835 contains two forms of SPI master controller, one known simply as
+-SPI0, and the other known as the "Universal SPI Master"; part of the
+-auxiliary block. This binding applies to the SPI0 controller.
+-
+-Required properties:
+-- compatible: Should be one of "brcm,bcm2835-spi" for BCM2835/2836/2837 or
+-  "brcm,bcm2711-spi" for BCM2711 or "brcm,bcm7211-spi" for BCM7211.
+-- reg: Should contain register location and length.
+-- interrupts: Should contain interrupt.
+-- clocks: The clock feeding the SPI controller.
+-
+-Example:
+-
+-spi@20204000 {
+-	compatible = "brcm,bcm2835-spi";
+-	reg = <0x7e204000 0x1000>;
+-	interrupts = <2 22>;
+-	clocks = <&clk_spi>;
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-};
+diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
+new file mode 100644
+index 000000000000..94da68792194
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/brcm,bcm2835-spi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static inline ssize_t sysfs_bin_attr_simple_read(struct file *file,
-+						 struct kobject *kobj,
-+						 struct bin_attribute *attr,
-+						 char *buf, loff_t off,
-+						 size_t count)
-+{
-+	return -EINVAL;
-+}
- #endif /* CONFIG_SYSFS */
- 
- static inline int __must_check sysfs_create_file(struct kobject *kobj,
-
-base-commit: c58a77fe0ba1b708759338ad8bd3828b75a26035
++title: Broadcom BCM2835 SPI0 controller
++
++maintainers:
++  - Florian Fainelli <florian.fainelli@broadcom.com>
++  - Kanak Shilledar <kanakshilledar111@protonmail.com>
++  - Stefan Wahren <wahrenst@gmx.net>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - brcm,bcm2835-spi
++      - brcm,bcm2711-spi
++      - brcm,bcm7211-spi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    spi@20204000 {
++        compatible = "brcm,bcm2835-spi";
++        reg = <0x7e204000 0x1000>;
++        interrupts = <2 22>;
++        clocks = <&clk_spi>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
 -- 
-2.45.2
+2.34.1
 
