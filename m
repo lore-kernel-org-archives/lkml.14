@@ -1,139 +1,89 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DF7487BF;
-	Mon,  3 Jun 2024 08:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B6557880;
+	Mon,  3 Jun 2024 08:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717402431; cv=none; b=Es2dZBjQLmkabrEnIPRuuaZYKoDaykULPLgNqHN4LcfPFRMRsUHF+NXGJmqWT5UCgaqn0BZW5lqwyGFKWp6D5SmOgQ7wm9Eu4OSgPYhSudf8SNzwOS9OUqaW8VKnM4gvJBLodQq9MLtJ2GDhKwRoK5nOtrTlhhsI6+SbIB1XmCs=
+	t=1717402434; cv=none; b=tOJ70BLXPmc1RwaVXlqRpwZHjA/L4KaTF3tYSOJzH9XWAMbNtFWwkRg43kDwEi8AV4Etef6rnD1mNTsJ//01I4xf4Mujc+LkblR14MsIu8ZHyg0SvcJ3aHzfFCegdppVVDTPZG83BQsEdtKe22Q8tgUpSDqtUazjCm7esTbMnfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717402431; c=relaxed/simple;
-	bh=dw35w2HlX6uEnLlGNP7oEeKFfwVxxiVEbHS8HsSh6Pc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RLmtzltzhsC9yqBv6wiGonsf4liBWvELcdn/v2eh9IKa7GR3RdKSoWDSrtMIy8E0kSjDxNKZTgrKfw6v4v052i6Oz0SW9Wci/he1KRN0c1tqAiOdqh6Rba768TqQOMQl3FJBOsu38mZLOyqqYnLHTuRre6WKa/TBxJas6Qon1Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=k8EuRzzC; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="k8EuRzzC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=59CM1T4kNHLXN8iP2xZIPMYXtUjSOpZ37vbcWdKyQJY=; b=k8EuRzzCfKfASeTkUM2IU1ILOO
-	wJkGORLCBY5HaUOijcxWfp3qDWtOYt2ghO1T3T8m6SHBTf4uYr5NlTmkwQG1F/QCnZH4l8aiw4jPP
-	9Av/CfwaGZWtgawb95ZQt/1ExzH8/nCNWS4Z9AGRzpMQe4gvf7z/i6hqgp/PfZbtGcXStlSnU9EIE
-	VfikzYJdeyrQzEuuVz6X0HL/rfP1aFGjcyvpHOow3m/Xdk+MqpeL03AAUYWNKiIsUPexZ6RY5deUb
-	ybosb0beHgkpRMEIIGgU4EsSIt/Cmxp5Qk1tiImUk5AUp0ZnwzhaYKWAy96LRL/bVAkX8hTH0aqyT
-	ye9H7dLA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50452)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1sE2hz-0002PF-31;
-	Mon, 03 Jun 2024 09:06:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1sE2hy-0000Fn-FF; Mon, 03 Jun 2024 09:06:22 +0100
-Date: Mon, 3 Jun 2024 09:06:22 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"dqfext@gmail.com" <dqfext@gmail.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"daniel@makrotopia.org" <daniel@makrotopia.org>
-Subject: Re: [PATCH net-next v5 4/5] net: phy: mediatek: Extend 1G TX/RX link
- pulse time
-Message-ID: <Zl15fh7y2oZmFfd7@shell.armlinux.org.uk>
-References: <20240530034844.11176-1-SkyLake.Huang@mediatek.com>
- <20240530034844.11176-5-SkyLake.Huang@mediatek.com>
- <ZlhTtSHRVrjWO0KD@shell.armlinux.org.uk>
- <a6280b885cf1cffa845310e7e565e1dd7421dc66.camel@mediatek.com>
- <Zlik7TfUsOanlBMV@shell.armlinux.org.uk>
- <e25de8898d594d14ade148004fdddb1f2c5b47f7.camel@mediatek.com>
+	s=arc-20240116; t=1717402434; c=relaxed/simple;
+	bh=pc1bt4zAadgnjFsSe5/HFZnbWwMdyN9oYQuKMuUsAgk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IKUqb2kSe6Mw+n9VXTuRiTByZf9eAieXVVM2AJxU6RixvB5fYJWx/7HBlbx30CdSl9DfzzkZETNVwMBcXsqcuvop2L/2DRXxnVgnFG0Tj8uQUfPSprq3C8FoGfBTu8YFTgmFRVD8PA0pQQVqvOsqDDs/HrCOM/cdBGDzI56HtXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B3A81042;
+	Mon,  3 Jun 2024 01:14:16 -0700 (PDT)
+Received: from e125905.cambridge.arm.com (e125905.cambridge.arm.com [10.1.194.73])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B526F3F792;
+	Mon,  3 Jun 2024 01:13:50 -0700 (PDT)
+From: Beata Michalska <beata.michalska@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org,
+	len.brown@intel.com
+Cc: ionela.voinescu@arm.com,
+	vanshikonda@os.amperecomputing.com,
+	sumitg@nvidia.com
+Subject: [PATCH 0/1] cpufreq: Move arch_freq_get_on_cpu to cpuinfo_cur_freq
+Date: Mon,  3 Jun 2024 09:13:30 +0100
+Message-Id: <20240603081331.3829278-1-beata.michalska@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <e25de8898d594d14ade148004fdddb1f2c5b47f7.camel@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, Jun 03, 2024 at 03:15:36AM +0000, SkyLake Huang (黃啟澤) wrote:
-> On Thu, 2024-05-30 at 17:10 +0100, Russell King (Oracle) wrote:
-> >  	 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >  On Thu, May 30, 2024 at 04:01:08PM +0000, SkyLake Huang (黃啟澤) wrote:
-> > > I'm not going to handle timeout case here. If we can't detect
-> > > MTK_PHY_FINAL_SPEED_1000 in 1 second, let it go and we'll detect it
-> > > next round.
-> > 
-> > With this waiting up to one second for MTK_PHY_FINAL_SPEED_1000 to be
-> > set...
-> > 
-> > > > > +int mtk_gphy_cl22_read_status(struct phy_device *phydev)
-> > > > > +{
-> > > > > +int ret;
-> > > > > +
-> > > > > +ret = genphy_read_status(phydev);
-> > > > > +if (ret)
-> > > > > +return ret;
-> > > > > +
-> > > > > +if (phydev->autoneg == AUTONEG_ENABLE && !phydev-
-> > > > >autoneg_complete) {
-> > 
-> > Are you sure you want this condition like this? When the link is
-> > down,
-> > and 1G speeds are being advertised, it means that you'll call
-> > extend_an_new_lp_cnt_limit(). If MTK_PHY_FINAL_SPEED_1000 doesn't get
-> > set, that'll take one second each and every time we poll the PHY for
-> > its status - which will be done while holding phydev->lock.
-> > 
-> > This doesn't sound very good.
-> > 
-> > -- 
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-> 
-> I add another condition to make sure we enter
-> extend_an_new_lp_cnt_limit() only in first few seconds when we plug in
-> cable.
-> 
-> It will look like this:
-> ===============================================================
-> #define MTK_PHY_AUX_CTRL_AND_STATUS		0x14
-> #define   MTK_PHY_LP_DETECTED_MASK		GENMASK(7, 6)
-> 
-> if (phydev->autoneg == AUTONEG_ENABLE && !phydev->autoneg_complete) {
-> 	phy_select_page(phydev, MTK_PHY_PAGE_EXTENDED_1);
-> 	ret = __phy_read(phydev, MTK_PHY_AUX_CTRL_AND_STATUS);
-> 	phy_restore_page(phydev, MTK_PHY_PAGE_STANDARD, 0);
+Hi All,
 
-We provide a helper for this:
+The CPUFreq core exposes, via sysfs, number of attributes, with cpuinfo_cur_freq
+and scaling_cur_freq being one of those. The first one, cpuinfo_cur_freq is
+supposed to provide current frequency of a given CPU, with an expectation,
+that this one will be the one that hardware actually runs at. The second one,
+scaling_cur_freq, is likewise suppose to show current frequency,though this
+time, it might not actually reflect the frequency values as seen by the hardware,
+as it will, in most cases, provide the last frequency requested.
+For some architectures though, the scaling_cur_freq might be given higher
+precision, still with no guarantee to match the exact CPU frequency. 
+This though adds a bit of confusion as it deviates from the attribute's
+original meaning: last requested frequency.
+Currently the higher precision of the CPU frequency provided via scalin_cur_freq
+for x86 is being achieved by utilizing APERF/MPERF registers, based on values
+of which, an average frequency (over 20ms time-window) is being determined.
+With the added support for AMU-based FIE for ARM, similar functionality can be
+([1]) alike exposed through arch_freq_ge_on_cpu. So far so good.
+Things get slightly complicated/confusing though when attempting to advertise
+that via related CPUFreq sysfs attributes. Relying on hardware counters to
+determine the CPU frequency is, in fact, a hardware feedback and as such,
+intuitively, should be wired with cpuinfo_cur_freq, even despite the fact that
+both implementations (of arch_freq_ge_on_cpu) provide an average instead of
+an instant view on current frequency. For that to happen though,
+arch_freq_ge_on_cpu (and hw feedback for that matter) should be removed from
+scaling_cur_freg. Having both relying on arch_freq_ge_on_cpu is a no go, as
+there should be a way to distinguish current vs expected frequency.
+Now, as straightforward as that may seem, the change might cause some
+disruption for user-space tools that might be relying on scaling_cur_freq
+to provide that extra precision, one that APERF/MPERF bring. For those,
+scaling_cur_freq may retain its use of arch_freq_ge_on_cpu for cases when
+cpuinfo_cur_freq is not exposed.
+The change seems unavoidable though: this way or another.
+Any ideas on ow to handle it better are more than welcomed.
 
-	ret = phy_read_paged(phydev, MTK_PHY_PAGE_EXTENDED_1,
-			     MTK_PHY_AUX_CTRL_AND_STATUS);
+Related discussions:
+[1] https://lore.kernel.org/all/20240417093848.1555462-1-beata.michalska@arm.com/
+    (updated version on the way)
+[2] https://lore.kernel.org/all/ZIwx+4zVzgKGLcS3@e120325.cambridge.arm.com/
+[3] https://lore.kernel.org/all/20240520091853.tbxzoolqh5tgzg7t@vireshk-i7/
 
-but please check "ret" for errors.
+Beata Michalska (1):
+  cpufreq: Rewire arch specific feedback for cpuinfo/scaling_cur_freq
+
+ drivers/cpufreq/cpufreq.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.25.1
+
