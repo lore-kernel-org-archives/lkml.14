@@ -1,132 +1,114 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C93A28382
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85D0135A6F;
+	Mon,  3 Jun 2024 17:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717436393; cv=none; b=bFhncRxqGiPiC9IKhOJG5eoT926P/UwkHW2oMk6/7/zjOFvehE5Z0JtCxpHU7+WsGPtf3Z+y40hB9gM9+OcQeH6DgGP8BYwr/zPY/JALYOJGK5YhsHRT6oR9RN2vqn3axskl0mV04eAqKE7h9wjnfbAvQfhslCGZC2JECT0M81w=
+	t=1717436529; cv=none; b=X/EGjX+b327Mn/mXuqokKFf4+c+QXqKnBg5gBalxXbxlrUJaG/u5Q5ra4/HeCfX2QVnS8M/l7t2nkEmaR2lgybDS6+XjJoui1leFGnmL3bZ3tOoSyE/6t+chhgDD27wFzsj/0ZIufi0FQTl8Se2XJ0vrKMCRsu6/iy+jWoLWQUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717436393; c=relaxed/simple;
-	bh=3c3w005UvrCNKiI8kJ/KOZjDllrOuRvQ9VhKuduhfhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UGjobVIF+ejHqhFh0/c05wQjKziI0iG56cxcCofLK+bgIqiAv0O1H1NT6heGE789WD4Ny9DtzxRf2EjdJcLXLW6OMxhfVqVevlDllr1d5unjG0Zp3zwprmxu4yx8MgKm/pA97/+Z0g78e+Jv9ZR104wPzSxco5Wh3bnJLPhEQ5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=sh+oRTR1; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1717436529; c=relaxed/simple;
+	bh=FTMHYBDXrMSnzSW1m3RkobvbHdA+rKpO/+FvnIJ+Qt4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AWKO8JNzjQjmG6TvbQYOfJkB2LqKUDAp6S0OorJbYpcs6m1jdM+6jDRJPs8aKhUWsKTfT6ABWx5RblRFOq4Uo3HTNuFgiRIxvG8Um3xzrV7b+pJ8TgjwwkKIb+cDN+3pwbczL4uzj4GlL3FVxyK9NNT5yE1VzxJGzGbtH2kzWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PJrzINqc; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="sh+oRTR1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=w2SkQCALZUJGPkfKV2Y9xV9yqucWzBmwANClRi5Emqc=; b=sh+oRTR1y8u452VN
-	w99m3VW4s1WyARCaLvp4yYiB5q17GNYc82acCLjQ+5O78SW3WtgT5HX5JcRQiY/WT0LQ8Tn5mdByN
-	A0bqjNU+n7kJ48pTXrIosyszQdIBDuCH1g9sCJMRxC9txi1iOxQDe1hdlVPSLZTEmZJraec/ygFOY
-	pJmBBGkSSt44W9lvqzUeXfUSqaNGk20x2aFeVh3yxF/VbyJ9xcE1JkwU707qT3AyFFSjlgdx3dKY3
-	uvVGYBDu3UTWHgE7v5cOrcUEqNz4uOQc9GrrwEcF5WpbRuABD8SZiK1Usz9hG5eimP0uMjVv3fgac
-	qDPxLhxDjbkR8EMhoA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1sEBeu-00400i-38;
-	Mon, 03 Jun 2024 17:39:48 +0000
-Date: Mon, 3 Jun 2024 17:39:48 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: sudipm.mukherjee@gmail.com
-Cc: arnd@arndb.de, linux-kernel@vger.kernel.org,
-	linux-parport@lists.infradead.org
-Subject: Re: [PATCH 0/3] parport: Cleanup some pre-devmodel code
-Message-ID: <Zl3_5MzTNqIiXM_C@gallifrey>
-References: <20240502154823.67235-1-linux@treblig.org>
- <ZkXj9Ip3DoUAe1wt@gallifrey>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PJrzINqc"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 453HfsKw090374;
+	Mon, 3 Jun 2024 12:41:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1717436514;
+	bh=TRuU8G9/d6lkp3hInz5RWXba11O8+BAQ5y7S3nHRwEw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=PJrzINqcZ9Rdj/ryi7UrbPQqzzmZffuvavnkkk/PnSsSErwZfikiEhpuSmLlek7lq
+	 dBP8JRq4FoevchYIgWbcsnxJsyIE/qbSEztaHvDl6FwEWkls4hBlILYfoqtaiERt6Q
+	 H2rgG3+ORj5DUoQ1YfvMGQLKcSd9QFQ1hmwjYw3M=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 453HfsgA032152
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 3 Jun 2024 12:41:54 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 3
+ Jun 2024 12:41:54 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 3 Jun 2024 12:41:54 -0500
+Received: from [172.24.227.94] (uda0132425.dhcp.ti.com [172.24.227.94])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 453HfoOg069313;
+	Mon, 3 Jun 2024 12:41:51 -0500
+Message-ID: <4ac40139-eda0-4f6a-8bbe-99110605f91e@ti.com>
+Date: Mon, 3 Jun 2024 23:11:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ZkXj9Ip3DoUAe1wt@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 17:39:38 up 26 days,  4:53,  1 user,  load average: 0.00, 0.02, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] Add overlays to disable optional hardware in
+ k3-am6xx-phycore-som boards
+To: Nathan Morrisson <nmorrisson@phytec.com>, <nm@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>,
+        <w.egorov@phytec.de>
+References: <20240528225137.3629698-1-nmorrisson@phytec.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20240528225137.3629698-1-nmorrisson@phytec.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-* Dr. David Alan Gilbert (dave@treblig.org) wrote:
-> * linux@treblig.org (linux@treblig.org) wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > There are some remenants of the pre-devmodel code
-> > still in the parport drivers; try and clean some of them out.
+Hi Nathan,
+
+On 29/05/24 04:21, Nathan Morrisson wrote:
+> Add three overlays to disable the eth phy, rtc, and spi nor. These
+> overlays will be used to disable device tree nodes for components
+> that are optionally not populated.
 > 
-> Ping!
-
-Ping^2.
-
-Dave
-
-> Dave
+> v2:
+>   - Add build time tests in makefile
 > 
-> > This series should have no visible change, all the drivers
-> > already use the devmodel, it's just removing the flags
-> > that say that, and cleaning out no longer used function pointers.
-> > (To me the most useful bit is removing the no longer used
-> > 'attach' pointer, so if you've got code that's trying to use
-> > it you'll get educated).
-> > 
-> > Trivially tested in qemu, I can still write to the lp;
-> > 
-> > Also checked with grep -r 'struct parport_driver' . -A 9
-> > to see if I've missed any.
-> > 
-> > (I found this while dragging the out-of-tree ppscsi code
-> > into working on head, so that I could use my prehistoric
-> > HP PP scanner)
-> > 
-> > Dave
-> > 
-> > Dr. David Alan Gilbert (3):
-> >   parport: Remove 'drivers' list
-> >   parport: Remove attach function pointer
-> >   parport: Remove parport_driver.devmodel
-> > 
-> >  drivers/ata/pata_parport/pata_parport.c  | 1 -
-> >  drivers/auxdisplay/ks0108.c              | 1 -
-> >  drivers/auxdisplay/panel.c               | 1 -
-> >  drivers/char/lp.c                        | 1 -
-> >  drivers/char/ppdev.c                     | 1 -
-> >  drivers/i2c/busses/i2c-parport.c         | 1 -
-> >  drivers/input/joystick/db9.c             | 1 -
-> >  drivers/input/joystick/gamecon.c         | 1 -
-> >  drivers/input/joystick/turbografx.c      | 1 -
-> >  drivers/input/joystick/walkera0701.c     | 1 -
-> >  drivers/input/serio/parkbd.c             | 1 -
-> >  drivers/net/hamradio/baycom_epp.c        | 1 -
-> >  drivers/net/hamradio/baycom_par.c        | 1 -
-> >  drivers/net/plip/plip.c                  | 1 -
-> >  drivers/parport/daisy.c                  | 1 -
-> >  drivers/parport/share.c                  | 9 ---------
-> >  drivers/pps/clients/pps_parport.c        | 1 -
-> >  drivers/pps/generators/pps_gen_parport.c | 1 -
-> >  drivers/scsi/imm.c                       | 1 -
-> >  drivers/scsi/ppa.c                       | 1 -
-> >  drivers/spi/spi-butterfly.c              | 1 -
-> >  drivers/spi/spi-lm70llp.c                | 1 -
-> >  include/linux/parport.h                  | 6 ------
-> >  sound/drivers/mts64.c                    | 1 -
-> >  sound/drivers/portman2x4.c               | 1 -
-> >  25 files changed, 38 deletions(-)
-> > 
-> > -- 
-> > 2.44.0
-> > 
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
+> Nathan Morrisson (4):
+>   arm64: dts: ti: k3-am64-phycore-som: Add serial_flash label
+
+
+>   arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disable eth phy
+>   arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disable rtc
+>   arm64: dts: ti: k3-am6xx-phycore-som: Add overlay to disabl spi nor
 > 
+>  arch/arm64/boot/dts/ti/Makefile               | 17 +++++++++++++++++
+>  .../boot/dts/ti/k3-am64-phycore-som.dtsi      |  2 +-
+>  .../ti/k3-am6xx-phycore-disable-eth-phy.dtso  | 19 +++++++++++++++++++
+>  .../dts/ti/k3-am6xx-phycore-disable-rtc.dtso  | 15 +++++++++++++++
+>  .../ti/k3-am6xx-phycore-disable-spi-nor.dtso  | 15 +++++++++++++++
+>  5 files changed, 67 insertions(+), 1 deletion(-)
+
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-eth-phy.dtso
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-rtc.dtso
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am6xx-phycore-disable-spi-nor.dtso
+> 
+
+I am not sure if this a common practice to have overlays to disable
+missing components (at least I dont see such dtso in kernel). I would
+like to see an what DT maintainers feel as such dtsos can explode in
+numbers.
+
+Is this something that U-Boot can detect and fix up for the Linux DT?
+
+Unpopulated SPI flash and RTC should ideally not be an issue as drivers
+would gracefully fail albeit with some sort of error msg.
+Not so sure about Eth PHYs though.
+
+Also, Are these dtso's mutually exclusive? ie can SoM have SPI flash but
+not RTC, have RTC and SPI Flash but no ETH PHY?
+
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Regards
+Vignesh
