@@ -1,46 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937DF12EBCA;
-	Mon,  3 Jun 2024 17:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408E112E1F9;
+	Mon,  3 Jun 2024 17:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434747; cv=none; b=Sbfh71l1FnJRVWAbfftisAMqU/IwmX5j2Eh6rXqNETh4+tmKj0AfmBfqJmzPZKDt4xbwuEeRWOTQjsU6NtKys9JOqRSFyhL3USBz72yxWK4nz0GJKk8Xa3+PVhrS7y/e4CBebU9u28E0qkSK6IFSVZy7tu/IjWBef/HgEPTIrKw=
+	t=1717434747; cv=none; b=q+5Qz5jz6sAT9sMW+LU1AivG3/nNDJYf9de3b7jJIxR5YB0dmgo9DSCKtf+41nz8RY+17LZrC3osV7zDEByuHKZt8VX1XTQotrwY3bKAmOKhNf6r8s00d2uVTFzdz3C1uL9BV71UQYInIZhaUjy7xguVsyDlvkzqxll40tnHSyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717434747; c=relaxed/simple;
-	bh=xGBnNUWH9srg7zslSJ4u3LNZM6ut5igRLi7ZpFcBOdQ=;
+	bh=rbtH+DpYhqBMd0xLDXJmN7RirgQ6wnLGRMVHaZoyBt8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b0AqoYyPphpDbNkzhUXrG+cQsuI+YEUubhsnxh1PFWC2MAS7Yq71tAeLoPJkxzWj6b+wAJmgpBStb3WyZflM3IVBKveg1V09mbQ8Rn+d/dtqChrr/LH24xsatbs26IA0iy9eJeHrpYKcDpq0t40kRSG6XzLPlI3JsIcbtPOdh8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVO+OWWA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=i2fu9gnHjrB50ZABF1paHfxKsjU6/3IypSyEi2nSVIxqKQofKr17i7ExeJ0n3ebbb/a8Ffu92nb0UU2UNxCv9u5QlRMewSAwhze+6I7WODemrsNOwH7Ge2Uv5WcE5hUXd/kqjsG4VWCXVdH/ZgdMlh9JLnRN5UHMy3XngcdI7Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HzHULEMQ; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVO+OWWA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AC3C2BD10;
-	Mon,  3 Jun 2024 17:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717434747;
-	bh=xGBnNUWH9srg7zslSJ4u3LNZM6ut5igRLi7ZpFcBOdQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=WVO+OWWAePkyeNvAfYUV9ZkELsUY9hTIcLfeX6XjL51dYoG7c1aL8oS6sfsLtbm3+
-	 GxGu391wrK8JmYNorxgVD1ZNTqHipO9CuDk+dXZD/3x4dgWdI7n4kFU3chYb9ony06
-	 TOEkbq2M592PCX/tC/Z26WKdwHRgxBpvRKxdNFhD3IWtcrMxn/Uvv/sBOSFzr3u/j6
-	 Jch6+gPZz8CdkzrhuY8YDh0XTKo9amaSM96RhVCzjbEPorRuPyCGiZWWnCW5c8F6lb
-	 GrV4cF4vVo8g758FpKfyZR6JQLS21kUDtsJAfjCSWWdtuhbtC5kvKKmUhvCrbHzdVi
-	 +KDbmWbnnsn3g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id B98A3CE3B76; Mon,  3 Jun 2024 10:12:26 -0700 (PDT)
-Date: Mon, 3 Jun 2024 10:12:26 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Z qiang <qiang.zhang1211@gmail.com>
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org,
-	urezki@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcutorture: Skip debug object testing for cur_ops
- without ->debug_objects set
-Message-ID: <4a6d1e70-ec91-4b6d-8f69-290c4ef57b7f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240528030054.4525-1-qiang.zhang1211@gmail.com>
- <1195a9a3-db87-465d-a3b0-ee92d67da954@paulmck-laptop>
- <CALm+0cVZ7GQC+v4Xe7nArh0DHKeax+ok_tYsKaB=JtG-BVgUag@mail.gmail.com>
- <CALm+0cUQuZDb6nrng+CnOXNGyy6gUWNGq9VoreU98KNkyTw_CQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzHULEMQ"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-794ab01e747so8949185a.1;
+        Mon, 03 Jun 2024 10:12:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717434745; x=1718039545; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xowQVtG5FrDvjNgj7LbV6txQKMGt2SxrGC16ykxcKRw=;
+        b=HzHULEMQf7QqvnzkLcLLAgGbu/mBmi1Tho5Hhkw896d6Jmrr8IW9w01JGStFtXnN04
+         oTr5GelT9OtR8hW6uFfsMMR/gonjw42VQHGfHjoRitNYFhzz9ECNpQ0n6pYrdjGJYmR6
+         wQdEq8VYRoCooSr0/isdHKfPgP4J5gJ79hyMBIZCDF4hvDWIb29ZpsCf9AzJs/Fkl4hf
+         fy7vioXn06EpD/yFInaQ32LFb+mLF17fSIXIulQ+wzOmZcMahAuUUpyK2HbXuQnM/wiN
+         xb1h/Mg+Vh69quNxGHMkLvqSWKtfC4r35vtxgiZZSX/bkDSaga4/YVBJU7H2Ce+DqS/h
+         ttGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717434745; x=1718039545;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xowQVtG5FrDvjNgj7LbV6txQKMGt2SxrGC16ykxcKRw=;
+        b=XROeovn/HTZGgFGctQDtLxzj+vaHA6ZcsK9JWgM1ExhaOySh1yMKLVZyrAtWhJADeI
+         PgXskJyGEU+2tYlsZlaxHR099cbPlIlBGcfS5akrD2rkr4G1hRDCPUxGqO9v1U98CtPg
+         Bd0R9WhbdbHPlBhfh9snld1lSSqPK+mNpqSI8YHU/CIRXrtnoY9rwMpsTJS4vPOUq4uO
+         6HTc4Hp0q24HIT1HFdViZR1i84pH5QydN8y5yMueiHeZwyU8bQG76xPJLihzvwPU4/Pv
+         TraqTHBb0xvTWaFwzKkfkn8dTd3tRM3qOlsTSm7OhYANWYNAAagKiMDowGhgUE6yc+Uk
+         jMFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeabnqRFUo07INiKuww9jiI2UbUsedYaj8UyfwC/N1IdjWYtsryDFgowxBDtQNded1/UTs5ehTcyJhcGEW9dIXvCqhiitQnzWEkSdYIh7E6Yh5lPDjJvT1h/q/Ac6RGuajfL589Nw+lUVsupM=
+X-Gm-Message-State: AOJu0YxfZsSf1gg0LLFDR4hJuiw5PVvOP8HpJPKCevrT1U+plYkBnRVk
+	lWhegwdP3uimGAcAWjlMOMoVJDIpctIvtdyOKjY/Vnb1CcCB9KF6rEYYmQ==
+X-Google-Smtp-Source: AGHT+IG1+ImgQlShZJjOVinqc19ZW7tffsoXk/S/ELVIsV9v9S0BiFRQszbLq8XpL1zK1XQ8didDJQ==
+X-Received: by 2002:a05:620a:4691:b0:78e:c890:1aa9 with SMTP id af79cd13be357-794f5c97363mr1194128685a.39.1717434745113;
+        Mon, 03 Jun 2024 10:12:25 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff2593ba4sm40794651cf.90.2024.06.03.10.12.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 10:12:24 -0700 (PDT)
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id DC78E1200043;
+	Mon,  3 Jun 2024 13:12:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Mon, 03 Jun 2024 13:12:23 -0400
+X-ME-Sender: <xms:d_ldZu-pV7_Pvupb69iz5JKxoz354vxmfK5THE5C7DFvk1j7K4ctrg>
+    <xme:d_ldZuswSm17kqi6ADV-Jnq_2IERMhLmD15C4Cdb0jNENJTTolq3_yjHyH-s3ZAg3
+    ZsHNuDBRd9paEI-oA>
+X-ME-Received: <xmr:d_ldZkBOjgqOhxKuETdhi_dfohwyf-vePb0boAxnAOxNwfzJXTBbJ2QxWf38ZA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelvddguddtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepgfelfeetleeivdeigfektddvhefhjeevfeeujeelleejgedtvdfggfff
+    jefftdevnecuffhomhgrihhnpehnohguvgdrrghspdhruhhsthdqlhgrnhhgrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgv
+X-ME-Proxy: <xmx:d_ldZmc9yED-qrYV6w3qJyFagxFhvrH7Vr466_PKVFMTWrSEHinVWA>
+    <xmx:d_ldZjNzpKX9S1a4k8H6hOZ4f7GpiLdbxGQGKkcODx2SR2VMnRNyJw>
+    <xmx:d_ldZgl7bzS34JlitWJRMef1cnQK8Jz91q2kXu3RWMelAVTw0I_B7w>
+    <xmx:d_ldZlsK6yg7Q0vmGOfdklzI5O68Y7AKchREJk73SjVsHv1T0QdhVg>
+    <xmx:d_ldZpv39RV6RJcBadnjxSr5fkCoeCeUBeMYYcSqKjLh69HvaiHDJtwy>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 3 Jun 2024 13:12:23 -0400 (EDT)
+Date: Mon, 3 Jun 2024 10:11:25 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Matt Gilbride <mattgilbride@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Rob Landley <rob@landley.net>, Davidlohr Bueso <dave@stgolabs.net>,
+	Michel Lespinasse <michel@lespinasse.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] rust: rbtree: add red-black tree implementation
+ backed by the C version
+Message-ID: <Zl35PQ8LAdw67xaS@boqun-archlinux>
+References: <20240603-b4-rbtree-v4-0-308e43d6abfc@google.com>
+ <20240603-b4-rbtree-v4-2-308e43d6abfc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,87 +113,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALm+0cUQuZDb6nrng+CnOXNGyy6gUWNGq9VoreU98KNkyTw_CQ@mail.gmail.com>
+In-Reply-To: <20240603-b4-rbtree-v4-2-308e43d6abfc@google.com>
 
-On Mon, Jun 03, 2024 at 12:55:30PM +0800, Z qiang wrote:
-> >
-> > >
-> > > On Tue, May 28, 2024 at 11:00:54AM +0800, Zqiang wrote:
-> > > > This commit make rcu_test_debug_objects() early return when the
-> > > > specified cur_ops not set the ->debug_objects.
-> > > >
-> > > > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> > > > ---
-> > > >  kernel/rcu/rcutorture.c | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > > > index 08bf7c669dd3..9b8c277ab91a 100644
-> > > > --- a/kernel/rcu/rcutorture.c
-> > > > +++ b/kernel/rcu/rcutorture.c
-> > > > @@ -3495,8 +3495,9 @@ static void rcu_test_debug_objects(void)
-> > > >               return;
-> > > >       }
-> > > >
-> > > > -     if (WARN_ON_ONCE(cur_ops->debug_objects &&
-> > > > -                     (!cur_ops->call || !cur_ops->cb_barrier)))
-> > > > +     if (!cur_ops->debug_objects ||
-> > > > +                     WARN_ON_ONCE(cur_ops->debug_objects &&
-> > >
-> > > You lost me here.  Given that we have "!cur_ops->debug_objects" before
-> > > that WARN_ON_ONCE(), why do we need "cur_ops->debug_objects" inside of it?
-> > >
-> > > Also, we don't get here unless the rcutorture.object_debug kernel boot
-> > > parameter is specified, don't we really want to WARN_ON_ONCE if the
-> > > current flavor does not support that?
+On Mon, Jun 03, 2024 at 04:05:17PM +0000, Matt Gilbride wrote:
+[...]
+> +/// A memory reservation for a red-black tree node.
+> +///
+> +///
+> +/// It contains the memory needed to hold a node that can be inserted into a red-black tree. One
+> +/// can be obtained by directly allocating it ([`RBTreeNodeReservation::new`]).
+> +pub struct RBTreeNodeReservation<K, V> {
+> +    node: Box<MaybeUninit<Node<K, V>>>,
+> +}
+> +
+> +impl<K, V> RBTreeNodeReservation<K, V> {
+> +    /// Allocates memory for a node to be eventually initialised and inserted into the tree via a
+> +    /// call to [`RBTree::insert`].
+> +    pub fn new(flags: Flags) -> Result<RBTreeNodeReservation<K, V>> {
+> +        Ok(RBTreeNodeReservation {
+> +            node: Box::new_uninit(flags)?,
+> +        })
+> +    }
+> +}
+> +
+> +// SAFETY: This doesn't actually contain K or V, and is just a memory allocation. Those can always
+> +// be moved across threads.
+> +unsafe impl<K, V> Send for RBTreeNodeReservation<K, V> {}
+> +
+> +// SAFETY: This doesn't actually contain K or V, and is just a memory allocation.
+> +unsafe impl<K, V> Sync for RBTreeNodeReservation<K, V> {}
+> +
+> +impl<K, V> RBTreeNodeReservation<K, V> {
+> +    /// Initialises a node reservation.
+> +    ///
+> +    /// It then becomes an [`RBTreeNode`] that can be inserted into a tree.
+> +    pub fn into_node(mut self, key: K, value: V) -> RBTreeNode<K, V> {
+> +        let node_ptr = self.node.as_mut_ptr();
+> +        // SAFETY: `node_ptr` is a valid pointer to a tree node.
+> +        unsafe {
+> +            node_ptr.write(Node {
+> +                key,
+> +                value,
+> +                links: bindings::rb_node::default(),
+> +            })
+> +        }
+> +        RBTreeNode {
+> +            // SAFETY: The pointer came from a `MaybeUninit<Node>` whose fields have all been
+> +            // initialised. Additionally, it has the same layout as `Node`.
+> +            node: unsafe { Box::<MaybeUninit<_>>::assume_init(self.node) },
+> +        }
+
+nit: could you use Box::write()[1] here? It saves two `unsafe` blocks.
+
+[1]: https://doc.rust-lang.org/std/boxed/struct.Box.html#method.write 
+
+Regards,
+Boqun
+
+> +    }
+> +}
+> +
+> +/// A red-black tree node.
+> +///
+> +/// The node is fully initialised (with key and value) and can be inserted into a tree without any
+> +/// extra allocations or failure paths.
+> +pub struct RBTreeNode<K, V> {
+> +    node: Box<Node<K, V>>,
+> +}
+> +
+> +impl<K, V> RBTreeNode<K, V> {
+> +    /// Allocates and initialises a node that can be inserted into the tree via
+> +    /// [`RBTree::insert`].
+> +    pub fn new(key: K, value: V, flags: Flags) -> Result<RBTreeNode<K, V>> {
+> +        Ok(RBTreeNodeReservation::new(flags)?.into_node(key, value))
+> +    }
+> +}
+> +
+> +// SAFETY: If K and V can be sent across threads, then it's also okay to send [`RBTreeNode`] across
+> +// threads.
+> +unsafe impl<K: Send, V: Send> Send for RBTreeNode<K, V> {}
+> +
+> +// SAFETY: If K and V can be accessed without synchronization, then it's also okay to access
+> +// [`RBTreeNode`] without synchronization.
+> +unsafe impl<K: Sync, V: Sync> Sync for RBTreeNode<K, V> {}
+> +
+> +struct Node<K, V> {
+> +    links: bindings::rb_node,
+> +    key: K,
+> +    value: V,
+> +}
 > 
-> Maybe I didn't describe it clearly enough, this
-> modification is mainly to filter out test types that do not support
-> double call_rcu*() checking, for example tasks, tasks-rudes,
->  task-tracing  ;) .
-
-Understood.
-
-It is just that in my experience, it is a good thing for rcutorture to
-splat when asked to do something that it cannot do.  Or do you have a
-use case where this is problematic?
-
-I don't count the fuzzers because they are supposed to avoid specifying
-things that are supposed to fail.  ;-)
-
-							Thanx, Paul
-
-> Thanks
-> Zqiang
+> -- 
+> 2.45.1.288.g0e0cd299f1-goog
 > 
-> >
-> > Hi, Paul
-> >
-> > The rcutorture.object_debug is set true, but the tasks-tracing does not support
-> > duplicate cur_ops->call check, but the debug_objects test was still done.
-> >
-> > insmod rcutorture.ko torture_type=tasks-tracing fwd_progress=4
-> > n_barrier_cbs=4 object_debug=1
-> >
-> > [  106.082416] rcutorture: WARN: Duplicate call_tasks-tracing() test starting.
-> > [  106.082533] tasks-tracing-torture: rcu_torture_read_exit: Start of test
-> > [  106.082543] tasks-tracing-torture: rcu_torture_read_exit: Start of episode
-> > [  106.105552] rcutorture: duplicated callback was invoked.
-> > [  106.105567] rcutorture: duplicated callback was invoked.
-> > [  106.111269] rcutorture: WARN: Duplicate call_tasks-tracing() test complete.
-> >
-> > Thanks
-> > Zqiang
-> >
-> > >
-> > > Or do you have a use case that needs to silence these warnings?
-> > >
-> > >                                                         Thanx, Paul
-> > >
-> > > > +                             (!cur_ops->call || !cur_ops->cb_barrier)))
-> > > >               return;
-> > > >
-> > > >       struct rcu_head *rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
-> > > > --
-> > > > 2.17.1
-> > > >
