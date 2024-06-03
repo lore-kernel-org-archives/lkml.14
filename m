@@ -1,70 +1,43 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA0412BF3A;
-	Mon,  3 Jun 2024 13:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D46D12DD9D
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717422063; cv=none; b=ln5cSgqRLHsc3NaJvEtdNxQfzpmHKKN5mAPFeQA/4QFAsJ67k3QGjO1v82r7mnUQDwm9xndlOe3jO28uL51BVp7qHXr4/gcJSmIQKZrfBXlRE9STe5/Z915JeyyHVWJ0mAf9Fjl8dGPYwoC8JUfjEWdWGlEAvpvFiMeTE3M4PG4=
+	t=1717422064; cv=none; b=rBPjtojrPeR0C++IH6111awJ44Wva8T3Y28wFF2BPWbtfiIP6kauF6myFxPYiNpKxBhj47G/hTW9N7FIvselcBWwe8eLMoWKcX2wVlsM8G6COF9zav9Zql3aunbL0oePsBLIvkYmcNTqHMtzGlvZkJlBbIuW/xOb7BYPYSrV83w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717422063; c=relaxed/simple;
-	bh=CNclYiuhtxn52z+HLZMDRgEiJTcrTNaDA8O1iQjku2w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z855HivDY5GiJDlUVc/OLL1npVvGHcgHniAJ9O+AeufUHe2mGtemj4Ur7ig1kmq3g9ZIzNSU97fu2tgH8osE/K0ztXSguBXaBOq02r6hVg3/AZjqQgDejdA6TsKXN0TTNvXeOpBYlVsRSjJwoo5lvgt5/hpHeMe/F6cBwSKtwp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKMlBeed; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717422064; c=relaxed/simple;
+	bh=Up225fPrblCk8vyakWXB0/yPHz5gAz1M47n4JUzhfjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gQ539ipfR961aBI1AEZtYAj4mPg15aGXRw8GVeo3imaGoA5x15yPUM0/e0yenV9Bw4j3E0TaNmsGeak6wOFjjwYR+Vh0Rj52aI7qWf3QTm3VfExaGdP2s92qiDx7ilFhoQ27BmGDyCtvMvtAP5/InQNS8lU+r8C26R5y2jbrc0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6mfXiT4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKMlBeed"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4213be171f7so9006085e9.1;
-        Mon, 03 Jun 2024 06:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717422060; x=1718026860; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ob+4f7qH6Vg5/G2utXpY3kVJwPOBg1pDjvHb44/3ang=;
-        b=kKMlBeed4ASpDMcJC9Y5PqMYytW0Yi1tuc6c0jlL7N+jebxgaF6fUf+iDMSRogoJJ0
-         xWI6s+/XLhid018vqD1pbagJNkhPHltAIUkJdFD6hg3676MxoI11+kiCafrgfvIxm3Ci
-         OQLTuQ/tFn65Iq0f8By1caesjl7RB98pFSKU4tkmAOvcwviVdO/Q/xfRONC392Yt1Hm+
-         ZhK1PHc2ZUGwwaAra3KfMB/1be/ceZdZywYNat3D3XeC5TiSIl1zy1HYZQe+5nKUtIev
-         clKQMC1pvANs25z0DQ/Upnq01JRcuuNJRIGCsmSUr4kO0yElUeB67cmzKd2dUwkxIVp/
-         q09g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717422060; x=1718026860;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ob+4f7qH6Vg5/G2utXpY3kVJwPOBg1pDjvHb44/3ang=;
-        b=aPmjiboDSd5yhm3xTPmKsHYvuQ/7NyIksf/uK5LiqMFpIhEKCf7nusBDZDEzPWaMqT
-         1CMZrMt+/h0OxuwL8MgiQuX3uazhb9BKywXTdstwl9rI/VmfvQQiPdyRm9jQzoVLC/XR
-         DRUVXutFTuPkRPr81LknpMDs3t3Ek5sNzk6rVJKxlBJFZXfjyLS3H1hmHbI/bMU1lMYO
-         LWxYppTi7Jj7Fmu8zg2viReVOpQUawmifk46iCgGdp4Ez1u9YBnR1WnxeDqOBcdXF4cF
-         hqKiEkgrerLl+qfJfoVUe57xSZzvD1fguY7TeaYNEu4smhpuwDOOJauYXN6HLH4oYaE+
-         awKA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJRbnk9hDR09XjjdbgML8qGcTDL+rf6wwrXHSScO6nZtJ2+eeJ0tjVji/u6wdS2BLtqo6y04vVIwSgVyvSQHOEEZW1kFuXgkDg4lIftD7FQKUbAH86iFAqVdrs89159atko7y6kVHSG+uYGoOTJWRlRrvcvkFST+qZf0pSsjGRx2s8mQ==
-X-Gm-Message-State: AOJu0YxtR4RLSWmQhZT/p99KP9VqIQ4u1D56xLxlEtLBD0eMM3x72HuA
-	Vkw1Yub/PoPNt5ggJ6w/RVkk0dBUiKSx7kjp0STyEMXgC/VCsBh/
-X-Google-Smtp-Source: AGHT+IHM+3rQ8itjEyUlUaHm/XCOUbXppbJ7L9q7d2TX7lh0T9HgF+HLQgadrxRd5FQkWwyk/907bw==
-X-Received: by 2002:a05:600c:3595:b0:41f:fca0:8c09 with SMTP id 5b1f17b1804b1-4212e0bddf6mr65554685e9.40.1717422059985;
-        Mon, 03 Jun 2024 06:40:59 -0700 (PDT)
-Received: from localhost.localdomain ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e5e3d1902sm1868361f8f.32.2024.06.03.06.40.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 06:40:59 -0700 (PDT)
-From: Mudit Sharma <muditsharma.info@gmail.com>
-To: ivan.orlov0322@gmail.com,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	robh@kernel.org
-Cc: Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: iio: light: ROHM BH1745
-Date: Mon,  3 Jun 2024 14:40:13 +0100
-Message-ID: <20240603134015.70388-1-muditsharma.info@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6mfXiT4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EA5C2BD10;
+	Mon,  3 Jun 2024 13:41:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717422063;
+	bh=Up225fPrblCk8vyakWXB0/yPHz5gAz1M47n4JUzhfjk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=h6mfXiT4Wx8nQ/F3zZbIjuPJn7F0/oQ0WKqJ3/5tgr4AwAa/PWsGpOpy75Wr5vGus
+	 2yilPSnU3BcK0GbHpTa6tTz/MJIflbzNCGkixAoczqN11vcB2qNDV4Bzue+vs3M42J
+	 TfmqPQrR3Qs47NBFTWy8a1XG+LQZNmCdYgKoOqkk3IcUBAM1ENo3APBrnXZIBlhrzE
+	 pS6WCPJcxTBDvObJTiQmxAmYvBpCWRi4aTShELTy3+JaKwo6VbE99VM+1la7kqwWwX
+	 gre9endQ1POpewU+qIqg3VP3oVOrxBL9jvPA2RWk5Zb9plhqzpicUxbSmU4UJOgj+a
+	 lyO67RfnXfiog==
+From: Michael Walle <mwalle@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] mtd: spi-nor: simplify spi_nor_get_flash_info()
+Date: Mon,  3 Jun 2024 15:40:55 +0200
+Message-Id: <20240603134055.1859863-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,69 +46,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add ROHM BH1745 - 4 channel I2C colour sensor's dt-bindings.
+Rework spi_nor_get_flash_info() to make it look more straight forward
+and esp. don't return early. The latter is a preparation to check for
+deprecated flashes.
 
-Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
+Signed-off-by: Michael Walle <mwalle@kernel.org>
 ---
- .../bindings/iio/light/rohm,bh1745.yaml       | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
+v3:
+ - rework the handling quite a bit, thanks Tudor.
+ - drop the spurious comment about the partitions, it goes way back
+   until the initial support. I don't think it's accurate anymore.
+   If the flash has the same size, the partitions can be trusted. If
+   not, anything can happen.. We don't know.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-new file mode 100644
-index 000000000000..b6abfbf609cb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/rohm,bh1745.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+v2/v1:
+ - none, this is a remaining patch of my spring cleanup series.
+
+ drivers/mtd/spi-nor/core.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+index 7128d45870d4..e0c4efc424f4 100644
+--- a/drivers/mtd/spi-nor/core.c
++++ b/drivers/mtd/spi-nor/core.c
+@@ -3298,32 +3298,28 @@ static const struct flash_info *spi_nor_get_flash_info(struct spi_nor *nor,
+ 
+ 	if (name)
+ 		info = spi_nor_match_name(nor, name);
+-	/* Try to auto-detect if chip name wasn't specified or not found */
+-	if (!info)
+-		return spi_nor_detect(nor);
+-
+ 	/*
+-	 * If caller has specified name of flash model that can normally be
+-	 * detected using JEDEC, let's verify it.
++	 * Auto-detect if chip name wasn't specified or not found, or the chip
++	 * has an ID. If the chip supposedly has an ID, we also do an
++	 * auto-detection to compare it later.
+ 	 */
+-	if (name && info->id) {
++	if (!info || info->id) {
+ 		const struct flash_info *jinfo;
+ 
+ 		jinfo = spi_nor_detect(nor);
+-		if (IS_ERR(jinfo)) {
++		if (IS_ERR(jinfo))
+ 			return jinfo;
+-		} else if (jinfo != info) {
+-			/*
+-			 * JEDEC knows better, so overwrite platform ID. We
+-			 * can't trust partitions any longer, but we'll let
+-			 * mtd apply them anyway, since some partitions may be
+-			 * marked read-only, and we don't want to loose that
+-			 * information, even if it's not 100% accurate.
+-			 */
 +
-+title: ROHM BH1745 colour sensor
++		/*
++		 * If caller has specified name of flash model that can normally
++		 * be detected using JEDEC, let's verify it.
++		 */
++		if (info && jinfo != info)
+ 			dev_warn(nor->dev, "found %s, expected %s\n",
+ 				 jinfo->name, info->name);
+-			info = jinfo;
+-		}
 +
-+maintainers:
-+  Mudit Sharma <muditsharma.info@gmail.com>
-+
-+description: |
-+  BH1745 is an I2C colour sensor with red, green, blue and clear
-+  channels. It has a programmable active low interrupt pin.
-+  Interrupt occurs when the signal from the selected interrupt
-+  source channel crosses set interrupt threshold high/low level.
-+
-+properties:
-+  compatible:
-+    const: rohm,bh1745
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        colour-sensor@38 {
-+            compatible = "rohm,bh1745";
-+            reg = <0x38>;
-+            interrupt-parent = <&gpio>;
-+            interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+        };
-+    };
-+
-+...
++		/* If info was set before, JEDEC knows better. */
++		info = jinfo;
+ 	}
+ 
+ 	return info;
 -- 
-2.43.0
+2.39.2
 
