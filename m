@@ -1,136 +1,96 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BC34DA06;
-	Mon,  3 Jun 2024 07:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19741481A7;
+	Mon,  3 Jun 2024 07:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717400236; cv=none; b=Bi/9XQy0km6nAs/zODUeATGfVrYQmA67P5j8eciNuNJ4DpmHUK7dIBbFYpqhdn8JF5X1j8IDyoT2z+bY3m0j6I9pehqiwiZkpBfBtIKvKpmtjckUccRKGJVy0DmV4F3MMbWD4IvxtUU2FquqdC7uXm/r21A6gLNIKhHxNHdPsig=
+	t=1717400266; cv=none; b=SAwHdeK4/+HjSPrRmfjBOC4R3aqA1ku+2sCqJNEvzR04mtO/thiZGCcPIzVRlGJgDniXt5PIo5ecPGrLjRrpw+GwgqvXDhT5oVdhBJTWm/9fP1A4VPkT3nD45ThLCgD+iGwr766xXK2Ql0/30oXThOGKj5AIN2VccEeinjr3z/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717400236; c=relaxed/simple;
-	bh=YrD1TeY+Zqn5mqS68Rc/BXAkFalRcdLmLF90a5+aRf4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GGAT81tx7GUpsaN8JyDhMMR14pT/lzR5Mtw4LYc9ws5KhwHYFDvMeEyeFPkMj/eMnahp6rpwBHiehDKdC10z3drX4YYo/SihNvOvDahydCWie2U5DVw+FLXDfIy0dc8oc8hFJ4KmOGruu1ead5sCmvRLJag4+PM6kbI66vOii5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ow+ndGbe; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717400266; c=relaxed/simple;
+	bh=0ZTbWXDKccVB2JD3rAJmUufRXjsYP9Y1lA2ybBWy5hc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O/ebGKg7Lu5+9aHOWkpl8tEzJMHJ5FW0c3kp+SH7xkvbeDQXsT5O0jTP0dNyKSr0tMaKYPT7FhkbZghs6i6jS/neerzDB13WR1Hxv7LD55Zj5uhZ7gzAqaF+mZfxKjQs7AGtx9nuFgjqiKEnqq3K6DjBQDGH+SoUjETblG3lNq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vDafQGTR; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ow+ndGbe"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452Lu1gi000710;
-	Mon, 3 Jun 2024 07:37:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=elIZI+0QGYBcCHC97gkGU8
-	OEiqo46K6nDcE6IeB7xhs=; b=ow+ndGbeid/o3aIiwDCtDJpUZLIZRvCL1OoEIV
-	jlFJ2DTNiSVz+Lpo3hSOzrvO7U3zjOHiditGtl4nb2Aq1XnZhby+ucTaEaDvUuU2
-	fiVQco/FaR7w7eHLv0hR2gn1UsgB7IoqXeKv6fip2SsQygGq1siTbkPfeOLy/S3R
-	LS26YLgOPXKrA4ujjQ2Ho/gCWpW0TiVYbyEKDatq2E/n2UVDloKRME/OCH8+CMOP
-	1OCiX1ZxN0DiMDL4Sy1ovaUliIbRbDhtgMvw/Q+DyzmV1U7ANHrG2/Re1hQRDYBg
-	G7Tv57VI5B0HpD9XcyOt4sX3up6OQoTPJfh53VrxVgssak0Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5kkegk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 07:37:10 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4537bAqe013568
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 07:37:10 GMT
-Received: from hu-deesin-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 3 Jun 2024 00:37:06 -0700
-From: Deepak Kumar Singh <quic_deesin@quicinc.com>
-To: <quic_bjorande@quicinc.com>, <andersson@kernel.org>,
-        <quic_clew@quicinc.com>, <mathieu.poirier@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <quic_sarannya@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        "Deepak
- Kumar Singh" <quic_deesin@quicinc.com>
-Subject: [PATCH V1] rpmsg: glink: Make glink smem interrupt wakeup capable
-Date: Mon, 3 Jun 2024 13:06:48 +0530
-Message-ID: <20240603073648.3475123-1-quic_deesin@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vDafQGTR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717400263;
+	bh=0ZTbWXDKccVB2JD3rAJmUufRXjsYP9Y1lA2ybBWy5hc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vDafQGTRrQv6ATZesjM0KMXd1XK648fVSi8sOaUgtu3AKw0HQaMGnVwcu8tzZKtBO
+	 POXBI7awfIrAYPMHcLYdyIn0e3ZS0wAz0opSTjp4tvOEqEUKKDDeh99jU74fZiUIBt
+	 fnPQWf1NhfFaVuw150JKOcQ8aOKbbBJfh2ualS038jCzm2cL8R7rE6TXGps33Guo2Q
+	 l/QRcL9vBGU1+XydKcWlQs6lmfoEH8veficATxuzt9XjZZpWPGYw8e/flMsyilZVKJ
+	 qxrTLzdcnixqvibuhLwfokY4C7vGGrU2wx11tZdU0d+jp0A/N56eTWJZ4bJSmoyQF7
+	 hvy0qcdSHMSxw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 025D937821DB;
+	Mon,  3 Jun 2024 07:37:42 +0000 (UTC)
+Message-ID: <703cfd0b-5d16-4888-bcc5-5742ee16fd29@collabora.com>
+Date: Mon, 3 Jun 2024 09:37:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: mediatek: mt7988: add I2C controllers
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20240405125549.11972-1-zajec5@gmail.com>
+ <20240405125549.11972-2-zajec5@gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240405125549.11972-2-zajec5@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sr0nk5k29uS2yIlRr3w11-nlJf5Hd-sf
-X-Proofpoint-ORIG-GUID: sr0nk5k29uS2yIlRr3w11-nlJf5Hd-sf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_04,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1011 phishscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
- mlxlogscore=716 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030063
 
-There are certain usecases which require glink interrupt to be
-wakeup capable. For example if handset is in sleep state and
-usb charger is plugged in, dsp wakes up and sends glink interrupt
-to host for glink pmic channel communication. Glink is suppose to
-wakeup host processor completely for further glink data handling.
-IRQF_NO_SUSPEND does not gurantee complete wakeup, system may again
-enter sleep after interrupt handling and glink data may not be
-handled by pmic client driver.
+Il 05/04/24 14:55, Rafał Miłecki ha scritto:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> MT7988 has three on-SoC I2C controllers that are the same hardware
+> blocks as already noticed on MT7981 chipsets.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 45 +++++++++++++++++++++++
+>   1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> index 27098f724b7a..b4dc81881cc7 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+> @@ -124,6 +124,51 @@ pwm@10048000 {
+>   			status = "disabled";
+>   		};
+>   
+> +		i2c@11003000 {
+> +			compatible = "mediatek,mt7981-i2c";
+> +			reg = <0 0x11003000 0 0x1000>,
+> +			      <0 0x10217080 0 0x80>;
+> +			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&infracfg CLK_INFRA_I2C_BCK>,
+> +				 <&infracfg CLK_INFRA_66M_AP_DMA_BCK>;
+> +			clock-names = "main", "dma";
+> +			clock-div = <1>;
+> +			clock-frequency = <100000>;
 
-To ensure data handling by client configure glink smem device as
-wakeup source and attach glink interrupt as wakeup irq. Remove
-IRQF_NO_SUSPEND flag as it is no longer required.
+As commented on 7981, please remove clock-div/frequency from SoC wide DTs.
 
-Signed-off-by: Deepak Kumar Singh <quic_deesin@quicinc.com>
----
- drivers/rpmsg/qcom_glink_smem.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Cheers,
+Angelo
 
-diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-index 7a982c60a8dd..f1b553efab13 100644
---- a/drivers/rpmsg/qcom_glink_smem.c
-+++ b/drivers/rpmsg/qcom_glink_smem.c
-@@ -22,6 +22,7 @@
- #include <linux/regmap.h>
- #include <linux/workqueue.h>
- #include <linux/list.h>
-+#include <linux/pm_wakeirq.h>
- 
- #include <linux/rpmsg/qcom_glink.h>
- 
-@@ -306,8 +307,7 @@ struct qcom_glink_smem *qcom_glink_smem_register(struct device *parent,
- 
- 	smem->irq = of_irq_get(smem->dev.of_node, 0);
- 	ret = devm_request_irq(&smem->dev, smem->irq, qcom_glink_smem_intr,
--			       IRQF_NO_SUSPEND | IRQF_NO_AUTOEN,
--			       "glink-smem", smem);
-+			       IRQF_NO_AUTOEN, "glink-smem", smem);
- 	if (ret) {
- 		dev_err(&smem->dev, "failed to request IRQ\n");
- 		goto err_put_dev;
-@@ -346,6 +346,8 @@ struct qcom_glink_smem *qcom_glink_smem_register(struct device *parent,
- 
- 	smem->glink = glink;
- 
-+	device_init_wakeup(dev, true);
-+	dev_pm_set_wake_irq(dev, smem->irq);
- 	enable_irq(smem->irq);
- 
- 	return smem;
-@@ -365,6 +367,8 @@ void qcom_glink_smem_unregister(struct qcom_glink_smem *smem)
- 	struct qcom_glink *glink = smem->glink;
- 
- 	disable_irq(smem->irq);
-+	dev_pm_clear_wake_irq(&smem->dev);
-+	device_init_wakeup(&smem->dev, false);
- 
- 	qcom_glink_native_remove(glink);
- 
--- 
-2.34.1
 
