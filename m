@@ -1,236 +1,204 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2099E7A140;
-	Mon,  3 Jun 2024 09:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717405586; cv=fail; b=Ol0GdCB3DpXSHN1pqd789lWu/+J1J1EPWmLP5Rb17GZJkcSqXuwQi14/WIZydlhwbNZpH+Q5IOnsNu3se2SOd4Kxg/gtyzKXYEtQi2JvJUSciInRdeHjvijFlQUGJmmR3Tvgx4Upklv+DZbif7DjLhR0uCnRGM/14dt02yusF+g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717405586; c=relaxed/simple;
-	bh=S1spURpvq/SrRUfYymQH22t9HjCWO/JMFYZ8XFvI9iY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=T0R9eLY2sLM9na3L+OBO9Oei2zumasJPAn7/vZa/Ugj6LXB1zY/ul+zOGWWrPzf/3B7jdCgbEMUzSyrBVMer0i7rIgZSZ+q3QkFZckL0YZTuhoNWw0TNawLbElLbDCD8DIWFZ9iGRaTvd7x4sHEtnOw3jbSLBhU7Dh/Dit/fOVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=h6n0nuX4; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="h6n0nuX4"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 452LkQDW015935;
-	Mon, 3 Jun 2024 02:06:16 -0700
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3ygufmsymk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 02:06:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XwAK3kTdPzYzQhhw7MFlYRwo8xwjn1sXLhfUoIiSpqh8F1uWZ5AnHNi1R8Mo/74vpjMx32PzsJ53LtF/BX7qJpjn1anMg09+PvW/YERo8FxovsT5tqXE/mc3R+0NMuPmWtM33HsJ2HsI2vysFAE3bIQTNNLPBJBKsc7lK+TJlx+73jS87xA0eFwm+qgHaCns+5wpv8wPATMzjJYQPFjcq/8y6QrGcoulppixgyXXjFtZG4NWomk2SLmecd3k1VwDFvkYt8779IO+IkBjYGa9BZQoqS0fLAD5oxky7AMDzWjlqrox/p7LYJTDepZ6zHGmLt2dK9Uy2AumPX+rHB5mYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/rs0jhJFAInPk+o2aYkuzei81RhHCIz19Br0ZPqWkoA=;
- b=TBqwds5blU6Np/kv84KNveRAtUZkwtrSSyEDdz/3am+aFAi7h74bGVXWI2rv6b9+UJtcKMGhI2710qTZFz09whAZYeI04UP7mK7ga7Gt8QIaEaYlVWb2PbJSPmcW51gNacuCU7mUHsPwrwrkPUTtpNgG0pNK8muTicL2fuK0mdsyxLAski0kUlCUP4AnM1i2qmvSoodXcYLLWQlxDwmFLFnJFKiqLHL6SSRq6cKdGt6uAzGOW/JlRzfvBxIHecSDhYwQiwE35fjQpvh/7XAijvoX+SfmEZKVApOaoZAOuIsaT+1pHavxSte/Vh/369aXx3fVtw6ZAqSE8YMuweQApQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/rs0jhJFAInPk+o2aYkuzei81RhHCIz19Br0ZPqWkoA=;
- b=h6n0nuX4reR/qXISWZpR6mvJG4ghuSIf7RbniJE7MztLsie9IjlBh4bCFcEO/ddj9FHjL4neMy76Cg6l/OQMo7C0WYNwU/EV0jxAl51bxW/Ue/bXPvEKe5gohZUvM/n6dvKdZWqui+BYF/utq78vxoqrhONFWlt3dViAsq7TZhg=
-Received: from SN7PR18MB5314.namprd18.prod.outlook.com (2603:10b6:806:2ef::8)
- by CH3PR18MB5859.namprd18.prod.outlook.com (2603:10b6:610:1d8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.36; Mon, 3 Jun
- 2024 09:06:13 +0000
-Received: from SN7PR18MB5314.namprd18.prod.outlook.com
- ([fe80::f808:b798:6233:add8]) by SN7PR18MB5314.namprd18.prod.outlook.com
- ([fe80::f808:b798:6233:add8%6]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
- 09:06:13 +0000
-From: Bharat Bhushan <bbhushan2@marvell.com>
-To: Simon Horman <horms@kernel.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sunil Kovvuri
- Goutham <sgoutham@marvell.com>,
-        Geethasowjanya Akula <gakula@marvell.com>,
-        Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-        Hariprasad Kelam
-	<hkelam@marvell.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org"
-	<kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        Jerin Jacob
-	<jerinj@marvell.com>, Linu Cherian <lcherian@marvell.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>
-Subject: RE: [EXTERNAL] Re: [net-next,v3 6/8] cn10k-ipsec: Process inline
- ipsec transmit offload
-Thread-Topic: [EXTERNAL] Re: [net-next,v3 6/8] cn10k-ipsec: Process inline
- ipsec transmit offload
-Thread-Index: AQHasQaTfyi6mWkXDkOBPclCj0tdJLGyuFMAgAMP14A=
-Date: Mon, 3 Jun 2024 09:06:13 +0000
-Message-ID: 
- <SN7PR18MB5314C837EBC54B24350DC638E3FF2@SN7PR18MB5314.namprd18.prod.outlook.com>
-References: <20240528135349.932669-1-bbhushan2@marvell.com>
- <20240528135349.932669-7-bbhushan2@marvell.com>
- <20240601101930.GB491852@kernel.org>
-In-Reply-To: <20240601101930.GB491852@kernel.org>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR18MB5314:EE_|CH3PR18MB5859:EE_
-x-ms-office365-filtering-correlation-id: 0495eb40-a67d-4db2-ba92-08dc83ac6b3e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|376005|38070700009;
-x-microsoft-antispam-message-info: 
- =?us-ascii?Q?Ah82SZ05tPX+7uYX6/H8wtIxI295UE+K5P67SlWgx5x8rUwzKc9S8G2ywcD4?=
- =?us-ascii?Q?pqrb5r3PFRG5IcjWLqa8BQ8FQevoxPuNNwtffsrHoqoc1XC9y3N727o1RBgO?=
- =?us-ascii?Q?SmWooNGDTc4ymRdvyMO3tGfIcIKEyJFcOj3SFWMDN4x3x6eddYecUFRURMhr?=
- =?us-ascii?Q?e/h61rrN+G5jonexrjYY6gnk30kZ2YUc1oOz/Bm6Q0Lm0qVK/eoxXr9QklXI?=
- =?us-ascii?Q?FFLDoclvwoMdFhgNBQ+fWfNRGW9Wtdj0ZIB5tf7bX0XejYJdr4xlFO13eCJg?=
- =?us-ascii?Q?jSobkJAb84g15hNN2DgzYDFofF5AyhuZ7eyYbwP7iU2t50T4Bx3vBApsviXV?=
- =?us-ascii?Q?dZ92VTPM6L/s3pTawmzlIa5uRmMnK4zlphhjq2zqrpIDhOWvtBJaY2B2FHDE?=
- =?us-ascii?Q?fBuiPpV1O89cKNvvxImIaOEXKz1rn2tsDnJBAhHY9q2fHDjMp5z0mahtfJ4G?=
- =?us-ascii?Q?EWPSe6UNDhPrfMcDRzOAILMh6X464PX0VDpleBtMpg8KY7tVxSy2i8uhgYbv?=
- =?us-ascii?Q?SG+yDhCqGKqJs1OA18klHQN8+tuZd1rmzUgLPRm6pXrP1gco6Jeh9V/GVwC6?=
- =?us-ascii?Q?UlSltbrlNu7VomFlCVpf7Vs3b+XTvq7N73cHkByOSUhBq31j6sM3K/hRhkUZ?=
- =?us-ascii?Q?opaPEM/powV73CDhf/lwtXwDkKPbjymGwXM2kxIJN+JUIrAdKdXhwPMip8Lm?=
- =?us-ascii?Q?SkwL9vpNG0HQdEKsHNEogXf2Sn/DPvEmJUQOjlVs3rG60DkiP9VXjGqadx7m?=
- =?us-ascii?Q?kJJLDcA2QkwGsO4+dK/6y0r5ifJ2dTILXUtzVKlNxwAjNbufhm84Tmt4UVY4?=
- =?us-ascii?Q?+PQBmG/Ln8Ayf0MdRR0w7BaoRkSo9hGGCHTl8wfJ6nCjL+0PwtSakiHUa2Ct?=
- =?us-ascii?Q?61Gii96LcCVWSpZb3zS1hQ+Go1VlEonewfR1tSaeFQw7TktFeT7Cfh2s+okw?=
- =?us-ascii?Q?Lp8epFDzrfctmtyQUslE7twFAk9XXksJxZAVonZ1GnfNh17fApMLyt1fNtXZ?=
- =?us-ascii?Q?RskdQzGoDfebJoOE5k8d9DnxSVGSXzxSk2WOTpnqGMG4UVkREi/b1BWMUKXj?=
- =?us-ascii?Q?TnV/kkZXTiJ/zma5QICMLsC8xGLEexJgfKLnDheo+7qMSzn0WDrHMZvsWRm7?=
- =?us-ascii?Q?1FZYJvSclqRrphV+rOGH0rMgcrqLNAe9KEFBum34qDd3zCs8YZMJXyt7D3om?=
- =?us-ascii?Q?gJykqDZw7W5JqVhi5yPEbUAfZKqrp+yS6YkFR05Yx0S8PMuU4/AxAk/u+eJe?=
- =?us-ascii?Q?xXOWzqtPKvNiL9JnuJEKBl7QtkFt+/dxKxdXva1HVqf9f1i8VK96yT49fgIx?=
- =?us-ascii?Q?BRNRzY+YaR1tHjpTAP8HMrEfZ6q3IKcpi0nZxobeFcKcBA=3D=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR18MB5314.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?08LZcTtI86cQALu+b/vUXX4zY3mAyqDH9agoRN2nrpwY7bnKrcMgUxvqaYIc?=
- =?us-ascii?Q?nbQvi/gZpJ6g2NQJx4HvvsnYm2oVt6jbkrupTB0LoZMg+QWF5PYrV67CZ7Vm?=
- =?us-ascii?Q?8ViRhXT5ANZaYrtBmiB6cevbyEmCyAW55lp8+SVftFoXzy1PXMmdtksmJ7Ty?=
- =?us-ascii?Q?yG7ZvbbH/T/1mqo/8ghtKsNB2EgrytVNLNZd6wSiEgoYKFxNKzydLIZX+bpB?=
- =?us-ascii?Q?weI9rLjo+RsKjGGiiol6IvxIVrTAG27ovDt/QXySnAVIlulJrG9hAco2JXHA?=
- =?us-ascii?Q?cDIfUnp3FmSbXTVczcLL2rKNZCEk6911Y1A/XRvI4oiGnE+C67F+4tILk8sg?=
- =?us-ascii?Q?EXOn2esQXi3H83C+CdV+/ySPNSIEzAtJq/2PZG/2xzhy1XSlju/EC5pkxnj/?=
- =?us-ascii?Q?lsIhjgG6IzdewfZbo8GLK+TVevdZcxEj7wWsFVytuhSCano+aD1WJ4TJM3cn?=
- =?us-ascii?Q?+65kbx4HluhiQD4cSOUsROxOic/71wvGRFFU89thhRewzo2/BU4v3y4jg4eu?=
- =?us-ascii?Q?jtZ7nUQFolk252Trvfl/+2eWNLKmEUvOzq9fb+iXXhSRor3uXLMpqJAGjbhp?=
- =?us-ascii?Q?fzhwEA0/2IHY4SpKJc0mC1UC3RhpIHTQixCGIPx/jkGlaMYgkbDLjJpxi3Cm?=
- =?us-ascii?Q?VLyfv68IbCckikt68dyE18FwySvHyO9ja0uBqV44Shvg/gQ7iS9us9aEoFvP?=
- =?us-ascii?Q?PNtIzFm16SOmioc5Qv8jWOAQ/yiYIezGaPo73owF2wr7FS9CAKs0O2MehogJ?=
- =?us-ascii?Q?Xdx2iok38N0mBjB7i+pcs4wfZ0AtcnxK01FHeACgxYw/G4JefR+y0YL5EK6E?=
- =?us-ascii?Q?JKRdFtgtjEtSG//hiFzhtj7u0YfBhZvETxenj7vJDee9mXycauv1SWtu486N?=
- =?us-ascii?Q?AD9NXsHVscMWy+M1y2pJO9fxxMShpGyltczePHGFpcjL98JuM/sTeMOUMV2d?=
- =?us-ascii?Q?5ulv/VF8pO1FYlgYfBweSZ3vZ5Jjb1UgWu2Aemxr2G4MoM9vlPFUw/MPxVmt?=
- =?us-ascii?Q?gip6nHrN8iQv2hrpxNkoCu026D1/YeyNspmEKoy/kFmzSG0+YThSFgwOuBS4?=
- =?us-ascii?Q?uqE35tF2I1m7y9C87JawpoQxssYPsyo62jpxVhvIvWgV9kqaGHEoj+E8y6vx?=
- =?us-ascii?Q?MG2PhAp1Xzmz6Vkjin1AgcWKmJyATM90ACoJLv2wFEaw8S3X8tjQc6AWkpHz?=
- =?us-ascii?Q?jhPJgm9NSL6wGQuTZa83OmXLEuTO28lNLqCdiZQJqFiV5NpnBQmD56IPps60?=
- =?us-ascii?Q?XOPtjbEmhCK9QK2FTUnssRz9Z2KrVaFAf5CG7HekxdjVLA+CO+pdsITWTO/M?=
- =?us-ascii?Q?dkL6xOMOZKg9IZ/qDIn6JBggkrxYuN4IMUcdV5z+Xy5nKo5byGx1jAjJGlFV?=
- =?us-ascii?Q?z2JYNendSj1/2GlzUJOfwxnUC5beO1IDLVe4Y6O/EPIPmVR6SFnqWA34R/g4?=
- =?us-ascii?Q?O3PjF/JHdNpApPukaP01dFIcZb5Vb68Fbk1I2EdaHUA4ZJ9N8niZMaQiN0OG?=
- =?us-ascii?Q?AvBHq+2x+7Jdsd8Mw8+CASQnUI2/s2wWB7uGqoQbJrczpBUHnF5qzO7zfkBi?=
- =?us-ascii?Q?DJ3S7SZKiS4icFHq0eirNwetmxVLHpTPvuaBqbdK?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205CB537E7;
+	Mon,  3 Jun 2024 09:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717405633; cv=none; b=vGM6IT8z2WRxJaGjobTm9HM1nTANxrAoeWrpcrAZTRMOiBQ1osyy++1aSd6xB36BxXhAGEZpgfbwqs6lr5mEgsWOfpNEQd0FQbjWGBFJ7TxqUCOthzXcKiETG63gzV5mWXw6PUOlxAVFQZMy/Ni6xA2jeg092I5MfPBBI/3b7ms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717405633; c=relaxed/simple;
+	bh=871het3VtC7LTGp81p5U+w2hz47qYXgg7Ly20kzRsmg=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tmmkOChtcFLVP2lyGDBZeYc2YM2+zwCvSmJrLtFd86/sZdEyBZWGIqSQA2gsxw2XTmkI2IV92GU5oaXBXpmJFLx6eN9NRtW3v56+I8WmWgrOjmCr7Lv3XeknJgbkJyXNj//TQaA196etV7JPMhzP9ms9R0G370ki8vADanQdja8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vt7C76gv2z4f3kpq;
+	Mon,  3 Jun 2024 17:06:59 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 2D9151A0840;
+	Mon,  3 Jun 2024 17:07:06 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgAXOQy2h11mYAk7Ow--.23407S3;
+	Mon, 03 Jun 2024 17:07:04 +0800 (CST)
+Subject: Re: [RFC PATCH v4 1/8] iomap: zeroing needs to be pagecache aware
+To: Brian Foster <bfoster@redhat.com>
+Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, djwong@kernel.org, hch@infradead.org,
+ brauner@kernel.org, david@fromorbit.com, chandanbabu@kernel.org,
+ jack@suse.cz, willy@infradead.org, yi.zhang@huawei.com,
+ chengzhihao1@huawei.com, yukuai3@huawei.com
+References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
+ <20240529095206.2568162-2-yi.zhang@huaweicloud.com>
+ <ZlxRz9LPNuoOZOtl@bfoster>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <cc7e0a68-185f-a3e0-d60a-989b8b014608@huaweicloud.com>
+Date: Mon, 3 Jun 2024 17:07:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR18MB5314.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0495eb40-a67d-4db2-ba92-08dc83ac6b3e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2024 09:06:13.6427
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PnXC5l6op3nG+RzX2Jim6c02jeAsKdImxk/CXXPoXpEqTyka3QOtkzI/n1y7TuaYMO128e5JuMuxLO4h0QeX1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR18MB5859
-X-Proofpoint-ORIG-GUID: uZYKiq0BANrirF2A9dCKnEoRnbabKiWD
-X-Proofpoint-GUID: uZYKiq0BANrirF2A9dCKnEoRnbabKiWD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_05,2024-05-30_01,2024-05-17_01
+In-Reply-To: <ZlxRz9LPNuoOZOtl@bfoster>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgAXOQy2h11mYAk7Ow--.23407S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw1UtryxXryrKFWUZF45GFg_yoWrZFWUpF
+	yftFnrKr48Ja47J3ZFyFyUXryrGwn5AFW7Gw15GasYvw1rZF1rtF47Gr40kFWUWrW5Gr1U
+	Zr45t342vryUAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
+On 2024/6/2 19:04, Brian Foster wrote:
+> On Wed, May 29, 2024 at 05:51:59PM +0800, Zhang Yi wrote:
+>> From: Dave Chinner <dchinner@redhat.com>
+>>
+>> Unwritten extents can have page cache data over the range being
+>> zeroed so we can't just skip them entirely. Fix this by checking for
+>> an existing dirty folio over the unwritten range we are zeroing
+>> and only performing zeroing if the folio is already dirty.
+>>
+>> XXX: how do we detect a iomap containing a cow mapping over a hole
+>> in iomap_zero_iter()? The XFS code implies this case also needs to
+>> zero the page cache if there is data present, so trigger for page
+>> cache lookup only in iomap_zero_iter() needs to handle this case as
+>> well.
+>>
+>> Before:
+>>
+>> $ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
+>> path /mnt/scratch/foo, 50000 iters
+>>
+>> real    0m14.103s
+>> user    0m0.015s
+>> sys     0m0.020s
+>>
+>> $ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
+>> path /mnt/scratch/foo, 50000 iters
+>> % time     seconds  usecs/call     calls    errors syscall
+>> ------ ----------- ----------- --------- --------- ----------------
+>>  85.90    0.847616          16     50000           ftruncate
+>>  14.01    0.138229           2     50000           pwrite64
+>> ....
+>>
+>> After:
+>>
+>> $ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
+>> path /mnt/scratch/foo, 50000 iters
+>>
+>> real    0m0.144s
+>> user    0m0.021s
+>> sys     0m0.012s
+>>
+>> $ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
+>> path /mnt/scratch/foo, 50000 iters
+>> % time     seconds  usecs/call     calls    errors syscall
+>> ------ ----------- ----------- --------- --------- ----------------
+>>  53.86    0.505964          10     50000           ftruncate
+>>  46.12    0.433251           8     50000           pwrite64
+>> ....
+>>
+>> Yup, we get back all the performance.
+>>
+>> As for the "mmap write beyond EOF" data exposure aspect
+>> documented here:
+>>
+>> https://lore.kernel.org/linux-xfs/20221104182358.2007475-1-bfoster@redhat.com/
+>>
+>> With this command:
+>>
+>> $ sudo xfs_io -tfc "falloc 0 1k" -c "pwrite 0 1k" \
+>>   -c "mmap 0 4k" -c "mwrite 3k 1k" -c "pwrite 32k 4k" \
+>>   -c fsync -c "pread -v 3k 32" /mnt/scratch/foo
+>>
+>> Before:
+>>
+>> wrote 1024/1024 bytes at offset 0
+>> 1 KiB, 1 ops; 0.0000 sec (34.877 MiB/sec and 35714.2857 ops/sec)
+>> wrote 4096/4096 bytes at offset 32768
+>> 4 KiB, 1 ops; 0.0000 sec (229.779 MiB/sec and 58823.5294 ops/sec)
+>> 00000c00:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
+>> XXXXXXXXXXXXXXXX
+>> 00000c10:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
+>> XXXXXXXXXXXXXXXX
+>> read 32/32 bytes at offset 3072
+>> 32.000000 bytes, 1 ops; 0.0000 sec (568.182 KiB/sec and 18181.8182
+>>    ops/sec
+>>
+>> After:
+>>
+>> wrote 1024/1024 bytes at offset 0
+>> 1 KiB, 1 ops; 0.0000 sec (40.690 MiB/sec and 41666.6667 ops/sec)
+>> wrote 4096/4096 bytes at offset 32768
+>> 4 KiB, 1 ops; 0.0000 sec (150.240 MiB/sec and 38461.5385 ops/sec)
+>> 00000c00:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> ................
+>> 00000c10:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>> ................
+>> read 32/32 bytes at offset 3072
+>> 32.000000 bytes, 1 ops; 0.0000 sec (558.036 KiB/sec and 17857.1429
+>>    ops/sec)
+>>
+>> We see that this post-eof unwritten extent dirty page zeroing is
+>> working correctly.
+>>
+> 
+> I've pointed this out in the past, but IIRC this implementation is racy
+> vs. reclaim. Specifically, relying on folio lookup after mapping lookup
+> doesn't take reclaim into account, so if we look up an unwritten mapping
+> and then a folio flushes and reclaims by the time the scan reaches that
+> offset, it incorrectly treats that subrange as already zero when it
+> actually isn't (because the extent is actually stale by that point, but
+> the stale extent check is skipped).
+> 
 
+Hello, Brian!
 
-> -----Original Message-----
-> From: Simon Horman <horms@kernel.org>
-> Sent: Saturday, June 1, 2024 3:50 PM
-> To: Bharat Bhushan <bbhushan2@marvell.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Sunil Kovvuri
-> Goutham <sgoutham@marvell.com>; Geethasowjanya Akula
-> <gakula@marvell.com>; Subbaraya Sundeep Bhatta <sbhatta@marvell.com>;
-> Hariprasad Kelam <hkelam@marvell.com>; davem@davemloft.net;
-> edumazet@google.com; kuba@kernel.org; pabeni@redhat.com; Jerin Jacob
-> <jerinj@marvell.com>; Linu Cherian <lcherian@marvell.com>;
-> richardcochran@gmail.com
-> Subject: [EXTERNAL] Re: [net-next,v3 6/8] cn10k-ipsec: Process inline ips=
-ec
-> transmit offload
->=20
->=20
-> ----------------------------------------------------------------------
-> On Tue, May 28, 2024 at 07:23:47PM +0530, Bharat Bhushan wrote:
-> > Prepare and submit crypto hardware (CPT) instruction for outbound
-> > inline ipsec crypto mode offload. The CPT instruction have
-> > authentication offset, IV offset and encapsulation offset in input
-> > packet. Also provide SA context pointer which have details about algo,
-> > keys, salt etc. Crypto hardware encrypt, authenticate and provide the
-> > ESP packet to networking hardware.
-> >
-> > Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
->=20
-> Hi Bharat,
->=20
-> A minor nit from my side as it looks like there will be a v4 anyway.
->=20
-> ...
->=20
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
-> > b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k_ipsec.c
->=20
-> ...
->=20
-> > +bool cn10k_ipsec_transmit(struct otx2_nic *pf, struct netdev_queue *tx=
-q,
-> > +			  struct otx2_snd_queue *sq, struct sk_buff *skb,
-> > +			  int num_segs, int size)
-> > +{
->=20
-> ...
->=20
-> > +	/* Check for valid SA context */
-> > +	sa_info =3D (struct cpt_ctx_info_s *)x->xso.offload_handle;
-> > +	if (!sa_info || !sa_info->sa_iova) {
-> > +		netdev_err(pf->netdev, "Invalid SA conext\n");
->=20
-> nit: context
->=20
->      checkpatch.pl --codespell is your friend.
+I'm confused, how could that happen? We do stale check under folio lock,
+if the folio flushed and reclaimed before we get&lock that folio in
+iomap_zero_iter()->iomap_write_begin(), the ->iomap_valid() would check
+this stale out and zero again in the next iteration. Am I missing
+something?
 
-Will fix here and run this on all patches.
+Thanks,
+Yi.
 
-Thanks
--Bharat
+> A simple example to demonstrate this is something like the following:
+> 
+> # looping truncate zeroing
+> while [ true ]; do
+> 	xfs_io -fc "truncate 0" -c "falloc 0 32K" -c "pwrite 0 4k" -c "truncate 2k" <file>
+> 	xfs_io -c "mmap 0 4k" -c "mread -v 2k 16" <file> | grep cd && break
+> done
+> 
+> vs.
+> 
+> # looping writeback and reclaim
+> while [ true ]; do
+> 	xfs_io -c "sync_range -a 0 0" -c "fadvise -d 0 0" <file>
+> done
+> 
+> If I ran that against this patch, the first loop will eventually detect
+> stale data exposed past eof.
+> 
+> Brian
+> 
 
->=20
-> > +		goto drop;
-> > +	}
->=20
-> ...
