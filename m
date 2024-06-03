@@ -1,171 +1,76 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A628282D62
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B70F763E4
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717408957; cv=none; b=WZV/BmKcfH0j3Jxs3tpX1/3GRElgT7HFvnbZFGxGIX6q8/rXeUMEUN3d17fF/NQt8rWXg49KHdUsttQa8dBRTmh8PsRxRd4IePGlytOJpa7Hpiowa40rEkTowIDDZUDZ1PWpu3KRC536MwcPcYzZr2QP6/Lljm71Anol9XPsl8o=
+	t=1717409041; cv=none; b=gIpAMjOGG4GI5d6CkElDr1h+fsAe5cU5fFsNH0cokMV1LkPRBp+THAicLwA4PrLXbl/OsBLkxOMHX2T6WWTtnvk0KPpm3fwUpQK2fmvVDgJG2A9b8QsKNJqY1nh5qttOhFYjQNrxb1IpXDrTGB6U2auIeinhBfTwz4wtmwsR4+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717408957; c=relaxed/simple;
-	bh=pTa5HCj2z6eTVOZMSCn+VDjbL0xjBXrYBD/36aWh+2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVAgHU5wRlsgu/iUzPxhA3fXdqFXzJ3ZLXlG26GOi+MJ40xdyG8BN8/1ISdf3YmYHlK7AhZu7rqy0xMlh4kjvuT4oU8yyxNr8dbI4wQSOCAq0762qFwlLxNKmfUfILz4lGAf+SPW9OaVUfPRzAuhYVbcRCdGUJyoeilafKuofdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hYbKpNWQ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717409041; c=relaxed/simple;
+	bh=Uwm71QwiZiskaFNE5hC3kDx6Ghn2eJwESg9uo3KSEzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ja2VjEJmH5xSDro6zr4DC8cTLkxA/mTiP5Vs2rZzbzq1Hfa2UTNlmgwVjv8YCI5HUVl9qs8/5YnK4QEEcDMSvnotg3TFXQRfaWcj3XjS0PoL/k/5ugr1uOlY5m749WEQq7LTmkGA58pwZWTH9qAUJQhiJhO31T8UCvjNz+Ecds0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=T6MnWyrb; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hYbKpNWQ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e719bab882so44538781fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 03:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717408954; x=1718013754; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ryO4ugnGoWUTuGXqo1VHRq3Edzl/w4ua4S104KUImxQ=;
-        b=hYbKpNWQGTyF+tf8UsZasaGwJETWbsr2P0rnnCbawtpdXIHQFJsXFA4Va0BniTUUpe
-         +qkTjgh1yKzOMaYACT8VsyiETYvX2oqal9h7mRsFgLpIGPGiwOPoYpTAK3dbpsm8YQr+
-         dqs+nzwBd8mO/7sCzzK5Wnb81Y4Z6F5YGANhhwoU6CztqRl96ej7HLIlZN+QzCuBuYcd
-         59VdjDQQ/BujmanXnclsskaT+lOxTDhCP4amU40gBBBrmFh9AmC2i8o+KL+EA4x7gYK8
-         L8XKJWeFAToeqIvaCbTE1Q+YtVVYBQSgeVWMjFYeNTzgEFo8bes3aXJd7tKQTR1nY8D6
-         N85A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717408954; x=1718013754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ryO4ugnGoWUTuGXqo1VHRq3Edzl/w4ua4S104KUImxQ=;
-        b=IUrURpLSYBiTdsvIAU1CV1flyWIzZ77mOQUnKj4gecQAxftGobnwZMV/x/aPKjWnLn
-         hFebU3P9MwRPkLTpktQlSFHmHVLLEZRhK1uhZGtBF5VQRSxYSPOfXdNVC1JPbIerKDFY
-         vL6othpZJbivQ2evCfItuYG3d19CfFlnl51XXo7CRuLpK3/THBWaUCCNX1cEjgpjrmXw
-         xgS6C8027pL8pAZkxaruxF7iZdzmM3fzzDMhGIve10t5bGjxh9bDn+FuYYgRxEO8ZgRA
-         qt/YI21TJil0K1J4iGc357bNwBInPAx3v30HJZLQVzDVTlCVOI8bAmW6AipZJYIqF07L
-         iAlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcDxX85ETGMcJ3ohV2awi3+ZXuMnd0udWuQizGJUIAEuOsg1cfj2ArzaFeLJIB76rUjP5FEjd27T4/aUhQnZUiB/HsyjMazmPHC+7T
-X-Gm-Message-State: AOJu0YyOSioC9f1/irtZmvgc/smqKgcBtTMx4LIYLpaIKyC/APAFEkdU
-	7/AMN5T/LkjVihMy5GdZjScBimWaMXeELvrbEws2RM/OOHzxXQk7MGg4cBWV70s=
-X-Google-Smtp-Source: AGHT+IF1Be8Y8y0lMsq0meVFZ8v7QE7uzkpO3VUfxY3jGl/v3awRTdyAqEwp3Oo2e6RSb9hkDhKLrA==
-X-Received: by 2002:a2e:3a04:0:b0:2e9:8497:46d2 with SMTP id 38308e7fff4ca-2ea951cff69mr50230111fa.46.1717408953704;
-        Mon, 03 Jun 2024 03:02:33 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea9c5bc882sm9105721fa.133.2024.06.03.03.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 03:02:33 -0700 (PDT)
-Date: Mon, 3 Jun 2024 13:02:31 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>
-Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org, 
-	gregkh@linuxfoundation.org, quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org, 
-	quic_chennak@quicinc.com, stable <stable@kernel.org>
-Subject: Re: [PATCH v3 8/9] misc: fastrpc: Restrict untrusted app to spawn
- signed PD
-Message-ID: <7eygwrefc43aaqeihir3odjhdseeewweqvabvq6jg5bbmnhrkz@p33mhebq5v3w>
-References: <20240530102032.27179-1-quic_ekangupt@quicinc.com>
- <20240530102032.27179-9-quic_ekangupt@quicinc.com>
- <q6vl2d7ekrjiwbr4h6cieh6q7vewhbiqay67wrglurphkigq4c@zoeyzywhypww>
- <6c026f78-d397-4375-a347-85f41bff1e99@quicinc.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="T6MnWyrb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:mime-version:content-transfer-encoding; s=k1; bh=/RLCNyizVaI6Dm
+	AjebjIJepF3QUYj0BeBbucccNDlEc=; b=T6MnWyrb0h/vF3FCuyteOwdtBPggtj
+	qePz2QgVmsibLy3Esa9SnAcFvF8HrJDG3FoMiSmi7rtmuTEnMQnjLktDqPOdVPGE
+	8VZsQFI9h5rD+J23Hox2+XsHKY/FRMs6TIsKFFO0mc/4v8j0tMW6qCsV6qdmdcgA
+	RoR75keyI2EYAfguBluRuOi7ZgNiEJuD5oayAMcNEq6nTdFIr8Axchzyf8a1Q9dC
+	st5UEcU34JhIx77WZDwOHVK3RsILipKePp0JtKet+afgOFU5SohRbFsKUs6ptpgc
+	aqj/9wufPE6eo/MW8dZ/VZMq58QKD3LHmgq+0ods6l7rKpZu4FoSoiHA==
+Received: (qmail 1913243 invoked from network); 3 Jun 2024 12:03:56 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Jun 2024 12:03:56 +0200
+X-UD-Smtp-Session: l3s3148p1@fBSFc/kZjJ8gAwDPXzLGAH1eNELjOc3g
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-media@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: delete email for Anton Sviridenko
+Date: Mon,  3 Jun 2024 12:01:17 +0200
+Message-ID: <20240603100346.10678-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c026f78-d397-4375-a347-85f41bff1e99@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 03, 2024 at 11:57:52AM +0530, Ekansh Gupta wrote:
-> 
-> On 5/31/2024 5:19 AM, Dmitry Baryshkov wrote:
-> > On Thu, May 30, 2024 at 03:50:26PM +0530, Ekansh Gupta wrote:
-> > > Some untrusted applications will not have access to open fastrpc
-> > > device nodes and a privileged process can open the device node on
-> > > behalf of the application. Add a check to restrict such untrusted
-> > > applications from offloading to signed PD.
-> > > 
-> > > Fixes: 7f1f481263c3 ("misc: fastrpc: check before loading process to the DSP")
-> > > Cc: stable <stable@kernel.org>
-> > > Signed-off-by: Ekansh Gupta <quic_ekangupt@quicinc.com>
-> > > ---
-> > >   drivers/misc/fastrpc.c | 23 ++++++++++++++++++-----
-> > >   1 file changed, 18 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> > > index 73fa0e536cf9..32615ccde7ac 100644
-> > > --- a/drivers/misc/fastrpc.c
-> > > +++ b/drivers/misc/fastrpc.c
-> > > @@ -328,6 +328,7 @@ struct fastrpc_user {
-> > >   	int pd;
-> > >   	bool is_secure_dev;
-> > >   	bool is_unsigned_pd;
-> > > +	bool untrusted_process;
-> > >   	char *servloc_name;
-> > >   	/* Lock for lists */
-> > >   	spinlock_t lock;
-> > > @@ -1249,13 +1250,17 @@ static bool is_session_rejected(struct fastrpc_user *fl, bool unsigned_pd_reques
-> > >   		 * channel is configured as secure and block untrusted apps on channel
-> > >   		 * that does not support unsigned PD offload
-> > >   		 */
-> > > -		if (!fl->cctx->unsigned_support || !unsigned_pd_request) {
-> > > -			dev_err(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
-> > > -			return true;
-> > > -		}
-> > > +		if (!fl->cctx->unsigned_support || !unsigned_pd_request)
-> > > +			goto reject_session;
-> > >   	}
-> > > +	/* Check if untrusted process is trying to offload to signed PD */
-> > > +	if (fl->untrusted_process && !unsigned_pd_request)
-> > > +		goto reject_session;
-> > >   	return false;
-> > > +reject_session:
-> > > +	dev_dbg(&fl->cctx->rpdev->dev, "Error: Untrusted application trying to offload to signed PD\n");
-> > > +	return true;
-> > >   }
-> > >   static void fastrpc_mmap_remove_pdr(struct fastrpc_static_pd *spd)
-> > > @@ -1504,12 +1509,20 @@ static int fastrpc_init_create_process(struct fastrpc_user *fl,
-> > >   		goto err;
-> > >   	}
-> > > +	/*
-> > > +	 * Third-party apps don't have permission to open the fastrpc device, so
-> > Permissions depend on the end-user setup. Is it going to break if the
-> > user sets 0666 mode for fastrpc nodes?
-> 
-> If the root user sets 0666 for fastrpc nodes, it is expected that this check will get bypassed.
+The email address bounced. I couldn't find a newer one in recent git history,
+so update MAINTAINERS accordingly.
 
-So, any process will be trusted? This looks so Android-centric. Please come
-with a better way to define 'trusted'.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
 
-On a typical UNIX system a used has multiple supplementary GIDs (which
-can be used to allow access to the devices) which have no relationship
-to the process effective GID. On a multi-user machine it might be
-logical that fastrpc nodes have separate group-id and group's read/write
-permissions. But then each of the users has their own unique 'effective'
-GID. Which of those should be using for computing the 'trusted' status?
-
-> 
-> > 
-> > > +	 * it is opened on their behalf by a priveleged process. This is detected
-> > > +	 * by comparing current PID with the one stored during device open.
-> > > +	 */
-> > > +	if (current->tgid != fl->tgid)
-> > > +		fl->untrusted_process = true;
-> > If the comment talks about PIDs, when why are you comparing GIDs here?
-> 
-> It should be GID, I'll update the comment in next spin.
-> 
-> > 
-> > > +
-> > >   	if (init.attrs & FASTRPC_MODE_UNSIGNED_MODULE)
-> > >   		fl->is_unsigned_pd = true;
-> > >   	if (is_session_rejected(fl, fl->is_unsigned_pd)) {
-> > > -		err = -ECONNREFUSED;
-> > > +		err = -EACCES;
-> > >   		goto err;
-> > >   	}
-> > > -- 
-> > > 2.43.0
-> > > 
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 523d84b2d613..947f9b25d139 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20724,7 +20724,6 @@ F:	include/uapi/rdma/rdma_user_rxe.h
+ 
+ SOFTLOGIC 6x10 MPEG CODEC
+ M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+-M:	Anton Sviridenko <anton@corp.bluecherry.net>
+ M:	Andrey Utkin <andrey_utkin@fastmail.com>
+ M:	Ismael Luceno <ismael@iodev.co.uk>
+ L:	linux-media@vger.kernel.org
+@@ -22927,7 +22926,6 @@ F:	tools/testing/selftests/turbostat/
+ 
+ TW5864 VIDEO4LINUX DRIVER
+ M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
+-M:	Anton Sviridenko <anton@corp.bluecherry.net>
+ M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
+ M:	Andrey Utkin <andrey_utkin@fastmail.com>
+ L:	linux-media@vger.kernel.org
 -- 
-With best wishes
-Dmitry
+2.43.0
+
