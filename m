@@ -1,461 +1,303 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6424E364A0;
-	Mon,  3 Jun 2024 06:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75309208CE;
+	Mon,  3 Jun 2024 06:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717396146; cv=none; b=nNHWKs4EmF2upvH80O0DcMhbFP/k5tf5cICXTmL9mNLDL1aVmZBAAzPF8SY0MRdQNEffz/lRQtzk3q26diSbGLI7gMsDkMxYf4z0CLqmR07ltZKDhbHCcrhM5hmrhD+9R8GLt7XdAjoqm26u1laA3BJL3yQjwHpqKfSVjBniJ8E=
+	t=1717396416; cv=none; b=WOV/qAdw9rwV7vpJ0UM3skj/IZxR61ie0ZW6kD/K/WsfbQ7XYGhngWFN3D9Ez6dHVrd2qLXMbb9ZThCOv9A7nPACcviXoLaQ9mis6G34tPZTscwFgRavmBkCVHcW3HbxEGy/MXGy5sL+aDZGQG3x2IH3wXNvfyQd65jdJJghofY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717396146; c=relaxed/simple;
-	bh=LhEadHgzTcfE5uhVo3fVsd568QdpLmxvzm6/NjL6kGA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aDRrwiB+dwXYynvgdj53Bzn7ZGuQlKbwALWzj0TkdRexBqlTmcudrtJBQzcpH/MSfIAMNmx5UuJL4QPchF06b3UtcjKdN93UozgJOoU2l0476+Pg833pcHjvCs2p8QMzLMHM5NUmAQ+xbTDniOTljd7k04IbsJmEO/d75IL1ipY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcvWgHnC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcvWgHnC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D899C4AF07;
-	Mon,  3 Jun 2024 06:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717396146;
-	bh=LhEadHgzTcfE5uhVo3fVsd568QdpLmxvzm6/NjL6kGA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=AcvWgHnChVtRm7wvnjC/fjjoxJT8FDdseMWuq5tpiuTO+JJpDOwjLHSj/J4mWlDsX
-	 04zqgdBKTMODKSmMdCsd2Rx8rviI+uKVVVF0Tt2ahRd16yg4388Ca7bZ0t4NWVavzQ
-	 DJf4uXUii7YXsdsVusCEmYuOvqsaFiKubKAQ1KZQU2w+G+IPaGL/mEn+AdqIyechFN
-	 6Gm8AgQZh2qAbXnNN1DKipwjSgpoVxF+aRgH5ZxZWd9vLNvXQkw8/mYhfPyM6UfS22
-	 pLnGo4fR2d77oPNjTswa3cq8e5O9xoBfJ5eNloN6mlIkhauKup4iDcmr9dtrgtej07
-	 FDngKOUY7eIlA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACDAC27C50;
-	Mon,  3 Jun 2024 06:29:05 +0000 (UTC)
-From: Alexandre Messier via B4 Relay <devnull+alex.me.ssier.org@kernel.org>
-Date: Mon, 03 Jun 2024 02:28:57 -0400
-Subject: [PATCH 2/2] ARM: dts: qcom: Add initial support for HTC One (M8)
+	s=arc-20240116; t=1717396416; c=relaxed/simple;
+	bh=6X2eWl8m6fp4O9UKOdJmQWu+wh1NOVXg4VKajjLXLgw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qFoMstbeQScRIbqyq2nJ45puGWRDLs1w8Go7dAo1JXrTkrfedEz0MNzuv5ZfagoWNCUvvJEU1cob50q6pYyZxfQptDSAEr0CyrtnR6VizYb3HWTUvZwbNjUlLjJ7m7PXkn4oh8Tm4BHnccomakZ07XJJPfunjGrdiCZkXBpi3wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b65.versanet.de ([83.135.91.101] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sE1Ft-0004rj-AX; Mon, 03 Jun 2024 08:33:17 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: wens@kernel.org, Dragan Simic <dsimic@manjaro.org>
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ Diederik de Haas <didi.debian@cknow.org>
+Subject:
+ Re: [PATCH] arm64: dts: rockchip: Fix the DCDC_REG2 minimum voltage on
+ Quartz64 Model B
+Date: Mon, 03 Jun 2024 08:33:16 +0200
+Message-ID: <2165494.3Lj2Plt8kZ@diego>
+In-Reply-To: <d0ab380955c293cf676938be5ea5bf52@manjaro.org>
+References:
+ <e70742ea2df432bf57b3f7de542d81ca22b0da2f.1716225483.git.dsimic@manjaro.org>
+ <ee74c146d1e69bef118e208fdf5cf10f@manjaro.org>
+ <d0ab380955c293cf676938be5ea5bf52@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240603-m8-support-v1-2-c7b6a1941ed2@me.ssier.org>
-References: <20240603-m8-support-v1-0-c7b6a1941ed2@me.ssier.org>
-In-Reply-To: <20240603-m8-support-v1-0-c7b6a1941ed2@me.ssier.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Luca Weiss <luca@z3ntu.xyz>, linux-arm-kernel@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, phone-devel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- Alexandre Messier <alex@me.ssier.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717396145; l=8929;
- i=alex@me.ssier.org; s=20240603; h=from:subject:message-id;
- bh=UpJvjtnEQ3Nh2o5lWTWj9v8Sn4StqngLLSysn4fnBUs=;
- b=w0sgFT/6Ucs0SAAprK31SqHJsjoGUbil2KtJ3WcM/LiUAjqgh+D9RWWPFw7fBYPvCixmx/rct
- CBHjNlJqLCgCF7CJ5Ri81XRi/7d0E0dr6wA+tGfEnXj+M0/nClACpO1
-X-Developer-Key: i=alex@me.ssier.org; a=ed25519;
- pk=JjRqVfLd2XLHX2QTylKoROw346/1LOyZJX0q6cfnrKw=
-X-Endpoint-Received: by B4 Relay for alex@me.ssier.org/20240603 with
- auth_id=168
-X-Original-From: Alexandre Messier <alex@me.ssier.org>
-Reply-To: alex@me.ssier.org
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-From: Alexandre Messier <alex@me.ssier.org>
+Am Montag, 3. Juni 2024, 06:51:58 CEST schrieb Dragan Simic:
+> On 2024-06-03 06:41, Dragan Simic wrote:
+> > On 2024-06-03 05:49, Chen-Yu Tsai wrote:
+> >> On Sat, Jun 1, 2024 at 6:41=E2=80=AFAM Dragan Simic <dsimic@manjaro.or=
+g>=20
+> >> wrote:
+> >>> On 2024-05-31 20:40, Heiko St=C3=BCbner wrote:
+> >>> > Am Freitag, 31. Mai 2024, 00:48:45 CEST schrieb Dragan Simic:
+> >>> >> On 2024-05-29 18:27, Chen-Yu Tsai wrote:
+> >>> >> > On Tue, May 21, 2024 at 1:20=E2=80=AFAM Dragan Simic <dsimic@man=
+jaro.org>
+> >>> >> > wrote:
+> >>> >> >>
+> >>> >> >> Correct the specified regulator-min-microvolt value for the buck
+> >>> >> >> DCDC_REG2
+> >>> >> >> regulator, which is part of the Rockchip RK809 PMIC, in the Pin=
+e64
+> >>> >> >> Quartz64
+> >>> >> >> Model B board dts.  According to the RK809 datasheet, version 1=
+=2E01,
+> >>> >> >> this
+> >>> >> >> regulator is capable of producing voltages as low as 0.5 V on i=
+ts
+> >>> >> >> output,
+> >>> >> >> instead of going down to 0.9 V only, which is additionally conf=
+irmed
+> >>> >> >> by the
+> >>> >> >> regulator-min-microvolt values found in the board dts files for=
+ the
+> >>> >> >> other
+> >>> >> >> supported boards that use the same RK809 PMIC.
+> >>> >> >>
+> >>> >> >> This allows the DVFS to clock the GPU on the Quartz64 Model B b=
+elow
+> >>> >> >> 700 MHz,
+> >>> >> >> all the way down to 200 MHz, which saves some power and reduces=
+ the
+> >>> >> >> amount of
+> >>> >> >> generated heat a bit, improving the thermal headroom and possib=
+ly
+> >>> >> >> improving
+> >>> >> >> the bursty CPU and GPU performance on this board.
+> >>> >> >>
+> >>> >> >> This also eliminates the following warnings in the kernel log:
+> >>> >> >>
+> >>> >> >>   core: _opp_supported_by_regulators: OPP minuV: 825000 maxuV: =
+825000,
+> >>> >> >> not supported by regulator
+> >>> >> >>   panfrost fde60000.gpu: _opp_add: OPP not supported by regulat=
+ors
+> >>> >> >> (200000000)
+> >>> >> >>   core: _opp_supported_by_regulators: OPP minuV: 825000 maxuV: =
+825000,
+> >>> >> >> not supported by regulator
+> >>> >> >>   panfrost fde60000.gpu: _opp_add: OPP not supported by regulat=
+ors
+> >>> >> >> (300000000)
+> >>> >> >>   core: _opp_supported_by_regulators: OPP minuV: 825000 maxuV: =
+825000,
+> >>> >> >> not supported by regulator
+> >>> >> >>   panfrost fde60000.gpu: _opp_add: OPP not supported by regulat=
+ors
+> >>> >> >> (400000000)
+> >>> >> >>   core: _opp_supported_by_regulators: OPP minuV: 825000 maxuV: =
+825000,
+> >>> >> >> not supported by regulator
+> >>> >> >>   panfrost fde60000.gpu: _opp_add: OPP not supported by regulat=
+ors
+> >>> >> >> (600000000)
+> >>> >> >>
+> >>> >> >> Fixes: dcc8c66bef79 ("arm64: dts: rockchip: add Pine64 Quartz64=
+=2DB
+> >>> >> >> device tree")
+> >>> >> >> Cc: stable@vger.kernel.org
+> >>> >> >> Reported-By: Diederik de Haas <didi.debian@cknow.org>
+> >>> >> >> Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+> >>> >> >> ---
+> >>> >> >>  arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts | 2 +-
+> >>> >> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>> >> >>
+> >>> >> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+> >>> >> >> b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+> >>> >> >> index 26322a358d91..b908ce006c26 100644
+> >>> >> >> --- a/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+> >>> >> >> +++ b/arch/arm64/boot/dts/rockchip/rk3566-quartz64-b.dts
+> >>> >> >> @@ -289,7 +289,7 @@ vdd_gpu: DCDC_REG2 {
+> >>> >> >>                                 regulator-name =3D "vdd_gpu";
+> >>> >> >>                                 regulator-always-on;
+> >>> >> >>                                 regulator-boot-on;
+> >>> >> >> -                               regulator-min-microvolt =3D <90=
+0000>;
+> >>> >> >> +                               regulator-min-microvolt =3D <50=
+0000>;
+> >>> >> >
+> >>> >> > The constraints here are supposed to be the constraints of the
+> >>> >> > consumer,
+> >>> >> > not the provider. The latter is already known by the implementat=
+ion.
+> >>> >> >
+> >>> >> > So if the GPU can go down to 0.825V or 0.81V even (based on the
+> >>> >> > datasheet),
+> >>> >> > this should say the corresponding value. Surely the GPU can't go=
+ down
+> >>> >> > to
+> >>> >> > 0.5V?
+> >>> >> >
+> >>> >> > Can you send another fix for it?
+> >>> >>
+> >>> >> I can confirm that the voltage of the power supply of GPU found in=
+side
+> >>> >> the RK3566 can be as low as 0.81 V, according to the datasheet, or=
+ as
+> >>> >> low as 0.825 V, according to the GPU OPPs found in rk356x.dtsi.
+> >>> >>
+> >>> >> If we want the regulator-min-microvolt parameter to reflect the
+> >>> >> contraint
+> >>> >> of the GPU as the consumer, which I agree with, we should do that =
+for
+> >>> >> other
+> >>> >> RK3566-based boards as well, and almost surely for the boards base=
+d on
+> >>> >> the
+> >>> >> RK3568, too.
+> >>> >
+> >>> > Hmm, I'm not so sure about that.
+> >>> >
+> >>> > The binding does define:
+> >>> >       regulator-min-microvolt:
+> >>> >           description: smallest voltage consumers may set
+> >>> >
+> >>> > This does not seem to describe it as a constraint solely of the
+> >>> > consumer.
+> >>> > At least the wording sounds way more flexible there.
+> >>> >
+> >>> > Also any regulator _could_ have multiple consumers, whose value wou=
+ld
+> >>> > it need then.
+> >>>=20
+> >>> The way I see it, the regulator-min-microvolt and
+> >>> regulator-max-microvolt
+> >>> parameters should be configured in a way that protects the=20
+> >>> consumer(s)
+> >>> of the particular voltage regulator against undervoltage and=20
+> >>> overvoltage
+> >>> conditions, which may be useful in some corner cases.
+> >>>=20
+> >>> If there are multiple consumers, which in this case may actually=20
+> >>> happen
+> >>> (IIRC, some boards use the same regulator for the GPU and NPU=20
+> >>> portions
+> >>> of the SoC), the situation becomes far from ideal, because the=20
+> >>> consumers
+> >>> might have different voltage requirements, but that's pretty much an
+> >>> unavoidable compromise.
+> >>=20
+> >> As Dragan mentioned, the min/max voltage constraints are there to=20
+> >> prevent
+> >> the implementation from setting a voltage that would make the hardware
+> >> inoperable, either temporarily or permanently. So the range set here
+> >> should be the intersection of the permitted ranges of all consumers on
+> >> that power rail.
+> >>=20
+> >> Now if that intersection happens to be an empty set, then it would up
+> >> to the implementation to do proper lock-outs. Hopefully no one designs
+> >> such hardware as it's too easy to fry some part of the hardware.
+> >=20
+> > Yes, such a hardware design would need fixing first on the schematic
+> > level.  When it comes to the RK3566's GPU and NPU sharing the same
+> > regulator, we should be fine because the RK3566 datasheet states that
+> > both the GPU and the NPU can go as low as 0.81 V, and their upper
+> > absolute ratings are the same at 1.2 V, so 1.0 V, which is as far as
+> > the GPU OPPs go, should be fine for both.
+> >=20
+> > As a note, neither the RK3566 datasheet nor the RK3566 hardware design
+> > guide specify the recommended upper voltage limit for the GPU or the
+> > NPU.  Though, their upper absolute ratings are the same, as already
+> > described above.
+>=20
+> Uh-oh, this rabbit hole goes much deeper than expected.  After a quick
+> check, I see there are also RK3399-based boards/devices that specify
+> the minimum and maximum values for their GPU regulators far outside
+> the recommended operating conditions of the RK3399's GPU.
+>=20
+> Perhaps the scope of the upcoming patches should be expanded to cover
+> other boards as well, not just those based on the RK356x.
+>=20
+> >>> > While true, setting it to the lowest the regulator can do in the
+> >>> > original
+> >>> > fix patch, might've been a bit much and a saner value might be bett=
+er.
+> >>>=20
+> >>> Agreed, but the value was selected according to what the other
+> >>> RK3566-based
+> >>> boards use, to establish some kind of consistency.  Now, there's a=20
+> >>> good
+> >>> chance for the second pass, so to speak, which should establish=20
+> >>> another
+> >>> different state, but also consistent. :)
+> >>>=20
+> >>> >> This would ensure consistency, but I'd like to know are all those
+> >>> >> resulting
+> >>> >> patches going to be accepted before starting to prepare them?  The=
+re
+> >>> >> will
+> >>> >> be a whole bunch of small patches.
+> >>> >
+> >>> > Hmm, though I'd say that would be one patch per soc?
+> >>> >
+> >>> > I.e. you're setting the min-voltage of _one_ regulator used
+> >>> > on each board to a value to support the defined OPPs.
+> >>> >
+> >>> > I.e. in my mind you'd end up with:
+> >>> >       arm64: dts: rockchip: set better min voltage for vdd_gpu on r=
+k356x
+> >>> > boards
+> >>> >
+> >>> > And setting the lower voltage to reach that lower OPP on all affect=
+ed
+> >>> > rk356x boards.
+> >>>=20
+> >>> Yes, the same thoughts have already crossed my mind, but I thought=20
+> >>> we'd
+> >>> like those patches to also include Fixes tags, so they also get
+> >>> propagated
+> >>> into the long-term kernel versions?  In that case, we'd need one=20
+> >>> patch
+> >>> per
+> >>> board, to have a clear relation to the commits referenced in the=20
+> >>> Fixes
+> >>> tags.
+> >>>=20
+> >>> OTOH, if we don't want the patches to be propagated into the=20
+> >>> long-term
+> >>> kernel
+> >>> versions, then having one patch per SoC would be perfectly fine.
+> >>=20
+> >> It's really up to Heiko, but personally I don't think it's that=20
+> >> important
+> >> to have them backported. These would be correctness patches, but don't
+> >> really affect functionality.
+> >=20
+> > On second thought, I also think that it might be better not to have
+> > these changes propagated into the long-term kernel versions.  That
+> > would keep the amount of backported changes to the bare minimum, i.e.
+> > containing just the really important fixes, while these changes are
+> > more on the correctness side.  Maybe together with providing a bit
+> > of additional safety.
 
-Add initial device tree for the HTC One (M8) smartphone.
+hehe, up to you I guess :-) .
 
-Initial support includes:
- - eMMC
- - Power button
- - USB
- - Vibrator
- - Volume buttons (GPIO)
- - Wi-Fi
+At least we tied down the how (one patch per soc or so) and not meant
+to be backported because more of the correctnes side. So yes I agree with
+the arguments for changing the constraints.
 
-Signed-off-by: Alexandre Messier <alex@me.ssier.org>
----
- arch/arm/boot/dts/qcom/Makefile                   |   1 +
- arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts | 353 ++++++++++++++++++++++
- 2 files changed, 354 insertions(+)
-
-diff --git a/arch/arm/boot/dts/qcom/Makefile b/arch/arm/boot/dts/qcom/Makefile
-index e2e922bdc9e9..759b0e7f0043 100644
---- a/arch/arm/boot/dts/qcom/Makefile
-+++ b/arch/arm/boot/dts/qcom/Makefile
-@@ -44,6 +44,7 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8974-sony-xperia-rhine-amami.dtb \
- 	qcom-msm8974-sony-xperia-rhine-honami.dtb \
- 	qcom-msm8974pro-fairphone-fp2.dtb \
-+	qcom-msm8974pro-htc-m8.dtb \
- 	qcom-msm8974pro-oneplus-bacon.dtb \
- 	qcom-msm8974pro-samsung-klte.dtb \
- 	qcom-msm8974pro-samsung-kltechn.dtb \
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts b/arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts
-new file mode 100644
-index 000000000000..b896cc1ad6f7
---- /dev/null
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts
-@@ -0,0 +1,353 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include "qcom-msm8974pro.dtsi"
-+#include "pm8841.dtsi"
-+#include "pm8941.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "HTC One (M8)";
-+	compatible = "htc,m8", "qcom,msm8974pro", "qcom,msm8974";
-+	chassis-type = "handset";
-+
-+	aliases {
-+		mmc0 = &sdhc_1;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-0 = <&gpio_keys_default>;
-+		pinctrl-names = "default";
-+
-+		key-volume-down {
-+			label = "volume_down";
-+			gpios = <&tlmm 27 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			debounce-interval = <20>;
-+			wakeup-source;
-+		};
-+
-+		key-volume-up {
-+			label = "volume_up";
-+			gpios = <&tlmm 28 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <20>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	vreg_boost: vreg-boost {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "vreg-boost";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+
-+		regulator-always-on;
-+		regulator-boot-on;
-+
-+		gpio = <&pm8941_gpios 21 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+
-+		pinctrl-0 = <&boost_bypass_n_pin>;
-+		pinctrl-names = "default";
-+	};
-+
-+	vreg_vph_pwr: vreg-vph-pwr {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vph-pwr";
-+
-+		regulator-min-microvolt = <3600000>;
-+		regulator-max-microvolt = <3600000>;
-+
-+		regulator-always-on;
-+	};
-+};
-+
-+&pm8941_vib {
-+	status = "okay";
-+};
-+
-+&pronto {
-+	vddmx-supply = <&pm8841_s1>;
-+	vddcx-supply = <&pm8841_s2>;
-+	vddpx-supply = <&pm8941_s3>;
-+
-+	pinctrl-0 = <&wcnss_pin_a>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	iris {
-+		vddxo-supply = <&pm8941_l6>;
-+		vddrfa-supply = <&pm8941_l11>;
-+		vddpa-supply = <&pm8941_l19>;
-+		vdddig-supply = <&pm8941_s3>;
-+	};
-+
-+	smd-edge {
-+		qcom,remote-pid = <4>;
-+		label = "pronto";
-+
-+		wcnss {
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible = "qcom,rpm-pm8841-regulators";
-+
-+		pm8841_s1: s1 {
-+			regulator-min-microvolt = <675000>;
-+			regulator-max-microvolt = <1050000>;
-+		};
-+
-+		pm8841_s2: s2 {
-+			regulator-min-microvolt = <500000>;
-+			regulator-max-microvolt = <1050000>;
-+		};
-+
-+		pm8841_s3: s3 {
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1050000>;
-+		};
-+
-+		pm8841_s4: s4 {
-+			regulator-min-microvolt = <815000>;
-+			regulator-max-microvolt = <900000>;
-+		};
-+	};
-+
-+	regulators-1 {
-+		compatible = "qcom,rpm-pm8941-regulators";
-+
-+		vdd_l1_l3-supply = <&pm8941_s1>;
-+		vdd_l2_lvs1_2_3-supply = <&pm8941_s3>;
-+		vdd_l4_l11-supply = <&pm8941_s1>;
-+		vdd_l5_l7-supply = <&pm8941_s2>;
-+		vdd_l6_l12_l14_l15-supply = <&pm8941_s2>;
-+		vdd_l8_l16_l18_l19-supply = <&vreg_vph_pwr>;
-+		vdd_l9_l10_l17_l22-supply = <&vreg_boost>;
-+		vdd_l13_l20_l23_l24-supply = <&vreg_boost>;
-+		vdd_l21-supply = <&vreg_boost>;
-+
-+		pm8941_s1: s1 {
-+			regulator-min-microvolt = <1300000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_s2: s2 {
-+			regulator-min-microvolt = <2150000>;
-+			regulator-max-microvolt = <2150000>;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_s3: s3 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l1: l1 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1225000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l2: l2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+
-+		pm8941_l3: l3 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+
-+		pm8941_l4: l4 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1225000>;
-+		};
-+
-+		pm8941_l5: l5 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8941_l6: l6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l7: l7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l8: l8 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8941_l9: l9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8941_l10: l10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+		};
-+
-+		pm8941_l11: l11 {
-+			regulator-min-microvolt = <1225000>;
-+			regulator-max-microvolt = <1350000>;
-+		};
-+
-+		pm8941_l12: l12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l13: l13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l14: l14 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+		};
-+
-+		pm8941_l15: l15 {
-+			regulator-min-microvolt = <2050000>;
-+			regulator-max-microvolt = <2050000>;
-+		};
-+
-+		pm8941_l16: l16 {
-+			regulator-min-microvolt = <2700000>;
-+			regulator-max-microvolt = <2700000>;
-+		};
-+
-+		pm8941_l17: l17 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8941_l18: l18 {
-+			regulator-min-microvolt = <2850000>;
-+			regulator-max-microvolt = <2850000>;
-+		};
-+
-+		pm8941_l19: l19 {
-+			regulator-min-microvolt = <2900000>;
-+			regulator-max-microvolt = <3350000>;
-+		};
-+
-+		pm8941_l20: l20 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-system-load = <200000>;
-+			regulator-allow-set-load;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l21: l21 {
-+			regulator-min-microvolt = <2950000>;
-+			regulator-max-microvolt = <2950000>;
-+			regulator-boot-on;
-+		};
-+
-+		pm8941_l22: l22 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		pm8941_l23: l23 {
-+			regulator-min-microvolt = <3000000>;
-+			regulator-max-microvolt = <3000000>;
-+		};
-+
-+		pm8941_l24: l24 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3075000>;
-+			regulator-boot-on;
-+		};
-+	};
-+};
-+
-+&sdhc_1 {
-+	vmmc-supply = <&pm8941_l20>;
-+	vqmmc-supply = <&pm8941_s3>;
-+
-+	pinctrl-0 = <&sdc1_on>;
-+	pinctrl-1 = <&sdc1_off>;
-+	pinctrl-names = "default", "sleep";
-+
-+	status = "okay";
-+};
-+
-+&smbb {
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio_keys_default: gpio-keys-default-state {
-+		pins = "gpio27", "gpio28";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+
-+	sdc1_on: sdc1-on-state {
-+		clk-pins {
-+			pins = "sdc1_clk";
-+			drive-strength = <10>;
-+			bias-disable;
-+		};
-+
-+		cmd-data-pins {
-+			pins = "sdc1_cmd", "sdc1_data";
-+			drive-strength = <10>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	wcnss_pin_a: wcnss-pin-active-state {
-+		pins = "gpio36", "gpio37", "gpio38", "gpio39", "gpio40";
-+		function = "wlan";
-+		drive-strength = <6>;
-+		bias-pull-down;
-+	};
-+};
-+
-+&usb {
-+	phys = <&usb_hs1_phy>;
-+	phy-select = <&tcsr 0xb000 0>;
-+	extcon = <&smbb>, <&usb_id>;
-+	vbus-supply = <&chg_otg>;
-+
-+	hnp-disable;
-+	srp-disable;
-+	adp-disable;
-+
-+	status = "okay";
-+};
-+
-+&usb_hs1_phy {
-+	v1p8-supply = <&pm8941_l6>;
-+	v3p3-supply = <&pm8941_l24>;
-+	extcon = <&smbb>;
-+	qcom,init-seq = /bits/ 8 <0x1 0x63>;
-+	status = "okay";
-+};
-
--- 
-2.45.1
+Heiko
 
 
