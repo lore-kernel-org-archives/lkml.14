@@ -1,32 +1,32 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583C6625
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 00:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078DB63D5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 00:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717374804; cv=none; b=YipKvFPFLiU4102KPE0cfktLyX54oB+RSALQ2E/0ZgLTJS8ORzwR4FqEY5/75k5RHXTORpnGKI3cv9KuegVZlP74mivOMKQYS490yJCSPoQZYLl8mDZmGHOVRjlfqR0tTf9N+AIrqKEKukUCDCc8Cb+7D9rEBNRU+ZSVh0vCp10=
+	t=1717374806; cv=none; b=lQwg6vcUwnyKDWWt8+0hFfUH49VREK13JYb4FhWNiXGURXg8bB9WgzVtbpU6uL58qrXsvfYC06OQnijWVK5XqPMInD/l//P6BBoiKCvWihP6gBpqHHKhhEpWFDHpyJrWNqTVWlrNJJp/4pNSRN4rCHFca525zlujmB+hjm8j7ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717374804; c=relaxed/simple;
-	bh=v6FQDpTvBgPP6UY0yZcioa8V0uGC7CDfX5pgDoWI7zQ=;
+	s=arc-20240116; t=1717374806; c=relaxed/simple;
+	bh=MbreANTvOFsf+HoMZMv881QbCHhV7LHQF9AJXemvdRM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dKPYsPmDVDbbnuEQF3l63sOp9E0DiLb8Dg9XYefwVjSv8sXi95bD9URXxIUKv1cphYmalriOMz3V+TwySEe+t/+RWUHyghzJidju+9HIVXGHZhkYtXhHTtyXbBvfSnDuh9ivmkz31RjmxdJnbkK6JW+5xuUPiJ7hQemgmSmPVDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cxshFyB9; arc=none smtp.client-ip=91.218.175.175
+	 MIME-Version; b=aFwrGJArAt2W0n/FRwpysutzLDvb+aIFDZWtqoE3YAUJzb6gW180dysBxoAiDD7QAhiMcDGWmmHgZzDd8+GThwuI819jJ/CbVS+WKdZieo+uKrFF3ClC3nWZxCnKiMecdc4u6wOT1zA0oYDFr3IEu9JMJoqvRYM4ZLbuECpVPVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=h9/irGBP; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cxshFyB9"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="h9/irGBP"
 X-Envelope-To: linux-fsdevel@vger.kernel.org
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717374798;
+	t=1717374801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+9i05LKO2QA/lK7UY488kffvxZI78NDDMmynN4RHjDY=;
-	b=cxshFyB9JKCAKNznr6OdQp2IxW5GvjHiPt+QwcO6E7Tff7SKkiTnAbxNBlh6rLc1BPyINF
-	oAsbyEBatHM043qRZtq+a8/5fz3Bt4YMJ4266ftivXpjgOu+sVkinKDFD6wTXyCe+0IeR1
-	kS1/2wqUZqwufTFCro/A+IvTJdlst2M=
+	bh=qtDVS9A12/FhM6gLI1GwHXngLSArqAMBUGSjtT60l7Y=;
+	b=h9/irGBPZpS9RHEtUgiTJNJaSvRPgN6nJTrpu0j6bdb35L0d1exKDknSJ8k4wJbNc2SO/S
+	d4jzM7YVLiQa1bS20ok3j4tjM0kEsbo2oWdezuBzLqXltHouvdgqN82Pjvqo6orf1MOT+1
+	37IexeJNG/zfZ4kQykqf74E8mRdY+bw=
 X-Envelope-To: linux-kernel@vger.kernel.org
 X-Envelope-To: axboe@kernel.dk
 X-Envelope-To: kent.overstreet@linux.dev
@@ -46,9 +46,9 @@ Cc: Jens Axboe <axboe@kernel.dk>,
 	Bernd Schubert <bernd.schubert@fastmail.fm>,
 	linux-mm@kvack.org,
 	Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 2/5] darray: Fix darray_for_each_reverse() when darray is empty
-Date: Sun,  2 Jun 2024 20:32:59 -0400
-Message-ID: <20240603003306.2030491-3-kent.overstreet@linux.dev>
+Subject: [PATCH 4/5] ringbuffer: Test device
+Date: Sun,  2 Jun 2024 20:33:01 -0400
+Message-ID: <20240603003306.2030491-5-kent.overstreet@linux.dev>
 In-Reply-To: <20240603003306.2030491-1-kent.overstreet@linux.dev>
 References: <20240603003306.2030491-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -60,24 +60,260 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
+This adds /dev/ringbuffer-test, which supports reading and writing a
+sequence of integers, to test performance and correctness.
+
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- include/linux/darray.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/Makefile          |   1 +
+ fs/ringbuffer_test.c | 209 +++++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug    |   5 ++
+ 3 files changed, 215 insertions(+)
+ create mode 100644 fs/ringbuffer_test.c
 
-diff --git a/include/linux/darray.h b/include/linux/darray.h
-index ff167eb795f2..603d6762c29a 100644
---- a/include/linux/darray.h
-+++ b/include/linux/darray.h
-@@ -108,7 +108,7 @@ do {									\
- 	for (typeof(&(_d).data[0]) _i = (_d).data; _i < (_d).data + (_d).nr; _i++)
+diff --git a/fs/Makefile b/fs/Makefile
+index 48e54ac01fb1..91061f281f0a 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_EVENTFD)		+= eventfd.o
+ obj-$(CONFIG_USERFAULTFD)	+= userfaultfd.o
+ obj-$(CONFIG_AIO)               += aio.o
+ obj-$(CONFIG_RINGBUFFER)        += ringbuffer.o
++obj-$(CONFIG_RINGBUFFER_TEST)   += ringbuffer_test.o
+ obj-$(CONFIG_FS_DAX)		+= dax.o
+ obj-$(CONFIG_FS_ENCRYPTION)	+= crypto/
+ obj-$(CONFIG_FS_VERITY)		+= verity/
+diff --git a/fs/ringbuffer_test.c b/fs/ringbuffer_test.c
+new file mode 100644
+index 000000000000..01aa9c55120d
+--- /dev/null
++++ b/fs/ringbuffer_test.c
+@@ -0,0 +1,209 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define pr_fmt(fmt) "%s() " fmt "\n", __func__
++
++#include <linux/device.h>
++#include <linux/errname.h>
++#include <linux/fs.h>
++#include <linux/kthread.h>
++#include <linux/ringbuffer_sys.h>
++#include <linux/uio.h>
++
++struct ringbuffer_test_file {
++	struct ringbuffer_test_rw {
++		struct mutex		lock;
++		struct ringbuffer	*rb;
++		struct task_struct	*thr;
++	} rw[2];
++};
++
++#define BUF_NR	4
++
++static int ringbuffer_test_writer(void *p)
++{
++	struct file *file = p;
++	struct ringbuffer_test_file *f = file->private_data;
++	struct ringbuffer *rb = f->rw[READ].rb;
++	u32 idx = 0;
++	u32 buf[BUF_NR];
++
++	while (!kthread_should_stop()) {
++		cond_resched();
++
++		struct kvec vec = { buf, sizeof(buf) };
++		struct iov_iter iter;
++		iov_iter_kvec(&iter, ITER_SOURCE, &vec, 1, sizeof(buf));
++
++		for (unsigned i = 0; i < ARRAY_SIZE(buf); i++)
++			buf[i] = idx + i;
++
++		ssize_t ret = ringbuffer_write_iter(rb, &iter, false);
++		if (ret < 0)
++			continue;
++		idx += ret / sizeof(buf[0]);
++	}
++
++	return 0;
++}
++
++static int ringbuffer_test_reader(void *p)
++{
++	struct file *file = p;
++	struct ringbuffer_test_file *f = file->private_data;
++	struct ringbuffer *rb = f->rw[WRITE].rb;
++	u32 idx = 0;
++	u32 buf[BUF_NR];
++
++	while (!kthread_should_stop()) {
++		cond_resched();
++
++		struct kvec vec = { buf, sizeof(buf) };
++		struct iov_iter iter;
++		iov_iter_kvec(&iter, ITER_DEST, &vec, 1, sizeof(buf));
++
++		ssize_t ret = ringbuffer_read_iter(rb, &iter, false);
++		if (ret < 0)
++			continue;
++
++		unsigned nr = ret / sizeof(buf[0]);
++		for (unsigned i = 0; i < nr; i++)
++			if (buf[i] != idx + i)
++				pr_err("read wrong data");
++		idx += ret / sizeof(buf[0]);
++	}
++
++	return 0;
++}
++
++static void ringbuffer_test_free(struct ringbuffer_test_file *f)
++{
++	for (unsigned i = 0; i < ARRAY_SIZE(f->rw); i++)
++		if (!IS_ERR_OR_NULL(f->rw[i].thr))
++			kthread_stop_put(f->rw[i].thr);
++	for (unsigned i = 0; i < ARRAY_SIZE(f->rw); i++)
++		if (!IS_ERR_OR_NULL(f->rw[i].rb))
++			ringbuffer_free(f->rw[i].rb);
++	kfree(f);
++}
++
++static int ringbuffer_test_open(struct inode *inode, struct file *file)
++{
++	static const char * const rw_str[] = { "reader", "writer" };
++	int ret = 0;
++
++	struct ringbuffer_test_file *f = kzalloc(sizeof(*f), GFP_KERNEL);
++	if (!f)
++		return -ENOMEM;
++
++	for (struct ringbuffer_test_rw *i = f->rw;
++	     i < f->rw + ARRAY_SIZE(f->rw);
++	     i++) {
++		unsigned idx = i - f->rw;
++
++		mutex_init(&i->lock);
++
++		i->rb = ringbuffer_alloc(PAGE_SIZE * 4);
++		ret = PTR_ERR_OR_ZERO(i->rb);
++		if (ret)
++			goto err;
++
++		i->thr = kthread_create(idx == READ
++					? ringbuffer_test_reader
++					: ringbuffer_test_writer,
++					file, "ringbuffer_%s", rw_str[idx]);
++		ret = PTR_ERR_OR_ZERO(i->thr);
++		if (ret)
++			goto err;
++		get_task_struct(i->thr);
++	}
++
++	file->private_data = f;
++	wake_up_process(f->rw[0].thr);
++	wake_up_process(f->rw[1].thr);
++	return 0;
++err:
++	ringbuffer_test_free(f);
++	return ret;
++}
++
++static int ringbuffer_test_release(struct inode *inode, struct file *file)
++{
++	ringbuffer_test_free(file->private_data);
++	return 0;
++}
++
++static ssize_t ringbuffer_test_read_iter(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct file *file = iocb->ki_filp;
++	struct ringbuffer_test_file *f = file->private_data;
++	struct ringbuffer_test_rw *i = &f->rw[READ];
++
++	ssize_t ret = mutex_lock_interruptible(&i->lock);
++	if (ret)
++		return ret;
++
++	ret = ringbuffer_read_iter(i->rb, iter, file->f_flags & O_NONBLOCK);
++	mutex_unlock(&i->lock);
++	return ret;
++}
++
++static ssize_t ringbuffer_test_write_iter(struct kiocb *iocb, struct iov_iter *iter)
++{
++	struct file *file = iocb->ki_filp;
++	struct ringbuffer_test_file *f = file->private_data;
++	struct ringbuffer_test_rw *i = &f->rw[WRITE];
++
++	ssize_t ret = mutex_lock_interruptible(&i->lock);
++	if (ret)
++		return ret;
++
++	ret = ringbuffer_write_iter(i->rb, iter, file->f_flags & O_NONBLOCK);
++	mutex_unlock(&i->lock);
++	return ret;
++}
++
++static struct ringbuffer *ringbuffer_test_ringbuffer(struct file *file, int rw)
++{
++	struct ringbuffer_test_file *i = file->private_data;
++
++	BUG_ON(rw > WRITE);
++
++	return i->rw[rw].rb;
++}
++
++static const struct file_operations ringbuffer_fops = {
++	.owner		= THIS_MODULE,
++	.read_iter	= ringbuffer_test_read_iter,
++	.write_iter	= ringbuffer_test_write_iter,
++	.ringbuffer	= ringbuffer_test_ringbuffer,
++	.open		= ringbuffer_test_open,
++	.release	= ringbuffer_test_release,
++};
++
++static int __init ringbuffer_test_init(void)
++{
++	int ringbuffer_major = register_chrdev(0, "ringbuffer-test", &ringbuffer_fops);
++	if (ringbuffer_major < 0)
++		return ringbuffer_major;
++
++	static const struct class ringbuffer_class = { .name = "ringbuffer_test" };
++	int ret = class_register(&ringbuffer_class);
++	if (ret)
++		goto major_out;
++
++	struct device *ringbuffer_device = device_create(&ringbuffer_class, NULL,
++				    MKDEV(ringbuffer_major, 0),
++				    NULL, "ringbuffer-test");
++	ret = PTR_ERR_OR_ZERO(ringbuffer_device);
++	if (ret)
++		goto class_out;
++
++	return 0;
++
++class_out:
++	class_unregister(&ringbuffer_class);
++major_out:
++	unregister_chrdev(ringbuffer_major, "ringbuffer-test");
++	return ret;
++}
++__initcall(ringbuffer_test_init);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 59b6765d86b8..bb16762af575 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2957,6 +2957,11 @@ config TEST_OBJPOOL
  
- #define darray_for_each_reverse(_d, _i)					\
--	for (typeof(&(_d).data[0]) _i = (_d).data + (_d).nr - 1; _i >= (_d).data; --_i)
-+	for (typeof(&(_d).data[0]) _i = (_d).data + (_d).nr - 1; (_d).data && _i >= (_d).data; --_i)
+ 	  If unsure, say N.
  
- #define darray_init(_d)							\
- do {									\
++config RINGBUFFER_TEST
++	bool "Test driver for sys_ringbuffer"
++	default n
++	depends on RINGBUFFER
++
+ endif # RUNTIME_TESTING_MENU
+ 
+ config ARCH_USE_MEMTEST
 -- 
 2.45.1
 
