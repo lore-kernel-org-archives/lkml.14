@@ -1,535 +1,154 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E832684E0C;
-	Mon,  3 Jun 2024 11:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3191366;
+	Mon,  3 Jun 2024 11:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717413795; cv=none; b=ruaeM/IWNaCRxIqSZkOhtxZk9XeCdU3+nI8xJ6qYmGQ+9mcv/Yg9H5T5DyR4HOR998kjxfrYo4eOMACVqV3dDpRwHXBlPBV2UtspimScNbzXjzTTIYHd2EZ50V9Fnh28cAIJZLozTbg+gOlMxUWPUP0J01URY6HkbyvC4vwvL/w=
+	t=1717413988; cv=none; b=K0KTRa2v6IdxXxMjS6swomhbComDf+PHODWScimIvHE9bZN25vhCtdGHT1o49EqUcC2DDtPmab/b61wxbzSmX/sXvUNg+WFYZ07vZU4iSp9+MfBEAN9+l7QUDuv+UB4NdlXvaxZ8zU0Z+4ecRHqCY9ovqCgck5dANlgNCKoESNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717413795; c=relaxed/simple;
-	bh=9omZ80GCe8KN3dX8x3IVhdGLJmne9smGQnBLqa3opUk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dxqxyjzvxyJz35J27e+ozvbWQLM8ENtam9KgTXGN27n0Th83ZEC2hBjwEzP2JOOGH17bORhq4ivs6XukN+k0LcZw7Tea5YSOZOTJ0yRZbuQQgb9XA5AXM5Irobzx6Bf5s6UWKgvT5wvGsup5Meh4isO6HQY9nWA9Z25bmb7iwkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=SheZwWnq; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SheZwWnq"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4539KQ67007294;
-	Mon, 3 Jun 2024 04:23:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=N8xMLLmZC1CImiIJlfbYK6z
-	yFAxXK392j0V/p98rNeo=; b=SheZwWnqB83zgXl2MeW+SWroD/kHn2g9GcytEkH
-	93RnHD4DjhO3SF4t35Rqa4POgR/TpIFMNXXIh8oMtEPbWd521vNyYLDBHWvukx7Y
-	NzDOOogfUiuPmLgZLnIyGoJP14eT0ZexOUxC8i1ibXT8o9ZaYSUwh2kwwsZ8fyKX
-	vriiK++003rkaxlC82B6kkcAejFsAHcOpihO0ugQczh77tSaM+TJ7VDs+zW+ZxiF
-	kZlwCTF2grf6UXWXAdpIv2veH7IybHz71qXXbKfYXlQVf6GPlfOuqK7v5kl6FTPR
-	qGSxecr+Hrqgdgm4PyKZ1I0rUUmUV68Q5IVj3AuziKKuLLA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yhb3w8aec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 04:23:06 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 3 Jun 2024 04:23:05 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 3 Jun 2024 04:23:05 -0700
-Received: from #hyd1583.marvell.com (unknown [10.29.37.44])
-	by maili.marvell.com (Postfix) with ESMTP id 088EC3F70C6;
-	Mon,  3 Jun 2024 04:23:01 -0700 (PDT)
-From: Anshumali Gaur <agaur@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Anshumali Gaur <agaur@marvell.com>, Sunil Goutham <sgoutham@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>, Jerin Jacob <jerinj@marvell.com>,
-        hariprasad <hkelam@marvell.com>,
-        "Subbaraya
- Sundeep" <sbhatta@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>
-Subject: [net-next PATCH v3] octeontx2-af: Add debugfs support to dump NIX TM topology
-Date: Mon, 3 Jun 2024 16:52:48 +0530
-Message-ID: <20240603112249.6403-1-agaur@marvell.com>
-X-Mailer: git-send-email 2.39.0.198.ga38d39a4c5
+	s=arc-20240116; t=1717413988; c=relaxed/simple;
+	bh=U5nhK6N3AY+7D8Nic9cgW9P7u0jQsPlGNJPN6Yco6fI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n9AxcZJRp3XK6H9U+n+wRalhgyfbvfYfx+n4jR+NPLMYx8IqKDFkODfcZlXBpKJllAyj6HY4+4mDxsSwElto8MsgjpsH8uBmJ6ekJNj/2XpGcMkt8c+KkO1rx1vhINtsY9Y+fP2BumQK3encOek48427PJng+vm2Pj7gUEZZYyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b65.versanet.de ([83.135.91.101] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1sE5pU-0006rj-BG; Mon, 03 Jun 2024 13:26:20 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: ulf.hansson@linaro.org, Adrian Hunter <adrian.hunter@intel.com>
+Cc: serghox@gmail.com, linux-mmc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quentin.schulz@cherry.de,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject:
+ Re: [PATCH] mmc: sdhci-of-dwcmshc: don't enable CQE without a suitable irq
+ handler
+Date: Mon, 03 Jun 2024 13:26:19 +0200
+Message-ID: <4015176.ZaRXLXkqSa@diego>
+In-Reply-To: <55cea03b-e685-4f7b-a93b-cb464417d364@intel.com>
+References:
+ <20240530215532.2192423-1-heiko@sntech.de>
+ <55cea03b-e685-4f7b-a93b-cb464417d364@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: nujGwU7jaCmLLt9TjBTHLUzvbjzYGIjU
-X-Proofpoint-GUID: nujGwU7jaCmLLt9TjBTHLUzvbjzYGIjU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_07,2024-05-30_01,2024-05-17_01
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-This patch adds support to dump NIX transmit queue topology.
-There are multiple levels of scheduling/shaping supported by
-NIX and a packet traverses through multiple levels before sending
-the packet out. At each level, there are set of scheduling/shaping
-rules applied to a packet flow.
+Am Montag, 3. Juni 2024, 10:01:23 CEST schrieb Adrian Hunter:
+> On 31/05/24 00:55, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > 
+> > supports-cqe is an established dt property so can appear in devicetrees
+> > at any time. CQE support in the sdhci-of-dwcmshc driver does require a
+> > special irq handler in the platform-specific ops, to handle the CQE
+> > interrupt.
+> > 
+> > Without this special handler we end up with a spew of unhandled interrupt
+> > messages on devices with supports-cqe property but without irq handler:
+> > 
+> > [   11.624143] mmc0: Unexpected interrupt 0x00004000.
+> > [   11.629504] mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> > [   11.636711] mmc0: sdhci: Sys addr:  0x00000008 | Version:  0x00000005
+> > [   11.643919] mmc0: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
+> > [   11.651128] mmc0: sdhci: Argument:  0x00018000 | Trn mode: 0x00000033
+> > [   11.658336] mmc0: sdhci: Present:   0x13f700f0 | Host ctl: 0x00000034
+> > [   11.665545] mmc0: sdhci: Power:     0x00000001 | Blk gap:  0x00000000
+> > [   11.672753] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x00000407
+> > [   11.679961] mmc0: sdhci: Timeout:   0x0000000e | Int stat: 0x00004000
+> > [   11.687169] mmc0: sdhci: Int enab:  0x02ff4000 | Sig enab: 0x02ff4000
+> > [   11.694378] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+> > [   11.701586] mmc0: sdhci: Caps:      0x226dc881 | Caps_1:   0x08000007
+> > [   11.708794] mmc0: sdhci: Cmd:       0x00000d1e | Max curr: 0x00000000
+> > [   11.716003] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x00000000
+> > [   11.723211] mmc0: sdhci: Resp[2]:   0x328f5903 | Resp[3]:  0x000007cd
+> > [   11.730419] mmc0: sdhci: Host ctl2: 0x0000000f
+> > [   11.735392] mmc0: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xee28f008
+> > [   11.742600] mmc0: sdhci: ============================================
+> > 
+> > So don't enable CQE if a usable interrupt handler is not defined and warn
+> > instead about this fact.
+> > 
+> > Fixes: 53ab7f7fe412 ("mmc: sdhci-of-dwcmshc: Implement SDHCI CQE support")
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > ---
+> > My rk3588-tiger and rk3588-jaguar devicetrees had an accidential
+> > supports-cqe in their devicetree, which made me run into this problem
+> > with 6.10-rc1 .
+> > 
+> >  drivers/mmc/host/sdhci-of-dwcmshc.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> > index 39edf04fedcf7..4410d4523728d 100644
+> > --- a/drivers/mmc/host/sdhci-of-dwcmshc.c
+> > +++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
+> > @@ -1254,10 +1254,14 @@ static int dwcmshc_probe(struct platform_device *pdev)
+> >  
+> >  	/* Setup Command Queue Engine if enabled */
+> >  	if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
+> > -		priv->vendor_specific_area2 =
+> > -			sdhci_readw(host, DWCMSHC_P_VENDOR_AREA2);
+> > +		if (pltfm_data && pltfm_data->ops && pltfm_data->ops->irq) {
+> 
+> ->irq() could be used for other things, so checking it for CQE
+> support is not appropriate.
 
-Each packet traverses through multiple levels
-SQ->SMQ->TL4->TL3->TL2->TL1 and these levels are mapped in a parent-child
-relationship.
+though here we are in the very limited scope of only the dwcmshc sdhci
+controller.
 
-This patch dumps the debug information related to all TM Levels in
-the following way.
+And at this point, any controller using the generic sdhci_dwcmshc_ops
+will always get the CQE irq handler, while _all other_ controllers
+will need to define one to handle the CQE irqs.
 
-Example:
-$ echo <nixlf> > /sys/kernel/debug/octeontx2/nix/tm_tree
-$ cat /sys/kernel/debug/octeontx2/nix/tm_tree
+So any variant trying to enable CQE needs to define an irq handler, hence
+the check simply was meant to not allow CQE enablement without any irq
+handler, because that will always cause those unhandled irq issues.
 
-A more desriptive set of registers at each level can be dumped
-in the following way.
+> If necessary, it would be better to flag which variants support
+> CQE in their platform data.
 
-Example:
-$ echo <nixlf> > /sys/kernel/debug/octeontx2/nix/tm_topo
-$ cat /sys/kernel/debug/octeontx2/nix/tm_topo
+I guess we can assume that all of the dwcmshc IP variants support
+CQE, it's just that the implementation is slightly strange in that
+a DT can enable CQE support and this will cause the driver to enable the
+CQE interrupt, even if nothing is there to handle it.
 
-Signed-off-by: Anshumali Gaur <agaur@marvell.com>
----
-v3:
-    - Addressed review comments given by Wojciech Drewek
-	1. Removed unnecessary goto statement
-	2. Moved valid SQ check before AF mbox
-v2:
-    - Addressed review comments given by Simon Horman
-	1. Resolved indentation issues
 
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |   1 +
- .../marvell/octeontx2/af/rvu_debugfs.c        | 365 ++++++++++++++++++
- .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   7 +
- 3 files changed, 373 insertions(+)
+For my own case I can also just live with the Rockchip irq handler
+patch going in (ideally as a fix) and I just wanted to try to fix this
+will definitly fail if irq-handler not present case.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-index 35834687e40f..3063a84a45ef 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
-@@ -76,6 +76,7 @@ struct rvu_debugfs {
- 	struct dump_ctx nix_cq_ctx;
- 	struct dump_ctx nix_rq_ctx;
- 	struct dump_ctx nix_sq_ctx;
-+	struct dump_ctx nix_tm_ctx;
- 	struct cpt_ctx cpt_ctx[MAX_CPT_BLKS];
- 	int npa_qsize_id;
- 	int nix_qsize_id;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c
-index 881d704644fb..4a4ef5bd9e0b 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c
-@@ -1603,6 +1603,367 @@ static void print_nix_cn10k_sq_ctx(struct seq_file *m,
- 		   (u64)sq_ctx->dropped_pkts);
- }
- 
-+static void print_tm_tree(struct seq_file *m,
-+			  struct nix_aq_enq_rsp *rsp, u64 sq)
-+{
-+	struct nix_sq_ctx_s *sq_ctx = &rsp->sq;
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	u16 p1, p2, p3, p4, schq;
-+	int blkaddr;
-+	u64 cfg;
-+
-+	blkaddr = nix_hw->blkaddr;
-+	schq = sq_ctx->smq;
-+
-+	cfg = rvu_read64(rvu, blkaddr, NIX_AF_MDQX_PARENT(schq));
-+	p1 = FIELD_GET(NIX_AF_MDQ_PARENT_MASK, cfg);
-+
-+	cfg = rvu_read64(rvu, blkaddr, NIX_AF_TL4X_PARENT(p1));
-+	p2 = FIELD_GET(NIX_AF_TL4_PARENT_MASK, cfg);
-+
-+	cfg = rvu_read64(rvu, blkaddr, NIX_AF_TL3X_PARENT(p2));
-+	p3 = FIELD_GET(NIX_AF_TL3_PARENT_MASK, cfg);
-+
-+	cfg = rvu_read64(rvu, blkaddr, NIX_AF_TL2X_PARENT(p3));
-+	p4 = FIELD_GET(NIX_AF_TL2_PARENT_MASK, cfg);
-+	seq_printf(m,
-+		   "SQ(%llu) -> SMQ(%u) -> TL4(%u) -> TL3(%u) -> TL2(%u) -> TL1(%u)\n",
-+		   sq, schq, p1, p2, p3, p4);
-+}
-+
-+/*dumps given tm_tree registers*/
-+static int rvu_dbg_nix_tm_tree_display(struct seq_file *m, void *unused)
-+{
-+	int qidx, nixlf, rc, id, max_id = 0;
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	struct nix_aq_enq_req aq_req;
-+	struct nix_aq_enq_rsp rsp;
-+	struct rvu_pfvf *pfvf;
-+	u16 pcifunc;
-+
-+	nixlf = rvu->rvu_dbg.nix_tm_ctx.lf;
-+	id = rvu->rvu_dbg.nix_tm_ctx.id;
-+
-+	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-+		return -EINVAL;
-+
-+	pfvf = rvu_get_pfvf(rvu, pcifunc);
-+	max_id = pfvf->sq_ctx->qsize;
-+
-+	memset(&aq_req, 0, sizeof(struct nix_aq_enq_req));
-+	aq_req.hdr.pcifunc = pcifunc;
-+	aq_req.ctype = NIX_AQ_CTYPE_SQ;
-+	aq_req.op = NIX_AQ_INSTOP_READ;
-+	seq_printf(m, "pcifunc is 0x%x\n", pcifunc);
-+	for (qidx = id; qidx < max_id; qidx++) {
-+		aq_req.qidx = qidx;
-+
-+		/* Skip SQ's if not initialized */
-+		if (!test_bit(qidx, pfvf->sq_bmap))
-+			continue;
-+
-+		rc = rvu_mbox_handler_nix_aq_enq(rvu, &aq_req, &rsp);
-+
-+		if (rc) {
-+			seq_printf(m, "Failed to read SQ(%d) context\n",
-+				   aq_req.qidx);
-+			continue;
-+		}
-+		print_tm_tree(m, &rsp, aq_req.qidx);
-+	}
-+	return 0;
-+}
-+
-+static ssize_t rvu_dbg_nix_tm_tree_write(struct file *filp,
-+					 const char __user *buffer,
-+					 size_t count, loff_t *ppos)
-+{
-+	struct seq_file *m = filp->private_data;
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	struct rvu_pfvf *pfvf;
-+	u16 pcifunc;
-+	u64 nixlf;
-+	int ret;
-+
-+	ret = kstrtoull_from_user(buffer, count, 10, &nixlf);
-+	if (ret)
-+		return ret;
-+
-+	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-+		return -EINVAL;
-+
-+	pfvf = rvu_get_pfvf(rvu, pcifunc);
-+	if (!pfvf->sq_ctx) {
-+		dev_warn(rvu->dev, "SQ context is not initialized\n");
-+		return -EINVAL;
-+	}
-+
-+	rvu->rvu_dbg.nix_tm_ctx.lf = nixlf;
-+	return count;
-+}
-+
-+RVU_DEBUG_SEQ_FOPS(nix_tm_tree, nix_tm_tree_display, nix_tm_tree_write);
-+
-+static void print_tm_topo(struct seq_file *m, u64 schq, u32 lvl)
-+{
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	int blkaddr, link, link_level;
-+	struct rvu_hwinfo *hw;
-+
-+	hw = rvu->hw;
-+	blkaddr = nix_hw->blkaddr;
-+	if (lvl == NIX_TXSCH_LVL_MDQ) {
-+		seq_printf(m, "NIX_AF_SMQ[%llu]_CFG =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_SMQX_CFG(schq)));
-+		seq_printf(m, "NIX_AF_SMQ[%llu]_STATUS =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_SMQX_STATUS(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_OUT_MD_COUNT =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_MDQX_OUT_MD_COUNT(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_SCHEDULE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_MDQX_SCHEDULE(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_SHAPE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_MDQX_SHAPE(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_CIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_MDQX_CIR(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_PIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_MDQX_PIR(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_SW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_MDQX_SW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_MDQ[%llu]_PARENT =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_MDQX_PARENT(schq)));
-+		seq_puts(m, "\n");
-+	}
-+
-+	if (lvl == NIX_TXSCH_LVL_TL4) {
-+		seq_printf(m, "NIX_AF_TL4[%llu]_SDP_LINK_CFG =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL4X_SDP_LINK_CFG(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_SCHEDULE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL4X_SCHEDULE(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_SHAPE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL4X_SHAPE(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_CIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL4X_CIR(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_PIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL4X_PIR(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_SW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL4X_SW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_TOPOLOGY =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL4X_TOPOLOGY(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_PARENT =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL4X_PARENT(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_MD_DEBUG0 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL4X_MD_DEBUG0(schq)));
-+		seq_printf(m, "NIX_AF_TL4[%llu]_MD_DEBUG1 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL4X_MD_DEBUG1(schq)));
-+		seq_puts(m, "\n");
-+	}
-+
-+	if (lvl == NIX_TXSCH_LVL_TL3) {
-+		seq_printf(m, "NIX_AF_TL3[%llu]_SCHEDULE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL3X_SCHEDULE(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_SHAPE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL3X_SHAPE(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_CIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL3X_CIR(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_PIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL3X_PIR(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_SW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL3X_SW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_TOPOLOGY =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL3X_TOPOLOGY(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_PARENT =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL3X_PARENT(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_MD_DEBUG0 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL3X_MD_DEBUG0(schq)));
-+		seq_printf(m, "NIX_AF_TL3[%llu]_MD_DEBUG1 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL3X_MD_DEBUG1(schq)));
-+
-+		link_level = rvu_read64(rvu, blkaddr, NIX_AF_PSE_CHANNEL_LEVEL)
-+				& 0x01 ? NIX_TXSCH_LVL_TL3 : NIX_TXSCH_LVL_TL2;
-+		if (lvl == link_level) {
-+			seq_printf(m,
-+				   "NIX_AF_TL3_TL2[%llu]_BP_STATUS =0x%llx\n",
-+				   schq, rvu_read64(rvu, blkaddr,
-+				   NIX_AF_TL3_TL2X_BP_STATUS(schq)));
-+			for (link = 0; link < hw->cgx_links; link++)
-+				seq_printf(m,
-+					   "NIX_AF_TL3_TL2[%llu]_LINK[%d]_CFG =0x%llx\n",
-+					   schq, link,
-+					   rvu_read64(rvu, blkaddr,
-+						      NIX_AF_TL3_TL2X_LINKX_CFG(schq, link)));
-+		}
-+		seq_puts(m, "\n");
-+	}
-+
-+	if (lvl == NIX_TXSCH_LVL_TL2) {
-+		seq_printf(m, "NIX_AF_TL2[%llu]_SHAPE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL2X_SHAPE(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_CIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL2X_CIR(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_PIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL2X_PIR(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_SW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL2X_SW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_TOPOLOGY =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL2X_TOPOLOGY(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_PARENT =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL2X_PARENT(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_MD_DEBUG0 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL2X_MD_DEBUG0(schq)));
-+		seq_printf(m, "NIX_AF_TL2[%llu]_MD_DEBUG1 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL2X_MD_DEBUG1(schq)));
-+
-+		link_level = rvu_read64(rvu, blkaddr, NIX_AF_PSE_CHANNEL_LEVEL)
-+				& 0x01 ? NIX_TXSCH_LVL_TL3 : NIX_TXSCH_LVL_TL2;
-+		if (lvl == link_level) {
-+			seq_printf(m,
-+				   "NIX_AF_TL3_TL2[%llu]_BP_STATUS =0x%llx\n",
-+				   schq, rvu_read64(rvu, blkaddr,
-+				   NIX_AF_TL3_TL2X_BP_STATUS(schq)));
-+			for (link = 0; link < hw->cgx_links; link++)
-+				seq_printf(m,
-+					   "NIX_AF_TL3_TL2[%llu]_LINK[%d]_CFG =0x%llx\n",
-+					   schq, link, rvu_read64(rvu, blkaddr,
-+					   NIX_AF_TL3_TL2X_LINKX_CFG(schq, link)));
-+		}
-+		seq_puts(m, "\n");
-+	}
-+
-+	if (lvl == NIX_TXSCH_LVL_TL1) {
-+		seq_printf(m, "NIX_AF_TX_LINK[%llu]_NORM_CREDIT =0x%llx\n",
-+			   schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TX_LINKX_NORM_CREDIT(schq)));
-+		seq_printf(m, "NIX_AF_TX_LINK[%llu]_HW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TX_LINKX_HW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_SCHEDULE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_SCHEDULE(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_SHAPE =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL1X_SHAPE(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_CIR =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL1X_CIR(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_SW_XOFF =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr, NIX_AF_TL1X_SW_XOFF(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_TOPOLOGY =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_TOPOLOGY(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_MD_DEBUG0 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_MD_DEBUG0(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_MD_DEBUG1 =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_MD_DEBUG1(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_DROPPED_PACKETS =0x%llx\n",
-+			   schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_DROPPED_PACKETS(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_DROPPED_BYTES =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_DROPPED_BYTES(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_RED_PACKETS =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_RED_PACKETS(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_RED_BYTES =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_RED_BYTES(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_YELLOW_PACKETS =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_YELLOW_PACKETS(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_YELLOW_BYTES =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_YELLOW_BYTES(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_GREEN_PACKETS =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_GREEN_PACKETS(schq)));
-+		seq_printf(m, "NIX_AF_TL1[%llu]_GREEN_BYTES =0x%llx\n", schq,
-+			   rvu_read64(rvu, blkaddr,
-+				      NIX_AF_TL1X_GREEN_BYTES(schq)));
-+		seq_puts(m, "\n");
-+	}
-+}
-+
-+/*dumps given tm_topo registers*/
-+static int rvu_dbg_nix_tm_topo_display(struct seq_file *m, void *unused)
-+{
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	struct nix_aq_enq_req aq_req;
-+	struct nix_txsch *txsch;
-+	int nixlf, lvl, schq;
-+	u16 pcifunc;
-+
-+	nixlf = rvu->rvu_dbg.nix_tm_ctx.lf;
-+
-+	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-+		return -EINVAL;
-+
-+	memset(&aq_req, 0, sizeof(struct nix_aq_enq_req));
-+	aq_req.hdr.pcifunc = pcifunc;
-+	aq_req.ctype = NIX_AQ_CTYPE_SQ;
-+	aq_req.op = NIX_AQ_INSTOP_READ;
-+	seq_printf(m, "pcifunc is 0x%x\n", pcifunc);
-+
-+	for (lvl = 0; lvl < NIX_TXSCH_LVL_CNT; lvl++) {
-+		txsch = &nix_hw->txsch[lvl];
-+		for (schq = 0; schq < txsch->schq.max; schq++) {
-+			if (TXSCH_MAP_FUNC(txsch->pfvf_map[schq]) == pcifunc)
-+				print_tm_topo(m, schq, lvl);
-+		}
-+	}
-+	return 0;
-+}
-+
-+static ssize_t rvu_dbg_nix_tm_topo_write(struct file *filp,
-+					 const char __user *buffer,
-+					 size_t count, loff_t *ppos)
-+{
-+	struct seq_file *m = filp->private_data;
-+	struct nix_hw *nix_hw = m->private;
-+	struct rvu *rvu = nix_hw->rvu;
-+	struct rvu_pfvf *pfvf;
-+	u16 pcifunc;
-+	u64 nixlf;
-+	int ret;
-+
-+	ret = kstrtoull_from_user(buffer, count, 10, &nixlf);
-+	if (ret)
-+		return ret;
-+
-+	if (!rvu_dbg_is_valid_lf(rvu, nix_hw->blkaddr, nixlf, &pcifunc))
-+		return -EINVAL;
-+
-+	pfvf = rvu_get_pfvf(rvu, pcifunc);
-+	if (!pfvf->sq_ctx) {
-+		dev_warn(rvu->dev, "SQ context is not initialized\n");
-+		return -EINVAL;
-+	}
-+
-+	rvu->rvu_dbg.nix_tm_ctx.lf = nixlf;
-+	return count;
-+}
-+
-+RVU_DEBUG_SEQ_FOPS(nix_tm_topo, nix_tm_topo_display, nix_tm_topo_write);
-+
- /* Dumps given nix_sq's context */
- static void print_nix_sq_ctx(struct seq_file *m, struct nix_aq_enq_rsp *rsp)
- {
-@@ -2349,6 +2710,10 @@ static void rvu_dbg_nix_init(struct rvu *rvu, int blkaddr)
- 		nix_hw = &rvu->hw->nix[1];
- 	}
- 
-+	debugfs_create_file("tm_tree", 0600, rvu->rvu_dbg.nix, nix_hw,
-+			    &rvu_dbg_nix_tm_tree_fops);
-+	debugfs_create_file("tm_topo", 0600, rvu->rvu_dbg.nix, nix_hw,
-+			    &rvu_dbg_nix_tm_topo_fops);
- 	debugfs_create_file("sq_ctx", 0600, rvu->rvu_dbg.nix, nix_hw,
- 			    &rvu_dbg_nix_sq_ctx_fops);
- 	debugfs_create_file("rq_ctx", 0600, rvu->rvu_dbg.nix, nix_hw,
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-index 086f05c0376f..5ec92654e7ad 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_reg.h
-@@ -429,6 +429,8 @@
- #define NIX_AF_RX_ACTIVE_CYCLES_PCX(a)	(0x4800 | (a) << 16)
- #define NIX_AF_LINKX_CFG(a)		(0x4010 | (a) << 17)
- #define NIX_AF_MDQX_IN_MD_COUNT(a)	(0x14e0 | (a) << 16)
-+#define NIX_AF_SMQX_STATUS(a)		(0x730 | (a) << 16)
-+#define NIX_AF_MDQX_OUT_MD_COUNT(a)	(0xdb0 | (a) << 16)
- 
- #define NIX_PRIV_AF_INT_CFG		(0x8000000)
- #define NIX_PRIV_LFX_CFG		(0x8000010)
-@@ -442,6 +444,11 @@
- #define NIX_CONST_MAX_BPIDS		GENMASK_ULL(23, 12)
- #define NIX_CONST_SDP_CHANS		GENMASK_ULL(11, 0)
- 
-+#define NIX_AF_MDQ_PARENT_MASK         GENMASK_ULL(24, 16)
-+#define NIX_AF_TL4_PARENT_MASK         GENMASK_ULL(23, 16)
-+#define NIX_AF_TL3_PARENT_MASK         GENMASK_ULL(23, 16)
-+#define NIX_AF_TL2_PARENT_MASK         GENMASK_ULL(20, 16)
-+
- /* SSO */
- #define SSO_AF_CONST			(0x1000)
- #define SSO_AF_CONST1			(0x1008)
--- 
-2.39.0.198.ga38d39a4c5
+
+Heiko
+
+
+> However that would probably mean introducing something
+> like struct dwcmshc_pltfm_data as described here:
+> 
+> https://lore.kernel.org/linux-mmc/ed900af1-f090-49a9-bc7e-363a28a4ac2b@intel.com/
+> 
+> 
+> > +			priv->vendor_specific_area2 =
+> > +				sdhci_readw(host, DWCMSHC_P_VENDOR_AREA2);
+> >  
+> > -		dwcmshc_cqhci_init(host, pdev);
+> > +			dwcmshc_cqhci_init(host, pdev);
+> > +		} else {
+> > +			dev_warn(&pdev->dev, "can't enable cqe support without irq handler\n");
+> > +		}
+> >  	}
+> >  
+> >  	if (rk_priv)
+> 
+> 
+
+
+
 
