@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6029713D2B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2CC13D2B6
 	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:24:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457100; cv=none; b=Q3AW6nT94bsnMAHwZSLvcWor+Y9B2QYuyU9Nij+s3xA0cAlP8u698UkL57a9wCiMUexd8ivRuH9mVDt+nEpuRT5YEKtmq3eDH5W2Mesz+XmDsixRCl3BCjq1SAnm9CXB9lvxZWS1eilvNjdfj4JkShz2uop1/Q4B/NAEW6k/6kk=
+	t=1717457101; cv=none; b=ctYBUu8ZCn1ukvgVt7Ni7jgguVvbphu7GSvqv+wivIC62r1CLmYtKsI9xVrQvS/KGgf72EOgQXDule8c5FQVLsoBf+B8TR/DANru7GvSZCSy9QqPAa/6kz6z4+h2ALw5Gx413sbHcssaMJqHKTOr1KGq9LsvnxNF0SjQaOPL0yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457100; c=relaxed/simple;
-	bh=1GPxJsazjgFSmtvziKA2daYP2cJk4PeD/79aElPpmV8=;
+	s=arc-20240116; t=1717457101; c=relaxed/simple;
+	bh=nJLUOO0kFbQq0mpsWpx/7kA8MXGjckBsDAJO8NTpM6E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZL2POwXgCnrKRTOpMOCa6wqt1u35Nqb2QCe2ghp8BoI3I0WSbHM9A8G0Y/gAuffnxL4H86iVjOIFk7SWLgSr1RH8RVX/sYMmIhxp9QFtKJSonlNM8TWbkvo0Tgjk7aSoWpZExo9+h86WevrzQrG3+uZ0IvvNBtQZq6FmWZEO4So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ugy8mT27; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EoHxWt/n; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=imtgu7wmBanP3AWaxQE586I36OTGsMNELklUYS+u6GmFDqr2ISclFRi/V8cAPBrT2HHqa5WZuFW2I0eBMCy8Aq1zGwunHWkmbDWIPNWEyWbkesEF0cfaOAMqPrc9t2OskqCtw3aP0GBwFTLrNxTFhMqodduJ1o1di7Fs2/Sq3tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qV+sNGum; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Odj4u7ry; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ugy8mT27";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EoHxWt/n"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qV+sNGum";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Odj4u7ry"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717457097;
+	s=2020; t=1717457096;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J3r539HPiGZ1ucztmTvwYfwwdyMDVQwx7ANJGpwQWgU=;
-	b=Ugy8mT27KdRZEzx99VjJZzeebPpUyaWC554x2HvHaMK4xKaZlrkbdIG9Wu+Dy2RX6Iz9yv
-	s2+BZXyqq6sENqhYcb/RJWKGbowNN9x3mY/UtKgP6Rs/mt3FGsizQsS85ePBz7tHJtkFxC
-	LWl+rJPaNYFv1QRjKqMmKSaIxhP8NfWPCCAG/Zfj0Z+yB4eqm29PhYqs0Worv2Eif0q/tM
-	zVVWNzDo/183+vRmg+t1PyDpSXfNHpQ7bUkxJs8WRJLV/DObJS8epL3+ayvhBbsEA0Vndn
-	ro72ykqUn7MT2Hle36AmdHKC4vTH4AxWsYQU/agXxugV0wBoBbklm3qKf+TPXQ==
+	bh=Dj4gOrMYbFMlZqhfQ1sjWqCRmrh47Yb6HFMI47V4kYM=;
+	b=qV+sNGumgD9wkX7Nv8ydFkhKqx9YqMjfbJ8zEq9ngIMylq4Ev76annalIm9kksCu5+HfFe
+	0bcAvNygHFrlh7zvE6jGtoYi4KYzHR6sp2GJqMGu4+lF98mLP5nURHdvjCePu++MhXEeQR
+	SLGZyZwKYcgvKGBF+HG6MkWwVeoJJ2e4LTiABIe2yitQ6PUE8unOk6yizO38mtQowL4qcU
+	9PsiFmgPDTouoagtWYmpOL4GKX04VPKBBCzyeD243BnH7Ige0D9N2YZjYxPZob2j3psozW
+	9Ps1+Vvpi5MKDkaLpT92WQmSiwqeCRTqDALqIpGCWPsv5WIYC/IHDsBkHhK1nw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717457097;
+	s=2020e; t=1717457096;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=J3r539HPiGZ1ucztmTvwYfwwdyMDVQwx7ANJGpwQWgU=;
-	b=EoHxWt/nLPkRcB9vqfRfKnHhGNiNmYiGJ/6KIay44Uw62QdQGjp8cqwYhJAlcfxXNWi6sb
-	RSJc4NUoFRAcAqBg==
+	bh=Dj4gOrMYbFMlZqhfQ1sjWqCRmrh47Yb6HFMI47V4kYM=;
+	b=Odj4u7ryDDsbcjDhjQhN0ZkCrkfM7T/t16qNZj1P56qCxrpCFxqIIbSVXKctpwrhWkRXmg
+	t4hFUzIaZ+YnuQDw==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v2 08/18] printk: nbcon: Stop threads on shutdown/reboot
-Date: Tue,  4 Jun 2024 01:30:43 +0206
-Message-Id: <20240603232453.33992-9-john.ogness@linutronix.de>
+Subject: [PATCH printk v2 05/18] printk: Atomic print in printk context on shutdown
+Date: Tue,  4 Jun 2024 01:30:40 +0206
+Message-Id: <20240603232453.33992-6-john.ogness@linutronix.de>
 In-Reply-To: <20240603232453.33992-1-john.ogness@linutronix.de>
 References: <20240603232453.33992-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,62 +57,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Register a syscore_ops shutdown function to stop all threaded
-printers on shutdown/reboot. This allows printk to cleanly
-transition back to atomic printing in order to provide a robust
-mechanism for outputting the final messages.
+For nbcon consoles, normally the printing is handled by the
+dedicated console printing threads. However, on shutdown the
+printing threads may not get a chance to print the final
+messages.
+
+When shutting down or rebooting (system_state > SYSTEM_RUNNING),
+perform atomic printing from the printk() caller context.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/nbcon.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ kernel/printk/nbcon.c  | 5 +++--
+ kernel/printk/printk.c | 7 ++++++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 4ab47cc014a3..f60d47b5db8a 100644
+index 89b340ca303c..19f0db6945e4 100644
 --- a/kernel/printk/nbcon.c
 +++ b/kernel/printk/nbcon.c
-@@ -18,6 +18,7 @@
- #include <linux/smp.h>
- #include <linux/stddef.h>
- #include <linux/string.h>
-+#include <linux/syscore_ops.h>
- #include <linux/types.h>
- #include "internal.h"
- #include "printk_ringbuffer.h"
-@@ -1703,3 +1704,33 @@ void nbcon_device_release(struct console *con)
- 	console_srcu_read_unlock(cookie);
- }
- EXPORT_SYMBOL_GPL(nbcon_device_release);
-+
-+/**
-+ * printk_kthread_shutdown - shutdown all threaded printers
-+ *
-+ * On system shutdown all threaded printers are stopped. This allows printk
-+ * to transition back to atomic printing, thus providing a robust mechanism
-+ * for the final shutdown/reboot messages to be output.
-+ */
-+static void printk_kthread_shutdown(void)
-+{
-+	struct console *con;
-+
-+	console_list_lock();
-+	for_each_console(con) {
-+		if (con->flags & CON_NBCON)
-+			nbcon_kthread_stop(con);
-+	}
-+	console_list_unlock();
-+}
-+
-+static struct syscore_ops printk_syscore_ops = {
-+	.shutdown = printk_kthread_shutdown,
-+};
-+
-+static int __init printk_init_ops(void)
-+{
-+	register_syscore_ops(&printk_syscore_ops);
-+	return 0;
-+}
-+device_initcall(printk_init_ops);
+@@ -1297,7 +1297,8 @@ static void nbcon_atomic_flush_pending_con(struct console *con, u64 stop_seq,
+ 	 * context must flush those remaining records if the printer thread
+ 	 * is not available do it.
+ 	 */
+-	if (!con->kthread && prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
++	if ((!con->kthread || (system_state > SYSTEM_RUNNING)) &&
++	    prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
+ 		stop_seq = prb_next_reserve_seq(prb);
+ 		goto again;
+ 	}
+@@ -1639,7 +1640,7 @@ void nbcon_device_release(struct console *con)
+ 	 */
+ 	cookie = console_srcu_read_lock();
+ 	if (console_is_usable(con, console_srcu_read_flags(con)) &&
+-	    !con->kthread &&
++	    (!con->kthread || (system_state > SYSTEM_RUNNING)) &&
+ 	    prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
+ 		__nbcon_atomic_flush_pending_con(con, prb_next_reserve_seq(prb), false);
+ 	}
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 137bd9a721c4..b58db15d2033 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2389,12 +2389,17 @@ asmlinkage int vprintk_emit(int facility, int level,
+ 		 *
+ 		 * - When this CPU is in panic.
+ 		 *
++		 * - During shutdown, since the printing threads may not get
++		 *   a chance to print the final messages.
++		 *
+ 		 * Note that if boot consoles are registered, the console
+ 		 * lock/unlock dance must be relied upon instead because nbcon
+ 		 * consoles cannot print simultaneously with boot consoles.
+ 		 */
+-		if (is_panic_context)
++		if (is_panic_context ||
++		    (system_state > SYSTEM_RUNNING)) {
+ 			nbcon_atomic_flush_pending();
++		}
+ 	}
+ 
+ 	if (do_trylock_unlock) {
 -- 
 2.39.2
 
