@@ -1,132 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic313-21.consmr.mail.ir2.yahoo.com (sonic313-21.consmr.mail.ir2.yahoo.com [77.238.179.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C503613B287;
-	Mon,  3 Jun 2024 19:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5821F13A876
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 19:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.179.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441720; cv=none; b=RQ21bcyKHPuzj4uhisf3tCh8vOkeqT+00rqbl2rtbFB5aLc9sjSAbGmgitOukvvekIGtQkvBSkN+7VVY/ldluzOKUXz45LFzSSM0YTAu9xtlx+4Vs70u8ItD8gEyxlxADviQmKV67BU21+QLQFvbDHL07JCJQKuuu2nOPonjvdc=
+	t=1717441825; cv=none; b=fGfqEm4wBfr8rSXulLrRZN/H6rEWVyhvJpi2QntH+RSmuFmwa8Y2BXPk9uKDh6fKBs3KZui4fj2ezEBe5wK93n5aCnbvVC1M1wD69GooeLDuXaEl88w7+/lVwoNCC9VgVwx8Ulfvp8XrccFQZl0hZ+gUIQGIeYkekstmOs0EyMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717441720; c=relaxed/simple;
-	bh=F/TK9OcxivDRmYkoq1xiln0SMyd/XO2PpVVZ5xeEJ/U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=Az1WXrZrVmC4RQJ8kZ+Gp/LyFfyEsw4Rc4AVrnmLr5zTrY11zDdyF5kBBwvOvPXP6DQ+dzCh8EMJ+TuX4EW3Qpv2hdOFlSt3ldpvNIqUMvGmvwLr45M716c8mB67KC/sAEBxaptcE2ISczPHsc5D9fCN84s3nTvKxjs6v1Cx1dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U8idsLAu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717441825; c=relaxed/simple;
+	bh=KPYkAqhmju7XsyzBTxmcRoWn5S92tOqYTNT7Zf42wUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NLIdMqIoqS0+zCCZcynXvAsl+ATLAQ6OisBtG7oT005Ifq7TGyw1CkuA50+9/CA4UhyIiDYPt/mzA3VGD0wlo+jt0wkMCSigRyq3XRNq7iU+510x4ZEVmWUs9xZvo666r6XezhHq/RIRRixTogcJqk5anZcMlPy6rK3/A+kyKEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de; spf=pass smtp.mailfrom=yahoo.de; dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b=J1JsREm1; arc=none smtp.client-ip=77.238.179.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U8idsLAu"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453BLFrS021300;
-	Mon, 3 Jun 2024 19:08:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=V3XSllfSI8aiZfLLyosstx
-	n33bIag5OldLcqt9tDy4Q=; b=U8idsLAu7agaSY9ACDz+BcfXJ8Wo3H/hF18B07
-	d6Wsqfkfdf8Wurmusm/ftx1gFSZMvRSlCs9LvSd1suRdihiiAXkR1r7gqmvIVbmw
-	OWJtgF5yk337vWnvHRMiFtvRfoMuVgDLbRwBYKc/6mbUQIRHEVHnejYzPiAk84CW
-	/DEfCc8p3c9rZaI0qMGojCwh9u1d2hP4H+lG/FG7Gv5pYXjqvCGvjgRV/ogm44v1
-	4xNEhtZuSHBx1H0X77ZO8q8h6h3Txwl+dsrGQafXnHC7OzleISHOyBXJs9IO/6ya
-	BBd87couF6A6LlRqLz7NZss4DG98hTpENaz9WYgKb4fJNofQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw4an1g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 19:08:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453J8Y3K007292
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 19:08:34 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 12:08:33 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 3 Jun 2024 12:08:32 -0700
-Subject: [PATCH] char: add missing MODULE_DESCRIPTION() macros
+	dkim=pass (2048-bit key) header.d=yahoo.de header.i=@yahoo.de header.b="J1JsREm1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.de; s=s2048; t=1717441816; bh=edWCNicz5SLkhidXgXtdvBzRygTru67Exq0izoAmB5E=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=J1JsREm1GMQyjSBjtQPGnapUvJYCq2JZfCXRXdfBJ1dJRQaxMgDD9ZQreCpnZFN8KjYxupZOFgY8b6ju/GnctuTNW+Ke5xKhIzSlFUvd6kQRWBuF55ZoGAzkbdx1/5S4loUdNlrjauTZRYieE0ugbYbqJpa+gqNGFY0n9zhFSknDGI36IFKNsRwrjUrX5nu7VpDbtoel3DgDhR7xsBZXyYsTI/gl9G78oX9H1tZtGT08sYg+yWjXaMtCW1jEFficU7ke7FEf7IJX+mU85ZqtV43xuy3wgxLP2QqValdES2VShCuYT+02DYQIbrPS4KYiFx5W/d1EBdOHBL0ruhSczw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1717441816; bh=HLLzKbN86DMWAOiWBMzfwvF233zZVKaahPOtp3NrJ2l=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=O3gxnjEk528WBpcvGNkUp+l0J4TaTDaWUZL20MhwoI+/IIDXzUQC5T7kK2kvSEHlj8U/VH6dfyt4fvMbQazRIstgzCHZfVB6pi9K9E43kLpIhgRIbj/NcD2cZwcQUX0nhl6ndiU8MTodkksB7Mnje/cW+dEH8z4kiLerW36evjo6NnDRgH/Eo0L/uEub/LoMXlGOu5sG7MeodlrkSknuUghuKXqanONJiS/eQmjMmjYHrjR7tjlGdGAXNpidUXVpYZnXcnpyljOQkFMDlrvBQKlbZ9lPGPGAmCA7z9oVe81MFu6W+e48qav5c/fG74QYJHbVqH5crZm34WGdEpqvFA==
+X-YMail-OSG: RRRAq.cVM1n6crMbCT.spnjMTieSo.tt0qvtB4AOa0lp934HpKZRmcMBUd.S_Fs
+ pqKphfUtzKyDdzA0YyYE_2_O5wds9gfEJHib7hAywVMfMKFSIYpdBpb9khpv0e0n.0UEnoPCdBhv
+ O3wF1k7a7OzlcFMzX84f_cAo56wUB92GVfIeXQSWK9KSewfWkTE2Fadgap0U93tlS_ONLoqOldOa
+ QNkeTZDtXt2cMCoZJP.be62Hm4fjUlCbxIpvkuo6FPXlbv7PyIZAbklVazvfFTW9JPAku1Nllhdh
+ OaBDpvdiqdgZM7NjZeiWKNFOWDah2Xcurs2qLEbGPAK8.jD8wfSIkjPOHj00c8yepEQowSgPi_MW
+ vBUlcUBLj5Oa5DCYwNg7KZb.6uyTBh1mDz14pv.gb9sp9OaYbLHMKGcikhLextuU0sfe9rvLP0Si
+ _6SFGmQ7UwNqTK2YdjOJR62CQF3W5TnqYpJdKc0eyoHdGKwkFCrxpMiZTJ7hAbBvw2iETrABl8hr
+ tvADER.UGLaUsf47f70aclGO7w1cAz7sngtu5tq.THxK2fyX8_PrXb2fKVHogj4JnXCuzokj8bI7
+ 7RJ56L82la.HeIumagtCCEf06xQ1HTyY1HmWivB_UWqDcSH9twW4awJim9pDZpbE2F.itilM3wr9
+ e6HMUjnEcglfYUrKgQcdnUTw.cuwAztFaBu5c9HrpI3YJNQ3sySn4YvUMR7cbZKkm_JbVz9gz0kG
+ FCTOT47xmaSw7y_HWcbgQqg0H94d5gTh0eAd5TeR6RVqHJm6fBvz7Yh3dt0e9bMwxR3ly_ambSPk
+ 7vnJHa9Ycg79VMdy2yGRKtBY2b9YQ3KgAMD0zn5VaR7xpD5ct3dN0_tYiv_Xgj6_TmZ41JU88ept
+ 3O3_R8MzeohgmAQ6jiBh_4LsuQVRCly5ZQzLLUkiUxNpNWbXhy0uhGde01.IsrRKL498bIUWTotK
+ hlazkSrXHiISCeeDIC73LnFLwfWtHU.GHSsz30_Yp0dBoSqIxjKu32Y.jfQ.f2BNNPZmizE86FQf
+ E..nYeW__tvIDYDiPv474VlxieQvJ260emljUo2DqB3Ehh13kUbBFnH7S4Zar5N10CUiY2QWl6jx
+ fRRtKL6MjBopYdy46jpc43pOHvyuHFZv06J_e2Dbz4gGJ3sQSXywrcPBzcM_BDQeocn7rGUxpJnA
+ B763QKOGlvPgTaYQmZiQWMxJB6QCNKG1k71265Unc33l.RYiu50HoFVlycBlID1rALmHvjKeLht5
+ mMvvcV6pGOzDgHihvoUHiGR.wESEDOYKEzOzJt39H3i41vcR0zXxDY3dQ9Sgqia_6p8eON4ZA9eG
+ Y.xx9baR.EFAS3HxTPaPq.0RFkxvGNHh5ZNv1r4GA6QeadYTdwTZr8SngRzw6P3r8a8MaLjcMNDi
+ uVoCDx0BpKfk7CEFCupCJK8X2VjhNDTmpAdBE_zUMNdZ46QawukiKtVfATKS0vkVwADWcylZSdt_
+ BxkLBol9tx3RWMuGNo7RNG7l9HPou49C3TbuIPNvrVgpZs4qn6_Hgbabmr.nOuJbqqzY5kbvMM2z
+ DzkJ0HaQlz.wWfVfiU781crKod9984S8_eFAdaJKfrbBVpsbT02LInBFo3CaqQRYDwanjuVQrLJd
+ f05E3qei4DnL.gKzlDsOdnh6WYH7kcXDAZB2nWd6Ty2nwK32ZKUD_keGuayhfvYFp72NSGNi_oki
+ SD3npZa3yqP_1Lu8gKP_JajAa7F5zxjNvRnaaqY8T51weOQCTmUWNjI17FbCw.8js1DDbbkmuZeB
+ SBWIfhzCESrYtg0Dl7zsW2hAH.SULdOxKK5Y55LlC7Va8qN1SNlWgOX44We9bxI3POXeJMu4M03j
+ WeVYwgz3QKr5AGFHW.CKI19r.40xMIVC.Tv6fVWsdbThv6.kBB585UxEg4adCdTqO2WCAaeGRwPF
+ tVcCtT6J.iZLb2OPLkA9tzg4e1XBa1h2jjInP_fTMUtC3ib5hhjnA8P2Chk9GQztEjJKAab6JlIv
+ sixBpNiOvdzL3nxgrJ8as0Wzhc5WGHSRtzeGuF2OqizEUjqtbnL989FBQ8ealhkUvLgmrKoEv8zQ
+ qC7ktR51sFka5I7Bmqohewtn51_zL5u4q57FahRZGq6yj54y6Mqu0yVWpWa_0v4pjIDAqPu9c5LC
+ HfQ6wPD2pV7geth9K5w5.pfbloEKJzoPdxBqjxruAwMGAlVeVBUdIABkQDeyDMsQL18zmdRk7gLA
+ QMb7xc0jYZBMBF2L3sAgZALgqeBuxzBr47wEvxPa_Z1_SHiO9LXUzluhM3AHm
+X-Sonic-MF: <fhortner@yahoo.de>
+X-Sonic-ID: 83e29caa-1270-46e0-bf41-7b4f52bbe70c
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ir2.yahoo.com with HTTP; Mon, 3 Jun 2024 19:10:16 +0000
+Received: by hermes--production-ir2-7b99fc9bb6-z99rq (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID abd44bd1c36a5049a30287d79d773928;
+          Mon, 03 Jun 2024 18:49:57 +0000 (UTC)
+Message-ID: <829c478d-f547-4e12-9976-ed465dd8d4ed@yahoo.de>
+Date: Mon, 3 Jun 2024 20:49:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240603-md-char-misc-v1-1-25d43d6f331d@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAK8UXmYC/x3M0QrCMAyF4VcZuTaQ1VHBVxEv0ja6gK2SOBmMv
- bvVy4/D+TdwMRWH87CByUddn61jPAyQZ253QS3dEChMFOmItWAfDKt6xjFFLhRONHGEfnmZ3HT
- 95y7X7sQumIxbnn+Rh7Zlxcr+FoN9/wJ/m5pMfQAAAA==
-To: Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        "Jeff
- Johnson" <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8iCGYLuUTvGCT_vha9RCmoRncIjvbY-O
-X-Proofpoint-ORIG-GUID: 8iCGYLuUTvGCT_vha9RCmoRncIjvbY-O
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030155
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression, thermal: core: battery reading wrong after wake from
+ S3 [Was: Bug Report according to thermal_core.c]
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <1051df4c-067f-455e-8c7f-9dc47dc8ed00@yahoo.de>
+ <7f4a777b-88f6-4429-b168-d1337d291386@yahoo.de>
+ <435867b5-029b-419f-bb7f-2d4902c62556@leemhuis.info>
+ <a97f9f4d-17f1-44cf-a0f4-634fd38aba2a@yahoo.de>
+ <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+From: "fhortner@yahoo.de" <fhortner@yahoo.de>
+Content-Language: en-US
+In-Reply-To: <CAJZ5v0jwvq6W0u7Zx4GzQxJOnrF4KvN1RHtqqDcaMvN6yp0hDg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.22407 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/ttyprintk.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/lp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/nvram.o
+I Totally agree, this was also my first thought, what has the battery 
+state to do with thermals.
+But at least, so far, we have in total three repros confirmed in the bug 
+report. All of the same machine.
+Thinkpad X1 Xtreme Gen2 = Thinkpad P1 Gen2. The only difference is the 
+graphics Nvidia Geforce vs Nvidia Quadro
 
-Add the missing invocations of the MODULE_DESCRIPTION() macro.
+these are the types of thermal zones:
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
-These are the ones left after addressing the ones in
-drivers/char that had explicit MAINTAINERS entries.
----
- drivers/char/lp.c        | 1 +
- drivers/char/nvram.c     | 1 +
- drivers/char/ttyprintk.c | 1 +
- 3 files changed, 3 insertions(+)
+cat /sys/class/thermal/thermal_zone*/type
+acpitz
+SEN6
+SEN7
+SEN8
+SEN9
+SENA
+SENB
+SENC
+SEND
+x86_pkg_temp
+iwlwifi_1
+INT3400 Thermal
+SEN1
+SEN2
+pch_cannonlake
+SEN3
+SEN0
+B0D4
+SEN4
+SEN5
 
-diff --git a/drivers/char/lp.c b/drivers/char/lp.c
-index 2f171d14b9b5..5faebe0365c5 100644
---- a/drivers/char/lp.c
-+++ b/drivers/char/lp.c
-@@ -1123,4 +1123,5 @@ module_init(lp_init_module);
- module_exit(lp_cleanup_module);
- 
- MODULE_ALIAS_CHARDEV_MAJOR(LP_MAJOR);
-+MODULE_DESCRIPTION("Generic parallel printer driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/char/nvram.c b/drivers/char/nvram.c
-index e9f694b36871..9eff426a9286 100644
---- a/drivers/char/nvram.c
-+++ b/drivers/char/nvram.c
-@@ -540,6 +540,7 @@ static void __exit nvram_module_exit(void)
- module_init(nvram_module_init);
- module_exit(nvram_module_exit);
- 
-+MODULE_DESCRIPTION("CMOS/NV-RAM driver for Linux");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS_MISCDEV(NVRAM_MINOR);
- MODULE_ALIAS("devname:nvram");
-diff --git a/drivers/char/ttyprintk.c b/drivers/char/ttyprintk.c
-index 4c806a189ee5..d7f841ab4323 100644
---- a/drivers/char/ttyprintk.c
-+++ b/drivers/char/ttyprintk.c
-@@ -228,4 +228,5 @@ static void __exit ttyprintk_exit(void)
- device_initcall(ttyprintk_init);
- module_exit(ttyprintk_exit);
- 
-+MODULE_DESCRIPTION("TTY driver to output user messages via printk");
- MODULE_LICENSE("GPL");
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240603-md-char-misc-1b6ad02704a6
+Am 03.06.24 um 20:38 schrieb Rafael J. Wysocki:
+> On Thu, May 30, 2024 at 1:10 PM fhortner@yahoo.de <fhortner@yahoo.de> wrote:
+>> Thanks Thorsten for the side note.
+>>
+>> I have compiled kernel 6.8.11 with reverted commit
+>> 5a5efdaffda5d23717d9117cf36cda9eafcf2fae.
+>>
+>> Battery Status works fine now with reverted commit after S3 Sleep and
+>> Wake cycles.
+> Well, the connection between the battery status and the resume of
+> thermal zones is somewhat unclear to me at the moment.
+>
+> Most likely, the commit in question changes the timing of system
+> resume which affects the battery behavior and it seems to be related
+> to the EC somehow.
+>
+> Let's first see what thermal zones there are on your system, so please
+> send the output of
+>
+> $ cat /sys/class/thermal/thermal_zone*/type
 
