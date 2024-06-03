@@ -1,114 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297FB3F8F7;
-	Mon,  3 Jun 2024 07:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5845838DE1;
+	Mon,  3 Jun 2024 07:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717398184; cv=none; b=HAqNWHTcQLRTD2qdYUybhXODqXO+7edjLCnvvfdfKYqKGmMvkSrgE2Pu/BNeN56/wAGaYbjxbVzoo9A6AvXp+47csZenMIlp5UeCuqyOuPKgpvMf0M/BtWsmDEJlaWl3Bk8GHqF9hn8JSncbr8pRi8uZOmG5zAHT7zOPqEiIzPc=
+	t=1717398220; cv=none; b=kiN1nG4zlD3AQGVrspreCwJgjSOb5yJMwIUZxRSVCsqhTZFl4sPVGZBwRxGKrWY35ZzluxZgghvCTgfF6HqtzUeNVnIvMp+E262h3CvezrC29F9wJ43gNS98WMhSe5TP3UZBhHK3ipBT6MUb+1Uad8f2XsVkBGf+or4DJgvu1ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717398184; c=relaxed/simple;
-	bh=pDG/zPvSsthUFIuk7WPPcVG/XqN7D5cdktO31r1fgKw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N1+VAePWVAk/EG4q9AixSK7hLRW0kuZnYnO7TLuarvkkM/yHCy3arLjF0uNRjiCVRM48f9oMiG9l3Wt9lG3UByhiUtZsaXMuLmo4jqvyEN0LGLhgwKukuNDeoZPxFyGyvINNN/6KEKauh/Hs/Ua7tI3rBZo1tztmGE8Hp+N5Oro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YY7v0o7p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717398220; c=relaxed/simple;
+	bh=UwiT9i7QKsZeFRnVhCPkDUyFUr4Bjhk57FjXtm5j1L8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kubhAyAyxHq81bQPnGxK0kYZvht0NgaHq+rvL9ZRk2Q1tWGNP433hH/C78hqkRmjPcEe/+vpjwv09eMaRTqFH18AXQUwVmQ8iLusP4w2Ah4qE90v5SnvMwL34gJCRXfXgbIt8YfphRAwZ2eOfLeBtsPoTpS72no/SpfgE5Y3CTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=W/Dd/5SR; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YY7v0o7p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5129DC2BD10;
-	Mon,  3 Jun 2024 07:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717398183;
-	bh=pDG/zPvSsthUFIuk7WPPcVG/XqN7D5cdktO31r1fgKw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YY7v0o7pW6GEseW8RE2YsHJXKMzSHhMSgxcOlldMUhhQu5hyRXE5xgx6PommmyrRe
-	 /8NX7dnz/k9elGlB3w0yiIbfnmmFDF+7uP3znW7vwQKsyrgR8nARqUNPIn8fZaiZli
-	 tK0DkG8LfLvVa4qy9NIazTGvqPxDwfMS6aVDXT6260B7f9WcNoBNhNnA9xZhJt5/rF
-	 aUIlPwRQWnfSJkOMQ9c2IF5SNSR9yUw1DCSMul7JZQqYt7R+FYlKD5HwSGr0tkgd9O
-	 FYuvR45VSogNLBSV+8Bts2bX3LsKUJKsrE6/kP7b7xCsfhUY5pAPXUoWCfTAFsldVy
-	 RyV2Tbc8rdB3A==
-Message-ID: <5d3a5e35-4a01-48f0-a078-42b564cae2e4@kernel.org>
-Date: Mon, 3 Jun 2024 09:02:58 +0200
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="W/Dd/5SR"
+Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id 3F25987D4F;
+	Mon,  3 Jun 2024 09:03:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1717398210;
+	bh=/5tiGd5pGdf6aZEybqPPhF21h6T2J0vgCrJD+FKGjZ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W/Dd/5SREWKMPK4oEMy7v3+vjc7htmpgltzvc24TyZeC/d0uQCMiH3On1ma/nhhhw
+	 BRP5coF/heAHFGGShfQHcOa7BT7fsRJZdRsSbGqcN4btXWfXHTKjJ7buhoCeVAh0+D
+	 14nUnNLwV9vxJMHogss93VcC+RZcpROMNSwI0GY32yZfh6Q212xWSTXdMgOM5zyya/
+	 SCYRQW2fFagpmaHgl3qtLl0jsewviYa9dzsfh1XrHJpthuoaYCBmVK/51iCmHJ+pMS
+	 p+N+Kcja8rPf50ghynmCs+WRtWu2qcsPjyIEfaG2hpNNYlG2A99UjL5g0uX/26P34N
+	 n66RaXV365N4w==
+Date: Mon, 3 Jun 2024 09:03:27 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Paolo Abeni
+ <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, Vladimir Oltean
+ <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, Oleksij
+ Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Ravi Gunasekaran
+ <r-gunasekaran@ti.com>, Simon Horman <horms@kernel.org>, Nikita
+ Zhandarovich <n.zhandarovich@fintech.ru>, Murali Karicheri
+ <m-karicheri2@ti.com>, Arvid Brodin <Arvid.Brodin@xdin.com>, Dan Carpenter
+ <dan.carpenter@linaro.org>, "Ricardo B. Marliere" <ricardo@marliere.net>,
+ Casper Andersson <casper.casan@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
+ Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH] selftests: hsr: Extend the hsr_redbox.sh test to use
+ fixed MAC addresses
+Message-ID: <20240603090327.44d43f53@wsk>
+In-Reply-To: <ZlfXmDN-W1dZRYQL@Laptop-X1>
+References: <20240529142232.2625747-1-lukma@denx.de>
+	<20240529142232.2625747-2-lukma@denx.de>
+	<ZlfXmDN-W1dZRYQL@Laptop-X1>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] dt-bindings: iio: dac: Add adi,ltc2664.yaml
-To: Kim Seer Paller <kimseer.paller@analog.com>,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Lars-Peter Clausen <lars@metafoo.de>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Dimitri Fedrau <dima.fedrau@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>
-References: <20240603012200.16589-1-kimseer.paller@analog.com>
- <20240603012200.16589-4-kimseer.paller@analog.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240603012200.16589-4-kimseer.paller@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/z8W=oEaNQY.U9rvg.vX2APw";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On 03/06/2024 03:21, Kim Seer Paller wrote:
-> Add documentation for ltc2664.
-> 
-> Co-developed-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> ---
+--Sig_/z8W=oEaNQY.U9rvg.vX2APw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Hangbin,
+
+> On Wed, May 29, 2024 at 04:22:32PM +0200, Lukasz Majewski wrote:
+> > Fixed MAC addresses help with debugging as last four bytes identify
+> > the network namespace.
+> >=20
+> > Moreover, it allows to mimic the real life setup with for example
+> > bridge having the same MAC address on each port.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > ---
+> >  tools/testing/selftests/net/hsr/hsr_redbox.sh | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >=20
+> > diff --git a/tools/testing/selftests/net/hsr/hsr_redbox.sh
+> > b/tools/testing/selftests/net/hsr/hsr_redbox.sh index
+> > 1f36785347c0..998103502d5d 100755 ---
+> > a/tools/testing/selftests/net/hsr/hsr_redbox.sh +++
+> > b/tools/testing/selftests/net/hsr/hsr_redbox.sh @@ -96,6 +96,21 @@
+> > setup_hsr_interfaces() ip -n "${ns4}" link set ns4eth1 up
+> >  	ip -n "${ns5}" link set ns5eth1 up
+> > =20
+> > +	ip -net "$ns1" link set address 00:11:22:00:01:01 dev
+> > ns1eth1
+> > +	ip -net "$ns1" link set address 00:11:22:00:01:02 dev
+> > ns1eth2 +
+> > +	ip -net "$ns2" link set address 00:11:22:00:02:01 dev
+> > ns2eth1
+> > +	ip -net "$ns2" link set address 00:11:22:00:02:02 dev
+> > ns2eth2
+> > +	ip -net "$ns2" link set address 00:11:22:00:02:03 dev
+> > ns2eth3 +
+> > +	ip -net "$ns3" link set address 00:11:22:00:03:11 dev
+> > ns3eth1
+> > +	ip -net "$ns3" link set address 00:11:22:00:03:11 dev
+> > ns3eth2
+> > +	ip -net "$ns3" link set address 00:11:22:00:03:11 dev
+> > ns3eth3
+> > +	ip -net "$ns3" link set address 00:11:22:00:03:11 dev
+> > ns3br1 =20
+>=20
+> The ns3's mac addresses are same, is it a copy-paste error?
+>=20
+
+No, it is to mimic the switch behaviour.
+
+> BTW, please add the target tree for the patch, e.g.
+>=20
+> [PATCH net-next]
+
+Ok.
+
+>=20
+> Thanks
+> Hangbin
 
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
 Best regards,
-Krzysztof
 
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/z8W=oEaNQY.U9rvg.vX2APw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmZdar8ACgkQAR8vZIA0
+zr3YeAgAx49HYhwsbFX+W79el/XYDzgWltp7XpxTRGWmi5/Aed3UdY+Ym5KfoziB
+HOMZWYInj0H8Gx+85e9kgObLHv/0bDQGbpu19uBzmsrk6Scv7H9vqgZaSQzzpPT+
+041vngmHhdknG39xDN+AgT1OOZt95N7gAM7qZqD72bohRxhcJ6BSh7REdyG9kSv4
+Ow1KkBky9aKQCnATC2RQBVxL5ex3QKINpiGIeMYbhiVIpTDINU7Rl3U+Fj0aOgW1
+wtuD8a28UVBnmkXFs3aVB3N8DPBgVwmSKR/yJHGzCcTJEWLHjwrjX7u2F/ogZSmI
+k4Gwyja4rojDvqrA84zQy8ol83z75g==
+=iEHT
+-----END PGP SIGNATURE-----
+
+--Sig_/z8W=oEaNQY.U9rvg.vX2APw--
