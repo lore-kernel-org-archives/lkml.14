@@ -1,178 +1,239 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2047.outbound.protection.outlook.com [40.107.243.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DED6D271
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 03:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717385152; cv=none; b=ktgpgj2+HSHYrWBMOL9+xH7Lm6NIzB/fEY4EEZMm4fck360j6Q5BoLm8/HJAQ+v16plJCNZF3IFo5xUhnD4bM9a65ruDS5OxrS8c9nTZpQGUlX4MKr3J3/Pw3Slau05TC/c6C6qnnGZoYIk5HO8pnUqapnzAjJqdPUl+sY99vKc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717385152; c=relaxed/simple;
-	bh=cGSW8YQcHSpUaGYgNWc8mvqWtkqEYi4Syfs9Qn+5qXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=M5z5zTB+ArnAx6/lPGobi9g3R2+p50yowkodNBp2yVnObGHawShAOws8Qp+AixzcTjvkuuqjs60tgGG1bP5i7JtXP5xlUvPp1tEZiZ47QmlupoojEUonJoBtmfPZ/PbEONpHS2hP8OWDChRE27NDP0GoMLHyyAz17AKcjYasU3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lf3/oBjQ; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248DDF4FC;
+	Mon,  3 Jun 2024 03:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717385154; cv=fail; b=J9E6q6RXTYrwAtnPyrtLPHdGP5/32SJtVkirFCfuDUZCWez/RiRZB0xet3u7murjkBH+qRtsplHVurdmJh9iZnPTBT0D3DtEAuqEFjsE+TPm0pNoCdrkcP3+hCrfmjtV6ljY/5NTw+IduiJ3JPCJGqaANxaazTTgw3RY4RhMns4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717385154; c=relaxed/simple;
+	bh=9+688kxo/BiLGbiaHMVdETkPAplE26gGuyOPxE71o9k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iAqUk1J6KqwIiR4ECAsiKFsYbc9PLgi2xFtlR0932IyCLYwi2ZJK3KPfk3T5ZaPsn/HatppyuHANLdJjl7mqa7ukheqBdoV5SvVf6DIDmKm2CJfq7b5v74SsvFa26vhgTS+KCp/KGriv/f6/FKM9duYnMXcdxBIFuenbT2AifFE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=H2MrwpM2; arc=fail smtp.client-ip=40.107.243.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lf3/oBjQ"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-1f4c7b022f8so35470925ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Jun 2024 20:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717385150; x=1717989950; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Oh/wbqjavokT5q9TMhnmKScz2Un4xULt+QTcj87qNHk=;
-        b=Lf3/oBjQtgctTFYo/ZrUylMJ1HZvsoMagf/B967u8jrm1JWqF7wUtfMyGAs+Jgt97K
-         woUJd1So5ggRFdN5mrxEASQnlONvWjRR1sPMBkoXcKdL2+gTRQem/NVLUO3NHBj0mIXQ
-         mwy9ZayJX3wNf99YlAf9TvhHrvjmIFGdFgRJni8U3cfCtOh5mJoxrbuV+QDfVI/rwv2Y
-         6yscmWHxaiAA3iA/3weOjPzk/mJAKIWfx+Oq1nW12hoNkxJ+mzEu+q9OmAwL6J4zAa9l
-         vrtTsmCN6UV51FJ31pz2PAh4PZ4+0DCGlqZMqP6bEhLjy/56x6tK1i96yw83uUTwPstZ
-         +bgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717385150; x=1717989950;
-        h=content-transfer-encoding:in-reply-to:cc:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oh/wbqjavokT5q9TMhnmKScz2Un4xULt+QTcj87qNHk=;
-        b=N5JrOuOEDXtSZvrtrFeI38g+CCxzKSoidB1uiHFCrUM7AkfJBBuCgoAHnMGwT5gDGS
-         Pkivkz1/HOuvPOWeBBGFG1fHsrBaanBOghlTl6j5UWpi6zy0YM61YCa6iPYvqGjJxTvW
-         lvkqGzvdkjae7+z66MEB9XAy9IWHG5WmqG/+MRMyoQcfDm92QFpqHaMwoR1WioKuCCjD
-         ssV9N8CamtgPlMrvRd8Rw30ophyo9uuh1/XwWWBCElJ990vKaHL7bpuBx20hHwfJXCuQ
-         Kf8Nn9C0DTwv1JAiYb00h/wpHqyQlwMgg4Ufh4QM4Aw8LGkDyRhklQVBbjzmav3cHkU2
-         7WGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqcSl2T+87M46ghO2As7nA6Ehl4oMMd2w8BSGUDnJM/cBLiqgl0eBYQXQ0HferqeqJKS0qu9F1I65k5TUrRu3hl1Zb9c5cUQlR7Wdr
-X-Gm-Message-State: AOJu0Yz9xxctm3BLlV0m3JPGKtM2yNCixa/ig/RVTdRDAN0QnqQ/bja4
-	DSry/T9GvVBOLmh3tHumbT3yFh+Jo/ddqIiISkOGwoWG7ZRFDxce
-X-Google-Smtp-Source: AGHT+IHx4qyCgYgiCspBRYkpM2Ho/CSW/xj7B0auEDgtKDsVBoQZ7QmCPmGDMjnMdXbfLHYd20xEbw==
-X-Received: by 2002:a17:903:120c:b0:1f6:70b7:2f85 with SMTP id d9443c01a7336-1f670b732a7mr31285545ad.64.1717385149589;
-        Sun, 02 Jun 2024 20:25:49 -0700 (PDT)
-Received: from [10.254.2.163] ([139.177.225.245])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63241c317sm53665795ad.294.2024.06.02.20.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Jun 2024 20:25:48 -0700 (PDT)
-Message-ID: <9a7718e0-e30b-4b87-a0ed-dfcea389eaed@gmail.com>
-Date: Mon, 3 Jun 2024 11:25:42 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="H2MrwpM2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nJw+yBl95Z9XWqdmNugKlaThRlvxCNrILSzjfyadGIYeAkQ/joVeq6MD0uJVpxQtm8jmGxAyuywoImWYt5YydQa6wx4qbavXXeLjZ/8Sdoyd7+to/f6EFvrXDnW1ez6aknNvK8iFb/HonWCGMMnCqSgy3CZ4FpGy6irkXPMEkUEH+1L+JFtEVb1JNiyOnwbrOpgEAwKanVbfAH2EnJcjmkYDinB3no4B/+OVI3JlyKkAihdnN2UmXMG3U3ymhIdH8F9zTtSOpmqC35LDtq4q2HIZ2bJ7WNcW/Ky38x6y/jTeva6eDonJ6PsRQdUbCAlzajiAttrglHTc/NQnc1QQLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YnHvxF6gFqrRGEyXUB3BjNGI9i4SQZX79YjPNbHpuLE=;
+ b=PdebG6nQ9DhkGl4gr+QLlgtd68wcGUFaBSDtRi4PnsHAmiLJYEVPFmXEwETtc1Vk4+SrekUsijmF1gIVNd8kQEdAqWszndqNCgQsdfiUOTiy+9kzrUIcpdjS2Vn+kFIZAHc+wu5rJuV6nG1fMHIJuk/gmn3xrjWLatDyMjubKqylV00abTeWEgnZfOgfBRSWwsicf5v6f0fM75rWAffjII4H2oNutdzeIA6K/BnKgRBNC1u5k6i6YzyX/Oo7NTC2BjMCtLAoYmluF4yxtX6bmPuTc2Vfb2MBkgVfb8tap9KDmju+CFr1pvskggWgpUwHDeDHPak4BlJQSeInZ25hZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YnHvxF6gFqrRGEyXUB3BjNGI9i4SQZX79YjPNbHpuLE=;
+ b=H2MrwpM2FRYnjb2IZnah9zuT7UDKfpufjoiXY42qzFM2cvp5CqUrO+uNXoCk1rcNbGUAWhtSx4BwSZEdtItFsx44Ogv0seOWnqcLCYeNIAiLQRNYN/ul7vyltIPy3ZGLOiOJxXNgqm3NpnrsNpnkziqCNv/ncc2hGH235vYDoWABEXTE11zkZ6wehumGYLWWHbDwwf0zfAy8JfC9jEuEK0hZ490qn0ZJ4ZhJXpHXua+/jk3d8b7v6+F7SmUo6B2Lz2q0jqF+ZdmkRNNsbcSgFltJGnXiOPgpvuAusDSPFIlfwWAP3+VL7dHjMRK8piNjVCoUZuBHr9OL5qxVGJBJQQ==
+Received: from CH0PR04CA0098.namprd04.prod.outlook.com (2603:10b6:610:75::13)
+ by MN2PR12MB4317.namprd12.prod.outlook.com (2603:10b6:208:1d0::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.19; Mon, 3 Jun
+ 2024 03:25:50 +0000
+Received: from DS2PEPF0000343F.namprd02.prod.outlook.com
+ (2603:10b6:610:75:cafe::d4) by CH0PR04CA0098.outlook.office365.com
+ (2603:10b6:610:75::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.29 via Frontend
+ Transport; Mon, 3 Jun 2024 03:25:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS2PEPF0000343F.mail.protection.outlook.com (10.167.18.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7633.15 via Frontend Transport; Mon, 3 Jun 2024 03:25:49 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 2 Jun 2024
+ 20:25:38 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 2 Jun 2024
+ 20:25:38 -0700
+Received: from nvidia.com (10.127.8.12) by mail.nvidia.com (10.129.68.10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4 via Frontend
+ Transport; Sun, 2 Jun 2024 20:25:36 -0700
+Date: Sun, 2 Jun 2024 20:25:34 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: "Tian, Kevin" <kevin.tian@intel.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"eric.auger@redhat.com" <eric.auger@redhat.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+	"santosh.shukla@amd.com" <santosh.shukla@amd.com>, "Dhaval.Giani@amd.com"
+	<Dhaval.Giani@amd.com>, "shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH RFCv1 08/14] iommufd: Add IOMMU_VIOMMU_SET_DEV_ID ioctl
+Message-ID: <Zl03rsgZl/msa3I+@nvidia.com>
+References: <ZlAoN3s96HL7ROth@nvidia.com>
+ <BN9PR11MB52762A0BC67B64D4171480C78CF52@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20240524131912.GT20229@nvidia.com>
+ <BN9PR11MB5276BBD592021507C3A0EBB38CF02@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZlY886FT3HHLC8Cf@nvidia.com>
+ <BN9PR11MB52762EA9B444DA71F551C3868CF22@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZlafEktUu5znDsNt@Asurada-Nvidia>
+ <BN9PR11MB5276AC43120376A2502D3D148CF32@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZlfPPwsnY6P4SoGF@Asurada-Nvidia>
+ <ZluWXYQjroz0fqqn@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] UBSAN: shift-out-of-bounds in do_shrink_slab
-Content-Language: en-US
-To: syzbot <syzbot+981b8efffb3d71c46bef@syzkaller.appspotmail.com>
-References: <0000000000003051770619cec4f8@google.com>
-From: Qi Zheng <arch0.zheng@gmail.com>
-Cc: akpm@linux-foundation.org, david@fromorbit.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, muchun.song@linux.dev,
- roman.gushchin@linux.dev, syzkaller-bugs@googlegroups.com,
- zhengqi.arch@bytedance.com, shakeel.butt@linux.dev,
- Johannes Weiner <hannes@cmpxchg.org>
-In-Reply-To: <0000000000003051770619cec4f8@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZluWXYQjroz0fqqn@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF0000343F:EE_|MN2PR12MB4317:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f118bc2-d8ab-409f-0bc2-08dc837cddb6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|1800799015|7416005|376005|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?iF4b5J5nZv/0P9dJhMgQuiQdVp9KpxTWjq3Ics6l1Qxyr4UgCoHA5lXaz+8X?=
+ =?us-ascii?Q?hTHdZbXG3S9xmkBfHEuVLdx7xid5A+0VZV16YrWk8/xnUt5WkW5iakObv3gt?=
+ =?us-ascii?Q?iss8Ab33AQQOjeBrakhUsIyNWoky1eP8FAxKout8G0S7OoZrhFZ3Arpn+Vxp?=
+ =?us-ascii?Q?RqBn1mbL+1xchmzLfLKuXDrQ/4FzCoQ0AiXegJw7eULTOXVmqUYgBtqTFHwl?=
+ =?us-ascii?Q?EIFBI4RSgVhR3crRDcQEWJDAPsU3gDfsQFY3lhT+s4PV+DS2wVg58gvMukCg?=
+ =?us-ascii?Q?3iLsBSmUjMzs/rrU+WKCNnFUKKAQSY8epVBuowDCAhAp+YFiN4UjmYBV14Ex?=
+ =?us-ascii?Q?1qK0BzNSvSkNF6yYJqdhoMoSuSOolyvMmoHWyCExNGaUPbkAFT8mx6/HWO42?=
+ =?us-ascii?Q?Z/vaEW9jHgWyTdiHLZ815s40l3TP5q8B9Rz6qFN1+BtSncCB5pr/LV+jdY4j?=
+ =?us-ascii?Q?HRzGSGwk5yUnQrqSa2/5gUV1bYc6RAD+pcOMFMzkEV4FCReeBW2R/1C9w2FY?=
+ =?us-ascii?Q?nIo8zq4n2g9U+V73ZFkvW3BuXD6yx6uVZI4WYJUzEB60/A70JVm1vCpgivA1?=
+ =?us-ascii?Q?+AgXMI+omPkamNw5EZeqft9l8N0CTNcI+6JLNNEqclDImt9QbyWSl+0ylKFn?=
+ =?us-ascii?Q?BhpaFXbMZ5jpFXqHOgS3QB5FOSsnTyY1KDEExhUVaH0LCXMz6+UFyD/zURxg?=
+ =?us-ascii?Q?M+gCQdjAQi8ti4ODKskDSOHfGvm4sIb+aLK4xlSn3t8a3fW6ZkwF2XzNS262?=
+ =?us-ascii?Q?H38M9EhmMOCT1WXAcyZQWbP7zc4YN1wkHnY+VN1x31/Zq/1glGyMjnwSQL/c?=
+ =?us-ascii?Q?x8HrsCvjwZZYUtdGi6I+6E49CQXnCMOy9Ey6/yEsF/qhE4nQcgrjwTWHjt0+?=
+ =?us-ascii?Q?6wwJytXIv4wtePoDqETEHwloJg7xCiPa2FpZ7ZJuOwNbp3YPR7PSX/bnc3JV?=
+ =?us-ascii?Q?aKxPxm76M5/y2Hu2+MXjW1HmBzM7biXgwrq7+YHyNWGrghYH0alNrmHtTEoS?=
+ =?us-ascii?Q?yr4EFuiK1ZhX8imOST2/9fkr1q9q4lo4GzOcvPaEbDn5s7TLoIWNkb670uXS?=
+ =?us-ascii?Q?ob12rMX0mfhErAH97QWtd/1k2+h0Kj98z+glmomFx+kCmSty2Xdcw6fUJTdt?=
+ =?us-ascii?Q?aVplZeEQcX6KarvspXSGQAM526ZCl7stTgJOcmk9drdHXV9FHqNCbskypfAv?=
+ =?us-ascii?Q?RiH8YQypGhegj7Ec62+aaqj+7OK3x79IAiE2si0IQeAY7ywBIyFSVEcgOa2L?=
+ =?us-ascii?Q?dwyLOUqKBTlY96xjSZA114ubxb1XATpWkRkLP2k4SErhCK+cjjxcuaTmlvWI?=
+ =?us-ascii?Q?Rw1uWvExggFywbzWRYk6Mgbn0WTJazfarfw2YpaqzVWVpE/XY36NM6f+B1JI?=
+ =?us-ascii?Q?dPQIsbIDgveWl6jKEUDuAnaGXA4N?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(1800799015)(7416005)(376005)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 03:25:49.7240
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f118bc2-d8ab-409f-0bc2-08dc837cddb6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF0000343F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4317
 
-Hi,
+On Sat, Jun 01, 2024 at 06:45:01PM -0300, Jason Gunthorpe wrote:
+> On Wed, May 29, 2024 at 05:58:39PM -0700, Nicolin Chen wrote:
+> > On Thu, May 30, 2024 at 12:28:43AM +0000, Tian, Kevin wrote:
+> > > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > > Sent: Wednesday, May 29, 2024 11:21 AM
+> > > > On Wed, May 29, 2024 at 02:58:11AM +0000, Tian, Kevin wrote:
+> > > > > My question is why that option is chosen instead of going with 1:1
+> > > > > mapping between vSMMU and viommu i.e. letting the kernel to
+> > > > > figure out which pSMMU should be sent an invalidation cmd to, as
+> > > > > how VT-d is virtualized.
+> > > > >
+> > > > > I want to know whether doing so is simply to be compatible with
+> > > > > what VCMDQ requires, or due to another untold reason.
+> > > >
+> > > > Because we use viommu as a VMID holder for SMMU. So a pSMMU must
+> > > > have its own viommu to store its VMID for a shared s2_hwpt:
+> > > >         |-- viommu0 (VMIDx) --|-- pSMMU0 --|
+> > > >  vSMMU--|-- viommu1 (VMIDy) --|-- pSMMU1 --|--s2_hwpt
+> > > >         |-- viommu2 (VMIDz) --|-- pSMMU2 --|
+> > > >
+> > > 
+> > > there are other options, e.g. you can have one viommu holding multiple
+> > > VMIDs each associating to a pSMMU.
+> > 
+> > Well, possibly. But everything previously in a viommu would have
+> > to be a list (for number of VMIDs) in the kernel level: not only
+> > a VMID list, but also a 2D virtual ID lists, something like:
+> > 
+> > struct xarray vdev_ids[num_of_vmid]; // per-IOMMU vID to pID lookup
+> 
+> I feel it makes most sense that ARM (and maybe everyone) just have a
+> viommu per piommu.
+> 
+> The main argument against is we haven't made it efficient for the VMM
+> to support multiple piommus. It has to do a system call per piommu
+> each time it processes the cmdq.
+> 
+> But, on the other hand, if you care about invalidation efficiency it
+> is kind of silly not to expose the piommus to the guest so that the
+> invalidation scope can be appropriately narrowed. Replicating all ASID
+> invalidations to all piommus doesn't make alot of sense if the guest
+> can know that only one piommu actually needs invalidation.
 
-I think this bug was introduced by commit 6be5e186fd65
-("mm: vmscan: restore incremental cgroup iteration"), and
-can be fixed by commit 9c8805439853 ("mm: vmscan: reset sc->priority on 
-retry").
+Yea, that'd be pretty slow, though a broadcast would be still
+inevitable when an invalidation only has an address range w/o
+an ASID, CMD_TLBI_NH_VAA for example.
 
-Thanks,
-Qi
+In fact, there should always be a dispatcher (v.s. broadcast):
+ - in the one-viommu-per-pIOMMU case (#1), it's in the VMM
+ - in the one-viommu-per-vIOMMU case (#2), it's in the kernel
 
+One of them has to take the role to burn some CPUs for-eaching
+the hwpt list to identify the iommu to forward. The design #1,
+simply makes the kernel easier.
 
-On 2024/6/1 15:08, syzbot wrote:
-> Hello,
+The design #2, on the other hand, would not only require some
+lists and new objects that we just discussed, yet also pair of
+VIOMMU_SET/UNSET_HWPT_ID ioctls, though it also makes sense as
+we choose IOMMU_VIOMMU_INVALIDATE over IOMMU_DEV_INVALIDATE by
+adding VIOMMU_SET/UNSET_VDEV_ID?
+
+> > And a driver in this case would be difficult to get a complete
+> > concept of a viommu object since it's core object and shared by
+> > all kernel-level IOMMU instances. If a driver wants to extend a
+> > viommu object for some additional feature, e.g. VINTF in this
+> > series, it would likely have to create another per-driver object
+> > and again another list of this kind of objects in struct viommu.
 > 
-> syzbot found the following issue on:
+> Right, we need some kind of per-piommu object because we have
+> per-piommu data.
+>
+> > Oh. With regular nested SMMU, there is only one virtual SMMU in
+> > the guest VM. No need of copying physical topology. Just the VMM
+> > needs to allocate three viommus to add them to a list of its own.
 > 
-> HEAD commit:    6dc544b66971 Add linux-next specific files for 20240528
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14c7f806980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=6a363b35598e573d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=981b8efffb3d71c46bef
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/334699ab67f8/disk-6dc544b6.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/4ca32b2218ce/vmlinux-6dc544b6.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/400bc5f019b3/bzImage-6dc544b6.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+981b8efffb3d71c46bef@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> UBSAN: shift-out-of-bounds in mm/shrinker.c:406:18
-> shift exponent -1 is negative
-> CPU: 0 PID: 5278 Comm: syz-executor.1 Not tainted 6.10.0-rc1-next-20240528-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
-> Call Trace:
->   <TASK>
->   __dump_stack lib/dump_stack.c:88 [inline]
->   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->   ubsan_epilogue lib/ubsan.c:231 [inline]
->   __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
->   do_shrink_slab+0xe26/0x1160 mm/shrinker.c:406
->   shrink_slab_memcg mm/shrinker.c:548 [inline]
->   shrink_slab+0x87c/0x14d0 mm/shrinker.c:626
->   shrink_node_memcgs mm/vmscan.c:5923 [inline]
->   shrink_node+0xb82/0x4150 mm/vmscan.c:5961
->   shrink_zones mm/vmscan.c:6205 [inline]
->   do_try_to_free_pages+0x789/0x1cb0 mm/vmscan.c:6267
->   try_to_free_mem_cgroup_pages+0x48f/0xb10 mm/vmscan.c:6598
->   try_charge_memcg+0x704/0x1850 mm/memcontrol.c:2946
->   obj_cgroup_charge_pages mm/memcontrol.c:3420 [inline]
->   __memcg_kmem_charge_page+0xe2/0x250 mm/memcontrol.c:3446
->   __alloc_pages_noprof+0x28c/0x6c0 mm/page_alloc.c:4712
->   __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
->   alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
->   bpf_ringbuf_area_alloc kernel/bpf/ringbuf.c:122 [inline]
->   bpf_ringbuf_alloc+0xcb/0x420 kernel/bpf/ringbuf.c:170
->   ringbuf_map_alloc+0x1d7/0x2f0 kernel/bpf/ringbuf.c:204
->   map_create+0x90c/0x1200 kernel/bpf/syscall.c:1333
->   __sys_bpf+0x6d1/0x810 kernel/bpf/syscall.c:5669
->   __do_sys_bpf kernel/bpf/syscall.c:5794 [inline]
->   __se_sys_bpf kernel/bpf/syscall.c:5792 [inline]
->   __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5792
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7efea107cee9
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007efea1de60c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-> RAX: ffffffffffffffda RBX: 00007efea11b3fa0 RCX: 00007efea107cee9
-> RDX: 0000000000000048 RSI: 00000000200002c0 RDI: 0000000000000000
-> RBP: 00007efea10c947f R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 000000000000000b R14: 00007efea11b3fa0 R15: 00007fff6651b5d8
->   </TASK>
-> ---[ end trace ]---
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
+> I understand the appeal of doing this has been to minimize qemu
+> changes in its ACPI parts if we tackle that instead maybe we should
+> just not implement viommu to multiple piommu. It is somewhat
+> complicated.
+
+Would you please clarify that suggestion "not implement viommu
+to multiple piommu"?
+
+For regular nesting (SMMU), we are still doing one vSMMU in the
+VMM, though VCMDQ case would be an exception....
+
+Thanks
+Nicolin
