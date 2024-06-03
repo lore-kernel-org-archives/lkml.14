@@ -1,131 +1,99 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE86112C552;
-	Mon,  3 Jun 2024 13:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5B412C484;
+	Mon,  3 Jun 2024 13:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717419661; cv=none; b=PKhPk2MjAvdVKBnvOt67k/35/vIcH7EKkjhUnQjw4XGGNv9afCsnBdvGNUqhlU/I2lHoNCSCIwmmt2Aaes+xhfO/XHFhSRSgktVliRS53dYxmSsjrYEFOmtgoeaymdDoxPjTQGtE1qet3MszNc5D54BV+FbeUmNLpUuIN44vhoo=
+	t=1717419669; cv=none; b=tNmzodaiwPhH3s7O4fpebZBTfcwe6ejMU0y3RwH9Izo8nlD3xVuXRaJo7eBJMcEmFpbKwm1taulKCPbmXCAl026NuU2aTb412R54kwGj1cPIkoPvm7yI4Mq0Gqkt9C2xpRfDYaRy4aFyVQdusnzY+c+fsLHhEAnGOmhE+ZIAA7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717419661; c=relaxed/simple;
-	bh=DbKL2DpCNxLJE7j01bpvEj8WJhxVsUr+mlsQyFYMnDg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nv7jiOoHCopu76v+9bgF5eWK6LAkyXsEdOtRG78MHPCSkcm2nCYiJMXMJ1VgTa9f/1vSpU6RPjjkpYzmgI6qNhVuDsUuC4iLQw+cTJptOzyGspzX2x2tr6Fh/QRB7W+SiOqh8DM3HmZcDIN1CUmf2b0CwXRrslsf9Fsf6G6VX2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VtDJb5Yjwz1S98n;
-	Mon,  3 Jun 2024 20:57:03 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id B8A9E140413;
-	Mon,  3 Jun 2024 21:00:42 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 3 Jun
- 2024 20:58:20 +0800
-From: Yu Kuai <yukuai3@huawei.com>
-To: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
-	<song@kernel.org>, <xni@redhat.com>, <mariusz.tkaczyk@linux.intel.com>,
-	<l@damenly.org>
-CC: <dm-devel@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<linux-raid@vger.kernel.org>, <yukuai3@huawei.com>,
-	<yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH 12/12] md/raid5: avoid BUG_ON() while continue reshape after reassembling
-Date: Mon, 3 Jun 2024 20:58:15 +0800
-Message-ID: <20240603125815.2199072-13-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240603125815.2199072-1-yukuai3@huawei.com>
-References: <20240603125815.2199072-1-yukuai3@huawei.com>
+	s=arc-20240116; t=1717419669; c=relaxed/simple;
+	bh=hJYwoFGlnugTymRGVt1UgZWaPCCiUj0gq+QrUUX/45E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rHd6DdQEwWJufCVx+fpfBEBsyzlje/ypxTdZLwIT7WXGdXFB5QDAwMg4mVOqq+fkJ7BB6KFLaSUkaTJJcIcVwytZX25kM6inKqVfpFfEdx/0H5cfVIt8svAR/eK/KkrAIwl7ks7MsQNzsg/gh3tOINNlWoyOXBYSGtVywbrRSis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U9feCv+f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U9feCv+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C118C2BD10;
+	Mon,  3 Jun 2024 13:01:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717419669;
+	bh=hJYwoFGlnugTymRGVt1UgZWaPCCiUj0gq+QrUUX/45E=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=U9feCv+fYTluUBwM4FpOl8q47QdLHhSbMGDa7v6J4r2GBJYbYLwO2ZxIlrKH8Q4+j
+	 tSq3yQiYAwpRGvJoeSPBDYQeAbbgiFwn+5lhXyMubLMao/4uLTxUXBenwAwtES8vbe
+	 R6UW5fk9ZzQoXMUih9Z49Ds1sMYuFcjyTjBeL0QC5cmpEo6lbAImf3J8IngtBAVzSx
+	 sx3VXcxelzYtVl9wPxviYkyz2j5RSyZupIwXf9eq/IEDAQTdH0zova4wQTint0KVdp
+	 IEPiPV2kIn+qi04NbEHKrwU8iNMcn7c++i1QtNAj0Ql1gfS0+RPa4u45TR7JpMCWpq
+	 Lx9zZgVxoMn9Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA63EC25B75;
+	Mon,  3 Jun 2024 13:01:08 +0000 (UTC)
+From: Nathan Lynch via B4 Relay <devnull+nathanl.linux.ibm.com@kernel.org>
+Date: Mon, 03 Jun 2024 08:01:03 -0500
+Subject: [PATCH] powerpc/crypto: Add generated P8 asm to .gitignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240603-powerpc-crypto-ignore-p8-asm-v1-1-05843fec2bb7@linux.ibm.com>
+X-B4-Tracking: v=1; b=H4sIAI6+XWYC/x3MOw6DMAwA0Ksgz1hy+VSlV0EdosSAhyaWU1EQ4
+ u5EjG95B2Q24Qzv6gDjVbKkWPCoK/CLizOjhGJoqOnoSS1q+rOpR2+7/hLKHJMx6gtd/mIXhqk
+ fgiNqGUqhxpNsdz9+zvMCr/+Njm4AAAA=
+To: Herbert Xu <herbert@gondor.apana.org.au>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Danny Tsen <dtsen@linux.ibm.com>
+Cc: linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, Nathan Lynch <nathanl@linux.ibm.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717419668; l=931;
+ i=nathanl@linux.ibm.com; s=20230817; h=from:subject:message-id;
+ bh=QihzfT/yvBcFqpbTNR7ndCqh7WaXVJqXBsXhRlZPQ90=;
+ b=QGuEuclbxZu65XOLMH9NK3EWtZhcZw+0yN7nFsIHy+I7MoKKPXUPvM7Gsd3TDDsqn7GmZ3CUN
+ CjIqTKmsh3OARa/D/u5bqr2EQMRnMMb17I33uslOf1hxKx6/We9aCDd
+X-Developer-Key: i=nathanl@linux.ibm.com; a=ed25519;
+ pk=jPDF44RvT+9DGFOH3NGoIu1xN9dF+82pjdpnKjXfoJ0=
+X-Endpoint-Received: by B4 Relay for nathanl@linux.ibm.com/20230817 with
+ auth_id=78
+X-Original-From: Nathan Lynch <nathanl@linux.ibm.com>
+Reply-To: nathanl@linux.ibm.com
 
-Currently, mdadm support --revert-reshape to abort the reshape while
-reassembling, as the test 07revert-grow. However, following BUG_ON()
-can be triggerred by the test:
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-kernel BUG at drivers/md/raid5.c:6278!
-invalid opcode: 0000 [#1] PREEMPT SMP PTI
-irq event stamp: 158985
-CPU: 6 PID: 891 Comm: md0_reshape Not tainted 6.9.0-03335-g7592a0b0049a #94
-RIP: 0010:reshape_request+0x3f1/0xe60
-Call Trace:
- <TASK>
- raid5_sync_request+0x43d/0x550
- md_do_sync+0xb7a/0x2110
- md_thread+0x294/0x2b0
- kthread+0x147/0x1c0
- ret_from_fork+0x59/0x70
- ret_from_fork_asm+0x1a/0x30
- </TASK>
+Looks like drivers/crypto/vmx/.gitignore should have been merged into
+arch/powerpc/crypto/.gitignore as part of commit
+109303336a0c ("crypto: vmx - Move to arch/powerpc/crypto") so that all
+generated asm files are ignored.
 
-Root cause is that --revert-reshape update the raid_disks from 5 to 4,
-while reshape position is still set, and after reassembling the array,
-reshape position will be read from super block, then during reshape the
-checking of 'writepos' that is caculated by old reshape position will
-fail.
-
-Fix this panic the easy way first, by converting the BUG_ON() to
-WARN_ON(), and stop the reshape if checkings fail.
-
-Noted that mdadm must fix --revert-shape as well, and probably md/raid
-should enhance metadata validation as well, however this means
-reassemble will fail and there must be user tools to fix the wrong
-metadata.
-
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Fixes: 109303336a0c ("crypto: vmx - Move to arch/powerpc/crypto")
 ---
- drivers/md/raid5.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ arch/powerpc/crypto/.gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 69a083ca41a3..d4c30a94e4e4 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6255,7 +6255,9 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
- 	safepos = conf->reshape_safe;
- 	sector_div(safepos, data_disks);
- 	if (mddev->reshape_backwards) {
--		BUG_ON(writepos < reshape_sectors);
-+		if (WARN_ON(writepos < reshape_sectors))
-+			return MaxSector;
-+
- 		writepos -= reshape_sectors;
- 		readpos += reshape_sectors;
- 		safepos += reshape_sectors;
-@@ -6273,14 +6275,18 @@ static sector_t reshape_request(struct mddev *mddev, sector_t sector_nr, int *sk
- 	 * to set 'stripe_addr' which is where we will write to.
- 	 */
- 	if (mddev->reshape_backwards) {
--		BUG_ON(conf->reshape_progress == 0);
-+		if (WARN_ON(conf->reshape_progress == 0))
-+			return MaxSector;
-+
- 		stripe_addr = writepos;
--		BUG_ON((mddev->dev_sectors &
--			~((sector_t)reshape_sectors - 1))
--		       - reshape_sectors - stripe_addr
--		       != sector_nr);
-+		if (WARN_ON((mddev->dev_sectors &
-+		    ~((sector_t)reshape_sectors - 1)) -
-+		    reshape_sectors - stripe_addr != sector_nr))
-+			return MaxSector;
- 	} else {
--		BUG_ON(writepos != sector_nr + reshape_sectors);
-+		if (WARN_ON(writepos != sector_nr + reshape_sectors))
-+			return MaxSector;
-+
- 		stripe_addr = sector_nr;
- 	}
- 
+diff --git a/arch/powerpc/crypto/.gitignore b/arch/powerpc/crypto/.gitignore
+index e1094f08f713..e9fe73aac8b6 100644
+--- a/arch/powerpc/crypto/.gitignore
++++ b/arch/powerpc/crypto/.gitignore
+@@ -1,3 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ aesp10-ppc.S
++aesp8-ppc.S
+ ghashp10-ppc.S
++ghashp8-ppc.S
+
+---
+base-commit: be2fc65d66e0406cc9d39d40becaecdf4ee765f3
+change-id: 20240603-powerpc-crypto-ignore-p8-asm-4d9f59da003e
+
+Best regards,
 -- 
-2.39.2
+Nathan Lynch <nathanl@linux.ibm.com>
+
 
