@@ -1,76 +1,104 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B70F763E4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 10:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FEC7E796;
+	Mon,  3 Jun 2024 10:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717409041; cv=none; b=gIpAMjOGG4GI5d6CkElDr1h+fsAe5cU5fFsNH0cokMV1LkPRBp+THAicLwA4PrLXbl/OsBLkxOMHX2T6WWTtnvk0KPpm3fwUpQK2fmvVDgJG2A9b8QsKNJqY1nh5qttOhFYjQNrxb1IpXDrTGB6U2auIeinhBfTwz4wtmwsR4+M=
+	t=1717409077; cv=none; b=IPvmU9ztC57nEmn4TEyPVl8qkbW7Qon5gU5C0kdBPE5RXB/vNVnBM6/erXORA9ArZdAKcQphv8ixyngSHyDRWlNSv/PsSgb8mvx4p6QEfk/RTrOCAZG6xUnDbuMwgs/dD8hEExTzRAoX8tADV5EGeXblhUdhjf/1Z4OnTnbSjCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717409041; c=relaxed/simple;
-	bh=Uwm71QwiZiskaFNE5hC3kDx6Ghn2eJwESg9uo3KSEzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ja2VjEJmH5xSDro6zr4DC8cTLkxA/mTiP5Vs2rZzbzq1Hfa2UTNlmgwVjv8YCI5HUVl9qs8/5YnK4QEEcDMSvnotg3TFXQRfaWcj3XjS0PoL/k/5ugr1uOlY5m749WEQq7LTmkGA58pwZWTH9qAUJQhiJhO31T8UCvjNz+Ecds0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=T6MnWyrb; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1717409077; c=relaxed/simple;
+	bh=Wlp7cZUIlE4IOHsusBnYh5vU2mzpL9FERd+nACxXsNk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UewtMI66+QzqNePQaPlWoT61VlaUQmvLG0+SGxGv/Tc6DWhGK4wGPAlxjyrbGhNrbYhAvmm+9I/1kTPNWFTWbuOa4SAvSFgQzi54jJFQbM3MghdtKssCcSRq32UQzOVizg614GEdDQUrM6bTKfjt3agSDwZA4q9nihL947vmrfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jitBqWF1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="T6MnWyrb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=/RLCNyizVaI6Dm
-	AjebjIJepF3QUYj0BeBbucccNDlEc=; b=T6MnWyrb0h/vF3FCuyteOwdtBPggtj
-	qePz2QgVmsibLy3Esa9SnAcFvF8HrJDG3FoMiSmi7rtmuTEnMQnjLktDqPOdVPGE
-	8VZsQFI9h5rD+J23Hox2+XsHKY/FRMs6TIsKFFO0mc/4v8j0tMW6qCsV6qdmdcgA
-	RoR75keyI2EYAfguBluRuOi7ZgNiEJuD5oayAMcNEq6nTdFIr8Axchzyf8a1Q9dC
-	st5UEcU34JhIx77WZDwOHVK3RsILipKePp0JtKet+afgOFU5SohRbFsKUs6ptpgc
-	aqj/9wufPE6eo/MW8dZ/VZMq58QKD3LHmgq+0ods6l7rKpZu4FoSoiHA==
-Received: (qmail 1913243 invoked from network); 3 Jun 2024 12:03:56 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Jun 2024 12:03:56 +0200
-X-UD-Smtp-Session: l3s3148p1@fBSFc/kZjJ8gAwDPXzLGAH1eNELjOc3g
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-media@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: delete email for Anton Sviridenko
-Date: Mon,  3 Jun 2024 12:01:17 +0200
-Message-ID: <20240603100346.10678-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jitBqWF1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E3BE1C2BD10;
+	Mon,  3 Jun 2024 10:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717409077;
+	bh=Wlp7cZUIlE4IOHsusBnYh5vU2mzpL9FERd+nACxXsNk=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=jitBqWF1HmyfocksqKrVWvoUdLzYHte1P62IPlwRvfzXXcj+S+Ew3u5pSPaWdaPqC
+	 TnDYquRgSjqKGrddFCEt7XSQ2cu5R1FDLVNrI8HO+NJ4M7EQof9EPK/ATJ8PRsLXYI
+	 19qmKeJBi2NkOyLWdIMmyOSP2tCMrawtG9YrDEO4G9FzMfqjlDJHj0fPqvnfP3hANW
+	 BrPlGxBnGwWfVQhdCf/hCRbjjoXK2VyZThPXUOTq2ZISjEA1N7gooblakjh0z3oZPZ
+	 AbfyUkJVJvQMLuOJKYLmKsjRanem+wocNewNB2m5Yx6jyx1zCDLIMBMSvl74XkSBpQ
+	 9ZV3CNB1BrPlA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9170C27C44;
+	Mon,  3 Jun 2024 10:04:36 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Mon, 03 Jun 2024 18:04:33 +0800
+Subject: [PATCH] clk: meson: s4: fix fixed_pll_dco clock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240603-s4_fixedpll-v1-1-2b2a98630841@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIADCVXWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDMwNj3WKT+LTMitSUgpwcXWNLo6QkM6PUZEtzCyWgjoKiVJAcyLTo2Np
+ aAPgIUCtdAAAA
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Yu Tu <yu.tu@amlogic.com>
+Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717409074; l=969;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=SOD0rIzjB9of1yjvijBbI9sErwBPGjkFM4JLYIAkE/M=;
+ b=EWCSOcnNVVrdnL4wLFgNl2+yIEH8TlQrvcy01wiM/tm0IMyHU3b5njMf9swxD3EF8sp0fC7I7
+ SQIYVaOz7myArhV3xPZMCbNAf8qNc/P/MP4qsyCyZEF6SHCnNBeF3vx
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-The email address bounced. I couldn't find a newer one in recent git history,
-so update MAINTAINERS accordingly.
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+The fixed_pll_dco output frequency is not accurate,
+add frac factor for fixed_pll_dco clk to fix it.
+
+Fixes: 57b55c76aaf1 ("clk: meson: S4: add support for Amlogic S4 SoC peripheral clock controller")
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- MAINTAINERS | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/clk/meson/s4-pll.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 523d84b2d613..947f9b25d139 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20724,7 +20724,6 @@ F:	include/uapi/rdma/rdma_user_rxe.h
- 
- SOFTLOGIC 6x10 MPEG CODEC
- M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
--M:	Anton Sviridenko <anton@corp.bluecherry.net>
- M:	Andrey Utkin <andrey_utkin@fastmail.com>
- M:	Ismael Luceno <ismael@iodev.co.uk>
- L:	linux-media@vger.kernel.org
-@@ -22927,7 +22926,6 @@ F:	tools/testing/selftests/turbostat/
- 
- TW5864 VIDEO4LINUX DRIVER
- M:	Bluecherry Maintainers <maintainers@bluecherrydvr.com>
--M:	Anton Sviridenko <anton@corp.bluecherry.net>
- M:	Andrey Utkin <andrey.utkin@corp.bluecherry.net>
- M:	Andrey Utkin <andrey_utkin@fastmail.com>
- L:	linux-media@vger.kernel.org
+diff --git a/drivers/clk/meson/s4-pll.c b/drivers/clk/meson/s4-pll.c
+index 8dfaeccaadc2..47c0c105e32d 100644
+--- a/drivers/clk/meson/s4-pll.c
++++ b/drivers/clk/meson/s4-pll.c
+@@ -38,6 +38,11 @@ static struct clk_regmap s4_fixed_pll_dco = {
+ 			.shift   = 0,
+ 			.width   = 8,
+ 		},
++		.frac = {
++			.reg_off = ANACTRL_FIXPLL_CTRL1,
++			.shift   = 0,
++			.width   = 17,
++		},
+ 		.n = {
+ 			.reg_off = ANACTRL_FIXPLL_CTRL0,
+ 			.shift   = 10,
+
+---
+base-commit: ba535bce57e71463a86f8b33a0ea88c26e3a6418
+change-id: 20240603-s4_fixedpll-392bb62ec978
+
+Best regards,
 -- 
-2.43.0
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
