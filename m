@@ -1,250 +1,171 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8C513B7A1;
-	Mon,  3 Jun 2024 20:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA6A125D6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 21:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717448398; cv=none; b=FdjLWcOapJceRsCqrzmmCv3BhDSZlslk5fXAzrgznHMB0oOOgzM0lbgLK64IYnfEg0j73spXQzFpy7VvT8WPloZTdvGFl5Od+3UDabT9EuR/lHN5opLWGbw4ZC5Oxhekw+RDiMng/hOtqLSHbDY6QFR4LTHzCqLx7zK0J/zj+PY=
+	t=1717448459; cv=none; b=B/vEjjRLhWDzYa6EIpZUxNeA752azFsKL8yaBuRy9EQ/2GCqHkR1RLpqfdKnsypTTxDZ8mmOYDTgcB4kF8Lk0WLbTO6fyIG57vJldN9Oqj0UBDY6jqdn6Z/tdvMS8NyBpA+krgXsACWmCtIzmX/21FX6zuIVakKF4eP5MvTCVGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717448398; c=relaxed/simple;
-	bh=Pvh+AiCMVIgAhsPn6Wp3P5BrTF4WN8Fj/Eu4gf4HaiY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=igynDiF65QYTC5uiy5ZW5Zx4wk0hyHutF3cybKRRs/Xrp0LU1WX/3Tlrlws2p8EgiSq2f/x5QmqBUzeI0F3JzCEGrCrMVsEmKHsyK4TEUW8gwA+wy5Svk+8KRLbW6sPJ+KTH231rD8CFC8Z7N36QiT9iWzk1lTW3jaREpPHcxOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LlPEQMlX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717448459; c=relaxed/simple;
+	bh=U0d0C2Qc8nhW+Pxro5e9VxmwRw0Do3zIr3QiofiBzs4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p8S+7L3QciU8EN3Llub+IuUMQn/YPCBp07xgpvylUsjijCCKAl36yRJIvSGEtcr0ASc80p7YKmT3X8V6EN0h5JA9IObs7dX1+1riwgndQg/OHjHYmmCq6aaaJL99odDnPUjtvj9GjxDYPnLWbxHkGDSp6c71/1unsPKIB91cwR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DMA04pPj; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LlPEQMlX"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453AOpXu019249;
-	Mon, 3 Jun 2024 20:59:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jL40qDH7QAg5YBT+Dh0Lwk9hblbSm05o2u4Yeq9i6A4=; b=LlPEQMlXQc+4ebTj
-	2IKCThSUkkkwnYfbSWctr3mKoWZfR5bKvc/W8A+pR5o0fDlH02SOjzAFqgZAzBcx
-	gdBPuaqdiPEynsuuNDZtUZXzJDEG2ayBtr/80tv53GqWsO7wx9U+BUF+DV0Whjbi
-	TfVD6qoMk4vU0PAZWz6a1I/8MD8QJjYp0udF07p4zqQsMJm8CN2apzb2o6oDD8Fz
-	ngMZZenohD5dQMoQ5k8XIWIdzEgR8KbcpIdAKuaRFP3BC05wWYyszMyezJ72LZ6e
-	5xgKA7CXN6/lCxwCC+Ufec3w/VenKrZ0vcxaGfmoTiQyqYOQQjDoGswiVakq3qQH
-	El5Bhg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw59msqv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 20:59:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453Kxm8u018624
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 20:59:48 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 3 Jun 2024 13:59:43 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-        <quic_kshivnan@quicinc.com>, <quic_sibis@quicinc.com>,
-        <conor+dt@kernel.org>, <quic_nkela@quicinc.com>,
-        <quic_psodagud@quicinc.com>, <abel.vesa@linaro.org>
-Subject: [PATCH V5 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-Date: Tue, 4 Jun 2024 02:28:59 +0530
-Message-ID: <20240603205859.2212225-6-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240603205859.2212225-1-quic_sibis@quicinc.com>
-References: <20240603205859.2212225-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMA04pPj"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-48bd4cefe5cso521584137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 14:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717448456; x=1718053256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tl/tLmHUxVE8PR415A8/Y/rCk+YfJ+4K/h4oejfCHnM=;
+        b=DMA04pPj3WZO+20Swz9GhEB6+MtZFrze4FgyNERQfuRBuncXs8S1D7p3rpc/pt9oVd
+         AVMvL573AI2RCy6mfAqgjaE2Y5w1sh+0v/5p+sdyMlKITBIqnr1o17FfXPdG8NEOqFW3
+         1yB8DPWydM3y9pQ2aiZ0liGoEQi+neai0zxcF1Kn9pIMSx0TJE7bas52JLFkKJmcVfoz
+         uj+q5HGjA74Vm4FtNeMZq3pBWTZGff5odyJZimhIb+PiQhAhHAU31pIpgR4v6hkGpPnz
+         QIk0peEbmY6RaLk3jXIwNtwqx26BXhjrRaTbb6hKWMUAi5/Y9efvMpBc7QPxMuFFEZ3+
+         MnmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717448456; x=1718053256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tl/tLmHUxVE8PR415A8/Y/rCk+YfJ+4K/h4oejfCHnM=;
+        b=bDc9Dw8TbEhjjGtdPqZB5seNAI1eJFTn0qTQsxQj2J7JFSxTsZZ7PMSrjNCBT+cRRi
+         BW/y9oXEWvvoZe1NazRz/obRaQOARQBCCQoY3xY5lK6K+1L5wBIPcE8Tjl9DeHALgWuh
+         cFGxXoWCZGS05ajwPCEfrIDas7pMzZ3TloCRTIUudLgF7HZUzd6g5k4B9rGvbrhHWLFJ
+         S7/rr37wze+yPP52++z/yntIansRnBR10OpiFHsDS9jjqQh//xhMxbG1jB+vH+8niq7n
+         Y4P00rjp86ZUR4VoKj/zbOnP3MQ75gjbPVNAN8+mfLtefpZa0CkTtSW6dANHZRS15Eb5
+         3Z6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUTU5sQkVDqvH6cPJpBCDhxWgPQ0I/tf8jt3jRmQRmMDiyqHybL0zOp77+ILrg5CI5HcV8m8meoGS0/CYSwUOm1jZ6HpXW55X2Rkhj/
+X-Gm-Message-State: AOJu0YyX6SEassrqRTeO1ov7q6AMQooVbrbvAOYjvmcqEMge1BaDPu4D
+	/QjBvOyV34w9hz2VW2/qk8tdOMntnJvI9pD4DVsl07yWYwb7RHI+DQ4xT1khTuLkA2pdZT8ciUG
+	4mhbVq+B3Upm/QAtKHttXA7pObJ0=
+X-Google-Smtp-Source: AGHT+IEvPvzqYmJeRojd3qT1NEMLMX0goTyVSSdJMab9ylacn0zwvrUz4LBErlIDXHllCWdHfZSGyURC/rJZWCEeVWc=
+X-Received: by 2002:a67:fa03:0:b0:48b:abba:5d8f with SMTP id
+ ada2fe7eead31-48bc211f15cmr10267933137.19.1717448456522; Mon, 03 Jun 2024
+ 14:00:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7UrCHnsZhEa1xolpettZwxSWVDHouAfq
-X-Proofpoint-ORIG-GUID: 7UrCHnsZhEa1xolpettZwxSWVDHouAfq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- adultscore=0 clxscore=1015 mlxlogscore=947 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030168
+References: <20240603140745.83880-1-ioworker0@gmail.com> <Zl3Wjh9_aGY8Xxm7@casper.infradead.org>
+ <c0309ab6-8bae-42b7-8d27-1df895689fb8@redhat.com> <Zl3axbhcljTg_X0C@casper.infradead.org>
+ <db8d4d78-a519-4642-a882-2a84f7a1366b@redhat.com> <CAK1f24=Xa-n2J4_sYL161PMB3hhJ8tcQtJ0qdV7ChPtjMTrPQg@mail.gmail.com>
+In-Reply-To: <CAK1f24=Xa-n2J4_sYL161PMB3hhJ8tcQtJ0qdV7ChPtjMTrPQg@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 4 Jun 2024 09:00:45 +1200
+Message-ID: <CAGsJ_4wwz9gBT35PSffcjQUwPCA2bE=_8Z75RuhsjuQHZnRCVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm/mlock: implement folio_mlock_step() using folio_pte_batch()
+To: Lance Yang <ioworker0@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, 
+	ryan.roberts@arm.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com, 
+	fengwei.yin@intel.com, ying.huang@intel.com, libang.li@antgroup.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
+On Tue, Jun 4, 2024 at 3:46=E2=80=AFAM Lance Yang <ioworker0@gmail.com> wro=
+te:
+>
+> On Mon, Jun 3, 2024 at 11:26=E2=80=AFPM David Hildenbrand <david@redhat.c=
+om> wrote:
+> >
+> > On 03.06.24 17:01, Matthew Wilcox wrote:
+> > > On Mon, Jun 03, 2024 at 04:56:05PM +0200, David Hildenbrand wrote:
+> > >> On 03.06.24 16:43, Matthew Wilcox wrote:
+> > >>> On Mon, Jun 03, 2024 at 10:07:45PM +0800, Lance Yang wrote:
+> > >>>> +++ b/mm/mlock.c
+> > >>>> @@ -307,26 +307,15 @@ void munlock_folio(struct folio *folio)
+> > >>>>    static inline unsigned int folio_mlock_step(struct folio *folio=
+,
+> > >>>>                    pte_t *pte, unsigned long addr, unsigned long e=
+nd)
+> > >>>>    {
+> > >>>> -  unsigned int count, i, nr =3D folio_nr_pages(folio);
+> > >>>> -  unsigned long pfn =3D folio_pfn(folio);
+> > >>>> +  const fpb_t fpb_flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DI=
+RTY;
+> > >>>> +  unsigned int count =3D (end - addr) >> PAGE_SHIFT;
+> > >>>
+> > >>> This is a pre-existing bug, but ... what happens if you're on a 64-=
+bit
+> > >>> system and you mlock() a range that is exactly 2^44 bytes?  Seems t=
+o me
+> > >>> that count becomes 0.  Why not use an unsigned long here and avoid =
+the
+> > >>> problem entirely?
+> > >>>
+> > >>> folio_pte_batch() also needs to take an unsigned long max_nr in tha=
+t
+> > >>> case, because you aren't restricting it to folio_nr_pages().
+> > >>
+> > >> Yeah, likely we should also take a look at other folio_pte_batch() u=
+sers
+> > >> like copy_present_ptes() that pass the count as an int. Nothing shou=
+ld
+> > >> really be broken, but we might not batch as much as we could, which =
+is
+> > >> unfortunate.
+> > >
+> > > You did include:
+> > >
+> > >          VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, fol=
+io);
+> > >
+> > > so at the least we have a userspace-triggerable warning.
+> >
+> > Yes, and max_nr =3D=3D 0 would likely not be healthy to the system.
+> >
+> > But
+> >
+> > For copy_pte_range(), zap_pte_range() and the madvise users, we should
+> > always have:
+> >         next =3D pmd_addr_end(addr, end);
+> >
+> > and use "next" as the actual "end" -- not the VMA end. So "end - addr" =
+=3D
+> > "next - addr" should never exceed a single PMD size.
+> >
+> >
+> > mlock_pte_range() is also called from walk_page_range(), which uses
+> >         next =3D pmd_addr_end(addr, end);
+> >
+> > So likely exceeding PMD size is not possible here and all is working as
+> > expected.
+>
+> Thanks for clarifying!
+>
+> I agree that currently all is fine, so perhaps we don't worry about that =
+:)
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 63 ++++++++++++++++----------
- 1 file changed, 39 insertions(+), 24 deletions(-)
+I agree with this point.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index df31ca0f497c..1929c34ae70a 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -69,8 +69,8 @@ CPU0: cpu@0 {
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD0>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_0: l2-cache {
-@@ -86,8 +86,8 @@ CPU1: cpu@100 {
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD1>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD1>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -97,8 +97,8 @@ CPU2: cpu@200 {
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD2>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD2>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -108,8 +108,8 @@ CPU3: cpu@300 {
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_0>;
--			power-domains = <&CPU_PD3>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD3>, <&scmi_dvfs 0>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -119,8 +119,8 @@ CPU4: cpu@10000 {
- 			reg = <0x0 0x10000>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD4>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD4>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_1: l2-cache {
-@@ -136,8 +136,8 @@ CPU5: cpu@10100 {
- 			reg = <0x0 0x10100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD5>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD5>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -147,8 +147,8 @@ CPU6: cpu@10200 {
- 			reg = <0x0 0x10200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD6>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD6>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -158,8 +158,8 @@ CPU7: cpu@10300 {
- 			reg = <0x0 0x10300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_1>;
--			power-domains = <&CPU_PD7>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD7>, <&scmi_dvfs 1>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -169,8 +169,8 @@ CPU8: cpu@20000 {
- 			reg = <0x0 0x20000>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD8>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD8>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 
- 			L2_2: l2-cache {
-@@ -186,8 +186,8 @@ CPU9: cpu@20100 {
- 			reg = <0x0 0x20100>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD9>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD9>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -197,8 +197,8 @@ CPU10: cpu@20200 {
- 			reg = <0x0 0x20200>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD10>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD10>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -208,8 +208,8 @@ CPU11: cpu@20300 {
- 			reg = <0x0 0x20300>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2_2>;
--			power-domains = <&CPU_PD11>;
--			power-domain-names = "psci";
-+			power-domains = <&CPU_PD11>, <&scmi_dvfs 2>;
-+			power-domain-names = "psci", "perf";
- 			cpu-idle-states = <&CLUSTER_C4>;
- 		};
- 
-@@ -309,6 +309,21 @@ scm: scm {
- 			interconnects = <&aggre2_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
- 					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
- 		};
-+
-+		scmi {
-+			compatible = "arm,scmi";
-+			mboxes = <&cpucp_mbox 0>, <&cpucp_mbox 2>;
-+			mbox-names = "tx", "rx";
-+			shmem = <&cpu_scp_lpri0>, <&cpu_scp_lpri1>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			scmi_dvfs: protocol@13 {
-+				reg = <0x13>;
-+				#power-domain-cells = <1>;
-+			};
-+		};
- 	};
- 
- 	clk_virt: interconnect-0 {
--- 
-2.34.1
+These functions are all scanning PTEs under a PMD. Any value exceeding
+the PTE entries of one PMD has been a bug of callers but not the callee.
 
+>
+> >
+> > Will double check later.
+>
+> I did a double-check and you're correct.
+>
+> Thanks,
+> Lance
+>
+> >
+> > --
+> > Cheers,
+> >
+> > David / dhildenb
+> >
+
+Thanks
+Barry
