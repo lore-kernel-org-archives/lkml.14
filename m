@@ -1,148 +1,112 @@
-Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EB821EF1A;
-	Mon,  3 Jun 2024 15:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636C012FF73;
+	Mon,  3 Jun 2024 15:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717428763; cv=none; b=qQzPtGKLDyFd7gkkT29Y2JQabTRNMLTCuaLwCGmQA+K8nCXdkaJmK7UkctstLcSLOvhQZW4EuXiSN5fLbmWZKmcYXp1jRKba9exy+vzf2DnqgdhcHifZbD5/1j1o+EY8+87aPEqTaKmFqgAmxZ0SjoAxrLeNTLKl9z2J60Cd7ac=
+	t=1717428793; cv=none; b=IKMCw81AEydc1sWBryQp9ftJhZd/y16HfO7sxqsoBYZFGBfYNg/sbeyK6pfyA7RW3b5sbmzgDh07GTE2sY4y2IsP1T5F0DJKe6OAjgdRYiGC6GtKTIk/93V/m1jRPZCUkoRiY9F/0dAAvmsBa/v34DfHZLwI6RTebzEXMhICIuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717428763; c=relaxed/simple;
-	bh=1PB5TAZWxS/S7OzA5Yx0jsbtLvaHqz8kwPOK5A57Bhg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fn6jaFzS2MB7V5AZLaagsjBcG6yeL8tlk5Pyu03I8ZcSSiFm6I6a9FKQYOKa7+eENy/5nPmtwYRrIG33L+Eet7jsLpWMRo2ZiyfgNskEo5O8KTYXwuXloH3WIso85o2NYhEYa9PlSay6NDGyJAWJEdtCyTqWLBbN3ZE0767uqZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=FIWJPd3l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Fkjra8FF; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
+	s=arc-20240116; t=1717428793; c=relaxed/simple;
+	bh=OgWlnRG7yqy7Yvp/hofY3k+TP4mvTMnfi5TRon+rND4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dZcNkKWNoz1PAwA+QVf0ArVHbuPuEX+9WLgaxH4i54iSlKy8a+90QNnxs40CAsysis5Kp2wJ0uqx64bYFMWQ6smrudRdf9Mk51ZwDm2IMtd+aH9FbFPC+29483ECTGTsD8DtxkYlvY2DbCWqX/RopUUNajeU5NPQ/ixTSkIJUwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V78vWfJn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="FIWJPd3l";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fkjra8FF"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 24A7313800D4;
-	Mon,  3 Jun 2024 11:32:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 03 Jun 2024 11:32:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1717428761;
-	 x=1717515161; bh=/TZQ0dkrHtiebumwKyexBxCJNAE82zu8Fq9CXg3TirY=; b=
-	FIWJPd3lO3IbyjBq1T358WBBsg49l+qrtihAccUkUtpax0B7TZ4IAzu4Dk15YUz9
-	oR2aPD6QsxACU42UmQscdjfNSDz1cz9Ly7retRalj2xIvLe7WRWn4Kk9o0OF0Nvm
-	yXwgMSr9xucrlS/I/4hpWg1imjc+82EUGBD4iK2zb0IeavRlbai42hb+w12Rfyao
-	iYdhvsOKrPl2MWiKKRbTnUsdd6wmeiK46e43qsHeDbGaCh5MXqcyn3BTrZNjzB+Y
-	DEHvGxd/dbUeVkPGLOJ2fNQuQesAZvvjG+FN7JQGr10a0/jYj5EUEs+kBP2jMd1n
-	PbtvhxIMTwFQ/SGigXzvkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717428761; x=
-	1717515161; bh=/TZQ0dkrHtiebumwKyexBxCJNAE82zu8Fq9CXg3TirY=; b=F
-	kjra8FF/JcxV4aWFINBDv2Pq4p5vGBJJY33XUzsNYl+j9qD9kPxyA+wTrJLQECNR
-	JyaTjCSJlR94KrUd0iIWasMJYShV84rtGbvsmLVUILQonZ2KAVtb0okptQA13Rvr
-	dlfDcIZdbVtJ9xNM5ONIpQE3A2A106T/PBQHy+wpxvjquQpIgefV/nCyLBAOmedO
-	6j5SR4iuSsu7yTu5Zs49HplwyZM+nGadWA3HmQwP1LFpeqHt0JygecTZ6/qFJbgv
-	1SttApnG3/CwmA7e4T/Z/09wPjGFaIdMOmz+/Gg2dHaxMFu7FDKsLGkA4gVmCVWK
-	i0ch8Rv+IZaWtvXF8wnog==
-X-ME-Sender: <xms:GOJdZi-zgAIbVI8HbgqXUYxVcIq0WgKA_tp0JYh6in9nROiCg4mG4g>
-    <xme:GOJdZiuhEutFf4a-h3CQ33fGF3ydYeO9P4PMDOKvNmikA7hQmhjDO0i4mCA_C3OEB
-    RKQRfoLzdZJ_0Rt>
-X-ME-Received: <xmr:GOJdZoCZv6hLDd7qMjpmff7CQn4PHUO_TZUIw4UQBRCGn_lLFJHMFwAgwGyfpl84BQ7WGYxYCm5iN0wNHvhM_nJ288sqDk1W7ifBsQ5QgQXM6JJkjc6_>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelvddgkeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeeuvghr
-    nhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrih
-    hlrdhfmheqnecuggftrfgrthhtvghrnhepvefhgfdvledtudfgtdfggeelfedvheefieev
-    jeeifeevieetgefggffgueelgfejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsggvrhhnugdrshgthhhusggvrhhtsehfrghsthhmrghilhdr
-    fhhm
-X-ME-Proxy: <xmx:GOJdZqfHYMTjCH-XhXTRY_qFG5KL0x5zn6LmyADj-Bw3p1SUcyIopg>
-    <xmx:GOJdZnPQzKwEnOZi1QB9f-7RQ444p4Mkve4kS4iBd5mEpbVsifYflA>
-    <xmx:GOJdZkmvZvuOeK4yWRqQzua1rywEBJehYJVRNuIxswhEvIOQE3iP0Q>
-    <xmx:GOJdZpvJHaSMbo_F2xXJZ0YRpF1K-U2VIpAxE2shbThOhnGAArnpYw>
-    <xmx:GeJdZi1Y3Wa6YulPVs5fs1H6zO1wnOwy7FCS95LL5CAKj2Dx-UEvIirL>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 3 Jun 2024 11:32:39 -0400 (EDT)
-Message-ID: <233a9fdf-13ea-488b-a593-5566fc9f5d92@fastmail.fm>
-Date: Mon, 3 Jun 2024 17:32:38 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V78vWfJn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9E44C2BD10;
+	Mon,  3 Jun 2024 15:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717428793;
+	bh=OgWlnRG7yqy7Yvp/hofY3k+TP4mvTMnfi5TRon+rND4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V78vWfJnvZewwuSibFDHSbCkT7UuQxhh7H/3SePSqXD1IHensUS8575I57nhRRGNm
+	 uDOgM18EICY1RU5BGasMfeKdxeRj3rrm2PDIut5kb5N6LTjgQt4lmtZpEoxnd4D/NG
+	 DFR4YbrHY4UahiNnkq8kYpIUnqE0jLjoUVsHEudhor2/ijmq3hhwTvR/6TzD+CSeXk
+	 70VXT93b0/xJnbu9pKur+08cmupOp+QAg40GAQgg9mAJ18lSAUQwwZQ5MgypDm/HJX
+	 A3mtO4WABeasmB7CgPZkv6Qg4s3KxOUWiaz18mYJUJb7SAL8aYxu1BywfFZ6bIqfaX
+	 CkQFqvbp/2bJA==
+Date: Mon, 3 Jun 2024 18:31:13 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+	jun.nakajima@intel.com, rick.p.edgecombe@intel.com,
+	thomas.lendacky@amd.com, michael.roth@amd.com, seanjc@google.com,
+	kai.huang@intel.com, bhe@redhat.com,
+	kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <Zl3hwYL2GDiyUfGo@kernel.org>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <cover.1717111180.git.ashish.kalra@amd.com>
+ <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+ <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
+ <Zl3HfiQ6oHdTdOdA@kernel.org>
+ <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
+ <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [HELP] FUSE writeback performance bottleneck
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Jingbo Xu <jefflexu@linux.alibaba.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- lege.wang@jaguarmicro.com
-References: <495d2400-1d96-4924-99d3-8b2952e05fc3@linux.alibaba.com>
- <67771830-977f-4fca-9d0b-0126abf120a5@fastmail.fm>
- <CAJfpeguts=V9KkBsMJN_WfdkLHPzB6RswGvumVHUMJ87zOAbDQ@mail.gmail.com>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <CAJfpeguts=V9KkBsMJN_WfdkLHPzB6RswGvumVHUMJ87zOAbDQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
 
-
-
-On 6/3/24 17:19, Miklos Szeredi wrote:
-> On Mon, 3 Jun 2024 at 16:43, Bernd Schubert <bernd.schubert@fastmail.fm> wrote:
->>
->>
->>
->> On 6/3/24 08:17, Jingbo Xu wrote:
->>> Hi, Miklos,
->>>
->>> We spotted a performance bottleneck for FUSE writeback in which the
->>> writeback kworker has consumed nearly 100% CPU, among which 40% CPU is
->>> used for copy_page().
->>>
->>> fuse_writepages_fill
->>>   alloc tmp_page
->>>   copy_highpage
->>>
->>> This is because of FUSE writeback design (see commit 3be5a52b30aa
->>> ("fuse: support writable mmap")), which newly allocates a temp page for
->>> each dirty page to be written back, copy content of dirty page to temp
->>> page, and then write back the temp page instead.  This special design is
->>> intentional to avoid potential deadlocked due to buggy or even malicious
->>> fuse user daemon.
->>
->> I also noticed that and I admin that I don't understand it yet. The commit says
->>
->> <quote>
->>     The basic problem is that there can be no guarantee about the time in which
->>     the userspace filesystem will complete a write.  It may be buggy or even
->>     malicious, and fail to complete WRITE requests.  We don't want unrelated parts
->>     of the system to grind to a halt in such cases.
->> </quote>
->>
->>
->> Timing - NFS/cifs/etc have the same issue? Even a local file system has no guarantees
->> how fast storage is?
+On Mon, Jun 03, 2024 at 04:46:39PM +0200, Borislav Petkov wrote:
+> On Mon, Jun 03, 2024 at 09:01:49AM -0500, Kalra, Ashish wrote:
+> > If we skip efi_arch_mem_reserve() (which should probably be anyway skipped
+> > for kexec case), then for kexec boot, EFI memmap is memremapped in the same
+> > virtual address as the first kernel and not the allocated memblock address.
 > 
-> I don't have the details but it boils down to the fact that the
-> allocation context provided by GFP_NOFS (PF_MEMALLOC_NOFS) cannot be
-> used by the unprivileged userspace server (and even if it could,
-> there's no guarantee, that it would).
+> Are you saying that we should simply do
 > 
-> When this mechanism was introduced, the deadlock was a real
-> possibility.  I'm not sure that it can still happen, but proving that
-> it cannot might be difficult.
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index fdf07dd6f459..410cb0743289 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -577,6 +577,9 @@ void __init efi_mem_reserve(phys_addr_t addr, u64 size)
+>  	if (WARN_ON_ONCE(efi_enabled(EFI_PARAVIRT)))
+>  		return;
+>  
+> +	if (kexec_in_progress)
+> +		return;
+> +
+>  	if (!memblock_is_region_reserved(addr, size))
+>  		memblock_reserve(addr, size);
+>  
+> and skip that whole call?
 
-Thanks Miklos!
-I need to go through all of the GFP_NOFS allocation, but I wonder if we
-could introduce cached allocations and fall back to the slow path if
-that didn't work.
+I think Ashish suggested rather 
 
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index fdf07dd6f459..eccc10ab15a4 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -580,6 +580,9 @@ void __init efi_mem_reserve(phys_addr_t addr, u64 size)
+ 	if (!memblock_is_region_reserved(addr, size))
+ 		memblock_reserve(addr, size);
+ 
++	if (kexec_in_progress)
++		return;
++
+ 	/*
+ 	 * Some architectures (x86) reserve all boot services ranges
+ 	 * until efi_free_boot_services() because of buggy firmware
+ 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
-Thanks,
-Bernd
+-- 
+Sincerely yours,
+Mike.
