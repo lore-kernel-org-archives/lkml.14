@@ -1,48 +1,39 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E854AEF5;
-	Mon,  3 Jun 2024 08:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA69E4AEF5
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 08:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717402897; cv=none; b=D+KN/cE+PyabmZZanO5OPXQiNN7baGdo0XmRe3egWXDlAHBNesKOU8p+lCl04NfmBig1XOtzpIERVT3TnXYztsDms6u/40uQqvyf1uL97gUgTGK39k89jMlB9RPBG65010Eift2K/nMPJk+pLCymq65McoYXzkrhomdIDvr/mAc=
+	t=1717402932; cv=none; b=g97rq1/jR7RHHR+nIpuVf8tidgvkcHKQBC4m3WiJUPiJC6rQ6hOhGnOJ6OvuZLqBd+9MGjYp7yqZvw2fwuhzq3SmvmlGIH2lMDKjE5KMZKf3ZeL1ml62gGeMZf9Lgl2BecHUPbiV2cBfZGt2rRXY0gPewv5s9JlSgzMLvoMdsX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717402897; c=relaxed/simple;
-	bh=OfJ1v8LmA6mNpHYBeRjLRPtYp398TYQP1NikawbZ4jY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kuNKzo1raFdgzVgrtYwsSpBfuz5mDBLyC3MZy5AfRHgpeKEi0dM9xE0W8i/R3yodIQNvJGm45O9Vi7gkhnvSJkvvnUr3MDlKjwaE0xJSuxg71xYdJK+oiq5VEkzr52EMx2sDG9gl27aE4crG9NdyntWrO92CpZ+ZWXV+9sSDMoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kJcZnF1n; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kJcZnF1n"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 34227C0011;
-	Mon,  3 Jun 2024 08:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717402888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Gu2XHe19XSpb+VgVm3wUODziOEYkalPD1w4V/84MF8c=;
-	b=kJcZnF1n3JOnk/MuEuZ3dn0jMOkEUPkoA0y6a3fiqJKuiYG7mKAiV+UysAK0+OFxrnaxam
-	l2zvuoKGM1M6zNAYuzOvd0JeSHuYftBF42IkMbC0RVwM/xiDO7u/7XT3SCB6YCRq2vY2jg
-	o2QqP2QJ8+TAVEUEGnM1P6o3m0OFldV30Zr4jY5qwgLDu2842RzR8bdPlRP2PP7pCUbrqU
-	8lNFn/BN5ZsJKa058PVdubPh7GdONG8ZtmUTqn7oUNPtz+fHAOlojCfXD8BIqhJmECtBoY
-	VKamKtM1e6FWe0b96A7McX9Z9IyHPhFpCpFzHCKJqpwjNDiAt0UwkkycajMwuw==
-From: Thomas Richard <thomas.richard@bootlin.com>
-To: linus.walleij@linaro.org
-Cc: m.nirmaladevi@ltts.com,
-	bhargav.r@ltts.com,
-	lee@kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	u-kumar1@ti.com,
-	gregory.clement@bootlin.com,
-	thomas.petazzoni@bootlin.com,
-	Thomas Richard <thomas.richard@bootlin.com>
-Subject: [PATCH] pinctrl: tps6594: add missing support for LP8764 PMIC
-Date: Mon,  3 Jun 2024 10:21:10 +0200
-Message-Id: <20240603082110.2104977-1-thomas.richard@bootlin.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1717402932; c=relaxed/simple;
+	bh=pfNUgLQMKlNwJ0XnIZ+P411+AYqKdFF05wDxFVQPy8U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qAEzWtAoU9QO4BdjoZ8SOmtHgH8JS99b4fs7vOp4gl56o1yX4O8DoQZ/V/NfJ5Zp+z/DjXKAER9+DBgTFEB1NgLPHCD6K2Ydiy5xLv+XgJjvXCYkrI5178rZvk+n0NoqD2XdOM4SA/6qYpH9TfxysGuZ6xa229mUCcNArvvuWQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 663DB1042;
+	Mon,  3 Jun 2024 01:22:34 -0700 (PDT)
+Received: from e125905.cambridge.arm.com (e125905.cambridge.arm.com [10.1.194.73])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66CCA3F792;
+	Mon,  3 Jun 2024 01:22:08 -0700 (PDT)
+From: Beata Michalska <beata.michalska@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com,
+	sudeep.holla@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	vincent.guittot@linaro.org,
+	vanshikonda@os.amperecomputing.com
+Cc: sumitg@nvidia.com,
+	yang@os.amperecomputing.com,
+	lihuisong@huawei.com,
+	viresh.kumar@linaro.org,
+	rafael@kernel.org
+Subject: [PATCH v6 0/4] Add support for AArch64 AMUv1-based arch_freq_get_on_cpu
+Date: Mon,  3 Jun 2024 09:21:50 +0100
+Message-Id: <20240603082154.3830591-1-beata.michalska@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,35 +41,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
 
-Add missing support for LP8764 PMIC in the probe().
+Introducing arm64 specific version of arch_freq_get_on_cpu, cashing on
+existing implementation for FIE and AMUv1 support: the frequency scale
+factor, updated on each sched tick, serves as a base for retrieving
+the frequency for a given CPU, representing an average frequency
+reported between the ticks - thus its accuracy is limited.
 
-Fixes: 208829715917 (pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO)
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
+The changes have been rather lightly (due to some limitations) tested on
+an FVP model. Note that some small discrepancies have been observed while
+testing (on the model) and this is currently being investigated, though it
+should not have any significant impact on the overall results.
 
-Issue detected with v6.10-rc1 (and reproduced with 6.10-rc2) using a TI
-J7200 EVM board.
+Relevant discussions:
+[1] https://lore.kernel.org/all/20240229162520.970986-1-vanshikonda@os.amperecomputing.com/
+[2] https://lore.kernel.org/all/7eozim2xnepacnnkzxlbx34hib4otycnbn4dqymfziqou5lw5u@5xzpv3t7sxo3/
+[3] https://lore.kernel.org/all/20231212072617.14756-1-lihuisong@huawei.com/
+[4] https://lore.kernel.org/lkml/ZIHpd6unkOtYVEqP@e120325.cambridge.arm.com/T/#m4e74cb5a0aaa353c60fedc6cfb95ab7a6e381e3c
 
-tps6594-pinctrl tps6594-pinctrl.8.auto: error -EINVAL: Couldn't register gpio_regmap driver
-tps6594-pinctrl tps6594-pinctrl.8.auto: probe with driver tps6594-pinctrl failed with error -22
+v6:
+ - delay allocating cpumask for AMU FIE support instead of invalidating the mask
+   upon failure to register cpufreq policy notifications
+ - drop the change to cpufreq core (for cpuinfo_cur_freq) as this one will be
+   sent as a separate change
 
- drivers/pinctrl/pinctrl-tps6594.c | 1 +
- 1 file changed, 1 insertion(+)
+v5:
+ - Fix invalid access to cpumask
+ - Reworked finding reference cpu when getting the freq
 
-diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
-index 085047320853..5e7c7cf93445 100644
---- a/drivers/pinctrl/pinctrl-tps6594.c
-+++ b/drivers/pinctrl/pinctrl-tps6594.c
-@@ -486,6 +486,7 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 		break;
- 	case TPS6593:
- 	case TPS6594:
-+	case LP8764:
- 		pctrl_desc->pins = tps6594_pins;
- 		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
- 
+v4:
+- dropping seqcount
+- fixing identifying active cpu within given policy
+- skipping full dynticks cpus when retrieving the freq
+- bringing back plugging in arch_freq_get_on_cpu into cpuinfo_cur_freq
+
+v3:
+- dropping changes to cpufreq_verify_current_freq
+- pulling in changes from Ionela initializing capacity_freq_ref to 0
+  (thanks for that!)  and applying suggestions made by her during last review:
+	- switching to arch_scale_freq_capacity and arch_scale_freq_ref when
+	  reversing freq scale factor computation
+	- swapping shift with multiplication
+- adding time limit for considering last scale update as valid
+- updating frequency scale factor upon entering idle
+
+v2:
+- Splitting the patches
+- Adding comment for full dyntick mode
+- Plugging arch_freq_get_on_cpu into cpufreq_verify_current_freq instead
+  of in show_cpuinfo_cur_freq to allow the framework to stay more in sync
+  with potential freq changes
+
+
+
+Beata Michalska (3):
+  arm64: amu: Delay allocating cpumask for AMU FIE support
+  arm64: Provide an AMU-based version of arch_freq_get_on_cpu
+  arm64: Update AMU-based frequency scale factor on entering idle
+
+Ionela Voinescu (1):
+  arch_topology: init capacity_freq_ref to 0
+
+ arch/arm64/kernel/topology.c | 145 +++++++++++++++++++++++++++++------
+ drivers/base/arch_topology.c |   8 +-
+ 2 files changed, 127 insertions(+), 26 deletions(-)
+
 -- 
-2.39.2
+2.25.1
 
