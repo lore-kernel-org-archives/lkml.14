@@ -1,139 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602FC12E1C6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 13:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62B12C550;
+	Mon,  3 Jun 2024 13:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717420189; cv=none; b=mQxLM77yPN8o1E1E5tlKF9HLvISxMEV66rA2zUvNzL0IXzW/WefkrvUNIijXCKWKm1WzTWlC9PnTg49kS5otA7ZiCoB2dmqms3AnzZHH/M+0WysMHg1yU4ENjQDxNZAWfluTqPq8gSu+st2i3IFEhFnyiVrDFKvvmRD+qP4tVcc=
+	t=1717420360; cv=none; b=odXGhT+ye+hftUo82WO3RRv7prB9ZXu8ZMOpjKhpNg6IIDv8N5GypkNzu90djCXluYuhP44qvNqhid56B4diqYJrrOKCGG43wcTkI75xq89QLibYRf0BlF54FnLrRd+BWSci0gXRp7pGWiIoUyG1Ux2V3XvIL7Hc/4+RC9aIcKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717420189; c=relaxed/simple;
-	bh=YhcdwzH90218JoOWdcc1NwAP0Li4AXv2Tb893sr7v9I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GNIjhjShwzbS4KajdZ+yoPMKYx4XI+g/1WaSFrDP0nfDjsf/nm5YM7TNE0CWaXwmZ3pb+G4IVpVXK+b/OP1i1qV4uCRuvLbYz80h5uZFiq2XGGyeTNm+B6x3QZLvhtaBaGD+HGzTZrJSikIE6D3b1Lu2RH334zfPfyPzAtfPtyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=drm6WUCS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717420360; c=relaxed/simple;
+	bh=9vECZuQN9rvTVQ+Bn4+skCJV/m297GeCrufh22rFSi8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EnnZ5iMCs8XVED5go0Oe4AFV2S+y3pCmUfLMBZBN1qCePwEt0eid7Aa2Fwlx1iAGlO4htaqjIsXvxRaErzKbF9Hmb6g1wUZqjJ7A7zESg5XaBAhZa99evf6qra8yeAz+6ETwYb0Fr8isMQjbuuX84PcW+RE6G4riwEBC7psJ7n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRRS/NKH; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drm6WUCS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717420177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cXAmMQrgrXIFLyB/yIKENXCHvnmz0ML8IZSHNgowrl8=;
-	b=drm6WUCSFiAUQ/Yy/lMllPY2nvmPDWVFRy4cmi/kGzfJ7KSlGPk1jvbj8Hp/zAAmAd8tMD
-	cnPjIFsjzbsu2olvDBbySfP1Nv27ekhNgHA3CI5OjgbfMjdpXJKLBHs7CerldCm5yALepa
-	0xzsN3cSYqeoG9aLy+fsfW6NIXf+whY=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-5-AzBsRabIO4SWrz_DQFw8JA-1; Mon, 03 Jun 2024 09:05:32 -0400
-X-MC-Unique: AzBsRabIO4SWrz_DQFw8JA-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-43ff7b96a3fso33491541cf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 06:05:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRRS/NKH"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a692130eb19so82808866b.2;
+        Mon, 03 Jun 2024 06:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717420357; x=1718025157; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cDFXoPl9QAiD7mft81g/Aw36i+8pqSQZWqXPwJ/7n6I=;
+        b=dRRS/NKHsP7CXAhIcsMx4TmiT0F0QfS/+zFVLoPk18VA7uY/ZN8kmczzXRjrFTnN3K
+         1O9l/98drdKCqk46vH8BcWa4TShZzpmEYHLSeBN0zwdRDnWVd99ymry2scwz6jGoI/eY
+         Na5C5THflRP8xOXF0bYOkOKPL0coUr3p/Ah/rOcG8yGXVKW3ieC88RmwyspEyzmvrXNQ
+         5vjMnNer2bZ/rq/YPod8dWCnuFwYT9xx0WizRFbDQrDftBi0g8Ehl5LNy8X3Gap7gRkt
+         x7N750nnjB4Pt36C0NxM8VkRYPdq9oiwQZteyAfXVOpIfY8Qq3PeXx0NEZgsy2/2CmH2
+         PoIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717419926; x=1718024726;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cXAmMQrgrXIFLyB/yIKENXCHvnmz0ML8IZSHNgowrl8=;
-        b=OcpZhrNOhWvhPd5BZ/5kHEl1cGq2kkse0fw3SM4e8HGd7CZBDpXcb/SH0rQrXeBsRV
-         zwOMm7ZLZL5JLAdrEVvzum4mMFyf4I2sp//5NTXJ1HKFSX0NBOmj3VB5wRf7Gv/po9CC
-         W9w5eyJus2M5bTsDd4TdzKdL8pmIaqipXAfE529BJbrtjTQuOEeYNtIVOL9K8RJYq5EM
-         3E62QenpqnKKfGH8bhAakkclBqG0iy8egg8uFa87VEePWvkYCjOH3fpoIDE1oDv0/sgp
-         KMOh92Dqgeyd8rl8iTjHsmrt/7dKQNk6R4/3DUNURBBYA5HBsKxCLuV7QvIpJ1CYj23J
-         w1Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCVWdd5iemjEeeU1ZweFg1V3oJwUM82RzM6zHNhYG8B3QKUlf0qvG8ssuDs+meXDjTvWKu0U9cEkOQ8NV7hfAihtU3TNHnnoyt9NHM2j
-X-Gm-Message-State: AOJu0YzTqy2TAk6lRPxLjgH8StJ9nAVRa01unNN1Lb6mSURroBLNPyDY
-	N/xpJ3DMEwC0yBJ/ZiT0qPrtLxfuRA//qK0EqvzeDP0uCxFrSwanhLZg95Ly6RF+aarkw1l600P
-	LNAr898DGQV4vhyLwfpG1KnzC8Yed/CxRITywCU7yiXaIA4nmc3JMGdiDxqirCA==
-X-Received: by 2002:a05:6214:3b87:b0:6af:b70d:55e9 with SMTP id 6a1803df08f44-6afb70d56b0mr37258186d6.42.1717419926036;
-        Mon, 03 Jun 2024 06:05:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLGteIxc3SVsMMA5OIbdqpk/I/qYvB4QX9ht7y8iaF54/X1TCt3zDCTxhbKhkVly5RHbTheQ==
-X-Received: by 2002:a05:6214:3b87:b0:6af:b70d:55e9 with SMTP id 6a1803df08f44-6afb70d56b0mr37257636d6.42.1717419925390;
-        Mon, 03 Jun 2024 06:05:25 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f02d1004c157eb0f018dd01.dip0.t-ipconnect.de. [2003:c9:3f02:d100:4c15:7eb0:f018:dd01])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4b4179f4sm30558826d6.113.2024.06.03.06.05.22
+        d=1e100.net; s=20230601; t=1717420357; x=1718025157;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cDFXoPl9QAiD7mft81g/Aw36i+8pqSQZWqXPwJ/7n6I=;
+        b=rVEMfUnZH9PklxM2UOEuIXVshG6gy3ivFf6KC9XawHH1JJJ4MPBEbHREYfSRHJSqqI
+         cf65DJc8sXQndbkAyG/hHxlUN/eOUdItVPWjmrAeTa+goOjQm6M4g3ycw7e41j94NCg/
+         W12EoLf8RinVf5TJHfYq+Vu2lo4JvQpwAB3ueiFFk1fWe7XAeC8+3+k7Y9LDTFr4QJ4p
+         JSSFC8p7nGD/6aI6j5uJEEqfUQiD3GjcBLpmquDoSG7TUPmXZDCbp+zdRnszGxWXB+qU
+         ngmHqr5ffNzLL3HM1Sl3GVS8SAv6xTCD/3eWs7HhZhgRLZStHc6Igf4fkbR/yhgcc08K
+         1yBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXH0nVW5gWBRxgE0gwQeYRnJ8rmc3ZXduCxwD6guVuczIn7w+0foEDLKkBwltiHkx5jbwf0FPLo4Er6zatTuS6UuAUxuI9MB6RY0pw2cEo2efNn85dZu/K/Pwfsa+6UbqNWzIqNAnijEy86kvVw/sc4Jt2Nyk69/WC8QquUo9BcEBJ8oQ==
+X-Gm-Message-State: AOJu0Ywz/My7sjW/uL11KiNew4ocx/iX6NM15DE42CwWGZpZM2RiceAP
+	Et/9Fd1xsvuusUuni7ORBlMJnNfq0CZ4mwlFRhv4a0OzN9MguIkH
+X-Google-Smtp-Source: AGHT+IEUVxQ9shjdUvCUFmrhT3joLAoB6rSyyBG57Rf6KbKIeWfvujt8kBwBXijDrUPJI3srZGpdQg==
+X-Received: by 2002:a17:906:aa4d:b0:a63:41e4:ee57 with SMTP id a640c23a62f3a-a681f87e62bmr535222566b.15.1717420357249;
+        Mon, 03 Jun 2024 06:12:37 -0700 (PDT)
+Received: from ?IPv6:2001:a61:35f9:9001:40df:88bb:5090:7ab6? ([2001:a61:35f9:9001:40df:88bb:5090:7ab6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a690e5ee90esm146062166b.117.2024.06.03.06.12.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 06:05:25 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Shaoqin Huang <shahuang@redhat.com>,
-	Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH v4 4/6] KVM: arm64: show writable masks for feature registers
-Date: Mon,  3 Jun 2024 15:05:05 +0200
-Message-ID: <20240603130507.17597-5-sebott@redhat.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240603130507.17597-1-sebott@redhat.com>
-References: <20240603130507.17597-1-sebott@redhat.com>
+        Mon, 03 Jun 2024 06:12:36 -0700 (PDT)
+Message-ID: <f262dd8884e89bb36a72fe8fd5cb75cd9ae6fa08.camel@gmail.com>
+Subject: Re: [PATCH v3 5/5] iio: dac: ltc2664: Add driver for LTC2664 and
+ LTC2672
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Kim Seer Paller <kimseer.paller@analog.com>,
+ linux-kernel@vger.kernel.org,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner
+ <dlechner@baylibre.com>,  Lars-Peter Clausen <lars@metafoo.de>, Liam
+ Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Dimitri
+ Fedrau <dima.fedrau@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,  Michael
+ Hennerich <michael.hennerich@analog.com>, kernel test robot <lkp@intel.com>
+Date: Mon, 03 Jun 2024 15:12:36 +0200
+In-Reply-To: <20240603012200.16589-6-kimseer.paller@analog.com>
+References: <20240603012200.16589-1-kimseer.paller@analog.com>
+	 <20240603012200.16589-6-kimseer.paller@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Instead of using ~0UL provide the actual writable mask for
-non-id feature registers in the output of the
-KVM_ARM_GET_REG_WRITABLE_MASKS ioctl.
+On Mon, 2024-06-03 at 09:22 +0800, Kim Seer Paller wrote:
+> LTC2664 4 channel, 16 bit Voltage Output SoftSpan DAC
+> LTC2672 5 channel, 16 bit Current Output Softspan DAC
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405241141.kYcxrSem-lkp@i=
+ntel.com/
 
-This changes the mask for the CTR_EL0 and CLIDR_EL1 registers.
+The above could be dropped. This is still not merged code :)
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+> Co-developed-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
+> ---
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 39057718fbcd..8008120d021b 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -2566,7 +2566,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 
- 	{ SYS_DESC(SYS_CCSIDR_EL1), access_ccsidr },
- 	{ SYS_DESC(SYS_CLIDR_EL1), access_clidr, reset_clidr, CLIDR_EL1,
--	  .set_user = set_clidr },
-+	  .set_user = set_clidr, .val = ~CLIDR_EL1_RES0 },
- 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
- 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
- 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
-@@ -4125,20 +4125,11 @@ int kvm_vm_ioctl_get_reg_writable_masks(struct kvm *kvm, struct reg_mask_range *
- 		if (!is_feature_id_reg(encoding) || !reg->set_user)
- 			continue;
- 
--		/*
--		 * For ID registers, we return the writable mask. Other feature
--		 * registers return a full 64bit mask. That's not necessary
--		 * compliant with a given revision of the architecture, but the
--		 * RES0/RES1 definitions allow us to do that.
--		 */
--		if (is_vm_ftr_id_reg(encoding)) {
--			if (!reg->val ||
--			    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0()))
--				continue;
--			val = reg->val;
--		} else {
--			val = ~0UL;
-+		if (!reg->val ||
-+		    (is_aa32_id_reg(encoding) && !kvm_supports_32bit_el0())) {
-+			continue;
- 		}
-+		val = reg->val;
- 
- 		if (put_user(val, (masks + KVM_ARM_FEATURE_ID_RANGE_INDEX(encoding))))
- 			return -EFAULT;
--- 
-2.42.0
+LGTM... just a couple of minor points/questions that you can maybe take on =
+if a re-
+spin is needed.
+
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+
+...
+
+>=20
+> +static int ltc2664_scale_get(const struct ltc2664_state *st, int c)
+> +{
+> +	const struct ltc2664_chan *chan =3D &st->channels[c];
+> +	const int (*span_helper)[2] =3D st->chip_info->span_helper;
+> +	int span, fs;
+> +
+> +	span =3D chan->span;
+> +	if (span < 0)
+> +		return span;
+> +
+> +	fs =3D span_helper[span][1] - span_helper[span][0];
+> +
+> +	return (fs / 2500) * st->vref;
+
+no need for ()
+
+...
+
+>=20
+> +static int ltc2664_channel_config(struct ltc2664_state *st)
+> +{
+> +	const struct ltc2664_chip_info *chip_info =3D st->chip_info;
+> +	struct device *dev =3D &st->spi->dev;
+> +	u32 reg, tmp[2], mspan;
+> +	int ret, span =3D 0;
+> +
+> +	mspan =3D LTC2664_MSPAN_SOFTSPAN;
+> +	ret =3D device_property_read_u32(dev, "adi,manual-span-operation-config=
+",
+> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &mspan);
+> +	if (!ret) {
+> +		if (!chip_info->manual_span_support)
+> +			return dev_err_probe(dev, -EINVAL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "adi,manual-span-operation-confi=
+g not
+> supported\n");
+> +
+> +		if (mspan > ARRAY_SIZE(ltc2664_mspan_lut))
+> +			return dev_err_probe(dev, -EINVAL,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "adi,manual-span-operation-confi=
+g not in range\n");
+> +	}
+> +
+> +	st->rfsadj =3D 20000;
+> +	ret =3D device_property_read_u32(dev, "adi,rfsadj-ohms", &st->rfsadj);
+> +	if (!ret) {
+> +		if (!chip_info->rfsadj_support)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "adi,rfsadj-ohms not supported\n");
+> +
+> +		if (st->rfsadj < 19000 || st->rfsadj > 41000)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "adi,rfsadj-ohms not in range\n");
+> +	}
+> +
+> +	device_for_each_child_node_scoped(dev, child) {
+> +		struct ltc2664_chan *chan;
+> +
+> +		ret =3D fwnode_property_read_u32(child, "reg", &reg);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to get reg property\n");
+> +
+> +		if (reg >=3D chip_info->num_channels)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 "reg bigger than: %d\n",
+> +					=C2=A0=C2=A0=C2=A0=C2=A0 chip_info->num_channels);
+> +
+> +		chan =3D &st->channels[reg];
+> +
+> +		if (fwnode_property_read_bool(child, "adi,toggle-mode")) {
+> +			chan->toggle_chan =3D true;
+> +			/* assume sw toggle ABI */
+
+Do we have any other option :)? For the ltc2668 driver (where this code cam=
+e from),
+we do have another way (driven by clocks) to toggle between outputs and hen=
+ce the
+comment.
+
+BTW, there's a fair amount of duplicated code between this and ltc2668. At =
+some point
+we may see if it makes sense to add some common module. Anyways, fine for n=
+ow.
+
+- Nuno S=C3=A1
+
 
