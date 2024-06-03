@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2CC13D2B6
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F56C13D527
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:25:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457101; cv=none; b=ctYBUu8ZCn1ukvgVt7Ni7jgguVvbphu7GSvqv+wivIC62r1CLmYtKsI9xVrQvS/KGgf72EOgQXDule8c5FQVLsoBf+B8TR/DANru7GvSZCSy9QqPAa/6kz6z4+h2ALw5Gx413sbHcssaMJqHKTOr1KGq9LsvnxNF0SjQaOPL0yg=
+	t=1717457102; cv=none; b=j0PJrm38rBJcQp894xV2wXuzT9UbeomW9oQ344JgdHpTX+Uw3yumQR+Q8QH+TnN/64gxEdjXEWNKsZZxE0FOhikyUsCh8l8DJYeR9TbQLm5hifFpLKg/N/LsmrZtJ57CqlMcv06qOVcT1A+1z15Phdhiavd7fMg1JzgTJSoJhC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457101; c=relaxed/simple;
-	bh=nJLUOO0kFbQq0mpsWpx/7kA8MXGjckBsDAJO8NTpM6E=;
+	s=arc-20240116; t=1717457102; c=relaxed/simple;
+	bh=WzH60LE1JHbgrXr8Xp82kiXt9WKVqavSDQunTGSY/BU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=imtgu7wmBanP3AWaxQE586I36OTGsMNELklUYS+u6GmFDqr2ISclFRi/V8cAPBrT2HHqa5WZuFW2I0eBMCy8Aq1zGwunHWkmbDWIPNWEyWbkesEF0cfaOAMqPrc9t2OskqCtw3aP0GBwFTLrNxTFhMqodduJ1o1di7Fs2/Sq3tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qV+sNGum; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Odj4u7ry; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=dJ9WlNnDhMU3IbJAclWD1qBUU3IEqzsx3TtTCElk8s2F4I5AEyUj5F5qKNdjibk9pXpHBk4dYLfzzHmcv1ONncdUe9rBzQnrPO6oAb0wEt3qs7Fh+tn1cAxCwcEAnei3yxOjLgRT06VHHkol8NzTzu96Bf0Zc2loProPC9aiHWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x4a20jNB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1NBbkf+i; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qV+sNGum";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Odj4u7ry"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x4a20jNB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1NBbkf+i"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717457096;
+	s=2020; t=1717457098;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Dj4gOrMYbFMlZqhfQ1sjWqCRmrh47Yb6HFMI47V4kYM=;
-	b=qV+sNGumgD9wkX7Nv8ydFkhKqx9YqMjfbJ8zEq9ngIMylq4Ev76annalIm9kksCu5+HfFe
-	0bcAvNygHFrlh7zvE6jGtoYi4KYzHR6sp2GJqMGu4+lF98mLP5nURHdvjCePu++MhXEeQR
-	SLGZyZwKYcgvKGBF+HG6MkWwVeoJJ2e4LTiABIe2yitQ6PUE8unOk6yizO38mtQowL4qcU
-	9PsiFmgPDTouoagtWYmpOL4GKX04VPKBBCzyeD243BnH7Ige0D9N2YZjYxPZob2j3psozW
-	9Ps1+Vvpi5MKDkaLpT92WQmSiwqeCRTqDALqIpGCWPsv5WIYC/IHDsBkHhK1nw==
+	bh=4oYaY6vh/25J7oqncloRHx8iudin+UX3Lw2NmnwW3ms=;
+	b=x4a20jNBcfTKskpVL5KHWROuttjcpcX9tuRFrAxhpqJvysj3BpITSI3LI5MksQG8UC/ZVE
+	hmt/ArLodPuOT19k+28sEMGnIHip8R3+WT2VASeDwvPDC8WK71e6hsWi0Yg7s5Q+j/Jpmk
+	k87wrYYYXwmhwEYc/VvAz/6esle6+SWdyDY5R+pdxV6GWC8N6GEVvTbhqTSEm7PCCZ+DRM
+	Omj50ebW4B1vY2HnwMmpb8P8YB37y4J0H7aTbjeRftEMr2zD8VwE+SwgLIJ2ivtzxTjRHR
+	cFvp9EE6C+mVEStIeGKBzF3pY180Pm3LAe0N8T05FXw5K7KiygnjQaTKFkbEsg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717457096;
+	s=2020e; t=1717457098;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Dj4gOrMYbFMlZqhfQ1sjWqCRmrh47Yb6HFMI47V4kYM=;
-	b=Odj4u7ryDDsbcjDhjQhN0ZkCrkfM7T/t16qNZj1P56qCxrpCFxqIIbSVXKctpwrhWkRXmg
-	t4hFUzIaZ+YnuQDw==
+	bh=4oYaY6vh/25J7oqncloRHx8iudin+UX3Lw2NmnwW3ms=;
+	b=1NBbkf+i0YZ7KR/qAerh2MAF+2aJNWczX8I9aHGeefDlnwTeWaxLrslvmjJF2/eDBxeT3H
+	vuAejtit7IH6uPBg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v2 05/18] printk: Atomic print in printk context on shutdown
-Date: Tue,  4 Jun 2024 01:30:40 +0206
-Message-Id: <20240603232453.33992-6-john.ogness@linutronix.de>
+Subject: [PATCH printk v2 10/18] printk: Provide helper for message prepending
+Date: Tue,  4 Jun 2024 01:30:45 +0206
+Message-Id: <20240603232453.33992-11-john.ogness@linutronix.de>
 In-Reply-To: <20240603232453.33992-1-john.ogness@linutronix.de>
 References: <20240603232453.33992-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,66 +57,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For nbcon consoles, normally the printing is handled by the
-dedicated console printing threads. However, on shutdown the
-printing threads may not get a chance to print the final
-messages.
-
-When shutting down or rebooting (system_state > SYSTEM_RUNNING),
-perform atomic printing from the printk() caller context.
+In order to support prepending different texts to printk
+messages, split out the prepending code into a helper
+function.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/nbcon.c  | 5 +++--
- kernel/printk/printk.c | 7 ++++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ kernel/printk/printk.c | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 89b340ca303c..19f0db6945e4 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -1297,7 +1297,8 @@ static void nbcon_atomic_flush_pending_con(struct console *con, u64 stop_seq,
- 	 * context must flush those remaining records if the printer thread
- 	 * is not available do it.
- 	 */
--	if (!con->kthread && prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
-+	if ((!con->kthread || (system_state > SYSTEM_RUNNING)) &&
-+	    prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
- 		stop_seq = prb_next_reserve_seq(prb);
- 		goto again;
- 	}
-@@ -1639,7 +1640,7 @@ void nbcon_device_release(struct console *con)
- 	 */
- 	cookie = console_srcu_read_lock();
- 	if (console_is_usable(con, console_srcu_read_flags(con)) &&
--	    !con->kthread &&
-+	    (!con->kthread || (system_state > SYSTEM_RUNNING)) &&
- 	    prb_read_valid(prb, nbcon_seq_read(con), NULL)) {
- 		__nbcon_atomic_flush_pending_con(con, prb_next_reserve_seq(prb), false);
- 	}
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 137bd9a721c4..b58db15d2033 100644
+index 4613f9145a8e..fcbf794a0aaf 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -2389,12 +2389,17 @@ asmlinkage int vprintk_emit(int facility, int level,
- 		 *
- 		 * - When this CPU is in panic.
- 		 *
-+		 * - During shutdown, since the printing threads may not get
-+		 *   a chance to print the final messages.
-+		 *
- 		 * Note that if boot consoles are registered, the console
- 		 * lock/unlock dance must be relied upon instead because nbcon
- 		 * consoles cannot print simultaneously with boot consoles.
- 		 */
--		if (is_panic_context)
-+		if (is_panic_context ||
-+		    (system_state > SYSTEM_RUNNING)) {
- 			nbcon_atomic_flush_pending();
-+		}
- 	}
+@@ -2806,30 +2806,25 @@ static void __console_unlock(void)
+ #ifdef CONFIG_PRINTK
  
- 	if (do_trylock_unlock) {
+ /*
+- * Prepend the message in @pmsg->pbufs->outbuf with a "dropped message". This
+- * is achieved by shifting the existing message over and inserting the dropped
+- * message.
++ * Prepend the message in @pmsg->pbufs->outbuf with the message in
++ * @pmsg->pbufs->scratchbuf. This is achieved by shifting the existing message
++ * over and inserting the scratchbuf message.
+  *
+  * @pmsg is the printk message to prepend.
+  *
+- * @dropped is the dropped count to report in the dropped message.
++ * @len is the length of the message in @pmsg->pbufs->scratchbuf.
+  *
+  * If the message text in @pmsg->pbufs->outbuf does not have enough space for
+- * the dropped message, the message text will be sufficiently truncated.
++ * the scratchbuf message, the message text will be sufficiently truncated.
+  *
+  * If @pmsg->pbufs->outbuf is modified, @pmsg->outbuf_len is updated.
+  */
+-void console_prepend_dropped(struct printk_message *pmsg, unsigned long dropped)
++static void __console_prepend_scratch(struct printk_message *pmsg, size_t len)
+ {
+ 	struct printk_buffers *pbufs = pmsg->pbufs;
+-	const size_t scratchbuf_sz = sizeof(pbufs->scratchbuf);
+ 	const size_t outbuf_sz = sizeof(pbufs->outbuf);
+ 	char *scratchbuf = &pbufs->scratchbuf[0];
+ 	char *outbuf = &pbufs->outbuf[0];
+-	size_t len;
+-
+-	len = scnprintf(scratchbuf, scratchbuf_sz,
+-		       "** %lu printk messages dropped **\n", dropped);
+ 
+ 	/*
+ 	 * Make sure outbuf is sufficiently large before prepending.
+@@ -2851,6 +2846,27 @@ void console_prepend_dropped(struct printk_message *pmsg, unsigned long dropped)
+ 	pmsg->outbuf_len += len;
+ }
+ 
++/*
++ * Prepend the message in @pmsg->pbufs->outbuf with a "dropped message".
++ * @pmsg->outbuf_len is updated appropriately.
++ *
++ * @pmsg is the printk message to prepend.
++ *
++ * @dropped is the dropped count to report in the dropped message.
++ */
++void console_prepend_dropped(struct printk_message *pmsg, unsigned long dropped)
++{
++	struct printk_buffers *pbufs = pmsg->pbufs;
++	const size_t scratchbuf_sz = sizeof(pbufs->scratchbuf);
++	char *scratchbuf = &pbufs->scratchbuf[0];
++	size_t len;
++
++	len = scnprintf(scratchbuf, scratchbuf_sz,
++		       "** %lu printk messages dropped **\n", dropped);
++
++	__console_prepend_scratch(pmsg, len);
++}
++
+ /*
+  * Read and format the specified record (or a later record if the specified
+  * record is not available).
 -- 
 2.39.2
 
