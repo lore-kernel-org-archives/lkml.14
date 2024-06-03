@@ -1,156 +1,140 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8151272C4
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10C127B40
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 12:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717416454; cv=none; b=G5wkRYw5QuxUYG+3yoWdkjLt6m+5gy/JYQOOJvfN4lMQcwt2lPbkvvm0tdYsuqefbl0xK4U9Yf8Jfn95o1O5ibed0FgzDDNsKB9PHb09AcuNR6OXkLXq6H8RdL9GsqloIlJhVKzKJCbu7e0LYu257Rfyusg9J0ArrNRHdkIkkHE=
+	t=1717416456; cv=none; b=RLdEfMs73d9hLKRqpdNAWfD5DdgRgp1IL+3j74vVpypILJ5DVe3/fychRX7X3ACsFl4ATU9bKrR1G9DwUK/n9nLRN1qKyotjr+7czbDmKYYuZazMDAQvSNhdd2VhRVQRMBJmv13LnWMQ8BHUjxZbWBsyCwHK6nEuP6HugZm+2cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717416454; c=relaxed/simple;
-	bh=TB8VSntBE0Ss5wM4wicbPwjXWZHfn1704FZN+zL4DsU=;
+	s=arc-20240116; t=1717416456; c=relaxed/simple;
+	bh=HKSuZku3Cjx589sVTPzEh7UJFBNrnrV54/ShUb7zzP4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fG0J00/ECqSskYZFpMgREECtOxvuAwiLTbCGvepw0rxNQSUiz3l90rOd4NUr7+X+KiZMK9Pj1bM0L7dtOThtEDu8FipIW7K3swT9GjAM5WDI0o/BrPb+AiHTt2H1Hd4WTrRu81h/Nx7m38cRtQvt/gMf6tDT4fgVBGFZpBnvyRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=nTU70QEU; arc=none smtp.client-ip=209.85.128.50
+	 MIME-Version:Content-Type; b=Q2VpbPHEtVNK3Up4imusAagX0CWGrGcZJKQ8I0GEVRVBXNcTVj44KYCY0A7QyR+AUEXiK2KrAm+SCDJ8mz0LOZXNHFVlk0EDAQfMWDAsC9g6pKx4UtenVvT4jyuPrzVcuEUGT7iZyU1sEDumvBWW3s5QiVFjqo+FHOhPBMj5Vkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=CzLaJWYv; arc=none smtp.client-ip=209.85.167.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="nTU70QEU"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4212f0444efso22497425e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:07:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="CzLaJWYv"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52b950aa47bso2039157e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 05:07:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717416451; x=1718021251; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+yeQ7CDIW6189ZyaxtGLD/570sICh6jaYTVsWRbXXec=;
-        b=nTU70QEUlk2zdFar4i7oXvIQ6fjH9OwZVZCzxzAkfCI3Ml/Q7qiP5r05xTh2QXztjR
-         Ws4na4Zn9QvnMus497hZ+M9Pc20qX+wqmHbgt+04RoaWIg5ad2vmFmU5h4xvV/AuBgsb
-         jKV7Q4s48BkmpHi8VGueG0is+s8Na/c5i2TPR7wgO0Z96CTVOcWhoEOllYSW648AuOPv
-         GbfoMi00SgO+DMcGSB7+dR97QYg5f2qmAOGX+PHfb5pOrb2KGFG/7AHD4k6mlDSspvhP
-         OJGxWpX82bhrFY9+saxl089LzMlIAUiPUMQ7huO7Zuip0/lfkoyNGPyl4dzova+TJQ2j
-         zj8A==
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1717416453; x=1718021253; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qp9kpSxktdl3t5QptSg4ay9ut9mo2kwGjiti3usGOlc=;
+        b=CzLaJWYvJIPMuYNShj9hqXtOdVkzbsqs6C2Mxa4kKnR8eR2SFnJA0wDZiHIyOcN9i0
+         +MvxUWIXlxK6oML9+9l0cdOC3cSDMH/FS5pYmXcgfqO9Sq8f1P5gb9gTpc19AWtQaB5i
+         AlwHgFVTzfowsyYWDeBz9cteMfj5PwI6+Q7UzXixT8X8nAchnR/kIVR6vLasCHiyBE7g
+         ODwprmWc+pxiCSYHa9JAJuIRF5UoQqorefxHo65NIfGNiVdz+j1gl+XacbbzKN7qL0XR
+         iALmTwuSmmX+ZNxFYpWRSTduASj9LVevRIxDm+FeZtQeNDLVl4Vh43IAU40lObwxsWv4
+         yv6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717416451; x=1718021251;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+yeQ7CDIW6189ZyaxtGLD/570sICh6jaYTVsWRbXXec=;
-        b=nayG2EOP/pmb4nzrXfvr1KeFVP/k/o35zJGc10hSWEcv1D83OvTyCTn1HsgeOa+NVq
-         9osUOzof2ZEFljBhpgpGJxW85X/qHkaPzzYT+tA9xPOiIzkTjg8VTwKwxBz4gcZv4ITE
-         4Uhgo8fzhxqM5QAOLzKIvI4GKvn3Afmn44dTBGOlsZo+cUF9GGDMo+Gxd5HhJY/pXy2x
-         UkocO0aMdZaUJD/OUH84JV3GGKTddk+/9y+j+gd7RFC/bjfUv6uFUYjjlqxV07gdxy0h
-         VdYaqo3jcx9AuLYOg9hlbo6oeAz6uQDZMdDwLawTYPgOJg54eYmOskB02uW38x8+9rKi
-         I1Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVIZIj3IGyvRGee5ai3Y7ZDG531m6vFmnip2nJE3sCM7U6L9jscecKBG6FbVxiHGcmt3SdsV5tTj0mYvfK1qrjgmzmtmXtIvKpDCE7W
-X-Gm-Message-State: AOJu0YwC1v4bHk5+Pn7P+QUQIJ1SshyHTGBpSGoSNBwqKBNMo4FUfFE4
-	2Oxx/cBjpK12hMwBCxnf6sCLhe2iCw3mQoh51EmKoBAT2pgt8KttZZPNOVNUUZs=
-X-Google-Smtp-Source: AGHT+IHRrt8E0vOepLzP9fOjqNLrwzjRMRHtLRiwGP0Im83sdAfyEtoFfO79EVxyHzzmioHETf/MBg==
-X-Received: by 2002:a05:600c:4f48:b0:421:35f1:804f with SMTP id 5b1f17b1804b1-42135f1822cmr44023435e9.25.1717416451438;
-        Mon, 03 Jun 2024 05:07:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717416453; x=1718021253;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qp9kpSxktdl3t5QptSg4ay9ut9mo2kwGjiti3usGOlc=;
+        b=q6vP1FkZlp1vW4GkkAsojM/X67DTL6UBmMJ0FJaGdBaHv0lL3hk1pmIINrQJKDTECe
+         Iryz8MCl2/4Lom5LMmWjR6PJDHUKQ5UZXzI3xDnU7XfCiCvJG6L7ag+dIjHQ2F7GQV3a
+         cIdrBD++shzaJgasQNGUAlLGkz7lZI/0UHsdMuYHXdg8moeEPS37I03D8CrmiU/yqedH
+         Lii3KW91JXCVauV8y+mpdKKZt50Jc6K9vXsMt274H9piSmzQw0S+fA63+G1PTdR9CuVl
+         QoS/nEUQlsBxcUEMeJHuqs3x+XF3yBt3gco9gpVEM/HzCjaAavxI6Hg32d8UNSwEXkiH
+         hGwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTjuQfqvxPSJUMcOu3eZ93Mv7CUz/RLSRIVBSCGPrej30Aflv/J7U2ZkVyhbj9LPqvoGkUMWCrxHD4Gt76eznkEAh7J6FmsXMsNgia
+X-Gm-Message-State: AOJu0YwDwxG3+L94AXrz5w1OlWVIeQRC8a8Uwkob0Nvr4/YSI94gFEkr
+	qSVdhXZT9a7pa+ZnGtj3gCnzVijytpiWmbY++F4mpXouf6IROF3xdC/ZetPHPmo=
+X-Google-Smtp-Source: AGHT+IG95U4cvzKCqCJC//mHEC5cwihIOE7E6yEp2LTEdM2o+aM+R0L+4dCYqsxwbWfMmXDgcOyfsQ==
+X-Received: by 2002:ac2:559a:0:b0:525:32aa:4449 with SMTP id 2adb3069b0e04-52b8958ba33mr5060953e87.5.1717416452482;
+        Mon, 03 Jun 2024 05:07:32 -0700 (PDT)
 Received: from localhost ([165.225.194.205])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd064bba6sm8572365f8f.104.2024.06.03.05.07.30
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e574748ffsm3619750f8f.87.2024.06.03.05.07.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 05:07:31 -0700 (PDT)
+        Mon, 03 Jun 2024 05:07:32 -0700 (PDT)
 From: Andreas Hindborg <nmi@metaspace.dk>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Hannes Reinecke <hare@suse.de>,  Keith Busch <kbusch@kernel.org>,  Jens
- Axboe <axboe@kernel.dk>,  Christoph Hellwig <hch@lst.de>,  Damien Le Moal
- <dlemoal@kernel.org>,  Bart Van Assche <bvanassche@acm.org>,  Ming Lei
- <ming.lei@redhat.com>,  "linux-block@vger.kernel.org"
- <linux-block@vger.kernel.org>,  Andreas Hindborg <a.hindborg@samsung.com>,
-  Greg KH <gregkh@linuxfoundation.org>,  Matthew Wilcox
- <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor
- <alex.gaynor@gmail.com>,  Wedson Almeida Filho <wedsonaf@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
- <benno.lossin@proton.me>,  Chaitanya Kulkarni <chaitanyak@nvidia.com>,
-  Luis Chamberlain <mcgrof@kernel.org>,  Yexuan Yang
- <1182282462@bupt.edu.cn>,  Sergio =?utf-8?Q?Gonz=C3=A1lez?= Collado
- <sergio.collado@gmail.com>,  Joel Granados <j.granados@samsung.com>,
-  "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,  Daniel Gomez
- <da.gomez@samsung.com>,  Niklas Cassel <Niklas.Cassel@wdc.com>,  Philipp
- Stanner <pstanner@redhat.com>,  Conor Dooley <conor@kernel.org>,  Johannes
- Thumshirn <Johannes.Thumshirn@wdc.com>,  Matias =?utf-8?Q?Bj=C3=B8rling?=
- <m@bjorling.me>,
-  open list <linux-kernel@vger.kernel.org>,
-  "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
-  "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-  "gost.dev@samsung.com" <gost.dev@samsung.com>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Keith Busch <kbusch@kernel.org>,  Jens Axboe <axboe@kernel.dk>,
+  Christoph Hellwig <hch@lst.de>,  Damien Le Moal <dlemoal@kernel.org>,
+  Bart Van Assche <bvanassche@acm.org>,  Ming Lei <ming.lei@redhat.com>,
+  "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,  Andreas
+ Hindborg <a.hindborg@samsung.com>,  Greg KH <gregkh@linuxfoundation.org>,
+  Matthew Wilcox <willy@infradead.org>,  Miguel Ojeda <ojeda@kernel.org>,
+  Alex Gaynor <alex.gaynor@gmail.com>,  Wedson Almeida Filho
+ <wedsonaf@gmail.com>,  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  Benno
+ Lossin <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,
+  Chaitanya Kulkarni <chaitanyak@nvidia.com>,  Luis Chamberlain
+ <mcgrof@kernel.org>,  Yexuan Yang <1182282462@bupt.edu.cn>,  Sergio
+ =?utf-8?Q?Gonz=C3=A1lez?= Collado <sergio.collado@gmail.com>,  Joel
+ Granados
+ <j.granados@samsung.com>,  "Pankaj Raghav (Samsung)"
+ <kernel@pankajraghav.com>,  Daniel Gomez <da.gomez@samsung.com>,  Niklas
+ Cassel <Niklas.Cassel@wdc.com>,  Philipp Stanner <pstanner@redhat.com>,
+  Conor Dooley <conor@kernel.org>,  Johannes Thumshirn
+ <Johannes.Thumshirn@wdc.com>,  Matias =?utf-8?Q?Bj=C3=B8rling?=
+ <m@bjorling.me>,  open list
+ <linux-kernel@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
+ <rust-for-linux@vger.kernel.org>,  "lsf-pc@lists.linux-foundation.org"
+ <lsf-pc@lists.linux-foundation.org>,  "gost.dev@samsung.com"
+ <gost.dev@samsung.com>
 Subject: Re: [PATCH v4 2/3] rust: block: add rnull, Rust null_blk
  implementation
-In-Reply-To: <CAH5fLgiSCTa=BCr2aGZBhsY2gvctE9OTFFA5CNiVR-YGbXhgxg@mail.gmail.com>
- (Alice
-	Ryhl's message of "Mon, 3 Jun 2024 11:06:57 +0200")
+In-Reply-To: <0a47eebd-2aca-494d-814b-bc949b08630b@suse.de> (Hannes Reinecke's
+	message of "Mon, 3 Jun 2024 11:05:19 +0200")
 References: <20240601134005.621714-1-nmi@metaspace.dk>
 	<20240601134005.621714-3-nmi@metaspace.dk>
 	<ZlsvHV6y4DEdC8ja@kbusch-mbp.dhcp.thefacebook.com>
 	<875xusoetn.fsf@metaspace.dk>
 	<ZltF5NvDnKFphcOo@kbusch-mbp.dhcp.thefacebook.com>
 	<0a47eebd-2aca-494d-814b-bc949b08630b@suse.de>
-	<CAH5fLgiSCTa=BCr2aGZBhsY2gvctE9OTFFA5CNiVR-YGbXhgxg@mail.gmail.com>
-Date: Mon, 03 Jun 2024 14:05:03 +0200
-Message-ID: <87bk4imdu8.fsf@metaspace.dk>
+Date: Mon, 03 Jun 2024 14:07:19 +0200
+Message-ID: <877cf6mdqg.fsf@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Alice Ryhl <aliceryhl@google.com> writes:
+Hannes Reinecke <hare@suse.de> writes:
 
-> On Mon, Jun 3, 2024 at 11:05=E2=80=AFAM Hannes Reinecke <hare@suse.de> wr=
-ote:
->>
->> On 6/1/24 18:01, Keith Busch wrote:
->> > On Sat, Jun 01, 2024 at 05:36:20PM +0200, Andreas Hindborg wrote:
->> >> Keith Busch <kbusch@kernel.org> writes:
->> >>
->> >>> On Sat, Jun 01, 2024 at 03:40:04PM +0200, Andreas Hindborg wrote:
->> >>>> +impl kernel::Module for NullBlkModule {
->> >>>> +    fn init(_module: &'static ThisModule) -> Result<Self> {
->> >>>> +        pr_info!("Rust null_blk loaded\n");
->> >>>> +        let tagset =3D Arc::pin_init(TagSet::try_new(1, 256, 1), f=
-lags::GFP_KERNEL)?;
->> >>>> +
->> >>>> +        let disk =3D {
->> >>>> +            let block_size: u16 =3D 4096;
->> >>>> +            if block_size % 512 !=3D 0 || !(512..=3D4096).contains=
-(&block_size) {
->> >>>> +                return Err(kernel::error::code::EINVAL);
->> >>>> +            }
->> >>>
->> >>> You've set block_size to the literal 4096, then validate its value
->> >>> immediately after? Am I missing some way this could ever be invalid?
->> >>
->> >> Good catch. It is because I have a patch in the outbound queue that a=
-llows setting
->> >> the block size via a module parameter. The module parameter patch is =
-not
->> >> upstream yet. Once I have that up, I will send the patch with the blo=
-ck
->> >> size config.
->> >>
->> >> Do you think it is OK to have this redundancy? It would only be for a
->> >> few cycles.
->> >
->> > It's fine, just wondering why it's there. But it also allows values li=
-ke
->> > 1536 and 3584, which are not valid block sizes, so I think you want the
->> > check to be:
->> >
->> >       if !(512..=3D4096).contains(&block_size) || ((block_size & (bloc=
-k_size - 1)) !=3D 0)
->> >
->> Can't we overload .contains() to check only power-of-2 values?
->
-> Rust integers have a method called is_power_of_two. If you need to
-> assert that it's a power of two, you can use that.
+> On 6/1/24 18:01, Keith Busch wrote:
+>> On Sat, Jun 01, 2024 at 05:36:20PM +0200, Andreas Hindborg wrote:
+>>> Keith Busch <kbusch@kernel.org> writes:
+>>>
+>>>> On Sat, Jun 01, 2024 at 03:40:04PM +0200, Andreas Hindborg wrote:
+>>>>> +impl kernel::Module for NullBlkModule {
+>>>>> +    fn init(_module: &'static ThisModule) -> Result<Self> {
+>>>>> +        pr_info!("Rust null_blk loaded\n");
+>>>>> +        let tagset = Arc::pin_init(TagSet::try_new(1, 256, 1), flags::GFP_KERNEL)?;
+>>>>> +
+>>>>> +        let disk = {
+>>>>> +            let block_size: u16 = 4096;
+>>>>> +            if block_size % 512 != 0 || !(512..=4096).contains(&block_size) {
+>>>>> +                return Err(kernel::error::code::EINVAL);
+>>>>> +            }
+>>>>
+>>>> You've set block_size to the literal 4096, then validate its value
+>>>> immediately after? Am I missing some way this could ever be invalid?
+>>>
+>>> Good catch. It is because I have a patch in the outbound queue that allows setting
+>>> the block size via a module parameter. The module parameter patch is not
+>>> upstream yet. Once I have that up, I will send the patch with the block
+>>> size config.
+>>>
+>>> Do you think it is OK to have this redundancy? It would only be for a
+>>> few cycles.
+>> It's fine, just wondering why it's there. But it also allows values like
+>> 1536 and 3584, which are not valid block sizes, so I think you want the
+>> check to be:
+>> 	if !(512..=4096).contains(&block_size) || ((block_size & (block_size - 1))
+>> != 0)
+>> 
+> Can't we overload .contains() to check only power-of-2 values?
 
-Thanks Alice, that is much easier to read =F0=9F=91=8D
+I think `contains` just compiles down to a simple bounds check. We have
+to do both the bounds check and the power-of-2 check either way.
 
 BR Andreas
+
