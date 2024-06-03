@@ -1,121 +1,106 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A2915E88;
-	Mon,  3 Jun 2024 07:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4D15E88
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 07:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717400952; cv=none; b=LTtS4GjSGh5VnqFUwvRGxzrBAP/IWut8LfcX0DkWBK2ckK15if5wuM+YYQdaum3vhbomePnAty7ami4CZK4deq3lD4mGbrqOUjd7vzaPDjzWIRE96XQOKB6M6QS1uZlvXdh5AeSxWDFKOHHowywqISA3GLE8Li2hmElIoqRLD/A=
+	t=1717401007; cv=none; b=Y//SsmAMo8m9RyslCCzHDeEyW6zbowvOWv3r9i7eBPJk422TG/3CtRFkTPjsoT5JviO55pmcMrS+JnBTFh30EUQQS20imuoX9hWP4cmEmNV0QWLcwAs2dbFl5XtoyD1rMgvs7nY+dKS6uvfcIgQRv/3OQZCZb1946gSnoQlkkZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717400952; c=relaxed/simple;
-	bh=l/sXJWAR9U+t8PuJjd67PbuHh01c02nSqxd7Y8bCUpM=;
-	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
-	 In-Reply-To; b=iYTWTcFKXHUxV+BzKoQghOkZIizoJ47xmR+UZRomZh9TOB4JpXf1sBZ4ViUFQuG+g3WVfeG3dPodkEFa2RgENvgqX5QF60jfroPs/B3K0HEVSDwyDuHtb4+yQYo/DKp9AJGuBjGR2znTEGbon130N4XC6CAmFdHVOefthSF0UeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=mKfgfIw0; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+	s=arc-20240116; t=1717401007; c=relaxed/simple;
+	bh=9fEUa8FDwmaLhcJXzAHKhcMaSGB5f5Nva+6gt2SaNrQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C9Fg8YMFCMGUc8EcV+5Snaw7JKt/1CDqIcOSqeDWX89ZZ09TzoC4pQKm3Vryc6r4H7DymMKQSSnVJLVmmIO6CZ9e9d7lCCO6dsUQOIzk9HbB1XjueA/ddqkReUtxJ1t+seoBQSZuJTUqz/GuYsBzZC3ZXx2SLInewSPPhXIriIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dATJn8J7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="mKfgfIw0"
-Received: from localhost (unknown [213.135.10.150])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id 30CEA136A;
-	Mon,  3 Jun 2024 09:42:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-	t=1717400554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
-	 references:references; bh=l/sXJWAR9U+t8PuJjd67PbuHh01c02nSqxd7Y8bCUpM=;
-	b=mKfgfIw0rVXzUB2hP0B2WxtTyKBz9VHQ5GW0H/acJGDGO7XYNyllK5U2aU0laMQOncMNxb
-	63+o3L3cwsC9BhAZl30ZY1W9aOEIKA0BadMQEvJfy28XQnJ6+Ag1UrmyyEpsPO+vKug+un
-	VIOmTj0ewguhvmUIc59KofVhqUsJ34y4Vz9XPQBBUgMTDGUnRQXFk6+nrb3CaP/4hXmPHs
-	bCgss0RdUhLImzMiLhXc+o9Y5G8Q2Shz99/HZYYA3JDlD/Bysg/DzDX2nPvCthzELAPQCH
-	N2RKaKynB4Z4wd5LO7zIxX5MplhmoRaMzAQ9NZNTakTdQUCwqGCiLUgX0z004g==
-Content-Type: multipart/signed;
- boundary=3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Mon, 03 Jun 2024 09:42:31 +0200
-Message-Id: <D1Q7OPR0TRFG.1WLSI7EBAPUWX@walle.cc>
-From: "Michael Walle" <michael@walle.cc>
-To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- <chunkuang.hu@kernel.org>
-Subject: Re: [PATCH v4 3/3] drm/mediatek: Implement OF graphs support for
- display paths
-Cc: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
- <conor+dt@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
- <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
- <mripard@kernel.org>, <tzimmermann@suse.de>, <matthias.bgg@gmail.com>,
- <shawn.sung@mediatek.com>, <yu-chang.lee@mediatek.com>,
- <ck.hu@mediatek.com>, <jitao.shi@mediatek.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <wenst@chromium.org>,
- <kernel@collabora.com>
-X-Mailer: aerc 0.16.0
-References: <20240516081104.83458-1-angelogioacchino.delregno@collabora.com>
- <20240516081104.83458-4-angelogioacchino.delregno@collabora.com>
- <D1BTQIQ2AQIS.G12ROFB149QB@walle.cc>
- <84cd0ac7-99d9-42cb-af79-a0fba09c1ebb@collabora.com>
-In-Reply-To: <84cd0ac7-99d9-42cb-af79-a0fba09c1ebb@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dATJn8J7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9FF0C2BD10;
+	Mon,  3 Jun 2024 07:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717401007;
+	bh=9fEUa8FDwmaLhcJXzAHKhcMaSGB5f5Nva+6gt2SaNrQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dATJn8J7VpQPZCMEgOIQ906FUhnCevaMyL4YtFA2RHURmgdxcuulIQr4uup+CBDfV
+	 VWSBR1PkzphKv3Dd+9xsbjYYtJPg9SPLHTm4kRuI8zqMnFgBSkgpITcSppXsQ9Ztw6
+	 a3VqLxzbUrXn1uVrL03O/UaSyFgc34jsCgjRIGHiqQxXJspkX0L2SG7qc3la+lJhqc
+	 PrGpZRCe7nse4ezR2fT9Dd6VijR3JHzuU8UpDDcONNixidm4N2Ec4JESRIxu7Bixii
+	 WNhIpQWLqh8WEViuqf+gRXT1fOGpTjF1uD6uz4mJZk1fIaafg6fBa/85D1N8ip0oMX
+	 o5Jo4TojPOsDQ==
+Message-ID: <10f4898f-0b8c-4503-8620-3bb566e9a163@kernel.org>
+Date: Mon, 3 Jun 2024 15:50:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] f2fs: use new ioprio Macro to get ckpt thread ioprio data
+To: Zhiguo Niu <niuzhiguo84@gmail.com>
+Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ ke.wang@unisoc.com
+References: <1717146645-18829-1-git-send-email-zhiguo.niu@unisoc.com>
+ <b0c9f3dc-417a-4891-bdf0-25b849828e3b@kernel.org>
+ <CAHJ8P3LFkk0YnF-vnsd7wVMHXyhJN43Gfqtq3EBqjxoqgd88mg@mail.gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAHJ8P3LFkk0YnF-vnsd7wVMHXyhJN43Gfqtq3EBqjxoqgd88mg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On 2024/6/3 14:52, Zhiguo Niu wrote:
+> On Mon, Jun 3, 2024 at 2:39 PM Chao Yu <chao@kernel.org> wrote:
+>>
+>> On 2024/5/31 17:10, Zhiguo Niu wrote:
+>>> Use new Macro IOPRIO_PRIO_LEVEL to get ckpt thread ioprio data(level),
+>>> it is more accurate and consisten with the way setting ckpt thread
+>>> ioprio(IOPRIO_PRIO_VALUE(class, data)).
+>>>
+>>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+>>> ---
+>>>    fs/f2fs/sysfs.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+>>> index 72676c5..55d46da 100644
+>>> --- a/fs/f2fs/sysfs.c
+>>> +++ b/fs/f2fs/sysfs.c
+>>> @@ -340,7 +340,7 @@ static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
+>>>        if (!strcmp(a->attr.name, "ckpt_thread_ioprio")) {
+>>>                struct ckpt_req_control *cprc = &sbi->cprc_info;
+>>>                int class = IOPRIO_PRIO_CLASS(cprc->ckpt_thread_ioprio);
+>>> -             int data = IOPRIO_PRIO_DATA(cprc->ckpt_thread_ioprio);
+>>> +             int data = IOPRIO_PRIO_LEVEL(cprc->ckpt_thread_ioprio);
+>>
+>> So, can you please use 'level' to instead 'data' in f2fs_sbi_show() and
+>> __sbi_store()?
+> Hi Chao,
+> 
+> IOPRIO_PRIO_DATA in the new kernel version includes two parts: level and hint.
+> In __sbi_store, " IOPRIO_PRIO_VALUE(class, data)"  is used to set ckpt
+> iopriority,
+> and it will pass default hint value, we just need to keep class /level right.
 
-Hi Angelo,
+Zhiguo,
 
-> >> Implement OF graphs support to the mediatek-drm drivers, allowing to
-> >> stop hardcoding the paths, and preventing this driver to get a huge
-> >> amount of arrays for each board and SoC combination, also paving the
-> >> way to share the same mtk_mmsys_driver_data between multiple SoCs,
-> >> making it more straightforward to add support for new chips.
-> >=20
-> > paths might be optional, see comment in mtk_drm_kms_init(). But with
-> > this patch, you'll get an -EINVAL with a disabled path. See my
-> > proposals how to fix that below.
->
-> I might not be understanding the reason behind allowing that but, per my =
-logic, if
-> a board does have a path, then it's written in devicetree and enabled - o=
-therwise,
-> it should not be there at all, in principle.
->
->
-> Can you explain a bit more extensively the reason(s) why we need to accou=
-nt
-> for disabled paths?
+I think f2fs only support configuring priolevel rather than priolevel and
+priohint of ckpt thread via ckpt_thread_ioprio sysfs interface, so it will
+be more readable to use 'level' instead of 'data' in context of the interface,
+thoughts?
 
-Paths should be (and this was already supported before this patch
-with the hardcoded paths) disabled with the status property. This
-way you can have a common board configuration where all the paths
-are already described but are disabled. An overlay (or maybe another
-dts variant) can then just enable the pipeline/output port by
-overwriting the status property.
+Thanks,
 
-Also, this is the usual DT usage, as a node with status =3D "disabled"
-should just be skipped. Without handling this, the current code will
-return -EINVAL during probe (IIRC, my vacation might have reset my
-memory :o).
-
--michael
-
---3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKcEABMJAC8WIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZl1z6BEcbWljaGFlbEB3
-YWxsZS5jYwAKCRASJzzuPgIf+EuiAYCiS0ktYeqW3WREzRyRaWz/fZqG9E+chTLp
-Eq2F71PR2kPsrQjcJqjw9P8PJP1Tb7IBf1Xo00KNX/YZCxZd7B2+oCO6cjri7/ym
-ZBbCHMlAM8XqJvXrDFXC1OxZkA8QuPDVng==
-=F2kN
------END PGP SIGNATURE-----
-
---3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8--
+> 
+>   #define IOPRIO_PRIO_VALUE(prioclass, priolevel) \
+>     ioprio_value(prioclass, priolevel, IOPRIO_HINT_NONE)
+> so i think this part is not needed to modify.
+> 
+> thanks!
+>>
+>> Thanks,
+>>
+>>>
+>>>                if (class != IOPRIO_CLASS_RT && class != IOPRIO_CLASS_BE)
+>>>                        return -EINVAL;
+>>
