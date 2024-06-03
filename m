@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8E713B7A1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D81B13B599;
 	Mon,  3 Jun 2024 19:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717441631; cv=none; b=GL2RPcoFJAe/1JfhG1plx/FHLQE5qTmT1x3iLcdg1lDcGIWsw2XlBuxwZ5X5TFIUZAHCUdqLo4Y4+j37niPYzouuAJ5o70ic65l06mZSckCgh++W5uJkeDRxTCKXqRqAgYNVxRnwtZ4jdYH0vqGZdMXt7BPw3u9FS8AYaUflDSc=
+	t=1717441631; cv=none; b=bTTpFTOXiWY4J64CBQtvqMIQILGPDp6tWs2WDfBJWm/hX7IR3kxKIAABvFagBM9feICt1z/IdnSOYvyKs1DYTLfQT3ZeZlh/pQSDlHSH+/TeThwHXqr5GhZBldrbCaZvy9S+xVg19ZDpqtA+lQmRb0Nb9KBQfHdUY9lS1WPG3Qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717441631; c=relaxed/simple;
-	bh=onmnptRPHMLbof5HYGb+W45EMoWIMr+zQx72xT7POs0=;
+	bh=7uDNNpjTlLopyMUFwmLnkBs2CMEiPSvGh1hhVGob2EI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MLDPyYDIGK6DlwKpA2GzCWqAvviGEjvE5uVw7X+b8KNg3NjMON+Y5L9BmmyHzVy5rUHQ+34bwdOlhp9neyGHgQdPtvsBaqLNSsubGEk/eRchbC+KWaCOjA3mRNWbYvjq2dT4pgNVKVWS6PWnpYy4ZmsX+ArMOdxZoMSCXSROEDw=
+	 Content-Type; b=Zf6Lob6y7MONInV/XdJJ0h2K167eSbZOIJemV+JhMWnQUQumzhn1diiLT9s/U/9A/6rJn5xhnGtvHQc4ptlV87+fkHkU0ykkQHMQboVCYUIJPVc2t+DGDce/TIad3DRKnptkoCwyL/hvP12qzHWcKYj5Tru5RLt+zYhZlyCsp0I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770F9C4DDFA;
-	Mon,  3 Jun 2024 19:07:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9CEC4AF5F;
+	Mon,  3 Jun 2024 19:07:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sED2c-00000009TqR-23D7;
+	id 1sED2c-00000009Tox-03Nz;
 	Mon, 03 Jun 2024 15:08:22 -0400
-Message-ID: <20240603190822.350654104@goodmis.org>
+Message-ID: <20240603190821.872127216@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 03 Jun 2024 15:07:13 -0400
+Date: Mon, 03 Jun 2024 15:07:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -41,7 +41,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [PATCH v3 09/27] ftrace: Allow ftrace startup flags to exist without dynamic ftrace
+Subject: [PATCH v3 06/27] function_graph: Remove logic around ftrace_graph_entry and return
 References: <20240603190704.663840775@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,60 +53,171 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Some of the flags for ftrace_startup() may be exposed even when
-CONFIG_DYNAMIC_FTRACE is not configured in. This is fine as the difference
-between dynamic ftrace and static ftrace is done within the internals of
-ftrace itself. No need to have use cases fail to compile because dynamic
-ftrace is disabled.
+The function pointers ftrace_graph_entry and ftrace_graph_return are no
+longer called via the function_graph tracer. Instead, an array structure is
+now used that will allow for multiple users of the function_graph
+infrastructure. The variables are still used by the architecture code for
+non dynamic ftrace configs, where a test is made against them to see if
+they point to the default stub function or not. This is how the static
+function tracing knows to call into the function graph tracer
+infrastructure or not.
 
-This change is needed to move some of the logic of what is passed to
-ftrace_startup() out of the parameters of ftrace_startup().
+Two new stub functions are made. entry_run() and return_run(). The
+ftrace_graph_entry and ftrace_graph_return are set to them respectively
+when the function graph tracer is enabled, and this will trigger the
+architecture specific function graph code to be executed.
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509100890.162236.4362350342549122222.stgit@devnote2
+This also requires checking the global_ops hash for all calls into the
+function_graph tracer.
+
+Co-developed with Masami Hiramatsu:
+Link: https://lore.kernel.org/linux-trace-kernel/171509097408.162236.17387844142114638932.stgit@devnote2
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ftrace.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/fgraph.c          | 67 ++++++++--------------------------
+ kernel/trace/ftrace.c          |  2 -
+ kernel/trace/ftrace_internal.h |  2 -
+ 3 files changed, 15 insertions(+), 56 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index fd656e6d6b7c..586018744785 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -509,6 +509,15 @@ static inline void stack_tracer_disable(void) { }
- static inline void stack_tracer_enable(void) { }
- #endif
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 8de2a2662281..2b52afa03ab4 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -163,6 +163,17 @@ set_bitmap(struct task_struct *t, int offset, unsigned long bitmap)
+ 		(FGRAPH_TYPE_BITMAP << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+ }
  
-+enum {
-+	FTRACE_UPDATE_CALLS		= (1 << 0),
-+	FTRACE_DISABLE_CALLS		= (1 << 1),
-+	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
-+	FTRACE_START_FUNC_RET		= (1 << 3),
-+	FTRACE_STOP_FUNC_RET		= (1 << 4),
-+	FTRACE_MAY_SLEEP		= (1 << 5),
-+};
++/* ftrace_graph_entry set to this to tell some archs to run function graph */
++static int entry_run(struct ftrace_graph_ent *trace)
++{
++	return 0;
++}
 +
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
- void ftrace_arch_code_modify_prepare(void);
-@@ -603,15 +612,6 @@ void ftrace_set_global_notrace(unsigned char *buf, int len, int reset);
- void ftrace_free_filter(struct ftrace_ops *ops);
- void ftrace_ops_set_global_filter(struct ftrace_ops *ops);
- 
--enum {
--	FTRACE_UPDATE_CALLS		= (1 << 0),
--	FTRACE_DISABLE_CALLS		= (1 << 1),
--	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
--	FTRACE_START_FUNC_RET		= (1 << 3),
--	FTRACE_STOP_FUNC_RET		= (1 << 4),
--	FTRACE_MAY_SLEEP		= (1 << 5),
--};
--
++/* ftrace_graph_return set to this to tell some archs to run function graph */
++static void return_run(struct ftrace_graph_ret *trace)
++{
++}
++
  /*
-  * The FTRACE_UPDATE_* enum is used to pass information back
-  * from the ftrace_update_record() and ftrace_test_record()
+  * @offset: The offset into @t->ret_stack to find the ret_stack entry
+  * @frame_offset: Where to place the offset into @t->ret_stack of that entry
+@@ -675,7 +686,6 @@ extern void ftrace_stub_graph(struct ftrace_graph_ret *);
+ /* The callbacks that hook a function */
+ trace_func_graph_ret_t ftrace_graph_return = ftrace_stub_graph;
+ trace_func_graph_ent_t ftrace_graph_entry = ftrace_graph_entry_stub;
+-static trace_func_graph_ent_t __ftrace_graph_entry = ftrace_graph_entry_stub;
+ 
+ /* Try to assign a return stack array on FTRACE_RETSTACK_ALLOC_SIZE tasks. */
+ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
+@@ -758,46 +768,6 @@ ftrace_graph_probe_sched_switch(void *ignore, bool preempt,
+ 	}
+ }
+ 
+-static int ftrace_graph_entry_test(struct ftrace_graph_ent *trace)
+-{
+-	if (!ftrace_ops_test(&global_ops, trace->func, NULL))
+-		return 0;
+-	return __ftrace_graph_entry(trace);
+-}
+-
+-/*
+- * The function graph tracer should only trace the functions defined
+- * by set_ftrace_filter and set_ftrace_notrace. If another function
+- * tracer ops is registered, the graph tracer requires testing the
+- * function against the global ops, and not just trace any function
+- * that any ftrace_ops registered.
+- */
+-void update_function_graph_func(void)
+-{
+-	struct ftrace_ops *op;
+-	bool do_test = false;
+-
+-	/*
+-	 * The graph and global ops share the same set of functions
+-	 * to test. If any other ops is on the list, then
+-	 * the graph tracing needs to test if its the function
+-	 * it should call.
+-	 */
+-	do_for_each_ftrace_op(op, ftrace_ops_list) {
+-		if (op != &global_ops && op != &graph_ops &&
+-		    op != &ftrace_list_end) {
+-			do_test = true;
+-			/* in double loop, break out with goto */
+-			goto out;
+-		}
+-	} while_for_each_ftrace_op(op);
+- out:
+-	if (do_test)
+-		ftrace_graph_entry = ftrace_graph_entry_test;
+-	else
+-		ftrace_graph_entry = __ftrace_graph_entry;
+-}
+-
+ static DEFINE_PER_CPU(unsigned long *, idle_ret_stack);
+ 
+ static void
+@@ -939,18 +909,12 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 			ftrace_graph_active--;
+ 			goto out;
+ 		}
+-
+-		ftrace_graph_return = gops->retfunc;
+-
+ 		/*
+-		 * Update the indirect function to the entryfunc, and the
+-		 * function that gets called to the entry_test first. Then
+-		 * call the update fgraph entry function to determine if
+-		 * the entryfunc should be called directly or not.
++		 * Some archs just test to see if these are not
++		 * the default function
+ 		 */
+-		__ftrace_graph_entry = gops->entryfunc;
+-		ftrace_graph_entry = ftrace_graph_entry_test;
+-		update_function_graph_func();
++		ftrace_graph_return = return_run;
++		ftrace_graph_entry = entry_run;
+ 
+ 		ret = ftrace_startup(&graph_ops, FTRACE_START_FUNC_RET);
+ 	}
+@@ -986,7 +950,6 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 	if (!ftrace_graph_active) {
+ 		ftrace_graph_return = ftrace_stub_graph;
+ 		ftrace_graph_entry = ftrace_graph_entry_stub;
+-		__ftrace_graph_entry = ftrace_graph_entry_stub;
+ 		ftrace_shutdown(&graph_ops, FTRACE_STOP_FUNC_RET);
+ 		unregister_pm_notifier(&ftrace_suspend_notifier);
+ 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 65208d3b5ed9..789950a4f977 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -235,8 +235,6 @@ static void update_ftrace_function(void)
+ 		func = ftrace_ops_list_func;
+ 	}
+ 
+-	update_function_graph_func();
+-
+ 	/* If there's no change, then do nothing more here */
+ 	if (ftrace_trace_function == func)
+ 		return;
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 5012c04f92c0..19eddcb91584 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -42,10 +42,8 @@ ftrace_ops_test(struct ftrace_ops *ops, unsigned long ip, void *regs)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ extern int ftrace_graph_active;
+-void update_function_graph_func(void);
+ #else /* !CONFIG_FUNCTION_GRAPH_TRACER */
+ # define ftrace_graph_active 0
+-static inline void update_function_graph_func(void) { }
+ #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
+ 
+ #else /* !CONFIG_FUNCTION_TRACER */
 -- 
 2.43.0
 
