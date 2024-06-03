@@ -1,181 +1,81 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585B13B588;
-	Mon,  3 Jun 2024 19:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4791F13C3F0;
+	Mon,  3 Jun 2024 19:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717442854; cv=none; b=akhGiHJqQySggrUvCvdR+S5wstmaVpsrOvj0EkjMoPHCOxsHCOX+bcu8W0dtHmAbwkilWH6qnoWnVwVB4CZurACHUzOC24klue1LK2tIaomwaTWOhnHklW3R0hWi8Ho8qvRxYtB1tkaDPjDpNJ3SJG+1WOsQ0xQO+Ca7PZhA234=
+	t=1717442860; cv=none; b=WkvFLuSyMvncGE/eowTNDTFq1a8l8HyLGyyjWzlsZn0zmTVuFZv9dR6/lol2VrboyKrkbula/X2UzmknmzVYzd2Mp7RFca+6ZvT6OR0JHjkQKd2GZ8h7HjjnWKyaipR/tC2m6vR1rAsi5Z074UT6WBnITRbyDAw1Nb6nJoXenkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717442854; c=relaxed/simple;
-	bh=HLsZL7u7067moMzrolBSvWIvdWRJpnhHQVzFAgy6EF8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ApybYcY1ZIqn6pGF0R2NzQDm+uMn7Ga7m+JNW+vfM/t2ijvT5e28J9jMCno6lf0nHCpRI0aEvIZ5v5ghLzu2f4ORGygCi5B8oRHIj4JNpPX+XuQnHDJtbaYahq1/QCNbLYKD9863iVBkryBInpbmqUWfOU6T77f5Y/qYjvYTnac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Mf9yPV/Y; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717442860; c=relaxed/simple;
+	bh=3Zln+JEWRzCLjJqeE+QHq6lHIRgWozx2/elNB/ZIlFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jgjxf+CQ/MoBKuudocslk5sKFUbT4gKLkFTXWK0hfjVhtA+nbh9qxQVwJrfk0kCvxYsxAK2cQwDmmRLrr7vxM7NKiwRmN+ozyphQpxYHGWszGsGldtZ9/8aRh/SPQNOkoL3Aw0iSwO3OhYEBKd1P7MoM6eU+i18l800LN1OAZGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7RReSKb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Mf9yPV/Y"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453C6dar019807;
-	Mon, 3 Jun 2024 19:27:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3Wbde8YI0XAKicrSrvhYlvfySXEfjzTuZ3lNB6UsJas=; b=Mf9yPV/Y9FRwwvxE
-	asnj66DNYgBxAOyN58Q1y2HhZLYmTzmWaJ6jbixwPcH04Vu8gclcXK+tWr5HA89Q
-	x68t2lhswXTX92GF2FAhFXIFKo5Do1kbOqFiJra/gvMEOe1YFUGkDV4rXXV1Vwle
-	SE+CoUmjNQE2TB08cWpVixDJOKPcFf6hXYDYLJ5UoWxrCnVVA54weP/R+CLC0ZNT
-	H9qmd6pPzKPtWjqgK2dKyuYr29WMz5Sf8GlPechc1auuxrQMHFPIH0HzgwNi89lX
-	nXsxcI6A9eOLhaLqQ+4cnjGydFM0OaeHfSrl0EIk7AdjBGGhlzStbBWdi+wk20M3
-	IaP9Jg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5t4k9a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 19:27:21 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453JRKRb000495
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 3 Jun 2024 19:27:20 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 3 Jun 2024 12:27:15 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <sudeep.holla@arm.com>, <cristian.marussi@arm.com>, <rafael@kernel.org>,
-        <viresh.kumar@linaro.org>, <morten.rasmussen@arm.com>,
-        <dietmar.eggemann@arm.com>, <lukasz.luba@arm.com>,
-        <pierre.gondois@arm.com>, <vincent.guittot@linaro.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_mdtipton@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>
-Subject: [PATCH V5 1/1] cpufreq: scmi: Register for limit change notifications
-Date: Tue, 4 Jun 2024 00:56:54 +0530
-Message-ID: <20240603192654.2167620-2-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240603192654.2167620-1-quic_sibis@quicinc.com>
-References: <20240603192654.2167620-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7RReSKb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E89C2BD10;
+	Mon,  3 Jun 2024 19:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717442860;
+	bh=3Zln+JEWRzCLjJqeE+QHq6lHIRgWozx2/elNB/ZIlFg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p7RReSKb6hSqdk4Y9AmOd5gUqefWdVL9sG8ZD2R22R7OCNldeT9cCEaEC0wL0xF/c
+	 z08G5pNFlRrAlWANQv50Vufa5m76dZG14AxuBraihm9Hmk+e/SFAASMmJUpU8Tj0+A
+	 NECDm3qLVFc9w6qBQ2tFTovmZBjwaPB9oRKHNxY5iLRlpLGK8Id+G0icCdORmI73Ui
+	 pb2QdeccF57XzQe3Ih9PSO20/ka9SKhMemLdj5KHRLJZtNIOwkMLZb5dFnWh6TARBZ
+	 Oz8KnbCflo2yVZtD1rRjyLSkjGRowUyI3V+UewMrtEUA7tLKP2Mvd3K9x98zSD5khQ
+	 BMn0WxopdXNPg==
+Date: Mon, 3 Jun 2024 20:27:30 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, himanshujha199640@gmail.com, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 13/17] iio: chemical: bme680: Add read buffers in DMA
+ safe region
+Message-ID: <20240603202730.7ce99cbf@jic23-huawei>
+In-Reply-To: <20240602193310.GE387181@vamoiridPC>
+References: <20240527183805.311501-1-vassilisamir@gmail.com>
+	<20240527183805.311501-14-vassilisamir@gmail.com>
+	<20240602135908.7e4183a2@jic23-huawei>
+	<20240602193310.GE387181@vamoiridPC>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.42; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mRYQMOihypBlEXyrnlrXqo8nHX_SJgnJ
-X-Proofpoint-GUID: mRYQMOihypBlEXyrnlrXqo8nHX_SJgnJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_15,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406030158
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Register for limit change notifications if supported and use the throttled
-frequency from the notification to apply HW pressure.
+On Sun, 2 Jun 2024 21:33:10 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
-
-v5:
-* Drop patch 1 and use pm_qos to update constraints. [Vincent]
-* Use sdev instead of cpu_dev in dev_warn. [Christian]
-* Pass sdev directly through private data. [Christian]
-* Dropping Rb's for now.
-
- drivers/cpufreq/scmi-cpufreq.c | 36 ++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index b87fd127aa43..0edfa55d8e49 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -16,6 +16,7 @@
- #include <linux/export.h>
- #include <linux/module.h>
- #include <linux/pm_opp.h>
-+#include <linux/pm_qos.h>
- #include <linux/slab.h>
- #include <linux/scmi_protocol.h>
- #include <linux/types.h>
-@@ -25,7 +26,9 @@ struct scmi_data {
- 	int domain_id;
- 	int nr_opp;
- 	struct device *cpu_dev;
-+	struct cpufreq_policy *policy;
- 	cpumask_var_t opp_shared_cpus;
-+	struct notifier_block limit_notify_nb;
- };
- 
- static struct scmi_protocol_handle *ph;
-@@ -174,6 +177,25 @@ static struct freq_attr *scmi_cpufreq_hw_attr[] = {
- 	NULL,
- };
- 
-+static int scmi_limit_notify_cb(struct notifier_block *nb, unsigned long event, void *data)
-+{
-+	struct scmi_data *priv = container_of(nb, struct scmi_data, limit_notify_nb);
-+	struct scmi_perf_limits_report *limit_notify = data;
-+	struct cpufreq_policy *policy = priv->policy;
-+	unsigned int limit_freq_khz;
-+	int ret;
-+
-+	limit_freq_khz = limit_notify->range_max_freq / HZ_PER_KHZ;
-+
-+	policy->max = clamp(limit_freq_khz, policy->cpuinfo.min_freq, policy->cpuinfo.max_freq);
-+
-+	ret = freq_qos_update_request(policy->max_freq_req, policy->max);
-+	if (ret < 0)
-+		pr_warn("failed to update freq constraint: %d\n", ret);
-+
-+	return NOTIFY_OK;
-+}
-+
- static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- {
- 	int ret, nr_opp, domain;
-@@ -181,6 +203,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 	struct device *cpu_dev;
- 	struct scmi_data *priv;
- 	struct cpufreq_frequency_table *freq_table;
-+	struct scmi_device *sdev = cpufreq_get_driver_data();
- 
- 	cpu_dev = get_cpu_device(policy->cpu);
- 	if (!cpu_dev) {
-@@ -294,6 +317,17 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 		}
- 	}
- 
-+	priv->limit_notify_nb.notifier_call = scmi_limit_notify_cb;
-+	ret = sdev->handle->notify_ops->devm_event_notifier_register(sdev, SCMI_PROTOCOL_PERF,
-+							SCMI_EVENT_PERFORMANCE_LIMITS_CHANGED,
-+							&domain,
-+							&priv->limit_notify_nb);
-+	if (ret)
-+		dev_warn(&sdev->dev,
-+			 "failed to register for limits change notifier for domain %d\n", domain);
-+
-+	priv->policy = policy;
-+
- 	return 0;
- 
- out_free_opp:
-@@ -372,6 +406,8 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
- 	if (!handle)
- 		return -ENODEV;
- 
-+	scmi_cpufreq_driver.driver_data = sdev;
-+
- 	perf_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PERF, &ph);
- 	if (IS_ERR(perf_ops))
- 		return PTR_ERR(perf_ops);
--- 
-2.34.1
-
+> On Sun, Jun 02, 2024 at 01:59:08PM +0100, Jonathan Cameron wrote:
+> > On Mon, 27 May 2024 20:38:01 +0200
+> > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> >   
+> > > Move the buffers that are used in order to read data from the
+> > > device in a DMA-safe region. Also create defines for the number
+> > > of bytes that are being read from the device and don't use
+> > > magic numbers.
+> > > 
+> > > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>  
+> > 
+> > Same response as previous.  I don't think it's necessary because
+> > of the custom regmap implementation.
+> > 
+> > My first instinct was the same as yours though!
+> > 
+> > Jonathan
+> > 
+> >   
+> Well, even if we end up not needing it, I would keep the values inside
+> the union just becasue it saves some space, and it keeps all the read
+> buffers in the same place. What do you think?
+> 
+Sure. The union is fine as long as you have made sure there can't be
+concurrent access to the different members. It will save space on x86_64
+at least as that has very low IIO_DMA_MINALIGN.  Less likely to make
+a difference on arm64.
