@@ -1,136 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7395E13B59C
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 21:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC381364A1;
+	Mon,  3 Jun 2024 21:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717449981; cv=none; b=hYNkrELN9i3piN5jJy3gCNYs8s2vW+KjSfuYiyX95jmiuIdbqM5e1Z0caxZMx+1SBii3sqHwTkeI84JDZfjTjMjHBMUgVs3OoPnWsJYVXzckZq3Nyp28t4msM9IjYVkwz2eD/DQIGIi+Q4z18pQzoowGLAR+p6P7KUw00Vrw/Bk=
+	t=1717450078; cv=none; b=JISL+FyfcrC6r7nhl8fhDUIDalo+QLQu5/Jlx+K+93eKc9xCgBuIbsPK2GY0kP8P6uW3ERXPXUaFSQY+vCuYWI51en6CvMUmmVsfme9ARAq1DhfAj7P/7cQ9OaMcyUafZrwgsPhayGroO5tV3R6bqXxyi9XcEHXh01OGHDVomJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717449981; c=relaxed/simple;
-	bh=hxFNXFxhoTGnscbJZwVO74ezWVZmXgfbta89CyZQJEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oVBXHn+gC9NFYcumFg+W8R+gvtsjMJ4T/eDZu91/HJawsVnbQb6sYChQkWdW+kXQqGUrOx3tETfU4N29HO0S3npK5q8jf3CCnp2aDgE9bpb/wJoC7uz/n8TFsLUDibxnuqi57zxFkvwifiuLylIdROUljSvgJ7WBfrMoKT7J6cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJsSakcp; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717450078; c=relaxed/simple;
+	bh=FUsL5X9V17Z2s69+YcjAFrRVbWIgcA3bDRVc1rw94bQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q+nz3bms7yhAOK8CbcsZqs7w14cxJTtMiMaVX3uTEitJG6Z01pJSQUV6DpnE+8Si570zIF38xOXtIHe1HQkwbCwnBC21qCrijYwb2Lci58na655HrFP3HDDZYYUoSdreFIkYUhkECKltkvqx+MZ8P64YkFTsgg1uizHeP+9Wjso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eilW4qOd; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJsSakcp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717449978; x=1748985978;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hxFNXFxhoTGnscbJZwVO74ezWVZmXgfbta89CyZQJEU=;
-  b=cJsSakcp3a2C16+G2BrwUBxemK1YWrj/hlZc3UxKMTite/D7RAhTnJRr
-   w5jlOQvJVEUXvCb3xymeEq9T/LVdOH4PtmgMt5LlZIJNMovCClWlly0jw
-   A7P+A8xo5EyMQZUndFnM0hnQ9q5fxw4kt5ERoW+lMTYe8J/dn2hyzb6u9
-   rL8iD3NVQ9K9Vn3l19yGeSrMuL5RAriBrgvwE12fH//q7/1sK2otsOVk1
-   MbkTfLxvbio6aX2Y22jpGORQBvC5EE1c8M46900BjADSWy02uxfgKK8Lu
-   01NcRCFf1AdxWr9mZ5IHfEseNNB/6EjNL3oC4LvKKwKJg1QT3bhByJexh
-   w==;
-X-CSE-ConnectionGUID: RuiZIWEvRpuuxlrIj6SlHQ==
-X-CSE-MsgGUID: ene+xzg+SF2MwbxDEHtYSQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="17802158"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="17802158"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 14:26:18 -0700
-X-CSE-ConnectionGUID: dGhhB+7wQ9SMOSJDMY8Nqw==
-X-CSE-MsgGUID: W49K0OOsQmG0sir3DGIPfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="37601355"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 03 Jun 2024 14:26:16 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sEFBt-000MCx-26;
-	Mon, 03 Jun 2024 21:26:08 +0000
-Date: Tue, 4 Jun 2024 05:25:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Xiu Jianfeng <xiujianfeng@huawei.com>, akpm@linux-foundation.org,
-	muchun.song@linux.dev
-Cc: oe-kbuild-all@lists.linux.dev, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next 2/3] mm/hugetlb_cgroup: prepare cftypes based on
- template
-Message-ID: <202406040437.z2Iel9db-lkp@intel.com>
-References: <20240603120506.1837322-3-xiujianfeng@huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eilW4qOd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=LSDGQzdToprClbFM9VSOn3HPVixsGLyQ+MmVlrKB1kI=; b=eilW4qOdRA4jyzIj6Y6OsGnHEt
+	NIDjNj/p6WTMv/ZSSIcFk8ZtQpW5ISSG3hSJigB6rnKNwyRjBJeFmHVgR8eLlmEGj+Dd+N+kRncqR
+	8nIZDIZTF+zbAdNd/ISt1/DA9+wD3N22k1RW0gT01piTnjVgNx+cCJU8UCOFe60vUhkHCJOtB4B0y
+	Xb5VUHtePrZqICDNJ6phu6zY6L7nWzN7RmmwZbuHca85pbg38VsxLZCPElpCCc+Lxbyuzt36zxIUe
+	6FbEXRHrKytYVdI5M58dmVP92hEix1OV+Knj0dZceHVp3OKvMK+28Y8jgefFuzexuGIgDKuq3HmPy
+	3CS+CMsA==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sEFDg-00000000Ob9-0r2e;
+	Mon, 03 Jun 2024 21:27:56 +0000
+Message-ID: <ec2e447e-ca96-49fc-b41b-ee3c48f6a914@infradead.org>
+Date: Mon, 3 Jun 2024 14:27:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603120506.1837322-3-xiujianfeng@huawei.com>
-
-Hi Xiu,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on akpm-mm/mm-everything]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Xiu-Jianfeng/mm-hugetlb_cgroup-identify-the-legacy-using-cgroup_subsys_on_dfl/20240603-201513
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20240603120506.1837322-3-xiujianfeng%40huawei.com
-patch subject: [PATCH -next 2/3] mm/hugetlb_cgroup: prepare cftypes based on template
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240604/202406040437.z2Iel9db-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406040437.z2Iel9db-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406040437.z2Iel9db-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   mm/hugetlb_cgroup.c: In function 'hugetlb_cgroup_cfttypes_init':
->> mm/hugetlb_cgroup.c:828:21: warning: the comparison will always evaluate as 'true' for the address of 'name' will never be NULL [-Waddress]
-     828 |                 if (tmpl->name)
-         |                     ^~~~
-   In file included from include/linux/cgroup.h:27,
-                    from mm/hugetlb_cgroup.c:20:
-   include/linux/cgroup-defs.h:605:14: note: 'name' declared here
-     605 |         char name[MAX_CFTYPE_NAME];
-         |              ^~~~
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] kconfig: doc: fix a typo in the note about 'imply'
+To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20240603161904.1663388-1-masahiroy@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240603161904.1663388-1-masahiroy@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-vim +828 mm/hugetlb_cgroup.c
 
-   814	
-   815	static void __init
-   816	hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
-   817				     struct cftype *tmpl, int tmpl_size)
-   818	{
-   819		char buf[32];
-   820		int i, idx = hstate_index(h);
-   821	
-   822		/* format the size */
-   823		mem_fmt(buf, sizeof(buf), huge_page_size(h));
-   824	
-   825		for (i = 0; i < tmpl_size; cft++, tmpl++, i++) {
-   826			*cft = *tmpl;
-   827			/* rebuild the name */
- > 828			if (tmpl->name)
-   829				snprintf(cft->name, MAX_CFTYPE_NAME, "%s.%s", buf, tmpl->name);
-   830			/* rebuild the private */
-   831			if (tmpl->private)
-   832				cft->private = MEMFILE_PRIVATE(idx, tmpl->private);
-   833			/* rebuild the file_offset */
-   834			if (tmpl->file_offset) {
-   835				unsigned int offset = tmpl->file_offset;
-   836	
-   837				cft->file_offset = MEMFILE_OFFSET0(offset) +
-   838						   MEMFILE_FIELD_SIZE(offset) * idx;
-   839			}
-   840		}
-   841	}
-   842	
+On 6/3/24 9:19 AM, Masahiro Yamada wrote:
+> This sentence does not make sense due to a typo. Fix it.
+> 
+> Fixes: def2fbffe62c ("kconfig: allow symbols implied by y to become m")
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+> 
+>  Documentation/kbuild/kconfig-language.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+> index 555c2f839969..86be5b857cc4 100644
+> --- a/Documentation/kbuild/kconfig-language.rst
+> +++ b/Documentation/kbuild/kconfig-language.rst
+> @@ -184,7 +184,7 @@ applicable everywhere (see syntax).
+>    ability to hook into a secondary subsystem while allowing the user to
+>    configure that subsystem out without also having to unset these drivers.
+>  
+> -  Note: If the combination of FOO=y and BAR=m causes a link error,
+> +  Note: If the combination of FOO=y and BAZ=m causes a link error,
+>    you can guard the function call with IS_REACHABLE()::
+>  
+>  	foo_init()
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
