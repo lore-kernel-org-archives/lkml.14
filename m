@@ -1,129 +1,108 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6CB20ED;
-	Mon,  3 Jun 2024 19:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9EB20ED;
+	Mon,  3 Jun 2024 19:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444564; cv=none; b=WHOzI9EHZMa+Iuy4nkC7ownMTxmoQlMAe3bXUiB/ND5HEAgEza0+4zP3Fj77PHLzAQ0iTv0w+fHf0ZKK4sHnq8wvBUgx/zsMvd1dFAfpHB02dWbqvbQLtc1udxyLgAzkMaMxtu+t2UU3LfpxpOWQDQwl/BaqvdRAoxucq2DMy1w=
+	t=1717444700; cv=none; b=lhDRnTH2olMoXMOJmSa6dLu5PL9LCQdbKkFGhZV8xbUvQLq0NiJsVJHWRZKUSY4j8iodXiN3SdBr35evVzg+6sV43HWzUDXl0b8xufsbm56GK+Zxux72MrcvPUfLZylxuOGMiHFHSKpWlOesocuFIg+6Ae0StWlF19yRVJ7x4ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444564; c=relaxed/simple;
-	bh=X02/WrcKG3y6tPosHO5YUNSdqDVkQDTVr3S+20CPbGQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KA8YtshiV92Q2NOZqKnkZGg+Dw+Y6mxTM6WYy2adSwRViVVMWDtI8OI4uAcP5V+UgrHMj+z8yp15ZHGwg/S+8VEKhJLJqhb8nLqKxSusF1iq3lJvg5yDYmaRwp2wyHKryfn1Y4Ih0icJvx0BbsXZedZq54SMqCtA4zdrDU5XshE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=HNQZFbxv; arc=none smtp.client-ip=217.72.192.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1717444700; c=relaxed/simple;
+	bh=Jv0wPuxLn2IQz24vgyugJvpXmcF7+iYuRiPa7kIs1QU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=nMW8piQSrU8WSuKqA2lSHdypTqs0xnpesA/XIzpoLDF8YqSiMiK6sx39n3/cHmHDwdQqSF57CrzHfo/x4lnrOgPJTS7/sHu6S53EdyjMYr3SwnoFfIip9FuwL+OlcYCNBLPu9u8j+p0US2xcgzeVGTyNEcEgTy7mMxB59LDOo70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RaMqEoqy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="HNQZFbxv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1717444555; x=1718049355;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=X02/WrcKG3y6tPosHO5YUNSdqDVkQDTVr3S+20CPbGQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=HNQZFbxv4wWkrF+W7wobqlWCXDH3m4+DT87C2AGRVIWtdylbvLh6n2UwQsIt1SiX
-	 HlmzQk+5pzrCYnu1g3nPgBj/ALYjf3zmVhMZwieaQprmtzdyX0lMBmc+6qArBtrnW
-	 cxRcxvKEVUadMvJF1s9flL4Ga1DQPPKdWEDyPGxCsPFX5l2yFcwG/96N+n5zNVB+z
-	 mRCR7fZzqYHVwYmFHtsqOgeJcKTYYxbBwPVdMk/Hfp2QUH4oo4xbCIKHjWuBK/L9/
-	 +l87GaNi1vCod6gzM1wXzuG5HDjkNK4MzeR7E2eo+EXH04zrxGmGtFOnWj4eOVjCQ
-	 bsdBeWgpsQdSJ6mzGQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.174] ([91.64.229.215]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M42X0-1sEDgf3Pua-0002kL; Mon, 03 Jun 2024 21:49:45 +0200
-Message-ID: <753fd496-ea66-42dd-a607-a879c3cce6b6@oldschoolsolutions.biz>
-Date: Mon, 3 Jun 2024 21:49:43 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RaMqEoqy"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453CBSfW021825;
+	Mon, 3 Jun 2024 19:58:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=sIsUCiNIgn3qUYEH9v2KuI
+	DucBsR0bH+FVI6oGRdiaE=; b=RaMqEoqyo+9XdqH85m6lKdFGCnsIL9M1aniytZ
+	atHvKD3cpmCD8m1kAu+pzAjcvxLXlxMAk/CQC3oeRp96MkuKtALjYT3tJO8ord9U
+	Jk+5GP3rLEucbDyIbR7TxZa09ywZlX8607o8aObrphse0wMLX+QNfFaKR90z4hVF
+	whAXt5lLHjWFwfTk2gdzI+bL8NSWHfhjDrTcu4OBUARp16MCN0FiGIYwCVXLdZCQ
+	LQ7OkmvaYSoEOHmra2GqA7DDk0k2QseQ7SyLlTwa485g21KxNm0a0H4hfE7pprTp
+	OuiMhy530Wa5eRnH2+7ilXP2foDUOmQbfISc/OAiZR5w+Taw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw7dmup3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Jun 2024 19:58:13 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 453JwCMe020715
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 3 Jun 2024 19:58:12 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
+ 12:58:09 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Mon, 3 Jun 2024 12:58:08 -0700
+Subject: [PATCH] misc: fastrpc: add missing MODULE_DESCRIPTION() macro
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/7] iommu/dma: Make limit checks self-contained
-To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Christoph Hellwig <hch@lst.de>
-Cc: Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Hanjun Guo
- <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>,
- Matthew Rosato <mjrosato@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
- Marek Szyprowski <m.szyprowski@samsung.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
-References: <cover.1713523152.git.robin.murphy@arm.com>
- <e28a114243d1e79eb3609aded034f8529521333f.1713523152.git.robin.murphy@arm.com>
- <aeb13631-7504-4c3c-ba7b-812bf121a60f@oldschoolsolutions.biz>
- <a4105d70-bec5-4fff-b9bf-04d0b03f81d6@arm.com>
-Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <a4105d70-bec5-4fff-b9bf-04d0b03f81d6@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iScz297IREJFID4bB3dtWwm3UthsXvjTmxRXzgKye5unhq4O8El
- UAp0YhhOkMt18jGteSmf+HbA5IqXBght1LGj55BFwT5gKovF2QMJd2VLv6ju+yQgF8OEFS2
- 6TaC7X10u8+U2BtvRcbGKRdmDiXJzZtuViJBoL2mdaHA+YN3BjKzQAkCp4jPPCqkuGrfhjb
- TmZJ62CruJPxm1u+aLqdg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qGcpoOb2bMA=;OYMmfwCyP4ATmR7YLDzYf0NQvOT
- Vq4EF7Zw55G8zloA1nBYhi3PnJpDKhr6DQuKVQr3x/OZ4bVovUeOP9Yt8JkF/Y3cuKHRYd3pm
- z4EcOGd2xQWOmhytIzyqyIMwTugk4WHA4YgupoSI1ss7Myt9hMlbYsWlRzM3OScGnvMS+UoGb
- 85l5GjXASHV/+xZMzoM6p+FGBmXvmTDYF/19wfEPLgPQgUwiwgn0esCVk1U2P2+j3SWunOhkO
- BiT6hEAASzaCLrCGWU+YcKfGZaLrBXIACblUeG+jswWpEWNOrFotuhFFZvyD53sAJpqX493Uo
- RwJKpMm5DOvg8pEw0YqLojiX34HiIKBwZNUFhtu/mUXR0n5InMvQnYnX/U6uuuySmdovXF0y7
- 2r7d6YthJBJD03qjdVn0/V7C8YoLzH6jOWNXhF0vKkw6oMAbh2hCOgCLqReGEcgt+M/4D9F9K
- nfzg//8+1S/scX2BM1ehQRkwh8TwpKYkML4JgnLavGn/9ip6PmTXKuwq/6K1W4sXNnNRxKVyq
- s0Yp07QJy+Qh5Z7VDbTO8oCxx5Yh+p07HDY03lTpxYjerStd4Si+JiqgDPWwnYjn5wbZXoS8u
- EbH9hA1EUtv6nU1AfKSZz3WaDCCSBkvdbKGvcmcMOOq/X64/O4yyJOlRFwLHBqpf3XkEVVasK
- BUOxk3YQFpJRwFmpdawerEUUjoxOvJEPg1NzAFRaW45XQGnAIaKA9KuFwTxAmHyr1msW30x/l
- h0Pf1q34pySadLyjOAfbs/cNEk2HLfWCTQtmVOKYuIwDbsfKzG6Z8M=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240603-md-misc-fastrpc-v1-1-6e6d73d08315@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAE8gXmYC/x3MTQrCMBBA4auUWTsQ2xB/riIuknRiB0wsMyqF0
+ rt3dPkt3ltBSZgUrt0KQl9WfjXD8dBBnmJ7EPJoht713gU3YB2xsmYsUd8yZ0zB++IvJwpnAqt
+ mocLL/3i7m1NUwiSx5en3eXL7LFgtJoFt2wEpFXrAgAAAAA==
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Amol Maheshwari
+	<amahesh@qti.qualcomm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson
+	<quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: G-FtRymav2VaB9gHqOae5bPDvBcbP8ME
+X-Proofpoint-GUID: G-FtRymav2VaB9gHqOae5bPDvBcbP8ME
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-03_16,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=975 impostorscore=0 malwarescore=0 phishscore=0 adultscore=0
+ clxscore=1011 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406030161
 
-Hi Robin,
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
 
-oh that was fast. Will test, thanks!
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
 
-with best regards
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+---
+ drivers/misc/fastrpc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jens
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 4c67e2c5a82e..e040cb5470c4 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -2478,5 +2478,6 @@ static void fastrpc_exit(void)
+ }
+ module_exit(fastrpc_exit);
+ 
++MODULE_DESCRIPTION("Qualcomm FastRPC");
+ MODULE_LICENSE("GPL v2");
+ MODULE_IMPORT_NS(DMA_BUF);
 
-On 6/3/24 21:46, Robin Murphy wrote:
-> Hi Jens,
->
-> On 2024-06-03 8:37 pm, Jens Glathe wrote:
->> Hi Robin,
->>
->> an observation from 6.10-rc1: On sc8280xp (Lenovo X13s, Windows Dev Kit
->> 2023), when booted to EL2 with the arm-smmuv3 under control of Linux, i=
-t
->> fails to set up DMA transfers to nvme. My box boots from nvme, so I onl=
-y
->> got a black screen. @craftyguy booted from USB, and got this:
->
-> Indeed, I see there's a dma-ranges property with a base of 0 in that
-> DT, so all manner of hilarity may ensue. The fix is here, just waiting
-> to be picked up:
->
-> https://lore.kernel.org/linux-iommu/159193e80b6a7701c61b32d6119ac68989d4=
-57bd.1716997607.git.robin.murphy@arm.com/
->
->
-> Thanks,
-> Robin.
+---
+base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+change-id: 20240603-md-misc-fastrpc-b644f497e68e
+
