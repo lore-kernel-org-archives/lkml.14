@@ -1,85 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB87130A47
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E50151311A8
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 15:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717429398; cv=none; b=o8NtzwHugUO4EN/7EqdbG+Vtg5WxQvxYPOGr5sL51QbK9LP0Jgss9NP5yNNXoJCK8bCEzOUpKfyB1tcvgY6+x9Z2kLqL/uwVF3XLuHi/cmUWuoS1ImgsZUvOMHAbT59U7a/oNo+sBiinbFcDG4A3+04zWvG6LZLbZoMiARvsTl4=
+	t=1717429458; cv=none; b=Atm7FZJgfTWX3RhyV5KNL66tWltPQ4MZjaaMw4jBP1VQANp8Vy8IUxoEpI4NF70ub+FgyG5UGlTdWkTN+Z7etli8oyZvGs03F714rb72HiN+ZAwPsrCK2HysQn9g2aNltqCcbP0iBSFGKuNgCTF5IUuHDrnz4i/VxR8/awtgcfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717429398; c=relaxed/simple;
-	bh=nc1q9g6/yaNinjXpHmVTBpup+b4GNWrTy8UsznWyeVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5/WrtKa68KVrv3DlHIGX8adEVquYlYEQPDPaOq47wYdgh0XD7pLzGlcuHwP/s3b8zWnWASj9/9/MHbemRmVjCKAmHUNyvD0LzBOMj7Aq8rfE0lgYhcvdjn0G52RPWMKBOuTfsg+d5ohiCThlETQkKRzyzKviUypwmrAfLkRogI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IMPpivgB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717429458; c=relaxed/simple;
+	bh=ViCOgp0Yz/a1mBDif8ovCtOgE1SFPQZh2StHW9aA04A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I19txnyQ3WHd/BHmf4knhmoZ5uDbzD6KGnjN6VUdpI7akIjD2KXUO8Px3IOWSD+/IMWBAhEzWAq0OE0R4uKq0MWNtnmB5+83q6t1lwh5R1wydPEJR891Pof6NFEQl1Lc3jb3KMmjszvFGd+aPxbl/Kpnro0SmJ5psRDD74EVEns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g2pGxbPQ; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IMPpivgB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717429395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nc1q9g6/yaNinjXpHmVTBpup+b4GNWrTy8UsznWyeVk=;
-	b=IMPpivgBPKOLw0Qhycb1gM6CJG69SAuyjnSMF23OvrJQ3AHEDNVP2JQcEl6Fs753yMqlr1
-	vO1ds8LJwmlWGSvMOYn32HqtWBG3HuYAZgi/LFasAhXiPds2GGOWLCvGiTj/jw/A/ivoD/
-	QGVBstUxUFx8is7VGzlS9/WsXUXuqXY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-358-1-oRNQjjNoK87_AoLLWbIQ-1; Mon, 03 Jun 2024 11:43:12 -0400
-X-MC-Unique: 1-oRNQjjNoK87_AoLLWbIQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 046DD18188A1;
-	Mon,  3 Jun 2024 15:43:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.103])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 0FA311C0D101;
-	Mon,  3 Jun 2024 15:43:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon,  3 Jun 2024 17:41:41 +0200 (CEST)
-Date: Mon, 3 Jun 2024 17:41:33 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>, Phil Auld <pauld@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Chris von Recklinghausen <crecklin@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tick/nohz_full: don't abuse smp_call_function_single()
- in tick_setup_device()
-Message-ID: <20240603154133.GC388@redhat.com>
-References: <20240522151742.GA10400@redhat.com>
- <20240528122019.GA28794@redhat.com>
- <ZliSt-RDyxf1bZ_t@localhost.localdomain>
- <20240601140321.GA3758@redhat.com>
- <ZlzkJGPEIfWC3Ue1@pavilion.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g2pGxbPQ"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a68e7538cfaso215904266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 08:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717429455; x=1718034255; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rqJ9wkj5wZpDYGPbIA+rqZwe8IgS9OX1IL+4hKpxPn4=;
+        b=g2pGxbPQ9ZGPb9G9nYOHHhrxTVOtUJfV9458zm88if8hA13aqyLDEJipAGSqvX8TB+
+         FTasRCdH7JHpoINO3WVCONpJheLxEsaNr8Ef1yGDiBNaN2RxJ2Nzl7ihOG9ZAEaFdOK8
+         GfllnyypXe50GRE0mPPo+THrRNvBwWfaWOb29haboSGS4whavBCCiCEYHNIDHW2u3Bj9
+         mcWO3d1uQJfuFBZAa89/mW4CLtQsdh8Cx0waCMTKIdowIlPddY3GDPmhoWU9o7SJrLe7
+         i+0l2jfSFXe46fNY2b0ovBZWKMpvDDMucWgOaO7ZZamsjmtZbL3/zRbXMaKnUCQTMx1t
+         8lGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717429455; x=1718034255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rqJ9wkj5wZpDYGPbIA+rqZwe8IgS9OX1IL+4hKpxPn4=;
+        b=lvnApIs3jJ35kkGe4efPYIbaDCM9jCuaL4+kDFRI1NFnsYsRVe+jk/5tcpgbNGu4ZP
+         Lo/d7ksYj32mB5cEezdfocz7fHez9RruvUYtNAdWsF7DeSsTJU0u7Mn1MZ126tuB3XRw
+         It7QIvJ5Paz5LYCeoyZq5iOGGuIB3ct02wzZxIEk+9siBpLmFVslgvKSxR4uxiC6S3FU
+         f/cIAcpORHRVKjz1rlJAJB/xDlfucM3AJNyZ+ozFZ4S8xAxfW9mFhkBukl0yofSrJrZd
+         e+d4ZXsLcSpj2ZAL2obYjdlCM1DaGs4er180ff/HBu1AU++VgCm1qRBDdah9m+RLsPK/
+         TX/A==
+X-Forwarded-Encrypted: i=1; AJvYcCW7JZDbVE9FNTrqMwiYmW96T2AoP9BkeFBAVbnZZGxmdhsDuW6+GATqmysnqS1yw5jiJCBwY2gHwQGg9RncfDPubChz/xwen8mo+TAU
+X-Gm-Message-State: AOJu0YyX9tnlSXR/ek5TEjgT/YAphlqzVDYm/yxf8D+yJEK6wG+5zlwu
+	/74nS9aMV+QcwBenv0ktjEAx+a/31cXSZBWoHfaLBSgMwsZsodfDcEnHCxzlpnJuaXxjm4T8spp
+	H+/1hG2DpkcB9/1+/vsFYimh087M8NqfiNc2o
+X-Google-Smtp-Source: AGHT+IEgXEMq7A34vV1MITk1aHrXEuVw+nVV7KMqkaSqRj4HNWxMWt5F6AEA8YGPMHEYOyWRevT8/8awpnNeVecVNuY=
+X-Received: by 2002:a17:907:3f28:b0:a68:5ac4:3aaf with SMTP id
+ a640c23a62f3a-a685ac43be7mr699125166b.41.1717429454535; Mon, 03 Jun 2024
+ 08:44:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlzkJGPEIfWC3Ue1@pavilion.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com> <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com> <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+In-Reply-To: <5aee4bba-ca65-443c-bd78-e5599b814a13@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 3 Jun 2024 08:43:58 -0700
+Message-ID: <CAHS8izNmT_NzgCu1pY1RKgJh+kP2rCL_90Gqau2Pkd3-48Q1_w@mail.gmail.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, 
+	Matt Turner <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/02, Frederic Weisbecker wrote:
+On Mon, Jun 3, 2024 at 7:52=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.c=
+om> wrote:
 >
-> I guess the static version above should work to remove the ifdef. And yes on top is fine.
+> On 6/3/24 15:17, Mina Almasry wrote:
+> > On Fri, May 31, 2024 at 10:35=E2=80=AFPM Christoph Hellwig <hch@infrade=
+ad.org> wrote:
+> >>
+> >> On Thu, May 30, 2024 at 08:16:01PM +0000, Mina Almasry wrote:
+> >>> I'm unsure if the discussion has been resolved yet. Sending the serie=
+s
+> >>> anyway to get reviews/feedback on the (unrelated) rest of the series.
+> >>
+> >> As far as I'm concerned it is not.  I've not seen any convincing
+> >> argument for more than page/folio allocator including larger order /
+> >> huge page and dmabuf.
+> >>
+> >
+> > Thanks Christoph, this particular patch series adds dmabuf, so I
+> > assume no objection there. I assume the objection is that you want the
+> > generic, extensible hooks removed.
+> >
+> > To be honest, I don't think the hooks are an integral part of the
+> > design, and at this point I think we've argued for them enough. I
+> > think we can easily achieve the same thing with just raw if statements
+> > in a couple of places. We can always add the hooks if and only if we
+> > actually justify many memory providers.
+> >
+> > Any objections to me removing the hooks and directing to memory
+> > allocations via simple if statements? Something like (very rough
+> > draft, doesn't compile):
+>
+> The question for Christoph is what exactly is the objection here? Why we
+> would not be using well defined ops when we know there will be more
+> users? Repeating what I said in the last thread, for io_uring it's used
+> to implement the flow of buffers from userspace to the kernel, the ABI,
+> which is orthogonal to the issue of what memory type it is and how it
+> came there. And even if you mandate unnecessary dmabuf condoms for user
+> memory in one form or another IMHO for no clear reason, the callbacks
+> (or yet another if-else) would still be needed.
+>
+> Sure, Mina can drop and hard code devmem path to easy the pain for
+> him and delay the discussion, but then shortly after I will be
+> re-sending same shit.
 
-OK, I've sent v2.
+You don't need to re-send the same ops again, right? You can add io
+uring support without ops. Something like:
 
-But again, I won't argue if you prefer to keep tick_do_timer_boot_cpu and add
-WARN_ON_ONCE(tick_cpu != tick_do_timer_boot_cpu) before WRITE_ONCE(tick_do_timer_cpu).
-In this case another patch makes no sense, I'll update this one.
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 92be1aaf18ccc..2cc986455bce6 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -557,8 +557,8 @@ netmem_ref page_pool_alloc_netmem(struct page_pool
+*pool, gfp_t gfp)
+                return netmem;
 
-Just tell me what you like more. Sorry for the chaotic emails.
+        /* Slow-path: cache empty, do real allocation */
+-       if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_op=
+s)
+-               netmem =3D pool->mp_ops->alloc_pages(pool, gfp);
++       if (unlikely(page_pool_is_dmabuf(pool)))
++               netmem =3D mp_dmabuf_devmem_alloc_pages():
++       else if (unlikely(page_pool_is_iouring(pool)))
++               netmem =3D mp_io_uring_alloc_pages():
+       else
+                netmem =3D __page_pool_alloc_pages_slow(pool, gfp);
+        return netmem;
 
-Oleg.
+So IMO, the ops themselves, which Christoph is repeatedly nacking, are
+not that important.
 
+I humbly think the energy should be spent convincing maintainers of
+the use case of io uring memory, not the ops. The ops are a cosmetic
+change to the code, and can be added later. Christoph is nacking the
+ops because it gives people too much rope [1].
+
+But if you disagree and think the ops themselves are important for a
+reason I missed, I'm happy waiting until agreement is reached here.
+Sorry, just voicing my 2 cents.
+
+[1] https://lore.kernel.org/netdev/ZjjHUh1eINPg1wkn@infradead.org/
+
+--=20
+Thanks,
+Mina
