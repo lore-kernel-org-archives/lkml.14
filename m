@@ -1,91 +1,109 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C8B770F1
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F9F7E110
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 09:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717406097; cv=none; b=ZfecDtj9zm1C26y2q2G2PjJbZ+SDCU2IIKKoomF8CkR6h1RLLlxCpLsa2IV1ZLXOZvU5bx1XxESplwXLWTdnwZWrBHcklppEiQ7YEhAK6BTLP0uOCBrhuvSMZ03FqSkJYFc6ZlJixQbq8eMdqjL3OS63Yh7EwWNL4B1G5nZwAto=
+	t=1717406151; cv=none; b=Z8Zg87cfiD7ksrXgmzY3I7niDx5GlmlYrFqPoaV2cj/mpo4GffE5+G0AQFnYnWjQ0SVjGiyAdhogSnXfBU9dZvPA6oGzHL3YnpSymigIWeM7dhsL0m+VO3/7HGY63ov8v5+O550hzfpkEBOiYksuEvQBdBRl5AvANhe/afDA2w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717406097; c=relaxed/simple;
-	bh=RBHxbEbPrdDXGVgs9JAV6IdcubHw5Ps3pU1smttww4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ke/U+H8MY3ylSvy3U/yytkLonGV9B6Ew9QU2WxJQ5rx/Px1lLj6clM2uFeirgxQM9RNWJLoF4Qi3aXcPnAbBoCtj/FctF+ordXKqxU0pvxrqVOx6ZKwVXtltg02IL2ezNUjfwtOIeUOlT/Yel/Z/Dtv4QpVC6Gz6SPqTPGRLn9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8477CC0005;
-	Mon,  3 Jun 2024 09:14:50 +0000 (UTC)
-Message-ID: <b199fde6-c24e-4c18-9c38-fdc923294551@ghiti.fr>
-Date: Mon, 3 Jun 2024 11:14:49 +0200
+	s=arc-20240116; t=1717406151; c=relaxed/simple;
+	bh=zqhSOx9TEsK+ntdJ3WpSkCqHwe22qFXbYtLRZFiNxlc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HXShnthrQEVe6ZWqtddreFnAjwpop3fz4Ojg0tto1WFk0sg13AR7AXv1pgD3VsqQYb8z5DQwxzkqbHcRZE5MCJNmEhiZJaS8Y6yGh7KT9MIOvaL66gb68+pN5Xf+Jv3lxt9Fp2/DxZJ6YWka5WnHYulrZPHPn6xezwULb3bfKME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=H5gTBkN3; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="H5gTBkN3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=from:to:cc:subject:date:message-id
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=CdJ6gRXs+1B22Jl+/VUs3m4FLJ6sLe4o/fPCvArtSI0=; b=H5gTBk
+	N3AuM5oQ1fxOx4oqj1HgM/wZEvUkmqF+OTSqLBsMFDZkX7vd+ZOCL5sGkSsmfyML
+	G1NZWTNQxa8GfY8sBgh/xma7jryPqVu0dO80B168RvqgYpnJX8YJLqo3jTtsMH0Y
+	L14SxeIuzB5nzwg5h+fJ3WFJuBSmXn7RuWxBaJHlR1TAA7GTFZ+kCoXLuHq/3CtK
+	SzRhqLWIriJkXy0ZhVoS3B0Bv4NWQt4pCYqrKF5kQu/oYvWM5v6JciND1GiFqQ68
+	UcgC8B1dmTgEg3th0sjs+h18MisPp5PQLt4piO/d/JvlVK1lx0cBtAZQda9QfkPt
+	lp9jEGT4IKtbOLYQ==
+Received: (qmail 1899341 invoked from network); 3 Jun 2024 11:15:47 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 3 Jun 2024 11:15:47 +0200
+X-UD-Smtp-Session: l3s3148p1@861Xx/gZEoYgAwDPXzLGAH1eNELjOc3g
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	linux-wireless@vger.kernel.org
+Subject: [PATCH 3/6] wifi: mac80211: use 'time_left' variable with wait_for_completion_timeout()
+Date: Mon,  3 Jun 2024 11:15:36 +0200
+Message-ID: <20240603091541.8367-4-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240603091541.8367-1-wsa+renesas@sang-engineering.com>
+References: <20240603091541.8367-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0] RISC-V: Use Zkr to seed KASLR base address
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>, Jesse Taube <jesse@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Masahiro Yamada <masahiroy@kernel.org>
-References: <20240531162327.2436962-1-jesse@rivosinc.com>
- <20240531-uselessly-spied-262ecf44e694@spud>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240531-uselessly-spied-262ecf44e694@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
 
-Hi Conor,
+There is a confusing pattern in the kernel to use a variable named 'timeout' to
+store the result of wait_for_completion_timeout() causing patterns like:
 
-On 31/05/2024 19:31, Conor Dooley wrote:
-> On Fri, May 31, 2024 at 12:23:27PM -0400, Jesse Taube wrote:
->> Dectect the Zkr extension and use it to seed the kernel base address.
->>
->> Detection of the extension can not be done in the typical fashion, as
->> this is very early in the boot process. Instead, add a trap handler
->> and run it to see if the extension is present.
-> You can't rely on the lack of a trap meaning that Zkr is present unless
-> you know that the platform implements Ssstrict. The CSR with that number
-> could do anything if not Ssstrict compliant, so this approach gets a
-> nak from me. Unfortunately, Ssstrict doesn't provide a way to detect
-> it, so you're stuck with getting that information from firmware.
+	timeout = wait_for_completion_timeout(...)
+	if (!timeout) return -ETIMEDOUT;
 
+with all kinds of permutations. Use 'time_left' as a variable to make the code
+self explaining.
 
-FYI, this patch is my idea, so I'm the one to blame here :)
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/net/wireless/marvell/mwl8k.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/wireless/marvell/mwl8k.c b/drivers/net/wireless/marvell/mwl8k.c
+index d3d07bb26335..241a02a0accd 100644
+--- a/drivers/net/wireless/marvell/mwl8k.c
++++ b/drivers/net/wireless/marvell/mwl8k.c
+@@ -2211,7 +2211,7 @@ static int mwl8k_post_cmd(struct ieee80211_hw *hw, struct mwl8k_cmd_pkt_hdr *cmd
+ 	dma_addr_t dma_addr;
+ 	unsigned int dma_size;
+ 	int rc;
+-	unsigned long timeout = 0;
++	unsigned long time_left = 0;
+ 	u8 buf[32];
+ 	u32 bitmap = 0;
+ 
+@@ -2258,8 +2258,8 @@ static int mwl8k_post_cmd(struct ieee80211_hw *hw, struct mwl8k_cmd_pkt_hdr *cmd
+ 	iowrite32(MWL8K_H2A_INT_DUMMY,
+ 		regs + MWL8K_HIU_H2A_INTERRUPT_EVENTS);
+ 
+-	timeout = wait_for_completion_timeout(&cmd_wait,
+-				msecs_to_jiffies(MWL8K_CMD_TIMEOUT_MS));
++	time_left = wait_for_completion_timeout(&cmd_wait,
++						msecs_to_jiffies(MWL8K_CMD_TIMEOUT_MS));
+ 
+ 	priv->hostcmd_wait = NULL;
+ 
+@@ -2267,7 +2267,7 @@ static int mwl8k_post_cmd(struct ieee80211_hw *hw, struct mwl8k_cmd_pkt_hdr *cmd
+ 	dma_unmap_single(&priv->pdev->dev, dma_addr, dma_size,
+ 			 DMA_BIDIRECTIONAL);
+ 
+-	if (!timeout) {
++	if (!time_left) {
+ 		wiphy_err(hw->wiphy, "Command %s timeout after %u ms\n",
+ 			  mwl8k_cmd_name(cmd->code, buf, sizeof(buf)),
+ 			  MWL8K_CMD_TIMEOUT_MS);
+@@ -2275,7 +2275,7 @@ static int mwl8k_post_cmd(struct ieee80211_hw *hw, struct mwl8k_cmd_pkt_hdr *cmd
+ 	} else {
+ 		int ms;
+ 
+-		ms = MWL8K_CMD_TIMEOUT_MS - jiffies_to_msecs(timeout);
++		ms = MWL8K_CMD_TIMEOUT_MS - jiffies_to_msecs(time_left);
+ 
+ 		rc = cmd->result ? -EINVAL : 0;
+ 		if (rc)
+-- 
+2.43.0
 
->
-> For DT systems, you can actually parse the DT in the pi, we do it to get
-> the kaslr seed if present, so you can actually check for Zkr. With ACPI
-> I have no idea how you can get that information, I amn't an ACPI-ist.
-
-
-I took a look at how to access ACPI tables this early when implementing 
-the Zabha/Zacas patches, but it seems not possible.
-
-But I'll look into this more, this is not the first time we need the 
-extensions list very early and since we have no way to detect the 
-presence of an extension at runtime, something needs to be done.
-
-Thanks,
-
-Alex
-
-
->
-> Thanks,
-> Conor.
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
