@@ -1,113 +1,166 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3A72562E;
-	Mon,  3 Jun 2024 17:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F31C262B6
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 17:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434072; cv=none; b=M41V+dtogt4HbYLG1dQzm+ed4i/Y/YmxGWzla1zdwTgq3OHwGRiQ5EA/zowjwdmdUbxLnoJIWwYFuz8ibiwn3aM2rtOY9GzPJ4NGIZaBHZ3oH5/wIjLSVPoSHzINDj2D1Q049ftr+sj474gIVTTu+8/S0hSUUM1mjkdOGGrFEzw=
+	t=1717434080; cv=none; b=OnlGfqxyiDjvlYc/BsF7fH7P+XaQs1I1o98qvYr4p5UloZsaXopPiqA01ou0xVGG/pRk+5gdugjFWCVa4xVPDwePndhjCiOlT8/IM9PcnOHpx9IZ0VfZjeOn8llwfE/v6Wyvr+Olg2DPQAq9FyhaP3I30fo10SmXURfe/mj+6Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717434072; c=relaxed/simple;
-	bh=g0urmVYosNcFn5Vrer0s4W3kW7EhZLaLDQ8k8VjSfgw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ILGgXO3r7O752sZP2dYwOyG/S7DIdAfRSHcFsBPKcaXjSKs9qSAVPESCMTMx98I/RPLCuxVgMfF7Lcmyu7RnYQxKTzE4ImRThTpRI29K5iQO1My3Ld6jFnZ3+CsK9C6D37IthM1NU9A1Tk8z83bwZnf1F4cPjL7vF7LnqrnH7SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1sEB3I-000000002Nq-1Sjk;
-	Mon, 03 Jun 2024 17:00:56 +0000
-Date: Mon, 3 Jun 2024 18:00:49 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Sky Huang <SkyLake.Huang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Qingfang Deng <dqfext@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Steven Liu <Steven.Liu@mediatek.com>
-Subject: Re: [PATCH net-next v6 5/5] net: phy: add driver for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <Zl32waW34yTiuF9u@makrotopia.org>
-References: <20240603121834.27433-1-SkyLake.Huang@mediatek.com>
- <20240603121834.27433-6-SkyLake.Huang@mediatek.com>
- <Zl3ELbG8c8y0/4DN@shell.armlinux.org.uk>
- <Zl3Fwoiv1bJlGaQZ@makrotopia.org>
- <Zl3IGN5ZHCQfQfmt@shell.armlinux.org.uk>
- <Zl3Yo3dwQlXEfP3i@makrotopia.org>
- <Zl3lkIDqnt4JD//u@shell.armlinux.org.uk>
+	s=arc-20240116; t=1717434080; c=relaxed/simple;
+	bh=XRm7qfVoKNCKJc8gWfdzMNwjpxqHgSu1zVUhoH1YdX0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N8neTBHinBk2WUDc5RdO4f7kWSEF+u55HwqHmCav9x33wAfFT+HVvUuKCW2qqc8vADJueXqgG0nkk8gWMkKPgDA/mnojXkVTxwBGK3563vyPMypCBylMQyzQvk9As//Q0iT6ngX1ZK2v1/aFcCOabbjgzoAr0MlJeYapcLVoqH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=B73hhSQm; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="B73hhSQm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9E9141C0004;
+	Mon,  3 Jun 2024 17:01:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717434076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jmDCtjl47QuoVAqZojA/Ey2uy0oviYRp59KU+NyG2KI=;
+	b=B73hhSQmhFwbOtJ/WMQ33Geu0egPkOPK1sZbEU7f4UzzOhrIwlLMNmyUNkfITVbUxLePcV
+	wajF1xNkPvZTQhWLzLOEtg15/PqHz2qAlkGdk//tz2Y2QU5JKlAAf/oCKmQOc1Y1rK2B4K
+	JQodDFj5b77H8H8fM8inZL6HTkNL9gUCFxFa+BultBdtnobUdCi8kkeHC4tCvjjxs0BLUl
+	vdl1Ofig4xBinQi+6twUMZvxrl6IvJhPcJZng5JvDLvvlkB2Qv8J2oVHtW7Kgf+CJTL7wN
+	pEj9E1fBEdX5LceJ1BOo293SyA0F1ajl4u5qnGH3nYP5+tL9SWQ0SJBthVcB6w==
+From: Thomas Richard <thomas.richard@bootlin.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	bhargav.r@ltts.com,
+	lee@kernel.org,
+	linux-kernel@vger.kernel.org,
+	gregory.clement@bootlin.com,
+	thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com,
+	Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH] regulator: tps6594-regulator: Fix the number of irqs for TPS65224 and TPS6594
+Date: Mon,  3 Jun 2024 19:01:00 +0200
+Message-Id: <20240603170100.2394402-1-thomas.richard@bootlin.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zl3lkIDqnt4JD//u@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Jun 03, 2024 at 04:47:28PM +0100, Russell King (Oracle) wrote:
-> On Mon, Jun 03, 2024 at 03:52:19PM +0100, Daniel Golle wrote:
-> > On Mon, Jun 03, 2024 at 02:41:44PM +0100, Russell King (Oracle) wrote:
-> > > On Mon, Jun 03, 2024 at 02:31:46PM +0100, Daniel Golle wrote:
-> > > > On Mon, Jun 03, 2024 at 02:25:01PM +0100, Russell King (Oracle) wrote:
-> > > > > On Mon, Jun 03, 2024 at 08:18:34PM +0800, Sky Huang wrote:
-> > > > > > Add support for internal 2.5Gphy on MT7988. This driver will load
-> > > > > > necessary firmware, add appropriate time delay and figure out LED.
-> > > > > > Also, certain control registers will be set to fix link-up issues.
-> > > > > 
-> > > > > Based on our previous discussion, it may be worth checking in the
-> > > > > .config_init() method whether phydev->interface is one of the
-> > > > > PHY interface modes that this PHY supports. As I understand from one
-> > > > > of your previous emails, the possibilities are XGMII, USXGMII or
-> > > > > INTERNAL. Thus:
-> > > > > 
-> > > > > > +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> > > > > > +{
-> > > > > > +	struct pinctrl *pinctrl;
-> > > > > > +	int ret;
-> > > > > 
-> > > > > 	/* Check that the PHY interface type is compatible */
-> > > > > 	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL &&
-> > > > > 	    phydev->interface != PHY_INTERFACE_MODE_XGMII &&
-> > > > > 	    phydev->interface != PHY_INTERFACE_MODE_USXGMII)
-> > > > > 		return -ENODEV;
-> > > > 
-> > > > The PHY is built-into the SoC, and as such the connection type should
-> > > > always be "internal". The PHY does not exist as dedicated IC, only
-> > > > as built-in part of the MT7988 SoC.
-> > > 
-> > > That's not how it was described to me by Sky.
-> > > 
-> > > If what you say is correct, then the implementation of
-> > > mt798x_2p5ge_phy_get_rate_matching() which checks for interface modes
-> > > other than INTERNAL is not correct. Also it means that config_init()
-> > > should not permit anything but INTERNAL.
-> > 
-> > The way the PHY is connected to the MAC *inside the chip* is XGMII
-> > according the MediaTek. So call it "internal" or "xgmii", however, up to
-> > my knowledge it's a fact that there is **only one way** this PHY is
-> > connected and used, and that is being an internal part of the MT7988 SoC.
-> > 
-> > Imho, as there are no actual XGMII signals exposed anywhere I'd use
-> > "internal" to describe the link between MAC and PHY (which are both
-> > inside the same chip package).
-> 
-> I don't care what gets decided about what's acceptable for the PHY to
-> accept, just that it checks for the acceptable modes in .config_init()
-> and the .get_rate_matching() method is not checking for interface
-> modes that are not permitted.
+The number of irqs is computed to allocate the right amount of memory for
+the irq data. An array of struct tps6594_regulator_irq_data is allocated
+one time for all the irqs. Each irq uses one cell of the array.
 
-What I meant to express is that there is no need for such a check, also
-not in config_init. There is only one way and one MAC-side interface mode
-to operate that PHY, so the value will anyway not be considered anywhere
-in the driver.
+If the computed number of irqs is not correct, not allocated memory could
+be used.
+
+Fix the	values used in the calculation for TPS6594 and TPS65224.
+
+Fixes: 00c826525fba (regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators)
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+
+Issue detected with Linux v6.10-rc1 and v6.10-rc2 using a TI J7200 EVM board
+during the suspend sequence.
+
+#echo 1 > /sys/power/pm_debug_messages
+#echo 1 > /sys/power/pm_print_times
+#echo 0 > /sys/module/printk/parameters/console_suspend
+#echo 8 > /proc/sys/kernel/printk
+#echo deep > /sys/power/mem_sleep
+#echo mem > /sys/power/state
+[   12.607734] PM: suspend entry (deep)
+[   12.612619] Filesystems sync: 0.000 seconds
+[   12.618349] Unable to handle kernel paging request at virtual address 000000366b63756a
+[   12.626255] Mem abort info:
+[   12.629037]   ESR = 0x0000000096000004
+[   12.632772]   EC = 0x25: DABT (current EL), IL = 32 bits
+[   12.638070]   SET = 0, FnV = 0
+[   12.641111]   EA = 0, S1PTW = 0
+[   12.644240]   FSC = 0x04: level 0 translation fault
+[   12.649103] Data abort info:
+[   12.651971]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[   12.657441]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[   12.662477]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[   12.667774] user pgtable: 4k pages, 48-bit VAs, pgdp=00000008844be000
+[   12.674198] [000000366b63756a] pgd=0000000000000000, p4d=0000000000000000
+[   12.680974] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[   12.687225] Modules linked in:
+[   12.690271] CPU: 1 PID: 135 Comm: sh Not tainted 6.10.0-rc2-00036-g8de0c9c7e923-dirty #46
+[   12.698430] Hardware name: Texas Instruments J7200 EVM (DT)
+[   12.703987] pstate: a00000c5 (NzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   12.710932] pc : devres_for_each_res+0x64/0xf0
+[   12.715370] lr : devres_for_each_res+0x4c/0xf0
+[   12.719800] sp : ffff8000840d3a80
+[   12.723102] x29: ffff8000840d3a80 x28: ffff800081aeef50 x27: ffff00080038d2bc
+[   12.730224] x26: 000000366b637562 x25: ffff80008358a978 x24: ffff8000840d3b68
+[   12.737346] x23: ffff800080923924 x22: ffff00080038d2c0 x21: ffff800080923290
+[   12.744467] x20: ffff8000809232fc x19: ffff00080038d010 x18: ffff8000840d3af8
+[   12.751589] x17: ffff8000833d5c58 x16: 0000000078d6c4df x15: 0000000069b9dda5
+[   12.758710] x14: 00000000f75c2086 x13: 00000000a0b1f81f x12: 000000004a81b180
+[   12.765831] x11: 00000000e38eab80 x10: 00000000981bbba1 x9 : 00000000d391c60b
+[   12.772952] x8 : ffff8000840d3b98 x7 : 0000000000000000 x6 : ffff800081aeeed0
+[   12.780073] x5 : ffff8000840d3b68 x4 : 0000000000000000 x3 : 0000000000000001
+[   12.787194] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 000000364b435542
+[   12.794315] Call trace:
+[   12.796751]  devres_for_each_res+0x64/0xf0
+[   12.800837]  dev_cache_fw_image+0x5c/0x1a8
+[   12.804921]  dpm_for_each_dev+0x54/0x88
+[   12.808749]  fw_pm_notify+0x80/0x108
+[   12.812312]  blocking_notifier_call_chain_robust+0x74/0xe4
+[   12.817785]  pm_notifier_call_chain_robust+0x28/0x48
+[   12.822738]  pm_suspend+0x118/0x270
+[   12.826216]  state_store+0x80/0xec
+[   12.829607]  kobj_attr_store+0x18/0x2c
+[   12.833349]  sysfs_kf_write+0x44/0x54
+[   12.837001]  kernfs_fop_write_iter+0x120/0x1ec
+[   12.841432]  vfs_write+0x238/0x368
+[   12.844823]  ksys_write+0x70/0x104
+[   12.848213]  __arm64_sys_write+0x1c/0x28
+[   12.852124]  invoke_syscall+0x48/0x118
+[   12.855867]  el0_svc_common.constprop.0+0x40/0xe0
+[   12.860560]  do_el0_svc+0x1c/0x28
+[   12.863865]  el0_svc+0x34/0xdc
+[   12.866910]  el0t_64_sync_handler+0x100/0x12c
+[   12.871255]  el0t_64_sync+0x190/0x194
+[   12.874907] Code: f94004da eb1600df 540000e1 14000018 (f9400740)
+[   12.880986] ---[ end trace 0000000000000000 ]---
+
+ drivers/regulator/tps6594-regulator.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tps6594-regulator.c
+index 4a859f4c0f83..ac53792e3fed 100644
+--- a/drivers/regulator/tps6594-regulator.c
++++ b/drivers/regulator/tps6594-regulator.c
+@@ -653,18 +653,14 @@ static int tps6594_regulator_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	if (tps->chip_id == LP8764) {
+-		nr_buck = ARRAY_SIZE(buck_regs);
+-		nr_ldo = 0;
+-		nr_types = REGS_INT_NB;
+-	} else if (tps->chip_id == TPS65224) {
++	if (tps->chip_id == TPS65224) {
+ 		nr_buck = ARRAY_SIZE(tps65224_buck_regs);
+ 		nr_ldo = ARRAY_SIZE(tps65224_ldo_regs);
+-		nr_types = REGS_INT_NB;
++		nr_types = TPS65224_REGS_INT_NB;
+ 	} else {
+ 		nr_buck = ARRAY_SIZE(buck_regs);
+-		nr_ldo = ARRAY_SIZE(tps6594_ldo_regs);
+-		nr_types = TPS65224_REGS_INT_NB;
++		nr_ldo = (tps->chip_id == LP8764) ? 0 : ARRAY_SIZE(tps6594_ldo_regs);
++		nr_types = REGS_INT_NB;
+ 	}
+ 
+ 	reg_irq_nb = nr_types * (nr_buck + nr_ldo);
+-- 
+2.39.2
+
