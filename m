@@ -1,171 +1,82 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from new-mail.astralinux.ru (new-mail.astralinux.ru [51.250.53.244])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95EC2031D;
-	Mon,  3 Jun 2024 11:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BBA84A51;
+	Mon,  3 Jun 2024 11:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.250.53.244
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717413306; cv=none; b=sqKOy4Bbqil8JbMhn0l8BhWMKNhC0ld1ZG2AqcOyDEb8gEkJNIhYUS7z3hcIFZVlECtcNwRKxaVt6cZSfRkJXl6WX72/b00fcRWydOr8Jpu/ZLUPNh/lN4PPrOvPvpOcx9Zo1Qxl07aUygfl9DAHm/l3EBcFUGyJSHatKUQuiOs=
+	t=1717413318; cv=none; b=Qp/3UwSp443PTzcc5UmPtdToILNJy6lKo6Brdxeq0otbDDm4AyrZwachw8x/VR4K6z9P03Fm1DoX9e7CBCvVGDyHYfFdv+2sSjaUuh8vci4nyLOjw01Fq7SiG4Renzgcc5BgusemLG9s7x9mkDUDSZWWYCTuGzGqJ1Nja7KFI/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717413306; c=relaxed/simple;
-	bh=ZFXR8m14kYvbVIl2KlyvnbiiBMx8mQpyawYBOo9d/aE=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G2Ayni545ZCgOO4KMzzggkoi7nInD0Bia9q2emkCFuQA580O4an4AFPJPB0kw/lrhZAT1aXtI/bn0x3eIhksBGSfvPVGeHyZFLmRgO8byII2sRCwdUBRv16X4v35p3/dvXTtoDs5Ye+GsCAE6fBeaVccojuXq1AA7tRy+FLKfDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y9N3vVSk; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y9N3vVSk"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 453APoTq003631;
-	Mon, 3 Jun 2024 11:14:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=OMYFUIm6w8L9hrflseDvr2e7ZieoDUoZJEftnc/pLfg=;
- b=Y9N3vVSk1iEPnn99N3F+v37zOGhApIKBCQGru8PJ+NERwHR/5nBs6LZLbI9wXDoLcztg
- JFqH7Utg3GvL7T26eTfmoy7Y35XYw0Q5F/09XcaQxdzcMm5coNJ4829iAF6ZSRF9yFrr
- Jc0guPDuSgd7QYmysMZ0gByIkH8iQiEw5dmB8127WURpCAArrc9gVEnYgPrRcyC4mHcz
- Wt+ZqWgN99LmGodYhpe41XSZgU+esFf/1jDw+3h43EUBD5rhRM19k80fc15iElvj9R7/
- CDQC+/tHBRkCTa2MrbxwX0scJS80DOZm2Uooz8Q0eVqmyTuGdRFQTeJzbd60uBd1lvRJ ZA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yhadh0bbh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 11:14:54 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 453BErbr027863;
-	Mon, 3 Jun 2024 11:14:53 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yhadh0bbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 11:14:53 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45399DTO031147;
-	Mon, 3 Jun 2024 11:14:53 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygeyp7fce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Jun 2024 11:14:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 453BElP534603754
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Jun 2024 11:14:49 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4069F20067;
-	Mon,  3 Jun 2024 11:14:47 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 308F42004E;
-	Mon,  3 Jun 2024 11:14:45 +0000 (GMT)
-Received: from [172.17.0.2] (unknown [9.3.101.175])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Jun 2024 11:14:45 +0000 (GMT)
-Subject: [PATCH 4/6] KVM: PPC: Book3S HV: Add one-reg interface for DEXCR
- register
-From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-To: kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: pbonzini@redhat.com, naveen.n.rao@linux.ibm.com,
-        christophe.leroy@csgroup.eu, corbet@lwn.net, mpe@ellerman.id.au,
-        namhyung@kernel.org, npiggin@gmail.com, pbonzini@redhat.com,
-        sbhat@linux.ibm.com, jniethe5@gmail.com, atrajeev@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Date: Mon, 03 Jun 2024 11:14:44 +0000
-Message-ID: <171741327891.6631.10339033341166150910.stgit@linux.ibm.com>
-In-Reply-To: <171741323521.6631.11242552089199677395.stgit@linux.ibm.com>
-References: <171741323521.6631.11242552089199677395.stgit@linux.ibm.com>
-User-Agent: StGit/1.5
+	s=arc-20240116; t=1717413318; c=relaxed/simple;
+	bh=f0yBKYMqtygn3cVibz3OF+CIlIM/Id+Akw/nJOBq5Es=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ERbFSz+Xj/xgdfWbYkJ1RVo9oiP9i2otyjXrePYjP+Z7VQs54EnEFakOUcn8YjSIli438gC0GGtdc23pB314lEAkLpLsJoHBRVthj9RfJhpz8RA+iVsN7e/D3MO52THkEol+XPT81jjnBJ3mdPDG7lb1QVjDKKammzkZhX8zd7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=51.250.53.244
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from rbta-msk-lt-106062.astralinux.ru (unknown [10.177.20.58])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Vt9vK2f0bzlW00;
+	Mon,  3 Jun 2024 14:08:29 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: Huang Rui <ray.huang@amd.com>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] cpufreq: amd-pstate: add check for cpufreq_cpu_get's return value
+Date: Mon,  3 Jun 2024 14:07:41 +0300
+Message-Id: <20240603110741.24818-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 879TKBnXgQhaFYIU84f2SOq75_EMCTg_
-X-Proofpoint-ORIG-GUID: qxq_pOFfdTbTw6Aa2193Vw_aayTuzrgk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_07,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=655 lowpriorityscore=0 phishscore=0
- suspectscore=0 bulkscore=0 adultscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406030094
+Content-Transfer-Encoding: 8bit
+X-DrWeb-SpamScore: -100
+X-DrWeb-SpamState: legit
+X-DrWeb-SpamDetail: gggruggvucftvghtrhhoucdtuddrgedvfedrvdehuddgtddvucetufdoteggodetrfcurfhrohhfihhlvgemucfftfghgfeunecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeetnhgrshhtrghsihgruceuvghlohhvrgcuoegrsggvlhhovhgrsegrshhtrhgrlhhinhhugidrrhhuqeenucggtffrrghtthgvrhhnpeffvddvueehvedvgfeivdeuvdduteeulefgfeehieffgfehtedutdfgveefvdeiheenucffohhmrghinheplhhinhhugihtvghsthhinhhgrdhorhhgnecukfhppedutddrudejjedrvddtrdehkeenucfrrghrrghmpehhvghloheprhgsthgrqdhmshhkqdhlthdquddtiedtiedvrdgrshhtrhgrlhhinhhugidrrhhupdhinhgvthepuddtrddujeejrddvtddrheekmeegtdejtdegpdhmrghilhhfrhhomheprggsvghlohhvrgesrghsthhrrghlihhnuhigrdhruhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprhgrhidrhhhurghnghesrghmugdrtghomhdprhgtphhtthhopegrsggvlhhovhgrsegrshhtrhgrlhhinhhugidrrhhupdhrtghpthhtohepghgruhhthhgrmhdrshhhvghnohihsegrmhgurdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehpvghrrhihrdihuhgrnhesrg
+ hmugdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
+X-DrWeb-SpamVersion: Vade Retro 01.423.251#02 AS+AV+AP Profile: DRWEB; Bailout: 300
+X-AntiVirus: Checked by Dr.Web [MailD: 11.1.19.2307031128, SE: 11.1.12.2210241838, Core engine: 7.00.65.05230, Virus records: 12717933, Updated: 2024-Jun-03 09:24:46 UTC]
 
-The patch adds a one-reg register identifier which can be used to
-read and set the DEXCR for the guest during enter/exit with
-KVM_REG_PPC_DEXCR. The specific SPR KVM API documentation
-too updated.
+cpufreq_cpu_get may return NULL. To avoid NULL-dereference check it
+and return in case of error.
 
-Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 ---
- Documentation/virt/kvm/api.rst            |    1 +
- arch/powerpc/include/uapi/asm/kvm.h       |    1 +
- arch/powerpc/kvm/book3s_hv.c              |    6 ++++++
- tools/arch/powerpc/include/uapi/asm/kvm.h |    1 +
- 4 files changed, 9 insertions(+)
+ drivers/cpufreq/amd-pstate.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index a71d91978d9e..81077c654281 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -2441,6 +2441,7 @@ registers, find a list below:
-   PPC     KVM_REG_PPC_PTCR                64
-   PPC     KVM_REG_PPC_DAWR1               64
-   PPC     KVM_REG_PPC_DAWRX1              64
-+  PPC     KVM_REG_PPC_DEXCR               64
-   PPC     KVM_REG_PPC_TM_GPR0             64
-   ...
-   PPC     KVM_REG_PPC_TM_GPR31            64
-diff --git a/arch/powerpc/include/uapi/asm/kvm.h b/arch/powerpc/include/uapi/asm/kvm.h
-index 1691297a766a..fcb947f65667 100644
---- a/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/arch/powerpc/include/uapi/asm/kvm.h
-@@ -645,6 +645,7 @@ struct kvm_ppc_cpu_char {
- #define KVM_REG_PPC_SIER3	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc3)
- #define KVM_REG_PPC_DAWR1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc4)
- #define KVM_REG_PPC_DAWRX1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc5)
-+#define KVM_REG_PPC_DEXCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc6)
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index 1b7e82a0ad2e..672cb6c280a4 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -621,6 +621,8 @@ static void amd_pstate_adjust_perf(unsigned int cpu,
+ 	unsigned long max_perf, min_perf, des_perf,
+ 		      cap_perf, lowest_nonlinear_perf, max_freq;
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return;
+ 	struct amd_cpudata *cpudata = policy->driver_data;
+ 	unsigned int target_freq;
  
- /* Transactional Memory checkpointed state:
-  * This is all GPRs, all VSX regs and a subset of SPRs
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index b576781d58d5..1294c6839d37 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2349,6 +2349,9 @@ static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_DAWRX1:
- 		*val = get_reg_val(id, kvmppc_get_dawrx1_hv(vcpu));
- 		break;
-+	case KVM_REG_PPC_DEXCR:
-+		*val = get_reg_val(id, kvmppc_get_dexcr_hv(vcpu));
-+		break;
- 	case KVM_REG_PPC_CIABR:
- 		*val = get_reg_val(id, kvmppc_get_ciabr_hv(vcpu));
- 		break;
-@@ -2592,6 +2595,9 @@ static int kvmppc_set_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_DAWRX1:
- 		kvmppc_set_dawrx1_hv(vcpu, set_reg_val(id, *val) & ~DAWRX_HYP);
- 		break;
-+	case KVM_REG_PPC_DEXCR:
-+		kvmppc_set_dexcr_hv(vcpu, set_reg_val(id, *val));
-+		break;
- 	case KVM_REG_PPC_CIABR:
- 		kvmppc_set_ciabr_hv(vcpu, set_reg_val(id, *val));
- 		/* Don't allow setting breakpoints in hypervisor code */
-diff --git a/tools/arch/powerpc/include/uapi/asm/kvm.h b/tools/arch/powerpc/include/uapi/asm/kvm.h
-index 1691297a766a..fcb947f65667 100644
---- a/tools/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/tools/arch/powerpc/include/uapi/asm/kvm.h
-@@ -645,6 +645,7 @@ struct kvm_ppc_cpu_char {
- #define KVM_REG_PPC_SIER3	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc3)
- #define KVM_REG_PPC_DAWR1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc4)
- #define KVM_REG_PPC_DAWRX1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc5)
-+#define KVM_REG_PPC_DEXCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc6)
- 
- /* Transactional Memory checkpointed state:
-  * This is all GPRs, all VSX regs and a subset of SPRs
-
+@@ -777,6 +779,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+ static void amd_pstate_update_limits(unsigned int cpu)
+ {
+ 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
++	if (!policy)
++		return;
+ 	struct amd_cpudata *cpudata = policy->driver_data;
+ 	u32 prev_high = 0, cur_high = 0;
+ 	int ret;
+-- 
+2.30.2
 
