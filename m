@@ -1,53 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BF913D606
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 23:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4014083CD8;
+	Mon,  3 Jun 2024 23:25:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717457102; cv=none; b=sf7j+WkxXUX/c6I+PhNelzMV5V+BtFPkNl3Do3htRYapE3lghbyDYO46YzJFZI2zZmndRKpgsTdb0dZ+1KoL622PE51BkxQcbY/Ck97X4C+SxpQGrx5pcfz11C89XJZV8YqBkrEftCPIvfdstcudyPHDoKw4ndB3VEJ5kIcObWw=
+	t=1717457104; cv=none; b=Xmk6eTV/uHGJkIQp/I2Zx0KpB/OFRzpf1tnZl5HOIMzZiQVV3WpHLrqLoXv5ERHfQbNDLr2RI5sKh2CNmKD3NkJl97cWL3kNCFD6dh14EVIjSARY2ATAeBFPBwlqZfO+nfvBpIS2tLVCUjbMnW/2ozbHool9HMIBnmLlaZ2DHvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717457102; c=relaxed/simple;
-	bh=zCdEe8+RH4XlG7eBx9a3rSWZHIqYz7vbbkZgHROBGK8=;
+	s=arc-20240116; t=1717457104; c=relaxed/simple;
+	bh=iFe7QTOJaIZ96iBr5IJNXeHec/OczXjluE+9uE64m5U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cJv0baMvbPGlg7QNeWp1aIs+pambcAjZXS6UZSi8jTo9Ri2x3RHCC/bs3HTv0gUrwMf3KBIq0n+Q0ii/19k2dv5rTA+cXhR+H7F6bWwb/beJI9101Bo8kOlrboo6WeiQFEb8cpygWNN2dnS271N7u89xdV5ont9yTwY2d/tqv5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DHV8Zwi6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=unMpXQQf; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=lJrVoRFOsFVWhsqvTwKcg9zQvN/GrFgKlahjsLlomwns1YticUBjJqPFyFQQ3jD7ciFpFbXvSGM0ohhGdTQdR7VadiSp8gPjd41Q0sXmuKpBiPoaacdvORy+Hwl1P0Dd22f2sRhrIGjuZj62/jwAUGuHVnX6J5FDSqxEZDhju1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RubfaJ21; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3VHXF6oe; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DHV8Zwi6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="unMpXQQf"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RubfaJ21";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3VHXF6oe"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717457099;
+	s=2020; t=1717457100;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HSPbGXrcPCHiCR0e1KtRGjSW0V56pt20H3Bnio+pcfI=;
-	b=DHV8Zwi6y4rTdb9NOOkhROyJ4R4g2iCWZHE83mUWDGdEAN87ebE3cnzLGhO8hHWJGrzl6K
-	7mvj17Gu10Thx+hvdO4vkkam24FDvzYgnQm47mO+xKKzTQwf+/to7uYDTlHAFiSK8EqeLp
-	8yWsPk4lCq/7nLlkHRoATl5G9mIyRyQRySKwngeYSqay+nF1YjNyWBm2FRV7KH/vwlstnc
-	S3o3sIotQk+NhUZsZPKteTPlxX98GtTjxjOLLDMNaHTRbpo2eeJHwRQCu1bILU5W0nfWGb
-	AeeWbSMxQTCpPco2KLF7OfRCIwM9Juqr9Eee7nq4HIAB0tPrJDTpXFWF0Z/8rQ==
+	bh=AVOojb4+PpMY1V+1K9x0e9ZnUQCXKs719BnreW8cqRo=;
+	b=RubfaJ21CaXktnflUH7lDlQT0oDJ4xfHIFVQvMDtT+1w44RUsTKBxRViXeoUKY/zceV1bU
+	HeKeZJZCjUGlxY6yPU4wsaIvbr4iZmKHEwbTRtw3obLvtsaflGd5f8UboRPVqulLAKb8in
+	L1Fn5CZ4HvOwhDwxxfm9OwL084/7aHPe3BhdwoxV3kXlPmPB/8dYsgcy8TLx7PERR92b67
+	FmijEEwoF3KWX+M5aSlP8VQpUd9jwzHKEHGThEDGmE9pAYI3umf7dUSf2IUm6pOLDJ4Szi
+	wh/xDjw+FjX72Owum1j34Q4tAjE63HMzH5daPzimwddr9eoqSOFcntGa9UqVgA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717457099;
+	s=2020e; t=1717457100;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HSPbGXrcPCHiCR0e1KtRGjSW0V56pt20H3Bnio+pcfI=;
-	b=unMpXQQf6Rr8AddTHoAqNxnxTkclhT2pnume2VqwfVqUZTbKWj/ltvZQFRQek6vYXqTH7M
-	TReXtirtTJ5bBRDw==
+	bh=AVOojb4+PpMY1V+1K9x0e9ZnUQCXKs719BnreW8cqRo=;
+	b=3VHXF6oejKzbZBE03RCA1YmIECu7IUwL9FS6L0OkNOAerzWOodexOCtM1ODvmzCfeJRKkM
+	j4oOnwZIuGB5DFDg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH printk v2 11/18] printk: nbcon: Show replay message on takeover
-Date: Tue,  4 Jun 2024 01:30:46 +0206
-Message-Id: <20240603232453.33992-12-john.ogness@linutronix.de>
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org
+Subject: [PATCH printk v2 15/18] tty: sysfs: Add nbcon support for 'active'
+Date: Tue,  4 Jun 2024 01:30:50 +0206
+Message-Id: <20240603232453.33992-16-john.ogness@linutronix.de>
 In-Reply-To: <20240603232453.33992-1-john.ogness@linutronix.de>
 References: <20240603232453.33992-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -58,144 +60,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-An emergency or panic context can takeover console ownership
-while the current owner was printing a printk message. The
-atomic printer will re-print the message that the previous
-owner was printing. However, this can look confusing to the
-user and may even seem as though a message was lost.
-
-  [3430014.1
-  [3430014.181123] usb 1-2: Product: USB Audio
-
-Add a new field @nbcon_prev_seq to struct console to track
-the sequence number to print that was assigned to the previous
-console owner. If this matches the sequence number to print
-that the current owner is assigned, then a takeover must have
-occurred. In this case, print an additional message to inform
-the user that the previous message is being printed again.
-
-  [3430014.1
-  ** replaying previous printk message **
-  [3430014.181123] usb 1-2: Product: USB Audio
+Allow the 'active' attribute to list nbcon consoles.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- include/linux/console.h  |  3 +++
- kernel/printk/internal.h |  1 +
- kernel/printk/nbcon.c    | 24 ++++++++++++++++++++++++
- kernel/printk/printk.c   | 19 +++++++++++++++++++
- 4 files changed, 47 insertions(+)
+ drivers/tty/tty_io.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/console.h b/include/linux/console.h
-index adcc1a74aeee..9927f08ac054 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -325,6 +325,7 @@ struct nbcon_write_context {
-  * @nbcon_state:	State for nbcon consoles
-  * @nbcon_seq:		Sequence number of the next record for nbcon to print
-  * @nbcon_device_ctxt:	Context available for non-printing operations
-+ * @nbcon_prev_seq:	Seq num the previous nbcon owner was assigned to print
-  * @pbufs:		Pointer to nbcon private buffer
-  * @kthread:		Printer kthread for this console
-  * @rcuwait:		RCU-safe wait object for @kthread waking
-@@ -445,6 +446,8 @@ struct console {
- 	atomic_t		__private nbcon_state;
- 	atomic_long_t		__private nbcon_seq;
- 	struct nbcon_context	__private nbcon_device_ctxt;
-+	atomic_long_t           __private nbcon_prev_seq;
-+
- 	struct printk_buffers	*pbufs;
- 	struct task_struct	*kthread;
- 	struct rcuwait		rcuwait;
-diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-index 5d4722310850..9e027e08918d 100644
---- a/kernel/printk/internal.h
-+++ b/kernel/printk/internal.h
-@@ -233,4 +233,5 @@ bool printk_get_next_message(struct printk_message *pmsg, u64 seq,
- 
- #ifdef CONFIG_PRINTK
- void console_prepend_dropped(struct printk_message *pmsg, unsigned long dropped);
-+void console_prepend_replay(struct printk_message *pmsg);
- #endif
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 480a0ced2708..8c92b076c745 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -866,6 +866,7 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt, bool use_a
- 	unsigned long con_dropped;
- 	struct nbcon_state cur;
- 	unsigned long dropped;
-+	unsigned long ulseq;
- 
- 	/*
- 	 * The printk buffers are filled within an unsafe section. This
-@@ -891,6 +892,28 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt, bool use_a
- 	if (dropped && !is_extended)
- 		console_prepend_dropped(&pmsg, dropped);
- 
-+	/*
-+	 * If the previous owner was assigned the same record, this context
-+	 * has taken over ownership and is replaying the record. Prepend a
-+	 * message to let the user know the record is replayed.
-+	 */
-+	ulseq = atomic_long_read(&ACCESS_PRIVATE(con, nbcon_prev_seq));
-+	if (__ulseq_to_u64seq(prb, ulseq) == pmsg.seq) {
-+		console_prepend_replay(&pmsg);
-+	} else {
-+		/*
-+		 * Ensure this context is still the owner before trying to
-+		 * update @nbcon_prev_seq. Otherwise the value in @ulseq may
-+		 * not be from the previous owner.
-+		 */
-+		nbcon_state_read(con, &cur);
-+		if (!nbcon_context_can_proceed(ctxt, &cur))
-+			return false;
-+
-+		atomic_long_try_cmpxchg(&ACCESS_PRIVATE(con, nbcon_prev_seq), &ulseq,
-+					__u64seq_to_ulseq(pmsg.seq));
-+	}
-+
- 	if (!nbcon_context_exit_unsafe(ctxt))
- 		return false;
- 
-@@ -1631,6 +1654,7 @@ void nbcon_init(struct console *con, u64 init_seq)
- 	rcuwait_init(&con->rcuwait);
- 	init_irq_work(&con->irq_work, nbcon_irq_work);
- 	nbcon_seq_force(con, init_seq);
-+	atomic_long_set(&ACCESS_PRIVATE(con, nbcon_prev_seq), -1UL);
- 	nbcon_state_set(con, &state);
- 	nbcon_kthread_create(con);
- }
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index fcbf794a0aaf..cf0d612329bf 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2867,6 +2867,25 @@ void console_prepend_dropped(struct printk_message *pmsg, unsigned long dropped)
- 	__console_prepend_scratch(pmsg, len);
- }
- 
-+/*
-+ * Prepend the message in @pmsg->pbufs->outbuf with a "replay message".
-+ * @pmsg->outbuf_len is updated appropriately.
-+ *
-+ * @pmsg is the printk message to prepend.
-+ */
-+void console_prepend_replay(struct printk_message *pmsg)
-+{
-+	struct printk_buffers *pbufs = pmsg->pbufs;
-+	const size_t scratchbuf_sz = sizeof(pbufs->scratchbuf);
-+	char *scratchbuf = &pbufs->scratchbuf[0];
-+	size_t len;
-+
-+	len = scnprintf(scratchbuf, scratchbuf_sz,
-+			"** replaying previous printk message **\n");
-+
-+	__console_prepend_scratch(pmsg, len);
-+}
-+
- /*
-  * Read and format the specified record (or a later record if the specified
-  * record is not available).
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 407b0d87b7c1..c9c914bc033c 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -3567,8 +3567,13 @@ static ssize_t show_cons_active(struct device *dev,
+ 	for_each_console(c) {
+ 		if (!c->device)
+ 			continue;
+-		if (!c->write)
+-			continue;
++		if (c->flags & CON_NBCON) {
++			if (!c->write_atomic && !c->write_thread)
++				continue;
++		} else {
++			if (!c->write)
++				continue;
++		}
+ 		if ((c->flags & CON_ENABLED) == 0)
+ 			continue;
+ 		cs[i++] = c;
 -- 
 2.39.2
 
