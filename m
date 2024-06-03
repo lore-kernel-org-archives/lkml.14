@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9668592E;
-	Mon,  3 Jun 2024 09:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4948B85C79;
+	Mon,  3 Jun 2024 09:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717407013; cv=none; b=ucYIBAsrJXpe9HSfVRlwx5fmIpAoXwGTogdAjZbHhCiJ/toywKztlXigcPZHYPLyA9Hlez2JBNFa59c0bZSOb5k6ZJmb8UannPUDl+EbPOi7VyAbMOuVw0l2lOKaQ6N2OUy6vxwUI9nnEX0l7kcswC88m6pnldPqND1DcoSF68o=
+	t=1717407015; cv=none; b=coxcPzrHs1jeiC/wrFdp9W0zsxLoQ5joOGLviPPGmXKIdk0Fqq+KQRtFXl2axn5/+SlzJXkn3jQy2kWx48MsaGZDWesfNmk1gDs5Fl1EruoWH0pqSS/NyUl2FuD6z1+Atr98rXoa3hGoZmFdQaunFKMWT91VoztQb0Q4aWwD1fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717407013; c=relaxed/simple;
-	bh=+p8BxJD+68L24HPRnqXuSQhmyp/9HF25yN1AjkfExzw=;
+	s=arc-20240116; t=1717407015; c=relaxed/simple;
+	bh=xtqMtpGQrHB54uGZfp9VBm9z3YM1dzMnaqxTWaWCnOc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JkSacqEC0xWGfBy3Ayi76JojkRkbnUpEiHb4Qk+l+vPl5a50v88PFCn3zlm3PpqRXPWZRIPhJp5lYaCwlJZhijQtHF/CPEEK/cdNvSaf49l9v0/zCpT/h07uLgxD7O0qmDwfoNndWYyDaRM3un9CYRy2OmbXSiykwpl4cVNT4DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y5TrLINk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UyGllTyQ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=MQNG22Y3F+fSfmo3/5DcBzQYKu1M9S6TuXPvYddBhi31xV62bS2lNMFHM15ekz45MHqWgPqFwnxjfOiBndezuhMOc9L82oKt4LADTXoyDDbxSEn5d540+gNv1QRTG6VbOHajIiy9+qwmvFmwdmVFxZsBKj8ubI65k/sZY6n7L/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=163kBzHa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0d6Jow0V; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y5TrLINk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UyGllTyQ"
-Date: Mon, 03 Jun 2024 09:30:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="163kBzHa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0d6Jow0V"
+Date: Mon, 03 Jun 2024 09:30:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1717407008;
+	s=2020; t=1717407009;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MqcLKvtYJ9TZ1EDrZbzL4x3uPENnbcq726v8T9HD24c=;
-	b=Y5TrLINk4ymXQjvlWARXqcNIVVwjVci/+M8NF41AyeRHk1Be4F4N0wXsB3Rtq8NT2pUK40
-	cPM6dsPRhYY3vTLrui/U8K2gz46v4/dZKAG3P9K949POZXLY9UFngUJBaTbG/ZoGqKd4JR
-	SDuconcIKptjCw/r4PBFJpXIEJL/ypQYsZQO+ejrDZv4jdRbwMn4vCFQwMW/sYCfFdKK2g
-	6DdRtquqLHVJq7QSYoQagCyLkotoKlaKGbsZhGFoOCFOOQPQ4zk8wFHRC8Og2evKbgSA4Z
-	179tb45ggEr/r6u0urQBTFMntSGs6L+5yTTpqERvjS+bRwtQvRH0LWGV50QRoQ==
+	bh=JeL1Q/NXa4GQb7N82Z1lfGHGwbb5bIh7X4xoJRM0NNM=;
+	b=163kBzHa+bwALxPF3qQLOOkexShIkxR9W7mMAgaDqj4U+CpoYY5KFlhmUqFRRXl+vRVwdt
+	q/5FNh69iifWHS3bKSykXF+/x0NapIxwv6mX4B8Q25ZGAyknSTuR72spFhD0b9IT84TRUJ
+	iy1K32aBg0RNeSfICvmrSl01f8MbnAqQfGTAMG6SvoKu7BXpTDdBf9a/Q++OTe/ihEo7G7
+	qCzLrkXgWRT2tyLqQrqqdBUWaTe18bF4a31OsjqZr6FH+6MFS7wampLHHj7xKDnAm4Vy/a
+	PcUQpjb6ZpThrMG9oF3iZfHQTyL6szmMHZ8iM21CaewTXBVAP4+4EdVr9xvWXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1717407008;
+	s=2020e; t=1717407009;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MqcLKvtYJ9TZ1EDrZbzL4x3uPENnbcq726v8T9HD24c=;
-	b=UyGllTyQxSfD+7zVteqYs8IZgmRMZ6OnEEjIcP424h3uDRTUbKsvPp8KhVBzpCZKA0qsT2
-	Ja1V1njRrtWvNgBw==
+	bh=JeL1Q/NXa4GQb7N82Z1lfGHGwbb5bIh7X4xoJRM0NNM=;
+	b=0d6Jow0VIwdl/arVtFx5saa6mJvToDdQRW/U+A1MYNkDhYht46V8VhtZJQ7NYtWJzsXD+T
+	UoIpSfa0WGHMEbCw==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] ALSA: hda: Remove convert_art_to_tsc()
+Subject: [tip: timers/core] e1000e: Replace convert_art_to_tsc()
 Cc: Thomas Gleixner <tglx@linutronix.de>,
  Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240513103813.5666-7-lakshmi.sowjanya.d@intel.com>
-References: <20240513103813.5666-7-lakshmi.sowjanya.d@intel.com>
+In-Reply-To: <20240513103813.5666-4-lakshmi.sowjanya.d@intel.com>
+References: <20240513103813.5666-4-lakshmi.sowjanya.d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171740700865.10875.2013333477065427380.tip-bot2@tip-bot2>
+Message-ID: <171740700913.10875.14681974045180514880.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     b3266ed85f77047a9674100f0da8058750e5bc62
-Gitweb:        https://git.kernel.org/tip/b3266ed85f77047a9674100f0da8058750e5bc62
+Commit-ID:     bd48b50be50ac5678a7e26c39f6779d7fadf128b
+Gitweb:        https://git.kernel.org/tip/bd48b50be50ac5678a7e26c39f6779d7fadf128b
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 13 May 2024 16:08:07 +05:30
+AuthorDate:    Mon, 13 May 2024 16:08:04 +05:30
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Mon, 03 Jun 2024 11:18:50 +02:00
 
-ALSA: hda: Remove convert_art_to_tsc()
+e1000e: Replace convert_art_to_tsc()
 
 The core code now provides a mechanism to convert the ART base clock to the
 corresponding TSC value without requiring an architecture specific
@@ -87,22 +87,22 @@ No functional change intended.
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20240513103813.5666-7-lakshmi.sowjanya.d@intel.com
+Link: https://lore.kernel.org/r/20240513103813.5666-4-lakshmi.sowjanya.d@intel.com
 
 ---
- sound/pci/hda/hda_controller.c | 3 ++-
+ drivers/net/ethernet/intel/e1000e/ptp.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_controller.c b/sound/pci/hda/hda_controller.c
-index 766734d..5d86e5a 100644
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -463,7 +463,8 @@ static int azx_get_sync_time(ktime_t *device,
- 	*device = ktime_add_ns(*device, (wallclk_cycles * NSEC_PER_SEC) /
- 			       ((HDA_MAX_CYCLE_VALUE + 1) * runtime->rate));
- 
--	*system = convert_art_to_tsc(tsc_counter);
-+	system->cycles = tsc_counter;
+diff --git a/drivers/net/ethernet/intel/e1000e/ptp.c b/drivers/net/ethernet/intel/e1000e/ptp.c
+index bbcfd52..89d57dd 100644
+--- a/drivers/net/ethernet/intel/e1000e/ptp.c
++++ b/drivers/net/ethernet/intel/e1000e/ptp.c
+@@ -124,7 +124,8 @@ static int e1000e_phc_get_syncdevicetime(ktime_t *device,
+ 	sys_cycles = er32(PLTSTMPH);
+ 	sys_cycles <<= 32;
+ 	sys_cycles |= er32(PLTSTMPL);
+-	*system = convert_art_to_tsc(sys_cycles);
++	system->cycles = sys_cycles;
 +	system->cs_id = CSID_X86_ART;
  
  	return 0;
