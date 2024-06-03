@@ -1,204 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B34415E88
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Jun 2024 07:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A2915E88;
+	Mon,  3 Jun 2024 07:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717400768; cv=none; b=JrjjbzgLLSIyYIZWd1SlgSN2LROdbkrbNSKmXkLEFLCb41gamGye83I1kfPtk2HbecbbGgCog/Z8yRKS4RCsQSWYgdZ5GggmrQHBk9AIsa2IkG4+FhznczZLLbGA1YZa9Z6V4+e1srfiDX7GmbFDX16637MMbucwZOFo7lsUfQ4=
+	t=1717400952; cv=none; b=LTtS4GjSGh5VnqFUwvRGxzrBAP/IWut8LfcX0DkWBK2ckK15if5wuM+YYQdaum3vhbomePnAty7ami4CZK4deq3lD4mGbrqOUjd7vzaPDjzWIRE96XQOKB6M6QS1uZlvXdh5AeSxWDFKOHHowywqISA3GLE8Li2hmElIoqRLD/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717400768; c=relaxed/simple;
-	bh=mFDXlpiMEJYXovW6Of1ONYiod4w13y59ry15qm4tAyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=swTqKTxg/RK0Ko8brtE9q5coGBA95JWBMOOXAvyD38CiU+0atlb741GXKi5+7PVYf3u9rIewIEyRhSPZozuBqITw0vTO2vh188cwcivdOlWJpNfwDTWp6WeVYba1pSLlAdb5Nal7nIVHPsiUCt6nFuU4jIfzMG/BeaY8on6T2Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t25W15xE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T+be8l7H; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=t25W15xE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=T+be8l7H; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717400952; c=relaxed/simple;
+	bh=l/sXJWAR9U+t8PuJjd67PbuHh01c02nSqxd7Y8bCUpM=;
+	h=Content-Type:Date:Message-Id:From:To:Subject:Cc:References:
+	 In-Reply-To; b=iYTWTcFKXHUxV+BzKoQghOkZIizoJ47xmR+UZRomZh9TOB4JpXf1sBZ4ViUFQuG+g3WVfeG3dPodkEFa2RgENvgqX5QF60jfroPs/B3K0HEVSDwyDuHtb4+yQYo/DKp9AJGuBjGR2znTEGbon130N4XC6CAmFdHVOefthSF0UeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=mKfgfIw0; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t25W15xE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T+be8l7H";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="t25W15xE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="T+be8l7H"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="mKfgfIw0"
+Received: from localhost (unknown [213.135.10.150])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 5C20522196;
-	Mon,  3 Jun 2024 07:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717400763; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ppjcw+ey9UBAAWa6TUuEs/1kMnYQaEpiNxwsiWo2PPg=;
-	b=t25W15xEW3ID4KWRgnM3+SMY43dWJxhiHe/yMP4eaV0xupcaZBE44g6mxnUz74OiEOQFGg
-	w8hfZ1d1l/lbGYq1zY9XtRLyRLUV40pLlQ2VC3cWXiwEP4MZHWRFDP5nTUuEKInEsKzCAu
-	+VaWoNdB/8uYlmCK0Y68hwvrMzOvmTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717400763;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ppjcw+ey9UBAAWa6TUuEs/1kMnYQaEpiNxwsiWo2PPg=;
-	b=T+be8l7HJtjZsshSs1YB++h6HHENRFrfLr3DOttTfA4+sTYCriWkGzhE/oYHbCcJ/N0v+I
-	sp40xEa9P31TZPDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717400763; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ppjcw+ey9UBAAWa6TUuEs/1kMnYQaEpiNxwsiWo2PPg=;
-	b=t25W15xEW3ID4KWRgnM3+SMY43dWJxhiHe/yMP4eaV0xupcaZBE44g6mxnUz74OiEOQFGg
-	w8hfZ1d1l/lbGYq1zY9XtRLyRLUV40pLlQ2VC3cWXiwEP4MZHWRFDP5nTUuEKInEsKzCAu
-	+VaWoNdB/8uYlmCK0Y68hwvrMzOvmTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717400763;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ppjcw+ey9UBAAWa6TUuEs/1kMnYQaEpiNxwsiWo2PPg=;
-	b=T+be8l7HJtjZsshSs1YB++h6HHENRFrfLr3DOttTfA4+sTYCriWkGzhE/oYHbCcJ/N0v+I
-	sp40xEa9P31TZPDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3F726139CB;
-	Mon,  3 Jun 2024 07:46:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eRkHD7t0XWa5XgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 03 Jun 2024 07:46:03 +0000
-Message-ID: <2ff52c5e-4b6b-4b3d-9047-f00967315d3e@suse.cz>
-Date: Mon, 3 Jun 2024 09:46:02 +0200
+	by mail.3ffe.de (Postfix) with ESMTPSA id 30CEA136A;
+	Mon,  3 Jun 2024 09:42:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+	t=1717400554;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
+	 references:references; bh=l/sXJWAR9U+t8PuJjd67PbuHh01c02nSqxd7Y8bCUpM=;
+	b=mKfgfIw0rVXzUB2hP0B2WxtTyKBz9VHQ5GW0H/acJGDGO7XYNyllK5U2aU0laMQOncMNxb
+	63+o3L3cwsC9BhAZl30ZY1W9aOEIKA0BadMQEvJfy28XQnJ6+Ag1UrmyyEpsPO+vKug+un
+	VIOmTj0ewguhvmUIc59KofVhqUsJ34y4Vz9XPQBBUgMTDGUnRQXFk6+nrb3CaP/4hXmPHs
+	bCgss0RdUhLImzMiLhXc+o9Y5G8Q2Shz99/HZYYA3JDlD/Bysg/DzDX2nPvCthzELAPQCH
+	N2RKaKynB4Z4wd5LO7zIxX5MplhmoRaMzAQ9NZNTakTdQUCwqGCiLUgX0z004g==
+Content-Type: multipart/signed;
+ boundary=3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Mon, 03 Jun 2024 09:42:31 +0200
+Message-Id: <D1Q7OPR0TRFG.1WLSI7EBAPUWX@walle.cc>
+From: "Michael Walle" <michael@walle.cc>
+To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ <chunkuang.hu@kernel.org>
+Subject: Re: [PATCH v4 3/3] drm/mediatek: Implement OF graphs support for
+ display paths
+Cc: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+ <conor+dt@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
+ <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
+ <mripard@kernel.org>, <tzimmermann@suse.de>, <matthias.bgg@gmail.com>,
+ <shawn.sung@mediatek.com>, <yu-chang.lee@mediatek.com>,
+ <ck.hu@mediatek.com>, <jitao.shi@mediatek.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+ <linux-arm-kernel@lists.infradead.org>, <wenst@chromium.org>,
+ <kernel@collabora.com>
+X-Mailer: aerc 0.16.0
+References: <20240516081104.83458-1-angelogioacchino.delregno@collabora.com>
+ <20240516081104.83458-4-angelogioacchino.delregno@collabora.com>
+ <D1BTQIQ2AQIS.G12ROFB149QB@walle.cc>
+ <84cd0ac7-99d9-42cb-af79-a0fba09c1ebb@collabora.com>
+In-Reply-To: <84cd0ac7-99d9-42cb-af79-a0fba09c1ebb@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] slab: check the return value of
- check_bytes_and_report()
-To: Chengming Zhou <chengming.zhou@linux.dev>,
- "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, zhouchengming@bytedance.com
-References: <20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev>
- <20240528-b4-slab-debug-v1-1-8694ef4802df@linux.dev>
- <4e4d45b5-c684-2d93-49d2-b179a088c2d5@gentwo.org>
- <dc7181fc-5b16-46f1-a267-0eb5781f692a@linux.dev>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <dc7181fc-5b16-46f1-a267-0eb5781f692a@linux.dev>
+
+--3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,intel.com,kvack.org,vger.kernel.org,bytedance.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -2.79
-X-Spam-Flag: NO
 
-On 5/31/24 10:31 AM, Chengming Zhou wrote:
-> On 2024/5/30 23:20, Christoph Lameter (Ampere) wrote:
->> On Tue, 28 May 2024, Chengming Zhou wrote:
->> 
->>> diff --git a/mm/slub.c b/mm/slub.c
->>> index 0809760cf789..de57512734ac 100644
->>> --- a/mm/slub.c
->>> +++ b/mm/slub.c
->>> @@ -1324,9 +1324,10 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
->>>         }
->>>     } else {
->>>         if ((s->flags & SLAB_POISON) && s->object_size < s->inuse) {
->>> -            check_bytes_and_report(s, slab, p, "Alignment padding",
->>> +            if (!check_bytes_and_report(s, slab, p, "Alignment padding",
->>>                 endobject, POISON_INUSE,
->>> -                s->inuse - s->object_size);
->>> +                s->inuse - s->object_size))
->>> +                return 0;
->>>         }
->>>     }
->> 
->> This change means we will then skip the rest of the checks in check_object() such as the poison check.
-> 
-> Yeah, only when this padding checking failed.
-> 
-> Now, we always abort checking and return 0 when the first checking error happens,
-> such as redzones checking above.
+Hi Angelo,
 
-Yes your patch will make it consistent. But IMHO it would be better to do
-all the checks without skipping, report their specific error findings in
-check_bytes_and_report() but not print_trailer(). Once all checks were done,
-if any found an error, print the trailer once from check_object(). Thoughts?
+> >> Implement OF graphs support to the mediatek-drm drivers, allowing to
+> >> stop hardcoding the paths, and preventing this driver to get a huge
+> >> amount of arrays for each board and SoC combination, also paving the
+> >> way to share the same mtk_mmsys_driver_data between multiple SoCs,
+> >> making it more straightforward to add support for new chips.
+> >=20
+> > paths might be optional, see comment in mtk_drm_kms_init(). But with
+> > this patch, you'll get an -EINVAL with a disabled path. See my
+> > proposals how to fix that below.
+>
+> I might not be understanding the reason behind allowing that but, per my =
+logic, if
+> a board does have a path, then it's written in devicetree and enabled - o=
+therwise,
+> it should not be there at all, in principle.
+>
+>
+> Can you explain a bit more extensively the reason(s) why we need to accou=
+nt
+> for disabled paths?
 
-> Thanks.
+Paths should be (and this was already supported before this patch
+with the hardcoded paths) disabled with the status property. This
+way you can have a common board configuration where all the paths
+are already described but are disabled. An overlay (or maybe another
+dts variant) can then just enable the pipeline/output port by
+overwriting the status property.
 
+Also, this is the usual DT usage, as a node with status =3D "disabled"
+should just be skipped. Without handling this, the current code will
+return -EINVAL during probe (IIRC, my vacation might have reset my
+memory :o).
+
+-michael
+
+--3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKcEABMJAC8WIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZl1z6BEcbWljaGFlbEB3
+YWxsZS5jYwAKCRASJzzuPgIf+EuiAYCiS0ktYeqW3WREzRyRaWz/fZqG9E+chTLp
+Eq2F71PR2kPsrQjcJqjw9P8PJP1Tb7IBf1Xo00KNX/YZCxZd7B2+oCO6cjri7/ym
+ZBbCHMlAM8XqJvXrDFXC1OxZkA8QuPDVng==
+=F2kN
+-----END PGP SIGNATURE-----
+
+--3ed5ea633b485a24b502befa1bea475237ec606cb99637397be66d7a74b8--
