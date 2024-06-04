@@ -1,163 +1,172 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2A71459EC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4708613247D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717496303; cv=none; b=XoD4Qcg3LNaIT7BP6cmZAYBShtrZT6LKVFucg2PuYa8VU0hyz52UPyDaPkQVlBO8oGLAKluDV7ImDoWWoHsjVYUIrNQh+/YmAIWwK5H4JjPzTLWKlxXTVg8GWX0Vh9fatnu71cZiuZhKSuXYGLYGcWxkBkst1u1NRo0ys4WO7P4=
+	t=1717496636; cv=none; b=kbfzAkkDm1xisdP6sXsK9WqrNd7LU3XjWZSPDD3EteOXyBD4/pUhJ1kqNrYc0xBXDys6AlIupHoFPG7ehVn6yLIO2xlknZo4kbOfHf9hXnfEYcIhTlXfFDqsjOghYfN/6Ppq74z4XlhXJHJ0DVIS2zP0ymMy4KC6rfHzfyR0JZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717496303; c=relaxed/simple;
-	bh=rP21fUuQQQToDvqa5Zoy0et3OXxLIaOzGgJakF6b+H4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h80zjaalGKsQnvttARdRc/379Iu2i21PPvSjTFmlb+zmQHbyH72MWUK/G/YfWEnwacDvo5mLrGF2CisiIOosxnJ2lOTFSyVo4qwNshNdz/axXysa4pqxrmpiOAIcO1z7Xuz81rWiYut3y0fZv5EjElz+J1SDES86QxgEPHn+IZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Xg8KIn88; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1717496636; c=relaxed/simple;
+	bh=3fA+ijMelVGnpHEMrovsOfjpvNZBvc0ULJRMousTutk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VteEsaRyztwkKQEtmuJWhE5sDvpQxvirOrYQgnQTIzDcGvFQsH/X59ira48Zy3Hh0kraxx0QXxUxjkDuOkvnqC99HBfcvygU/vKQ1mnfmTccEhobKeSdDQuE/wXMpt4sm4EXEqIzLdUisaBTN8DCrEvp3clAbT2VNcNMEKiPH5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iSjDdIdt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Xg8KIn88"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717496293; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=mF0SOFHOYjsa4DTAJ1q9V/3Dk01gX+rLS8KbnSGFj9Q=;
-	b=Xg8KIn88zwHc/B3tvibj+yVf1vRdVQfmY4uLgkTgp9ix6aZhmWjJrf/5o0smegHIKSUv3rE490HvbMMl/V/oGu1un8T2GQxAkS1+A3tQHUb1zxpoz+PD69MI3xLzT+aM6cax6kcmJwdKv9kdfXoFm1tnOHFJz37rRvdpV/Cd2j8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7qooJc_1717496289;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7qooJc_1717496289)
-          by smtp.aliyun-inc.com;
-          Tue, 04 Jun 2024 18:18:09 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com
-Cc: willy@infradead.org,
-	david@redhat.com,
-	wangkefeng.wang@huawei.com,
-	ying.huang@intel.com,
-	21cnbao@gmail.com,
-	ryan.roberts@arm.com,
-	shy828301@gmail.com,
-	ziy@nvidia.com,
-	ioworker0@gmail.com,
-	da.gomez@samsung.com,
-	p.raghav@samsung.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 5/6] mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
-Date: Tue,  4 Jun 2024 18:17:49 +0800
-Message-Id: <1d2f719d558d5c789c4cceebdaac42a814e8f107.1717495894.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <cover.1717495894.git.baolin.wang@linux.alibaba.com>
-References: <cover.1717495894.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iSjDdIdt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717496634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=O6tikh5JBiLBm1a4LVwhDF58Q+DFMaskKtK9m6Z5K2w=;
+	b=iSjDdIdtNp7XgzAbulBGvkRkbxWyRbZ1JmMVoSwx9XaAL++oQP2r/gtRTda6ey45ndkYbm
+	4njAyg0Yng6pmKJ6uaqYZMszAxDz8AVc6dtXdfyOGRERLMFshQaY4DnaMgn5l9QmSyuOuI
+	b+IXJRwmNRlnYnC8Jikk54Lw3tB2NmU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-536-3YnuuyERPd6ToQgtuGRI5w-1; Tue, 04 Jun 2024 06:23:53 -0400
+X-MC-Unique: 3YnuuyERPd6ToQgtuGRI5w-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4212a921250so3903555e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 03:23:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717496632; x=1718101432;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6tikh5JBiLBm1a4LVwhDF58Q+DFMaskKtK9m6Z5K2w=;
+        b=kwjHDxOBr4+sHBPNg0g7h54C5lAeLUtqIZ3QkILCaqKofwvf4ScxEZ5xWeaJ5VlWjn
+         PiDKQr+hhY9Sci9skrF28sPN7QZy0rWxSCRlOa7X5MN5Cy9nMm7HmNG95dwwAaiVG9Q+
+         gvIJ6PZhIs/3QP2XbVjO1xQZl4XTR+LvWx/BrrOhGb3a479QXUYi1HlR6G4QOtd1Jk6C
+         mcg7BT3MADE8g6lBMkcIgZw2aE9i1IfUxE9C5nI3d0pDx6Lc0V2rRlUVqbZ61o70C86j
+         ki4CZFhnEhuSuaVgn903rKvUmvaEHRp1qGQaMbbOFF2ffT8NkLmgC0mbL36WEa9qKgSY
+         UTag==
+X-Forwarded-Encrypted: i=1; AJvYcCWrifaGC7CLFAoULlsDrQCaRshhGjR1UHU7zo4bOkwEIi2OciVwLID8OSwKVU9FO05xLK6NgzqjBKvO+ddPP1Ruk1BHGlE35yFgC649
+X-Gm-Message-State: AOJu0YxMFmuW2U4uaaswgUj5jvQ26FbX1Jw/f+nzZVVkCKQ5WYMJgoMG
+	0nyswW9oyYRj/X2wjh2RLbP4O5Dt3ifexImfr2/u1O+MUSYnRKOCXBKuOb1t7VBbFXHn+tnP1Qe
+	f++OgdTwylEcHyHOt6Eq++P980lsm1SZ6EzjpyNZFK+hxAwRuqSrybnxKz1iXRQ==
+X-Received: by 2002:a05:6000:400a:b0:35e:51cf:6908 with SMTP id ffacd0b85a97d-35e51cf6a65mr6304480f8f.0.1717496632001;
+        Tue, 04 Jun 2024 03:23:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrhzH032AI5YL7gUIyX1AtuXBZC4N92hUDih0vFJ9VAbnPZz6xUFLcLH2nJjeRcYQ09o42TQ==
+X-Received: by 2002:a05:6000:400a:b0:35e:51cf:6908 with SMTP id ffacd0b85a97d-35e51cf6a65mr6304415f8f.0.1717496631543;
+        Tue, 04 Jun 2024 03:23:51 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3344:1b74:3a10::f71])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c4388sm11260215f8f.14.2024.06.04.03.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 03:23:51 -0700 (PDT)
+Message-ID: <31b376371d52797894809ad8a2edd4b76a76775f.camel@redhat.com>
+Subject: Re: [PATCH net-next v10 06/14] page_pool: convert to use netmem
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Donald Hunter
+ <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>,  Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,  Shuah Khan
+ <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Pavel Begunkov
+ <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe
+ <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand
+ <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
+ linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>
+Date: Tue, 04 Jun 2024 12:23:48 +0200
+In-Reply-To: <20240530201616.1316526-7-almasrymina@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+	 <20240530201616.1316526-7-almasrymina@google.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Although the top-level hugepage allocation can be turned off, anonymous shmem
-can still use mTHP by configuring the sysfs interface located at
-'/sys/kernel/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled'. Therefore,
-add alignment for mTHP size to provide a suitable alignment address in
-shmem_get_unmapped_area().
+On Thu, 2024-05-30 at 20:16 +0000, Mina Almasry wrote:
+> diff --git a/include/trace/events/page_pool.h b/include/trace/events/page=
+_pool.h
+> index 6834356b2d2ae..c5b6383ff2760 100644
+> --- a/include/trace/events/page_pool.h
+> +++ b/include/trace/events/page_pool.h
+> @@ -42,51 +42,52 @@ TRACE_EVENT(page_pool_release,
+>  TRACE_EVENT(page_pool_state_release,
+> =20
+>  	TP_PROTO(const struct page_pool *pool,
+> -		 const struct page *page, u32 release),
+> +		 netmem_ref netmem, u32 release),
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Tested-by: Lance Yang <ioworker0@gmail.com>
----
- mm/shmem.c | 40 +++++++++++++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 9 deletions(-)
+This causes a sparse warning, as the caller is still passing a 'page'
+argument.
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 9a8533482208..2ecc41521dbb 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2394,6 +2394,7 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	unsigned long inflated_len;
- 	unsigned long inflated_addr;
- 	unsigned long inflated_offset;
-+	unsigned long hpage_size;
- 
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
-@@ -2412,8 +2413,6 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 
- 	if (shmem_huge == SHMEM_HUGE_DENY)
- 		return addr;
--	if (len < HPAGE_PMD_SIZE)
--		return addr;
- 	if (flags & MAP_FIXED)
- 		return addr;
- 	/*
-@@ -2425,8 +2424,11 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (uaddr == addr)
- 		return addr;
- 
-+	hpage_size = HPAGE_PMD_SIZE;
- 	if (shmem_huge != SHMEM_HUGE_FORCE) {
- 		struct super_block *sb;
-+		unsigned long __maybe_unused hpage_orders;
-+		int order = 0;
- 
- 		if (file) {
- 			VM_BUG_ON(file->f_op != &shmem_file_operations);
-@@ -2439,18 +2441,38 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 			if (IS_ERR(shm_mnt))
- 				return addr;
- 			sb = shm_mnt->mnt_sb;
-+
-+			/*
-+			 * Find the highest mTHP order used for anonymous shmem to
-+			 * provide a suitable alignment address.
-+			 */
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+			hpage_orders = READ_ONCE(huge_anon_shmem_orders_always);
-+			hpage_orders |= READ_ONCE(huge_anon_shmem_orders_within_size);
-+			hpage_orders |= READ_ONCE(huge_anon_shmem_orders_madvise);
-+			if (SHMEM_SB(sb)->huge != SHMEM_HUGE_NEVER)
-+				hpage_orders |= READ_ONCE(huge_anon_shmem_orders_inherit);
-+
-+			if (hpage_orders > 0) {
-+				order = highest_order(hpage_orders);
-+				hpage_size = PAGE_SIZE << order;
-+			}
-+#endif
- 		}
--		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER)
-+		if (SHMEM_SB(sb)->huge == SHMEM_HUGE_NEVER && !order)
- 			return addr;
- 	}
- 
--	offset = (pgoff << PAGE_SHIFT) & (HPAGE_PMD_SIZE-1);
--	if (offset && offset + len < 2 * HPAGE_PMD_SIZE)
-+	if (len < hpage_size)
-+		return addr;
-+
-+	offset = (pgoff << PAGE_SHIFT) & (hpage_size - 1);
-+	if (offset && offset + len < 2 * hpage_size)
- 		return addr;
--	if ((addr & (HPAGE_PMD_SIZE-1)) == offset)
-+	if ((addr & (hpage_size - 1)) == offset)
- 		return addr;
- 
--	inflated_len = len + HPAGE_PMD_SIZE - PAGE_SIZE;
-+	inflated_len = len + hpage_size - PAGE_SIZE;
- 	if (inflated_len > TASK_SIZE)
- 		return addr;
- 	if (inflated_len < len)
-@@ -2463,10 +2485,10 @@ unsigned long shmem_get_unmapped_area(struct file *file,
- 	if (inflated_addr & ~PAGE_MASK)
- 		return addr;
- 
--	inflated_offset = inflated_addr & (HPAGE_PMD_SIZE-1);
-+	inflated_offset = inflated_addr & (hpage_size - 1);
- 	inflated_addr += offset - inflated_offset;
- 	if (inflated_offset > offset)
--		inflated_addr += HPAGE_PMD_SIZE;
-+		inflated_addr += hpage_size;
- 
- 	if (inflated_addr > TASK_SIZE - len)
- 		return addr;
--- 
-2.39.3
+> =20
+> -	TP_ARGS(pool, page, release),
+> +	TP_ARGS(pool, netmem, release),
+> =20
+>  	TP_STRUCT__entry(
+>  		__field(const struct page_pool *,	pool)
+> -		__field(const struct page *,		page)
+> +		__field(netmem_ref,			netmem)
+>  		__field(u32,				release)
+>  		__field(unsigned long,			pfn)
+>  	),
+> =20
+>  	TP_fast_assign(
+>  		__entry->pool		=3D pool;
+> -		__entry->page		=3D page;
+> +		__entry->netmem		=3D netmem;
+>  		__entry->release	=3D release;
+> -		__entry->pfn		=3D page_to_pfn(page);
+> +		__entry->pfn		=3D netmem_to_pfn(netmem);
+>  	),
+> =20
+> -	TP_printk("page_pool=3D%p page=3D%p pfn=3D0x%lx release=3D%u",
+> -		  __entry->pool, __entry->page, __entry->pfn, __entry->release)
+> +	TP_printk("page_pool=3D%p netmem=3D%lu pfn=3D0x%lx release=3D%u",
+> +		  __entry->pool, (__force unsigned long)__entry->netmem,
+> +		  __entry->pfn, __entry->release)
+>  );
+> =20
+>  TRACE_EVENT(page_pool_state_hold,
+> =20
+>  	TP_PROTO(const struct page_pool *pool,
+> -		 const struct page *page, u32 hold),
+> +		 netmem_ref netmem, u32 hold),
+
+Same here.
+
+Thanks,
+
+Paolo
 
