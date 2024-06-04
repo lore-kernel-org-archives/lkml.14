@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED88E13DDA6;
-	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2BA13E884;
+	Tue,  4 Jun 2024 06:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482600; cv=none; b=rxVUJgSWpHcQCsXa2+cfxVuO23EEl7Dsjd3LoZTi1AH2JhEuelHUZuJwX6gXZjepv6XaITkBpTkZ/3BBUDffrfasPlHl1WefB+RnjWI67iIFoY5YeZ5SQs6h7Zx6z7CWGCAd+Whg3BVpbo5ZjV4zjbyQSEoCfCM++HNxE7lpfrw=
+	t=1717482600; cv=none; b=VenVkDzfTjMV8ujWwfp136XMsMMaTGXrgAtNHvdA1Wr4P45AQVVuiYvw2uEg6YSZ9Kapha6HVEeBAlmR/4ZJY5DgiTOf3SrnGKd3kBEGVzr6mPBqA4m6OIedsbxaqFMxDEBccVc93YdRNS5lBKhta7R8rsH0evfBrD2Cq4T1x4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717482600; c=relaxed/simple;
-	bh=qnk8lkgaR1ZcTBtK8DdwuXgNlEzaf3fm9+u2f6xPjbg=;
+	bh=uQvKTedfeUJ5bmniBUr9CwYhnYEum8lzyXgoPJAiEIM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CuZ4PxUdNaLb5PQXtzvZuZpVuRFB7WqcWc3zRyWtgKl323qAhmkm49jglDqyT2aFsw3EdNggi5qCOSZw47543GZhFaYs8QNs3w1WVkVVEVRm6B09KhKnsJmXMHmWzy5/UcCiuAA5YC6p88lDF8qPp1bRPYgDrkYHxocrXzZUmjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8sqn2UI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=NVS2b8/h7yH71IZL0AGqit5NITdNtvRvqZKu+ZWodneanEsFbmL6voDg74ZqlNFuvETdl92j0KeClhMXqlgxuwyYNkxT+DOGMTikoAF2pp0VRrj+uZCq+6h+c7qkuP2o7+zAqyecbEg7thSBbPUfADRu1iZazatZihZVBQuLjXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkdsXLX/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8sqn2UI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BD22CC4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkdsXLX/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D51BCC4AF12;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717482599;
-	bh=qnk8lkgaR1ZcTBtK8DdwuXgNlEzaf3fm9+u2f6xPjbg=;
+	bh=uQvKTedfeUJ5bmniBUr9CwYhnYEum8lzyXgoPJAiEIM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=q8sqn2UING2yH+C0lcGQSy4ae0FcbWJrC/vs7mpC04KFg1OQJRvbK9zk+t5Fw/rIR
-	 EXSXQVp55YTwcmYQApUkmuu2iBDhC8iLZ0bQAqn5D1BkK/WZr+UBT8CZVt6H8PxIjg
-	 ZYTMUuFRe2XlLeU+UTju9SRDmbbt8ASi+Flu/QfnUo+d9b/v1GYlHruDAVJbdprcat
-	 3tCLPSjEQ5pBzKJkGdHOWkbi9N6PHM1x1F5tWDqDHF9zPuM7Dadi3X/TJlDHqc4csl
-	 t5+ByLcktT3kpOOhg2GCTRNVMD3F3FnIkWuDh54RMgQoxxdZf52k9L2Y2XUmYe+gc1
-	 BdW6AX8HkNm8Q==
+	b=RkdsXLX/rWNsSnP1w0vpeQO8ySbd33WZFy1o2u5e5N1MaiUcQP2TG2eJUTndxXt3q
+	 6OxqXH4y8t+bk4SdJBB3SvyQOefglzILYK2uP527CPP9zD1yZnWraBkOBsm4sLCqvX
+	 /iqL5IFdy0HEEVY+3Hvot+cQfBKhwaGAZLW2Nbh42ex6j3bVFoM2Kgz7lYTG5Ge4cI
+	 NkKMcVXcV1cGMITbeti1Mx3rTuvfM1gBbZ8rdw4zC9O1kXyytocY5qr22xKPNCjSgi
+	 OLoI75IpKFkEerVQqpHzGSKIPc+6ljn5j5vYU/Lr5hciFXi8M3TBJ8M6gjr5QnTVYt
+	 UYTwzOiJ9VLAA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAEEC25B7E;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4ADC27C52;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Tue, 04 Jun 2024 08:29:22 +0200
-Subject: [PATCH 4/8] sysctl: Replace nr_entries with ctl_table_size in
- new_links
+Date: Tue, 04 Jun 2024 08:29:24 +0200
+Subject: [PATCH 6/8] sysctl: Remove "child" sysctl code comments
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240604-jag-sysctl_remset-v1-4-2df7ecdba0bd@samsung.com>
+Message-Id: <20240604-jag-sysctl_remset-v1-6-2df7ecdba0bd@samsung.com>
 References: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 In-Reply-To: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -56,19 +55,19 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
  linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2054;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2907;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=qaxk3rDogN+ZQLc9uwmgCuRk4aqbCXJb1N+PNG5WkHU=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGPmD7WlkmXC06LM/3KIlA0dRX7bMC7EC
- Mz6CbqNQM1cIokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRjAAoJELqXzVK3
- lkFPAi8L/jtTQsXQjrugX/vUO+3ZfV6tbEgbfiD5VOWt6iknGkxcPfsh4zkeVU+8DtrCDQ0oTo0
- GK2pL+u7ZNsuK18g4OX5tQMQVfAa2WTYIAakatrnYIpkAvyS/IRkkCpJAggBFnIPbUoauOXuhtL
- vVb5HV0xe3NZMqFfuzg3sgsCCwtnTZ9jKMfXD/KSW2MGFqGP+hgjtkXwyzoAvgnsgQOqsKCG6+x
- MvS/OHonmHCHQPsZIeZVrK1DRP4wZyzDTW2YybRazjY24n+c+5JZ5PPbI8ll/f29f2zjq7k3bRO
- ckeQIGnXL4rCPhIB82vSKkxAmUeD/pUQvw120K7thSuG4GGl0vhrTYxH5QkC783QZN3lH+lGPMO
- StmLrdQkPtEG7L0BcxN1FSMQGG2dXI3KUR2Noy5QDAu4bAwnQge1FBEVa/4NNgBhFN4NHyejdNR
- yFpQcnPYKczW4mfyKjeQDHvC7T9RuoIqhNR2eW/3Zmhz/KXrysvomOq3G2E40T12Zu/PH9FuYL5
- l4=
+ bh=0XKCBtKXUsaQ3icltpQ/GcT4z/xTnWSxXkUvgvEAqjc=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGSx+J2DsW2akHI1bXUBxwZLWJOp+r/vp
+ Mjc/iI3BpjvEIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRkAAoJELqXzVK3
+ lkFP5qIL/1mam3EXhTaxS41hy26Dmq0UjeoUbnRZYhSzHmbvW3UT9tGd0CEzkRmrmeO5pdUckpq
+ /Xdt4dyVI2zsF1mpS0/senLUoeACPSh46rmxp5ymGQQZ999WnsOewsF44Mjh/agSxFKYLIMWhTu
+ HP0QK15UKiFYjQVS/IcARz0Rq96i8bWVETbMGfCvTSh9swmqxWj7VqNDY1mXl1MIHr+Mzh6tdB1
+ AHaTV/HasD29w/8TIBI7J+II662XOod/LWhfuSYUKtkxKQgMCOw8wqIouOv1s9sdsnFR/6uaxEC
+ GOHVm1t4sQ7GsSyaRwvEVP/aB5SnRGWn6408TrOz7E/Jn2sabbqUB9Ordb2H8FP0Ss88mW8kE2O
+ GNFLoqO6pDYyWYSvXKLsugRX5f17Zhth9sYOdKExC+60DIQg2SFQoQRXHGGSVPBDFu/eLBCxlx9
+ jOHJAUn2H18r9Amtf/jCtQG51NN+gJH/ndYTe9NkwKnQpjhiITpmpMdb6QjPMrDMs8MnrpY0xV6
+ tI=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -78,62 +77,67 @@ Reply-To: j.granados@samsung.com
 
 From: Joel Granados <j.granados@samsung.com>
 
-The number of ctl_table entries (nr_entries) calculation was previously
-based on the ctl_table_size and the sentinel element. Since the
-sentinels have been removed, we remove the calculation and just use the
-ctl_table_size from the ctl_table_header.
+Erase the code comments mentioning "child" that were forgotten when the
+child element was removed in commit 2f2665c13af48 ("sysctl: replace
+child with an enumeration").
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- fs/proc/proc_sysctl.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ fs/proc/proc_sysctl.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
 diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index d4ba7ad9dbe0..1babb54347a4 100644
+index 29d40f0ff3ff..2ef23d2c3496 100644
 --- a/fs/proc/proc_sysctl.c
 +++ b/fs/proc/proc_sysctl.c
-@@ -1154,18 +1154,16 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
- 	struct ctl_table_header *links;
- 	struct ctl_node *node;
- 	char *link_name;
--	int nr_entries, name_bytes;
-+	int name_bytes;
- 
- 	name_bytes = 0;
--	nr_entries = 0;
- 	list_for_each_table_entry(entry, head) {
--		nr_entries++;
- 		name_bytes += strlen(entry->procname) + 1;
- 	}
- 
- 	links = kzalloc(sizeof(struct ctl_table_header) +
--			sizeof(struct ctl_node)*nr_entries +
--			sizeof(struct ctl_table)*(nr_entries + 1) +
-+			sizeof(struct ctl_node)*head->ctl_table_size +
-+			sizeof(struct ctl_table)*(head->ctl_table_size + 1) +
- 			name_bytes,
- 			GFP_KERNEL);
- 
-@@ -1173,8 +1171,8 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
- 		return NULL;
- 
- 	node = (struct ctl_node *)(links + 1);
--	link_table = (struct ctl_table *)(node + nr_entries);
--	link_name = (char *)&link_table[nr_entries + 1];
-+	link_table = (struct ctl_table *)(node + head->ctl_table_size);
-+	link_name = (char *)&link_table[head->ctl_table_size + 1];
- 	link = link_table;
- 
- 	list_for_each_table_entry(entry, head) {
-@@ -1188,7 +1186,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
- 	}
- 	init_header(links, dir->header.root, dir->header.set, node, link_table,
- 		    head->ctl_table_size);
--	links->nreg = nr_entries;
-+	links->nreg = head->ctl_table_size;
- 
- 	return links;
- }
+@@ -1298,28 +1298,23 @@ static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
+  * __register_sysctl_table - register a leaf sysctl table
+  * @set: Sysctl tree to register on
+  * @path: The path to the directory the sysctl table is in.
+- * @table: the top-level table structure without any child. This table
+- * 	 should not be free'd after registration. So it should not be
+- * 	 used on stack. It can either be a global or dynamically allocated
+- * 	 by the caller and free'd later after sysctl unregistration.
++ *
++ * @table: the top-level table structure. This table should not be free'd
++ *         after registration. So it should not be used on stack. It can either
++ *         be a global or dynamically allocated by the caller and free'd later
++ *         after sysctl unregistration.
+  * @table_size : The number of elements in table
+  *
+  * Register a sysctl table hierarchy. @table should be a filled in ctl_table
+  * array. A completely 0 filled entry terminates the table.
+  *
+  * The members of the &struct ctl_table structure are used as follows:
+- *
+  * procname - the name of the sysctl file under /proc/sys. Set to %NULL to not
+  *            enter a sysctl file
+- *
+- * data - a pointer to data for use by proc_handler
+- *
+- * maxlen - the maximum size in bytes of the data
+- *
+- * mode - the file permissions for the /proc/sys file
+- *
+- * child - must be %NULL.
+- *
++ * data     - a pointer to data for use by proc_handler
++ * maxlen   - the maximum size in bytes of the data
++ * mode     - the file permissions for the /proc/sys file
++ * type     - Defines the target type (described in struct definition)
+  * proc_handler - the text handler routine (described below)
+  *
+  * extra1, extra2 - extra pointers usable by the proc handler routines
+@@ -1327,8 +1322,7 @@ static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
+  * [0] https://lkml.kernel.org/87zgpte9o4.fsf@email.froward.int.ebiederm.org
+  *
+  * Leaf nodes in the sysctl tree will be represented by a single file
+- * under /proc; non-leaf nodes (where child is not NULL) are not allowed,
+- * sysctl_check_table() verifies this.
++ * under /proc; non-leaf nodes are not allowed.
+  *
+  * There must be a proc_handler routine for any terminal nodes.
+  * Several default handlers are available to cover common cases -
 
 -- 
 2.43.0
