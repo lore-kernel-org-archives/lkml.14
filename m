@@ -1,210 +1,137 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B0314A4C8
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717516163; cv=fail; b=UZ4QKh9nmdL4nZWxfbwEiqf1pS7Ut74EVfDXsfSsQ2UxTqcSUimklEZYNYoFqDFX5G9llfvDyQdZehraAkxzDycnVzthujfGqCYRKT0TzFdy42M3DqNb32JiZ8GDYitFDqkrR5T0TasOw4hRv3YDfP+PKn791mbAjJL3IeW/fw4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717516163; c=relaxed/simple;
-	bh=Zqgappe+YSFazdyPiDJJCPDzwjt/EnTDjx5AgEdsi6E=;
-	h=Date:From:To:Cc:Message-ID:Content-Type:Content-Disposition:
-	 MIME-Version; b=MrZfbxw6bx72NI9wZCd8tFRK2Aw6+e+lcFpwV1vHfJZvWiQbhEVeaPguhjGaXbCDvh+k+2/hSSuBBNgqkCmnj8r+LwBc3U2g8mwSo4rxYvTE8Y0/K7IvHMH+hFvRNY/ghe6Ql7pIxnKwui0SlyX4t6jwk54F49eyKPEbTE98ToI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SO/zn+px; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=HnAJBJPh; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SO/zn+px";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="HnAJBJPh"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454BmnJC004596;
-	Tue, 4 Jun 2024 15:49:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com;
- h=cc:content-type:date:from:message-id:mime-version:to; s=corp-2023-11-20;
- bh=M0an5CGtNJfv3kNHyoN9/2qDFefqllyrdAnYjxnfjPs=;
- b=SO/zn+pxqCt5VyRJlkLwjGBFaQjsC+LBrWEM7Ip+pwZh9xnDRK091NerwEH9qzZboYHW
- /X4lmZNtmlRpMStvxmx5d+/o1JmpMfNPNOUqW9ZBkqo+pIyw36lZZfeHwPNCB7FOuRuJ
- y4K/dUujwcGXfS3Wpp2NRryMITyiRsOvMRiFObPHJrVPJm7AU/kMYoBsVR0p8WwUHupl
- jRFbVptIfeET2TOfuFTFgWSbCm0EWlbl3xvl4A1igp0URz8ffEXQ4U6CM74aK6iUwuQO
- imzufFPFBkYT0rtmGV56ku5DAIZ5sBxIpKk7qIPAZGmyz5+ztNwo+Hld4qrNDwmJWlOZ KA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yfv05dbym-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 15:49:15 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 454EQLld015566;
-	Tue, 4 Jun 2024 15:49:14 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2045.outbound.protection.outlook.com [104.47.55.45])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrjcgs9g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 15:49:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f+jB703EfUaiNi7TA/PTFMzbtSiEeL9yfHVK+0G5P8sVC3Qo49+OH6hN79RtZp/d62l+ctqBW8iTiygX6ivBMBXb22EVnqA7m4qqTE+XFWWm7Mz0DBuT4EAZlDn9I1+cFxsQS0XKu9E45PzB37HN4QJnUUuklsekVMgLIs8f8AIdBEXLMPEvtWt0RKl85zbaGs9jEEz3uvF/tUbLPPevtWl4L/nFCKHx5mN/Rfyb+KWHbDf1VTF3lgYUUBF4LwjfAQuzPij5Azt75I5Kg8NJDRuscZgXV7Vn7Cl+POvF8B86vsyZ4vMFB/0ZZvLyQlwHuiupg+2JqW0F6xa+dCKYYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M0an5CGtNJfv3kNHyoN9/2qDFefqllyrdAnYjxnfjPs=;
- b=jqg1hBgK//TaBftBkrUYnBklcw8QbTc9aMzEZKUyr2Wurp1mRpsDfdDUYoNE5jveb6SbXf2vYSm1c1x0R5fxENCt81Gm3i1EXlPl0GFO2ZTw6TmBPFiP/gPjEsrV1PW3gP2NTxwZt1uAZ1LvqYvwcudcYJEBITmImUHVZi9nArSWRCSy++jOgJG+AblXVbMC8gc19AqM8yG6frP8jKEZzeCIiINsdAxmXO8RAgwnfttZL2kJr0wC3uBTKgB+UajMVu8xeedJ+CAUL3Fm3qqyYkB9ElEci7gecvU6fv8xM8ImAQO9WMnSfYp3B9efiZCWoKWs4ZZw1TEUUQTm5Y4Frw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M0an5CGtNJfv3kNHyoN9/2qDFefqllyrdAnYjxnfjPs=;
- b=HnAJBJPhWC3YduP0j5gAwiaXUQtI7csFSMaljLBeZtnKtP9T822HvryhFUadLJ9wnpDTgKnq8cdCPtHp2mI5y3K2exz0rZVIiEI2rDG8b6/lsIJAxOswYFhG6oCJlIDJRT5YRTVgLIVi7adAm4cWMsEc4+d691WMZXBEerCsQow=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by PH8PR10MB6359.namprd10.prod.outlook.com (2603:10b6:510:1be::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Tue, 4 Jun
- 2024 15:49:12 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
- 15:49:11 +0000
-Date: Tue, 4 Jun 2024 11:49:09 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: syzbot <syzbot+c67d06ab25a9bc4adf35@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        maple-tree@lists.infradead.org
-Message-ID: <mfpcd7cotdxsnz2tjlgyownecexd5rbw5ujjs7vue6hkllasfr@n3ua6lcfizrr>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20231103
-X-ClientProxiedBy: YT4P288CA0025.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d3::10) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E9D143C7A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717516190; cv=none; b=gbttHW57SYt/3UGDAhp6Z3spiEBEQ4O72Z1ER3IVhUS4Y86eokmUe1BwjvpKLtiiSsN2zfaYg7rzLwp9Gg0OQ5jfaj0Ifq4ZL7MhhbYhVIG8Fy5fkDRuCsckcpcQdHX6a0FmmR3sJKj1qXdQyxlBRcp7IViV+MLOB059mKi/I/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717516190; c=relaxed/simple;
+	bh=s3Y+StiWH1SUXcnL87GNEQTzrLSMMZXbkk3q9EZHmQo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D5Djn3KUAS2SqOVLB8UxLMGfU9ANSlSwd717ByO8TWiPdcYrGWn4B2COl4uSBhQWQXhNzJdSaMk9fkrUlNWAKJzc4IX0V7aYDukCQhxzf1hZboyAzwuJTLlVDD2D0jMZ8neyfNDSWDBs0gBQzT7mGT/WpTVBZiqSkjECTys0om4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VtvGF4WWhz9v7J0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:12:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id AEEB1140154
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:29:50 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.206.133.88])
+	by APP2 (Coremail) with SMTP id GxC2BwDXwibhMl9m4o6GCQ--.5202S2;
+	Tue, 04 Jun 2024 16:29:50 +0100 (CET)
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+To: paulmck@kernel.org
+Cc: stern@rowland.harvard.edu,
+	parri.andrea@gmail.com,
+	will@kernel.org,
+	peterz@infradead.org,
+	boqun.feng@gmail.com,
+	npiggin@gmail.com,
+	dhowells@redhat.com,
+	j.alglave@ucl.ac.uk,
+	luc.maranget@inria.fr,
+	akiyks@gmail.com,
+	dlustig@nvidia.com,
+	joel@joelfernandes.org,
+	urezki@gmail.com,
+	quic_neeraju@quicinc.com,
+	frederic@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Subject: [PATCHv2 0/4] tools/memory-model: Define more of LKMM in tools/memory-model
+Date: Tue,  4 Jun 2024 17:29:18 +0200
+Message-Id: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|PH8PR10MB6359:EE_
-X-MS-Office365-Filtering-Correlation-Id: 066be5d8-a052-4013-5821-08dc84ade0ed
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?y/iLBq3HmcOhadu7r2r7sKYMScMAtQLS4mDuexcewLumxY3GvwH41TdbB6CX?=
- =?us-ascii?Q?YhdDb5+l3LzH9hrcN2zcmvIrzy9pgAkaBCNLREWDBQVCAo66DqCXexndYpgU?=
- =?us-ascii?Q?dwva2HYV0HvwcEGKr31nO7DENu3UTTKqhRxkqAWr9P4xHeMAGPfnZ/Kn4y5K?=
- =?us-ascii?Q?v8JvBXoRLLNTAL2dm7RD1YbG0/e1bfvk9KYamtqIMb7ajNR68jxFoqOaOoXm?=
- =?us-ascii?Q?g/5H+LKXbFX1/uoNV5qjgfSqsZtoQojcZ2OlvTlPWN48hInLYn5zkJ+knI08?=
- =?us-ascii?Q?wbyjeurCVNV2SRj25/fcJRRM4TK6S5Zd6B38Nx9a42HtbRLKOQx7lg0oB93R?=
- =?us-ascii?Q?m/yVlvUm8RZNH3nxBvN1onWxg0/gr876UDkqfbP1T3ElvG5kgso/U8Gn1xvX?=
- =?us-ascii?Q?4itSigkzteOi6KYfVu8muzcrvOKQzBm8Et9wbQuefsm7pr3nN0lJL0u4Swgd?=
- =?us-ascii?Q?J0X3KVTmJQ+cffJ1ykFdBT9+PQyPeu0X4v3SvCSDKDcIHPc3Gd3CIWX2Qwf7?=
- =?us-ascii?Q?SZ1tXxBSeaRLp0Gc/bdNmhs4X8XtwVjiEIfVe/Y7JzSQMtPK2a3OaolEE4yW?=
- =?us-ascii?Q?wwxCa9dLT8LxX9XivRafDTj5reSurDWl082J26k7aHahijL7qwU/PP6r3MiW?=
- =?us-ascii?Q?i6u5Eodzp0Qnjf8gXtuJWbjJC+gDlIrNPp5+5ncj7cwOukcRrrBPG1qooktT?=
- =?us-ascii?Q?vxSANap4dTVVyF9Dy7uyWYkpZ7RPg4wa36YzGK1lxkg8HLfuZSb0l0YVjiyJ?=
- =?us-ascii?Q?UmVPdVrKt3eRGZM6Jnw2bvm03i+EsexyVr1zQ84aXm9WUSoTIMJ+2NpGnsjj?=
- =?us-ascii?Q?WjsOhHRqUQra3rAlIRC2Qc9NlGaj54+lXqCSs978128ACB5o0lWS4i+zNhpJ?=
- =?us-ascii?Q?hEDvHgqgtP7k9aDHlesyLV/dgQEYcERC4FXRS3opxcDbyv+9sXIB94hUSyYP?=
- =?us-ascii?Q?xQDDgk34M2tTBxvlnsQhQNkEf8guqOB/MtoYsnIIr8XDmC1W6LliENhFmAzR?=
- =?us-ascii?Q?QOWWh2AolYuk8xPObg9r0nOMuOho660yZqkX/WUtkdUdpcZKoALByN6ckBzS?=
- =?us-ascii?Q?tiUQloy0ueE+yZY2qZAgoP13160TVPXPgwdEyCL9fgPzxBN9pq4bDUHlrA5p?=
- =?us-ascii?Q?CoR0cPcM7B01jLtiPU10mWMvxfd4Ej0wiSR3u6UVxNVcvTatxOFhNKhsxBF0?=
- =?us-ascii?Q?HD1FK7nTo5S0oR3P76TQAt7fTrIvc2NIoks4ZY5by9T6BIoaxKexvpbMTNk?=
- =?us-ascii?Q?=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?aq8zhHGrLkBdBpf8Z+KfajFJA08q23W7CZTdIGSXvH+O0jegmZ5R3flN9H3m?=
- =?us-ascii?Q?8ViQRBCSRNCujV39SFSiSWfLFabf0iKG+GsPmdB3/Gsa9EIFi+gd0NO0XLMA?=
- =?us-ascii?Q?1Wl1YqeWYDQdxmx04zQKUtWFLkAcn6VRTyd4pb/xMf/uQzyzvfdRSfwYEPdF?=
- =?us-ascii?Q?0XSaeTm2aDeXKMstBccr1DMgzd/lVGYeriBir/wfSrYNLENpkPrZXf+DFLTv?=
- =?us-ascii?Q?c29E+eIc6fAyuo1swRPrVG+8krP/VqlI9pJZmkv9eM/kinPCWxaai7jNuBM2?=
- =?us-ascii?Q?+xwta9DCbkVLSlsM2+pJUlYh7ELCxsHbcjSW45Hsilmgp5r5Q0RqsB1dxIWL?=
- =?us-ascii?Q?EzSeIlt/SanzUEMSxID+Gnu64Xt15wR41feLeibw3PvQ1s1H6Sz+dFSuuUsw?=
- =?us-ascii?Q?1aFPLAp3PqL5byN+q33oqYfmVneaoPJ53Yuvjoh1dg6f3kwYzzRSanmwM++3?=
- =?us-ascii?Q?w5gcywB9YNomOQ0XtmLLMd+mHSqxqyhEKG5IvVnlSByHT1rA9df1vd+uw5+d?=
- =?us-ascii?Q?rkMFbVlXoJ2U7kPjGqsbR7KAg7GvZlEAvO5SIQeNxOIslYfXj/8JW5OJ2WQ4?=
- =?us-ascii?Q?rM494fhRdM5CBd/SaDwoS9SQ/4ZxgQV8RvIiIcfWcj8CJ2Cx51Ygi7kfE7Ck?=
- =?us-ascii?Q?1lRNpp/gkKYtp/GXEcZepHdcxrkkDaKmgvPwPz3mSccPjBtLstx5ryVMafAF?=
- =?us-ascii?Q?2jXndIXqjpLBf9LT07PasQuEYDrEhH2xXwm8KSFzqqv81Ynq/QSzcPdUHp52?=
- =?us-ascii?Q?MZD0KzWDXBKG7heQzevdZ8NFKZvTdirTu+E4dSosrYDd6+Vjrq3HN4tzHxx+?=
- =?us-ascii?Q?+JpkaDtP/OfcnLJ+eb8ZKP61GMQRCnSL/N8ttDaB2Wnsn3pJ+OqzYOVKyRVS?=
- =?us-ascii?Q?Tv8dFDVd8iwXY6k+lMKoHA0VjzN/O5gCXLt/K7OK7MIA02B+zvOnGlY/9zZi?=
- =?us-ascii?Q?GkA90MMpGj6ZmYnLGbguDD6PAxhWGN8kv+hPSuOGHN1KJcd7tX622tB34QBd?=
- =?us-ascii?Q?vcTcMdiZqBkyVLTzEuTW9IxYeQDJERE1a9O9ahZmHXfN/BerDvlaMYeSFhma?=
- =?us-ascii?Q?KqpkGymgrX322lG3iEkNpopMNiY4z+Wz/fdOZH30JOYw5YtCYCXOrjceVCVi?=
- =?us-ascii?Q?eOSc09qMqN+MxI2K72IjKJ4McN8iDkXpaIx/c+MArYKqojTw26fPasXu5As/?=
- =?us-ascii?Q?LAnQxFBfYlAaxjdluopK6UIlPlYZPf+u4KkBDZo3Tc+LHxfou4iQeEPIhGny?=
- =?us-ascii?Q?Uc+7HmdptuUlAQJt0CvRD1+6b9LXfHD4LygF6POq88oyh6woO+Lb+ufBmzSn?=
- =?us-ascii?Q?fnFVx/fWzqubSKf+dNFWm/Uhm0jiKzDoIkT0s3o/JE0nBnhmjigpHMjlbpSA?=
- =?us-ascii?Q?joh8IUJS74gTXiPs0yxy/a4Ih5qst+IXu6RH3n4VJbUlRhUvDARm0tb8IKAZ?=
- =?us-ascii?Q?wTYxeFi2+O3lsWoMcCAoC8Wac8pt32ZFdcsd3xQTtRtAdW+/IPsYsA5dZ5be?=
- =?us-ascii?Q?bdKtI9RCoWApn5bpHeSul1tZquZIdzdjFq1dMpMcMcWbV31r9ivOv5U3xB16?=
- =?us-ascii?Q?LrUnpgblMwVVTI+B/UzigJHIu5bgah1jqf4n/7mt?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	Xi75u6nWsMCbpIafTq/2CJhQjRp2ttrjcwIQSAqz/HOtDTggbWafmSeRGnbjFIsrHUY1ySpaTeVMHsoijoiT0HZYtrvzHAot5Tfx6m6Bnz9SoAdSq1Z4MC8uu7KoLYE21y24VulaR2dbV+HXFZuHZnqaFtWd3f3ddxwjGBc1NMvH4dQKnRgWMxZOCqlf4IrStWrZkWj6NY/a2lp8UGVH/ww0wLpjvF0ZiLZ0a0jUTvgL9/0vhMz8iJ0JbT++heicVZnHtTcQoDNfRxqhvsqCZ6TFTndFfesVsV3b1obBMicjbGweyNWesba0tP0upSZn5gq1SUEZkUXNN6/2abR4J6edi/q6Dczl7lAgkhdYeTxmBK1KGJlmtysdoqNNuLnxf4BEIif10OtAG3wgWi4W6m5Yd1O2Q0Rxd/shzlKlFs+MXkCBQSCrBujLbaDT6/ZGAlw3M5ix+QYI6hRdGkpLG+dmAica9tU2q/YuOz/0ruV1rkotjwdbpsGJPzg63m/Eo7lyJnCb61Kuvr79EI5suype/fdym/AqMfzaW2T1F+hpf/nL3rveeA6iVk+O1ikz9rCRO/pH1BSnW0ZtmSlKihzNBpAOUZ8cM5noHdmbNB0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 066be5d8-a052-4013-5821-08dc84ade0ed
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 15:49:11.9118
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9ZYQAPuy0jckOs06fIO34gnZYaLMo6BvuWAGpf3Tg573QG0QGyQwQSMJoBi8fDOnGyJG0ZJeSeCl8gLVI4YCWg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6359
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_09,2024-06-04_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=894 phishscore=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406040126
-X-Proofpoint-GUID: WKZ3oiiaNqXELqZjp7IFW2oAlab3M1Pa
-X-Proofpoint-ORIG-GUID: WKZ3oiiaNqXELqZjp7IFW2oAlab3M1Pa
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:GxC2BwDXwibhMl9m4o6GCQ--.5202S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw45urW3Xr4xWrW3tF4xJFb_yoW5WrWkpr
+	Z5G34rKF1DKr9F9a1xWws7XFySyayrGw47KFn7twn5u3W5ury0yr1Ikw4Fvr97u397XayU
+	ZryUtr1kWw1DArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF0
+	eHDUUUU
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-maple-tree@
-Bcc:
-Subject: Re: [syzbot] [maple-tree?] BUG: unable to handle kernel paging
- request in mas_walk
-Reply-To:
-In-Reply-To: <000000000000d09b25061a11f454@google.com>
+Currently, the effect of several tag on operations is defined only in
+the herd7 tool's OCaml code as syntax transformations, while the effect
+of all other tags is defined in tools/memory-model.
+This asymmetry means that two seemingly analogous definitions in 
+tools/memory-model behave quite differently because the generated
+representation is sometimes modified by hardcoded behavior in herd7.
 
-* syzbot <syzbot+c67d06ab25a9bc4adf35@syzkaller.appspotmail.com> [240604 11:18]:
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> BUG: unable to handle kernel paging request in corrupted
-> 
-> Unable to handle kernel paging request at virtual address 007f8000826099b8
-> Mem abort info:
->   ESR = 0x0000000096000004
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
->   FSC = 0x04: level 0 translation fault
-> Data abort info:
->   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
->   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [007f8000826099b8] address between user and kernel address ranges
-> 
-> 
-> Tested on:
-> 
-> commit:         63ab6007 maple_tree: Check dead node in mas_walk() whe..
-> git tree:       git://git.infradead.org/users/jedix/linux-maple.git syz_20240603
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14842a16980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=bd6024aedb15e15c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c67d06ab25a9bc4adf35
-> compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: arm64
-> 
-> Note: no patches were applied.
+It also makes it hard to see that the behavior of the formalization 
+matches the intuition described in explanation.txt without delving into
+the implementation of herd7.
 
-This trace does not look to be related to the first reported issue
-either.  It is difficult to test fixes when the issue is not reliably
-reachable.
+Furthermore, this hardcoded behavior is hard to maintain inside herd7 and
+other tools implementing WMM, and has caused several bugs and confusions
+with the tool maintainers, e.g.:
+
+  https://github.com/MPI-SWS/genmc/issues/22
+  https://github.com/herd/herdtools7/issues/384#issuecomment-1132859904
+  https://github.com/hernanponcedeleon/Dat3M/issues/254
+
+It also means that potential future extensions of LKMM with new tags may
+not work without changing internals of the herd7 tool.
+
+In this patch series, we first emulate the effect of herd7 transformations
+in tools/memory-model through explicit rules in .cat and .bell files that
+reference the transformed tags.
+These transformations do not have any immediate effect with the current
+herd7 implementation, because they apply after the syntax transformations
+have already modified those tags.
+
+In a second step, we then distinguish between syntactic tags (that are
+placed by the programmer on operations, e.g., an 'ACQUIRE tag on both the
+read and write of an xchg_acquire() operation) and sets of events (that
+would be defined after the (emulated) transformations, e.g., an Acquire
+set that includes only on the read of the xchg_acquire(), but "has been
+removed" from the write).
+
+This second step is incompatible with the current herd7 implementation,
+since herd7 uses hardcoded tag names to decide what to do with LKMM;
+therefore, the newly introduced syntactic tags will be ignored or
+processed incorrectly by herd7.
+
+Have fun,
+  jonas
+
+
+Changes since v1:
+   - addressed several spelling/style issues pointed out by Alan
+   - simplified the definition of Marked accesses based on a
+      suggestion by Alan
+
+Jonas Oberhauser (4):
+  tools/memory-model: Legitimize current use of tags in LKMM macros
+  tools/memory-model: Define applicable tags on operation in tools/...
+  tools/memory-model: Define effect of Mb tags on RMWs in tools/...
+  tools/memory-model: Distinguish between syntactic and semantic tags
+
+ tools/memory-model/linux-kernel.bell |  26 ++--
+ tools/memory-model/linux-kernel.cat  |  10 ++
+ tools/memory-model/linux-kernel.def  | 176 +++++++++++++--------------
+ 3 files changed, 115 insertions(+), 97 deletions(-)
+
+-- 
+2.34.1
 
