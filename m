@@ -1,67 +1,69 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5873B13DB9F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECE314A0B8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717528153; cv=none; b=EdN5iz3Po7K4T00OTLiAQa8H1fMWERet5wYEMf8dCWk0mN00VMWrqdNjL2tch2CZo6A5g+LiTGRXjrZGq93LBslFU5mx+g/F3+aE2MVBwff/EfUKdkAQ6P+jZnYkr6FDklE/oViOuJd6F+pzO7aATpS6lzio4CbBDCjBIHMhaAw=
+	t=1717528242; cv=none; b=PEWPeio7Pgb0hF0akTuMwEKRvUk15B31ijlnIE93JvM+jyxSW0MnVSXGsVF2TG3yt6q7/wtNYovVUZCkGyGp0ycoCi8t9UaMShElTDl09GJi8bZXytH66ohaurojg9a9o5ww/PJY3PZj/fwGyuJbpOnP4s9iR06l1TJF7X7gawI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717528153; c=relaxed/simple;
-	bh=XwKCIkqkYBEgl5ZLKvPLvvtSlpG35zCzFjQXlbOyGj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tbt3kMyPUQCBfWEPlEi01WIXKLagShCnUQpaqmpsrrOJK7i73FJ45ng3DyipdYX6/gabSGTjFqzN/6OvXQIrR1ZqQwwV64WnTD30hRCwG/crln1BeU4+eG6dHm4dNo1uR/6r+UxkAyf64avC10hN5fZzwT5ODP9bN+8cJbNRtZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HGVnyxLm; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1717528242; c=relaxed/simple;
+	bh=6WRhNvMputCmUE8KuRCNypytBhygsDlUsvmXPlqiqT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=g5BX9BU/WGnPHA4aC9jQ9hFKiEnxWrsJmkCktsN3lBkHvYTyxmu4GKA/X7qUd0Y4RKfWVVBz1M1ZAeR08UwprVfMyRvYR9B959fmhwT49pX/qhIVjAYuFKLIMzT0/iDG3MMHTe8dxf6uY4Z1NNdKqG/urJSwjqRDMqyWV8Uz9pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XX0Ajj3Y; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HGVnyxLm"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57a20c600a7so6767378a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 12:09:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XX0Ajj3Y"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-57a4ce82f30so4245944a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 12:10:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717528150; x=1718132950; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tgB4DbGE6T1ikwhYmw4fa2hcF17RtM7yOsq39hT9I98=;
-        b=HGVnyxLmkb5rgO8DdWN+3Qgpa7NYAyZaER/Y+DwRZmBxvlb6SSAvAQM2qzK0gqB9Xq
-         VTshWOhAyxjROhpuXWjdS7+KyyHKjflE1qWfn13lIQzTQ7NzYJIuEVVGzyKoj7KLrSJr
-         vQ++l5HAd3xS5mLKhzxbTosCGw6ElrJ6MSiRzG4GWT8HV9j9B8jTyCq1SonM7rrBeplA
-         TOGJceC387Qry0OCcNZFZFIE98aiBd3pch0jrAGkuS2crg/ngHNwKDBxUxJf0AgO2qCd
-         Q/9Famn2WLU28UjxNP6KQyIgTOEgdcfhDcEj1DS5Z7+WEEY66dkolzwbQV9+vSjdLV72
-         yW3Q==
+        d=linaro.org; s=google; t=1717528238; x=1718133038; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uzA8SRe4whRjxMfh3T9fimsp/JqPLwi91HrTpjRxV+U=;
+        b=XX0Ajj3Y+1AZObqOfPb18cGyraQBDDLO2XIlAPS8Ly83mZMEaDukTwLl+9+4GwpKd2
+         THP7pT7DLRfk9UqrlX/fGSI5cZPLFm8D0w5CUdEI3pYebM+h81FoVigV9m2nEfYj4kRC
+         TonahQMlIiCAWbop+xMV9g639FTHM0BNlMfdtUrRWitQi6eLhlCZAtRVbPilZLWl0auA
+         8h2mQJGO7Hs2apj6epMapIMzjz6YH5eOzwmLsxZKClVONJ1f6gxRaW+EvpI+QRaIfMhz
+         7XZQpiWfGApQyh6Jx4J7T+OGwblLT6XKCE2SpIvVkKV0X1DWJhFjGQN7d0Qx/HnXjWz+
+         qRYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717528150; x=1718132950;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tgB4DbGE6T1ikwhYmw4fa2hcF17RtM7yOsq39hT9I98=;
-        b=ELfohdGV5xb8E7QBETZ5wOoVRSP3IAmSvWI78iLskKalFhxUKNn3HIJwpRFe8wD6Za
-         StYkpqRKZpqmJ+HunzTKfgws/tU/zGCvGatiEwDY+OMT7N6rpClh+/RWUkUHJ9KuHq23
-         fXq97wKbW0KGxWcx6i1KCff+pbxiBOVwl16JKC4aBFv2bUaSYx+WZxzSAi4XzEf0Ttk3
-         6g+YXROb6tIUWv8z7Qq3quZLOyBaKdzWM2J7P8xXe1GWJfpKIPHS7wV90NATykzcKOb2
-         Rv5ZWcpmYnkTuN8weEFo71ynOK0M7SsV07QV99LKEOBIJQ4TFzp5ApfbNXWTjSOn3kmI
-         FzHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgFWw8fxoDjcsunPOMUdRlVydl7rjSaOJvLlGAL7Qwz7j7R5u3D8CE3S8QiVWHCWXG9oU0tEniuH6RE6g275eXrDP8dRK5yoU3qm9K
-X-Gm-Message-State: AOJu0YymJewcW8ecwweB/RKFD6PPaD2MaDgy9qPxlroRzkwYdI9iYDZk
-	uJMlHse+RXT3sczKSkzPEzWs0fcv2wd0WYPUWVQMC8H2GuDzb+g5Lvsx94oUV1E=
-X-Google-Smtp-Source: AGHT+IHQGLFEtmqT9U+tp95hpWm2B8YC/v5PjnMpJnjq63cgYXkxFs635u1b0+F9sBKngRqYp/Xe5A==
-X-Received: by 2002:a17:906:2a82:b0:a68:fafb:a16e with SMTP id a640c23a62f3a-a699f34ae75mr29653766b.4.1717528149569;
-        Tue, 04 Jun 2024 12:09:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717528238; x=1718133038;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uzA8SRe4whRjxMfh3T9fimsp/JqPLwi91HrTpjRxV+U=;
+        b=UybXQ5tTLllWwtDwiwSHgOevIgzOHIvE3lOhIgn4ki7rsnPMK/j/TV/HVo8lPkFCsW
+         0VKMv2VogTj9yWhBB7PWKZYQsymQv6LwosO+Ybdg4Ijp8/K3qeXHaKNCgPSHjcyPa5cI
+         R38a8SLnxZq09JreXElRWLrY/K1vqUHcdHKAiSi5v6jZRo03DBy57k78p0kMAzGA/zfs
+         U9fa8BcPzJP9zPSmTBKi8M8ezK3+KvHbWm2pL9SSectMPoLGhC8BlaEXeVfKerse7dVu
+         sfK82PBdbC/aG54NvQft07G2fGEmKSkGu1mrCs5oIaa1h4j8ndUYgrKlFzhHPsdufFBH
+         wUwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnA+aL5KqWr82gfwKQp1SRlPFceSCAicK9vzmkm7dLbnohHeBHpeaXN8hlS7CCokkJq38fmBSdW/OtRUIwCS7Kz+U6iap/afXZ2BsY
+X-Gm-Message-State: AOJu0Yy+k/7WDn2iZBRT8P6bKFYA5Wc6mw/gszGsVInvw1YPMPQRrK15
+	OXM7JrAQ6dFk9B6BKabsiCqEygbGVUa0JncsBHGlNXvo3mAlPSKwTt0UVLLVgyc=
+X-Google-Smtp-Source: AGHT+IGlsLGfRHK0f6DmqF44S64KIFY4M3R+3mRgGUK5rWCZG7z77L7iKZ+bC3jDwWK1rj3XV48eRQ==
+X-Received: by 2002:a50:d4db:0:b0:57a:242e:806b with SMTP id 4fb4d7f45d1cf-57a8b6acd8emr362804a12.18.1717528237801;
+        Tue, 04 Jun 2024 12:10:37 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68f8840bd9sm389463566b.20.2024.06.04.12.09.08
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31bb825esm7847800a12.32.2024.06.04.12.10.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 12:09:09 -0700 (PDT)
-Date: Tue, 4 Jun 2024 22:09:05 +0300
+        Tue, 04 Jun 2024 12:10:37 -0700 (PDT)
+Date: Tue, 4 Jun 2024 22:10:33 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: will@kernel.org, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, joro@8bytes.org, jgg@nvidia.com,
-	nicolinc@nvidia.com, mshavit@google.com
-Subject: Re: [PATCH] iommu/arm-smmu-v3: Avoid uninitialized asid in case of
- error
-Message-ID: <30b1fd0f-d43d-497d-b372-5218f7b4153b@moroto.mountain>
-References: <20240604185218.2602058-1-smostafa@google.com>
+To: oe-kbuild@lists.linux.dev, Hyeonwoo Cha <chw1119@hanyang.ac.kr>,
+	david.sterba@suse.com
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, aivazian.tigran@gmail.com,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	tytso@mit.edu, adilger.kernel@dilger.ca,
+	hirofumi@mail.parknet.co.jp, sfr@canb.auug.org.au,
+	chw1119@hanyang.ac.kr, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	reiserfs-devel@vger.kernel.org
+Subject: Re: [PATCH v2] Fix issue in mark_buffer_dirty_inode
+Message-ID: <97ac9280-4c7b-4466-9cb8-2a81882f0b80@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,18 +72,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240604185218.2602058-1-smostafa@google.com>
+In-Reply-To: <20240604060636.87652-1-chw1119@hanyang.ac.kr>
 
-On Tue, Jun 04, 2024 at 06:52:18PM +0000, Mostafa Saleh wrote:
-> A simple fix would be just to initialize the local variable to zero,
-> this path will only be reached on the first attach to a domain where
-> the CD is already initialized to zero.
-> This avoids having to bloat the function with an error path.
+Hi Hyeonwoo,
 
-Yep.  Since everyone automatically zeroes stack variables these days,
-this patch doesn't have any impact on runtime at all.  It's free.  It
-just silences warning.
+kernel test robot noticed the following build warnings:
 
-regards,
-dan carpenter
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hyeonwoo-Cha/Fix-issue-in-mark_buffer_dirty_inode/20240604-140958
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20240604060636.87652-1-chw1119%40hanyang.ac.kr
+patch subject: [PATCH v2] Fix issue in mark_buffer_dirty_inode
+config: i386-randconfig-141-20240604 (https://download.01.org/0day-ci/archive/20240605/202406050218.U7c0DL3C-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202406050218.U7c0DL3C-lkp@intel.com/
+
+smatch warnings:
+fs/buffer.c:673 mark_buffer_dirty_fsync() warn: if statement not indented
+fs/buffer.c:682 mark_buffer_dirty_fsync() warn: inconsistent indenting
+
+vim +673 fs/buffer.c
+
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  667  void mark_buffer_dirty_fsync(struct buffer_head *bh, struct address_space *mapping)
+^1da177e4c3f41 Linus Torvalds          2005-04-16  668  {
+abc8a8a2c7dc7b Matthew Wilcox (Oracle  2022-12-15  669) 	struct address_space *buffer_mapping = bh->b_folio->mapping;
+^1da177e4c3f41 Linus Torvalds          2005-04-16  670  
+^1da177e4c3f41 Linus Torvalds          2005-04-16  671  	mark_buffer_dirty(bh);
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  672  
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04 @673  	if (bh->b_assoc_map)
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  674          return;
+
+The code is okay, but the indenting is messed up.
+
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  675  
+600f111ef51dc2 Matthew Wilcox (Oracle  2023-11-17  676) 	if (!mapping->i_private_data) {
+600f111ef51dc2 Matthew Wilcox (Oracle  2023-11-17  677)     	mapping->i_private_data = buffer_mapping;
+^1da177e4c3f41 Linus Torvalds          2005-04-16  678      } else {
+600f111ef51dc2 Matthew Wilcox (Oracle  2023-11-17  679)         BUG_ON(mapping->i_private_data != buffer_mapping);
+^1da177e4c3f41 Linus Torvalds          2005-04-16  680      }
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  681  
+600f111ef51dc2 Matthew Wilcox (Oracle  2023-11-17 @682)     spin_lock(&buffer_mapping->i_private_lock);
+73295b4ed00de6 Hyeonwoo Cha            2024-06-04  683      list_move_tail(&bh->b_assoc_buffers, &mapping->i_private_list);
+58ff407bee5a55 Jan Kara                2006-10-17  684      bh->b_assoc_map = mapping;
+600f111ef51dc2 Matthew Wilcox (Oracle  2023-11-17  685)     spin_unlock(&buffer_mapping->i_private_lock);
+^1da177e4c3f41 Linus Torvalds          2005-04-16  686  }
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
