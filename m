@@ -1,113 +1,150 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EDD71487F6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A6153BE;
+	Tue,  4 Jun 2024 16:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717517296; cv=none; b=ZfyA9xU/lVFkh5QthlF9a7f2vfe6Z106SL6Jn/+GsAvqtqDTPU1O2IWtSug4ghmXp9w2oMEQVi76uSrqGtWo8YCdB3Fng4I6GiH0ISwHALPIWcgGfdixPeH/ONpMVtK5nEs5Rz/F7lMVZNVUpbgHRBI+++2X6zmlPI6F3j5muV8=
+	t=1717517311; cv=none; b=Il4LTMNPrMucP6rk3tPEMNTPvK5WT7xAt+RP23mYo5x8+aGKu25wwlXUf0i74hC9QzilK/cjNfUGRIjo+xADuoYSqRvhaPmOPFEFTzJBpIADAP9dfnkISZQ1xlgkSr5GMrs6QCZE/Rh+nvv3cZeHAHfQUuMVV8q/SSN2v7xVS2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717517296; c=relaxed/simple;
-	bh=KDTa+PJ5eeVOd+MfhgCP89f4+O99J5UKBCREOezms0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=arm5vQpD6oWY9gWDUE26pnO/HZYS+MrRpoFirBY9w9UumWNBT5qxboRZmmUIw4HRNjaknLFhn7Sw/GSeoF75eKc/ritk9bkvps4ex6jZTYSwbid37SIvHMf4zYkkkefHAcTRhuJ3sL7qQQ7lcmckl+IB6e4r8uC71KfZQ3YLmBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5lO12AL; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717517311; c=relaxed/simple;
+	bh=XSjy6YxFesdMOR6JzoV48NYYd8/0S1BEVnZIXtD3nK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oknzBDUOCV5dw+0UljyqW3KhZP56X2mdSbUgtOqVa7F2+TbsQhOE7a25+s0JF5nBy6yuVDMD+AmXv+g1JPK2SFI42siALoP/MKWY5w3hXeieZ0uLLcYlBcJFYXo8zUpbb3pSt7ap/H6u7lcl/xXgfFvz+PtO4pED6EQt7lhuhQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e+LfK803; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5lO12AL"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57a22af919cso11214a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:08:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717517293; x=1718122093; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rVSYwx5fVzchQDcX26rC6LU8bv7Rb+05yZYVVsCliko=;
-        b=j5lO12ALSwAvvkWuHSxgzGYzegCwq8hL7rcaqzPpajT8frf6fhmxlrsrW+vLJ1nNr8
-         GEwHzQRnDPxZ3HXehbXBEmb+PKgQfEm97d9aim8dZHxtjLhLah19UXuUrh96NLt3k00U
-         wK865TYMTJDnBvRZvCAsruz+luW3TuClA7BcJGfHUHujCA2aAdKdRmK1AT/12U7Vg1RQ
-         mffWemJcJA1kUktbzC3gRQBCWhZN1/m7ABc9F9JdRLT77ob01vAG6Ls3ipaGbcY2VRC/
-         Qs0c1Iwnme1hmL0t0Od3KcMRn+zU48xIDR7HzECAYycBpPeb6Fp12DwHjxh/8C/Kx1lp
-         IXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717517293; x=1718122093;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rVSYwx5fVzchQDcX26rC6LU8bv7Rb+05yZYVVsCliko=;
-        b=HbikHncMbJMtrylFQU3GCVZjgEVCSAS4P5fpMQQ1xkwhb22J/Yisik+tNRA/iJ9l+m
-         c2oDUO9N8IE9dHSM/lfzijk1DJAcC663EQlJslyH3CpRFC9G0adlJjIb7rkL1AtKWGLE
-         nqj1xFVSbzsw6QC/fwe3h/gosyvvU/gIDoIeJk/JRo5RmE7LJtg2urus3StoEuY9vfse
-         vPghBGEAfZpmnYDHlaTLKTl9O+zOlBgMFKSTGS3oveiAEu5gbIv/hyWEjUbomzBLSYxV
-         t38NQN1USFH+MqODWnWsNRTDWJeVcaNFQhpZhT4H6ofx7sa8ABFyPWobIrTDi1qDiqXH
-         1/jA==
-X-Forwarded-Encrypted: i=1; AJvYcCVm2JmbEIXGU3/Up5E8sw12mDrb8EOWZdM+VqUcSf+penw1JNZDSqJEpC8YnlaZmirWwkNOxTFFCWUYYx95BeCluVPR3vGStSmixksu
-X-Gm-Message-State: AOJu0YwjJlJm+6clqgyWXysS8dePQogOST7eQYs4UiFah1jI5r5Kc6+D
-	lPOSbb3mZJx9FQT+UIeciktRZLOaKE7HRlzxgqvdwWVNHV6mG+nWgDQT4RyuzWrE8JFyOI4ymke
-	qx9/5iaUAuZQ5BvLodY3Gloz6jpWHL2IBXE/1
-X-Google-Smtp-Source: AGHT+IH+oB1DnjI2U/ZeNzKa/BJ7QaL35XcSz5qPnVnPsMEs1iTipj4x9dA3MeZNdH6wXMdTZguAgTpFdxXsurS8fnc=
-X-Received: by 2002:a05:6402:b04:b0:57a:2398:5ea2 with SMTP id
- 4fb4d7f45d1cf-57a80593672mr150384a12.3.1717517290725; Tue, 04 Jun 2024
- 09:08:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e+LfK803"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717517309; x=1749053309;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XSjy6YxFesdMOR6JzoV48NYYd8/0S1BEVnZIXtD3nK0=;
+  b=e+LfK803uGoOwfmDUI8YHWqL81H23/Nn4Hq0u2Phj/v22OVJ/Nym9ENw
+   rHWbjxWAa53y1xdFe0S7eXQASlQML9v1NYeKdMEMb2L0q4vwhfTjU4G0N
+   pXV1fWerzsQLkEBLFKu+E6XbbP9d6bSCwgZbnvsSjsGVMcp3P+cUWfxCz
+   TfGMubhPeMt/iteg6NxnHkjWYLAqsfPOvWWZa8IlpwJDA5cZZsRracsKG
+   vRRDY1X4ABxvYkmCSdKrtYzbIj5ba7ZlH44+0ev+jrlxt4vuHZPONSyVn
+   16/nFARdJgeT6HMieN1yZnt3kCOT4/9IlStJBM5VZ2eeuHpV/IMd79P10
+   g==;
+X-CSE-ConnectionGUID: ivKEXyoISUC0ReQeI1nY8g==
+X-CSE-MsgGUID: Fnw4z5J4S9CuPgqrbPc/Ng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13918265"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="13918265"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:29 -0700
+X-CSE-ConnectionGUID: z2GB6NqfTPOjmfKsW00vug==
+X-CSE-MsgGUID: UUAir5M0R0KfDhtDtVquyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="42225128"
+Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO [10.125.108.218]) ([10.125.108.218])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:26 -0700
+Message-ID: <6fd2c15b-5bd9-4e7e-8da0-4ca2c89b38f9@intel.com>
+Date: Tue, 4 Jun 2024 09:08:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1717507310.git.dvyukov@google.com> <1ada3be307bbd076c4ea63530cf445e7fbd0e4e7.1717507310.git.dvyukov@google.com>
- <3f15814c-de9c-4aa6-b56d-82761bb6520a@intel.com>
-In-Reply-To: <3f15814c-de9c-4aa6-b56d-82761bb6520a@intel.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 4 Jun 2024 18:07:58 +0200
-Message-ID: <CACT4Y+Y2j-YxvjkkXwuUp6cRjhqQOQN=fcga+0co7eirD_wVaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] x86/entry: Remove unwanted instrumentation in common_interrupt()
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller@googlegroups.com, elver@google.com, glider@google.com, 
-	nogikh@google.com, tarasmadan@google.com, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 09/19] x86/tdx: Account shared memory
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Liu <ltao@redhat.com>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Jun 2024 at 18:01, Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/4/24 06:45, Dmitry Vyukov wrote:
-> > The manifestation is that KCOV produces spurious coverage
-> > in kvm_set_cpu_l1tf_flush_l1d() in random places because
-> > the call happens when preempt count is not yet updated
-> > to say that we are in an interrupt.
-> >
-> > Mark kvm_set_cpu_l1tf_flush_l1d() as __always_inline and move
-> > out of instrumentation_begin/end() section.
-> > It only calls __this_cpu_write() which is already safe to call
-> > in noinstr contexts.
->
-> I've internalized the main rules around noinstr to basically be: Only
-> call noinstr functions before begin_instrumentation().  Second, try to
-> minimize the amount of noinstr code.
->
-> This patch seems to be adding another rule which is that all code before
-> preempt_count manipulation needs to be noinstr.
->
-> _Is_ that a new rule, or was it something I was missing?
+On 5/28/24 02:55, Kirill A. Shutemov wrote:
+> Keep track of the number of shared pages. This will allow for 
+> cross-checking against the shared information in the direct mapping
+> and reporting if the shared bit is lost.
 
-Hi Dave,
+It's probably also worth mentioning that conversions are slow and
+relatively rare and even though a global atomic isn't really scalable,
+it also isn't worth doing anything fancier.
+> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+> index 26fa47db5782..979891e97d83 100644
+> --- a/arch/x86/coco/tdx/tdx.c
+> +++ b/arch/x86/coco/tdx/tdx.c
+> @@ -38,6 +38,8 @@
+>  
+>  #define TDREPORT_SUBTYPE_0	0
+>  
+> +static atomic_long_t nr_shared;
 
-This is an old rule. KCOV was always intended to not trace interrupts:
+Doesn't this technically need to be:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c9a8750a6409c63a0f01d51a9024861022f6593
+	static atomic_long_t nr_shared = ATOMIC_LONG_INIT(0);
 
-+void __sanitizer_cov_trace_pc(void)
-+{
-+         /*
-+         * We are interested in code coverage as a function of a
-syscall inputs,
-+         * so we ignore code executed in interrupts.
-+         */
-+         if (!t || in_interrupt())
-+                 return;
-
-At the time the entry code was in asm and wasn't instrumented by the
-compiler, so the in_interrupt() check was enough to avoid all
-problems.
+?  I thought we had some architectures where the 0 logical value wasn't
+actually all 0's.
