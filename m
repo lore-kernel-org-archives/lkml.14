@@ -1,87 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921431411EA
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B3D13FD9B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487555; cv=none; b=mKOKLq2FFltjywabskOGqFl9+7afpyJe4vy1MX80WhMI7YOEPKuDCuO4zIPI3XqbD+EA+EAN2NrlcUyFFi7Poev57UAz5OKYKfhGs4Gl4DgDaZunzwVeGajl174RIdMPKXr0N5iCRDNZ644Q8AYdxFmlIY9Uo6jPOJlM0snXyfA=
+	t=1717487556; cv=none; b=EMkNRDFqF1TEW458RCPMWz1tx/QCKWB/FmvgzU6VMg/zDkz0KO8AzHjCC12uItnYYz8bB8sw95Z0d2bPMZCKhVstTwwjLhOdHSW57kH3l7JtYn2Zyj0PDj++WS60h9ttNkWqCK8VjlnS7JW0cA3sbUtzTnGkqJ0ceP2crAVJHVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717487555; c=relaxed/simple;
-	bh=b3E/UIPslsT8I86wbPoMlWOJhjF5vCXYbMseh+Nd3tk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kwb+0HfxWmjorU7ja4Q2dyQC2IpQk2AiT6yd9OhBPR5AmtIzu084uWrMcH28bwrqTP+iu2uU8A1EOyyTr4V1J9Sf9sXFC/p87p4T9sev+4+mKJJ+vbIVBQUe3/87LO2B9Y2duTtCWgTM9RLB9DDp5NsP01UUO5hlxDgTdnclqXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjDXtJ2B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717487556; c=relaxed/simple;
+	bh=7FwB3nh1ferhUN8F1AXZaJmUS/9xCv9OYccjoPM7BDg=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AwPxK+PP0EAFpNoaRjWnjoQJobDLuJIVyhCwoEhk06AG7e2ma1m8WD35jrs37X4D1aJLnQqNm+tRssCDm//+87wxYY26CWO7pc0dJwO4JrnJ5oTHJDv0hCffSZjDJsSNP6fphAWxAaQ5Y/lV/3lSH/l8d9WNc0bAeurE0lNV8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lmd+Glju; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjDXtJ2B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17191C2BBFC;
-	Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717487555;
-	bh=b3E/UIPslsT8I86wbPoMlWOJhjF5vCXYbMseh+Nd3tk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tjDXtJ2Bnfn07g6X0XM+j297fga5v438KKDbcNVYwW2D+xQhMkkweVBBOq3AS1gnX
-	 LAT0S0hHXiRAbW0abuhjIBsb7zRZd9Vov9GSssIzB5IvYRfy0nEstMHIRPPAskPjwZ
-	 KPCRv+C8IrQHxklAXbga205F0kcrlnBKjckpEDIv6XiTukWD1DeFIjNuDugks8XN2e
-	 +NAcE3ybEZRC3RsKxXDrnGMEICl+VqRqArskLYTKbqPdtGalr7LhEMxDRIXFolzZ/z
-	 GvzdKSHVxQ/eknLuUFdKt8ZRyfKtv+2m3GlZTu3mNahck1+jtV4OGGQI18symujISv
-	 W1td3s2pCk3Mg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1sEOy9-000000005QR-3RBp;
-	Tue, 04 Jun 2024 09:52:33 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Sanyog Kale <sanyog.r.kale@intel.com>,
-	alsa-devel@alsa-project.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 3/4] soundwire: bus: clean up probe warnings
-Date: Tue,  4 Jun 2024 09:52:12 +0200
-Message-ID: <20240604075213.20815-4-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20240604075213.20815-1-johan+linaro@kernel.org>
-References: <20240604075213.20815-1-johan+linaro@kernel.org>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lmd+Glju"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=7FwB
+	3nh1ferhUN8F1AXZaJmUS/9xCv9OYccjoPM7BDg=; b=lmd+GljuCk2T/uoLtVq6
+	vdhfRilml3TuNPNpb3hfMvYkbP6WJR01wbk64BFCSOtOAS6RGDUGY62XGZj01Xmv
+	n5n0ttdRE1xjWA7c/sZICWiVhA9mzI4FgKfQgKNayR8tX1LVgTsIQ63EsYWLqDKV
+	ww0DIipdtvxt2W4v4P0lB+26ZnxV2tXmOlhMIXwrl9wMjKkOLaBKVR0e1fz3fY3I
+	oo5YknZEQlBtbsVgJfMY6Q9nY5OQPs3soST+kSKBcL8heiWUStJ28ZZQqwYD5X3d
+	DnaObnx6fvQHuzJ7sXzzfopgRZYTQwpuYUpsLn/4AsnHTuYoxiXE6BcUXPleGfdJ
+	aA==
+Received: (qmail 2210011 invoked from network); 4 Jun 2024 09:52:32 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 09:52:32 +0200
+X-UD-Smtp-Session: l3s3148p1@s/10uwsabN0gAwDPXzLGAH1eNELjOc3g
+Date: Tue, 4 Jun 2024 09:52:32 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: smbus: Log (LP)DDR5 type specific unimplemented
+ message in `i2c_register_spd()`
+Message-ID: <pdxpacfmgmyqltigevalitf2q3tdty5nud3wdyjgmjfswwkmg7@vuwuirl3vpmz>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240530183444.9312-2-pmenzel@molgen.mpg.de>
+ <66acde9a-b453-465d-8b44-2bfc2164cdbb@t-8ch.de>
+ <tdia472d4pow2osabef24y2ujkkquplfajxmmtk5pnxllsdxsz@wxzynz7llasr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="oknbffertqzdv6fi"
+Content-Disposition: inline
+In-Reply-To: <tdia472d4pow2osabef24y2ujkkquplfajxmmtk5pnxllsdxsz@wxzynz7llasr>
 
-Clean up the probe warning messages by using a common succinct format
-(e.g. without __func__ and with a space after ':').
 
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/soundwire/bus_type.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--oknbffertqzdv6fi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index 3979be0f8b65..43e732ca73c0 100644
---- a/drivers/soundwire/bus_type.c
-+++ b/drivers/soundwire/bus_type.c
-@@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
- 	/* init the dynamic sysfs attributes we need */
- 	ret = sdw_slave_sysfs_dpn_init(slave);
- 	if (ret < 0)
--		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
-+		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
- 
- 	/*
- 	 * Check for valid clk_stop_timeout, use DisCo worst case value of
-@@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
- 	if (drv->ops && drv->ops->update_status) {
- 		ret = drv->ops->update_status(slave, slave->status);
- 		if (ret < 0)
--			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
-+			dev_warn(dev, "failed to update status: %d\n", ret);
- 	}
- 
- 	mutex_unlock(&slave->sdw_dev_lock);
--- 
-2.44.1
 
+> Sadly, no cigar yet, we need the EEPROM support.
+
+Things got better! This patch can be discarded then.
+
+https://lore.kernel.org/all/20240604040237.1064024-1-linux@roeck-us.net/
+
+
+--oknbffertqzdv6fi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZex8AACgkQFA3kzBSg
+KbZbuhAAmQmch08GVo3n/SoI8jV6HEZTyurA4gvdABpzHap9TLOgD67x027iddH7
+HOc5CGuzCK6Uyy8lHVDhIbpfucLgLVWdI+8TuNHHKpRJEuFmKMCP8Cv+vvjAsVeM
+LjgQ175SeiC145RTHtEGyBVOgJE9Sy9W/B8VONDJqqWPUMSBZiB6e0TXJh92ojyj
+HgKeKRgWqTk52W9C278W9Sb+yGlRniv8u+z4Bod2cX1gbBbagT3DBCw6e/LNgL50
+jQOJMayOjYjqkU+Vbxh+y7lhk51R2moI1YoGNdZgXTOVIYxWu4BmQF9j0rzuYlsv
+U+0+rDsQq365Mjbo/omS9BQP9B11reqlTLbZb5h022/lIi4LF2cMJMDvyzn7Z8/u
+vrA/a2g5TkR7DIFLgek73DbqXBAi1RcdNgg+WMQwxCetdtnyMTvee+VA9xeHfmnv
+KEY4Sq6TOqkOOTfbGIysrBnBe+cfEDymG0zKFYrsp523DYGT2+VW3S2kfETk9YVf
+kNA3wgkemA9scJE+E9q+5zuBp7TrPefCz4xxfxDksmbe8ZJT6uIudi1TVWG4g9L/
+4osKfPfMNMrhPX6W36C4LAVO3SKBOT+QmE8/XR9oaC9lkjyRyceaCaSY0eo7Y3ol
+Px5v9wfJSzA/URCohXhNxT1g9fAb+K9xUWiL0kXgreXTCDMxWUM=
+=ommU
+-----END PGP SIGNATURE-----
+
+--oknbffertqzdv6fi--
