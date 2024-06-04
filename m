@@ -1,111 +1,114 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2872566;
-	Tue,  4 Jun 2024 10:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0898B1448C9;
+	Tue,  4 Jun 2024 10:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717497153; cv=none; b=L9RGQRhJmcUX+2QECU+kgV3XbfNz4lns9Z5U0YSe8Jzn99Hj1ynivmGQ+FAyyyop7PmPRxvJqsSyj9LDHMRtNlzJI7eUwavmYp+4CeYDEX19bDvF5qA6FH9u73OphBaoqLa7zwuTvAhp/V3jl84EbF323f7lAS8GRwm+zaNOA9w=
+	t=1717497376; cv=none; b=CCG9C6L2Afgg9xSSLooY0c/Jn0KtuKnv8WDVXQt8GsgVkOX4TkV5EENY89/iZTiNY7kaOOezs8SIZFw/ybSLzPVEwUpEid+xpr2g0ekxBm+MGCBsAnyC8riRLgg655VCgxfV/kSfkBGMzREMV/cAj8YzQPUspVAZnMPIYCiuz/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717497153; c=relaxed/simple;
-	bh=wpcAi4enpYzd0kfnEOi1NkxVY22NtCkMLmxRw+8RjlU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tN+aFtWUKxXPCSWgpi8nP5WmHj5ARo/Q3/45aCiElgjOfuuprBflhU7kdq7PtjbZNpXPxoDw8DD51bysRes90TY9lV4ApCUujsVQ0bCMUB1WOgigsa9FEpJve1/HWvhxCnKHrk44N0xLZRH5hr9BC7KAtnt9KKtOCAspJceV3AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=RIBclG0j; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1717497376; c=relaxed/simple;
+	bh=fAoFXYYkIkdenvWHNgGiSslpve99mgAMustoo4fOjKM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E5Pr8FgAhVIoI6VJ4Gi9d+8nTCQenImx+ODAkzXHv8xJMEA44V+HBOIvtj3YlxXrr1eACSGeR8atPT5p2j/1OWNPY7i3mn3W+onAWP9B+NfQ/OAXN+yEP3X5J6kl8TEkjenDqFNwuFpwr6UtA4ryQ52TPPQEbOEPk3yBqW9Ny68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=X7N4nvDB; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="RIBclG0j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1717497149;
-	bh=wpcAi4enpYzd0kfnEOi1NkxVY22NtCkMLmxRw+8RjlU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RIBclG0jB9B/SJn7h9s0YCp/Shiu3cAgG5q/J0IZWtD4Lm7DMtXAgMJnvArNJX+ln
-	 nKSDw+r1n1FPj4OOwd/+WyLRVxKK3lxFwMPZXk/nEgYCsOHnUmYEnYBKWVNXmhqU4G
-	 ZrdgLIlSRU/fejwzMpA9WBnWmRcSEjaRxuLQYHH8=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 32D826591E;
-	Tue,  4 Jun 2024 06:32:28 -0400 (EDT)
-Message-ID: <258ce61c155c28937620f6abe57a39f2b4b0ff56.camel@xry111.site>
-Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
- global.turbo_disabled after initialization
-From: Xi Ruoyao <xry111@xry111.site>
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>, "Rafael J.
- Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
- <linux-pm@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>
-Date: Tue, 04 Jun 2024 18:32:25 +0800
-In-Reply-To: <63e98f2151ef64de92cf7e3da796937755ea5552.camel@linux.intel.com>
-References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
-	 <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
-	 <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
-	 <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
-	 <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
-	 <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
-	 <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
-	 <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
-	 <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
-	 <48eba83030e155f703b4248e9c1ae65aa44b1a83.camel@xry111.site>
-	 <CAJZ5v0jjLgG3VY_kBYc4mTrL2ybD2LfBTk2_H7xY0+Aq5g827A@mail.gmail.com>
-	 <f34c20ae3feac0e3570125f124e440d51c5e4d9b.camel@linux.intel.com>
-	 <1da736da33a61de92314934ecf7fa0420d6d6b81.camel@linux.intel.com>
-	 <aa643910265b9d92a397d5148b31d37b2c421b8b.camel@xry111.site>
-	 <63e98f2151ef64de92cf7e3da796937755ea5552.camel@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="X7N4nvDB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C3CC0E0009;
+	Tue,  4 Jun 2024 10:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717497372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fA411foyqLMzZ1hKOUW4fEs/FNUN6uX3elekeFZ7ooQ=;
+	b=X7N4nvDBmnw4RYWneE5CtUu3qx19bfW2W4250fsTMXFe6jFiWec0T/VnjVewnrLKDLBrtR
+	MjtespVLF57sWVij73AS/HAQxnI3Mf1SEF+c3giOqJ3uFrCz1wqEbbUx6L1OYk4jU3jtC6
+	vLD2Vdn4o4KNeFaRIlJX7RoQo3lvCYEz30GENbZWXAuQRnVKidqkCBJpz26wjnnojWNQFM
+	Fkayj7j2VgbS48X54m27vCV5wqYBI19sIjasEkIqo6L6M2ONxLxQ0GPvUNkU2ETvpY3hvo
+	yIgdsR5JAe/GYK8F1d6GIIGfa9+T650WqNcqiduSZVGFd0TLjijvbFNfAsDCpQ==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 04 Jun 2024 12:36:01 +0200
+Subject: [PATCH net-next v14 01/14] net_tstamp: Add TIMESTAMPING SOFTWARE
+ and HARDWARE mask
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240604-feature_ptp_netnext-v14-1-bfb4632429db@bootlin.com>
+References: <20240604-feature_ptp_netnext-v14-0-bfb4632429db@bootlin.com>
+In-Reply-To: <20240604-feature_ptp_netnext-v14-0-bfb4632429db@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, 
+ Willem de Bruijn <willemb@google.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Tue, 2024-06-04 at 03:29 -0700, srinivas pandruvada wrote:
-> On Tue, 2024-06-04 at 17:30 +0800, Xi Ruoyao wrote:
-> > On Mon, 2024-06-03 at 21:31 -0700, srinivas pandruvada wrote:
-> >=20
-> > > > > Second, a delayed work can be added to check the MSR long
-> > > > > enough
-> > > > > after
-> > > > > initialization and update global.turbo_disabled if it is 1.=20
-> > > > > However,
-> > > > > that would require some code surgery.
-> > > >=20
-> > > Something like the attached which does same way as user space
-> > > no_turbo
-> > > update.
-> >=20
-> > > =C2=A0static int intel_pstate_register_driver(struct cpufreq_driver
-> > > *driver)
-> > > =C2=A0{
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret;
-> > > @@ -3114,6 +3137,9 @@ static int
-> > > intel_pstate_register_driver(struct cpufreq_driver *driver)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0global.turbo_disabled=
- =3D turbo_is_disabled();
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0global.no_turbo =3D g=
-lobal.turbo_disabled;
-> > > =C2=A0
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (global.turbo_disabled)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0schedule_delayed_work(&turbo_work, HZ);
-> > > +
-> >=20
-> > I have to change it to 20 * HZ to make it work for me.=C2=A0 15 * HZ do=
-es
-> > not
-> > work.
->=20
-> Is there any consistency or it is changing every time?
+Timestamping software or hardware flags are often used as a group,
+therefore adding these masks will ease future use.
 
-It seems consistent.
+I did not use SOF_TIMESTAMPING_SYS_HARDWARE flag as it is deprecated and
+not used at all.
 
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Changes in v7:
+- Move the masks out of uapi to include/linux/net_tstamp.h
+
+Changes in v9:
+- Fix commit message typos
+---
+ include/linux/net_tstamp.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+index eb01c37e71e0..3799c79b6c83 100644
+--- a/include/linux/net_tstamp.h
++++ b/include/linux/net_tstamp.h
+@@ -5,6 +5,14 @@
+ 
+ #include <uapi/linux/net_tstamp.h>
+ 
++#define SOF_TIMESTAMPING_SOFTWARE_MASK	(SOF_TIMESTAMPING_RX_SOFTWARE | \
++					 SOF_TIMESTAMPING_TX_SOFTWARE | \
++					 SOF_TIMESTAMPING_SOFTWARE)
++
++#define SOF_TIMESTAMPING_HARDWARE_MASK	(SOF_TIMESTAMPING_RX_HARDWARE | \
++					 SOF_TIMESTAMPING_TX_HARDWARE | \
++					 SOF_TIMESTAMPING_RAW_HARDWARE)
++
+ enum hwtstamp_source {
+ 	HWTSTAMP_SOURCE_NETDEV,
+ 	HWTSTAMP_SOURCE_PHYLIB,
+
+-- 
+2.34.1
+
