@@ -1,151 +1,68 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BFB144D23;
-	Tue,  4 Jun 2024 13:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B96144D23;
+	Tue,  4 Jun 2024 13:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508541; cv=none; b=SRtayE3kLDlMmtoF0ZoBuUK0a+CxgJr9ZNmbQHaxG8m9iOeOFHRJ4U6BlQTFKzqAm4dQZjRjHe+jcqlbfDY0WatKBHVJnYSQYdEERdzAth3VxYJU9yIGeTLqykrGAE65q521koCA87Okd3RsTtiXaFFFTV0EYWey/EovXvNyn9c=
+	t=1717508593; cv=none; b=uRVGuK2CbxrDaZ92qit11nUfr6EZpfEi/SF+Z6YqTw8wVXh6bEtnYC9e+vvXZRe86Qg4hzQnHRRXFynhksx8Gn1c+XVmF3SOChm4uwfmvMT23u1ngTAmyrN48NpRx91I3yToZN4tkviTxEIApdPwbTmpgDive9WozCCUuZ8qJo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508541; c=relaxed/simple;
-	bh=JzvpitEF6afef78A6BqMKn7sGkEtB3biXCt3XCWqeog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tTyMmsMenKeUuMHZ8R3QnyQ35KpVK7m5faYaXjwAUw78MWaEyU/V9dtm1Hbcnjz6wDn9pITWTVfFh5KnkiZVoVCOyr4Q8xj9Eaincw7WEoFybU/yLfPuw7QuybdEpf6QFNVMzRO1rv9Vw8ylkP1qXOSrsVbhYAJxi7ghlWYPGiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwwA667s; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717508593; c=relaxed/simple;
+	bh=s9rg0xKazwih6oPuOEuE5wEC2gCvQpXYl5XV3pLTn10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n4qKNcLaX3qjYv1r6xwReEoWrcvmirTA6x88XitHBkKSzBHhRLd4B69PNskdvNMXSSHsrMxfqgkuo2m3bhwtr38plFsm6+8n+OGl4lrRCEwZp/pPcDLjPnExtnDaBMAPwWbxPDCWXvNQUmb7+FHUtk8mSosOjxY3Gtb5iBp8VEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=zWqr95Fq; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwwA667s"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4eb0f868f2aso1029548e0c.3;
-        Tue, 04 Jun 2024 06:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717508539; x=1718113339; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I/wDaAVsUoMEE2XkQjQGVHqiZEip+VWTpwMBzDDOubw=;
-        b=YwwA667sY8kcgKRArClihxuwUyj+kPxpXb40LQpzrhsAn3+I5K/p6hKggyjWdS8Vrz
-         2BvufJEiHteSRBWyBCxu5LGQdorahH0ojz5o+OIIhInu2L4A2Md3mYd7+w9qC6EYNDRs
-         zaOVcYeFodLg75svb4vPddg8oyho2CV+gAAp1uT1CnOWykuFkceGWhc0z6U2xO98sBjT
-         BV3nUB9lRfMr0X1jYTDugD7V4h5Xgo8B36pAkicqgYDRw6yF/llso2dINjCoMUaHuRBD
-         mvj7dhfa01EvhGOXnyIISPnO3wGVL5QUeyKLBbJW6ZfV0LmnnkMv7BNjRjPzPH46Hslr
-         gVSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717508539; x=1718113339;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I/wDaAVsUoMEE2XkQjQGVHqiZEip+VWTpwMBzDDOubw=;
-        b=leNLlxvDEXmpfYIzuExDcqmMdIy0k57W7t8JAfwikNTMGXBq6O0S/rggAKknGX3Oo0
-         v2qbM+xHlxKKqI4VyX6gpDifAMXa0807LIehgew/xbcCCwtTvafIH5xp/3eYZBeQCuNE
-         zjtMB3cEUrdKN+n6H2Ji5wLdSXS1y3CklT6fcNJvYose3K6nl7N0CvqGFSnmOP3uxaus
-         7a/8vhmOuC0BX6EJ2HocZFUr/5jefgdHdxVhhCuqPxyry5qn7yRSQPmIo3Kv/s8eEs45
-         RdLVg1grs6ziqQanaRN6JlDEsqTfMOZWtMjdVxbcrYP9JEQdV+BdLlhAwnQY0WmHGYsN
-         IB2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtpcpWyjr/jPmgu/w27PzbIKZUmIv/pLyIjox0S3Cf4jasVRMPEUxNUp8yn3zkalBb78iIzRCNJtKC7u29NeYaSl9QSChooWM1Ufz590H90aDeWBmMCnXdsXNztmybsrGD99K8q0X/hcL9MzOut3zFiyRrrBVbdfaBeImsQRcB7IWB9oZ7g7V9KFwdGvFkTW6U9gnSlh7AlpoUgcPkgcTUC0+Zs9p8gdL1
-X-Gm-Message-State: AOJu0YxDfGnkGohIuBAJ+pse2YH/aCdDefq3iBVDxTFlNcD2IljiBmcI
-	xCcFpGbOEKgbQByR/lnPy9dI5nhl7vK+NQNqoKO4tj9q8nt1TiFdLv8Udq/pF/Z1ZKQUevWYDrQ
-	067PXmaTSnEiSTPlFEWWdFTV3X3A=
-X-Google-Smtp-Source: AGHT+IHgpZyV5AZDRDVpQ9136VhNSmZNg2lCdWNHz35AYccw+Xew1tUvamXCslfWnHhTU0ar0AqXutM9VZt8VyRop7A=
-X-Received: by 2002:a05:6122:4685:b0:4e9:7e39:cc9f with SMTP id
- 71dfb90a1353d-4eb02eec147mr13378784e0c.11.1717508536659; Tue, 04 Jun 2024
- 06:42:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="zWqr95Fq"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id EA4621F83F;
+	Tue,  4 Jun 2024 15:33:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1717508037;
+	bh=s9rg0xKazwih6oPuOEuE5wEC2gCvQpXYl5XV3pLTn10=; h=From:To:Subject;
+	b=zWqr95FqqexgpAKBfIEbwsvL9BcndvX51R6PH5soxwwTR/DP7bQwoXIEU6rDLjqDw
+	 ghbIC7PWxlEja3Rxg2OTpuceYhtoV4feOzkLhQF1EgqIITCkDI4l5Oj3AuPoxVZUOh
+	 P5u86GU5Y5fzQHk54FrJrWXxJZVni9C2/i9Inmdv8qNKDS3TG4sl4yFGsf+n/FL8Z0
+	 dyAKBiFkuCYMjxOHPTt0GJkLu0VQgirm3NVy9/SGwXUuqQU77uMmn1K8KMsmn3w18Y
+	 F7+fdD8CDapN+cA09BsWVXgfr/pO0le5tkTAbRPb4RWpbSh0QuzWHYm9YtvfDVooYk
+	 XWkYqaO0UgNpg==
+Date: Tue, 4 Jun 2024 15:33:52 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Jai Luthra <j-luthra@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jayesh Choudhary <j-choudhary@ti.com>,
+	Devarsh Thakkar <devarsht@ti.com>, Bryan Brattlof <bb@ti.com>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] arm64: dts: ti: McASP fixes
+Message-ID: <20240604133352.GA10282@francesco-nb>
+References: <20240604-mcasp_fifo_drop-v1-0-03ebe25f47db@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322144355.878930-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8vQr2jxrW+C5VTcmEHmDgNp6S8=3KcAT1SzcKusFaP7Gw@mail.gmail.com>
- <2024052955-phrase-portion-8d1f@gregkh> <2024060426-radiance-reappear-c77a@gregkh>
-In-Reply-To: <2024060426-radiance-reappear-c77a@gregkh>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 4 Jun 2024 14:41:49 +0100
-Message-ID: <CA+V-a8sJ2o3HckW_YdwAraihXuDtnsqguHd8msKFe12BhCCy=g@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] Add SCIF support for Renesas RZ/V2H(P) SoC
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604-mcasp_fifo_drop-v1-0-03ebe25f47db@ti.com>
 
-Hi Greg,
+Hello Jai,
 
-On Tue, Jun 4, 2024 at 1:06=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 29, 2024 at 09:42:50AM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, May 29, 2024 at 07:15:23AM +0100, Lad, Prabhakar wrote:
-> > > Hi Greg,
-> > >
-> > > On Fri, Mar 22, 2024 at 2:45=E2=80=AFPM Prabhakar <prabhakar.csengg@g=
-mail.com> wrote:
-> > > >
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Hi All,
-> > > >
-> > > > This patch series updates DT binding doc and scif driver to add sup=
-port
-> > > > for the Renesas RZ/V2H(P) SoC. RZ/V2H(P) SoC supports one channel S=
-CIF
-> > > > interface.
-> > > >
-> > > > v3->v4
-> > > > - patch 2/4 reverted back to version 2
-> > > > - new patch 3/5 added
-> > > > - Added new reg type for RZ/V2H
-> > > >
-> > > > v2->v3
-> > > > - Included DT validation patches
-> > > > - Added a new compat string for RZ/V2H(P) SoC
-> > > > - Added driver changes for RZ/V2H(P) SoC
-> > > > - Listed interrupts and interrupt-names for every SoC in if check
-> > > >
-> > > > Cheers,
-> > > > Prabhakar
-> > > >
-> > > > Lad Prabhakar (5):
-> > > >   dt-bindings: serial: renesas,scif: Move ref for serial.yaml at th=
-e end
-> > > >   dt-bindings: serial: renesas,scif: Validate 'interrupts' and
-> > > >     'interrupt-names'
-> > > >   dt-bindings: serial: renesas,scif: Make 'interrupt-names' propert=
-y as
-> > > >     required
-> > > >   dt-bindings: serial: Add documentation for Renesas RZ/V2H(P)
-> > > >     (R9A09G057) SCIF support
-> > > >   serial: sh-sci: Add support for RZ/V2H(P) SoC
-> > > >
-> > > Gentle ping.
-> >
-> > It is only 3 days since the merge window ended, please be patient for
-> > maintainers to catch up with their pending review queue.  Especially fo=
-r
-> > non-bugfixes like these that will be included in the 6.11-rc1 release,
-> > there is not any rush here for anyone just yet.
-> >
-> > For example, my todo queue currently has 1458 emails to process in it,
-> > this thread is somewhere in the middle.
-> >
-> > In the meantime, please help review other pending patches for the
-> > subsystem to help enable your patches to move toward the top of the
-> > queue.
->
-> And this patch series does not even apply, so how could it be accepted?
->
-Oops I'll rebase the changes now.
+On Tue, Jun 04, 2024 at 03:11:01PM +0530, Jai Luthra wrote:
+> Drop McASP AFIFOs for all AM62 based platforms, as the extra buffering
+> is not needed with BCDMA already having internal buffering.
 
-> Please fix and resend with the proper reviews added.
->
-Sure will do.
+Is this related with the issue in which after play/record or use the
+McASP interface the system crashes or behaves in unexpected ways or this
+is something else?
 
-Cheers,
-Prabhakar
+Francesco
+
