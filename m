@@ -1,138 +1,104 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41D612CD98;
-	Tue,  4 Jun 2024 17:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF86149C58;
+	Tue,  4 Jun 2024 17:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717522401; cv=none; b=uX5FRfCuD6VboTDkFUJvd1G7ndc3zPdPzTUe2TlnLP1UKdjaSI7yQj0iHdHHjCq9rmiz5kRvVT5gJsiJsaN40eG4zD6GIUQzVZRE7KtRqfw2ZtK/gOaFDWAYjGu/I5dmXpd8vB4wivKqaW9FE7UzulvNGqiWnJQMfI+PPaKMWiE=
+	t=1717522479; cv=none; b=nP1NfNr2PNXtNkgtLpZFcSOBEIbsJas7fcqh6wbhKCHyKUJ7f28kCcoOzPJt60R+6kSdn4CL3xlwnLJTiCrI2ZSmw8EzkCwebWZQlUAWwLSyzesuwxJG2IF/jxFCok+zU0bjb5RYxB1aXh/eSsVyprPveCw5XG9VYKizO1R4+n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717522401; c=relaxed/simple;
-	bh=YuGOADg4czSzgm002ZqSN9+p7jih/VzRmBx506gij2Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tilOWNWwkXbjM01xXeSRVnmntc2VDOQhZOYi8qS/rkg80qOwY2ZBufvhAyqbfWjUE3iCjwwgcCKabDcNMDrmTLFjvcxxcFOjH63m6rtWajES6lBSr0N29xbpmnXLrha0qPuAlXKTQZIpZ6qXzG9UeVuMj2Zh8f2FlNP78Oe9xYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nj4UnR5c; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717522479; c=relaxed/simple;
+	bh=mBjS3PkyPZqLidoYSO/7OG/yx3lWsxvuDm8eBxTFLZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEEsGR1LjKEDpPtTZpALcjGSB8uj3AdSWPSCt4gvW0gXtFual2pYoGgMTCXP97WRlv2bmrGKXcQEi4rEolhT2y79ihuZcNzXr7F+RZLUkTfnP1cVPFCgBxXY7WSQW1URZuRMxX3XQziBf91ud/5UTyO75ZhzydC+fUNK3fu0Vws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvrHJ2qc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj4UnR5c"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6cc3e134f88so1082119a12.0;
-        Tue, 04 Jun 2024 10:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717522399; x=1718127199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63v6j8hzC+Le93kyoeflCRDkGNVRCCu2mfp5KUaAnVQ=;
-        b=nj4UnR5cn/o4ZbnYkfR6aeZ7RPQwU9j3FmyzY/Kkicm5MevTrtbohq+r1HIuNT4vfS
-         FfcXf276FhvhZvw6Pw7k/wobqupIqv5p5p+c2Hfziz3T1kVFJS6OlZ7v5GcR/1SoMUL5
-         qBMNfjsZ3SxHC+En2erUJnv8cO4ysdjEAJAo5CYwoo32m7AhHl5dzSurok/A9MPIdPr6
-         69QLlKRwnI0mOjqmOGJaADs+ehPBIQZIuWyTfdr7XAcNGqI25ZBqRsvHk1c1IL23Hbwv
-         hcjwNcGeNm6iaIrxtT8LUVWYvNKJfgXOTALPIudFc14xCVMGAI+J57cIejCIdULi5G3o
-         /blg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717522399; x=1718127199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=63v6j8hzC+Le93kyoeflCRDkGNVRCCu2mfp5KUaAnVQ=;
-        b=CWyuaxgKTbM6+ut8EXUiqETYK4rdcyqTdqWREUnDM30OX0BWAsFVBYXLl4XuL4mtbw
-         15GidBxsgdqf+m5KuvzijQDoIapAH2DGNFU7J84DKi2KP4QIznldqEB8bO4aJIGInmGc
-         ISX3dMsyU4qMmofr3RWd/X4cA39jV2hpNi9/Sp81CU8ZPrhXaLcuT9UILzvU4AZ94ypW
-         RCXHImN+zSWhUWC0LuJYG9DZG7rJgMi2/FN5FBNMCuw+fOBr5jyBSvdcTibLwapzQLuB
-         sJg3j05dvTUi8v03FmQDjr41AE7T2c15RcPql+xQaKNsjb0Q99RB28xP0PRtzaGVWsW9
-         KObA==
-X-Forwarded-Encrypted: i=1; AJvYcCXZIHTu9CCmDkM5f84vRILfVPPF66mOl97s1RMElltBA/XltAaFgFjEXMavSox/1CWKcN9Ov3cc9a4ZZ8G3mCasEhjy7wZmoXXbVa86TuSG4/nTQFJKB68hPPgNvHrMvb87xKw4bj0//FLb/g==
-X-Gm-Message-State: AOJu0YzEt3VjS/5N75fESGsL2AKRLZ09GPy4u+9TWYyWp8j9Rjnjk0xu
-	N8oiW+r82ixKMBe/Ukn1f1rVTuP8ac08N8UBA+xHI3qSTT5iBsMZfaEQHJBNY9g1i6Ygzh7Or3+
-	IO/NhbdOy96DTOaAu2ZzhBFwxNgx4z4srtwg=
-X-Google-Smtp-Source: AGHT+IFL6LnqJEew7ANnyer/NGZs2s8PRUmbYPraWgW0HaR3LUPGwf4aoQwHd/mVUBYU0r0nM3dM2yMs2IsqmijKfOY=
-X-Received: by 2002:a17:90b:20d:b0:2bf:6b68:5219 with SMTP id
- 98e67ed59e1d1-2c27db63af1mr114715a91.41.1717522399093; Tue, 04 Jun 2024
- 10:33:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvrHJ2qc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95037C2BBFC;
+	Tue,  4 Jun 2024 17:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717522479;
+	bh=mBjS3PkyPZqLidoYSO/7OG/yx3lWsxvuDm8eBxTFLZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SvrHJ2qcH4XDdneMTN2vrA1Pw4nVUqdU8X8ZVPnJzuoig9BsP2hb2pGeG8OCVodDY
+	 vlEvQTHyZZ2ez/8dN81zicSqN+JZveHSrFHVe4WB4jkXRkeeaoKKXdp2l+4BFVQd6a
+	 s+qMGRma6z0epuuQnuTDOWNR1oTRRZ5mfyBj3oXQ+fIK9DyT/vEFtbmbp9smsn2dBK
+	 N3RYOMl/jd7gF+1JRMbmvJ79D0/k87xp9/Y3qkwWiq832iUJKwIDm+K1kRV2c9IapZ
+	 r2sRm8wIMt2fv3T/qLqDi5NH/KHrq8S690sl0T6jE7WaK8JLjIhjYKmdjm3xdkHJat
+	 h1QVUKweHW27g==
+Date: Tue, 4 Jun 2024 18:34:34 +0100
+From: Conor Dooley <conor@kernel.org>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: Re: [PATCH v5 2/9] dt-bindings: adc: ad7173: add support for ad411x
+Message-ID: <20240604-darkish-paprika-351ad2f72e96@spud>
+References: <20240603-ad4111-v5-0-9a9c54d9ac78@analog.com>
+ <20240603-ad4111-v5-2-9a9c54d9ac78@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240604-a505-v1-1-82ee1c04d200@gmail.com> <49fe3b01-4f00-4ffc-80cf-2a0add1ebaad@linaro.org>
- <CAGsSOWV=i2JHsYNvi5EC6q=NoD8v7SiTjbVQhTDLNw35+irTCQ@mail.gmail.com>
- <CAGsSOWV9SRK1VUJiQfavEM1hL0PapxUBG6CNeD+Q=0qPT5ZnSA@mail.gmail.com> <37b0404d-bba5-4a77-ad86-62c6dd308d37@linaro.org>
-In-Reply-To: <37b0404d-bba5-4a77-ad86-62c6dd308d37@linaro.org>
-From: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>
-Date: Tue, 4 Jun 2024 19:33:07 +0200
-Message-ID: <CAGsSOWUNN-PRvojvJR-i7wBDz8QRNnaTt19-6G41g7Hdt6RyTQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/adreno: Add support for Adreno 505 GPU
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Daniil Titov <daniilt971@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ICeoNF/w62bKpKgP"
+Content-Disposition: inline
+In-Reply-To: <20240603-ad4111-v5-2-9a9c54d9ac78@analog.com>
+
+
+--ICeoNF/w62bKpKgP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 4, 2024 at 7:06=E2=80=AFPM Konrad Dybcio <konrad.dybcio@linaro.=
-org> wrote:
->
->
->
-> On 6/4/24 18:45, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wrote:
-> > On Tue, Jun 4, 2024 at 2:27=E2=80=AFPM Barnab=C3=A1s Cz=C3=A9m=C3=A1n <=
-trabarni@gmail.com> wrote:
-> >>
-> >> On Tue, Jun 4, 2024 at 1:55=E2=80=AFPM Konrad Dybcio <konrad.dybcio@li=
-naro.org> wrote:
-> >>>
-> >>>
-> >>>
-> >>> On 6/4/24 02:20, Barnab=C3=A1s Cz=C3=A9m=C3=A1n wrote:
-> >>>> From: Daniil Titov <daniilt971@gmail.com>
-> >>>>
-> >>>> This GPU is found on SoCs such as MSM8937 (450 MHz), MSM8940 (475 MH=
-z),
-> >>>> SDM439 (650 MHz).
-> >>>>
-> >>>> Signed-off-by: Daniil Titov <daniilt971@gmail.com>
-> >>>> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com>
-> >>>> ---
-> >>>
-> >>> This all looks very good, just a nit
-> >>>
-> >>> [...]
-> >>>
-> >>>> +             /*
-> >>>> +              * Increase inactive period to 250 to avoid bouncing
-> >>>> +              * the GDSC which appears to make it grumpy
-> >>>> +              */
-> >>>> +             .inactive_period =3D 250,
-> >>>
-> >>> Are you sure this is actually necessary?
-> >> Every A5XX GPU is using the same value, but i have never tried with
-> >> DRM_MSM_INACTIVE_PERIOD.
-> > This was the original patch
-> > https://lore.kernel.org/all/20180507224750.9383-1-jcrouse@codeaurora.or=
-g/
-> > where the inactive period was increased for a530. I cannot test
-> > suspend on msm8937 yet.
->
-> The suspend here refers to device suspend, not system suspend. Adreno
-> goes into device suspend every time you stop using it, i.e. after the
-> rendering is done and there's no more work to do.
->
-> I suppose a good test scenario here would be to keep running and closing
-> kmscube in a rapid fashion and checking if the GPU starts crashing for
-> unknown reasons (the dmesg would denote that)
->
-I have checked on a505 and a506 with this small script
-while true; do kmscube; kill kmscube; done
-none of them crashing, so i am going to change it.
-> > I can check on msm8953 with a506 maybe if a506 works fine with
-> > DRM_MSM_INACTIVE_PERIOD
-> > then a505 would be fine with it also.
->
-> The more testing the merrier :)
->
-> Konrad
+On Mon, Jun 03, 2024 at 07:23:00PM +0300, Dumitru Ceclan via B4 Relay wrote:
+> +      common-mode-channel:
+> +        description:
+> +          This property is used for defining the negative input of a
+> +          single-ended or pseudo-differential voltage channel.
+> +
+> +          Special inputs are valid as well.
+> +        minimum: 0
+> +        maximum: 31
+
+I think this property, since it purports to be a common one due to the
+lack of a vendor prefix, should be documented in adc.yaml.
+
+> +
+>        adi,reference-select:
+>          description: |
+>            Select the reference source to use when converting on
+> @@ -154,9 +213,31 @@ patternProperties:
+>            - avdd
+>          default: refout-avss
+> =20
+> +      adi,current-channel:
+> +        description: |
+> +          Signal that the selected inputs are current channels.
+> +          Only available on AD4111 and AD4112.
+
+> +        type: boolean
+Instead of boolean, use:
+    $ref: /schemas/types.yaml#/definitions/flag
+
+Otherwise, I think this all looks okay.
+
+--ICeoNF/w62bKpKgP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZl9QKgAKCRB4tDGHoIJi
+0opdAPdU6LlCW4TffD6ame5jjBfZLhk26hiOVuyNlT53peXSAQDWQrG9YcGs8XyW
+xH1awVu8+MXKYRpbKhXBTh+nSqahDw==
+=TIka
+-----END PGP SIGNATURE-----
+
+--ICeoNF/w62bKpKgP--
