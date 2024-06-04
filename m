@@ -1,166 +1,97 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F248A143890
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:12:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5FC1411F2;
+	Tue,  4 Jun 2024 09:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492355; cv=none; b=k+9waYr6h8wjXKyr+eCLyjIsIlcqdQS0KXqvRZPFa0E8LTUD4bCxDEg8EGqckeV3FpR+XijHinC/GJ1qFItUReR8gfDr0HrHu1RfFkDEVc/8kiA2PBKSkjNk8YvvetpNP9h9nd1Z8P3uGPFrggRRtgf6srwmoqNt4agq/qKVWu4=
+	t=1717492514; cv=none; b=MwQwZL75I/AXFCimA1ulecX+hvJ2Tm5X0Ho12UnRn03nvaTMn5v+KGqYvHxAvmmHK+B3uxUbqkN6vw3kcD/v7xUOtKUqeJ+VxKNIOV448fiD9opOvmcj7jegXwzneZcW5kYDua4RrrXPYIX654KwuAaC4o2TtR7nxhm9wM75feQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492355; c=relaxed/simple;
-	bh=ZDk/Nypti9OkdiSrO0F3QWd83a+WWkijrwoDmER6QIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O6PaH+cRNXUIxdKFPt+Car0Mcl4y2sIFpTXEVDW45Ght8XgFUWvhxbZFdW4pw/OvpArTcezyczyYbdImzRnaTZPdmrYbbB/42JG9I3XcrXYl6fTtM8h/GUkuDr8Wsx2Ow+Fg7N8GFQtK0V6HeXSrR8v+1xQtqGrWK2i4qJfFrtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-5f-665eda7b264e
-Date: Tue, 4 Jun 2024 18:12:22 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, hannes@cmpxchg.org,
-	iamjoonsoo.kim@lge.com, rientjes@google.com
-Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
- hopeless but may not now
-Message-ID: <20240604091221.GA28034@system.software.com>
-References: <20240604072323.10886-1-byungchul@sk.com>
- <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <20240604084533.GA68919@system.software.com>
- <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	s=arc-20240116; t=1717492514; c=relaxed/simple;
+	bh=UBSE8GEPqxZdSjgPlJVW65yM+v8/dSAUhsYRVqOb1Jg=;
+	h=From:To:Subject:Date:Message-Id; b=HCrYnaDEhJHWe3d+v0Y+/R/qbzWy8P/EwmCL7xDLlYhJQC2i9Rg27GyMUgW20DUCWGPF7scPusSjieTkmEWR/jBv6G18SbIeP4JY+EvcXqVTCoCCBmC/T8a5dWPhGMQ5hnWnH45qKq3DcaMIbb4NFIwNPVzxdf7fXQGBLRMLEks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B63131A1E06;
+	Tue,  4 Jun 2024 11:15:05 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 54FFA1A1DCB;
+	Tue,  4 Jun 2024 11:15:05 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9DE281820F76;
+	Tue,  4 Jun 2024 17:15:03 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lars@metafoo.de,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	shengjiu.wang@gmail.com
+Subject: [PATCH] ASoC: dmaengine_pcm: terminate dmaengine before synchronize
+Date: Tue,  4 Jun 2024 16:58:57 +0800
+Message-Id: <1717491537-9033-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXC9ZZnkW71rbg0g533xC3mrF/DZrF6k6/F
-	yu5mNovLu+awWdxb85/Vom3JRiaLk7Mmsziwexx+857ZY8GmUo/Fe14yeWz6NIndo+vtFSaP
-	EzN+s3h83iQXwB7FZZOSmpNZllqkb5fAlbHq41q2gq9KFTPf/WRrYFwg3cXIySEhYCLxYvID
-	Jhi7rW0GO4jNIqAisXHhA1YQm01AXeLGjZ/MILaIgIbEp4XLgWq4OJgF1jJKHLnaAlTEwSEs
-	kCpxfHsASA2vgIXEsiUvWUBqhATOMEr0NqxngkgISpyc+YQFxGYW0JK48e8lE0gvs4C0xPJ/
-	HCBhTgE7id5F9xlBbFEBZYkD244zgcyREDjAJjHl7gMWiEMlJQ6uuMEygVFgFpKxs5CMnYUw
-	dgEj8ypGocy8stzEzBwTvYzKvMwKveT83E2MwGBfVvsnegfjpwvBhxgFOBiVeHgNFsWmCbEm
-	lhVX5h5ilOBgVhLh7auLThPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVIID2xJDU7NbUg
-	tQgmy8TBKdXA2PxZwXmDvxafxa2qZ2wvXqdy9OkJzWDiOsK6RfoOd8nf68JPTIo0arbb6ArF
-	yW/oWNdTwv+VS45pa+Kk85wdonJZZ2N3aLNLfp24bWuxsUJZ5JKotO8XX5mnS39yfWaieMf6
-	4m2Wh1JL/e/tW8+8+efSnokKffVHOr53M2p7LdRViD2ge3umEktxRqKhFnNRcSIARsvOv3IC
-	AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsXC5WfdrFt9Ky7N4NkdLos569ewWaze5Gux
-	sruZzeLw3JOsFpd3zWGzuLfmP6tF25KNTBYnZ01mceDwOPzmPbPHgk2lHov3vGTy2PRpErtH
-	19srTB4nZvxm8Vj84gOTx+dNcgEcUVw2Kak5mWWpRfp2CVwZqz6uZSv4qlQx891PtgbGBdJd
-	jJwcEgImEm1tM9hBbBYBFYmNCx+wgthsAuoSN278ZAaxRQQ0JD4tXA5Uw8XBLLCWUeLI1Rag
-	Ig4OYYFUiePbA0BqeAUsJJYteckCUiMkcIZRordhPRNEQlDi5MwnLCA2s4CWxI1/L5lAepkF
-	pCWW/+MACXMK2En0LrrPCGKLCihLHNh2nGkCI+8sJN2zkHTPQuhewMi8ilEkM68sNzEzx1Sv
-	ODujMi+zQi85P3cTIzB0l9X+mbiD8ctl90OMAhyMSjy8Fitj04RYE8uKK3MPMUpwMCuJ8PbV
-	RacJ8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MPK65x5+
-	ZDffzkAt7/z+9K2Oezq+K8aF3Gzh0t8wVbn3tdyV+o2iz25c2uxu7fzAr2p67oXCa8vmafs2
-	NloYH3qjwjDx0JF/pQFmT7T/6U/bk5RpZP1LWmH60qf8hz2SHcNP8c/XvbN2w+bFC19FMJ1a
-	nfqzrW6jduaGTVdCOa/P/HQjR3zZ5AYlluKMREMt5qLiRADimWPdWQIAAA==
-X-CFilter-Loop: Reflected
 
-On Tue, Jun 04, 2024 at 04:57:17PM +0800, Huang, Ying wrote:
-> Byungchul Park <byungchul@sk.com> writes:
-> 
-> > On Tue, Jun 04, 2024 at 03:57:54PM +0800, Huang, Ying wrote:
-> >> Byungchul Park <byungchul@sk.com> writes:
-> >> 
-> >> > Changes from v1:
-> >> > 	1. Don't allow to resume kswapd if the system is under memory
-> >> > 	   pressure that might affect direct reclaim by any chance, like
-> >> > 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
-> >> >
-> >> > --->8---
-> >> > From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
-> >> > From: Byungchul Park <byungchul@sk.com>
-> >> > Date: Tue, 4 Jun 2024 15:27:56 +0900
-> >> > Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
-> >> >
-> >> > A system should run with kswapd running in background when under memory
-> >> > pressure, such as when the available memory level is below the low water
-> >> > mark and there are reclaimable folios.
-> >> >
-> >> > However, the current code let the system run with kswapd stopped if
-> >> > kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
-> >> > until direct reclaim will do for that, even if there are reclaimable
-> >> > folios that can be reclaimed by kswapd.  This case was observed in the
-> >> > following scenario:
-> >> >
-> >> >    CONFIG_NUMA_BALANCING enabled
-> >> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
-> >> >    numa node0 (500GB local DRAM, 128 CPUs)
-> >> >    numa node1 (100GB CXL memory, no CPUs)
-> >> >    swap off
-> >> >
-> >> >    1) Run a workload with big anon pages e.g. mmap(200GB).
-> >> >    2) Continue adding the same workload to the system.
-> >> >    3) The anon pages are placed in node0 by promotion/demotion.
-> >> >    4) kswapd0 stops because of the unreclaimable anon pages in node0.
-> >> >    5) Kill the memory hoggers to restore the system.
-> >> >
-> >> > After restoring the system at 5), the system starts to run without
-> >> > kswapd.  Even worse, tiering mechanism is no longer able to work since
-> >> > the mechanism relies on kswapd for demotion.
-> >> 
-> >> We have run into the situation that kswapd is kept in failure state for
-> >> long in a multiple tiers system.  I think that your solution is too
-> >
-> > My solution just gives a chance for kswapd to work again even if
-> > kswapd_failures >= MAX_RECLAIM_RETRIES, if there are potential
-> > reclaimable folios.  That's it.
-> >
-> >> limited, because OOM killing may not happen, while the access pattern of
-> >
-> > I don't get this.  OOM will happen as is, through direct reclaim.
-> 
-> A system that fails to reclaim via kswapd may succeed to reclaim via
-> direct reclaim, because more CPUs are used to scanning the page tables.
-> 
-> In a system with NUMA balancing based page promotion and page demotion
-> enabled, page promotion will wake up kswapd, but kswapd may fail in some
-> situations.  But page promotion will no trigger direct reclaim or OOM.
-> 
-> >> the workloads may change.  We have a preliminary and simple solution for
-> >> this as follows,
-> >> 
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
-> >
-> > Whether tiering is involved or not, the same problem can arise if
-> > kswapd gets stopped due to kswapd_failures >= MAX_RECLAIM_RETRIES.
-> 
-> Your description is about tiering too.  Can you describe a situation
+When dmaengine supports pause function, in suspend state,
+dmaengine_pause() is called instead of dmaengine_terminate_async(),
 
-I mentioned "tiering" while I described how to reproduce because I ran
-into the situation while testing with tiering system but I don't think
-it's the necessary condition.
+In end of playback stream, the runtime->state will go to
+SNDRV_PCM_STATE_DRAINING, if system suspend & resume happen
+at this time, application will not resume playback stream, the
+stream will be closed directly, the dmaengine_terminate_async()
+will not be called before the dmaengine_synchronize(), which
+violates the call sequence for dmaengine_synchronize().
 
-Let me ask you back, why the logic to stop kswapd was considered in the
-first place?  That's because the problem was already observed anyway
-whether tiering is involved or not.  The same problem will arise once
-kswapd stops.
+This behavior also happens for capture streams, but there is no
+SNDRV_PCM_STATE_DRAINING state for capture. So use
+dmaengine_tx_status() to check the DMA status if the status is
+DMA_PAUSED, then call dmaengine_terminate_async() to terminate
+dmaengine before dmaengine_synchronize().
 
-	Byungchul
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/core/pcm_dmaengine.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> without tiering?
-> 
-> --
-> Best Regards,
-> Huang, Ying
-> 
-> > 	Byungchul
-> >
-> >> where we will try to wake up kswapd to check every 10 seconds if kswapd
-> >> is in failure state.  This is another possible solution.
-> >> 
-> >> > However, the node0 has pages newly allocated after 5), that might or
-> >> > might not be reclaimable.  Since those are potentially reclaimable, it's
-> >> > worth hopefully trying reclaim by allowing kswapd to work again.
-> >> >
-> >> 
-> >> [snip]
-> >> 
-> >> --
-> >> Best Regards,
-> >> Huang, Ying
+diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+index 12aa1cef11a1..7346c993a067 100644
+--- a/sound/core/pcm_dmaengine.c
++++ b/sound/core/pcm_dmaengine.c
+@@ -358,6 +358,12 @@ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_open_request_chan);
+ int snd_dmaengine_pcm_close(struct snd_pcm_substream *substream)
+ {
+ 	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
++	struct dma_tx_state state;
++	enum dma_status status;
++
++	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
++	if (status == DMA_PAUSED)
++		dmaengine_terminate_async(prtd->dma_chan);
+ 
+ 	dmaengine_synchronize(prtd->dma_chan);
+ 	kfree(prtd);
+@@ -378,6 +384,12 @@ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_close);
+ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
+ {
+ 	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
++	struct dma_tx_state state;
++	enum dma_status status;
++
++	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
++	if (status == DMA_PAUSED)
++		dmaengine_terminate_async(prtd->dma_chan);
+ 
+ 	dmaengine_synchronize(prtd->dma_chan);
+ 	dma_release_channel(prtd->dma_chan);
+-- 
+2.34.1
+
