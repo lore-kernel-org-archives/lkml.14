@@ -1,70 +1,35 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA2814885E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5974F33F6;
+	Tue,  4 Jun 2024 16:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518824; cv=none; b=mChtaITgEjyT+0wE9uwN6K5bWjJWUCAecV7ObqhOlUMykDDumbwdE5MtdcbndqPsOCRJL9mPUmFSKnOoGrfgb9O3k7edg2anfd7Ii3WL5htDdwvm5g6RTdkuYeVYYhqmz0Q6Us2nPcSCKEUfXk7Hf/pPx9xqybb+F5B64vXioNE=
+	t=1717518863; cv=none; b=mlFx48IfEEW6qoZybIEwxA2/r5Yxhr+8oAmoNVN6R/p2fClvlemBysuRK6AYuiAYnnk9koMG3pKyqPB42UWI+Wq6+FrKyqoItzL0Yk3OZMuat6znFq8e6s0kF0Iw0Geowit/j1cB/mnevQ53fJe1XCZRaIwsx8gbkwIDFm8EiQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518824; c=relaxed/simple;
-	bh=0sjG0tqlKzolcqbhmchRyBzY61TASS8q3u0cZwwqMg4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=NvKRYvu+7EEhj8p2BysztD+Bc151PYxrVJCuF7323R7VOi00e0yxZhsTR3K2RkgIXLmCSW8jj4G8n0b/ZuKecfoNCmTvqvjgtEorJNcgTGxh8CESlYRdYIqoLITDTDZpTv4MEeSjGIyTPV2IT+FBmWbgcvaTAQmRfetZMWlHgD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=W4CGU0Pv; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="W4CGU0Pv"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6ae4d4abeb8so24939956d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:33:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717518821; x=1718123621; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LJ3fzqU7zIJSZIaEHoz1dBE+4a5Pc5bbz++LUqESkpE=;
-        b=W4CGU0PvWe/ITnumQkYU1g/tLCgPrrs8LgoWafFHEbNHSikDAL7mj1L0sThcFlxaon
-         RbfpF9HrPWYvGkljVTsc9NqYQ44o2Pt80LKdnHRj6gqItfcyej8DgbNo6h0BJ92Rim7I
-         PsdJyEgizl1Ig98QcYVpls5T+a9n30y19xIiv0b4MfV9nCKhMprf8XFRe16B9FfMEgMe
-         WA/j8+apWSjeHi71d2CgQWc71rnuyLQV8fyeH8XsMg50HsywbZQwdqPbb2yTA5l1Z2B4
-         8O2SffMxg24pUBR7UMVmktsGH850UndIF9+o32GGf9DljsUBbGXMCb/khhOHN6JvECnB
-         B5hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717518821; x=1718123621;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LJ3fzqU7zIJSZIaEHoz1dBE+4a5Pc5bbz++LUqESkpE=;
-        b=mSF/X41j/HinoSmbd13dV9DiyhIqNguDbBhMo3ppU5bmnp0rjQLM9Q0p4wTb3ecCwo
-         a6G9TFAHKnqIhzn+ijBkxv32VSOc9tYt4WFdEU5mvh98hXmV1ZEDWbMH07IXTx2SpOEE
-         l6N0WCHnb9V7xx4pC4UVh0yszPrOUOR5BB++vVEqv2I6cb9j91HUbo70qcKEjYLBagw7
-         SsG7OhN4PGkZPcxIqC8YBqpMb7Zz0JS+X+GrwdxjaHldM5oJGeDmGzqkN111qVDGjX2j
-         HEjNlUMhkDpI7XeJWjKjdN2ja091gOyjMNh+1Ih09MOj3ncVIvyHoAV0+s+9QCRnn02S
-         PfmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNjZiuD5qjDo1tcyz1naYdxoSNYWYUI28u/foMmPLNlIgaHSD6Hri+8uN9GwfXTAQay4k/li+3xrd3/GdZlgPZcRYH6Jt0kEtAeDkH
-X-Gm-Message-State: AOJu0Yxd7s6tMbN9r1mX1CIjCFC3hwHIUcd5bpko3gHU5s8GMctIFafz
-	KY3qDSpVKaQdxQN7EQu4VeWIXYVCEGfr2zPFyqy8iiuDa7pVtZyHStpziovMZEk=
-X-Google-Smtp-Source: AGHT+IHd2opDiMK9J56b4t8UYsWXPdl+c252CiMlGiyJylrxgyVHd1pODis8mm4KS0VPSIQYkVKiLw==
-X-Received: by 2002:a05:6214:588a:b0:6af:4fb6:22fd with SMTP id 6a1803df08f44-6af4fb62450mr95965726d6.3.1717518821099;
-        Tue, 04 Jun 2024 09:33:41 -0700 (PDT)
-Received: from xanadu (modemcable018.15-162-184.mc.videotron.ca. [184.162.15.18])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4a73dfa8sm39997536d6.23.2024.06.04.09.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 09:33:40 -0700 (PDT)
-Date: Tue, 4 Jun 2024 12:33:39 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-cc: Julien Panis <jpanis@baylibre.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, 
-    Daniel Lezcano <daniel.lezcano@linaro.org>, 
-    Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-    Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] thermal/drivers/mediatek/lvts_thermal: Return error in
- case of invalid efuse data
-In-Reply-To: <af024ad1-93f6-4d7a-b139-7eb2fa12eb81@collabora.com>
-Message-ID: <359n7s98-08p8-177q-n51s-33rs215soqq2@onlyvoer.pbz>
-References: <20240603-mtk-thermal-calib-check-v1-1-5d6bf040414c@baylibre.com> <af024ad1-93f6-4d7a-b139-7eb2fa12eb81@collabora.com>
+	s=arc-20240116; t=1717518863; c=relaxed/simple;
+	bh=7D7T22hQGM8W37qBr4mMHw1mBEwnwhMEDU/ROlDpLas=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bxycQyELaUBvTvhXE2gPgRjSPXYSDYGQG6PHhx+c41fy8ZYtom+TaVRg7B1kkOzrlkQk6S9jDtA7Tgv1aKHzTjxaXgmEyX5nXNyNqA8p5yUvZwqNAxL3IM5deqVh/5R/M0jRVwIfP2anUj5HJlD7jSsyBLSIw0a3Bf5qsg/2iJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D2C2BBFC;
+	Tue,  4 Jun 2024 16:34:21 +0000 (UTC)
+Date: Tue, 4 Jun 2024 12:34:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, don
+ <zds100@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
+ modules
+Message-ID: <20240604123418.22e16e97@gandalf.local.home>
+In-Reply-To: <419b80da-9cbf-4bb2-aabb-dc04f0fb0f37@efficios.com>
+References: <171723014778.258703.6731294779199848686.stgit@devnote2>
+	<171723016594.258703.1629777910752596529.stgit@devnote2>
+	<fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
+	<20240604084955.29b9440687522a1347e0e7cd@kernel.org>
+	<419b80da-9cbf-4bb2-aabb-dc04f0fb0f37@efficios.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,20 +37,35 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Jun 2024, AngeloGioacchino Del Regno wrote:
+On Tue, 4 Jun 2024 11:02:16 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> Il 03/06/24 14:06, Julien Panis ha scritto:
-> > This patch prevents from registering thermal entries and letting the
-> > driver misbehave if efuse data is invalid. A device is not properly
-> > calibrated if the golden temperature is zero.
-> > 
-> > Signed-off-by: Julien Panis <jpanis@baylibre.com>
+> I see.
 > 
-> Fixes tag, please.
+> It looks like there are a few things we could improve there:
+> 
+> 1) With your approach, modules need to be already loaded before
+> attaching an fprobe event to them. This effectively prevents
+> attaching to any module init code. Is there any way we could allow
+> this by implementing a module coming notifier in fprobe as well ?
+> This would require that fprobes are kept around in a data structure
+> that matches the modules when they are loaded in the coming notifier.
 
-What should it refer to? This is arguably a robustness enhancement for a 
-defficiency that has been there all along.
+The above sounds like a nice enhancement, but not something necessary for
+this series.
 
+> 
+> 2) Given that the fprobe module going notifier is protected by the
+> event_mutex, can we use locking rather than reference counting
+> in fprobe attach to guarantee the target module is not reclaimed
+> concurrently ? This would remove the transient side-effect of
+> holding a module reference count which temporarily prevents module
+> unload.
 
-Nicolas
+Why do we care about unloading modules during the transition? Note, module
+unload has always been considered a second class citizen, and there's been
+talks in the past to even rip it out.
+
+-- Steve
