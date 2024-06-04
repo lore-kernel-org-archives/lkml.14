@@ -1,139 +1,147 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2062.outbound.protection.outlook.com [40.92.107.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D571465A8;
-	Tue,  4 Jun 2024 12:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505594; cv=none; b=InhZkCnvmnnUIW/6qM/mreYhac/GZI0wC1HWsWKrltuc/35g3DBaNDOczJmqJlAFTjODmX/7er/KmKwlxHDfKYAIiElxc8v2HNxV+p+TVNm7HSqiKuJs/e7XBcraO4iEm537aFRw94+ruTeb5B5zGKI5ZAFfCL6Yb6xlXRxSINU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505594; c=relaxed/simple;
-	bh=/0Z5do5U7FHNT8l5qEE+RkwK0432uhaqsm9lIUnKlCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=feEMYve3UGqX06pH8P57u1bEcnlUDpausC7/wW1Q6ZgVq+HfeCQlFYZXgLEAKLu+/XPZlLvylZB2yU8U3k3hwpDdZ10aP940Of4CIAi1Gt5/DazxVQap62VhGbGoUP0mqwgPNeuexWCFWy07re8wENFpJNgNH7llh1FaO3jetek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UoqMPFHY; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB89147C91;
+	Tue,  4 Jun 2024 12:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717505604; cv=fail; b=klcRulsNdd0F8khbDWbR9fr9aUo/3yCia6Y8PgdT2uq3UcIT6tHSTk+4Zc5rA0cxYTTbS7MUfT+cx0lSnMLOI8H93VApwoj3mGoi7uhpTst5y036/OkkJa/fw/l9gCQ7AyQgWB5ArkBzC3KOPY1I/n45hfEsLh+C8zRuIICnKFY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717505604; c=relaxed/simple;
+	bh=6z6RDZlpP8Ikel/3sNieKU0tNHFYItjerYZWAxSNtvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qFa0m0A4E2Omxxlu+EYr9qQWhcxlyDLc6CgGDzlgkiQD+uwhdfqfM0db2fvmlgdEMNkevu9NT3ogVah6I5s+CbaWH02TFS/QZKCQoMMnH3hGU/s5jSoDGocfiMFfBcGjXywOzzUjcgNq2XvhpdJH5BrPWmXyN8axqliL1tt5s4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=U13jcXgb; arc=fail smtp.client-ip=40.92.107.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UoqMPFHY"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57a4ce82f30so3693426a12.0;
-        Tue, 04 Jun 2024 05:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717505591; x=1718110391; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jA/3XDMRYNfFF/x22X/HxutHqnTJnzF8YXOQgaSCQAY=;
-        b=UoqMPFHYxFrr6ksVLln0ZmE+PTgu7l8c04YcHBKe6sVjapKQvfIuwt0p1R1D+F5EyU
-         Ocn0TlL2KUiUgX0ADnkfyYLm5qY1JG4+RQUXt/hpiJmVQiapzEzGVlABJEyVpW6xFpQP
-         mbBIOYkIoICsdhrQdVCBbuQIARr0ovfSb8CS0pWAXxinUooGE6qL7boWYELTzYLn9y9C
-         txmQWcNMSyR8SLwHfFwZEswROFkKNngKAj2EEdCuU39ICGh9wOzX6EJhb4xWJid0VwUQ
-         vZakZLOZAoD4BTfIaYQ0pYSwlp9NVbYeaA4LBnFh1yjFTscp32dECa/U0UhBofmG+51B
-         hccw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717505591; x=1718110391;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jA/3XDMRYNfFF/x22X/HxutHqnTJnzF8YXOQgaSCQAY=;
-        b=da19xVB1xO2KIretSDtoH0rPkttswWACYLC3aGe7L8KhUlhEDy/HyPsuJ5qT6J2fRN
-         T2D7irjGfwNhQZXiEXceEZUjl9svl+LNm2V0pk48rXdOgpCZ/wY4+dmZwiwUjQhOpMnK
-         5T7gQGBYMJLhmAfJP33Ic2kbdU/6zGHP7us7E1oGwGAy6ONEVq//dR0ZrHywP1V1ZR1E
-         28IB0+tHtOBsgYcyJgULZ2Qk8icewiEig/1JdnYj79SOt4zTdFF1luBjOHOXGS4czbbG
-         fViTZLVFwtmMXC14xZzt2lPxOO748vTRcZzeQSz6go8hG4Deh/ofvKF3liK2iAWemX6Y
-         wQvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/0q9GgrJSPYEQ4k+rQuhqPwKx9snn9QMCPe5fl7yhbz4rScHs4nfFz+qGqa+GPt8M15NcYYCwadybBXOccSvFHuWmGQfW92+I2Hl8lJBShtxFAY5BXAiruOeE+PPruiaJuXsnmg==
-X-Gm-Message-State: AOJu0Yzg6uRpShwaXi1DDFycZC98wFLyWHs8PVn26eTudABuNamGk8ED
-	OelZ+COGgzDvTWlBjgXAZo8AL4mg0yN1J6lqhzPzI2Q4LH20+GqO
-X-Google-Smtp-Source: AGHT+IFYik7pF49ujBeIaufnGjl1TZQfJJcRHhW17ogA+Z7WUs+FmnspEYfwsKjiHnM+N/tpJSf2rQ==
-X-Received: by 2002:a17:906:bd1:b0:a65:135d:2ef0 with SMTP id a640c23a62f3a-a6820901cbcmr841265466b.34.1717505590514;
-        Tue, 04 Jun 2024 05:53:10 -0700 (PDT)
-Received: from [192.168.0.31] (84-115-213-103.cable.dynamic.surfer.at. [84.115.213.103])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68e9eed9b1sm393402766b.131.2024.06.04.05.53.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 05:53:10 -0700 (PDT)
-Message-ID: <f241957f-6f4b-424c-9ea2-d7eb564daa4e@gmail.com>
-Date: Tue, 4 Jun 2024 14:53:08 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="U13jcXgb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UC9OU/urPwyV47SHq9ZCZA5vnhWSzZOYkJlTf2wv9x+wBLJC5DsvV03/ftnoM7FsXK54i+BDB6RBaZRiXyQS7ncDH/h5nD3KgKJxBycproFI08FXnutvhHloTumOBTuK7yuh05nhTnYYKm1eK5uYmq7k4RAMGfxaRzSmVczGOMWkV710cenEwkiRUULr/ox0tSMCRPe2QV4HRPZWTw3LE64PDav4qN8i/QPWk7WqhZLMQ0pXKRHD6cnDTwGOt8+PmofXT0o+BW48nnCMkGOvIqzKqaxTLSnRPfqWyjNxs4/kfF0hJ1sC87Ea3pzGgyvoaNYkOXXQMgfQ9XHoqZSA/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a1cNEbeG1wdPdrghu/oHKokJc7AylRp/n1AT06GG5/s=;
+ b=DCDoApOreR9ZQarjCSsUrc6VdBaGa5PxE/Qq/3XGZgrnB+6h1VOLz97zL7A0q6Y5dqJRgo+Cr6LHsHmWRFbbz6FIR4mHXjesxz1xnXbX1c9y8QLy2NE6TdQcLr2IipzjvqXXGCfIqWaeEK4TDpfbI0fEL7LG+Ema/VwPcE1O6e6PR1mCHq8bGE0LcmvZgj1MQa6LM5P/3W01CiGMlyZeb+bCzVRpjfcMwnupBNoBXfk5+/85tO1rSbfxqiBam0ohRmjWa9xLWJ990497QUpJPoaN3MBo0xJuoC4YU5dgLCt2txxUd1TgR8+xC4JqsUfzzqSBf7HNgBWdaOJpVpqCBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a1cNEbeG1wdPdrghu/oHKokJc7AylRp/n1AT06GG5/s=;
+ b=U13jcXgbqtj6YCIrqjvmq/v0Y0gMh6DWagX1Sn9NBsbGgPfTax8w8CmyK5ed1MIZIa+wy1GENRJb2u2rurO6v4RDheUKeHlyH+NwWXxh9MxcYK3h7KDnV0aV5MRo0Z3yo9vAqGksE9E9/rrIPsycN04Bs8HY5bGv9JZgff11/5PDg6rZKQYy5aXK1jdMll7dIXDqhs52gV0w8ESxQV1p8e46HUFE9CcR+4qlAmWZCYVz5hfUaZQWbrPwn9OZonNSbd4hkOqQiM5KyDh/MfrnF38CpuEK/O6iALnpbobZtUnM6/9NXLwq4U8HnhrYoV2l6mtfqLblb5V2WQ1aahsvgw==
+Received: from SG2PR01MB4218.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:1ca::8) by SG2PR01MB4386.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:1b5::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Tue, 4 Jun
+ 2024 12:53:12 +0000
+Received: from SG2PR01MB4218.apcprd01.prod.exchangelabs.com
+ ([fe80::7155:e92c:291b:fc1c]) by SG2PR01MB4218.apcprd01.prod.exchangelabs.com
+ ([fe80::7155:e92c:291b:fc1c%4]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
+ 12:53:12 +0000
+From: Haylen Chu <heylenay@outlook.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Jisheng Zhang <jszhang@kernel.org>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Haylen Chu <heylenay@outlook.com>
+Subject: [PATCH v2 0/3] riscv: sophgo: add thermal sensor support for cv180x/sg200x SoCs
+Date: Tue,  4 Jun 2024 12:51:43 +0000
+Message-ID:
+ <SG2PR01MB4218013241B3EED779D3BAE8D7F82@SG2PR01MB4218.apcprd01.prod.exchangelabs.com>
+X-Mailer: git-send-email 2.45.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [RGPwRmNW0xhNYHbvPyk+wFYN+hsaXf/g]
+X-ClientProxiedBy: SI1PR02CA0049.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::18) To SG2PR01MB4218.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:1ca::8)
+X-Microsoft-Original-Message-ID: <20240604125142.22298-2-heylenay@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add maintainer for ROHM BH1745
-To: Mudit Sharma <muditsharma.info@gmail.com>, ivan.orlov0322@gmail.com,
- jic23@kernel.org, lars@metafoo.de, krzk+dt@kernel.org, conor+dt@kernel.org,
- robh@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240603162122.165943-1-muditsharma.info@gmail.com>
- <20240603162122.165943-3-muditsharma.info@gmail.com>
- <a628db76-a48a-4492-a3cc-f93c0f67ad04@gmail.com>
- <961fa617-a76b-4b79-956b-795a55fec959@gmail.com>
-Content-Language: en-US, de-AT
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-In-Reply-To: <961fa617-a76b-4b79-956b-795a55fec959@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR01MB4218:EE_|SG2PR01MB4386:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0e5a0d3-632f-483e-01d6-08dc849548b4
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199019|440099019|3412199016|1710799017;
+X-Microsoft-Antispam-Message-Info:
+	5Eal7oXGwZhiFIcnZ13C+bnHkFrB3GrkxHuPG7slUya0OItEDUTTaJKrd1NGaUVQB34NYOHHBTS//Lf7SKrW3vXYlFfEty+20ux5CeKM2kvVvXFHDpiYsVr63ZTy/Z8MdmRkIwBEv0EPypvADGKg1gGu4odzzdhviY5C+MUQTBvoZ6P/jnTlteqiEstUC93utnueaasYSdcml4aMPUCtMWwAlCFCFU0fAE7uKQBPV8GdkHf2zh8Zq843LhI3Q/4poMbThG+ysicpTJ/NfAMEnTCNowDbEOieeGoE4cSp229LJIyhVmJ9hC1LYohjKLrBHvX5tUt2qjThos9/GLmfRW0fhB0i+feWqti4hIEWKFFNbRr2XqoVm/sd8RK/RTx4F7BbNcyAksgo/ROSQu3E6X/uvFcoOAJEfYO4A60cCV+ucb2nAMpN6680dGnyMQmloqzqNPCrBqnjfGA7DG5ZDrhmSgao3/1XVtjoixTYJmWCoOagTy4Y5vpocgZ++rGbYeHNAlLv1R52i19Xxr3Li02/oG/sNGLBYRyxewWka/XJggVCwApSlEbsg5K2Q7tMBGgSh3jyVkpceDDs/yXHZyu6tdr/vbwhcy9qb/cru3A=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?coSOwDVY2DyVawXXANUPCeCo5vuaMlgTpYESkhG+wVHjSOQJXhA+HoKKLbpm?=
+ =?us-ascii?Q?sB/zpjiFl9BIOOUB5P27+vsasimunoXaVqsTxCyUuviWP4m0hWdyO6E1ODKI?=
+ =?us-ascii?Q?VQaCST9JIYSGEmPwH/YRgX3ywNoUYuEzpvNALyngkzbAGx6qyQnS8MQDIWL8?=
+ =?us-ascii?Q?UdTwHTtw8+FzRtOjEOW252NPFcA604sobrMgpsg3O47ZQfnzpaU1d3wCpUJk?=
+ =?us-ascii?Q?S+Kibrgq3jAHNlqd5G1hidUrjdgnzme9uzSBAdwG+1n5d4JPtxA5uZbY1y4F?=
+ =?us-ascii?Q?IiMc88jciIByLdT9vvyKgkJ4M3Jd5LGzdiDN1kd7PHxdosNEQIbEWUAsoNO5?=
+ =?us-ascii?Q?y69Z/7rH9Yen52laauhT/sBHyMb3OQViBVTaxDBu05MTdYyDIjZpzMljqwPa?=
+ =?us-ascii?Q?CwUC6/AHJ2Dxo0ny5pogoAIm+M2E7lI9PXHIhF9OtMR3QmdQacniyIVohz0Q?=
+ =?us-ascii?Q?peL7MJL3paRVwfuPzxE5r2yN2dCY8YfqZRhywc3sM5NUmm58vzMC/Rud/6JT?=
+ =?us-ascii?Q?ToK4n5ZNyUgAsytvzeypiwG3VM0oI/ASL47txqhlO1EQ+rEejtjQghrOzW/x?=
+ =?us-ascii?Q?6zVVSGzcqNNLjRyxbajdea0WWjZ5t428NjiqZAwDNVVJCgou3q+dPGw6szkI?=
+ =?us-ascii?Q?jepWtugwm8unqpvrLfNOoLDqkkxKDjEc6UV8NC0bw4b48ZmZjR7ZSjtOnG5k?=
+ =?us-ascii?Q?kX41t55m8WGJFXAjTr2fjHnBRG2rU7Ge//vyP7BbO+MqyH2TTRVFViACCV8J?=
+ =?us-ascii?Q?yWIcR33CBxAVR/XjygxhTwR+rrwIYI8KYA9tdpzap+58nbFHzx4Sd/KpWFf2?=
+ =?us-ascii?Q?LIzvfirRdtFPd12HCikKi5iZc3HSMk6y6NrdXgGcF/50SVT+UxmXB1lB96VG?=
+ =?us-ascii?Q?w21CA274ETvi/QBa+aDqsOPukaf4vvjnUDsbnBiDBqh50hvy27X1t5ZFANNz?=
+ =?us-ascii?Q?ndvenzqEW0U/+JnqM1GRwRV2/2rRJQBaVpFHwR1DNR6oeHKhzyEnOS0wmiAX?=
+ =?us-ascii?Q?HxZ1oCb+pjSn1tuz1ajX1mWAN61ISuiQ69LwyL6jxxUFvjvXePIIS2kN0yyl?=
+ =?us-ascii?Q?XRZb7KwmBgrE1tcYzxba5WJjN0KZcix9UH3jQNxY1J22kq+e7ZOqCCXTzSXL?=
+ =?us-ascii?Q?8rZoyGRXlgIn3WK26RDNV2l3rq5HVW++/NLsAaD+PL54jjTdYGmwQiFpz2/O?=
+ =?us-ascii?Q?L2IvPOdXekAiYRwwBpGqTZojyXrgHGM822pK4H3QpFL0hv3pZopM4YFhkaE?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0e5a0d3-632f-483e-01d6-08dc849548b4
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR01MB4218.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 12:53:12.0980
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR01MB4386
 
-On 04/06/2024 12:44, Mudit Sharma wrote:
-> On 03/06/2024 23:37, Javier Carrasco wrote:
->> On 03/06/2024 18:21, Mudit Sharma wrote:
->>> Add myself as maintainer for ROHM BH1745 colour sensor driver.
->>>
->>> Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
->>> ---
->>> v1->v2:
->>> - No changes
->>>
->>>   MAINTAINERS | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index d6c90161c7bf..945873321fef 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -19407,6 +19407,13 @@ S:    Supported
->>>   F:    drivers/power/supply/bd99954-charger.c
->>>   F:    drivers/power/supply/bd99954-charger.h
->>>   +ROHM BH1745 COLOUR SENSOR
->>> +M:    Mudit Sharma <muditsharma.info@gmail.com>
->>> +L:    linux-iio@vger.kernel.org
->>> +S:    Maintained
->>> +F:    Documentation/devicetree/bindings/iio/light/rohm,bh1745.yaml
->>> +F:    drivers/iio/light/bh1745.c
->>> +
->>>   ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
->>>   M:    Tomasz Duszynski <tduszyns@gmail.com>
->>>   S:    Maintained
->>
->> Hi Mudit,
->>
->> is there any special reason to have a separate patch for this? The
->> addition to MAINTANERS for new drives is usually included in the patch
->> that provides the driver itself.
->>
->> Best regards,
->> Javier Carrasco
-> 
-> Hi Javier,
-> 
-> Adding this in a separate commit was just a pattern I notices with some
-> other drivers, for instance 3b4e0e9.
-> 
-> If necessary and/or considered good practice, I can squash this in the
-> patch that brings in the driver.
-> 
-> Best regards,
-> Mudit Sharma
+This series implements driver for Sophgo cv180x/sg200x on-chip thermal
+sensor and adds thermal zones for CV1800B SoCs.
 
-Although there might be some cases where it was added separately, it is
-much more common that it is added to the patch that provides the driver.
-Some perfectionists even include the entry in the dt-bindings patch, and
-then add the link to the driver code in the driver patch. I believe that
-a simple squash would be ok, though.
+Changed from v1:
+1. style and code improvements
+2. make sample parameters configurable
+3. generalize document temperature calculating formula
 
-Best regards,
-Javier Carrasco
+Haylen Chu (3):
+  dt-bindings: thermal: sophgo,cv180x-thermal: Add Sophgo CV180x thermal
+  riscv: dts: sophgo: cv18xx: Add sensor device and thermal zone
+  thermal: cv180x: Add cv180x thermal driver support
+
+ .../thermal/sophgo,cv180x-thermal.yaml        |  82 ++++++
+ arch/riscv/boot/dts/sophgo/cv1800b.dtsi       |  30 ++
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi        |   8 +
+ drivers/thermal/Kconfig                       |   6 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/cv180x_thermal.c              | 262 ++++++++++++++++++
+ 6 files changed, 389 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sophgo,cv180x-thermal.yaml
+ create mode 100644 drivers/thermal/cv180x_thermal.c
+
+-- 
+2.45.2
 
