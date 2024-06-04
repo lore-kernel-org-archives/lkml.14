@@ -1,91 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAC913A863
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA80171BA;
+	Tue,  4 Jun 2024 14:42:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512134; cv=none; b=dUvSQz7kGehxjCPT2QstMKmpuoVFhJHl+ez+hTFGGSxjMJuNnxcaTd/09oCKBAKfcgm68/WsOc49hZOwltWl/etYF9eqOpFqKCLAatP5YEc0E1E/TusxVHLYM5KIs191CVgnDys5k0Szv+fiS1vJL/89IAn4ilEqBxzdV4fp4uU=
+	t=1717512134; cv=none; b=NJHB799f2yP/NIPKFVhsd+ZkfGxFF5gCWORm4rTJZssjJwkB3Z6ztk9Gk7B6kK0fcF/Dshw4mtDKakJyi7lj3LM9yB/MtZOCwAzRz3l/FRx8dOu6/lDISS8+SRwhDA7CRNXRZpXYKinKDm/L926UCjGhro+/Sw+vZRMN7I8Zd9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717512134; c=relaxed/simple;
-	bh=QhueViGQ6pQwXQ+A7L/O06/Vk+SdAysHzZ8fTiTjFis=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=IINeg75fXwhkmDSbGA7SQM286kiLUn0HyjSOBSH7QqUwEW6tynquekYy9xgOtDAXfW6OiBdgPeI4/MkIovZWOi/ywA/5cFjvXkdw8ylvrF8HavTFR1CSRLZlJ3/MtSTk7VZgWPk+KNQDshoD0GnZCxQATJ28lvHaWMxOw05JucI=
+	bh=vYV83xCHqW60X90yf6GZR914c8efb/jm9Lzm+HGekqU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=i9KnTKdk6eGfiBWwTjDywHMWe6eyWPUymY+qPDZ3KGooxJoBoKajC4rQ2NPvyeTzCubgbiGi5hd8lLAoX4Vxx9xYr89TdaB+Z6gh5+d1XNlKlGXhao69Bm7EPU6woY1YAdg9K8BY93p8uNZyXjsSMNPTjVG4zv9/3U29L9s2Qq0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACEDC32786;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88ABAC4AF07;
 	Tue,  4 Jun 2024 14:42:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMc-00000000Yt9-0V0T;
+	id 1sEVMc-00000000Yu7-1oTd;
 	Tue, 04 Jun 2024 10:42:14 -0400
-Message-ID: <20240604144103.293353991@goodmis.org>
+Message-ID: <20240604144214.299594261@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:03 -0400
+Date: Tue, 04 Jun 2024 10:41:05 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 00/27] function_graph: Allow multiple users for v6.11
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Florent Revest <revest@chromium.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ bpf <bpf@vger.kernel.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Alan Maguire <alan.maguire@oracle.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Guo Ren <guoren@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Subject: [for-next][PATCH 02/27] fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible
+ by long
+References: <20240604144103.293353991@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-fgraph/for-next
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Head SHA1: 8d4e21bd4cca8013d2c6f55d42df85838d4ebce6
+Instead of using "ALIGN()", use BUILD_BUG_ON() as the structures should
+always be divisible by sizeof(long).
+
+Co-developed with Masami Hiramatsu:
+Link: https://lore.kernel.org/linux-trace-kernel/171509093949.162236.14518699447151894536.stgit@devnote2
+Link: http://lkml.kernel.org/r/20190524111144.GI2589@hirez.programming.kicks-ass.net
+Link: https://lore.kernel.org/linux-trace-kernel/20240603190821.232168933@goodmis.org
+
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Florent Revest <revest@chromium.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: bpf <bpf@vger.kernel.org>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Alan Maguire <alan.maguire@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Guo Ren <guoren@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/fgraph.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index c62e6db718a0..fdb206aeffe3 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -33,7 +33,7 @@
+  * SHADOW_STACK_MAX_OFFSET: The max offset of the stack for a new frame to be added
+  */
+ #define FGRAPH_FRAME_SIZE	sizeof(struct ftrace_ret_stack)
+-#define FGRAPH_FRAME_OFFSET	(ALIGN(FGRAPH_FRAME_SIZE, sizeof(long)) / sizeof(long))
++#define FGRAPH_FRAME_OFFSET	DIV_ROUND_UP(FGRAPH_FRAME_SIZE, sizeof(long))
+ #define SHADOW_STACK_SIZE (PAGE_SIZE)
+ #define SHADOW_STACK_OFFSET			\
+ 	(ALIGN(SHADOW_STACK_SIZE, sizeof(long)) / sizeof(long))
+@@ -103,6 +103,8 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	if (!current->ret_stack)
+ 		return -EBUSY;
+ 
++	BUILD_BUG_ON(SHADOW_STACK_SIZE % sizeof(long));
++
+ 	/*
+ 	 * We must make sure the ret_stack is tested before we read
+ 	 * anything else.
+@@ -326,6 +328,8 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int idx)
+ {
+ 	int index = task->curr_ret_stack;
+ 
++	BUILD_BUG_ON(FGRAPH_FRAME_SIZE % sizeof(long));
++
+ 	index -= FGRAPH_FRAME_OFFSET * (idx + 1);
+ 	if (index < 0)
+ 		return NULL;
+-- 
+2.43.0
 
 
-Masami Hiramatsu (Google) (3):
-      function_graph: Handle tail calls for stack unwinding
-      function_graph: Use a simple LRU for fgraph_array index number
-      ftrace: Add multiple fgraph storage selftest
-
-Steven Rostedt (Google) (9):
-      ftrace: Add subops logic to allow one ops to manage many
-      ftrace: Allow subops filtering to be modified
-      function_graph: Add pid tracing back to function graph tracer
-      function_graph: Use for_each_set_bit() in __ftrace_return_to_handler()
-      function_graph: Use bitmask to loop on fgraph entry
-      function_graph: Use static_call and branch to optimize entry function
-      function_graph: Use static_call and branch to optimize return function
-      selftests/ftrace: Add function_graph tracer to func-filter-pid test
-      selftests/ftrace: Add fgraph-multi.tc test
-
-Steven Rostedt (VMware) (15):
-      function_graph: Convert ret_stack to a series of longs
-      fgraph: Use BUILD_BUG_ON() to make sure we have structures divisible by long
-      function_graph: Add an array structure that will allow multiple callbacks
-      function_graph: Allow multiple users to attach to function graph
-      function_graph: Remove logic around ftrace_graph_entry and return
-      ftrace/function_graph: Pass fgraph_ops to function graph callbacks
-      ftrace: Allow function_graph tracer to be enabled in instances
-      ftrace: Allow ftrace startup flags to exist without dynamic ftrace
-      function_graph: Have the instances use their own ftrace_ops for filtering
-      function_graph: Add "task variables" per task for fgraph_ops
-      function_graph: Move set_graph_function tests to shadow stack global var
-      function_graph: Move graph depth stored data to shadow stack global var
-      function_graph: Move graph notrace bit to shadow stack global var
-      function_graph: Implement fgraph_reserve_data() and fgraph_retrieve_data()
-      function_graph: Add selftest for passing local variables
-
-----
- include/linux/ftrace.h                             |   43 +-
- include/linux/sched.h                              |    2 +-
- include/linux/trace_recursion.h                    |   39 -
- kernel/trace/fgraph.c                              | 1044 ++++++++++++++++----
- kernel/trace/ftrace.c                              |  522 +++++++++-
- kernel/trace/ftrace_internal.h                     |    5 +-
- kernel/trace/trace.h                               |   94 +-
- kernel/trace/trace_functions.c                     |    8 +
- kernel/trace/trace_functions_graph.c               |   96 +-
- kernel/trace/trace_irqsoff.c                       |   10 +-
- kernel/trace/trace_sched_wakeup.c                  |   10 +-
- kernel/trace/trace_selftest.c                      |  259 ++++-
- .../selftests/ftrace/test.d/ftrace/fgraph-multi.tc |  103 ++
- .../ftrace/test.d/ftrace/func-filter-pid.tc        |   27 +-
- 14 files changed, 1945 insertions(+), 317 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi.tc
