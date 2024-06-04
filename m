@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE4513D24F;
-	Tue,  4 Jun 2024 14:00:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A094E1EB26;
+	Tue,  4 Jun 2024 14:00:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717509610; cv=none; b=uUy9BxjchYprYSv+jayxCT8vo4WzRO91EPwsjhsTiTj3+46g/DT5jqfmeznjeBkZ3ZMiVAd4qGfeozNgCD0mk2GoqhnhhprpGDBVg35NKZnH5Ugj+GEFbh6IQSFfDqBafK+eVhuNG5xiHM8gM0gkDQjSRFTFAgIKKuxAJ8ulaOo=
+	t=1717509613; cv=none; b=AdOt+TeyIFumTogb2TlpI7NZNFj36Ijiv2/WmBH3zMlxzKtbO0wLFHaDSa6c4xFk3LblnzBqF4D2NcwdIfXOh6aBXxs64Dy2mFvwPxQPJDJPKDrMmwCHKg0nhE2QZvTsn5IfKY4MSna3/G3HaKGr/YDGcdk5aRQt1g01wjneFfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717509610; c=relaxed/simple;
-	bh=cP7uD/wG7u91xicq/qibn/jCrRGqs0slZIoz+5q3tuk=;
+	s=arc-20240116; t=1717509613; c=relaxed/simple;
+	bh=bp4RUBBoDBNxBmueQhwpMXLVezAaB2zJTWzVJs7lfD8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qaSbAwLwnL7tvsUrAcFr41H3SX+PFyJYFM9IUjrC4c4BiG+glOs28cX3TnbxgLurKRllRcGGVzpucKOoso1/LlVSw2rQscvqNVS5rTBtpQg6yb0EtitDUNLrA5La6d7aYUrySZhMvB7klR9Z62T70qKkRDlUW1kS2hVgZUgPW0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYUL7o6u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XYvZrDiPmy+54DpbvWi1IFa+w/jrO9VC0Smm4nM8M0VNL9t4qJtKMUE8BRJfCjljk4FsSZQpm3ruP584cjEZzgS1vRukfDYv44tP4DhyxZ7jSbqmAamKKeZk2Tjfi80wHuaHaPBxOnnveBEcPB8C9H0XyVxDncI7OPxOfk3Qpno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZTqIUin; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYUL7o6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC62C4AF07;
-	Tue,  4 Jun 2024 14:00:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZTqIUin"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 278F9C2BBFC;
+	Tue,  4 Jun 2024 14:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717509609;
-	bh=cP7uD/wG7u91xicq/qibn/jCrRGqs0slZIoz+5q3tuk=;
+	s=k20201202; t=1717509613;
+	bh=bp4RUBBoDBNxBmueQhwpMXLVezAaB2zJTWzVJs7lfD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RYUL7o6uWryWEjlN0rRCAeL587woAKjq97KzFJcTzeBKoUAQbSoMwAAuIifxaB1ey
-	 AX8pwjTg4ngTXHHOsVxU6EV3mbV9TBP8xyCAz2D2xTH2+spNZsKUD7CtHLuQeSDUnZ
-	 D4X1U4BgDhfhoQew587hNofF7X8J1/tGEV0Z+JUdHk4Ziv+yXiMTM91h8JtPfrJSjE
-	 Xlp94kJsIL/NoU0cnBcKStNPxEFD+PyHLfOAQ1eLO40U8iw7JgwG6kXkotUc1LQqGd
-	 BNwEzZTlIL0tlDHHp1aB9bZdObI925AA8AGJ+Gf4lZM+gaaoC9/SVGL6f+eCYYYYYq
-	 Sgj8DVHk0Jlzg==
+	b=eZTqIUin6QMORoeiFVbD804WbJDlgJ7D5GtxruxhrtSHTjJQyYCVzoKPGvLAa4E2j
+	 ofSSDd2suDVVfLZ1TlDX4s653lNKNPEHAtJvJQCs64r6q5f75cDDVzhKRI3elI80xC
+	 rtQ6eYScDyQItOnoG6srCQee12gBfXHNNhpA2/JkLHhHkkRq/HlwYl39n4mapXGGAJ
+	 3qaUii2Zo9ekQtEWPa2ONsDwROdiQpJm1U8QyDeebCg/vuObbHBk47p6Xn0HQlyeSb
+	 16CsS7X+YOA181TdABY75YTewaDVcNr3vun2FjarbbDFSoP8NlM21ZzEURBlvxk+OD
+	 09/WG9cZUz/pQ==
 From: Michael Walle <mwalle@kernel.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
 	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH 06/10] ARM: dts: imx6qdl-kontron-samx6i: fix product name
-Date: Tue,  4 Jun 2024 15:59:30 +0200
-Message-Id: <20240604135934.1951189-7-mwalle@kernel.org>
+Subject: [PATCH 07/10] ARM: dts: imx6qdl-kontron-samx6i: always enable eMMC
+Date: Tue,  4 Jun 2024 15:59:31 +0200
+Message-Id: <20240604135934.1951189-8-mwalle@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240604135934.1951189-1-mwalle@kernel.org>
 References: <20240604135934.1951189-1-mwalle@kernel.org>
@@ -56,39 +56,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The correct name of the product is "Kontron SMARC-sAMX6i". See also
-https://www.kontron.com/en/products/smarc-samx6i/p89810
+There are no variants of this module without an eMMC.
 
 Signed-off-by: Michael Walle <mwalle@kernel.org>
 ---
- arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i.dtsi | 2 +-
- arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i.dtsi b/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i.dtsi
-index a864fdbd5f16..5a9b819d7ee8 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-kontron-samx6i.dtsi
-@@ -7,6 +7,6 @@
- #include "imx6qdl-kontron-samx6i.dtsi"
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+index 4a6ab7e7908a..4d3cd338a707 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-kontron-samx6i.dtsi
+@@ -800,7 +800,6 @@ &usdhc3 {
  
- / {
--	model = "Kontron SMARC sAMX6i Dual-Lite/Solo";
-+	model = "Kontron SMARC-sAMX6i Dual-Lite/Solo";
- 	compatible = "kontron,imx6dl-samx6i", "fsl,imx6dl";
+ /* SDMMC */
+ &usdhc4 {
+-	/* Internal eMMC, optional on some boards */
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc4>;
+ 	bus-width = <8>;
+@@ -809,6 +808,7 @@ &usdhc4 {
+ 	non-removable;
+ 	vmmc-supply = <&reg_3p3v_s0>;
+ 	vqmmc-supply = <&reg_1p8v_s0>;
++	status = "okay";
  };
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i.dtsi b/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i.dtsi
-index ff062f4fd726..e76963436079 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-kontron-samx6i.dtsi
-@@ -7,6 +7,6 @@
- #include "imx6qdl-kontron-samx6i.dtsi"
  
- / {
--	model = "Kontron SMARC sAMX6i Quad/Dual";
-+	model = "Kontron SMARC-sAMX6i Quad/Dual";
- 	compatible = "kontron,imx6q-samx6i", "fsl,imx6q";
- };
+ &wdog1 {
 -- 
 2.39.2
 
