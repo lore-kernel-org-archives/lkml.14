@@ -1,355 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B74514A4DD;
-	Tue,  4 Jun 2024 14:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B97F14A4DE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512139; cv=none; b=CI7XWnsPcPKqSe1CDW7yYsQqtngSYIIE3bALhSo/nKEDrPHR/HbPIcxjIvcK4PbdryxEO22U0Z8eNBv0CL4a+uYpJZiWUkzspWAkLZHdp35xSfZFRNSaSDaqPQYpnbM7K2fVoqSXSrFsO1JqxqiH09N5FvpYcG99mj6TEI34/pk=
+	t=1717512142; cv=none; b=qZWAuw3GDlgbe17kXSqOqT5qEa1tFxqaUYYK8CtXWdzss/urLDWq/3fnCp3YIHX8l0VxXtY8Y2Mvu8A9pTLMH1WSAanQjU1+Zh+iUn6N1M/80jxMriZ6/FzAJ6IS1nK6khWT4aUZsTSHHUGMXCLT51ZF8J3zD5vqXebGrIidKOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512139; c=relaxed/simple;
-	bh=DODPJgC5iTA3XbUH1M3g3CyluOcqeSJmFe7rf8Joak8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=jqZwdOyi+CYCUE5aoy4IQczzxk0Vrl7j+0O0tgtgjmCbvoMOLoC4quHg/SUeAsHzhItyP/zsxYpRerLfKfjzIUa4AK825EBhTo2rpkdl7cm8vYcYVIQ3lk4zw8hhQxddTID55qi+Wj/XDOoZyqkd/RF4T4+HCh35Z//hfjxw+a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F3EC4AF13;
-	Tue,  4 Jun 2024 14:42:18 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMf-00000000Z3V-24Ne;
-	Tue, 04 Jun 2024 10:42:17 -0400
-Message-ID: <20240604144217.350436921@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Florent Revest <revest@chromium.org>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- bpf <bpf@vger.kernel.org>,
- Sven Schnelle <svens@linux.ibm.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Alan Maguire <alan.maguire@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Guo Ren <guoren@kernel.org>
-Subject: [for-next][PATCH 21/27] ftrace: Add multiple fgraph storage selftest
-References: <20240604144103.293353991@goodmis.org>
+	s=arc-20240116; t=1717512142; c=relaxed/simple;
+	bh=Ghqj7sm86kY0ZfjVRuy7AMU0AJWf5Kbzzfiaeeu4Smc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=INjkLYnXD0OXOw17+sO6uOSNK1htFMRnc1KH6P2BJGiTAFHr0XpF0PqEymmNN/FXISek/8sHdprZy5sshUwrS4UzxBrQk9xGSxTgmhhm3h6XZwhSrEfQlhmyPopgvQp9azlu0DVtlKsrbM2ke7S/1tKBxtWJ5Rk+T2SdcisIw/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GCr3CgbG; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GCr3CgbG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717512138;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6GSKZn5YJoJ3kMztNbh4Ff0sh8p7A+Y7W7uSyuwooK8=;
+	b=GCr3CgbGFtppbFBknp5GHAFYpN3skru48lJfzrg7+r9ZcCjhPDtx79mUh0VY238EMQd+jD
+	PPK4FjKBAWuCBtjfXqJDUJevEGy4PDuS+UjiGsVZN5UYOfNL7s5EXkKQLpGHHqwe8nBzU8
+	LkTjgKDx2ETeYGFQer2pBfwJETkGxNM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-504-MGrYLXmCP9S3pm1nWD1f7A-1; Tue, 04 Jun 2024 10:42:16 -0400
+X-MC-Unique: MGrYLXmCP9S3pm1nWD1f7A-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-57a1c680aa8so474166a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:42:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717512135; x=1718116935;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6GSKZn5YJoJ3kMztNbh4Ff0sh8p7A+Y7W7uSyuwooK8=;
+        b=Q0p8B8/0zWe7NhOtNFOrDdxH28EehryjG3qCP2CroVNxsNYRWHq1gwFT9mBGVFXR6Z
+         aA5dfGU4s0cflYs7ELRp226Zn+JLjojT0Yy0fi0P09a9M98aHNM0B7E2VX40RMxbc0xM
+         7TWT7egW+sK8awe3pXoy5mJQMKnGm+uWx8KbX3wr73SXlI+5sSFazbHIaay8Xr3XYPVg
+         FeYx96fdSY8gBBkZ0gKzeYrtGcocJX/u7VFfJDKNKRjmDxHJh95l3Z+xXuHRTbIXDjQx
+         UDdtHGvTJZQLMX3wxWw0EC5MNCeuYRnSRYSjbK2qgjnDafdt2rCwS3wD7YP/OP+qr08J
+         MhcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVb/u4XxnINx0bDI0pbyNFghveynpBNZOPycYFAnJ2VF2Q6utXvQnCst4rXrgnIJ+/AHzByN0XkiHepITlxhdwkcTN1OabDq0IXe3Gj
+X-Gm-Message-State: AOJu0YxPb7OlpY75PkGI8cJInsBmONxoFb7U9za8OEga9jiX3XtnP+uT
+	a2FFRSgT6i7MvRSbFlo1TIgJ1plnefjiGZnl3XtQB2la/xRm4YohnkmA1BvHpXIiQt0dU87vq56
+	u3W/HrpQVyj6ZD022gnNSJaXhlp16ewHPkhN6v+k6B1Gh5uGV7BjlQUUl2qePkw==
+X-Received: by 2002:a17:906:a946:b0:a65:d7f7:f3f2 with SMTP id a640c23a62f3a-a6820be934fmr797485966b.36.1717512135501;
+        Tue, 04 Jun 2024 07:42:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGdDULiev1oH5nT3hJB3si4jO9YRCWfF0/Nqzsz2PAZuFe5bOc8WIqL7WohgMsV7xNUgCC15g==
+X-Received: by 2002:a17:906:a946:b0:a65:d7f7:f3f2 with SMTP id a640c23a62f3a-a6820be934fmr797484566b.36.1717512135073;
+        Tue, 04 Jun 2024 07:42:15 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:2a07:3a01:e7a9:b143:57e6:261b? (2001-1c00-2a07-3a01-e7a9-b143-57e6-261b.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:e7a9:b143:57e6:261b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68e940ed6asm411617666b.22.2024.06.04.07.42.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 07:42:14 -0700 (PDT)
+Message-ID: <ad6c1af5-b0bb-430a-9d6f-0cdb1d2d8904@redhat.com>
+Date: Tue, 4 Jun 2024 16:42:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: lg-g15: add missing MODULE_DESCRIPTION() macro
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <20240604-md-hid-lg-g15-v1-1-265b094db089@quicinc.com>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240604-md-hid-lg-g15-v1-1-265b094db089@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Hi,
 
-Add a selftest for multiple function graph tracer with storage on a same
-function. In this case, the shadow stack entry will be shared among those
-fgraph with different data storage. So this will ensure the fgraph will
-not mixed those storage data.
+On 6/4/24 4:33 PM, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-lg-g15.o
+> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509111465.162236.3795819216426570800.stgit@devnote2
-Link: https://lore.kernel.org/linux-trace-kernel/20240603190824.284049716@goodmis.org
+Thanks, patch looks good to me:
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Florent Revest <revest@chromium.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Alan Maguire <alan.maguire@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Guo Ren <guoren@kernel.org>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_selftest.c | 171 +++++++++++++++++++++++++---------
- 1 file changed, 126 insertions(+), 45 deletions(-)
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index fcdc744c245e..369efc569238 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -762,28 +762,32 @@ trace_selftest_startup_function(struct tracer *trace, struct trace_array *tr)
- #define SHORT_NUMBER 12345
- #define WORD_NUMBER 1234567890
- #define LONG_NUMBER 1234567890123456789LL
--
--static int fgraph_store_size __initdata;
--static const char *fgraph_store_type_name __initdata;
--static char *fgraph_error_str __initdata;
--static char fgraph_error_str_buf[128] __initdata;
-+#define ERRSTR_BUFLEN 128
-+
-+struct fgraph_fixture {
-+	struct fgraph_ops gops;
-+	int store_size;
-+	const char *store_type_name;
-+	char error_str_buf[ERRSTR_BUFLEN];
-+	char *error_str;
-+};
- 
- static __init int store_entry(struct ftrace_graph_ent *trace,
- 			      struct fgraph_ops *gops)
- {
--	const char *type = fgraph_store_type_name;
--	int size = fgraph_store_size;
-+	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
-+	const char *type = fixture->store_type_name;
-+	int size = fixture->store_size;
- 	void *p;
- 
- 	p = fgraph_reserve_data(gops->idx, size);
- 	if (!p) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Failed to reserve %s\n", type);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return 0;
- 	}
- 
--	switch (fgraph_store_size) {
-+	switch (size) {
- 	case 1:
- 		*(char *)p = BYTE_NUMBER;
- 		break;
-@@ -804,7 +808,8 @@ static __init int store_entry(struct ftrace_graph_ent *trace,
- static __init void store_return(struct ftrace_graph_ret *trace,
- 				struct fgraph_ops *gops)
- {
--	const char *type = fgraph_store_type_name;
-+	struct fgraph_fixture *fixture = container_of(gops, struct fgraph_fixture, gops);
-+	const char *type = fixture->store_type_name;
- 	long long expect = 0;
- 	long long found = -1;
- 	int size;
-@@ -812,20 +817,18 @@ static __init void store_return(struct ftrace_graph_ret *trace,
- 
- 	p = fgraph_retrieve_data(gops->idx, &size);
- 	if (!p) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Failed to retrieve %s\n", type);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return;
- 	}
--	if (fgraph_store_size > size) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+	if (fixture->store_size > size) {
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "Retrieved size %d is smaller than expected %d\n",
--			 size, (int)fgraph_store_size);
--		fgraph_error_str = fgraph_error_str_buf;
-+			 size, (int)fixture->store_size);
- 		return;
- 	}
- 
--	switch (fgraph_store_size) {
-+	switch (fixture->store_size) {
- 	case 1:
- 		expect = BYTE_NUMBER;
- 		found = *(char *)p;
-@@ -845,45 +848,44 @@ static __init void store_return(struct ftrace_graph_ret *trace,
- 	}
- 
- 	if (found != expect) {
--		snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
-+		snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
- 			 "%s returned not %lld but %lld\n", type, expect, found);
--		fgraph_error_str = fgraph_error_str_buf;
- 		return;
- 	}
--	fgraph_error_str = NULL;
-+	fixture->error_str = NULL;
- }
- 
--static struct fgraph_ops store_bytes __initdata = {
--	.entryfunc		= store_entry,
--	.retfunc		= store_return,
--};
--
--static int __init test_graph_storage_type(const char *name, int size)
-+static int __init init_fgraph_fixture(struct fgraph_fixture *fixture)
- {
- 	char *func_name;
- 	int len;
--	int ret;
- 
--	fgraph_store_type_name = name;
--	fgraph_store_size = size;
-+	snprintf(fixture->error_str_buf, ERRSTR_BUFLEN,
-+		 "Failed to execute storage %s\n", fixture->store_type_name);
-+	fixture->error_str = fixture->error_str_buf;
- 
--	snprintf(fgraph_error_str_buf, sizeof(fgraph_error_str_buf),
--		 "Failed to execute storage %s\n", name);
--	fgraph_error_str = fgraph_error_str_buf;
-+	func_name = "*" __stringify(DYN_FTRACE_TEST_NAME);
-+	len = strlen(func_name);
-+
-+	return ftrace_set_filter(&fixture->gops.ops, func_name, len, 1);
-+}
-+
-+/* Test fgraph storage for each size */
-+static int __init test_graph_storage_single(struct fgraph_fixture *fixture)
-+{
-+	int size = fixture->store_size;
-+	int ret;
- 
- 	pr_cont("PASSED\n");
- 	pr_info("Testing fgraph storage of %d byte%s: ", size, size > 1 ? "s" : "");
- 
--	func_name = "*" __stringify(DYN_FTRACE_TEST_NAME);
--	len = strlen(func_name);
--
--	ret = ftrace_set_filter(&store_bytes.ops, func_name, len, 1);
-+	ret = init_fgraph_fixture(fixture);
- 	if (ret && ret != -ENODEV) {
- 		pr_cont("*Could not set filter* ");
- 		return -1;
- 	}
- 
--	ret = register_ftrace_graph(&store_bytes);
-+	ret = register_ftrace_graph(&fixture->gops);
- 	if (ret) {
- 		pr_warn("Failed to init store_bytes fgraph tracing\n");
- 		return -1;
-@@ -891,30 +893,109 @@ static int __init test_graph_storage_type(const char *name, int size)
- 
- 	DYN_FTRACE_TEST_NAME();
- 
--	unregister_ftrace_graph(&store_bytes);
-+	unregister_ftrace_graph(&fixture->gops);
- 
--	if (fgraph_error_str) {
--		pr_cont("*** %s ***", fgraph_error_str);
-+	if (fixture->error_str) {
-+		pr_cont("*** %s ***", fixture->error_str);
- 		return -1;
- 	}
- 
- 	return 0;
- }
-+
-+static struct fgraph_fixture store_bytes[4] __initdata = {
-+	[0] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 1,
-+		.store_type_name = "byte",
-+	},
-+	[1] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 2,
-+		.store_type_name = "short",
-+	},
-+	[2] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 4,
-+		.store_type_name = "word",
-+	},
-+	[3] = {
-+		.gops = {
-+			.entryfunc		= store_entry,
-+			.retfunc		= store_return,
-+		},
-+		.store_size = 8,
-+		.store_type_name = "long long",
-+	},
-+};
-+
-+static __init int test_graph_storage_multi(void)
-+{
-+	struct fgraph_fixture *fixture;
-+	bool printed = false;
-+	int i, ret;
-+
-+	pr_cont("PASSED\n");
-+	pr_info("Testing multiple fgraph storage on a function: ");
-+
-+	for (i = 0; i < ARRAY_SIZE(store_bytes); i++) {
-+		fixture = &store_bytes[i];
-+		ret = init_fgraph_fixture(fixture);
-+		if (ret && ret != -ENODEV) {
-+			pr_cont("*Could not set filter* ");
-+			printed = true;
-+			goto out;
-+		}
-+
-+		ret = register_ftrace_graph(&fixture->gops);
-+		if (ret) {
-+			pr_warn("Failed to init store_bytes fgraph tracing\n");
-+			printed = true;
-+			goto out;
-+		}
-+	}
-+
-+	DYN_FTRACE_TEST_NAME();
-+out:
-+	while (--i >= 0) {
-+		fixture = &store_bytes[i];
-+		unregister_ftrace_graph(&fixture->gops);
-+
-+		if (fixture->error_str && !printed) {
-+			pr_cont("*** %s ***", fixture->error_str);
-+			printed = true;
-+		}
-+	}
-+	return printed ? -1 : 0;
-+}
-+
- /* Test the storage passed across function_graph entry and return */
- static __init int test_graph_storage(void)
- {
- 	int ret;
- 
--	ret = test_graph_storage_type("byte", 1);
-+	ret = test_graph_storage_single(&store_bytes[0]);
-+	if (ret)
-+		return ret;
-+	ret = test_graph_storage_single(&store_bytes[1]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("short", 2);
-+	ret = test_graph_storage_single(&store_bytes[2]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("word", 4);
-+	ret = test_graph_storage_single(&store_bytes[3]);
- 	if (ret)
- 		return ret;
--	ret = test_graph_storage_type("long long", 8);
-+	ret = test_graph_storage_multi();
- 	if (ret)
- 		return ret;
- 	return 0;
--- 
-2.43.0
+Regards,
 
+Hans
+
+
+
+> ---
+>  drivers/hid/hid-lg-g15.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
+> index acbec1dcf196..53e7b90f9cc3 100644
+> --- a/drivers/hid/hid-lg-g15.c
+> +++ b/drivers/hid/hid-lg-g15.c
+> @@ -954,4 +954,5 @@ static struct hid_driver lg_g15_driver = {
+>  module_hid_driver(lg_g15_driver);
+>  
+>  MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
+> +MODULE_DESCRIPTION("HID driver for gaming keys on Logitech gaming keyboards");
+>  MODULE_LICENSE("GPL");
+> 
+> ---
+> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+> change-id: 20240604-md-hid-lg-g15-e4a106ba126b
+> 
 
