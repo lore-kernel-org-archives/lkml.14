@@ -1,116 +1,142 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A875D1FA5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 00:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9AE4A0F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 00:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717460590; cv=none; b=AT81JCxgPeXIz/tqzPpZFfvNbdtCdct7BHf0rwHYGEUYqvwjUMvHm+zrYMDEei/6aPrZhOAijChlc2viDKUJtAhnjt0x4Mi8wohLTG7tOF644y0WkIQFLElLIS98dygO06s6i96huaRgtVK+G7RbYbBoWK9kNaJT4p7jvFT8AV0=
+	t=1717460993; cv=none; b=PRcFkLHCW7Z1ayR5OYI3KG/JDFLiNNgBDE7qVZ5mOrrbPCZ3F1oc3VIpCRiKxejph9mMn/z79RvzQcJCd3esIJLmCuZTUgrWkLk031RUnr4T8s0jxJyfKhNee93dVWzvWOGvFa/+0gv7G/qJhFUHEHxKt63ihxD43hHHWLDUfCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717460590; c=relaxed/simple;
-	bh=ouvtVl7K0PAyNCf/CqS8kHiqugncCwG8s3P79l84eTI=;
+	s=arc-20240116; t=1717460993; c=relaxed/simple;
+	bh=tHNlljHyl4OWf1KxKCEPYA1CiqsKpPT13VLxPLbrxl8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PYSuFlcShJydTgXpDwo8K4p4mFqMIuCNhNjlZigardY0dOudge8rC4engaM9PI6BtAgnSR3kMir39wbJEuuj51W00JKs/xWmuFD/7mq+NjvpZZcVUK2ctlVET+bLjMbOSfmzL0p9fOk1z0zZIq9Yd8DaW5GExCanYDByTs1lolc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c1m8ckvv; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=OPlIVQQGvQremj2LMWuRBAuFLJF+QD5wW2wJVKArBradZltz6j2xqyJpySZycxlD6gKRxPhNyM7efpaTHcrS9/fzeH9A0kRvz6HRytzAprcqcuVaihfYWRecdlwwclD9aDJSdRUgaibcFRs/N2WbywvR3k4dIV4Sgl0mG+YncBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=puxjbxBT; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1m8ckvv"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfa4b878450so7327011276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 17:23:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="puxjbxBT"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6658818ad5eso3699535a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 17:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717460588; x=1718065388; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717460991; x=1718065791; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HRuXM8qP8LdDvX6fn1r8scesSI9q9pU2JyFDr4cXXhA=;
-        b=c1m8ckvvboOwe3KrhHvNr9scMkhS5hbZHC4OO/9AxaPB6cCwQnHZkr1ZxTFGKbGpkm
-         U21tzIPxW2xS0YzG453o80rah9rxwfBOjzEmsykJnWgK1SAIOVPBUwK0zkGXDxnLvj9Y
-         AW52RCSShShES3RR2ozc8dVWoh4Rol47IrwsXyYIjm9WoimEaT/lmnet4RIuodPntggB
-         plcafDYVXkQZKOa2/m+6wAbjOL8xRJ4yw2rmCGeDmLiOFT4aRZX2dRsU0hNekfENabM1
-         QUUPAvur26jvp92Z4K1CWzFxCO3JvEs1jfPGBZr3MkUhu/xkSfVGyyCe838x5bftgUlq
-         UPfg==
+        bh=QxIMQXFvRFWSOBKMLO/Pb11VLx9FgWxOAKpcjqg1q6M=;
+        b=puxjbxBTG5z3Upww4V6uBpPm3gT6S16Fh/4hFzQnft+qQUhCffRGP8yUD+0M/Y0BTF
+         t80sR1UETBui4VWEC5izZ6Y8k0lq81iM2k9DX2auu95AjbleBwkIMJ1kYn+iRVKjqtOJ
+         TNN4BZQoewG55+6C5TOEBRUiCr5SyTNx7tpVYnQ/FTN5Bp6SapIJT+tu3hdu+PStimkS
+         0RfRGfAImQnfZdDfSfHvC814+/YkuIhFCJBEShpWm3nJuvoosaIf+iNyskVf1kJiix9d
+         BYFr2cgkFmIrb0Jmd88+P9eQ4EGysGGVrXi//MiWRpYOTrPBDwTLwfQQznIk+5cZfCKl
+         coeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717460588; x=1718065388;
+        d=1e100.net; s=20230601; t=1717460991; x=1718065791;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HRuXM8qP8LdDvX6fn1r8scesSI9q9pU2JyFDr4cXXhA=;
-        b=oROqeeMLxipGlNwrbFcSz6z7N5TvAP5YE8arKpB8/zxIGYPUJvBOOSyZxxLgebp0Eb
-         NQp2KeZ9rTLQOMBJ/vPtIcfl/JURhYhHF6mzraGqrbdMtz64HZrH/JJE7N1KNy2jBlIG
-         UghkKN+C4wmzXZoYBl8l/x16pIrWZiObreJ4lY3lIrQjP0grA11q82ZAg8Y/00wdgMXv
-         NrbOQfRQPsQXYC0PTwLm17zowyTGPbbeoxiKaIK0x6gwsGWaCK1Tbg338m7+xlpquwDt
-         zWgm1bTwE4obzn0+c94dM71hkNE12x+d5fNiq5pXr2UgP5tlzQjNXaCNYIxouSR+g1QQ
-         kQ3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWIsw3PCt9fiae3MC5K+QXANTFQF2MzS791ZJh6FZDUR+ta+LhoMtwl1IL/dudZGrXtetVeotRiKD/jTyPIFku38P9S5VlFZPSwVCtS
-X-Gm-Message-State: AOJu0Yx7hFM+8MqBC/P4KdSBNky8PcBJ8vTv2CZ3qGHQahMuhSJ30gnO
-	xNkc3XEGHdaoUwUmB0BeMleMMFY25MJk847IYwIhM/QvHz4IuUBxhlqiQLmablzHeYy7SmYqg+l
-	e+A==
-X-Google-Smtp-Source: AGHT+IEk24C6d/QoiBbCyIExMW7OdPZLjaBEK4ZPTTj/IX3O1NfqjnOFuoealUEhXp84xV+hhBOGjvPTh7s=
+        bh=QxIMQXFvRFWSOBKMLO/Pb11VLx9FgWxOAKpcjqg1q6M=;
+        b=NEEK+s+hIKTdcbF+Ln8e+p3kOCH+0dyCqcMvi7rAV/QbVvqUtfggFiabZCvpMbu1Mg
+         zc0K3nvR43FnCzYbaHj3Z2mfbG/ocp1uIW5RYG67f0dz7lxVJtsLwKtVLuC2wS1HDsLI
+         OfqGsYqtdWOujWG8LESIXbFKijawR2V1C/ZuBH0BoYISllBoEqLa/opg0nt8w2RX9pqx
+         G1FT1/WZUwiypqhy8oWr+eZeG+qwz1zywKlzHckLWqLeK5FyrheGVYoBuE2fT2YpQYf+
+         eYSpawZNE2VxQO9pp+V53EUD/gG5Gkz8tn6RNqxmcwvWRGS0cDhG8K+I8HE3RoosK+9I
+         C/gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ/QGya/VcKR6/x+2VhJI7BsPN3Fvhp1GUcyI6GUWHBLgDTTrUkxVv19MrV+nPwNNFYxn27ZZ/xtyUJ6IW1xlx9aWPp9u0yTCmVVIG
+X-Gm-Message-State: AOJu0YwgK+1VL42LJ2qIIvQph0M++DiRcDrBfdkwCIZUeHKOo01M6g5S
+	6fXVcLrdpkBmuPfqR1WlIiVTI1gV+YzhZmOQllU0smTBBA6UnrOcg1nwWSAfHTEvOnvZThDK3mi
+	0QQ==
+X-Google-Smtp-Source: AGHT+IENLGEaWbs37HwWar6l9tfsoGWg6m42nFsyoTQfIezFlKVeE9IraziAYhpEU9jmdwNYoPJqg3Pzh8c=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:707:b0:dfa:ba40:6f43 with SMTP id
- 3f1490d57ef6-dfaba407295mr112473276.2.1717460587664; Mon, 03 Jun 2024
- 17:23:07 -0700 (PDT)
-Date: Mon, 3 Jun 2024 17:23:06 -0700
-In-Reply-To: <CADrL8HU734C_OQhzszWJWMXEXLN6HkBo4yweN2fX4BbOegXrFA@mail.gmail.com>
+ (user=seanjc job=sendgmr) by 2002:a17:902:f7c1:b0:1f4:620b:6a47 with SMTP id
+ d9443c01a7336-1f6370524bemr2945395ad.4.1717460990723; Mon, 03 Jun 2024
+ 17:29:50 -0700 (PDT)
+Date: Mon, 3 Jun 2024 17:29:49 -0700
+In-Reply-To: <20240514.OoPohLaejai6@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240529180510.2295118-3-jthoughton@google.com>
- <CAOUHufYFHKLwt1PWp2uS6g174GZYRZURWJAmdUWs5eaKmhEeyQ@mail.gmail.com>
- <ZlelW93_T6P-ZuSZ@google.com> <CAOUHufZdEpY6ra73SMHA33DegKxKaUM=Os7A7aDBFND6NkbUmQ@mail.gmail.com>
- <Zley-u_dOlZ-S-a6@google.com> <CADrL8HXHWg_MkApYQTngzmN21NEGNWC6KzJDw_Lm63JHJkR=5A@mail.gmail.com>
- <CAOUHufZq6DwpStzHtjG+TOiHaQ6FFbkTfHMCe8Yy0n_M9MKdqw@mail.gmail.com>
- <CADrL8HW44Hx_Ejx_6+FVKt1V17PdgT6rw+sNtKzumqc9UCVDfA@mail.gmail.com>
- <Zl5LqcusZ88QOGQY@google.com> <CADrL8HU734C_OQhzszWJWMXEXLN6HkBo4yweN2fX4BbOegXrFA@mail.gmail.com>
-Message-ID: <Zl5eat0sh7rrspUG@google.com>
-Subject: Re: [PATCH v4 2/7] mm: multi-gen LRU: Have secondary MMUs participate
- in aging
+References: <20240503131910.307630-1-mic@digikod.net> <20240503131910.307630-4-mic@digikod.net>
+ <ZjTuqV-AxQQRWwUW@google.com> <20240506.ohwe7eewu0oB@digikod.net>
+ <ZjmFPZd5q_hEBdBz@google.com> <20240507.ieghomae0UoC@digikod.net>
+ <ZjpTxt-Bxia3bRwB@google.com> <20240514.OoPohLaejai6@digikod.net>
+Message-ID: <Zl5f_T7Nb-Fk8Y1o@google.com>
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
 From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: Yu Zhao <yuzhao@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Ankit Agrawal <ankita@nvidia.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Axel Rasmussen <axelrasmussen@google.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Catalin Marinas <catalin.marinas@arm.com>, 
-	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, James Morse <james.morse@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Shaoqin Huang <shahuang@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Will Deacon <will@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	loongarch@lists.linux.dev
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Nicolas Saenz Julienne <nsaenz@amazon.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, 
+	Angelina Vu <angelinavu@linux.microsoft.com>, 
+	Anna Trikalinou <atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>, 
+	James Morris <jamorris@linux.microsoft.com>, John Andersen <john.s.andersen@intel.com>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>, 
+	"Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>, 
+	"=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>, Thara Gopinath <tgopinath@microsoft.com>, 
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>, 
+	Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>, 
+	"=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>, dev@lists.cloudhypervisor.org, 
+	kvm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, qemu-devel@nongnu.org, 
+	virtualization@lists.linux-foundation.org, x86@kernel.org, 
+	xen-devel@lists.xenproject.org
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024, James Houghton wrote:
-> On Mon, Jun 3, 2024 at 4:03=E2=80=AFPM Sean Christopherson <seanjc@google=
-.com> wrote:
-> > But before we do that, I think we need to perform due dilegence (or pro=
-vide data)
-> > showing that having KVM take mmu_lock for write in the "fast only" API =
-provides
-> > better total behavior.  I.e. that the additional accuracy is indeed wor=
-th the cost.
+On Tue, May 14, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> On Tue, May 07, 2024 at 09:16:06AM -0700, Sean Christopherson wrote:
+> > On Tue, May 07, 2024, Micka=C3=ABl Sala=C3=BCn wrote:
+> > > If yes, that would indeed require a *lot* of work for something we're=
+ not
+> > > sure will be accepted later on.
+> >=20
+> > Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SV=
+SM support
+> > is trending toward the paired VM+vCPU model.  IMO, it's entirely feasib=
+le to
+> > design KVM support such that much of the development load can be shared=
+ between
+> > the projects.  And having 2+ use cases for a feature (set) makes it _mu=
+ch_ more
+> > likely that the feature(s) will be accepted.
+> >=20
+> > And similar to what Paolo said regarding HEKI not having a complete sto=
+ry, I
+> > don't see a clear line of sight for landing host-defined policy enforce=
+ment, as
+> > there are many open, non-trivial questions that need answers. I.e. upst=
+reaming
+> > HEKI in its current form is also far from a done deal, and isn't guaran=
+teed to
+> > be substantially less work when all is said and done.
 >=20
-> That sounds good to me. I'll drop the Kconfig. I'm not really sure
-> what to do about the self-test, but that's not really all that
-> important.
+> I'm not sure to understand why "Heki not having a complete story".  The
+> goal is the same as the current kernel self-protection mechanisms.
 
-Enable it only on architectures+setups that are guaranteed to implement the
-fast-only API?  E.g. on x86, it darn well better be active if the TDP MMU i=
-s
-enabled.  If the test fails because that doesn't hold true, then we _want_ =
-the
-failure.
+HEKI doesn't have a complete story for how it's going to play nice with kex=
+ec(),
+emulated RESET, etc.  The kernel's existing self-protection mechanisms Just=
+ Work
+because the protections are automatically disabled/lost on such transitions=
+.
+They are obviously significant drawbacks to that behavior, but they are acc=
+epted
+drawbacks, i.e. solving those problems isn't in scope (yet) for the kernel.=
+  And
+the "failure" mode is also loss of hardening, not an unusable guest.
+
+In other words, the kernel's hardening is firmly best effort at this time,
+whereas HEKI likely needs to be much more than "best effort" in order to ju=
+stify
+the extra complexity.  And that means having answers to the various interop=
+erability
+questions.
