@@ -1,187 +1,100 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D688142E71
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B69142E76;
+	Tue,  4 Jun 2024 08:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717491038; cv=none; b=U3CJYmGe+9ZvuE1HClfDRGasbtiL/Vr4TLcoZU0X0PFOstPOQD0rAEybxYNJT1yEr9dKIt8Tp+YIqMSrCrysySIRyz1/xtBrqrnKzwntcso3ipWLMZCInvEyRDmyHF83B2unrp2cSHwxHKZkuDJ5LIaTbAG/pOHYVEG3yeigemI=
+	t=1717491038; cv=none; b=S01DF1XQ9+5nprPC7gB/+AMBPGPlpsttsSKH9a1mzcprJuXcSDUxWmx3D8nXtky247vAwAKbu0h2ZCsQ+7g/laJKsrd7RyzZ2hh6Wyv1bL/ygMNeifcXIRt4bv6eFXXU7b2UmeK6YAnBRpvAI2T6Xe4GNQGhwHg2ny91c+V35Qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717491038; c=relaxed/simple;
-	bh=/82jAxl1bZX5xtR/X9gizbSQ2/4wMrIRGo3/dkUnlT0=;
+	bh=jsePevRiIhDkdVXD80oV8Y9zSm3mcSPIVKYbBwvy7G0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FUCfRY9CGRsR8KRDWUkEgbXnBorFqWjKhHTcFoHn1qpGD9ilA608GhPGm7TuzsxDxJBN9Gq37d8p/ossX02fhwb+bBlhbtRvnEOS1j/5kHjTE8HgHMQNJSXzAdq4UwGO0Vye1jJDejb9zpUf9mhWTThCGEmaj/qBX7yzcyxB1LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FJ6agKLZ; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DJqzl/HhqoTqjekyihe4ocfRN0odRUoU1zuY5311DPbx+NYnlQ2hInXME6CdZJLK9ISmyf+jU7o2WPs79sl9p4qiPSB+p8SQsBN/aKBB49rRGobXnZXvgj5ZwsPrbrzqw2qmTn0WUaVg0vv+bOfQ50wFzB39iFj+SJwJgitnYXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXm/XwhC; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FJ6agKLZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=9m0u
-	dGVcBfGslrF6YCgHx585x/QcfuEfa9X406f+ogE=; b=FJ6agKLZJSbSFnGfeZay
-	qwhVAeYvizTy72wVpjvbp6NKJQuYQvoAiah/GQNrLsR7KlZpWQcRlX/RZiA/79pz
-	A+Dwj7VS6SgV82Gb9w80ZhNEmQzUMKXZea7bG2iO9zcbRJU6xq7sRzbDKbSOKT1t
-	TCjbKOAnc6MFqSjlzFuKWESadlK7fGS3BD9XdpwKHk6NF8Ug9qm/DmJdOaL/3c8y
-	UDBQ/R50KXnN5mc8nsKC+1HXz4Q5Rm7PgTuLukTVZTRzvG0fneFZjv6MSxsfOjSe
-	7WONQm+LJ7ON0bI3JbSOVFzsQ8visq03LhDzRRrouI/7XbUEcXYW8rALk8WWYiAS
-	RA==
-Received: (qmail 2254511 invoked from network); 4 Jun 2024 10:50:30 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 10:50:30 +0200
-X-UD-Smtp-Session: l3s3148p1@psbEigwakq0gAwDPXzLGAH1eNELjOc3g
-Date: Tue, 4 Jun 2024 10:50:30 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Jean Delvare <jdelvare@suse.de>
-Cc: linux-renesas-soc@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH] i2c: smbus: fix NULL function pointer dereference
-Message-ID: <b2tnimag62ty6wndyjsy7u5fay6y52zn47vvifw6rh5abeqzpu@pqyyczutxcwu>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Jean Delvare <jdelvare@suse.de>, linux-renesas-soc@vger.kernel.org, 
-	Baruch Siach <baruch@tkos.co.il>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Rosin <peda@axentia.se>
-References: <20240426064408.7372-1-wsa+renesas@sang-engineering.com>
- <1e626d93f4220cc348300bbc61089de32300122d.camel@suse.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXm/XwhC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717491034; x=1749027034;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jsePevRiIhDkdVXD80oV8Y9zSm3mcSPIVKYbBwvy7G0=;
+  b=HXm/XwhCQnLeRePw0y3pGsVGDM5WZsmwMlmJGVcbmVmjczco7aIt6Bzh
+   gNkcqrLYfcYPiI+Y8Hab7frKBqrwUAWBwm5SOE+o0TlUbsfTeZdFYxfg0
+   qMT512zTGEc9JpF0h/NRiirvAW+g41mhuTp8qKchk5m8D9YGyPt8nVdVi
+   1ObneYY1vrkWqqUhF0xlOoMjISbN1ok0u0EUaRBWY3hBQJyN9amZX6D4H
+   4jpsS0e+EY3N1zKcFBXpc1BGSgOGG/QzkSqagIZjXPxtNo4Epiu4GdVmC
+   MbhyRSKLjDnIcbn8bHr8OMR09PnTq9evfNC3UBbUZSQaKKiJC/d26FBhF
+   A==;
+X-CSE-ConnectionGUID: 9asW5QEdQji7iCx5vAxyBQ==
+X-CSE-MsgGUID: G6iYR54FS72rnZ9Ow4DX2w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25422250"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="25422250"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:50:33 -0700
+X-CSE-ConnectionGUID: muE7e3PGTp6QpkFk7l5Dpw==
+X-CSE-MsgGUID: jJ+fMvi1R76uL0GyoUCxcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37038342"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 04 Jun 2024 01:50:29 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEPs9-000Myv-14;
+	Tue, 04 Jun 2024 08:50:25 +0000
+Date: Tue, 4 Jun 2024 16:49:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Adrian Moreno <amorenoz@redhat.com>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, aconole@redhat.com, echaudro@redhat.com,
+	horms@kernel.org, i.maximets@ovn.org, dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Pravin B Shelar <pshelar@ovn.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 6/9] net: openvswitch: store sampling
+ probability in cb.
+Message-ID: <202406041623.ycwsuP85-lkp@intel.com>
+References: <20240603185647.2310748-7-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ksynbm66oyue3y2r"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1e626d93f4220cc348300bbc61089de32300122d.camel@suse.de>
+In-Reply-To: <20240603185647.2310748-7-amorenoz@redhat.com>
 
+Hi Adrian,
 
---ksynbm66oyue3y2r
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel test robot noticed the following build errors:
 
-Hi Jean,
+[auto build test ERROR on net-next/main]
 
-> I have a hard time establishing a formal link between the reported bug
-> and the commit listed above. I do understand that it wouldn't make
-> sense to register an i2c_adapter with neither .master_xfer nor
-> .smbus_xfer set before .reg_slave was added to struct i2c_algorithm,
-> but there were no checks in i2c-core preventing it from happening.
+url:    https://github.com/intel-lab-lkp/linux/commits/Adrian-Moreno/net-psample-add-user-cookie/20240604-030055
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240603185647.2310748-7-amorenoz%40redhat.com
+patch subject: [PATCH net-next v2 6/9] net: openvswitch: store sampling probability in cb.
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20240604/202406041623.ycwsuP85-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041623.ycwsuP85-lkp@intel.com/reproduce)
 
-Well, yes, correct.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406041623.ycwsuP85-lkp@intel.com/
 
-> It was also possible for any (broken) device driver to call
-> __i2c_transfer() without first checking if plain I2C transfers were
-> actually supported by the i2c_adapter. I would argue that such an issue
-> should have been fixed at the device driver level by checking for the
-> I2C_FUNC_I2C functionality flag before calling __i2c_transfer(). That's
-> a theoretical issue though as I'm not aware of any device driver having
-> this issue.
+All errors (new ones prefixed by >>):
 
-In theory, checking against I2C_FUNC_I2C should happen. In practice,
-most I2C drivers do not do this. Being picky here could results in bad
-user experience because of OOPS. If we really want to enforce checking
-I2C_FUNC_I2C, then we should have this safety net while we convert all
-users. No, actually, I think we always should have some safety nets.
+   m68k-linux-ld: net/openvswitch/actions.o: in function `do_execute_actions':
+>> actions.c:(.text+0x214e): undefined reference to `__udivdi3'
 
-> The call stack in Baruch's report shows that the real issue is with
-> i2c_smbus_xfer_emulated() being called with the i2c bus lock already
-> held, and thus having to call __i2c_transfer() instead of
-> i2c_transfer(). This code path did not exist before commit 63453b59e411
-> ("i2c: smbus: add unlocked __i2c_smbus_xfer variant"), which was added
-> in kernel v4.19. Therefore I claim that CVE-2024-35984 only affects
-> kernel v4.19 and newer. Do we agree on that?
-
-(There is a CVE for it??) For Baruch's case, this is true. But there are
-__i2c_transfer users all over the tree, they are all potentially
-vulnerable, or?
-
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!adap->algo->master_xfer=
-) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0dev_dbg(&adap->dev, "I2C level transfers not supported=
-\n");
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return -EOPNOTSUPP;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > +
->=20
-> Not related specifically to this commit, as it is only moving a check
-> which already existed before, but this looks inefficient to me.
->=20
-> We end up performing the check with every I2C-level transfer, while the
-> availability of such support can almost always be checked once and for
-> all in the I2C device driver (i2c-dev and i2c_smbus_xfer_emulated being
-> the exceptions).
->=20
-> I see two ways for us to reach this check:
-> * __i2c_transfer() or i2c_transfer() gets called directly by a device
-> driver. This driver should have checked for the I2C_FUNC_I2C
-> functionality flag before calling either function. If they did not,
-> it's a driver bug, which should be fixed in the driver in question.
-
-I see the performance penalty, yet I prefer handling the buggy driver
-gracefully because kicking off I2C transfers is not a hot path. Maybe we
-could turn the dev_dbg into something louder to make people aware that
-there is a bug?
-
-> Note that i2c-dev currently lacks this check, I think it should be
-> added.
-
-True, it should be a role-model of a good citizen :)
-
-> * __i2c_transfer() gets called by i2c_smbus_xfer_emulated(). We should
-> add a check for I2C_FUNC_I2C in __i2c_smbus_xfer() before calling this
-> function. This is more or less what Baruch proposed initially, and I
-> think it would have been a more efficient fix.
-
-As I said above, more efficient but not thorough. One driver not
-checking I2C_FUNC_I2C and boom...
-
-> And if you are concerned about functionality flags not being set
-> properly (specifically I2C_FUNC_I2C being set while .master_xfer isn't
-> set [1]) then we should add a consistency check at i2c_adapter
-> registration time, so again it's done once and for all and we don't
-> have to check again and again at transfer time.
-
-I think this check is worth to have. It is not complete because drivers
-may still not check the flag, but it is one step to be more robust.
-
-> Or is this optimization not worth it?
-
-I think so. It is one pointer check against a kernel oopsing somewhere
-somewhen.
-
-> [1] BTW, looking at the only two in-tree slave-only I2C adapter
-> drivers, i2c-at91-slave and i2c-designware-slave, both are setting
-> functionality flags other than I2C_FUNC_SLAVE. Unless I don't
-> understand how the slave functionality works, this is a bug. I'll
-> prepare and post patches later today.
-
-Thanks for doing that!
-
-Happy hacking,
-
-   Wolfram
-
-
---ksynbm66oyue3y2r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZe1VEACgkQFA3kzBSg
-KbYpeQ//dIw4KlFvx97wH/kz2omtgShRsM4PBlclKbm20ZkoYdTr1F5Rya2uE3tm
-+xEF83Pg/m3t64S2PVpLIhfQmN0u3z7/+hcPH6CpXE0hGpLoO41JHPELd5p9FYB2
-LS300jBoSgcLryw8IAFjR3YQA/UaSeXk5OHKyAZgJPJTdY+aDFCFbJnJnAl2hyEs
-pEirJeX0Ajqp7B01YcCeD5AeImMQQalBV2zHYlKfmmCTN4w9NQj969igBi0O6gSA
-XcLxno7rqOamgSmdcouxEI7e1uSWdnIReAyw8nGKfZ9bzYKJUa8C9cBfJ7JJ6XGt
-Rb3Y8INN6rJZv9V4oi+5xzNCEYaiyYDgALMp0OfMG664isMzaVMT7DqTo8S8Qw7H
-4MMDmSQJTYIKoh2XpKABL8USm3SDKEglAoSN+RD0wEuEOu5BGDKMQqlOIukQwfqf
-ssQuLVklbLrtMgNsxJibDBdMYJnOYfBYoNljVaRs9MIf0oypT6zO7Px7wv2sYyGo
-HpUcbFmovXAlmqwljNACIqAYms9Kw4P/istl//wd+yr6MI5Qkx0IftQiC6/bqf5e
-mdYbqOuXNbwnVLd8nGMVRMYUMxTU+LeC1clNWAXzBhlgAqFo2gQmZMgsEll3X0Jq
-g2qHB8KoF8KlqulH7WBm7SRL2zmbCaV5xqN0BSozutvjqs0kJgY=
-=eDfQ
------END PGP SIGNATURE-----
-
---ksynbm66oyue3y2r--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
