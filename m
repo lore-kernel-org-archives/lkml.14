@@ -1,157 +1,132 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248091420BC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8486613C818;
+	Tue,  4 Jun 2024 14:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511730; cv=none; b=Iu/+SIcSFSbLTS6OXkZMNs5W9ay/Cc9ptBMsezL61Vq73vpcuMvsHYGeojLiYGohi3y/K4eHw/0uJFvMb8O03mmQPb2Ikbm+cLPeRGMG6bfmFixSRlh4MTrOQ031WiIqS+CSDst9oONBb5zRt1uo8NGUszhxXq9k3aAhQk41hrA=
+	t=1717511833; cv=none; b=fNVgiyXmm+cJT16qU35S3fLrCFAsWLdRzDwrpAt1PdtxnCrf6M3aT4pcT6OT0VPEJooFy3CHyIVCSCxODL7LfU5g9QnJ2sHdVAvosNnxQ4v3kGPldQYDRO/jYjpwMfTtgiPiIyWQStQ2+bA5UebFamX5z/8gkxnIYXh1mWfVDDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511730; c=relaxed/simple;
-	bh=zhxB4xrQrAVXAbhbxwOvlF0wqi6yLfLTVSPn49ick8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0kYoSDNeHsOYSTk6xV3hf7WNw79LzBYofc7hyP3mU/Ya2VvzBxkXFsrVdAlCcUC26q8peONQSRiDiIMp5rbiRriz1q4CZnTWXgJITcRw6Oq+bUbwBNFfZq8MUj5baoP0+694wgqBPkbrc4D9dNBEZSFtMaBwvDiMkAwWX5eHEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q2wCQYGk; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717511833; c=relaxed/simple;
+	bh=n99Ko5HaJO85F54ix4X1ovOI96Xl295WeZ0B5aVvtBk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rzaCDqcAYcJeudW0wQ45nbEDTev9cOEzjK6idh0hgI92kB50eniGxMC89MaBYIwRVVCiUe6rt+nB02O4Xtvc2BKw+qZRCSXW9p2xIczeBYr9QYISg2urjfvgBCw3erI/SqU5vvC8r+2hYIoFFZfdLdxPXp6HFieai2iHnR4mhyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HkJWRbLp; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q2wCQYGk"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a62ef52e837so126016166b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717511726; x=1718116526; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6L/xkpcOUMcu4g4EPcPs71CcWtZgSi+vh4CgjuHBVk=;
-        b=Q2wCQYGkQiMijzeV/AeMjDgLFPqcx0T16CcNTvjIVCIHWDt4KEmZDuyM5LibMet2bk
-         H0IC5GbOt7qs+X2Yj1X/dzOgkWcvBfBNLEZCTXEyMW1/qd5w2TUPkN5M12RLe9sFKuBj
-         nINL2ABtDtOREP8RyTZu7yZrQrT1NzhQCT8G/h726MYw3wzt3o8oVIPC9ymnkdO1SSMl
-         DP0aczsABg2rpKlhFjnXFpQthr+dZSySxA6PfL3oMjtuDxy18K2MDs7qDcu3/2NXJtBR
-         RmVlb9pB8ABPMqe3eY8nuLY4fcVYOIK9GmXA8PPiXl74bT77oYc04s/UAqyBb+/mtZDL
-         H5DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717511726; x=1718116526;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N6L/xkpcOUMcu4g4EPcPs71CcWtZgSi+vh4CgjuHBVk=;
-        b=f8FOHkrQKmTWTiNHGmpz3vKy29DExlUPkGPVYQY+fIby+a+z3sEOKfvZgcxwwDI7DL
-         ldpi2feKz2LtT3/VLv4iGyFq7VvzLyTDGrhE4KgfhmImnFtMHb18SSZhv+RHFMkpNI6M
-         Wx5EaiH6tVkepZlyDiv/x56iyNxMdjMxHiC61LWrQiIZw4pwbc7/XY2ZtqAuIz7rVQF+
-         mBSA+vAM3pi2ITLCbms1tc7q7Pb2iTNPHclRMdyhH4PGQy8KAEfu5p0qAk+HdrlCCq/2
-         6+vXVxFjAENeymTDhbI/v+XOC71icHyWtX9qGqOwclqhPBmWYDzZYlA1E1Isjh4H1vj7
-         K51w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/oXl5gmGGnsLO7z6dQrWPs1kg5yL5+lrJZaU6XT5nDLlMD+WwmmxVmV2yoRBjIRzMOQOl/w0uXhPQaSRq6bpH912Ouvkzfwqgfu+i
-X-Gm-Message-State: AOJu0YxjW8hFvnyqauJsgbgDapRjvHeKPNCJpcVE5F4mPSlmMpfQNugR
-	/JgemK+b/TwO+glazAFZqf4xlnXeuXPPEZ4FjeNuN308MAU8D398FTjM++b3mHQ=
-X-Google-Smtp-Source: AGHT+IFy5kHjV2Tu8d+ModGRTOANXINp1lHBsrB5h6ijDdg1iRS8Q7e0+jIlU0n4WFHZ499S/Q3cjw==
-X-Received: by 2002:a17:906:1e89:b0:a66:7f1a:61e0 with SMTP id a640c23a62f3a-a6821f4e6cbmr873463166b.62.1717511726349;
-        Tue, 04 Jun 2024 07:35:26 -0700 (PDT)
-Received: from linaro.org ([188.27.161.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a690a32cba4sm306241966b.158.2024.06.04.07.35.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 07:35:25 -0700 (PDT)
-Date: Tue, 4 Jun 2024 17:35:24 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100: Make the PCIe 6a PHY
- support 4 lanes mode
-Message-ID: <Zl8mLGziGzFhqbZC@linaro.org>
-References: <20240531-x1e80100-dts-fixes-pcie6a-v1-0-1573ebcae1e8@linaro.org>
- <20240531-x1e80100-dts-fixes-pcie6a-v1-2-1573ebcae1e8@linaro.org>
- <Zl28nvnpGFRsYpGh@hovoldconsulting.com>
- <d93fe55e-7c65-48cb-bdaf-5e15bc22be30@linaro.org>
- <Zl8GoRoY9lXRtg2R@hovoldconsulting.com>
- <402aa998-8b3c-4c3c-8dcb-f128b6ddac46@linaro.org>
- <Zl8MUpfy/2Khw+wD@linaro.org>
- <dd1be285-d94b-448e-85d3-d5dce27f9ac0@linaro.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HkJWRbLp"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454DOLvW012864;
+	Tue, 4 Jun 2024 16:36:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=yc0Pxe2X2efIKfu9xwLwzE
+	iOJ7Ub60FE7k6shR7hdK8=; b=HkJWRbLpSrB7odl14Y7bp7yJSnOKlN33STWeuG
+	lJZPXdKc6VeCJ2FAfJFMvWMKpCkXnoRhqegpLYQgw0/BWuKWKg0KRRlRum8q3AW+
+	TXqMW3BZ1AY6l6xH7WHfuBh0oRy8dVfXaHqiEl/eCRFUE6wzOmfiJe5AQ2CfwOeF
+	rDE3vh0ngWbu7Dx1yBDtZXeRWehWDmzCTVG5pxXYZ9ABu+vjmuxl2PdPazNNandD
+	saDo9OfBsJ40P9l5wWYQJWJ/EpTJA3gYI6YRqrqMIHL7hi3J43oRuxC5Y51DgjQt
+	Ieohf9q8RY88WH8wYGen9SS8dwkVCN3lKS54jzmoANHB9VOQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yfw3wmp4v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Jun 2024 16:36:37 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 90E9140045;
+	Tue,  4 Jun 2024 16:36:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A9B1B221944;
+	Tue,  4 Jun 2024 16:35:15 +0200 (CEST)
+Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 4 Jun
+ 2024 16:35:14 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 00/11] Series to deliver Ethernet for STM32MP13
+Date: Tue, 4 Jun 2024 16:34:51 +0200
+Message-ID: <20240604143502.154463-1-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd1be285-d94b-448e-85d3-d5dce27f9ac0@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_09,2024-06-04_01,2024-05-17_01
 
-On 24-06-04 14:55:31, Konrad Dybcio wrote:
-> 
-> 
-> On 6/4/24 14:45, Abel Vesa wrote:
-> > On 24-06-04 14:38:40, Konrad Dybcio wrote:
-> > > 
-> > > 
-> > > On 6/4/24 14:20, Johan Hovold wrote:
-> > > > On Tue, Jun 04, 2024 at 02:00:10PM +0200, Konrad Dybcio wrote:
-> > > > > On 6/3/24 14:52, Johan Hovold wrote:
-> > > > 
-> > > > > > As I just mentioned in my reply on the PHY patch, this does not seem to
-> > > > > > work on the CRD were the link still come up as 2-lane (also with the
-> > > > > > clocks fixed):
-> > > > > > 
-> > > > > > 	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
-> > > > > > 
-> > > > > > So something appears to be wrong here or in the PHY changes.
-> > > > > 
-> > > > > Is the device on the other end x4-capable? Or does it not matter in
-> > > > > this log line?
-> > > > 
-> > > > Yes, of course. It's the CRD as I wrote above, and you can tell from
-> > > > other log entries:
-> > > > 
-> > > > 	pci 0007:01:00.0: 31.506 Gb/s available PCIe bandwidth, limited by 16.0 GT/s PCIe x2 link at 0007:00:00.0 (capable of 63.012 Gb/s with 16.0 GT/s PCIe x4 link)
-> > > > 
-> > > > lspci and what Windows reports.
-> > > Ok, good. I was scared of double-sourcing of parts that are not identical
-> > > in spec..
-> > > 
-> > 
-> > On my CRD, there is a KBG50ZNS256G.
-> > 
-> > > [1] suggests this wasn't ever achieved.. which makes the cover letter of
-> > > this series a bit misleading..
-> > 
-> > True ...
-> > 
-> > > 
-> > > What does the TCSR check return? If 0, can you hardcode it to 1 and see if
-> > > the link comes up at x4?
-> > 
-> > TCSR check returns 1. But that is not enough. The PCIe controller needs to
-> > handles some stuff about margining. See the following patchset.
-> > 
-> > https://lore.kernel.org/linux-pci/20240501163610.8900-3-quic_schintav@quicinc.com/
-> > 
-> > But even with this, I'm not able to get 4-lanes mode to work (yet).
-> > So it must be something else in the controller driver that is needed.
-> 
-> The margining settings AFAIU shouldn't be necessary for just getting the
-> link, but to ensure there aren't many errors while transacting..
+STM32MP13 is STM32 SOC with 2 GMACs instances
+    GMAC IP version is SNPS 4.20.
+    GMAC IP configure with 1 RX and 1 TX queue.
+    DMA HW capability register supported
+    RX Checksum Offload Engine supported
+    TX Checksum insertion supported
+    Wake-Up On Lan supported
+    TSO supported
+Rework dwmac glue to simplify management for next stm32 (integrate RFC from Marek)
 
-Part of the margining settings is related number of lanes.
+V2: - Remark from Rob Herring (add Krzysztof's ack in patch 02/11, update in yaml)
+      Remark from Serge Semin (upate commits msg)
+V3: - Remove PHY regulator patch and Ethernet2 DT because need to clarify how to
+      manage PHY regulator (in glue or PHY side)
+    - Integrate RFC from Marek
+    - Remark from Rob Herring in YAML documentation
+V4: - Remark from Marek (remove max-speed, extra space in DT, update commit msg)
+    - Remark from Rasmus (add sign-off, add base-commit)
+    - Remark from Sai Krishna Gajula
 
-> 
-> > 
-> > IIRC, this is the first Qualcomm platform that would support Gen4 with
-> > 4-lanes upstream. Maybe I'm wrong.
-> 
-> Seems so
-> 
-> Another idea I had, maybe the PCIE_PORT_LINK_CONTROL &
-> PCIE_LINK_WIDTH_SPEED_CONTROL registers differ on qcom gen4 controllers..
-> 
-> Can you check the documentation and see if the defines in
-> drivers/pci/controller/dwc/pcie-designware.h still hold true?
+Christophe Roullier (6):
+  dt-bindings: net: add STM32MP13 compatible in documentation for stm32
+  net: ethernet: stmmac: add management of stm32mp13 for stm32
+  ARM: dts: stm32: add ethernet1 and ethernet2 support on stm32mp13
+  ARM: dts: stm32: add ethernet1/2 RMII pins for STM32MP13F-DK board
+  ARM: dts: stm32: add ethernet1 for STM32MP135F-DK board
+  ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
 
-Yep. No issue there.
+Marek Vasut (5):
+  net: stmmac: dwmac-stm32: Separate out external clock rate validation
+  net: stmmac: dwmac-stm32: Separate out external clock selector
+  net: stmmac: dwmac-stm32: Extract PMCR configuration
+  net: stmmac: dwmac-stm32: Clean up the debug prints
+  net: stmmac: dwmac-stm32: Fix Mhz to MHz
 
-> 
-> Konrad
+ .../devicetree/bindings/net/stm32-dwmac.yaml  |  41 ++++-
+ arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi   |  71 ++++++++
+ arch/arm/boot/dts/st/stm32mp131.dtsi          |  38 ++++
+ arch/arm/boot/dts/st/stm32mp133.dtsi          |  31 ++++
+ arch/arm/boot/dts/st/stm32mp135f-dk.dts       |  23 +++
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 172 ++++++++++++++----
+ 7 files changed, 330 insertions(+), 47 deletions(-)
+
+
+base-commit: cd0057ad75116bacf16fea82e48c1db642971136
+-- 
+2.25.1
+
