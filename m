@@ -1,153 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailrelay1-1.pub.mailoutpod3-cph3.one.com (mailrelay1-1.pub.mailoutpod3-cph3.one.com [46.30.211.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DE13BB24
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 20:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EEB1350FD
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 20:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717533609; cv=none; b=VoRwJHtoWV+WU/6N198JBA8n/wmJUc0KIG48qg0VO7sAead0GmxtpxNR6PUqbgcPesi8EzCsKbSV5ENty3lAobMd4cUBVtimhLcVMYphdk7gmo9WgB3JQzAnI7bYeUpKFslo/57rWr/Ke5sxR7K2DPiTWnYNsyUhQMj9VnYfDCY=
+	t=1717533744; cv=none; b=lHxOH/1RsFivC/DS57Vlg8xefso7DuMaSV/MFgIFbjFnID96vllBUL5zXeyan38zGDXRjiLWYahr8Z5cWcCJI4+oOjB8/JRzZbOM9pdPS9/VXUCvRmHLB37aOMsLDF62ca/tKFTMGps/pdamrbpyLEHvl3M5pUw+WGjToN8PlkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717533609; c=relaxed/simple;
-	bh=OA4jXIR7HzNnpaEbG8qQ2TpYGmLYNKQZaYWLgI4fz70=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AjrEkKe+ZXWe1WNkR7GgY60cEmyZC0NrLT7uZUcxssXl1V4i5NiJr4EhVg9GRLQlyJQZiA7WcYigUh2rGxhMtYQ/LrnRabh+IG0h/OnGZp65xPCb/vr5xIFLMQe0jBx+upaY0SgdVut8Nk3RNLXo6EqrFHDVCg0dgZlx23iqzMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQuK7mO8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717533744; c=relaxed/simple;
+	bh=1dWSYg0dVf/rqsLrOmw8N6/UvJ03wpNFLYhrom2Lml0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QCk7zTw4zuVu0owWMdk7wMSnOwESBA8Bup9r44G9FXg5Sx0b8/732scmuSlDsZUu3j6x8vXxZ++Jj8MYm+pR2RI/JZqnRupmZbj6bLp0tv//DP7FBUWt17R7YRq6/3qUh2E0xkFM9SFFbJLbWGo1lRLeHos2gIq5PvAkvwz2/0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=N61vra7C; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=r4JvKN3M; arc=none smtp.client-ip=46.30.211.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQuK7mO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5893C2BBFC;
-	Tue,  4 Jun 2024 20:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717533608;
-	bh=OA4jXIR7HzNnpaEbG8qQ2TpYGmLYNKQZaYWLgI4fz70=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iQuK7mO8wi/Niq/PkspASgP/nPjYY3fsO3u+c0iQ72Y+DdLzwdW5KhZx9S1D90eF5
-	 H5zIDaBAQkbsSDTRfhShL+zOdJ5gUIdTgKx8xy++sd8dntdLIr8LRIgNkPiwC/qB+Y
-	 1IO0oO9SYbRYojZHcFodL+pK2d35OT5g4lgrsSAvULWdc+O0ubFaKETiRai07Nuwoa
-	 lyUJdv49tW37eVsQAY+IKuPFongImcl5sGRj+bCLgra8GaXTFFMuZRffYCI0xfs642
-	 gzTxpdwkarELkZS7vB4/8dEktBGZeUMyjI/xDdAtFgHqIQbAlaet5xhSW1Y0pOgMLp
-	 MCMWsJuD2dyYw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 77B2CCE3ED6; Tue,  4 Jun 2024 13:40:08 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	kernel-team@meta.com,
-	mingo@kernel.org
-Cc: elver@google.com,
-	andreyknvl@google.com,
-	glider@google.com,
-	dvyukov@google.com,
-	cai@lca.pw,
-	boqun.feng@gmail.com,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Breno Leitao <leitao@debian.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH kcsan 1/2] kcsan: Add example to data_race() kerneldoc header
-Date: Tue,  4 Jun 2024 13:40:05 -0700
-Message-Id: <20240604204006.2367440-1-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <ecf1cf53-3334-4bf4-afee-849cc00c3672@paulmck-laptop>
-References: <ecf1cf53-3334-4bf4-afee-849cc00c3672@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="N61vra7C";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="r4JvKN3M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=Dk4sfgI36ZWaPJ+eBS/GI/TZ8w55X9bgUEDY5cQtdtU=;
+	b=N61vra7CHLZfKe5uIUlYx3GQv9YGIc7bLyEhl3+9zNcLfrg/064TgGMDdyq/ZA10mlYXb06vgNF0h
+	 qwxtSmeWRmsmmd3wrCCBBvUY+SFythORAs9pyE4otLatq0n/0MIHh8STbOiAKmU9DUOex9d1E4YSfX
+	 x8KwPBxjY/1bPXa3W4ZVzNJZE8vyRU4ysM0VrCOe55RkF7hCRcl+V9ySXs0kbLERYnt8ZjSy6kIePK
+	 853Zbg7dZnTvyDX2GrBxleUad6prFsi1lEZKiKL68eW9CCm5QisalqofZTtORQWuI1bSEXtwK7zLcI
+	 Xu0tUkNa02dSjD3QS04pgnpBnbZ1OSQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=Dk4sfgI36ZWaPJ+eBS/GI/TZ8w55X9bgUEDY5cQtdtU=;
+	b=r4JvKN3MaF/e09yO6vz7gW/+Vs/xVKV1CvUIVwJnko5Bqds84IFN0/PUeYg4Zdo1itqPMmJMDSrRa
+	 fTI/wgXCg==
+X-HalOne-ID: c619a21d-22b2-11ef-9886-bf3d7f4c9d3b
+Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
+	by mailrelay1.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id c619a21d-22b2-11ef-9886-bf3d7f4c9d3b;
+	Tue, 04 Jun 2024 20:41:12 +0000 (UTC)
+Date: Tue, 4 Jun 2024 22:41:10 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Sandy Huang <hjc@rock-chips.com>,
+	Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mark Yao <markyao0591@gmail.com>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+	kernel@collabora.com, Alexandre ARNOUD <aarnoud@me.com>,
+	Luis de Arquer <ldearquer@gmail.com>,
+	Algea Cao <algea.cao@rock-chips.com>
+Subject: Re: [PATCH 13/14] drm/bridge: synopsys: Add DW HDMI QP TX controller
+ driver
+Message-ID: <20240604204110.GA84949@ravnborg.org>
+References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
+ <20240601-b4-rk3588-bridge-upstream-v1-13-f6203753232b@collabora.com>
+ <20240601143226.GA2003970@ravnborg.org>
+ <59519381-2729-4839-9882-65a981a0c551@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59519381-2729-4839-9882-65a981a0c551@collabora.com>
 
-Although the data_race() kerneldoc header accurately states what it does,
-some of the implications and usage patterns are non-obvious.  Therefore,
-add a brief locking example and also state how to have KCSAN ignore
-accesses while also preventing the compiler from folding, spindling,
-or otherwise mutilating the access.
+Hi Cristian.
 
-[ paulmck: Apply Bart Van Assche feedback. ]
-[ paulmck: Apply feedback from Marco Elver. ]
+On Tue, Jun 04, 2024 at 10:32:04PM +0300, Cristian Ciocaltea wrote:
+> Hi Sam,
+> 
+> On 6/1/24 5:32 PM, Sam Ravnborg wrote:
+> > Hi Cristian,
+> > 
+> > a few drive-by comments below.
+> > 
+> > 	Sam
+> > 
+> > 
+> >> +
+> >> +static const struct drm_connector_funcs dw_hdmi_qp_connector_funcs = {
+> >> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> >> +	.detect = dw_hdmi_connector_detect,
+> >> +	.destroy = drm_connector_cleanup,
+> >> +	.force = dw_hdmi_qp_connector_force,
+> >> +	.reset = drm_atomic_helper_connector_reset,
+> >> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> >> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> >> +};
+> >> +
+> >> +static int dw_hdmi_qp_bridge_attach(struct drm_bridge *bridge,
+> >> +				    enum drm_bridge_attach_flags flags)
+> >> +{
+> >> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> >> +
+> >> +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
+> >> +		return drm_bridge_attach(bridge->encoder, hdmi->next_bridge,
+> >> +					 bridge, flags);
+> >> +
+> >> +	return dw_hdmi_connector_create(hdmi, &dw_hdmi_qp_connector_funcs);
+> >> +}
+> > 
+> > Are there any users left that requires the display driver to create the
+> > connector?
+> > In other words - could this driver fail if DRM_BRIDGE_ATTACH_NO_CONNECTOR
+> > is not passed and drop dw_hdmi_connector_create()?
+> > 
+> > I did not try to verify this - just a naive question.
+> 
+> I've just tested this and it doesn't work - dw_hdmi_connector_create()
+> is still needed.
 
-Reported-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Jens Axboe <axboe@kernel.dk>
----
- include/linux/compiler.h                      | 10 +++++++-
- .../Documentation/access-marking.txt          | 24 ++++++++++++++++++-
- 2 files changed, 32 insertions(+), 2 deletions(-)
+Hmm, seems the display driver or some other bridge driver fails to
+support "DRM_BRIDGE_ATTACH_NO_CONNECTOR".
+what other drivers are involved?
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 8c252e073bd81..68a24a3a69799 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -194,9 +194,17 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  * This data_race() macro is useful for situations in which data races
-  * should be forgiven.  One example is diagnostic code that accesses
-  * shared variables but is not a part of the core synchronization design.
-+ * For example, if accesses to a given variable are protected by a lock,
-+ * except for diagnostic code, then the accesses under the lock should
-+ * be plain C-language accesses and those in the diagnostic code should
-+ * use data_race().  This way, KCSAN will complain if buggy lockless
-+ * accesses to that variable are introduced, even if the buggy accesses
-+ * are protected by READ_ONCE() or WRITE_ONCE().
-  *
-  * This macro *does not* affect normal code generation, but is a hint
-- * to tooling that data races here are to be ignored.
-+ * to tooling that data races here are to be ignored.  If the access must
-+ * be atomic *and* KCSAN should ignore the access, use both data_race()
-+ * and READ_ONCE(), for example, data_race(READ_ONCE(x)).
-  */
- #define data_race(expr)							\
- ({									\
-diff --git a/tools/memory-model/Documentation/access-marking.txt b/tools/memory-model/Documentation/access-marking.txt
-index 65778222183e3..3377d01bb512c 100644
---- a/tools/memory-model/Documentation/access-marking.txt
-+++ b/tools/memory-model/Documentation/access-marking.txt
-@@ -24,6 +24,11 @@ The Linux kernel provides the following access-marking options:
- 4.	WRITE_ONCE(), for example, "WRITE_ONCE(a, b);"
- 	The various forms of atomic_set() also fit in here.
- 
-+5.	__data_racy, for example "int __data_racy a;"
-+
-+6.	KCSAN's negative-marking assertions, ASSERT_EXCLUSIVE_ACCESS()
-+	and ASSERT_EXCLUSIVE_WRITER(), are described in the
-+	"ACCESS-DOCUMENTATION OPTIONS" section below.
- 
- These may be used in combination, as shown in this admittedly improbable
- example:
-@@ -205,6 +210,23 @@ because doing otherwise prevents KCSAN from detecting violations of your
- code's synchronization rules.
- 
- 
-+Use of __data_racy
-+------------------
-+
-+Adding the __data_racy type qualifier to the declaration of a variable
-+causes KCSAN to treat all accesses to that variable as if they were
-+enclosed by data_race().  However, __data_racy does not affect the
-+compiler, though one could imagine hardened kernel builds treating the
-+__data_racy type qualifier as if it was the volatile keyword.
-+
-+Note well that __data_racy is subject to the same pointer-declaration
-+rules as are other type qualifiers such as const and volatile.
-+For example:
-+
-+	int __data_racy *p; // Pointer to data-racy data.
-+	int *__data_racy p; // Data-racy pointer to non-data-racy data.
-+
-+
- ACCESS-DOCUMENTATION OPTIONS
- ============================
- 
-@@ -342,7 +364,7 @@ as follows:
- 
- Because foo is read locklessly, all accesses are marked.  The purpose
- of the ASSERT_EXCLUSIVE_WRITER() is to allow KCSAN to check for a buggy
--concurrent lockless write.
-+concurrent write, whether marked or not.
- 
- 
- Lock-Protected Writes With Heuristic Lockless Reads
--- 
-2.40.1
+Note that my comments here should be seen as potential future
+improvements, and do not block the patch from being used.
 
+	Sam
