@@ -1,121 +1,192 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF73179BC;
-	Tue,  4 Jun 2024 18:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA2A18635
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 18:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717524142; cv=none; b=o47TtoTIWoHOW+vKOyk5/6aD4ChBhk2yENN76/uHCXmylFCeI1awxjKYAcmUQBDBLOhIFYNNZ9TqLCUTIuR6jGmam1BCYDzj++GvF5zjoADUSH/ZN2+jrsVqxgwZKDywerXr6vK3WW9TXkZiQVFER714Ee+MZs3DuGPBW6TOfD4=
+	t=1717524142; cv=none; b=nL4suiM8rTFwDxwbYV7oYHQUdpLK/aMpoi9oHP0muRazQsfQQgg4pj29Sck33ykftqW6o6uI2q8GlbwWoU+nRySDhZIyyKEcerH3cPOronOTFyvAajEZVt6quNvE5qPIbXNlKTCYFOt8zu7ZOfIhGe451B1KzLtk4bzEA2fPt4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717524142; c=relaxed/simple;
-	bh=qcp+UzM4xs7eHbK/5zAhD0ChiUogwbeZjzyp4fNvko8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bLsrrB/hOvGORrdAHj5+WFQYab9h3z8hc0F3AGSFai8D2op155B87fW3d4EeQkF6lpp1y8vHVwyP190n4yYcrIg0iVVJUFdXonzsjf1TFzy8dpMHtNNfLcISsE9eFSmHpHdyw6+1DuzsKoE4OXSPUriOOZWZiWTNBNDyW/4fapk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=H1DXBN0q; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	bh=tHWLGQWisUQj7HhRAw2go4sy8LHyULISrzif4HyJkSE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o8cUvVAypQclA1pRpoqbHBdMkhbE3DB3cBSRsYcnn/n02BwR/lmfkqcpSJzBrOXgMjOxilSy9Lbx4E2XbYbZQucMB9AJaqIC7z7hm/KwXJW5laF+/n4s4inELgbV7uSBTNsrfV+JghCyM4bWtvIixQ3Qcj2i5Qp2KF6c/AXnc3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XXGi1TRT; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="H1DXBN0q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1717524138;
-	bh=qcp+UzM4xs7eHbK/5zAhD0ChiUogwbeZjzyp4fNvko8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H1DXBN0qrpkHb1DP3ffwmLu34qJNIxKYImS1RbipV5DwDdW97Q+To4Q618q7A26pe
-	 qjGlrE0JFS/7pLIU2HuTUHXJXdImwlw82h3SNo5WEAPegF5gSW5IN5+Dx7q/enMupW
-	 wpIPAL008Q6I6iW+mVLd/HJsvcYIegDNlj2pZrG7XHLf/a/EraCwFIuRf5op6fct+K
-	 AUXVHncX/+QwKlJDPDubt12oicVEezHoNh02ZICqqcga3fjfZ6CYlHmLsyJdp7wpDh
-	 NBLuBO40/vMKwLfhRapC9UdUbxEAGh89SOxNu+varXmf2/7bpdZi7Q3wfIo1c6kLnX
-	 Myc9baY/JqNPA==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Vtz2L0d0lz12ld;
-	Tue,  4 Jun 2024 14:02:18 -0400 (EDT)
-Message-ID: <5fc7a866-ecd9-4b57-9740-369544df1264@efficios.com>
-Date: Tue, 4 Jun 2024 14:03:05 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XXGi1TRT"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3c9c36db8eeso3335531b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 11:02:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717524139; x=1718128939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tHWLGQWisUQj7HhRAw2go4sy8LHyULISrzif4HyJkSE=;
+        b=XXGi1TRTITQwz1xn5H/aKaCoS1R041RPFztAHSxRoiXq3+Bw7CYbeYIWqAYHmmcWLN
+         T5WTQKTHaDSFhcvizWs4M6wfWiZwSgDc0Bc8cF+jntVDel//da+vKKInTbayVL2iUssB
+         aTOozmG3g2u6UGpBQdZ0ofPZQpDWIfMHV/vlX0H/h1DCZX9N/t9yMrn7Kibr73vcvXsi
+         vw3IsQvtfbgG9KuRz6k0IwUeBbfRj5bGKTmtmt2scRJT0YIeOJgfa+fgWt9ew29T58m9
+         yZepVSVY5JclGQKnIZYKgyW9cefdtDdwuJ7Qixxij8WALOlIBUuuU8M/yKTSt4TpwcU4
+         iGXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717524139; x=1718128939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tHWLGQWisUQj7HhRAw2go4sy8LHyULISrzif4HyJkSE=;
+        b=CWEQT6RDG7677oymRtJ5Y7C2SBiT7bGfErkWqR/BasSlAz0cDuD86a+ykyG0HQKhRf
+         I8SqcyOb5iz8G/CmQJFaNNV44OCULJL9Rzci8gCwN7f9fmcjXtPM8cqymmo3GNJwE+d3
+         vFG19IWKS3bbo6frVERWSJvn5lxkApniZkP4uC7sDliC3n8xiz7T9kZizCu+IMwIbKUI
+         mcc2JJ8QyBEL1bckJb5weLE3iVilljnVmlaI17I96DMO8JEtAFzftpF1h2gUw7cmek52
+         WLqR03UNghSNVaEVPikORr+4EbjoIrmi1d1KWTnBIhkznA+U1iKiRcBqZkgEkE6beaCt
+         Iy1g==
+X-Forwarded-Encrypted: i=1; AJvYcCXnY38QYd3SqZk77BkxcZR9vsJEhjU9YzfMy916U3jiKH7wmAZ7NCNj15KHoRnzH2izCBTeZP8x6/mYN5F9R/5mVQjIaNPRiwaVeDCX
+X-Gm-Message-State: AOJu0YzSUAvCCEkdpiyDNh4+Ky2j2fDxQxAvZa9JndF1SU6GshWP+0J5
+	52ewilT8lAJjb8YDFfDuKxAmj5f/eoDUaHQ7sPznxs0e+wXP2DyJctlwJHOUTpIrn35euC9RIIs
+	4R4gMs3acXxlR4Ir1Wahvlwc4kKA406R+Jdj9
+X-Google-Smtp-Source: AGHT+IGLP4t3hL8c6rQwnWojRitsYcXuRXha13VBXTuVelVGnvix3EEiSfqrbr4AO/JmxEnQlMJSjTPnhcgT9+b9UCM=
+X-Received: by 2002:a05:6808:911:b0:3d1:d9e6:7ee9 with SMTP id
+ 5614622812f47-3d20439d504mr112188b6e.33.1717524139167; Tue, 04 Jun 2024
+ 11:02:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
- modules
-To: Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain
- <mcgrof@kernel.org>, linux-modules@vger.kernel.org
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, don
- <zds100@gmail.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <171723014778.258703.6731294779199848686.stgit@devnote2>
- <171723016594.258703.1629777910752596529.stgit@devnote2>
- <fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
- <20240604084955.29b9440687522a1347e0e7cd@kernel.org>
- <419b80da-9cbf-4bb2-aabb-dc04f0fb0f37@efficios.com>
- <20240604123418.22e16e97@gandalf.local.home>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20240604123418.22e16e97@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240508202111.768b7a4d@yea> <20240515224524.1c8befbe@yea>
+ <CAOUHufZ-9NmzOKjLedvZFp0=N0LvRZn77qC6k1WXK+NHtKr=0w@mail.gmail.com>
+ <CAOUHufZ36rQc8AfLtRv2QrEareysdvbprAEO5XkcG-FeDOxFLA@mail.gmail.com>
+ <20240602200332.3e531ff1@yea> <20240604001304.5420284f@yea>
+ <CAJD7tkbCRLdy0vD2Pd17fNrxHgkzW1VucN4qMkohLFLBLaaeCQ@mail.gmail.com>
+ <20240604134458.3ae4396a@yea> <CAJD7tkYjJJGthQ_8NukGw6Q9EYbLA=8sAH_7=B90KXEL6HWdSw@mail.gmail.com>
+ <CAOUHufa0Fpj6SjNgB-z0n5Jg63q1ewkbOAU65forpDwQVs45qg@mail.gmail.com>
+ <CAJD7tkb=5GJ9SNUwDsu1Zy3Tus4rjsNo60Hg9N7=gGth409Diw@mail.gmail.com> <CAOUHufb6zXr14Wm3T-4-OJh7iAq+vzDKwVYfHLhMMt96SpiZXg@mail.gmail.com>
+In-Reply-To: <CAOUHufb6zXr14Wm3T-4-OJh7iAq+vzDKwVYfHLhMMt96SpiZXg@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 4 Jun 2024 11:01:39 -0700
+Message-ID: <CAJD7tkZ+QY55GTzW9A7ZCm=rxAEfrW76cWXf8o5nwiKSXp8z=w@mail.gmail.com>
+Subject: Re: kswapd0: page allocation failure: order:0, mode:0x820(GFP_ATOMIC),
+ nodemask=(null),cpuset=/,mems_allowed=0 (Kernel v6.5.9, 32bit ppc)
+To: Yu Zhao <yuzhao@google.com>
+Cc: Erhard Furtner <erhard_f@mailbox.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, Johannes Weiner <hannes@cmpxchg.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Minchan Kim <minchan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-06-04 12:34, Steven Rostedt wrote:
-> On Tue, 4 Jun 2024 11:02:16 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
->> I see.
->>
->> It looks like there are a few things we could improve there:
->>
->> 1) With your approach, modules need to be already loaded before
->> attaching an fprobe event to them. This effectively prevents
->> attaching to any module init code. Is there any way we could allow
->> this by implementing a module coming notifier in fprobe as well ?
->> This would require that fprobes are kept around in a data structure
->> that matches the modules when they are loaded in the coming notifier.
-> 
-> The above sounds like a nice enhancement, but not something necessary for
-> this series.
+On Tue, Jun 4, 2024 at 10:54=E2=80=AFAM Yu Zhao <yuzhao@google.com> wrote:
+>
+> On Tue, Jun 4, 2024 at 11:34=E2=80=AFAM Yosry Ahmed <yosryahmed@google.co=
+m> wrote:
+> >
+> > On Tue, Jun 4, 2024 at 10:19=E2=80=AFAM Yu Zhao <yuzhao@google.com> wro=
+te:
+> > >
+> > > On Tue, Jun 4, 2024 at 10:12=E2=80=AFAM Yosry Ahmed <yosryahmed@googl=
+e.com> wrote:
+> > > >
+> > > > On Tue, Jun 4, 2024 at 4:45=E2=80=AFAM Erhard Furtner <erhard_f@mai=
+lbox.org> wrote:
+> > > > >
+> > > > > On Mon, 3 Jun 2024 16:24:02 -0700
+> > > > > Yosry Ahmed <yosryahmed@google.com> wrote:
+> > > > >
+> > > > > > Thanks for bisecting. Taking a look at the thread, it seems lik=
+e you
+> > > > > > have a very limited area of memory to allocate kernel memory fr=
+om. One
+> > > > > > possible reason why that commit can cause an issue is because w=
+e will
+> > > > > > have multiple instances of the zsmalloc slab caches 'zspage' an=
+d
+> > > > > > 'zs_handle', which may contribute to fragmentation in slab memo=
+ry.
+> > > > > >
+> > > > > > Do you have /proc/slabinfo from a good and a bad run by any cha=
+nce?
+> > > > > >
+> > > > > > Also, could you check if the attached patch helps? It makes sur=
+e that
+> > > > > > even when we use multiple zsmalloc zpools, we will use a single=
+ slab
+> > > > > > cache of each type.
+> > > > >
+> > > > > Thanks for looking into this! I got you 'cat /proc/slabinfo' from=
+ a good HEAD, from a bad HEAD and from the bad HEAD + your patch applied.
+> > > > >
+> > > > > Good was 6be3601517d90b728095d70c14f3a04b9adcb166, bad was b8cf32=
+dc6e8c75b712cbf638e0fd210101c22f17 which I got both from my bisect.log. I g=
+ot the slabinfo shortly after boot and a 2nd time shortly before the OOM or=
+ the kswapd0: page allocation failure happens. I terminated the workload (s=
+tress-ng --vm 2 --vm-bytes 1930M --verify -v) manually shortly before the 2=
+ GiB RAM exhausted and got the slabinfo then.
+> > > > >
+> > > > > The patch applied to git b8cf32dc6e8c75b712cbf638e0fd210101c22f17=
+ unfortunately didn't make a difference, I got the kswapd0: page allocation=
+ failure nevertheless.
+> > > >
+> > > > Thanks for trying this out. The patch reduces the amount of wasted
+> > > > memory due to the 'zs_handle' and 'zspage' caches by an order of
+> > > > magnitude, but it was a small number to begin with (~250K).
+> > > >
+> > > > I cannot think of other reasons why having multiple zsmalloc pools
+> > > > will end up using more memory in the 0.25GB zone that the kernel
+> > > > allocations can be made from.
+> > > >
+> > > > The number of zpools can be made configurable or determined at runt=
+ime
+> > > > by the size of the machine, but I don't want to do this without
+> > > > understanding the problem here first. Adding other zswap and zsmall=
+oc
+> > > > folks in case they have any ideas.
+> > >
+> > > Hi Erhard,
+> > >
+> > > If it's not too much trouble, could you "grep nr_zspages /proc/vmstat=
+"
+> > > on kernels before and after the bad commit? It'd be great if you coul=
+d
+> > > run the grep command right before the OOM kills.
+> > >
+> > > The overall internal fragmentation of multiple zsmalloc pools might b=
+e
+> > > higher than a single one. I suspect this might be the cause.
+> >
+> > I thought about the internal fragmentation of pools, but zsmalloc
+> > should have access to highmem, and if I understand correctly the
+> > problem here is that we are running out of space in the DMA zone when
+> > making kernel allocations.
+> >
+> > Do you suspect zsmalloc is allocating memory from the DMA zone
+> > initially, even though it has access to highmem?
+>
+> There was a lot of user memory in the DMA zone. So at a point the
+> highmem zone was full and allocation fallback happened.
+>
+> The problem with zone fallback is that recent allocations go into
+> lower zones, meaning they are further back on the LRU list. This
+> applies to both user memory and zsmalloc memory -- the latter has a
+> writeback LRU. On top of this, neither the zswap shrinker nor the
+> zsmalloc shrinker (compaction) is zone aware. So page reclaim might
+> have trouble hitting the right target zone.
 
-IMHO it is nevertheless relevant to discuss the impact of supporting
-this kind of use-case on the ABI presented to userspace, at least to
-validate that what is exposed today can incrementally be enhanced
-towards that goal.
+I see what you mean. In this case, yeah I think the internal
+fragmentation in the zsmalloc pools may be the reason behind the
+problem.
 
-I'm not saying that it needs to be implemented today, but we should
-at least give it some thoughts right now to make sure the ABI is a
-good fit.
+How many CPUs does this machine have? I am wondering if 32 can be an
+overkill for small machines, perhaps the number of pools should be
+max(nr_cpus, 32)?
 
->>
->> 2) Given that the fprobe module going notifier is protected by the
->> event_mutex, can we use locking rather than reference counting
->> in fprobe attach to guarantee the target module is not reclaimed
->> concurrently ? This would remove the transient side-effect of
->> holding a module reference count which temporarily prevents module
->> unload.
-> 
-> Why do we care about unloading modules during the transition? Note, module
-> unload has always been considered a second class citizen, and there's been
-> talks in the past to even rip it out.
+Alternatively, the number of pools should scale with the memory size
+in some way, such that we only increase fragmentation when it's
+tolerable.
 
-As a general rule I try to ensure tracing has as little impact on the
-system behavior so issues that occur without tracing can be reproduced
-with instrumentation.
-
-On systems where modules are loaded/unloaded with udev, holding
-references on modules can spuriously prevent module unload, which
-as a consequence changes the system behavior.
-
-About the relative importance of the various kernel subsystems,
-following your reasoning that module unload is considered a
-second-class citizen within the kernel, I would argue that tracing
-is a third-class citizen and should not needlessly modify the
-behavior of classes above it.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+>
+> We can't really tell how zspages are distributed across zones, but the
+> overall number might be helpful. It'd be great if someone could make
+> nr_zspages per zone :)
