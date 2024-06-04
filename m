@@ -1,237 +1,285 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5D814A4D9;
-	Tue,  4 Jun 2024 17:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029BE13E030;
+	Tue,  4 Jun 2024 17:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717522036; cv=none; b=ZTYy3EoUxTLC57cHdPjVPEpJyTqa9Db0SZCOXbuRqQJaubVhUCJNRj/hlyuoqimBLvVnW64+SEPAB8aBO/tE7pwaJ9XOtMGM4TIfRI00zhS6WuyJLrFhcQwD7tIARDCCZsmtQM+SS34Em5hoFzmyS5yGq9Bx9lYSJadnhwXPIsM=
+	t=1717522088; cv=none; b=LbrVX5tMhK5lJ0wdfwMYBdWkhV7uhuhGc1aoOPjYPSifaOtS9YCQ72aST7o7qUwB//P/kIlym0BLzun8I8m263CSrKiaJeLkKt0EU3+0zJ6LDmcI951SYEobyaJNtwCzSPX5RL2njsY8I8nRdAZ6OMLmNgTfSG04PYQzsLqynzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717522036; c=relaxed/simple;
-	bh=AhkZuPpHQ3cux+x+mZLwO0uQb8cbs9T4dTiGLFrCc7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RSzuro6o8CbI6yLOVI/0doRhMsDDDxK5FACmwkgH+MLRP7Dx9yT+9YqW87JB+/BbvHHM/m8oaQPWN88PxJH3sGy63Wm9C43MQ02dG4H+QHX+fESEhr+9uWWy4NKFWaxC9/TRDaTqzRcB2+++ye8bz6naufQc7pLXbbvZJ8aoq+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=fRYQaIBk; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1717522088; c=relaxed/simple;
+	bh=Hq7jDuDAZuNVQvwyzMy9LQ/uIpB/beFQlGAvgABevb0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=utcn16/w307OzwBE7KiINPzFRU7XOt4WvZou2c0sObHVfPOYWV9t7LwZOaV+288ZvaE9rKqgDl6+MsXr72qSzsBSsmnddGmhTRf2Bj7uKXodBiKvyEjgU3lS1jAg89oRzJDxV9a8uP4a0VCLo1NAXRYixBeO0DDmVOOIgFtJU64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mewng6sf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="fRYQaIBk"
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 9C08688481;
-	Tue,  4 Jun 2024 19:27:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1717522032;
-	bh=3NtwaV0lVIbVvfefAVmPkJRULKlNZkvRewz4sAE2MzQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fRYQaIBkivP15jB/9X0FMmdKthdY+zvzdWW92V4p6yGsqzOGdWqpb9FRfQKpDSLAd
-	 Y51mmCbzifnmHvC0MvNGQ6pmx1jLWIQNuclUNV68E+1Zq1YuNPBX8AFccRjsAwREV9
-	 MWLZIRuIJPS5m4BtikgjEzKEPzJe9lSq+N0nc74/+civjx6Tqv2Junym+QPeZuzX5+
-	 cNLw5XdO80KCpfw8zO5E13IvyO+poL6K3ptYTQmKt3WokfCYL4rCC9NwiJx0m4RoZz
-	 jB1ucAFMzuLhRdH2aJy0/hT13GDA5GwizjfWubH/taAzqnuZlYWM/jQlUZx6GIwrwd
-	 6lWUekjtvuF1g==
-Message-ID: <3c40352b-ad69-4847-b665-e7b2df86a684@denx.de>
-Date: Tue, 4 Jun 2024 19:05:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mewng6sf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64CAAC32786;
+	Tue,  4 Jun 2024 17:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717522087;
+	bh=Hq7jDuDAZuNVQvwyzMy9LQ/uIpB/beFQlGAvgABevb0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Mewng6sff4Q3oHOO3u97/PHwvW1/PQKVsHvj+tNZgI+goJF98V+8mWUg7oaMAUl1u
+	 NWcPI3f518914FmCk0FQc+b87p2LBoHmKN/RQlmqtsfCVBjKfeiwXOy2RPK/9tSPEC
+	 Jcs2eM54eLIP8x40IKPpwHfmgWaqj+eeFvMbSd3UMCrlu1lAENkTGbGe7ZaC895gWJ
+	 diiui7vM3gEClN0mIa1zS2L2NybEFjzYl732Z7SR/EY/3LcbkRS6i9Pt67nXRrNIhI
+	 ComB5C0GpjIr9clPbsOuGADQsN7Uy9Vq/TorEzxHZil1m67OeHep7FfcbmS+kwRhxi
+	 THugSpYp7q+fg==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so32981871fa.3;
+        Tue, 04 Jun 2024 10:28:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVQP4DBmbEcE7IWsvFAwRbI9Z8A3m1GcbrUoE6SAFSF1B33RO4WO089pmUgZnN6RsmpzNsNLLJhRb1tOhpkhBGdpLR2sRVsEjBTEJMbCoIlN6jTd88gl8cjJ1/sziBOp2GB11XVA74vvU3m3wiiOkqL+f6N+1YvGq0WSx98+BzzGp4HMIorInGtzk+k+SCQfxTbS9pvxGTiVgpKhLxKbVdqoM5s
+X-Gm-Message-State: AOJu0YyqVJ7J69mO5WNdB8pCAIWzqvTnaqtFAlIDZzUiN1wDzPEZq/Ln
+	2+wsrJ23fnuX7n99k5fLvl36Cp0nvBPmOwCiOuvjDk9IZSfLhcVowi/XlMw9BaQDrjrOexjrULB
+	O7FfkW8DjSI80jgXkB5PVzbvY3Ok=
+X-Google-Smtp-Source: AGHT+IGQEUWIUDsnYaQOiE3ueF8g36oV4N6BM2kNeRty3LZVia7TSNqropfDYmmyHyk1NP46eWoKRo2stIh34R+FcH8=
+X-Received: by 2002:a2e:90d8:0:b0:2df:b0e3:b548 with SMTP id
+ 38308e7fff4ca-2ea951ace3cmr74448021fa.42.1717522085743; Tue, 04 Jun 2024
+ 10:28:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/11] net: ethernet: stmmac: add management of
- stm32mp13 for stm32
-To: Christophe Roullier <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Richard Cochran <richardcochran@gmail.com>, Jose Abreu
- <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240604143502.154463-1-christophe.roullier@foss.st.com>
- <20240604143502.154463-8-christophe.roullier@foss.st.com>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <20240604143502.154463-8-christophe.roullier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-9-ross.philipson@oracle.com> <CAMj1kXHaH6atsvwr6oVPdZuhR5YEXU33-2kYEn6xb1e=gidOCw@mail.gmail.com>
+ <CAMj1kXHcYOPTLTh-hEtfHk+JaORGK+fEatTT+UOqLJww+_cNTg@mail.gmail.com> <5bffa507-75e8-4cce-ac0c-fe13d6efd3bb@oracle.com>
+In-Reply-To: <5bffa507-75e8-4cce-ac0c-fe13d6efd3bb@oracle.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 4 Jun 2024 19:27:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHLaqyPAw5Jjg91pqFbHoMT2jDqui4rosyerHVudRsq-w@mail.gmail.com>
+Message-ID: <CAMj1kXHLaqyPAw5Jjg91pqFbHoMT2jDqui4rosyerHVudRsq-w@mail.gmail.com>
+Subject: Re: [PATCH v9 08/19] x86: Secure Launch kernel early boot stub
+To: ross.philipson@oracle.com
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
+	trenchboot-devel@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/4/24 4:34 PM, Christophe Roullier wrote:
-> Add Ethernet support for STM32MP13.
-> STM32MP13 is STM32 SOC with 2 GMACs instances.
-> GMAC IP version is SNPS 4.20.
-> GMAC IP configure with 1 RX and 1 TX queue.
-> DMA HW capability register supported
-> RX Checksum Offload Engine supported
-> TX Checksum insertion supported
-> Wake-Up On Lan supported
-> TSO supported
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-> ---
->   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 50 +++++++++++++++----
->   1 file changed, 40 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index bed2be129b2d2..e59f8a845e01e 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -84,12 +84,14 @@ struct stm32_dwmac {
->   	struct clk *clk_eth_ck;
->   	struct clk *clk_ethstp;
->   	struct clk *syscfg_clk;
-> +	bool is_mp13;
->   	int ext_phyclk;
->   	int enable_eth_ck;
->   	int eth_clk_sel_reg;
->   	int eth_ref_clk_sel_reg;
->   	int irq_pwr_wakeup;
->   	u32 mode_reg;		 /* MAC glue-logic mode register */
-> +	u32 mode_mask;
->   	struct regmap *regmap;
->   	u32 speed;
->   	const struct stm32_ops *ops;
-> @@ -102,8 +104,8 @@ struct stm32_ops {
->   	void (*resume)(struct stm32_dwmac *dwmac);
->   	int (*parse_data)(struct stm32_dwmac *dwmac,
->   			  struct device *dev);
-> -	u32 syscfg_eth_mask;
->   	bool clk_rx_enable_in_suspend;
-> +	u32 syscfg_clr_off;
->   };
->   
->   static int stm32_dwmac_clk_enable(struct stm32_dwmac *dwmac, bool resume)
-> @@ -227,7 +229,14 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
->   
->   	switch (plat_dat->mac_interface) {
->   	case PHY_INTERFACE_MODE_MII:
-> -		val = SYSCFG_PMCR_ETH_SEL_MII;
-> +		/*
-> +		 * STM32MP15xx supports both MII and GMII, STM32MP13xx MII only.
-> +		 * SYSCFG_PMCSETR ETH_SELMII is present only on STM32MP15xx and
-> +		 * acts as a selector between 0:GMII and 1:MII. As STM32MP13xx
-> +		 * supports only MII, ETH_SELMII is not present.
-> +		 */
-> +		if (!dwmac->is_mp13)	/* Select MII mode on STM32MP15xx */
-> +			val |= SYSCFG_PMCR_ETH_SEL_MII;
->   		break;
->   	case PHY_INTERFACE_MODE_GMII:
->   		val = SYSCFG_PMCR_ETH_SEL_GMII;
-> @@ -256,13 +265,16 @@ static int stm32mp1_configure_pmcr(struct plat_stmmacenet_data *plat_dat)
->   
->   	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
->   
-> +	/* Shift value at correct ethernet MAC offset in SYSCFG_PMCSETR */
-> +	val <<= ffs(dwmac->mode_mask) - ffs(SYSCFG_MP1_ETH_MASK);
-> +
->   	/* Need to update PMCCLRR (clear register) */
-> -	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
-> -		     dwmac->ops->syscfg_eth_mask);
-> +	regmap_write(dwmac->regmap, dwmac->ops->syscfg_clr_off,
-> +		     dwmac->mode_mask);
->   
->   	/* Update PMCSETR (set register) */
->   	return regmap_update_bits(dwmac->regmap, reg,
-> -				 dwmac->ops->syscfg_eth_mask, val);
-> +				 dwmac->mode_mask, val);
->   }
->   
->   static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
-> @@ -303,7 +315,7 @@ static int stm32mcu_set_mode(struct plat_stmmacenet_data *plat_dat)
->   	dev_dbg(dwmac->dev, "Mode %s", phy_modes(plat_dat->mac_interface));
->   
->   	return regmap_update_bits(dwmac->regmap, reg,
-> -				 dwmac->ops->syscfg_eth_mask, val << 23);
-> +				 SYSCFG_MCU_ETH_MASK, val << 23);
->   }
->   
->   static void stm32_dwmac_clk_disable(struct stm32_dwmac *dwmac, bool suspend)
-> @@ -348,8 +360,15 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
->   		return PTR_ERR(dwmac->regmap);
->   
->   	err = of_property_read_u32_index(np, "st,syscon", 1, &dwmac->mode_reg);
-> -	if (err)
-> +	if (err) {
->   		dev_err(dev, "Can't get sysconfig mode offset (%d)\n", err);
-> +		return err;
-> +	}
-> +
-> +	dwmac->mode_mask = SYSCFG_MP1_ETH_MASK;
-> +	err = of_property_read_u32_index(np, "st,syscon", 2, &dwmac->mode_mask);
-> +	if (err)
-> +		pr_debug("Warning sysconfig register mask not set\n");
+On Tue, 4 Jun 2024 at 19:24, <ross.philipson@oracle.com> wrote:
+>
+> On 5/31/24 6:33 AM, Ard Biesheuvel wrote:
+> > On Fri, 31 May 2024 at 13:00, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >>
+> >> Hello Ross,
+> >>
+> >> On Fri, 31 May 2024 at 03:32, Ross Philipson <ross.philipson@oracle.com> wrote:
+> >>>
+> >>> The Secure Launch (SL) stub provides the entry point for Intel TXT (and
+> >>> later AMD SKINIT) to vector to during the late launch. The symbol
+> >>> sl_stub_entry is that entry point and its offset into the kernel is
+> >>> conveyed to the launching code using the MLE (Measured Launch
+> >>> Environment) header in the structure named mle_header. The offset of the
+> >>> MLE header is set in the kernel_info. The routine sl_stub contains the
+> >>> very early late launch setup code responsible for setting up the basic
+> >>> environment to allow the normal kernel startup_32 code to proceed. It is
+> >>> also responsible for properly waking and handling the APs on Intel
+> >>> platforms. The routine sl_main which runs after entering 64b mode is
+> >>> responsible for measuring configuration and module information before
+> >>> it is used like the boot params, the kernel command line, the TXT heap,
+> >>> an external initramfs, etc.
+> >>>
+> >>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> >>> ---
+> >>>   Documentation/arch/x86/boot.rst        |  21 +
+> >>>   arch/x86/boot/compressed/Makefile      |   3 +-
+> >>>   arch/x86/boot/compressed/head_64.S     |  30 +
+> >>>   arch/x86/boot/compressed/kernel_info.S |  34 ++
+> >>>   arch/x86/boot/compressed/sl_main.c     | 577 ++++++++++++++++++++
+> >>>   arch/x86/boot/compressed/sl_stub.S     | 725 +++++++++++++++++++++++++
+> >>>   arch/x86/include/asm/msr-index.h       |   5 +
+> >>>   arch/x86/include/uapi/asm/bootparam.h  |   1 +
+> >>>   arch/x86/kernel/asm-offsets.c          |  20 +
+> >>>   9 files changed, 1415 insertions(+), 1 deletion(-)
+> >>>   create mode 100644 arch/x86/boot/compressed/sl_main.c
+> >>>   create mode 100644 arch/x86/boot/compressed/sl_stub.S
+> >>>
+> >>> diff --git a/Documentation/arch/x86/boot.rst b/Documentation/arch/x86/boot.rst
+> >>> index 4fd492cb4970..295cdf9bcbdb 100644
+> >>> --- a/Documentation/arch/x86/boot.rst
+> >>> +++ b/Documentation/arch/x86/boot.rst
+> >>> @@ -482,6 +482,14 @@ Protocol:  2.00+
+> >>>              - If 1, KASLR enabled.
+> >>>              - If 0, KASLR disabled.
+> >>>
+> >>> +  Bit 2 (kernel internal): SLAUNCH_FLAG
+> >>> +
+> >>> +       - Used internally by the setup kernel to communicate
+> >>> +         Secure Launch status to kernel proper.
+> >>> +
+> >>> +           - If 1, Secure Launch enabled.
+> >>> +           - If 0, Secure Launch disabled.
+> >>> +
+> >>>     Bit 5 (write): QUIET_FLAG
+> >>>
+> >>>          - If 0, print early messages.
+> >>> @@ -1028,6 +1036,19 @@ Offset/size:     0x000c/4
+> >>>
+> >>>     This field contains maximal allowed type for setup_data and setup_indirect structs.
+> >>>
+> >>> +============   =================
+> >>> +Field name:    mle_header_offset
+> >>> +Offset/size:   0x0010/4
+> >>> +============   =================
+> >>> +
+> >>> +  This field contains the offset to the Secure Launch Measured Launch Environment
+> >>> +  (MLE) header. This offset is used to locate information needed during a secure
+> >>> +  late launch using Intel TXT. If the offset is zero, the kernel does not have
+> >>> +  Secure Launch capabilities. The MLE entry point is called from TXT on the BSP
+> >>> +  following a success measured launch. The specific state of the processors is
+> >>> +  outlined in the TXT Software Development Guide, the latest can be found here:
+> >>> +  https://urldefense.com/v3/__https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf__;!!ACWV5N9M2RV99hQ!Mng0gnPhOYZ8D02t1rYwQfY6U3uWaypJyd1T2rsWz3QNHr9GhIZ9ANB_-cgPExxX0e0KmCpda-3VX8Fj$
+> >>> +
+> >>>
+> >>
+> >> Could we just repaint this field as the offset relative to the start
+> >> of kernel_info rather than relative to the start of the image? That
+> >> way, there is no need for patch #1, and given that the consumer of
+> >> this field accesses it via kernel_info, I wouldn't expect any issues
+> >> in applying this offset to obtain the actual address.
+> >>
+> >>
+> >>>   The Image Checksum
+> >>>   ==================
+> >>> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> >>> index 9189a0e28686..9076a248d4b4 100644
+> >>> --- a/arch/x86/boot/compressed/Makefile
+> >>> +++ b/arch/x86/boot/compressed/Makefile
+> >>> @@ -118,7 +118,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+> >>>   vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+> >>>   vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+> >>>
+> >>> -vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/early_sha1.o $(obj)/early_sha256.o
+> >>> +vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/early_sha1.o $(obj)/early_sha256.o \
+> >>> +       $(obj)/sl_main.o $(obj)/sl_stub.o
+> >>>
+> >>>   $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+> >>>          $(call if_changed,ld)
+> >>> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> >>> index 1dcb794c5479..803c9e2e6d85 100644
+> >>> --- a/arch/x86/boot/compressed/head_64.S
+> >>> +++ b/arch/x86/boot/compressed/head_64.S
+> >>> @@ -420,6 +420,13 @@ SYM_CODE_START(startup_64)
+> >>>          pushq   $0
+> >>>          popfq
+> >>>
+> >>> +#ifdef CONFIG_SECURE_LAUNCH
+> >>> +       /* Ensure the relocation region is coverd by a PMR */
+> >>
+> >> covered
+> >>
+> >>> +       movq    %rbx, %rdi
+> >>> +       movl    $(_bss - startup_32), %esi
+> >>> +       callq   sl_check_region
+> >>> +#endif
+> >>> +
+> >>>   /*
+> >>>    * Copy the compressed kernel to the end of our buffer
+> >>>    * where decompression in place becomes safe.
+> >>> @@ -462,6 +469,29 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+> >>>          shrq    $3, %rcx
+> >>>          rep     stosq
+> >>>
+> >>> +#ifdef CONFIG_SECURE_LAUNCH
+> >>> +       /*
+> >>> +        * Have to do the final early sl stub work in 64b area.
+> >>> +        *
+> >>> +        * *********** NOTE ***********
+> >>> +        *
+> >>> +        * Several boot params get used before we get a chance to measure
+> >>> +        * them in this call. This is a known issue and we currently don't
+> >>> +        * have a solution. The scratch field doesn't matter. There is no
+> >>> +        * obvious way to do anything about the use of kernel_alignment or
+> >>> +        * init_size though these seem low risk with all the PMR and overlap
+> >>> +        * checks in place.
+> >>> +        */
+> >>> +       movq    %r15, %rdi
+> >>> +       callq   sl_main
+> >>> +
+> >>> +       /* Ensure the decompression location is covered by a PMR */
+> >>> +       movq    %rbp, %rdi
+> >>> +       movq    output_len(%rip), %rsi
+> >>> +       callq   sl_check_region
+> >>> +#endif
+> >>> +
+> >>> +       pushq   %rsi
+> >>
+> >> This looks like a rebase error.
+> >>
+> >>>          call    load_stage2_idt
+> >>>
+> >>>          /* Pass boot_params to initialize_identity_maps() */
+> >>> diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+> >>> index c18f07181dd5..e199b87764e9 100644
+> >>> --- a/arch/x86/boot/compressed/kernel_info.S
+> >>> +++ b/arch/x86/boot/compressed/kernel_info.S
+> >>> @@ -28,6 +28,40 @@ SYM_DATA_START(kernel_info)
+> >>>          /* Maximal allowed type for setup_data and setup_indirect structs. */
+> >>>          .long   SETUP_TYPE_MAX
+> >>>
+> >>> +       /* Offset to the MLE header structure */
+> >>> +#if IS_ENABLED(CONFIG_SECURE_LAUNCH)
+> >>> +       .long   rva(mle_header)
+> >>
+> >> ... so this could just be mle_header - kernel_info, and the consumer
+> >> can do the math instead.
+> >>
+> >>> +#else
+> >>> +       .long   0
+> >>> +#endif
+> >>> +
+> >>>   kernel_info_var_len_data:
+> >>>          /* Empty for time being... */
+> >>>   SYM_DATA_END_LABEL(kernel_info, SYM_L_LOCAL, kernel_info_end)
+> >>> +
+> >>> +#if IS_ENABLED(CONFIG_SECURE_LAUNCH)
+> >>> +       /*
+> >>> +        * The MLE Header per the TXT Specification, section 2.1
+> >>> +        * MLE capabilities, see table 4. Capabilities set:
+> >>> +        * bit 0: Support for GETSEC[WAKEUP] for RLP wakeup
+> >>> +        * bit 1: Support for RLP wakeup using MONITOR address
+> >>> +        * bit 2: The ECX register will contain the pointer to the MLE page table
+> >>> +        * bit 5: TPM 1.2 family: Details/authorities PCR usage support
+> >>> +        * bit 9: Supported format of TPM 2.0 event log - TCG compliant
+> >>> +        */
+> >>> +SYM_DATA_START(mle_header)
+> >>> +       .long   0x9082ac5a  /* UUID0 */
+> >>> +       .long   0x74a7476f  /* UUID1 */
+> >>> +       .long   0xa2555c0f  /* UUID2 */
+> >>> +       .long   0x42b651cb  /* UUID3 */
+> >>> +       .long   0x00000034  /* MLE header size */
+> >>> +       .long   0x00020002  /* MLE version 2.2 */
+> >>> +       .long   rva(sl_stub_entry) /* Linear entry point of MLE (virt. address) */
+> >>
+> >> and these should perhaps be relative to mle_header?
+> >>
+> >>> +       .long   0x00000000  /* First valid page of MLE */
+> >>> +       .long   0x00000000  /* Offset within binary of first byte of MLE */
+> >>> +       .long   rva(_edata) /* Offset within binary of last byte + 1 of MLE */
+> >>
+> >> and here
+> >>
+> >
+> > Ugh never mind - these are specified externally.
+>
+> Can you clarify your follow on comment here?
+>
 
-I _think_ you need to left-shift the mode mask by 8 for STM32MP13xx 
-second GMAC somewhere in here, right ?
+I noticed that -as you pointed out in your previous reply- these
+fields cannot be repainted at will, as they are defined by an external
+specification.
 
->   	return err;
->   }
-> @@ -361,6 +380,8 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
->   	struct device_node *np = dev->of_node;
->   	int err = 0;
->   
-> +	dwmac->is_mp13 = of_device_is_compatible(np, "st,stm32mp13-dwmac");
-
-You could make is_mp13 part of struct stm32_ops {} just like 
-syscfg_clr_off is part of struct stm32_ops {} .
-
->   	/* Ethernet PHY have no crystal */
->   	dwmac->ext_phyclk = of_property_read_bool(np, "st,ext-phyclk");
->   
-> @@ -540,8 +561,7 @@ static SIMPLE_DEV_PM_OPS(stm32_dwmac_pm_ops,
->   	stm32_dwmac_suspend, stm32_dwmac_resume);
->   
->   static struct stm32_ops stm32mcu_dwmac_data = {
-> -	.set_mode = stm32mcu_set_mode,
-> -	.syscfg_eth_mask = SYSCFG_MCU_ETH_MASK
-> +	.set_mode = stm32mcu_set_mode
-
-It is not necessary to remove the trailing comma ','
-
->   };
->   
->   static struct stm32_ops stm32mp1_dwmac_data = {
-> @@ -549,13 +569,23 @@ static struct stm32_ops stm32mp1_dwmac_data = {
->   	.suspend = stm32mp1_suspend,
->   	.resume = stm32mp1_resume,
->   	.parse_data = stm32mp1_parse_data,
-> -	.syscfg_eth_mask = SYSCFG_MP1_ETH_MASK,
-> +	.syscfg_clr_off = 0x44,
-> +	.clk_rx_enable_in_suspend = true
-> +};
-> +
-> +static struct stm32_ops stm32mp13_dwmac_data = {
-> +	.set_mode = stm32mp1_set_mode,
-> +	.suspend = stm32mp1_suspend,
-> +	.resume = stm32mp1_resume,
-> +	.parse_data = stm32mp1_parse_data,
-> +	.syscfg_clr_off = 0x08,
->   	.clk_rx_enable_in_suspend = true
->   };
->   
->   static const struct of_device_id stm32_dwmac_match[] = {
->   	{ .compatible = "st,stm32-dwmac", .data = &stm32mcu_dwmac_data},
->   	{ .compatible = "st,stm32mp1-dwmac", .data = &stm32mp1_dwmac_data},
-> +	{ .compatible = "st,stm32mp13-dwmac", .data = &stm32mp13_dwmac_data},
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, stm32_dwmac_match);
-
-This patch definitely looks MUCH better than what this series started 
-with, it is much easier to grasp the MP13 specific changes.
-
-You could possibly improve this further and split the 
-dwmac->ops->syscfg_eth_mask to dwmac->mode_mask conversion into separate 
-preparatory patch (as a 6.5/11 in context of this series), and then add 
-the few MP13 changes on top (as 7/11 patch).
+I'll play a bit more with this code tomorrow - I would *really* like
+to avoid the need for patch #1, as it adds another constraint on how
+we construct the boot image, and this is already riddled with legacy
+and other complications.
