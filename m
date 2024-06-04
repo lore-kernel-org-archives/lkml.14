@@ -1,185 +1,220 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0498BF7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C498146019;
+	Tue,  4 Jun 2024 13:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717506875; cv=none; b=PsHDF/X5xykt2UostJ5mcKNax0eAXAxG7l0Jmf2n45L8S8ZhamUTs/btXFnVtma1+LIVRBbJ/PA+so5xnZf9QUZs2j1JIUdcepo4PEoPNaQIW7SktB9tJu/llY6uJdbWw+3r/yDupBcfNZQsNgt3iG/YE+rcwMXb1Ea4OW0UgM8=
+	t=1717506894; cv=none; b=YGWK1Gv8edFLwokE/neGnKEOhzcKcO+2hz7TYAusFJ4JoM7fNcE0vZBaleEfbI6VsZJasCxau4bbCR5X82SrO/Y+RYdIIyoL3rU2JnZkvgZbvdIPk/TS/0OcFPPlc1/PkXs0M3fdDSyjDLUxYtWF/xwHZiLC5Mzv1LZtI5g2tX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717506875; c=relaxed/simple;
-	bh=xFq6rC/NfxmfGTWLn6azWFOoOM3m+tOW3yOJT3C9yA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=A5FxoNwUEkOrzRy5mKKADH/Ht6eHaVTsZJGuAOwHZgqYdEbT7bdunbn5g0Xkz/8QCKsc/8yiIUAR90GD3Kt7GK9Ccyt6IBU01weGn3uEJ41DY5bqpL1uMiK1rgj4oy1ji7KBZqq3Nd/oAfJdezlcwROgJQgkGrKOQlxAZxbF9Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TMCmZCxy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TMCmZCxy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717506872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=LQiuJa6XjEMGh17HerZFZUVv0NCVs36LUrZfs91xsUU=;
-	b=TMCmZCxy0dPTSTcJj7sirYz1LozUKxSu4I4vLAz5deEOxlXvRCWY06WuEoTMG8KDM+um90
-	xpSEfKgL+MMBbuJbGl+ghNAfMKSM13ta1QG5Qm0Adu7yDEHhQ7HNgFt+5u36yOg5aq5ww+
-	XwwWBfW0i5znVkQ2S1FDUpANrw3kjts=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-277-tQTLBkO3NnyIHL3TTXfNJg-1; Tue, 04 Jun 2024 09:14:30 -0400
-X-MC-Unique: tQTLBkO3NnyIHL3TTXfNJg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-42117a61bccso42619455e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 06:14:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717506869; x=1718111669;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LQiuJa6XjEMGh17HerZFZUVv0NCVs36LUrZfs91xsUU=;
-        b=kQeyO3PFxiMMNMv0wxF0duzrMs82321c9rUzw18ddAMzP+TvGo/+bBe3oE3625t1QD
-         YqnqEB1l+Z2SaDVef5U3IR2Bb2fq//o9dwHk5wmgEgK4+Z4UpS2nG4Hraw0eAVq7qo3e
-         fNCj4oT2lZD24dknX7v6I1ESVXdsvd5VTCAOF7qMhkJjQ+SfbYWx+xJHzAMEKqPyXZGw
-         70nkfRrmn1RfNLEUzjQSAJV0ub9kwEJo5GwXHC7+8ceci+m+m9LDLc9S2G7m1xymMfS1
-         o5rXIVdCVbhlH8H2SN3ieUTagv698woFhR+jDk/6cTP42OPLBXA/mwRyBizYzjM9MsEa
-         77AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWUaSSoX1+W4MhW0EDtNFXjvkm1NM1iatDA6H231ceUB33nUbiavU1/+1HsvPXT8AlQSyxfC2n/y5d24n+TZHVd5YuMHRqQyN99hzdB
-X-Gm-Message-State: AOJu0YyNCSzHkrlcqx/j5WFUb0TFMhgWFtqnJcvOqVxKVrNFtH8HkDQl
-	PT36GhR8ArH2BgSdSVtVGMMM69f0eXFw+oVGY5HSJOsbu6jYbbb0yXZbLJvOgLvLyhw3A1fMCpI
-	8RKs9l19rHyA9oUqfTNtZfKytkfz8VUdNeht4EEssuxQ0HyIiWWNDXUtLVAs2DA==
-X-Received: by 2002:a7b:ce10:0:b0:421:2a14:3132 with SMTP id 5b1f17b1804b1-4212e0a52c3mr100630245e9.25.1717506869329;
-        Tue, 04 Jun 2024 06:14:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5wn67LsGXw7ypMf8z9AKW2X8rC2HJnPZGHC9fa6Le3AhDS/bTwE5fFsT6+1/khMWDkAeS4g==
-X-Received: by 2002:a7b:ce10:0:b0:421:2a14:3132 with SMTP id 5b1f17b1804b1-4212e0a52c3mr100630005e9.25.1717506868895;
-        Tue, 04 Jun 2024 06:14:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c73a:3a00:a025:9b06:549e:c16b? (p200300cbc73a3a00a0259b06549ec16b.dip0.t-ipconnect.de. [2003:cb:c73a:3a00:a025:9b06:549e:c16b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04d94f1sm11446657f8f.49.2024.06.04.06.14.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 06:14:28 -0700 (PDT)
-Message-ID: <3d2ad8a3-30c6-41d6-841b-e8c376d01da3@redhat.com>
-Date: Tue, 4 Jun 2024 15:14:27 +0200
+	s=arc-20240116; t=1717506894; c=relaxed/simple;
+	bh=8nW1V6CbncsFWuIQZgo5buIgXhsjHyc1sGEJPYs+00Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sBHqSPGQp0gFfqRsBPGuWI5cPBWvexLmFs/yW+GV5yqz+4w8nYk8nOjJHx5M/1kB31nCXiYLexF97Fan/Do5+1IGhjo5Zu7ayxZWLoKpPPPcv/yubOFcQW8jyGuwz1OTRxcUxAqZPh6nQmixY4bLLA+u7XBrwGGGB1VgIf1lPAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VtrfN175Pz4f3mHZ;
+	Tue,  4 Jun 2024 21:14:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 3EA601A0842;
+	Tue,  4 Jun 2024 21:14:47 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgDnCw9FE19mKJipOw--.8022S3;
+	Tue, 04 Jun 2024 21:14:47 +0800 (CST)
+Message-ID: <86c3df48-7e9f-bf72-c7a7-5c02b31ed9c0@huaweicloud.com>
+Date: Tue, 4 Jun 2024 21:14:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] mm/ksm: skip subpages of compound pages
-To: Alex Shi <seakeel@gmail.com>, alexs@kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, izik.eidus@ravellosystems.com,
- willy@infradead.org, aarcange@redhat.com, chrisw@sous-sol.org,
- hughd@google.com
-References: <20240604042454.2012091-1-alexs@kernel.org>
- <20240604042454.2012091-3-alexs@kernel.org>
- <8d3a60d5-06c5-4df4-aeda-2fbec45a8ae0@redhat.com>
- <b3e242b5-c589-47fd-9a02-1e488bed9d15@gmail.com>
- <00dcd224-6333-4f1e-9087-bdb5024ac236@redhat.com>
- <9f4f6f0e-81e8-4bd0-9f20-412a543a452d@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <9f4f6f0e-81e8-4bd0-9f20-412a543a452d@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] ublk_drv: fix NULL pointer dereference in
+ ublk_ctrl_start_recovery()
+To: Changhui Zhong <czhong@redhat.com>
+Cc: Ming Lei <ming.lei@redhat.com>, axboe@kernel.dk,
+ ZiyangZhang@linux.alibaba.com, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yukuai3@huawei.com, yi.zhang@huawei.com,
+ houtao1@huawei.com, yangerkun@huawei.com
+References: <20240529095313.2568595-1-linan666@huaweicloud.com>
+ <Zl0QpCbYVHIkKa/H@fedora>
+ <225f4c8e-0e2c-8f4b-f87d-69f4677af572@huaweicloud.com>
+ <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <CAGVVp+XD5MbYOWL4pbLMxXL0yNKO5NJ84--=KVnW6w5-GF7Drw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgDnCw9FE19mKJipOw--.8022S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw4UtrWUuw1UWw4rur17KFg_yoWxJFyUpF
+	ykWFW0kFW8Gr18Aws7tr45tF10ya1q9a1DGwnagFy7Wa4kur13Xa48CF1jgrWDWw4Utay7
+	tFn0grW0gr1jqaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487
+	Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aV
+	AFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E
+	8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWr
+	Zr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_Gr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IU1VOJ7UUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-On 04.06.24 15:10, Alex Shi wrote:
-> 
-> 
-> On 6/4/24 6:43 PM, David Hildenbrand wrote:
->>>>>
->>>>> @@ -2680,7 +2685,7 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
->>>>>                 }
->>>>>     next_page:
->>>>>                 put_page(*page);
->>>>> -            ksm_scan.address += PAGE_SIZE;
->>>>> +            ksm_scan.address += nr * PAGE_SIZE;
->>>>>                 cond_resched();
->>>>>             }
->>>>>         }
+
+
+在 2024/6/4 9:32, Changhui Zhong 写道:
+> On Mon, Jun 3, 2024 at 10:20 AM Li Nan <linan666@huaweicloud.com> wrote:
+>>
+>>
+>>
+>> 在 2024/6/3 8:39, Ming Lei 写道:
+>>
+>> [...]
+>>
+>>>> diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+>>>> index 4e159948c912..99b621b2d40f 100644
+>>>> --- a/drivers/block/ublk_drv.c
+>>>> +++ b/drivers/block/ublk_drv.c
+>>>> @@ -2630,7 +2630,8 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
+>>>>    {
+>>>>       int i;
 >>>>
->>>> You might be jumping over pages that don't belong to that folio. What you would actually want to do is somehow use folio_pte_batch() to really know the PTEs point at the same folio, so you can skip them. But that's not that easy when using follow_page() ...
->>>>
->>>> So I suggest dropping this change for now.
->>>>
+>>>> -    WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
+>>>> +    if (WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq))))
+>>>> +            return;
 >>>
->>> Hi David,
+>>> Yeah, it is one bug. However, it could be addressed by adding the check in
+>>> ublk_ctrl_start_recovery() and return immediately in case of NULL ubq->ubq_daemon,
+>>> what do you think about this way?
 >>>
->>> Forgive my stupidity, where I jump over normal page that not to belong to the folio?
 >>
->> IIUC, you assume that the folio is fully mapped by all PTEs that could span it, and that follow_page() would give you the head page, correct?
+>> Check ub->nr_queues_ready seems better. How about:
 >>
->> As a simple example, assume only a single page of a large folio is still mapped, which could be any tail page. You couldn't jump over any PTEs.
+>> @@ -2662,6 +2662,8 @@ static int ublk_ctrl_start_recovery(struct
+>> ublk_device *ub,
+>>           mutex_lock(&ub->mutex);
+>>           if (!ublk_can_use_recovery(ub))
+>>                   goto out_unlock;
+>> +       if (!ub->nr_queues_ready)
+>> +               goto out_unlock;
+>>           /*
+>>            * START_RECOVERY is only allowd after:
+>>            *
 >>
->> Or am I missing something?
+>>>
+>>> Thanks,
+>>> Ming
+>>
+>> --
+>> Thanks,
+>> Nan
+>>
 > 
-> Uh, thanks for explanations. for what's we concerned, the following code could take care of the FULL or ERR pages. And it still keep the step of single page.
->                          page = follow_page(vma, ksm_scan.address, FOLL_GET);
->                          if (IS_ERR_OR_NULL(page)) {
->                                  ksm_scan.address += PAGE_SIZE;
->                                  cond_resched();
->                                  continue;
->                          }
-> And after the above code, step folio_nr_pages on address should be safe, isn't it?
+> 
+> Hi,Nan
+> 
+> After applying your new patch, I did not trigger "NULL pointer
+> dereference" and "Warning",
+> but hit task hung "Call Trace" info, please check
+> 
+> [13617.812306] running generic/004
+> [13622.293674] blk_print_req_error: 91 callbacks suppressed
+> [13622.293681] I/O error, dev ublkb4, sector 233256 op 0x1:(WRITE)
+> flags 0x8800 phys_seg 1 prio class 0
+> [13622.308145] I/O error, dev ublkb4, sector 233256 op 0x0:(READ)
+> flags 0x0 phys_seg 2 prio class 0
+> [13622.316923] I/O error, dev ublkb4, sector 233264 op 0x1:(WRITE)
+> flags 0x8800 phys_seg 1 prio class 0
+> [13622.326048] I/O error, dev ublkb4, sector 233272 op 0x0:(READ)
+> flags 0x0 phys_seg 1 prio class 0
+> [13622.334828] I/O error, dev ublkb4, sector 233272 op 0x1:(WRITE)
+> flags 0x8800 phys_seg 1 prio class 0
+> [13622.343954] I/O error, dev ublkb4, sector 233312 op 0x0:(READ)
+> flags 0x0 phys_seg 1 prio class 0
+> [13622.352733] I/O error, dev ublkb4, sector 233008 op 0x0:(READ)
+> flags 0x0 phys_seg 1 prio class 0
+> [13622.361514] I/O error, dev ublkb4, sector 233112 op 0x0:(READ)
+> flags 0x0 phys_seg 1 prio class 0
+> [13622.370292] I/O error, dev ublkb4, sector 233192 op 0x1:(WRITE)
+> flags 0x8800 phys_seg 1 prio class 0
+> [13622.379419] I/O error, dev ublkb4, sector 233120 op 0x0:(READ)
+> flags 0x0 phys_seg 1 prio class 0
+> [13641.069695] INFO: task fio:174413 blocked for more than 122 seconds.
+> [13641.076061]       Not tainted 6.10.0-rc1+ #1
+> [13641.080338] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+> disables this message.
+> [13641.088164] task:fio             state:D stack:0     pid:174413
+> tgid:174413 ppid:174386 flags:0x00004002
+> [13641.088168] Call Trace:
+> [13641.088170]  <TASK>
+> [13641.088171]  __schedule+0x221/0x670
+> [13641.088177]  schedule+0x23/0xa0
+> [13641.088179]  io_schedule+0x42/0x70
+> [13641.088181]  blk_mq_get_tag+0x118/0x2b0
+> [13641.088185]  ? gup_fast_pgd_range+0x280/0x370
+> [13641.088188]  ? __pfx_autoremove_wake_function+0x10/0x10
+> [13641.088192]  __blk_mq_alloc_requests+0x194/0x3a0
+> [13641.088194]  blk_mq_submit_bio+0x241/0x6c0
+> [13641.088196]  __submit_bio+0x8a/0x1f0
+> [13641.088199]  submit_bio_noacct_nocheck+0x168/0x250
+> [13641.088201]  ? submit_bio_noacct+0x45/0x560
+> [13641.088203]  __blkdev_direct_IO_async+0x167/0x1a0
+> [13641.088206]  blkdev_write_iter+0x1c8/0x270
+> [13641.088208]  aio_write+0x11c/0x240
+> [13641.088212]  ? __rq_qos_issue+0x21/0x40
+> [13641.088214]  ? blk_mq_start_request+0x34/0x1a0
+> [13641.088216]  ? io_submit_one+0x68/0x380
+> [13641.088218]  ? kmem_cache_alloc_noprof+0x4e/0x320
+> [13641.088221]  ? fget+0x7c/0xc0
+> [13641.088224]  ? io_submit_one+0xde/0x380
+> [13641.088226]  io_submit_one+0xde/0x380
+> [13641.088228]  __x64_sys_io_submit+0x80/0x160
+> [13641.088229]  do_syscall_64+0x79/0x150
+> [13641.088233]  ? syscall_exit_to_user_mode+0x6c/0x1f0
+> [13641.088237]  ? do_io_getevents+0x8b/0xe0
+> [13641.088238]  ? syscall_exit_work+0xf3/0x120
+> [13641.088241]  ? syscall_exit_to_user_mode+0x6c/0x1f0
+> [13641.088243]  ? do_syscall_64+0x85/0x150
+> [13641.088245]  ? do_syscall_64+0x85/0x150
+> [13641.088247]  ? blk_mq_flush_plug_list.part.0+0x108/0x160
+> [13641.088249]  ? rseq_get_rseq_cs+0x1d/0x220
+> [13641.088252]  ? rseq_ip_fixup+0x6d/0x1d0
+> [13641.088254]  ? blk_finish_plug+0x24/0x40
+> [13641.088256]  ? syscall_exit_to_user_mode+0x6c/0x1f0
+> [13641.088258]  ? do_syscall_64+0x85/0x150
+> [13641.088260]  ? syscall_exit_to_user_mode+0x6c/0x1f0
+> [13641.088262]  ? do_syscall_64+0x85/0x150
+> [13641.088264]  ? syscall_exit_to_user_mode+0x6c/0x1f0
+> [13641.088266]  ? do_syscall_64+0x85/0x150
+> [13641.088268]  ? do_syscall_64+0x85/0x150
+> [13641.088270]  ? do_syscall_64+0x85/0x150
+> [13641.088272]  ? clear_bhb_loop+0x45/0xa0
+> [13641.088275]  ? clear_bhb_loop+0x45/0xa0
+> [13641.088277]  ? clear_bhb_loop+0x45/0xa0
+> [13641.088279]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [13641.088281] RIP: 0033:0x7ff92150713d
+> [13641.088283] RSP: 002b:00007ffca1ef81f8 EFLAGS: 00000246 ORIG_RAX:
+> 00000000000000d1
+> [13641.088285] RAX: ffffffffffffffda RBX: 00007ff9217e2f70 RCX: 00007ff92150713d
+> [13641.088286] RDX: 000055863b694fe0 RSI: 0000000000000010 RDI: 00007ff92164d000
+> [13641.088287] RBP: 00007ff92164d000 R08: 00007ff91936d000 R09: 0000000000000180
+> [13641.088288] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000010
+> [13641.088289] R13: 0000000000000000 R14: 000055863b694fe0 R15: 000055863b6970c0
+> [13641.088291]  </TASK>
+> 
+> Thanks，
+> Changhui
 
-Not sure if I follow. Let me try explaining once again:
-
-Assume a PTE maps some tail page of the large anonymous folio. The other 
-PTEs around it map some other anonymous folios, not pages of that large 
-anonymous folio.
-
-Without looking at the other PTEs you don't know how much you can skip.
+Thanks for your test, I am trying to find the cause of this new issue.
 
 -- 
-Cheers,
-
-David / dhildenb
+Thanks,
+Nan
 
