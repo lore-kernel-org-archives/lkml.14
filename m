@@ -1,333 +1,197 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2061.outbound.protection.outlook.com [40.107.8.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1361411FD;
-	Tue,  4 Jun 2024 07:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487653; cv=none; b=M/ektmnmp8rMaFlEZoSl5Io9ZVh+EfNWdOQVZGT2oKR22WueGBwzrjrA58/uCZc8+q4kNXoy3XTiRmSDQUEebud3TV3349WOXGPCY6KEQ00Yp1x0yWgxmsYZEciVeLV9uoQT4+ft9bxLlE6ztVwxIL3slOGbt6mdZNW2XkwJX10=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717487653; c=relaxed/simple;
-	bh=+07XjaCmvSa2PN1d6lMA+SwXTKZqzU2wx3qN8oHNSUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ImmqQIq8AkUegyGT0Sk93+vg0/WPvHGkcEdfjNfgN/WFrvMlxxvIb7k495xNZhveo14lAjZIsv93aWl9h81kCMQd0w43z5XPGRNZi3c7PbxOheD+hEFJUvT6Wc1MIr1D6Aj34j9HttrPLBjPKcaTAs80T+OmEvlXZSJtnDvmAtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MP+Clkmi; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DD11422AF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717487674; cv=fail; b=XEmIWy7rSUkqmdB8lR3cLpcL1aheH7qJ5Pm+aONIZW1OHqsMOhjPpLf/3qPj5V+VdPwztUvda9sarbjn60Ci9iVNjbsCDzqhT5PkxHq8fAtCSjG8XWJs9KsFChyMnJu8I85cXIPzGWIEEzstQ+RYFu9LKQEs+kAMMflhknY1VqY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717487674; c=relaxed/simple;
+	bh=qcq9lu7LExDAHb+/Jf7Mn02xmr7/LJ0Vbn4lUy0T3As=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=His+WB+NUje6buBLFzpVfbTzsg7q0F1IQRoB7CZgIFO90gbaf6rDeemQF3RyByCcw15woOd13cfW3QyRwsa6EYj+3pJr36TKclDoLAnpqidjYDZFuMw1gE5bCXymp1efqJarhDPXf6U2/63BQu1is+emxaejwTFfIaRSxYQ35L0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WLONGakP; arc=fail smtp.client-ip=40.107.8.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MP+Clkmi"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52b992fd796so777824e87.0;
-        Tue, 04 Jun 2024 00:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717487650; x=1718092450; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BoSVUPBHVu1Boko+k4yuvY/1xggpNKidapHYx+cVQow=;
-        b=MP+ClkmiJ7/SCMB3tuggw9iyM2JLiq2qdeCDiee4/oLT4iJ5eOZIs8VGjMBHLILWIg
-         5p1WQyw0CN7L+8ECdN/kC9z88+HPAyyZTR6G3uOw7olg3+pothbArAdd2EElvuEkM95E
-         WAS//ZZ+qk/geE0isbIQ4rUVsvYeHN6GGjrZ5xPD5xfEdbjkFUtYIV7RibnKqDBbekrN
-         4lIaXz8SDFVA/wsVlqDuq0lssLZCBgBFGlGrCtcYiFyvMDxWexzcL/AhhE/O5O6t/nfp
-         7WAQztHI2zRU8+u5I1MJyopHRa0SrjNsBKRRjRHzAuTwBQY7Uh2mvDR70CTOkdWZ92Ro
-         PHWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717487650; x=1718092450;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BoSVUPBHVu1Boko+k4yuvY/1xggpNKidapHYx+cVQow=;
-        b=sA4rAUzX2Npvi1QzTTzr8lgGRGDUbdIOhoV9WbJ/E1cJ1tx+MwFkzAuJNcYkWW3f4n
-         m6LgXOv3NxzfkLK6nR6S9LPLpZlbz+Kgv87hrVOZRvOgyMwUiPhYLtj+ZVguXK5TMHpH
-         9ga+iIm+j1RyArLQdjXCaA9raHGYJM1aYYNiax8cfJu4GZ3lqQ555Vj5vuX6fqyYzaVH
-         Ebjt8rLTiby9Mpo+0r13yws2T6ufQKxT8oQc7zE48g7GiOBB0MhqzOS7y4JckhCs3boF
-         PGZCUe0sp781+tVb43u+HpymV1j1Cj+wJSfv99fZuYqi8qtSWNtL5W/W3e5XoksmQrWZ
-         b4pg==
-X-Forwarded-Encrypted: i=1; AJvYcCW46TxxrOrkyNP9HkwS2/ej5n4NxJKTYosldiyG+d+RxqFz4+6p3iWxzULnG8THj4bbw6w5tqvHtdwZdSexIMaSFzHoyw8FSGO4spfgjMY5O4ZEXPPOzI/Cg2neN3k2bTlvh82ndQaGoks+VZ+yeiNeN1Gp1NpQgXP9TVOQbpZ4FdWCzE/htfXN
-X-Gm-Message-State: AOJu0Yz/6KYicgaSMLkBfZLVwQJcWhXw1oU4iXNHLjThO03UvCc9TVC4
-	GYjlmsijzX5idfbBX+heuD+30Vf6iJ7MOFML08LFyXJLhn1nFB5B
-X-Google-Smtp-Source: AGHT+IHzq/IV6y+wMC6pEzqLt2bPySVEN6Iakhv0//gENZjemwN+WDCSwgUzCoMmEtlycllLGYPy6A==
-X-Received: by 2002:a05:6512:118e:b0:52b:a5bb:12e6 with SMTP id 2adb3069b0e04-52ba5bb136bmr635980e87.35.1717487649543;
-        Tue, 04 Jun 2024 00:54:09 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d7ecbdsm1432069e87.182.2024.06.04.00.54.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 00:54:08 -0700 (PDT)
-Date: Tue, 4 Jun 2024 10:54:04 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v3 02/10] dt-bindings: mfd: bd96801 PMIC core
-Message-ID: <674f3c69eefb2d31ceb064f898cb0237a5301044.1717486682.git.mazziesaccount@gmail.com>
-References: <cover.1717486682.git.mazziesaccount@gmail.com>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WLONGakP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rcbloe1hCIpQnXjLlY7KAtzz1ThpgVBrVLwgbEukOTzfCPb+5GpLsH8Tuc1A1Riwyqk8q9WIRBtdqkl8unuhv222rqICy8327fNAMOImYPhuQl7bxXgFmYA/o4VAA1IJUlLWSsYyVuPU2XDD1o2Di5tCbrp0ZTa52FZa/VbrjTZccQNorWUTtrHk/e+v96/KeTZMdgP3UFh5uiNriCjErAscXE+dNYfRZ7/DF/OwSKdR22F7b68nW+cJs5g2ETiE3tHYAhxgveVVMm3DaVq6dMfeTSNAFgesCTpvscXh6erRUEoJxhGfWs4UWOAHvA3O+G9UYjjYVotJ1BhbWH0V3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hteWmja6vb3IQ8GfcY3lSL1CRwcOLpAMk0QyTnGJc2M=;
+ b=CGqjG/43FgZPZaWWd4Q+ImoCR4bLVNuKYwEaL/KHXvjvyvaogKmQ35Icp0JImf4NlVY4IQt5i+uPANplSphJf6OxY2RDkwjIRfKTyVi6WVW7Mop1AW3xW+mFpN9XYy9Fd+T5M3tO9xwDhYbGubmcAf2zTrGuFLJmZMlwbTFCqvt0P7O9jiZayyj+2K7r0kEzs1TSoSLZ9xWCciQ9C6xLpU1n8Xshc2MsgzfWEIF/t29fiju+bYWmvUP9yJpYjDC8se4QD35PffFLJZnHp8COrXcnV9OL1talO2jktUuu701A5lC9N6ZKPt0vR3iL4dHHwB/f9igW1cKPBT+Ugkj5eA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hteWmja6vb3IQ8GfcY3lSL1CRwcOLpAMk0QyTnGJc2M=;
+ b=WLONGakPgoWhUMlh5VriErVGhIJwPuILp+qugVwZVM+jn+O5msH6akhtgDp8AGcfgZ1vUKrWjLKfjnV/UgzQYfaI7kEC8oIyh4q5HojdGHxL15uPa5Ur1IR5ros5lYRdgTJ8R0jMzN7inz2KiTCysOKSOKdVMgoCRIIUdFHwSEU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DU2PR04MB9019.eurprd04.prod.outlook.com (2603:10a6:10:2d4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
+ 2024 07:54:27 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::557f:6fcf:a5a7:981c]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::557f:6fcf:a5a7:981c%7]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
+ 07:54:27 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Javier Martinez Canillas <javierm@redhat.com>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/fbdev-dma: fix getting smem_start
+Date: Tue,  4 Jun 2024 16:03:28 +0800
+Message-Id: <20240604080328.4024838-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0028.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::9)
+ To DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4Ps4zMNCG7GQ+eF5"
-Content-Disposition: inline
-In-Reply-To: <cover.1717486682.git.mazziesaccount@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|DU2PR04MB9019:EE_
+X-MS-Office365-Filtering-Correlation-Id: beb9456b-15e1-4151-7d85-08dc846b8eb9
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|52116005|1800799015|366007|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?zs47fTBrfDyH0TTfaGI6SHSZUtNJrIhEKkaN6+zilTfnKeSnTAqIkLt68TB7?=
+ =?us-ascii?Q?ioMPY8k0vsbYFUCg3IR9MmlwMaccz8gTK+g8b5joToI90Mqs8MsyETdwbxUA?=
+ =?us-ascii?Q?Xewf4qGVpLXtG4fwE/OJIhCrptwNKFZSvd4qfu6pu/FxWTrxzxC89Ddr7UCb?=
+ =?us-ascii?Q?7VcrzaSMLlSpborRQ68/PQTj5Ymxf+FVq4A2qMW09ugg83Qmp1IdMrExGAs3?=
+ =?us-ascii?Q?ROMtAhKQnYJmjnlMKTH7bjiWSDjVVZ+QLuLimp/xmi9qZRthoyuEHiTjvfSJ?=
+ =?us-ascii?Q?t4QURXNv6JbRbZtec1Rk39MFihY9n0wAiu+f8uDF8R19HoGZ27UXj0a1JY3Q?=
+ =?us-ascii?Q?dsswxRUPi66SHRgTHU/DjxeaSfdYz5G9v/KTtKuhbS33GwabrhDaFislaXx4?=
+ =?us-ascii?Q?lyO+GyrgERYA/DxgEzHbGfzqL3TbXIHWk3dLgK0LO7uVHbV0I2YaDvn9UW3+?=
+ =?us-ascii?Q?WS6BIy6a+YqSYteIls3v7qX/D+CjBc0+XKaI8KOAP/56usvJ3yxE320/NUyD?=
+ =?us-ascii?Q?RZ3rhqWilddI6yQZE1O3d5Uihd++Mf4iQSA/3OxqtBuUngKOp5pA5HD0mVYG?=
+ =?us-ascii?Q?9mqEJg1iBrkJ1mzRUyzymmKuRLzis5s7TuZqQYa9MdYpMFDVtuLct3X+Xzt/?=
+ =?us-ascii?Q?GYHe+/5cOhQcMY8TTYk7TxoMXzTeX3x7bsMeM44Q6yMMlGxKZgHANQAbNa9q?=
+ =?us-ascii?Q?YOkj5MMOtw85gj9AJpWw2AYBuzIFb+TeIf6KETJwdMwxSXUY/82ND8BR1P1e?=
+ =?us-ascii?Q?LzCyejEQk8jEV2Av4hGkgYTq75lEKtb0zPTwRHEUb2TEoYkZQVNo4xC88uuL?=
+ =?us-ascii?Q?m14Z4elCnjRpjk871MOQMcj1OUQEwBp4uYF/7OPREEsa7idaa8g9aviNpxvy?=
+ =?us-ascii?Q?WpUmJfOTrEF6lFkW0kajQpmGkTePqy3REQyvtBOqmEFAxoJ73D5v9BlvA+OD?=
+ =?us-ascii?Q?lVVnvjTxxowpyVKaqVAVviIc1T4qIX4PqxLGL+wM5A+39jV1QV6AenVbMryZ?=
+ =?us-ascii?Q?Mv3Zy4UDMQGYyUnLXqpU6gFKpV8x7Uoq34pFnezCSqze/KlZmpLYEpCwW13I?=
+ =?us-ascii?Q?ijGEPqp55OuwdxXgUUYFg7YEmghmhI8rv+g36drW46DE/kTvmCG80ontDpc9?=
+ =?us-ascii?Q?DLoXkZuDN072/iYZN7Ca32cwicrKehPHjUxrjK6GqGcWw0jlKTYBUv/Khw8O?=
+ =?us-ascii?Q?f1jDZNG5ptvJZyUR8AqMspcL92bdIgi2qX1eNgnO1ZWrXamaKs9r7964OT74?=
+ =?us-ascii?Q?tlaQ3jyy5cZcAeqW1F1PNI8AFTski/EYBpNkZ+fxZpP2s1N0FDhmtg+BROhl?=
+ =?us-ascii?Q?pdyE4OmZI2y9M7imNUhfOSmVBKYmqHziKEfNpQuCSmzCVQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(52116005)(1800799015)(366007)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ry7zHsSLf7Sh91FWMRNu1CssHy7bsqN5tPDkUf3zyf+GULC/5pri1QNybZht?=
+ =?us-ascii?Q?Ftie0048x/OVy8FVv5ZvgLnJ9tlsuqetQqZUzhzTvfiHJv+4DpJHcwbsukbe?=
+ =?us-ascii?Q?lPwHZVgDSmuz0MM4YNkwk1PFK87wo91ZzpoYGxvQmkJ5p5DilOogr6RgAbgb?=
+ =?us-ascii?Q?/5JovFtISCDrN0cFvsnfgAwahwxTQAleUOHuOU/5owtBFctlgJ5Ewb8lHosA?=
+ =?us-ascii?Q?sDGEh2v5OvD8u2XwUnxLRRvPtSwPs+z8QyPWVZSgG+wzCEwWrQTQxm6D3rLr?=
+ =?us-ascii?Q?urVC2RfNBx/eooRpSnbpjlwNJwfbtCU1YEbgqKr/j7mhFgY1B0uL0MOouRmJ?=
+ =?us-ascii?Q?mUac5VZQgenwN1vZihNfgzBygqHUcAE459RyN4BA6+yOvyo57k+GY9NwMafo?=
+ =?us-ascii?Q?Ra6cdwEX2xVG0NK/Qn/ExEn76+1nEjzHVcPiLbBugYcC+y564p2T/Uu0Fa8d?=
+ =?us-ascii?Q?tTY9PXNXJal7evabgoRLiNc4MrSV80q8j+cgvbIQ0Z74sWlc/I07rBif2s5U?=
+ =?us-ascii?Q?Is5I3ejH6ERTbChj3cEBGCFwzJDqNJIw9SchLmAfrT6NfPObxbhDbEUMe0T4?=
+ =?us-ascii?Q?5zgSMMmDWdVj/j1HsKmPi3crNhk4Efrdrs+fyFODM6PS2hA9ad7wXbnPI0n5?=
+ =?us-ascii?Q?1YZsPHZ32BYbmqygY9Rq2+ok7o1VJT25Rv6JpGqJF+mjgHzoobEfMCVOaa48?=
+ =?us-ascii?Q?JJDss2bd/o/HOFKGBT60tuL1Wlwfh86JaNOG+Ef3qCcvyitDD3BgZc+irICN?=
+ =?us-ascii?Q?jkPPIAj75Dp+EmBGsvEuRdkopUwCe8CSSvJDPR0XK+xj+sLM2Z3Euy4o8FMw?=
+ =?us-ascii?Q?5pzgsBq6HlW4IL2MaSgbB4/Gam4pQYeNNvAjVjIoJb/P8YN9iIpdjbOmlU0x?=
+ =?us-ascii?Q?kR8kfNk/NZoUQDphMSPAO6TalLavp3duZ+HXyNlXS8lJymxtJ0Oo6cYGDOIK?=
+ =?us-ascii?Q?uSBt9yW/Xn+7Hbya83NoXrGHgAR59KV11yKVD8O/D0Y/q4LWcqoeKUEl1QbB?=
+ =?us-ascii?Q?/rYcxV4UrGxCA8uIsT5m6xIvKU+KhrUfyd23ju+7UFeQe6chk11Tsra3ot0/?=
+ =?us-ascii?Q?byel8HKpJ3O00TpyiTRjY3oBp5n+1j+8L38xGcG08D93FdPtXQ74lFU0+KBB?=
+ =?us-ascii?Q?y5NxhAKgsmPGMHZV94JtW2/mgoO48Piuh58JEnvJrEyRCIy7uRaipqbM1Qcb?=
+ =?us-ascii?Q?J/i+02B3KenNiaQTWWU/w9fwpjBFpNUILa8iKbuQv5uLoS8z49VUFjBXVbxq?=
+ =?us-ascii?Q?SlrDGLiDwveMFKNR4ZmsSVok2xNBwARJ7dtoCgtYBpNF49ZgkWfdTeBforTg?=
+ =?us-ascii?Q?ZCGraxQs+faMLqfZpEWTnY4L/StrmpjwA/LUguHGkjWwEyffzlZ0ytVruEE/?=
+ =?us-ascii?Q?dp35Z3mPDq8IDLNaKfWY8fD99zAL2lw3XyANgIxCY2w9NtpK4+9m1evI/euP?=
+ =?us-ascii?Q?XnPiRtxl6WDqKe9oXZMRlsZGziTCbLAJBnZHME5RRESi89YVXYTEDz414PFy?=
+ =?us-ascii?Q?4PXESd8U+fcGaPd0UlxE8qon+sPRsf0dQpTxFXEoaHQT7A2ysaGYbfnx+UtS?=
+ =?us-ascii?Q?/M459fMKWrZ833+3SxhlUtmcpOR7Sh6RpO9fuIye?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: beb9456b-15e1-4151-7d85-08dc846b8eb9
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 07:54:27.5422
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jy0mmp7YSVkRGMMt9cqmELLAD3hM8CRJoLMYAiDBfIwVft9VwtKD6xyTjQlvCfN/7n9+ntu54i+KDW4w4BQKCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9019
 
+From: Peng Fan <peng.fan@nxp.com>
 
---4Ps4zMNCG7GQ+eF5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If 'info->screen_buffer' locates in vmalloc address space, virt_to_page
+will not be able to get correct results. With CONFIG_DEBUG_VM and
+CONFIG_DEBUG_VIRTUAL enabled on ARM64, there is dump below:
+[    3.536043] ------------[ cut here ]------------
+[    3.540716] virt_to_phys used for non-linear address: 000000007fc4f540 (0xffff800086001000)
+[    3.552628] WARNING: CPU: 4 PID: 61 at arch/arm64/mm/physaddr.c:12 __virt_to_phys+0x68/0x98
+[    3.565455] Modules linked in:
+[    3.568525] CPU: 4 PID: 61 Comm: kworker/u12:5 Not tainted 6.6.23-06226-g4986cc3e1b75-dirty #250
+[    3.577310] Hardware name: NXP i.MX95 19X19 board (DT)
+[    3.582452] Workqueue: events_unbound deferred_probe_work_func
+[    3.588291] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    3.595233] pc : __virt_to_phys+0x68/0x98
+[    3.599246] lr : __virt_to_phys+0x68/0x98
+[    3.603276] sp : ffff800083603990
+[    3.677939] Call trace:
+[    3.680393]  __virt_to_phys+0x68/0x98
+[    3.684067]  drm_fbdev_dma_helper_fb_probe+0x138/0x238
+[    3.689214]  __drm_fb_helper_initial_config_and_unlock+0x2b0/0x4c0
+[    3.695385]  drm_fb_helper_initial_config+0x4c/0x68
+[    3.700264]  drm_fbdev_dma_client_hotplug+0x8c/0xe0
+[    3.705161]  drm_client_register+0x60/0xb0
+[    3.709269]  drm_fbdev_dma_setup+0x94/0x148
 
-ROHM BD96801 is a highly configurable automotive grade PMIC. Introduce
-DT bindings for the BD96801 core.
+So add a check 'is_vmalloc_addr'.
 
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-
+Fixes: b79fe9abd58b ("drm/fbdev-dma: Implement fbdev emulation for GEM DMA helpers")
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
-Revision history:
-v2 =3D>:
- - No changes
+ drivers/gpu/drm/drm_fbdev_dma.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-v1 =3D> v2:
- - use lowercase node names in example
- - minor addition to ERRB use-cases
+diff --git a/drivers/gpu/drm/drm_fbdev_dma.c b/drivers/gpu/drm/drm_fbdev_dma.c
+index 6c9427bb4053..9e2eddb6eb5c 100644
+--- a/drivers/gpu/drm/drm_fbdev_dma.c
++++ b/drivers/gpu/drm/drm_fbdev_dma.c
+@@ -130,7 +130,12 @@ static int drm_fbdev_dma_helper_fb_probe(struct drm_fb_helper *fb_helper,
+ 		info->flags |= FBINFO_READS_FAST; /* signal caching */
+ 	info->screen_size = sizes->surface_height * fb->pitches[0];
+ 	info->screen_buffer = map.vaddr;
+-	info->fix.smem_start = page_to_phys(virt_to_page(info->screen_buffer));
++
++	if (is_vmalloc_addr(info->screen_buffer))
++		info->fix.smem_start = page_to_phys(vmalloc_to_page(info->screen_buffer));
++	else
++		info->fix.smem_start = page_to_phys(virt_to_page(info->screen_buffer));
++
+ 	info->fix.smem_len = info->screen_size;
+ 
+ 	return 0;
+-- 
+2.37.1
 
-RFCv2 =3D> v1
- - minor cleaning
- - add timeout-sec
-
-RFCv1 =3D> RFCv2:
-  - Document rohm,hw-timeout-ms
-  - Document rohm,wdg-action
----
- .../bindings/mfd/rohm,bd96801-pmic.yaml       | 173 ++++++++++++++++++
- 1 file changed, 173 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic=
-=2Eyaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml b=
-/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
-new file mode 100644
-index 000000000000..d381125a0a15
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
-@@ -0,0 +1,173 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/rohm,bd96801-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD96801 Scalable Power Management Integrated Circuit
-+
-+maintainers:
-+  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-+
-+description:
-+  BD96801 is an automotive grade single-chip power management IC.
-+  It integrates 4 buck converters and 3 LDOs with safety features like
-+  over-/under voltage and over current detection and a watchdog.
-+
-+properties:
-+  compatible:
-+    const: rohm,bd96801
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      The PMIC provides intb and errb IRQ lines. The errb IRQ line is used
-+      for fatal IRQs which will cause the PMIC to shut down power outputs.
-+      In many systems this will shut down the SoC contolling the PMIC and
-+      connecting/handling the errb can be omitted. However, there are cases
-+      where the SoC is not powered by the PMIC or has a short time backup
-+      energy to handle shutdown of critical hardware. In that case it may =
-be
-+      useful to connect the errb and handle errb events.
-+    minItems: 1
-+    maxItems: 2
-+
-+  interrupt-names:
-+    minItems: 1
-+    items:
-+      - enum: [intb, errb]
-+      - const: errb
-+
-+  rohm,hw-timeout-ms:
-+    description:
-+      Watchdog timeout value(s). First walue is timeout limit. Second valu=
-e is
-+      optional value for 'too early' watchdog ping if window timeout mode =
-is
-+      to be used.
-+    minItems: 1
-+    maxItems: 2
-+
-+  rohm,wdg-action:
-+    description:
-+      Whether the watchdog failure must turn off the regulator power outpu=
-ts or
-+      just toggle the INTB line.
-+    enum:
-+      - prstb
-+      - intb-only
-+
-+  timeout-sec:
-+    maxItems: 2
-+
-+  regulators:
-+    $ref: /schemas/regulator/rohm,bd96801-regulator.yaml
-+    description:
-+      List of child nodes that specify the regulators.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - regulators
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+        pmic: pmic@60 {
-+            reg =3D <0x60>;
-+            compatible =3D "rohm,bd96801";
-+            interrupt-parent =3D <&gpio1>;
-+            interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>, <6 IRQ_TYPE_LEVEL_LOW>;
-+            interrupt-names =3D "intb", "errb";
-+
-+            regulators {
-+                buck1 {
-+                    regulator-name =3D "buck1";
-+                    regulator-ramp-delay =3D <1250>;
-+                    /* 0.5V min INITIAL - 150 mV tune */
-+                    regulator-min-microvolt =3D <350000>;
-+                    /* 3.3V + 150mV tune */
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    /* These can be set only when PMIC is in STBY */
-+                    rohm,initial-voltage-microvolt =3D <500000>;
-+                    regulator-ov-error-microvolt =3D <230000>;
-+                    regulator-uv-error-microvolt =3D <230000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+                buck2 {
-+                    regulator-name =3D "buck2";
-+                    regulator-min-microvolt =3D <350000>;
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <3000000>;
-+                    regulator-ov-error-microvolt =3D <18000>;
-+                    regulator-uv-error-microvolt =3D <18000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <1>;
-+                };
-+                buck3 {
-+                    regulator-name =3D "buck3";
-+                    regulator-min-microvolt =3D <350000>;
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <600000>;
-+                    regulator-ov-warn-microvolt =3D <18000>;
-+                    regulator-uv-warn-microvolt =3D <18000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-error-kelvin =3D <0>;
-+                };
-+                buck4 {
-+                    regulator-name =3D "buck4";
-+                    regulator-min-microvolt =3D <350000>;
-+                    regulator-max-microvolt =3D <3450000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <600000>;
-+                    regulator-ov-warn-microvolt =3D <18000>;
-+                    regulator-uv-warn-microvolt =3D <18000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-error-kelvin =3D <0>;
-+                };
-+                ldo5 {
-+                    regulator-name =3D "ldo5";
-+                    regulator-min-microvolt =3D <300000>;
-+                    regulator-max-microvolt =3D <3300000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <500000>;
-+                    regulator-ov-error-microvolt =3D <36000>;
-+                    regulator-uv-error-microvolt =3D <34000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+                ldo6 {
-+                    regulator-name =3D "ldo6";
-+                    regulator-min-microvolt =3D <300000>;
-+                    regulator-max-microvolt =3D <3300000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <300000>;
-+                    regulator-ov-error-microvolt =3D <36000>;
-+                    regulator-uv-error-microvolt =3D <34000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+                ldo7 {
-+                    regulator-name =3D "ldo7";
-+                    regulator-min-microvolt =3D <300000>;
-+                    regulator-max-microvolt =3D <3300000>;
-+
-+                    rohm,initial-voltage-microvolt =3D <500000>;
-+                    regulator-ov-error-microvolt =3D <36000>;
-+                    regulator-uv-error-microvolt =3D <34000>;
-+                    regulator-temp-protection-kelvin =3D <1>;
-+                    regulator-temp-warn-kelvin =3D <0>;
-+                };
-+            };
-+        };
-+    };
---=20
-2.45.1
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---4Ps4zMNCG7GQ+eF5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmZeyBwACgkQeFA3/03a
-ocXSnQf/YCl6DS+PfaoCQuZc+4eoWP3t8mAR7po//JC+pbpMGtlYiaGwxD/3RkE5
-Oxs04bd8gOxGLVYrIua9e0bJ29EGkoCemDOVmSr7kG+CCH9abIsfPqti1KlevhGB
-XQrttdSrHH9W0t6x3IkjCLVxRj23m24oZBBKT5032WkoDawJZuybOPRMWrF5p/IG
-fi9w7F8CNRmkdnpahsyTPP1ModWapgKIt6dHpRlMaGlGLBcUmUzIhdr+6yGdQ9yL
-j7hULd858cPG65jbt6mqR9z+erK/yDQ3vxIRrAyNf+3vS9gqMVNIqiaqs+Ha3zXc
-oAe3gLpuOcf6aBfDQm1F2MDwN+qxCg==
-=vY9r
------END PGP SIGNATURE-----
-
---4Ps4zMNCG7GQ+eF5--
