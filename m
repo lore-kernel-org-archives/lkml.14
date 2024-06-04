@@ -1,118 +1,91 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8D714A0AE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2C1146D6E;
+	Tue,  4 Jun 2024 17:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717522519; cv=none; b=C0uFUyEp06TXtoPqgkFkQ9Uo+f7feyJeMwRjC+ncwqSBoitAXxP/ylMrHPggnVlCEOJ8escwl9tHe43Ns+GKdHbVS5BX5Fjsn5L4YyW53CChDAb+QP0BIaCxTfh3+WjLQhaLDFTdusFW/RoG/jIaGzGDilhMlVNn0iXNOv61lso=
+	t=1717522546; cv=none; b=WzZFJIvbKg8K06vr089tfnVEZkyFK5S7lVgQbu1MX9virftEf6U2SPNobRME1Q4IVaJ+cm3OfhneeFEmKBxgKKKKP5QjOUVVGnwf90/EkeRWoVX7Y+IsO2FiYTSJcJKY2xcmSGA6ePdANzHAHn7RpzKKCbGtXG3tbmgU/8QQSQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717522519; c=relaxed/simple;
-	bh=lxElhNb6+LLAOwSRzJUjOlUE1gCjxcVourbCmwIjDc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lc+vlXvY3R3aItql1my6aHv0UK2KjSjpP4bGwuotKtsl+6zSt4CT/0Mhy+H0DPRLoIsZ9ezfsT2aH0oO2OT4UYSZe5q5vZplmkcWQfEfKFupvOuFHVC9E6bHJdbzfSDT9YJhRhIjBdOdYst9mBL2w5a0Oj54hp6I7Fnl+sUJuBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CF5ZD1vl; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717522546; c=relaxed/simple;
+	bh=LZ2gZVAxd7B/Z2dlVqxhZwIjcAne3l5f3dO6vlVXRfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uU0Hq2lmcyj7wxnJXKMpHnKH0ZwXZS00H1qU7LeBz2Iyyc4SnFHKd3eZurp5lHPFd842QwBh0em4JnI4BfN+VMlTVfIJmLaLLMC6z5UHjOvgjmrUQJ87yDJOaXzNKX5BCd6gVEnUWbOh/DyaLkj5k9TbhlD4zvpWo5esO/FOxs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QS9JgKcI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CF5ZD1vl"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57864327f6eso88184a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 10:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717522516; x=1718127316; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnqJOAf1Q2Nckvls20fL4xWcgC3Wkf+wvlijKAtyrII=;
-        b=CF5ZD1vlubTegKWW+/xN5r+Y2tslC6HWVC2vtr+PfuHO6GZvA3FX/iLbFoN6vn2n9P
-         dlt2z5DF2dWE4CUoRv8BJ608mscTyREWTs6MB3ML0akgWcFL5B5ZNsG2Q4nbrqlVq2yE
-         ZWj0WMg6C+yRcEQcnp9jxDRuvcEucE4339p0FhKg2xT5YH32yA/eo0xN9stpF+Jl4WzT
-         IT+8bpNjxCxG79Bt45g9O2lxtMKDZn/JvYaqR6dQrJKIolz5pXjDu+GzOt//Kf+HcIPd
-         YwgAunk37OmZgrb62fC3vHlW5eyNEUQ020Urd20AlWbo17RJdR7+wvjttokvpsg34r3I
-         9FLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717522516; x=1718127316;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QnqJOAf1Q2Nckvls20fL4xWcgC3Wkf+wvlijKAtyrII=;
-        b=GWvOZhondwlR3H2N9HjRbdJQYkC4crqkm/UiT5K6EYH6+a6eDHCexDOahoG0ulTXyY
-         vr7Y0xBEXGkVZJitdRhryyqKXeD2ux+hr3NUQpGgJvJyilXyd1qiWn0a0ilSEOSCoJCi
-         3JTxqugPanYi5JououkhQZY7ujTyq3xUMokOiWpxgNO/4mwg4qquHaV02EFm0A/xK0t8
-         t6k/fLye/M91tMIi8AHjxzmfzoinZBA37rZYwbwUZvjD7JMzRXgdhf5oa1njWSJeffk5
-         IsWEc66MIkuVKwPziLS1WrmB1gMP6h8Iw30PmDQTeV+NtXRTNsXmVi+NEVXbBu4wiqHG
-         Xdhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuCkrlTHi70As2Kr/nSX8K/7qZ+F9MyIRPMHBULJgHOiDAywEMCNB/aFtSkMZmAKxOB2DuZl0bFC4olos8UUH77qSJ9k6i9VuY++p/
-X-Gm-Message-State: AOJu0YxuJL37QLp/hvUz2xhK9eyO+ErRSWlOY5oZmTqoOz/w/SuAmgJX
-	sqJVraGoreYSL9noq/G58fKVeGaIFOXRf77aZHTK/Uttiwuxn4xqoxmZKXdtF5FqtwPsntoG5QP
-	Wx5CHLjv2Pej2F6//sQHpY/xgjvc=
-X-Google-Smtp-Source: AGHT+IHXpNuf2BcjrXTd+QUegb227fWnqENFLc7DunocDDJ5GF80C+wRoVoBVJRNKJ8qmzJC/IrELCqiSRzMfhrbbvQ=
-X-Received: by 2002:a50:a414:0:b0:579:c37c:1b36 with SMTP id
- 4fb4d7f45d1cf-57a8bcc896emr242557a12.17.1717522515985; Tue, 04 Jun 2024
- 10:35:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QS9JgKcI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D55C2BBFC;
+	Tue,  4 Jun 2024 17:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717522546;
+	bh=LZ2gZVAxd7B/Z2dlVqxhZwIjcAne3l5f3dO6vlVXRfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QS9JgKcIiNG6uXtpVgBhRgZb55zKms71XzqF/eG9cvf5dD5lGUtH54nyYFI7D9SRD
+	 JvJXcXaD2QFeelL7XW6A0qpWSMR6sO7je1NCpdeYc838qQAGlrZMDSdyqroujk7Mcj
+	 obOX5E6L+94VWonx1vl3wawwOj86bbxsRqBe1gI8+RucbsbyO9u7KBcfqjwf05x/af
+	 8zFsQ7HdUwflojN/7w7Sg8KmJQBulENlN6yLBpQboU59Hsc5oSRYjkczw1zTwYKR66
+	 DAJmgYwbhpfJ6ESbYlHra5AAE1d+IJrCDwrnxqo+Y9vmmAI+cuJmJZdWRfJjrX6UmD
+	 LyCF61lPrrOow==
+Date: Tue, 4 Jun 2024 18:35:41 +0100
+From: Conor Dooley <conor@kernel.org>
+To: dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Lechner <dlechner@baylibre.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: Re: [PATCH v5 1/9] dt-bindings: iio: adc: Add common-mode-channel
+ property
+Message-ID: <20240604-sandpaper-aliens-05dbab5b2df5@spud>
+References: <20240603-ad4111-v5-0-9a9c54d9ac78@analog.com>
+ <20240603-ad4111-v5-1-9a9c54d9ac78@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZlpcRnuZUEYJJ0JA@x1n> <CAHbLzkrRw-xf819gYJwRQ=-u971LQYnB2FNJMkN=s6u-pJ4Z8g@mail.gmail.com>
- <CAHbLzkoB+oFTxtVYpeXQvko2q9HUVzUYrr83S6M6PUmXDQpkag@mail.gmail.com>
- <0edfcfed-e8c4-4c46-bbce-528c07084792@redhat.com> <Zl3cakfiRsPQDb8q@x1n>
- <8da12503-839d-459f-a2fa-4abd6d21935d@redhat.com> <Zl4m-sAhZknHOHdb@x1n>
- <9d9a5730-161b-4a9d-a696-1cf6d0c5123c@redhat.com> <Zl4vlGJsbHiahYil@x1n>
- <54ce029f-b16f-4607-bdf1-a1efe904029a@redhat.com> <821cf1d6-92b9-4ac4-bacc-d8f2364ac14f@paulmck-laptop>
-In-Reply-To: <821cf1d6-92b9-4ac4-bacc-d8f2364ac14f@paulmck-laptop>
-From: Yang Shi <shy828301@gmail.com>
-Date: Tue, 4 Jun 2024 10:35:04 -0700
-Message-ID: <CAHbLzkpuZx7cHoY6vLyetJ9T+KJrTKi1vt=wFv8YMhab7awDxQ@mail.gmail.com>
-Subject: Re: [linus:master] [mm] efa7df3e3b: kernel_BUG_at_include/linux/page_ref.h
-To: paulmck@kernel.org
-Cc: David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>, 
-	kernel test robot <oliver.sang@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, 
-	Vivek Kasireddy <vivek.kasireddy@intel.com>, Rik van Riel <riel@surriel.com>, oe-lkp@lists.linux.dev, 
-	lkp@intel.com, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, 
-	Christopher Lameter <cl@linux.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="S+XBbKqsoN+A5IiA"
+Content-Disposition: inline
+In-Reply-To: <20240603-ad4111-v5-1-9a9c54d9ac78@analog.com>
 
-> >
-> > I chased it further to:
-> >
-> > commit 8375ad98cc1defc36adf4a77d9ea1e71db51a371
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Mon Apr 29 15:06:13 2013 -0700
-> >
-> >     vm: adjust ifdef for TINY_RCU
-> >     There is an ifdef in page_cache_get_speculative() that checks for !SMP
-> >     and TREE_RCU, which has been an impossible combination since the advent
-> >     of TINY_RCU.  The ifdef enables a fastpath that is valid when preemption
-> >     is disabled by rcu_read_lock() in UP systems, which is the case when
-> >     TINY_RCU is enabled.  This commit therefore adjusts the ifdef to
-> >     generate the fastpath when TINY_RCU is enabled.
-> >
-> >
-> > Where Paul explicitly restored that fastpath for TINY_RCU instead of removing that code.
-> >
-> > So maybe Paul can comment if that is still worth having. CCing him.
->
-> It is currently an atomic operation either way, though the folio_ref_add()
-> avoids full ordering, but that is immaterial on x86.  Some say that it is
-> in the noise on server-class ARMv8 as well, though they have also said
-> a great many things in the past.  But if that is true, the big benefit
-> of the TINY_RCU check is that folio_ref_try_add_rcu() is guaranted not
-> to fail in that case (single CPU with preemption disabled).  Except that
-> everyone has to check the return value anyway, right?
->
-> So the usual advice, unsatisfying though it might be, is to remove that
-> #ifdef and see if anyone notices.
->
-> After all, both 2013 and 2008 were quite some time ago.  ;-)
 
-Thanks, Paul.
+--S+XBbKqsoN+A5IiA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I will submit a patch to remove the #ifdef as the fix for the bug
-report. And do the clean up in a separate patch which is preferred by
-David.
+On Mon, Jun 03, 2024 at 07:22:59PM +0300, Dumitru Ceclan via B4 Relay wrote:
+> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>=20
+> There are ADCs that are differential but support to measure single-ended
+> signals on the same channels by connecting a constant voltage to the
+> negative input pin.
+>=20
+> This property allows to properly define a single-ended channel that
+> requires two inputs to be specified. Software can use the presence of
+> this property to mark the channel as not differential.
+>=20
+> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
->
->                                                         Thanx, Paul
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+
+Thanks,
+Conor.
+
+--S+XBbKqsoN+A5IiA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZl9QbQAKCRB4tDGHoIJi
+0s69AQCGC0ulZogpvt2PjR9FhR2Kajq4+cr21kDIPAPAvYplqQEAlLQ+9SbyGuPb
+HbMhaYbM2JEWx6RqWpi7jSIWZNaANgk=
+=L/dt
+-----END PGP SIGNATURE-----
+
+--S+XBbKqsoN+A5IiA--
