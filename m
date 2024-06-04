@@ -1,120 +1,246 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8046614A4FC;
-	Tue,  4 Jun 2024 18:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445C218028;
+	Tue,  4 Jun 2024 18:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717526923; cv=none; b=t4WiKuPB14HkF20Mfasdzoq2uoC122fMLvAKisq3N9BcW8ONpzMeFA5EDF45soaMntWyX+IU6YlLc5uipmEjbLR5EhxqcHq1iLIb0dxMh9fQmvxArObUrJPN/YnaH9xJyvAqbdtASnE5kNF2kt8DD+CayNSs+m5RS3JW69qJayU=
+	t=1717526968; cv=none; b=d9NUBy37eQGVe8wedFjhXu9/415zDsnYMoGDwDGt90/3Gf9MVEuHa2BWTh0IQ6txw444eYlgXFOeA+zBbgNazdDb0WZcV+WXBe7kUlchEQT0UAh7MCrmx9MESJOCbrNRUHEHfGCvKuMf4+7lMdY6Kj9YDmz4RaEJ6dW6R4m+Zj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717526923; c=relaxed/simple;
-	bh=rb1t3bO33sJM24NYQ16VoUzU0MNaG6KSdzSrX+GNr8E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnWI+rllQFkh9YNqstmq4l+5fG9VnXXFc1NQcSfNbmfEhwrp67kKod9Yy7XqmXH+sWD0GEwzMan4erRxYXC9dok490Qgv8f7D1EKtanYao+w+a+bMHGIgoYExYuNAtWzZNkM7Dh1vhTVYIW7O9oOt2F2Bf1ZPWVxQImszUjaSLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lYDl6NND; arc=none smtp.client-ip=209.85.167.54
+	s=arc-20240116; t=1717526968; c=relaxed/simple;
+	bh=a1zun8HL6lepv1ujLISq6+xEZ0ZnO4qy/lSJiqqhavo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CmCP2fONInsC6xeyjUvbYM397GES5HFBNZfZNii5ju16yeireA3yk8+3zBN59xxyKv7A5nFst+ATg0rVQ1n2/q3QvnFmMqrzW4Is4VqozVwc/qfVynTga+FovajDKwNJaSaIsVdhukKGv1qqODgMX6zDBvxnjUlFHa3Ss+tktZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTXX0GZD; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYDl6NND"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52b8b638437so1609282e87.3;
-        Tue, 04 Jun 2024 11:48:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTXX0GZD"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-572c65cea55so230848a12.0;
+        Tue, 04 Jun 2024 11:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717526920; x=1718131720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YhU1SbvM7znKVct1eWXWAILOVj0SRCPHV7V811HpayA=;
-        b=lYDl6NNDQ0JGEhY5hGpra3rdHpSjFgdvs1SGgwcXvvzWv7Nym44bpSOfQqg1LNP3up
-         irunm1w+LESoQdfZGrK+eKSSc7aqE8Lae34FD6o9kYyjTiH+zKcwSQwwPCs83toA/5kO
-         PeCdiG1uLc5CoLLnyoNAAOwr7ZNUgeWSdrhRF1CKwEQroFHtDm6kYUotlr9Z2HVFLL1M
-         /vlLibC63aoPliCQD5dFKn7+JnHNjTkh1ipib1HX9k3OzG02gpw+YGa3FTd6Fd/X2oL1
-         Vpj2HiALiH9e1DZsgDSzqvlJqeHnD+aYoUDfgEZ/+vD0wnxVYxXbI+EOwrgKmbEslIcW
-         Lh8w==
+        d=gmail.com; s=20230601; t=1717526966; x=1718131766; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bb27sFgRlG0Tk9BuaJtsYRuhNJ3jYbY3tEhCWfnKOSg=;
+        b=MTXX0GZDZta/N8f78Syfoxt7FmPFFY9lurDnHtuvlz/LzOtd6tMN6gLVDzfljOk6f/
+         tyDoYVDP6BlWYSQ/nOYEXdSwHoZJOggEFQ4QC+HuS21K96qNma8gKBABIhWwSFO5Vn7a
+         ppM6tGmRaOPstF/qpIQn4XZQ9tIuxp0TZlQHsM9jTGJUR9hoE7+R7dVeg2yed6JLJYO9
+         Z98tE8K+f/ed7TUuJOb4URynwsTkFLtlV/G3R778RuWkkRE8o/MLWinPYn+t6jB41A55
+         YvpR4x/IO2UPEH/MeG03SqALsHofpssYp+RWLfPkhNr4RLCKNX65qbFL6Cj6jX3Q0Cyt
+         PU+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717526920; x=1718131720;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YhU1SbvM7znKVct1eWXWAILOVj0SRCPHV7V811HpayA=;
-        b=Xzow538ohuy+ijx2wYFwh3R9KJ2g1m6wZjIlfVk7Q3cHalEo2JhmFj1de3jEWL0u2/
-         SYKHQaCyrFcWg9TqldIT6U/S0NeP384DqkpMZzr9B+//rKW88Xs1nVNqRfomNuxaRuvG
-         YvMVUT3EOnup2KL9y2ypJj4FVfclRt5NQy+J9BGTnPlbtTc+hYibHfVJAC37VTo9UgAw
-         aYePhFYvJCQKx001fNtNWr2/dS1ujShGXOCPU1BTzGg+4/CxTo+r+LYsA6qyHuyBib59
-         Lw9u9OW3g+D3v1zZwv0Rj9fFlD3e0D3jtKw7XrlJR1zrgLdFRjPNY/WHxX6G0L8jV64i
-         /E2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWn/6kqxUGQX4cH+XAs/geXQp9UlhH9DQFdhtYvE4TJMpZWPQgj7HRWHsquP78XLA4bGwkpxMQcjpfBjATCAKsrszOLUniz1AsXTSFsH49zAfJQwyTTETJ3u6Haa8pjpYpjFWwbRdse9qM=
-X-Gm-Message-State: AOJu0YzVGgHgi+03gOS6KcdYWphaIVlq56wB0pSKY/cq71fFhXEisLxl
-	E8Bha4N9qZZTAODXSyYE1lAj8iUjuu1rx9F6oGhUfqfdXUuZrJ6R
-X-Google-Smtp-Source: AGHT+IFEJ8hqG5xCrTQKvzSoryOtPIc1PkC8aaNWtW7orx0ghMl5wbgtdEJ/5xVPTPWB8vdw9HCNQw==
-X-Received: by 2002:ac2:4e89:0:b0:52a:fbcc:b358 with SMTP id 2adb3069b0e04-52bab4cbd6amr226548e87.13.1717526919443;
-        Tue, 04 Jun 2024 11:48:39 -0700 (PDT)
-Received: from U19.ag.local (static.187.76.181.135.clients.your-server.de. [135.181.76.187])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b9ea5271fsm452903e87.252.2024.06.04.11.48.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 11:48:38 -0700 (PDT)
-From: Alibek Omarov <a1ba.omarov@gmail.com>
-To: luca.ceresoli@bootlin.com,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: Alibek Omarov <a1ba.omarov@gmail.com>,
-	linux-rockchip@lists.infradead.org,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: rockchip: i2s-tdm: Fix trcm mode by setting clock on right mclk
-Date: Tue,  4 Jun 2024 21:47:52 +0300
-Message-Id: <20240604184752.697313-1-a1ba.omarov@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1717526966; x=1718131766;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bb27sFgRlG0Tk9BuaJtsYRuhNJ3jYbY3tEhCWfnKOSg=;
+        b=HNGKUeRgg4tycRdoqB4dtz/VJiKkle5YLenZ1PxiCVPD+mdXng/Te4iuWxZjDnYG/S
+         kLoGiyKwBvUaSPkM1SB4OD3SkUEyg+4aUX9JGlpt4dVCDMCuMv98rgJSHA/Oq5SKYLNU
+         G1gAl8+/VMN3qaYGqPliqKtUMt1qXqqsDm4Ws+3HCxhXWkI12+L9SGOsiQLo3kJGOA3a
+         3D+fjekOCb6dyzve/ELPw08/vQrZyaVnGEgs2QihDO7b4MjoEXovSk4zydpv96IRl9wG
+         esb65ejYmIjguxhkxxHEkLgYKT7uHD3jLJJuiRDYhWD8EXt/k0oNQVjm74NK5zztTtdG
+         KxUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWO+arFEkNzPZXCESGs5SNTgxIX6M6Z0aF+hmcIRSNBWNZePWCcKN105fu4SUlTMSUiyBO95WlIbS59sYowvxna4OxDuqNkR9wL6vXEFR3HMN8TgAVP/9spp70xfzFfpGW96PsZ0nqbwyWAw==
+X-Gm-Message-State: AOJu0YxFCfedSqOMLWInXKDvrBZMjOO3ssgqKl1ou3oeSbTZCeVzM4X2
+	JCgymRaUSHrRxmOOOSxSvWtJKwahvZC5KQ/1+ZutTBnm/q0uy330BakzAlgZQ4j+tlB4NNTPUfC
+	3857f7tSIqparAO/qVcijCPm+rbs=
+X-Google-Smtp-Source: AGHT+IFWkdL+wQ72daSRO1P7tTzDvc9m9YMF90o5MlhZaIpy3wrX/gSyeDidoV+f0/qTjEPQhAglVyN6XWP5BsXJN00=
+X-Received: by 2002:a50:8a92:0:b0:574:ec3d:262a with SMTP id
+ 4fb4d7f45d1cf-57a8b6a4d4emr430003a12.5.1717526965479; Tue, 04 Jun 2024
+ 11:49:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
+ <20240123144543.9405-4-quic_bibekkum@quicinc.com> <CAF6AEGs3_wBNo58EbGicFoQuq8--fDohTGv1JSFgoViygLS5Lg@mail.gmail.com>
+ <f2222714-1e00-424e-946d-c314d55541b8@quicinc.com> <51b2bd40-888d-4ee4-956f-c5239c5be9e9@linaro.org>
+ <0a867cd1-8d99-495e-ae7e-a097fc9c00e9@quicinc.com> <7140cdb8-eda4-4dcd-b5e3-c4acdd01befb@linaro.org>
+ <omswcicgc2kqd6gp4bebd43sklfs2wqyaorhfyb2wumoeo6v74@gaay3p5m46xi>
+ <CAF6AEGub2b5SRw7kDUGfKQQ35VSsMkQ9LNExSkyHHczdFa2T4Q@mail.gmail.com> <9992067e-51c5-4a55-8d66-55a102a001b6@quicinc.com>
+In-Reply-To: <9992067e-51c5-4a55-8d66-55a102a001b6@quicinc.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Tue, 4 Jun 2024 11:49:13 -0700
+Message-ID: <CAF6AEGsxKwzX6it4vipggOdGqNVzPbwMj6a0h871a=GfwUp0Cg@mail.gmail.com>
+Subject: Re: [PATCH v9 3/5] iommu/arm-smmu: introduction of ACTLR for custom
+ prefetcher settings
+To: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	will@kernel.org, robin.murphy@arm.com, joro@8bytes.org, jsnitsel@redhat.com, 
+	quic_bjorande@quicinc.com, mani@kernel.org, quic_eberman@quicinc.com, 
+	robdclark@chromium.org, u.kleine-koenig@pengutronix.de, robh@kernel.org, 
+	vladimir.oltean@nxp.com, quic_pkondeti@quicinc.com, quic_molvera@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When TRCM mode is enabled, I2S RX and TX clocks are synchronized through
-selected clock source. Without this fix BCLK and LRCK might get parented
-to an uninitialized MCLK and the DAI will receive data at wrong pace.
+On Thu, May 30, 2024 at 2:22=E2=80=AFAM Bibek Kumar Patro
+<quic_bibekkum@quicinc.com> wrote:
+>
+>
+>
+> On 5/28/2024 9:38 PM, Rob Clark wrote:
+> > On Tue, May 28, 2024 at 6:06=E2=80=AFAM Dmitry Baryshkov
+> > <dmitry.baryshkov@linaro.org> wrote:
+> >>
+> >> On Tue, May 28, 2024 at 02:59:51PM +0200, Konrad Dybcio wrote:
+> >>>
+> >>>
+> >>> On 5/15/24 15:59, Bibek Kumar Patro wrote:
+> >>>>
+> >>>>
+> >>>> On 5/10/2024 6:32 PM, Konrad Dybcio wrote:
+> >>>>> On 10.05.2024 2:52 PM, Bibek Kumar Patro wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> On 5/1/2024 12:30 AM, Rob Clark wrote:
+> >>>>>>> On Tue, Jan 23, 2024 at 7:00=E2=80=AFAM Bibek Kumar Patro
+> >>>>>>> <quic_bibekkum@quicinc.com> wrote:
+> >>>>>>>>
+> >>>>>>>> Currently in Qualcomm  SoCs the default prefetch is set to 1 whi=
+ch allows
+> >>>>>>>> the TLB to fetch just the next page table. MMU-500 features ACTL=
+R
+> >>>>>>>> register which is implementation defined and is used for Qualcom=
+m SoCs
+> >>>>>>>> to have a custom prefetch setting enabling TLB to prefetch the n=
+ext set
+> >>>>>>>> of page tables accordingly allowing for faster translations.
+> >>>>>>>>
+> >>>>>>>> ACTLR value is unique for each SMR (Stream matching register) an=
+d stored
+> >>>>>>>> in a pre-populated table. This value is set to the register duri=
+ng
+> >>>>>>>> context bank initialisation.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+> >>>>>>>> ---
+> >>>>>
+> >>>>> [...]
+> >>>>>
+> >>>>>>>> +
+> >>>>>>>> +               for_each_cfg_sme(cfg, fwspec, j, idx) {
+> >>>>>>>> +                       smr =3D &smmu->smrs[idx];
+> >>>>>>>> +                       if (smr_is_subset(smr, id, mask)) {
+> >>>>>>>> +                               arm_smmu_cb_write(smmu, cbndx, A=
+RM_SMMU_CB_ACTLR,
+> >>>>>>>> +                                               actlrcfg[i].actl=
+r);
+> >>>>>>>
+> >>>>>>> So, this makes ACTLR look like kind of a FIFO.  But I'm looking a=
+t
+> >>>>>>> downstream kgsl's PRR thing (which we'll need to implement vulkan
+> >>>>>>> sparse residency), and it appears to be wanting to set BIT(5) in =
+ACTLR
+> >>>>>>> to enable PRR.
+> >>>>>>>
+> >>>>>>>            val =3D KGSL_IOMMU_GET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACT=
+LR);
+> >>>>>>>            val |=3D FIELD_PREP(KGSL_IOMMU_ACTLR_PRR_ENABLE, 1);
+> >>>>>>>            KGSL_IOMMU_SET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR, val)=
+;
+> >>>>>>>
+> >>>>>>> Any idea how this works?  And does it need to be done before or a=
+fter
+> >>>>>>> the ACTLR programming done in this patch?
+> >>>>>>>
+> >>>>>>> BR,
+> >>>>>>> -R
+> >>>>>>>
+> >>>>>>
+> >>>>>> Hi Rob,
+> >>>>>>
+> >>>>>> Can you please help provide some more clarification on the FIFO pa=
+rt? By FIFO are you referring to the storing of ACTLR data in the table?
+> >>>>>>
+> >>>>>> Thanks for pointing to the downstream implementation of kgsl drive=
+r for
+> >>>>>> the PRR bit. Since kgsl driver is already handling this PRR bit's
+> >>>>>> setting, this makes setting the PRR BIT(5) by SMMU driver redundan=
+t.
+> >>>>>
+> >>>>> The kgsl driver is not present upstream.
+> >>>>>
+> >>>>
+> >>>> Right kgsl is not present upstream, it would be better to avoid conf=
+iguring the PRR bit and can be handled by kgsl directly in downstream.
+> >>>
+> >>> No! Upstream is not a dumping ground to reduce your technical debt.
+> >>>
+> >>> There is no kgsl driver upstream, so this ought to be handled here, i=
+n
+> >>> the iommu driver (as poking at hardware A from driver B is usually no=
+t good
+> >>> practice).
+> >>
+> >> I'd second the request here. If another driver has to control the
+> >> behaviour of another driver, please add corresponding API for that.
+> >
+> > We have adreno_smmu_priv for this purpose ;-)
+> >
+>
+> Thanks Rob for pointing to this private interface structure between smmu
+> and gpu. I think it's similar to what you're trying to implement here
+> https://lore.kernel.org/all/CAF6AEGtm-KweFdMFvahH1pWmpOq7dW_p0Xe_13aHGWt0=
+jSbg8w@mail.gmail.com/#t
+> I can add an api "set_actlr_prr()" with smmu_domain cookie, page pointer
+> as two parameters. This api then can be used by drm/msm driver to carry
+> out the prr implementation by simply calling this.
+> Would this be okay Rob,Konrad,Dmitry?
+> Let me know if any other suggestions you have in mind as well regarding
+> parameters and placement.
 
-However, unlike in original i2s-tdm driver, there is no need to manually
-synchronize mclk_rx and mclk_tx, as only one gets used anyway.
+Hey Bibek, quick question.. is ACTLR preserved across a suspend/resume
+cycle?  Or does it need to be reprogrammed on resume?  And same
+question for these two PRR related regs:
 
-Tested on a board with RK3568 SoC and Silergy SY24145S codec with enabled and
-disabled TRCM mode.
+  /* Global SMMU register offsets */
+  #define KGSL_IOMMU_PRR_CFG_LADDR        0x6008
+  #define KGSL_IOMMU_PRR_CFG_UADDR        0x600c
 
-Fixes: 9e2ab4b18ebd ("ASoC: rockchip: i2s-tdm: Fix inaccurate sampling rates")
-Signed-off-by: Alibek Omarov <a1ba.omarov@gmail.com>
----
- sound/soc/rockchip/rockchip_i2s_tdm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+(ie. high/low 32b of the PRR page)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s_tdm.c b/sound/soc/rockchip/rockchip_i2s_tdm.c
-index 9fa020ef7eab..ee517d7b5b7b 100644
---- a/sound/soc/rockchip/rockchip_i2s_tdm.c
-+++ b/sound/soc/rockchip/rockchip_i2s_tdm.c
-@@ -655,8 +655,17 @@ static int rockchip_i2s_tdm_hw_params(struct snd_pcm_substream *substream,
- 	int err;
- 
- 	if (i2s_tdm->is_master_mode) {
--		struct clk *mclk = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
--			i2s_tdm->mclk_tx : i2s_tdm->mclk_rx;
-+		struct clk *mclk;
-+
-+		if (i2s_tdm->clk_trcm == TRCM_TX) {
-+			mclk = i2s_tdm->mclk_tx;
-+		} else if (i2s_tdm->clk_trcm == TRCM_RX) {
-+			mclk = i2s_tdm->mclk_rx;
-+		} else if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			mclk = i2s_tdm->mclk_tx;
-+		} else {
-+			mclk = i2s_tdm->mclk_rx;
-+		}
- 
- 		err = clk_set_rate(mclk, DEFAULT_MCLK_FS * params_rate(params));
- 		if (err)
--- 
-2.34.1
+I was starting to type up a patch to add PRR configuration, but
+depending on whether it interacts with suspend/resume, it might be
+better form arm-smmu-qcom.c to just always enable and configure PRR
+(including allocating a page to have an address to program into
+PRR_CFG_LADDR/UADDR), and instead add an interface to return the PRR
+page?  I think there is no harm in unconditionally configuring PRR for
+gpu smmu.
 
+BR,
+-R
+
+> Thanks & regards,
+> Bibek
+>
+> > BR,
+> > -R
+> >
+> >>>
+> >>>>
+> >>>>>> Thanks for bringing up this point.
+> >>>>>> I will send v10 patch series removing this BIT(5) setting from the=
+ ACTLR
+> >>>>>> table.
+> >>>>>
+> >>>>> I think it's generally saner to configure the SMMU from the SMMU dr=
+iver..
+> >>>>
+> >>>> Yes, agree on this. But since PRR bit is not directly related to SMM=
+U
+> >>>> configuration so I think it would be better to remove this PRR bit
+> >>>> setting from SMMU driver based on my understanding.
+> >>>
+> >>> Why is it not related? We still don't know what it does.
+> >>>
+> >>> Konrad
+> >>
+> >> --
+> >> With best wishes
+> >> Dmitry
