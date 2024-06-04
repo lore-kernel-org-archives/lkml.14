@@ -1,96 +1,184 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E2DD1459EA;
-	Tue,  4 Jun 2024 09:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9223823BC;
+	Tue,  4 Jun 2024 09:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717493572; cv=none; b=KlgimZqJXPGBt5sIQCdsCUovQ3B9jkJma0lDzZ3saZgu5EPF3FlRS8cusyq3z/Bq1g2u6newgNfZCYs+C2sUbGKf6NQPYW0sKuqdJrt6BAe1G4V2IodU0VMxj4txg2/VehXrv0GOMelLeEviQxrvTYC2KZTynW09LttJ0RrT56I=
+	t=1717493636; cv=none; b=j0ZGI1AwfRjfRtSN9VZ3p3qVuzVGkrElYMbTH3rlPqQ/R0wPthh/cmwZ1bRmURuRp9y0ggT3Zg00Ba61nGc2KKOYpzcZ5Q6xf2k0WFQcjd8G0YUgwp4tvU78VTHTmopC7V6rr4lQ1yqRWQ2D4D8ELumXGKA3EuIipBVGsM3RC7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717493572; c=relaxed/simple;
-	bh=N+BgYVByzMrgGeiS8IAeDM2+IOiN9MtSfjmOFc+R2H8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uGRM6wVL46PHKKKwQnSDQjiBJ/cGexsastSJBM5e6JeHan2Xmh9iY3P/3PhfLARzcI6m05/CBH2iF8UH8YR1LdaCmnicjXXnK/dx62MB5VpCMUBetjxbTJEQRZpAfKhPYAIZg6y1rKWXxksexK3JHzDpEEZlJuASoChfI0WfPjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 538ED1063;
-	Tue,  4 Jun 2024 02:33:15 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 46F0F3F762;
-	Tue,  4 Jun 2024 02:32:49 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Terrell <terrelln@fb.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Changbin Du <changbin.du@huawei.com>,
-	Fangrui Song <maskray@google.com>,
-	"Mateusz Kowalczyk" <fuuzetsu@fuuzetsu.co.uk>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 6/6] perf: build: Link lib 'zstd' for static build
-Date: Tue,  4 Jun 2024 10:32:23 +0100
-Message-Id: <20240604093223.1934236-7-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604093223.1934236-1-leo.yan@arm.com>
-References: <20240604093223.1934236-1-leo.yan@arm.com>
+	s=arc-20240116; t=1717493636; c=relaxed/simple;
+	bh=JaaBIIXHCbGmOzepuoBGmKbypMRkED1xayHQDMMQjEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fH5+WqZEgPUPvtRrFeURfNYjy8BBzkfkvXLkJ1YIqyV8VQ3WpSWac8zlwOkPdSSzC4sG3oTa/FmC0J/fM17vlkX1WTarKdJRov3OBOIPJ4NC6zQve46UICJyHJD3w6jxTWQg7927PszVClhHo/ioBCP52YvMn+2KS0CILyXwIy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tn7WkOYs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tn7WkOYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88107C2BBFC;
+	Tue,  4 Jun 2024 09:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717493636;
+	bh=JaaBIIXHCbGmOzepuoBGmKbypMRkED1xayHQDMMQjEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tn7WkOYsrinLNfR1Du+opWfBFE7yf+/ugsZL2M5cccHBKPwCqejGEim1s4caAxbEn
+	 S0liFqOnftGDQmZfQQEggAZRVgKPq+hN9NQ2K20VuNln3Huid/Am6eDHY80NxSYF+Y
+	 RKwvO5HffShDqgg53uVB0aClx2p53l/w6k2exB3SLQH1aSjNRBk0xeG4R9+SAD3Rb/
+	 p3of3H88+TFLAHUS2JXWM1XLHCwGK1OTa0OtPMogh66HmhOK0fUyal4a+qSHZPq77w
+	 cYoQdQv4lTIUxBJTEL6xELT6wXRJ5mcnraBoB+xG+anxvpSQKmhLxuom2hU/Y+Jw6M
+	 AwNU8QrQN45Kw==
+Date: Tue, 4 Jun 2024 10:33:49 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>,
+	Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Long Li <longli@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
+ table
+Message-ID: <20240604093349.GP491852@kernel.org>
+References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-When build static perf, Makefile reports the error:
+On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
+> Allow variable size indirection table allocation in MANA instead
+> of using a constant value MANA_INDIRECT_TABLE_SIZE.
+> The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
+> indirection table is allocated dynamically.
+> 
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-  Makefile.config:480: No libdw DWARF unwind found, Please install
-  elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR
+...
 
-The libdw has been installed on the system, but the build system fails
-to build the feature detecting binary 'test-libdw-dwarf-unwind'. The
-failure is caused by missing to link the lib 'zstd'.
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
 
-Link lib 'zstd' for the static build, in the end, the dwarf feature can
-be enabled in the static perf.
+...
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- tools/build/feature/Makefile | 2 +-
- tools/perf/Makefile.config   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> @@ -2344,11 +2352,33 @@ static int mana_create_vport(struct mana_port_context *apc,
+>  	return mana_create_txq(apc, net);
+>  }
+>  
+> +static int mana_rss_table_alloc(struct mana_port_context *apc)
+> +{
+> +	if (!apc->indir_table_sz) {
+> +		netdev_err(apc->ndev,
+> +			   "Indirection table size not set for vPort %d\n",
+> +			   apc->port_idx);
+> +		return -EINVAL;
+> +	}
+> +
+> +	apc->indir_table = kcalloc(apc->indir_table_sz, sizeof(u32), GFP_KERNEL);
+> +	if (!apc->indir_table)
+> +		return -ENOMEM;
+> +
+> +	apc->rxobj_table = kcalloc(apc->indir_table_sz, sizeof(mana_handle_t), GFP_KERNEL);
+> +	if (!apc->rxobj_table) {
+> +		kfree(apc->indir_table);
 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 18aa6e654804..80c237890a06 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -159,7 +159,7 @@ $(OUTPUT)test-libopencsd.bin:
- 
- DWARFLIBS := -ldw
- ifeq ($(findstring -static,${LDFLAGS}),-static)
--  DWARFLIBS += -lelf -lz -llzma -lbz2
-+  DWARFLIBS += -lelf -lz -llzma -lbz2 -lzstd
- 
-   LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
-   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index e8d3713b081c..acd405bc46de 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -152,7 +152,7 @@ ifdef LIBDW_DIR
- endif
- DWARFLIBS := -ldw
- ifeq ($(findstring -static,${LDFLAGS}),-static)
--  DWARFLIBS += -lelf -ldl -lz -llzma -lbz2
-+  DWARFLIBS += -lelf -ldl -lz -llzma -lbz2 -lzstd
- 
-   LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
-   LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
--- 
-2.34.1
+Hi, Shradha
 
+Perhaps I am on the wrong track here, but I have some concerns
+about clean-up paths.
+
+Firstly.  I think that apc->indir_table should be to NULL here for
+consistency with other clean-up paths. Or alternatively, fields of apc
+should not set to NULL elsewhere after being freed.
+
+In looking into this I noticed that mana_probe() does not call
+mana_remove() or return an error in the cases where mana_probe_port() or
+mana_attach() fail unless add_adev also fails. If so, is that intentional?
+
+In any case, I would suggest as a follow-up, arranging things so that when
+an error occurs in a function, anything that was allocated is unwound
+before returning an error.
+
+I think this would make allocation/deallocation easier to reason with.
+And I suspect it would avoid both the need for fields of structures to be
+zeroed after being freed, and the need to call mana_remove() from
+mana_probe().
+
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void mana_rss_table_init(struct mana_port_context *apc)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < MANA_INDIRECT_TABLE_SIZE; i++)
+> +	for (i = 0; i < apc->indir_table_sz; i++)
+>  		apc->indir_table[i] =
+>  			ethtool_rxfh_indir_default(i, apc->num_queues);
+>  }
+
+...
+
+> @@ -2739,11 +2772,17 @@ static int mana_probe_port(struct mana_context *ac, int port_idx,
+>  	err = register_netdev(ndev);
+>  	if (err) {
+>  		netdev_err(ndev, "Unable to register netdev.\n");
+> -		goto reset_apc;
+> +		goto free_indir;
+>  	}
+>  
+>  	return 0;
+>  
+> +free_indir:
+> +	apc->indir_table_sz = 0;
+> +	kfree(apc->indir_table);
+> +	apc->indir_table = NULL;
+> +	kfree(apc->rxobj_table);
+> +	apc->rxobj_table = NULL;
+>  reset_apc:
+>  	kfree(apc->rxqs);
+>  	apc->rxqs = NULL;
+
+nit: Not strictly related to this patch, but the reset_apc code should
+     probably be a call to mana_cleanup_port_context() as it is the dual of
+     mana_init_port_context() which is called earlier in mana_probe_port()
+
+...
+
+> @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
+>  		}
+>  
+>  		unregister_netdevice(ndev);
+> +		apc->indir_table_sz = 0;
+> +		kfree(apc->indir_table);
+> +		apc->indir_table = NULL;
+> +		kfree(apc->rxobj_table);
+> +		apc->rxobj_table = NULL;
+
+The code to free and zero indir_table_sz and indir_table appears twice
+in this patch. Perhaps a helper to do this, which would be the dual
+of mana_rss_table_alloc is in order.
+
+>  
+>  		rtnl_unlock();
+>  
+
+...
