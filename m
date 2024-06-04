@@ -1,182 +1,110 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF99145FF6;
-	Tue,  4 Jun 2024 12:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9364D145FF6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717503881; cv=none; b=X8+IX/73mbs9UO1E7I3lFyokhE19hzK2XXCDnmYU9yBmkWYbjhujDMTIweExabVs1GAtJcg7Beel+RGhJ0sFLviektSPevscC+1TlViC2Esx3lMtkYXK7fzVgYDnWhxqF4sBA8DxzmLQIvnYXFVM2tG/Or4STPW6MCPAq6szo9k=
+	t=1717503958; cv=none; b=XZoCM5eokeJ2t6PLBWfsBue65NHvYn+vfYo5d0t6d+YMroZYMNAOksRgNI/DvsOhOnUphZuaZlJt7uaiIAEDf5pPzvbeUFZmd+crl18DolCyAWohAOuWHhrLnDKBk+sMf1upMLaYbkup/s5WfgQKXoA46qTOVcs5fEMlnoIp6nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717503881; c=relaxed/simple;
-	bh=Lv9Ndc3v7OplGgEuObrkLWF5jfo0VwmttjMAF0BC7Yg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GJdXuNY7QH2EYEVPJAB9ngQV9eY+xyvaNUZ5//7EHkVTlXtek8ludwmHJP78TwNPfsxWQqBADPOA16Ehd8OsckwS1y2rUpt8PqWWMamF0+w0OJcXICI5WAUNvziTsiCto/vuQ0hHzWp4mwijeZ1qhtyn656RrA4timSQSjwP8NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=wYr4Iky7; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1717503958; c=relaxed/simple;
+	bh=s1VCyyJJljzsAGyKD0o7mdCoAu+eLFprs/YEVsgvPA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s2jI/4Yp1Z5OodVzJRbqZC3vdB3qyV8KzXa7UahSrwMXjKHZAdPfIJNAY9rWALLEmKDKliUGahhosPi1TxINak7z9pv48mcwVqv6aGPI3VsudEFISFfrPae5sZwDgHfo14vbnK8oIm4c04bNa7C+qqFyvpy8mCdw0xS29z4y1Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FfiliTvn; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="wYr4Iky7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717503877;
-	bh=Lv9Ndc3v7OplGgEuObrkLWF5jfo0VwmttjMAF0BC7Yg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=wYr4Iky7YMflG9JtezhvZtRBcZeFnpjwTSMcpN+b5X5cESTbE3GoiK7IFx9Qgw/sQ
-	 6d/NUKDtM1reDJRZotpXohQC2N+7opEJiqseoukugOvnse6Pin5MpMgeMq8uE9ArWm
-	 nm6OvNACcVFYGZjjGCpXQeR0nh9owN2hSJyo0pzFNRuc2p5Xvla51cRS9SsWa47dRv
-	 74xee2CHTTmMsHkw4kY6reOt9KRaq1hWuass2Ls5E9iobh8YQbegJhA78kHlJ3020W
-	 KF2vtCtt/JUF8+Fi2QdtGbtYEHbuQoPVrpeIUeD6ZE86udgWVwzvyU3+V//duffumK
-	 pACLCgDn2sBPQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2C687378214D;
-	Tue,  4 Jun 2024 12:24:36 +0000 (UTC)
-Message-ID: <c9066432-8849-49cb-8027-4f9c7f5d7686@collabora.com>
-Date: Tue, 4 Jun 2024 14:24:35 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FfiliTvn"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-572c65cea55so9679033a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:25:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717503955; x=1718108755; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y9gS0OyJH72V5TfYu3VmbBAJJsXIwwQ21Ck30Dm2cAY=;
+        b=FfiliTvnArvh3SByvoAAV/xMv7XPhD6qoBLnLSUlSJjDfx8kIuHIQtasx2vLbNgEfn
+         EdPeK23fBf46DLNcyzwk7G/EGkPQRXJ19PAi6bv545zVTBJ/bVtc9T7Bm9T6ejNvAoOM
+         TE7OLRtcnNqVkjry8QXaAeLh1Wuqzi5OwPlGF0Ldn9dg0VDaj3gQFVmPuFd4NMRa0Y1w
+         3T24TUCguST8xqYw1o0vmFSDpvOIOAa5SZ9urigwamu+0Ro9OB5CiH8YH4nOTnt9Cbz5
+         19getvDlMcUFhcZPCcT1FoKCtL2WNPHWe+gcAfyoX/Vqu2Giusx4MluiYE5YW6nD/FzR
+         hW2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717503955; x=1718108755;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y9gS0OyJH72V5TfYu3VmbBAJJsXIwwQ21Ck30Dm2cAY=;
+        b=oOYJtsoZGQLuFAw6DnrYB7SYc7FpH6OhX3F8YCmFWDA/mKOlBAx5AdrjcaBEBfJsBi
+         mBHi3Zb/lQAcB+yZGvNsyz/qula6EBPvs99weiHXVDNJMfkLmMAtTXvFrcpcOJWb8n0S
+         PE17sXaQXMpTHnb5tJtaVGxVhjDsIuLA0ez0vJR1UPn+5Dk8lKZGNmyk5sPML5vYhHh3
+         u5Y0zSvGh6uqbTM7JbBRSm1KrRuqz4oRvuS/btB8IZ14+lR4FI8BdAOf5EiiaFndOq8r
+         JXgEbxR0dMnXNtrcSCQrf6gMeMu+NI9BbAGely4f6k54iaAA7h+Rkh+dDWX9HiLl2SzZ
+         84tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUm3Lk1uwq82qMbinHRMLVadPXbBkBNH31aheEy7Z2H+ZrlTleWcDv4nfrvv6ADphE9mzRiKcauR+OiBzMix4jMI3QjGxP1tRHVMTd6
+X-Gm-Message-State: AOJu0YymHNWFrmm/v2Ogf+XvVc/rB869k4AUklOvt0Paj8CRNYjOWHNO
+	9hHwh22fnNmKDEpe/Og2Ju2S1PWeSqLbaccHM5PdBDF7R2gq9gDXlZKDRcaY/bM=
+X-Google-Smtp-Source: AGHT+IEN9f8uev3FXprfAoYc9A1GaTXa2CrF6gqcTsV0n51gFLuo0b534nnOFA35YyhTJtD3rOTrFw==
+X-Received: by 2002:a50:aadc:0:b0:578:5f53:f017 with SMTP id 4fb4d7f45d1cf-57a7a6bb3ddmr2057448a12.6.1717503954639;
+        Tue, 04 Jun 2024 05:25:54 -0700 (PDT)
+Received: from linaro.org ([188.27.161.69])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31bb825esm7298469a12.32.2024.06.04.05.25.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 05:25:54 -0700 (PDT)
+Date: Tue, 4 Jun 2024 15:25:52 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] phy: qcom: qmp-pcie: Add X1E80100 Gen4 4-lane mode
+ support
+Message-ID: <Zl8H0KOrfuF91kpZ@linaro.org>
+References: <20240531-x1e80100-phy-add-gen4x4-v1-0-5c841dae7850@linaro.org>
+ <20240531-x1e80100-phy-add-gen4x4-v1-2-5c841dae7850@linaro.org>
+ <Zl27FJVU_YHokCiD@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/4] dt-bindings: iio: adc: Add MediaTek MT6359 PMIC
- AUXADC
-To: Krzysztof Kozlowski <krzk@kernel.org>, jic23@kernel.org
-Cc: lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
- andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, marius.cristea@microchip.com,
- marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
- mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, kernel@collabora.com
-References: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com>
- <20240530093410.112716-2-angelogioacchino.delregno@collabora.com>
- <c2b97c8e-177e-4169-b001-ab0e3303734f@kernel.org>
- <dc46258b-caf9-46a7-84b4-2f229d48b8f7@collabora.com>
- <0d7d9f61-2590-4c72-9498-dc6540b571d5@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <0d7d9f61-2590-4c72-9498-dc6540b571d5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zl27FJVU_YHokCiD@hovoldconsulting.com>
 
-Il 04/06/24 11:38, Krzysztof Kozlowski ha scritto:
-> On 04/06/2024 10:55, AngeloGioacchino Del Regno wrote:
->> Il 01/06/24 17:32, Krzysztof Kozlowski ha scritto:
->>> On 30/05/2024 11:34, AngeloGioacchino Del Regno wrote:
->>>> Add a new binding for the MT6350 Series (MT6357/8/9) PMIC AUXADC,
->>>> providing various ADC channels for both internal temperatures and
->>>> voltages, audio accessory detection (hp/mic/hp+mic and buttons,
->>>> usually on a 3.5mm jack) other than some basic battery statistics
->>>> on boards where the battery is managed by this PMIC.
->>>>
->>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>>> ---
->>>>    .../iio/adc/mediatek,mt6359-auxadc.yaml       | 43 +++++++++++++++++++
->>>>    .../iio/adc/mediatek,mt6357-auxadc.h          | 21 +++++++++
->>>>    .../iio/adc/mediatek,mt6358-auxadc.h          | 22 ++++++++++
->>>>    .../iio/adc/mediatek,mt6359-auxadc.h          | 22 ++++++++++
->>>>    4 files changed, 108 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
->>>>    create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6357-auxadc.h
->>>>    create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6358-auxadc.h
->>>>    create mode 100644 include/dt-bindings/iio/adc/mediatek,mt6359-auxadc.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
->>>> new file mode 100644
->>>> index 000000000000..dd6c331905cf
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/adc/mediatek,mt6359-auxadc.yaml
->>>> @@ -0,0 +1,43 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/iio/adc/mediatek,mt6359-auxadc.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: MediaTek MT6350 series PMIC AUXADC
->>>> +
->>>> +maintainers:
->>>> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>>> +
->>>> +description:
->>>> +  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
->>>> +  in some MediaTek PMICs, performing various PMIC related measurements
->>>> +  such as battery and PMIC internal voltage regulators temperatures,
->>>> +  accessory detection resistance (usually, for a 3.5mm audio jack)
->>>> +  other than voltages for various PMIC internal components.
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    enum:
->>>> +      - mediatek,mt6357-auxadc
->>>> +      - mediatek,mt6358-auxadc
->>>> +      - mediatek,mt6359-auxadc
->>>> +
->>>> +  "#io-channel-cells":
->>>> +    const: 1
->>>> +
->>>> +additionalProperties: false
->>>
->>> If there is going to be a re-spin, please move this below required: block.
->>>
->>
->> Yep, will do. Fixed up for v2.
->>
->>>> +
->>>> +required:
->>>> +  - compatible
->>>> +  - "#io-channel-cells"
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    pmic {
->>>> +        pmic_adc: adc {
->>>> +            compatible = "mediatek,mt6359-auxadc";
->>>> +            #io-channel-cells = <1>;
->>>> +        };
->>>
->>> This suggests that you should grow (make complete) the parent PMIC example.
->>
->> Uhm, should I instead add that to bindings/mfd/mediatek,mt6357.yaml and avoid
->> growing the parent example?
+On 24-06-03 14:46:12, Johan Hovold wrote:
+> On Fri, May 31, 2024 at 07:06:45PM +0300, Abel Vesa wrote:
+> > The PCIe 6th instance from X1E80100 can be used in both 4-lane mode or
+> > 2-lane mode. Add the configuration and compatible for the 4-lane mode.
 > 
-> No. You should avoid this example and grow the parent example. Not avoid
-> parent example...
+> Same language nits as for patch 1/1.
 > 
-
-I will remove examples from here and move the example that I wrote in here
-to mediatek,mt6357.yaml.
-
->>
->>     adc:
->>       type: object
->>       $ref: /schemas/iio/adc/mediatek,mt6359-auxadc.yaml
->>       unevaluatedProperties: false
->>
->>>
->>> Actually having this as a separate node is not really needed. Why it
->>> cannot be just part of the MFD/parent node?
->>>
->>
->> (glossary: PWRAP = PMIC [SPI] WRAPper)
->>
->> The top node is the PWRAP, an IP that is (mostly) used to dispatch commands to
->> the PMIC, but the AUXADC is not integrated into the PWRAP, but into the PMIC.
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 > 
-> Eh? mediatek,mt6357.yaml says it is a PMIC...
+> I tried this patch along with the DT changes and the link on the CRD
+> still comes up as 2-lane:
 > 
+> 	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
+> 
+> so something appears to be wrong here. (I noticed the same with your
+> next branch last week.)
+> 
+> How did you test this? Does the link actually come up as 4-lane for you?
 
-Eh, apparently my brain cells are somewhere else today.
-I was thinking about the HW, and some synapse got disconnected in the process, lol.
+This is the PHY part. The controller needs some changes as well.
 
-Just pretend I never wrote this useless wall of text, sorry. Ugh :-)
+Yes, as of yet, I'm not able to bring the link up in 4-lanes mode.
+This however doesn't mean the PHY sequence is incorrect.
 
-Cheers,
-Angelo
+But, I agree, maybe I should hold on to the PHY changes as well until
+we get the controller side working as well.
 
+Thanks for reviewing.
+
+> 
+> Johan
