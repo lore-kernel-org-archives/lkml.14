@@ -1,137 +1,232 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E9D143C7A
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9705B946C;
+	Tue,  4 Jun 2024 15:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717516190; cv=none; b=gbttHW57SYt/3UGDAhp6Z3spiEBEQ4O72Z1ER3IVhUS4Y86eokmUe1BwjvpKLtiiSsN2zfaYg7rzLwp9Gg0OQ5jfaj0Ifq4ZL7MhhbYhVIG8Fy5fkDRuCsckcpcQdHX6a0FmmR3sJKj1qXdQyxlBRcp7IViV+MLOB059mKi/I/c=
+	t=1717516205; cv=none; b=fwyaWSBWkdb5AwCG1G5QwSu91j9h8kpzA6DLh4zaOHGWBncPkAcTzZgprA050/o1xvZenHELDD2kjBxcJqR0qCs2J/UYVf7RlJGdbGSXe7hs0EDzBguFJBzDtzyfHK9OjjeWl8qRElPIxRKJgmi40NguFMP7D9lIjXvRJMoUVOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717516190; c=relaxed/simple;
-	bh=s3Y+StiWH1SUXcnL87GNEQTzrLSMMZXbkk3q9EZHmQo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D5Djn3KUAS2SqOVLB8UxLMGfU9ANSlSwd717ByO8TWiPdcYrGWn4B2COl4uSBhQWQXhNzJdSaMk9fkrUlNWAKJzc4IX0V7aYDukCQhxzf1hZboyAzwuJTLlVDD2D0jMZ8neyfNDSWDBs0gBQzT7mGT/WpTVBZiqSkjECTys0om4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VtvGF4WWhz9v7J0
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:12:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id AEEB1140154
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:29:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.206.133.88])
-	by APP2 (Coremail) with SMTP id GxC2BwDXwibhMl9m4o6GCQ--.5202S2;
-	Tue, 04 Jun 2024 16:29:50 +0100 (CET)
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-To: paulmck@kernel.org
-Cc: stern@rowland.harvard.edu,
-	parri.andrea@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	npiggin@gmail.com,
-	dhowells@redhat.com,
-	j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr,
-	akiyks@gmail.com,
-	dlustig@nvidia.com,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	quic_neeraju@quicinc.com,
-	frederic@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Subject: [PATCHv2 0/4] tools/memory-model: Define more of LKMM in tools/memory-model
-Date: Tue,  4 Jun 2024 17:29:18 +0200
-Message-Id: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1717516205; c=relaxed/simple;
+	bh=H7+KBIj+XhYX0G3IfUFHqSGj8MwKV6m8R2fUal8uXJg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tvJzJCzyX95MSadzRp3grrJZR0bH4+JFdXmkb1eSB8Kg8JEsNQR6I/FgHdUZAqYYhd+iDS5p6rE1/Mu1EbxG8PQXj/4xoFG5jYY84SAssnjYut/iq8D6n2d5Cc7TEz726ekivz1nZ3CILpWfebTxuU8D6FpoyhVomlTt/JhucZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-62a145e0bb2so56137007b3.0;
+        Tue, 04 Jun 2024 08:50:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717516202; x=1718121002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jdl8ZvZjrswfXtiaYupkzfGxYwNns5foQkdy/ZL8qPo=;
+        b=wYmhmGyGGWLq/08/gzR88hN5vIX3yc0dZeh/7xQ7oYOByUsUX9kbmsj7g1Tlm+J1kz
+         vnBKAnCGp4MrUCsuURXioZ7CUGF+ojcwaOuTgqG+SudP4f7fdOGwRm7zlprQGMgySfzf
+         v6yIX1mfikQTe2k6VU7PM+WsFzE/r8qVJIdLKLOoh3an7jW5D98X36DWYUtGmb92Ve4A
+         np/HLmnqYKxLHvquZfbBRtxVNxGeUzwcGi6I6CnhtRncQ59Q3wavSTZk9nMnbXiXg9Eq
+         L51h/f9xkWVMLfj2hDv+2Yoxl72KDDi8twC/wu2k2MCrTQ6hHGuzxULQvp9kNbN0Wqhl
+         b+JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVCygffeyO6x3p7bO5RVtv/FQ0yXTR49d0SOWQO86YRfsAmpvfjoCMsEadSEFhawmUxdp31+T4ofz+on1ybetiVfuPfh0H7MVkpn7OAPh7N3+mwi6cy12ss3t87S5swtyouz7duASfkntWZAnu2yOdI+N5C/TY39DmZDzF+KTPAdrIunCDGtAJ30zbruYFGgd4TMookiuJvsauSlHZKUp0WdOxAFLC
+X-Gm-Message-State: AOJu0YzWUWeE+kIHgU/2oUnDsw6q4V9nsrtQbYfMDkFhcnCQ4DLWIHKt
+	WDIv9ASGRu7JazSrFvpI5WOs1ebUvnjol2qxjFjNCrvTYuOK62TZga7JF8+N
+X-Google-Smtp-Source: AGHT+IFCgbSmnuaH8FTde07Q4cJUUU9SXFffH8ErkByzRf0oazsc+zwvRaDkMe4pQnOVTk0qG/CpxA==
+X-Received: by 2002:a0d:c3c4:0:b0:61b:69f:4c24 with SMTP id 00721157ae682-62c796c3d61mr129326827b3.20.1717516201571;
+        Tue, 04 Jun 2024 08:50:01 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c766b42b3sm18788207b3.111.2024.06.04.08.50.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 08:50:01 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dfa72c9d426so4642166276.3;
+        Tue, 04 Jun 2024 08:50:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUL8XHXNeK2j1xUeCJRtS3mY7ARhyo6C99yw8V+WJUFhLvXt2dOIKj+bxMs8QcbElG5N/ASsZI/YvLWuP3zb2IwE5RAv3OV7Lv+ZNF3s/vAYJIN1TEnffG215iN0OYqciIdjYUCfR5AJ5Bnj59qu9T6Ep+HYy5sStym2L1hYXfQMh/nIHgRWxhwaLAzmSiiVtm9fYDPbOLQw1fzM9e6KFXUycfN1LPC
+X-Received: by 2002:a25:c794:0:b0:df7:c087:579b with SMTP id
+ 3f1490d57ef6-dfa73ddb7famr12853703276.58.1717516200826; Tue, 04 Jun 2024
+ 08:50:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwDXwibhMl9m4o6GCQ--.5202S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWw45urW3Xr4xWrW3tF4xJFb_yoW5WrWkpr
-	Z5G34rKF1DKr9F9a1xWws7XFySyayrGw47KFn7twn5u3W5ury0yr1Ikw4Fvr97u397XayU
-	ZryUtr1kWw1DArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF0
-	eHDUUUU
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+References: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240524082800.333991-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240524082800.333991-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Jun 2024 17:49:49 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWzrEKFHauJ=6UnsufJjDO3LfJ45eJXx1V72AmVzvsjyw@mail.gmail.com>
+Message-ID: <CAMuHMdWzrEKFHauJ=6UnsufJjDO3LfJ45eJXx1V72AmVzvsjyw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: clock: renesas: Document RZ/V2H(P) SoC
+ CPG driver
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the effect of several tag on operations is defined only in
-the herd7 tool's OCaml code as syntax transformations, while the effect
-of all other tags is defined in tools/memory-model.
-This asymmetry means that two seemingly analogous definitions in 
-tools/memory-model behave quite differently because the generated
-representation is sometimes modified by hardcoded behavior in herd7.
+Hi Prabhakar,
 
-It also makes it hard to see that the behavior of the formalization 
-matches the intuition described in explanation.txt without delving into
-the implementation of herd7.
+Thanks for your patch!
 
-Furthermore, this hardcoded behavior is hard to maintain inside herd7 and
-other tools implementing WMM, and has caused several bugs and confusions
-with the tool maintainers, e.g.:
+Please drop "driver" from the one-line summary.
 
-  https://github.com/MPI-SWS/genmc/issues/22
-  https://github.com/herd/herdtools7/issues/384#issuecomment-1132859904
-  https://github.com/hernanponcedeleon/Dat3M/issues/254
+On Fri, May 24, 2024 at 10:29=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document the device tree bindings of the Renesas RZ/V2H(P) SoC
 
-It also means that potential future extensions of LKMM with new tags may
-not work without changing internals of the herd7 tool.
+s/of/for/
 
-In this patch series, we first emulate the effect of herd7 transformations
-in tools/memory-model through explicit rules in .cat and .bell files that
-reference the transformed tags.
-These transformations do not have any immediate effect with the current
-herd7 implementation, because they apply after the syntax transformations
-have already modified those tags.
+> Clock Pulse Generator (CPG).
+>
+> CPG block handles the below operations:
+> - Handles the generation and control of clock signals for the IP modules
 
-In a second step, we then distinguish between syntactic tags (that are
-placed by the programmer on operations, e.g., an 'ACQUIRE tag on both the
-read and write of an xchg_acquire() operation) and sets of events (that
-would be defined after the (emulated) transformations, e.g., an Acquire
-set that includes only on the read of the xchg_acquire(), but "has been
-removed" from the write).
+Please drop "Handles the"
 
-This second step is incompatible with the current herd7 implementation,
-since herd7 uses hardcoded tag names to decide what to do with LKMM;
-therefore, the newly introduced syntactic tags will be ignored or
-processed incorrectly by herd7.
+> - The generation and control of resets
 
-Have fun,
-  jonas
+Please drop "The".
+
+> - Control over booting
+> - Low power consumption and the power supply domains
+
+Please drop "the".
+
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,rzv2h-cpg.yaml
+> @@ -0,0 +1,78 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/renesas,rzv2h-cpg.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/V2H(P) Clock Pulse Generator (CPG)
+> +
+> +maintainers:
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +
+> +description: |
+> +  On Renesas RZ/V2H(P) SoC's, the CPG (Clock Pulse Generator) handles th=
+e generation
+
+SoCs
+
+> +  and control of clock signals for the IP modules, the generation and co=
+ntrol of resets,
+> +  and control over booting, low power consumption and the power supply d=
+omains.
+
+Please drop "the".
+
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,r9a09g057-cpg
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Clock source to CPG can be either from external clock input (EXCLK=
+) or
+> +      crystal oscillator (XIN/XOUT).
+> +    const: extal
+
+According to Figure 4.4-1 ("CPG Functional Block Diagram"), there are 3
+(RTC, audio, main).
+
+> +
+> +  '#clock-cells':
+> +    description: |
+> +      - For CPG core clocks, the two clock specifier cells must be "CPG_=
+CORE"
+> +        and a core clock reference, as defined in
+> +        <dt-bindings/clock/r9a09g057-cpg.h>,
+> +      - For module clocks, the two clock specifier cells must be "CPG_MO=
+D" and
+> +        a module number, as defined in <dt-bindings/clock/r9a09g057-cpg.=
+h>.
+> +    const: 2
+
+I understand this will be changed to 1, the clock number?
+
+> +  '#power-domain-cells':
+> +    description:
+> +      SoC devices that are part of the CPG/Module Standby Mode Clock Dom=
+ain and
+> +      can be power-managed through Module Standby should refer to the CP=
+G device
+> +      node in their "power-domains" property, as documented by the gener=
+ic PM
+> +      Domain bindings in Documentation/devicetree/bindings/power/power-d=
+omain.yaml.
+> +      The power domain specifiers defined in <dt-bindings/clock/r9a09g05=
+7-cpg.h> could
+> +      be used to reference individual CPG power domains.
+
+The latter suggests "const: 1".
+But the example below uses zero, as does the code?
+
+> +
+> +  '#reset-cells':
+> +    description:
+> +      The single reset specifier cell must be the module number, as defi=
+ned in
+
+reset number (or index).
+
+> +      <dt-bindings/clock/r9a09g057-cpg.h>.
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#power-domain-cells'
+> +  - '#reset-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    cpg: clock-controller@10420000 {
+> +            compatible =3D "renesas,r9a09g057-cpg";
+> +            reg =3D <0x10420000 0x10000>;
+> +            clocks =3D <&extal_clk>;
+> +            clock-names =3D "extal";
+> +            #clock-cells =3D <2>;
+> +            #power-domain-cells =3D <0>;
+> +            #reset-cells =3D <1>;
+> +    };
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
-Changes since v1:
-   - addressed several spelling/style issues pointed out by Alan
-   - simplified the definition of Marked accesses based on a
-      suggestion by Alan
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Jonas Oberhauser (4):
-  tools/memory-model: Legitimize current use of tags in LKMM macros
-  tools/memory-model: Define applicable tags on operation in tools/...
-  tools/memory-model: Define effect of Mb tags on RMWs in tools/...
-  tools/memory-model: Distinguish between syntactic and semantic tags
-
- tools/memory-model/linux-kernel.bell |  26 ++--
- tools/memory-model/linux-kernel.cat  |  10 ++
- tools/memory-model/linux-kernel.def  | 176 +++++++++++++--------------
- 3 files changed, 115 insertions(+), 97 deletions(-)
-
--- 
-2.34.1
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
