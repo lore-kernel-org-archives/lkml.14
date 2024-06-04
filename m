@@ -1,114 +1,325 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7EE1384B1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717488008; cv=none; b=hRZT2nnaDllM93+CDj44mIqOS1tK3WZG5TA8jTe9TJP9sZtJBAmJCEwxEhioiOgSFY0Xkpcf5mZS6QF3gxSK7iEoVZUWn2xBWX2huBs10ZS8IEXYZRvPfbKgo2VdvErxcTOy8ziG/LeAuXfqDtTvfea1LpOpjVJi1vL++bz7Rgc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717488008; c=relaxed/simple;
-	bh=2FwahE66ZXIwspaC/JRsBaR02QEmRxDVlA8r/UgHIEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhdqR0H6HAVO7gfBJ0BgXyJiVUPRtPe79epyHQT4szwbMGuPL+/qlaNmo6vuiTs4WOazQuIYdt48kohJt1+q0Ik5ddZuK7y9RCJUF/xaNwqrZ622zEtdar27VDx66eT9nNd0pjMckJ4vk6p/safEmS0bhBYrM96kdEl69lvWw4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=K+hP4aPF; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF8D1422D1
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717488014; cv=fail; b=epBoFuWXtQ68uNCtYlmwPrnpxwxqub7i71G6Qlp9QlInCQJkWs8cQJIQVGZcLsno7QFn+kCBlNI9dPoHLx2GOBjPXR1nDyVBMNtA2H185TXBULNAZwQB5q4CUiw6tVawCF4bN67CLAnEzoBZJvNVqHvgsjrhuvJXNyGriXF/IPU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717488014; c=relaxed/simple;
+	bh=eA7WQGd28dmYOVYmRMRkOz1jRa+zdHGtK6Lvni0LvII=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=utJfiOIU3Q+nIq4Nca8OZk4+KK4jp72Ss9mL50cCEeRNEI94JLsv2nbYboTov4Ce2qyoywSSxXr8St5ZAoi5dbTStPToduAIAg8AUG/AxMB+SHfiYs5M/nc8MDFGJepNRJXt+NXBQJeVss3TyeUMM4Il7SRsQBy0wlMEZQL5Xxk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tp/CZ7wt; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="K+hP4aPF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=2Fwa
-	hE66ZXIwspaC/JRsBaR02QEmRxDVlA8r/UgHIEo=; b=K+hP4aPFlCRH0h5xXLEU
-	/9kHCA592KKdKg2kYjOpCrj2AGOjxuI4HbrrWY65K8A21X4TsoEzevkLMrIjB72W
-	spvmeNCHEThU1Rv+8ov/Xw2KWy3c5V+V1M2YjUBkwl+L3OmU6844eIIYs/YGdCj9
-	GqG9VW6VFpUe0gAjGdTv7sXWUOsX7gQ03PwDMiHNmqT+2YbgN3i7PenBiygglTVP
-	OjKhK4Awt5pZpTz55ic35oXH7SjG399geGItpv1GWADy+lf9P13r/IDJxRjOw2tN
-	6dVyQ8LDjbn7EPHEBtFHGxl313eAl4t4kulHNSkXgcPie33QQiLCU9fjGLt+x2h1
-	HQ==
-Received: (qmail 2214748 invoked from network); 4 Jun 2024 10:00:05 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 10:00:05 +0200
-X-UD-Smtp-Session: l3s3148p1@Lttt1gsaVscgAwDPXzLGAH1eNELjOc3g
-Date: Tue, 4 Jun 2024 10:00:04 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Hans Hu <hanshu@zhaoxin.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Wentong Wu <wentong.wu@intel.com>, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: viai2c: turn common code into a proper module
-Message-ID: <bi3lwgeh5egvd4g6aspwvefibk3cviwuzinvgkmnwy4f3bvua4@nf5a6w77cr7v>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Arnd Bergmann <arnd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Hans Hu <hanshu@zhaoxin.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Wentong Wu <wentong.wu@intel.com>, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240528120710.3433792-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tp/CZ7wt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717488012; x=1749024012;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=eA7WQGd28dmYOVYmRMRkOz1jRa+zdHGtK6Lvni0LvII=;
+  b=Tp/CZ7wt4IQjtqB25TXo1uIlZrTdH+wMlBWmS9nIcbTdwHFHFMyoa2G1
+   UfXYjexavTC9BJRx5+OlVwsaWCcY+2MK3YsJsquMmCzKtQ8UObl/9HDoi
+   wWR+bhTkH2hQZiZfwtNKzKBHA+e/wMjmw9QGa8V4xr+ZvcKD2CZWUP3VB
+   P1c6sE2ZhJ101f9TPN3zPicjhXaC46D/0zDJAw+TomIFvtgFhQmZ7rRGi
+   LT78YkThk7VwlaafjJVjkLWdM+7KLnXdj5FLdqKqjaBvUJxW8RbrRMSxq
+   hiuQVuIMX7zMmWojehfdz8K+wzyPQtbbiAr38qkGk9en3WkXI6CCuK3Uc
+   g==;
+X-CSE-ConnectionGUID: AL7z1SJJRAi2iisF2zaINw==
+X-CSE-MsgGUID: MuslHj9jRTenmvKbJOQNdg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="14240984"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="14240984"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:00:10 -0700
+X-CSE-ConnectionGUID: NC/sslmPSRiTtULqQ/Fr5g==
+X-CSE-MsgGUID: lWfd8BD6RBOSZ1GhrkZulQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37213300"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jun 2024 01:00:10 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 4 Jun 2024 01:00:09 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 4 Jun 2024 01:00:09 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.171)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 4 Jun 2024 01:00:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nlqfGXu+BxFIo06PX31pdTn5BuzZJrTTwriAwM2m3rHVJnY4GblqTBZGkC8tN5jrHGEjCWhQuZfH89rKcNDNYeBUZUtevlWc3WiuMhx956bXrVrgyxiHLXGXsVAOsQ6TgPq3OgvasuF6VqnFc3uH01CVj3hjkxgqLi3OAzzz9lnjfbQhSBtTMYNqoxv36hgcY2o/f/LhgRwjEarTVd7AZIrrvmH9ZlEzSyn47O3DAtD73i3dmzbDY/ZEZ854YMwvMTTKV6BSlY6sZqro8ndtR2sH5mVMSt5KiEh/3MS525OX5t1eHOzaQmWKkXiK0sjQEYzlaO9HIDk6qxHC86NiRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=L3HH4CJHhYfHxXDoXhLWgN2V82Io7vdCQ2XmXiPsqfY=;
+ b=NzYFwsXyfSpAVml0J84JBWkC7uNym6/v84svkmGNa3Bz+xceZyu/lPsXLXiEREGKcO+pzj5S2zCXJk4Sh71u3p2TmLH7VJD/6SGFhKnahqzh/vW1FydhZrQslowncuS44GA61NHotNu5HsxjiNCfbnjQd1mbBvcXZAa1uAOi0D5PBxjunlTglBRIFccZ6MQ34nTM3lzv0sJUkoWDVkCjmBQTHAnY3fOvVTMRxPGOTXHPe2qqm4Z5GONK5inie2k5AMk8pJNdNsZdMxlO6Bbe6tuOtJd+7QwEiX4xzvHXFLYAORyAg7cQdQzFFwyXi6o0sZyC3nJEVcRRNZxMevymaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by CY5PR11MB6308.namprd11.prod.outlook.com (2603:10b6:930:20::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.21; Tue, 4 Jun
+ 2024 08:00:07 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a%7]) with mapi id 15.20.7633.018; Tue, 4 Jun 2024
+ 08:00:06 +0000
+Message-ID: <445fae9f-ea1e-4864-9f0e-f348c51146a1@intel.com>
+Date: Tue, 4 Jun 2024 16:03:58 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/22] iommu: Add iommu_user_domain_alloc() interface
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+CC: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Kalle
+ Valo" <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, "Mathieu
+ Poirier" <mathieu.poirier@linaro.org>, Alex Williamson
+	<alex.williamson@redhat.com>, <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>, "Jonathan
+ Hunter" <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>,
+	<iommu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+ <20240604015134.164206-2-baolu.lu@linux.intel.com>
+Content-Language: en-US
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <20240604015134.164206-2-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2P153CA0027.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:190::22) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hzrqra7phcm27hy4"
-Content-Disposition: inline
-In-Reply-To: <20240528120710.3433792-1-arnd@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|CY5PR11MB6308:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39a8ab03-a3df-4770-49ce-08dc846c58dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Q3FrT2FCSUswMGtJUnhPaENFWVMzd0FuNTlnNHRGVjhoOTcxQjEwVUZ2TGQv?=
+ =?utf-8?B?aitTOXBXUDVpN3ZyMU55Wk1JdE41ZTdESVVXclZNWGhEQzhTck9maFRTaDFv?=
+ =?utf-8?B?ZjZSL1hMWlZJTXUrSlp6MnJldFJLTE5VSjJUbFJYWlg2RGNmVENpeld3ejFO?=
+ =?utf-8?B?aGR6WGYrdTFhUFFISzlyeXl5SnR6UWZFQko5YkJzRDZHSzJIYXlHV2hDWFBH?=
+ =?utf-8?B?MkdmcEtmNlRXRXNWbDc0UmtuWSs3WGpycU1sSkVib2F3UnpIMWUzZk5saXdD?=
+ =?utf-8?B?QXlRYTdWcXd1dU9yRmVNdnFwL2pQRHpITnNMcWdZOS9BUGlTNmlBUW5JV1VF?=
+ =?utf-8?B?TWxpemJuOThSY0RwbXFDMWlXWXE0bE5YSEtLLzIrYXJsMUg5a3YxZHBjcGVG?=
+ =?utf-8?B?QVVQRlY1Q0VTVnZ5OVZYbmludnVMQktPMERrRk5qR3IxamlNcittYjVRTnB2?=
+ =?utf-8?B?aTRPdlJ3ZDg2R2tySUpBUnJ0ZVJOWUxacUNzM090MHkvOVJqVEd3emFPMHpw?=
+ =?utf-8?B?R2FLYnpsTmtnbDdzSGJETUJwU05QSzFMSHJXNDVkQmsvbUZDN0VnQnVabGlI?=
+ =?utf-8?B?RnZiZE40eS9CSE1vejZGSVRsKytGcmRNNXYrODNTRGR0dDBGMHJFMXVJMTZ5?=
+ =?utf-8?B?WHNuaXdLc0haUEN6TkhKVjBDbm56SWZPK0dZWllQZklCR1liVkFhTUhXNFh4?=
+ =?utf-8?B?cWRMRlRpQW9vWXYwTnRncVkyTGtwMVhLQkg4NjZsaFUvUUU5UFBnK2w2ZG1p?=
+ =?utf-8?B?WlZ0azBmS3laTkRiVms5TlB0a3FCUDZrNUtHVS9tc204VWJVK3oxM1N2bzBn?=
+ =?utf-8?B?cWgreGNWTEZKV0JmcWhsM0dLcjBWNzhpYmpqajR0WGFXUzJQbyt0SGZCUy8x?=
+ =?utf-8?B?cVhvbjVrWTdTd2JNK0U5WCtiK29sYWE3ZmJqcnNPeUFBL3dEMHpudUxGcXZa?=
+ =?utf-8?B?b0tBYm1rb0I3MVJoRnlURTNMNk51ZGdxTW5DMVUyNzJRL3d5WlRGcmxuSlFn?=
+ =?utf-8?B?UDJXUnJFaGlYREJXeE8zMXI5bTNHbnlyRXMvdjdRTXllUkNNOG90TVlLN1c4?=
+ =?utf-8?B?UWNJci9hbjFrTStYUlB0ZGp6cTA0Z2VwZThTMTZvQ2xXWDk4aTVFdmJsV2hH?=
+ =?utf-8?B?eSthVVRWSVMzcFJpbXdwRGcvOGM3NGd4bE5rc3VVQXZKa1IzUGtIVXdGZVIz?=
+ =?utf-8?B?Sy9ybStqTHZqVEJQU21BV3FiZ3VuM3htZXJIWndPWmluRTgvRjZWeDZMWGFa?=
+ =?utf-8?B?bVU5T0pua1ZuSHZJQnEvWlEyWmgzUkhBM1pEbWpOQ3JHNVVPMU54NkFwK0lv?=
+ =?utf-8?B?eEl2Ymc0S2tmYnJEQy9veVhsYVkyQ0JsNktwTjl0czRDY1l5dlIxN0wrS1Y5?=
+ =?utf-8?B?dStDU1BNVEdpOHJJSlk3bGlJeHZNS2Uwd2xzNGg3SUtLSkxTV0oySVZKSjhj?=
+ =?utf-8?B?Zkp5QS9OeWlVRHJwVWNTdWdXcURpSGVFS1VrWGxsKzd0aVdHZHVqQ0FTVEVl?=
+ =?utf-8?B?V3M1NElyY1Q2WXBYd2FLTlErWjR1M0ZwcWlUMExkZmVjVG1IU0dLbG8wUE80?=
+ =?utf-8?B?d3FOMWRKMWhkMUxvTWQ3czdUa2ZPUzIySFZoNGhFUVpNS0ltTGhQVGUvQ2Za?=
+ =?utf-8?B?UjRCRGtjSmNHOTRFc3doNGk3Nlh5RDJFOWhYMU9hSkg2NDBRTDJ0RVl6NU0v?=
+ =?utf-8?B?dXZVc2dYb2diem0zdVZyMFBiWnhNRWF5elZWK1VxbnpzV3ZvT2gwMjFBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aXJHQzMvNXo0Tkp2Z2d3a1lVc0ZzanNEOVRvUkNsVXVieE9iMVBRWUhaMzhv?=
+ =?utf-8?B?NE9xQTAxWTBBcUFvaU5DSldQc0RKRnlJVjZLTjM0a0dCRjBpSnZBdGZ2ZUtC?=
+ =?utf-8?B?OUpaMm42cGFnQ2NxOTdhL2NnL3VXT2h6enBVcjNEK3Ryb0NCa0s5UGtVNFVx?=
+ =?utf-8?B?ekRhb2w5Q1pIbFdhbll5SVE1N0d5Qjk3aU5GVGwvUXVxTVBHOU5WbGh4K1Zv?=
+ =?utf-8?B?OGlEUjM2WTN1aTRlR0ZnU2ZIczcwS0o4ajI1bjFSYnlkU2tnSytvZG9ZUTEy?=
+ =?utf-8?B?MnpWUTlxeHBNVDZCVDdlRzdrUG9Lcm43UjdweFJ2UnNEVjFBenQ1OTUxZzd4?=
+ =?utf-8?B?MHA1SE5tRWlGVTY1Z2hpaGpKSTZnNUQxMGlSOXNmMFA2bWlSYllUZitlM0wv?=
+ =?utf-8?B?V1VJbFAxdG1GWXlUQWNsY1NpTUMxdVNQRGR2eU14eThOVlBHU3BIU0ZJbURK?=
+ =?utf-8?B?SHRsUWNqcC90bnlhQlhVQWZhSXZEZjczbXFtQ2xXcFRmdGJVNFJpV1FPT0ZO?=
+ =?utf-8?B?MHpFYVl0cXVNdlFycnp0UUc2b3liS0tBNDkvbG10ZkxUK2t5NXZvNk9GVjVD?=
+ =?utf-8?B?YXViSURXQWJBVm1rOHVybkJBQ0hoMmp5N2dJclp3QXZLaklFSCtCTW5iQy9R?=
+ =?utf-8?B?U0Q3UkVjMElVc0c5Um5JSndIRXkzeTFrVzlvTlBvRE1uSVpKa0k5bWE1SUlP?=
+ =?utf-8?B?aVEwenorMU50N29kN1RsOWdOcnRoRktIRzRwTElzM2dFZUdKY1FPdHRFNndJ?=
+ =?utf-8?B?NlgzaXNDRGJyVTJ5UzlTTnozUlhSYVJidHZ4MWNrWXlDeE9PbzBLdWhYQkNh?=
+ =?utf-8?B?b2dUdlpJdWI4QXlDSTRNQnlQN29XZ2NPek9GYm1Td1NIN3FlWkxCMkVnckJq?=
+ =?utf-8?B?MFhzbmI4SVpEODZ6eFBOLzB5ZW9GMy9XZElNUHdJU2wxbkoySjJ1SFE3WWdJ?=
+ =?utf-8?B?U1ErZUhtM1dkZU90bDBoNVFpY25pRU5UbVBHQU81WmNlU2U2aUZCUzFCVVZX?=
+ =?utf-8?B?WWpMSFhYWWRQOHJuL0tTd1ZHYmYyenNiMFRqMDNtb0FWWlIwOXRlODJReWpH?=
+ =?utf-8?B?QlpyellPbXJJNU5VZ1AwV3JhbzY0SGM0VEpFRm5zWmtsT1VoOWJMeDdJa2JF?=
+ =?utf-8?B?TTEzTjhhKzVBU3pHTjBEa2lEclliTVl2c3ZObTlnWmdlN1pTb0h4WW9QU3BN?=
+ =?utf-8?B?dFBFbFJEemdLM2w3Q0dLWW05alF4clppNGlzRW8waVBVOGNDSzFvZ0lRQlQr?=
+ =?utf-8?B?TmNVSGlLMTVxMk5PZ25RMTlsdFdnRS96R3NjaWVKeXQrZXFheXZPN1pyeUVv?=
+ =?utf-8?B?MHF2bFovbXZtL1ROdlhUVzhHMWlXVXRKSHViZ3JSVzJZT0RqWHk5K2JDTXU3?=
+ =?utf-8?B?LzFyd1NXZ2c3dW1mQU1YSmtEM2k0d2JRUm5qN29TcGlXUFRsNEh2Mmo3dHVJ?=
+ =?utf-8?B?c1MvQXNpeTY3dFZZZjBFa2s5M05RY2dRTFFMQS9BSFNtWFZBbzd2MHM5Unc0?=
+ =?utf-8?B?Q2FDaGNodlJ0L3RQTllTOCtOZC9NaldjSHBkUmhXV1lmWElMdHpZUDBNUEZl?=
+ =?utf-8?B?bDIyRyt6V1N2SnF0ZHp1STZlWWU0MmlseWVZUkhEeE12LzVBRTNHWDlubW93?=
+ =?utf-8?B?MnhHMmNaM0YyL25Jd2o1OVRVK0dEOUkyR0kxT2JRbFhUeklhTmFZZ2YxNU1W?=
+ =?utf-8?B?RGZBcVovc0k4NHI4RHJLbkFUSzJUZ2ZDN0QxNkZYTFBRV1JQRFppMCtsK1pa?=
+ =?utf-8?B?UEErZURpNnlYUFRHK0RYODdIT0JVZkFSd1daSi95dzdzQUZBQVA1WWNVMGkx?=
+ =?utf-8?B?M0NnMWQ5bGs1d2g5bytkL1RwN0VVOTlRQ052Y1dtYUtpeTV0SVFiRGNqRW1M?=
+ =?utf-8?B?aDhaVEJKWS9kRUtTeHZUMys3YWlDV1F1OCtDWnNMejZDdnpFQi9ndnVoUU40?=
+ =?utf-8?B?NEhkRnRPaGdva3h6RmdxaDZwcDNvZVB0eUp5SGMzTEYxLzloSkZYZlVNU1Yy?=
+ =?utf-8?B?QXZCYWN1RlNGMm9ndlUxeStDZ3hpdkZXNSt3RjdGcW84TkVCRHBGWW5qSVg3?=
+ =?utf-8?B?NDZVTTJrYnNsdkd4SnF2eCsxTjRXUmVQMTJKS3o1M1grOXdwVm9JUndsdW9i?=
+ =?utf-8?Q?X780RPU8C9pUV6ThWRYqTZW5o?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39a8ab03-a3df-4770-49ce-08dc846c58dc
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 08:00:06.4962
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QxZmtKOuj5RpwJtPXylCegX0fwH1VmuRqGKWv/Wi8D63cQEoZveZNiiiE0OaxzFGb6KFmtkdq/gOyFFxphpSxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6308
+X-OriginatorOrg: intel.com
 
+On 2024/6/4 09:51, Lu Baolu wrote:
+> Commit <909f4abd1097> ("iommu: Add new iommu op to create domains owned
+> by userspace") added a dedicated iommu op to allocate a user domain.
+> While IOMMUFD has already made use of this callback, other frameworks
+> like vfio/type1 and vDPA still use the paging domain allocation interface.
+> 
+> Add a new interface named iommu_user_domain_alloc(), which indicates the
+> allocation of a domain for device DMA managed by user space driver. All
+> device passthrough frameworks could use this interface for their domain
+> allocation.
+> 
+> Although it is expected that all iommu drivers could implement their own
+> domain_alloc_user ops, most drivers haven't implemented it yet. Rollback
+> to the paging domain allocation interface if the iommu driver hasn't
+> implemented this op yet.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>   include/linux/iommu.h |  6 ++++++
+>   drivers/iommu/iommu.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 48 insertions(+)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7bc8dff7cf6d..6648b2415474 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -780,6 +780,7 @@ extern bool iommu_present(const struct bus_type *bus);
+>   extern bool device_iommu_capable(struct device *dev, enum iommu_cap cap);
+>   extern bool iommu_group_has_isolated_msi(struct iommu_group *group);
+>   extern struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus);
+> +struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 flags);
+>   extern void iommu_domain_free(struct iommu_domain *domain);
+>   extern int iommu_attach_device(struct iommu_domain *domain,
+>   			       struct device *dev);
+> @@ -1086,6 +1087,11 @@ static inline struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus
+>   	return NULL;
+>   }
+>   
+> +static inline struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 flags)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+>   static inline void iommu_domain_free(struct iommu_domain *domain)
+>   {
+>   }
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 9df7cc75c1bc..f1416892ef8e 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2032,6 +2032,48 @@ struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus)
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_domain_alloc);
+>   
+> +/**
+> + * iommu_user_domain_alloc() - Allocate a user domain
+> + * @dev: device for which the domain is allocated
+> + * @flags: iommufd_hwpt_alloc_flags defined in uapi/linux/iommufd.h
+> + *
+> + * Allocate a user domain which will be managed by a userspace driver. Return
+> + * allocated domain if successful, or a ERR pointer for failure.
 
---hzrqra7phcm27hy4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+do you want to mention that this is for paging domain allocation?
 
-On Tue, May 28, 2024 at 02:06:30PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> The i2c-viai2c-common.c file is used by two drivers, but is not a proper
-> abstraction and can get linked into both modules in the same configuratio=
-n,
-> which results in a warning:
->=20
-> scripts/Makefile.build:236: drivers/i2c/busses/Makefile: i2c-viai2c-commo=
-n.o is added to multiple modules: i2c-wmt i2c-zhaoxin
->=20
-> The other problems with this include the incorrect use of a __weak functi=
-on
-> when both are built-in, and the fact that the "common" module is sprinked
-> with 'if (i2c->plat =3D=3D ...)' checks that have knowledge about the dif=
-ferences
-> between the drivers using it.
->=20
-> Avoid the link time warning by making the common driver a proper module
-> with MODULE_LICENCE()/MODULE_AUTHOR() tags, and remove the __weak function
-> by slightly rearranging the code.
->=20
-> This adds a little more duplication between the two main drivers, but
-> those versions get more readable in the process.
->=20
-> Fixes: a06b80e83011 ("i2c: add zhaoxin i2c controller driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> + */
+> +struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 flags)
+> +{
+> +	struct iommu_domain *domain;
+> +	const struct iommu_ops *ops;
+> +
+> +	if (!dev_has_iommu(dev))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	ops = dev_iommu_ops(dev);
+> +	if (ops->domain_alloc_user) {
+> +		domain = ops->domain_alloc_user(dev, flags, NULL, NULL);
+> +		if (IS_ERR(domain))
+> +			return domain;
+> +
+> +		domain->type = IOMMU_DOMAIN_UNMANAGED;
+> +		domain->owner = ops;
+> +		domain->pgsize_bitmap = ops->pgsize_bitmap;
 
-Andi, I am tempted to include this in my for-current pull request this
-week. Are you okay with this or do you want to review it more closely?
+this seems to break the iommufd selftest as the mock driver sets extra
+bits in the domain->pgsize_bitmap in allocation. Override it may fail
+something in the testing. you may need to check if domain->pgsize_bitmap
+is set or use &=.
 
+static struct iommu_domain *mock_domain_alloc_paging(struct device *dev)
+{
+	struct mock_dev *mdev = container_of(dev, struct mock_dev, dev);
+	struct mock_iommu_domain *mock;
 
---hzrqra7phcm27hy4
-Content-Type: application/pgp-signature; name="signature.asc"
+	mock = kzalloc(sizeof(*mock), GFP_KERNEL);
+	if (!mock)
+		return NULL;
+	mock->domain.geometry.aperture_start = MOCK_APERTURE_START;
+	mock->domain.geometry.aperture_end = MOCK_APERTURE_LAST;
+	mock->domain.pgsize_bitmap = MOCK_IO_PAGE_SIZE;
+	if (dev && mdev->flags & MOCK_FLAGS_DEVICE_HUGE_IOVA)
+		mock->domain.pgsize_bitmap |= MOCK_HUGE_PAGE_SIZE;
+	mock->domain.ops = mock_ops.default_domain_ops;
+	mock->domain.type = IOMMU_DOMAIN_UNMANAGED;
+	xa_init(&mock->pfns);
+	return &mock->domain;
+}
 
------BEGIN PGP SIGNATURE-----
+> +		domain->ops = ops->default_domain_ops;
+> +
+> +		return domain;
+> +	}
+> +
+> +	/*
+> +	 * The iommu driver doesn't support domain_alloc_user callback.
+> +	 * Rollback to a UNMANAGED paging domain which doesn't support
+> +	 * the allocation flags.
+> +	 */
+> +	if (flags)
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +
+> +	return __iommu_domain_alloc(ops, dev, IOMMU_DOMAIN_UNMANAGED);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_user_domain_alloc);
+> +
+>   void iommu_domain_free(struct iommu_domain *domain)
+>   {
+>   	if (domain->type == IOMMU_DOMAIN_SVA)
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZeyYQACgkQFA3kzBSg
-KbYxrhAAjGLtahAsSRKZR0KV4UQzJCnGB4IHLqh5jGCTvKMNxQxfdvTSUg23MCi/
-4MmtcLezzjSmCbd6Z6Apk4za6PxzLRyeSw+rpp7imXh6RSII2QkWAodG7wyU7jir
-szjfA58A2pHdCIFcGcNziygwVx+W8kNcn2GRVNMn2NJP2EuyXS+hkMvYh6CdjOVK
-VYwkh5jeRjlUt8c2jQ5uMufQvsFF0tuYI87awEiRUSSUU1TjrJDdMfo3+L4wTusi
-9y+fNVGfaA4Bsd1bdB3Ex7K/tUCkqh+1QsStMWKiLEr/kfmvTtG7p3wsFZOvU+Rd
-dvJ5jYJ34j2aN8XsrFlf7huuNd3TFdDbAPjUV2+ty+ZznqsRi+YCmsjWticWCFs3
-nna9B05vIHjcM/4ZU2WRR3NbHJAzhtxjnxOg2HVRvE0RRPVhlTy6C86H1bUnaatK
-4KKKT7Xeh/Ounx1XenE0PAsWkOYyoLGM/TDJI67SQI3KS1rL7P2I5wycEc26CfOx
-YzRr8d7UZ0gi0jYXvEFsuNUw/kW59PcBUspGAOfqZ7gmuUafWjsAQeFHBCe6iQ0Z
-xVR/1O48JqD6neGR8VM6aNhvhSuNzTb5C9APPSAqzut2nJbY29Bj/gtvbodlejUQ
-neZtHetUCiGwmXiIW0t1xz+w3FPvD1JgwcCVYz4dfznJmZHmz14=
-=mOV+
------END PGP SIGNATURE-----
-
---hzrqra7phcm27hy4--
+-- 
+Regards,
+Yi Liu
