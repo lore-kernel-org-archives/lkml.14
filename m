@@ -1,209 +1,358 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A4683CD8;
-	Tue,  4 Jun 2024 09:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2555314387B
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717493284; cv=none; b=e6+xawip2wAC+NZc76GddpPP1jWcCNhFKCdZY0n2Hxe/ZqskJuP28XL4CKzaYi4TuD6c1gLwbI+wTexIgM008oGrRgsOxq7xy5+yEixlGg+VJL1A1MR9quRjW6ZG3Lho2T4phPP/Ru006aqK0c1y+DVag1VzOkGPRv99F1I/1yk=
+	t=1717493375; cv=none; b=jgNDYLzZ0id/bsewzLRUAm4fQ+GnSpWwpGTnF1VLSgSsXFdJ3ksllQ1X/E34yH7WohPoovrKFIhArx1gUhH88foZlFtgJuVeVKBjpqA+uBY2vUelUmZemsxyYf3X6H989mR+5bXy9mKop23VLoAwgH3aRK3CXINI31QPi7eQImk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717493284; c=relaxed/simple;
-	bh=qtV6WkWEV85Gwke+5sDv0lGuSW3BGovIvI6AmpxP6eI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z8Zbefn1SRZtlcew0HRplR9jugwzAeXvFGEx2blHMdUvFB0tvfpNXEXTCMwdyxhn1HxOXj31g+O634Ws/1OEyrL0bXpZrEHOKJNVkAsiBGTfrspTYdN/oCBk4hS/pqn984kSh+peaxEkhcgSeNrXOU4gVbmsPXJ1GgL3mpDDY8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MeJXKTTl; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717493375; c=relaxed/simple;
+	bh=Yc5jW4lxOdcDfqizFQVJgSqliOCL3B12pvN7jexmqkE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
+	 MIME-Version:References; b=rlOhB5MmVbTisVH8HS0enAMhjHIJ3++9P/sFJGKcip3y2bwnQSdAM+pmRXiTjbqvsbfWav7103JBOhitSkgws+D6uhGIQMEhaIaRAjYQsQlT973qNQSVOVIYq3vA7Frq0s3+da1T/Wd4treIoKIIHcxnjwBCnfZcI/n73c1zqTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BDSjoCzz; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MeJXKTTl"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4549HY7t001747;
-	Tue, 4 Jun 2024 09:28:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=+PBvxOT9WIZi0i2wHiWHGNA6bgAo22c3cf6fHA4qwao=;
- b=MeJXKTTlYwrL+5cKPN6czrU8CiNmuKpQy8m/s6mw1bmtN61pz9wy94xbw20QJZ6ZYOAo
- KxUzJyqVNf+MHWRYSv2EYd44Oo8vs6EYXk/Z/O7NebAIba3OTjI5fGSWcgfzIdIwvCqK
- IgNznFsKItWwzIE8JGElCyH3z9ch0FKGesPXLIQE7eFxYcFwZ72Or2Xp/GBHt1nrRO1U
- qfInxjBPkc84pMsIV+SBApcJXiZuh9hhtm2QfKdvtSB4Y4P1m49nIiFX31xNqgtvQsRl
- d2fNFZa+BDw9S/1KBjIYDS6DgfGf26GoSpDFFbuaKbuVufE/temoJz92BTyXDnr8pA5b ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj05ng0xg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 09:28:00 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4549OeoW015142;
-	Tue, 4 Jun 2024 09:28:00 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj05ng0xd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 09:28:00 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4548QNPR008458;
-	Tue, 4 Jun 2024 09:27:59 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygec0negy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 09:27:59 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4549Rusc40829440
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Jun 2024 09:27:58 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1688058065;
-	Tue,  4 Jun 2024 09:27:56 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3D0575805A;
-	Tue,  4 Jun 2024 09:27:54 +0000 (GMT)
-Received: from oc-fedora.boeblingen.de.ibm.com (unknown [9.152.212.216])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Jun 2024 09:27:54 +0000 (GMT)
-Message-ID: <b816efd7dd3d5f6fead3433d8a800c7f4372a091.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 0/3] vfio/pci: s390: Fix issues preventing
- VFIO_PCI_MMAP=y for s390 and enable it
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alex Williamson
- <alex.williamson@redhat.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew
- Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Date: Tue, 04 Jun 2024 11:27:53 +0200
-In-Reply-To: <0a4622ce-3826-4b08-ab81-375887ab6a46@linux.ibm.com>
-References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
-	 <0a4622ce-3826-4b08-ab81-375887ab6a46@linux.ibm.com>
-Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
- keydata=mQINBGHm3M8BEAC+MIQkfoPIAKdjjk84OSQ8erd2OICj98+GdhMQpIjHXn/RJdCZLa58k
- /ay5x0xIHkWzx1JJOm4Lki7WEzRbYDexQEJP0xUia0U+4Yg7PJL4Dg/W4Ho28dRBROoJjgJSLSHwc
- 3/1pjpNlSaX/qg3ZM8+/EiSGc7uEPklLYu3gRGxcWV/944HdUyLcnjrZwCn2+gg9ncVJjsimS0ro/
- 2wU2RPE4ju6NMBn5Go26sAj1owdYQQv9t0d71CmZS9Bh+2+cLjC7HvyTHKFxVGOznUL+j1a45VrVS
- XQ+nhTVjvgvXR84z10bOvLiwxJZ/00pwNi7uCdSYnZFLQ4S/JGMs4lhOiCGJhJ/9FR7JVw/1t1G9a
- UlqVp23AXwzbcoV2fxyE/CsVpHcyOWGDahGLcH7QeitN6cjltf9ymw2spBzpRnfFn80nVxgSYVG1d
- w75ksBAuQ/3e+oTQk4GAa2ShoNVsvR9GYn7rnsDN5pVILDhdPO3J2PGIXa5ipQnvwb3EHvPXyzakY
- tK50fBUPKk3XnkRwRYEbbPEB7YT+ccF/HioCryqDPWUivXF8qf6Jw5T1mhwukUV1i+QyJzJxGPh19
- /N2/GK7/yS5wrt0Lwxzevc5g+jX8RyjzywOZGHTVu9KIQiG8Pqx33UxZvykjaqTMjo7kaAdGEkrHZ
- dVHqoPZwhCsgQARAQABtChOaWtsYXMgU2NobmVsbGUgPHNjaG5lbGxlQGxpbnV4LmlibS5jb20+iQ
- JXBBMBCABBAhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAhkBFiEEnbAAstJ1IDCl9y3cr+Q/Fej
- CYJAFAmWVooIFCQWP+TMACgkQr+Q/FejCYJCmLg/+OgZD6wTjooE77/ZHmW6Egb5nUH6DU+2nMHMH
- UupkE3dKuLcuzI4aEf/6wGG2xF/LigMRrbb1iKRVk/VG/swyLh/OBOTh8cJnhdmURnj3jhaefzslA
- 1wTHcxeH4wMGJWVRAhOfDUpMMYV2J5XoroiA1+acSuppelmKAK5voVn9/fNtrVr6mgBXT5RUnmW60
- UUq5z6a1zTMOe8lofwHLVvyG9zMgv6Z9IQJc/oVnjR9PWYDUX4jqFL3yO6DDt5iIQCN8WKaodlNP6
- 1lFKAYujV8JY4Ln+IbMIV2h34cGpIJ7f76OYt2XR4RANbOd41+qvlYgpYSvIBDml/fT2vWEjmncm7
- zzpVyPtCZlijV3npsTVerGbh0Ts/xC6ERQrB+rkUqN/fx+dGnTT9I7FLUQFBhK2pIuD+U1K+A+Egw
- UiTyiGtyRMqz12RdWzerRmWFo5Mmi8N1jhZRTs0yAUn3MSCdRHP1Nu3SMk/0oE+pVeni3ysdJ69Sl
- kCAZoaf1TMRdSlF71oT/fNgSnd90wkCHUK9pUJGRTUxgV9NjafZy7sx1Gz11s4QzJE6JBelClBUiF
- 6QD4a+MzFh9TkUcpG0cPNsFfEGyxtGzuoeE86sL1tk3yO6ThJSLZyqFFLrZBIJvYK2UiD+6E7VWRW
- 9y1OmPyyFBPBosOvmrkLlDtAtyfYInO0KU5pa2xhcyBTY2huZWxsZSA8bmlrbGFzLnNjaG5lbGxlQ
- GlibS5jb20+iQJUBBMBCAA+AhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEnbAAstJ1IDCl9y
- 3cr+Q/FejCYJAFAmWVoosFCQWP+TMACgkQr+Q/FejCYJB7oxAAksHYU+myhSZD0YSuYZl3oLDUEFP
- 3fm9m6N9zgtiOg/GGI0jHc+Tt8qiQaLEtVeP/waWKgQnje/emHJOEDZTb0AdeXZk+T5/ydrKRLmYC
- 6rPge3ue1yQUCiA+T72O3WfjZILI2yOstNwd1f0epQ32YaAvM+QbKDloJSmKhGWZlvdVUDXWkS6/m
- aUtUwZpddFY8InXBxsYCbJsqiKF3kPVD515/6keIZmZh1cTIFQ+Kc+UZaz0MxkhiCyWC4cH6HZGKR
- fiXLhPlmmAyW9FiZK9pwDocTLemfgMR6QXOiB0uisdoFnjhXNfp6OHSy7w7LTIHzCsJoHk+vsyvSp
- +fxkjCXgFzGRQaJkoX33QZwQj1mxeWl594QUfR4DIZ2KERRNI0OMYjJVEtB5jQjnD/04qcTrSCpJ5
- ZPtiQ6Umsb1c9tBRIJnL7gIslo/OXBe/4q5yBCtCZOoD6d683XaMPGhi/F6+fnGvzsi6a9qDBgVvt
- arI8ybayhXDuS6/StR8qZKCyzZ/1CUofxGVIdgkseDhts0dZ4AYwRVCUFQULeRtyoT4dKfEot7hPE
- /4wjm9qZf2mDPRvJOqss6jObTNuw1YzGlpe9OvDYtGeEfHgcZqEmHbiMirwfGLaTG2xKDx4g2jd2z
- Ocf83TCERFKJEhvZxB3tRiUQTd3dZ1TIaisv/o+y0K05pa2xhcyBTY2huZWxsZSA8bmlrbGFzLnNj
- aG5lbGxlQGdtYWlsLmNvbT6JAlQEEwEIAD4CGwEFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSds
- ACy0nUgMKX3Ldyv5D8V6MJgkAUCZZWiiwUJBY/5MwAKCRCv5D8V6MJgkNVuEACo12niyoKhnXLQFt
- NaqxNZ+8p/MGA7g2XcVJ1bYMPoZ2Wh8zwX0sKX/dLlXVHIAeqelL5hIv6GoTykNqQGUN2Kqf0h/z7
- b85o3tHiqMAQV0dAB0y6qdIwdiB69SjpPNK5KKS1+AodLzosdIVKb+LiOyqUFKhLnablni1hiKlqY
- yDeD4k5hePeQdpFixf1YZclGZLFbKlF/A/0Q13USOHuAMYoA/iSgJQDMSUWkuC0mNxdhfVt/gVJnu
- Kq+uKUghcHflhK+yodqezlxmmRxg6HrPVqRG4pZ6YNYO7YXuEWy9JiEH7MmFYcjNdgjn+kxx4IoYU
- O0MJ+DjLpVCV1QP1ZvMy8qQxScyEn7pMpQ0aW6zfJBsvoV3EHCR1emwKYO6rJOfvtu1rElGCTe3sn
- sScV9Z1oXlvo8pVNH5a2SlnsuEBQe0RXNXNJ4RAls8VraGdNSHi4MxcsYEgAVHVaAdTLfJcXZNCIU
- cZejkOE+U2talW2n5sMvx+yURAEVsT/50whYcvomt0y81ImvCgUz4xN1axZ3PCjkgyhNiqLe+vzge
- xq7B2Kx2++hxIBDCKLUTn8JUAtQ1iGBZL9RuDrBy2rR7xbHcU2424iSbP0zmnpav5KUg4F1JVYG12
- vDCi5tq5lORCL28rjOQqE0aLHU1M1D2v51kjkmNuc2pgLDFzpvgLQhTmlrbGFzIFNjaG5lbGxlIDx
- uaWtzQGtlcm5lbC5vcmc+iQJUBBMBCAA+AhsBBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEnbAA
- stJ1IDCl9y3cr+Q/FejCYJAFAmWVoosFCQWP+TMACgkQr+Q/FejCYJAglRAAihbDxiGLOWhJed5cF
- kOwdTZz6MyYgazbr+2sFrfAhX3hxPFoG4ogY/BzsjkN0cevWpSigb2I8Y1sQD7BFWJ2OjpEpVQd0D
- sk5VbJBXEWIVDBQ4VMoACLUKgfrb0xiwMRg9C2h6KlwrPBlfgctfvrWWLBq7+oqx73CgxqTcGpfFy
- tD87R4ovR9W1doZbh7pjsH5Ae9xX5PnQFHruib3y35zC8+tvSgvYWv3Eg/8H4QWlrjLHHy2AfZDVl
- 9F5t5RfGL8NRsiTdVg9VFYg/GDdck9WPEgdO3L/qoq3Iuk0SZccGl+Nj8vtWYPKNlu2UvgYEbB8cl
- UoWhg+SjjYQka7/p6tc+CCPZ8JUpkgkAdt7yXt6370wP1gct2VztS6SEGcmAE1qxtGhi5Kuln4ZJ/
- UO2yxhPHgoW99OuZw3IRHe0+mNR67JbIpSuFWDFNjZ0nckQcU1taSEUi0euWs7i4MEkm0NsOsVhbs
- 4D2vMiC6kO/FqWOPmWZeAjyJw/KRUG4PaJAr5zJUx57nhKWgeTniW712n4DwCUh77D/PHY0nqBTG/
- B+QQCR/FYGpTFkO4DRVfapT8njDrsWyVpP9o64VNZP42S+DuRGWfUKCMAXsM/wPzRiDEVfnZMcUR9
- vwLSHeoV7MiIFC0xIrp5ES9R00t4UFgqtGc36DV71qjR+66Im0=
-Content-Type: text/plain; charset="UTF-8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BDSjoCzz"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240604092930euoutp01f7c6b260a7d62379d48563a5cc6f8f0e~Vwx7XT0ry2062920629euoutp01V
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:29:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240604092930euoutp01f7c6b260a7d62379d48563a5cc6f8f0e~Vwx7XT0ry2062920629euoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717493370;
+	bh=Yc5jW4lxOdcDfqizFQVJgSqliOCL3B12pvN7jexmqkE=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=BDSjoCzzKl2wP5PRsR085oX2F5IiRJBUZNq4YB4Ulm1kG+2rQaItkjW33Zk/hFQGF
+	 FL4nL+U0yqj1I7b/5PeDOXAgRy94SSPb2re1moHjwv+wAc55KUhyaO06Yj2RbnPQv/
+	 TVU26tKpajIUS57nWPKUI1CYQGdo68GELjpm2uq0=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240604092929eucas1p16ab4b299453b7079e5756d66992fff93~Vwx6x5Gf60520305203eucas1p1G;
+	Tue,  4 Jun 2024 09:29:29 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 44.0F.09624.97EDE566; Tue,  4
+	Jun 2024 10:29:29 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240604092929eucas1p220b12ab9df8d97b63d7986788a57f0f0~Vwx6Vq6-N1370913709eucas1p2x;
+	Tue,  4 Jun 2024 09:29:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240604092929eusmtrp19911c8d83e99216dd68dabc40c6e574b~Vwx6Uya8M1368113681eusmtrp1w;
+	Tue,  4 Jun 2024 09:29:29 +0000 (GMT)
+X-AuditID: cbfec7f2-bfbff70000002598-24-665ede796643
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 91.75.09010.87EDE566; Tue,  4
+	Jun 2024 10:29:28 +0100 (BST)
+Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240604092928eusmtip238958ac1606802e288b01c6821150426~Vwx6IQ2J22194621946eusmtip2v;
+	Tue,  4 Jun 2024 09:29:28 +0000 (GMT)
+Received: from CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) by
+	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) with Microsoft SMTP
+	Server (TLS) id 15.0.1497.2; Tue, 4 Jun 2024 10:29:27 +0100
+Received: from CAMSVWEXC01.scsc.local ([::1]) by CAMSVWEXC01.scsc.local
+	([fe80::7d73:5123:34e0:4f73%13]) with mapi id 15.00.1497.012; Tue, 4 Jun
+	2024 10:29:27 +0100
+From: Daniel Gomez <da.gomez@samsung.com>
+To: David Hildenbrand <david@redhat.com>
+CC: Baolin Wang <baolin.wang@linux.alibaba.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "hughd@google.com" <hughd@google.com>,
+	"willy@infradead.org" <willy@infradead.org>, "wangkefeng.wang@huawei.com"
+	<wangkefeng.wang@huawei.com>, "ying.huang@intel.com" <ying.huang@intel.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, "shy828301@gmail.com" <shy828301@gmail.com>,
+	"ziy@nvidia.com" <ziy@nvidia.com>, "ioworker0@gmail.com"
+	<ioworker0@gmail.com>, Pankaj Raghav <p.raghav@samsung.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/6] add mTHP support for anonymous shmem
+Thread-Topic: [PATCH v3 0/6] add mTHP support for anonymous shmem
+Thread-Index: AQHasjX9yP1IBMh0VkC4Fzv01OfbabGxBpEAgAA+eQCAABeXAIAF8ZEA
+Date: Tue, 4 Jun 2024 09:29:26 +0000
+Message-ID: <zz23hukm6kpguehfsxmzdtam34bj2opt63oesspwsikw57bpqy@eftgscqy3bly>
+In-Reply-To: <f0618bca-119b-417a-a19d-699084476f88@redhat.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <797394D7AE3BE04F92D50A4ED07A2A04@scsc.local>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yE8rqb7HLFBblCStVzGjDJG42WSTd8dO
-X-Proofpoint-ORIG-GUID: A2vWTWj028cwHTWVJppbX6H87F1MjySW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-04_03,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
- malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2405010000 definitions=main-2406040076
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHKsWRmVeSWpSXmKPExsWy7djP87qV9+LSDB7MlbD4fFfIYs76NWwW
+	//ceY7T4uv4Xs8XTT30sFot+G1tc3jWHzeLemv+sFj27pzJaLDixmNGi8fN9RovfP4ASJ2dN
+	ZrGYffQeuwOfx5p5axg9ds66y+6xYFOpR8uRt6wem1doeSze85LJY9OnSeweJ2b8ZvHY+dDS
+	o7f5HZvH+31X2Tw+b5IL4InisklJzcksSy3St0vgypj0ZiVLwV+riqeHnjM2MC7R62Lk5JAQ
+	MJGYuOs5UxcjF4eQwApGie/LPjNCOF8YJe4+vMUMUiUk8JlRYulVTpiO761r2SCKljNKrFx4
+	lB2u6OYLUYjEaUaJiaufs8HNffX9LSNIFZuApsS+k5vAOkQENCQ2tW0AW8EsMJdV4mB7CIgt
+	LOAgMXNxLytEjaPEjaarbBC2m8Savm4mEJtFQEWibe58sDm8Ar4S3//eAJvPKWAn0XhkP1gv
+	o4CsxKOVv9gh5otL3HoynwniBUGJRbP3MEPYYhL/dj1kg7B1JM5ef8IIYRtIbF26jwXCVpTo
+	OHaTDWKOjsSC3Z+gbEuJXy/+s0DY2hLLFr5mhrhHUOLkzCcsIM9LCGzkkjjycgMrxCAXiU93
+	Z7JD2MISr45vYZ/AqDMLyX2zkOyYhWTHLCQ7ZiHZsYCRdRWjeGppcW56arFhXmq5XnFibnFp
+	Xrpecn7uJkZgkjz97/inHYxzX33UO8TIxMF4iFGCg1lJhLevLjpNiDclsbIqtSg/vqg0J7X4
+	EKM0B4uSOK9qinyqkEB6YklqdmpqQWoRTJaJg1OqgSnFKt9U6Z73DO6G33JXqrbsT0k1FAjv
+	eMo2q9poJ0v0ty0h1f8i9AOFtdoyzE3Z9vy4vH/rHhX1W+kJsovfZVsbs54/Z/HuzYv2FjYj
+	c87KDdMZpu5jUzGtu9n6u0jjjeouvUaPvDnM3/ICZr4TbSn+4PdhjtzeBdLXI1/e+xgqYSOm
+	pyx6xzVdi+fnmRJfDt2vb098yG669ND+Wpd9x66o9VsqWUXjnK7vt3lWLOs7K/1CaNctsee9
+	3qw1jRXNH/raNmQ7tuRNTk1e8eUnR9p7dzE7jSVls+33KuqvFdKfMIs1+ryG1O0VH+9tX++r
+	9l/zEPtdPpfwrLCTm361rv0UIzW5ZG/17b18UzeKKrEUZyQaajEXFScCAGAcUuUBBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOKsWRmVeSWpSXmKPExsVy+t/xe7oV9+LSDFaut7L4fFfIYs76NWwW
+	//ceY7T4uv4Xs8XTT30sFot+G1tc3jWHzeLemv+sFj27pzJaLDixmNGi8fN9RovfP4ASJ2dN
+	ZrGYffQeuwOfx5p5axg9ds66y+6xYFOpR8uRt6wem1doeSze85LJY9OnSeweJ2b8ZvHY+dDS
+	o7f5HZvH+31X2Tw+b5IL4InSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3
+	s0lJzcksSy3St0vQy5j0ZiVLwV+riqeHnjM2MC7R62Lk5JAQMJH43rqWrYuRi0NIYCmjxJc1
+	bSwQCRmJjV+uskLYwhJ/rnVBFX1klOjo+scC4ZxmlOi7c58NpEpIYAWjxNefLiA2m4CmxL6T
+	m9hBbBEBDYlNbRuYQWxmgbmsEgfbQ0BsYQEHiZmLe1khahwlbjRdZYOw3STW9HUzgdgsAioS
+	bXPng83hFfCV+P73BiPE4gNMEitnzwYbyilgJ9F4ZD/YIEYBWYlHK3+xQywTl7j1ZD4TxAsC
+	Ekv2nGeGsEUlXj7+B/WajsTZ608YIWwDia1L90G9ryjRcewmG8QcHYkFuz9B2ZYSv178Z4Gw
+	tSWWLXzNDHGcoMTJmU9YJjDKzEKyehaS9llI2mchaZ+FpH0BI+sqRpHU0uLc9NxiI73ixNzi
+	0rx0veT83E2MwBS47djPLTsYV776qHeIkYmD8RCjBAezkghvX110mhBvSmJlVWpRfnxRaU5q
+	8SFGU2DgTWSWEk3OBybhvJJ4QzMDU0MTM0sDU0szYyVxXs+CjkQhgfTEktTs1NSC1CKYPiYO
+	TqkGpo2emWeuJjR9Lp299KfNp9/F7JcKvq/knv/hStn7d3kpHn3FF08Y9oRkWh3496K42Ou3
+	5vqfAjpHT3ondM5Ye95LaVNXYXtHHpO+dLyMt7tXgO2F6x/ymW+EXvytx2s+X6NmZlLoE/2S
+	nM6+N4Z9/nOtwoUN5nbkNJ19vnQO+7KOR0rzo4rOVn7wPR4X/KxjWon2zqX/UqYkxjJe+PXw
+	nM3jZRMsJKezlW7458AkZhZ7qS9uwSSmPIWJXF8OWm+KezQ/5rfHatuAeMY/rhbR+Rekq76f
+	PM6a+M3HY0e3odGjw8WeygkNczvbzTMnb19TI/PggcxygecxOce26sSlfIzTOdZ3UOmoWcBr
+	H+5EJZbijERDLeai4kQASv8mhAoEAAA=
+X-CMS-MailID: 20240604092929eucas1p220b12ab9df8d97b63d7986788a57f0f0
+X-Msg-Generator: CA
+X-RootMTR: 20240531093540eucas1p257ec781a06607de130ea1fff8cfa080a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240531093540eucas1p257ec781a06607de130ea1fff8cfa080a
+References: <cover.1717033868.git.baolin.wang@linux.alibaba.com>
+	<CGME20240531093540eucas1p257ec781a06607de130ea1fff8cfa080a@eucas1p2.samsung.com>
+	<f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com>
+	<vlkkfcyumveggkddb6d44f55gtx4qonoiijxyofa63mtmkuofv@uf4nbw3r5ysh>
+	<f0618bca-119b-417a-a19d-699084476f88@redhat.com>
 
-On Mon, 2024-06-03 at 17:50 +0200, Christian Borntraeger wrote:
-> Am 29.05.24 um 13:36 schrieb Niklas Schnelle:
-> > With the introduction of memory I/O (MIO) instructions enbaled in commi=
-t
-> > 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
-> > gained support for direct user-space access to mapped PCI resources.
-> > Even without those however user-space can access mapped PCI resources
-> > via the s390 specific MMIO syscalls. There is thus nothing fundamentall=
-y
-> > preventing s390 from supporting VFIO_PCI_MMAP allowing user-space drive=
-rs
-> > to access PCI resources without going through the pread() interface.
-> > To actually enable VFIO_PCI_MMAP a few issues need fixing however.
-> >=20
-> > Firstly the s390 MMIO syscalls do not cause a page fault when
-> > follow_pte() fails due to the page not being present. This breaks
-> > vfio-pci's mmap() handling which lazily maps on first access.
-> >=20
-> > Secondly on s390 there is a virtual PCI device called ISM which has
-> > a few oddities. For one it claims to have a 256 TiB PCI BAR (not a typo=
-)
-> > which leads to any attempt to mmap() it fail with the following message=
-:
-> >=20
-> >      vmap allocation for size 281474976714752 failed: use vmalloc=3D<si=
-ze> to increase size
-> >=20
-> > Even if one tried to map this BAR only partially the mapping would not
-> > be usable on systems with MIO support enabled. So just block mapping
-> > BARs which don't fit between IOREMAP_START and IOREMAP_END.
-> >=20
-> > Note:
-> > For your convenience the code is also available in the tagged
-> > b4/vfio_pci_mmap branch on my git.kernel.org site below:
-> > https: //git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
+On Fri, May 31, 2024 at 04:43:32PM +0200, David Hildenbrand wrote:
+> Hi Daniel,
 >=20
+> > > Let me summarize the takeaway from the bi-weekly MM meeting as I unde=
+rstood
+> > > it, that includes Hugh's feedback on per-block tracking vs. mTHP:
+> >=20
+> > Thanks David for the summary. Please, find below some follow up questio=
+ns.
+> >=20
+> > I want understand if zeropage scanning overhead is preferred over per-b=
+lock
+> > tracking complexity or if we still need to verify this.
+> >=20
+> > >=20
+> > > (1) Per-block tracking
+> > >=20
+> > > Per-block tracking is currently considered unwarranted complexity in
+> > > shmem.c. We should try to get it done without that. For any test case=
+s that
+> > > fail, we should consider if they are actually valid for shmem.
+> >=20
+> > I agree it was unwarranted complexity but only if this is just to fix l=
+seek() as
+> > we can simply make the test pass by checking if holes are reported as d=
+ata. That
+> > would be the minimum required for lseek() to be compliant with the sysc=
+all.
+> >=20
+> > How can we use per-block tracking for reclaiming memory and what change=
+s would
+> > be needed? Or is per-block really a non-viable option?
 >=20
-> I guess its now mostly a question of who picks those patches? Alex?
+> The interesting thing is: with mTHP toggles it is opt-in -- like for
+> PMD-sized THP with shmem_enabled -- and we don't have to be that concerne=
+d
+> about this problem right now.
 
-That matches my understanding as well.
+Without respecting the size when allocating large folios, mTHP toggles woul=
+d
+over allocate. My proposal added earlier to this thread is to combine the 2
+to avoid that case. Otherwise, shouldn't we try to find a solution for the
+reclaiming path?
 
 >=20
-> Any patch suitable for stable?
+> >=20
+> > Clearly, if per-block is viable option, shmem_fault() bug would require=
+d to be
+> > fixed first. Any ideas on how to make it reproducible?
+> >=20
+> > The alternatives discussed where sub-page refcounting and zeropage scan=
+ning.
+>=20
+> Yeah, I don't think sub-page refcounting is a feasible (and certainly not
+> desired ;) ) option in the folio world.
+>=20
+> > The first one is not possible (IIUC) because of a refactor years back t=
+hat
+> > simplified the code and also requires extra complexity. The second opti=
+on would
+> > require additional overhead as we would involve scanning.
+>=20
+> We'll likely need something similar (scanning, tracking?) for anonymous
+> memory as well. There was a proposal for a THP shrinker some time ago, th=
+at
+> would solve part of the problem.
 
-I'd almost say all but the last one may be candidates for stable. I
-found it hard to pinpoint a specific commit they fix though, hence the
-lack of Fixes tag. For the first one I'm actually not sure if e.g.
-rdma-core users could also run into this problem when they get swapped
-out as I'm not sure if the mapping is pinned there.
+It's good to know we have the same problem in different places. I'm more
+inclined to keep the information rather than adding an extra overhead. Unle=
+ss
+the complexity is really overwhelming. Considering the concerns here, not s=
+ure
+how much should we try merging with iomap as per Ritesh's suggestion.
+
+The THP shrinker, could you please confirm if it is this following thread?
+
+https://lore.kernel.org/all/cover.1667454613.git.alexlzhu@fb.com/
+
+>=20
+> For example, for shmem you could simply flag folios that failed splitting
+> during fallocate() as reclaim candidates and try to reclaim memory later.=
+ So
+> you don't have to scan arbitrary folios (which might also be desired,
+> though).
+
+Thanks for the suggestion. I'll look into this.
+
+>=20
+> >=20
+> > >=20
+> > > To optimize FALLOC_FL_PUNCH_HOLE for the cases where splitting+freein=
+g
+> > > is not possible at fallcoate() time, detecting zeropages later and
+> > > retrying to split+free might be an option, without per-block tracking=
+.
+> >=20
+> > >=20
+> > > (2) mTHP controls
+> > >=20
+> > > As a default, we should not be using large folios / mTHP for any shme=
+m, just
+> > > like we did with THP via shmem_enabled. This is what this series curr=
+ently
+> > > does, and is aprt of the whole mTHP user-space interface design.
+> >=20
+> > That was clear for me too. But what is the reason we want to boot in 's=
+afe
+> > mode'? What are the implications of not respecing that?
+>=20
+> [...]
+>=20
+> >=20
+> > As I understood from the call, mTHP with sysctl knobs is preferred over
+> > optimistic falloc/write allocation? But is still unclear to me why the =
+former
+> > is preferred.
+>=20
+> I think Hugh's point was that this should be an opt-in feature, just like
+> PMD-sized THP started out, and still is, an opt-in feature.
+
+I'd be keen to understand the use case for this. Even the current THP contr=
+ols
+we have in tmpfs. I guess these are just scenarios with no swap involved?
+Are these use cases the same for both tmpfs and shmem anon mm?
+
+>=20
+> Problematic interaction with khugepaged (that will be fixed) is one thing=
+,
+> interaction with memory reclaim (without any kind of memory reclaim
+> mechanisms in place) might be another one. Controlling and tuning for
+> specific folio sizes might be another one Hugh raised. [summarizing what =
+I
+> recall from the discussion, there might be more].
+>=20
+> >=20
+> > Is large folios a non-viable option?
+>=20
+> I think you mean "allocating large folios without user space control".
+
+Yes.
+
+>=20
+> Because mTHP gives user space full control, to the point where you can
+> enable all sizes and obtain the same result.
+
+Agree.
+
+>=20
+> >=20
+> > >=20
+> > > Also, we should properly fallback within the configured sizes, and no=
+t jump
+> > > "over" configured sizes. Unless there is a good reason.
+> > >=20
+> > > (3) khugepaged
+> > >=20
+> > > khugepaged needs to handle larger folios properly as well. Until fixe=
+d,
+> > > using smaller THP sizes as fallback might prohibit collapsing a PMD-s=
+ized
+> > > THP later. But really, khugepaged needs to be fixed to handle that.
+> > >=20
+> > > (4) force/disable
+> > >=20
+> > > These settings are rather testing artifacts from the old ages. We sho=
+uld not
+> > > add them to the per-size toggles. We might "inherit" it from the glob=
+al one,
+> > > though.
+> > >=20
+> > > "within_size" might have value, and especially for consistency, we sh=
+ould
+> > > have them per size.
+> > >=20
+> > >=20
+> > >=20
+> > > So, this series only tackles anonymous shmem, which is a good startin=
+g
+> > > point. Ideally, we'd get support for other shmem (especially during f=
+ault
+> > > time) soon afterwards, because we won't be adding separate toggles fo=
+r that
+> > > from the interface POV, and having inconsistent behavior between kern=
+el
+> > > versions would be a bit unfortunate.
+> > >=20
+> > >=20
+> > > @Baolin, this series likely does not consider (4) yet. And I suggest =
+we have
+> > > to take a lot of the "anonymous thp" terminology out of this series,
+> > > especially when it comes to documentation.
+> > >=20
+> > > @Daniel, Pankaj, what are your plans regarding that? It would be grea=
+t if we
+> > > could get an understanding on the next steps on !anon shmem.
+> >=20
+> > I realize I've raised so many questions, but it's essential for us to g=
+rasp the
+> > mm concerns and usage scenarios. This understanding will provide clarit=
+y on the
+> > direction regarding folios for !anon shmem.
+>=20
+> If I understood correctly, Hugh had strong feelings against not respectin=
+g
+> mTHP toggles for shmem. Without per-block tracking, I agree with that.
+
+My understanding was the same. But I have this follow-up question: should
+we respect mTHP toggles without considering mapping constraints (size and
+index)? Or perhaps we should use within_size where we can fit this intermed=
+iate
+approach, as long as mTHP granularity is respected?
+
+Daniel
+
+>=20
+> --=20
+> Cheers,
+>=20
+> David / dhildenb
+> =
