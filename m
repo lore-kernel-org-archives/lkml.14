@@ -1,115 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED51D149C58;
-	Tue,  4 Jun 2024 15:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A745C38396;
+	Tue,  4 Jun 2024 15:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717514946; cv=none; b=HxFnJJ0lOj5iDfjxNStthtC8rENY/ZCnIywGBTGiua68iviqjGWlx5J5tzE2FESvZXwEtm1MyfN4b24ZAkQHAJfSx4ZuC+5MGUzNsvnnaxmX6CpA2kstFabdzXfV0hsv7gPpNXbwMq6FHOOKLMtxG5zzndQzvyksDQnY61wOK/g=
+	t=1717514997; cv=none; b=jUBxuSmt7yD9WwieLg0iBkNv0Cwm/ZO1Wo6wEPowX3GBCCwtRMxx02PFfsZO+4+9kMf0bXgiGftWOYdb5C8uFW1UlQjak4PPZD87abKg0YQU8hzCnNHweAfxXURNmg1E0AdPm/ZMaxDxYEE3mGnogspiHprsarF+kqxC86aFrSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717514946; c=relaxed/simple;
-	bh=mfTb8/nIO2i2gRcje+LHHzecxszLMkpseLwAZu/HtWM=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Qjd6Y0VnjcVb4svOB57nky/jxEObx/w0xMg5O4dOtn8nf54fYF9UdtmLiL8/VudhpIbJwZq8vWIWRW+itxmxdbQ9njjDM3PZXEypQ1iDn7FqqMII3uJDgldddrQf/9L7jyKXDoP3WMRSNYwido+sKvsDOF88Rd+6O7KulUO3DLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZMYbQkL8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717514997; c=relaxed/simple;
+	bh=C14isIc+P1iK/ldU8nKQNQ5GsUEH1CTcFuGOrpxQgw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XGLK0+VNlzkm+kVozawDFZ+BmlsYsOLLhI+JLTckaCuNNgKr51QaGgDqVP7/1BHw7BfCJ/7tCo6e034Kc+93x1gyAUlgmUlZBh5B7vQEmZKkVbY5jcwIJWBofmTh00wssCTLsi7qz3t3GrOsYCD08fv7xGufmb1HmLgAFgUMWtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlTqRI1L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZMYbQkL8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4667DC4AF08;
-	Tue,  4 Jun 2024 15:29:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlTqRI1L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83031C2BBFC;
+	Tue,  4 Jun 2024 15:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717514945;
-	bh=mfTb8/nIO2i2gRcje+LHHzecxszLMkpseLwAZu/HtWM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ZMYbQkL8sB8prdLwR3LZ20wOCUuHUBC1pSjXFiEkqhcr8dOYg+pUW2WMGGDgVpKM8
-	 oBJ8q9525y6f+Ay8GFp6ope2Hw19AJWo19jO3wrWWBq5kylKbCJqrl3SKKG9t9HoVv
-	 4UcRnt+Cju03IvM7ewve7DnPEdcnLx1IDFuyDmWzQL0I2ly7ZHoImmEYHiYRyZYKZr
-	 NLj1lj4Bx4sLEyJCuoXovBdrsLGKfNyJE06zQWJ4PHmLE1xjIAQeiGnor29Q5/sGy1
-	 9GGMMDkKFMCkY9fp6fFIUYiYoeo5Ad8qqguX6GqAenWAc68KEJXk3F0kzOawO2/NMh
-	 drtst/bT3P/Vw==
-Date: Tue, 04 Jun 2024 10:29:03 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1717514997;
+	bh=C14isIc+P1iK/ldU8nKQNQ5GsUEH1CTcFuGOrpxQgw4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mlTqRI1LNEJ6rKXTKRWw7KUeeyl/GM+DZ3olfHmt2SkLTXWRn/aLmnJefLwdA2voo
+	 eBhjvMCMKefDeWLlWOKZ2HJr3H7EC2MPF9d6KnM2lnVuLGS87W4jpS5dQUK+ktjaRk
+	 H6l7a2z64tPEfYJEmaMERg5/TeSjxrWmODhrqixUVN5k4sJo4SKLqlptSqGkogmFAs
+	 8blKMwWPhWWWlZyaYvLWtLlcLL6sWnY07E4oZUxKvu1gzHbkssoC4nrK0tzgbyMKTM
+	 lBzoZXoamn45w0x/lR6Trik4AThLJ0a688DBG0xqJfP39lXvnsuBJZNVSjFsfUeuXY
+	 fX2sou7dzV/Hw==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Patrick Havelange <patrick.havelange@essensium.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] counter: ftm-quaddec: add missing MODULE_DESCRIPTION() macro
+Date: Wed,  5 Jun 2024 00:29:25 +0900
+Message-ID: <171751489612.794006.17943846980351481989.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240602-md-ftm-quaddec-v1-1-1bbdf705ad31@quicinc.com>
+References: <20240602-md-ftm-quaddec-v1-1-1bbdf705ad31@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Alexey Klimov <alexey.klimov@linaro.org>, stable@vger.kernel.org, 
- Caleb Connolly <caleb.connolly@linaro.org>, linux-arm-msm@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-In-Reply-To: <20240604-rb12-i2c2g-pio-v1-0-f323907179d9@linaro.org>
-References: <20240604-rb12-i2c2g-pio-v1-0-f323907179d9@linaro.org>
-Message-Id: <171751455130.786440.9645536291683303071.robh@kernel.org>
-Subject: Re: [PATCH 0/2] arm64: dts: qcom: switch RB1 and RB2 platforms to
- i2c2-gpio
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=472; i=wbg@kernel.org; h=from:subject:message-id; bh=82o0fVij14ivELuN2t+845WpXw79WOc8i9daX3vtnEs=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDGnxRrM3zWdz4052V5X7oOln8upX2KrY/gJlj6ebtq4+/ ffRhhMJHaUsDGJcDLJiiiy95mfvPrikqvHjxfxtMHNYmUCGMHBxCsBE5nQz/A888My93VKeiS3i DIvXwzmHFszOF13wn/nOQsXZbvX8jyIZ/tewXU7Y6DfLdLK/EbOJ+vX06U+1k8JW6T1Ut/vp41u lwwQA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 
 
-On Tue, 04 Jun 2024 13:14:57 +0300, Dmitry Baryshkov wrote:
-> On the Qualcomm RB1 and RB2 platforms the I2C bus connected to the
-> LT9611UXC bridge under some circumstances can go into a state when all
-> transfers timeout. This causes both issues with fetching of EDID and
-> with updating of the bridge's firmware.
+On Sun, 02 Jun 2024 15:05:20 -0700, Jeff Johnson wrote:
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/counter/ftm-quaddec.o
 > 
-> While we are debugging the issue, switch corresponding I2C bus to use
-> i2c-gpio driver. While using i2c-gpio no communication issues are
-> observed.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
-> Dmitry Baryshkov (2):
->       arm64: dts: qcom: qrb2210-rb1: switch I2C2 to i2c-gpio
->       arm64: dts: qcom: qrb4210-rb2: switch I2C2 to i2c-gpio
-> 
->  arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 13 ++++++++++++-
->  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 13 ++++++++++++-
->  2 files changed, 24 insertions(+), 2 deletions(-)
-> ---
-> base-commit: 0e1980c40b6edfa68b6acf926bab22448a6e40c9
-> change-id: 20240604-rb12-i2c2g-pio-f6035fa8e022
-> 
-> Best regards,
-> --
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
+> Add the missing invocation of the MODULE_DESCRIPTION() macro.
 > 
 > 
 
+Applied, thanks!
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+[1/1] counter: ftm-quaddec: add missing MODULE_DESCRIPTION() macro
+      commit: b84dba784fcb44d142bcc49effbb27244fe782cc
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y qcom/qrb2210-rb1.dtb qcom/qrb4210-rb2.dtb' for 20240604-rb12-i2c2g-pio-v1-0-f323907179d9@linaro.org:
-
-arch/arm64/boot/dts/qcom/qrb2210-rb1.dtb: /: i2c2-gpio: {'compatible': ['i2c-gpio'], 'sda-gpios': [[25, 6, 0]], 'scl-gpios': [[25, 7, 0]], '#address-cells': [[1]], '#size-cells': [[0]], 'status': ['okay'], 'clock-frequency': [[400000]], 'hdmi-bridge@2b': {'compatible': ['lontium,lt9611uxc'], 'reg': [[43]], 'interrupts-extended': [[25, 46, 2]], 'reset-gpios': [[25, 41, 0]], 'vdd-supply': [[107]], 'vcc-supply': [[108]], 'pinctrl-0': [[109, 110]], 'pinctrl-names': ['default'], '#sound-dai-cells': [[1]], 'ports': {'#address-cells': [[1]], '#size-cells': [[0]], 'port@0': {'reg': [[0]], 'endpoint': {'remote-endpoint': [[111]], 'phandle': [[92]]}}, 'port@2': {'reg': [[2]], 'endpoint': {'remote-endpoint': [[112]], 'phandle': [[106]]}}}}} is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-arch/arm64/boot/dts/qcom/qrb4210-rb2.dtb: /: i2c2-gpio: {'compatible': ['i2c-gpio'], 'sda-gpios': [[43, 6, 0]], 'scl-gpios': [[43, 7, 0]], '#address-cells': [[1]], '#size-cells': [[0]], 'status': ['okay'], 'clock-frequency': [[400000]], 'hdmi-bridge@2b': {'compatible': ['lontium,lt9611uxc'], 'reg': [[43]], 'interrupts-extended': [[43, 46, 2]], 'reset-gpios': [[43, 41, 0]], 'vdd-supply': [[178]], 'vcc-supply': [[179]], 'pinctrl-0': [[180, 181]], 'pinctrl-names': ['default'], '#sound-dai-cells': [[1]], 'ports': {'#address-cells': [[1]], '#size-cells': [[0]], 'port@0': {'reg': [[0]], 'endpoint': {'remote-endpoint': [[182]], 'phandle': [[127]]}}, 'port@2': {'reg': [[2]], 'endpoint': {'remote-endpoint': [[183]], 'phandle': [[177]]}}}}} is not of type 'array'
-	from schema $id: http://devicetree.org/schemas/gpio/gpio-consumer.yaml#
-arch/arm64/boot/dts/qcom/qrb2210-rb1.dtb: i2c2-gpio: $nodename:0: 'i2c2-gpio' does not match '^i2c(@.*|-[0-9a-z]+)?$'
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
-arch/arm64/boot/dts/qcom/qrb2210-rb1.dtb: i2c2-gpio: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'clock-frequency', 'hdmi-bridge@2b' were unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
-arch/arm64/boot/dts/qcom/qrb4210-rb2.dtb: i2c2-gpio: $nodename:0: 'i2c2-gpio' does not match '^i2c(@.*|-[0-9a-z]+)?$'
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
-arch/arm64/boot/dts/qcom/qrb4210-rb2.dtb: i2c2-gpio: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'clock-frequency', 'hdmi-bridge@2b' were unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-gpio.yaml#
-
-
-
-
-
+Best regards,
+-- 
+William Breathitt Gray <wbg@kernel.org>
