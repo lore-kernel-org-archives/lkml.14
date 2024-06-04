@@ -1,138 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA8B2F25;
-	Tue,  4 Jun 2024 20:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8718F1422DE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 20:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717532096; cv=none; b=VdxCy+SqQo/MYNeqbfpFvG9K28NhPddlYaHYAAOUvXCCWIXFvWNgYb0CZkoBEeohHHMRZC0ghsn1KyYSXiQK9QzuGf8PWVLpaKVsCao+S5mvy5mBDdmnuMvJLJqedCKCvG2Nzv/2NS8E1YqekR76AFxskxkGn+Wu/BsVSlbg/Gs=
+	t=1717532128; cv=none; b=Lw15gQXK+hdQpIBgjbAJDU5ScfyHgZTyAYdm32L/N/JrXYYVxm+6Elj56vd9BRLIzorVsKlrjKEm17wcbNEU1wnQ7slVcbtJhkI3ApRDiwTRzwCzr4xfdYZoSUoBS+gXbR/sAkYSUlwyewhEPxn6fK1FykkhMcJf/RNAcZuvlR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717532096; c=relaxed/simple;
-	bh=1dJyobrXgBY+x5j48CVCOANJ3cfEJFSAQaYi7nvuypo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=JFwSDfEZFdXvSCmCPaD9O9D8N7+QFnGoPBkYbm81JEhX35y/kqPn1NF8HZVUryghkO2sZnzELIRWEeaQQIu3x+WofE24oKOuA3FANMp9MaX5xEAHTasyaPfVjRJ4r2tOBsHkQ3VVstKkEB21iu9rQfU8ZO3wh74B1ibBriN6t80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9K/+UVI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717532128; c=relaxed/simple;
+	bh=843Pxj9q/wszPDCTdOObwl7gl9BDaaPWFGEg1gnkF10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UR7HzPQm95U3C8RFrKDpXSNsbNwcbQdvOrOHZclezZzTFAGAEJj1qVmo9OHvBc1DjXDi5XcJ+IQKA8C9q39P6tx4Xd5cEMnTuJM1akRKAwIZWNM2WlP6/mzNBZVee3eMISvSSVwPyso+SchIG7mxpZ4gbkkzSiyoTosHxS1uNw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Beev9rSt; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9K/+UVI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24356C2BBFC;
-	Tue,  4 Jun 2024 20:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717532095;
-	bh=1dJyobrXgBY+x5j48CVCOANJ3cfEJFSAQaYi7nvuypo=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=F9K/+UVI55Cki+Zo9OV87c2eeM0ifYp6hzMMXIULk9SS+odlEkpfVLeUXP4r+oQI6
-	 wfMGyaFnOX6GdfRpZY9TJNS1oJsfXJZ/IJX+nmhl0yKUw8hVNf0D8m74ltEtcmCyco
-	 Ibm1AFdqcrhjN2qr54RkgXTWstymQme4U/+2ZmqA9Nh5hJlq/w8xFHYQXLWKvwZMST
-	 jTybqZsrdfgundyOcDQUAtKTV3IprZxJLaq7OYxtGU3mYBJCYfOw9B6zyfb3iCJ1tI
-	 QImFf84vT1cJ8PQjS/IYtU0wuNW911HYfxYBIB0HbKIa2FXKYvJiHgBoDofVRq/bSK
-	 tkhBei/QCWaHA==
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Beev9rSt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=80M9
+	/oFeQrdHA5qzmIt/EiiNd4PHMkgSxg0oOqw3y5U=; b=Beev9rStyx1sTek2gs0e
+	VVLK3gieGjFU6iGVBwpNVS9US/BFN25KxB6txKVv7eTWTkoIzuXH+7CJtv/ipJJu
+	zzCIh9x9Avn1dZ8u4x7O6oUcHRrb4GqPWPHfsrYopdtQkOyPlI8DQr9VWHyhM4kg
+	coh1nGvp2+kzJ1rFxm3cFXDcjLfBsyYwiOJVm11uzw9JxBt69UCMmeNT9qd0FUAG
+	/IWdEpDNS+/Shc4PlipLA850UO1CnSSqFXk8j6GUZnwEa8MNT65VnTfvXMGfIONz
+	tfC7BC5EqEa8rcyHfl/dTFM4jYdJ77QoyhhIpeNm9Vaso3BZgmzbuv1PO72/8Jvj
+	gA==
+Received: (qmail 2434857 invoked from network); 4 Jun 2024 22:08:41 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 22:08:41 +0200
+X-UD-Smtp-Session: l3s3148p1@VjAmBBYawNFehhtB
+Date: Tue, 4 Jun 2024 22:08:41 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: linux-renesas-soc@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] i2c: smbus: fix NULL function pointer dereference
+Message-ID: <bk6rgqfcn5op5iuojoisogvtrp24ldblgkq4g62ffr4z7wnzug@xlp3ce5bx7bs>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Jean Delvare <jdelvare@suse.de>, linux-renesas-soc@vger.kernel.org, 
+	Baruch Siach <baruch@tkos.co.il>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Rosin <peda@axentia.se>
+References: <20240426064408.7372-1-wsa+renesas@sang-engineering.com>
+ <1e626d93f4220cc348300bbc61089de32300122d.camel@suse.de>
+ <b2tnimag62ty6wndyjsy7u5fay6y52zn47vvifw6rh5abeqzpu@pqyyczutxcwu>
+ <20240604171113.232628f9@endymion.delvare>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4bhsazqdizvel7kz"
+Content-Disposition: inline
+In-Reply-To: <20240604171113.232628f9@endymion.delvare>
+
+
+--4bhsazqdizvel7kz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Jun 2024 23:14:47 +0300
-Message-Id: <D1RIB8BHWRC5.3RRW0ZKV3KDVM@kernel.org>
-Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
- <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
- <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
- <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
- <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
- <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
- <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
- <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
- <trenchboot-devel@googlegroups.com>
-Subject: Re: [PATCH v9 14/19] tpm: Ensure tpm is in known state at startup
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Ross Philipson" <ross.philipson@oracle.com>,
- <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
- <linux-integrity@vger.kernel.org>, <linux-doc@vger.kernel.org>,
- <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
- <linux-efi@vger.kernel.org>, <iommu@lists.linux-foundation.org>
-X-Mailer: aerc 0.17.0
-References: <20240531010331.134441-1-ross.philipson@oracle.com>
- <20240531010331.134441-15-ross.philipson@oracle.com>
-In-Reply-To: <20240531010331.134441-15-ross.philipson@oracle.com>
 
-On Fri May 31, 2024 at 4:03 AM EEST, Ross Philipson wrote:
-> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
->
-> When tis core initializes, it assumes all localities are closed. There
+Hi Jean,
 
-s/tis_core/tpm_tis_core/
+> Note that we still want I2C_FUNC_I2C to be set properly, because it
+> allows device drivers to optimize transfers (the at24 driver is a prime
+> example of that) or even just to bind to the I2C bus (for device
+> drivers which properly check for it).
 
-> are cases when this may not be the case. This commit addresses this by
-> ensuring all localities are closed before initializing begins.
->
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
->  drivers/char/tpm/tpm_tis_core.c | 11 ++++++++++-
->  include/linux/tpm.h             |  6 ++++++
->  2 files changed, 16 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
-ore.c
-> index 7c1761bd6000..9fb53bb3e73f 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -1104,7 +1104,7 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
->  	u32 intmask;
->  	u32 clkrun_val;
->  	u8 rid;
-> -	int rc, probe;
-> +	int rc, probe, i;
->  	struct tpm_chip *chip;
-> =20
->  	chip =3D tpmm_chip_alloc(dev, &tpm_tis);
-> @@ -1166,6 +1166,15 @@ int tpm_tis_core_init(struct device *dev, struct t=
-pm_tis_data *priv, int irq,
->  		goto out_err;
->  	}
-> =20
-> +	/*
-> +	 * There are environments, like Intel TXT, that may leave a TPM
+I agree. We definitely want I2C_FUNC_I2C to be set and make use of it as
+much as possible. We should just not completely rely on it.
 
-What else at this point than Intel TXT reflecting the state of the
-mainline?
+> > (There is a CVE for it??) For Baruch's case, this is true. But there are
+> > __i2c_transfer users all over the tree, they are all potentially
+> > vulnerable, or?
+>=20
+> Yes there are many, but I think we shall differentiate between 2 cases:
+> * Missing check in a specific kernel device driver. These are unlikely
+>   to be a problem in practice because (1) these devices are typically
+>   instantiated explicitly, and such explicit code or device tree
+>   description would not exist in the first place if said device was not
+>   compatible with said I2C bus, and (2) if such an incompatibility was
+>   really present then it would have been spotted and fixed very
+>   quickly. Arbitrary binding through sysfs attributes is still possible
+>   but would definitely require root access and evil intentions (at
+>   which point we are screwed no matter what). I'm honestly not worried
+>   about this scenario.
 
-> +	 * locality open. Close all localities to start from a known state.
-> +	 */
-> +	for (i =3D 0; i <=3D TPM_MAX_LOCALITY; i++) {
-> +		if (check_locality(chip, i))
-> +			tpm_tis_relinquish_locality(chip, i);
-> +	}
+OK, can be argued.
 
-To be strict this should be enabled only for x86 platforms.
+> * The issue being triggered from user-space through i2c-dev, which is
+>   what Baruch reported. The user doing that can target any arbitrary
+>   I2C bus and thus cause the oops by accident or even on purpose. For
+>   me this is what CVE-2024-35984 is about. What limits the attack
+>   surface here is that slave-only I2C buses are rare and you typically
+>   need to be root to use i2c-dev. But this is still a serious issue.
 
-I.e. should be flagged.
+Agreed.
 
-> +
->  	/* Take control of the TPM's interrupt hardware and shut it off */
->  	rc =3D tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
->  	if (rc < 0)
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index c17e4efbb2e5..363f7078c3a9 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -147,6 +147,12 @@ struct tpm_chip_seqops {
->   */
->  #define TPM2_MAX_CONTEXT_SIZE 4096
-> =20
-> +/*
-> + * The maximum locality (0 - 4) for a TPM, as defined in section 3.2 of =
-the
-> + * Client Platform Profile Specification.
-> + */
-> +#define TPM_MAX_LOCALITY		4
-> +
->  struct tpm_chip {
->  	struct device dev;
->  	struct device devs;
+> Also note that the first case could happen ever since __i2c_transfer()
+> was introduced (kernel v3.6, commit b37d2a3a75cb) and is not limited to
+> slave-only adapters, as any SMBus-only i2c_adapter would also be
+> vulnerable.
+
+Which makes handling this gracefully even more important.
+
+> So the "Fixes:" tag in commit 91811a31b68d is incorrect for both
+> scenarios.
+
+Ack. Sorry! :)
+
+> > gracefully because kicking off I2C transfers is not a hot path. Maybe we
+> > could turn the dev_dbg into something louder to make people aware that
+> > there is a bug?
+>=20
+> My previous message initially had a suggestion in that direction ;-)
+> but I first wanted your opinion on the check itself. dev_dbg() is
+> definitely not appropriate for a condition which should never happen
+> and implies there's a bug somewhere else. A WARN_ON_ONCE would probably
+> be better, so that the bug gets spotted and fixed quickly.
+
+So, are you okay with keeping the check where it is now and turning the
+dev_dbg into WARN_ON_ONCE? I am.
+
+All the best,
+
+   Wolfram
 
 
-BR, Jarkko
+--4bhsazqdizvel7kz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZfdEUACgkQFA3kzBSg
+Kba6Tw//ZXtwgs1Z64LmhwEfpaTqY+W5nFX6jknwWjmZovfxNwQw8d/YqCuQKKfP
+07P18mNfynJxN/H/QQZi6QW4XSyW0vEv18co4QNmW9YRRWRcyT18U0Onhf4NzwH2
+uZBta6T2zoPiCAAiALKUCXCg1KTG0rm2usWZzuBG6dtlNnTQtmbNj6GyqTg9+NkB
+i5Il7D9Vq2OvryNAe0dBgJYbd58rESLNeTYk99+4vqzR+bzTt3DPWvwuFa8JBEaH
+RvQHHEMxYol3Jdp60WwRaWDIvMvFdVT6qmxkrSZDTLGSw3VwZdJ+YMY1B2dPAXPr
+JFPwNEQftVaf7uRFj7lsBqgtzHkDtvAWbJtZP4DCdaMPOZKSV4oc0qm4iF8MV/Oj
+jtBWFEJ68H4DCd89l2Y4I5EbA8eTpDRHQNLsjI7cMw5+bg8/z71rqSLa5nLNetLY
+roHH/3+hMvOACaxKxv7EVGGZXoSfTid/hp7CpSciiwcI5h8uFkEnw3QHWgyS7b7v
+EORXybfUyv/CCPJNybhoJdCsupmtFohn48NiWr1fVcvpCimvpiTatXuBP7uuOspN
+EwqUW31YYobHybDmaIhD7DetIWPwGMZItcztkUfM3T7LbWFxGh44mbmGdfEobscT
+AW0o7GioHbwSeU78vAUrjje8hVmmQwJE1DQ8gda/RtmFmjQEmoY=
+=8vSS
+-----END PGP SIGNATURE-----
+
+--4bhsazqdizvel7kz--
