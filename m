@@ -1,113 +1,107 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C6913D29F;
-	Tue,  4 Jun 2024 10:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A6D143C72
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717495703; cv=none; b=CnmXIGj6cU8HExr2bhXmcJ71LzOuX51Ucbqv4/yQa5uQ85sCiVY2c0YZRnjsw0xLmxCgBYFxcnBtHj4VU7TLOutWtycxApbJSNDlw3rtxX1AfkEWF8B5yTsMUKEbK5eAtGo6tYs7R0010lZORhTXDX0VfaIT1IVgRhRmSQGEsCQ=
+	t=1717495891; cv=none; b=W6E9cDhfhfnZ1sYMFrVcqhmLTI3b8Pvvd6e26D/0GJcK+MMvWoUtMC0aszbMAu40eaoc39lvmq194f/KWi7tJNu390uVFqr45E668K8eyp3er08LA+TbeL/E2r17PYPcgBpiIujwXdnp15m/MzvGGIMmJG2b4LAGR24puKHsV9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717495703; c=relaxed/simple;
-	bh=6avz5LUZ/inR3Uyxtt0j62Bs3F4d8DO/HyEZ6uiBHac=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lk971raWZjq02e5YwdWFg4jSiyb12EamFF+PJzca3+fFMNyrHrQJIs5j4wJyzDYlboW/Z2yUeK9vhiwm1X/Y9ucENN+P7Df4j78R7CTdSjJ50BQo0b3xV1ZTE7vJpLesgkY9m9xhc4oe9qNOIBQIWX4VwE96CR4KibP/dHucpLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=dH0pYbAs; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1717495891; c=relaxed/simple;
+	bh=Q5FhSAKmhTtyMKkX3TGPlAag5uc3ZeJc0glHX5zdRBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JrXsjHPb+AQ225w0RsePWsb1QnAIA5S4av7Mg2IRzUhDrpdQ/TM1v2AFudwc1ptSCJ2o9yW1rxmQd5vkSrIuZ0p/WCH/wZN5XKDVYi0KykMzkHGqGQTWHU8a7l03i9KDCtT9VIAsVIBQRuYdNEcmSi8/wvBR7Fs8ojxpdYkM1xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XIAwUZ2K; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="dH0pYbAs"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 56B52100002;
-	Tue,  4 Jun 2024 13:07:59 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1717495679; bh=8vE6tl+i2CQkzPeTqs79Tzdv02wtzECjp6uIUogF75g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=dH0pYbAsiDnGl6HYNaimqToe8De/PssZVo8Q8q2TmQ765dUJbpsqpCnmySq16fpo3
-	 /qcIpb9REOCOV8u/yT4W65KapglTZ/0y0qUC8Xj3LlC1V4Qy0+h0WUADdakg5YXo5a
-	 Za5DO73w4bXlYi6Doxw1PH83XVHNOwPSC6IdRNnR+ckGq+pr/tPnPLzAIpSUPpzgLc
-	 KzvwEYscSmOoXAd6nqr1XeGIFkDji1Mgcyd2LvN+Vi4GiAEayVsukYl6Fc6076Fw0b
-	 5UEOh2lt64trvM0I9yWleEpez6qj/W2aXFHvavNj9NyXEByueVBo3A64zbaPR9OJwr
-	 JbJgc//eVcfKw==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Tue,  4 Jun 2024 13:06:20 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Jun 2024
- 13:06:00 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Mark Bloch <mbloch@nvidia.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maor Gottlieb
-	<maorg@nvidia.com>, Jacob Keller <jacob.e.keller@intel.com>, Shay Drory
-	<shayd@nvidia.com>, Jianbo Liu <jianbol@nvidia.com>, Jinjie Ruan
-	<ruanjinjie@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net] net/mlx5: Fix tainted pointer delete is case of flow rules creation fail
-Date: Tue, 4 Jun 2024 13:05:52 +0300
-Message-ID: <20240604100552.25201-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XIAwUZ2K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ATGlkKEngE3eomrKUxqxHcflBPoRWqyoqgF1HGqQ1pQ=; b=XIAwUZ2Kh6rGtNHJMU4EVNN+t2
+	0sHDUb30n7mCdT61O1ARapfiPxD/b+bK9SmH9OOX94PlnuIcZUdgmrlfYde4A2kUnG8SSt5S9Ei8k
+	s37edxtQFQ+ejjVD55iQm5D8ukUYt3oj7uTDN/Gaklgj9jCIXPm93fY+oBh0d9iBY9EQtHEYX4+3k
+	06G4FdQ19YNfG6tNrfzjE9k5bzyZ4s8zYPPTNkwfz0/u8+reGy1yB2IKXSKcWOPri/TrticA2TiXJ
+	k7R/BIZNk6RRImWH9KVuhOkzl12BQHkGpbXlBWaruSGojAaA3LzBOOcjfsmtWGq/UQpF3kE9LCEsT
+	gFYcncCQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sER8I-0000000Ekl8-2O6v;
+	Tue, 04 Jun 2024 10:11:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 93C9F30068B; Tue,  4 Jun 2024 12:11:07 +0200 (CEST)
+Date: Tue, 4 Jun 2024 12:11:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Luis Machado <luis.machado@arm.com>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
+	wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de,
+	nd <nd@arm.com>, John Stultz <jstultz@google.com>,
+	Hongyan.Xia2@arm.com
+Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
+Message-ID: <20240604101107.GO26599@noisy.programming.kicks-ass.net>
+References: <20240405110010.631664251@infradead.org>
+ <3888d7c8-660e-479c-8c10-8295204e5f36@arm.com>
+ <1461277e-af68-41e7-947c-9178b55810b1@arm.com>
+ <20240425104220.GE21980@noisy.programming.kicks-ass.net>
+ <20240425114949.GH12673@noisy.programming.kicks-ass.net>
+ <20240426093241.GI12673@noisy.programming.kicks-ass.net>
+ <c6152855-ef92-4c24-a3f5-64d4256b6789@arm.com>
+ <2fba04b0-e55e-41f4-8b7a-723734fe1ad2@arm.com>
+ <20240529225036.GN40213@noisy.programming.kicks-ass.net>
+ <7eac0774-0f9d-487c-97b6-ab0e85f0ae3a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185699 [Jun 04 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/04 07:46:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/04 05:43:00 #25435061
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7eac0774-0f9d-487c-97b6-ab0e85f0ae3a@arm.com>
 
-In case of flow rule creation fail in mlx5_lag_create_port_sel_table(),
-instead of previously created rules, the tainted pointer is deleted
-deveral times.
-Fix this bug by using correct flow rules pointers.
+On Mon, Jun 03, 2024 at 08:30:43PM +0100, Luis Machado wrote:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Exchanging some information with Hongyan today, he was a bit suspicious of the uclamp
+> behavior with the eevdf complete series applied.
+> 
+> Checking the uclamp code, I see we have some refcounting tied to enqueuing/dequeuing
+> of tasks, and the uclamp values are organized in buckets.
+> 
+> Just for fun I added a few trace_printk's in uclamp_eff_value, uclamp_rq_inc_id and
+> uclamp_rq_dec_id.
+> 
+> Booting up the system with delayed_dequeue disabled and running the benchmark, I 
+> see the uclamp bucket management pretty stable. Tasks get added to the uclamp
+> buckets but then get removed. At the end of the benchmark, the uclamp buckets
+> are (almost always) clean of tasks.
+> 
+> Enabling delayed dequeue, I can see the uclamp buckets slowly filling up with
+> tasks. At the end of the benchmark, I see uclamp buckets with 30, 40 or 50
+> tasks still. If I do another run, I can see 80, 100 tasks still.
+> 
+> I suspect refcounting might be going wrong somewhere due to delayed dequeue
+> tasks, but that's more of a guess right now. Hopefully that is useful
+> information. I'll resume investigation tomorrow.
 
-Fixes: 352899f384d4 ("net/mlx5: Lag, use buckets in hash mode")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Thank you both!!
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c b/drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c
-index c16b462ddedf..ab2717012b79 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lag/port_sel.c
-@@ -88,9 +88,13 @@ static int mlx5_lag_create_port_sel_table(struct mlx5_lag *ldev,
- 								      &dest, 1);
- 			if (IS_ERR(lag_definer->rules[idx])) {
- 				err = PTR_ERR(lag_definer->rules[idx]);
--				while (i--)
--					while (j--)
-+				do {
-+					while (j--) {
-+						idx = i * ldev->buckets + j;
- 						mlx5_del_flow_rules(lag_definer->rules[idx]);
-+					}
-+					j = ldev->buckets;
-+				} while (i--);
- 				goto destroy_fg;
- 			}
+Does the below help?
+
+Note how dequeue_task() does uclamp_rq_dec() unconditionally, which is
+then not balanced in the case below.
+
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3664,6 +3664,7 @@ static int ttwu_runnable(struct task_str
+ 			/* mustn't run a delayed task */
+ 			SCHED_WARN_ON(task_on_cpu(rq, p));
+ 			enqueue_task(rq, p, ENQUEUE_DELAYED);
++			uclamp_rq_inc(rq, p);
  		}
--- 
-2.30.2
-
+ 		if (!task_on_cpu(rq, p)) {
+ 			/*
