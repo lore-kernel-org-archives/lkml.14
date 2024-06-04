@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EEB13E888;
-	Tue,  4 Jun 2024 06:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB513F00B;
+	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482600; cv=none; b=d4Exzy+3gm2oe6n4sxie1aERh2Q+64DREsVn55GCcb2hkcRCg7kG+WIPaPWnebjxbwDma+k44HiXpIg/Bf3nvGuPloOeA+b2GwlYIL3xXU2ts6ojVa1r3W8Ua4KnXJ6d++Kff2ZvNWO8AuF5H6lT6NjO+b1b62pDLOu6J7r8dOE=
+	t=1717482600; cv=none; b=CranHYsDU7Sku8pVk/5hUb91u6a38bu6UymyQLIeMDtBoJmG4kmxmHxtvQGROzV6Vd0S7H4nrDbozMJKGfQC1J7Suj9ZZYse0UkLgCO/qA527ytsiFjp/8q2V+oNeyM1OrSygK1XmdkupKeDLVR2MBajr7jlOFIDdxEHrRdpq2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717482600; c=relaxed/simple;
-	bh=+9m/xQlKsI8pqumJbCIgfUOr4dYZwdwxkZ7BbsD0p9w=;
+	bh=SiVUhtxONKQWX+BBZwI127KwpXG2Q3vZOfxEJQppcWk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b3b05F5fiUZ9QKJhMpUR4f3pntiSFktJHpRDrMAg3pVdjOdSWxssua3r6+gWjWgM3uPJ1j0khSGprzmqn5u3zIk5GlXBeIkyBkqQ0zg2Peje867brjLvcFizfBZrGQzL5yIS2Dc44ZuOJwmeKueYkicbpTESF7GOlMBXSi+7VvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cypzoF8H; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=aTPjr08EU30OsYxEJaA8/kBvA7qYA24drM+cYqyagj+qklaIHwd7ASDWYTFwcK+xQUSnzuRMx1rSjg8JeksyIh7ev3hEmBjTdhpbZHIewkcxHFjd4r1HfEIrquA0BR99bDmZRfnqbejGoaJwR/t3aZ1+9i4LZL9u2dHB5D9V8iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pA4dmeog; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cypzoF8H"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C6F46C4AF0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pA4dmeog"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AEBC7C4AF09;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717482599;
-	bh=+9m/xQlKsI8pqumJbCIgfUOr4dYZwdwxkZ7BbsD0p9w=;
+	bh=SiVUhtxONKQWX+BBZwI127KwpXG2Q3vZOfxEJQppcWk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=cypzoF8HBNiKPC2nUW6/CDayI/9sb7tk1EtuIsF5LNkC/Vvb+lntmVYJEU2yPN3dA
-	 Ywxo0gc6flAZv29VpNp3LTsFajnFwGDogaqn6kUhNBrkFgUN3kNw2mvICiomWHaW1o
-	 N+5Gyr8ievMcOl/NAHnguvAJGOeRS/NOsViAWyNA+2fmH116RFJjF2A3licAft8U4L
-	 WcJb4OJewURJ4scZFVIoFS4fPM5kEwyLzJJLmbsLKAa3s1isHrTUfrwnxbG43DDnxT
-	 rsIt5LYSNnfJ5gvdtg0Bz7jZDaJltPCZITDdFXU3HuLeQl12etRnAYp0XrWrxis/B0
-	 kvFEyjLzYCWdg==
+	b=pA4dmeogTARSZfUZ/Gh9KHrzmf7wDP8GqwUGhu5YY1UfYSpIYx7Ne3usxtGqOwF2J
+	 mA5x5+xvD0pZwhihYG1Ufi1aaFA8o2vmdw121w6VUTnpX7cM1CcG8/w9hdles60tLI
+	 5sNqVzC6xqZol58Rt0b4wJcCTQLTqh5WaMaM1gJt8R8rFyUCTLy2e78mU5MjXxt9xv
+	 3+j9/MOmODLqmTStj6lUdjNt3QeZfewviDek6mipvnJGN1KTs8WIU/WH4EyjcrQx5i
+	 x+Sbm2GdzftBbBsodZq+OgHOAWOsgB5lDdMspCkESqr7WUTz24atJeZbtBMslDcz/A
+	 Xah1DKevIQW2w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D1C27C53;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F52C27C55;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Tue, 04 Jun 2024 08:29:23 +0200
-Subject: [PATCH 5/8] sysctl: Remove superfluous empty allocations from
- sysctl internals
+Date: Tue, 04 Jun 2024 08:29:21 +0200
+Subject: [PATCH 3/8] sysctl: Remove check for sentinel element in ctl_table
+ arrays
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240604-jag-sysctl_remset-v1-5-2df7ecdba0bd@samsung.com>
+Message-Id: <20240604-jag-sysctl_remset-v1-3-2df7ecdba0bd@samsung.com>
 References: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 In-Reply-To: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -56,19 +56,19 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
  linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1905;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2348;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=dykX5g3MqGx15MATEKwwLa2ClmbIRatln9uC2eazckc=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGR3E2qjUjAS4q9w+HjZ+miKQrmluWXXn
- C0vkfATqOvX1okBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRkAAoJELqXzVK3
- lkFPwCwL/jqnIEcEWutsOWB1UQTKFkNA7cz4uGlz1RuXDsLJxTehHd+yxHkXH/uC4QSeWlaJMhI
- y/M6hBaSMqyknpSMeXjgwML0myqcwanvUI52qQez7GuzEmaMStbuewJp4fIOopCHSV3fAefx++0
- OYitv3k2B/txIQBpMqoHWgB9DejZcZzzB/KygVZrRs/vDrkWdIl5uMR3J/Ehw3MmcW+b2pU2os2
- pXUQCyBxpa+rOAvWTm7MXOBOHZJnXlIKajR4RLbfGSvkNXJfLmHwY4XuCv2N9BXGX0RgCoMEYSM
- C5UiFki4U0ojWqyKLxg5Lj8T0XgxNjRvgtXo/ao/vdejeY7STem/sCXWVka8SWuXRY2YAFfBlcr
- mU7T+yqjI8JVf6MTCkQYPk9ueo5YHbqWt+oGCXPDUfFfELnkSsWHAsH0S782t4zi4XrmyP3bUZ9
- KAkFDTj8PBaGvHxjxnIsU0ZxjNwxosVnynxuCAKNSU4szTgMzcl76Ck2/It8V8v3qnnHktCQJU7
- uE=
+ bh=mD4Ze/7MDPElpYuv5XGK8tVRov3P49zLBw+A3YRwezE=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGMc5UA19wZYyokNq00ONpu/iFrRM3b3d
+ ji21KMQyCufh4kBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRjAAoJELqXzVK3
+ lkFPjSkL/jbkTtKEHy2F4Zoay4bUyht8qYvmVrqYV35vhM08LmptpbTf9aDW49d1wvwom8i7zTo
+ +bkTEJ+q5fEM8JibuQ4wBCwuyN55TQaiyynC6+P1sISJFiR+wNNKUkzoJZJuds9xIN3VHDBujmF
+ hNT6GLin8xncVd6bXgjH1ukPvQamXDCmxcTzZ2ES5fPV4d063gEAAo0nfHkZRnPYcBfiPAf6E0W
+ 6G/lTK5uCzNa1ienyagjyYa/UhAA/5IR33bkyguc9SGsBIZ5T33xBdFUHEfNS3GwclPA2Yt2jZ1
+ LYUI6YkfSftzj365NjA/UIsfGOdho/i4+CyV68VYXCQ0uQqSokz3ckRi9m/9JJOmT+qgzaSJbad
+ kdWkSUcfn0vkojZPlpE8X3ed9U671GRAu0H/6f3Mv1yLfMoZEfspW68GFf+XV2mwWYYfmJl8rny
+ mq0grO/Kf0H96o3+fcySffKJnyun8yE/Sil4YyRoh2AS4mwi23lOtffZxZJuyJcUTavw5iP4Pw6
+ PI=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -78,55 +78,67 @@ Reply-To: j.granados@samsung.com
 
 From: Joel Granados <j.granados@samsung.com>
 
-Now that the sentinels have been removed from ctl_table arrays, there is
-no need to artificially append empty ctl_table elements at ctl_table
-registration. Remove superfluous empty allocation from new_dir and
-new_links.
+Use ARRAY_SIZE exclusively by removing the check to ->procname in the
+stopping criteria of the loops traversing ctl_table arrays. This commit
+finalizes the removal of the sentinel elements at the end of ctl_table
+arrays which reduces the build time size and run time memory bloat by
+~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+
+Remove the entry->procname evaluation from the for loop stopping
+criteria in sysctl and sysctl_net.
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- fs/proc/proc_sysctl.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/proc/proc_sysctl.c |  2 +-
+ net/sysctl_net.c      | 11 ++---------
+ 2 files changed, 3 insertions(+), 10 deletions(-)
 
 diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 1babb54347a4..29d40f0ff3ff 100644
+index b1c2c0b82116..d4ba7ad9dbe0 100644
 --- a/fs/proc/proc_sysctl.c
 +++ b/fs/proc/proc_sysctl.c
-@@ -951,14 +951,14 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
- 	char *new_name;
+@@ -21,7 +21,7 @@
  
- 	new = kzalloc(sizeof(*new) + sizeof(struct ctl_node) +
--		      sizeof(struct ctl_table)*2 +  namelen + 1,
-+		      sizeof(struct ctl_table) +  namelen + 1,
- 		      GFP_KERNEL);
- 	if (!new)
- 		return NULL;
+ #define list_for_each_table_entry(entry, header)	\
+ 	entry = header->ctl_table;			\
+-	for (size_t i = 0 ; i < header->ctl_table_size && entry->procname; ++i, entry++)
++	for (size_t i = 0 ; i < header->ctl_table_size; ++i, entry++)
  
- 	node = (struct ctl_node *)(new + 1);
- 	table = (struct ctl_table *)(node + 1);
--	new_name = (char *)(table + 2);
-+	new_name = (char *)(table + 1);
- 	memcpy(new_name, name, namelen);
- 	table[0].procname = new_name;
- 	table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
-@@ -1163,7 +1163,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+ static const struct dentry_operations proc_sys_dentry_operations;
+ static const struct file_operations proc_sys_file_operations;
+diff --git a/net/sysctl_net.c b/net/sysctl_net.c
+index f5017012a049..19e8048241ba 100644
+--- a/net/sysctl_net.c
++++ b/net/sysctl_net.c
+@@ -127,7 +127,7 @@ static void ensure_safe_net_sysctl(struct net *net, const char *path,
  
- 	links = kzalloc(sizeof(struct ctl_table_header) +
- 			sizeof(struct ctl_node)*head->ctl_table_size +
--			sizeof(struct ctl_table)*(head->ctl_table_size + 1) +
-+			sizeof(struct ctl_table)*head->ctl_table_size +
- 			name_bytes,
- 			GFP_KERNEL);
+ 	pr_debug("Registering net sysctl (net %p): %s\n", net, path);
+ 	ent = table;
+-	for (size_t i = 0; i < table_size && ent->procname; ent++, i++) {
++	for (size_t i = 0; i < table_size; ent++, i++) {
+ 		unsigned long addr;
+ 		const char *where;
  
-@@ -1172,7 +1172,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+@@ -165,17 +165,10 @@ struct ctl_table_header *register_net_sysctl_sz(struct net *net,
+ 						struct ctl_table *table,
+ 						size_t table_size)
+ {
+-	int count;
+-	struct ctl_table *entry;
+-
+ 	if (!net_eq(net, &init_net))
+ 		ensure_safe_net_sysctl(net, path, table, table_size);
  
- 	node = (struct ctl_node *)(links + 1);
- 	link_table = (struct ctl_table *)(node + head->ctl_table_size);
--	link_name = (char *)&link_table[head->ctl_table_size + 1];
-+	link_name = (char *)(link_table + head->ctl_table_size);
- 	link = link_table;
+-	entry = table;
+-	for (count = 0 ; count < table_size && entry->procname; entry++, count++)
+-		;
+-
+-	return __register_sysctl_table(&net->sysctls, path, table, count);
++	return __register_sysctl_table(&net->sysctls, path, table, table_size);
+ }
+ EXPORT_SYMBOL_GPL(register_net_sysctl_sz);
  
- 	list_for_each_table_entry(entry, head) {
 
 -- 
 2.43.0
