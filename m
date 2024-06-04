@@ -1,55 +1,55 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D4713D2BA
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3502613D89C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717466772; cv=none; b=YWo3mQZaT5aERDXdejpMnXbGfiZAUFrKPHBTsYDjQFKygQDU+cF/HE4zT2sAogZ2gvD+fdmOPSPG7WO1vHEvxcr+uQcnPXCqsJ0NHbAmSzgcehkk6dMmxEmqFVeLvNBEqQFxVxPKIK97I9kVEfoMvQbNh0XS9oDFyffi5/q4t2k=
+	t=1717466774; cv=none; b=eL1q1v3z615DmG2CqxDZdRKLgi8f6kbWcg9Dc0xV0vqbbYshjQ/m+sbDKioqLLCMECh/BnlCYChdnRgfclXkGOFviZu/XQJPV95syyWKmiYoPev/dD2MvwwtFBss8gfC/NsECadGvyIZCGh56o2a27MM1Opl1fxaThT8grR8/V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717466772; c=relaxed/simple;
-	bh=msjeUsgEzzOjOpUWHfas3LCKMX1t6e6yDLl0uelE9mg=;
+	s=arc-20240116; t=1717466774; c=relaxed/simple;
+	bh=fth2mh5hLwZQ+6IzfCTKsQwbyjH8dDmVn+u6o0NiQiY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dM3741wbQ/d20iLyB3fGeYj0NL3lncmOd/nOznuiB4tUGyWMAe2oXI//MvWCDy40UcKjg7ahsZeq5sNTTlxRnFWvc7hMsrjfIBM8/iS7A3bm3kGGytruW8KlbXP9eCl/yp+3IMDwv/nx1rzvkV918l8QTR3RklG7tNvHTcnBSdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=taLOJr1h; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=Xz9Jvz7IBDSJzH6jExNCVMhCuvHorIpgXfKU0Qef366EmwR58mQPkulL3D8VR8Bo36hZ3Eqnue5gJNl0x8eMrVWipJIS1tbdv5pEOIZzCSqIi8ljm8HOdj6UVmHrGBy/qFotZt/IEQcoXKiHCtttz1ZhH/m1VsT9/Iql/rGPAB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jCspLKne; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="taLOJr1h"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfa744fe2f9so870793276.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 19:06:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCspLKne"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-df78efda253so8012825276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 19:06:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717466769; x=1718071569; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717466772; x=1718071572; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TjWUm/jwk/hpgAY6bYVVdFyPbNpQM4PAlbOY34rPVUc=;
-        b=taLOJr1helQgcs2JhlL6kdfSnGBKeG/3LVHEiZ9Vdl5nRWjTl5YAUPzrEnyV9eehYF
-         Lxvqu8GQguXVjnt+E+h3sKyGTdazv6oYbh8jbATK48mqlft9bxuGvXpzkMlcyxx0SnvY
-         uK3Fo+k11KYaD5fnNdh0XSdJXpm0XxUECkpBf5a9g/8WjBtjJH7prgII0v8mCsdMx+sB
-         6HOcbPdetq7ONLQaH6i/lEDQVMtbHmv66iCpffsbl3f64k351lwEFGmYo0KLSjcYCVLu
-         Y26QnOD9lh4PL5F7kOCHx3MAeDrCH9lAaXONfMbsCVOuGbF2hygVxJUi0b9fw26gH59t
-         xUdA==
+        bh=lTOg/v4agW4t4UIoB+YneZrty+w+zSP5tjy7abHeLhs=;
+        b=jCspLKneDnH+idREYlO67FAi3+wE4vd8Jfq2IhxHwrPsqIS32F9zj/RbRdHvwxamwT
+         Mi0CeLnfWoCrqrNWlvZ1FbotXhb8JVwsArJ8ypAibCmOC5pW6IAR6AwmqFOJkO6bQ7je
+         QTSUVAHjetrJ+VzR1ybIQTlNfwQkGJnyWhP0e6sGn73CdoYv4yJD3UfhMgF82ShVD6DR
+         HmsU+sThhR+ZPtpGy1+xF32KBn2TngHFbOZ11kS0hXI2rceqwfGd9+nmRmsBzQZakpGo
+         gJCEnfQHa599ZqwogsTdStYQC7JCgtYvss9EwytDm1RDcPEaPNJp7qEHvR9uGCYbsNm/
+         aGjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717466769; x=1718071569;
+        d=1e100.net; s=20230601; t=1717466772; x=1718071572;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TjWUm/jwk/hpgAY6bYVVdFyPbNpQM4PAlbOY34rPVUc=;
-        b=R8qBfC2H1w7RyE2ybp0wQ965IknmrUwW5nM+DX6C/f7CypeRFablcSp0vVx4dccBMt
-         xWZYKBLTe0THNjPcjuAdHMGyJxEysj7ktbqmbOA4VYGVZgDNxm6Z7upL6dqEkvg3WNao
-         3jNpvvXrO3aIkzTRhnrZUtvSBF+nh/ndW3eNAaDGspr1zUxk/akak4vEjUS/kEKve75c
-         O76Hw9PQ5qmt3HMTc2e+C5ZJUBL90R9rM+PR4jgAlHs/9VKMqFxlNKUfYj/EQAgHDZpj
-         QWZ91W6TlhSHXxVv5pPjCrnV69M3ZcwBJi+dImFrbz34kpl8i+AAabgQLL40ONZADGUA
-         zEwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4mL4LurP3ECNNTYKCN1Qq8uPRaD/lszopaGUrAYiTeGRRjfAx0Y0VVFhHo49MamuQ1QMmBEleZ4sgmlcn/RfxPzTmnCOBqUM28hhk
-X-Gm-Message-State: AOJu0YynT3ZS2sPvLfWTOIonQ142AAQRqzfvPZN0REhmL6OqRwMqLGx0
-	Cb1Sw7bcSr0+DQ5t9njrL+UHCdVk8NtZWVoLNguDOub7547tEYXXN/8GtE/dkcYKwbxZueyXZvT
-	GxZ/2xw==
-X-Google-Smtp-Source: AGHT+IEDfb+3JEeKpiUuy5LGS6SnXp9v414pUptf89nU5rjiLVpz5pdRpN0kM4+F2bCDbN9n10wQa2F2tJMo
+        bh=lTOg/v4agW4t4UIoB+YneZrty+w+zSP5tjy7abHeLhs=;
+        b=FKWt42B4HAb/a2swj6ZkFjfMGCrLzyisoap4XfOFzd599s1eSJanoJ7QqRI9hZPiR/
+         /aPJKDW/NAryu9IjcjPfj+06iR4Axjo+8MidVckJTOhr38C9grW0plNKYAofuNdZ9WAv
+         NE68XfPq7TzQIeSjUH7l/GMUbUHbH56Nu+WhzOld32QUZkhS/DPwGW5UCe948Od/zrM0
+         j9GeIrVz2LG1R9aBk8wwOb3jSfILqkHCGtCFtv+y33sj9t1kut3xpwgofNvW4P/m6J0Z
+         rjcW7jw32+qh5SIO4IkUPy4v/F1me4qHN1VZjGaHB+RnnimkiAoegXgZ77zUKR1lcnPj
+         Pc6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVqEN4jBcKLnm0cDr4v+uT7sefFbKHmzOx/87uSMeGKzbE0No5x/LEoLIi58zL1QQPYY5zVnetPN8u08/Yl36oo/AibidsM/HYACro6
+X-Gm-Message-State: AOJu0YyOkY9FI/ILvFEQgDOztTSOGZGGbjJYS+EnKZXAr/zyagQoIhhd
+	NlDHrWNY+J816WKTSruxBSLU5e2mx+dXW5X6xtsCR3dFNB4omGuI3XE5oFHGQ959vuczPpFj601
+	mh/gryg==
+X-Google-Smtp-Source: AGHT+IF3oIyaAWYZ8ktE5GFmyMb/f4z4VLJcbawoHVR7E/BZJtA687NFWcmcqqxVcMJp0b3YvGvnhH6eb1O6
 X-Received: from yuanchu-desktop.svl.corp.google.com ([2620:15c:2a3:200:367f:7387:3dd2:73f1])
- (user=yuanchu job=sendgmr) by 2002:a05:6902:110d:b0:df1:d00c:130c with SMTP
- id 3f1490d57ef6-dfa73bf59bcmr1176974276.5.1717466768619; Mon, 03 Jun 2024
- 19:06:08 -0700 (PDT)
-Date: Mon,  3 Jun 2024 19:05:42 -0700
+ (user=yuanchu job=sendgmr) by 2002:a05:6902:2d42:b0:df7:83fa:2736 with SMTP
+ id 3f1490d57ef6-dfa73dbc831mr913449276.11.1717466772327; Mon, 03 Jun 2024
+ 19:06:12 -0700 (PDT)
+Date: Mon,  3 Jun 2024 19:05:44 -0700
 In-Reply-To: <20240604020549.1017540-1-yuanchu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240604020549.1017540-1-yuanchu@google.com>
 X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-Message-ID: <20240604020549.1017540-2-yuanchu@google.com>
-Subject: [PATCH v2 1/8] mm: multi-gen LRU: ignore non-leaf pmd_young for force_scan=true
+Message-ID: <20240604020549.1017540-4-yuanchu@google.com>
+Subject: [PATCH v2 3/8] mm: use refresh interval to rate-limit workingset
+ report aggregation
 From: Yuanchu Xie <yuanchu@google.com>
 To: David Hildenbrand <david@redhat.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
 	Khalid Aziz <khalid.aziz@oracle.com>, Henry Huang <henry.hj@antgroup.com>, 
@@ -83,43 +84,174 @@ Cc: Kalesh Singh <kaleshsingh@google.com>, Wei Xu <weixugc@google.com>,
 	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When non-leaf pmd accessed bits are available, MGLRU page table walks
-can clear the non-leaf pmd accessed bit and ignore the accessed bit on
-the pte if it's on a different node, skipping a generation update as
-well. If another scan occurrs on the same node as said skipped pte.
-the non-leaf pmd accessed bit might remain cleared and the pte accessed
-bits won't be checked. While this is sufficient for reclaim-driven
-aging, where the goal is to select a reasonably cold page, the access
-can be missed when aging proactively for workingset estimation of a of a
-node/memcg.
+The refresh interval is a rate limiting factor to workingset page age
+histogram reads. When a workingset report is generated, a timestamp
+is noted, and the same report will be read until it expires beyond
+the refresh interval, at which point a new report is generated.
 
-In more detail, get_pfn_folio returns NULL if the folio's nid != node
-under scanning, so the page table walk skips processing of said pte. Now
-the pmd_young flag on this pmd is cleared, and if none of the pte's are
-accessed before another scan occurrs on the folio's node, the pmd_young
-check fails and the pte accessed bit is skipped.
-
-Since force_scan disables various other optimizations, we check
-force_scan to ignore the non-leaf pmd accessed bit.
+Sysfs interface
+/sys/devices/system/node/nodeX/workingset_report/refresh_interval
+	time in milliseconds specifying how long the report is valid for
 
 Signed-off-by: Yuanchu Xie <yuanchu@google.com>
 ---
- mm/vmscan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/workingset_report.h |  1 +
+ mm/workingset_report.c            | 84 +++++++++++++++++++++++++------
+ 2 files changed, 70 insertions(+), 15 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index d55e8d07ffc4..73f3718b33f7 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -3548,7 +3548,7 @@ static void walk_pmd_range(pud_t *pud, unsigned long start, unsigned long end,
+diff --git a/include/linux/workingset_report.h b/include/linux/workingset_report.h
+index d7c2ee14ec87..8bae6a600410 100644
+--- a/include/linux/workingset_report.h
++++ b/include/linux/workingset_report.h
+@@ -37,6 +37,7 @@ struct wsr_page_age_histo {
+ };
  
- 		walk->mm_stats[MM_NONLEAF_TOTAL]++;
+ struct wsr_state {
++	unsigned long refresh_interval;
+ 	/* breakdown of workingset by page age */
+ 	struct mutex page_age_lock;
+ 	struct wsr_page_age_histo *page_age;
+diff --git a/mm/workingset_report.c b/mm/workingset_report.c
+index a4dcf62fcd96..fe553c0a653e 100644
+--- a/mm/workingset_report.c
++++ b/mm/workingset_report.c
+@@ -195,7 +195,8 @@ static void collect_page_age(struct wsr_page_age_histo *page_age,
  
--		if (should_clear_pmd_young()) {
-+		if (!walk->force_scan && should_clear_pmd_young()) {
- 			if (!pmd_young(val))
- 				continue;
+ /* First step: hierarchically scan child memcgs. */
+ static void refresh_scan(struct wsr_state *wsr, struct mem_cgroup *root,
+-			 struct pglist_data *pgdat)
++			 struct pglist_data *pgdat,
++			 unsigned long refresh_interval)
+ {
+ 	struct mem_cgroup *memcg;
+ 	unsigned int flags;
+@@ -208,12 +209,15 @@ static void refresh_scan(struct wsr_state *wsr, struct mem_cgroup *root,
+ 	do {
+ 		struct lruvec *lruvec = mem_cgroup_lruvec(memcg, pgdat);
+ 		unsigned long max_seq = READ_ONCE((lruvec)->lrugen.max_seq);
++		int gen = lru_gen_from_seq(max_seq);
++		unsigned long birth = READ_ONCE(lruvec->lrugen.timestamps[gen]);
  
+ 		/*
+ 		 * setting can_swap=true and force_scan=true ensures
+ 		 * proper workingset stats when the system cannot swap.
+ 		 */
+-		try_to_inc_max_seq(lruvec, max_seq, true, true);
++		if (time_is_before_jiffies(birth + refresh_interval))
++			try_to_inc_max_seq(lruvec, max_seq, true, true);
+ 		cond_resched();
+ 	} while ((memcg = mem_cgroup_iter(root, memcg, NULL)));
+ 
+@@ -270,17 +274,25 @@ bool wsr_refresh_report(struct wsr_state *wsr, struct mem_cgroup *root,
+ 			struct pglist_data *pgdat)
+ {
+ 	struct wsr_page_age_histo *page_age;
++	unsigned long refresh_interval = READ_ONCE(wsr->refresh_interval);
+ 
+ 	if (!READ_ONCE(wsr->page_age))
+ 		return false;
+ 
+-	refresh_scan(wsr, root, pgdat);
++	if (!refresh_interval)
++		return false;
++
+ 	mutex_lock(&wsr->page_age_lock);
+ 	page_age = READ_ONCE(wsr->page_age);
+-	if (page_age) {
+-		copy_node_bins(pgdat, page_age);
+-		refresh_aggregate(page_age, root, pgdat);
+-	}
++	if (!page_age)
++		goto unlock;
++	if (page_age->timestamp &&
++	    time_is_after_jiffies(page_age->timestamp + refresh_interval))
++		goto unlock;
++	refresh_scan(wsr, root, pgdat, refresh_interval);
++	copy_node_bins(pgdat, page_age);
++	refresh_aggregate(page_age, root, pgdat);
++unlock:
+ 	mutex_unlock(&wsr->page_age_lock);
+ 	return !!page_age;
+ }
+@@ -299,6 +311,52 @@ static struct wsr_state *kobj_to_wsr(struct kobject *kobj)
+ 	return &mem_cgroup_lruvec(NULL, kobj_to_pgdat(kobj))->wsr;
+ }
+ 
++static ssize_t refresh_interval_show(struct kobject *kobj,
++				     struct kobj_attribute *attr, char *buf)
++{
++	struct wsr_state *wsr = kobj_to_wsr(kobj);
++	unsigned int interval = READ_ONCE(wsr->refresh_interval);
++
++	return sysfs_emit(buf, "%u\n", jiffies_to_msecs(interval));
++}
++
++static ssize_t refresh_interval_store(struct kobject *kobj,
++				      struct kobj_attribute *attr,
++				      const char *buf, size_t len)
++{
++	unsigned int interval;
++	int err;
++	struct wsr_state *wsr = kobj_to_wsr(kobj);
++
++	err = kstrtouint(buf, 0, &interval);
++	if (err)
++		return err;
++
++	mutex_lock(&wsr->page_age_lock);
++	if (interval && !wsr->page_age) {
++		struct wsr_page_age_histo *page_age =
++			kzalloc(sizeof(struct wsr_page_age_histo), GFP_KERNEL);
++
++		if (!page_age) {
++			err = -ENOMEM;
++			goto unlock;
++		}
++		wsr->page_age = page_age;
++	}
++	if (!interval && wsr->page_age) {
++		kfree(wsr->page_age);
++		wsr->page_age = NULL;
++	}
++
++	WRITE_ONCE(wsr->refresh_interval, msecs_to_jiffies(interval));
++unlock:
++	mutex_unlock(&wsr->page_age_lock);
++	return err ?: len;
++}
++
++static struct kobj_attribute refresh_interval_attr =
++	__ATTR_RW(refresh_interval);
++
+ static ssize_t page_age_intervals_show(struct kobject *kobj,
+ 				       struct kobj_attribute *attr, char *buf)
+ {
+@@ -382,13 +440,6 @@ static ssize_t page_age_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 	int ret = 0;
+ 	struct wsr_state *wsr = kobj_to_wsr(kobj);
+ 
+-
+-	mutex_lock(&wsr->page_age_lock);
+-	if (!wsr->page_age)
+-		wsr->page_age =
+-			kzalloc(sizeof(struct wsr_page_age_histo), GFP_KERNEL);
+-	mutex_unlock(&wsr->page_age_lock);
+-
+ 	wsr_refresh_report(wsr, NULL, kobj_to_pgdat(kobj));
+ 
+ 	mutex_lock(&wsr->page_age_lock);
+@@ -414,7 +465,10 @@ static ssize_t page_age_show(struct kobject *kobj, struct kobj_attribute *attr,
+ static struct kobj_attribute page_age_attr = __ATTR_RO(page_age);
+ 
+ static struct attribute *workingset_report_attrs[] = {
+-	&page_age_intervals_attr.attr, &page_age_attr.attr, NULL
++	&refresh_interval_attr.attr,
++	&page_age_intervals_attr.attr,
++	&page_age_attr.attr,
++	NULL
+ };
+ 
+ static const struct attribute_group workingset_report_attr_group = {
 -- 
 2.45.1.467.gbab1589fc0-goog
 
