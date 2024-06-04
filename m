@@ -1,79 +1,75 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E082214A4EF;
-	Tue,  4 Jun 2024 17:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EE2149C77
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520751; cv=none; b=Jy+KwR096fstTE/GISumt84MbwXGhV5ogRXbwx8C0r3X31Czcgalxtq/lOT3hCh+hjsGeEaYj53voXKoxnPK7zsgs096rZByj903g6/viSR1onql+rKV5Lqd6aInK+/+JGUxj+NZ2no23ItzZb4/k/bjnwwoQe4UrxoG3QltKTg=
+	t=1717520766; cv=none; b=gRBJzsp0jo7xU37BGnMwNDfr0ZrW56YUHHxs+b38ymcUxbzg3uSH2husfgCzLiq/KpNk/iVGEkjmp8wbTNd0eV4RzFvYF2ARK1mhTsmaX+AtYRKYqDL9fe3B02mecgGRLak2hbs4LNTmLufbI0Q6neWXADTRR4IMa+EEHFfSzyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717520751; c=relaxed/simple;
-	bh=S4zI23jXY5UCYhcYcLEHzR39qEGwQxMYzl57igXjnSE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=daTE/BGla4XEux5xJNlng3Js234yrT/sxMCVcN3HKo+hWRaHsYbMCFb8fwD/ivH4rZHnXdREY3t4N5b/82oZo/MIIHJoMC+sa6wx8EYamiy0C7kONQiwpVrCZ85g0KvRRWyl5BfHuuC8CJLqNqZAK3cEgxCuMV+85GI06fbGJno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bb1daZkI; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717520766; c=relaxed/simple;
+	bh=rEVud8jYCenY75ArS4e4npQEZOeDDa8qDxgOauldd3U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DFfUsNMARHTBzAckBUSlgbYhP0WJoVC7obuXbrRiH7hRbxYOqW4U5OazlX30aDipR08NRONVtvnbuVPRcRCJE0Z7j8bTcrE0Af2XTfezz/lpOejr9t+ntjU4FxvB01zVRLWQDkgJ4E38HCMWVf3UGIwm2Yf0yuFO41Kk8KM9QG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KdU73S0M; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bb1daZkI"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-35e573c0334so10792f8f.1;
-        Tue, 04 Jun 2024 10:05:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KdU73S0M"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f4603237e0so23402b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 10:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717520748; x=1718125548; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1717520761; x=1718125561; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mGYHbF59iZQUuSem60N9wQ2sz32IfeHdhp9ulRawMZ0=;
-        b=Bb1daZkIow0M7lYSmG9OSccT08lG2QKq2HZetgP6UH8dyInZJ+vMnQcgDDxq/zbloT
-         QrlXBN//L2KUrZHeTAGCyyxUvE+vLUX+Ehdmm8/Hym5S58OcAyT6cFAN9sW2nTN3ompb
-         OQCg2678jSbsyWu3/+9yOoLhcnhrUsxy9uR/JEXLSU3z2K6RUgbSuIPbUIiAK1JpPGPj
-         2Lqy5s89JNFTi0ILMbijRN9J+oJpz8QzWZn5K92YWTggtH4431TzcIiyOg1X4zQpHDOC
-         2NVkl0CQxFT+tMD4ILKj0NRZj1GCjso62q6wrU/p08hmOjgblVADcuTZus0xcJyfRGNN
-         AyZg==
+        bh=fgJ5+iEOSgKZgq1LxXHnvCk2860Dw4BLXVAkjQni18I=;
+        b=KdU73S0MrArtUIvzdV8S/zE81viRGPgVg6TDvu3lu1z9mrer6UhcSvBd1I13bjF4G6
+         QlR0EQPJZuhXaSoLsGeytQ3lLdXeOGiiOO3uIUrOQL/JIe83HN+4d04xy18q4piGg9cT
+         1t5/59cHgaafiVN6OlYS/aqZfCGFGqR+RXE6M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717520748; x=1718125548;
+        d=1e100.net; s=20230601; t=1717520761; x=1718125561;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mGYHbF59iZQUuSem60N9wQ2sz32IfeHdhp9ulRawMZ0=;
-        b=WnShLC7kDvY2YbtTtQpduiDyWdN/mze32JlrevfI1aHL3xK5/vt/JYF0myAXCTBU9Q
-         G5GBpd31Xjjmuwtw5ftF7yyCR15NQkgj/glusQAnJlIPMEJTMCqZTz1iEQTI4bCXl+Vr
-         knAWE9GlUbDlJjJXrZYpXb3RPOJp0fcGwzfXSdi6YSYRwgkbMlnKuRl5rEncQQDcfg5N
-         SSL//ARj9wtnGdi7VLmHPp+ijrGDHqii2TrPlHDgSfGicKhe7kFydwV0R62niVjEnyvG
-         6TEul4FKEWP7LpNqPSsXSD9LparDCSqkVbvbMLSmQ6pRgndxog85VivQjjpq4xMBHLEw
-         ikCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhaMT1vi7BHk6MI7adPyc5S3Y++XqLMNuESYqy6skauCh5ZoIyRuZOcITnMc0mviqew6NLdHq16gpeknXbUA9ctHawWrUG1oGoh1Fhks+c/vrkfSkdQOEy8WE6/mOUGZCJCzD/zNXajX24Z8f2qCsX4dcNzjr/93dD7x06X+57mbzlqvW/+qBFcklxQO2pkg1CGiwma5lO9906H41bQzVHu/Sw3e1Tzara
-X-Gm-Message-State: AOJu0Yz/644BgA8JbjuJOmdXpkXicoawmhR04lkQvyop9qFJzJ0VPRMF
-	ZEMJMaD0H0G5+3NuyvXYZdh/k3jLx4KL4Yi/dzGewj3CrD3ASJv7AyTD2/4D
-X-Google-Smtp-Source: AGHT+IGogEfmHMC1iFii2yLHXYzFwHrA3TajAr+bExLnDU4vduJgzcWcl+etyGfgDSl6SLve9BKF0A==
-X-Received: by 2002:adf:e805:0:b0:35e:537c:b1ac with SMTP id ffacd0b85a97d-35e7c59148fmr3162243f8f.34.1717520748226;
-        Tue, 04 Jun 2024 10:05:48 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:2595:4364:d152:dff3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0f2asm12244077f8f.3.2024.06.04.10.05.47
+        bh=fgJ5+iEOSgKZgq1LxXHnvCk2860Dw4BLXVAkjQni18I=;
+        b=usHPuKn8fwpxzafoslfZB/OOHF2bRip0L5Ph4XS33s3gZoBJHM/6XFJyc80IQyWN49
+         tPoozOUh7qoaWF8W/T/RDmEV+628LBY5QsthICWKzJXHoQgd2nZPsZDpUEbAjDY1kkr3
+         /sMV4Tm6n8qdWOhmjdjvIkCxzWu4b63SzY2dMy0aN/6ek5rnntXes9aLcSIyLn9Zpx9V
+         +m+FGrV1J/wWyPDqMWsehVtRhd7wr9x1cH/s9jAed2XiCxXspVIad9N8F9Xa5FiXxcMo
+         i3VoHz5GA1Lpk1I0ksANAJ/5x+pVWzHUMoMiiwa822KkFzReCp6FYmuCnfjJFLvmju16
+         wgJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVifz9KVo+Z6QxlGc3INe4v44E/+xhXdJByxyfEmDRyXHacmrAMnBbZUCxoza06rGccQjDO28JHM2lLKNsg8jz7Yav/KRGqMrs55yWQ
+X-Gm-Message-State: AOJu0YwPEVfbs4hPvbpI5LQniDPZdhLWlV69m/lUsOq9Fvi3KXIhl1Ti
+	O9oygLTeydR+5saKFqg81Lbc9s8J+Zp2T85lJ/o8bPcFTDTRohudGbAxJ5WJ6Q==
+X-Google-Smtp-Source: AGHT+IFGAiCt40jA5/yhChT2c5Qddf9o2Q57U/QnPJLBpXj9m7oYVO4h6NEpzDCXz6oyMA7cKGh7fA==
+X-Received: by 2002:a05:6a00:2d1d:b0:6f4:d5d8:e0a3 with SMTP id d2e1a72fcca58-703e4bf60cfmr331030b3a.9.1717520760886;
+        Tue, 04 Jun 2024 10:06:00 -0700 (PDT)
+Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:6203:d1ca:c560:52f1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b0914dsm7510672b3a.179.2024.06.04.10.05.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 10:05:47 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 5/5] serial: sh-sci: Add support for RZ/V2H(P) SoC
-Date: Tue,  4 Jun 2024 18:05:13 +0100
-Message-Id: <20240604170513.522631-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604170513.522631-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240604170513.522631-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 04 Jun 2024 10:06:00 -0700 (PDT)
+From: Daisuke Nojiri <dnojiri@chromium.org>
+To: 
+Cc: Daisuke Nojiri <dnojiri@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Reka Norman <rekanorman@chromium.org>,
+	Tzung-Bi Shih <tzungbi@chromium.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@google.com>,
+	Gwendal Grignou <gwendal@chromium.org>,
+	Pavan Holla <pholla@chromium.org>,
+	Ching-Kang Yen <chingkang@chromium.org>,
+	Lukasz Majczak <lma@chromium.org>,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] platform/chrome: Add struct ec_response_get_next_event_v3
+Date: Tue,  4 Jun 2024 10:01:48 -0700
+Message-ID: <20240604170552.2517189-1-dnojiri@chromium.org>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+In-Reply-To: <20240604005354.2294468-1-dnojiri@chromium.org>
+References: <20240604005354.2294468-1-dnojiri@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,166 +78,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Add struct ec_response_get_next_event_v3 to upgrade
+EC_CMD_GET_NEXT_EVENT to version 3.
 
-Add serial support for RZ/V2H(P) SoC with earlycon.
-
-The SCIF interface in the Renesas RZ/V2H(P) is similar to that available
-in the RZ/G2L (R9A07G044) SoC, with the following differences:
-
-- RZ/V2H(P) SoC has three additional interrupts: one for Tx end/Rx ready
-  and two for Rx and Tx buffer full, all of which are edge-triggered.
-- RZ/V2H(P) supports asynchronous mode, whereas RZ/G2L supports both
-  synchronous and asynchronous modes.
-- There are differences in the configuration of certain registers such
-  as SCSMR, SCFCR, and SCSPTR between the two SoCs.
-
-To handle these differences on RZ/V2H(P) SoC SCIx_RZV2H_SCIF_REGTYPE
-is added.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
 ---
-Hi Geert, Ive restored your RB tag after rebase (as the changes were trival)
-hope that's OK.
+ .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Cheers, Prabhakar
-
-v4 -> v5
-- Rebased changes on top of v6.10-rc2
-- Included RB tag from Geert
-
-v3 -> v4
-- Added SCIx_RZV2H_SCIF_REGTYPE to handle the differences on the
-  RZ/V2H(P) SoC
-
-v2 -> v3
-- new patch
----
- drivers/tty/serial/sh-sci.c | 55 +++++++++++++++++++++++++++++++++----
- include/linux/serial_sci.h  |  1 +
- 2 files changed, 51 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index f738980a8b2c..b80e9a528e17 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -317,6 +317,37 @@ static const struct sci_port_params sci_port_params[SCIx_NR_REGTYPES] = {
- 		.error_clear = SCIF_ERROR_CLEAR,
- 	},
- 
-+	/*
-+	 * The "SCIF" that is in RZ/V2H(P) SoC is similar to one found on RZ/G2L SoC
-+	 * with below differences,
-+	 * - Break out of interrupts are different: ERI, BRI, RXI, TXI, TEI, DRI,
-+	 *   TEI-DRI, RXI-EDGE and TXI-EDGE.
-+	 * - SCSMR register does not have CM bit (BIT(7)) ie it does not support synchronous mode.
-+	 * - SCFCR register does not have SCFCR_MCE bit.
-+	 * - SCSPTR register has only bits SCSPTR_SPB2DT and SCSPTR_SPB2IO.
-+	 */
-+	[SCIx_RZV2H_SCIF_REGTYPE] = {
-+		.regs = {
-+			[SCSMR]		= { 0x00, 16 },
-+			[SCBRR]		= { 0x02,  8 },
-+			[SCSCR]		= { 0x04, 16 },
-+			[SCxTDR]	= { 0x06,  8 },
-+			[SCxSR]		= { 0x08, 16 },
-+			[SCxRDR]	= { 0x0a,  8 },
-+			[SCFCR]		= { 0x0c, 16 },
-+			[SCFDR]		= { 0x0e, 16 },
-+			[SCSPTR]	= { 0x10, 16 },
-+			[SCLSR]		= { 0x12, 16 },
-+			[SEMR]		= { 0x14, 8 },
-+		},
-+		.fifosize = 16,
-+		.overrun_reg = SCLSR,
-+		.overrun_mask = SCLSR_ORER,
-+		.sampling_rate_mask = SCI_SR(32),
-+		.error_mask = SCIF_DEFAULT_ERROR_MASK,
-+		.error_clear = SCIF_ERROR_CLEAR,
-+	},
-+
- 	/*
- 	 * Common SH-3 SCIF definitions.
- 	 */
-@@ -757,7 +788,7 @@ static void sci_init_pins(struct uart_port *port, unsigned int cflag)
- 		}
- 		sci_serial_out(port, SCPDR, data);
- 		sci_serial_out(port, SCPCR, ctrl);
--	} else if (sci_getreg(port, SCSPTR)->size) {
-+	} else if (sci_getreg(port, SCSPTR)->size && s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE) {
- 		u16 status = sci_serial_in(port, SCSPTR);
- 
- 		/* RTS# is always output; and active low, unless autorts */
-@@ -2124,8 +2155,9 @@ static void sci_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 
- 	if (!(mctrl & TIOCM_RTS)) {
- 		/* Disable Auto RTS */
--		sci_serial_out(port, SCFCR,
--			       sci_serial_in(port, SCFCR) & ~SCFCR_MCE);
-+		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+			sci_serial_out(port, SCFCR,
-+				       sci_serial_in(port, SCFCR) & ~SCFCR_MCE);
- 
- 		/* Clear RTS */
- 		sci_set_rts(port, 0);
-@@ -2137,8 +2169,9 @@ static void sci_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 		}
- 
- 		/* Enable Auto RTS */
--		sci_serial_out(port, SCFCR,
--			       sci_serial_in(port, SCFCR) | SCFCR_MCE);
-+		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+			sci_serial_out(port, SCFCR,
-+				       sci_serial_in(port, SCFCR) | SCFCR_MCE);
- 	} else {
- 		/* Set RTS */
- 		sci_set_rts(port, 1);
-@@ -3225,6 +3258,10 @@ static const struct of_device_id of_sci_match[] __maybe_unused = {
- 		.compatible = "renesas,scif-r9a07g044",
- 		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZ_SCIFA_REGTYPE),
- 	},
-+	{
-+		.compatible = "renesas,scif-r9a09g057",
-+		.data = SCI_OF_DATA(PORT_SCIF, SCIx_RZV2H_SCIF_REGTYPE),
-+	},
- 	/* Family-specific types */
- 	{
- 		.compatible = "renesas,rcar-gen1-scif",
-@@ -3533,6 +3570,13 @@ static int __init rzscifa_early_console_setup(struct earlycon_device *device,
- 	return early_console_setup(device, PORT_SCIF);
- }
- 
-+static int __init rzv2hscif_early_console_setup(struct earlycon_device *device,
-+						const char *opt)
-+{
-+	port_cfg.regtype = SCIx_RZV2H_SCIF_REGTYPE;
-+	return early_console_setup(device, PORT_SCIF);
-+}
-+
- static int __init scifa_early_console_setup(struct earlycon_device *device,
- 					  const char *opt)
- {
-@@ -3553,6 +3597,7 @@ OF_EARLYCON_DECLARE(sci, "renesas,sci", sci_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif", scif_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif-r7s9210", rzscifa_early_console_setup);
- OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a07g044", rzscifa_early_console_setup);
-+OF_EARLYCON_DECLARE(scif, "renesas,scif-r9a09g057", rzv2hscif_early_console_setup);
- OF_EARLYCON_DECLARE(scifa, "renesas,scifa", scifa_early_console_setup);
- OF_EARLYCON_DECLARE(scifb, "renesas,scifb", scifb_early_console_setup);
- OF_EARLYCON_DECLARE(hscif, "renesas,hscif", hscif_early_console_setup);
-diff --git a/include/linux/serial_sci.h b/include/linux/serial_sci.h
-index 1c89611e0e06..0f2f50b8d28e 100644
---- a/include/linux/serial_sci.h
-+++ b/include/linux/serial_sci.h
-@@ -37,6 +37,7 @@ enum {
- 	SCIx_SH7705_SCIF_REGTYPE,
- 	SCIx_HSCIF_REGTYPE,
- 	SCIx_RZ_SCIFA_REGTYPE,
-+	SCIx_RZV2H_SCIF_REGTYPE,
- 
- 	SCIx_NR_REGTYPES,
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index 070e49c5381e..fff191a8d413 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -3527,6 +3527,34 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
  };
+ BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
+ 
++union __ec_align_offset1 ec_response_get_next_data_v3 {
++	uint8_t key_matrix[18];
++
++	/* Unaligned */
++	uint32_t host_event;
++	uint64_t host_event64;
++
++	struct __ec_todo_unpacked {
++		/* For aligning the fifo_info */
++		uint8_t reserved[3];
++		struct ec_response_motion_sense_fifo_info info;
++	} sensor_fifo;
++
++	uint32_t buttons;
++
++	uint32_t switches;
++
++	uint32_t fp_events;
++
++	uint32_t sysrq;
++
++	/* CEC events from enum mkbp_cec_event */
++	uint32_t cec_events;
++
++	uint8_t cec_message[16];
++};
++BUILD_ASSERT(sizeof(union ec_response_get_next_data_v3) == 18);
++
+ struct ec_response_get_next_event {
+ 	uint8_t event_type;
+ 	/* Followed by event data if any */
+@@ -3539,6 +3567,12 @@ struct ec_response_get_next_event_v1 {
+ 	union ec_response_get_next_data_v1 data;
+ } __ec_align1;
+ 
++struct ec_response_get_next_event_v3 {
++	uint8_t event_type;
++	/* Followed by event data if any */
++	union ec_response_get_next_data_v3 data;
++} __ec_align1;
++
+ /* Bit indices for buttons and switches.*/
+ /* Buttons */
+ #define EC_MKBP_POWER_BUTTON	0
 -- 
-2.34.1
+2.45.1.288.g0e0cd299f1-goog
 
