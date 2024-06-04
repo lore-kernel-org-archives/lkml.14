@@ -1,353 +1,123 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA023146D6E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966A117597
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717517137; cv=none; b=ZSBIpi3ft4BgDw6QX6SJvmJhBsGcjLTGVgDJCuy/mOTjNkREOvm44++yRsKT/sGTMzbqjXGr9mbeKvqJUO9dPx/qCR9lADxqH37owtKlH0TdAQoknraGlqokjEdXL0c9WSjMO2SADMWEUDWKE/oD1PU8NPzTHnRkcptxuzoXuSY=
+	t=1717517221; cv=none; b=mjL2w56wtxZuiPY3UXzwevYyucASmQNDW+fkpGJLkWIxkYprnZxxXUXnR2iqdQtGn9F+qQgnYYWTkpI+5B34GBqFjqjGBW32JdQXoFN5FLdAM0aMVihgMRclICq2zx0dbwXCZSJTOA0Hh9T+L7KfPhSHJGRUVbuByzhelVOnD/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717517137; c=relaxed/simple;
-	bh=FU6GNh4XzJLuiE9LuDyFg65wWv21DyTlcYGDZen0blc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vDBjb+QoAdaB8Ewb1wUmiEL6OTvZFWDf1BYJClUUaC1rrDiPuirWEnu4+HQhnpaT5WCYVMx7es2tJp0UrmYNLxuJd0GY6UQAiOu5D5Sfy+YVr4uj9UjlMLx4QEwstiOxC1rVSr6AUFm6YZdatu667ndITRlQOu7+FqfVh7DEYxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vtvxr1wC5z9v7JW
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:43:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 66F8B140717
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 00:05:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.206.133.88])
-	by APP2 (Coremail) with SMTP id GxC2BwCn4CQ2O19mAfiGCQ--.12002S2;
-	Tue, 04 Jun 2024 17:05:22 +0100 (CET)
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-To: paulmck@kernel.org
-Cc: stern@rowland.harvard.edu,
-	parri.andrea@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	npiggin@gmail.com,
-	dhowells@redhat.com,
-	j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr,
-	akiyks@gmail.com,
-	dlustig@nvidia.com,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	quic_neeraju@quicinc.com,
-	frederic@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Subject: [PATCHv2 4/4] tools/memory-model: Distinguish between syntactic and semantic tags
-Date: Tue,  4 Jun 2024 18:05:06 +0200
-Message-Id: <20240604160506.498429-1-jonas.oberhauser@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
-References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+	s=arc-20240116; t=1717517221; c=relaxed/simple;
+	bh=GfgdfxzT8n8+FRMuhvSXa/oYSlEgqKTOgyJud5hAWa4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=LaMPGTYwLL54bGn8fy4RY8dIP0mhnJR7TgHxfAPHfxMec/0KJ9JfbbwyqRHrCd+v55LKT9Jvx5caYPwXoz9pyIuNGZKvQM69UBUd1TwLOPxW/1diRTUrGZcc5hVx9a/O2RwoAKuJ9d2q46sayduO/CnEi+OH6VF/jRSREBXk0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EO1Js1NM; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EO1Js1NM"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35dc7d0387cso5899813f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:06:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717517218; x=1718122018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DVcQEIP+MENTssUPsqaOZqlKvsqibx0etjqeiTYhCrQ=;
+        b=EO1Js1NMIsReXNE7qOnijnyWw/z4jZLzVaGj7Pi5pzOukmCJpNpPiAcQSgftiYgxyL
+         BoYMdEAh8twkkSI0bHzaYEureehs9I/wQ/ZwHSSSFDPlmKHmND4MvQD2tntGROB1UGAt
+         LF1BSqvL4QARxwREwSfjgf05pBUzWvwGd9i+6H6jKw4+o2hcbNXYqAWW+jyxi5TBWwUS
+         uP7E/6QsI8288rWxFZ9J5tF5qyXGrUX1OrL9HzUwDN9wHw6VwCuo9J8s2nHZXDhrm6P5
+         4QR8/N69eyMubvCyIlW9Qp5bvQQh4P+O130Sk3+rV5Oe/iiWlpYiC8EMZW/hf2y0wl0m
+         CbgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717517218; x=1718122018;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DVcQEIP+MENTssUPsqaOZqlKvsqibx0etjqeiTYhCrQ=;
+        b=X/snfSDJzlqZaeIxcJ+o5jG9Lb75BHjvSelzkKWAZKkz+xHfYNK2iFHnL+H+rC1yUn
+         3sPIATJhWwBFRR/nhpEQkViAF9zMXNSL07SkYTLm2H/iWPN6q7KRTYhDmyyjSFZ3GYi9
+         f1G8tLugOn10UzHcr++N8qpqsRnVCmymGkkGX2kj7pdLrDamS68hffdFnlwPMo+M8S6d
+         0REKlZ3xPz4hyO8iWtti9DZCM9Q65XsS5YXUFDQyPpR+L+khr/8i0UiQkyk1x87LMAHB
+         cmEYYpTKTNhFroX7I1NQzh2zqTkTycUL2vui16p3koZJQW/RbTQr2iRqxCLAgGyQzfd1
+         iJSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXY4anKaDGs4sEAjo6Pp93tl0fW9qjWYPLjaTw8d0qz1Xv83HUqrAoG/12oNrOd2TIMJEXHyg+TnKb5ni1o6u7ICsLXCxUm8XPcsN32
+X-Gm-Message-State: AOJu0YyGuJd1hYhVbzxsi/Ok3DhtXzACdWzlTHd4TdU08JSZY1G87xhC
+	S7p2WrFxyJdoDcWQFLelVearQoRc4DlyJKxbGPJNEIWwj8GzHV0rUnMN2VUNmoo=
+X-Google-Smtp-Source: AGHT+IFYA1dhRvmL2GTj5Q6k/vk2zOUsQMMogmi/rc6o5NV9inVq5WoI7Vq75aDni69dzFSZ/DMrow==
+X-Received: by 2002:a5d:438e:0:b0:354:c43d:d5a with SMTP id ffacd0b85a97d-35e0f26984cmr10765554f8f.24.1717517217961;
+        Tue, 04 Jun 2024 09:06:57 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04da756sm11983392f8f.59.2024.06.04.09.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 09:06:57 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Vladimir Zapolskiy <vz@mleia.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Vincent Shih <vincent.sunplus@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, Rafal Milecki <rafal@milecki.pl>, 
+ Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+ Joy Chakraborty <joychakr@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev, 
+ manugautam@google.com
+In-Reply-To: <20240510082929.3792559-1-joychakr@google.com>
+References: <20240510082929.3792559-1-joychakr@google.com>
+Subject: Re: [PATCH v3 0/1] nvmem: Handle actual amount of data
+ read/written by suppliers
+Message-Id: <171751721565.70889.16944298203785853489.b4-ty@linaro.org>
+Date: Tue, 04 Jun 2024 17:06:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwCn4CQ2O19mAfiGCQ--.12002S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfGr1kJw18Aw4ftrWDAF13Jwb_yoW8GF1fCo
-	WrGr1ft3W8XFyDWan8Kw1xJrWDW3y2q3Z0gry8Gw1jvFy7Za95XrnrG3Wjq34xtFy5Cw15
-	WrZ7Z3sxXay7Jr1kn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYc7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWx
-	JVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AK
-	xVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	fUo8nYUUUUU
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
-Not all tags that are always there syntactically also provide semantic
-membership in the corresponding set. For example, an 'acquire tag on a
-write does not imply that the write is finally in the Acquire set and
-provides acquire ordering.
 
-To distinguish in those cases between the syntactic tags and actual
-sets, we capitalize the former, so 'ACQUIRE tags may be present on both
-reads and writes, but only reads will appear in the Acquire set.
+On Fri, 10 May 2024 08:29:28 +0000, Joy Chakraborty wrote:
+> This Patch series stems from discussions in patchset,
+> "[PATCH v2] nvmem: rmem: Fix return value of rmem_read()"
+> (https://lore.kernel.org/all/20240206042408.224138-1-joychakr@google.com/).
+> Where we come across the fact that currently the nvmem suppliers do not
+> actually let the core know how much data has been actually read or written.
+> Instead they are expected to return 0 for success and the core assumes that
+> the amount of data written is equal to what the core has requested.
+> 
+> [...]
 
-For tags where the two concepts are the same we do not use specific
-capitalization to make this distinction.
+Applied, thanks!
 
-Reported-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
----
- tools/memory-model/linux-kernel.bell |  22 ++--
- tools/memory-model/linux-kernel.def  | 176 +++++++++++++--------------
- 2 files changed, 99 insertions(+), 99 deletions(-)
+[1/1] nvmem: Change return type of reg read/write to ssize_t
+      commit: f5de138db5b76de7d96d4cf92f871ba893ba0119
 
-diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
-index 2f49993644ed..a27757470d29 100644
---- a/tools/memory-model/linux-kernel.bell
-+++ b/tools/memory-model/linux-kernel.bell
-@@ -13,18 +13,18 @@
- 
- "Linux-kernel memory consistency model"
- 
--enum Accesses = 'once (*READ_ONCE,WRITE_ONCE*) ||
--		'release (*smp_store_release*) ||
--		'acquire (*smp_load_acquire*) ||
--		'noreturn (* R of non-return RMW *) ||
--		'mb (*xchg(),cmpxchg(),...*)
-+enum Accesses = 'ONCE (*READ_ONCE,WRITE_ONCE*) ||
-+		'RELEASE (*smp_store_release*) ||
-+		'ACQUIRE (*smp_load_acquire*) ||
-+		'NORETURN (* R of non-return RMW *) ||
-+		'MB (*xchg(),cmpxchg(),...*)
- instructions R[Accesses]
- instructions W[Accesses]
- instructions RMW[Accesses]
- 
- enum Barriers = 'wmb (*smp_wmb*) ||
- 		'rmb (*smp_rmb*) ||
--		'mb (*smp_mb*) ||
-+		'MB (*smp_mb*) ||
- 		'barrier (*barrier*) ||
- 		'rcu-lock (*rcu_read_lock*)  ||
- 		'rcu-unlock (*rcu_read_unlock*) ||
-@@ -38,10 +38,10 @@ instructions F[Barriers]
- 
- (* Remove impossible tags, such as Acquire on a store or failed RMW *)
- let FailedRMW = RMW \ (domain(rmw) | range(rmw))
--let Acquire = Acquire \ W \ FailedRMW
--let Release = Release \ R \ FailedRMW
--let Mb = Mb \ FailedRMW
--let Noreturn = Noreturn \ W
-+let Acquire = ACQUIRE \ W \ FailedRMW
-+let Release = RELEASE \ R \ FailedRMW
-+let Mb = MB \ FailedRMW
-+let Noreturn = NORETURN \ W
- 
- (* SRCU *)
- enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
-@@ -81,7 +81,7 @@ flag ~empty rcu-rscs & (po ; [Sync-srcu] ; po) as invalid-sleep
- flag ~empty different-values(srcu-rscs) as srcu-bad-value-match
- 
- (* Compute marked and plain memory accesses *)
--let Marked = (~M) | IW | Once | Release | Acquire | domain(rmw) | range(rmw) |
-+let Marked = (~M) | IW | ONCE | RELEASE | ACQUIRE | MB | RMW |
- 		LKR | LKW | UL | LF | RL | RU | Srcu-lock | Srcu-unlock
- let Plain = M \ Marked
- 
-diff --git a/tools/memory-model/linux-kernel.def b/tools/memory-model/linux-kernel.def
-index a12b96c547b7..001366ff3fb4 100644
---- a/tools/memory-model/linux-kernel.def
-+++ b/tools/memory-model/linux-kernel.def
-@@ -6,18 +6,18 @@
- // which appeared in ASPLOS 2018.
- 
- // ONCE
--READ_ONCE(X) __load{once}(X)
--WRITE_ONCE(X,V) { __store{once}(X,V); }
-+READ_ONCE(X) __load{ONCE}(X)
-+WRITE_ONCE(X,V) { __store{ONCE}(X,V); }
- 
- // Release Acquire and friends
--smp_store_release(X,V) { __store{release}(*X,V); }
--smp_load_acquire(X) __load{acquire}(*X)
--rcu_assign_pointer(X,V) { __store{release}(X,V); }
--rcu_dereference(X) __load{once}(X)
--smp_store_mb(X,V) { __store{once}(X,V); __fence{mb}; }
-+smp_store_release(X,V) { __store{RELEASE}(*X,V); }
-+smp_load_acquire(X) __load{ACQUIRE}(*X)
-+rcu_assign_pointer(X,V) { __store{RELEASE}(X,V); }
-+rcu_dereference(X) __load{ONCE}(X)
-+smp_store_mb(X,V) { __store{ONCE}(X,V); __fence{MB}; }
- 
- // Fences
--smp_mb() { __fence{mb}; }
-+smp_mb() { __fence{MB}; }
- smp_rmb() { __fence{rmb}; }
- smp_wmb() { __fence{wmb}; }
- smp_mb__before_atomic() { __fence{before-atomic}; }
-@@ -28,14 +28,14 @@ smp_mb__after_srcu_read_unlock() { __fence{after-srcu-read-unlock}; }
- barrier() { __fence{barrier}; }
- 
- // Exchange
--xchg(X,V)  __xchg{mb}(X,V)
--xchg_relaxed(X,V) __xchg{once}(X,V)
--xchg_release(X,V) __xchg{release}(X,V)
--xchg_acquire(X,V) __xchg{acquire}(X,V)
--cmpxchg(X,V,W) __cmpxchg{mb}(X,V,W)
--cmpxchg_relaxed(X,V,W) __cmpxchg{once}(X,V,W)
--cmpxchg_acquire(X,V,W) __cmpxchg{acquire}(X,V,W)
--cmpxchg_release(X,V,W) __cmpxchg{release}(X,V,W)
-+xchg(X,V)  __xchg{MB}(X,V)
-+xchg_relaxed(X,V) __xchg{ONCE}(X,V)
-+xchg_release(X,V) __xchg{RELEASE}(X,V)
-+xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
-+cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
-+cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
-+cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
-+cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
- 
- // Spinlocks
- spin_lock(X) { __lock(X); }
-@@ -72,75 +72,75 @@ atomic_inc(X)   { __atomic_op(X,+,1); }
- atomic_dec(X)   { __atomic_op(X,-,1); }
- atomic_andnot(V,X) { __atomic_op(X,&~,V); }
- 
--atomic_add_return(V,X) __atomic_op_return{mb}(X,+,V)
--atomic_add_return_relaxed(V,X) __atomic_op_return{once}(X,+,V)
--atomic_add_return_acquire(V,X) __atomic_op_return{acquire}(X,+,V)
--atomic_add_return_release(V,X) __atomic_op_return{release}(X,+,V)
--atomic_fetch_add(V,X) __atomic_fetch_op{mb}(X,+,V)
--atomic_fetch_add_relaxed(V,X) __atomic_fetch_op{once}(X,+,V)
--atomic_fetch_add_acquire(V,X) __atomic_fetch_op{acquire}(X,+,V)
--atomic_fetch_add_release(V,X) __atomic_fetch_op{release}(X,+,V)
--
--atomic_fetch_and(V,X) __atomic_fetch_op{mb}(X,&,V)
--atomic_fetch_and_relaxed(V,X) __atomic_fetch_op{once}(X,&,V)
--atomic_fetch_and_acquire(V,X) __atomic_fetch_op{acquire}(X,&,V)
--atomic_fetch_and_release(V,X) __atomic_fetch_op{release}(X,&,V)
--
--atomic_fetch_or(V,X) __atomic_fetch_op{mb}(X,|,V)
--atomic_fetch_or_relaxed(V,X) __atomic_fetch_op{once}(X,|,V)
--atomic_fetch_or_acquire(V,X) __atomic_fetch_op{acquire}(X,|,V)
--atomic_fetch_or_release(V,X) __atomic_fetch_op{release}(X,|,V)
--
--atomic_fetch_xor(V,X) __atomic_fetch_op{mb}(X,^,V)
--atomic_fetch_xor_relaxed(V,X) __atomic_fetch_op{once}(X,^,V)
--atomic_fetch_xor_acquire(V,X) __atomic_fetch_op{acquire}(X,^,V)
--atomic_fetch_xor_release(V,X) __atomic_fetch_op{release}(X,^,V)
--
--atomic_inc_return(X) __atomic_op_return{mb}(X,+,1)
--atomic_inc_return_relaxed(X) __atomic_op_return{once}(X,+,1)
--atomic_inc_return_acquire(X) __atomic_op_return{acquire}(X,+,1)
--atomic_inc_return_release(X) __atomic_op_return{release}(X,+,1)
--atomic_fetch_inc(X) __atomic_fetch_op{mb}(X,+,1)
--atomic_fetch_inc_relaxed(X) __atomic_fetch_op{once}(X,+,1)
--atomic_fetch_inc_acquire(X) __atomic_fetch_op{acquire}(X,+,1)
--atomic_fetch_inc_release(X) __atomic_fetch_op{release}(X,+,1)
--
--atomic_sub_return(V,X) __atomic_op_return{mb}(X,-,V)
--atomic_sub_return_relaxed(V,X) __atomic_op_return{once}(X,-,V)
--atomic_sub_return_acquire(V,X) __atomic_op_return{acquire}(X,-,V)
--atomic_sub_return_release(V,X) __atomic_op_return{release}(X,-,V)
--atomic_fetch_sub(V,X) __atomic_fetch_op{mb}(X,-,V)
--atomic_fetch_sub_relaxed(V,X) __atomic_fetch_op{once}(X,-,V)
--atomic_fetch_sub_acquire(V,X) __atomic_fetch_op{acquire}(X,-,V)
--atomic_fetch_sub_release(V,X) __atomic_fetch_op{release}(X,-,V)
--
--atomic_dec_return(X) __atomic_op_return{mb}(X,-,1)
--atomic_dec_return_relaxed(X) __atomic_op_return{once}(X,-,1)
--atomic_dec_return_acquire(X) __atomic_op_return{acquire}(X,-,1)
--atomic_dec_return_release(X) __atomic_op_return{release}(X,-,1)
--atomic_fetch_dec(X) __atomic_fetch_op{mb}(X,-,1)
--atomic_fetch_dec_relaxed(X) __atomic_fetch_op{once}(X,-,1)
--atomic_fetch_dec_acquire(X) __atomic_fetch_op{acquire}(X,-,1)
--atomic_fetch_dec_release(X) __atomic_fetch_op{release}(X,-,1)
--
--atomic_xchg(X,V) __xchg{mb}(X,V)
--atomic_xchg_relaxed(X,V) __xchg{once}(X,V)
--atomic_xchg_release(X,V) __xchg{release}(X,V)
--atomic_xchg_acquire(X,V) __xchg{acquire}(X,V)
--atomic_cmpxchg(X,V,W) __cmpxchg{mb}(X,V,W)
--atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{once}(X,V,W)
--atomic_cmpxchg_acquire(X,V,W) __cmpxchg{acquire}(X,V,W)
--atomic_cmpxchg_release(X,V,W) __cmpxchg{release}(X,V,W)
--
--atomic_sub_and_test(V,X) __atomic_op_return{mb}(X,-,V) == 0
--atomic_dec_and_test(X)  __atomic_op_return{mb}(X,-,1) == 0
--atomic_inc_and_test(X)  __atomic_op_return{mb}(X,+,1) == 0
--atomic_add_negative(V,X) __atomic_op_return{mb}(X,+,V) < 0
--atomic_add_negative_relaxed(V,X) __atomic_op_return{once}(X,+,V) < 0
--atomic_add_negative_acquire(V,X) __atomic_op_return{acquire}(X,+,V) < 0
--atomic_add_negative_release(V,X) __atomic_op_return{release}(X,+,V) < 0
--
--atomic_fetch_andnot(V,X) __atomic_fetch_op{mb}(X,&~,V)
--atomic_fetch_andnot_acquire(V,X) __atomic_fetch_op{acquire}(X,&~,V)
--atomic_fetch_andnot_release(V,X) __atomic_fetch_op{release}(X,&~,V)
--atomic_fetch_andnot_relaxed(V,X) __atomic_fetch_op{once}(X,&~,V)
-+atomic_add_return(V,X) __atomic_op_return{MB}(X,+,V)
-+atomic_add_return_relaxed(V,X) __atomic_op_return{ONCE}(X,+,V)
-+atomic_add_return_acquire(V,X) __atomic_op_return{ACQUIRE}(X,+,V)
-+atomic_add_return_release(V,X) __atomic_op_return{RELEASE}(X,+,V)
-+atomic_fetch_add(V,X) __atomic_fetch_op{MB}(X,+,V)
-+atomic_fetch_add_relaxed(V,X) __atomic_fetch_op{ONCE}(X,+,V)
-+atomic_fetch_add_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,+,V)
-+atomic_fetch_add_release(V,X) __atomic_fetch_op{RELEASE}(X,+,V)
-+
-+atomic_fetch_and(V,X) __atomic_fetch_op{MB}(X,&,V)
-+atomic_fetch_and_relaxed(V,X) __atomic_fetch_op{ONCE}(X,&,V)
-+atomic_fetch_and_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,&,V)
-+atomic_fetch_and_release(V,X) __atomic_fetch_op{RELEASE}(X,&,V)
-+
-+atomic_fetch_or(V,X) __atomic_fetch_op{MB}(X,|,V)
-+atomic_fetch_or_relaxed(V,X) __atomic_fetch_op{ONCE}(X,|,V)
-+atomic_fetch_or_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,|,V)
-+atomic_fetch_or_release(V,X) __atomic_fetch_op{RELEASE}(X,|,V)
-+
-+atomic_fetch_xor(V,X) __atomic_fetch_op{MB}(X,^,V)
-+atomic_fetch_xor_relaxed(V,X) __atomic_fetch_op{ONCE}(X,^,V)
-+atomic_fetch_xor_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,^,V)
-+atomic_fetch_xor_release(V,X) __atomic_fetch_op{RELEASE}(X,^,V)
-+
-+atomic_inc_return(X) __atomic_op_return{MB}(X,+,1)
-+atomic_inc_return_relaxed(X) __atomic_op_return{ONCE}(X,+,1)
-+atomic_inc_return_acquire(X) __atomic_op_return{ACQUIRE}(X,+,1)
-+atomic_inc_return_release(X) __atomic_op_return{RELEASE}(X,+,1)
-+atomic_fetch_inc(X) __atomic_fetch_op{MB}(X,+,1)
-+atomic_fetch_inc_relaxed(X) __atomic_fetch_op{ONCE}(X,+,1)
-+atomic_fetch_inc_acquire(X) __atomic_fetch_op{ACQUIRE}(X,+,1)
-+atomic_fetch_inc_release(X) __atomic_fetch_op{RELEASE}(X,+,1)
-+
-+atomic_sub_return(V,X) __atomic_op_return{MB}(X,-,V)
-+atomic_sub_return_relaxed(V,X) __atomic_op_return{ONCE}(X,-,V)
-+atomic_sub_return_acquire(V,X) __atomic_op_return{ACQUIRE}(X,-,V)
-+atomic_sub_return_release(V,X) __atomic_op_return{RELEASE}(X,-,V)
-+atomic_fetch_sub(V,X) __atomic_fetch_op{MB}(X,-,V)
-+atomic_fetch_sub_relaxed(V,X) __atomic_fetch_op{ONCE}(X,-,V)
-+atomic_fetch_sub_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,-,V)
-+atomic_fetch_sub_release(V,X) __atomic_fetch_op{RELEASE}(X,-,V)
-+
-+atomic_dec_return(X) __atomic_op_return{MB}(X,-,1)
-+atomic_dec_return_relaxed(X) __atomic_op_return{ONCE}(X,-,1)
-+atomic_dec_return_acquire(X) __atomic_op_return{ACQUIRE}(X,-,1)
-+atomic_dec_return_release(X) __atomic_op_return{RELEASE}(X,-,1)
-+atomic_fetch_dec(X) __atomic_fetch_op{MB}(X,-,1)
-+atomic_fetch_dec_relaxed(X) __atomic_fetch_op{ONCE}(X,-,1)
-+atomic_fetch_dec_acquire(X) __atomic_fetch_op{ACQUIRE}(X,-,1)
-+atomic_fetch_dec_release(X) __atomic_fetch_op{RELEASE}(X,-,1)
-+
-+atomic_xchg(X,V) __xchg{MB}(X,V)
-+atomic_xchg_relaxed(X,V) __xchg{ONCE}(X,V)
-+atomic_xchg_release(X,V) __xchg{RELEASE}(X,V)
-+atomic_xchg_acquire(X,V) __xchg{ACQUIRE}(X,V)
-+atomic_cmpxchg(X,V,W) __cmpxchg{MB}(X,V,W)
-+atomic_cmpxchg_relaxed(X,V,W) __cmpxchg{ONCE}(X,V,W)
-+atomic_cmpxchg_acquire(X,V,W) __cmpxchg{ACQUIRE}(X,V,W)
-+atomic_cmpxchg_release(X,V,W) __cmpxchg{RELEASE}(X,V,W)
-+
-+atomic_sub_and_test(V,X) __atomic_op_return{MB}(X,-,V) == 0
-+atomic_dec_and_test(X)  __atomic_op_return{MB}(X,-,1) == 0
-+atomic_inc_and_test(X)  __atomic_op_return{MB}(X,+,1) == 0
-+atomic_add_negative(V,X) __atomic_op_return{MB}(X,+,V) < 0
-+atomic_add_negative_relaxed(V,X) __atomic_op_return{ONCE}(X,+,V) < 0
-+atomic_add_negative_acquire(V,X) __atomic_op_return{ACQUIRE}(X,+,V) < 0
-+atomic_add_negative_release(V,X) __atomic_op_return{RELEASE}(X,+,V) < 0
-+
-+atomic_fetch_andnot(V,X) __atomic_fetch_op{MB}(X,&~,V)
-+atomic_fetch_andnot_acquire(V,X) __atomic_fetch_op{ACQUIRE}(X,&~,V)
-+atomic_fetch_andnot_release(V,X) __atomic_fetch_op{RELEASE}(X,&~,V)
-+atomic_fetch_andnot_relaxed(V,X) __atomic_fetch_op{ONCE}(X,&~,V)
+Best regards,
 -- 
-2.34.1
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
