@@ -1,276 +1,190 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B7913D88D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 18:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7644A13D88D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 18:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717526903; cv=none; b=iVxBHCB1n4fiOUw/1oXXyMmskLGcK/L5NMQDGFks2ZnYLA5bSlC9uDNGZfkoLDzpjqPNgX9qE7iCFODzy/r2dVLImlxIT9cYi75lw341FbjL+7djX4Zh6EwbrRIU7QY40a4nEdoOl7fs9Doxnv26RRBF2k8+8a8E/vu0ITDgCSo=
+	t=1717526913; cv=none; b=AFBkNIuPkNUlhetJAyWb7wT9GzrAtWTXaKnQ8yRMskNw8mF1wOJjUWDjAS0hHkF8df7IWHwWKZ8/3zAnXjFMfgVnr+qfocV3RzvHq1592Q76Fwh6FW+O55lTkZzgdMtu3KR0WFI/BhLTla7VDv9zM38IKpQDdIi4nwgOUbr9q5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717526903; c=relaxed/simple;
-	bh=jX8UMTejDZxOWy2xvRQrFYx9FLkD8PRvvmu286qo3B8=;
+	s=arc-20240116; t=1717526913; c=relaxed/simple;
+	bh=grQASJp14Bt7fZYtPF/BOiWWydFpPjbo/cl/eIyN7Yw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qAcmG5NKiKYjDDwrFyHqIAWmuXr/DX6UUOlqetkA7v+YZPUxkbHmbbGfK1QecPxbnzM1Xor0bCezk6tfDDX10wBYbsgvtcUTRPUgm/1Ices1J+MrvzFDSx0z3itNKWPTBZpfSEU6rnYIYkaVfVmNFLH24Ch2xE/ZuVSHAKolpjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y4xYIfv4; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=jsdEew4HK+zcDFjdKwB+NGXEEerLlAam4m35CouOKk4Mvv4IixnMMPJUzWPcm9LuTwIpAWPb3sNhwEYlGa5FiF5yUcPr1TKjpdun3nffzrpv4U1YNr9UEyrv/Mjfe6t3bcbuCBirE+Obfrgv90aifaLcH7HG6wc/iy8lwIdOY4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Fh3Xu4lf; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y4xYIfv4"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1f6a270d1b8so34535ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 11:48:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Fh3Xu4lf"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a68cd75b97dso334289866b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 11:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717526901; x=1718131701; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GW87wwCX8r5pSoAmwipgb8TBgyr5V1aGTvd+vaaORGA=;
-        b=y4xYIfv4vyvXS0ob6OglaQSyePcU6H4yj4gWdc68Cp3w9wEdasebeKwlixtX0rx7k6
-         LXMlRKc7jLoD5UgDZKDfu6TnL66Hbw+G8YsKhjrBRSFqM0ert5U+mafG3WvA0K/ukRY9
-         P15rOIc1nHDcfPy3Re3wuuZO1m+/tzeoR+2r605wniQhC88tvHi0rW4z13YxL7MLLfZc
-         AvyTM+muDGbR771u6w0Pj1uJu1bislbI7tIaA5yOYc7KB5BhKFaIb60apMhaymZfL/I4
-         n42hBtOUHuDOM8USDn03EuoT31YiM71+eIViry1zJICdxTWqE3uB6aPQ+mVxhQ0YpVmP
-         sLOA==
+        d=linux-foundation.org; s=google; t=1717526910; x=1718131710; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Iay1wNfKZ5p2yKYQUB8UE9csohQVR6x64V5CAu9ZDo=;
+        b=Fh3Xu4lf4IavhNHAwV/f0TtO6ccKlIMeS5OZYhtHwKr9aiF/5zo6IWdf+5ZCqSLnVa
+         MoP8vNPe5SwruNUivfBnjergTNXmQTkPTGPbM0DYYd9Shh/4+7X0/8FB7fcRij8JNwP5
+         2Ifphzi/saqBL+WyE9lzHrX9TyHteJXK4+28g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717526901; x=1718131701;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GW87wwCX8r5pSoAmwipgb8TBgyr5V1aGTvd+vaaORGA=;
-        b=DN62wQeeV36+pkcpxVKTLqeg8obnWqTkucvtGtFjQvtNeZ8B1Xy9iiTAWIw92H5nwU
-         qrHRUjCjPtA4OFyh06tAYJLgm3+oWEQu89oOA34NtUFyr2hJUBJbpGT73zs9+IYYglB7
-         MlP5fSWCemknfIprDkOL3A2JvOLIyGfIJTOUVUdKJgQC4ykFuwuqGORAaB4pyliy5ogg
-         wVGVU/cUaSfkA5Y5eGMq3gRMcyegemXoIw79B2KFX8yHrB3HKx+6Mp0YT3IIJiJkArwh
-         Vl91aHHw/Yd15t59lf8yaDKoQ0cQAG2GiC8vwRgdhQ/4n+2xgKIbwaNj+PQ5ByK1ZVi1
-         tFCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHPNv6xIwVyL93dUapopEBzy9YNjvrnFwA9RUKD2V38F+Kmv8Ud0KGI2F/FVdLegl8EnW6QVVIlU/5FCfPdH3sZFr8Ax7TPjZFPJdy
-X-Gm-Message-State: AOJu0Yzo4xk2jWARQj8RVjoqVSD4+7MmPOFTmxI2lh+/E8mnppvcD6jn
-	9BbCSbvubDrwN4crtZXU/+Rtx9EJfYb1z1G03lbp3PnNtD79iYwEz0KG/as8fuDhNBJgrW5pCTo
-	sajymay65tPJpS66ZQUQ7L63XXelws+BEqqG3
-X-Google-Smtp-Source: AGHT+IHUVUunvHlUcY83hu7GlpidYQUM4eo6IlyvzCk7xmtTg7hH7ekLcv/5Om/sMvyhqe1VhxNDnvG9iTXn6sBiS40=
-X-Received: by 2002:a17:902:da89:b0:1f3:aff:8318 with SMTP id
- d9443c01a7336-1f6a66e4cbbmr289735ad.5.1717526900793; Tue, 04 Jun 2024
- 11:48:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717526910; x=1718131710;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Iay1wNfKZ5p2yKYQUB8UE9csohQVR6x64V5CAu9ZDo=;
+        b=oXLIozzPKG4mX4lD63+T7twL2DKdBV8TjROEbgtUNnbCHt/HXG8qOOrK57QI327hpE
+         bBsOVZHzlRRxqAkbqcOCqjoS44lGKL5sWIRstjgKQaMj1I+qPPD8mpVeGg1gBsQrDSv5
+         cmLq4qqHQbNovE5eqG/bH83UR2NMpPOizQMLCddFuIdYnDV6VG3qEYPL9hOwtrUm2h/t
+         AGHy2tC7Yt74rP2G4SV1rplfT4fnzz0iYIkxnpCtzRyPGqv2YE5UTc0oOCCarCrwa+aY
+         fUNFvfE1wAwhWWrzpYT5KYJzuvW3NYGdP5pP0p6n2tBAQH8bw+DKvKE3t6PSjhKe42Zt
+         ES1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUD6Fee+Ar6/9bSmlXnTOFq75KdZ8pjaKYYJPHk9pFEWO86VhDMBkpFDojYu/wKF8WInchJu0VFHK2GhFlv4fM3hYs1uYQxKD6bQC6E
+X-Gm-Message-State: AOJu0YxysqiFlTJhRfMptZhG9Ksob8rmOsSpjoiNz0UJFefPNF+tVywL
+	if3ryb/RKhRLjtHLTSO5V90L6zoBcQflp/uj1VpaA30srSMpplhMJy5WpH/05WELUq3yhHs7Mso
+	+s+zzXV/T
+X-Google-Smtp-Source: AGHT+IGIg57olnGl8s8h9fRX+d5c2dvy0G57z37hsql3mpYilb5/sHWuN80ytxi+7rvqvi3wMZ+TkQ==
+X-Received: by 2002:a17:906:4816:b0:a58:e3d9:e2d6 with SMTP id a640c23a62f3a-a69a024cf61mr22013966b.56.1717526909677;
+        Tue, 04 Jun 2024 11:48:29 -0700 (PDT)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68cf23c63esm454950866b.5.2024.06.04.11.48.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 11:48:29 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35dc9cef36dso5019417f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 11:48:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXghyOrhVt6FX66GHtZ7RjNKnPaaRYKkl9QT1MKZV9IR3BBpWbiybqGlRSm1EPlrGMYIaal8JVKeYkuo+7cpaJ+m9kj2kPfWIH6QH1D
+X-Received: by 2002:a17:906:54b:b0:a62:2cae:c02 with SMTP id
+ a640c23a62f3a-a69a024ce40mr20818866b.61.1717526574326; Tue, 04 Jun 2024
+ 11:42:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <23879991.0LEYPuXRzz@milian-workstation> <Zl8bhWfHSXxs35r2@x1> <Zl8g1LxRCYgTSxhy@x1>
-In-Reply-To: <Zl8g1LxRCYgTSxhy@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 4 Jun 2024 11:48:09 -0700
-Message-ID: <CAP-5=fVJRr2Qgf88ugEJ2FGerzKNv_dD6XOT_dSuFyYp2ubwSw@mail.gmail.com>
-Subject: Re: perf 6.9-1 (archlinux) crashes during recording of cycles + raw_syscalls
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Milian Wolff <milian.wolff@kdab.com>, linux-perf-users@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kenel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20240603211538.289765-1-andriy.shevchenko@linux.intel.com> <Zl9b_Wh_Lx7Aln1q@intel.com>
+In-Reply-To: <Zl9b_Wh_Lx7Aln1q@intel.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 4 Jun 2024 11:42:36 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whAnzrovfD8MtpRwfbkVxi-W61CqKxYdX+94r_uJeCT7w@mail.gmail.com>
+Message-ID: <CAHk-=whAnzrovfD8MtpRwfbkVxi-W61CqKxYdX+94r_uJeCT7w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] treewide: Align match_string() with sysfs_match_string()
+To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Corey Minyard <minyard@acm.org>, 
+	Allen Pais <apais@linux.microsoft.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Perry Yuan <perry.yuan@amd.com>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Nuno Sa <nuno.sa@analog.com>, Guenter Roeck <linux@roeck-us.net>, 
+	Randy Dunlap <rdunlap@infradead.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Lee Jones <lee@kernel.org>, 
+	Samuel Holland <samuel@sholland.org>, Elad Nachman <enachman@marvell.com>, 
+	Arseniy Krasnov <AVKrasnov@sberdevices.ru>, Johannes Berg <johannes.berg@intel.com>, 
+	Gregory Greenman <gregory.greenman@intel.com>, Benjamin Berg <benjamin.berg@intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Robert Richter <rrichter@amd.com>, Vinod Koul <vkoul@kernel.org>, 
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Nikita Kravets <teackot@gmail.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Stanley Chang <stanley_chang@realtek.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Abdel Alkuor <abdelalkuor@geotab.com>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Eric Biggers <ebiggers@google.com>, 
+	Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>, 
+	Abel Wu <wuyun.abel@bytedance.com>, John Johansen <john.johansen@canonical.com>, 
+	Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	Roberto Sassu <roberto.sassu@huawei.com>, Eric Snowberg <eric.snowberg@oracle.com>, 
+	Takashi Iwai <tiwai@suse.de>, Takashi Sakamoto <o-takashi@sakamocchi.jp>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Mark Brown <broonie@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-ide@vger.kernel.org, openipmi-developer@lists.sourceforge.net, 
+	linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, qat-linux@intel.com, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
+	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-leds@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-usb@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, alsa-devel@alsa-project.org, 
+	linux-sound@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, David Howells <dhowells@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, Damien Le Moal <dlemoal@kernel.org>, 
+	Niklas Cassel <cassel@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	Huang Rui <ray.huang@amd.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
+	Danilo Krummrich <dakr@redhat.com>, Jean Delvare <jdelvare@suse.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>, Hu Ziji <huziji@marvell.com>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Potnuri Bharat Teja <bharat@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>, Kalle Valo <kvalo@kernel.org>, 
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver O'Halloran" <oohall@gmail.com>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, JC Kuo <jckuo@nvidia.com>, 
+	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Sebastian Reichel <sre@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	Helge Deller <deller@gmx.de>, Brian Foster <bfoster@redhat.com>, 
+	Zhihao Cheng <chengzhihao1@huawei.com>, Tejun Heo <tj@kernel.org>, 
+	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 4, 2024 at 7:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+On Tue, 4 Jun 2024 at 11:25, Rodrigo Vivi <rodrigo.vivi@intel.com> wrote:
 >
-> On Tue, Jun 04, 2024 at 10:50:00AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Tue, Jun 04, 2024 at 01:44:18PM +0200, Milian Wolff wrote:
-> > > the following command crashes perf for me, is this still an issue ups=
-tream and
-> > > should I report it to arch for backporting? I cannot build the offici=
-al perf/
-> > > core branch, so I am afraid I cannot test it myself there:
->
-> > > ```
-> > > sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e
-> > > raw_syscalls:sys_enter ls
-> > > ...
-> > > [ perf record: Woken up 3 times to write data ]
-> > > malloc(): invalid next size (unsorted)
-> > > Aborted
-> > > ```
-> > > Backtrace with GDB + debuginfod:
-> > > ```
-> > > malloc(): invalid next size (unsorted)
->
-> > I reproduced this all the way back to 6.8, trying to bisect now, thanks
-> > for the report,
->
-> Can you please try with the attached and perhaps provide your Tested-by?
->
-> Thanks,
->
-> - Arnaldo
->
-> From ab355e2c6b4cf641a9fff7af38059cf69ac712d5 Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Tue, 4 Jun 2024 11:00:22 -0300
-> Subject: [PATCH 1/1] Revert "perf record: Reduce memory for recording
->  PERF_RECORD_LOST_SAMPLES event"
->
-> This reverts commit 7d1405c71df21f6c394b8a885aa8a133f749fa22.
+> (I believe that the new _match_string(str1, size, str2) deserves a better name,
+> but since I'm bad with naming stuff, I don't have any good suggestion)
 
-I think we should try to fight back reverts when possible. Reverts are
-removing something somebody poured time and attention into. When a
-regression has occurred then I think we should add the regression case
-as a test.
+I hated the enormous cc list, so I didn't reply to all. But clearly
+everybody else is just doing so.
 
-> This causes segfaults in some cases, as reported by Milian:
->
->   ```
->   sudo /usr/bin/perf record -z --call-graph dwarf -e cycles -e
->   raw_syscalls:sys_enter ls
->   ...
->   [ perf record: Woken up 3 times to write data ]
->   malloc(): invalid next size (unsorted)
->   Aborted
->   ```
->
->   Backtrace with GDB + debuginfod:
->
->   ```
->   malloc(): invalid next size (unsorted)
->
->   Thread 1 "perf" received signal SIGABRT, Aborted.
->   __pthread_kill_implementation (threadid=3D<optimized out>, signo=3Dsign=
-o@entry=3D6,
->   no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:44
->   Downloading source file /usr/src/debug/glibc/glibc/nptl/pthread_kill.c
->   44            return INTERNAL_SYSCALL_ERROR_P (ret) ? INTERNAL_SYSCALL_=
-ERRNO
->   (ret) : 0;
->   (gdb) bt
->   #0  __pthread_kill_implementation (threadid=3D<optimized out>,
->   signo=3Dsigno@entry=3D6, no_tid=3Dno_tid@entry=3D0) at pthread_kill.c:4=
-4
->   #1  0x00007ffff6ea8eb3 in __pthread_kill_internal (threadid=3D<optimize=
-d out>,
->   signo=3D6) at pthread_kill.c:78
->   #2  0x00007ffff6e50a30 in __GI_raise (sig=3Dsig@entry=3D6) at ../sysdep=
-s/posix/
->   raise.c:26
->   #3  0x00007ffff6e384c3 in __GI_abort () at abort.c:79
->   #4  0x00007ffff6e39354 in __libc_message_impl (fmt=3Dfmt@entry=3D0x7fff=
-f6fc22ea
->   "%s\n") at ../sysdeps/posix/libc_fatal.c:132
->   #5  0x00007ffff6eb3085 in malloc_printerr (str=3Dstr@entry=3D0x7ffff6fc=
-5850
->   "malloc(): invalid next size (unsorted)") at malloc.c:5772
->   #6  0x00007ffff6eb657c in _int_malloc (av=3Dav@entry=3D0x7ffff6ff6ac0
->   <main_arena>, bytes=3Dbytes@entry=3D368) at malloc.c:4081
->   #7  0x00007ffff6eb877e in __libc_calloc (n=3D<optimized out>,
->   elem_size=3D<optimized out>) at malloc.c:3754
->   #8  0x000055555569bdb6 in perf_session.do_write_header ()
->   #9  0x00005555555a373a in __cmd_record.constprop.0 ()
->   #10 0x00005555555a6846 in cmd_record ()
->   #11 0x000055555564db7f in run_builtin ()
->   #12 0x000055555558ed77 in main ()
->   ```
->
->   Valgrind memcheck:
->   ```
->   =3D=3D45136=3D=3D Invalid write of size 8
->   =3D=3D45136=3D=3D    at 0x2B38A5: perf_event__synthesize_id_sample (in =
-/usr/bin/perf)
+Anyway, here's my NAK for this patch with explanation:
 
-The write that is happening here is because an empty sample except for
-the id value is written out:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/synthetic-events.c?h=3Dperf-tools-next#n1805
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/builtin-record.c?h=3Dperf-tools-next#n1910
-It'd been missed that the sample wasn't quite empty and needed space.
+    https://lore.kernel.org/all/CAHk-=wg5F99-GZPETsasJd0JB0JGcdmmPeHRxCtT4_i83h8avg@mail.gmail.com/
 
-Rather than making the space 64kb again, can we not use
-perf_event__sample_event_size or some max constant?
+and part of it was the naming, but there were other oddities there too.
 
-Thanks,
-Ian
-
->   =3D=3D45136=3D=3D    by 0x157069: __cmd_record.constprop.0 (in /usr/bin=
-/perf)
->   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
->   =3D=3D45136=3D=3D  Address 0x6a866a8 is 0 bytes after a block of size 4=
-0 alloc'd
->   =3D=3D45136=3D=3D    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
->   =3D=3D45136=3D=3D    by 0x3574AB: zalloc (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin=
-/perf)
->   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
->   =3D=3D45136=3D=3D
->   =3D=3D45136=3D=3D Syscall param write(buf) points to unaddressable byte=
-(s)
->   =3D=3D45136=3D=3D    at 0x575953D: __libc_write (write.c:26)
->   =3D=3D45136=3D=3D    by 0x575953D: write (write.c:24)
->   =3D=3D45136=3D=3D    by 0x35761F: ion (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x357778: writen (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x1548F7: record__write (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x15708A: __cmd_record.constprop.0 (in /usr/bin=
-/perf)
->   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
->   =3D=3D45136=3D=3D  Address 0x6a866a8 is 0 bytes after a block of size 4=
-0 alloc'd
->   =3D=3D45136=3D=3D    at 0x4849BF3: calloc (vg_replace_malloc.c:1675)
->   =3D=3D45136=3D=3D    by 0x3574AB: zalloc (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x1570E0: __cmd_record.constprop.0 (in /usr/bin=
-/perf)
->   =3D=3D45136=3D=3D    by 0x15A845: cmd_record (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x201B7E: run_builtin (in /usr/bin/perf)
->   =3D=3D45136=3D=3D    by 0x142D76: main (in /usr/bin/perf)
->   =3D=3D45136=3D=3D
->  -----
->
-> Closes: https://lore.kernel.org/linux-perf-users/23879991.0LEYPuXRzz@mili=
-an-workstation/
-> Reported-by: Milian Wolff <milian.wolff@kdab.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: stable@kernel.org # 6.8+
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-record.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 66a3de8ac66186b0..0a8ba1323d64be6b 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1956,8 +1956,7 @@ static void record__read_lost_samples(struct record=
- *rec)
->
->                                 if (count.lost) {
->                                         if (!lost) {
-> -                                               lost =3D zalloc(sizeof(*l=
-ost) +
-> -                                                             session->ma=
-chines.host.id_hdr_size);
-> +                                               lost =3D zalloc(PERF_SAMP=
-LE_MAX_SIZE);
->                                                 if (!lost) {
->                                                         pr_debug("Memory =
-allocation failed\n");
->                                                         return;
-> @@ -1973,8 +1972,7 @@ static void record__read_lost_samples(struct record=
- *rec)
->                 lost_count =3D perf_bpf_filter__lost_count(evsel);
->                 if (lost_count) {
->                         if (!lost) {
-> -                               lost =3D zalloc(sizeof(*lost) +
-> -                                             session->machines.host.id_h=
-dr_size);
-> +                               lost =3D zalloc(PERF_SAMPLE_MAX_SIZE);
->                                 if (!lost) {
->                                         pr_debug("Memory allocation faile=
-d\n");
->                                         return;
-> --
-> 2.45.1
->
+           Linus
