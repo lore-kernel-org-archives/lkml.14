@@ -1,288 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E339912BEA4;
-	Tue,  4 Jun 2024 14:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C93913CA9A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511528; cv=none; b=ePAf6CDE9KSRi+E7k6kaKK33+sGkqymoE79FaemIkzgQE9sZo+YGSYdn1VRBWIMmGK1W2MY4YS6TpMdhTIPWC7B96OALRKoNf/3aTkNlXBnnUDoVW19CyU7TrhOiH/QwZ+tCqWSgj5GEzT8DFrQsLxIqerJMsPYj2csEvQMAcqg=
+	t=1717511530; cv=none; b=Vaqhwm9N4r3hmir5FVM/04sZHBq9nZrHEOQCIUbt/Zt8SeY5JeucLsMCQrcU7nWbvoMnP4xf0o57If+ICpgfnjgKdKttKjWjEGEYuFckPy9YnunUOgQVle1LJYwkNwDeLpsiGD+M/stkkVFTvRIhO8pBQWFnJPMTG1ZIU8pcvqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511528; c=relaxed/simple;
-	bh=B4nm6nLK51aoQsLttd3Ekb+C8feSvY1WbvdomQFg9hE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=j+i0UczbB2zCInnY4jnSlh3ilF7pkdhIclZiNG+j2nL8z0fMfBgnp9H4O1EDK+QzS22COSbhZPZYtL1SSCODM4kPWrbD5jf5rRxJAEGmRtuuenOdTqc1hdtn31fnWda5x0+ujCDaFODSBXduLqZ3gt6egZhQay1xun2vqbSllQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCDB21063;
-	Tue,  4 Jun 2024 07:32:30 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 251373F64C;
-	Tue,  4 Jun 2024 07:32:03 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 06/16] perf: cs-etm: Create decoders based on the trace ID mappings
-Date: Tue,  4 Jun 2024 15:30:15 +0100
-Message-Id: <20240604143030.519906-7-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604143030.519906-1-james.clark@arm.com>
-References: <20240604143030.519906-1-james.clark@arm.com>
+	s=arc-20240116; t=1717511530; c=relaxed/simple;
+	bh=vGp3ovyzZdpRyR1W94NZG7tQypJhWhNwsTCZl5Q5Tek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uHoLW8ynyU7h88NhecJo1EuWxHAl9yFvKCqBmwHsAouxqOMasvXSVro9pHcnd98OY9yhOGyTpkc8hs1MJuVFUI+3KY/OoH68kLQxFC2hlSZ4EO9DvTdT3X0DW66ZXiEJ9tOnPCcVhA2YtrWG+Qm2mX9qQ5MrCBkWK+g7ikCwuY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q78JyIsh; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q78JyIsh"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44024f5271dso154911cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717511526; x=1718116326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MQpV5dfzXhIlBBaFJofdAT+Rq9XDrHNaF91R1+IyrHc=;
+        b=q78JyIsh300QLsOzWB0cIrO5QteKg38itV0Zky9xhQNsMKqT/bJqXtn93le7vXbA2a
+         kcBFFRhPsHYoYSlkDwdDNtG9wycigglwu18jp3iUPoQ5uEjYZMV85Jzx1ZhEpRYYWiR9
+         7CpT3aDElHqpDOnmIEGdIo7GpuAVHvHqS/CgYVY5Cz4CWU2NfunGG7W+lESaduWARcED
+         vqmsIyt+it93mQ9j5/5bj6zaEYha7ZA/EA5oyAvsnJJ9N8A9nAvYXS095DU/IDgfYHcv
+         y/U/B7gzeO0fme01F1gn7R+/QwGIl2uHzFkUlbVsJJTDcJyhiyiUPcJBuVulULClM+6E
+         h4rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717511526; x=1718116326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MQpV5dfzXhIlBBaFJofdAT+Rq9XDrHNaF91R1+IyrHc=;
+        b=Yws2+h311EJfGrdnaewIJOoCcyUIFgZK2bl/lUy4UnzHHblRp8+y67wUO3yY65doDC
+         hGttp3UpJ5Zz74eD8q1wRHGQItRG1tavtk3Es36J+HwUsJTZXzBB9gM8zmLRY+UI/9J1
+         RuUsCL/jy8nSsYRSWljDLOJT7Ajtba4uSxxInfbNoHiTeeMPzsHISAltggAL1/2a3b50
+         4IrexaRewzVXLzOnoK3zwXItB+cjdl0bwLlhCENOcA2oDLHDgaNwUBk5UMes1835XroC
+         FkBAw3DVaZujuUmje7MpV5gWK4Mp5JwkDIKQmMIpqFsqRyD1MGXQXYuY/WAdtRIGVB2/
+         7aTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYZaXK6UvEu+0CgHlKEyC7l24TeAwYisoHGCQ0ML/1ksY/O6QGffUk7VSP8EkR23RmlyayZF1g2ab6dXmYEpG2ucqV8yqdbgFf29j/
+X-Gm-Message-State: AOJu0YwntpSN/ibUQ1iC5RIax7Lufc2U0F9/FZg5ARlz2l+A4NH6HLZD
+	L1Wsno1coEDnf1YMqNKp8HN5plzQD57jhaE37WQfn7SPkba20gnCbRAlhwtyZ4C1beiipWWOJ8j
+	/iD9jXhH8sRtUO6B+oEodNdaLHHROYa1hP/hm
+X-Google-Smtp-Source: AGHT+IGEpedUSaa44exiq+so0jKgv5XcNH+0+P8IoQJ2kUlE8+YPjvD8hE8Ie7JCngfSpIvxHm8sJNewp7aY8fLH1PQ=
+X-Received: by 2002:a05:622a:7392:b0:440:1fb0:1726 with SMTP id
+ d75a77b69052e-4401fb017d1mr1630971cf.19.1717511526273; Tue, 04 Jun 2024
+ 07:32:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240604060659.1449278-1-quic_kriskura@quicinc.com> <20240604060659.1449278-3-quic_kriskura@quicinc.com>
+In-Reply-To: <20240604060659.1449278-3-quic_kriskura@quicinc.com>
+From: Doug Anderson <dianders@google.com>
+Date: Tue, 4 Jun 2024 07:31:54 -0700
+Message-ID: <CAD=FV=VpYVE6hksZiyVTG+9qOZnpdyt45Av5JizeUiOHaVzvjg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sc7280: Disable SuperSpeed
+ instances in park mode
+To: Krishna Kurapati <quic_kriskura@quicinc.com>
+Cc: cros-qcom-dts-watchers@chromium.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <swboyd@chromium.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Kaehlcke <mka@chromium.org>, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, quic_ppratap@quicinc.com, quic_jackp@quicinc.com, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that each queue has a unique set of trace ID mappings, use this
-list to create the decoders. This also works the same way for
-unformatted where a single dummy entry is added into the trace ID list.
+Hi,
 
-Previously each queue would have a decoder created for each traced CPU
-on the system but this won't work anymore because CPUs can have
-overlapping trace IDs.
+On Mon, Jun 3, 2024 at 11:07=E2=80=AFPM Krishna Kurapati
+<quic_kriskura@quicinc.com> wrote:
+>
+> On SC7280, in host mode, it is observed that stressing out controller
+> results in HC died error:
+>
+>  xhci-hcd.12.auto: xHCI host not responding to stop endpoint command
+>  xhci-hcd.12.auto: xHCI host controller not responding, assume dead
+>  xhci-hcd.12.auto: HC died; cleaning up
+>
+> And at this instant only restarting the host mode fixes it. Disable
+> SuperSpeed instances in park mode for SC7280 to mitigate this issue.
+>
+> Reported-by: Doug Anderson <dianders@google.com>
+> Cc: <stable@vger.kernel.org>
+> Fixes: bb9efa59c665 ("arm64: dts: qcom: sc7280: Add USB related nodes")
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> ---
+> Removed RB/TB tag from Doug as commit text was updated.
+>
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm.c | 143 +++++++++++++++++++++++----------------
- 1 file changed, 85 insertions(+), 58 deletions(-)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index be858aed26c4..73fc0ab2fb09 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -268,6 +268,10 @@ static int cs_etm__map_trace_id_v0(struct cs_etm_auxtrace *etm, u8 trace_chan_id
- 		int ret;
- 		struct cs_etm_queue *etmq = etm->queues.queue_array[i].priv;
- 
-+		/* Ignore HW_IDs on unformatted queues */
-+		if (etmq->formatted_set && !etmq->formatted)
-+			continue;
-+
- 		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id,
- 						   cpu_metadata);
- 		if (ret)
-@@ -673,80 +677,58 @@ static void cs_etm__packet_dump(const char *pkt_string)
- }
- 
- static void cs_etm__set_trace_param_etmv3(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx, u32 etmidr)
-+					  u64 *metadata, u32 etmidr)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = cs_etm__get_v7_protocol_version(etmidr);
--	t_params[t_idx].etmv3.reg_ctrl = metadata[m_idx][CS_ETM_ETMCR];
--	t_params[t_idx].etmv3.reg_trc_id = metadata[m_idx][CS_ETM_ETMTRACEIDR];
-+	t_params->protocol = cs_etm__get_v7_protocol_version(etmidr);
-+	t_params->etmv3.reg_ctrl = metadata[CS_ETM_ETMCR];
-+	t_params->etmv3.reg_trc_id = metadata[CS_ETM_ETMTRACEIDR];
- }
- 
- static void cs_etm__set_trace_param_etmv4(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx)
-+					  u64 *metadata)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = CS_ETM_PROTO_ETMV4i;
--	t_params[t_idx].etmv4.reg_idr0 = metadata[m_idx][CS_ETMV4_TRCIDR0];
--	t_params[t_idx].etmv4.reg_idr1 = metadata[m_idx][CS_ETMV4_TRCIDR1];
--	t_params[t_idx].etmv4.reg_idr2 = metadata[m_idx][CS_ETMV4_TRCIDR2];
--	t_params[t_idx].etmv4.reg_idr8 = metadata[m_idx][CS_ETMV4_TRCIDR8];
--	t_params[t_idx].etmv4.reg_configr = metadata[m_idx][CS_ETMV4_TRCCONFIGR];
--	t_params[t_idx].etmv4.reg_traceidr = metadata[m_idx][CS_ETMV4_TRCTRACEIDR];
-+	t_params->protocol = CS_ETM_PROTO_ETMV4i;
-+	t_params->etmv4.reg_idr0 = metadata[CS_ETMV4_TRCIDR0];
-+	t_params->etmv4.reg_idr1 = metadata[CS_ETMV4_TRCIDR1];
-+	t_params->etmv4.reg_idr2 = metadata[CS_ETMV4_TRCIDR2];
-+	t_params->etmv4.reg_idr8 = metadata[CS_ETMV4_TRCIDR8];
-+	t_params->etmv4.reg_configr = metadata[CS_ETMV4_TRCCONFIGR];
-+	t_params->etmv4.reg_traceidr = metadata[CS_ETMV4_TRCTRACEIDR];
- }
- 
- static void cs_etm__set_trace_param_ete(struct cs_etm_trace_params *t_params,
--					  struct cs_etm_auxtrace *etm, int t_idx,
--					  int m_idx)
-+					u64 *metadata)
- {
--	u64 **metadata = etm->metadata;
--
--	t_params[t_idx].protocol = CS_ETM_PROTO_ETE;
--	t_params[t_idx].ete.reg_idr0 = metadata[m_idx][CS_ETE_TRCIDR0];
--	t_params[t_idx].ete.reg_idr1 = metadata[m_idx][CS_ETE_TRCIDR1];
--	t_params[t_idx].ete.reg_idr2 = metadata[m_idx][CS_ETE_TRCIDR2];
--	t_params[t_idx].ete.reg_idr8 = metadata[m_idx][CS_ETE_TRCIDR8];
--	t_params[t_idx].ete.reg_configr = metadata[m_idx][CS_ETE_TRCCONFIGR];
--	t_params[t_idx].ete.reg_traceidr = metadata[m_idx][CS_ETE_TRCTRACEIDR];
--	t_params[t_idx].ete.reg_devarch = metadata[m_idx][CS_ETE_TRCDEVARCH];
-+	t_params->protocol = CS_ETM_PROTO_ETE;
-+	t_params->ete.reg_idr0 = metadata[CS_ETE_TRCIDR0];
-+	t_params->ete.reg_idr1 = metadata[CS_ETE_TRCIDR1];
-+	t_params->ete.reg_idr2 = metadata[CS_ETE_TRCIDR2];
-+	t_params->ete.reg_idr8 = metadata[CS_ETE_TRCIDR8];
-+	t_params->ete.reg_configr = metadata[CS_ETE_TRCCONFIGR];
-+	t_params->ete.reg_traceidr = metadata[CS_ETE_TRCTRACEIDR];
-+	t_params->ete.reg_devarch = metadata[CS_ETE_TRCDEVARCH];
- }
- 
- static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
--				     struct cs_etm_auxtrace *etm,
--				     bool formatted,
--				     int sample_cpu,
--				     int decoders)
--{
--	int t_idx, m_idx;
--	u32 etmidr;
--	u64 architecture;
--
--	for (t_idx = 0; t_idx < decoders; t_idx++) {
--		if (formatted)
--			m_idx = t_idx;
--		else {
--			m_idx = get_cpu_data_idx(etm, sample_cpu);
--			if (m_idx == -1) {
--				pr_warning("CS_ETM: unknown CPU, falling back to first metadata\n");
--				m_idx = 0;
--			}
--		}
-+				     struct cs_etm_queue *etmq)
-+{
-+	struct int_node *inode;
- 
--		architecture = etm->metadata[m_idx][CS_ETM_MAGIC];
-+	intlist__for_each_entry(inode, etmq->traceid_list) {
-+		u64 *metadata = inode->priv;
-+		u64 architecture = metadata[CS_ETM_MAGIC];
-+		u32 etmidr;
- 
- 		switch (architecture) {
- 		case __perf_cs_etmv3_magic:
--			etmidr = etm->metadata[m_idx][CS_ETM_ETMIDR];
--			cs_etm__set_trace_param_etmv3(t_params, etm, t_idx, m_idx, etmidr);
-+			etmidr = metadata[CS_ETM_ETMIDR];
-+			cs_etm__set_trace_param_etmv3(t_params++, metadata, etmidr);
- 			break;
- 		case __perf_cs_etmv4_magic:
--			cs_etm__set_trace_param_etmv4(t_params, etm, t_idx, m_idx);
-+			cs_etm__set_trace_param_etmv4(t_params++, metadata);
- 			break;
- 		case __perf_cs_ete_magic:
--			cs_etm__set_trace_param_ete(t_params, etm, t_idx, m_idx);
-+			cs_etm__set_trace_param_ete(t_params++, metadata);
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -2918,6 +2900,42 @@ static u64 *cs_etm__create_meta_blk(u64 *buff_in, int *buff_in_offset,
- 	return metadata;
- }
- 
-+/*
-+ * traceid_list is used to create decoders and give them the trace ID
-+ * mappings. In unformatted mode just insert one entry for the sample
-+ * CPU so the decoder knows which settings to use.
-+ */
-+static int cs_etm__map_trace_ids_unformatted(struct cs_etm_auxtrace *etm)
-+{
-+	for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
-+		int ret;
-+		struct cs_etm_queue *etmq;
-+		u8 trace_chan_id;
-+		u64 *cpu_data;
-+
-+		etmq = etm->queues.queue_array[i].priv;
-+		if (!etmq->formatted_set || etmq->formatted)
-+			continue;
-+
-+		/* Giving it a real ID doesn't do much but can help with debugging */
-+		trace_chan_id = CORESIGHT_LEGACY_CPU_TRACE_ID(i);
-+		cpu_data = get_cpu_data(etm, i);
-+		if (cpu_data == NULL) {
-+			pr_warning("CS_ETM: unknown CPU, falling back to first metadata\n");
-+			cpu_data = etm->metadata[0];
-+		}
-+
-+		ret = cs_etm__insert_trace_id_node(etmq, trace_chan_id, cpu_data);
-+		if (ret)
-+			return ret;
-+
-+		ret = cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
- /**
-  * Puts a fragment of an auxtrace buffer into the auxtrace queues based
-  * on the bounds of aux_event, if it matches with the buffer that's at
-@@ -3220,21 +3238,26 @@ static int cs_etm__clear_unused_trace_ids_metadata(int num_cpu, u64 **metadata)
- static int cs_etm__create_queue_decoders(struct cs_etm_queue *etmq)
- {
- 	struct cs_etm_decoder_params d_params;
-+	struct cs_etm_trace_params  *t_params;
-+	int decoders = intlist__nr_entries(etmq->traceid_list);
- 
- 	/*
- 	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
- 	 * needed.
- 	 */
--	int decoders = etmq->formatted ? etmq->etm->num_cpu : 1;
-+	if (etmq->formatted_set && !etmq->formatted)
-+		assert(decoders == 1);
-+
-+	if (decoders == 0)
-+		return 0;
- 
- 	/* Use metadata to fill in trace parameters for trace decoder */
--	struct cs_etm_trace_params  *t_params = zalloc(sizeof(*t_params) * decoders);
-+	t_params = zalloc(sizeof(*t_params) * decoders);
- 
- 	if (!t_params)
- 		goto out_free;
- 
--	if (cs_etm__init_trace_params(t_params, etmq->etm, etmq->formatted,
--				      etmq->queue_nr, decoders))
-+	if (cs_etm__init_trace_params(t_params, etmq))
- 		goto out_free;
- 
- 	/* Set decoder parameters to decode trace packets */
-@@ -3497,6 +3520,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	if (err)
- 		goto err_free_queues;
- 
-+	err = cs_etm__map_trace_ids_unformatted(etm);
-+	if (err)
-+		goto err_free_queues;
-+
- 	err = cs_etm__create_decoders(etm);
- 	if (err)
- 		goto err_free_queues;
--- 
-2.34.1
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
