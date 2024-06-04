@@ -1,109 +1,86 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C6E14374E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C982F1386D2
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492574; cv=none; b=Xg6FHNDxT9yxTV+LKeC4HAe0I3QWV76wRwiZ8QQDL5dnl09uE2LhGS9w62x6MKZxOuSKvxKVRk5hTWnKLrQ8nj44GleMcrdUFFz4OBk5LZ3h+xFN7pLIS3qgSE9ChiARtG6vOvnYLam9w9eJ+R8ISY75jHpTsuJXuAOyszKy7Lo=
+	t=1717492642; cv=none; b=h/UH/4AA8m/bHdDB8M/ggC1xz8NkUBD9hYX6m9kCsztjg9DV+4+HfNwbJZgOMnuxJBFuym7HSQ5v3EJ7kjVtU+Z3Eihipvl391tFg3W5I8BW5H0G9heXob7RMooMy0Wwv7jC8roCu3mQ6r8EFtuz7ybPoPx8GtPi6esXu6VmYKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492574; c=relaxed/simple;
-	bh=b4BkQJr9zqa33/Ise3vdTeOwjy+zddMPkvLiqQ/OEvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q9fOceW0AT+XYuigyPU0rlKNEfSfhLVYVG06iPQAcvkr1fXJ3PRyIIU8RGUIuFrkXqr+YxmGngFWKpbcnOUSfcuXKUEBBJqADJ44tYwWZ3OOIlLoHexV/VqaxF6KJ6KKD4+1YA/+RtihaxcYQtTz4t3C1QNx0oHIUTM2FDRysAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K4B8tM6Z; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717492642; c=relaxed/simple;
+	bh=FCrFtvGT7nfYDArMK5ytnHOL+AVDEQiP/9i3bDpr0hA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLxyEVuVLPoiOknLnao2C1y5hMgtF7TyfIdJaoOFF10lLY7/rVWWy08O/pma+Bz9yn/evys9+ssBGNgBkGMiJiRU+wFzMuVWTVDGtDSchZjl4rKSPiP0+UZpjU2Z2+82Eq8QJNsQ4lVrrLx6jgRO/+RertQorsXoMha5Gmo7qsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3YGOQUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4B8tM6Z"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a526c6a2cso3023029a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 02:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717492571; x=1718097371; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=50hDekaz82sJymj7fyrqiF3qhFMExcj59YbjLfONsC8=;
-        b=K4B8tM6ZCK8VrXyVXCwJDaqLQUHC8RzrA951SgP//3LLXDsOT049Ogvk6zGnXq5MiY
-         DSiMbf7tm0F/ToXkKUHU4Wbje2KrZVSn+kviOFkZGivCnbhkXsaHqGSK+R1LiQkpwEuX
-         wC0MQHU4OqkcTRiZm1abNwHM1XPeKA9rq4eQVtQ/JVDiEOaXlesKX6b03/sg0z562bbK
-         EPvJr983a+IrxCJXuvfr+e3XfRZNU+5ghPYnsL70MRpPmHDldn1gjFTdV8ZCg4wOsDRQ
-         YJB09MUkS3KUA8pQseJKMtgW9oIE0hYKx/d3Y7SuBTmLKbUM+L/YoZ4rvie2a0u5aXFi
-         LENA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717492571; x=1718097371;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=50hDekaz82sJymj7fyrqiF3qhFMExcj59YbjLfONsC8=;
-        b=qt4p0zDkupOhAW5I1u9iG1epd+mCzjwV90SUZaRer04TS/7HFKYvGo80EDbaSdiQcv
-         AkNJryWDYnlV0LzWkdmiWAyCtR5GJgqdAtYN3va3QMk/TEmSuDtrIrSv5hvp6QfrNpHt
-         WmxsXxqQrhXykTV8nWdVcB732aqbobWYACAdlWSF0q8RYdvWUBXdWYybVdPwVwFzlK4B
-         lKxDshBefYGE3AXwTotU/Rd5MwbW+HfP5b+DpyD9FO0D5HzOXSw+vyXEGtE9ymQbiYHR
-         q+K35uetnvfxKan/7ovldn/zmPh8YUk9sxnR1cAS75DxiGZ8bTWTRGfTDAHEnu3PNVBp
-         kXgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLEATOwVkKg4mF2/IAGt2pXnwom767U9lIKuoPg1uMma/2bu+zfTyM67eCGXv4TFlfkvltZtphKMd8p2xpHB7ukOXYiBgWgg25YZ1X
-X-Gm-Message-State: AOJu0YxuR/lC4D8fRGbyhdWznb1xZjg6hZBhkTpURcDratVX130CW/2A
-	1Bt/Alffh+9BZA6J0Kjpln2rhPZiNr7hXnCyA4SyiuK4TZmlHUN4BhYfdSpW9kiE2MZaTTGqlUA
-	CUGrAAO3ly3EHA2/FuknBltJX+J5dzAy3HHA=
-X-Google-Smtp-Source: AGHT+IHkvBdA3Td7lCQbI7cnVHmFNcr7+ODgAN0ELhpUaW9M6kw3ibo6BjExWQT2oqahBU9FECD25BzUy0a5i3BATbo=
-X-Received: by 2002:a17:906:2b0e:b0:a68:f5fe:ac8a with SMTP id
- a640c23a62f3a-a68f5feacc4mr404643666b.64.1717492570557; Tue, 04 Jun 2024
- 02:16:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3YGOQUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52111C2BBFC;
+	Tue,  4 Jun 2024 09:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717492642;
+	bh=FCrFtvGT7nfYDArMK5ytnHOL+AVDEQiP/9i3bDpr0hA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L3YGOQULFYzsdRUHxPDwrS0zuMsIKMDkRsByuPi3yXGkmGiKwxqZme5r7pqSeB8xb
+	 D8vsUY1rbs2KS6EaMvEOYpFTFpkX1u1H4LhNh4MP/kFmsO5Bt3v1doMjiCz9OWCDTn
+	 ZRuywir2hsfdLVWK7/vQtTv+6wd8rFJDcBNxB7hYb6+JOnBSKNf0lwk+r90Dg12qSg
+	 m+gdgqCMA+opVFr+bGwSXHursv8ZjOB2JH1+fblDh9h1LMaNujBgYDgRygEFNdv0ki
+	 wjBeqI1ZIpl549F832GSb1f+hp9Vp51ZHNVcFirChjnBTWOC6ZBudBb20H73DQBfiq
+	 6IjoFe9Qd/dHA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sEQIC-000000001XF-28Nh;
+	Tue, 04 Jun 2024 11:17:21 +0200
+Date: Tue, 4 Jun 2024 11:17:20 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Sanyog Kale <sanyog.r.kale@intel.com>, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] soundwire: bus: clean up probe warnings
+Message-ID: <Zl7boEkMpQaELARP@hovoldconsulting.com>
+References: <20240604075213.20815-1-johan+linaro@kernel.org>
+ <20240604075213.20815-4-johan+linaro@kernel.org>
+ <8dd7cadc-138c-4ef5-b06f-7177550b1215@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240523211437.2839942-1-jwylder@google.com> <ZlwfQ3ERbo5snLcK@surfacebook.localdomain>
- <37abbb4e-cac4-4278-98fb-0af75e5b3ef4@sirena.org.uk>
-In-Reply-To: <37abbb4e-cac4-4278-98fb-0af75e5b3ef4@sirena.org.uk>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 4 Jun 2024 12:15:33 +0300
-Message-ID: <CAHp75Vfgu0eXXJ_FTgMC-VUzTRSo7zoA4C9j3WsevPzhajpDSA@mail.gmail.com>
-Subject: Re: [PATCH v2] regmap-i2c: Subtract reg size from max_write
-To: Mark Brown <broonie@kernel.org>
-Cc: Jim Wylder <jwylder@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, kernel-team@android.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8dd7cadc-138c-4ef5-b06f-7177550b1215@linux.intel.com>
 
-On Mon, Jun 3, 2024 at 3:08=E2=80=AFPM Mark Brown <broonie@kernel.org> wrot=
-e:
->
-> On Sun, Jun 02, 2024 at 10:29:07AM +0300, Andy Shevchenko wrote:
->
-> > >                 (bus->max_raw_write =3D=3D 0 || bus->max_raw_write > =
-quirks->max_write_len))
-> > > -                   max_write =3D quirks->max_write_len;
-> > > +                   max_write =3D quirks->max_write_len -
-> > > +                           (config->reg_bits + config->pad_bits) / B=
-ITS_PER_BYTE;
->
-> > Interesting. regmap-spi does this slightly differently, i.e. reg/8 + pa=
-d/8.
-> > I'm wondering which one is more correct (potential off-by-one I suppose=
-).
->
-> The above seems more correct if we have less than a full byte of padding.
+On Tue, Jun 04, 2024 at 10:33:02AM +0200, Pierre-Louis Bossart wrote:
+> On 6/4/24 02:52, Johan Hovold wrote:
+> > Clean up the probe warning messages by using a common succinct format
+> > (e.g. without __func__ and with a space after ':').
 
-Hmm... So, if we have
+> > @@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
+> >  	/* init the dynamic sysfs attributes we need */
+> >  	ret = sdw_slave_sysfs_dpn_init(slave);
+> >  	if (ret < 0)
+> > -		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
+> > +		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
+> >  
+> >  	/*
+> >  	 * Check for valid clk_stop_timeout, use DisCo worst case value of
+> > @@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
+> >  	if (drv->ops && drv->ops->update_status) {
+> >  		ret = drv->ops->update_status(slave, slave->status);
+> >  		if (ret < 0)
+> > -			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
+> > +			dev_warn(dev, "failed to update status: %d\n", ret);
+> 
+> the __func__ does help IMHO, 'failed to update status' is way too general...
 
-bits    pad  x/8+y/8 (x+y)/8
-4..7    0..3    0      0  // x + y from 4 up to 7
-4..7    4..7    0      1  // x + y from 8 up to 11
-4..7   8..11    1      1 // x + y from 12 up to 15
-8..15   0..7    1      1 // x + y from 8 up to 15
-8..15  8..15    2      2 // x + y from 16 up to 23
+Error messages printed with dev_warn will include the device and driver
+names so this message will be quite specific still.
 
-The only difference AFAICS is the case 2.
-Do we need to patch regmap SPI for that?
+> Replacing 'with status' by ":" is fine, but do we really care about 10
+> chars in a log?
 
-I think SPI just works since we don't really have devices that use
-less than 8 bits per register, and hence we never enter into such a
-case (while I2C is naturally using 7-bit addresses).
+It's not primarily about the numbers of characters but about consistency.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Johan
