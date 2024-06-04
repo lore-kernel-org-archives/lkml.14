@@ -1,57 +1,57 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA57143879
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14E31428F5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492155; cv=none; b=cLYmDOi3HgQIZP6MvUeW0eGAnySNwO3aGgiAu7P2T9GiRMYfhe8KWaNBnFA0dwaXFkWV6FeQ67Aw8a22m3T6CYYoA08+g8f0avV8W32V615TELraCY+gdxxd2KXfaNDFzX8bD/Y4GoSMEHc9jlM3sdKOEG7B1Luk1RocHVlD4Hc=
+	t=1717492151; cv=none; b=AlJ24HZr0mkvd+bekZLtsuOh6Ki8uGB/i8dXhbatCIKfZD6puQr/XSu/PVWi/gFPKmz5ZLRI6Q2/HS2PBnNB/REeKMOnPYg0C36PTlS0FPzNaPMjzmS1SagkK2u8cEz1Rs3BzAcI5PjjDf8fovjsnkeEF+7DZiLEd1Lr/ANcQQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492155; c=relaxed/simple;
-	bh=UdxRgzWjFQ8nvwfCq2iecsJsp5rik97H65lidWIfejs=;
+	s=arc-20240116; t=1717492151; c=relaxed/simple;
+	bh=PIMgUHILZaBD4zfg7wh7KkdwJbP30hYsk8LsiTVX2d0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vE9OwoZwqiVrOvK/yQly4d+PVYDhfHhh6sLA5XgI6GduyMosGS67N0R2Yw0jE0dNyxBBbKn5/OfWCcAQthGS9RswcBMjbOZaL3vVTSKfDOMKFZMeTiWyvgnQVuA/xPV+OoPnq+DQu4X7/G5uDeYPrdHUxfSHSnrQ8uuYP+Z/7xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=M0kAdpmy; arc=none smtp.client-ip=209.85.218.46
+	 MIME-Version; b=NDJTvXJvcsdH0kUEQ9ZIOyw+ymsWNkXNypsmwIA1sHoADaljyK4EmE1TWbIZT7ECSq+6rc95HyW25J7+Q5eSnAAjjnMg065GKk+MIzmqGbdbbKkj5od23mBbOs9r2NpoyVy5+RiNEDewXTYHPjJ+T9EQX6Kk8S5W52DAPZB8d0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=ZL1iY0nv; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="M0kAdpmy"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a626919d19dso943648866b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 02:09:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="ZL1iY0nv"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a63359aaaa6so681762266b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 02:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1717492151; x=1718096951; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1717492147; x=1718096947; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lu9yS7pQCrsoRi7ZUhn1+G2Y6nFzVt+avQdoI72cAe0=;
-        b=M0kAdpmysxYo5hqM46ymYTojdJC21cmzRtlYqOczx8sa1AdEFmqLvxYB9T5ApP1KOu
-         KoaVcCTDqqKGzXry0NHtkC7lub32MHyB63YyGZntsPb8kRMZqbv7H0XAFmP10/x2qjHj
-         0B7zKpZPdnROjrROLHix0aU9ZfzbFLuhOUVjS4qCcM5jkMuRLnQ8KaxAcWVK4jbXPYBH
-         I7b70SdADkYB+lEWlBt1ZEhhwn0EGqhbSo5F8ziPuhaCLAtbfc6P6RY9vx0OoZMAICo4
-         OP9uuVINUSuvI9wTiKW+1E+tv3UDO6bRcMnW+UkRXTtUTPm/0qyIT+yTH1GR+8t91UZE
-         e9sw==
+        bh=F9nIWEpeq+x9zjwKZn660Hrmucb48woIRSOtfjCvxw0=;
+        b=ZL1iY0nvd5/Xnilv+jiiagJ2DGeTGLFnvlWZUr8ko699UFgZiWcriIvA4fyhFVzq+/
+         WRqkAucXEGUUvu+3rELHzzCuaaKMMOKNTw3XKC7wDWe6rk+cdM2UrzCY9drW2i07bvN6
+         cPtpbPoQW/UHxPInAbUGWLGyjvNNrasO3ah01XUjTKXi3jMNfTVkobYzRhxPKSr/jKtG
+         HfCdSFxinQ8JXJED/xYlAAvKtt7TdgVmUovLedpfg1NvBNOqkaCEP4n3BPFeQiYTmUcI
+         WhEbzNjFRNa/m39JOuIiudIdEjU6IcvF1iVNVHroX1h40WDUxj38fIwIvlrhcaXcwS3R
+         2Ejw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717492151; x=1718096951;
+        d=1e100.net; s=20230601; t=1717492147; x=1718096947;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lu9yS7pQCrsoRi7ZUhn1+G2Y6nFzVt+avQdoI72cAe0=;
-        b=meehdl5x4ZhJ0SXuvpPJxx2PSYTKHttWGP5cTOSVkO0f3HPgcOGn9tKiEQa+LC+U14
-         KnoSLBAeVTZtRTdQjtBoPyENlRIHngf7mq6MGrFgpYXJ3oQO1xHUX+nu0raLGGMAasww
-         U0K54Islh6z5kG6Dqw6YU3zImI0wxEPuOGbTMSRvlfNWy80hBrKj62Z4jlGqcVIYIVSD
-         q8aLyqsYZfPW548B/8Bqa/sYcT4Ey5NZkPfYmYqaQdDCFDT9B0ULXZLdo7Q8XkX6JLdp
-         19n7Gs83VxV5ULZGMpqjdd168JYM8oG6DIZfigHPPJQtbaapjhN5A47ISBSGW3+SCgNf
-         U7cA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTi1/3FQbvcJOVd6LTAc0OsFegj5jDdjw9T17lcAdqg+WE4OmGJvMgYRz0mDb5/B0R/4c3T7OFGkoS7gkuzQXqMoNWMN7nASpwSE20
-X-Gm-Message-State: AOJu0Yxm0f2ytMUyqVp1D6+CuA9Ow9u3p5gy6QF9o6UBXR9qe0mU6M3d
-	Z9ShtcrEXIEFYNYNrjKaOBZ2XYSLDE4EkIoji0ajIu1X/esMus8/BkzjIJrCbw8=
-X-Google-Smtp-Source: AGHT+IFXHmTUY2LAO0CrBslhuc7TrTKlPItnXfEjmCqfLbltfo+OCfR+cziyr/TPphDgOmpCJJexuA==
-X-Received: by 2002:a17:906:471a:b0:a59:dba0:1544 with SMTP id a640c23a62f3a-a69544242b4mr149880166b.31.1717492151196;
-        Tue, 04 Jun 2024 02:09:11 -0700 (PDT)
+        bh=F9nIWEpeq+x9zjwKZn660Hrmucb48woIRSOtfjCvxw0=;
+        b=tybe5hqXSE7B6jhSakaQGH0md5n3ZV9XKY8+x7SmDzSG0TIKQ+8G3QKOSuV4ajeVO1
+         S2bkQwYN30rjf4F+3TWpjS64jw8H+7ozJBGryyBeB7B09QIIvoZ8bhVUToJkxuKkRvr+
+         cmdYAt+shVUBNVh6AgIhM4PdXdZrO9desKhfoYywsN7u3XuAHXThU210cRFnx9dc5t/U
+         0iEAXGTNNuBevLYbwUfLTnHK6gKAUrzuZ9IO4/4XzwXtq/ydsPfQomuUfYIpnJoH1T78
+         T1s7CcsBXwNuEp5tVVdC2R5hgEoIGTblMphGnQKCCGNZf4fE4oh/6PZ+NxKR1Sj1cq4N
+         3lIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVjxjVftHZwfgk0lNvklhgw2QXAlFpXWty5kXxhnbMhkz4Vu8clRMNX2vsXUvbJpg1xAtamHissF5SFIzuPYKUIz1uMkzV8ikA1nux
+X-Gm-Message-State: AOJu0Yw6sBjOha217Q3k1iOnUUGYf9tzxlOX6lYC/FtZpn9pyCVmgDyU
+	ixgtzyKy06V3D3uWS/iSHL65rqGffFB7E+xaH/S45cRTyRkiB8DZLgSwxW9o8nY=
+X-Google-Smtp-Source: AGHT+IH/QWdZZ4hxij414qaSi16QQPTkgw/+VI8cd7eUev+6bYbrIXWUDGZs5ah4lxOjZno8KDMAsg==
+X-Received: by 2002:a17:906:31c7:b0:a59:b61f:b96d with SMTP id a640c23a62f3a-a681fe4d0c3mr753625466b.5.1717492146689;
+        Tue, 04 Jun 2024 02:09:06 -0700 (PDT)
 Received: from raven.blarg.de (p200300dc6f4f9200023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f4f:9200:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa49e66fsm328376766b.129.2024.06.04.02.09.09
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa49e66fsm328376766b.129.2024.06.04.02.09.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 02:09:09 -0700 (PDT)
+        Tue, 04 Jun 2024 02:09:06 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
@@ -60,9 +60,9 @@ Cc: willy@infradead.org,
 	sfr@canb.auug.org.au,
 	david@redhat.com,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v6 04/15] linux/mm.h: move page_kasan_tag() to mm/page_kasan_tag.h
-Date: Tue,  4 Jun 2024 11:08:34 +0200
-Message-Id: <20240604090845.2182265-5-max.kellermann@ionos.com>
+Subject: [PATCH v6 01/15] drivers: add missing includes on linux/mm.h (and others)
+Date: Tue,  4 Jun 2024 11:08:31 +0200
+Message-Id: <20240604090845.2182265-2-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240604090845.2182265-1-max.kellermann@ionos.com>
 References: <20240604090845.2182265-1-max.kellermann@ionos.com>
@@ -74,194 +74,538 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Prepare to reduce dependencies on linux/mm.h.
-
-page_kasan_tag() is used by the page_to_virt() macro in ARM64 (but
-asm/memory.h does not include linux/mm.h).  Thus, in order to be able to use
-anything that calls page_to_virt(), linux/mm.h needs to be included.
-
-This would prevent us from moving page_address() to a separate header,
-because it calls lowmem_page_address() which in turn calls
-page_to_virt().  To prepare for this move, we move page_kasan_tag()
-out of linux/mm.h into a separate lean header.
-
-A side effect of this patch is that the <linux/kasan.h> include line
-is moved inside the "#ifdef CONFIG_KASAN..." block, i.e. it is not
-included at all if KASAN is disabled.
+After developing the other patches in this series, I had lots of build
+failures because "#include <linux/mm.h>" was missing.  This patch
+fixes those build failures by adding the missing "#include" lines.  To
+allow bisects, it is ordered before the others.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- MAINTAINERS                       |  1 +
- include/linux/mm.h                | 56 +-------------------------
- include/linux/mm/page_kasan_tag.h | 66 +++++++++++++++++++++++++++++++
- 3 files changed, 68 insertions(+), 55 deletions(-)
- create mode 100644 include/linux/mm/page_kasan_tag.h
+ arch/arm/mm/iomap.c                                       | 3 +++
+ drivers/comedi/comedi_buf.c                               | 1 +
+ drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c | 1 +
+ drivers/dma/bcm2835-dma.c                                 | 1 +
+ drivers/dma/dma-axi-dmac.c                                | 1 +
+ drivers/dma/sh/rcar-dmac.c                                | 1 +
+ drivers/firmware/qcom/qcom_scm-legacy.c                   | 1 +
+ drivers/firmware/qcom/qcom_scm-smc.c                      | 1 +
+ drivers/firmware/raspberrypi.c                            | 1 +
+ drivers/iio/buffer/industrialio-buffer-dma.c              | 1 +
+ drivers/iommu/iommufd/ioas.c                              | 2 ++
+ drivers/iommu/iommufd/selftest.c                          | 1 +
+ drivers/media/platform/mediatek/vpu/mtk_vpu.c             | 1 +
+ drivers/media/platform/ti/omap/omap_voutlib.c             | 1 +
+ drivers/misc/bcm-vk/bcm_vk_dev.c                          | 1 +
+ drivers/misc/fastrpc.c                                    | 1 +
+ drivers/misc/genwqe/card_dev.c                            | 1 +
+ drivers/misc/uacce/uacce.c                                | 1 +
+ drivers/mtd/spi-nor/core.h                                | 2 ++
+ drivers/pci/p2pdma.c                                      | 1 +
+ drivers/pci/pci.c                                         | 1 +
+ drivers/remoteproc/mtk_scp.c                              | 1 +
+ drivers/remoteproc/remoteproc_core.c                      | 1 +
+ drivers/soc/qcom/rmtfs_mem.c                              | 1 +
+ drivers/spi/spi-aspeed-smc.c                              | 1 +
+ drivers/spi/spi-bcm2835.c                                 | 2 ++
+ drivers/spi/spi-intel.c                                   | 1 +
+ drivers/virtio/virtio_ring.c                              | 1 +
+ include/linux/huge_mm.h                                   | 2 ++
+ include/linux/iommu.h                                     | 1 +
+ include/linux/nvme-keyring.h                              | 2 ++
+ include/linux/page-flags.h                                | 3 +++
+ include/linux/scatterlist.h                               | 6 ++++++
+ include/linux/vmstat.h                                    | 1 +
+ include/scsi/scsicam.h                                    | 3 +++
+ kernel/dma/ops_helpers.c                                  | 1 +
+ kernel/dma/remap.c                                        | 1 +
+ kernel/rcu/rcutorture.c                                   | 1 +
+ mm/dmapool.c                                              | 1 +
+ 39 files changed, 55 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb9f8077b37d..a9459947a3b3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14475,6 +14475,7 @@ F:	include/linux/mempolicy.h
- F:	include/linux/mempool.h
- F:	include/linux/memremap.h
- F:	include/linux/mm.h
-+F:	include/linux/mm/*.h
- F:	include/linux/mm_*.h
- F:	include/linux/mmzone.h
- F:	include/linux/mmu_notifier.h
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c41c82bcbec2..3ff239992d4c 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2,6 +2,7 @@
- #ifndef _LINUX_MM_H
- #define _LINUX_MM_H
+diff --git a/arch/arm/mm/iomap.c b/arch/arm/mm/iomap.c
+index 415d0a454237..9873d8156908 100644
+--- a/arch/arm/mm/iomap.c
++++ b/arch/arm/mm/iomap.c
+@@ -29,6 +29,9 @@ EXPORT_SYMBOL(ioport_unmap);
+ #endif
  
-+#include <linux/mm/page_kasan_tag.h>
- #include <linux/errno.h>
- #include <linux/mmdebug.h>
- #include <linux/gfp.h>
-@@ -28,7 +29,6 @@
- #include <linux/sizes.h>
- #include <linux/sched.h>
- #include <linux/pgtable.h>
--#include <linux/kasan.h>
- #include <linux/memremap.h>
+ #ifdef CONFIG_PCI
++
++#include <asm/pgtable.h> // for VMALLOC_*
++
+ unsigned long pcibios_min_io = 0x1000;
+ EXPORT_SYMBOL(pcibios_min_io);
+ 
+diff --git a/drivers/comedi/comedi_buf.c b/drivers/comedi/comedi_buf.c
+index 393966c09740..23b07ebc97ca 100644
+--- a/drivers/comedi/comedi_buf.c
++++ b/drivers/comedi/comedi_buf.c
+@@ -10,6 +10,7 @@
+ #include <linux/vmalloc.h>
  #include <linux/slab.h>
+ #include <linux/comedi/comedidev.h>
++#include <asm/pgtable.h> // for PAGE_KERNEL*
+ #include "comedi_internal.h"
  
-@@ -1812,60 +1812,6 @@ static inline void vma_set_access_pid_bit(struct vm_area_struct *vma)
- }
- #endif /* CONFIG_NUMA_BALANCING */
+ #ifdef PAGE_KERNEL_NOCACHE
+diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+index ee0b5079de3e..c9b2787baac7 100644
+--- a/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
++++ b/drivers/crypto/intel/qat/qat_common/adf_gen4_pm_debugfs.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright(c) 2023 Intel Corporation */
+ #include <linux/dma-mapping.h>
++#include <linux/fs.h> // for simple_read_from_buffer()
+ #include <linux/kernel.h>
+ #include <linux/string_helpers.h>
+ #include <linux/stringify.h>
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 9d74fe97452e..1d971999fd39 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -31,6 +31,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
++#include <asm/pgtable.h> // for ZERO_PAGE()
  
--#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
--
--/*
-- * KASAN per-page tags are stored xor'ed with 0xff. This allows to avoid
-- * setting tags for all pages to native kernel tag value 0xff, as the default
-- * value 0x00 maps to 0xff.
-- */
--
--static inline u8 page_kasan_tag(const struct page *page)
--{
--	u8 tag = KASAN_TAG_KERNEL;
--
--	if (kasan_enabled()) {
--		tag = (page->flags >> KASAN_TAG_PGSHIFT) & KASAN_TAG_MASK;
--		tag ^= 0xff;
--	}
--
--	return tag;
--}
--
--static inline void page_kasan_tag_set(struct page *page, u8 tag)
--{
--	unsigned long old_flags, flags;
--
--	if (!kasan_enabled())
--		return;
--
--	tag ^= 0xff;
--	old_flags = READ_ONCE(page->flags);
--	do {
--		flags = old_flags;
--		flags &= ~(KASAN_TAG_MASK << KASAN_TAG_PGSHIFT);
--		flags |= (tag & KASAN_TAG_MASK) << KASAN_TAG_PGSHIFT;
--	} while (unlikely(!try_cmpxchg(&page->flags, &old_flags, flags)));
--}
--
--static inline void page_kasan_tag_reset(struct page *page)
--{
--	if (kasan_enabled())
--		page_kasan_tag_set(page, KASAN_TAG_KERNEL);
--}
--
--#else /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
--
--static inline u8 page_kasan_tag(const struct page *page)
--{
--	return 0xff;
--}
--
--static inline void page_kasan_tag_set(struct page *page, u8 tag) { }
--static inline void page_kasan_tag_reset(struct page *page) { }
--
--#endif /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
--
- static inline struct zone *page_zone(const struct page *page)
+ #include "virt-dma.h"
+ 
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index bdb752f11869..7538459f1d8a 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -15,6 +15,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_dma.h>
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 40482cb73d79..784da367665c 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -12,6 +12,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+diff --git a/drivers/firmware/qcom/qcom_scm-legacy.c b/drivers/firmware/qcom/qcom_scm-legacy.c
+index 029e6d117cb8..01e082c7163c 100644
+--- a/drivers/firmware/qcom/qcom_scm-legacy.c
++++ b/drivers/firmware/qcom/qcom_scm-legacy.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/io.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/errno.h>
+diff --git a/drivers/firmware/qcom/qcom_scm-smc.c b/drivers/firmware/qcom/qcom_scm-smc.c
+index 16cf88acfa8e..a5c74d8996fe 100644
+--- a/drivers/firmware/qcom/qcom_scm-smc.c
++++ b/drivers/firmware/qcom/qcom_scm-smc.c
+@@ -5,6 +5,7 @@
+ #include <linux/io.h>
+ #include <linux/errno.h>
+ #include <linux/delay.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/mutex.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+index ac34876a97f8..b7858014a59c 100644
+--- a/drivers/firmware/raspberrypi.c
++++ b/drivers/firmware/raspberrypi.c
+@@ -10,6 +10,7 @@
+ #include <linux/kref.h>
+ #include <linux/mailbox_client.h>
+ #include <linux/mailbox_controller.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c b/drivers/iio/buffer/industrialio-buffer-dma.c
+index 13b1a858969e..d3e82d25df70 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dma.c
++++ b/drivers/iio/buffer/industrialio-buffer-dma.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/slab.h>
+ #include <linux/kernel.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/workqueue.h>
+diff --git a/drivers/iommu/iommufd/ioas.c b/drivers/iommu/iommufd/ioas.c
+index 742248276548..40c4942406cd 100644
+--- a/drivers/iommu/iommufd/ioas.c
++++ b/drivers/iommu/iommufd/ioas.c
+@@ -5,6 +5,8 @@
+ #include <linux/interval_tree.h>
+ #include <linux/iommufd.h>
+ #include <linux/iommu.h>
++#include <linux/capability.h>
++#include <linux/slab.h>
+ #include <uapi/linux/iommufd.h>
+ 
+ #include "io_pagetable.h"
+diff --git a/drivers/iommu/iommufd/selftest.c b/drivers/iommu/iommufd/selftest.c
+index 7a2199470f31..bcecf44681fe 100644
+--- a/drivers/iommu/iommufd/selftest.c
++++ b/drivers/iommu/iommufd/selftest.c
+@@ -5,6 +5,7 @@
+  */
+ #include <linux/slab.h>
+ #include <linux/iommu.h>
++#include <linux/mm.h> // for GUP_PIN_COUNTING_BIAS
+ #include <linux/xarray.h>
+ #include <linux/file.h>
+ #include <linux/anon_inodes.h>
+diff --git a/drivers/media/platform/mediatek/vpu/mtk_vpu.c b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
+index 724ae7c2ab3b..f248e4194b49 100644
+--- a/drivers/media/platform/mediatek/vpu/mtk_vpu.c
++++ b/drivers/media/platform/mediatek/vpu/mtk_vpu.c
+@@ -8,6 +8,7 @@
+ #include <linux/firmware.h>
+ #include <linux/interrupt.h>
+ #include <linux/iommu.h>
++#include <linux/mm.h> // for totalram_pages()
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+diff --git a/drivers/media/platform/ti/omap/omap_voutlib.c b/drivers/media/platform/ti/omap/omap_voutlib.c
+index 0ac46458e41c..3b653b49cc48 100644
+--- a/drivers/media/platform/ti/omap/omap_voutlib.c
++++ b/drivers/media/platform/ti/omap/omap_voutlib.c
+@@ -18,6 +18,7 @@
+  *
+  */
+ 
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/errno.h>
+ #include <linux/kernel.h>
+diff --git a/drivers/misc/bcm-vk/bcm_vk_dev.c b/drivers/misc/bcm-vk/bcm_vk_dev.c
+index d4a96137728d..c5a39a8189bf 100644
+--- a/drivers/misc/bcm-vk/bcm_vk_dev.c
++++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
+@@ -11,6 +11,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/kref.h>
++#include <linux/mm.h> // for io_remap_pfn_range()
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/pci.h>
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 694fc083b1bd..1e7421995f6b 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -10,6 +10,7 @@
+ #include <linux/idr.h>
+ #include <linux/list.h>
+ #include <linux/miscdevice.h>
++#include <linux/mm.h> // for find_vma()
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of.h>
+diff --git a/drivers/misc/genwqe/card_dev.c b/drivers/misc/genwqe/card_dev.c
+index 4441aca2280a..ce3acb938ca6 100644
+--- a/drivers/misc/genwqe/card_dev.c
++++ b/drivers/misc/genwqe/card_dev.c
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/kernel.h>
+ #include <linux/types.h>
++#include <linux/mm.h> // for struct vm_operations_struct
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/string.h>
+diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
+index bdc2e6fda782..af815b8a718e 100644
+--- a/drivers/misc/uacce/uacce.c
++++ b/drivers/misc/uacce/uacce.c
+@@ -2,6 +2,7 @@
+ #include <linux/compat.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/iommu.h>
++#include <linux/mm.h> // for struct vm_operations_struct
+ #include <linux/module.h>
+ #include <linux/poll.h>
+ #include <linux/slab.h>
+diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
+index 1516b6d0dc37..6b48bb57b638 100644
+--- a/drivers/mtd/spi-nor/core.h
++++ b/drivers/mtd/spi-nor/core.h
+@@ -9,6 +9,8 @@
+ 
+ #include "sfdp.h"
+ 
++#include <linux/sizes.h> // for SZ_*
++
+ #define SPI_NOR_MAX_ID_LEN	6
+ /*
+  * 256 bytes is a sane default for most older flashes. Newer flashes will
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index 4f47a13cb500..ef37ea6c09fc 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -16,6 +16,7 @@
+ #include <linux/slab.h>
+ #include <linux/genalloc.h>
+ #include <linux/memremap.h>
++#include <linux/mm.h> // for VM_MAYSHARE
+ #include <linux/percpu-refcount.h>
+ #include <linux/random.h>
+ #include <linux/seq_buf.h>
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index aac5daad3188..780d6b4f923b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -25,6 +25,7 @@
+ #include <linux/logic_pio.h>
+ #include <linux/pm_wakeup.h>
+ #include <linux/device.h>
++#include <linux/pgtable.h> // for pgprot_device()
+ #include <linux/pm_runtime.h>
+ #include <linux/pci_hotplug.h>
+ #include <linux/vmalloc.h>
+diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
+index b885a9a041e4..4f4f1e51d160 100644
+--- a/drivers/remoteproc/mtk_scp.c
++++ b/drivers/remoteproc/mtk_scp.c
+@@ -16,6 +16,7 @@
+ #include <linux/remoteproc.h>
+ #include <linux/remoteproc/mtk_scp.h>
+ #include <linux/rpmsg/mtk_rpmsg.h>
++#include <linux/slab.h>
+ 
+ #include "mtk_common.h"
+ #include "remoteproc_internal.h"
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index f276956f2c5c..938220fe29f5 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -18,6 +18,7 @@
+ 
+ #include <linux/delay.h>
+ #include <linux/kernel.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/module.h>
+ #include <linux/device.h>
+ #include <linux/panic_notifier.h>
+diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+index df850d073102..15c2f6e5eaff 100644
+--- a/drivers/soc/qcom/rmtfs_mem.c
++++ b/drivers/soc/qcom/rmtfs_mem.c
+@@ -6,6 +6,7 @@
+ #include <linux/kernel.h>
+ #include <linux/cdev.h>
+ #include <linux/err.h>
++#include <linux/mm.h> // for remap_pfn_range()
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/of.h>
+diff --git a/drivers/spi/spi-aspeed-smc.c b/drivers/spi/spi-aspeed-smc.c
+index bbd417c55e7f..e45f64761e5e 100644
+--- a/drivers/spi/spi-aspeed-smc.c
++++ b/drivers/spi/spi-aspeed-smc.c
+@@ -11,6 +11,7 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
++#include <linux/sizes.h> // for SZ_*
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi-mem.h>
+ 
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index e1b9b1235787..d8ed5575a9c6 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -33,6 +33,8 @@
+ #include <linux/slab.h>
+ #include <linux/spi/spi.h>
+ 
++#include <asm/pgtable.h> // for ZERO_PAGE()
++
+ /* SPI register offsets */
+ #define BCM2835_SPI_CS			0x00
+ #define BCM2835_SPI_FIFO		0x04
+diff --git a/drivers/spi/spi-intel.c b/drivers/spi/spi-intel.c
+index 3e5dcf2b3c8a..cf8e4f1c4d93 100644
+--- a/drivers/spi/spi-intel.c
++++ b/drivers/spi/spi-intel.c
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
++#include <linux/sizes.h> // for SZ_*
+ 
+ #include <linux/mtd/partitions.h>
+ #include <linux/mtd/spi-nor.h>
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 2a972752ff1b..12ad62415312 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -12,6 +12,7 @@
+ #include <linux/hrtimer.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/kmsan.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ #include <linux/spinlock.h>
+ #include <xen/xen.h>
+ 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 020e2344eb86..c48fdb486bb3 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -7,6 +7,8 @@
+ 
+ #include <linux/fs.h> /* only for vma_is_dax() */
+ 
++#include <asm/page.h> // for pmd_t
++
+ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf);
+ int copy_huge_pmd(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+ 		  pmd_t *dst_pmd, pmd_t *src_pmd, unsigned long addr,
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 7bc8dff7cf6d..d56e17a0fdf6 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -14,6 +14,7 @@
+ #include <linux/err.h>
+ #include <linux/of.h>
+ #include <linux/iova_bitmap.h>
++#include <linux/uaccess.h> // for copy_struct_from_user()
+ 
+ #define IOMMU_READ	(1 << 0)
+ #define IOMMU_WRITE	(1 << 1)
+diff --git a/include/linux/nvme-keyring.h b/include/linux/nvme-keyring.h
+index e10333d78dbb..9e033850b967 100644
+--- a/include/linux/nvme-keyring.h
++++ b/include/linux/nvme-keyring.h
+@@ -6,6 +6,8 @@
+ #ifndef _NVME_KEYRING_H
+ #define _NVME_KEYRING_H
+ 
++#include <linux/key.h>
++
+ #if IS_ENABLED(CONFIG_NVME_KEYRING)
+ 
+ key_serial_t nvme_tls_psk_default(struct key *keyring,
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index f04fea86324d..4d7265bbd93e 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -12,6 +12,9 @@
+ #ifndef __GENERATING_BOUNDS_H
+ #include <linux/mm_types.h>
+ #include <generated/bounds.h>
++#ifdef CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
++#include <linux/jump_label.h> // for DECLARE_STATIC_KEY_FALSE
++#endif
+ #endif /* !__GENERATING_BOUNDS_H */
+ 
+ /*
+diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+index 77df3d7b18a6..0516e64dc03e 100644
+--- a/include/linux/scatterlist.h
++++ b/include/linux/scatterlist.h
+@@ -8,6 +8,12 @@
+ #include <linux/mm.h>
+ #include <asm/io.h>
+ 
++#ifdef CONFIG_UML
++#include <asm/pgtable.h> // for virt_to_page(), page_to_phys()
++#else
++#include <asm/page.h> // for virt_to_page(), page_to_phys()
++#endif
++
+ struct scatterlist {
+ 	unsigned long	page_link;
+ 	unsigned int	offset;
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 131966a4af78..67c2505d3b78 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/types.h>
+ #include <linux/percpu.h>
++#include <linux/mm.h> // for folio_zone(), folio_nr_pages()
+ #include <linux/mmzone.h>
+ #include <linux/vm_event_item.h>
+ #include <linux/atomic.h>
+diff --git a/include/scsi/scsicam.h b/include/scsi/scsicam.h
+index 08edd603e521..6eb9fb7a57d0 100644
+--- a/include/scsi/scsicam.h
++++ b/include/scsi/scsicam.h
+@@ -13,6 +13,9 @@
+ 
+ #ifndef SCSICAM_H
+ #define SCSICAM_H
++
++#include <linux/types.h> // for sector_t
++
+ int scsicam_bios_param(struct block_device *bdev, sector_t capacity, int *ip);
+ bool scsi_partsize(struct block_device *bdev, sector_t capacity, int geom[3]);
+ unsigned char *scsi_bios_ptable(struct block_device *bdev);
+diff --git a/kernel/dma/ops_helpers.c b/kernel/dma/ops_helpers.c
+index af4a6ef48ce0..641363b13bb9 100644
+--- a/kernel/dma/ops_helpers.c
++++ b/kernel/dma/ops_helpers.c
+@@ -4,6 +4,7 @@
+  * the allocated memory contains normal pages in the direct kernel mapping.
+  */
+ #include <linux/dma-map-ops.h>
++#include <linux/mm.h> // for PAGE_ALIGN()
+ 
+ static struct page *dma_common_vaddr_to_page(void *cpu_addr)
  {
- 	return &NODE_DATA(page_to_nid(page))->node_zones[page_zonenum(page)];
-diff --git a/include/linux/mm/page_kasan_tag.h b/include/linux/mm/page_kasan_tag.h
-new file mode 100644
-index 000000000000..1210c62170a3
---- /dev/null
-+++ b/include/linux/mm/page_kasan_tag.h
-@@ -0,0 +1,66 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_PAGE_KASAN_TAG_H
-+#define _LINUX_MM_PAGE_KASAN_TAG_H
-+
-+#include <linux/types.h>
-+
-+struct page;
-+
-+#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
-+
-+#include <linux/kasan.h>
-+#include <linux/mm_types.h> // for struct page
-+
-+/*
-+ * KASAN per-page tags are stored xor'ed with 0xff. This allows to avoid
-+ * setting tags for all pages to native kernel tag value 0xff, as the default
-+ * value 0x00 maps to 0xff.
-+ */
-+
-+static inline u8 page_kasan_tag(const struct page *page)
-+{
-+	u8 tag = KASAN_TAG_KERNEL;
-+
-+	if (kasan_enabled()) {
-+		tag = (page->flags >> KASAN_TAG_PGSHIFT) & KASAN_TAG_MASK;
-+		tag ^= 0xff;
-+	}
-+
-+	return tag;
-+}
-+
-+static inline void page_kasan_tag_set(struct page *page, u8 tag)
-+{
-+	unsigned long old_flags, flags;
-+
-+	if (!kasan_enabled())
-+		return;
-+
-+	tag ^= 0xff;
-+	old_flags = READ_ONCE(page->flags);
-+	do {
-+		flags = old_flags;
-+		flags &= ~(KASAN_TAG_MASK << KASAN_TAG_PGSHIFT);
-+		flags |= (tag & KASAN_TAG_MASK) << KASAN_TAG_PGSHIFT;
-+	} while (unlikely(!try_cmpxchg(&page->flags, &old_flags, flags)));
-+}
-+
-+static inline void page_kasan_tag_reset(struct page *page)
-+{
-+	if (kasan_enabled())
-+		page_kasan_tag_set(page, KASAN_TAG_KERNEL);
-+}
-+
-+#else /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
-+
-+static inline u8 page_kasan_tag(const struct page *page)
-+{
-+	return 0xff;
-+}
-+
-+static inline void page_kasan_tag_set(struct page *page, u8 tag) { }
-+static inline void page_kasan_tag_reset(struct page *page) { }
-+
-+#endif /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
-+
-+#endif /* _LINUX_MM_PAGE_KASAN_TAG_H */
+diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
+index 27596f3b4aef..87b3c874d370 100644
+--- a/kernel/dma/remap.c
++++ b/kernel/dma/remap.c
+@@ -3,6 +3,7 @@
+  * Copyright (c) 2014 The Linux Foundation
+  */
+ #include <linux/dma-map-ops.h>
++#include <linux/mm.h> // for vmap(), PAGE_ALIGN()
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
+ 
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 08bf7c669dd3..a1527f855f2a 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -47,6 +47,7 @@
+ #include <linux/oom.h>
+ #include <linux/tick.h>
+ #include <linux/rcupdate_trace.h>
++#include <linux/mm.h> // for mem_dump_obj()
+ #include <linux/nmi.h>
+ 
+ #include "rcu.h"
+diff --git a/mm/dmapool.c b/mm/dmapool.c
+index f0bfc6c490f4..b8e23fdc81d7 100644
+--- a/mm/dmapool.c
++++ b/mm/dmapool.c
+@@ -25,6 +25,7 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/export.h>
++#include <linux/mm.h> // for want_init_on_alloc()
+ #include <linux/mutex.h>
+ #include <linux/poison.h>
+ #include <linux/sched.h>
 -- 
 2.39.2
 
