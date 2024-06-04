@@ -1,203 +1,378 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355153236;
-	Tue,  4 Jun 2024 11:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E440FAD51;
+	Tue,  4 Jun 2024 11:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717500616; cv=none; b=WGiLTnQHZQokUbWjcurFwV9OYL0kiYLIurtsgaeiPn+j3zrgvd5k1A90BUHCZHpG9BHRh6tP+cMqTphO5tziPZuQysupldxKSd1TGXoJf5EHa66Fsv6l5kTZkKsaIGKFflSsRCKpgG3HW186kHT/JbzCCk8u/Jz781FbNoXd214=
+	t=1717500695; cv=none; b=ezZbc5Evd3OT1HGCb4GnGwTAuBnq/xOg4wa2CJ9ueukMM5oO+Xf4Effj11RBEnxIqvacieDEkN85vzDSiyasvtnk6lHNiXPcT5mKtvdDG9n8+uu3Fh8quwQeBGM5IL4R7PVjgeKV1HumRp+6uXUsqFehUoXjoHYaWKeaclTvSCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717500616; c=relaxed/simple;
-	bh=TSTA2G2LQUoLI818l9IzE6WcYMZFTkdSN3J60PlP/OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUK6K1LtbYSCJ0YdbuSatG5du47SttAExr+uHpWPjePti8Th4cBiGjkhXHpJQ525u9wYF6bmUj5gLKOX1hemBxzmozqIPIwuHooxEWPRCwFeDl8Yc2tQyyfUmFQmpJoxm6yc7SEYe7Qoe3EAbR6dm+B3u1rVkl0XMmQ/Lc2j1tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OdRrewFP; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717500695; c=relaxed/simple;
+	bh=4VkGtERUrKVdApQTxE0PYMgIVXnqdYk7PyRuEkZe2dc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=UMdjPCwEqHuXKDX195poV9gSenxfC/2eLoYXY4C4Rra9g5wd+OfiCGyXRYAP6USWcaFLvhoGcVRJKZEGa1DkdAwFn+J4nWab2NPZTQvZYBIMZ6CZpeJRR0H1lvuvZ8o7oC3/riewADRY0duXD+2m/zC0M4ECcrS0flxTkRMWkIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=R9eFN+WM; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OdRrewFP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717500614; x=1749036614;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TSTA2G2LQUoLI818l9IzE6WcYMZFTkdSN3J60PlP/OM=;
-  b=OdRrewFP5MUVENDRqkkcuHEBPp/VmaAIOHBfvDoyeVA4sPjbgEcgCn+S
-   mxS1mSQ8fZGnK1y1AclN/EBBmcyRA4VeNzfzYc7xIXy8mzC92z0Z9OQo6
-   8T90/gbKrZdzLAdL51tZ4FSlZ+7DHBP+h779lyRKiylWQwPL7EQ2KTNfQ
-   SclejSY99WDVb806Iqa+nbC+Eucb5tpLuztueF/LV5BnzorMWgL/VCKDR
-   vIVEASKy38b2JvYomtHUuGQp55sQa4iO/DYQ14gvZm8llWbPP3IJdXPTE
-   cri0RB0+ANh7CRRBNsvbq8HGCgQAu+FW9GUnj4c8YD1/WjRmRxRwYZfyW
-   A==;
-X-CSE-ConnectionGUID: yoedKoM6S3+44ld1Z20dUw==
-X-CSE-MsgGUID: WKEPKTdaRlmfMrXI8MXxvA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="14263076"
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="14263076"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 04:30:13 -0700
-X-CSE-ConnectionGUID: SpeJQ3pTRt+lLlyUgBliTg==
-X-CSE-MsgGUID: PDxX2zhER16Ox+JxrCjxVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="41670248"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 04 Jun 2024 04:30:09 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sESMh-000N8x-06;
-	Tue, 04 Jun 2024 11:30:07 +0000
-Date: Tue, 4 Jun 2024 19:29:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andreas Kemnade <andreas@kemnade.info>, marcel@holtmann.org,
-	luiz.dentz@gmail.com, johan@kernel.org, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, pmenzel@molgen.mpg.de,
-	linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
-	tomi.valkeinen@ideasonboard.com,
-	=?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@gmail.com>,
-	robh@kernel.org, hns@goldelico.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v3 3/4] gnss: Add driver for AI2 protocol
-Message-ID: <202406041854.1Ad8rnRn-lkp@intel.com>
-References: <20240603144400.2195564-4-andreas@kemnade.info>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="R9eFN+WM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717500664; x=1718105464; i=markus.elfring@web.de;
+	bh=RqEJL9d9070BNk7hTaW1Jc98pMQJPKNH8MLfBlTHCLo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=R9eFN+WMgIaIYRA/nPWC3/464ltk3AOqYYMwWGJ+TP8juT0vixZDE2Cb7TCqUHvP
+	 PTf7Gdd/tQjzqUGeQeTwtUJrzYGCbFjDl+2H4nUGT1W/pbu149eKfWnf0zXXT5tPD
+	 azcbEKzidENjhQefnXayjYhNV6xL0nM1CFGTJ5aci9/T7x+JxHjdDvDuJM7iEvovN
+	 f2N6LA6i+84KJeyYQJxJrYwovUJmjr5pk524BZySSgHTWd4YFR26kxKOLBw9JU8Oq
+	 Ga3lKi3TUQdHWCIJfyzG90MeA1nAANz3GcBNLBGykd9I1BMWGNdcdGIdUhtyv7zAQ
+	 6zjgjUar0L9qfrl98A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M43GU-1sESNc2TVQ-00EJak; Tue, 04
+ Jun 2024 13:31:04 +0200
+Message-ID: <6562750c-0787-4edf-866b-691dd5b8854e@web.de>
+Date: Tue, 4 Jun 2024 13:30:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603144400.2195564-4-andreas@kemnade.info>
+User-Agent: Mozilla Thunderbird
+To: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Bard Liao
+ <yung-chuan.liao@linux.intel.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, Vinod Koul <vkoul@kernel.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, Bard Liao <bard.liao@intel.com>,
+ Vinod Koul <vinod.koul@linaro.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] soundwire: Use scope-based resource management in five
+ functions
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cScq7uthnA9o3mWUXillcOW60/+JXMdE1sEtnxrSCuLeIocVmlg
+ 86wyntw8D2uoBObODLpBxNHUEcjiHvBDBBKBS5Ut9chFKPAWO69LXFabNj6DdQdqOMJAiFj
+ SDTz+/WaVjxPTK63mxzYHSr5xNtbUy/7rQYYJVZil1E68erTi3LxEOkKHQ2O5ex0cV2zH/e
+ Y2ud7S1x5okGPYXOm/4tw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:soCrROdFRaw=;TkRwY2s1JgztSRhVlnV430/UODB
+ g6jvi5DKEkjRZeU0WDGMWRRdRGzmuNrBaZImD5EKOXNLqcPBdcHbXICd8zfbwsuflm0qNERUJ
+ NagvptKvMzRFlQcsDR5/tCqHtzRPVOG7SZcLmeNTEAZW7rsU5NWV67QA0We9WcQaT88pRnCcp
+ cwxCTyPn/T93yhtQ2NbG1CHVRFQEzbzmM4SYoRCXVLWIMrSBYK/9gghV77Z68P30KXETD3GL7
+ W3SsNO3L8A1vX6882cHKUvSMvejxKLkmPUjTZWfykZpgMrNt0qT62/wsNQ0oosSm5BDxyzoFz
+ ivDK9NumN6axlmp7zZlLCi7Ns5Ej/0Kcm6HSzNXLwHePvSF9njZHumTVJO9NnHX+zsYTJ5BcK
+ aMlr00m1SfPG/lbRbZrEcwENh3FoNGqjRzjMuiRsvghkwUBmiTkudGmEgIZtfOajUrKOcu7Nw
+ h6UmyXExMGHx1xaGpXsuIqv43D5RJ6xG8GkNouvsTJTIwqXMoFGAgjgluSOdtz1GjXzC5mYBi
+ ucBbiWmr6GDCrsZGmS24EQLGrdDr6uQa4i1TV/w/rK0GtSnAXUd6HVP6FHUYez9qSGzaAGGRq
+ S3xhcQ6uqj3KNCmY8DDtxk9b79N48lWNKg3dKBOLwmWTGRJpLevf5PZlc7H4bphmLgC9Rbm8d
+ hhVMkZQe9D2FqGtx2cmXl7hDim1dSkLZdSxBaragr2yr9bm9XGHvRmcwqe8BbSAEdy6EVPxni
+ 9kCfza9FuLx+Ld5FKKuAjFLG+cPU4cf3sGcN6tFGKJdFJQ+jkJ+Ys86E3Nztxi3Cwj8lqJgRt
+ yyJnOU1jGShyu5g9GudDSD8Jpyvo0EpXAcat5dbQg7COY=
 
-Hi Andreas,
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 4 Jun 2024 12:30:40 +0200
 
-kernel test robot noticed the following build errors:
+Scope-based resource management became supported also for another
+programming interface by contributions of Jonathan Cameron on 2024-02-17.
+See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
+property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
 
-[auto build test ERROR on bluetooth/master]
-[also build test ERROR on bluetooth-next/master char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.10-rc2 next-20240604]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D at more p=
+laces.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andreas-Kemnade/gnss-Add-AI2-protocol-used-by-some-TI-combo-chips/20240603-224753
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git master
-patch link:    https://lore.kernel.org/r/20240603144400.2195564-4-andreas%40kemnade.info
-patch subject: [PATCH v3 3/4] gnss: Add driver for AI2 protocol
-config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20240604/202406041854.1Ad8rnRn-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041854.1Ad8rnRn-lkp@intel.com/reproduce)
+* Reduce scopes for corresponding local variables.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406041854.1Ad8rnRn-lkp@intel.com/
+* Omit explicit fwnode_handle_put() calls accordingly.
 
-All errors (new ones prefixed by >>):
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-   In file included from drivers/gnss/ai2.c:9:
-   In file included from include/linux/gnss.h:13:
-   In file included from include/linux/kfifo.h:42:
-   In file included from include/linux/scatterlist.h:8:
-   In file included from include/linux/mm.h:2210:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from drivers/gnss/ai2.c:9:
-   In file included from include/linux/gnss.h:13:
-   In file included from include/linux/kfifo.h:42:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-         |                                                   ^
-   In file included from drivers/gnss/ai2.c:9:
-   In file included from include/linux/gnss.h:13:
-   In file included from include/linux/kfifo.h:42:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-         |                                                   ^
-   In file included from drivers/gnss/ai2.c:9:
-   In file included from include/linux/gnss.h:13:
-   In file included from include/linux/kfifo.h:42:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/hexagon/include/asm/io.h:328:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
->> drivers/gnss/ai2.c:340:6: error: call to undeclared function 'get_unaligned_le16'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     340 |         if (get_unaligned_le16(data + i) != sum) {
-         |             ^
-   7 warnings and 1 error generated.
+Previous clarification approach:
+soundwire: fix usages of device_get_named_child_node()
+https://lore.kernel.org/lkml/a2036c46-0527-4ac3-a40b-c9c2cd3e185e@web.de/
+https://lkml.org/lkml/2024/5/28/1138
 
 
-vim +/get_unaligned_le16 +340 drivers/gnss/ai2.c
+ drivers/soundwire/amd_manager.c     |  9 ++---
+ drivers/soundwire/intel_auxdevice.c | 12 ++----
+ drivers/soundwire/mipi_disco.c      | 62 +++++++++++------------------
+ 3 files changed, 31 insertions(+), 52 deletions(-)
 
-   324	
-   325	/* do some sanity checks and split frame into packets */
-   326	static void process_ai2_frame(struct ai2_device *ai2dev)
-   327	{
-   328		u16 sum;
-   329		int i;
-   330		u8 *head;
-   331		u8 *data;
-   332	
-   333		sum = 0;
-   334		data = ai2dev->recv_skb->data;
-   335		for (i = 0; i < ai2dev->recv_skb->len - 2; i++)
-   336			sum += data[i];
-   337	
-   338		print_hex_dump_bytes("ai2 frame: ", DUMP_PREFIX_OFFSET, data, ai2dev->recv_skb->len);
-   339	
- > 340		if (get_unaligned_le16(data + i) != sum) {
-   341			dev_dbg(ai2dev->dev,
-   342				"checksum error in reception, dropping frame\n");
-   343			return;
-   344		}
-   345	
-   346		/* reached if byte 1 in the command packet is set to 1 */
-   347		if (data[1] == AI2_ACK)
-   348			return;
-   349	
-   350		head = skb_pull(ai2dev->recv_skb, 2); /* drop frame start marker */
-   351		while (head && (ai2dev->recv_skb->len >= 3)) {
-   352			u8 cmd;
-   353			u16 pktlen;
-   354	
-   355			cmd = head[0];
-   356			pktlen = get_unaligned_le16(head + 1);
-   357			data = skb_pull(ai2dev->recv_skb, 3);
-   358			if (!data)
-   359				break;
-   360	
-   361			if (pktlen > ai2dev->recv_skb->len)
-   362				break;
-   363	
-   364			head = skb_pull(ai2dev->recv_skb, pktlen);
-   365	
-   366			process_ai2_packet(ai2dev, cmd, data, pktlen);
-   367		}
-   368	}
-   369	
+diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manag=
+er.c
+index 795e223f7e5c..94b867700b2d 100644
+=2D-- a/drivers/soundwire/amd_manager.c
++++ b/drivers/soundwire/amd_manager.c
+@@ -15,6 +15,7 @@
+ #include <linux/soundwire/sdw.h>
+ #include <linux/soundwire/sdw_registers.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <linux/wait.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+@@ -546,7 +547,6 @@ static int amd_sdw_port_enable(struct sdw_bus *bus,
+ static int sdw_master_read_amd_prop(struct sdw_bus *bus)
+ {
+ 	struct amd_sdw_manager *amd_manager =3D to_amd_sdw(bus);
+-	struct fwnode_handle *link;
+ 	struct sdw_master_prop *prop;
+ 	u32 quirk_mask =3D 0;
+ 	u32 wake_en_mask =3D 0;
+@@ -556,7 +556,9 @@ static int sdw_master_read_amd_prop(struct sdw_bus *bu=
+s)
+ 	prop =3D &bus->prop;
+ 	/* Find manager handle */
+ 	snprintf(name, sizeof(name), "mipi-sdw-link-%d-subproperties", bus->link=
+_id);
+-	link =3D device_get_named_child_node(bus->dev, name);
++
++	struct fwnode_handle *link __free(fwnode_handle)
++				   =3D device_get_named_child_node(bus->dev, name);
+ 	if (!link) {
+ 		dev_err(bus->dev, "Manager node %s not found\n", name);
+ 		return -EIO;
+@@ -571,9 +573,6 @@ static int sdw_master_read_amd_prop(struct sdw_bus *bu=
+s)
+ 	amd_manager->wake_en_mask =3D wake_en_mask;
+ 	fwnode_property_read_u32(link, "amd-sdw-power-mode", &power_mode_mask);
+ 	amd_manager->power_mode_mask =3D power_mode_mask;
+-
+-	fwnode_handle_put(link);
+-
+ 	return 0;
+ }
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel=
+_auxdevice.c
+index fd29f4ee6970..17ad3191ecc3 100644
+=2D-- a/drivers/soundwire/intel_auxdevice.c
++++ b/drivers/soundwire/intel_auxdevice.c
+@@ -14,6 +14,7 @@
+ #include <linux/auxiliary_bus.h>
+ #include <sound/pcm_params.h>
+ #include <linux/pm_runtime.h>
++#include <linux/property.h>
+ #include <sound/soc.h>
+ #include <linux/soundwire/sdw_registers.h>
+ #include <linux/soundwire/sdw.h>
+@@ -123,7 +124,6 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
+bus)
+ {
+ 	struct sdw_master_prop *prop =3D &bus->prop;
+ 	struct sdw_intel_prop *intel_prop;
+-	struct fwnode_handle *link;
+ 	char name[32];
+ 	u32 quirk_mask;
+
+@@ -131,7 +131,8 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
+bus)
+ 	snprintf(name, sizeof(name),
+ 		 "mipi-sdw-link-%d-subproperties", bus->link_id);
+
+-	link =3D device_get_named_child_node(bus->dev, name);
++	struct fwnode_handle *link __free(fwnode_handle)
++				   =3D device_get_named_child_node(bus->dev, name);
+ 	if (!link) {
+ 		dev_err(bus->dev, "Master node %s not found\n", name);
+ 		return -EIO;
+@@ -155,10 +156,8 @@ static int sdw_master_read_intel_prop(struct sdw_bus =
+*bus)
+ 		SDW_MASTER_QUIRKS_CLEAR_INITIAL_PARITY;
+
+ 	intel_prop =3D devm_kzalloc(bus->dev, sizeof(*intel_prop), GFP_KERNEL);
+-	if (!intel_prop) {
+-		fwnode_handle_put(link);
++	if (!intel_prop)
+ 		return -ENOMEM;
+-	}
+
+ 	/* initialize with hardware defaults, in case the properties are not fou=
+nd */
+ 	intel_prop->clde =3D 0x0;
+@@ -205,9 +204,6 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
+bus)
+ 		intel_prop->doais,
+ 		intel_prop->dodse,
+ 		intel_prop->dods);
+-
+-	fwnode_handle_put(link);
+-
+ 	return 0;
+ }
+
+diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco=
+.c
+index e5d9df26d4dc..4906532feaec 100644
+=2D-- a/drivers/soundwire/mipi_disco.c
++++ b/drivers/soundwire/mipi_disco.c
+@@ -30,7 +30,6 @@
+ int sdw_master_read_prop(struct sdw_bus *bus)
+ {
+ 	struct sdw_master_prop *prop =3D &bus->prop;
+-	struct fwnode_handle *link;
+ 	char name[32];
+ 	int nval, i;
+
+@@ -42,7 +41,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
+ 	snprintf(name, sizeof(name),
+ 		 "mipi-sdw-link-%d-subproperties", bus->link_id);
+
+-	link =3D device_get_named_child_node(bus->dev, name);
++	struct fwnode_handle *link __free(fwnode_handle)
++				   =3D device_get_named_child_node(bus->dev, name);
+ 	if (!link) {
+ 		dev_err(bus->dev, "Master node %s not found\n", name);
+ 		return -EIO;
+@@ -66,10 +66,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
+ 		prop->clk_freq =3D devm_kcalloc(bus->dev, prop->num_clk_freq,
+ 					      sizeof(*prop->clk_freq),
+ 					      GFP_KERNEL);
+-		if (!prop->clk_freq) {
+-			fwnode_handle_put(link);
++		if (!prop->clk_freq)
+ 			return -ENOMEM;
+-		}
+
+ 		fwnode_property_read_u32_array(link,
+ 				"mipi-sdw-clock-frequencies-supported",
+@@ -94,10 +92,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
+ 		prop->clk_gears =3D devm_kcalloc(bus->dev, prop->num_clk_gears,
+ 					       sizeof(*prop->clk_gears),
+ 					       GFP_KERNEL);
+-		if (!prop->clk_gears) {
+-			fwnode_handle_put(link);
++		if (!prop->clk_gears)
+ 			return -ENOMEM;
+-		}
+
+ 		fwnode_property_read_u32_array(link,
+ 					       "mipi-sdw-supported-clock-gears",
+@@ -119,9 +115,6 @@ int sdw_master_read_prop(struct sdw_bus *bus)
+
+ 	fwnode_property_read_u32(link, "mipi-sdw-command-error-threshold",
+ 				 &prop->err_threshold);
+-
+-	fwnode_handle_put(link);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL(sdw_master_read_prop);
+@@ -169,7 +162,6 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
+ 			      struct sdw_dpn_prop *dpn, int count, int ports,
+ 			      char *type)
+ {
+-	struct fwnode_handle *node;
+ 	u32 bit, i =3D 0;
+ 	int nval;
+ 	unsigned long addr;
+@@ -185,7 +177,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
+
+ 		dpn[i].num =3D bit;
+
+-		node =3D device_get_named_child_node(&slave->dev, name);
++		struct fwnode_handle *node __free(fwnode_handle)
++					   =3D device_get_named_child_node(&slave->dev, name);
+ 		if (!node) {
+ 			dev_err(&slave->dev, "%s dpN not found\n", name);
+ 			return -EIO;
+@@ -203,10 +196,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
+,
+ 						    dpn[i].num_words,
+ 						    sizeof(*dpn[i].words),
+ 						    GFP_KERNEL);
+-			if (!dpn[i].words) {
+-				fwnode_handle_put(node);
++			if (!dpn[i].words)
+ 				return -ENOMEM;
+-			}
+
+ 			fwnode_property_read_u32_array(node,
+ 					"mipi-sdw-port-wordlength-configs",
+@@ -244,10 +235,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
+,
+ 						       dpn[i].num_channels,
+ 						       sizeof(*dpn[i].channels),
+ 						 GFP_KERNEL);
+-			if (!dpn[i].channels) {
+-				fwnode_handle_put(node);
++			if (!dpn[i].channels)
+ 				return -ENOMEM;
+-			}
+
+ 			fwnode_property_read_u32_array(node,
+ 					"mipi-sdw-channel-number-list",
+@@ -261,10 +250,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
+,
+ 					dpn[i].num_ch_combinations,
+ 					sizeof(*dpn[i].ch_combinations),
+ 					GFP_KERNEL);
+-			if (!dpn[i].ch_combinations) {
+-				fwnode_handle_put(node);
++			if (!dpn[i].ch_combinations)
+ 				return -ENOMEM;
+-			}
+
+ 			fwnode_property_read_u32_array(node,
+ 					"mipi-sdw-channel-combination-list",
+@@ -286,8 +273,6 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
+
+ 		/* TODO: Read audio mode */
+
+-		fwnode_handle_put(node);
+-
+ 		i++;
+ 	}
+
+@@ -302,7 +287,6 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ {
+ 	struct sdw_slave_prop *prop =3D &slave->prop;
+ 	struct device *dev =3D &slave->dev;
+-	struct fwnode_handle *port;
+ 	int nval;
+
+ 	device_property_read_u32(dev, "mipi-sdw-sw-interface-revision",
+@@ -355,21 +339,21 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ 				 &prop->sink_ports);
+
+ 	/* Read dp0 properties */
+-	port =3D device_get_named_child_node(dev, "mipi-sdw-dp-0-subproperties")=
+;
+-	if (!port) {
+-		dev_dbg(dev, "DP0 node not found!!\n");
+-	} else {
+-		prop->dp0_prop =3D devm_kzalloc(&slave->dev,
+-					      sizeof(*prop->dp0_prop),
+-					      GFP_KERNEL);
+-		if (!prop->dp0_prop) {
+-			fwnode_handle_put(port);
+-			return -ENOMEM;
+-		}
+-
+-		sdw_slave_read_dp0(slave, port, prop->dp0_prop);
++	{
++		struct fwnode_handle *port __free(fwnode_handle)
++					   =3D device_get_named_child_node(dev,
++									 "mipi-sdw-dp-0-subproperties");
++		if (!port) {
++			dev_dbg(dev, "DP0 node not found!!\n");
++		} else {
++			prop->dp0_prop =3D devm_kzalloc(&slave->dev,
++						      sizeof(*prop->dp0_prop),
++						      GFP_KERNEL);
++			if (!prop->dp0_prop)
++				return -ENOMEM;
+
+-		fwnode_handle_put(port);
++			sdw_slave_read_dp0(slave, port, prop->dp0_prop);
++		}
+ 	}
+
+ 	/*
+=2D-
+2.45.1
+
