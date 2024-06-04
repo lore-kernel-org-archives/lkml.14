@@ -1,110 +1,112 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A18143724
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E857713B58A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717494329; cv=none; b=C1RTm/StzJ9Ed9fkjuH0A+/j7WYS/LK0XntYPw0tL1fLtt+Xa2EbVuez3FfBZuvVz8YTi3qVXPByBD+tzgYTgjJAUy4Do40YiywHpa5dh1IcbNXRPZTfSH5woSEqjkYLEBgJlTEukDwLoXd+z4hhWMqRWsWUONa6sXHuTiKqv8U=
+	t=1717494384; cv=none; b=aWz7h3VHv2Go3FSgk6V3E0FDu58lJU/QBK/0B5oBq/P6F1ebOwVdijjncAudOIm8YjYnWPZx0AWwoLk6d6zZwEEd8WB4nWY5htO6H7BwTdSx3ol+ASb7z2u5KhkLRI/oTCXkF48wo8PMa9pjlkok5AW3QlSZiLoG4LkvNWtA+r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717494329; c=relaxed/simple;
-	bh=q6OwPnDB/7iRSRzcquIUgaQdPaEF7T8E9hWdTrF07tU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n5Zg1wYDLoPX2ETE2lfnPjptbhGOSPbDjW5nBjHDwSjN8NFPwXaZbA1Ir0o5gBPozVXGhVTMet1kZavBiGg0UJPdqLVPFNzNVGPQemF2aZJsLd2pM1DHexCmVcyPGVBzYxDBZy9gXEcatER66h/ukY6b3kbrVbWgT8tqNarFvVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FeAVMx5R; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FeAVMx5R"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717494323; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vbTEU+QReOv/YXLhMYe94JXt/EprrLouNKIL/3NbTqU=;
-	b=FeAVMx5RZW+bo6Hy9n0D8tG7AKOe/LoXzYAXit7nhq8pf7z7M2R2//lqWPoemiL7z8kGZOmxbkfsopiEnQ0V8WcpsONM7hUlGtwPDyNNzEEFwUyD7umSyh95pKurwCOGjCZEi7j3txdAaQdL+JLgqm2IVtO2ZUtGgSWeBBbHCs4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0W7qjMx5_1717494320;
-Received: from 30.97.56.67(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W7qjMx5_1717494320)
-          by smtp.aliyun-inc.com;
-          Tue, 04 Jun 2024 17:45:21 +0800
-Message-ID: <f11c1b52-67d1-4c2a-834b-47302b0054bc@linux.alibaba.com>
-Date: Tue, 4 Jun 2024 17:45:20 +0800
+	s=arc-20240116; t=1717494384; c=relaxed/simple;
+	bh=/zpny/ZM3LBzpHP+P5Rl8ivFh/8aquswNIcUNFLBxoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U4QAI3JFg/Xfe5iDlfXzyMIGhjaevqjAwsm6Y12IIB8aeRFAz9u2tWGNyiavW9psrK2bGinGTWc8tGBdh1w1yh9m/Naeml3Z9qHfPO5Hf21G5SAPRKZPejPVTi3KMTQGyMXA1f8+Jvb1y312u/ZjliIvla0merusjbcAxDqukQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 995E71042;
+	Tue,  4 Jun 2024 02:46:46 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EC6B3F762;
+	Tue,  4 Jun 2024 02:46:21 -0700 (PDT)
+Date: Tue, 4 Jun 2024 10:46:19 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mailbox: ARM_MHU_V3 should depend on ARM64
+Message-ID: <Zl7ia0t2O2xS8PXU@pluto>
+References: <e00498fccf6dcbcf63bd24a137bfc7abd1b98345.1716967720.git.geert+renesas@glider.be>
+ <Zlb_txl4CqCfxWZz@pluto>
+ <CAMuHMdUyW_RxfUaxnyWVzPsdXQWqCQbgZ+avHskinXkrSFqhtw@mail.gmail.com>
+ <Zl3HiBX8ih6Sret6@bogus>
+ <CAMuHMdVkeKbUa45okF8qGOVVLRcOOtq=54yett+4dbyktCHxeg@mail.gmail.com>
+ <20240604070718.ypymfv6j2smvxldr@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] add mTHP support for anonymous shmem
-To: Daniel Gomez <da.gomez@samsung.com>, David Hildenbrand <david@redhat.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "hughd@google.com" <hughd@google.com>,
- "willy@infradead.org" <willy@infradead.org>,
- "wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
- "ying.huang@intel.com" <ying.huang@intel.com>,
- "21cnbao@gmail.com" <21cnbao@gmail.com>,
- "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
- "shy828301@gmail.com" <shy828301@gmail.com>, "ziy@nvidia.com"
- <ziy@nvidia.com>, "ioworker0@gmail.com" <ioworker0@gmail.com>,
- Pankaj Raghav <p.raghav@samsung.com>, "linux-mm@kvack.org"
- <linux-mm@kvack.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1717033868.git.baolin.wang@linux.alibaba.com>
- <f1783ff0-65bd-4b2b-8952-52b6822a0835@redhat.com>
- <db3517d0-54b1-4d3a-b798-1c13572d07be@linux.alibaba.com>
- <CGME20240531111357eucas1p2338be7f326d8d9176d2ee212a10fc9db@eucas1p2.samsung.com>
- <502fb3df-b42b-4f0c-a98d-348c3d544721@redhat.com>
- <slkkien5nc3weyzebdlxs5jjvealqzmctbom7sfvijvkolhsjj@athcc2aqq77p>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <slkkien5nc3weyzebdlxs5jjvealqzmctbom7sfvijvkolhsjj@athcc2aqq77p>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604070718.ypymfv6j2smvxldr@bogus>
 
-
-
-On 2024/6/4 16:18, Daniel Gomez wrote:
-> On Fri, May 31, 2024 at 01:13:48PM +0200, David Hildenbrand wrote:
->>>>
->>>> As a default, we should not be using large folios / mTHP for any shmem,
->>>> just like we did with THP via shmem_enabled. This is what this series
->>>> currently does, and is aprt of the whole mTHP user-space interface design.
->>>>
->>>> Further, the mTHP controls should control all of shmem, not only
->>>> "anonymous shmem".
->>>
->>> Yes, that's what I thought and in my TODO list.
->>
->> Good, it would be helpful to coordinate with Daniel and Pankaj.
+On Tue, Jun 04, 2024 at 08:07:18AM +0100, Sudeep Holla wrote:
+> On Mon, Jun 03, 2024 at 07:52:56PM +0200, Geert Uytterhoeven wrote:
+> > Hi Sudeep,
+> >
+> > On Mon, Jun 3, 2024 at 3:39 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > > On Wed, May 29, 2024 at 01:36:42PM +0200, Geert Uytterhoeven wrote:
+> > > > On Wed, May 29, 2024 at 12:13 PM Cristian Marussi
+> > > > <cristian.marussi@arm.com> wrote:
+> > > > > On Wed, May 29, 2024 at 09:30:45AM +0200, Geert Uytterhoeven wrote:
+> > > > > > The ARM MHUv3 controller is only present on ARM64 SoCs.  Hence add a
+> > > > > > dependency on ARM64, to prevent asking the user about this driver when
+> > > > > > configuring a kernel for a different architecture than ARM64.
+> > > > >
+> > > > > the ARM64 dependency was dropped on purpose after a few iterations of
+> > > > > this series since, despite this being an ARM IP, it has really no technical
+> > > > > dependency on ARM arch, not even the usual one on ARM AMBA bus, being this a
+> > > > > platform driver, so it seemed an uneeded artificial restriction to impose...
+> > > > > ...having said that, surely my live testing were performed only on arm64 models
+> > > > > as of now.
+> > > >
+> > > > For that, we have COMPILE_TEST=y.
+> > > >
+> > > > > So, I am not saying that I am against this proposed fix but what is the
+> > > > > issue that is trying to solve, have you seen any compilation error ? or
+> > > > > is it just to avoid the user-prompting ?
+> > > >
+> > > > I did not see a compile error (I didn't enable it on any non-ARM
+> > > > platform).
+> > > >
+> > > > But it is rather futile to ask the user about (thousands of) drivers
+> > > > for hardware that cannot possibly be present on the system he is
+> > > > configuring a kernel for.
+> > >
+> > > I am fine with this fix but I have seen quite opposite argument. That is
+> > > not to add dependency if it is not strictly required.
+> >
+> > Can you please point me to that reference?
+> >
 > 
-> I've integrated patches 11 and 12 from the lsf RFC thread [1] on top of Baolin's
-> v3 patches. You may find a version in my integration branch here [2]. I can
-> attach them here if it's preferred.
+> I don't have one handy, I need to dig but I have been asked to remove
+> in the past.
 > 
-> [1] https://lore.kernel.org/all/20240515055719.32577-1-da.gomez@samsung.com/
-> [2] https://gitlab.com/dkruces/linux-next/-/commits/next-20240604-shmem-mthp
+> > > Also since you state that the fix is to avoid users of other archs being
+> > > posed with the question that they may get annoyed or can't answer, I
+> > > wonder if the right approach is to make this driver default "n" instead.
+> >
+> > The driver already defaults to "n" (which is the default default ;-)
 > 
-> The point here is to combine the large folios strategy I proposed with mTHP
-> user controls. Would it make sense to limit the orders to the mapping order
-> calculated based on the size and index?
-
-IMO, for !anon shmem, this change makes sense to me. We should respect 
-the size and mTHP should act as a order filter.
-
-For anon shmem, we should ignore the length, which you always set it to 
-PAGE_SIZE in patch [1].
-
-[1] 
-https://gitlab.com/dkruces/linux-next/-/commit/edf02311fd6d86b355d3aeb74e67c8da6de3c569
-
-> @@ -1765,6 +1798,10 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
+> Ah Cristian mentioned the same in private. I may have misunderstood
+> then, for some reason I thought explicit default "n" would avoid getting
+> the prompt.
 > 
->                  order = highest_order(suitable_orders);
->                  while (suitable_orders) {
-> +                       if (order > mapping_order) {
-> +                               order = next_order(&suitable_orders, order);
-> +                               continue;
-> +                       }
->                          pages = 1UL << order;
->                          index = round_down(index, pages);
->                          folio = shmem_alloc_folio(gfp, order, info, index);
+
+I just tried this trick, it does not seem to work: an explict default-n will
+anyway trigger a prompt.
+
+> As I said I am fine with the proposed change, just took this discussion
+> as a way to learn little more about Kconfig.
 > 
-> Note: The branch still need to be adapted to include !anon mm.
+
+Can this be at least
+
+	depends on ARM || ARM64 || COMPILE_TEST
+
+Thanks,
+Cristian
+
