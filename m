@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D42171BA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1995D149DFB;
 	Tue,  4 Jun 2024 14:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512137; cv=none; b=lG5wMIiYyejN8KhkQAYFQWFtwVsRyjxc9s/uMuY51TYyLC9CvRAXfaNYfeT81r4MNPmrqqdMYF7W/v1V3v3Q/DsWgcgpsrudTul29GfrNSiV43bvn/PG40c9d+YwjhCfIVKFBmjPOh4hrzW3vD3mTx5kXwELUaNLAhYj0eMkalQ=
+	t=1717512138; cv=none; b=asEH62RJRfZrMMJiulLVx+ijM0VXh6lMd9a34fLLDSqkNNrJpRlaWGKCMyzKaZ25Csfu9k693VQNeY6/SKixBP/OPy/iPcgjO8BkN+IDvRlO4mhP5lpM1Fs0KZr8yCVelq+r6QfaYaqzUk5/QlHvlhWD+Oxm4BWB8Nv+xdG4Jmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512137; c=relaxed/simple;
-	bh=3LIdj7MeTAYW/ya7pNWfrRivBY+9Ty7JAfRpJe8bI6k=;
+	s=arc-20240116; t=1717512138; c=relaxed/simple;
+	bh=LLcOXWIJvLc0UoG5r0ma9bX/oC7gcdfyq7ld+y9LUoM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=YKZ1S6sIm+rGlZuLPSgB3Wc+Kt5HkKXFJm54KThsl2Icdz3ZntIBAuUfOW6YHPTzp3dLNDBLvRFXv5M8SR6rkEETIfD/dc1YK4buLXgD4xO/cnpnHZ9eTB3PXDAmfe8il0d27yiqISdSPxBs1x18jiRUmUrdsRxsG0kp+mhAw0w=
+	 Content-Type; b=ROmvcfst9V0bkaFTv9RynZTQJLkQ61Dj/WrH7Eb+Xtl4Rbm/BelSGA2/lm/UjnAtfXNuOfGukmdz/C1mmSjo7nEvZMSGBRSVnvu94IGGTjEoV4XPNH6qWw55p4aS/PSXZmqbaoyD0RFgskyVfA/7G7aCB9GuI7xPYaDsovMFUTw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1050AC32786;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C233C4AF08;
 	Tue,  4 Jun 2024 14:42:17 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMe-00000000Z0W-2DzG;
-	Tue, 04 Jun 2024 10:42:16 -0400
-Message-ID: <20240604144216.387251916@goodmis.org>
+	id 1sEVMf-00000000Z20-03Vc;
+	Tue, 04 Jun 2024 10:42:17 -0400
+Message-ID: <20240604144216.873024321@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:18 -0400
+Date: Tue, 04 Jun 2024 10:41:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [for-next][PATCH 15/27] function_graph: Add "task variables" per task for fgraph_ops
+Subject: [for-next][PATCH 18/27] function_graph: Move graph notrace bit to shadow stack global var
 References: <20240604144103.293353991@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -52,16 +52,13 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Add a "task variables" array on the tasks shadow ret_stack that is the
-size of longs for each possible registered fgraph_ops. That's a total
-of 16, taking up 8 * 16 = 128 bytes (out of a page size 4k).
+The use of the task->trace_recursion for the logic used for the function
+graph no-trace was a bit of an abuse of that variable. Now that there
+exists global vars that are per stack for registered graph traces, use
+that instead.
 
-This will allow for fgraph_ops to do specific features on a per task basis
-having a way to maintain state for each task.
-
-Co-developed with Masami Hiramatsu:
-Link: https://lore.kernel.org/linux-trace-kernel/171509104383.162236.12239656156685718550.stgit@devnote2
-Link: https://lore.kernel.org/linux-trace-kernel/20240603190823.308806126@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/171509107907.162236.6564679266777519065.stgit@devnote2
+Link: https://lore.kernel.org/linux-trace-kernel/20240603190823.796709456@goodmis.org
 
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -84,153 +81,100 @@ Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ftrace.h |  1 +
- kernel/trace/fgraph.c  | 74 +++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 74 insertions(+), 1 deletion(-)
+ include/linux/trace_recursion.h      |  7 -------
+ kernel/trace/trace.h                 |  9 +++++++++
+ kernel/trace/trace_functions_graph.c | 10 ++++++----
+ 3 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index e31ec8516de1..82cfc8e09cfd 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1089,6 +1089,7 @@ ftrace_graph_get_ret_stack(struct task_struct *task, int skip);
+diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
+index fdfb6f66718a..ae04054a1be3 100644
+--- a/include/linux/trace_recursion.h
++++ b/include/linux/trace_recursion.h
+@@ -44,13 +44,6 @@ enum {
+  */
+ 	TRACE_IRQ_BIT,
  
- unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
- 				    unsigned long ret, unsigned long *retp);
-+unsigned long *fgraph_get_task_var(struct fgraph_ops *gops);
+-	/*
+-	 * To implement set_graph_notrace, if this bit is set, we ignore
+-	 * function graph tracing of called functions, until the return
+-	 * function is called to clear it.
+-	 */
+-	TRACE_GRAPH_NOTRACE_BIT,
+-
+ 	/* Used to prevent recursion recording from recursing. */
+ 	TRACE_RECORD_RECURSION_BIT,
+ };
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 82d879dc63ff..b37402e3f0c9 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -919,8 +919,17 @@ enum {
  
- /*
-  * Sometimes we don't want to trace a function with the function
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 7fd9b03bd170..baa08249ffd5 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -54,6 +54,10 @@
-  * on the return of the function being traced, this is what will be on the
-  * task's shadow ret_stack: (the stack grows upward)
-  *
-+ *  ret_stack[SHADOW_STACK_OFFSET]
-+ * | SHADOW_STACK_TASK_VARS(ret_stack)[15]      |
-+ * ...
-+ * | SHADOW_STACK_TASK_VARS(ret_stack)[0]       |
-  *  ret_stack[SHADOW_STACK_MAX_OFFSET]
-  * ...
-  * |                                            | <- task->curr_ret_stack
-@@ -116,11 +120,19 @@ enum {
- #define SHADOW_STACK_SIZE	(PAGE_SIZE)
- #define SHADOW_STACK_OFFSET	(SHADOW_STACK_SIZE / sizeof(long))
- /* Leave on a buffer at the end */
--#define SHADOW_STACK_MAX_OFFSET (SHADOW_STACK_OFFSET - (FGRAPH_FRAME_OFFSET + 1))
-+#define SHADOW_STACK_MAX_OFFSET				\
-+	(SHADOW_STACK_OFFSET - (FGRAPH_FRAME_OFFSET + 1 + FGRAPH_ARRAY_SIZE))
- 
- /* RET_STACK():		Return the frame from a given @offset from task @t */
- #define RET_STACK(t, offset) ((struct ftrace_ret_stack *)(&(t)->ret_stack[offset]))
- 
-+/*
-+ * Each fgraph_ops has a reservered unsigned long at the end (top) of the
-+ * ret_stack to store task specific state.
-+ */
-+#define SHADOW_STACK_TASK_VARS(ret_stack) \
-+	((unsigned long *)(&(ret_stack)[SHADOW_STACK_OFFSET - FGRAPH_ARRAY_SIZE]))
+ 	TRACE_GRAPH_DEPTH_START_BIT,
+ 	TRACE_GRAPH_DEPTH_END_BIT,
 +
- DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
++	/*
++	 * To implement set_graph_notrace, if this bit is set, we ignore
++	 * function graph tracing of called functions, until the return
++	 * function is called to clear it.
++	 */
++	TRACE_GRAPH_NOTRACE_BIT,
+ };
  
-@@ -211,6 +223,44 @@ static void return_run(struct ftrace_graph_ret *trace, struct fgraph_ops *ops)
++#define TRACE_GRAPH_NOTRACE		(1 << TRACE_GRAPH_NOTRACE_BIT)
++
+ static inline unsigned long ftrace_graph_depth(unsigned long *task_var)
  {
- }
- 
-+static void ret_stack_set_task_var(struct task_struct *t, int idx, long val)
-+{
-+	unsigned long *gvals = SHADOW_STACK_TASK_VARS(t->ret_stack);
-+
-+	gvals[idx] = val;
-+}
-+
-+static unsigned long *
-+ret_stack_get_task_var(struct task_struct *t, int idx)
-+{
-+	unsigned long *gvals = SHADOW_STACK_TASK_VARS(t->ret_stack);
-+
-+	return &gvals[idx];
-+}
-+
-+static void ret_stack_init_task_vars(unsigned long *ret_stack)
-+{
-+	unsigned long *gvals = SHADOW_STACK_TASK_VARS(ret_stack);
-+
-+	memset(gvals, 0, sizeof(*gvals) * FGRAPH_ARRAY_SIZE);
-+}
-+
-+/**
-+ * fgraph_get_task_var - retrieve a task specific state variable
-+ * @gops: The ftrace_ops that owns the task specific variable
-+ *
-+ * Every registered fgraph_ops has a task state variable
-+ * reserved on the task's ret_stack. This function returns the
-+ * address to that variable.
-+ *
-+ * Returns the address to the fgraph_ops @gops tasks specific
-+ * unsigned long variable.
-+ */
-+unsigned long *fgraph_get_task_var(struct fgraph_ops *gops)
-+{
-+	return ret_stack_get_task_var(current, gops->idx);
-+}
-+
- /*
-  * @offset: The offset into @t->ret_stack to find the ret_stack entry
-  * @frame_offset: Where to place the offset into @t->ret_stack of that entry
-@@ -766,6 +816,7 @@ static int alloc_retstack_tasklist(unsigned long **ret_stack_list)
- 
- 		if (t->ret_stack == NULL) {
- 			atomic_set(&t->trace_overrun, 0);
-+			ret_stack_init_task_vars(ret_stack_list[start]);
- 			t->curr_ret_stack = 0;
- 			t->curr_ret_depth = -1;
- 			/* Make sure the tasks see the 0 first: */
-@@ -826,6 +877,7 @@ static void
- graph_init_task(struct task_struct *t, unsigned long *ret_stack)
+ 	return (*task_var >> TRACE_GRAPH_DEPTH_START_BIT) & 3;
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 66cce73e94f8..13d0387ac6a6 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -130,6 +130,7 @@ static inline int ftrace_graph_ignore_irqs(void)
+ int trace_graph_entry(struct ftrace_graph_ent *trace,
+ 		      struct fgraph_ops *gops)
  {
- 	atomic_set(&t->trace_overrun, 0);
-+	ret_stack_init_task_vars(ret_stack);
- 	t->ftrace_timestamp = 0;
- 	t->curr_ret_stack = 0;
- 	t->curr_ret_depth = -1;
-@@ -959,6 +1011,24 @@ static int start_graph_tracing(void)
- 	return ret;
- }
++	unsigned long *task_var = fgraph_get_task_var(gops);
+ 	struct trace_array *tr = gops->private;
+ 	struct trace_array_cpu *data;
+ 	unsigned long flags;
+@@ -138,7 +139,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
+ 	int ret;
+ 	int cpu;
  
-+static void init_task_vars(int idx)
-+{
-+	struct task_struct *g, *t;
-+	int cpu;
-+
-+	for_each_online_cpu(cpu) {
-+		if (idle_task(cpu)->ret_stack)
-+			ret_stack_set_task_var(idle_task(cpu), idx, 0);
-+	}
-+
-+	read_lock(&tasklist_lock);
-+	for_each_process_thread(g, t) {
-+		if (t->ret_stack)
-+			ret_stack_set_task_var(t, idx, 0);
-+	}
-+	read_unlock(&tasklist_lock);
-+}
-+
- int register_ftrace_graph(struct fgraph_ops *gops)
+-	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT))
++	if (*task_var & TRACE_GRAPH_NOTRACE)
+ 		return 0;
+ 
+ 	/*
+@@ -149,7 +150,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
+ 	 * returning from the function.
+ 	 */
+ 	if (ftrace_graph_notrace_addr(trace->func)) {
+-		trace_recursion_set(TRACE_GRAPH_NOTRACE_BIT);
++		*task_var |= TRACE_GRAPH_NOTRACE_BIT;
+ 		/*
+ 		 * Need to return 1 to have the return called
+ 		 * that will clear the NOTRACE bit.
+@@ -240,6 +241,7 @@ void __trace_graph_return(struct trace_array *tr,
+ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 			struct fgraph_ops *gops)
  {
- 	int command = 0;
-@@ -997,6 +1067,8 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 		ftrace_graph_return = return_run;
- 		ftrace_graph_entry = entry_run;
- 		command = FTRACE_START_FUNC_RET;
-+	} else {
-+		init_task_vars(gops->idx);
++	unsigned long *task_var = fgraph_get_task_var(gops);
+ 	struct trace_array *tr = gops->private;
+ 	struct trace_array_cpu *data;
+ 	unsigned long flags;
+@@ -249,8 +251,8 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
+ 
+ 	ftrace_graph_addr_finish(gops, trace);
+ 
+-	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
+-		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
++	if (*task_var & TRACE_GRAPH_NOTRACE) {
++		*task_var &= ~TRACE_GRAPH_NOTRACE;
+ 		return;
  	}
  
- 	/* Always save the function, and reset at unregistering */
 -- 
 2.43.0
 
