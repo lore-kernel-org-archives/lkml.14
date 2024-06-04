@@ -1,138 +1,228 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65198225CF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7980148855;
+	Tue,  4 Jun 2024 16:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717519911; cv=none; b=TV8J2lJuuK8tMDcy0AiCLR/6p0VBId2oXmmv7PfXAk4AIUWceWwE7Y+pNFK1X1PfqjrIMwek9lxrkx7p422kgMUI92Gip+B8Dko90GXd6u54PCR+KRlACwaGlINm267sFqzYUIBoKGzEyuTA2NO0lt8YSfMiayrfSHAUORIqnOk=
+	t=1717519931; cv=none; b=jept2EJkGg+37Rjz5Fg/NnDIQmBf5BBTMT+CE+vH3KOg073u5G7OZz5o1Vfef/Jv6raHRCQN7WfTwr0nzPp5JAdDtPHoh+pjVNJ2v1osii0JT2sD5gGbN0hV9JGKVxrUyRTg1GEgYE7k1hZ5exumM1NqzSYPohJBa+2JWOLPf40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717519911; c=relaxed/simple;
-	bh=/gbhEWGwhC/N9t3ZntrfKjb94teayzC5Ct4eUgtvJyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DAb6b9XceWae4FgGk9c47IjVLRl994jqK/SHoAYEJ17at975r9BSsfVRMMC9p117hwtbvj7VA9PLHw8ZIewWGDHb/uJ6tyc0Aj69fW8Y370RrJdRrreCxvyPQyN0flnO8yifQf6Oiug2QzJKYDL/uBjiRwk6TLNG90f7d/w3iFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=mjnjANRX; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1717519931; c=relaxed/simple;
+	bh=5xgUfNefMw6wri/wlUNbDyhBSguJ3pHNq3wLRAPp26E=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=AwQePvr6cGb8FI5NVUjcXAjAnircG920xWV52EkT6rC7CBvaJuSGKCabsB/tpBCBC+0CaaSozGRRqds6n+0SvG0yw1RaSTKtS3tSVTNz7+po8QKXXFbYBobZPQGO5eUeYn6u4PFmsVucyTiInp55QmmR4UvvSfIQ4S/XfeyAghk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEFOZDH3; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="mjnjANRX"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-794ba2d4d82so258359985a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:51:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEFOZDH3"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42147970772so8118905e9.0;
+        Tue, 04 Jun 2024 09:52:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1717519908; x=1718124708; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rHa4rdBij7iNJpe66g86f477UY9nlCjL0qAGcR/g8E0=;
-        b=mjnjANRXZzIJiJnslRWqn3WsM3RfBVwCqK98KUBQe6h3/IkYHs1d1w2Xk/qN5RjGPb
-         tBb1CQf84XEUVZNahwQBHTiq4ekZHv5Nk0ClroIV3nLYwOfSB5FQ8cpYqzsjvSEfgIIW
-         XYRxbWpLuaiFky9tXBjqw7pbwDRznLz7ie3B7CQTLVycOo4NS5C4wsSQKNCTVEucroVc
-         xK/ybtjne+qXDbu6nI4cDxGAbE//w990WRl1XQNU0wgxNeib1Wzf0Eb1NiyVuG24cOEG
-         Xo5BZspLhgQz+QnSMXf55WhnESkGoS72WekXB+vTNSHZ97oZ3MYxlR0W+ZCSxBy2/TWI
-         ShQw==
+        d=gmail.com; s=20230601; t=1717519928; x=1718124728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1Jmxeyxl2JTcXXAAs8GoA7peZQ32QIewc1EvPktBMQ=;
+        b=XEFOZDH3c933LHZJ6+NfoYwORg7bNUruoTf/cnPm4ftjYqnwq39BMBZ12nKqV33Eve
+         D3dPKQeCkNRrhiA5u3yWFcb4oOK1yDnkYma7mWEzda6Td7vE8VsuDBmJP5EqJWyyV2tf
+         deYKLeh1Thyy43Ki6DS0N5cbljKc+y4cKfeAxkNi0WM+uy9oEeoZkoJeL4IMjaP4TXpi
+         fsTQdqAI2Rdi6UbVDeu/eEME2Rw794wSoBaYrTnh5oXvsvCycbj/Fga+4uK4mKpa4KtF
+         L9GERtmt/09zpsMPdIxJ2reZYh43n74Nv1xdePcr89ebElRPRTYQcTmRt8LEKnT37XjG
+         vJTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717519908; x=1718124708;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rHa4rdBij7iNJpe66g86f477UY9nlCjL0qAGcR/g8E0=;
-        b=P5lwMCjnFZsElYVSaX+SGxZa+8yJLOc9Ebpo2z/MLECVvmXrx2U0SmFDvuvPJ9o6k1
-         U2vpOpizPIFA0kgAGBg6Gu0pt+SWJVMLxvVxvad5q3EW4ZWtIdzdf5p+hQ8bWBpGMSKs
-         CQmItVUKJ6/T0FvRJOOh1vEioN0/64e+0ZcqWfgRV1kbYoc+n2YuETF01bY4h4MG2T5o
-         S2n+vUP56O6xZhGbd/aksH71hjxKjjHSTK/pb3OF1+Qe8RoYi73aj49A/u+OM8+LF4iT
-         egIfJgTOFIhV40XVp5gXXpZu7J6id/qPQowt5quevJGL0Vq+QbJpfBYxzoznEFx5fImY
-         AOkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXufXAFlzQrV7DM6amuQS6wLOjfVUzK3HP0qd+4g1O3ZZf70U8sU+1MWTzIsB9PSskdWYWuv4kydNgOjTwIXhUz9+ikqpCw7jMCOLNu
-X-Gm-Message-State: AOJu0YyDvizMZkq8ugdTfR8p1KjI1t0DQrU9ZQnpYlTy1gS1Jbu00V7B
-	EI7oKz9jEEW9jBhB2jZv79k9QuNcYD4tQwp7yK1YZKes9gF8SLzPtVpSzAjAq9Y=
-X-Google-Smtp-Source: AGHT+IGwn1k8sp+tDvJPbmVwjnFqtNhVBCqRYzi+miJGltF4eG+Bl2fD0Av2bC2c9STAhnkW1l81RA==
-X-Received: by 2002:a05:6214:3906:b0:6af:c6bc:bdc2 with SMTP id 6a1803df08f44-6afc6bcc442mr50551886d6.28.1717519908248;
-        Tue, 04 Jun 2024 09:51:48 -0700 (PDT)
-Received: from ziepe.ca ([128.77.69.89])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6af3d644efbsm29212786d6.19.2024.06.04.09.51.47
+        d=1e100.net; s=20230601; t=1717519928; x=1718124728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1Jmxeyxl2JTcXXAAs8GoA7peZQ32QIewc1EvPktBMQ=;
+        b=MyKOzwB2MSJURXNf8Ccg9eCDD9v9y6qR8fd2u0OoUyijaky4o/qcGi2yqvqvcw8g71
+         4NpF64kciH1B+w3CA6PloC4ZIowTdPrM+BtHPkGzRyz/30qGNfNuxl1LC+2GD6dtPvER
+         tAdPmZKM8nJbhIi4Y8a4m3EMU6xhj76cyoqVNXM35PQQaXon8ygJzM3qP31HDqeKVz1f
+         ivaHJZ8yQ3yUO6tbuo0MciKbCqnjnyngzLBgxjftVuWFn6rupZGcloqGyffDuLJEd2M1
+         u1vK6FCj2ysh3QldSQGSROmpxCkopksn10mTZygykF5Ne/EYcD/MvLz0bp1WVoQ8fRem
+         m6TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ9ChDXnoeYea1OqzOYUzX6oadA9nyPyIOmg7TiOe3AAvyboMwZBJI998SZHCFXY/N414bvIwfYAQ069YQIPC6ncVnPTouUyoOADlWEkfJFbkvmiOKd+hTFsRQLVlo4qHC2k+djxOlDatnonwU5Th/4h8rIS66I6VO8RszTvBME1/iWYIy
+X-Gm-Message-State: AOJu0Yxl5UNQ9zEQdIQzY+vBcMmvrN4vfsoIszHf7F5YSu1uRGEaNdkf
+	ENxGJNrEYyAVD9LxSUSs5ue9JI20gma5wknVclgFOY5MrzEWYG82
+X-Google-Smtp-Source: AGHT+IGew2QGLmhBJKgIkPQsUevYJs7yaWGXRd7LMJsL8rwmWlpRGcGuq4R/SIPPxpRgV0sMwBX8+A==
+X-Received: by 2002:a05:600c:3105:b0:419:f241:633b with SMTP id 5b1f17b1804b1-421562cf43cmr1626575e9.8.1717519927916;
+        Tue, 04 Jun 2024 09:52:07 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4212b85c61dsm162465555e9.28.2024.06.04.09.52.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 09:51:47 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1sEXNx-002u7o-KW;
-	Tue, 04 Jun 2024 13:51:45 -0300
-Date: Tue, 4 Jun 2024 13:51:45 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
-	Jason Wang <jasowang@redhat.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/22] iommufd: Use iommu_user_domain_alloc()
-Message-ID: <20240604165145.GD21513@ziepe.ca>
-References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
- <20240604015134.164206-3-baolu.lu@linux.intel.com>
+        Tue, 04 Jun 2024 09:52:07 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] dt-bindings: hwmon: g762: Convert to yaml schema
+Date: Tue,  4 Jun 2024 18:43:41 +0200
+Message-ID: <20240604164348.542-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604015134.164206-3-baolu.lu@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2024 at 09:51:14AM +0800, Lu Baolu wrote:
-> Replace iommu_domain_alloc() with iommu_user_domain_alloc().
-> 
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/iommufd/hw_pagetable.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommufd/hw_pagetable.c b/drivers/iommu/iommufd/hw_pagetable.c
-> index 33d142f8057d..ada05fccb36a 100644
-> --- a/drivers/iommu/iommufd/hw_pagetable.c
-> +++ b/drivers/iommu/iommufd/hw_pagetable.c
-> @@ -127,21 +127,11 @@ iommufd_hwpt_paging_alloc(struct iommufd_ctx *ictx, struct iommufd_ioas *ioas,
->  	hwpt_paging->ioas = ioas;
->  	hwpt_paging->nest_parent = flags & IOMMU_HWPT_ALLOC_NEST_PARENT;
->  
-> -	if (ops->domain_alloc_user) {
-> -		hwpt->domain = ops->domain_alloc_user(idev->dev, flags, NULL,
-> -						      user_data);
-                                                     ^^^^^^^^^^^^
+Convert g762 Documentation to yaml schema and port all the custom
+properties and info.
 
-> -		if (IS_ERR(hwpt->domain)) {
-> -			rc = PTR_ERR(hwpt->domain);
-> -			hwpt->domain = NULL;
-> -			goto out_abort;
-> -		}
-> -		hwpt->domain->owner = ops;
-> -	} else {
-> -		hwpt->domain = iommu_domain_alloc(idev->dev->bus);
-> -		if (!hwpt->domain) {
-> -			rc = -ENOMEM;
-> -			goto out_abort;
-> -		}
-> +	hwpt->domain = iommu_user_domain_alloc(idev->dev, flags);
-> +	if (IS_ERR(hwpt->domain)) {
+Add the vendor prefix to name to follow naming standard.
 
-Where did the user_data go???
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Changes v4:
+- Fix typo
+- Drop fixed clock
+- Add Reviewed-by tag
+Changes v3:
+- Rename yaml to g762 from g76x
 
-If you are going to wrapper the op function then all the args need to
-be provided.
+ .../devicetree/bindings/hwmon/g762.txt        | 47 ------------
+ .../devicetree/bindings/hwmon/gmt,g762.yaml   | 72 +++++++++++++++++++
+ 2 files changed, 72 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/hwmon/g762.txt
+ create mode 100644 Documentation/devicetree/bindings/hwmon/gmt,g762.yaml
 
-I'm not sure there is value in having vfio and vdpa call this
-variation since they won't pass a user_data or flags?
+diff --git a/Documentation/devicetree/bindings/hwmon/g762.txt b/Documentation/devicetree/bindings/hwmon/g762.txt
+deleted file mode 100644
+index 6d154c4923de..000000000000
+--- a/Documentation/devicetree/bindings/hwmon/g762.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-GMT G762/G763 PWM Fan controller
+-
+-Required node properties:
+-
+- - "compatible": must be either "gmt,g762" or "gmt,g763"
+- - "reg": I2C bus address of the device
+- - "clocks": a fixed clock providing input clock frequency
+-	     on CLK pin of the chip.
+-
+-Optional properties:
+-
+- - "fan_startv": fan startup voltage. Accepted values are 0, 1, 2 and 3.
+-	       The higher the more.
+-
+- - "pwm_polarity": pwm polarity. Accepted values are 0 (positive duty)
+-	       and 1 (negative duty).
+-
+- - "fan_gear_mode": fan gear mode. Supported values are 0, 1 and 2.
+-
+-If an optional property is not set in .dts file, then current value is kept
+-unmodified (e.g. u-boot installed value).
+-
+-Additional information on operational parameters for the device is available
+-in Documentation/hwmon/g762.rst. A detailed datasheet for the device is available
+-at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
+-
+-Example g762 node:
+-
+-   clocks {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	g762_clk: fixedclk {
+-		 compatible = "fixed-clock";
+-		 #clock-cells = <0>;
+-		 clock-frequency = <8192>;
+-	}
+-   }
+-
+-   g762: g762@3e {
+-	compatible = "gmt,g762";
+-	reg = <0x3e>;
+-	clocks = <&g762_clk>
+-	fan_gear_mode = <0>; /* chip default */
+-	fan_startv = <1>;    /* chip default */
+-	pwm_polarity = <0>;  /* chip default */
+-   };
+diff --git a/Documentation/devicetree/bindings/hwmon/gmt,g762.yaml b/Documentation/devicetree/bindings/hwmon/gmt,g762.yaml
+new file mode 100644
+index 000000000000..762779da5ba2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/gmt,g762.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/gmt,g762.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: GMT G762/G763 PWM Fan controller
++
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++description: |
++  GMT G762/G763 PWM Fan controller.
++
++  If an optional property is not set in DT, then current value is kept
++  unmodified (e.g. bootloader installed value).
++
++  Additional information on operational parameters for the device is available
++  in Documentation/hwmon/g762.rst. A detailed datasheet for the device is available
++  at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
++
++properties:
++  compatible:
++    enum:
++      - gmt,g762
++      - gmt,g763
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: a fixed clock providing input clock frequency on CLK
++      pin of the chip.
++    maxItems: 1
++
++  fan_startv:
++    description: Fan startup voltage step
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3]
++
++  pwm_polarity:
++    description: PWM polarity (positive or negative duty)
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1]
++
++  fan_gear_mode:
++    description: FAN gear mode. Configure High speed fan setting factor
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2]
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        g762@3e {
++            compatible = "gmt,g762";
++            reg = <0x3e>;
++            clocks = <&g762_clk>;
++            fan_gear_mode = <0>;
++            fan_startv = <1>;
++            pwm_polarity = <0>;
++        };
++    };
+-- 
+2.43.0
 
-Do you imagine there will ever be a difference between what
-domain_alloc_user(dev, 0, NULL, NULL) returns from
-domain_alloc_paging(dev) ?
-
-That seems like questionable driver behavior to me.
-
-Jason
