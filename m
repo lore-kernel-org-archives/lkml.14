@@ -1,122 +1,134 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959E58472
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 01:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239F08F68
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 01:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717463794; cv=none; b=jjgxa01CIP1cBkrFwt/cGu494h929wxwcf97vj+hHF5Ok6QvrLK+ePJVQbrdXOGRFmsh1XKYVcGB9MDOtlBrYqrgIFLZPj4vq1shnBpRQLYWll6h/SEzzQfKlxX/sfM4tbHTi5PTiGLWfBqTzxi3eDhZk0wxTQg1iLPO9cVvIxQ=
+	t=1717463820; cv=none; b=OU2lMTZv8FLliovrsalef2vD8Pv1QzjVypymhvZFWqdo+5ZAfK88aK7Qz+f0/fnPkUXqbgKIiS4aN7yNCKeBZOwRFCczMrEKGgEdq66VxBqCsTHvwNe5gIhBdqdgckon3JwBb6n8ebOSwGP6bZRyak8Xkhh1xp2BiXITSZG2dlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717463794; c=relaxed/simple;
-	bh=Eqh/AtuHMdxOjBiZKaHZvSpUFcM+NAehA9EHqDldqTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=k6LgHsqQe/gSfNjs6UXrSBR5IMu9gQw60xOjfTqHVGsSe2LfAejvQbdK/Nq0A5Tn69kqEnOeWndBKHf6U8k6NQ/+JCw+Ag46c4vDQ8PFXOcZdfFBhCgtKE6h0a9f2Al//lKaFWHlaEfB9usiR81y0wK+ctmylmrZT/kT3cf1mAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VtXdD3dyczxPxC;
-	Tue,  4 Jun 2024 09:12:32 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id BBEE9140109;
-	Tue,  4 Jun 2024 09:16:27 +0800 (CST)
-Received: from [10.67.110.112] (10.67.110.112) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 4 Jun 2024 09:16:27 +0800
-Message-ID: <3b030437-4571-7a87-55e0-5fc3f5711a6e@huawei.com>
-Date: Tue, 4 Jun 2024 09:16:27 +0800
+	s=arc-20240116; t=1717463820; c=relaxed/simple;
+	bh=nS1vioMmlFcL+wVN5+oD9svb1qqgpoWUq++JjBbAvNg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cHNF7aEwiap+GE4Aa5Oij7Y83AvE4m7/FdWCVS5UGwLH8Rui9sJY5J5cP7tyJMNhpng+LFW9LrQ01NzKtK37E+h+UB0uETM3AoBBbdtLDNFejPkGfNu3b40aKbjW4oOIuXRsBk2wfqHXJwApjS+oc63XTAQa73xvz0oK3WUNlRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZzKlS9xV; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZzKlS9xV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717463818; x=1748999818;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nS1vioMmlFcL+wVN5+oD9svb1qqgpoWUq++JjBbAvNg=;
+  b=ZzKlS9xVkKfhg1C99ImIe5RL04EjrDXPXaXY4RNoTXixPxKEK19ga8VV
+   ChgDh42gi6KQtL2h7bYRfDYHhrIhlrAOy5D/vechsX0sk55jjlU99aEog
+   3WFNx8H4ah1qrFUGBpFIduPKXM4+VhcxdBxuSf1LziqWxZA46KrvlM819
+   clHu929TLx0tJ+kZvK1abC1YMnzhTmfI7uircapXStJmDvYP1LGw5s2Sz
+   6wjt4T4Aq+vxlIzhCOy7/tUDFZM+WQd0l6fTWTEEDB2wr82nEUNinDSrl
+   MaiacaNKavOZSDOo/YDB2e9jlPlncDCbIRLZCA+V9k6ZZJvoZLKDlINDq
+   Q==;
+X-CSE-ConnectionGUID: ROzvJeG/TxO9CWRDXwtnOQ==
+X-CSE-MsgGUID: v0ZMKJqeQriaElahD1lrcg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25382605"
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="25382605"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 18:16:58 -0700
+X-CSE-ConnectionGUID: kRC8iBJbR2i0JqodLPwaQw==
+X-CSE-MsgGUID: So2ZWZ+cTzSMU59ww0/KbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
+   d="scan'208";a="37044864"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa008.fm.intel.com with ESMTP; 03 Jun 2024 18:16:57 -0700
+Message-ID: <7440cd36-41e0-4705-a597-f2ce3f841a70@linux.intel.com>
+Date: Tue, 4 Jun 2024 09:14:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH -next 2/3] mm/hugetlb_cgroup: prepare cftypes based on
- template
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] iommu/vt-d: Support batching IOTLB/dev-IOTLB
+ invalidation commands
+To: "Zhang, Tina" <tina.zhang@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>
+References: <20240517003728.251115-1-tina.zhang@intel.com>
+ <20240517003728.251115-2-tina.zhang@intel.com>
+ <2b390228-190c-4508-b98f-1811c54c9e5c@linux.intel.com>
+ <MW5PR11MB588165376224FEA74A0426D989FF2@MW5PR11MB5881.namprd11.prod.outlook.com>
 Content-Language: en-US
-To: kernel test robot <lkp@intel.com>, <akpm@linux-foundation.org>,
-	<muchun.song@linux.dev>
-CC: <oe-kbuild-all@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240603120506.1837322-3-xiujianfeng@huawei.com>
- <202406040437.z2Iel9db-lkp@intel.com>
-From: xiujianfeng <xiujianfeng@huawei.com>
-In-Reply-To: <202406040437.z2Iel9db-lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <MW5PR11MB588165376224FEA74A0426D989FF2@MW5PR11MB5881.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500023.china.huawei.com (7.185.36.114)
 
+On 6/3/24 3:37 PM, Zhang, Tina wrote:
+>> -----Original Message-----
+>> From: Baolu Lu<baolu.lu@linux.intel.com>
+>> Sent: Sunday, May 19, 2024 5:43 PM
+>> To: Zhang, Tina<tina.zhang@intel.com>; Tian, Kevin<kevin.tian@intel.com>
+>> Cc:baolu.lu@linux.intel.com;iommu@lists.linux.dev; linux-
+>> kernel@vger.kernel.org
+>> Subject: Re: [PATCH 1/2] iommu/vt-d: Support batching IOTLB/dev-IOTLB
+>> invalidation commands
+>>
+>> On 5/17/24 8:37 AM, Tina Zhang wrote:
+>>> Introduce a new parameter batch_desc to the QI based IOTLB/dev-IOTLB
+>>> invalidation operations to support batching invalidation descriptors.
+>>> This batch_desc is a pointer to the descriptor entry in a batch cmds
+>>> buffer. If the batch_desc is NULL, it indicates that batch submission
+>>> is not being used, and descriptors will be submitted individually.
+>>>
+>>> Also fix an issue reported by checkpatch about "unsigned mask":
+>>>           "Prefer 'unsigned int' to bare use of 'unsigned'"
+>>>
+>>> Signed-off-by: Tina Zhang<tina.zhang@intel.com>
+>>> ---
+>>>    drivers/iommu/intel/cache.c | 33 +++++++++++-------
+>>>    drivers/iommu/intel/dmar.c  | 67 ++++++++++++++++++++-----------------
+>>>    drivers/iommu/intel/iommu.c | 27 +++++++++------
+>>>    drivers/iommu/intel/iommu.h | 21 ++++++++----
+>>>    drivers/iommu/intel/pasid.c | 20 ++++++-----
+>>>    5 files changed, 100 insertions(+), 68 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/intel/cache.c b/drivers/iommu/intel/cache.c
+>>> index e8418cdd8331..dcf5e0e6af17 100644
+>>> --- a/drivers/iommu/intel/cache.c
+>>> +++ b/drivers/iommu/intel/cache.c
+>>> @@ -278,7 +278,7 @@ void cache_tag_flush_range(struct dmar_domain
+>> *domain, unsigned long start,
+>>>    		case CACHE_TAG_NESTING_IOTLB:
+>>>    			if (domain->use_first_level) {
+>>>    				qi_flush_piotlb(iommu, tag->domain_id,
+>>> -						tag->pasid, addr, pages, ih);
+>>> +						tag->pasid, addr, pages, ih,
+>> NULL);
+>>>    			} else {
+>> I'd like to have all batched descriptors code inside this file to make it easier for
+>> maintenance. Perhaps we can add the below infrastructure in the
+>> dmar_domain structure together with the cache tag.
+> Does it suggest we need to add a batch version of qi_flush_iotlb/qi_flush_dev_iotlb/qi_flush_piotlb/qi_flush_dev_iotlb_pasid() in the cache.c file? It doesn't sound like an easy to maintain those functions, does it?
 
-
-On 2024/6/4 5:25, kernel test robot wrote:
-> Hi Xiu,
-> 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on akpm-mm/mm-everything]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Xiu-Jianfeng/mm-hugetlb_cgroup-identify-the-legacy-using-cgroup_subsys_on_dfl/20240603-201513
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-> patch link:    https://lore.kernel.org/r/20240603120506.1837322-3-xiujianfeng%40huawei.com
-> patch subject: [PATCH -next 2/3] mm/hugetlb_cgroup: prepare cftypes based on template
-> config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240604/202406040437.z2Iel9db-lkp@intel.com/config)
-> compiler: aarch64-linux-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406040437.z2Iel9db-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202406040437.z2Iel9db-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    mm/hugetlb_cgroup.c: In function 'hugetlb_cgroup_cfttypes_init':
->>> mm/hugetlb_cgroup.c:828:21: warning: the comparison will always evaluate as 'true' for the address of 'name' will never be NULL [-Waddress]
->      828 |                 if (tmpl->name)
->          |                     ^~~~
->    In file included from include/linux/cgroup.h:27,
->                     from mm/hugetlb_cgroup.c:20:
->    include/linux/cgroup-defs.h:605:14: note: 'name' declared here
->      605 |         char name[MAX_CFTYPE_NAME];
->          |              ^~~~
-> 
-
-Thanks, will fix in the next version.
+Yes. I don't think it's that difficult as the helpers just compose a qi
+descriptor and insert it in a local queue. This local queue will be
+flushed after finishing iterating all cache tags, or there's no room for
+more descriptors, or switches to a different iommu. Have I missed
+anything?
 
 > 
-> vim +828 mm/hugetlb_cgroup.c
-> 
->    814	
->    815	static void __init
->    816	hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
->    817				     struct cftype *tmpl, int tmpl_size)
->    818	{
->    819		char buf[32];
->    820		int i, idx = hstate_index(h);
->    821	
->    822		/* format the size */
->    823		mem_fmt(buf, sizeof(buf), huge_page_size(h));
->    824	
->    825		for (i = 0; i < tmpl_size; cft++, tmpl++, i++) {
->    826			*cft = *tmpl;
->    827			/* rebuild the name */
->  > 828			if (tmpl->name)
->    829				snprintf(cft->name, MAX_CFTYPE_NAME, "%s.%s", buf, tmpl->name);
->    830			/* rebuild the private */
->    831			if (tmpl->private)
->    832				cft->private = MEMFILE_PRIVATE(idx, tmpl->private);
->    833			/* rebuild the file_offset */
->    834			if (tmpl->file_offset) {
->    835				unsigned int offset = tmpl->file_offset;
->    836	
->    837				cft->file_offset = MEMFILE_OFFSET0(offset) +
->    838						   MEMFILE_FIELD_SIZE(offset) * idx;
->    839			}
->    840		}
->    841	}
->    842	
-> 
+> In this patch, we reuse the current qi_flush_xxx() for both batching and non-batching processing, so that we don't need to duplicate the logic of qi_flush_xxx() in two places with one for batching processing and the other one for non-batching processing. What do you think?
+
+I don't like to put different things in a single helper. They share some
+code, for example, composing the descriptor's dw words. Others are just
+different. You can move that code into a static inline if you would
+like, but the batching and non-batching processing should be in
+different helpers.
+
+Best regards,
+baolu
