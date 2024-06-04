@@ -1,91 +1,85 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E66C1422AD
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFF81422AD;
+	Tue,  4 Jun 2024 21:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717536466; cv=none; b=NO95Q/5tH6u0KaFMmjvbaDTA9hHlpbWkZ/bTNuSTwlNtHj9eShqmbVjApI8sx6fPfNLSU3VErzHf6NW8EqwVAj54ty4upW6ZzyrKdDstMPfTUuYK6QCnb24aN/qLJXEDv6d+BVusXfiKBcYVygGlSFf2y5MP9du6+EFiliCv3Eo=
+	t=1717536534; cv=none; b=PkCRF/uBIhvugqME3zqObI2fcoLEClH7Ei+YjkVZSc5BgmxhHkbYhhRmDILt5LM7cfNLIw85uLae5GgdTayJ9ptOWScfcH0I/TId2Mi2dpaJo17QJDE8diKyHAgS8k+HkaCaLkLppsi03ygXtEdidiWs6FRBxDblw7rxZN/7K5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717536466; c=relaxed/simple;
-	bh=lDBJ8K/uPFkXP5dSpZgqFYX0szNdg0uxk14jnd4DaQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qTfOMaLSx4ZCp5QaAj1C1XEQBNqRgy0u2zpq5dda7yE/kdNHNx1o/Jy13Qo2WL7Z0bKEsfKJMbx3+8D1Dv0RAr7ufQrIRAbzGxEaXvwzhdk9JKC7k+R0rluFRy0EtBBGECyUeBeieAKPl2l2mGIpjspDdZN3dJytXL23Gqysa3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ExaSpfN+; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ExaSpfN+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=jC1A7HqJFY+HVi
-	MGUM45leqfW8NuwjQ3Xmn/k6LDPlM=; b=ExaSpfN+SnEmqFaflt0MPZaIwEKLfB
-	YNE7Z3kefv+ba1Qq03TYS36ogHQ8tIxWehG0uTK9O3Uf+/YE5FF9/43QPp5GWNRy
-	eAGaFtYfqxh9VqJH1CKW0jHuaU6RGUFAegG1P0gW8MdcnKTp8BLGcLklH9ocXmgC
-	3bOJByoWHNV/kIqU2JVeawKWLmMeyBnZIpKYQGvnTgoLLmVQs4c1+0G9eet5xZKS
-	I2pU/SXSsFgD1ap0EvCrHbFBdmt2zMApWv7z81IDzWmywJy8G9VB4Ef+Npdluszu
-	/V68lrQbtgt2Fsems0wQwrxQLhI53Ng+iDHvKNeSiU3YN+xPLctVyfnQ==
-Received: (qmail 2450558 invoked from network); 4 Jun 2024 23:27:42 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 23:27:42 +0200
-X-UD-Smtp-Session: l3s3148p1@/C6yHhcaiKtehhtB
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org
-Subject: [PATCH 1/1] usb: typec: tcpm: use 'time_left' variable with wait_for_completion_timeout()
-Date: Tue,  4 Jun 2024 23:27:31 +0200
-Message-ID: <20240604212730.4968-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1717536534; c=relaxed/simple;
+	bh=gzuMoHpSvUC71Fv0Tg5dkH6tkrJ5zCwfPg5xYrrAB6I=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=ngj+DHmo8/xEWj9YJBg/0elb+SXl+5e3z2Id0zitkUtWWV2BZnkvXXSbYUIJl77GLyrczJnFMELxdFymqZIev/Qs4IPL0DMH8qRFlq62fNhhjMAw0pvjsNWGRtqlfCCzMFkJMKpvWjOhK+JaCcP2C1G8c/Zz+l7swCOa6hDrTc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02786C4AF07;
+	Tue,  4 Jun 2024 21:28:53 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.97)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1sEbiA-00000000bDo-3cdN;
+	Tue, 04 Jun 2024 17:28:54 -0400
+Message-ID: <20240604212854.725383717@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 04 Jun 2024 17:28:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 2/5] ftrace: Comment __ftrace_hash_rec_update() and make filter_hash bool
+References: <20240604212817.384103202@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 
-There is a confusing pattern in the kernel to use a variable named 'timeout' to
-store the result of wait_for_completion_timeout() causing patterns like:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-	timeout = wait_for_completion_timeout(...)
-	if (!timeout) return -ETIMEDOUT;
+The function __ftrace_hash_rec_update() parameter "filter_hash" is only
+used for true or false (boolean), but is of type int. It already has an
+"inc" parameter that is boolean. This is confusing, make "filter_hash"
+boolean as well.
 
-with all kinds of permutations. Use 'time_left' as a variable to make the code
-self explaining.
+While at it, add some documentation to that function especially since it
+holds the guts of the filtering logic of ftrace.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/usb/typec/tcpm/tcpm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 8a1af08f71b6..e46148c19be3 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -943,7 +943,7 @@ static int tcpm_pd_transmit(struct tcpm_port *port,
- 			    enum tcpm_transmit_type tx_sop_type,
- 			    const struct pd_message *msg)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 9dcdefe9d1aa..93c7c5fd4249 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1701,8 +1701,20 @@ static bool skip_record(struct dyn_ftrace *rec)
+ 		!(rec->flags & FTRACE_FL_ENABLED);
+ }
+ 
++/*
++ * This is the main engine to the ftrace updates.
++ *
++ * It will iterate through all the available ftrace functions
++ * (the ones that ftrace can have callbacks to) and set the flags
++ * to the associated dyn_ftrace records.
++ *
++ * @filter_hash: True if for the filter hash is udpated, false for the
++ *               notrace hash
++ * @inc: True to add this hash, false to remove it (increment the
++ *       recorder counters or decrement them).
++ */
+ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
+-				     int filter_hash,
++				     bool filter_hash,
+ 				     bool inc)
  {
--	unsigned long timeout;
-+	unsigned long time_left;
- 	int ret;
- 	unsigned int negotiated_rev;
- 
-@@ -968,10 +968,10 @@ static int tcpm_pd_transmit(struct tcpm_port *port,
- 		return ret;
- 
- 	mutex_unlock(&port->lock);
--	timeout = wait_for_completion_timeout(&port->tx_complete,
--				msecs_to_jiffies(PD_T_TCPC_TX_TIMEOUT));
-+	time_left = wait_for_completion_timeout(&port->tx_complete,
-+						msecs_to_jiffies(PD_T_TCPC_TX_TIMEOUT));
- 	mutex_lock(&port->lock);
--	if (!timeout)
-+	if (!time_left)
- 		return -ETIMEDOUT;
- 
- 	switch (port->tx_status) {
+ 	struct ftrace_hash *hash;
 -- 
 2.43.0
+
 
