@@ -1,77 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B406F149E1E;
-	Tue,  4 Jun 2024 17:06:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFC81494DB;
+	Tue,  4 Jun 2024 17:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520794; cv=none; b=RtWGmwCkjOX71wqvF6ar2u44J6+FcE/XDYWir6fRYScqV+ChqtepQ22X7phKFraUaTCGiU+lNAZAP8oSjHE2fFV1nDpaLo2XyvdYnkhm5Tp9uu4gr8gw18PCqgXQXendAnQN9cnpLNwk19IaHZ8CsKaKPEqk6r3KRMPlYVbnWVA=
+	t=1717520887; cv=none; b=ow0FFW+IoPRR/K79xKfJJqrvrc9laeVIOHv9o9aHh4IV3vlHh10orWBhCCEesQCtEAXOMNFNeB6AB4sX5Ce6QnnQK4C0kYX6ZtgpDuTx/nRGe3g3kFhiu11jA0XYHU58qZFd5bWGEzgx5P81VdbToqeEdje+7QQssWhqHXfcoRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717520794; c=relaxed/simple;
-	bh=tUBl/sGlfXdb3mfB5sq1boTwBro77b8hrFoMIHiFHAM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KyrJl7lSOFaHkqFIOQlX2N8zr5N/I5J1q93mA113W1nJObB7Hq3RRLupjHsngyj1kwQa7im39PAH+FICaHItJxXvI+db8c9G3Pei+ZIJcpayWujPfIFbrsLTYyYbXXg7BoFpvZq+yUv6QvSBPsp7c2F9A7BcJkhaYKfjW3rh7j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyxXfWtu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717520887; c=relaxed/simple;
+	bh=54ydihiRs3glxrB7j/VdgJfU7tdLQHeIoW/Ag/kejKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q1eSejn7815kzmomLQ2vGEz72187+u53leJf1+fJcWs4kAVgV3RwJOpOaeZYoUFt3cADrn1xc4F59ZgIxTUp2d/gPFdU8qzvitPDVwKyzkieENnuZB9fwOU7QeBtX0W4mA7DiMTxbGgrtiguG/1ZPJe4LmCGXs+Oy14WX1TdQwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnbSj/j+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyxXfWtu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29427C2BBFC;
-	Tue,  4 Jun 2024 17:06:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnbSj/j+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91ED0C2BBFC;
+	Tue,  4 Jun 2024 17:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717520794;
-	bh=tUBl/sGlfXdb3mfB5sq1boTwBro77b8hrFoMIHiFHAM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WyxXfWtuHQltY7Xz1Wn0BdmlNCBdh+qCbBJhLPTyY7aFsljjtCGs2psPeNyTcDWS9
-	 FNNnecaiXxl0W8pro08xWEFCXy11vz3aByIjYZiQtCi3OyctiXcnb6Tlp1CIdxbqpU
-	 h0kS6PLrQFLSDIqraxZr4me42JwQNew6QjtQ1y82IiOaOENmKgqJRAGNAfZJPZst2v
-	 oc43+S6G0pUwIis4rd88gWHLJEkabc+LfkNcYaj4XI54mloqh+VJCIseQBQHCd0VoB
-	 fnTeB1Oq36tLG1Xjre/JqopFSawco6DJAXUIzydgh7qfoJJ709yCxWezlYvy7vB0Tp
-	 cJ75sB8TQeOUw==
-From: Conor Dooley <conor@kernel.org>
-To: kernel@esmil.dk,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	devicetree@vger.kernel.org,
-	aou@eecs.berkeley.edu,
-	duwe@suse.de,
-	linux-kernel@vger.kernel.org,
-	palmer@dabbelt.com,
-	heinrich.schuchardt@canonical.com,
-	paul.walmsley@sifive.com,
-	linux-riscv@lists.infradead.org,
-	Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] riscv: dts: starfive: Update flash partition layout
-Date: Tue,  4 Jun 2024 18:06:22 +0100
-Message-ID: <20240604-exes-reuse-4e71199a2aab@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240603150759.9643-1-matthias.bgg@kernel.org>
-References: <20240603150759.9643-1-matthias.bgg@kernel.org>
+	s=k20201202; t=1717520886;
+	bh=54ydihiRs3glxrB7j/VdgJfU7tdLQHeIoW/Ag/kejKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gnbSj/j+GifQ7H4Z4ICILKkdyo0+KlrBQ+gxHcdwdXJ+Q2W49CVb8vW4agM5ba3zB
+	 CmAWMTeFiz7Fz500K+4mjrN0fql9jTYK8o0YWXbjoSvtxSKlc+P0esCcSuWQk7E22D
+	 Q/hGLntRGrf9TCvgt2Ul4XSt1Zgyy9k2lAwxBFvYH6gcAiApDDMb7Eyon8UR9dxoYc
+	 b2qI0MD4VjZvPMEKW2RRHlcTAgL0O16zmp6clO90EDe5mMZ42AghgGH3gpD6NATU8H
+	 MXcxD8fIopZYm9VAE5gh5U3MQC6bVUBwxAawjizw9zjBptsNsdWuMlAzcweN/MJf2X
+	 1K1U1p6ioIdtg==
+Date: Tue, 4 Jun 2024 18:08:02 +0100
+From: Simon Horman <horms@kernel.org>
+To: linux@treblig.org
+Cc: allison.henderson@oracle.com, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/rds: remove unused struct 'rds_ib_dereg_odp_mr'
+Message-ID: <20240604170802.GC791188@kernel.org>
+References: <20240531233307.302571-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=369; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=4+UQ1S3fvbCY3fO8QuWvBZzXb5ymXFVsbruVFqi2CM8=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGnxnn1nlnScPrf25LrpGbkva644ms687fpzWm/XnNDpW b/WVmiodpSyMIhxMMiKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiJ94x/K/sPeSbsedIWVTu KzWufO7GKdv+i8zkesLEK/OgpX9jqiDDX7nCSA0ep+6t0e8jJue+2q4dejHhy2xLe7dQhhtyb0q EOAE=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531233307.302571-1-linux@treblig.org>
 
-From: Conor Dooley <conor.dooley@microchip.com>
-
-On Mon, 03 Jun 2024 17:07:55 +0200, matthias.bgg@kernel.org wrote:
-> Up to now, the describe flash partition layout has some gaps.
-> Use the whole flash chip by getting rid of the gaps.
+On Sat, Jun 01, 2024 at 12:33:07AM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
+> 'rds_ib_dereg_odp_mr' has been unused since the original
+> commit 2eafa1746f17 ("net/rds: Handle ODP mr
+> registration/unregistration").
+
+nit: Maybe commit lines are best not line-wrapped.
+     I'm unsure.
+
 > 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Applied to riscv-dt-for-next, thanks!
+The above not withstanding, this looks good to me.
 
-[1/1] riscv: dts: starfive: Update flash partition layout
-      https://git.kernel.org/conor/c/1dc5f8f6ea73
-
-Thanks,
-Conor.
+Reviewed-by: Simon Horman <horms@kernel.org>
