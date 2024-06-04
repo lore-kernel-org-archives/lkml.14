@@ -1,48 +1,58 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3867114535B;
-	Tue,  4 Jun 2024 11:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A351A145A06
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 11:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717501490; cv=none; b=Vg0TsuFQZuVdEsXaElUHq6F2dReGBMgNZGhR2ejoPwpmkJdWYK79vELAlMD9uDftp0ey6oZisY+M4ck/eORHW8tgGXyDHct6SiyvtRfPcUnEkkL+e9j8pVLwwM5ZXwQKIb5sP5qvqWFOHA1eON1bgstgFiT9g32HUS+wMHZAxTk=
+	t=1717501538; cv=none; b=QTvNVFZZd+TNLe1ReSheWHl8FCwP1bfWuVjSSolLeZOO1mk2bUoI4+qyxk7cA1BSih5qoj5hkE6u1+mujHBLYDlYLuHc4MIUjwy/gdRit70WrMhM+V9Ol3Kvl7GNruOhrHPMlpcmZQdFljMXP3Yr/1UKGOLpbeMOxJUVia1KPls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717501490; c=relaxed/simple;
-	bh=Zq3tmv7wVyTPDUnP6zcuF5O5k4OJprRbePrkTV4mQxs=;
+	s=arc-20240116; t=1717501538; c=relaxed/simple;
+	bh=EqkGWZ9F8GOUzilRYOYPTx0A0909TDaKfDfPNVFxtdg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ecf6kZihT9zvo5YVMk1ipovHSk4KjolV/bzzev4QM1D3km2VtT7npd4i+cQSyyWlWQeZVbBO5Tz/A2iGkCL3DAr6TS/832IaaGr3031xeSaLePqA+AG70rqD8IakaKo7/YOrnYzRWncwpHnFa9yBr2BMlSWAfSQ4iCAjoYlarGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=PH0bzoil; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	 In-Reply-To:Content-Type; b=qNhx32W95qyzTl0rPG7/8kSFYGI4AJaQQ71BHIhiXwFeqRHlCcAzrBtzZNXjUaiJcmtkYPZdbyIZHFqF4jPQjLynGpoQaQr3BHu95QsgYAxpmhIqiZIvksjnM1P9OglKALMyMfdtiOga3AeT9gcDTvq3K4wHb329Oimhp2vnVl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XkYJSVhB; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="PH0bzoil"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4Vtpfm2nCnz6CmM6L;
-	Tue,  4 Jun 2024 11:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1717501479; x=1720093480; bh=7qUm0UAjYUpYgELaUp3vQTyR
-	sNCZFqUKF3YsXC9VPcI=; b=PH0bzoilwBKbtI0CATbVi7YcINf9EkEcm2c2N0CV
-	1/oVwONzbegPfpgoEMQNU3394kaNh4ZWcqz6bVyW5zyutvi2Xq9VBgu24G8pIM65
-	vc4hx0zpbsrSh7Y9GrAgZKutiC2V9wqzzVN99yfwWnHRIuyclYn7hDFRE96oz8Wq
-	JaAttVggwSu/Djpga3VWgX3kj7CUtYmZqBGYkPXR6AuvhT78LjHBQDX7UYpSsnHC
-	Tgn6ypj7ceaWO8DuUcqBb/5GdadTFhcBUfAwr6Uo6TykNn+CPNk5jEy07Wisb1Gq
-	5Mj52lkVrD41PtszHYQi/5R/4HaVA1eHn9rVUidXnlwTOw==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id JJ_f4sfDEmwz; Tue,  4 Jun 2024 11:44:39 +0000 (UTC)
-Received: from [192.168.132.235] (unknown [65.117.37.195])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VtpfX0Smkz6CmQvG;
-	Tue,  4 Jun 2024 11:44:35 +0000 (UTC)
-Message-ID: <4ffad358-a3e6-4a88-9a40-b7e5d05aa53c@acm.org>
-Date: Tue, 4 Jun 2024 04:44:34 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XkYJSVhB"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a68f1017170so96356366b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 04:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717501535; x=1718106335; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jEYPS1P1P/pg/x7T6VsyXUmYK0wASnWZkTb2yubv/Tw=;
+        b=XkYJSVhBxhYqOjVGtiu/Cj+gWp63lJQiRpSvlMH6C8Xefg3WoE/F3qk7H2uZmr6yC7
+         5tFARy2br0b7/zREMjrvyLdk7tL4fGyPixWSQOoddFUyJsZGVuei63IWbLJpDT3uLyXa
+         DnOAkMulwIYBGZNaKzin92wLgxNIqqTqb0WVfgjijl1AWfh0euTeR2s/aCbPGqz+Qlz1
+         cU1TWiAeGL3BIoImrod1rl/gLOrxeWzs6Z4grDlrCoAMcWvMtBeLa0MVfc5qyfv8fLba
+         tqi47R8kdIYoslWZdRGfYSQjxn/StdY4rDcm+7+QKaeFz6Zgt1zufi46PNC7SoT8Ukoc
+         Oa4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717501535; x=1718106335;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jEYPS1P1P/pg/x7T6VsyXUmYK0wASnWZkTb2yubv/Tw=;
+        b=HDqqpDM/eOcrrWEUrSSbs8x9wtD8D3TX+mSJfGiAygeHly7mtr9HDG6SEenuBl/fsH
+         P/j6H4U/MVoTqh2odVsRBVn4MMDghl3d8N1USfJJZyKbU1O7YKBcVaD3kldGsF7xxhKj
+         hluN2EeMCfvS2qtouXSL7S7ibc4D+UT+a0R8y0CBaJ7KEzF6nve7CzUf9MDbe6Rwwhjo
+         qR9rFZ3pe8dXoWsAyx1gnaJW6MMBccFxPwHiZZd/6ty30FJiqqHHjJUODsWmfrHm+Bee
+         CEBqHvrqrfAUou7kTlbU9g/erpphh8BOMdWvSEif/5hhbSS7hobSMOD0gyj25vwphh8n
+         MENw==
+X-Gm-Message-State: AOJu0YxlNjLdOi8drMQPpqA9GHLKSLfVJYAIpX72fWHEosWWbypKbjPt
+	k9lu/PMn8fJwTrvJTFBi1YtXKI1jos6YmJ0DEamQ5wswyEwWBFXh3Uu4GzeaqcY=
+X-Google-Smtp-Source: AGHT+IGNC+G0CRWDuySvVpRylDriDDDpg7AMDvN3xv5vrnBLp5WpII5byOdlZw58pQV67Lx+l3WClg==
+X-Received: by 2002:a17:906:5957:b0:a68:a958:db18 with SMTP id a640c23a62f3a-a68a958dcbamr633833166b.76.1717501534980;
+        Tue, 04 Jun 2024 04:45:34 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:909a:a11e:a035:2af2:8d85:1f72? ([2a00:f41:909a:a11e:a035:2af2:8d85:1f72])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68ad1d7c8csm489285966b.80.2024.06.04.04.45.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 04:45:34 -0700 (PDT)
+Message-ID: <da4c6403-7886-468d-a1f0-a3454bca2c6d@linaro.org>
+Date: Tue, 4 Jun 2024 13:45:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,52 +60,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 02/12] Add infrastructure for copy offload in block
- and request layer.
-To: Christoph Hellwig <hch@lst.de>
-Cc: Nitesh Shetty <nj.shetty@samsung.com>, Damien Le Moal
- <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Jonathan Corbet <corbet@lwn.net>, Alasdair Kergon <agk@redhat.com>,
- Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka <mpatocka@redhat.com>,
- Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>, martin.petersen@oracle.com, david@fromorbit.com,
- hare@suse.de, damien.lemoal@opensource.wdc.com, anuj20.g@samsung.com,
- joshi.k@samsung.com, nitheshshetty@gmail.com, gost.dev@samsung.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, dm-devel@lists.linux.dev,
- linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
- <CGME20240520102842epcas5p4949334c2587a15b8adab2c913daa622f@epcas5p4.samsung.com>
- <20240520102033.9361-3-nj.shetty@samsung.com>
- <eda6c198-3a29-4da4-94db-305cfe28d3d6@acm.org>
- <9f1ec1c1-e1b8-48ac-b7ff-8efb806a1bc8@kernel.org>
- <a866d5b5-5b01-44a2-9ccb-63bf30aa8a51@acm.org>
- <665850bd.050a0220.a5e6b.5b72SMTPIN_ADDED_BROKEN@mx.google.com>
- <abe8c209-d452-4fb5-90eb-f77b5ec1a2dc@acm.org> <20240601055931.GB5772@lst.de>
- <d7ae00c8-c038-4bed-937e-222251bc627a@acm.org>
- <20240604044042.GA29094@lst.de>
+Subject: Re: [PATCH v2 0/2] Disable SS instances in park mode for SC7180/
+ SC7280
+To: Krishna Kurapati <quic_kriskura@quicinc.com>,
+ cros-qcom-dts-watchers@chromium.org, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Stephen Boyd <swboyd@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Matthias Kaehlcke <mka@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, quic_ppratap@quicinc.com, quic_jackp@quicinc.com
+References: <20240604060659.1449278-1-quic_kriskura@quicinc.com>
 Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240604044042.GA29094@lst.de>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240604060659.1449278-1-quic_kriskura@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/3/24 21:40, Christoph Hellwig wrote:
-> There is no requirement to process them synchronously, there is just
-> a requirement to preserve the order.  Note that my suggestion a few
-> arounds ago also included a copy id to match them up.  If we don't
-> need that I'm happy to leave it away.  If need it it to make stacking
-> drivers' lifes easier that suggestion still stands.
 
-Including an ID in REQ_OP_COPY_DST and REQ_OP_COPY_SRC operations sounds
-much better to me than abusing the merge infrastructure for combining
-these two operations into a single request. With the ID-based approach
-stacking drivers are allowed to process copy bios asynchronously and it
-is no longer necessary to activate merging for copy operations if
-merging is disabled (QUEUE_FLAG_NOMERGES).
 
-Thanks,
+On 6/4/24 08:06, Krishna Kurapati wrote:
+> When working in host mode, in certain conditions, when the USB
+> host controller is stressed, there is a HC died warning that comes up.
+> Fix this up by disabling SS instances in park mode for SC7280 and SC7180.
+> 
+> It is recommended to set this quirk for all Gen-1 SoCs. Will identify the
+> other SoCs and push a separate series for the same.
 
-Bart.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
