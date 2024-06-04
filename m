@@ -1,234 +1,136 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2064.outbound.protection.outlook.com [40.107.7.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73770148315;
-	Tue,  4 Jun 2024 13:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508245; cv=fail; b=exN0JG6PjIlmX4YBV+sAbk518KXM5BiBu+nMvddUfLCsne83Ecx/QtDjW6pf0y/R8mxr0ZSjQaaqX83fO5K3aWp8/o9NmpfzaUWrQGZOfoBydirltMOYzzaxQof/4atjQ+SshSvW7YN/eHeYjQMMwZbY8T1gFgT5LSQ+A4182mU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508245; c=relaxed/simple;
-	bh=cptz0IRnup62E0/a4VROp5kRGBymby/FqRfLJeMoidA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W5pkZ4LR6OyLuAYycodyuDj6ZyZJ8fgPMNPOYlZuuZT1aJksg5e5bH44G5QzV7vQClomM5CqcewalviMH2YrGIh53VwD1Q1Vrac+ci7wbxEGjqGPJuY3QFYc0rea88Q4u5kimquTe/YRSs9o168tKEE++ZQkiO2+aRn00La8yLk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=2n.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=L1waOaEa; arc=fail smtp.client-ip=40.107.7.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=2n.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2DB146D79;
+	Tue,  4 Jun 2024 13:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717508254; cv=none; b=UrnDg4iXonK6b/gvY5PuE8XTbGUpKVk+53y6u+vk6d07TUGLK1qAjQNLAmisjCRd7/Vdn5uI0Fgj6IxN5EB4k6xrd3e3i3McfCE8Sh4Gie0Xl3envJ9n9k/KRZqexHKuAtEZ1eiBVOVkIRz/EGEWY6EUv3DnGplnK5yMNNSQe2k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717508254; c=relaxed/simple;
+	bh=MtARxcG/H7MP69b0+3dVZv3usHjHBoMxyxik2H2JBvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ijQtWmUx2ahscfRWHECtO948Ut+asFks55LOeP3p2TT21iwE237tlVb78AxziYQKMliVDamg1aLJSTC90ZcdVr9Pt1Scq1kuB3WBWkZ5GAyQ24/xc2WjJXMh2JizqSZRKt404i5Fjti2FX4IAyegeV9a5F3HszHuR9ymKLXzRwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Kysw50c4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="L1waOaEa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YanvNYrKcA+m6ynZj+QkfYVRLRwGGWs/rAGUD+K9Y0xPXy9jzJMCyYvg9g3jEUvKPv3gD6MLVyUGXDoYOi/HR859jumpVTWlqArLEj5QL07ZfvaPTtl804ZyWc2e15g09oCgBzyrk7dgvZ5K7aAhulsb7cwU0uerVNxen4lSAeus+YvTxKGYjwYmZSKSMMhanTy60K6WM1weK8X67v4pCZOBpGaav8lHgd1qpDljDH412Is4va1cxEBLll68wKU9+UIf0Epu0oA/4IB8dYwuJM4csOWOn9fb3Cpd581YR9synBlzAQDQwkFkCglH6E1V4SqI82bYbHsoJpnR3KFBSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N1N5IVWmATDtB8x7sZDsKo2B71+DChFJfe1pnJHfUnM=;
- b=diJYziROft5NxA8tzxNovSH9a0D/eDCAW2NS5x8I52rGRTiKc3jXN/dgO/15NW86QXiywz8xPr8ffCfZGIUtHnltS5BaevQiZ85mt6rwCLx9YsM/0Uu2IXgf8FD2Mwdg4qjOitA6SvanFlnLWrT5vKuiAt1NtVupEG0oBB/Pp3TgmlnglGdNXCoVyZ/d9OPahMeUCpohq6HIqvUDSwZx3wwzro37q8JaSkvtnWjqdZrI2fs8Op5V8GW6Ag6yIjpbYIqOw/VXnjKKHV0oWfqCP0qQ8MAwDKPC0DyvGYI7JvErBOMXIl+qaNB6tgN6L/EgFkm70ZGoutxaqIGbpAaDAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=broadcom.com smtp.mailfrom=2n.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1N5IVWmATDtB8x7sZDsKo2B71+DChFJfe1pnJHfUnM=;
- b=L1waOaEagOPMPhY17wp/vGe0p31/KN+w2XYlZZK9lerNHI/y68TrzxaU0NYHI1kjt9u7UbJxTWUcNXf+CpX5WNH4XHcX0OPYguf+xAeIl/zUiv41wDmnY/RVIyzRrlz7UFOYjnWPzxgJ0hLG4DBApMO1eOs8+peyYOONQ6xwJb0=
-Received: from AM6P191CA0030.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8b::43)
- by DB3PR0202MB9227.eurprd02.prod.outlook.com (2603:10a6:10:431::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Tue, 4 Jun
- 2024 13:37:18 +0000
-Received: from AMS0EPF0000019C.eurprd05.prod.outlook.com
- (2603:10a6:209:8b:cafe::b2) by AM6P191CA0030.outlook.office365.com
- (2603:10a6:209:8b::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.31 via Frontend
- Transport; Tue, 4 Jun 2024 13:37:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=2n.com; dkim=none (message not signed) header.d=none;dmarc=fail
- action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of 2n.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- AMS0EPF0000019C.mail.protection.outlook.com (10.167.16.248) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Tue, 4 Jun 2024 13:37:18 +0000
-Received: from pcczc3457tyd.2n.cz.axis.com (10.0.5.60) by se-mail01w.axis.com
- (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Jun
- 2024 15:37:17 +0200
-From: =?UTF-8?q?Kamil=20Hor=C3=A1k=20-=202N?= <kamilh@axis.com>
-To: <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
-	<andrew@lunn.ch>, <hkallweit1@gmail.com>
-CC: <kamilh@axis.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/3] net: phy: bcm54811: Add LRE registers definitions
-Date: Tue, 4 Jun 2024 15:36:53 +0200
-Message-ID: <20240604133654.2626813-3-kamilh@axis.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240604133654.2626813-1-kamilh@axis.com>
-References: <20240604133654.2626813-1-kamilh@axis.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Kysw50c4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE758C2BBFC;
+	Tue,  4 Jun 2024 13:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717508254;
+	bh=MtARxcG/H7MP69b0+3dVZv3usHjHBoMxyxik2H2JBvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kysw50c4D7+gLgCn7OJktJVSc1Oz43RA9YzGK0f4lqtdi7w2uzlvFDc4aKa8TFdsb
+	 iXAspH4KMzwKjgyJFwcLALNCNF4Sk4zuA9+p/B/bhb+Y/35Mmf0pgFZcvsffOAJQ9J
+	 76q9p+8WfkenrmUmqkaVpXQ+7tPqYzjWeDSCPFA8=
+Date: Tue, 4 Jun 2024 15:35:55 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: accessrunner-general@lists.sourceforge.net, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	syzbot+00c18ee8497dd3be6ade@syzkaller.appspotmail.com
+Subject: Re: [PATCH] usb: atm: cxacru: fix endpoint checking in cxacru_bind()
+Message-ID: <2024060415-cloud-calcium-ca2f@gregkh>
+References: <20240528183807.3832-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF0000019C:EE_|DB3PR0202MB9227:EE_
-X-MS-Office365-Filtering-Correlation-Id: d766e872-b653-462c-c472-08dc849b7448
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|82310400017|36860700004|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NmFrLzErY3QxcC9WSHBoYXcvMUF4YUI1Q2tBb0tNV01UempXa1RibjdIcFdq?=
- =?utf-8?B?K0RzalRxU3FONlhrR1ViK3JJK0dyOTZVYmhKaFRWdTBMMUF3WXc3elBzQmRa?=
- =?utf-8?B?aFpvd2NOc2RjSldQSkN1VGhVWWxpSWJud1ozcVVnQlBybWVQdTE3eG5reHV0?=
- =?utf-8?B?WEtiNFFlWlNQbnF2akdXcDhlT0habWdNY2t2THlDRWFxM21kNUc5MGJLYlQ4?=
- =?utf-8?B?akY0ZzIyTW5hN3NyRDNSQnhoR21ySkxzbUM2U1BOOVFIZlZ6T0FOZzUvTjFE?=
- =?utf-8?B?NXlBbldKRHk2bE5ncHFPaUNsUmE5VlRIZFNuc1JhOC9HcFlDSitpTThON2Fr?=
- =?utf-8?B?NTN3WmVRcmU0a29weEZWbmJuQUVjUnZLUWVneVlnL1UwTFhKU3JNYXFXUndQ?=
- =?utf-8?B?aktCL0IxNEdKUFhaUElQUndRTWNIcU0xSlN0UHJydjZaRHFNSm80bUptZEVs?=
- =?utf-8?B?T3ZPVUxCcHpQdkRvN3diU1pFa3RoSFo0NG5wbkNKZmNWZDMxZ21zd21uSjJU?=
- =?utf-8?B?ZnpyelJQWGJpZVZzM0VKL1FNTVA5U3JSSzdDc21YTldoTFNXcUFENTJ4blZG?=
- =?utf-8?B?QlFNMjNJb3pPSkljbkFBZ1dJWkphSmhMOVNKdkFhN2d4bFcybmtFclo4OXlM?=
- =?utf-8?B?aFU2T2FJSzRVWnZ2QTgvbHdHSUNCWTYzLzlDNHVzZVQxZTVSeE5VaUFuU3BX?=
- =?utf-8?B?Z0FPeWdNQXNFVi9IUS83cDVZc0tRNjJidHhKekZMN0lFM0JCdUV4Ym5TUHVo?=
- =?utf-8?B?M3lvSTVWdlMvVHNKV0VkRXNpK1VjODZIOUdkOEVlSjBkQzFHbmVoUzJFaURK?=
- =?utf-8?B?UVgyR3NkWWE2NkVWdlJqWk90MHBHSnpjN3FEQUZKTlVRcTc3M1dyczBHWVB2?=
- =?utf-8?B?bm16S2JqR1phbEhKaExOL0VzNmVvTzNERWpmNC82Y3diUlcrMC9sa1NDTkpG?=
- =?utf-8?B?bWtNVTMxQTU4WHBzclRjVURsSm1GbWx3SjExelN2bE93T25TWDRUaGtrdUZP?=
- =?utf-8?B?SVpoU2FDMzNTZFB1SGdJcGllZ29jRGtBSlRDL2FLcStpdUVITnJSQmlZUVMv?=
- =?utf-8?B?WmJrc3JNOXozSndtSVJVNHRUV2JPMm1sa05jTFhEQ1NsamFyY1ZFT0tVMk80?=
- =?utf-8?B?MCt1bzdWcHZyK3VCbklBeXhSQWZnWlZaVkpBRlRDdytwUmduL0J4UjlOWkdX?=
- =?utf-8?B?Q2xtZVJ1dWFhYy81TE9hK0NPQTIzNWFFTW5CWG5DWVY0MU5qa2tWd2d3Slln?=
- =?utf-8?B?bUx4aEVrZDlVQk1jSzh5UGdOYlgrVGxmSkgrdUl4ekttTG1Od2RCSTVPaDhP?=
- =?utf-8?B?VGJRYnNCTnBZYW56NjEzOTRjQ0hVQWVZclhUMmc0VW5TLzdLWUFjWUNBRG1l?=
- =?utf-8?B?dVZ5MzMvQTQwaVJ2Zm9aSVlRanA0K2g0clY2THBZQ1RiaWJNbHl2VTZsdFlx?=
- =?utf-8?B?bzZZSVhJRk9UeCt1YjRoZ2RKWHM2cXBuVUZVNmEza0l6VDUxNjA0ZHFER3FH?=
- =?utf-8?B?VDRrKzdReGdWSVBJTHdxeWJZTmtrZkZPVDBROW9FL3JGbVJOYjUrOS9CcWZ1?=
- =?utf-8?B?cTYzMENtdjlta1pTVVdIdlNiN1RiRnVlSmdoQnVvclB0U3o5UFhoUDVRT2FO?=
- =?utf-8?B?VWpCcjFHaTgrZ0h1VFB5eWxEOURPMGR6ZmN4TjdHU3l4K21HWmZDbkJDdVN4?=
- =?utf-8?B?citnMlF0RllNbWhUQUxoNzFaZmtaY3pHOE0vWm5ZcTJVU0w4dXphWEFkc3Bv?=
- =?utf-8?B?b3VzRVJWUi8zQXhLNndCc0tsYjZsUTFnR2VLK2tCbUE0WTB0aVprQloyNFhp?=
- =?utf-8?B?WDJJYklPRXliRTJMRkhIeHg3cndpM2xPcUg3RExzUmJ4TEFMVjhBUjcrOGNF?=
- =?utf-8?B?SHQ2Z29aMWU3c1hrVGd3djNiRlBwajdlNWhvZExkaEpiWnc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 13:37:18.5022
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d766e872-b653-462c-c472-08dc849b7448
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF0000019C.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB9227
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240528183807.3832-1-n.zhandarovich@fintech.ru>
 
-Add the definitions of LRE registers for Broadcom BCM5481x PHY
+On Tue, May 28, 2024 at 11:38:07AM -0700, Nikita Zhandarovich wrote:
+> Syzbot is still reporting quite an old issue [1] that occurs due to
+> incomplete checking of present usb endpoints. As such, wrong
+> endpoints types may be used at urb sumbitting stage which in turn
+> triggers a warning in usb_submit_urb().
+> 
+> Fix the issue by verifying that required endpoint types are present
+> for both in and out endpoints, taking into account cmd endpoint type.
+> 
+> Unfortunately, this patch has not been tested on real hardware.
+> 
+> [1] Syzbot report:
+> usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+> WARNING: CPU: 0 PID: 8667 at drivers/usb/core/urb.c:502 usb_submit_urb+0xed2/0x18a0 drivers/usb/core/urb.c:502
+> Modules linked in:
+> CPU: 0 PID: 8667 Comm: kworker/0:4 Not tainted 5.14.0-rc4-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:usb_submit_urb+0xed2/0x18a0 drivers/usb/core/urb.c:502
+> ...
+> Call Trace:
+>  cxacru_cm+0x3c0/0x8e0 drivers/usb/atm/cxacru.c:649
+>  cxacru_card_status+0x22/0xd0 drivers/usb/atm/cxacru.c:760
+>  cxacru_bind+0x7ac/0x11a0 drivers/usb/atm/cxacru.c:1209
+>  usbatm_usb_probe+0x321/0x1ae0 drivers/usb/atm/usbatm.c:1055
+>  cxacru_usb_probe+0xdf/0x1e0 drivers/usb/atm/cxacru.c:1363
+>  usb_probe_interface+0x315/0x7f0 drivers/usb/core/driver.c:396
+>  call_driver_probe drivers/base/dd.c:517 [inline]
+>  really_probe+0x23c/0xcd0 drivers/base/dd.c:595
+>  __driver_probe_device+0x338/0x4d0 drivers/base/dd.c:747
+>  driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:777
+>  __device_attach_driver+0x20b/0x2f0 drivers/base/dd.c:894
+>  bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:427
+>  __device_attach+0x228/0x4a0 drivers/base/dd.c:965
+>  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:487
+>  device_add+0xc2f/0x2180 drivers/base/core.c:3354
+>  usb_set_configuration+0x113a/0x1910 drivers/usb/core/message.c:2170
+>  usb_generic_driver_probe+0xba/0x100 drivers/usb/core/generic.c:238
+>  usb_probe_device+0xd9/0x2c0 drivers/usb/core/driver.c:293
+> 
+> Reported-and-tested-by: syzbot+00c18ee8497dd3be6ade@syzkaller.appspotmail.com
+> Fixes: 902ffc3c707c ("USB: cxacru: Use a bulk/int URB to access the command endpoint")
+> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+> ---
+> P.S. While the driver is orphaned, it might still make sense to
+> suppress the syzbot report, seeing how ancient it is.
+> P.P.S. checkpatch complains about outdated format of debug printing
+> but I decided to keep it in tune with the rest of the driver. 
+> 
+>  drivers/usb/atm/cxacru.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/atm/cxacru.c b/drivers/usb/atm/cxacru.c
+> index 4ce7cba2b48a..8a8e94a601c6 100644
+> --- a/drivers/usb/atm/cxacru.c
+> +++ b/drivers/usb/atm/cxacru.c
+> @@ -1131,7 +1131,8 @@ static int cxacru_bind(struct usbatm_data *usbatm_instance,
+>  	struct cxacru_data *instance;
+>  	struct usb_device *usb_dev = interface_to_usbdev(intf);
+>  	struct usb_host_endpoint *cmd_ep = usb_dev->ep_in[CXACRU_EP_CMD];
+> -	int ret;
+> +	struct usb_endpoint_descriptor *in, *out;
+> +	int ret = -1;
 
-Signed-off-by: Kamil Horák - 2N <kamilh@axis.com>
----
- include/linux/brcmphy.h | 80 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+Why initialize this and then write over it?
 
-diff --git a/include/linux/brcmphy.h b/include/linux/brcmphy.h
-index 1394ba302367..1b02e1014583 100644
---- a/include/linux/brcmphy.h
-+++ b/include/linux/brcmphy.h
-@@ -270,6 +270,86 @@
- #define BCM5482_SSD_SGMII_SLAVE		0x15	/* SGMII Slave Register */
- #define BCM5482_SSD_SGMII_SLAVE_EN	0x0002	/* Slave mode enable */
- #define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
-+#define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
-+
-+/* BroadR-Reach LRE Registers. */
-+#define MII_BCM54XX_LRECR		0x00	/* LRE Control Register                    */
-+#define MII_BCM54XX_LRESR		0x01	/* LRE Status Register                     */
-+#define MII_BCM54XX_LREPHYSID1		0x02	/* LRE PHYS ID 1                           */
-+#define MII_BCM54XX_LREPHYSID2		0x03	/* LRE PHYS ID 2                           */
-+#define MII_BCM54XX_LREANAA		0x04	/* LDS Auto-Negotiation Advertised Ability */
-+#define MII_BCM54XX_LREANAC		0x05	/* LDS Auto-Negotiation Advertised Control */
-+#define MII_BCM54XX_LREANPT		0x06	/* LDS Ability Next Page Transmit          */
-+#define MII_BCM54XX_LRELPA		0x07	/* LDS Link Partner Ability                */
-+#define MII_BCM54XX_LRELPNPM		0x08	/* LDS Link Partner Next Page Message      */
-+#define MII_BCM54XX_LRELPNPC		0x09	/* LDS Link Partner Next Page Control      */
-+#define MII_BCM54XX_LRELDSE		0x0a	/* LDS Expansion Register                  */
-+#define MII_BCM54XX_LREES		0x0f	/* LRE Extended Status                     */
-+
-+/* LRE control register. */
-+#define LRECR_RESET			0x8000	/* Reset to default state      */
-+#define LRECR_LOOPBACK			0x4000	/* Internal Loopback           */
-+#define LRECR_LDSRES			0x2000	/* Restart LDS Process         */
-+#define LRECR_LDSEN			0x1000	/* LDS Enable                  */
-+#define LRECR_PDOWN			0x0800	/* Enable low power state      */
-+#define LRECR_ISOLATE			0x0400	/* Isolate data paths from MII */
-+#define LRECR_SPEED100			0x0200	/* Select 100 Mbps             */
-+#define LRECR_SPEED10			0x0000	/* Select 10 Mbps              */
-+#define LRECR_4PAIRS			0x0020	/* Select 4 Pairs              */
-+#define LRECR_2PAIRS			0x0010	/* Select 2 Pairs              */
-+#define LRECR_1PAIR			0x0000	/* Select 1 Pair               */
-+#define LRECR_MASTER			0x0008	/* Force Master when LDS disabled */
-+#define LRECR_SLAVE			0x0000	/* Force Slave when LDS disabled  */
-+
-+/* LRE status register. */
-+#define LRESR_100_1PAIR			0x2000	/* Can do 100Mbps 1 Pair       */
-+#define LRESR_100_4PAIR			0x1000	/* Can do 100Mbps 4 Pairs      */
-+#define LRESR_100_2PAIR			0x0800	/* Can do 100Mbps 2 Pairs      */
-+#define LRESR_10_2PAIR			0x0400	/* Can do 10Mbps 2 Pairs       */
-+#define LRESR_10_1PAIR			0x0200	/* Can do 10Mbps 1 Pair        */
-+#define LRESR_ESTATEN			0x0100	/* Extended Status in R15      */
-+#define LRESR_RESV			0x0080	/* Unused...                   */
-+#define LRESR_MFPS			0x0040	/* Can suppress Management Frames Preamble */
-+#define LRESR_LDSCOMPLETE		0x0020	/* LDS Auto-negotiation complete */
-+#define LRESR_8023			0x0010	/* Has IEEE 802.3 Support      */
-+#define LRESR_LDSABILITY		0x0008	/* LDS auto-negotiation capable */
-+#define LRESR_LSTATUS			0x0004	/* Link status                 */
-+#define LRESR_JCD			0x0002	/* Jabber detected             */
-+#define LRESR_ERCAP			0x0001	/* Ext-reg capability          */
-+
-+/* LDS Auto-Negotiation Advertised Ability. */
-+#define LREANAA_PAUSE_ASYM		0x8000	/* Can pause asymmetrically    */
-+#define LREANAA_PAUSE			0x4000	/* Can pause                   */
-+#define LREANAA_100_1PAIR		0x0020	/* Can do 100Mbps 1 Pair       */
-+#define LREANAA_100_4PAIR		0x0010	/* Can do 100Mbps 4 Pair       */
-+#define LREANAA_100_2PAIR		0x0008	/* Can do 100Mbps 2 Pair       */
-+#define LREANAA_10_2PAIR		0x0004	/* Can do 10Mbps 2 Pair        */
-+#define LREANAA_10_1PAIR		0x0002	/* Can do 10Mbps 1 Pair        */
-+
-+#define LRE_ADVERTISE_FULL		(LREANAA_100_1PAIR | LREANAA_100_4PAIR | \
-+					 LREANAA_100_2PAIR | LREANAA_10_2PAIR | \
-+					 LREANAA_10_1PAIR)
-+
-+#define LRE_ADVERTISE_ALL		LRE_ADVERTISE_FULL
-+
-+/* LDS Link Partner Ability. */
-+#define LRELPA_PAUSE_ASYM		0x8000	/* Supports asymmetric pause   */
-+#define LRELPA_PAUSE			0x4000	/* Supports pause capability   */
-+#define LRELPA_100_1PAIR		0x0020	/* 100Mbps 1 Pair capable      */
-+#define LRELPA_100_4PAIR		0x0010	/* 100Mbps 4 Pair capable      */
-+#define LRELPA_100_2PAIR		0x0008	/* 100Mbps 2 Pair capable      */
-+#define LRELPA_10_2PAIR			0x0004	/* 10Mbps 2 Pair capable       */
-+#define LRELPA_10_1PAIR			0x0002	/* 10Mbps 1 Pair capable       */
-+
-+/* LDS Expansion register. */
-+#define LDSE_DOWNGRADE			0x8000	/* Can do LDS Speed Downgrade  */
-+#define LDSE_MASTER			0x4000	/* Master / Slave              */
-+#define LDSE_PAIRS_MASK			0x3000	/* Pair Count Mask             */
-+#define LDSE_PAIRS_SHIFT		12
-+#define LDSE_4PAIRS			(2 << LDSE_PAIRS_SHIFT)	/* 4 Pairs Connection */
-+#define LDSE_2PAIRS			(1 << LDSE_PAIRS_SHIFT)	/* 2 Pairs Connection */
-+#define LDSE_1PAIR			(0 << LDSE_PAIRS_SHIFT)	/* 1 Pair  Connection */
-+#define LDSE_CABLEN_MASK		0x0FFF	/* Cable Length Mask           */
- 
- /* BCM54810 Registers */
- #define BCM54810_EXP_BROADREACH_LRE_MISC_CTL	(MII_BCM54XX_EXP_SEL_ER + 0x90)
--- 
-2.39.2
+Also, -1 is not a valid return value, so even if this was needed, it's
+not correct :(
 
+
+>  
+>  	/* instance init */
+>  	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
+> @@ -1177,6 +1178,19 @@ static int cxacru_bind(struct usbatm_data *usbatm_instance,
+>  		goto fail;
+>  	}
+>  
+> +	if (usb_endpoint_xfer_int(&cmd_ep->desc))
+> +		ret = usb_find_common_endpoints(intf->cur_altsetting,
+> +						NULL, NULL, &in, &out);
+> +	else
+> +		ret = usb_find_common_endpoints(intf->cur_altsetting,
+> +						&in, &out, NULL, NULL);
+> +
+> +	if (ret) {
+> +		usb_dbg(usbatm_instance, "cxacru_bind: interface has incorrect endpoints\n");
+
+Shouldn't this be an error instead?
+
+thanks,
+
+greg k-h
