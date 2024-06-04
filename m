@@ -1,66 +1,65 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDE9320C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 22:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB47A320C;
+	Tue,  4 Jun 2024 22:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717538508; cv=none; b=gzWcVjcRXeFMbeg3sm4duYzurxaOg4OFYvzfLQy3q8mWQMFrIDffUYiHEySVHPOrHXYnERcrExp3Vrm36zy/KxHlyYSRdkEyc5rcMWTfCisnZnxrwLwxZL+ZRBgWczDFvH+a402TmzeDPH7QyMyDtBurY1KUQ9VKq3T1O8wrfUU=
+	t=1717538536; cv=none; b=e25m5KhwPV2fPkw0a6SQxUK9ktD6ivsxlEZ4TrTqlnhVRf6n0fm35dE2j+WZMOL2bz02Q5x4af3NE46voS44d+G7uQucYfnYU7ib8MakttXfVXbmppMqqJffMNuRHrgOoY6Ls/rPfixty3wkiR1yXPksdNSykGhvG8nhmvCREjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717538508; c=relaxed/simple;
-	bh=AoLRjCk7Gy+e+NqCwI7iR2QlaUB3i7o+sdNHdzHRKy4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qgqx/fbku6oHJkuSwfJQKg8vNGtWMXU4oTaSXnxS08VSFfDAQivV/DIaZ2jUNMppiyQeYG0i25xpVSFqnAup1E/+D29lkB5x23PqJhre1LxPYquFUzif6wCOsZntKNTEWvdNAwNs6eb3Sg1EJsToUAwZyDGgFudefrWMxzLDc1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjblrvLp; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717538536; c=relaxed/simple;
+	bh=EMIzYIFkXVUprOInl/LuU0NK/y3BCX3/WnmoS6Oig2k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u7HEsfEfL4IRDvdzMKsU5fp3pp+gypBAbEpsiTuoKzymQTTuaTOnepGrroK6hOd9UtJGvk29EvKnMmKMbeQMo1sGbMXnDzUALg7/1+X0gpDyNTGe7rDlTpahCwnLocB4IJMP9QUpHzQ6eHo5JvAFp5cGpJ/5jKKWcbI/44GZP58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i4q3cb+Y; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjblrvLp"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2c21571e99bso458322a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 15:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717538507; x=1718143307; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IukKNUeQwFyeGm++e5Ng9ZtZqlsDoJ65zsIQjpZSzD0=;
-        b=BjblrvLpckTs4atViKrxi2Lbiw9qtu9UtX0V/rCE5mP0HcWQQjqL6+6wxNhZURocmT
-         XFACsgnq+dNbkl2rdZte8pspOP3vdJxoG/VroIetembHzmbAt+LK/ImXTJ8OXz8ID38h
-         2FYxbFnyYCBrIq1/FSjZvqmzIM8SPtlXPWla3Yvjw1MzFZk23qx3uF3VTxIb/1RAIlVC
-         E4LrTCuAxxMHfVCBxIcr8CoIDt2AzukE8d0QKxpGlXbGW3aISiJpWqCgAfE+/Emq4xRx
-         dZHFfVVRCF86f3QJAlZ5gjNBHapG/o6ABlJSHYZCLdd5NtX69cwd1CcYjs1bcI6mxbGC
-         x2Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717538507; x=1718143307;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IukKNUeQwFyeGm++e5Ng9ZtZqlsDoJ65zsIQjpZSzD0=;
-        b=dll4Ue04D9TytBgm9J1IjUnOYL7gO6l2ULob3pDENwqYjFeJwxTe5Aw/5QZqI7Pll/
-         L12UVRtJpXirEK2s5AT29g21opbyVDA7exL7tqhw2WVMBa8FzArA/aGtBG6EEqBAMGfe
-         Fr2rFUhgzh1+9PYMwUCG5hoK23ZYkvtXmAmdjK7c0wkbgTA3wQGSd53RTzFx3OdEXSwb
-         wOKIOwj/TkTXyFPY8ERKuZOwqLe3h5ic2K4fxfJCLIQ5OCAP2I8ap4f9Bk+lwLjVjBaS
-         Cfuwq7jDbHpmInUz5uLxiIaTfxEABRJ3iTHrh8Lnn5PKesk2Sre3H+0rAy2lPGSUkbFB
-         2O+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWzgO8P1ROTJLBNzkcLJINY1ibkXKG2ZtJG4sT8qSyvZ6w0PHGNZGqLJT1/hvFN3brmK6TecDE5jMwXnIfIrBqiecIEFoVyVCgzNWFR
-X-Gm-Message-State: AOJu0Ywquiog/IVqCo8hWDyIXxnLCWd+XDGQ+C9tqTtfMj9B2kaktwfz
-	HyCy9BVxwYma6FBnK4Fj0peDIULmZyica8P3AG3w8tUqcRJXduaA
-X-Google-Smtp-Source: AGHT+IFGYwHxVsNfoxbt2CzK5l4eYIyE35Rx9m0srIscTGbYXyaHlNMMP3LgYVtHRyNy/za7Z3REpA==
-X-Received: by 2002:a17:902:cec2:b0:1f6:1bbb:e07d with SMTP id d9443c01a7336-1f6a5868539mr9569905ad.0.1717538506583;
-        Tue, 04 Jun 2024 15:01:46 -0700 (PDT)
-Received: from localhost (43.222.125.34.bc.googleusercontent.com. [34.125.222.43])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f677fc9f24sm45772085ad.309.2024.06.04.15.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 15:01:46 -0700 (PDT)
-From: Chia-I Wu <olvaffe@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] resource: add a simple test for walk_iomem_res_desc()
-Date: Tue,  4 Jun 2024 15:01:14 -0700
-Message-ID: <20240604220128.682745-1-olvaffe@gmail.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i4q3cb+Y"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454LqCMp009352;
+	Tue, 4 Jun 2024 21:59:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : date : from : message-id : mime-version :
+ subject : to; s=pp1; bh=OHYuuKn8tJ7rSUbYgVXZpxWOnvGgk1aa1oTjRBRVGS4=;
+ b=i4q3cb+YDGF8VqB19V6IAhQpX61Nn7ZfC6yTCdM8yp2tgfOA6SYWRyoOPuxR1+inR5/1
+ wva8yBRXckEq7gm/WajmB8Vv4tji1gdXQp24O1Fx4wPzP6ebuT7O9TS3kyw+KuVKHttg
+ vN+VTMAkOIaeVQku5CtTpPYM8qSXCD5eSV4x+j29DbzEs9gIQJbQUJLfP4oNTdAUi9Hv
+ THTvcimKZH/sDzgwAVO52sSnEE36WdVeYrBKabFyBl1lyaxQT9EKK0SCZdbAyQJrk81w
+ 1xnnCJGoW0/D/A5OFa+VNiQhoDEz9u3QbXBDyQx7pwBY3VsgfcWMnzIJBS+43ror4sX9 Iw== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjax7g1ej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Jun 2024 21:59:48 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 454LjC1x008501;
+	Tue, 4 Jun 2024 21:59:47 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygec0rq47-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Jun 2024 21:59:47 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 454Lxife15270642
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 4 Jun 2024 21:59:46 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B2BF58064;
+	Tue,  4 Jun 2024 21:59:44 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2F7858062;
+	Tue,  4 Jun 2024 21:59:43 +0000 (GMT)
+Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  4 Jun 2024 21:59:43 +0000 (GMT)
+From: Ninad Palsule <ninad@linux.ibm.com>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+        andrew@codeconstruct.com.au
+Cc: Ninad Palsule <ninad@linux.ibm.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, eajames@linux.ibm.com
+Subject: [PATCH v1] ARM: dts: aspeed: System1: Updates to BMC board
+Date: Tue,  4 Jun 2024 16:59:39 -0500
+Message-Id: <20240604215939.1967329-1-ninad@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,105 +67,69 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -Vetq6Mejqa7zfwIUkmji2p2f6zF51Xz
+X-Proofpoint-ORIG-GUID: -Vetq6Mejqa7zfwIUkmji2p2f6zF51Xz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 clxscore=1011 lowpriorityscore=0 mlxlogscore=779 mlxscore=0
+ malwarescore=0 adultscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406040177
 
-This mainly tests that find_next_iomem_res() does not miss resources.
+- Added new power monitor device max5970
+- Changed temperature sensor monitor chip from tmp423 to tmp432
 
-Signed-off-by: Chia-I Wu <olvaffe@gmail.com>
-
+Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
 ---
-v2: update subject, use DEFINE_RES_NAMED and hardcoded offsets
----
- kernel/resource_kunit.c | 67 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/resource_kunit.c b/kernel/resource_kunit.c
-index 58ab9f914602..c3a3f3bdf5d5 100644
---- a/kernel/resource_kunit.c
-+++ b/kernel/resource_kunit.c
-@@ -6,6 +6,7 @@
- #include <kunit/test.h>
- #include <linux/ioport.h>
- #include <linux/kernel.h>
-+#include <linux/sizes.h>
- #include <linux/string.h>
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+index dcbc16308ab50..e09a6b383ba49 100644
+--- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+@@ -753,6 +753,11 @@ &i2c4 {
+ &i2c5 {
+ 	status = "okay";
  
- #define R0_START	0x0000
-@@ -137,9 +138,75 @@ static void resource_test_intersection(struct kunit *test)
- 	} while (++i < ARRAY_SIZE(results_for_intersection));
- }
- 
-+static int resource_walk_count(struct resource *res, void *data)
-+{
-+	int *count = data;
-+	(*count)++;
-+	return 0;
-+}
-+
-+static void resource_test_walk_iomem_res_desc(struct kunit *test)
-+{
-+	struct resource root = {
-+		.name = "Resource Walk Test",
++	power-monitor@3a {
++		compatible = "maxim,max5970";
++		reg = <0x3a>;
 +	};
-+	struct resource res[8];
-+	int count;
 +
-+	KUNIT_ASSERT_EQ(test, 0,
-+			allocate_resource(&iomem_resource, &root, SZ_1M,
-+				0, ~0, SZ_1M, NULL, NULL));
-+
-+	/* build the resource tree */
-+
-+	res[0] = DEFINE_RES_NAMED(root.start, SZ_1K, "SYSRAM 1",
-+			IORESOURCE_SYSTEM_RAM);
-+	res[1] = DEFINE_RES_NAMED(root.start + SZ_1K, SZ_1K, "OTHER", 0);
-+
-+	res[2] = DEFINE_RES_NAMED(root.start + SZ_1K * 3, SZ_1K, "NESTED", 0);
-+	res[3] = DEFINE_RES_NAMED(root.start + SZ_1K * 3 + SZ_512, SZ_512,
-+			"SYSRAM 2", IORESOURCE_SYSTEM_RAM);
-+
-+	res[4] = DEFINE_RES_NAMED(root.start + SZ_1K * 4, SZ_1K, "SYSRAM 3",
-+			IORESOURCE_SYSTEM_RAM);
-+
-+	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[0]));
-+	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[1]));
-+	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[2]));
-+	KUNIT_EXPECT_EQ(test, 0, request_resource(&res[2], &res[3]));
-+	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[4]));
-+
-+	/* walk the entire region */
-+	count = 0;
-+	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-+			root.start, root.end, &count, resource_walk_count);
-+	KUNIT_EXPECT_EQ(test, count, 3);
-+
-+	/* walk the region requested by res[1] */
-+	count = 0;
-+	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-+			res[1].start, res[1].end, &count, resource_walk_count);
-+	KUNIT_EXPECT_EQ(test, count, 0);
-+
-+	/* walk the region requested by res[2] */
-+	count = 0;
-+	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-+			res[2].start, res[2].end, &count, resource_walk_count);
-+	KUNIT_EXPECT_EQ(test, count, 1);
-+
-+	/* walk the region requested by res[4] */
-+	count = 0;
-+	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-+			res[4].start, res[4].end, &count, resource_walk_count);
-+	KUNIT_EXPECT_EQ(test, count, 1);
-+
-+	release_resource(&root);
-+}
-+
- static struct kunit_case resource_test_cases[] = {
- 	KUNIT_CASE(resource_test_union),
- 	KUNIT_CASE(resource_test_intersection),
-+	KUNIT_CASE(resource_test_walk_iomem_res_desc),
- 	{}
- };
+ 	regulator@42 {
+ 		compatible = "infineon,ir38263";
+ 		reg = <0x42>;
+@@ -1138,7 +1143,7 @@ i2c8mux0chn6: i2c@6 {
+ 			reg = <6>;
  
+ 			temperature-sensor@4c {
+-				compatible = "ti,tmp423";
++				compatible = "ti,tmp432";
+ 				reg = <0x4c>;
+ 			};
+ 		};
+@@ -1599,7 +1604,7 @@ i2c15mux0chn6: i2c@6 {
+ 			reg = <6>;
+ 
+ 			temperature-sensor@4c {
+-				compatible = "ti,tmp423";
++				compatible = "ti,tmp432";
+ 				reg = <0x4c>;
+ 			};
+ 		};
+@@ -1615,7 +1620,7 @@ regulator@40 {
+ 			};
+ 
+ 			temperature-sensor@4c {
+-				compatible = "ti,tmp423";
++				compatible = "ti,tmp432";
+ 				reg = <0x4c>;
+ 			};
+ 		};
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.40.1
 
