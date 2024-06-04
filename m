@@ -1,318 +1,326 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A96149C41;
-	Tue,  4 Jun 2024 14:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E5A0149C74;
+	Tue,  4 Jun 2024 14:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511585; cv=none; b=k2f8yokvKVwu2BMfcAlvSb0no0UiuKxV22XlQvWtUx1N79V9PRJv5aT21/YmCWhZODSM9t/bt3gg9e6FUlgyrN85/OYTlpR27422iTTNE8DPZmvSVImBg+xOAMBPJb7jT7LoPuyJJMmkK9zyMTj27uXT5jjpZQqPTbiW4dXLIug=
+	t=1717511591; cv=none; b=PenfoJUA1Zdaskix3ZQhAS0d/wJCWJyVAoSDfHDbux7gsquOI7Tk1/jnXluvAb6xpG0lSe4nh0HbpnA4PhhR5R0MLwxeI37gOcNDs/SM1kQPsPE1eCV8Xa1J/MOkJJuFf2FsUvwh31NCGJQtqcVrEQKJ8XKjstp4aqz6GwKBaG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511585; c=relaxed/simple;
-	bh=WGX0LQIKn31QilnSgdvEzuanRgd2jUzWguiy+MLJlIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvF54RzXjIhNBgtBOuhP8z7R1kVsQ4dZS8I5ci2LGVv1HIF+Ve2eJM+PxOGetp+cjH4aU6SFdgXTEHnixwjnAe/F0yWFHziE+L6gxxoU2ShziixRPcmcEe3VNvwat0bFlkGPpc1nCYS9SZoz31Ro2Twgnno+MfShhu4Y4s/nB1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LzrZWvlq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LzrZWvlq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C233C4AF07;
-	Tue,  4 Jun 2024 14:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717511584;
-	bh=WGX0LQIKn31QilnSgdvEzuanRgd2jUzWguiy+MLJlIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LzrZWvlq8L8jwmqGds51i6DDRahz5Qvr2WtODwlXP+Mr0fk6rmP7uFYNHNhom311G
-	 I2dfEkZM8XmgnTfYLaKYngLaG1eLY+W+1s77r8FmIqBwFC1iNaergB0r+8eqw688is
-	 9dApN1U1US7NaDbFpGTSUDM0deJ7yNYfiTjO/xBI=
-Date: Tue, 4 Jun 2024 16:27:31 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 02/11] rust: add driver abstraction
-Message-ID: <2024060432-chloride-grappling-cf95@gregkh>
-References: <20240520172554.182094-1-dakr@redhat.com>
- <20240520172554.182094-3-dakr@redhat.com>
- <2024052045-lived-retiree-d8b9@gregkh>
- <ZkvPDbAQLo2/7acY@pollux.localdomain>
- <2024052155-pulverize-feeble-49bb@gregkh>
- <Zk0egew_AxvNpUG-@pollux>
+	s=arc-20240116; t=1717511591; c=relaxed/simple;
+	bh=+uaCA1PZ6hnPgW9mWMl8w3jiCY+lih4zCy5dEYG4tS4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J7O76bpbDg3QmBNyPCdKH+1DFma+Y9M05Z9IIaX0oEnbj/x6kA5lgTata8T7bt9p2LNESzdFBSzDrXPC0KOyJI/UK0Z3naBzOPt5d07GQSF+MUyi1ba/XL6IjLYUUzLm/ACkh1zWvbC9auw6/yT1dQck4N/3LFXtUNfXjWEg5kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A0671063;
+	Tue,  4 Jun 2024 07:33:33 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 026E23F64C;
+	Tue,  4 Jun 2024 07:33:05 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 14/16] coresight: Remove pending trace ID release mechanism
+Date: Tue,  4 Jun 2024 15:30:23 +0100
+Message-Id: <20240604143030.519906-15-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240604143030.519906-1-james.clark@arm.com>
+References: <20240604143030.519906-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zk0egew_AxvNpUG-@pollux>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 22, 2024 at 12:21:53AM +0200, Danilo Krummrich wrote:
-> On Tue, May 21, 2024 at 11:35:43AM +0200, Greg KH wrote:
-> > On Tue, May 21, 2024 at 12:30:37AM +0200, Danilo Krummrich wrote:
-> > > On Mon, May 20, 2024 at 08:14:18PM +0200, Greg KH wrote:
-> > > > On Mon, May 20, 2024 at 07:25:39PM +0200, Danilo Krummrich wrote:
-> > > > > From: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > > > > 
-> > > > > This defines general functionality related to registering drivers with
-> > > > > their respective subsystems, and registering modules that implement
-> > > > > drivers.
-> > > > > 
-> > > > > Co-developed-by: Asahi Lina <lina@asahilina.net>
-> > > > > Signed-off-by: Asahi Lina <lina@asahilina.net>
-> > > > > Co-developed-by: Andreas Hindborg <a.hindborg@samsung.com>
-> > > > > Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
-> > > > > Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-> > > > > Signed-off-by: Danilo Krummrich <dakr@redhat.com>
-> > > > > ---
-> > > > >  rust/kernel/driver.rs        | 492 +++++++++++++++++++++++++++++++++++
-> > > > >  rust/kernel/lib.rs           |   4 +-
-> > > > >  rust/macros/module.rs        |   2 +-
-> > > > >  samples/rust/rust_minimal.rs |   2 +-
-> > > > >  samples/rust/rust_print.rs   |   2 +-
-> > > > >  5 files changed, 498 insertions(+), 4 deletions(-)
-> > > > >  create mode 100644 rust/kernel/driver.rs
-> > > > > 
-> > > > > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> > > > > new file mode 100644
-> > > > > index 000000000000..e0cfc36d47ff
-> > > > > --- /dev/null
-> > > > > +++ b/rust/kernel/driver.rs
-> > > > > @@ -0,0 +1,492 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +
-> > > > > +//! Generic support for drivers of different buses (e.g., PCI, Platform, Amba, etc.).
-> > > > > +//!
-> > > > > +//! Each bus/subsystem is expected to implement [`DriverOps`], which allows drivers to register
-> > > > > +//! using the [`Registration`] class.
-> > > > 
-> > > > Why are you creating new "names" here?  "DriverOps" is part of a 'struct
-> > > > device_driver' why are you separating it out here?  And what is
-> > > 
-> > > DriverOps is a trait which abstracts a subsystems register() and unregister()
-> > > functions to (un)register drivers. It exists such that a generic Registration
-> > > implementation calls the correct one for the subsystem.
-> > > 
-> > > For instance, PCI would implement DriverOps::register() by calling into
-> > > bindings::__pci_register_driver().
-> > > 
-> > > We can discuss whether DriverOps is a good name for the trait, but it's not a
-> > > (different) name for something that already exists and already has a name.
-> > 
-> > It's a name we don't have in the C code as the design of the driver core
-> > does not need or provide it.  It's just the section of 'struct
-> > device_driver' that provides function callbacks, why does it need to be
-> > separate at all?
-> 
-> I'm confused by the relationship to `struct device_driver` you seem to imply.
-> How is it related?
-> 
-> Again, this is just a trait for subsystems to provide their corresponding
-> register and unregister implementation, e.g. pci_register_driver() and
-> pci_unregister_driver(), such that they can be called from the generic
-> Registration code below.
-> 
-> See [1] for an example implementation in PCI.
+Pending the release of IDs was a way of managing concurrent sysfs and
+Perf sessions in a single global ID map. Perf may have finished while
+sysfs hadn't, and Perf shouldn't release the IDs in use by sysfs and
+vice versa.
 
-registering and unregistering drivers belongs in the bus code, NOT in
-the driver code.
+Now that Perf uses its own exclusive ID maps, pending release doesn't
+result in any different behavior than just releasing all IDs when the
+last Perf session finishes. As part of the per-sink trace ID change, we
+would have still had to make the pending mechanism work on a per-sink
+basis, due to the overlapping ID allocations, so instead of making that
+more complicated, just remove it.
 
-I think lots of the objections I had here will be fixed up when you move
-the bus logic out to it's own file, it does not belong here in a driver
-file (device ids, etc.)
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ .../hwtracing/coresight/coresight-etm-perf.c  | 11 ++--
+ .../hwtracing/coresight/coresight-trace-id.c  | 62 +++++--------------
+ .../hwtracing/coresight/coresight-trace-id.h  | 31 +++++-----
+ include/linux/coresight.h                     |  6 +-
+ 4 files changed, 34 insertions(+), 76 deletions(-)
 
-> Please also consider that some structures might be a 1:1 representation of C
-> structures, some C structures are not required at the Rust side at all, and
-> then there might be additional structures and traits that abstract things C has
-> no data structure for.
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 7fb55dafb639..17cafa1a7f18 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -232,15 +232,14 @@ static void free_event_data(struct work_struct *work)
+ 		if (!(IS_ERR_OR_NULL(*ppath))) {
+ 			struct coresight_device *sink = coresight_get_sink(*ppath);
+ 
+-			coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
++			/* mark perf event as done for trace id allocator */
++			coresight_trace_id_perf_stop(&sink->perf_sink_id_map);
++
+ 			coresight_release_path(*ppath);
+ 		}
+ 		*ppath = NULL;
+ 	}
+ 
+-	/* mark perf event as done for trace id allocator */
+-	coresight_trace_id_perf_stop();
+-
+ 	free_percpu(event_data->path);
+ 	kfree(event_data);
+ }
+@@ -328,9 +327,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		sink = user_sink = coresight_get_sink_by_id(id);
+ 	}
+ 
+-	/* tell the trace ID allocator that a perf event is starting up */
+-	coresight_trace_id_perf_start();
+-
+ 	/* check if user wants a coresight configuration selected */
+ 	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
+ 	if (cfg_hash) {
+@@ -404,6 +400,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		}
+ 
+ 		/* ensure we can allocate a trace ID for this CPU */
++		coresight_trace_id_perf_start(&sink->perf_sink_id_map);
+ 		trace_id = coresight_trace_id_get_cpu_id_map(cpu, &sink->perf_sink_id_map);
+ 		if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+ 			cpumask_clear_cpu(cpu, mask);
+diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+index 8a777c0af6ea..acb99ccf96b5 100644
+--- a/drivers/hwtracing/coresight/coresight-trace-id.c
++++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+@@ -18,12 +18,6 @@ static struct coresight_trace_id_map id_map_default = {
+ 	.cpu_map = &id_map_default_cpu_ids
+ };
+ 
+-/* maintain a record of the pending releases per cpu */
+-static cpumask_t cpu_id_release_pending;
+-
+-/* perf session active counter */
+-static atomic_t perf_cs_etm_session_active = ATOMIC_INIT(0);
+-
+ /* lock to protect id_map and cpu data  */
+ static DEFINE_SPINLOCK(id_map_lock);
+ 
+@@ -122,34 +116,18 @@ static void coresight_trace_id_free(int id, struct coresight_trace_id_map *id_ma
+ 	clear_bit(id, id_map->used_ids);
+ }
+ 
+-static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
+-{
+-	if (WARN(!IS_VALID_CS_TRACE_ID(id), "Invalid Trace ID %d\n", id))
+-		return;
+-	set_bit(id, id_map->pend_rel_ids);
+-}
+-
+ /*
+- * release all pending IDs for all current maps & clear CPU associations
+- *
+- * This currently operates on the default id map, but may be extended to
+- * operate on all registered id maps if per sink id maps are used.
++ * release all IDs and clear CPU associations
+  */
+-static void coresight_trace_id_release_all_pending(void)
++static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map)
+ {
+-	struct coresight_trace_id_map *id_map = &id_map_default;
+ 	unsigned long flags;
+-	int cpu, bit;
++	int cpu;
+ 
+ 	spin_lock_irqsave(&id_map_lock, flags);
+-	for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_ID_RES_TOP) {
+-		clear_bit(bit, id_map->used_ids);
+-		clear_bit(bit, id_map->pend_rel_ids);
+-	}
+-	for_each_cpu(cpu, &cpu_id_release_pending) {
+-		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
+-		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+-	}
++	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
++	for_each_possible_cpu(cpu)
++		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+ 	DUMP_ID_MAP(id_map);
+ }
+@@ -164,7 +142,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	/* check for existing allocation for this CPU */
+ 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+ 	if (id)
+-		goto get_cpu_id_clr_pend;
++		goto get_cpu_id_out_unlock;
+ 
+ 	/*
+ 	 * Find a new ID.
+@@ -185,11 +163,6 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	/* allocate the new id to the cpu */
+ 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+ 
+-get_cpu_id_clr_pend:
+-	/* we are (re)using this ID - so ensure it is not marked for release */
+-	cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+-	clear_bit(id, id_map->pend_rel_ids);
+-
+ get_cpu_id_out_unlock:
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+ 
+@@ -210,15 +183,8 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+ 
+ 	spin_lock_irqsave(&id_map_lock, flags);
+ 
+-	if (atomic_read(&perf_cs_etm_session_active)) {
+-		/* set release at pending if perf still active */
+-		coresight_trace_id_set_pend_rel(id, id_map);
+-		cpumask_set_cpu(cpu, &cpu_id_release_pending);
+-	} else {
+-		/* otherwise clear id */
+-		coresight_trace_id_free(id, id_map);
+-		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+-	}
++	coresight_trace_id_free(id, id_map);
++	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+ 	DUMP_ID_CPU(cpu, id);
+@@ -302,17 +268,17 @@ void coresight_trace_id_put_system_id(int id)
+ }
+ EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+ 
+-void coresight_trace_id_perf_start(void)
++void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map)
+ {
+-	atomic_inc(&perf_cs_etm_session_active);
++	atomic_inc(&id_map->perf_cs_etm_session_active);
+ 	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
+ }
+ EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+ 
+-void coresight_trace_id_perf_stop(void)
++void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map)
+ {
+-	if (!atomic_dec_return(&perf_cs_etm_session_active))
+-		coresight_trace_id_release_all_pending();
++	if (!atomic_dec_return(&id_map->perf_cs_etm_session_active))
++		coresight_trace_id_release_all(id_map);
+ 	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
+ }
+ EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+index 840babdd0794..9aae50a553ca 100644
+--- a/drivers/hwtracing/coresight/coresight-trace-id.h
++++ b/drivers/hwtracing/coresight/coresight-trace-id.h
+@@ -17,9 +17,10 @@
+  * released when done.
+  *
+  * In order to ensure that a consistent cpu / ID matching is maintained
+- * throughout a perf cs_etm event session - a session in progress flag will
+- * be maintained, and released IDs not cleared until the perf session is
+- * complete. This allows the same CPU to be re-allocated its prior ID.
++ * throughout a perf cs_etm event session - a session in progress flag will be
++ * maintained for each sink, and IDs are cleared when all the perf sessions
++ * complete. This allows the same CPU to be re-allocated its prior ID when
++ * events are scheduled in and out.
+  *
+  *
+  * Trace ID maps will be created and initialised to prevent architecturally
+@@ -66,11 +67,7 @@ int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id
+ /**
+  * Release an allocated trace ID associated with the CPU.
+  *
+- * This will release the CoreSight trace ID associated with the CPU,
+- * unless a perf session is in operation.
+- *
+- * If a perf session is in operation then the ID will be marked as pending
+- * release.
++ * This will release the CoreSight trace ID associated with the CPU.
+  *
+  * @cpu: The CPU index to release the associated trace ID.
+  */
+@@ -133,21 +130,21 @@ void coresight_trace_id_put_system_id(int id);
+ /**
+  * Notify the Trace ID allocator that a perf session is starting.
+  *
+- * Increase the perf session reference count - called by perf when setting up
+- * a trace event.
++ * Increase the perf session reference count - called by perf when setting up a
++ * trace event.
+  *
+- * This reference count is used by the ID allocator to ensure that trace IDs
+- * associated with a CPU cannot change or be released during a perf session.
++ * Perf sessions never free trace IDs to ensure that the ID associated with a
++ * CPU cannot change during their and other's concurrent sessions. Instead,
++ * this refcount is used so that the last event to finish always frees all IDs.
+  */
+-void coresight_trace_id_perf_start(void);
++void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map);
+ 
+ /**
+  * Notify the ID allocator that a perf session is stopping.
+  *
+- * Decrease the perf session reference count.
+- * if this causes the count to go to zero, then all Trace IDs marked as pending
+- * release, will be released.
++ * Decrease the perf session reference count. If this causes the count to go to
++ * zero, then all Trace IDs will be released.
+  */
+-void coresight_trace_id_perf_stop(void);
++void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map);
+ 
+ #endif /* _CORESIGHT_TRACE_ID_H */
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 9c3067e2e38b..197949fd2c35 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -227,14 +227,12 @@ struct coresight_sysfs_link {
+  * @used_ids:	Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
+  *		Initialised so that the reserved IDs are permanently marked as
+  *		in use.
+- * @pend_rel_ids: CPU IDs that have been released by the trace source but not
+- *		  yet marked as available, to allow re-allocation to the same
+- *		  CPU during a perf session.
++ * @perf_cs_etm_session_active: Number of Perf sessions using this ID map.
+  */
+ struct coresight_trace_id_map {
+ 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+-	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	atomic_t __percpu *cpu_map;
++	atomic_t perf_cs_etm_session_active;
+ };
+ 
+ /**
+-- 
+2.34.1
 
-That's fine, but let's keep the separate of what we have today at the
-very least and not try to lump it all into one file, that makes it
-harder to review and maintain over time.
-
-> > > > 'Registration'?  That's a bus/class thing, not a driver thing.
-> > > 
-> > > A Registration is an object representation of the driver's registered state.
-> > 
-> > And that representation should not ever need to be tracked by the
-> > driver, that's up to the driver core to track that.
-> 
-> The driver doesn't need it, the Registration abstraction does need it. Please
-> see my comments below.
-
-Great, put it elsewhere please, it does not belong in driver.rs.
-
-> > > Having an object representation for that is basically the Rust way to manage the
-> > > lifetime of this state.
-> > 
-> > This all should be a static chunk of read-only memory that should never
-> > have a lifetime, why does it need to be managed at all?
-> 
-> What I meant here is that if a driver was registered, we need to make sure it's
-> going to be unregistered eventually, e.g. when the module is removed or when
-> something fails after registration and we need to unwind.
-> 
-> When the Registration structure goes out of scope, which would happen in both
-> the cases above, it will automatically unregister the driver, due to the
-> automatic call to `drop()`.
-
-That's fine, but again, this all should just be static code, not
-dynamic.
-
-> > > Once the Registration is dropped, the driver is
-> > > unregistered. For instance, a PCI driver Registration can be bound to a module,
-> > > such that the PCI driver is unregistered when the module is unloaded (the
-> > > Registration is dropped in the module_exit() callback).
-> > 
-> > Ok, that's fine, but note that your module_exit() function will never be
-> > called if your module_init() callback fails, so why do you need to track
-> > this state?  Again, C drivers never need to track this state, why is
-> > rust requiring more logic here for something that is NOT a dynamic chunk
-> > of memory (or should not be a dynamic chunk of memory, let's get it
-> > correct from the start and not require us to change things later on to
-> > make it more secure).
-> 
-> That's fine, if module_init() would fail, the Registration would be dropped as
-> well.
-> 
-> As for why doesn't C need this is a good example of what I wrote above. Because
-> it is useful for Rust, but not for C.
-> 
-> In Rust we get drop() automatically called when a structure is destroyed. This
-> means that if we let drivers put the Registration structure (e.g. representing
-> that a PCI driver was registered) into its `Module` representation structure
-> (already upstream) then this Registration is automatically destroyed once the
-> module representation is destroyed (which happens on module_exit()). This leads
-> to `drop()` of the `Registration` structure being called, which unregisteres the
-> (e.g. PCI) driver.
-> 
-> This way the driver does not need to take care of unregistering the PCI driver
-> explicitly. The driver can also place multiple registrations into the `Module`
-> structure. All of them would be unregistered automatically in module_exit().
-
-Ok, I think we are agreeing here, except that you do not need a "am I
-registered" flag, as the existance of the "object" defines if it is
-registered or not (i.e. if it exists and the "destructor" is called,
-it's been registered, otherwise it hasn't been and the check is
-pointless.)
-
-> > Again, 'class' means something different here in the driver model, so be
-> > careful with terms, language matters, especially when many of our
-> > developers do not have English as their native language.
-> > 
-> > > > > +/// The registration of a driver.
-> > > > > +pub struct Registration<T: DriverOps> {
-> > > > > +    is_registered: bool,
-> > > > 
-> > > > Why does a driver need to know if it is registered or not?  Only the
-> > > > driver core cares about that, please do not expose that, it's racy and
-> > > > should not be relied on.
-> > > 
-> > > We need it to ensure we do not try to register the same thing twice
-> > 
-> > Your logic in your code is wrong if you attempt to register it twice,
-> > AND the driver core will return an error if you do so, so a driver
-> > should not need to care about this.
-> 
-> We want it to be safe, if the driver logic is wrong and registers it twice, we
-> don't want it to blow up.
-
-How could that happen?
-
-> The driver core takes care, but I think there are subsystems that do
-> initializations that could make things blow up when registering the driver
-> twice.
-
-Nope, should not be needed, see above.  Rust should make this _easier_
-not harder, than C code here :)
-
-> > > , some subsystems might just catch fire otherwise.
-> > 
-> > Which ones?
-> 
-> Let's take the one we provide abstractons for, PCI.
-> 
-> In __pci_register_driver() we call spin_lock_init() and INIT_LIST_HEAD() before
-> driver_register() could bail out [1].
-> 
-> What if this driver is already registered and in use and we're randomly altering
-> the list pointers or call spin_lock_init() on a spin lock that's currently being
-> held?
-
-I don't understand, why would you ever call "register driver" BEFORE the
-driver was properly set up to actually be registered?
-
-PCI works properly here, you don't register unless everything is set up.
-Which is why it doesn't have a "hey, am I registered or not?" type flag,
-it's not needed.
-
-> > 
-> > > > > +        }
-> > > > > +    }
-> > > > > +}
-> > > > > +
-> > > > > +/// Conversion from a device id to a raw device id.
-> > > > > +///
-> > > > > +/// This is meant to be implemented by buses/subsystems so that they can use [`IdTable`] to
-> > > > > +/// guarantee (at compile-time) zero-termination of device id tables provided by drivers.
-> > > > > +///
-> > > > > +/// Originally, RawDeviceId was implemented as a const trait. However, this unstable feature is
-> > > > > +/// broken/gone in 1.73. To work around this, turn IdArray::new() into a macro such that it can use
-> > > > > +/// concrete types (which can still have const associated functions) instead of a trait.
-> > > > > +///
-> > > > > +/// # Safety
-> > > > > +///
-> > > > > +/// Implementers must ensure that:
-> > > > > +///   - [`RawDeviceId::ZERO`] is actually a zeroed-out version of the raw device id.
-> > > > > +///   - [`RawDeviceId::to_rawid`] stores `offset` in the context/data field of the raw device id so
-> > > > > +///     that buses can recover the pointer to the data.
-> > > > > +pub unsafe trait RawDeviceId {
-> > > > > +    /// The raw type that holds the device id.
-> > > > > +    ///
-> > > > > +    /// Id tables created from [`Self`] are going to hold this type in its zero-terminated array.
-> > > > > +    type RawType: Copy;
-> > > > > +
-> > > > > +    /// A zeroed-out representation of the raw device id.
-> > > > > +    ///
-> > > > > +    /// Id tables created from [`Self`] use [`Self::ZERO`] as the sentinel to indicate the end of
-> > > > > +    /// the table.
-> > > > > +    const ZERO: Self::RawType;
-> > > > 
-> > > > All busses have their own way of creating "ids" and that is limited to
-> > > > the bus code itself, why is any of this in the rust side?  What needs
-> > > > this?  A bus will create the id for the devices it manages, and can use
-> > > > it as part of the name it gives the device (but not required), so all of
-> > > > this belongs to the bus, NOT to a driver, or a device.
-> > > 
-> > > This is just a generalized interface which can be used by subsystems to
-> > > implement the subsystem / bus specific ID type.
-> > 
-> > Please move this all to a different file as it has nothing to do with
-> > the driver core bindings with the include/device/driver.h api.
-> 
-> I don't think driver.rs in an unreasonable place for a generic device ID
-> representation that is required by every driver structure.
-
-It has nothing to do with drivers on their own, it's a bus attribute,
-please put that in bus.rs at the least.  Or it's own file if you need
-lots of code for simple arrays like this :)
-
-> But I'm also not overly resistant to move it out. What do you think would be a
-> good name?
-> 
-> Please consider that this name will also be the namespace for this trait.
-> Currently you can reference it with `kernel::driver::RawDeviceId`. If you move
-> it to foo.rs, it'd be `kernel::foo::RawDeviceId`.
-
-I don't see why this isn't just unique to each bus type, it is not a
-driver attribute, but a bus-specific-driver type.  Please put it there
-and don't attempt to make it "generic".
-
-thanks,
-
-greg k-h
