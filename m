@@ -1,158 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314AC1494A1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381D613D270;
+	Tue,  4 Jun 2024 14:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511861; cv=none; b=eV/pqr2tfuJsB3RWlQPycbRE5kVe0DAkV+H0eS+UY6DcxBX849lQqgAGzWnjVDTmj9eZrTaa56u36tsawOmMVnbkl/rAzzVdsbP7yScr4jA/3kkb0OBSAOtMXF7+yphtRWui5O4zwdNWb4mZuRASq0vUA+LWtGnMG2lLkU6dUaU=
+	t=1717511892; cv=none; b=Xkd/ekmu2QErd4MVAa1Kc+y7gUVcddX3rkGOtPpywzgEVRmkeToFzLqd20mHSx+abewGh5ZA8bWF3rEU2XN/VOMTkNflboXtaQ5xojRA2VkMzz6hvbgmiwcPRSVXgrPPhRiXoOaUUX0SccMyjTq1Gk0gdnmycTV1H42jEBDxTyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511861; c=relaxed/simple;
-	bh=GSe0K72YrdDKsD9ccEAxSP2G9RITqEcmzRd91s6iNuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iRdqijo+HizTpkRFx0ID3RFBiE6dtMX8uktr49UXSc6E1RQqnw5dFOP2lV3uEsbZFGd1i2VTPe1RYP/ifywofZQ7304rNhyFeIsPM+L4lz/bp5rnrIrjeqawiaA0R219hKAAG3c2fIqY8l/ClHVZHlELmvdviHeJb7QN6my+5VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R+hWca0I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717511892; c=relaxed/simple;
+	bh=h5mN9hSq8pgjzcyt50z4SAsjS4rmHveIiM9R54ksBvM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pgb7qSFd+LSvFgT9MpLrMqqWRN7wtd1rTuGOOehm8wUzGoQXnak39M5b9a1Da0MQeo6TqNDo52B2Z/oO60+TGbTQNLj7XDtwRCF5782ZaUVZW1XmfEdfBk8w+Y0J4YpiI3sE+W6v6lKpM+7CulPV02f1/4BP3VtN0Gk9J8NbhXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5jV0Ve0x; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+hWca0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717511859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WH8AS3lVorPueuVFarM2V4L81baIisvkBg5pdJlXfEI=;
-	b=R+hWca0IJDg6a8uT0Nrk+wMnv8K9cXJyIqzNa6QxPgWZ3R4qn9YReIrgIQahEJ3zAWqOEg
-	mnvMsBPTL51NeyYFyFrfCInN5pxPHxHa6+Y3kGghDtdqjWKBkeWcDIXpXeS8502wF76ssX
-	/wcogWnCj0vHKi3SSY1Tc297Mg8j1HQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-DCICH841MYyBgLkbsaYwQQ-1; Tue, 04 Jun 2024 10:37:33 -0400
-X-MC-Unique: DCICH841MYyBgLkbsaYwQQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8963101A521;
-	Tue,  4 Jun 2024 14:37:32 +0000 (UTC)
-Received: from redhat.com (unknown [10.22.32.74])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 440661C1CEAB;
-	Tue,  4 Jun 2024 14:37:32 +0000 (UTC)
-Date: Tue, 4 Jun 2024 10:37:30 -0400
-From: Joe Lawrence <joe.lawrence@redhat.com>
-To: zhang warden <zhangwarden@gmail.com>
-Cc: Miroslav Benes <mbenes@suse.cz>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
-	live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] livepatch: introduce klp_func called interface
-Message-ID: <Zl8mqq6nFlZL+6sb@redhat.com>
-References: <20240520005826.17281-1-zhangwarden@gmail.com>
- <alpine.LSU.2.21.2405200845130.11413@pobox.suse.cz>
- <BBD2A553-6D44-4CD5-94DD-D8B2D5536F94@gmail.com>
- <alpine.LSU.2.21.2405210823590.4805@pobox.suse.cz>
- <Zloh/TbRFIX6UtA+@redhat.com>
- <4DE98E35-2D1F-4A4E-8689-35FD246606EF@gmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5jV0Ve0x"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454CBhgJ018429;
+	Tue, 4 Jun 2024 16:37:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	1Q35dkt89KWo1ea1imWMRpqWMEk/sfn0A6SfaG1T7t4=; b=5jV0Ve0xDeZkUAft
+	r3m2hsVs0EZrkWY1D4YtaZtAHBlXGVPKHbusBk9F5sClAGjMiDNSjtq6JqwaJca4
+	LKryt9hHXChjhmvwmSsuFz9yyaMOuewdGEM3Rpgy3fewG9W+hX517X37MA7Yehpe
+	xG+f7Cd+r8FgpzYw8kGJ3VYq1O8NRL7vDFVYIKYIY6Nxfa6+MiptDk8VebBjhbdY
+	elEqw20kdsTKrV+7hnc6+gwih0tr5X1CD9lVwfRpuRaWoQWGt6NhgbpcV//Pl0JC
+	INwezLj+OD4uRjDcsmhUGaCki4LjAcOdR+Wysx96GQyInf6B3mjKE73cigw7eg3i
+	RLOfGg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ygekhu0yv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Jun 2024 16:37:48 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A148C40047;
+	Tue,  4 Jun 2024 16:37:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E23652194F7;
+	Tue,  4 Jun 2024 16:36:31 +0200 (CEST)
+Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 4 Jun
+ 2024 16:36:31 +0200
+From: Christophe Roullier <christophe.roullier@foss.st.com>
+To: "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>,
+        Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 09/11] ARM: dts: stm32: add ethernet1/2 RMII pins for STM32MP13F-DK board
+Date: Tue, 4 Jun 2024 16:35:00 +0200
+Message-ID: <20240604143502.154463-10-christophe.roullier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240604143502.154463-1-christophe.roullier@foss.st.com>
+References: <20240604143502.154463-1-christophe.roullier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4DE98E35-2D1F-4A4E-8689-35FD246606EF@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_09,2024-06-04_01,2024-05-17_01
 
-On Tue, Jun 04, 2024 at 04:14:51PM +0800, zhang warden wrote:
-> 
-> 
-> > On Jun 1, 2024, at 03:16, Joe Lawrence <joe.lawrence@redhat.com> wrote:
-> > 
-> > Adding these attributes to livepatch sysfs would be expedient and
-> > probably easier for us to use, but imposes a recurring burden on us to
-> > maintain and test (where is the documentation and kselftest for this new
-> > interface?).  Or, we could let the other tools handle all of that for
-> > us.
-> How this attribute imposes a recurring burden to maintain and test?
-> 
+Those pins are used for Ethernet 1 and 2 on STM32MP13F-DK board.
+ethernet1: RMII with crystal.
+ethernet2: RMII without crystal.
+Add analog gpio pin configuration ("sleep") to manage power mode on
+stm32mp13.
 
-Perhaps "responsibility" is a better description.  This would introduce
-an attribute that someone's userspace utility is relying on.  It should
-at least have a kselftest to ensure a random patch in 2027 doesn't break
-it.
+Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+---
+ arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi | 71 +++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-> > Perhaps if someone already has an off-the-shelf script that is using
-> > ftrace to monitor livepatched code, it could be donated to
-> > Documentation/livepatch/?  I can ask our QE folks if they have something
-> > like this.
-> 
-> My intention to introduce this attitude to sysfs is that user who what to see if this function is called can just need to show this function attribute in the livepatch sysfs interface.
-> 
-> User who have no experience of using ftrace will have problems to get the calling state of the patched function. After all, ftrace is a professional kernel tracing tools.
-> 
-> Adding this attribute will be more easier for us to show if this patched function is called. Actually, I have never try to use ftrace to trace a patched function. Is it OK of using ftrace for a livepatched function?
-> 
-
-If you build with CONFIG_SAMPLE_LIVEPATCH=m, you can try it out (or with
-one of your own livepatches):
-
-# Convenience variable
-  $ SYSFS=/sys/kernel/debug/tracing
-
-# Install the livepatch sample demo module
-  $ insmod samples/livepatch/livepatch-sample.ko
-
-# Verify that ftrace can filter on our functions
-  $ grep cmdline_proc_show $SYSFS/available_filter_functions
-  cmdline_proc_show
-  livepatch_cmdline_proc_show [livepatch_sample]
-
-# Turn off any existing tracing and filter functions
-  $ echo 0 > $SYSFS/tracing_on
-  $ echo > $SYSFS/set_ftrace_filter
-
-# Set up the function tracer and add the kernel's cmdline_proc_show()
-# and livepatch-sample's livepatch_cmdline_proc_show()
-  $ echo function > $SYSFS/current_tracer
-  $ echo cmdline_proc_show >> $SYSFS/set_ftrace_filter
-  $ echo livepatch_cmdline_proc_show >> $SYSFS/set_ftrace_filter
-  $ cat $SYSFS/set_ftrace_filter
-  cmdline_proc_show
-  livepatch_cmdline_proc_show [livepatch_sample]
-
-# Turn on the ftracing and force execution of the original and
-# livepatched functions
-  $ echo 1 > $SYSFS/tracing_on
-  $ cat /proc/cmdline 
-  this has been live patched
-
-# Checkout out the trace file results
-  $ cat $SYSFS/trace
-  # tracer: function
-  #
-  # entries-in-buffer/entries-written: 2/2   #P:8
-  #
-  #                                _-----=> irqs-off/BH-disabled
-  #                               / _----=> need-resched
-  #                              | / _---=> hardirq/softirq
-  #                              || / _--=> preempt-depth
-  #                              ||| / _-=> migrate-disable
-  #                              |||| /     delay
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-               cat-254     [002] ...2.   363.043498: cmdline_proc_show <-seq_read_iter
-               cat-254     [002] ...1.   363.043501: livepatch_cmdline_proc_show <-seq_read_iter
-
-
-The kernel docs provide a lot of explanation of the complete ftracing
-interface.  It's pretty power stuff, though you may also go the other
-direction and look into using the trace-cmd front end to simplify all of
-the sysfs manipulation.  Julia Evans wrote a blog [1] a while back that
-provides a some more examples.
-
-[1] https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/
-
---
-Joe
+diff --git a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
+index 32c5d8a1e06ac..7f72c62da0a64 100644
+--- a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
+@@ -13,6 +13,77 @@ pins {
+ 		};
+ 	};
+ 
++	eth1_rmii_pins_a: eth1-rmii-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('G', 13, AF11)>, /* ETH_RMII_TXD0 */
++				 <STM32_PINMUX('G', 14, AF11)>, /* ETH_RMII_TXD1 */
++				 <STM32_PINMUX('B', 11, AF11)>, /* ETH_RMII_TX_EN */
++				 <STM32_PINMUX('A', 1, AF11)>, /* ETH_RMII_REF_CLK */
++				 <STM32_PINMUX('A', 2, AF11)>, /* ETH_MDIO */
++				 <STM32_PINMUX('G', 2, AF11)>; /* ETH_MDC */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++
++		pins2 {
++			pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RMII_RXD0 */
++				 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RMII_RXD1 */
++				 <STM32_PINMUX('C', 1, AF10)>; /* ETH_RMII_CRS_DV */
++			bias-disable;
++		};
++
++	};
++
++	eth1_rmii_sleep_pins_a: eth1-rmii-sleep-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('G', 13, ANALOG)>, /* ETH_RMII_TXD0 */
++				 <STM32_PINMUX('G', 14, ANALOG)>, /* ETH_RMII_TXD1 */
++				 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RMII_TX_EN */
++				 <STM32_PINMUX('A', 1, ANALOG)>, /* ETH_RMII_REF_CLK */
++				 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
++				 <STM32_PINMUX('G', 2, ANALOG)>, /* ETH_MDC */
++				 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RMII_RXD0 */
++				 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RMII_RXD1 */
++				 <STM32_PINMUX('C', 1, ANALOG)>; /* ETH_RMII_CRS_DV */
++		};
++	};
++
++	eth2_rmii_pins_a: eth2-rmii-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('F', 7, AF11)>, /* ETH_RMII_TXD0 */
++				 <STM32_PINMUX('G', 11, AF10)>, /* ETH_RMII_TXD1 */
++				 <STM32_PINMUX('G', 8, AF13)>, /* ETH_RMII_ETHCK */
++				 <STM32_PINMUX('F', 6, AF11)>, /* ETH_RMII_TX_EN */
++				 <STM32_PINMUX('B', 2, AF11)>, /* ETH_MDIO */
++				 <STM32_PINMUX('G', 5, AF10)>; /* ETH_MDC */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++
++		pins2 {
++			pinmux = <STM32_PINMUX('F', 4, AF11)>, /* ETH_RMII_RXD0 */
++				 <STM32_PINMUX('E', 2, AF10)>, /* ETH_RMII_RXD1 */
++				 <STM32_PINMUX('A', 12, AF11)>; /* ETH_RMII_CRS_DV */
++			bias-disable;
++		};
++	};
++
++	eth2_rmii_sleep_pins_a: eth2-rmii-sleep-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('F', 7, ANALOG)>, /* ETH_RMII_TXD0 */
++				 <STM32_PINMUX('G', 11, ANALOG)>, /* ETH_RMII_TXD1 */
++				 <STM32_PINMUX('G', 8, ANALOG)>, /* ETH_RMII_ETHCK */
++				 <STM32_PINMUX('F', 6, ANALOG)>, /* ETH_RMII_TX_EN */
++				 <STM32_PINMUX('B', 2, ANALOG)>, /* ETH_MDIO */
++				 <STM32_PINMUX('G', 5, ANALOG)>, /* ETH_MDC */
++				 <STM32_PINMUX('F', 4, ANALOG)>, /* ETH_RMII_RXD0 */
++				 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RMII_RXD1 */
++				 <STM32_PINMUX('A', 12, ANALOG)>; /* ETH_RMII_CRS_DV */
++		};
++	};
++
+ 	i2c1_pins_a: i2c1-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 12, AF5)>, /* I2C1_SCL */
+-- 
+2.25.1
 
