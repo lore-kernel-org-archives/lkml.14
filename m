@@ -1,290 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2124E1E485
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717467046; cv=fail; b=rdzr9m/fp8OjLW+FzLKfCjgQIT6Zea+X8T74sIgCUUaXyEsAO0tRVfvg9H52mMI1RXhVc1FWhgPgONYiW1zE/NdUWApz5WJ4yrcj4BDw7DYm8Ru2xH+oJUMaQJmGnXFAtfrGNsdCUjS+XEeIDGcAGQNkHCOQACcEfUyNzaUcNGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717467046; c=relaxed/simple;
-	bh=+pbOfCVFn0bH3Eeub79E2ots+UM/rDwzTg3MPpIEp4w=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mcagTpTC7PYPm15LntzOy04IEDYX6TKDTT4ezXp7bhz0RK/ffFyhgxos7hPRS/xerPN0nVbZNiexRHLGzCkAIK5z07ssY5qzTYiHQvyK1zQsKwu0t+USaodgkzy096WmiwzzqbXuQjYrswrlQNIhARpTz4lPVv/rlWK05z/7PNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3cg/iD1; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCBD2C861
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717467545; cv=none; b=Fzk7VauVJ9KTwGQUQTbfEufCjRxc1Nd4KYOH/ceJpA1dqmMUPglOrro1FHuM8DaG0AqwJEQ3UDVP5eUfn5jzgEfSprkAY8FJeuV+U+M8xPD/vwtX/ZIN6IkxOaH0t/Tk7w9dcG5ZfRv+No2WHospS+Civ9UWRxYQ7x1EZnhW+H4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717467545; c=relaxed/simple;
+	bh=SQjBsq1pSDRa+92X8rsTn7sADmhW91X/pso6BF73AR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=CN632Wsn/tnNhl7GP4IH2vBoihvIHRSJlodtwDxfSAmJTdS/pkSvhdLCistdpU1R7yKn43qWjfQDjDFePU105tmFMg/avwn1pI72tRpps9waPGVWtpHqoXDRmR5AqoHXtGoHWBly/d7hYuOrHOK0hm2rmXPAMgpWQODoAEIoLaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=o5rRVSVM; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3cg/iD1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717467045; x=1749003045;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=+pbOfCVFn0bH3Eeub79E2ots+UM/rDwzTg3MPpIEp4w=;
-  b=l3cg/iD1cQu0/RC9WmQGup1fS5ZgVU/gI438KKfMTQqXwi5bldGx542L
-   N0wmgGWZYtDCZMeP0X6GZUovX+n9QqLUWwidbSOWkc6uUQVc2ycPHA69V
-   TYjCTYC9QXrl6RsAe/k3bv24/WWa7pILal1PE6mKdDQym9sbb4GJF/o+I
-   qenkj6AiU6uh3QvTsljJOoZcEekXWofksyEc+9NbMn3lF3gZjs+oi7aTn
-   YKzu+euq2ytOinN18cQ23MRgchR8eX5j7cdmSXUmy6+g29JM5YF7I10qO
-   iChE6YdC4EPplb9AsXriD08+pajqU6L8yvabTy+xDAjs9PAjvgW0MpAxn
-   A==;
-X-CSE-ConnectionGUID: icFWofJ/SXWzQlWAExh+AQ==
-X-CSE-MsgGUID: v8Vc41WJTsGPJVgRah+e2g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="24612667"
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="24612667"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 19:10:44 -0700
-X-CSE-ConnectionGUID: qnzIqgtNRm+SXmq4NuvseQ==
-X-CSE-MsgGUID: zU5nlhq6TZ6DdD65YZSRcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="37535799"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 03 Jun 2024 19:10:44 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 3 Jun 2024 19:10:43 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Mon, 3 Jun 2024 19:10:43 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Mon, 3 Jun 2024 19:10:43 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 3 Jun 2024 19:10:43 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jBkIGD8Rf5X2bD/5IaQXpfpuZkv+VQva9+c+OW84Xl6HqRtI+S0ZedcxNrvylHKyUqlf2E3Fvl/lIroPwlJ09RGSq8Zw82CtPu0WXMNZWX53jhlG2iaF6dyWGyXTeZd4YX3mrX/GAh7OCleYkzyWyNE3UNnf3PuK9W8/5NflUgUDGCP77Iqlz/bKF5T0EgEnSvFuVY+n91eRs67BoO2jrBf6QANdGwmWUSfYYwbWoVi4RZy78AEz/uklWZlzyCccH+++IxxH9o3R8E0REQLVr9usW0WqlPrPJBsusMX0cKzTF3joSRKmjd24aIvtk7Eb8zdYMMhvHB9+jrLph1MxBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+bLOOcnVwoJrTyBbvjyOgvbsq14lI7d60rjsqNs5iUM=;
- b=a4eACW/L8a4uez+yPzKXjFsepqnlk58ffN96145SXi3dFiPh8nbxTKeCRS8Ms+bLgJkl0hydknbSfVIHBcFdMYkZ4g2Gg0f3iPFUOaXuA/rJQWT0isxaAeGEIhSKbx6Cdjr3jaBLtTkwk305uy937EnBrfIFVbF7DGlum+TKnuSAlsXs2pHUu+Wb4ch/fJM5zj+M8YmT7NFZnjOzAkwqCrnF0LJiFgRok3NnrMgSgfv8DJSjefvIqXTluB4YGlV15D/fCv8OJu4V5re4uTwBGuZK23Y2zlcJbXFePLKBNJDW4cVLSbwtht4prFdmxzETz7gnOspCcFacPHJ1x3ljgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6005.namprd11.prod.outlook.com (2603:10b6:510:1e0::19)
- by DM6PR11MB4595.namprd11.prod.outlook.com (2603:10b6:5:2ac::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
- 2024 02:10:41 +0000
-Received: from PH7PR11MB6005.namprd11.prod.outlook.com
- ([fe80::39d2:ae29:6e3f:1b6a]) by PH7PR11MB6005.namprd11.prod.outlook.com
- ([fe80::39d2:ae29:6e3f:1b6a%5]) with mapi id 15.20.7633.018; Tue, 4 Jun 2024
- 02:10:40 +0000
-Date: Tue, 4 Jun 2024 10:10:29 +0800
-From: Chen Yu <yu.c.chen@intel.com>
-To: Tim Chen <tim.c.chen@linux.intel.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>, <linux-kernel@vger.kernel.org>,
-	Vinicius Gomes <vinicius.gomes@intel.com>
-Subject: Re: [PATCH] sched/balance: Skip unnecessary updates to idle load
- balancer's flags
-Message-ID: <Zl53lXjEmnWhlW8p@chenyu5-mobl2>
-References: <20240531205452.65781-1-tim.c.chen@linux.intel.com>
- <Zlygeqy+SVs1KZYW@chenyu5-mobl2>
- <c3d2a49e580cea9ae86e692f72094119310adc8f.camel@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <c3d2a49e580cea9ae86e692f72094119310adc8f.camel@linux.intel.com>
-X-ClientProxiedBy: SG2PR04CA0205.apcprd04.prod.outlook.com
- (2603:1096:4:187::6) To PH7PR11MB6005.namprd11.prod.outlook.com
- (2603:10b6:510:1e0::19)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o5rRVSVM"
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240604021902epoutp04e7c4d6d6b210ad9dd6e571ae5c2dbc6a~Vq6FInHXB1337813378epoutp04M
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:19:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240604021902epoutp04e7c4d6d6b210ad9dd6e571ae5c2dbc6a~Vq6FInHXB1337813378epoutp04M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717467542;
+	bh=JrbYCyMWg5+SkRsH6d147/xUVTz498odRqOzgTstKfc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=o5rRVSVMw+Ki3eiwwpt5EO6UBZgye6nuzLJAGvHz84fpUHt5bIW3nB8lAqMOGzqSp
+	 HTzKfRXWgJE1ZvKmreYToUFlP5+rmPbekBLhoNOaJfY5gG1TjjNklmoqf8kxF4ahNg
+	 QXrdS5tnvXKDg9oxz4hnEbFT3VKBPYWSyy9bZusk=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+	20240604021901epcas2p2b90b9ae5ce5cb136016f31ec5f38a043~Vq6ETaECa3090730907epcas2p2F;
+	Tue,  4 Jun 2024 02:19:01 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.91]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4VtZ5w6CCZz4x9Pv; Tue,  4 Jun
+	2024 02:19:00 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	11.8A.09848.3997E566; Tue,  4 Jun 2024 11:18:59 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240604021859epcas2p47538af772afe3e57d25c1fde33fd28db~Vq6CYYfI60306903069epcas2p4w;
+	Tue,  4 Jun 2024 02:18:59 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240604021859epsmtrp25dbcd778e59061ec44393ffe8b9027fd~Vq6CXfLDO0329303293epsmtrp2A;
+	Tue,  4 Jun 2024 02:18:59 +0000 (GMT)
+X-AuditID: b6c32a45-447fe70000002678-6b-665e7993479e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3C.16.08622.2997E566; Tue,  4 Jun 2024 11:18:59 +0900 (KST)
+Received: from ubuntu (unknown [10.229.95.128]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240604021858epsmtip26dff3dc71f3ee0c68295f92acf988b69~Vq6CLPIaz2236722367epsmtip2N;
+	Tue,  4 Jun 2024 02:18:58 +0000 (GMT)
+Date: Tue, 4 Jun 2024 11:19:35 +0900
+From: Jung Daehwan <dh10.jung@samsung.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+	Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Mathias
+	Nyman <mathias.nyman@intel.com>, Felipe Balbi <balbi@kernel.org>, "open
+ list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE
+ AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] dt-bindings: usb: xhci: Add
+ 'write-64-hi-lo-quirk' quirk
+Message-ID: <20240604021935.GB49465@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6005:EE_|DM6PR11MB4595:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a57708d-4630-4fc4-4d47-08dc843b8839
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|366007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?v7F7enPbXPzwKycgqwAh1x0j4145l+e9Jgncp/v4MYmgT71qWPazq66m5MtG?=
- =?us-ascii?Q?mDVGslmpi3lmprkIh4iWPsK/yDTJDnQYDJn8nnONeFXWS7c+hn3Z+isIs+DT?=
- =?us-ascii?Q?M3RI2xeGegGhyI/RdU3StOQRGDoEqlFaEiRN0fTdWNUCtxmJamb5W82ZVqb6?=
- =?us-ascii?Q?9eDRkgEQ88dbyzdIYPAKPI2W66zMbAuGsqQAXn5YVpfsuSUNv170gJbuRTXP?=
- =?us-ascii?Q?pu+I6AGRxQp9ITBimqzuvw540WtBpbqgZ9iOPoG0XW6iSPfPmk4ZwnFJyRD0?=
- =?us-ascii?Q?UxF0UdAmuNQbkUQcLLXcGVHLUMmefYpn5hgDsftxFY1gD0XUbMxz7IpsmA4d?=
- =?us-ascii?Q?dvpH0GC9v1oucuowMJKvH2Wo3Nn40ZTnHahvqmhwLv1buJi6PFtzJzDTuMof?=
- =?us-ascii?Q?z/2TnzSI7xahY0OFmywASjaG63fq3uVww5s0+YVPdbHJVew8OME/yaX3B9v8?=
- =?us-ascii?Q?kcEfxRBZ1MDdFZJe8L+B/lWnAi8fvmMbijz7NyGZ6wWIpTeZklLVMcLRsSnI?=
- =?us-ascii?Q?KSMsysusvPnCTQC4p5+RKJ47CvP/rXMNBnxVAA7VH/g3xSx4epJnYoxoEKq9?=
- =?us-ascii?Q?8XiK8PK6OtSnb3plNN1yFqDsw0yjZFQtalIcyHLsRyff+z9lF8yEEoVRn7sc?=
- =?us-ascii?Q?nrczc/6RvTjTcsr0ZEfd/2eZRt+qQ3qctnPUDX/jkqDpiWr37nU7PGqEzqKp?=
- =?us-ascii?Q?Jzcp1Gt4VTgvAhfPVoJaZUq/55UfuzONOSOWGT8LC1ifOcZ0Msw9e9d6mCVo?=
- =?us-ascii?Q?ZZvNT6gRqqiHAIqbsBo6pkMDTcWoOpM0NpPauCEN2YFIqsWXJaWidd96Twyz?=
- =?us-ascii?Q?4wsKMwM7RmiQaBicr0O6vIlTEgjbxdY2CBWNwZTW9alJ0ZpuZZHCD7nR9thI?=
- =?us-ascii?Q?chtscrt/FOz7SXgrm7Pcm/tU/l+aCmkjB9aL/WwPqcL/8eYY9NK+jHSMQhwe?=
- =?us-ascii?Q?sBCxQ/ZPAkeqJ356frQshtB5e1lAnKkSS5/t41Ug9wVqMSvD/OlUW7bE9N1o?=
- =?us-ascii?Q?9xWzLL5H5HGkloVrcSJYXMlbh4eMA3IzHtRts32Hcc578umHx1f+Bfz+i9Ti?=
- =?us-ascii?Q?8LckEo+jWCdPgHIhyVSKb0qoFTa/1QAYvijrfNS4kGa3v0aXSnbH1r4S5ZEy?=
- =?us-ascii?Q?AlnB7XOGlmS0cJaTKSaem7icbnj3AEScJHPuiUbGoUNF5/25PaoK/F41QEDj?=
- =?us-ascii?Q?jfXB8KMUCvikxDnpc/4di1EJkPBTdOCeEStF5eAupuiDfW2vmGqtIff9Shy8?=
- =?us-ascii?Q?reBFc3WriCxnGLHmjCd//BBCwKZwmOEGnelW+vtysg=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6005.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DyeCDPtRS4jsGe3Ch62PO/DtIc+WnF7TuCVHizl2yNLhZ40P8xzJHHHfGr1I?=
- =?us-ascii?Q?GjHAbnTOXVjZNuP4ZrGT1b+Kf4/UjOCWuObf24meQEHBqOaSSo6E6Js0T8mR?=
- =?us-ascii?Q?MJOzEMIkKqi4v9QmyPu1gBBwnNGZa1YKJAnWgcHz6wBxbXf2SDkyDBKcW3Aw?=
- =?us-ascii?Q?hy/JevW1d2JzalcUicLpO460QWwZRo2UPOPfXS/md4pUFhvtiXZ9uLzbiZP9?=
- =?us-ascii?Q?wogCCHxxVptfJPvUyJSJ+nkFlc5R3cSAPm9QM2qwc+Qzru6ZeGQ3Kle1pzO6?=
- =?us-ascii?Q?wcCG1sI0gPI1iPhYMuJ1IIlSWRcZAtk4ZCQGLrR4QUIwUcwmFNRZKUJj7m2r?=
- =?us-ascii?Q?BLmWhC+j9Dt0OVC9XdOdOJYOzKlhZMQwBTb6HYSoEWgtVHw+yNi+SiAIUcpO?=
- =?us-ascii?Q?I7ElSzTaONd7pPFscJLO56joyKW2f9yRVXSdgSrXAYuWNvURdYac+QZF0zji?=
- =?us-ascii?Q?l2cezP3xEvWUPQox9+m6D0TLmclYUtd4IDr4k7uYuIyj6AeAB8yihatsLxIL?=
- =?us-ascii?Q?QoOV9d83dJ/YsmI9VyPEKcFtaXQMRp17QxWgiLU0kSgBYOFwj2nVwDgNnmoD?=
- =?us-ascii?Q?X6cV2CH+lQ3YzW266jdQYXC7eglNBMU/Qm/qgw2b0xagQPWMl2UummLn2OVT?=
- =?us-ascii?Q?5e2uAzXGV0RzKlFWdrgHsVMgXIF6Fm1H8+5etDdIoeUvoGsuUzic0L/BTuIb?=
- =?us-ascii?Q?ZvI90R/hx1/pUAfu/M1PoX7bMrwJFdVX6rmVWp3+kTpQCEI6dIESHZje/KG9?=
- =?us-ascii?Q?b7VuYbIJeV6TDvCcyeOGnRUwMqq/ZdvngdtdulehfbQcgU1QPxZQW6JJK26D?=
- =?us-ascii?Q?PSjVon1Ru7KHpjK2HDkQqlFAiWrNj6ZqvmJZRUUEdgzMzrv1no7V2taCwguh?=
- =?us-ascii?Q?JEaWjkx6jWZFBugLf10WeNxd2RatxQEHQmX0nAPHU2CtiGGtubBg8gkK5VCU?=
- =?us-ascii?Q?wLlaEs2VvvOXMJ9d0fUMRwh/GgIpPpgYwbIcEmzYOppkpWmKRgScsdOBCibI?=
- =?us-ascii?Q?Y6oN0rVK/ZO0kaCC7nfg1ss9B5jBwp6X25UlgBR442+PtqAqdz8LPcY5qnIl?=
- =?us-ascii?Q?zgyYR4b5eTsLtzLILn8XEegR4dwwcWc0D5xmGaphksZzqBgrj4iOj5TZJucg?=
- =?us-ascii?Q?kBXQC85FEuffIY/fB3qNJjy3zdwlH+8S7q6WK+IgFeKSvcXBKEbr4iK3c3VR?=
- =?us-ascii?Q?wjRgUHRDx7rnVdcn/3xPCcT6TsdjYcxmN5uAAUe4UDGzHO27STySgS/fmiGM?=
- =?us-ascii?Q?lHsyX7ZViX36qccuAglT2zJe+ynmEmBppxZXMpGBktFduN3z4BmvddjSpJAE?=
- =?us-ascii?Q?lRsnRoWqpja0q2yWkvvu0GWobpzwf5ltSNb05H5t13kcyplc+uihIEgO+TNb?=
- =?us-ascii?Q?vKRrhd3fa0C9iY1Iqx5ymFjo9MpsvKsOX1OSeRD/mLoiuXxlLNinfRnig5yK?=
- =?us-ascii?Q?vOZ0HI3izwH/Z6yJ9aQ5f+iapr0jUziE/HLskX6wpleIadoYtjz8tvNvy0Dv?=
- =?us-ascii?Q?5y/LlplwKoFaXEkIOyL9oGqJNIQFzQW4qfWAP6D7zl7WoUYrb8Ut86KRQHjp?=
- =?us-ascii?Q?hLj5KsPdKKlHnBQadDmssTZ4RM32oaXKejf0GZXO?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a57708d-4630-4fc4-4d47-08dc843b8839
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6005.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 02:10:40.4203
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k/sPYAI2l3i33szhqITXv1Wtggjv84BjOM0mwNmDypJiYu/rJKS+81FaVLMr29gBODi5GJDrRUqn+qFoOMJrSA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4595
-X-OriginatorOrg: intel.com
+In-Reply-To: <20240604003013.2jwskwiqivgumrsx@synopsys.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmme7kyrg0g233dSyOtT1ht1iz9xyT
+	xfwj51gtmhevZ7N4Oesem8X58xvYLS7vmsNmsWhZK7NF86YprBb/9+xgt1i14AC7A7fH4j0v
+	mTw2repk89g/dw27x5b9nxk9Pm+SC2CNyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1
+	tLQwV1LIS8xNtVVy8QnQdcvMATpNSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNg
+	XqBXnJhbXJqXrpeXWmJlaGBgZApUmJCd8f/4QsaCtxwVrZOvMjUwLmDvYuTkkBAwkeja85Kl
+	i5GLQ0hgB6PE3d89TBDOJ0aJ9nnvGSGcb4wSLZsOMsG0nDqxD6plL6PEhTuToVqeMEpMbXkO
+	NphFQEXi0awFjCA2m4CWxL0fJ5hBbBEBHYkDJ86DNTAL3GSW2P29HWyssECYxMLTt1i7GDk4
+	eAW0JY62R4KEeQUEJU7OfMICYnMKWEtcX/STBaREFGj+q4P1IGMkBGZySDz4P50N4joXibkr
+	uqBsYYlXx7dAPSol8fndXqh4scSt58+YIZpbGCVWvGphhkgYS8x61g52NLNAhsS95vVgyyQE
+	lCWO3GKBCPNJdBz+yw4R5pXoaBOC6FSWmH55AiuELSlx8PU5qIkeEs2bGqCBtYVZ4vbLRSwT
+	GOVnIXltFpJtELaOxILdn9hmAa1gFpCWWP6PA8LUlFi/S38BI+sqRrHUguLc9NRiowJDeGwn
+	5+duYgQnWy3XHYyT337QO8TIxMF4iFGCg1lJhLevLjpNiDclsbIqtSg/vqg0J7X4EKMpMJ4m
+	MkuJJucD031eSbyhiaWBiZmZobmRqYG5kjjvvda5KUIC6YklqdmpqQWpRTB9TBycUg1MM+5f
+	j006c/y4R6fA/1Pz3/A+UrW78JKzeKV87vl/3wMfbnx2vNvZ/Mx9/6MWM39N/3VW1b3ANNTr
+	XOf6tlu5S97LFPhrl6qmhN7pZr1q/mr9g76u/YnyFxqu8sk9nTy19UuYrIbUCrbJ4dX+fb0L
+	VdKe+Xntm2h2yKfmh3/Al2yRnYVvZe7OfuzIYXBUI/bRqXWZd/q8l9zq1cq0nrZW/VvR/hCj
+	5TdlVu2ZsLA/Z/+/xtNu/fPX/88V4LE/r9NiveT2n5hzZ1V+XXU818R74ayP5woevolSh44x
+	uHyqe2JjIZ7fXzzru0RIxbP5z+P/ihwrk7Ni1v4iy9e8PXJh//FbF9cvOC8q0p97dYr4YyWW
+	4oxEQy3mouJEABPz5Nw/BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSvO7kyrg0g/O3mSyOtT1ht1iz9xyT
+	xfwj51gtmhevZ7N4Oesem8X58xvYLS7vmsNmsWhZK7NF86YprBb/9+xgt1i14AC7A7fH4j0v
+	mTw2repk89g/dw27x5b9nxk9Pm+SC2CN4rJJSc3JLEst0rdL4MpY3rSQqWAtW8WTOUvZGxh/
+	snQxcnJICJhInDqxD8jm4hAS2M0ocX1xAztEQlJi6dwbULawxP2WI6wQRY8YJSbdWMcIkmAR
+	UJF4NGsBmM0moCVx78cJZhBbREBH4sCJ80wgDcwC95kl+hbNZQVJCAuESSw8fQvI5uDgFdCW
+	ONoeCTF0C7PEn4l7wAbxCghKnJz5BOw8ZqChN/69ZAKpZxaQllj+jwMkzClgLXF9EcgHHByi
+	QDe8Olg/gVFwFpLmWUiaZyE0L2BkXsUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERwr
+	Wlo7GPes+qB3iJGJg/EQowQHs5IIb19ddJoQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OE
+	BNITS1KzU1MLUotgskwcnFINTJeNxWetd9QW7ZM4tFRXcZMTV8vBiT13ZuutfZ/sufrX1l85
+	13uzHPf/v/Concn6e36HBb92RFAYQ5L9lFsdDfVcRVm6ZarFXOE5loVudettfBIqlj4rKr5h
+	Uczc63v/t6K2NOt5N/nyI3++sRmyROdZ8ex9JFmktE15QWGaaPEUMe0Lf7NsKn/JWX75897H
+	dOfrmr8uAREz94pFev0/9yn7H6frnMe8a7/wTtQ4vLfnBe8rK5O2F327A0M+sKbKfygP/ntm
+	j4/hZvXUZrm5r7NjLr3Rtt+9+nj9bHepq/oHvkrZ27zaeeXm4x1a+pKHEg8Kzd/wb+8OJqnG
+	cnWuDC+9Ofdal0SUT9JzNvijxFKckWioxVxUnAgA5x1zMQQDAAA=
+X-CMS-MailID: 20240604021859epcas2p47538af772afe3e57d25c1fde33fd28db
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240531060729epcas2p1df12dd3b14c5fa2fa0716f72010b3dbd
+References: <1717135657-120818-1-git-send-email-dh10.jung@samsung.com>
+	<CGME20240531060729epcas2p1df12dd3b14c5fa2fa0716f72010b3dbd@epcas2p1.samsung.com>
+	<1717135657-120818-4-git-send-email-dh10.jung@samsung.com>
+	<bcbff3b2-c5ae-4a95-aa36-f9b88a97e72c@kernel.org>
+	<20240603033427.GB23593@ubuntu>
+	<69c954ce-d7a2-420c-b3f6-72caee02d84f@kernel.org>
+	<20240603082538.GD23593@ubuntu>
+	<20240604003013.2jwskwiqivgumrsx@synopsys.com>
 
-On 2024-06-03 at 09:13:47 -0700, Tim Chen wrote:
-> On Mon, 2024-06-03 at 00:40 +0800, Chen Yu wrote:
-> > > 
-> > > With instrumentation, we found that 81% of the updates do not result in
-> > > any change in the ilb_cpu's flags.  That is, multiple cpus are asking
-> > > the ilb_cpu to do the same things over and over again, before the ilb_cpu
-> > > has a chance to run NOHZ load balance.
-> > > 
-> > > Skip updates to ilb_cpu's flags if no new work needs to be done.
-> > > Such updates do not change ilb_cpu's NOHZ flags.  This requires an extra
-> > > atomic read but it is less expensive than frequent unnecessary atomic
-> > > updates that generate cache bounces.
+------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+
+On Tue, Jun 04, 2024 at 12:30:32AM +0000, Thinh Nguyen wrote:
+> On Mon, Jun 03, 2024, Jung Daehwan wrote:
 > > 
-> > A race condition is that many CPUs choose the same ilb_cpu and ask it to trigger
-> > the nohz idle balance. This is because find_new_ilb() always finds the first
-> > nohz idle CPU. I wonder if we could change the
-> > for_each_cpu_and(ilb_cpu, nohz.idle_cpus_mask, hk_mask)
-> > into
-> > for_each_cpu_wrap(ilb_cpu,  cpumask_and(nohz.idle_cpus_mask, hk_mask), this_cpu+1) 
-> > so different ilb_cpu might be found by different CPUs.
-> > Then the extra atomic read could brings less cache bounces.
+> > This issue is not specific on SoC side but dwc3 controller. I think it's
+> > better to add it to dwc3 directly but I can't find dts for dwc3. Dts for
+> > SoC, which uses dwc3 would be needed in this case, right?
 > > 
 > 
-> Your proposal improves scaling.  However,
-> that could result in many idle CPUs getting kicked.  I assume that
-> current approach of delegating to a common idle CPU will disturb fewer CPUs
-> and let them stay in deeper idle states, and get the power benefits
-> from NOHZ scheme.
->
+> This quirk applies across different DWC_usb3x versions. IMO, you can
+> just pass the xhci quirk flag along the dwc3_xhci_plat_quirk->quirks
+> without needing to introduce a new xhci DTS binding. However, to do
+> this, you should extract the xhci quirk flags to a separate header so
+> that dwc3 can include and use them.
+> 
+> BR,
+> Thinh
 
-I see, from power point of view, current solution is better.
- 
-> > > 
-> > > We saw that on the OLTP workload, cpu cycles from trigger_load_balance()
-> > > (or sched_balance_trigger()) got reduced from 0.7% to 0.2%.
-> > > 
-> > > Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> > > ---
-> > >  kernel/sched/fair.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index 8a5b1ae0aa55..9ab6dff6d8ac 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -11891,6 +11891,13 @@ static void kick_ilb(unsigned int flags)
-> > >  	if (ilb_cpu < 0)
-> > >  		return;
-> > >  
-> > > +	/*
-> > > +	 * Don't bother if no new NOHZ balance work items for ilb_cpu,
-> > > +	 * i.e. all bits in flags are already set in ilb_cpu.
-> > > +	 */
-> > > +	if ((atomic_read(nohz_flags(ilb_cpu)) & flags) == flags)
-> > 
-> > Maybe also mention in the comment that when above statement is true, the
-> > current ilb_cpu's flags is not 0 and in NOHZ_KICK_MASK, so return directly
-> > here is safe(anyway just 2 cents)
-> 
-> Not sure I follow your comments about return being safe.  Let me explain
-> in details.
-> 
-> We will return directly if and only if the bits set in flags are also set
-> in nohz_flags(ilb_cpu).  
-> 
-> The comment's intention is to say that if the above statement is true, then
-> the later operation of 
-> 
-> 	atomic_fetch_or(flags, nohz_flags(ilb_cpu))
-> 
-> will be useless and not result in any change to nohz_flags(ilb_cpu), since all the set bits
-> in flags are already set in nohz_flags(ilb_cpu).
+I haven't got using dwc3_xhci_plat_quirk. Let me try to use it.
+Thanks for the comment.
 
-Understand. My previous thought was that, what if the current nohz_flags(ilb_cpu) is 0 or
-NOHZ_NEWILB_KICK. If yes, return directly might miss one ipi to the ilb_cpu(because
-the current code checks flags & NOHZ_KICK_MASK to return directly). But from the current
-logic when we reach kick_ilb(), the flag is not 0, and the flag passed by nohz_balancer_kick()
-satisfy (flags & NOHZ_KICK_MASK), so returns here is ok.
+Best Regards,
+Jung Daehwan
 
-> 
-> So will it be clearer if I say
-> 
-> 	/*
-> 	 * Don't bother if no new NOHZ balance work items for ilb_cpu,
-> 	 * i.e. all bits in flags are already set in ilb_cpu.
-> 	 * Later OR of flags to nohz_flags(ilb_cpu)
-> 	 * will not change nohz_flags(ilb_cpu).
-> 	 */
->
-
-Yes, this is ok.
+------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_
+Content-Type: text/plain; charset="utf-8"
 
 
-thanks,
-Chenyu
- 
-> Thanks.
-> 
-> 
-> Tim
-> 
-> > Reviewed-by: Chen Yu <yu.c.chen@intel.com>
-> > 
-> > thanks,
-> > Chenyu
-> > 
-> > > +		return;
-> > > +
-> > >  	/*
-> > >  	 * Access to rq::nohz_csd is serialized by NOHZ_KICK_MASK; he who sets
-> > >  	 * the first flag owns it; cleared by nohz_csd_func().
-> > > -- 
-> > > 2.32.0
-> > > 
-> 
+------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_--
