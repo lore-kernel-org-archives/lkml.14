@@ -1,108 +1,97 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB6A144D03;
-	Tue,  4 Jun 2024 10:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A064E13C67C;
+	Tue,  4 Jun 2024 10:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717498360; cv=none; b=bx4uD991TvfMcfVldWRShzsgiiZ+r3kfE7qYHUWtbuZPuetzcLYG/bIjARB9+Waa9FhnbC73ZTrIqoVqU2211VnQu19r7EVqykIdrEh9O0KAkQK4VmAhHV/GBW0+fbCh9lEMIZRvmDpoQjOvmGwFEpavy9qC6YgRGNjcKZ9Ph+g=
+	t=1717498380; cv=none; b=JYWyli+zd2wH6ROhLugaR5fKdUg469NgdvYz4W7cn34LeMcdCtr327hHRsP9MwKNxdTD2pcr/pNLmKLqH6MNAXm/zNr2s3L32LGBoNmd1LESQlnsQyhNMxD1zAU6LrwY/bzU7W7qm3FHixALgnqKvOBvlpMN+xNqDXdeMc8iSAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717498360; c=relaxed/simple;
-	bh=p8RmQjWju6YwnZ7CZmFezlveQX8QHnpPcm1uFVN4HLQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RLyiCMaxTRjGRGxmisaklWR1SkwmE5eRewsj/VJvlRA54sC3gLjoa0vPO9zA/3vXs/6fPnRQ4l9NSxnfaPBnGZyKbTJNxxQLN0i9BYDxVq8fe3hivgy4HHhDt8sbrC60N7E2AcmDM+WYN+t4iuB/C+tik8Dp6f2Ky0hp6wx7QgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZcUM7Cah; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717498380; c=relaxed/simple;
+	bh=CIT+PLRRVeQCc2z7Vg7ycTCgsifejpCEeedaNo9Y7s0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VDNgFFEbINf9Z9wuWenuGJmiqu2kI0lROaI0ftsekEHbfSv6eDaal2JY8PE4ulXZxrZ87Sb0clXM+ZQhIPAFXoKfkvNzjBobGJWEsJ156OZVme7mMzKN1Jv84AWJDEX8J6e9owzSb32nhBFCEq8SYD+0/n3ZltVdG+bxze3tGQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5Xmet7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZcUM7Cah"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 454AqFMx005296;
-	Tue, 4 Jun 2024 05:52:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717498335;
-	bh=fdbp4Ke8IMl5fhviwUSq+Cwwqel7fwsn4xw3/GtV4g0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ZcUM7Cahlrhn5uVPltGVWDcw/bB5IprFGWl+EY9fMtLAWekvUOG31ii3qdgn01/Cg
-	 ApFb+1k+2r/UsA4JN1RivyiyxlmkEJmA045CwvpM7HC0GAKKqWKekCM7ZpnwMcUK97
-	 8UUYKnEun20nJKZywQkz+TMQkzdocg+U6BMaP8f0=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 454AqFWZ032544
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 05:52:15 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Jun 2024 05:52:15 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Jun 2024 05:52:15 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 454AqEr5074325;
-	Tue, 4 Jun 2024 05:52:15 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <akpm@linux-foundation.org>, <gregkh@linuxfoundation.org>,
-        <andriy.shevchenko@linux.intel.com>, <adobriyan@gmail.com>,
-        <jani.nikula@intel.com>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-        <daniel@ffwll.ch>, <dri-devel@lists.freedesktop.org>, <corbet@lwn.net>,
-        <broonie@kernel.org>, <rdunlap@infradead.org>,
-        <linux-doc@vger.kernel.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <davidgow@google.com>, <dlatypov@google.com>
-Subject: [PATCH v12 09/13] Documentation: core-api: Add math.h macros and functions
-Date: Tue, 4 Jun 2024 16:22:14 +0530
-Message-ID: <20240604105214.2255251-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20240604104001.2235082-1-devarsht@ti.com>
-References: <20240604104001.2235082-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5Xmet7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17212C2BBFC;
+	Tue,  4 Jun 2024 10:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717498380;
+	bh=CIT+PLRRVeQCc2z7Vg7ycTCgsifejpCEeedaNo9Y7s0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S5Xmet7couJFpLtaS/ov6U1F0VLxO4CKzvTvoWut/0vHH5PURzAXdg8upaH/1YpAu
+	 jjkLEw5yqSiL+JmnU/n0SIjshrR2GiZjlSCazWpM4vh7qhCrqfR+RzrH2bY4vGJTRb
+	 EU3G+zlN+DnOgGSqsrJ3ChOLrSB9cEIl6CKfhVY28u/cflYdT7UoCG23l+NdgutNt9
+	 6+DI5daCEbmYIIx5FqHI4eTXj2kJaqMhHyOYXkleb4aEYBmGCFj+T/GTM3TWLq6SLV
+	 oY5iMigYIs4DlbBiQV6OsYZOA+pLfqyJIdZX6kHvQR6FWHWhrUFWTHTy4Ii2WfOfpJ
+	 m4+YNJDMSwM5w==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sERml-000000002vu-0RVB;
+	Tue, 04 Jun 2024 12:52:59 +0200
+Date: Tue, 4 Jun 2024 12:52:59 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] dt-bindings: usb: qcom,dwc3: set minItems for
+ interrupt-names
+Message-ID: <Zl7yCy5G2q0SGlwr@hovoldconsulting.com>
+References: <20240527144538.155704-1-brgl@bgdev.pl>
+ <CAMRc=McurmN4Hs2MVGCjF0z_FX+84v0psGuTse0K7caSVF445A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAMRc=McurmN4Hs2MVGCjF0z_FX+84v0psGuTse0K7caSVF445A@mail.gmail.com>
 
-Add documentation for rounding, scaling, absolute value and 32-bit division
-related macros and functions exported by math.h header file.
+On Tue, Jun 04, 2024 at 08:52:52AM +0200, Bartosz Golaszewski wrote:
+> On Mon, May 27, 2024 at 4:45 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > There's a set of compatibles for which we set a strict list of 5 interrupt
+> > names even though minItems for the interrupts property is 4. One of the
+> > USB controllers on sa8775p only consumes 4 interrupts which leads to
+> > dtbs_check errors. Make the last entry optional by setting minItems to 4.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> > index cf633d488c3f..4251dc25ee9a 100644
+> > --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> > +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> > @@ -468,6 +468,7 @@ allOf:
+> >            minItems: 4
+> >            maxItems: 5
+> >          interrupt-names:
+> > +          minItems: 4
+> >            items:
+> >              - const: pwr_event
+> >              - const: hs_phy_irq
+> > --
+> > 2.43.0
+> >
+> 
+> Gentle ping.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-V12: Add Reviewed-by
-V11: Fix title for math function header
-V10: Patch introduced
-V1->V9 (No change)
----
- Documentation/core-api/kernel-api.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+As was pointed out elsewhere in this thread, there are two more
+issues like introduced by the same patch which should be fixed at the
+same time.
 
-diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
-index ae92a2571388..7de494e76fa6 100644
---- a/Documentation/core-api/kernel-api.rst
-+++ b/Documentation/core-api/kernel-api.rst
-@@ -185,6 +185,12 @@ Division Functions
- .. kernel-doc:: lib/math/gcd.c
-    :export:
- 
-+Rounding, absolute value, division and 32-bit scaling functions
-+---------------------------------------------------------------
-+
-+.. kernel-doc:: include/linux/math.h
-+   :internal:
-+
- UUID/GUID
- ---------
- 
--- 
-2.39.1
-
+Johan
