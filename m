@@ -1,181 +1,159 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC7F13D50F;
-	Tue,  4 Jun 2024 02:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D6E53BE
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717467562; cv=none; b=M1PTKAPYQZdWJpz9Y7UYWKHHJd8CyxNaoTxaFfQures1FIJ44cLvNy6zsM+rv6r6XlhhKLMbTUVhE6SzvkhfKubQX7IaD+vad4/81XasAbLkpiNpfFb6gbTbWwSi0BwThuSyfPY8cnCr0EGnzd91b0dlJATX+trvUZHEKeHJDLM=
+	t=1717467775; cv=none; b=A8eq2wMTiKzxKGkFQWiUYbi2dIDBQrb7R9a7I4ceSrEJsSY9xvRFfGSKqGsi23g88cAIn/TCQfbtgsbBM2utxKFYDIW5PQrTO2PJO8PgN45ip6MBa9n+VuU7ayedNQIbbjac9WLOVO51W1X+Gr0DjNf7xI+CV2XcdG5WByhH0ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717467562; c=relaxed/simple;
-	bh=ae09Bok+7c40U7+a/HBGd5hON5Y5Ex8pTOtiKczukCI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iAEncXl6hecLJTbEheWs1q5PjHimncd7joeKJQ3Yhqaj+GNvMRBTl1kGPdN3uTsL17zzkgxejA5zpwnU82h7znvOM/zT4AnYNwrP9Qq42g1xh8muo3+ehX+2oa/DRgsqyA4tu04ePMP0nHAGhJA54jhGRCrOZ7o0WAekAqwfzLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJIjaV31; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJIjaV31"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-702621d8725so2281939b3a.0;
-        Mon, 03 Jun 2024 19:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717467560; x=1718072360; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bfeY666rk1f2+TdD4mCmpU8biTw6zhseS8B25qhfvhY=;
-        b=EJIjaV31fYvrkiDt3cn1uIPWepfmItnSmBz/QhDvCeKu6/JJ8M9wgI4EL4rpYhQgib
-         aNhwUGIRnaLuLdJtbfuafpVMq2YJMXc+vtoaczjimlCQsHNeORSsvLM+RIHU7Swu/Rjt
-         AW4QFfpSCR2oDAjnJo7KIdaRIiIV1kqZF4p17NkJUlYXUokXtqgJil3g6sphR4vqHEJr
-         /8G2POLo1YKgc8Z2KdTjv0NVIOQlToS8eVdJDbhXISdDSKQaLqpserCjyGBqGxpG1uwO
-         TcO7vMJseMB+WZcZOEG+gYQOFMipj5LY6KkOauj6QkGEOqMOBS5rnZmQ7OGPgPd39bLC
-         Cnsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717467560; x=1718072360;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bfeY666rk1f2+TdD4mCmpU8biTw6zhseS8B25qhfvhY=;
-        b=Fh0XysT1MPSl0VBBt9BshFFDkRxkMayLxiOtagTmr5GZ6Y7AnYzUKWT1GZNatSqrFN
-         NA66b503tPJTJVlZf6KWYGxA7lFfLELQSNqPyah5AOjLotSR/JjIkPd2xkAMsa4ij3if
-         GoIm8Epg+2DhxJvFyJkt3xZhnUDd+onQK8tcs5kxF9sSSx6GJFDh08Cs+bj/KHO4k7mp
-         6PWk7+8YG5YDPVrxa/Xv2hWQaC2U4/d+xhr3C76UhRN3Waip+a6i9H7CorEpBF//RIu1
-         Ft753CQZMxkPuJh4IkCtRsoegXnHbdjmIUkA3CIxPqvDftYEmpqzz55BY4CYI+E6uPRZ
-         TGnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFRu21vhgHjJkg0dntHUjQ/tcApHj4bJwSFpKYBYsVA/TpDC27tqcznV05EBRGHSJiSubtd6eIWHotRkOylqiOf/8f9swgXV+yz+ONjlwWjukJQnWVN3f0MPMI9FbTZ3O6
-X-Gm-Message-State: AOJu0YzAb49sQ/iu0O5+aniZPXCnBgva/athLdGKJ9BAJW7jOszVdJ/L
-	Aay/q84u/+90ml0vpnzYaZFwp6qzmjE4SUzTA5xJCVf4GeexbQ+vnEl3sf/eFR2usOLNN3jqZel
-	VSCX88XYeUeg64Mlr5HpcFeICr69DvnYO
-X-Google-Smtp-Source: AGHT+IGzmPU+zRpnVlFuldWTKzqZo5wJODzcCnXHR+S7Pn1YefmWqQ0EErc9Oh5J3te1IPu4S8l3xP0EiZy6JXcQeFE=
-X-Received: by 2002:a05:6a20:2444:b0:1af:d9df:d8de with SMTP id
- adf61e73a8af0-1b26f146b92mr11991213637.21.1717467560114; Mon, 03 Jun 2024
- 19:19:20 -0700 (PDT)
+	s=arc-20240116; t=1717467775; c=relaxed/simple;
+	bh=j7SmNnf2IJ7HtGtXQrqOdQgWBu66WrwLsS5J2Vr5gCE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IHQu+XDxfx5JQhSmBwwUTk5zqTozbGnzhjX8yl1GPu0ogF7cktFHWANhWQD9D76G3cgg5B3JEQDdrM4mftIIME+vDnJN/6cnnw2LNFtZHiqKe+pFsJ3B7kWnj//8+a6yO0W0/a/lbN9s3rUDTiaOLL2ZHEJGSniY5BH3r/aTXsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 4542Mg2p074077;
+	Tue, 4 Jun 2024 10:22:42 +0800 (+08)
+	(envelope-from zhaoyang.huang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4VtZ5c3Zc2z2R4pwY;
+	Tue,  4 Jun 2024 10:18:44 +0800 (CST)
+Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
+ BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.23; Tue, 4 Jun 2024 10:22:40 +0800
+From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki
+	<urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes
+	<lstoakes@gmail.com>, Baoquan He <bhe@redhat.com>,
+        Thomas Gleixner
+	<tglx@linutronix.de>,
+        hailong liu <hailong.liu@oppo.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhaoyang Huang
+	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
+Subject: [PATCHv4 1/1] mm: fix incorrect vbq reference in purge_fragmented_block
+Date: Tue, 4 Jun 2024 10:22:32 +0800
+Message-ID: <20240604022232.1669983-1-zhaoyang.huang@unisoc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528030054.4525-1-qiang.zhang1211@gmail.com>
- <1195a9a3-db87-465d-a3b0-ee92d67da954@paulmck-laptop> <CALm+0cVZ7GQC+v4Xe7nArh0DHKeax+ok_tYsKaB=JtG-BVgUag@mail.gmail.com>
- <CALm+0cUQuZDb6nrng+CnOXNGyy6gUWNGq9VoreU98KNkyTw_CQ@mail.gmail.com> <4a6d1e70-ec91-4b6d-8f69-290c4ef57b7f@paulmck-laptop>
-In-Reply-To: <4a6d1e70-ec91-4b6d-8f69-290c4ef57b7f@paulmck-laptop>
-From: Z qiang <qiang.zhang1211@gmail.com>
-Date: Tue, 4 Jun 2024 10:19:08 +0800
-Message-ID: <CALm+0cVjjL98+QRO7a=18JjUB2-1R0oFyksgkH9ZEAr2NsBniQ@mail.gmail.com>
-Subject: Re: [PATCH] rcutorture: Skip debug object testing for cur_ops without
- ->debug_objects set
-To: paulmck@kernel.org
-Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org, 
-	urezki@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX01.spreadtrum.com (10.0.64.7)
+X-MAIL:SHSQR01.spreadtrum.com 4542Mg2p074077
 
->
-> On Mon, Jun 03, 2024 at 12:55:30PM +0800, Z qiang wrote:
-> > >
-> > > >
-> > > > On Tue, May 28, 2024 at 11:00:54AM +0800, Zqiang wrote:
-> > > > > This commit make rcu_test_debug_objects() early return when the
-> > > > > specified cur_ops not set the ->debug_objects.
-> > > > >
-> > > > > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> > > > > ---
-> > > > >  kernel/rcu/rcutorture.c | 5 +++--
-> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > > > > index 08bf7c669dd3..9b8c277ab91a 100644
-> > > > > --- a/kernel/rcu/rcutorture.c
-> > > > > +++ b/kernel/rcu/rcutorture.c
-> > > > > @@ -3495,8 +3495,9 @@ static void rcu_test_debug_objects(void)
-> > > > >               return;
-> > > > >       }
-> > > > >
-> > > > > -     if (WARN_ON_ONCE(cur_ops->debug_objects &&
-> > > > > -                     (!cur_ops->call || !cur_ops->cb_barrier)))
-> > > > > +     if (!cur_ops->debug_objects ||
-> > > > > +                     WARN_ON_ONCE(cur_ops->debug_objects &&
-> > > >
-> > > > You lost me here.  Given that we have "!cur_ops->debug_objects" before
-> > > > that WARN_ON_ONCE(), why do we need "cur_ops->debug_objects" inside of it?
-> > > >
-> > > > Also, we don't get here unless the rcutorture.object_debug kernel boot
-> > > > parameter is specified, don't we really want to WARN_ON_ONCE if the
-> > > > current flavor does not support that?
-> >
-> > Maybe I didn't describe it clearly enough, this
-> > modification is mainly to filter out test types that do not support
-> > double call_rcu*() checking, for example tasks, tasks-rudes,
-> >  task-tracing  ;) .
->
-> Understood.
->
-> It is just that in my experience, it is a good thing for rcutorture to
-> splat when asked to do something that it cannot do.  Or do you have a
-> use case where this is problematic?
->
+From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
 
-Hi, Paul
+vmalloc area runs out in our ARM64 system during an erofs test as
+vm_map_ram failed[1]. By following the debug log, we find that
+vm_map_ram()->vb_alloc() will allocate new vb->va which corresponding
+to 4MB vmalloc area as list_for_each_entry_rcu returns immediately
+when vbq->free->next points to vbq->free. That is to say, 65536 times
+of page fault after the list's broken will run out of the whole
+vmalloc area. This should be introduced by one vbq->free->next point to
+vbq->free which makes list_for_each_entry_rcu can not iterate the list
+and find the BUG.
 
+[1]
+PID: 1        TASK: ffffff80802b4e00  CPU: 6    COMMAND: "init"
+ #0 [ffffffc08006afe0] __switch_to at ffffffc08111d5cc
+ #1 [ffffffc08006b040] __schedule at ffffffc08111dde0
+ #2 [ffffffc08006b0a0] schedule at ffffffc08111e294
+ #3 [ffffffc08006b0d0] schedule_preempt_disabled at ffffffc08111e3f0
+ #4 [ffffffc08006b140] __mutex_lock at ffffffc08112068c
+ #5 [ffffffc08006b180] __mutex_lock_slowpath at ffffffc08111f8f8
+ #6 [ffffffc08006b1a0] mutex_lock at ffffffc08111f834
+ #7 [ffffffc08006b1d0] reclaim_and_purge_vmap_areas at ffffffc0803ebc3c
+ #8 [ffffffc08006b290] alloc_vmap_area at ffffffc0803e83fc
+ #9 [ffffffc08006b300] vm_map_ram at ffffffc0803e78c0
 
-This is a scene I mentioned before:
+Fixes: fc1e0d980037 ("mm/vmalloc: prevent stale TLBs in fully utilized blocks")
 
-The rcutorture.object_debug is set true, but the tasks-tracing does not support
-duplicate cur_ops->call check, but the debug_objects test was still done.
+For detailed reason of broken list, please refer to below URL
+https://lore.kernel.org/all/20240531024820.5507-1-hailong.liu@oppo.com/
 
-insmod rcutorture.ko torture_type=tasks-tracing fwd_progress=4
-n_barrier_cbs=4 object_debug=1
+Suggested-by: Hailong.Liu <hailong.liu@oppo.com>
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+---
+v2: introduce cpu in vmap_block to record the right CPU number
+v3: use get_cpu/put_cpu to prevent schedule between core
+v4: replace get_cpu/put_cpu by another API to avoid disabling preemption
+---
+---
+ mm/vmalloc.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-[  106.082416] rcutorture: WARN: Duplicate call_tasks-tracing() test starting.
-[  106.082533] tasks-tracing-torture: rcu_torture_read_exit: Start of test
-[  106.082543] tasks-tracing-torture: rcu_torture_read_exit: Start of episode
-[  106.105552] rcutorture: duplicated callback was invoked.
-[  106.105567] rcutorture: duplicated callback was invoked.
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index 22aa63f4ef63..89eb034f4ac6 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2458,6 +2458,7 @@ struct vmap_block {
+ 	struct list_head free_list;
+ 	struct rcu_head rcu_head;
+ 	struct list_head purge;
++	unsigned int cpu;
+ };
+ 
+ /* Queue of free and dirty vmap blocks, for allocation and flushing purposes */
+@@ -2585,8 +2586,15 @@ static void *new_vmap_block(unsigned int order, gfp_t gfp_mask)
+ 		free_vmap_area(va);
+ 		return ERR_PTR(err);
+ 	}
+-
+-	vbq = raw_cpu_ptr(&vmap_block_queue);
++	/*
++	 * list_add_tail_rcu could happened in another core
++	 * rather than vb->cpu due to task migration, which
++	 * is safe as list_add_tail_rcu will ensure the list's
++	 * integrity together with list_for_each_rcu from read
++	 * side.
++	 */
++	vb->cpu = raw_smp_processor_id();
++	vbq = per_cpu_ptr(&vmap_block_queue, vb->cpu);
+ 	spin_lock(&vbq->lock);
+ 	list_add_tail_rcu(&vb->free_list, &vbq->free);
+ 	spin_unlock(&vbq->lock);
+@@ -2614,9 +2622,10 @@ static void free_vmap_block(struct vmap_block *vb)
+ }
+ 
+ static bool purge_fragmented_block(struct vmap_block *vb,
+-		struct vmap_block_queue *vbq, struct list_head *purge_list,
+-		bool force_purge)
++		struct list_head *purge_list, bool force_purge)
+ {
++	struct vmap_block_queue *vbq = &per_cpu(vmap_block_queue, vb->cpu);
++
+ 	if (vb->free + vb->dirty != VMAP_BBMAP_BITS ||
+ 	    vb->dirty == VMAP_BBMAP_BITS)
+ 		return false;
+@@ -2664,7 +2673,7 @@ static void purge_fragmented_blocks(int cpu)
+ 			continue;
+ 
+ 		spin_lock(&vb->lock);
+-		purge_fragmented_block(vb, vbq, &purge, true);
++		purge_fragmented_block(vb, &purge, true);
+ 		spin_unlock(&vb->lock);
+ 	}
+ 	rcu_read_unlock();
+@@ -2801,7 +2810,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
+ 			 * not purgeable, check whether there is dirty
+ 			 * space to be flushed.
+ 			 */
+-			if (!purge_fragmented_block(vb, vbq, &purge_list, false) &&
++			if (!purge_fragmented_block(vb, &purge_list, false) &&
+ 			    vb->dirty_max && vb->dirty != VMAP_BBMAP_BITS) {
+ 				unsigned long va_start = vb->va->va_start;
+ 				unsigned long s, e;
+-- 
+2.25.1
 
-for call_rcu*()  that does not support double call checking, if
-continue to test,
-"rcutorture: duplicated callback was invoked". will output,
-I just want to avoid the output of this error message :)
-
-Thanks
-Zqiang
-
-
-> I don't count the fuzzers because they are supposed to avoid specifying
-> things that are supposed to fail.  ;-)
->
->                                                         Thanx, Paul
->
-> > Thanks
-> > Zqiang
-> >
-> > >
-> > > Hi, Paul
-> > >
-> > > The rcutorture.object_debug is set true, but the tasks-tracing does not support
-> > > duplicate cur_ops->call check, but the debug_objects test was still done.
-> > >
-> > > insmod rcutorture.ko torture_type=tasks-tracing fwd_progress=4
-> > > n_barrier_cbs=4 object_debug=1
-> > >
-> > > [  106.082416] rcutorture: WARN: Duplicate call_tasks-tracing() test starting.
-> > > [  106.082533] tasks-tracing-torture: rcu_torture_read_exit: Start of test
-> > > [  106.082543] tasks-tracing-torture: rcu_torture_read_exit: Start of episode
-> > > [  106.105552] rcutorture: duplicated callback was invoked.
-> > > [  106.105567] rcutorture: duplicated callback was invoked.
-> > > [  106.111269] rcutorture: WARN: Duplicate call_tasks-tracing() test complete.
-> > >
-> > > Thanks
-> > > Zqiang
-> > >
-> > > >
-> > > > Or do you have a use case that needs to silence these warnings?
-> > > >
-> > > >                                                         Thanx, Paul
-> > > >
-> > > > > +                             (!cur_ops->call || !cur_ops->cb_barrier)))
-> > > > >               return;
-> > > > >
-> > > > >       struct rcu_head *rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
-> > > > > --
-> > > > > 2.17.1
-> > > > >
