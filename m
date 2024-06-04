@@ -1,111 +1,110 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE6B149006
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 18:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB381149006
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 18:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717524581; cv=none; b=Zqv9m93nbK5ceZhtTtv3h3FWbbQrBE88HKt0CNILfhO7GJ7t1ANva1ikOZdBHOLXbJ13OQWHAciNeejplDE0XGFsNoxuy/A+0j0DUi8GBX/OEeXRCUiE1mrJl27CmwR6HIwNHHxFE0TwrLM2ezN7tOlUF5eLki/B8TpnkOqVEm8=
+	t=1717524648; cv=none; b=poCALOj1xRi3L6ylvNzVWTnfcd/Hyz3Fy4FLL1O8/O2Mbih4bSSLG4Zoi8nB+JHKxgAXlcU32HZU93SFnDI5fk4+OTj1ealkgY5KVHf/I3mqGwPReQsre3mYZlH91wlLWdAbwUPcgqnYGukCwcCmvWcpuawrHS0qzxC5H01rI9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717524581; c=relaxed/simple;
-	bh=zlFWfsNQMx3Sd1wcaWh6ZJ1CoD/mFgMKL5nAugZkz7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r/836DSsw+egA4Gxjkm18EWuNcn06XKL5L4YN/EyYR35D1pXyH5d+VZsXUWy3RsGezyv864Dolu930wzA4XQ2gsHjvHRHvOXSGoRvOWhx8MPhB2MZB4VaKvKtMCysh91ww/cl20MTEss9Bd3HDXEaRQ1N+tjwMcvGHZkPBib6/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=icO6sQ9n; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1717524648; c=relaxed/simple;
+	bh=2J2obyLXuZLm84OoVhVs+u+eDYt1l0tpsTiknUdmAOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CJjvYWwStbGU6KUsvZ2LqHo5YZBWnASNEaUZJZ1FcVBz9Giv7oNr2E/Fx3ZcPjCaREKMt5wrOmGjFveUeNvByyvZFTqz6o95XoB5X+fWA2uSmsLOP0YwkyFLeZhagp9RIoSIINv/JTeL+Ux8RAShXCf76oCDTXjUd9sRgS1B//o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BsoflhVV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="icO6sQ9n"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e73359b900so14832421fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 11:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717524578; x=1718129378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3BF8/GItxoat+r6e4T4fHLj85BE2y/O2eJbYc1bfqVo=;
-        b=icO6sQ9nYKhBglMTDc1Q6bEW9B1kSlQ7SIoK2XI3RDoOyqMEWUaoO73UtpTFEkxI4n
-         d016IgL0BRSGE/A4k9yQb+UCNQXepe+uey+Z6fMvQi7tbdlEChx4Mgsqs+KF+neFDDEH
-         kBNZdfHRtykgxbiscS8XtS2ZBTUO2zZozv6Y9ONthxbGHPtZck2qXQcs5lcaPEDy9amk
-         p7G//WxSD4sAwPr+PvpwPE/L1+E2sEAo+5hrQ/qjQpDf0xJp78eMGeoRNpAQTPLcisFk
-         SlvGLErc+YE4o/UYmkB1txiXJWnWWShzkjmls/nPirjqJvcIlazkWPstrozI4SvrZrK1
-         kx6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717524578; x=1718129378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3BF8/GItxoat+r6e4T4fHLj85BE2y/O2eJbYc1bfqVo=;
-        b=IUzC2QtS1Wwfygo9RUOuW5+t2BRRXqL2Fx+top5d3bsZ+TjvxCPe3E5yECDaKsx+sa
-         soJbp+QniEeyO7tI262pn6+SnekjiOne9g2LaaSmD6/8MP56UbEtzCceVH0roP4kggyV
-         8fQMxDWQWOYdc/6DAxCb5BBmSBKRvDJynktCJQz+NTIVFyX/RECWQI1JTdhVehxdja84
-         LbUWMPVU17o9Zcy0Vp03beyaf+tVoBV+TfqGa6CUU434pNH0xeVhXL87cKsgH1goZtBr
-         gokPLTAjvc4Oss0fjPiGGjLtRYZeKox9UmayMSgHFDPLfrQ5eNfX6AgFUKSnADuYpiYo
-         C9fQ==
-X-Gm-Message-State: AOJu0YxukBENUPfKBFXpDSIpLS3ZZ2JKnjYkKMllftG/ST//6uw9/y3A
-	GSrzViY3TnygjC4R5D9esgPfTjQLoTlxRnMF91iGGomx7AwlNSmXUIofzNCGNpk=
-X-Google-Smtp-Source: AGHT+IF3N6NfG0OENYZjXQOQM6bYvkm+cqHhQ/GSCbJSHvHKe8aILbrtlbcys8kaiBIZmXUTWEMsPw==
-X-Received: by 2002:a2e:800e:0:b0:2ea:8291:c669 with SMTP id 38308e7fff4ca-2eac7aad160mr184191fa.44.1717524577695;
-        Tue, 04 Jun 2024 11:09:37 -0700 (PDT)
-Received: from debian.fritz.box. (aftr-82-135-80-160.dynamic.mnet-online.de. [82.135.80.160])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4214fdf4953sm27451925e9.25.2024.06.04.11.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 11:09:37 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	will@kernel.org,
-	longman@redhat.com,
-	boqun.feng@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] locking/ww_mutex/test: Use swap() macro
-Date: Tue,  4 Jun 2024 20:07:07 +0200
-Message-Id: <20240604180705.257033-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BsoflhVV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717524645;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/91xk/bJbfVq3tbd0vXxIGIhiCMBEED20dA29kFKyVw=;
+	b=BsoflhVVn4Ih5phA/heVKJE2hOZr3JXsDVlZZ/S8/zNUqL9k6vdVX/37+brQc1ee1TjbJ8
+	321YLxQfMAJi9IZHOw/lHmcgfOLw1s7qyOmpw3T90lchQnWvYYm6/uEhZoSfYqo4xbVz+O
+	QzdAicnC3qAetWQzCKPs0G37vVttuxc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-UkLDSWeDNxC6OgfwtjWxcA-1; Tue,
+ 04 Jun 2024 14:10:42 -0400
+X-MC-Unique: UkLDSWeDNxC6OgfwtjWxcA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E452A29ABA03;
+	Tue,  4 Jun 2024 18:10:41 +0000 (UTC)
+Received: from redhat.com (unknown [10.22.32.74])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 791C120230B8;
+	Tue,  4 Jun 2024 18:10:41 +0000 (UTC)
+Date: Tue, 4 Jun 2024 14:10:40 -0400
+From: Joe Lawrence <joe.lawrence@redhat.com>
+To: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+	Shuah Khan <shuah@kernel.org>, live-patching@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] selftests: livepatch: Test atomic replace against
+ multiple modules
+Message-ID: <Zl9YoIAy+1bEnHCB@redhat.com>
+References: <20240603-lp-atomic-replace-v3-1-9f3b8ace5c9f@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240603-lp-atomic-replace-v3-1-9f3b8ace5c9f@suse.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Fixes the following Coccinelle/coccicheck warning reported by
-swap.cocci:
+On Mon, Jun 03, 2024 at 02:26:19PM -0300, Marcos Paulo de Souza wrote:
+> Adapt the current test-livepatch.sh script to account the number of
+> applied livepatches and ensure that an atomic replace livepatch disables
+> all previously applied livepatches.
+> 
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+> Changes since v2:
+> * Used variables to stop the name of other livepatches applied to test
+>   the atomic replace. (Joe)
+> 
+> Changes since v1:
+> * Added checks in the existing test-livepatch.sh instead of creating a
+>   new test file. (Joe)
+> * Fixed issues reported by ShellCheck (Joe)
+> ---
+> Changes in v3:
+> - EDITME: describe what is new in this series revision.
+> - EDITME: use bulletpoints and terse descriptions.
+> - Link to v2: https://lore.kernel.org/r/20240525-lp-atomic-replace-v2-1-142199bb65a1@suse.com
+> ---
+>  .../testing/selftests/livepatch/test-livepatch.sh  | 138 +++++++++++++--------
+>  1 file changed, 89 insertions(+), 49 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/livepatch/test-livepatch.sh b/tools/testing/selftests/livepatch/test-livepatch.sh
+> index e3455a6b1158..ca770b8c62fc 100755
+> --- a/tools/testing/selftests/livepatch/test-livepatch.sh
+> +++ b/tools/testing/selftests/livepatch/test-livepatch.sh
+>  
+> [ ... snip ... ]
+>  
+>  # - load a livepatch that modifies the output from /proc/cmdline and
+>  #   verify correct behavior
+> -# - load an atomic replace livepatch and verify that only the second is active
+> -# - remove the first livepatch and verify that the atomic replace livepatch
+> -#   is still active
+> +# - load two addtional livepatches and check the number of livepatch modules
 
-	WARNING opportunity for swap()
+nit: s/addtional/additional as Miroslav spotted in v2
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- kernel/locking/test-ww_mutex.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Otherwise LGTM,
 
-diff --git a/kernel/locking/test-ww_mutex.c b/kernel/locking/test-ww_mutex.c
-index 78719e1ef1b1..252bef786aef 100644
---- a/kernel/locking/test-ww_mutex.c
-+++ b/kernel/locking/test-ww_mutex.c
-@@ -402,7 +402,7 @@ static inline u32 prandom_u32_below(u32 ceil)
- static int *get_random_order(int count)
- {
- 	int *order;
--	int n, r, tmp;
-+	int n, r;
- 
- 	order = kmalloc_array(count, sizeof(*order), GFP_KERNEL);
- 	if (!order)
-@@ -413,11 +413,8 @@ static int *get_random_order(int count)
- 
- 	for (n = count - 1; n > 1; n--) {
- 		r = prandom_u32_below(n + 1);
--		if (r != n) {
--			tmp = order[n];
--			order[n] = order[r];
--			order[r] = tmp;
--		}
-+		if (r != n)
-+			swap(order[n], order[r]);
- 	}
- 
- 	return order;
--- 
-2.39.2
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+
+--
+Joe
 
