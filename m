@@ -1,88 +1,145 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89D6147C91
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2495514B07E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717529954; cv=none; b=N7zMXWbsyZQ4yc3/wtIC3m/hlVUq1AO1nitVAWiB+sEm+ALjNAvvUqEJMEfDviJeO6Pg1ei+MZ1tE3QK9GHjZ0hHKOnpIci9ni7W0OFmtxmHPo3n4kikaCG1E89Uqws+5kuTZvmJxBdRlkzNrj96Ey7gGYPeHxbo4BJyMrN/IFc=
+	t=1717529962; cv=none; b=sqGMXe8vqZQdlP35uZjNS2POuU6DE+4kiknjA+TCBUbbs9KAvFbczEVCYcN4snCxnJp3kYfMRuEolttZLHMDepfm1VWFK2TO/e1NMjZNxshtZmOt6IdB8CpZgTECY5CUYEBPQdKiFzxNoCJyomAX8WMSz2nM3IMqnBxLMk3gAqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717529954; c=relaxed/simple;
-	bh=T5REOv9tw1BR0J/xEmL+OuRX5PHdlT361lXv/GL/XT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GP3/eJ57ugliOBbqQPk1piF2ubJNl9FxWGsIPgxUq2P84QZU/rMCh9zc7r1NkaO0YS0Jr3bBm1gvGGHxlm0jcReyFwMRJYp86dIGr/UdWs/edt8q0SzWd9WoySA6rB0czEyuecAlWAhCA+pRoquXHh0cYchM5l6UQE+oTp/9FLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=N04GAfoW; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1717529962; c=relaxed/simple;
+	bh=I8Na0X1lr4Anj/n0WwNbTpdssCH6TSBbBWFAR7jHJaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rxr8I3nVxgVRtxOQEeHrPwgy6Sf/uTAgSMYqjrRtr9/XgKKrUBunIhiyBWxjY1Sihwe4sugfb1tVsIlMcjz+wPTxLrD5uxFNjV1le+724EvLCZhehSTvieOKSn2CnB2sAxqR607FiaqB6aPYGlxmXqWySEB0nR14uSsULeq0eRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=E6U7aZLj; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N04GAfoW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Cs1i66KM29U3v6L5ZjDjDwoxrJb+4BKxhx9GDAwj1sw=; b=N04GAfoWepoDyXO3E++aw8sFO4
-	qyoaxkQHg2o8rcqYCS2/7LA6/tzRdvL+n7uqKeeI5ZPDtvD2dCkrHE22D7Q0aYGbmX5IYhDmrptMy
-	v6nIYBYuobSoOtq+w8fNofjWhV3IyP2kqlK+oEbmUhUV1Erre3Ai7lwWa3PqE1SivE7dRYWiOXDDJ
-	d5+kQj5p7/KpRKZXsswOCVRt8U26BZTVNIz3KGXlQa/XZPu1PS4onWGiI4Yxl0xV95fwRh2xlLpIF
-	goUfizXWRVmFQHW0rVmVXQ9j/JxFV598pRXgBhJA2052gFsnrZyKb+iAecMj0WVDTRh9FDB0mc67z
-	r/VLzXCQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEZzh-0000000FZy4-2nTd;
-	Tue, 04 Jun 2024 19:38:54 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 482D830068B; Tue,  4 Jun 2024 21:38:53 +0200 (CEST)
-Date: Tue, 4 Jun 2024 21:38:53 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller@googlegroups.com, elver@google.com, glider@google.com,
-	nogikh@google.com, tarasmadan@google.com
-Subject: Re: [PATCH 1/4] x86/entry: Remove unwanted instrumentation in
- common_interrupt()
-Message-ID: <20240604193853.GR40213@noisy.programming.kicks-ass.net>
-References: <cover.1717507310.git.dvyukov@google.com>
- <1ada3be307bbd076c4ea63530cf445e7fbd0e4e7.1717507310.git.dvyukov@google.com>
- <3f15814c-de9c-4aa6-b56d-82761bb6520a@intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="E6U7aZLj"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f943a34a83so88643a34.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 12:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717529960; x=1718134760; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o8gskDRDbtXP6DbwUmFPk9QCXBH4Q1DxOfYZZF3juho=;
+        b=E6U7aZLjEB1cb5AwDYzuty37NO5Xg4XtHiQVf6wqkhx6je/8VxR+bMdfQIFtZhf9O1
+         3sjLHZ9dzjnB0EfNynLyHnjwBWkaWUH5gVALq+xpUcZO8e2ZGwGjCwRwBfLMeBlyP2F1
+         FgziUgJyPmo7h1qBFPfuUkGS2Q+MbLbnwxkeNhFEDvUs2uSAVF8BpLAUPldYrJI2UNmd
+         p5pzsMiu/n7C/oR6NEE0+/4jlBSydEH7FTHhpZNFNvLl64RobRrBc1voRyaGlvQ4UHGy
+         HkxeMnVJv2PUS7jKS+4Tw7QOXLw577JeiLPgFDx70hm1zgsKUxDJexpw1NbQZyUjpdEb
+         LizQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717529960; x=1718134760;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o8gskDRDbtXP6DbwUmFPk9QCXBH4Q1DxOfYZZF3juho=;
+        b=PhDvdLSAtH9f+SgDCACAvo+0AEquct2c+253ePALY+QXlxnygq/YD0ufMa/EDtEpzh
+         kg2szCk+QK7VyGJbAvaE4wfSOEsWSH+D8qF4dAQ1ZO10AbK2rg3yfk4DETJ5Pdbnwl6R
+         Zz6Ow0BIeUB6+9bEV2/zDNEeVmH8M/fwzgXsu2MaEp+W4ZTYiGnU6bRlZDvZTkpT96yZ
+         iAVLcAOKP36GE4uI+HcMzjgt/PXrrCbl/HQxnQ3iNDa/OE1nDxaXU6cNhcdRILEmx3Ld
+         GEBGUY3o/oHkRpH6JEBi299XFURwdpbc4CpnXEc8JJPJbRQNGssQaZ/IZ+8ufqH4q1gT
+         njsA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+z1CDNBfVzRsQm/aubmZJJaPyfqPCy5R0lITRGbPb5umwrkZL1DOeTMiCjg8RMcmugfAC2xREoWptYBpYdGGvnG7QV7yHfj9z4DxD
+X-Gm-Message-State: AOJu0YxcDfDr9PA9fgDUnt9GdDM7vjo1tZcWTbz3rFPMrBR5x5Sk/Dg2
+	js+r+9H6FwZYfaKqnS4Vm+26uMaNQfMQL0hC16non/DtdElwND5BjuX8ys5k+1A=
+X-Google-Smtp-Source: AGHT+IGWUBqQJOc0LHLzKdUR+del2BWW0rhqTnu+2S39NuLIHBVHgE7vqg/VdKu40BelYN5BpLWjyQ==
+X-Received: by 2002:a9d:6d0c:0:b0:6f0:e870:e3e8 with SMTP id 46e09a7af769-6f943486643mr519655a34.21.1717529960085;
+        Tue, 04 Jun 2024 12:39:20 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-6f910539e69sm2092702a34.28.2024.06.04.12.39.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 12:39:19 -0700 (PDT)
+Message-ID: <97246fdc-bb33-45bc-a24a-c2595920421f@baylibre.com>
+Date: Tue, 4 Jun 2024 14:39:18 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f15814c-de9c-4aa6-b56d-82761bb6520a@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 1/8] spi: dt-bindings: spi-peripheral-props: add
+ spi-offloads property
+To: Conor Dooley <conor@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>, David Jander <david@protonic.nl>,
+ Martin Sperl <kernel@martin.sperl.org>, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+References: <CAMknhBFFpEGcMoLo5gsC11Syv+CwUM0mnq1yDMUzL1uutUtB+Q@mail.gmail.com>
+ <20240516-rudder-reburial-dcf300504c0a@spud>
+ <CAMknhBF_s0btus4yqPe-T=F3z7Asi9KkRGsGr7FHDFi=k4EQjw@mail.gmail.com>
+ <20240519-abreast-haziness-096a57ef57d3@spud>
+ <CAMknhBHvEse2FyDoBXR1PvymGpSGq8dotKfm+8XH+0+k+xKtQw@mail.gmail.com>
+ <20240522-gullible-ibuprofen-cf9111c25f6f@spud>
+ <5ad0b5782434eaf4cf565cffb0e4c14b7414ae38.camel@gmail.com>
+ <20240526-peculiar-panama-badda4f02336@spud>
+ <10991373cb9603803df63d8236c475807f6dde68.camel@gmail.com>
+ <6db8ba66-841b-4425-9dd4-9d6e7b0463bf@baylibre.com>
+ <20240604-oink-recognize-682c553a18e5@spud>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20240604-oink-recognize-682c553a18e5@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2024 at 09:00:59AM -0700, Dave Hansen wrote:
-> On 6/4/24 06:45, Dmitry Vyukov wrote:
-> > The manifestation is that KCOV produces spurious coverage
-> > in kvm_set_cpu_l1tf_flush_l1d() in random places because
-> > the call happens when preempt count is not yet updated
-> > to say that we are in an interrupt.
-> > 
-> > Mark kvm_set_cpu_l1tf_flush_l1d() as __always_inline and move
-> > out of instrumentation_begin/end() section.
-> > It only calls __this_cpu_write() which is already safe to call
-> > in noinstr contexts.
+On 6/4/24 2:33 PM, Conor Dooley wrote:
+> On Thu, May 30, 2024 at 02:24:17PM -0500, David Lechner wrote:
+>> On 5/29/24 3:07 AM, Nuno Sá wrote:
+>>> On Sun, 2024-05-26 at 18:35 +0100, Conor Dooley wrote:
+>>
+>>
+>>>> It might be easy to do it this way right now, but be problematic for a
+>>>> future device or if someone wants to chuck away the ADI provided RTL and
+>>>> do their own thing for this device. Really it just makes me wonder if
+>>>> what's needed to describe more complex data pipelines uses an of_graph,
+>>>> just like how video pipelines are handled, rather than the implementation
+>>>> of io-backends that don't really seem to model the flow of data.
+>>>>
+>>>
+>>> Yeah, backends is more for devices/soft-cores that extend the functionality of the
+>>> device they are connected too. Like having DACs/ADCs hdl cores for connecting to high
+>>> speed controllers. Note that in some cases they also manipulate or even create data
+>>> but since they fit in IIO, having things like the DMA property in the hdl binding was
+>>> fairly straight.
+>>>
+>>> Maybe having an offload dedicated API (through spi) to get/share a DMA handle would
+>>> be acceptable. Then we could add support to "import" it in the IIO core. Then it
+>>> would be up to the controller to accept or not to share the handle (in some cases the
+>>> controller could really want to have the control of the DMA transfers).
+>>
+>> I could see this working for some SPI controllers, but for the AXI SPI Engine
+>> + DMA currently, the DMA has a fixed word size, so can't be used as a generic
+>> DMA with arbitrary SPI xfers. For example, if the HDL is compiled with a 32-bit
+>> word size, then even if we are reading 16-bit sample data, the DMA is going to
+>> put it in a 32-bit slot. So one could argue that this is still doing some data
+>> manipulation similar to the CRC checker example.
+>>
+>>>
+>>> Not familiar enough with of_graph so can't argue about it but likely is something
+>>> worth looking at.
+>>
+>> I did try implementing something using graph bindings when I first started
+>> working on this, but it didn't seem to really give us any extra useful
+>> information. It was just describing connections (endpoints) that I thought
+>> we could just implicitly assume. After this discussion though, maybe worth
+>> a second look. I'll have to think about it more.
 > 
-> I've internalized the main rules around noinstr to basically be: Only
-> call noinstr functions before begin_instrumentation().  Second, try to
-> minimize the amount of noinstr code.
-> 
-> This patch seems to be adding another rule which is that all code before
-> preempt_count manipulation needs to be noinstr.
-> 
-> _Is_ that a new rule, or was it something I was missing?
+> Could you elaborate on why you think you can assume the connections? What
+> happens when you have multiple stages of data processing and/or multiple
+> ADCs in your system? As I've previously said, I work on FPGA stuff, and
+> everyone here seems to fawn over having <insert custom DSP IP here> in
+> their data pipelines. I can't imagine it being any different for ADC data,
+> and an io-backend property that doesn't describe how the data flows is
+> gonna become lacklustre I think.
 
-Specifically, the problem here appears to be that the instrumentation
-cannot correctly identify the context because the HARDIRQ_MASK bits
-aren't yet set in preempt_count.
+I was more ignorant back then. :-)
 
-So the preempt_count manipulations as such are not the problem, but the
-fact that we call into instrumentation code that seems to rely on using
-the preempt_count to determine context is.
-
-Does that clarify?
+That is is why I said "thought" instead of "think". I am more enlightened now.
