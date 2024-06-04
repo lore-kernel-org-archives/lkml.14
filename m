@@ -1,114 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D889765F;
-	Tue,  4 Jun 2024 06:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D488265F;
+	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482538; cv=none; b=OyLwqh+SLLD3OumvvD+/gzpwRT5XnF39TW1oSNBHkfUUDZ4iq0qNQS2nLbMuraYx5L2sQEohNPdb2lFTJ13VRQPEX4JVD1xsbpKlbbXGLDd5THkWhy/ORl3nSIzkILCnx/H4NuT0QIzq4DsQsnZGIo3tiKNZw0tcGgQGtG6sDs0=
+	t=1717482599; cv=none; b=lPFytXORno4S3q0xaHmelcP4OlTc65qJ1fN1HlX3bB4Uuw9iO24VPg2y0B5oH18QzAin6F3tkCD7Y+roiOy6equSI+DuROQ4Y29NfAD1Wmw3zh7CRxT1rJWOPIjmP4APSl3sJwYVGrjP8GiB7M423bIdRVvFGE8bru6dFJ9Pdoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717482538; c=relaxed/simple;
-	bh=Ee4EP6JXspvBxLB9eKYgXCccLrc5W1jo7F2glI6Jta4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ubl/hRvruoHVSGAx/E7lQ1p6vVkdHxIX20kx4KMt6fyaguQgLXy+BUZMyASVK5VOdKR1wmeSqNWJwVjRLjJ/VO8nFgh96Ghw7tmrKRWD7dx6MsKtlEfBsSkDt9cllMcX6CnZJ+of+y9kjKT3E3jdI6W2k7hnjFxFXiKP4UdSHsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cd9oFiS4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717482599; c=relaxed/simple;
+	bh=WuskAK9QMw2Rb7LOBaE2ncAcIhSptttUqQRlOQ8Mdw8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lviFPPfMP73KQSzaD9/9jH1FbUn0uAmUjpEyPiwnCqL2Cit5Nle78CN3wD/NZ90pwyw1UW2gj1R5+gSshndZf0KUmis5QgXjJYKkkMPx7qWsz0750XFKdr7P0uSYDH61DqWwlD/6bu3tguFcxTly/q6ZI75UM+jTg88095XK7Wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmOaJBCN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cd9oFiS4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAC6C2BBFC;
-	Tue,  4 Jun 2024 06:28:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmOaJBCN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A60A5C4AF08;
+	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717482537;
-	bh=Ee4EP6JXspvBxLB9eKYgXCccLrc5W1jo7F2glI6Jta4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Cd9oFiS4vsW+MkWn7q6k9PljpSOBYnro+w51FJOtOXtaJtpzSfv+LirxV5y9qOY87
-	 5erEolXtJUpjviM92MBrTGozfAO6ZvBIFBwvHnLp2pPjlszrJBSQzPiqSxwWIecP3v
-	 Jh0hDJCc+zskX9qDewFt8++BDjh/KM28S6r4zL1cpwCqC/EQ4jFSCnt2oppHI7o8oM
-	 CFdnbNSCVhJGCBMVArUnJmkHZII/XAH9G7iH24JGWhLbXQ/mC1/AVw3rliJ+06X0Qm
-	 N/sYDfbtNHsVoxVbCoyzmHtlDyVoS0D47UpF2SrbIpQoRSGGKfXOgXj0lu160yHUQZ
-	 SI7eIimsbsSBg==
-Message-ID: <7eb0556f-c25f-4568-a17b-24fb6b60ada8@kernel.org>
-Date: Tue, 4 Jun 2024 08:28:51 +0200
+	s=k20201202; t=1717482599;
+	bh=WuskAK9QMw2Rb7LOBaE2ncAcIhSptttUqQRlOQ8Mdw8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=XmOaJBCNNhIk3UU18TsE4jmyx7Lq7jCrOLUmJNxjqPDcCFDgQl2DmJgWeBoO5O2cy
+	 hbtVw89hITlfEkLbn7HfQHjHjdjQZjHcowoB5tpg7avtohdheMiJ17HGEWrP0NXZei
+	 QltPuZBue7VdCJkD9utcSgbTjV0DFdShfUCtR075TP9XMLt5aJ7lP6hAPskiJeheoH
+	 6c68TGQVytiKrJkdqreOoQGp0MOMHBx47+s6j+SBYvRz4QBvPWtVhDrSfGAGlSHBn9
+	 jNtKztz+66GA9ocoVqZV/4PWQhpUzXoz3Y989QMQ/jChKBqmFU0IVRf2ioegPhQyHV
+	 /Tu0jucWCC6UA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935DDC27C54;
+	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Tue, 04 Jun 2024 08:29:20 +0200
+Subject: [PATCH 2/8] mm profiling: Remove superfluous sentinel element from
+ ctl_table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: media: amlogic,gx-vdec: add the GXLX SoC
- family and update GXL
-To: Christian Hewitt <christianshewitt@gmail.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
- devicetree@vger.kernel.org, linux-staging@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240604051533.3312944-1-christianshewitt@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240604051533.3312944-1-christianshewitt@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240604-jag-sysctl_remset-v1-2-2df7ecdba0bd@samsung.com>
+References: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
+In-Reply-To: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Suren Baghdasaryan <surenb@google.com>, 
+ Kent Overstreet <kent.overstreet@linux.dev>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Joel Granados <j.granados@samsung.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=862;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=grXyma2z6K/wRopvypgEfIMP+PFHWBDb7VqNp82ood4=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGLtay8GHHZfoulwDT7Cp/+NFmjaUVFeN
+ K1kk9wfksxNuIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRiAAoJELqXzVK3
+ lkFPLVQL/RZBp0EyIV+vm0gXQg6+z7wQ3w++rqI1ydJNjnUfIkWxiBXMoWjegWKgorptI5L0LL5
+ QiBGzg09KK78sYzgGlTjTudseX5pEj0wPgl5NA41VUKS3+eKByodee1SAT7w/5KgDAtjOwJiCmx
+ hsXoF/SogQ0PJnNF+lZgwNnSukeE3eotjMuL0fhv7BGE9TwpcF7pOGrqB8AmLn91nFXyVOWjtBj
+ Y/BhWU1/R5n57AbIDkaR04pcY907qAipnMbKVrminTdDhcjrYBuoX2O3K/WsV5UGPLWxg7Pwr2+
+ DKSCcd3f7cgKGvrqvuO0E1bsr+dsJj2zRAGJsSJtpfUhQ5A/KnmBUxbFb6W6IGbQVIfeAia9jys
+ u3mALmKeyGRvnUkSMmH+z8yrhDmtI4Hn4lQUh9MofiwVN8fBR64dUuoxfVJhH2vHrg9PEnToAUN
+ 6djR12wRe1b3eoxy8lGrrPi6EMi8z7R+qmxIqSo83Up6qfK7p2AMUDkiSJY6aoyusP77KXPACI5
+ 0I=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
+ auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: j.granados@samsung.com
 
-On 04/06/2024 07:15, Christian Hewitt wrote:
-> The GXLX SoC is a GXL variant that omits VP9 codec support. Also add S905W
-> and S905Y as GXL chips and sort the GXL comment.
-> 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+From: Joel Granados <j.granados@samsung.com>
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This commit is part of a greater effort to remove all empty elements at
+the end of the ctl_table arrays (sentinels) which will reduce the
+overall build time size of the kernel and run time memory bloat by ~64
+bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Best regards,
-Krzysztof
+Removed sentinel from memory_allocation_profiling_sysctls
+
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ lib/alloc_tag.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 11ed973ac359..7293cd54d1b1 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -238,7 +238,6 @@ static struct ctl_table memory_allocation_profiling_sysctls[] = {
+ #endif
+ 		.proc_handler	= proc_do_static_key,
+ 	},
+-	{ }
+ };
+ 
+ static int __init alloc_tag_init(void)
+
+-- 
+2.43.0
+
 
