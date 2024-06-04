@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7163149C6F;
-	Tue,  4 Jun 2024 14:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD09149001;
+	Tue,  4 Jun 2024 14:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512137; cv=none; b=eA/Hid86+J2QB2IvS9s2Gi724JfSOCtm/m1tRgglrmmrdfV64BX1WPgWcCbSDtLUArJoXxvKBHt/nLI67bNJHq2SXEXsEfQhhqYpUT0Ylem1EA1sfOWJXSjFNc1wytHW6rMvdvkcK2S+9WibGBZrC6XitjJty0+JfbNRAhDgBig=
+	t=1717512136; cv=none; b=U/kC7pNn6WSQnO5cyDJ7kap3y58Ehyfiqajfu2gFF0onUtUD09/uhPlgalwFD44HSlxNreJ89Wu87N/1lD2x2Uh/1pN3geeCg44yimTCZGzC8oEBe2hv7vSTVftdsddqx1x8/1Ao2DZ829e1a3YXQKceNiIUDPkUb906N6Jdgd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512137; c=relaxed/simple;
-	bh=xkj7iYanLcwDLbYG9lORFKFdI5h35wHW2yUh/YEVqiU=;
+	s=arc-20240116; t=1717512136; c=relaxed/simple;
+	bh=CM1DT/bEys/OkYDAVIqBWYLjcFkpkJmrI4R5bPgXFgk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=F4c7K5lzn20UISOeua0469GO1HQRR3z2oiW5ZhcuWDbMnofrAlShxVEPOnydt9uYHI9OWb+9T65cTjxc0kZ90GUdZHWxRNpfqYB3cWqE54H1ws8zX66JWpEeJLCxtoI+dsk/m/W5iRcWch+cI3lPN05vaglX7Y7EaeZTI7Fp+8Q=
+	 Content-Type; b=mkEJHE5tqQPk/v204tDe+FcNEnzk+Ej5UfbCRaGT90khOx1lRsgEjtmcCCf+Sq2Sxr4E8k89zoiT0VuPSzWHcK/VB0OS9j6L7Qe2Alf7eONJAqJjjJ3VO6kug65Ivyx+bIY9xUzbLYdspfHBjEybc7VsSMHL/6gMGrjD+b/s/T4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 566AFC2BBFC;
-	Tue,  4 Jun 2024 14:42:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F16ADC4AF1B;
+	Tue,  4 Jun 2024 14:42:15 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMe-00000000Z11-2uAk;
-	Tue, 04 Jun 2024 10:42:16 -0400
-Message-ID: <20240604144216.550245969@goodmis.org>
+	id 1sEVMd-00000000Yy1-30Wu;
+	Tue, 04 Jun 2024 10:42:15 -0400
+Message-ID: <20240604144215.576895926@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:19 -0400
+Date: Tue, 04 Jun 2024 10:41:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,8 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [for-next][PATCH 16/27] function_graph: Move set_graph_function tests to shadow stack global
- var
+Subject: [for-next][PATCH 10/27] ftrace: Add subops logic to allow one ops to manage many
 References: <20240604144103.293353991@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -51,16 +50,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The use of the task->trace_recursion for the logic used for the
-set_graph_function was a bit of an abuse of that variable. Now that there
-exists global vars that are per stack for registered graph traces, use that
-instead.
+There are cases where a single system will use a single function callback
+to handle multiple users. For example, to allow function_graph tracer to
+have multiple users where each can trace their own set of functions, it is
+useful to only have one ftrace_ops registered to ftrace that will call a
+function by the function_graph tracer to handle the multiplexing with the
+different registered  function_graph tracers.
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509105520.162236.10339831553995971290.stgit@devnote2
-Link: https://lore.kernel.org/linux-trace-kernel/20240603190823.472955399@goodmis.org
+Add a "subop_list" to the ftrace_ops that will hold a list of other
+ftrace_ops that the top ftrace_ops will manage.
 
+The function ftrace_startup_subops() that takes the manager ftrace_ops and
+a subop ftrace_ops it will manage. If there are no subops with the
+ftrace_ops yet, it will copy the ftrace_ops subop filters to the manager
+ftrace_ops and register that with ftrace_startup(), and adds the subop to
+its subop_list. If the manager ops already has something registered, it
+will then merge the new subop filters with what it has and enable the new
+functions that covers all the subops it has.
+
+To remove a subop, ftrace_shutdown_subops() is called which will use the
+subop_list of the manager ops to rebuild all the functions it needs to
+trace, and update the ftrace records to only call the functions it now has
+registered. If there are no more functions registered, it will then call
+ftrace_shutdown() to disable itself completely.
+
+Note, it is up to the manager ops callback to always make sure that the
+subops callbacks are called if its filter matches, as there are times in
+the update where the callback could be calling more functions than those
+that are currently registered.
+
+This could be updated to handle other systems other than function_graph,
+for example, fprobes could use this (but will need an interface to call
+ftrace_startup_subops()).
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240603190822.508431129@goodmis.org
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -78,203 +105,491 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Guo Ren <guoren@kernel.org>
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/trace_recursion.h      |  5 +----
- kernel/trace/trace.h                 | 32 ++++++++++++++++++----------
- kernel/trace/trace_functions_graph.c |  6 +++---
- kernel/trace/trace_irqsoff.c         |  4 ++--
- kernel/trace/trace_sched_wakeup.c    |  4 ++--
- 5 files changed, 29 insertions(+), 22 deletions(-)
+ include/linux/ftrace.h         |   1 +
+ kernel/trace/fgraph.c          |   3 +-
+ kernel/trace/ftrace.c          | 401 ++++++++++++++++++++++++++++++++-
+ kernel/trace/ftrace_internal.h |   1 +
+ kernel/trace/trace.h           |   1 +
+ 5 files changed, 405 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-index 24ea8ac049b4..02e6afc6d7fe 100644
---- a/include/linux/trace_recursion.h
-+++ b/include/linux/trace_recursion.h
-@@ -44,9 +44,6 @@ enum {
-  */
- 	TRACE_IRQ_BIT,
- 
--	/* Set if the function is in the set_graph_function file */
--	TRACE_GRAPH_BIT,
--
- 	/*
- 	 * In the very unlikely case that an interrupt came in
- 	 * at a start of graph tracing, and we want to trace
-@@ -60,7 +57,7 @@ enum {
- 	 * that preempted a softirq start of a function that
- 	 * preempted normal context!!!! Luckily, it can't be
- 	 * greater than 3, so the next two bits are a mask
--	 * of what the depth is when we set TRACE_GRAPH_BIT
-+	 * of what the depth is when we set TRACE_GRAPH_FL
- 	 */
- 
- 	TRACE_GRAPH_DEPTH_START_BIT,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index f06b5ddd3580..73919129e57c 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -898,11 +898,16 @@ extern void init_array_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops
- extern int allocate_fgraph_ops(struct trace_array *tr, struct ftrace_ops *ops);
- extern void free_fgraph_ops(struct trace_array *tr);
- 
-+enum {
-+	TRACE_GRAPH_FL		= 1,
-+};
-+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 586018744785..978a1d3b270a 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -334,6 +334,7 @@ struct ftrace_ops {
+ 	unsigned long			trampoline;
+ 	unsigned long			trampoline_size;
+ 	struct list_head		list;
++	struct list_head		subop_list;
+ 	ftrace_ops_func_t		ops_func;
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ 	unsigned long			direct_call;
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 54ed2ed2036b..e39042c40937 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -21,7 +21,8 @@
  #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash __rcu *ftrace_graph_hash;
- extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
- 
--static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
-+static inline int
-+ftrace_graph_addr(unsigned long *task_var, struct ftrace_graph_ent *trace)
- {
- 	unsigned long addr = trace->func;
- 	int ret = 0;
-@@ -924,12 +929,11 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 	}
- 
- 	if (ftrace_lookup_ip(hash, addr)) {
--
- 		/*
- 		 * This needs to be cleared on the return functions
- 		 * when the depth is zero.
- 		 */
--		trace_recursion_set(TRACE_GRAPH_BIT);
-+		*task_var |= TRACE_GRAPH_FL;
- 		trace_recursion_set_depth(trace->depth);
- 
- 		/*
-@@ -949,11 +953,14 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- 	return ret;
- }
- 
--static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
-+static inline void
-+ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftrace_graph_ret *trace)
- {
--	if (trace_recursion_test(TRACE_GRAPH_BIT) &&
-+	unsigned long *task_var = fgraph_get_task_var(gops);
-+
-+	if ((*task_var & TRACE_GRAPH_FL) &&
- 	    trace->depth == trace_recursion_depth())
--		trace_recursion_clear(TRACE_GRAPH_BIT);
-+		*task_var &= ~TRACE_GRAPH_FL;
- }
- 
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
-@@ -979,7 +986,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- 	return ret;
- }
+ #define ASSIGN_OPS_HASH(opsname, val) \
+ 	.func_hash		= val, \
+-	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock),
++	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock), \
++	.subop_list		= LIST_HEAD_INIT(opsname.subop_list),
  #else
--static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
-+static inline int ftrace_graph_addr(unsigned long *task_var, struct ftrace_graph_ent *trace)
- {
- 	return 1;
- }
-@@ -988,17 +995,20 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
+ #define ASSIGN_OPS_HASH(opsname, val)
+ #endif
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index b85f00b0ffe7..63b8d1fe1dd8 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -74,7 +74,8 @@
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ #define INIT_OPS_HASH(opsname)	\
+ 	.func_hash		= &opsname.local_hash,			\
+-	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock),
++	.local_hash.regex_lock	= __MUTEX_INITIALIZER(opsname.local_hash.regex_lock), \
++	.subop_list		= LIST_HEAD_INIT(opsname.subop_list),
+ #else
+ #define INIT_OPS_HASH(opsname)
+ #endif
+@@ -161,6 +162,7 @@ static inline void ftrace_ops_init(struct ftrace_ops *ops)
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 	if (!(ops->flags & FTRACE_OPS_FL_INITIALIZED)) {
+ 		mutex_init(&ops->local_hash.regex_lock);
++		INIT_LIST_HEAD(&ops->subop_list);
+ 		ops->func_hash = &ops->local_hash;
+ 		ops->flags |= FTRACE_OPS_FL_INITIALIZED;
+ 	}
+@@ -3164,6 +3166,403 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
  	return 0;
  }
--static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
-+static inline void ftrace_graph_addr_finish(struct fgraph_ops *gops, struct ftrace_graph_ret *trace)
- { }
- #endif /* CONFIG_DYNAMIC_FTRACE */
  
- extern unsigned int fgraph_max_depth;
- 
--static inline bool ftrace_graph_ignore_func(struct ftrace_graph_ent *trace)
-+static inline bool
-+ftrace_graph_ignore_func(struct fgraph_ops *gops, struct ftrace_graph_ent *trace)
- {
-+	unsigned long *task_var = fgraph_get_task_var(gops);
++/* Simply make a copy of @src and return it */
++static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
++{
++	if (ftrace_hash_empty(src))
++		return EMPTY_HASH;
 +
- 	/* trace it when it is-nested-in or is a function enabled. */
--	return !(trace_recursion_test(TRACE_GRAPH_BIT) ||
--		 ftrace_graph_addr(trace)) ||
-+	return !((*task_var & TRACE_GRAPH_FL) ||
-+		 ftrace_graph_addr(task_var, trace)) ||
- 		(trace->depth < 0) ||
- 		(fgraph_max_depth && trace->depth >= fgraph_max_depth);
- }
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 7f30652f0e97..66cce73e94f8 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -160,7 +160,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	if (!ftrace_trace_task(tr))
- 		return 0;
++	return alloc_and_copy_ftrace_hash(src->size_bits, src);
++}
++
++/*
++ * Append @new_hash entries to @hash:
++ *
++ *  If @hash is the EMPTY_HASH then it traces all functions and nothing
++ *  needs to be done.
++ *
++ *  If @new_hash is the EMPTY_HASH, then make *hash the EMPTY_HASH so
++ *  that it traces everything.
++ *
++ *  Otherwise, go through all of @new_hash and add anything that @hash
++ *  doesn't already have, to @hash.
++ *
++ *  The filter_hash updates uses just the append_hash() function
++ *  and the notrace_hash does not.
++ */
++static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
++{
++	struct ftrace_func_entry *entry;
++	int size;
++	int i;
++
++	/* An empty hash does everything */
++	if (ftrace_hash_empty(*hash))
++		return 0;
++
++	/* If new_hash has everything make hash have everything */
++	if (ftrace_hash_empty(new_hash)) {
++		free_ftrace_hash(*hash);
++		*hash = EMPTY_HASH;
++		return 0;
++	}
++
++	size = 1 << new_hash->size_bits;
++	for (i = 0; i < size; i++) {
++		hlist_for_each_entry(entry, &new_hash->buckets[i], hlist) {
++			/* Only add if not already in hash */
++			if (!__ftrace_lookup_ip(*hash, entry->ip) &&
++			    add_hash_entry(*hash, entry->ip) == NULL)
++				return -ENOMEM;
++		}
++	}
++	return 0;
++}
++
++/*
++ * Add to @hash only those that are in both @new_hash1 and @new_hash2
++ *
++ * The notrace_hash updates uses just the intersect_hash() function
++ * and the filter_hash does not.
++ */
++static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash1,
++			  struct ftrace_hash *new_hash2)
++{
++	struct ftrace_func_entry *entry;
++	int size;
++	int i;
++
++	/*
++	 * If new_hash1 or new_hash2 is the EMPTY_HASH then make the hash
++	 * empty as well as empty for notrace means none are notraced.
++	 */
++	if (ftrace_hash_empty(new_hash1) || ftrace_hash_empty(new_hash2)) {
++		free_ftrace_hash(*hash);
++		*hash = EMPTY_HASH;
++		return 0;
++	}
++
++	size = 1 << new_hash1->size_bits;
++	for (i = 0; i < size; i++) {
++		hlist_for_each_entry(entry, &new_hash1->buckets[i], hlist) {
++			/* Only add if in both @new_hash1 and @new_hash2 */
++			if (__ftrace_lookup_ip(new_hash2, entry->ip) &&
++			    add_hash_entry(*hash, entry->ip) == NULL)
++				return -ENOMEM;
++		}
++	}
++	/* If nothing intersects, make it the empty set */
++	if (ftrace_hash_empty(*hash)) {
++		free_ftrace_hash(*hash);
++		*hash = EMPTY_HASH;
++	}
++	return 0;
++}
++
++/* Return a new hash that has a union of all @ops->filter_hash entries */
++static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
++{
++	struct ftrace_hash *new_hash;
++	struct ftrace_ops *subops;
++	int ret;
++
++	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
++	if (!new_hash)
++		return NULL;
++
++	list_for_each_entry(subops, &ops->subop_list, list) {
++		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
++		if (ret < 0) {
++			free_ftrace_hash(new_hash);
++			return NULL;
++		}
++		/* Nothing more to do if new_hash is empty */
++		if (ftrace_hash_empty(new_hash))
++			break;
++	}
++	return new_hash;
++}
++
++/* Make @ops trace evenything except what all its subops do not trace */
++static struct ftrace_hash *intersect_hashes(struct ftrace_ops *ops)
++{
++	struct ftrace_hash *new_hash = NULL;
++	struct ftrace_ops *subops;
++	int size_bits;
++	int ret;
++
++	list_for_each_entry(subops, &ops->subop_list, list) {
++		struct ftrace_hash *next_hash;
++
++		if (!new_hash) {
++			size_bits = subops->func_hash->notrace_hash->size_bits;
++			new_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->notrace_hash);
++			if (!new_hash)
++				return NULL;
++			continue;
++		}
++		size_bits = new_hash->size_bits;
++		next_hash = new_hash;
++		new_hash = alloc_ftrace_hash(size_bits);
++		ret = intersect_hash(&new_hash, next_hash, subops->func_hash->notrace_hash);
++		free_ftrace_hash(next_hash);
++		if (ret < 0) {
++			free_ftrace_hash(new_hash);
++			return NULL;
++		}
++		/* Nothing more to do if new_hash is empty */
++		if (ftrace_hash_empty(new_hash))
++			break;
++	}
++	return new_hash;
++}
++
++static bool ops_equal(struct ftrace_hash *A, struct ftrace_hash *B)
++{
++	struct ftrace_func_entry *entry;
++	int size;
++	int i;
++
++	if (ftrace_hash_empty(A))
++		return ftrace_hash_empty(B);
++
++	if (ftrace_hash_empty(B))
++		return ftrace_hash_empty(A);
++
++	if (A->count != B->count)
++		return false;
++
++	size = 1 << A->size_bits;
++	for (i = 0; i < size; i++) {
++		hlist_for_each_entry(entry, &A->buckets[i], hlist) {
++			if (!__ftrace_lookup_ip(B, entry->ip))
++				return false;
++		}
++	}
++
++	return true;
++}
++
++static int ftrace_hash_move_and_update_ops(struct ftrace_ops *ops,
++					   struct ftrace_hash **orig_hash,
++					   struct ftrace_hash *hash,
++					   int enable);
++
++static int ftrace_update_ops(struct ftrace_ops *ops, struct ftrace_hash *filter_hash,
++			     struct ftrace_hash *notrace_hash)
++{
++	int ret;
++
++	if (!ops_equal(filter_hash, ops->func_hash->filter_hash)) {
++		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->filter_hash,
++						      filter_hash, 1);
++		if (ret < 0)
++			return ret;
++	}
++
++	if (!ops_equal(notrace_hash, ops->func_hash->notrace_hash)) {
++		ret = ftrace_hash_move_and_update_ops(ops, &ops->func_hash->notrace_hash,
++						      notrace_hash, 0);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++/**
++ * ftrace_startup_subops - enable tracing for subops of an ops
++ * @ops: Manager ops (used to pick all the functions of its subops)
++ * @subops: A new ops to add to @ops
++ * @command: Extra commands to use to enable tracing
++ *
++ * The @ops is a manager @ops that has the filter that includes all the functions
++ * that its list of subops are tracing. Adding a new @subops will add the
++ * functions of @subops to @ops.
++ */
++int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
++{
++	struct ftrace_hash *filter_hash;
++	struct ftrace_hash *notrace_hash;
++	struct ftrace_hash *save_filter_hash;
++	struct ftrace_hash *save_notrace_hash;
++	int size_bits;
++	int ret;
++
++	if (unlikely(ftrace_disabled))
++		return -ENODEV;
++
++	ftrace_ops_init(ops);
++	ftrace_ops_init(subops);
++
++	if (WARN_ON_ONCE(subops->flags & FTRACE_OPS_FL_ENABLED))
++		return -EBUSY;
++
++	/* Make everything canonical (Just in case!) */
++	if (!ops->func_hash->filter_hash)
++		ops->func_hash->filter_hash = EMPTY_HASH;
++	if (!ops->func_hash->notrace_hash)
++		ops->func_hash->notrace_hash = EMPTY_HASH;
++	if (!subops->func_hash->filter_hash)
++		subops->func_hash->filter_hash = EMPTY_HASH;
++	if (!subops->func_hash->notrace_hash)
++		subops->func_hash->notrace_hash = EMPTY_HASH;
++
++	/* For the first subops to ops just enable it normally */
++	if (list_empty(&ops->subop_list)) {
++		/* Just use the subops hashes */
++		filter_hash = copy_hash(subops->func_hash->filter_hash);
++		notrace_hash = copy_hash(subops->func_hash->notrace_hash);
++		if (!filter_hash || !notrace_hash) {
++			free_ftrace_hash(filter_hash);
++			free_ftrace_hash(notrace_hash);
++			return -ENOMEM;
++		}
++
++		save_filter_hash = ops->func_hash->filter_hash;
++		save_notrace_hash = ops->func_hash->notrace_hash;
++
++		ops->func_hash->filter_hash = filter_hash;
++		ops->func_hash->notrace_hash = notrace_hash;
++		list_add(&subops->list, &ops->subop_list);
++		ret = ftrace_startup(ops, command);
++		if (ret < 0) {
++			list_del(&subops->list);
++			ops->func_hash->filter_hash = save_filter_hash;
++			ops->func_hash->notrace_hash = save_notrace_hash;
++			free_ftrace_hash(filter_hash);
++			free_ftrace_hash(notrace_hash);
++		} else {
++			free_ftrace_hash(save_filter_hash);
++			free_ftrace_hash(save_notrace_hash);
++			subops->flags |= FTRACE_OPS_FL_ENABLED;
++		}
++		return ret;
++	}
++
++	/*
++	 * Here there's already something attached. Here are the rules:
++	 *   o If either filter_hash is empty then the final stays empty
++	 *      o Otherwise, the final is a superset of both hashes
++	 *   o If either notrace_hash is empty then the final stays empty
++	 *      o Otherwise, the final is an intersection between the hashes
++	 */
++	if (ftrace_hash_empty(ops->func_hash->filter_hash) ||
++	    ftrace_hash_empty(subops->func_hash->filter_hash)) {
++		filter_hash = EMPTY_HASH;
++	} else {
++		size_bits = max(ops->func_hash->filter_hash->size_bits,
++				subops->func_hash->filter_hash->size_bits);
++		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
++		if (!filter_hash)
++			return -ENOMEM;
++		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
++		if (ret < 0) {
++			free_ftrace_hash(filter_hash);
++			return ret;
++		}
++	}
++
++	if (ftrace_hash_empty(ops->func_hash->notrace_hash) ||
++	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
++		notrace_hash = EMPTY_HASH;
++	} else {
++		size_bits = max(ops->func_hash->filter_hash->size_bits,
++				subops->func_hash->filter_hash->size_bits);
++		notrace_hash = alloc_ftrace_hash(size_bits);
++		if (!notrace_hash) {
++			free_ftrace_hash(filter_hash);
++			return -ENOMEM;
++		}
++
++		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
++				     subops->func_hash->filter_hash);
++		if (ret < 0) {
++			free_ftrace_hash(filter_hash);
++			free_ftrace_hash(notrace_hash);
++			return ret;
++		}
++	}
++
++	list_add(&subops->list, &ops->subop_list);
++
++	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
++	free_ftrace_hash(filter_hash);
++	free_ftrace_hash(notrace_hash);
++	if (ret < 0)
++		list_del(&subops->list);
++	else
++		subops->flags |= FTRACE_OPS_FL_ENABLED;
++
++	return ret;
++}
++
++/**
++ * ftrace_shutdown_subops - Remove a subops from a manager ops
++ * @ops: A manager ops to remove @subops from
++ * @subops: The subops to remove from @ops
++ * @command: Any extra command flags to add to modifying the text
++ *
++ * Removes the functions being traced by the @subops from @ops. Note, it
++ * will not affect functions that are being traced by other subops that
++ * still exist in @ops.
++ *
++ * If the last subops is removed from @ops, then @ops is shutdown normally.
++ */
++int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
++{
++	struct ftrace_hash *filter_hash;
++	struct ftrace_hash *notrace_hash;
++	int ret;
++
++	if (unlikely(ftrace_disabled))
++		return -ENODEV;
++
++	if (WARN_ON_ONCE(!(subops->flags & FTRACE_OPS_FL_ENABLED)))
++		return -EINVAL;
++
++	list_del(&subops->list);
++
++	if (list_empty(&ops->subop_list)) {
++		/* Last one, just disable the current ops */
++
++		ret = ftrace_shutdown(ops, command);
++		if (ret < 0) {
++			list_add(&subops->list, &ops->subop_list);
++			return ret;
++		}
++
++		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
++
++		free_ftrace_hash(ops->func_hash->filter_hash);
++		free_ftrace_hash(ops->func_hash->notrace_hash);
++		ops->func_hash->filter_hash = EMPTY_HASH;
++		ops->func_hash->notrace_hash = EMPTY_HASH;
++
++		return 0;
++	}
++
++	/* Rebuild the hashes without subops */
++	filter_hash = append_hashes(ops);
++	notrace_hash = intersect_hashes(ops);
++	if (!filter_hash || !notrace_hash) {
++		free_ftrace_hash(filter_hash);
++		free_ftrace_hash(notrace_hash);
++		list_add(&subops->list, &ops->subop_list);
++		return -ENOMEM;
++	}
++
++	ret = ftrace_update_ops(ops, filter_hash, notrace_hash);
++	if (ret < 0)
++		list_add(&subops->list, &ops->subop_list);
++	else
++		subops->flags &= ~FTRACE_OPS_FL_ENABLED;
++
++	free_ftrace_hash(filter_hash);
++	free_ftrace_hash(notrace_hash);
++	return ret;
++}
++
+ static u64		ftrace_update_time;
+ unsigned long		ftrace_update_tot_cnt;
+ unsigned long		ftrace_number_of_pages;
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 19eddcb91584..cdfd12c44ab4 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -15,6 +15,7 @@ extern struct ftrace_ops global_ops;
+ int ftrace_startup(struct ftrace_ops *ops, int command);
+ int ftrace_shutdown(struct ftrace_ops *ops, int command);
+ int ftrace_ops_test(struct ftrace_ops *ops, unsigned long ip, void *regs);
++int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
  
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
+ #else /* !CONFIG_DYNAMIC_FTRACE */
  
- 	if (ftrace_graph_ignore_irqs())
-@@ -247,7 +247,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- 	long disabled;
- 	int cpu;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index a5070f9b977b..9a70beb2cc46 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1136,6 +1136,7 @@ extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+ 			     int len, int reset);
+ extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
+ 			      int len, int reset);
++extern int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command);
+ #else
+ struct ftrace_func_command;
  
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
- 		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-@@ -269,7 +269,7 @@ void trace_graph_return(struct ftrace_graph_ret *trace,
- static void trace_graph_thresh_return(struct ftrace_graph_ret *trace,
- 				      struct fgraph_ops *gops)
- {
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (trace_recursion_test(TRACE_GRAPH_NOTRACE_BIT)) {
- 		trace_recursion_clear(TRACE_GRAPH_NOTRACE_BIT);
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 5478f4c4f708..fce064e20570 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -184,7 +184,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 	unsigned int trace_ctx;
- 	int ret;
- 
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
- 	/*
- 	 * Do not trace a function if it's filtered by set_graph_notrace.
-@@ -214,7 +214,7 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 	unsigned long flags;
- 	unsigned int trace_ctx;
- 
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (!func_prolog_dec(tr, &data, &flags))
- 		return;
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index 49bcc812652c..130ca7e7787e 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -120,7 +120,7 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
- 	unsigned int trace_ctx;
- 	int ret = 0;
- 
--	if (ftrace_graph_ignore_func(trace))
-+	if (ftrace_graph_ignore_func(gops, trace))
- 		return 0;
- 	/*
- 	 * Do not trace a function if it's filtered by set_graph_notrace.
-@@ -149,7 +149,7 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 	struct trace_array_cpu *data;
- 	unsigned int trace_ctx;
- 
--	ftrace_graph_addr_finish(trace);
-+	ftrace_graph_addr_finish(gops, trace);
- 
- 	if (!func_prolog_preempt_disable(tr, &data, &trace_ctx))
- 		return;
 -- 
 2.43.0
 
