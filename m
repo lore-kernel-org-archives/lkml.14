@@ -1,45 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE3E801;
-	Tue,  4 Jun 2024 19:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7772E64C;
+	Tue,  4 Jun 2024 19:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717529328; cv=none; b=KY2eC0nfskoDFT7EvVb4+R4Ovq/an0BanCfSTmtPvYTeZCc8TgFjWc5+kDa/OW/18HuFz7oOVbg78ZmcyGtfm6jL7nW0HzJZntkp6q0GxT8vGfaUKoCI11Io0c5cBmiPYQuClB40Vjjg6ij0O2U1C/PaYzPRgE4lg4KVa7lgvGc=
+	t=1717529414; cv=none; b=gBbMPUtHSjhTeBIdyP/QNdxSsxjdyi7/DCEWzdxsqzFIYh1iSNJuit4oH5esoZ8ehr5g6NWYAbWKHhB0vhxadsxzrYr/IWvhWV9AiDiP5KfGecnLDfutDd5w7ZsNXyNF5ejwlhqgweM10GLM2F5SHrEB8yqFpPQucEOQwWBqlpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717529328; c=relaxed/simple;
-	bh=7/YcOy5Bf8pm94Kwy+b+flUypYkdMlrw6zcx/ybLGuU=;
+	s=arc-20240116; t=1717529414; c=relaxed/simple;
+	bh=oULadjP6P41q089ExSQ5/oAxT/vKrEmTUYcwve21ydY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ybqw6b0WgXn8fAq2WP6ifmKDYgRvn1magPHGCq1AvvmXvvubCrPkHI47m9LxikWWjYZbihNGiHT2tg0xge9sVt63gzT/uAhtmTtz7IPzNpD0KIu9OIf+8bRRBbDg6Hn2zWhN87+4U8VhLXz/JESMZx2Iuo+4v8CEvCKthE0aJ54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vK7F3jEG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vK7F3jEG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79729C4AF07;
-	Tue,  4 Jun 2024 19:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717529327;
-	bh=7/YcOy5Bf8pm94Kwy+b+flUypYkdMlrw6zcx/ybLGuU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vK7F3jEGOjMbKRZze0jBxvQ//AVTxTuyb+zDGaNWmASMZLHJSKK6opW4zt9ThqqGS
-	 YP8yXb6UeS+dNo9xrrMjsAXCpNnMMqShGQW+udQCzhEQ520sDsDy9fPNywWxypWEJY
-	 vANanpCnS9hhUCvb64WlYdqF4awaf3DskFK2+sPplxQtUFJHSR/ipnLLJaTybrnAD1
-	 CVj/6S1tEMJA+8J5Z890PfFpOUNJPi/X5JML9a0RrOzKGejMNbKK33y+gyYksBoF1M
-	 B4zQ4tPepefkaEY8ccktPzR4eFyvEoTT05NW9A64PE81KWhhGaJe1Xb4Nz8vSZGV3c
-	 EZeDWmIslG5xg==
-Date: Tue, 4 Jun 2024 14:28:45 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Joel Stanley <joel@jms.id.au>, openbmc@lists.ozlabs.org,
-	linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/3] dt-bindings: pinctrl: aspeed,ast2600-pinctrl:
- Describe I3C, USB
-Message-ID: <171752932281.1150170.5170215514575189840.robh@kernel.org>
-References: <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-0-a6fe2281a1b8@codeconstruct.com.au>
- <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-3-a6fe2281a1b8@codeconstruct.com.au>
+	 Content-Type:Content-Disposition:In-Reply-To; b=tf6cD7vuLQ7jjBsYIJpqSKbRjPNxHNZHJYsB3DuvJlV4IQ30IJ4zUfVsYiQ6KnidZa+4rO32MLyr9Zpke0dClliljsKMSXNM3lTF2jDyKsukLqkbWM91wAVIel4RQp9mP769zqkeZQPJqmKS9MVa/xl6YDGgpnUbBZcfsA+Z8gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 1Cvi0cF8TK+EeU5TvQsCOA==
+X-CSE-MsgGUID: c9JEqBabSyKe2dY58hwyWA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="14257589"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="14257589"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 12:30:12 -0700
+X-CSE-ConnectionGUID: lYBHTnAjSPer6lvyayjErg==
+X-CSE-MsgGUID: D8aIAmoOQISCjC8b7LQjgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="68488808"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 12:30:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1sEZrD-0000000Ddrd-3tyz;
+	Tue, 04 Jun 2024 22:30:07 +0300
+Date: Tue, 4 Jun 2024 22:30:07 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: kernel-janitors@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Robin van der Gracht <robin@protonic.nl>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: auxdisplay: ht16k33: Drop device node reference after
+ registration failure in ht16k33_led_probe()
+Message-ID: <Zl9rPy3hD-Hk-gxm@smile.fi.intel.com>
+References: <0fc79fe9-da49-4cbe-a7ff-6443ad93f120@web.de>
+ <Zl9B2zqbJqVAf83d@smile.fi.intel.com>
+ <503de0cb-09d2-4716-99cb-de257a33bad8@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,53 +55,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240531-dt-warnings-gpio-ast2600-pinctrl-funcs-groups-v1-3-a6fe2281a1b8@codeconstruct.com.au>
+In-Reply-To: <503de0cb-09d2-4716-99cb-de257a33bad8@web.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Jun 04, 2024 at 08:15:35PM +0200, Markus Elfring wrote:
+> > But, by design we don't use reference counting after we registered LED,
+> > hence both error and successful paths need to have this,
+> 
+> Do you indicate really special data processing constraints here?
+
+Nothing special, either we hold reference for the entire life time of the
+device or not. For LEDS the convention is not to hold.
 
 
-On Fri, 31 May 2024 12:32:49 +0930, Andrew Jeffery wrote:
-> I3C1 and I3C2 become muxed functions in the mass production release of
-> the AST2600. Also document the USB2A device and USB2B HID mux options.
->=20
-> Squash warnings such as:
->=20
->     arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-elbert.dtb: pinctrl: usb=
-2ad_default:function:0: 'USB2AD' is not one of ['ADC0', 'ADC1', 'ADC10', 'A=
-DC11', 'ADC12', 'ADC13', 'ADC14', 'ADC15', 'ADC2', 'ADC3', 'ADC4', 'ADC5', =
-'ADC6', 'ADC7', 'ADC8', 'ADC9', 'BMCINT', 'EMMC', 'ESPI', 'ESPIALT', 'FSI1'=
-, 'FSI2', 'FWQSPI', 'FWSPIABR', 'FWSPID', 'FWSPIWP', 'GPIT0', 'GPIT1', 'GPI=
-T2', 'GPIT3', 'GPIT4', 'GPIT5', 'GPIT6', 'GPIT7', 'GPIU0', 'GPIU1', 'GPIU2'=
-, 'GPIU3', 'GPIU4', 'GPIU5', 'GPIU6', 'GPIU7', 'I2C1', 'I2C10', 'I2C11', 'I=
-2C12', 'I2C13', 'I2C14', 'I2C15', 'I2C16', 'I2C2', 'I2C3', 'I2C4', 'I2C5', =
-'I2C6', 'I2C7', 'I2C8', 'I2C9', 'I3C3', 'I3C4', 'I3C5', 'I3C6', 'JTAGM', 'L=
-HPD', 'LHSIRQ', 'LPC', 'LPCHC', 'LPCPD', 'LPCPME', 'LPCSMI', 'LSIRQ', 'MACL=
-INK1', 'MACLINK2', 'MACLINK3', 'MACLINK4', 'MDIO1', 'MDIO2', 'MDIO3', 'MDIO=
-4', 'NCTS1', 'NCTS2', 'NCTS3', 'NCTS4', 'NDCD1', 'NDCD2', 'NDCD3', 'NDCD4',=
- 'NDSR1', 'NDSR2', 'NDSR3', 'NDSR4', 'NDTR1', 'NDTR2', 'NDTR3', 'NDTR4', 'N=
-RI1', 'NRI2', 'NRI3', 'NR
->  I4', 'NRTS1', 'NRTS2', 'NRTS3', 'NRTS4', 'OSCCLK', 'PEWAKE', 'PWM0', 'PW=
-M1', 'PWM10', 'PWM11', 'PWM12', 'PWM13', 'PWM14', 'PWM15', 'PWM2', 'PWM3', =
-'PWM4', 'PWM5', 'PWM6', 'PWM7', 'PWM8', 'PWM9', 'RGMII1', 'RGMII2', 'RGMII3=
-', 'RGMII4', 'RMII1', 'RMII2', 'RMII3', 'RMII4', 'RXD1', 'RXD2', 'RXD3', 'R=
-XD4', 'SALT1', 'SALT10', 'SALT11', 'SALT12', 'SALT13', 'SALT14', 'SALT15', =
-'SALT16', 'SALT2', 'SALT3', 'SALT4', 'SALT5', 'SALT6', 'SALT7', 'SALT8', 'S=
-ALT9', 'SD1', 'SD2', 'SGPM1', 'SGPM2', 'SGPS1', 'SGPS2', 'SIOONCTRL', 'SIOP=
-BI', 'SIOPBO', 'SIOPWREQ', 'SIOPWRGD', 'SIOS3', 'SIOS5', 'SIOSCI', 'SPI1', =
-'SPI1ABR', 'SPI1CS1', 'SPI1WP', 'SPI2', 'SPI2CS1', 'SPI2CS2', 'TACH0', 'TAC=
-H1', 'TACH10', 'TACH11', 'TACH12', 'TACH13', 'TACH14', 'TACH15', 'TACH2', '=
-TACH3', 'TACH4', 'TACH5', 'TACH6', 'TACH7', 'TACH8', 'TACH9', 'THRU0', 'THR=
-U1', 'THRU2', 'THRU3', 'TXD1', 'TXD2', 'TXD3', 'TXD4', 'UART10', 'UART11', =
-'UART12', 'UART13', 'UART6', 'UART7', 'UART8', 'UART9', 'USBAD', 'USBADP', =
-'USB2AH', 'USB2AHP', 'USB
->  2BD', 'USB2BH', 'VB', 'VGAHS', 'VGAVS', 'WDTRST1', 'WDTRST2', 'WDTRST3',=
- 'WDTRST4']
->=20
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml         | 6 =
-++++++
->  1 file changed, 6 insertions(+)
->=20
+> > so add another fwnode_handle_put() after this branch.
+> 
+> Will this suggestion trigger any further clarifications for the affected software?
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+You need to put an fwnode handle in both paths: inside the if branch as you
+have done (error path) and missing one is after that needs to be added.
+
+Just address my comments and I believe everyone will be happy about it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
