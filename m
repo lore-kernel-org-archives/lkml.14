@@ -1,375 +1,330 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB4E149C55;
-	Tue,  4 Jun 2024 16:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CC6149C6E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717516920; cv=none; b=tHiO5wiwkh1i7P84MbJWTpB1wnpy7SOvWKh++m0M6TwrvGzfJF/LD+fWP5VRNylqRiJQE1A6GCsBvKVahrWVzWa/iCsYyPZPtuGZz2HbPQccSD9Motbm6NcWZmZoHKx7xcSl5Y5A3npR0YoHyIF4Ee0LQ4L/vqNausZVDhI0Qzs=
+	t=1717516921; cv=none; b=VxfUnOZmeyLwlyjKAazNHVvOvo+wZO4C1FdE5aP7D/q7B1usChsPl1F39dOt08QX8h9uA9CPuy9IrpzMvqDfpQnOHpTUD6TVAg2917+m4bWv4H1+RFi3x7dmR0F0dUzi3jLSx/QyNUcUcALXswg0B9iG/797F273F4vlXfEJlzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717516920; c=relaxed/simple;
-	bh=SMBSb3Dc2fwROkWUlxe5ulZUXFb6LfXWCv/+EQodzsg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VXWKvRqQ9wq8PY5OoNRdg9DEIDRkC4p1/K3J2OkAfmcQQ3HUhtsUCDeXUJtIHahaIFzI/em7xrusmGEfuGiLrJ5NAVJYmHpofMPJn3znOrMSXdJqqcXesi3/bDhWYBNkEwR1coyhEu+biFMqJ0cJhHn0DPj2ZFWkhXBsk+DR7kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-62a08091c2bso63310217b3.0;
-        Tue, 04 Jun 2024 09:01:58 -0700 (PDT)
+	s=arc-20240116; t=1717516921; c=relaxed/simple;
+	bh=ObtNj6rjCVjW2T5iMzjYuSOL8U7EWQcPv2CwxAiHVwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bEd76IrNQcx8bM1J8N8M+HJuD5HLYxQ+l3T+WewK2wHO3F/J/JSkNyxwWeFRlXI0tJp3bQ08Dkb5Z0ypZ9YwBzanJj1LLCB6YOKSVqsYnf/r0N11Y1Ed1ERLNy01VxVzEJ0Gepcsh8V3GV+2ND2XLNZOv4SJvj8m5PVkBGUcy44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hHhfR9E2; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hHhfR9E2"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1f6559668e1so23918885ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717516919; x=1718121719; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u97ZAbEtZ1L64P2LpaM/3tu5it6GPftWXFpfcFUjbZI=;
+        b=hHhfR9E2zruTiNJDOIGnySmpUmqbh3fxLZgvbcfid4M0epWKPQp0gaYNzu1s8PLpf0
+         T51xMdrrpb/suzeURwhfQ4au7UXqc7cpF5kLtFIpzox7E/osb7Z6TFdDsUUpAdmfzddt
+         onJl6rSORlkTArrpv5WXUSfuNs45jkJqOwTOg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717516916; x=1718121716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717516919; x=1718121719;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XIOf757GnuZR9iGqOgRzuj9wVjjOZufKYrP2krAzxUo=;
-        b=oFsQ0r1n5jRZ4Q6BirAA972SV6spu+Cyk3Bs9bdZPlyg+Vt39cYru9j7hpxK9szW/X
-         y8a41EBUHLFBBiUmyHnop9P9OVjt8MS1+2YU0Lce0GW9FlZOEPrxOYw2P50/325w7Txc
-         9xPxtN37pfJLFOPocmCTKEEwZQQ3mMFmJNvA9Dqvyje0vyyZZvPZZM+6JXZnGQY0tWtE
-         fPBrV5R4xekaZL6n2jBEDmogTMQBmZXP9PF3VCEeqHWtr4y9YBdLDel5+seUR41xL3JQ
-         1hnVtM8/Smtq5UqhBnAYA08J/iYT1RCGnDjC5kEZdyrK1K4sMaHInn6GktZ7kyOPHcvI
-         xdrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaoq7ogx4+0xxeEfrjxZxcwUuGbCB+cWFT1quKdd04Aw7hJXuwsuonRjgoreC7YwGjHYgiwh48govsAvRSgsUjHsACnecaSclWI187hukfsenOsJH5QOkdSs+dUyoeSszZH9JnQyVApXbE8W4C/+ldI5qRNv/UKhcXNyEtR2sr8J5LdEx9riaW2ijfnrVuSiV0WqyPRBy3HQuLTZM7egFcRDvecwsU
-X-Gm-Message-State: AOJu0YzTmG2XPltwL6BWm5IyOrXdLF03ChFxwZ9sQ7KgfWb1qH1rxeQS
-	YCMK7uGyDNf+PLqRHerS+1cv/rVixlnfwMIm0/s8msP4NxQW48e684DWlWtg
-X-Google-Smtp-Source: AGHT+IGMjHqqLU8NcQLUDocL6X+Aagi8Hu1AijdF21DssrTbF3gBcoOSON6V9NZbxlBhbnQmaDRvpQ==
-X-Received: by 2002:a81:4f93:0:b0:627:dfbd:89e with SMTP id 00721157ae682-62c7969b500mr114778237b3.11.1717516915930;
-        Tue, 04 Jun 2024 09:01:55 -0700 (PDT)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c766b3259sm18453877b3.109.2024.06.04.09.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 09:01:55 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dfa682a4025so5261930276.2;
-        Tue, 04 Jun 2024 09:01:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXghGfvVDRq7y497cEE70dfqaXDhL/dOoiMu7V2zR04f9TdTYmFYChBXXSs6IZN2a+/TqWIeiOiUJBd/qUJoKjXzx13rp3NBuZ2HJKoZAas9eGl9rrhtsYYxjI6vmfcLS7AjylX6NGDuqfamNgEymRMjgwEVAlPDGWz+MHQ/3r5FEerC/n6Zv9jRIxB2QHtGdBDexJt5gKwFwFNejNOkP2hEyq2/99T
-X-Received: by 2002:a25:6c89:0:b0:dfa:b412:20ae with SMTP id
- 3f1490d57ef6-dfab41221efmr4047424276.7.1717516915044; Tue, 04 Jun 2024
- 09:01:55 -0700 (PDT)
+        bh=u97ZAbEtZ1L64P2LpaM/3tu5it6GPftWXFpfcFUjbZI=;
+        b=L6jy0JZPNaxsTpn2XD/1SGnsEfjg+KsIo0X0s8FWYQqkLSSxFhycsZkWPsThpziG3Q
+         zvIbuwU1IYXoM5XAZQgpev8ZlBDatfF4Er/CNEcp5l8X2GNy68fA7Pgm8qkynxtP5G0N
+         8znGBGEKiUnTOvwsuycAmGsPWm/3P2TZnzO7u/omDWsoDQYz71EYgeDkyinLe3OKg2dh
+         +xC+ErSyImiltDpu9gpX35ZEL04cT5tAcnoEMXHDPi92KXyOHraS/i6aud7LFyboE/d8
+         jxYF60oYEfYcptUDQyd8Qgk8XTjzjcNfSywOyc7NLB5+Vf+xPqGETCNI0sSZfcJvHX3P
+         CEmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCaYC5RfVug6o+yHa6et3Nidk8BOzRdAtpdszOq/nr0neO9KHnIpxthQuAcIsBgrX6eqfGn3efcO+gmJCVghqS4kce3UvvHvOxu5bz
+X-Gm-Message-State: AOJu0YxLMGLoXVIOw5Ubeb/kLjsW7yGBdXC7HiJrW4ZyqBrQrN3CRoOK
+	LIpfflcyZH8prn8HzyOvMVyqDtQEtwpCSdv/FbZKRnNlGYG33qgpdfwaU4VwcQ==
+X-Google-Smtp-Source: AGHT+IGmXg/0jbFEnM2y3wf5yaCkuP92p/JJeadGUBooCLQ9wjYQ+ewAobCZ6YU1JYKB+ljtMp+80Q==
+X-Received: by 2002:a17:903:32d2:b0:1e5:3c5:55a5 with SMTP id d9443c01a7336-1f636fd9da4mr140529395ad.8.1717516918750;
+        Tue, 04 Jun 2024 09:01:58 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:3609:ff79:4625:8a71])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f632358519sm86118385ad.82.2024.06.04.09.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 09:01:57 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-msm@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	John Ogness <john.ogness@linutronix.de>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Stephen Boyd <swboyd@chromium.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+Subject: [PATCH v3 6/7] serial: qcom-geni: Fix suspend while active UART xfer
+Date: Tue,  4 Jun 2024 09:00:32 -0700
+Message-ID: <20240604090028.v3.6.I0f81a5baa37d368f291c96ee4830abca337e3c87@changeid>
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+In-Reply-To: <20240604160123.2029413-1-dianders@chromium.org>
+References: <20240604160123.2029413-1-dianders@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240524082800.333991-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240524082800.333991-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240524082800.333991-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 4 Jun 2024 18:01:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVPZgxsM1OsFt-+802mzajKR6CO8B9ofFzaThKsBAdGTQ@mail.gmail.com>
-Message-ID: <CAMuHMdVPZgxsM1OsFt-+802mzajKR6CO8B9ofFzaThKsBAdGTQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] clk: renesas: Add RZ/V2H CPG core wrapper driver
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+On devices using Qualcomm's GENI UART it is possible to get the UART
+stuck such that it no longer outputs data. Specifically, logging in
+via an agetty on the debug serial port (which was _not_ used for
+kernel console) and running:
+  cat /var/log/messages
+...and then (via an SSH session) forcing a few suspend/resume cycles
+causes the UART to stop transmitting.
 
-Thanks for your patch!
+The root of the problems was with qcom_geni_serial_stop_tx_fifo()
+which is called as part of the suspend process. Specific problems with
+that function:
+- When an in-progress "tx" command is cancelled it doesn't appear to
+  fully drain the FIFO. That meant qcom_geni_serial_tx_empty()
+  continued to report that the FIFO wasn't empty. The
+  qcom_geni_serial_start_tx_fifo() function didn't re-enable
+  interrupts in this case so the driver would never start transferring
+  again.
+- When the driver cancelled the current "tx" command but it forgot to
+  zero out "tx_remaining". This confused logic elsewhere in the
+  driver.
+- From experimentation, it appears that cancelling the "tx" command
+  could drop some of the queued up bytes.
 
-On Fri, May 24, 2024 at 10:29=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
-com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add CPG core helper wrapper driver for RZ/V2H SoC.
+While qcom_geni_serial_stop_tx_fifo() could be fixed to drain the FIFO
+and shut things down properly, stop_tx() isn't supposed to be a slow
+function. It is run with local interrupts off and is documented to
+stop transmitting "as soon as possible". Change the function to just
+stop new bytes from being queued. In order to make this work, change
+qcom_geni_serial_start_tx_fifo() to remove some conditions. It's
+always safe to enable the watermark interrupt and the IRQ handler will
+disable it if it's not needed.
 
-What is a "core helper wrapper"? ;-)
+For system suspend the queue still needs to be drained. Failure to do
+so means that the hardware won't provide new interrupts until a
+"cancel" command is sent. Add draining logic (fixing the issues noted
+above) at suspend time.
 
-Looking at the structure, this looks like a family-specific clock driver?
-Will there be more RZ/V2H-alike SoCs?
+NOTE: It would be ideal if qcom_geni_serial_stop_tx_fifo() could
+"pause" the transmitter right away. There is no obvious way to do this
+in the docs and experimentation didn't find any tricks either, so
+stopping TX "as soon as possible" isn't very soon but is the best
+possible.
 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/clk/renesas/Kconfig     |   5 +
->  drivers/clk/renesas/Makefile    |   1 +
->  drivers/clk/renesas/rzv2h-cpg.c | 673 ++++++++++++++++++++++++++++++++
->  drivers/clk/renesas/rzv2h-cpg.h | 149 +++++++
->  4 files changed, 828 insertions(+)
->  create mode 100644 drivers/clk/renesas/rzv2h-cpg.c
->  create mode 100644 drivers/clk/renesas/rzv2h-cpg.h
->
-> diff --git a/drivers/clk/renesas/Kconfig b/drivers/clk/renesas/Kconfig
-> index d252150402e8..254203c2cb2e 100644
-> --- a/drivers/clk/renesas/Kconfig
-> +++ b/drivers/clk/renesas/Kconfig
-> @@ -40,6 +40,7 @@ config CLK_RENESAS
->         select CLK_R9A07G054 if ARCH_R9A07G054
->         select CLK_R9A08G045 if ARCH_R9A08G045
->         select CLK_R9A09G011 if ARCH_R9A09G011
-> +       select CLK_R9A09G057 if ARCH_R9A09G057
->         select CLK_SH73A0 if ARCH_SH73A0
->
->  if CLK_RENESAS
-> @@ -193,6 +194,10 @@ config CLK_R9A09G011
->         bool "RZ/V2M clock support" if COMPILE_TEST
->         select CLK_RZG2L
->
-> +config CLK_R9A09G057
-> +       bool "Renesas RZ/V2H(P) clock support" if COMPILE_TEST
+Fixes: c4f528795d1a ("tty: serial: msm_geni_serial: Add serial driver support for GENI based QUP")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+There are still a number of problems with GENI UART after this but
+I've kept this change separate to make it easier to understand.
+Specifically on mainline just hitting "Ctrl-C" after dumping
+/var/log/messages to the serial port hangs things after the kfifo
+changes. Those issues will be addressed in future patches.
 
-Please drop "Renesas "
-(few other symbols have it, I'll fix the remaining).
+It should also be noted that the "Fixes" tag here is a bit of a
+swag. I haven't gone and tested on ancient code, but at least the
+problems exist on kernel 5.15 and much of the code touched here has
+been here since the beginning, or at least since as long as the driver
+was stable.
 
-> +       select RESET_CONTROLLER
-> +
->  config CLK_SH73A0
->         bool "SH-Mobile AG5 clock support" if COMPILE_TEST
->         select CLK_RENESAS_CPG_MSTP
-> diff --git a/drivers/clk/renesas/Makefile b/drivers/clk/renesas/Makefile
-> index f7e18679c3b8..79cc7c4d77c6 100644
-> --- a/drivers/clk/renesas/Makefile
-> +++ b/drivers/clk/renesas/Makefile
-> @@ -37,6 +37,7 @@ obj-$(CONFIG_CLK_R9A07G044)           +=3D r9a07g044-cp=
-g.o
->  obj-$(CONFIG_CLK_R9A07G054)            +=3D r9a07g044-cpg.o
->  obj-$(CONFIG_CLK_R9A08G045)            +=3D r9a08g045-cpg.o
->  obj-$(CONFIG_CLK_R9A09G011)            +=3D r9a09g011-cpg.o
-> +obj-$(CONFIG_CLK_R9A09G057)            +=3D rzv2h-cpg.o
+Changes in v3:
+- 0xffffffff => GENMASK(31, 0)
+- Reword commit message.
 
-If this is a family-specific clock driver, please use a separate Kconfig
-symbol, like other families do, and move it ...
+Changes in v2:
+- Totally rework / rename patch to handle suspend while active xfer
 
->  obj-$(CONFIG_CLK_SH73A0)               +=3D clk-sh73a0.o
->
->  # Family
+ drivers/tty/serial/qcom_geni_serial.c | 97 +++++++++++++++++++++------
+ 1 file changed, 75 insertions(+), 22 deletions(-)
 
-... here.
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 4dbc59873b34..46b6674d90c5 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -130,6 +130,7 @@ struct qcom_geni_serial_port {
+ 	bool brk;
+ 
+ 	unsigned int tx_remaining;
++	unsigned int tx_total;
+ 	int wakeup_irq;
+ 	bool rx_tx_swap;
+ 	bool cts_rts_swap;
+@@ -311,11 +312,14 @@ static bool qcom_geni_serial_poll_bit(struct uart_port *uport,
+ 
+ static void qcom_geni_serial_setup_tx(struct uart_port *uport, u32 xmit_size)
+ {
++	struct qcom_geni_serial_port *port = to_dev_port(uport);
+ 	u32 m_cmd;
+ 
+ 	writel(xmit_size, uport->membase + SE_UART_TX_TRANS_LEN);
+ 	m_cmd = UART_START_TX << M_OPCODE_SHFT;
+ 	writel(m_cmd, uport->membase + SE_GENI_M_CMD0);
++
++	port->tx_total = xmit_size;
+ }
+ 
+ static void qcom_geni_serial_poll_tx_done(struct uart_port *uport)
+@@ -335,6 +339,64 @@ static void qcom_geni_serial_poll_tx_done(struct uart_port *uport)
+ 	writel(irq_clear, uport->membase + SE_GENI_M_IRQ_CLEAR);
+ }
+ 
++static void qcom_geni_serial_drain_tx_fifo(struct uart_port *uport)
++{
++	struct qcom_geni_serial_port *port = to_dev_port(uport);
++
++	/*
++	 * If the main sequencer is inactive it means that the TX command has
++	 * been completed and all bytes have been sent. Nothing to do in that
++	 * case.
++	 */
++	if (!qcom_geni_serial_main_active(uport))
++		return;
++
++	/*
++	 * Wait until the FIFO has been drained. We've already taken bytes out
++	 * of the higher level queue in qcom_geni_serial_send_chunk_fifo() so
++	 * if we don't drain the FIFO but send the "cancel" below they seem to
++	 * get lost.
++	 */
++	qcom_geni_serial_poll_bitfield(uport, SE_GENI_M_GP_LENGTH, GENMASK(31, 0),
++				       port->tx_total - port->tx_remaining);
++
++	/*
++	 * If clearing the FIFO made us inactive then we're done--no need for
++	 * a cancel.
++	 */
++	if (!qcom_geni_serial_main_active(uport))
++		return;
++
++	/*
++	 * Cancel the current command. After this the main sequencer will
++	 * stop reporting that it's active and we'll have to start a new
++	 * transfer command.
++	 *
++	 * If we skip doing this cancel and then continue with a system
++	 * suspend while there's an active command in the main sequencer
++	 * then after resume time we won't get any more interrupts on the
++	 * main sequencer until we send the cancel.
++	 */
++	geni_se_cancel_m_cmd(&port->se);
++	if (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
++				       M_CMD_CANCEL_EN, true)) {
++		/* The cancel failed; try an abort as a fallback. */
++		geni_se_abort_m_cmd(&port->se);
++		qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
++						M_CMD_ABORT_EN, true);
++		writel(M_CMD_ABORT_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
++	}
++	writel(M_CMD_CANCEL_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
++
++	/*
++	 * We've cancelled the current command. "tx_remaining" stores how
++	 * many bytes are left to finish in the current command so we know
++	 * when to start a new command. Since the command was cancelled we
++	 * need to zero "tx_remaining".
++	 */
++	port->tx_remaining = 0;
++}
++
+ static void qcom_geni_serial_abort_rx(struct uart_port *uport)
+ {
+ 	u32 irq_clear = S_CMD_DONE_EN | S_CMD_ABORT_EN;
+@@ -655,37 +717,18 @@ static void qcom_geni_serial_start_tx_fifo(struct uart_port *uport)
+ {
+ 	u32 irq_en;
+ 
+-	if (qcom_geni_serial_main_active(uport) ||
+-	    !qcom_geni_serial_tx_empty(uport))
+-		return;
+-
+ 	irq_en = readl(uport->membase +	SE_GENI_M_IRQ_EN);
+ 	irq_en |= M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
+-
+ 	writel(irq_en, uport->membase +	SE_GENI_M_IRQ_EN);
+ }
+ 
+ static void qcom_geni_serial_stop_tx_fifo(struct uart_port *uport)
+ {
+ 	u32 irq_en;
+-	struct qcom_geni_serial_port *port = to_dev_port(uport);
+ 
+ 	irq_en = readl(uport->membase + SE_GENI_M_IRQ_EN);
+ 	irq_en &= ~(M_CMD_DONE_EN | M_TX_FIFO_WATERMARK_EN);
+ 	writel(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+-	/* Possible stop tx is called multiple times. */
+-	if (!qcom_geni_serial_main_active(uport))
+-		return;
+-
+-	geni_se_cancel_m_cmd(&port->se);
+-	if (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+-						M_CMD_CANCEL_EN, true)) {
+-		geni_se_abort_m_cmd(&port->se);
+-		qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+-						M_CMD_ABORT_EN, true);
+-		writel(M_CMD_ABORT_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
+-	}
+-	writel(M_CMD_CANCEL_EN, uport->membase + SE_GENI_M_IRQ_CLEAR);
+ }
+ 
+ static void qcom_geni_serial_handle_rx_fifo(struct uart_port *uport, bool drop)
+@@ -1067,7 +1110,15 @@ static int setup_fifos(struct qcom_geni_serial_port *port)
+ }
+ 
+ 
+-static void qcom_geni_serial_shutdown(struct uart_port *uport)
++static void qcom_geni_serial_shutdown_dma(struct uart_port *uport)
++{
++	disable_irq(uport->irq);
++
++	qcom_geni_serial_stop_tx(uport);
++	qcom_geni_serial_stop_rx(uport);
++}
++
++static void qcom_geni_serial_shutdown_fifo(struct uart_port *uport)
+ {
+ 	disable_irq(uport->irq);
+ 
+@@ -1076,6 +1127,8 @@ static void qcom_geni_serial_shutdown(struct uart_port *uport)
+ 
+ 	qcom_geni_serial_stop_tx(uport);
+ 	qcom_geni_serial_stop_rx(uport);
++
++	qcom_geni_serial_drain_tx_fifo(uport);
+ }
+ 
+ static int qcom_geni_serial_port_setup(struct uart_port *uport)
+@@ -1533,7 +1586,7 @@ static const struct uart_ops qcom_geni_console_pops = {
+ 	.startup = qcom_geni_serial_startup,
+ 	.request_port = qcom_geni_serial_request_port,
+ 	.config_port = qcom_geni_serial_config_port,
+-	.shutdown = qcom_geni_serial_shutdown,
++	.shutdown = qcom_geni_serial_shutdown_fifo,
+ 	.type = qcom_geni_serial_get_type,
+ 	.set_mctrl = qcom_geni_serial_set_mctrl,
+ 	.get_mctrl = qcom_geni_serial_get_mctrl,
+@@ -1555,7 +1608,7 @@ static const struct uart_ops qcom_geni_uart_pops = {
+ 	.startup = qcom_geni_serial_startup,
+ 	.request_port = qcom_geni_serial_request_port,
+ 	.config_port = qcom_geni_serial_config_port,
+-	.shutdown = qcom_geni_serial_shutdown,
++	.shutdown = qcom_geni_serial_shutdown_dma,
+ 	.type = qcom_geni_serial_get_type,
+ 	.set_mctrl = qcom_geni_serial_set_mctrl,
+ 	.get_mctrl = qcom_geni_serial_get_mctrl,
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-> --- /dev/null
-> +++ b/drivers/clk/renesas/rzv2h-cpg.c
-
-> +/**
-> + * struct rzv2h_cpg_priv - Clock Pulse Generator Private Data
-> + *
-> + * @rcdev: Reset controller entity
-> + * @dev: CPG device
-> + * @base: CPG register block base address
-> + * @rmw_lock: protects register accesses
-> + * @clks: Array containing all Core and Module Clocks
-> + * @num_core_clks: Number of Core Clocks in clks[]
-> + * @num_mod_clks: Number of Module Clocks in clks[]
-> + * @num_resets: Number of Module Resets in info->resets[]
-> + * @info: Pointer to platform data
-> + */
-> +struct rzv2h_cpg_priv {
-> +       struct reset_controller_dev rcdev;
-> +       struct device *dev;
-> +       void __iomem *base;
-> +       spinlock_t rmw_lock;
-
-Unused
-
-> +
-> +       struct clk **clks;
-> +       unsigned int num_core_clks;
-> +       unsigned int num_mod_clks;
-> +       unsigned int num_resets;
-> +
-> +       const struct rzv2h_cpg_info *info;
-> +};
-
-> +static struct clk
-> +*rzv2h_cpg_clk_src_twocell_get(struct of_phandle_args *clkspec,
-> +                              void *data)
-> +{
-> +       unsigned int clkidx =3D clkspec->args[1];
-> +       struct rzv2h_cpg_priv *priv =3D data;
-> +       struct device *dev =3D priv->dev;
-> +       const char *type;
-> +       struct clk *clk;
-> +
-> +       switch (clkspec->args[0]) {
-> +       case CPG_CORE:
-> +               type =3D "core";
-> +               clk =3D priv->clks[clkidx];
-
-No range checking?
-
-> +               break;
-> +
-> +       case CPG_MOD:
-> +               type =3D "module";
-> +               if (clkidx >=3D priv->num_mod_clks) {
-> +                       dev_err(dev, "Invalid %s clock index %u\n", type,
-> +                               clkidx);
-> +                       return ERR_PTR(-EINVAL);
-> +               }
-> +               clk =3D priv->clks[priv->num_core_clks + clkidx];
-> +               break;
-> +
-> +       default:
-> +               dev_err(dev, "Invalid CPG clock type %u\n", clkspec->args=
-[0]);
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       if (IS_ERR(clk))
-> +               dev_err(dev, "Cannot get %s clock %u: %ld", type, clkidx,
-> +                       PTR_ERR(clk));
-> +       else
-> +               dev_dbg(dev, "clock (%u, %u) is %pC at %lu Hz\n",
-> +                       clkspec->args[0], clkspec->args[1], clk,
-> +                       clk_get_rate(clk));
-> +       return clk;
-> +}
-
-> +static void __init
-> +rzv2h_cpg_register_mod_clk(const struct rzv2h_mod_clk *mod,
-> +                          const struct rzv2h_cpg_info *info,
-> +                          struct rzv2h_cpg_priv *priv)
-> +{
-> +       struct mstp_clock *clock =3D NULL;
-> +       struct device *dev =3D priv->dev;
-> +       unsigned int id =3D mod->id;
-> +       struct clk_init_data init;
-> +       struct clk *parent, *clk;
-> +       const char *parent_name;
-> +       unsigned int i;
-> +
-> +       WARN_DEBUG(id < priv->num_core_clks);
-> +       WARN_DEBUG(id >=3D priv->num_core_clks + priv->num_mod_clks);
-> +       WARN_DEBUG(mod->parent >=3D priv->num_core_clks + priv->num_mod_c=
-lks);
-> +       WARN_DEBUG(PTR_ERR(priv->clks[id]) !=3D -ENOENT);
-> +
-> +       if (!mod->name) {
-> +               /* Skip NULLified clock */
-> +               return;
-> +       }
-
-Do you have NULLified clocks?
-
-
-> new file mode 100644
-> index 000000000000..689c123d01c5
-> --- /dev/null
-> +++ b/drivers/clk/renesas/rzv2h-cpg.h
-
-> +/**
-> + * struct rzv2h_mod_clk - Module Clocks definitions
-> + *
-> + * @name: handle between common and hardware-specific interfaces
-> + * @id: clock index in array containing all Core and Module Clocks
-> + * @parent: id of parent clock
-> + * @off: register offset
-
-control register offset
-
-> + * @bit: ON/MON bit
-
-> + * @monoff: monitor register offset
-> + * @monbit: monitor bit
-> + */
-> +struct rzv2h_mod_clk {
-> +       const char *name;
-> +       unsigned int id;
-> +       unsigned int parent;
-> +       u16 off;
-> +       u8 bit;
-
-Perhaps name them ctrl{off,bit}?
-
-However, as all CPG_CLKONn registers are contiguous, storing
-the register index (u8) might be better than the register offset (u16)?
-
-> +       u16 monoff;
-> +       u8 monbit;
-
-Likewise for the CPG_CLKMONx registers...
-
-> +};
-> +
-> +#define DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _monoff, _monbit) =
-       \
-> +       { \
-> +               .name =3D _name, \
-> +               .id =3D MOD_CLK_BASE + (_id), \
-> +               .parent =3D (_parent), \
-> +               .off =3D (_off), \
-> +               .bit =3D (_bit), \
-> +               .monoff =3D (_monoff), \
-> +               .monbit =3D (_monbit), \
-> +       }
-> +
-> +#define DEF_MOD(_name, _id, _parent, _off, _bit, _monoff, _monbit)     \
-> +       DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _monoff, _monbit)
-> +
-> +/**
-> + * struct rzv2h_reset - Reset definitions
-> + *
-> + * @off: reset register offset
-> + * @bit: reset bit
-> + * @monoff: monitor register offset
-> + * @monbit: monitor bit
-> + */
-> +struct rzv2h_reset {
-> +       u16 resoff;
-> +       u8 resbit;
-> +       u16 monoff;
-> +       u8 monbit;
-
-... and the CPG_RSTx and CPG_RSTMONx registers.
-
-
-> +};
-> +
-> +#define DEF_RST(_id, _resoff, _resbit, _monoff, _monbit)       \
-> +       [_id] =3D { \
-> +               .resoff =3D (_resoff), \
-> +               .resbit =3D (_resbit), \
-> +               .monoff =3D (_monoff), \
-> +               .monbit =3D (_monbit) \
-> +       }
-> +
-> +/**
-> + * struct rzv2h_cpg_info - SoC-specific CPG Description
-> + *
-> + * @core_clks: Array of Core Clock definitions
-> + * @num_core_clks: Number of entries in core_clks[]
-> + * @num_total_core_clks: Total number of Core Clocks (exported + interna=
-l)
-> + *
-> + * @mod_clks: Array of Module Clock definitions
-> + * @num_mod_clks: Number of entries in mod_clks[]
-> + * @num_hw_mod_clks: Number of Module Clocks supported by the hardware
-> + *
-> + * @resets: Array of Module Reset definitions
-> + * @num_resets: Number of entries in resets[]
-> + *
-> + * @crit_mod_clks: Array with Module Clock IDs of critical clocks that
-> + *                 should not be disabled without a knowledgeable driver
-> + * @num_crit_mod_clks: Number of entries in crit_mod_clks[]
-> + * @pll_get_clk1_offset: Function pointer to get PLL CLK1 offset
-> + * @pll_get_clk2_offset: Function pointer to get PLL CLK2 offset
-> + */
-> +struct rzv2h_cpg_info {
-
-> +       /* function pointers for PLL information */
-> +       int (*pll_get_clk1_offset)(int clk);
-> +       int (*pll_get_clk2_offset)(int clk);
-
-Why are these function pointers?
-
-> +};
-> +
-> +#endif /* __RENESAS_RZV2H_CPG_H__ */
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
