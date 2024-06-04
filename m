@@ -1,301 +1,163 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C578BF7;
-	Tue,  4 Jun 2024 13:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DA0146D77
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717507731; cv=none; b=cTQ7Vlgy7qHFAm/oAlkyz1cNE6qyKhR1u9Ybs7yuePBpXFrGxnpxNFJZtC84Us8wMKF27egqr+DZuardbvLtk0UYmOnbRUta3tBsmapb76Td0ttk7Ppa1EH43OUZndU1wyClWTJwbLozkg8l0FVY/7pXSwAX+YD3mKdkq+I/MmU=
+	t=1717507736; cv=none; b=rMPNYxSUvNwtjwhODVe+jZnkAcij1YV8OH4d4mHtFu0CoChE6MLYh9vNNHLFWijXe0o4B5bLZUt7SFnYiLFNJD3F0t2jbOcGxavBnq039N68czC2N/lP37U/TbHT3WrVeN6hClIL/thQ7PWoMB0sZQfre2HXBUGKl3j8+0twb7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717507731; c=relaxed/simple;
-	bh=oyTjlmkCltJUaGMCykFubPmgbhm6riddvyGiZjwZeRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Szh/xYcBibNSOtqKaxiYYHSQRk5pEKRv2rbvU9Wr4IyHIt3lvZ+hDEhvdC0CJaSNNu09Zwu0Q/S9edXHpFR6lpc1c6JUSB/1qwtj+faBCwXgNvJp2a7fMjbll0BAgt3gAyYHapSm6WXjE1isrgh/pk8SIX/yI9ZfR/w7aRHvD50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C2KEBj+N; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717507736; c=relaxed/simple;
+	bh=tEP4FxvSBnrhpDRl6WQ4IKX33lUXJ8VWdEL2T2jp8dg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q5OBQf6v/k+L6YQ2C825cxHovOJn+EaYXaCoVlZfzOt7tHcoskDAJNyoh/3z9yjhSVmZLIgegbrx0AmS00+vRufd5WduNECgvSf0ynR0glkhJX7u8KPJpszEUhe6qGBI1mXoD4kBUMUzsuCIErmTbPG65ELff+X7+DGFP+eDMMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eb6t7siY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C2KEBj+N"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454CtnIm028886;
-	Tue, 4 Jun 2024 13:28:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : date : from : message-id : mime-version :
- subject : to; s=pp1; bh=8CBofm5wlQ/q9WILgTW18TMovmyhRmHItD/vxOqdcV4=;
- b=C2KEBj+NqLVpf73cBhktmfO/VtEFxoN1d8y7xSsdsfXJGCiF0tOWN4Yv0E+Gf4ZZcyXu
- W7sPOLfzHnKjPYDUq2DqTJe7bJYGD6zyGtcB9S6jO9Ns33f5bAvq+BTOLs43N86xU8m1
- YVjpK9fcoLtCO0Ekkt0BzGGdjLBo4RcZrK3ZvFBpx95LRspA9H214mFUp6RIlb7dKIR8
- xr0juPSYUOjUNGXJbadZjMNrvYgKfI46ECu/XuCnUigxBSKFUzo9vts8yLserrwgJjeR
- CWwoT9kf5pT35dmEk7PrtgJQitru4t6fzqoIyfsi/AvwEwTRWHgfTU9XosRYJeIlG76n 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj38fr38g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:28:16 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 454DSCma012438;
-	Tue, 4 Jun 2024 13:28:13 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj38fr37s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:28:13 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 454BUql4026513;
-	Tue, 4 Jun 2024 13:28:08 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yggp2wrkg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:28:07 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 454DS4RA54067628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Jun 2024 13:28:06 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5922420043;
-	Tue,  4 Jun 2024 13:28:04 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CB8520040;
-	Tue,  4 Jun 2024 13:28:02 +0000 (GMT)
-Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.53.171.174])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Jun 2024 13:28:02 +0000 (GMT)
-From: Donet Tom <donettom@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tony Battersby <tonyb@cybernetics.com>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ritesh Harjani <ritesh.list@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2] selftest: mm: Test if hugepage does not get leaked during __bio_release_pages()
-Date: Tue,  4 Jun 2024 08:28:01 -0500
-Message-ID: <20240604132801.23377-1-donettom@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Qx7mLlbJFOIVZwOKNtiobcqmQr8Ygba1
-X-Proofpoint-GUID: OnUwfmU_Tp4pENvpCwfVgUwlYpuuV-2s
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eb6t7siY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717507733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=42V/ockWwxrYy/bRQBVw5gjEZCwTD2Wh2lZUM6jdqB0=;
+	b=eb6t7siY1wxL50RGSA/cmKJXLZ3LfaFBGouXl0oKZ3olr+KvHS72G6nP0szGosAHW5miw4
+	TsIPHIAA0fYNeXjB8MporL7suSCPigaqHpqEL7KXaVd66wG08XEa3TGkXaNAetU4q0WqTX
+	cnmzlvcVDdgDqTwjUGwhD5vRyIxvY4Q=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-255-ZtPJYv4sPmiRPJUFVNSvRA-1; Tue, 04 Jun 2024 09:28:52 -0400
+X-MC-Unique: ZtPJYv4sPmiRPJUFVNSvRA-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-35e0e59dcf7so2508216f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 06:28:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717507731; x=1718112531;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=42V/ockWwxrYy/bRQBVw5gjEZCwTD2Wh2lZUM6jdqB0=;
+        b=FYemzM64BurVtnvr2/V4Aum/q90Vz2yYZIaLLYED+m4GRHo8SVqSsXfNco7mrKA4U8
+         pNpT2OOSPMg1DlFxAko2ZfnhT6Xge/JnLGcAQTnSJA6FE67QxjUna/TussUxsCKgQcph
+         +Kuuv9Hb7GhknpqUY7txnq8Oaj5491ygRuHoi1t59L4arRxvWhTcoU7U91hCsI4zOeG0
+         x75zT0170wGHurNrLRLxGa1agquFq9fjhynVROFPbLT+9xQOer9POshyfeH25GgoQW8Q
+         NIl9nezZrcPYCH5UW4M7bYxB3uGdvK3QMAZVOybev9RcQHe3uvWoZP/la/9Rb9V4zajC
+         pIQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlMj+4OjkH692eEkEP0d9BF+m0Jf5IBk1MxBjoufTUaX68jMNwhhnsCfVAdncadhhEkltTuSCVZ0Ctbqlo4OcwimqdUpEiDQ0f6Y4x
+X-Gm-Message-State: AOJu0YwYivStoWksZE+Fq4zrqKEflkKhGnrT2HoiEjCQtLsGz+mQBvNi
+	zxC4kzAA3yC2VIAQPI89+lBQcMtcaiH6SV7MkXl5u2WHAbhYLFqdAHuYTtZmz9PZjQ9UwN2tQ6y
+	iY54kei/9CQJ11+9dBJth56V7K8LAEDyiBiEzHy8lxo2rqJvCZWK2M6FP2MjKJA==
+X-Received: by 2002:a05:6000:1207:b0:354:c8d7:e0af with SMTP id ffacd0b85a97d-35e0f2947e1mr7516454f8f.35.1717507731234;
+        Tue, 04 Jun 2024 06:28:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFktQuvCXtauGgJWzfxv770xS8RoIJMbHbbiuUoVp/Wok6oTrNjlNqZ9HXfUP6Mz6SK/umj6Q==
+X-Received: by 2002:a05:6000:1207:b0:354:c8d7:e0af with SMTP id ffacd0b85a97d-35e0f2947e1mr7516431f8f.35.1717507730838;
+        Tue, 04 Jun 2024 06:28:50 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c73a:3a00:a025:9b06:549e:c16b? (p200300cbc73a3a00a0259b06549ec16b.dip0.t-ipconnect.de. [2003:cb:c73a:3a00:a025:9b06:549e:c16b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd064b5e9sm11590372f8f.96.2024.06.04.06.28.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 06:28:50 -0700 (PDT)
+Message-ID: <9bc7eb69-47a7-4565-8672-636273967dc3@redhat.com>
+Date: Tue, 4 Jun 2024 15:28:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_05,2024-06-04_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 clxscore=1015 phishscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406040107
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/10] use folio in ksm
+To: alexs@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ izik.eidus@ravellosystems.com, willy@infradead.org, aarcange@redhat.com,
+ chrisw@sous-sol.org, hughd@google.com
+References: <20240604042454.2012091-1-alexs@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240604042454.2012091-1-alexs@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Commit 1b151e2435fc ("block: Remove special-casing of compound
-pages") caused a change in behaviour when releasing the pages
-if the buffer does not start at the beginning of the page. This
-was because the calculation of the number of pages to release
-was incorrect.
-This was fixed by commit 38b43539d64b ("block: Fix page refcounts
-for unaligned buffers in __bio_release_pages()").
+On 04.06.24 06:24, alexs@kernel.org wrote:
+> From: "Alex Shi (tencent)" <alexs@kernel.org>
+> 
+> This is the 2nd part to use folio in ksm, it saves 82kbytes in ksm.o and
+> passed all ksm testcases in kselftest.
+> 
+> KSM still split same folios to single page if they are good to be KSM,
+> but will skip the rest subpage checking if a folio couldn't suit for
+> ksm.
+> 
+> Alex Shi (tencent) (10):
+>    mm/ksm: reduce the flush action for ksm merging page
+>    mm/ksm: skip subpages of compound pages
+>    mm/ksm: use folio in try_to_merge_one_page
+>    mm/ksm: add identical_folio func
+>    mm/ksm: use folio in stable_tree_search
+>    mm/ksm: remove page_stable_node
+>    mm/ksm: use folio in unstable_tree_search_insert
+>    mm/ksm: use folio in try_to_merge_xx serie funcs
+>    mm/ksm: calc_checksum for folio
+>    m/ksm: use folio in ksm scan path
 
-We pin the user buffer during direct I/O writes. If this buffer is a
-hugepage, bio_release_page() will unpin it and decrement all references
-and pin counts at ->bi_end_io. However, if any references to the hugepage
-remain post-I/O, the hugepage will not be freed upon unmap, leading
-to a memory leak.
+I skimmed over most patches, but I'm afraid you introduce quite some 
+subtle problems.
 
-This patch verifies that a hugepage, used as a user buffer for DIO
-operations, is correctly freed upon unmapping, regardless of whether
-the offsets are aligned or unaligned w.r.t page boundary.
+Part of the rework should not be do convert things to folios that really 
+operate on pages (of possibly large folios).
 
-Test Result  Fail Scenario (Without the fix)
---------------------------------------------------------
-[]# ./hugetlb_dio
-TAP version 13
-1..4
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 1 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 2 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 3 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 6
-not ok 4 : Huge pages not freed!
-Totals: pass:3 fail:1 xfail:0 xpass:0 skip:0 error:0
+We really have to be careful about pages vs. folios before we have KSM 
+folios. Only then, we know that we have small folios only.
 
-Test Result  PASS Scenario (With the fix)
----------------------------------------------------------
-[]#./hugetlb_dio
-TAP version 13
-1..4
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 1 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 2 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 3 : Huge pages freed successfully !
-No. Free pages before allocation : 7
-No. Free pages after munmap : 7
-ok 4 : Huge pages freed successfully !
-Totals: pass:4 fail:0 xfail:0 xpass:0 skip:0 error:0
-
-V2:
-- Addressed all review commets from Muhammad Usama Anjum
-V1:
-https://lore.kernel.org/all/20240523063905.3173-1-donettom@linux.ibm.com/#t
-
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-Co-developed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-Signed-off-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
----
- tools/testing/selftests/mm/Makefile      |   1 +
- tools/testing/selftests/mm/hugetlb_dio.c | 118 +++++++++++++++++++++++
- 2 files changed, 119 insertions(+)
- create mode 100644 tools/testing/selftests/mm/hugetlb_dio.c
-
-diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-index 3b49bc3d0a3b..a1748a4c7df1 100644
---- a/tools/testing/selftests/mm/Makefile
-+++ b/tools/testing/selftests/mm/Makefile
-@@ -73,6 +73,7 @@ TEST_GEN_FILES += ksm_functional_tests
- TEST_GEN_FILES += mdwe_test
- TEST_GEN_FILES += hugetlb_fault_after_madv
- TEST_GEN_FILES += hugetlb_madv_vs_map
-+TEST_GEN_FILES += hugetlb_dio
- 
- ifneq ($(ARCH),arm64)
- TEST_GEN_FILES += soft-dirty
-diff --git a/tools/testing/selftests/mm/hugetlb_dio.c b/tools/testing/selftests/mm/hugetlb_dio.c
-new file mode 100644
-index 000000000000..e4f4924179c8
---- /dev/null
-+++ b/tools/testing/selftests/mm/hugetlb_dio.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * This program tests for hugepage leaks after DIO writes to a file using a
-+ * hugepage as the user buffer. During DIO, the user buffer is pinned and
-+ * should be properly unpinned upon completion. This patch verifies that the
-+ * kernel correctly unpins the buffer at DIO completion for both aligned and
-+ * unaligned user buffer offsets (w.r.t page boundary), ensuring the hugepage
-+ * is freed upon unmapping.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <sys/stat.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
-+#include <stdint.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+#include "vm_util.h"
-+#include "../kselftest.h"
-+
-+void run_dio_using_hugetlb(unsigned int start_off, unsigned int end_off)
-+{
-+	int fd;
-+	char *buffer =  NULL;
-+	char *orig_buffer = NULL;
-+	size_t h_pagesize = 0;
-+	size_t writesize;
-+	int free_hpage_b = 0;
-+	int free_hpage_a = 0;
-+	const int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB;
-+	const int mmap_prot  = PROT_READ | PROT_WRITE;
-+
-+	writesize = end_off - start_off;
-+
-+	/* Get the default huge page size */
-+	h_pagesize = default_huge_page_size();
-+	if (!h_pagesize)
-+		ksft_exit_fail_msg("Unable to determine huge page size\n");
-+
-+	/* Open the file to DIO */
-+	fd = open("/tmp", O_TMPFILE | O_RDWR | O_DIRECT);
-+	if (fd < 0)
-+		ksft_exit_fail_perror("Error opening file\n");
-+
-+	/* Get the free huge pages before allocation */
-+	free_hpage_b = get_free_hugepages();
-+	if (free_hpage_b == 0) {
-+		close(fd);
-+		ksft_exit_skip("No free hugepage, exiting!\n");
-+	}
-+
-+	/* Allocate a hugetlb page */
-+	orig_buffer = mmap(NULL, h_pagesize, mmap_prot, mmap_flags, -1, 0);
-+	if (orig_buffer == MAP_FAILED) {
-+		close(fd);
-+		ksft_exit_fail_perror("Error mapping memory\n");
-+	}
-+	buffer = orig_buffer;
-+	buffer += start_off;
-+
-+	memset(buffer, 'A', writesize);
-+
-+	/* Write the buffer to the file */
-+	if (write(fd, buffer, writesize) != (writesize)) {
-+		munmap(orig_buffer, h_pagesize);
-+		close(fd);
-+		ksft_exit_fail_perror("Error writing to file\n");
-+	}
-+
-+	/* unmap the huge page */
-+	munmap(orig_buffer, h_pagesize);
-+	close(fd);
-+
-+	/* Get the free huge pages after unmap*/
-+	free_hpage_a = get_free_hugepages();
-+
-+	/*
-+	 * If the no. of free hugepages before allocation and after unmap does
-+	 * not match - that means there could still be a page which is pinned.
-+	 */
-+	if (free_hpage_a != free_hpage_b) {
-+		ksft_print_msg("No. Free pages before allocation : %d\n", free_hpage_b);
-+		ksft_print_msg("No. Free pages after munmap : %d\n", free_hpage_a);
-+		ksft_test_result_fail(": Huge pages not freed!\n");
-+	} else {
-+		ksft_print_msg("No. Free pages before allocation : %d\n", free_hpage_b);
-+		ksft_print_msg("No. Free pages after munmap : %d\n", free_hpage_a);
-+		ksft_test_result_pass(": Huge pages freed successfully !\n");
-+	}
-+}
-+
-+int main(void)
-+{
-+	size_t pagesize = 0;
-+
-+	ksft_print_header();
-+	ksft_set_plan(4);
-+
-+	/* Get base page size */
-+	pagesize  = psize();
-+
-+	/* start and end is aligned to pagesize */
-+	run_dio_using_hugetlb(0, (pagesize * 3));
-+
-+	/* start is aligned but end is not aligned */
-+	run_dio_using_hugetlb(0, (pagesize * 3) - (pagesize / 2));
-+
-+	/* start is unaligned and end is aligned */
-+	run_dio_using_hugetlb(pagesize / 2, (pagesize * 3));
-+
-+	/* both start and end are unaligned */
-+	run_dio_using_hugetlb(pagesize / 2, (pagesize * 3) + (pagesize / 2));
-+
-+	ksft_finished();
-+}
-+
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
