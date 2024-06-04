@@ -1,68 +1,116 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B96144D23;
-	Tue,  4 Jun 2024 13:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F20146A8C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508593; cv=none; b=uRVGuK2CbxrDaZ92qit11nUfr6EZpfEi/SF+Z6YqTw8wVXh6bEtnYC9e+vvXZRe86Qg4hzQnHRRXFynhksx8Gn1c+XVmF3SOChm4uwfmvMT23u1ngTAmyrN48NpRx91I3yToZN4tkviTxEIApdPwbTmpgDive9WozCCUuZ8qJo4=
+	t=1717508633; cv=none; b=L1azhHQH6a5XcLNFwtXXirQee9B7Nsepmio10hGngerJ5bE7msHrgh+7oEe4zGAqbhI1tG1QAYImhv2vB6BaExdp3JkZ4GKxL8KwcycsxEHwBGO1/vS9d6ufrq+WidAhWgCNNR4sJyK+NBG/ab8LelWVz7RfndDiq1tC3m3vMCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508593; c=relaxed/simple;
-	bh=s9rg0xKazwih6oPuOEuE5wEC2gCvQpXYl5XV3pLTn10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4qKNcLaX3qjYv1r6xwReEoWrcvmirTA6x88XitHBkKSzBHhRLd4B69PNskdvNMXSSHsrMxfqgkuo2m3bhwtr38plFsm6+8n+OGl4lrRCEwZp/pPcDLjPnExtnDaBMAPwWbxPDCWXvNQUmb7+FHUtk8mSosOjxY3Gtb5iBp8VEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=zWqr95Fq; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1717508633; c=relaxed/simple;
+	bh=73TacqsCpBZ+SAUPu6XyT+doqzn3pkKU04z3oNydmok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BxZJ7wL3uoRrxr0Cs6pfnQq+x9gjpXqPtAdGagJc6vMKE8G8koDiavzbKa2bfJBFvvu5BuAaAvEFO1Fn/uAkyt2OGWGN4fek/ARo9fK+UBS4MrbOODWbHeOkdMbH0cRwKkJ+GPJklWTtLUwIUkcbsSkAxGkS47V5me4O0khneWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WHTPGKRX; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="zWqr95Fq"
-Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id EA4621F83F;
-	Tue,  4 Jun 2024 15:33:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1717508037;
-	bh=s9rg0xKazwih6oPuOEuE5wEC2gCvQpXYl5XV3pLTn10=; h=From:To:Subject;
-	b=zWqr95FqqexgpAKBfIEbwsvL9BcndvX51R6PH5soxwwTR/DP7bQwoXIEU6rDLjqDw
-	 ghbIC7PWxlEja3Rxg2OTpuceYhtoV4feOzkLhQF1EgqIITCkDI4l5Oj3AuPoxVZUOh
-	 P5u86GU5Y5fzQHk54FrJrWXxJZVni9C2/i9Inmdv8qNKDS3TG4sl4yFGsf+n/FL8Z0
-	 dyAKBiFkuCYMjxOHPTt0GJkLu0VQgirm3NVy9/SGwXUuqQU77uMmn1K8KMsmn3w18Y
-	 F7+fdD8CDapN+cA09BsWVXgfr/pO0le5tkTAbRPb4RWpbSh0QuzWHYm9YtvfDVooYk
-	 XWkYqaO0UgNpg==
-Date: Tue, 4 Jun 2024 15:33:52 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Jai Luthra <j-luthra@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>, Bryan Brattlof <bb@ti.com>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] arm64: dts: ti: McASP fixes
-Message-ID: <20240604133352.GA10282@francesco-nb>
-References: <20240604-mcasp_fifo_drop-v1-0-03ebe25f47db@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WHTPGKRX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717508631; x=1749044631;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=73TacqsCpBZ+SAUPu6XyT+doqzn3pkKU04z3oNydmok=;
+  b=WHTPGKRX/f7VzNypXPul4JfLlowd5h/F7SAUfCxezSUySmNKA/wdEM7r
+   dC027YJua2qZj8+SzZdctX0zZQwfg6jYVVwEUNul6H4ePgPjEXHjkQDid
+   ko0DB0TwrrXxbz4fJeeUK0XsBCCdwwd9sCqrSTtIbXyQady85onyPbKmz
+   Rlbrrkp+pYF3wQmNPRj9Oz/tRRZLGM7u4OJdRr8hJzKFOEpczVWneoct4
+   b03DVeopCcAaLfZ1+UEBNa0/cjtaTv3gpMgwqiGdBQKl1A7KlYAvBsPPM
+   +NV48oSOIh8Pzq14f0FE++K9N2hk0J1MGAtTnZCzjnhmzDhcdt6j1QVxb
+   Q==;
+X-CSE-ConnectionGUID: 4IOfeBGlRqiLmwBis0p9pw==
+X-CSE-MsgGUID: 69M/osSxQjaDvntGco+IaQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13804621"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="13804621"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 06:43:51 -0700
+X-CSE-ConnectionGUID: 9s6zS/BhQt67arFy2ujWnQ==
+X-CSE-MsgGUID: 6auYehRnRBeQO0y66DqDhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="41793773"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO [10.245.246.143]) ([10.245.246.143])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 06:43:50 -0700
+Message-ID: <970501b1-09ae-4f2c-a078-2b4f23fe460e@linux.intel.com>
+Date: Tue, 4 Jun 2024 15:43:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604-mcasp_fifo_drop-v1-0-03ebe25f47db@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] soundwire: bus: clean up probe warnings
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, alsa-devel@alsa-project.org,
+ linux-kernel@vger.kernel.org
+References: <20240604075213.20815-1-johan+linaro@kernel.org>
+ <20240604075213.20815-4-johan+linaro@kernel.org>
+ <8dd7cadc-138c-4ef5-b06f-7177550b1215@linux.intel.com>
+ <Zl7boEkMpQaELARP@hovoldconsulting.com>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <Zl7boEkMpQaELARP@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Jai,
 
-On Tue, Jun 04, 2024 at 03:11:01PM +0530, Jai Luthra wrote:
-> Drop McASP AFIFOs for all AM62 based platforms, as the extra buffering
-> is not needed with BCDMA already having internal buffering.
 
-Is this related with the issue in which after play/record or use the
-McASP interface the system crashes or behaves in unexpected ways or this
-is something else?
+On 6/4/24 11:17, Johan Hovold wrote:
+> On Tue, Jun 04, 2024 at 10:33:02AM +0200, Pierre-Louis Bossart wrote:
+>> On 6/4/24 02:52, Johan Hovold wrote:
+>>> Clean up the probe warning messages by using a common succinct format
+>>> (e.g. without __func__ and with a space after ':').
+> 
+>>> @@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
+>>>  	/* init the dynamic sysfs attributes we need */
+>>>  	ret = sdw_slave_sysfs_dpn_init(slave);
+>>>  	if (ret < 0)
+>>> -		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
+>>> +		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
+>>>  
+>>>  	/*
+>>>  	 * Check for valid clk_stop_timeout, use DisCo worst case value of
+>>> @@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
+>>>  	if (drv->ops && drv->ops->update_status) {
+>>>  		ret = drv->ops->update_status(slave, slave->status);
+>>>  		if (ret < 0)
+>>> -			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
+>>> +			dev_warn(dev, "failed to update status: %d\n", ret);
+>>
+>> the __func__ does help IMHO, 'failed to update status' is way too general...
+> 
+> Error messages printed with dev_warn will include the device and driver
+> names so this message will be quite specific still.
 
-Francesco
+The goal isn't to be 'quite specific' but rather 'completely
+straightforward'. Everyone can lookup a function name in a xref tool and
+ quickly find out what happened. Doing 'git grep' on message logs isn't
+great really, and over time logs tend to be copy-pasted. Just look at
+the number of patches where we had to revisit the dev_err logs to make
+then really unique/useful.
 
+>> Replacing 'with status' by ":" is fine, but do we really care about 10
+>> chars in a log?
+> 
+> It's not primarily about the numbers of characters but about consistency.
+
+I am advocating for inclusion of __func__ everywhere...It's simpler for
+remote support and bug chasing.
+
+The exception to the rule would be dev_dbg where you can get the
+function name with module options.
