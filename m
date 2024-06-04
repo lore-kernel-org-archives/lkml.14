@@ -1,172 +1,99 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46065146A70;
-	Tue,  4 Jun 2024 12:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CA314882B;
+	Tue,  4 Jun 2024 12:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505422; cv=none; b=hZv3RE7a5FJaz32iTC4/WE3rSRqQ1do7oBeSrWr2bkpQ28Hd0ft37ObiMq3yM4DKbwYJNwmUuI3r+zrdjcXnhUWCqFCaI7EdwrfGJbwrB0takiTKO0R8vjBf30ES0krz+QdRlNI0OqguhmglvX5EasPpEg9HrAS10v3Zc9kcn+Y=
+	t=1717505433; cv=none; b=EQee+zDe1W0JZkNm6wm+sVXxgpIGFyHNM8EWcuF959uwtB/fYrLRjjzY0f8/DLeC95JhVhlOz/RJT4WT0gSvNnAsE64uKwUMGlmRy9mbUMPEjw3Q4TN+K7YQ45G2cT7v4WIicoA8Pyi7O+AYP+RgGni34aahSJ2bzGdEqx0jRd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505422; c=relaxed/simple;
-	bh=oTyWyoQ6DV2/i77kbwUYPK5JR9US69MX44FaIuO5w3o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Xwo+he2LE0nWGOLSA3nHgCoEtL4ZqB2kPWEdd0pDxxo6wYrA7CYYrBcWyo5oxGWD86GXpfl0gkerY49c3RVCqtmRoaiuElWvy1JkUl/3amXVJfpd/8wQvZ0uE6nlzUdkNNsZ49qsgX/dO9+KrHeqb5Dwi4907NDhMbUaWM/Jiu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8DxP_CJDV9mo2MDAA--.14500S3;
-	Tue, 04 Jun 2024 20:50:17 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxssSIDV9mxEEUAA--.39592S2;
-	Tue, 04 Jun 2024 20:50:16 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	corbet@lwn.net,
-	alexs@kernel.org,
-	siyanteng@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH V1 1/2] docs: Add advanced extended IRQ model description
-Date: Tue,  4 Jun 2024 20:50:15 +0800
-Message-Id: <20240604125015.18678-1-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1717505433; c=relaxed/simple;
+	bh=CLuSD10Auw3b45Rs7wDNc1Y+bI+7e6t/jKqHAQlZhBo=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=RBO9NZ4Dk82NMFN+kPHmM0J0RVUE3ZslteipjLwJCHwQ3anqAGwpbDpvPdMUp7IkuKRyCnWNq5RghDh68+0AacLnNrlpe8Vj3DxND5g1MgM0Hx6BQls5TRFv00gANYCRV/AHtzsQnB+mbA9Wkk+VIAz2BJ9UJ/eHSVYVoTh8AL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxMknA+X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxMknA+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CCD6C3277B;
+	Tue,  4 Jun 2024 12:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717505430;
+	bh=CLuSD10Auw3b45Rs7wDNc1Y+bI+7e6t/jKqHAQlZhBo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=NxMknA+X6kjkzdJE34TjJfT5bJm+unUH6RIKDrzTQ3rWpldei90v2NMZNZ3eUJB4b
+	 7n1NWjjUpL7oovMphxfKQCZdx1bMG5wiGuo7S1VuHhabzglGHjhoiqh7Bft+V5XLgq
+	 CQ6lyyCbDcscAzRNeMgLPXwQcGXbW38GJst6eTP9GL1YBJRdlytiZmGDE1KRO84n06
+	 GtWLn/d6usN3winasKQcnAThxqfpZlC4Gm6EIcTbTt9OQldb1kHh9/Pgk2Z8VCc7Nz
+	 uL8OsWtSCCQdMYHu7mZ5J3QY9pPJrQ3yYUsyPnWxUAnXP77e/7+RR6voWRRKRbZhTC
+	 WenSkITJvWQbw==
+Date: Tue, 04 Jun 2024 07:50:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxssSIDV9mxEEUAA--.39592S2
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUU9vb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
-	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wASzI0E04IjxsIE14AKx2xKxw
-	AqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8I
-	cVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjc
-	xG0xvY0x0EwIxGrwAKzVC20s0267AEwI8IwI0ExsIj0wCF04k20xvY0x0EwIxGrwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	1j6r18MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
-	GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8zwZ7UUUUU==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Daniel Latypov <dlatypov@google.com>, Maxime Ripard <maxime@cerno.tech>, 
+ linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+ patches@lists.linux.dev, "Rafael J . Wysocki" <rafael@kernel.org>, 
+ kunit-dev@googlegroups.com, Christian Marangi <ansuelsmth@gmail.com>, 
+ Saravana Kannan <saravanak@google.com>, linux-kselftest@vger.kernel.org, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <20240603223811.3815762-8-sboyd@kernel.org>
+References: <20240603223811.3815762-1-sboyd@kernel.org>
+ <20240603223811.3815762-8-sboyd@kernel.org>
+Message-Id: <171750542807.3346.5048720218082629186.robh@kernel.org>
+Subject: Re: [PATCH v5 07/11] dt-bindings: test: Add single clk consumer
 
-From 3C6000, Loongarch began to support advanced extended
-interrupt mode, in which each CPU has an independent interrupt
-vector number.This will enhance the architecture's ability
-to support modern devices
 
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
----
- .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
- .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
- 2 files changed, 67 insertions(+), 3 deletions(-)
+On Mon, 03 Jun 2024 15:38:04 -0700, Stephen Boyd wrote:
+> Describe a binding for a device that consumes a single clk in DT. This
+> will initially be used by a KUnit test to clk_get() the clk registered
+> by of_fixed_clk_setup() and test that it is setup properly.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> Cc: David Gow <davidgow@google.com>
+> Cc: Rae Moar <rmoar@google.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  .../test/test,single-clk-consumer.yaml        | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/test/test,single-clk-consumer.yaml
+> 
 
-diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-index 7988f4192363..4fb24077b23b 100644
---- a/Documentation/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/arch/loongarch/irq-chip-model.rst
-@@ -85,6 +85,39 @@ to CPUINTC directly::
-     | Devices |
-     +---------+
- 
-+Advanced Extended IRQ model
-+===========================
-+
-+In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
-+to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
-+and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
-+by EIOINTC, and then go to CPUINTC directly::
-+
-+ +-----+     +--------------------------+     +-------+
-+ | IPI | --> |           CPUINTC        | <-- | Timer |
-+ +-----+     +--------------------------+     +-------+
-+              ^        ^             ^
-+              |        |             |
-+      +--------+  +---------+ +---------+     +-------+
-+      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
-+      +--------+  +---------+ +---------+     +-------+
-+           ^            ^
-+           |            |
-+         +---------+  +---------+
-+         |   MSI   |  | PCH-PIC |
-+         +---------+  +---------+
-+            ^          ^       ^
-+            |          |       |
-+    +---------+ +---------+ +---------+
-+    | Devices | | PCH-LPC | | Devices |
-+    +---------+ +---------+ +---------+
-+                     ^
-+                     |
-+                +---------+
-+                | Devices |
-+                +---------+
-+
-+
- ACPI-related definitions
- ========================
- 
-diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-index f1e9ab18206c..cadf38589059 100644
---- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-+++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-@@ -9,9 +9,8 @@
- LoongArch的IRQ芯片模型（层级关系）
- ==================================
- 
--目前，基于LoongArch的处理器（如龙芯3A5000）只能与LS7A芯片组配合工作。LoongArch计算机
--中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、LIOINTC（
--Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
-+LoongArch计算机中的中断控制器（即IRQ芯片）包括CPUINTC（CPU Core Interrupt Controller）、
-+LIOINTC（Legacy I/O Interrupt Controller）、EIOINTC（Extended I/O Interrupt Controller）、
- HTVECINTC（Hyper-Transport Vector Interrupt Controller）、PCH-PIC（LS7A芯片组的主中
- 断控制器）、PCH-LPC（LS7A芯片组的LPC中断控制器）和PCH-MSI（MSI中断控制器）。
- 
-@@ -87,6 +86,38 @@ PCH-LPC/PCH-MSI，然后被EIOINTC统一收集，再直接到达CPUINTC::
-     | Devices |
-     +---------+
- 
-+高级扩展IRQ模型
-+=======================
-+
-+在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
-+CPU串口（UARTs）中断发送到LIOINTC，MSI中断发送到AVEC，而后通过AVEC送达CPUINTC，而
-+其他所有设备的中断则分别发送到所连接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直
-+接到达CPUINTC::
-+
-+ +-----+     +--------------------------+     +-------+
-+ | IPI | --> |           CPUINTC        | <-- | Timer |
-+ +-----+     +--------------------------+     +-------+
-+              ^        ^             ^
-+              |        |             |
-+      +--------+  +---------+ +---------+     +-------+
-+      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
-+      +--------+  +---------+ +---------+     +-------+
-+              ^        ^
-+              |        |
-+      +---------+  +-------------+
-+      |   MSI   |  |   PCH-PIC   |
-+      +---------+  +-------------+
-+            ^          ^       ^
-+            |          |       |
-+    +---------+ +---------+ +---------+
-+    | Devices | | PCH-LPC | | Devices |
-+    +---------+ +---------+ +---------+
-+                     ^
-+                     |
-+                +---------+
-+                | Devices |
-+                +---------+
-+
- ACPI相关的定义
- ==============
- 
--- 
-2.20.1
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/test/test,single-clk-consumer.example.dtb: /example-0/clock-consumer: failed to match any schema with compatible: ['test,clk-fixed-rate']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240603223811.3815762-8-sboyd@kernel.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
