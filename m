@@ -1,211 +1,196 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF27C13D619
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 03:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EB1ECC;
+	Tue,  4 Jun 2024 03:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717471736; cv=none; b=f82XMKBP+OVKNzvmP0KvryWvsKPKhlRyRD0m5rzdzRBe/kNijyDugM/VPcicCo1qlBVI3vx6DAYuM78Yh1TWBo4fYtUHuiAYRuWZgbv2OiGTNppt/KlJTelCCZSwvvbB6+Kco0ydii/NQtp3bNqOj+JL/+JtZtC0TVSjxwHdh/c=
+	t=1717471822; cv=none; b=cgCiw04IS3xHPx6ZjoohtWofFFOqm6Jpudt5fPpT90azN1/DKoIgoj/kACq95G5HWf7DDCT3ERQK0xCe/bhmO6HCrTeXqCbdartdi28pzFIW6hAVdyd841ktM8PAr+FfSKugKopzCloEl9/GffxZyBWqBKz0sPZ6XgIQjUUKvgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717471736; c=relaxed/simple;
-	bh=BmnSM780gtlucE+xybG8Q/hhbxyboU3CWExMeE8IYw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=L4bo7Pl+/dEKgJnYao2ZuF1fu5QFrbsWm1XTh4KpvZ+d1utQzSYmEd3wYbVYhwxlfcQe/FlRCg552tScRyfnRDaGwWO02rZ2Nb8xUn4Je8XdhCCHE1DOGeFHN6jtmRq+raWAmhkI0AGBg4hk19ChhF9ctqRWA9Q9s0ECm2e61yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tNcvNOlR; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717471822; c=relaxed/simple;
+	bh=2Ztio9qL8ZpBUVSvlweFkPrMPNc98vITPhHYI2PxnXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sb56Nx9x72451LzVvOzYxAWvkY1Rwb6hlyXNWb2Z95/bTqGoiiUpASOxQ4nj3ZD93RlhCXj+1Ko1hwLeoA4aVYymONQW1qwhUPbCCzzuQoVUaMh/sxa7wS1+xrcKTUFhgOjVE57LrTeck5PTNFAZHnNSfzNIFzes7xnja7ubBVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNZLElMb; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tNcvNOlR"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240604032847epoutp01f6d46da0a2254c7623ab389f16e1ba40~Vr2-EfeDA2617426174epoutp01H
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 03:28:47 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240604032847epoutp01f6d46da0a2254c7623ab389f16e1ba40~Vr2-EfeDA2617426174epoutp01H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717471727;
-	bh=7VN6ZUoN/sVx9OFQYPCvCDso3Uou5inchmMvd4vuq5E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tNcvNOlRXnI5bedxJ26y9w6TRzG50YcynA+2cGwniUTGpbgpPHphBAsVudbrcN6WS
-	 Fpv7ucxsfE765eTLhxyisAVREhNHMPqO/FB5cH81xO6io/wNvfYuyBtGTssgD1G/vj
-	 9fPq3lfnRj7akJXFtacojDMp/JpXoMaqAMTH/PV8=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-	20240604032846epcas5p1f1c03e377b238d49df5eb58251bf4543~Vr29wVx_50292302923epcas5p1T;
-	Tue,  4 Jun 2024 03:28:46 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4VtbfN3yFfz4x9Pv; Tue,  4 Jun
-	2024 03:28:44 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	46.70.08853.CE98E566; Tue,  4 Jun 2024 12:28:44 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240603065101epcas5p2acde37ff1854ff6f455f51ec940caf65~Va_R6KOZ01423114231epcas5p2p;
-	Mon,  3 Jun 2024 06:51:01 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240603065101epsmtrp18e7b805f6f3c250176196fb7d0105d49~Va_R3vysa1582915829epsmtrp1i;
-	Mon,  3 Jun 2024 06:51:01 +0000 (GMT)
-X-AuditID: b6c32a44-fc3fa70000002295-08-665e89ec9f67
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	B8.4E.07412.5D76D566; Mon,  3 Jun 2024 15:51:01 +0900 (KST)
-Received: from nj.shetty?samsung.com (unknown [107.99.41.245]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240603065058epsmtip19af2886049d9888391a19a98b3e4be4f~Va_OP59sS2735927359epsmtip1k;
-	Mon,  3 Jun 2024 06:50:57 +0000 (GMT)
-Date: Mon, 3 Jun 2024 06:43:56 +0000
-From: Nitesh Shetty <nj.shetty@samsung.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>, Alasdair
-	Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, Mikulas Patocka
-	<mpatocka@redhat.com>, Keith Busch <kbusch@kernel.org>, Sagi Grimberg
-	<sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
-	<jack@suse.cz>, martin.petersen@oracle.com, bvanassche@acm.org,
-	david@fromorbit.com, hare@suse.de, damien.lemoal@opensource.wdc.com,
-	anuj20.g@samsung.com, joshi.k@samsung.com, nitheshshetty@gmail.com,
-	gost.dev@samsung.com, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	dm-devel@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v20 01/12] block: Introduce queue limits and sysfs for
- copy-offload support
-Message-ID: <20240603064356.nujnjbtje3vjnti2@nj.shetty@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNZLElMb"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-6c4829d7136so496945a12.1;
+        Mon, 03 Jun 2024 20:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717471820; x=1718076620; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GYrQk95y2prpjepkR4vgWKHcx6FJS0ARSzceKfmHqSU=;
+        b=KNZLElMbbY2O6kxmpxGnWnvjQusK8bhlmrR8MqMMMSIEUXCODzP0T6qVlypxXo6ezm
+         +4EhOOA3HBGJ+9PsQzHQMzm4ZRGj0VIiY2ac5M6yaAHvvvc0yGAm7/3P6FtrDEEebD6E
+         RE1APTLUr3QgwwTp7vCRW3OKH+uTqY1NZzT1i2FLV/fDXcb+mkvlz+wpBaaYsYAuVC2Q
+         29p3T1S/1ZsTBUeWHBrgB2f+s+IRoFLVMNpCc2c4tUcEpsWckGGUn7wGiX9Sz5PY8gZF
+         KsSJxow8N9VCV3uQPKY0DJsP5WazGwODdSgPe915strvAua6Ja1Z8GtbLqp+6/9q5oaT
+         8gPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717471820; x=1718076620;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GYrQk95y2prpjepkR4vgWKHcx6FJS0ARSzceKfmHqSU=;
+        b=T946az7rScp7O57fQyK5e7Ae6UefcZW+n+xY3l/Swzx6tD944pHY9w3WwrK4RFec+J
+         MvtfJUDReyRKkvb15/C98fte8JecKHTv1/0g73HvPZVpGRz+T6NyYdqAcNp6ITHSu0wg
+         t7m4YDX1qnXw2AFDat9VM4ZQHY1WeBN5HMn9+UoMS3XBBlYBjucHjZQbe6jwkoPV76k3
+         bw8Cs7tPNFKw8Gy4Kn1i8uVA4C50mkLIjlWWdIv0M39oYn8zmcFHjydPjMOOQbqJF6r4
+         0ld3QwJozdjQCvLJHAjevrpUg+ZSUy78B6wGZxJ8xQ1pejFUbR7yH5XI2pVEc+iUEvb4
+         8t3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVC3QMK32mt1QtDvr8kBQzQuCv8FBPc86YdgNlvU5RtBAQJKjfeYmjccjmaHaLqJw9v7R49V2EIN5z21NR2TuDg4HW5xVibzbC0a6vPf7OzSXNGaAUAU+pKfYPMzAvu6+lp
+X-Gm-Message-State: AOJu0Yzi70SCEQyFhqcxupTzc4SyiYv6l9ONLBF+uPX7CBvx/mhNMYU6
+	eW/SOPtDx5EqZ8YoFLRL2O8IYmNPm/viC/znGU7d7oRoRgcQc8DcqvuQudYNLJMb9iI4Trj7ZJQ
+	VKCbf3W5aFLonotUtiS5Lb+KJch8=
+X-Google-Smtp-Source: AGHT+IHdG9EnNjz/uQO4L2IHYIy1R9doqNoCM+9pIKcsIawyv2XEY1VZ+dbrbfNoapgMEwOsXdKNKzN1ZtPT5isGLtw=
+X-Received: by 2002:a05:6a20:2590:b0:1af:8c2f:5f5e with SMTP id
+ adf61e73a8af0-1b26f164267mr11793640637.28.1717471819902; Mon, 03 Jun 2024
+ 20:30:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240601055323.GB5613@lst.de>
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te1BUVRzHO3fv3r1YS5eHcVgmh7nSFO9dWeDgiDVBdiebEXPGHHvACpdH
-	7Kt9aOAMgYiKBCvyilXj2RJgkkLyTmMFAsOdIEAQqCG2SCKIxqBBoIULjf99ft/ze//mkDxH
-	k0BEJih1rEYpk9PENvym2dPT94/M92PFE2MuqK63i4dOXVjhodpxA4FmzAsAFc7/y0NTt88C
-	tNxn4aGGrgmASsuv4GjkdjOG2sovYqi6thNDl4rSMdS5Nkugix1DAFkHjRhqH/VGZWcqcdTW
-	3oOjgZbLBCoxWQWoqnsVQ7nnBjHUNJUG0LWZORx9N+qGLCvd/FfcmIEf9zO95ZBpNo4LGMvE
-	dZwZ6NMzN2oyCaa+8mNmur4YMK0jqQRTkZPHZ7LT/ySY5oyf+Mxf1lGcmftmkGByGmoA833p
-	HUGE09HEPfGsLIbVuLPKaFVMgjIulN5/KDIsMjBILPGVhKBg2l0pU7ChdPibEb77EuS25dDu
-	x2VyvU2KkGm1tP/ePRqVXse6x6u0ulCaVcfI1VK1n1am0OqVcX5KVrdbIhbvCrQ5RiXGD+Xm
-	EOoml4+WUx+AVHDZ6TywIyElhYbGbOI82EY6Uq0Amq63YpyxYDNquvmc8Q+A5ol6sBUyXFDF
-	4x7aAVypz8U5428A+/v6BeteOOUBR0x9NiZJgvKGd9fIddmZoqH1Yd9GIh5VQMA1o9s6O1Ey
-	WDXSvqELqTA435DK59gB9hRP4etsZ0tjqf4NrNeClNkOdt0twdfzQyocDjTSXHNO8GF3g4Bj
-	EfzdcGaTT8Dq/C8ILvY0gMZh4+Y0L8OMXgOPaygeThuaN/XnYUHvNYzT7WH28hTG6ULY9NkW
-	74RX60oJjl3h0GLaJjPwktW8uccxANubR4gLYIfxiYGMT9TjeDfMnD/FN9rm4VFusGqV5NAT
-	1rX4lwJ+DXBl1VpFHBsdqJYo2RP/XzlapbgBNj6MV3gTuF+y6tcBMBJ0AEjyaGdhTso7sY7C
-	GFlSMqtRRWr0clbbAQJt98nlibZHq2w/TqmLlEhDxNKgoCBpSECQhHYRzmRciXGk4mQ6NpFl
-	1axmKw4j7USpmNbhhaIM/x37rMdGH096e/RGer8OF6ZKBhZe1VdbzvmW2S+99O4PC4uxB1qy
-	8O3DFSaHR1SQ988+gcVzTsSXT0fLVvL1hx8veS2W+3j0BVTy3eSubrOFSQejzaFRDj4ftpc3
-	HFz61kQeD//1tChX+uCWpL86eWz6yNfBj5JffHb4lmtN8lMnG1Wiyp7X8kZO7m1+65muubiZ
-	A8E6C23+tKzLPiSrRGLubCtO/4ScrZisXYHiqGBBRlpjvn/YB8OfKwwBR2OdQrRnj1Ue0jt/
-	9UvKnY6hhTcUeT5Fh7N2Ls1O7up2vPreTUHpkdnkzKSU+jihIF5xr+i+6G2DOOBhoTx/vPbe
-	czSujZdJvHgarew/c/aterkEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1BMYRzGveeczp5KzbGFN2vEYQyhbLm8bg3pwyG5fHC/rjptxm7lHJGI
-	Te4Ry5A2tdmy22VEl2mkwoRSrGUS2lJkl6ZGchmTtGGL4dtvnmd+z//Ln8LF74gR1LaInRwf
-	IVMwpBNRcpcZNaVevjFsaqraG12rrcLRwTM2HOW9Ok2ijrufAbrQ9R1HljtHAfphNOGouKoZ
-	oAxdGoEa7pRiqFx3FkM5efcxlJqcgKH7Pz+Q6Gzlc4Cs9RoMVZgnoctHsghUXlFDoLqbl0ik
-	1VtFyFDdhyH1sXoM3bDEA5Tf8ZFAD8wSZLJVO8yXsHXPgthaHWRLNa9ErKm5gGDrjNFsYe5x
-	ki3KOsC2FaUAtqxBRbKZSecc2FMJnSRberjFgf1kNRPsx1v1JJtUnAvYRxn3RMvd1jnNDeUU
-	23ZxvI//Fqfwruuv8ah295ib3V8IFWijTwBHCtLT4IvzBvwEcKLEdBmAVxKywUDhAfW2e/gA
-	u8GcvvciO4vpTwDGl0XbmaDHwQa98XdOUSQ9CT78Sdljd5qB1nZj/wxOp5DwkVZpZzdaBg0N
-	Ff25C70QdhWrHAbuNgNY01vypxgCa1IsxIA8A6YXvcHt+zgtgYa+/n3H36dMOe/BGUBr/jM0
-	/xmaf0YGwHOBBxclKOXKEGmUNILb7S3IlEJ0hNw7JFJZCPpfwWvCDdCs7fOuBBgFKgGkcMbd
-	JWn/+jCxS6hsTyzHR27moxWcUAkkFMEMd5FeTA0V03LZTm47x0Vx/N8WoxxHqLAnr0s8Dab8
-	HYOFdml25ju3mF3hwTHg3OygC641TSPfjI50DnRfuSy4VzK0HDsd19p5e6Rv+u1GV7WlZ30h
-	o57o17bEjxcWrs5sKpuXtT/3pbOGyWiM6clp8dN5JQtjtQFKcUpHYkCLdebe+Yf4VYpbBZvG
-	zYzfNyNZsXzNrMTW2N6tcdN1vk+bwiaO7VmRPV5fsEXDLYBV5rql7f6iOSHINoyIm+ATaYv1
-	T0+bM+Zq59vjlpA8n1W+rtb8tEBPc+rswK/axsXTHq+t/abu3mw+/FxuuxLsMciTmTylep+q
-	V7ge1prw42T2kw0feH2tsWqrYdHVtaODlN+htYlx7vYJiGMIIVwm9cJ5QfYLXINCcHkDAAA=
-X-CMS-MailID: 20240603065101epcas5p2acde37ff1854ff6f455f51ec940caf65
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_50408_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240520102830epcas5p27274901f3d0c2738c515709890b1dec4
-References: <20240520102033.9361-1-nj.shetty@samsung.com>
-	<CGME20240520102830epcas5p27274901f3d0c2738c515709890b1dec4@epcas5p2.samsung.com>
-	<20240520102033.9361-2-nj.shetty@samsung.com> <20240601055323.GB5613@lst.de>
+References: <20240528030054.4525-1-qiang.zhang1211@gmail.com>
+ <1195a9a3-db87-465d-a3b0-ee92d67da954@paulmck-laptop> <CALm+0cVZ7GQC+v4Xe7nArh0DHKeax+ok_tYsKaB=JtG-BVgUag@mail.gmail.com>
+ <CALm+0cUQuZDb6nrng+CnOXNGyy6gUWNGq9VoreU98KNkyTw_CQ@mail.gmail.com>
+ <4a6d1e70-ec91-4b6d-8f69-290c4ef57b7f@paulmck-laptop> <CALm+0cVjjL98+QRO7a=18JjUB2-1R0oFyksgkH9ZEAr2NsBniQ@mail.gmail.com>
+ <aa5d29b4-3f3b-440c-a6a5-2f77691fac90@paulmck-laptop>
+In-Reply-To: <aa5d29b4-3f3b-440c-a6a5-2f77691fac90@paulmck-laptop>
+From: Z qiang <qiang.zhang1211@gmail.com>
+Date: Tue, 4 Jun 2024 11:30:08 +0800
+Message-ID: <CALm+0cXdHU4qa175SAx3GaktdLWrchS_xcJcidmvmPtm0twjng@mail.gmail.com>
+Subject: Re: [PATCH] rcutorture: Skip debug object testing for cur_ops without
+ ->debug_objects set
+To: paulmck@kernel.org
+Cc: frederic@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org, 
+	urezki@gmail.com, rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_50408_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Disposition: inline
-
-On 01/06/24 07:53AM, Christoph Hellwig wrote:
->On Mon, May 20, 2024 at 03:50:14PM +0530, Nitesh Shetty wrote:
->> Add device limits as sysfs entries,
->> 	- copy_max_bytes (RW)
->> 	- copy_max_hw_bytes (RO)
->>
->> Above limits help to split the copy payload in block layer.
->> copy_max_bytes: maximum total length of copy in single payload.
->> copy_max_hw_bytes: Reflects the device supported maximum limit.
 >
->That's a bit of a weird way to phrase the commit log as the queue_limits
->are the main thing (and there are three of them as required for the
->scheme to work).  The sysfs attributes really are just an artifact.
+> On Tue, Jun 04, 2024 at 10:19:08AM +0800, Z qiang wrote:
+> > >
+> > > On Mon, Jun 03, 2024 at 12:55:30PM +0800, Z qiang wrote:
+> > > > >
+> > > > > >
+> > > > > > On Tue, May 28, 2024 at 11:00:54AM +0800, Zqiang wrote:
+> > > > > > > This commit make rcu_test_debug_objects() early return when the
+> > > > > > > specified cur_ops not set the ->debug_objects.
+> > > > > > >
+> > > > > > > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
+> > > > > > > ---
+> > > > > > >  kernel/rcu/rcutorture.c | 5 +++--
+> > > > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> > > > > > > index 08bf7c669dd3..9b8c277ab91a 100644
+> > > > > > > --- a/kernel/rcu/rcutorture.c
+> > > > > > > +++ b/kernel/rcu/rcutorture.c
+> > > > > > > @@ -3495,8 +3495,9 @@ static void rcu_test_debug_objects(void)
+> > > > > > >               return;
+> > > > > > >       }
+> > > > > > >
+> > > > > > > -     if (WARN_ON_ONCE(cur_ops->debug_objects &&
+> > > > > > > -                     (!cur_ops->call || !cur_ops->cb_barrier)))
+> > > > > > > +     if (!cur_ops->debug_objects ||
+> > > > > > > +                     WARN_ON_ONCE(cur_ops->debug_objects &&
+> > > > > >
+> > > > > > You lost me here.  Given that we have "!cur_ops->debug_objects" before
+> > > > > > that WARN_ON_ONCE(), why do we need "cur_ops->debug_objects" inside of it?
+> > > > > >
+> > > > > > Also, we don't get here unless the rcutorture.object_debug kernel boot
+> > > > > > parameter is specified, don't we really want to WARN_ON_ONCE if the
+> > > > > > current flavor does not support that?
+> > > >
+> > > > Maybe I didn't describe it clearly enough, this
+> > > > modification is mainly to filter out test types that do not support
+> > > > double call_rcu*() checking, for example tasks, tasks-rudes,
+> > > >  task-tracing  ;) .
+> > >
+> > > Understood.
+> > >
+> > > It is just that in my experience, it is a good thing for rcutorture to
+> > > splat when asked to do something that it cannot do.  Or do you have a
+> > > use case where this is problematic?
+> > >
+> >
+> > Hi, Paul
+> >
+> >
+> > This is a scene I mentioned before:
+> >
+> > The rcutorture.object_debug is set true, but the tasks-tracing does not support
+> > duplicate cur_ops->call check, but the debug_objects test was still done.
+> >
+> > insmod rcutorture.ko torture_type=tasks-tracing fwd_progress=4
+> > n_barrier_cbs=4 object_debug=1
+> >
+> > [  106.082416] rcutorture: WARN: Duplicate call_tasks-tracing() test starting.
+> > [  106.082533] tasks-tracing-torture: rcu_torture_read_exit: Start of test
+> > [  106.082543] tasks-tracing-torture: rcu_torture_read_exit: Start of episode
+> > [  106.105552] rcutorture: duplicated callback was invoked.
+> > [  106.105567] rcutorture: duplicated callback was invoked.
+> >
+> > for call_rcu*()  that does not support double call checking, if
+> > continue to test,
+> > "rcutorture: duplicated callback was invoked". will output,
+> > I just want to avoid the output of this error message :)
 >
-Acked, we will update commit log.
+> OK, but then why not just avoid setting rcutorture.object_debug for
+> the torture_type values that do not support it?
 
->> @@ -231,10 +237,11 @@ int blk_set_default_limits(struct queue_limits *lim)
->>  {
->>  	/*
->>  	 * Most defaults are set by capping the bounds in blk_validate_limits,
->> -	 * but max_user_discard_sectors is special and needs an explicit
->> -	 * initialization to the max value here.
->> +	 * but max_user_discard_sectors and max_user_copy_sectors are special
->> +	 * and needs an explicit initialization to the max value here.
+OK, understand.
+
+Thanks
+Zqiang
+
 >
->s/needs/need/
+>                                                         Thanx, Paul
 >
-Acked.
-
->> +/*
->> + * blk_queue_max_copy_hw_sectors - set max sectors for a single copy payload
->> + * @q:	the request queue for the device
->> + * @max_copy_sectors: maximum number of sectors to copy
->> + */
->> +void blk_queue_max_copy_hw_sectors(struct request_queue *q,
->> +				   unsigned int max_copy_sectors)
->> +{
->> +	struct queue_limits *lim = &q->limits;
->> +
->> +	if (max_copy_sectors > (BLK_COPY_MAX_BYTES >> SECTOR_SHIFT))
->> +		max_copy_sectors = BLK_COPY_MAX_BYTES >> SECTOR_SHIFT;
->> +
->> +	lim->max_copy_hw_sectors = max_copy_sectors;
->> +	lim->max_copy_sectors =
->> +		min(max_copy_sectors, lim->max_user_copy_sectors);
->> +}
->> +EXPORT_SYMBOL_GPL(blk_queue_max_copy_hw_sectors);
->
->Please don't add new blk_queue_* helpers, everything should go through
->the atomic queue limits API now.  Also capping the hardware limit
->here looks odd.
->
-This was a mistake, we are not using this function. We will remove this
-function in next version.
-
->> +	if (max_copy_bytes & (queue_logical_block_size(q) - 1))
->> +		return -EINVAL;
->
->This should probably go into blk_validate_limits and just round down.
->
-Bart also pointed out similar thing. We do same check before issuing
-copy offload, so we will remove this check.
-
->Also most block limits are in kb.  Not that I really know why we are
->doing that, but is there a good reason to deviate from that scheme?
->
-We followed discard as a reference, but we can move to kb, if that helps
-with overall readability.
-
-Thank you,
-Nitesh Shetty
-
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_50408_
-Content-Type: text/plain; charset="utf-8"
-
-
-------Fualeei1.f5fhWGYL679EBd0hH5-OLgtfrOtH6wInDZGwDEe=_50408_--
+> > Thanks
+> > Zqiang
+> >
+> >
+> > > I don't count the fuzzers because they are supposed to avoid specifying
+> > > things that are supposed to fail.  ;-)
+> > >
+> > >                                                         Thanx, Paul
+> > >
+> > > > Thanks
+> > > > Zqiang
+> > > >
+> > > > >
+> > > > > Hi, Paul
+> > > > >
+> > > > > The rcutorture.object_debug is set true, but the tasks-tracing does not support
+> > > > > duplicate cur_ops->call check, but the debug_objects test was still done.
+> > > > >
+> > > > > insmod rcutorture.ko torture_type=tasks-tracing fwd_progress=4
+> > > > > n_barrier_cbs=4 object_debug=1
+> > > > >
+> > > > > [  106.082416] rcutorture: WARN: Duplicate call_tasks-tracing() test starting.
+> > > > > [  106.082533] tasks-tracing-torture: rcu_torture_read_exit: Start of test
+> > > > > [  106.082543] tasks-tracing-torture: rcu_torture_read_exit: Start of episode
+> > > > > [  106.105552] rcutorture: duplicated callback was invoked.
+> > > > > [  106.105567] rcutorture: duplicated callback was invoked.
+> > > > > [  106.111269] rcutorture: WARN: Duplicate call_tasks-tracing() test complete.
+> > > > >
+> > > > > Thanks
+> > > > > Zqiang
+> > > > >
+> > > > > >
+> > > > > > Or do you have a use case that needs to silence these warnings?
+> > > > > >
+> > > > > >                                                         Thanx, Paul
+> > > > > >
+> > > > > > > +                             (!cur_ops->call || !cur_ops->cb_barrier)))
+> > > > > > >               return;
+> > > > > > >
+> > > > > > >       struct rcu_head *rhp = kmalloc(sizeof(*rhp), GFP_KERNEL);
+> > > > > > > --
+> > > > > > > 2.17.1
+> > > > > > >
