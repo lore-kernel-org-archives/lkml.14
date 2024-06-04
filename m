@@ -1,85 +1,126 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEFAA5F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219FB144D3F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717544081; cv=none; b=cGYB4Hf4AvK+hnf4MW2UJpQL1Vanc+swyVHu7Wd80u8AsV1yJEItQr2z9lq3iM7tVLp1fWpXpK1199oNBrVqaDZGRr/7ARSHKizuoO+SRtTEIsfZx+QZgP4eqrS7oE5dvTNP++a1H72mLUNc9FZJledjcQzvaLIxSxqOJHuqy0w=
+	t=1717544107; cv=none; b=P+dvqO2yVXbewqyu/0eihVxh0Mts1MN6+G2RdrUqDyV66ClXJdfExMzk8b83jo9ceJMGU/DRX9KTnRK42lz+PgGw4UW6Wo159Vt3R3FAodm0cDxVuowsYLXCBngJuna0ZQEVU/PkzXvxp1EMt1ZSYjhfN/aHElvR7cgNJlYhIZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717544081; c=relaxed/simple;
-	bh=/RyllKS71H+IC820enjmIT75ZvOYvn2A1K/k4ayEGS4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JM78XPaPgE4Auh7pf278Tj7IvqntFU1sXs2mGjbRhr81c+SEWzRC4P0K5FWYT7UknTuGjZptMZ7aIQ6XUoc+MAjCCb+Yju/VsaqPGjezDbnjtWvKO1nvC8VxEMpdaEZANw+ZjhE7YlqJibg13QJxlsn9eMGdDzTPxedwDzTbnX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RrbSCWrl; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1717544107; c=relaxed/simple;
+	bh=ljUZwH0wfZx09w13YocP3uzPKY+TNatl/gsxBoW/3SE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pmeyR1q/JuPcktgVem9/G8WfhndvLnpjKP8i75InK72bjOF4MUJJF+uepttrOureS3ibrSB++AA1UUtQgZqa3JzY6LSmgFfdtu4+xG7nZPSdOyWwW2qsIS8n1Ix3Gt/6yoZlxxmGBjwwDd9gjvwwaVzO/k9WdEc4zv4wrkq3Zqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ypqfFRu+; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RrbSCWrl"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-6cc288a7ee6so254603a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 16:34:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ypqfFRu+"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dfa7fafa0c0so336772276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 16:35:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717544079; x=1718148879; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WiOlI2KgvibXBloj2qE38W2kmcg/QICR4XC0NHpgGeA=;
-        b=RrbSCWrl7cPBQ679DsI2cMdWhp/tUoKClRowOdGsW2SGFl+twxDxIUPa65t0xPbKcJ
-         87QALdPajRHrFubf3hqe7A8p/Rjgk6K8B60gnvbWcacLK+mlRaxMmDWQekmUGjLOxQwX
-         p+lx5SEQt1dmdjYtHElpY6FDUPBt7mdJvnRUncVAWIp8E04dm3oIj5iA8gRWkORD6wrh
-         eXPLFWWVA3y0wo79qRZodypujBwiWyv7ms60c+8LRofvyF4313MOpBeUYrIZQqgg4DFl
-         CbqN80KkVaV5SRUjbi74Q8PSySRtx6OXdnn4bZTeRNEF+y1lDHJIR71k7PRFNe00o5HW
-         0s5w==
+        d=linaro.org; s=google; t=1717544104; x=1718148904; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=U5F59Y5F210ARWzU6IxQVbEufFPE5a5xbmD+TtWexxk=;
+        b=ypqfFRu+uPKXPjMQPgBOuDv7GombmJURsrNzvb1dhGyJL++QPuKNJMwtjg7mzX2AGO
+         EpJEE5DgnWwRbsoAbNI5wz4OPG1sEnjRhFT0XnPgxPWcjCEj3pZoXjhI6otg8UvBHBYO
+         xl7w8Dcmya++BneGdZupinvOiyoHiLazgcFy+i1VS0V1rLcOMnh0f53A4K0rGqFAB1Ut
+         xQlM465D31D1Jx6qDraao/DDsh5dKo0pArqVwUWIfXHPmkJeAmWgQWe/LfNLRmzsz4al
+         rwFDPwRo2zLhMz6Ho4YTCJM+GDISJ87GtkipLCy4iQwWlfly7cXr8iDr1MiZo5t1Ofly
+         jpwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717544079; x=1718148879;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WiOlI2KgvibXBloj2qE38W2kmcg/QICR4XC0NHpgGeA=;
-        b=TAjo8Povl2khDZssQIWdVsJqzaUPaEoE82phXjoE7zW86ZRGiiE68FKM8VDfdfmA3P
-         UmhzmYRKi2jg/LWU6cot6gipLbJSK0i59lQsPfSDNSGvSpfaDU9hp1JVoZHSdkgSYc/X
-         zw16ZTItY327HyNpTejL1MjM7myyaHZg0jAXaoUUZoQvAWnS18PvxAz7WWQCXPG1FDde
-         XebiGwdnCOlcSt58CvLU9ZFpSXFDv7NLBjnwmQVjKBdrUVt8T4SiY8YEqYT3S+ZOzpwd
-         +UpT2l0PLlW8IYKs2DsmGzAu0TPOY8v9Z933VxKodPTVKOcpcUVG8oqu6awMWZEUstrj
-         /jkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaWRGV5z4oAz6Ypdp1XoBWneybXXa+ZHQ9QQepdJznNJH/RwskQj7GWRSDYIjAonelSOD+4EXX9WxuW/Tqk+3Cv/gxKhk2q81tEqnN
-X-Gm-Message-State: AOJu0YywEZlW1OMhqx39RKcgWRmokFHwkzL3ZIG9+YIz8L9Qic/eBf1j
-	pbKVqH7o+h4m1caoeP5Dpq4XA+qS43kp2lyvJO551v9bjXiYWnwfsQTBXWmkLS0XB7NSgVHEB4C
-	qAQ==
-X-Google-Smtp-Source: AGHT+IG9/QfGlk3w+QqLKKOftRIh42oh6bp6yqD4YsiF/v3U3LPU8jLyNQQmMLcvrkoGApD1kHD0qQ+VMT4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90b:2309:b0:2b4:32df:9b7b with SMTP id
- 98e67ed59e1d1-2c25300652fmr48802a91.1.1717544079451; Tue, 04 Jun 2024
- 16:34:39 -0700 (PDT)
-Date: Tue,  4 Jun 2024 16:29:27 -0700
-In-Reply-To: <20240520143220.340737-1-julian.stecklina@cyberus-technology.de>
+        d=1e100.net; s=20230601; t=1717544104; x=1718148904;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U5F59Y5F210ARWzU6IxQVbEufFPE5a5xbmD+TtWexxk=;
+        b=wVgJyP30dijENrpyk9YpSBpQ2d4scwPcoRZheHwKiY068y8n6A6kNK6l6zBb/bAkCY
+         fe/D8Ok3lxMROUKTxs6Qcj2w3H7jSf2tSDshpOLDKImv9wgWe6ColmMr6xOi6YyBmMsB
+         R4eWS4jl965xE56Wm71Q/nIPEYwg6d5PGg4s4ZGC7w344R0DRt+eCVooMs5SaFJIK3gs
+         jY1Umpa8opNHIUty9r1vXyQUoHdqE8sh+GHeYtbqzcH7XtWHVlpXXZMXRigSWcPJOkXT
+         DqjkT2mUsw8c+DKJpjt4jOupfTENclUKL8TnEsOvhWBcCw9YMeuM4STrl+nTYO1pNa1q
+         e9iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPO7s82OkOMmTnrjqtFQ6WajeWSwwKi1DGr5DY8Xfz/CB/7GmkIlE2j5AvJLD9HNP1ke9qWUtn8jNlVU0D2orRl4ULg9ygDYnOWQyM
+X-Gm-Message-State: AOJu0YyLyOwkpyrDYlEY5lSmJFLS7zuJ5HwtpTk+Obmrglx423w6+TXu
+	cACRzfx9hIrPapNbSiiRaLp5Xo4kJDHY4tAAPf4bWgXaeVehJS+WXMTWx/k7gBM3wE7uPuCnPAa
+	q7JYuFbLfBifuke4s0GgjSUJJsj/PgwBwF/X0aw==
+X-Google-Smtp-Source: AGHT+IFdoTto+OyWazk/s95VUduCXVBIPATg60NiVpHEaONaANNsRtZaVqiKS3evRYjowXOhqIkWoq2TlII04CwtgN4=
+X-Received: by 2002:a25:dcd0:0:b0:dfa:48d9:b0 with SMTP id 3f1490d57ef6-dfab8b0312fmr3125447276.22.1717544104107;
+ Tue, 04 Jun 2024 16:35:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240520143220.340737-1-julian.stecklina@cyberus-technology.de>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <171754323407.2778815.4127978352090083510.b4-ty@google.com>
-Subject: Re: [PATCH 1/2] KVM: fix documentation rendering for KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Cc: kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240528-pwrseq-v8-16-d354d52b763c@linaro.org> <20240604232347.GA740032@bhelgaas>
+In-Reply-To: <20240604232347.GA740032@bhelgaas>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 5 Jun 2024 02:34:52 +0300
+Message-ID: <CAA8EJpomPLQmQbW8w3_ms_NMKHoSPcqBa7f2OhNTTOUSdB+9Eg@mail.gmail.com>
+Subject: Re: [PATCH v8 16/17] PCI/pwrctl: add a PCI power control driver for
+ power sequenced devices
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
+	Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Elliot Berman <quic_eberman@quicinc.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Alex Elder <elder@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	ath11k@lists.infradead.org, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	ath12k@lists.infradead.org, linux-pm@vger.kernel.org, 
+	linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
+	Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 20 May 2024 16:32:18 +0200, Julian Stecklina wrote:
-> The documentation for KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM doesn't use the
-> correct keyword formatting, which breaks rendering on
-> https://www.kernel.org/doc/html/latest/virt/kvm/api.html.
-> 
-> 
+On Wed, 5 Jun 2024 at 02:23, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, May 28, 2024 at 09:03:24PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add a PCI power control driver that's capable of correctly powering up
+> > devices using the power sequencing subsystem. The first users of this
+> > driver are the ath11k module on QCA6390 and ath12k on WCN7850.
+>
+> Can you add a little detail here about what benefit we will see from
+> this driver?  E.g., something that doesn't work correctly now, but
+> will work with this driver?
+>
+> > +static const struct of_device_id pci_pwrctl_pwrseq_of_match[] = {
+> > +     {
+> > +             /* ATH11K in QCA6390 package. */
+> > +             .compatible = "pci17cb,1101",
+> > +             .data = "wlan",
+> > +     },
+> > +     {
+> > +             /* ATH12K in WCN7850 package. */
+> > +             .compatible = "pci17cb,1107",
+> > +             .data = "wlan",
+> > +     },
+>
+> IIUC, "pci17cb,1101" and "pci17cb,1107" exist partly so we can check
+> that a DTS conforms to the schema, e.g., a "pci17cb,1101" node
+> contains all the required regulators.  For that use, we obviously need
+> a very specific "compatible" string.
+>
+> Is there any opportunity to add a more generic "compatible" string in
+> addition to those so this list doesn't have to be updated for every
+> PMU?  The .data here is "wlan" in both cases, and for this purpose, we
+> don't care whether it's "pci17cb,1101" or "pci17cb,1107".
 
-Applied patch 1 to kvm-x86 generic, thanks!
+These two devices have different set of regulators and different
+requirements to power them on.
 
-[1/2] KVM: fix documentation rendering for KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM
-      https://github.com/kvm-x86/linux/commit/f2362c04752c
-[2/2] KVM: fix spelling of KVM_RUN_X86_BUS_LOCK in docs
-      (not applied)
---
-https://github.com/kvm-x86/linux/tree/next
+-- 
+With best wishes
+Dmitry
