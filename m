@@ -1,107 +1,86 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2B51487DF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D091474D4;
+	Tue,  4 Jun 2024 16:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717517226; cv=none; b=dnRYgcB9V559cSxtq5yPI3P+Sg3uBt1JeeMDzLAplEu3a+XvQWoX5VY5CDfmo4Dfjjtdt5hJC21mkYmUiROryqQxY3FAVtAIxivwvORLgXmluALO2U8GbBMkAeYHD8IgTNclc6A/1h+rLmxN9Nm3+WuN7Ocy3QW2zNJO5xmK0cs=
+	t=1717517292; cv=none; b=MjW4Z0SxbjlRik8bOCGi2MrhbBe/0LR1V6FfeETOQXteOO0WZgwD+DY48fePTj34GBjG6zQ2b6ke9wa5Fgd6EinxkYuQTbYCSe3b/0FPvB4SiRZH2IEYYlgybe0FpBIujlTwIsY3aHn0NLoeZMMc9IYnDgIQOvkjeD8Ekvu8zf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717517226; c=relaxed/simple;
-	bh=LiSw4cTkRlKkl50Td/1EOWuYousa7uj5W+u2v+62BuQ=;
+	s=arc-20240116; t=1717517292; c=relaxed/simple;
+	bh=nei+SOKSc6thGKa4Dt93c6j8LtKtL1IB/f1d/ptLbA0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=scU4YaDR0zRJepYovtYNzbBiNAeeKBy22UojSO4gqlb0LqZJvtTamg+Hd1O6WAMmA6zNuj3Rj95VIVim2m+7Zi2Y8hNBYZ9J+jnVttWBy1lGalyHwdQ/DQlEvaECdw1gHYWNdAMBVinBL01WY3ayujUwPq/khFmC5IAK/THFrKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=hFtnqX57; arc=none smtp.client-ip=45.157.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=XOpkzZq3ERDTBI7rJG6uFrpCl5GSgq8p6kT+vF2rQQcqJAZ9hz1fpfnZ7C93ClNuBaYMTwnqNDChtSGjunnjxG+92KgYeS1ejbIp1TieqtggL0pLbCfJYhQoveulVG7TYssT8/c3biTmDvTE8Ezxb8mlO81vxzM96F2FetwAuv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJ2Apo2Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="hFtnqX57"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VtwTB71FQzR2Y;
-	Tue,  4 Jun 2024 18:06:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1717517214;
-	bh=aNLMmrtRqyR3S0obQrH4DObn3P8MphMPMTJP3cciKvM=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJ2Apo2Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54F96C2BBFC;
+	Tue,  4 Jun 2024 16:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717517291;
+	bh=nei+SOKSc6thGKa4Dt93c6j8LtKtL1IB/f1d/ptLbA0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hFtnqX57SJl/4Fh9aQvCi1KoonGg5N4DjhRPZByVGizbDmtLtvsZMh03LYRvUKPzh
-	 oluqoBSNi6W59lxCYFr6Va/1Ifx551otm6KY9D1p5DEAHJdc3nW+DCr57SHC9r3grY
-	 pCgBICWchLUQPM8ecx8uhp9WxlYZ68yjuYOOyKQc=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4VtwT80YykzC0N;
-	Tue,  4 Jun 2024 18:06:51 +0200 (CEST)
-Date: Tue, 4 Jun 2024 18:06:48 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Sasha Levin <sashal@kernel.org>, Sean Christopherson <seanjc@google.com>, 
-	Shengyu Li <shengyu.li.evgeny@gmail.com>, Shuah Khan <shuah@kernel.org>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Brendan Higgins <brendanhiggins@google.com>, David Gow <davidgow@google.com>, 
-	"David S . Miller" <davem@davemloft.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Jon Hunter <jonathanh@nvidia.com>, Ron Economos <re@w6rz.net>, 
-	Ronald Warsow <rwarsow@gmx.de>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Will Drewry <wad@chromium.org>, kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH v7 04/10] selftests/harness: Fix interleaved scheduling
- leading to race conditions
-Message-ID: <20240604.KaT6shae5eip@digikod.net>
-References: <20240511171445.904356-1-mic@digikod.net>
- <20240511171445.904356-5-mic@digikod.net>
- <9341d4db-5e21-418c-bf9e-9ae2da7877e1@sirena.org.uk>
- <187423fb-ec78-4318-9da0-5b27df62b71f@sirena.org.uk>
- <9eb1e48e-b273-475a-9740-52deedf11ee2@sirena.org.uk>
+	b=jJ2Apo2ZBxetosKifpxr+CgZtwcGzOvva32RymAgiBeGK5SAFdWYjAXt6Ox9SnwJv
+	 yUQXKf0TUft3VcdUXaEhCBwcwul2/xfQ17Nx6MTxxAa5fteq/Jg+maV5Ga5LHjsyj4
+	 QO1na6Ga3KN1//KwGNRQ5GEFr5yofQAwvZ7H/nxZYQweqFx/qTxF7I4CgKzBMTWPA7
+	 E1aH6IUkPebZTUL8qH8IUS1hTNLXV0vPfdCoW4HIdPYnlVDjN1BDor81xWfZVL5ieq
+	 4NhS1b+P0C2gRtUmoIA+Gokclp9NcqcsVMkxGE2DGcXDu9uYk/nvGSAIdOiM0yYeT/
+	 OWVRm7xZ/aOKA==
+Date: Tue, 4 Jun 2024 11:08:09 -0500
+From: Rob Herring <robh@kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] of: Add missing locking to
+ of_(bus_)?n_(size|addr)_cells()
+Message-ID: <20240604160809.GA1060206-robh@kernel.org>
+References: <20240530-dt-interrupt-map-fix-v1-0-2331d8732f08@kernel.org>
+ <20240530-dt-interrupt-map-fix-v1-2-2331d8732f08@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9eb1e48e-b273-475a-9740-52deedf11ee2@sirena.org.uk>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20240530-dt-interrupt-map-fix-v1-2-2331d8732f08@kernel.org>
 
-On Mon, Jun 03, 2024 at 06:22:32PM +0100, Mark Brown wrote:
-> On Mon, Jun 03, 2024 at 05:27:52PM +0100, Mark Brown wrote:
-> > On Mon, May 27, 2024 at 08:07:40PM +0100, Mark Brown wrote:
+On Thu, May 30, 2024 at 08:03:28PM -0500, Rob Herring (Arm) wrote:
+> When accessing parent/child/sibling pointers the DT spinlock needs to
+> be held. The of_(bus_)?n_(size|addr)_cells() functions are missing that
+> when walking up the parent nodes. In reality, it rarely matters as most
+> nodes are static.
 > 
-> > > This is now in mainline and appears to be causing several tests (at
-> > > least the ptrace vmaccess global_attach test on arm64, possibly also
-> > > some of the epoll tests) that previously were timed out by the harness
-> > > to to hang instead.  A bisect seems to point at this patch in
-> > > particular, there was a bunch of discussion of the fallout of these
-> > > patches but I'm afraid I lost track of it, is there something in flight
-> > > for this?  -next is affected as well from the looks of it.
-
-Thanks for the heads up.  I warned about not being able to test
-everything when fixing kselftest last time, but nobody show up.  Is
-there an easy way to run most kselftests?  We really need a (more
-accessible) CI...
-
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  drivers/of/base.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
 > 
-> > FWIW I'm still seeing this on -rc2...
-> 
-> AFAICT this is due to the switch to using clone3() with CLONE_VFORK
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 20603d3c9931..61fff13bbee5 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -91,8 +91,8 @@ int of_bus_n_addr_cells(struct device_node *np)
+>  {
+>  	u32 cells;
+>  
+> -	for (; np; np = np->parent)
+> -		if (!of_property_read_u32(np, "#address-cells", &cells))
+> +	for_each_parent_of_node_scoped(parent, np)
+> +		if (!of_property_read_u32(parent, "#address-cells", &cells))
+>  			return cells;
+>  
+>  	/* No #address-cells property for the root node */
+> @@ -101,10 +101,9 @@ int of_bus_n_addr_cells(struct device_node *np)
+>  
+>  int of_n_addr_cells(struct device_node *np)
+>  {
+> -	if (np->parent)
+> -		np = np->parent;
 
-I guess it started with the previous vfork() that was later replaced
-with CLONE_VFORK.
+This isn't going to work... This drops of_n_addr_cells working for the 
+root node. Callers wanting to get root node's properties need to use the 
+of_bus_n variant instead, so those callers will have to be checked and 
+fixed first.
 
-> to start the test which means we never even call alarm() to set up the
-> timeout for the test, let alone have the signal for it delivered.  I'm a
-> confused about how this could ever work, with clone_vfork() the parent
-> shouldn't run until the child execs (which won't happen here) or exits.
-> Since we don't call alarm() until after we started the child we never
-> actually get that far, but even if we reorder things we'll not get the
-> signal for the alarm if the child messes up since the parent is
-> suspended.
-> 
-> I'm not clear what the original race being fixed here was but it seems
-> like we should revert this since the timeout functionality is pretty
-> important?
-
-It took me a while to fix all the previous issues and it would be much
-easier to just fix this issue too.
-
-I'm working on it.
+Rob
