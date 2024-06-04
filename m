@@ -1,142 +1,141 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D22FF144306;
-	Tue,  4 Jun 2024 14:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A0E144313;
+	Tue,  4 Jun 2024 14:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511575; cv=none; b=R6+PbbtGvrT4iQRTGHK0cVj3TSvcxb31xtf8K5AFI8skMoL0wkEbBZuSDesc0S09lyRTLY3jMHAwEuRU1mvnczB8vNjLqGlgdCZkhnDRx85nOSSz0I1DxWqg+hkxzb5CI/YsTyLByspnM/5iNmPdfyxmDAKST2KjebyaMiRtmHk=
+	t=1717511577; cv=none; b=VYG7Gs0FGPwKSCvuAEtD/Ye32DmP38MuxKOBio3sw3MvS1UyZvEfGTNsotP5u7fI0r3+IfdIi/lcrF0JX7n8Dz/cAllnu5cJBRZGGggWgGOqc1REKpWn9QDIpcTcV1Wj92i/TmfQUfyn3PUN2VRkLM1skvAHYobwW28gIwKz76k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511575; c=relaxed/simple;
-	bh=h3XxyN6IXydL8e0zIIIS9V4ZStSl00kff0Mk919Sp94=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GzvjMCi6sKCgIMKGAVITlsZO1541MtiefCT2pSr8oQUn8x69Va5t6F1HQnXkv6f0GrcBDnvdRfqfqSO0N7FBWk3zi0+TpniFmjTvEwtwvHpNhsRLo36weHjbP/bsGhtpDOgpllo3I6gRGuf/YEUFNi+0xgTXOv28xw5xe2XQxUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCD511042;
-	Tue,  4 Jun 2024 07:33:17 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 525523F64C;
-	Tue,  4 Jun 2024 07:32:50 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 12/16] coresight: Make CPU id map a property of a trace ID map
-Date: Tue,  4 Jun 2024 15:30:21 +0100
-Message-Id: <20240604143030.519906-13-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604143030.519906-1-james.clark@arm.com>
-References: <20240604143030.519906-1-james.clark@arm.com>
+	s=arc-20240116; t=1717511577; c=relaxed/simple;
+	bh=o2mxzel60r7gCRivC5Z4TUDgKE+d9kjE+8mhknQD8YM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nd1/l3dRy36g1Dt1Bmri3HOd6N5s/0jC3kcNgKlhg8JR1ZC2yJKDwzdh4JGTfh9k38VRuAQ3pv1onVxiBVzt6myB4wOIrjxUzOButPLYEvQerxs27bJ0dEecuq/uE+OsQmeE3Q/D0n/m3Zf62XvysWAJrXX5Frd0RYfkcV7WrgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2Tl32S+f; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2Tl32S+f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CA5C4AF08;
+	Tue,  4 Jun 2024 14:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717511577;
+	bh=o2mxzel60r7gCRivC5Z4TUDgKE+d9kjE+8mhknQD8YM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2Tl32S+f0uYVyDTYPdJKeLmAq5C7wR3ltmjeG9Hk45252TkQrW6BOA02wijrNgVqu
+	 1RYzMpiz6b2mKESpa4q/yLcU0j7uA5lm9D3ZfAjAHCRH1njiVH2H5vvXFm19nN4pQH
+	 vrmhg48+g8pdeHO6xd0cHGkmVsarK4CZkEBT2o08=
+Date: Tue, 4 Jun 2024 16:17:29 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
+	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
+	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
+	ajanulgu@redhat.com, lyude@redhat.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [RFC PATCH 01/11] rust: add abstraction for struct device
+Message-ID: <2024060428-whoops-flattop-7f43@gregkh>
+References: <20240520172554.182094-1-dakr@redhat.com>
+ <20240520172554.182094-2-dakr@redhat.com>
+ <2024052038-deviancy-criteria-e4fe@gregkh>
+ <Zkuw/nOlpAe1OesV@pollux.localdomain>
+ <2024052144-alibi-mourner-d463@gregkh>
+ <Zk0HG5Ot-_e0o89p@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zk0HG5Ot-_e0o89p@pollux>
 
-The global CPU ID mappings won't work for per-sink ID maps so move it to
-the ID map struct. coresight_trace_id_release_all_pending() is hard
-coded to operate on the default map, but once Perf sessions use their
-own maps the pending release mechanism will be deleted. So it doesn't
-need to be extended to accept a trace ID map argument at this point.
+On Tue, May 21, 2024 at 10:42:03PM +0200, Danilo Krummrich wrote:
+> On Tue, May 21, 2024 at 11:24:38AM +0200, Greg KH wrote:
+> > On Mon, May 20, 2024 at 10:22:22PM +0200, Danilo Krummrich wrote:
+> > > > > +impl Device {
+> > > > > +    /// Creates a new ref-counted instance of an existing device pointer.
+> > > > > +    ///
+> > > > > +    /// # Safety
+> > > > > +    ///
+> > > > > +    /// Callers must ensure that `ptr` is valid, non-null, and has a non-zero reference count.
+> > > > 
+> > > > Callers NEVER care about the reference count of a struct device, anyone
+> > > > poking in that is asking for trouble.
+> > > 
+> > > That's confusing, if not the caller who's passing the device pointer somewhere,
+> > > who else?
+> > > 
+> > > Who takes care that a device' reference count is non-zero when a driver's probe
+> > > function is called?
+> > 
+> > A device's reference count will be non-zero, I'm saying that sometimes,
+> > some driver core functions are called with a 'struct device' that is
+> > NULL, and it can handle it just fine.  Hopefully no callbacks to the
+> > rust code will happen that way, but why aren't you checking just "to be
+> > sure!" otherwise you could have a bug here, and it costs nothing to
+> > verify it, right?
+> 
+> I get your point on that one. But let me explain a bit more why I think that
+> check is not overly helpful here.
+> 
+> In Rust we have the concept of marking functions as 'unsafe'. Unsafe functions
+> need to document their safety preconsitions, i.e. the conditions the caller of
+> the function must guarantee. The caller of an unsafe function needs an unsafe
+> block for it to compile and every unsafe block needs an explanation why it is
+> safe to call this function with the corresponding arguments.
+> 
+> (Ideally, we want to avoid having them in the first place, but for C abstractions
+> we have to deal with raw pointers we receive from the C side and dereferencing a
+> raw pointer is unsafe by definition.)
+> 
+> In this case we have a function that constructs the Rust `Device` structure from
+> a raw (device) pointer we potentially received from the C side. Now we have to
+> decide whether this function is going to be unsafe or safe.
+> 
+> In order for this function to be safe we would need to be able to guarantee that
+> this is a valid, non-null pointer with a non-zero reference count, which
+> unfortunately we can't. Hence, it's going to be an unsafe function.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- drivers/hwtracing/coresight/coresight-trace-id.c | 16 +++++++++-------
- include/linux/coresight.h                        |  1 +
- 2 files changed, 10 insertions(+), 7 deletions(-)
+But you can verify it is non-null, so why not?
 
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index 5561989a03fa..8a777c0af6ea 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -13,10 +13,12 @@
- #include "coresight-trace-id.h"
- 
- /* Default trace ID map. Used in sysfs mode and for system sources */
--static struct coresight_trace_id_map id_map_default;
-+static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
-+static struct coresight_trace_id_map id_map_default = {
-+	.cpu_map = &id_map_default_cpu_ids
-+};
- 
--/* maintain a record of the mapping of IDs and pending releases per cpu */
--static DEFINE_PER_CPU(atomic_t, cpu_id) = ATOMIC_INIT(0);
-+/* maintain a record of the pending releases per cpu */
- static cpumask_t cpu_id_release_pending;
- 
- /* perf session active counter */
-@@ -49,7 +51,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
- /* unlocked read of current trace ID value for given CPU */
- static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
--	return atomic_read(&per_cpu(cpu_id, cpu));
-+	return atomic_read(per_cpu_ptr(id_map->cpu_map, cpu));
- }
- 
- /* look for next available odd ID, return 0 if none found */
-@@ -145,7 +147,7 @@ static void coresight_trace_id_release_all_pending(void)
- 		clear_bit(bit, id_map->pend_rel_ids);
- 	}
- 	for_each_cpu(cpu, &cpu_id_release_pending) {
--		atomic_set(&per_cpu(cpu_id, cpu), 0);
-+		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
- 		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
- 	}
- 	spin_unlock_irqrestore(&id_map_lock, flags);
-@@ -181,7 +183,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 		goto get_cpu_id_out_unlock;
- 
- 	/* allocate the new id to the cpu */
--	atomic_set(&per_cpu(cpu_id, cpu), id);
-+	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
- 
- get_cpu_id_clr_pend:
- 	/* we are (re)using this ID - so ensure it is not marked for release */
-@@ -215,7 +217,7 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
- 	} else {
- 		/* otherwise clear id */
- 		coresight_trace_id_free(id, id_map);
--		atomic_set(&per_cpu(cpu_id, cpu), 0);
-+		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
- 	}
- 
- 	spin_unlock_irqrestore(&id_map_lock, flags);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index c16c61a8411d..7d62b88bfb5c 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -234,6 +234,7 @@ struct coresight_sysfs_link {
- struct coresight_trace_id_map {
- 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
-+	atomic_t __percpu *cpu_map;
- };
- 
- /**
--- 
-2.34.1
+> A NULL pointer check would not make it a safe function either, since the pointer
+> could still be an invalid one, or a pointer to a device it's not guaranteed that
+> the reference count is held up for the duration of the function call.
 
+True, but you just took one huge swatch of "potential crashes" off the
+table.  To ignore that feels odd.
+
+> Given that, we could add the NULL check and change the safety precondition to
+> "valid pointer to a device with non-zero reference count OR NULL", but I don't
+> see how this improves the situation for the caller, plus we'd need to return
+> `Result<Device>` instead and let the caller handle that the `Device` was not
+> created.
+
+It better be able to handle if `Device` was not created, as you could
+have been out of memory and nothing would have been allocated.  To not
+check feels very broken.
+
+> > Ok, if you say so, should we bookmark this thread for when this does
+> > happen?  :)
+> 
+> I'm just saying the caller has to validate that or provide a rationale why this
+> is safe anyways, hence it'd be just a duplicate check.
+> 
+> > 
+> > What will the rust code do if it is passed in a NULL pointer?  Will it
+> > crash like C code does?  Or something else?
+> 
+> It mostly calls into C functions with this pointer, depends on what they do.
+> 
+> Checking a few random places, e.g. [1], it seems to crash in most cases.
+> 
+> [1] https://elixir.free-electrons.com/linux/latest/source/drivers/base/core.c#L3863
+
+Great, then you should check :)
+
+thanks,
+
+greg k-h
