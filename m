@@ -1,118 +1,134 @@
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA2D1474BC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CCE143C7B;
+	Tue,  4 Jun 2024 16:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717517921; cv=none; b=UGx9LmzIoWfbvu6NsOguSU+CdiA3A2nWGuTitUXzAIpcsKVL44Ke6XODhiJOmIA5ISAl9iNZ0XMaDhK9J04up9YTXGjGL3t8WxlSMgcXm0y92Dqkzqqb+BapgTx+2D+NQFDOr41sKkwYcJ1UAdKKic6L1gX7rZ4UW2PhkbI2i9I=
+	t=1717517921; cv=none; b=qk2ClEpmyWRU/q1PcXH5QHy8o4S+MctX028KK7h1ZOqgBqvKRiOLMXn5ZfRxalHy79nKphAcWl7KrY7AQYGltk8p+Cw+U++EeneCE5Zb0KlaR5bHoW8bG++LeGOysuX3Mle76inxoBgOmpCzFytZK6lrCqussDJJ+LHZ+s3k2zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717517921; c=relaxed/simple;
-	bh=AuthoQ2SxkhYYlaXRjMt5sLm3Is9Iy5TFs8uQ/j6sJk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XKl+tQQesIfKwemkRIXJz6NueW9Aez1nRVRpvfb59WlE/oLXYvm5ibGWrqGFAIfxcEKn6AIn0CyrsZUnXSMVQEDKLo8uA75guKYOmQP6kWd0hgjA7WT7dbjeAdocghIC1RX37cWVxtLD2yvicVwcgUg3tPt3mGgQv54ydWKwddM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4VtvyW4KT9z9v7JB
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:43:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 64AF614078E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 00:01:09 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.206.133.88])
-	by APP2 (Coremail) with SMTP id GxC2BwAH9Cc4Ol9mnOuGCQ--.64982S2;
-	Tue, 04 Jun 2024 17:01:08 +0100 (CET)
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-To: paulmck@kernel.org
-Cc: stern@rowland.harvard.edu,
-	parri.andrea@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	npiggin@gmail.com,
-	dhowells@redhat.com,
-	j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr,
-	akiyks@gmail.com,
-	dlustig@nvidia.com,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	quic_neeraju@quicinc.com,
-	frederic@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Subject: [PATCHv2 1/4] tools/memory-model: Legitimize current use of tags in LKMM macros
-Date: Tue,  4 Jun 2024 18:00:51 +0200
-Message-Id: <20240604160051.497856-1-jonas.oberhauser@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
-References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+	bh=bE1vdHtIjSqwigCaLdryxWybdC+nY5atBDg6IDsGPHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jDtSAhgh5yE+QKAXgdd+ZkD5CO4+6DWZnKnsfHjqXweQB2I5ode3QVP+OZq6gnbXRZoTIRup0G9OwNbYSq9W1zFTjshrRnC23sR85YN+RmY3Nz3j92/BfOslj9iFwzZt8L0E/+wOod7LAMesX+gaMKuCyzwBuV802WQBx5sA6BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhEVfBTv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhEVfBTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092E4C32786;
+	Tue,  4 Jun 2024 16:18:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717517920;
+	bh=bE1vdHtIjSqwigCaLdryxWybdC+nY5atBDg6IDsGPHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bhEVfBTvB89ICwH5kSGyU+pleoJh1UIenKoqhcNlXMpaRnyCpfs/VUD1SN68E+hij
+	 QgA3qyEB068crCIK8AtSPuulcKGShjxkaRKryZjzmyMEIZi0TRUCfPM1tdRGU50u1x
+	 AtQlGltWp1zvO4lFsyWqRt5t5kWxuuPFaZfZD4CnCi4j42z8v73LCvsDYLQ4y0v1eE
+	 H1p+poDml21jEVERJAtULu3WKvdxeQymsrHWu/TRAwwckSdutPYyBCDTCImjOecubP
+	 xXty3JGR2EX1zPl0RD+DrpHOyOhjLWTOeD29jO5Ze8ZEEaz2VwCXAQkxh8va+EW7zz
+	 rVxYvdNQu0u1g==
+Date: Tue, 4 Jun 2024 17:18:32 +0100
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	Jon Hunter <jonathanh@nvidia.com>, Ron Economos <re@w6rz.net>,
+	Ronald Warsow <rwarsow@gmx.de>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v7 04/10] selftests/harness: Fix interleaved scheduling
+ leading to race conditions
+Message-ID: <53c0e2e5-46c9-4e49-8ec4-64ef58e6331c@sirena.org.uk>
+References: <20240511171445.904356-1-mic@digikod.net>
+ <20240511171445.904356-5-mic@digikod.net>
+ <9341d4db-5e21-418c-bf9e-9ae2da7877e1@sirena.org.uk>
+ <187423fb-ec78-4318-9da0-5b27df62b71f@sirena.org.uk>
+ <9eb1e48e-b273-475a-9740-52deedf11ee2@sirena.org.uk>
+ <20240604.KaT6shae5eip@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwAH9Cc4Ol9mnOuGCQ--.64982S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF4xGr45tF4DGr43tF4ruFg_yoW8Ar4kpF
-	ZrCw15GF4UXrZ8uwnrGrWUua4S9a93Jr45Gr9rJa43A34YvrnFy3WDXFnFqFZ3ZrWv9w12
-	qr12qFn2q3WUArJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
-	UAxhLUUUUU=
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="d/oZ8G2r6TlAFN6b"
+Content-Disposition: inline
+In-Reply-To: <20240604.KaT6shae5eip@digikod.net>
+X-Cookie: Is it clean in other dimensions?
 
-The current macros in linux-kernel.def reference instructions such as
-__xchg{mb} or __cmpxchg{acquire}, which are invalid combinations of tags
-and instructions according to the declarations in linux-kernel.bell.
-This works with current herd7 because herd7 removes these tags anyways
-and does not actually enforce validity of combinations at all.
 
-If a future herd7 version no longer applies these hardcoded
-transformations, then all currently invalid combinations will actually
-appear on some instruction.
+--d/oZ8G2r6TlAFN6b
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We therefore adjust the declarations to make the resulting combinations
-valid, by adding the 'mb tag to the set of Accesses and allowing all
-Accesses to appear on all read, write, and RMW instructions.
+On Tue, Jun 04, 2024 at 06:06:48PM +0200, Micka=EBl Sala=FCn wrote:
 
-Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
----
- tools/memory-model/linux-kernel.bell | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> Thanks for the heads up.  I warned about not being able to test
+> everything when fixing kselftest last time, but nobody show up.  Is
+> there an easy way to run most kselftests?  We really need a (more
+> accessible) CI...
 
-diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
-index ce068700939c..dba6b5b6dee0 100644
---- a/tools/memory-model/linux-kernel.bell
-+++ b/tools/memory-model/linux-kernel.bell
-@@ -16,10 +16,11 @@
- enum Accesses = 'once (*READ_ONCE,WRITE_ONCE*) ||
- 		'release (*smp_store_release*) ||
- 		'acquire (*smp_load_acquire*) ||
--		'noreturn (* R of non-return RMW *)
--instructions R[{'once,'acquire,'noreturn}]
--instructions W[{'once,'release}]
--instructions RMW[{'once,'acquire,'release}]
-+		'noreturn (* R of non-return RMW *) ||
-+		'mb (*xchg(),cmpxchg(),...*)
-+instructions R[Accesses]
-+instructions W[Accesses]
-+instructions RMW[Accesses]
- 
- enum Barriers = 'wmb (*smp_wmb*) ||
- 		'rmb (*smp_rmb*) ||
--- 
-2.34.1
+You can just invoke the top level kselftests Makefile but between things
+being flaky and runtime requirements there's a bunch of noise there.
+KernelCI covers a bunch of it and would be my go to, I've got a good
+chunk of the selftests that actually build and run reliably in my
+personal CI but it has no visible UI.  Part of the issue here might be
+platform specifics, I'm seeing this on arm64. =20
 
+> > > FWIW I'm still seeing this on -rc2...
+
+> > AFAICT this is due to the switch to using clone3() with CLONE_VFORK
+
+> I guess it started with the previous vfork() that was later replaced
+> with CLONE_VFORK.
+
+Bisect did seem to point at this commit FWIW, I've not dug into any API
+differences or anything here.  The immediate thing being replaced was a
+plain fork() though I see it was vfork() at some point before that, and
+I'd not have noticed if the individual testcases weren't hanging so the
+timeout was needed.
+
+> > I'm not clear what the original race being fixed here was but it seems
+> > like we should revert this since the timeout functionality is pretty
+> > important?
+
+> It took me a while to fix all the previous issues and it would be much
+> easier to just fix this issue too.
+
+> I'm working on it.
+
+Great, thanks.
+
+--d/oZ8G2r6TlAFN6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZfPlcACgkQJNaLcl1U
+h9DBngf+IjDxDtusJc/iSMVrkM3BxNZGYxiJwiwd29R9Z1J4+xF1epkd3KXzUhGK
+s7k2vCuJcyj3tj0CDKxLbC155dUIryEvIF8o9oJ5xY4z+l/8SSspGxm0Oly8fjZE
+T3vZLiWmWFyZV6pC9FhXryFLgnCCwmHgKXpMQoRDZGSkpq/DhxYTNAH1n94F2P6e
+vjEnCzuZb9YvH8ZEG7X5yiZs0Z6lUiVSFp4Uqf3AEFLZBl33JFREgnuYpuSsBo/p
+vo6UOKR/TkP61x02iuq5QiL0OtuW/pusrq1yDmAlILHzh6z5DYHgf/iNAumjKykx
+ZxQrgJtk5Fhc8P5nERw/c7Q07LjV/A==
+=Ezzq
+-----END PGP SIGNATURE-----
+
+--d/oZ8G2r6TlAFN6b--
