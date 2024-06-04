@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCA114A0BC;
-	Tue,  4 Jun 2024 14:42:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F95614A61B;
+	Tue,  4 Jun 2024 14:42:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512138; cv=none; b=a++cNANo7jwR6/f0aZJEhRG3VSbOwTKv3UydF7FEolpN5UAEe/rxnPPgS/0Y3YMb3x55UMZdsQ6mPb0+MLwKXMuxcrxKMHUpconJ+O71vWYtMTYMcE9+bz8Np5f7h4hwfabIu1l5bKqMy9UWIgWPzk+yaD/pckvFf1bIo5B3pnY=
+	t=1717512139; cv=none; b=QYsLX+38xDFKvZhM8E/piJxbzkVTj759c9YlmQdEQBlRiOiMp+88uI4f1Ee25NuBj3Mp3E1NBHQ0Qt6rwTLd4I5mugqbUuOJXfPJ+RDYS88Eqfw7QBmzexv9BnizFA1I5KUVPW/AME5WNFTfDGJdIOXPj8TQb1yHSI/zRRC2tWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512138; c=relaxed/simple;
-	bh=Pyur7WLvWYb5zL5/rTJ/K0q1Rf4L3oxuDRz/ogVLsII=;
+	s=arc-20240116; t=1717512139; c=relaxed/simple;
+	bh=bt/kGDzFunrncc+tGakDqJ1SDIrQ36rHNX8lhail/8g=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=BhtPzj7URHlmLOEh+kdePJ8OdOASvWZJcv6fUS+tOjGUwkggrqTeAIaJ0DYQr9svtgiYVx+u3PAMn7/p1YWgXEX9jeNJnORIa7L4NS3L4hFDYOPTnh5JY/4QFZeQMVIuxRJ7A8qZOq6VII9c0D0kuNU9Q//HWpbM96/X9DwKsOY=
+	 Content-Type; b=B2I6U5HbB09/Tiv3bL/3lxBop2FjiMSf7lZSGdoRfnyYRPvSYbCbXolb4pjPNDNaHjQlXTLc6HZrq60UYDgZHWzK2B7iXIFVATci2fuL8uhcEnjDw4KRREgXAa5W6HGYPFqw9acxv1qcWWD+y2rz7NlYOadeIT+vmG6Q0eTL0Hw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A09D0C4AF11;
-	Tue,  4 Jun 2024 14:42:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B7DC2BBFC;
+	Tue,  4 Jun 2024 14:42:19 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMf-00000000Z4V-3QXO;
-	Tue, 04 Jun 2024 10:42:17 -0400
-Message-ID: <20240604144217.676052910@goodmis.org>
+	id 1sEVMg-00000000Z60-1GtP;
+	Tue, 04 Jun 2024 10:42:18 -0400
+Message-ID: <20240604144218.160516951@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:26 -0400
+Date: Tue, 04 Jun 2024 10:41:29 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [for-next][PATCH 23/27] function_graph: Use bitmask to loop on fgraph entry
+Subject: [for-next][PATCH 26/27] selftests/ftrace: Add function_graph tracer to func-filter-pid test
 References: <20240604144103.293353991@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -52,19 +52,13 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Instead of looping through all the elements of fgraph_array[] to see if
-there's an gops attached to one and then calling its gops->func(). Create
-a fgraph_array_bitmask that sets bits when an index in the array is
-reserved (via the simple lru algorithm). Then only the bits set in this
-bitmask needs to be looked at where only elements in the array that have
-ops registered need to be looked at.
+The function tracer is tested to see if pid filtering works. Add a test to
+test function_graph tracer as well, but only if the function_graph tracer
+is enabled for the top level or instance.
 
-Note, we do not care about races. If a bit is set before the gops is
-assigned, it only wastes time looking at the element and ignoring it (as
-it did before this bitmask is added).
+Link: https://lore.kernel.org/linux-trace-kernel/20240603190825.083048115@goodmis.org
 
-Link: https://lore.kernel.org/linux-trace-kernel/20240603190824.604448781@goodmis.org
-
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -84,49 +78,77 @@ Cc: Guo Ren <guoren@kernel.org>
 Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/fgraph.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../ftrace/test.d/ftrace/func-filter-pid.tc   | 27 +++++++++++++++----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 0827b67f746d..4d566a0a741d 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -172,6 +172,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
- int ftrace_graph_active;
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+index 2f7211254529..c6fc9d31a496 100644
+--- a/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/func-filter-pid.tc
+@@ -14,6 +14,11 @@ if [ ! -f options/function-fork ]; then
+     echo "no option for function-fork found. Option will not be tested."
+ fi
  
- static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
-+static unsigned long fgraph_array_bitmask;
- 
- /* LRU index table for fgraph_array */
- static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
-@@ -196,6 +197,8 @@ static int fgraph_lru_release_index(int idx)
- 
- 	fgraph_lru_table[fgraph_lru_last] = idx;
- 	fgraph_lru_last = (fgraph_lru_last + 1) % FGRAPH_ARRAY_SIZE;
++if [ ! -f options/funcgraph-proc ]; then
++    do_funcgraph_proc=0
++    echo "no option for function-fork found. Option will not be tested."
++fi
 +
-+	clear_bit(idx, &fgraph_array_bitmask);
- 	return 0;
+ read PID _ < /proc/self/stat
+ 
+ if [ $do_function_fork -eq 1 ]; then
+@@ -21,12 +26,18 @@ if [ $do_function_fork -eq 1 ]; then
+     orig_value=`grep function-fork trace_options`
+ fi
+ 
++if [ $do_funcgraph_proc -eq 1 ]; then
++    orig_value2=`cat options/funcgraph-proc`
++fi
++
+ do_reset() {
+-    if [ $do_function_fork -eq 0 ]; then
+-	return
++    if [ $do_function_fork -eq 1 ]; then
++	echo $orig_value > trace_options
+     fi
+ 
+-    echo $orig_value > trace_options
++    if [ $do_funcgraph_proc -eq 1 ]; then
++	echo $orig_value2 > options/funcgraph-proc
++    fi
  }
  
-@@ -210,6 +213,8 @@ static int fgraph_lru_alloc_index(void)
- 
- 	fgraph_lru_table[fgraph_lru_next] = -1;
- 	fgraph_lru_next = (fgraph_lru_next + 1) % FGRAPH_ARRAY_SIZE;
-+
-+	set_bit(idx, &fgraph_array_bitmask);
- 	return idx;
+ fail() { # msg
+@@ -36,13 +47,15 @@ fail() { # msg
  }
  
-@@ -631,7 +636,8 @@ int function_graph_enter(unsigned long ret, unsigned long func,
- 	if (offset < 0)
- 		goto out;
+ do_test() {
++    TRACER=$1
++
+     disable_tracing
  
--	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
-+	for_each_set_bit(i, &fgraph_array_bitmask,
-+			 sizeof(fgraph_array_bitmask) * BITS_PER_BYTE) {
- 		struct fgraph_ops *gops = fgraph_array[i];
- 		int save_curr_ret_stack;
+     echo do_execve* > set_ftrace_filter
+     echo $FUNCTION_FORK >> set_ftrace_filter
  
+     echo $PID > set_ftrace_pid
+-    echo function > current_tracer
++    echo $TRACER > current_tracer
+ 
+     if [ $do_function_fork -eq 1 ]; then
+ 	# don't allow children to be traced
+@@ -82,7 +95,11 @@ do_test() {
+     fi
+ }
+ 
+-do_test
++do_test function
++if grep -s function_graph available_tracers; then
++    do_test function_graph
++fi
++
+ do_reset
+ 
+ exit 0
 -- 
 2.43.0
 
