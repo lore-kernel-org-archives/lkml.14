@@ -1,159 +1,274 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11010001.outbound.protection.outlook.com [52.101.128.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCBD2C861
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717467545; cv=none; b=Fzk7VauVJ9KTwGQUQTbfEufCjRxc1Nd4KYOH/ceJpA1dqmMUPglOrro1FHuM8DaG0AqwJEQ3UDVP5eUfn5jzgEfSprkAY8FJeuV+U+M8xPD/vwtX/ZIN6IkxOaH0t/Tk7w9dcG5ZfRv+No2WHospS+Civ9UWRxYQ7x1EZnhW+H4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717467545; c=relaxed/simple;
-	bh=SQjBsq1pSDRa+92X8rsTn7sADmhW91X/pso6BF73AR8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=CN632Wsn/tnNhl7GP4IH2vBoihvIHRSJlodtwDxfSAmJTdS/pkSvhdLCistdpU1R7yKn43qWjfQDjDFePU105tmFMg/avwn1pI72tRpps9waPGVWtpHqoXDRmR5AqoHXtGoHWBly/d7hYuOrHOK0hm2rmXPAMgpWQODoAEIoLaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=o5rRVSVM; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E6213D886;
+	Tue,  4 Jun 2024 02:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717467551; cv=fail; b=qWGGl6bNWOjkzRFzcQ2ce7uSSQ4ZlawzN0j+NdcIj7izZSh4QCZQtyah78K1htKHeulPsMncD0eoA3qE7+QamUqZz+AnIExsrSf0z2/H2h8IjuMVCpZIxBEF7qHPly8A3JMYpntCQW5NlA9N0bOhZObwOUD5WgLTlKErCNERSns=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717467551; c=relaxed/simple;
+	bh=gOcZkaJwvkmT7oEE1lzEI5iQoTY15+nnHRJV9h5aF6c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=I3wvTzWXPEQp8Hlw9PDGFlDu8QQqnjUI85TdBZUVxJIMgLvhixzDl5mTS9GDBdxivarGGz8uL5fA/XIa0WIDARQyA+WoJ+qxU26unf5MDtGkB11b82NZgMv0cVaEWD5caIDKCtIW+P4jMJYEj2OrPmD3xaGXWtKJEaKw24M/fz8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=ZYHhTJok; arc=fail smtp.client-ip=52.101.128.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o5rRVSVM"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20240604021902epoutp04e7c4d6d6b210ad9dd6e571ae5c2dbc6a~Vq6FInHXB1337813378epoutp04M
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:19:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20240604021902epoutp04e7c4d6d6b210ad9dd6e571ae5c2dbc6a~Vq6FInHXB1337813378epoutp04M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717467542;
-	bh=JrbYCyMWg5+SkRsH6d147/xUVTz498odRqOzgTstKfc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o5rRVSVMw+Ki3eiwwpt5EO6UBZgye6nuzLJAGvHz84fpUHt5bIW3nB8lAqMOGzqSp
-	 HTzKfRXWgJE1ZvKmreYToUFlP5+rmPbekBLhoNOaJfY5gG1TjjNklmoqf8kxF4ahNg
-	 QXrdS5tnvXKDg9oxz4hnEbFT3VKBPYWSyy9bZusk=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240604021901epcas2p2b90b9ae5ce5cb136016f31ec5f38a043~Vq6ETaECa3090730907epcas2p2F;
-	Tue,  4 Jun 2024 02:19:01 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.91]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4VtZ5w6CCZz4x9Pv; Tue,  4 Jun
-	2024 02:19:00 +0000 (GMT)
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	11.8A.09848.3997E566; Tue,  4 Jun 2024 11:18:59 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240604021859epcas2p47538af772afe3e57d25c1fde33fd28db~Vq6CYYfI60306903069epcas2p4w;
-	Tue,  4 Jun 2024 02:18:59 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240604021859epsmtrp25dbcd778e59061ec44393ffe8b9027fd~Vq6CXfLDO0329303293epsmtrp2A;
-	Tue,  4 Jun 2024 02:18:59 +0000 (GMT)
-X-AuditID: b6c32a45-447fe70000002678-6b-665e7993479e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3C.16.08622.2997E566; Tue,  4 Jun 2024 11:18:59 +0900 (KST)
-Received: from ubuntu (unknown [10.229.95.128]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240604021858epsmtip26dff3dc71f3ee0c68295f92acf988b69~Vq6CLPIaz2236722367epsmtip2N;
-	Tue,  4 Jun 2024 02:18:58 +0000 (GMT)
-Date: Tue, 4 Jun 2024 11:19:35 +0900
-From: Jung Daehwan <dh10.jung@samsung.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
-	Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Mathias
-	Nyman <mathias.nyman@intel.com>, Felipe Balbi <balbi@kernel.org>, "open
- list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE
- AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: usb: xhci: Add
- 'write-64-hi-lo-quirk' quirk
-Message-ID: <20240604021935.GB49465@ubuntu>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ZYHhTJok"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N56mr3DUr+VJmEMHi69REIngL+TxYAqsmHu+NVRr5uNh7IWpX4oIyNBGgzI4ygCkrqGTh+rn5FSvmWQ8mlcoqZbthLUtyvbukfFRGW9mlMfq8ZETXLkVARifqptcZWpAFahLzZAfAV1BXzDZg6Kfb1QVxj6BWwwfBLc9sTZjcCHu4cIiwso4+FiGc7saM24LmTwOjkhOjBiihOOMsM2cuRob/BeyP7QPbBA8n9uRyEPdDDkGXQcNDMPxUjKhr4joG0UWPQjXinalAOwA/LUJWrCuJ9Ljo32W5FRKFK2EPNY02h9DlEOR7z5n+gocHXV4ejPq++QpbAzdq4/7Sun4eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RDuI3S4oC3/uupXWLOF+caYuZ5D8gNLb1ccESyRaWws=;
+ b=XtDyShXBkdtIKsjpBjbs/XNImsI8A54wwD/+o14pzzi9qvAANqts5aMsiBtC0vnLxLfQVlR1IpDHE+5JZYgPWN64brpoaogrVewv4CZCaUfjNektiD+9twUip80gunthaWhPK/XWWcWX420c0I1ZjGsSRgLyj2q/KFG8zN1HQlOIspY+h9upvevQJMH6eW7i3V0XhsWsCiR4uUFG7JiLnzqHmnJD2WCAtB4uzYjDC4eWPGbJWjvOQEsR++huKMH6k/cYs0dbmjqhMGcSbgi3peKgZpGaiiS+k7jalRo/licLUvFEhmUnebHHcSHk9FGP/KvUNXUUztcY3PdTTWJP3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RDuI3S4oC3/uupXWLOF+caYuZ5D8gNLb1ccESyRaWws=;
+ b=ZYHhTJokScPFeBsxYb6X1g7ukUkhXVfNH1cUr0w2EbVlLuQrs/1oSoOREwesYsoePH16Cyeq/FMNd/ebt2RTKROX7n6/iMdaWlXP9gVbbXd31T2Qu0DDNZn4FCZi5YxXV4Z6dSMvLBZ2C9A8mrFFhlwzngmtkCSSuFXwCslWu5cgCHz0fmBC3ctT3kvdoUnSl1WZvKbcY+Zm09rvPIdJ6pgn7yxFb1xAjPpU/42lHkpjHJyAud3x88kXYIoFdkOzNmaWAk21IQhkjpuFH8yTDlmf4Vxxsw0vfe4ZHPlgu+r0mJNClUBD2oAbXlqKHN/pSR67J7pOU0N2jlxre3EWxA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com (2603:1096:820:146::12)
+ by PUZPR06MB5452.apcprd06.prod.outlook.com (2603:1096:301:ea::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.30; Tue, 4 Jun
+ 2024 02:19:06 +0000
+Received: from KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e]) by KL1PR06MB7401.apcprd06.prod.outlook.com
+ ([fe80::f4f:43c4:25e5:394e%4]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
+ 02:19:06 +0000
+Message-ID: <3f1b7f90-5de3-45c5-87c1-c09687d9e623@vivo.com>
+Date: Tue, 4 Jun 2024 10:19:01 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] sbitmap: fix io hung due to race on
+ sbitmap_word::cleared
+Content-Language: en-US
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Andrew Morton <akpm@linux-foundation.org>,
+ Pavel Begunkov <asml.silence@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org
+References: <20240527042654.2404-1-yang.yang@vivo.com>
+ <Zl5sj6IC5sBqgAF2@fedora>
+From: YangYang <yang.yang@vivo.com>
+In-Reply-To: <Zl5sj6IC5sBqgAF2@fedora>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0077.jpnprd01.prod.outlook.com
+ (2603:1096:404:2c::17) To KL1PR06MB7401.apcprd06.prod.outlook.com
+ (2603:1096:820:146::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240604003013.2jwskwiqivgumrsx@synopsys.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRmVeSWpSXmKPExsWy7bCmme7kyrg0g233dSyOtT1ht1iz9xyT
-	xfwj51gtmhevZ7N4Oesem8X58xvYLS7vmsNmsWhZK7NF86YprBb/9+xgt1i14AC7A7fH4j0v
-	mTw2repk89g/dw27x5b9nxk9Pm+SC2CNyrbJSE1MSS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1
-	tLQwV1LIS8xNtVVy8QnQdcvMATpNSaEsMacUKBSQWFyspG9nU5RfWpKqkJFfXGKrlFqQklNg
-	XqBXnJhbXJqXrpeXWmJlaGBgZApUmJCd8f/4QsaCtxwVrZOvMjUwLmDvYuTkkBAwkeja85Kl
-	i5GLQ0hgB6PE3d89TBDOJ0aJ9nnvGSGcb4wSLZsOMsG0nDqxD6plL6PEhTuToVqeMEpMbXkO
-	NphFQEXi0awFjCA2m4CWxL0fJ5hBbBEBHYkDJ86DNTAL3GSW2P29HWyssECYxMLTt1i7GDk4
-	eAW0JY62R4KEeQUEJU7OfMICYnMKWEtcX/STBaREFGj+q4P1IGMkBGZySDz4P50N4joXibkr
-	uqBsYYlXx7dAPSol8fndXqh4scSt58+YIZpbGCVWvGphhkgYS8x61g52NLNAhsS95vVgyyQE
-	lCWO3GKBCPNJdBz+yw4R5pXoaBOC6FSWmH55AiuELSlx8PU5qIkeEs2bGqCBtYVZ4vbLRSwT
-	GOVnIXltFpJtELaOxILdn9hmAa1gFpCWWP6PA8LUlFi/S38BI+sqRrHUguLc9NRiowJDeGwn
-	5+duYgQnWy3XHYyT337QO8TIxMF4iFGCg1lJhLevLjpNiDclsbIqtSg/vqg0J7X4EKMpMJ4m
-	MkuJJucD031eSbyhiaWBiZmZobmRqYG5kjjvvda5KUIC6YklqdmpqQWpRTB9TBycUg1MM+5f
-	j006c/y4R6fA/1Pz3/A+UrW78JKzeKV87vl/3wMfbnx2vNvZ/Mx9/6MWM39N/3VW1b3ANNTr
-	XOf6tlu5S97LFPhrl6qmhN7pZr1q/mr9g76u/YnyFxqu8sk9nTy19UuYrIbUCrbJ4dX+fb0L
-	VdKe+Xntm2h2yKfmh3/Al2yRnYVvZe7OfuzIYXBUI/bRqXWZd/q8l9zq1cq0nrZW/VvR/hCj
-	5TdlVu2ZsLA/Z/+/xtNu/fPX/88V4LE/r9NiveT2n5hzZ1V+XXU818R74ayP5woevolSh44x
-	uHyqe2JjIZ7fXzzru0RIxbP5z+P/ihwrk7Ni1v4iy9e8PXJh//FbF9cvOC8q0p97dYr4YyWW
-	4oxEQy3mouJEABPz5Nw/BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrILMWRmVeSWpSXmKPExsWy7bCSvO7kyrg0g/O3mSyOtT1ht1iz9xyT
-	xfwj51gtmhevZ7N4Oesem8X58xvYLS7vmsNmsWhZK7NF86YprBb/9+xgt1i14AC7A7fH4j0v
-	mTw2repk89g/dw27x5b9nxk9Pm+SC2CN4rJJSc3JLEst0rdL4MpY3rSQqWAtW8WTOUvZGxh/
-	snQxcnJICJhInDqxD8jm4hAS2M0ocX1xAztEQlJi6dwbULawxP2WI6wQRY8YJSbdWMcIkmAR
-	UJF4NGsBmM0moCVx78cJZhBbREBH4sCJ80wgDcwC95kl+hbNZQVJCAuESSw8fQvI5uDgFdCW
-	ONoeCTF0C7PEn4l7wAbxCghKnJz5BOw8ZqChN/69ZAKpZxaQllj+jwMkzClgLXF9EcgHHByi
-	QDe8Olg/gVFwFpLmWUiaZyE0L2BkXsUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERwr
-	Wlo7GPes+qB3iJGJg/EQowQHs5IIb19ddJoQb0piZVVqUX58UWlOavEhRmkOFiVx3m+ve1OE
-	BNITS1KzU1MLUotgskwcnFINTJeNxWetd9QW7ZM4tFRXcZMTV8vBiT13ZuutfZ/sufrX1l85
-	13uzHPf/v/Concn6e36HBb92RFAYQ5L9lFsdDfVcRVm6ZarFXOE5loVudettfBIqlj4rKr5h
-	Uczc63v/t6K2NOt5N/nyI3++sRmyROdZ8ex9JFmktE15QWGaaPEUMe0Lf7NsKn/JWX75897H
-	dOfrmr8uAREz94pFev0/9yn7H6frnMe8a7/wTtQ4vLfnBe8rK5O2F327A0M+sKbKfygP/ntm
-	j4/hZvXUZrm5r7NjLr3Rtt+9+nj9bHepq/oHvkrZ27zaeeXm4x1a+pKHEg8Kzd/wb+8OJqnG
-	cnWuDC+9Ofdal0SUT9JzNvijxFKckWioxVxUnAgA5x1zMQQDAAA=
-X-CMS-MailID: 20240604021859epcas2p47538af772afe3e57d25c1fde33fd28db
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240531060729epcas2p1df12dd3b14c5fa2fa0716f72010b3dbd
-References: <1717135657-120818-1-git-send-email-dh10.jung@samsung.com>
-	<CGME20240531060729epcas2p1df12dd3b14c5fa2fa0716f72010b3dbd@epcas2p1.samsung.com>
-	<1717135657-120818-4-git-send-email-dh10.jung@samsung.com>
-	<bcbff3b2-c5ae-4a95-aa36-f9b88a97e72c@kernel.org>
-	<20240603033427.GB23593@ubuntu>
-	<69c954ce-d7a2-420c-b3f6-72caee02d84f@kernel.org>
-	<20240603082538.GD23593@ubuntu>
-	<20240604003013.2jwskwiqivgumrsx@synopsys.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: KL1PR06MB7401:EE_|PUZPR06MB5452:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36dcea3c-c60e-4e51-3f89-08dc843cb5a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VUh1NHlZNHZTeU5UcHFyTU1YbEVqMFkwRi9LbDJadlhnNlJUbGh6aWVLWEox?=
+ =?utf-8?B?ZEdtc0lSMm0rNllOMVdqRE1FbjNscGY1bzRkTDRMTlNCeVd4eUFrak05TE9Q?=
+ =?utf-8?B?Uk5rd1lsZ21KdWVXRVArTFRoWWRFYzk5a1N4SXpXanhsbEltOWh4UE9EQXFX?=
+ =?utf-8?B?VE8zL3ZIamFnVGxGQmJMdEtYcndWajhwWjhFUjE1UmRrZ3hVaFJJcGc3dnlt?=
+ =?utf-8?B?aXJ4L3ZQb3ZxNkJqTEJRVG8wQnRmV3cwd3UycXZ1WFVXREtuMGdtQWwvSE56?=
+ =?utf-8?B?MHV0VzBsUFhrK0dLbHc3RXlOOE5USWpHNU1XMTk1MUFqOTNGWCtUYnNyb091?=
+ =?utf-8?B?VWMwdXpRVm5KNG84TEVnQWhjdVh5S2FaY0pDblY1cElyVTZPaWhWRkpxWSs4?=
+ =?utf-8?B?V05TSE10V3NpcTl6K2tKMTZoVEFvRXdOMWY3OEVtNmMxZG1iRXNlVDBvdito?=
+ =?utf-8?B?YnlObWEvOHNJZDRIdFNmeUM2Y1JBVmhZYWdwVUtqS202RktTVVpCRW9pemV6?=
+ =?utf-8?B?YXpHSXkrNm9LS0YwVmxUZTNNNXdYSFRiUHR0bU4xUGdmbW53M1BjM2V4bmt2?=
+ =?utf-8?B?anVNdmFCUWF2d2piNW1RU2RxM2g2QjJZRFhFd0ZCcW1EUWVyNjFYNFkvb2c4?=
+ =?utf-8?B?dFpzMU5FN1BqOWtKNy9xTEN4ZlJackhzWE9IWkpnRUxEN3g3Y0UxRXNqdlpY?=
+ =?utf-8?B?VlVMZytmT281eTJyTmtVeVVRUG5zOCtDbzF6bk5LWGNaTVpqUGdDcXJTeWVo?=
+ =?utf-8?B?RGlrSURHWmxCZTZZenRzSEtYUHhLUmJHZURYbTFiTE5XNHI1ZlY5dHJPY2Yx?=
+ =?utf-8?B?MU14R2pvRk9jekRRakdGQXZKNlpKUVczOFQrV1BreTVSL21Ia1RLYkRKOW9s?=
+ =?utf-8?B?dmQwL1ZsYlJRNENsbmNhWks0ODJjWTB6QjZKdU1hOFU5QllzOTdSS0VBaWh5?=
+ =?utf-8?B?eUVGTUhOdHUwM2s4WVp5WFJXUnNFdEZVN3gvYk5UWHNMV3NONHhRNGRpTFIr?=
+ =?utf-8?B?NHBMa3NONHVOaUNaazgvdjRRaGsxbFRtekNsOEdyTGtZNUQvanE3L2g2UEhE?=
+ =?utf-8?B?RnJma0kwRUxsQkgzR0pBT3o0dWk0Nm1wSnZXVFNWQ284ZmUrVW9UTWplOGFQ?=
+ =?utf-8?B?bWVKOUd2WlNpOHlJbmpkLzczQmpzVmFTa1NjT3lJWGdST3M3ZVpBK295VjdK?=
+ =?utf-8?B?Yk1ZTW9lcy85ZUw2NXpDWTczaVJFd3RxcVEwY2RUTGIrVXdnNXNwR1NJMnBq?=
+ =?utf-8?B?MmRUOENaeEZBTERKOWlyQ0xZTmVsYTJUV3Q2TXREU2E5OTA2OHJ3YXNHdDZ2?=
+ =?utf-8?B?aU9TRzV6WHlVRUJTemFyT1NGejR0YUh6MkZmU2ZtQ01HRFFXVWlyWEJsRElK?=
+ =?utf-8?B?YmsyM1gxQU9LWG1wS0svUER1MU5wQUxvUllZZEZ5MTBvbHg5UlZKc3FIc0Mr?=
+ =?utf-8?B?NS9EWnNXT3NJU3NkVDNEdmYzaWo0emRnK1F0TlNoWXpaVTlmNnYvTTc5V1lP?=
+ =?utf-8?B?QSs3T1U1MWJCK2RnZFpBei9SSmNWV1ptcEh4c3BORUpORElPS29zTTVNdWJn?=
+ =?utf-8?B?bldoWThtY2NFMlloOEFVblU2NWxjSkpKcHBZTEZYNThYUDEydlVlOTBPai8x?=
+ =?utf-8?B?dkR3eVdLQW5SU202V21keVFzNWl3NmphZVppakxqNitFdC9TWnFCZ3JKQVJa?=
+ =?utf-8?B?Vm9Bd3NHSmlWelhvaHJVakU4blIvQVp1NlNYWmViL2pBaC9yaTBDc0t3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB7401.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MlB6bjZyKzhHV24zaURDU1JSTmJxT3dCZ21QdnBVdG04czdSNGlQLzIwVndl?=
+ =?utf-8?B?SjhoSEsySHJPWW9NcXZmNU5NT0QvbERlZ1B0dXJWc0ZOSjlucHVPWHhha08y?=
+ =?utf-8?B?bGJXdFNWaG9XMmk3eW9yQlNDK2xHZ051NzNZZDB1VDhSUFJza3JzdGVsUXBH?=
+ =?utf-8?B?VGNCSzRvSDdzeENWSG51SE4rZThncEJlM3doT3psNzBBZUU3ZlVJaWJkcjZB?=
+ =?utf-8?B?YlFlbk9jZ0ZOQnR4cGEwRzlYY3Q5VDhLZzZDOHhycjR4WG9jdTFNWjgzSUhF?=
+ =?utf-8?B?bll4dkxZRzFRbDZOanUvdEp0ejlxNkJFNnJjQmNmcEJ0R0wzdVNJZWpwWWVJ?=
+ =?utf-8?B?T0p4S1l4SDVjSVhsRDYyTjZaNjlMazBPUjE0QU5va0hzSWwzZ2VQdXNMOEI4?=
+ =?utf-8?B?WURhODdOQnhpS0NTNXFudkNGM3MzY1pnQlRhdnNwWHNRUHRMbnR2aEw4L3B0?=
+ =?utf-8?B?Y2VmK0o5bDZhT0YzTnVmNlcvdkhmQnFJQ3dybXc5Z1lvTmhRSXlHaExobGc3?=
+ =?utf-8?B?c3pxQWRIREVmRzgrTTFWaEZrMmFHNXpOUGZyaU05TWpzTTBhU0RIc3lqdXF3?=
+ =?utf-8?B?c1ptdWx3UUF2a3k3MW5kdWRYWXpwYnFtaVpINURoUHhXUmErbHkvL1N6cjN3?=
+ =?utf-8?B?YXFKOWlYWVhNOGllN3BBUVhjL1ptU3ZPRmxiWFUwcHBiWldjaFhyQ0lURVJu?=
+ =?utf-8?B?cCs3aGV1VGU1UzBYZHJhUEwrWG56N244VVl5VTlVNkhIVld1TzBaV2JlMWxI?=
+ =?utf-8?B?YTg2cmRiOVNpbmdKbFkvM0Rld1R3M2k5TmNYMzBXeWlNQXBHWFJJMDl6bkJN?=
+ =?utf-8?B?VmNFeTluMkRQTnV1T3BmKzlCcVh5dlByMnk3dGJ6cEN5QXJ6YkpsdTM2OWsx?=
+ =?utf-8?B?bDY4YU8zYklSaGNZbXFqejZpc1pHbXBXdkFGU3N0WDZ3YjE3ZHRFTy9neWF2?=
+ =?utf-8?B?WC8wZkM1TW1VK25Wak95S1VTbTczYUUvWGQ3MER4OFErMlRuTS9hRkhURlRE?=
+ =?utf-8?B?OGpoVHBhSzZVTU5adEYvVHh0aStxVVZGVk52SG02dWVqLzNtNStXNUhuTUZW?=
+ =?utf-8?B?WkZ2ZmR1bUpLUUR5SU10UzBPajJaWEF0b3pNenI0WUQ1bG9SVkpXQTJSTFZ0?=
+ =?utf-8?B?RkdzTkx2TllLa2pZWXBJUSs5RmFHdVM5WS9qZGlSenRRcXJqR0dsdEo4Wlpa?=
+ =?utf-8?B?dmZSSS92R0xvYXp0QU1vaTVIcDNYLy9ETW5idUJLWEZEZnhTSzZ3MExHM0x4?=
+ =?utf-8?B?ZjdMb3ZTc2pYbUptRW9EaVE5WmRUaThEL2doMUdTQnhrYkk4ME9ybEk0Z05u?=
+ =?utf-8?B?Mm1Fc1d1ZWxQZVhpOWY5R2M1bG1DMzNpRTcySmEzaFVqMlBaakorQWkzVDYx?=
+ =?utf-8?B?djFzZ3NNdWNqZ1RUWnpibm5GK1NKbE0zQ3dnQlVjK08wWVlIWlpNc3NNU0tT?=
+ =?utf-8?B?blBZTWsvQlRCa2FmaGgwVE5vV0xWQ2d5bWNNZVlUUWJPWGx2MElFZW9iUzZj?=
+ =?utf-8?B?b3c1NlpNZE9wbWd4UTd4b3hndHZ4NndVenVsN1MySW1TNEppaXJyTUJhT1U0?=
+ =?utf-8?B?TW1LS2hkajdBRVFQazVvZVBMYnBqcEE0dTIyalJwUVQzUHVGZ09QT0x3QVQ5?=
+ =?utf-8?B?dUJoYjdoQmhTazI2Qml4N3BoVkYyWkljU1lMZVJWcUl5U0U4Y3FQTUxIZU5q?=
+ =?utf-8?B?NEJ1ZlRMdWVIa2dmcitEckZDMXNqamhyWUhIWHIxY0FWZWRHL05ydERza2xa?=
+ =?utf-8?B?azVzSy9kM2hTcW15OFNsWkJTTXd0bFM0OHBDZEtsMVoyd0V2amFpUjZWek1L?=
+ =?utf-8?B?RGR5Q0Evb0lsSmFFNUptN0JsaXJaSlBaVnNmanlXTTROU3VHc0RVQ3hwL3lh?=
+ =?utf-8?B?aVl4YWwxZGNCaWNDbHRIS3BTdFQveTRKNkV3WDNSb1FJL2lxRzdYbE5vWnk1?=
+ =?utf-8?B?anQycy9UL0F3YVU0SjhmcExkSll2VGUrazlWUFhJMkUvbk8ycWlUamlQOFJC?=
+ =?utf-8?B?WmxmUVAvQTYwWWt2TnhmNTJLZVVtTGdvNmJyMzdXczUrYzB6Vm1RWWd1Y29L?=
+ =?utf-8?B?bGhZaXlJNUlzMnlmeHAweGozZHp0ZTBsRXB3Ui83SXA3bjZraVo4MG4zQWkr?=
+ =?utf-8?Q?yF1EqvdIigJZNUlH6q+t7npgv?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36dcea3c-c60e-4e51-3f89-08dc843cb5a8
+X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB7401.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 02:19:06.2183
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FV33m8B7p6X+Iy3oTkGztcjmcfE0qreXkQs71hIdFAwOJojGmiTmzan8FVYRxD4HGpLgFXbIwTqh9tJB0/d4ZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5452
 
-------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-
-On Tue, Jun 04, 2024 at 12:30:32AM +0000, Thinh Nguyen wrote:
-> On Mon, Jun 03, 2024, Jung Daehwan wrote:
-> > 
-> > This issue is not specific on SoC side but dwc3 controller. I think it's
-> > better to add it to dwc3 directly but I can't find dts for dwc3. Dts for
-> > SoC, which uses dwc3 would be needed in this case, right?
-> > 
+On 2024/6/4 9:23, Ming Lei wrote:
+> On Mon, May 27, 2024 at 12:26:50PM +0800, Yang Yang wrote:
+>> Configuration for sbq:
+>>    depth=64, wake_batch=6, shift=6, map_nr=1
+>>
+>> 1. There are 64 requests in progress:
+>>    map->word = 0xFFFFFFFFFFFFFFFF
+>> 2. After all the 64 requests complete, and no more requests come:
+>>    map->word = 0xFFFFFFFFFFFFFFFF, map->cleared = 0xFFFFFFFFFFFFFFFF
+>> 3. Now two tasks try to allocate requests:
+>>    T1:                                       T2:
+>>    __blk_mq_get_tag                          .
+>>    __sbitmap_queue_get                       .
+>>    sbitmap_get                               .
+>>    sbitmap_find_bit                          .
+>>    sbitmap_find_bit_in_word                  .
+>>    __sbitmap_get_word  -> nr=-1              __blk_mq_get_tag
+>>    sbitmap_deferred_clear                    __sbitmap_queue_get
+>>    /* map->cleared=0xFFFFFFFFFFFFFFFF */     sbitmap_find_bit
+>>      if (!READ_ONCE(map->cleared))           sbitmap_find_bit_in_word
+>>        return false;                         __sbitmap_get_word -> nr=-1
+>>      mask = xchg(&map->cleared, 0)           sbitmap_deferred_clear
+>>      atomic_long_andnot()                    /* map->cleared=0 */
+>>                                                if (!(map->cleared))
+>>                                                  return false;
+>>                                       /*
+>>                                        * map->cleared is cleared by T1
+>>                                        * T2 fail to acquire the tag
+>>                                        */
+>>
+>> 4. T2 is the sole tag waiter. When T1 puts the tag, T2 cannot be woken
+>> up due to the wake_batch being set at 6. If no more requests come, T1
+>> will wait here indefinitely.
+>>
+>> Fix this issue by adding a new flag swap_inprogress to indicate whether
+>> the swap is ongoing.
+>>
+>> Fixes: 661d4f55a794 ("sbitmap: remove swap_lock")
 > 
-> This quirk applies across different DWC_usb3x versions. IMO, you can
-> just pass the xhci quirk flag along the dwc3_xhci_plat_quirk->quirks
-> without needing to introduce a new xhci DTS binding. However, to do
-> this, you should extract the xhci quirk flags to a separate header so
-> that dwc3 can include and use them.
+> Indeed, commit 661d4f55a794 ("sbitmap: remove swap_lock") causes this
+> issue, and ->cleared and ->word should have been checked & updated
+> atomically.
 > 
-> BR,
-> Thinh
+>> Signed-off-by: Yang Yang <yang.yang@vivo.com>
+>> ---
+>>   include/linux/sbitmap.h |  5 +++++
+>>   lib/sbitmap.c           | 22 ++++++++++++++++++++--
+>>   2 files changed, 25 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/sbitmap.h b/include/linux/sbitmap.h
+>> index d662cf136021..b88a9e4997ab 100644
+>> --- a/include/linux/sbitmap.h
+>> +++ b/include/linux/sbitmap.h
+>> @@ -36,6 +36,11 @@ struct sbitmap_word {
+>>   	 * @cleared: word holding cleared bits
+>>   	 */
+>>   	unsigned long cleared ____cacheline_aligned_in_smp;
+>> +
+>> +	/**
+>> +	 * @swap_inprogress: set to 1 when swapping word <-> cleared
+>> +	 */
+>> +	atomic_t swap_inprogress;
+>>   } ____cacheline_aligned_in_smp;
+>>   
+>>   /**
+>> diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+>> index 1e453f825c05..d4bb258fe8b0 100644
+>> --- a/lib/sbitmap.c
+>> +++ b/lib/sbitmap.c
+>> @@ -62,10 +62,19 @@ static inline void update_alloc_hint_after_get(struct sbitmap *sb,
+>>    */
+>>   static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+>>   {
+>> -	unsigned long mask;
+>> +	unsigned long mask, flags;
+>> +	int zero = 0;
+>>   
+>> -	if (!READ_ONCE(map->cleared))
+>> +	if (!READ_ONCE(map->cleared)) {
+>> +		if (atomic_read(&map->swap_inprogress))
+>> +			goto out_wait;
+>>   		return false;
+>> +	}
+>> +
+>> +	if (!atomic_try_cmpxchg(&map->swap_inprogress, &zero, 1))
+>> +		goto out_wait;
+>> +
+>> +	local_irq_save(flags);
+>>   
+>>   	/*
+>>   	 * First get a stable cleared mask, setting the old mask to 0.
+>> @@ -77,6 +86,15 @@ static inline bool sbitmap_deferred_clear(struct sbitmap_word *map)
+>>   	 */
+>>   	atomic_long_andnot(mask, (atomic_long_t *)&map->word);
+>>   	BUILD_BUG_ON(sizeof(atomic_long_t) != sizeof(map->word));
+>> +
+>> +	atomic_set(&map->swap_inprogress, 0);
+>> +	smp_mb__after_atomic();
+>> +	local_irq_restore(flags);
+>> +	return true;
+>> +
+>> +out_wait:
+>> +	while (atomic_read(&map->swap_inprogress))
+>> +		;
+>>   	return true;
+>>   }
+> 
+> IMO, the above fix looks a bit complicated, and I'd suggest to revert
+> 661d4f55a794 ("sbitmap: remove swap_lock") if no clean & simple solution
+> can be figured out.
 
-I haven't got using dwc3_xhci_plat_quirk. Let me try to use it.
-Thanks for the comment.
+Thanks. I will send a patch to revert that change.
 
-Best Regards,
-Jung Daehwan
+> 
+> Thanks,
+> Ming
+> 
 
-------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_
-Content-Type: text/plain; charset="utf-8"
-
-
-------NM.SL-8AX4fCWwUaz12YupYcgI_4q5PcTQ1CNbbJhqicWcnv=_436c4_--
