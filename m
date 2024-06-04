@@ -1,289 +1,413 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2057.outbound.protection.outlook.com [40.107.6.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6029412B145
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.57
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511047; cv=fail; b=iidWl5Wy+2u7NJQrc4C8PyXj0CPhGRtoag13wKvgyd4Zm8gcYxhUH4B/YgD92b6D27+rV8+OKU1xHraC9JfRQvHtstH4yRfjtWMH4pmr+IaEOaprPcZ6wq+v3NY8+/Q9xk6A9VACcA4BWDIe77fCg/hvdaWStnYmkhJ5VK3r+3o=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511047; c=relaxed/simple;
-	bh=3TJKfYJgnJ3Aq4ctesDZ8Ikm7feKsj1XoWkcHrG5JIM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qcMXOHksFXsZKnsb/HUjnNQxiOIpjEXKvn2dxNqpVvXr0eFLG28qpNQeklDbkk+bZ83sC/h5jPD/wr0n5Sink6hl45Ev2X6tgMR4qU+of/8gmCLloXTHowAVj0DuCGu5rsJMVlWtRU/oo5qg2xUXN3MCmouCG2lNs1rPk0XiUpk=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ffTk1S3L; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ffTk1S3L; arc=fail smtp.client-ip=40.107.6.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B7212B14F;
+	Tue,  4 Jun 2024 14:24:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717511081; cv=none; b=K6YEXGpwemf2u9uPkdwnrR017MdvGodA2QnAqLd2l/RXDIzuifVFWjRPtoFlXmufn6dNM47SDVkyl024X2PCTz4W58iYx9ETtX1MZMA5RyqW11deDExFbK9ndfUs2DBNvupJyBqIO+uc45/90RvNKFlGyy7RMTMkH0kt028R6QE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717511081; c=relaxed/simple;
+	bh=HLNcSZfh0ioxvmMpsDRTGbbRcDkxiJBXxeViGC43KO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RytxAXpSvY+7ifxrIp9HC5MpERh6DzEOPn0OcdfWEGHWykHHHGHjrntAWlEDjyInPpsFGvo3xtvH8g2JyxwsX6zquWHuI7nDpT55oMI/tKPTbn5jtI+uQhDWYv95YRLRrVkeI8S1dzfYp8+OBdHs5CFpyOfWi4MpDCcOPtsZ338=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IwPsBL0H; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ffTk1S3L";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ffTk1S3L"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
- b=RLm3TepBIYWYf2k3JR3Q9FpCeJrlROPdopqu2cYsf64zxoywk6rGW663fF9ERWwfvnxc2Zhq0RgNSUrfLAsZreetBhddG0L1yrFXKw8AFskzd795f1Ko7OJmrLDsNC0PpcdqsP4dXAWec8zYTUhIerftOHRJWDrI/wbZeEHr8V5qFJFXP4jFBe/0IzQ6R6T+1YvSuyui1u51VviuS552eERx0/QjqW2Zp2ixqGg96lfx4TWiyVXJsMvzBQK+YzUg6QIAvYyJM6v8ephDM15/ar9jKbddt1vZzyTQVufbF4f1SUInqOk2ZMYkY1oKL5TdGLCzYUwm9quOs1hPAelK1Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9IFuoepYxY8qPs0Y/7v3UBKKSplNv6OLe+dg9GDADk=;
- b=RnmvpRgxhnCrKQ8j4YZl730nhonl3gYI8TmyVbk/bX4IZ3MX1y2xD7EqbVsEQyL0rbTxR6LWI1dQi3S98q7gCA5JD6NSb7FrsUlVwEW7P62V2aonZKBhtD77v6jfBrx1c+fN1U4jbxFSMMgScaozBv6Oe0TyH9X5C67Z5PsIy5hgQ8B0RtNecQ7PRLKOgDcjrP//W2lFWjUFnxO2XKCpimfsuH9AJoSaoHzVwjuZxNDnHNt3fTiL04jWzmwVN+a2BOIXOjrLr2pkqs7jWklpeG54gxA2v4a0XCLyBuPp9S7IuCq+cYpKJkQFHQYar+/M1nHAsyPssy7UholQRAZIFA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9IFuoepYxY8qPs0Y/7v3UBKKSplNv6OLe+dg9GDADk=;
- b=ffTk1S3LCg6xazkxMPfMwBxUHehreCzNlVkRi2HCF/dyX4w8W7WjVIxh8q1C+GRCw+1Qx1Ls5zgf6oUhMcYIu5CJloMiHeTmSl12iagaTEVfMHUVPgX+J27rlCtIWYpuuQucgJR4CakFl3UAJ6a5zsJOvA32aFLPCRpz/9DcDLA=
-Received: from AM7PR04CA0026.eurprd04.prod.outlook.com (2603:10a6:20b:110::36)
- by AS4PR08MB8144.eurprd08.prod.outlook.com (2603:10a6:20b:58f::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
- 2024 14:24:01 +0000
-Received: from AMS1EPF00000046.eurprd04.prod.outlook.com
- (2603:10a6:20b:110:cafe::c4) by AM7PR04CA0026.outlook.office365.com
- (2603:10a6:20b:110::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.30 via Frontend
- Transport; Tue, 4 Jun 2024 14:24:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AMS1EPF00000046.mail.protection.outlook.com (10.167.16.43) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.7633.15
- via Frontend Transport; Tue, 4 Jun 2024 14:24:01 +0000
-Received: ("Tessian outbound 3fb86adce702:v327"); Tue, 04 Jun 2024 14:24:00 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 0b58f2469197a9ea
-X-CR-MTA-TID: 64aa7808
-Received: from 4b53e8da1b06.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7094DB93-85EC-4B39-BBBD-C9B2D038400C.1;
-	Tue, 04 Jun 2024 14:23:49 +0000
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4b53e8da1b06.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 04 Jun 2024 14:23:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZTKa+YPwCRrBicv2WJKR9WY1xyerN96IlSocB8l3yR0MX/KeUDV3h5w2k5lg/q0AE8Wb7NrVcII581GXFxA3QS578OZqrOptREpuNaLkKjTgXj3D+mNAcqjV9oMQURJtYhlPLqdhkVttDdgVb8PouYNQIJvR5F+cW7bjTAk+PgvALx24sIIJDT/iNGAusWS0KZuUS4X4yR9PrXgpcZsEuzaturfshPj8vQjm3p8mwPuXRZEFwkvsmQGMHqKkzFyHoZ6B5EhK7P0jwL/LUskATMdxEvN6bcTwVnFjT3tlaf6BX/IkRXdnRa7Q9ZgnKWo6AklJ5kLZ0lS91oKTQOnv7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9IFuoepYxY8qPs0Y/7v3UBKKSplNv6OLe+dg9GDADk=;
- b=lEt8DYazwQdNEgUrNJRwJdioXFg3xgD0QTb+mnchnQadbYKO1pWr8420xWiU1zYaLuvIKqQ4VKXCv5qDfNCCcXlDVxb2TBklObiSi/eJFSkhKSFQsk8AdtaMIY2ORDKLp4gR4m9gpLFv/YdtbF5Gv0x17+yxnGPCd3Wy4r75qAo4S/hIbYXm/2Drvayl9BTkspqPGd+8V28/nptthDh+bj6iK7/IlUvkcLP6DFncW48Nj2FKITXwV8muA6TRFUSizJubt1z37xtLfbgX8JWZGUa6J1FsjT65v9DE6ISSFcYC2e5M16VbtXdH+AqTRRVb5sRKT8zK1iQ7PwzOfrWpWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I9IFuoepYxY8qPs0Y/7v3UBKKSplNv6OLe+dg9GDADk=;
- b=ffTk1S3LCg6xazkxMPfMwBxUHehreCzNlVkRi2HCF/dyX4w8W7WjVIxh8q1C+GRCw+1Qx1Ls5zgf6oUhMcYIu5CJloMiHeTmSl12iagaTEVfMHUVPgX+J27rlCtIWYpuuQucgJR4CakFl3UAJ6a5zsJOvA32aFLPCRpz/9DcDLA=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from VI1PR08MB3919.eurprd08.prod.outlook.com (2603:10a6:803:c4::31)
- by PA4PR08MB6303.eurprd08.prod.outlook.com (2603:10a6:102:e5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Tue, 4 Jun
- 2024 14:23:46 +0000
-Received: from VI1PR08MB3919.eurprd08.prod.outlook.com
- ([fe80::14e2:874a:b20b:78e5]) by VI1PR08MB3919.eurprd08.prod.outlook.com
- ([fe80::14e2:874a:b20b:78e5%4]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
- 14:23:46 +0000
-Message-ID: <24e09046-74ee-4ebb-ac1a-bdc84568e825@arm.com>
-Date: Tue, 4 Jun 2024 15:23:41 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
- linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
- wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de, nd
- <nd@arm.com>, John Stultz <jstultz@google.com>, Hongyan.Xia2@arm.com
-References: <20240405110010.631664251@infradead.org>
- <3888d7c8-660e-479c-8c10-8295204e5f36@arm.com>
- <1461277e-af68-41e7-947c-9178b55810b1@arm.com>
- <20240425104220.GE21980@noisy.programming.kicks-ass.net>
- <20240425114949.GH12673@noisy.programming.kicks-ass.net>
- <20240426093241.GI12673@noisy.programming.kicks-ass.net>
- <c6152855-ef92-4c24-a3f5-64d4256b6789@arm.com>
- <2fba04b0-e55e-41f4-8b7a-723734fe1ad2@arm.com>
- <20240529225036.GN40213@noisy.programming.kicks-ass.net>
- <7eac0774-0f9d-487c-97b6-ab0e85f0ae3a@arm.com>
- <20240604101107.GO26599@noisy.programming.kicks-ass.net>
-From: Luis Machado <luis.machado@arm.com>
-In-Reply-To: <20240604101107.GO26599@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0099.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bc::20) To VI1PR08MB3919.eurprd08.prod.outlook.com
- (2603:10a6:803:c4::31)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IwPsBL0H"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-43fc6795babso30613851cf.1;
+        Tue, 04 Jun 2024 07:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717511078; x=1718115878; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CpYqY35fI/kNiZjb1tZLjln2Cpfa8WAcl2VmbwXBgPQ=;
+        b=IwPsBL0HmMuY0layObym/dT2qKZ0uEEqr7qD/jDQ2V8tTOW6TXSqBi3FHwirfd+RYr
+         SVQGrETxxLoxJyuJoHKFpWXgM7YUFR9JSBohzhvAGflew7ZLCunz3p3iU4dYoiDsQ+N/
+         vG1XT+S7XM0Dn5qJ3OZ9osHfrDgpiopcJe/z6JoMEjMCJ6kEPrO35xTtPAXyWmSIhKVQ
+         k5qgLN52hVYN4PLMSWAy+nydCP6MtZQMpo79cSHthfZHDi6sDrjovtQbYYL2Dj+LUfHx
+         4EYl+iTPqQbN0AWhycx3TZap4CDxO83n56snLvTBYrDhIB9+6LyrtZ/sTR0Ys8hBc2D2
+         hmdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717511078; x=1718115878;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CpYqY35fI/kNiZjb1tZLjln2Cpfa8WAcl2VmbwXBgPQ=;
+        b=lrMT/imVmGDUXx/w7/ExIge7mcXDMDyLLoKQCV2GvRRnpyqLgz1fNz4/bvzdGF+v+c
+         ikbhpQfGcDDZZEWGx+KDAS6XJTikXUynoVH6TLWtJAXwepq2LMOlOYoAfy+NybnO7WNu
+         weWZc/WFRmk/co1iasHvFgHVl2LnRelKcWX6ydWbwqTUJLI6nHLOGq0agOto+N4YM2fp
+         HCjVacAx8gAR0cwIMirHsqTZk3sO7T1Rj0Ipecg8mpMdFtrt9/7QBaxp7Hy3hnzwO6K3
+         OMUhrkkeXJ7eS/MAyblYOX01Gbu7+qwkfaaSStdtY0f6pzouBRJGOPanYGllJY8r768k
+         vZjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGwiAxT3kgS4VBiKUKzXczqAh7wZzPIJ9MNQzfau1eg4uE/SfuuJXfADOIqTtCywgte+xZ6U+PrJSOsR5YHu+fyFSvlu3CotOTJbrcW2CFX6qRHv9he23zwhxpWCVuZ73GLncgJg==
+X-Gm-Message-State: AOJu0Yx3+5Sldqx7vGgSvGuBh0+SN9ZCSnT60Ps7I+sPgvH/ICzpUqcO
+	uOKnK4SLNmB82v9iqc/0Ed3xxUsfLg+Dg8ruibWPvvkMRIDuEpHp
+X-Google-Smtp-Source: AGHT+IHO3/574qV4DDPn5I2NO5lx5o2Vflm5hpErLJfUo72/R3X4pBcaaDkIF+BRyGUTTUSaBwm0WQ==
+X-Received: by 2002:ac8:5811:0:b0:43a:d7a9:390 with SMTP id d75a77b69052e-43ff52592f3mr109557261cf.29.1717511077950;
+        Tue, 04 Jun 2024 07:24:37 -0700 (PDT)
+Received: from [172.16.100.125] ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44015cda8fcsm14026531cf.95.2024.06.04.07.24.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 07:24:37 -0700 (PDT)
+Message-ID: <c0732554-0742-444b-910d-55052e2c0f92@gmail.com>
+Date: Tue, 4 Jun 2024 15:24:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	VI1PR08MB3919:EE_|PA4PR08MB6303:EE_|AMS1EPF00000046:EE_|AS4PR08MB8144:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6b972a5-10c9-4b9b-54c6-08dc84a1fad0
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230031|1800799015|366007|376005|7416005;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?dHJYRWNtQ1I5eWpaaDFhUE5xLy9oK0dsWW1FY0kvZEhUckxNRUdaQmhtTSs2?=
- =?utf-8?B?TnV1RDViNU80aU0vVlBRaEoybGpxZEVJTUZSbklqRktRSkJqVnROME9Gemlx?=
- =?utf-8?B?dThKS214RG1KcHVzMkZrYllBMitESHloR1Q2YnM4TjdYckFqWXRuSllRTUdu?=
- =?utf-8?B?emJvS1o5eGg0OG5adGtueGxIS3VER0pIeTZkT2pLMS9sNVMxemx2UHFyTHRD?=
- =?utf-8?B?NGFKSGRUSWRMM2pDYmY1cnBERktvNXNOS2VSN2ZOWnlCMjgwR0ZyaGhRT0ww?=
- =?utf-8?B?L0JrYjJscndRZFo1ZWVuMHErcDZkbFlSYWZyUGt4SkxjK29TbmJ2Y0tuYUdS?=
- =?utf-8?B?NlZkVmxnNzJYc0krU0RqNFNkN1Zxd2ZZR3NqcDRUOTR1MHp1Y25sVkM2TDZU?=
- =?utf-8?B?aW9EQUpXbENXZTVZWjA4Z09KYUxKWHFITHZKRTh4ZktRcTJkT25pVzBCQkVu?=
- =?utf-8?B?aVhaZkVrNmhEak9QVWZ1cjhLaVhTWURkMDlrZnlManhtQ2tORlYzM0pvZVd5?=
- =?utf-8?B?MVE5dmgzbDEwZ3lpRUNpWHNQN1BseXdoUkRLRnltVEVQWVQ1UU04UWF3MzEv?=
- =?utf-8?B?MEVNSEVkc25zQTJpWXFoUHpYakFRTUNmdmJLYmhrT05yb2sycDhxaXBBV0FC?=
- =?utf-8?B?ZE5BNjBxWjY3N0J6ZlBkeHBsTFMraWsvT1NhOUpMMFMxL1lDVnZ3YlFZN0RC?=
- =?utf-8?B?ZkdPYzRzUFIwcjI2eSt2em8wMVpjcnVTWTQrQWtqb3dJSkJMak1aUmZhWUpQ?=
- =?utf-8?B?enFkUkFnZjVtekE0MUNoK0hEMVVBNG1RM1RQRjJoRnZFSUNDdVNpNVlua0dT?=
- =?utf-8?B?bjhDOWd5MHlOOUZZazE4dURMV2k1ZC9yZVNFNTJObWI1RlpnS2tsci8za2dT?=
- =?utf-8?B?aWlKQ2g5aE9ZcEgrelpJS2NCZ2lxNHoxemc0WWM0OU41eithT3NVZ3o3M3dy?=
- =?utf-8?B?WHUrbmx6c0RVUm9XMnhyMFlUSzQ4SjVKYUMvd3NTR09pUUlKVWkwdExPY0I3?=
- =?utf-8?B?RUNxQzJPNHpXS0FtcFZMNjlXVGxsakhORFBScklCOUU5ZmIwa2JpV2RITUFC?=
- =?utf-8?B?NHJnOVFLNC9BSE9mdmlTN2hzcHFZVjVMTktFLzJRWlVJWjhhTVIwd29UeFJR?=
- =?utf-8?B?d0JTNlM2cGRVWGxRT25FbGtPQlEvRDRWZEtvWCtORVVVSGptaUxxSjhINkVi?=
- =?utf-8?B?NUIyZUUxTXhsL0pmLytwUHpDZUpXL0JHZTUxeVlYTTdVNi9HdXovOFVqYVVU?=
- =?utf-8?B?d0x2Q3VzTWlHWUY0Umhia0YzMXgvWnMwMU9DTnVaR3FCNk9SR2MzVlBoRENK?=
- =?utf-8?B?NThRMzBrSXYrc0thMmNTZ2thRGJqVXBmSVc5WHZieG5aWmcvelo2RkhBN0pl?=
- =?utf-8?B?N1c0ekhaMUwyKzMrMGdrUzdRZkRPVC9VQjRybENjY0phcWMrU0hYRk1JdDJR?=
- =?utf-8?B?cW5ZekZoQWhpQ0RDOXhzMUtIbFhPTytuR0FRckpwL1ZWekRkTkQ2SFZhNyt1?=
- =?utf-8?B?S3IyY1cvM3M3V3kyM3VHT1NjVjEvbnV6RDBVdXYreFF3RVFVaEYrRkpVdUhy?=
- =?utf-8?B?aGdzTWgrMHVFWWtYQVlxaTFxTmtjdkQ4bUpGdlpxdjg5S25ybVJZMGNBV1NG?=
- =?utf-8?B?K09VTE1HVmlSV0NFNFdaMDJFMWhnVFVXWEJqV3Y1eE9OS3V0Q0diY2tOOXRm?=
- =?utf-8?B?L1ZFVGI5US9jWDA5UmdEN09lMm9ldytPN1RXdm9vYkRUeVRBR0d0VEdBPT0=?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3919.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6303
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AMS1EPF00000046.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	6eb604d9-10a6-4b12-bf84-08dc84a1f18d
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|82310400017|35042699013|36860700004|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K25WU1JUcGdTVEdjRTNxb290ZUNKQlozQnc0cHE5RjFMNFE5TnphZ0wyNzht?=
- =?utf-8?B?b0NTRjZ0NmIwOXY3Q2g1T1h2dEVPQWxCakVJSzJ2eUNaSTY5Um5jNlZWRjZZ?=
- =?utf-8?B?Q04rajgzd2hGMHY3c2RoNHBVeFlKNHF3Zm5KN2VRWEJwNnhaSCtRUzl2SE5i?=
- =?utf-8?B?cTE5bHFCZi9GNWl1elloc1ozS2Zra3FoT1ptVEhUVDZ1MTFJK1N1RjZEaFEz?=
- =?utf-8?B?eG80U0R0enhlZlNhemdTZTlVTkIwQk5xcmV4NDhwZWdZQ05vZGRhYnVUaVBp?=
- =?utf-8?B?d1hoZlV4VFBVeWpIYkJtc0ZLZEFVZTk2dnpFaUdYb3ZJUnVsUWlFWjVrMW5E?=
- =?utf-8?B?NjF0R1hlNFBzZ0ZxaWdaYmJOU2RqemtMVjFxYXBnY0RZKzBKa3YvdWFIa1l6?=
- =?utf-8?B?VGdHTjBHYUVSMEQ4RXhmc1lGOTlFODlwTm84SHZwN0xjZW9mdmlpK1U0Q3Yz?=
- =?utf-8?B?bmFpck1rckRhaXpKby9tSVZvY3VSeWtpSzNLdGJaN1Y3bzg5cCtodU1XSit0?=
- =?utf-8?B?RDRaNEIzVjkxRDA0RzE2ZDE3clRTcnZhL2FLUDJ3LzlGR1F2bXJKRE84d0dE?=
- =?utf-8?B?empQb0RyY3pRZXk4b0MyUksxM3luV3ovK25oVGlTTmZxWTRRcGZDeGN2ZUFV?=
- =?utf-8?B?Mi91SWhjSUtCbEdtNm1aWVNZSHNDb1JuTnVZcEZzNEFrYXloYUU5U1B1anBH?=
- =?utf-8?B?UDZuTGQxSnQ4MjRtN3FnbHhVYUNkcHgrRlkvdGVIMkI0ZWh5UlNUY1FSQ1VY?=
- =?utf-8?B?blNZanphd2hTM21vcEYzak92eFN6OWFLUUR5b3dlK3E4S2pKd3h1elRmVXZD?=
- =?utf-8?B?akRMRmFIcHNxM2xJdTlIQ3F4eVRXK29kaTZiYmxvRmp4c3lhZ3VkZ2ozd2RK?=
- =?utf-8?B?eWM0ZG5aQ1daZnc5MTVadUhubGNyQU9IUWUwRlJ5c2FJM0haeEdZNFExMHFh?=
- =?utf-8?B?b0M5WDlHWEFaNVhxZzJZaHFrbVMybnBad3VIdmVVZERnWmszU250djQvdEJz?=
- =?utf-8?B?dFpjOHBtdU1DUlNObVM4SVVxZzRVa2gzNG9tVmlaakdNZzRzOGdtWWRWdnZr?=
- =?utf-8?B?ZWtEditWSzJmL0phbnVuN2cyeVZPSXJ0aGcwSEhxYVI4WmV0NHJDVjY1enBD?=
- =?utf-8?B?b2lRd1ozRmtDSklzdmhzU2swbUNERDltS2pKMWhHM1E4T0EySCtuR25ucVp0?=
- =?utf-8?B?R21QRFRRMEhSdlhJVWZHa3o4T2NVbGQ3N3dZdHQyeFlWVjZyZE9KR2p3UWZW?=
- =?utf-8?B?QlpxRVFUL051OVM2L1kzemUyendITkQyNjVQc29qRVFjWC81N3pwdmxodGVx?=
- =?utf-8?B?MXpXNU9CSHJjUVRoRlEwQXpBYmVuaERxVjhDZTc1M2d4eXUyVGhwekRxODFB?=
- =?utf-8?B?YTRNbTEydzJRQThobHNaVGR3dy93ME1sVUY1b1docFQxbEdCTVZCcnhrMVVJ?=
- =?utf-8?B?d0trdVZKQXF3UHJDU0FzdWZXTGxwcmF0VFVtZWVjcmVmeVRDdXNKOHplbXFq?=
- =?utf-8?B?OVhOd1J3RmJKbm1tVzVEMWNHZnVhajYvR2lwS1FselRMSlRhYUpoaFNpcDda?=
- =?utf-8?B?UUlXb2hra25wSHhlTlcrdk4yK1BrQTByWjhmR0Y1bkxUSE84OG53WHFSLzk2?=
- =?utf-8?B?aUNsQ2l3R1pyemlGclFkeWM3UVZnZ0xXbTJiNU55WjlWcWFrT2JhYlFXQ3NH?=
- =?utf-8?B?cldCQlMveW00SlFOd0hIQjl5TXpDS3ZrWVl4aFNVVlVIZ0R1eFVUck9LUEJ6?=
- =?utf-8?B?WTdWdmFaRGJYaDlNUFNlQUkxVFFaSHJtMUVqdnZ0WklXMkhkWHFad1A2cGZx?=
- =?utf-8?B?WndwMUEvS3pLRnV0a1oxVDlON0ZBYUcvaVEvV0luNWc2a1kzMTRFejVhR2lj?=
- =?utf-8?B?ZmUrVlBrV0xVZnVEb2JIUnNKRVdFV1FmaUZZUTlJVlNOUFE9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(35042699013)(36860700004)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 14:24:01.1701
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6b972a5-10c9-4b9b-54c6-08dc84a1fad0
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF00000046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR08MB8144
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] iio: light: ROHM BH1745 colour sensor
+To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ ivan.orlov0322@gmail.com, jic23@kernel.org, lars@metafoo.de,
+ krzk+dt@kernel.org, conor+dt@kernel.org, robh@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20240603162122.165943-1-muditsharma.info@gmail.com>
+ <20240603162122.165943-2-muditsharma.info@gmail.com>
+ <39710806-3151-4b57-9af4-c0b4a4d21c28@gmail.com>
+Content-Language: en-US
+From: Mudit Sharma <muditsharma.info@gmail.com>
+In-Reply-To: <39710806-3151-4b57-9af4-c0b4a4d21c28@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 6/4/24 11:11, Peter Zijlstra wrote:
-> On Mon, Jun 03, 2024 at 08:30:43PM +0100, Luis Machado wrote:
-> 
->> Exchanging some information with Hongyan today, he was a bit suspicious of the uclamp
->> behavior with the eevdf complete series applied.
+On 04/06/2024 00:10, Javier Carrasco wrote:
+> On 03/06/2024 18:21, Mudit Sharma wrote:
+>> Add support for BH1745, which is an I2C colour sensor with red, green,
+>> blue and clear channels. It has a programmable active low interrupt pin.
+>> Interrupt occurs when the signal from the selected interrupt source
+>> channel crosses set interrupt threshold high or low level.
 >>
->> Checking the uclamp code, I see we have some refcounting tied to enqueuing/dequeuing
->> of tasks, and the uclamp values are organized in buckets.
+>> This driver includes device attributes to configure the following:
+>> - Interrupt pin latch: The interrupt pin can be configured to
+>>    be latched (until interrupt register (0x60) is read or initialized)
+>>    or update after each measurement.
+>> - Interrupt source: The colour channel that will cause the interrupt
+>>    when channel will cross the set threshold high or low level.
 >>
->> Just for fun I added a few trace_printk's in uclamp_eff_value, uclamp_rq_inc_id and
->> uclamp_rq_dec_id.
+>> This driver also includes device attributes to present valid
+>> configuration options/values for:
+>> - Integration time
+>> - Interrupt colour source
+>> - Hardware gain
 >>
->> Booting up the system with delayed_dequeue disabled and running the benchmark, I 
->> see the uclamp bucket management pretty stable. Tasks get added to the uclamp
->> buckets but then get removed. At the end of the benchmark, the uclamp buckets
->> are (almost always) clean of tasks.
+>> Signed-off-by: Mudit Sharma <muditsharma.info@gmail.com>
+> 
+> Hi Mudit,
+> 
+> a few minor comments inline.
+> 
+>> ---
+>> v1->v2:
+>> - No changes
 >>
->> Enabling delayed dequeue, I can see the uclamp buckets slowly filling up with
->> tasks. At the end of the benchmark, I see uclamp buckets with 30, 40 or 50
->> tasks still. If I do another run, I can see 80, 100 tasks still.
+>>   drivers/iio/light/Kconfig  |  12 +
+>>   drivers/iio/light/Makefile |   1 +
+>>   drivers/iio/light/bh1745.c | 879 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 892 insertions(+)
+>>   create mode 100644 drivers/iio/light/bh1745.c
 >>
->> I suspect refcounting might be going wrong somewhere due to delayed dequeue
->> tasks, but that's more of a guess right now. Hopefully that is useful
->> information. I'll resume investigation tomorrow.
+>> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+>> index 9a587d403118..6e0bd2addf9e 100644
+>> --- a/drivers/iio/light/Kconfig
+>> +++ b/drivers/iio/light/Kconfig
+>> @@ -114,6 +114,18 @@ config AS73211
+>>   	 This driver can also be built as a module.  If so, the module
+>>   	 will be called as73211.
+>>   
+>> +config BH1745
+>> +	tristate "ROHM BH1745 colour sensor"
+>> +	depends on I2C
+>> +	select REGMAP_I2C
+>> +	select IIO_BUFFER
+>> +	select IIO_TRIGGERED_BUFFER
+>> +	help
+>> +	  Say Y here to build support for the ROHM bh1745 colour sensor.
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will
+>> +	  be called bh1745.
+>> +
+>>   config BH1750
+>>   	tristate "ROHM BH1750 ambient light sensor"
+>>   	depends on I2C
+>> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+>> index a30f906e91ba..939a701a06ac 100644
+>> --- a/drivers/iio/light/Makefile
+>> +++ b/drivers/iio/light/Makefile
+>> @@ -13,6 +13,7 @@ obj-$(CONFIG_APDS9300)		+= apds9300.o
+>>   obj-$(CONFIG_APDS9306)		+= apds9306.o
+>>   obj-$(CONFIG_APDS9960)		+= apds9960.o
+>>   obj-$(CONFIG_AS73211)		+= as73211.o
+>> +obj-$(CONFIG_BH1745)		+= bh1745.o
+>>   obj-$(CONFIG_BH1750)		+= bh1750.o
+>>   obj-$(CONFIG_BH1780)		+= bh1780.o
+>>   obj-$(CONFIG_CM32181)		+= cm32181.o
+>> diff --git a/drivers/iio/light/bh1745.c b/drivers/iio/light/bh1745.c
+>> new file mode 100644
+>> index 000000000000..a7b660a1bdc8
+>> --- /dev/null
+>> +++ b/drivers/iio/light/bh1745.c
+>> @@ -0,0 +1,879 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * ROHM BH1745 digital colour sensor driver
+>> + *
+>> + * Copyright (C) Mudit Sharma <muditsharma.info@gmail.com>
+>> + *
+>> + * 7-bit I2C slave addresses:
+>> + *  0x38 (ADDR pin low)
+>> + *  0x39 (ADDR pin high)
+>> + *
+>> + */
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/util_macros.h>
+>> +#include <linux/iio/events.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +
+>> +#define BH1745_MOD_NAME "bh1745"
 > 
-> Thank you both!!
+> Given that this define is only used in one place, using the string
+> directly is common practice in iio.
 > 
-> Does the below help?
+>> +
+>> +/* BH1745 config regs */
+>> +#define BH1745_SYS_CTRL 0x40
+>> +
+>> +#define BH1745_MODE_CTRL_1 0x41
+>> +#define BH1745_MODE_CTRL_2 0x42
+>> +#define BH1745_MODE_CTRL_3 0x44
+>> +
+>> +#define BH1745_INTR 0x60
+>> +#define BH1745_INTR_STATUS BIT(7)
+>> +
+>> +#define BH1745_PERSISTENCE 0x61
+>> +
+>> +#define BH1745_TH_LSB 0X62
+>> +#define BH1745_TH_MSB 0X63
+>> +
+>> +#define BH1745_TL_LSB 0X64
+>> +#define BH1745_TL_MSB 0X65
+>> +
+>> +#define BH1745_THRESHOLD_MAX 0xFFFF
+>> +#define BH1745_THRESHOLD_MIN 0x0
+>> +
+>> +#define BH1745_MANU_ID 0X92
+>> +
+>> +/* BH1745 output regs */
+>> +#define BH1745_R_LSB 0x50
+>> +#define BH1745_R_MSB 0x51
+>> +#define BH1745_G_LSB 0x52
+>> +#define BH1745_G_MSB 0x53
+>> +#define BH1745_B_LSB 0x54
+>> +#define BH1745_B_MSB 0x55
+>> +#define BH1745_CLR_LSB 0x56
+>> +#define BH1745_CLR_MSB 0x57
+>> +
+>> +#define BH1745_SW_RESET BIT(7)
+>> +#define BH1745_INT_RESET BIT(6)
+>> +
+>> +#define BH1745_MEASUREMENT_TIME_MASK GENMASK(2, 0)
+>> +
+>> +#define BH1745_RGBC_EN BIT(4)
+>> +
+>> +#define BH1745_ADC_GAIN_MASK GENMASK(1, 0)
+>> +
+>> +#define BH1745_INT_ENABLE BIT(0)
+>> +#define BH1745_INT_SIGNAL_ACTIVE BIT(7)
+>> +
+>> +#define BH1745_INT_SIGNAL_LATCHED BIT(4)
+>> +#define BH1745_INT_SIGNAL_LATCH_OFFSET 4
+>> +
+>> +#define BH1745_INT_SOURCE_MASK GENMASK(3, 2)
+>> +#define BH1745_INT_SOURCE_OFFSET 2
+>> +
+>> +#define BH1745_INT_TIME_AVAILABLE "0.16 0.32 0.64 1.28 2.56 5.12"
+>> +#define BH1745_HARDWAREGAIN_AVAILABLE "1 2 16"
+>> +#define BH1745_INT_COLOUR_CHANNEL_AVAILABLE \
+>> +	"0 (Red Channel) 1 (Green Channel) 2 (Blue channel) 3 (Clear channel)"
+>> +
+>> +static const int bh1745_int_time[][2] = {
+>> +	{ 0, 160000 }, /* 160 ms */
+>> +	{ 0, 320000 }, /* 320 ms */
+>> +	{ 0, 640000 }, /* 640 ms */
+>> +	{ 1, 280000 }, /* 1280 ms */
+>> +	{ 2, 560000 }, /* 2560 ms */
+>> +	{ 5, 120000 }, /* 5120 ms */
+>> +};
+>> +
+>> +static const u8 bh1745_gain_factor[] = { 1, 2, 16 };
+>> +
+>> +enum {
+>> +	BH1745_INT_SOURCE_RED,
+>> +	BH1745_INT_SOURCE_GREEN,
+>> +	BH1745_INT_SOURCE_BLUE,
+>> +	BH1745_INT_SOURCE_CLEAR,
+>> +} bh1745_int_source;
+>> +
+>> +enum {
+>> +	BH1745_ADC_GAIN_1X,
+>> +	BH1745_ADC_GAIN_2X,
+>> +	BH1745_ADC_GAIN_16X,
+>> +} bh1745_gain;
+>> +
+>> +enum {
+>> +	BH1745_MEASUREMENT_TIME_160MS,
+>> +	BH1745_MEASUREMENT_TIME_320MS,
+>> +	BH1745_MEASUREMENT_TIME_640MS,
+>> +	BH1745_MEASUREMENT_TIME_1280MS,
+>> +	BH1745_MEASUREMENT_TIME_2560MS,
+>> +	BH1745_MEASUREMENT_TIME_5120MS,
+>> +} bh1745_measurement_time;
+>> +
+>> +enum {
+>> +	BH1745_PRESISTENCE_UPDATE_TOGGLE,
+>> +	BH1745_PRESISTENCE_UPDATE_EACH_MEASUREMENT,
+>> +	BH1745_PRESISTENCE_UPDATE_FOUR_MEASUREMENT,
+>> +	BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT,
+>> +} bh1745_presistence_value;
+>> +
+>> +struct bh1745_data {
+>> +	struct mutex lock;
+>> +	struct regmap *regmap;
+>> +	struct i2c_client *client;
+>> +	struct iio_trigger *trig;
+>> +	u8 mode_ctrl1;
+>> +	u8 mode_ctrl2;
+>> +	u8 int_src;
+>> +	u8 int_latch;
+>> +	u8 interrupt;
+>> +};
+>> +
+>> +static const struct regmap_range bh1745_volatile_ranges[] = {
+>> +	regmap_reg_range(BH1745_MODE_CTRL_2, BH1745_MODE_CTRL_2), /* VALID */
+>> +	regmap_reg_range(BH1745_R_LSB, BH1745_CLR_MSB), /* Data */
+>> +	regmap_reg_range(BH1745_INTR, BH1745_INTR), /* Interrupt */
+>> +};
+>> +
+>> +static const struct regmap_access_table bh1745_volatile_regs = {
+>> +	.yes_ranges = bh1745_volatile_ranges,
+>> +	.n_yes_ranges = ARRAY_SIZE(bh1745_volatile_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range bh1745_read_ranges[] = {
+>> +	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL_2),
+>> +	regmap_reg_range(BH1745_R_LSB, BH1745_CLR_MSB),
+>> +	regmap_reg_range(BH1745_INTR, BH1745_INTR),
+>> +	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
+>> +	regmap_reg_range(BH1745_MANU_ID, BH1745_MANU_ID),
+>> +};
+>> +
+>> +static const struct regmap_access_table bh1745_ro_regs = {
+>> +	.yes_ranges = bh1745_read_ranges,
+>> +	.n_yes_ranges = ARRAY_SIZE(bh1745_read_ranges),
+>> +};
+>> +
+>> +static const struct regmap_range bh1745_writable_ranges[] = {
+>> +	regmap_reg_range(BH1745_SYS_CTRL, BH1745_MODE_CTRL_2),
+>> +	regmap_reg_range(BH1745_PERSISTENCE, BH1745_TL_MSB),
+>> +};
+>> +
+>> +static const struct regmap_access_table bh1745_wr_regs = {
+>> +	.yes_ranges = bh1745_writable_ranges,
+>> +	.n_yes_ranges = ARRAY_SIZE(bh1745_writable_ranges),
+>> +};
+>> +
+>> +static const struct regmap_config bh1745_regmap = {
+>> +	.reg_bits = 8,
+>> +	.val_bits = 8,
+>> +	.max_register = BH1745_MANU_ID,
+>> +	.cache_type = REGCACHE_RBTREE,
+>> +	.volatile_table = &bh1745_volatile_regs,
+>> +	.wr_table = &bh1745_wr_regs,
+>> +	.rd_table = &bh1745_ro_regs,
+>> +};
+>> +
+>> +static const struct iio_event_spec bh1745_event_spec[] = {
+>> +	{
+>> +		.type = IIO_EV_TYPE_THRESH,
+>> +		.dir = IIO_EV_DIR_RISING,
+>> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
+>> +	},
+>> +	{
+>> +		.type = IIO_EV_TYPE_THRESH,
+>> +		.dir = IIO_EV_DIR_FALLING,
+>> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
+>> +	},
+>> +	{
+>> +		.type = IIO_EV_TYPE_THRESH,
+>> +		.dir = IIO_EV_DIR_EITHER,
+>> +		.mask_shared_by_type = BIT(IIO_EV_INFO_PERIOD),
+>> +	},
+>> +};
+>> +
+>> +#define BH1745_CHANNEL(_colour, _si, _addr)                                   \
+>> +	{                                                                     \
+>> +		.type = IIO_INTENSITY, .modified = 1,                         \
+>> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),                 \
+>> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_HARDWAREGAIN) | \
+>> +					    BIT(IIO_CHAN_INFO_INT_TIME),      \
+>> +		.event_spec = bh1745_event_spec,                              \
+>> +		.num_event_specs = ARRAY_SIZE(bh1745_event_spec),             \
+>> +		.channel2 = IIO_MOD_LIGHT_##_colour, .address = _addr,        \
+>> +		.scan_index = _si,                                            \
+>> +		.scan_type = {                                                \
+>> +			.sign = 'u',                                          \
+>> +			.realbits = 16,                                       \
+>> +			.storagebits = 16,                                    \
+>> +			.endianness = IIO_CPU,                                \
+>> +		},                                                            \
+>> +	}
+>> +
+>> +static const struct iio_chan_spec bh1745_channels[] = {
+>> +	BH1745_CHANNEL(RED, 0, BH1745_R_LSB),
+>> +	BH1745_CHANNEL(GREEN, 1, BH1745_G_LSB),
+>> +	BH1745_CHANNEL(BLUE, 2, BH1745_B_LSB),
+>> +	BH1745_CHANNEL(CLEAR, 3, BH1745_CLR_LSB),
+>> +	IIO_CHAN_SOFT_TIMESTAMP(4),
+>> +};
+>> +
+>> +static int bh1745_write_value(struct bh1745_data *data, u8 reg, void *value,
+>> +			      size_t len)
+>> +{
 > 
-> Note how dequeue_task() does uclamp_rq_dec() unconditionally, which is
-> then not balanced in the case below.
+> The initial assignment is unnecessary, as a new assignment is made
+> immediately. This applies to several declarations of ret in this driver,
+> but not always (e.g. bh1745_setup_trigger()).
 > 
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3664,6 +3664,7 @@ static int ttwu_runnable(struct task_str
->  			/* mustn't run a delayed task */
->  			SCHED_WARN_ON(task_on_cpu(rq, p));
->  			enqueue_task(rq, p, ENQUEUE_DELAYED);
-> +			uclamp_rq_inc(rq, p);
->  		}
->  		if (!task_on_cpu(rq, p)) {
->  			/*
+>> +	int ret = 0;
+>> +
+>> +	ret = regmap_bulk_write(data->regmap, reg, value, len);
+>> +	if (ret < 0) {
+>> +		dev_err(&data->client->dev,
+>> +			"Failed to write to sensor. Reg: 0x%x\n", reg);
+>> +		return ret;
+>> +	}
+> 
+> Nit: black line before return (it applies to several functions in this
+> driver, but again, not in all of them).
 
-As Hongyan pointed out in a separate message, the above makes things
-worse, as we end up with even more leftover tasks in the uclamp
-buckets.
+Hi Javier,
 
-I'm trying a fix in kernel/sched/core.c:enqueue_task that only
-calls uclamp_rq_inc if the task is not sched_delayed, so:
+Thank you for the review on this.
 
--       uclamp_rq_inc(rq, p);
-+       if (!p->se.sched_delayed)
-+         uclamp_rq_inc(rq, p);
+Can you please point me to resource/section of code style guide for 
+reference which talks about new line before 'return'.
 
-I'm not entirely sure it is correct, but it seems to fix things,
-but I'm still running some tests.
+Best regards,
+Mudit Sharma
 
-With the current code, given uclamp_rq_inc and uclamp_rq_dec get
-called in enqueue_task and dequeue_task, the additional enqueue_task
-call from ttwu_runnable for a delayed_dequeue task may do an additional
-unconditional call to uclamp_rq_inc, no?
+
+
