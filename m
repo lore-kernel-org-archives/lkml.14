@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937531411F6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921431411EA
 	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487555; cv=none; b=VtkRZaTSoW2ye0DilqGcUcyVMMxTTujoGgUt0AXC6er8PY/Z17buCNsI32l+fsNR7oAYPEZMdP1hGmvZEZ+H5x30cO/J7YzyA4axWyyo5t0wwBqVC4qqMgUPX6czqooNPV5c8hAAJh6kyuYMGYsX3i6bHiy+KY9PTI9oH+Mo1Dw=
+	t=1717487555; cv=none; b=mKOKLq2FFltjywabskOGqFl9+7afpyJe4vy1MX80WhMI7YOEPKuDCuO4zIPI3XqbD+EA+EAN2NrlcUyFFi7Poev57UAz5OKYKfhGs4Gl4DgDaZunzwVeGajl174RIdMPKXr0N5iCRDNZ644Q8AYdxFmlIY9Uo6jPOJlM0snXyfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717487555; c=relaxed/simple;
-	bh=/fiIiiYbJFRNvZ7FP9BHekn9qQAHxsiruF9zvi9/kK4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cw4pS3AgeJHB8ssHxTHXgvKIVz58gALXWhD+1zh2UzNQXs7DCknwEscCcT1VzPHLIOPoSJnthbog/EsLTKo2f18Cnx/4SkJiTKa1T3C9zCnjJVjG5Icxye2jzOM/fUEZ0jqrpFv/FV2OQSRO7WjtbjmzFuvXNKCT34VHgVty45A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4zwSauH; arc=none smtp.client-ip=10.30.226.201
+	bh=b3E/UIPslsT8I86wbPoMlWOJhjF5vCXYbMseh+Nd3tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kwb+0HfxWmjorU7ja4Q2dyQC2IpQk2AiT6yd9OhBPR5AmtIzu084uWrMcH28bwrqTP+iu2uU8A1EOyyTr4V1J9Sf9sXFC/p87p4T9sev+4+mKJJ+vbIVBQUe3/87LO2B9Y2duTtCWgTM9RLB9DDp5NsP01UUO5hlxDgTdnclqXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjDXtJ2B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4zwSauH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1D8C4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjDXtJ2B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17191C2BBFC;
 	Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717487555;
-	bh=/fiIiiYbJFRNvZ7FP9BHekn9qQAHxsiruF9zvi9/kK4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=o4zwSauH9GbTo/xlsMQYytCJC5Rl+06wVlBsyC6ATPqM9sWzsAvra6bqIlJu46xBK
-	 +j2Eq/qhdq6EPCG8KKWClJJQ40P6cTtM/8HO4ZMvBNgP+T/fKlX/tmI8lgu0TLIoE2
-	 PZp2n6Jtd1ZxIsz/wGJPrO5vtbAVx9oBuKLShSxzuvl2Ncn928Ylkg6UacMpS6Uisl
-	 fwK+MVggsjjD+zyyjPXnUZD5Qw9sNLbxa4mh5R0n3B0x1bIRvZHL6cq8Bc6zbwmZGJ
-	 Ig2ZGs7QLPskYIKugr9jkU+AVOYwDyYlbddjt6dL/XW41A7d1ZfxyjmI+x9i0/lfJY
-	 XHdtLqJB3Bwtg==
+	bh=b3E/UIPslsT8I86wbPoMlWOJhjF5vCXYbMseh+Nd3tk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tjDXtJ2Bnfn07g6X0XM+j297fga5v438KKDbcNVYwW2D+xQhMkkweVBBOq3AS1gnX
+	 LAT0S0hHXiRAbW0abuhjIBsb7zRZd9Vov9GSssIzB5IvYRfy0nEstMHIRPPAskPjwZ
+	 KPCRv+C8IrQHxklAXbga205F0kcrlnBKjckpEDIv6XiTukWD1DeFIjNuDugks8XN2e
+	 +NAcE3ybEZRC3RsKxXDrnGMEICl+VqRqArskLYTKbqPdtGalr7LhEMxDRIXFolzZ/z
+	 GvzdKSHVxQ/eknLuUFdKt8ZRyfKtv+2m3GlZTu3mNahck1+jtV4OGGQI18symujISv
+	 W1td3s2pCk3Mg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sEOy8-000000005QL-3SGj;
+	id 1sEOy9-000000005QR-3RBp;
 	Tue, 04 Jun 2024 09:52:33 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>
@@ -37,10 +38,12 @@ Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
 	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 0/4] soundwire: bus: suppress probe deferral errors
-Date: Tue,  4 Jun 2024 09:52:09 +0200
-Message-ID: <20240604075213.20815-1-johan+linaro@kernel.org>
+Subject: [PATCH v2 3/4] soundwire: bus: clean up probe warnings
+Date: Tue,  4 Jun 2024 09:52:12 +0200
+Message-ID: <20240604075213.20815-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
+In-Reply-To: <20240604075213.20815-1-johan+linaro@kernel.org>
+References: <20240604075213.20815-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,31 +52,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The soundwire bus code is incorrectly logging probe deferrals as errors.
+Clean up the probe warning messages by using a common succinct format
+(e.g. without __func__ and with a space after ':').
 
-This series addresses that, cleans up the soundwire bus logging and
-drops the unused soudwire driver name field.
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/soundwire/bus_type.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Johan
-
-
-Changes in v2
- - drop probe error message completely
- - drop soundwire driver name field
- - cleanup probe warning messages
- - drop probe debug message
-
-
-Johan Hovold (4):
-  soundwire: bus: suppress probe deferral errors
-  soundwire: bus: drop unused driver name field
-  soundwire: bus: clean up probe warnings
-  soundwire: bus: drop redundant probe debug message
-
- drivers/soundwire/bus_type.c  | 21 ++++-----------------
- include/linux/soundwire/sdw.h |  2 --
- 2 files changed, 4 insertions(+), 19 deletions(-)
-
+diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
+index 3979be0f8b65..43e732ca73c0 100644
+--- a/drivers/soundwire/bus_type.c
++++ b/drivers/soundwire/bus_type.c
+@@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
+ 	/* init the dynamic sysfs attributes we need */
+ 	ret = sdw_slave_sysfs_dpn_init(slave);
+ 	if (ret < 0)
+-		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
++		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
+ 
+ 	/*
+ 	 * Check for valid clk_stop_timeout, use DisCo worst case value of
+@@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
+ 	if (drv->ops && drv->ops->update_status) {
+ 		ret = drv->ops->update_status(slave, slave->status);
+ 		if (ret < 0)
+-			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
++			dev_warn(dev, "failed to update status: %d\n", ret);
+ 	}
+ 
+ 	mutex_unlock(&slave->sdw_dev_lock);
 -- 
 2.44.1
 
