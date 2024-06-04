@@ -1,99 +1,110 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67E139CFF
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96A4139CFF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717489071; cv=none; b=mPze4OkMg+bKTBkht6shqQNfnKaTmeOKAC1mXZgngTBNudPJVljkss6KaHI5nAejcX1U6hVvlCkZm7cOboBKTu/alSO65ZQ41KUDK1/bV/dE5jurRxgtiODdF1bxEKKIkrF3q/FCEcbWlZA58dLWvoy8QGFzBae9gp6PUFutiOA=
+	t=1717489128; cv=none; b=ZDET0HQo37wHWT3Y3brIg9yrrMaUYxSPkKdxvTxGXHlajIsJRJMg24+wxUqTKyHqvv0yxC/pv9lJDNitCLXJjj6pdWBf26dc6FcJCgH4vf8jA0kGJxhe0ri8mv4Ej6S6q9hdnn24GMhpcs3y+dkmx0U5YQMj4VD+WjetOdPdBmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717489071; c=relaxed/simple;
-	bh=KJf2pXnlxe7k1MX+zyUO4LGepipFYbNI23zLJRKf5Ro=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VlOxirOOtf4Zdo4fD6PqLtwaH2wAiO/CKjgAoyt+NB5dxYfwzExalO9/7v1i05rYxwJzivY8Bd8rDKHzygXxxMgjWBaSL0zLxXSf0TUCwh0NgSDe2YHflhcBSZ5Me3/DkiLiGcXmpRnLE1gk2EbfYZEdM/2phRqHSR/ifDgqfgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=XKGUi6tk; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1717489128; c=relaxed/simple;
+	bh=t4AlPKcMOvF+J0KAl9cz4z7x0CWBkr/MlJ8H27UTrHo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=K9cElx5FzLEBEI4iV/1ojFc36NjMOJMD/GoixaEzxg8Hx8wcRJT/AlqqnPjUinF7wsiCgtIQjvFV6wFV0nuFQK27TwqVKqjAlV5QR9hcXqYGQsKuPjsY5GnxuxKfiW45YwZwJkxuRs7UflUtUS6PDb7Xvbp1BBwd4X+CVRteZ6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VZ1tj2rA; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="XKGUi6tk"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-356c4e926a3so4322760f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 01:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717489068; x=1718093868; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BMx0DAEnud4ZAXbAP7JbZUsSrVWKe0ofICbawK0LpNk=;
-        b=XKGUi6tkcNoT2I8TlMl0LXXMB2kDiCHzpCvgCkbtZ2xGGJNzeg1DAgSSufIXlBPVgy
-         24nO77Ln0McZaAg5ssZUu8ab9H4aonnM0Qo/I1dxb22p270IJn/D6VEBuJ5KUIYvWYtW
-         vPuKKZ/UYBCS8R5iRBvgrtcyW/jLSUijJ4z+7dL61G40jV1TXm8eGx184NjyMKxSU5h8
-         oYWVLstkxnuoVhyABKG/nF0uPs3bFNq3MyqNriJZcFqfoYzk+me6Qc7LKFKe0x0HtVTt
-         j9KNCVS9pGMBaUBzbrLvO67JLXN66K48amk6pqwaQitn37YAOe8kQzcZsCwKp9OdCbac
-         vkng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717489068; x=1718093868;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BMx0DAEnud4ZAXbAP7JbZUsSrVWKe0ofICbawK0LpNk=;
-        b=MvaKE+TBQ/RlmyoYT840lH+KSOYPYtgisHIaEPcQbI8Z/9DEzhPgu76rBB9f5bGEeQ
-         fWsSH70VWF3b82iiUWuYMnMBjBLj2sJ2NlTgX7KkXeAhyeRbIojQ9FUyFXWal0CMpZb4
-         7c7PIT9XLGZwByAkVtywc2ILSb81lGsioC9X3pwkUePcXzl70RS2fpn5SRlcrXDATElq
-         oomVt+3qfDUEJCQ69QqHcmmxniMm41m8nLCgiHDFxJA0GmFXy3+rn+GZW0601ehP96Mz
-         rYOd6qcE/dQ5tieEogYMC10Jsc4fKDyvJNp6kbe8Zboar+nF2todRDqrn3SunpH0oshN
-         s1dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxcWgVTeoHfqLa0op6zX7vo82BCrtw96WwfbiRJvOOnVNni7rOggYauaiDSGGKRwc6FSO6/Q5b0bv1Sux2eqp8xkCT5FxYhiSJ/sHE
-X-Gm-Message-State: AOJu0Yw0xx7DJOX/8nIzwdbSNQ7OJBOYDjjRWeXbCa/sN1DpUFns2Qor
-	4682ccrj4rogHYoxdHhUgUHUMBcNbO5IqTmXNHNVXeI3EIW8wK3nq30gYLqS1CU=
-X-Google-Smtp-Source: AGHT+IG8KwelaEdu91MhiQlPTN5blf3+ic8FvdeZmDwoqZIwWA1MJk4rUYqO2f/1N9MKlqTjia0eug==
-X-Received: by 2002:a5d:5485:0:b0:354:f142:65b0 with SMTP id ffacd0b85a97d-35e0f28858fmr8744196f8f.37.1717489067621;
-        Tue, 04 Jun 2024 01:17:47 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:1604:5579:bac6:654])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04ca434sm10771262f8f.30.2024.06.04.01.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 01:17:47 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v2 0/2] gpiolib: Show IRQ line in debugfs
-Date: Tue,  4 Jun 2024 10:17:46 +0200
-Message-ID: <171748906381.10591.18127648133265044353.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
-References: <20240530191418.1138003-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VZ1tj2rA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717489127; x=1749025127;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=t4AlPKcMOvF+J0KAl9cz4z7x0CWBkr/MlJ8H27UTrHo=;
+  b=VZ1tj2rAgXtHBalW/UJ8clMAe9qAeuHk2hmk1VIt/5kXaTk0Hpjd16Jc
+   BzVi6hlAec7ObOwbkCybWicAuAJyuBBmUv0DQKwCA23fZMtn7Po5sGbuK
+   Cw4rsb1Ep5+Hx2h69wtRqJXcDhjxcDh9kM+Ttt7ToJsCjKU6SEd/BRUr3
+   MB3eW//Ucf7qP/5XWUCS08FTCa+SmvfLm5jGhRn3pi/qNESyunEhRzz6g
+   Fx4J4FRpWkhXOAuoMXWBUAo+EA8TLHjTkHEWKd5bZ5CwQEwGclgKn8Nkd
+   w4lyK4LqsnNK2KQ3pJw6RFr7Gt9uEOVU4pNWUzQxbT1MsgcjSNPukYkR3
+   g==;
+X-CSE-ConnectionGUID: r0A87p79TICQ5Bsr30+6KQ==
+X-CSE-MsgGUID: 8wgmX4ukQbOzTUV1Axucmw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25417177"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="25417177"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:18:45 -0700
+X-CSE-ConnectionGUID: 1zgcUipQRbSslbX3cwqIaQ==
+X-CSE-MsgGUID: iF7ryx1fQ/KGN7P9cTR90Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37286242"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 01:18:41 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>,  Dave Hansen
+ <dave.hansen@intel.com>,  Byungchul Park <byungchul@sk.com>,  Byungchul
+ Park <lkml.byungchul.park@gmail.com>,  linux-kernel@vger.kernel.org,
+  linux-mm@kvack.org,  kernel_team@skhynix.com,  akpm@linux-foundation.org,
+  vernhao@tencent.com,  mgorman@techsingularity.net,  hughd@google.com,
+  peterz@infradead.org,  luto@kernel.org,  tglx@linutronix.de,
+  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
+  rjgolo@gmail.com
+Subject: Re: [PATCH v11 09/12] mm: implement LUF(Lazy Unmap Flush) defering
+ tlb flush when folios get unmapped
+In-Reply-To: <24daabde-300e-4a28-9a1c-9e406b087195@redhat.com> (David
+	Hildenbrand's message of "Mon, 3 Jun 2024 20:00:52 +0200")
+References: <20240531092001.30428-1-byungchul@sk.com>
+	<20240531092001.30428-10-byungchul@sk.com>
+	<fab1dd64-c652-4160-93b4-7b483a8874da@intel.com>
+	<CAHyrMpxETdVewTH3MCS4qPyD6Xf1zRUfWZf-8SCdpCFj2Pj_Wg@mail.gmail.com>
+	<f17f33e8-1c1f-460f-8c5a-713476f524a3@intel.com>
+	<26dc4594-430b-483c-a26c-7e68bade74b0@redhat.com>
+	<20240603093505.GA12549@system.software.com>
+	<d650c29b-129f-4fac-9a9d-ea1fbdae2c3a@intel.com>
+	<35866f91-7d96-462a-aa0a-ac8a6b8cbcf8@redhat.com>
+	<196481bb-b86d-4959-b69b-21fda4daae77@intel.com>
+	<Zl320dWODSYw-PgV@casper.infradead.org>
+	<24daabde-300e-4a28-9a1c-9e406b087195@redhat.com>
+Date: Tue, 04 Jun 2024 16:16:49 +0800
+Message-ID: <877cf5ceby.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+David Hildenbrand <david@redhat.com> writes:
 
+> On 03.06.24 19:01, Matthew Wilcox wrote:
+>> On Mon, Jun 03, 2024 at 09:37:46AM -0700, Dave Hansen wrote:
+>>> Yeah, we'd need some equivalent of a PTE marker, but for the page cache.
+>>>   Presumably some xa_value() that means a reader has to go do a
+>>> luf_flush() before going any farther.
+>> I can allocate one for that.  We've got something like 1000
+>> currently
+>> unused values which can't be mistaken for anything else.
+>
+> I'm curious when to set that, though.
+>
+> While migrating/reclaiming, when unmapping the folio from the page
+> tables, the folio is still valid in the page cache. So at the point in
+> time of unmapping from one process, we cannot simply replace the folio
+> in the page cache by some other value -- I think.
+>
+> Maybe it's all easier than I think.
 
-On Thu, 30 May 2024 22:12:28 +0300, Andy Shevchenko wrote:
-> Couple of patches to show IRQ only (when it's not requested as GPIO)
-> lines in the debugfs.
-> 
-> In v2:
-> - joined two separate patches
-> - rebased on top of latest GPIO for-next (Bart)
-> 
-> [...]
+IIUC, we need to held folio lock before replacing the folio in the page
+cache.  In page_cache_delete(), folio_test_locked() is checked.  And, we
+will lock the folio before writing to it via write syscall.  So, it's
+safe to defer TLB flushing until we unlock the folio.
 
-Applied, thanks!
-
-[1/2] gpiolib: Return label, if set, for IRQ only line
-      commit: 5a646e03e956f45e74c0a606f51e1ebc13880309
-[2/2] gpiolib: Show more info for interrupt only lines in debugfs
-      commit: 54a687cd49e3625819f24e17655346c85f498cbc
-
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+--
+Best Regards,
+Huang, Ying
