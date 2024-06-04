@@ -1,143 +1,104 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C899199BC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 05:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D0E13FD71;
+	Tue,  4 Jun 2024 05:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717480408; cv=none; b=h76D13KE+YGWV+F7ZnKtHyMzUSjgtIpMf/zk9SV+Ch1zU4HSVCkatyv78NH8z0bTk2th2iHk1Q97sj/6Ht2axzAk0qI0KY5ReLVtqkUbud5ZIZpvYgcIVHD4DIeircou54Ds6cIWFOOBmo+/SeNsZH7LDk0yUEKg+v6m3gD31EY=
+	t=1717480479; cv=none; b=VwM+7dX8qQub+a/Iccr2VnSOtdWnykKak7C1vIHvYvQj3e5sxAR99kd9jH+8znllVtUzVw2EYygSD7RJU9Rr0hJScM833AfypkW1riB9YQyiAkCwC47voIwVUvJmeMQFgieEr88Ir9xsLIHFGcJ0M1o8t1cRCiB0QmnWVcr2VcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717480408; c=relaxed/simple;
-	bh=IoB/yV/6K+QghVV3rsD9UF32nbZm90OaPHf1zCxHcuM=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=pj0+scUvNJ2xJhe8t3BS3HeJRdPFtFOVXVh8IHSRM5MiQAOEMBFpuRrgfc+MwzBZxGKurUeA/p414b/WQimnUE8jLlzUxjlRU//elH7oLU6vhGlJW7FCfpF9TPilk36q8PsFUDf5Y+NvCBzcbK7kL0tw70LV3irOTJPbbFgi0XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4Vtfl34DhpzKhm
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:47:59 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4Vtfkw4tx9z5TCG9
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:47:52 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Vtfkl3JFsz5R9kD;
-	Tue,  4 Jun 2024 13:47:43 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 4545laZs009782;
-	Tue, 4 Jun 2024 13:47:36 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 4 Jun 2024 13:47:38 +0800 (CST)
-Date: Tue, 4 Jun 2024 13:47:38 +0800 (CST)
-X-Zmail-TransId: 2af9665eaa7a03e-7c67f
-X-Mailer: Zmail v1.0
-Message-ID: <20240604134738264WKaKYb3q_YTE32hNAy2lz@zte.com.cn>
+	s=arc-20240116; t=1717480479; c=relaxed/simple;
+	bh=2kKHgihjqrDxrurs3az7IkXPlCuY6xKciu50Wy6gfIE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=iCo1SiwKYpckQvuSgo6VlCAjGosbJG8VeicseHw5YBq6/ouwSSscUIC071PUlYWNMgzBB5UJUfh/Hih4/79q/KvugHhbZtbAgG19InJv7ABv/2o63OR4h0GhZNR9AI1hd2YU81Yj4rhnljGkzlByu8IoTxthJ+qD0+GNf7XEmB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MABw0W3O; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MABw0W3O"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5751bcb3139so6163581a12.1;
+        Mon, 03 Jun 2024 22:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717480476; x=1718085276; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/B3D4wtGRpJZ2iApcLLvXsbZjMk476N0oS3prX5uEXY=;
+        b=MABw0W3OEdJ6BnKXykmqCnFnp4XlfZqpSD5pf6/1nY9YPlnJYNaDj5Peq0LyVyorVn
+         MC5gTqYRvpF95SSCGpShcTttO0hpNbdAWXfSB6qXhIMYypkfUct0YITJkq8XUaCvzg7v
+         aknmDkzJS+TNjotpOkEot3tFuaHJFb1wY98zv+PPoNTAZ9a+9KFjhNU0LGccXmQvOZZd
+         WtfspBbM/57M9wlcdTuJkz7dXDZXJHJ6ZqfsmvC0jmkYE73IP1iv7HwWOShGsTzMq/bn
+         e51J+pmklmrqYmmHuR7j/oUHkQuCFtSIxpnUjAvcgtOwQblA2lRDiVgbZLzd/rgmtlsb
+         tSKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717480476; x=1718085276;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/B3D4wtGRpJZ2iApcLLvXsbZjMk476N0oS3prX5uEXY=;
+        b=fE7YOqN0uolqYvyhH7QRGnolewWDOt7TyeENAvW3hYknSj/WwtOXUWi7g33BoLMvTm
+         PPGDdHy/6niUp09YQ30Go1B4a2lVIoqDvxENNRDzHNey5/chx4Uz6FVyxT/QeiszThX6
+         h7Zz/4xv3szAp5SiOJvLVm/eyb9U6g0eVJsksIQA8lu6scSIX3mm5V+yYmyi21/JPirv
+         I4KlxKi2BbZ9TJ6ZveNbZsNKdEx7cX6k6fwcWNmhYbvvgxpyRK0ALydlvpxgKnXYNXoY
+         zvvAZyldKOx495dqW03n7xwPk43zUHSt1FpvGDYhMjrdXQgFRitIsGJ4K6rnMujyThGz
+         khAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1Vcv+NtJRA10ba7fHhxbIEDLl/QaYnmFhGLtAID7e3sVGpmCXbbmMrCOMk/yRFCaP4OmGRvI9PR56humzY3v5yceSw+yjSpS2UlwCTQouwk0wQWfuNf1D6tNrU8pmQdxxl718Cy9EvVMoTbmm9ZIVjwrmhymUQ/G+V1MqG9v3KbSOLg==
+X-Gm-Message-State: AOJu0YwnEkRkpBNssYcGA7SM7hmIykBzPWlZbJajg4aATekkEpb8AXHK
+	H6X5XHvPhIUNqIZweIPZV6vUUiZg60raKuBC3H8kqg93b3eFcuOt
+X-Google-Smtp-Source: AGHT+IHVXdxysaq5WMsG98sCezHcJNWQkXwVmFFXDwwcoFJhWDYblpS3zlpgz69HjU4vaFXbm5lIDQ==
+X-Received: by 2002:a50:f609:0:b0:57a:2a46:701 with SMTP id 4fb4d7f45d1cf-57a3638f2f7mr8298598a12.19.1717480475987;
+        Mon, 03 Jun 2024 22:54:35 -0700 (PDT)
+Received: from toolbox.. ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a4fc842b5sm4895643a12.71.2024.06.03.22.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 22:54:35 -0700 (PDT)
+From: Christian Hewitt <christianshewitt@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: iio: adc: amlogic,meson-saradc: add GXLX SoC compatible
+Date: Tue,  4 Jun 2024 05:54:30 +0000
+Message-Id: <20240604055431.3313961-1-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <akpm@linux-foundation.org>, <ziy@nvidia.com>
-Cc: <v-songbaohua@oppo.com>, <mhocko@kernel.org>, <david@redhat.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIG1tOiBodWdlX21lbW9yeTogZml4IG1pc3VzZWQgbWFwcGluZ19sYXJnZV9mb2xpb19zdXBwb3J0KCnCoGZvciBhbm9uIGZvbGlvcw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 4545laZs009782
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 665EAA8E.000/4Vtfl34DhpzKhm
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-When I did a large folios split test, a WARNING
-"[ 5059.122759][  T166] Cannot split file folio to non-0 order"
-was triggered. But my test cases are only for anonmous folios. 
-while mapping_large_folio_support() is only reasonable for page
-cache folios. 
+Add support for the GXLX SoC. GXLX is very similar to GXL but has three
+additional bits in MESON_SAR_ADC_REG12 for the three MPLL clocks.
 
-In split_huge_page_to_list_to_order(), the folio passed to
-mapping_large_folio_support() maybe anonmous folio. The
-folio_test_anon() check is missing. So the split of the anonmous THP
-is failed. This is also the same for shmem_mapping(). We'd better add
-a check for both. But the shmem_mapping() in __split_huge_page() is
-not involved, as for anonmous folios, the end parameter is set to -1, so
-(head[i].index >= end) is always false. shmem_mapping() is not called.
-
-Using /sys/kernel/debug/split_huge_pages to verify this, with this
-patch, large anon THP is successfully split and the warning is ceased.
-
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
-Cc: xu xin <xu.xin16@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- mm/huge_memory.c | 38 ++++++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 18 deletions(-)
+ .../devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml        | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 317de2afd371..4c9c7e5ea20c 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3009,31 +3009,33 @@ int split_huge_page_to_list_to_order(struct page *page, struct list_head *list,
- 	if (new_order >= folio_order(folio))
- 		return -EINVAL;
-
--	/* Cannot split anonymous THP to order-1 */
--	if (new_order == 1 && folio_test_anon(folio)) {
--		VM_WARN_ONCE(1, "Cannot split to order-1 folio");
--		return -EINVAL;
--	}
--
- 	if (new_order) {
- 		/* Only swapping a whole PMD-mapped folio is supported */
- 		if (folio_test_swapcache(folio))
- 			return -EINVAL;
--		/* Split shmem folio to non-zero order not supported */
--		if (shmem_mapping(folio->mapping)) {
--			VM_WARN_ONCE(1,
--				"Cannot split shmem folio to non-0 order");
--			return -EINVAL;
--		}
--		/* No split if the file system does not support large folio */
--		if (!mapping_large_folio_support(folio->mapping)) {
--			VM_WARN_ONCE(1,
--				"Cannot split file folio to non-0 order");
--			return -EINVAL;
-+
-+		if (folio_test_anon(folio)) {
-+			/* Cannot split anonymous THP to order-1 */
-+			if (new_order == 1) {
-+				VM_WARN_ONCE(1, "Cannot split to order-1 folio");
-+				return -EINVAL;
-+			}
-+		} else {
-+			/* Split shmem folio to non-zero order not supported */
-+			if (shmem_mapping(folio->mapping)) {
-+				VM_WARN_ONCE(1,
-+					"Cannot split shmem folio to non-0 order");
-+				return -EINVAL;
-+			}
-+			/* No split if the file system does not support large folio */
-+			if (!mapping_large_folio_support(folio->mapping)) {
-+				VM_WARN_ONCE(1,
-+					"Cannot split file folio to non-0 order");
-+				return -EINVAL;
-+			}
- 		}
- 	}
-
--
- 	is_hzp = is_huge_zero_folio(folio);
- 	if (is_hzp) {
- 		pr_warn_ratelimited("Called split_huge_page for huge zero page\n");
+diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
+index 7e8328e9ce13..b2fef72267b4 100644
+--- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
+@@ -23,6 +23,7 @@ properties:
+               - amlogic,meson8m2-saradc
+               - amlogic,meson-gxbb-saradc
+               - amlogic,meson-gxl-saradc
++              - amlogic,meson-gxlx-saradc
+               - amlogic,meson-gxm-saradc
+               - amlogic,meson-axg-saradc
+               - amlogic,meson-g12a-saradc
 -- 
-2.15.2
+2.34.1
+
