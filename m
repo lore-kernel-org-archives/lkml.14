@@ -1,130 +1,135 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526D0143C7B;
-	Tue,  4 Jun 2024 10:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE46E144D29
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717495899; cv=none; b=nBaZYB+h0Tqj1GjG+WieQgBzBmOZ1cvwNkyd52dydCWZCCF6DORVXIw61YcrGEvuZn+a5sdYRl4OeBEXRUQzfrq2h4TG1ogSiqeck3wW0ceocOJD1jPHdFByKuqQWa4fPc6IZPT90PZXUoUdfgK2E/fFpy5wgnHhDUoPCQKEQXE=
+	t=1717496007; cv=none; b=Tagf9je/Aq3yLH+ySrZaiWRA1ENn6ZiYE1+ZDsDld078Ufcm3kj9JVXfyzNzVwMw9xZioxR6xMOyjtq4lcZNYnH1IjDwrL0kSI2t3FST0W8bbgOKWWj3wnRpfWQSYICJWIAPdxPpVoGG5ef6/DojGCzkASmlMA/TtiioWkvie1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717495899; c=relaxed/simple;
-	bh=C9QZlpACMYy1Zfnu2NImSG8I/J6FWYhPgPQBtPiN+aM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NIvKm2GOmUg34V61BNa6gqXWwMrsVQLcgO81xICclx11PGK/aJBNc8DvY8EZbkDqsh/R7n+GyjwfGXOYwKTP6dlOq4LIVJP/XbL5b3YLxY3He09+1jnbxMqBuBDilamxVhLYd7WbXybZAyPE6zfqlBKXlmiNiV4ah2ptBK5sFtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=E+DvwRIS; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1717496007; c=relaxed/simple;
+	bh=7pMGPoPFS6WXSOEYdjHiLZC8wz7D3xw7x/5rkBNplrY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cbl++Jinu6ZSZKRYwFTQLEsbCwxcooRdAMomubtKGgZwpABJSGXkKsIB4p7xC/6TYhpmwbVjnvkzUjBWb+uBey0CXzzC4z/5Jtnjf/tB3mwHqWTICe8Z7TrQcXgkgaNC1CefTshiW77jfK4K5Lcux6oW8QXq2uugX6yUDOJWNG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UnU/+GhY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="E+DvwRIS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1717495898; x=1749031898;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=C9QZlpACMYy1Zfnu2NImSG8I/J6FWYhPgPQBtPiN+aM=;
-  b=E+DvwRISWsIp+FV/u1kORVbvpHp2sBvN7oIIjGDxK+46ugBXY7bNHKSC
-   3OK5wYRj9WMWmb55fBFjc2JLq3Ic9PoIN4fhu4sLAzIp5wJJz778SLIMM
-   BIfwPYIfYQdHd57TptjkCwCIvTfhKYbBML10zW9EphJjmcu6oYz1IulfU
-   7jAYmgrdgatau5DUvjlcBAEkV8a/XzPfqiUmFA1JSzDfUkCFIrCl13aM8
-   3hcUj0+JimlYaC00p/s0TIaPDxhjyCwcSoaVOip9SRomyAFJ9ff3qshWD
-   mhT6LpS/XluSbdbvQYOFuC1QNNF71/yZ+6s0c496IHE6ZmKLPzzozVCx1
-   w==;
-X-CSE-ConnectionGUID: wEzRrHHTQXqTSqyPNngmpw==
-X-CSE-MsgGUID: VmTWgr6UT6GmI5MeZ9Sbbw==
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="257789211"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Jun 2024 03:11:30 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 4 Jun 2024 03:10:49 -0700
-Received: from ROB-ULT-M76677.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Tue, 4 Jun 2024 03:10:47 -0700
-From: Andrei Simion <andrei.simion@microchip.com>
-To: <claudiu.beznea@tuxon.dev>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-	<perex@perex.cz>, <tiwai@suse.com>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <kuninori.morimoto.gx@renesas.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Andrei Simion <andrei.simion@microchip.com>
-Subject: [PATCH] ASoC: atmel: atmel-classd: Re-add dai_link->platform to fix card init
-Date: Tue, 4 Jun 2024 13:10:30 +0300
-Message-ID: <20240604101030.237792-1-andrei.simion@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnU/+GhY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717496003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Qj8vTI2LXR4HXBOizcBl1XW0VI7FRaOpZEigzFh4T+M=;
+	b=UnU/+GhYCKC9spnS3nzVBHR6F6RLwfZO75SvHthMaPQQbm1fYg70Q3gxGN9vHAMABhlK2U
+	vL2G18KECpY/GkWBdv1YIlZRpiWletUjM8Kb8Vp3UrK3EtSUrGr2gD6lf0AuMQAnta74bF
+	Z0omoYBzVVZPw4Ul595JTgTkiHvZ8Ls=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-619-7GpYyGZAO-mizx2aa0-ZAw-1; Tue, 04 Jun 2024 06:13:22 -0400
+X-MC-Unique: 7GpYyGZAO-mizx2aa0-ZAw-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ea8e94a56aso6198331fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 03:13:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717496000; x=1718100800;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qj8vTI2LXR4HXBOizcBl1XW0VI7FRaOpZEigzFh4T+M=;
+        b=cLSW0354/vYEHPVDxNsqrffIlYiKb6qENIV6mXkUQudIciqw2Yn0ggclA6TF0Gexg6
+         WSOIVas6sMWfIZIPh2Q5/LdpFKxVBiyAOrf2uegtUHbS+ZRLwYvRQH4PkE+/MWrsPi/K
+         c98Gh0X2lQPiBSUXcx3we+rdBuHh/566W52OUqSzPrkPgPTmCKDFh+kvDyHM8QAUepLe
+         +EUEofcYeu2zJ/4NgblTKYFtolr2mG2LcXUlxdzcAXQmGhKQ8AoVX266SriOOj8KXwzG
+         VzHlFzbp9YgPJFeVe3m86sxR3YzIgN2cD8lvD1JIabio1Y3inFEGeb6IaObTcznwHwkv
+         i3PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlQqlhlMRgvwKEGU1UZ8cnjoCRKkud5PoQOEz/Lgye7ONUL3uLhykG/UsvqaPA8ddAz1vQ3goT2qzzykjOeynfoE5fYw/U5Ryf/7NW
+X-Gm-Message-State: AOJu0YwgtP7aEXO4MTKewbmXS30NTHnyxeSYdyMlvL3Sr6/ItQ1H8j78
+	4JjOzuqfHd6rFuW92QN6nNLNrlCFdEjJoKAbkEsDs4BA8/Ylu22pzIgznbQAcyi8mya4rCsbKvI
+	I4//s7iNw2kcyjqd7EGLzB4E/KBng66QKlB9Y2RYk5ofYqmK1B3BP1cDsOIEoEg==
+X-Received: by 2002:a05:6512:3b25:b0:52b:8909:58b1 with SMTP id 2adb3069b0e04-52b89702d1emr10432006e87.3.1717496000623;
+        Tue, 04 Jun 2024 03:13:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF2KYZpo1PhJKQf4emed84mgFHvwqcq7vviZe/cQXCtmdquAQ4ToFV2c7RihQIOA2x+z432PQ==
+X-Received: by 2002:a05:6512:3b25:b0:52b:8909:58b1 with SMTP id 2adb3069b0e04-52b89702d1emr10431960e87.3.1717496000150;
+        Tue, 04 Jun 2024 03:13:20 -0700 (PDT)
+Received: from gerbillo.redhat.com ([2a0d:3344:1b74:3a10::f71])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35e537da921sm6658518f8f.17.2024.06.04.03.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 03:13:19 -0700 (PDT)
+Message-ID: <bea8b8bf1630309bb004f614e4a3c7f684a6acb6.camel@redhat.com>
+Subject: Re: [PATCH net-next v10 05/14] netdev: netdevice devmem allocator
+From: Paolo Abeni <pabeni@redhat.com>
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Donald Hunter
+ <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, Thomas
+ Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+ Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven
+ Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnd Bergmann
+ <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>,  Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,  Shuah Khan
+ <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Pavel Begunkov
+ <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>, Jason Gunthorpe
+ <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, Shailend Chand
+ <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
+ <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>,
+ Willem de Bruijn <willemb@google.com>, Kaiyuan Zhang <kaiyuanz@google.com>
+Date: Tue, 04 Jun 2024 12:13:15 +0200
+In-Reply-To: <20240530201616.1316526-6-almasrymina@google.com>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+	 <20240530201616.1316526-6-almasrymina@google.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-The removed dai_link->platform component cause a fail which
-is exposed at runtime. (ex: when a sound tool is used)
-This patch re-adds the dai_link->platform component to have
-a full card registered.
+On Thu, 2024-05-30 at 20:16 +0000, Mina Almasry wrote:
+> diff --git a/net/core/devmem.c b/net/core/devmem.c
+> index d82f92d7cf9ce..d5fac8edf621d 100644
+> --- a/net/core/devmem.c
+> +++ b/net/core/devmem.c
+> @@ -32,6 +32,14 @@ static void net_devmem_dmabuf_free_chunk_owner(struct =
+gen_pool *genpool,
+>  	kfree(owner);
+>  }
+> =20
+> +static inline dma_addr_t net_devmem_get_dma_addr(const struct net_iov *n=
+iov)
 
-Before this patch:
-:~$ aplay -l
-**** List of PLAYBACK Hardware Devices ****
-card 0: CLASSD [CLASSD], device 0: CLASSD PCM snd-soc-dummy-dai-0 []
-    Subdevices: 1/1
-    Subdevice #0: subdevice #0
+Minor nit: please no 'inline' keyword in c files.
 
-:~$ speaker-test -t sine
-speaker-test 1.2.6
-Playback device is default
-Stream parameters are 48000Hz, S16_LE, 1 channels
-Sine wave rate is 440.0000Hz
-Playback open error: -22,Invalid argument
+Thanks,
 
-After this patch which restores the platform component:
-:~$ aplay -l
-**** List of PLAYBACK Hardware Devices ****
-card 0: CLASSD [CLASSD], device 0: CLASSD PCM snd-soc-dummy-dai-0
-						[CLASSD PCM snd-soc-dummy-dai-0]
-    Subdevices: 1/1
-    Subdevice #0: subdevice #0
--> Resolve the playback error.
-
-Fixes: 2f650f87c03c ("ASoC: atmel: remove unnecessary dai_link->platform")
-Signed-off-by: Andrei Simion <andrei.simion@microchip.com>
----
- sound/soc/atmel/atmel-classd.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/atmel/atmel-classd.c b/sound/soc/atmel/atmel-classd.c
-index 6aed1ee443b4..ba314b279919 100644
---- a/sound/soc/atmel/atmel-classd.c
-+++ b/sound/soc/atmel/atmel-classd.c
-@@ -473,19 +473,22 @@ static int atmel_classd_asoc_card_init(struct device *dev,
- 	if (!dai_link)
- 		return -ENOMEM;
- 
--	comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
-+	comp = devm_kzalloc(dev, 2 * sizeof(*comp), GFP_KERNEL);
- 	if (!comp)
- 		return -ENOMEM;
- 
--	dai_link->cpus		= comp;
-+	dai_link->cpus		= &comp[0];
- 	dai_link->codecs	= &snd_soc_dummy_dlc;
-+	dai_link->platforms	= &comp[1];
- 
- 	dai_link->num_cpus	= 1;
- 	dai_link->num_codecs	= 1;
-+	dai_link->num_platforms = 1;
- 
- 	dai_link->name			= "CLASSD";
- 	dai_link->stream_name		= "CLASSD PCM";
- 	dai_link->cpus->dai_name	= dev_name(dev);
-+	dai_link->platforms->name	= dev_name(dev);
- 
- 	card->dai_link	= dai_link;
- 	card->num_links	= 1;
--- 
-2.34.1
+Paolo
 
