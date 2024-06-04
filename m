@@ -1,138 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFF8146D6E;
-	Tue,  4 Jun 2024 13:39:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A82266A7
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508343; cv=none; b=gEB+riawlYxeYDjq44v5fvHciYkUFuRykDnTc4bmP9IM+J1ujlTX2CtkJFODS+DM/zsbZt65khTU+iN9r7TxLOPv3PSmgp7eSCCGvYMXpPK+7PtKpMjuxcj3YG8QugBoNj8gEhKkOejp+d1gtfkH2prPpPtKgwc4g9h4SwZ23rQ=
+	t=1717508417; cv=none; b=ZwuBbvahdzjjH8WLiowo1bugat1RfEAgMPvb8oH/0iV/YtYJl22yx2LOl4h4cB020DjzI6GFlkYgDlqtG6QUjjO1NbSMlgmJV+fJJeSGwtrlqLmMVPQZoVPrV+3kPt9sT6FJuThwll01ERCPTnHc2IRKVWGPWYe9cx/yjU/pvYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508343; c=relaxed/simple;
-	bh=O+deWQNt5OanYzNos3NVHzpWd15SU72v0FwzQLeeXhQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lC7rBcd9Rfs3PFeovWhXQKb2nDF7ULH3qxvjkqFFg4Vgv2AyTiShvI66bx9vjGXhcRloRzTCcnqZq3g16xXjQMMWbFs6Vu/tV1KX6zvxSfA9juOUvUfKov+T251NicMpZwBQuMT1NzYpjCOe90ZRomnwfBEG0Xypc+aKs1iE8BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fs2vc81L; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717508417; c=relaxed/simple;
+	bh=b8AMxcqWw0P3jOh8p1hb7REjv+Kt3Ihe6OI8G/FSqrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MApXAToCCmF1Mrspg6fZ+WTdjcL8VZ3f4Y0DV8rr+6yLkhNN1eRUqOLS88R7tHOPAatIUg+HhkLGLSSb09rZdCLjd//zVwBqhjqSDSlveHiXoJg1lCr+b9RePJKTfCJzMvqStsxfxJmdjRXJirAe9AYRA0pOxz08jYqb+f1zSuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QO9SgBOZ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fs2vc81L"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454Cutm2013955;
-	Tue, 4 Jun 2024 13:38:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : message-id :
- mime-version : subject : to; s=pp1;
- bh=QPSi69NKkDl86Z+DG7MVLpzqXo+cHpFb4T+eUjHO5Lw=;
- b=fs2vc81LNN1x5QMsRWFDQr6LPDLUIa8fomWBAwTpow+hZzRWzxMMtT9K8uyfHN1PT0LD
- e/9Oj/klzlph6LP2WpG5bAms7037wKSk+mvH0RGCoIi2yTHh1MConH2MOJa8vxLHhBf5
- 0KC1ONiiM4aG+vCkItHrAUz/7YLO5USpZ31RRiSx5igZofb7lN9fqarC0h+UWZ3CI0h0
- ovDXz9KpFgGNcC5wPCaq9Tsgr/zq1VhKWJt+4GC6Rp3RaWQXpVNRD7AajaVz+E7Eo6wM
- d0Bnx70o4t2ZC7YQlHVZajL/WSKIvCWKo2CKI3d6ZoWl6OCY9LEOQeviRXOiJr8i1MKs Rw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj2x9g81j-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QO9SgBOZ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4548lMfs000933;
+	Tue, 4 Jun 2024 13:39:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	g3xKDmGEtE5NY3eQm4y/GHC7J2gBGR92nLzdqVWo5F0=; b=QO9SgBOZQWdcRV/2
+	GmUNDR60B5JL/RFYPJmrnSZ4nPEq1iUBMaxI9Bq0yKMyflUmfUUyUFWyidBp+h2x
+	1CyUul08o9lmPAYSxgMFKaGrcVIZsivPlO5mYS+sgcdOzBtsxn4kduJqPN7pqAsg
+	PKndjQPXQx72PiUUpguB7tPOSoTVafAxQeqSKCeGpYm8BlP/+1kJXsCmT+JRt41Y
+	F+Vm+hZmgDJRRZBY6qQ3Q40vBf1tVjBl9/wd7kWFxB/vjrx3m8MejoPYPdFTdjy3
+	AbMFrt9CKXagNdbVTWMYbLc0Q/NaY8k1L3mYp5za7YUmH4uxb9alg+u3nL1pPRVr
+	r+446A==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5kq2s7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:38:57 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 454DcvZg013875;
-	Tue, 4 Jun 2024 13:38:57 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yj2x9g81g-1
+	Tue, 04 Jun 2024 13:39:51 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 454DdosV012590
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:38:57 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 454Cg95i008517;
-	Tue, 4 Jun 2024 13:38:56 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygec0pf6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 13:38:56 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 454DcreF27788000
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 4 Jun 2024 13:38:55 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C3D5958054;
-	Tue,  4 Jun 2024 13:38:53 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8E46358050;
-	Tue,  4 Jun 2024 13:38:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  4 Jun 2024 13:38:52 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-Date: Tue, 04 Jun 2024 15:38:39 +0200
-Subject: [PATCH] PCI: Add missing lockdep assertion in
- pci_cfg_access_trylock()
+	Tue, 4 Jun 2024 13:39:50 GMT
+Received: from [10.81.24.74] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 4 Jun 2024
+ 06:39:49 -0700
+Message-ID: <bb8cf06e-4f96-4545-b459-3e70acb50f97@quicinc.com>
+Date: Tue, 4 Jun 2024 06:39:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/22] ath10k: Use iommu_paging_domain_alloc()
+Content-Language: en-US
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+        Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Jason
+ Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+CC: Yi Liu <yi.l.liu@intel.com>, David Airlie <airlied@gmail.com>,
+        Daniel
+ Vetter <daniel@ffwll.ch>, Kalle Valo <kvalo@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alex
+ Williamson <alex.williamson@redhat.com>, <mst@redhat.com>,
+        Jason Wang
+	<jasowang@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan
+ Hunter <jonathanh@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>, <iommu@lists.linux.dev>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <ath10k@lists.infradead.org>
+References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+ <20240604015134.164206-12-baolu.lu@linux.intel.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20240604015134.164206-12-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240604-pci_cfg_lockdep-v1-1-00da1706c9fd@linux.ibm.com>
-X-B4-Tracking: v=1; b=H4sIAN4YX2YC/x3MQQqAIBBA0avErBNsEKOuEiGlUw1FikIE4t2Tl
- m/xf4ZEkSnB2GSI9HBif1d0bQP2WO6dBLtqQIlKaqlEsGzstpvL29NREKseOkUaXY8aahUibfz
- +x2ku5QOsVV36YQAAAA==
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1128;
- i=schnelle@linux.ibm.com; h=from:subject:message-id;
- bh=O+deWQNt5OanYzNos3NVHzpWd15SU72v0FwzQLeeXhQ=;
- b=owGbwMvMwCH2Wz534YHOJ2GMp9WSGNLiJZ6lPt98Y4W/68uv8/vXbdyyujR2FZOM8L09Z3O+P
- Jwio7tIvaOUhUGMg0FWTJFlUZez37qCKaZ7gvo7YOawMoEMYeDiFICJ/GVm+GfCuKWy7HnktKuf
- s+YsLXRcviXy1ZcFZhP/+S+UW6o57dMWRoY/x728lyVJrku70ptxusIzfNHhpH/GXXY1h2MYGla
- 938sAAA==
-X-Developer-Key: i=schnelle@linux.ibm.com; a=openpgp;
- fpr=9DB000B2D2752030A5F72DDCAFE43F15E8C26090
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: EuWyve0ZBFGSziGMKYKH3OoHm_EqeriT
-X-Proofpoint-ORIG-GUID: TkuItEXU7KJSJI0OxFDg8G5dTJXOPHt_
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Md4EIe9lNXys9JP7qqj6UgaTb6nNYv_z
+X-Proofpoint-ORIG-GUID: Md4EIe9lNXys9JP7qqj6UgaTb6nNYv_z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-04_05,2024-06-04_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 clxscore=1011 mlxscore=0 suspectscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406040109
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015 phishscore=0
+ mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406040109
 
-In commit 7e89efc6e9e4 ("PCI: Lock upstream bridge for
-pci_reset_function()") it was missed that pci_cfg_access_trylock() needs
-the same lockdep assertion as pci_cfg_access_lock(). This leads to false
-positive lockdep splats for users of pci_cfg_access_trylock(). Add the
-missing assertion when the lock was successfully acquired.
++ath10k list for viibility
 
-Fixes: 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- drivers/pci/access.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 30f031de9cfe..5b6620da30d7 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -319,6 +319,8 @@ bool pci_cfg_access_trylock(struct pci_dev *dev)
- 		dev->block_cfg_access = 1;
- 	raw_spin_unlock_irqrestore(&pci_lock, flags);
- 
-+	if (locked)
-+		lock_map_acquire(&dev->cfg_access_lock);
- 	return locked;
- }
- EXPORT_SYMBOL_GPL(pci_cfg_access_trylock);
-
----
-base-commit: c3f38fa61af77b49866b006939479069cd451173
-change-id: 20240604-pci_cfg_lockdep-b6914e62d726
-
-Best regards,
--- 
-Niklas Schnelle
+On 6/3/24 18:51, Lu Baolu wrote:
+> An iommu domain is allocated in ath10k_fw_init() and is attached to
+> ar_snoc->fw.dev in the same function. Use iommu_paging_domain_alloc() to
+> make it explicit.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>   drivers/net/wireless/ath/ath10k/snoc.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+> index 8530550cf5df..0fe47d51013c 100644
+> --- a/drivers/net/wireless/ath/ath10k/snoc.c
+> +++ b/drivers/net/wireless/ath/ath10k/snoc.c
+> @@ -1635,10 +1635,10 @@ static int ath10k_fw_init(struct ath10k *ar)
+>   
+>   	ar_snoc->fw.dev = &pdev->dev;
+>   
+> -	iommu_dom = iommu_domain_alloc(&platform_bus_type);
+> -	if (!iommu_dom) {
+> +	iommu_dom = iommu_paging_domain_alloc(ar_snoc->fw.dev);
+> +	if (IS_ERR(iommu_dom)) {
+>   		ath10k_err(ar, "failed to allocate iommu domain\n");
+> -		ret = -ENOMEM;
+> +		ret = PTR_ERR(iommu_dom);
+>   		goto err_unregister;
+>   	}
+>   
 
