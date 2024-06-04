@@ -1,133 +1,146 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A94614B06E;
-	Tue,  4 Jun 2024 22:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309171384B3
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 22:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717540910; cv=none; b=R3f0psrtJ00XxF2VQLP8JkiAc/JLHQAUzC/ropmkkvJhF2TVTTwyz8wfN9d5+LJ3/5nBRk9NTLQ7mBW9avqlJn5fO8SpTuwo8/AZpX/68e1GZ8nPLCQiEizUO1ADX1kkpYkSl3KfZpbVFkbbFmRweBrMs/I7GyJQwEQHi7XJVZ8=
+	t=1717540924; cv=none; b=JCeRBMBJUwtdfD/kCcHAbXqkB/zoGf5gPeYv+afaH2yLwLfxmT8J3fK+xOEfwmZqqN4ybR/MRe9/Mz+E4hzjcNxjPWIQwKsVvNvj9q0VbgTEoKCtAStfGu4GyQhKGlGWQ9wZ2PPM/IcEPE7w6B1+IwJMekPn7v9FVGXgH/ee0Ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717540910; c=relaxed/simple;
-	bh=yuZKQqpqmxwyDNVBJjjuic8k9T9N0zt4jUtnRywhVyc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oRS2BUWFt2PdDmRbLdTZHuEymq0twOh45Ba7g/oA6Ls1/2Q3ZycE9m7UYsQYym8N5/PXs9Yjx6SqkHqP1RSCeyfTxOushqa5gFJ3r3PQ2YsxMBYJj+qxRmhl4t0TP6bvkUAtPBEQqidBvjWI54r1MDE/+lFMa2/S3IgPqLK9FCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=PA86CCzy; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1717540924; c=relaxed/simple;
+	bh=RVJ4j4cMnToo44h4/Z5RpEHyocI7BKeltHV6TedRuMM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WwE8lvl0nx4iR3uL+MnX5Gc7EMBDvopn3qacS3JrBUwaMllAvXA/e0oxqD3Ays1rjKy5LJALiC1/ouE9odUJdvxtRJGtSG1zI7B3WPdbF0SX45x5Q/SGYxUaLOgWMj0hvsW11t+AvLm7nZhtFEak1Yf7G00BdP8IuP9//fXrmlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YKVUfW5/; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="PA86CCzy"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454K0N3h015061;
-	Tue, 4 Jun 2024 18:41:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=oN/4JX8Lx+3D+bSydBJVahix/UU
-	ZEC7PQQ+hSFktC6s=; b=PA86CCzyBgCEQe3fZc8lagO2sj8wnAxiCo9NDWIvJho
-	i6FZwRTYQZLjtx0rM97YzUjfMEtSN16KGRtVM6EJq1ClYlv3HSIwm4jB9zVKNcOJ
-	Wr869cMbZCuvi2CCAqGmowx8mpd5KzYcTsSxLatZZFubG1/GCSaxJNNVQy/iDGHe
-	w2cWKdPu96rGVqZf5srfvLVhIETRG8/9vL5NgnleqtXRnnRcqJ/5e6C14gzJj3VO
-	ftf2Gvvh8iMwh90NnFs+kvpOXytriijscTJ4AEGLW5RoTjZ16qHj+xeVqg0QQ06Y
-	3bytcuAIEQVKnI2DC9hso/VrDEXddC0CE9lUpS/I7bw==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yj0hvakj1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 18:41:20 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 454MfJPB010856
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 18:41:19 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 4 Jun 2024
- 18:41:18 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 4 Jun 2024 18:41:18 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.129])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 454Mf2xc001165;
-	Tue, 4 Jun 2024 18:41:05 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <broonie@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <nuno.sa@analog.com>, <dlechner@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>
-CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/6] Add support for AD4000 series of ADCs
-Date: Tue, 4 Jun 2024 19:40:56 -0300
-Message-ID: <cover.1717539384.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YKVUfW5/"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f66ad03847so35775ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 15:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717540922; x=1718145722; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kxpHTd5BZykqrVKTAmTFLY0ccrzh8pYj5w+W6cIXXW4=;
+        b=YKVUfW5/0oiRZTH6NICPCFNahbZoopPB/m75XTy/cVc9eQFFa6KIGbbf2n+dwB4Rt5
+         pPZ9899gjhv32Nfwj1z9xP5AxcOH+gr3sbkzNKfnm41mQNyDEHC6MBhbUmlXUfsFJYH6
+         0MykcoY9zGQ4mcjQCv/wlmw25VUx5/Le/NVfMSX5Nk+pU8aQ1GVEx7p23XK+P6kOXLA6
+         Am/v8C4cd+U1+IoQ8aipdZN1Nvt61jnu39ObdgEgiDQSAQauBOYJ+pdDMh8P+/DZXi0J
+         YJ3FW/DV3b3ZBVxcRbNPzzgdAzx5zxdAlg1SHiIhLsGv12fEnjgyPSUmQwPcdU8QOdkR
+         aNCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717540922; x=1718145722;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kxpHTd5BZykqrVKTAmTFLY0ccrzh8pYj5w+W6cIXXW4=;
+        b=b/MHTyTPNTJlSbX67OwgnDxopvuRv7tFHQVflInEZXLcGQovmB7O1lLVj6VuEllVlx
+         gnKE2tlf3ls0uWHUWdYlTszRc8ZG/crQwUPnBWWb1sDjJeEtqv+0AoUX5qFQU4xvUpyj
+         pMA/JLy2Qsz7y+1nMt0rE0NCW2/XMJdQ9P+gr6sfqjeGjzmL5BfSihrE2FgOSIBGb8Sz
+         JjLYrBuJcT/UJCI7V8teuQnvT1pseMQZFgi9VL4VawU8ReTH9pVbStF0Oab7iYPuPcLp
+         E29y3ayTVBTdwxdAuzcqdFQj4dj8UkT5kwyEeod7FNxWAzPo2kGK9zIklFJ6K7WneL/t
+         cZ2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUZOan7M0w44o4lDRNUwCBu9VfxhntPrWMnMM3EfXMb+vj4+S4byhdMKT/BmRRTk/mzv0Ik7emFDI6zzbihEYT5d+AELAdyLgw1RVZZ
+X-Gm-Message-State: AOJu0YxDy+7VNFFACCXdMdn8SDwWkCRmhVKjASVPyncOgcjCgx6I9yGa
+	lYGMNDdD29BTYQnlyPnpOSg/XCRJXf8BvKllF44dTWe+sap4MhqBgiDVCTNUBwIzrDnETj05ADJ
+	GQvBnBq8g3wkletACIrliFYEeEPHTwz1eXHLu
+X-Google-Smtp-Source: AGHT+IEv+dGkXehFDxrAJs9OVMPrLMqlvskSpYNvwbIIRv8bVNJS78j2sX3r56V0EyjAfuI5/+Fx/EY3RwWIVIwxtaU=
+X-Received: by 2002:a17:903:8c8:b0:1f6:92be:2c9c with SMTP id
+ d9443c01a7336-1f6a64bdc8fmr1186625ad.6.1717540922141; Tue, 04 Jun 2024
+ 15:42:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: MUO5teRQRbHDdxsS36D6OaO3q_CZLHlq
-X-Proofpoint-ORIG-GUID: MUO5teRQRbHDdxsS36D6OaO3q_CZLHlq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0 adultscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=974
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406040183
+References: <20240529064327.4080674-1-weilin.wang@intel.com>
+ <20240529064327.4080674-4-weilin.wang@intel.com> <CAM9d7cgSwZ3PU3H9VNvxQakocEZ_CQEqB9M1o3xTMdJ7F1sufQ@mail.gmail.com>
+ <CO6PR11MB56357F58D99B17CD08671A26EEFC2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cjbHzgfW2fKQkZ2=gtEMD9N5wG4xaWgPU+N-YvmfhXviQ@mail.gmail.com>
+ <CO6PR11MB563511F1A6165F0F4B30C4DFEEF82@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <Zl-WCEhhxBtiGGhn@google.com>
+In-Reply-To: <Zl-WCEhhxBtiGGhn@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Jun 2024 15:41:50 -0700
+Message-ID: <CAP-5=fW41UxUDO-FSymMX_R5nEJDnV7FOjfhW5=XGCVj=TSYKQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v10 3/8] perf stat: Fork and launch perf record when
+ perf stat needs to get retire latency value for a metric.
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: "Wang, Weilin" <weilin.wang@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch series extends the SPI bitbang, gpio, and spi-engine controllers to
-support configurable MOSI line idle state.
-It then introduces the ad4000 driver which makes use of the MOSI idle
-configuration to properly support AD4000 series of ADCs.
+On Tue, Jun 4, 2024 at 3:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Tue, Jun 04, 2024 at 08:00:26PM +0000, Wang, Weilin wrote:
+>
+> > > On Thu, May 30, 2024 at 11:46=E2=80=AFPM Wang, Weilin <weilin.wang@in=
+tel.com>
+> > > > > > +       /*
+> > > > > > +        * Only set retire_latency value to the first CPU and t=
+hread.
+> > > > > > +        */
+> > > > > > +       if (cpu_map_idx =3D=3D 0 && thread =3D=3D 0) {
+> > > > > > +       /* Lost precision when casting from double to __u64. An=
+y
+> > > > > improvement? */
+> > > > >
+> > > > > As I said before I think you can set t->val * 1000 and then
+> > > > > set the evsel->scale to 1e3 or 1e-3.
+> > > >
+> > > > Hi Namhyung,
+> > > >
+> > > > Sorry if this is a repeated message. I thought I replied to your su=
+ggestion
+> > > > on this last time. I'm thinking we should keep it like this for now=
+ and make
+> > > > this change unless we find the precision loss is critical. Because =
+I thought
+> > > > we don't want to add special code to handle the calculation and fin=
+al print
+> > > > to keep code simple.
+> > > >
+> > > > I kept this comment here so that we don't forget about it. Please l=
+et me
+> > > > know if you'd like me to remove it.
+> > >
+> > > Please see print_counter_aggrdata().  It's the generic code to print
+> > > the event value and it'll display the value multiplied by the scale
+> > > (default to 1.0).  So you can keep precision as long as you set the
+> > > scale properly (1e-3).
+> >
+> > I could see the retire_latency is printed correctly after set the evsel=
+->scale to 1e-3
+> > and multiply the t->val * 1000. However, this scale is not used in metr=
+ic calculations.
+> > We need to add code in metric calculation or display part to scale it a=
+s well. Is that
+> > acceptable or do you have other suggestions?
+>
+> Hmm.. I don't know if other metric already dealt with the scale like with
+> RAPL events.. If not, I think it's reasonable to add that to the metric
+> calculation.
+>
+> Ian, what do you think?
 
-Change log v2 -> v3:
-- [new patch] Extended SPI modes to allow MOSI idle high configuration.
-- [new patch] Implemented configurable MOSI idle state for spi-bitbang controller.
-- [new patch] Implemented configurable MOSI idle state for spi-gpio controller.
-- [new patch] Implemented configurable MOSI idle state for spi-axi-spi-engine controller.
-- Dropped spi-cpha property (these devices communicate in SPI mode 0).
-- Added dt-binding check to constrain adi,gain-milli property to ADAQ devices only.
-- Device config doesn't enable TURBO anymore to save power.
-- Fixed device buffer declaration.
-- Simplified ADC input gain handling by keeping gain value from DT.
-- Reworked ADC sample read function in "3-wire mode" making it latency free.
-- Added ADC sample read function for "4-wire mode".
-- Read adi,spi-mode dt prop and use "3-wire" or "4-wire" mode accordingly.
-- Many other minor improvements such as better code execution flows and comments.
-- Removed Mircea Caprioru from authors. This driver is now completely different
-  from what Mircea left in ADI Linux.
-
-I'll leave additional ADC features (e.g. single-ended to differential configuration)
-for future patches if no one minds it.
+Tbh, I don't understand the conversation and it looks like we're in
+the weeds. In metrics the scale/unit from the event aren't used - that
+is all events in a metric are the unscaled quantities unless something
+is broken.
 
 Thanks,
-Marcelo
+Ian
 
-Marcelo Schmitt (6):
-  spi: Add SPI mode bit for MOSI idle state configuration
-  spi: bitbang: Implement support for MOSI idle state configuration
-  spi: spi-gpio: Add support for MOSI idle state configuration
-  spi: spi-axi-spi-engine: Add support for MOSI idle configuration
-  dt-bindings: iio: adc: Add AD4000
-  iio: adc: Add support for AD4000
-
- .../bindings/iio/adc/adi,ad4000.yaml          | 207 +++++
- MAINTAINERS                                   |   8 +
- drivers/iio/adc/Kconfig                       |  12 +
- drivers/iio/adc/Makefile                      |   1 +
- drivers/iio/adc/ad4000.c                      | 735 ++++++++++++++++++
- drivers/spi/spi-axi-spi-engine.c              |   8 +-
- drivers/spi/spi-bitbang.c                     |  24 +
- drivers/spi/spi-gpio.c                        |  12 +-
- drivers/spi/spi.c                             |   6 +
- include/linux/spi/spi_bitbang.h               |   1 +
- include/uapi/linux/spi/spi.h                  |   3 +-
- 11 files changed, 1014 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
- create mode 100644 drivers/iio/adc/ad4000.c
-
--- 
-2.43.0
-
+> Thanks,
+> Namhyung
+>
