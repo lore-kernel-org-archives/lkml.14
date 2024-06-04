@@ -1,131 +1,69 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3B9A5F;
-	Tue,  4 Jun 2024 22:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9F2A5F;
+	Tue,  4 Jun 2024 22:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717541016; cv=none; b=L5VT1dIH7h9vlUipsm0Sd9rkyCOpFDUbYaJEh6M7Dv2dk34R787FE1Uq2ay92ENzasbLixzZzElz4U6TDO8SCRGAGmQhDKUkNRfq9u5mNXRY5zDQvbXpm+MtMCWlXMvw7qiQzdPUcUvS1eanxOS0Y2T4nNzmo6QcDAaiw/I6Wl8=
+	t=1717541022; cv=none; b=ip+dRiOoH40K6nAm9ywhFy9eHNr4ok6BsK05RMjIE8BYRKJPHO9Hdw2o3nJd/R+CuxtSQ7FORgtUQUu38454cCo2WLVzviGWnsvc7oZFuDT5j0x5ytJu5t23WJlNd2PkPszBdwwDj2yJUyEXEaxehFpVrall6ZBizJOWCUlTVI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717541016; c=relaxed/simple;
-	bh=xd9W2Uaq28uqseaO7Rty9ETXeULI54L/WJ0WeG+zeIg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ceLDvIQzr46hFOCMMiKovPCFA5B6rDDGYuyIvhF7OQPWbCWz7wDcOWBIDmMUQvZAJMvIo0+Glg4u4bHUuftB/XBpSEhWJc1YuO3Tj2VPX7udwtnJtp9HfTOJZtVgZ9UVOMj7zh2afu0hHOCsuQARXvOAdLvLBAClMm/VA5aEBKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=SVUi8TNr; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1717541022; c=relaxed/simple;
+	bh=Gvkfp5YbJwML1P1XHALdTu+UlMk812IdrdYozmeU+R8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=Me8iIaR5Af8y2+fdHahZxow0A49tk+3MTUZWXpnPDgakwJZ6kvzlWZcNrui0ScuOHL/Z5hs68PtiORHekPyFZnxJQAhnHthngCwEnqUVCmY4l/xEC98VEaBKGineWkNXgyWNdkYS48Hx0ce7qy7r1GzoPFR/bNea2a+ImaKyRT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9vMEgfy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="SVUi8TNr"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454KwV4w030387;
-	Tue, 4 Jun 2024 18:43:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=74Jf2
-	frvsqaSsOeTHOKorXh3HH5oIkv3eucaR50gD3A=; b=SVUi8TNrMtXapbBYjEgOC
-	iWetApcliMJT1xABgH1LyY5iHLOHA4LXbXQoQKBoSzoSBGDAlHzV6EtTzURZubne
-	qcPK6iwtMI51BK13gDTEFpXEoEAA6ShefluTByW8rP9O49bdOCo/h28Rb07GSPn+
-	jf50HfFi+5JsoVLjbohMfYsWPGXTsFkO5MiJ3HY5iEy+B9G9Hz6bI2WbcqsQydic
-	zozJKU+aJLAz7ENC92KgtB3q7A+/pUXXZlU+rW/ONQqvbX9rZvU2cScJ2Jt4XxvH
-	7HYT9GMiKCinQw1ODxPYGH9qGspeP/uoPjNkgb2KARya6Q/JkDk5qdVtQMMCaBdT
-	A==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yg0j1ms2m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 18:43:20 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 454MhJBL011092
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 18:43:19 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 4 Jun 2024
- 18:43:18 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 4 Jun 2024 18:43:18 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.129])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 454Mh0Ut001195;
-	Tue, 4 Jun 2024 18:43:02 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <broonie@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <nuno.sa@analog.com>, <dlechner@baylibre.com>,
-        <marcelo.schmitt1@gmail.com>
-CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 3/6] spi: spi-gpio: Add support for MOSI idle state configuration
-Date: Tue, 4 Jun 2024 19:42:58 -0300
-Message-ID: <8dcce41a69a89cb8ace2587ca7ddb1c665f2d1cb.1717539384.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <cover.1717539384.git.marcelo.schmitt@analog.com>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9vMEgfy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA590C2BBFC;
+	Tue,  4 Jun 2024 22:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717541021;
+	bh=Gvkfp5YbJwML1P1XHALdTu+UlMk812IdrdYozmeU+R8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I9vMEgfymZiMHowJPK0j6PGnB4K8NiMVfmeC5CboYCxP4VQiCLtom6Bh3LGBUMGv2
+	 RJYIUtTdCGtmGvwIEoZ5W3VGKDeMauC1Plp4BeHnilMFU0u4qtt8xJdpTJdYTu8Wem
+	 3Q7k1fhtOTW3HcMO6VNZylFS3AhvFtv+ke3kt9hy4wyKOacVXfU7w4i3DY/0w5uHS/
+	 lheegCWh9BSlWj52kUQD2plb2avqcjLDF6G958ch3TQwzwc2062ybktk6reSnYIVRP
+	 RMZIuot6TzcVOOZ5t0RExBJo9ZZzZF6/XwCYxa4vLSLe1kjTIQIrEN+1djb3HXXFFM
+	 J3AtNbhAAyKAQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: ysfdGX-dEfld29ZsW-GV6nDUznLZ9Php
-X-Proofpoint-GUID: ysfdGX-dEfld29ZsW-GV6nDUznLZ9Php
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
- phishscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406040183
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 05 Jun 2024 01:43:34 +0300
+Message-Id: <D1RLH5CJJ2NA.33QHHJNR5IZ41@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
+ <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
+ <iommu@lists.linux-foundation.org>
+Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
+ <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
+ <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v9 08/19] x86: Secure Launch kernel early boot stub
+X-Mailer: aerc 0.17.0
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-9-ross.philipson@oracle.com>
+ <D1RHWYUN14C0.34HJBW7BI3CIV@kernel.org>
+ <e5287d8c-58ec-4f24-b27f-f8de688931d6@oracle.com>
+In-Reply-To: <e5287d8c-58ec-4f24-b27f-f8de688931d6@oracle.com>
 
-Implement MOSI idle low and MOSI idle high to better support peripherals
-that request specific MOSI behavior.
+> > s/tpm20/tpm2/
+>
+> Reasonable. We can change it.
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
- drivers/spi/spi-gpio.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+For the sake of consistency. Anywhere else where we have code using TPM,
+either "tpm_" or "tpm2_" is used.
 
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index 909cce109bba..d3b8c99f0cb4 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -236,6 +236,14 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
- 	}
- }
- 
-+static void spi_gpio_set_mosi_idle(struct spi_device *spi)
-+{
-+	struct spi_gpio *spi_gpio = spi_to_spi_gpio(spi);
-+
-+	gpiod_set_value_cansleep(spi_gpio->mosi,
-+				 !!(spi->mode & SPI_MOSI_IDLE_HIGH));
-+}
-+
- static int spi_gpio_setup(struct spi_device *spi)
- {
- 	struct gpio_desc	*cs;
-@@ -411,7 +419,8 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 
- 	host->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
- 	host->mode_bits = SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPOL |
--			    SPI_CS_HIGH | SPI_LSB_FIRST;
-+			  SPI_CS_HIGH | SPI_LSB_FIRST | SPI_MOSI_IDLE_LOW |
-+			  SPI_MOSI_IDLE_HIGH;
- 	if (!spi_gpio->mosi) {
- 		/* HW configuration without MOSI pin
- 		 *
-@@ -436,6 +445,7 @@ static int spi_gpio_probe(struct platform_device *pdev)
- 	host->flags |= SPI_CONTROLLER_GPIO_SS;
- 	bb->chipselect = spi_gpio_chipselect;
- 	bb->set_line_direction = spi_gpio_set_direction;
-+	bb->set_mosi_idle = spi_gpio_set_mosi_idle;
- 
- 	if (host->flags & SPI_CONTROLLER_NO_TX) {
- 		bb->txrx_word[SPI_MODE_0] = spi_gpio_spec_txrx_word_mode0;
--- 
-2.43.0
-
+BR, Jarkko
