@@ -1,95 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D47E144303;
-	Tue,  4 Jun 2024 15:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5B6144303
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717515749; cv=none; b=sgxijqImJpsq58BnlGfeI7umX9GhDlv0TsaTe7tmam+80MsbI+2P8vdslokI1iHXEVJk7vwROpDkMmRnjOKwYu330e4GwsRIvo/RP/CCr9o33MmoOOe/oZbgwBpiRlXAYMxB26cclPtIlZCc6Wa3yEriCNBKxAlnh46wyKzdj0Y=
+	t=1717515771; cv=none; b=hQ77eQQAZ+nptvNCfwQYRAg0fIW5bqhjUijXeS9HoP4b0usTIrHlUaMldqwMvz51en4KHk+RYwNBnQiP9nBmMofQ1gCxn/bZ7YF/FUdOY5pBltiqhoKyTeR5wz1h2OfgqoARXJoVP3shYybagzKBGmfRp6lsf/fO8qfziNHm6U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717515749; c=relaxed/simple;
-	bh=gvxpfHQ65oWsKW/gpsh/uvOZGyM//B6SX2D/4rQ0Nsc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlwVQTTYvgoIMsEYPvFrQvG9MxB8eOpDjkoHlIqxiJrK9K1lHQOtwj9UxrJSEhtGfJQuFsxFvy7Jc2NGZR9WCVY6Wrf2iW0tzErYhsutb6tmHUX8rKh/DQERthyFJDZrz92SLZ2vlP+rvtn6KlpE9T+yIzYaIH4z//L4aw4NckI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1p0RL9O1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717515771; c=relaxed/simple;
+	bh=zUig3LFnbOZFizQhvImLYF4yPkzpA3wfhYaOksTtYeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hxyV/YLfAycgesWjNdLOvF3EjcgvF8C1loPsHwAUsZ6WwWtlyvxQPVgtkde5ZRaDwj0wHEWiy3dnthPSRrUKDjJH0hFfLs9YUiYk+T3eL/y9lqbzjflxUww2JEEoZPcbygx8JUUxz70M5jcjVA8hzEl1ELOzlbF39fC20xaTfqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=I4a4/T1o; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1p0RL9O1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB18C2BBFC;
-	Tue,  4 Jun 2024 15:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717515749;
-	bh=gvxpfHQ65oWsKW/gpsh/uvOZGyM//B6SX2D/4rQ0Nsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1p0RL9O1txeF88r7BI4R3mZCPecX9o5eCeU291B62J/7N4Hkguvf1lfLd3cqQUs8P
-	 4Y1/0W4FQ0ElqLZ7UU0nmattnWlXk/Z10eyZip8sZHsKgLIIU/ogQGQB9n7FHaJ/iv
-	 fP0oOcb6nC636FrLvgUA+RegIdHHg80BK9dpAXYI=
-Date: Tue, 4 Jun 2024 17:38:24 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Joy Chakraborty <joychakr@google.com>
-Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>, Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Vincent Shih <vincent.sunplus@gmail.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Rafal Milecki <rafal@milecki.pl>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Michal Simek <michal.simek@amd.com>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-sunxi@lists.linux.dev, manugautam@google.com
-Subject: Re: [PATCH v3 1/1] nvmem: Change return type of reg read/write to
- ssize_t
-Message-ID: <2024060445-amaze-sitter-88da@gregkh>
-References: <20240510082929.3792559-1-joychakr@google.com>
- <20240510082929.3792559-2-joychakr@google.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I4a4/T1o"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-250aa4e8306so1637873fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 08:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1717515769; x=1718120569; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YTdWE72afDYsK1q1OenbgjxdrmLtbuaHew5UjnF896Q=;
+        b=I4a4/T1ol1BPfo5asHRsY8fJZV3OhD+01VrEwlZIgSh3w65TvWGjNOAyffSFmLFPjC
+         KUQ5ITxkd+/yQ+/tXV2WhFEEMw14a5Tgo/GXwgkLzofKClgQ3wkfS5D9rUOUBapCHVoJ
+         ZlVGV+c2wdn90LBrec+lPQ4eK/OVVtqz9fmU4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717515769; x=1718120569;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YTdWE72afDYsK1q1OenbgjxdrmLtbuaHew5UjnF896Q=;
+        b=QZnFzqLmN0AJeHTKqyq4W2auLNRusrazQs4HOO7kApvqPbvU+r7xg2VbUmcQqYXZsO
+         xv9DIIaykyZAN8EU5ucZ723GkJTlsxLtLhiIKV/qzSkAqzQSu+rxE9H1uhWEwxUVRVRL
+         2mJv68SHzWYxDQ3+zXdQ2wRiGSXRVvDkrhjyUmTrE+sI3Q6KnX2YE+8mTjkROvmpzOBJ
+         /FY3/SZYCCxgk8ibi5gduQVIbAvdLj0samCNWN94+BRzxUGmcF1+eTXOtNRx2vvV01CF
+         PyRdZ0HPfdU8DrSn/iRRHNBR8mF7/+fF0Ch27x7alGxZHm9CN5BCgEEOsU1fvGYSrSjf
+         Fidw==
+X-Gm-Message-State: AOJu0Yzu8/QY10YWwmRfiG/DRc7FN3LICdCA7QfVscn6E/1fv8KMdnm1
+	zj93lxa+FWBPDQOT9MoZreS0cF2gVn0cyPZ+4pigvNf2hNwmO9kKU+RO/7I4JnLzOOkJ1cIFpAa
+	UyyOMfDzTa3Y/LYFiQqEtBZxpei7WgP9RFfee
+X-Google-Smtp-Source: AGHT+IGB/rduOe7VuUnqKKPTpxby23105z+u+FGKaOfGxDOzBmoKc4Rdtq6ADa5DDVWLsYkCNGB3fzck976BtNYJJw4=
+X-Received: by 2002:a05:6870:e9a0:b0:24f:ca0b:a416 with SMTP id
+ 586e51a60fabf-2508b993cfamr15623795fac.25.1717515768507; Tue, 04 Jun 2024
+ 08:42:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510082929.3792559-2-joychakr@google.com>
+References: <20240603220834.21989-1-kamal.dasu@broadcom.com>
+ <20240603220834.21989-2-kamal.dasu@broadcom.com> <CAPDyKFqk4uzSm_ti=66wU22GM8TqeM83aCz6=j9Gr9-sCUuR8Q@mail.gmail.com>
+In-Reply-To: <CAPDyKFqk4uzSm_ti=66wU22GM8TqeM83aCz6=j9Gr9-sCUuR8Q@mail.gmail.com>
+From: Kamal Dasu <kamal.dasu@broadcom.com>
+Date: Tue, 4 Jun 2024 11:42:12 -0400
+Message-ID: <CAKekbetJT1hob1Bd9ZOsf+J9JVfjRanq6GUdKF7oZr6xkPCzZw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mmc: sdhci-brcmstb: check R1_STATUS for erase/trim/discard
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	ludovic.barre@st.com, f.fainelli@gmail.com, 
+	bcm-kernel-feedback-list@broadcom.com
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000053859d061a124da9"
 
-On Fri, May 10, 2024 at 08:29:29AM +0000, Joy Chakraborty wrote:
-> Change return type of reg_read() and reg_write() callback to ssize_t for
-> nvmem suppliers to return number of bytes read/written to the nvmem core.
-> 
-> Currently nvmem core assumes the amount of data read/written is equal
-> to what it has requested from the supplier, this return code facilitates
-> better error handling in the nvmem core.
-> 
-> Signed-off-by: Joy Chakraborty <joychakr@google.com>
+--00000000000053859d061a124da9
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I thought this would be two patches, one to change the return type, and
-the second to change the logic involved here (making it easier to notice
-the logic changes.)  But it seems ok to me:
+On Tue, Jun 4, 2024 at 7:14=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.org>=
+ wrote:
+>
+> On Tue, 4 Jun 2024 at 00:09, Kamal Dasu <kamal.dasu@broadcom.com> wrote:
+> >
+> > When erase/trim/discard completion was converted to mmc_poll_for_busy()=
+,
+> > optional ->card_busy() host ops support was added as part of
+> > dd0d84c3e6a5b2 ("mmc: core: Convert to mmc_poll_for_busy() for erase/tr=
+im/discard").
+>
+> I can't find the above commit hash. You probably want "0d84c3e6a5b2"?
+>
+> > sdhci card->busy() could return busy for long periods to cause
+> > mmc_do_erase() to block during discard operation as shown below
+> > during mkfs.f2fs :
+> >
+> >     Info: [/dev/mmcblk1p9] Discarding device
+> >     [   39.597258] sysrq: Show Blocked State
+> >     [   39.601183] task:mkfs.f2fs       state:D stack:0     pid:1561  t=
+gid:1561  ppid:1542   flags:0x0000000d
+> >     [   39.610609] Call trace:
+> >     [   39.613098]  __switch_to+0xd8/0xf4
+> >     [   39.616582]  __schedule+0x440/0x4f4
+> >     [   39.620137]  schedule+0x2c/0x48
+> >     [   39.623341]  schedule_hrtimeout_range_clock+0xe0/0x114
+> >     [   39.628562]  schedule_hrtimeout_range+0x10/0x18
+> >     [   39.633169]  usleep_range_state+0x5c/0x90
+> >     [   39.637253]  __mmc_poll_for_busy+0xec/0x128
+> >     [   39.641514]  mmc_poll_for_busy+0x48/0x70
+> >     [   39.645511]  mmc_do_erase+0x1ec/0x210
+> >     [   39.649237]  mmc_erase+0x1b4/0x1d4
+> >     [   39.652701]  mmc_blk_mq_issue_rq+0x35c/0x6ac
+> >     [   39.657037]  mmc_mq_queue_rq+0x18c/0x214
+> >     [   39.661022]  blk_mq_dispatch_rq_list+0x3a8/0x528
+> >     [   39.665722]  __blk_mq_sched_dispatch_requests+0x3a0/0x4ac
+> >     [   39.671198]  blk_mq_sched_dispatch_requests+0x28/0x5c
+> >     [   39.676322]  blk_mq_run_hw_queue+0x11c/0x12c
+> >     [   39.680668]  blk_mq_flush_plug_list+0x200/0x33c
+> >     [   39.685278]  blk_add_rq_to_plug+0x68/0xd8
+> >     [   39.689365]  blk_mq_submit_bio+0x3a4/0x458
+> >     [   39.693539]  __submit_bio+0x1c/0x80
+> >     [   39.697096]  submit_bio_noacct_nocheck+0x94/0x174
+> >     [   39.701875]  submit_bio_noacct+0x1b0/0x22c
+> >     [   39.706042]  submit_bio+0xac/0xe8
+> >     [   39.709424]  blk_next_bio+0x4c/0x5c
+> >     [   39.712973]  blkdev_issue_secure_erase+0x118/0x170
+> >     [   39.717835]  blkdev_common_ioctl+0x374/0x728
+> >     [   39.722175]  blkdev_ioctl+0x8c/0x2b0
+> >     [   39.725816]  vfs_ioctl+0x24/0x40
+> >     [   39.729117]  __arm64_sys_ioctl+0x5c/0x8c
+> >     [   39.733114]  invoke_syscall+0x68/0xec
+> >     [   39.736839]  el0_svc_common.constprop.0+0x70/0xd8
+> >     [   39.741609]  do_el0_svc+0x18/0x20
+> >     [   39.744981]  el0_svc+0x68/0x94
+> >     [   39.748107]  el0t_64_sync_handler+0x88/0x124
+> >     [   39.752455]  el0t_64_sync+0x168/0x16c
+> >
+> > This problem is obsereved with BLKSECDISCARD ioctl on brcmstb mmc
+> > controllers. Fix makes mmc_host_ops.card_busy NULL and forces
+> > MMC_SEND_STATUS and R1_STATUS check in mmc_busy_cb() function.
+> >
+> > Signed-off-by: Kamal Dasu <kamal.dasu@broadcom.com>
+>
+> We probably want a fixes/stable tag for this too, right?
+>
+> Fixes: 0d84c3e6a5b2 ("mmc: core: Convert to mmc_poll_for_busy() for
+> erase/trim/discard")
+>
+> I have amended the commit message and applied this for fixes, thanks!
+>
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thank you Ulffe.
+
+> Kind regards
+> Uffe
+>
+>
+> > ---
+> >  drivers/mmc/host/sdhci-brcmstb.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-=
+brcmstb.c
+> > index 9053526fa212..150fb477b7cc 100644
+> > --- a/drivers/mmc/host/sdhci-brcmstb.c
+> > +++ b/drivers/mmc/host/sdhci-brcmstb.c
+> > @@ -24,6 +24,7 @@
+> >  #define BRCMSTB_MATCH_FLAGS_NO_64BIT           BIT(0)
+> >  #define BRCMSTB_MATCH_FLAGS_BROKEN_TIMEOUT     BIT(1)
+> >  #define BRCMSTB_MATCH_FLAGS_HAS_CLOCK_GATE     BIT(2)
+> > +#define BRCMSTB_MATCH_FLAGS_USE_CARD_BUSY      BIT(4)
+> >
+> >  #define BRCMSTB_PRIV_FLAGS_HAS_CQE             BIT(0)
+> >  #define BRCMSTB_PRIV_FLAGS_GATE_CLOCK          BIT(1)
+> > @@ -384,6 +385,9 @@ static int sdhci_brcmstb_probe(struct platform_devi=
+ce *pdev)
+> >         if (match_priv->flags & BRCMSTB_MATCH_FLAGS_BROKEN_TIMEOUT)
+> >                 host->quirks |=3D SDHCI_QUIRK_BROKEN_TIMEOUT_VAL;
+> >
+> > +       if (!(match_priv->flags & BRCMSTB_MATCH_FLAGS_USE_CARD_BUSY))
+> > +               host->mmc_host_ops.card_busy =3D NULL;
+> > +
+> >         /* Change the base clock frequency if the DT property exists */
+> >         if (device_property_read_u32(&pdev->dev, "clock-frequency",
+> >                                      &priv->base_freq_hz) !=3D 0)
+> > --
+> > 2.17.1
+> >
+
+--00000000000053859d061a124da9
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIQZwYJKoZIhvcNAQcCoIIQWDCCEFQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg2+MIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
+MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
+rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
+aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
+e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
+cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
+MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
+KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
+/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
+TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
+YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
+b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
+CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
+BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
+jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
+9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
+/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
+jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
+AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
+dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
+MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
+IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
+XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
+J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
+nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBUYwggQuoAMCAQICDDz1ZfY+nu573bZBWTANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjIwMjFaFw0yNTA5MTAxMjIwMjFaMIGK
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xEzARBgNVBAMTCkthbWFsIERhc3UxJjAkBgkqhkiG9w0BCQEW
+F2thbWFsLmRhc3VAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+qleMIXx8Zwh2WP/jpzRzyh3axDm5qIpwHevp+tTA7EztFd+5EoriRj5/goGYkJH+HbVOvY9bS1dJ
+swWsylPFAKpuHPnJb+W9ZTJZnmOd6GHO+37b4rcsxsmbw9IWIy7tPWrKaLQXNjwEp/dum+FWlB8L
+sCrKsoN6HxDhqzjLGMNy1lpKvkF/+5mDUeBn4hSdjLMRejcZnlnB/vk4aU/sBzFzK6gkhpoH1V+H
+DxuNuBlySpn/GYqPcDcRZd8EENWqnZrjtjHMk0j7ZfrPGXq8sQkbG3OX+DOwSaefPRq1pLGWBZaZ
+YuUo5O7CNHo7h7Hc9GgjiW+6X9BjKAzSaDy8jwIDAQABo4IB2DCCAdQwDgYDVR0PAQH/BAQDAgWg
+MIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUFBzABhjVo
+dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMDBNBgNV
+HSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xvYmFsc2ln
+bi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRwOi8vY3Js
+Lmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAiBgNVHREEGzAZ
+gRdrYW1hbC5kYXN1QGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSMEGDAW
+gBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUcRYSWvAVyA3hgTrQ2c4AFquBsG0wDQYJ
+KoZIhvcNAQELBQADggEBAIKB2IOweF2sIYGBZTDm+Hwmhga+sjekM167Sk/KwxxvQFwZYP6i0SnR
+7aR59vbfVQVaAiZH/a+35EYxP/sXaIM4+E3bFykBuXwcGEnYyEn6MceiOCkjkWQq1Co2JyOdNvkP
+nAxyPoWlsJtr+N/MF1EYKGpYMdPM7S2T/gujjO9N56BCGu9yJElszWcXHmBl5IsaQqMS36vhsV0b
+NxffjNkeAdgfN/SS9S9Rj4WXD7pF1M0Xq8gPLCLyXrx1i2KkYOYJsj0PWlC6VRg6E1xXkYDte0VL
+fAAG4QsETU27E1HBNQyp5zF1PoPCPvq3EnWQnbLgYk+Jz2iwIUwiqwr/bDgxggJtMIICaQIBATBr
+MFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9i
+YWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgw89WX2Pp7ue922QVkwDQYJYIZI
+AWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIOBTFgWLQQBjz+trPDKlf7VieljOl91AU8rEPK0X
+WFTeMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYwNDE1NDI0
+OVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQB
+AjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkq
+hkiG9w0BAQEFAASCAQCHDitsVrSIBqEBfi+BtUh/VV4n01E3KUZmMiIeHPu26bc/VPdvyKtajqAM
+WcXtKSxa/LIduy33Uf9rBZIbMYXAMetjJeD1ez4diXNfgtDhy94kokDyIRP7MdmN5yivsr111KXs
+inzTLpTxSanh5pGzsyWCdqVOPoZWaxXfc5T9l2Lb2eHa7onxds3wqFe2qA7fIY6gTsKoRxlD9oR9
+ixEzo5s6kxydsYO7olMixGTpbVwiC+0GKNOTzM1PKRxAPQB7nQhNhdzoPRn3Bes0hsP8HkFoDE20
+s1Et24gsdM6Q3loughwUE0Eif4Am5EKHx9Sf2KsAvWA2aYgxzU72IvVv
+--00000000000053859d061a124da9--
