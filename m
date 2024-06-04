@@ -1,99 +1,73 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67110145B11
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE714144D21;
+	Tue,  4 Jun 2024 12:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717502422; cv=none; b=JxryoRltwrsKp6TPbgLRi4t8tpin8byhikAZye6CZlcCEXGMgToC8hhakkMjd7vfkplkU14f5joXd6jO7rdBfAgz3jOfkdW3ld1RiJikst7gWRGqQvOCpc2BhKkRh5/oWRGvIwd3Wnnaln5NZ34/Wy9bDD4KWkV4AbBEI4h2ud8=
+	t=1717502431; cv=none; b=siJl7B+GWUixPsvZ6gamoDAXR6i8J8Pp4X3lMyCcEp2pAC9a3Pw25ZdCoz3Q5Cte9tSUBIveyyDsjLPLhYcomHovHS7XcgUTr8vwGcgaf5TK/ejvV4npxh5msmjLYcNsr0czd3sSPCl54gCgzE3Xw9LEg9F6eEAWxhmpXDWlf5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717502422; c=relaxed/simple;
-	bh=ITmDK/o3vZUBIPrdr54txC310yi36/Wx7TXNE/zjdpY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqEHPtc2x7i/IKhj3JzJwU49yXAHLnm3WsipqUCz10YzDSeIC4qVYiDCkZSWPn+2xt0q2yrcG4juUgjJBPeeusJChYCnONEq/R8ma4/kiuI6qoYoMnwr1p6S+2dRaD4d1qJ6PoBQOGlhjftUdKI8LbILGCQZf+n1Q/hmf/CtXSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yp4j63PX; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717502431; c=relaxed/simple;
+	bh=uqC1CdqJrQZsKoI9p56FyhoJ8ZKHafWpVDbwRS7y2lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T+0sio6rQB8JciSWImzyxC936byA/XNgCRss90jLJleJzWlZS3ofW3u+PPo0b4hVdhfAY7czwgzAXrkEUNEksuf875+2GIvOlIslWix18dl8Wjsw9SLaBm4LLsmL6zrfiR89ApzOGyHP3QBaVN6qUO1JRiMGJ/Sko39IJooKCR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bXUi4eQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yp4j63PX"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a4ce82f30so3599599a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717502420; x=1718107220; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gxZZBV6os56KANAv7SzQ35RGN2CB4F4JHMvmXBGcdT4=;
-        b=Yp4j63PX7bB/5Dfjtq0yJcztgKyDPyPByZJJF4b0ka/nbRCUcLtfnN68YnJfpRze8E
-         ljU68VfXs7cXI8uA/dzq182y7OXQzAboxiexFBc8O2b9imQ9kowcrrKZPOpOA4W99JrH
-         vP0BF4mJsIbROm7yZ/kdHBpnHiswixeuuVQav8d5qQlMxuhI1G7T9twDEhxu5c1dYN/O
-         dQh3foAStCa6rqLq2guN/a8ACmRW9udrHqCWD5OufshRRFl3XxtnFNLh14lFAjqs6UuA
-         MQlVRX3GmqdbdLzffrCzmgsWmzhq4UXSNFIcG/Z4BHRanfBj0LagbXzyH2OSdGd6zYz6
-         Q22Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717502420; x=1718107220;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gxZZBV6os56KANAv7SzQ35RGN2CB4F4JHMvmXBGcdT4=;
-        b=hBiWlxfPy8ULOF2BotKDBFasFrCfSnXLqwWyMABklXrNaoiRiQqJZvhFfeafQxcUod
-         rwCROrdWNSVZFaRw66jh1lh/CVgNeolmt1ybG1miqTCa1G3n11LAap+F5q5xasTU5vMM
-         /TBU27xOxl4NZ8XbuNi7WPeG1BojqdROSblJiWtBJFHFE4WTHwq+ByjoIpEhNkJxkAQS
-         jbHQyslftWC1Cndsp6e3xYFtl3v8HK/joAzM6psXSPa5VXZ3+VQTuqv92vDJWoSMsgwd
-         H1eEVH/ecfWlt5Rq0FcvggrKXVfVvZifR6/kHTxAaZ75dAcWXhYlGWwi8YO3gl9Kvc5H
-         tvgg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6lWnwfpq1z3aIiSXQzyjy3//j+rjGXzdVjQVTTPf9h4iwwHk2P8Qy8UrwpoAjeYtr5/jzRGqrqpwg8gIGF4b9ctisa3X+Q6dq3WqQ
-X-Gm-Message-State: AOJu0YyzkvXluZZfs8T6x0WdXoeL6Vxgp/O5zUyyacv0V7TqAUgAsu75
-	Jh2IDvzNawyL573eHQxsaQTZbCjef1nekwNi37UpkgZN1zKJhO9G8n4xkKW/he0=
-X-Google-Smtp-Source: AGHT+IG7QzWP6TC0xP0LnvsUQdt79OEW+vUjnsDphskiqmixjCLQXCnOn9Q5pGxgijhnHA5ckYPChQ==
-X-Received: by 2002:a17:906:a046:b0:a59:d2ac:3856 with SMTP id a640c23a62f3a-a682022f87cmr857478366b.22.1717502419771;
-        Tue, 04 Jun 2024 05:00:19 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:909a:a11e:a035:2af2:8d85:1f72? ([2a00:f41:909a:a11e:a035:2af2:8d85:1f72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b71450c1sm471790866b.152.2024.06.04.05.00.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 05:00:19 -0700 (PDT)
-Message-ID: <d93fe55e-7c65-48cb-bdaf-5e15bc22be30@linaro.org>
-Date: Tue, 4 Jun 2024 14:00:10 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bXUi4eQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A6EC2BBFC;
+	Tue,  4 Jun 2024 12:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717502430;
+	bh=uqC1CdqJrQZsKoI9p56FyhoJ8ZKHafWpVDbwRS7y2lo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bXUi4eQa0Ms/AUNphYr4mmeszGwtmlI2nrH4Fgpb2tDaW7KxBo64jhMx9bjrbG+fB
+	 OSnDStbCivdLQ6SqQd4lOEQ828Tsr7/vxPG8zuxoXzXikpls8hoc+Edz0ySuDei7Ec
+	 WbYysoeGZ9P7TdMnc0+mSBK8Kr4Yjm2US1qXqNjI=
+Date: Tue, 4 Jun 2024 13:56:00 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: dt-bindings: marvell,mmp2-ssp: Merge PXA SSP into
+ schema
+Message-ID: <2024060451-stuffed-letdown-23ba@gregkh>
+References: <20240522132859.3146335-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100: Make the PCIe 6a PHY
- support 4 lanes mode
-To: Johan Hovold <johan@kernel.org>, Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Rajendra Nayak <quic_rjendra@quicinc.com>,
- Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240531-x1e80100-dts-fixes-pcie6a-v1-0-1573ebcae1e8@linaro.org>
- <20240531-x1e80100-dts-fixes-pcie6a-v1-2-1573ebcae1e8@linaro.org>
- <Zl28nvnpGFRsYpGh@hovoldconsulting.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <Zl28nvnpGFRsYpGh@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240522132859.3146335-1-robh@kernel.org>
 
-
-
-On 6/3/24 14:52, Johan Hovold wrote:
-
-[...]
-
+On Wed, May 22, 2024 at 08:28:58AM -0500, Rob Herring (Arm) wrote:
+> The Marvell PXA SSP block is the same or similiar to the MMP2 variant.
+> The only difference in the binding is the PXA version supports DMA (and
+> that's probably a binding difference rather than an actual h/w
+> difference).
 > 
-> As I just mentioned in my reply on the PHY patch, this does not seem to
-> work on the CRD were the link still come up as 2-lane (also with the
-> clocks fixed):
+> The old binding didn't belong under 'serial' as it is not a UART. The
+> SSP block also supports audio devices, so 'spi' is not a perfect fit
+> either. As the existing schema for MMP2 is there, just leave things
+> as-is.
 > 
-> 	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
+> The examples in the old text binding were pretty out of sync with
+> reality. 'clock-names' and 'ssp-id' aren't documented nor used.
 > 
-> So something appears to be wrong here or in the PHY changes.
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  .../bindings/serial/mrvl,pxa-ssp.txt          | 64 -------------------
+>  .../bindings/spi/marvell,mmp2-ssp.yaml        | 35 ++++++++--
+>  2 files changed, 31 insertions(+), 68 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
+> 
 
-Is the device on the other end x4-capable? Or does it not matter in
-this log line?
-
-Konrad
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
