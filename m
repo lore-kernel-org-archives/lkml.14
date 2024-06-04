@@ -1,161 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD8814D2B5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 22:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BFD801;
+	Tue,  4 Jun 2024 22:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717541130; cv=none; b=ZAcAp7ghLZm7srEJyx1rtpkBGMI31ql5IxtoPFfLENVN1SV6p2BbgUx0uMIZh1Wzfeg6ufSif5g3c+ZFj9wCCxxGuHlfKxFitO0GvLawFGUeov/oBLt6ai7ltGi3xvqkKWf8rRVjAhkhvVUYPynY/+1v53FLPm0FMYEX6rHKZGg=
+	t=1717541165; cv=none; b=noJnVOMm9iDsYqVKFIk66iuDAYNl6GsOjuRN0QCkIFD/D7o9bdYE9lPjzqQrm6nJ94sqc/SOw7vIcZehe3IWlHDMVRvZnVsco8+I7HRccIPnKhVdGaLpqrMpEyQwWVN1jGLJO1WfTVE1PkXuQgfUUexOAozD0NutqZ2dS5qubLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717541130; c=relaxed/simple;
-	bh=mXAGe3YINODB6h+MbBkIPYf536ptCXDV0Tp3NMe+dO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHD3eThsbyDYFXhyayGIBNWWkDrnhFBAQxKz07f8yiKFopCeuF6BvMhjge430Dbdvn7xGrDe/q6R1Tft8XOIMDBFcYJ+2DqNv3B0uImjVnEqcj393g2dsnkiFj89WiwLVFbaDm9SPXl67KzC2CAx+L54tFa0+Yhhz9beu8WYr1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hZAwvL8n; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717541165; c=relaxed/simple;
+	bh=0j92OYN0ot6ykQ3RbGLDgHKUxmwp+JtNMv1RWWcbk/M=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=oFJRN2nkTi9LEZ9fwm2tP4qotGXDxAxGLO+EYlODtY+OYJrBpgpy/uftOC+VBIeLrUo84UYio5k4+fp8KkN61TJixw9wOung2ARB1abPJ6S/e9wLdg9/BZgbgeifmTKWA9hJl8+HJLTQBoX8iE/MY9x1izwkNaDa+K3Dwh+M5+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOekrpHn; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hZAwvL8n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717541128; x=1749077128;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mXAGe3YINODB6h+MbBkIPYf536ptCXDV0Tp3NMe+dO8=;
-  b=hZAwvL8nbl4FjLTP3iqtEQvJq4AsHJWvlx4wHpwZs2bvbdcy3zafDvKX
-   I7sEuVOqrrpgkL4g4GRh2Raan1sScHqF+viuTUo2walQKvOPJQmQYyQH3
-   qbWit0JLhXKgIRpAcTl47hhlFeCp3RMggXubrF45Z7DLRHr0uD2K/S97K
-   +oEbHBFRwW+GnDhFNBFmNXUqZ4szxDcFHpStqKKdUuYrHoOXVIQCzOyrb
-   cV+5pZUUgnLKFMpwKPHF+AwkgZ6T8puIeb+OHyeKlKyLVN72CAkXtVdLQ
-   X2zkY6mktASSwUOcONpW+QS4lH8mS58szYywOvZhT1fx6ugJnp1+IGDhE
-   Q==;
-X-CSE-ConnectionGUID: jWdyBp1bToyN5varlVOirQ==
-X-CSE-MsgGUID: lZWO96EbRI6y0YTA/cq4sg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="14253163"
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="14253163"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 15:45:28 -0700
-X-CSE-ConnectionGUID: 31zVMKuHSCKIFD6pq35g3A==
-X-CSE-MsgGUID: cYrlB2C1T329o8h4VgUFIw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="60576089"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 04 Jun 2024 15:45:24 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sEcuA-0000dH-12;
-	Tue, 04 Jun 2024 22:45:22 +0000
-Date: Wed, 5 Jun 2024 06:44:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>,
-	linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-mm@kvack.org,
-	akpm@linux-foundation.org, liam.howlett@oracle.com,
-	zhangpeng.00@bytedance.com, willy@infradead.org,
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Subject: Re: [PATCH 12/18] maple_tree: convert mas_insert() to preallocate
- nodes
-Message-ID: <202406050614.NwHTjXFD-lkp@intel.com>
-References: <20240604174145.563900-13-sidhartha.kumar@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOekrpHn"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-62a080a171dso47143087b3.0;
+        Tue, 04 Jun 2024 15:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717541162; x=1718145962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S0Jj8Pzqt23dEn0FrpFNMot6Gc2YRe5Kly/ELg/v/IE=;
+        b=FOekrpHnJNL7oKuhz+5YGPohyXcD+RkKvA60kVOjSBdbnBdSsStpBr7NdWA7+68b5t
+         IZtQMAR+26zSoppgyo/CYIGV2KxcuMMd6uWtcu98zp3wjtxykUYXu9Z4stzXbvw46W/4
+         GbisMk/VUu2X7u5q2CjUouzg+U1f/a2Gi8uNZMf38TkLrKR8XOahmP5mmh49QKCYtNgy
+         6iw1wCmL9pTCVengG8jnbT7q8/FmRqkJqf7o9VzXDZB2JhchWoHyHqFfS1QlnuutuE9l
+         NkoZ5my3WKUZds14dduaxALFWRwjZdJQVzfdQM7NwZTowxxsutAaCv44YMI+3YUrC4Yu
+         C34g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717541162; x=1718145962;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=S0Jj8Pzqt23dEn0FrpFNMot6Gc2YRe5Kly/ELg/v/IE=;
+        b=tKhldOkCiOIz259Vk26EaTx+h068XRiDjQS6S8bHTRBQWh6JpaTcEWVGKEio7ICM8n
+         PlvWQVkxC0UoW/2xH9juohfMmEKaA1sFiIZoEjHXZV0cRunz8v9X7ruE4hOMfWjXT6Zl
+         V3SHK7lhOfPKT8SeoIW9K2/Hp6p+JPRYxh6IU9M7dgkplmrzdx47pSP+MlQH8jvyLKXW
+         fgzJCa6DNkTtndjlOYyfGdOSJiPeDAucTrTxqvZSbXE9LJ3/eYV/jWrey3ILVvUin44+
+         GcU+rlsmBjZhDaOqMJYTFfP1eIay3dBvnNtRaDCMpzFjRjrq4QFVHa9yLSWSxfvp0Apn
+         cuIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUL//4g9BSTa0fQnUQ+oT5ALrJXhWIfZQED6CpgVr9ZRgtpo/hPgcMyhbJhgdkFMmNY0dJVqzfVr0gboqKP8wy4Q6E8/xOZz9ra2zzF5BoUEgpSXMruR720bwF7dDCBrhWakuGojuPbg1/HL8ZsB0d8gqmAxIAOEU/LYOZB
+X-Gm-Message-State: AOJu0Yx7BOAdgvUxAhVMrl+YxT7JhQXLyvYEhLipXca2gjIPQnziE0Gc
+	trzHScreGjDXbNi7J14uSwVvXN3huW80IL8ZZQlsQo7FVl2LtiH6
+X-Google-Smtp-Source: AGHT+IHIXJN2Un+CobN++6lQfH0UMp9lpxmFKW7kjO/s3cRi4M+lO9D0ilFQrU0NkWsq6pKvkOEqow==
+X-Received: by 2002:a81:c602:0:b0:627:c0ab:22b9 with SMTP id 00721157ae682-62cbb4dc6damr6947277b3.21.1717541162307;
+        Tue, 04 Jun 2024 15:46:02 -0700 (PDT)
+Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6af5576960bsm29282156d6.3.2024.06.04.15.46.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 15:46:01 -0700 (PDT)
+Date: Tue, 04 Jun 2024 18:46:01 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Chengen Du <chengen.du@canonical.com>, 
+ willemdebruijn.kernel@gmail.com
+Cc: davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ kaber@trash.net, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org
+Message-ID: <665f9929a1195_2bf7de294d0@willemb.c.googlers.com.notmuch>
+In-Reply-To: <CAPza5qeVMqpvjwMeBdAfvp=MFxxJv9xS4JfJ9rig9-rNVdKTjA@mail.gmail.com>
+References: <20240604054823.20649-1-chengen.du@canonical.com>
+ <CAPza5qeVMqpvjwMeBdAfvp=MFxxJv9xS4JfJ9rig9-rNVdKTjA@mail.gmail.com>
+Subject: Re: [PATCH v5] af_packet: Handle outgoing VLAN packets without
+ hardware offloading
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604174145.563900-13-sidhartha.kumar@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sidhartha,
+Chengen Du wrote:
+> Hi Willem,
+> =
 
-kernel test robot noticed the following build warnings:
+> Thank you for your comments on patch v4.
+> I have made some modifications and would like to discuss some of your
+> suggestions in detail.
 
-[auto build test WARNING on akpm-mm/mm-nonmm-unstable]
-[also build test WARNING on linus/master v6.10-rc2 next-20240604]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the revision. It addresses many of my comments. =
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sidhartha-Kumar/maple_tree-introduce-store_type-enum/20240605-014633
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
-patch link:    https://lore.kernel.org/r/20240604174145.563900-13-sidhartha.kumar%40oracle.com
-patch subject: [PATCH 12/18] maple_tree: convert mas_insert() to preallocate nodes
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240605/202406050614.NwHTjXFD-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240605/202406050614.NwHTjXFD-lkp@intel.com/reproduce)
+> =
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406050614.NwHTjXFD-lkp@intel.com/
+> =
 
-All warnings (new ones prefixed by >>):
+> On Tue, Jun 4, 2024 at 1:50=E2=80=AFPM Chengen Du <chengen.du@canonical=
+.com> wrote:
+> >
+> > The issue initially stems from libpcap. The ethertype will be overwri=
+tten
+> > as the VLAN TPID if the network interface lacks hardware VLAN offload=
+ing.
+> > In the outbound packet path, if hardware VLAN offloading is unavailab=
+le,
+> > the VLAN tag is inserted into the payload but then cleared from the s=
+k_buff
+> > struct. Consequently, this can lead to a false negative when checking=
+ for
+> > the presence of a VLAN tag, causing the packet sniffing outcome to la=
+ck
+> > VLAN tag information (i.e., TCI-TPID). As a result, the packet captur=
+ing
+> > tool may be unable to parse packets as expected.
+> >
+> > The TCI-TPID is missing because the prb_fill_vlan_info() function doe=
+s not
+> > modify the tp_vlan_tci/tp_vlan_tpid values, as the information is in =
+the
+> > payload and not in the sk_buff struct. The skb_vlan_tag_present() fun=
+ction
+> > only checks vlan_all in the sk_buff struct. In cooked mode, the L2 he=
+ader
+> > is stripped, preventing the packet capturing tool from determining th=
+e
+> > correct TCI-TPID value. Additionally, the protocol in SLL is incorrec=
+t,
+> > which means the packet capturing tool cannot parse the L3 header corr=
+ectly.
+> >
+> > Link: https://github.com/the-tcpdump-group/libpcap/issues/1105
+> > Link: https://lore.kernel.org/netdev/20240520070348.26725-1-chengen.d=
+u@canonical.com/T/#u
+> > Fixes: 393e52e33c6c ("packet: deliver VLAN TCI to userspace")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Chengen Du <chengen.du@canonical.com>
+> > ---
+> >  net/packet/af_packet.c | 64 ++++++++++++++++++++++++++++++++++++++++=
+--
+> >  1 file changed, 62 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+> > index ea3ebc160e25..53d51ac87ac6 100644
+> > --- a/net/packet/af_packet.c
+> > +++ b/net/packet/af_packet.c
+> > @@ -538,6 +538,52 @@ static void *packet_current_frame(struct packet_=
+sock *po,
+> >         return packet_lookup_frame(po, rb, rb->head, status);
+> >  }
+> >
+> > +static u16 vlan_get_tci(struct sk_buff *skb)
+> > +{
+> > +       unsigned int vlan_depth =3D skb->mac_len;
+> > +       struct vlan_hdr vhdr, *vh;
+> > +       u8 *skb_head =3D skb->data;
+> > +       int skb_len =3D skb->len;
+> > +
+> > +       if (vlan_depth) {
+> > +               if (WARN_ON(vlan_depth < VLAN_HLEN))
+> > +                       return 0;
+> > +               vlan_depth -=3D VLAN_HLEN;
+> > +       } else {
+> > +               vlan_depth =3D ETH_HLEN;
+> > +       }
+> > +
+> > +       skb_push(skb, skb->data - skb_mac_header(skb));
+> > +       vh =3D skb_header_pointer(skb, vlan_depth, sizeof(vhdr), &vhd=
+r);
+> > +       if (skb_head !=3D skb->data) {
+> > +               skb->data =3D skb_head;
+> > +               skb->len =3D skb_len;
+> > +       }
+> > +       if (unlikely(!vh))
+> > +               return 0;
+> > +
+> > +       return ntohs(vh->h_vlan_TCI);
+> > +}
+> =
 
-   lib/maple_tree.c:4304: warning: Function parameter or struct member 'entry' not described in 'mas_prealloc_calc'
->> lib/maple_tree.c:4449: warning: Function parameter or struct member 'gfp' not described in 'mas_insert'
+> As you mentioned, we need the outermost VLAN tag to fit the protocol
+> we referenced in tp_vlan_tpid.
+> In if_vlan.h, __vlan_get_protocol() only provides the protocol and may
+> affect other usage scenarios if we modify it to also provide TCI.
+> =
+
+> There is a similar function called __vlan_get_tag(), which also aims
+> to extract TCI from the L2 header, but it doesn't check the header
+> size as __vlan_get_protocol() does.
+> To prevent affecting other usage scenarios, I introduced a new
+> function to achieve our purpose.
+
+__vlan_get_protocol exists to parse through possibly multiple VLAG
+tags to the inner non-VLAN protocol.
+
+Since you only want the outer VLAN tag, you can use skb_header_pointer
+directly. No need for vlan_depth.
+
+Similar to what __vlan_get_tag does, but with safe access as it is not
+guaranteed that the data beyond the link layer lies in skb linear.
+
+> Additionally, the starting point of skb->data differs in SOCK_RAW and
+> SOCK_DGRAM cases.
+> I accounted for this by using skb_push to ensure that skb->data starts
+> from the L2 header.
+> =
+
+> Would you recommend modifying __vlan_get_tag() to add the size check
+> logic instead?
+> If so, we would also need to consider how to integrate the size check
+> logic into both __vlan_get_protocol() and __vlan_get_tag().
+
+No, let's not touch those.
+> =
+
+> > +
+> > +static __be16 vlan_get_protocol_dgram(struct sk_buff *skb)
+> > +{
+> > +       __be16 proto =3D skb->protocol;
+> > +
+> > +       if (unlikely(eth_type_vlan(proto))) {
+> > +               u8 *skb_head =3D skb->data;
+> > +               int skb_len =3D skb->len;
+> > +
+> > +               skb_push(skb, skb->data - skb_mac_header(skb));
+> > +               proto =3D __vlan_get_protocol(skb, proto, NULL);
+> > +               if (skb_head !=3D skb->data) {
+> > +                       skb->data =3D skb_head;
+> > +                       skb->len =3D skb_len;
+> > +               }
+> > +       }
+> > +
+> > +       return proto;
+> > +}
+> > +
+> >  static void prb_del_retire_blk_timer(struct tpacket_kbdq_core *pkc)
+> >  {
+> >         del_timer_sync(&pkc->retire_blk_timer);
+> > @@ -1011,6 +1057,10 @@ static void prb_fill_vlan_info(struct tpacket_=
+kbdq_core *pkc,
+> >                 ppd->hv1.tp_vlan_tci =3D skb_vlan_tag_get(pkc->skb);
+> >                 ppd->hv1.tp_vlan_tpid =3D ntohs(pkc->skb->vlan_proto)=
+;
+> >                 ppd->tp_status =3D TP_STATUS_VLAN_VALID | TP_STATUS_V=
+LAN_TPID_VALID;
+> > +       } else if (unlikely(eth_type_vlan(pkc->skb->protocol))) {
+> > +               ppd->hv1.tp_vlan_tci =3D vlan_get_tci(pkc->skb);
+> > +               ppd->hv1.tp_vlan_tpid =3D ntohs(pkc->skb->protocol);
+> > +               ppd->tp_status =3D TP_STATUS_VLAN_VALID | TP_STATUS_V=
+LAN_TPID_VALID;
+> >         } else {
+> >                 ppd->hv1.tp_vlan_tci =3D 0;
+> >                 ppd->hv1.tp_vlan_tpid =3D 0;
+> > @@ -2428,6 +2478,10 @@ static int tpacket_rcv(struct sk_buff *skb, st=
+ruct net_device *dev,
+> >                         h.h2->tp_vlan_tci =3D skb_vlan_tag_get(skb);
+> >                         h.h2->tp_vlan_tpid =3D ntohs(skb->vlan_proto)=
+;
+> >                         status |=3D TP_STATUS_VLAN_VALID | TP_STATUS_=
+VLAN_TPID_VALID;
+> > +               } else if (unlikely(eth_type_vlan(skb->protocol))) {
+> > +                       h.h2->tp_vlan_tci =3D vlan_get_tci(skb);
+> > +                       h.h2->tp_vlan_tpid =3D ntohs(skb->protocol);
+> > +                       status |=3D TP_STATUS_VLAN_VALID | TP_STATUS_=
+VLAN_TPID_VALID;
+> >                 } else {
+> >                         h.h2->tp_vlan_tci =3D 0;
+> >                         h.h2->tp_vlan_tpid =3D 0;
+> > @@ -2457,7 +2511,8 @@ static int tpacket_rcv(struct sk_buff *skb, str=
+uct net_device *dev,
+> >         sll->sll_halen =3D dev_parse_header(skb, sll->sll_addr);
+> >         sll->sll_family =3D AF_PACKET;
+> >         sll->sll_hatype =3D dev->type;
+> > -       sll->sll_protocol =3D skb->protocol;
+> > +       sll->sll_protocol =3D (sk->sk_type =3D=3D SOCK_DGRAM) ?
+> > +               vlan_get_protocol_dgram(skb) : skb->protocol;
+> >         sll->sll_pkttype =3D skb->pkt_type;
+> >         if (unlikely(packet_sock_flag(po, PACKET_SOCK_ORIGDEV)))
+> >                 sll->sll_ifindex =3D orig_dev->ifindex;
+> > @@ -3482,7 +3537,8 @@ static int packet_recvmsg(struct socket *sock, =
+struct msghdr *msg, size_t len,
+> >                 /* Original length was stored in sockaddr_ll fields *=
+/
+> >                 origlen =3D PACKET_SKB_CB(skb)->sa.origlen;
+> >                 sll->sll_family =3D AF_PACKET;
+> > -               sll->sll_protocol =3D skb->protocol;
+> > +               sll->sll_protocol =3D (sock->type =3D=3D SOCK_DGRAM) =
+?
+> > +                       vlan_get_protocol_dgram(skb) : skb->protocol;=
+
+> >         }
+> >
+> >         sock_recv_cmsgs(msg, sk, skb);
+> > @@ -3539,6 +3595,10 @@ static int packet_recvmsg(struct socket *sock,=
+ struct msghdr *msg, size_t len,
+> >                         aux.tp_vlan_tci =3D skb_vlan_tag_get(skb);
+> >                         aux.tp_vlan_tpid =3D ntohs(skb->vlan_proto);
+> >                         aux.tp_status |=3D TP_STATUS_VLAN_VALID | TP_=
+STATUS_VLAN_TPID_VALID;
+> > +               } else if (unlikely(eth_type_vlan(skb->protocol))) {
+> > +                       aux.tp_vlan_tci =3D vlan_get_tci(skb);
+> > +                       aux.tp_vlan_tpid =3D ntohs(skb->protocol);
+> > +                       aux.tp_status |=3D TP_STATUS_VLAN_VALID | TP_=
+STATUS_VLAN_TPID_VALID;
+> >                 } else {
+> >                         aux.tp_vlan_tci =3D 0;
+> >                         aux.tp_vlan_tpid =3D 0;
+> > --
+> > 2.43.0
+> >
 
 
-vim +4449 lib/maple_tree.c
-
-e0c5446b52f6a9 Sidhartha Kumar 2024-06-04  4439  
-54a611b605901c Liam R. Howlett 2022-09-06  4440  /**
-54a611b605901c Liam R. Howlett 2022-09-06  4441   * mas_insert() - Internal call to insert a value
-54a611b605901c Liam R. Howlett 2022-09-06  4442   * @mas: The maple state
-54a611b605901c Liam R. Howlett 2022-09-06  4443   * @entry: The entry to store
-54a611b605901c Liam R. Howlett 2022-09-06  4444   *
-54a611b605901c Liam R. Howlett 2022-09-06  4445   * Return: %NULL or the contents that already exists at the requested index
-54a611b605901c Liam R. Howlett 2022-09-06  4446   * otherwise.  The maple state needs to be checked for error conditions.
-54a611b605901c Liam R. Howlett 2022-09-06  4447   */
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4448  static inline void *mas_insert(struct ma_state *mas, void *entry, gfp_t gfp)
-54a611b605901c Liam R. Howlett 2022-09-06 @4449  {
-54a611b605901c Liam R. Howlett 2022-09-06  4450  	MA_WR_STATE(wr_mas, mas, entry);
-54a611b605901c Liam R. Howlett 2022-09-06  4451  
-54a611b605901c Liam R. Howlett 2022-09-06  4452  	/*
-54a611b605901c Liam R. Howlett 2022-09-06  4453  	 * Inserting a new range inserts either 0, 1, or 2 pivots within the
-54a611b605901c Liam R. Howlett 2022-09-06  4454  	 * tree.  If the insert fits exactly into an existing gap with a value
-54a611b605901c Liam R. Howlett 2022-09-06  4455  	 * of NULL, then the slot only needs to be written with the new value.
-54a611b605901c Liam R. Howlett 2022-09-06  4456  	 * If the range being inserted is adjacent to another range, then only a
-54a611b605901c Liam R. Howlett 2022-09-06  4457  	 * single pivot needs to be inserted (as well as writing the entry).  If
-54a611b605901c Liam R. Howlett 2022-09-06  4458  	 * the new range is within a gap but does not touch any other ranges,
-54a611b605901c Liam R. Howlett 2022-09-06  4459  	 * then two pivots need to be inserted: the start - 1, and the end.  As
-54a611b605901c Liam R. Howlett 2022-09-06  4460  	 * usual, the entry must be written.  Most operations require a new node
-54a611b605901c Liam R. Howlett 2022-09-06  4461  	 * to be allocated and replace an existing node to ensure RCU safety,
-54a611b605901c Liam R. Howlett 2022-09-06  4462  	 * when in RCU mode.  The exception to requiring a newly allocated node
-54a611b605901c Liam R. Howlett 2022-09-06  4463  	 * is when inserting at the end of a node (appending).  When done
-54a611b605901c Liam R. Howlett 2022-09-06  4464  	 * carefully, appending can reuse the node in place.
-54a611b605901c Liam R. Howlett 2022-09-06  4465  	 */
-54a611b605901c Liam R. Howlett 2022-09-06  4466  	wr_mas.content = mas_start(mas);
-54a611b605901c Liam R. Howlett 2022-09-06  4467  	if (wr_mas.content)
-54a611b605901c Liam R. Howlett 2022-09-06  4468  		goto exists;
-54a611b605901c Liam R. Howlett 2022-09-06  4469  
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4470  	mas_wr_preallocate(&wr_mas, entry, gfp);
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4471  	if (mas_is_err(mas))
-54a611b605901c Liam R. Howlett 2022-09-06  4472  		return NULL;
-54a611b605901c Liam R. Howlett 2022-09-06  4473  
-54a611b605901c Liam R. Howlett 2022-09-06  4474  	/* spanning writes always overwrite something */
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4475  	if (mas->store_type == wr_spanning_store)
-54a611b605901c Liam R. Howlett 2022-09-06  4476  		goto exists;
-54a611b605901c Liam R. Howlett 2022-09-06  4477  
-54a611b605901c Liam R. Howlett 2022-09-06  4478  	/* At this point, we are at the leaf node that needs to be altered. */
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4479  	if (mas->store_type != wr_new_root && mas->store_type != wr_store_root) {
-54a611b605901c Liam R. Howlett 2022-09-06  4480  		wr_mas.offset_end = mas->offset;
-54a611b605901c Liam R. Howlett 2022-09-06  4481  		wr_mas.end_piv = wr_mas.r_max;
-54a611b605901c Liam R. Howlett 2022-09-06  4482  
-54a611b605901c Liam R. Howlett 2022-09-06  4483  		if (wr_mas.content || (mas->last > wr_mas.r_max))
-54a611b605901c Liam R. Howlett 2022-09-06  4484  			goto exists;
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4485  	}
-54a611b605901c Liam R. Howlett 2022-09-06  4486  
-9d36d13535c7c8 Sidhartha Kumar 2024-06-04  4487  	mas_wr_store_entry(&wr_mas);
-54a611b605901c Liam R. Howlett 2022-09-06  4488  	return wr_mas.content;
-54a611b605901c Liam R. Howlett 2022-09-06  4489  
-54a611b605901c Liam R. Howlett 2022-09-06  4490  exists:
-54a611b605901c Liam R. Howlett 2022-09-06  4491  	mas_set_err(mas, -EEXIST);
-54a611b605901c Liam R. Howlett 2022-09-06  4492  	return wr_mas.content;
-54a611b605901c Liam R. Howlett 2022-09-06  4493  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
