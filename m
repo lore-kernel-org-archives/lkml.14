@@ -1,133 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C8F3EA69;
-	Tue,  4 Jun 2024 08:32:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790733EA69
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717489931; cv=none; b=IYDYws4hTtQ1gRSBKzVdkD7wN3P8xuxKsrZK9tBuI7Qfm1cLYufDkKEzlwa2x2VbPx4JPQhbXa/bPmbB0TAU8ZYhY2KbaRn5RX9VGmPLETwaYgijK3NDEfRIRBa/NHyd3mbwsVa/OyO3Sy9jU3PEC90pI9vNxavT3y7ABNx/zwQ=
+	t=1717490024; cv=none; b=ulBgh/Ujo3GW+P4Jc98FlKWPRO9TqvM3bv9R6WfgGA3m/gl8bxPcBNRcInl+4GXuXvTpIEf9oUOraRR+0apK/emz7oISzhCCtHxQGSJU+BBHz2t9xb2hUFj4KVuKymC9pIr+BYaLAha3+/Pc9pUx/JppuZm7rj34NJtCyfbalPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717489931; c=relaxed/simple;
-	bh=TudwJC2mySdD/07ev8fN3GTUmSReWRPtzu1meagMp/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ezgiTb7Luq2jRl3UTmK6AWnLY64VjzmZvZ9dHOMRD0hZIevjIdwcQaW0oq9NasRmVd/QvNLvMG7VUCTKW2M0vxKbVM1fSL8NxagC/V0gKwKhYNbOkYXRCFqmziXqUgTxciWfRcCUhcqEHQ7dMC1D8RAZX8B8B4f1rsC0cTdiOJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=djjIM4qP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717490024; c=relaxed/simple;
+	bh=WcdjXKp0usjBkPhOi1eWLnKB5YMWTKiIrOQDU48frSc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0dTxyRJmxQDkwMt9R8KmZsokT0u8gmHm85ryhyP6i3fMsEuBfDOM0NQIfSl+kwvt6Q6kpkqBdBtP5aJeE4PK/M0T57zGH0KYlKyeqa3jnftau02t19X9OwtYRwmd+RPLmgaJaY1wlCZla+D0OVzj94Dpb/50TG82N8pEuqZ4E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZfdi1+5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djjIM4qP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03605C2BBFC;
-	Tue,  4 Jun 2024 08:32:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZfdi1+5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DEBC2BBFC;
+	Tue,  4 Jun 2024 08:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717489930;
-	bh=TudwJC2mySdD/07ev8fN3GTUmSReWRPtzu1meagMp/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=djjIM4qPJVvrJG/3oJFJKYFcNfV4LBHhTfXOXQTK9uWabNERAkHOiFGl7aB3GTDKh
-	 H7dtfSszw4s3g0rwbaup+mGPZbxOktbd2DCOlNQmX5iOqFyZ6pDT0D0gDd3Uzt7kD4
-	 H8EIcZtNOj1saTPyh6yDdBPTVF1PC0aDCoQpICV5YHgm9vKlAiOsgyI/tycdgQ6Wzn
-	 e5shvqY+wz7nAmETFN4jX84LdPbmXWXbly5bmhCI1yN+mEoUz1BZeSaTl2sKWHLoQJ
-	 so68vwEQAAdK2f88icoWLLl9xICHJwchQwEx1B3F/GNs9PSNTI/Tv728K8QNKY+dlg
-	 RY/T3BIzfCXZQ==
-Date: Tue, 4 Jun 2024 11:32:05 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Colin Ian King <colin.i.king@gmail.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>,
-	Pavan Chebbi <pavan.chebbi@broadcom.com>,
-	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Kees Cook <keescook@chromium.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Long Li <longli@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH net-next v3] net: mana: Allow variable size indirection
- table
-Message-ID: <20240604083205.GM3884@unreal>
-References: <1717169861-15825-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20240603084122.GK3884@unreal>
- <20240604053648.GA14220@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	s=k20201202; t=1717490024;
+	bh=WcdjXKp0usjBkPhOi1eWLnKB5YMWTKiIrOQDU48frSc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qZfdi1+5gE9tloM9plnd3OEOQJBcvuaiwPhWTsubkB3Hn1yhrHMBn2W32u+eBZSLB
+	 j3Px4R8aU+jzL2Q/Gm+E1qYhquQJGBWvOizcZVm5lVCTgwmCmcQK/Y/KK0Ww9amtbW
+	 lKZdaM1s5gQTgve53ySXMXBI7m43/erS8Hw7un8inpwt37c4JgVvBlmz9N3EJAuiVI
+	 2wiAymER1ylE2RtZDuWBGJSPo3By47m53Oquc03Vua3beillfXm6uXsEBmSsTcyhyP
+	 bxBZbxuxsEC2pnQDkmSK90BXCeNIsoxqqJRuIdAsLSCidQusCgsedOFQ4DFn12ZeYd
+	 wbogKIXNYjCJA==
+From: Michael Walle <mwalle@kernel.org>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Jani Nikula <jani.nikula@intel.com>,
+	Chen-Yu Tsai <wenst@chromium.org>,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH RESEND] drm/mediatek/dp: fix spurious kfree()
+Date: Tue,  4 Jun 2024 10:33:37 +0200
+Message-Id: <20240604083337.1879188-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604053648.GA14220@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 03, 2024 at 10:36:48PM -0700, Shradha Gupta wrote:
-> On Mon, Jun 03, 2024 at 11:41:22AM +0300, Leon Romanovsky wrote:
-> > On Fri, May 31, 2024 at 08:37:41AM -0700, Shradha Gupta wrote:
-> > > Allow variable size indirection table allocation in MANA instead
-> > > of using a constant value MANA_INDIRECT_TABLE_SIZE.
-> > > The size is now derived from the MANA_QUERY_VPORT_CONFIG and the
-> > > indirection table is allocated dynamically.
-> > > 
-> > > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > > ---
-> > >  Changes in v3:
-> > >  * Fixed the memory leak(save_table) in mana_set_rxfh()
-> > > 
-> > >  Changes in v2:
-> > >  * Rebased to latest net-next tree
-> > >  * Rearranged cleanup code in mana_probe_port to avoid extra operations
-> > > ---
-> > >  drivers/infiniband/hw/mana/qp.c               | 10 +--
-> > >  drivers/net/ethernet/microsoft/mana/mana_en.c | 68 ++++++++++++++++---
-> > >  .../ethernet/microsoft/mana/mana_ethtool.c    | 27 +++++---
-> > >  include/net/mana/gdma.h                       |  4 +-
-> > >  include/net/mana/mana.h                       |  9 +--
-> > >  5 files changed, 89 insertions(+), 29 deletions(-)
-> > 
-> > <...>
-> > 
-> > > +free_indir:
-> > > +	apc->indir_table_sz = 0;
-> > > +	kfree(apc->indir_table);
-> > > +	apc->indir_table = NULL;
-> > > +	kfree(apc->rxobj_table);
-> > > +	apc->rxobj_table = NULL;
-> > >  reset_apc:
-> > >  	kfree(apc->rxqs);
-> > >  	apc->rxqs = NULL;
-> > > @@ -2897,6 +2936,7 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> > >  {
-> > 
-> > <...>
-> > 
-> > > @@ -2931,6 +2972,11 @@ void mana_remove(struct gdma_dev *gd, bool suspending)
-> > >  		}
-> > >  
-> > >  		unregister_netdevice(ndev);
-> > > +		apc->indir_table_sz = 0;
-> > > +		kfree(apc->indir_table);
-> > > +		apc->indir_table = NULL;
-> > > +		kfree(apc->rxobj_table);
-> > > +		apc->rxobj_table = NULL;
-> > 
-> > Why do you need to NULLify here? Will apc is going to be accessible
-> > after call to mana_remove? or port probe failure?
-> Right, they won't be accessed. This is just for the sake of completeness
-> and to prevent double free in case there are code bug in other place.
+drm_edid_to_sad() might return an error or just zero. If that is the
+case, we must not free the SADs because there was no allocation in
+the first place.
 
-This coding patter is called defensive programming, which is discouraged
-in the kernel. You are not preventing double free, but hiding bugs which
-were possible to be found by various static analysis tools.
+Fixes: dab12fa8d2bd ("drm/mediatek/dp: fix memory leak on ->get_edid callback audio detection")
+Signed-off-by: Michael Walle <mwalle@kernel.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+---
+ drivers/gpu/drm/mediatek/mtk_dp.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Please don't do it.
+diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek/mtk_dp.c
+index 536366956447..ada12927bbac 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dp.c
++++ b/drivers/gpu/drm/mediatek/mtk_dp.c
+@@ -2073,9 +2073,15 @@ static const struct drm_edid *mtk_dp_edid_read(struct drm_bridge *bridge,
+ 		 */
+ 		const struct edid *edid = drm_edid_raw(drm_edid);
+ 		struct cea_sad *sads;
++		int ret;
+ 
+-		audio_caps->sad_count = drm_edid_to_sad(edid, &sads);
+-		kfree(sads);
++		ret = drm_edid_to_sad(edid, &sads);
++		/* Ignore any errors */
++		if (ret < 0)
++			ret = 0;
++		if (ret)
++			kfree(sads);
++		audio_caps->sad_count = ret;
+ 
+ 		/*
+ 		 * FIXME: This should use connector->display_info.has_audio from
+-- 
+2.39.2
 
-Thanks
-
-> 
-> Regards,
-> Shradha.
-> > 
-> > Thanks
