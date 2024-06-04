@@ -1,182 +1,153 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9462B9C5;
-	Tue,  4 Jun 2024 15:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F112051C3E;
+	Tue,  4 Jun 2024 15:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513309; cv=none; b=rBCKxp79VYxCr+1vo823xvuKYkdKK2nH7NKdSlBrCZISLlEE6R2HN3MRuWrivBrYzT0IA5UU2U/c5ikJBrHJH88yNQHJ1RMxegHj5N8MKXO2+6jkqihpVsqbWsLbGh6ibQuzmw0Z9BYjuyUgIF5/mPPCfpgKWmZ8ujG//v9M8Es=
+	t=1717513356; cv=none; b=UKRTYUI76OTZXRFIB6DqQDIaSj2kLXWI6WRSHn+CCTcw45VcVP//u+4I9jlS1Olt3OmwbqWXaVByoJLSpTsZVZz6Tb8nJrk7vep3cHHn33w4hM3NN15ME/9MDmOAwVCVnvTmjsdFv18DBUqil64EQl26oTSpj1tZW11N8x//OdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513309; c=relaxed/simple;
-	bh=FBKiAGtmKJHWNrtxjlG2jSJk1wPquEKW9T6nmOhWZEw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z8KxlJ76NG1mDnZiIytN+xhztkkTDq6O467IE2/rWU1XcwMXZlLjt9aXeLy+EmoTPj/JTzNxwgqbOKQcqA00nHJtk2ThjJg1CwGbuk7HoBXznAsTof2NZtL78HDSPOfIQHg5Q5FKNJmNYEtGTKREv4+7QngGM4rGRhB8F4BnkOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b/2iz4Nz; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717513356; c=relaxed/simple;
+	bh=xtJUyNxwB7M1j6qR9LAvxbMNOmZxHaugTMRR02cMN0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N0HQKvPZoV2TroOOlgX9AvTFaaT39lKx5EbAQ4jRQtIL6FxLrzSfp6A9+cNbTwtzCi7WemwL4tms+gb4ZrokT9RSKoXnsG4j3kxtNgAgxL+VkN30g/ubAWy/66iQZf3VNTbFAVmf7cpZcIS4YzJqzb1aNUZM+Voo9p8QWQ/x9ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PcFyYteG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/2iz4Nz"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f44b42d1caso43315525ad.0;
-        Tue, 04 Jun 2024 08:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717513307; x=1718118107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+zzDBNu/Km1bywTdzn1zNJ2Ca7zC5GTmKmM9CZqf88E=;
-        b=b/2iz4NzNpSYvpte8HqOw58iz17gwmscwpZmea9mBnIAZ2e8WxfD7KhjFnJbpTMgX5
-         GA4+bG+LfA533IT89IFVbwKovsWiieSrVvIwDYfoqNCmWY6Y/mTI/xlg0bidhz+k4z3O
-         H5sbRLYXKrJIpA6QeYiVpV2sa1TblCWrlpETPhGo97j5+tmEzsvdBoRpUpy35VgUvFLs
-         ZWOIgCaRnrEr0Rt09UihrgdHPFbt+5zpJHhSoyy7apcliuDBA8GYsUeM7dUL3FCeuJFl
-         7UfpDdcwOjpL3uQZ+cyFKZoeVU7IzkwMIf58SMG92G4yOgTY409tvrNIl++joTac6QWC
-         87Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717513307; x=1718118107;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+zzDBNu/Km1bywTdzn1zNJ2Ca7zC5GTmKmM9CZqf88E=;
-        b=kOK+HpqjsrDzqMQu5EuUQ8VukO0Hq0uPK1Bh2kTcXS+hMX3/n/sDsIsDHslAsyzL6t
-         kZ3yEMwj+4zh6BBfq7WeW6B5iDtLR1DlnOfMPNuTxKPTTjb/CQs2/Am/c275WkQegBno
-         jZwoMJ0Chm1nrO1k3Y/OyRe9T+fLSqoyqNCgbXvdPG6llaa//FycP7A2D2hUISHl4GFC
-         bgc8dYf8+sK6r2GBAC306+E7Cu70ERtEQPrIPTLtHuJvZOI9pChZgafox87qfIHX+4fP
-         MPnqXqc2wXduHIvoLCChmXqXOLunkUtKgCxrJy9noeuUZGZZ1R3BkaZRPJu943t2pcvH
-         Nnvw==
-X-Forwarded-Encrypted: i=1; AJvYcCV3vKWKZYJ+W1a6gJgF+1o3t35yGwg0Pq8hwMktNO+r90fQiNOOUqRPrKq30q4m5krCi/+FHilIEZZs6I0geUEyCHYxSOdlniPbG/uq
-X-Gm-Message-State: AOJu0YyEeCWL3t6i62cD7acEaxajszLgTxurohtAqPmOYpHpReNrdjtc
-	d00vq0FGVBjL3efs3d6eM+CFLoc6viqMwk7gYAc2Du9Y8R/xGOO0
-X-Google-Smtp-Source: AGHT+IF1zgJrv6FVFO4d/uMJ9aDbi7Mhv60qd0JUz/GquNgBBdeZzjzd6K0FINdAHBDxfCTjnp5JGg==
-X-Received: by 2002:a17:902:e846:b0:1f3:4d2:7025 with SMTP id d9443c01a7336-1f6370985fcmr137086895ad.49.1717513301179;
-        Tue, 04 Jun 2024 08:01:41 -0700 (PDT)
-Received: from localhost ([2a00:79e1:2e00:1301:e1c5:6354:b45d:8ffc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dd731sm86202895ad.144.2024.06.04.08.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 08:01:40 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: iommu@lists.linux.dev
-Cc: linux-arm-msm@vger.kernel.org,
-	Stephen Boyd <swboyd@chromium.org>,
-	Rob Clark <robdclark@chromium.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] iommu/arm-smmu: Pretty-print context fault related regs
-Date: Tue,  4 Jun 2024 08:01:31 -0700
-Message-ID: <20240604150136.493962-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.45.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PcFyYteG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BD9C2BBFC;
+	Tue,  4 Jun 2024 15:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717513355;
+	bh=xtJUyNxwB7M1j6qR9LAvxbMNOmZxHaugTMRR02cMN0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PcFyYteGPx/DLK2FaeMM8zewZ/t0mDDBxMsBzBzhxtDLVgoapx658UcdzRfQ9xd8q
+	 Fe8q8wddXOp4eBjWidUKbiB4xyPgrvn5Ibp8p6REqg2XtX/yAmhkLI8jGVuJKXB43e
+	 aIWSCDddiK2YemWgtQ+VCuKqdcdoER9sYPiBv7ziIOKcPLdpB0fBpcfNgrcbIjK87i
+	 AR2uG6QiuS0oZOgWOcyrurtPfWoUQetrTtOtkeyVgrsi+Te46ruuoBKTGLuBT52TRK
+	 8QLogsZuUqOr1lZFpkG0nKIZ/TCwx2Enn+6TwYaR5/QM+qVYbc23ZG2QknvVuROtGN
+	 YI7pW5PhSNevQ==
+Date: Tue, 4 Jun 2024 16:02:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	jvoisin <julien.voisin@dustri.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	"GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+	Xiu Jianfeng <xiujianfeng@huawei.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Jann Horn <jannh@google.com>, Matteo Rizzo <matteorizzo@google.com>,
+	Thomas Graf <tgraf@suug.ch>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] mm/slab: Introduce kmem_buckets_create() and
+ family
+Message-ID: <20240604150228.GS491852@kernel.org>
+References: <20240531191304.it.853-kees@kernel.org>
+ <20240531191458.987345-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531191458.987345-4-kees@kernel.org>
 
-From: Rob Clark <robdclark@chromium.org>
+On Fri, May 31, 2024 at 12:14:56PM -0700, Kees Cook wrote:
 
-Parse out the bitfields for easier-to-read fault messages.
+...
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-Stephen was wanting easier to read fault messages.. so I typed this up.
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index b5c879fa66bc..f42a98d368a9 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -392,6 +392,82 @@ kmem_cache_create(const char *name, unsigned int size, unsigned int align,
+>  }
+>  EXPORT_SYMBOL(kmem_cache_create);
+>  
+> +static struct kmem_cache *kmem_buckets_cache __ro_after_init;
+> +
+> +kmem_buckets *kmem_buckets_create(const char *name, unsigned int align,
+> +				  slab_flags_t flags,
+> +				  unsigned int useroffset,
+> +				  unsigned int usersize,
+> +				  void (*ctor)(void *))
+> +{
+> +	kmem_buckets *b;
+> +	int idx;
+> +
+> +	/*
+> +	 * When the separate buckets API is not built in, just return
+> +	 * a non-NULL value for the kmem_buckets pointer, which will be
+> +	 * unused when performing allocations.
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_SLAB_BUCKETS))
+> +		return ZERO_SIZE_PTR;
+> +
+> +	if (WARN_ON(!kmem_buckets_cache))
+> +		return NULL;
+> +
+> +	b = kmem_cache_alloc(kmem_buckets_cache, GFP_KERNEL|__GFP_ZERO);
+> +	if (WARN_ON(!b))
+> +		return NULL;
+> +
+> +	flags |= SLAB_NO_MERGE;
+> +
+> +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
+> +		char *short_size, *cache_name;
+> +		unsigned int cache_useroffset, cache_usersize;
+> +		unsigned int size;
+> +
+> +		if (!kmalloc_caches[KMALLOC_NORMAL][idx])
+> +			continue;
+> +
+> +		size = kmalloc_caches[KMALLOC_NORMAL][idx]->object_size;
+> +		if (!size)
+> +			continue;
+> +
+> +		short_size = strchr(kmalloc_caches[KMALLOC_NORMAL][idx]->name, '-');
+> +		if (WARN_ON(!short_size))
+> +			goto fail;
+> +
+> +		cache_name = kasprintf(GFP_KERNEL, "%s-%s", name, short_size + 1);
+> +		if (WARN_ON(!cache_name))
+> +			goto fail;
+> +
+> +		if (useroffset >= size) {
+> +			cache_useroffset = 0;
+> +			cache_usersize = 0;
+> +		} else {
+> +			cache_useroffset = useroffset;
+> +			cache_usersize = min(size - cache_useroffset, usersize);
+> +		}
+> +		(*b)[idx] = kmem_cache_create_usercopy(cache_name, size,
+> +					align, flags, cache_useroffset,
+> +					cache_usersize, ctor);
+> +		kfree(cache_name);
+> +		if (WARN_ON(!(*b)[idx]))
+> +			goto fail;
+> +	}
+> +
+> +	return b;
+> +
+> +fail:
+> +	for (idx = 0; idx < ARRAY_SIZE(kmalloc_caches[KMALLOC_NORMAL]); idx++) {
+> +		if ((*b)[idx])
+> +			kmem_cache_destroy((*b)[idx]);
 
-Resend with the new iommu list address
+nit: I don't think it is necessary to guard this with a check for NULL.
 
- drivers/iommu/arm/arm-smmu/arm-smmu.c | 53 +++++++++++++++++++++++++--
- drivers/iommu/arm/arm-smmu/arm-smmu.h |  5 +++
- 2 files changed, 54 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index c572d877b0e1..06712d73519c 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -411,6 +411,8 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- 	unsigned long iova;
- 	struct arm_smmu_domain *smmu_domain = dev;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
-+				      DEFAULT_RATELIMIT_BURST);
- 	int idx = smmu_domain->cfg.cbndx;
- 	int ret;
- 
-@@ -425,10 +427,53 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- 	ret = report_iommu_fault(&smmu_domain->domain, NULL, iova,
- 		fsynr & ARM_SMMU_FSYNR0_WNR ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ);
- 
--	if (ret == -ENOSYS)
--		dev_err_ratelimited(smmu->dev,
--		"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
--			    fsr, iova, fsynr, cbfrsynra, idx);
-+	if (ret == -ENOSYS && __ratelimit(&rs)) {
-+		static const struct {
-+			u32 mask; const char *name;
-+		} fsr_bits[] = {
-+			{ ARM_SMMU_FSR_MULTI,  "MULTI" },
-+			{ ARM_SMMU_FSR_SS,     "SS"    },
-+			{ ARM_SMMU_FSR_UUT,    "UUT"   },
-+			{ ARM_SMMU_FSR_ASF,    "ASF"   },
-+			{ ARM_SMMU_FSR_TLBLKF, "TLBLKF" },
-+			{ ARM_SMMU_FSR_TLBMCF, "TLBMCF" },
-+			{ ARM_SMMU_FSR_EF,     "EF"     },
-+			{ ARM_SMMU_FSR_PF,     "PF"     },
-+			{ ARM_SMMU_FSR_AFF,    "AFF"    },
-+			{ ARM_SMMU_FSR_TF,     "TF"     },
-+		}, fsynr0_bits[] = {
-+			{ ARM_SMMU_FSYNR0_WNR,    "WNR"    },
-+			{ ARM_SMMU_FSYNR0_PNU,    "PNU"    },
-+			{ ARM_SMMU_FSYNR0_IND,    "IND"    },
-+			{ ARM_SMMU_FSYNR0_NSATTR, "NSATTR" },
-+			{ ARM_SMMU_FSYNR0_PTWF,   "PTWF"   },
-+			{ ARM_SMMU_FSYNR0_AFR,    "AFR"    },
-+		};
-+
-+		pr_err("%s %s: Unhandled context fault: fsr=0x%x (",
-+		       dev_driver_string(smmu->dev), dev_name(smmu->dev), fsr);
-+
-+		for (int i = 0, n = 0; i < ARRAY_SIZE(fsr_bits); i++) {
-+			if (fsr & fsr_bits[i].mask) {
-+				pr_cont("%s%s", (n > 0) ? "|" : "", fsr_bits[i].name);
-+				n++;
-+			}
-+		}
-+
-+		pr_cont("), iova=0x%08lx, fsynr=0x%x (S1CBNDX=%u", iova, fsynr,
-+			(fsynr >> 16) & 0xff);
-+
-+		for (int i = 0; i < ARRAY_SIZE(fsynr0_bits); i++) {
-+			if (fsynr & fsynr0_bits[i].mask) {
-+				pr_cont("|%s", fsynr0_bits[i].name);
-+			}
-+		}
-+
-+		pr_cont("|PLVL=%u), cbfrsynra=0x%x, cb=%d\n",
-+			fsynr & 0x3,   /* FSYNR0.PLV */
-+			cbfrsynra, idx);
-+
-+	}
- 
- 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_FSR, fsr);
- 	return IRQ_HANDLED;
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 836ed6799a80..3b051273718b 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -223,6 +223,11 @@ enum arm_smmu_cbar_type {
- 
- #define ARM_SMMU_CB_FSYNR0		0x68
- #define ARM_SMMU_FSYNR0_WNR		BIT(4)
-+#define ARM_SMMU_FSYNR0_PNU		BIT(5)
-+#define ARM_SMMU_FSYNR0_IND		BIT(6)
-+#define ARM_SMMU_FSYNR0_NSATTR		BIT(8)
-+#define ARM_SMMU_FSYNR0_PTWF		BIT(10)
-+#define ARM_SMMU_FSYNR0_AFR		BIT(11)
- 
- #define ARM_SMMU_CB_FSYNR1		0x6c
- 
--- 
-2.45.1
-
+> +	}
+> +	kfree(b);
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL(kmem_buckets_create);
