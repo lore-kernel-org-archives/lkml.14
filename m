@@ -1,103 +1,121 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FD884A33;
-	Tue,  4 Jun 2024 17:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E797D84A33;
+	Tue,  4 Jun 2024 17:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717523878; cv=none; b=lkKVV48JZ+aXeOSzg0oomL2PLCEhM3NFuOlkIYRGlr1ubfLGs9W8Bl8FukiTApYLRoPX65C4C2VWbk7Cicgtx6HwLzmnwnnTk3UUTJyaePb0phiR851/XvYpX1bzjxFztDY2f4F/6CMpzLnURVr4usxITGuMjCZ8JnPeJNwPyjI=
+	t=1717523968; cv=none; b=P4Rg4Lrp7uFgohTVsY0aPi2AsDLtoRzvZvZU42aS41Z9G7/iF2hmTgrI7nNT2IFRXJW5bgiSVIfBbLhCokr3zZF6q+EKU5Eia6bk0XyLVKkQPbWKSKRN2a1AFs5oDLrEU0OkO6TIlzFEYFEt5FhqsPo3sEdAtCM01bdHo8b8qsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717523878; c=relaxed/simple;
-	bh=E+MtxwwhVqCdGJffmyAZCA/EMI2HiYm5YWLiS0Lw7ys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXlNHmM20utVuBi61Il763NeJj3JRq0gn0r6QMs72WbKJSeg7mZF6vtKPjAbO2IdDUZKTjMzLeej6ZKx3f0UCrltf+4cExNC0EXY6x8aOXGo35dHHEfjUpaNavPDhqwinOSLIgBlrAb46SI8vGnu7XGHRIH+ECtFeHFToWemiCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=gWdLoPL0; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717523968; c=relaxed/simple;
+	bh=Jjiyu40/RbXKcJ/N6MhGcs1AIS0xncpQQ2rPMAjh6EY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=bXii+VrtWhUxMESKqRxTRlzDFDJ+MKMkvkDOTRB2jAwPfkw0KwG3Irk7A7WrGGg4nDxp0qNsKgi3q7TB7Sn2eBbrD6zrtQTIF+j6PyvX7+E+mjZKWWS9JywvZFd9huOFjok3V5uoGu5UYJUNJBioO8XiaJsHrpNoE6kb0/nIlPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7u7MCms; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="gWdLoPL0"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 412E240E016E;
-	Tue,  4 Jun 2024 17:57:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id GcSvWKOLzVkh; Tue,  4 Jun 2024 17:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717523869; bh=JXZbniqiYmCh6nO8eOuM412v/bVplPF4NQw9IrGcNgw=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7u7MCms"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A9F3C2BBFC;
+	Tue,  4 Jun 2024 17:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717523967;
+	bh=Jjiyu40/RbXKcJ/N6MhGcs1AIS0xncpQQ2rPMAjh6EY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gWdLoPL0Geu18Mg09ep22E8CJvmQKeIXM/qeFRd35Ee5DINk9hJ1k1uSdd+ZOYIVO
-	 577lBvho2BI8wZgUCZ7BotNPN9ZSqJNOtt11EkNZ2loxtHuj8mbIkJFcl2qWeXJ0CG
-	 uyQUAYVCQZTEUTmNrujRy260AyawFlCuPwcjaYet1+adCC00xHv70iET5PgQlYWJDf
-	 DL16UmrcR6KGpH7E2N7lvUaxNbpIBQo3jNTJut7Xax9DEXl6iROBaVoTFWeI6C4y++
-	 tiZAsXGByTnT2xL5rqqPNd/kvJ58OHLWgFy8HscK8we8+E1mhPhCwHInvpmyzzRJS2
-	 Wz/ZBqVfp8zpns6YR83BDw1nG2AHceAXRgUqbdABY32fFb6BCBJGaFYaLz269a/j5B
-	 DlKjsKQYNMarJVeLOYyqJLwyBBA17yNQadN9DTU+bf2J2IlDy6XkiNjl8MlbxR6lct
-	 qNEHwEcdgyNtRx02O6juN14djEeE3l5mB6c873EcMJ66gTKaXCJVpeSkPe6IAK807h
-	 N4tX9FAxP6X6ty3nug+8TCqm9+CkycFBJM7wdSfahJXtGG66JqySNhiMdBDpVeJME0
-	 ZMChUXpW3VpwL9K5Y3GjTNasyDugQa60YGhSG0iEFji/ORi5QW3VcERJ8YpRHWCdSn
-	 g9SttyT/p/diiD2uywWfVs64=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 09B9640E0081;
-	Tue,  4 Jun 2024 17:57:22 +0000 (UTC)
-Date: Tue, 4 Jun 2024 19:57:16 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
- confusion
-Message-ID: <20240604175716.GGZl9VfDwv_JhmzwPH@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
- <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
- <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
- <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
- <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+	b=R7u7MCmsa10awgQf1KcWyVu4v7GTvrU8UqDF2Horg1lWXWQOh0qv5COXe0+3d12AC
+	 Sh/F9ormB/wcV8pt8GRTnIi3qSW6q4atAC7THvfIIcu9Gt1OB6KNwDYVHWnfFFdKvu
+	 6BdtSBNB08M8RbZysMzVt2wbrdayEpnoHH02qqrWxQFcuCWbHXHDXtusNQunjqE7QJ
+	 2ORxcwrXkUygM8TfubBm7MyaqYbw4u2S6kMhrbRxnyMM+B6uh8f+z6lFn6TwwesPDG
+	 C2R+tQeOXvlkq5jRYX5jYiWxLA5vCGcfUyYVbSGKPl0r92Bdf+GD/PRKe4D1j0OFyY
+	 29ZIEyqzZteYQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 04 Jun 2024 20:59:20 +0300
+Message-Id: <D1RFFIVMEENQ.3RXXNAGNWBE1O@kernel.org>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Eric Snowberg" <eric.snowberg@oracle.com>,
+ <linux-security-module@vger.kernel.org>
+Cc: <dhowells@redhat.com>, <dwmw2@infradead.org>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <ardb@kernel.org>,
+ <paul@paul-moore.com>, <jmorris@namei.org>, <serge@hallyn.com>,
+ <zohar@linux.ibm.com>, <roberto.sassu@huawei.com>,
+ <dmitry.kasatkin@gmail.com>, <mic@digikod.net>, <casey@schaufler-ca.com>,
+ <stefanb@linux.ibm.com>, <ebiggers@kernel.org>, <rdunlap@infradead.org>,
+ <linux-kernel@vger.kernel.org>, <keyrings@vger.kernel.org>,
+ <linux-crypto@vger.kernel.org>, <linux-efi@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/8] Clavis LSM
+X-Mailer: aerc 0.17.0
+References: <20240531003945.44594-1-eric.snowberg@oracle.com>
+In-Reply-To: <20240531003945.44594-1-eric.snowberg@oracle.com>
 
-On Tue, Jun 04, 2024 at 06:21:27PM +0300, Kirill A. Shutemov wrote:
-> What about this?
+On Fri May 31, 2024 at 3:39 AM EEST, Eric Snowberg wrote:
+> Introduce a new LSM called Clavis (Latin word meaning key).  The motivati=
+on
+> behind this LSM is to provide access control for system keys.  Before spe=
+nding
+> more time on this LSM, I am sending this as an RFC to start a discussion =
+to see
+> if the current direction taken has a possibility of being accepted in the
+> future.
+>
+> Today the kernel has the following system keyrings: .builtin_trusted_keyr=
+ing,
+> .secondary_trusted_keyring, and the .machine.  It also has the .platform
+> keyring which has limited capabilities; it can only be used to verify a k=
+ernel
+> for kexec.
 
-Yeah, LGTM.
+Would be nice to have a reminder of applications for secondary keyrings
+use cases of today [1]. It is not entirely clear for me, given that I
+need personally just the builtin and machine keyring. This is not the
+same as saying that it would not be useful, but it would clarity to
+scope it a bit in the current state of the art.
 
-Thx.
+>
+> Today the kernel also tracks key usage for verification done with any of =
+these
+> keys. Current verification usage includes: VERIFYING_MODULE_SIGNATURE,
+> VERIFYING_FIRMWARE_SIGNATURE, VERIFYING_KEXEC_PE_SIGNATURE,
+> VERIFYING_KEY_SIGNATURE, VERIFYING_KEY_SELF_SIGNATURE, and
+> VERIFYING_UNSPECIFIED_SIGNATURE. After these usage types were originally
+> introduced, most additions have typically used the
+> VERIFYING_UNSPECIFIED_SIGNATURE.
 
--- 
-Regards/Gruss,
-    Boris.
+Since there are so many why not just format them as a list here?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Maybe start the whole cover letter with exactly two lists:
+
+1. All possible keyrings that are below described as "system keys",
+   and their purpose and scope (briefly).
+2. The above verification methods and exact same level of detail
+   for each.
+
+There's so much text here that maybe even subsections like:
+
+Background
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+<Those two lists>
+
+Motivation
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+<Motivation behind Clavis>
+
+Solution
+=3D=3D=3D=3D=3D=3D=3D=3D
+
+<Mechanics of Clavis>
+
+Would make reviewing this heck a lot easier as you can then focus in one
+of these three parts. And I guess I have a brain of a goldfish ;-)
+
+[1] https://lore.kernel.org/all/20160407085915.29311.7484.stgit@warthog.pro=
+cyon.org.uk/
+
+BR, Jarkko
