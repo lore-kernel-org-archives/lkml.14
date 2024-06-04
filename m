@@ -1,200 +1,463 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F369146D4D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F9E146D7F
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505240; cv=none; b=TL0/DCi2MRQ7er0nNk4/eaVUfnvPbh5M37W710mPlsXtGx5uLCXmsCBTOwHh2fiXjcDP1M2htXwLV4qXB2/zGA6SQl2/E9gYiv2GYJ8eRUFMidjctmhscCTkHkhXplQd5Di+zzJGFOoSzrLAzoogdxbs6zjavqxn667sO4jPCwc=
+	t=1717505245; cv=none; b=IFpgiYpE5sYEYoWbrhIazBz4jke2Pfc/DtM9FV/Y0rCDrANEKVTt37Cym/OYghfkjh8bMiNvSpWepDWZ/Accg65hBKYPOd2bHGIpIf2hhpwDPXmmSaQa79eajSK8A7NxrcPHCg7m9VfKdIIJhMHKDEpozzMLExgmGS9m7fy1RXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505240; c=relaxed/simple;
-	bh=BeTgSd0+/cjAAYS23pyY1QSxXrTM/CfR+Kb+Gb5WH3Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRwQpeEl3EDjcoPlla4Z3/fEbreGx+uNfARLuiGnRtscGbht3S3yz/3J73bKU02ApPhIXwndY9kJiry1izsyQGekiAas4aUyLRYtCEvTz3QVYuo7jWQU7nvewvAm9FulN8lvHL3oBO/qCCtgVcRmKa2ZaTUtEzaIj7MBpHMQevM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BrWG3W3M; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BrWG3W3M"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1f60a17e3e7so5008265ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717505239; x=1718110039; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MDggCbJq5xAgdt5U/mnZ4/8n6MHnmjzG09lZvHegJVk=;
-        b=BrWG3W3MdLdBsAlySBsEDS1VJcm5ESRHlXYwVzaWrADGgQKgyidVMzUC9gHLNCaLer
-         T6x7Zxo1dXpAQAzM8Iquo6QbX3bNOn/Q7aFiSAaISwGnMBsZlRAhNH0VsvyN08RYtjxP
-         KdcxF5Qx8YAoezWZ4uWSyngWjZVOo5/LY21tmXWJ06lmrLYA+EPs5egwoAOZ+BRqHAhM
-         6+WKgMBR8VZ+FHZ+lNH8P7sF1zzGwnqxvxf1cPb70z3MUxls0Ep1nbp7A5cRVoCs1R8q
-         bieBmJK02GVH9RTSrhESb9yio8DU0n1Orx6JXWmrikfxVZIXXURnaawGJhaDQiMLJ2aJ
-         sK+w==
+	s=arc-20240116; t=1717505245; c=relaxed/simple;
+	bh=NISObnSudCej+8hdfqE7EJLxiFZrQe1AaJ3pR8W3V/Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Gf33vHOKOA751R5ndXky5tlf+ugquwDVUUKEDYK2RlRRRoxB/fCkQoHd7F+myFGq+8bMMqwQ98DfOHlV1WWCGtTZRuMCgIIaSdhd7FuzcH21wJNtAZoxSFWE73KCKEO4jls2ZYCKixJIqcDxp2+lLco0+qNFz8wgbJjWlo5hiuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3747f1b958bso57803785ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:47:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717505239; x=1718110039;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MDggCbJq5xAgdt5U/mnZ4/8n6MHnmjzG09lZvHegJVk=;
-        b=NfVky82Ss7yzbCBJc9oGvhRWg3bn0aTS3LgFGA2s6G0GWDxEPerM5KzSodFnTqUAD9
-         DWxddmD6x137tXR+WJKYHXQsC0W+E0yovLbYo/zTvsN26nj1gbA/KlkPHY5ZktgrAZ5e
-         JThRzS98O2S9BEbF/EVjW4zAS0dWn9Kc7dV62TGIJREe3SzDOr6FNKeGH44xUwV2YQF6
-         0q0eGRYEDbKTzY9cWJWc5EU5olu+pvEiMLmJ+yQZqRsa/1MiGCRJlc76KI1Ki/b2mNDZ
-         pzE54y8tVULhZ+nQ70v6whyekzDOhhBh8KidfUs84sJrTo5I4KLccW7kZo2nmmnRdz4K
-         ZrEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUObgpFlBHRSmPrIau0080R30YP5YMch2ViGMkgOFig7t8XVvX97lLNEOPsU0NA93UlFiP+LKqEW9lrhKfpIr1qVQ0/ENr0bX51j5cN
-X-Gm-Message-State: AOJu0YzqwKAyPZkhNSPE33hEraWY0pOh+0yThC4NPqcdnaqNtz+Q1gCy
-	tFje0x6ASdNfl/JBu+RjQrGeDQZGxdFmj7haBXAMyEk8XGnb0GGYoSkunNrAPf0=
-X-Google-Smtp-Source: AGHT+IGQMTJjGTRyExe5WucoZYIN7+QmoxG6l4x/LYMJNGm+8SMfBCqkxppCIaA9Kdjsd1UwcvgPcQ==
-X-Received: by 2002:a17:902:c952:b0:1f3:453:2c82 with SMTP id d9443c01a7336-1f6370c3578mr132333805ad.4.1717505238694;
-        Tue, 04 Jun 2024 05:47:18 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:327b:5ba3:8154:37ed])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ebc69sm83042885ad.211.2024.06.04.05.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 05:47:18 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Charlie Jenkins <charlie@rivosinc.com>
-Subject: [PATCH v6 06/16] dt-bindings: riscv: add Zca, Zcf, Zcd and Zcb ISA extension description
-Date: Tue,  4 Jun 2024 14:45:38 +0200
-Message-ID: <20240604124550.3214710-7-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240604124550.3214710-1-cleger@rivosinc.com>
-References: <20240604124550.3214710-1-cleger@rivosinc.com>
+        d=1e100.net; s=20230601; t=1717505243; x=1718110043;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dr3ARtSXytznS7LEimUUkvVEtezO/cquAO5ZWoDP4Zw=;
+        b=LKl/crEAqXUWADG2fTTwu7unaku92FIgLAjYSYhrlbe/BQgHwwTKoS20by7opkgsmy
+         pl2+gHtd/gJUetd8jz/PKJux97OEmFB0vcAEkOXmZSUsTzTt59fmrlHeUZVXNvYibw9k
+         DaNznINANBmJZI73Olgd8hAtQhC8LhciNWzB7+Z7NAp2C7RPWwi3SfO8JC9xNudIq6mG
+         FQlt29lyuEVFG8LkBoxMQvfuBZtQhXWvbPcc8Lt0/5dcqBm0AQ52mov8yy7p1lnc0P7G
+         AMCieIi1VGvuvdrXKIvyho9CIGjzlbLmhIoEwrlV/9ejI6av2U4dShLDxtQVpIqpGeY0
+         bUmA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKv7IgQe43rThWI+9bCi0z55B3NULiMRIhx6j0k/tk5+uIf+RYbH2lEFz6S71OIM8KpnkePzH9Rpf+p+0rkHEg0EixTfW1HTyC4BvH
+X-Gm-Message-State: AOJu0YxCO/a1SY8/b86BtE1KA0rZjDX8JnG1Bk+eCXFtk1hbvR2dOE6F
+	VV2qd6E83yc7uqqLIb2FcVYCN/aj1hT8u4PVxDWZe80PjFyqixS0cDvG2x0OqcYetgFMlzYb3rP
+	WjWeh3Jva6D49DXwnt6RibGOWpf90BJPEi3FdMobUk4GjDMioQCVmDnw=
+X-Google-Smtp-Source: AGHT+IFXjzQhLpCVJeUsauvs6kLG6GF5/vPyRsj8aaAEQi5s5g5qWm54eC8HNFrMbICvYHGq7uOtq2Rf+RTD4eUEPZ8uZ8aGOmON
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:c26e:0:b0:36f:c675:fe8e with SMTP id
+ e9e14a558f8ab-3748b9e5cb8mr8435835ab.4.1717505242992; Tue, 04 Jun 2024
+ 05:47:22 -0700 (PDT)
+Date: Tue, 04 Jun 2024 05:47:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e8a796061a0fd949@google.com>
+Subject: [syzbot] [kernfs?] INFO: task hung in kernfs_dop_revalidate (4)
+From: syzbot <syzbot+da20d108162166514db6@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add description for Zca, Zcf, Zcd and Zcb extensions which are part the
-Zc* standard extensions for code size reduction. Additional validation
-rules are added since Zcb depends on Zca, Zcf, depends on Zca and F, Zcd
-depends on Zca and D and finally, Zcf can not be present on rv64.
+Hello,
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+syzbot found the following issue on:
+
+HEAD commit:    4a4be1ad3a6e Revert "vfs: Delete the associated dentry whe..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17012bd2980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b9016f104992d69c
+dashboard link: https://syzkaller.appspot.com/bug?extid=da20d108162166514db6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150e4b0c980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c039c2980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/e323e970d41d/disk-4a4be1ad.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f0dfe36102b9/vmlinux-4a4be1ad.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9ca35ad0fa6a/bzImage-4a4be1ad.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+da20d108162166514db6@syzkaller.appspotmail.com
+
+INFO: task udevd:4544 blocked for more than 143 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:udevd           state:D
+ stack:24048 pid:4544  tgid:4544  ppid:1      flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f8b7f9169a4
+RSP: 002b:00007fffdadb9fc0 EFLAGS: 00000246
+ ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000008 RCX: 00007f8b7f9169a4
+RDX: 0000000000080000 RSI: 00007fffdadba0f8 RDI: 00000000ffffff9c
+RBP: 00007fffdadba0f8 R08: 0000000000000008 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000080000
+R13: 0000558fed691b42 R14: 0000000000000001 R15: 0000000000000000
+ </TASK>
+INFO: task syz-executor167:5156 blocked for more than 144 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:21024 pid:5156  tgid:5156  ppid:5154   flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45d03e1
+RSP: 002b:00007ffd172253b0 EFLAGS: 00000287 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007febd45d03e1
+RDX: 0000000000090800 RSI: 00007febd461b14f RDI: 00000000ffffff9c
+RBP: 0000000000000069 R08: 00000000095f7996 R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000067
+ </TASK>
+INFO: task syz-executor167:5158 blocked for more than 145 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:19248 pid:5158  tgid:5158  ppid:5153   flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45d03e1
+RSP: 002b:00007ffd172253b0 EFLAGS: 00000287
+ ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007febd45d03e1
+RDX: 0000000000090800 RSI: 00007febd461b14f RDI: 00000000ffffff9c
+RBP: 000000000000006b R08: 000000002bee115c R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000069
+ </TASK>
+INFO: task syz-executor167:5157 blocked for more than 146 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:20512 pid:5157  tgid:5157  ppid:5151   flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45d03e1
+RSP: 002b:00007ffd172253b0 EFLAGS: 00000287
+ ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007febd45d03e1
+RDX: 0000000000090800 RSI: 00007febd461b14f RDI: 00000000ffffff9c
+RBP: 0000000000000068 R08: 000000000bbb6644 R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000066
+ </TASK>
+INFO: task syz-executor167:5155 blocked for more than 147 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:21024 pid:5155  tgid:5155  ppid:5150   flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45d03e1
+RSP: 002b:00007ffd172253b0 EFLAGS: 00000287
+ ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007febd45d03e1
+RDX: 0000000000090800 RSI: 00007febd461b14f RDI: 00000000ffffff9c
+RBP: 000000000000006b R08: 0000000024e66dc2 R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000069
+ </TASK>
+INFO: task syz-executor167:5159 blocked for more than 148 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:21024 pid:5159  tgid:5159  ppid:5152   flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_read_slowpath kernel/locking/rwsem.c:1086 [inline]
+ __down_read_common kernel/locking/rwsem.c:1250 [inline]
+ __down_read kernel/locking/rwsem.c:1263 [inline]
+ down_read+0x705/0xa40 kernel/locking/rwsem.c:1528
+ kernfs_dop_revalidate+0xd4/0x560 fs/kernfs/dir.c:1159
+ lookup_fast+0x1f4/0x4a0
+ walk_component fs/namei.c:2000 [inline]
+ link_path_walk+0x60b/0xea0 fs/namei.c:2331
+ path_openat+0x24a/0x3280 fs/namei.c:3803
+ do_filp_open+0x235/0x490 fs/namei.c:3834
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1405
+ do_sys_open fs/open.c:1420 [inline]
+ __do_sys_openat fs/open.c:1436 [inline]
+ __se_sys_openat fs/open.c:1431 [inline]
+ __x64_sys_openat+0x247/0x2a0 fs/open.c:1431
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45d03e1
+RSP: 002b:00007ffd172253b0 EFLAGS: 00000287
+ ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007febd45d03e1
+RDX: 0000000000090800 RSI: 00007febd461b14f RDI: 00000000ffffff9c
+RBP: 000000000000006b R08: 00000000128cac2c R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000069
+ </TASK>
+INFO: task kworker/0:5:5179 blocked for more than 149 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:kworker/0:5     state:D
+ stack:21328 pid:5179  tgid:5179  ppid:2      flags:0x00004000
+Workqueue: usb_hub_wq hub_event
+
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ kernfs_add_one+0x9a/0x8b0 fs/kernfs/dir.c:778
+ kernfs_create_dir_ns+0xd9/0x120 fs/kernfs/dir.c:1071
+ sysfs_create_dir_ns+0x189/0x3a0 fs/sysfs/dir.c:59
+ create_dir lib/kobject.c:73 [inline]
+ kobject_add_internal+0x435/0x8d0 lib/kobject.c:240
+ kobject_add_varg lib/kobject.c:374 [inline]
+ kobject_add+0x152/0x220 lib/kobject.c:426
+ device_add+0x4e5/0xbf0 drivers/base/core.c:3659
+ usb_new_device+0x104a/0x19a0 drivers/usb/core/hub.c:2651
+ hub_port_connect drivers/usb/core/hub.c:5521 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5661 [inline]
+ port_event drivers/usb/core/hub.c:5821 [inline]
+ hub_event+0x2d6a/0x5150 drivers/usb/core/hub.c:5903
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3312
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3393
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+INFO: task syz-executor167:5709 blocked for more than 150 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:26736 pid:5709  tgid:5709  ppid:5156   flags:0x00024006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ kernfs_remove_by_name_ns+0x7a/0x160 fs/kernfs/dir.c:1689
+ module_remove_driver+0x59/0x1c0 drivers/base/module.c:100
+ bus_remove_driver+0x1fb/0x320 drivers/base/bus.c:743
+ usb_gadget_unregister_driver+0x4e/0x70 drivers/usb/gadget/udc/core.c:1733
+ raw_release+0xf9/0x1e0 drivers/usb/gadget/legacy/raw_gadget.c:462
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ __do_sys_close fs/open.c:1555 [inline]
+ __se_sys_close fs/open.c:1540 [inline]
+ __x64_sys_close+0x7f/0x110 fs/open.c:1540
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45cf880
+RSP: 002b:00007ffd17225418 EFLAGS: 00000202
+ ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007febd45cf880
+RDX: 0000000000000000 RSI: 00007ffd17225380 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 000000000000000f R09: 00007ffd17225117
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000067
+ </TASK>
+INFO: task syz-executor167:5710 blocked for more than 151 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:25488 pid:5710  tgid:5710  ppid:5157   flags:0x00024006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ kernfs_remove_by_name_ns+0x7a/0x160 fs/kernfs/dir.c:1689
+ remove_bind_files drivers/base/bus.c:600 [inline]
+ bus_remove_driver+0x26c/0x320 drivers/base/bus.c:738
+ usb_gadget_unregister_driver+0x4e/0x70 drivers/usb/gadget/udc/core.c:1733
+ raw_release+0xf9/0x1e0 drivers/usb/gadget/legacy/raw_gadget.c:462
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ __do_sys_close fs/open.c:1555 [inline]
+ __se_sys_close fs/open.c:1540 [inline]
+ __x64_sys_close+0x7f/0x110 fs/open.c:1540
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7febd45cf880
+RSP: 002b:00007ffd17225418 EFLAGS: 00000202
+ ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007febd45cf880
+RDX: 0000000000000000 RSI: 00007ffd17225380 RDI: 0000000000000004
+RBP: 0000000000000000 R08: 000000000000000f R09: 00007ffd17225117
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffd1722543c
+R13: 00007ffd17225450 R14: 00007ffd17225490 R15: 0000000000000066
+ </TASK>
+INFO: task syz-executor167:5711 blocked for more than 152 seconds.
+      Not tainted 6.10.0-rc1-syzkaller-00027-g4a4be1ad3a6e #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor167 state:D
+ stack:25440 pid:5711  tgid:5711  ppid:5159   flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5408 [inline]
+ __schedule+0x17e8/0x4a20 kernel/sched/core.c:6745
+ __schedule_loop kernel/sched/core.c:6822 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6837
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6894
+ rwsem_down_write_slowpath+0xeeb/0x13b0 kernel/locking/rwsem.c:1178
+ __down_write_common+0x1af/0x200 kernel/locking/rwsem.c:1306
+ kernfs_remove_by_name_ns+0x7a/0x160 fs/kernfs/dir.c:1689
+ remove_bind_files drivers/base/bus.c:600 [inline]
+ bus_remove_driver+0x26c/0x320 drivers/base/bus.c:738
+ usb_gadget_unregister_driver+0x4e/0x70 drivers/usb/gadget/udc/core.c:1733
+ raw_release+0xf9/0x1e0 drivers/usb/gadget/legacy/raw_gadget.c:462
+ __fput+0x406/0x8b0 fs/file_table.c:422
+ task_work_run+0x24f/0x310 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0xa27/0x27e0 kernel/exit.c:874
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1023
+ get_signal+0x16a1/0x1740 kernel/signal.c:2909
+
+
 ---
- .../devicetree/bindings/riscv/extensions.yaml | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 616370318a66..81bce4fa2424 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -220,6 +220,38 @@ properties:
-             instructions as ratified at commit 6d33919 ("Merge pull request #158
-             from hirooih/clmul-fix-loop-end-condition") of riscv-bitmanip.
- 
-+        - const: zca
-+          description: |
-+            The Zca extension part of Zc* standard extensions for code size
-+            reduction, as ratified in commit 8be3419c1c0 ("Zcf doesn't exist on
-+            RV64 as it contains no instructions") of riscv-code-size-reduction,
-+            merged in the riscv-isa-manual by commit dbc79cf28a2 ("Initial seed
-+            of zc.adoc to src tree.").
-+
-+        - const: zcb
-+          description: |
-+            The Zcb extension part of Zc* standard extensions for code size
-+            reduction, as ratified in commit 8be3419c1c0 ("Zcf doesn't exist on
-+            RV64 as it contains no instructions") of riscv-code-size-reduction,
-+            merged in the riscv-isa-manual by commit dbc79cf28a2 ("Initial seed
-+            of zc.adoc to src tree.").
-+
-+        - const: zcd
-+          description: |
-+            The Zcd extension part of Zc* standard extensions for code size
-+            reduction, as ratified in commit 8be3419c1c0 ("Zcf doesn't exist on
-+            RV64 as it contains no instructions") of riscv-code-size-reduction,
-+            merged in the riscv-isa-manual by commit dbc79cf28a2 ("Initial seed
-+            of zc.adoc to src tree.").
-+
-+        - const: zcf
-+          description: |
-+            The Zcf extension part of Zc* standard extensions for code size
-+            reduction, as ratified in commit 8be3419c1c0 ("Zcf doesn't exist on
-+            RV64 as it contains no instructions") of riscv-code-size-reduction,
-+            merged in the riscv-isa-manual by commit dbc79cf28a2 ("Initial seed
-+            of zc.adoc to src tree.").
-+
-         - const: zfa
-           description:
-             The standard Zfa extension for additional floating point
-@@ -489,5 +521,51 @@ properties:
-             Registers in the AX45MP datasheet.
-             https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-5.0.0-Datasheet.pdf
- 
-+    allOf:
-+      # Zcb depends on Zca
-+      - if:
-+          contains:
-+            const: zcb
-+        then:
-+          contains:
-+            const: zca
-+      # Zcd depends on Zca and D
-+      - if:
-+          contains:
-+            const: zcd
-+        then:
-+          allOf:
-+            - contains:
-+                const: zca
-+            - contains:
-+                const: d
-+      # Zcf depends on Zca and F
-+      - if:
-+          contains:
-+            const: zcf
-+        then:
-+          allOf:
-+            - contains:
-+                const: zca
-+            - contains:
-+                const: f
-+
-+allOf:
-+  # Zcf extension does not exist on rv64
-+  - if:
-+      properties:
-+        riscv,isa-extensions:
-+          contains:
-+            const: zcf
-+        riscv,isa-base:
-+          contains:
-+            const: rv64i
-+    then:
-+      properties:
-+        riscv,isa-extensions:
-+          not:
-+            contains:
-+              const: zcf
-+
- additionalProperties: true
- ...
--- 
-2.45.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
