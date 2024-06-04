@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D775A1420C9
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:41:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519EC145FF8
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717515712; cv=none; b=dAbK75ydT4jYvMAYTg0fKYFvPVLKfZXDXA1tjvwzoExaNfdypSkS3nsmDdCw0stZonR7tjV0ROo6cUMNq8IMqhUor78majM1nrwnUIsBjeO0H8vP7wKgkflEuWSRu6iRUnr22QAmt19oOsSbNl81DQAj38gYduIoG2Uwqt9BtwU=
+	t=1717515720; cv=none; b=gMwoA30RwffFYfBJ7H/Wk2vtScBx1+QvI94njLZHXLWNEufTb7V4vUXqo1QTJXH0qzi+Q3zvmbN2zsJNFcT6qiarDcd0h0KJBsU9SHAe3PeKoZcPZ02dpDy3Hi/YER4X9na2NQv2uFPqgqNlLUw2Px9Q8BO2xuqWfUGh6juIj1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717515712; c=relaxed/simple;
-	bh=oGxkaCgbS2IqbLETXH8WRTH3RcDVcBRWmTNg4lWSmQA=;
+	s=arc-20240116; t=1717515720; c=relaxed/simple;
+	bh=2der58+5+M8sJ7S06tSlSPRV9DWuJlgIZ3M0EI+0TiM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZiTgQkap1+00lPNoPva/er2WAdFtFlDTRc9F3O+Il3tD3tnOlBweyEg/kMJtCy/qFdE8dQ9QCBpl5bl6tPwddrZm//OITKoFad9XpI5oR6I5OB9FTvPzie4k0oOFLjWJYDj1Sm9vM+BDKNL2k4fWyNvXFxcDJALksYtO8YE5REo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WMVOXQ5w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gaIbTHgIVW06WqavNctLsRn8eI19sCF+exQj+6XU80jG5iR1aswbTJM7oeESz57dJayKc8gurKfB4xwDI0kkFjN3U8wTcIn4D4dxKcuaTZ3t3feDxN6DtI1RA3cOld4qJA5jqAZK779ICEGYk9oslmG8fU7t1od/w603WzflWOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FbNYR/Zb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WMVOXQ5w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC62BC2BBFC;
-	Tue,  4 Jun 2024 15:41:51 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FbNYR/Zb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C49C2BBFC;
+	Tue,  4 Jun 2024 15:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717515712;
-	bh=oGxkaCgbS2IqbLETXH8WRTH3RcDVcBRWmTNg4lWSmQA=;
+	s=korg; t=1717515720;
+	bh=2der58+5+M8sJ7S06tSlSPRV9DWuJlgIZ3M0EI+0TiM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WMVOXQ5w9RfX7ALuuXqlBvV4njc42ArlGrRypZinPClhAqRlFbNEHev7AtNjZwy2T
-	 h5SrfsoEIbC3F/D2BsCUDndu43cYb3sNduLE0jGcW/q8K5SjNIML3M6EoqnWNAvi2u
-	 9Acl/ssXSgbWwAaQNeekvZHt959i4w7B8SjOJ8hw=
-Date: Tue, 4 Jun 2024 17:33:51 +0200
+	b=FbNYR/ZbJnrYREWVDk0cbY3+SZjJoW12kNfP0nVniJW587W3Fz3XvVNgb6kYvWG1o
+	 BdsGhqd+HrKceW0eYW/6aXo6wqCP3Dv7qmH364oHRUJFpqb5bAf46KNyP6iJqrLcqs
+	 5Q5pkKyS+9rORKMAVJIgs/Aorp5IognvUMOb02Fo=
+Date: Tue, 4 Jun 2024 17:34:02 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Jani Nikula <jani.nikula@intel.com>
 Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/4] kernel/panic: return early from print_tainted() when
- not tainted
-Message-ID: <2024060443-improve-undermost-0cf7@gregkh>
+Subject: Re: [PATCH 2/4] kernel/panic: convert print_tainted() to use struct
+ seq_buf internally
+Message-ID: <2024060454-talisman-worrisome-ac95@gregkh>
 References: <cover.1717146197.git.jani.nikula@intel.com>
- <01d6c03de1c9d1b52b59c652a3704a0a9886ed63.1717146197.git.jani.nikula@intel.com>
+ <cb6006fa7c0f82a6b6885e8eea2920fcdc4fc9d0.1717146197.git.jani.nikula@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,16 +40,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01d6c03de1c9d1b52b59c652a3704a0a9886ed63.1717146197.git.jani.nikula@intel.com>
+In-Reply-To: <cb6006fa7c0f82a6b6885e8eea2920fcdc4fc9d0.1717146197.git.jani.nikula@intel.com>
 
-On Fri, May 31, 2024 at 12:04:54PM +0300, Jani Nikula wrote:
-> Reduce indent to make follow-up changes slightly easier on the eyes.
+On Fri, May 31, 2024 at 12:04:55PM +0300, Jani Nikula wrote:
+> Convert print_tainted() to use struct seq_buf internally in order to be
+> more aware of the buffer constraints as well as make it easier to extend
+> in follow-up work.
 > 
 > Cc: Andrew Morton <akpm@linux-foundation.org>
 > Cc: Greg KH <gregkh@linuxfoundation.org>
 > Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 > ---
->  kernel/panic.c | 25 +++++++++++++------------
->  1 file changed, 13 insertions(+), 12 deletions(-)
+>  kernel/panic.c | 38 ++++++++++++++++++++++++--------------
+>  1 file changed, 24 insertions(+), 14 deletions(-)
 
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
