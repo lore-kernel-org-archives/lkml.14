@@ -1,37 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 377FF1428F5;
-	Tue,  4 Jun 2024 09:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3E91428F5;
+	Tue,  4 Jun 2024 09:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492290; cv=none; b=Ck1EhbCXiHgbB/S2zIOKVIGWyplghPOGQLsi4ejMpdrSku6483NGgVWOkuctTv/r6riCTG6jLtaw9LHMeH1me+oXwed2wTIYT6tU9UblqCd8dSL7B7fFBdzTOiLYpY4qJ1u9U8AaTRbJNCpNzx2aClFDA0Z1TgAIIIsCL8Hjrk4=
+	t=1717492306; cv=none; b=nLNkgm41kK7Vukk7ltq9/p3yfTloAOnAN7TxFQoid7HMVZCOw3g0WD5YNzDMjP90Gt+/XSOb2oumCzi6Q/XWUNy0QO3HDXJQQoZC96G45JEr3eS4Smum6HunFuSgYFy/G8HOHxbOEkwasj7nvUaX7zf+5c1JMP/hhcwRz9XCQUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492290; c=relaxed/simple;
-	bh=zPO+/aKjmZiAU7rnr7JcIcsudeId+P/k7gqQdD755KA=;
+	s=arc-20240116; t=1717492306; c=relaxed/simple;
+	bh=n0+6Zr+fVpwoIm04mx+e+RHQbAYONFbtegnmjOCnEFE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RQAjgeC5kzmzDylotS2/cTduAQa2b6fFid5MVkSi9ap554zytp4o5PXFR4ae0N9NYHvHT03JbWZQGQZpXkFmnBcwKo7dhR1f0NwGhH7aCqt9pKNtAmMYHJKHaRpBCSoE9L1QWta3w3HPkBufOsmx0ky69ytXYoKeAReQoBCg42Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE33B1042;
-	Tue,  4 Jun 2024 02:11:51 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83D9B3F762;
-	Tue,  4 Jun 2024 02:11:25 -0700 (PDT)
-Date: Tue, 4 Jun 2024 10:11:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Besar Wicaksono <bwicaksono@nvidia.com>, Will Deacon <will@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC/PATCH 1/1] tools headers arm64: Sync arm64's cputype.h with
- the kernel sources
-Message-ID: <Zl7aOk2h4_73JmUu@J2N7QTR9R3>
-References: <Zl4MYzhP0NB-Z1DW@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SmdWdOKXOFEKMep41RfnbLEx20of95CJq12Y2Ar4M3YJ8GATAu3kwvT8rEpG7fGBOXLM8nxSSgqTEIFRxFaC0L7Xb1fWtfkq+3HA3WG9dLUYDa4EyAiz2xyFL0ZCRQDSmZ9w2LLl5A/6HpDZByU0sx1S4AdrgJJnB2NzDqColO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VgXt9qy3; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VgXt9qy3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717492305; x=1749028305;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=n0+6Zr+fVpwoIm04mx+e+RHQbAYONFbtegnmjOCnEFE=;
+  b=VgXt9qy3+TtdqoI+231qDTjfMHkUBHatgeHYKuacqPmfF7hdW+9WJxA5
+   QXTdRZyW4JbAQQNYPq/TKViEgaQYaRZdrl50ECl/t+qs6j/udUohGPafv
+   lPo3DAMSVfqwKlLw51pTkStT1p3aBUkONEQoNEv5yfi8whuLnT38Ce1Rm
+   5kX0jl4cdVXfCJ+eCMZzwDkbWBtKxtyjVjQdTuE8VPKIFmkwpYzNPtHnJ
+   ATpJZL2fpNiaOtcyJGQykMcFsPFbdDhf3fG1TwzpZmGpIhjnCkRDoDJ7+
+   5C8m1o9Tl1ZEkaO8btyBF4JaNxzmkItQYXUvpyhB2YjJa9Pn6m2/Lmwmw
+   g==;
+X-CSE-ConnectionGUID: RhufaxHJQRKTlUe07Isbew==
+X-CSE-MsgGUID: +MPAa+qmSNaweFnS57qW1A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="17854982"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="17854982"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 02:11:44 -0700
+X-CSE-ConnectionGUID: KaKEcYXXR8KSoqyaybARGA==
+X-CSE-MsgGUID: aXf4mTjmQP6psAbqM4zCxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37299304"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 04 Jun 2024 02:11:41 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEQCg-000MzV-1v;
+	Tue, 04 Jun 2024 09:11:38 +0000
+Date: Tue, 4 Jun 2024 17:10:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hyeonwoo Cha <chw1119@hanyang.ac.kr>, david.sterba@suse.com
+Cc: oe-kbuild-all@lists.linux.dev, aivazian.tigran@gmail.com,
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
+	tytso@mit.edu, adilger.kernel@dilger.ca,
+	hirofumi@mail.parknet.co.jp, sfr@canb.auug.org.au,
+	chw1119@hanyang.ac.kr, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
+	reiserfs-devel@vger.kernel.org
+Subject: Re: [PATCH v2] Fix issue in mark_buffer_dirty_inode
+Message-ID: <202406041616.S1kIWWZc-lkp@intel.com>
+References: <20240604060636.87652-1-chw1119@hanyang.ac.kr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,100 +68,126 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zl4MYzhP0NB-Z1DW@x1>
+In-Reply-To: <20240604060636.87652-1-chw1119@hanyang.ac.kr>
 
-Hi Arnaldo,
+Hi Hyeonwoo,
 
-On Mon, Jun 03, 2024 at 03:33:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> To get the changes in:
-> 
->   0ce85db6c2141b7f ("arm64: cputype: Add Neoverse-V3 definitions")
->   02a0a04676fa7796 ("arm64: cputype: Add Cortex-X4 definitions")
->   f4d9d9dcc70b96b5 ("arm64: Add Neoverse-V2 part")
+kernel test robot noticed the following build errors:
 
-As a heads-up, there are likely to be a couple more updates here
-shortly:
+[auto build test ERROR on brauner-vfs/vfs.all]
+[also build test ERROR on linus/master v6.10-rc2 next-20240604]
+[cannot apply to jack-fs/for_next tytso-ext4/dev vfs-idmapping/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  https://lore.kernel.org/linux-arm-kernel/20240603111812.1514101-1-mark.rutland@arm.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Hyeonwoo-Cha/Fix-issue-in-mark_buffer_dirty_inode/20240604-140958
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20240604060636.87652-1-chw1119%40hanyang.ac.kr
+patch subject: [PATCH v2] Fix issue in mark_buffer_dirty_inode
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240604/202406041616.S1kIWWZc-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041616.S1kIWWZc-lkp@intel.com/reproduce)
 
-> That makes this perf source code to be rebuilt:
-> 
->   CC      /tmp/build/perf-tools/util/arm-spe.o
-> 
-> The changes in the above patch add MIDR_NEOVERSE_V[23] and
-> MIDR_NEOVERSE_V1 is used in arm-spe.c, so probably we need to add those
-> and perhaps MIDR_CORTEX_X4 to that array? Or maybe we need to leave this
-> for later when this is all tested on those machines?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406041616.S1kIWWZc-lkp@intel.com/
 
-Hmm... looking at where that was added this is somewhat misnamed, this
-is really saying that these cores use the same IMPLEMENTATION DEFINED
-encoding of the source field. That's not really a property of Neoverse
-specifically, and I'm not sure what Arm's policy is here going forwards.
+All error/warnings (new ones prefixed by >>):
 
-We should probably rename that to something like
-common_data_source_encoding, with a big comment about exactly what it
-implies.
+   fs/affs/namei.c: In function 'affs_symlink':
+>> fs/affs/namei.c:377:9: error: expected ',' or ';' before 'mark_buffer_dirty_fsync'
+     377 |         mark_buffer_dirty_fsync(bh, mapping);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+>> fs/affs/namei.c:376:31: warning: unused variable 'mapping' [-Wunused-variable]
+     376 |         struct address_space *mapping = inode->i_mapping
+         |                               ^~~~~~~
 
-I would not touch this for now -- someone would have to go audit the
-TRMs to check that those other cores have the same encoding, and I think
-it'd be better to do that as a follow-up.
 
-The relevant commit was:
+vim +377 fs/affs/namei.c
 
-  4e6430cbb1a9f1dc ("perf arm-spe: Use SPE data source for neoverse cores")
+   314	
+   315	int
+   316	affs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+   317		     struct dentry *dentry, const char *symname)
+   318	{
+   319		struct super_block	*sb = dir->i_sb;
+   320		struct buffer_head	*bh;
+   321		struct inode		*inode;
+   322		char			*p;
+   323		int			 i, maxlen, error;
+   324		char			 c, lc;
+   325	
+   326		pr_debug("%s(%lu,\"%pd\" -> \"%s\")\n",
+   327			 __func__, dir->i_ino, dentry, symname);
+   328	
+   329		maxlen = AFFS_SB(sb)->s_hashsize * sizeof(u32) - 1;
+   330		inode  = affs_new_inode(dir);
+   331		if (!inode)
+   332			return -ENOSPC;
+   333	
+   334		inode->i_op = &affs_symlink_inode_operations;
+   335		inode_nohighmem(inode);
+   336		inode->i_data.a_ops = &affs_symlink_aops;
+   337		inode->i_mode = S_IFLNK | 0777;
+   338		affs_mode_to_prot(inode);
+   339	
+   340		error = -EIO;
+   341		bh = affs_bread(sb, inode->i_ino);
+   342		if (!bh)
+   343			goto err;
+   344		i  = 0;
+   345		p  = (char *)AFFS_HEAD(bh)->table;
+   346		lc = '/';
+   347		if (*symname == '/') {
+   348			struct affs_sb_info *sbi = AFFS_SB(sb);
+   349			while (*symname == '/')
+   350				symname++;
+   351			spin_lock(&sbi->symlink_lock);
+   352			while (sbi->s_volume[i])	/* Cannot overflow */
+   353				*p++ = sbi->s_volume[i++];
+   354			spin_unlock(&sbi->symlink_lock);
+   355		}
+   356		while (i < maxlen && (c = *symname++)) {
+   357			if (c == '.' && lc == '/' && *symname == '.' && symname[1] == '/') {
+   358				*p++ = '/';
+   359				i++;
+   360				symname += 2;
+   361				lc = '/';
+   362			} else if (c == '.' && lc == '/' && *symname == '/') {
+   363				symname++;
+   364				lc = '/';
+   365			} else {
+   366				*p++ = c;
+   367				lc   = c;
+   368				i++;
+   369			}
+   370			if (lc == '/')
+   371				while (*symname == '/')
+   372					symname++;
+   373		}
+   374		*p = 0;
+   375		inode->i_size = i + 1;
+ > 376		struct address_space *mapping = inode->i_mapping
+ > 377		mark_buffer_dirty_fsync(bh, mapping);
+   378		affs_brelse(bh);
+   379		mark_inode_dirty(inode);
+   380	
+   381		error = affs_add_entry(dir, inode, dentry, ST_SOFTLINK);
+   382		if (error)
+   383			goto err;
+   384	
+   385		return 0;
+   386	
+   387	err:
+   388		clear_nlink(inode);
+   389		mark_inode_dirty(inode);
+   390		iput(inode);
+   391		return error;
+   392	}
+   393	
 
-Mark.
-
->   static const struct midr_range neoverse_spe[] = {
->           MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
->           MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
->           MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
->           {},
->   };
-> 
-> That addresses this perf build warning:
-> 
->   Warning: Kernel ABI header differences:
->     diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Besar Wicaksono <bwicaksono@nvidia.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Link: https://lore.kernel.org/lkml/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/arch/arm64/include/asm/cputype.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
-> index 52f076afeb96006c..7b32b99023a21d3a 100644
-> --- a/tools/arch/arm64/include/asm/cputype.h
-> +++ b/tools/arch/arm64/include/asm/cputype.h
-> @@ -86,6 +86,9 @@
->  #define ARM_CPU_PART_CORTEX_X2		0xD48
->  #define ARM_CPU_PART_NEOVERSE_N2	0xD49
->  #define ARM_CPU_PART_CORTEX_A78C	0xD4B
-> +#define ARM_CPU_PART_NEOVERSE_V2	0xD4F
-> +#define ARM_CPU_PART_CORTEX_X4		0xD82
-> +#define ARM_CPU_PART_NEOVERSE_V3	0xD84
->  
->  #define APM_CPU_PART_XGENE		0x000
->  #define APM_CPU_VAR_POTENZA		0x00
-> @@ -159,6 +162,9 @@
->  #define MIDR_CORTEX_X2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_X2)
->  #define MIDR_NEOVERSE_N2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_N2)
->  #define MIDR_CORTEX_A78C	MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A78C)
-> +#define MIDR_NEOVERSE_V2 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_V2)
-> +#define MIDR_CORTEX_X4 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_X4)
-> +#define MIDR_NEOVERSE_V3 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_NEOVERSE_V3)
->  #define MIDR_THUNDERX	MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX)
->  #define MIDR_THUNDERX_81XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_81XX)
->  #define MIDR_THUNDERX_83XX MIDR_CPU_MODEL(ARM_CPU_IMP_CAVIUM, CAVIUM_CPU_PART_THUNDERX_83XX)
-> -- 
-> 2.44.0
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
