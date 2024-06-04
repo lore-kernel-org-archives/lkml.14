@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6981411CA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6211D1411CB
 	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487555; cv=none; b=WpgBq3iey6TrsnOO1bYUJTCPqK0A8qIYL2loCqW3a0krxnxN7YnYdgN3ILDHfiXcQq7TjoA9/KkSJclRfc4Gjy7l++4MYg5muHZpQZvHpQgCS7XKnFhG2+5HqfgekF5qN3j4KBFkFP8J2od/XBcvOJv+ftNNK0cpohiV8GyCjMU=
+	t=1717487555; cv=none; b=aFyVBphwLqkbjbTJDLAp3hLJO7CBMSxm2pxG/0vMRJWCWQ1gqijvxB5A2jBeA6SRbOZPjoti5RPyoiFB33ps3ed2J3O1S7DK9CQoz3XeTd5oX8c1JIMoYHU2JipvKXYOVxCaluV90gV0HUOpHii6TPCV9mVqfZvjWoQvcNM9n0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717487555; c=relaxed/simple;
-	bh=hi7PWtwphuTNKYoU1XS9MRhf81ClVkiQ1xJd4IkXUsg=;
+	bh=0miAYvpRkAOFP1cMzY2sUokznCRDxVUYD0uECgu4qUU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H2fuReHtgAD2ByQy97DoWBS8D6F5XE52pKU0GrX8q8qWI8a2e2I5s5A0HEci913MCNJMK1/3xh1d93t0FMvGYLb3WaUgyIwfcg1T29Kcu5iGpW4ncSUWJCFjlfs40PnS6/svchnESeKIJuPj/m50+biLE1jfnIDvIQ2ZqllnP1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+XYvvT5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sB/VZmm368SD7oDDQpqsNIjpG9SFpzFKF2dQ0SLg4n48as/S1/cBENdBNmjVbQf+hfLXeVncUzjtNFtQ8hYx63eJwS8hhwsfxxntFZQUeo7xypyIKe9OneYdkuQrG1Y8n4/Eh6Nw0GD0FMG1Vz+ZwpozFUndipS1fWLlXg/ALLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzG99Qw5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+XYvvT5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C508C4AF08;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzG99Qw5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21677C4AF0A;
 	Tue,  4 Jun 2024 07:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717487555;
-	bh=hi7PWtwphuTNKYoU1XS9MRhf81ClVkiQ1xJd4IkXUsg=;
+	bh=0miAYvpRkAOFP1cMzY2sUokznCRDxVUYD0uECgu4qUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E+XYvvT5XpJaP1NvyduzcIpGyiIREifzDW8WqTsMx0GDH02HpxMjUk3CSQeKZdFKd
-	 t6M3E9lDRO2KpOhZnl5YykJXmipfY+cUhmbRUZ3ODgSdU+KlyUJWU5cEsGSUQh3x1t
-	 9f2dZyUNLuVAi51/X6yolNV9BNrJwC3filbeBTn3uZqeJQe4I/W2pEwB1inZIc6CDK
-	 bR6VclVvYeys2vfTgdnwxf+4lbhXORPWyzBQY1rUvy4G8pUeYnSG8JbjFxkpMg6Cwh
-	 fr4htXNh5ciBZybh02rmJB23kcbTzmgQkanCtTOJTyKt4pqlSvvLN9w7IInp2WNuWJ
-	 x1LPpQnfVpmYQ==
+	b=KzG99Qw5ODW1xQLiR9KG29aXCAfNttYdbB7UcPyeZbQXgW5vYcm8NJ5P4THgJvH51
+	 9lMrayaJzfHdKb3ToFEsMtdbCJSaZwy3zX9QsB0OdoH8ZGCtkeW7LuCgyR4hhBIAxw
+	 YH6GDZstjwzBBekAPGDGIXxvqDLgTjBUIRQ40llXpFKk9VxNJTjc+xKmh1llyGpGx4
+	 900dvTibDCfD0Ps9P7MC3PDkoWBmaCwNeLcJBSTHWaj502R9hAsrrTNI8Y9jufk4LQ
+	 mgU8nzwf5BVJIvOpFW5BSaEkmC0j2k6yeBAmqBekTrHFA01NFoKLhRZr8zKds1+0RH
+	 fsnDSM0N1kamA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1sEOy9-000000005QT-3oXW;
+	id 1sEOy9-000000005QP-3637;
 	Tue, 04 Jun 2024 09:52:33 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>
@@ -38,9 +38,9 @@ Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
 	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 4/4] soundwire: bus: drop redundant probe debug message
-Date: Tue,  4 Jun 2024 09:52:13 +0200
-Message-ID: <20240604075213.20815-5-johan+linaro@kernel.org>
+Subject: [PATCH v2 2/4] soundwire: bus: drop unused driver name field
+Date: Tue,  4 Jun 2024 09:52:11 +0200
+Message-ID: <20240604075213.20815-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.44.1
 In-Reply-To: <20240604075213.20815-1-johan+linaro@kernel.org>
 References: <20240604075213.20815-1-johan+linaro@kernel.org>
@@ -52,28 +52,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Drop the redundant probe debug message which is already provided by
-driver core. Whether probe succeeded can also be determined through
-sysfs.
+The soundwire driver name field is not currently used by any driver (and
+even appears to never have been used) so drop it.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/soundwire/bus_type.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/soundwire/bus_type.c  | 9 ++-------
+ include/linux/soundwire/sdw.h | 2 --
+ 2 files changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/soundwire/bus_type.c b/drivers/soundwire/bus_type.c
-index 43e732ca73c0..5b9b129badff 100644
+index 85fa5970d98a..3979be0f8b65 100644
 --- a/drivers/soundwire/bus_type.c
 +++ b/drivers/soundwire/bus_type.c
-@@ -152,8 +152,6 @@ static int sdw_drv_probe(struct device *dev)
- 
- 	mutex_unlock(&slave->sdw_dev_lock);
- 
--	dev_dbg(dev, "probe complete\n");
+@@ -198,16 +198,11 @@ static void sdw_drv_shutdown(struct device *dev)
+  */
+ int __sdw_register_driver(struct sdw_driver *drv, struct module *owner)
+ {
+-	const char *name;
 -
- 	return 0;
- }
+ 	drv->driver.bus = &sdw_bus_type;
  
+ 	if (!drv->probe) {
+-		name = drv->name;
+-		if (!name)
+-			name = drv->driver.name;
+-
+-		pr_err("driver %s didn't provide SDW probe routine\n", name);
++		pr_err("driver %s didn't provide SDW probe routine\n",
++				drv->driver.name);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 13e96d8b7423..5e133dfec8f2 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -704,8 +704,6 @@ struct sdw_master_device {
+ 	container_of(d, struct sdw_master_device, dev)
+ 
+ struct sdw_driver {
+-	const char *name;
+-
+ 	int (*probe)(struct sdw_slave *sdw,
+ 			const struct sdw_device_id *id);
+ 	int (*remove)(struct sdw_slave *sdw);
 -- 
 2.44.1
 
