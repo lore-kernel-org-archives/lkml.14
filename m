@@ -1,65 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31AF1411C1;
-	Tue,  4 Jun 2024 08:13:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC23446CF;
+	Tue,  4 Jun 2024 08:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717488803; cv=none; b=Pk+Z37600w+VVrSqHjLEYKkVZda1+Apl4BMefFJErirUQrNMbBsclniXkRqGbVHSBb/3y8LlPH0qZSWsoWEien8VJAlP783vaXWGAjaLHgQ12SFeXPDutiUdDyyZyIOlBsTnlygGPFhZRdDYS+NeUbnQSSKUM84HYPEVQpkTz88=
+	t=1717488832; cv=none; b=ljO5h7Ls9PUmovLkK1s1gpRtsgv6AyWUEAHACTm6sBWLQ/VSg+Dh10fH/1aPdG9ok6PCY9sKRfHFoQWeTr0o0c8D5AOSKqbmsn206biVUsE3Ra/rQRnEHbqKzU4rT1T0W/av9GUp2DiMPSdGk8K5eYQ5dFmQao9NCDLMEJ+jQPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717488803; c=relaxed/simple;
-	bh=ZSU7PK0vum8taK7BnyorRr6YBa1q8MjzDhJGdV/tLz4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=sYYkAQ/eZOZK3Pl9C5uWVZb5AklG6os9VxggIOx93Pn5z77KIrqRjf44Ps7wQwT2VzOw2zgx/aiy1SyJrM0BGhjJ9i+DKeWaRv1ydLbXqPpweTwBD846BNmenhxId+7RwFp88TJnjmMRlSlBCJ7ACBuwkHx5MCa5hn2PadfeXmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=icrOYmsN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717488832; c=relaxed/simple;
+	bh=56WLi8CXo1AcrdLwJh+EBDJTq1lXFHmxgYbS9a/UTg0=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=U/6vlby5FAxSnH8Y4dwjDmxMy5NvSouF55xdvBaJaeRtNU0O8Vf97wsWK9ZJRzFUPDFkISuNs7W1lngJe3vBUXPYFELgkSIqMzfMZOPIjpVb9LNp1x4KcURz4pIWq4/vYYvIN1sSJxJsni79qsivFLDL3bcTZHMBhqodguH2PWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cQ17OP03; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="icrOYmsN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038FEC2BBFC;
-	Tue,  4 Jun 2024 08:13:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cQ17OP03"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A13D7C2BBFC;
+	Tue,  4 Jun 2024 08:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717488802;
-	bh=ZSU7PK0vum8taK7BnyorRr6YBa1q8MjzDhJGdV/tLz4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=icrOYmsN9GOHocEFyhnoBnMUttBJslMtriOixJAgOf3GZXxLg9bZlxhv+7wY5g5bp
-	 m79vew42t4ODu6Bis/hzQqiQKVZZpnNtxKfODX+sw3YTJ6o/Rf7l08WSNMxThMZplO
-	 CDt5wj+0P+llsL7PSc0TOcx/U6Ztwa15iswXaHyO/GnxiDWy6ptaNmfS69PjjbrSBP
-	 6PtdUdEH+ElHsaJI3PkovxRIFILex+gW2d2KrFSs84Gy4yy07zysLZigN/tYFjPbty
-	 Ukjp6mOhOTjc1Uox/BuEiOOZ1pHH2D9vBpjqD8VL3SoPBOIo9++gIZAW+OkeEuQEQv
-	 cPxyr+4CyufPw==
-Date: Tue, 4 Jun 2024 10:13:19 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: =?ISO-8859-15?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-cc: benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Improve HUION Kamvas Pro 24 support
-In-Reply-To: <20240524112554.166746-1-jose.exposito89@gmail.com>
-Message-ID: <nycvar.YFH.7.76.2406041013110.16865@cbobk.fhfr.pm>
-References: <20240524112554.166746-1-jose.exposito89@gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	s=k20201202; t=1717488832;
+	bh=56WLi8CXo1AcrdLwJh+EBDJTq1lXFHmxgYbS9a/UTg0=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=cQ17OP03lb6oYLzf2d773K2wukeyoY8gV8t5ZG4CXOzi/Og1nGwYzOz5cW1VdIPKs
+	 GfXmUvphwJe73lWW40vZMMzVv+ka+zLsxNZLf/cGEF47Isd0SWmnzEFdLUnL88GvaC
+	 hMI1cHETWj0/LjNdd4kxEJo+/HrDHMj/1ErtCyyntP5LexIo/7KV9+2aolkrHbmSVz
+	 eT83yXofsMIjTwXaZpc5xXabFs6vzRVxgptsJjuYUC5qN4QOnA7YaXTCvrNx5/59bs
+	 iXyBWof5FUAKJK08lvLJdrlRljtvDbYrEiwRMwg24uwcrCUFXSrdLSt6Dob+w6kaoS
+	 VZjwjwf2K8+TQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: [PATCH 5/6] wifi: rtw89: use 'time_left' variable with
+ wait_for_completion_timeout()
+References: <20240603091541.8367-1-wsa+renesas@sang-engineering.com>
+	<20240603091541.8367-6-wsa+renesas@sang-engineering.com>
+	<1fca9d83960442b0b637d4e9586766bf@realtek.com>
+Date: Tue, 04 Jun 2024 11:13:49 +0300
+In-Reply-To: <1fca9d83960442b0b637d4e9586766bf@realtek.com> (Ping-Ke Shih's
+	message of "Tue, 4 Jun 2024 00:35:27 +0000")
+Message-ID: <878qzlt9aa.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 
-On Fri, 24 May 2024, Jos=C3=A9 Exp=C3=B3sito wrote:
+Ping-Ke Shih <pkshih@realtek.com> writes:
 
-> This series includes 2 patches to improve support for the HUION Kamvas
-> Pro 24. See [1] and [2] for additional context.
->=20
-> [1] https://gitlab.freedesktop.org/libinput/libinput/-/issues/989
-> [2] https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/989
->=20
-> Jos=C3=A9 Exp=C3=B3sito (2):
->   HID: uclogic: Support HUION devices with up to 20 buttons
->   HID: uclogic: Use Rx and Ry for touch strips
+> Wolfram Sang <wsa+renesas@sang-engineering.com> wrote:
+>> There is a confusing pattern in the kernel to use a variable named 'timeout' to
+>> store the result of wait_for_completion_timeout() causing patterns like:
+>> 
+>>         timeout = wait_for_completion_timeout(...)
+>>         if (!timeout) return -ETIMEDOUT;
+>> 
+>> with all kinds of permutations. Use 'time_left' as a variable to make the code
+>> self explaining.
+>> 
+>> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-Applied, thanks Jos=C3=A9.
+BTW Ping, you can also take it directly to your tree if you want. But if you
+want me to take the patch, then please assign it to me on patchwork (ie.
+change 'Delegate to' to 'kvalo'). My preference is to take it to your
+tree, smaller risk of concflicts that way, but up to you.
 
---=20
-Jiri Kosina
-SUSE Labs
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
