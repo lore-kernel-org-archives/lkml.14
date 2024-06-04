@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBEE14D28F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B46B14C5BA;
 	Tue,  4 Jun 2024 22:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717539837; cv=none; b=aWS+i2xMEcFyKeM7Edn9iPbmBFrypC+/ItQ0rUl9lhnEdkjN6uHON+Th9J1CGOG9KpHpM8bZltNuNlp4wmXeOT+NoGSm4+XtsPUqQFwnby95Dl82YN1dlxguj/SxPbWL/iiXzyunkWS3PU1spjxR+iQeK0/yX3bZV8vPZda1BC4=
+	t=1717539837; cv=none; b=QscyFfmwZiliLB1ukdcFYq945D6b7xv6CSVm2ztytL+A7N8gb5kAXo3aZ6tF7UwPqBvE9P6SXdyL2yuaMPAT6ZuRmsURfEPO2FJ8QbUttGZNnLdB/fv3OJPbOKXg3/9qTrmWfbaHfi2hipruYQ4wC998/OL9DDASIUZ6eCDANE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717539837; c=relaxed/simple;
-	bh=yXmNx6GGZHORzw+Gi/ligi9zPZy9C9j2+D0gbKw6Oec=;
+	bh=Mr0jgnXrW9nLakafqNopRYzxiUW6MmdPijZgfPRpq7Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RwzeMZ0TCK19l6PNYMkyGYyu9wguOx11fZyhEkJ/5vjfUozD7gXKE6q3zIJ8hOwjQ78kTbyH0UMeoOQBhjZNcD5wDL+sUaqu2WVRlMafykIU79OoollDvNLqJYYPZE3NWtOyEaeHW0teGj6LKw8T7GFmPMhHaZLt+p76lpg3TpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU6xBh0V; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CmsjppLI5Mq0SQu52mleQH+AuFCpqmvKHJ0sFYewJezFrmYP+3KnW0Nw4p7lTEIMJvm3Sx2g3Xa5zokrp9TEwMaP4qEOhXBXq166hDmXfjS1YMmIMT+CNS01tWI0/1w0Qgm+Opxw/OvtQvzbM1PHb/BCk+Z3qTUkvssTc5J7o+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7EL/eN1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU6xBh0V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D17EC4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7EL/eN1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16C78C4AF0F;
 	Tue,  4 Jun 2024 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717539837;
-	bh=yXmNx6GGZHORzw+Gi/ligi9zPZy9C9j2+D0gbKw6Oec=;
+	bh=Mr0jgnXrW9nLakafqNopRYzxiUW6MmdPijZgfPRpq7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oU6xBh0VDGe7iMxicBoLC3QF6WQmFzOSJtugKtOUFyrrHafO+M+Y3cBp0yNCHOKbs
-	 SAxgBt0nbSN4vSDr2TCJ4u5ZGIz/E+HiCslFN52DUwsc/Dl14I4K/M8v1dbXSEeIu4
-	 fD6UkNzVcucXXz0kCzGy1O/I/lu2z8pOYSykXfLTN3A/2jNKB4ku+bfGlQfuTalaDJ
-	 MToyertvOMNHwHaSS/2vDoUoP6BCIJmgcj2urVR84N7m7BSxAMnyCtLDaNpuLie7qx
-	 wsOfz2lVGdpaPDk6hJ4vawC70JgXUd2MCkT0BYA4azl40xWEjzUhPhb5VCKBmNDAXL
-	 U0AUr7aV+nbQQ==
+	b=X7EL/eN1SHfNEkXECubtVnDDCJtiDSOesBLMbda4eaJenNyPOBOZW+dZ/RsThju5i
+	 lmHgj0eZddck8K7R13yuNIfmjLrbD7+geOzHmyQdZFXpMD2k4zPkALiG3bPBsDUb5N
+	 zJYlTCELaZTimBbStA8G9cznf/a9jllb9gwDfkwIX4opsRsVuAxKBLMLHtRt9vQ4EB
+	 rrMPVBqT23skMVg+9fBlO+AfrBmdIh31tDvgCymnOE7VTXirr9cqLqOxFHQ5WURalQ
+	 XNukyjTTkXivfjLnV9+4UkxycIl9rBTD15FGv5AZIsN3rRNMP5IfMminSqSzUJHRld
+	 OqMZH0CWowTeg==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6ECB1CE3F35; Tue,  4 Jun 2024 15:23:56 -0700 (PDT)
+	id 67235CE3F30; Tue,  4 Jun 2024 15:23:56 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH rcu 9/9] rcu: Fix rcu_barrier() VS post CPUHP_TEARDOWN_CPU invocation
-Date: Tue,  4 Jun 2024 15:23:55 -0700
-Message-Id: <20240604222355.2370768-9-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: [PATCH rcu 6/9] rcu: Add rcutree.nocb_patience_delay to reduce nohz_full OS jitter
+Date: Tue,  4 Jun 2024 15:23:52 -0700
+Message-Id: <20240604222355.2370768-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
 References: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
@@ -49,115 +50,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Frederic Weisbecker <frederic@kernel.org>
+If a CPU is running either a userspace application or a guest OS in
+nohz_full mode, it is possible for a system call to occur just as an
+RCU grace period is starting.  If that CPU also has the scheduling-clock
+tick enabled for any reason (such as a second runnable task), and if the
+system was booted with rcutree.use_softirq=0, then RCU can add insult to
+injury by awakening that CPU's rcuc kthread, resulting in yet another
+task and yet more OS jitter due to switching to that task, running it,
+and switching back.
 
-When rcu_barrier() calls rcu_rdp_cpu_online() and observes a CPU off
-rnp->qsmaskinitnext, it means that all accesses from the offline CPU
-preceding the CPUHP_TEARDOWN_CPU are visible to RCU barrier, including
-callbacks expiration and counter updates.
+In addition, in the common case where that system call is not of
+excessively long duration, awakening the rcuc task is pointless.
+This pointlessness is due to the fact that the CPU will enter an extended
+quiescent state upon returning to the userspace application or guest OS.
+In this case, the rcuc kthread cannot do anything that the main RCU
+grace-period kthread cannot do on its behalf, at least if it is given
+a few additional milliseconds (for example, given the time duration
+specified by rcutree.jiffies_till_first_fqs, give or take scheduling
+delays).
 
-However interrupts can still fire after stop_machine() re-enables
-interrupts and before rcutree_report_cpu_dead(). The related accesses
-happening between CPUHP_TEARDOWN_CPU and rnp->qsmaskinitnext clearing
-are _NOT_ guaranteed to be seen by rcu_barrier() without proper
-ordering, especially when callbacks are invoked there to the end, making
-rcutree_migrate_callback() bypass barrier_lock.
+This commit therefore adds a rcutree.nocb_patience_delay kernel boot
+parameter that specifies the grace period age (in milliseconds)
+before which RCU will refrain from awakening the rcuc kthread.
+Preliminary experiementation suggests a value of 1000, that is,
+one second.  Increasing rcutree.nocb_patience_delay will increase
+grace-period latency and in turn increase memory footprint, so systems
+with constrained memory might choose a smaller value.  Systems with
+less-aggressive OS-jitter requirements might choose the default value
+of zero, which keeps the traditional immediate-wakeup behavior, thus
+avoiding increases in grace-period latency.
 
-The following theoretical race example can make rcu_barrier() hang:
+[ paulmck: Apply Leonardo Bras feedback.  ]
 
-CPU 0                                               CPU 1
------                                               -----
-//cpu_down()
-smpboot_park_threads()
-//ksoftirqd is parked now
-<IRQ>
-rcu_sched_clock_irq()
-   invoke_rcu_core()
-do_softirq()
-   rcu_core()
-      rcu_do_batch()
-         // callback storm
-         // rcu_do_batch() returns
-         // before completing all
-         // of them
-   // do_softirq also returns early because of
-   // timeout. It defers to ksoftirqd but
-   // it's parked
-</IRQ>
-stop_machine()
-   take_cpu_down()
-                                                    rcu_barrier()
-                                                        spin_lock(barrier_lock)
-                                                        // observes rcu_segcblist_n_cbs(&rdp->cblist) != 0
-<IRQ>
-do_softirq()
-   rcu_core()
-      rcu_do_batch()
-         //completes all pending callbacks
-         //smp_mb() implied _after_ callback number dec
-</IRQ>
+Link: https://lore.kernel.org/all/20240328171949.743211-1-leobras@redhat.com/
 
-rcutree_report_cpu_dead()
-   rnp->qsmaskinitnext &= ~rdp->grpmask;
-
-rcutree_migrate_callback()
-   // no callback, early return without locking
-   // barrier_lock
-                                                        //observes !rcu_rdp_cpu_online(rdp)
-                                                        rcu_barrier_entrain()
-                                                           rcu_segcblist_entrain()
-                                                              // Observe rcu_segcblist_n_cbs(rsclp) == 0
-                                                              // because no barrier between reading
-                                                              // rnp->qsmaskinitnext and rsclp->len
-                                                              rcu_segcblist_add_len()
-                                                                 smp_mb__before_atomic()
-                                                                 // will now observe the 0 count and empty
-                                                                 // list, but too late, we enqueue regardless
-                                                                 WRITE_ONCE(rsclp->len, rsclp->len + v);
-                                                        // ignored barrier callback
-                                                        // rcu barrier stall...
-
-This could be solved with a read memory barrier, enforcing the message
-passing between rnp->qsmaskinitnext and rsclp->len, matching the full
-memory barrier after rsclp->len addition in rcu_segcblist_add_len()
-performed at the end of rcu_do_batch().
-
-However the rcu_barrier() is complicated enough and probably doesn't
-need too many more subtleties. CPU down is a slowpath and the
-barrier_lock seldom contended. Solve the issue with unconditionally
-locking the barrier_lock on rcutree_migrate_callbacks(). This makes sure
-that either rcu_barrier() sees the empty queue or its entrained
-callback will be migrated.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Reported-by: Leonardo Bras <leobras@redhat.com>
+Suggested-by: Leonardo Bras <leobras@redhat.com>
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Leonardo Bras <leobras@redhat.com>
 ---
- kernel/rcu/tree.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  8 ++++++++
+ kernel/rcu/tree.c                               | 10 ++++++++--
+ kernel/rcu/tree_plugin.h                        | 10 ++++++++++
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 500cfa7762257..2d4a512cf1fc6 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -5018,6 +5018,14 @@
+ 			the ->nocb_bypass queue.  The definition of "too
+ 			many" is supplied by this kernel boot parameter.
+ 
++	rcutree.nocb_patience_delay= [KNL]
++			On callback-offloaded (rcu_nocbs) CPUs, avoid
++			disturbing RCU unless the grace period has
++			reached the specified age in milliseconds.
++			Defaults to zero.  Large values will be capped
++			at five seconds.  All values will be rounded down
++			to the nearest value representable by jiffies.
++
+ 	rcutree.qhimark= [KNL]
+ 			Set threshold of queued RCU callbacks beyond which
+ 			batch limiting is disabled.
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 408b020c9501f..c58fc10fb5969 100644
+index 35bf4a3736765..408b020c9501f 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -5147,11 +5147,15 @@ void rcutree_migrate_callbacks(int cpu)
- 	struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
- 	bool needwake;
+@@ -176,6 +176,9 @@ static int gp_init_delay;
+ module_param(gp_init_delay, int, 0444);
+ static int gp_cleanup_delay;
+ module_param(gp_cleanup_delay, int, 0444);
++static int nocb_patience_delay;
++module_param(nocb_patience_delay, int, 0444);
++static int nocb_patience_delay_jiffies;
  
--	if (rcu_rdp_is_offloaded(rdp) ||
--	    rcu_segcblist_empty(&rdp->cblist))
--		return;  /* No callbacks to migrate. */
-+	if (rcu_rdp_is_offloaded(rdp))
-+		return;
+ // Add delay to rcu_read_unlock() for strict grace periods.
+ static int rcu_unlock_delay;
+@@ -4344,11 +4347,14 @@ static int rcu_pending(int user)
+ 		return 1;
  
- 	raw_spin_lock_irqsave(&rcu_state.barrier_lock, flags);
-+	if (rcu_segcblist_empty(&rdp->cblist)) {
-+		raw_spin_unlock_irqrestore(&rcu_state.barrier_lock, flags);
-+		return;  /* No callbacks to migrate. */
+ 	/* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
+-	if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
++	gp_in_progress = rcu_gp_in_progress();
++	if ((user || rcu_is_cpu_rrupt_from_idle() ||
++	     (gp_in_progress &&
++	      time_before(jiffies, READ_ONCE(rcu_state.gp_start) + nocb_patience_delay_jiffies))) &&
++	    rcu_nohz_full_cpu())
+ 		return 0;
+ 
+ 	/* Is the RCU core waiting for a quiescent state from this CPU? */
+-	gp_in_progress = rcu_gp_in_progress();
+ 	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
+ 		return 1;
+ 
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 340bbefe5f652..31c539f09c150 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -93,6 +93,16 @@ static void __init rcu_bootup_announce_oddness(void)
+ 		pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
+ 	if (gp_cleanup_delay)
+ 		pr_info("\tRCU debug GP cleanup slowdown %d jiffies.\n", gp_cleanup_delay);
++	if (nocb_patience_delay < 0) {
++		pr_info("\tRCU NOCB CPU patience negative (%d), resetting to zero.\n", nocb_patience_delay);
++		nocb_patience_delay = 0;
++	} else if (nocb_patience_delay > 5 * MSEC_PER_SEC) {
++		pr_info("\tRCU NOCB CPU patience too large (%d), resetting to %ld.\n", nocb_patience_delay, 5 * MSEC_PER_SEC);
++		nocb_patience_delay = 5 * MSEC_PER_SEC;
++	} else if (nocb_patience_delay) {
++		pr_info("\tRCU NOCB CPU patience set to %d milliseconds.\n", nocb_patience_delay);
 +	}
-+
- 	WARN_ON_ONCE(rcu_rdp_cpu_online(rdp));
- 	rcu_barrier_entrain(rdp);
- 	my_rdp = this_cpu_ptr(&rcu_data);
++	nocb_patience_delay_jiffies = msecs_to_jiffies(nocb_patience_delay);
+ 	if (!use_softirq)
+ 		pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
+ 	if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
 -- 
 2.40.1
 
