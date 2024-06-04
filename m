@@ -1,192 +1,133 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9048428DC7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 22:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A94614B06E;
+	Tue,  4 Jun 2024 22:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717540885; cv=none; b=Ho1l2LBdqq3Rl2Abhrke7Dtjv5tvI2MQrbxkVmS+nY9tYlUSGKzLdunDyVU6SZCZuUiPnOUiRmb+p5bJw49pD/vYZr8TZmPC3rS/YZmbhPo1+vz9jNicMIhCQlcImKv7IH4aynx9NuQA7B+gUYYSW4Ftqlw0/qvzdYZQKL+tPP8=
+	t=1717540910; cv=none; b=R3f0psrtJ00XxF2VQLP8JkiAc/JLHQAUzC/ropmkkvJhF2TVTTwyz8wfN9d5+LJ3/5nBRk9NTLQ7mBW9avqlJn5fO8SpTuwo8/AZpX/68e1GZ8nPLCQiEizUO1ADX1kkpYkSl3KfZpbVFkbbFmRweBrMs/I7GyJQwEQHi7XJVZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717540885; c=relaxed/simple;
-	bh=48X2qgdP1gIxKDJW40AJ3Odff8DBYT35+62pDzTjg8s=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=RHUc/CaSVmfk5T8UyZAug93zCMC3JGnaaThliOXD8B/vmekP7DvH2YE9qVmYQ8KDVm0bZ1yBF25U2lKaoq1jBg1EsnWPjfj8SqRZoLZdI976u2O4lgRRHDv7w533oBvrZMVvDMCUHhArKFpg+kixjBC/wjxhlSGdH1lR3O1agqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K0OaYR3i; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
+	s=arc-20240116; t=1717540910; c=relaxed/simple;
+	bh=yuZKQqpqmxwyDNVBJjjuic8k9T9N0zt4jUtnRywhVyc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oRS2BUWFt2PdDmRbLdTZHuEymq0twOh45Ba7g/oA6Ls1/2Q3ZycE9m7UYsQYym8N5/PXs9Yjx6SqkHqP1RSCeyfTxOushqa5gFJ3r3PQ2YsxMBYJj+qxRmhl4t0TP6bvkUAtPBEQqidBvjWI54r1MDE/+lFMa2/S3IgPqLK9FCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=PA86CCzy; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K0OaYR3i"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa72779f04so8221515276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 15:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717540882; x=1718145682; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5BFhMURlOxwbCZPlt3t+cMRvFnuBznLgUYvajgNDozE=;
-        b=K0OaYR3i07zq5e5v5zpwIGXGynOZVzDIE3GP5tlL2EcCO09llUjrJvzCgrAN4/i/aM
-         IIC4mDBqZ5yKXk6+m4qNMa/CWLymETiW7D6VaDoUznE+NAReuY7MrBJzUhdN7U6n5fV8
-         qqp6MfVLt2DAOUaSuPCTdmXmx+mPzWRq9UZ7MxOrGVE7lVq7nQcWdo+1SK56r5/kP8Te
-         NyUXcrT5QtwN+fB2/lvDLMK9bvmM4FY6xeFwtANSwD3sFo2CStl9x/RkyukL0eWUDC7b
-         NyDIfNTAQa+e8vwYWgh6l5tdO2kgTTuqKSHHp3lnsP7lF/u6WDd+wdjNBHOr/4AAPQl5
-         GJ0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717540882; x=1718145682;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5BFhMURlOxwbCZPlt3t+cMRvFnuBznLgUYvajgNDozE=;
-        b=qbl/TNxCXn59qLTClNx2Vv0ul2RMuqsbYITxK9pJ2YSU7Oc5BobxZsTI9mMQyZEh88
-         SOgrnQ3wwZykM+xLc82PS3fAiAHWCJH2x8Qe7pXtNKgPhn6kFbbxsEOPEPY92dSRXZKE
-         12xAFCqDge8eoMnT3HCJOJo/fgYWfXpbA6N2hzlzuyKQ6yYQiInCiYT+gV1BIkZ/kZlb
-         tQFMqSaEaVYDDG+lANvNZ+qlKgbd0ARN5a0ALP74z7og5wVOf1e38Bin1O3HkUt6gQWS
-         0DCi2DjhCEJcJppBjVCvC0YdwPZrSpo1d6I2anagHgn2Z3zJ7uwp7DLwhgfnjx7rloX5
-         hApQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVn4w2Xev8iVyZ1tIrOCbmjWiFnSHexx4eqO7UbUwH//OLnKFxTQj9MM/kneTFe4QNX/RI5MqU24mHuWwdqqoILyVE4WHbYrurl6Z0v
-X-Gm-Message-State: AOJu0YxTuSzevB13YAXD4evpvzidTbf5f1h/SR5WuJjECQU7Pud0/eZm
-	QnvgfQW9GJH5+22ORHzNLqRLOSj1Vi2sHxc9g5LzijqYvcCsoifiP6WQP1H8EI6pz9xd3O+CNQL
-	r/xvpoC01BQ==
-X-Google-Smtp-Source: AGHT+IFe9doWPRL9bdOBiprw606KPAUV1/yCDGjKHg9/0f16jSpDeFrPKk08bm1aGwBuEsC7VjTpzn499oFw4w==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:120d:b0:dcb:e982:4e40 with SMTP
- id 3f1490d57ef6-dfacad28c85mr236994276.12.1717540882585; Tue, 04 Jun 2024
- 15:41:22 -0700 (PDT)
-Date: Wed,  5 Jun 2024 06:40:50 +0800
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="PA86CCzy"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454K0N3h015061;
+	Tue, 4 Jun 2024 18:41:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=oN/4JX8Lx+3D+bSydBJVahix/UU
+	ZEC7PQQ+hSFktC6s=; b=PA86CCzyBgCEQe3fZc8lagO2sj8wnAxiCo9NDWIvJho
+	i6FZwRTYQZLjtx0rM97YzUjfMEtSN16KGRtVM6EJq1ClYlv3HSIwm4jB9zVKNcOJ
+	Wr869cMbZCuvi2CCAqGmowx8mpd5KzYcTsSxLatZZFubG1/GCSaxJNNVQy/iDGHe
+	w2cWKdPu96rGVqZf5srfvLVhIETRG8/9vL5NgnleqtXRnnRcqJ/5e6C14gzJj3VO
+	ftf2Gvvh8iMwh90NnFs+kvpOXytriijscTJ4AEGLW5RoTjZ16qHj+xeVqg0QQ06Y
+	3bytcuAIEQVKnI2DC9hso/VrDEXddC0CE9lUpS/I7bw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3yj0hvakj1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 04 Jun 2024 18:41:20 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 454MfJPB010856
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 4 Jun 2024 18:41:19 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 4 Jun 2024
+ 18:41:18 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 4 Jun 2024 18:41:18 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.129])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 454Mf2xc001165;
+	Tue, 4 Jun 2024 18:41:05 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <broonie@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <jic23@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <nuno.sa@analog.com>, <dlechner@baylibre.com>,
+        <marcelo.schmitt1@gmail.com>
+CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/6] Add support for AD4000 series of ADCs
+Date: Tue, 4 Jun 2024 19:40:56 -0300
+Message-ID: <cover.1717539384.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240604224052.3138504-1-davidgow@google.com>
-Subject: [PATCH] arch: um: rust: Add i386 support for Rust
-From: David Gow <davidgow@google.com>
-To: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>
-Cc: David Gow <davidgow@google.com>, kunit-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org, 
-	rust-for-linux@vger.kernel.org, x86@kernel.org, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, linux-doc@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: MUO5teRQRbHDdxsS36D6OaO3q_CZLHlq
+X-Proofpoint-ORIG-GUID: MUO5teRQRbHDdxsS36D6OaO3q_CZLHlq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0 adultscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=974
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406040183
 
-At present, Rust in the kernel only supports 64-bit x86, so UML has
-followed suit. However, it's significantly easier to support 32-bit i386
-on UML than on bare metal, as UML does not use the -mregparm option
-(which alters the ABI), which is not yet supported by rustc[1].
+This patch series extends the SPI bitbang, gpio, and spi-engine controllers to
+support configurable MOSI line idle state.
+It then introduces the ad4000 driver which makes use of the MOSI idle
+configuration to properly support AD4000 series of ADCs.
 
-Add support for CONFIG_RUST on um/i386, by adding a new target config to
-generate_rust_target, and replacing various checks on CONFIG_X86_64 to
-also support CONFIG_X86_32.
+Change log v2 -> v3:
+- [new patch] Extended SPI modes to allow MOSI idle high configuration.
+- [new patch] Implemented configurable MOSI idle state for spi-bitbang controller.
+- [new patch] Implemented configurable MOSI idle state for spi-gpio controller.
+- [new patch] Implemented configurable MOSI idle state for spi-axi-spi-engine controller.
+- Dropped spi-cpha property (these devices communicate in SPI mode 0).
+- Added dt-binding check to constrain adi,gain-milli property to ADAQ devices only.
+- Device config doesn't enable TURBO anymore to save power.
+- Fixed device buffer declaration.
+- Simplified ADC input gain handling by keeping gain value from DT.
+- Reworked ADC sample read function in "3-wire mode" making it latency free.
+- Added ADC sample read function for "4-wire mode".
+- Read adi,spi-mode dt prop and use "3-wire" or "4-wire" mode accordingly.
+- Many other minor improvements such as better code execution flows and comments.
+- Removed Mircea Caprioru from authors. This driver is now completely different
+  from what Mircea left in ADI Linux.
 
-We still use generate_rust_target, rather than a built-in rustc target,
-in order to match x86_64, provide a future place for -mregparm, and more
-easily disable floating point instructions.
+I'll leave additional ADC features (e.g. single-ended to differential configuration)
+for future patches if no one minds it.
 
-With these changes, the KUnit tests pass with:
-kunit.py run --make_options LLVM=1 --kconfig_add CONFIG_RUST=y
---kconfig_add CONFIG_64BIT=n --kconfig_add CONFIG_FORTIFY_SOURCE=n
+Thanks,
+Marcelo
 
-An earlier version of these changes was proposed on the Rust-for-Linux
-github[2].
+Marcelo Schmitt (6):
+  spi: Add SPI mode bit for MOSI idle state configuration
+  spi: bitbang: Implement support for MOSI idle state configuration
+  spi: spi-gpio: Add support for MOSI idle state configuration
+  spi: spi-axi-spi-engine: Add support for MOSI idle configuration
+  dt-bindings: iio: adc: Add AD4000
+  iio: adc: Add support for AD4000
 
-[1]: https://github.com/rust-lang/rust/issues/116972
-[2]: https://github.com/Rust-for-Linux/linux/pull/966
+ .../bindings/iio/adc/adi,ad4000.yaml          | 207 +++++
+ MAINTAINERS                                   |   8 +
+ drivers/iio/adc/Kconfig                       |  12 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ad4000.c                      | 735 ++++++++++++++++++
+ drivers/spi/spi-axi-spi-engine.c              |   8 +-
+ drivers/spi/spi-bitbang.c                     |  24 +
+ drivers/spi/spi-gpio.c                        |  12 +-
+ drivers/spi/spi.c                             |   6 +
+ include/linux/spi/spi_bitbang.h               |   1 +
+ include/uapi/linux/spi/spi.h                  |   3 +-
+ 11 files changed, 1014 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
+ create mode 100644 drivers/iio/adc/ad4000.c
 
-Signed-off-by: David Gow <davidgow@google.com>
----
- Documentation/rust/arch-support.rst |  2 +-
- arch/um/Kconfig                     |  2 +-
- rust/Makefile                       |  2 +-
- scripts/Makefile                    |  2 +-
- scripts/generate_rust_target.rs     | 17 +++++++++++++++++
- 5 files changed, 21 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/rust/arch-support.rst b/Documentation/rust/arch-support.rst
-index b13e19d84744..750ff371570a 100644
---- a/Documentation/rust/arch-support.rst
-+++ b/Documentation/rust/arch-support.rst
-@@ -18,7 +18,7 @@ Architecture   Level of support  Constraints
- ``arm64``      Maintained        Little Endian only.
- ``loongarch``  Maintained        \-
- ``riscv``      Maintained        ``riscv64`` only.
--``um``         Maintained        ``x86_64`` only.
-+``um``         Maintained        \-
- ``x86``        Maintained        ``x86_64`` only.
- =============  ================  ==============================================
- 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 93a5a8999b07..b6ac49fec5bb 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -31,7 +31,7 @@ config UML
- 	select TRACE_IRQFLAGS_SUPPORT
- 	select TTY # Needed for line.c
- 	select HAVE_ARCH_VMAP_STACK
--	select HAVE_RUST			if X86_64
-+	select HAVE_RUST
- 
- config MMU
- 	bool
-diff --git a/rust/Makefile b/rust/Makefile
-index f70d5e244fee..83f675adbfab 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -426,7 +426,7 @@ $(obj)/core.o: private rustc_objcopy = $(foreach sym,$(redirect-intrinsics),--re
- $(obj)/core.o: private rustc_target_flags = $(core-cfgs)
- $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs FORCE
- 	+$(call if_changed_dep,rustc_library)
--ifdef CONFIG_X86_64
-+ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
- $(obj)/core.o: scripts/target.json
- endif
- 
-diff --git a/scripts/Makefile b/scripts/Makefile
-index fe56eeef09dd..dccef663ca82 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -12,7 +12,7 @@ hostprogs-always-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE)	+= insert-sys-cert
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_builder
- hostprogs-always-$(CONFIG_RUST_KERNEL_DOCTESTS)		+= rustdoc_test_gen
- 
--ifdef CONFIG_X86_64
-+ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
- always-$(CONFIG_RUST)					+= target.json
- filechk_rust_target = $< < include/config/auto.conf
- 
-diff --git a/scripts/generate_rust_target.rs b/scripts/generate_rust_target.rs
-index 641b713a033a..87f34925eb7b 100644
---- a/scripts/generate_rust_target.rs
-+++ b/scripts/generate_rust_target.rs
-@@ -169,6 +169,23 @@ fn main() {
-         ts.push("features", features);
-         ts.push("llvm-target", "x86_64-linux-gnu");
-         ts.push("target-pointer-width", "64");
-+    } else if cfg.has("X86_32") {
-+        // This only works on UML, as i386 otherwise needs regparm support in rustc
-+        if !cfg.has("UML") {
-+            panic!("32-bit x86 only works under UML");
-+        }
-+        ts.push("arch", "x86");
-+        ts.push(
-+            "data-layout",
-+            "e-m:e-p:32:32-p270:32:32-p271:32:32-p272:64:64-i128:128-f64:32:64-f80:32-n8:16:32-S128",
-+        );
-+        let mut features = "-3dnow,-3dnowa,-mmx,+soft-float".to_string();
-+        if cfg.has("MITIGATION_RETPOLINE") {
-+            features += ",+retpoline-external-thunk";
-+        }
-+        ts.push("features", features);
-+        ts.push("llvm-target", "i386-unknown-linux-gnu");
-+        ts.push("target-pointer-width", "32");
-     } else if cfg.has("LOONGARCH") {
-         panic!("loongarch uses the builtin rustc loongarch64-unknown-none-softfloat target");
-     } else {
 -- 
-2.45.1.288.g0e0cd299f1-goog
+2.43.0
 
