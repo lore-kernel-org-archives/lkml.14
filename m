@@ -1,82 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D300826AF1
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F0613D526;
+	Tue,  4 Jun 2024 16:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717518198; cv=none; b=bmc5b9+YtA5d25RD5hk/KKKsp6FKc76kkpz5TAUhoziLbtAmcGW458UHgHstCvQrr0TCerjZyaOGUgB4oCIFxr9F4P/GpekCIyi8zenlutxvmWOycDPmWrdw4SpCI40YRjzsSCJx1SpJj/tdFlXdkN9vZlckXhEmyNnEQAnRE2E=
+	t=1717518284; cv=none; b=oRCmf+v0krzy9PbXVqW0zXoLynxHQf+hM4XQX2trW4r6kHZQtrEB9F4JG7O8w5as21z/r9dQzivGGdG5aGEGbbgijHqz+ED8b0hyzDRl0SSBb4GzzQWPchavMOtSC+htWcpIJNYC2FHFvzeBKnM05u8hdKWxLiz9mLm62DhOECs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717518198; c=relaxed/simple;
-	bh=L42C0MqxlWUis1/vQ2kmicKTlDmz8GjJwo4hZVEkM70=;
+	s=arc-20240116; t=1717518284; c=relaxed/simple;
+	bh=pvWvcrNQgufN9CzRFzzo7ISHTN099yhCI9EO4AnyfJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l+Te9VV1KvOk7vpeZHPre8cXtFE3QkEj2ZR6NONsykpaQffhh2XkfeiHxHFqNtwA2/m9kj82mVARZcp+aFD/PPo0NvET4+GSoqQHjLI2Qy4HKWdylQCIQaH/Hwji7jQfd08NA2/uIuFzd4yaN8nhJPFvY+HJzdUGcfhZGRhj1ZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OkuYICvZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GgXENEMWXAsZ3mIGZP+eY5h3Sac6hTJf30IgTBOFsHd6Pns/JOqvDUSU/L0Gi53a27FB7OQ+ZXhH1VqZS9Kws38zJ49a3MLdZf3dSrNRfVRN75jr87Wo6HW0d2n+j5bzMiA4YypqyFujzU14+pqf6zvW3UrlvHG2viN0uteFuXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E9RPLouu; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OkuYICvZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717518195;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t9m4FJ0/GJVz2wRY4oBw6RkZiK4RCdJiPQkTonn2MFI=;
-	b=OkuYICvZqpVMACEz0GDleuN8shS8+iJpLuhpuz79CWe8tgnLXbtnlBr7SkDt/ACzrWKBp4
-	bJUl3tYnOQyLz1EYHmf4JftBeBGDqo1OZhJE0sftRqCsGTNJqoFzrJTvMujuiRwBTHgFu1
-	dYqetdk22t9iKjkLXo0xPxmcc2LODgE=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-518-7SPA8Lu5MHmnDcf4fs5pqg-1; Tue, 04 Jun 2024 12:23:14 -0400
-X-MC-Unique: 7SPA8Lu5MHmnDcf4fs5pqg-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2ea9429e1deso37171941fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:23:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717518192; x=1718122992;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t9m4FJ0/GJVz2wRY4oBw6RkZiK4RCdJiPQkTonn2MFI=;
-        b=JPAFETV2X2Au9D75mwslb5J+zlHQ3t/oDiZMABsrzXzcWwfUdkZtvN1+nSQO2G4qRS
-         C8VdN1toQBZ/OPAR/dsfCtmCqURqI2k6JtQnri1LtFzsHyths5Sw5jqs8W/KSbEmptIu
-         ar5dioEA+iAvmf82gFpuCJihz1h11jLerLg3/mxZp1kapjf/psNk47Kep2StkQJkRyTt
-         bjJjRGwdmlkvu+BqaDwP6UbhaS+zQJXUt+dAQcRBYp3DxVlHaySvMR15tIhPlkYZvWir
-         FSzJha5qiiwfs4pQP0+Avq6agnJw0g06LqJQLlhW7eH6UOh2bo0EJkeSG3CpQPRarn1d
-         L9yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpvmkfdeiZCZ9cLeHybpeH2AKFH3nmjaSdvZSt50aBdS24djXegw5iuBdbybpk7ZFxcue4pI9ADOcGUWYJ6Pj9H99nwbg02zvzqLic
-X-Gm-Message-State: AOJu0YzI3Rrftynk+mE5sLjbwB5nVpekZaYFNbO7aDMu7wYeRYxWjQ7N
-	oun5i9E3p1uZ7gJNjCg0IcJPLdGJsbr+wGbALv1qGzCXCFM/bJ6dNAW/nv6/BLK0jbG/Pl2UA1i
-	wRyhPwzuBnjinqonaE5xARuToDVkg/NJaZfA05niabivmCd84R8zaYbwL3FTf0A==
-X-Received: by 2002:a2e:b053:0:b0:2ea:938f:a23d with SMTP id 38308e7fff4ca-2ea951b6102mr79735721fa.42.1717518192419;
-        Tue, 04 Jun 2024 09:23:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFpDgl6mVBcVb02NoTlLuJeCPaA3ijNInKKoW4CUr3sKzP9Qc3fogPqdIuifYw03YqFir9JPw==
-X-Received: by 2002:a2e:b053:0:b0:2ea:938f:a23d with SMTP id 38308e7fff4ca-2ea951b6102mr79735491fa.42.1717518191954;
-        Tue, 04 Jun 2024 09:23:11 -0700 (PDT)
-Received: from cassiopeiae ([2a02:810d:4b3f:ee94:642:1aff:fe31:a19f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212709d336sm190116295e9.37.2024.06.04.09.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 09:23:11 -0700 (PDT)
-Date: Tue, 4 Jun 2024 18:23:09 +0200
-From: Danilo Krummrich <dakr@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 01/11] rust: add abstraction for struct device
-Message-ID: <Zl8_bXqK-T24y1kp@cassiopeiae>
-References: <20240520172554.182094-1-dakr@redhat.com>
- <20240520172554.182094-2-dakr@redhat.com>
- <2024052038-deviancy-criteria-e4fe@gregkh>
- <Zkuw/nOlpAe1OesV@pollux.localdomain>
- <2024052144-alibi-mourner-d463@gregkh>
- <Zk0HG5Ot-_e0o89p@pollux>
- <2024060428-whoops-flattop-7f43@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E9RPLouu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717518283; x=1749054283;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pvWvcrNQgufN9CzRFzzo7ISHTN099yhCI9EO4AnyfJE=;
+  b=E9RPLouuoQ01gCfFcWIVyvTv26hRngmW+hPVI/ttl9onKU7DtSnF0J/w
+   V5K1wsByzqj0WG1hQIHfUHRWfJ00V5tM2G6MVj+PEKJiK/fXesLBgYHMG
+   pAZy45J6i19uGkuLxsCMOkpiYC7NcTqn8t+bXpCsieuCPuFg/jQEep22o
+   TOGr191rby9xVHpvV1dje3NiJbETfv6XiK9OrnpN3tKGFsqAoIHw4PkCn
+   0hbNvYmSJ1voNHlTfEGjQ+IULpcGHKkeLqtHqfKPYb5bcIb4TL/Rw8QG3
+   mNTIqrjgPY54FHJjCnd0s9DU0DmHX7vuhtgWrFKoKBUneWOkm9aJtPEqw
+   g==;
+X-CSE-ConnectionGUID: 9E+3CUy6QFKubGE5ZxhvMA==
+X-CSE-MsgGUID: y+9UAki3Sky9226jhuy+pw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13829922"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="13829922"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:24:42 -0700
+X-CSE-ConnectionGUID: qUBTJsF0Q7eFyomBX4zctA==
+X-CSE-MsgGUID: n0UalEy1Qt+6LV6QKuU3Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="37293248"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 04 Jun 2024 09:24:36 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 34FF52DC; Tue, 04 Jun 2024 19:24:35 +0300 (EEST)
+Date: Tue, 4 Jun 2024 19:24:35 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
+Subject: Re: [PATCHv11 09/19] x86/tdx: Account shared memory
+Message-ID: <5sjy5qfztnipehq3j3hn4jsufrd642n272sjjcpowvgze5qm22@jjfmw6u4rvgl>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
+ <6fd2c15b-5bd9-4e7e-8da0-4ca2c89b38f9@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,144 +73,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024060428-whoops-flattop-7f43@gregkh>
+In-Reply-To: <6fd2c15b-5bd9-4e7e-8da0-4ca2c89b38f9@intel.com>
 
-On Tue, Jun 04, 2024 at 04:17:29PM +0200, Greg KH wrote:
-> On Tue, May 21, 2024 at 10:42:03PM +0200, Danilo Krummrich wrote:
-> > On Tue, May 21, 2024 at 11:24:38AM +0200, Greg KH wrote:
-> > > On Mon, May 20, 2024 at 10:22:22PM +0200, Danilo Krummrich wrote:
-> > > > > > +impl Device {
-> > > > > > +    /// Creates a new ref-counted instance of an existing device pointer.
-> > > > > > +    ///
-> > > > > > +    /// # Safety
-> > > > > > +    ///
-> > > > > > +    /// Callers must ensure that `ptr` is valid, non-null, and has a non-zero reference count.
-> > > > > 
-> > > > > Callers NEVER care about the reference count of a struct device, anyone
-> > > > > poking in that is asking for trouble.
-> > > > 
-> > > > That's confusing, if not the caller who's passing the device pointer somewhere,
-> > > > who else?
-> > > > 
-> > > > Who takes care that a device' reference count is non-zero when a driver's probe
-> > > > function is called?
-> > > 
-> > > A device's reference count will be non-zero, I'm saying that sometimes,
-> > > some driver core functions are called with a 'struct device' that is
-> > > NULL, and it can handle it just fine.  Hopefully no callbacks to the
-> > > rust code will happen that way, but why aren't you checking just "to be
-> > > sure!" otherwise you could have a bug here, and it costs nothing to
-> > > verify it, right?
-> > 
-> > I get your point on that one. But let me explain a bit more why I think that
-> > check is not overly helpful here.
-> > 
-> > In Rust we have the concept of marking functions as 'unsafe'. Unsafe functions
-> > need to document their safety preconsitions, i.e. the conditions the caller of
-> > the function must guarantee. The caller of an unsafe function needs an unsafe
-> > block for it to compile and every unsafe block needs an explanation why it is
-> > safe to call this function with the corresponding arguments.
-> > 
-> > (Ideally, we want to avoid having them in the first place, but for C abstractions
-> > we have to deal with raw pointers we receive from the C side and dereferencing a
-> > raw pointer is unsafe by definition.)
-> > 
-> > In this case we have a function that constructs the Rust `Device` structure from
-> > a raw (device) pointer we potentially received from the C side. Now we have to
-> > decide whether this function is going to be unsafe or safe.
-> > 
-> > In order for this function to be safe we would need to be able to guarantee that
-> > this is a valid, non-null pointer with a non-zero reference count, which
-> > unfortunately we can't. Hence, it's going to be an unsafe function.
+On Tue, Jun 04, 2024 at 09:08:25AM -0700, Dave Hansen wrote:
+> On 5/28/24 02:55, Kirill A. Shutemov wrote:
+> > Keep track of the number of shared pages. This will allow for 
+> > cross-checking against the shared information in the direct mapping
+> > and reporting if the shared bit is lost.
 > 
-> But you can verify it is non-null, so why not?
+> It's probably also worth mentioning that conversions are slow and
+> relatively rare and even though a global atomic isn't really scalable,
+> it also isn't worth doing anything fancier.
 
-I suggest to check out the code making use of this.
+Okay, will do.
 
-From the PCI abstractions:
-
-    extern "C" fn probe_callback(
-        pdev: *mut bindings::pci_dev,
-        id: *const bindings::pci_device_id,
-    ) -> core::ffi::c_int {
-        // SAFETY: Safe because the core kernel only ever calls the probe callback with a valid
-        // `pdev`.
-        let dev = unsafe { device::Device::from_raw(&mut (*pdev).dev) };
-
-        [...]
-    }
-
-Doing the NULL check would turn this into something like:
-
-    extern "C" fn probe_callback(
-        pdev: *mut bindings::pci_dev,
-        id: *const bindings::pci_device_id,
-    ) -> core::ffi::c_int {
-        // SAFETY: Safe because the core kernel only ever calls the probe callback with a valid
-        // `pdev`, but we still have to handle `Device::from_raw`'s NULL check.
-        let dev = match unsafe { device::Device::from_raw(&mut (*pdev).dev) } {
-           Ok(dev) => dev,
-           Err(err) => return Error::to_errno(err),
-        }
-    }
-
-This would be super odd. If `Device::from_raw` reports "Ok" it actually wouldn't
-mean everything is well. It would *only* mean that the pointer that was passed
-is not NULL. This is counter intuitive; IMHO unsafe functions shouldn't return
-any type of result, because it just isn't meaningful.
-
+> > diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+> > index 26fa47db5782..979891e97d83 100644
+> > --- a/arch/x86/coco/tdx/tdx.c
+> > +++ b/arch/x86/coco/tdx/tdx.c
+> > @@ -38,6 +38,8 @@
+> >  
+> >  #define TDREPORT_SUBTYPE_0	0
+> >  
+> > +static atomic_long_t nr_shared;
 > 
-> > A NULL pointer check would not make it a safe function either, since the pointer
-> > could still be an invalid one, or a pointer to a device it's not guaranteed that
-> > the reference count is held up for the duration of the function call.
+> Doesn't this technically need to be:
 > 
-> True, but you just took one huge swatch of "potential crashes" off the
-> table.  To ignore that feels odd.
+> 	static atomic_long_t nr_shared = ATOMIC_LONG_INIT(0);
 > 
-> > Given that, we could add the NULL check and change the safety precondition to
-> > "valid pointer to a device with non-zero reference count OR NULL", but I don't
-> > see how this improves the situation for the caller, plus we'd need to return
-> > `Result<Device>` instead and let the caller handle that the `Device` was not
-> > created.
-> 
-> It better be able to handle if `Device` was not created, as you could
-> have been out of memory and nothing would have been allocated.  To not
-> check feels very broken.
+> ?  I thought we had some architectures where the 0 logical value wasn't
+> actually all 0's.
 
-The abstraction is not allocating a new C struct device, it's just abstracting a
-pointer to an existing struct device. There is no OOM case to handle, the
-abstraction holding the pointer lives on the stack.
+Hm. I am not aware of such requirement. I see plenty uninitilized
+atomic_long_t in generic code. For instance, invalid_kread_bytes.
 
-> 
-> > > Ok, if you say so, should we bookmark this thread for when this does
-> > > happen?  :)
-> > 
-> > I'm just saying the caller has to validate that or provide a rationale why this
-> > is safe anyways, hence it'd be just a duplicate check.
-> > 
-> > > 
-> > > What will the rust code do if it is passed in a NULL pointer?  Will it
-> > > crash like C code does?  Or something else?
-> > 
-> > It mostly calls into C functions with this pointer, depends on what they do.
-> > 
-> > Checking a few random places, e.g. [1], it seems to crash in most cases.
-> > 
-> > [1] https://elixir.free-electrons.com/linux/latest/source/drivers/base/core.c#L3863
-> 
-> Great, then you should check :)
+And I doubt TDX will ever be built for non-x86 :P
 
-Why isn't the conclusion that the C code should check (as well)? :) Would you
-want to add a NULL check at the beginning of device_del()?
-
-In Rust we have a clear separation between safe and unsafe functions with, for
-the latter, documented requirements on what's actually allowed to pass in and
-which preconditions must be guaranteed. The check happens, just not within the
-unsafe function.
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
