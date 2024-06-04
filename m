@@ -1,143 +1,135 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EE2149C77
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE3E149C77
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520766; cv=none; b=gRBJzsp0jo7xU37BGnMwNDfr0ZrW56YUHHxs+b38ymcUxbzg3uSH2husfgCzLiq/KpNk/iVGEkjmp8wbTNd0eV4RzFvYF2ARK1mhTsmaX+AtYRKYqDL9fe3B02mecgGRLak2hbs4LNTmLufbI0Q6neWXADTRR4IMa+EEHFfSzyE=
+	t=1717520776; cv=none; b=WaEzKqPaL9KQgKO9DdzHdd5cTp9bx87oFwCSXz7b9BhwIRi/Ttldu/tff1p13jNIwmg/NJE/6+aIwpy1q/AFexyvloHmRvotVGDGz0q4ih6/Ydhd92ed22Bx6mwosL5Sxh4kn3KMQ/nU/Q3SgKI/gyS0bWijhpaWt+KKRIX/KvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717520766; c=relaxed/simple;
-	bh=rEVud8jYCenY75ArS4e4npQEZOeDDa8qDxgOauldd3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DFfUsNMARHTBzAckBUSlgbYhP0WJoVC7obuXbrRiH7hRbxYOqW4U5OazlX30aDipR08NRONVtvnbuVPRcRCJE0Z7j8bTcrE0Af2XTfezz/lpOejr9t+ntjU4FxvB01zVRLWQDkgJ4E38HCMWVf3UGIwm2Yf0yuFO41Kk8KM9QG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KdU73S0M; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1717520776; c=relaxed/simple;
+	bh=7FZMerzyumByug0YBJaZePO62jxn9Zgedg66wnJtGLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ft9e50d+eSeMJRwDwhJJJMOy8nQbpusfBHocgy/cREYtE6fJzm9eU0I+czfDqU8oyMK63cs3OlxW7bOuBKq6ls12uuvkLQCKKBojfD9IvHRHkc/W6g58dExfEWcNZ1Y4cK06fE5it213rJIB/TaLe3IPKcRqt/xQNcTh5V3xTgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i3E6SxfJ; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KdU73S0M"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f4603237e0so23402b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 10:06:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i3E6SxfJ"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a68c8b90c85so392056666b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 10:06:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717520761; x=1718125561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fgJ5+iEOSgKZgq1LxXHnvCk2860Dw4BLXVAkjQni18I=;
-        b=KdU73S0MrArtUIvzdV8S/zE81viRGPgVg6TDvu3lu1z9mrer6UhcSvBd1I13bjF4G6
-         QlR0EQPJZuhXaSoLsGeytQ3lLdXeOGiiOO3uIUrOQL/JIe83HN+4d04xy18q4piGg9cT
-         1t5/59cHgaafiVN6OlYS/aqZfCGFGqR+RXE6M=
+        d=linaro.org; s=google; t=1717520773; x=1718125573; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4aUMBd6S6vH1Fq76iwhEyjBkvlh36Pc3VvYRxup98QU=;
+        b=i3E6SxfJRRCVXelXM9VViV381xYdplJpsdn/xfmEDSpzUS50fakhUXufIKuM3wHvkm
+         iKj0beU/ibLDnZtvyzkSWR1oT91xa+FJCuH24iubMbhjPa5hZ4yfaja/w7Lr52cXvS3w
+         Wny81Gj1+tnHjsFK39Y/wBvp25uSglOyoiJQH2pwyFHhUHbX+/PVpdOFhPpwDt9lP7u6
+         +ARARApUmnnmEN9fmS2gEtVFQf6MPjtZ047hyIvTtLLOcDxN+5hgKptliA9gh1HylDl0
+         ES42ncwvuZuAZ+f95x0GLkOJbPb2Qkv+Ei/4Qtkv2JH9ievmLFB6TcOMMvnS3E9U1QxW
+         htHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717520761; x=1718125561;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fgJ5+iEOSgKZgq1LxXHnvCk2860Dw4BLXVAkjQni18I=;
-        b=usHPuKn8fwpxzafoslfZB/OOHF2bRip0L5Ph4XS33s3gZoBJHM/6XFJyc80IQyWN49
-         tPoozOUh7qoaWF8W/T/RDmEV+628LBY5QsthICWKzJXHoQgd2nZPsZDpUEbAjDY1kkr3
-         /sMV4Tm6n8qdWOhmjdjvIkCxzWu4b63SzY2dMy0aN/6ek5rnntXes9aLcSIyLn9Zpx9V
-         +m+FGrV1J/wWyPDqMWsehVtRhd7wr9x1cH/s9jAed2XiCxXspVIad9N8F9Xa5FiXxcMo
-         i3VoHz5GA1Lpk1I0ksANAJ/5x+pVWzHUMoMiiwa822KkFzReCp6FYmuCnfjJFLvmju16
-         wgJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVifz9KVo+Z6QxlGc3INe4v44E/+xhXdJByxyfEmDRyXHacmrAMnBbZUCxoza06rGccQjDO28JHM2lLKNsg8jz7Yav/KRGqMrs55yWQ
-X-Gm-Message-State: AOJu0YwPEVfbs4hPvbpI5LQniDPZdhLWlV69m/lUsOq9Fvi3KXIhl1Ti
-	O9oygLTeydR+5saKFqg81Lbc9s8J+Zp2T85lJ/o8bPcFTDTRohudGbAxJ5WJ6Q==
-X-Google-Smtp-Source: AGHT+IFGAiCt40jA5/yhChT2c5Qddf9o2Q57U/QnPJLBpXj9m7oYVO4h6NEpzDCXz6oyMA7cKGh7fA==
-X-Received: by 2002:a05:6a00:2d1d:b0:6f4:d5d8:e0a3 with SMTP id d2e1a72fcca58-703e4bf60cfmr331030b3a.9.1717520760886;
-        Tue, 04 Jun 2024 10:06:00 -0700 (PDT)
-Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:6203:d1ca:c560:52f1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b0914dsm7510672b3a.179.2024.06.04.10.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 10:06:00 -0700 (PDT)
-From: Daisuke Nojiri <dnojiri@chromium.org>
-To: 
-Cc: Daisuke Nojiri <dnojiri@chromium.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Reka Norman <rekanorman@chromium.org>,
-	Tzung-Bi Shih <tzungbi@chromium.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@google.com>,
-	Gwendal Grignou <gwendal@chromium.org>,
-	Pavan Holla <pholla@chromium.org>,
-	Ching-Kang Yen <chingkang@chromium.org>,
-	Lukasz Majczak <lma@chromium.org>,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] platform/chrome: Add struct ec_response_get_next_event_v3
-Date: Tue,  4 Jun 2024 10:01:48 -0700
-Message-ID: <20240604170552.2517189-1-dnojiri@chromium.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-In-Reply-To: <20240604005354.2294468-1-dnojiri@chromium.org>
-References: <20240604005354.2294468-1-dnojiri@chromium.org>
+        d=1e100.net; s=20230601; t=1717520773; x=1718125573;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4aUMBd6S6vH1Fq76iwhEyjBkvlh36Pc3VvYRxup98QU=;
+        b=PmQXeKclBeIIZwhTffX77dkqF1qP/PTbyDZTtX0JPUhzECsHMv9b+Yd3TKITO54o7V
+         52wOrV+H26IOgM89cqWUe2S2zLJ8oWbwfS0mVIcIljkZzDvmRHai7PEmKyE2p1ThjzGc
+         F6gpptg0yxf8YfvqraWmjcBTzVo2g5sEYyKrJN0anpfy0S479cfi9i/7ffH7ant2wrkH
+         alBbLf/5+X+s4QXyAlzEF/5QEv2I9ggX+EKiCqQRSn6VddAZZdjWJn/2mUbKOqOP50Ew
+         NiaMH+m8BYsElCfUqycu2N6Td6Z07YzRtk8kCUPisyj2H58HGGmkiTZNeHcRkXf/eSiq
+         01pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdR8aF9tRqifYXfmP4jgCao3/Pzy9ZabtMdmo2AnckBOjfe6TEfZtF+N2keGmh5y5L9ug/jtfJvrjay4Knw0O9IyGtfQOjR666uQRs
+X-Gm-Message-State: AOJu0YyFwmH4I7osRg5llh+AO6Wlws9PbGo0odQVCpa2H5fgOtolHa27
+	a7CCxfoQG26+553/EunrC93BdyKfebiDCbL7BYPezBBC5hkJurlMfX/qW2v26so=
+X-Google-Smtp-Source: AGHT+IHT8X9AMfx+BZpwbKKAI0BGP41IwtZlUxVZrzOm9sWMjqE5bRIO+v8abCGhYG5qwitWIODsOA==
+X-Received: by 2002:a17:907:770c:b0:a67:7649:3c3c with SMTP id a640c23a62f3a-a69a000e966mr10970966b.56.1717520772786;
+        Tue, 04 Jun 2024 10:06:12 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:909a:a11e:b2c0:1360:9a97:b2b8? ([2a00:f41:909a:a11e:b2c0:1360:9a97:b2b8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a69127f2901sm291675066b.48.2024.06.04.10.06.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 10:06:12 -0700 (PDT)
+Message-ID: <37b0404d-bba5-4a77-ad86-62c6dd308d37@linaro.org>
+Date: Tue, 4 Jun 2024 19:06:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/adreno: Add support for Adreno 505 GPU
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Daniil Titov <daniilt971@gmail.com>
+References: <20240604-a505-v1-1-82ee1c04d200@gmail.com>
+ <49fe3b01-4f00-4ffc-80cf-2a0add1ebaad@linaro.org>
+ <CAGsSOWV=i2JHsYNvi5EC6q=NoD8v7SiTjbVQhTDLNw35+irTCQ@mail.gmail.com>
+ <CAGsSOWV9SRK1VUJiQfavEM1hL0PapxUBG6CNeD+Q=0qPT5ZnSA@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAGsSOWV9SRK1VUJiQfavEM1hL0PapxUBG6CNeD+Q=0qPT5ZnSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Add struct ec_response_get_next_event_v3 to upgrade
-EC_CMD_GET_NEXT_EVENT to version 3.
 
-Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
----
- .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
 
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 070e49c5381e..fff191a8d413 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -3527,6 +3527,34 @@ union __ec_align_offset1 ec_response_get_next_data_v1 {
- };
- BUILD_ASSERT(sizeof(union ec_response_get_next_data_v1) == 16);
- 
-+union __ec_align_offset1 ec_response_get_next_data_v3 {
-+	uint8_t key_matrix[18];
-+
-+	/* Unaligned */
-+	uint32_t host_event;
-+	uint64_t host_event64;
-+
-+	struct __ec_todo_unpacked {
-+		/* For aligning the fifo_info */
-+		uint8_t reserved[3];
-+		struct ec_response_motion_sense_fifo_info info;
-+	} sensor_fifo;
-+
-+	uint32_t buttons;
-+
-+	uint32_t switches;
-+
-+	uint32_t fp_events;
-+
-+	uint32_t sysrq;
-+
-+	/* CEC events from enum mkbp_cec_event */
-+	uint32_t cec_events;
-+
-+	uint8_t cec_message[16];
-+};
-+BUILD_ASSERT(sizeof(union ec_response_get_next_data_v3) == 18);
-+
- struct ec_response_get_next_event {
- 	uint8_t event_type;
- 	/* Followed by event data if any */
-@@ -3539,6 +3567,12 @@ struct ec_response_get_next_event_v1 {
- 	union ec_response_get_next_data_v1 data;
- } __ec_align1;
- 
-+struct ec_response_get_next_event_v3 {
-+	uint8_t event_type;
-+	/* Followed by event data if any */
-+	union ec_response_get_next_data_v3 data;
-+} __ec_align1;
-+
- /* Bit indices for buttons and switches.*/
- /* Buttons */
- #define EC_MKBP_POWER_BUTTON	0
--- 
-2.45.1.288.g0e0cd299f1-goog
+On 6/4/24 18:45, Barnabás Czémán wrote:
+> On Tue, Jun 4, 2024 at 2:27 PM Barnabás Czémán <trabarni@gmail.com> wrote:
+>>
+>> On Tue, Jun 4, 2024 at 1:55 PM Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>>
+>>>
+>>>
+>>> On 6/4/24 02:20, Barnabás Czémán wrote:
+>>>> From: Daniil Titov <daniilt971@gmail.com>
+>>>>
+>>>> This GPU is found on SoCs such as MSM8937 (450 MHz), MSM8940 (475 MHz),
+>>>> SDM439 (650 MHz).
+>>>>
+>>>> Signed-off-by: Daniil Titov <daniilt971@gmail.com>
+>>>> Signed-off-by: Barnabás Czémán <trabarni@gmail.com>
+>>>> ---
+>>>
+>>> This all looks very good, just a nit
+>>>
+>>> [...]
+>>>
+>>>> +             /*
+>>>> +              * Increase inactive period to 250 to avoid bouncing
+>>>> +              * the GDSC which appears to make it grumpy
+>>>> +              */
+>>>> +             .inactive_period = 250,
+>>>
+>>> Are you sure this is actually necessary?
+>> Every A5XX GPU is using the same value, but i have never tried with
+>> DRM_MSM_INACTIVE_PERIOD.
+> This was the original patch
+> https://lore.kernel.org/all/20180507224750.9383-1-jcrouse@codeaurora.org/
+> where the inactive period was increased for a530. I cannot test
+> suspend on msm8937 yet.
 
+The suspend here refers to device suspend, not system suspend. Adreno
+goes into device suspend every time you stop using it, i.e. after the
+rendering is done and there's no more work to do.
+
+I suppose a good test scenario here would be to keep running and closing
+kmscube in a rapid fashion and checking if the GPU starts crashing for
+unknown reasons (the dmesg would denote that)
+
+> I can check on msm8953 with a506 maybe if a506 works fine with
+> DRM_MSM_INACTIVE_PERIOD
+> then a505 would be fine with it also.
+
+The more testing the merrier :)
+
+Konrad
