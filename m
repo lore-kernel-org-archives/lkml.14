@@ -1,141 +1,341 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A0E144313;
-	Tue,  4 Jun 2024 14:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D2411459F6;
+	Tue,  4 Jun 2024 14:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511577; cv=none; b=VYG7Gs0FGPwKSCvuAEtD/Ye32DmP38MuxKOBio3sw3MvS1UyZvEfGTNsotP5u7fI0r3+IfdIi/lcrF0JX7n8Dz/cAllnu5cJBRZGGggWgGOqc1REKpWn9QDIpcTcV1Wj92i/TmfQUfyn3PUN2VRkLM1skvAHYobwW28gIwKz76k=
+	t=1717511583; cv=none; b=Cqc/wbu0MncEsfY10YG9Xps0Sh9m87UANPUbugloBX5H5itQGV7NJIsEimp3uHHZS6yqTHnkS2Fh6YuAFRwyyU4kP3m4MvtKTWUXZHN2X+ZtYsAY+52dGnG8xPgHjuzI+K/L/3kRoX5yesl5jG1ljyTVwSFIDopOXMM0cxQI+lI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511577; c=relaxed/simple;
-	bh=o2mxzel60r7gCRivC5Z4TUDgKE+d9kjE+8mhknQD8YM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nd1/l3dRy36g1Dt1Bmri3HOd6N5s/0jC3kcNgKlhg8JR1ZC2yJKDwzdh4JGTfh9k38VRuAQ3pv1onVxiBVzt6myB4wOIrjxUzOButPLYEvQerxs27bJ0dEecuq/uE+OsQmeE3Q/D0n/m3Zf62XvysWAJrXX5Frd0RYfkcV7WrgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2Tl32S+f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2Tl32S+f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CA5C4AF08;
-	Tue,  4 Jun 2024 14:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1717511577;
-	bh=o2mxzel60r7gCRivC5Z4TUDgKE+d9kjE+8mhknQD8YM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2Tl32S+f0uYVyDTYPdJKeLmAq5C7wR3ltmjeG9Hk45252TkQrW6BOA02wijrNgVqu
-	 1RYzMpiz6b2mKESpa4q/yLcU0j7uA5lm9D3ZfAjAHCRH1njiVH2H5vvXFm19nN4pQH
-	 vrmhg48+g8pdeHO6xd0cHGkmVsarK4CZkEBT2o08=
-Date: Tue, 4 Jun 2024 16:17:29 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: rafael@kernel.org, bhelgaas@google.com, ojeda@kernel.org,
-	alex.gaynor@gmail.com, wedsonaf@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, airlied@gmail.com,
-	fujita.tomonori@gmail.com, lina@asahilina.net, pstanner@redhat.com,
-	ajanulgu@redhat.com, lyude@redhat.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 01/11] rust: add abstraction for struct device
-Message-ID: <2024060428-whoops-flattop-7f43@gregkh>
-References: <20240520172554.182094-1-dakr@redhat.com>
- <20240520172554.182094-2-dakr@redhat.com>
- <2024052038-deviancy-criteria-e4fe@gregkh>
- <Zkuw/nOlpAe1OesV@pollux.localdomain>
- <2024052144-alibi-mourner-d463@gregkh>
- <Zk0HG5Ot-_e0o89p@pollux>
+	s=arc-20240116; t=1717511583; c=relaxed/simple;
+	bh=OOsniqMzajuGpNT0CxN0TAVXcqtzOrWvuovOerhoRSE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Fl8moNHtHoRimeQKqTyVrDsrViKwCIlZ7w6JC1/i2MAuJH58XYKuP8656iDrZDgQBl8Gv+IMsGh872hr8ET35iMOb/OkwiX168BqSTwx/QEBtTfRU/n+hwVLSFQOYFmQcOlrkwpllhRKP8GCdT/g5Tw5bIduZd3ng7KWeksfU8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DAF81042;
+	Tue,  4 Jun 2024 07:33:25 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 267363F64C;
+	Tue,  4 Jun 2024 07:32:58 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 13/16] coresight: Use per-sink trace ID maps for Perf sessions
+Date: Tue,  4 Jun 2024 15:30:22 +0100
+Message-Id: <20240604143030.519906-14-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240604143030.519906-1-james.clark@arm.com>
+References: <20240604143030.519906-1-james.clark@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zk0HG5Ot-_e0o89p@pollux>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 21, 2024 at 10:42:03PM +0200, Danilo Krummrich wrote:
-> On Tue, May 21, 2024 at 11:24:38AM +0200, Greg KH wrote:
-> > On Mon, May 20, 2024 at 10:22:22PM +0200, Danilo Krummrich wrote:
-> > > > > +impl Device {
-> > > > > +    /// Creates a new ref-counted instance of an existing device pointer.
-> > > > > +    ///
-> > > > > +    /// # Safety
-> > > > > +    ///
-> > > > > +    /// Callers must ensure that `ptr` is valid, non-null, and has a non-zero reference count.
-> > > > 
-> > > > Callers NEVER care about the reference count of a struct device, anyone
-> > > > poking in that is asking for trouble.
-> > > 
-> > > That's confusing, if not the caller who's passing the device pointer somewhere,
-> > > who else?
-> > > 
-> > > Who takes care that a device' reference count is non-zero when a driver's probe
-> > > function is called?
-> > 
-> > A device's reference count will be non-zero, I'm saying that sometimes,
-> > some driver core functions are called with a 'struct device' that is
-> > NULL, and it can handle it just fine.  Hopefully no callbacks to the
-> > rust code will happen that way, but why aren't you checking just "to be
-> > sure!" otherwise you could have a bug here, and it costs nothing to
-> > verify it, right?
-> 
-> I get your point on that one. But let me explain a bit more why I think that
-> check is not overly helpful here.
-> 
-> In Rust we have the concept of marking functions as 'unsafe'. Unsafe functions
-> need to document their safety preconsitions, i.e. the conditions the caller of
-> the function must guarantee. The caller of an unsafe function needs an unsafe
-> block for it to compile and every unsafe block needs an explanation why it is
-> safe to call this function with the corresponding arguments.
-> 
-> (Ideally, we want to avoid having them in the first place, but for C abstractions
-> we have to deal with raw pointers we receive from the C side and dereferencing a
-> raw pointer is unsafe by definition.)
-> 
-> In this case we have a function that constructs the Rust `Device` structure from
-> a raw (device) pointer we potentially received from the C side. Now we have to
-> decide whether this function is going to be unsafe or safe.
-> 
-> In order for this function to be safe we would need to be able to guarantee that
-> this is a valid, non-null pointer with a non-zero reference count, which
-> unfortunately we can't. Hence, it's going to be an unsafe function.
+This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+as long as there are fewer than that many ETMs connected to each sink.
 
-But you can verify it is non-null, so why not?
+Each sink owns its own trace ID map, and any Perf session connecting to
+that sink will allocate from it, even if the sink is currently in use by
+other users. This is similar to the existing behavior where the dynamic
+trace IDs are constant as long as there is any concurrent Perf session
+active. It's not completely optimal because slightly more IDs will be
+used than necessary, but the optimal solution involves tracking the PIDs
+of each session and allocating ID maps based on the session owner. This
+is difficult to do with the combination of per-thread and per-cpu modes
+and some scheduling issues. The complexity of this isn't likely to worth
+it because even with multiple users they'd just see a difference in the
+ordering of ID allocations rather than hitting any limits (unless the
+hardware does have too many ETMs connected to one sink).
 
-> A NULL pointer check would not make it a safe function either, since the pointer
-> could still be an invalid one, or a pointer to a device it's not guaranteed that
-> the reference count is held up for the duration of the function call.
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-core.c      | 10 ++++++++++
+ drivers/hwtracing/coresight/coresight-dummy.c     |  3 ++-
+ drivers/hwtracing/coresight/coresight-etm-perf.c  | 15 ++++++++++-----
+ .../hwtracing/coresight/coresight-etm3x-core.c    |  9 +++++----
+ .../hwtracing/coresight/coresight-etm4x-core.c    |  9 +++++----
+ drivers/hwtracing/coresight/coresight-stm.c       |  3 ++-
+ drivers/hwtracing/coresight/coresight-sysfs.c     |  3 ++-
+ drivers/hwtracing/coresight/coresight-tpdm.c      |  3 ++-
+ include/linux/coresight.h                         |  3 ++-
+ 9 files changed, 40 insertions(+), 18 deletions(-)
 
-True, but you just took one huge swatch of "potential crashes" off the
-table.  To ignore that feels odd.
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index 9fc6f6b863e0..d5aaeafe5c7d 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -902,6 +902,7 @@ static void coresight_device_release(struct device *dev)
+ 	struct coresight_device *csdev = to_coresight_device(dev);
+ 
+ 	fwnode_handle_put(csdev->dev.fwnode);
++	free_percpu(csdev->perf_sink_id_map.cpu_map);
+ 	kfree(csdev);
+ }
+ 
+@@ -1159,6 +1160,14 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
+ 	dev_set_name(&csdev->dev, "%s", desc->name);
+ 
++	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
++	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
++		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
++		if (!csdev->perf_sink_id_map.cpu_map) {
++			ret = -ENOMEM;
++			goto err_out;
++		}
++	}
+ 	/*
+ 	 * Make sure the device registration and the connection fixup
+ 	 * are synchronised, so that we don't see uninitialised devices
+@@ -1216,6 +1225,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ err_out:
+ 	/* Cleanup the connection information */
+ 	coresight_release_platform_data(NULL, desc->dev, desc->pdata);
++	kfree(csdev);
+ 	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL_GPL(coresight_register);
+diff --git a/drivers/hwtracing/coresight/coresight-dummy.c b/drivers/hwtracing/coresight/coresight-dummy.c
+index ac70c0b491be..1f1b9ad160f6 100644
+--- a/drivers/hwtracing/coresight/coresight-dummy.c
++++ b/drivers/hwtracing/coresight/coresight-dummy.c
+@@ -21,7 +21,8 @@ DEFINE_CORESIGHT_DEVLIST(source_devs, "dummy_source");
+ DEFINE_CORESIGHT_DEVLIST(sink_devs, "dummy_sink");
+ 
+ static int dummy_source_enable(struct coresight_device *csdev,
+-			       struct perf_event *event, enum cs_mode mode)
++			       struct perf_event *event, enum cs_mode mode,
++			       __maybe_unused struct coresight_trace_id_map *id_map)
+ {
+ 	dev_dbg(csdev->dev.parent, "Dummy source enabled\n");
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index c0c60e6a1703..7fb55dafb639 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -229,10 +229,13 @@ static void free_event_data(struct work_struct *work)
+ 		struct list_head **ppath;
+ 
+ 		ppath = etm_event_cpu_path_ptr(event_data, cpu);
+-		if (!(IS_ERR_OR_NULL(*ppath)))
++		if (!(IS_ERR_OR_NULL(*ppath))) {
++			struct coresight_device *sink = coresight_get_sink(*ppath);
++
++			coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
+ 			coresight_release_path(*ppath);
++		}
+ 		*ppath = NULL;
+-		coresight_trace_id_put_cpu_id(cpu);
+ 	}
+ 
+ 	/* mark perf event as done for trace id allocator */
+@@ -401,7 +404,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		}
+ 
+ 		/* ensure we can allocate a trace ID for this CPU */
+-		trace_id = coresight_trace_id_get_cpu_id(cpu);
++		trace_id = coresight_trace_id_get_cpu_id_map(cpu, &sink->perf_sink_id_map);
+ 		if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+ 			cpumask_clear_cpu(cpu, mask);
+ 			coresight_release_path(path);
+@@ -495,7 +498,8 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		goto fail_end_stop;
+ 
+ 	/* Finally enable the tracer */
+-	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
++	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF,
++				      &sink->perf_sink_id_map))
+ 		goto fail_disable_path;
+ 
+ 	/*
+@@ -507,7 +511,8 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+ 				   CS_AUX_HW_ID_CURR_VERSION);
+ 		hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+-				    coresight_trace_id_read_cpu_id(cpu));
++				    coresight_trace_id_read_cpu_id_map(cpu,
++								       &sink->perf_sink_id_map));
+ 		perf_report_aux_output_id(event, hw_id);
+ 	}
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x-core.c b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+index 9d5c1391ffb1..65cf7456426a 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x-core.c
+@@ -481,7 +481,8 @@ void etm_release_trace_id(struct etm_drvdata *drvdata)
+ }
+ 
+ static int etm_enable_perf(struct coresight_device *csdev,
+-			   struct perf_event *event)
++			   struct perf_event *event,
++			   struct coresight_trace_id_map *id_map)
+ {
+ 	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	int trace_id;
+@@ -500,7 +501,7 @@ static int etm_enable_perf(struct coresight_device *csdev,
+ 	 * with perf locks - we know the ID cannot change until perf shuts down
+ 	 * the session
+ 	 */
+-	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
++	trace_id = coresight_trace_id_read_cpu_id_map(drvdata->cpu, id_map);
+ 	if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+ 		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+ 			dev_name(&drvdata->csdev->dev), drvdata->cpu);
+@@ -553,7 +554,7 @@ static int etm_enable_sysfs(struct coresight_device *csdev)
+ }
+ 
+ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
+-		      enum cs_mode mode)
++		      enum cs_mode mode, struct coresight_trace_id_map *id_map)
+ {
+ 	int ret;
+ 	struct etm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+@@ -568,7 +569,7 @@ static int etm_enable(struct coresight_device *csdev, struct perf_event *event,
+ 		ret = etm_enable_sysfs(csdev);
+ 		break;
+ 	case CS_MODE_PERF:
+-		ret = etm_enable_perf(csdev, event);
++		ret = etm_enable_perf(csdev, event, id_map);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index a0bdfabddbc6..fcd0f9ba562d 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -752,7 +752,8 @@ static int etm4_parse_event_config(struct coresight_device *csdev,
+ }
+ 
+ static int etm4_enable_perf(struct coresight_device *csdev,
+-			    struct perf_event *event)
++			    struct perf_event *event,
++			    struct coresight_trace_id_map *id_map)
+ {
+ 	int ret = 0, trace_id;
+ 	struct etmv4_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+@@ -775,7 +776,7 @@ static int etm4_enable_perf(struct coresight_device *csdev,
+ 	 * with perf locks - we know the ID cannot change until perf shuts down
+ 	 * the session
+ 	 */
+-	trace_id = coresight_trace_id_read_cpu_id(drvdata->cpu);
++	trace_id = coresight_trace_id_read_cpu_id_map(drvdata->cpu, id_map);
+ 	if (!IS_VALID_CS_TRACE_ID(trace_id)) {
+ 		dev_err(&drvdata->csdev->dev, "Failed to set trace ID for %s on CPU%d\n",
+ 			dev_name(&drvdata->csdev->dev), drvdata->cpu);
+@@ -837,7 +838,7 @@ static int etm4_enable_sysfs(struct coresight_device *csdev)
+ }
+ 
+ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
+-		       enum cs_mode mode)
++		       enum cs_mode mode, struct coresight_trace_id_map *id_map)
+ {
+ 	int ret;
+ 
+@@ -851,7 +852,7 @@ static int etm4_enable(struct coresight_device *csdev, struct perf_event *event,
+ 		ret = etm4_enable_sysfs(csdev);
+ 		break;
+ 	case CS_MODE_PERF:
+-		ret = etm4_enable_perf(csdev, event);
++		ret = etm4_enable_perf(csdev, event, id_map);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
+index e1c62820dfda..a80ad1de4c23 100644
+--- a/drivers/hwtracing/coresight/coresight-stm.c
++++ b/drivers/hwtracing/coresight/coresight-stm.c
+@@ -194,7 +194,8 @@ static void stm_enable_hw(struct stm_drvdata *drvdata)
+ }
+ 
+ static int stm_enable(struct coresight_device *csdev, struct perf_event *event,
+-		      enum cs_mode mode)
++		      enum cs_mode mode,
++		      __maybe_unused struct coresight_trace_id_map *trace_id)
+ {
+ 	struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-sysfs.c b/drivers/hwtracing/coresight/coresight-sysfs.c
+index 1e67cc7758d7..a01c9e54e2ed 100644
+--- a/drivers/hwtracing/coresight/coresight-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-sysfs.c
+@@ -9,6 +9,7 @@
+ #include <linux/kernel.h>
+ 
+ #include "coresight-priv.h"
++#include "coresight-trace-id.h"
+ 
+ /*
+  * Use IDR to map the hash of the source's device name
+@@ -63,7 +64,7 @@ static int coresight_enable_source_sysfs(struct coresight_device *csdev,
+ 	 */
+ 	lockdep_assert_held(&coresight_mutex);
+ 	if (coresight_get_mode(csdev) != CS_MODE_SYSFS) {
+-		ret = source_ops(csdev)->enable(csdev, data, mode);
++		ret = source_ops(csdev)->enable(csdev, data, mode, NULL);
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
+index a9708ab0d488..0376ad326a2f 100644
+--- a/drivers/hwtracing/coresight/coresight-tpdm.c
++++ b/drivers/hwtracing/coresight/coresight-tpdm.c
+@@ -439,7 +439,8 @@ static void __tpdm_enable(struct tpdm_drvdata *drvdata)
+ }
+ 
+ static int tpdm_enable(struct coresight_device *csdev, struct perf_event *event,
+-		       enum cs_mode mode)
++		       enum cs_mode mode,
++		       __maybe_unused struct coresight_trace_id_map *id_map)
+ {
+ 	struct tpdm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index 7d62b88bfb5c..9c3067e2e38b 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -290,6 +290,7 @@ struct coresight_device {
+ 	bool sysfs_sink_activated;
+ 	struct dev_ext_attribute *ea;
+ 	struct coresight_device *def_sink;
++	struct coresight_trace_id_map perf_sink_id_map;
+ 	/* sysfs links between components */
+ 	int nr_links;
+ 	bool has_conns_grp;
+@@ -384,7 +385,7 @@ struct coresight_ops_link {
+ struct coresight_ops_source {
+ 	int (*cpu_id)(struct coresight_device *csdev);
+ 	int (*enable)(struct coresight_device *csdev, struct perf_event *event,
+-		      enum cs_mode mode);
++		      enum cs_mode mode, struct coresight_trace_id_map *id_map);
+ 	void (*disable)(struct coresight_device *csdev,
+ 			struct perf_event *event);
+ };
+-- 
+2.34.1
 
-> Given that, we could add the NULL check and change the safety precondition to
-> "valid pointer to a device with non-zero reference count OR NULL", but I don't
-> see how this improves the situation for the caller, plus we'd need to return
-> `Result<Device>` instead and let the caller handle that the `Device` was not
-> created.
-
-It better be able to handle if `Device` was not created, as you could
-have been out of memory and nothing would have been allocated.  To not
-check feels very broken.
-
-> > Ok, if you say so, should we bookmark this thread for when this does
-> > happen?  :)
-> 
-> I'm just saying the caller has to validate that or provide a rationale why this
-> is safe anyways, hence it'd be just a duplicate check.
-> 
-> > 
-> > What will the rust code do if it is passed in a NULL pointer?  Will it
-> > crash like C code does?  Or something else?
-> 
-> It mostly calls into C functions with this pointer, depends on what they do.
-> 
-> Checking a few random places, e.g. [1], it seems to crash in most cases.
-> 
-> [1] https://elixir.free-electrons.com/linux/latest/source/drivers/base/core.c#L3863
-
-Great, then you should check :)
-
-thanks,
-
-greg k-h
