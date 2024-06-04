@@ -1,137 +1,171 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1F4146A8C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C18145FF1;
+	Tue,  4 Jun 2024 12:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505362; cv=none; b=Yg435VPTR5buQDEGHWMbWKkSsEr21LUifupdfU5hLkJhI5ztFbifWVwxo1Q3GrWqACwoADeU3XhUHObEH2VwzLgOw7HyOegxwZjligBO6dN/MSkrf1wIhvJHfbvlo6S5aENYD/pyGyEaIC7+LzGarapTpWDVH6pqrhENzix/RWU=
+	t=1717505417; cv=none; b=H9D34N5nwFTq26LPhGr6v8C4Da+neNLcbs7AJUBB8w83j6QutrzZWkO51peR5mztpj3rVPoxn+oERRYRGoeOviqlRYwo2pGHdkW7DfRsHZG+FeAUrnYSkrYVyXQcb8QsvH5/H7ZClBDeMFqLBg/Xa/Anwky1qP1mvrVNytE69HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505362; c=relaxed/simple;
-	bh=9gi4a4wTtOnHVdD3VSLP7Qeg3BmFkZjwDMVlBkbQhKs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pu67aKwZhmVpvaUoOvlfuxy8ikD64go0kQTAr0qzDIVJOoCUMF/37ZhfvEX4DqTLoK/rSiu20Jf8rtPHmVv2S2l+Nr9bF7gkD2C3QCVsjMU29+r/GxyiDTVgttzc3diObL0seIBz76oKMUiOgSqKb+pkJsU/TKTlNfwl81M9ffI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=oQH303wy; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1717505417; c=relaxed/simple;
+	bh=uL/t7pm9AK4sEcDXmw3Mra5gJjxVZIFJK9MXRYF5SCc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JzgkMzeTR8poymTuyMufW0IH/Da9rELUi1eaFZvSlg+YLiFKKHqtyKJWsoI6diWl30qEpqgCIc61kXrocVuDD39H5QMPrIGDuksKj6kaS0Ht5TqENmLZF9xRO0YmBiCPf+yCP3Y0WNGV2CWZwkoXLuSQwlVsmLZ9Voj6d2SoPss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z4bKT20b; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="oQH303wy"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-64ecc2f111dso648989a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:49:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4bKT20b"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a677d3d79so3342259a12.1;
+        Tue, 04 Jun 2024 05:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717505360; x=1718110160; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1717505414; x=1718110214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hg13op520E0l7vmsGSXJjwrEXGfoFkLadNxxD6X23VY=;
-        b=oQH303wyl92EQU98nM0yovW2mIBSccaLRA7ij57ulHx8t2FlEbiQ1qTvyOSfGrP497
-         gIVN+re6sV/T/9QEL6AR/6eU04npXIa/2/jZcqBKMX7y4Y9PQvF20i5NfVXYHUqUNjzB
-         RCyj+PCkOikcW3fXK1wCgWPsNX3Zom+46mE1OjcIZEm7JRLwQas9cQ2XKR7naadL1wvo
-         E9rKy8gjMhnIx08xX5/cMk+eNjbC5+MYLaCXULMWZRvMAC3m7U8PYJtlR3hF4jzLOsVv
-         fGYU0z7+q1b6m3FkSImGVb1FhvqTcj8qLqVHIOf3tufVsNpPmiuxXkd2NjP/HHwJfzBr
-         8rkg==
+        bh=l5A5/CwMQp+giK6dA3QbmX6y5Z0nir0CTmgUL04kHgE=;
+        b=Z4bKT20bGMXD/hk6vaMlGYEtJU15SQFFGJF0FO93kOVnrFOkPoYb1MJ/1VShuoAyem
+         syYNMKa6g5kbjkqLb3yTYj3OTv1iWT1CnVpKKrLzHMa9Ttl6PNcKaEAC2mMiN4y/CHO2
+         eJm67iJT/ndfWtIFsH9/5UZzdv+3dI8w7Ecdip+yk32SKy5c+pYIHoaLFbpCy1/B2Wuk
+         vQK57JT9Pw9wcdvg5/iFe7qViq1/2s1kfyEShnoGDbDxC/jycH3Sx7tk01BUhJkA5xCh
+         J0cX3ls4XbAW5W7dt0GB65hX3QZy+v3KJdx0kE+WFnMJj8k4/rG0jZwS6l74Ek6SJ1t4
+         Ldaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717505360; x=1718110160;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1717505414; x=1718110214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hg13op520E0l7vmsGSXJjwrEXGfoFkLadNxxD6X23VY=;
-        b=HdyV/VV87Poen3GT9G7by+Tyl+TG5R0B7PWQ5PuZFKF42LOvQ9EvFF9EmIaxDRGuxl
-         ohfEADhf5vmKAWLWAH7G7DsgTCzmGsegG3wP6ZgjnxUJC3kRXBJhWpVBP3wD6NUBwyEu
-         Y1eAm7mJvvw9zAtbCid1WB45kMFKbEYsobNl+vALMQsRMR/Ii3q3haFtyodDsnR0txeP
-         ARW230lot01Cbgwe7ogQCZtmePOaLAolOTkMb6m0t01LnnWWFIPBLJixjvuYEE+GpOEz
-         2fEZ5uvr9b4TOBb+pGlU5Yfzx2BHQwQ3vgfqcNe7Cw9a8ikefCfaOx2fHmvB1pg+gCBA
-         zSOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfSVStfiDEtnUMHe5Oodjv/pv9T+nwLj5dKrw1/n2AFtFlJOQeV5hoU9fcu806+4BpGgMa7ZAs5FQKUrHEaANpJy2SexSZiM8Z3U/J
-X-Gm-Message-State: AOJu0YxpveC71UfsHK8Y8OhBiAR4HfkyhK7pT3nQ3kxPhXR9VYT+LBNB
-	JQ6CnLEPQEGW6Tdob57c2SNKIuH0qPe/EvQ+DsvDOmUzlw8AiZgs9qaKnhuuxoU=
-X-Google-Smtp-Source: AGHT+IFjRaBoryIbYEQtignrxN6JqLYXY8gztujl1ilZT6KvEZR3UOMAvujw3x8ToyklOBgsdusl/Q==
-X-Received: by 2002:a17:902:ecc6:b0:1f5:e796:f247 with SMTP id d9443c01a7336-1f6371ff41amr134960595ad.6.1717505360188;
-        Tue, 04 Jun 2024 05:49:20 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:327b:5ba3:8154:37ed])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ebc69sm83042885ad.211.2024.06.04.05.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 05:49:19 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v6 16/16] KVM: riscv: selftests: Add Zcmop extension to get-reg-list test
-Date: Tue,  4 Jun 2024 14:45:48 +0200
-Message-ID: <20240604124550.3214710-17-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240604124550.3214710-1-cleger@rivosinc.com>
-References: <20240604124550.3214710-1-cleger@rivosinc.com>
+        bh=l5A5/CwMQp+giK6dA3QbmX6y5Z0nir0CTmgUL04kHgE=;
+        b=T1D1u2hdB02XKS88FFFSpXWeyYy+2ImWI/9Bphe6gCPYRVUUViNVp6CxBp/caepC2v
+         59+4hdiF7gyoCEwcAL5mxDh0a1NrboBpL4p9BCbSInchI0qFpO8a2edipFpsu63pI6EJ
+         jaVA4pS7lIMg9V5LU1pU2xeb/fnJkYXBLQBfvRQVSeiLDSTBW/tPoQ9uFb44/R+zsI3l
+         V/vrhfng80PdOqif/FPUHclLGpPGWiCoIrGWPwCjWICQPZvD1rVh8G3Ay0FbPEc/eGoI
+         eeRXnzqozyuqjMFFqdT0OO3A1VNryqMxQbuG7rnYNLzW5rL3qX1yiQ1h0Rc9PicoVhUu
+         Yw/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXfTbcwtnEdwhv8o+OJ2jKoQDKwc2QvWZap3ALg2bloQiR+faq0aLhFCziKd/ugfTnuvZ7DF0zs2zagbUGQN/od1wWIE0HgT1EkVpyECdVKPdnuG/8eOWQfvruhVNSUHiGcsMD93xu9EsxDIfypU+yi3JyPQAxRgIJd1i8qxQt7/XaXBA==
+X-Gm-Message-State: AOJu0Yw2ayA/0ivlJyQbuOiZgPYkLOCq6USQKIscjaY2S7AVwt5Ia/Vb
+	IkPqkD1e5iCwr82pIWs0ajKNCtEg5m3oEPRskVvfWvweBXj1Hq1W7r+5Nn1YsA9f9vpwvNufma8
+	OvfiQH/bUhHYQJiJK2ux3bVEjGB0=
+X-Google-Smtp-Source: AGHT+IF2c7GJir+XPdRoLTFlUuzDsKkGSNria5acCbGeioFwEyDr0OUN028acb+qeCgAnoaY523IZwylbZbhdOiDrCo=
+X-Received: by 2002:a50:9ea5:0:b0:578:6484:24ff with SMTP id
+ 4fb4d7f45d1cf-57a7a6a29a2mr2227617a12.6.1717505413457; Tue, 04 Jun 2024
+ 05:50:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240530072113.30410-1-animeshagarwal28@gmail.com> <Zlij+FgY4ul7ZwbA@lizhi-Precision-Tower-5810>
+In-Reply-To: <Zlij+FgY4ul7ZwbA@lizhi-Precision-Tower-5810>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Tue, 4 Jun 2024 15:50:01 +0300
+Message-ID: <CAEnQRZBsBOAHiwZDNKyPRinXdEOhdu2dBdGpMrq-e9kWasukSQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: dma: fsl,imx-dma: Convert to dtschema
+To: Frank Li <Frank.li@nxp.com>
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The KVM RISC-V allows Zcmop extension for Guest/VM so add this
-extension to get-reg-list test.
+On Thu, May 30, 2024 at 7:06=E2=80=AFPM Frank Li <Frank.li@nxp.com> wrote:
+>
+> On Thu, May 30, 2024 at 12:51:07PM +0530, Animesh Agarwal wrote:
+> > Convert the fsl i.MX DMA controller bindings to DT schema
+>
+> nit: need "." after sentence.
+>
+> >
+> > Signed-off-by: Animesh Agarwal <animeshagarwal28@gmail.com>
+> > ---
+> >  .../devicetree/bindings/dma/fsl,imx-dma.yaml  | 58 +++++++++++++++++++
+> >  .../devicetree/bindings/dma/fsl-imx-dma.txt   | 50 ----------------
+> >  2 files changed, 58 insertions(+), 50 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/fsl,imx-dma.y=
+aml
+> >  delete mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-dma.t=
+xt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml b/D=
+ocumentation/devicetree/bindings/dma/fsl,imx-dma.yaml
+> > new file mode 100644
+> > index 000000000000..f36ab5425bdb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/fsl,imx-dma.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/dma/fsl,imx-dma.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Freescale Direct Memory Access (DMA) Controller for i.MX
+> > +
+> > +maintainers:
+> > +  - Animesh Agarwal <animeshagarwal28@gmail.com>
+> > +
+> > +allOf:
+> > +  - $ref: dma-controller.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - fsl,imx1-dma
+> > +      - fsl,imx21-dma
+> > +      - fsl,imx27-dma
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    description: |
+> > +      First item should be DMA interrupt, second one is optional and
+> > +      should contain DMA Error interrupt.
+>
+> items:
+>   - description: DMA complete interrupt
+>   - description: DMA Error interrupt
+>
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  "#dma-cells":
+> > +    const: 1
+> > +
+> > +  dma-channels:
+> > +    const: 16
+>
+> I think it should be maximum: 16
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Acked-by: Anup Patel <anup@brainfault.org>
----
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
- 1 file changed, 4 insertions(+)
+As Krzysztof pointed out and looking at datasheet and driver implementation=
+, we
+always use 16 channels. Nothing less or variable.
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index 864a701ef6c3..1a5637a6ea1e 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -60,6 +60,7 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCB:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCD:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCF:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZCMOP:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFA:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
-@@ -431,6 +432,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(ZCB),
- 		KVM_ISA_EXT_ARR(ZCD),
- 		KVM_ISA_EXT_ARR(ZCF),
-+		KVM_ISA_EXT_ARR(ZCMOP),
- 		KVM_ISA_EXT_ARR(ZFA),
- 		KVM_ISA_EXT_ARR(ZFH),
- 		KVM_ISA_EXT_ARR(ZFHMIN),
-@@ -960,6 +962,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zca, ZCA),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcb, ZCB),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcd, ZCD),
- KVM_ISA_EXT_SIMPLE_CONFIG(zcf, ZCF),
-+KVM_ISA_EXT_SIMPLE_CONFIG(zcmop, ZCMOP);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
- KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
-@@ -1021,6 +1024,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_zcb,
- 	&config_zcd,
- 	&config_zcf,
-+	&config_zcmop,
- 	&config_zfa,
- 	&config_zfh,
- 	&config_zfhmin,
--- 
-2.45.1
+So const: 16 I think it is correct!
 
+Another, thing. Should we keep both
+
+dma-channels
+and
+#dma-channels?
+
+I wonder what is the correct way to put #dma-channels
+
+Like this:
+
+#dma-channels:
+     deprecated
+
+or
+
+'#dma-channels':
+    deprecated
+
+
+The rest looks good to me.
+
+Thanks for doing this Animesh!
