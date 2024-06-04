@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494F814885D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C524145A1F;
 	Tue,  4 Jun 2024 14:42:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717512136; cv=none; b=O33WH8H07ldaXil43PtlcVHKiWLNAdYuozxEJ5XInrUplxgSxqdplGyySZHI+KCgrlXoWEYFlhegJLTqRsJTo3+dME5saadUSMfeYfpkE35vXSWVOXLwG6G3TlTQUb7RTkgAwqlqnga2F3JPZUeX8/Ij+RI3UreFhCYB9YK6EqE=
+	t=1717512135; cv=none; b=dukI7NayS87twWgErfpBw51xmah/uRqnCbsIncDcyG0ZQyTE66DHVK1vJJyEtEjaivatcVabqwks2Yhg9r2oGEHx2YtYSp4fUz9vAx9ZNIFQaxH1dc9nRMcgk6GS8oayst6rX6h3kOWVmv79Jv+/nwOQRLQfKlFBOhALnGf6V50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717512136; c=relaxed/simple;
-	bh=swTaasv8PXlkFiPSTEH7yV+crVt6cu1LbDP2CWCm4e4=;
+	s=arc-20240116; t=1717512135; c=relaxed/simple;
+	bh=c9vm0JziVDoqmP/XAmZSco8JE8aUdkPgChYrMgrLdC8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VaCWNj4Ujw3iRYUXh2DDIEpwiRAINg4/pKPwMD0NYmUwIa/51W9473gIlqAcIZLu6W48KeM+n2vpqflYG9GfekhfHCgSMR9Va0yjrnishsRZaCY/vtab2cv5DcU9EFbdklOm+VWK9hnSCiaE8RYOdqIr6I6/hCMdaeVSCZ8Z0Yo=
+	 Content-Type; b=PUjT0U6I5fWGlpymGyuIpdSfZI0ANQ8tOGp5w6i3tgKhD6ou0vS6IOIN2KceFhiL0g7uVHag9akOIrwTEmQxYZEMcxV1yyWW+zsCE8xsWis2xUkAfkDnJII/ThgBohODQXr37er3ibv6/ebhYm5/QnwDyImzQa6Pf6wNx8VePG0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D038EC4AF55;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B18C32786;
 	Tue,  4 Jun 2024 14:42:15 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1sEVMd-00000000YxX-2Kl0;
-	Tue, 04 Jun 2024 10:42:15 -0400
-Message-ID: <20240604144215.418546634@goodmis.org>
+	id 1sEVMc-00000000Yvb-3oeR;
+	Tue, 04 Jun 2024 10:42:14 -0400
+Message-ID: <20240604144214.765821705@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Jun 2024 10:41:12 -0400
+Date: Tue, 04 Jun 2024 10:41:08 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,7 +40,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Thomas Gleixner <tglx@linutronix.de>,
  Guo Ren <guoren@kernel.org>
-Subject: [for-next][PATCH 09/27] ftrace: Allow ftrace startup flags to exist without dynamic ftrace
+Subject: [for-next][PATCH 05/27] function_graph: Handle tail calls for stack unwinding
 References: <20240604144103.293353991@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,19 +50,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 
-Some of the flags for ftrace_startup() may be exposed even when
-CONFIG_DYNAMIC_FTRACE is not configured in. This is fine as the difference
-between dynamic ftrace and static ftrace is done within the internals of
-ftrace itself. No need to have use cases fail to compile because dynamic
-ftrace is disabled.
+For the tail-call, there would be 2 or more ftrace_ret_stacks on the
+ret_stack, which records "return_to_handler" as the return address except
+for the last one.  But on the real stack, there should be 1 entry because
+tail-call reuses the return address on the stack and jump to the next
+function.
 
-This change is needed to move some of the logic of what is passed to
-ftrace_startup() out of the parameters of ftrace_startup().
+In ftrace_graph_ret_addr() that is used for stack unwinding, skip tail
+calls as a real stack unwinder would do.
 
-Link: https://lore.kernel.org/linux-trace-kernel/171509100890.162236.4362350342549122222.stgit@devnote2
-Link: https://lore.kernel.org/linux-trace-kernel/20240603190822.350654104@goodmis.org
+Link: https://lore.kernel.org/linux-trace-kernel/171509096221.162236.8806372072523195752.stgit@devnote2
+Link: https://lore.kernel.org/linux-trace-kernel/20240603190821.717065217@goodmis.org
 
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -80,50 +80,67 @@ Cc: Alan Maguire <alan.maguire@oracle.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Guo Ren <guoren@kernel.org>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ftrace.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/fgraph.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index fd656e6d6b7c..586018744785 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -509,6 +509,15 @@ static inline void stack_tracer_disable(void) { }
- static inline void stack_tracer_enable(void) { }
- #endif
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index aae51f746828..8de2a2662281 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -594,16 +594,26 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 				    unsigned long ret, unsigned long *retp)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
++	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
+ 	int i = task->curr_ret_stack;
  
-+enum {
-+	FTRACE_UPDATE_CALLS		= (1 << 0),
-+	FTRACE_DISABLE_CALLS		= (1 << 1),
-+	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
-+	FTRACE_START_FUNC_RET		= (1 << 3),
-+	FTRACE_STOP_FUNC_RET		= (1 << 4),
-+	FTRACE_MAY_SLEEP		= (1 << 5),
-+};
-+
- #ifdef CONFIG_DYNAMIC_FTRACE
+-	if (ret != (unsigned long)dereference_kernel_function_descriptor(return_to_handler))
++	if (ret != return_handler)
+ 		return ret;
  
- void ftrace_arch_code_modify_prepare(void);
-@@ -603,15 +612,6 @@ void ftrace_set_global_notrace(unsigned char *buf, int len, int reset);
- void ftrace_free_filter(struct ftrace_ops *ops);
- void ftrace_ops_set_global_filter(struct ftrace_ops *ops);
+ 	while (i > 0) {
+ 		ret_stack = get_ret_stack(current, i, &i);
+ 		if (!ret_stack)
+ 			break;
+-		if (ret_stack->retp == retp)
++		/*
++		 * For the tail-call, there would be 2 or more ftrace_ret_stacks on
++		 * the ret_stack, which records "return_to_handler" as the return
++		 * address except for the last one.
++		 * But on the real stack, there should be 1 entry because tail-call
++		 * reuses the return address on the stack and jump to the next function.
++		 * Thus we will continue to find real return address.
++		 */
++		if (ret_stack->retp == retp &&
++		    ret_stack->ret != return_handler)
+ 			return ret_stack->ret;
+ 	}
  
--enum {
--	FTRACE_UPDATE_CALLS		= (1 << 0),
--	FTRACE_DISABLE_CALLS		= (1 << 1),
--	FTRACE_UPDATE_TRACE_FUNC	= (1 << 2),
--	FTRACE_START_FUNC_RET		= (1 << 3),
--	FTRACE_STOP_FUNC_RET		= (1 << 4),
--	FTRACE_MAY_SLEEP		= (1 << 5),
--};
--
- /*
-  * The FTRACE_UPDATE_* enum is used to pass information back
-  * from the ftrace_update_record() and ftrace_test_record()
+@@ -614,10 +624,11 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 				    unsigned long ret, unsigned long *retp)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
++	unsigned long return_handler = (unsigned long)dereference_kernel_function_descriptor(return_to_handler);
+ 	int offset = task->curr_ret_stack;
+ 	int i;
+ 
+-	if (ret != (unsigned long)dereference_kernel_function_descriptor(return_to_handler))
++	if (ret != return_handler)
+ 		return ret;
+ 
+ 	if (!idx)
+@@ -626,6 +637,8 @@ unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+ 	i = *idx;
+ 	do {
+ 		ret_stack = get_ret_stack(task, offset, &offset);
++		if (ret_stack && ret_stack->ret == return_handler)
++			continue;
+ 		i--;
+ 	} while (i >= 0 && ret_stack);
+ 
 -- 
 2.43.0
 
