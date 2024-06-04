@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF530149C67;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4F3149C65;
 	Tue,  4 Jun 2024 17:04:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520681; cv=none; b=mS74vz6dVacpUlDVLFb7fsGftHFvXyJWPVPqXghlAfbGeNThPmAsLi2r6qc8qucDwIiKBsQqDKn7BhuC+Q8Cu/36+9dLsq5lzqDJo4sk4LdSwT765af5mdejQHHlULwfLtFvoFxF3eIqAmPtkT5cFUBkyY62gpmHb3fx9yePxbM=
+	t=1717520681; cv=none; b=HKcfgItt/pYiOu2OvgWzmr8lETuFX6zBDop+CEgg9dvJ3nGt+KSUxaqNaeBS0LV9QHEVA/pCg4XAa1w1/iU2OST9TyUn8yxXaR/OfHROOmXzb8JBHAZC4OnpedzKTH1zUBSfl2SzQdrsh4nSEtolBtBHJ3ix3S0dGOcsoKLNwYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717520681; c=relaxed/simple;
-	bh=GxwVGSclRaGU/SB3ndBiNvXG+9cagR1RsASsFKDZ6S8=;
+	bh=rrXhYcuvAzSeNxJsE5K8KoOIiHuhtq2k88GjikEXdAw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SxXhyTkx/gcH6SAf85SLUhIII8u9Q+D/U0W9BqhJQnj3uMvNtH53qLGoekly1jYLhNzTxmCGCpz+9KkFApuDWkWs7rZUKbOW+X0/qyXNr2rKCyS8U8Wu5dZpG4Wv/fUI+StFrWibO6Hwj6Hlo2KXPFNhKAyRCkog5a11Qy8CtUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqARKUI5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GtL2SIIBCXYQdSe2lzeoKbfh/OJQu+hnjajlgEbjXgygP7ClFDL5G3yKZttNIJzaycdHEZSHaRKqEovXMmQvV4Ue/bUu83Uk/3Kjv7lOlfEv3k2H8x4zqsOnvkL7w27/QQ3+x7aCkLdkdiwYrQcrDlkxq5JocqcNDZgMQAhtjVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VdcZuACD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqARKUI5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 618BAC4AF0A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VdcZuACD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 700D4C4AF10;
 	Tue,  4 Jun 2024 17:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717520681;
-	bh=GxwVGSclRaGU/SB3ndBiNvXG+9cagR1RsASsFKDZ6S8=;
+	bh=rrXhYcuvAzSeNxJsE5K8KoOIiHuhtq2k88GjikEXdAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nqARKUI5XSSx7SeFDFVZhhnMd+v9cxXbud2egrU5rqUpu7Wn0aByJNTBInYwpf6eb
-	 BGYqKqkybmoZ3Zxf7lwKE7jJt7yvxAAJSMd16HpbM0pzyxZibSZrsAfBY/lq0bJ0Qj
-	 QcAUkc7hjloPQywj1HvHXDmNbqs8TDqSP3ImoJ8OXA+A8A6RQ8HbnzABAeLWOcMNPN
-	 8eybIErJI5kSK3Jb3EkwlZDhSUlOHeKd5fX3mjYA9vVYw1+PsX+7YAI9ToqjT7JIDN
-	 /MJp1R8HZ944N/61tin46cQ3bOSGrNi9dm9CcZ9LzDIrEF+MVNpb0QgsjR4ipjrG1U
-	 VWwGUON4u80Fw==
+	b=VdcZuACD7jFzew8Y495MNxaKHldbX2iP8xvNHsI8eKkW0G2YxjlzAgxLkPd7oKKM1
+	 FtjqK+2bGHncEj0v81ifGJ0r1L7ZaeN3jgpnYbPsQtUaR2olHVTXo6GYHoyQlp7GNg
+	 lrr00++8r7myhmm/i00hZZpUcCfL4Ownla+JxAO/Q4d0olbXWR0MP4nHS0YB9gJvE3
+	 XePnoEf9Z/MPRz+i2o9/b5sLuE2MhaK9dkUcTM6fzv4abfZ5I+ocQY7i8OBhKvyNKK
+	 5FnRl9DLBNMAlJLeTa/Bb+tRy8NAPr0DOV2trLtmxlMSAmfDNMo4z+dhOpLwS8qpzq
+	 d6nFjU1Iobj6w==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 01CFFCE1415; Tue,  4 Jun 2024 10:04:41 -0700 (PDT)
+	id 08360CE3F27; Tue,  4 Jun 2024 10:04:41 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-arch@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -41,13 +41,18 @@ Cc: linux-kernel@vger.kernel.org,
 	torvalds@linux-foundation.org,
 	arnd@arndb.de,
 	"Paul E. McKenney" <paulmck@kernel.org>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-sh@vger.kernel.org
-Subject: [PATCH v3 cmpxchg 2/4] sh: Emulate one-byte cmpxchg
-Date: Tue,  4 Jun 2024 10:04:35 -0700
-Message-Id: <20240604170437.2362545-2-paulmck@kernel.org>
+	Mark Brown <broonie@kernel.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Andrew Davis <afd@ti.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 cmpxchg 4/4] ARM: Emulate one-byte cmpxchg
+Date: Tue,  4 Jun 2024 10:04:37 -0700
+Message-Id: <20240604170437.2362545-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
 References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
@@ -59,56 +64,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on sh.
+Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on ARM systems
+with ARCH < ARMv6K.
 
-[ paulmck: Drop two-byte support per Arnd Bergmann feedback. ]
-[ paulmck: Apply feedback from Naresh Kamboju. ]
-[ Apply Geert Uytterhoeven feedback. ]
+[ paulmck: Apply Arnd Bergmann and Nathan Chancellor feedback. ]
 
+Reported-by: Mark Brown <broonie@kernel.org>
+Closes: https://lore.kernel.org/all/54798f68-48f7-4c65-9cba-47c0bf175143@sirena.org.uk/
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYuZ+pf6p8AXMZWtdFtX-gbG8HMaBKp=XbxcdzA_QeLkxQ@mail.gmail.com/
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Andi Shyti <andi.shyti@linux.intel.com>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: <linux-sh@vger.kernel.org>
+Cc: Andrew Davis <afd@ti.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: <linux-arm-kernel@lists.infradead.org>
 ---
- arch/sh/Kconfig               | 1 +
- arch/sh/include/asm/cmpxchg.h | 3 +++
- 2 files changed, 4 insertions(+)
+ arch/arm/Kconfig               | 1 +
+ arch/arm/include/asm/cmpxchg.h | 7 ++++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-index 5e6a3ead51fb1..f723e2256c9c1 100644
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -16,6 +16,7 @@ config SUPERH
- 	select ARCH_HIBERNATION_POSSIBLE if MMU
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index ee5115252aac4..a867a7d967aa5 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -34,6 +34,7 @@ config ARM
  	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_WANT_IPC_PARSE_VERSION
-+	select ARCH_NEED_CMPXCHG_1_EMU
- 	select CPU_NO_EFFICIENT_FFS
- 	select DMA_DECLARE_COHERENT
- 	select GENERIC_ATOMIC64
-diff --git a/arch/sh/include/asm/cmpxchg.h b/arch/sh/include/asm/cmpxchg.h
-index 5d617b3ef78f7..1e5dc5ccf7bf5 100644
---- a/arch/sh/include/asm/cmpxchg.h
-+++ b/arch/sh/include/asm/cmpxchg.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/compiler.h>
- #include <linux/types.h>
+ 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
++	select ARCH_NEED_CMPXCHG_1_EMU if CPU_V6
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_CFI_CLANG
+ 	select ARCH_SUPPORTS_HUGETLBFS if ARM_LPAE
+diff --git a/arch/arm/include/asm/cmpxchg.h b/arch/arm/include/asm/cmpxchg.h
+index 44667bdb4707a..a428e06fe94ee 100644
+--- a/arch/arm/include/asm/cmpxchg.h
++++ b/arch/arm/include/asm/cmpxchg.h
+@@ -5,6 +5,7 @@
+ #include <linux/irqflags.h>
+ #include <linux/prefetch.h>
+ #include <asm/barrier.h>
 +#include <linux/cmpxchg-emu.h>
  
- #if defined(CONFIG_GUSA_RB)
- #include <asm/cmpxchg-grb.h>
-@@ -56,6 +57,8 @@ static inline unsigned long __cmpxchg(volatile void * ptr, unsigned long old,
- 		unsigned long new, int size)
- {
+ #if defined(CONFIG_CPU_SA1100) || defined(CONFIG_CPU_SA110)
+ /*
+@@ -162,7 +163,11 @@ static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+ 	prefetchw((const void *)ptr);
+ 
  	switch (size) {
+-#ifndef CONFIG_CPU_V6	/* min ARCH >= ARMv6K */
++#ifdef CONFIG_CPU_V6	/* min ARCH < ARMv6K */
 +	case 1:
-+		return cmpxchg_emu_u8(ptr, old, new);
- 	case 4:
- 		return __cmpxchg_u32(ptr, old, new);
- 	}
++		oldval = cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
++		break;
++#else /* min ARCH >= ARMv6K */
+ 	case 1:
+ 		do {
+ 			asm volatile("@ __cmpxchg1\n"
 -- 
 2.40.1
 
