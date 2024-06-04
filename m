@@ -1,39 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 022B5C147;
-	Tue,  4 Jun 2024 14:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248091420BC
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511685; cv=none; b=MQ56Qgo2AxNbBS5AZV2hx0RNY2XUtCX+JgVs2D4P8og0fvpjZG2vpmI9OirjKet7Ptv5KGKhRv0bNzunzIDv5ZhspVY+HtcztqiXFI5z0wPjHneort14FH+yv8nhXM8GGEinM681472Ucb4VSoY6RoWiih3zg60fylX4HlwoGps=
+	t=1717511730; cv=none; b=Iu/+SIcSFSbLTS6OXkZMNs5W9ay/Cc9ptBMsezL61Vq73vpcuMvsHYGeojLiYGohi3y/K4eHw/0uJFvMb8O03mmQPb2Ikbm+cLPeRGMG6bfmFixSRlh4MTrOQ031WiIqS+CSDst9oONBb5zRt1uo8NGUszhxXq9k3aAhQk41hrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511685; c=relaxed/simple;
-	bh=VnrLIrbhzUALzkQehAninJgeB7+/iCbWWjBnOYjHgZY=;
+	s=arc-20240116; t=1717511730; c=relaxed/simple;
+	bh=zhxB4xrQrAVXAbhbxwOvlF0wqi6yLfLTVSPn49ick8I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kqd1CJqG/7qvi+qKMq++FP3Ka5QFYTjJEyxtX1fAbfabBO+nElkIjB2dqbMn1Qrma+EB/snovCiCC0mW2NYrb5ycMwFMAk1wfYQ/lHHLqKI+OaqGqdNmB+45O3TVQ42V1Z6+uaYfunRkokbbtKZiIuQq+jByn1VdhuXmiiiaVF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDA6F1042;
-	Tue,  4 Jun 2024 07:35:07 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA0143F64C;
-	Tue,  4 Jun 2024 07:34:41 -0700 (PDT)
-Date: Tue, 4 Jun 2024 15:34:36 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Besar Wicaksono <bwicaksono@nvidia.com>, Will Deacon <will@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC/PATCH 1/1] tools headers arm64: Sync arm64's cputype.h with
- the kernel sources
-Message-ID: <Zl8l_NdVEmcrsuSx@J2N7QTR9R3>
-References: <Zl4MYzhP0NB-Z1DW@x1>
- <Zl7aOk2h4_73JmUu@J2N7QTR9R3>
- <Zl8cYk0Tai2fs7aM@x1>
+	 Content-Type:Content-Disposition:In-Reply-To; b=S0kYoSDNeHsOYSTk6xV3hf7WNw79LzBYofc7hyP3mU/Ya2VvzBxkXFsrVdAlCcUC26q8peONQSRiDiIMp5rbiRriz1q4CZnTWXgJITcRw6Oq+bUbwBNFfZq8MUj5baoP0+694wgqBPkbrc4D9dNBEZSFtMaBwvDiMkAwWX5eHEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q2wCQYGk; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q2wCQYGk"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a62ef52e837so126016166b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717511726; x=1718116526; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N6L/xkpcOUMcu4g4EPcPs71CcWtZgSi+vh4CgjuHBVk=;
+        b=Q2wCQYGkQiMijzeV/AeMjDgLFPqcx0T16CcNTvjIVCIHWDt4KEmZDuyM5LibMet2bk
+         H0IC5GbOt7qs+X2Yj1X/dzOgkWcvBfBNLEZCTXEyMW1/qd5w2TUPkN5M12RLe9sFKuBj
+         nINL2ABtDtOREP8RyTZu7yZrQrT1NzhQCT8G/h726MYw3wzt3o8oVIPC9ymnkdO1SSMl
+         DP0aczsABg2rpKlhFjnXFpQthr+dZSySxA6PfL3oMjtuDxy18K2MDs7qDcu3/2NXJtBR
+         RmVlb9pB8ABPMqe3eY8nuLY4fcVYOIK9GmXA8PPiXl74bT77oYc04s/UAqyBb+/mtZDL
+         H5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717511726; x=1718116526;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N6L/xkpcOUMcu4g4EPcPs71CcWtZgSi+vh4CgjuHBVk=;
+        b=f8FOHkrQKmTWTiNHGmpz3vKy29DExlUPkGPVYQY+fIby+a+z3sEOKfvZgcxwwDI7DL
+         ldpi2feKz2LtT3/VLv4iGyFq7VvzLyTDGrhE4KgfhmImnFtMHb18SSZhv+RHFMkpNI6M
+         Wx5EaiH6tVkepZlyDiv/x56iyNxMdjMxHiC61LWrQiIZw4pwbc7/XY2ZtqAuIz7rVQF+
+         mBSA+vAM3pi2ITLCbms1tc7q7Pb2iTNPHclRMdyhH4PGQy8KAEfu5p0qAk+HdrlCCq/2
+         6+vXVxFjAENeymTDhbI/v+XOC71icHyWtX9qGqOwclqhPBmWYDzZYlA1E1Isjh4H1vj7
+         K51w==
+X-Forwarded-Encrypted: i=1; AJvYcCW/oXl5gmGGnsLO7z6dQrWPs1kg5yL5+lrJZaU6XT5nDLlMD+WwmmxVmV2yoRBjIRzMOQOl/w0uXhPQaSRq6bpH912Ouvkzfwqgfu+i
+X-Gm-Message-State: AOJu0YxjW8hFvnyqauJsgbgDapRjvHeKPNCJpcVE5F4mPSlmMpfQNugR
+	/JgemK+b/TwO+glazAFZqf4xlnXeuXPPEZ4FjeNuN308MAU8D398FTjM++b3mHQ=
+X-Google-Smtp-Source: AGHT+IFy5kHjV2Tu8d+ModGRTOANXINp1lHBsrB5h6ijDdg1iRS8Q7e0+jIlU0n4WFHZ499S/Q3cjw==
+X-Received: by 2002:a17:906:1e89:b0:a66:7f1a:61e0 with SMTP id a640c23a62f3a-a6821f4e6cbmr873463166b.62.1717511726349;
+        Tue, 04 Jun 2024 07:35:26 -0700 (PDT)
+Received: from linaro.org ([188.27.161.69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a690a32cba4sm306241966b.158.2024.06.04.07.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 07:35:25 -0700 (PDT)
+Date: Tue, 4 Jun 2024 17:35:24 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Johan Hovold <johan@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100: Make the PCIe 6a PHY
+ support 4 lanes mode
+Message-ID: <Zl8mLGziGzFhqbZC@linaro.org>
+References: <20240531-x1e80100-dts-fixes-pcie6a-v1-0-1573ebcae1e8@linaro.org>
+ <20240531-x1e80100-dts-fixes-pcie6a-v1-2-1573ebcae1e8@linaro.org>
+ <Zl28nvnpGFRsYpGh@hovoldconsulting.com>
+ <d93fe55e-7c65-48cb-bdaf-5e15bc22be30@linaro.org>
+ <Zl8GoRoY9lXRtg2R@hovoldconsulting.com>
+ <402aa998-8b3c-4c3c-8dcb-f128b6ddac46@linaro.org>
+ <Zl8MUpfy/2Khw+wD@linaro.org>
+ <dd1be285-d94b-448e-85d3-d5dce27f9ac0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,39 +80,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zl8cYk0Tai2fs7aM@x1>
+In-Reply-To: <dd1be285-d94b-448e-85d3-d5dce27f9ac0@linaro.org>
 
-On Tue, Jun 04, 2024 at 10:53:38AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Jun 04, 2024 at 10:11:22AM +0100, Mark Rutland wrote:
-> > On Mon, Jun 03, 2024 at 03:33:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > The changes in the above patch add MIDR_NEOVERSE_V[23] and
-> > > MIDR_NEOVERSE_V1 is used in arm-spe.c, so probably we need to add those
-> > > and perhaps MIDR_CORTEX_X4 to that array? Or maybe we need to leave this
-> > > for later when this is all tested on those machines?
-> > 
-> > Hmm... looking at where that was added this is somewhat misnamed, this
-> > is really saying that these cores use the same IMPLEMENTATION DEFINED
-> > encoding of the source field. That's not really a property of Neoverse
-> > specifically, and I'm not sure what Arm's policy is here going forwards.
-> > 
-> > We should probably rename that to something like
-> > common_data_source_encoding, with a big comment about exactly what it
-> > implies.
-> > 
-> > I would not touch this for now -- someone would have to go audit the
+On 24-06-04 14:55:31, Konrad Dybcio wrote:
 > 
-> Ok, you mean not touch tools/perf/util/arm-spe.c, right, can I just go
-> ahead and update the copy of that header so that we have a clean (of
-> build warnings) build?
+> 
+> On 6/4/24 14:45, Abel Vesa wrote:
+> > On 24-06-04 14:38:40, Konrad Dybcio wrote:
+> > > 
+> > > 
+> > > On 6/4/24 14:20, Johan Hovold wrote:
+> > > > On Tue, Jun 04, 2024 at 02:00:10PM +0200, Konrad Dybcio wrote:
+> > > > > On 6/3/24 14:52, Johan Hovold wrote:
+> > > > 
+> > > > > > As I just mentioned in my reply on the PHY patch, this does not seem to
+> > > > > > work on the CRD were the link still come up as 2-lane (also with the
+> > > > > > clocks fixed):
+> > > > > > 
+> > > > > > 	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
+> > > > > > 
+> > > > > > So something appears to be wrong here or in the PHY changes.
+> > > > > 
+> > > > > Is the device on the other end x4-capable? Or does it not matter in
+> > > > > this log line?
+> > > > 
+> > > > Yes, of course. It's the CRD as I wrote above, and you can tell from
+> > > > other log entries:
+> > > > 
+> > > > 	pci 0007:01:00.0: 31.506 Gb/s available PCIe bandwidth, limited by 16.0 GT/s PCIe x2 link at 0007:00:00.0 (capable of 63.012 Gb/s with 16.0 GT/s PCIe x4 link)
+> > > > 
+> > > > lspci and what Windows reports.
+> > > Ok, good. I was scared of double-sourcing of parts that are not identical
+> > > in spec..
+> > > 
+> > 
+> > On my CRD, there is a KBG50ZNS256G.
+> > 
+> > > [1] suggests this wasn't ever achieved.. which makes the cover letter of
+> > > this series a bit misleading..
+> > 
+> > True ...
+> > 
+> > > 
+> > > What does the TCSR check return? If 0, can you hardcode it to 1 and see if
+> > > the link comes up at x4?
+> > 
+> > TCSR check returns 1. But that is not enough. The PCIe controller needs to
+> > handles some stuff about margining. See the following patchset.
+> > 
+> > https://lore.kernel.org/linux-pci/20240501163610.8900-3-quic_schintav@quicinc.com/
+> > 
+> > But even with this, I'm not able to get 4-lanes mode to work (yet).
+> > So it must be something else in the controller driver that is needed.
+> 
+> The margining settings AFAIU shouldn't be necessary for just getting the
+> link, but to ensure there aren't many errors while transacting..
 
-Yes: update the header, but leave arm-spe.c unchanged. Sorry for not
-being clear!
+Part of the margining settings is related number of lanes.
 
-It'd be nice if we could update the commit message to note that we're
-deliberately leaving that as-is.
+> 
+> > 
+> > IIRC, this is the first Qualcomm platform that would support Gen4 with
+> > 4-lanes upstream. Maybe I'm wrong.
+> 
+> Seems so
+> 
+> Another idea I had, maybe the PCIE_PORT_LINK_CONTROL &
+> PCIE_LINK_WIDTH_SPEED_CONTROL registers differ on qcom gen4 controllers..
+> 
+> Can you check the documentation and see if the defines in
+> drivers/pci/controller/dwc/pcie-designware.h still hold true?
 
-Either way:
+Yep. No issue there.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
+> 
+> Konrad
