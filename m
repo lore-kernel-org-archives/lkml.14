@@ -1,114 +1,171 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A26148318
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE201474BE;
+	Tue,  4 Jun 2024 16:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717517079; cv=none; b=aflczT4CbX5/AXCZOLwVE1H2NAs0eHfkh27rVV/rQ1/mIwWgkV9g5swlLoo1Chzkc92hP8kYe41JmTDXTI5KNhoCnzsdzXg29ToFjHdOciqAyWAb8r53gP4OBm2xqnfP1HoP7/B6apWo+hioTfIlkK/wqaELF+bxtVoxcJ5gdqI=
+	t=1717517092; cv=none; b=pwrwXC1GN2SV+PT+aTTYzMVIDlK6nx+u23blofwvDOku8GYkCbmJUcdJRJzgapTIOZaIwPJrNpFvwTpBJ1bFn/qIdDV2oj1akmNWRM3HDBGaR9uF7JPX7CyCWNT2H3bnmTgbxMdMRVNKAio4PARChPDuBUEx9neiMTIxr7lMS7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717517079; c=relaxed/simple;
-	bh=xLrshINXFNdrylWYQWWaisBvYfqOz7VcgvqZYTDpaVc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GZWtr4KKhlvRu2bTP8gLipNznQJ71HzoMsMHsRJ0qDFZYf9yeTTvNoXWIweTDcMaznB2Nw6rMSCzASW57LPwrF3whtEfZqoRiHSWDfjravBZN8E21k8L1ilqFt+l5esmLGr8cyebZGKSqcy5OkpJd4v8e35tXJPZDw2sWuYgirY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vtw2K1PGVz9v7Hq
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:47:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id DBB04140F79
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 00:04:27 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.206.133.88])
-	by APP1 (Coremail) with SMTP id LxC2BwCHehP+Ol9mXzeKCQ--.59465S2;
-	Tue, 04 Jun 2024 17:04:27 +0100 (CET)
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-To: paulmck@kernel.org
-Cc: stern@rowland.harvard.edu,
-	parri.andrea@gmail.com,
-	will@kernel.org,
-	peterz@infradead.org,
-	boqun.feng@gmail.com,
-	npiggin@gmail.com,
-	dhowells@redhat.com,
-	j.alglave@ucl.ac.uk,
-	luc.maranget@inria.fr,
-	akiyks@gmail.com,
-	dlustig@nvidia.com,
-	joel@joelfernandes.org,
-	urezki@gmail.com,
-	quic_neeraju@quicinc.com,
-	frederic@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-Subject: [PATCHv2 2/4] tools/memory-model: Define applicable tags on operation in tools/...
-Date: Tue,  4 Jun 2024 18:04:09 +0200
-Message-Id: <20240604160409.498190-1-jonas.oberhauser@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
-References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+	s=arc-20240116; t=1717517092; c=relaxed/simple;
+	bh=uSwYhDRrOAl/s39iwUUiNHqv2jXHckCtaGmDOi8+Ec4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j88pajpYOe/3KMo4aBjSAtpbYBg1hNHF/DJO+9h5waG4jMqQbtfjpTdTO2TRemqER9Kn+oUP9eKNzYGAzTgExb0hw23l0/fSSnxDLA6QPZtB1dFpLShjjD5QyBErUgY8hKFRS/LlW9WR39dj3ISEV+iQdaBYEiE+0ixLO05HVSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VtwKS6f85z6K6Q9;
+	Wed,  5 Jun 2024 00:00:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 39A801400D9;
+	Wed,  5 Jun 2024 00:04:46 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 4 Jun
+ 2024 17:04:45 +0100
+Date: Tue, 4 Jun 2024 17:04:45 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] cxl: add missing MODULE_DESCRIPTION() macros
+Message-ID: <20240604170445.00005c67@Huawei.com>
+In-Reply-To: <20240603-md-drivers-cxl-v1-1-f2940f5c0836@quicinc.com>
+References: <20240603-md-drivers-cxl-v1-1-f2940f5c0836@quicinc.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwCHehP+Ol9mXzeKCQ--.59465S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WF48tr4xXr45XrWDJFy7ZFb_yoW8Xw43pr
-	WkX3y5Kr17twn3Z397J34fuFWrWa1rGFy5GF92v3sxZryUJrs2ya1DWanIgF9aqrW3GayU
-	Za1jqFWqkw4UCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUos
-	qXDUUUU
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Herd7 transforms reads, writes, and read-modify-writes by eliminating
-'acquire tags from writes, 'release tags from reads, and 'acquire,
-'release, and 'mb tags from failed read-modify-writes. We emulate this
-behavior by redefining Acquire, Release, and Mb sets in linux-kernel.bell
-to explicitly exclude those combinations.
+On Mon, 3 Jun 2024 21:48:53 -0700
+Jeff Johnson <quic_jjohnson@quicinc.com> wrote:
 
-Herd7 furthermore adds 'noreturn tag to certain reads. Currently herd7
-does not allow specifying the 'noreturn tag manually, but such manual
-declaration (e.g., through a syntax __atomic_op{noreturn}) would add
-invalid 'noreturn tags to writes; in preparation, we already also exclude
-this combination.
+> make allmodconfig && make W=1 C=1 reports:
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/core/cxl_core.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pci.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_mem.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_acpi.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_pmem.o
+> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cxl/cxl_port.o
+> 
+> Add the missing invocations of the MODULE_DESCRIPTION() macro.
+> 
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
----
- tools/memory-model/linux-kernel.bell | 7 +++++++
- 1 file changed, 7 insertions(+)
+This has been irritating me as well.  Need to do
+drivers/perf/cxl_pmu.c at somepoint as well but given that goes through
+a different maintainer makes sense to do separately.
 
-diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
-index dba6b5b6dee0..2f49993644ed 100644
---- a/tools/memory-model/linux-kernel.bell
-+++ b/tools/memory-model/linux-kernel.bell
-@@ -36,6 +36,13 @@ enum Barriers = 'wmb (*smp_wmb*) ||
- 		'after-srcu-read-unlock (*smp_mb__after_srcu_read_unlock*)
- instructions F[Barriers]
- 
-+(* Remove impossible tags, such as Acquire on a store or failed RMW *)
-+let FailedRMW = RMW \ (domain(rmw) | range(rmw))
-+let Acquire = Acquire \ W \ FailedRMW
-+let Release = Release \ R \ FailedRMW
-+let Mb = Mb \ FailedRMW
-+let Noreturn = Noreturn \ W
-+
- (* SRCU *)
- enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
- instructions SRCU[SRCU]
--- 
-2.34.1
+Only comment I have is that we should probably strive for more consistency
+than you currently have.  Always expand CXL or never do, use
+colons consistently, use Support everywhere or nowhere.
+
+
+
+> ---
+>  drivers/cxl/acpi.c      | 1 +
+>  drivers/cxl/core/port.c | 1 +
+>  drivers/cxl/mem.c       | 1 +
+>  drivers/cxl/pci.c       | 1 +
+>  drivers/cxl/pmem.c      | 1 +
+>  drivers/cxl/port.c      | 1 +
+>  6 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 571069863c62..e51315ea4a6a 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -921,6 +921,7 @@ static void __exit cxl_acpi_exit(void)
+>  /* load before dax_hmem sees 'Soft Reserved' CXL ranges */
+>  subsys_initcall(cxl_acpi_init);
+>  module_exit(cxl_acpi_exit);
+> +MODULE_DESCRIPTION("CXL ACPI: Platform Support");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS(CXL);
+>  MODULE_IMPORT_NS(ACPI);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 887ed6e358fb..ccaa00cd0321 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -2356,5 +2356,6 @@ static void cxl_core_exit(void)
+>  
+>  subsys_initcall(cxl_core_init);
+>  module_exit(cxl_core_exit);
+> +MODULE_DESCRIPTION("CXL (Compute Express Link) Devices Support");
+
+Why the expanded version for this one?
+
+I'm not sure Devices really makes sense here, particularly as it
+likely a range of other driver will make some use of this core
+functionality over time.  Maybe "CXL core" is sufficient?
+
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index 0c79d9ce877c..1afb0e78082b 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -252,6 +252,7 @@ static struct cxl_driver cxl_mem_driver = {
+>  
+>  module_cxl_driver(cxl_mem_driver);
+>  
+> +MODULE_DESCRIPTION("CXL: Memory Expansion");
+
+Why does this one get a colon? Also no Support at the end?
+
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS(CXL);
+>  MODULE_ALIAS_CXL(CXL_DEVICE_MEMORY_EXPANDER);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index e53646e9f2fb..2c17fcb1b4ee 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -1066,5 +1066,6 @@ static void __exit cxl_pci_driver_exit(void)
+>  
+>  module_init(cxl_pci_driver_init);
+>  module_exit(cxl_pci_driver_exit);
+> +MODULE_DESCRIPTION("CXL PCI manageability");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS(CXL);
+> diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+> index 2ecdaee63021..4ef93da22335 100644
+> --- a/drivers/cxl/pmem.c
+> +++ b/drivers/cxl/pmem.c
+> @@ -453,6 +453,7 @@ static __exit void cxl_pmem_exit(void)
+>  	cxl_driver_unregister(&cxl_nvdimm_bridge_driver);
+>  }
+>  
+> +MODULE_DESCRIPTION("CXL PMEM: Persistent Memory Support");
+>  MODULE_LICENSE("GPL v2");
+>  module_init(cxl_pmem_init);
+>  module_exit(cxl_pmem_exit);
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 97c21566677a..5ceff1df60db 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -209,6 +209,7 @@ static struct cxl_driver cxl_port_driver = {
+>  };
+>  
+>  module_cxl_driver(cxl_port_driver);
+> +MODULE_DESCRIPTION("CXL Port Support");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_IMPORT_NS(CXL);
+>  MODULE_ALIAS_CXL(CXL_DEVICE_PORT);
+> 
+> ---
+> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+> change-id: 20240603-md-drivers-cxl-85ac807b9618
+> 
 
