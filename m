@@ -1,235 +1,171 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93C9513A3F7;
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A97113B5B7;
 	Tue,  4 Jun 2024 14:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511512; cv=none; b=cEp+4QSirzar4MU71b+sgSDARhAe4CGTB0XNkPtOMwIV/dY0RNSoKGHtJRpr8isNR8c8bgiAUagdGYXNf1tpRc+II2JZfD7Ls7yktWI/rFaLEyQ+/NQufm2M/xYhlTg1j3/XSqSY0F7fti8bb/vdL59+2qMGtZUXw4b7hZAsXCA=
+	t=1717511512; cv=none; b=N/Td9l/n/pLDJD9tU5+2RoM2Cc59zB4L8+D3rXGmrNSPTN0/OtHQFWVoAHxvUobXkDduoAoLytZxk/akMyxs88+AQrn0/jt8P2JoI+zXYgFKlHIJSHWhxNksV/TECP2YZRUIubr/B+Ax18omrdBz80t6EVdzc4ELVD+WJwjo//Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717511512; c=relaxed/simple;
-	bh=m5MKYq+sbY/RyNjY39bpEhwKF6st/PRM8qPP5HXfLKU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B5x/xJNEZAWSnQ2AqwmxbbG5tIotJshoCbwQn/1bdNJ5nQ7pTo6ja2ouGlVwa4nXG0UjE2tv2d16P1Z6rJGpuaglGfoVPuKm+Ak20xPHZdnLyAHOsyJCqjFByOBVtB3AJOWqBxAhl7jIEI4DWPy5nJjmSbV/ckdBO0dgu8ln4jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6636B1063;
-	Tue,  4 Jun 2024 07:32:14 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CC393F64C;
-	Tue,  4 Jun 2024 07:31:46 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 04/16] perf: cs-etm: Allocate queues for all CPUs
-Date: Tue,  4 Jun 2024 15:30:13 +0100
-Message-Id: <20240604143030.519906-5-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604143030.519906-1-james.clark@arm.com>
-References: <20240604143030.519906-1-james.clark@arm.com>
+	bh=RM+SjVMkg/K7DFppKMcbKWOM/ucNqttsWoRCyloK3M0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QuOKF9oFTKkOOZ2+95Mfl+y/2dXYBl9VQAy6bvPuxkS3aNJzbAep5iB/kJn6mTlgkFbmsFW9a7ThlpHQnWQuGf4HWLrUkimhJQIhK0XrWIuyK6iwqzA1kHuWfNt+plpP+1TBjOhEPH1xxahan0/W/kJa/TexAAkF+5UZkiO5XMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XO4ZL1q5; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XO4ZL1q5"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1f44b5d0c50so42498165ad.2;
+        Tue, 04 Jun 2024 07:31:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717511510; x=1718116310; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=btxrm+NJ1/xNKhjXV8pJNpI5p98TsdjFZzhEY1yUR+o=;
+        b=XO4ZL1q5Ew+X4qTeHyOhMulVEyE9bRGiut1mkP/abZj2XR9OLrjeuDgdTJQo1iwyYb
+         qE8I5yU7M8iT6N0cMRKjNFESEOZao9vPpBbE+kiRYpaKvLV5jboypWfzYwwGL8tstHLL
+         3HJKwzftJLAlpH6Fn3wwgpolUudMjbEWVsnYYy3MsX6NCBO1j/2OPtu1aRYoKngjY0Wp
+         v7vhkKNNNIHdzYEs8qS0XjNVkjPW5u3d55rh9JCAzsWnkH5Ndv6SLoSRzzy6e9RIs4JY
+         qEv/Dv1OROq8fRAudY3BsJfsb3fwauoFn8HTnnDsdqBtyr6l01j/qAG7QnBm9rKMw7I6
+         jj3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717511510; x=1718116310;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=btxrm+NJ1/xNKhjXV8pJNpI5p98TsdjFZzhEY1yUR+o=;
+        b=pt2WqIMr45y5JKU20ZxyhDv2bzCwnoqM6GRwnCsVYfbc30Ec2CYnSBzuEzCgTP5U/k
+         w3aIXia12VJooypwxyHLrEaJaihAtHnQt/RmuLmuM3fG0ATZXcBCEgEo0UNuA6qG6K3M
+         n+Hcdj0LnD7+ivh6LxzjCyp3GBCO227IOCd0izISmTjsVpSVHI2CpokVEyPqMZPpG0OF
+         +C55v1XaNAfkrVY2G0HOjLDbT981u2j5TNWazFqV5WSYVuFAnu1lMbekoMgKN+n2kx3R
+         gV475asx1WraRRaNJpXPNtizoWeu3Xg9zq9ypcw2osucTtddqzpVpnLgXHRwApWpAmcl
+         GXCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKuckHThmOua+rI8RbLf0zei5GFttQCQ+HlR1HZU5fEg77902WKKDLANmzA86u6UcD6i17g5RGG3b62R3EclmysfVZNCDZH1Y81Sd6mTK8WS1bwDkKjvqhfE/DbP5xjWG+yYc2daBmVUDPyr6DXGg2tduxgTr3kIsdmIWFfFFG9wh0MX5a
+X-Gm-Message-State: AOJu0Yx7YrA1iR+edfz8afguLZZModdTU/ywk437J9jpvi3WXOhv65BN
+	/wKFxMtCg9+vnMb8+g8w9FJwCfPYsxmB6OGiSB3JYP8hyvSOw4Of
+X-Google-Smtp-Source: AGHT+IGfgO9f/KQcrZNeBmHYEnduCT8loWCjHxpEbGwARcRqv9BttQMFRx9GiCUS8Qh+vo45YcDpSA==
+X-Received: by 2002:a17:902:fc48:b0:1f6:792c:6372 with SMTP id d9443c01a7336-1f6792c66e0mr70220135ad.47.1717511509717;
+        Tue, 04 Jun 2024 07:31:49 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dde56sm86252335ad.165.2024.06.04.07.31.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 07:31:49 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c25ff311-7742-46b3-a2f3-77d7b6a37ab7@roeck-us.net>
+Date: Tue, 4 Jun 2024 07:31:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/6] hwmon: Add support for SPD5118 compliant
+ temperature sensors
+To: Stephen Horvath <s.horvath@outlook.com.au>, linux-hwmon@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Armin Wolf <W_Armin@gmx.de>
+References: <20240604040237.1064024-1-linux@roeck-us.net>
+ <20240604040237.1064024-3-linux@roeck-us.net>
+ <SY4P282MB30639393B10CC313292C936BC5F82@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <SY4P282MB30639393B10CC313292C936BC5F82@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Make cs_etm__setup_queue() setup a queue even if it's empty, and
-pre-allocate queues based on the max CPU that was recorded. In per-CPU
-mode aux queues are indexed based on CPU ID even if all CPUs aren't
-recorded, sparse queue arrays aren't used.
+On 6/4/24 01:48, Stephen Horvath wrote:
+> Hi,
+> 
+> On 4/6/24 14:02, Guenter Roeck wrote:
+>> Add support for SPD5118 (Jedec JESD300) compliant temperature
+>> sensors. Such sensors are typically found on DDR5 memory modules.
+>>
+>> Cc: René Rebe <rene@exactcode.de>
+>> Cc: Thomas Weißschuh <linux@weissschuh.net>
+>> Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
+>> Tested-by: Thomas Weißschuh <linux@weissschuh.net>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>> v4: No change
+>>
+>> v3: Shorten JESD300-5B.01 to JESD300; 5B.01 refers to the version
+>>      of the standard
+>>      Drop unnecessary 'attr' parameter from spd5118_{read,write}_enable()
+>>
+>> v2: Drop PEC property documentation
+>>      Add note indicating that alarm attributes are sticky until read
+>>      to documentation
+>>      Fix detect function
+>>      Fix misspelling in Makefile (CONFIG_SENSORS_SPD5118->CONFIG_SENSORS_SPD5118)
+>>
+>>   Documentation/hwmon/index.rst   |   1 +
+>>   Documentation/hwmon/spd5118.rst |  55 ++++
+>>   drivers/hwmon/Kconfig           |  12 +
+>>   drivers/hwmon/Makefile          |   1 +
+>>   drivers/hwmon/spd5118.c         | 481 ++++++++++++++++++++++++++++++++
+>>   5 files changed, 550 insertions(+)
+>>   create mode 100644 Documentation/hwmon/spd5118.rst
+>>   create mode 100644 drivers/hwmon/spd5118.c
+>>
+> 
+> It seems to report correct temperatures for my sticks, so I guess:
+> 
+> Tested-by: Stephen Horvath <s.horvath@outlook.com.au>
+> 
 
-This will allow HW_IDs to be saved even if no aux data was received in
-that queue without having to call cs_etm__setup_queue() from two
-different places.
+Thanks!
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm.c | 55 ++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 28 deletions(-)
+Guenter
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f09004c4ba44..e40dfd09d3ed 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -104,6 +104,7 @@ struct cs_etm_queue {
- 	unsigned int queue_nr;
- 	u8 pending_timestamp_chan_id;
- 	bool formatted;
-+	bool formatted_set;
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
-@@ -1056,16 +1057,11 @@ static struct cs_etm_queue *cs_etm__alloc_queue(void)
- 
- static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 			       struct auxtrace_queue *queue,
--			       unsigned int queue_nr, bool formatted)
-+			       unsigned int queue_nr)
- {
- 	struct cs_etm_queue *etmq = queue->priv;
- 
--	if (etmq && formatted != etmq->formatted) {
--		pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
--		return -EINVAL;
--	}
--
--	if (list_empty(&queue->head) || etmq)
-+	if (etmq)
- 		return 0;
- 
- 	etmq = cs_etm__alloc_queue();
-@@ -1078,7 +1074,6 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	etmq->queue_nr = queue_nr;
- 	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
- 	etmq->offset = 0;
--	etmq->formatted = formatted;
- 
- 	return 0;
- }
-@@ -2791,17 +2786,6 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
- 		if (err)
- 			return err;
- 
--		/*
--		 * Knowing if the trace is formatted or not requires a lookup of
--		 * the aux record so only works in non-piped mode where data is
--		 * queued in cs_etm__queue_aux_records(). Always assume
--		 * formatted in piped mode (true).
--		 */
--		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
--					  idx, true);
--		if (err)
--			return err;
--
- 		if (dump_trace)
- 			if (auxtrace_buffer__get_data(buffer, fd)) {
- 				cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
-@@ -2918,7 +2902,6 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 	struct perf_record_auxtrace *auxtrace_event;
- 	union perf_event auxtrace_fragment;
- 	__u64 aux_offset, aux_size;
--	__u32 idx;
- 	bool formatted;
- 
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
-@@ -2985,6 +2968,8 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 
- 	if (aux_offset >= auxtrace_event->offset &&
- 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
-+		struct cs_etm_queue *etmq = etm->queues.queue_array[auxtrace_event->idx].priv;
-+
- 		/*
- 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
- 		 * based on the sizes of the aux event, and queue that fragment.
-@@ -3001,10 +2986,14 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 		if (err)
- 			return err;
- 
--		idx = auxtrace_event->idx;
- 		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
--
--		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx, formatted);
-+		if (etmq->formatted_set && formatted != etmq->formatted) {
-+			pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
-+			return -EINVAL;
-+		}
-+		etmq->formatted = formatted;
-+		etmq->formatted_set = true;
-+		return 0;
- 	}
- 
- 	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
-@@ -3256,6 +3245,7 @@ static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
- 		 * Don't create decoders for empty queues, mainly because
- 		 * etmq->formatted is unknown for empty queues.
- 		 */
-+		assert(empty == !etmq->formatted_set);
- 		if (empty)
- 			continue;
- 
-@@ -3275,10 +3265,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	int event_header_size = sizeof(struct perf_event_header);
- 	int total_size = auxtrace_info->header.size;
- 	int priv_size = 0;
--	int num_cpu;
-+	int num_cpu, max_cpu = 0;
- 	int err = 0;
- 	int aux_hw_id_found;
--	int i, j;
-+	int i;
- 	u64 *ptr = NULL;
- 	u64 **metadata = NULL;
- 
-@@ -3309,7 +3299,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	 * required by the trace decoder to properly decode the trace due
- 	 * to its highly compressed nature.
- 	 */
--	for (j = 0; j < num_cpu; j++) {
-+	for (int j = 0; j < num_cpu; j++) {
- 		if (ptr[i] == __perf_cs_etmv3_magic) {
- 			metadata[j] =
- 				cs_etm__create_meta_blk(ptr, &i,
-@@ -3333,6 +3323,9 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 			err = -ENOMEM;
- 			goto err_free_metadata;
- 		}
-+
-+		if ((int) metadata[j][CS_ETM_CPU] > max_cpu)
-+			max_cpu = metadata[j][CS_ETM_CPU];
- 	}
- 
- 	/*
-@@ -3362,10 +3355,16 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	 */
- 	etm->pid_fmt = cs_etm__init_pid_fmt(metadata[0]);
- 
--	err = auxtrace_queues__init(&etm->queues);
-+	err = auxtrace_queues__init_nr(&etm->queues, max_cpu + 1);
- 	if (err)
- 		goto err_free_etm;
- 
-+	for (unsigned int j = 0; j < etm->queues.nr_queues; ++j) {
-+		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[j], j);
-+		if (err)
-+			goto err_free_queues;
-+	}
-+
- 	if (session->itrace_synth_opts->set) {
- 		etm->synth_opts = *session->itrace_synth_opts;
- 	} else {
-@@ -3487,7 +3486,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	zfree(&etm);
- err_free_metadata:
- 	/* No need to check @metadata[j], free(NULL) is supported */
--	for (j = 0; j < num_cpu; j++)
-+	for (int j = 0; j < num_cpu; j++)
- 		zfree(&metadata[j]);
- 	zfree(&metadata);
- err_free_traceid_list:
--- 
-2.34.1
 
