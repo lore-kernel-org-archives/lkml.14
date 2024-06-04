@@ -1,147 +1,114 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C35C1448E5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 10:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DCC1A286;
+	Tue,  4 Jun 2024 10:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717497576; cv=none; b=AEUaTlnHTXngXrGIQcLbELi3+KvTupOxOOHo3bBrV5WAReIdi8Ir1VCA3VfqhNIFJIysqGiG2/CyEsI4hCZCl/9flXFCNK1vA5cGOEuL0BOpKTsjyL7G4Ifv/5vtjNWYZx/mAlGOI4BdTQCneAXY34gHlFO0NLSRceiREwcuMZc=
+	t=1717497599; cv=none; b=TO3HbFNOxG3UjzIEesPegb3kslP8p/wPNCeTbcDaexdz0n70CReD3SBGKQNvQNkCaTAwlsuMCoWSP14XN83TPB2yNFRxQYxPrhsi5+sC5JUrkx/kHtGJjQat4hUnQqrO8au4ZXBGTNnVZr1kqUP7MWex62HnxebBhuxx4045AmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717497576; c=relaxed/simple;
-	bh=uu24MvOLTSDrGtaB+9R342Vu+OPQ+6CL46IPrj7xBmY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TM5dZ9imbOk/LGLuS1+8ejQwRZjEVGUkGkKlBWNnVGqYPvzQsGfYJ/MMt3Thw8+Sy9HSnX+fMvtaAv6hcNmkPfOCHqDcWxx93H58Grx/SgeJTjjHsOeIMskjhKgvKpBAFtM80/ja06uUnLYxWl4FjQ3tAWYhe6MM4g+uFRZN2/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=mBYUVo5C; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1717497599; c=relaxed/simple;
+	bh=fAoFXYYkIkdenvWHNgGiSslpve99mgAMustoo4fOjKM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GzzdvsMAXENHalQ+eFnkoLXRaZEV0J/OsUiwyzzzzGlGI5CvQhyBmuztNEYleEkOFT7i6AjmHdySKgWRicWhUXhz68JQX87Ys6eawcZ4TFF6+ZiN6GH+ZTS7KDK54TjqlQKOb6LuktENe5FXfdcj1m4+YPZT/kVSrBur2Q4Rl2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XI9qSM4l; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="mBYUVo5C"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52b82d57963so5574260e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 03:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717497573; x=1718102373; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3WCRRHJvbBRghgXSmEq8Fvp6W4aBxQB8LzjGg3Uzwg=;
-        b=mBYUVo5Ct93Uq26UPw1rezUJjqoTI+XXq3Mb1DucQW6m89GHybK0883G46qyk4Ynxw
-         +kuW2KVGNPqyWNHMkldH8dWzmkji+70uvw/ovynX/oI6R2fq2IGtOH0S77pJ6ZdPlEIA
-         USvnHUF3VpCdFiPFYCwefYhUoPyB4EKd0gRxvyX3wXaCHH57Vt755zoglBeC4z3JglOg
-         fLt5I7VbceLe5Jcs3PCOSxr3+MiOIw9FrXlEOO6t5y59F2x9BRBTO8S/iMAjRVpNJeiC
-         MYx3876F20BR+AsDs7z4nzrYYcYCKYlDEdCSWjbs6Oz+GuxsZLuXcDglR8hWZBCIjfd1
-         YUyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717497573; x=1718102373;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F3WCRRHJvbBRghgXSmEq8Fvp6W4aBxQB8LzjGg3Uzwg=;
-        b=c2LnfFMKi/8X7q3yVBZE5ZK+zsiOzHJQhlHCUCeGwVdNGRuDIVHxWyqN24f47YlPtP
-         mDeQU1FmZ2FrZ/sYBN7CQhkBBqoG2CMdtQMPMbyF5sPbtCcdUkihu5WIkTyCrU36GByy
-         HoYkkJpOBYWeLTtpupiOiaWzLPvNk/1OEmFeVU7K13DcdV1H2TyZQh+o/jLyNs4nYo65
-         AS2RsP2I/rmAHS8geUum9LNLGkTbO7/qzQukJ1VnIoXrquVHR6aAS8R89+pFHdcRCAyr
-         1zR0kN9vs8rrd5BDKlGe2xRtatfPKTmtROcxrIxBujRT9i5GiFQPL7z5G2ARf95mF7I5
-         MCtg==
-X-Forwarded-Encrypted: i=1; AJvYcCXtBE/y33ouAjlXtTGRDGaPZlVIGU+tmyh96FOknFwPq/i+tL4xuv8E42RY2+gujjcv3W5VnHpVoJIEhLUMCQ3FJr3XRNGkR/1D4z2x
-X-Gm-Message-State: AOJu0YxVmyz1fa1ZRatAiYxzEpNptwVykp+pt4ceekzqy8BnvGvDFimy
-	bnrW8NFhEqBGwRyeX9180cNIeJpc37ULcRfycP57KuSrveU94+qhKUn+ujb3WlU=
-X-Google-Smtp-Source: AGHT+IETd4msXoxRl+ud5mCwMFNofqwpac+oO3fwbkx5DB7asjTWSlI02keQuaJBEBR7nsu+b/81Pg==
-X-Received: by 2002:a05:651c:1991:b0:2d8:930c:bbfa with SMTP id 38308e7fff4ca-2ea950c5fafmr91095041fa.5.1717497572574;
-        Tue, 04 Jun 2024 03:39:32 -0700 (PDT)
-Received: from debian.fritz.box. (aftr-82-135-80-160.dynamic.mnet-online.de. [82.135.80.160])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4212b84be78sm149457245e9.17.2024.06.04.03.39.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 03:39:32 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	daniel@ffwll.ch
-Cc: Qingqing.Zhuo@amd.com,
-	roman.li@amd.com,
-	hersenxs.wu@amd.com,
-	chaitanya.dhere@amd.com,
-	wenjing.liu@amd.com,
-	alex.hung@amd.com,
-	sungkim@amd.com,
-	syed.hassan@amd.com,
-	syedsaaem.rizvi@amd.com,
-	dillon.varone@amd.com,
-	charlene.liu@amd.com,
-	hamza.mahfooz@amd.com,
-	nicholas.kazlauskas@amd.com,
-	jerry.zuo@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] drm/amd/display: Simplify if conditions
-Date: Tue,  4 Jun 2024 12:37:37 +0200
-Message-Id: <20240604103736.3068-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XI9qSM4l"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 168781BF20A;
+	Tue,  4 Jun 2024 10:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717497595;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fA411foyqLMzZ1hKOUW4fEs/FNUN6uX3elekeFZ7ooQ=;
+	b=XI9qSM4lHKcZfHH4XITu8QF0X7XObYSyZXEkDTslnVCuyxQAh5Uau535xPPNIRy3f4itXA
+	8ewCKKRrjWPDyvCOyWxYSk2fY3RHe0kXS5r7v4E6uWnPo2LmEqT7iDL/+IsH2QKqJ+lpgU
+	w6aTW9PKVxp0QL7CTuY0YdHNhrQVK7w7XMg01D/gibk5DSg4Zpq98K+spUSGxpPmQaEQam
+	+6V0GlQNcL1Y7gPhSOhrn8akbiZaamemiX6n8nk3RBVdqlPOkmMX2GUweJnvzsWSujwyx/
+	jpgYl03ISJCXVQTdmD4dKlaULNvNXuv6IrT90YY0OKu3VLhJQXnoNfwbL2fe+Q==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 04 Jun 2024 12:39:36 +0200
+Subject: [PATCH net-next v14 01/14] net_tstamp: Add TIMESTAMPING SOFTWARE
+ and HARDWARE mask
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240604-feature_ptp_netnext-v14-1-77b6f6efea40@bootlin.com>
+References: <20240604-feature_ptp_netnext-v14-0-77b6f6efea40@bootlin.com>
+In-Reply-To: <20240604-feature_ptp_netnext-v14-0-77b6f6efea40@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>, 
+ Willem de Bruijn <willemb@google.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-The if conditions !A || A && B can be simplified to !A || B.
+Timestamping software or hardware flags are often used as a group,
+therefore adding these masks will ease future use.
 
-Fixes the following Coccinelle/coccicheck warnings reported by
-excluded_middle.cocci:
+I did not use SOF_TIMESTAMPING_SYS_HARDWARE flag as it is deprecated and
+not used at all.
 
-	WARNING !A || A && B is equivalent to !A || B
-	WARNING !A || A && B is equivalent to !A || B
-	WARNING !A || A && B is equivalent to !A || B
-
-Compile-tested only.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- drivers/gpu/drm/amd/display/dc/dml2/dml2_dc_resource_mgmt.c | 6 +++---
- .../gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c   | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_dc_resource_mgmt.c b/drivers/gpu/drm/amd/display/dc/dml2/dml2_dc_resource_mgmt.c
-index ad2a6b4769fe..940081df6dc0 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_dc_resource_mgmt.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_dc_resource_mgmt.c
-@@ -68,7 +68,7 @@ static bool get_plane_id(struct dml2_context *dml2, const struct dc_state *state
- 		if (state->streams[i]->stream_id == stream_id) {
- 			for (j = 0; j < state->stream_status[i].plane_count; j++) {
- 				if (state->stream_status[i].plane_states[j] == plane &&
--					(!is_plane_duplicate || (is_plane_duplicate && (j == plane_index)))) {
-+					(!is_plane_duplicate || (j == plane_index))) {
- 					*plane_id = (i << 16) | j;
- 					return true;
- 				}
-@@ -707,8 +707,8 @@ static void free_unused_pipes_for_plane(struct dml2_context *ctx, struct dc_stat
- 	for (i = 0; i < ctx->config.dcn_pipe_count; i++) {
- 		if (state->res_ctx.pipe_ctx[i].plane_state == plane &&
- 			state->res_ctx.pipe_ctx[i].stream->stream_id == stream_id &&
--			(!is_plane_duplicate || (is_plane_duplicate &&
--			ctx->v20.scratch.dml_to_dc_pipe_mapping.dml_pipe_idx_to_plane_index[state->res_ctx.pipe_ctx[i].pipe_idx] == plane_index)) &&
-+			(!is_plane_duplicate ||
-+			ctx->v20.scratch.dml_to_dc_pipe_mapping.dml_pipe_idx_to_plane_index[state->res_ctx.pipe_ctx[i].pipe_idx] == plane_index) &&
- 			!is_pipe_used(pool, state->res_ctx.pipe_ctx[i].pipe_idx)) {
- 			free_pipe(&state->res_ctx.pipe_ctx[i]);
- 		}
-diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c b/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
-index a41812598ce8..b2bbf7988f92 100644
---- a/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
-+++ b/drivers/gpu/drm/amd/display/dc/dml2/dml2_translation_helper.c
-@@ -979,7 +979,7 @@ static bool get_plane_id(struct dml2_context *dml2, const struct dc_state *conte
- 		if (context->streams[i]->stream_id == stream_id) {
- 			for (j = 0; j < context->stream_status[i].plane_count; j++) {
- 				if (context->stream_status[i].plane_states[j] == plane &&
--					(!is_plane_duplicate || (is_plane_duplicate && (j == plane_index)))) {
-+					(!is_plane_duplicate || (j == plane_index))) {
- 					*plane_id = (i << 16) | j;
- 					return true;
- 				}
+Changes in v7:
+- Move the masks out of uapi to include/linux/net_tstamp.h
+
+Changes in v9:
+- Fix commit message typos
+---
+ include/linux/net_tstamp.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/net_tstamp.h b/include/linux/net_tstamp.h
+index eb01c37e71e0..3799c79b6c83 100644
+--- a/include/linux/net_tstamp.h
++++ b/include/linux/net_tstamp.h
+@@ -5,6 +5,14 @@
+ 
+ #include <uapi/linux/net_tstamp.h>
+ 
++#define SOF_TIMESTAMPING_SOFTWARE_MASK	(SOF_TIMESTAMPING_RX_SOFTWARE | \
++					 SOF_TIMESTAMPING_TX_SOFTWARE | \
++					 SOF_TIMESTAMPING_SOFTWARE)
++
++#define SOF_TIMESTAMPING_HARDWARE_MASK	(SOF_TIMESTAMPING_RX_HARDWARE | \
++					 SOF_TIMESTAMPING_TX_HARDWARE | \
++					 SOF_TIMESTAMPING_RAW_HARDWARE)
++
+ enum hwtstamp_source {
+ 	HWTSTAMP_SOURCE_NETDEV,
+ 	HWTSTAMP_SOURCE_PHYLIB,
+
 -- 
-2.39.2
+2.34.1
 
