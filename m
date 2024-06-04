@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282A2145322;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2834614C592;
 	Tue,  4 Jun 2024 22:23:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717539837; cv=none; b=gO5KqU7hcuBR8PgfhPuxdkW2aIz0WG47tu2NB7Um+Z93PrysUb9jA5N3nTU4U1N0N/lwFpYvwGRKQwy14GF3aUkzxqjVakVpLhkyoTj7MYT8YB+EiCf/7jo+jxDrDtCP78GPzWEtun2dut9rVy0/D2booqY5D7Km65ffT1V3oGc=
+	t=1717539837; cv=none; b=SdgBGIM1m0qS8sUTgOVSacE3FB0pBwVLqoORgzrWpIUla1iS/t8tk2Mph+FTFvDcivXE3eQghnvbH0KCiZY8QH3KSn5Q7Wt3u8Set4mjZHl8rbkw/dzO2/MpBTdCPjDlQScEoif0fc96mi+Zc+KmVJsxQwaPnEqkO0KQisxOTb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717539837; c=relaxed/simple;
-	bh=Zg9sZgSfw8tshKxAzI3tRPCKrOIhzkGKLv0XgiHxsM8=;
+	bh=pfQQEuNAMcpIVAntByrnVCNTp3OoaecMef/sKBSFuQE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WAGx8X1ly7Z82GQwUeE5dRpLWMCTnP9bFdD4XoicZuPunNlag2F1F5WWBFPoEcH8kX+D1B3P1vOH5TzBUMzld6Tl9VpN22kcmm58o/tw3e3opcBIFvaHs5aEAjTtsmrXsC8NYnNM3pNht88WiXbPBbdkpWW/zUZQuECRENDwn7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SS+UH7cu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hU33HoIDYoSxDeGBALR4VItDiPLg2iKxtlWbMv+fheKHhhz7GcRJXP5m4wRuLBtX/pkCHoaOht1KLQze0lLDHrxWBKOgSh/pnghrpru1NQhP8m1+F+VCEo1Hbo0TiE44LVmcTw8Y+le62DTLF4SSz5T/7onSWR7MBQa6AUBug0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0LX1Gsk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SS+UH7cu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DF9C2BBFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0LX1Gsk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA6E6C4AF08;
 	Tue,  4 Jun 2024 22:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717539836;
-	bh=Zg9sZgSfw8tshKxAzI3tRPCKrOIhzkGKLv0XgiHxsM8=;
+	bh=pfQQEuNAMcpIVAntByrnVCNTp3OoaecMef/sKBSFuQE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SS+UH7cuLvDau5uNM/gzwumHyeUhSvhZjWKDAh0R08pe+kWTHr6B0sW3nIobnTbPK
-	 pfIbzPhGCS9fSN+RpdylGD4JVJ1NxKbrNn2vYu25HgrwNlSDgtSzh1y9YNSXiFSf75
-	 LTH8hQaiRPEUYnTq4cnuRYOycWkVi9gItuDKzPNiivBTfobmL3QdheLQC916jhqbS3
-	 GpvwxexASDXfWgRqvGI/ZweGSYeIYs5K/VuARYV7wH9K/JvVfbkmKs4X+/bLmtwLYW
-	 /L/uMR6JdJU149Pd6/lcbmTpfgH/p+HWhrow2hD3nOv/4tT84A7BqGXm3O7UNu9BDZ
-	 LSiZrHadbpZ2A==
+	b=W0LX1GskxrP735W7tui7ZPtRZqg8hRjGnLsh3TQxMveQtXzar8nhQ9LN3Gf6D5mAr
+	 ppyDH57GjFGHhEjW9RK8pWV7UpC+/RveIlrAqV91QKywsS3wydUX0Q9+0aNnsNAwA4
+	 pSUkyvPKRXEQ1W9n/cDGVR46DVmZJ0u/7dzlbNwy7DcN5DCkNm0opWliukzhC/4Hdu
+	 NWlCs7BN190+IY2/XbEyrIeFO55ApJHopcLmOV+cPLCE+k5hitWuFHfpjbk/p8XPsX
+	 UuKI5uPVH4onkDSVU4XaAXZn8XiCI8/1lxzfWZqbs8S9iZmHe8u9C1c7/ttGSmHjNo
+	 Ad/xufTVra4og==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5A049CE3ED6; Tue,  4 Jun 2024 15:23:56 -0700 (PDT)
+	id 5F39DCE3F26; Tue,  4 Jun 2024 15:23:56 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: rcu@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
 	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH rcu 1/9] rcu: Add lockdep_assert_in_rcu_read_lock() and friends
-Date: Tue,  4 Jun 2024 15:23:47 -0700
-Message-Id: <20240604222355.2370768-1-paulmck@kernel.org>
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH rcu 3/9] rcu/tree: Reduce wake up for synchronize_rcu() common case
+Date: Tue,  4 Jun 2024 15:23:49 -0700
+Message-Id: <20240604222355.2370768-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
 References: <657595c8-e86c-4594-a5b1-3c64a8275607@paulmck-laptop>
@@ -49,99 +50,118 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no direct RCU counterpart to lockdep_assert_irqs_disabled()
-and friends.  Although it is possible to construct them, it would
-be more convenient to have the following lockdep assertions:
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-lockdep_assert_in_rcu_read_lock()
-lockdep_assert_in_rcu_read_lock_bh()
-lockdep_assert_in_rcu_read_lock_sched()
-lockdep_assert_in_rcu_reader()
+In the synchronize_rcu() common case, we will have less than
+SR_MAX_USERS_WAKE_FROM_GP number of users per GP. Waking up the kworker
+is pointless just to free the last injected wait head since at that point,
+all the users have already been awakened.
 
-This commit therefore creates them.
+Introduce a new counter to track this and prevent the wakeup in the
+common case.
 
-Reported-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rcupdate.h | 60 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ kernel/rcu/tree.c | 35 ++++++++++++++++++++++++++++++-----
+ kernel/rcu/tree.h |  1 +
+ 2 files changed, 31 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index dfd2399f2cde0..8470a85f65634 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -421,11 +421,71 @@ static inline void rcu_preempt_sleep_check(void) { }
- 				 "Illegal context switch in RCU-sched read-side critical section"); \
- 	} while (0)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 6ba36d9c09bde..2fe08e6186b4d 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -96,6 +96,7 @@ static struct rcu_state rcu_state = {
+ 	.ofl_lock = __ARCH_SPIN_LOCK_UNLOCKED,
+ 	.srs_cleanup_work = __WORK_INITIALIZER(rcu_state.srs_cleanup_work,
+ 		rcu_sr_normal_gp_cleanup_work),
++	.srs_cleanups_pending = ATOMIC_INIT(0),
+ };
  
-+// See RCU_LOCKDEP_WARN() for an explanation of the double call to
-+// debug_lockdep_rcu_enabled().
-+static inline bool lockdep_assert_rcu_helper(bool c)
-+{
-+	return debug_lockdep_rcu_enabled() &&
-+	       (c || !rcu_is_watching() || !rcu_lockdep_current_cpu_online()) &&
-+	       debug_lockdep_rcu_enabled();
-+}
-+
-+/**
-+ * lockdep_assert_in_rcu_read_lock - WARN if not protected by rcu_read_lock()
-+ *
-+ * Splats if lockdep is enabled and there is no rcu_read_lock() in effect.
-+ */
-+#define lockdep_assert_in_rcu_read_lock() \
-+	WARN_ON_ONCE(lockdep_assert_rcu_helper(!lock_is_held(&rcu_lock_map)))
-+
-+/**
-+ * lockdep_assert_in_rcu_read_lock_bh - WARN if not protected by rcu_read_lock_bh()
-+ *
-+ * Splats if lockdep is enabled and there is no rcu_read_lock_bh() in effect.
-+ * Note that local_bh_disable() and friends do not suffice here, instead an
-+ * actual rcu_read_lock_bh() is required.
-+ */
-+#define lockdep_assert_in_rcu_read_lock_bh() \
-+	WARN_ON_ONCE(lockdep_assert_rcu_helper(!lock_is_held(&rcu_bh_lock_map)))
-+
-+/**
-+ * lockdep_assert_in_rcu_read_lock_sched - WARN if not protected by rcu_read_lock_sched()
-+ *
-+ * Splats if lockdep is enabled and there is no rcu_read_lock_sched()
-+ * in effect.  Note that preempt_disable() and friends do not suffice here,
-+ * instead an actual rcu_read_lock_sched() is required.
-+ */
-+#define lockdep_assert_in_rcu_read_lock_sched() \
-+	WARN_ON_ONCE(lockdep_assert_rcu_helper(!lock_is_held(&rcu_sched_lock_map)))
-+
-+/**
-+ * lockdep_assert_in_rcu_reader - WARN if not within some type of RCU reader
-+ *
-+ * Splats if lockdep is enabled and there is no RCU reader of any
-+ * type in effect.  Note that regions of code protected by things like
-+ * preempt_disable, local_bh_disable(), and local_irq_disable() all qualify
-+ * as RCU readers.
-+ *
-+ * Note that this will never trigger in PREEMPT_NONE or PREEMPT_VOLUNTARY
-+ * kernels that are not also built with PREEMPT_COUNT.  But if you have
-+ * lockdep enabled, you might as well also enable PREEMPT_COUNT.
-+ */
-+#define lockdep_assert_in_rcu_reader()								\
-+	WARN_ON_ONCE(lockdep_assert_rcu_helper(!lock_is_held(&rcu_lock_map) &&			\
-+					       !lock_is_held(&rcu_bh_lock_map) &&		\
-+					       !lock_is_held(&rcu_sched_lock_map) &&		\
-+					       preemptible()))
-+
- #else /* #ifdef CONFIG_PROVE_RCU */
+ /* Dump rcu_node combining tree at boot to verify correct setup. */
+@@ -1633,8 +1634,11 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+ 	 * the done tail list manipulations are protected here.
+ 	 */
+ 	done = smp_load_acquire(&rcu_state.srs_done_tail);
+-	if (!done)
++	if (!done) {
++		/* See comments below. */
++		atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
+ 		return;
++	}
  
- #define RCU_LOCKDEP_WARN(c, s) do { } while (0 && (c))
- #define rcu_sleep_check() do { } while (0)
+ 	head = done->next;
+ 	done->next = NULL;
+@@ -1656,6 +1660,9 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
  
-+#define lockdep_assert_in_rcu_read_lock() do { } while (0)
-+#define lockdep_assert_in_rcu_read_lock_bh() do { } while (0)
-+#define lockdep_assert_in_rcu_read_lock_sched() do { } while (0)
-+#define lockdep_assert_in_rcu_reader() do { } while (0)
+ 		rcu_sr_put_wait_head(rcu);
+ 	}
 +
- #endif /* #else #ifdef CONFIG_PROVE_RCU */
++	/* Order list manipulations with atomic access. */
++	atomic_dec_return_release(&rcu_state.srs_cleanups_pending);
+ }
  
  /*
+@@ -1663,7 +1670,7 @@ static void rcu_sr_normal_gp_cleanup_work(struct work_struct *work)
+  */
+ static void rcu_sr_normal_gp_cleanup(void)
+ {
+-	struct llist_node *wait_tail, *next, *rcu;
++	struct llist_node *wait_tail, *next = NULL, *rcu = NULL;
+ 	int done = 0;
+ 
+ 	wait_tail = rcu_state.srs_wait_tail;
+@@ -1697,16 +1704,34 @@ static void rcu_sr_normal_gp_cleanup(void)
+ 			break;
+ 	}
+ 
+-	// concurrent sr_normal_gp_cleanup work might observe this update.
+-	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
++	/*
++	 * Fast path, no more users to process except putting the second last
++	 * wait head if no inflight-workers. If there are in-flight workers,
++	 * they will remove the last wait head.
++	 *
++	 * Note that the ACQUIRE orders atomic access with list manipulation.
++	 */
++	if (wait_tail->next && wait_tail->next->next == NULL &&
++	    rcu_sr_is_wait_head(wait_tail->next) &&
++	    !atomic_read_acquire(&rcu_state.srs_cleanups_pending)) {
++		rcu_sr_put_wait_head(wait_tail->next);
++		wait_tail->next = NULL;
++	}
++
++	/* Concurrent sr_normal_gp_cleanup work might observe this update. */
+ 	ASSERT_EXCLUSIVE_WRITER(rcu_state.srs_done_tail);
++	smp_store_release(&rcu_state.srs_done_tail, wait_tail);
+ 
+ 	/*
+ 	 * We schedule a work in order to perform a final processing
+ 	 * of outstanding users(if still left) and releasing wait-heads
+ 	 * added by rcu_sr_normal_gp_init() call.
+ 	 */
+-	queue_work(sync_wq, &rcu_state.srs_cleanup_work);
++	if (wait_tail->next) {
++		atomic_inc(&rcu_state.srs_cleanups_pending);
++		if (!queue_work(sync_wq, &rcu_state.srs_cleanup_work))
++			atomic_dec(&rcu_state.srs_cleanups_pending);
++	}
+ }
+ 
+ /*
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index bae7925c497fe..affcb92a358c3 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -420,6 +420,7 @@ struct rcu_state {
+ 	struct llist_node *srs_done_tail; /* ready for GP users. */
+ 	struct sr_wait_node srs_wait_nodes[SR_NORMAL_GP_WAIT_HEAD_MAX];
+ 	struct work_struct srs_cleanup_work;
++	atomic_t srs_cleanups_pending; /* srs inflight worker cleanups. */
+ };
+ 
+ /* Values for rcu_state structure's gp_flags field. */
 -- 
 2.40.1
 
