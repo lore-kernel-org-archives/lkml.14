@@ -1,197 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F204513E3F9
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 04:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE4C13DDB2
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 04:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717474922; cv=none; b=tkce6O5jH2bMd+giLk1tEHA+xPOv7ncKEJlBAdxqwQtTzGk5SXXo72NvPVnK0Copmd8g9hggbyA+ZliI1Qiu+eLvJLqTYSa+JndFnxW5BE2hsNcM5XFer0o9POJTghzFDe2Tcbn+JGq1wqFy8MsgetzhHaWKYFQcPZUyKO8eFGs=
+	t=1717474921; cv=none; b=kkrlpDpBWPuX4xFaIhQpjgxHZvXeuZYUVT3Y6CtDgzzK8Dn0CpAyUBmGYIHI3y/MOK9JvOaWV4vl02mzmtmlTUW0Gu5O+RG+ZHtDxLOSOGzknwZHzCLviazm/GofOBZe12W7KH4/6xckPUVnGFX/qOGaYOdvhJth6ShQCZymDZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717474922; c=relaxed/simple;
-	bh=zYmT3lwFo6rWfb+tk0qEdUJ1sHLo1w0Ku5xx7RwN91E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HaButu6Ptddsu2mb6h8F4k05DWkGpftBEPDgpZRK2lcanajcbP3nEPp7b776LKLzNVXSy4PAHDKaIzQU/fFzz4mMUUfkeViMCFfT+Wk3MSm51s1OtGEJTmmhMrHgKcG3cUSIqGd69RMtc7fUz9eaYSP7rbt4ZMz0FTUCNAcT08A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1n6Rqkd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717474921; c=relaxed/simple;
+	bh=vdT1WnfavoXbakHdoyabknlLpRd1rltXkfOabReQFKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U8149BJkKfsg2LkucR72cXWfB4xohCV6HrsPYKPrLOVqukQEE6UGv7T0knNdLiP5yWlsdeSzbpCTN2879QsqDc3Cp2otKII5cV8nuPlcBDyfES7zLrBqg4A2p9f0JHGf1aaf7AsfG1b4kWS+T4VsLPhIK26wdbw5g4TWKM8GISk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=e+uXFulk; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1n6Rqkd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F02A6C2BBFC;
-	Tue,  4 Jun 2024 04:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717474921;
-	bh=zYmT3lwFo6rWfb+tk0qEdUJ1sHLo1w0Ku5xx7RwN91E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=n1n6RqkdZBqCVuUxiRYbqCsvhoBbYlLF6Tvbv/GcWyfrKGI0NaYyHr/QY8N+fCXeo
-	 ZyqzSABKskTK19EVEKFZ0dPpOIG49//2tmiIEI5wj1RjvoGrfxWZMwUvYk3U1fMLZq
-	 M0sQEx6nVa6TrVMytPlCJK79PonvX/LOvVR9KZwKxF8cWxEHsRVrel6+djm0sUbqfy
-	 l+sZVswL5p6CcvKVP6t8yEMZlFgtcRTcEBMqW8CS1+bnZjfS9f6CSOaJL/axF4ejz7
-	 RRoM2ihQmnQSyii+KyuXtFT5x+qw/CElR9Gf/KgRbdPbJIcCsvuGxA0QwKM0IhZkAE
-	 bgeMB1Y+dWEFw==
-From: alexs@kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	izik.eidus@ravellosystems.com,
-	willy@infradead.org,
-	aarcange@redhat.com,
-	chrisw@sous-sol.org,
-	hughd@google.com,
-	david@redhat.com
-Cc: "Alex Shi (tencent)" <alexs@kernel.org>
-Subject: [PATCH 10/10] m/ksm: use folio in ksm scan path
-Date: Tue,  4 Jun 2024 12:24:52 +0800
-Message-ID: <20240604042454.2012091-11-alexs@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240604042454.2012091-1-alexs@kernel.org>
-References: <20240604042454.2012091-1-alexs@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e+uXFulk"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b82d57963so5203767e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 21:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717474918; x=1718079718; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sZTkPdaoUs8jQNyMlsxEd3PQVY77PvdNJflZvZlG4XM=;
+        b=e+uXFulkAUmDRkcSNAcbr5C0R6/BqxNB6IQnwYnfyjBOJSLnCGJOFaDpCXrCEql/et
+         bxpLzyXZD2zProRAF1WjVJ6JcTZyvlk06TgvcjUuAsbYBOMPAZGHXfkyXCFnlleyUZ4z
+         zbxLeXpfWvZtPttVGhytF1SGLrIAVs9wILV2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717474918; x=1718079718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sZTkPdaoUs8jQNyMlsxEd3PQVY77PvdNJflZvZlG4XM=;
+        b=Dbs1Asxec4MuXykoFOchPuT/Kg1lFrUFR2ABsDAhhy13IKaVvlj4tbAsTuNy5NjNR8
+         xtw7OoXfs0zpEDZfH93MFnc1FTx/BVRBJYTXIXZolMMCwgAfu+Yq2V+9T6N2UTlgzKMM
+         Asegd2hzPBjzxql/vtbPzwyKvHl4v2w3WxpYor77m9pTjS4PUDIp5tEiHSI3IMKsavMq
+         LVuFIQhOAQ3VqQPrNbLalak35jb38SAWvR3N0Vin70+Knlfh7ICwgg0gIUI0mka+LTrx
+         aYML2ymBPCZ5nspIXxdE1TZUAw1NMMhEG+mkB9PQAAV/OBk3jZ1LDn/yMvk66t7nz5n7
+         VVxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWA65C3CFLf9e71yK2E3c1ay46/LZ/JjU+Whb5DmsejS5wpNggyQ4ANOOJstFG47g3uM4spX7DxyZ+BNvnCZctOjSQDxzhlQKxJgW1Y
+X-Gm-Message-State: AOJu0YwgXmu14JCqHTdR0Y8gMyUTuc2oAwQIPKr6WEKM9QCS4lkMLmA2
+	zJuaIc18pgQUjXqKdMmbeAk6L6C0bzAb/d1vBRWvEhuy6WBVPxOaWlV3NLGXxR9Z9o1Mad70lhI
+	09yzbuavL0QDWJyUF5u0E9dlvK9sK4TjJLPVc
+X-Google-Smtp-Source: AGHT+IGDgg2+V5eJ8x467mxNrV7nhwIMgXm1gR49RnrnhPkROZN8HdeL71iXvR/Wj+N6cLD7tGCc7y6sYjgN44bSwNQ=
+X-Received: by 2002:a19:5f53:0:b0:51d:5f0b:816f with SMTP id
+ 2adb3069b0e04-52b89590e7cmr5639078e87.15.1717474917527; Mon, 03 Jun 2024
+ 21:21:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240530083513.4135052-1-wenst@chromium.org> <20240530083513.4135052-4-wenst@chromium.org>
+ <cc5847a486a760921375f069a4f65cd29453a624.camel@imgtec.com> <CAHCN7xJ7X9_yNJa7-HyU=FzN2G1cV8i9R+PoTHm-DKyiOPenUQ@mail.gmail.com>
+In-Reply-To: <CAHCN7xJ7X9_yNJa7-HyU=FzN2G1cV8i9R+PoTHm-DKyiOPenUQ@mail.gmail.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Tue, 4 Jun 2024 12:21:46 +0800
+Message-ID: <CAGXv+5GeWpBaFw89KsKyQi4t+Wjh=+58UQ7hyPaLM6pwGELiVA@mail.gmail.com>
+Subject: Re: [PATCH 3/6] dt-bindings: gpu: powervr-rogue: Add MediaTek MT8173 GPU
+To: Adam Ford <aford173@gmail.com>
+Cc: Frank Binns <Frank.Binns@imgtec.com>, 
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
+	Matt Coster <Matt.Coster@imgtec.com>, "sboyd@kernel.org" <sboyd@kernel.org>, 
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
+	"mripard@kernel.org" <mripard@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "airlied@gmail.com" <airlied@gmail.com>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Alex Shi (tencent)" <alexs@kernel.org>
+On Fri, May 31, 2024 at 10:25=E2=80=AFPM Adam Ford <aford173@gmail.com> wro=
+te:
+>
+> On Fri, May 31, 2024 at 8:37=E2=80=AFAM Frank Binns <Frank.Binns@imgtec.c=
+om> wrote:
+> >
+> > Hi ChenYu,
+> >
+> > On Thu, 2024-05-30 at 16:35 +0800, Chen-Yu Tsai wrote:
+> > > The MediaTek MT8173 comes with a PowerVR Rogue GX6250, which is one
+> > > of the Series6XT GPUs, another sub-family of the Rogue family.
+> >
+> > I've added Adam Ford who sent out some DT related patches [1] for the R=
+enesas
+> > variant of GX6250 and the GX6650 (another Series6XT GPU).
+> >
+>
+> Thanks for including me.
+>
+> > >
+> > > This was part of the very first few versions of the PowerVR submissio=
+n,
+> > > but was later dropped. The compatible string has been updated to foll=
+ow
+> > > the new naming scheme adopted for the AXE series.
+> > >
+> > > In a previous iteration of the PowerVR binding submission [1], the
+> > > number of clocks required for the 6XT family was mentioned to be
+> > > always 3. This is also reflected here.
+> > >
+> > > [1] https://lore.kernel.org/dri-devel/6eeccb26e09aad67fb30ffcd523c793=
+a43c79c2a.camel@imgtec.com/
+> > >
+> > > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> > > ---
+> > >  .../bindings/gpu/img,powervr-rogue.yaml       | 24 +++++++++++++++--=
+--
+> > >  1 file changed, 20 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.=
+yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+> > > index 256e252f8087..48aa205b66b4 100644
+> > > --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+> > > +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+> > > @@ -12,10 +12,17 @@ maintainers:
+> > >
+> > >  properties:
+> > >    compatible:
+> > > -    items:
+> > > -      - enum:
+> > > -          - ti,am62-gpu
+> > > -      - const: img,img-axe # IMG AXE GPU model/revision is fully dis=
+coverable
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - enum:
+> > > +              - mediatek,mt8173-gpu
+> > > +          # PowerVR 6XT GPU model/revision is fully discoverable
+> > > +          - const: img,powervr-6xt
+> > > +      - items:
+> > > +          - enum:
+> > > +              - ti,am62-gpu
+> > > +          # IMG AXE GPU model/revision is fully discoverable
+> > > +          - const: img,img-axe
+> >
+> > The Series6XT GPU models have differing numbers of power domains (eithe=
+r 2, 4 or
+> > 5). Whereas, the AXE GPUs have a single power domain, so I assume there=
+ should
+> > be a related change here.
+> >
+> > The GX6250 has two power domains (lets call them A and B). There's a co=
+nstraint
+> > that if domain B is powered then domain A must also be powered.
+> >
+> > In patch 6 [2] it's setting the power domain to MT8173_POWER_DOMAIN_MFG=
+, which I
+> > believe corresponds to power domain B. I assume this works because the =
+MTK power
+> > controller driver is encoding the constraint above, meaning that when w=
+e disable
+> > or enable MT8173_POWER_DOMAIN_MFG it's also disabling/enabling MT8173_P=
+OWER_DOMA
+> > IN_MFG_2D (domain A).
+> >
+>
+> In the cover letter of this series, it was noted that the GPU
+> enumerates, but it doesn' fully function yet.  This is also the case
+> for both of the Renesas variants I have been testing, and I was nicely
+> asked to postpone my series until the driver was closer to being
+> ready.
 
-Now we could safely use folio in ksm_do_scan path to save a few compound
-checks. The 'page' still used since follow_page function still no folio
-version.
+Yeah. Frank laid out the current state of GX6250 support and future plans
+in his reply to the clk driver patch.
 
-Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
----
- mm/ksm.c | 47 +++++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+> Even if the driver isn't ready yet, it would be nice to move the
+> bindings forward.
 
-diff --git a/mm/ksm.c b/mm/ksm.c
-index dc2b5e6a9659..57904b3b18dc 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -2304,7 +2304,7 @@ static void stable_tree_append(struct ksm_rmap_item *rmap_item,
-  * @page: the page that we are searching identical page to.
-  * @rmap_item: the reverse mapping into the virtual address of this page
-  */
--static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_item)
-+static void cmp_and_merge_page(struct folio *folio, struct ksm_rmap_item *rmap_item)
- {
- 	struct mm_struct *mm = rmap_item->mm;
- 	struct ksm_rmap_item *tree_rmap_item;
-@@ -2314,9 +2314,7 @@ static void cmp_and_merge_page(struct page *page, struct ksm_rmap_item *rmap_ite
- 	unsigned int checksum;
- 	int err;
- 	bool max_page_sharing_bypass = false;
--	struct folio *folio;
- 
--	folio = page_folio(page);
- 	stable_node = folio_stable_node(folio);
- 	if (stable_node) {
- 		if (stable_node->head != &migrate_nodes &&
-@@ -2518,12 +2516,12 @@ static unsigned int skip_age(rmap_age_t age)
- }
- 
- /*
-- * Determines if a page should be skipped for the current scan.
-+ * Determines if a folio should be skipped for the current scan.
-  *
-- * @page: page to check
-- * @rmap_item: associated rmap_item of page
-+ * @folio: folio to check
-+ * @rmap_item: associated rmap_item of folio
-  */
--static bool should_skip_rmap_item(struct page *page,
-+static bool should_skip_rmap_item(struct folio *folio,
- 				  struct ksm_rmap_item *rmap_item)
- {
- 	rmap_age_t age;
-@@ -2536,7 +2534,7 @@ static bool should_skip_rmap_item(struct page *page,
- 	 * will essentially ignore them, but we still have to process them
- 	 * properly.
- 	 */
--	if (PageKsm(page))
-+	if (folio_test_ksm(folio))
- 		return false;
- 
- 	age = rmap_item->age;
-@@ -2566,7 +2564,7 @@ static bool should_skip_rmap_item(struct page *page,
- 	return true;
- }
- 
--static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
-+static struct ksm_rmap_item *scan_get_next_rmap_item(struct folio **folio)
- {
- 	struct mm_struct *mm;
- 	struct ksm_mm_slot *mm_slot;
-@@ -2655,36 +2653,41 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
- 			ksm_scan.address = vma->vm_end;
- 
- 		while (ksm_scan.address < vma->vm_end) {
-+			struct page *page;
-+
- 			if (ksm_test_exit(mm))
- 				break;
--			*page = follow_page(vma, ksm_scan.address, FOLL_GET);
--			if (IS_ERR_OR_NULL(*page)) {
-+			page = follow_page(vma, ksm_scan.address, FOLL_GET);
-+			if (IS_ERR_OR_NULL(page)) {
- 				ksm_scan.address += PAGE_SIZE;
- 				cond_resched();
- 				continue;
- 			}
- 
--			VM_WARN_ON(PageTail(*page));
--			nr = compound_nr(*page);
--			if (is_zone_device_page(*page))
-+			*folio = page_folio(page);
-+			VM_WARN_ON(PageTail(page));
-+			nr = folio_nr_pages(*folio);
-+
-+			if (folio_is_zone_device(*folio))
- 				goto next_page;
--			if (PageAnon(*page)) {
-+
-+			if (folio_test_anon(*folio)) {
- 				rmap_item = get_next_rmap_item(mm_slot,
- 					ksm_scan.rmap_list, ksm_scan.address);
- 				if (rmap_item) {
- 					ksm_scan.rmap_list = &rmap_item->rmap_list;
- 
--					if (should_skip_rmap_item(*page, rmap_item))
-+					if (should_skip_rmap_item(*folio, rmap_item))
- 						goto next_page;
- 
- 					ksm_scan.address += nr * PAGE_SIZE;
- 				} else
--					put_page(*page);
-+					folio_put(*folio);
- 				mmap_read_unlock(mm);
- 				return rmap_item;
- 			}
- next_page:
--			put_page(*page);
-+			folio_put(*folio);
- 			ksm_scan.address += nr * PAGE_SIZE;
- 			cond_resched();
- 		}
-@@ -2755,16 +2758,16 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
- static void ksm_do_scan(unsigned int scan_npages)
- {
- 	struct ksm_rmap_item *rmap_item;
--	struct page *page;
-+	struct folio *folio;
- 	unsigned int npages = scan_npages;
- 
- 	while (npages-- && likely(!freezing(current))) {
- 		cond_resched();
--		rmap_item = scan_get_next_rmap_item(&page);
-+		rmap_item = scan_get_next_rmap_item(&folio);
- 		if (!rmap_item)
- 			return;
--		cmp_and_merge_page(page, rmap_item);
--		put_page(page);
-+		cmp_and_merge_page(folio, rmap_item);
-+		folio_put(folio);
- 	}
- 
- 	ksm_pages_scanned += scan_npages - npages;
--- 
-2.43.0
+Agreed. It would be nice to have an agreed upon set of bindings. We
+can then move our downstream stuff comply with it.
 
+
+Thanks
+ChenYu
+
+> adam
+>
+> > Thanks
+> > Frank
+> >
+> > [1] https://lists.freedesktop.org/archives/dri-devel/2024-February/4435=
+48.html
+> > [2] https://lists.freedesktop.org/archives/dri-devel/2024-May/455833.ht=
+ml
+> >
+> > >
+> > >    reg:
+> > >      maxItems: 1
+> > > @@ -56,6 +63,15 @@ allOf:
+> > >        properties:
+> > >          clocks:
+> > >            maxItems: 1
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            const: img,powervr-6xt
+> > > +    then:
+> > > +      properties:
+> > > +        clocks:
+> > > +          minItems: 3
+> > >
+> > >  examples:
+> > >    - |
