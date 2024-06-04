@@ -1,134 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239F08F68
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 01:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D146FD5;
+	Tue,  4 Jun 2024 01:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717463820; cv=none; b=OU2lMTZv8FLliovrsalef2vD8Pv1QzjVypymhvZFWqdo+5ZAfK88aK7Qz+f0/fnPkUXqbgKIiS4aN7yNCKeBZOwRFCczMrEKGgEdq66VxBqCsTHvwNe5gIhBdqdgckon3JwBb6n8ebOSwGP6bZRyak8Xkhh1xp2BiXITSZG2dlk=
+	t=1717463880; cv=none; b=UXcd/lXO43be06IRnhPj+9hfYXmzpGEhzaFhV/hl4pClP8vw6sXE+R5vaFIdKitHA5hIRkR5kui3yD25esK73AxLui3FAx7Ml5cj4ZHVRF4Nx0uXBm/uLXt/m1ngGLWx+C/EJEoeFtMRqaHEIt8kI/jherNADAlJSA1n9kxtMq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717463820; c=relaxed/simple;
-	bh=nS1vioMmlFcL+wVN5+oD9svb1qqgpoWUq++JjBbAvNg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cHNF7aEwiap+GE4Aa5Oij7Y83AvE4m7/FdWCVS5UGwLH8Rui9sJY5J5cP7tyJMNhpng+LFW9LrQ01NzKtK37E+h+UB0uETM3AoBBbdtLDNFejPkGfNu3b40aKbjW4oOIuXRsBk2wfqHXJwApjS+oc63XTAQa73xvz0oK3WUNlRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZzKlS9xV; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZzKlS9xV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717463818; x=1748999818;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nS1vioMmlFcL+wVN5+oD9svb1qqgpoWUq++JjBbAvNg=;
-  b=ZzKlS9xVkKfhg1C99ImIe5RL04EjrDXPXaXY4RNoTXixPxKEK19ga8VV
-   ChgDh42gi6KQtL2h7bYRfDYHhrIhlrAOy5D/vechsX0sk55jjlU99aEog
-   3WFNx8H4ah1qrFUGBpFIduPKXM4+VhcxdBxuSf1LziqWxZA46KrvlM819
-   clHu929TLx0tJ+kZvK1abC1YMnzhTmfI7uircapXStJmDvYP1LGw5s2Sz
-   6wjt4T4Aq+vxlIzhCOy7/tUDFZM+WQd0l6fTWTEEDB2wr82nEUNinDSrl
-   MaiacaNKavOZSDOo/YDB2e9jlPlncDCbIRLZCA+V9k6ZZJvoZLKDlINDq
-   Q==;
-X-CSE-ConnectionGUID: ROzvJeG/TxO9CWRDXwtnOQ==
-X-CSE-MsgGUID: v0ZMKJqeQriaElahD1lrcg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25382605"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="25382605"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 18:16:58 -0700
-X-CSE-ConnectionGUID: kRC8iBJbR2i0JqodLPwaQw==
-X-CSE-MsgGUID: So2ZWZ+cTzSMU59ww0/KbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="37044864"
-Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
-  by fmviesa008.fm.intel.com with ESMTP; 03 Jun 2024 18:16:57 -0700
-Message-ID: <7440cd36-41e0-4705-a597-f2ce3f841a70@linux.intel.com>
-Date: Tue, 4 Jun 2024 09:14:42 +0800
+	s=arc-20240116; t=1717463880; c=relaxed/simple;
+	bh=OzRQPXtvsFdD9jyp6q+9LTW2h0h6y9O369n2NTJKpDE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aKb5g+0H4C3YkGsT6ZHnaKu9jOzKcdak4VM9Cb7uFD3CXiqQrWCZU5ZzwlNeVSH4EYGpj7c+qS3p101K1mGWYzEZsyT5pHP9Z0Kbi1Za8V1NuqNYprwNFtuPTLoHdKUHEqh7GmmEzsriBybFt4eTxnBS9TWZY2SHOvU6rI6WCs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453NrBxt028282;
+	Mon, 3 Jun 2024 18:17:24 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3yg35f24n9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 03 Jun 2024 18:17:24 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 3 Jun 2024 18:17:23 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.39 via Frontend Transport; Mon, 3 Jun 2024 18:17:18 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <krisman@suse.de>
+CC: <adilger.kernel@dilger.ca>, <coreteam@netfilter.org>,
+        <davem@davemloft.net>, <ebiggers@kernel.org>, <fw@strlen.de>,
+        <jaegeuk@kernel.org>, <kadlec@netfilter.org>, <kuba@kernel.org>,
+        <linux-ext4@vger.kernel.org>, <linux-fscrypt@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <lkp@intel.com>, <llvm@lists.linux.dev>, <netdev@vger.kernel.org>,
+        <netfilter-devel@vger.kernel.org>, <oe-kbuild-all@lists.linux.dev>,
+        <pablo@netfilter.org>,
+        <syzbot+340581ba9dceb7e06fb3@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>, <tytso@mit.edu>
+Subject: Re: [PATCH V5] ext4: check hash version and filesystem casefolded consistent
+Date: Tue, 4 Jun 2024 09:17:17 +0800
+Message-ID: <20240604011718.3360272-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <87plsym65w.fsf@mailhost.krisman.be>
+References: <87plsym65w.fsf@mailhost.krisman.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] iommu/vt-d: Support batching IOTLB/dev-IOTLB
- invalidation commands
-To: "Zhang, Tina" <tina.zhang@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>
-References: <20240517003728.251115-1-tina.zhang@intel.com>
- <20240517003728.251115-2-tina.zhang@intel.com>
- <2b390228-190c-4508-b98f-1811c54c9e5c@linux.intel.com>
- <MW5PR11MB588165376224FEA74A0426D989FF2@MW5PR11MB5881.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <MW5PR11MB588165376224FEA74A0426D989FF2@MW5PR11MB5881.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: gfcExZLBCFyH3mjBVyUMLZjSXIlULXV0
+X-Proofpoint-ORIG-GUID: gfcExZLBCFyH3mjBVyUMLZjSXIlULXV0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 mlxscore=0 phishscore=0
+ clxscore=1011 malwarescore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2405170001 definitions=main-2406040008
 
-On 6/3/24 3:37 PM, Zhang, Tina wrote:
->> -----Original Message-----
->> From: Baolu Lu<baolu.lu@linux.intel.com>
->> Sent: Sunday, May 19, 2024 5:43 PM
->> To: Zhang, Tina<tina.zhang@intel.com>; Tian, Kevin<kevin.tian@intel.com>
->> Cc:baolu.lu@linux.intel.com;iommu@lists.linux.dev; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH 1/2] iommu/vt-d: Support batching IOTLB/dev-IOTLB
->> invalidation commands
->>
->> On 5/17/24 8:37 AM, Tina Zhang wrote:
->>> Introduce a new parameter batch_desc to the QI based IOTLB/dev-IOTLB
->>> invalidation operations to support batching invalidation descriptors.
->>> This batch_desc is a pointer to the descriptor entry in a batch cmds
->>> buffer. If the batch_desc is NULL, it indicates that batch submission
->>> is not being used, and descriptors will be submitted individually.
->>>
->>> Also fix an issue reported by checkpatch about "unsigned mask":
->>>           "Prefer 'unsigned int' to bare use of 'unsigned'"
->>>
->>> Signed-off-by: Tina Zhang<tina.zhang@intel.com>
->>> ---
->>>    drivers/iommu/intel/cache.c | 33 +++++++++++-------
->>>    drivers/iommu/intel/dmar.c  | 67 ++++++++++++++++++++-----------------
->>>    drivers/iommu/intel/iommu.c | 27 +++++++++------
->>>    drivers/iommu/intel/iommu.h | 21 ++++++++----
->>>    drivers/iommu/intel/pasid.c | 20 ++++++-----
->>>    5 files changed, 100 insertions(+), 68 deletions(-)
->>>
->>> diff --git a/drivers/iommu/intel/cache.c b/drivers/iommu/intel/cache.c
->>> index e8418cdd8331..dcf5e0e6af17 100644
->>> --- a/drivers/iommu/intel/cache.c
->>> +++ b/drivers/iommu/intel/cache.c
->>> @@ -278,7 +278,7 @@ void cache_tag_flush_range(struct dmar_domain
->> *domain, unsigned long start,
->>>    		case CACHE_TAG_NESTING_IOTLB:
->>>    			if (domain->use_first_level) {
->>>    				qi_flush_piotlb(iommu, tag->domain_id,
->>> -						tag->pasid, addr, pages, ih);
->>> +						tag->pasid, addr, pages, ih,
->> NULL);
->>>    			} else {
->> I'd like to have all batched descriptors code inside this file to make it easier for
->> maintenance. Perhaps we can add the below infrastructure in the
->> dmar_domain structure together with the cache tag.
-> Does it suggest we need to add a batch version of qi_flush_iotlb/qi_flush_dev_iotlb/qi_flush_piotlb/qi_flush_dev_iotlb_pasid() in the cache.c file? It doesn't sound like an easy to maintain those functions, does it?
-
-Yes. I don't think it's that difficult as the helpers just compose a qi
-descriptor and insert it in a local queue. This local queue will be
-flushed after finishing iterating all cache tags, or there's no room for
-more descriptors, or switches to a different iommu. Have I missed
-anything?
-
+On Mon, 03 Jun 2024 10:50:51 -0400, Gabriel Krisman Bertazi wrote:
+> > When mounting the ext4 filesystem, if the hash version and casefolded are not
+> > consistent, exit the mounting.
+> >
+> > Reported-by: syzbot+340581ba9dceb7e06fb3@syzkaller.appspotmail.com
+> > Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+> > ---
+> >  fs/ext4/super.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index c682fb927b64..0ad326504c50 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -5262,6 +5262,11 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+> >  		goto failed_mount;
+> >  
+> >  	ext4_hash_info_init(sb);
+> > +	if (es->s_def_hash_version == DX_HASH_SIPHASH && 
+> > +	    !ext4_has_feature_casefold(sb)) {
 > 
-> In this patch, we reuse the current qi_flush_xxx() for both batching and non-batching processing, so that we don't need to duplicate the logic of qi_flush_xxx() in two places with one for batching processing and the other one for non-batching processing. What do you think?
+> Can we ever have DX_HASH_SIPHASH set up in the super block?  I thought
+> it was used solely for directories where ext4_hash_in_dirent(inode) is
+> true.
+The value of s'def_hash_version is obtained by reading the super block from the
+buffer cache of the block device in ext4_load_super().
+> 
+> If this is only for the case of a superblock corruption, perhaps we
+> should always reject the mount, whether casefold is enabled or not?
+Based on the existing information, it cannot be confirmed whether the superblock
+is corrupt, but one thing is clear: if the default hash version of the superblock
+is set to DX_HASH_SIPHASH, but the casefold feature is not set at the same time,
+it is definitely an error.
 
-I don't like to put different things in a single helper. They share some
-code, for example, composing the descriptor's dw words. Others are just
-different. You can move that code into a static inline if you would
-like, but the batching and non-batching processing should be in
-different helpers.
-
-Best regards,
-baolu
+Lizhi
