@@ -1,58 +1,57 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B0B143870
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4A5144D1A
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492165; cv=none; b=ekX84zIwZ9DXQreUqXTohkA7yZGrmHBKegEcd9jJ+BvxFbUmnPo1ODoco1YaN/HqNQbxZq6lCF03lhNexfW9XS0f8tBbVMNLfFFWTkihA1lkOYae6YFiEC7nz4G50WmtkxgQda/p/P8w9Edr3Zv6CVnmjzDBs6bp9z1HUqw7hjM=
+	t=1717492163; cv=none; b=TgTR/ZRZlBMdnT2PagTddPJnfdADJEGSdnyzzp56OUgN5TdO+W+FEKMUTE+ZXfEiWmIt6EIhAbqPVes4DSqoCen+mPK2UhQ/NpGIhBjsuwg+1WhboW2WNBQ928n+Kv0K3RXwjUfm6j0htx2Zk0bL2NkAMt3FpBSyJT9sD0rTnOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492165; c=relaxed/simple;
-	bh=E7omIAd4oioz178wbahLxCf/I00afQCoybuhoNDREsg=;
+	s=arc-20240116; t=1717492163; c=relaxed/simple;
+	bh=Z4hvY1uctw58NTWdM7rNyP6R2/EAy7sNCXs18rZQTUY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UiRkNrpO2KDYVX/grYJOMpkQfy8mo1QCb+79rkiJ5rrW/MSEALApuiBKyJBy8TPLtmmRoPE6I9B37Xg8FGvvwahBL/RuSDqx/LE5Le8ERTpgQFoSKaaBVwGDcJiQxwJELzjxGwE7/Tovak1JhsJrMGv/HornGZIUCqRClkb+VYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=iizB5ryk; arc=none smtp.client-ip=209.85.208.53
+	 MIME-Version; b=ftup4t/fQHCKfk792yhhi54JdbZFNY9NtTZKl/h6hCAKL9X50N9s3oLw0m+6YGvVEeBUCagQ06y6M1Y61TWnFhBiPYiY8czH/tv5s5i9t33nrW/da5rDyRfT2efQagUXa5SOb5Jcb3no2AaJpdBhC+yNIO96Fs1ZZFq4ev9kqkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=i9dRalzo; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="iizB5ryk"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-57a1fe6392eso6069898a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 02:09:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="i9dRalzo"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a68b5f18fc5so323430466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 02:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1717492161; x=1718096961; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1717492159; x=1718096959; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=66hU7JCzDxZkm1iV/ENOXsQE3QPWNxsFJw0nhpOp8E8=;
-        b=iizB5ryk4QWnKCluE/rRqllcKR4DA6W90mXewvxC5i1XnoEgg6uOPKE/YRN4BOiNGm
-         jz1DGQvo49Kdr0Ec4LaIzHbDrE9zh1DyPuhxN2Dud380bt4Zr+1kC2djlZsD3QUoE2Gf
-         umLOMSfeRN3ASTsv2LPRL7tHeegNXwhlC/y534l1PNyyXhBiOuJh+fxaRg+N7QSikgai
-         lK5vnvVjVsyXHLBKbidoeWnFsCQkN/UMDDh2v11mKKvYZD5298Mp9rELhvBFsRFh5vXK
-         lGw9dHKFla0RuFfgk22FCOqTNclqwb888vJV8kW8eEE+7TxVPAqKVxSVkQOeyKhTLf53
-         4Nrg==
+        bh=ib6uKSj7xS/ycwqLjicn1v63gCXQSDvpTlGGC5UinQY=;
+        b=i9dRalzoK8JENqCI7ft/x7NbeNX4IoewPCz/f+ESqfgGvBsGHHlCNiC7TP612ygp+5
+         t30JG+IWeO4L0dcftKKNgxH3xQLh9ItYzrzPwEQxtSyKbzyAo6gUYdMjVagoH0Y6CbzH
+         +kpBAROW1vhpGp7IkBya1duW/oCPHUrQZziCz6KN03l/v2A+Je13IhatTAb1p97W8Tbx
+         p0okHLcMppl/GaKPz2gigM+edD0vI2FBbVhRMiskO+Oa4Ef/GUAAp9SvoONPZNIkpGX0
+         j9tUu8CrtNa8A8ysjoakbqdxR9u5gQwFNp1u1HUyST06H0aho69KtBDpwp4YBi6kr0+J
+         wjAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717492161; x=1718096961;
+        d=1e100.net; s=20230601; t=1717492159; x=1718096959;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=66hU7JCzDxZkm1iV/ENOXsQE3QPWNxsFJw0nhpOp8E8=;
-        b=u9zA0QnKsJzvRrcjK2c9YTiXHCA8SHUIeltTZYrw2rRnA/u2lMgeOWVBOlIAvxZxVW
-         vHGE481/miVqNxLYP1fjEI/kxFBZn6RIY78WgwDPeLXSt5rBZG8XO6CEI+TmNugxq1qd
-         WHREj/fUDIfO1F/rtkxI9fhUuUh2tthvXrHyOs8apLGQgiIzarFM3AQ6olGX8EAerkcb
-         RXciLn5aJ6iBKx2z06xE2hZE+TGR3rTRudBTptSZSEs94QZLLLqVzeK9kzq8tqVb3vq+
-         rb5rXQLJb0afaaXzq/nn6DyPNbeIyQEOV9mOt0mr47JRg+ONFblegeqTzgfGyNgBrrSI
-         sIvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlJlbOVDNyy0Mnzx31Yur7EbKgdsSO77fYfSI4+An8/O4FQyekPPmVliJb4YSTuE8noLM/VbdZEnG9lKQUDamskyh9jajPK8fdHtz5
-X-Gm-Message-State: AOJu0Yww1CJ4NchR2nzsDL6y1GhkoDXZUJIRGzI4vBU+Z5obeLNz3C7/
-	PNzrAemAqKXcCDbn1OLXrSjHxlw14HiVCl/tQWSjyCNjqGyFCNN1Z+Yeru86YumxAxZwHa4VEh3
-	Mw/w=
-X-Google-Smtp-Source: AGHT+IFjlRq5i4sRiIz9ii8DICuiWwLZihtIRXZ77Dt4nvy+Gy+GZJvOZGsJ7ckHFkBdl+70Wt0aaw==
-X-Received: by 2002:a17:906:f585:b0:a68:f0ce:9f2e with SMTP id a640c23a62f3a-a68f0cea079mr465457066b.44.1717492161256;
-        Tue, 04 Jun 2024 02:09:21 -0700 (PDT)
+        bh=ib6uKSj7xS/ycwqLjicn1v63gCXQSDvpTlGGC5UinQY=;
+        b=frmu0IkT1/haCrekXiiCgbQHJZ0HZtZX0RXXygqfVn0aP+FYOpyCPpnPLPiNWtqJtz
+         6sFXKmcyfzG66igoocdPsVOJ0bopcFEDzMdpRWyZSWscBHPB9PZ8HaRROMgkPc6/2FjZ
+         yE3pC8B9hZkYkJpMrXt7tRtAvQv8DgzOWReUH9Q1VR/zfepZCtl1LsxVxx6af+qcwfLf
+         gI98ndmDyMY3T01TTG+rr7i6wyw7a5wirrQKLmIEyvuzxLXm8XuO/ZZldeR4RYetCd8o
+         S2aJeckOAC+ef4v+TpPD66RNmKVwPvu6obDlcTcwSy5q/Vsh+Fj8eP+sExb4dAlEpxrc
+         OOvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzmiShDjpv/syD8hVuVDah75j1q+SAY9BVV8rN0AWIG8685zPKs6ttYiYJI+jHeVRTs1Y+V0st5B4XvvuivqY0zMoYJQolkhKn4hGI
+X-Gm-Message-State: AOJu0YwOO1wBchk/b6QKtl1haddI0B7wADDI+2Id0x9RYH0EYoqFW2f/
+	HLiUtNVgT/vcWwhcq/YNxtkPwOMeOs4k6U7LS6aFBW+d17ZzA+YmPvQo4oX36GA=
+X-Google-Smtp-Source: AGHT+IErVk8d/9y/kb0Ga83nzzJPAptWAOoI16J5Z6NNnpL0um0Mhe5dQgJ/cpp18A88n2GMuIzlBA==
+X-Received: by 2002:a17:906:a10b:b0:a5a:34ae:10ea with SMTP id a640c23a62f3a-a682272f34amr756980666b.76.1717492159079;
+        Tue, 04 Jun 2024 02:09:19 -0700 (PDT)
 Received: from raven.blarg.de (p200300dc6f4f9200023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f4f:9200:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa49e66fsm328376766b.129.2024.06.04.02.09.20
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa49e66fsm328376766b.129.2024.06.04.02.09.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 02:09:20 -0700 (PDT)
+        Tue, 04 Jun 2024 02:09:18 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org,
@@ -61,9 +60,9 @@ Cc: willy@infradead.org,
 	sfr@canb.auug.org.au,
 	david@redhat.com,
 	Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH v6 12/15] linux/mm.h: move pfmemalloc-related functions to pfmemalloc.h
-Date: Tue,  4 Jun 2024 11:08:42 +0200
-Message-Id: <20240604090845.2182265-13-max.kellermann@ionos.com>
+Subject: [PATCH v6 10/15] linux/mm.h: move usage count functions to mm/folio_usage.h
+Date: Tue,  4 Jun 2024 11:08:40 +0200
+Message-Id: <20240604090845.2182265-11-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240604090845.2182265-1-max.kellermann@ionos.com>
 References: <20240604090845.2182265-1-max.kellermann@ionos.com>
@@ -75,136 +74,419 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is needed to eliminate linux/skbuff.h's dependency on linux/mm.h.
+Prepare to reduce dependencies on linux/mm.h.
+
+This new header contains wrappers for the low-level functions from
+page_ref.h.  By having those higher-level functions in a separate
+header, we can avoid their additional dependencies in the page_ref.h.
+
+Having these in a separate header will allow eliminating the
+dependency on linux/mm.h from these headers:
+
+- linux/skbuff.h
+- linux/swap.h
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- include/linux/mm.h            | 45 +-----------------------------
- include/linux/mm/pfmemalloc.h | 52 +++++++++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+), 44 deletions(-)
- create mode 100644 include/linux/mm/pfmemalloc.h
+ include/linux/mm.h             | 172 +------------------------------
+ include/linux/mm/folio_usage.h | 182 +++++++++++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+), 171 deletions(-)
+ create mode 100644 include/linux/mm/folio_usage.h
 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c026e58e3725..e178bda2525d 100644
+index 6ae6961e83bf..a32d284813f4 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -8,6 +8,7 @@
- #include <linux/mm/folio_zone.h>
+@@ -2,9 +2,9 @@
+ #ifndef _LINUX_MM_H
+ #define _LINUX_MM_H
+ 
+-#include <linux/mm/devmap_managed.h>
+ #include <linux/mm/folio_next.h>
+ #include <linux/mm/folio_size.h>
++#include <linux/mm/folio_usage.h>
  #include <linux/mm/page_address.h>
  #include <linux/mm/page_section.h>
-+#include <linux/mm/pfmemalloc.h>
  #include <linux/errno.h>
- #include <linux/mmdebug.h>
- #include <linux/gfp.h>
-@@ -1772,50 +1773,6 @@ static inline int arch_make_folio_accessible(struct folio *folio)
-  */
- #include <linux/vmstat.h>
+@@ -1074,51 +1074,6 @@ struct inode;
+ 
+ #include <linux/huge_mm.h>
  
 -/*
-- * Return true only if the page has been allocated with
-- * ALLOC_NO_WATERMARKS and the low watermark was not
-- * met implying that the system is under some pressure.
+- * Methods to modify the page usage count.
+- *
+- * What counts for a page usage:
+- * - cache mapping   (page->mapping)
+- * - private data    (page->private)
+- * - page mapped in a task's page tables, each mapping
+- *   is counted separately
+- *
+- * Also, many kernel routines increase the page count before a critical
+- * routine so they can be sure the page doesn't go away from under them.
 - */
--static inline bool page_is_pfmemalloc(const struct page *page)
+-
+-/*
+- * Drop a ref, return true if the refcount fell to zero (the page has no users)
+- */
+-static inline int put_page_testzero(struct page *page)
 -{
--	/*
--	 * lru.next has bit 1 set if the page is allocated from the
--	 * pfmemalloc reserves.  Callers may simply overwrite it if
--	 * they do not need to preserve that information.
--	 */
--	return (uintptr_t)page->lru.next & BIT(1);
+-	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
+-	return page_ref_dec_and_test(page);
+-}
+-
+-static inline int folio_put_testzero(struct folio *folio)
+-{
+-	return put_page_testzero(&folio->page);
 -}
 -
 -/*
-- * Return true only if the folio has been allocated with
-- * ALLOC_NO_WATERMARKS and the low watermark was not
-- * met implying that the system is under some pressure.
+- * Try to grab a ref unless the page has a refcount of zero, return false if
+- * that is the case.
+- * This can be called when MMU is off so it must not access
+- * any of the virtual mappings.
 - */
--static inline bool folio_is_pfmemalloc(const struct folio *folio)
+-static inline bool get_page_unless_zero(struct page *page)
 -{
--	/*
--	 * lru.next has bit 1 set if the page is allocated from the
--	 * pfmemalloc reserves.  Callers may simply overwrite it if
--	 * they do not need to preserve that information.
--	 */
--	return (uintptr_t)folio->lru.next & BIT(1);
+-	return page_ref_add_unless(page, 1, 0);
 -}
+-
+-static inline struct folio *folio_get_nontail_page(struct page *page)
+-{
+-	if (unlikely(!get_page_unless_zero(page)))
+-		return NULL;
+-	return (struct folio *)page;
+-}
+-
+ extern int page_is_ram(unsigned long pfn);
+ 
+ enum {
+@@ -1265,8 +1220,6 @@ static inline struct folio *virt_to_folio(const void *x)
+ 	return page_folio(page);
+ }
+ 
+-void __folio_put(struct folio *folio);
+-
+ void put_pages_list(struct list_head *pages);
+ 
+ void split_page(struct page *page, unsigned int order);
+@@ -1355,129 +1308,6 @@ vm_fault_t finish_fault(struct vm_fault *vmf);
+  *   back into memory.
+  */
+ 
+-/* 127: arbitrary random number, small enough to assemble well */
+-#define folio_ref_zero_or_close_to_overflow(folio) \
+-	((unsigned int) folio_ref_count(folio) + 127u <= 127u)
+-
+-/**
+- * folio_get - Increment the reference count on a folio.
+- * @folio: The folio.
+- *
+- * Context: May be called in any context, as long as you know that
+- * you have a refcount on the folio.  If you do not already have one,
+- * folio_try_get() may be the right interface for you to use.
+- */
+-static inline void folio_get(struct folio *folio)
+-{
+-	VM_BUG_ON_FOLIO(folio_ref_zero_or_close_to_overflow(folio), folio);
+-	folio_ref_inc(folio);
+-}
+-
+-static inline void get_page(struct page *page)
+-{
+-	folio_get(page_folio(page));
+-}
+-
+-static inline __must_check bool try_get_page(struct page *page)
+-{
+-	page = compound_head(page);
+-	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
+-		return false;
+-	page_ref_inc(page);
+-	return true;
+-}
+-
+-/**
+- * folio_put - Decrement the reference count on a folio.
+- * @folio: The folio.
+- *
+- * If the folio's reference count reaches zero, the memory will be
+- * released back to the page allocator and may be used by another
+- * allocation immediately.  Do not access the memory or the struct folio
+- * after calling folio_put() unless you can be sure that it wasn't the
+- * last reference.
+- *
+- * Context: May be called in process or interrupt context, but not in NMI
+- * context.  May be called while holding a spinlock.
+- */
+-static inline void folio_put(struct folio *folio)
+-{
+-	if (folio_put_testzero(folio))
+-		__folio_put(folio);
+-}
+-
+-/**
+- * folio_put_refs - Reduce the reference count on a folio.
+- * @folio: The folio.
+- * @refs: The amount to subtract from the folio's reference count.
+- *
+- * If the folio's reference count reaches zero, the memory will be
+- * released back to the page allocator and may be used by another
+- * allocation immediately.  Do not access the memory or the struct folio
+- * after calling folio_put_refs() unless you can be sure that these weren't
+- * the last references.
+- *
+- * Context: May be called in process or interrupt context, but not in NMI
+- * context.  May be called while holding a spinlock.
+- */
+-static inline void folio_put_refs(struct folio *folio, int refs)
+-{
+-	if (folio_ref_sub_and_test(folio, refs))
+-		__folio_put(folio);
+-}
+-
+-void folios_put_refs(struct folio_batch *folios, unsigned int *refs);
 -
 -/*
-- * Only to be called by the page allocator on a freshly allocated
-- * page.
+- * union release_pages_arg - an array of pages or folios
+- *
+- * release_pages() releases a simple array of multiple pages, and
+- * accepts various different forms of said page array: either
+- * a regular old boring array of pages, an array of folios, or
+- * an array of encoded page pointers.
+- *
+- * The transparent union syntax for this kind of "any of these
+- * argument types" is all kinds of ugly, so look away.
 - */
--static inline void set_page_pfmemalloc(struct page *page)
+-typedef union {
+-	struct page **pages;
+-	struct folio **folios;
+-	struct encoded_page **encoded_pages;
+-} release_pages_arg __attribute__ ((__transparent_union__));
+-
+-void release_pages(release_pages_arg, int nr);
+-
+-/**
+- * folios_put - Decrement the reference count on an array of folios.
+- * @folios: The folios.
+- *
+- * Like folio_put(), but for a batch of folios.  This is more efficient
+- * than writing the loop yourself as it will optimise the locks which need
+- * to be taken if the folios are freed.  The folios batch is returned
+- * empty and ready to be reused for another batch; there is no need to
+- * reinitialise it.
+- *
+- * Context: May be called in process or interrupt context, but not in NMI
+- * context.  May be called while holding a spinlock.
+- */
+-static inline void folios_put(struct folio_batch *folios)
 -{
--	page->lru.next = (void *)BIT(1);
+-	folios_put_refs(folios, NULL);
 -}
 -
--static inline void clear_page_pfmemalloc(struct page *page)
+-static inline void put_page(struct page *page)
 -{
--	page->lru.next = NULL;
+-	struct folio *folio = page_folio(page);
+-
+-	/*
+-	 * For some devmap managed pages we need to catch refcount transition
+-	 * from 2 to 1:
+-	 */
+-	if (put_devmap_managed_folio_refs(folio, 1))
+-		return;
+-	folio_put(folio);
 -}
 -
  /*
-  * Can be called by the pagefault handler when it gets a VM_FAULT_OOM.
-  */
-diff --git a/include/linux/mm/pfmemalloc.h b/include/linux/mm/pfmemalloc.h
+  * GUP_PIN_COUNTING_BIAS, and the associated functions that use it, overload
+  * the page's refcount so that two separate items are tracked: the original page
+diff --git a/include/linux/mm/folio_usage.h b/include/linux/mm/folio_usage.h
 new file mode 100644
-index 000000000000..345b215a3566
+index 000000000000..1cf11ca1f5ab
 --- /dev/null
-+++ b/include/linux/mm/pfmemalloc.h
-@@ -0,0 +1,52 @@
++++ b/include/linux/mm/folio_usage.h
+@@ -0,0 +1,182 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MM_PFMEMALLOC_H
-+#define _LINUX_MM_PFMEMALLOC_H
++#ifndef _LINUX_MM_FOLIO_USAGE_H
++#define _LINUX_MM_FOLIO_USAGE_H
 +
-+#include <linux/bits.h> // for BIT()
-+#include <linux/mm_types.h> // for struct page
++#include <linux/mm/devmap_managed.h> // for put_devmap_managed_page()
++#include <linux/mmdebug.h> // for VM_BUG_ON_PAGE()
++#include <linux/mm_types.h> // for struct folio
++#include <linux/page_ref.h>
++
++struct folio_batch;
 +
 +/*
-+ * Return true only if the page has been allocated with
-+ * ALLOC_NO_WATERMARKS and the low watermark was not
-+ * met implying that the system is under some pressure.
++ * Methods to modify the page usage count.
++ *
++ * What counts for a page usage:
++ * - cache mapping   (page->mapping)
++ * - private data    (page->private)
++ * - page mapped in a task's page tables, each mapping
++ *   is counted separately
++ *
++ * Also, many kernel routines increase the page count before a critical
++ * routine so they can be sure the page doesn't go away from under them.
 + */
-+static inline bool page_is_pfmemalloc(const struct page *page)
++
++/*
++ * Drop a ref, return true if the refcount fell to zero (the page has no users)
++ */
++static inline int put_page_testzero(struct page *page)
 +{
++	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
++	return page_ref_dec_and_test(page);
++}
++
++static inline int folio_put_testzero(struct folio *folio)
++{
++	return put_page_testzero(&folio->page);
++}
++
++/*
++ * Try to grab a ref unless the page has a refcount of zero, return false if
++ * that is the case.
++ * This can be called when MMU is off so it must not access
++ * any of the virtual mappings.
++ */
++static inline bool get_page_unless_zero(struct page *page)
++{
++	return page_ref_add_unless(page, 1, 0);
++}
++
++static inline struct folio *folio_get_nontail_page(struct page *page)
++{
++	if (unlikely(!get_page_unless_zero(page)))
++		return NULL;
++	return (struct folio *)page;
++}
++
++void __folio_put(struct folio *folio);
++
++/* 127: arbitrary random number, small enough to assemble well */
++#define folio_ref_zero_or_close_to_overflow(folio) \
++	((unsigned int) folio_ref_count(folio) + 127u <= 127u)
++
++/**
++ * folio_get - Increment the reference count on a folio.
++ * @folio: The folio.
++ *
++ * Context: May be called in any context, as long as you know that
++ * you have a refcount on the folio.  If you do not already have one,
++ * folio_try_get() may be the right interface for you to use.
++ */
++static inline void folio_get(struct folio *folio)
++{
++	VM_BUG_ON_FOLIO(folio_ref_zero_or_close_to_overflow(folio), folio);
++	folio_ref_inc(folio);
++}
++
++static inline void get_page(struct page *page)
++{
++	folio_get(page_folio(page));
++}
++
++static inline __must_check bool try_get_page(struct page *page)
++{
++	page = compound_head(page);
++	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
++		return false;
++	page_ref_inc(page);
++	return true;
++}
++
++/**
++ * folio_put - Decrement the reference count on a folio.
++ * @folio: The folio.
++ *
++ * If the folio's reference count reaches zero, the memory will be
++ * released back to the page allocator and may be used by another
++ * allocation immediately.  Do not access the memory or the struct folio
++ * after calling folio_put() unless you can be sure that it wasn't the
++ * last reference.
++ *
++ * Context: May be called in process or interrupt context, but not in NMI
++ * context.  May be called while holding a spinlock.
++ */
++static inline void folio_put(struct folio *folio)
++{
++	if (folio_put_testzero(folio))
++		__folio_put(folio);
++}
++
++/**
++ * folio_put_refs - Reduce the reference count on a folio.
++ * @folio: The folio.
++ * @refs: The amount to subtract from the folio's reference count.
++ *
++ * If the folio's reference count reaches zero, the memory will be
++ * released back to the page allocator and may be used by another
++ * allocation immediately.  Do not access the memory or the struct folio
++ * after calling folio_put_refs() unless you can be sure that these weren't
++ * the last references.
++ *
++ * Context: May be called in process or interrupt context, but not in NMI
++ * context.  May be called while holding a spinlock.
++ */
++static inline void folio_put_refs(struct folio *folio, int refs)
++{
++	if (folio_ref_sub_and_test(folio, refs))
++		__folio_put(folio);
++}
++
++void folios_put_refs(struct folio_batch *folios, unsigned int *refs);
++
++/*
++ * union release_pages_arg - an array of pages or folios
++ *
++ * release_pages() releases a simple array of multiple pages, and
++ * accepts various different forms of said page array: either
++ * a regular old boring array of pages, an array of folios, or
++ * an array of encoded page pointers.
++ *
++ * The transparent union syntax for this kind of "any of these
++ * argument types" is all kinds of ugly, so look away.
++ */
++typedef union {
++	struct page **pages;
++	struct folio **folios;
++	struct encoded_page **encoded_pages;
++} release_pages_arg __attribute__ ((__transparent_union__));
++
++void release_pages(release_pages_arg, int nr);
++
++/**
++ * folios_put - Decrement the reference count on an array of folios.
++ * @folios: The folios.
++ *
++ * Like folio_put(), but for a batch of folios.  This is more efficient
++ * than writing the loop yourself as it will optimise the locks which need
++ * to be taken if the folios are freed.  The folios batch is returned
++ * empty and ready to be reused for another batch; there is no need to
++ * reinitialise it.
++ *
++ * Context: May be called in process or interrupt context, but not in NMI
++ * context.  May be called while holding a spinlock.
++ */
++static inline void folios_put(struct folio_batch *folios)
++{
++	folios_put_refs(folios, NULL);
++}
++
++static inline void put_page(struct page *page)
++{
++	struct folio *folio = page_folio(page);
++
 +	/*
-+	 * lru.next has bit 1 set if the page is allocated from the
-+	 * pfmemalloc reserves.  Callers may simply overwrite it if
-+	 * they do not need to preserve that information.
++	 * For some devmap managed pages we need to catch refcount transition
++	 * from 2 to 1:
 +	 */
-+	return (uintptr_t)page->lru.next & BIT(1);
++	if (put_devmap_managed_folio_refs(folio, 1))
++		return;
++	folio_put(folio);
 +}
 +
-+/*
-+ * Return true only if the folio has been allocated with
-+ * ALLOC_NO_WATERMARKS and the low watermark was not
-+ * met implying that the system is under some pressure.
-+ */
-+static inline bool folio_is_pfmemalloc(const struct folio *folio)
-+{
-+	/*
-+	 * lru.next has bit 1 set if the page is allocated from the
-+	 * pfmemalloc reserves.  Callers may simply overwrite it if
-+	 * they do not need to preserve that information.
-+	 */
-+	return (uintptr_t)folio->lru.next & BIT(1);
-+}
-+
-+/*
-+ * Only to be called by the page allocator on a freshly allocated
-+ * page.
-+ */
-+static inline void set_page_pfmemalloc(struct page *page)
-+{
-+	page->lru.next = (void *)BIT(1);
-+}
-+
-+static inline void clear_page_pfmemalloc(struct page *page)
-+{
-+	page->lru.next = NULL;
-+}
-+
-+#endif /* _LINUX_MM_PFMEMALLOC_H */
++#endif /* _LINUX_MM_FOLIO_USAGE_H */
 -- 
 2.39.2
 
