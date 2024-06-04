@@ -1,49 +1,50 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0295D1448D7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDEC1448E0;
 	Tue,  4 Jun 2024 10:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717495461; cv=none; b=d0d0EsICpNLmCWgnN6qglVTN3hUOY7vDKxZo99aSZ9i34ueOpTNvwMaaYqXAuVi2wMJ6nxrUQ7lLrpcnExKnLYoBU5PC11XZHkvQzx/zcQ3kcrbQAH5Z8rFlzz0vFXD4g1Gs4EuB/PeyYX1/rb/AqXC1T6cH1OugOiE+AXCHgsI=
+	t=1717495461; cv=none; b=kTdyvAsgMXttx1kb7bTB48fFwS875gwUGUsSqiVofC4HHMlvho7Pzl6ozgZAwxwE5wzQIfjuywuLMIyKnet47ik5naRf9U+9lvqeCGkcN5xA0fOlhsuXYyUgkCAub6mz0cfPkbkITQ3NKEtYYNyYScuunvH27x3HKDvv+xj+DXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717495461; c=relaxed/simple;
-	bh=mT1/rVVdWV+5QoTSApPnuEEIlkiQJf0kw1vPslyrMIY=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Zz/x3vPuFJjVPrcYdF2hzxPQamaCIlqveV90kqxGDw0DVvcMN7yIYT+A74WVA+556xtHWJkNX72+8fg/R7Gt5tHU3TQgKcALOd4fhCutGEISfk2TiD1Z8NdJJz5XYdueoSQEoWjfuiacfsgVRz+aYS/Ytugvfnt9hL4lCbJ3C88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JLLNPyxR; arc=none smtp.client-ip=198.47.23.248
+	bh=eMhqaoNHJ3tHzDi6VNuN8VlXihGxJv2kvkvNe0CppiA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=MUpEgAxOn2OjRhEOzvqWQ7WKYf1VXapX4kAOPL3lEGaa0NUmUgxYen3ANUltffV8M3LsSSdwkNXDh4PTVtKgIRFtpuZSJ585br65aqJxtSajYkVErGenGmFDT8iODw6+8Q6p8O3MSC5CgbtaWj8kBxhNfmO9SmeehFXJPUG+Phg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H5+cpgZu; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JLLNPyxR"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 454A2DmO090283;
-	Tue, 4 Jun 2024 05:02:13 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H5+cpgZu"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 454A2FYQ119449;
+	Tue, 4 Jun 2024 05:02:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717495333;
-	bh=lEeeA5XVGydla/KRte/WAZAqdb4muiovvZrIFmRss1s=;
-	h=From:Subject:Date:To:CC;
-	b=JLLNPyxR1w5+lmhYx9ZbWHXKfrSIa7/v6lEB+XvtUusMK0Yuzknk+sbqSrAVYd1xk
-	 OiV92W0Z46cWH1GVjAo5FErQPN+MQkde10gOxWMnZRLyfR6KpkSYXQjzdK2UuyB0+m
-	 z2o/Y3KWPkbiUFi/MgZ6nKASyUFW3An8WmnexC1A=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 454A2CJU007010
+	s=ti-com-17Q1; t=1717495335;
+	bh=aiAJG9A2lXmBO3D4+H7SDy5jGWfjtvudxc1KcNRhPHk=;
+	h=From:Date:Subject:References:In-Reply-To:To:CC;
+	b=H5+cpgZuX9iIF8gQ29GBYHlxuEoSJBKpxwMw65IlghMRnwRtDt/2k6w29SR6SH6IJ
+	 SDmZl4+ak9jmnAeUU1vPzchcCtRFhEioOD9xfH/CJNEErOtfJHzsOTlDvPZlBoYSA8
+	 xOadELTDAisheXxjqbKZj3QnKSs5vM5OHm8GX9MU=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 454A2FtQ030398
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 05:02:12 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 4 Jun 2024 05:02:15 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Jun 2024 05:02:12 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 05:02:15 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Jun 2024 05:02:12 -0500
+ Frontend Transport; Tue, 4 Jun 2024 05:02:15 -0500
 Received: from localhost (jluthra.dhcp.ti.com [172.24.227.116])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 454A2BRB130365;
-	Tue, 4 Jun 2024 05:02:12 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 454A2E92130460;
+	Tue, 4 Jun 2024 05:02:15 -0500
 From: Jai Luthra <j-luthra@ti.com>
-Subject: [PATCH 0/2] Fixes for McASP and dmaengine_pcm
-Date: Tue, 4 Jun 2024 15:31:49 +0530
-Message-ID: <20240604-asoc_next-v1-0-e895c88e744d@ti.com>
+Date: Tue, 4 Jun 2024 15:31:51 +0530
+Subject: [PATCH 2/2] ASoC: ti: davinci-mcasp: Set min period size using
+ FIFO config
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,9 +53,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAA3mXmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDMwMT3cTi/OT4vNSKEt1kAzPjtORkQ0uDZDMloPqCotS0zAqwWdGxtbU
- AE2GY9VsAAAA=
+Message-ID: <20240604-asoc_next-v1-2-e895c88e744d@ti.com>
+References: <20240604-asoc_next-v1-0-e895c88e744d@ti.com>
+In-Reply-To: <20240604-asoc_next-v1-0-e895c88e744d@ti.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
         Mark
@@ -63,47 +64,85 @@ To: Lars-Peter Clausen <lars@metafoo.de>, Jaroslav Kysela <perex@perex.cz>,
 CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <alsa-devel@alsa-project.org>, Jai Luthra <j-luthra@ti.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=915; i=j-luthra@ti.com;
- h=from:subject:message-id; bh=mT1/rVVdWV+5QoTSApPnuEEIlkiQJf0kw1vPslyrMIY=;
- b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBmXuYgB8FlkmaUfeYeISFrnAiKrV3JaFHoPcw3e
- zYjan9orCqJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZl7mIAAKCRBD3pH5JJpx
- RXaTD/9mm61MjSw+c7tSjgOLv58uadvLpqkDpKp5w8Twl1roQ+6Y/taGUyWg27a1LrAa1LYObpk
- rlHA30idq7AIFHTFvj1cBE8GUekfbnzqXYlbjsBqV11/A8qAAwCf/U/AoqHq9TqDb8xSSTHgT3c
- GhTPbvpsxp5VQDKU5jQu23LEstByqjE1IIvkQxodPNl56G+BlOmKyhnewT7fi5xwzgH/fSnxaRH
- Ak2BKvE4mwjNBk0dtKt9q7hnrLdqVmhMy6gQGLZbJYj2p+Yl0Ql2OayzDKF1Ak8346YIJXvfHf7
- rMxS47tzEFll+D2fRHQTbu1ICPJK78jg2quD0rwOPXRFFEfNI+8UuGfxFdfLGvj+GiOV3Auy3Rd
- vS+NwJwJ5NnnV50viG/mjbARnLVlTSljB5yIHP85PcNLIq678IjLL9ad42O8UKkusHIhYLB8veY
- Uasuz0kLgig8uvxk3YtewOiTQlkIXIPp9RlYlNp4PasX8V+hGrLbfUXqYN2TfMKslvxZyL2PRLU
- m2aZBx3FWwLR3n47o7yBcoDIqU1nIHCJBDLDhjpAaKYG0R252XBXiYmvyEuHZAPnUt/R4aSu86i
- IiwHTfJ12nBbkLxagoaHh7TEXHChwLM95Gw/Un88WY+ffEYAVjpBAhNlbJKeAaSj3a7pnBjg08w
- Ja3MzA2SG36zlaw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2259; i=j-luthra@ti.com;
+ h=from:subject:message-id; bh=eMhqaoNHJ3tHzDi6VNuN8VlXihGxJv2kvkvNe0CppiA=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBmXuYiUfBPv3bkEGL189j5N4WDta+evgx+wbTGN
+ ls6nNkcMy2JAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZl7mIgAKCRBD3pH5JJpx
+ RQcGEACl67P2gaXQhns4uPnJR7XAkyL6OS3dRQI2hPO7SoIm6YC7egACmjuxKB66aDznzzL7ZJ9
+ bI0xTe08wlmTQe59AfOsg9TrlRS4X1/YToBjsZylpnehntLU2bgozZyoKOFFcePo6u9qMMFukHg
+ T19ORJPmHgkgMJMwdSGsYXfi/Tp/kNbk47+OqEUFauOPm8omuppWRceZFgTt66k5N+KqL2cIwMq
+ bGZvBGSxMgRT+3rt6VwWRhbGmKOjmWXp1Z+hsgMn40wX7nPOIibeg7TDW1/EkyCPIE5567wK2ZF
+ mOkox9pDVgyheyzPNC7dDnPDtuaB5cl5xIHf7mWfOWNL/+1uZvFBd5CdFr0sY9slvz91LioUJ09
+ f4W+2ctMUxd3FVcygAT4MtwwLzB2b+hYQuvayD3SS6O6HMbzQWv/mpkGyZ7efLqjTAyd5msOboK
+ 0BdW9wNbOhdiF0vSG79JH/jTNP6Pc/g+4eGJ5N3FKwsHJb0EVdXYlArTd5PEKx0SnbXZO6goGvW
+ 5xlkXLX8Xm4FYqmX3qFyIUIPIGN3bY2JOuNZVphHzH/z4U4AHtb4bLDcbtkZcYMKhyGw7oQpdfp
+ iablLtsJXQYzJ1fHqzBjMYDnso6V4PQ/5dpNeHjoUadv68d4Lzap6zxirlewY23jjyttxTf0F6U
+ QLKsgHoBfRThCiQ==
 X-Developer-Key: i=j-luthra@ti.com; a=openpgp;
  fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This series fixes two patches:
+The minimum period size was enforced to 64 as older devices integrating
+McASP with EDMA used an internal FIFO of 64 samples.
 
-1. Fix the dmaengine API usage by calling dmaengine_synchronize() after
-   dmaengine_terminate_async() when xrun events occur in application
-2. Use the McASP AFIFO property from DT to refine the period size,
-   instead of hardcoding minimum to 64 samples
+With UDMA based platforms this internal McASP FIFO is optional, as the
+DMA engine internally does some buffering which is already accounted for
+when registering the platform. So we should read the actual FIFO
+configuration (txnumevt/rxnumevt) instead of hardcoding frames.min to
+64.
 
 Signed-off-by: Jai Luthra <j-luthra@ti.com>
 ---
-Jai Luthra (2):
-      ALSA: dmaengine: Synchronize dma channel in prepare()
-      ASoC: ti: davinci-mcasp: Set min period size using FIFO config
+ sound/soc/ti/davinci-mcasp.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
- include/sound/dmaengine_pcm.h         |  1 +
- sound/core/pcm_dmaengine.c            | 10 ++++++++++
- sound/soc/soc-generic-dmaengine-pcm.c |  8 ++++++++
- sound/soc/ti/davinci-mcasp.c          |  9 +++++++--
- 4 files changed, 26 insertions(+), 2 deletions(-)
----
-base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
-change-id: 20240604-asoc_next-c063fcc190c6
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 1e760c315521..2a53fb7e72eb 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -70,6 +70,7 @@ struct davinci_mcasp_context {
+ struct davinci_mcasp_ruledata {
+ 	struct davinci_mcasp *mcasp;
+ 	int serializers;
++	u8 numevt;
+ };
+ 
+ struct davinci_mcasp {
+@@ -1470,12 +1471,13 @@ static int davinci_mcasp_hw_rule_format(struct snd_pcm_hw_params *params,
+ static int davinci_mcasp_hw_rule_min_periodsize(
+ 		struct snd_pcm_hw_params *params, struct snd_pcm_hw_rule *rule)
+ {
++	struct davinci_mcasp_ruledata *rd = rule->private;
+ 	struct snd_interval *period_size = hw_param_interval(params,
+ 						SNDRV_PCM_HW_PARAM_PERIOD_SIZE);
+ 	struct snd_interval frames;
+ 
+ 	snd_interval_any(&frames);
+-	frames.min = 64;
++	frames.min = rd->numevt;
+ 	frames.integer = 1;
+ 
+ 	return snd_interval_refine(period_size, &frames);
+@@ -1516,6 +1518,9 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 		if (mcasp->serial_dir[i] == dir)
+ 			max_channels++;
+ 	}
++	ruledata->numevt = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
++				   mcasp->txnumevt :
++				   mcasp->rxnumevt;
+ 	ruledata->serializers = max_channels;
+ 	ruledata->mcasp = mcasp;
+ 	max_channels *= tdm_slots;
+@@ -1591,7 +1596,7 @@ static int davinci_mcasp_startup(struct snd_pcm_substream *substream,
+ 
+ 	snd_pcm_hw_rule_add(substream->runtime, 0,
+ 			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+-			    davinci_mcasp_hw_rule_min_periodsize, NULL,
++			    davinci_mcasp_hw_rule_min_periodsize, ruledata,
+ 			    SNDRV_PCM_HW_PARAM_PERIOD_SIZE, -1);
+ 
+ 	return 0;
 
-Best regards,
 -- 
-Jai Luthra <j-luthra@ti.com>
+2.43.0
 
