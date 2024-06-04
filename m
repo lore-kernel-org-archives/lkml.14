@@ -1,42 +1,46 @@
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3F05B683
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:22:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847ED84E1C
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 21:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717536178; cv=none; b=lxTWQyA2SrhLkFYfWx0rgoSYuhlOReYNQGc9oUo/YZ4O8qaCfxRA5EFgqRXYKlbkhhQqk9I35B8yFeDFuYGgL3NY/XYGwG4uvKBP1MgD40A+OVOf/QggWIOs3eCIp0gA74xAHCy7x8hFAtA/KAenIQLKNjv9K6oGeQbNuncMxkU=
+	t=1717536179; cv=none; b=J2uGVQ7s9nnWL6E8JR5m7IpOtjGNvsTnIM5nXS1pU+p2pJiHU7vNj0D753sCQX4gbo+jm7gCWTq8Ky22MIeALMnYSv/Cem3Qs8DbIgZ/XYQ8UyK3+iaza3DxgjiqwwfSiryHN3V2q0SYVZlptfHWLhE5PbqdIu1oSZ4RHAjb/z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717536178; c=relaxed/simple;
-	bh=uq9U9mDJUce7Qvp01K18gA3dtgV4zfH955lkRAaV4mM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q/h1vartqrXZmnS9vxWDiFjuqW8G0Ib7aPkrdVPTYuBMkVJva6fv4McQTgm10BxlDyiiRYkmiGOCYunRfC9408tYqm0FiiURCG9KBVKhOXTRTcsIEVdbeQPdvM/qTV83jOaLZp1EtIXwbvTB3Td8OFGs6Jqb/4admH3jiprYMoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=lrwIyQ3o; arc=none smtp.client-ip=194.117.254.33
+	s=arc-20240116; t=1717536179; c=relaxed/simple;
+	bh=fmVvY+JNZpsEx1YEUwXw+sagzKkVZJYhIwWRBRO3PPQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b97TDRnhVE3ln0HhbLi3EP6+EwRv0776EROrvk7bGPoHWwWOfcWAViCAj3OjxsHN4vVwqkEapnHOfQSEgRlICqU1ky9P3kS/WOA8yiCfza1XEvPPbLkbG8LDILWV525OVipHRpRds4/VcR6kwRx7oQVh7h7yQ2qChNwr6F4l+AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TcP+bXez; arc=none smtp.client-ip=194.117.254.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="lrwIyQ3o"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TcP+bXez"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=62lUBNUlR8iL4F
-	sWpr9dsKOLBDz7it0Yl5zVjY+xhek=; b=lrwIyQ3o/NpXvUfIj1XZdN5jgXuzeR
-	ItuU2mxagSryrReDB1IlhEqN0RXIbZW0wd/N1KJaTjm94gQYvHTKz1RtVGT30UWF
-	RnQHMjloLw6LgWmp8JpgtukU7oP0a7KHviWl9rUhoSzUfnLmOEewjv7vqHFQS3Op
-	yobcghwSmSBZzW4cgK6ovfV2gvep2T7gCSVQ9gDnvfQtHB52/urLCY2UZ/zUne14
-	MPtjT/K4wOevZ8mAUSFvzXRFRe5fQFSH464BTfSaBR/N0+1AVtILb7MAAIhtG2FE
-	Efz8ZdIUTAmI35F/QmYrtHBPvTui023Zfr31gyuNeJnamP0FUkg7IMVQ==
-Received: (qmail 2449393 invoked from network); 4 Jun 2024 23:22:50 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 23:22:50 +0200
-X-UD-Smtp-Session: l3s3148p1@sZxQDRcapIFehhtB
+	:in-reply-to:references:mime-version:content-transfer-encoding;
+	 s=k1; bh=ipB+dIDL7p2Y85aj9rGKHn6fFGIdgaCRl3bJhyD9eCA=; b=TcP+bX
+	ez/Q27NRvYItnMWHJ64kQB3dT7Kil81i4X3R82XMbuQl+4obYVBWUqNYbqZ+LW1V
+	KV8G6LRRSIEQiv6iX+PUsxlzeY/DrqTRDKyVvrdPDhp9jSHm7Wtxq7X5hPek74B7
+	ClUqB2P69JBFpAfgMd5Qq5XsIGo+ErZkCBmWSa9a6tmH3tpA8nm1rqc+UNw/EpQr
+	/U35lm4ivT27EjDdy6tVa1bgKat9bi/6sxDNbmNPLn586m3kKLbX4yw7G2MPwgG7
+	vl/zM1SZWi3NicDVp2htNvegPpqX1K2evo7+ZrDztgTyqgfPcGB+xC+h6Rcd7vji
+	e2KSqyBDGVOCaHaA==
+Received: (qmail 2449471 invoked from network); 4 Jun 2024 23:22:52 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 23:22:52 +0200
+X-UD-Smtp-Session: l3s3148p1@ILFzDRcaNN1ehhtB
 From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 To: linux-kernel@vger.kernel.org
 Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
 	Alex Dubov <oakad@yahoo.com>,
 	Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 0/4] misc: use 'time_left' instead of 'timeout' with wait_*() functions
-Date: Tue,  4 Jun 2024 23:22:35 +0200
-Message-ID: <20240604212240.4529-1-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 3/4] misc: tifm: use 'time_left' variable with wait_for_completion_timeout()
+Date: Tue,  4 Jun 2024 23:22:38 +0200
+Message-ID: <20240604212240.4529-4-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240604212240.4529-1-wsa+renesas@sang-engineering.com>
+References: <20240604212240.4529-1-wsa+renesas@sang-engineering.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,38 +50,43 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 There is a confusing pattern in the kernel to use a variable named 'timeout' to
-store the result of wait_*() functions causing patterns like:
+store the result of wait_for_completion_timeout() causing patterns like:
 
-        timeout = wait_for_completion_timeout(...)
-        if (!timeout) return -ETIMEDOUT;
+	timeout = wait_for_completion_timeout(...)
+	if (!timeout) return -ETIMEDOUT;
 
 with all kinds of permutations. Use 'time_left' as a variable to make the code
-obvious and self explaining.
+self explaining.
 
-This is part of a tree-wide series. The rest of the patches can be found here:
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/misc/tifm_7xx1.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/time_left
-
-Because these patches are generated, I audit them before sending. This is why I
-will send series step by step. Build bot is happy with these patches, though.
-No functional changes intended.
-
-Wolfram Sang (4):
-  misc: apds990x: use 'time_left' variable with
-    wait_event_interruptible_timeout()
-  misc: bh1770glc: use 'time_left' variable with
-    wait_event_interruptible_timeout()
-  misc: tifm: use 'time_left' variable with
-    wait_for_completion_timeout()
-  misc: ti-st: st_kim: use 'time_left' variable with
-    wait_for_completion_interruptible_timeout()
-
- drivers/misc/apds990x.c     | 10 +++++-----
- drivers/misc/bh1770glc.c    | 10 +++++-----
- drivers/misc/ti-st/st_kim.c |  8 ++++----
- drivers/misc/tifm_7xx1.c    |  6 +++---
- 4 files changed, 17 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/misc/tifm_7xx1.c b/drivers/misc/tifm_7xx1.c
+index 7dd86a9858ab..1d54680d6ed2 100644
+--- a/drivers/misc/tifm_7xx1.c
++++ b/drivers/misc/tifm_7xx1.c
+@@ -229,7 +229,7 @@ static int __maybe_unused tifm_7xx1_resume(struct device *dev_d)
+ 	struct pci_dev *dev = to_pci_dev(dev_d);
+ 	struct tifm_adapter *fm = pci_get_drvdata(dev);
+ 	int rc;
+-	unsigned long timeout;
++	unsigned long time_left;
+ 	unsigned int good_sockets = 0, bad_sockets = 0;
+ 	unsigned long flags;
+ 	/* Maximum number of entries is 4 */
+@@ -265,8 +265,8 @@ static int __maybe_unused tifm_7xx1_resume(struct device *dev_d)
+ 	if (good_sockets) {
+ 		fm->finish_me = &finish_resume;
+ 		spin_unlock_irqrestore(&fm->lock, flags);
+-		timeout = wait_for_completion_timeout(&finish_resume, HZ);
+-		dev_dbg(&dev->dev, "wait returned %lu\n", timeout);
++		time_left = wait_for_completion_timeout(&finish_resume, HZ);
++		dev_dbg(&dev->dev, "wait returned %lu\n", time_left);
+ 		writel(TIFM_IRQ_FIFOMASK(good_sockets)
+ 		       | TIFM_IRQ_CARDMASK(good_sockets),
+ 		       fm->addr + FM_CLEAR_INTERRUPT_ENABLE);
 -- 
 2.43.0
 
