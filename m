@@ -1,265 +1,215 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2552524A08;
-	Tue,  4 Jun 2024 01:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530254A2C;
+	Tue,  4 Jun 2024 01:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717463613; cv=none; b=u6+TvU97Ub0bHyLJY93BjJFnFQX7MB0s/fDpKMdUd2zEHzw2CM7M5eiDBqpsXrawL6OeWYf8ih8t95LAXO2wUhY7DROCrp/2XPVYRZt/xBuPg7RuZpP6+qzoHOXDBayJ3PdgR4XRNzEKMR4NIaj0aZMu1VSszKYqqlOoxf4LoCE=
+	t=1717463768; cv=none; b=eMLEzYn7q2rtd95x9lmbO+vbttOEbE5qL1OA371quexnDoxE4f+aWh1qbgka+notFVymxkwuLZM7648HHKmYVpS/1jbNeKhxwpH/LxWd3S0QFEnmlOcQksl/T+oUHKZhiQ95Lz84u92YWCP6fqVpF8cku6vYW/JkFN4V/3+BQ94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717463613; c=relaxed/simple;
-	bh=3qw0MaJni88pwleg/7aVtdME2YvjeNzDSsDWc1eCUCA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y8jLjgmmJk9mzda/MNJuDlzMvMuSF2cS19Cq7fNHMEmiQGPeNmFbRto6na0iWClP5Ty/yb6toe1Q33EeW0+ijCZCCHvGVyDDclBGkkp+Y4BDF7sM+hQBkOo+l9AUlskOlUrovYfuYrMhDqDOP/DvuAPw4lyJxtm/MpbSVbAHnu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fkqrEXAG; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717463768; c=relaxed/simple;
+	bh=3k4VVgF3vzvK7xLsva37al3VhH6jC2ecwaxPsYlpRLM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DYgvMbMs3LapG+op8t1eBRR1w2MNbxEOB75X37KgpxxpQdlzeZ7JvlmNDtTOmRv8huZ9Eo/A09YsQTcY14s4PIbOKY30jqKWIdDXqNo29m0dsrXzB8hZQIVcnecypyZaacH2PejU0KVSOy7a1tssgrAwruCADqrEvByqCMsa97E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=gOX4dm+g; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fkqrEXAG"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453CGM3G028674;
-	Tue, 4 Jun 2024 01:13:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5CnW80lYICCpRYMpoRMwkl3G0FelFZhQiGYOUNlDSW8=; b=fkqrEXAGkMH79Qil
-	zDlbRsaralPfDFIdZm04JaTzcYG2RbBs5iZoZ6NEFcbTa6sm17XDcJrPrvDFX4xR
-	d0Hp469Yn/xfvpzoIGQSP7cDaAUkdZhikkix3jWhwMkkjRYxHOMs1M02OuS/sHY7
-	3jiiLtOXdy4UgWcc9SWBRyfmI1bTEPsPvnhDW2qWI9W0BsMSbzK9zMGhf8P+6P2N
-	NYQUbJqBRqREA9jBW1c0mRoXAJ82t/t4uMhN5bpsR+/pLrslCe4E5hihPVl1mls0
-	tRhtQEx9J81+IwghlJd+1f0H7TFoWE4OnmmJSZSyZNKzUYlw8ViZ4YDSHpEevciU
-	GznuFQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5t55js-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 01:13:29 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4541DSc2012575
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Jun 2024 01:13:28 GMT
-Received: from hu-sibis-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 3 Jun 2024 18:13:23 -0700
-From: Sibi Sankar <quic_sibis@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <srinivas.kandagatla@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <quic_rgottimu@quicinc.com>, <quic_kshivnan@quicinc.com>,
-        <quic_sibis@quicinc.com>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <abel.vesa@linaro.org>
-Subject: [PATCH 4/4] arm64: dts: qcom: x1e80100: Add fastrpc nodes
-Date: Tue, 4 Jun 2024 06:41:57 +0530
-Message-ID: <20240604011157.2358019-5-quic_sibis@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604011157.2358019-1-quic_sibis@quicinc.com>
-References: <20240604011157.2358019-1-quic_sibis@quicinc.com>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="gOX4dm+g"
+Received: from pecola.lan (unknown [159.196.93.152])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 7112D2013B;
+	Tue,  4 Jun 2024 09:15:53 +0800 (AWST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1717463754;
+	bh=PwovlZCKdFMr+QpQpCC2tTBSTOMUP4TYt99tDEe4S2I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=gOX4dm+gp8roOZb0OqKy6dQGgS+HWCAZMLSIAd+e1g3mY5T+MplAbFKjPIJq5gx6u
+	 6bjVU8MOVsKbcDNFifflHT9Z2xmlHmx5b7yL2KcmWhQneoMfD4pHcv6Kvx4nu0WGw5
+	 pjiVw98XyF9L38Tjy60+PO/z1psXD29DCicFlNpWrEjE5yqeImaev/W/JIpeoNZedO
+	 yXpUOJrejGTcPj//+TGXrPGV7Vpy9QJNI2vIlWKgwCi51+4tmjVT+okygjJtYBHfVr
+	 g/4pTo1czHWKHggVqz9p2BQ6m8r1DnXlKhAR9N4EJIZrIffx3UCltzENMza994Oa0r
+	 frCn6JFNyxxvQ==
+Message-ID: <4eefd134bec51482655018bbbd7c4d5c7668a7fa.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v2 3/3] mctp pcc: Implement MCTP over PCC Transport
+From: Jeremy Kerr <jk@codeconstruct.com.au>
+To: Adam Young <admiyo@amperemail.onmicrosoft.com>, 
+ admiyo@os.amperecomputing.com, Matt Johnston <matt@codeconstruct.com.au>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 04 Jun 2024 09:15:53 +0800
+In-Reply-To: <1a38b394-30ae-42c6-b363-9f3a00166259@amperemail.onmicrosoft.com>
+References: <20240513173546.679061-1-admiyo@os.amperecomputing.com>
+	 <20240528191823.17775-1-admiyo@os.amperecomputing.com>
+	 <20240528191823.17775-4-admiyo@os.amperecomputing.com>
+	 <6a01ffb4ef800f381d3e494bf1862f6e4468eb7d.camel@codeconstruct.com.au>
+	 <1a38b394-30ae-42c6-b363-9f3a00166259@amperemail.onmicrosoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: jTKPC6OOZy6OgkCht_WT-68_F8nO_quL
-X-Proofpoint-GUID: jTKPC6OOZy6OgkCht_WT-68_F8nO_quL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 malwarescore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=725 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406040008
 
-Add fastrpc nodes for ADSP and CDSP on X1E80100 SoC.
+Hi Adam,
 
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 156 +++++++++++++++++++++++++
- 1 file changed, 156 insertions(+)
+> > And can you include a brief summary of changes since the prior version
+> > you have sent?
+> >=20
+> They are all in the header patch.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index d86c4d3be126..4edabe0ff592 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -5567,6 +5567,55 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 				label = "lpass";
- 				qcom,remote-pid = <2>;
- 
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "adsp";
-+					qcom,non-secure-domain;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x1003 0x80>,
-+							 <&apps_smmu 0x1063 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x1004 0x80>,
-+							 <&apps_smmu 0x1064 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x1005 0x80>,
-+							 <&apps_smmu 0x1065 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_smmu 0x1006 0x80>,
-+							 <&apps_smmu 0x1066 0x0>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@7 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <7>;
-+						iommus = <&apps_smmu 0x1007 0x80>,
-+							 <&apps_smmu 0x1067 0x0>;
-+						dma-coherent;
-+					};
-+				};
-+
- 				gpr {
- 					compatible = "qcom,gpr";
- 					qcom,glink-channels = "adsp_apps";
-@@ -5656,6 +5705,113 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 
- 				label = "cdsp";
- 				qcom,remote-pid = <5>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "cdsp";
-+					qcom,non-secure-domain;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x0c01 0x20>,
-+							 <&apps_smmu 0x0c21 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x0c02 0x20>,
-+							 <&apps_smmu 0x0c22 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x0c03 0x20>,
-+							 <&apps_smmu 0x0c23 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x0c04 0x20>,
-+							 <&apps_smmu 0x0c24 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x0c05 0x20>,
-+							 <&apps_smmu 0x0c25 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_smmu 0x0c06 0x20>,
-+							 <&apps_smmu 0x0c26 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@7 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <7>;
-+						iommus = <&apps_smmu 0x0c07 0x20>,
-+							 <&apps_smmu 0x0c27 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@8 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <8>;
-+						iommus = <&apps_smmu 0x0c08 0x20>,
-+							 <&apps_smmu 0x0c28 0x20>;
-+						dma-coherent;
-+					};
-+
-+					/* note: compute-cb@9 is secure */
-+
-+					compute-cb@10 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <10>;
-+						iommus = <&apps_smmu 0x0c0c 0x20>,
-+							 <&apps_smmu 0x0c2c 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@11 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <11>;
-+						iommus = <&apps_smmu 0x0c0d 0x20>,
-+							 <&apps_smmu 0x0c2d 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@12 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <12>;
-+						iommus = <&apps_smmu 0x0c0e 0x20>,
-+							 <&apps_smmu 0x0c2e 0x20>;
-+						dma-coherent;
-+					};
-+
-+					compute-cb@13 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <13>;
-+						iommus = <&apps_smmu 0x0c0f 0x20>,
-+							 <&apps_smmu 0x0c2f 0x20>;
-+						dma-coherent;
-+					};
-+				};
- 			};
- 		};
- 	};
--- 
-2.34.1
+Ah, neat. Can you include reviewers on CC for that 0/n patch then?
 
+> > > +static struct list_head mctp_pcc_ndevs;
+> > I'm not clear on what this list is doing; it seems to be for freeing
+> > devices on module unload (or device remove).
+> >=20
+> > However, the module will be refcounted while there are devices bound, s=
+o
+> > module unload shouldn't be possible in that state. So the only time
+> > you'll be iterating this list to free everything will be when it's
+> > empty.
+> >=20
+> > You could replace this with the mctp_pcc_driver_remove() just removing =
+the
+> > device passed in the argument, rather than doing any list iteration.
+> >=20
+> > ... unless I've missed something?
+>=20
+> There is no requirement that all the devices=C2=A0 be unloaded in order f=
+or=20
+> the module to get unloaded.
+
+... aside from the driver refcounting. You're essentially replicating
+the driver core's own facility for device-to-driver mappings here.
+
+> It someone wants to disable the MCTP devices, they can unload the=20
+> module, and it gets cleaned up.
+>=20
+> With ACPI, the devices never go away, they are defined in a table read=
+=20
+> at start up and stay there.
+
+Sure, the ACPI bus devices may always be present, but you can still
+unbind the driver from one device:
+
+   echo '<device-id>' > /sys/bus/acpi/drivers/mctp_pcc/unbind
+
+- where device-id is one of the links to a device in that mctp_pcc dir.
+
+then:
+
+> So without this change there is no way to unload the module.
+
+... with no devices bound, you can safely unload the module (but the
+unload path will also perform that unbind anyway, more on that below).
+
+> Maybe it is just a convenience for development, but I think most
+> modules behave this way.
+
+If you can avoid holding internal references to devices, you have a
+whole class of bugs you can avoid.
+
+> > Any benefit in including the pcc_hdr in the skb?
+> >=20
+> > (not necessarily an issue, just asking...)
+> It shows up in=C2=A0 tracing of the packet.=C2=A0 Useful for debugging.
+
+Sounds good!
+
+> > Does anything need to tell the mailbox driver to do that ack after
+> > setting ack_rx?
+>=20
+> Yes.=C2=A0 It is in the previous patch, in the pcc_mailbox code.=C2=A0 I=
+=20
+> originally had it as a follow on, but reordered to make it a pre-req.=C2=
+=A0=20
+> That allows me to inline this logic, making the driver easier to review=
+=20
+> (I hope).
+
+OK. As far as I can tell here this is just setting a member of the
+mailbox interface, but not calling back into the mailbox code. If this
+is okay, then all good.
+
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0netif_stop_queue(ndev);
+> > Do you need to stop and restart the queue? Your handling is atomic.
+> I guess not.=C2=A0 This was just from following the examples of others. W=
+ill=20
+> remove.
+
+Those examples (at least, in the MCTP drivers) will not have been able
+to complete transmission until way later - say, after a separate
+completion, or after a separate thread has processed the outgoing skb.
+While that is happening, we may have stopped the queue.
+
+In your case, you complete transmission entirely within the start_xmit
+operation (*and* that path is atomic), so the queue is fine to remain
+enabled.
+
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0if (adev && mctp_pcc_dev->acpi_device =3D=3D adev)
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0con=
+tinue;
+> > I think you meant '!=3D' instead of '=3D=3D'?
+> Yes.=C2=A0 Yes I did.=C2=A0 This is code that has to be there for complet=
+eness,
+> but I don't really have a way to test, except for the "delete all" case.
+
+The 'unbind' example above will test this.
+
+> > > +static int __init mctp_pcc_mod_init(void)
+> > > +{
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int rc;
+> > > +
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_debug("Initializing MCT=
+P over PCC transport driver\n");
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0INIT_LIST_HEAD(&mctp_pcc_n=
+devs);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rc =3D acpi_bus_register_d=
+river(&mctp_pcc_driver);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (rc < 0)
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Error registering=
+ driver\n"));
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return rc;
+> > > +}
+> > > +
+> > > +static __exit void mctp_pcc_mod_exit(void)
+> > > +{
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_debug("Removing MCTP ov=
+er PCC transport driver\n");
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mctp_pcc_driver_remove(NUL=
+L);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0acpi_bus_unregister_driver=
+(&mctp_pcc_driver);
+> > > +}
+> > > +
+> > > +module_init(mctp_pcc_mod_init);
+> > > +module_exit(mctp_pcc_mod_exit);
+> > If you end up removing the mctp_pcc_ndevs list, these can all be
+> > replaced with module_acpi_driver(mctp_pcc_driver);
+>=20
+> Yeah, I can't get away with that.=C2=A0 The ACPI devices may still be the=
+re=20
+> when some one calls rmmod, and so we need to clean up the ndevs.
+
+The core driver unregister path should unbind all devices before the
+module is removed, so your mctp_pcc_driver_remove() should get invoked
+on each individual device during that process.
+
+(with the above !=3D vs. =3D=3D bug fixed, you'll probably find that
+"delete-all" case will always hit an empty list)
+
+... this is unless something is different about the ACPI bus type, but
+it all looks standard from a brief look!
+
+Cheers,
+
+
+Jeremy
