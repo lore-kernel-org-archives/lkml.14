@@ -1,378 +1,230 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E440FAD51;
-	Tue,  4 Jun 2024 11:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C00CC38B;
+	Tue,  4 Jun 2024 11:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717500695; cv=none; b=ezZbc5Evd3OT1HGCb4GnGwTAuBnq/xOg4wa2CJ9ueukMM5oO+Xf4Effj11RBEnxIqvacieDEkN85vzDSiyasvtnk6lHNiXPcT5mKtvdDG9n8+uu3Fh8quwQeBGM5IL4R7PVjgeKV1HumRp+6uXUsqFehUoXjoHYaWKeaclTvSCk=
+	t=1717500972; cv=none; b=PuewJBehhrAA4eb4kq41JH5xkftR56uKs75dE7nlqkJaMg3MbEstWy/5yxP6sh0HwC1XxFGrgKirSQ3r8z4ekUV+eVqPTl4GZNE/t1NQpVgTzEydxOosR6TQ53YhXB/kbYSAz6+QluswK/lN/F/XbaEkoXYqNacwHSSaqKfdjdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717500695; c=relaxed/simple;
-	bh=4VkGtERUrKVdApQTxE0PYMgIVXnqdYk7PyRuEkZe2dc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=UMdjPCwEqHuXKDX195poV9gSenxfC/2eLoYXY4C4Rra9g5wd+OfiCGyXRYAP6USWcaFLvhoGcVRJKZEGa1DkdAwFn+J4nWab2NPZTQvZYBIMZ6CZpeJRR0H1lvuvZ8o7oC3/riewADRY0duXD+2m/zC0M4ECcrS0flxTkRMWkIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=R9eFN+WM; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717500972; c=relaxed/simple;
+	bh=02u0kNPyfblbpdwTQTDwg+4zFb9EyB2G2DK5wKRR5ZY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=fXNS8FYNk9VP7AckgYn6tFszWjZcEfrkJtV5L/PfV8O6agWPZAfNS7MLEGqKXyVbF48FLHLriCYbe9pJ6fsSCQuUzJhC4yUx54Z6L9wE6xjHHFPAdQXqYDzByoRs1bT9laKtk23fRSrmX0boVYLGzodi5nyhhCjbXHI0dNaMn+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CQ0m0CP9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="R9eFN+WM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717500664; x=1718105464; i=markus.elfring@web.de;
-	bh=RqEJL9d9070BNk7hTaW1Jc98pMQJPKNH8MLfBlTHCLo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=R9eFN+WMgIaIYRA/nPWC3/464ltk3AOqYYMwWGJ+TP8juT0vixZDE2Cb7TCqUHvP
-	 PTf7Gdd/tQjzqUGeQeTwtUJrzYGCbFjDl+2H4nUGT1W/pbu149eKfWnf0zXXT5tPD
-	 azcbEKzidENjhQefnXayjYhNV6xL0nM1CFGTJ5aci9/T7x+JxHjdDvDuJM7iEvovN
-	 f2N6LA6i+84KJeyYQJxJrYwovUJmjr5pk524BZySSgHTWd4YFR26kxKOLBw9JU8Oq
-	 Ga3lKi3TUQdHWCIJfyzG90MeA1nAANz3GcBNLBGykd9I1BMWGNdcdGIdUhtyv7zAQ
-	 6zjgjUar0L9qfrl98A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M43GU-1sESNc2TVQ-00EJak; Tue, 04
- Jun 2024 13:31:04 +0200
-Message-ID: <6562750c-0787-4edf-866b-691dd5b8854e@web.de>
-Date: Tue, 4 Jun 2024 13:30:48 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CQ0m0CP9"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 391F720B915A;
+	Tue,  4 Jun 2024 04:36:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 391F720B915A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1717500970;
+	bh=P719o/fbklQlZn6JZundaChgkDKmyxtoWTlV7qJ1Hoo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CQ0m0CP92PDJfkAMxdRkZq8Cagk+hYrZpV5Bk42kg4KkcHZo9+kxlecwhRvbdgZu1
+	 wAIl91nxLWqJhj8SaDdPZhOqPjZxmvne1LAqZ6mbLT2+4JQQaZM2oWdVWU3vKmFAmJ
+	 B+p9LpJVPxnVih3nFTXvyWeDUJ8UIjgVilgi5r5k=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	weh@microsoft.com,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH rdma-next 1/1] RDMA/mana_ib: process QP error events
+Date: Tue,  4 Jun 2024 04:36:03 -0700
+Message-Id: <1717500963-1108-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- kernel-janitors@vger.kernel.org, Bard Liao
- <yung-chuan.liao@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Sanyog Kale <sanyog.r.kale@intel.com>, Vinod Koul <vkoul@kernel.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Bard Liao <bard.liao@intel.com>,
- Vinod Koul <vinod.koul@linaro.org>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] soundwire: Use scope-based resource management in five
- functions
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cScq7uthnA9o3mWUXillcOW60/+JXMdE1sEtnxrSCuLeIocVmlg
- 86wyntw8D2uoBObODLpBxNHUEcjiHvBDBBKBS5Ut9chFKPAWO69LXFabNj6DdQdqOMJAiFj
- SDTz+/WaVjxPTK63mxzYHSr5xNtbUy/7rQYYJVZil1E68erTi3LxEOkKHQ2O5ex0cV2zH/e
- Y2ud7S1x5okGPYXOm/4tw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:soCrROdFRaw=;TkRwY2s1JgztSRhVlnV430/UODB
- g6jvi5DKEkjRZeU0WDGMWRRdRGzmuNrBaZImD5EKOXNLqcPBdcHbXICd8zfbwsuflm0qNERUJ
- NagvptKvMzRFlQcsDR5/tCqHtzRPVOG7SZcLmeNTEAZW7rsU5NWV67QA0We9WcQaT88pRnCcp
- cwxCTyPn/T93yhtQ2NbG1CHVRFQEzbzmM4SYoRCXVLWIMrSBYK/9gghV77Z68P30KXETD3GL7
- W3SsNO3L8A1vX6882cHKUvSMvejxKLkmPUjTZWfykZpgMrNt0qT62/wsNQ0oosSm5BDxyzoFz
- ivDK9NumN6axlmp7zZlLCi7Ns5Ej/0Kcm6HSzNXLwHePvSF9njZHumTVJO9NnHX+zsYTJ5BcK
- aMlr00m1SfPG/lbRbZrEcwENh3FoNGqjRzjMuiRsvghkwUBmiTkudGmEgIZtfOajUrKOcu7Nw
- h6UmyXExMGHx1xaGpXsuIqv43D5RJ6xG8GkNouvsTJTIwqXMoFGAgjgluSOdtz1GjXzC5mYBi
- ucBbiWmr6GDCrsZGmS24EQLGrdDr6uQa4i1TV/w/rK0GtSnAXUd6HVP6FHUYez9qSGzaAGGRq
- S3xhcQ6uqj3KNCmY8DDtxk9b79N48lWNKg3dKBOLwmWTGRJpLevf5PZlc7H4bphmLgC9Rbm8d
- hhVMkZQe9D2FqGtx2cmXl7hDim1dSkLZdSxBaragr2yr9bm9XGHvRmcwqe8BbSAEdy6EVPxni
- 9kCfza9FuLx+Ld5FKKuAjFLG+cPU4cf3sGcN6tFGKJdFJQ+jkJ+Ys86E3Nztxi3Cwj8lqJgRt
- yyJnOU1jGShyu5g9GudDSD8Jpyvo0EpXAcat5dbQg7COY=
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 4 Jun 2024 12:30:40 +0200
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Scope-based resource management became supported also for another
-programming interface by contributions of Jonathan Cameron on 2024-02-17.
-See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
-property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
+Process QP fatal events from the error event queue.
+For that, find the QP, using QPN from the event, and then call its
+event_handler. To find the QPs, store created RC QPs in an xarray.
 
-* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D at more p=
-laces.
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+Reviewed-by: Wei Hu <weh@microsoft.com>
+---
+ drivers/infiniband/hw/mana/device.c           |  3 ++
+ drivers/infiniband/hw/mana/main.c             | 37 ++++++++++++++++++-
+ drivers/infiniband/hw/mana/mana_ib.h          |  4 ++
+ drivers/infiniband/hw/mana/qp.c               | 11 ++++++
+ .../net/ethernet/microsoft/mana/gdma_main.c   |  1 +
+ include/net/mana/gdma.h                       |  1 +
+ 6 files changed, 55 insertions(+), 2 deletions(-)
 
-* Reduce scopes for corresponding local variables.
-
-* Omit explicit fwnode_handle_put() calls accordingly.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-Previous clarification approach:
-soundwire: fix usages of device_get_named_child_node()
-https://lore.kernel.org/lkml/a2036c46-0527-4ac3-a40b-c9c2cd3e185e@web.de/
-https://lkml.org/lkml/2024/5/28/1138
-
-
- drivers/soundwire/amd_manager.c     |  9 ++---
- drivers/soundwire/intel_auxdevice.c | 12 ++----
- drivers/soundwire/mipi_disco.c      | 62 +++++++++++------------------
- 3 files changed, 31 insertions(+), 52 deletions(-)
-
-diff --git a/drivers/soundwire/amd_manager.c b/drivers/soundwire/amd_manag=
-er.c
-index 795e223f7e5c..94b867700b2d 100644
-=2D-- a/drivers/soundwire/amd_manager.c
-+++ b/drivers/soundwire/amd_manager.c
-@@ -15,6 +15,7 @@
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_registers.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/wait.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -546,7 +547,6 @@ static int amd_sdw_port_enable(struct sdw_bus *bus,
- static int sdw_master_read_amd_prop(struct sdw_bus *bus)
- {
- 	struct amd_sdw_manager *amd_manager =3D to_amd_sdw(bus);
--	struct fwnode_handle *link;
- 	struct sdw_master_prop *prop;
- 	u32 quirk_mask =3D 0;
- 	u32 wake_en_mask =3D 0;
-@@ -556,7 +556,9 @@ static int sdw_master_read_amd_prop(struct sdw_bus *bu=
-s)
- 	prop =3D &bus->prop;
- 	/* Find manager handle */
- 	snprintf(name, sizeof(name), "mipi-sdw-link-%d-subproperties", bus->link=
-_id);
--	link =3D device_get_named_child_node(bus->dev, name);
+diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
+index 9a7da2e..9eb714e 100644
+--- a/drivers/infiniband/hw/mana/device.c
++++ b/drivers/infiniband/hw/mana/device.c
+@@ -126,6 +126,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	if (ret)
+ 		goto destroy_eqs;
+ 
++	xa_init_flags(&dev->qp_table_rq, XA_FLAGS_LOCK_IRQ);
+ 	ret = mana_ib_gd_config_mac(dev, ADDR_OP_ADD, mac_addr);
+ 	if (ret) {
+ 		ibdev_err(&dev->ib_dev, "Failed to add Mac address, ret %d",
+@@ -143,6 +144,7 @@ static int mana_ib_probe(struct auxiliary_device *adev,
+ 	return 0;
+ 
+ destroy_rnic:
++	xa_destroy(&dev->qp_table_rq);
+ 	mana_ib_gd_destroy_rnic_adapter(dev);
+ destroy_eqs:
+ 	mana_ib_destroy_eqs(dev);
+@@ -158,6 +160,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
+ 	struct mana_ib_dev *dev = dev_get_drvdata(&adev->dev);
+ 
+ 	ib_unregister_device(&dev->ib_dev);
++	xa_destroy(&dev->qp_table_rq);
+ 	mana_ib_gd_destroy_rnic_adapter(dev);
+ 	mana_ib_destroy_eqs(dev);
+ 	mana_gd_deregister_device(dev->gdma_dev);
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index 365b4f1..dfcfb88 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -667,6 +667,39 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
+ 	return 0;
+ }
+ 
++static void
++mana_ib_event_handler(void *ctx, struct gdma_queue *q, struct gdma_event *event)
++{
++	struct mana_ib_dev *mdev = (struct mana_ib_dev *)ctx;
++	struct mana_ib_qp *qp;
++	struct ib_event ev;
++	unsigned long flag;
++	u32 qpn;
 +
-+	struct fwnode_handle *link __free(fwnode_handle)
-+				   =3D device_get_named_child_node(bus->dev, name);
- 	if (!link) {
- 		dev_err(bus->dev, "Manager node %s not found\n", name);
- 		return -EIO;
-@@ -571,9 +573,6 @@ static int sdw_master_read_amd_prop(struct sdw_bus *bu=
-s)
- 	amd_manager->wake_en_mask =3D wake_en_mask;
- 	fwnode_property_read_u32(link, "amd-sdw-power-mode", &power_mode_mask);
- 	amd_manager->power_mode_mask =3D power_mode_mask;
--
--	fwnode_handle_put(link);
--
- 	return 0;
- }
-
-diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel=
-_auxdevice.c
-index fd29f4ee6970..17ad3191ecc3 100644
-=2D-- a/drivers/soundwire/intel_auxdevice.c
-+++ b/drivers/soundwire/intel_auxdevice.c
-@@ -14,6 +14,7 @@
- #include <linux/auxiliary_bus.h>
- #include <sound/pcm_params.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <sound/soc.h>
- #include <linux/soundwire/sdw_registers.h>
- #include <linux/soundwire/sdw.h>
-@@ -123,7 +124,6 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
-bus)
- {
- 	struct sdw_master_prop *prop =3D &bus->prop;
- 	struct sdw_intel_prop *intel_prop;
--	struct fwnode_handle *link;
- 	char name[32];
- 	u32 quirk_mask;
-
-@@ -131,7 +131,8 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
-bus)
- 	snprintf(name, sizeof(name),
- 		 "mipi-sdw-link-%d-subproperties", bus->link_id);
-
--	link =3D device_get_named_child_node(bus->dev, name);
-+	struct fwnode_handle *link __free(fwnode_handle)
-+				   =3D device_get_named_child_node(bus->dev, name);
- 	if (!link) {
- 		dev_err(bus->dev, "Master node %s not found\n", name);
- 		return -EIO;
-@@ -155,10 +156,8 @@ static int sdw_master_read_intel_prop(struct sdw_bus =
-*bus)
- 		SDW_MASTER_QUIRKS_CLEAR_INITIAL_PARITY;
-
- 	intel_prop =3D devm_kzalloc(bus->dev, sizeof(*intel_prop), GFP_KERNEL);
--	if (!intel_prop) {
--		fwnode_handle_put(link);
-+	if (!intel_prop)
- 		return -ENOMEM;
--	}
-
- 	/* initialize with hardware defaults, in case the properties are not fou=
-nd */
- 	intel_prop->clde =3D 0x0;
-@@ -205,9 +204,6 @@ static int sdw_master_read_intel_prop(struct sdw_bus *=
-bus)
- 		intel_prop->doais,
- 		intel_prop->dodse,
- 		intel_prop->dods);
--
--	fwnode_handle_put(link);
--
- 	return 0;
- }
-
-diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco=
-.c
-index e5d9df26d4dc..4906532feaec 100644
-=2D-- a/drivers/soundwire/mipi_disco.c
-+++ b/drivers/soundwire/mipi_disco.c
-@@ -30,7 +30,6 @@
- int sdw_master_read_prop(struct sdw_bus *bus)
- {
- 	struct sdw_master_prop *prop =3D &bus->prop;
--	struct fwnode_handle *link;
- 	char name[32];
- 	int nval, i;
-
-@@ -42,7 +41,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
- 	snprintf(name, sizeof(name),
- 		 "mipi-sdw-link-%d-subproperties", bus->link_id);
-
--	link =3D device_get_named_child_node(bus->dev, name);
-+	struct fwnode_handle *link __free(fwnode_handle)
-+				   =3D device_get_named_child_node(bus->dev, name);
- 	if (!link) {
- 		dev_err(bus->dev, "Master node %s not found\n", name);
- 		return -EIO;
-@@ -66,10 +66,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
- 		prop->clk_freq =3D devm_kcalloc(bus->dev, prop->num_clk_freq,
- 					      sizeof(*prop->clk_freq),
- 					      GFP_KERNEL);
--		if (!prop->clk_freq) {
--			fwnode_handle_put(link);
-+		if (!prop->clk_freq)
- 			return -ENOMEM;
--		}
-
- 		fwnode_property_read_u32_array(link,
- 				"mipi-sdw-clock-frequencies-supported",
-@@ -94,10 +92,8 @@ int sdw_master_read_prop(struct sdw_bus *bus)
- 		prop->clk_gears =3D devm_kcalloc(bus->dev, prop->num_clk_gears,
- 					       sizeof(*prop->clk_gears),
- 					       GFP_KERNEL);
--		if (!prop->clk_gears) {
--			fwnode_handle_put(link);
-+		if (!prop->clk_gears)
- 			return -ENOMEM;
--		}
-
- 		fwnode_property_read_u32_array(link,
- 					       "mipi-sdw-supported-clock-gears",
-@@ -119,9 +115,6 @@ int sdw_master_read_prop(struct sdw_bus *bus)
-
- 	fwnode_property_read_u32(link, "mipi-sdw-command-error-threshold",
- 				 &prop->err_threshold);
--
--	fwnode_handle_put(link);
--
- 	return 0;
- }
- EXPORT_SYMBOL(sdw_master_read_prop);
-@@ -169,7 +162,6 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
- 			      struct sdw_dpn_prop *dpn, int count, int ports,
- 			      char *type)
- {
--	struct fwnode_handle *node;
- 	u32 bit, i =3D 0;
- 	int nval;
- 	unsigned long addr;
-@@ -185,7 +177,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
-
- 		dpn[i].num =3D bit;
-
--		node =3D device_get_named_child_node(&slave->dev, name);
-+		struct fwnode_handle *node __free(fwnode_handle)
-+					   =3D device_get_named_child_node(&slave->dev, name);
- 		if (!node) {
- 			dev_err(&slave->dev, "%s dpN not found\n", name);
- 			return -EIO;
-@@ -203,10 +196,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
-,
- 						    dpn[i].num_words,
- 						    sizeof(*dpn[i].words),
- 						    GFP_KERNEL);
--			if (!dpn[i].words) {
--				fwnode_handle_put(node);
-+			if (!dpn[i].words)
- 				return -ENOMEM;
--			}
-
- 			fwnode_property_read_u32_array(node,
- 					"mipi-sdw-port-wordlength-configs",
-@@ -244,10 +235,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
-,
- 						       dpn[i].num_channels,
- 						       sizeof(*dpn[i].channels),
- 						 GFP_KERNEL);
--			if (!dpn[i].channels) {
--				fwnode_handle_put(node);
-+			if (!dpn[i].channels)
- 				return -ENOMEM;
--			}
-
- 			fwnode_property_read_u32_array(node,
- 					"mipi-sdw-channel-number-list",
-@@ -261,10 +250,8 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave=
-,
- 					dpn[i].num_ch_combinations,
- 					sizeof(*dpn[i].ch_combinations),
- 					GFP_KERNEL);
--			if (!dpn[i].ch_combinations) {
--				fwnode_handle_put(node);
-+			if (!dpn[i].ch_combinations)
- 				return -ENOMEM;
--			}
-
- 			fwnode_property_read_u32_array(node,
- 					"mipi-sdw-channel-combination-list",
-@@ -286,8 +273,6 @@ static int sdw_slave_read_dpn(struct sdw_slave *slave,
-
- 		/* TODO: Read audio mode */
-
--		fwnode_handle_put(node);
--
- 		i++;
- 	}
-
-@@ -302,7 +287,6 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop =3D &slave->prop;
- 	struct device *dev =3D &slave->dev;
--	struct fwnode_handle *port;
- 	int nval;
-
- 	device_property_read_u32(dev, "mipi-sdw-sw-interface-revision",
-@@ -355,21 +339,21 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
- 				 &prop->sink_ports);
-
- 	/* Read dp0 properties */
--	port =3D device_get_named_child_node(dev, "mipi-sdw-dp-0-subproperties")=
-;
--	if (!port) {
--		dev_dbg(dev, "DP0 node not found!!\n");
--	} else {
--		prop->dp0_prop =3D devm_kzalloc(&slave->dev,
--					      sizeof(*prop->dp0_prop),
--					      GFP_KERNEL);
--		if (!prop->dp0_prop) {
--			fwnode_handle_put(port);
--			return -ENOMEM;
--		}
--
--		sdw_slave_read_dp0(slave, port, prop->dp0_prop);
-+	{
-+		struct fwnode_handle *port __free(fwnode_handle)
-+					   =3D device_get_named_child_node(dev,
-+									 "mipi-sdw-dp-0-subproperties");
-+		if (!port) {
-+			dev_dbg(dev, "DP0 node not found!!\n");
-+		} else {
-+			prop->dp0_prop =3D devm_kzalloc(&slave->dev,
-+						      sizeof(*prop->dp0_prop),
-+						      GFP_KERNEL);
-+			if (!prop->dp0_prop)
-+				return -ENOMEM;
-
--		fwnode_handle_put(port);
-+			sdw_slave_read_dp0(slave, port, prop->dp0_prop);
++	switch (event->type) {
++	case GDMA_EQE_RNIC_QP_FATAL:
++		qpn = event->details[0];
++		xa_lock_irqsave(&mdev->qp_table_rq, flag);
++		qp = xa_load(&mdev->qp_table_rq, qpn);
++		if (qp)
++			refcount_inc(&qp->refcount);
++		xa_unlock_irqrestore(&mdev->qp_table_rq, flag);
++		if (!qp)
++			break;
++		if (qp->ibqp.event_handler) {
++			ev.device = qp->ibqp.device;
++			ev.element.qp = &qp->ibqp;
++			ev.event = IB_EVENT_QP_FATAL;
++			qp->ibqp.event_handler(&ev, qp->ibqp.qp_context);
 +		}
++		if (refcount_dec_and_test(&qp->refcount))
++			complete(&qp->free);
++		break;
++	default:
++		break;
++	}
++}
++
+ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
+ {
+ 	struct gdma_context *gc = mdev_to_gc(mdev);
+@@ -676,7 +709,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
+ 	spec.type = GDMA_EQ;
+ 	spec.monitor_avl_buf = false;
+ 	spec.queue_size = EQ_SIZE;
+-	spec.eq.callback = NULL;
++	spec.eq.callback = mana_ib_event_handler;
+ 	spec.eq.context = mdev;
+ 	spec.eq.log2_throttle_limit = LOG2_EQ_THROTTLE;
+ 	spec.eq.msix_index = 0;
+@@ -691,7 +724,7 @@ int mana_ib_create_eqs(struct mana_ib_dev *mdev)
+ 		err = -ENOMEM;
+ 		goto destroy_fatal_eq;
  	}
-
- 	/*
-=2D-
-2.45.1
+-
++	spec.eq.callback = NULL;
+ 	for (i = 0; i < mdev->ib_dev.num_comp_vectors; i++) {
+ 		spec.eq.msix_index = (i + 1) % gc->num_msix_usable;
+ 		err = mana_gd_create_mana_eq(mdev->gdma_dev, &spec, &mdev->eqs[i]);
+diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
+index 60bc548..b732555 100644
+--- a/drivers/infiniband/hw/mana/mana_ib.h
++++ b/drivers/infiniband/hw/mana/mana_ib.h
+@@ -62,6 +62,7 @@ struct mana_ib_dev {
+ 	mana_handle_t adapter_handle;
+ 	struct gdma_queue *fatal_err_eq;
+ 	struct gdma_queue **eqs;
++	struct xarray qp_table_rq;
+ 	struct mana_ib_adapter_caps adapter_caps;
+ };
+ 
+@@ -124,6 +125,9 @@ struct mana_ib_qp {
+ 
+ 	/* The port on the IB device, starting with 1 */
+ 	u32 port;
++
++	refcount_t		refcount;
++	struct completion	free;
+ };
+ 
+ struct mana_ib_ucontext {
+diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
+index 34a9372..3f4fcc9 100644
+--- a/drivers/infiniband/hw/mana/qp.c
++++ b/drivers/infiniband/hw/mana/qp.c
+@@ -460,6 +460,12 @@ static int mana_ib_create_rc_qp(struct ib_qp *ibqp, struct ib_pd *ibpd,
+ 		}
+ 	}
+ 
++	refcount_set(&qp->refcount, 1);
++	init_completion(&qp->free);
++	err = xa_insert_irq(&mdev->qp_table_rq, qp->ibqp.qp_num, qp, GFP_KERNEL);
++	if (err)
++		goto destroy_qp;
++
+ 	return 0;
+ 
+ destroy_qp:
+@@ -620,6 +626,11 @@ static int mana_ib_destroy_rc_qp(struct mana_ib_qp *qp, struct ib_udata *udata)
+ 		container_of(qp->ibqp.device, struct mana_ib_dev, ib_dev);
+ 	int i;
+ 
++	xa_erase_irq(&mdev->qp_table_rq, qp->ibqp.qp_num);
++	if (refcount_dec_and_test(&qp->refcount))
++		complete(&qp->free);
++	wait_for_completion(&qp->free);
++
+ 	/* Ignore return code as there is not much we can do about it.
+ 	 * The error message is printed inside.
+ 	 */
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index d33b272..ab8adac 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -380,6 +380,7 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
+ 	case GDMA_EQE_HWC_INIT_EQ_ID_DB:
+ 	case GDMA_EQE_HWC_INIT_DATA:
+ 	case GDMA_EQE_HWC_INIT_DONE:
++	case GDMA_EQE_RNIC_QP_FATAL:
+ 		if (!eq->eq.callback)
+ 			break;
+ 
+diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
+index 2768413..44c797d 100644
+--- a/include/net/mana/gdma.h
++++ b/include/net/mana/gdma.h
+@@ -60,6 +60,7 @@ enum gdma_eqe_type {
+ 	GDMA_EQE_HWC_INIT_DONE		= 131,
+ 	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
+ 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
++	GDMA_EQE_RNIC_QP_FATAL		= 176,
+ };
+ 
+ enum {
+-- 
+2.43.0
 
