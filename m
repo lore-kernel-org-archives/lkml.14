@@ -1,88 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FC81487EF;
-	Tue,  4 Jun 2024 16:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEB72AF16;
+	Tue,  4 Jun 2024 16:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520071; cv=none; b=aQBEmeBttp4KUvkdFybTTwA8nLtA0x8F8QfuoLH2jcsfb/uaKWTiIW+VqrQtMfUi6F1PMGJzQe+pTU2KFrIyCqEhGrN8KxoFOJzBSXCZvku+nmZux9OXbIvsb1hMoe2hP7JkQttltFOm4cKk9CkNsxZd7+9/CtEUvaxDFp1zTeA=
+	t=1717520241; cv=none; b=tAnt1S789e3LdagUFY9dQUYo1OqzWUryqhrRoAu6KrQvG+bPLDkLLdX/wY5lMW7oDOyu5XyW5PLLWb6A+I+fi9lSJ9DbAdKngcEj1C6GUvnzhC4JExE5La+ucfVNwkEBsTZPRMVZOK4W809YNHGiR8LpwBHFXpzWjqHu9ZNF3Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717520071; c=relaxed/simple;
-	bh=9QxiAFyRtObELcKE8Pdt8Q3G8VNOVmS0MGj3q8rQD1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mrPOWjkwDZwW34Uywz6aEMaSHoO1WLKkjWC+AWADvl9z7lqi/D7EXKAd3H3kD7yEfz2s5jJDkUJan3k7CNkkVqNrhLMJWKz8RGC5vDOaDLo1QocFgChMIf8brR+iQbEXCEbloBIkjEK6uEhIke0xTJgAiw8UeXQPZ9SOsxtkRNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vfjd0UrE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717520241; c=relaxed/simple;
+	bh=8d5FrD3zoZXY2kRruuxHEQtoIcximE7vznRzibmSxHg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BpzRQl1fHMLVNpqh27Jk1itlpsoTVCzhujvSWInWsiycTIjfroV2OulKKlcEjCVZQFWAxkzLRy9qRj2zLmddC5XdI6Bxr/MbYCSf6zN9D0kdvbgKQW4BshoqHg/7k8pTtgsULilytp4Qp92v4gw8E3r/4aZLVliHdkVmhLZgKA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZfSA1xJ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vfjd0UrE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2A47C2BBFC;
-	Tue,  4 Jun 2024 16:54:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717520070;
-	bh=9QxiAFyRtObELcKE8Pdt8Q3G8VNOVmS0MGj3q8rQD1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vfjd0UrE2T+Gw7EaDN2F9IKww+eROskhaELkjqCbX0lg+lVJ+MLsrQfelrViaAjRK
-	 vrTuTLxSPpypv72kmQAt8Cde37e0dM0by7sRAXP0j2/P0ICSo/VDotdM1ThDn23VKx
-	 nchFMcSkJp3H1Go+ZPvoQgK90QywEjPLEfPc5m0fmGSr4lmmVyUpdTi9T1esqkrB7z
-	 jFUz8p5LZUBgPwHI4sb84alubcVZSfqIdk1ar2MEhpeU0hXfVlNr6Mm8btlKkr6y7g
-	 8V5ZydI77l33AdOWULTvZm554rTgl5qkqVRCqnb5gvWo5bWP4Btsqp0X02t8eUcyp3
-	 H/GbHVznSCciA==
-Date: Tue, 4 Jun 2024 17:54:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Hal Feng <hal.feng@starfivetech.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: serial: snps-dw-apb-uart: Add one
- more reset signal for StarFive JH7110 SoC
-Message-ID: <20240604-sagging-unbiased-17083b875576@spud>
-References: <20240604084729.57239-1-hal.feng@starfivetech.com>
- <20240604084729.57239-2-hal.feng@starfivetech.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZfSA1xJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717520239; x=1749056239;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=8d5FrD3zoZXY2kRruuxHEQtoIcximE7vznRzibmSxHg=;
+  b=AZfSA1xJ++t8oLpCyNGkXfcxTAWLTvISdk1bCCg/L9AOxWcHff5iGM9y
+   VT1q7swskDPMDRoQckFa3e3msQJ54tAmj4qY6nZlCQudQeA1m6zSb/uHW
+   tKRhz+NkhwOU2C8FxEygi4yc5ULeSqy2TZzeDvuJoX8c7PLbA/HDTpbId
+   Wgn13X7B+yv6AvlghRSQ4yz2bVcQVWsa8fqJ6chCAOabkIfHjpxb3pBuT
+   WucN5TGIV5+4iP66xmFHO34JJm3jbyuYktzACm0GwF1/ydfsEtlSe/7MR
+   LndTmmULUI5cCE7Bgw5rAVc1wV5+YrJIYp3Qg+CKVvPhIe8ahSUSgGBda
+   Q==;
+X-CSE-ConnectionGUID: wuvU5ZzlRo6bbm6A0vCCfw==
+X-CSE-MsgGUID: WiITed4wRQm1zPVAlesTEg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="24658814"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="24658814"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:57:19 -0700
+X-CSE-ConnectionGUID: rIdYWhGMQ4O2e7AiyxFRFw==
+X-CSE-MsgGUID: owmQ4ar9QN+6e9E2Ti2HHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="41734897"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:57:18 -0700
+Message-ID: <651d11578646200cdb0a91c46ed09a22f29e94a0.camel@linux.intel.com>
+Subject: Re: [PATCH v1 2/6] cpufreq: intel_pstate: Do not update
+ global.turbo_disabled after initialization
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Xi Ruoyao <xry111@xry111.site>, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+  Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Date: Tue, 04 Jun 2024 09:56:36 -0700
+In-Reply-To: <CAJZ5v0jBBgjBny0Ps9bvHc7q1Un_6sdudpNL0==Z5HB+gHH0Hw@mail.gmail.com>
+References: <13494237.uLZWGnKmhe@kreacher> <8366982.T7Z3S40VBb@kreacher>
+	 <bf3ebf1571a4788e97daf861eb493c12d42639a3.camel@xry111.site>
+	 <6d5ee74605bd9574baa5ed111cb54e959414437a.camel@linux.intel.com>
+	 <6ebadacd8aaa307a5766cdb1b4d4a5c69acd87ac.camel@xry111.site>
+	 <30a30c5107a47a2cc3fd39306728f70dd649d7fe.camel@linux.intel.com>
+	 <f382e06635b3b52841d1e0c11dcf639d225edae0.camel@xry111.site>
+	 <29d69252dcdc398f147c9139a8666d09e7bd831d.camel@linux.intel.com>
+	 <0324bc3a88654855719cd48a5ed69a34eea31037.camel@xry111.site>
+	 <c3526e7a0e80ec1a3a011259c38ab4b772040ea4.camel@linux.intel.com>
+	 <48eba83030e155f703b4248e9c1ae65aa44b1a83.camel@xry111.site>
+	 <CAJZ5v0jjLgG3VY_kBYc4mTrL2ybD2LfBTk2_H7xY0+Aq5g827A@mail.gmail.com>
+	 <f34c20ae3feac0e3570125f124e440d51c5e4d9b.camel@linux.intel.com>
+	 <1da736da33a61de92314934ecf7fa0420d6d6b81.camel@linux.intel.com>
+	 <aa643910265b9d92a397d5148b31d37b2c421b8b.camel@xry111.site>
+	 <63e98f2151ef64de92cf7e3da796937755ea5552.camel@linux.intel.com>
+	 <258ce61c155c28937620f6abe57a39f2b4b0ff56.camel@xry111.site>
+	 <101b903e58f2ebae60934edc374c7cda09f83de1.camel@linux.intel.com>
+	 <CAJZ5v0jBBgjBny0Ps9bvHc7q1Un_6sdudpNL0==Z5HB+gHH0Hw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gEvQNIf624IsR0Q/"
-Content-Disposition: inline
-In-Reply-To: <20240604084729.57239-2-hal.feng@starfivetech.com>
 
-
---gEvQNIf624IsR0Q/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 04, 2024 at 04:47:27PM +0800, Hal Feng wrote:
-> The UART of StarFive JH7110 has two reset signals.
-> Both of them are necessary for JH7110 to initialize UART.
+On Tue, 2024-06-04 at 18:46 +0200, Rafael J. Wysocki wrote:
+> On Tue, Jun 4, 2024 at 6:41=E2=80=AFPM srinivas pandruvada
+> <srinivas.pandruvada@linux.intel.com> wrote:
+> >=20
+> > On Tue, 2024-06-04 at 18:32 +0800, Xi Ruoyao wrote:
+> > > On Tue, 2024-06-04 at 03:29 -0700, srinivas pandruvada wrote:
+> > > > On Tue, 2024-06-04 at 17:30 +0800, Xi Ruoyao wrote:
+> > > > > On Mon, 2024-06-03 at 21:31 -0700, srinivas pandruvada wrote:
+> > > > >=20
+> > > > > > > > Second, a delayed work can be added to check the MSR
+> > > > > > > > long
+> > > > > > > > enough
+> > > > > > > > after
+> > > > > > > > initialization and update global.turbo_disabled if it
+> > > > > > > > is 1.
+> > > > > > > > However,
+> > > > > > > > that would require some code surgery.
+> > > > > > >=20
+> > > > > > Something like the attached which does same way as user
+> > > > > > space
+> > > > > > no_turbo
+> > > > > > update.
+> > > > >=20
+> > > > > > =C2=A0static int intel_pstate_register_driver(struct
+> > > > > > cpufreq_driver
+> > > > > > *driver)
+> > > > > > =C2=A0{
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+> > > > > > @@ -3114,6 +3137,9 @@ static int
+> > > > > > intel_pstate_register_driver(struct cpufreq_driver *driver)
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 global.turbo_disable=
+d =3D turbo_is_disabled();
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 global.no_turbo =3D =
+global.turbo_disabled;
+> > > > > >=20
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (global.turbo_disabled=
+)
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 schedule_delayed_work(&turbo_work, HZ);
+> > > > > > +
+> > > > >=20
+> > > > > I have to change it to 20 * HZ to make it work for me.=C2=A0 15 *
+> > > > > HZ
+> > > > > does
+> > > > > not
+> > > > > work.
+> > > >=20
+> > > > Is there any consistency or it is changing every time?
+> > >=20
+> > > It seems consistent.
+> > With such a delay, I am not sure how this even worked before.
+> > Can you revert the patch in question and use kernel dynamic debug
+> > dyndbg=3D"file intel_pstate.c +p" kernel command line and collect log
+> > for
+> > 30 seconds?
 >=20
-> Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> I think that it worked because the MSR was read every time
+> intel_pstate ran, so it got updated at one point and stayed that way.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+But here HWP in active mode is getting used. So it should have fewer
+request calls to set accept via cpufreq set_policy()
 
-Thanks,
-Conor.
+ callback or with some HWP interrupt.
 
---gEvQNIf624IsR0Q/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZl9GwQAKCRB4tDGHoIJi
-0pIEAQCPDEC7F3bwjXqRwHk8slfZh89WNAGHTG3bfBDIyQqRJAD/Rel/CIsjO73v
-ESIZqBFtkTn9zKJuSZN0Z3XX9Kv1qwc=
-=tyjt
------END PGP SIGNATURE-----
-
---gEvQNIf624IsR0Q/--
