@@ -1,90 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C431487EA;
-	Tue,  4 Jun 2024 16:43:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A569814882D
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 16:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717519389; cv=none; b=RqYJcNe194xZOhN21ChSBdA+dekGbENWGHYH9DvTV0RM5aAwPLt3tk2a4FzVweIwoXUwRvmKQHqJmS3lx+d96qCkSbem6QnAdcuHIk2lb8GgJ6s/tk9hVLuWukHPaDmCOXOrTHIoqg3hMy2H0tQkafDl/NT8g6RK+2KsIAwYMa8=
+	t=1717519505; cv=none; b=KU5uc5vQLngC7ItVHIb8C1c7ZttuuJk6sLcviFkFqcWdkvKzlKpEiqHItsyEoCCbky/z2e+mNGm5h9X7MTvB5SDYzJmTEZKRsavbwO7Mj185+iKwbvOamh7PM3BCsA7gA8YiI95DU3LguJLf3ngyvQF7kq9aRmIHutUUzyIXKRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717519389; c=relaxed/simple;
-	bh=1p99fCGxODxrIiIt9XeDCfRuJ+kqg3lvOH++vIvpUAA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Dv8zeINuPD/Jwg1TtPuj6gM8BQ6Ax8keJJqlAXnmyb3tLsGSBTMRaqOTC2FsjJXaUel87LcVkFQS8DL9ZaEsrfZ8BXUha04vEGUCTQTiTffL5XDl6LiyRgtME2T5GAx8Wg8SMj4WcS4NCaYCh1mbCOzIQ+hp6htOIjVhrHlD+0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ta4+C5HW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717519505; c=relaxed/simple;
+	bh=Jl68LcgBN1pRhZi6PtJEE4lVnKKYIRWjPxs0FDaFCcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WS4p2Nj/wnKzDa0HzUjDSdy8copVX2nISsA6go8wW5DStniPjUTLVZqdxEwqh5qcJuCjKIrbaHu5G27xRMud2VJPL4hd/icb8nQmkXmMZHL3fxWMeQrcXHyVLM/KHosZXfjR0T4kIXR3XHJ5ZtKCmLv35VnifRLmL4ZI3QxFiwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=R7c3xhdq; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ta4+C5HW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2AC6C2BBFC;
-	Tue,  4 Jun 2024 16:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717519389;
-	bh=1p99fCGxODxrIiIt9XeDCfRuJ+kqg3lvOH++vIvpUAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ta4+C5HWSlUb+AKDacytBH7eL9iXvO7U7HHIWIxf9ZCDJanoA1+wK78DEcNXhM2or
-	 OYwVopQxjtOuuyrflAqE+Y2VhwqoTlNA0/kU3NvEaVAmrFJQykkeliBXj1QU5YxuzG
-	 5G3sG8DyV2iWlmsMC1Un2WqLmt9jfGq/yAL87Oiexmto+J9mlJTTZw+qHtGvtEaI76
-	 oimZpNV9FQrKwkGh0oRsvJfz8CkapqDxjfIcI95jPsGIAXQ6gUNcLB/NKs3EEk7VGg
-	 5ZlRYtwAZim/glGC5L6QnVAWTMm5BjpXhNGuIqQrtV2zY2Oz11DQwO2mPEsCuF3rXD
-	 4+gqXgF7z8qMA==
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R7c3xhdq"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5b96a781b63so2601433eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 09:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1717519501; x=1718124301; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=13DrUW0wsjFsOLQQnsi9knf7av4PrVRrLk1t14myUlc=;
+        b=R7c3xhdqDAsJ5hZnDQYawsz6d0Afl2byGWi181amsLb6UIToEqRaNyMIIvV8V1FPO+
+         +2rxMaoZB4FWxfVk3UaHTtKGWGS0OdJ80miL3lrcyqZ4aJP+5RVM7fAHAj0jy7uTE7b8
+         zgHEPFEhiaw5ZCCSZixrm1nRA6HFcwS0Z8yfiDMIBd1MxxgjTg8lAvpLPdhCCB2nQEx6
+         WCBR0zGDEbaxXavQpzAc52H0zPkhGoN0cG2DjkjyLNeQ0ca4uOaDbL9u1/SzxqrFdqe4
+         mQ1+Mb4Pw5LqLLPEtUbtKo9w3yxH58EtucIdCcSbLGjYdEdSidDQT3c+sq6PRh1PP4wb
+         GdNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717519501; x=1718124301;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=13DrUW0wsjFsOLQQnsi9knf7av4PrVRrLk1t14myUlc=;
+        b=JmEsFXeqrxfsghub61bfjq3r4GOIowO0Bk4F9tIOmBovoVK2dHq5GVh/g9AaUzpb5d
+         ABIG6uHOCVBGbIPdSkRTcEdvydrsh6+jKKlsk0+Mud5PZUA8m+nd0mm1DfKw3hGgl/gt
+         FAXGUQ/BoDtaUAlnbKcdT7T72Pqc699+4l4O7fDQmOs3zHPZp+iOssBshnVz+I5XDrXT
+         ABEi7w9St5qofIs/vYl0xYBxHdiSVGpvjf06HoCE54l0GOWbN4pfR9Qn4B5MFWxBiMjD
+         dUi/DKrBh4kw6Cn0qW2Yc3vQCCrlq98pLMxO3PRIir9wLdFpMChFk5npCG9Tr7AN4n3u
+         N0cg==
+X-Forwarded-Encrypted: i=1; AJvYcCUbEequg/DENwx+v+UN68tllB4bqPfs/0h9YsRKaG/P/0u387J2EC3OErc9NHZR0P9qSXuP0PWFFBEH+hoN4FZTTVKrIQeteocZlxjL
+X-Gm-Message-State: AOJu0YyZ80naA+C8iDzHYacedYu3aoRv+Pu9QbJ/+pTQ6uBvZafU96Jj
+	37M8spIRzNBIrNQNLKN/CidwjSOePvL/zU9DlP71lU69LUNF8zfAEDlEl+iAAxw=
+X-Google-Smtp-Source: AGHT+IEfas1lnZdFNBRgqZxmKWv2oXN51AWEQ8aiqFcaC4Ca/kraXgYuVuAGXMg9aTheAhe7N7CZog==
+X-Received: by 2002:a05:6870:4708:b0:24f:f297:3ff7 with SMTP id 586e51a60fabf-25122a6d964mr33165fac.38.1717519501608;
+        Tue, 04 Jun 2024 09:45:01 -0700 (PDT)
+Received: from ziepe.ca ([128.77.69.89])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-44009a2902csm30190921cf.38.2024.06.04.09.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 09:45:00 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1sEXHP-002tE6-4C;
+	Tue, 04 Jun 2024 13:44:59 -0300
+Date: Tue, 4 Jun 2024 13:44:59 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Kalle Valo <kvalo@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+	Jason Wang <jasowang@redhat.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 15/22] RDMA/usnic: Use iommu_paging_domain_alloc()
+Message-ID: <20240604164459.GC21513@ziepe.ca>
+References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+ <20240604015134.164206-16-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 04 Jun 2024 19:43:05 +0300
-Message-Id: <D1RDT52OY7S6.J625EB7S0KVR@kernel.org>
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jeff Johnson" <quic_jjohnson@quicinc.com>, "James Bottomley"
- <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
- <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
- <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>, "Serge E.
- Hallyn" <serge@hallyn.com>
-Cc: <linux-integrity@vger.kernel.org>, <keyrings@vger.kernel.org>,
- <linux-security-module@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH v2] KEYS: trusted: add missing MODULE_DESCRIPTION()
-X-Mailer: aerc 0.17.0
-References: <20240530-md-trusted-v2-1-151f0c7be272@quicinc.com>
-In-Reply-To: <20240530-md-trusted-v2-1-151f0c7be272@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604015134.164206-16-baolu.lu@linux.intel.com>
 
-On Thu May 30, 2024 at 5:43 PM EEST, Jeff Johnson wrote:
-> kbuild reports:
->
-> WARNING: modpost: missing MODULE_DESCRIPTION() in security/keys/trusted-k=
-eys/trusted.o
->
-> Add the missing MODULE_DESCRIPTION() macro invocation.
->
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+On Tue, Jun 04, 2024 at 09:51:27AM +0800, Lu Baolu wrote:
+> usnic_uiom_alloc_pd() allocates a paging domain for a given device.
+> In this case, iommu_domain_alloc(dev->bus) is equivalent to 
+> iommu_paging_domain_alloc(dev). Replace it as iommu_domain_alloc()
+> has been deprecated.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 > ---
-> Changes in v2:
-> - reword commit text per Jarkko's guidance
-> - Link to v1: https://lore.kernel.org/r/20240529-md-trusted-v1-1-56c9a0ae=
-8e28@quicinc.com
-> ---
->  security/keys/trusted-keys/trusted_core.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/security/keys/trusted-keys/trusted_core.c b/security/keys/tr=
-usted-keys/trusted_core.c
-> index 5113aeae5628..f4ab16d59663 100644
-> --- a/security/keys/trusted-keys/trusted_core.c
-> +++ b/security/keys/trusted-keys/trusted_core.c
-> @@ -395,4 +395,5 @@ static void __exit cleanup_trusted(void)
->  late_initcall(init_trusted);
->  module_exit(cleanup_trusted);
-> =20
-> +MODULE_DESCRIPTION("Trusted Key support");
+>  drivers/infiniband/hw/usnic/usnic_uiom.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-First this should be just "Trusted key type".
+Acked-by: Jason Gunthorpe <jgg@nvidia.com>
 
-Second: neither encrypted keys has the description.
-
-So I'd consider also "Encrypted key type" for that one.
-
-So this really needs two patches to be done properly.
-
-BR, Jarkko
+Jason
