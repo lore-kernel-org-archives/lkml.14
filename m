@@ -1,59 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EC183CD6;
-	Tue,  4 Jun 2024 20:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232783CD6;
+	Tue,  4 Jun 2024 20:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717532318; cv=none; b=M5Q7vGR0S9YOfJC7Zzx2S0nHGvMhDSBXGD/LaDI2Ih3WQr3NlKmj//4o1KBQUdXKkXsz1EDcumBjSJ7NL/v3eGA7KxSFAXEO6wlccqefXUwigVkNYkbtApLmH8VSMf5R0KAq6JoUh09JuHPBmt6nBjT8xqUK7JDD6aCRXAQu994=
+	t=1717532373; cv=none; b=M4+8Ck5syhW5JjxZo0MD/dMmyokvLD5Ez+flHECTFJWm2OB2DHPAMP1KD/NNEbb+8jhaH5OBqfuby5f8yzCiYvQuE2HryP3DwnTBi1FmvQlLg/fC5Ryn+bKm97W24R85M7e52Et1HdCDnR7o40CetaQf6anbxagPtoepTxXZd0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717532318; c=relaxed/simple;
-	bh=0BUG/LD9w8zBQ2o9IC9TBMii5AV3XOnsct+AhdNAvC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LaRjzo6VyYt7cqUOmXIWeA5ua4wRDRqa+FheyOl7XOek7lhzEan9Fv5M+BIWSKDB+NwgGeSEpABVG5fxG0JgXyLy+NSMd/0pu1Ap695uimvWvw4SV5HHWunzyX1Pg7SenP9XJzS/cH2xdmQWIcou/andgeWpSz0lrPtkSM5bi18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/f3Iijk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717532373; c=relaxed/simple;
+	bh=xfed6Cfrm4TYAkaOK6QS9lthrhaOfXoUEarZpKNCE3o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O86/Wz19ukwpeu55oPnYZjjMcfwAhONTxD/b1vIvHyga+9YvbLMdhIsMW1NwnEB47wLfsxkp1qw4pU6pHk158OYhgKAyulkD/rfDQernhPWhh2JdMq4ta9skSQxtggG3QtBqMZt4FTUy7b7PwLUbtrKVUFBecfeTEOt0N8MysLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rG/dc3M1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/f3Iijk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 654A0C2BBFC;
-	Tue,  4 Jun 2024 20:18:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rG/dc3M1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B64E7C4AF08;
+	Tue,  4 Jun 2024 20:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717532317;
-	bh=0BUG/LD9w8zBQ2o9IC9TBMii5AV3XOnsct+AhdNAvC4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C/f3IijkXHpGZlqdkTyZwG9/hvQG39wN9CC6UZmYLCyotLJmTS8LD7oWFDiIL9mwy
-	 Qq9UtHgeaSHl6SQscw63XGk7nsnXl8iPNu+VHKRW6VJbH/hLd/kbtHod3TH2BsGj9v
-	 prD16ii84Co6NdmVSx6CfqFdNOgbo24XlcUzdaZGiV8vZqXNvgMRuyv9Ro3rOvVYQ+
-	 3dmUwyn7+lsSDJnXWyeahEZQOJZ0QS2j1M2uMxCePyX0/zPyGQnhvd59akO/1YnyZb
-	 dl+eebSo3Mm9nHiUZDpzQcPGAy70xOejzqCSK9a3dsuJZ1WSSfd++YghskQNgWRNcj
-	 CiAXUVCNlSSwg==
-Date: Tue, 4 Jun 2024 13:23:45 -0700
-From: Bjorn Andersson <andersson@kernel.org>
-To: Tanmay Shah <tanmay.shah@amd.com>
-Cc: mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] drivers: remoteproc: xlnx: add attach detach support
-Message-ID: <chqsvuwi7gukbw3l2y6xoxmd3lh6vlqhs2wjd4lylbhsg5m2hc@vnmesij3xoiu>
-References: <20240603203437.973009-1-tanmay.shah@amd.com>
+	s=k20201202; t=1717532372;
+	bh=xfed6Cfrm4TYAkaOK6QS9lthrhaOfXoUEarZpKNCE3o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=rG/dc3M1CG5owOIa1XY6ze4o7kfMnD+PsTfmDwTVwgwG9ydgIW+oS5cJAsUNTIpD0
+	 RN+NGNQnSwiE5VCW+UQLk08bqTGnghi4AeIOF8Q0b8M+7mp8FvyyfqQOo8YIPKMhOY
+	 p6dd/ECrPIqdLrjz1WedwmuDPjsIrLrOlco6IOWGzpTl0IFeJqJmGTfIigRkL/tmTJ
+	 2InR+eOV2BGWjOEHMD/Fgb+9qI0RdNYz/1a6I8hTVdrAWsb3MfbLqrn13bBBg86w/U
+	 P7z70Xzz4dLq/xsowpHr6jQ/PgIp1XqPdmDZRVUGcQb02/1sH8KIk9jXYAWAdchRy5
+	 gBMhcNXprTCXQ==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52b8b638437so1700767e87.3;
+        Tue, 04 Jun 2024 13:19:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUzZ1HtoTgr3HdcMVxEmfmyshqPZbVPpVOWLMD7btqsYAZKBbee3qAFSP2vDIi2EmnNN7IrZPMn5utccImE+A316zECtx0q4oGUD1/9viOs85iGN0DaeiXzxcXoEBKqAro2IziXwJMibnc3wZbUqC0Ulc0XlNDF8J9CvrDnpYnKXWFG+EImY0PUAKgOfsbMk1GEBbpPFn1xxQUpVXGiG7/e0nBLxQ==
+X-Gm-Message-State: AOJu0YxRmgDAQ1kLfzhcBfZ94XxrIuId8nZvXMLFyqOaitliYsSIuceg
+	nd+kXONeTqt1B8I+8wk7mse2YE8mhNbLb1I1Rz8anx5dRm+RAsKRV2XUB398tE3qXAf1/F3AW7W
+	5gtl8+fxaXxbAssgN7k/o5cdaCw==
+X-Google-Smtp-Source: AGHT+IGG/ugXWVgGpCxPMAP/Ccqb4aZBz8y38s1TLqki2W99KFPyOdEm7ffLjdVe1PWTT7lBgxduFT+JvaciNq7bwps=
+X-Received: by 2002:a05:6512:1597:b0:52b:2031:4b93 with SMTP id
+ 2adb3069b0e04-52bab4ca9d7mr467209e87.4.1717532371055; Tue, 04 Jun 2024
+ 13:19:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603203437.973009-1-tanmay.shah@amd.com>
+References: <20240603223811.3815762-1-sboyd@kernel.org> <20240603223811.3815762-8-sboyd@kernel.org>
+ <20240604130526.GA12945-robh@kernel.org> <cce5a85e48f35f5ad5464a2443ca972e.sboyd@kernel.org>
+In-Reply-To: <cce5a85e48f35f5ad5464a2443ca972e.sboyd@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 4 Jun 2024 15:19:18 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+mGbW=4RbF+E1knvQco+5b1s7Tk8=2wyo9rT48Q=zkFQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+mGbW=4RbF+E1knvQco+5b1s7Tk8=2wyo9rT48Q=zkFQ@mail.gmail.com>
+Subject: Re: [PATCH v5 07/11] dt-bindings: test: Add single clk consumer
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, patches@lists.linux.dev, 
+	kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, 
+	devicetree@vger.kernel.org, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Daniel Latypov <dlatypov@google.com>, 
+	Christian Marangi <ansuelsmth@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Ripard <maxime@cerno.tech>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 03, 2024 at 01:34:38PM -0700, Tanmay Shah wrote:
-> It is possible that remote processor is already running before
-> linux boot or remoteproc platform driver probe. Implement required
-> remoteproc framework ops to provide resource table address and
-> connect or disconnect with remote processor in such case.
-> 
+On Tue, Jun 4, 2024 at 1:28=E2=80=AFPM Stephen Boyd <sboyd@kernel.org> wrot=
+e:
+>
+> Quoting Rob Herring (2024-06-04 06:05:26)
+> > On Mon, Jun 03, 2024 at 03:38:04PM -0700, Stephen Boyd wrote:
+> > > Describe a binding for a device that consumes a single clk in DT. Thi=
+s
+> > > will initially be used by a KUnit test to clk_get() the clk registere=
+d
+> > > by of_fixed_clk_setup() and test that it is setup properly.
+> > >
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> > > Cc: Conor Dooley <conor+dt@kernel.org>
+> > > Cc: Brendan Higgins <brendan.higgins@linux.dev>
+> > > Cc: David Gow <davidgow@google.com>
+> > > Cc: Rae Moar <rmoar@google.com>
+> > > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > > ---
+> > >  .../test/test,single-clk-consumer.yaml        | 34 +++++++++++++++++=
+++
+> > >  1 file changed, 34 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/test/test,singl=
+e-clk-consumer.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/test/test,single-clk-c=
+onsumer.yaml b/Documentation/devicetree/bindings/test/test,single-clk-consu=
+mer.yaml
+> > > new file mode 100644
+> > > index 000000000000..8c384c48707d
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/test/test,single-clk-consumer=
+.yaml
+> > > @@ -0,0 +1,34 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/test/test,single-clk-consumer.yam=
+l#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Test consumer of a single clock
+> > > +
+> > > +maintainers:
+> > > +  - Stephen Boyd <sboyd@kernel.org>
+> > > +
+> > > +description:
+> > > +  A consumer of a single clock used in tests.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: test,single-clk-consumer
+> >
+> > I don't know if there's much value in defining bindings for tests. We
+> > could alternatively make 'test,' opt out of everything. There's already
+> > some support in dtschema for this with 'foo,'.
+> >
+> > I need something for the DT unittest as well.
+> >
+>
+> Ok. So I should drop this patch and the other one that adds a binding
+> for the fake clock provider?
 
-I know if changes the current style for this driver, but could we drop
-"drivers: " from the subject prefix, to align changes to this driver
-with others?
+Yes.
 
-Regards,
-Bjorn
+> And replace it with something that makes
+> the test vendor prefix opt out of all checking? How is that done?  Some
+> patch to dtschema directly?
+
+Yes, but I just added it for you.
+
+Rob
