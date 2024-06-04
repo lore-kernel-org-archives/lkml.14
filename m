@@ -1,192 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E2D14B06E;
-	Tue,  4 Jun 2024 20:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEE514BFA8;
+	Tue,  4 Jun 2024 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717531441; cv=none; b=m78UTjjKC/OpN9zT3aiAdb9cYGILMfqohqEclZf6j7sUmGKuE7zIFPjiLPxQOB99WxwRlEvjyBKqzx6rjoIQrQQo/7aqUH5ADxmO4DsY0n8hjEqJSi/vLSJ9ik4mP36r0s0Nf78IW2XJ7J6/ipp+Vh0OqDOCV9P7IQ2ReF5uP1s=
+	t=1717531452; cv=none; b=suuXopYSshV3EdqdNaPEPzXTUTjyiJ9irsxQLJZmvTONNWU75TmXaYjsPuz78FMdbYBVI4DzQUZmXeLjAuxStEKKJlU1JZYFjLr5bf6TcReyv+wUz5/VIE4HkW04/HmUuaduLSt4TE3WS04iDeMk/JatZSYs1e2F69IQjHHh4P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717531441; c=relaxed/simple;
-	bh=CmzoveDdgtuX9uW3EQCl2u70qoS5RT28wNQKn8Oddbs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=esTouQr6zdRQEErTkrio8GYj7kRPnHrIGJ9IIRgxJaSjmxS9ACyY+2M2L0TJAdHhrnwb5lQZYQIk+ptR+OUBc2pji37huUT3Ww93jbBwV+dk1Sfk3whzVF/6gbJrrkUdUsS09zq8KA+Bfua5eOj4eliE2oWOjKPayBHprZxTpJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGPFjltm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717531452; c=relaxed/simple;
+	bh=NoZ60/3I8sWKWSOxRd8whX5XG2JH2IMU+VUKv74CMn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z3lkXVsrcM9o6I+3TfCb6C1jjxcaeLdknc2mb0iOJQTUnADad97RxJx3aSWw76tGq9ViOtWMpVWQMC3L9Ia8d/tMMzRM8eQlN20+STaiHYk2bNcQf1Yi9woLEnJJ6ML5aoiiw1opwIfQkkDJD2CNMRsveYSXqbobzwtBcl1P/7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PcrQlQdx; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGPFjltm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF06DC2BBFC;
-	Tue,  4 Jun 2024 20:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717531440;
-	bh=CmzoveDdgtuX9uW3EQCl2u70qoS5RT28wNQKn8Oddbs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kGPFjltm7U/AN2d6nJR0mn/WkRcDPgVCPvnW00sd6+QQEmdbOX9jqGhDUopK9Bv5s
-	 7RVRzJ1k+rFItowXnYQCRGzSAO44sjTrjcQghu2jeP4IWGqBSy4tE5hNoFslc7snKj
-	 w3ENm7ftW62vIXXaca0Ir6S5uWyYjrmGJuj9XNTX+Wbb0FlVoI7gIdGPWunI8PqXI2
-	 azq2pZPuyMwL4fbxjAuDuG+mJ24VCdDNYsuggd5pAeKb6Rih1r71fCUvdWQOnNxW3y
-	 UETSHNmPf0dz0SfIEz1O369NRn/8WHyoHWIpQe84LrYkI3tGWYFK5gtVWYjPOl/s8c
-	 f7AsQ/5qqFSjw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC bpf-next 07/10] selftests/bpf: Add uprobe session test
-Date: Tue,  4 Jun 2024 22:02:18 +0200
-Message-ID: <20240604200221.377848-8-jolsa@kernel.org>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240604200221.377848-1-jolsa@kernel.org>
-References: <20240604200221.377848-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcrQlQdx"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-702555eb23bso2898599b3a.1;
+        Tue, 04 Jun 2024 13:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717531450; x=1718136250; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D+24MUcJLTqMTxLtXfNfOk4eUSJDfkxN4hOKkJZ8yq8=;
+        b=PcrQlQdxW+q0VtepoOLrwbbTk4J2BYjEYoBprRvFo5faLHwc3DXhuaHVHjqVHeyplY
+         y5O2onI4s1eCnefAo6F6hRzKkb6RM0SUsLw8A4Sski51hKAMQHNLYRLIguDSa6wS+RXr
+         +Rpi1/RU4VeqoMSLzN9gfBkrPoE8NxZvfDCfs+fifpHDnIaVVgfoLvltfkdxYxaEY7Yz
+         AHrkUq/nr/9mw8SkbiIagzyoDsU6GM+9LG4avcNPzmCtTErJNdIysLcEC3LIwhFpFbWN
+         6CrUk5dHjt6KsPxLtUQ5bRoRkX+AzQ7qEEu8gMcicqj9wm0JbmOiLzgSi6cnVQ25KSYe
+         ojPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717531450; x=1718136250;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D+24MUcJLTqMTxLtXfNfOk4eUSJDfkxN4hOKkJZ8yq8=;
+        b=LyrXA0uSzydxQ6KigYCkWRJslJi211b4C+syWafYEsIJzOr72d1UFx43fV70ykeK+h
+         rNairxPCK6BWTBJ6E0CSdMGy9pS8H+S4a39QG7pIaE+XUdirO8TBPwXm2dB/+ufp2doy
+         Tb7zbAHCLqpryFjW93RuV9FT/XU6quN5xLBRvBbE4KYfOojSXk/U3z06C+klhOWYUgQP
+         U4u35hcSOOFZsv15Sa0nKR9EyZLbvi+Q/CNh7TYtT8VlTd97+vwqXmahTHz1r3v1w+m6
+         IcbbD53ZzWDnJCv57Gf+fc9XR0sA4oLTU43GgFG++7nBEkL8Ah64mhgf1L5mkyzGi6rz
+         x5bw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0G+WQ4U7IU7I6O6ifX4op6QZAYKAqkGK0YXW3hqQnkkbY+8uoxD6yQJKoOD0ruCox0Jmsj2R3BxCRYLUwHWBOlobxqjaf+qE40tuRDP/zKN3s5yu5uEJjhDUOd/J1IiRFrpRWUsjY/g==
+X-Gm-Message-State: AOJu0YwhbbdikXz+pmbEMgWLIHk4FgpdgVqdStcQ/YxO07Xeviq3Epoq
+	iRpOYlp2Nn+mFRLqSQcWMalrLdqNJWdQL4UGOJuZrOZdHPWZhkgw
+X-Google-Smtp-Source: AGHT+IELiEtMOAJZph6bIqKZ/dy/Dy80YTBB9pmkx9dxb+1OVSPKQaenfPO7D+Vdt9pTlBdXvD6LiA==
+X-Received: by 2002:a05:6a00:2e13:b0:6f8:f020:af02 with SMTP id d2e1a72fcca58-703e5a498ffmr518330b3a.34.1717531449911;
+        Tue, 04 Jun 2024 13:04:09 -0700 (PDT)
+Received: from localhost (dhcp-141-239-159-203.hawaiiantel.net. [141.239.159.203])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242af1288sm7408029b3a.134.2024.06.04.13.04.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 13:04:09 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 4 Jun 2024 10:04:08 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Hillf Danton <hdanton@sina.com>, Peter Zijlstra <peterz@infradead.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, linux-kernel@vger.kernel.org,
+	Gal Pressman <gal@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+	RDMA mailing list <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH -rc] workqueue: Reimplement UAF fix to avoid lockdep
+ worning
+Message-ID: <Zl9zOH2hUramwNSi@slm.duckdns.org>
+References: <4c4f1fb769a609a61010cb6d884ab2841ef716d3.1716885172.git.leon@kernel.org>
+ <ZljyqODpCD0_5-YD@slm.duckdns.org>
+ <20240531034851.GF3884@unreal>
+ <Zl4jPImmEeRuYQjz@slm.duckdns.org>
+ <20240604105456.1668-1-hdanton@sina.com>
+ <20240604113834.GO3884@unreal>
+ <Zl9BOaPDsQBc8hSL@slm.duckdns.org>
+ <20240604185804.GT3884@unreal>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604185804.GT3884@unreal>
 
-Adding uprobe session test and testing that the entry program
-return value controls execution of the return probe program.
+Hello,
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../bpf/prog_tests/uprobe_multi_test.c        | 38 ++++++++++++++
- .../bpf/progs/uprobe_multi_session.c          | 52 +++++++++++++++++++
- 2 files changed, 90 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/uprobe_multi_session.c
+On Tue, Jun 04, 2024 at 09:58:04PM +0300, Leon Romanovsky wrote:
+> But at that point, we didn't add newly created WQ to any list which will execute
+> that asynchronous release. Did I miss something?
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-index 8269cdee33ae..fddca2597818 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_multi_test.c
-@@ -5,6 +5,7 @@
- #include "uprobe_multi.skel.h"
- #include "uprobe_multi_bench.skel.h"
- #include "uprobe_multi_usdt.skel.h"
-+#include "uprobe_multi_session.skel.h"
- #include "bpf/libbpf_internal.h"
- #include "testing_helpers.h"
- 
-@@ -497,6 +498,41 @@ static void test_link_api(void)
- 	__test_link_api(child);
- }
- 
-+static void test_session_skel_api(void)
-+{
-+	struct uprobe_multi_session *skel = NULL;
-+	LIBBPF_OPTS(bpf_kprobe_multi_opts, opts);
-+	struct bpf_link *link = NULL;
-+	int err;
-+
-+	skel = uprobe_multi_session__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "fentry_raw_skel_load"))
-+		goto cleanup;
-+
-+	skel->bss->pid = getpid();
-+
-+	err = uprobe_multi_session__attach(skel);
-+	if (!ASSERT_OK(err, " uprobe_multi_session__attach"))
-+		goto cleanup;
-+
-+	/* trigger all probes */
-+	skel->bss->uprobe_multi_func_1_addr = (__u64) uprobe_multi_func_1;
-+	skel->bss->uprobe_multi_func_2_addr = (__u64) uprobe_multi_func_2;
-+	skel->bss->uprobe_multi_func_3_addr = (__u64) uprobe_multi_func_3;
-+
-+	uprobe_multi_func_1();
-+	uprobe_multi_func_2();
-+	uprobe_multi_func_3();
-+
-+	ASSERT_EQ(skel->bss->uprobe_session_result[0], 1, "uprobe_multi_func_1_result");
-+	ASSERT_EQ(skel->bss->uprobe_session_result[1], 2, "uprobe_multi_func_1_result");
-+	ASSERT_EQ(skel->bss->uprobe_session_result[2], 1, "uprobe_multi_func_1_result");
-+
-+cleanup:
-+	bpf_link__destroy(link);
-+	uprobe_multi_session__destroy(skel);
-+}
-+
- static void test_bench_attach_uprobe(void)
- {
- 	long attach_start_ns = 0, attach_end_ns = 0;
-@@ -585,4 +621,6 @@ void test_uprobe_multi_test(void)
- 		test_bench_attach_usdt();
- 	if (test__start_subtest("attach_api_fails"))
- 		test_attach_api_fails();
-+	if (test__start_subtest("session"))
-+		test_session_skel_api();
- }
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_multi_session.c b/tools/testing/selftests/bpf/progs/uprobe_multi_session.c
-new file mode 100644
-index 000000000000..b382d7d29475
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/uprobe_multi_session.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <stdbool.h>
-+#include "bpf_kfuncs.h"
-+#include "bpf_misc.h"
-+
-+char _license[] SEC("license") = "GPL";
-+
-+__u64 uprobe_multi_func_1_addr = 0;
-+__u64 uprobe_multi_func_2_addr = 0;
-+__u64 uprobe_multi_func_3_addr = 0;
-+
-+__u64 uprobe_session_result[3];
-+
-+int pid = 0;
-+
-+static int uprobe_multi_check(void *ctx, bool is_return)
-+{
-+	const __u64 funcs[] = {
-+		uprobe_multi_func_1_addr,
-+		uprobe_multi_func_2_addr,
-+		uprobe_multi_func_3_addr,
-+	};
-+	unsigned int i;
-+	__u64 addr;
-+
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 1;
-+
-+	addr = bpf_get_func_ip(ctx);
-+
-+	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
-+		if (funcs[i] == addr) {
-+			uprobe_session_result[i]++;
-+			break;
-+                }
-+        }
-+
-+	if ((addr == uprobe_multi_func_1_addr) ||
-+	    (addr == uprobe_multi_func_3_addr))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+SEC("uprobe.session//proc/self/exe:uprobe_multi_func_*")
-+int uprobe(struct pt_regs *ctx)
-+{
-+	return uprobe_multi_check(ctx, bpf_session_is_return());
-+}
+So, wq itself is not the problem. There are multiple pwq's that get attached
+to a wq and each pwq is refcnt'd and released asynchronously. Over time,
+during wq init, how the error paths behave diverged - pwq's still take the
+async path while wq error path stayed synchronous. The flush is there to
+match them. A cleaner solution would be either turning everything async or
+sync.
+
+> Anyway, I understand that the lockdep_register_key() corruption comes
+> from something else. Do you have any idea what can cause it? How can we
+> help debug this issue?
+
+It looks like other guys are already looking at another commit, but focusing
+on the backtrace which prematurely freed the reported object (rather than
+the backtrace which stumbled upon it while walking shared data structure)
+should help finding the actual culprit.
+
+Thanks.
+
 -- 
-2.45.1
-
+tejun
