@@ -1,111 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC30446CF;
-	Tue,  4 Jun 2024 11:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F25A13D243
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 11:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717498841; cv=none; b=OLppWO/cxlwcN0GXr3FXe+QzEgxnmfjc2Z3LRwJbjnx6eDXt5GRnOebzkfri0UCwmokM/VyDojTG80P30QH/Vd2rPOisVRZrFlbhrfM/+iqqBlIf8MGmE/KT3EXjcmp551eOdBaSt9WyU6jtkJpyZOk+l64Lgr68+y4nfin/NRs=
+	t=1717498885; cv=none; b=LR3UG5UU2lLLbURF50UibuN5te3MEBAi1OhmRwBtZGFjwo9kQCJb4LrtGGVCGOHSUcQflyLYXeJEVS3D2mvlfmnYpuWxffuahT7yPpVgubFIhLjn9N1PsoSQRdPos1U48Lwn/z3frhsa9yVpHWaFnNt9Em+gbVu78kroyx/eZXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717498841; c=relaxed/simple;
-	bh=icN7yy769H60NF0IQHkwQ06Z7vp+DD69l8il9VhXQyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KlinjvG/isis3OJDBu6mzxKKWja1hAAq/u70JFMlDN5XUpT6ZHi2W7JgPfPx8oH5CNKPxnmxKLbNx8ESC/pfKL7pk+OZlVZGZejolwKRVXVYX7H1Oq4/X1HkGiWRogqZlELMNBVYOn0sLCniRU/5eYb9N3jIcMBR7wklK8xWFjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOmctIqJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717498885; c=relaxed/simple;
+	bh=9k79GsPGzm2AvUEzs0+bU/ldhlkSEOwUuzkUE/Ejxj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxhrbdgfmIWLLPY6hobZbb/Uv0uvAcN7N1/v9K2dDjkgDuNnvd/s2iEm3HqjANIXjYFwUfFgzDveIFIsy977P3nhaqOBozDg/BtPDbKpE4xjqM0yqAv9gnZhZOScNZkajbQXONoJYcrM/kAyUouhcaRScRnMQbl0TRLsfL8hSFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWVh4Tjr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOmctIqJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D780FC2BBFC;
-	Tue,  4 Jun 2024 11:00:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWVh4Tjr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1830C2BBFC;
+	Tue,  4 Jun 2024 11:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717498840;
-	bh=icN7yy769H60NF0IQHkwQ06Z7vp+DD69l8il9VhXQyE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZOmctIqJg3FeyMAnGbo3vjLdAqkFSlSrwKIRWj8Z+vlG+Oi+VZIEysmgaSuOixUsG
-	 JBZareAMBcnNqjM9L1dpIjrwuDk/Hv4EQUMmRKRCN/UoEMAA4Nxxx2DSj0KEMrKkXP
-	 +16wVUYFMZFyUqnj/Xd2kqfSHyzIuo0DrwLlcBhiJemPd9fBXYZmY8oLZkH1l94Qlk
-	 tnrSzg5awRN1u0679c1qv3qmtLZzxnNfOY5m30sFZsjCSPCQzoeaOQ0QEgj8Fwkvbk
-	 6A/XOYhLNwyDXyc7CyPhJwuQJ54uJk8J+ljQD0JQes9L4PXeDGVhBILjik6wBg1osk
-	 pev6gYVgiTdbw==
-Message-ID: <8e5610de-8091-4a08-a3b8-a0eecdc89438@kernel.org>
-Date: Tue, 4 Jun 2024 13:00:35 +0200
+	s=k20201202; t=1717498885;
+	bh=9k79GsPGzm2AvUEzs0+bU/ldhlkSEOwUuzkUE/Ejxj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aWVh4TjrrJEW1rAMjOkRgSCV7udDjWnb2anstavniGKlRUr9e0G/xsT+BMP0GQPgN
+	 dothII+OwwG1o2VK5CwwVbn6O1ExgNkwnE7lj/71h/Q8qgC2MCNTmL0IR8qfVC0WOr
+	 c4C5m4aejQ3IXr5dpusN9NbhPvTjT26xvfM+v2sW8wlk/FmX7AWXcqqo+J/YecItAV
+	 V9dlJLFmAKywNdUqbFJtTD1WxGeMudq78pAZcFTueXPGoDvlJrL3HHIVnxxA5C0FP3
+	 OBmnA/imD1n1r8d0ZRtYA/2TN65KUj6HzamXOnU+wZkr9eWxR3DVi4kQSdPxw8ZPZH
+	 k/yUJLbhtJvKA==
+Date: Tue, 4 Jun 2024 12:01:20 +0100
+From: Will Deacon <will@kernel.org>
+To: syzbot <syzbot+8336c747d79a4c3a0944@syzkaller.appspotmail.com>
+Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	mark.rutland@arm.com
+Subject: Re: [syzbot] [arm?] BUG: unable to handle kernel paging request in
+ task_h_load
+Message-ID: <20240604110119.GA20284@willie-the-truck>
+References: <000000000000fa65d80619830888@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
- Document the X1E80100 QMP PCIe PHY Gen4 x4
-To: Johan Hovold <johan@kernel.org>, Abel Vesa <abel.vesa@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240531-x1e80100-phy-add-gen4x4-v1-0-5c841dae7850@linaro.org>
- <20240531-x1e80100-phy-add-gen4x4-v1-1-5c841dae7850@linaro.org>
- <Zl26Y0VklPmiirem@hovoldconsulting.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Zl26Y0VklPmiirem@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000fa65d80619830888@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 03/06/2024 14:43, Johan Hovold wrote:
-> On Fri, May 31, 2024 at 07:06:44PM +0300, Abel Vesa wrote:
->> The PCIe 6th instance from X1E80100 can be used in both 4-lane mode or
+Hello Syzbot,
+
+On Tue, May 28, 2024 at 05:47:22AM -0700, syzbot wrote:
+> syzbot found the following issue on:
 > 
-> nit: s/PCIe 6th/sixth PCIe/
-> nit: s/from/on/
-> nit: s/both/either/
+> HEAD commit:    6d69b6c12fce Merge tag 'nfs-for-6.10-1' of git://git.linux..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=164ce7f0980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=21de3d423116c304
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8336c747d79a4c3a0944
+> compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=119fbe58980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a8443c980000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-6d69b6c1.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/9fa4d7c3665d/vmlinux-6d69b6c1.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/131ac291917c/Image-6d69b6c1.gz.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+8336c747d79a4c3a0944@syzkaller.appspotmail.com
+> 
+> Unable to handle kernel paging request at virtual address 007000000621a118
+> Mem abort info:
+>   ESR = 0x0000000096000004
+>   EC = 0x25: DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+>   FSC = 0x04: level 0 translation fault
+> Data abort info:
+>   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+>   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [007000000621a118] address between user and kernel address ranges
+> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 1 PID: 3189 Comm: syz-executor371 Not tainted 6.9.0-syzkaller-12124-g6d69b6c12fce #0
+> Hardware name: linux,dummy-virt (DT)
+> pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : cfs_rq_of kernel/sched/sched.h:1468 [inline]
+> pc : update_cfs_rq_h_load kernel/sched/fair.c:9441 [inline]
+> pc : task_h_load+0x40/0xb8 kernel/sched/fair.c:9466
+> lr : detach_tasks kernel/sched/fair.c:9181 [inline]
+> lr : sched_balance_rq+0x80c/0xc94 kernel/sched/fair.c:11375
 
-That's really nit-picking and not helpful in getting things merged.
+Mark and I were looking at this today and we believe it should be fixed
+by:
 
-Best regards,
-Krzysztof
+https://lore.kernel.org/all/20240524005444.135417-1-21cnbao@gmail.com/T/#u
 
+which is queued in -next via the mm tree and will hopefully land in -rc3.
+
+Will
