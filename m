@@ -1,113 +1,85 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A118144D2E;
-	Tue,  4 Jun 2024 10:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B67D38B;
+	Tue,  4 Jun 2024 10:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717498545; cv=none; b=iho8uNE7lq151a7S4CCj/UEcp9BbTcTdWo29H4Rxg9rut+WzfQ+XuNbXoVF8JWUNQd/SmYlV/wV2a3PQz5ePAYBhQlU7kvaD1XRexCp9tweqJb3ipnU0RP3dQXeDfERLasib7EviKBlt86uZ+w3SREgJ5Ok2G+tyGiJQPGhjft0=
+	t=1717498653; cv=none; b=JtvbER1DByY38H9VxeHEtkHi25T7fBbKv+nmCQ2jAOFnm7TwOMP7RjEsF+/P0+/iocFE4+rqAPl3CIQJlfivCEKkggETl2o+mEwZTKbHSU8FSZwANV0c6IIVRhg/0d37M3oo9fnnfuSY/a3jvNlJkgVWsqfQf5RSNasG0l1RxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717498545; c=relaxed/simple;
-	bh=+qlsn2D0Bl9bAT/zCHb1kX2iWwIp82kUn+lzQwccsqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JK2CP7J54jwkxmwx0FedgJVz9Pz1+PUe7fuyrTGJF568BQ8Ne+1wseYh0p/mls3JaSrPhm62U3tEXy5IQinqbJMuOP/o+QyvI7Rt4dD36Go3n9oKan5GnFZPUWmEpKySiY4VGx2c76Ax56+KNff/f5ffNXRwnVphNyZ9K1uslUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WyBW3uB9; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyBW3uB9"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a85cc2d96so457742a12.2;
-        Tue, 04 Jun 2024 03:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717498542; x=1718103342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IDj6XyLMkdypUs5XebPk9O6Y/tAg4OP0rl7m8sDWpro=;
-        b=WyBW3uB9G4oeSv/fUK4tP/WdFdoXUnj9zlnLu154/k7HfFWdVJJX1zo5h3JQfcbeec
-         n+AgfiWL4KCvqtapKYLp7jfr+tpdsinH8TSNjcx7apuNU3kyC/xHs6ubvOeJunzRGel+
-         nuw8+Q0O4kEwdm/47+X7Agg1ImEyHEgYQDHwXLSxsVCJFqcY9xogRqfNwVhWG0u0SpMN
-         DYQiQs1Bhu+2IrbyJGLpcOXQRmOfICPu7bSpBJdUP0ihSqFsBSKBMk9Vd1qzjFO7OvzQ
-         JKKlrNm7WMqcRwM7hiWSjaC81Qq/GBv3hW7Exptsotk+Y6D/HYfwQnwK9vRqTeFbo40c
-         Ka4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717498542; x=1718103342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IDj6XyLMkdypUs5XebPk9O6Y/tAg4OP0rl7m8sDWpro=;
-        b=BBdRo4tBoVPNA8TehchHXyzq5h6Lj2Pw4GH+WUAeeSX+aSuGI/q5/+PRPynMY61xPF
-         8sTN0R4k8wNDovG2c11doYNFRH3gFinU+OyDie+yQYFYpEJ7/W/IGlGyuGc4w/Q8JPJv
-         pQFYdO/DctM/FKX2xCAEUDPG/rkGEctfKBDgJZkYgSXxhg2S4RxCE2LgtLatePhTPIXW
-         9VSzqtR7omib2AOKVDsGnGIwdgpEIu1yl4OslKKFM60YgUy5Z8PaCRS++jwCZ0nbzOn/
-         HIAfkVgyeNjp3xh7n3pkkZ3XmPSK7mJPe+zOT1/vPdj57pcS1eGlEXLnoklcgGH8OOeK
-         Yu0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUeN4jZIVM0cM1Hywq8kegPrqxs5CMDwiiBln8M+FL1uwF3yTVBO8rC7qWaYrRMAFW9GKCHuROkEk1ooNVD0754B+FGZ+U+AMbxycpXRSE8q8OGkZkOoZnDmQB7VrRs1rngDp9WJ97xGE5AOhvvH4gd4ZaH2+WtLZ3bF5zZMQn8FzLWXg==
-X-Gm-Message-State: AOJu0YxPxpgBpUUOTVhQi02DgusyJp0ksbvymiTzsATGhpuzWlXHQwgm
-	Ew6O1zHMilmIubIR7KG2vOnN0pvjDXfyh6O0nXoe9pNK/KY8WV9LBOXO9x1OEnLGdIrgpAslTeI
-	9sRmDfq3nqNNzDUyCICRaALZsxhc=
-X-Google-Smtp-Source: AGHT+IFmZt6Y9UJZxMqsQKH1greIZFtT4Z7hrqbjSEJ/dY7Mmt/YlBYihOWjiM0e7kzDgcBKFTWWMMLnuGmhwMU9t2Q=
-X-Received: by 2002:a17:906:6acd:b0:a65:26dc:3c25 with SMTP id
- a640c23a62f3a-a6821b71ea0mr796196266b.54.1717498542174; Tue, 04 Jun 2024
- 03:55:42 -0700 (PDT)
+	s=arc-20240116; t=1717498653; c=relaxed/simple;
+	bh=pDzZuelRd9zkUjP+3rv7hlwEiVL1Kt7S4rapZBl5Ko0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C0nBRLr8I/Ulzman+lXZoQplMz6K909UCxWGkCmhGt6yoT5YQQDrHFdtS/ynnH8DZShy1c3RZ8QsWciVEggVuu5Wlbejuw12IIklp99LsrN29k2lr0c4IGz+BYNnsnAM3S12GUFrv5SvljltHgMxTucl6R3oUDnbO0QtfmL1WjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DD4C2BBFC;
+	Tue,  4 Jun 2024 10:57:27 +0000 (UTC)
+Date: Tue, 4 Jun 2024 06:57:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <kees@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook
+ <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Guenter
+ Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
+ wklin@google.com, Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel
+ Fernandes <joel@joelfernandes.org>, Suleiman Souhlal <suleiman@google.com>,
+ Linus Torvalds <torvalds@linuxfoundation.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, ardb@kernel.org
+Subject: Re: [PATCH 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+Message-ID: <20240604065727.4deefc04@gandalf.local.home>
+In-Reply-To: <5DAB46F6-F415-4C2B-AA6A-E0049CF6270C@kernel.org>
+References: <20240603233330.801075898@goodmis.org>
+	<20240603233631.452433539@goodmis.org>
+	<5DAB46F6-F415-4C2B-AA6A-E0049CF6270C@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com>
- <20240530093410.112716-3-angelogioacchino.delregno@collabora.com>
- <20240602111141.0058f39e@jic23-huawei> <60e55919-2a8c-4d83-89a1-6e4ae156d34d@collabora.com>
-In-Reply-To: <60e55919-2a8c-4d83-89a1-6e4ae156d34d@collabora.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 4 Jun 2024 13:55:05 +0300
-Message-ID: <CAHp75Vf5a8VVyOXQRt9P1QnM6GHZ3rLuvnBF63H_83QBHOTJ9w@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] iio: adc: Add support for MediaTek MT6357/8/9
- Auxiliary ADC
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org, andy@kernel.org, 
-	nuno.sa@analog.com, bigunclemax@gmail.com, dlechner@baylibre.com, 
-	marius.cristea@microchip.com, marcelo.schmitt@analog.com, fr0st61te@gmail.com, 
-	mitrutzceclan@gmail.com, mike.looijmans@topic.nl, marcus.folkesson@gmail.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 4, 2024 at 12:42=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
-> Il 02/06/24 12:11, Jonathan Cameron ha scritto:
-> > On Thu, 30 May 2024 11:34:08 +0200
-> > AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> wr=
-ote:
+On Mon, 03 Jun 2024 22:52:37 -0700
+Kees Cook <kees@kernel.org> wrote:
 
-...
+> On June 3, 2024 4:33:31 PM PDT, Steven Rostedt <rostedt@goodmis.org> wrot=
+e:
+> >From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> >
+> >In order to allow for requesting a memory region that can be used for
+> >things like pstore on multiple machines where the memory layout is not t=
+he
+> >same, add a new option to the kernel command line called "reserve_mem".
+> >
+> >The format is:  reserve_mem=3Dnn:align:name
+> >
+> >Where it will find nn amount of memory at the given alignment of align.
+> >The name field is to allow another subsystem to retrieve where the memory
+> >was found. For example:
+> >
+> >  reserve_mem=3D12M:4096:oops ramoops.mem_name=3Doops =20
+>=20
+> How does this interact with KASLR? It has chosen its physical location
+> before this parsing happens, so I'd expect this to fail once in a while,
+> unless the size/alignment is lucky enough that KASLR never uses that
+> portion of the physical memory...
+>=20
 
-> > What are IMP channels?
->
-> Honestly? Well, it's called like that. I don't have any clear description=
- of that
-> and not even datasheets are unrolling the meaning of "IMP". So.. I don't =
-know.
->
-> What I know is what I wrote in the driver, and this is:
-> * IMP has IBAT and VBAT ADCs
-> * It needs different handling from the other ADCs, as shown.
->
-> ...and nothing else :-(
+=46rom looking at the KASLR code, it looks to me that it picks from 100
+different locations. I could be wrong, but if you have sufficient memory,
+I'm thinking that it should not conflict. But if it does, yes, it will fail
+to pick the same location.
 
-I could speculate with confidence that this means IMPedance (since it's ADC=
-).
-
-From MTK6329  datasheet:
-"The hardware also includes necessary modes to allow for simultaneous
-current and voltage measurement
-which can be utilized to estimate the battery impedance."
-And googling in vendor trees also suggests the same.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- Steve
