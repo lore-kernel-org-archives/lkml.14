@@ -1,128 +1,100 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23AC146013;
-	Tue,  4 Jun 2024 13:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E227C148301
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717508314; cv=none; b=G8xsK6Q6kF6Nu3y6pBY7nKK5utKn/cpVJhH4aCKXCzAbazb++V1A0OMOIeooX6BH1yDMqfTCbIjbBeslRxYRBDIwf8m8woY4TujkTd7Egjr+g8AnVJy8xHp/+1dRu8zvY9dnw9GzrA5SUz3lqB390taOP4kWDc3fUneOUsBhMcE=
+	t=1717508331; cv=none; b=Gq6eAn8bmV67pzk7IZbiSxkZanmv84P2bmvw18tnIiZf8hPXNmQKtV/uFUXZ1LQB8Dxx605ydMwky71Pro+hfLn2L3Z9ghdSB3Ec5xO3JWQRyqP+VK9jQF1bGRSejNXhMIOBnF9NVIJF1SNGAkYeuUGItR15r+xx4JxjOHWcg2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717508314; c=relaxed/simple;
-	bh=981/QqhUSMzgIxUQtx9ezdolZv3NUY4Z5O51ISsZLnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WWRmXoOoW902HkobL3b0fIdQFIDSwyzc+yaR01JePkJojVsYcP9CqNRfFGqLK2DdvVb8UpzQWRqSoW+TCp/1YRbYrQhSLTLeSqXsYGvh4Ft4Fb59uUizH2/hB4GmXCJvizEe/hgE12DPEboAkD8ecrJU+P3BdTX1tlk9tDo81Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ls1jumE0; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717508331; c=relaxed/simple;
+	bh=mLOB/pRDSaqep4kaNRLrvlUmHU00bgxlnVyjfSPtsEk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=s/H/rEoZMhi1Mp0n0NYINituM2hR5OAqOXX4NzWaoBh92s/8hWsLHhLf+r9zV4gZJ4wZ6JNjpM/80kkdyzzv6/F3yr4tQhFI5zuzpfezOzmWbmvmSyh/iL50eR6Yr/UV7pRO+TlvCmeDHA1BJxeM/PNclzxJPR7jW1c5ItouoyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=IyewzNbo; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ls1jumE0"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52b894021cbso5107893e87.0;
-        Tue, 04 Jun 2024 06:38:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="IyewzNbo"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-6c9cd96e485so321676a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 06:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717508311; x=1718113111; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MDB7A/H/VZ5MlDIB5Z1XvXuMlPAslnCdsAIH4mBnMFI=;
-        b=Ls1jumE0StrOkcgQcPN1fcgXnTYBiA0uwKjasLiJBSQWXOK8LTCqHBEiMw+l4vWliz
-         H2rNdSrCANbsO64QY0cm0b+A+y5zfNrRtihhFh7PRNXrHqtGFb7zyrzTfacZ2MuzK+KN
-         n6FSehmdg9XA8HItoN1loBQHNgX53HWWkKA6X14qg840GUXB3RP0JRyCJJtPpNewXbnK
-         SxoZ+YTs5ksT7HXi2dMaFn9PXLDQE8bTgFNw+l45BYA0pHpKRXQuKOoJRrzjptf/oi1n
-         lzM7i6qUWUpfQ6pHKrL7yNy+b1iV/j+ZsIzenXb1DkzLgSBMVFAKsgZoh+V0sLr4U/jX
-         d5gA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1717508329; x=1718113129; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wyXYBZ9yf/+pq+sDdhkihpXpTq6hpcaT1psfHyvcipQ=;
+        b=IyewzNboMpcwW5LFMTFxdY4SQ1KG2Q+U6IGwJlTrzALJKOjw/JKNzXkiCnHi9jmS9J
+         eOlFQY+innZPCcgj56KeD6Az2gAsr9khEuktItMjqTjCRV0HOlA6LHK4FvKE/kX8GcaN
+         DjJ9HDIVl8c4etQ9mDDS2tOBKmVH0urcEJpp/3efMCMSOxLuZMhIkB1DfHdu+uw22hpW
+         5r2jONIgP0E/l8reAXvD6z0NHJxrdyqtHJ9b+mxD/cqRS19VEvzmXG/vkkxwS+ZK3Rn9
+         XtkJdIPfHqxbjDZZKvn1RBhJPJVym5TWFFAn+1koXb3jqScMupOOk5lhSMtnDGcXhJYT
+         FMXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717508311; x=1718113111;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MDB7A/H/VZ5MlDIB5Z1XvXuMlPAslnCdsAIH4mBnMFI=;
-        b=hHYK3L2uQQVeUObSN6Flq8rbhMXhy0NmUlBD5m1d8hpxtIhXdbVPNsojDS91o/507t
-         Ua844oayzP7/HkKNxFtDQiIPi1ig9YtJ/TCZEc8/m4ZDUzDKgU5tcN3/Ir9FGi5wM6bZ
-         bpR38e4WrPrMBbwcefq6ZeIvGSghmMdGQezm83M3XeHFgyL8cOC27JxEqJemyGmdBngH
-         tAwRUdeGdwyuGPEh6byG/d6AD+YGxZO7Dnh3S4VFJQVPSPQ279DmyfWzqP6a0SwLrPhy
-         XNvRzHP7dxbkfne6v21Poj9QXranwgZatmTSgl6UZbUPrV3V1ZfaouWogJy5IoI/G4qv
-         yGKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqNFWyA0/zxE+HtYY0ZXQeJn201ZTrf1jiI1A4X3yxdMFI2lXVUluCmYtnBR9SIksEuP1XQaVUHeV1meOppRd6o7kvnZW1smvE2jp4a8hYMyhS7ZYw0kglgxxhKRVcv+CX6sab/w==
-X-Gm-Message-State: AOJu0YwpfSXsXAy3eUd8H+eHFd0yecmRYmgHC/Va8oUw2e95pI58EKLI
-	r8/MNZa+WevFv5C6wHnuDIuKqMGb5yI9ed4tbAbYWEKgxD6x6Ejy
-X-Google-Smtp-Source: AGHT+IHMG7g7gUQyOP7IBzRP7Mvor81DV9nO1tbz6GXI2rFwKiMWR+p5QJtsTqaei2Fw+UAJK2U+1g==
-X-Received: by 2002:a05:6512:70:b0:523:9789:4c8b with SMTP id 2adb3069b0e04-52b8957ff6cmr7229809e87.5.1717508310621;
-        Tue, 04 Jun 2024 06:38:30 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd? ([2a10:a5c0:800d:dd00:8cfe:d6e7:6701:9dfd])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d75fb7sm1536590e87.133.2024.06.04.06.38.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 06:38:29 -0700 (PDT)
-Message-ID: <17b23723-d0d0-4744-9828-cef316cf3fb7@gmail.com>
-Date: Tue, 4 Jun 2024 16:38:28 +0300
+        d=1e100.net; s=20230601; t=1717508329; x=1718113129;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wyXYBZ9yf/+pq+sDdhkihpXpTq6hpcaT1psfHyvcipQ=;
+        b=WUYdBz8L+ty85CucOzVz2Z4w+nXbE0eP33mCYcy2KLk86YF4nJJfIOWWGFQXVrNcBA
+         DES5oZq39NgpuqsVx1JbmVSfWEWpbBXPyGSam/YNpFiIEPQNmz5rmOa2d0RgNRnR+biw
+         gEf3QOBoknBmqv3Dk5SuzIAzdxWv/zgV/kBdQrXKqvG5bIH9nM3rO88lVW1QMAqEn40v
+         lQsR9nx902p4C4NQZSwWKv1XbNbwaQQfO/o33klKMfIjjJhIiXpS/fIDqHhN9KMTbt0I
+         HLd0sNB/xY95TbG26MzryQq0yy3gUXiIC6F0f7hYv9t1mzCmqalzJnjM8XWU6E7AIRMa
+         9QQg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhxmWbPmFz5AXuKbim3NCyFDmqr0W7nuoExlnksxoZ3Q8GmxmcE3d09dmldFDYbIhDC/beyisSI6lRhyo5186BxBcn3vuhXZllwvfW
+X-Gm-Message-State: AOJu0YybXvqy9HT11SaznuMiXB39umaXq9ilsQ60t37TIOWedKSiskyZ
+	UXiCAb5hsJm/HCfc0+Gs5z00yIxIvnT75QdCHmtlP/yHbGqsAANkRxkcxxWrY6o=
+X-Google-Smtp-Source: AGHT+IGgE1PUAohyvsVgmtFENCcomUvJIkWVXPFd7SdjzctUJnwKJA25eUqbhTVsMlgms0m7bEff7Q==
+X-Received: by 2002:a05:6a21:338f:b0:1b2:53c5:9e67 with SMTP id adf61e73a8af0-1b2a46feafemr2610730637.4.1717508329280;
+        Tue, 04 Jun 2024 06:38:49 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1a77bab23sm10440745a91.48.2024.06.04.06.38.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 06:38:48 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: asml.silence@gmail.com, nathan@kernel.org, ndesaulniers@google.com, 
+ morbo@google.com, justinstitt@google.com, Su Hui <suhui@nfschina.com>
+Cc: haoxu@linux.alibaba.com, io-uring@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ kernel-janitors@vger.kernel.org
+In-Reply-To: <20240604121242.2661244-1-suhui@nfschina.com>
+References: <20240604121242.2661244-1-suhui@nfschina.com>
+Subject: Re: [PATCH] io_uring/io-wq: avoid garbge value of 'match' in
+ io_wq_enqueue()
+Message-Id: <171750832792.373240.8767021460699358833.b4-ty@kernel.dk>
+Date: Tue, 04 Jun 2024 07:38:47 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Add maintainer for ROHM BH1745
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Mudit Sharma <muditsharma.info@gmail.com>, ivan.orlov0322@gmail.com,
- jic23@kernel.org, lars@metafoo.de, krzk+dt@kernel.org, conor+dt@kernel.org,
- robh@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240603162122.165943-1-muditsharma.info@gmail.com>
- <20240603162122.165943-3-muditsharma.info@gmail.com>
- <a628db76-a48a-4492-a3cc-f93c0f67ad04@gmail.com>
- <961fa617-a76b-4b79-956b-795a55fec959@gmail.com>
- <f241957f-6f4b-424c-9ea2-d7eb564daa4e@gmail.com>
-Content-Language: en-US, en-GB
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <f241957f-6f4b-424c-9ea2-d7eb564daa4e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-On 6/4/24 15:53, Javier Carrasco wrote:
-> On 04/06/2024 12:44, Mudit Sharma wrote:
->> On 03/06/2024 23:37, Javier Carrasco wrote:
->>> On 03/06/2024 18:21, Mudit Sharma wrote:
->>>> Add myself as maintainer for ROHM BH1745 colour sensor driver.
->>>>
->>>
->>> is there any special reason to have a separate patch for this? The
->>> addition to MAINTANERS for new drives is usually included in the patch
->>> that provides the driver itself.
->>
->> Adding this in a separate commit was just a pattern I notices with some
->> other drivers, for instance 3b4e0e9.
->>
->> If necessary and/or considered good practice, I can squash this in the
->> patch that brings in the driver.
+
+On Tue, 04 Jun 2024 20:12:43 +0800, Su Hui wrote:
+> Clang static checker (scan-build) warning:
+> o_uring/io-wq.c:line 1051, column 3
+> The expression is an uninitialized value. The computed value will
+> also be garbage.
 > 
-> Although there might be some cases where it was added separately, it is
-> much more common that it is added to the patch that provides the driver.
-> Some perfectionists even include the entry in the dt-bindings patch, and
-> then add the link to the driver code in the driver patch. I believe that
-> a simple squash would be ok, though.
+> 'match.nr_pending' is used in io_acct_cancel_pending_work(), but it is
+> not initialized. Change the order of assignment for 'match' to fix
+> this problem.
+> 
+> [...]
 
-I believe there is a notable case where having MAINTAINERS updates as a 
-separate patch makes sense. When one creates drivers for a device which 
-touches multiple subsystems, typically a set of MFD drivers. This is 
-usually done as a set of subsystem specific patches, each adding 
-subsystem specific file(s). In this case adding MAINTAINER info 
-separately for each sub-driver will create unnecessary churn in the 
-MAINTAINERS file - which I believe is already now a major source of 
-merge conflicts. I am not sure of this is a reason to have MAINTAINERS 
-updates in own patch though.
+Applied, thanks!
 
-Furthermore, I've been instructed by Rob (AFAIR) to omit the dt-binding 
-files from the MAINTAINERS because the maintainer information is already 
-contained in the bindings itself.
+[1/1] io_uring/io-wq: avoid garbge value of 'match' in io_wq_enqueue()
+      commit: e87863ed45a1c36b0d8a5b70134caf8c794d8d57
 
-Yours,
-	-- Matti
-
+Best regards,
 -- 
-Matti Vaittinen
-Linux kernel developer at ROHM Semiconductors
-Oulu Finland
+Jens Axboe
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+
 
