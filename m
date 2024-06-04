@@ -1,226 +1,295 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F70813D52C
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717523599; cv=fail; b=DL/w3R09MaABl2ZkTbhN95Bhc6kgl9g64yVRs3/Jh2MRUPOiJiPsEQPATDKD5xbVc2i3F3FMRDd0Y00K2IxOqm1Pf+1vPdgF4jkiNzgEWAUNtoh+E9QSpuYpjq9zZqU8pfZ6R7WjE9aa9fLP6UU2tr5hQHagXl/Mtb3ktjca1QU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717523599; c=relaxed/simple;
-	bh=mJcQEjN3m7eKAsSRR4CgP5thHk/z6dmYH26yHzS3lWw=;
-	h=References:From:To:Cc:Subject:In-reply-to:Date:Message-ID:
-	 Content-Type:MIME-Version; b=TacTk7TAQBpqC1R8ulwO6nOY9ZARuCrkgNK5MhbXXFaQCDh+JIddugVsR5meprx2wshWkC4i7kDgiGMnP2tK6oVbneVk1xddCtRRY2NLMwlj+97DcnqclYYY8BLCw1Mu+RsN6colUsAC/3i5PKoKNdbAMHqppMs/3PJe9whwHNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454BnaWG024276;
-	Tue, 4 Jun 2024 17:52:56 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-type:date:from:in-reply-to:message-id:mime-versio?=
- =?UTF-8?Q?n:references:subject:to;_s=3Dcorp-2023-11-20;_bh=3Dar1zAe5xV3Wk?=
- =?UTF-8?Q?gDskWLwtK2yR73TKmHme8jle94lvkT4=3D;_b=3DLa7GwQvY0W+3qSGD0edMjA8?=
- =?UTF-8?Q?l4TYkD4Xj5fLPBQPWxzbOJ2ho93K/b6VyLBKG0AUKYEcU_SgrfvnwJ/tdCGG/w1?=
- =?UTF-8?Q?WM62Sc22rv1XOhlfGSrjvb20gHttiyFhRZBHUtyJYHKTxuNiWD+_MD9y/lfGoBU?=
- =?UTF-8?Q?bqV33D1LQp3rxzXYlJvy9kgLRhcCgDZRvRIUNDZ59+Q+37/Vj9fCAzJDt_DeYAq?=
- =?UTF-8?Q?UJWyCg6JPVu3JbuxDx2c97pmR9jRH+8qQMZb74oFfj3W3DNcDz9pWI5m1BQe+ok?=
- =?UTF-8?Q?_xCLWRI642Hg9ZJcGyz95nRGyX6ZKJSgnyHdMsmQfGndu3C4V2erMvWLo2Q/rBw?=
- =?UTF-8?Q?NixyjB_VA=3D=3D_?=
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yfv3nwjj3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 17:52:56 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 454HJigE025210;
-	Tue, 4 Jun 2024 17:52:54 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrt8y9kf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 17:52:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CWGG6nL3q0ps4m1aJzQa+25qwSxTV1Rk0mm/qIjIgNykHj++kO28KYnCEzfFa6Nq05Yhe10D7UmZTEY39DYcS5siytTFvKz1Lj/+5ZZiC1W/r58pS+AI5XzpnPNyqOplAW2K7tfjfHa/ACgfMpiykIYJAup5j//gj8OzoFm1sVWnXAfiFkiy9rp0AlfJH5eWlpx/ph4LXKjfE/ZThVxA6OYUw/PDw8s9iXUq0QzxI8fGYTIQglaCeXykfErg5uz8cRAiouXflZpV0oWCZ7FVurgivWcSENanjkX7T++98z/X62VwkGFObHoDW2FKShKDzn8rn02WfCwEEkm1IG8i9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ar1zAe5xV3WkgDskWLwtK2yR73TKmHme8jle94lvkT4=;
- b=n0bG6RcBZMZop3gHrrup7KZSLFuOh9Ha9ivrISuzAwDg5YMtsGwwJQ2xcPh3G6pT2ZmxvUk8hB2Y/rkPWGEw/mgEmKsksr7k2VUz1JMfVCNq2ZKCyfcAKdBy87z+aO/Pm+u+VyKoWZH/MkAR1dWDYzTiwLWusjwAvtC30J17BdyoHhzBjWzJ0fOGg7JF18k0RxD+WE6DfAop2K31fKTw8OMxMKvQI+H2ctdU0iYPXzFjIx7h1GFY6vLpsNRILNU7iG+DUKIJO9340KhMBSg6FmFzQj4ec04jKoKm0l7LdkLjfGqD6EdzKWQDJhv6AfIismfYxUBgCmwRnTO7M0TEpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4B414A088
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 17:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717523625; cv=none; b=MknFqxRsIXU5O79SBqn5BXSEzgYQSgnww4G68SxF5jMMsyDUFlBC618PyNm21L9r8KK9JTnTPkulZvM/7J3pBf//dxKOgJkWRcit9fcLzysiDibUoY9DIznSfcmyhnBmdXmxJSaMS424p4V+HjrYDP4WY2yQu6LrUxVTlC6ZPks=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717523625; c=relaxed/simple;
+	bh=w7ZEyukyRV+/9n1UGLtHOWCQnBJmpgY6htuPha8k+Jk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IOw61n9Mvw7r80JQlJ7ivPL0s9pW++oqgVv8rtGpkJY02+CpcNm16BTXMF3FJgNn53AxB8qryd19HbcZE8+VFJVT1uxjiROyhvnyZfp+hUmTQshnzToDz4I9WtQtFL+svovaqskr37q97GAggHpjdDCEEkxWkKZKsD9irAySOdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zA8A680t; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zA8A680t"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627eb3fb46cso96842597b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 10:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ar1zAe5xV3WkgDskWLwtK2yR73TKmHme8jle94lvkT4=;
- b=m7+w4XoCeMHioRzFrV69hB9/sf0GEHQrWsVk1/gdK3UnQc3RyLC2tPyuhe8FN33G62lmW3RBO2yM+vEYlVOgjAJiHTsSRJa8TWgU5BEfIEIZA0zPfuVEuYFK3Wo4bn6U/zfE5lHEB+4zEsLR8EqwRQxU315qPK6yBxKKioHYZe0=
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com (2603:10b6:5:357::14)
- by SA2PR10MB4796.namprd10.prod.outlook.com (2603:10b6:806:115::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
- 2024 17:52:52 +0000
-Received: from CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e]) by CO6PR10MB5409.namprd10.prod.outlook.com
- ([fe80::25a9:32c2:a7b0:de9e%3]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
- 17:52:51 +0000
-References: <20240528003521.979836-1-ankur.a.arora@oracle.com>
- <20240528003521.979836-5-ankur.a.arora@oracle.com>
- <fa715df1-bc7f-4abc-8554-947484b2c0ae@linux.ibm.com>
-User-agent: mu4e 1.4.10; emacs 27.2
-From: Ankur Arora <ankur.a.arora@oracle.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>, tglx@linutronix.de,
-        peterz@infradead.org, torvalds@linux-foundation.org,
-        paulmck@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
-        juri.lelli@redhat.com, joel@joelfernandes.org, raghavendra.kt@amd.com,
-        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com,
-        Jonathan Corbet
- <corbet@lwn.net>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 04/35] preempt: introduce CONFIG_PREEMPT_AUTO
-In-reply-to: <fa715df1-bc7f-4abc-8554-947484b2c0ae@linux.ibm.com>
-Date: Tue, 04 Jun 2024 10:52:49 -0700
-Message-ID: <87sexs389a.fsf@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: MW4P222CA0013.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::18) To CO6PR10MB5409.namprd10.prod.outlook.com
- (2603:10b6:5:357::14)
+        d=google.com; s=20230601; t=1717523623; x=1718128423; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RkO01EBi4ZpDllQIyTsXkNSPQB7Na6mjECCeDND9h9A=;
+        b=zA8A680t/8Pwos7Hu9yYQ7Bd7hvKWjObApRyiIV9VaKk7IORvwKqJtIRPBCnkQuSts
+         CEDR59gjxXxFTjxnITtWtsgZF8IWvcZfIvo8CLHpQCGtgvuluh20+hvbu5oWMxjOv0Da
+         rwxZSC/iChPfm1eh9WcaTo3r6Gn5pI2/5dRRo68RLqmdD/HYKRlPAyWpbUBzFPRkzAo4
+         hEhPLW4M1QM/GKJ8GL5LkXBU25kJUyeBSt0ivIJ51IfiTrLappqVwNZtK5WFxwYeB6lO
+         s0t53/M1Gd4H5vnWtV8Fa9jL7rx0dLBwDOIYh3XRQlVRZF+IQfDNN1nqfTh8xJpaToHH
+         O5uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717523623; x=1718128423;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RkO01EBi4ZpDllQIyTsXkNSPQB7Na6mjECCeDND9h9A=;
+        b=ZHgNZ0DCNeBolo1H02J0xCjaS7loXJVPXOU/emXz97vPg2zJe0KR/x8u2YzJKqSfpa
+         jsVszmcffyjqTGCsG9LSGjOrSfGznhAgh+TkDhCSq14gfTaYXy+fOkXO9rcI1wMvt0L7
+         nCj+BFKGkt1cX36VS6X9LtzTsWAO9Lb/Sp+DmK/kVKDT4JOa6qU0h2Kojpj+kz4B1xRd
+         LMJ4HBo9sPZiI+p5PBILcgZv0SL+grR1ryII2tAzZ+DaPnA81C/5O6bMcIp0fciCeX0q
+         dKllIpOoiC4JePastsbhUKKqmU6zCBbQMqYR2gnP4NxxmmZB/E6LWyVBn5wQMZN4tw3+
+         SF+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUBZ7ENg4hVbjC/1WWfuqpRL1tzSeylsdwkYXNlPu8W4KU9tqUHoRKJjTo6EnsxCRqJZt1WZew7nIYDNhmz+aZ9u+GwiwLoTRqr3xZn
+X-Gm-Message-State: AOJu0YxEGCRU3xiEpj3faOPKuhSeVdjAXT1K8of3u1gVHeaSiy+lVIR1
+	AuNPMtnEv3z1IYaC+j2Q9fQFZme4FIIc+IKfbckwymkwv3A39J+U/CwIcqqAelCNWj1ToCZ+MOQ
+	WHw7grtDKMIluMoIoaw==
+X-Google-Smtp-Source: AGHT+IG98szI73ZNCoIhOV8kejNTVDpGJJ4whJQBxKBrMgBWivuKR4Zny2rU1jLSFhAlPBEnPs3zVZyVQs41JDjj
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a25:add0:0:b0:dfa:88df:b389 with SMTP
+ id 3f1490d57ef6-dfacac4e620mr529276.7.1717523623046; Tue, 04 Jun 2024
+ 10:53:43 -0700 (PDT)
+Date: Tue,  4 Jun 2024 17:53:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5409:EE_|SA2PR10MB4796:EE_
-X-MS-Office365-Filtering-Correlation-Id: 340e1793-6070-445c-6249-08dc84bf2748
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?K5UYvRA18Kc9VeiLV3Ba75qIAxZxJQSwz6X51b6atSHr7EGP0hZFRtuv+09C?=
- =?us-ascii?Q?Apt4BOTEC9cFfd1iY9AfWVziltEXoAN+719PdiMFqxCd14eNB0mVyED44aCG?=
- =?us-ascii?Q?20xjsbE84GlVHPCaCDtiGxZexla5Yuq0C559OcXiZXVIckgJuGFR6XVAJG/r?=
- =?us-ascii?Q?wZADz6hhvAsaa+x37UeGQaWl6nZExDSHFzTDFrGX7H1G3dk+neJJKCRQo7Ts?=
- =?us-ascii?Q?hMdzwhCtM7wY+iaVpaaHYNWEZNDYRSe2CpMjNQB4AUVoEt4LMELoN0/VPV2w?=
- =?us-ascii?Q?dsoZpFztlRw8ApsFDZ3kqViHhvpgMV+SSNWAT0DWf15aZH16asxmiTwbZx1H?=
- =?us-ascii?Q?7QiOQjbauxIZGsDStdZwRnB1CHyRGh5dCNoj5/FKPvmfbENKJ23OTHG+769t?=
- =?us-ascii?Q?GBKUc40X1AuUjqReVoPXDEqJg3Ow6vPddkMuBXMp3w6HVnvPtsLsq8nTVW3K?=
- =?us-ascii?Q?q6GKmofWKtiJvfMfmz4LRDDq1n78+fs9xasw34G0ah3PjLk29+RcqVWnMxt+?=
- =?us-ascii?Q?hYz3IpOQY6AsPctcgQIlt/o2QqYHV2cTvpdFVlmdGEFiga0wEu2n7Ib94fr2?=
- =?us-ascii?Q?XhPhOiDAIonfx1AACYMc+SBNKtglMPmnL3Tl+5UVTWNEBEpVGg+GiswYyKa8?=
- =?us-ascii?Q?vCiAK/Y4MLFqmj0naXpNk9x0s35g2vd0FpXg6uLyhJm57l+7f+v/70HFxE78?=
- =?us-ascii?Q?6bN4LDP4Hx3+ds1sCOFnQCC+ZtYb0lIYFq4gSWWbG/Yf6vReNY7F+JFl3z+a?=
- =?us-ascii?Q?Zsm7BS/M0aYOLTgKvZBQbTGbsvj4aOfF/hhGIcK0dTrYvDW3dl39E5LW/Bs4?=
- =?us-ascii?Q?B7vvkywCUdiSy2N9jKPS0//ohd3VRysKkC5EyUU4XK/nkPX6rogiA2R6c6jm?=
- =?us-ascii?Q?ds+PNNCoNSy9kxMIWHFG30oweq+8uAoMu/XOeXh6MpnEMSeA8PAkICOHqIlw?=
- =?us-ascii?Q?X771uO/GqJA7VluLh1xJOdhyVjFxvcmuL0gGXsmd9Y5LS6T4p7SrbLy1Pz8z?=
- =?us-ascii?Q?6dlmh7FriKuZwpYiHqw8X7r1NwHQWajCLOQeGPtYuxjZ8dIZid8dZCFTZlmg?=
- =?us-ascii?Q?uvqR+7P3ctxLv+iCUfpbIx48zbEJQ385V5lBsyXrki5P289M2+zx1QVLPE4F?=
- =?us-ascii?Q?DR/Hz2trHVkG+C2JsjYGKc/62RM/YOvbWIB/lfBI5S5AZoTwedX7Betvw5Dc?=
- =?us-ascii?Q?/kRujww6bifee5ugphnKACb+mvqnRIs3zMedxOU4eZ+aFUIGz24duHJ+x5gq?=
- =?us-ascii?Q?qFqUtIEMpFqjBci3fY0c4ynBtPPN9LRngpjRbHyBrg=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR10MB5409.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?wA7eVFKfMGp9wmHrL0kucVYdvXf+eNOwiREA6TxA/C0JUmXNGRryZRfbGlKJ?=
- =?us-ascii?Q?Bbsbeern34tdgINVVkzmEXvp5JpJzxF/nZuttPVhc6fgF6Gjb7XPI+Ix2tHq?=
- =?us-ascii?Q?i1t3Ht/6x3QcwFJVjYkbHZOyb9FIWfZrh9lEj6hVUyhqFr1oDMeg5uZxz0m0?=
- =?us-ascii?Q?GAE85pz37MrqSWFPMimexP9b/mc5Qnh+c7FsjvBLM/NVqg5XryMYd1vm+yk7?=
- =?us-ascii?Q?rH8wllASJnaUVnGsUkv2SabTFzy7RM+MNqO5mQ1yvFjisn7viNHOFRSsYkQM?=
- =?us-ascii?Q?Ac88KDShUVmdyu2tEZNi8dDVFrEyjrpxAsQ9obzhV+RG7K0OWPHEX6slxyqf?=
- =?us-ascii?Q?IQM8faHq2g7vRUtIzwLAYeP41I0IcBbgxP9f9hPE0JVqAQiKpOnPbwCTu/aO?=
- =?us-ascii?Q?VqYO4x90ib5FPtn24i3Zw5VNlzzcsnOQOxse0BCDSeGuRqVcMjQNdlvf+qgN?=
- =?us-ascii?Q?YeYS3+0KDJFgwdgsOXizj0s+GWyGMaPpzpk5GMeSOyc4uI/ML9nrx+7rHNzb?=
- =?us-ascii?Q?jnsFHyKAoxD49fMRmJvAIy7xMRXhVE99x5QB7A8GXMVfIVoMl84NYiUtOtPQ?=
- =?us-ascii?Q?3uIyBn4igL650czftisNk8wqwLSNBGOig8peDLKcD84MYZsta/HBelHDuShd?=
- =?us-ascii?Q?XrobM+HdT2mGGLdGseRrcuObcRXjv/OcmOzRSi/AqajPwASW/d7xWrlkP7c5?=
- =?us-ascii?Q?9rNFTRofDgua8WVopzgFtiTR0IYfnubtuOLdRMGLe3lWnhC9sxtDl6IXZJKL?=
- =?us-ascii?Q?Yz1zUfQl7IJKwwN95o2K0eXZC1ZkEFGeOWzWqB3r815ynpWh362bt2Md8xsz?=
- =?us-ascii?Q?d/zOExzCN+/8K1ebkIfg8I1q59FT9Ijyn+MFDDEIYxJWMdrLtjqsmPuwOo3T?=
- =?us-ascii?Q?6s2jvrNQi57GaNYr8JlyC6phr12JfVZ7/sVn+FZoQqrfq2Y3KYrwm9gDHiem?=
- =?us-ascii?Q?lCQL6P4cmNVjGCRxjTiqqZyqHvKmVwbMoIeUK/AT5x8/JFXd3cQ+gVPAQ/ru?=
- =?us-ascii?Q?UyCUq1tDVtV7og97DAbs9+aLN0IYjkQWdsj3CWpjtg1NdcK5nXiWpHAuk+GY?=
- =?us-ascii?Q?Jro0Qj9SzcJDroELF1glK9oo2heiGN8//OLhm9keNqBWvgkolOBKbNWzBNMX?=
- =?us-ascii?Q?9iW03gxWtP2wdJVxQ+J8ENv+06yB+0obzd87dUO8/wwk8C3iOa499EtsEVQ8?=
- =?us-ascii?Q?fRq0q0FhjUpRq1c586IXyxmfszCvlLnCoFhY4oAmRJ1EPvy/HtdsXPNX0BtU?=
- =?us-ascii?Q?N5RH4Q7zGM5AJzvTiP2RJer2gUwTvJ8JMuNJR4L+FQ7PEvOhcaVWMdDhndRW?=
- =?us-ascii?Q?nZr/r1t+UvnIHIXVV0HWkQa634ESjHAPix57RM795tnYuhy4CG3/HJJxICYp?=
- =?us-ascii?Q?uSVYeri8Ut38V+h5NZYquObf0rDmZLsLNOi/Zdf/2yfnOGfBrTS91kvpcQc/?=
- =?us-ascii?Q?YIk8JMIJ5hSsQiF8Eqo2BytX2oph8r/swJo0h3oB3DRjB7RepP9CqPw5HHpf?=
- =?us-ascii?Q?yw+NdtIWlEf0aAXbXtL85fhio1zBuF3qmnCjOD+Ag3kggWsq9wz599A/rRc0?=
- =?us-ascii?Q?muxEjyc1u2YYQKKrrpzhPC9LaDfSUUpClrmWmfXFhCKEF1lK4P9hgtRneW2P?=
- =?us-ascii?Q?oQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	iqs9xv0iKo9Tylz3PvJTrPK/5JsDneMoDzcME0dvnV4ZC6BkqDC24vnQXXu8Vk21ILG7Viv5WLEsGAxnU8Xsx1xI2fE1p4e7zha1SOLBzJL4+YBTpb9JdkgXoBOXQlDoXIMK2yS230YHC+4v6bnsUY2+SacDDuH3ui7gC+FuNHZ7Z9IL6QZ/L8e3zXki6a6pkL0sIC4rG9bQx17xgJlqtbVSwUrlPoWUpc/lnfHMmSGyQ6CgMp9qPNepLDJr99h+7fyGI3H4D+RR3W2cMiYsm+KmhtSXnVQxkimPZU+Tn+lJXYtBWbtqPue6mVUoRtNCYtYpuonQOjIMD0HVGBZjt5VMDn8o2NZClYOeO5RwrYKVfuJ1shmZnTi5zw4cv6K+yi0Ne2LON2tSYfPLDQOig7yHaLBr9gvxKCmDHSA5PHoTo61StpIUYdZqebbFXzMjCS4TQKB31nRhawgGjPWmQ73TKB6HudwmyPqq5BedLqpr12oRDsR4yFO0xe5MbSZAmnIEfej2AppSbqJlEMGaaX8oFrHF4sdt+xwKXQ6YqW/TC3sKJWL2+cQ2V/Cjm1qpnO4CV1ZGc3wNqihzCbvOlhxKy+g1XBYJ98qNTzZe8lc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 340e1793-6070-445c-6249-08dc84bf2748
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR10MB5409.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 17:52:51.4001
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jdsNuhwl5ULVwQyWBpxx1gbZsAHe1W3aOJ57bzdtjH6aaJSYjExeTqrQWr7P3FjaLB9IG9jTGDb2Qmc0kufVyGBr62jlf67ukx+Bw0KYXUE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4796
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_09,2024-06-04_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=919 bulkscore=0 spamscore=0
- adultscore=0 suspectscore=0 malwarescore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
- definitions=main-2406040143
-X-Proofpoint-ORIG-GUID: XKbMdzvDxn-0ihDs6YXx9nwAwYm1FrQJ
-X-Proofpoint-GUID: XKbMdzvDxn-0ihDs6YXx9nwAwYm1FrQJ
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+Message-ID: <20240604175340.218175-1-yosryahmed@google.com>
+Subject: [PATCH] mm: zsmalloc: share slab caches for all zsmalloc zpools
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, 
+	Erhard Furtner <erhard_f@mailbox.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Zswap creates multiple zpools to improve concurrency. Each zsmalloc
+zpool creates its own 'zs_handle' and 'zspage' slab caches. Currently we
+end up with 32 slab caches of each type.
 
-Shrikanth Hegde <sshegde@linux.ibm.com> writes:
+Since each slab cache holds some free objects, we end up with a lot of
+free objects distributed among the separate zpool caches. Slab caches
+are designed to handle concurrent allocations by using percpu
+structures, so having a single instance of each cache should be enough,
+and avoids wasting more memory than needed due to fragmentation.
 
-> On 5/28/24 6:04 AM, Ankur Arora wrote:
+Additionally, having more slab caches than needed unnecessarily slows
+down code paths that iterate slab_caches.
 
-[...]
+In the results reported by Eric in [1], the amount of unused slab memory
+in these caches goes down from 242808 bytes to 29216 bytes (-88%). This
+is calculated by (num_objs - active_objs) * objsize for each 'zs_handle'
+and 'zspage' cache. Although this patch did not help with the allocation
+failure reported by Eric with zswap + zsmalloc, I think it is still
+worth merging on its own.
 
->> diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
->> index 9ea0b28068f4..06e13e7acbe2 100644
->> --- a/include/linux/thread_info.h
->> +++ b/include/linux/thread_info.h
->> @@ -59,6 +59,18 @@ enum syscall_work_bit {
->>
->>  #include <asm/thread_info.h>
->>
->> +/*
->> + * Fall back to the default need-resched flag when an architecture does not
->> + * define TIF_NEED_RESCHED_LAZY.
->> + *
->> + * Note: with !PREEMPT_AUTO, code should not be setting TIF_NEED_RESCHED_LAZY
->> + * anywhere. Define this here because we will explicitly test for this bit.
->> + */
->
->
-> Is this comment still valid?
-> I see that flag has been set without any checks in arch file.
+[1]https://lore.kernel.org/lkml/20240604134458.3ae4396a@yea/
 
-Thanks for pointing this out. There is a typo in this comment.
-Should have said "with !HAVE_PREEMPT_AUTO" instead of "with
-!PREEMPT_AUTO" above.
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+---
+ mm/zsmalloc.c | 87 ++++++++++++++++++++++++++-------------------------
+ 1 file changed, 44 insertions(+), 43 deletions(-)
 
-So, an architecture should define HAVE_PREMPT_AUTO only if it also
-defines TIF_NEED_RESCHED_LAZY and whatever else necessary to support
-PREEMPT_AUTO.
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index b42d3545ca856..76d9976442a4a 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -220,8 +220,6 @@ struct zs_pool {
+ 	const char *name;
+ 
+ 	struct size_class *size_class[ZS_SIZE_CLASSES];
+-	struct kmem_cache *handle_cachep;
+-	struct kmem_cache *zspage_cachep;
+ 
+ 	atomic_long_t pages_allocated;
+ 
+@@ -289,50 +287,29 @@ static void init_deferred_free(struct zs_pool *pool) {}
+ static void SetZsPageMovable(struct zs_pool *pool, struct zspage *zspage) {}
+ #endif
+ 
+-static int create_cache(struct zs_pool *pool)
+-{
+-	pool->handle_cachep = kmem_cache_create("zs_handle", ZS_HANDLE_SIZE,
+-					0, 0, NULL);
+-	if (!pool->handle_cachep)
+-		return 1;
+-
+-	pool->zspage_cachep = kmem_cache_create("zspage", sizeof(struct zspage),
+-					0, 0, NULL);
+-	if (!pool->zspage_cachep) {
+-		kmem_cache_destroy(pool->handle_cachep);
+-		pool->handle_cachep = NULL;
+-		return 1;
+-	}
+-
+-	return 0;
+-}
++static struct kmem_cache *zs_handle_cache;
++static struct kmem_cache *zspage_cache;
+ 
+-static void destroy_cache(struct zs_pool *pool)
++static unsigned long cache_alloc_handle(gfp_t gfp)
+ {
+-	kmem_cache_destroy(pool->handle_cachep);
+-	kmem_cache_destroy(pool->zspage_cachep);
+-}
+-
+-static unsigned long cache_alloc_handle(struct zs_pool *pool, gfp_t gfp)
+-{
+-	return (unsigned long)kmem_cache_alloc(pool->handle_cachep,
++	return (unsigned long)kmem_cache_alloc(zs_handle_cache,
+ 			gfp & ~(__GFP_HIGHMEM|__GFP_MOVABLE));
+ }
+ 
+-static void cache_free_handle(struct zs_pool *pool, unsigned long handle)
++static void cache_free_handle(unsigned long handle)
+ {
+-	kmem_cache_free(pool->handle_cachep, (void *)handle);
++	kmem_cache_free(zs_handle_cache, (void *)handle);
+ }
+ 
+-static struct zspage *cache_alloc_zspage(struct zs_pool *pool, gfp_t flags)
++static struct zspage *cache_alloc_zspage(gfp_t flags)
+ {
+-	return kmem_cache_zalloc(pool->zspage_cachep,
++	return kmem_cache_zalloc(zspage_cache,
+ 			flags & ~(__GFP_HIGHMEM|__GFP_MOVABLE));
+ }
+ 
+-static void cache_free_zspage(struct zs_pool *pool, struct zspage *zspage)
++static void cache_free_zspage(struct zspage *zspage)
+ {
+-	kmem_cache_free(pool->zspage_cachep, zspage);
++	kmem_cache_free(zspage_cache, zspage);
+ }
+ 
+ /* pool->lock(which owns the handle) synchronizes races */
+@@ -837,7 +814,7 @@ static void __free_zspage(struct zs_pool *pool, struct size_class *class,
+ 		page = next;
+ 	} while (page != NULL);
+ 
+-	cache_free_zspage(pool, zspage);
++	cache_free_zspage(zspage);
+ 
+ 	class_stat_dec(class, ZS_OBJS_ALLOCATED, class->objs_per_zspage);
+ 	atomic_long_sub(class->pages_per_zspage, &pool->pages_allocated);
+@@ -950,7 +927,7 @@ static struct zspage *alloc_zspage(struct zs_pool *pool,
+ {
+ 	int i;
+ 	struct page *pages[ZS_MAX_PAGES_PER_ZSPAGE];
+-	struct zspage *zspage = cache_alloc_zspage(pool, gfp);
++	struct zspage *zspage = cache_alloc_zspage(gfp);
+ 
+ 	if (!zspage)
+ 		return NULL;
+@@ -967,7 +944,7 @@ static struct zspage *alloc_zspage(struct zs_pool *pool,
+ 				dec_zone_page_state(pages[i], NR_ZSPAGES);
+ 				__free_page(pages[i]);
+ 			}
+-			cache_free_zspage(pool, zspage);
++			cache_free_zspage(zspage);
+ 			return NULL;
+ 		}
+ 
+@@ -1338,7 +1315,7 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+ 	if (unlikely(size > ZS_MAX_ALLOC_SIZE))
+ 		return (unsigned long)ERR_PTR(-ENOSPC);
+ 
+-	handle = cache_alloc_handle(pool, gfp);
++	handle = cache_alloc_handle(gfp);
+ 	if (!handle)
+ 		return (unsigned long)ERR_PTR(-ENOMEM);
+ 
+@@ -1363,7 +1340,7 @@ unsigned long zs_malloc(struct zs_pool *pool, size_t size, gfp_t gfp)
+ 
+ 	zspage = alloc_zspage(pool, class, gfp);
+ 	if (!zspage) {
+-		cache_free_handle(pool, handle);
++		cache_free_handle(handle);
+ 		return (unsigned long)ERR_PTR(-ENOMEM);
+ 	}
+ 
+@@ -1441,7 +1418,7 @@ void zs_free(struct zs_pool *pool, unsigned long handle)
+ 		free_zspage(pool, class, zspage);
+ 
+ 	spin_unlock(&pool->lock);
+-	cache_free_handle(pool, handle);
++	cache_free_handle(handle);
+ }
+ EXPORT_SYMBOL_GPL(zs_free);
+ 
+@@ -2111,9 +2088,6 @@ struct zs_pool *zs_create_pool(const char *name)
+ 	if (!pool->name)
+ 		goto err;
+ 
+-	if (create_cache(pool))
+-		goto err;
+-
+ 	/*
+ 	 * Iterate reversely, because, size of size_class that we want to use
+ 	 * for merging should be larger or equal to current size.
+@@ -2234,16 +2208,41 @@ void zs_destroy_pool(struct zs_pool *pool)
+ 		kfree(class);
+ 	}
+ 
+-	destroy_cache(pool);
+ 	kfree(pool->name);
+ 	kfree(pool);
+ }
+ EXPORT_SYMBOL_GPL(zs_destroy_pool);
+ 
++static void zs_destroy_caches(void)
++{
++	kmem_cache_destroy(zs_handle_cache);
++	kmem_cache_destroy(zspage_cache);
++	zs_handle_cache = NULL;
++	zspage_cache = NULL;
++}
++
++static int zs_create_caches(void)
++{
++	zs_handle_cache = kmem_cache_create("zs_handle", ZS_HANDLE_SIZE,
++					    0, 0, NULL);
++	zspage_cache = kmem_cache_create("zspage", sizeof(struct zspage),
++					 0, 0, NULL);
++
++	if (!zs_handle_cache || !zspage_cache) {
++		zs_destroy_caches();
++		return -1;
++	}
++	return 0;
++}
++
+ static int __init zs_init(void)
+ {
+ 	int ret;
+ 
++	ret = zs_create_caches();
++	if (ret)
++		goto out;
++
+ 	ret = cpuhp_setup_state(CPUHP_MM_ZS_PREPARE, "mm/zsmalloc:prepare",
+ 				zs_cpu_prepare, zs_cpu_dead);
+ 	if (ret)
+@@ -2258,6 +2257,7 @@ static int __init zs_init(void)
+ 	return 0;
+ 
+ out:
++	zs_destroy_caches();
+ 	return ret;
+ }
+ 
+@@ -2269,6 +2269,7 @@ static void __exit zs_exit(void)
+ 	cpuhp_remove_state(CPUHP_MM_ZS_PREPARE);
+ 
+ 	zs_stat_exit();
++	zs_destroy_caches();
+ }
+ 
+ module_init(zs_init);
+-- 
+2.45.1.288.g0e0cd299f1-goog
 
-
-Ankur
-
->> +#ifndef TIF_NEED_RESCHED_LAZY
->> +#define TIF_NEED_RESCHED_LAZY TIF_NEED_RESCHED
->> +#define _TIF_NEED_RESCHED_LAZY _TIF_NEED_RESCHED
->> +#endif
->> +
->>  #ifdef __KERNEL__
->>
->>  #ifndef arch_set_restart_data
-
-
---
-ankur
