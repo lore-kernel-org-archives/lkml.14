@@ -1,90 +1,253 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE431411F3
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B6114E2C6
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 23:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717544294; cv=none; b=suMl+V+a6uh8+rGn/5AwKf/b8Dy6Bv8MvV0Q3dfd8jt/y8FCMjZ6wwomli+BeoilkUKW8di46owvo+Zs1V46R6xjkTZPqEdJbyQBIN4EpIXN9Tavb1Me8H5v8a/InpSqahdIkpVZZBEXaFYdxYnkRqoocm3yQ4v5fIvLHbnvBbg=
+	t=1717544304; cv=none; b=vAyy+gAE3hu1U5Ycb/yGYsEp8Q7ymFII7S6xGPP5uCONaiKIfRueB2cCJWvOlgY6JDCCBDDb593DWmjJ9elhHzhkdqVsEz9dhqLQXfo0YyzuxMeVBWmwgD5w28k+OWq4gGOUZ35J2893pLoQPw91jf2hDMo/qzUEaPOJlLr1/t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717544294; c=relaxed/simple;
-	bh=SgCn/l7g4v+vmT6795+UxJUGRirIdKhPEsjbXrH81BU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dfUdjYrFCwROW5pUPjDVJFSD7yUZ2hX9lK0BSGSLVGfexqVXlZSLeiKA+moJWTtI5OiLMosMYpGwp2PBQe8Uq5iWyb6zVaZ40GLoG4LcOdwdUOQdv9WNQ0hDBq7vub2bGeDDDwI3KX421SVgVGiLmjdXZ1OKx+CeJ7+nIDMDhAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Os+UPWTZ; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1717544304; c=relaxed/simple;
+	bh=ca+wPik1uOiAzqp5kmKAVjchH0HdPECP6GFtThndtPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9rjlQae6N+KDkraUZcfUQgDmOUDkQXLv/vtlTR5ZNC1r1tZlJylGM7PzX0DsGXG+cPDzgudCPSG9luGSUfdS2eS6HIlDaAo9EMY+DfQ0bz50C3ipXNy29y8S0eIW2HYfajUzp1fLwxTemjioZX6kskAUdLhu5/ay3GeSHNHfUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=PF5JQpZv; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Os+UPWTZ"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6c380e03048so5404540a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 16:38:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="PF5JQpZv"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f64ecb1766so14455835ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 16:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717544292; x=1718149092; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xAzqMhmS0H/CDDPovrdGPbxW+iLCDyuoKj+AAyKi6gM=;
-        b=Os+UPWTZcL9J5fMYbMWCFMFO5MvGW2NUcYgqw03teT+2EBWlktHoZwHSDZZuYI8pGt
-         0lVv6Rqw0rwnwJN/8Rl/UCo8iVCRBXTVa5ZujE/j4VtVHEM8VifanD66l/kmIABQ3/iU
-         CoByNAv5vGE2K4WYhoXXOJduRiOoPLT6Coa8KbgZjdVOUaKXKxwwDVgxUmRpg+CrW+0G
-         heFDPeVA4ebbJKQlgm/S5NFuXwL+Wttpl1Tvamia0bA9Bb77GoVxceSitBsMbTF7owFd
-         YIRShUcwUE9uzAxw9iTNjXjkNJTXM3DY7k1Jg+mzOAw9/OGkpmutXp2/s8FMosLRoXxX
-         4L1g==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1717544302; x=1718149102; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N0aCZBQtCU83mtJ7BQNmsemGUrA8Pwn3mZJbsHt/hUM=;
+        b=PF5JQpZvpS1wNAP4XFsEIJFVgRj0QkMBw7fkTmyMt8zebhS9zfqccFFFGR6ZCTE1fp
+         KN673JL3b92gDyA7qtxGe2jAPd9dZ4Q5QoRMPiPtOBIspFE5hW4f2aebQpIkjtioSDSA
+         RWtn2ObZ7H0pwceKmJM0OA8mYGvncUm3YD9WvBnk7RzRcEIqoZcsZ5HQMNXEE+Q8zrS4
+         fMP93R2BUYDZ/+UDoDPArWPiffa/smll1JQiE8jjg30jBY/lnEshsNOK5CITpXXvGY0A
+         OI6V570x4QdugSqa3+s7tNR02maHww7TOmD7OCclC5gwk5O9nsSxRwk4DzXfD50v+959
+         fMpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717544292; x=1718149092;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xAzqMhmS0H/CDDPovrdGPbxW+iLCDyuoKj+AAyKi6gM=;
-        b=ggdLlmDcugfLX/ZOxHx7fDL+UNTQya+NlbMmauIKVhbXRrSgSmwTLhveLturbjZkZx
-         yqntJNYZR+3cfMNp4OnHliLtFFLLk+YjNu1N4M16GOC6xMJtzG/WTNCkixYLk4ivWBxk
-         N6FYzuOUe4eMzMsqkjqkSScpgNyixwCMnBjOazNA8RmActq+Fu3qVQDCfF6JEh6yUu7w
-         ixZlcNfU0Ezp4zYd0D6dagPd7wIEEE/sNB8QytqrkLt80GYzMpR51Hgc9FzmI2Ba8VTp
-         j3eLDT2ljRo3hy6rzG+sKHSdJNGWAfP1LW8Ha6ziME6aQ32Zdnea3cPGd5wnTrW8OnKt
-         zPCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVexmmpJ/IFbpiaavFMjJji66gS7wgY/1MMglj1I89gCWlytDuroLhDvjXR09HU2s0iLgcFlRdiHFp2BZrqfY20Ovr/pCzr4b6mreQi
-X-Gm-Message-State: AOJu0YzAQmZgCaIAxBaCy/5wDEY0RknrEB4gZeBWQfr3zHAXdbZeEsFZ
-	bx2MOF94/658px6+6LeJbDHMSurC+aHqC0pnSdkge/i5UiOsa9MGvP6Bv0v3zw8pJXvlonOxEh4
-	BpQ==
-X-Google-Smtp-Source: AGHT+IGCD99fitWPdtKdasUbYEWUOBm7hBtry/D23V5KTSUlmLEyVY9kWlvcOhJeAMQ6LM++mt1w/gb/8k0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f542:b0:1f4:4618:8932 with SMTP id
- d9443c01a7336-1f6a5862887mr28415ad.0.1717544291993; Tue, 04 Jun 2024 16:38:11
- -0700 (PDT)
-Date: Tue,  4 Jun 2024 16:29:33 -0700
-In-Reply-To: <20240506225321.3440701-1-alejandro.j.jimenez@oracle.com>
+        d=1e100.net; s=20230601; t=1717544302; x=1718149102;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N0aCZBQtCU83mtJ7BQNmsemGUrA8Pwn3mZJbsHt/hUM=;
+        b=q10f73nfskBhuQlanUxFa5p3li9PbguUP+OggYoIXXlqu43Xzm9VMeRnIajHm0xCIf
+         bZ+zel+HxOf7m/qAm9mjlz3CywECem0IWiR4M6C7OaQSf2Mv+hlr6jRZjKOP8wBSpIOg
+         eFCT2nZpsrHr/W/50M3vNKOl03Fu4bD339woG0M7wGM1Wj02YqG9OTJw5VECJIL3pA9r
+         y+Ntw+05oSgueH2m48Xp6mtSjheo7Vc4opKsqrhGPCGLtHrqN/RkZcK6sQ/SgWwVFKLk
+         WvJqcyiUL+GA8ectDLM056KEj3qZKMd9ftl6fjSRMSoaklPRxmo8AE/OIrcCl201NbJt
+         I9sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8hgQBurpDOQBMOSSTxIwq58k8OOdoH59T4T9CMHYU0H2BlrslIo+2IOKqQAG1m3lPMufRkPKkV90bhn9/IXPrED2aEr6U/nfYdplf
+X-Gm-Message-State: AOJu0YxbknUChWyp+xcP/cwFl34DGo11Bb+SwJ2Y4Nx40GZ2X9SkswpM
+	ou+URL9WiWBhVa64t0IOnqA0o2nczxSU4tSBFSeAbWFSMThndA286PKEJkwOQXs=
+X-Google-Smtp-Source: AGHT+IEKmRhZJswXWNpPWzjD5VxSqHIUYsSj148xPMfo2/HFBa3XHAJNKZNKM0XpWv5O7SYcklEy5g==
+X-Received: by 2002:a17:902:f545:b0:1f6:91a1:88a0 with SMTP id d9443c01a7336-1f6a5a26f3amr12387925ad.35.1717544302135;
+        Tue, 04 Jun 2024 16:38:22 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ddac9sm91405275ad.173.2024.06.04.16.38.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 16:38:21 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1sEdjO-004YyF-0a;
+	Wed, 05 Jun 2024 09:38:18 +1000
+Date: Wed, 5 Jun 2024 09:38:18 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: Brian Foster <bfoster@redhat.com>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	djwong@kernel.org, hch@infradead.org, brauner@kernel.org,
+	chandanbabu@kernel.org, jack@suse.cz, willy@infradead.org,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [RFC PATCH v4 1/8] iomap: zeroing needs to be pagecache aware
+Message-ID: <Zl+lanp0K1N7yCcG@dread.disaster.area>
+References: <20240529095206.2568162-1-yi.zhang@huaweicloud.com>
+ <20240529095206.2568162-2-yi.zhang@huaweicloud.com>
+ <ZlxRz9LPNuoOZOtl@bfoster>
+ <cc7e0a68-185f-a3e0-d60a-989b8b014608@huaweicloud.com>
+ <Zl3VPA5mVUP4iC3R@bfoster>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240506225321.3440701-1-alejandro.j.jimenez@oracle.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <171754374489.2780783.15684128983475310982.b4-ty@google.com>
-Subject: Re: [PATCH v2 0/2] Print names of apicv inhibit reasons in traces
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, vasant.hegde@amd.com, 
-	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
-Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org, 
-	joao.m.martins@oracle.com, boris.ostrovsky@oracle.com, 
-	suravee.suthikulpanit@amd.com, mlevitsk@redhat.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zl3VPA5mVUP4iC3R@bfoster>
 
-On Mon, 06 May 2024 22:53:19 +0000, Alejandro Jimenez wrote:
-> v2:
-> - Use Sean's implementation/patch from v1: https://lore.kernel.org/all/ZjVQOFLXWrZvoa-Y@google.com/
-> - Fix typo in commit message (s/inhbit/inhibit).
-> - Add patch renaming APICV_INHIBIT_REASON_DISABLE to APICV_INHIBIT_REASON_DISABLED.
-> - Drop Vasant's R-b from v1 since implementation was refined, even though the
-> general approach and behavior remains the same.
+On Mon, Jun 03, 2024 at 10:37:48AM -0400, Brian Foster wrote:
+> On Mon, Jun 03, 2024 at 05:07:02PM +0800, Zhang Yi wrote:
+> > On 2024/6/2 19:04, Brian Foster wrote:
+> > > On Wed, May 29, 2024 at 05:51:59PM +0800, Zhang Yi wrote:
+> > >> From: Dave Chinner <dchinner@redhat.com>
+> > >>
+> > >> Unwritten extents can have page cache data over the range being
+> > >> zeroed so we can't just skip them entirely. Fix this by checking for
+> > >> an existing dirty folio over the unwritten range we are zeroing
+> > >> and only performing zeroing if the folio is already dirty.
+> > >>
+> > >> XXX: how do we detect a iomap containing a cow mapping over a hole
+> > >> in iomap_zero_iter()? The XFS code implies this case also needs to
+> > >> zero the page cache if there is data present, so trigger for page
+> > >> cache lookup only in iomap_zero_iter() needs to handle this case as
+> > >> well.
+> > >>
+> > >> Before:
+> > >>
+> > >> $ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
+> > >> path /mnt/scratch/foo, 50000 iters
+> > >>
+> > >> real    0m14.103s
+> > >> user    0m0.015s
+> > >> sys     0m0.020s
+> > >>
+> > >> $ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
+> > >> path /mnt/scratch/foo, 50000 iters
+> > >> % time     seconds  usecs/call     calls    errors syscall
+> > >> ------ ----------- ----------- --------- --------- ----------------
+> > >>  85.90    0.847616          16     50000           ftruncate
+> > >>  14.01    0.138229           2     50000           pwrite64
+> > >> ....
+> > >>
+> > >> After:
+> > >>
+> > >> $ time sudo ./pwrite-trunc /mnt/scratch/foo 50000
+> > >> path /mnt/scratch/foo, 50000 iters
+> > >>
+> > >> real    0m0.144s
+> > >> user    0m0.021s
+> > >> sys     0m0.012s
+> > >>
+> > >> $ sudo strace -c ./pwrite-trunc /mnt/scratch/foo 50000
+> > >> path /mnt/scratch/foo, 50000 iters
+> > >> % time     seconds  usecs/call     calls    errors syscall
+> > >> ------ ----------- ----------- --------- --------- ----------------
+> > >>  53.86    0.505964          10     50000           ftruncate
+> > >>  46.12    0.433251           8     50000           pwrite64
+> > >> ....
+> > >>
+> > >> Yup, we get back all the performance.
+> > >>
+> > >> As for the "mmap write beyond EOF" data exposure aspect
+> > >> documented here:
+> > >>
+> > >> https://lore.kernel.org/linux-xfs/20221104182358.2007475-1-bfoster@redhat.com/
+> > >>
+> > >> With this command:
+> > >>
+> > >> $ sudo xfs_io -tfc "falloc 0 1k" -c "pwrite 0 1k" \
+> > >>   -c "mmap 0 4k" -c "mwrite 3k 1k" -c "pwrite 32k 4k" \
+> > >>   -c fsync -c "pread -v 3k 32" /mnt/scratch/foo
+> > >>
+> > >> Before:
+> > >>
+> > >> wrote 1024/1024 bytes at offset 0
+> > >> 1 KiB, 1 ops; 0.0000 sec (34.877 MiB/sec and 35714.2857 ops/sec)
+> > >> wrote 4096/4096 bytes at offset 32768
+> > >> 4 KiB, 1 ops; 0.0000 sec (229.779 MiB/sec and 58823.5294 ops/sec)
+> > >> 00000c00:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
+> > >> XXXXXXXXXXXXXXXX
+> > >> 00000c10:  58 58 58 58 58 58 58 58 58 58 58 58 58 58 58 58
+> > >> XXXXXXXXXXXXXXXX
+> > >> read 32/32 bytes at offset 3072
+> > >> 32.000000 bytes, 1 ops; 0.0000 sec (568.182 KiB/sec and 18181.8182
+> > >>    ops/sec
+> > >>
+> > >> After:
+> > >>
+> > >> wrote 1024/1024 bytes at offset 0
+> > >> 1 KiB, 1 ops; 0.0000 sec (40.690 MiB/sec and 41666.6667 ops/sec)
+> > >> wrote 4096/4096 bytes at offset 32768
+> > >> 4 KiB, 1 ops; 0.0000 sec (150.240 MiB/sec and 38461.5385 ops/sec)
+> > >> 00000c00:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >> ................
+> > >> 00000c10:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >> ................
+> > >> read 32/32 bytes at offset 3072
+> > >> 32.000000 bytes, 1 ops; 0.0000 sec (558.036 KiB/sec and 17857.1429
+> > >>    ops/sec)
+> > >>
+> > >> We see that this post-eof unwritten extent dirty page zeroing is
+> > >> working correctly.
+> > >>
+> > > 
+> > > I've pointed this out in the past, but IIRC this implementation is racy
+> > > vs. reclaim. Specifically, relying on folio lookup after mapping lookup
+> > > doesn't take reclaim into account, so if we look up an unwritten mapping
+> > > and then a folio flushes and reclaims by the time the scan reaches that
+> > > offset, it incorrectly treats that subrange as already zero when it
+> > > actually isn't (because the extent is actually stale by that point, but
+> > > the stale extent check is skipped).
+> > > 
+> > 
+> > Hello, Brian!
+> > 
+> > I'm confused, how could that happen? We do stale check under folio lock,
+> > if the folio flushed and reclaimed before we get&lock that folio in
+> > iomap_zero_iter()->iomap_write_begin(), the ->iomap_valid() would check
+> > this stale out and zero again in the next iteration. Am I missing
+> > something?
+> > 
 > 
-> [...]
+> Hi Yi,
+> 
+> Yep, that is my understanding of how the revalidation thing works in
+> general as well. The nuance in this particular case is that no folio
+> exists at the associated offset. Therefore, the reval is skipped in
+> iomap_write_begin(), iomap_zero_iter() skips over the range as well, and
+> the operation carries on as normal.
+>> 
+> Have you tried the test sequence above? I just retried on latest master
+> plus this series and it still trips for me. I haven't redone the low
+> level analysis, but in general what this is trying to show is something
+> like the following...
+> 
+> Suppose we start with an unwritten block on disk with a dirty folio in
+> cache:
+> 
+> - iomap looks up the extent and finds the unwritten mapping.
+> - Reclaim kicks in and writes back the page and removes it from cache.
 
-Applied to kvm-x86 misc, thanks!
+To be pedantic, reclaim doesn't write folios back - we haven't done
+that for the best part of a decade on XFS. We don't even have a
+->writepage method for reclaim to write back pages anymore.
 
-[1/2] KVM: x86: Print names of apicv inhibit reasons in traces
-      https://github.com/kvm-x86/linux/commit/8b5bf6b80eb3
-[2/2] KVM: x86: Keep consistent naming for APICv/AVIC inhibit reasons
-      https://github.com/kvm-x86/linux/commit/f9979c52eb02
+Hence writeback has to come from background flusher threads hitting
+that specific folio, then IO completion running and converting the
+unwritten extent, then reclaim hitting that folio, all while the
+zeroing of the current iomap is being walked and zeroed.
 
---
-https://github.com/kvm-x86/linux/tree/next
+That makes it an extremely rare and difficult condition to hit. Yes,
+it's possible, but it's also something we can easily detect. So as
+long as detection is low cost, the cost of resolution when such a
+rare event is detected isn't going to be noticed by anyone.
+
+>   The underlying block is no longer unwritten (current mapping is now
+>   stale).
+> - iomap_zero_iter() processes the associated offset. iomap_get_folio()
+>   clears FGP_CREAT, no folio is found.
+
+Actually, this is really easy to fix - we simply revalidate the
+mapping at this point rather than just skipping the folio range. If
+the mapping has changed because it's now written, the zeroing code
+backs out and gets a new mapping that reflects the changed state of
+this range.
+
+However, with the above cost analysis in mind, a lower overhead
+common case alternative might be to only revalidate the mapping at
+->iomap_end() time. If the mapping has changed while zeroing, we
+return -EBUSY/-ESTALE and that triggers the zeroing to restart from
+the offset at the beginning of the "stale" iomap.  The runtime cost
+is one extra mapping revalidation call per mapping, and the
+resolution cost is refetching and zeroing the range of a single
+unwritten iomap.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
