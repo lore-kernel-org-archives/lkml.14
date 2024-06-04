@@ -1,115 +1,76 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6545414037D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:09:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24EA446CF;
+	Tue,  4 Jun 2024 08:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717488563; cv=none; b=uyuPRqH8v5VOJB4l+FfFqbh6Id0rWdCerAGmOuUcBwWfBFgw71jRqNBXs7pKFER+rwlc1KDdVcWzPvinhapZ4OnXgVLVijuvcft8DDL5bDG2m2DO4K+4wg8+uwA8Xw2mdKfX8pv3sPeFYmtNHwr2FOixiLpF31YeFLQfpZrlWmM=
+	t=1717488571; cv=none; b=u90VSFXbC2w8XD4K5+zCaEm1tRw1txKl8Hko9r4xJit5luxFwjJNZVtbxPxSheid9waEYOV3LVQD7dvtmJUqEh1wzI23IjyvpvIi3t3gIhaDRtobKEqGIkyiGvYMSnp9jIMw1u1u7nSa6Ecdk9rge2hENdsBT8hR6kVTBMHrgY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717488563; c=relaxed/simple;
-	bh=jsmPz/k1p+Y8GO04dOldgsBBp7w7NBWf3VP4rZu1Rpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wp6vMfixtu2ZM/scS8+jcixV1/reC7jtMQ62lr0q+GHnRDhDPRnOQhR0sUlEevjX1YCxZzpE49ALW/SWfCP01pWYsuSY1tib4fa2E+VBXFzM8QWd8wPhWCtoh7zT8P4iYUp/wE/oU8DhdNnpwsjZqDOVWBUlWLxwYsSGt24dr9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ImsqvZgH; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1717488571; c=relaxed/simple;
+	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=qlddUFXb1BHDdZpwva5vcDXzVGaAeFDJovvGTWBoYeS1E1m9ptc8zZbplWspTF4FIopAntocAtfMDUMHA1sEwA31qwJPeKsoWDNWEDL1FUcjoZWFl3WzjuzTlJuGKgCE8olQA08iu4waJTuwjrO0IWEN4a/XTlhnTX7rs4SKJpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1MRxCEM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ImsqvZgH"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-35dceef429bso2279642f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 01:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1717488560; x=1718093360; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w3/eSMbfH3GxJXiAeW4Zl8FzceN/5F/2l8oFwai4K1E=;
-        b=ImsqvZgH0PvaFRrZjMzv1mC3zveA4ZqbO10BYTKfHu4VIgqJWU4tcWhOaLV8+NjYqx
-         CebGsiucgo33qGJCJEDl++s1lLsmA4FqPnYsT0Emu5djuBswqVZkkkvuvRHkJDATMkEl
-         8yRaDxuJb3kY/h/b8lMjpNdV33xnJAfRKtXfDf3aqJI8cmsSo/GZRmrKb4b0IPyUO5Vt
-         iFxNolSnejAqqNp8BOXXWjNdncVmzypbp8GlOBEP/DC5UAHmtYP5N79ktjP+5vw0fvuo
-         AiLyOCuXlQqY00GQBfwT/BGO87OfHgO7x9jxoZ4Cb2fJNhcfc8IUoH5ELeLiRpbkY9rV
-         re1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717488560; x=1718093360;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w3/eSMbfH3GxJXiAeW4Zl8FzceN/5F/2l8oFwai4K1E=;
-        b=S/6bMrGk9dwhq1qDFEllhSvqavSFoe80L5PSZLZFS693A/UZyc4X7vLdYqdg8pG8Sg
-         1aEijQ2mrNsSNX38XVMpi4qnK5ML+fpu6IOLRBOt95OjxPoPK/F+T4w9sBsaVyU7gr4I
-         Wgh9i5EqC08MrwfWtkSAPMf6KS+9sUUn4xH2f8j8aRVFXkpiOFzDCr8dv4QjnKkD6P5y
-         XiRWWn2EXc8kVWLgWOQyb1Va8e4dRcAmXB+EIIrXljd48Teabl5ILpzD/tz1HJbzeZQN
-         nGGOOrd4ugw5hxfhsu/KOz2YxyP13Yv5Nv+GZHeVhNlN2Um4ZEo0R7TcTWEmzZfu+gUc
-         jj+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVWDQOVtWkhO0sJwe+e3pIhA4P7gqZUr9u5C/fGyeyg7oHatg4n210s8SuYzpyAczT40rBBmj5SY9r2VhsekFIm7S4m64Rhfpf+F6Vu
-X-Gm-Message-State: AOJu0YxSI/vS7KkvUNo8QQPftv2Lj2Cjde5BfOreeYUyZmIolGS34T7y
-	2Fh/U4vHD1lThBG3o5AlrfNIS8KmvfRYv7nKYCRifnKASibb94ySkzdxxj3ZZw8=
-X-Google-Smtp-Source: AGHT+IE1yuIeQdvfaLUlHn16HLkz5ku2FV+gfSnKv2NqvwgiNpGtvNC3MCPso6YmvpVD0Etm1p+EUQ==
-X-Received: by 2002:a5d:55c9:0:b0:354:de40:2942 with SMTP id ffacd0b85a97d-35e7c52d673mr1546703f8f.12.1717488559721;
-        Tue, 04 Jun 2024 01:09:19 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6324167f5sm78117595ad.282.2024.06.04.01.09.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 01:09:19 -0700 (PDT)
-Date: Tue, 4 Jun 2024 10:09:07 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Sreenath Vijayan <sreenath.vijayan@sony.com>
-Cc: john.ogness@linutronix.de, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, rdunlap@infradead.org,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-	taichi.shimoyashiki@sony.com, daniel.palmer@sony.com,
-	anandakumar.balasubramaniam@sony.com
-Subject: Re: [PATCH] printk: Rename console_replay_all() and update context
-Message-ID: <Zl7Lo5eGJKLjbTUc@pathway.suse.cz>
-References: <66582edb.650a0220.8de7.c591SMTPIN_ADDED_BROKEN@mx.google.com>
- <ZlmPAZUeKIDFKLdf@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1MRxCEM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6ECC2BBFC;
+	Tue,  4 Jun 2024 08:09:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717488570;
+	bh=Ks/5HXLLA3BlNGAruV2BQLpNqH2NplEnN5LmiJ/z4Cg=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=o1MRxCEMsm/rvMeAAJBPCYWpYQyAFd8BIGgeQvMSn7f/STx63dNix0p3AdGHdZgHO
+	 VpJz0TOInXj39V5PtD1yEF+NaPIlHvxQyN6RxRjF55oj3yFnPSF6kAdy6xZoSDHHF8
+	 uFmfQLaIUcNUKv1NYmxjir4bIWQYSbjQb2VcekRvPSTuUmUGpobXBYYjpH/pVzZSO8
+	 5mj4vvnZes5pcoFC9qdoLII1gSie8vbQ6FVHKFbBDT3w6IZIgxBPY/CwY/WAR1Th7W
+	 PGtpqFlZXM5ZneNCb8ZcE0Ar/w4EbNdRtAHV6nqSQqZJm6gZrHzagtxpP5PSB2kX/I
+	 mykRDonmv/rmQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,  Dave Jiang <dave.jiang@intel.com>,
+  Bjorn Helgaas <bhelgaas@google.com>,  <linux-wireless@vger.kernel.org>,
+  <ath11k@lists.infradead.org>,  <regressions@lists.linux.dev>,  Jeff
+ Johnson <quic_jjohnson@quicinc.com>,  <linux-kernel@vger.kernel.org>,
+  <linux-cxl@vger.kernel.org>,  <linux-pci@vger.kernel.org>
+Subject: Re: [regression] BUG: KASAN: use-after-free in
+ lockdep_register_key+0x755/0x8f0
+References: <20240603165342.GA685076@bhelgaas> <87wmn5ubfo.fsf@kernel.org>
+	<665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Tue, 04 Jun 2024 11:09:26 +0300
+In-Reply-To: <665e162ec4b2d_2a90e294c8@dwillia2-xfh.jf.intel.com.notmuch> (Dan
+	Williams's message of "Mon, 3 Jun 2024 12:14:54 -0700")
+Message-ID: <87cyoxt9hl.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZlmPAZUeKIDFKLdf@pathway.suse.cz>
+Content-Type: text/plain
 
-On Fri 2024-05-31 10:49:08, Petr Mladek wrote:
-> On Thu 2024-05-30 13:15:47, Sreenath Vijayan wrote:
-> > Rename console_replay_all() to console_try_replay_all() to make
-> > clear that the implementation is best effort. Also, the function
-> > should not be called in NMI context as it takes locks, so update
-> > the comment in code.
-> > 
-> > Fixes: 693f75b91a91 ("printk: Add function to replay kernel log on consoles")
-> > Fixes: 1b743485e27f ("tty/sysrq: Replay kernel log messages on consoles via sysrq")
-> > Suggested-by: Petr Mladek <pmladek@suse.com>
-> > Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-> > Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
-> 
-> Thanks for the fix.
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
- 
-> PS: I am going to queue it for 6.11. It is not critical
->     to hurry it into 6.10-rcX.
+Dan Williams <dan.j.williams@intel.com> writes:
 
-JFYI, the patch has been comitted into printk/linux.git,
-branch for-6.11.
+> Kalle Valo wrote:
+> [..]
+>> > Thanks for reporting the issue and testing the fix!  Can you please
+>> > respond with your Tested-by to the actual patch(es) you tested?
+>> 
+>> Not easily as I'm not subscribed to linux-pci list and I haven't
+>> researched how to import mbox files to my mailer :) So feel free to
+>> ignore my Tested-by tag in this case.
+>
+> I have had success with "b4 mbox" and importing that into Evolution, but
+> your mileage may vary with your mailer setup.
 
-BTW:
+Heh, I'm old school and don't use anything modern like Evolution :) But
+it was actually really easy with Gnus ('G f') and looks like I managed
+to do it succesfully now:
 
-I have pushed a patch which came to my mailbox with ID
+https://lore.kernel.org/all/87h6e9t9qt.fsf@kernel.org/
 
-   66582edb.650a0220.8de7.c591SMTPIN_ADDED_BROKEN@mx.google.com
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-From some reasons, it is not available in the official archive
-at lore.kernel.org. Instead, I have mentioned in the commit
-message
-
-     https://lore.kernel.org/r/Zlguq/wU21Z8MqI4@sreenath.vijayan@sony.com
-
-which points to the same patch (same changes), exists at
-lore.kernel.org but I havn't got that one from some reason.
-
-Best Regards,
-Petr
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
