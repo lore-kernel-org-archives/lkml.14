@@ -1,69 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07DD6FD3;
-	Tue,  4 Jun 2024 02:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2606748E
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717468256; cv=none; b=eL+m/EZEr5YuE7YPANqWh+TLYpzBjoPdT1HPMO0xUDgdNQsc7Ks7psUxH9hPIHQsxQvlhYVv0Ku3ikSVXQEwNNV+yVa8mYB3ogG5xmP5kGjJrfz21U2mgFXTrvo+C9UEQgPwdT2LstctlUD7YBx3ge3asJ79+99ts+O10Fd3wZ0=
+	t=1717468489; cv=none; b=jrL5CX516bLLg5/t1a9PfliZ8LuacfR7WqrQmDcJSehKc6DSTRV27XhVy8eZUmA75/U0IEXdwSc9KSITOv81FDFY4l6BMsztNSjXKXDKwbeCD/BKy5cGiLi+oFxabKLbdNpEjKwyjAYXAuNNUizY5lpe5c9OP6yYAZFF70YzIMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717468256; c=relaxed/simple;
-	bh=To8fbG5O3C9YMOaBN3ki4SETwIhbdcKXVkxjt90NHYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oIo1UcuR0UlOdk9L71fxeJUQbTdwSJN4yDruu5CBcVNaNCFqbEIvd6gfjrdUlzAK3H3b5KKP0T/W3aJBMLuDvSg+lo2h/hl8TtELDNeIS+gwgYjWkhrWnTnWto3ZNsSmAyUuWesPlcqxKUroG2puGq8K/Jy7+HbRfJzy0z0EJ1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g9a9pvqf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717468489; c=relaxed/simple;
+	bh=EpJwlD2h3adGfeCbQchhxLhcjWAtcTed5L8RgNwp3lY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qlaB/ridq/w7PiOhbAFL66ZtjXmY0FKhZ2ttY1bzDhc//8kkxnOhTSIISKr0upPtIpUjbClhWxNWz1xQaAMmntprIWI32vDFUdg5XDK3c1+9ClZBO0fjHSS8zH7xBEG3UaROn2XiQ0ql9a3py6VjSst7ysLjVXKNdX0UHGrU42A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=GeCo7aEQ reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g9a9pvqf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD6EC2BD10;
-	Tue,  4 Jun 2024 02:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717468255;
-	bh=To8fbG5O3C9YMOaBN3ki4SETwIhbdcKXVkxjt90NHYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g9a9pvqfiNhkA/yXbTHAe18mKQqZDgmFunO9Hc3/jCu+nbWirZWD1u4vr2WkNoEu+
-	 KUwHyKEwTdy57naVtnxRWNpffWbqVJID5z+2XpyxYXMaIT5u8x+HjB9r8fXTJcuiir
-	 h2HcPlcRUFx/cdd2CQgTLJF4WCvwsa/wgtPjNWF9Ygsw9kuHl6lCZY1/zZKA7cYpK6
-	 y5W9pXz5gEiPvo+Y51LqI/OlYusXspl6IyPXpe4Summx74JlNmRiEsuP2QqZz1j4dU
-	 FpickXtUkU+bk0fbAJFCfRRAPVCLRd2LNjd7vEY01kfvGf5OcarrHM8TxfftCr5F+A
-	 auUPs4iBllFiA==
-Date: Tue, 4 Jun 2024 02:30:52 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Ben Walsh <ben@jubnut.com>, Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	"Dustin L. Howett" <dustin@howett.net>,
-	Kieran Levin <ktl@frame.work>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] platform/chrome: cros_ec_lpc: Add a new quirk for
- ACPI id
-Message-ID: <Zl58XNl8fhJU24OV@google.com>
-References: <20240603063834.5580-1-ben@jubnut.com>
- <20240603063834.5580-4-ben@jubnut.com>
- <Zl2NTbhk96dhTV2n@google.com>
- <c8d765bc-4e45-40b3-a33d-b4cc1bbd67bd@amd.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="GeCo7aEQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=ite.com.tw; s=dkim;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ongMRIDR9OJ67FPX959hIpLFcH5SoR5ACjgPGkxuvD4=;
+  b=GeCo7aEQ1VpT4jZAxcyOm1qtfTcaSRkOQb3oIQ6N4/RitTv91zl3v7p2
+   3FGdDznDNM1EOv6ggm/o8P58uuUH9jM+0iaQaA4pqsQAeTxDsHgMyo4LU
+   2rUzIQFszOSoJDTiExz0AFmd0n/dXA2fIa/lEMNmExebDLunacE2/LRGU
+   epMgXb3CfMHRTKKI7mpB79qXpCnBAinbf5cw0dF7mES09w7oLBoMNEjJl
+   I3+aujMj8ewG3WBTU0kH3UdyUXpy9/MFAmMFCwraWpRWSGXqD9+5GBmcu
+   hGdwL27XEWvVES0OW17plPTFjXprC8+z7Dm/BGAGac0o+HaACJg6NEiLU
+   g==;
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 04 Jun 2024 10:33:34 +0800
+Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
+	by mse.ite.com.tw with ESMTP id 4542XTSn057581;
+	Tue, 4 Jun 2024 10:33:29 +0800 (GMT-8)
+	(envelope-from kuro.chung@ite.com.tw)
+Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 4 Jun 2024 10:33:28 +0800
+From: kuro <kuro.chung@ite.com.tw>
+To: Pin-yen Lin <treapking@chromium.org>,
+        Kenneth Haung
+	<kenneth.hung@ite.com.tw>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard
+	<mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC: Kuro Chung <kuro.chung@ite.com.tw>, Hermes Wu <hermes.wu@ite.com.tw>
+Subject: [PATCH v1] drm/bridge: it6505: update usleep_range for RC circuit charge time
+Date: Tue, 4 Jun 2024 10:44:05 +0800
+Message-ID: <20240604024405.1122488-1-kuro.chung@ite.com.tw>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8d765bc-4e45-40b3-a33d-b4cc1bbd67bd@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58)
+X-TM-SNTS-SMTP:
+	A32F6B6386882D419C459589941F989605B411FE5A98B4AC4E9B5DC4CAEDA3DC2002:8
+X-MAIL:mse.ite.com.tw 4542XTSn057581
 
-On Mon, Jun 03, 2024 at 11:00:22AM -0500, Mario Limonciello wrote:
-> On 6/3/2024 04:30, Tzung-Bi Shih wrote:
-> > On Mon, Jun 03, 2024 at 07:38:32AM +0100, Ben Walsh wrote:
-> > > @@ -436,6 +463,8 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
-> > >   	ec_lpc->mmio_memory_base = EC_LPC_ADDR_MEMMAP;
-> > > +	adev = ACPI_COMPANION(dev);
-> > > +
-> > 
-> > The change is irrelevant to the patch.
-> 
-> It looks relevant to me.  The companion needs to get set before the quirk
-> overwrites it.
+From: Kuro Chung <kuro.chung@ite.com.tw>
 
-Please see code for CROS_EC_LPC_QUIRK_ACPI_ID in the patch, `adev` is going to
-be overridden soon.  I don't see why the ACPI_COMPANION() needs to move here.
+The spec of timing between IVDD/OVDD and SYSRTEN is 10ms, but SYSRSTN RC
+circuit need at least 25ms for rising time, update for match spec
+
+Signed-off-by: Kuro Chung <kuro.chung@ite.com.tw>
+Signed-off-by: Hermes Wu <hermes.wu@ite.com.tw>
+---
+ drivers/gpu/drm/bridge/ite-it6505.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
+index cd1b5057ddfb4..1e1c06fdf2064 100644
+--- a/drivers/gpu/drm/bridge/ite-it6505.c
++++ b/drivers/gpu/drm/bridge/ite-it6505.c
+@@ -2615,7 +2615,7 @@ static int it6505_poweron(struct it6505 *it6505)
+ 		gpiod_set_value_cansleep(pdata->gpiod_reset, 0);
+ 		usleep_range(1000, 2000);
+ 		gpiod_set_value_cansleep(pdata->gpiod_reset, 1);
+-		usleep_range(10000, 20000);
++		usleep_range(25000, 35000);
+ 	}
+ 
+ 	it6505->powered = true;
+-- 
+2.25.1
+
