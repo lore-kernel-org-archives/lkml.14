@@ -1,318 +1,422 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56F31420D2;
-	Tue,  4 Jun 2024 10:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C96C38B;
+	Tue,  4 Jun 2024 10:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717497375; cv=none; b=TT6Qa6NfxZrBQvXfqOS1R+mVNH+pw1WryQyQUtt5UFU1SWZMTZa6Ot8CyV68TeXKzP4rAdq71DejLnY7UQeFQTRArljdoHy9Rz62atrnzFpeuMTdlGVkv0F9PiJoLMSQw+nr0++hYtGLHNiadYwYiL1/zALvEsUil7kgkr7XvEA=
+	t=1717497490; cv=none; b=lvI//GQ/c0GUc3O3JRt71ZTBxfoq3/befymTGp0k1RRqiOg0fhEpP9WibpXSGFKruV4rG1laMOCFzbLGy1lsGdD56CR2nDvZDbaFxTq7XNzNqjB7hGGS/i1U0TJDTs+o9MjjLCgu2gqy6MUbIDQxj7MRw74C+WlVI7Ro5MN6JSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717497375; c=relaxed/simple;
-	bh=imfikOJ6FortcKm7/VnBUh3+Dm4gHD+L3ZnRei50E4E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gnI8UUZwUMGBVO12QyMGtGJVhZCkmDd3Q1BBpN7q6ZB0y+QGp2YkpKL4nEqD1ZbKgq86bYpMNKuDCCWZx8QZYNYocJiH9/f7PjZKShmEHyUc5KuWZnR11xbSAPqdsTonux5VJk/ppl0EBkHoz7KPkOc/d3etb4Ae+mURA21oEIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GbIFwz+6; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1717497490; c=relaxed/simple;
+	bh=83qgTD6GQKD17zryJJer2RaJbdNVFmS+NMwIUzNFP2U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RPEPGzohB/QDAlY4Ykknf1FzUMDCHnASRJT2jsC6LCd3V0R5Wm3h2qQrIR+fl0p7cuuVK/QZJl8iQmrM/3kAcZ2fCZpYaGm8l2pemZxQNn1DUSJ2+7rBMWtLU1ICT0ktqRIvE8AfevykpNU4Qe8NG0C/Q+YeSMaC37OL/0QJ1G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ajzzr07W; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GbIFwz+6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1600BE0008;
-	Tue,  4 Jun 2024 10:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717497368;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=30y8NJ0nbXLz7OQ38/S1QpE1/3/s8iRa7rwvgdvIKBA=;
-	b=GbIFwz+6OgC+URabpdYaZD8SzDVuBk4h9oHAo/DP6VJAP/N1nLdRbuLeO+LKRHqoR5A9ot
-	7apAj66Fk95+2MMwyBpPpf4DfykKcVHAOjp0F9ExIGmCI5bc7OxTwz8NQ8j7CezL6PW45I
-	Uzu9QpR2SrPIbbxzOoftMg2TJd19ezgZz/PmgDyM5gMtkaugg/PsKhTVrkCyryC8jS2+eT
-	Ow4CK360oRSQVsdPhjNIX7qy3A0CjusW6bDl9ek4x1+w3SE3ID86X6VqWC20EaigkDC2hx
-	BtTk4D+6G7yxaGPPfxYbxxesICbWw29uMJxgIF6eJT7mxr6QQ2vRwwbJvawukw==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Subject: [PATCH net-next v14 00/14] net: Make timestamping selectable
-Date: Tue, 04 Jun 2024 12:36:00 +0200
-Message-Id: <20240604-feature_ptp_netnext-v14-0-bfb4632429db@bootlin.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ajzzr07W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717497486;
+	bh=83qgTD6GQKD17zryJJer2RaJbdNVFmS+NMwIUzNFP2U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ajzzr07WHRA3SgHRuBDCGrgT90Benyyh2fvI3m5ZL1ML0Ytj8ma90RiDPSTJtxBGC
+	 z614fqAVpWsLRylzPGu0BKDiOJ8IVxxF94KDPE7b16HP8VBJzeZq6oWf4NBpZdxDck
+	 BHCnZjYTl5RSR8HgSSqpmLUlJtTlzUDi5532SvlyJpT7lcdNUaZfZUtF7jyqD58O4P
+	 U5DgXMKmsMvhTvoGiOBz3jQ1RuWK+AwEz/1jguOV+f+Qrxh1oFSan5MXKdu0qEAUZh
+	 99huVFDrNcTGrfvlY8YVotC/qdBtYL5lGMUukd6jdOQxkv5ruYz8yJYtYsmT5NmGv5
+	 BRHqt/Cc1vAMA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C690937821DC;
+	Tue,  4 Jun 2024 10:38:04 +0000 (UTC)
+Message-ID: <84f1c58c-0a5d-4131-a16b-b76bf28862ee@collabora.com>
+Date: Tue, 4 Jun 2024 12:38:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] iio: adc: Add support for MediaTek MT6357/8/9
+ Auxiliary ADC
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, matthias.bgg@gmail.com, lee@kernel.org,
+ andy@kernel.org, nuno.sa@analog.com, bigunclemax@gmail.com,
+ dlechner@baylibre.com, marius.cristea@microchip.com,
+ marcelo.schmitt@analog.com, fr0st61te@gmail.com, mitrutzceclan@gmail.com,
+ mike.looijmans@topic.nl, marcus.folkesson@gmail.com,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, kernel@collabora.com
+References: <20240530093410.112716-1-angelogioacchino.delregno@collabora.com>
+ <20240530093410.112716-3-angelogioacchino.delregno@collabora.com>
+ <CAHp75Vexddt1xUGogRDZA9pM1pFp2=ZtCQnCfXePahSCb+oKpg@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAHp75Vexddt1xUGogRDZA9pM1pFp2=ZtCQnCfXePahSCb+oKpg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIABDuXmYC/3XQwU7DMAwG4FdBOVMUu06TcOI9EJrS1maRoJ3aU
- g1Ne3e8CrShtcfYzuf8OZmRh8yjeX44mYHnPOa+0wPQ44Np9ql75yK3WjBosQQLUAin6Wvg3WE
- 67DqeOj5ORSnog/OBA9VGbx4Glnxc2FejQ8VlyrxpZ5/HqR++l31ztfR/5bgqz1VhCw9JpEFfW
- 3Yvdd9PH7l7avrPRZz9VQGgdcWrQh7Z++iAyd4r4U8hi1CtK0EVB1YIhYikvlfijYIbSry8xbk
- KwFEUhHsF7JUhu/ExYNWxkpCTa0JMccWBGwdxwwF1BDQQCCZow4qDN05pNxxUBxsnSHWVItCKU
- 14dh1u5SnUqbhO1pPFI/jvn8/kHarPQlLUCAAA=
-To: Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
- Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
- Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
- Kory Maincent <kory.maincent@bootlin.com>, 
- Willem de Bruijn <willemb@google.com>, 
- Alexandra Winter <wintera@linux.ibm.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: kory.maincent@bootlin.com
 
-Up until now, there was no way to let the user select the hardware
-PTP provider at which time stamping occurs. The stack assumed that PHY time
-stamping is always preferred, but some MAC/PHY combinations were buggy.
+Il 30/05/24 15:34, Andy Shevchenko ha scritto:
+> On Thu, May 30, 2024 at 12:34 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> Add a driver to support reading the Auxiliary ADC IP found in the
+>> MediaTek MT6357, MT6358 and MT6359 Power Management ICs.
+>>
+>> This driver provides multiple ADC channels for system monitoring,
+>> such as battery voltage, PMIC temperature, PMIC-internal voltage
+>> regulators temperature, and others.
+> 
+>> ---
+> 
+> Here is no explanation on how this is differ to any of the three
+> existing drivers? I.o.w. why do we need a brand new one?
+> 
 
-This series updates the default MAC/PHY default timestamping and aims to
-allow the user to select the desired hwtstamp provider administratively.
+Not a SoC AUXADC but a PMIC AUXADC, different register layout and different
+handling for configuration, reset, and reading.
 
-Changes in v14:
-- Add back an EXPORT_SYMBOL() missing.
-- Link to v13: https://lore.kernel.org/r/20240529-feature_ptp_netnext-v13-0-6eda4d40fa4f@bootlin.com
+So okay I'm adding a nicer text of what I just wrote to the commit description.
 
-Changes in v13:
-- Add PTP builtin code to fix build errors when building PTP as a module.
-- Fix error spotted by smatch and sparse.
-- Link to v12: https://lore.kernel.org/r/20240430-feature_ptp_netnext-v12-0-2c5f24b6a914@bootlin.com
+> ...
+> 
+> + bits.h
+> 
+>> +#include <linux/delay.h>
+> 
+>> +#include <linux/kernel.h>
+> 
+> Why?
+> 
 
-Changes in v12:
-- Add missing return description in the kdoc.
-- Fix few nit.
-- Link to v11: https://lore.kernel.org/r/20240422-feature_ptp_netnext-v11-0-f14441f2a1d8@bootlin.com
+Because I forgot to cleanup the headers :-\
 
-Changes in v11:
-- Add netlink examples.
-- Remove a change of my out of tree marvell_ptp patch in the patch series.
-- Remove useless extern.
-- Link to v10: https://lore.kernel.org/r/20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com
+> + mod_devicetable.h
+>> +#include <linux/module.h>
+> 
+>> +#include <linux/of.h>
+> 
+> Why?
+> 
 
-Changes in v10:
-- Move declarations to net/core/dev.h instead of netdevice.h
-- Add netlink documentation.
-- Add ETHTOOL_A_TSINFO_GHWTSTAMP netlink attributes instead of a bit in
-  ETHTOOL_A_TSINFO_TIMESTAMPING bitset.
-- Send "Move from simple ida to xarray" patch standalone.
-- Add tsinfo ntf command.
-- Add rcu_lock protection mechanism to avoid memory leak.
-- Fixed doc and kdoc issue.
-- Link to v9: https://lore.kernel.org/r/20240226-feature_ptp_netnext-v9-0-455611549f21@bootlin.com
+Same reason :')
 
-Changes in v9:
-- Remove the RFC prefix.
-- Correct few NIT fixes.
-- Link to v8: https://lore.kernel.org/r/20240216-feature_ptp_netnext-v8-0-510f42f444fb@bootlin.com
+...And yes that should be linux/property.h instead, for device_get_match_data().
 
-Changes in v8:
-- Drop the 6 first patch as they are now merged.
-- Change the full implementation to not be based on the hwtstamp layer
-  (MAC/PHY) but on the hwtstamp provider which mean a ptp clock and a
-  phc qualifier.
-- Made some patch to prepare the new implementation.
-- Expand netlink tsinfo instead of a new ts command for new hwtstamp
-  configuration uAPI and for dumping tsinfo of specific hwtstamp provider.
-- Link to v7: https://lore.kernel.org/r/20231114-feature_ptp_netnext-v7-0-472e77951e40@bootlin.com
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+> 
+> + types.h
+> 
+> + blank line
+> 
+>> +#include <linux/iio/iio.h>
+> 
+> + Blank line
+> 
+>> +#include <linux/mfd/mt6397/core.h>
+> 
+> ...
+> 
+>> +#define PMIC_RG_RESET_VAL              (BIT(0) | BIT(3))
+> 
+> In this form it requires a comment explaining each mentioned bit.
+> 
 
-Changes in v7:
-- Fix a temporary build error.
-- Link to v6: https://lore.kernel.org/r/20231019-feature_ptp_netnext-v6-0-71affc27b0e5@bootlin.com
+I don't have an explanation for this, I know it's two different bits from some
+reveng, but the downstream driver declares that simply as 0x9.
 
-Changes in v6:
-- Few fixes from the reviews.
-- Replace the allowlist to default_timestamp flag to know which phy is
-  using old API behavior.
-- Rename the timestamping layer enum values.
-- Move to a simple enum instead of the mix between enum and bitfield.
-- Update ts_info and ts-set in software timestamping case.
+Should I just "mask" this as 0x9 instead?
 
-Changes in v5:
-- Update to ndo_hwstamp_get/set. This bring several new patches.
-- Add few patches to make the glue.
-- Convert macb to ndo_hwstamp_get/set.
-- Add netlink specs description of new ethtool commands.
-- Removed netdev notifier.
-- Split the patches that expose the timestamping to userspace to separate
-  the core and ethtool development.
-- Add description of software timestamping.
-- Convert PHYs hwtstamp callback to use kernel_hwtstamp_config.
+>> +#define PMIC_AUXADC_ADCx(x)            ((x) << 1)
+> 
+> Seems like a useless macro, it occupies much more space than in-place shift.
+> 
 
-Changes in v4:
-- Move on to ethtool netlink instead of ioctl.
-- Add a netdev notifier to allow packet trapping by the MAC in case of PHY
-  time stamping.
-- Add a PHY whitelist to not break the old PHY default time-stamping
-  preference API.
+Well that was done to enhance human readability, but okay I will just use an
+in-place shift.
 
-Changes in v3:
-- Expose the PTP choice to ethtool instead of sysfs.
-  You can test it with the ethtool source on branch feature_ptp of:
-  https://github.com/kmaincent/ethtool
-- Added a devicetree binding to select the preferred timestamp.
+> ...
+> 
+>> +#define MT6358_IMP0_CLEAR              (BIT(14) | BIT(7))
+> 
+> As per above.
+> 
 
-Changes in v2:
-- Move selected_timestamping_layer variable of the concerned patch.
-- Use sysfs_streq instead of strmcmp.
-- Use the PHY timestamp only if available.
+Same, I don't have any explanation for that.
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
-Kory Maincent (14):
-      net_tstamp: Add TIMESTAMPING SOFTWARE and HARDWARE mask
-      net: Move dev_set_hwtstamp_phylib to net/core/dev.h
-      net: Make dev_get_hwtstamp_phylib accessible
-      net: Make net_hwtstamp_validate accessible
-      net: Change the API of PHY default timestamp to MAC
-      net: net_tstamp: Add unspec field to hwtstamp_source enumeration
-      net: Add struct kernel_ethtool_ts_info
-      ptp: Add phc source and helpers to register specific PTP clock or get information
-      net: Add the possibility to support a selected hwtstamp in netdevice
-      net: netdevsim: ptp_mock: Convert to netdev_ptp_clock_register
-      net: macb: Convert to netdev_ptp_clock_register
-      net: ptp: Move ptp_clock_index() to builtin symbol
-      net: ethtool: tsinfo: Add support for hwtstamp provider and get/set hwtstamp config
-      netlink: specs: tsinfo: Enhance netlink attributes and add a set command
+If you prefer, I can define this as 0x4080, but honestly I prefer keeping
+it as-is since I am sure it's not a magic number but really two bits to flip
+in a register.
 
- Documentation/netlink/specs/ethtool.yaml           |  43 +-
- Documentation/networking/ethtool-netlink.rst       |  38 +-
- Documentation/networking/timestamping.rst          |  35 +-
- drivers/net/bonding/bond_main.c                    |   4 +-
- drivers/net/can/dev/dev.c                          |   2 +-
- drivers/net/can/peak_canfd/peak_canfd.c            |   2 +-
- drivers/net/can/usb/gs_usb.c                       |   2 +-
- drivers/net/can/usb/peak_usb/pcan_usb_core.c       |   2 +-
- drivers/net/can/usb/peak_usb/pcan_usb_core.h       |   2 +-
- drivers/net/dsa/hirschmann/hellcreek_hwtstamp.c    |   2 +-
- drivers/net/dsa/hirschmann/hellcreek_hwtstamp.h    |   2 +-
- drivers/net/dsa/microchip/ksz_ptp.c                |   2 +-
- drivers/net/dsa/microchip/ksz_ptp.h                |   2 +-
- drivers/net/dsa/mv88e6xxx/hwtstamp.c               |   2 +-
- drivers/net/dsa/mv88e6xxx/hwtstamp.h               |   4 +-
- drivers/net/dsa/ocelot/felix.c                     |   2 +-
- drivers/net/dsa/sja1105/sja1105_ptp.c              |   2 +-
- drivers/net/dsa/sja1105/sja1105_ptp.h              |   2 +-
- drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c       |   2 +-
- .../net/ethernet/aquantia/atlantic/aq_ethtool.c    |   2 +-
- .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |   2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |   2 +-
- drivers/net/ethernet/broadcom/tg3.c                |   2 +-
- drivers/net/ethernet/cadence/macb.h                |   2 +-
- drivers/net/ethernet/cadence/macb_main.c           |   4 +-
- drivers/net/ethernet/cadence/macb_ptp.c            |   2 +-
- drivers/net/ethernet/cavium/liquidio/lio_ethtool.c |   2 +-
- .../net/ethernet/cavium/thunder/nicvf_ethtool.c    |   2 +-
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c |   2 +-
- drivers/net/ethernet/cisco/enic/enic_ethtool.c     |   2 +-
- drivers/net/ethernet/engleder/tsnep_ethtool.c      |   2 +-
- drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c |   2 +-
- .../net/ethernet/freescale/dpaa2/dpaa2-ethtool.c   |   2 +-
- .../net/ethernet/freescale/enetc/enetc_ethtool.c   |   2 +-
- drivers/net/ethernet/freescale/fec_main.c          |   2 +-
- drivers/net/ethernet/freescale/gianfar_ethtool.c   |   2 +-
- .../net/ethernet/fungible/funeth/funeth_ethtool.c  |   2 +-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |   2 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c |   2 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.h |   2 +-
- drivers/net/ethernet/intel/e1000e/ethtool.c        |   2 +-
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c     |   2 +-
- drivers/net/ethernet/intel/ice/ice_ethtool.c       |   2 +-
- drivers/net/ethernet/intel/igb/igb_ethtool.c       |   2 +-
- drivers/net/ethernet/intel/igc/igc_ethtool.c       |   2 +-
- drivers/net/ethernet/intel/ixgbe/ixgbe_ethtool.c   |   2 +-
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c    |   2 +-
- .../ethernet/marvell/octeontx2/nic/otx2_ethtool.c  |   2 +-
- drivers/net/ethernet/mellanox/mlx4/en_ethtool.c    |   2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |   2 +-
- .../net/ethernet/mellanox/mlx5/core/en_ethtool.c   |   4 +-
- .../ethernet/mellanox/mlx5/core/ipoib/ethtool.c    |   2 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum.h     |   2 +-
- .../net/ethernet/mellanox/mlxsw/spectrum_ethtool.c |   2 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.c |   4 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_ptp.h |  10 +-
- drivers/net/ethernet/microchip/lan743x_ethtool.c   |   2 +-
- .../ethernet/microchip/lan966x/lan966x_ethtool.c   |   2 +-
- .../net/ethernet/microchip/sparx5/sparx5_ethtool.c |   2 +-
- drivers/net/ethernet/mscc/ocelot_net.c             |   2 +-
- drivers/net/ethernet/mscc/ocelot_ptp.c             |   2 +-
- .../net/ethernet/pensando/ionic/ionic_ethtool.c    |   2 +-
- drivers/net/ethernet/qlogic/qede/qede_ethtool.c    |   2 +-
- drivers/net/ethernet/qlogic/qede/qede_ptp.c        |   2 +-
- drivers/net/ethernet/qlogic/qede/qede_ptp.h        |   2 +-
- drivers/net/ethernet/renesas/ravb_main.c           |   2 +-
- drivers/net/ethernet/renesas/rswitch.c             |   2 +-
- drivers/net/ethernet/sfc/ethtool.c                 |   2 +-
- drivers/net/ethernet/sfc/falcon/nic.h              |   2 +-
- drivers/net/ethernet/sfc/ptp.c                     |   2 +-
- drivers/net/ethernet/sfc/ptp.h                     |   5 +-
- drivers/net/ethernet/sfc/siena/ethtool.c           |   2 +-
- drivers/net/ethernet/sfc/siena/ptp.c               |   2 +-
- drivers/net/ethernet/sfc/siena/ptp.h               |   4 +-
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   2 +-
- drivers/net/ethernet/ti/am65-cpsw-ethtool.c        |   2 +-
- drivers/net/ethernet/ti/cpsw_ethtool.c             |   4 +-
- drivers/net/ethernet/ti/cpsw_priv.h                |   2 +-
- drivers/net/ethernet/ti/icssg/icssg_ethtool.c      |   2 +-
- drivers/net/ethernet/ti/netcp_ethss.c              |   4 +-
- drivers/net/ethernet/xscale/ixp4xx_eth.c           |   2 +-
- drivers/net/macvlan.c                              |   2 +-
- drivers/net/netdevsim/ethtool.c                    |   2 +-
- drivers/net/netdevsim/netdev.c                     |  19 +-
- drivers/net/phy/bcm-phy-ptp.c                      |   5 +-
- drivers/net/phy/dp83640.c                          |   4 +-
- drivers/net/phy/micrel.c                           |  10 +-
- drivers/net/phy/mscc/mscc_ptp.c                    |   5 +-
- drivers/net/phy/nxp-c45-tja11xx.c                  |   5 +-
- drivers/net/phy/phy_device.c                       |  11 +
- drivers/ptp/Makefile                               |   5 +
- drivers/ptp/ptp_clock.c                            |  39 +-
- drivers/ptp/ptp_clock_consumer.c                   | 172 ++++++
- drivers/ptp/ptp_ines.c                             |   2 +-
- drivers/ptp/ptp_mock.c                             |   4 +-
- drivers/ptp/ptp_private.h                          |   7 +
- drivers/s390/net/qeth_ethtool.c                    |   2 +-
- include/linux/can/dev.h                            |   2 +-
- include/linux/ethtool.h                            |  29 +-
- include/linux/mii_timestamper.h                    |   2 +-
- include/linux/net_tstamp.h                         |  16 +
- include/linux/netdevice.h                          |   8 +-
- include/linux/phy.h                                |  21 +-
- include/linux/ptp_clock_kernel.h                   | 178 ++++++
- include/linux/ptp_mock.h                           |   4 +-
- include/net/dsa.h                                  |   2 +-
- include/soc/mscc/ocelot.h                          |   2 +-
- include/uapi/linux/ethtool_netlink.h               |  14 +
- include/uapi/linux/net_tstamp.h                    |  11 +
- net/8021q/vlan_dev.c                               |   2 +-
- net/core/dev.h                                     |   7 +
- net/core/dev_ioctl.c                               |  56 +-
- net/core/timestamping.c                            |  49 +-
- net/dsa/user.c                                     |   2 +-
- net/ethtool/common.c                               |  40 +-
- net/ethtool/common.h                               |   5 +-
- net/ethtool/ioctl.c                                |  12 +-
- net/ethtool/netlink.c                              |  16 +-
- net/ethtool/netlink.h                              |   6 +-
- net/ethtool/tsinfo.c                               | 641 ++++++++++++++++++++-
- net/sched/sch_taprio.c                             |   2 +-
- 122 files changed, 1520 insertions(+), 202 deletions(-)
----
-base-commit: caaa6a85f0658de87358e08fb9e3768d2daf5e01
-change-id: 20231011-feature_ptp_netnext-3f278578e84b
+> ...
+> 
+>> +/**
+>> + * struct mtk_pmic_auxadc_chan - PMIC AUXADC channel data
+>> + * @req_idx:       Request register number
+>> + * @req_mask:      Bitmask to activate a channel
+>> + * @num_samples:   Number of AUXADC samples for averaging
+>> + * @r_numerator:   Resistance ratio numerator
+>> + * @r_denominator: Resistance ratio denominator
+>> + */
+>> +struct mtk_pmic_auxadc_chan {
+>> +       u8 req_idx;
+>> +       u16 req_mask;
+>> +       u16 num_samples;
+> 
+>> +       u8 r_numerator;
+>> +       u8 r_denominator;
+> 
+> Can you add struct u8_fract to the math.h and use it? I will Ack/R the
+> respective patch.
+> 
 
-Best regards,
--- 
-Köry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Yeah, I did that exactly because u8_fract wasn't there and I didn't want
+to waste more bits, but since you just asked for it... well, I'm happier :-)
+
+>> +};
+> 
+> ...
+> 
+>> +struct mtk_pmic_auxadc_pdata {
+>> +       const struct iio_chan_spec *channels;
+>> +       int num_channels;
+> 
+> Why signed?
+> 
+
+Yeah, that doesn't make any sense, that's going to be u8.
+
+>> +       const struct mtk_pmic_auxadc_chan *desc;
+>> +       const u16 *regs;
+>> +       u16 sec_unlock_key;
+>> +       u8 imp_adc_num;
+>> +       int (*read_imp)(struct mt6359_auxadc *adc_dev, int *vbat, int *ibat);
+>> +};
+> 
+> ...
+> 
+>> +static const u16 mt6357_auxadc_regs[] = {
+>> +       [PMIC_HK_TOP_RST_CON0]  = 0xf90,
+> 
+> Can we use the fixed-width values so all of them will look nice and
+> easy to parse?
+> 
+
+We obviously can, let's do that.
+
+>> +       [PMIC_AUXADC_DCM_CON]   = 0x122e,
+>> +       [PMIC_AUXADC_ADC0]      = 0x1088,
+>> +       [PMIC_AUXADC_IMP0]      = 0x119c,
+>> +       [PMIC_AUXADC_IMP1]      = 0x119e,
+>> +       [PMIC_AUXADC_RQST0]     = 0x110e,
+>> +       [PMIC_AUXADC_RQST1]     = 0x1114,
+>> +};
+> 
+> ...
+> 
+>> +static const u16 mt6358_auxadc_regs[] = {
+> 
+> Ditto.
+> 
+>> +       [PMIC_HK_TOP_RST_CON0]  = 0xf90,
+>> +       [PMIC_AUXADC_DCM_CON]   = 0x1260,
+>> +       [PMIC_AUXADC_ADC0]      = 0x1088,
+>> +       [PMIC_AUXADC_IMP0]      = 0x1208,
+>> +       [PMIC_AUXADC_IMP1]      = 0x120a,
+>> +       [PMIC_AUXADC_RQST0]     = 0x1108,
+>> +       [PMIC_AUXADC_RQST1]     = 0x110a,
+>> +};
+> 
+> ...
+> 
+>> +static const u16 mt6359_auxadc_regs[] = {
+> 
+> Ditto.
+> 
+>> +       [PMIC_FGADC_R_CON0]     = 0xd88,
+>> +       [PMIC_HK_TOP_WKEY]      = 0xfb4,
+>> +       [PMIC_HK_TOP_RST_CON0]  = 0xf90,
+>> +       [PMIC_AUXADC_RQST0]     = 0x1108,
+>> +       [PMIC_AUXADC_RQST1]     = 0x110a,
+>> +       [PMIC_AUXADC_ADC0]      = 0x1088,
+>> +       [PMIC_AUXADC_IMP0]      = 0x1208,
+>> +       [PMIC_AUXADC_IMP1]      = 0x120a,
+>> +       [PMIC_AUXADC_IMP3]      = 0x120e,
+>> +};
+> 
+> ...
+> 
+>> +       ret = regmap_read_poll_timeout(adc_dev->regmap, pdata->regs[PMIC_AUXADC_IMP0],
+>> +                                      val, !!(val & MT6358_IMP0_IRQ_RDY),
+>> +                                      IMP_POLL_DELAY_US, AUXADC_TIMEOUT_US);
+>> +       if (ret) {
+>> +               mt6358_stop_imp_conv(adc_dev);
+> 
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+> 
+>    if (ret)
+>      foo()
+> 
+>    return ret;
+> 
+> 
+> ...
+> 
+>> +       int val_v, ret;
+> 
+> Why is val_v signed?
+> 
+> ...
+> 
+>> +       int val_v, val_i, ret;
+> 
+> Ditto for all val_*.
+> 
+
+Yup, changed to u32.
+
+> ...
+> 
+>> +       /* If it succeeded, wait for the registers to be populated */
+>> +       usleep_range(IMP_STOP_DELAY_US, IMP_STOP_DELAY_US + 50);
+> 
+> fsleep() ?
+> 
+
+Okay
+
+> ...
+> 
+>> +       /* Assert ADC reset */
+>> +       regmap_set_bits(regmap, pdata->regs[PMIC_HK_TOP_RST_CON0], PMIC_RG_RESET_VAL);
+> 
+> No required delay in between?
+> 
+
+No, as strange as it may look, there is no delay required in between: this is
+because the register R/W is behind the PMIC Wrapper as much as all of the other
+MediaTek PMIC (sub)devices, so, missing delays was intentional here, yes.
+
+>> +       /* De-assert ADC reset */
+>> +       regmap_clear_bits(regmap, pdata->regs[PMIC_HK_TOP_RST_CON0], PMIC_RG_RESET_VAL);
+> 
+> ...
+> 
+>> +       /* Wait until all samples are averaged */
+>> +       usleep_range(desc->num_samples * AUXADC_AVG_TIME_US,
+>> +                    (desc->num_samples + 1) * AUXADC_AVG_TIME_US);
+> 
+> fsleep()
+> 
+> ...
+> 
+>> +       ret = regmap_read_poll_timeout(regmap,
+>> +                                      (pdata->regs[PMIC_AUXADC_ADC0] +
+>> +                                       PMIC_AUXADC_ADCx(chan->address)),
+> 
+> Drop unneeded parentheses and possibly make it one line.
+> 
+>> +                                      val, (val & PMIC_AUXADC_RDY_BIT),
+> 
+> Unneeded parentheses.
+> 
+
+Yeah, forgot those there during cleanup, whoops!
+
+>> +                                      AUXADC_POLL_DELAY_US, AUXADC_TIMEOUT_US);
+>> +       if (ret)
+>> +               return ret;
+> 
+> ...
+> 
+>> +       mutex_lock(&adc_dev->lock);
+> 
+> Why not use cleanup.h?
+> 
+
+I want to unlock the mutex immediately right after executing read_imp() or
+mt6359_auxadc_read_adc(), and I don't want the reset to be done while a mutex
+is being held, as that makes no sense for this driver.
+
+Besides, I find the macros in cleanup.h to be cryptic - in my opinion, they
+require better documentation as, for example, I don't understand when the
+guard(mutex)(my_mutex) is supposed to acquire the lock and when it's supposed
+to release it.
+
+
+> ...
+> 
+>> +static int mt6359_auxadc_probe(struct platform_device *pdev)
+>> +{
+> 
+>    struct device *dev = &pdev->dev;
+
+Yeah without that it simply looked more "beautiful" to read, but okay, added.
+
+> 
+>> +       struct device *mt6397_mfd_dev = pdev->dev.parent;
+> 
+>    ... = dev->parent;
+> 
+>> +       struct mt6359_auxadc *adc_dev;
+>> +       struct iio_dev *indio_dev;
+>> +       struct regmap *regmap;
+>> +       int ret;
+>> +
+>> +       /* Regmap is from SoC PMIC Wrapper, parent of the mt6397 MFD */
+>> +       regmap = dev_get_regmap(mt6397_mfd_dev->parent, NULL);
+>> +       if (!regmap)
+>> +               return dev_err_probe(&pdev->dev, -ENODEV, "Failed to get regmap\n");
+>> +
+>> +       indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc_dev));
+>> +       if (!indio_dev)
+>> +               return -ENOMEM;
+>> +
+>> +       adc_dev = iio_priv(indio_dev);
+>> +       adc_dev->regmap = regmap;
+>> +       adc_dev->dev = &pdev->dev;
+>> +
+>> +       adc_dev->pdata = device_get_match_data(&pdev->dev);
+>> +       if (!adc_dev->pdata)
+>> +               return -EINVAL;
+>> +
+>> +       mutex_init(&adc_dev->lock);
+>> +
+>> +       mt6359_auxadc_reset(adc_dev);
+>> +
+>> +       indio_dev->dev.parent = &pdev->dev;
+>> +       indio_dev->name = dev_name(&pdev->dev);
+>> +       indio_dev->info = &mt6359_auxadc_info;
+>> +       indio_dev->modes = INDIO_DIRECT_MODE;
+>> +       indio_dev->channels = adc_dev->pdata->channels;
+>> +       indio_dev->num_channels = adc_dev->pdata->num_channels;
+>> +
+>> +       ret = devm_iio_device_register(&pdev->dev, indio_dev);
+>> +       if (ret < 0)
+> 
+> Why  ' < 0' ?
+> 
+
+Uuuuuh.. well... I have no idea why this "< 0" is in there, I must have gremlins
+living inside my keyboard, secretly inserting those checks when I'm not looking.
+
+Must definitely be that.
+
+Jokes apart, thanks for the review!
+...a v2 will come asap, along with the math.h change :-)
+
+Cheers!
+Angelo
+
 
