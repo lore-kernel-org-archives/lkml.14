@@ -1,62 +1,33 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2087.outbound.protection.outlook.com [40.107.215.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0E913791D;
-	Tue,  4 Jun 2024 06:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482631; cv=fail; b=ihGBgmwr3+05nHDrHqC/AFoDo+vP6i7zvl38JWWZL24wwEKkEnk2pjLmzXhvbe0OxRaAubc5H8Hz9Mbvionp8D3CuQK23X8npXn/cz16eP7MdgPPZMet+ZjTIRGRm8idMe6YvAYK6ZrrDezZ/XY3plV8PTavAwlvtZVfKXWHWyM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717482631; c=relaxed/simple;
-	bh=owZThAty/ZD0UqkQ7DBB7a55qaKB+slvuq8DvqXa2LQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NVBgl/4k7he8wDxIpsdyLVJjGOG3+HncYcPtB5Rm3bpnHg5yxbijjZtARxaFotD0FCm2lcMBDpFavsZh0g4DrSGNYyMz24YgFN/rqHJe1a6BjR1VMkthCAhJ1za0RzWnlSXlE5i4cqPW9mjYNvU0TmHpndQEcjao9xLPLq6lFGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=eRGmsJZC; arc=fail smtp.client-ip=40.107.215.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B2C801;
+	Tue,  4 Jun 2024 06:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717482805; cv=none; b=Q3R5HFYgQi3e0eOFU79wnydTn9INn5QGqPpsdWZfjF52eeSANUpYf2G34Geu7YXgDjs+d5312tv6Dz/H8uA6f0hzJ/opoIr9B7+f0BIJDXpsePg20WJHPoYKqKr3pSxFhecpChhI+w94JD+azza9z/SwO5/DW7d41T7PI2MMIhI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717482805; c=relaxed/simple;
+	bh=dpZyVHMswi3v2L6bUKC9WMVdfPiLGk+kr3qSj20mpgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DlfqoaecgMJSYyYwnWCQotvBJz2snbv7OTwDBesADGS78pvnTZP96ia9KBE6Wg1RQBJPkcLZ/PZ6XmF9r6ZOQo3LkgaRlqnVY/4rgowF2026Lu+kX46I56YZFvp4Lk5LAN1B/BUvPdXeNyCSFtJp0QWt1hzq0vOkm+PvMiipVlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVALGFzO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="eRGmsJZC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DVkkoCryysiGlg6bh5DWIcuFLsJz6eEHrXzNiwElP3FGa5Xg8u0gX9a5Ygpy9UaeKxvlaX2TBNKc8E2OT+FJ99SNUKIx4+t9k08P8Kk76qEhRbq2vUT6aWyzHkb9a1e3sQVey7cIvbEwCCBg2SVQAt5AAmiAbMtpW7DqOi82EXwzZbIDLDC97+sKEtcMmy8rGLKqYVCtummoZpQ7WntcpK/pDKSxM9CHzGCUqy7/xf0OVpNHtDyjDI0j8Hjv+Dfdpsj2hQyD2DlcWBktfC/fPoErHL0gBGn1Q8TQIB3OZ29jylmtbt/CfuEQLcjRQOm9dKpId0dQRBXs4OwU/O05vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P6mocaiFbUti81GdwyW9uAFSeKItB+OxSg0cMJZvewA=;
- b=LsR4jdJzkw46jJutB7fuCQvlvJZn9JzP/5LwR4sEhlGQt12kCcFhPDDRisxhFm68X5QZZ/jux2tqwyDdPgmxMotr71/T9A22fCBzrZJ2vi0sIbcV6tQvByZRiiTafOj2GqAQlhlmFvrQsVQWTlRr895D3RQM3Mz9o8J12scbMCBNxmtrglUU7gjhhPattiQU8f/lWyJBzZ9YPSTV4+y/3NMOJWc8kctcxiBiVZa/9dDch72NusoEx1RjZoeL5QeTNbkneijyOg1ox2JSG5VBwoVLSkFkISQk7GWjco3D7EtW9nnMqSXXn/42va68TI4Jsgmy4tDNmhdIoVME4jrfoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 58.252.5.68) smtp.rcpttodomain=google.com smtp.mailfrom=oppo.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=oppo.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P6mocaiFbUti81GdwyW9uAFSeKItB+OxSg0cMJZvewA=;
- b=eRGmsJZCnWn0Do0qSkCkVuvvcefOsUjsattPom5QWMnwS+6FX4ny4GoSA5Jf3CDXeu7bEvf69W6BXxqZxK8hOMCYr7X+6iLpRMJMFmg+jkmadRSv5kIMC26pmqXEWQyb9Hk1fYTOREcPRKOGga1ReKPSpnfOHnc4fOggbEU+sdw=
-Received: from SG2P153CA0030.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c7::17) by
- KL1PR02MB7310.apcprd02.prod.outlook.com (2603:1096:820:11e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
- 2024 06:30:26 +0000
-Received: from HK3PEPF00000221.apcprd03.prod.outlook.com
- (2603:1096:4:c7:cafe::96) by SG2P153CA0030.outlook.office365.com
- (2603:1096:4:c7::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.5 via Frontend
- Transport; Tue, 4 Jun 2024 06:30:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
- smtp.mailfrom=oppo.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=oppo.com;
-Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
- 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
- client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
-Received: from mail.oppo.com (58.252.5.68) by
- HK3PEPF00000221.mail.protection.outlook.com (10.167.8.43) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7633.15 via Frontend Transport; Tue, 4 Jun 2024 06:30:25 +0000
-Received: from [127.0.0.1] (172.16.40.118) by mailappw31.adc.com
- (172.16.56.198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 4 Jun
- 2024 14:30:24 +0800
-Message-ID: <cff79c75-4c9c-46e0-a3ac-b9c0e8cad6f0@oppo.com>
-Date: Tue, 4 Jun 2024 14:30:24 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVALGFzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1521CC32786;
+	Tue,  4 Jun 2024 06:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717482804;
+	bh=dpZyVHMswi3v2L6bUKC9WMVdfPiLGk+kr3qSj20mpgs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pVALGFzOARE6ZmiWGLawAzToD5WjGG+qyYYrbdPC1P1LiUviUiU7ap39ICGCO16LS
+	 XuC4aQmorcr+Y0MvV2WXYAuRE5g6DVOU1OYBEdMmqU+TXdccglyWWP0Gt0EIMeqGcW
+	 7kG9XiziI6HHB/fcDUxmXEc0K6d9NA41gjrxLsA9lCYYOT0IauwZtKkiNSlW0Oc+QK
+	 UKzVOOxGZPqJ+9z0aoH6g4x6cBvVWliMLWbzZ5SYrRUWke+YHzcASqQAT8F88vhxqA
+	 uLC+7H/3NiOwtaIW7xufe6pUuaWv9Y05A5KCOlIj38i6E4pgd3TrrBpBumb2rp6wCm
+	 QVOaQUjqbT4aQ==
+Message-ID: <9c665afe-16d7-469e-ac3e-d0d7388a31b7@kernel.org>
+Date: Tue, 4 Jun 2024 08:33:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,171 +35,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1] dma-buf: heaps: move the verification of
- heap_flags to the corresponding heap
-To: John Stultz <jstultz@google.com>
-CC: Sumit Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
-	"T.J. Mercier" <tjmercier@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>, <21cnbao@gmail.com>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>
-References: <20240603114008.16235-1-hailong.liu@oppo.com>
- <CANDhNCq50zPB+TS+_Oo0HY0aUuBAdik2KrC8eJRTygbis293sw@mail.gmail.com>
- <20240603172148.gb7txpg2ya43jyxn@oppo.com>
- <CANDhNCrwgce7G5_-4tNfgTHcdL12zt3JKBg=o3bHrzMmfFMctg@mail.gmail.com>
+Subject: Re: [PATCH v2, 1/3] dt-bindings: usb: dwc3: Add snps,p2p3tranok quirk
+To: joswang <joswang1221@gmail.com>, Thinh.Nguyen@synopsys.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, balbi@kernel.org, devicetree@vger.kernel.org,
+ joswang <joswang@lenovo.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
+ <20240603130004.25662-1-joswang1221@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Hailong Liu <hailong.liu@oppo.com>
-In-Reply-To: <CANDhNCrwgce7G5_-4tNfgTHcdL12zt3JKBg=o3bHrzMmfFMctg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
- (172.16.56.198)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF00000221:EE_|KL1PR02MB7310:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e0853c1-991d-4d2b-5aca-08dc845fd206
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|1800799015|376005|36860700004|7416005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YjJZWGpla0VCNGZWc3hLb3BxRFVKNURWOWsrdExpK2V3eks0RUVGZmVycGNQ?=
- =?utf-8?B?YVh4dUVXK1Q3cElTWE1aUzF0U0tmUlFLNWtSYU1OMTNTL3JzQzlSMXFja3ln?=
- =?utf-8?B?aEl5d3o0YnJISXR1bC9aSFZYdzVQKzRGT1JWdWh2Z3lMNVhrZFB1dTVEWGhY?=
- =?utf-8?B?dmRVcC9qZVFYdEJNQWxNYmIxNUhSWEhCVGNnOXpCQVMrbjhUeXBPU1VxeW9Q?=
- =?utf-8?B?YTdpQUtvdXo0MmgyaVc5Z0I1SkcvYU02VjFaaWkzenJDdmpkTnVtSGdVbXFW?=
- =?utf-8?B?Y1RtcGxsejhFTUFBMDMxcnhUQkYxN0R5NExwMzJuSVRQZ1ozMGk5SzNmVVRh?=
- =?utf-8?B?bXVkMDkwNDdjOU5lRGp3MlFZU1hGQTR1N1FHa3hwM2tNbCtuRm5SOUwva1Zj?=
- =?utf-8?B?UkIvVkdaUVFFN0xOeDkyMDR2d3dYRzRNdUg2cEw0V29SWXErRmNuUSt2OTFF?=
- =?utf-8?B?T3JsbkluaHJpQ1hWcnh6Rk1yNjRGK0RxR1hRTUprR0ppRTU1TU91RVNMQ3d1?=
- =?utf-8?B?b2NPY2gxdEd1ZGJiQ2E0bjFoN0tLV09wbFdtTEp5cENINkJYcFE1M3Z3NkhK?=
- =?utf-8?B?Y0RHaE94dWNTc3RMT0RNMkk3Q0RrTUtWaXpwK2xEd0tjNDI3dGF2Y3MwNzJN?=
- =?utf-8?B?MS9lcmhNWUFyYzRvdERQM2tqU2tLb0c3TXVueXRMZGlLcGY5ZE14VVluaXBR?=
- =?utf-8?B?azRvUDAxSHBpeHkwY1Y2UmlSK0FCZ29GeXF2NGVCb2p4anlWYitQcFhDZWor?=
- =?utf-8?B?MXA2SnozYUVCWmoydmFCU2pOTkk5K3M3S3NrQlljZS9LUFZ5VHZUeHhlYnp6?=
- =?utf-8?B?ZzhyNjNQUnNnZzVmWnlER2c5WHllRlY2RHpwbERvalJDTFJtamRRQjVEMlFX?=
- =?utf-8?B?eHhyUnUzWWFpeFRBdFFFbHpPcGtZMGVoV3d2dVVGN0RKN3dCR0NCOENBa1JH?=
- =?utf-8?B?aWg0Q29hSWtxTzdueDlURGhmbThKN3hKMVMwUEY4Y2NKSlBwNFpIVEl3d29v?=
- =?utf-8?B?WFJ3cE5JdjFsUlZMWndIYkpxVFZkYnNhQTBvcHdpSFhkTlIxOFl1d0UzTzhi?=
- =?utf-8?B?aUdGSHRJeUQwSjNmTXh2WHgyVkUzZ1dMRzlsVDZXQkl4NmdZM0xzaUJESEdt?=
- =?utf-8?B?c1NMV1dBVGwxWVZJQmhjbko0eGpmbHU4OXo0TlR1SHNrTDBxTkJZTVF1TEx2?=
- =?utf-8?B?MUN4VEdJd0RQMEtaN3N3a3JabVVkZGZMVCtxVzlBZW5aNlJLcTcxc090c3lj?=
- =?utf-8?B?QWlUVTgyMDRvb0hpK1EzM3VQeFlQOXhLR1E3YlJLekRSMUR2VGM4aG92VTdW?=
- =?utf-8?B?QmVGWlJqbUJvU0FDcmpVaS9abktZRVFQNUx2S3pSUHE3S2lQVFdUaXhGWE9U?=
- =?utf-8?B?R0FrQURKYmZ2cFM4aFhSdGF6akcxVG5zVU1DRk5HcnZHN0ZuY2o4Um55OFZk?=
- =?utf-8?B?Njd6eXFXbkp0ODQ0bW5WUUhwNWdIUkJzaVVkemxGdTBSMlJ2YjcvUkt0UEY0?=
- =?utf-8?B?bjhnYVk4d0RPMUtBR29leUc5SkdGQTBOcGx4VTlHaHZiQ0g2bXRaRHJaNWd5?=
- =?utf-8?B?TGRpOU1QMkVLSGdEUmppZW1NMHNRRWNQK3hHT0pXelI1RjV0d29aSnh3NHJL?=
- =?utf-8?B?dnIrK1ZzS3Q5L04xcmVtNTNHQVIva3BNb1E0NGpkOGx1THRXaDdUQW9kZm5T?=
- =?utf-8?B?MEtqcmt6QWZ1SkF6TXJHTWhQSjR1cGVTNUlLbzJBMVNuZy8xcFR0YUhtejdO?=
- =?utf-8?B?NU9DTG4xcEcwKzA2UXF2bGxVanRzR3NkaWw0Z0g3Q1U2ZEJpaEpia3F3QWRK?=
- =?utf-8?B?NEpqZjBTYTk4Wk5rcWFPaVFldU5HSnZKaDFhTW1DZm1BSnJORWxjSWp2SHh6?=
- =?utf-8?Q?6dBXDblZwOSvN?=
-X-Forefront-Antispam-Report:
-	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(376005)(36860700004)(7416005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 06:30:25.8596
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e0853c1-991d-4d2b-5aca-08dc845fd206
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK3PEPF00000221.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB7310
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240603130004.25662-1-joswang1221@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/4/2024 2:06 AM, John Stultz wrote:
-> On Mon, Jun 3, 2024 at 10:21 AM Hailong Liu <hailong.liu@oppo.com> wrote:
->> On Mon, 03. Jun 09:01, John Stultz wrote:
->>> On Mon, Jun 3, 2024 at 4:40 AM <hailong.liu@oppo.com> wrote:
->>>>
->>>> From: "Hailong.Liu" <hailong.liu@oppo.com>
->>>>
->>>> This help module use heap_flags to determine the type of dma-buf,
->>>> so that some mechanisms can be used to speed up allocation, such as
->>>> memory_pool, to optimize the allocation time of dma-buf.
->>>
->>> This feels like it's trying to introduce heap specific flags, but
->>> doesn't introduce any details about what those flags might be?
->>>
->>> This seems like it would re-allow the old opaque vendor specific heap
->>> flags that we saw in the ION days, which was problematic as different
->>> userspaces would use the same interface with potentially colliding
->>> heap flags with different meanings. Resulting in no way to properly
->>> move to an upstream solution.
->>>
->>> With the dma-heaps interface, we're trying to make sure it is well
->>> defined. One can register a number of heaps with different behaviors,
->>> and the heap name is used to differentiate the behavior. Any flags
->>> introduced will need to be well defined and behaviorally consistent
->>> between heaps. That way when an upstream solution lands, if necessary
->>> we can provide backwards compatibility via symlinks.
->>>
->>> So I don't think this is a good direction to go for dma-heaps.
->>>
->>> It would be better if you were able to clarify what flag requirements
->>> you need, so we can better understand how they might apply to other
->>> heaps, and see if it was something we would want to define as a flag
->>> (see the discussion here for similar thoughts:
->>> https://lore.kernel.org/lkml/CANDhNCoOKwtpstFE2VDcUvzdXUWkZ-Zx+fz6xrdPWTyciVXMXQ@mail.gmail.com/
->>> )
->>>
->>> But if your vendor heap really needs some sort of flags argument that
->>> you can't generalize, you can always implement your own dmabuf
->>> exporter driver with whatever ioctl interface you'd prefer.
->>
->> Thanks for your reply. Let’s continue our discussion here instead
->> of on android-review. We aim to enhance memory allocation on each
->> all heaps. Your pointer towards heap_flags used in /dev/ion for heap
->> identification was helpful.
->>
->> We now aim to improve priority dma-buf allocation. Consider android
->> animations scene:
->>
->> when device is in low memory, Allocating dma-buf as animation
->> buffers enter direct_reclaimation, longer allocation time result in a
->> laggy UI. But if we know the usage of the dma-buf, we can use some
->> mechanisms to boost, e.g. animation-memory-pool.
-> 
-> Can you generalize this a bit further? When would userland know to use
-> this new flag?
-> If it is aware, would it make sense to just use a separate heap name instead?
-> 
-> (Also: These other mechanisms you mention should probably also be
-> submitted upstream, however for upstream there's also the requirement
-> that we have open users and are not just enabling proprietary blob
-> userspace, which makes any changes to dma-buf heaps for out of tree
-> code quite difficult)
-> 
->> However, dma-buf usage identification becomes a challenge. A potential
->> solution could be heap_flags. the use of heap_flags seems ugly and
->> contrary to the intended design as you said, How aboult extending
->> dma_heap_allocation_data as follows?
->>
->> struct dma_heap_allocation_data {
->>         __u64 len;
->>         __u32 fd;
->>         __u32 fd_flags;
->>         __u64 heap_flags;
->>         __u64 buf_flags: // buf usage
->> };
-> 
-> This would affect the ABI (forcing a new ioctl number).  And it's
-> unclear what flags you envision as buffer specific (rather than heap
-> specific as this patch suggested).
-> 
-> I think we need more details about the specific problem you're seeing
-> and trying to resolve.
-This patch mainly focuses on optimization for Android scenarios. Let’s 
-discuss it on the issue website.
-Bug: 344501512
+On 03/06/2024 15:00, joswang wrote:
+> From: joswang <joswang@lenovo.com>
 
-Brs,
-Hailong.
+Is this your full name or known identity you want to use for all kernel
+contributions? Looks like login...
 
 > 
-> thanks
-> -john
+> There is an issue with the DWC31 2.00a and earlier versions
+> where the controller link power state transition from
+> P3/P3CPM/P4 to P2 may take longer than expected, ultimately
+> resulting in the hibernation D3 entering time exceeding the
+> expected 10ms.
+> 
+> Add a new 'snps,p2p3tranok-quirk' DT quirk to dwc3 core
+> for enable the controller transitions directly from phy
+> power state P2 to P3 or from state P3 to P2.
+> 
+> Note that this can only be set if the USB3 PHY supports
+> direct p3 to p2 or p2 to p3 conversion.
+> 
+> Signed-off-by: joswang <joswang@lenovo.com>
+> ---
+>  Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> index 1cd0ca90127d..721927495887 100644
+> --- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> @@ -242,6 +242,13 @@ properties:
+>        When set, all HighSpeed bus instances in park mode are disabled.
+>      type: boolean
+>  
+> +  snps,p2p3tranok-quirk:
+
+Why this cannot be deduced from compatible? Which upstream SoCs are
+affected?
+
+
+
+Best regards,
+Krzysztof
 
