@@ -1,255 +1,275 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00230701.pphosted.com (mx0a-00230701.pphosted.com [148.163.156.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E636179F9
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 00:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717462521; cv=none; b=tK1YM+tQYpBrZlerAVE3V4WOB7CAwqlExl0/xxtFEsq6jkwxEijGNEoZn9obcdn3iDthBUNLDPwsLJc2255r56PPltAR3AQZzp3AAzDY+YqOvq9CRIzoAYkqpm1HZWJ+3LD6hINF9Y/KY1ubCJsa4xc02StDW40NkJQZ3TKMItU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717462521; c=relaxed/simple;
-	bh=y9qJaxDPtCa7TFe4kS2XEHyXNU+gJunYjHYvKMEW4a4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=by1hC/qgNhIkw61f+J3bCaAutKRIBuyXnY8dsTsG3aLm8UqDvysiLwz5k/r52tcIuLJIuuCe1fPdQG7R59TExFCtCUHh9B0ZsoFC2t2wvU5oSLz/N8b/BB1dGAH8se2qWoLkt83GybYOJ/NGw7JM10Nbnueh7fgZPHamKHKoK2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YEXCOrM+; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264A8811;
+	Tue,  4 Jun 2024 00:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.156.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717462590; cv=fail; b=pi1Cu8b6dtiba3H8TsPlYjQuGDuMJIcI1Mk0jgAv5KUL6DQleSGYb1XZE4cIHA33uIzcUJsxeCdshrD66olzcCpU7QRzhwGQ4vURwgbaJbf+4dOjwRmr20nIlX3btJ+wu+Xze4s3EJ6e897NNWBl5ZGb99sgEmdnqYSH5L/IO6A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717462590; c=relaxed/simple;
+	bh=v4Fkz/YycHHuf1uXfelOmcW22OndA2F4me99igzS9RI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qhSI5Ddq3RWXOejaJ3qpLr1kFwmZX8Ak+Lrt3vW3/FjhsK6URnngwSEtjbmnpdEdSzQsIgt60JzimfpknS19XxXHndhtYi97WgJCWsfzJgMTaVyPRfv2mwmztSUqQ5DOYGRyL4t1nvyr5GI4pK9ydbspJhaevQiWtHHRBMkkQAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com; spf=pass smtp.mailfrom=synopsys.com; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=n0Kpn/Kd; dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=YK3TzaZ1; dkim=fail (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b=jrJUF6Di reason="signature verification failed"; arc=fail smtp.client-ip=148.163.156.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=synopsys.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=synopsys.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YEXCOrM+"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f4a5344ec7so36703295ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 17:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717462519; x=1718067319; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ThA1CudYSXQIP69orU4mXcGD6+uxuB5dET7rM3Aiif0=;
-        b=YEXCOrM+n82WHzsFkanLVvuZclPuQ80kbGBEArlAS9JiMNLzWldNgqirpqgVk/w0Fw
-         dNjH2XFn+k+rUoVznQhDkZz+tFJ8b3ferHesh7+3dL71IKpAZ/2fUjbIw2WEkLrvbyHY
-         YJu0Qsz6R3A20nNYKiAQ5f82FMyUZs6EtXzNs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717462519; x=1718067319;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ThA1CudYSXQIP69orU4mXcGD6+uxuB5dET7rM3Aiif0=;
-        b=J8fMqvlEqVHDsAMjm5nacHD7AWy4Whixo2DehVpRKLsjQiKqe4tiIPVkxiuRFnDvgl
-         lOM4LaYCbk7GHpAYLeO51sDP1s4S2fhRq83Oen85AY9dXod2vKlzFiuprMcvdSf6SCAb
-         v6XIHFlZF3inwmTOEUvGHWankI3PmJL7bbs4CfF2AU4J5VawQTQpWPVmmrSsat1NJpZK
-         ByQH5YQG21F0AHyJLUkwwinlLdcQw2knTxxalqE0xbd6e/Cz7febJnd3/1mS7nck4az6
-         fcgNNcAFUdcYrM4+kMoSguL3V7Jm1E/shpgHt8wzsJuo3kISSGqUk6rrhwyCDOs41pe3
-         RzQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9H1E2nUybMZredoY0EGyMqYf8nHY69EUhCZ3OPKHqtoXLaPdfjdEDbqO7HvOF/F5utV3SFesx3IjtQ/iZPDyScxhrDzlcCeCIZDrZ
-X-Gm-Message-State: AOJu0YxFj57IaxkLKfWO1bZgScDJZR6mFeduoKYxk7rKc+EQVHxRdALU
-	W6IJomxfmk0ar6bOee8aj2PAnlf+rgxsDyVytEzVDDHKiCrhxm6l8LPlgWqCZw==
-X-Google-Smtp-Source: AGHT+IGGYat42jdRQab54UsDyz/zr2+blwgDrqyNtrO3uhAg/FawQmTH/4lICBl/JltxjNTgC9+BGA==
-X-Received: by 2002:a17:902:f703:b0:1f4:8a01:285c with SMTP id d9443c01a7336-1f69390b644mr12858935ad.24.1717462518940;
-        Mon, 03 Jun 2024 17:55:18 -0700 (PDT)
-Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:6203:d1ca:c560:52f1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f63241d4d9sm70649365ad.296.2024.06.03.17.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 17:55:18 -0700 (PDT)
-From: Daisuke Nojiri <dnojiri@chromium.org>
-To: 
-Cc: Daisuke Nojiri <dnojiri@chromium.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	devicetree@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: cros-ec-keyboard: Add keyboard matrix v3.0
-Date: Mon,  3 Jun 2024 17:55:10 -0700
-Message-ID: <20240604005513.2298957-1-dnojiri@chromium.org>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="n0Kpn/Kd";
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YK3TzaZ1";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jrJUF6Di"
+Received: from pps.filterd (m0297266.ppops.net [127.0.0.1])
+	by mx0a-00230701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453Nq33X027247;
+	Mon, 3 Jun 2024 17:07:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com; h=
+	cc:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	pfptdkimsnps; bh=v4Fkz/YycHHuf1uXfelOmcW22OndA2F4me99igzS9RI=; b=
+	n0Kpn/KdzPmACfbAMgoUbrS1t++CQMgEZTFxwRiLE2UKN1wRVxaxFMzXuDeEz/FW
+	JMi88OvfLsvugTRckCXR17pjVy4Qz9tiMUJgT82SDak2UmJQaFs2CgH7oGshW7+C
+	56PgOSqxgia5i7O2bPR/gBpvvJ64NcORg8MY8Go4ukSbsUqq76NkvF/vqfLMX+Dn
+	3zcGtVyn0TRfDwWq0lQS/lFfNc0erZ5LEnIaAB2t43o5GxiQAdddYZYDLEn67N+7
+	BvyFGrPaPMueWni4uJjLNzYgTvfCoTje/9uPzhIZhuedxZccFJFivDVRocL3M4fg
+	4Me/2WEG0xQBWKU8YCKmMA==
+Received: from smtprelay-out1.synopsys.com (smtprelay-out1.synopsys.com [149.117.73.133])
+	by mx0a-00230701.pphosted.com (PPS) with ESMTPS id 3yg2w315k2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 03 Jun 2024 17:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+	t=1717459655; bh=v4Fkz/YycHHuf1uXfelOmcW22OndA2F4me99igzS9RI=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=YK3TzaZ13dhFmP7Qoa+zJiKwMnih/MO8d6dxr55R8HvZfKqYxMY3cYJ5/ydtyit8j
+	 VttTt15FvHiWx3l5oEmH4VkdX2/fnKx9VmFRz3LHY3APvg6ojbeK65GWuIIfK9YQMm
+	 GvjjqlLNAxV30zY4gmWxJs7nO6eK4pvnLSOf9SxzoY2lVVciiiX48Cf6sF/0PLhS8T
+	 vZ63LuGurflql9+/t0vaRMsy4HY2GzZZFPL9V7TfqW8yBose4GeI19ZD6bOam730MI
+	 O6HGM5xz+y2KUsIa7L7lTCItZmFtqp0QMIavR7+l1WrHAUs0KnDT6cqV0Y6sHWErO8
+	 IUkLYxc7Rjfqg==
+Received: from mailhost.synopsys.com (us03-mailhost1.synopsys.com [10.4.17.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits)
+	 client-signature RSA-PSS (2048 bits))
+	(Client CN "mailhost.synopsys.com", Issuer "SNPSica2" (verified OK))
+	by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BC980403A2;
+	Tue,  4 Jun 2024 00:07:35 +0000 (UTC)
+Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(Client CN "o365relay-in.synopsys.com", Issuer "Entrust Certification Authority - L1K" (verified OK))
+	by mailhost.synopsys.com (Postfix) with ESMTPS id 6DBF8A0263;
+	Tue,  4 Jun 2024 00:07:35 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+	dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.a=rsa-sha256 header.s=selector1 header.b=jrJUF6Di;
+	dkim-atps=neutral
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "mail.protection.outlook.com", Issuer "DigiCert Cloud Services CA-1" (verified OK))
+	by o365relay-in.synopsys.com (Postfix) with ESMTPS id C6B5B40361;
+	Tue,  4 Jun 2024 00:07:34 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KIeZ5Xe3Q70unDgxIlYPXHKeC75yVQ/52uRw0E4DHAty1g3iH9VGcW9VJG9M64U6rEcEKeBNsB7g36ZKjFyljQCWljOtNBPodp8awKuPptUil+GXZvseR+JkYT1Gnn09gq2By5uIeZRB4Yt8iiH7lADiZjeq1UXsqcKtP/knOBgzVxYySphomYYRIDUSXLEpRuOEzStbIVWVmQtdOiFoykxF27KXVOWRZCg0mIeo7ZTV/lnwAmQCL9XcaXqLEQd6Nq2PsUstEb9Q5bvoR6AnFgfH+8p2d0jQDMBF2droxJohITeywUMqvxE4yIIkt7sJzkAhJ2xy1MgXmbO0DzUrMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v4Fkz/YycHHuf1uXfelOmcW22OndA2F4me99igzS9RI=;
+ b=cPJnNOMhp7rijcHRzRZ8lFswDo/+fWhPqeGNwIE93wi4XeyIMe7ke6HqVoG1itqtDpIokhuuh3EOasqLk3h2M8BVvCig9aH7ObvWxvvnsz2M5E/w3CdnA834nxDLizkNHBawYdSLS0IbR7b55ZbEQMmS6n0zag2r12mglp2EEKQM+imDhj1psoH69oZLerEkk2K78dD8czhTfdDY3hSYW73pjICccDuGx7PEJNA90cWz9Zo1q31HA88Dpu/Urq8YcHbFswjE9G5uzeb7nZmNV96QCGlv21UsgTiVahLN7luvQcG7qFhmHXDlkrGhr9HzUg74ghyrAU08pI5ljYEFiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v4Fkz/YycHHuf1uXfelOmcW22OndA2F4me99igzS9RI=;
+ b=jrJUF6Di2Qa+B+P6jImV2RP6uO/A1Glqi/EG88VDttOP/JCedCnwY+sDgNRBk+0RqHTwusgGGWmJ7nlHtzUWQFC6x0MOvOSbP4kqkHYHNGgB4rDxX7sAVcmHYIMB716BC1NFZSYwRnA4S4Q0fgsADVh5xJiRxhvLa8HIBYY+2BU=
+Received: from LV2PR12MB5990.namprd12.prod.outlook.com (2603:10b6:408:170::16)
+ by SA0PR12MB4431.namprd12.prod.outlook.com (2603:10b6:806:95::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.24; Tue, 4 Jun
+ 2024 00:07:31 +0000
+Received: from LV2PR12MB5990.namprd12.prod.outlook.com
+ ([fe80::3d09:f15f:d888:33a8]) by LV2PR12MB5990.namprd12.prod.outlook.com
+ ([fe80::3d09:f15f:d888:33a8%4]) with mapi id 15.20.7611.025; Tue, 4 Jun 2024
+ 00:07:29 +0000
+X-SNPS-Relay: synopsys.com
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To: joswang <joswang1221@gmail.com>
+CC: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "conor+dt@kernel.org" <conor+dt@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        joswang <joswang@lenovo.com>
+Subject: Re: [PATCH v2, 3/3] usb: dwc3: core: Workaround for CSR read timeout
+Thread-Topic: [PATCH v2, 3/3] usb: dwc3: core: Workaround for CSR read timeout
+Thread-Index: AQHatbZOP6V8cE1jeEGogZmaKJg11rG2uuOA
+Date: Tue, 4 Jun 2024 00:07:29 +0000
+Message-ID: <20240604000715.3rlmzxriof6wwksm@synopsys.com>
+References: <20240601092646.52139-1-joswang1221@gmail.com>
+ <20240603130219.25825-1-joswang1221@gmail.com>
+In-Reply-To: <20240603130219.25825-1-joswang1221@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV2PR12MB5990:EE_|SA0PR12MB4431:EE_
+x-ms-office365-filtering-correlation-id: dd35e64b-b833-4f52-5561-08dc842a52dd
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: 
+ BCL:0;ARA:13230031|376005|7416005|1800799015|366007|38070700009;
+x-microsoft-antispam-message-info: 
+ =?utf-8?B?MkNsS2JiOW1pR0lRYmpsVWlQN1M1TUJWVVZSdG01RlNmMHVVLzRFcUNza21E?=
+ =?utf-8?B?QWVMbGR3bXRxMTJlNHpsU1BKN1dBblMrZ3hnRUgzMUxqVDFyaXB6RENGc2NY?=
+ =?utf-8?B?N0E0bVFMVUVDYkFkTExLQzJHaE9YbkpCVHhqTllBZk1PZElZd0tCZzZCUEly?=
+ =?utf-8?B?WUxENU9UbWVUazBnSGJNRlF1QTBiREFsK2pNbXRXMmNrZFVqaXUvNUQ3MUNT?=
+ =?utf-8?B?UytIejQ3WXNrTlFHZVgzY0NML3h3Sk9SUVpIYXZPSXpKeXNXZG5zdnpXNmxM?=
+ =?utf-8?B?ODFIOU1jVG5YTXNiT292bWM5RWtKUGQ2ZU5IRnBwaFI1TXJ4N3hURWFXRDBh?=
+ =?utf-8?B?V2YwVisySTBaQ3VmR3JGZEtnZzlCbUhibCtkVDRTTC9hL2dFV1RHUUNMZyt3?=
+ =?utf-8?B?dmJLbGlzTDVlUWZjTWJvWFlTcE1ZWHF5YlB4Y3VMSkxHRHUwT2w4cWVvZTNN?=
+ =?utf-8?B?dWVmMVd4d3UzUURETXlrTHlGS2VsWEJiSlJGc280K3hwc3VJTmh2WlNGcXlz?=
+ =?utf-8?B?cFBXUCtma0tLSzgxTU9XMm5iaXNYSkV2Z1NJSENGMkd1NWhFR1lHcGZUVFJ5?=
+ =?utf-8?B?UXB4SGs5MzVLakMreE1XbHMvQ3pOWVN4VTh0Z2d1UHVhWjZHK1JKYmlTTkNp?=
+ =?utf-8?B?c1ErOE5jOGlwMDM0RmpReFlxTlFRd3NHTkV0VjAySW5NNENJK29iMThZWlJB?=
+ =?utf-8?B?OXIxVVkzK1NiTzFXamlPd0FIUFg5TTRmM1JTbWhoeGxMU3dLMUdNb1FSNHpu?=
+ =?utf-8?B?VVJ2T2VTMW8xb3ROUGxKa1F5anBJcnRrSE1IaFFsNVdCTlNlNlpGcUY2S1pL?=
+ =?utf-8?B?bEU0SjgwY05mNjdIdHJ2SjJoMCt5dFlOcXhlM0QrUFhBa2dXem4vNkhSZEdG?=
+ =?utf-8?B?Q1VWSzBaY3JzR29ZWEwzSTNYZVZRMWpvWTd6R0JNdmFBTUlXaTc3NXZXV2gv?=
+ =?utf-8?B?YzQ5ai9veWh5dmNrYkNNTWtreHlYd0tsZzFYNSs1RlllMmhnZ3ZmZzFvQzV6?=
+ =?utf-8?B?LzdwWDl1WTNPSmFMQXRVdEp3QllQeFdhSUltSXRIY1Rwa1pscW1sU0o0TEhy?=
+ =?utf-8?B?bTllWUEzbG1jVEt5cjdmVFh2YVVqVmdESGtBZU9wT3lsL1VwVFVVWWdydXcv?=
+ =?utf-8?B?eXFMWE1pVWN2Uld6dG41eW9XVTIycEdWMXNZdXRPalI1UmZyYUt5WEtkdm8x?=
+ =?utf-8?B?Z1U0eHFNZjBmQjFJMXp2OXZyUDB3eEhZckc4cmU5dktSQmZFWlhjTzh0YlZx?=
+ =?utf-8?B?SC9sVE5hU2tjY3BHRWh0SEFWYmIwYVpmN01icFV2bUp5bzFGK0xRd2pYUFhr?=
+ =?utf-8?B?WjBOdkNZQzI5UXZmWUp6U2w5VmY2amJ3bFN5U2JXWkJVNCtXdmY3QXpCYjJv?=
+ =?utf-8?B?cnJncmovdWRoVGRzdUhBdlh5QzZ5M3pCV0trekVzQjY1S2wrcnYvalJoOGkr?=
+ =?utf-8?B?WThHRzRuK2xGcmEySmVlZlV6bVJ0cHBNdWc0OVIwQVhaMm01TkV5d0diSFVl?=
+ =?utf-8?B?ci9kMTJQMUpQb2pRU2pweFZ3aUVSYWkvR2xXT2ZUS1RPWjd5SHdpZTQ4OGdD?=
+ =?utf-8?B?REgxNG5GZ3dOelJkVGVaWkIxWHU0bDQ3Z0pJdSttSHJqVmRLVkVhZ0I1OEtL?=
+ =?utf-8?B?ckQrSmpKREFVN29vVHZqbDBudU5UQkc1cHRKOFJpcmZYL01CUFpWS25ENUFw?=
+ =?utf-8?B?amgvUTVEN3ozNWxxUXB0Mk5qNkh2QU5zRmh0RzF5NlYvRUd5S0Z5Kzh2anFu?=
+ =?utf-8?B?eUdha1cwb0RPcjRsZWVRV09GOXVuWFlBUTEwaE83YzlIV2VjUENSaVY2Sm4z?=
+ =?utf-8?B?M3QyUWd5SkJTcXFoZmY1Zz09?=
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?T0pQWXJnTmxjM1EvZjRGM2thU0VlS0ZuSEM1dUI5S09nMkh0clFtS3NhTEtW?=
+ =?utf-8?B?SUtPWFVzZGRKZk1la1RGM3JGZ002bG5oQ3lMNTlUVy92YmFKajR4N2RXRVZk?=
+ =?utf-8?B?OG5tb2taSU40OW91bEh2amF4SVlDOXA3SzZhM0xuYUppUjA2a1psVnlHcHJO?=
+ =?utf-8?B?WS8vU0dBbVlJZ3o3czhJaWxhZFI2TmMzL3B3YVB2Qk9GSUN0SVYxekJyVSt1?=
+ =?utf-8?B?bFh4VVNZdDQzTDJuTWZYZWduc1l1T0N3WDNVYVFFVDdMTWZuaFVxNExzeFlC?=
+ =?utf-8?B?b0hObVlJbk9wSEFjQ0xnbHcvNFJNSHNpeVVwMC8zMDVDVUlLZDhPeEJvODhr?=
+ =?utf-8?B?MEw2UVFYQkRRYXkvbTQ4VjFyeHNZUVU0TFhxL2dOMVpPUDBhaVhHL255MWFD?=
+ =?utf-8?B?YzRScWVRamdpaHNrRStIa0I0Q1pyaSt3YTUwWUNSL0lWQ1NzWWhEdFk2L28v?=
+ =?utf-8?B?QnpJS3I4eXZrTDNMT291RVcvSk1BOEF4WXlGOTY2RXBXd3FwU0VGaHZ3Zm9Y?=
+ =?utf-8?B?Umt2UjcrbE10UUFHZEhEbCt2bGdDMzlka3ROVkx6UTlieFU3dEZtNTlpbTJD?=
+ =?utf-8?B?ZzZjdG5MVGRxa1diTjh4amRCUmZBMnNKSlNqZGo4b0NVRVJyK040cXFrSFZG?=
+ =?utf-8?B?RE84dW5ta1pZMXdNZGZRZEJNMll1YnZKOFFwTHdNbmZidmFWbVc2YVhTNTYr?=
+ =?utf-8?B?MDZvOE5mM1hHTkk4WTQvQ0xzWmh2ckEvSG5pZklYQVBlaDBPS3dKMy9EQWJr?=
+ =?utf-8?B?clpOcVRaUWtVL2hiWnYyeUE2M2JwTy9JdjR1R3o2b3Rjei80UjBibDBmVWRG?=
+ =?utf-8?B?b01LakliekZzUExnMEtMWDVBdE1FM2QzUFdnVXdOOTlwYjlMbU1VeENsdkFF?=
+ =?utf-8?B?bEJRbXdVa1piTE9MOHNML09vUDJKaGJtT3RkKzlIb0xNT1dTSk02QlRpeDdh?=
+ =?utf-8?B?M1FVd05FYVZRV3VYYm05WUhEWU1Sc2VEalphUThpakVFeWNyUUt4RVhMZnNp?=
+ =?utf-8?B?eVVLbWRPZzF1T1JNUzFtMXcvZUtUcGpjUk0yaUp5K0xma3lWeE4rU2c4SWlZ?=
+ =?utf-8?B?ZmtWVk91WGF3Um5rQ2R5SGJxcWNsT0Q5UEM2d3dEMmRrY3N3TVNVSVowcU1T?=
+ =?utf-8?B?RUIycnZuUW9TMWZEU2tnUG9XQ1hhRkt5VGQ0c1FFb2IwNUxFUTkwSmRDelNu?=
+ =?utf-8?B?MVhWMUNZQlF2dEFjWEI0cEppZ1UxUTR2eEJNTDZWN1U5SnBSSUVqVXFNWitW?=
+ =?utf-8?B?RVpDbmg2L01xNndtT0I4SWgrWWo2b0M3YTZXRC9CN3JsZ0pDZXA0RTVQT2lF?=
+ =?utf-8?B?bW5rWmcxUk9XWnh6NUFneEtUMkl5SXk4MFhpMXJWY3AwSDNoQ25aNXBzTVlX?=
+ =?utf-8?B?emhxQTBSeHRnVU80cWxIUFB1eFdCTkRiTkRXZmkySis4RmsvVFJGNUdCRDV0?=
+ =?utf-8?B?d0NINE1IUTFzMnIwdUJRR1FuRkdVckJiUXd4em5rTDJBYXpCWHkwajI2UHNK?=
+ =?utf-8?B?anFtL2dwL25sNncrUC9XTS9kbytNR1hnOG1aTFBkeGprSnhZTWdHUS9ETVhV?=
+ =?utf-8?B?NlZINEZoMmZxQjZ5SlFTWGcwTGRyTWNtbUJJQ0MyR245ak5NbjR3eldJOVY2?=
+ =?utf-8?B?Qm9md00yVm5wRWJHZCtMR1NRcnBaZVVlbW03YmF5aWZGc2RaZ3E1eU1SZUNy?=
+ =?utf-8?B?UUdsMG1EcTQ4Y1ZKTGVtazJzbUplN1BuZ0VtdDJGUU55bVlYQmVLYU82VW1T?=
+ =?utf-8?B?d1FRNm53WTkrZmpmY3lFY2tvQ1l4Z0orY2I2RlRuZTRVOURENHdIN25tUHcw?=
+ =?utf-8?B?WERGTlV4bUs2ZCt3aHVLcXBzaGNzRWdBcnR1YXNtazUwWTF1ZCtmdDYvSExB?=
+ =?utf-8?B?Q3hRVCtobVFkMUpQbm01Q0RwY3FpUXgzdlBxNkZaZGlMYVFRUXUwajZaT2Y2?=
+ =?utf-8?B?eWpLUGJyRzRJeTlWRUdOMklxd3VoWmtCQ3hYVWRNMHdSWTRlTDV2K2NndlB3?=
+ =?utf-8?B?c3gzVWlYcUk2a0s2UlQzTS9XTEFhUWxoWllHakJDdVM4QXMybFBkMytiRVpD?=
+ =?utf-8?B?V3E5cVNFZFVUU09xemVFUlNmNTh0QWNnSHkrdjJwUkRpZHd2ckwyenNydmVT?=
+ =?utf-8?Q?39VDd9r80tcpsgME7uEAcucDb?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5F942410DD48354DBE6B7E8FC80D3B97@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	SOTyLCAj9DEzu6fBEw6KjhXVYtZXF2Es13jvAIwqz+4qn4zjnrEa3t15e8BgpZwdK0inQsJIGWT2s8NpkBI5fo9/Slearv6oNf/CZ54+GDCjxUpAmcm/aq86OG4uL7fWtUicJqY/bKpM3xs7u1W2Btvaj1o9pGOay0qE28XScpxmiCo5b6Kuwdhx33BWI0bQnKgTqGm4aOap/HA6cik91FXm1w3KAzPaBn16zJdYQTTwo4aV0IAWjvzs27KCnrj9+yipuVGvE1djXnaVC9Wmj36W8hXmRNe4ldNdDEhAwHW+7IeJ7Utd6YWB1UQ/afiPu3sKBl+4fpqjQHMnGwCIbwHxPbwCmY8FSs5rhoneePmkbKlXCw4JxrRqpOUXJkrpTkJtr9yzMC027IjDq1bs+xI7mHlY+wpdkw9CJE36ZPBovo5E12FPf8+4VeMZFNz6QtB0GhRqaJJGO3JwyMOW+6lbU62vYVON0rellSSuOrSr2cOf8ua0mq7JSGIpiCzA7aJ2QUZavMg930JVNpCbhRpxlXaQlIDKIdVvoSpyseKNmbBPW07yhEZsUCvzSv6YJakcYN7G6wcKH1QUw3qk3/7AcRPoXUzQDHzzFGkzhpvRl7SK2smhA3FJU6vPJzcwtIevvaUq/4qw3bOfdv7eww==
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd35e64b-b833-4f52-5561-08dc842a52dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2024 00:07:29.3422
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cn22OXaekPigmoSnuUCyPhKdW8gpzvIztkPi+WRRM5R+JzR/mmuaKPeVuynivWVbhV5OdyhMuqgopaeoNRmD+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4431
+X-Proofpoint-GUID: VH897u4CngLuD5MJdLJrpoUTxwkzfgMb
+X-Proofpoint-ORIG-GUID: VH897u4CngLuD5MJdLJrpoUTxwkzfgMb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
+ definitions=2024-06-03_17,2024-05-30_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_active_cloned_notspam policy=outbound_active_cloned score=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2405170001 definitions=main-2406030195
 
-This CL adds support for keyboard matrix version 3.0. To enable it,
-define CONFIG_CROS_KBD_V30.
-
-BUG=b:331761304
-TEST=cros build-packages --board corsola sys-kernel/chromeos-kernel-5_15
-
-Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
----
- arch/arm/boot/dts/cros-ec-keyboard.dtsi      |  16 ++-
- drivers/platform/chrome/Kconfig              |   6 ++
- include/dt-bindings/input/cros-ec-keyboard.h | 104 +++++++++++++++++++
- 3 files changed, 123 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-index 55c4744fa7e7..0499e254596a 100644
---- a/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-+++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-@@ -8,16 +8,26 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/input/cros-ec-keyboard.h>
- 
-+#ifdef CONFIG_CROS_KBD_V30
-+#define CROS_EC_KEYBOARD_COLUMN_SIZE 18
-+#define CROS_TOP_ROW_KEYMAP CROS_TOP_ROW_KEYMAP_V30
-+#define CROS_MAIN_KEYMAP CROS_MAIN_KEYMAP_V30
-+#else
-+#define CROS_EC_KEYBOARD_COLUMN_SIZE 13
-+#define CROS_TOP_ROW_KEYMAP CROS_STD_TOP_ROW_KEYMAP
-+#define CROS_MAIN_KEYMAP CROS_STD_MAIN_KEYMAP
-+#endif
-+
- &cros_ec {
- 	keyboard_controller: keyboard-controller {
- 		compatible = "google,cros-ec-keyb";
- 		keypad,num-rows = <8>;
--		keypad,num-columns = <13>;
-+		keypad,num-columns = <CROS_EC_KEYBOARD_COLUMN_SIZE>;
- 		google,needs-ghost-filter;
- 
- 		linux,keymap = <
--			CROS_STD_TOP_ROW_KEYMAP
--			CROS_STD_MAIN_KEYMAP
-+			CROS_TOP_ROW_KEYMAP
-+			CROS_MAIN_KEYMAP
- 		>;
- 	};
- };
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index d48f7f43f9e5..8f66beaa48ec 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -157,6 +157,12 @@ config CROS_KBD_LED_BACKLIGHT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_kbd_led_backlight.
- 
-+config CROS_KBD_V30
-+	bool "ChromeOS built-in keyboard version 3.0"
-+	default n
-+	help
-+	  If you say Y here, you get support for built-in keyboard ver 3.0.
-+
- config CROS_EC_CHARDEV
- 	tristate "ChromeOS EC miscdevice"
- 	depends on MFD_CROS_EC_DEV
-diff --git a/include/dt-bindings/input/cros-ec-keyboard.h b/include/dt-bindings/input/cros-ec-keyboard.h
-index f0ae03634a96..afc12f6aa642 100644
---- a/include/dt-bindings/input/cros-ec-keyboard.h
-+++ b/include/dt-bindings/input/cros-ec-keyboard.h
-@@ -100,4 +100,108 @@
- 	MATRIX_KEY(0x07, 0x0b, KEY_UP)		\
- 	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)
- 
-+/* No numpad */
-+#define CROS_TOP_ROW_KEYMAP_V30 \
-+	MATRIX_KEY(0x00, 0x01, KEY_F11)		/* T11 */	\
-+	MATRIX_KEY(0x00, 0x02, KEY_F1)		/* T1 */	\
-+	MATRIX_KEY(0x00, 0x04, KEY_F10)		/* T10 */	\
-+	MATRIX_KEY(0x00, 0x0b, KEY_F14)		/* T14 */	\
-+	MATRIX_KEY(0x00, 0x0c, KEY_F15)		/* T15 */	\
-+	MATRIX_KEY(0x01, 0x02, KEY_F4)		/* T4 */	\
-+	MATRIX_KEY(0x01, 0x04, KEY_F7)		/* T7 */	\
-+	MATRIX_KEY(0x01, 0x05, KEY_F12)		/* T12 */	\
-+	MATRIX_KEY(0x01, 0x09, KEY_F9)		/* T9 */	\
-+	MATRIX_KEY(0x02, 0x02, KEY_F3)		/* T3 */	\
-+	MATRIX_KEY(0x02, 0x04, KEY_F6)		/* T6 */	\
-+	MATRIX_KEY(0x02, 0x0b, KEY_F8)		/* T8 */	\
-+	MATRIX_KEY(0x03, 0x02, KEY_F2)		/* T2 */	\
-+	MATRIX_KEY(0x03, 0x05, KEY_F13)		/* T13 */	\
-+	MATRIX_KEY(0x04, 0x04, KEY_F5)		/* T5 */
-+
-+#define CROS_MAIN_KEYMAP_V30			/* Keycode */	\
-+	MATRIX_KEY(0x00, 0x03, KEY_B)		/* 50 */	\
-+	MATRIX_KEY(0x00, 0x05, KEY_N)		/* 51 */	\
-+	MATRIX_KEY(0x00, 0x06, KEY_RO)		/* 56 (JIS) */	\
-+	MATRIX_KEY(0x00, 0x08, KEY_EQUAL)	/* 13 */	\
-+	MATRIX_KEY(0x00, 0x09, KEY_HOME)	/* 80 (Numpad) */	\
-+	MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)	/* 62 */	\
-+	MATRIX_KEY(0x00, 0x10, KEY_FN)		/* 127 */	\
-+								\
-+	MATRIX_KEY(0x01, 0x01, KEY_ESC)		/* 110 */	\
-+	MATRIX_KEY(0x01, 0x03, KEY_G)		/* 35 */	\
-+	MATRIX_KEY(0x01, 0x06, KEY_H)		/* 36 */	\
-+	MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)	/* 41 */	\
-+	MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)	/* 15 */	\
-+	MATRIX_KEY(0x01, 0x0c, KEY_HENKAN)	/* 65 (JIS) */	\
-+	MATRIX_KEY(0x01, 0x0e, KEY_LEFTCTRL)	/* 58 */	\
-+								\
-+	MATRIX_KEY(0x02, 0x01, KEY_TAB)		/* 16 */	\
-+	MATRIX_KEY(0x02, 0x03, KEY_T)		/* 21 */	\
-+	MATRIX_KEY(0x02, 0x05, KEY_RIGHTBRACE)	/* 28 */	\
-+	MATRIX_KEY(0x02, 0x06, KEY_Y)		/* 22 */	\
-+	MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)	/* 27 */	\
-+	MATRIX_KEY(0x02, 0x09, KEY_DELETE)	/* 76 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x0c, KEY_PAGEUP)	/* 85 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x011, KEY_YEN)	/* 14 (JIS) */	\
-+								\
-+	MATRIX_KEY(0x03, 0x00, KEY_LEFTMETA)	/* Launcher */	\
-+	MATRIX_KEY(0x03, 0x01, KEY_GRAVE)	/* 1 */	\
-+	MATRIX_KEY(0x03, 0x03, KEY_5)		/* 6 */	\
-+	MATRIX_KEY(0x03, 0x04, KEY_S)		/* 32 */	\
-+	MATRIX_KEY(0x03, 0x06, KEY_MINUS)	/* 12 */	\
-+	MATRIX_KEY(0x03, 0x08, KEY_6)		/* 7 */		\
-+	MATRIX_KEY(0x03, 0x09, KEY_SLEEP)	/* Lock */	\
-+	MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)	/* 29 */	\
-+	MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)	/* 63 (JIS) */	\
-+	MATRIX_KEY(0x03, 0x0e, KEY_RIGHTCTRL)	/* 64 */	\
-+								\
-+	MATRIX_KEY(0x04, 0x01, KEY_A)		/* 31 */	\
-+	MATRIX_KEY(0x04, 0x02, KEY_D)		/* 33 */	\
-+	MATRIX_KEY(0x04, 0x03, KEY_F)		/* 34 */	\
-+	MATRIX_KEY(0x04, 0x05, KEY_K)		/* 38 */	\
-+	MATRIX_KEY(0x04, 0x06, KEY_J)		/* 37 */	\
-+	MATRIX_KEY(0x04, 0x08, KEY_SEMICOLON)	/* 40 */	\
-+	MATRIX_KEY(0x04, 0x09, KEY_L)		/* 39 */	\
-+	MATRIX_KEY(0x04, 0x0b, KEY_ENTER)	/* 43 */	\
-+	MATRIX_KEY(0x04, 0x0c, KEY_END)		/* 81 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x05, 0x01, KEY_1)		/* 2 */	\
-+	MATRIX_KEY(0x05, 0x02, KEY_COMMA)	/* 53 */	\
-+	MATRIX_KEY(0x05, 0x03, KEY_DOT)		/* 54 */	\
-+	MATRIX_KEY(0x05, 0x04, KEY_SLASH)	/* 55 */	\
-+	MATRIX_KEY(0x05, 0x05, KEY_C)		/* 48 */	\
-+	MATRIX_KEY(0x05, 0x06, KEY_SPACE)	/* 61 */	\
-+	MATRIX_KEY(0x05, 0x07, KEY_LEFTSHIFT)	/* 44 */	\
-+	MATRIX_KEY(0x05, 0x08, KEY_X)		/* 47 */	\
-+	MATRIX_KEY(0x05, 0x09, KEY_V)		/* 49 */	\
-+	MATRIX_KEY(0x05, 0x0b, KEY_M)		/* 52 */	\
-+	MATRIX_KEY(0x05, 0x0c, KEY_PAGEDOWN)	/* 86 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x06, 0x01, KEY_Z)		/* 46 */	\
-+	MATRIX_KEY(0x06, 0x02, KEY_3)		/* 4 */		\
-+	MATRIX_KEY(0x06, 0x03, KEY_4)		/* 5 */		\
-+	MATRIX_KEY(0x06, 0x04, KEY_2)		/* 3 */		\
-+	MATRIX_KEY(0x06, 0x05, KEY_8)		/* 9 */		\
-+	MATRIX_KEY(0x06, 0x06, KEY_0)		/* 11 */	\
-+	MATRIX_KEY(0x06, 0x08, KEY_7)		/* 8 */		\
-+	MATRIX_KEY(0x06, 0x09, KEY_9)		/* 10 */	\
-+	MATRIX_KEY(0x06, 0x0b, KEY_DOWN)	/* 84 */	\
-+	MATRIX_KEY(0x06, 0x0c, KEY_RIGHT)	/* 89 */	\
-+	MATRIX_KEY(0x06, 0x0d, KEY_LEFTALT)	/* 60 */	\
-+	MATRIX_KEY(0x06, 0x0f, KEY_ASSISTANT)	/* 128 */	\
-+	MATRIX_KEY(0x06, 0x11, KEY_BACKSLASH)	/* 42 (JIS, ISO) */	\
-+								\
-+	MATRIX_KEY(0x07, 0x01, KEY_U)		/* 23 */	\
-+	MATRIX_KEY(0x07, 0x02, KEY_I)		/* 24 */	\
-+	MATRIX_KEY(0x07, 0x03, KEY_O)		/* 25 */	\
-+	MATRIX_KEY(0x07, 0x04, KEY_P)		/* 26 */	\
-+	MATRIX_KEY(0x07, 0x05, KEY_Q)		/* 17 */	\
-+	MATRIX_KEY(0x07, 0x06, KEY_W)		/* 18 */	\
-+	MATRIX_KEY(0x07, 0x07, KEY_RIGHTSHIFT)	/* 57 */	\
-+	MATRIX_KEY(0x07, 0x08, KEY_E)		/* 19 */	\
-+	MATRIX_KEY(0x07, 0x09, KEY_R)		/* 20 */	\
-+	MATRIX_KEY(0x07, 0x0b, KEY_UP)		/* 83 */	\
-+	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)	/* 79 */	\
-+	MATRIX_KEY(0x07, 0x11, KEY_102ND)	/* 45 (ISO) */
-+
- #endif /* _CROS_EC_KEYBOARD_H */
--- 
-2.45.1.288.g0e0cd299f1-goog
-
+T24gTW9uLCBKdW4gMDMsIDIwMjQsIGpvc3dhbmcgd3JvdGU6DQo+IEZyb206IGpvc3dhbmcgPGpv
+c3dhbmdAbGVub3ZvLmNvbT4NCj4gDQo+IERXQzMxIHZlcnNpb24gMi4wMGEgaGF2ZSBhbiBpc3N1
+ZSB0aGF0IHdvdWxkIGNhdXNlDQo+IGEgQ1NSIHJlYWQgdGltZW91dCBXaGVuIENTUiByZWFkIGNv
+aW5jaWRlcyB3aXRoIFJBTQ0KPiBDbG9jayBHYXRpbmcgRW50cnkuDQoNCkRvIHlvdSBoYXZlIHRo
+ZSBTVEFSIGlzc3VlIG51bWJlcj8NCg0KPiANCj4gVGhpcyB3b3JrYXJvdW5kIHNvbHV0aW9uIGRp
+c2FibGUgQ2xvY2sgR2F0aW5nLCBzYWNyaWZpY2luZw0KPiBwb3dlciBjb25zdW1wdGlvbiBmb3Ig
+bm9ybWFsIG9wZXJhdGlvbi4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IGpvc3dhbmcgPGpvc3dhbmdA
+bGVub3ZvLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3VzYi9kd2MzL2NvcmUuYyB8IDIzICsrKysr
+KysrKysrKysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMjMgaW5zZXJ0aW9ucygrKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jIGIvZHJpdmVycy91c2Iv
+ZHdjMy9jb3JlLmMNCj4gaW5kZXggM2E4ZmJjMmQ2Yjk5Li4xZGY4NWM1MDVjOWUgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2R3YzMv
+Y29yZS5jDQo+IEBAIC05NzgsMTEgKzk3OCwyMiBAQCBzdGF0aWMgdm9pZCBkd2MzX2NvcmVfc2V0
+dXBfZ2xvYmFsX2NvbnRyb2woc3RydWN0IGR3YzMgKmR3YykNCj4gIAkJICoNCj4gIAkJICogU1RB
+UiM5MDAwNTg4Mzc1OiBDbG9jayBHYXRpbmcsIFNPRiBJc3N1ZXMgd2hlbiByZWZfY2xrLUJhc2Vk
+DQo+ICAJCSAqIFNPRi9JVFAgTW9kZSBVc2VkDQo+ICsJCSAqDQo+ICsJCSAqIFdPUktBUk9VTkQ6
+IERXQzMxIHZlcnNpb24gMi4wMGEgaGF2ZSBhbiBpc3N1ZSB0aGF0IHdvdWxkDQo+ICsJCSAqIGNh
+dXNlIGEgQ1NSIHJlYWQgdGltZW91dCBXaGVuIENTUiByZWFkIGNvaW5jaWRlcyB3aXRoIFJBTQ0K
+PiArCQkgKiBDbG9jayBHYXRpbmcgRW50cnkuDQo+ICsJCSAqDQo+ICsJCSAqIFRoaXMgd29ya2Fy
+b3VuZCBzb2x1dGlvbiBkaXNhYmxlIENsb2NrIEdhdGluZywgc2FjcmlmaWNpbmcNCj4gKwkJICog
+cG93ZXIgY29uc3VtcHRpb24gZm9yIG5vcm1hbCBvcGVyYXRpb24uDQo+ICAJCSAqLw0KPiAgCQlp
+ZiAoKGR3Yy0+ZHJfbW9kZSA9PSBVU0JfRFJfTU9ERV9IT1NUIHx8DQo+ICAJCQkJZHdjLT5kcl9t
+b2RlID09IFVTQl9EUl9NT0RFX09URykgJiYNCj4gIAkJCQlEV0MzX1ZFUl9JU19XSVRISU4oRFdD
+MywgMjEwQSwgMjUwQSkpDQo+ICAJCQlyZWcgfD0gRFdDM19HQ1RMX0RTQkxDTEtHVE5HIHwgRFdD
+M19HQ1RMX1NPRklUUFNZTkM7DQo+ICsJCWVsc2UgaWYgKChkd2MtPmRyX21vZGUgPT0gVVNCX0RS
+X01PREVfSE9TVCB8fA0KPiArCQkJCWR3Yy0+ZHJfbW9kZSA9PSBVU0JfRFJfTU9ERV9PVEcpICYm
+DQo+ICsJCQkJRFdDM19WRVJfSVMoRFdDMzEsIDIwMEEpKQ0KPiArCQkJcmVnIHw9IERXQzNfR0NU
+TF9EU0JMQ0xLR1RORzsNCj4gIAkJZWxzZQ0KPiAgCQkJcmVnICY9IH5EV0MzX0dDVExfRFNCTENM
+S0dUTkc7DQo+ICAJCWJyZWFrOw0KPiBAQCAtOTkyLDYgKzEwMDMsMTggQEAgc3RhdGljIHZvaWQg
+ZHdjM19jb3JlX3NldHVwX2dsb2JhbF9jb250cm9sKHN0cnVjdCBkd2MzICpkd2MpDQo+ICAJCSAq
+IHdpbGwgd29yay4gRGV2aWNlLW1vZGUgaGliZXJuYXRpb24gaXMgbm90IHlldCBpbXBsZW1lbnRl
+ZC4NCj4gIAkJICovDQo+ICAJCXJlZyB8PSBEV0MzX0dDVExfR0JMSElCRVJOQVRJT05FTjsNCj4g
+Kw0KPiArCQkvKg0KPiArCQkgKiBXT1JLQVJPVU5EOiBEV0MzMSB2ZXJzaW9uIDIuMDBhIGhhdmUg
+YW4gaXNzdWUgdGhhdCB3b3VsZA0KPiArCQkgKiBjYXVzZSBhIENTUiByZWFkIHRpbWVvdXQgV2hl
+biBDU1IgcmVhZCBjb2luY2lkZXMgd2l0aCBSQU0NCj4gKwkJICogQ2xvY2sgR2F0aW5nIEVudHJ5
+Lg0KPiArCQkgKg0KPiArCQkgKiBUaGlzIHdvcmthcm91bmQgc29sdXRpb24gZGlzYWJsZSBDbG9j
+ayBHYXRpbmcsIHNhY3JpZmljaW5nDQo+ICsJCSAqIHBvd2VyIGNvbnN1bXB0aW9uIGZvciBub3Jt
+YWwgb3BlcmF0aW9uLg0KPiArCQkgKi8NCj4gKwkJaWYgKChkd2MtPmRyX21vZGUgPT0gVVNCX0RS
+X01PREVfSE9TVCB8fA0KPiArCQkgICAgIGR3Yy0+ZHJfbW9kZSA9PSBVU0JfRFJfTU9ERV9PVEcp
+ICYmIERXQzNfVkVSX0lTKERXQzMxLCAyMDBBKSkNCj4gKwkJCXJlZyB8PSBEV0MzX0dDVExfRFNC
+TENMS0dUTkc7DQo+ICAJCWJyZWFrOw0KPiAgCWRlZmF1bHQ6DQo+ICAJCS8qIG5vdGhpbmcgKi8N
+Cj4gLS0gDQo+IDIuMTcuMQ0KPiANCg0KVGhpcyBkb2Vzbid0IHNlZW0gbGlrZSBpdCBzaG91bGQg
+YmUgYXBwbGllZCBnbG9iYWxseS4gUGxlYXNlIHByb3ZpZGUgdGhlDQpTVEFSIG51bWJlciBpZiB5
+b3UgY2FuIHNvIEkgY2FuIHJldmlldyBmdXJ0aGVyLiBJZiBwb3NzaWJsZSBJJ2QgcHJlZmVyDQp0
+byBvbmx5IHRhcmdldCB5b3VyIHBsYXRmb3JtLg0KDQpUaGFua3MsDQpUaGluaA==
