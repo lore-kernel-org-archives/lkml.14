@@ -1,97 +1,92 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5FC1411F2;
-	Tue,  4 Jun 2024 09:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D731428F5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492514; cv=none; b=MwQwZL75I/AXFCimA1ulecX+hvJ2Tm5X0Ho12UnRn03nvaTMn5v+KGqYvHxAvmmHK+B3uxUbqkN6vw3kcD/v7xUOtKUqeJ+VxKNIOV448fiD9opOvmcj7jegXwzneZcW5kYDua4RrrXPYIX654KwuAaC4o2TtR7nxhm9wM75feQ=
+	t=1717492534; cv=none; b=QiY3Lwr8Yct4E6/+mOJLRhUQQBezcWeaFA8H13NUvZu842S1gCT1im1PBq8Ip8GGbEla5qYxZNwBTkiecWpDrb5ZLvpzMyBmF+AFHnAF2hTvqvYz6HwhE1mabPh/8GeHVVR3C+ICesS/mlWf7KjNeKODutyMl3RmnTm/iQj71Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492514; c=relaxed/simple;
-	bh=UBSE8GEPqxZdSjgPlJVW65yM+v8/dSAUhsYRVqOb1Jg=;
-	h=From:To:Subject:Date:Message-Id; b=HCrYnaDEhJHWe3d+v0Y+/R/qbzWy8P/EwmCL7xDLlYhJQC2i9Rg27GyMUgW20DUCWGPF7scPusSjieTkmEWR/jBv6G18SbIeP4JY+EvcXqVTCoCCBmC/T8a5dWPhGMQ5hnWnH45qKq3DcaMIbb4NFIwNPVzxdf7fXQGBLRMLEks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B63131A1E06;
-	Tue,  4 Jun 2024 11:15:05 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 54FFA1A1DCB;
-	Tue,  4 Jun 2024 11:15:05 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9DE281820F76;
-	Tue,  4 Jun 2024 17:15:03 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lars@metafoo.de,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
+	s=arc-20240116; t=1717492534; c=relaxed/simple;
+	bh=Nta7iN+WFvRet05k6qlyoPpxSdKuLhWbm5NL+lqsFH4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=twFEIz08mxdXyUMtWybwZCNKHZs/4VFbPak4gE2lZhvQdJ/ZANarcL+Qdrrm2reAlNfUVAWeKnSdMxD+C5jFh0SMlipiOSpJRgaMnUGoPwLxUD5584nI50mYUL4e1rr9jwROMNDIY3Jg1oifXhb9f9Zg+EH1Wpdp1LN8GeGZdV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=ddFR8wsg; arc=none smtp.client-ip=220.197.31.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="ddFR8wsg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=OttNBT7tDdR+8AIHQK
+	EdCnsXbEagpDW5BlvkbCVKymI=; b=ddFR8wsgl8hZrgVsG8OTgCSXkrFUJhIVwf
+	v2H66v3QqIt65zB3rSIOvAhmve4LvEWC4aaldZKPoTqKc1DxuoB69mulzhyjTf0b
+	ano9jtjGSmJBeM0gt1pPqvoNayaB5ghn7hz1u40wOOT0NNfN1FDr3aAHKfhWKuqW
+	U86hDftYk=
+Received: from hg-OptiPlex-7040.hygon.cn (unknown [118.242.3.34])
+	by gzga-smtp-mta-g1-3 (Coremail) with SMTP id _____wAnFS7u2l5mNA2KAQ--.319S2;
+	Tue, 04 Jun 2024 17:14:23 +0800 (CST)
+From: yangge1116@126.com
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH] ASoC: dmaengine_pcm: terminate dmaengine before synchronize
-Date: Tue,  4 Jun 2024 16:58:57 +0800
-Message-Id: <1717491537-9033-1-git-send-email-shengjiu.wang@nxp.com>
+	baolin.wang@linux.alibaba.com,
+	liuzixing@hygon.cn,
+	yangge <yangge1116@126.com>
+Subject: [PATCH] mm/page_alloc: skip THP-sized PCP list when allocating non-CMA THP-sized page
+Date: Tue,  4 Jun 2024 17:14:20 +0800
+Message-Id: <1717492460-19457-1-git-send-email-yangge1116@126.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-CM-TRANSID:_____wAnFS7u2l5mNA2KAQ--.319S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KFykXw18Ww1DXFy8GF1UAwb_yoW8XryxpF
+	Wxua4jyayfXw13Ca97J3Wqkrsxuw4vgFWUCF4fXw1UZw13ta1293s7GF90vF1fAr98AF18
+	tr4ktr95ZF4qyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jxJ5rUUUUU=
+X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiGBPzG2VLblbknQABsN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-When dmaengine supports pause function, in suspend state,
-dmaengine_pause() is called instead of dmaengine_terminate_async(),
+From: yangge <yangge1116@126.com>
 
-In end of playback stream, the runtime->state will go to
-SNDRV_PCM_STATE_DRAINING, if system suspend & resume happen
-at this time, application will not resume playback stream, the
-stream will be closed directly, the dmaengine_terminate_async()
-will not be called before the dmaengine_synchronize(), which
-violates the call sequence for dmaengine_synchronize().
+Since commit 5d0a661d808f ("mm/page_alloc: use only one PCP list for
+THP-sized allocations") no longer differentiates the migration type
+of pages in THP-sized PCP list, it's possible to get a CMA page from
+the list, in some cases, it's not acceptable, for example, allocating
+a non-CMA page with PF_MEMALLOC_PIN flag returns a CMA page.
 
-This behavior also happens for capture streams, but there is no
-SNDRV_PCM_STATE_DRAINING state for capture. So use
-dmaengine_tx_status() to check the DMA status if the status is
-DMA_PAUSED, then call dmaengine_terminate_async() to terminate
-dmaengine before dmaengine_synchronize().
+The patch forbids allocating non-CMA THP-sized page from THP-sized
+PCP list to avoid the issue above.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Fixes: 5d0a661d808f ("mm/page_alloc: use only one PCP list for THP-sized allocations")
+Signed-off-by: yangge <yangge1116@126.com>
 ---
- sound/core/pcm_dmaengine.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ mm/page_alloc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
-index 12aa1cef11a1..7346c993a067 100644
---- a/sound/core/pcm_dmaengine.c
-+++ b/sound/core/pcm_dmaengine.c
-@@ -358,6 +358,12 @@ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_open_request_chan);
- int snd_dmaengine_pcm_close(struct snd_pcm_substream *substream)
- {
- 	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
-+	struct dma_tx_state state;
-+	enum dma_status status;
-+
-+	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
-+	if (status == DMA_PAUSED)
-+		dmaengine_terminate_async(prtd->dma_chan);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 2e22ce5..0bdf471 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2987,10 +2987,20 @@ struct page *rmqueue(struct zone *preferred_zone,
+ 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
  
- 	dmaengine_synchronize(prtd->dma_chan);
- 	kfree(prtd);
-@@ -378,6 +384,12 @@ EXPORT_SYMBOL_GPL(snd_dmaengine_pcm_close);
- int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
- {
- 	struct dmaengine_pcm_runtime_data *prtd = substream_to_prtd(substream);
-+	struct dma_tx_state state;
-+	enum dma_status status;
-+
-+	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
-+	if (status == DMA_PAUSED)
-+		dmaengine_terminate_async(prtd->dma_chan);
+ 	if (likely(pcp_allowed_order(order))) {
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++		if (!IS_ENABLED(CONFIG_CMA) || alloc_flags & ALLOC_CMA ||
++						order != HPAGE_PMD_ORDER) {
++			page = rmqueue_pcplist(preferred_zone, zone, order,
++						migratetype, alloc_flags);
++			if (likely(page))
++				goto out;
++		}
++#else
+ 		page = rmqueue_pcplist(preferred_zone, zone, order,
+ 				       migratetype, alloc_flags);
+ 		if (likely(page))
+ 			goto out;
++#endif
+ 	}
  
- 	dmaengine_synchronize(prtd->dma_chan);
- 	dma_release_channel(prtd->dma_chan);
+ 	page = rmqueue_buddy(preferred_zone, zone, order, alloc_flags,
 -- 
-2.34.1
+2.7.4
 
