@@ -1,105 +1,68 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2502D145A0E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 11:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F805144D21;
+	Tue,  4 Jun 2024 11:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717502129; cv=none; b=fsoZ/n5XLqcZxqc6bIQhTD3mPTO+Li+CYDRgjg0xKm27sXAlpE/hLfYFa2IfA3Pm727npkZK4kjVZVQF/BTq0lw1znedVoAIlSvvhxH5pSv5geYcJJjGO9ovJemYvGqvaD2D32ZmcPasXifNjGDM4bNXr1Swx8bfM5ZePtMGrlA=
+	t=1717502169; cv=none; b=oJyZtQkHJttTEi53InsNTmVV8V9T+vFLt+ufzX0eHjVZY6mJ91J+tlHWMK6FRdWoOGvDEYa0IY395MSZbPeJFjIJojKNHqTxqZHyv+8I2VQUKK9lS49uwQjERDOKCwG3PCKuZgB0y3XFvQxxn4uvTeAHkM16SZz/TQVYNDoxRzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717502129; c=relaxed/simple;
-	bh=yf+ydN+R982IdKmF4n3pntMyWNKFqfXc2Wo1bpcEdxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LgbfowFfReBrntCjUoLeTzt42B4B8b5cVXAUI/nM8GnooemDq7NABzyEb+JsRaR9nAhLuCAJ5hRuICydEh3Japy6FJQ6nYrVeHmdnXLBORkBCHItKUrE6UMHHOzhoKsFmfvKKmzAbQfPD2FB4I4mBDdpa7DGujTfGX3QK7Orcv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RcalEGgD; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717502169; c=relaxed/simple;
+	bh=2HtaCje/AByO8y8ttVnVbtxmSFQ/xg7CJhaRqfcF0Ys=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=Bj8/4ConVCPmNzH8Llpdqfg1mPsoPzoxx4MjWxiRY6UvTGYznGnY4GaTaDoyBG4Zy5i3jCQUVZ4nVQevy2U5aD6iRMYkPl3iR/D3Wo1C3an05LFbBLuqDyvhfIeUHwiwpgh7BDIH0/Bn0Gpol0yBjWiYnMAxKzFUAbnUBxRdndk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bZIrT/28; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RcalEGgD"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a68c2915d99so96624766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 04:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717502126; x=1718106926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=q6VdsvIa8zMQRCvSPBfH+t7XShyheFf7xCTS+iDnU7A=;
-        b=RcalEGgDgrN/x75cijpLoGLQrTHBTXBlPsq/r99yaX5Rx4DAsxs6XsUamB7Ezjrbqs
-         l83HWWwBZI5A63n49YJvih+DZVClNKXrNTd63pprl1p7gmQGeLsc20DRqVpRAHwtKbVG
-         TVUJWeNuDWtp/DzGbHesmxCaC7wTdut3YKo/qjlZQWpowEMKJ9bfm+MDYQ1OkkoyfrPi
-         i22tYEGAcHXpPCFIKoyMGoCfkIyRbPGSaB6o8Si9MYHI1DoHzi+eTv/O7Qtzc5wUkNer
-         nAzGLX1Zq5FhQX81IfWQlVssBabOz77dfz3V0lesuiJmxm8v9n6WYTn4vA0sDM13QmU8
-         wrSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717502126; x=1718106926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q6VdsvIa8zMQRCvSPBfH+t7XShyheFf7xCTS+iDnU7A=;
-        b=C+mb01IiH6Q/vLKjF/M03Ji29w6Hya8eEgXUlFKW2ZWtmfXBYd9nnbhUSHDd+HdUYG
-         X6FOF6YOdt3N79BAhEokNPGEtT67+HgR6PGkiqHzMoq8pWRYGaqVbc4rNM/qkJIcIMmE
-         3BmdJFpN9lPLaUnKoPpOmKuhQG/OeJ/vT8qHioACDQYPWGc512XVXbx3HmUZspROAamb
-         /O4c3/EwQ6zg9jiCgDxAgVlEQE1wYwvyLwaUaQOMmVG8T+38A0u2FLE0AHTU/It9lGMg
-         aXUqrSU7qU5ieIHKcO/KfbJOzALlgLFCeRykXWWgGN/WApCzluS7yt5IYgm66YmUx/ZQ
-         Gk5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXwFh92NycATEuIGrWTwOmjMeuTS8ly6HBwR4EYV6U6OjqWF4oxElOb+hgPRHv4RhgG6JiW5+cVfyUF0chKapWzOpZQ1IcmmDzy0Qg5
-X-Gm-Message-State: AOJu0Yyn4ZXWtXgqLQ53qF2gKoIc23tGeIOu+xQBujfvaeBHMohHxDHu
-	PFDCwfObrlfWWAgHcWStxWqd595eqcwugnt0W2Au0qYjx8RBfqAer6xQVr7RmYE=
-X-Google-Smtp-Source: AGHT+IFPMPPfIGwe+ITg80ybaKWLNAXwRZnyLNcFGdUR3AZt9Bjo6BQS8NFYbo5uuwNUOn4vIHjZ3w==
-X-Received: by 2002:a17:907:914e:b0:a68:9621:a93c with SMTP id a640c23a62f3a-a689621ab6fmr500481766b.8.1717502126376;
-        Tue, 04 Jun 2024 04:55:26 -0700 (PDT)
-Received: from ?IPV6:2a00:f41:909a:a11e:a035:2af2:8d85:1f72? ([2a00:f41:909a:a11e:a035:2af2:8d85:1f72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b0795942sm489469666b.181.2024.06.04.04.55.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 04:55:26 -0700 (PDT)
-Message-ID: <49fe3b01-4f00-4ffc-80cf-2a0add1ebaad@linaro.org>
-Date: Tue, 4 Jun 2024 13:55:14 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bZIrT/28"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4684E20B915A;
+	Tue,  4 Jun 2024 04:56:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4684E20B915A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1717502167;
+	bh=b/MoSSPuCfOeziCi8nOimS5wI7JeCnaNuAEAlFo9bSA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bZIrT/28dl3EvAYyniP1/Kkv8nk+8njU1bsfzhQ61prpnwCVjNnLbJBP9UPrGsBYI
+	 U4DC3g8VQWQCcj2yGH6bGqODHsC2zabAnKeHRimMD6LhGOuMFYtaQVG4u4uuvk8Ljk
+	 O04Zr/LSlKIEq15voaNRj5JAee33nc/DONG1SVX4=
+From: Konstantin Taranov <kotaranov@linux.microsoft.com>
+To: kotaranov@microsoft.com,
+	sharmaajay@microsoft.com,
+	longli@microsoft.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] RDMA/mana_ib: ignore optional access flags for MRs
+Date: Tue,  4 Jun 2024 04:56:02 -0700
+Message-Id: <1717502162-4161-1-git-send-email-kotaranov@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/adreno: Add support for Adreno 505 GPU
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>,
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Daniil Titov <daniilt971@gmail.com>
-References: <20240604-a505-v1-1-82ee1c04d200@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240604-a505-v1-1-82ee1c04d200@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+From: Konstantin Taranov <kotaranov@microsoft.com>
 
+Ignore optional ib_access_flags when an MR is created.
 
-On 6/4/24 02:20, Barnabás Czémán wrote:
-> From: Daniil Titov <daniilt971@gmail.com>
-> 
-> This GPU is found on SoCs such as MSM8937 (450 MHz), MSM8940 (475 MHz),
-> SDM439 (650 MHz).
-> 
-> Signed-off-by: Daniil Titov <daniilt971@gmail.com>
-> Signed-off-by: Barnabás Czémán <trabarni@gmail.com>
-> ---
+Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
+---
+ drivers/infiniband/hw/mana/mr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This all looks very good, just a nit
+diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
+index 4f13423..887b09d 100644
+--- a/drivers/infiniband/hw/mana/mr.c
++++ b/drivers/infiniband/hw/mana/mr.c
+@@ -112,6 +112,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
+ 		  "start 0x%llx, iova 0x%llx length 0x%llx access_flags 0x%x",
+ 		  start, iova, length, access_flags);
+ 
++	access_flags &= ~IB_ACCESS_OPTIONAL;
+ 	if (access_flags & ~VALID_MR_FLAGS)
+ 		return ERR_PTR(-EINVAL);
+ 
+-- 
+2.43.0
 
-[...]
-
-> +		/*
-> +		 * Increase inactive period to 250 to avoid bouncing
-> +		 * the GDSC which appears to make it grumpy
-> +		 */
-> +		.inactive_period = 250,
-
-Are you sure this is actually necessary?
-
-Konrad
