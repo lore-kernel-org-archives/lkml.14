@@ -1,97 +1,85 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB14D1419BC
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE1A23A0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487099; cv=none; b=P0IAvZvxWlNim0vwsimuri56DIeo8Yzlv1U1/OjqHrzhR2vumndLQlu+jCd/k98kejqeLC7Zz50vzyCEKgcAos1VDnHe3zOIamZEJ7Cc5alBRvOChCDm4LYsdEL0C0VRWzBanq2pFcPfj/5U9SbzSWyBa7Y2ITxfqGg+Urlexyc=
+	t=1717487164; cv=none; b=o70VcJoAfdEzKzrk7SF5bfrPs16Ucnwae+0cJ3yXPh7d3lconhsodXrAuBE6w/duWNa7x/gsJXMdMhrYl33tpI5PFQRRUPqh3bFNPKlHl+LtbDotDeZDt8on5KOPnnKAN3MK4h3E2inQad4rYCk4/qGyCFbADsktvMnOIm3zSBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717487099; c=relaxed/simple;
-	bh=tJBEhB3YJOWcB0CXNOHejn+7YjmsEvW/39XD/31pdto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MUeLJdIOUNDjiXr29rmfNboneeohR0CP90oRSF8Ji/krjSfomE9oHUD7viaNZVUOoulT05bBQI2P0Q8nt+2LoNDkAJf+IiztRcYYNGvoq2zS9dVLzkD88Vb6618vwDi9pCf54NmmFO7YuhFDihowQRak4eJcKjbFcAf3Y9pBkP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=FUM9icE7; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1717487164; c=relaxed/simple;
+	bh=15pEe5GNPxLteORBQfGrvAQ4jQMZUEhpWDnsiYVvo5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dx+GHHMzH0JGA8oYMg3BuS88ue66hdq2m+6/rWTuc7rFHqNBEj7Hct7J3miUtGaILR/voMvjUoGl40gal/qJSJ26PIPYidVoooNCqqDwRD/l6KDIYRKEihQjpwd3/PbNVWLB9r7fPro0uZxS/MW2yIuTsK8H+ruFtxKMRS+rY1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qAUaZu4z; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="FUM9icE7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=OcPX
-	Gu74LaGeRZBSSAXOp0vI7KaRiJ6A9fQeGd7c6jk=; b=FUM9icE7POaT2Q3v9hbZ
-	02l7MCaSwU9nJIARQPBTdvsdkxnM4m0Fy0Ny7tZ4UNkvrlond+PT0kjwBBEsjBpv
-	PoLLPdPyknatGIZbm6+elDLBG46IQ4udd/GX+fRmTtO3BS3DVFpDMtn8GDQHiQU1
-	31oPtU/YyUL0PNUPr4PQBAwUjHNldfzbi8gvzSW8CpeuIjWpp9cMhLXIib/Xj3OI
-	KIbTvGzQ/zPZNSFGpi1iJDgyW7AlpN0kEBb0FT7G/pBtG6vNzHRVFRbMPequlpJM
-	PaTimFRhnpd0hae912sWHaMSZR8QxVVPKe/er/jFI0LWw0NW9EYXnmc5kSEIntv4
-	nw==
-Received: (qmail 2207727 invoked from network); 4 Jun 2024 09:44:55 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Jun 2024 09:44:55 +0200
-X-UD-Smtp-Session: l3s3148p1@WoA+oAsads0gAwDPXzLGAH1eNELjOc3g
-Date: Tue, 4 Jun 2024 09:44:55 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, =?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Armin Wolf <W_Armin@gmx.de>, 
-	Stephen Horvath <s.horvath@outlook.com.au>
-Subject: Re: [PATCH v4 6/6] hwmon: (spd5118) Add configuration option for
- auto-detection
-Message-ID: <v5amgsab6fwz5sp3faci2ly6hbhyqfikcde6guszbjhssfxq64@lqawvnnin3sl>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, =?utf-8?B?UmVuw6k=?= Rebe <rene@exactcode.de>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Armin Wolf <W_Armin@gmx.de>, 
-	Stephen Horvath <s.horvath@outlook.com.au>
-References: <20240604040237.1064024-1-linux@roeck-us.net>
- <20240604040237.1064024-7-linux@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAUaZu4z"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a63359aaaa6so670708266b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 00:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717487161; x=1718091961; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=15pEe5GNPxLteORBQfGrvAQ4jQMZUEhpWDnsiYVvo5o=;
+        b=qAUaZu4zHVOAAJUljR09fPip433Na3ninkmq6OqZCHyX7NBWdU2ebNJup/aA+feqDS
+         gFA3A6eOQIO6Ncq3cfKieRPnfasHbAAGzCh+NFY0n2a6sbsvHYuZ1Mup682cJ1z1FTlq
+         WtBBYHCkpfb45WvsvHbNlPE6U/Hxv6ZXjbC7JeRbbocrNtBSzDj+28uWu7kpbMEPL70r
+         Wl5DSkdHmjYdG0sTJHa1oSMpDJZfisD8eDnvdrvMcDzyYeZnDd2SgjiZsyPu7//G9WqB
+         y1/GhriIG4bjqurVQht2abZQMt/yUT4roFf51rB+SxlC+RQhTVpV6iCfQFpzVvVOsdhM
+         TtIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717487161; x=1718091961;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=15pEe5GNPxLteORBQfGrvAQ4jQMZUEhpWDnsiYVvo5o=;
+        b=srJ/+7iwffQVWKpeNTEyq+Ui+d4MJCrlHuLHbfeSNMU9IBrmchQcZyMRA+NOs65une
+         fb5xjfhybv2J6AJC6mR/ZiXadSgNTmoblDDBLPrvOS40d1rhoufaHjZQbdhtp3uznTvX
+         DJho3Azw5xsRUxX1/DAQaXWn7yGNl/67CKlkxmQqpDD9IuEXoJYkO1v2xzQsR5Dcdrwf
+         0u31qlwEHswHFOQGUdZuSe9ePu8+b46GpPEr9nBbU9FfncgK2HAIdpDu0l73n43vX18l
+         DGyxqhHYIf9xlslgeMHcIrPghOweq99aml+blxGSO+d4Oox6G7vqNtDH77sLzL1w03gr
+         AuSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTYOoo0DSt/m7GjiCxxHCnkVU3b4CF0Ovqu+sevJpusHotBchLOnvCT/CuBG0i357jONSrbmUp/fbnJikIjmOliosmPsEP7PKbLH9r
+X-Gm-Message-State: AOJu0YyuZlAL08MLqu+FVktvKTPL51MIF9AOPhzBAYBc0dGQJFTeOvmL
+	VMSUnKDYBFXK2dM9uit4DxM7CMwv+0AQzi4Jr4cvIZT6jpgwmthllHqHNprawBM=
+X-Google-Smtp-Source: AGHT+IHvUcA/6Oaq3UarCZk0mfTN19uu+Ne4PDIdlEpwTxN7BJtF7D3Gf5q3AHla316Pq+3QWSworw==
+X-Received: by 2002:a17:906:eb46:b0:a68:bfe9:a111 with SMTP id a640c23a62f3a-a68bfe9a651mr545404266b.55.1717487161129;
+        Tue, 04 Jun 2024 00:46:01 -0700 (PDT)
+Received: from [192.168.0.107] ([79.115.63.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a552c902sm475478766b.191.2024.06.04.00.45.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jun 2024 00:46:00 -0700 (PDT)
+Message-ID: <9e5a3c7a-54ce-4219-a37d-c08ae2af9c10@linaro.org>
+Date: Tue, 4 Jun 2024 08:45:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y5lvvhmn6yrs6kjk"
-Content-Disposition: inline
-In-Reply-To: <20240604040237.1064024-7-linux@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: mtd: spi-nor: deprecate Everspin MRAM
+ devices
+To: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Thorsten Scherer <t.scherer@eckelmann.de>, Marek Vasut <marex@denx.de>,
+ Imre Kaloz <kaloz@openwrt.org>, Andrew Lunn <andrew@lunn.ch>,
+ Flavio Suligoi <f.suligoi@asem.it>
+References: <20240604074231.1874972-1-mwalle@kernel.org>
+Content-Language: en-US
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20240604074231.1874972-1-mwalle@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---y5lvvhmn6yrs6kjk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-> +#ifdef CONFIG_SENSORS_SPD5118_DETECT
->  	.detect		= spd5118_detect,
-> +#endif
->  	.address_list	= normal_i2c,
->  };
-
-So, I think we have too many Kconfig symbols already. What about using
-!DMI here?
-
-
---y5lvvhmn6yrs6kjk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmZexfcACgkQFA3kzBSg
-Kbb6uw/+J82rXUS8G+ViECXJ4AGTWUr1qhvMeXO8SjAiN9sT6JR+uooZKRcnNznp
-z/oXOlSETCFc6IdyDTqKTOxcrmYtWg6z/Vu1ayNltTkpAvG5KDRuGo1akUM6WZrn
-p+b3lon22H0vKvBuEkUS+WVzmglaVs6FUU2hZZxucBd4RgjSSkwbhtMETwX2D1yo
-r5yb09mUK4GmNIUI+mpOYtdKwj1hjpXTsxzgPcYMFOHPwyk6ZVde6MqsBE/pqSbo
-GVUTjmhkCbRIh0b5IPfv4yx/C/O+jelEn3nGVz4OjDLaGF4di2pqpyC3sNSLw29Q
-pShZBbctxRNrAgKKxRxlCQwiQGpqdjZnQyj1fAuz37L+Tw8KRbnHeLho+9veh9kV
-S1IfU5g12ckN+ENEY0jO7yINx+fyPS179Ve5tAFLR2+jxdyeOkzPrBKIihm7ReEo
-WryqbTXs3eUYhIdtvefWnDZB1Rd8tZ3Y8kmzUpJqYLM8vjcxoCoRPc1KynupmFJt
-yIxVb1zYhAWKXN9eaU2scbzpGVn9eLxmunxRMBkgPnxOU7XJ/hHp8VzbN5M3uD5s
-pMBGNA+FhJf2EFo18uwU4YksckpEjrkn7GKpyLrpTD9MhVU7I8cW0SgNZ+nTPCIY
-9KndUMSwE1eBNuKUSDbA/8w8eD9IDoFRUZm/Gu0gl+Xv231aoeE=
-=46bl
------END PGP SIGNATURE-----
-
---y5lvvhmn6yrs6kjk--
+Acked-by: Tudor Ambarus <tudor.ambarus@linaro.org>
