@@ -1,152 +1,199 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939F813F44D
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 06:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6E214294;
+	Tue,  4 Jun 2024 06:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717481290; cv=none; b=c15iAEyn1rENtcNnc0qXF/4lw+3th2/tRfmMaDsnKMlpOkDtOjRKrRV6zu4HoTTQcWdSyi4zx5Fs9W6uWlNx3fGpzdbrsugi/bp8YzGJzH5Q3jyinvpGf8/OXNpeQxCC/57xLM0XZTZhu2QtI2SYl860gANYDDgweQrt8dK+apA=
+	t=1717481374; cv=none; b=haf0ZjT8ARNx/0XkPVsThgmEyhk/p3ZVFfBVhB6BieyEPwufgYpHnwVOeLdG0bOJilDJ6u6nel4PJUebf6gbyVMpqzLxgdwmX5aP9RZluqkUfI1gcQt0WZDpOtsjrMOO0x0hFyeGXK1ybx5i5ZOURMWqnT15Rf26/wIgdp9wT4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717481290; c=relaxed/simple;
-	bh=uBSMT/rJCeQH+/WQQglX9BDaLJwuZrWJKb3tRGMkiPg=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=cz2TbOlCS5Vj8b3IF/7IKS3aTQMPk3GbwMlVMsWjURNxjvFjbteLMqUNqyDPnaGvIOmxP4cTDISayVchpWHoeIBDiaSrfeENc5QDsx5Xdz2lbqMVqWpJEpglcpf5Byutchc+35eCZ1z8F35RyqCa/DIDGSvzl/B/OtaG19AV8i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FOQCvNDj; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1717481374; c=relaxed/simple;
+	bh=INJo2SidQewMD7hDdbT5P1qF8tQ9+yI/vwd7rHQq24w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sqaqwq1Y/wP0203RbjkIrxxKjILgbgyF7wMbN3JugwNyX/Egsv8EEkSaDK5eBpK37taot8lDn3tKJEQUJHtWOzrWjQb76sL76bMQZ0pvnbJ9IdyNWZs1O6druHZqyIIkvdKG6FZHjYYs5mhxwRjXVTwKlEqY5MVhLBtjzSeff6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=goswy3rH; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FOQCvNDj"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240604060807euoutp02c7e28627cc2be18645db30eebb6181ad~VuCGLgp5U3231132311euoutp02i
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 06:08:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240604060807euoutp02c7e28627cc2be18645db30eebb6181ad~VuCGLgp5U3231132311euoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1717481287;
-	bh=fXwWGleR7MHxbZ9YCCDvKWivlC67g5iAbwjZphmcEeo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=FOQCvNDjITCsVlOK5DnP7AKdUUhnBoTxmx++M1JNSbYwNy17ppTni8OiPszB1Fi3i
-	 UBEmU0yZv+O/n60AxEBLD9MvFY2gztGx3P8MK83pmTO34sBzguMV5ifT2vNxP1AKXP
-	 DDpiowbDAe9oc06geVgINEEbaADEW4BnJVVez44M=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20240604060806eucas1p2b5d355cdd13db417969c9a1b4a4f89ad~VuCF4AeEm1450314503eucas1p2L;
-	Tue,  4 Jun 2024 06:08:06 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id F6.49.09620.64FAE566; Tue,  4
-	Jun 2024 07:08:06 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240604060806eucas1p22862dbc5e160cc485614c823ba1f77a3~VuCFhbCqT1406314063eucas1p2q;
-	Tue,  4 Jun 2024 06:08:06 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240604060806eusmtrp162ffe2f0926e959a7292f45cf7162b99~VuCFg4hoQ2337423374eusmtrp1J;
-	Tue,  4 Jun 2024 06:08:06 +0000 (GMT)
-X-AuditID: cbfec7f5-d1bff70000002594-78-665eaf460f05
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 31.A0.09010.64FAE566; Tue,  4
-	Jun 2024 07:08:06 +0100 (BST)
-Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240604060806eusmtip13627c1055fc783b6978f153609ec32c3~VuCFTUs_T2258622586eusmtip10;
-	Tue,  4 Jun 2024 06:08:06 +0000 (GMT)
-Received: from localhost (106.210.248.71) by CAMSVWEXC01.scsc.local
-	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Tue, 4 Jun 2024 07:08:05 +0100
-Date: Mon, 3 Jun 2024 15:23:05 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-CC: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
-	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] kernel/sysctl-test: add MODULE_DESCRIPTION()
-Message-ID: <20240603132305.ji6mpwao6q4hnsfl@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="goswy3rH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717481372; x=1749017372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=INJo2SidQewMD7hDdbT5P1qF8tQ9+yI/vwd7rHQq24w=;
+  b=goswy3rHrCOXv7HsjLFTyGGfmOT4pXHIV4KxYgBYIVNrdREpheHyJCOj
+   feB6Rvxf9hFPiAoWQaGbHzEl+mcqkd1sYHMMtgU8JBQSithMnmPdCoLJT
+   YRmciXjsvhW76OxxJWVexPltDc22LeVyaINFMZ+ZXRgbYEFib2DAd3JoS
+   ZX9JJyV6HSJZ6td/0WbB69k8oirCTNFrs+UkjHPhUTf+NQSRSRCjqXlKx
+   FS7kH3NaXv0jL5wr38sJUIvO1pCU14Gz2LRLspkCBbZwouvVNdE4/F11r
+   ZlucXzra9WF9ZZt+AdwadOZMJKLjtdfLnP0vU0XkLdvcuJjHbrEnlsRij
+   w==;
+X-CSE-ConnectionGUID: XzWWeFO6TUCMhk6ZsWsZBQ==
+X-CSE-MsgGUID: 9+UhSBa8SMiLLwM0mBeoYQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="14127962"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="14127962"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 23:09:32 -0700
+X-CSE-ConnectionGUID: ou6xFO4KTfC6+UFr/7gGXQ==
+X-CSE-MsgGUID: wahi9MLFSIOb+TqnUEXeuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="42055698"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 03 Jun 2024 23:09:28 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sENML-000Mdv-1k;
+	Tue, 04 Jun 2024 06:09:25 +0000
+Date: Tue, 4 Jun 2024 14:09:05 +0800
+From: kernel test robot <lkp@intel.com>
+To: Adrian Moreno <amorenoz@redhat.com>, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, aconole@redhat.com, echaudro@redhat.com,
+	horms@kernel.org, i.maximets@ovn.org, dev@openvswitch.org,
+	Adrian Moreno <amorenoz@redhat.com>,
+	Pravin B Shelar <pshelar@ovn.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 6/9] net: openvswitch: store sampling
+ probability in cb.
+Message-ID: <202406041339.ytdRh41V-lkp@intel.com>
+References: <20240603185647.2310748-7-amorenoz@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240529-md-kernel-sysctl-test-v1-1-32597f712634@quicinc.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleLIzCtJLcpLzFFi42LZduznOV239XFpBrO2aFuc6c612HpL2mLP
-	3pMsFpd3zWGzuDHhKaNF45a7rA5sHrMbLrJ4bFrVyeYxcU+dx+dNcgEsUVw2Kak5mWWpRfp2
-	CVwZ267OZS64xlFx5fYZlgbGXvYuRk4OCQETiSvvVjF2MXJxCAmsYJTY1baeHcL5wijRtOsc
-	VOYzo8Tsp2uZYVqmf/rCBJFYzijx7+9vhKobjxdCOZsZJSa+WAXWwiKgInF2UgMbiM0moCNx
-	/s0dsLgIkN36dAsbSAMzSMO5H/vAioQFHCXu7J4HVsQr4CDRdmMTC4QtKHFy5hMwmxmoecHu
-	T0D1HEC2tMTyfxwgYU4Bb4mZH/czQpyqJHHw4nsWCLtWYu2xM2DPSQic4ZA4d/whVMJFYvmX
-	XjYIW1ji1fEt0KCRkTg9uYcFomEyo8T+fx+gulczSixr/MoEUWUt0XLlCTvIFRJAV+8/bA1h
-	8knceCsIcSefxKRt05khwrwSHW1CEI1qEqvvvWGZwKg8C8lns5B8NgvhswWMzKsYxVNLi3PT
-	U4uN81LL9YoTc4tL89L1kvNzNzEC08rpf8e/7mBc8eqj3iFGJg7GQ4wSHMxKIrx9ddFpQrwp
-	iZVVqUX58UWlOanFhxilOViUxHlVU+RThQTSE0tSs1NTC1KLYLJMHJxSDUyTVnqeKV7q1vDu
-	/1r+bU8eHQptvrOh/dTcqa+D455oh706mPjTeNn5bX/45Iw13/578k3wlg2f+pr8g0t+8V5c
-	uybMb/7E5yc+y+YtT71mPJdh2/4Ze20fCIou40i4paWl9fD6u2MFm6q7/U7dvRZ9IOHnscbt
-	X08/nDFV9ofuP49jXpI9BfMFVh8PWb+2+x1fL1sBW2D/+wurhNjcJUz5Nh0P3LeY5cVdpayw
-	iQfKt08tPXcgxOGz9JFn81oXPDt6e3HkToPfO544vbnT1SndahoiG9e1//wJf6+MAJ5Nvjd7
-	v/1+698YxL5+rv6JB1Wbi6V+NZZmyJp8n1M5/6P83gSuF+oTRNTFfjHfKNiePFOJpTgj0VCL
-	uag4EQDm2WNKmgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsVy+t/xu7pu6+PSDD7eEbQ4051rsfWWtMWe
-	vSdZLC7vmsNmcWPCU0aLxi13WR3YPGY3XGTx2LSqk81j4p46j8+b5AJYovRsivJLS1IVMvKL
-	S2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQytl2dy1xwjaPiyu0zLA2M
-	vexdjJwcEgImEtM/fWHqYuTiEBJYyijx8tw1JoiEjMTGL1dZIWxhiT/Xutggij4ySpy8eA/K
-	2cwosePzVmaQKhYBFYmzkxrYQGw2AR2J82/ugMVFgOzWp1vAGphBGs792AdWJCzgKHFn9zyw
-	Il4BB4m2G5tYIKbOY5T4PmkRG0RCUOLkzCcsIDYz0KQFuz8BxTmAbGmJ5f84QMKcAt4SMz/u
-	Z4Q4VUni4MX3LBB2rcSr+7sZJzAKz0IyaRaSSbMQJi1gZF7FKJJaWpybnltspFecmFtcmpeu
-	l5yfu4kRGF3bjv3csoNx5auPeocYmTgYDzFKcDArifD21UWnCfGmJFZWpRblxxeV5qQWH2I0
-	BYbFRGYp0eR8YHznlcQbmhmYGpqYWRqYWpoZK4nzehZ0JAoJpCeWpGanphakFsH0MXFwSjUw
-	LVCdF7MwIsLxY1Yo45HFWVtSmpeed+t/zHNrQ94h6YpDB+y6D/29duLvi2PmjJ2ynZVPyueJ
-	m10JYmvyfPae+6XrLs12VS+pp7v/3mOo3HrXPGDbhkYLpQaxDyZ7mS9caFQ5776oxeEy2+28
-	X/w84RnvzzOfmnNPrirTRfz85MunTVt/yShl/NbdnP7Wr66jWCNR6V16uO7Eww+EpcMe/16o
-	fdCLw/hwWHNPaxDDwReq71dsVZPeP+vezXSnKwIzHx53TNKzvrFCd18Z35IdcpaF4VPk2ETk
-	7Ivddh5SbfIPSrsl7M08Xbi5TsBcLrirSO3CeSGVrgzn6TIvVQ2XJd7yOmSaoT5/5yru+weU
-	WIozEg21mIuKEwHXFM0GNwMAAA==
-X-CMS-MailID: 20240604060806eucas1p22862dbc5e160cc485614c823ba1f77a3
-X-Msg-Generator: CA
-X-RootMTR: 20240529212552eucas1p1810ee5a1c17fb966eada0b0562338c23
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240529212552eucas1p1810ee5a1c17fb966eada0b0562338c23
-References: <CGME20240529212552eucas1p1810ee5a1c17fb966eada0b0562338c23@eucas1p1.samsung.com>
-	<20240529-md-kernel-sysctl-test-v1-1-32597f712634@quicinc.com>
+In-Reply-To: <20240603185647.2310748-7-amorenoz@redhat.com>
 
-On Wed, May 29, 2024 at 02:25:41PM -0700, Jeff Johnson wrote:
-> Fix the 'make W=1' warning:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in kernel/sysctl-test.o
+Hi Adrian,
 
-I changed the message to this
-"""
-sysctl: Add module description to sysctl-testing
+kernel test robot noticed the following build errors:
 
-    Added a module description to sysctl Kunit self test module to fix the
-    'make W=1' warning (" WARNING: modpost: missing MODULE_DESCRIPTION() in
-    kernel/sysctl-test.o")
-"""
+[auto build test ERROR on net-next/main]
 
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
->  kernel/sysctl-test.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-> index 6ef887c19c48..92f94ea28957 100644
-> --- a/kernel/sysctl-test.c
-> +++ b/kernel/sysctl-test.c
-> @@ -388,4 +388,5 @@ static struct kunit_suite sysctl_test_suite = {
->  
->  kunit_test_suites(&sysctl_test_suite);
->  
-> +MODULE_DESCRIPTION("KUnit test of proc sysctl");
->  MODULE_LICENSE("GPL v2");
-> 
-> ---
-> base-commit: 4a4be1ad3a6efea16c56615f31117590fd881358
-> change-id: 20240529-md-kernel-sysctl-test-2bbad793ac62
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Adrian-Moreno/net-psample-add-user-cookie/20240604-030055
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240603185647.2310748-7-amorenoz%40redhat.com
+patch subject: [PATCH net-next v2 6/9] net: openvswitch: store sampling probability in cb.
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20240604/202406041339.ytdRh41V-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041339.ytdRh41V-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406041339.ytdRh41V-lkp@intel.com/
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-zydacron.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-viewsonic.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-waltop.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-winwing.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/of/of_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/fbtft/fbtft.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-bootrom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spilib.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-hid.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-light.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-log.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-loopback.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-power-supply.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-raw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-vibrator.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-audio-manager.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gbphy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-i2c.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-pwm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-sdio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-spi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-uart.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/staging/greybus/gb-usb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/goldfish/goldfish_pipe.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/platform/chrome/cros_kunit_proto_test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mailbox/mtk-cmdq-mailbox.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_simpleondemand.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_powersave.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwtracing/intel_th/intel_th_msu_sink.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem-apple-efuses.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_brcm_nvram.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/nvmem/nvmem_u-boot-env.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx8mm-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx8mq-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx8mn-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/interconnect/imx/imx8mp-interconnect.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hte/hte-tegra194-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/vdpa/vdpa.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/parport/parport.o
+WARNING: modpost: drivers/parport/parport_amiga: section mismatch in reference: amiga_parallel_driver+0x8 (section: .data) -> amiga_parallel_remove (section: .exit.text)
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/brcm_u-boot.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/parsers/tplink_safeloader.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_util.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/chips/cfi_cmdset_0020.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mtd/maps/map_funcs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/spmi-pmic-arb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/uio/uio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/pcmcia_rsrc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/pcmcia/i82365.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/corsair-cpro.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/vhost/vringh.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/greybus.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/greybus/gb-es2.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rpmsg/rpmsg_char.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/ingenic-adc.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/xilinx-ams.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-hub.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-aspeed.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-ast-cf.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-scom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/siox/siox-bus-gpio.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/counter/ftm-quaddec.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/oss/dmasound/dmasound_core.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/codecs/snd-soc-wm-adsp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/fsl/imx-pcm-dma.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/mxs/snd-soc-mxs-pcm.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/qcom/snd-soc-qcom-sdw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-intel-atom.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-acpi-intel-byt.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/intel/snd-sof-acpi-intel-bdw.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/imx/snd-sof-imx8.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/imx/snd-sof-imx8m.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/imx/snd-sof-imx8ulp.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/imx/imx-common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/mediatek/mtk-adsp-common.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/mediatek/mt8195/snd-sof-mt8195.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/mediatek/mt8186/snd-sof-mt8186.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-utils.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-acpi.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in sound/soc/sof/snd-sof-of.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mtty.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mdpy-fb.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/vfio-mdev/mbochs.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/configfs/configfs_sample.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/bytestream-example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/dma-example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/inttype-example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kfifo/record-example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kobject/kobject-example.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in samples/kobject/kset-example.o
+>> ERROR: modpost: "__udivdi3" [net/openvswitch/openvswitch.ko] undefined!
 
 -- 
-
-Joel Granados
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
