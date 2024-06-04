@@ -1,76 +1,98 @@
-Received: from mx.adeep.su (mx.adeep.su [185.250.0.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDE329CFE
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.250.0.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BEE66FD5
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717510552; cv=none; b=TK4BXboMWiU/+HC6lMy6IaslJThlHMfjXf3/YdmduIYW8cmN7F+x5frXEdm66mBM3saZ1dThnC9l/H1Ya15qGOuGzugIa7zIe0BiRpS76A6q6jcMxWrO/Kz8lMroncImJpNUmYAiIwNBDuJ3LcV7kQS6VaDVsDaiNNxaBTinnfY=
+	t=1717510642; cv=none; b=bkbNIEFetXiXzlEdYj/oVSkYKGvVXLnIuP21PTu7tR46Dg2F0KPL/NnGQCv7YHWEbFM5l7Cy4ZFPkPSn06LlTJE9NVBA5R9Z8hJ+as31Ykt04ThUZvQDQlx4YhaNJTco8ZrFoa5vwQZthe/M8qtkjdK/jq+2qUAgUNsj/fLTdkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717510552; c=relaxed/simple;
-	bh=eGS1Vsi5QG9dv+ynVH1vgHZQbhfvGoJaZLtnjmp2MVg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=J0DlgeGsHDMjKY2dc/bxSgAv6p7BFlFqe6FD7sGysS2VA8oS1EImp9RGIEllUag0Qn5ONZE3OVmFg2//vic7JjpAC8JtJ3IUaDut3te1D8yE0ihFgwn9x2xDrk5ujRHWC8qLyw1M/yAXm8Pl30v/KYJtldsq0wypgxxk6GaLrUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in; spf=pass smtp.mailfrom=lexina.in; dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b=CKfwtdCw; arc=none smtp.client-ip=185.250.0.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=lexina.in
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lexina.in
+	s=arc-20240116; t=1717510642; c=relaxed/simple;
+	bh=huLSRBNy5PxQ3jwYLVFn/vcVsswN30JmnD1cxehH2D0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=bO09Vw4Dl5QcZKsxnoVj/UL9/q+JPJ8QNOX1F0oGy894B+wp7KTmF2IykVkmZJXMmfVylz5hoeiDJmdH9gTkuQLEKtg99YqM9DxF20g+9pxr2uhe+CtqF0GGVTAD5/sQ9vOlN5Fe84PHkadEAMV8b3+ziigMPZlskAO687tvOW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=qYNTVHS4; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lexina.in header.i=@lexina.in header.b="CKfwtdCw"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 511C9FC974;
-	Tue,  4 Jun 2024 17:06:17 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lexina.in; s=dkim;
-	t=1717509991; h=from:subject:date:message-id:to:mime-version:
-	 content-transfer-encoding; bh=IBuooCDtyKHRQbL0BSwWXYG2t/9WVK1dkFV9raf2ZvY=;
-	b=CKfwtdCwbZrMdw6VnDe6QW4eaNX86ggr7TqKXZAx6CJUYHCI5JNXvXjBqxvKdHMxxwu5vL
-	4/d8Q6qDviKdtQhrDG7HAqOOqG0Wj6Qqg6yUCUrijFXFvaLNKPYoGDYE9GNzJDBmmH1AQu
-	svCPglmyl1L3OY6k6iW+gw9FAr1XHZ1CHsvwXK9ctRfYFS42gSjcpDSooZsl/LW7Qlnl4V
-	CM0pLhWJY0/wMTrNcoTcnEdb3EXdiWJ8KuyY8McjUxM0eOScLbk7uV86eT7T0mE6cnG0VI
-	YVjQNJkJ0BJFoJ/ZHoyjky76iOofRxYiSiPeEsybmYIn85wOTE/8nUXi2jC4Uw==
-From: Viacheslav Bocharov <adeep@lexina.in>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: [PATCH] soc: amlogic: meson-gx-socinfo: add new A113X SoC id
-Date: Tue,  4 Jun 2024 17:04:51 +0300
-Message-ID: <20240604140612.1179323-1-adeep@lexina.in>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="qYNTVHS4"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6f676798c13so86314b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1717510640; x=1718115440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IkJ21ZkyQafe4wcLOoZRQCL0rFCtk91xN44Tj1tR6SQ=;
+        b=qYNTVHS4IvdAf4mB2t4QLTaLfal+ni0NqtTk62hOgg1gLnOdvFw7NxzEm1AwB2dyp+
+         BmbaIKjBP7SZN2pvldD2ljj7NeSKPzqL8OkG8JKwA7THp+HnF32CxrwCs/qUf0pXZucR
+         xDMvTFNMc1n/r8xSJzsgi0UJPo+8+lmas54ZCLPT4/nvpeYXMMcfnLlNFvN/Mtk9Uoay
+         Z2NGe6hXfJ1Z4yAmUFN9pbw/qOjVFsE3xKGiQOGprhy5lLe4S6UZgqQSSIFai+L/mQv9
+         AqOIWvej78YbbUB9ZGevziDh8slWidamJ1YpKGeoG/OxiwZwaH0fci0wzLUmwY6lGJWf
+         hapA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717510640; x=1718115440;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IkJ21ZkyQafe4wcLOoZRQCL0rFCtk91xN44Tj1tR6SQ=;
+        b=WQXYSjerqenT/OpWEFPkgZiKin2nw6ey2gfQ+rpUvO57wU/1fiE6flXE4A23Mkjff3
+         qh50+jv0JOw9MPMn6Og6NR0Q2Ohho/RdfRDYciZscgvBec6GGRtD8SfwSXYWoAgtGUgD
+         1c3py3NSsdCDGvXvpF0BwXbce8lpqKsoR1DBoeTpHGoWytXcC7NC9wvuoi1DN0KlQ/sw
+         RTA5q6X8z34NYyr1wSukao0YDpObG8H8S+jad7ibnXLXWudJCIBVvSgB0qFM08gxgFNj
+         u8erMjsmkW6vwf4RFwhDARwZJoE0Y8PZXN3rrHUj+ImbHm0wlHs1a0RA+9dGyxazbao8
+         JecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWqdWzCABFgtYNMefOUmZPNcorXd04c2vQBGeQsPRhdvxCtmHEtRUxu/5T/4654lItHSeFyTSaBVrcrvSI+AoGBRlRcAknBpIU3GzF
+X-Gm-Message-State: AOJu0YxrZUT8o+nXHuAtNI46dTrih8P2O6x+R+b9uF9PnBBwRTV556C1
+	pLkM/a35wY4aJi6TOGSFyXxCgnZvmoc7X2rclTMskAFB/WCbh8Fd172JTHxtuLY=
+X-Google-Smtp-Source: AGHT+IEBqulbCLQzbATvm9efh4+qHDny10+2m/uVMwoiB0wI78fd61USIWTQx0er3QwGUHB3JAc4cQ==
+X-Received: by 2002:a62:e116:0:b0:6ec:ee44:17bb with SMTP id d2e1a72fcca58-70247899e76mr12225845b3a.2.1717510639671;
+        Tue, 04 Jun 2024 07:17:19 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702541eeadcsm5396462b3a.150.2024.06.04.07.17.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 07:17:19 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: ming.lei@redhat.com, hch@lst.de, f.weber@proxmox.com, 
+ bvanassche@acm.org, Chengming Zhou <chengming.zhou@linux.dev>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ zhouchengming@bytedance.com
+In-Reply-To: <20240604064745.808610-1-chengming.zhou@linux.dev>
+References: <20240604064745.808610-1-chengming.zhou@linux.dev>
+Subject: Re: [PATCH] block: fix request.queuelist usage in flush
+Message-Id: <171751063844.375344.3358896610081062168.b4-ty@kernel.dk>
+Date: Tue, 04 Jun 2024 08:17:18 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.5-dev-2aabd
 
-Add new definition for Amlogix A113X SoC found in JetHub D1/D1+ devices:
 
-soc soc0: Amlogic Meson AXG (A113X) Revision 25:b (43:2) Detected
+On Tue, 04 Jun 2024 14:47:45 +0800, Chengming Zhou wrote:
+> Friedrich Weber reported a kernel crash problem and bisected to commit
+> 81ada09cc25e ("blk-flush: reuse rq queuelist in flush state machine").
+> 
+> The root cause is that we use "list_move_tail(&rq->queuelist, pending)"
+> in the PREFLUSH/POSTFLUSH sequences. But rq->queuelist.next == xxx since
+> it's popped out from plug->cached_rq in __blk_mq_alloc_requests_batch().
+> We don't initialize its queuelist just for this first request, although
+> the queuelist of all later popped requests will be initialized.
+> 
+> [...]
 
-Signed-off-by: Viacheslav Bocharov <adeep@lexina.in>
+Applied, thanks!
 
----
-This commit is applied on top of Christian Hewitt's commit with S905L SoC id.
+[1/1] block: fix request.queuelist usage in flush
+      commit: a315b96155e4c0362742aa3c3b3aebe2ec3844bd
 
---- 
- drivers/soc/amlogic/meson-gx-socinfo.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 7e255acf5430..8809a948201a 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -63,6 +63,7 @@ static const struct meson_gx_package_id {
- 	{ "962X", 0x24, 0x10, 0xf0 },
- 	{ "962E", 0x24, 0x20, 0xf0 },
- 	{ "A113X", 0x25, 0x37, 0xff },
-+	{ "A113X", 0x25, 0x43, 0xff },
- 	{ "A113D", 0x25, 0x22, 0xff },
- 	{ "S905L", 0x26, 0, 0x0 },
- 	{ "S905D2", 0x28, 0x10, 0xf0 },
+Best regards,
 -- 
-2.45.2
+Jens Axboe
+
+
 
