@@ -1,58 +1,39 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2311CA5F
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 00:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20160399;
+	Tue,  4 Jun 2024 00:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717461514; cv=none; b=jyHte9QvfVClhl5k4WJOy36QP6RornORGFkfk30YiT9LoKehdBjArDqqdOoghlJ4ppImp6jB+fpIKq9RaapdlE9n8s458G9Lb1GllnfqxzrUXfO/ARk+buYcH51GTNONge+ntEBv6DPJWwQfg+jyMXM+2J4/OoMuu3Bp272OEoI=
+	t=1717461910; cv=none; b=jcLSdkocjdnAFsiiFOKLg8ZACdJAiORboQTib3EH0WNoQlKTpc8a5VCoE84WWGhCi84V9qvmTolBsvuT3UMvHl2n+1OTh2GLq2oL+YS9xwWYdw2zbZiyfVUJBLobFWQ/Q88GHysrhdOpL/phHQYU5xtSKEoZL3uJBCq849ba+GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717461514; c=relaxed/simple;
-	bh=YDU1Dhsr3KT+mfMya+MZmz7rPu7CE0JSUYz5RrRoIz4=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=E6DYEVvqvA6DDe6HrjbuqWA8mADdHpNKZvsc6//KLwT99IM63iwOW2/Eb0HltMQ5VDMD3uupWH8B8NeX0EBKOWGIXy0qrSr9nfjYpe5M/VDjRyj8gHiWZUdsNjCdPmAmYQYUNrvdZ6dWU1u4iAO+vV3BsDYVKGDnTgo404JWssA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZsbcczYl; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717461910; c=relaxed/simple;
+	bh=7mlxyKX/tSYlAa4UsecWzVPrQObeMubwDYBXeApQ3Po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EhI2csFK/VT1uyqj+FIGQO/tuPaZz2FvUvenxGnZCGjzihLxJ4h7bgS8x+3UIR6DO5wyxT57ik+Pgfp19YH+dply3sEqlpaqFqrkIKxK+Gpv0S6XGMWeTYk6lWWJhmoL0oT7VViF2hss03NwE7NWd8X8BJxECIkH3x22nILj2vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=IcBtkMGI; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsbcczYl"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42121d27861so4744245e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 17:38:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717461511; x=1718066311; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aNrik73waLfRCE0M6HnOnzqRYLaiC1N+WSsxINID/rI=;
-        b=ZsbcczYlAqhNjjGEZ7McijbFOq1TeCyn7h9yVDmYgXA29h9QDmcaY5esuy0qzXqOX6
-         K+hVFRXwPRPgh1+ml2Xjx+71aGORnTWgCS44rvQfwXRLQgMs57gyVGGI0psGSuFi9hf1
-         OBZad8HxCCoqut0XzY+p7goWCbv58Emiv4BJZoAn/3K5N0GJDM49FWtrjRPAdOV42lC+
-         //9lCu09s2dF7obf2GHYHwyF4ZU3s2OTBT2kq9hRcR4sMbFh5ZrA9HWSxGmv7PzvBMON
-         JDec1MJiisvWHui5twf6D9vjd3emmxMrU3kfOSDWf3fnM4ZkuDOYmMaiQL2cfEArqj1W
-         ICXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717461511; x=1718066311;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aNrik73waLfRCE0M6HnOnzqRYLaiC1N+WSsxINID/rI=;
-        b=qFy08Vs5RxhSJ+D6LHx4YT4zi0mr1UDXxZDa2PE/Z3bE2nuM47a7fB9/ITrlcGIf/w
-         ex64pIHo3tooLS/0NVBxB9RfGf5TZoH4jMxAUYAUConUSKaygODtzdyYKX1Hlb+dgXFL
-         yndsUCZ2IMoF18mPgAEzSjMhtGxKQ6onkjBt8jFywaYVTAYXfBenT2I5YMWP4P01Rnpp
-         D+1ngneT4AIAKmP3rS3vbmBixv9w13aTyXluEJwnYv552If3J0s4zB06bDtO0w5bylzq
-         Pm+1cd2AOtIRK70gc2GO80xZTK+eRem/hdtvf1sIb8B5s9qITMvf43O87zxVq9yXMs9a
-         mOkg==
-X-Gm-Message-State: AOJu0Ywy8vpnhf4BLCVZG02mg64DobMOtAIRkVupcjXZN62rWlRu4g7p
-	dWFQNU2jAWAOq+9pOKEY1lK5Xxb1wYj/CklzzJgiU8r/VQ71F+w6Xs6B5A==
-X-Google-Smtp-Source: AGHT+IHFC3dUs0TkHZn3w8fCXnYDJ6rNoQK/eT14wra0Z+hxsRD7P5LwrBVMwBKAjP2YclWBkzPyzQ==
-X-Received: by 2002:a05:600c:1d17:b0:419:d5cd:5ba with SMTP id 5b1f17b1804b1-4212e0441e7mr83339505e9.7.1717461511196;
-        Mon, 03 Jun 2024 17:38:31 -0700 (PDT)
-Received: from ?IPV6:2001:8a0:6cd2:9000:7743:6619:c46d:98fb? ([2001:8a0:6cd2:9000:7743:6619:c46d:98fb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd06499d8sm10202119f8f.90.2024.06.03.17.38.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jun 2024 17:38:30 -0700 (PDT)
-Message-ID: <ce0408ed-4738-4a0b-994b-f3b6cd17091b@gmail.com>
-Date: Tue, 4 Jun 2024 01:38:30 +0100
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IcBtkMGI"
+Received: from [IPV6:2601:646:8002:4641:eb14:ad94:2806:1c1a] ([IPv6:2601:646:8002:4641:eb14:ad94:2806:1c1a])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4540O6GP697624
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 3 Jun 2024 17:24:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4540O6GP697624
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024051501; t=1717460652;
+	bh=hPNX3NSLHYNb2TcI1l7fuFsWwNCcNc5ytF4+K+xW86o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IcBtkMGIO/Y/xzeu3xUgo0V2bIRkGJWdFYBCuvM7FvQFv4DD5SqW52rOMi1M1NXq0
+	 UbpxLqPThJOMWS5OGoH5JDJTneX9Fz4WB6HCAlD3DdwNRoR6DOySE7liMPJ2OoJXwk
+	 kN0YOjNf4IHAm/j/fRONallpudtEaMW7a9guw+zMWdMJsw0v5yTE4w+UjP4qPSHwDW
+	 +lzLAyxf6BQR+J+gKWA9WL4tVNflr3bNAQgvUQ8ZJY3ET9y22IPwofcNUeVC+3avqJ
+	 UFYXxzGbHKtq+nJW3AUi/L4zQrxGWhTvCCXwlR00kYfSxD0xpWVzLtMVCBflrX/zBr
+	 fTdcJY72jn6bw==
+Message-ID: <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
+Date: Mon, 3 Jun 2024 17:24:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,33 +41,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nikolay Borisov <nik.borisov@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Kalra, Ashish"
+ <ashish.kalra@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Baoquan He <bhe@redhat.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+        linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
 Content-Language: en-US
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Andr=C3=A9_Coelho?= <andrealbergaria@gmail.com>
-Subject: user structure
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Trying one more time; sorry (again) if someone receives this in duplicate.
 
-im not sure, wether, this is correct, but i assume that the kernel , 
-doesnt have notion of users?!
+>>>
+>>> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+>>> index 56cab1bb25f5..085eef5c3904 100644
+>>> --- a/arch/x86/kernel/relocate_kernel_64.S
+>>> +++ b/arch/x86/kernel/relocate_kernel_64.S
+>>> @@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>>>    	 */
+>>>    	movl	$X86_CR4_PAE, %eax
+>>>    	testq	$X86_CR4_LA57, %r13
+>>> -	jz	1f
+>>> +	jz	.Lno_la57
+>>>    	orl	$X86_CR4_LA57, %eax
+>>> -1:
+>>> +.Lno_la57:
+>>> +
+>>>    	movq	%rax, %cr4
 
-perhaps a kernel structure like
+If we are cleaning up this code... the above can simply be:
 
-struct user; {
+	andl $(X86_CR4_PAE | X86_CR4_LA54), %r13
+	movq %r13, %cr4
 
-something
+%r13 is dead afterwards, and the PAE bit *will* be set in %r13 anyway.
 
-};
-
-could be ok , or that stuff already exist?!
-
-thanks
-
-andre
-
--- 
-André Albergaria Coelho
-andrealbergaria@gmail.com
+	-hpa
 
