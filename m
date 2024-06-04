@@ -1,119 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B0BE148820;
-	Tue,  4 Jun 2024 17:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF56C149C69;
+	Tue,  4 Jun 2024 17:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717520681; cv=none; b=r8bqTlEBFKhzSSXM8AZkYrPxj5ovu/40viMo8/Oiwt/PPGa4KchaLg60ZCclPpnd/tppmKGYeVycD9FnM4uG1J4DXXiwsVMTth0y/yHOIq0KDjDCVk3u3LJFVlpBerz6YITnznKwGXSM1rBsKn+xMX38h2rhYN0qpLzDo1eFlkA=
+	t=1717520681; cv=none; b=BrprILRbzBW/+QeYczu/TzIGvXWAndGvTTsO3xHli2AhcpmjDp6v0EonDURRdv4nwj+5hOvxXtaC/HdyCKe7lnfMkNh4d1nSMWeyVGfKOz/JUzyPi6DE5l+IQyyRIDO5ox/XtC02iIe7jyx8YDrxG2Hq1oCk8NNeU7PPOzowSuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717520681; c=relaxed/simple;
-	bh=LJWf3QoCZ3rFmQ9GULoPGURQSMideMDjJ/XO70462sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RGJYTcz74XgEfSssw39Ku0oGib9go4QCtvpTyj8prFosoFlmQJ/5bsrxBS9F3bgVD8tIuIvZLITUbBt5noj7/w0lk+Vx84ZhkPRtYPfNo/+ZEZ6qp+DY9Gjutd+kleRBb6BQyrJ4B8QjpoCRTtj+7MmCCWpGKwuec2rTNS8ccaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F64C1042;
-	Tue,  4 Jun 2024 10:04:55 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 097E53F762;
-	Tue,  4 Jun 2024 10:04:27 -0700 (PDT)
-Date: Tue, 4 Jun 2024 18:04:22 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Florent Revest <revest@chromium.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v3 00/27] function_graph: Allow multiple users for
- function graph tracing
-Message-ID: <Zl9JFnzKGuUM10X2@J2N7QTR9R3>
-References: <20240603190704.663840775@goodmis.org>
- <20240604081850.59267aa9@rorschach.local.home>
- <Zl8oWNhkEPleJ3B_@J2N7QTR9R3>
- <20240604123124.456d19cf@gandalf.local.home>
+	bh=SsfSYlvMJfbrFJhxWSLRoEWcjcncMnxVxwE9E1US2+0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pNSmkvqog4i2ETofYD4mQTixpRjx+GqCfYZ6U3tRGAsQDA0ri04bNYyMubjwf17a2VFC01BjIX28tQdmKCl8btPFQuKVPd2E/jdh4KZUeezc/jItmWXWZ08TFRaOlfcfVQuvGKZUUhUG+v4b6ox1M1KQGgybIiHhRiR8/0zTaTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfKUufhi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfKUufhi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69273C4AF0D;
+	Tue,  4 Jun 2024 17:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717520681;
+	bh=SsfSYlvMJfbrFJhxWSLRoEWcjcncMnxVxwE9E1US2+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mfKUufhihelxky1Xwi2kwpbTuct2AOpwGA45g3lf3ZkFteqZwyHM80zBFEtCjHLVu
+	 F8arywo58nGGrzvjXi5LmYsJSgGky84+emU3ZWWeOtd5CAfan355yNTGVTj+MZp9CH
+	 +zJbtfcKjCPWB7wkmhNanJGMBy0TMMCiWIecVwdMQ9NKMHPvssPiWEWc1tmq80UGB8
+	 oBLttlxdYLIkAK9T06/wJaevO1tCyWfKh2atjudmX6j+XWlRHStXeq2HbcPDnr4qRy
+	 c4rx9SqCfJEfXV+oiKbK0tM6oh2xK4WF3nl4wrmReBZnDnio088/fW0urCs3nf7Bq3
+	 CmDcv19v4Wpww==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 05254CE3F26; Tue,  4 Jun 2024 10:04:41 -0700 (PDT)
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	elver@google.com,
+	akpm@linux-foundation.org,
+	tglx@linutronix.de,
+	peterz@infradead.org,
+	dianders@chromium.org,
+	pmladek@suse.com,
+	torvalds@linux-foundation.org,
+	arnd@arndb.de,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Yujie Liu <yujie.liu@intel.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v3 cmpxchg 3/4] xtensa: Emulate one-byte cmpxchg
+Date: Tue,  4 Jun 2024 10:04:36 -0700
+Message-Id: <20240604170437.2362545-3-paulmck@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
+References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604123124.456d19cf@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 04, 2024 at 12:31:24PM -0400, Steven Rostedt wrote:
-> On Tue, 4 Jun 2024 15:44:40 +0100
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > Hi Steve, Masami,
-> > 
-> > On Tue, Jun 04, 2024 at 08:18:50AM -0400, Steven Rostedt wrote:
-> > > 
-> > > Masami,
-> > > 
-> > > This series passed all my tests, are you comfortable with me pushing
-> > > them to linux-next?  
-> > 
-> > As a heads-up (and not to block pushing this into next), I just gave
-> > this a spin on arm64 atop v6.10-rc2, and running the selftests I see:
-> > 
-> > 	ftrace - function pid filters
-> > 	(instance)  ftrace - function pid filters
-> > 
-> > ... both go from [PASS] to [FAIL].
-> > 
-> > Everything else looks good -- I'll go dig into why that's happening.
-> > 
-> > It's possible that's just something odd with the filesystem I'm using
-> > (e.g. the wnership test failed because this lacks 'stat').
-> 
-> Thanks for the update. I could be something I missed in patch 13 that had
-> to put back the pid code.
-> 
-> There may have been something arch specific that I'm unaware about. I'll
-> look at that deeper.
+Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on xtensa.
 
-It looks like e are lines in the trace that it doesn't expect:
+[ paulmck: Apply kernel test robot feedback. ]
+[ paulmck: Drop two-byte support per Arnd Bergmann feedback. ]
+[ Apply Geert Uytterhoeven feedback. ]
 
-	+ cat trace
-	+ grep -v ^#
-	+ grep 970
-	+ wc -l
-	+ count_pid=0
-	+ cat trace
-	+ grep -v ^#
-	+ grep -v 970
-	+ wc -l
-	+ count_other=3
-	+ [ 0 -eq 0 -o 3 -ne 0 ]
-	+ fail PID filtering not working?
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Tested-by: Yujie Liu <yujie.liu@intel.com>
+Cc: Andi Shyti <andi.shyti@linux.intel.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+---
+ arch/xtensa/Kconfig               | 1 +
+ arch/xtensa/include/asm/cmpxchg.h | 2 ++
+ 2 files changed, 3 insertions(+)
 
-... where we expect that count_other to be 0.
+diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
+index f200a4ec044e6..d3db28f2f8110 100644
+--- a/arch/xtensa/Kconfig
++++ b/arch/xtensa/Kconfig
+@@ -14,6 +14,7 @@ config XTENSA
+ 	select ARCH_HAS_DMA_SET_UNCACHED if MMU
+ 	select ARCH_HAS_STRNCPY_FROM_USER if !KASAN
+ 	select ARCH_HAS_STRNLEN_USER
++	select ARCH_NEED_CMPXCHG_1_EMU
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+diff --git a/arch/xtensa/include/asm/cmpxchg.h b/arch/xtensa/include/asm/cmpxchg.h
+index 675a11ea8de76..95e33a913962d 100644
+--- a/arch/xtensa/include/asm/cmpxchg.h
++++ b/arch/xtensa/include/asm/cmpxchg.h
+@@ -15,6 +15,7 @@
+ 
+ #include <linux/bits.h>
+ #include <linux/stringify.h>
++#include <linux/cmpxchg-emu.h>
+ 
+ /*
+  * cmpxchg
+@@ -74,6 +75,7 @@ static __inline__ unsigned long
+ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new, int size)
+ {
+ 	switch (size) {
++	case 1:  return cmpxchg_emu_u8(ptr, old, new);
+ 	case 4:  return __cmpxchg_u32(ptr, old, new);
+ 	default: __cmpxchg_called_with_bad_pointer();
+ 		 return old;
+-- 
+2.40.1
 
-I hacked in a 'cat trace' just before the 'fail' and that shows:
-
-	+ cat trace
-	# tracer: function_graph
-	#
-	# CPU  DURATION                  FUNCTION CALLS
-	# |     |   |                     |   |   |   |
-	 3) ! 143.685 us  |  kernel_clone();
-	 3) ! 127.055 us  |  kernel_clone();
-	 1) ! 127.170 us  |  kernel_clone();
-	 3) ! 126.840 us  |  kernel_clone();
-
-I'm not sure if that's legitimate output the test is failing to account
-for or if that indicates a kernel-side issue.
-
-Mark.
