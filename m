@@ -1,159 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E7513D2B6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 15:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DF013A863;
+	Tue,  4 Jun 2024 15:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513947; cv=none; b=b6wEGbr2eAPCc7YyQQpvApj3iYeO7wRGAVP008zvvib09TX/NgvD1kQOwemW24H9kce+zZ0+T5VJmBAmmUVwhH2N9Zzn16z0TAroBT0nh1ej/hw2wsBqEuKqpNVHiePzC9qEE/rEjsy4upe4uq4v4yTZBNH6KtfqsL+wmyojzIw=
+	t=1717513972; cv=none; b=oUVs8AOjAul1PeENOf+v5Ji7PVIIcxQ9Ire0Fjpk4KvJU70F5KE36XV1czqYnqVjE2cWvsCj3299h+G9Q0XTLCnuvgmCa6WlfxPpUPwpev1j2qeME7mjEeT0JQAcY9z/BQJCkxX5dRJjP0iHbnCQ4J8ReuDhmaNbIFxLCymis3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513947; c=relaxed/simple;
-	bh=hSqtnWWeq83bRrdJrf3MfAQNHnxLuRaoyE2ioCIEo0M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YFp4neJ94pRss67IoVYinQaQHJIEn/JztOuCcEK7GrYbTIPg9WIe7NUV1jf8xhYmW8+wZUGaP+vK+P3p7baxQgr94wE+JlmNjPY7J0rs35I/mPwh05Y1KmCQk9EtpxPgvYyVDZFZFX0170Zlt93PeiCCG6KLPQZcM63PXJ8n5lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SyvVE81X; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SyvVE81X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717513946; x=1749049946;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hSqtnWWeq83bRrdJrf3MfAQNHnxLuRaoyE2ioCIEo0M=;
-  b=SyvVE81XOtCj6TxF2mkahSd5qG92jMZRm9+00sgSfysp6PAY7OUBqRKg
-   d/KXoFuIWvdl2SvLjednOevMv7HXrce0Cs/6VWN6cIbIedV8cXlcx2eeI
-   4obPZI/RzEz5dshgKtiegfSSed4BBxg2LBisqOtUNg9SdRxeZS7HD+3Cs
-   Bfa1CfhwPOx4MYWM/L70OGU6jEbO/s9wWgFqE40Zh4HynaJkeSfeP+/XB
-   sxPe3N6l1g5byce37yJKTbB3OaksthEubkEJrmzS4siWmHf+BrX5+UW1x
-   RUOyHBAH9cxf+WFrYFLWpT872uFL0fL7yZfRU9FWRRoC3Xf+aErL2wCmf
-   w==;
-X-CSE-ConnectionGUID: QQQ3GMxhRYOERbYZxXPsLg==
-X-CSE-MsgGUID: 7Ed8jU12S8irzdRk4YTQ5A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="31602499"
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="31602499"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:12:09 -0700
-X-CSE-ConnectionGUID: XIeU217HRTuXyOfBAck/OQ==
-X-CSE-MsgGUID: Oe+hRJJRQT+iPoQlktO7RQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="37139630"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO [10.245.246.143]) ([10.245.246.143])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:12:07 -0700
-Message-ID: <0d15954f-0158-4a56-afef-f0d043135146@linux.intel.com>
-Date: Tue, 4 Jun 2024 17:07:39 +0200
+	s=arc-20240116; t=1717513972; c=relaxed/simple;
+	bh=snGZE3s9qsesS9xe2bi91BaKQseWkzGOPHp3Bh1sXPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oBZ73mTQE2LDYIaGm+nj5W+DbMwyNp9TaFon69VuNuAPy2u1I0dEmt0Xg7x+MnEFZ7TtLdBk89gSprP0EU+1LP0dG8P2FDmVyY8X9ltUfUdngkG5vpESWubHNbDBOTo10rXhr4xcnbltxQxWNxJkTCDQTFVuwXq0Uxx8w+pTUuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE5AC2BBFC;
+	Tue,  4 Jun 2024 15:12:50 +0000 (UTC)
+Date: Tue, 4 Jun 2024 11:12:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, don
+ <zds100@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] tracing/fprobe: Support raw tracepoint events on
+ modules
+Message-ID: <20240604111249.78c48ac7@gandalf.local.home>
+In-Reply-To: <20240604084955.29b9440687522a1347e0e7cd@kernel.org>
+References: <171723014778.258703.6731294779199848686.stgit@devnote2>
+	<171723016594.258703.1629777910752596529.stgit@devnote2>
+	<fbfec8d9-d0ed-4384-bbd2-dd5c1e568ed1@efficios.com>
+	<20240604084955.29b9440687522a1347e0e7cd@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] soundwire: bus: clean up probe warnings
-To: Johan Hovold <johan@kernel.org>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Sanyog Kale <sanyog.r.kale@intel.com>, alsa-devel@alsa-project.org,
- linux-kernel@vger.kernel.org
-References: <20240604075213.20815-1-johan+linaro@kernel.org>
- <20240604075213.20815-4-johan+linaro@kernel.org>
- <8dd7cadc-138c-4ef5-b06f-7177550b1215@linux.intel.com>
- <Zl7boEkMpQaELARP@hovoldconsulting.com>
- <970501b1-09ae-4f2c-a078-2b4f23fe460e@linux.intel.com>
- <Zl8iUmOfrjw3gWVX@hovoldconsulting.com>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <Zl8iUmOfrjw3gWVX@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-\
->>>>> @@ -123,7 +123,7 @@ static int sdw_drv_probe(struct device *dev)
->>>>>  	/* init the dynamic sysfs attributes we need */
->>>>>  	ret = sdw_slave_sysfs_dpn_init(slave);
->>>>>  	if (ret < 0)
->>>>> -		dev_warn(dev, "Slave sysfs init failed:%d\n", ret);
->>>>> +		dev_warn(dev, "failed to initialise sysfs: %d\n", ret);
->>>>>  
->>>>>  	/*
->>>>>  	 * Check for valid clk_stop_timeout, use DisCo worst case value of
->>>>> @@ -147,7 +147,7 @@ static int sdw_drv_probe(struct device *dev)
->>>>>  	if (drv->ops && drv->ops->update_status) {
->>>>>  		ret = drv->ops->update_status(slave, slave->status);
->>>>>  		if (ret < 0)
->>>>> -			dev_warn(dev, "%s: update_status failed with status %d\n", __func__, ret);
->>>>> +			dev_warn(dev, "failed to update status: %d\n", ret);
->>>>
->>>> the __func__ does help IMHO, 'failed to update status' is way too general...
->>>
->>> Error messages printed with dev_warn will include the device and driver
->>> names so this message will be quite specific still.
->>
->> The goal isn't to be 'quite specific' but rather 'completely
->> straightforward'. Everyone can lookup a function name in a xref tool and
->>  quickly find out what happened. Doing 'git grep' on message logs isn't
->> great really, and over time logs tend to be copy-pasted. Just look at
->> the number of patches where we had to revisit the dev_err logs to make
->> then really unique/useful.
+On Tue, 4 Jun 2024 08:49:55 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> On Mon, 3 Jun 2024 15:50:55 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 > 
-> Error message should be self-contained and give user's some idea of what
-> went wrong and not leak implementation details like function names (and
-> be greppable, which "%s:" is not).
-
-"Failed to update status" doesn't sound terribly self-contained to me.
-
-It's actually a great example of making the logs less clear with good
-intentions. How many people know that the SoundWire bus exposes an
-'update_status' callback, and that callback can be invoked from two
-completely different places (probe or on device attachment)?
-
-/* Ensure driver knows that peripheral unattached */
-ret = sdw_update_slave_status(slave, status[i]);
-if (ret < 0)
-	dev_warn(&slave->dev, "Update Slave status failed:%d\n", ret);
-
-You absolutely want to know which of these two cases failed, but with
-your changes they now look rather identical except for the order of
-words. one would be 'failed to update status' and the other 'update
-status failed'.
-
-What is much better is to know WHEN this failure happens, then folks
-looking at logs to fix a problem don't need to worry about precise
-wording or word order.
-
-It's a constant battle to get meaningful messages that are useful for
-validation/integration folks, and my take is that it's a
-windmill-fighting endeavor. The function name is actually more useful,
-it's not an implementation detail, it's what you're looking for when
-reverse-engineering problematic sequences from a series of CI logs.
-
->>>> Replacing 'with status' by ":" is fine, but do we really care about 10
->>>> chars in a log?
->>>
->>> It's not primarily about the numbers of characters but about consistency.
->>
->> I am advocating for inclusion of __func__ everywhere...It's simpler for
->> remote support and bug chasing.
-
-I meant everywhere in SoundWire. Other subsystems may have different
-views and different observability tools, that's fine.
-
-> A quick grep seems to suggest you're in a small minority here with some
-> 5k of 65k dev_err() including __func__.
+> > On 2024-06-01 04:22, Masami Hiramatsu (Google) wrote:  
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Support raw tracepoint event on module by fprobe events.
+> > > Since it only uses for_each_kernel_tracepoint() to find a tracepoint,
+> > > the tracepoints on modules are not handled. Thus if user specified a
+> > > tracepoint on a module, it shows an error.
+> > > This adds new for_each_module_tracepoint() API to tracepoint subsystem,
+> > > and uses it to find tracepoints on modules.  
+> > 
+> > Hi Masami,
+> > 
+> > Why prevent module unload when a fprobe tracepoint is attached to a
+> > module ? This changes the kernel's behavior significantly just for the
+> > sake of instrumentation.  
 > 
-> [ And there's only 55 out of 750 dev_err() like that in
-> drivers/soundwire, which is inconsistent at best. ]
+> I don't prevent module unloading all the time, just before registering
+> tracepoint handler (something like booking a ticket :-) ).
+> See the last hunk of this patch, it puts the module before exiting
+> __trace_fprobe_create().
+> 
+> > 
+> > As an alternative, LTTng-modules attach/detach to/from modules with the
+> > coming/going notifiers, so the instrumentation gets removed when a
+> > module is unloaded rather than preventing its unload by holding a module
+> > reference count. I would recommend a similar approach for fprobe.  
+> 
+> Yes, since tracepoint subsystem provides a notifier API to notify the
+> tracepoint is gone, fprobe already uses it to find unloading and
+> unregister the target function. (see __tracepoint_probe_module_cb)
+> 
 
-As you mentioned yourself, the asynchronous nature of the SoundWire
-probe/attachment/interrupts makes it difficult to reverse-engineer, and
-we want to err on the side of MORE information.
+Ah, it only prevents module unloading in __trace_fprobe_create()
 
-Also not all dev_err() are equal, most are part of paranoid checks and
-never used. An example above is the sysfs log, we've never seen it happen.
+> +static void __find_tracepoint_module_cb(struct tracepoint *tp, void *priv)
+> +{
+> +	struct __find_tracepoint_cb_data *data = priv;
+> +
+> +	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
+> +		data->tpoint = tp;
+> +		data->mod = __module_text_address((unsigned long)tp->probestub);
+> +		if (!try_module_get(data->mod)) {
 
-That's different to changes that impact probe and interrupts which will
-fail at some point on new platforms. It's not an academic statement,
-I've spent most of my day chasing two such issues.
+Here it gets the module. Should only happen once, as it sets data->tpoint.
+
+> +			data->tpoint = NULL;
+> +			data->mod = NULL;
+> +		}
+> +	}
+> +}
+> +
+>  static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+>  {
+>  	struct __find_tracepoint_cb_data *data = priv;
+> @@ -905,14 +922,28 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+>  		data->tpoint = tp;
+>  }
+>  
+> -static struct tracepoint *find_tracepoint(const char *tp_name)
+> +/*
+> + * Find a tracepoint from kernel and module. If the tracepoint is in a module,
+> + * this increments the module refcount to prevent unloading until the
+> + * trace_fprobe is registered to the list. After registering the trace_fprobe
+> + * on the trace_fprobe list, the module refcount is decremented because
+> + * tracepoint_probe_module_cb will handle it.
+> + */
+> +static struct tracepoint *find_tracepoint(const char *tp_name,
+> +					  struct module **tp_mod)
+>  {
+>  	struct __find_tracepoint_cb_data data = {
+>  		.tp_name = tp_name,
+> +		.mod = NULL,
+>  	};
+>  
+>  	for_each_kernel_tracepoint(__find_tracepoint_cb, &data);
+>  
+> +	if (!data.tpoint && IS_ENABLED(CONFIG_MODULES)) {
+> +		for_each_module_tracepoint(__find_tracepoint_module_cb, &data);
+> +		*tp_mod = data.mod;
+> +	}
+> +
+>  	return data.tpoint;
+>  }
+>  
+> @@ -996,6 +1027,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	char abuf[MAX_BTF_ARGS_LEN];
+>  	char *dbuf = NULL;
+>  	bool is_tracepoint = false;
+> +	struct module *tp_mod = NULL;
+>  	struct tracepoint *tpoint = NULL;
+>  	struct traceprobe_parse_context ctx = {
+>  		.flags = TPARG_FL_KERNEL | TPARG_FL_FPROBE,
+> @@ -1080,7 +1112,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  
+>  	if (is_tracepoint) {
+>  		ctx.flags |= TPARG_FL_TPOINT;
+> -		tpoint = find_tracepoint(symbol);
+> +		tpoint = find_tracepoint(symbol, &tp_mod);
+>  		if (!tpoint) {
+>  			trace_probe_log_set_index(1);
+>  			trace_probe_log_err(0, NO_TRACEPOINT);
+> @@ -1110,8 +1142,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  		goto out;
+>  
+>  	/* setup a probe */
+> -	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+> -				argc, is_return);
+> +	tf = alloc_trace_fprobe(group, event, symbol, tpoint, tp_mod,
+> +				maxactive, argc, is_return);
+>  	if (IS_ERR(tf)) {
+>  		ret = PTR_ERR(tf);
+>  		/* This must return -ENOMEM, else there is a bug */
+> @@ -1119,10 +1151,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  		goto out;	/* We know tf is not allocated */
+>  	}
+>  
+> -	if (is_tracepoint)
+> -		tf->mod = __module_text_address(
+> -				(unsigned long)tf->tpoint->probestub);
+> -
+>  	/* parse arguments */
+>  	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
+>  		trace_probe_log_set_index(i + 2);
+> @@ -1155,6 +1183,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+>  	}
+>  
+>  out:
+> +	if (tp_mod)
+> +		module_put(tp_mod);
+
+And on the way out, it puts it.
+
+-- Steve
+
+>  	traceprobe_finish_parse(&ctx);
+>  	trace_probe_log_clear();
+>  	kfree(new_argv);
