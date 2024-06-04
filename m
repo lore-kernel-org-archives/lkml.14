@@ -1,160 +1,111 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D036A6FC3;
-	Tue,  4 Jun 2024 12:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0817D145B07
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717502532; cv=none; b=UddNzaduNM6SbEbOuE3Vq+UUMxGwQc+HuCNFFP11/6E6rjuGDAl4F3CYi4vcsph0pFx1DeFAfhGoJLMWVX/LYAH+YsqjqeVC5S+tOdiXwCzrRdS1SP19/CQV+vJS9SxfPd4jndsISwumGiPVFOFVFxxAZ2zeUYUhu2CFMWLhejA=
+	t=1717502632; cv=none; b=eJp1Qj5wGO2SYOr5gkwOP9dhvMIWv3WTtYJcamaAc1ETcmKDATm0b85fc7R6iJsL5+uxBRHOQKoOYg/lgzn3i0AoGzC6oVRVOHrwfD3F2qXhdwWAWxF3eoY9ewTAPt52FgpadpoSAWhvLkdHr7DgvKA3y+gemDRr7AI3kFe96VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717502532; c=relaxed/simple;
-	bh=RPokp8KoGwM0k25xUQr9w8oEeLy2cIEiE4e2CbX+uf8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=J8vRWzfXvTW3HDZ2skIlzelG9Muo1RuTj+e4/Gv0hQlDVN68whgB5OUgfidhaqJJpJL2q1XXPUg4spTog0TeBqLl79c2z3S2ZTGBVuvP4fblE11k4Ez2tPA7eztp8Htodeuh5ICMH87Htu1tcoIH/caOCVxcqoDW1QgFmllKk4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=q2iURE3A; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1717502632; c=relaxed/simple;
+	bh=ohUteCCr14DvVrrrPnFI1Jm0Fo1hkuR15Sefi+jOngQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=WnFaH8/nEFuNqTgjr1KJXJ+CO3MAw97roHnANnPZ+Np7QZVxWGmF0+9ULx6h0iHG3unxQd9cOR8WYuwtsDrem+G3oTZNxYmeNvQxZvhHbmqzoylsfXmw5oJTCvDdO47xO/vouvAvNT5ch0/3F+g0LuBmPlXTauWapQDxButELng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FxmqnVtj; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="q2iURE3A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1717502524; x=1718107324; i=w_armin@gmx.de;
-	bh=DYfX5asiSQ5TGa/Edpy4+l0LBbjxyMvWoqp83X0yK/o=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=q2iURE3AXuGiBlDreeV4hiQrh4qjTnIujmX/eoZsfHQyipSjAiFPyFLA8+25sTmj
-	 Q6SI6Tt6HwLLoe61AhrAU+IhaKzBpg4YpskHIdBMjwmJtR//diLUTgFmsMcLcpxsR
-	 jNDKUkcEvo7ER9Wmg9dI2QVSmtTRpLN9lh+8c3ZVYfPW20KA4xFOufh0yxnmb50yC
-	 vRjw/IgLUXUjGr6GgFG+GmoqhYS5lVmdlChInQojBFoYiFaECLkTUnyQAOpGBhH5L
-	 pclWV8Z65+NIPt795V99vGPrpLIvQIwaaHlFyZQhtQtn0qthAm+MdfBkcjrhEZUYx
-	 oD2k+IkoQkvZcbCmEg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.104.27] ([141.76.182.129]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8ofO-1sZ4dW1Emc-015tvq; Tue, 04
- Jun 2024 14:02:04 +0200
-Message-ID: <dbb9dfe5-8812-482a-b384-8e86e0a8eb8f@gmx.de>
-Date: Tue, 4 Jun 2024 14:02:02 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxmqnVtj"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a626919d19dso974448266b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717502629; x=1718107429; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C4nlrs5Q5b1jrnGdcQAM4D0fQRXIDjBPjqNQMqZMjmY=;
+        b=FxmqnVtjcbPhFf2ctS1qHZLt+O56dPdFdWEW12sQqWYuhIQXlhOyCfWAn2su2yzLaZ
+         b8Zh0l/Nzvdo7e8EmpG02TZr/Du8tdYpZKqPiBB1Yts4Q00mLq3++7lY6p/gdxdvAOvB
+         r3Iiz0hXZb3BLJQDQS2BDBltNTDWFjWC9t5WdL6kEV2K+RNInmuzaHVLjGWC3ROP7Ei0
+         Xcb0aUyVn0SpnxTR8lvqaiKbErtBAXl2Lx7m0NeSlq6Kkb0wv53M6jolMVTrl69kJkIK
+         xzAhtWmE3fulheS4XYLiruFaoyVjxFu+nYDp/x893LeXpd66C7TFpKt+KF+vh6GPwjGQ
+         VTDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717502629; x=1718107429;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C4nlrs5Q5b1jrnGdcQAM4D0fQRXIDjBPjqNQMqZMjmY=;
+        b=ITpnUe1yX/IP16aPfBo2IWly9cymz67il37iZ5G/+TN3ui1EKs0K83Mrxy3QFeKNqE
+         ew/YKiCKuZtR6bKSl9lEDsHhiEs8XBC0sfpjaycGsHDgabKyPQPkQfZWmmn9J09VPu47
+         64CGcZaEK+33NTD+PPhEJYY3k5dM945Ww8jkuH8EUm/eukcvGaz0ZoEWWh+L/vqXfsK0
+         EBe2AKrLeI+K3+XEuyn9317S2QV/f+kF7NZxWt11LXsAJBsCO/cUF2MYETM6revZLH0P
+         Zhu0bV5Iu96IcwTyT08u5d3L008A2gJIJcNwcHdMtf/0krWqNGgLi7hJ7P5j78GWrJvD
+         gN0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWIICN/GKcxyYKGIMeEcsjQZ3Orp+YhX5u69N/TpXkHphyLrRRbPEQ6jHzh5zPWl6N6ZX/cBHo/zarBka2eO56VEC9Kt7cgGy+E5Jt6
+X-Gm-Message-State: AOJu0YxArneGHKZRSfoYZChYSHc18CJ57P9wCwSDan4ppV3tG2fbO8FS
+	XbhAZfRspqhLH/6lQ8PZGtcjVLnG52IisHfuJ/+ujxMu7xz7sTLwZlEqWouFZGeW4W2ug3ZJ8fd
+	upRX31ed+2E8M4U9NyAceQtf1pAQ=
+X-Google-Smtp-Source: AGHT+IE/QK095tMqeR7Avx3enQ7Z5Hcs2NL5seKcPKRkFbHhUpQlCH9zQn3vuOJNjrF8fHF1xmIDsEN9dj00DV7A8eI=
+X-Received: by 2002:a17:906:cb8c:b0:a67:f689:b695 with SMTP id
+ a640c23a62f3a-a695429a195mr192822566b.16.1717502629119; Tue, 04 Jun 2024
+ 05:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] power: supply: hwmon: Add support for power sensors
-From: Armin Wolf <W_Armin@gmx.de>
-To: sre@kernel.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240528222115.791511-1-W_Armin@gmx.de>
-Content-Language: en-US
-In-Reply-To: <20240528222115.791511-1-W_Armin@gmx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:MogaJJ0Q6ymVcMiBnjZyHWDa/2IRqoo4Z4nqDkkQiwwZqmUvn1g
- ieC0a2IavPQiaBTaCgM+ZqauO8ABVQ/1Rw34wzWNou4MsV9F5eHmvCfFdCqoviB6TcsaLYe
- XqcqTW5GLrFlbwkasO2tHSRVVgHt+bHpOIsG4j1aqjFZCyL5imrhR84Mk8AVfqOJqVsCFoA
- pZiEc6NBpqeaEV5Se8JiQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:iT6Rdzp9fZk=;MgFU7dgpZqTBoBPmsFhNCV8J163
- D3BtPVx6vp9dGvWv1/098HAfNW42tuvLwVRlhDkJnwNSGF89nnSQUs/CtZJTmjl9NKWWkBdOa
- nse9igQ9no5HpeBP8NHh3Jg2v1SyVD+OSbJ3gwC1yVG44PGBxIwDvUdBArY/CYXTyfgu1uZII
- nuSwoQhYgyczUza+9UJjBxNu305THAuZ0mzcDYzcn3wVvW1kH1w7wjfh1aXCQh/5vLW1u1AzX
- iIZCu6IeXLOmu+7voRsEs1pwwXnAYD69R7eK9wBEQJH6vVvFsYI4kyM8oa+/1zf+/tGPQzg7p
- 9oyTMHM7eCIZhaVBHSPfu/vFNMU64c96olFJttbLPWfYDwajXNSSlaSxz3xS949uiYB6uNayf
- Qmmi2p8sIYP47x+pbyMxuDXnSbXKiakq0N8T7ZdWRB/W/j7PgGAXXIMW2lVZfZML60AOnooZP
- KOT8CIVNxpWKRloodY/95k8m8ZoxtzXp0Gcqg9lw1Iw/Q5x4mvEgm4nVkC92IHPnNi8A32oG6
- VkDtgrLlwIbJLnqdIhxL7fzBoTU9ki7IzZItWSzxraZO2txCxtTZOgS5ValGKO330cTCzzWT+
- ov7sY/GOBwz/Tu7zMINHxl7Pa99vztH+O38ACtEnSjDLYjG2528XC5RFKfT1/H9/XGNwYABpE
- /NNc2BK7YTt9rtiSlzXPY/R08SaWVYF/CoF/lI3TEkoHEFtJY7cz5YdcaMoj77tZUe88WNCGg
- PsHKUCblrRAW4vGfELbmvpHJFEJDPOJUvERyJy+/iqwy2rxMDYoO6UR/6Ke5rJLgyEyZeqPqE
- YHF2JiXC+T+v7EzbC53OYY+WTnV74Z1RDFEVCmeXZkAio=
+References: <20240601025536.25682-1-rgbi3307@naver.com> <ntycfywrhmt2beba7pgyxmahwhncufgnpjxjobl33f2tyrhzpb@cckdgisyqlra>
+ <CAHOvCC6vZQkotPCvOafGxXWb5GygMSUiYUaYZu3RwFA9cCY2nw@mail.gmail.com> <57xfda6fbz6m4sig4kdyi5jinibcqycobwrpaih45cykfqyr5a@fstc2xjyw2x5>
+In-Reply-To: <57xfda6fbz6m4sig4kdyi5jinibcqycobwrpaih45cykfqyr5a@fstc2xjyw2x5>
+From: JaeJoon Jung <rgbi3307@gmail.com>
+Date: Tue, 4 Jun 2024 21:03:36 +0900
+Message-ID: <CAHOvCC7AFYg1UEQNcgNSAF-bAqeoYjBB2gTcHWHnx_0GQv1WZw@mail.gmail.com>
+Subject: Re: [PATCH] maple_tree: add mas_node_count() before going to
+ slow_path in mas_wr_modify()
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, JaeJoon Jung <rgbi3307@gmail.com>, 
+	maple-tree@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am 29.05.24 um 00:21 schrieb Armin Wolf:
+Hello, Liam.
+As you pointed out, I did enough testing in the userspace and in
+previous versions of the kernel, but I was surprised that a syntax
+error occurred in making newest patch because of my careless mistake.
+I will be careful not to make this mistake again.
+And I am going to study the low memory situation in kernel space in more detail.
+Thank you very much for your detailed answer and explanation.
 
-> Currently, more than seven power supply drivers are supporting
-> POWER_SUPPLY_PROP_POWER_NOW, but their power readings are not being
-> reported through the hwmon subsystem.
->
-> Fix this by adding support for power sensors to the power supply
-> hwmon integration.
+Best regards,
+JaeJoon Jung
 
-Hi, what is the status of this patch? Are there any obvious errors which
-need to be fixed?
-
-Thanks,
-Armin Wolf
-
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->   drivers/power/supply/power_supply_hwmon.c | 25 +++++++++++++++++++++++
->   1 file changed, 25 insertions(+)
+On Mon, 3 Jun 2024 at 21:29, Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
 >
-> diff --git a/drivers/power/supply/power_supply_hwmon.c b/drivers/power/supply/power_supply_hwmon.c
-> index c97893d4c25e..baacefbdf768 100644
-> --- a/drivers/power/supply/power_supply_hwmon.c
-> +++ b/drivers/power/supply/power_supply_hwmon.c
-> @@ -48,6 +48,18 @@ static int power_supply_hwmon_curr_to_property(u32 attr)
->   	}
->   }
+> * JaeJoon Jung <rgbi3307@gmail.com> [240602 05:06]:
+> > Hello, Liam.
+> > Thank you very much for the detailed answer and explanation.
+> >
+> > I tested this patch in userspace.
+> > In user space, this phenomenon always occurs when kmem_cache_alloc()
+> > is executed to allocate a new node.
 >
-> +static int power_supply_hwmon_power_to_property(u32 attr)
-> +{
-> +	switch (attr) {
-> +	case hwmon_power_input:
-> +		return POWER_SUPPLY_PROP_POWER_NOW;
-> +	case hwmon_power_average:
-> +		return POWER_SUPPLY_PROP_POWER_AVG;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
->   static int power_supply_hwmon_temp_to_property(u32 attr, int channel)
->   {
->   	if (channel) {
-> @@ -90,6 +102,8 @@ power_supply_hwmon_to_property(enum hwmon_sensor_types type,
->   		return power_supply_hwmon_in_to_property(attr);
->   	case hwmon_curr:
->   		return power_supply_hwmon_curr_to_property(attr);
-> +	case hwmon_power:
-> +		return power_supply_hwmon_power_to_property(attr);
->   	case hwmon_temp:
->   		return power_supply_hwmon_temp_to_property(attr, channel);
->   	default:
-> @@ -229,6 +243,11 @@ power_supply_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->   	case hwmon_in:
->   		pspval.intval = DIV_ROUND_CLOSEST(pspval.intval, 1000);
->   		break;
-> +	case hwmon_power:
-> +		/*
-> +		 * Power properties are already in microwatts.
-> +		 */
-> +		break;
->   	/*
->   	 * Temp needs to be converted from 1/10 C to milli-C
->   	 */
-> @@ -311,6 +330,10 @@ static const struct hwmon_channel_info * const power_supply_hwmon_info[] = {
->   			   HWMON_C_MAX     |
->   			   HWMON_C_INPUT),
+> This is expected in the userspace test program.  We test the error path
+> most frequently, with only a bypass for those who wish to test an
+> initial success - such as preallocations.  I was concerned about the
+> testing since your first patch had a syntax error with a correction
+> quickly after.  It is good news that you were able to find and use the
+> maple tree testing framework, though.
 >
-> +	HWMON_CHANNEL_INFO(power,
-> +			   HWMON_P_INPUT |
-> +			   HWMON_P_AVERAGE),
-> +
->   	HWMON_CHANNEL_INFO(in,
->   			   HWMON_I_AVERAGE |
->   			   HWMON_I_MIN     |
-> @@ -359,6 +382,8 @@ int power_supply_add_hwmon_sysfs(struct power_supply *psy)
->   		case POWER_SUPPLY_PROP_CURRENT_AVG:
->   		case POWER_SUPPLY_PROP_CURRENT_MAX:
->   		case POWER_SUPPLY_PROP_CURRENT_NOW:
-> +		case POWER_SUPPLY_PROP_POWER_AVG:
-> +		case POWER_SUPPLY_PROP_POWER_NOW:
->   		case POWER_SUPPLY_PROP_TEMP:
->   		case POWER_SUPPLY_PROP_TEMP_MAX:
->   		case POWER_SUPPLY_PROP_TEMP_MIN:
-> --
-> 2.39.2
+> > I will try to test it in more detail in kernel space.
 >
+> If you test in kernel space, you will have to hit a low memory scenario
+> to see a difference.  stress-ng would probably help.
 >
+> > I will also refer to the notes from the email list you shared
+> > and send results once a more clear analysis has been made.
+>
+> I don't think you need to continue with this work as you will find that
+> the low memory situation is going to be rare and in a very slow path
+> already.
+>
+> Thanks,
+> Liam
