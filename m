@@ -1,27 +1,28 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130BD1442E3;
-	Tue,  4 Jun 2024 11:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E278F145343;
+	Tue,  4 Jun 2024 11:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717500401; cv=none; b=niW+C+dORK+AvZEEOU5O6kB/nlp9unq2og5+ZAtgTWQFBXi2XZtK8JUMxc+KSTDdKsxJ2wjCG7gzzgJuVUTeFDzIELrA6659gZyJqic/+9Y9JqWvnmAuCIsxsvtqrpPbEGj9xvldQ6yRkBvZJYUSMA5dZc/LtlxYDTmTsutO/9Q=
+	t=1717500403; cv=none; b=fnSZQJBm3OuqOd+v2L26GZLH2dBJm2L9gKTU2EUDoak6Sc+pS3gW67oFVkJmrnN2ZGZzmfwFGTI3CifwCAW6nIAMHDJLEOYhiTa6r/tgiQz5VUt5nVjBdfUhztBelBmoBY3OrSIOecDEuxQ8R6NURh9P03wxoH2kPGekuOK4LfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717500401; c=relaxed/simple;
-	bh=ZExI+57O0zbDnRE+F0agz7VJP6zV/CMKBCosJpqOa0k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j1gWO7CYeayg/S7SFDjUCqlSyhEKP49ztqkmv5FU03EPXHvJ2npT8bq5tWHgBjC9V6G/uK6Zulm1fT/iOdBT2DyrbFzIU8Lk9+hbFRmYVPqBmPQ5dY4rj+MVfkLeaiuceHrNnY8o/IyOdDNVo6ndrxuwbTGWn8XGSbb5jRtXog8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	s=arc-20240116; t=1717500403; c=relaxed/simple;
+	bh=2sqRP+cDWakjPW2TLGsMmWbJp1y1dv+ct4RW2zKc/Jg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ovaM7Cbv1o0/0QFRYuoL7trceEwRa352OEwnSLSo0PohalmudRVYbzSubsOePK9f/f+yNsC6qLaueK4/Iyh0DSbgIWZkgrVi8Ji7+8ZQD22T1tMMkXyNMOofT4n8J6Z5hztyHNiWHyvrc+PNU1J/Xi7jJu/L6czCHlocZ/38IiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VtpFY4zM8z4f3jsq;
-	Tue,  4 Jun 2024 19:26:25 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VtpFZ2z71z4f3mJP;
+	Tue,  4 Jun 2024 19:26:26 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 4BF6C1A0874;
-	Tue,  4 Jun 2024 19:26:35 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 78BD21A0CB7;
+	Tue,  4 Jun 2024 19:26:37 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAXKwTp+V5mJkItOg--.61165S4;
-	Tue, 04 Jun 2024 19:26:34 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAXKwTp+V5mJkItOg--.61165S6;
+	Tue, 04 Jun 2024 19:26:36 +0800 (CST)
 From: Li Lingfeng <lilingfeng@huaweicloud.com>
 To: dhowells@redhat.com,
 	marc.dionne@auristor.com,
@@ -53,10 +54,12 @@ Cc: linux-afs@lists.infradead.org,
 	zhangxiaoxu5@huawei.com,
 	lilingfeng@huaweicloud.com,
 	lilingfeng3@huawei.com
-Subject: [PATCH RFC 0/2] NFSv4: set sb_flags to second superblock
-Date: Tue,  4 Jun 2024 19:26:34 +0800
-Message-Id: <20240604112636.236517-1-lilingfeng@huaweicloud.com>
+Subject: [PATCH RFC 2/2] NFSv4: set sb_flags to second superblock
+Date: Tue,  4 Jun 2024 19:26:36 +0800
+Message-Id: <20240604112636.236517-3-lilingfeng@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240604112636.236517-1-lilingfeng@huaweicloud.com>
+References: <20240604112636.236517-1-lilingfeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,48 +67,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAXKwTp+V5mJkItOg--.61165S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr15KrWfZr4UXr1xJr1kKrg_yoWxCrg_J3
-	97XF48ArWxXry2kr4fCwn7trWxK3yfCF13XryftryUXryDZFyYk3WDAry8uFs3WF4ftr1f
-	CF1jkrn0vr1a9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbx8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j
-	6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQ6p
-	PUUUUU=
+X-CM-TRANSID:cCh0CgAXKwTp+V5mJkItOg--.61165S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1DCFW3ur1xAr1UGF1Utrb_yoW5CF1rpF
+	WfAryUGrWkJF1UXa10yFWrXa4Sy34kZF4UAFn3ua4kAryDXr1xX3W3tFWY9a48Zr4fZr98
+	XFWftF13C3ZrJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUP014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJw
+	CI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbvtC7UU
+	UUU==
 X-CM-SenderInfo: polox0xjih0w46kxt4xhlfz01xgou0bp/
 
-Added sb_flags parameter to d_automount callback function and
-fs_context_for_submount().
-NFSv4 uses this parameter to set the second superblock.
+From: Li Lingfeng <lilingfeng3@huawei.com>
 
-Li Lingfeng (2):
-  fs: pass sb_flags to submount
-  NFSv4: set sb_flags to second superblock
+During the process of mounting an NFSv4 client, two superblocks will be
+created in sequence. The first superblock corresponds to the root
+directory exported by the server, and the second superblock corresponds to
+the directory that will be actually mounted. The first superblock will
+eventually be destroyed.
+The flag passed from user mode will only be passed to the first
+superblock, resulting in the actual used superblock not carrying the flag
+passed from user mode(fs_context_for_submount() will set sb_flags as 0).
 
- fs/afs/internal.h          | 2 +-
- fs/afs/mntpt.c             | 4 ++--
- fs/autofs/root.c           | 4 ++--
- fs/debugfs/inode.c         | 2 +-
- fs/fs_context.c            | 5 +++--
- fs/fuse/dir.c              | 4 ++--
- fs/namei.c                 | 3 ++-
- fs/nfs/internal.h          | 2 +-
- fs/nfs/namespace.c         | 4 ++--
- fs/smb/client/cifsfs.h     | 2 +-
- fs/smb/client/namespace.c  | 2 +-
- include/linux/dcache.h     | 2 +-
- include/linux/fs_context.h | 3 ++-
- 13 files changed, 21 insertions(+), 18 deletions(-)
+If the 'ro' parameter is used in two consecutive mount commands, only the
+first execution will create a new vfsmount, and the kernel will return
+EBUSY on the second execution. However, if a remount command with the 'ro'
+parameter is executed between the two mount commands, both mount commands
+will create new vfsmounts.
 
+The superblock generated after the first mount command does not have the
+'ro' flag, and the read-only status of the file system is implemented by
+checking the read-only flag of the vfsmount. After executing the remount
+command, the 'ro' flag will be added to the superblock. When the second
+mount command is executed, the comparison result between the superblock
+with the 'ro' flag and the fs_context without the flag in the
+nfs_compare_mount_options() function will be different, resulting in the
+creation of a new vfsmount.
+
+This problem can be reproduced by performing the following operations:
+mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+mount -t nfs -o remount,ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+mount -t nfs -o ro,vers=4.0 192.168.240.250:/sdb /mnt/sdb
+Two vfsmounts are generated:
+[root@localhost ~]# mount | grep nfs
+192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
+rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,
+sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
+192.168.240.250:/sdb on /mnt/sdb type nfs4 (ro,relatime,vers=4.0,
+rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,
+sec=sys,clientaddr=192.168.240.251,local_lock=none,addr=192.168.240.250)
+
+Fix this by setting sb_flags to second superblock.
+
+Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+---
+ fs/nfs/namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 887aeacedebd..8b3d75af60d4 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -158,7 +158,7 @@ struct vfsmount *nfs_d_automount(struct path *path, unsigned int sb_flags)
+ 	/* Open a new filesystem context, transferring parameters from the
+ 	 * parent superblock, including the network namespace.
+ 	 */
+-	fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, path->dentry, 0);
++	fc = fs_context_for_submount(path->mnt->mnt_sb->s_type, path->dentry, sb_flags);
+ 	if (IS_ERR(fc))
+ 		return ERR_CAST(fc);
+ 
 -- 
 2.39.2
 
