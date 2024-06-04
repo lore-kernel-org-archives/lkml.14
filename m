@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BD3146587;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B3E1459E9;
 	Tue,  4 Jun 2024 13:20:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717507239; cv=none; b=GwEJV8jtA7OP4tkQBr9XXkxEdaT0Q59lu2s2z/ZjExZxu3Ln2ynUJdupQhYA1gytw8YRFsZ6Ds7SBjK6GPJ85eryosfpyQ2GG63Z6Ohgpxcb6CvPkDu95cSyXbBnfl6HraRz4VcanKf0a7bk6b2ti35SZ61ifpJJzv9Bf7givjY=
+	t=1717507239; cv=none; b=XM99wAwKpohaZDdqaw0IQ32CQO2MKZmP5AAxpPsIVL44uWqQMRjdwHKTaBj7EJz5gTT4ymKwtolbgp8eu19ToeUyDsDDFYaOSW9xwJ6B+5x+GbLcA8mtEN7morpjuM9DfXDtQZEfDZG7uHW5+4GocEhBQ3ze+tqCn63rDmFqlcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717507239; c=relaxed/simple;
-	bh=hGVtjDM96GPiibc2AFKhkSfhGrvU98AnTo1RVvLWr2c=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EMDa/dtsr3VeSmqt6P4FvbSH1J3BzOpQ+lSlkJsQ87PDZTGGSg1lNVlpRfaChfUW5XOK63oTDDVl5VvfbJvnkw6DE9gTKOfCn6VVWUFgOq08q2s+UBERF9CrrxjscS++0wEe5Q8ECgmkNIx7K20GiOqYTttGghNhkHWkgLZ4R+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeWIPB0P; arc=none smtp.client-ip=10.30.226.201
+	bh=MOWZAwgoq9deQWVd/HKA2U6UFAXJnTWhKChG7nX2LNs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qP0Wh8ONzJP2kLCvIM+VW1s78LIWfKp6SzturCWLUVOTMEmkmvng6IErSvCuq9r9cxl+ED62PlkPWiwiveMy9FBK8oNCzR/yzdTsfWyca6hbpWk82WvvMlHDbvi8GBjitgssOJsWbwrki8v3aXbVwAqVgx3yo8yHJHHrvsTj+3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dl/BmPMI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeWIPB0P"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 573C2C3277B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dl/BmPMI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7AACDC4AF08;
 	Tue,  4 Jun 2024 13:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717507239;
-	bh=hGVtjDM96GPiibc2AFKhkSfhGrvU98AnTo1RVvLWr2c=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=JeWIPB0P3qWQHXcZKy8R50Iss/fsuFPOfYteEyM/6bcxX4S+I2XjHKYnWUIbGgO5L
-	 eIBAiMvO1K4KSNZz9yFzrNBpf1oSJIRWAUEijBLorecO23vsmWF58alJqpNO3gr3a7
-	 zJn5qHqv/cIlQg9efJj+DMvhneKqnWCFYdK6lfP4oBx/JmAyPwJW3qim+ny1DNjdwJ
-	 NLoQoLC5VYDSXMSKzhcoyGOWdvVjkUCkDop6qYbbXGBqQRjFixpGl+TC91GCRznUSJ
-	 NbB6JINNm52suU3DsGhCJVahJQ5hSXVKBPYCOyjIs3x7Vy7XV1H7Y1PDQwqmPcZWAS
-	 JJz4supYSbK2w==
+	bh=MOWZAwgoq9deQWVd/HKA2U6UFAXJnTWhKChG7nX2LNs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Dl/BmPMIUQxsH17b3Fsp/u59iHP/n1454A/Z7j8xe6dxIHusodNS70vZoYbYwUSkC
+	 IqtgTDWYcdcb3nqa8ETSlrGqL2hMvz9bZDPwLtuWQtUkW5uAd597f0WGbBdunJ2Lb1
+	 ycoSoUbORL3dY9YnstuSHOVEIjjtWyJUmdawbfD+UgMl9uN8DpElvEDO4w6d5TLtRn
+	 tXv6jy6wvNd/B28PRrjx5VsclYorhPqLKR/WsFvBn5rz9ZpiIUmtuyA4a9rAUnQQNF
+	 6fdMpTFGlwF2yngiYlvbeH8DvuciZ7v0Aev3tTL3Y9mGT1Sg4KrjChTT03RakABTZi
+	 DqYaIC7He/KQA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357BEC27C50;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690DBC27C5E;
 	Tue,  4 Jun 2024 13:20:39 +0000 (UTC)
 From: =?utf-8?q?Noralf_Tr=C3=B8nnes_via_B4_Relay?= <devnull+noralf.tronnes.org@kernel.org>
-Subject: [PATCH v4 0/5] drm/tiny: panel-mipi-dbi: Support 18 bits per color
- RGB666
-Date: Tue, 04 Jun 2024 15:20:27 +0200
-Message-Id: <20240604-panel-mipi-dbi-rgb666-v4-0-d7c2bcb9b78d@tronnes.org>
+Date: Tue, 04 Jun 2024 15:20:30 +0200
+Subject: [PATCH v4 3/5] drm/mipi-dbi: Make bits per word configurable for
+ pixel transfers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJsUX2YC/3XNQQ6CMBCF4auQrq0pndJSV97DuCh0xEm0kJYQD
- eHuVl2oMSz/l8w3M0sYCRPbFTOLOFGiPuRQm4K1Zxc65ORzMymkEkpUfHABL/xKA3HfEI9do7X
- mCgWAqY3XrWX5doh4otvLPRxznymNfby/3kzlc32LlTAr4lRywbWxVoJyJwe4H2MfAqZtHzv2N
- Cf55ZRyzZHZUdZ7qTXI2ol/Bz6OFrDmQHYqi76C1hnw7tdZluUBcdzMf0wBAAA=
+Message-Id: <20240604-panel-mipi-dbi-rgb666-v4-3-d7c2bcb9b78d@tronnes.org>
+References: <20240604-panel-mipi-dbi-rgb666-v4-0-d7c2bcb9b78d@tronnes.org>
+In-Reply-To: <20240604-panel-mipi-dbi-rgb666-v4-0-d7c2bcb9b78d@tronnes.org>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
@@ -60,11 +59,11 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  Tommaso Merciai <tommaso.merciai@amarulasolutions.com>, 
  =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717507238; l=1651;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717507238; l=3211;
  i=noralf@tronnes.org; s=20221122; h=from:subject:message-id;
- bh=hGVtjDM96GPiibc2AFKhkSfhGrvU98AnTo1RVvLWr2c=;
- b=vnBGh6Lt3xK3rg/hBAkv2zBvn/jF1Hke6fLG5mA8v6xGqS56OsmjWlfSyNUxWnwnjD3OUE+60
- Ib93heNhhopCbVgVg6OfKbXatAbPsQzGDXcdWsQXJp/hs1YrlIbw8MX
+ bh=rVzHuDjtn7Xw6fi36k+F3W4cyneNuZNHvALA/j7EnHQ=;
+ b=5nLeRwMyrPxLtwlCGeWGNzmg1KQ7Y/QYi8B+PZGKSkc3S8X28UXh2jCdm0E2Ie+Tk9XQtDmHL
+ 4bjsy1k9XQtAmh7aGbcncI/9pvSw4VKyUtf7o2Ru4TJ3HngqRqMKwHH
 X-Developer-Key: i=noralf@tronnes.org; a=ed25519;
  pk=0o9is4iddvvlrY3yON5SVtAbgPnVs0LfQsjfqR2Hvz8=
 X-Endpoint-Received: by B4 Relay for noralf@tronnes.org/20221122 with
@@ -72,47 +71,101 @@ X-Endpoint-Received: by B4 Relay for noralf@tronnes.org/20221122 with
 X-Original-From: =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
 Reply-To: noralf@tronnes.org
 
-Hi,
+From: Noralf Trønnes <noralf@tronnes.org>
 
-In this version I've fixed up a commit message that I had forgotten to 
-write before sending and improved a struct member name.
+MIPI DCS write/set commands have 8 bit parameters except for the
+write_memory commands where it depends on the pixel format.
+drm_mipi_dbi does currently only support RGB565 which is 16-bit and it
+has to make sure that the pixels enters the SPI bus in big endian format
+since the MIPI DBI spec doesn't have support for little endian.
 
-See version 1 of the patchset for the full cover letter.
+drm_mipi_dbi is optimized for DBI interface option 3 which means that the
+16-bit bytes are swapped by the upper layer if the SPI bus does not
+support 16 bits per word, signified by the swap_bytes member.
+
+In order to support both 16-bit and 24-bit pixel transfers we need a way
+to tell the DBI command layer the format of the buffer. Add a
+write_memory_bpw member that the upper layer can use to tell how many
+bits per word to use for the SPI transfer.
+
+v4:
+- Expand the commit message (Dmitry)
 
 Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
 ---
-Changes in v4:
-- Expand the commit message (Dmitry)
-- s/emulation_format/pixel_format/ (Dmitry)
-- Link to v3: https://lore.kernel.org/r/20240603-panel-mipi-dbi-rgb666-v3-0-59ed53ca73da@tronnes.org
+ drivers/gpu/drm/drm_mipi_dbi.c | 14 ++++++++++----
+ include/drm/drm_mipi_dbi.h     |  5 +++++
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-Changes in v3:
-- Added r-b's to patch 1 and 5
-- Link to v2: https://lore.kernel.org/r/20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org
+diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
+index fa8aba6dc81c..77f8a828d6e0 100644
+--- a/drivers/gpu/drm/drm_mipi_dbi.c
++++ b/drivers/gpu/drm/drm_mipi_dbi.c
+@@ -1079,7 +1079,7 @@ static int mipi_dbi_typec1_command_read(struct mipi_dbi *dbi, u8 *cmd,
+ static int mipi_dbi_typec1_command(struct mipi_dbi *dbi, u8 *cmd,
+ 				   u8 *parameters, size_t num)
+ {
+-	unsigned int bpw = (*cmd == MIPI_DCS_WRITE_MEMORY_START) ? 16 : 8;
++	unsigned int bpw = 8;
+ 	int ret;
+ 
+ 	if (mipi_dbi_command_is_read(dbi, *cmd))
+@@ -1091,6 +1091,9 @@ static int mipi_dbi_typec1_command(struct mipi_dbi *dbi, u8 *cmd,
+ 	if (ret || !num)
+ 		return ret;
+ 
++	if (*cmd == MIPI_DCS_WRITE_MEMORY_START)
++		bpw = dbi->write_memory_bpw;
++
+ 	return mipi_dbi_spi1_transfer(dbi, 1, parameters, num, bpw);
+ }
+ 
+@@ -1184,8 +1187,8 @@ static int mipi_dbi_typec3_command(struct mipi_dbi *dbi, u8 *cmd,
+ 	if (ret || !num)
+ 		return ret;
+ 
+-	if (*cmd == MIPI_DCS_WRITE_MEMORY_START && !dbi->swap_bytes)
+-		bpw = 16;
++	if (*cmd == MIPI_DCS_WRITE_MEMORY_START)
++		bpw = dbi->write_memory_bpw;
+ 
+ 	spi_bus_lock(spi->controller);
+ 	gpiod_set_value_cansleep(dbi->dc, 1);
+@@ -1256,12 +1259,15 @@ int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *dbi,
+ 
+ 	dbi->spi = spi;
+ 	dbi->read_commands = mipi_dbi_dcs_read_commands;
++	dbi->write_memory_bpw = 16;
+ 
+ 	if (dc) {
+ 		dbi->command = mipi_dbi_typec3_command;
+ 		dbi->dc = dc;
+-		if (!spi_is_bpw_supported(spi, 16))
++		if (!spi_is_bpw_supported(spi, 16)) {
++			dbi->write_memory_bpw = 8;
+ 			dbi->swap_bytes = true;
++		}
+ 	} else {
+ 		dbi->command = mipi_dbi_typec1_command;
+ 		dbi->tx_buf9_len = SZ_16K;
+diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
+index e8e0f8d39f3a..b36596efdcc3 100644
+--- a/include/drm/drm_mipi_dbi.h
++++ b/include/drm/drm_mipi_dbi.h
+@@ -56,6 +56,11 @@ struct mipi_dbi {
+ 	 */
+ 	struct spi_device *spi;
+ 
++	/**
++	 * @write_memory_bpw: Bits per word used on a MIPI_DCS_WRITE_MEMORY_START transfer
++	 */
++	unsigned int write_memory_bpw;
++
+ 	/**
+ 	 * @dc: Optional D/C gpio.
+ 	 */
 
-Changes in v2:
-- binding: Use 'default: r5g6b5' (Rob)
-- Link to v1: https://lore.kernel.org/r/20240507-panel-mipi-dbi-rgb666-v1-0-6799234afa3e@tronnes.org
-
----
-Noralf Trønnes (5):
-      dt-bindings: display: panel: mipi-dbi-spi: Add a pixel format property
-      drm/mipi-dbi: Remove mipi_dbi_machine_little_endian()
-      drm/mipi-dbi: Make bits per word configurable for pixel transfers
-      drm/mipi-dbi: Add support for DRM_FORMAT_RGB888
-      drm/tiny: panel-mipi-dbi: Support the pixel format property
-
- .../bindings/display/panel/panel-mipi-dbi-spi.yaml | 30 +++++++++
- drivers/gpu/drm/drm_mipi_dbi.c                     | 76 +++++++++++++++-------
- drivers/gpu/drm/tiny/panel-mipi-dbi.c              | 55 +++++++++++++++-
- include/drm/drm_mipi_dbi.h                         | 10 +++
- 4 files changed, 147 insertions(+), 24 deletions(-)
----
-base-commit: 0209df3b4731516fe77638bfc52ba2e9629c67cd
-change-id: 20240405-panel-mipi-dbi-rgb666-4e033787d6c9
-
-Best regards,
 -- 
-Noralf Trønnes <noralf@tronnes.org>
+2.45.1
 
 
