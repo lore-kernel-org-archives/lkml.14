@@ -1,68 +1,31 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A76C1442FB;
-	Tue,  4 Jun 2024 09:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F248A143890
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 09:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717492309; cv=none; b=h9+7lzEIG4011uyl6/9+4n1IsvZqtHKEo3XjROOi2EVd11slcYRmOvEVUZegHy+nSNNIMQyai3NrVKps/F9Wl6HY3Po+Lc6GNVhyxr12WrX5XcSmn5fVZ9//J6P9daXWaIxvaDqci7KrOAzqeAtdofVeBiYnD9TWOmaoaWvhZvE=
+	t=1717492355; cv=none; b=k+9waYr6h8wjXKyr+eCLyjIsIlcqdQS0KXqvRZPFa0E8LTUD4bCxDEg8EGqckeV3FpR+XijHinC/GJ1qFItUReR8gfDr0HrHu1RfFkDEVc/8kiA2PBKSkjNk8YvvetpNP9h9nd1Z8P3uGPFrggRRtgf6srwmoqNt4agq/qKVWu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717492309; c=relaxed/simple;
-	bh=vhRGBF5u2soD1b1ZxX2Vte9C9U3uPwpV5XFLBTuyFyc=;
+	s=arc-20240116; t=1717492355; c=relaxed/simple;
+	bh=ZDk/Nypti9OkdiSrO0F3QWd83a+WWkijrwoDmER6QIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNZNa9xpYab/5JAkB7NemvjM6TjBAYd8O0KvzKHkZLMrnmq1KBaisAD380Qf4UjWyo25OrlWlGOUwvzIt5Z3ySAbTWghPRebYxkbTpL8QQ2Ci78La2SoFzLDuXPiDDf2E8yaZCzx4tWKlxpIzsjOOdV1hg1Eg+ouwagEEdpfR/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QONPOjyD; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QONPOjyD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717492308; x=1749028308;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vhRGBF5u2soD1b1ZxX2Vte9C9U3uPwpV5XFLBTuyFyc=;
-  b=QONPOjyDMFGv9wuVzJgThFOvenblOJZsakUVOUEszPONS7Ha9HyqYrL7
-   a3dCkcQKz85yPOhyMoplEE5TvdOF2sUD+UcyuRDFJGjH6zJlSi1fHL/yU
-   31SzjNlm9Ag7biH5waVtGmoXXd0PxIK8wlDKZrX8IL5AeJuDHtMTRL6DM
-   oU2Swh3ib7FwF7l2MhCTJ61CATr3sYWgD1sAvzEflZBUAMLe9o3VLeo/m
-   X/YU2zF2wM7mgQ2jw4uzIwbRsLom71K/7OOBM+9xeQKtRvggFYjLpIML7
-   dBKmP8+pcBdXX02R9DNbv18soP9nzTYQ7E3k7Ro2oaDNfPLyS7ZQ+AHvE
-   g==;
-X-CSE-ConnectionGUID: AO+h+O7aSxufhIXnGYliYg==
-X-CSE-MsgGUID: aFqblQlLQ+q/rqVjTEdbgw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="24689355"
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="24689355"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 02:11:46 -0700
-X-CSE-ConnectionGUID: pisztONWSemSgBojbjX2tA==
-X-CSE-MsgGUID: 8XMlt/GLQYy/LtwSjtP/IQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="68343439"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 04 Jun 2024 02:11:41 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sEQCg-000MzX-20;
-	Tue, 04 Jun 2024 09:11:38 +0000
-Date: Tue, 4 Jun 2024 17:10:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sibi Sankar <quic_sibis@quicinc.com>, sudeep.holla@arm.com,
-	cristian.marussi@arm.com, andersson@kernel.org,
-	konrad.dybcio@linaro.org, jassisinghbrar@gmail.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	dmitry.baryshkov@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com,
-	quic_sibis@quicinc.com, conor+dt@kernel.org, quic_nkela@quicinc.com,
-	quic_psodagud@quicinc.com, abel.vesa@linaro.org
-Subject: Re: [PATCH V5 2/5] mailbox: Add support for QTI CPUCP mailbox
- controller
-Message-ID: <202406041620.FyEU8GRv-lkp@intel.com>
-References: <20240603205859.2212225-3-quic_sibis@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6PaH+cRNXUIxdKFPt+Car0Mcl4y2sIFpTXEVDW45Ght8XgFUWvhxbZFdW4pw/OvpArTcezyczyYbdImzRnaTZPdmrYbbB/42JG9I3XcrXYl6fTtM8h/GUkuDr8Wsx2Ow+Fg7N8GFQtK0V6HeXSrR8v+1xQtqGrWK2i4qJfFrtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-5f-665eda7b264e
+Date: Tue, 4 Jun 2024 18:12:22 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, hannes@cmpxchg.org,
+	iamjoonsoo.kim@lge.com, rientjes@google.com
+Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
+ hopeless but may not now
+Message-ID: <20240604091221.GA28034@system.software.com>
+References: <20240604072323.10886-1-byungchul@sk.com>
+ <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <20240604084533.GA68919@system.software.com>
+ <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,73 +34,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240603205859.2212225-3-quic_sibis@quicinc.com>
+In-Reply-To: <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXC9ZZnkW71rbg0g533xC3mrF/DZrF6k6/F
+	yu5mNovLu+awWdxb85/Vom3JRiaLk7Mmsziwexx+857ZY8GmUo/Fe14yeWz6NIndo+vtFSaP
+	EzN+s3h83iQXwB7FZZOSmpNZllqkb5fAlbHq41q2gq9KFTPf/WRrYFwg3cXIySEhYCLxYvID
+	Jhi7rW0GO4jNIqAisXHhA1YQm01AXeLGjZ/MILaIgIbEp4XLgWq4OJgF1jJKHLnaAlTEwSEs
+	kCpxfHsASA2vgIXEsiUvWUBqhATOMEr0NqxngkgISpyc+YQFxGYW0JK48e8lE0gvs4C0xPJ/
+	HCBhTgE7id5F9xlBbFEBZYkD244zgcyREDjAJjHl7gMWiEMlJQ6uuMEygVFgFpKxs5CMnYUw
+	dgEj8ypGocy8stzEzBwTvYzKvMwKveT83E2MwGBfVvsnegfjpwvBhxgFOBiVeHgNFsWmCbEm
+	lhVX5h5ilOBgVhLh7auLThPiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVIID2xJDU7NbUg
+	tQgmy8TBKdXA2PxZwXmDvxafxa2qZ2wvXqdy9OkJzWDiOsK6RfoOd8nf68JPTIo0arbb6ArF
+	yW/oWNdTwv+VS45pa+Kk85wdonJZZ2N3aLNLfp24bWuxsUJZ5JKotO8XX5mnS39yfWaieMf6
+	4m2Wh1JL/e/tW8+8+efSnokKffVHOr53M2p7LdRViD2ge3umEktxRqKhFnNRcSIARsvOv3IC
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGLMWRmVeSWpSXmKPExsXC5WfdrFt9Ky7N4NkdLos569ewWaze5Gux
+	sruZzeLw3JOsFpd3zWGzuLfmP6tF25KNTBYnZ01mceDwOPzmPbPHgk2lHov3vGTy2PRpErtH
+	19srTB4nZvxm8Vj84gOTx+dNcgEcUVw2Kak5mWWpRfp2CVwZqz6uZSv4qlQx891PtgbGBdJd
+	jJwcEgImEm1tM9hBbBYBFYmNCx+wgthsAuoSN278ZAaxRQQ0JD4tXA5Uw8XBLLCWUeLI1Rag
+	Ig4OYYFUiePbA0BqeAUsJJYteckCUiMkcIZRordhPRNEQlDi5MwnLCA2s4CWxI1/L5lAepkF
+	pCWW/+MACXMK2En0LrrPCGKLCihLHNh2nGkCI+8sJN2zkHTPQuhewMi8ilEkM68sNzEzx1Sv
+	ODujMi+zQi85P3cTIzB0l9X+mbiD8ctl90OMAhyMSjy8Fitj04RYE8uKK3MPMUpwMCuJ8PbV
+	RacJ8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1MPK65x5+
+	ZDffzkAt7/z+9K2Oezq+K8aF3Gzh0t8wVbn3tdyV+o2iz25c2uxu7fzAr2p67oXCa8vmafs2
+	NloYH3qjwjDx0JF/pQFmT7T/6U/bk5RpZP1LWmH60qf8hz2SHcNP8c/XvbN2w+bFC19FMJ1a
+	nfqzrW6jduaGTVdCOa/P/HQjR3zZ5AYlluKMREMt5qLiRADimWPdWQIAAA==
+X-CFilter-Loop: Reflected
 
-Hi Sibi,
+On Tue, Jun 04, 2024 at 04:57:17PM +0800, Huang, Ying wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > On Tue, Jun 04, 2024 at 03:57:54PM +0800, Huang, Ying wrote:
+> >> Byungchul Park <byungchul@sk.com> writes:
+> >> 
+> >> > Changes from v1:
+> >> > 	1. Don't allow to resume kswapd if the system is under memory
+> >> > 	   pressure that might affect direct reclaim by any chance, like
+> >> > 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
+> >> >
+> >> > --->8---
+> >> > From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
+> >> > From: Byungchul Park <byungchul@sk.com>
+> >> > Date: Tue, 4 Jun 2024 15:27:56 +0900
+> >> > Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
+> >> >
+> >> > A system should run with kswapd running in background when under memory
+> >> > pressure, such as when the available memory level is below the low water
+> >> > mark and there are reclaimable folios.
+> >> >
+> >> > However, the current code let the system run with kswapd stopped if
+> >> > kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
+> >> > until direct reclaim will do for that, even if there are reclaimable
+> >> > folios that can be reclaimed by kswapd.  This case was observed in the
+> >> > following scenario:
+> >> >
+> >> >    CONFIG_NUMA_BALANCING enabled
+> >> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
+> >> >    numa node0 (500GB local DRAM, 128 CPUs)
+> >> >    numa node1 (100GB CXL memory, no CPUs)
+> >> >    swap off
+> >> >
+> >> >    1) Run a workload with big anon pages e.g. mmap(200GB).
+> >> >    2) Continue adding the same workload to the system.
+> >> >    3) The anon pages are placed in node0 by promotion/demotion.
+> >> >    4) kswapd0 stops because of the unreclaimable anon pages in node0.
+> >> >    5) Kill the memory hoggers to restore the system.
+> >> >
+> >> > After restoring the system at 5), the system starts to run without
+> >> > kswapd.  Even worse, tiering mechanism is no longer able to work since
+> >> > the mechanism relies on kswapd for demotion.
+> >> 
+> >> We have run into the situation that kswapd is kept in failure state for
+> >> long in a multiple tiers system.  I think that your solution is too
+> >
+> > My solution just gives a chance for kswapd to work again even if
+> > kswapd_failures >= MAX_RECLAIM_RETRIES, if there are potential
+> > reclaimable folios.  That's it.
+> >
+> >> limited, because OOM killing may not happen, while the access pattern of
+> >
+> > I don't get this.  OOM will happen as is, through direct reclaim.
+> 
+> A system that fails to reclaim via kswapd may succeed to reclaim via
+> direct reclaim, because more CPUs are used to scanning the page tables.
+> 
+> In a system with NUMA balancing based page promotion and page demotion
+> enabled, page promotion will wake up kswapd, but kswapd may fail in some
+> situations.  But page promotion will no trigger direct reclaim or OOM.
+> 
+> >> the workloads may change.  We have a preliminary and simple solution for
+> >> this as follows,
+> >> 
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
+> >
+> > Whether tiering is involved or not, the same problem can arise if
+> > kswapd gets stopped due to kswapd_failures >= MAX_RECLAIM_RETRIES.
+> 
+> Your description is about tiering too.  Can you describe a situation
 
-kernel test robot noticed the following build errors:
+I mentioned "tiering" while I described how to reproduce because I ran
+into the situation while testing with tiering system but I don't think
+it's the necessary condition.
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.10-rc2 next-20240604]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Let me ask you back, why the logic to stop kswapd was considered in the
+first place?  That's because the problem was already observed anyway
+whether tiering is involved or not.  The same problem will arise once
+kswapd stops.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sibi-Sankar/dt-bindings-mailbox-qcom-Add-CPUCP-mailbox-controller-bindings/20240604-050256
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240603205859.2212225-3-quic_sibis%40quicinc.com
-patch subject: [PATCH V5 2/5] mailbox: Add support for QTI CPUCP mailbox controller
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20240604/202406041620.FyEU8GRv-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406041620.FyEU8GRv-lkp@intel.com/reproduce)
+	Byungchul
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406041620.FyEU8GRv-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/mailbox/qcom-cpucp-mbox.c: In function 'qcom_cpucp_mbox_irq_fn':
->> drivers/mailbox/qcom-cpucp-mbox.c:54:18: error: implicit declaration of function 'readq'; did you mean 'readb'? [-Werror=implicit-function-declaration]
-      54 |         status = readq(cpucp->rx_base + APSS_CPUCP_RX_MBOX_STAT);
-         |                  ^~~~~
-         |                  readb
->> drivers/mailbox/qcom-cpucp-mbox.c:65:17: error: implicit declaration of function 'writeq'; did you mean 'writeb'? [-Werror=implicit-function-declaration]
-      65 |                 writeq(BIT(i), cpucp->rx_base + APSS_CPUCP_RX_MBOX_CLEAR);
-         |                 ^~~~~~
-         |                 writeb
-   cc1: some warnings being treated as errors
-
-
-vim +54 drivers/mailbox/qcom-cpucp-mbox.c
-
-    47	
-    48	static irqreturn_t qcom_cpucp_mbox_irq_fn(int irq, void *data)
-    49	{
-    50		struct qcom_cpucp_mbox *cpucp = data;
-    51		u64 status;
-    52		int i;
-    53	
-  > 54		status = readq(cpucp->rx_base + APSS_CPUCP_RX_MBOX_STAT);
-    55	
-    56		for_each_set_bit(i, (unsigned long *)&status, APSS_CPUCP_IPC_CHAN_SUPPORTED) {
-    57			u32 val = readl(cpucp->rx_base + APSS_CPUCP_RX_MBOX_CMD(i) + APSS_CPUCP_MBOX_CMD_OFF);
-    58			struct mbox_chan *chan = &cpucp->chans[i];
-    59			unsigned long flags;
-    60	
-    61			/* Provide mutual exclusion with changes to chan->cl */
-    62			spin_lock_irqsave(&chan->lock, flags);
-    63			if (chan->cl)
-    64				mbox_chan_received_data(chan, &val);
-  > 65			writeq(BIT(i), cpucp->rx_base + APSS_CPUCP_RX_MBOX_CLEAR);
-    66			spin_unlock_irqrestore(&chan->lock, flags);
-    67		}
-    68	
-    69		return IRQ_HANDLED;
-    70	}
-    71	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> without tiering?
+> 
+> --
+> Best Regards,
+> Huang, Ying
+> 
+> > 	Byungchul
+> >
+> >> where we will try to wake up kswapd to check every 10 seconds if kswapd
+> >> is in failure state.  This is another possible solution.
+> >> 
+> >> > However, the node0 has pages newly allocated after 5), that might or
+> >> > might not be reclaimable.  Since those are potentially reclaimable, it's
+> >> > worth hopefully trying reclaim by allowing kswapd to work again.
+> >> >
+> >> 
+> >> [snip]
+> >> 
+> >> --
+> >> Best Regards,
+> >> Huang, Ying
