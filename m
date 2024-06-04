@@ -1,112 +1,113 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A881482E7;
-	Tue,  4 Jun 2024 14:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA54135414;
+	Tue,  4 Jun 2024 14:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511964; cv=none; b=tJ7IzIHaz/kL6DHVAsoSlPXnDixgIh8eHqhDE9uP+ydAZgVVRPJEmgU/54+yOIAoMq5s7kBMyoWNnlkRuQcMoLPoVPSv0WfPeqUuGj1IcXY/dHK0UrVUDBf7NtrdJcEFqIAOBxIde1LON6T0odAKrXHB0QrqTIYFVTixv3WB4vU=
+	t=1717512062; cv=none; b=nYfIEkGud8PsXV3/cQgyq7wBPASUNBA06nqOiz2RCW+heklDVYThOe0KWI5u054TlBhbEfB3xTTatgumvnG0cqmL2IxHLN8wTnmkeHuoa9SQGg5BocJ3rAGMiq0B5GpIbgYYYmoARsXNvG72qxKVD0SXlfJFre6BM9GQIZKAmJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511964; c=relaxed/simple;
-	bh=DJPEv7DHqC2jFC/ml2G0XBZOO08J9xy7Lnf+7JZnsJc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBMDqy88U0aP4xF8MfaQIBJGVQ6WpJvqOqeF7oSyJE+LqYyJYQRAJ+snb/OtAd5os6aUWBb9gVk5kxRZUNSubm7U9TIXtqzpD+i7iYg15tvZwRluA2dOsfts8VfIfm/icMv7GyS2Cft5nwOLntgLk4TUvlO1B2a57tmrLiOngVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7lgQXoag; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1717512062; c=relaxed/simple;
+	bh=mMQkWVSXbYBsdOLYmzi5KmcMzPAUaVKm50X4Xsw56ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ANZoE/A87AvWAI/GmTXNOaCJOrYUvj9TfNmG9mBnqlFM8pYMo2u7/kvGHp5qxzSNDIw+BbwS5Tpd2FdbQHo33mBz3nA31GTaPHTOk8j6HXN53OOqFxB+LRZo69gdgJiPW0epjccaZLBIqSAI7DRbJz029XwNJ7zUSefPUUIzGaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQUvskLU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7lgQXoag"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454CITxL011744;
-	Tue, 4 Jun 2024 16:39:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	wKwsSbDUP5U8ltkUT/lf79BigFMhUPhxIubwoABa380=; b=7lgQXoagjOzWwKcA
-	wFmFz8hyurpTC+g9lL+ZekiFu1B0hArKrM7BNzl6Bxj05veh07ogicGbF0Eygt4W
-	A9NPjXWy9Vtu81xg6JwqXtLWt36evy5FyE4O64GRQNdmDtAp7cfPylzrbBh6QWdl
-	k4uocNg0cuWlsD155NRrAUlwcSzJETkfQvr0slXLfaVw8YcJhYk2C7FYP5GpxMOu
-	fnKCQmglPyUkxAX2x0q5xpjsl8DIERnttxolE0C4LlSAwdEFSenhj9ub2WPnBnCT
-	UGyEDjPSmXhnnrCZSFoawgVo1thxAZqRHlYBPeOozLZApwiwpQ57VLhRN0pKuG8P
-	pK/DFQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yg7r03j2d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 16:39:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D385D40044;
-	Tue,  4 Jun 2024 16:38:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 05775221961;
-	Tue,  4 Jun 2024 16:37:44 +0200 (CEST)
-Received: from localhost (10.48.86.164) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 4 Jun
- 2024 16:37:43 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>,
-        Marek Vasut <marex@denx.de>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 11/11] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
-Date: Tue, 4 Jun 2024 16:35:02 +0200
-Message-ID: <20240604143502.154463-12-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240604143502.154463-1-christophe.roullier@foss.st.com>
-References: <20240604143502.154463-1-christophe.roullier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQUvskLU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93555C2BBFC;
+	Tue,  4 Jun 2024 14:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717512062;
+	bh=mMQkWVSXbYBsdOLYmzi5KmcMzPAUaVKm50X4Xsw56ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OQUvskLUvAt55dCN/pmYncolyVzQuWF9dIVGfKa0pBA+K25Oitp9cCR0TaJfjAF1Q
+	 tC1lkodyEZ1uKzduXA77TZPeRyAB3dnPXYtZN3GCIR/FjJmK0bp0HrMRFPlgnsliRE
+	 9dCqASCJsTU1nWSGRc2BNKXaWuEe0cQX1Skz+Yob3gtgxVqVy8veZPMl0cqlp1taW6
+	 gU1Vfna8PrJUGo6Rp9vow6MUPsuQmY+vqC65KgDqr6C0qo5TH3OufTgaxEppC6Ongy
+	 XQn2NY3KUcZKI6kYTFIxGMqUP7jPzB+VAvWreSh0jtFha1d+ufyadgliZynsXkmG8f
+	 OtoQPMZbd3lng==
+Date: Tue, 4 Jun 2024 15:40:56 +0100
+From: Will Deacon <will@kernel.org>
+To: Andrew Halaney <ahalaney@redhat.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/adreno: De-spaghettify the use of memory barriers
+Message-ID: <20240604144055.GE20384@willie-the-truck>
+References: <20240508-topic-adreno-v1-1-1babd05c119d@linaro.org>
+ <20240514183849.6lpyplifero5u35r@hu-akhilpo-hyd.qualcomm.com>
+ <ae4a77wt3kc73ejshptldqx6ugzrqguyq7etbbu54y4avhbdlt@qyt4r6gma7ev>
+ <20240516145005.gdksmvxp35m45ifh@hu-akhilpo-hyd.qualcomm.com>
+ <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_09,2024-06-04_01,2024-05-17_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5vyrmxvkurdstqfiatxfqcqljwyiswda2vpkea27ighb2eqbav@n24yzdykbc23>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Need to enable MCP23S08 I/O expanders to manage Ethernet PHY
-reset in STM32MP135F-DK board.
-Put this config in built-in like STMMAC to avoid huge of Ethernet
-messages during boot (deferred)
+On Thu, May 16, 2024 at 01:55:26PM -0500, Andrew Halaney wrote:
+> On Thu, May 16, 2024 at 08:20:05PM GMT, Akhil P Oommen wrote:
+> > On Thu, May 16, 2024 at 08:15:34AM -0500, Andrew Halaney wrote:
+> > > If I understand correctly, you don't need any memory barrier.
+> > > writel()/readl()'s are ordered to the same endpoint. That goes for all
+> > > the reordering/barrier comments mentioned below too.
+> > > 
+> > > device-io.rst:
+> > > 
+> > >     The read and write functions are defined to be ordered. That is the
+> > >     compiler is not permitted to reorder the I/O sequence. When the ordering
+> > >     can be compiler optimised, you can use __readb() and friends to
+> > >     indicate the relaxed ordering. Use this with care.
+> > > 
+> > > memory-barriers.txt:
+> > > 
+> > >      (*) readX(), writeX():
+> > > 
+> > > 	    The readX() and writeX() MMIO accessors take a pointer to the
+> > > 	    peripheral being accessed as an __iomem * parameter. For pointers
+> > > 	    mapped with the default I/O attributes (e.g. those returned by
+> > > 	    ioremap()), the ordering guarantees are as follows:
+> > > 
+> > > 	    1. All readX() and writeX() accesses to the same peripheral are ordered
+> > > 	       with respect to each other. This ensures that MMIO register accesses
+> > > 	       by the same CPU thread to a particular device will arrive in program
+> > > 	       order.
+> > > 
+> > 
+> > In arm64, a writel followed by readl translates to roughly the following
+> > sequence: dmb_wmb(), __raw_writel(), __raw_readl(), dmb_rmb(). I am not
+> > sure what is stopping compiler from reordering  __raw_writel() and __raw_readl()
+> > above? I am assuming iomem cookie is ignored during compilation.
+> 
+> It seems to me that is due to some usage of volatile there in
+> __raw_writel() etc, but to be honest after reading about volatile and
+> some threads from gcc mailing lists, I don't have a confident answer :)
+> 
+> > 
+> > Added Will to this thread if he can throw some light on this.
+> 
+> Hopefully Will can school us.
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+The ordering in this case is ensured by the memory attributes used for
+ioremap(). When an MMIO region is mapped using Device-nGnRE attributes
+(as it the case for ioremap()), the "nR" part means "no reordering", so
+readX() and writeX() to that region are ordered wrt each other.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 86bf057ac3663..9758f3d41ad70 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
- CONFIG_SPI_SPIDEV=y
- CONFIG_SPMI=y
- CONFIG_PINCTRL_AS3722=y
-+CONFIG_PINCTRL_MCP23S08=y
- CONFIG_PINCTRL_MICROCHIP_SGPIO=y
- CONFIG_PINCTRL_OCELOT=y
- CONFIG_PINCTRL_PALMAS=y
--- 
-2.25.1
+Note that guarantee _doesn't_ apply to other flavours of ioremap(), so
+e.g. ioremap_wc() won't give you the ordering.
 
+Hope that helps,
+
+Will
