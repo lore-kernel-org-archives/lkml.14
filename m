@@ -1,127 +1,160 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A061EB30;
-	Tue,  4 Jun 2024 07:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5261F83CB4
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717486905; cv=none; b=C1bLs8NlGpyLTGsX0GSwtuu05Z7XjbR1pkrIZszc6f6h+4md5Y2/T8X+g0wJIm3WUipjUpm1z1Hp0uAf3/W3mHGDzDYHXMcsE5H+XIKLTl04RAn9PWhiZX2U4D93FMizefZke1GDDEVZ03HQSfS98U6MZGaa3nIjQxCBONVz+yA=
+	t=1717486907; cv=none; b=WEeVVWsUyL1MVChuWO2NlJxIYaiQQjm9nguqZGoIq/srnxUETn2GguAoouPMyVWMOXOQS7CRma+W/RgIe0ht1n+pXaKxVJNkiq+6dY6dLjtS9QW4Tn1chcQe2qdl8rmC++znZMrab9WiVmIaol5poR7vS4ISQU/K1+qgdjhj7BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717486905; c=relaxed/simple;
-	bh=dkVXzums6rTRSBN+PD2u6Ye0UZiO6StWMO+FNoWaoQE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OovecJ9GwdKe7jxwo+3xj6hLDTpnQiLPjbVVii6II3xmL2qofE4gA7H8TXrD34TCfrcrqqBkNaHKb56X6E7WoJGLxGom9FCp1vM7YlCIgRFib7zEeIkXgmGYd7MD7u1+Yzl55HLIRydv1gfNSymwyfqLXN6Y7hmHxE6PXCaKwnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=ty0Hjejg; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1717486907; c=relaxed/simple;
+	bh=uqrD+mSTw2cbrHqixanYyy0kaU3D0TlQKJePcyo5e5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oppBeDqHIqB3ApjhYbIzpXSalxXeNi1M/el2yvlAlHeYKwCcNrEp8BeUk0qOUD5uOtqSrsxI56Ri75jY9uGdHajsvYv0XhBOQBMMs9yNsYSL3lE4+piFkHIEOmzDISXGlWhkYsaLIQH10hYAm/7OvLkZILL8TdC5kKTdydauyS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KHLfYGrx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ty0Hjejg"
-X-UUID: dce319dc224511efbace61486a71fe2b-20240604
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=vCnoMy4gW37pGjxNmOGfcGS87C3TvaA24Lp8NUng/m0=;
-	b=ty0Hjejg1DYOz7PPH9gbkJgSYFB3JIw17xNfdMHQFgG7IKidg2TOo6JOVC3xVY55LQQRXwxwFbhK7UWNOnXlv6ZPW9PXVrH8nJZQ0A5T708FzSNuPcCQySmMGO1ZyaIkIEPcgH93KvQoNipwtgVbHvvoD+aKxiJNuJOC4iVC6J8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.39,REQID:b6dd6ba2-b461-44f4-804f-1a781c203b02,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:393d96e,CLOUDID:d4fd2d44-4544-4d06-b2b2-d7e12813c598,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: dce319dc224511efbace61486a71fe2b-20240604
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <jiande.lu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1740364105; Tue, 04 Jun 2024 15:41:32 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 4 Jun 2024 15:41:30 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 4 Jun 2024 15:41:30 +0800
-From: Jiande Lu <jiande.lu@mediatek.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
-CC: Sean Wang <sean.wang@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
-	Deren Wu <deren.Wu@mediatek.com>, Aaron Hou <aaron.hou@mediatek.com>, "Steve
- Lee" <steve.lee@mediatek.com>, linux-bluetooth
-	<linux-bluetooth@vger.kernel.org>, linux-kernel
-	<linux-kernel@vger.kernel.org>, linux-mediatek
-	<linux-mediatek@lists.infradead.org>, Jiande Lu <jiande.lu@mediatek.com>
-Subject: [PATCH] Bluetooth: btusb: Add USB HW IDs for MT7920/MT7925
-Date: Tue, 4 Jun 2024 15:41:00 +0800
-Message-ID: <20240604074100.572-1-jiande.lu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHLfYGrx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717486904;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TsMImdYFRkA+pOndLmWX7p9H2qEq17QcVQSCTLk4QM0=;
+	b=KHLfYGrxavJeB4PeX6w5j54jk8vFQ1+Lmt3RkpeI4ZRckXZWS+wXHZpJVRJweJaAbh3EcN
+	bIcTbZWb++By278lW6bai3ejVNfM8ztK/ZSITchxHKwW+7rF8grzDtqb0A3I2APL1CsL8N
+	h/aHfkMDMFqmMQkUhxBfEqNSR5zXiN4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-SJikkqORMAqbpA2TenS47Q-1; Tue,
+ 04 Jun 2024 03:41:40 -0400
+X-MC-Unique: SJikkqORMAqbpA2TenS47Q-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 007853806620;
+	Tue,  4 Jun 2024 07:41:40 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B30C4492EE6;
+	Tue,  4 Jun 2024 07:41:38 +0000 (UTC)
+Date: Tue, 4 Jun 2024 15:41:35 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v4 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <Zl7FLw+YrFN/blA+@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-2-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--4.703900-8.000000
-X-TMASE-MatchedRID: yvDAzrttxFVys0UAwvp+/ANARH50Lwx2uLwbhNl9B5VUvqB5o/Lqcx4u
-	a24ul9odlQyR652shZxIg7V1v/s3Rx1YpEPWJiyz4pdq9sdj8LUK3n1SHen81Xe9QDr8+LTcPOm
-	svTTYiPHi8zVgXoAltsIJ+4gwXrEtwrbXMGDYqV+eVW/ZdL52j0CK+Db3ho1yetUmjQUx2zddNn
-	8SXR397s3/wxQI4Cm55M5efyQJ5Xs2GIkImAO0vyKNY+qbNCUOjK6ZzRHW/PGz2uN2Wc67hHZrU
-	bEZipAEiWT09mQz7szw9kH8zAy44aOuVLnx3A74
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--4.703900-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP:
-	08934D42DCF5218560D29DD22AA74B15C6C053DEC15DEBE8655CB9616CDD33102000:8
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-2-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Add HW IDs for wireless module. These HW IDs are extracted from
-Windows driver inf file. Note these HW IDs without official drivers,
-still in testing phase. Thus, we update module HW ID and test
-ensure consistent boot success.
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> Currently, kexec_buf is placed in order which means for the same
+> machine, the info in the kexec_buf is always located at the same
+> position each time the machine is booted. This may cause a risk for
+> sensitive information like LUKS volume key. Now struct kexec_buf has a
+> new field random which indicates it's supposed to be placed in a random
+> position.
+> 
+> Suggested-by: Jan Pazdziora <jpazdziora@redhat.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/kexec.h |  2 ++
+>  kernel/kexec_file.c   | 15 +++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f0e9f8eda7a3..cc81b8a903ab 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+>   * @buf_min:	The buffer can't be placed below this address.
+>   * @buf_max:	The buffer can't be placed above this address.
+>   * @top_down:	Allocate from top of memory.
+> + * @random:	Place the buffer at a random position.
+>   */
+>  struct kexec_buf {
+>  	struct kimage *image;
+> @@ -182,6 +183,7 @@ struct kexec_buf {
+>  	unsigned long buf_min;
+>  	unsigned long buf_max;
+>  	bool top_down;
+> +	bool random;
+>  };
+>  
+>  int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 3d64290d24c9..06b77f9ac4cc 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/elfcore.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kernel_read_file.h>
+> +#include <linux/prandom.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/vmalloc.h>
+>  #include "kexec_internal.h"
+> @@ -437,6 +438,16 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  	return ret;
+>  }
+>  
+> +static unsigned long kexec_random_start(unsigned long start, unsigned long end)
+> +{
+> +	unsigned long temp_start;
+> +	unsigned short i;
+> +
+> +	get_random_bytes(&i, sizeof(unsigned short));
+> +	temp_start = start + (end - start) / USHRT_MAX * i;
+> +	return temp_start;
+> +}
+> +
+>  static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  				    struct kexec_buf *kbuf)
+>  {
+> @@ -445,6 +456,8 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  
+>  	temp_end = min(end, kbuf->buf_max);
+>  	temp_start = temp_end - kbuf->memsz + 1;
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, temp_end);
 
-Signed-off-by: Jiande Lu <jiande.lu@mediatek.com>
----
- drivers/bluetooth/btusb.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+As we discussed before, this need be limited in kdump scope, seems v4
+doesn't include the change.
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 79aefdb3324d..62fc836f8afb 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -585,6 +585,20 @@ static const struct usb_device_id quirks_table[] = {
- 						     BTUSB_WIDEBAND_SPEECH |
- 						     BTUSB_VALID_LE_STATES },
- 
-+	/* Additional MediaTek MT7920 Bluetooth devices */
-+	{ USB_DEVICE(0x0489, 0xe134), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH |
-+						     BTUSB_VALID_LE_STATES },
-+	{ USB_DEVICE(0x13d3, 0x3620), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH |
-+						     BTUSB_VALID_LE_STATES },
-+	{ USB_DEVICE(0x13d3, 0x3621), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH |
-+						     BTUSB_VALID_LE_STATES },
-+	{ USB_DEVICE(0x13d3, 0x3622), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH |
-+						     BTUSB_VALID_LE_STATES },
-+
- 	/* Additional MediaTek MT7921 Bluetooth devices */
- 	{ USB_DEVICE(0x0489, 0xe0c8), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH |
-@@ -685,6 +699,9 @@ static const struct usb_device_id quirks_table[] = {
- 	{ USB_DEVICE(0x0489, 0xe113), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH |
- 						     BTUSB_VALID_LE_STATES },
-+	{ USB_DEVICE(0x0489, 0xe139), .driver_info = BTUSB_MEDIATEK |
-+						     BTUSB_WIDEBAND_SPEECH |
-+						     BTUSB_VALID_LE_STATES },
- 	{ USB_DEVICE(0x13d3, 0x3602), .driver_info = BTUSB_MEDIATEK |
- 						     BTUSB_WIDEBAND_SPEECH |
- 						     BTUSB_VALID_LE_STATES },
--- 
-2.18.0
+>  
+>  	do {
+>  		/* align down start */
+> @@ -482,6 +495,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+>  	unsigned long temp_start, temp_end;
+>  
+>  	temp_start = max(start, kbuf->buf_min);
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, end);
+>  
+>  	do {
+>  		temp_start = ALIGN(temp_start, kbuf->buf_align);
+> -- 
+> 2.45.0
+> 
 
