@@ -1,121 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A06C8C7
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 14:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 132ABC8C7;
+	Tue,  4 Jun 2024 14:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511475; cv=none; b=dCIuFBXWKeQ91YjsjauxZTZNv8Hz98O4FPznLtUtUZ5BAEiXxAbbm8RdcVfqZ3hPGnaQcULxuwrMzp7QtEhuLMVjRTY1hgGz6h1nY8jJVe03sCelKfT43Ncm2mefEv46dqwxtE08/wo9Ms6cG772hmQiwQeYw0f7vWmxoX6JTco=
+	t=1717511481; cv=none; b=qvyMD9aNtBgupLWb4eEa5uTsuclbbaqqqk21TG8xl0ZRfCqmyDG/h2Cb6zbeOYHs7ABEKT1Mc857SOP2a/EruDZAjaqNahtNX4xX7yHRONv2ntSMG+Rcvm51DINSRuvkKAsydcEsMf9ED1gpu805tCWbMXxlciU6Y4IKvuWn1qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511475; c=relaxed/simple;
-	bh=wyePXwAxkMqCXIcx+41jHRC/gZYDXyThMt5kNSMQuZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NNkSrTkzDhnLi2MrpNChgfAQrVb+59eL0nwCyxWEPcQyzVwryW2pUCr3wfDdiPNwYwGdWKfHn83PTYV1dJkf4DCLO39k+rp9xybEAKBhF/wsUvkD4vvoSzDb3J4E6q13CPQu+1V+FvZR5tGK9kA6Vgahugb7kOXv9cPBsYPCpcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FnGAeiu2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FnGAeiu2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717511472;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gzSWB1uu8SnFXUqQQbZ1ZdBme8dM2DhgxeTgLVp11LI=;
-	b=FnGAeiu2b0kd7cpv+1+dL+GKz/zdv8QG3YYL1wV9+V5cw2YbV7zGgD7UdwYz7QcSubIOtL
-	OanDNIMKqOxZRPOpM6zcG93oDdIcaBFGQ7u+q27EtMjCbLP8OxL77bsNzu7iOO9NjK3ZQY
-	yDdqE/ddDOUhu8B1dh7VXjfz+areulA=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-450-cQT_CUcOPXG0o_JYYOPp0g-1; Tue, 04 Jun 2024 10:31:11 -0400
-X-MC-Unique: cQT_CUcOPXG0o_JYYOPp0g-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-57851ae6090so2328648a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 07:31:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717511469; x=1718116269;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gzSWB1uu8SnFXUqQQbZ1ZdBme8dM2DhgxeTgLVp11LI=;
-        b=dpIuuxJMPYE0jmaiMsEcMfwo4djtKpMHHS7Ce7OB5jhX/Z7ON8tasW3UgE+y20FBxl
-         LT9ROGkzHdrFlqtrxIk1lvWl+9rFE+hmrsqeduLXWrvONidzCv3jRVoLQjJQkP85D9m/
-         ohRDr8mog36PRT82qsUHqtzGgbGr6e5TB9j3atcu4LXdhQrMDtv6/W/qgSKhEBD9yv1F
-         R1I/FAGYhq+Po/Amqg27xpAdydnKsUEJcL9CNMMteGnXx2NIGoCmQ7b1iGgn/Xq05Yhi
-         yz234wpJBk1/ZQ46ZZSlBv1j/oxyW0MvqOjcZkMf2iu4Odtv5de2iYhjT3+nYdYR0a3f
-         Z9Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDwxfExLXlBWEKVvS2XEqb4dXxifLV97+wFaoz8fFH38D1U9GlsSwgMJt6720zdWmUpmDiHaFmciiVe7UbSEpZ1Z0HTa2XKlsnT7eA
-X-Gm-Message-State: AOJu0Yx3LFJykOFJHKgsHDkDiO0q0ScP26Rh7AsRnWe1w83nZ2V1bkRU
-	E/HarCLFXhzUAFPHwz0nJ0wVKOreIeGgGYXU3sr9O8frugL5TY05ErIDtZyVkr2orgjfuP4dW6u
-	5m5AXY+dByD6pDO42RebZbfUa7c0mOX0DZKRzh5meyx0P3lIe41nKPNVdAHkasA==
-X-Received: by 2002:a50:f616:0:b0:572:4041:5637 with SMTP id 4fb4d7f45d1cf-57a3638f302mr7897275a12.19.1717511468897;
-        Tue, 04 Jun 2024 07:31:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKz9ykShYqx98nKzJWNWXfA6S3FKbkIGe+3J3S5MNrtNmnUpiyilWNsHcrQEEB+GSK2sKi9g==
-X-Received: by 2002:a50:f616:0:b0:572:4041:5637 with SMTP id 4fb4d7f45d1cf-57a3638f302mr7897258a12.19.1717511468461;
-        Tue, 04 Jun 2024 07:31:08 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:2a07:3a01:e7a9:b143:57e6:261b? (2001-1c00-2a07-3a01-e7a9-b143-57e6-261b.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:e7a9:b143:57e6:261b])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a66ed0d68sm3377025a12.63.2024.06.04.07.31.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jun 2024 07:31:08 -0700 (PDT)
-Message-ID: <85109720-0d0e-4c35-8cf5-02d8c883f13a@redhat.com>
-Date: Tue, 4 Jun 2024 16:31:07 +0200
+	s=arc-20240116; t=1717511481; c=relaxed/simple;
+	bh=Dq1zejYHK9mzk5cTnEpZHT/3srVpAlt4/nXwvEtc2ak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jr/Nvaju7ZrA6q4I1r+4oEW78kQia8h2W/2Pj4fzWVF435ADGzAzIni2AET6a+ayhgrdV6h4MC+GyEzCYTmgwAqVpe4TO5GgJgwR+F7lbHpneWgaIKfhYaICK0YgA/B5ts8SeKAW0EwpYyxCWr6KhQn1CIrg2Tkw5kKp6dnBhDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 905391042;
+	Tue,  4 Jun 2024 07:31:42 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1D1C33F64C;
+	Tue,  4 Jun 2024 07:31:15 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: coresight@lists.linaro.org,
+	suzuki.poulose@arm.com,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@linux.dev,
+	anshuman.khandual@arm.com
+Cc: James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 00/16] coresight: Use per-sink trace ID maps for Perf sessions
+Date: Tue,  4 Jun 2024 15:30:09 +0100
+Message-Id: <20240604143030.519906-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: letsketch: add missing MODULE_DESCRIPTION() macro
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20240604-md-hid-letsketch-v1-1-ff38ae7b4cb0@quicinc.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240604-md-hid-letsketch-v1-1-ff38ae7b4cb0@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+as long as there are fewer than that many ETMs connected to each sink.
 
-On 6/4/24 4:20 PM, Jeff Johnson wrote:
-> make allmodconfig && make W=1 C=1 reports:
-> WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-letsketch.o
-> 
-> Add the missing invocation of the MODULE_DESCRIPTION() macro.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Each sink owns its own trace ID map, and any Perf session connecting to
+that sink will allocate from it, even if the sink is currently in use by
+other users. This is similar to the existing behavior where the dynamic
+trace IDs are constant as long as there is any concurrent Perf session
+active. It's not completely optimal because slightly more IDs will be
+used than necessary, but the optimal solution involves tracking the PIDs
+of each session and allocating ID maps based on the session owner. This
+is difficult to do with the combination of per-thread and per-cpu modes
+and some scheduling issues. The complexity of this isn't likely to worth
+it because even with multiple users they'd just see a difference in the
+ordering of ID allocations rather than hitting any limits (unless the
+hardware does have too many ETMs connected to one sink).
 
-Thanks, patch looks good to me:
+Per-thread mode works but only until there are any overlapping IDs, at
+which point Perf will error out. Both per-thread mode and sysfs mode are
+left to future changes, but both can be added on top of this initial
+implementation and only sysfs mode requires further driver changes.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+The HW_ID version field hasn't been bumped in order to not break Perf
+which already has an error condition for other values of that field.
+Instead a new minor version has been added which signifies that there
+are new fields but the old fields are backwards compatible.
 
-Regards,
+Changes since V1:
 
-Hans
+ * Rename coresight_device.perf_id_map to perf_sink_id_map.
+ * Instead of outputting a HW_ID for each reachable ETM, output
+   the sink ID and continue to output only the HW_ID once for
+   each mapping.
+ * Keep the first two Perf patches so that it applies cleanly
+   on coresight-next, although they have been applied on perf-tools-next
+ * Add new *_map() functions to the trace ID public API instead of
+   modifying existing ones.
+ * Collapse "coresight: Pass trace ID map into source enable" into
+   "coresight: Use per-sink trace ID maps for Perf sessions" because the
+   first commit relied on the default map being accessible which is no
+   longer necessary due to the previous bullet point.
 
+James Clark (16):
+  perf cs-etm: Print error for new PERF_RECORD_AUX_OUTPUT_HW_ID versions
+  perf auxtrace: Allow number of queues to be specified
+  perf: cs-etm: Create decoders after both AUX and HW_ID search passes
+  perf: cs-etm: Allocate queues for all CPUs
+  perf: cs-etm: Move traceid_list to each queue
+  perf: cs-etm: Create decoders based on the trace ID mappings
+  perf: cs-etm: Support version 0.1 of HW_ID packets
+  coresight: Remove unused ETM Perf stubs
+  coresight: Clarify comments around the PID of the sink owner
+  coresight: Move struct coresight_trace_id_map to common header
+  coresight: Expose map arguments in trace ID API
+  coresight: Make CPU id map a property of a trace ID map
+  coresight: Use per-sink trace ID maps for Perf sessions
+  coresight: Remove pending trace ID release mechanism
+  coresight: Re-emit trace IDs when the sink changes in per-thread mode
+  coresight: Emit sink ID in the HW_ID packets
 
+ drivers/hwtracing/coresight/coresight-core.c  |  36 +-
+ drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
+ .../hwtracing/coresight/coresight-etm-perf.c  |  50 +-
+ .../hwtracing/coresight/coresight-etm-perf.h  |  20 +-
+ .../coresight/coresight-etm3x-core.c          |   9 +-
+ .../coresight/coresight-etm4x-core.c          |   9 +-
+ drivers/hwtracing/coresight/coresight-priv.h  |   1 +
+ drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
+ drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
+ drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
+ drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
+ .../hwtracing/coresight/coresight-trace-id.c  | 109 ++--
+ .../hwtracing/coresight/coresight-trace-id.h  |  70 +-
+ include/linux/coresight-pmu.h                 |  17 +-
+ include/linux/coresight.h                     |  20 +-
+ tools/include/linux/coresight-pmu.h           |  17 +-
+ tools/perf/util/auxtrace.c                    |   9 +-
+ tools/perf/util/auxtrace.h                    |   1 +
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  28 +-
+ tools/perf/util/cs-etm.c                      | 603 ++++++++++++------
+ tools/perf/util/cs-etm.h                      |   2 +-
+ 22 files changed, 628 insertions(+), 395 deletions(-)
 
-> ---
->  drivers/hid/hid-letsketch.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hid/hid-letsketch.c b/drivers/hid/hid-letsketch.c
-> index 97f047f18136..229820fda960 100644
-> --- a/drivers/hid/hid-letsketch.c
-> +++ b/drivers/hid/hid-letsketch.c
-> @@ -319,4 +319,5 @@ static struct hid_driver letsketch_driver = {
->  module_hid_driver(letsketch_driver);
->  
->  MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
-> +MODULE_DESCRIPTION("Driver for the LetSketch / VSON WP9620N drawing tablet");
->  MODULE_LICENSE("GPL");
-> 
-> ---
-> base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-> change-id: 20240604-md-hid-letsketch-53206a0faa79
-> 
+-- 
+2.34.1
 
