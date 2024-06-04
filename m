@@ -1,153 +1,165 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631FBB669
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8622EAD0
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 13:53:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717509158; cv=none; b=utVETHP2onICb51+Ee2cGuQh+E/dg00uQLc0100hQ7tlwWLmwGF31OESUdbodgu7C48eX5mYvRqSbf6YPf8ouXH6QvMM2oVxmEdmLtwuMsOW+uYUfHFDKBcSJw0Cz5Q3oEygaX3+a/Webdzsr4KcKe0z0F5FqxPZJknjWsKbr7E=
+	t=1717509187; cv=none; b=YDljWl5wqEztySnCGevepH2iGH96n3raYStBUrnU/+u5Brf4jwxIF5gHVgwhGktC/qk5p38D+s2TMdkB3g/ijnwfZG+GUfe2wHUwt7j1TYmcKpjZkAeROD3H3hXfaO0IImMnN7Nf49ggKNqCtmMp7nCn2TL5NxIMdZApRVO/AmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717509158; c=relaxed/simple;
-	bh=AU+eGvnqHFAm1RBD3hnb/xZtqJPO5HTmEwoNf646to4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I2w9AWb5Z9p4Ki9s9KiApDZ0UEBCw24BmmizI4/k4WCSzK80kfIZp2D/YqCOPgqkKEcoV2KuDohBuqsObSBZIo7ptdUSgyuT4hfT91IsHSI2YsR8fVWOnTWKJTKco7AehzSRVx5QR8uYwxjz+YJcrcBeOId1ZUVE3gCBPCWjrk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MbvgTgZJ; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1717509187; c=relaxed/simple;
+	bh=/XFAEfCczlibUE70QLgqPgMQ8f45nxN8l1BnMdzrpK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fV4YJ9JWWIIU7TEHtdM8jAyn1vrXmtuHyZTUu+VCGtrdVaQG+3df/iXVfL96WMbJz0Tc20ADmjED12X5migSi4kKocQfv77Tyf99/ch02k72pmxmY3jtFVlLmTm0ZtSKuiLGmFci4toT3x+aij+F/mjTVzJwuUdwsp1h0THcWlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igiEY8Bb; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MbvgTgZJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igiEY8Bb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717509156;
+	s=mimecast20190719; t=1717509184;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yAFQzZY8JpxmgqUlWM1NDpMdAv0BIR7b/lj5ql78PZE=;
-	b=MbvgTgZJcvD79F9Jp/UUkPX6kCLFy7UA+QN0GDWgTxo21eEr40bz+LdTi9UanDCPEAGYRx
-	ZQOjdDjttO0EYpKIxVXhaHQXLV2sg3hhrsOaECDGGsPJKIGMZNZsyJ0JdztGagNuKGnnId
-	MZ0ymSdW5QybQ0KOK3zdmxPDIaAs6Os=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=R0VxfhH1OEgJBZVeakcTEgY15FfwsO+wwN+9uT42qak=;
+	b=igiEY8Bb8kRddFmq0fDyPI/AskDDrNVuOfiJtav+tgxSlOmQ5osNJkmQi9lMHLwgaazP7Y
+	CQVMD3zIfqTRteOBDhrE72vn1mZ1fYeQJP+aLsmm8RLX4Jf/IUbrvnZ0O1gqMIHCk+DhiK
+	7MKAnsLZrcLO3uOc0ef87OI/LijKneg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-8TZ4FrU1Pa6TxmIxOvE52A-1; Tue, 04 Jun 2024 09:52:34 -0400
-X-MC-Unique: 8TZ4FrU1Pa6TxmIxOvE52A-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2eaa90653adso18127851fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 06:52:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717509153; x=1718113953;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yAFQzZY8JpxmgqUlWM1NDpMdAv0BIR7b/lj5ql78PZE=;
-        b=bsxghTsgDGsAaOelplkvAY2AlhDay5vCKbcKPuO4b1AVsSFPzGBTFVsz8DLuFqZiVZ
-         joe1gMqFWOJs3QVcwdvNtsc9uqW15zq1CR+lROm/7IMfTrwQxzPfe0NhQR1gd6ZbjGje
-         CRFIjfUFlXDJNXCrDezYspfTZQsWP/VCX+zrl63Yqohi2OxlZXHwOG6L3Mp0tTR0ga/2
-         JCbO4X7KCICFbQAmtSqMOIXGbY6l6kQcK+6Rg/fCHqsSnDOsx10l4CmD7n6eV7iLBQfY
-         wpNw2K0+bnvf6OSZrzZyflA0d9i7G5AJb4qhe0HLnBjyF1RO1IXN/7h/8rvH2MN0hYdB
-         ELQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXYuUlO7ZGmzVwMpYYfCRlHqyCg7c+79o61XpDMNCTdp8F1CvYF9kMQPafXlZy9KWcN8nznh530X5FjI4TxXVgQUFwPVXv1Y9XFzRjG
-X-Gm-Message-State: AOJu0YxeZJZFK/UCUzXur20Bhpy9bt5Kgd+blIsLYmKsDPoWC3+EVa/W
-	MJDBLT8ayx/cLJiDNU9qszjqKX3aPVTtrwwFkm18HOt509UGIG9iJgZQYm8UxPUkSPwpJJVQYzu
-	iGZ/rlmIhZ6XiMMrZFYGh+rr8HrLQLTyoEi7kO9aF6DzNC1NZxMVyHmh3aqv1e+bBZV7120Kd+N
-	/u5Dyzmyfta1UIWuUegQ08hsh83xwTFHUeMIvB
-X-Received: by 2002:a2e:9b06:0:b0:2ea:8e94:a2f4 with SMTP id 38308e7fff4ca-2ea950fa369mr80608131fa.21.1717509152874;
-        Tue, 04 Jun 2024 06:52:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVcTnWxMbCCJGk8cFzSvdq37qQbJ2J1M96WyUbWFPtZFyvR59Ym03swakCQ6zW818B7BZAniACmpmHL6wioLs=
-X-Received: by 2002:a2e:9b06:0:b0:2ea:8e94:a2f4 with SMTP id
- 38308e7fff4ca-2ea950fa369mr80607931fa.21.1717509152500; Tue, 04 Jun 2024
- 06:52:32 -0700 (PDT)
+ us-mta-298-GvTqAB9lMauck_M8KHLNIg-1; Tue, 04 Jun 2024 09:53:01 -0400
+X-MC-Unique: GvTqAB9lMauck_M8KHLNIg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D423B85A5B6;
+	Tue,  4 Jun 2024 13:53:00 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C0212166B35;
+	Tue,  4 Jun 2024 13:52:59 +0000 (UTC)
+Date: Tue, 4 Jun 2024 21:52:56 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 4/7] crash_dump: reuse saved dm crypt keys for
+ CPU/memory hot-plugging
+Message-ID: <Zl8cOOv9gVzdkU0f@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-5-coxu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240531080739.2608969-1-jiangyunshui@kylinos.cn>
- <41e4b0e3-ecc0-43ca-a6cd-4a6beb0ceb8f@datenfreihafen.org> <20240603165543.46c7d3b4@kernel.org>
-In-Reply-To: <20240603165543.46c7d3b4@kernel.org>
-From: Alexander Aring <aahringo@redhat.com>
-Date: Tue, 4 Jun 2024 09:52:20 -0400
-Message-ID: <CAK-6q+j7vBbeB5ZPdT6szgUzYhDiPyVuadLooOywOU7M0fpfzQ@mail.gmail.com>
-Subject: Re: [PATCH] net: mac802154: Fix racy device stats updates by
- DEV_STATS_INC() and DEV_STATS_ADD()
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Stefan Schmidt <stefan@datenfreihafen.org>, Yunshui Jiang <jiangyunshui@kylinos.cn>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wpan@vger.kernel.org, alex.aring@gmail.com, miquel.raynal@bootlin.com, 
-	davem@davemloft.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-5-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Hi,
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> When there is CPU/memory hot-plugging, the kdump kernel image and initrd
+> will be reloaded. The user space can write the "reuse" command to
+> /sys/kernel/crash_dm_crypt_key so the stored keys can be re-saved again.
+> 
+> Note currently only x86 (commit ea53ad9cf73b ("x86/crash: add x86 crash
+> hotplug support")) and ppc (WIP) supports the new infrastructure
+> (commit 247262756121 ("crash: add generic infrastructure for crash
+> hotplug support")). If the new infrastructure get extended to all arches,
+> this patch can be dropped.
 
-On Mon, Jun 3, 2024 at 7:56=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wro=
-te:
->
-> On Mon, 3 Jun 2024 11:33:28 +0200 Stefan Schmidt wrote:
-> > Hello.
-> >
-> > On 31.05.24 10:07, Yunshui Jiang wrote:
-> > > mac802154 devices update their dev->stats fields locklessly. Therefor=
-e
-> > > these counters should be updated atomically. Adopt SMP safe DEV_STATS=
-_INC()
-> > > and DEV_STATS_ADD() to achieve this.
-> > >
-> > > Signed-off-by: Yunshui Jiang <jiangyunshui@kylinos.cn>
-> > > ---
-> > >   net/mac802154/tx.c | 8 ++++----
-> > >   1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/net/mac802154/tx.c b/net/mac802154/tx.c
-> > > index 2a6f1ed763c9..6fbed5bb5c3e 100644
-> > > --- a/net/mac802154/tx.c
-> > > +++ b/net/mac802154/tx.c
-> > > @@ -34,8 +34,8 @@ void ieee802154_xmit_sync_worker(struct work_struct=
- *work)
-> > >     if (res)
-> > >             goto err_tx;
-> > >
-> > > -   dev->stats.tx_packets++;
-> > > -   dev->stats.tx_bytes +=3D skb->len;
-> > > +   DEV_STATS_INC(dev, tx_packets);
-> > > +   DEV_STATS_ADD(dev, tx_bytes, skb->len);
-> > >
-> > >     ieee802154_xmit_complete(&local->hw, skb, false);
-> > >
-> > > @@ -90,8 +90,8 @@ ieee802154_tx(struct ieee802154_local *local, struc=
-t sk_buff *skb)
-> > >             if (ret)
-> > >                     goto err_wake_netif_queue;
-> > >
-> > > -           dev->stats.tx_packets++;
-> > > -           dev->stats.tx_bytes +=3D len;
-> > > +           DEV_STATS_INC(dev, tx_packets);
-> > > +           DEV_STATS_ADD(dev, tx_bytes, len);
-> > >     } else {
-> > >             local->tx_skb =3D skb;
-> > >             queue_work(local->workqueue, &local->sync_tx_work);
-> >
-> > This patch has been applied to the wpan tree and will be
-> > part of the next pull request to net. Thanks!
->
-> Hi! I haven't looked in detail, but FWIW
->
-> $ git grep LLTX net/mac802154/
-> $
->
-> and similar patch from this author has been rejected:
->
-> https://lore.kernel.org/all/CANn89iLPYoOjMxNjBVHY7GwPFBGuxwRoM9gZZ-fWUUYF=
-YjM1Uw@mail.gmail.com/
+I am confused, what is the new infrastructure? And why this patch can be
+dropped if 'the new infrastructure' is extended to all arches.
 
-In the case of ieee802154_tx() yes the tx lock is held so it's like
-what the mentioned link says. The workqueue is an ordered workqueue
-and you either have the driver async xmit option (the preferred
-option) or the driver sync xmit callback on a per driver (implies per
-interface) basis.
+> 
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  kernel/crash_dump_dm_crypt.c | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> index 89fec768fba8..b4dc881cc867 100644
+> --- a/kernel/crash_dump_dm_crypt.c
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -10,12 +10,13 @@
+>  // The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+>  #define KEY_DESC_LEN 48
+>  
+> -static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded", "reuse"};
+>  static enum STATE_ENUM {
+>  	FRESH = 0,
+>  	INITIALIZED,
+>  	RECORDED,
+>  	LOADED,
+> +	REUSE,
+>  } state;
+>  
+>  static unsigned int key_count;
+> @@ -90,12 +91,31 @@ static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
+>  	return 0;
+>  }
+>  
+> +static void get_keys_from_kdump_reserved_memory(void)
+> +{
+> +	struct keys_header *keys_header_loaded;
+> +
+> +	arch_kexec_unprotect_crashkres();
+> +
+> +	keys_header_loaded = kmap_local_page(pfn_to_page(
+> +		kexec_crash_image->dm_crypt_keys_addr >> PAGE_SHIFT));
+> +
+> +	memcpy(keys_header, keys_header_loaded, keys_header_size);
+> +	kunmap_local(keys_header_loaded);
+> +	state = RECORDED;
+> +}
+> +
+>  static int process_cmd(const char *buf, size_t count)
+>  {
+>  	if (strncmp(buf, "init ", 5) == 0)
+>  		return init(buf);
+>  	else if (strncmp(buf, "record ", 7) == 0)
+>  		return record_key_desc(buf, &keys_header->keys[key_count]);
+> +	else if (!strcmp(buf, "reuse")) {
+> +		state = REUSE;
+> +		get_keys_from_kdump_reserved_memory();
+> +		return 0;
+> +	}
+>  
+>  	return -EINVAL;
+>  }
+> @@ -175,9 +195,11 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>  	}
+>  
+>  	image->dm_crypt_keys_addr = 0;
+> -	r = build_keys_header();
+> -	if (r)
+> -		return r;
+> +	if (state != REUSE) {
+> +		r = build_keys_header();
+> +		if (r)
+> +			return r;
 
-I also don't see why there is currently a problem with the current
-non-atomic way.
+Is the logic here wrong? Isn't it we return when it's REUSE. If not
+REUSE, we need build_keys_header(), then add buffer?
 
-- Alex
+> +	}
+>  
+>  	kbuf.buffer = keys_header;
+>  	kbuf.bufsz = keys_header_size;
+> -- 
+> 2.45.0
+> 
 
