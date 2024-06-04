@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0509613DDAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED88E13DDA6;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717482600; cv=none; b=sxB6uXA6goj0qgCzhQ1dUb8auWjwgbfmzcG7zdpxAYb6fJ4naRSUz+fRyMd9E8rxeU5ol7b8D7+KUJQgxDLabfDiIGVsQy2tns8geEYFoYEfm+/AHgLpM004xQhrGzu4mAQEbRwcdrCYQzg42fQ7e+Omke9XCVIgq/ezen21/ts=
+	t=1717482600; cv=none; b=rxVUJgSWpHcQCsXa2+cfxVuO23EEl7Dsjd3LoZTi1AH2JhEuelHUZuJwX6gXZjepv6XaITkBpTkZ/3BBUDffrfasPlHl1WefB+RnjWI67iIFoY5YeZ5SQs6h7Zx6z7CWGCAd+Whg3BVpbo5ZjV4zjbyQSEoCfCM++HNxE7lpfrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717482600; c=relaxed/simple;
-	bh=vlte7/jFt4SHMLHwVPqBFv0PbVs5A4Gx+169UcJVYx4=;
+	bh=qnk8lkgaR1ZcTBtK8DdwuXgNlEzaf3fm9+u2f6xPjbg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B3NWpO0lKUHNRMMKwErf2lGzqBI2KFRiXkolMeVsnWDSsB01lbwd1hef1R0Snsa2m2mLGTmkLge3tmz9y6WG4ET4PFhLJkHQIRWPnK1Iqgh39KE08NV6jmfsOwv5lBsLT9cKon4WlvvVRL6Qc5ATSBiY1Df8aWRDViCptGsHhu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Janm6h/L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CuZ4PxUdNaLb5PQXtzvZuZpVuRFB7WqcWc3zRyWtgKl323qAhmkm49jglDqyT2aFsw3EdNggi5qCOSZw47543GZhFaYs8QNs3w1WVkVVEVRm6B09KhKnsJmXMHmWzy5/UcCiuAA5YC6p88lDF8qPp1bRPYgDrkYHxocrXzZUmjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8sqn2UI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Janm6h/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9D302C4AF07;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8sqn2UI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BD22CC4AF0D;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717482599;
-	bh=vlte7/jFt4SHMLHwVPqBFv0PbVs5A4Gx+169UcJVYx4=;
+	bh=qnk8lkgaR1ZcTBtK8DdwuXgNlEzaf3fm9+u2f6xPjbg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Janm6h/LdugNk9//EITCAQZDYPDw1vSnkgIxHRJuajbB1uhJNb70fHHifyUdgIwcd
-	 Mg/HAMdxAw36cEdgsIlgBSdWy4Hc1od48ze7wM/QiaaAiTJzgstk8udBt6Zdg8/iOG
-	 f8VuGNUzWuQKpYFFGRqCGi2qBuVHvmp/E7SYChkdTKQTlffnCQs8/lsca4Kg0BegZL
-	 IM1CNUrig4EYtykD2DZQb1tjvma1ZoZXSYPE3wH1aCO3p6Z2ja0uG2BkYSqWU3Y4yB
-	 6bsIl/ubhru7xQrDX8TdX9KSM4vlh1VmOObgZh71649aGA8FYEifSv59esu8EEoPN4
-	 xSTPH1D/d4gTQ==
+	b=q8sqn2UING2yH+C0lcGQSy4ae0FcbWJrC/vs7mpC04KFg1OQJRvbK9zk+t5Fw/rIR
+	 EXSXQVp55YTwcmYQApUkmuu2iBDhC8iLZ0bQAqn5D1BkK/WZr+UBT8CZVt6H8PxIjg
+	 ZYTMUuFRe2XlLeU+UTju9SRDmbbt8ASi+Flu/QfnUo+d9b/v1GYlHruDAVJbdprcat
+	 3tCLPSjEQ5pBzKJkGdHOWkbi9N6PHM1x1F5tWDqDHF9zPuM7Dadi3X/TJlDHqc4csl
+	 t5+ByLcktT3kpOOhg2GCTRNVMD3F3FnIkWuDh54RMgQoxxdZf52k9L2Y2XUmYe+gc1
+	 BdW6AX8HkNm8Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8419BC27C52;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAEEC25B7E;
 	Tue,  4 Jun 2024 06:29:59 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Tue, 04 Jun 2024 08:29:19 +0200
-Subject: [PATCH 1/8] locking: Remove superfluous sentinel element from
- kern_lockdep_table
+Date: Tue, 04 Jun 2024 08:29:22 +0200
+Subject: [PATCH 4/8] sysctl: Replace nr_entries with ctl_table_size in
+ new_links
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240604-jag-sysctl_remset-v1-1-2df7ecdba0bd@samsung.com>
+Message-Id: <20240604-jag-sysctl_remset-v1-4-2df7ecdba0bd@samsung.com>
 References: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 In-Reply-To: <20240604-jag-sysctl_remset-v1-0-2df7ecdba0bd@samsung.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -56,19 +56,19 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
  linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=860;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2054;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=14739GNIvIP1jcOFEalMBBReb5ieHSFF2clMwb/AQoM=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGJabxTBGOF4nHQDP1wm5ErY55X5yT1ko
- moGhHsQTVtxBIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRiAAoJELqXzVK3
- lkFPreYMAIXr/sxZeeYa1hpzMSQR+LDo1okDOTVaAB6RI94p35Ph0NodstJFVE8/a/F7z8yznfT
- zRGB5mwTfERvnAHoLRa4cRPV7deYGX2Lfl4gRBxx38VVMXVNXGHuX412vQ/HGw8IG9A/McpDk0u
- Z2K9H7mdffgtNOrik+M5doL2wo8aIl3n/ntCbrFS6KMi5BjMA6JTGcCKPQc09MMFN8iWCyUlpHv
- PO0MOmlqI+ydfIGKM3grwe0ygIghPE7rXbC+RmQ/CFoPVTtuysPBixbT389HdPi2kwZfc3yMdiG
- JqIDpGDgEfx6eBoHqPi9f6UjsZsRZ8uQjA3cPhNf2r57I/Ous7iFkFzWnm9lsT7juRvP2yBLdve
- Fsb5u3LI21rJQdi9hKHm+Qy0a7lF7daS5ISDeA9YiPhRmI4qFElN50yOxuLkzeWdOmUek/m7eVe
- mIrjNatEmaWnNaLmtaw3exq+Eoi54Rdh5QCBMA0GRO+dVR2JtZ85j6nhTdGkijeKFOoJQ/Vz+O5
- Xc=
+ bh=qaxk3rDogN+ZQLc9uwmgCuRk4aqbCXJb1N+PNG5WkHU=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGZetGPmD7WlkmXC06LM/3KIlA0dRX7bMC7EC
+ Mz6CbqNQM1cIokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmXrRjAAoJELqXzVK3
+ lkFPAi8L/jtTQsXQjrugX/vUO+3ZfV6tbEgbfiD5VOWt6iknGkxcPfsh4zkeVU+8DtrCDQ0oTo0
+ GK2pL+u7ZNsuK18g4OX5tQMQVfAa2WTYIAakatrnYIpkAvyS/IRkkCpJAggBFnIPbUoauOXuhtL
+ vVb5HV0xe3NZMqFfuzg3sgsCCwtnTZ9jKMfXD/KSW2MGFqGP+hgjtkXwyzoAvgnsgQOqsKCG6+x
+ MvS/OHonmHCHQPsZIeZVrK1DRP4wZyzDTW2YybRazjY24n+c+5JZ5PPbI8ll/f29f2zjq7k3bRO
+ ckeQIGnXL4rCPhIB82vSKkxAmUeD/pUQvw120K7thSuG4GGl0vhrTYxH5QkC783QZN3lH+lGPMO
+ StmLrdQkPtEG7L0BcxN1FSMQGG2dXI3KUR2Noy5QDAu4bAwnQge1FBEVa/4NNgBhFN4NHyejdNR
+ yFpQcnPYKczW4mfyKjeQDHvC7T9RuoIqhNR2eW/3Zmhz/KXrysvomOq3G2E40T12Zu/PH9FuYL5
+ l4=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -78,29 +78,62 @@ Reply-To: j.granados@samsung.com
 
 From: Joel Granados <j.granados@samsung.com>
 
-This commit is part of a greater effort to remove all
-empty elements at the end of the ctl_table arrays (sentinels) which will
-reduce the overall build time size of the kernel and run time memory
-bloat by ~64 bytes per sentinel (further information Link :
-https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+The number of ctl_table entries (nr_entries) calculation was previously
+based on the ctl_table_size and the sentinel element. Since the
+sentinels have been removed, we remove the calculation and just use the
+ctl_table_size from the ctl_table_header.
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/locking/lockdep.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/proc/proc_sysctl.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 151bd3de5936..726b22ce7d0b 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -97,7 +97,6 @@ static struct ctl_table kern_lockdep_table[] = {
- 		.proc_handler   = proc_dointvec,
- 	},
- #endif /* CONFIG_LOCK_STAT */
--	{ }
- };
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index d4ba7ad9dbe0..1babb54347a4 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1154,18 +1154,16 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+ 	struct ctl_table_header *links;
+ 	struct ctl_node *node;
+ 	char *link_name;
+-	int nr_entries, name_bytes;
++	int name_bytes;
  
- static __init int kernel_lockdep_sysctls_init(void)
+ 	name_bytes = 0;
+-	nr_entries = 0;
+ 	list_for_each_table_entry(entry, head) {
+-		nr_entries++;
+ 		name_bytes += strlen(entry->procname) + 1;
+ 	}
+ 
+ 	links = kzalloc(sizeof(struct ctl_table_header) +
+-			sizeof(struct ctl_node)*nr_entries +
+-			sizeof(struct ctl_table)*(nr_entries + 1) +
++			sizeof(struct ctl_node)*head->ctl_table_size +
++			sizeof(struct ctl_table)*(head->ctl_table_size + 1) +
+ 			name_bytes,
+ 			GFP_KERNEL);
+ 
+@@ -1173,8 +1171,8 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+ 		return NULL;
+ 
+ 	node = (struct ctl_node *)(links + 1);
+-	link_table = (struct ctl_table *)(node + nr_entries);
+-	link_name = (char *)&link_table[nr_entries + 1];
++	link_table = (struct ctl_table *)(node + head->ctl_table_size);
++	link_name = (char *)&link_table[head->ctl_table_size + 1];
+ 	link = link_table;
+ 
+ 	list_for_each_table_entry(entry, head) {
+@@ -1188,7 +1186,7 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+ 	}
+ 	init_header(links, dir->header.root, dir->header.set, node, link_table,
+ 		    head->ctl_table_size);
+-	links->nreg = nr_entries;
++	links->nreg = head->ctl_table_size;
+ 
+ 	return links;
+ }
 
 -- 
 2.43.0
