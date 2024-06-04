@@ -1,86 +1,117 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95E8149E00;
-	Tue,  4 Jun 2024 19:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F8FB644;
+	Tue,  4 Jun 2024 19:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717529416; cv=none; b=BTrSY0qM1Fc6FfvoipTd+8UHoqkZymbIBRjKmI5C0dJfTdLNdvqZKB0mjlp0MOZW2Xgn+H+GSnBMqrG/GKzMhuBFnCSO8gKnqKZB5/qO7HiWes3UZ6VjguL4z6OmZireg6FN9oxMCk6UnRwMU1I3nKrEMM4k9tS6G0olX2i7tJw=
+	t=1717529532; cv=none; b=Oa7YtoOOIHbtS5zIEbrJt9lFEh8xVWAKqibmP3/YV4X5o1UHCVeUZelDg6e7m20lMdHtcRjY9Fgbu43Q+bHWZLvNTFkCGWPxTXdtT3w9IXlm0Kr/WGEwK4YurSTv/plzPfvwuSD1mSlytOkpmfgut9zzPe5PGqBRgMYQBkgk1Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717529416; c=relaxed/simple;
-	bh=ndt5DjQLSxNaMRiN5lWMogKV1y5Mo8iJXJhz3aNywNU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=m6I0JCSFywjzslM1h2a99G8MT20dN5rV/k+j8S1Gx3hyMAO9CQY5TCbrm7nb1X8ZEplJxcT/AXzTN6FXaYg5Kx76rUqthsrwIYaWUZ98YNEuGTbA/YiTP6gpC8TgFldFIOXTlIOl+9T8Oq/m7bW/TP8S1r0lFBrDBv8NRr63i7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NHYIEzd4; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1717529532; c=relaxed/simple;
+	bh=M1Gdn4asSpZpMWSj1SJTHfA7FUsIrefzLkYIEaSuPWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d6kK43xB1Zuz8jezXSFubFevHHcqrNc06xdyQ5Tv3UhWWLiQeyjG7xeCFr42VT6o/UH/OrJOl+iDDdEyP+ayzGBX+4ZNXyiljZZXwME58Ga9m9ioLklsBVBXSckAK5VDJZI4gdCvv/XGqpVhewTXHlTaI7IjzYrpfSATj55STj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TD10HMw/; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NHYIEzd4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=SjfoPtdjADSbT41zcd4TQ1qMWoklnCAhWIpkfEJKm1Q=;
-	t=1717529413; x=1718739013; b=NHYIEzd4h3I05y9SHIkqwUaFy9wL1RY6nRwgO9qhjGoJ+BO
-	t3M8Aut/gyFurhcII4Mt8BeKGpoXn+23NPH5h39ijQ6o9UyCZWDg3gpcOCqGZowklzPIgCboDwVgC
-	SNH4ASHQtOy824JkeZ09TjFb2USBCXUmFB1xCETtykWO3Kv2kMfkWNsOXqfOK2MXNxB7U3+ljjz7L
-	2OxVz2Ig+rPOArLKKVkQap2OFJbA1tDUkfVC+kGWLfLoyDHUMZ15kuS3VbDMJ7Lc8L8x2rGQAbFVn
-	LTzKndGgFR6hzfl/BgjPhUxAd2houkv1MeRQAhAmb4dki1gNW5WKseWGGkb8nr4Q==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sEZr5-0000000CoV1-2UFL;
-	Tue, 04 Jun 2024 21:30:00 +0200
-Message-ID: <ab59089feac4cfbc1d681fcaa4a828ca13088ce1.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] wifi: mac80211: Avoid address calculations via out
- of bounds array indexing
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Kenton Groombridge <concord@gentoo.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com,  linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Kees Cook
- <keescook@chromium.org>
-Date: Tue, 04 Jun 2024 21:29:57 +0200
-In-Reply-To: <cx2oet5b5lavjywcbf7u4c32krtoglvt3xbe2sxac55e36iibw@lrd5iuhtxz2g>
-References: <20240517145420.8891-1-concord@gentoo.org>
-	 <d1fea590e53cb1b00dc64f4f8a4c8aec84610401.camel@sipsolutions.net>
-	 <cx2oet5b5lavjywcbf7u4c32krtoglvt3xbe2sxac55e36iibw@lrd5iuhtxz2g>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TD10HMw/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717529528;
+	bh=M1Gdn4asSpZpMWSj1SJTHfA7FUsIrefzLkYIEaSuPWc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TD10HMw/KC+Zeelk+t0a2mjwUXPzb3Hczj8F6WJBiKw0COfBZeFkF6EjH/qUi48qL
+	 Oz9zz7uaYcFmKTLwBXh3XcgXxt1v4yBKJUYlHnXUWCjFRzo7dw+5/ivuKYGENSwMLJ
+	 LvmenoFOnasGe9G3cgE4XwgWopGAd8Md2SRq71K7ijBmpjow3omaEht4KKbarw28ED
+	 7H9raw9xn5TOhFMBmU/sLHCDNzg2KVLlll+mZxajs0X372UDLle9lEnVM2sQFZgwhG
+	 5l7Olu+lbU/ZioZKr9kHyJk90sbdSWmxRprtzSCEwqySgumM/wxv/5/lO4SzBiDufs
+	 eYIBVVVhmwMOA==
+Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 989343782172;
+	Tue,  4 Jun 2024 19:32:06 +0000 (UTC)
+Message-ID: <59519381-2729-4839-9882-65a981a0c551@collabora.com>
+Date: Tue, 4 Jun 2024 22:32:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/14] drm/bridge: synopsys: Add DW HDMI QP TX controller
+ driver
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
+ <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Mark Yao <markyao0591@gmail.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, kernel@collabora.com,
+ Alexandre ARNOUD <aarnoud@me.com>, Luis de Arquer <ldearquer@gmail.com>,
+ Algea Cao <algea.cao@rock-chips.com>
+References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
+ <20240601-b4-rk3588-bridge-upstream-v1-13-f6203753232b@collabora.com>
+ <20240601143226.GA2003970@ravnborg.org>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240601143226.GA2003970@ravnborg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-06-04 at 14:53 -0400, Kenton Groombridge wrote:
-> On 24/05/29 04:54PM, Johannes Berg wrote:
-> > On Fri, 2024-05-17 at 10:54 -0400, Kenton Groombridge wrote:
-> > > req->n_channels must be set before req->channels[] can be used.
-> > >=20
-> >=20
-> > I don't know why, but this patch breaks a number of hwsim test cases.
-> >=20
-> > https://w1.fi/cgit/hostap/tree/tests/hwsim/
-> >=20
-> > johannes
->=20
-> Pardon my absence.
->=20
-> I'm also not sure why these tests are failing. Unless I'm missing
-> something, the runtime behavior of these code paths shouldn't have
-> changed significantly.
->=20
+Hi Sam,
 
-Looking at your patch again, this seems wrong?
+On 6/1/24 5:32 PM, Sam Ravnborg wrote:
+> Hi Cristian,
+> 
+> a few drive-by comments below.
+> 
+> 	Sam
+> 
+> 
+>> +
+>> +static const struct drm_connector_funcs dw_hdmi_qp_connector_funcs = {
+>> +	.fill_modes = drm_helper_probe_single_connector_modes,
+>> +	.detect = dw_hdmi_connector_detect,
+>> +	.destroy = drm_connector_cleanup,
+>> +	.force = dw_hdmi_qp_connector_force,
+>> +	.reset = drm_atomic_helper_connector_reset,
+>> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+>> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>> +};
+>> +
+>> +static int dw_hdmi_qp_bridge_attach(struct drm_bridge *bridge,
+>> +				    enum drm_bridge_attach_flags flags)
+>> +{
+>> +	struct dw_hdmi *hdmi = bridge->driver_private;
+>> +
+>> +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
+>> +		return drm_bridge_attach(bridge->encoder, hdmi->next_bridge,
+>> +					 bridge, flags);
+>> +
+>> +	return dw_hdmi_connector_create(hdmi, &dw_hdmi_qp_connector_funcs);
+>> +}
+> 
+> Are there any users left that requires the display driver to create the
+> connector?
+> In other words - could this driver fail if DRM_BRIDGE_ATTACH_NO_CONNECTOR
+> is not passed and drop dw_hdmi_connector_create()?
+> 
+> I did not try to verify this - just a naive question.
 
-> +				local->hw_scan_req->req.channels[*n_chans++] =3D
->  							req->channels[i];
->=20
+I've just tested this and it doesn't work - dw_hdmi_connector_create()
+is still needed.
 
-This will increment n_chans rather than *n_chans, no?
-
-johannes
+Regards,
+Cristian
