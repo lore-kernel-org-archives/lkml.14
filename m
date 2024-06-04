@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EA71428FA;
-	Tue,  4 Jun 2024 08:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBAD143C44;
+	Tue,  4 Jun 2024 08:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717491204; cv=none; b=AW4twM7vDKQp1oriXcIyuUqaJ/NW8jtOLV0EJYKYt5v0GTzZS6a5KlCuGBMD923JXQqhb3UlDwjTjGU+gYNmQdSHugmMzToSv9BgT1swnnit2z5iGbSwaUoBucrhhOSiGkbXlsVMAgHaBYVOnfAlmPXGaAKNPOpJOgR48w7rto4=
+	t=1717491206; cv=none; b=bSrVkX/aHk7WjbCyTnqJjIa/6DayKowRz3icDLqoMDE3rUqLskOBZVginsbxLR9GOUAwmuP4puaCQ6sFgjop2369IkwkU6GePwhRFJCmHUwo6y9JfHgLF+cENpbc3VVVBHiG0p35RzI2ugvTIzlG/HdKs2rui4Xeiz5arg2C3as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717491204; c=relaxed/simple;
-	bh=NDjjiG4C1KBE7XG5eHEnnlNL/2hTHXZqB2NotJEGCmA=;
+	s=arc-20240116; t=1717491206; c=relaxed/simple;
+	bh=giGgyG+uBowzn1pZxxGxG2AQgr8MJfdVaHBdhehyj7Q=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gUPdp2rsj2ac/6NyYKm7nR6vNK9JFwDHSRFeH3vp2JeF16A8xKVnb7levN0M1OUc4/be25tVNBk8BVgJG4MoVQeku1MYum2Fs+I06UBLSDdEWnNNq+aavVjBnXHn6HmL9Wgh9Gv2Zi6FufPO42l++vfpS1y+Q3nAWoYKmGLYcH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZEVicY3O; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=IszFDQmLEdCUCEHLJqkslAbOaZDBBM+fv1bj5nUja4m9wCIa0FDscAg9OZ0AVPRIM3xWOPuOB2qemMIiCA5VjNc4sQLSlXN9+q4MVjUGlLJfjOnPjfiJtMUbsyYIMJPEfYRFNqtWSnp2gEBphQZnXxqLFLrBrxL0p7qpfdl3A+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=s6gLD1HA; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZEVicY3O"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s6gLD1HA"
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4548rF7L069305;
-	Tue, 4 Jun 2024 03:53:15 -0500
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4548r6R3056294;
+	Tue, 4 Jun 2024 03:53:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717491195;
-	bh=A3xBNcQ8wLm8339Z6LOc/8zgbSMmT1b2GM+j9FvE9oU=;
+	s=ti-com-17Q1; t=1717491186;
+	bh=IFPvDohlPGXXqXCQGX0a2YhLsDb1v7coMiYchfsU0dc=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=ZEVicY3Oo9P/hJok/hGUt9hnn5b/9TsIglsyKb0xhWPF2LQUtWj2q7Xck1ZHFq87j
-	 xymCE6AKpRQ6RvHK21E6Ql0FOo9hFs8CC70YQAwFdeT3h4GkE1wcPovE88UzV6JzpR
-	 cXjb8Dek8HrDbB4YoGE7SVZXubc2xRva+kA8DFn4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4548rFxY016073
+	b=s6gLD1HAmWFV/Bnrx81H3yDPBRZqos6VhW7cIHhv0K4EYnR+ARGbaxRdP3Ae2kJDC
+	 psMD5FkK61OIqAokRs+5XRGtMfVzsVhirlaqwEEKDA08Butt9Sr4ua1+aki7D+uiDq
+	 vKr69HPyOkNNTH6zb1GXdhzLxYsDMzyReCfhLsfM=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4548r6jV016003
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 03:53:15 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 4 Jun 2024 03:53:06 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Jun 2024 03:53:15 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2024 03:53:06 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Jun 2024 03:53:15 -0500
+ Frontend Transport; Tue, 4 Jun 2024 03:53:06 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4548qqQl066926;
-	Tue, 4 Jun 2024 03:53:11 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4548qqQj066926;
+	Tue, 4 Jun 2024 03:53:02 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>,
         <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -48,9 +48,9 @@ To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <kristo@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <u-kumar1@ti.com>,
         <danishanwar@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
-Subject: [PATCH v5 4/7] arm64: dts: ti: k3-j722s: Switch to k3-am62p-j722s-common.dtsi
-Date: Tue, 4 Jun 2024 14:22:49 +0530
-Message-ID: <20240604085252.3686037-5-s-vadapalli@ti.com>
+Subject: [PATCH v5 2/7] arm64: dts: ti: k3-am62p-j722s: Move AM62P specific USB1 to am62p-main.dtsi
+Date: Tue, 4 Jun 2024 14:22:47 +0530
+Message-ID: <20240604085252.3686037-3-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240604085252.3686037-1-s-vadapalli@ti.com>
 References: <20240604085252.3686037-1-s-vadapalli@ti.com>
@@ -64,132 +64,113 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Update "k3-j722s.dtsi" to use "k3-am62p-j722s-common.dtsi" which
-contains the nodes shared with AM62P, followed by including the J722S
-specific main domain peripherals contained in "k3-j722s-main.dtsi".
+The USB1 instance of USB controller on AM62P is different from the USB1
+instance of USB controller on J722S. Thus, move the USB1 instance from
+the shared "k3-am62p-j722s-common-main.dtsi" file to the AM62p specific
+"k3-am62p-main.dtsi" file.
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
 v4:
-https://lore.kernel.org/r/20240601121554.2860403-5-s-vadapalli@ti.com/
-No changes since v4.
+https://lore.kernel.org/r/20240601121554.2860403-3-s-vadapalli@ti.com/
+Changes since v4:
+- s/main/MAIN in k3-am62p-main.dtsi
 
- arch/arm64/boot/dts/ti/k3-j722s.dtsi | 97 +++++++++++++++++++++++++++-
- 1 file changed, 96 insertions(+), 1 deletion(-)
+ .../dts/ti/k3-am62p-j722s-common-main.dtsi    | 26 --------------
+ arch/arm64/boot/dts/ti/k3-am62p-main.dtsi     | 34 +++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62p5.dtsi         |  1 +
+ 3 files changed, 35 insertions(+), 26 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s.dtsi b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-index c75744edb143..9e04e6a5c0fd 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j722s.dtsi
-@@ -10,12 +10,107 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/soc/ti,sci_pm_domain.h>
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+index bf6384ba824a..80d2e559a473 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+@@ -662,32 +662,6 @@ usb0: usb@31000000 {
+ 		};
+ 	};
  
--#include "k3-am62p5.dtsi"
-+#include "k3-am62p-j722s-common.dtsi"
-+#include "k3-j722s-main.dtsi"
+-	usbss1: usb@f910000 {
+-		compatible = "ti,am62-usb";
+-		reg = <0x00 0x0f910000 0x00 0x800>,
+-		      <0x00 0x0f918000 0x00 0x400>;
+-		clocks = <&k3_clks 162 3>;
+-		clock-names = "ref";
+-		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
+-		ranges;
+-		status = "disabled";
+-
+-		usb1: usb@31100000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x00 0x31100000 0x00 0x50000>;
+-			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
+-			<GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
+-			interrupt-names = "host", "peripheral";
+-			maximum-speed = "high-speed";
+-			dr_mode = "otg";
+-			snps,usb2-gadget-lpm-disable;
+-			snps,usb2-lpm-disable;
+-		};
+-	};
+-
+ 	fss: bus@fc00000 {
+ 		compatible = "simple-bus";
+ 		reg = <0x00 0x0fc00000 0x00 0x70000>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+new file mode 100644
+index 000000000000..9caab7db5440
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Device Tree file for the AM62P MAIN domain peripherals
++ *
++ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
++
++&cbass_main {
++	usbss1: usb@f910000 {
++		compatible = "ti,am62-usb";
++		reg = <0x00 0x0f910000 0x00 0x800>,
++		      <0x00 0x0f918000 0x00 0x400>;
++		clocks = <&k3_clks 162 3>;
++		clock-names = "ref";
++		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
++		ranges;
++		status = "disabled";
++
++		usb1: usb@31100000 {
++			compatible = "snps,dwc3";
++			reg = <0x00 0x31100000 0x00 0x50000>;
++			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
++			<GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
++			interrupt-names = "host", "peripheral";
++			maximum-speed = "high-speed";
++			dr_mode = "otg";
++			snps,usb2-gadget-lpm-disable;
++			snps,usb2-lpm-disable;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
+index b7bb04a7968f..9f5bd76bf050 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p5.dtsi
+@@ -9,6 +9,7 @@
+ /dts-v1/;
+ 
+ #include "k3-am62p-j722s-common.dtsi"
++#include "k3-am62p-main.dtsi"
  
  / {
- 	model = "Texas Instruments K3 J722S SoC";
- 	compatible = "ti,j722s";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0: cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+		};
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x000>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			clocks = <&k3_clks 135 0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x001>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			clocks = <&k3_clks 136 0>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x002>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			clocks = <&k3_clks 137 0>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			reg = <0x003>;
-+			device_type = "cpu";
-+			enable-method = "psci";
-+			i-cache-size = <0x8000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <256>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			next-level-cache = <&l2_0>;
-+			clocks = <&k3_clks 138 0>;
-+		};
-+	};
-+
-+	l2_0: l2-cache0 {
-+		compatible = "cache";
-+		cache-unified;
-+		cache-level = <2>;
-+		cache-size = <0x80000>;
-+		cache-line-size = <64>;
-+		cache-sets = <512>;
-+	};
-+
- 	cbass_main: bus@f0000 {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
+ 	cpus {
 -- 
 2.40.1
 
