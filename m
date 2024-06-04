@@ -1,54 +1,54 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C9D145A1E
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 11:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAD2145B02
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 11:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717499659; cv=none; b=L+6fn+AhMJFRmur1HdGpDp0auJvElVh1AB/VapW8Yb9fctbx7bLVCyU6rK17z4cb4IrGXGadr923DWDRjBrNfiBhPHzlR+3CHJjxj1oldkFlvcTUgf3A3KzucOjulxwqQ2ne3je8JV1OzzFAWH3BszIxsd0SpJpqQnF9H27xNtU=
+	t=1717499660; cv=none; b=L5dgXtpAU86PKk0ud9EKbK0zYrzgWu1zmWWC4rZ3ACYO0/+MQ+/VFWLd8jLNWtfYbTtxzdOw45eOq9tVKOQkFbgMpzHEF3DRNJSKQyS92QWZ1qRjN+7e2YIT1J6oDcDNFteCQ1H2HEmGNT+y5qnsm90/5YBVmrruCVIozGhrDaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717499659; c=relaxed/simple;
-	bh=z+WsJHNaskJCg4/9AjFqG4HscAEnbI/YRzybRuPv8ys=;
+	s=arc-20240116; t=1717499660; c=relaxed/simple;
+	bh=OsuAqfneVxExio+uxNqT6IiAZUoZ4GqeLL6RRoRcxmo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ejp3gCaVCZwg8h4Kv3SscjqttPjGTWo/+Ss6dHWsAVnl3cZPShcDWDGWH5ssk8i8+uIL0Ru9/yJTX4WwDVkHyRDoKMlG7av0HiPDkhAX0Arm4DIC+gfT82dRUVPQdNCTNwHA9RWbkaQNHbcv8PSt8nW2Zca1AzhjI1MDx2GbDkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ThQEnG2K; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=sSTB5Pxs8gNRmJ3W6Pvcm8afEsUoJbIowb0GCHj/hC8N5bo359LA4EGN16O3yhQ3Vn4PlDCKgYkmcES6gWMTUrHcDhWWVFZAlnWA/1WDcNtBUIL8XAbFs4lHAcPHNzqHAPODENPwzKwRCry3EwEpbAdo3H4F30u+OJMbZBFGuyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=HqktHl/y; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ThQEnG2K"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-df771b6cf71so937218276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 04:14:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="HqktHl/y"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-52b93370ad0so4071375e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 04:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717499657; x=1718104457; darn=vger.kernel.org;
+        d=ionos.com; s=google; t=1717499656; x=1718104456; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/SHisJ7CCxndoN5Fdc6xcJmlIiLgKfMyPUBkvpRmDi4=;
-        b=ThQEnG2K2geXfZC2nCFr9Z7sKRzMbk+z37SEp/0vfwXG/xu14Cf19ekeFVC+YwoEzp
-         eg8RfIMAUDpkq6GO9hu+dkLxjPfAXQ5vj2wq7NQJogpTnFx3X1xGDAiwIwBIpB9/UOx/
-         GASAUpy7H5sRZ2R7fBc0nPAQJr4pW6SzEBIG5KjrDniqOl4cyMOAjlJJvYIlML3vsGbM
-         vGwvi4rHhWgAtQl1SIj1j3o1AJx5acjWj1fYQGRB1vz0PNzocbpsJ01isI+aZ71dmW2L
-         9wsAgekPmufCI4cK9mdy+VZRYuVDxTIJAJtwcpJfOZVm85FbHlomM487O5XdA51bNdZ1
-         MJUg==
+        bh=OsuAqfneVxExio+uxNqT6IiAZUoZ4GqeLL6RRoRcxmo=;
+        b=HqktHl/yUJAzNFnAxORkC4KvcVsEvMGytp3raSwv7xvMaX2d97zOkPf3LMZ/CAIKNR
+         7fvhHUvuHurVhiTZJOVBtyXZ183D/oJX7INDUNqyBEV8TM9KyAu3X5ifQwKXgjYZfnfH
+         3a9OQxmlVsecFCSfUctx3Z54X5RNrMldRaoU2Jx2qj4w1mmj94FimYpUAunyoThPSGmf
+         JVvTpN3eSFRFlvviVswHsnXK6Fl6CqD8XIVJ3u7ECvTRKT/B1/HGzmSWiO6D+MvNLeIe
+         qVINAiw95Ekf8s/2+8s3JW2/IN2nv57XcqtgBK3rUBSgTRnHWj5HHGCL6WEnGyRmlnai
+         G+mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717499657; x=1718104457;
+        d=1e100.net; s=20230601; t=1717499656; x=1718104456;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/SHisJ7CCxndoN5Fdc6xcJmlIiLgKfMyPUBkvpRmDi4=;
-        b=t+MdzUs2i+V/B4OW66UhogOtq9RGUL68KrxDWtpYF43wuHL05O1MVz7MJmSkICDoNR
-         NXa1AVw/rOSt2Moow3ULgn4qbiMs2w42+a6HwOQiDiFkDKP97uChmw0NOeGPOOm37aDZ
-         Pw0kETvOfXFBgmphXKRmbb4F+gUH8jct5788RVuAFIvWg240AylF+pDwSiluN2gHyoel
-         k+jvAs/rmKfKxkFqOxCUwcpNeLSoC0bm+hV58WMKMm+AaQgaxorX1e1mYcGfg3bvTRuf
-         yKU1T+bAFyFs9HiRjdsX6t7GPpHqI4xN87+6W8Etgq1KkueOhdZHOypGTdEW0GFcFiis
-         1P7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVl6XdrW2xR9oLTi6tbMPTBtAs7wEgCUIL2Z+BGPJ/ZOrQPRcT9ShkEi8cKSxbkJEfPXGjjCgRy7mTgoceYfVG53NqirF6mC+acqv1Z
-X-Gm-Message-State: AOJu0YyyP99MQQ0xjxpLPZrBrBOZBJfrSuLd+/cC4tJPbQu2CEwCXyht
-	HFa7hdWH/+BRJnKLnOPP98Yld+XaRIZRf6aPYgn3Kg/xCPzmBw29skOqw+MJkP09RsgwPbF/lJa
-	uGzXUXtjp4YxjqBNUm8IZK1uKpxB1YjaGiYa2ig==
-X-Google-Smtp-Source: AGHT+IF7rrqUCsphi5Ci9q0e6oLnlkzOlW/Q14Bh38ZpEZKYw+rO8lP8vt/6KfbzoLfuy1ZokVqzPQbe8IoatP8LzPY=
-X-Received: by 2002:a25:74d2:0:b0:deb:c07d:7f5d with SMTP id
- 3f1490d57ef6-dfa73bce75fmr12031361276.11.1717499656884; Tue, 04 Jun 2024
+        bh=OsuAqfneVxExio+uxNqT6IiAZUoZ4GqeLL6RRoRcxmo=;
+        b=EHz6RFW2kfeoWD5Zgl7spuK+VzFJ8dJg1apoorlNRErLVwSKjsmOGDXCGY51QqkE1T
+         XLWyVZg3lAC/Ba/UB70yfpf9mQNEUAGnekFj+jvfAQgpuprc618ic1HyTfBkSXQ/J4lO
+         zyYe8ZC26xt3I2O+wpMuog5uUJ+D6xKANkaPYkH7ADeM+bJu9rlM453MVzzg3fPgPQPq
+         D8A7M9YEkoLxPOJScmQxOIPf6sCxEfXDM47Ho1oSsGjsIfkBGhvyCHtcMFfdTBuFaBXk
+         SxwtoR7LYDqKTglMCSphue2NUQUwyOFqHdCimuNWNfqxsOfW1+3tUMmWnF/PRyH1Ip4H
+         3qLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUvydelUt1iC5VxGMSE1XluTyant14IVYf3shJASv3iZCcnZf4wTqUtVKoid/1JjoAFiFo+fJpQ+TCMc9RAlbxb88HnpxUv9J/85IXR
+X-Gm-Message-State: AOJu0Yzc/LXteRdw84qLESQoKXgzY8YP385DmwrTEckCZTvlThC2sCQo
+	craRGN6vzYTVLvKCcY2IF1/FXMaP4GEbtKkVZjljnLAzGwF2lpm0/vWOQoi57CP1eG9K+pyC3QC
+	F+x8Dba9O+s83t4VDuOQkagv2AKwRxmnz0Po6sg==
+X-Google-Smtp-Source: AGHT+IGPM+K2hixyRUP9EcOT9Brv7YAnDET3OYQ68QdgVrS8wykAfmjuzPC7P+3Ds9ZEZVrJrtEUH6tY4nUhWlqN5Bo=
+X-Received: by 2002:a19:8c4e:0:b0:518:9ce1:a5bb with SMTP id
+ 2adb3069b0e04-52b896aebebmr8354193e87.54.1717499656564; Tue, 04 Jun 2024
  04:14:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,92 +56,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527132443.14038-1-ilpo.jarvinen@linux.intel.com>
-In-Reply-To: <20240527132443.14038-1-ilpo.jarvinen@linux.intel.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 4 Jun 2024 13:13:41 +0200
-Message-ID: <CAPDyKFpqBMV9SS=1GE2JPR4O-ZzjEY+R41AiOtJrWafib8SuFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci-pci: Convert PCIBIOS_* return codes to errnos
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Fengguang Wu <fengguang.wu@intel.com>, 
-	Pierre Ossman <drzeus@drzeus.cx>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20240604092431.2183929-1-max.kellermann@ionos.com> <20240604104151.73n3zmn24hxmmwj6@quack3>
+In-Reply-To: <20240604104151.73n3zmn24hxmmwj6@quack3>
+From: Max Kellermann <max.kellermann@ionos.com>
+Date: Tue, 4 Jun 2024 13:14:05 +0200
+Message-ID: <CAKPOu+9BEAOSDPM97uzHUoQoNZC064D-F2SWZR=BSxi-r-=2VA@mail.gmail.com>
+Subject: Re: [PATCH v3] fs/splice: don't block splice_direct_to_actor() after
+ data was read
+To: Jan Kara <jack@suse.cz>
+Cc: axboe@kernel.dk, brauner@kernel.org, viro@zeniv.linux.org.uk, 
+	hch@infradead.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, 27 May 2024 at 15:24, Ilpo J=C3=A4rvinen
-<ilpo.jarvinen@linux.intel.com> wrote:
->
-> jmicron_pmos() and sdhci_pci_probe() use pci_{read,write}_config_byte()
-> that return PCIBIOS_* codes. The return code is then returned as is by
-> jmicron_probe() and sdhci_pci_probe(). Similarly, the return code is
-> also returned as is from jmicron_resume(). Both probe and resume
-> functions should return normal errnos.
->
-> Convert PCIBIOS_* returns code using pcibios_err_to_errno() into normal
-> errno before returning them the fix these issues.
->
-> Fixes: 7582041ff3d4 ("mmc: sdhci-pci: fix simple_return.cocci warnings")
-> Fixes: 45211e215984 ("sdhci: toggle JMicron PMOS setting")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+On Tue, Jun 4, 2024 at 12:41=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+> Well, I can see your pain but after all the kernel does exactly what
+> userspace has asked for?
 
-Applied for fixes, thanks!
+That is a valid point of view; indeed the kernel's behavior is correct
+according to the specification, but that was not my point.
 
-Kind regards
-Uffe
+This is about an exotic problem that occurs only in very rare
+circumstances (depending on hard disk speed, network speed and
+timing), but when it occurs, it blocks the calling process for a very
+long time, which can then cause problems more serious than user
+unhappiness (e.g. expiring timeouts). (As I said, nginx had to work
+around this problem.)
 
+I'd like to optimize this special case, and adjust the kernel to
+always behave like the common case.
 
-> ---
->  drivers/mmc/host/sdhci-pci-core.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-p=
-ci-core.c
-> index ef89ec382bfe..23e6ba70144c 100644
-> --- a/drivers/mmc/host/sdhci-pci-core.c
-> +++ b/drivers/mmc/host/sdhci-pci-core.c
-> @@ -1326,7 +1326,7 @@ static int jmicron_pmos(struct sdhci_pci_chip *chip=
-, int on)
->
->         ret =3D pci_read_config_byte(chip->pdev, 0xAE, &scratch);
->         if (ret)
-> -               return ret;
-> +               goto fail;
->
->         /*
->          * Turn PMOS on [bit 0], set over current detection to 2.4 V
-> @@ -1337,7 +1337,10 @@ static int jmicron_pmos(struct sdhci_pci_chip *chi=
-p, int on)
->         else
->                 scratch &=3D ~0x47;
->
-> -       return pci_write_config_byte(chip->pdev, 0xAE, scratch);
-> +       ret =3D pci_write_config_byte(chip->pdev, 0xAE, scratch);
-> +
-> +fail:
-> +       return pcibios_err_to_errno(ret);
->  }
->
->  static int jmicron_probe(struct sdhci_pci_chip *chip)
-> @@ -2202,7 +2205,7 @@ static int sdhci_pci_probe(struct pci_dev *pdev,
->
->         ret =3D pci_read_config_byte(pdev, PCI_SLOT_INFO, &slots);
->         if (ret)
-> -               return ret;
-> +               return pcibios_err_to_errno(ret);
->
->         slots =3D PCI_SLOT_INFO_SLOTS(slots) + 1;
->         dev_dbg(&pdev->dev, "found %d slot(s)\n", slots);
-> @@ -2211,7 +2214,7 @@ static int sdhci_pci_probe(struct pci_dev *pdev,
->
->         ret =3D pci_read_config_byte(pdev, PCI_SLOT_INFO, &first_bar);
->         if (ret)
-> -               return ret;
-> +               return pcibios_err_to_errno(ret);
->
->         first_bar &=3D PCI_SLOT_INFO_FIRST_BAR_MASK;
->
-> --
-> 2.39.2
->
+> After all there's no substantial difference between userspace issuing a 2=
+GB read(2) and 2GB sendfile(2).
+
+I understand your fear of breaking userspace, but this doesn't apply
+here, because yes, there is indeed a substantial difference: in the
+normal case, sendfile() stops when the destination socket buffer is
+full. That is the normal mode of operation, which all applications
+must be prepared for, because short sendfile() calls happen all the
+time, that's the common case.
+
+My patch is ONLY about fixing that exotic special case where the
+socket buffer is drained over and over while sendfile() still runs.
+
+> there are too many userspace applications that depend on this behavior...
+
+True for read() - but which application depends on this very special
+behavior that only occurs in very rare exceptional cases? I think we
+have a slight misunderstanding about the circumstances of the problem.
