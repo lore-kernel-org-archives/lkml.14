@@ -1,103 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C1C1411CA;
-	Tue,  4 Jun 2024 07:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD21446CF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 07:59:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717487932; cv=none; b=W8CQCf4UfAgvqjazmH9a6QJDs9pRVaFxaSYGZAVjWzXArM/Jk2xETux6Q8cuGc1txXcfL9Y6OKIPfczvgsOfQJlH5iX35aPPE13epxcbmyFSWZkXM3nv4ayZdyXK1+zcVUQsfNSaokJ3SAVkDrDGYDsEpWUlq6fjeVNSGoEECjM=
+	t=1717487990; cv=none; b=nFP6ntypmL+1j0/fs5woARLdFS4QmRKcjEVt1RewpWCfDTCpx+8Mj0AYei/DmPZiVcm7BQBJcUXRej2LhoQwILvAk3nUCZ/GFOSyaQbjgeRNcJrjdtEfqGHZ63sIxsnzM13POUP1k5/SaoR2g8UogOnNzYkKe0gdO9JJffXvBX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717487932; c=relaxed/simple;
-	bh=/2h304tkOJFnFlQMxg3EG6MI/HuME1XtmAEkjVrYmYY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KirDxwB7PqVAHrXXDd4njxY8p2ws3bKXUVvohxGSdD9W4w4jNCPIuLbmqhJO4uVKXnCq8dLAsO9VT7nQSxqUFoyzNFlLZ0YJ8Hgz3zUdYCo9+1YHbX4/wLAomUdS80ueUjJPMjNUG0R5U2ST0oxCGakCRw4ffD9AXlht3g+egTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfoLU4/R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717487990; c=relaxed/simple;
+	bh=FW5MO1A3RijbLPhQAw8aoJYzQGdRnwECT/nsnX6u0rY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RKIbtZxYNhiGanr1IDtIjtOPJtlZVFYRaAmGVW0YKbmUcnds2Z9SEQKbROfXFtfal5ImFsfUMnioffTAttSd+PoOdQHXr6KQRGvHI0aCMhiu9DrOsqPBWT5Bsm5daK0b9AT6nVEzdodmM4p7j4PLwdNL349gzMExE77PGsOqkLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CVTG/M33; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfoLU4/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD1BC2BBFC;
-	Tue,  4 Jun 2024 07:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717487931;
-	bh=/2h304tkOJFnFlQMxg3EG6MI/HuME1XtmAEkjVrYmYY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=FfoLU4/Rw1RAUN1Ww+rsMTdeA1C0zktNuV7DVFFartqRjRUWC72cr6+Iy8lTssqya
-	 +F9a+yR0qD35AhleNxWSrCKwRqj112IL6hJtu7SN0pvYuoausgWlbDsjBM4GGFoQO9
-	 mkPiHgXe/i353/szgViaRzUHEynzpTy5bqFzRNrFAECPI5X1f9Amqjmig4ejTuEZjm
-	 KxMtnaQOGdCBMLovnIR5LmiJcnKtxEjs0tZKwwNSDITcekKklMDG0Q75SzDmMp+kBX
-	 q7axmSh2tcDoBilsNvWT8y3vYTZQgfBU7u81KJ2G6E2noenkiwErbF/Be22Cj1W6uH
-	 9EqqHakY8rM2A==
-Date: Tue, 4 Jun 2024 09:58:48 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: "Hailong.Liu" <hailong.liu@oppo.com>
-cc: benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, 
-    linux-kernel@vger.kernel.org, 21cnbao@gmail.com
-Subject: Re: [PATCH] HID: Use kvzalloc instead of kzalloc in
- hid_register_field()
-In-Reply-To: <20240522080328.12317-1-hailong.liu@oppo.com>
-Message-ID: <nycvar.YFH.7.76.2406040958380.16865@cbobk.fhfr.pm>
-References: <20240522080328.12317-1-hailong.liu@oppo.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CVTG/M33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717487989; x=1749023989;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=FW5MO1A3RijbLPhQAw8aoJYzQGdRnwECT/nsnX6u0rY=;
+  b=CVTG/M33XWov3D3m6Eye8j/jfJLbKrQzcDnc+jm8QWiE6yB+JbwIXcx5
+   QCIzVs2Bu/DQxIpx5JSGFxUtPOdnWKTlSsf2y0/FS9LIhmGccRzq+C7BR
+   PmAbP+gjUvYSVUAxQlQJs8GmO5lUHqCJUZcyhYe/ZqkgULLLF0Px9S6qQ
+   XnHJ2pubTumscHjeNdvA+nsjurB+Pm4DMbW9FuQRRC+1dWDgQKcFu6NxN
+   7vZnhdb3dLXUoeAw4/zvOzn2kfoSEzJJqspasZ9R6AStfl57mvXPxq7ua
+   UXjDp9Oe1RfCUXsgnqxcHJ+Vti7zUe5gWdJl43rzWACcs07eehXSNb/lI
+   Q==;
+X-CSE-ConnectionGUID: OfU94RqVQd6dy7ikyc8reA==
+X-CSE-MsgGUID: gv/B7GksRBmxyRvAqxYuSw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="13965203"
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="13965203"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 00:59:48 -0700
+X-CSE-ConnectionGUID: sDrlrulOSTmw1CWWzxYJ5g==
+X-CSE-MsgGUID: 0nzFEGt2SdWI+j/s8rysQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
+   d="scan'208";a="37796359"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 00:59:46 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Byungchul Park <byungchul@sk.com>
+Cc: <akpm@linux-foundation.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <kernel_team@skhynix.com>,  <hannes@cmpxchg.org>,
+  <iamjoonsoo.kim@lge.com>,  <rientjes@google.com>
+Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
+ hopeless but may not now
+In-Reply-To: <20240604072323.10886-1-byungchul@sk.com> (Byungchul Park's
+	message of "Tue, 4 Jun 2024 16:23:23 +0900")
+References: <20240604072323.10886-1-byungchul@sk.com>
+Date: Tue, 04 Jun 2024 15:57:54 +0800
+Message-ID: <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ascii
 
-On Wed, 22 May 2024, hailong.liu@oppo.com wrote:
+Byungchul Park <byungchul@sk.com> writes:
 
-> From: "Hailong.Liu" <hailong.liu@oppo.com>
->=20
-> The function hid_register_field() might allocate more than 32k, which
-> would use order-4 contiguous memory if the parameter usage exceeds
-> 1024. However, after the system runs for a while, the memory can
-> become heavily fragmented. This increases the likelihood of order-4 page
-> allocation failure. Here=E2=80=99s the relevant log.
->=20
-> [71553.093623]kworker/1: 0: page allocation failure: order:4, mode:0x40dc=
-0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=3D(null),cpuset=3D/,mems_allo=
-wed=3D0
-> [71553.093669]Workqueue: events uhid_device_add_worker
-> [71553.093683]Call trace:
-> [71553.093687]: dump_backtrace+0xf4/0x118
-> [71553.093696]: show_stack+0x18/0x24
-> [71553.093702]: dump_stack_lvl+0x60/0x7c
-> [71553.093710]: dump_stack+0x18/0x3c
-> [71553.093717]: warn_alloc+0xf4/0x174
-> [71553.093725]: __alloc_pages_slowpath+0x1ba0/0x1cac
-> [71553.093732]: __alloc_pages+0x460/0x560
-> [71553.093738]: __kmalloc_large_node+0xbc/0x1f8
-> [71553.093746]: __kmalloc+0x144/0x254
-> [71553.093752]: hid_add_field+0x13c/0x308
-> [71553.093758]: hid_parser_main+0x250/0x298
-> [71553.093765]: hid_open_report+0x214/0x30c
-> [71553.093771]: mt_probe+0x130/0x258
-> [71553.093778]: hid_device_probe+0x11c/0x1e4
-> [71553.093784]: really_probe+0xe4/0x388
-> [71553.093791]: __driver_probe_device+0xa0/0x12c
-> [71553.093798]: driver_probe_device+0x44/0x214
-> [71553.093804]: __device_attach_driver+0xdc/0x124
-> [71553.093812]: bus_for_each_drv+0x88/0xec
-> [71553.093818]: __device_attach+0x84/0x170
-> [71553.093824]: device_initial_probe+0x14/0x20
-> [71553.093831]: bus_probe_device+0x48/0xd0
-> [71553.093836]: device_add+0x248/0x928
-> [71553.093844]: hid_add_device+0xf8/0x1a4
-> [71553.093850]: uhid_device_add_worker+0x24/0x144
-> [71553.093857]: process_one_work+0x158/0x804
-> [71553.093865]: worker_thread+0x15c/0x494
-> [71553.093872]: kthread+0xf4/0x1e4
-> [71553.093880]: ret_from_fork+0x10/0x20
->=20
-> To fix the allocation failure, use kvzalloc() instead of kzalloc().
->=20
-> Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
+> Changes from v1:
+> 	1. Don't allow to resume kswapd if the system is under memory
+> 	   pressure that might affect direct reclaim by any chance, like
+> 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
+>
+> --->8---
+> From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
+> From: Byungchul Park <byungchul@sk.com>
+> Date: Tue, 4 Jun 2024 15:27:56 +0900
+> Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
+>
+> A system should run with kswapd running in background when under memory
+> pressure, such as when the available memory level is below the low water
+> mark and there are reclaimable folios.
+>
+> However, the current code let the system run with kswapd stopped if
+> kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
+> until direct reclaim will do for that, even if there are reclaimable
+> folios that can be reclaimed by kswapd.  This case was observed in the
+> following scenario:
+>
+>    CONFIG_NUMA_BALANCING enabled
+>    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
+>    numa node0 (500GB local DRAM, 128 CPUs)
+>    numa node1 (100GB CXL memory, no CPUs)
+>    swap off
+>
+>    1) Run a workload with big anon pages e.g. mmap(200GB).
+>    2) Continue adding the same workload to the system.
+>    3) The anon pages are placed in node0 by promotion/demotion.
+>    4) kswapd0 stops because of the unreclaimable anon pages in node0.
+>    5) Kill the memory hoggers to restore the system.
+>
+> After restoring the system at 5), the system starts to run without
+> kswapd.  Even worse, tiering mechanism is no longer able to work since
+> the mechanism relies on kswapd for demotion.
 
-Applied, thanks.
+We have run into the situation that kswapd is kept in failure state for
+long in a multiple tiers system.  I think that your solution is too
+limited, because OOM killing may not happen, while the access pattern of
+the workloads may change.  We have a preliminary and simple solution for
+this as follows,
 
---=20
-Jiri Kosina
-SUSE Labs
+https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
 
+where we will try to wake up kswapd to check every 10 seconds if kswapd
+is in failure state.  This is another possible solution.
+
+> However, the node0 has pages newly allocated after 5), that might or
+> might not be reclaimable.  Since those are potentially reclaimable, it's
+> worth hopefully trying reclaim by allowing kswapd to work again.
+>
+
+[snip]
+
+--
+Best Regards,
+Huang, Ying
