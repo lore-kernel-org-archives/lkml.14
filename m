@@ -1,117 +1,425 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB99146592
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:46:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA72E146A8C;
+	Tue,  4 Jun 2024 12:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717505183; cv=none; b=b/nXjPtncVR7e4XbqugpGof2VqhPJoCFXK41FbNsS995GoVQcSkMx6dfNARlYOWODsPsIzz3y1CC7is9b9pGnnLBYEd3lUTNb8SiVV4j5gj5KozBJRuyr4k4mugSIkEuaa/x5eBQXQ+D7cWS+ngtT4Z5M+jSUsqCmsZrGBxqrpo=
+	t=1717505186; cv=none; b=Q6l9ix7xqW18+RCozWh5xXLYS7GdfJB3ALJlFZNGnqBc5ZvIIX9Y1NoAuSICeNI2PWmqfc4eAbEP6xw5rfLQpaMOzaJAPqmP5gtr9T9qoY7CFTJ4vCrG2NmLGPQB2z+duXioimLvAkOgbuOFeQ8Cm/tpfRZxwk/13rUJI9V+8Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717505183; c=relaxed/simple;
-	bh=krQUkNfTKWTUKxvKlFPKtZuRRj8DoTRNLSytjvedMq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Exj82GBYetQLY0X4yk71Xa9NKTUtL5bjXZ7TzmGJgHIWVNOrh9RgXmypGuq/MqaZhsg5eubMHNT7cgRN3CO2kdlF3xc3J4H64+g/bboWTe/QJh0lQsDx3FANeLLXwQBkjoZSJluahEinZ22XeyrbCK8zxIlpXx1Ig5S9FJ4wZsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=eF/SBaRk; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="eF/SBaRk"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1f63b38e0b7so953935ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:46:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1717505182; x=1718109982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rkPyoR3KU3XSm/AEH/d1RonWJjnHK9mNu+9RmdnkI1w=;
-        b=eF/SBaRk3tAWkysYLAjECFL6buehXgwpMdB3LTW5CSwijWPldsY/yLYOWvPh0Jmo4l
-         m9SZhSHEPzrAyXN+ox8yYduPwTdSz4NVi5zSXXNEyfuuU31FMvV4aOGzgCUDYe6E9/DQ
-         1ds7aZK+GmI6Zfqc/39o0xe5FBSdGTyuZcv+dEZJKdd7THlZOTQCQiT6xcRzgC5zYNtY
-         gXodEN9p5ERHOGevegBfzgybLu7V9NQy32tuPKDXp5JH3f3BjqPFBDLFIP7cqMZqhfxd
-         aEd0a+QPpgB/PAw2uKxvOUnavsKPq4pgWMP3G1V1lQPmzQ3lNdZxfvChpxZtnxyAnwYk
-         6dhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717505182; x=1718109982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rkPyoR3KU3XSm/AEH/d1RonWJjnHK9mNu+9RmdnkI1w=;
-        b=dgIEigU/hoaILIwxd+7YMyRkXwPQY2UMuiWwjr2Cux2LyhmcPJYx54xbaS5Ufhn+mX
-         5DWfqdBVvqF42W/ek7qTtT4dqijcOoteoLD4a82moEgxzTQlEVvFDpEQCk3Tgh+R6Hf6
-         lmuo3xi3RTpxH/usqGoiVdmvyLCyMbRclnKQYXOKdFZUGIILkpVOdYm49H/1+152fcWh
-         lUHrEsm38imUx/duhzkByeQjzhJAyITONK0UanJspRpdQCbgmWNvPhXIIoQzdCz7ATu8
-         i/yRQDHu9P61krJHocRbfFnGbbH2sOh+E491lLsfyQFxNbwDY53mSHR64zkcNoaAed/W
-         dlwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWbkpH2kcoTE2S9fyCLgntgv2+yzWOp1yT5GCLfSWKcEmlXPfl8wGtm1lgTx4f6Cnk0hIr1lXmU3K7MLUucFWTxqd9LyE8zDZ1Pz2qW
-X-Gm-Message-State: AOJu0YzTjVZZ/A4bksU9y80eEZ2yZIXQwO0f6efuVsPNDOU+I4uXJsTV
-	ToFpsUlKgquQuEuBQ+ngextFUbVdZD30NlVhf+ZJ4FtqwitXgs4yrciJ5aif0zI=
-X-Google-Smtp-Source: AGHT+IE7Gfwq22B4CqIBvkHs1xIPksWu/HDt59N3pxzuY9J8Ym84nB3KvA4Wk5h6TCyGNl1IpKdoHw==
-X-Received: by 2002:a17:902:ecc6:b0:1f4:8a31:5a43 with SMTP id d9443c01a7336-1f6370b3a51mr135960905ad.4.1717505181811;
-        Tue, 04 Jun 2024 05:46:21 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:327b:5ba3:8154:37ed])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323ebc69sm83042885ad.211.2024.06.04.05.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 05:46:21 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org,
-	Charlie Jenkins <charlie@rivosinc.com>
-Subject: [PATCH v6 01/16] dt-bindings: riscv: add Zimop ISA extension description
-Date: Tue,  4 Jun 2024 14:45:33 +0200
-Message-ID: <20240604124550.3214710-2-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.45.1
-In-Reply-To: <20240604124550.3214710-1-cleger@rivosinc.com>
-References: <20240604124550.3214710-1-cleger@rivosinc.com>
+	s=arc-20240116; t=1717505186; c=relaxed/simple;
+	bh=N2tQ10M1thMcd/btnrlujSu/lmE9NMX155tIVRoqrfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L8JDM+uBGWU4zpsfYCAgRR/QjkhgalokrKJlMAqcpbwkI+GXkMO8NYMjZlA1u/AYi5Ceuu3bUh47E8RupmWD9j8uGxspV1vk9QDLMDTBxopMqRM+Q7qy0azZ/73vhmD9p14iqJLKLl6+AJfd66Q+3pkI6vUrejN+0qL4bn40LhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79439C4AF07;
+	Tue,  4 Jun 2024 12:46:23 +0000 (UTC)
+Message-ID: <b1effb32-5b9e-4a48-9cd7-63f20d8334b1@xs4all.nl>
+Date: Tue, 4 Jun 2024 14:46:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/10] media: Add Chameleon v3 video interface driver
+To: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>
+Cc: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org,
+ daniel@ffwll.ch, dinguyen@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ maarten.lankhorst@linux.intel.com, mchehab@kernel.org, mripard@kernel.org,
+ robh+dt@kernel.org, tzimmermann@suse.de, devicetree@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, chromeos-krk-upstreaming@google.com
+References: <20240507155413.266057-1-panikiel@google.com>
+ <20240507155413.266057-2-panikiel@google.com>
+ <c5f40d46-9e8d-40f9-82ee-83013dbc134e@xs4all.nl>
+ <CAM5zL5reA_nyt0FfmE2+eFESq6JdHJ8Z1wCp1zEsvLECeOx3mA@mail.gmail.com>
+ <fee56d57-ae17-4001-8f22-bd32ce74c8af@xs4all.nl>
+ <CAM5zL5qbfMnjrBqaF7gw1XfiiFpCF4QTVTvO9ZMPmNFiHJDvDg@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <CAM5zL5qbfMnjrBqaF7gw1XfiiFpCF4QTVTvO9ZMPmNFiHJDvDg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add description for the Zimop (May-Be-Operations) ISA extension which
-was ratified in commit 58220614a5f of the riscv-isa-manual.
+On 04/06/2024 14:03, Paweł Anikiel wrote:
+> On Mon, Jun 3, 2024 at 4:56 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 03/06/2024 16:32, Paweł Anikiel wrote:
+>>> On Mon, Jun 3, 2024 at 9:57 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>>>
+>>>> On 07/05/2024 17:54, Paweł Anikiel wrote:
+>>>>> Add v4l2 driver for the video interface present on the Google
+>>>>> Chameleon v3. The Chameleon v3 uses the video interface to capture
+>>>>> a single video source from a given HDMI or DP connector and write
+>>>>> the resulting frames to memory.
+>>>>>
+>>>>> Signed-off-by: Paweł Anikiel <panikiel@google.com>
+>>>>> ---
+>>>>>  drivers/media/platform/Kconfig             |   1 +
+>>>>>  drivers/media/platform/Makefile            |   1 +
+>>>>>  drivers/media/platform/google/Kconfig      |  13 +
+>>>>>  drivers/media/platform/google/Makefile     |   3 +
+>>>>>  drivers/media/platform/google/chv3-video.c | 891 +++++++++++++++++++++
+>>>>>  5 files changed, 909 insertions(+)
+>>>>>  create mode 100644 drivers/media/platform/google/Kconfig
+>>>>>  create mode 100644 drivers/media/platform/google/Makefile
+>>>>>  create mode 100644 drivers/media/platform/google/chv3-video.c
+>>>>>
+>>>>> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+>>>>> index 91e54215de3a..b82f7b142b85 100644
+>>>>> --- a/drivers/media/platform/Kconfig
+>>>>> +++ b/drivers/media/platform/Kconfig
+>>>>> @@ -69,6 +69,7 @@ source "drivers/media/platform/aspeed/Kconfig"
+>>>>>  source "drivers/media/platform/atmel/Kconfig"
+>>>>>  source "drivers/media/platform/cadence/Kconfig"
+>>>>>  source "drivers/media/platform/chips-media/Kconfig"
+>>>>> +source "drivers/media/platform/google/Kconfig"
+>>>>>  source "drivers/media/platform/intel/Kconfig"
+>>>>>  source "drivers/media/platform/marvell/Kconfig"
+>>>>>  source "drivers/media/platform/mediatek/Kconfig"
+>>>>> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+>>>>> index 3296ec1ebe16..f7067eb05f76 100644
+>>>>> --- a/drivers/media/platform/Makefile
+>>>>> +++ b/drivers/media/platform/Makefile
+>>>>> @@ -12,6 +12,7 @@ obj-y += aspeed/
+>>>>>  obj-y += atmel/
+>>>>>  obj-y += cadence/
+>>>>>  obj-y += chips-media/
+>>>>> +obj-y += google/
+>>>>>  obj-y += intel/
+>>>>>  obj-y += marvell/
+>>>>>  obj-y += mediatek/
+>>>>> diff --git a/drivers/media/platform/google/Kconfig b/drivers/media/platform/google/Kconfig
+>>>>> new file mode 100644
+>>>>> index 000000000000..9674a4c12e2d
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/media/platform/google/Kconfig
+>>>>> @@ -0,0 +1,13 @@
+>>>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>>>> +
+>>>>> +config VIDEO_CHAMELEONV3
+>>>>> +     tristate "Google Chameleon v3 video driver"
+>>>>> +     depends on V4L_PLATFORM_DRIVERS
+>>>>> +     depends on VIDEO_DEV
+>>>>> +     select VIDEOBUF2_DMA_CONTIG
+>>>>> +     select V4L2_FWNODE
+>>>>> +     help
+>>>>> +       v4l2 driver for the video interface present on the Google
+>>>>> +       Chameleon v3. The Chameleon v3 uses the video interface to
+>>>>> +       capture a single video source from a given HDMI or DP connector
+>>>>> +       and write the resulting frames to memory.
+>>>>> diff --git a/drivers/media/platform/google/Makefile b/drivers/media/platform/google/Makefile
+>>>>> new file mode 100644
+>>>>> index 000000000000..cff06486244c
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/media/platform/google/Makefile
+>>>>> @@ -0,0 +1,3 @@
+>>>>> +# SPDX-License-Identifier: GPL-2.0-only
+>>>>> +
+>>>>> +obj-$(CONFIG_VIDEO_CHAMELEONV3) += chv3-video.o
+>>>>> diff --git a/drivers/media/platform/google/chv3-video.c b/drivers/media/platform/google/chv3-video.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..6e782484abaf
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/media/platform/google/chv3-video.c
+>>>>> @@ -0,0 +1,891 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +/*
+>>>>> + * Copyright 2023-2024 Google LLC.
+>>>>> + * Author: Paweł Anikiel <panikiel@google.com>
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/delay.h>
+>>>>> +#include <linux/dma-mapping.h>
+>>>>> +#include <linux/interrupt.h>
+>>>>> +#include <linux/kernel.h>
+>>>>> +#include <linux/module.h>
+>>>>> +#include <linux/of.h>
+>>>>> +#include <linux/platform_device.h>
+>>>>> +#include <linux/v4l2-dv-timings.h>
+>>>>> +#include <linux/videodev2.h>
+>>>>> +#include <media/v4l2-ctrls.h>
+>>>>> +#include <media/v4l2-device.h>
+>>>>> +#include <media/v4l2-dv-timings.h>
+>>>>> +#include <media/v4l2-event.h>
+>>>>> +#include <media/v4l2-fwnode.h>
+>>>>> +#include <media/v4l2-ioctl.h>
+>>>>> +#include <media/videobuf2-dma-contig.h>
+>>>>> +
+>>>>> +#define DEVICE_NAME  "chv3-video"
+>>>>> +
+>>>>> +#define VIDEO_EN                     0x00
+>>>>> +#define VIDEO_EN_BIT                 BIT(0)
+>>>>> +#define VIDEO_HEIGHT                 0x04
+>>>>> +#define VIDEO_WIDTH                  0x08
+>>>>> +#define VIDEO_BUFFERA                        0x0c
+>>>>> +#define VIDEO_BUFFERB                        0x10
+>>>>> +#define VIDEO_BUFFERSIZE             0x14
+>>>>> +#define VIDEO_RESET                  0x18
+>>>>> +#define VIDEO_RESET_BIT                      BIT(0)
+>>>>> +#define VIDEO_ERRORSTATUS            0x1c
+>>>>> +#define VIDEO_IOCOLOR                        0x20
+>>>>> +#define VIDEO_DATARATE                       0x24
+>>>>> +#define VIDEO_DATARATE_SINGLE                0x0
+>>>>> +#define VIDEO_DATARATE_DOUBLE                0x1
+>>>>> +#define VIDEO_PIXELMODE                      0x28
+>>>>> +#define VIDEO_PIXELMODE_SINGLE               0x0
+>>>>> +#define VIDEO_PIXELMODE_DOUBLE               0x1
+>>>>> +#define VIDEO_SYNCPOLARITY           0x2c
+>>>>> +#define VIDEO_DMAFORMAT                      0x30
+>>>>> +#define VIDEO_DMAFORMAT_8BPC         0x0
+>>>>> +#define VIDEO_DMAFORMAT_10BPC_UPPER  0x1
+>>>>> +#define VIDEO_DMAFORMAT_10BPC_LOWER  0x2
+>>>>> +#define VIDEO_DMAFORMAT_12BPC_UPPER  0x3
+>>>>> +#define VIDEO_DMAFORMAT_12BPC_LOWER  0x4
+>>>>> +#define VIDEO_DMAFORMAT_16BPC                0x5
+>>>>> +#define VIDEO_DMAFORMAT_RAW          0x6
+>>>>> +#define VIDEO_DMAFORMAT_8BPC_PAD     0x7
+>>>>> +#define VIDEO_VERSION                        0x34
+>>>>> +#define VIDEO_VERSION_CURRENT                0xc0fb0001
+>>>>> +
+>>>>> +#define VIDEO_IRQ_MASK               0x8
+>>>>> +#define VIDEO_IRQ_CLR                0xc
+>>>>> +#define VIDEO_IRQ_ALL                0xf
+>>>>> +#define VIDEO_IRQ_BUFF0              BIT(0)
+>>>>> +#define VIDEO_IRQ_BUFF1              BIT(1)
+>>>>> +#define VIDEO_IRQ_RESOLUTION BIT(2)
+>>>>> +#define VIDEO_IRQ_ERROR              BIT(3)
+>>>>> +
+>>>>> +struct chv3_video {
+>>>>> +     struct device *dev;
+>>>>> +     void __iomem *iobase;
+>>>>> +     void __iomem *iobase_irq;
+>>>>> +
+>>>>> +     struct v4l2_device v4l2_dev;
+>>>>> +     struct vb2_queue queue;
+>>>>> +     struct video_device vdev;
+>>>>> +     struct v4l2_pix_format pix_fmt;
+>>>>> +     struct v4l2_dv_timings timings;
+>>>>> +     u32 bytes_per_pixel;
+>>>>> +
+>>>>> +     struct v4l2_ctrl_handler ctrl_handler;
+>>>>> +     struct v4l2_async_notifier notifier;
+>>>>> +     struct v4l2_subdev *subdev;
+>>>>> +     int subdev_source_pad;
+>>>>> +
+>>>>> +     u32 sequence;
+>>>>> +     bool writing_to_a;
+>>>>> +
+>>>>> +     struct list_head bufs;
+>>>>> +     spinlock_t bufs_lock;
+>>>>> +
+>>>>> +     struct mutex video_lock;
+>>>>> +};
+>>>>> +
+>>>>> +struct chv3_video_buffer {
+>>>>> +     struct vb2_v4l2_buffer vb;
+>>>>> +     struct list_head link;
+>>>>> +};
+>>>>> +
+>>>>> +struct chv3_video_config {
+>>>>> +     u32 pixelformat;
+>>>>> +     u32 bytes_per_pixel;
+>>>>> +     u32 dmaformat;
+>>>>> +};
+>>>>> +
+>>>>> +static void chv3_video_set_format_resolution(struct chv3_video *video, u32 width, u32 height)
+>>>>> +{
+>>>>> +     video->pix_fmt.width = width;
+>>>>> +     video->pix_fmt.height = height;
+>>>>> +     video->pix_fmt.bytesperline = width * video->bytes_per_pixel;
+>>>>> +     video->pix_fmt.sizeimage = video->pix_fmt.bytesperline * height;
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * The video interface has hardware counters which expose the width and
+>>>>> + * height of the current video stream. It can't reliably detect if the stream
+>>>>> + * is present or not, so this is only used as a fallback in the case where
+>>>>> + * we don't have access to the receiver hardware.
+>>>>> + */
+>>>>> +static int chv3_video_query_dv_timings_fallback(struct chv3_video *video,
+>>>>> +                                             struct v4l2_dv_timings *timings)
+>>>>> +{
+>>>>> +     u32 width, height;
+>>>>> +
+>>>>> +     width  = readl(video->iobase + VIDEO_WIDTH);
+>>>>> +     height = readl(video->iobase + VIDEO_HEIGHT);
+>>>>> +     if (width == 0 || height == 0)
+>>>>> +             return -ENOLINK;
+>>>>> +
+>>>>> +     memset(timings, 0, sizeof(*timings));
+>>>>> +     timings->type = V4L2_DV_BT_656_1120;
+>>>>> +     timings->bt.width  = width;
+>>>>> +     timings->bt.height = height;
+>>>>> +     timings->bt.pixelclock = width * height * 24;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_query_dv_timings(struct chv3_video *video, struct v4l2_dv_timings *timings)
+>>>>> +{
+>>>>> +     if (video->subdev) {
+>>>>> +             return v4l2_subdev_call(video->subdev, pad, query_dv_timings,
+>>>>> +                                     video->subdev_source_pad, timings);
+>>>>> +     } else {
+>>>>> +             return chv3_video_query_dv_timings_fallback(video, timings);
+>>>>> +     }
+>>>>
+>>>> I would move the contents of chv3_video_query_dv_timings_fallback() to this
+>>>> function and drop the old fallback function. It makes more sense if it is all
+>>>> in the same function.
+>>>>
+>>>>> +}
+>>>>> +
+>>>>> +static const struct v4l2_dv_timings_cap chv3_video_fallback_dv_timings_cap = {
+>>>>> +     .type = V4L2_DV_BT_656_1120,
+>>>>> +     .bt = {
+>>>>> +             .min_width = 640,
+>>>>> +             .max_width = 7680,
+>>>>> +             .min_height = 480,
+>>>>> +             .max_height = 4320,
+>>>>> +             .min_pixelclock = 25000000,
+>>>>> +             .max_pixelclock = 1080000000,
+>>>>> +             .standards = V4L2_DV_BT_STD_CEA861 | V4L2_DV_BT_STD_DMT |
+>>>>> +                     V4L2_DV_BT_STD_CVT | V4L2_DV_BT_STD_GTF,
+>>>>> +             .capabilities = V4L2_DV_BT_CAP_PROGRESSIVE |
+>>>>> +                     V4L2_DV_BT_CAP_REDUCED_BLANKING |
+>>>>> +                     V4L2_DV_BT_CAP_CUSTOM,
+>>>>> +     },
+>>>>> +};
+>>>>> +
+>>>>> +static int chv3_video_enum_dv_timings_fallback(struct chv3_video *video,
+>>>>> +                                            struct v4l2_enum_dv_timings *timings)
+>>>>> +{
+>>>>> +     return v4l2_enum_dv_timings_cap(timings, &chv3_video_fallback_dv_timings_cap,
+>>>>> +                                     NULL, NULL);
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_dv_timings_cap_fallback(struct chv3_video *video,
+>>>>> +                                           struct v4l2_dv_timings_cap *cap)
+>>>>> +{
+>>>>> +     *cap = chv3_video_fallback_dv_timings_cap;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>
+>>>> Same for these two fallback functions: move them to the functions that calls them.
+>>>>
+>>>>> +
+>>>>> +static void chv3_video_apply_dv_timings(struct chv3_video *video)
+>>>>> +{
+>>>>> +     struct v4l2_dv_timings timings;
+>>>>> +     int res;
+>>>>> +
+>>>>> +     res = chv3_video_query_dv_timings(video, &timings);
+>>>>> +     if (res)
+>>>>> +             return;
+>>>>> +
+>>>>> +     video->timings = timings;
+>>>>> +     chv3_video_set_format_resolution(video, timings.bt.width, timings.bt.height);
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_querycap(struct file *file, void *fh, struct v4l2_capability *cap)
+>>>>> +{
+>>>>> +     strscpy(cap->driver, DEVICE_NAME, sizeof(cap->driver));
+>>>>> +     strscpy(cap->card, "Chameleon v3 video", sizeof(cap->card));
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_g_fmt_vid_cap(struct file *file, void *fh, struct v4l2_format *fmt)
+>>>>> +{
+>>>>> +     struct chv3_video *video = video_drvdata(file);
+>>>>> +
+>>>>> +     fmt->fmt.pix = video->pix_fmt;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_enum_fmt_vid_cap(struct file *file, void *fh, struct v4l2_fmtdesc *fmt)
+>>>>> +{
+>>>>> +     struct chv3_video *video = video_drvdata(file);
+>>>>> +
+>>>>> +     if (fmt->index != 0)
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     fmt->flags = 0;
+>>>>> +     fmt->pixelformat = video->pix_fmt.pixelformat;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_g_input(struct file *file, void *fh, unsigned int *index)
+>>>>> +{
+>>>>> +     *index = 0;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_s_input(struct file *file, void *fh, unsigned int index)
+>>>>> +{
+>>>>> +     if (index != 0)
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int chv3_video_enum_input(struct file *file, void *fh, struct v4l2_input *input)
+>>>>> +{
+>>>>> +     if (input->index != 0)
+>>>>> +             return -EINVAL;
+>>>>> +
+>>>>> +     strscpy(input->name, "input0", sizeof(input->name));
+>>>>
+>>>> This name is not terribly user friendly. Is it possible to determine a more human
+>>>> readable name? E.g. "DP1", "DP2", etc. Something that matches labeling on the Chameleon
+>>>> board.
+>>>
+>>> The driver would require some board-specific instance info to
+>>> determine if the video interface is connected to DP1, DP2, or the
+>>> auxiliary decoder (or something entirely different if this IP was used
+>>> on a different board). I don't see an easy way to determine such a
+>>> human readable name, unfortunately.
+>>
+>> It is possible, but it requires adding a connector to video pipeline in the device tree.
+>> See e.g. Documentation/devicetree/bindings/display/connector/dp-connector.yaml and
+>> Documentation/devicetree/bindings/media/i2c/tvp5150.txt.
+> 
+> I am using connectors in the device tree, actually. See the last
+> commit of this patchset. However, it's not connected directly - the
+> video interface is connected to the DP receiver which is then
+> connected to the connector.
+> 
+>>
+>> While connectors are used in drm, in the media subsytem only the tvp5150 driver ever
+>> used it for analog video inputs.
+>>
+>> The connectors have a label, and that can be used to fill in the input name.
+>>
+>> It is worth checking if this would work without too much effort, but if not, then
+>> at least change the "input0" string to something like "Video Input".
+> 
+> In order to read the connector label, the video interface driver would
+> have to make some assumptions about the incoming pipeline, e.g. figure
+> out which port of the decoder dt node is the input (how? just assume
+> it's port 0?). Do you see a good way to deal with that?
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
-Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
----
- Documentation/devicetree/bindings/riscv/extensions.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+It is the Displayport RX IP driver that has to parse the connector data
+and create connector entities in the media topology. The video interface
+driver would have to walk the graph to find those connector entities and
+the entity name would contains the input name.
 
-diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-index 468c646247aa..616370318a66 100644
---- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-+++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-@@ -363,6 +363,11 @@ properties:
-             ratified in the 20191213 version of the unprivileged ISA
-             specification.
- 
-+        - const: zimop
-+          description:
-+            The standard Zimop extension version 1.0, as ratified in commit
-+            58220614a5f ("Zimop is ratified/1.0") of the riscv-isa-manual.
-+
-         - const: ztso
-           description:
-             The standard Ztso extension for total store ordering, as ratified
--- 
-2.45.1
+'git grep MEDIA_ENT_FL_CONNECTOR' gives a good idea where this is used.
 
+Note: connectors are currently only used for S-Video and Composite inputs,
+so some infrastructure would need to be added for HDMI/DP inputs.
+
+I have never done this, so you may well encounter unexpected issues.
+
+That said, having support for this would be really nice.
+
+Regards,
+
+	Hans
