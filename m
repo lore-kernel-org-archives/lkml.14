@@ -1,109 +1,157 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B9B1487DC;
-	Tue,  4 Jun 2024 17:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9CE7E2;
+	Tue,  4 Jun 2024 17:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717523818; cv=none; b=H77gYtss1D04XO9KqEsVME0AjkytI1QsivhyAPeeYUzG8FRUMGguXtURLeB9Orgu8RsIaf5jCE6GLee00RcpjTUlxwf2eH6rsUPoZX0vHczzRTPojADy5BO04RKcOBrVXv6c9cuGg0elgMCnRRKDaB87XdzV5zxHD41qAfIPqMU=
+	t=1717523876; cv=none; b=Hkv5GatH1iKnEluQcpr8+TI/KfrsnMt60LHFXSDNBG0EdeRM8B72xxKpK17S0ukrnpXcUbpR4V/qTvoMPdSBabRG0PRh4EmUmBzBxdZ2PAqiYIvQALeMXrpUq5jwovHWm4r0dSbDMNn4Crgt/2cB+4Qb8KOaN272qffdNEXH8Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717523818; c=relaxed/simple;
-	bh=01/796tP5PbyAszPkhz/4rw8qfREIO3W6R5nzVRXffo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IjBG1RN6LzEFWa+V6SngDc4DNoy2+qpN0XXuJqnUCTvwV9oaqa/Jg08PL9OLtEGnGg7OLxEhJo8PuCWu905uCmfE3pthQGyLmrWp4CRAce1hpYujJQLO9FDyki+b5GsHx5EmZqpS02NpUc5Q76ZQ3cQwmOaJb9yyJgzA4lUMO24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=lW0XgdXM; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="lW0XgdXM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ex0/jsAU2z4rnu2Iz/lqMEV9TPAG1zSwQM+2P/IPTq4=; t=1717523814; x=1718128614; 
-	b=lW0XgdXMLQkKJytNBxhoNv0/U4VaijYVljCUu5CjwuhFalTSauUenxaxcgzmiJkGE1MK/aUAXB+
-	82fhBOLidNgS0kjqtTsks4enFgcMLY40gEAXrXurSPZFMESjB14tkI7ADmLKdcnwfEo8arKoOWRfR
-	D1UTgoqmaKAXin8nrRkmXuYfJ9L4uYpzOo85CaSQhEPI1x+SwHu2QwrqhW1vF7uZ7oYs7RQaoNi9x
-	+bTN7EzZH/4YETxMuFXUtMTFZZ3b5oQeye1i3qPNkh+BVVn1mONS056UYyO7i9mdJTDRyYkvjNEYB
-	Zu/do8MQOWwHl/p+RLR9BYJIwIAQ9+2xIZmg==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.97)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1sEYOw-00000000cPV-3eyW; Tue, 04 Jun 2024 19:56:50 +0200
-Received: from p57bd9a40.dip0.t-ipconnect.de ([87.189.154.64] helo=[192.168.178.20])
-          by inpost2.zedat.fu-berlin.de (Exim 4.97)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1sEYOw-00000002mlm-2duq; Tue, 04 Jun 2024 19:56:50 +0200
-Message-ID: <fc6bbbcd0b2a79d8fdcbde576ae3e5a52ffab02a.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v3 cmpxchg 2/4] sh: Emulate one-byte cmpxchg
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: paulmck@kernel.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-team@meta.com, elver@google.com, akpm@linux-foundation.org, 
- tglx@linutronix.de, peterz@infradead.org, dianders@chromium.org,
- pmladek@suse.com,  torvalds@linux-foundation.org, arnd@arndb.de, Andi Shyti
- <andi.shyti@linux.intel.com>, Palmer Dabbelt <palmer@rivosinc.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, linux-sh@vger.kernel.org
-Date: Tue, 04 Jun 2024 19:56:49 +0200
-In-Reply-To: <fcfa4d17-ea05-46f2-840d-9486923fd01d@paulmck-laptop>
-References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
-	 <20240604170437.2362545-2-paulmck@kernel.org>
-	 <c44890de1c3d54d93fbde09ada558e7cb4a7177c.camel@physik.fu-berlin.de>
-	 <fcfa4d17-ea05-46f2-840d-9486923fd01d@paulmck-laptop>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1717523876; c=relaxed/simple;
+	bh=VfjsCNv3tPCRb/eFant6jx5dnFmC+uhdZpNm4L/xvcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NAguUevDqTuFklVVSXY42jg5iI0FSFga74rlTvK8onrws1VN0wmOybMfRBvQC/wcUgS8SyuHgKuXygTFCFs+rVWeOT6MOZsV9kog9j75Gc8Hx4GI1EoekVV12GJafQVovN6KsLNcb1nb3W4MTvg7QctkFKG34dMpwzviT1sFA6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 4 Jun
+ 2024 20:57:50 +0300
+Received: from [192.168.211.130] (10.0.253.138) by Ex16-01.fintech.ru
+ (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 4 Jun 2024
+ 20:57:49 +0300
+Message-ID: <51adbe66-1ba1-428c-a6ea-9341f9adfa04@fintech.ru>
+Date: Tue, 4 Jun 2024 10:57:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: atm: cxacru: fix endpoint checking in cxacru_bind()
+Content-Language: en-US
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<syzkaller-bugs@googlegroups.com>,
+	<syzbot+00c18ee8497dd3be6ade@syzkaller.appspotmail.com>
+References: <20240528183807.3832-1-n.zhandarovich@fintech.ru>
+ <2024060415-cloud-calcium-ca2f@gregkh>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+In-Reply-To: <2024060415-cloud-calcium-ca2f@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Hello,
 
-On Tue, 2024-06-04 at 10:50 -0700, Paul E. McKenney wrote:
-> > Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> >=20
-> > I can pick this up through my SH tree unless someone insists this to
-> > go through some other tree.
->=20
-> Please do take it, and thank you!  When I see it in -next, I will drop
-> it from my tree.
 
-I'll pick it up over the weekend for which I have planned my usual kernel
-review and merge session.
+On 6/4/24 06:35, Greg Kroah-Hartman wrote:
+> On Tue, May 28, 2024 at 11:38:07AM -0700, Nikita Zhandarovich wrote:
+>> Syzbot is still reporting quite an old issue [1] that occurs due to
+>> incomplete checking of present usb endpoints. As such, wrong
+>> endpoints types may be used at urb sumbitting stage which in turn
+>> triggers a warning in usb_submit_urb().
+>>
+>> Fix the issue by verifying that required endpoint types are present
+>> for both in and out endpoints, taking into account cmd endpoint type.
+>>
+>> Unfortunately, this patch has not been tested on real hardware.
+>>
+>> [1] Syzbot report:
+>> usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+>> WARNING: CPU: 0 PID: 8667 at drivers/usb/core/urb.c:502 usb_submit_urb+0xed2/0x18a0 drivers/usb/core/urb.c:502
+>> Modules linked in:
+>> CPU: 0 PID: 8667 Comm: kworker/0:4 Not tainted 5.14.0-rc4-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>> Workqueue: usb_hub_wq hub_event
+>> RIP: 0010:usb_submit_urb+0xed2/0x18a0 drivers/usb/core/urb.c:502
+>> ...
+>> Call Trace:
+>>  cxacru_cm+0x3c0/0x8e0 drivers/usb/atm/cxacru.c:649
+>>  cxacru_card_status+0x22/0xd0 drivers/usb/atm/cxacru.c:760
+>>  cxacru_bind+0x7ac/0x11a0 drivers/usb/atm/cxacru.c:1209
+>>  usbatm_usb_probe+0x321/0x1ae0 drivers/usb/atm/usbatm.c:1055
+>>  cxacru_usb_probe+0xdf/0x1e0 drivers/usb/atm/cxacru.c:1363
+>>  usb_probe_interface+0x315/0x7f0 drivers/usb/core/driver.c:396
+>>  call_driver_probe drivers/base/dd.c:517 [inline]
+>>  really_probe+0x23c/0xcd0 drivers/base/dd.c:595
+>>  __driver_probe_device+0x338/0x4d0 drivers/base/dd.c:747
+>>  driver_probe_device+0x4c/0x1a0 drivers/base/dd.c:777
+>>  __device_attach_driver+0x20b/0x2f0 drivers/base/dd.c:894
+>>  bus_for_each_drv+0x15f/0x1e0 drivers/base/bus.c:427
+>>  __device_attach+0x228/0x4a0 drivers/base/dd.c:965
+>>  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:487
+>>  device_add+0xc2f/0x2180 drivers/base/core.c:3354
+>>  usb_set_configuration+0x113a/0x1910 drivers/usb/core/message.c:2170
+>>  usb_generic_driver_probe+0xba/0x100 drivers/usb/core/generic.c:238
+>>  usb_probe_device+0xd9/0x2c0 drivers/usb/core/driver.c:293
+>>
+>> Reported-and-tested-by: syzbot+00c18ee8497dd3be6ade@syzkaller.appspotmail.com
+>> Fixes: 902ffc3c707c ("USB: cxacru: Use a bulk/int URB to access the command endpoint")
+>> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+>> ---
+>> P.S. While the driver is orphaned, it might still make sense to
+>> suppress the syzbot report, seeing how ancient it is.
+>> P.P.S. checkpatch complains about outdated format of debug printing
+>> but I decided to keep it in tune with the rest of the driver. 
+>>
+>>  drivers/usb/atm/cxacru.c | 16 +++++++++++++++-
+>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/atm/cxacru.c b/drivers/usb/atm/cxacru.c
+>> index 4ce7cba2b48a..8a8e94a601c6 100644
+>> --- a/drivers/usb/atm/cxacru.c
+>> +++ b/drivers/usb/atm/cxacru.c
+>> @@ -1131,7 +1131,8 @@ static int cxacru_bind(struct usbatm_data *usbatm_instance,
+>>  	struct cxacru_data *instance;
+>>  	struct usb_device *usb_dev = interface_to_usbdev(intf);
+>>  	struct usb_host_endpoint *cmd_ep = usb_dev->ep_in[CXACRU_EP_CMD];
+>> -	int ret;
+>> +	struct usb_endpoint_descriptor *in, *out;
+>> +	int ret = -1;
+> 
+> Why initialize this and then write over it?
+> 
+> Also, -1 is not a valid return value, so even if this was needed, it's
+> not correct :(
+> 
+> 
 
-> > Adrian
-> >=20
-> > PS: I'm a bit stumped that I'm not CC'ed as the SH maintainer.
->=20
-> Me too, now that you mention it.  I did generate the list some time
-> back, but "git blame" shows you being maintainer for more than a year.
-> Yet I do have the linux-sh email list, so it is unlikely that I pasted
-> the get_maintainer.pl output from the wrong commit.
->=20
-> I am forced to hypothesize that I fat-fingered the output of
-> get_maintainer.pl when adding the Cc lines to that commit.
->=20
-> Please accept my apologies for having left you out!
+I agree, that was a mistake on my part. An artifact from WIP-version of
+the patch. I should have removed that initialization. Thank you for
+bringing that up.
 
-No worries. I was just surprised as I assume get_maintainer.pl should have
-done the right thing and spit out the names of the responsible maintainers.
+>>  
+>>  	/* instance init */
+>>  	instance = kzalloc(sizeof(*instance), GFP_KERNEL);
+>> @@ -1177,6 +1178,19 @@ static int cxacru_bind(struct usbatm_data *usbatm_instance,
+>>  		goto fail;
+>>  	}
+>>  
+>> +	if (usb_endpoint_xfer_int(&cmd_ep->desc))
+>> +		ret = usb_find_common_endpoints(intf->cur_altsetting,
+>> +						NULL, NULL, &in, &out);
+>> +	else
+>> +		ret = usb_find_common_endpoints(intf->cur_altsetting,
+>> +						&in, &out, NULL, NULL);
+>> +
+>> +	if (ret) {
+>> +		usb_dbg(usbatm_instance, "cxacru_bind: interface has incorrect endpoints\n");
+> 
+> Shouldn't this be an error instead?
 
-Thanks,
-Adrian
+I was torn between following the code style established in cxacru_bind()
+(and some other functions) where in case of an error usb_dbg() is used
+AND doing exactly what you suggested. I agree that using usb_err()
+probably makes more sense here.
+> 
+> thanks,
+> 
+> greg k-h
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+I'll send revised patch soon.
+
+Regards,
+Nikita
