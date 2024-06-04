@@ -1,110 +1,157 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9364D145FF6
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B427D145FFF
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 12:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717503958; cv=none; b=XZoCM5eokeJ2t6PLBWfsBue65NHvYn+vfYo5d0t6d+YMroZYMNAOksRgNI/DvsOhOnUphZuaZlJt7uaiIAEDf5pPzvbeUFZmd+crl18DolCyAWohAOuWHhrLnDKBk+sMf1upMLaYbkup/s5WfgQKXoA46qTOVcs5fEMlnoIp6nU=
+	t=1717503967; cv=none; b=U7jgqeJucXt9yaniJe7uLiwZNjwcycAigs1hv1V2whuUFOaS74wdaH4fpxnJeBnamlsrdXT0oXbSm1FHPovRaog9PY7BcJl38fsyWxkagiKgR+uhF6Vz40+weedZZ9+9zOiZHPqJc5ox5IS9pMiISVLy1dqNV2TMqB33HVFZyEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717503958; c=relaxed/simple;
-	bh=s1VCyyJJljzsAGyKD0o7mdCoAu+eLFprs/YEVsgvPA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s2jI/4Yp1Z5OodVzJRbqZC3vdB3qyV8KzXa7UahSrwMXjKHZAdPfIJNAY9rWALLEmKDKliUGahhosPi1TxINak7z9pv48mcwVqv6aGPI3VsudEFISFfrPae5sZwDgHfo14vbnK8oIm4c04bNa7C+qqFyvpy8mCdw0xS29z4y1Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FfiliTvn; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717503967; c=relaxed/simple;
+	bh=C0m1q9sQFto++NXEm5lo0SSe/c2H/tzIMnQtwBN17pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tUAeNA2RyTdOg8/Dqjse2Y6VSIH00ZLyk5vVeoCzyfb0Pbsje136epuAJIUhtk3f+KhxhyW770xAzZSa8w3a6T+HibV1bt+kQIDF78piNkolgAvuCs5U/LCAWGI9RdSWG+WIlWlSLo7tsXsQORIqjWTfayZhBkK3HIW4ZuGsQPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+BGbWSd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FfiliTvn"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-572c65cea55so9679033a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 05:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717503955; x=1718108755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9gS0OyJH72V5TfYu3VmbBAJJsXIwwQ21Ck30Dm2cAY=;
-        b=FfiliTvnArvh3SByvoAAV/xMv7XPhD6qoBLnLSUlSJjDfx8kIuHIQtasx2vLbNgEfn
-         EdPeK23fBf46DLNcyzwk7G/EGkPQRXJ19PAi6bv545zVTBJ/bVtc9T7Bm9T6ejNvAoOM
-         TE7OLRtcnNqVkjry8QXaAeLh1Wuqzi5OwPlGF0Ldn9dg0VDaj3gQFVmPuFd4NMRa0Y1w
-         3T24TUCguST8xqYw1o0vmFSDpvOIOAa5SZ9urigwamu+0Ro9OB5CiH8YH4nOTnt9Cbz5
-         19getvDlMcUFhcZPCcT1FoKCtL2WNPHWe+gcAfyoX/Vqu2Giusx4MluiYE5YW6nD/FzR
-         hW2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717503955; x=1718108755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y9gS0OyJH72V5TfYu3VmbBAJJsXIwwQ21Ck30Dm2cAY=;
-        b=oOYJtsoZGQLuFAw6DnrYB7SYc7FpH6OhX3F8YCmFWDA/mKOlBAx5AdrjcaBEBfJsBi
-         mBHi3Zb/lQAcB+yZGvNsyz/qula6EBPvs99weiHXVDNJMfkLmMAtTXvFrcpcOJWb8n0S
-         PE17sXaQXMpTHnb5tJtaVGxVhjDsIuLA0ez0vJR1UPn+5Dk8lKZGNmyk5sPML5vYhHh3
-         u5Y0zSvGh6uqbTM7JbBRSm1KrRuqz4oRvuS/btB8IZ14+lR4FI8BdAOf5EiiaFndOq8r
-         JXgEbxR0dMnXNtrcSCQrf6gMeMu+NI9BbAGely4f6k54iaAA7h+Rkh+dDWX9HiLl2SzZ
-         84tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3Lk1uwq82qMbinHRMLVadPXbBkBNH31aheEy7Z2H+ZrlTleWcDv4nfrvv6ADphE9mzRiKcauR+OiBzMix4jMI3QjGxP1tRHVMTd6
-X-Gm-Message-State: AOJu0YymHNWFrmm/v2Ogf+XvVc/rB869k4AUklOvt0Paj8CRNYjOWHNO
-	9hHwh22fnNmKDEpe/Og2Ju2S1PWeSqLbaccHM5PdBDF7R2gq9gDXlZKDRcaY/bM=
-X-Google-Smtp-Source: AGHT+IEN9f8uev3FXprfAoYc9A1GaTXa2CrF6gqcTsV0n51gFLuo0b534nnOFA35YyhTJtD3rOTrFw==
-X-Received: by 2002:a50:aadc:0:b0:578:5f53:f017 with SMTP id 4fb4d7f45d1cf-57a7a6bb3ddmr2057448a12.6.1717503954639;
-        Tue, 04 Jun 2024 05:25:54 -0700 (PDT)
-Received: from linaro.org ([188.27.161.69])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31bb825esm7298469a12.32.2024.06.04.05.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 05:25:54 -0700 (PDT)
-Date: Tue, 4 Jun 2024 15:25:52 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] phy: qcom: qmp-pcie: Add X1E80100 Gen4 4-lane mode
- support
-Message-ID: <Zl8H0KOrfuF91kpZ@linaro.org>
-References: <20240531-x1e80100-phy-add-gen4x4-v1-0-5c841dae7850@linaro.org>
- <20240531-x1e80100-phy-add-gen4x4-v1-2-5c841dae7850@linaro.org>
- <Zl27FJVU_YHokCiD@hovoldconsulting.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+BGbWSd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717503964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=g9xu8CO6FcwPIS6aRjJr9urN6rt6ZyZUoWGzoofY+lc=;
+	b=D+BGbWSdnUu575pFWlf6WUaigVRJFG3ZmoZBMJHUFcmJms4pGVe+wgKy0FpSXcrXmWMzul
+	sHd+377IqHAJdr+TcyZh8eGDTmre8s6ha+al8g0nto8GhNw6CDF3osaFfMM6wD0+1drjRO
+	oQAXWT/FkrSNruaqmBfnqWau6v36ZIM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-404-6cKNhcoxPuygImNn1gcRmw-1; Tue,
+ 04 Jun 2024 08:26:01 -0400
+X-MC-Unique: 6cKNhcoxPuygImNn1gcRmw-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B184B18FF939;
+	Tue,  4 Jun 2024 12:25:57 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.193.118])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0BEB91955D92;
+	Tue,  4 Jun 2024 12:25:49 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guillaume Morin <guillaume@morinfr.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH RFC 0/3] kernel/events/uprobes: uprobe_write_opcode() rewrite
+Date: Tue,  4 Jun 2024 14:25:45 +0200
+Message-ID: <20240604122548.359952-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zl27FJVU_YHokCiD@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 24-06-03 14:46:12, Johan Hovold wrote:
-> On Fri, May 31, 2024 at 07:06:45PM +0300, Abel Vesa wrote:
-> > The PCIe 6th instance from X1E80100 can be used in both 4-lane mode or
-> > 2-lane mode. Add the configuration and compatible for the 4-lane mode.
-> 
-> Same language nits as for patch 1/1.
-> 
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> 
-> I tried this patch along with the DT changes and the link on the CRD
-> still comes up as 2-lane:
-> 
-> 	qcom-pcie 1bf8000.pci: PCIe Gen.4 x2 link up
-> 
-> so something appears to be wrong here. (I noticed the same with your
-> next branch last week.)
-> 
-> How did you test this? Does the link actually come up as 4-lane for you?
+Against mm/mm-unstable.
 
-This is the PHY part. The controller needs some changes as well.
+There is interest in supporting uprobes on hugetlb pages [1]. Having
+uprobe_write_opcode() implement COW-breaking itself is really far from
+optimal, and having to add hugetlb COW-breaking to implement hugetlb
+support really does sound wrong.
 
-Yes, as of yet, I'm not able to bring the link up in 4-lanes mode.
-This however doesn't mean the PHY sequence is incorrect.
+Further, I think the current code doesn't really handle some things
+properly (see patch #3) when replacing/zapping pages.
 
-But, I agree, maybe I should hold on to the PHY changes as well until
-we get the controller side working as well.
+Let's rewrite it, to leave COW-breaking to the fault handler, and handle
+registration/unregistration by temporarily unmapping the anonymous page,
+modifying it, and mapping it again. We still have to implement
+zapping of anonymous pages ourselves, unfortunately.
 
-Thanks for reviewing.
+Note that we now won't have to allocate another anonymous folio when
+unregistering (which will be beneficial for hugetlb as well), we can simply
+modify the already-mapped one from the registration (if any). When
+registering a uprobe, we'll first trigger a write fault to break COW to
+then modify the already-mapped page.
 
-> 
-> Johan
+Briefly sanity tested with perf:
+  [root@localhost ~]# perf probe -x /usr/bin/bash -a main
+  ...
+  [root@localhost ~]# perf record -e probe_bash:main -aR sleep 10 &
+  [1] 2196
+  [root@localhost ~]# bash
+  [root@localhost ~]# exit
+  exit
+  [root@localhost ~]# bash
+  [root@localhost ~]# exit
+  exit
+  [root@localhost ~]# [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.287 MB perf.data (8 samples) ]
+  ...
+  [root@localhost ~]# perf report --stdio
+  # To display the perf.data header info, please use --header/--header-only optio>
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 8  of event 'probe_bash:main'
+  # Event count (approx.): 8
+  #
+  # Overhead  Command      Shared Object  Symbol  
+  # ........  ...........  .............  ........
+  #
+      75.00%  grepconf.sh  bash           [.] main
+      25.00%  bash         bash           [.] main
+  ...
+
+Are there any uprobe tests / benchmarks that are worth running?
+
+[1] https://lkml.kernel.org/r/ZiK50qob9yl5e0Xz@bender.morinfr.org
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Guillaume Morin <guillaume@morinfr.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+
+David Hildenbrand (3):
+  kernel/events/uprobes: pass VMA instead of MM to install_breakpoint()
+  kernel/events/uprobes: pass VMA to set_swbp(), set_orig_insn() and
+    uprobe_write_opcode()
+  kernel/events/uprobes: uprobe_write_opcode() rewrite
+
+ arch/arm/probes/uprobes/core.c |   4 +-
+ include/linux/uprobes.h        |   6 +-
+ kernel/events/uprobes.c        | 387 +++++++++++++++++++--------------
+ 3 files changed, 223 insertions(+), 174 deletions(-)
+
+
+base-commit: 065d3634d60843b8e338d405b844cc7f2e5e1c66
+-- 
+2.45.1
+
