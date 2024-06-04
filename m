@@ -1,116 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEA2142900;
-	Tue,  4 Jun 2024 08:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD2201411F9
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 08:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717490705; cv=none; b=FmjWPuqqKzmpSGsXR3xvjolNr2tKWXHf0U4PC1OS2dyJWR9Cg+q+zVuXwI/nIZjI0IIBOvpP6XZ0GZQoBywidbYC9IwO5iuGalNLYotWp5ncLWMznlql4+TK+xgtV6XQcYlha3wA5FeODqsKi6bXWMQT6h1gxlD/Hp23+b6U+P8=
+	t=1717490748; cv=none; b=uf751IFQEqNrd4pULg5DI2Y6Tn4ew57R1UzFHX2zLjYRj2AAyJkhER78MySLu7PoknEWuQvLkvcfwC/WYrzdNye2Uzd1i7DM0mGyIQv3t0/JTTg0WTcWccrPPlQYUDZhDcRRXNwsN/N7sAARkGcE/gh+ARL6aoRNSrGP6LRPuB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717490705; c=relaxed/simple;
-	bh=qoaQB7rxX8vYM9zT6xg/g3VNAy1PUU7qn2yUm7JbNTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eKKItqRZdovc7YcbqexDwH/2dbSfQtj6rQmirobyNdGXBRwIXnbbJCo64BTFluSKOWFrGQ0rvjcDm3cRU8++nht96HCYcsaBCRPGawH0kqResKT7L2PyPmrUeyEc3AF3r5I8TfntlJYf5ES3+iA3cTARPccmR+eC2aUlTK3mDw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMhwWNEM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMhwWNEM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A60D0C2BBFC;
-	Tue,  4 Jun 2024 08:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717490705;
-	bh=qoaQB7rxX8vYM9zT6xg/g3VNAy1PUU7qn2yUm7JbNTE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AMhwWNEMwZ6o8RteW/0pjAl5ylovbgWc7MgM/FFZjl6A10V0kSCtOEK8HzgcgYI/a
-	 a3Bgbevo1QnH6WjtZaM6KvHA30SjE0lTue3Qy91JB5tAAZKNnYM72iV0Hnuqfuaqr7
-	 /+lJ56FXUmmZ1uaS4gFhBUIJXv5xTBo6FAlMpxVFD2eicBLd1mebf7xa2jlVk3tHgQ
-	 gKAyEG1FfjsOdJ0H5tMIVjoMiDfRNB09vlgYaAo5jbeszkpktrEkX9MjD6Om64Tz8M
-	 BDMnNs1m0OYHtBmPHAP41eMCUUsCBnbeBKOt8j19Y7Y+FpbWOFJbMo00ysg9P43Aex
-	 HgbKbPqUPKBCA==
-Message-ID: <e740deb8-e412-4913-9a79-59ad8e117d53@kernel.org>
-Date: Tue, 4 Jun 2024 10:45:00 +0200
+	s=arc-20240116; t=1717490748; c=relaxed/simple;
+	bh=OQIffwSMMzPTLMkbkLwlXwwOwo3Bx6H8Zm5F5P0mvfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j7Zt8jm1r4dllnBhqvJVoIwV8bGEs6x3hYG9E/ZHU0HwPclfb5HsTAxG/DXtCXlIbIaDoTPMUqSJn25/DFCKHZueI6rGWgO8m5RZ9JYyIHcmCfXzQJmZln2J0JE+nxNOjV33OF3Uy5NcHoSgYdRddrc00jFCZCWOiMBpyWjRXRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-d85ff70000001748-9a-665ed43276cc
+Date: Tue, 4 Jun 2024 17:45:33 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, hannes@cmpxchg.org,
+	iamjoonsoo.kim@lge.com, rientjes@google.com
+Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
+ hopeless but may not now
+Message-ID: <20240604084533.GA68919@system.software.com>
+References: <20240604072323.10886-1-byungchul@sk.com>
+ <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: light: add VEML6040 RGBW-LS
- bindings
-To: arthur.becker@sentec.com, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20240604-veml6040-v4-0-5a4d59597874@sentec.com>
- <20240604-veml6040-v4-2-5a4d59597874@sentec.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240604-veml6040-v4-2-5a4d59597874@sentec.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNLMWRmVeSWpSXmKPExsXC9ZZnoa7Rlbg0g/ZzOhZz1q9hs1i9yddi
+	ZXczm8XlXXPYLO6t+c9q0bZkI5PFyVmTWRzYPQ6/ec/ssWBTqcfiPS+ZPDZ9msTu0fX2CpPH
+	iRm/WTw+b5ILYI/isklJzcksSy3St0vgytixSr/gq0TF/kV3mRsYzwt3MXJySAiYSGzffIKt
+	i5EDzF7RYAQSZhFQkVh05CoriM0moC5x48ZPZhBbREBD4tPC5exdjFwczAJrGSWOXG1hBekV
+	FkiVOL49AKSGV8BC4t2xj2wgtpBApsSDnXuZIeKCEidnPmEBsZkFtCRu/HvJBNLKLCAtsfwf
+	B4jJKWAnseOqFUiFqICyxIFtx5lANkkI7GGTaN01jR3iYkmJgytusExgFJiFZOosJFNnIUxd
+	wMi8ilEoM68sNzEzx0QvozIvs0IvOT93EyMwyJfV/onewfjpQvAhRgEORiUeXoNFsWlCrIll
+	xZW5hxglOJiVRHj76qLThHhTEiurUovy44tKc1KLDzFKc7AoifMafStPERJITyxJzU5NLUgt
+	gskycXBKNTDapPX/Ngqcc/vqn09y+ic049a/9NJIvN9i8iL3+B1T7Tls9ZN+BTTJbJ2gxT/f
+	qt1ueU55CnOnzOa1s1OOrvux9IVT8uZXijGp0/obnKPPPu6u/b5PgIcx5a+hvNL3o+u3L+1U
+	4zii9PIZ40bDJyG9hwvlNlcem/Bdee7NxZ+6+aSdW8/UP1uuxFKckWioxVxUnAgAsAtk0m4C
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsXC5WfdrGt0JS7NoPuPqMWc9WvYLFZv8rVY
+	2d3MZnF47klWi8u75rBZ3Fvzn9WibclGJouTsyazOHB4HH7zntljwaZSj8V7XjJ5bPo0id2j
+	6+0VJo8TM36zeCx+8YHJ4/MmuQCOKC6blNSczLLUIn27BK6MHav0C75KVOxfdJe5gfG8cBcj
+	B4eEgInEigajLkZODhYBFYlFR66ygthsAuoSN278ZAaxRQQ0JD4tXM7excjFwSywllHiyNUW
+	VpBeYYFUiePbA0BqeAUsJN4d+8gGYgsJZEo82LmXGSIuKHFy5hMWEJtZQEvixr+XTCCtzALS
+	Esv/cYCYnAJ2EjuuWoFUiAooSxzYdpxpAiPvLCTNs5A0z0JoXsDIvIpRJDOvLDcxM8dUrzg7
+	ozIvs0IvOT93EyMwZJfV/pm4g/HLZfdDjAIcjEo8vBYrY9OEWBPLiitzDzFKcDArifD21UWn
+	CfGmJFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTD2vS5dvWlx
+	DFtc/h/Xr4v1nzjOXPM39h8bk8le7bcT24+sSJhaemtfkve3wF9u77dUFlzo8X/xJ+bfzIse
+	j39tbWc8nPb39eaw+/HHF0+3PhHZ5LGy8uyiig5mX4dG95/VHtImYU13fh1I8/5ov/SBWtDt
+	BEalJ29Z0iOWL9rEEff2zJpb05ZMVmIpzkg01GIuKk4EAL/tOjJVAgAA
+X-CFilter-Loop: Reflected
 
-On 04/06/2024 10:01, Arthur Becker via B4 Relay wrote:
-> From: Arthur Becker <arthur.becker@sentec.com>
+On Tue, Jun 04, 2024 at 03:57:54PM +0800, Huang, Ying wrote:
+> Byungchul Park <byungchul@sk.com> writes:
 > 
-> Device tree bindings for the vishay VEML6040 RGBW light sensor iio
-> driver
+> > Changes from v1:
+> > 	1. Don't allow to resume kswapd if the system is under memory
+> > 	   pressure that might affect direct reclaim by any chance, like
+> > 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
+> >
+> > --->8---
+> > From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
+> > From: Byungchul Park <byungchul@sk.com>
+> > Date: Tue, 4 Jun 2024 15:27:56 +0900
+> > Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
+> >
+> > A system should run with kswapd running in background when under memory
+> > pressure, such as when the available memory level is below the low water
+> > mark and there are reclaimable folios.
+> >
+> > However, the current code let the system run with kswapd stopped if
+> > kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
+> > until direct reclaim will do for that, even if there are reclaimable
+> > folios that can be reclaimed by kswapd.  This case was observed in the
+> > following scenario:
+> >
+> >    CONFIG_NUMA_BALANCING enabled
+> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
+> >    numa node0 (500GB local DRAM, 128 CPUs)
+> >    numa node1 (100GB CXL memory, no CPUs)
+> >    swap off
+> >
+> >    1) Run a workload with big anon pages e.g. mmap(200GB).
+> >    2) Continue adding the same workload to the system.
+> >    3) The anon pages are placed in node0 by promotion/demotion.
+> >    4) kswapd0 stops because of the unreclaimable anon pages in node0.
+> >    5) Kill the memory hoggers to restore the system.
+> >
+> > After restoring the system at 5), the system starts to run without
+> > kswapd.  Even worse, tiering mechanism is no longer able to work since
+> > the mechanism relies on kswapd for demotion.
 > 
-> Signed-off-by: Arthur Becker <arthur.becker@sentec.com>
-> ---
+> We have run into the situation that kswapd is kept in failure state for
+> long in a multiple tiers system.  I think that your solution is too
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+My solution just gives a chance for kswapd to work again even if
+kswapd_failures >= MAX_RECLAIM_RETRIES, if there are potential
+reclaimable folios.  That's it.
 
-If there is any resend:
-A nit, subject: drop second/last, redundant "bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+> limited, because OOM killing may not happen, while the access pattern of
 
-Best regards,
-Krzysztof
+I don't get this.  OOM will happen as is, through direct reclaim.
 
+> the workloads may change.  We have a preliminary and simple solution for
+> this as follows,
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
+
+Whether tiering is involved or not, the same problem can arise if
+kswapd gets stopped due to kswapd_failures >= MAX_RECLAIM_RETRIES.
+
+	Byungchul
+
+> where we will try to wake up kswapd to check every 10 seconds if kswapd
+> is in failure state.  This is another possible solution.
+> 
+> > However, the node0 has pages newly allocated after 5), that might or
+> > might not be reclaimable.  Since those are potentially reclaimable, it's
+> > worth hopefully trying reclaim by allowing kswapd to work again.
+> >
+> 
+> [snip]
+> 
+> --
+> Best Regards,
+> Huang, Ying
