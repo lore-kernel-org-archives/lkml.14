@@ -1,295 +1,1557 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CA7148823;
-	Tue,  4 Jun 2024 10:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AA81482E5;
+	Tue,  4 Jun 2024 10:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717497638; cv=none; b=SD3MNnxqxZ1w+Y2qPCXyoWh7gvZ5+cJWp8ZbAp6PZAaZj7HkhjDmt/ixazi3oQ9uwQv7/Z8BBwHvJqLemFXfXsEUqjnrvFPF6x36vHlHMStp0VnWHy5s/hVXgeFzVz4pZK0L/tc4BbCOjlkPfWx9Y2FF0NYXi1qBdwVmptbsack=
+	t=1717497629; cv=none; b=YaKKeKks0yAApgcZfTa65pz8U5XhMkGsr+/BXz5AhUn28x7iXOILDG3GYfIrqWJtZ9Pq8jLErY3rFdPFsRJLADUL051P4YVgJbBmIXaHqFNuBEueT9OhkGhn82wbR1463oaipeVFas++boFxhXZwK/12nuxrprqZnnAZCuO1RaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717497638; c=relaxed/simple;
-	bh=d1KQv8FT/ETWh3qGsfeda23SktFcE0gTbujVyZkB088=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eWx9qD4K1lGG/Xfg9cGG9lSq7nP4ZfnkYXGneTY2PqvANx6FFEOxCBI1XwbIi8VsvdGlI6FwVHMhupEDEWKktiw8RQY+BPGLVdokTIPZ76cmOwDUgcQqGifYkLCLZyVUd8X3eAwVyNeFC1yJIYpCt81FDfilewKIS9Acb9qt/iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=paIYfbTt; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1717497629; c=relaxed/simple;
+	bh=CREwFbLZCaFWnkWyvGg7s+RWUiZUGT20uHDyZ6zb0GU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dS7XJG3HDzNDa5znQ4QT5Y5pojWeoY9f71aRkWF+wNiiW37TObuokRIJOWvBGWfKd/mjqk9EppavuMqrmuKnPPBQLybjFI6lGz1Dd5kWQNNCQVnelO3f9CtRBbseI+4nlDgyOQN7IxacLWuvR2JDfUHs+v5itQqjkuapEx7w/HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J6RDG3Iy; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="paIYfbTt"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 454Ae4lY083800;
-	Tue, 4 Jun 2024 05:40:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1717497604;
-	bh=hddo9HAPifqq5cXPPE/SjcpNlikR3rcZT61M3YzRnTI=;
-	h=From:To:CC:Subject:Date;
-	b=paIYfbTtZTKLGhkqBIiQRd7XpIrwSwW3UI45nQKx8bGbNJg5H2P/wPFwNwuMoORTR
-	 2dK0Hjmz3ZhEA70QW+B24fkWiThgdmIKhAPPbiqRSY4t0EazdkoJs55O45GBArk4FJ
-	 1xyeOfQhhv0cGdLADZk3EhSFZrRay872s90wDH0c=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 454Ae3IK025616
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 4 Jun 2024 05:40:03 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 4
- Jun 2024 05:40:03 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 4 Jun 2024 05:40:03 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 454Ae2XA056550;
-	Tue, 4 Jun 2024 05:40:02 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <hverkuil-cisco@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <p.zabel@pengutronix.de>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <akpm@linux-foundation.org>,
-        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        <adobriyan@gmail.com>, <andi.shyti@linux.intel.com>,
-        <airlied@gmail.com>, <daniel@ffwll.ch>, <jani.nikula@intel.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-rockchip@lists.infradead.org>, <davidgow@google.com>,
-        <dlatypov@google.com>
-Subject: [PATCH v12 00/13] Add V4L2 M2M Driver for E5010 JPEG Encoder
-Date: Tue, 4 Jun 2024 16:10:01 +0530
-Message-ID: <20240604104001.2235082-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J6RDG3Iy"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 940F61BF209;
+	Tue,  4 Jun 2024 10:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717497623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p1c4jU6mqZ8qDhSd8f+pKKNvIu68ph7k1jQ6VZ7YYq4=;
+	b=J6RDG3Iy13PExlp5/PdE04asDUZuFoFkHN4Jjj5wLWnMIENmjuPn9MqwripCTYw95GKZnx
+	d3c9VcXN5MJhE+843/FAl+0pILTxiPL70ltiPuRYBTxluLr1Y1Di4ST2chRA4FIxzc/v26
+	CNjsG1ZzSf26IiAopvNGcPdWqP5LIZAZCzlufA30W1eiMHVURXwhO5ky68OCXIElCIK6z9
+	devkCRYpXWMZ4ihPwm9P+FnQQLSJrCPSC0agAwT3s8D6Ts/ue//v9eeevtfi0pQHL3jOJO
+	fK4jgEBplY1/2MZuzf8OyvFuA2asYDcw1O/urRmLMmZ+e+ur+tLUxH+qFnYdcA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 04 Jun 2024 12:39:48 +0200
+Subject: [PATCH net-next v14 13/14] net: ethtool: tsinfo: Add support for
+ hwtstamp provider and get/set hwtstamp config
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240604-feature_ptp_netnext-v14-13-77b6f6efea40@bootlin.com>
+References: <20240604-feature_ptp_netnext-v14-0-77b6f6efea40@bootlin.com>
+In-Reply-To: <20240604-feature_ptp_netnext-v14-0-77b6f6efea40@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-This adds support for V4L2 M2M based driver for E5010 JPEG Encoder
-which is a stateful JPEG encoder from Imagination technologies
-and is present in TI AM62A SoC.
+Enhance 'get' command to retrieve tsinfo of hwtstamp providers within a
+network topology and read current hwtstamp configuration.
 
-While adding support for it, following additional framework changes were
-made:
- - Moved reference quantization and huffman tables provided in
-   ITU-T-REC-T.81 to v4l2-jpeg.c as suggested in mailing list [1].
- - Add macros to round to closest integer (either higher or lower) while
-   rounding in order of 2.
- - Add KUnit tests for math functions.
+Introduce support for ETHTOOL_MSG_TSINFO_SET ethtool netlink socket to
+configure hwtstamp of a PHC provider. Note that simultaneous hwtstamp
+isn't supported; configuring a new one disables the previous setting.
 
-v4l2-compliance test :
-Link: https://gist.github.com/devarsht/1f039c631ca953a57f405cfce1b69e49
+Also, add support for a specific dump command to retrieve all hwtstamp
+providers within the network topology, with added functionality for
+filtered dump to target a single interface.
 
-E5010 JPEG Encoder Manual tests :
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
 
-Performance:
-Link: https://gist.github.com/devarsht/c40672944fd71c9a53ab55adbfd9e28b
+Pointer attached_dev is used to know if the phy is on the net topology.
+This might not be enough and might need Maxime Chevallier link topology
+patch series:
+https://lore.kernel.org/netdev/20240213150431.1796171-1-maxime.chevallier@bootlin.com/
 
-Functionality:
-Link: https://gist.github.com/devarsht/8e88fcaabff016bb2bac83d89c9d23ce
+Change in v8:
+- New patch
 
-Compression Quality:
-Link: https://gist.github.com/devarsht/cbcc7cd97e8c48ba1486caa2b7884655
+Change in v9:
+- Fix nit in done callback.
 
-Multi Instance:
-Link: https://gist.github.com/devarsht/22c2fca08cd3441fb40f2c7a4cebc95a
+Change in v10:
+- Add documentation.
+- Add extack error messages.
+- Add NLA_POLICY_* checks.
+- Fix few nits.
+- Add ETHTOOL_A_TSINFO_GHWTSTAMP netlink attributes instead of a bit in
+  ETHTOOL_A_TSINFO_TIMESTAMPING bitset.
+- Add tsinfo_parse_hwtstamp_provider function for more readability.
+- Move netdev_support_hwtstamp_qualifier function in core ptp instead of
+  core net.
+- Add refcount put to release the ptp object.
+- Use rcu lock to avoid memory leak.
 
-Crop support:
-Link: https://gist.github.com/devarsht/de6f5142f678bb1a5338abfd9f814abd
+Change in v12:
+- Add missing return description in the kdoc.
+- Fix possible leak due to uninitialised variable.
+- Add a missing static.
 
-Runtime PM:
-Link: https://gist.github.com/devarsht/70cd95d4440ddc678489d93885ddd4dd
+Change in v13:
+- Remove useless EXPORT_SYMBOL().
+- Fix issues reported by sparse and smatch.
+- Fix issues when building PTP as a module.
+- Rename HWTSTAMP_PROVIDER_NEST to HWTSTAMP_PROVIDER.
+---
+ Documentation/networking/ethtool-netlink.rst |  38 +-
+ Documentation/networking/timestamping.rst    |  35 +-
+ drivers/net/phy/phy_device.c                 |   9 +-
+ drivers/ptp/ptp_clock_consumer.c             |  66 +++
+ include/linux/ethtool.h                      |   4 +
+ include/linux/netdevice.h                    |   2 +-
+ include/linux/ptp_clock_kernel.h             |  53 +++
+ include/uapi/linux/ethtool_netlink.h         |  14 +
+ net/core/dev_ioctl.c                         |  17 +-
+ net/core/timestamping.c                      |  36 +-
+ net/ethtool/common.c                         |  32 ++
+ net/ethtool/common.h                         |   3 +
+ net/ethtool/netlink.c                        |  16 +-
+ net/ethtool/netlink.h                        |   6 +-
+ net/ethtool/tsinfo.c                         | 639 ++++++++++++++++++++++++++-
+ 15 files changed, 903 insertions(+), 67 deletions(-)
 
-Math lib KUnit tests:
-Link: https://gist.github.com/devarsht/3f9042825be3da4e133b8f4eda067876
-
-[1]: 
-https://lore.kernel.org/all/de46aefe-36da-4e1a-b4fa-b375b2749181@xs4all.nl/
-
-Changelog:
-V12:
- - Fix documentation and enable kernel-doc rendering for math.h and jpeg helpers
- - Add Reviewed-by and Acked-by tags
-  
-V10->V11:
- - Fix commenting for math.h, include headers per IWYU principle in
-   math_kunit, update title for math.h kernel-doc
-
-V9->V10:
- - Update commenting style in math.h and add notes for new jpeg header
-   macros
- - Add KUnit dependency for math_kunit
-
-V8->V9:
- - Remove kernel.h header file
- - Remove stale filler data on jpeg header in E5010 jpeg driver
-
-V7->V8:
- - Add KUnit tests for math functions
- - Add roundclosest() for supporting rounding for non-multiple of 2
- - Update commit message as suggested
- - Add Reviewed-by and Acked-by tags to patches as received
-
-V6->V7:
- - Fix cropping support
- - Move reference huffman and quantization tables to v4l2-jpeg.c
- - Fix suspend/resume use-case
- - Add Reviewed-by
-
-V5->V6:
- - Fix sparse warnings
-
-V4->V5:
- - Sort the #includes in driver file alphabetically
- - Rename huffman and quantization tables to not use '_'
- - Add Reviewed-by tag
-
-V3->V4:
-- Use ti-specific compatible ti,am62a-jpeg-enc as secondary one in
-  dt-binding
-- Remove clock-names as only single clock in dt-binding
-- Fix issue with default params setting
-- Correct v4l2 error prints
-- Simplify register write functions with single statement return values
-- Remove unrequired error checks from get_queue()
-- Drop explicit device_caps setting as it is already taken care by v4l2
-  core
-- Remove unrequired multiplanar checks and memset from s_fmt, g_fmt
-  callback functions
-- Fix try_fmt callback to not update the queues
-- Remove unrequired contiguous format attribute from queue_init
-- Use dynamic allocation for video_device and remove unrequired
-  assignments in probe()
-- Remove unrequired checks from queue_setup function
-- Return queued buffers back if start_streaming fails
-- Use ARRAY_SIZE in place of hard-coding
-- Use huffman and quantization tables from reference header file
-
-V2->V3:
-- Add DONOTMERGE patches for dts and defconfig
-- Update driver with below changes :
-  - Correct license headers
-  - Use more generic name core instead of jasper for base registers
-  - Add Comment for forward declarations
-  - Simplify quantization table calculations
-  - Use v4l2_apply_frmsize_constraints for updating framesize and remove
-    unrequired functions
-  - Place TODO at top of file and in commit message too
-  - Use dev_err_probe helper in probe function
-  - Fix return value checking for failure scenarios in probe function
-  - Use v4l2_err/info/warn helpers instead of dev_err/info/warn helpers
-  - Fix unexpected indentation
-  - Correct commit message
-- Update dt-bindings with below changes :
-  - Add vendor specific compatible 
-  - Fix commit title and message
-  - Update reg names
-  - Update clocks to 1
-  - Fix dts example with proper naming
-
-V1->V2:
- - Send dt-bindings and driver together
-
-Patch-Diff between the series :
-V11->V12 Range diff :
-https://gist.github.com/devarsht/18455f1744b6b6b8f33dd505a4ca2651
-
-V10->V11 Range diff :
-https://gist.github.com/devarsht/cd76372bff7c125f75d06ba009264b75
-
-V9->V10 Range diff :
-https://gist.github.com/devarsht/b446acee460b8c65fb577d06b7bbc1da
-
-V8->V9 Range diff :
-https://gist.github.com/devarsht/3fd6c4e8031ab114248f93d01c8dfc74
-
-V6->V7 Range diff :
-https://gist.github.com/devarsht/1db185b1e187eaf397e9e4c37066777e
-
-V5->V6 Range diff :
-https://gist.github.com/devarsht/c89180ac2b0d2814614f2b59d0705c19
-
-V4->V5 Range diff :
-https://gist.github.com/devarsht/298790af819f299a0a05fec89371097b
-
-V3->V4 Range diff :
-https://gist.github.com/devarsht/22a744d999080de6e813bcfb5a596272
-
-Previous patch series:
-V11: https://lore.kernel.org/all/20240531170229.1270828-1-devarsht@ti.com/
-V10: https://lore.kernel.org/all/20240530165925.2715837-1-devarsht@ti.com/
-V9: https://lore.kernel.org/all/20240526175655.1093707-1-devarsht@ti.com/
-V8: https://lore.kernel.org/all/20240517171532.748684-1-devarsht@ti.com/
-V7: https://lore.kernel.org/all/20240510082603.1263256-1-devarsht@ti.com/
-V6: https://lore.kernel.org/all/20240228141140.3530612-1-devarsht@ti.com/
-V5: https://lore.kernel.org/all/20240215134641.3381478-1-devarsht@ti.com/
-V4: https://lore.kernel.org/all/20240205114239.924697-1-devarsht@ti.com/
-V3: https://lore.kernel.org/all/20230816152210.4080779-1-devarsht@ti.com/
-V2: https://lore.kernel.org/all/20230727112546.2201995-1-devarsht@ti.com/
-
-
-Daniel Latypov (1):
-  lib: add basic KUnit test for lib/math
-
-Devarsh Thakkar (12):
-  media: dt-bindings: Add Imagination E5010 JPEG Encoder
-  media: imagination: Add E5010 JPEG Encoder driver
-  media: v4l2-jpeg: Export reference quantization and huffman tables
-  media: Documentation: Document v4l2-jpeg helper macros
-  media: imagination: Use exported tables from v4l2-jpeg core
-  media: verisilicon : Use exported tables from v4l2-jpeg for hantro
-    codec
-  math.h: Add macros for rounding to closest value
-  math.h: Use kernel-doc syntax for divison functions
-  Documentation: core-api: Add math.h macros and functions
-  lib: math_kunit: Add tests for new macros related to rounding to
-    nearest value
-  media: imagination: Round to closest multiple for cropping region
-  gpu: ipu-v3: Use generic macro for rounding closest to specified value
-
- Documentation/core-api/kernel-api.rst         |    6 +
- .../bindings/media/img,e5010-jpeg-enc.yaml    |   75 +
- Documentation/driver-api/media/v4l2-core.rst  |    1 +
- Documentation/driver-api/media/v4l2-jpeg.rst  |   10 +
- MAINTAINERS                                   |    7 +
- drivers/gpu/ipu-v3/ipu-image-convert.c        |    4 +-
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/imagination/Kconfig    |   12 +
- drivers/media/platform/imagination/Makefile   |    3 +
- .../platform/imagination/e5010-core-regs.h    |  585 ++++++
- .../platform/imagination/e5010-jpeg-enc-hw.c  |  267 +++
- .../platform/imagination/e5010-jpeg-enc-hw.h  |   42 +
- .../platform/imagination/e5010-jpeg-enc.c     | 1644 +++++++++++++++++
- .../platform/imagination/e5010-jpeg-enc.h     |  168 ++
- .../platform/imagination/e5010-mmu-regs.h     |  311 ++++
- .../media/platform/verisilicon/hantro_jpeg.c  |  128 +-
- drivers/media/v4l2-core/v4l2-jpeg.c           |  162 +-
- include/linux/math.h                          |   86 +-
- include/media/v4l2-jpeg.h                     |   28 +
- lib/math/Kconfig                              |   14 +
- lib/math/Makefile                             |    1 +
- lib/math/math_kunit.c                         |  329 ++++
- 23 files changed, 3761 insertions(+), 124 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
- create mode 100644 Documentation/driver-api/media/v4l2-jpeg.rst
- create mode 100644 drivers/media/platform/imagination/Kconfig
- create mode 100644 drivers/media/platform/imagination/Makefile
- create mode 100644 drivers/media/platform/imagination/e5010-core-regs.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.h
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.c
- create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.h
- create mode 100644 drivers/media/platform/imagination/e5010-mmu-regs.h
- create mode 100644 lib/math/math_kunit.c
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index 160bfb0ae8ba..4635ddfda8eb 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -1221,24 +1221,28 @@ callback supports.
+ TSINFO_GET
+ ==========
+ 
+-Gets timestamping information like ``ETHTOOL_GET_TS_INFO`` ioctl request.
++Gets timestamping information like ``ETHTOOL_GET_TS_INFO`` ioctl request or
++get hardware timestamping configuration like ``SIOCGHWTSTAMP`` ioctl request.
+ 
+ Request contents:
+ 
+-  =====================================  ======  ==========================
+-  ``ETHTOOL_A_TSINFO_HEADER``            nested  request header
+-  =====================================  ======  ==========================
++  ========================================  ======  ============================
++  ``ETHTOOL_A_TSINFO_HEADER``               nested  request header
++  ``ETHTOOL_A_TSINFO_GHWTSTAMP``            bool    get hwtstamp configuration
++  ``ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER``    nested  PTP hw clock provider
++  ========================================  ======  ============================
+ 
+ Kernel response contents:
+ 
+-  =====================================  ======  ==========================
++  =====================================  ======  ==================================
+   ``ETHTOOL_A_TSINFO_HEADER``            nested  request header
+   ``ETHTOOL_A_TSINFO_TIMESTAMPING``      bitset  SO_TIMESTAMPING flags
+-  ``ETHTOOL_A_TSINFO_TX_TYPES``          bitset  supported Tx types
+-  ``ETHTOOL_A_TSINFO_RX_FILTERS``        bitset  supported Rx filters
++  ``ETHTOOL_A_TSINFO_TX_TYPES``          bitset  supported or configured Tx types
++  ``ETHTOOL_A_TSINFO_RX_FILTERS``        bitset  supported or configured Rx filters
+   ``ETHTOOL_A_TSINFO_PHC_INDEX``         u32     PTP hw clock index
+   ``ETHTOOL_A_TSINFO_STATS``             nested  HW timestamping statistics
+-  =====================================  ======  ==========================
++  ``ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS``    u32     hwstamp flags
++  =====================================  ======  ==================================
+ 
+ ``ETHTOOL_A_TSINFO_PHC_INDEX`` is absent if there is no associated PHC (there
+ is no special value for this case). The bitset attributes are omitted if they
+@@ -1252,6 +1256,24 @@ Additional hardware timestamping statistics response contents:
+   ``ETHTOOL_A_TS_STAT_TX_ERR``           uint    HW error request Tx timestamp count
+   =====================================  ======  ===================================
+ 
++TSINFO_SET
++==========
++
++Sets hardware timestamping configuration like ``SIOCSHWTSTAMP`` ioctl request.
++
++Request contents:
++
++  ===========================================  ======  ========================
++  ``ETHTOOL_A_TSINFO_HEADER``                  nested  request header
++  ``ETHTOOL_A_TSINFO_TX_TYPES``                bitset  configured Tx type
++  ``ETHTOOL_A_TSINFO_RX_FILTERS``              bitset  configured Rx filter
++  ``ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS``          u32     hwstamp flags
++  ``ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER``       nested  PTP hw clock provider
++  ===========================================  ======  ========================
++
++If ``ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER`` is absent, set the hwtstamp
++configuration of the current hwtstamp.
++
+ CABLE_TEST
+ ==========
+ 
+diff --git a/Documentation/networking/timestamping.rst b/Documentation/networking/timestamping.rst
+index 5e93cd71f99f..2303e4927c9e 100644
+--- a/Documentation/networking/timestamping.rst
++++ b/Documentation/networking/timestamping.rst
+@@ -493,8 +493,8 @@ implicitly defined. ts[0] holds a software timestamp if set, ts[1]
+ is again deprecated and ts[2] holds a hardware timestamp if set.
+ 
+ 
+-3. Hardware Timestamping configuration: SIOCSHWTSTAMP and SIOCGHWTSTAMP
+-=======================================================================
++3. Hardware Timestamping configuration: ETHTOOL_MSG_TSINFO_SET/GET
++==================================================================
+ 
+ Hardware time stamping must also be initialized for each device driver
+ that is expected to do hardware time stamping. The parameter is defined in
+@@ -507,10 +507,16 @@ include/uapi/linux/net_tstamp.h as::
+ 	};
+ 
+ Desired behavior is passed into the kernel and to a specific device by
+-calling ioctl(SIOCSHWTSTAMP) with a pointer to a struct ifreq whose
+-ifr_data points to a struct hwtstamp_config. The tx_type and
+-rx_filter are hints to the driver what it is expected to do. If
+-the requested fine-grained filtering for incoming packets is not
++calling the tsinfo netlink socket ETHTOOL_MSG_TSINFO_SET.
++The ETHTOOL_A_TSINFO_TX_TYPES, ETHTOOL_A_TSINFO_RX_FILTERS and
++ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS netlink attributes are then used to set the
++struct hwtstamp_config accordingly.
++
++The legacy configuration is the use of the ioctl(SIOCSHWTSTAMP) with a pointer
++to a struct ifreq whose ifr_data points to a struct hwtstamp_config.
++
++The tx_type and rx_filter are hints to the driver what it is expected to do.
++If the requested fine-grained filtering for incoming packets is not
+ supported, the driver may time stamp more than just the requested types
+ of packets.
+ 
+@@ -531,9 +537,13 @@ Only a processes with admin rights may change the configuration. User
+ space is responsible to ensure that multiple processes don't interfere
+ with each other and that the settings are reset.
+ 
+-Any process can read the actual configuration by passing this
+-structure to ioctl(SIOCGHWTSTAMP) in the same way.  However, this has
+-not been implemented in all drivers.
++Any process can read the actual configuration by requesting tsinfo netlink
++socket ETHTOOL_MSG_TSINFO_GET with ETHTOOL_MSG_TSINFO_GHWTSTAMP netlink
++attribute set.
++
++The legacy usage is to pass this structure to ioctl(SIOCGHWTSTAMP) in the
++same way as the ioctl(SIOCSHWTSTAMP).  However, this has not been implemented
++in all drivers.
+ 
+ ::
+ 
+@@ -578,9 +588,10 @@ not been implemented in all drivers.
+ --------------------------------------------------------
+ 
+ A driver which supports hardware time stamping must support the
+-SIOCSHWTSTAMP ioctl and update the supplied struct hwtstamp_config with
+-the actual values as described in the section on SIOCSHWTSTAMP.  It
+-should also support SIOCGHWTSTAMP.
++ndo_hwtstamp_set NDO or the legacy SIOCSHWTSTAMP ioctl and update the
++supplied struct hwtstamp_config with the actual values as described in
++the section on SIOCSHWTSTAMP. It should also support ndo_hwtstamp_get or
++the legacy SIOCGHWTSTAMP.
+ 
+ Time stamps for received packets must be stored in the skb. To get a pointer
+ to the shared time stamp structure of the skb call skb_hwtstamps(). Then
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 880c84e91cdb..2ff6b232a785 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -1937,12 +1937,13 @@ void phy_detach(struct phy_device *phydev)
+ 
+ 	phy_suspend(phydev);
+ 	if (dev) {
+-		struct hwtstamp_provider *hwtstamp = dev->hwtstamp;
++		struct hwtstamp_provider *hwtstamp;
+ 
++		hwtstamp = rtnl_dereference(dev->hwtstamp);
+ 		/* Disable timestamp if selected */
+-		if (hwtstamp &&
+-		    ptp_clock_phydev(hwtstamp->ptp) == phydev) {
+-			dev->hwtstamp = NULL;
++		if (hwtstamp && ptp_clock_phydev(hwtstamp->ptp) == phydev) {
++			rcu_assign_pointer(dev->hwtstamp, NULL);
++			synchronize_rcu();
+ 			kfree(hwtstamp);
+ 		}
+ 
+diff --git a/drivers/ptp/ptp_clock_consumer.c b/drivers/ptp/ptp_clock_consumer.c
+index 69d2921e45a1..6c3b86fa8428 100644
+--- a/drivers/ptp/ptp_clock_consumer.c
++++ b/drivers/ptp/ptp_clock_consumer.c
+@@ -104,3 +104,69 @@ int ptp_clock_index(struct ptp_clock *ptp)
+ 	return ptp->index;
+ }
+ EXPORT_SYMBOL(ptp_clock_index);
++
++struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
++					unsigned long *indexp)
++{
++	struct ptp_clock *ptp;
++	unsigned long index;
++
++	xa_for_each_start(&ptp_clocks_map, index, ptp, *indexp) {
++		if ((ptp->phc_source == HWTSTAMP_SOURCE_NETDEV &&
++		     ptp->netdev == dev) ||
++		    (ptp->phc_source == HWTSTAMP_SOURCE_PHYLIB &&
++		     ptp->phydev->attached_dev == dev)) {
++			*indexp = index;
++			return ptp;
++		}
++	}
++
++	return NULL;
++};
++
++bool
++netdev_support_hwtstamp_qualifier(struct net_device *dev,
++				  enum hwtstamp_provider_qualifier qualifier)
++{
++	const struct ethtool_ops *ops = dev->ethtool_ops;
++
++	if (!ops)
++		return false;
++
++	/* Return true with precise qualifier and with NIC without
++	 * qualifier description to not break the old behavior.
++	 */
++	if (!ops->supported_hwtstamp_qualifiers &&
++	    qualifier == HWTSTAMP_PROVIDER_QUALIFIER_PRECISE)
++		return true;
++
++	if (ops->supported_hwtstamp_qualifiers & BIT(qualifier))
++		return true;
++
++	return false;
++}
++
++bool netdev_support_hwtstamp(struct net_device *dev,
++			     struct hwtstamp_provider *hwtstamp)
++{
++	struct ptp_clock *tmp_ptp;
++	unsigned long index = 0;
++
++	netdev_for_each_ptp_clock_start(dev, index, tmp_ptp, 0) {
++		if (tmp_ptp != hwtstamp->ptp)
++			continue;
++
++		if (ptp_clock_from_phylib(hwtstamp->ptp) &&
++		    hwtstamp->qualifier == HWTSTAMP_PROVIDER_QUALIFIER_PRECISE)
++			return true;
++
++		if (ptp_clock_from_netdev(hwtstamp->ptp) &&
++		    netdev_support_hwtstamp_qualifier(dev,
++						      hwtstamp->qualifier))
++			return true;
++
++		return false;
++	}
++
++	return false;
++}
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index d92e2cd13b81..a39fe9b8231b 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -667,6 +667,7 @@ struct ethtool_rxfh_param {
+  * @cmd: command number = %ETHTOOL_GET_TS_INFO
+  * @so_timestamping: bit mask of the sum of the supported SO_TIMESTAMPING flags
+  * @phc_index: device index of the associated PHC, or -1 if there is none
++ * @phc_qualifier: qualifier of the associated PHC
+  * @tx_types: bit mask of the supported hwtstamp_tx_types enumeration values
+  * @rx_filters: bit mask of the supported hwtstamp_rx_filters enumeration values
+  */
+@@ -674,6 +675,7 @@ struct kernel_ethtool_ts_info {
+ 	u32 cmd;
+ 	u32 so_timestamping;
+ 	int phc_index;
++	enum hwtstamp_provider_qualifier phc_qualifier;
+ 	enum hwtstamp_tx_types tx_types;
+ 	enum hwtstamp_rx_filters rx_filters;
+ };
+@@ -688,6 +690,7 @@ struct kernel_ethtool_ts_info {
+  *	RSS.
+  * @supported_coalesce_params: supported types of interrupt coalescing.
+  * @supported_ring_params: supported ring params.
++ * @supported_hwtstamp_qualifiers: bitfield of supported hwtstamp qualifier.
+  * @get_drvinfo: Report driver/device information. Modern drivers no
+  *	longer have to implement this callback. Most fields are
+  *	correctly filled in by the core using system information, or
+@@ -871,6 +874,7 @@ struct ethtool_ops {
+ 	u32	cap_rss_sym_xor_supported:1;
+ 	u32	supported_coalesce_params;
+ 	u32	supported_ring_params;
++	u32	supported_hwtstamp_qualifiers;
+ 	void	(*get_drvinfo)(struct net_device *, struct ethtool_drvinfo *);
+ 	int	(*get_regs_len)(struct net_device *);
+ 	void	(*get_regs)(struct net_device *, struct ethtool_regs *, void *);
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 5f9687a0c6bc..faa5723264df 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2405,7 +2405,7 @@ struct net_device {
+ 	struct hlist_head	page_pools;
+ #endif
+ 
+-	struct hwtstamp_provider	*hwtstamp;
++	struct hwtstamp_provider __rcu	*hwtstamp;
+ };
+ #define to_net_dev(d) container_of(d, struct net_device, dev)
+ 
+diff --git a/include/linux/ptp_clock_kernel.h b/include/linux/ptp_clock_kernel.h
+index 860c1e293a62..2f7b3f158f8a 100644
+--- a/include/linux/ptp_clock_kernel.h
++++ b/include/linux/ptp_clock_kernel.h
+@@ -442,6 +442,45 @@ struct ptp_clock *ptp_clock_get_by_index(struct device *dev, int index);
+ 
+ void ptp_clock_put(struct device *dev, struct ptp_clock *ptp);
+ 
++/**
++ * netdev_ptp_clock_find() - obtain the next PTP clock in the netdev
++ *			     topology
++ *
++ * @dev:    Pointer of the net device.
++ * @indexp:  Pointer of ptp clock index start point.
++ *
++ * Return: Pointer of the PTP clock found, NULL otherwise.
++ */
++
++struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
++					unsigned long *indexp);
++
++/**
++ * netdev_support_hwtstamp_qualifier() - Verify if the net device support the
++ *					 hwtstamp qualifier
++ *
++ * @dev:        Pointer of the net device.
++ * @qualifier:  hwtstamp provider qualifier.
++ *
++ * Return: True if the net device support the htstamp qualifier false otherwise.
++ */
++
++bool netdev_support_hwtstamp_qualifier(struct net_device *dev,
++				       enum hwtstamp_provider_qualifier qualifier);
++
++/**
++ * netdev_support_hwtstamp() - Verify if the hwtstamp belong to the netdev
++ *			       topology
++ *
++ * @dev:       Pointer of the net device
++ * @hwtstamp:  Pointer of the hwtstamp provider
++ *
++ * Return: True if the hwtstamp belong to the netdev topology false otherwise.
++ */
++
++bool netdev_support_hwtstamp(struct net_device *dev,
++			     struct hwtstamp_provider *hwtstamp);
++
+ /**
+  * ptp_find_pin() - obtain the pin index of a given auxiliary function
+  *
+@@ -530,6 +569,16 @@ static inline void ptp_clock_put(struct device *dev, struct ptp_clock *ptp)
+ static inline struct ptp_clock *ptp_clock_get_by_index(struct device *dev,
+ 						       int index)
+ { return NULL; }
++static inline struct ptp_clock *netdev_ptp_clock_find(struct net_device *dev,
++						      unsigned long *indexp)
++{ return NULL; }
++static inline bool
++netdev_support_hwtstamp_qualifier(struct net_device *dev,
++				  enum hwtstamp_provider_qualifier qualifier)
++{ return false; }
++static inline bool netdev_support_hwtstamp(struct net_device *dev,
++					   struct hwtstamp_provider *hwtst)
++{ return false; }
+ static inline int ptp_find_pin(struct ptp_clock *ptp,
+ 			       enum ptp_pin_function func, unsigned int chan)
+ { return -1; }
+@@ -544,6 +593,10 @@ static inline void ptp_cancel_worker_sync(struct ptp_clock *ptp)
+ { }
+ #endif
+ 
++#define netdev_for_each_ptp_clock_start(dev, index, entry, start) \
++	for (index = start, entry = netdev_ptp_clock_find(dev, &index); \
++	     entry; index++, entry = netdev_ptp_clock_find(dev, &index))
++
+ #if IS_BUILTIN(CONFIG_PTP_1588_CLOCK)
+ /*
+  * These are called by the network core, and don't work if PTP is in
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index b49b804b9495..e1b1930ce11c 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -57,6 +57,7 @@ enum {
+ 	ETHTOOL_MSG_PLCA_GET_STATUS,
+ 	ETHTOOL_MSG_MM_GET,
+ 	ETHTOOL_MSG_MM_SET,
++	ETHTOOL_MSG_TSINFO_SET,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_USER_CNT,
+@@ -109,6 +110,7 @@ enum {
+ 	ETHTOOL_MSG_PLCA_NTF,
+ 	ETHTOOL_MSG_MM_GET_REPLY,
+ 	ETHTOOL_MSG_MM_NTF,
++	ETHTOOL_MSG_TSINFO_NTF,
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_MSG_KERNEL_CNT,
+@@ -469,6 +471,15 @@ enum {
+ };
+ 
+ /* TSINFO */
++enum {
++	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_UNSPEC,
++	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX,		/* u32 */
++	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER,		/* u32 */
++
++	__ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_CNT,
++	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_MAX = (__ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_CNT - 1)
++};
++
+ 
+ enum {
+ 	ETHTOOL_A_TSINFO_UNSPEC,
+@@ -478,6 +489,9 @@ enum {
+ 	ETHTOOL_A_TSINFO_RX_FILTERS,			/* bitset */
+ 	ETHTOOL_A_TSINFO_PHC_INDEX,			/* u32 */
+ 	ETHTOOL_A_TSINFO_STATS,				/* nest - _A_TSINFO_STAT */
++	ETHTOOL_A_TSINFO_GHWTSTAMP,			/* u8 */
++	ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER,		/* nest - *_TSINFO_HWTSTAMP_PROVIDER_* */
++	ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS,		/* u32 */
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_A_TSINFO_CNT,
+diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+index acb0cadb7512..350d123c09c9 100644
+--- a/net/core/dev_ioctl.c
++++ b/net/core/dev_ioctl.c
+@@ -270,10 +270,13 @@ static int dev_eth_ioctl(struct net_device *dev,
+ int dev_get_hwtstamp_phylib(struct net_device *dev,
+ 			    struct kernel_hwtstamp_config *cfg)
+ {
+-	if (dev->hwtstamp) {
+-		struct ptp_clock *ptp = dev->hwtstamp->ptp;
++	struct hwtstamp_provider *hwtstamp;
+ 
+-		cfg->qualifier = dev->hwtstamp->qualifier;
++	hwtstamp = rtnl_dereference(dev->hwtstamp);
++	if (hwtstamp) {
++		struct ptp_clock *ptp = hwtstamp->ptp;
++
++		cfg->qualifier = hwtstamp->qualifier;
+ 		if (ptp_clock_from_phylib(ptp))
+ 			return phy_hwtstamp_get(ptp_clock_phydev(ptp), cfg);
+ 
+@@ -340,13 +343,15 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ {
+ 	const struct net_device_ops *ops = dev->netdev_ops;
+ 	struct kernel_hwtstamp_config old_cfg = {};
++	struct hwtstamp_provider *hwtstamp;
+ 	struct phy_device *phydev;
+ 	bool changed = false;
+ 	bool phy_ts;
+ 	int err;
+ 
+-	if (dev->hwtstamp) {
+-		struct ptp_clock *ptp = dev->hwtstamp->ptp;
++	hwtstamp = rtnl_dereference(dev->hwtstamp);
++	if (hwtstamp) {
++		struct ptp_clock *ptp = hwtstamp->ptp;
+ 
+ 		if (ptp_clock_from_phylib(ptp)) {
+ 			phy_ts = true;
+@@ -357,7 +362,7 @@ int dev_set_hwtstamp_phylib(struct net_device *dev,
+ 			return -EOPNOTSUPP;
+ 		}
+ 
+-		cfg->qualifier = dev->hwtstamp->qualifier;
++		cfg->qualifier = hwtstamp->qualifier;
+ 	} else {
+ 		phy_ts = phy_is_default_hwtstamp(dev->phydev);
+ 		if (phy_ts)
+diff --git a/net/core/timestamping.c b/net/core/timestamping.c
+index 1bc9dc76efff..f8522fefd468 100644
+--- a/net/core/timestamping.c
++++ b/net/core/timestamping.c
+@@ -22,6 +22,7 @@ static unsigned int classify(const struct sk_buff *skb)
+ 
+ void skb_clone_tx_timestamp(struct sk_buff *skb)
+ {
++	struct hwtstamp_provider *hwtstamp;
+ 	struct mii_timestamper *mii_ts;
+ 	struct phy_device *phydev;
+ 	struct sk_buff *clone;
+@@ -30,18 +31,23 @@ void skb_clone_tx_timestamp(struct sk_buff *skb)
+ 	if (!skb->sk || !skb->dev)
+ 		return;
+ 
+-	if (skb->dev->hwtstamp) {
+-		struct ptp_clock *ptp = skb->dev->hwtstamp->ptp;
+-
+-		if (!ptp_clock_from_phylib(ptp))
++	rcu_read_lock();
++	hwtstamp = rcu_dereference(skb->dev->hwtstamp);
++	if (hwtstamp) {
++		if (!ptp_clock_from_phylib(hwtstamp->ptp)) {
++			rcu_read_unlock();
+ 			return;
++		}
+ 
+-		phydev = ptp_clock_phydev(ptp);
++		phydev = ptp_clock_phydev(hwtstamp->ptp);
+ 	} else {
+ 		phydev = skb->dev->phydev;
+-		if (!phy_is_default_hwtstamp(phydev))
++		if (!phy_is_default_hwtstamp(phydev)) {
++			rcu_read_unlock();
+ 			return;
++		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	type = classify(skb);
+ 	if (type == PTP_CLASS_NONE)
+@@ -59,6 +65,7 @@ EXPORT_SYMBOL_GPL(skb_clone_tx_timestamp);
+ 
+ bool skb_defer_rx_timestamp(struct sk_buff *skb)
+ {
++	struct hwtstamp_provider *hwtstamp;
+ 	struct mii_timestamper *mii_ts;
+ 	struct phy_device *phydev;
+ 	unsigned int type;
+@@ -66,18 +73,23 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
+ 	if (!skb->dev)
+ 		return false;
+ 
+-	if (skb->dev->hwtstamp) {
+-		struct ptp_clock *ptp = skb->dev->hwtstamp->ptp;
+-
+-		if (!ptp_clock_from_phylib(ptp))
++	rcu_read_lock();
++	hwtstamp = rcu_dereference(skb->dev->hwtstamp);
++	if (hwtstamp) {
++		if (!ptp_clock_from_phylib(hwtstamp->ptp)) {
++			rcu_read_unlock();
+ 			return false;
++		}
+ 
+-		phydev = ptp_clock_phydev(ptp);
++		phydev = ptp_clock_phydev(hwtstamp->ptp);
+ 	} else {
+ 		phydev = skb->dev->phydev;
+-		if (!phy_is_default_hwtstamp(phydev))
++		if (!phy_is_default_hwtstamp(phydev)) {
++			rcu_read_unlock();
+ 			return false;
++		}
+ 	}
++	rcu_read_unlock();
+ 
+ 	if (skb_headroom(skb) < ETH_HLEN)
+ 		return false;
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 461017a37955..532332e708fb 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -629,10 +629,42 @@ int ethtool_check_ops(const struct ethtool_ops *ops)
+ 	return 0;
+ }
+ 
++int ethtool_get_ts_info_by_phc(struct net_device *dev,
++			       struct kernel_ethtool_ts_info *info,
++			       struct hwtstamp_provider *hwtstamp)
++{
++	const struct ethtool_ops *ops = dev->ethtool_ops;
++
++	memset(info, 0, sizeof(*info));
++	info->cmd = ETHTOOL_GET_TS_INFO;
++	info->phc_qualifier = hwtstamp->qualifier;
++
++	if (!netdev_support_hwtstamp(dev, hwtstamp))
++		return -ENODEV;
++
++	if (ptp_clock_from_phylib(hwtstamp->ptp) &&
++	    phy_has_tsinfo(ptp_clock_phydev(hwtstamp->ptp)))
++		return phy_ts_info(ptp_clock_phydev(hwtstamp->ptp), info);
++
++	if (ptp_clock_from_netdev(hwtstamp->ptp) && ops->get_ts_info)
++		return ops->get_ts_info(dev, info);
++
++	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
++				SOF_TIMESTAMPING_SOFTWARE;
++	info->phc_index = -1;
++
++	return 0;
++}
++
+ int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info)
+ {
+ 	const struct ethtool_ops *ops = dev->ethtool_ops;
+ 	struct phy_device *phydev = dev->phydev;
++	struct hwtstamp_provider *hwtstamp;
++
++	hwtstamp = rtnl_dereference(dev->hwtstamp);
++	if (hwtstamp)
++		return ethtool_get_ts_info_by_phc(dev, info, hwtstamp);
+ 
+ 	memset(info, 0, sizeof(*info));
+ 	info->cmd = ETHTOOL_GET_TS_INFO;
+diff --git a/net/ethtool/common.h b/net/ethtool/common.h
+index b9daeecbd84d..83bf82a4e75a 100644
+--- a/net/ethtool/common.h
++++ b/net/ethtool/common.h
+@@ -45,6 +45,9 @@ bool convert_legacy_settings_to_link_ksettings(
+ int ethtool_get_max_rxfh_channel(struct net_device *dev, u32 *max);
+ int ethtool_get_max_rxnfc_channel(struct net_device *dev, u64 *max);
+ int __ethtool_get_ts_info(struct net_device *dev, struct kernel_ethtool_ts_info *info);
++int ethtool_get_ts_info_by_phc(struct net_device *dev,
++			       struct kernel_ethtool_ts_info *info,
++			       struct hwtstamp_provider *hwtst);
+ 
+ extern const struct ethtool_phy_ops *ethtool_phy_ops;
+ extern const struct ethtool_pse_ops *ethtool_pse_ops;
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index bd04f28d5cf4..5ed04efd773e 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -306,6 +306,7 @@ ethnl_default_requests[__ETHTOOL_MSG_USER_CNT] = {
+ 	[ETHTOOL_MSG_PLCA_GET_STATUS]	= &ethnl_plca_status_request_ops,
+ 	[ETHTOOL_MSG_MM_GET]		= &ethnl_mm_request_ops,
+ 	[ETHTOOL_MSG_MM_SET]		= &ethnl_mm_request_ops,
++	[ETHTOOL_MSG_TSINFO_SET]	= &ethnl_tsinfo_request_ops,
+ };
+ 
+ static struct ethnl_dump_ctx *ethnl_dump_context(struct netlink_callback *cb)
+@@ -635,6 +636,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
+ 	[ETHTOOL_MSG_MODULE_NTF]	= &ethnl_module_request_ops,
+ 	[ETHTOOL_MSG_PLCA_NTF]		= &ethnl_plca_cfg_request_ops,
+ 	[ETHTOOL_MSG_MM_NTF]		= &ethnl_mm_request_ops,
++	[ETHTOOL_MSG_TSINFO_NTF]	= &ethnl_tsinfo_request_ops,
+ };
+ 
+ /* default notification handler */
+@@ -733,6 +735,7 @@ static const ethnl_notify_handler_t ethnl_notify_handlers[] = {
+ 	[ETHTOOL_MSG_MODULE_NTF]	= ethnl_default_notify,
+ 	[ETHTOOL_MSG_PLCA_NTF]		= ethnl_default_notify,
+ 	[ETHTOOL_MSG_MM_NTF]		= ethnl_default_notify,
++	[ETHTOOL_MSG_TSINFO_NTF]	= ethnl_default_notify,
+ };
+ 
+ void ethtool_notify(struct net_device *dev, unsigned int cmd, const void *data)
+@@ -974,9 +977,9 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 	{
+ 		.cmd	= ETHTOOL_MSG_TSINFO_GET,
+ 		.doit	= ethnl_default_doit,
+-		.start	= ethnl_default_start,
+-		.dumpit	= ethnl_default_dumpit,
+-		.done	= ethnl_default_done,
++		.start	= ethnl_tsinfo_start,
++		.dumpit	= ethnl_tsinfo_dumpit,
++		.done	= ethnl_tsinfo_done,
+ 		.policy = ethnl_tsinfo_get_policy,
+ 		.maxattr = ARRAY_SIZE(ethnl_tsinfo_get_policy) - 1,
+ 	},
+@@ -1125,6 +1128,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
+ 		.policy = ethnl_mm_set_policy,
+ 		.maxattr = ARRAY_SIZE(ethnl_mm_set_policy) - 1,
+ 	},
++	{
++		.cmd	= ETHTOOL_MSG_TSINFO_SET,
++		.flags	= GENL_UNS_ADMIN_PERM,
++		.doit	= ethnl_default_set_doit,
++		.policy = ethnl_tsinfo_set_policy,
++		.maxattr = ARRAY_SIZE(ethnl_tsinfo_set_policy) - 1,
++	},
+ };
+ 
+ static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 9a333a8d04c1..8a6f767ab6db 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -422,7 +422,7 @@ extern const struct nla_policy ethnl_pause_get_policy[ETHTOOL_A_PAUSE_STATS_SRC
+ extern const struct nla_policy ethnl_pause_set_policy[ETHTOOL_A_PAUSE_TX + 1];
+ extern const struct nla_policy ethnl_eee_get_policy[ETHTOOL_A_EEE_HEADER + 1];
+ extern const struct nla_policy ethnl_eee_set_policy[ETHTOOL_A_EEE_TX_LPI_TIMER + 1];
+-extern const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_HEADER + 1];
++extern const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX + 1];
+ extern const struct nla_policy ethnl_cable_test_act_policy[ETHTOOL_A_CABLE_TEST_HEADER + 1];
+ extern const struct nla_policy ethnl_cable_test_tdr_act_policy[ETHTOOL_A_CABLE_TEST_TDR_CFG + 1];
+ extern const struct nla_policy ethnl_tunnel_info_get_policy[ETHTOOL_A_TUNNEL_INFO_HEADER + 1];
+@@ -441,6 +441,7 @@ extern const struct nla_policy ethnl_plca_set_cfg_policy[ETHTOOL_A_PLCA_MAX + 1]
+ extern const struct nla_policy ethnl_plca_get_status_policy[ETHTOOL_A_PLCA_HEADER + 1];
+ extern const struct nla_policy ethnl_mm_get_policy[ETHTOOL_A_MM_HEADER + 1];
+ extern const struct nla_policy ethnl_mm_set_policy[ETHTOOL_A_MM_MAX + 1];
++extern const struct nla_policy ethnl_tsinfo_set_policy[ETHTOOL_A_TSINFO_MAX + 1];
+ 
+ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info);
+@@ -448,6 +449,9 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_tunnel_info_doit(struct sk_buff *skb, struct genl_info *info);
+ int ethnl_tunnel_info_start(struct netlink_callback *cb);
+ int ethnl_tunnel_info_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
++int ethnl_tsinfo_start(struct netlink_callback *cb);
++int ethnl_tsinfo_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
++int ethnl_tsinfo_done(struct netlink_callback *cb);
+ 
+ extern const char stats_std_names[__ETHTOOL_STATS_CNT][ETH_GSTRING_LEN];
+ extern const char stats_eth_phy_names[__ETHTOOL_A_STATS_ETH_PHY_CNT][ETH_GSTRING_LEN];
+diff --git a/net/ethtool/tsinfo.c b/net/ethtool/tsinfo.c
+index 88e59ca8d4c0..1461e643bd41 100644
+--- a/net/ethtool/tsinfo.c
++++ b/net/ethtool/tsinfo.c
+@@ -1,67 +1,219 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ 
+ #include <linux/net_tstamp.h>
++#include <linux/ptp_clock_kernel.h>
+ 
+ #include "netlink.h"
+ #include "common.h"
+ #include "bitset.h"
++#include "../core/dev.h"
++
++struct hwtst_provider {
++	int index;
++	u32 qualifier;
++};
+ 
+ struct tsinfo_req_info {
+ 	struct ethnl_req_info		base;
++	struct hwtst_provider		hwtst;
++	bool				get_hwtstamp;
+ };
+ 
+ struct tsinfo_reply_data {
+ 	struct ethnl_reply_data		base;
+-	struct kernel_ethtool_ts_info	ts_info;
++	union {
++		struct kernel_ethtool_ts_info	ts_info;
++		struct {
++			u32 tx_type;
++			u32 rx_filter;
++			u32 flags;
++		} hwtst_config;
++	};
+ 	struct ethtool_ts_stats		stats;
+ };
+ 
++#define TSINFO_REQINFO(__req_base) \
++	container_of(__req_base, struct tsinfo_req_info, base)
++
+ #define TSINFO_REPDATA(__reply_base) \
+ 	container_of(__reply_base, struct tsinfo_reply_data, base)
+ 
+ #define ETHTOOL_TS_STAT_CNT \
+ 	(__ETHTOOL_A_TS_STAT_CNT - (ETHTOOL_A_TS_STAT_UNSPEC + 1))
+ 
+-const struct nla_policy ethnl_tsinfo_get_policy[] = {
++static const struct nla_policy
++ethnl_tsinfo_hwtstamp_provider_policy[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_MAX + 1] = {
++	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX] =
++		NLA_POLICY_MIN(NLA_S32, 0),
++	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER] =
++		NLA_POLICY_MAX(NLA_U32, HWTSTAMP_PROVIDER_QUALIFIER_CNT - 1)
++};
++
++const struct nla_policy ethnl_tsinfo_get_policy[ETHTOOL_A_TSINFO_MAX + 1] = {
+ 	[ETHTOOL_A_TSINFO_HEADER]		=
+ 		NLA_POLICY_NESTED(ethnl_header_policy_stats),
++	[ETHTOOL_A_TSINFO_GHWTSTAMP] =
++		NLA_POLICY_MAX(NLA_U8, 1),
++	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER] =
++		NLA_POLICY_NESTED(ethnl_tsinfo_hwtstamp_provider_policy),
+ };
+ 
++static int tsinfo_parse_hwtstamp_provider(const struct nlattr *nest,
++					  struct hwtst_provider *hwtst,
++					  struct netlink_ext_ack *extack,
++					  bool *mod)
++{
++	struct nlattr *tb[ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy)];
++	int ret;
++
++	ret = nla_parse_nested(tb,
++			       ARRAY_SIZE(ethnl_tsinfo_hwtstamp_provider_policy) - 1,
++			       nest,
++			       ethnl_tsinfo_hwtstamp_provider_policy, extack);
++	if (ret < 0)
++		return ret;
++
++	if (NL_REQ_ATTR_CHECK(extack, nest, tb, ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX) ||
++	    NL_REQ_ATTR_CHECK(extack, nest, tb, ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER))
++		return -EINVAL;
++
++	ethnl_update_u32(&hwtst->index,
++			 tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX],
++			 mod);
++	ethnl_update_u32(&hwtst->qualifier,
++			 tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER],
++			 mod);
++
++	return 0;
++}
++
++static int
++tsinfo_parse_request(struct ethnl_req_info *req_base, struct nlattr **tb,
++		     struct netlink_ext_ack *extack)
++{
++	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
++	bool mod = false;
++
++	req->hwtst.index = -1;
++
++	if (tb[ETHTOOL_A_TSINFO_GHWTSTAMP]) {
++		req->get_hwtstamp = nla_get_u8(tb[ETHTOOL_A_TSINFO_GHWTSTAMP]);
++
++		/* We support only the get of the current hwtstamp config
++		 * for now.
++		 */
++		if (req->get_hwtstamp &&
++		    tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER]) {
++			NL_SET_ERR_MSG_ATTR(extack,
++					    tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++					    "only getting the current hwtstamp configuration is supported");
++			return -EOPNOTSUPP;
++		}
++	}
++
++	if (!tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER])
++		return 0;
++
++	return tsinfo_parse_hwtstamp_provider(tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++					      &req->hwtst, extack, &mod);
++}
++
+ static int tsinfo_prepare_data(const struct ethnl_req_info *req_base,
+ 			       struct ethnl_reply_data *reply_base,
+ 			       const struct genl_info *info)
+ {
+ 	struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
++	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
+ 	struct net_device *dev = reply_base->dev;
+ 	int ret;
+ 
+ 	ret = ethnl_ops_begin(dev);
+ 	if (ret < 0)
+ 		return ret;
++
++	if (req->get_hwtstamp) {
++		struct kernel_hwtstamp_config cfg = {};
++
++		if (!dev->netdev_ops->ndo_hwtstamp_get) {
++			ret = -EOPNOTSUPP;
++			goto out;
++		}
++
++		ret = dev_get_hwtstamp_phylib(dev, &cfg);
++		data->hwtst_config.tx_type = BIT(cfg.tx_type);
++		data->hwtst_config.rx_filter = BIT(cfg.rx_filter);
++		data->hwtst_config.flags = BIT(cfg.flags);
++		goto out;
++	}
++
+ 	if (req_base->flags & ETHTOOL_FLAG_STATS &&
+ 	    dev->ethtool_ops->get_ts_stats) {
+ 		ethtool_stats_init((u64 *)&data->stats,
+ 				   sizeof(data->stats) / sizeof(u64));
+ 		dev->ethtool_ops->get_ts_stats(dev, &data->stats);
+ 	}
+-	ret = __ethtool_get_ts_info(dev, &data->ts_info);
++
++	if (req->hwtst.index != -1) {
++		struct hwtstamp_provider hwtstamp;
++
++		hwtstamp.ptp = ptp_clock_get_by_index(&dev->dev, req->hwtst.index);
++		if (!hwtstamp.ptp) {
++			ret = -ENODEV;
++			goto out;
++		}
++		hwtstamp.qualifier = req->hwtst.qualifier;
++
++		ret = ethtool_get_ts_info_by_phc(dev, &data->ts_info,
++						 &hwtstamp);
++		ptp_clock_put(&dev->dev, hwtstamp.ptp);
++	} else {
++		ret = __ethtool_get_ts_info(dev, &data->ts_info);
++	}
++
++out:
+ 	ethnl_ops_complete(dev);
+ 
+ 	return ret;
+ }
+ 
+-static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
+-			     const struct ethnl_reply_data *reply_base)
++static int
++tsinfo_reply_size_hwtstamp_config(const struct tsinfo_reply_data *data,
++				  u32 req_flags)
+ {
+-	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
+-	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+-	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
++	bool compact = req_flags & ETHTOOL_FLAG_COMPACT_BITSETS;
+ 	int len = 0;
+ 	int ret;
+ 
+-	BUILD_BUG_ON(__SOF_TIMESTAMPING_CNT > 32);
+-	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
+-	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
++	if (data->hwtst_config.flags)
++		len += nla_total_size(sizeof(u32));
++
++	if (data->hwtst_config.tx_type) {
++		ret = ethnl_bitset32_size(&data->hwtst_config.tx_type,
++					  NULL, __HWTSTAMP_TX_CNT,
++					  ts_tx_type_names, compact);
++		if (ret < 0)
++			return ret;
++		len += ret;	/* _TSINFO_TX_TYPES */
++	}
++	if (data->hwtst_config.rx_filter) {
++		ret = ethnl_bitset32_size(&data->hwtst_config.rx_filter,
++					  NULL, __HWTSTAMP_FILTER_CNT,
++					  ts_rx_filter_names, compact);
++		if (ret < 0)
++			return ret;
++		len += ret;	/* _TSINFO_RX_FILTERS */
++	}
++
++	return len;
++}
++
++static int
++tsinfo_reply_size_ts_info(const struct kernel_ethtool_ts_info *ts_info,
++			  u32 req_flags)
++{
++	bool compact = req_flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	int len = 0;
++	int ret;
+ 
+ 	if (ts_info->so_timestamping) {
+ 		ret = ethnl_bitset32_size(&ts_info->so_timestamping, NULL,
+@@ -87,9 +239,12 @@ static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
+ 			return ret;
+ 		len += ret;	/* _TSINFO_RX_FILTERS */
+ 	}
+-	if (ts_info->phc_index >= 0)
++	if (ts_info->phc_index >= 0) {
++		/* _TSINFO_HWTSTAMP_PROVIDER */
++		len += 2 * nla_total_size(sizeof(u32));
+ 		len += nla_total_size(sizeof(u32));	/* _TSINFO_PHC_INDEX */
+-	if (req_base->flags & ETHTOOL_FLAG_STATS)
++	}
++	if (req_flags & ETHTOOL_FLAG_STATS)
+ 		len += nla_total_size(0) + /* _TSINFO_STATS */
+ 		       nla_total_size_64bit(sizeof(u64)) * ETHTOOL_TS_STAT_CNT;
+ 
+@@ -130,13 +285,30 @@ static int tsinfo_put_stats(struct sk_buff *skb,
+ 	return -EMSGSIZE;
+ }
+ 
+-static int tsinfo_fill_reply(struct sk_buff *skb,
+-			     const struct ethnl_req_info *req_base,
++static int tsinfo_reply_size(const struct ethnl_req_info *req_base,
+ 			     const struct ethnl_reply_data *reply_base)
+ {
+ 	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
+-	bool compact = req_base->flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
++
++	BUILD_BUG_ON(__SOF_TIMESTAMPING_CNT > 32);
++	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
++	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
++
++	if (req->get_hwtstamp)
++		return tsinfo_reply_size_hwtstamp_config(data,
++							 req_base->flags);
++
++	return tsinfo_reply_size_ts_info(&data->ts_info, req_base->flags);
++}
++
++static int tsinfo_fill_ts_info(struct sk_buff *skb,
++			       const struct tsinfo_reply_data *data,
++			       u32 req_flags)
++{
+ 	const struct kernel_ethtool_ts_info *ts_info = &data->ts_info;
++	bool compact = req_flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	struct nlattr *nest;
+ 	int ret;
+ 
+ 	if (ts_info->so_timestamping) {
+@@ -163,16 +335,438 @@ static int tsinfo_fill_reply(struct sk_buff *skb,
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+-	if (ts_info->phc_index >= 0 &&
+-	    nla_put_u32(skb, ETHTOOL_A_TSINFO_PHC_INDEX, ts_info->phc_index))
+-		return -EMSGSIZE;
+-	if (req_base->flags & ETHTOOL_FLAG_STATS &&
++	if (ts_info->phc_index >= 0) {
++		ret = nla_put_u32(skb, ETHTOOL_A_TSINFO_PHC_INDEX,
++				  ts_info->phc_index);
++		if (ret)
++			return -EMSGSIZE;
++
++		nest = nla_nest_start(skb, ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER);
++		if (!nest)
++			return -EMSGSIZE;
++
++		if (nla_put_u32(skb, ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_INDEX,
++				ts_info->phc_index) ||
++		    nla_put_u32(skb,
++				ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER_QUALIFIER,
++				ts_info->phc_qualifier)) {
++			nla_nest_cancel(skb, nest);
++			return -EMSGSIZE;
++		}
++
++		nla_nest_end(skb, nest);
++	}
++	if (req_flags & ETHTOOL_FLAG_STATS &&
+ 	    tsinfo_put_stats(skb, &data->stats))
+ 		return -EMSGSIZE;
+ 
+ 	return 0;
+ }
+ 
++static int
++tsinfo_fill_hwtstamp_config(struct sk_buff *skb,
++			    const struct tsinfo_reply_data *data,
++			    u32 req_flags)
++{
++	bool compact = req_flags & ETHTOOL_FLAG_COMPACT_BITSETS;
++	int ret;
++
++	if (data->hwtst_config.flags) {
++		ret = nla_put_u32(skb, ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS,
++				  data->hwtst_config.flags);
++		if (ret < 0)
++			return ret;
++	}
++
++	if (data->hwtst_config.tx_type) {
++		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TSINFO_TX_TYPES,
++					 &data->hwtst_config.tx_type, NULL,
++					 __HWTSTAMP_TX_CNT,
++					 ts_tx_type_names, compact);
++		if (ret < 0)
++			return ret;
++	}
++
++	if (data->hwtst_config.rx_filter) {
++		ret = ethnl_put_bitset32(skb, ETHTOOL_A_TSINFO_RX_FILTERS,
++					 &data->hwtst_config.rx_filter,
++					 NULL, __HWTSTAMP_FILTER_CNT,
++					 ts_rx_filter_names, compact);
++		if (ret < 0)
++			return ret;
++	}
++	return 0;
++}
++
++static int tsinfo_fill_reply(struct sk_buff *skb,
++			     const struct ethnl_req_info *req_base,
++			     const struct ethnl_reply_data *reply_base)
++{
++	const struct tsinfo_reply_data *data = TSINFO_REPDATA(reply_base);
++	struct tsinfo_req_info *req = TSINFO_REQINFO(req_base);
++
++	if (req->get_hwtstamp)
++		return tsinfo_fill_hwtstamp_config(skb, data,
++						   req_base->flags);
++
++	return tsinfo_fill_ts_info(skb, data, req_base->flags);
++}
++
++struct ethnl_tsinfo_dump_ctx {
++	struct tsinfo_req_info		*req_info;
++	struct tsinfo_reply_data	*reply_data;
++	unsigned long			pos_ifindex;
++	unsigned long			pos_phcindex;
++	enum hwtstamp_provider_qualifier pos_phcqualifier;
++};
++
++static int ethnl_tsinfo_dump_one_ptp(struct sk_buff *skb, struct net_device *dev,
++				     struct netlink_callback *cb,
++				     struct ptp_clock *ptp)
++{
++	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
++	struct tsinfo_reply_data *reply_data;
++	struct tsinfo_req_info *req_info;
++	void *ehdr = NULL;
++	int ret = 0;
++
++	reply_data = ctx->reply_data;
++	req_info = ctx->req_info;
++	req_info->hwtst.index = ptp_clock_index(ptp);
++
++	for (; ctx->pos_phcqualifier < HWTSTAMP_PROVIDER_QUALIFIER_CNT;
++	     ctx->pos_phcqualifier++) {
++		if (!netdev_support_hwtstamp_qualifier(dev,
++						       ctx->pos_phcqualifier))
++			continue;
++
++		ehdr = ethnl_dump_put(skb, cb,
++				      ETHTOOL_MSG_TSINFO_GET_REPLY);
++		if (!ehdr)
++			return -EMSGSIZE;
++
++		memset(reply_data, 0, sizeof(*reply_data));
++		reply_data->base.dev = dev;
++		req_info->hwtst.qualifier = ctx->pos_phcqualifier;
++		ret = tsinfo_prepare_data(&req_info->base,
++					  &reply_data->base,
++					  genl_info_dump(cb));
++		if (ret < 0)
++			break;
++
++		ret = ethnl_fill_reply_header(skb, dev,
++					      ETHTOOL_A_TSINFO_HEADER);
++		if (ret < 0)
++			break;
++
++		ret = tsinfo_fill_reply(skb, &req_info->base,
++					&reply_data->base);
++		if (ret < 0)
++			break;
++	}
++
++	reply_data->base.dev = NULL;
++	if (!ret && ehdr)
++		genlmsg_end(skb, ehdr);
++	else
++		genlmsg_cancel(skb, ehdr);
++	return ret;
++}
++
++static int ethnl_tsinfo_dump_one_dev(struct sk_buff *skb, struct net_device *dev,
++				     struct netlink_callback *cb)
++{
++	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
++	struct ptp_clock *ptp;
++	int ret = 0;
++
++	netdev_for_each_ptp_clock_start(dev, ctx->pos_phcindex, ptp,
++					ctx->pos_phcindex) {
++		ret = ethnl_tsinfo_dump_one_ptp(skb, dev, cb, ptp);
++		if (ret < 0 && ret != -EOPNOTSUPP)
++			break;
++		ctx->pos_phcqualifier = HWTSTAMP_PROVIDER_QUALIFIER_PRECISE;
++	}
++
++	return ret;
++}
++
++int ethnl_tsinfo_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
++{
++	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
++	struct net *net = sock_net(skb->sk);
++	struct net_device *dev;
++	int ret = 0;
++
++	rtnl_lock();
++	if (ctx->req_info->base.dev) {
++		ret = ethnl_tsinfo_dump_one_dev(skb,
++						ctx->req_info->base.dev,
++						cb);
++	} else {
++		for_each_netdev_dump(net, dev, ctx->pos_ifindex) {
++			ret = ethnl_tsinfo_dump_one_dev(skb, dev, cb);
++			if (ret < 0 && ret != -EOPNOTSUPP)
++				break;
++			ctx->pos_phcindex = 0;
++		}
++	}
++	rtnl_unlock();
++
++	if (ret == -EMSGSIZE && skb->len)
++		return skb->len;
++	return ret;
++}
++
++static int
++tsinfo_dump_parse_request(struct nlattr **tb, struct netlink_ext_ack *extack)
++{
++	if (tb[ETHTOOL_A_TSINFO_GHWTSTAMP] &&
++	    nla_get_u8(tb[ETHTOOL_A_TSINFO_GHWTSTAMP])) {
++		/* We do not support simultaneous hwtstamp for now */
++		NL_SET_ERR_MSG_ATTR(extack,
++				    tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++				    "only getting the current hwtstamp configuration is supported");
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
++
++int ethnl_tsinfo_start(struct netlink_callback *cb)
++{
++	const struct genl_dumpit_info *info = genl_dumpit_info(cb);
++	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
++	struct nlattr **tb = info->info.attrs;
++	struct tsinfo_reply_data *reply_data;
++	struct tsinfo_req_info *req_info;
++	int ret;
++
++	BUILD_BUG_ON(sizeof(*ctx) > sizeof(cb->ctx));
++
++	req_info = kzalloc(sizeof(*req_info), GFP_KERNEL);
++	if (!req_info)
++		return -ENOMEM;
++	reply_data = kzalloc(sizeof(*reply_data), GFP_KERNEL);
++	if (!reply_data) {
++		ret = -ENOMEM;
++		goto free_req_info;
++	}
++
++	ret = ethnl_parse_header_dev_get(&req_info->base,
++					 tb[ETHTOOL_A_TSINFO_HEADER],
++					 sock_net(cb->skb->sk), cb->extack,
++					 false);
++	if (ret < 0)
++		goto free_reply_data;
++
++	ret = tsinfo_dump_parse_request(tb, cb->extack);
++	if (ret < 0)
++		goto put_header_dev;
++
++	ctx->req_info = req_info;
++	ctx->reply_data = reply_data;
++	ctx->pos_ifindex = 0;
++	ctx->pos_phcindex = 0;
++	ctx->pos_phcqualifier = HWTSTAMP_PROVIDER_QUALIFIER_PRECISE;
++
++	return 0;
++
++put_header_dev:
++	if (req_info->base.dev) {
++		ethnl_parse_header_dev_put(&req_info->base);
++		req_info->base.dev = NULL;
++	}
++free_reply_data:
++	kfree(reply_data);
++free_req_info:
++	kfree(req_info);
++
++	return ret;
++}
++
++int ethnl_tsinfo_done(struct netlink_callback *cb)
++{
++	struct ethnl_tsinfo_dump_ctx *ctx = (void *)cb->ctx;
++	struct tsinfo_req_info *req_info = ctx->req_info;
++
++	ethnl_parse_header_dev_put(&req_info->base);
++	kfree(ctx->reply_data);
++	kfree(ctx->req_info);
++
++	return 0;
++}
++
++/* TSINFO_SET (set hwtstamp config) */
++const struct nla_policy ethnl_tsinfo_set_policy[ETHTOOL_A_TSINFO_MAX + 1] = {
++	[ETHTOOL_A_TSINFO_HEADER] = NLA_POLICY_NESTED(ethnl_header_policy),
++	[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER] = { .type = NLA_NESTED },
++	[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS] = { .type = NLA_U32 },
++	[ETHTOOL_A_TSINFO_RX_FILTERS] = { .type = NLA_NESTED },
++	[ETHTOOL_A_TSINFO_TX_TYPES] = { .type = NLA_NESTED },
++};
++
++static int ethnl_set_tsinfo_validate(struct ethnl_req_info *req_base,
++				     struct genl_info *info)
++{
++	const struct net_device_ops *ops = req_base->dev->netdev_ops;
++
++	if (!ops->ndo_hwtstamp_set || !ops->ndo_hwtstamp_get)
++		return -EOPNOTSUPP;
++
++	return 1;
++}
++
++static int ethnl_set_tsinfo(struct ethnl_req_info *req_base,
++			    struct genl_info *info)
++{
++	unsigned long mask = 0, req_rx_filter, req_tx_type;
++	struct kernel_hwtstamp_config hwtst_config = {0};
++	struct hwtstamp_provider *hwtstamp = NULL;
++	struct net_device *dev = req_base->dev;
++	struct nlattr **tb = info->attrs;
++	bool mod = false;
++	int ret;
++
++	BUILD_BUG_ON(__HWTSTAMP_TX_CNT > 32);
++	BUILD_BUG_ON(__HWTSTAMP_FILTER_CNT > 32);
++
++	if (!netif_device_present(dev))
++		return -ENODEV;
++
++	if (tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER]) {
++		struct hwtst_provider __hwtst = {.index = -1};
++		struct hwtstamp_provider *__hwtstamp;
++
++		__hwtstamp = rtnl_dereference(dev->hwtstamp);
++		if (__hwtstamp) {
++			__hwtst.index = ptp_clock_index(__hwtstamp->ptp);
++			__hwtst.qualifier = __hwtstamp->qualifier;
++		}
++
++		ret = tsinfo_parse_hwtstamp_provider(tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++						     &__hwtst, info->extack,
++						     &mod);
++		if (ret < 0)
++			return ret;
++
++		if (mod) {
++			hwtstamp = devm_kzalloc(&dev->dev, sizeof(*hwtstamp),
++						GFP_KERNEL);
++			if (!hwtstamp)
++				return -ENOMEM;
++
++			hwtstamp->ptp = ptp_clock_get_by_index(&dev->dev,
++							       __hwtst.index);
++			if (!hwtstamp->ptp) {
++				NL_SET_ERR_MSG_ATTR(info->extack,
++						    tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++						    "no phc at such index");
++				ret = -ENODEV;
++				goto err_free_hwtstamp;
++			}
++			hwtstamp->qualifier = __hwtst.qualifier;
++
++			/* Does the hwtstamp supported in the netdev topology */
++			if (!netdev_support_hwtstamp(dev, hwtstamp)) {
++				NL_SET_ERR_MSG_ATTR(info->extack,
++						    tb[ETHTOOL_A_TSINFO_HWTSTAMP_PROVIDER],
++						    "phc not in this net device topology");
++				ret = -ENODEV;
++				goto err_clock_put;
++			}
++		}
++	}
++
++	/* Get current hwtstamp config if we are not changing the hwtstamp
++	 * source
++	 */
++	if (!mod) {
++		ret = dev_get_hwtstamp_phylib(dev, &hwtst_config);
++		if (ret < 0 && ret != -EOPNOTSUPP)
++			goto err_clock_put;
++	}
++
++	/* Get the hwtstamp config from netlink */
++	if (tb[ETHTOOL_A_TSINFO_TX_TYPES]) {
++		ret = ethnl_parse_bitset(&req_tx_type, &mask,
++					 __HWTSTAMP_TX_CNT,
++					 tb[ETHTOOL_A_TSINFO_TX_TYPES],
++					 ts_tx_type_names, info->extack);
++		if (ret < 0)
++			goto err_clock_put;
++
++		/* Select only one tx type at a time */
++		if (ffs(req_tx_type) != fls(req_tx_type)) {
++			ret = -EINVAL;
++			goto err_clock_put;
++		}
++
++		hwtst_config.tx_type = ffs(req_tx_type) - 1;
++	}
++	if (tb[ETHTOOL_A_TSINFO_RX_FILTERS]) {
++		ret = ethnl_parse_bitset(&req_rx_filter, &mask,
++					 __HWTSTAMP_FILTER_CNT,
++					 tb[ETHTOOL_A_TSINFO_RX_FILTERS],
++					 ts_rx_filter_names, info->extack);
++		if (ret < 0)
++			goto err_clock_put;
++
++		/* Select only one rx filter at a time */
++		if (ffs(req_rx_filter) != fls(req_rx_filter)) {
++			ret = -EINVAL;
++			goto err_clock_put;
++		}
++
++		hwtst_config.rx_filter = ffs(req_rx_filter) - 1;
++	}
++	if (tb[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS]) {
++		ret = nla_get_u32(tb[ETHTOOL_A_TSINFO_HWTSTAMP_FLAGS]);
++		if (ret < 0)
++			goto err_clock_put;
++		hwtst_config.flags = ret;
++	}
++
++	ret = net_hwtstamp_validate(&hwtst_config);
++	if (ret)
++		goto err_clock_put;
++
++	/* Disable current time stamping if we try to enable another one */
++	if (mod && (hwtst_config.tx_type || hwtst_config.rx_filter)) {
++		struct kernel_hwtstamp_config zero_config = {0};
++
++		ret = dev_set_hwtstamp_phylib(dev, &zero_config, info->extack);
++		if (ret < 0)
++			goto err_clock_put;
++	}
++
++	/* Changed the selected hwtstamp source if needed */
++	if (mod) {
++		struct hwtstamp_provider *__hwtstamp;
++
++		__hwtstamp = rcu_replace_pointer_rtnl(dev->hwtstamp, hwtstamp);
++		synchronize_rcu();
++		if (__hwtstamp) {
++			ptp_clock_put(&dev->dev, __hwtstamp->ptp);
++			kfree(__hwtstamp);
++		}
++	}
++
++	ret = dev_set_hwtstamp_phylib(dev, &hwtst_config, info->extack);
++	if (ret < 0)
++		goto err_clock_put;
++
++	return 1;
++
++err_clock_put:
++	if (hwtstamp)
++		ptp_clock_put(&dev->dev, hwtstamp->ptp);
++err_free_hwtstamp:
++	devm_kfree(&dev->dev, hwtstamp);
++
++	return ret;
++}
++
+ const struct ethnl_request_ops ethnl_tsinfo_request_ops = {
+ 	.request_cmd		= ETHTOOL_MSG_TSINFO_GET,
+ 	.reply_cmd		= ETHTOOL_MSG_TSINFO_GET_REPLY,
+@@ -180,7 +774,12 @@ const struct ethnl_request_ops ethnl_tsinfo_request_ops = {
+ 	.req_info_size		= sizeof(struct tsinfo_req_info),
+ 	.reply_data_size	= sizeof(struct tsinfo_reply_data),
+ 
++	.parse_request		= tsinfo_parse_request,
+ 	.prepare_data		= tsinfo_prepare_data,
+ 	.reply_size		= tsinfo_reply_size,
+ 	.fill_reply		= tsinfo_fill_reply,
++
++	.set_validate		= ethnl_set_tsinfo_validate,
++	.set			= ethnl_set_tsinfo,
++	.set_ntf_cmd		= ETHTOOL_MSG_TSINFO_NTF,
+ };
 
 -- 
-2.39.1
+2.34.1
 
