@@ -1,167 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FAE142E68
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 01:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248CD137924;
+	Tue,  4 Jun 2024 01:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717466148; cv=none; b=E0+iHPoy+VAJzqyUwb5BbCMBuaDOeo4T/I8GOWE9Xtv+2MFnpHmN+rAx23ti0dR2OYXkC/PghYLKd59EeWWOUeu4LHRs93wLOC2ZQKSfT9o2JqqwFUinA62XuLseGAGPVGW5iUmIl+oMN/LfdAEuxFjpcxYD/XlnOaElabJmucM=
+	t=1717466229; cv=none; b=Y9iQS8Wmt8Hl1lXHvDFOz1j9BIyO7C79hZgtENJPMW54swk2zNNiBVm9NLTNk/Ylz8HprMmV1Io0qaoL1ovtmaZbArououWEGYN8uCOsD2EQZK8P49+d6iosdlO0p2+VxP8TLFGBl4M7Aq1kzVaoncj/guw4W9rBW2Q7Ah44uZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717466148; c=relaxed/simple;
-	bh=fB0WT/uFAD/6kyoV4UsQtcUjaYUF0Qf8FTDYMb+l8Rw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dhWqpnzt3ki9yBLaFlovaDp7pd0QWzFTnKpxxhTY18pjcLBo3ftaBaBgLqswyoDs5pKph4QixCN4cRF4aoWe+oBYN8c5ukjcaYIeDMk7wNcQyVdz90wJJcRZttQ4i7u9OtFSfwDwCCOfaNXSoCRKjsMlxDheNai19cqrfxrD6og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B4QF+BTW; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717466229; c=relaxed/simple;
+	bh=vAHxqC5p21VJM3W0tqZX2heKAMVPYr0MbjkwYfHJtjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MH+Wh2kvKEB/GTnnza880hSjdDk3mnopl278DiLM6OsNti6k33d8BeDFwOTFoiFTFE4bPYHnL8+qUG2NW/HJTucZNYt8uhXyosBqXd0vq0Lrb+tRk7HMH/E9wOhc+wyN2fBuZKhpDGKJZqN5/lsgimo5EJwOVPp93C8a/ugmaLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KYk0RwQB; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B4QF+BTW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717466145; x=1749002145;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fB0WT/uFAD/6kyoV4UsQtcUjaYUF0Qf8FTDYMb+l8Rw=;
-  b=B4QF+BTWm9Nfsz2hTrk9Cw3jodZzg4BlnldUUepl7FvIgZblkrAOYWWa
-   kXij+QMpmjrvfccOnx7N5SNebe0xM5vxiSePPzID9VNY4061uNL9T9+Kz
-   zZSRfdlhteUtZHblJgGt81+VdaORgyQEGFZU5pykqt5UPUQypIf7fLf+b
-   JosnTe3KTIsX2HVAgxcv1B45rapnKUDtf6WKr4yjTOe/HIsc3qYvJ8Kpo
-   2sPyn8ZVPfg1AB7drWDjo4QPZFFjo8eQJn37PbQ9Q616nNpuOCtGUNNj0
-   5OVEKhEeyeNbaJ0hTaoS7e5Ngl5D3PH9D2zJBcOs+ws4Nsvs8ygVXqIn+
-   A==;
-X-CSE-ConnectionGUID: 8BYXUwd6QA+VQaxI9Znl+g==
-X-CSE-MsgGUID: K0xst9fcSs6tsROKL0pfog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="25385283"
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="25385283"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 18:55:45 -0700
-X-CSE-ConnectionGUID: zu00YDKoTgCrApgAN111bg==
-X-CSE-MsgGUID: kCjus9/aSU67aafbZZIwFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="37662070"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by orviesa008.jf.intel.com with ESMTP; 03 Jun 2024 18:55:41 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Kalle Valo <kvalo@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	mst@redhat.com,
-	Jason Wang <jasowang@redhat.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	iommu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 22/22] iommu: Remove iommu_domain_alloc()
-Date: Tue,  4 Jun 2024 09:51:34 +0800
-Message-Id: <20240604015134.164206-23-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240604015134.164206-1-baolu.lu@linux.intel.com>
-References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KYk0RwQB"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1717466223; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Qe5hOBNaCqLZm/rRI4XccAdFKiV/c/Rsd9mYPA/Q9+4=;
+	b=KYk0RwQBbcDcuNn16o9LuVna9X2GOCX0hAmMEqkXATC1hUwWV+ErGwPBOKzmfnEdZhsuEsywBx6sXkr5kFA+sg4eyH0St+eEgNjzinQnRJPBQQnMVX3SgLFuoHT2Smq3wIKU7y/Y5aVSVmVsl8HeFjuJTo5jZ+5kDueEo3IKt/Q=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W7p7gKf_1717466222;
+Received: from 30.221.146.134(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W7p7gKf_1717466222)
+          by smtp.aliyun-inc.com;
+          Tue, 04 Jun 2024 09:57:03 +0800
+Message-ID: <bd49fcba-3eb6-4e84-a0f0-e73bce31ddb2@linux.alibaba.com>
+Date: Tue, 4 Jun 2024 09:57:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [HELP] FUSE writeback performance bottleneck
+To: Miklos Szeredi <miklos@szeredi.hu>,
+ Bernd Schubert <bernd.schubert@fastmail.fm>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ lege.wang@jaguarmicro.com
+References: <495d2400-1d96-4924-99d3-8b2952e05fc3@linux.alibaba.com>
+ <67771830-977f-4fca-9d0b-0126abf120a5@fastmail.fm>
+ <CAJfpeguts=V9KkBsMJN_WfdkLHPzB6RswGvumVHUMJ87zOAbDQ@mail.gmail.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <CAJfpeguts=V9KkBsMJN_WfdkLHPzB6RswGvumVHUMJ87zOAbDQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The iommu_domain_alloc() interface is no longer used in the tree anymore.
-Remove it to avoid dead code.
+Hi Bernd and Miklos,
 
-There is increasing demand for supporting multiple IOMMU drivers, and this
-is the last bus-based thing standing in the way of that.
+On 6/3/24 11:19 PM, Miklos Szeredi wrote:
+> On Mon, 3 Jun 2024 at 16:43, Bernd Schubert <bernd.schubert@fastmail.fm> wrote:
+>>
+>>
+>>
+>> On 6/3/24 08:17, Jingbo Xu wrote:
+>>> Hi, Miklos,
+>>>
+>>> We spotted a performance bottleneck for FUSE writeback in which the
+>>> writeback kworker has consumed nearly 100% CPU, among which 40% CPU is
+>>> used for copy_page().
+>>>
+>>> fuse_writepages_fill
+>>>   alloc tmp_page
+>>>   copy_highpage
+>>>
+>>> This is because of FUSE writeback design (see commit 3be5a52b30aa
+>>> ("fuse: support writable mmap")), which newly allocates a temp page for
+>>> each dirty page to be written back, copy content of dirty page to temp
+>>> page, and then write back the temp page instead.  This special design is
+>>> intentional to avoid potential deadlocked due to buggy or even malicious
+>>> fuse user daemon.
+>>
+>> I also noticed that and I admin that I don't understand it yet. The commit says
+>>
+>> <quote>
+>>     The basic problem is that there can be no guarantee about the time in which
+>>     the userspace filesystem will complete a write.  It may be buggy or even
+>>     malicious, and fail to complete WRITE requests.  We don't want unrelated parts
+>>     of the system to grind to a halt in such cases.
+>> </quote>
+>>
+>>
+>> Timing - NFS/cifs/etc have the same issue? Even a local file system has no guarantees
+>> how fast storage is?
+> 
+> I don't have the details but it boils down to the fact that the
+> allocation context provided by GFP_NOFS (PF_MEMALLOC_NOFS) cannot be
+> used by the unprivileged userspace server (and even if it could,
+> there's no guarantee, that it would).
+> 
+> When this mechanism was introduced, the deadlock was a real
+> possibility.  I'm not sure that it can still happen, but proving that
+> it cannot might be difficult.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/linux/iommu.h |  6 ------
- drivers/iommu/iommu.c | 36 ------------------------------------
- 2 files changed, 42 deletions(-)
+IIUC, there are two sources that may cause deadlock:
+1) the fuse server needs memory allocation when processing FUSE_WRITE
+requests, which in turn triggers direct memory reclaim, and FUSE
+writeback then - deadlock here
+2) a process that trigfgers direct memory reclaim or calls sync(2) may
+hang there forever, if the fuse server is buggyly or malicious and thus
+hang there when processing FUSE_WRITE requests
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index b0bd16a7768e..8b4ce7aa16ac 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -778,7 +778,6 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
- extern int bus_iommu_probe(const struct bus_type *bus);
- extern bool device_iommu_capable(struct device *dev, enum iommu_cap cap);
- extern bool iommu_group_has_isolated_msi(struct iommu_group *group);
--extern struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus);
- struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 flags);
- struct iommu_domain *iommu_paging_domain_alloc(struct device *dev);
- extern void iommu_domain_free(struct iommu_domain *domain);
-@@ -1077,11 +1076,6 @@ static inline bool device_iommu_capable(struct device *dev, enum iommu_cap cap)
- 	return false;
- }
- 
--static inline struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus)
--{
--	return NULL;
--}
--
- static inline struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 flags)
- {
- 	return ERR_PTR(-ENODEV);
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3e4195c28e85..9ce8bc18485b 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1975,42 +1975,6 @@ __iommu_group_domain_alloc(struct iommu_group *group, unsigned int type)
- 	return __iommu_domain_alloc(dev_iommu_ops(dev), dev, type);
- }
- 
--static int __iommu_domain_alloc_dev(struct device *dev, void *data)
--{
--	const struct iommu_ops **ops = data;
--
--	if (!dev_has_iommu(dev))
--		return 0;
--
--	if (WARN_ONCE(*ops && *ops != dev_iommu_ops(dev),
--		      "Multiple IOMMU drivers present for bus %s, which the public IOMMU API can't fully support yet. You will still need to disable one or more for this to work, sorry!\n",
--		      dev_bus_name(dev)))
--		return -EBUSY;
--
--	*ops = dev_iommu_ops(dev);
--	return 0;
--}
--
--/*
-- * The iommu ops in bus has been retired. Do not use this interface in
-- * new drivers.
-- */
--struct iommu_domain *iommu_domain_alloc(const struct bus_type *bus)
--{
--	const struct iommu_ops *ops = NULL;
--	int err = bus_for_each_dev(bus, NULL, &ops, __iommu_domain_alloc_dev);
--	struct iommu_domain *domain;
--
--	if (err || !ops)
--		return NULL;
--
--	domain = __iommu_domain_alloc(ops, NULL, IOMMU_DOMAIN_UNMANAGED);
--	if (IS_ERR(domain))
--		return NULL;
--	return domain;
--}
--EXPORT_SYMBOL_GPL(iommu_domain_alloc);
--
- /**
-  * iommu_user_domain_alloc() - Allocate a user domain
-  * @dev: device for which the domain is allocated
+Thus the temp page design was introduced to avoid the above potential
+issues.
+
+I think case 1 may be fixed (if any), but I don't know how case 2 can be
+avoided as any one could run a fuse server in unprivileged mode.  Or if
+case 2 really matters?  Please correct me if I miss something.
+
 -- 
-2.34.1
-
+Thanks,
+Jingbo
