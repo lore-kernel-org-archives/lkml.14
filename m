@@ -1,138 +1,250 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D4113D2B5
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EFB12D758
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 02:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717466604; cv=none; b=hgzVxVVrEHNzwLrDSykHNNTsPrJqIWGecWMClg1rLOkfzXcPfv9KhLfED/VjeO+vfRSSfC/LrqAwuCxiIfEI9ugYZ+GpNNYAah2bVe6nabTqGAZ7YUkF0++sLkVZauGhOOo0Ezz7XNE6g+oLQLd+JAIAZhsT/icSlHG5yf29j+Y=
+	t=1717466769; cv=none; b=dasJBosXmfOry+F2q+r18JyBigPgDol8rcuzHdwfUm/xxJHe9SgUMBcA9tI+eM7E/bBQlmN5EEZI1Bw+JTlacKcWgkR0fHVkw4wYOF0utYycbCYkODhP0MdyNld66005hUGL4IQQUrjbvHolkgn+bUxW6AgKM4Co5eDjMIIg53U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717466604; c=relaxed/simple;
-	bh=VTCH11EDuFxS9Okiehsc89nS6yYQ+MIJBAIq81KUk0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkVlhHxcgCtKRPFPpEn9IV/ewxMHj/n/bqnY9J6UZw6Cc9VHa6SYzJ7wcwmX1NwA5ifFOFyt0xPCbd037osPPUzlIpYAWgaBm4R5w0OxyqZlVEPneaH6oW6fdQ5XsA+yvaimnBt4ssq9GiCucdHQATi4kh9Fw00X+2ecGuKzzsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VO2bURFY; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717466769; c=relaxed/simple;
+	bh=wy5P01o+0T9XjRR76ApAbVVT5yJ5oILZKBGqQSK/dd8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M9Xmt3YCn5pPjB+a/oaqwXsTcItIl9ySG7z3X8FAqqIZHuBWQ92yShzPGy206qc75FY3ZtULanrqect0B2hWs4E/JBLVlvto7L5PXqBQrpwPt2Fycaik6I3h5jzZY0TELG65zjrWCYraVhxA1FX64/rCY94edBkrGUstbETN++s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BqFTX3Is; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuanchu.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VO2bURFY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717466603; x=1749002603;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VTCH11EDuFxS9Okiehsc89nS6yYQ+MIJBAIq81KUk0s=;
-  b=VO2bURFYJQl9YEYVL2m0kReVxaAFIYOz6pzW6hjS66R1IAlK6lMeWjDp
-   47wxjcGyd3YDO39zCPU/VhR+sMDaX/E9U338qMiai0d8WtcHRvpFzGGlj
-   bA130eGSEd/5qYxnVitMJgTB1fyQMDzkJ2ITgK5zugkEHGUSf1m74MnhY
-   KV92fjyWrTJ5oPfLNiMWSu9SPwseslkYFNNdGcV2Z4CwRgbhQEqfoKUPg
-   WHR6DR37iwiD2GkbO0bV4oU+GnUAb+WLugj1VOco9PuZDrjsSlBqL4y5L
-   LHS+0W4L2BcX7JsJXAE2XkbmT+EQ22RGqRhzd84cYqCFeNVDrptTWfaxf
-   g==;
-X-CSE-ConnectionGUID: 8t+yBy4STuiSReeaQcSTTQ==
-X-CSE-MsgGUID: 8VGoKzX5QD6FHKqW7Pch/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11092"; a="11884912"
-X-IronPort-AV: E=Sophos;i="6.08,213,1712646000"; 
-   d="scan'208";a="11884912"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2024 19:03:13 -0700
-X-CSE-ConnectionGUID: YFB59XH6RPabyn5x7q+MDg==
-X-CSE-MsgGUID: O0cRuqV4QWOcwVyqRpgsIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,212,1712646000"; 
-   d="scan'208";a="74557144"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 03 Jun 2024 19:03:10 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sEJVn-000MQt-0n;
-	Tue, 04 Jun 2024 02:03:05 +0000
-Date: Tue, 4 Jun 2024 10:02:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>,
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>, hughsient@gmail.com
-Subject: Re: [PATCH v2] drm/client: Detect when ACPI lid is closed during
- initialization
-Message-ID: <202406040928.Eu1gRIWv-lkp@intel.com>
-References: <20240528210319.1242-1-mario.limonciello@amd.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BqFTX3Is"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a0827391aso90992047b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Jun 2024 19:06:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717466767; x=1718071567; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rjsptS2Yts9gQuV5Q8ZXK1TfjP+hvA4bC7qdXn/aM28=;
+        b=BqFTX3Isw4SWroCcvDGc2XhbzVCcYcHNuD/iK1C8UzQe4y+Lsr+IhmXVP/PI5dQJ6k
+         A4m0zFqLA0FXV0DLWS+2ZU9XAg7vczaL9ODCfMFbq4iyN3sXdVnhyHcJ1XhcklsQEhZp
+         Qj1zpgYkADUS3DgK6aRJ+Fi8egKaSxNpyGJfz0HsY/5lbCGZ52zEk8wCR2rbhAsXBhYl
+         +n/h8YNiYeqte0yAJYW0KXpmCjEE5LtrsX6AKXTipwqcsmow/3MHO+L+nTgb9nU0LDkI
+         mszYqbJPbjqZmVWx9OhDNp5RSQ+nZV+1wIO/RbrGHyrDzZVT9ICJbiKf7l+sOImJnm1K
+         6AKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717466767; x=1718071567;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rjsptS2Yts9gQuV5Q8ZXK1TfjP+hvA4bC7qdXn/aM28=;
+        b=cvJkCDn628/+WunFjEi5+tWd3fKLodPxF4FAKy/tpmTJWdQpcDq7JDIDJESNIYeLKH
+         PmBI38QQ0LIEiMTq9t3mHwQQAurt6V8hx/t5lay0GIq5UtkXcJ+G5buPHj6Zay1pLwqu
+         2CtVZIx0o9LJS8u4/JKqd6ROvC4bSzZgb53qz/M+xrYwTkYKwv5dUBYMKt44VUdHFRVb
+         UZRw3PNN6WsgUryCw4+sM59fv1OKPraPGavBty7FRBeOCP/TEaShayaAcVTOvbNos6h6
+         qXKVnG3niWspWmCMcClOw+l+mSAUglPVr770lwOw1tM919+x6wC9nYqktTV6JIoB63nU
+         b7vg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5JWR73sYeE1uDyFV3zZ/V7BMOWxWTPFmhQw1yXnQhT5ptNNjadqrNNtaYlMXn86F5tKMxUlMSI2qrBfE6sHACV0eOy9K9sbm9Z8hV
+X-Gm-Message-State: AOJu0YyvEzvOZkB3xVTpuZbyVZJG3x8ddrcKFgNmS45/mxhvb+Y8TfLA
+	Kzle7koDOlE6y+PemecWrg0oD32ihSlgQgCEeoijahMmkE/iB2cuErKjxMX/yNsZjV1EOUt2nBG
+	fGkKVZg==
+X-Google-Smtp-Source: AGHT+IG3g3AgqCOlx3jBB4ji1cGSVnGwhhLfCxnWASyuX4xJagCnN4kQSgFzxz93g37nWopgo31fHw42PQJS
+X-Received: from yuanchu-desktop.svl.corp.google.com ([2620:15c:2a3:200:367f:7387:3dd2:73f1])
+ (user=yuanchu job=sendgmr) by 2002:a05:690c:85:b0:61b:1dbf:e3f with SMTP id
+ 00721157ae682-62c796486d0mr32737577b3.4.1717466766718; Mon, 03 Jun 2024
+ 19:06:06 -0700 (PDT)
+Date: Mon,  3 Jun 2024 19:05:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240528210319.1242-1-mario.limonciello@amd.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
+Message-ID: <20240604020549.1017540-1-yuanchu@google.com>
+Subject: [PATCH v2 0/8] mm: workingset reporting
+From: Yuanchu Xie <yuanchu@google.com>
+To: David Hildenbrand <david@redhat.com>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, 
+	Khalid Aziz <khalid.aziz@oracle.com>, Henry Huang <henry.hj@antgroup.com>, 
+	Yu Zhao <yuzhao@google.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Gregory Price <gregory.price@memverge.com>, Huang Ying <ying.huang@intel.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Kalesh Singh <kaleshsingh@google.com>, Wei Xu <weixugc@google.com>, 
+	David Rientjes <rientjes@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Shuah Khan <shuah@kernel.org>, Yosry Ahmed <yosryahmed@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, Sudarshan Rajagopalan <quic_sudaraja@quicinc.com>, 
+	Kairui Song <kasong@tencent.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Vasily Averin <vasily.averin@linux.dev>, Nhat Pham <nphamcs@gmail.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Abel Wu <wuyun.abel@bytedance.com>, "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Yuanchu Xie <yuanchu@google.com>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mario,
+Changes from PATCH v1 -> v2:
+- Updated selftest to use ksft_test_result_code instead of switch-case
+  (Muhammad Usama Anjum)
+- Included more use cases in the cover letter
+  (Huang, Ying)
+- Added documentation for sysfs and memcg interfaces
+- Added an aging-specific struct lru_gen_mm_walk in struct pglist_data
+  to avoid allocating for each lruvec.
 
-kernel test robot noticed the following build errors:
+Changes from RFC v3 -> PATCH v1:
+- Updated selftest to use ksft_print_msg instead of fprintf(stderr, ...)
+  (Muhammad Usama Anjum)
+- Included more detail in patch skipping pmd_young with force_scan
+  (Huang, Ying)
+- Deferred reaccess histogram as a followup
+- Removed per-memcg page age interval configs for simplicity
 
-[auto build test ERROR on drm-misc/drm-misc-next]
-[also build test ERROR on drm/drm-next drm-exynos/exynos-drm-next drm-intel/for-linux-next drm-intel/for-linux-next-fixes drm-tip/drm-tip linus/master v6.10-rc2 next-20240603]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Changes from RFC v2 -> RFC v3:
+- Update to v6.8
+- Added an aging kernel thread (gated behind config)
+- Added basic selftests for sysfs interface files
+- Track swapped out pages for reaccesses
+- Refactoring and cleanup
+- Dropped the virtio-balloon extension to make things manageable
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/drm-client-Detect-when-ACPI-lid-is-closed-during-initialization/20240529-050440
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240528210319.1242-1-mario.limonciello%40amd.com
-patch subject: [PATCH v2] drm/client: Detect when ACPI lid is closed during initialization
-config: i386-randconfig-053-20240604 (https://download.01.org/0day-ci/archive/20240604/202406040928.Eu1gRIWv-lkp@intel.com/config)
-compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240604/202406040928.Eu1gRIWv-lkp@intel.com/reproduce)
+Changes from RFC v1 -> RFC v2:
+- Refactored the patchs into smaller pieces
+- Renamed interfaces and functions from wss to wsr (Working Set Reporting)
+- Fixed build errors when CONFIG_WSR is not set
+- Changed working_set_num_bins to u8 for virtio-balloon
+- Added support for per-NUMA node reporting for virtio-balloon
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406040928.Eu1gRIWv-lkp@intel.com/
+[rfc v1]
+https://lore.kernel.org/linux-mm/20230509185419.1088297-1-yuanchu@google.com/
+[rfc v2]
+https://lore.kernel.org/linux-mm/20230621180454.973862-1-yuanchu@google.com/
+[rfc v3]
+https://lore.kernel.org/linux-mm/20240327213108.2384666-1-yuanchu@google.com/
 
-All errors (new ones prefixed by >>):
+This patch series provides workingset reporting of user pages in
+lruvecs, of which coldness can be tracked by accessed bits and fd
+references. However, the concept of workingset applies generically to
+all types of memory, which could be kernel slab caches, discardable
+userspace caches (databases), or CXL.mem. Therefore, data sources might
+come from slab shrinkers, device drivers, or the userspace. IMO, the
+kernel should provide a set of workingset interfaces that should be
+generic enough to accommodate the various use cases, and be extensible
+to potential future use cases. The current proposed interfaces are not
+sufficient in that regard, but I would like to start somewhere, solicit
+feedback, and iterate.
 
-   ld: drivers/gpu/drm/drm_client_modeset.o: in function `drm_client_match_edp_lid':
->> drivers/gpu/drm/drm_client_modeset.c:281:(.text+0x221b): undefined reference to `acpi_lid_open'
+Use cases
+==========
+Job scheduling
+On overcommitted hosts, workingset information allows the job scheduler
+to right-size each job and land more jobs on the same host or NUMA node,
+and in the case of a job with increasing workingset, policy decisions
+can be made to migrate other jobs off the host/NUMA node, or oom-kill
+the misbehaving job. If the job shape is very different from the machine
+shape, knowing the workingset per-node can also help inform page
+allocation policies.
 
+Proactive reclaim
+Workingset information allows the a container manager to proactively
+reclaim memory while not impacting a job's performance. While PSI may
+provide a reactive measure of when a proactive reclaim has reclaimed too
+much, workingset reporting allows the policy to be more accurate and
+flexible.
 
-vim +281 drivers/gpu/drm/drm_client_modeset.c
+Ballooning (similar to proactive reclaim)
+While this patch series does not extend the virtio-balloon device,
+balloon policies benefit from workingset to more precisely determine
+the size of the memory balloon. On desktops/laptops/mobile devices where
+memory is scarce and overcommitted, the balloon sizing in multiple VMs
+running on the same device can be orchestrated with workingset reports
+from each one.
 
-   260	
-   261	static void drm_client_match_edp_lid(struct drm_device *dev,
-   262					     struct drm_connector **connectors,
-   263					     unsigned int connector_count,
-   264					     bool *enabled)
-   265	{
-   266		int i;
-   267	
-   268		for (i = 0; i < connector_count; i++) {
-   269			struct drm_connector *connector = connectors[i];
-   270	
-   271			switch (connector->connector_type) {
-   272			case DRM_MODE_CONNECTOR_LVDS:
-   273			case DRM_MODE_CONNECTOR_eDP:
-   274				if (!enabled[i])
-   275					continue;
-   276				break;
-   277			default:
-   278				continue;
-   279			}
-   280	
- > 281			if (!acpi_lid_open()) {
-   282				drm_dbg_kms(dev, "[CONNECTOR:%d:%s] lid is closed, disabling\n",
-   283					    connector->base.id, connector->name);
-   284				enabled[i] = false;
-   285			}
-   286		}
-   287	}
-   288	
+Promotion/Demotion
+If different mechanisms are used for promition and demotion, workingset
+information can help connect the two and avoid pages being migrated back
+and forth.
+For example, given a promotion hot page threshold defined in reaccess
+distance of N seconds (promote pages accessed more often than every N
+seconds). The threshold N should be set so that ~80% (e.g.) of pages on
+the fast memory node passes the threshold. This calculation can be done
+with workingset reports.
+To be directly useful for promotion policies, the workingset report
+interfaces need to be extended to report hotness and gather hotness
+information from the devices[1].
+
+[1]
+https://www.opencompute.org/documents/ocp-cms-hotness-tracking-requirements-white-paper-pdf-1
+
+Sysfs and Cgroup Interfaces
+==========
+The interfaces are detailed in the patches that introduce them. The main
+idea here is we break down the workingset per-node per-memcg into time
+intervals (ms), e.g.
+
+1000 anon=137368 file=24530
+20000 anon=34342 file=0
+30000 anon=353232 file=333608
+40000 anon=407198 file=206052
+9223372036854775807 anon=4925624 file=892892
+
+I realize this does not generalize well to hotness information, but I
+lack the intuition for an abstraction that presents hotness in a useful
+way. Based on a recent proposal for move_phys_pages[2], it seems like
+userspace tiering software would like to move specific physical pages,
+instead of informing the kernel "move x number of hot pages to y
+device". Please advise.
+
+[2]
+https://lore.kernel.org/lkml/20240319172609.332900-1-gregory.price@memverge.com/
+
+Implementation
+==========
+Currently, the reporting of user pages is based off of MGLRU, and
+therefore requires CONFIG_LRU_GEN=y. We would benefit from more MGLRU
+generations for a more fine-grained workingset report. I will make the
+generation count configurable in the next version. The workingset
+reporting mechanism is gated behind CONFIG_WORKINGSET_REPORT, and the
+aging thread is behind CONFIG_WORKINGSET_REPORT_AGING.
+
+Yuanchu Xie (8):
+  mm: multi-gen LRU: ignore non-leaf pmd_young for force_scan=true
+  mm: aggregate working set information into histograms
+  mm: use refresh interval to rate-limit workingset report aggregation
+  mm: report workingset during memory pressure driven scanning
+  mm: extend working set reporting to memcgs
+  mm: add kernel aging thread for workingset reporting
+  selftest: test system-wide workingset reporting
+  Docs/admin-guide/mm/workingset_report: document sysfs and memcg
+    interfaces
+
+ Documentation/admin-guide/mm/index.rst        |   1 +
+ .../admin-guide/mm/workingset_report.rst      | 105 ++++
+ drivers/base/node.c                           |   6 +
+ include/linux/memcontrol.h                    |   5 +
+ include/linux/mmzone.h                        |   9 +
+ include/linux/workingset_report.h             |  97 +++
+ mm/Kconfig                                    |  15 +
+ mm/Makefile                                   |   2 +
+ mm/internal.h                                 |  18 +
+ mm/memcontrol.c                               | 184 +++++-
+ mm/mm_init.c                                  |   2 +
+ mm/mmzone.c                                   |   2 +
+ mm/vmscan.c                                   |  58 +-
+ mm/workingset_report.c                        | 561 ++++++++++++++++++
+ mm/workingset_report_aging.c                  | 127 ++++
+ tools/testing/selftests/mm/.gitignore         |   1 +
+ tools/testing/selftests/mm/Makefile           |   3 +
+ tools/testing/selftests/mm/run_vmtests.sh     |   5 +
+ .../testing/selftests/mm/workingset_report.c  | 306 ++++++++++
+ .../testing/selftests/mm/workingset_report.h  |  39 ++
+ .../selftests/mm/workingset_report_test.c     | 329 ++++++++++
+ 21 files changed, 1869 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/admin-guide/mm/workingset_report.rst
+ create mode 100644 include/linux/workingset_report.h
+ create mode 100644 mm/workingset_report.c
+ create mode 100644 mm/workingset_report_aging.c
+ create mode 100644 tools/testing/selftests/mm/workingset_report.c
+ create mode 100644 tools/testing/selftests/mm/workingset_report.h
+ create mode 100644 tools/testing/selftests/mm/workingset_report_test.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.1.467.gbab1589fc0-goog
+
