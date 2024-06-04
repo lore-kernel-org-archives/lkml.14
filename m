@@ -1,47 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC1913D607;
-	Tue,  4 Jun 2024 17:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A127148820;
+	Tue,  4 Jun 2024 17:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717521676; cv=none; b=rcPWEGx9+N3bKgTjS+yroNGst8Tsv0UBik52MB/BWjLWzl19M8XxOerlzXQ3mm/YE+6fSn18Pt4Ss21ecICFX1wpSTMwpidHoyBDfaKf5OC+CuEaI+z4dheiOv3SrQEAULucBTHePof3ZI19b7+75ET3mV1AbwxKmjPeO65zqf0=
+	t=1717521772; cv=none; b=qWfRQmld7pB6aL0XtEou4Xno6lt2DNAan/IwsLsLwN/ZQkGOqs86fl3Q0l5mHGEgRGtLfzOdTE0kgqGLnrv8K1p94PF3SGem+N2c2QgNr+uYUlVEaWj/lhGTwi7h63ngnoc66Cv3klfdn1xuhkb2crE6nb1mtQ6AWsWBj2A5Zbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717521676; c=relaxed/simple;
-	bh=ENkuYl6K6Pazk888AjcWNqo87PwckZvP2v3d5Fy2kV4=;
+	s=arc-20240116; t=1717521772; c=relaxed/simple;
+	bh=xKwDmlTQgHxY0OuUUcdVyJs4Yi3XufURqPsGe3qRrKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swLLfFP+1vFAYJ/mwhwCJRRc8CGKRpHNtT/+top0oaxqD0LKe5LlF8j/TV/gXrpy3hDsjkX5En2O+zZtwIZ+QzrlG3GTcw+svXdL/LacD7ZSEKF74xxV3kmr2yciONzaY+SdhiHxGDNBP0szi00OhuqgRnQ8h5OjtqGiJ9UjsfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLSOWmyG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCW90HEW7M+kH7UXimY2DRI0GZc6ChIdZsDs8y7Y4gmupPZA56arLXwUjVjDa73mZgBIYIsAzpmhugO+bE4uaAVJLkw2gAFK+lboltPNL4nlmWVJBQF8Og/AaY2XW7XXCrPZ8BezvgQxmP9zYD9lyIcDcNTN22KzOGfiVymIzoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRX8huRT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLSOWmyG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A50C2BBFC;
-	Tue,  4 Jun 2024 17:21:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRX8huRT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9BFC2BBFC;
+	Tue,  4 Jun 2024 17:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717521675;
-	bh=ENkuYl6K6Pazk888AjcWNqo87PwckZvP2v3d5Fy2kV4=;
+	s=k20201202; t=1717521771;
+	bh=xKwDmlTQgHxY0OuUUcdVyJs4Yi3XufURqPsGe3qRrKY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bLSOWmyGF0Bc+5ULOgVYYseAHIlEtY+J8TE2hNhNzmZMRzsrFpC+aJ8ydjJByzWz2
-	 N19WWKxZl9peofpn8DT6bQrt5eYy+d4Pf9lAhGo1vc0As9A9ssJSCc67EOUrzZ85Qq
-	 CtreVZ3/m8sAkDLN7qPb2P17m+pnJgjSMUXAK0ZlF6pbfbT0LnybAXp9zO9COeoBsi
-	 5DIlloZzB0uM6HluZpo098Ounu9ilx0vumXx+c3wpaXigP6raWTQiCXQQL5Ilyi6jD
-	 1LfpdsP89BNfPoJqgM1Sr8+FnFEqCr74Zj7b8v94175X7+U7jXYihMf4J6vGqHaekw
-	 8aN1yTHwp9JIw==
-Date: Tue, 4 Jun 2024 10:21:15 -0700
-From: Kees Cook <kees@kernel.org>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
-	linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com, linux-kernel@vger.kernel.org,
-	syzbot+c52569baf0c843f35495@syzkaller.appspotmail.com,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] HID: usbhid: fix recurrent out-of-bounds bug in
- usbhid_parse()
-Message-ID: <202406041019.BCD0A93C@keescook>
-References: <20240524120112.28076-1-n.zhandarovich@fintech.ru>
- <nycvar.YFH.7.76.2406041015210.16865@cbobk.fhfr.pm>
- <E62FA5CB-D7AE-4A11-9D2E-7D78D7C10ADA@kernel.org>
- <nycvar.YFH.7.76.2406041614210.24940@cbobk.fhfr.pm>
- <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+	b=hRX8huRTHJdpJsxH0u9OAGIOKUvWIt22seynnj5Xh6CNtBAxPPyJhJvdvj4QJaJzG
+	 kiNAXice3ersyCVMJnmCcBd8MaVLhFEcpDElXyqtX3OwFHTfk8Tjw8aI4CxWjAN1D4
+	 vRbXrrXLHYX//5binCIN9/yEZLKLR5PAgrCUOeRt2TuGH5p+8wyRrSA3vVAEhG5suQ
+	 fissWp3QxeCp/mCSezWQ8sZvK0qaiRbxsPWLyuo1k6RvhBjAZs10ErlbpjCo7P7vtQ
+	 hANCAoeWBC2WfVMcUfiDkJqwomlT3P5uY4/YFXy/+gFLSwVtBITp7hZMrJq5adIR7w
+	 rcnO7MIcYIp9A==
+Date: Tue, 4 Jun 2024 10:22:49 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	tglx@linutronix.de, linux-crypto@vger.kernel.org,
+	linux-api@vger.kernel.org, x86@kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Adhemerval Zanella Netto <adhemerval.zanella@linaro.org>,
+	Carlos O'Donell <carlos@redhat.com>,
+	Florian Weimer <fweimer@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH v16 2/5] random: add vgetrandom_alloc() syscall
+Message-ID: <20240604172249.GA1566@sol.localdomain>
+References: <20240528122352.2485958-1-Jason@zx2c4.com>
+ <20240528122352.2485958-3-Jason@zx2c4.com>
+ <20240531035917.GD6505@sol.localdomain>
+ <Zlr-aMJdAEgHOj9-@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,52 +53,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2a38e355-af5c-4b3d-81be-0cc97376c1f5@fintech.ru>
+In-Reply-To: <Zlr-aMJdAEgHOj9-@zx2c4.com>
 
-On Tue, Jun 04, 2024 at 10:09:43AM -0700, Nikita Zhandarovich wrote:
-> Hi,
+On Sat, Jun 01, 2024 at 12:56:40PM +0200, Jason A. Donenfeld wrote:
+> On Thu, May 30, 2024 at 08:59:17PM -0700, Eric Biggers wrote:
+> > On Tue, May 28, 2024 at 02:19:51PM +0200, Jason A. Donenfeld wrote:
+> > > +/**
+> > > + * sys_vgetrandom_alloc - Allocate opaque states for use with vDSO getrandom().
+> > > + *
+> > > + * @num:	   On input, a pointer to a suggested hint of how many states to
+> > > + * 		   allocate, and on return the number of states actually allocated.
+> > > + *
+> > > + * @size_per_each: On input, must be zero. On return, the size of each state allocated,
+> > > + * 		   so that the caller can split up the returned allocation into
+> > > + * 		   individual states.
+> > > + *
+> > > + * @addr:	   Reserved, must be zero.
+> > > + *
+> > > + * @flags:	   Reserved, must be zero.
+> > > + *
+> > > + * The getrandom() vDSO function in userspace requires an opaque state, which
+> > > + * this function allocates by mapping a certain number of special pages into
+> > > + * the calling process. It takes a hint as to the number of opaque states
+> > > + * desired, and provides the caller with the number of opaque states actually
+> > > + * allocated, the size of each one in bytes, and the address of the first
+> > > + * state, which may be split up into @num states of @size_per_each bytes each,
+> > > + * by adding @size_per_each to the returned first state @num times, while
+> > > + * ensuring that no single state straddles a page boundary.
+> > > + *
+> > > + * Returns the address of the first state in the allocation on success, or a
+> > > + * negative error value on failure.
+> > > + *
+> > > + * The returned address of the first state may be passed to munmap(2) with a
+> > > + * length of `(size_t)num * (size_t)size_per_each`, in order to deallocate the
+> > > + * memory, after which it is invalid to pass it to vDSO getrandom().
+> > 
+> > Wouldn't a munmap with '(size_t)num * (size_t)size_per_each' be potentially too
+> > short, due to how the allocation is sized such that states don't cross page
+> > boundaries?
 > 
-> On 6/4/24 07:15, Jiri Kosina wrote:
-> > On Tue, 4 Jun 2024, Kees Cook wrote:
-> > 
-> >> This isn't the right solution. The problem is that hid_class_descriptor 
-> >> is a flexible array but was sized as a single element fake flexible 
-> >> array:
-> >>
-> >> struct hid_descriptor {
-> >> 	   __u8  bLength;
-> >> 	   __u8  bDescriptorType;
-> >> 	   __le16 bcdHID;
-> >> 	   __u8  bCountryCode;
-> >> 	   __u8  bNumDescriptors;
-> >>
-> >> 	   struct hid_class_descriptor desc[1];
-> >> } __attribute__ ((packed));
-> >>
-> >> This likely needs to be: 
-> >>
-> >> struct hid_class_descriptor desc[] __counted_by(bNumDescriptors);
-> >>
-> >> And then check for any sizeof() uses of the struct that might have changed.
-> > 
-> > Ah, you are of course right, not sure what I was thinking. Thanks a lot 
-> > for catching my brainfart.
-> > 
-> > I am dropping the patch for now; Nikita, will you please send a refreshed 
-> > one?
-> > 
+> You're right, I think. The calculation should instead be something like:
 > 
-> Thanks for catching my mistake.
+>     DIV_ROUND_UP(num, PAGE_SIZE / size_per_each) * PAGE_SIZE
 > 
-> I'll gladly send a revised version, hoping to do it very soon.
+> Does that seem correct to you?
+> 
 
-I spent a little more time looking at this, and I'm not sure I
-understand where the actual space for the descriptors comes from?
-There's interface->extra that is being parsed, and effectively
-hid_descriptor is being mapped into it, but it uses "sizeof(struct
-hid_descriptor)" for the limit. Is more than 1 descriptor expected to
-work correctly? Or is the limit being ignored? I'm a bit confused by
-this code...
+Yes, though I wonder if it would be better to give userspace the number of pages
+instead of the number of states.
 
--- 
-Kees Cook
+- Eric
