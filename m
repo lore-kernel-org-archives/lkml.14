@@ -1,218 +1,884 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1772414B945
-	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717529701; cv=fail; b=Ob2sPrXn3XzwwFMkrQyp1SVMFYteKleM9FT3pKPvlujhJDcGHg6fdfN9dJOJyurbgIP8iOMIVNiqVEoI5PyjnMF26wg31EM0C0ub8KsI5BiFFYCuYRWpW+cJxfUnYOaFuMCN7N5MYbg61GSgg/hSwhGRQt2a0vui62myND4+yv4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717529701; c=relaxed/simple;
-	bh=2QPvmna++U008XhJgEMCW+Gyym0d8+PiOcjWqkdPIeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ffd0V5XNw6IecOBtpgS8C29CyQNuaX7vFUDFBi00E4QWXU8tgz38Wx498bf7YZVa2Wf334IUdnYxxZ1gFaKSs6WbOsY7YvWSWb+L2PrifK9wPaFA62SXLnkkHtqN2sfnDXHlhVH2kUir/9VHKy63KZFDP1g7JR7Abu1Hk+C57/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 454JFkFu024630;
-	Tue, 4 Jun 2024 19:34:41 GMT
-DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
- =?UTF-8?Q?=3Dcc:content-transfer-encoding:content-type:date:from:in-reply?=
- =?UTF-8?Q?-to:message-id:mime-version:references:subject:to;_s=3Dcorp-202?=
- =?UTF-8?Q?3-11-20;_bh=3Dco10d3lQC88M20IyXskdzzJdaLATeibvbUB5Esx7WY0=3D;_b?=
- =?UTF-8?Q?=3DWrD6FXAUvkyMXt2dwCRNKHRgKHk13SH5dRYBex53WldSv1w/vGIiAsi96yy2?=
- =?UTF-8?Q?ZZl5PsbS_EMgbRxTkdt3BEblKx6uFe9cHOdNXBQnH6U37gmzvJybIwJ5pKGx7dY?=
- =?UTF-8?Q?w4evaW2gKw/h9+_7lqqHGFY+yjS2NB70T6At53PSlr8mCsHeUW1oIUexxWPuEao?=
- =?UTF-8?Q?C6zFSBXsOfzm1GKYUm99_7pa4bhoOGtqPqmtpfE5Yim9QGb6FFi1zXM6ASTRcBV?=
- =?UTF-8?Q?RyYJA7Au9UR3AuDvPPpF00LN9J_Dn5EMtXl/KfVyQBb9b+vJ0k0PfEyn4DRPfFf?=
- =?UTF-8?Q?sb6DZVVnV2qKcbHmKrAudHihkO0yhOK8_CQ=3D=3D_?=
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yfv3nwrsf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 19:34:41 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 454JV2Pe015598;
-	Tue, 4 Jun 2024 19:34:40 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ygrjcsj6a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 04 Jun 2024 19:34:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lsAud1O2g39DoJQbs1aIv7LSv4ouNIkvcXIuE1ZxLlRqR8a/W3UpTBE7CvhIkgwvMPkyDvQweaUCsbyyLRtjL2mRnLrfiMuWTg2XeJQihqAV/+1Ye3DA7f3y/4lV+ZtmHVoKg05f4ZSIAZVcHjbUavmqnZUJSBQXT/q9A72SCeHJVYEo4FbnIJCkFglZfAlg6vxpvlAv6EgoOaE5QFi72lBA4wGxpxWISe8W9Ih5tBUde7JxhPCDuC0KJCIuFzMJ6s3+uZPaFdDTETpkU6cSalEy2rLN0YnmnFcsEbobR/H6uyKWJ39LFKP93kc/R2uG40z5N9hjFHZwxSR5eAhgUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=co10d3lQC88M20IyXskdzzJdaLATeibvbUB5Esx7WY0=;
- b=bf72TSWpMuUQfjLVToc+v2fB5wR7hjtyomRIerPppDGEjNjoBoGp6C4bt/zAySRxYrEDbb3NbBkJHAMWPprtDmii3xhF2DYNhVdcZfV88sWr4cRcKVqtbP+RiiEfX35Kxg5qp2DfzuO2g6UahYKek+CXLNsei4cD83WljMWSscQh5mNP7Qw/nlWLlzTxKnNRogy9oBCHGGhT+iiZMEzhpRTNUyOtoyLZD6bcI+fmkvskONRhBD9/q4IZ2Nh6skbVWcdgHejxOLeofgad5o9tQfUhfCtgFbgokGyUQbkzs17nhzBq6uJsF5qHCFjMc1URRjp7M/Ec+s5kQ/K5IrgCFw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25A314AD36
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 19:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717529696; cv=none; b=slXXlDzctcuyQddzkyxa6o6OpQBqu18OfsxV/1w2qesQtJ70zH9GxErurbsYD6n61XLBqGwkgMaX8GGq6g8PO0QtKP2HLuzGXEdwmnCocFbRJQto8nPqDjGL8Yhujg5qGU8tQ7/FYcqmqvF1KiTQ8MV9tfPIzXfX4S4QwvE2D0s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717529696; c=relaxed/simple;
+	bh=qN2MBRKzxzwXAL03Xzsa1ojxsfhLcPfAHIaUXpEXeZg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=frGfvzdvKK7zo/qiin5kPMLJNre2Yj9LqMFaV9C9vIe9VRCq2KLKwLSGCb665dR43ChG9+DBoMzhSi9OapsPzGFYTunTYfV0WJeHYltIVinR15Z0PWJqdqTeEWF82S57eImniDnKHD0YOFQUxtm9y2LK1UPecc9pBu3anSO3Wqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vpVFz5mm; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpVFz5mm"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-62a379a7c80so101896a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 12:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=co10d3lQC88M20IyXskdzzJdaLATeibvbUB5Esx7WY0=;
- b=h2a/deip/1u3sljnLQCKXrjUyEDeB1Pel2Sfi6mU8Grqcs8zHIj9EuHF7CsR7C9/vYk5KZiJ4E7pNEP2DnKzvHL2PN+EQlc9dYCQGfehDCtixWwq2iyQDmz1s+dRQP5b/MtYiGh0DnmYAul0vYn4jiGDoMkH2m8x2RjIVu1p5OU=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by BL3PR10MB6042.namprd10.prod.outlook.com (2603:10b6:208:3b2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.27; Tue, 4 Jun
- 2024 19:34:37 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::2561:85b0:ae8f:9490%7]) with mapi id 15.20.7633.021; Tue, 4 Jun 2024
- 19:34:37 +0000
-Date: Tue, 4 Jun 2024 15:34:35 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Cc: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        zhangpeng.00@bytedance.com, willy@infradead.org
-Subject: Re: [PATCH 13/18] maple_tree: simplify mas_commit_b_node()
-Message-ID: <zhbyib7htf37f6sw6futnsjqy4w6ru442jd3v2f3i7hhz35hgz@jkv7i6osu5jz>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>, linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org, 
-	linux-mm@kvack.org, akpm@linux-foundation.org, zhangpeng.00@bytedance.com, 
-	willy@infradead.org
-References: <20240604174145.563900-1-sidhartha.kumar@oracle.com>
- <20240604174145.563900-14-sidhartha.kumar@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240604174145.563900-14-sidhartha.kumar@oracle.com>
-User-Agent: NeoMutt/20231103
-X-ClientProxiedBy: YT4PR01CA0081.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:ff::15) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+        d=google.com; s=20230601; t=1717529694; x=1718134494; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ct1xfjgBlDiO/rOwDK4wzZ15YJPUMxnDGM/Y6I9JkHI=;
+        b=vpVFz5mmg1SJX+EbQQGyzWT+foIKJE+oDLFN6zCACcHIdkvr51G38udM/AvfrEnAuy
+         quYnizEuU9AYt+GoIvRlzWaZp+1kSxO95fYYt05JTHToxD/q4qByxudLp5xe4s9KdLb/
+         e7t6uQlRmrCUfkPU/Ta602d9Gxq9eZKRX3zEyigaNWL06Ce9xE3uUBH0vJ+mJFX3GJ25
+         R8MUEZxn85kjTOAlTfRD0SbZLBhcpRhh2b2A539hzuPkezsKA/GwYmaeQwgaVtc/yC5G
+         HS6neKmB7q+Yso4mctT7DLP0bYf1zVVrZnNAg4XY+VcdqKkPn8WMe/Qf2lyh9fxC+/n/
+         Bl8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717529694; x=1718134494;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ct1xfjgBlDiO/rOwDK4wzZ15YJPUMxnDGM/Y6I9JkHI=;
+        b=oalsWZQOatf7toalT9h1r3kbe5nC7JmsJyJXmXATMZ0WKGp/pNtYdIN6FqB7q9xQ+n
+         SDJ2HsXwJFdq7HK6iyc40DDwBZnm157q3HiZfmKNIE91QAkYHwAjcbauGGNMFaCjmAW1
+         PkS2JxanaCjjTIiqRaaxRXzLVXyfM+Rt/Mzc7Ssx7aK8Qhf5yV07lm+Y7iyfmz4ZN7/Z
+         dJY8/eL6BcKX5R+DgVrdPRGilksAhxcjcnE7VLFz+xWCRfz0KL2ekroPu6UlQtMYC54D
+         NXzlU+VSkdkZyqDMQzgbPCyw9Pd5w4/kJktKBR+r9SMAp6N6TMkWKzZnriTn6QPEGQu7
+         WIbg==
+X-Forwarded-Encrypted: i=1; AJvYcCX00pp2FCXyM4ElcZMZBr4dTDWrS+k6TJZElJu3ahD0n5df+GfXDP9d+p/MqKp0pTxPu8ogRBgvcoY4iqa+B24VexO1tGufTtYurRrH
+X-Gm-Message-State: AOJu0YyJm+MbHcPqhsSsX27FCHj1co9+2YAlQYQfTWVvwrw8fC7tx5TS
+	PcZP7BXpo8qYBH5pPpyR6k7N6MzCuxHjhezQ+92Ln7z2e1MZxWhq+XY8d/TklsXdyGFJtr9ilWm
+	Jew==
+X-Google-Smtp-Source: AGHT+IGQdHaNTRmKVtUlJ0+GgSID3GaK0JE3JGKduXiODJNepMkjBlKKe38/pjK+JgMlkVHdCO8o9CVqSXM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:2309:b0:2b4:32df:9b7b with SMTP id
+ 98e67ed59e1d1-2c25300652fmr44706a91.1.1717529693749; Tue, 04 Jun 2024
+ 12:34:53 -0700 (PDT)
+Date: Tue, 4 Jun 2024 12:34:52 -0700
+In-Reply-To: <crv2ak76xudopm7xnbg6zp2ntw4t2gni3vlowm7otl7xyu72oz@rt2ncbmodsth>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|BL3PR10MB6042:EE_
-X-MS-Office365-Filtering-Correlation-Id: f524396a-d06c-49b8-3f19-08dc84cd5f0d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?Z3gk6SfUm/LssMPw5yFmjrsd4Uiie7PqfdwmnhaPSTGfnxPVpyMVGIkpLOJc?=
- =?us-ascii?Q?KyRyjSBv7wm5D6F2nr6yyD2YKm8oD7gi1d3dnEFbwMzNKdyszbpClXM2ERjb?=
- =?us-ascii?Q?ydgD8glGCOq4yJKVMuLtdWJfVL1/A6V2w3MmvXK9PSfC5WJ3F8Z9WB2elfIH?=
- =?us-ascii?Q?dWUhWOTGxeBjRQSQpMbx+g7JATDNwMTYUO/QPqTKGWzcmasVUXdtbiio/iQu?=
- =?us-ascii?Q?Bvc75CV/GemtEXrVESkkUEwxFM5Jxq+7zEj0d9M97uDLSnmel0DdkRgkzPXr?=
- =?us-ascii?Q?Qi1oYNH0qvckgH78nBPONCOf2drJqI750XaLXUR0LJuv/h2GsXUIwuz6zN8+?=
- =?us-ascii?Q?JJ4Zc2TZO2PMOMtGyvIGn7WE4T5SgYZKYLROYIa0xub6su25Abuw7O37IQGG?=
- =?us-ascii?Q?1oqfV5gztpxxM0hhL3NEr8TuNEdJXd6j22rjg97qKrLEdRKtjbkv1yXN9nzQ?=
- =?us-ascii?Q?DcpyZvFnLbiachd+KkP9Wo9+bOavUR4ILqO9X5GxMP5HCPvJfAfRr1r8wbvZ?=
- =?us-ascii?Q?dRujAJJJxtlu8ekkrmGVsHcZbirloheN/++ucEZhMph4R3A95mgtEBxwHUTW?=
- =?us-ascii?Q?tsp3GanBjvIknTvxNAN180jvznQMvFFfaZgqc2ATFH6f2Bt5Vm+oO7nOyO2j?=
- =?us-ascii?Q?0LxIuBCkjPpCGaaPwy8nB2GFh8B7nGwMOQ8LFWMTA0deDWkkOKISGlkIXCl8?=
- =?us-ascii?Q?pFtVmoLC0VOT2S2w2VYxtFJrWxD7t7rntHOID2DKLlcvh/Er5MbuAonVhghc?=
- =?us-ascii?Q?o/aDkmE/QgG9b7gApMxbU/HkFiIZ3CeVGrGEr8Wo0phT8oYTk9WK1R05nxVV?=
- =?us-ascii?Q?81dk57thMw+1oir3H1F53xMNutSAdSblY25UT3ECXPkQ7ON78tcyrE+hB+Cs?=
- =?us-ascii?Q?3FGBIh2XJxD1AHYLmmqRuVmV2Ol/mzEStdcH3KKjrKIP6eXyEQmm2F6PK8C6?=
- =?us-ascii?Q?MwuXpjmLtAMzsTISN/Bdzq9J0SeKcftNRQaCPv5w3dZOQZWCrMChFcTc8nsg?=
- =?us-ascii?Q?Y2uIoL3E22ZdgoE/5SZZpuubzonH2EomDbCrNxbPzrDiGvqOA3zI32n+6KWI?=
- =?us-ascii?Q?oour3H0T7TQLAHzfdUmT03ia12HzQjODnP6rdgrTAXE7sQ0kGpp0WmJbgB9Q?=
- =?us-ascii?Q?P9hYhjVgCLz8SJ3GDZqrLVYfffMVqzdmOnmHmTqB95LZ1ehUqUrCTHuqhwj2?=
- =?us-ascii?Q?hGSW3JrqOJhicB1Z3rnP3rfGz5cxmCE2SjtS9s1EWlfKZJJ65dVkM5Gn8sFt?=
- =?us-ascii?Q?7objY6ZFRMP4BxeKhQW7iDiYF5btC6OZqm/zQpqc3mxbaa6MbwByee+sWk5s?=
- =?us-ascii?Q?7g/xmlc6IlYQ3/DnKfO1/sZJ?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?XrXyv3iECQYJorzttDGI4QCK2RckFEGtpxylqmHmOM2mLbyDLXZuMJuOW9mW?=
- =?us-ascii?Q?jgz1aR84Wx9rizOkJpdRfw3QnEebGRd4Zu6BOVzu/cPjQxJJbEsvOsKS6L3t?=
- =?us-ascii?Q?bup5sSAx8AbYVHZC3xEtH93iwFw3WglS6TOGuz0JUISt9SqwiTC+QVRWErzk?=
- =?us-ascii?Q?fbe+pzajvFDXeLinxcvdB+n+w7Sxdjt0n1yvDNACm/ghye+PMl3Is2gPlaxW?=
- =?us-ascii?Q?jjFyxCFZozOzCluGrHUnkd8Gc0fiw6WhUcBisWKSmAgTwscplDp1tzXJE4pr?=
- =?us-ascii?Q?hKdE/wlGmMzgCUCtc4xs5s4FRoe8/0o/zcGVQkXyMN4jLKOwuUWd1972v/xG?=
- =?us-ascii?Q?mY1hvmJfd9ZCcekAc6+ZLdpiDFIgT+zDAVWNYVZjMz+4WGzr0SrP3jyb7+jC?=
- =?us-ascii?Q?PK36ZTJDgof8BOzv9jFTxHR+t9k3mcBstQi2x+/fE4nzDnInCjTo2YacASLc?=
- =?us-ascii?Q?soMssoO9yZyVDaosBxJQXLFvbT2h6K3E+TJNdI5nqqAMpPLiuaPgcc5k2eb9?=
- =?us-ascii?Q?7ZLtgGVYN+ZR/g2z9rBPbo7GbPD2/7baGcFDBP1Bij0Yl+By2Dpwt9hTHJRu?=
- =?us-ascii?Q?5WDq7hiIqdfLNYpAUBxoI1JPCxiCS9AsVloioE0ncAlQWJ+LXsNMLgF9fFRH?=
- =?us-ascii?Q?nJg0O8LGBu45gUwSXYzJy86lcyXiDi6D7k7oNTs5SpOSKDPTRmZ2nrLKD4NC?=
- =?us-ascii?Q?gevo9inV34qZBUegtOJYjEy8U1/nCa9cZoKcOfBh1MNSTuYWFV5U4uE/cfm5?=
- =?us-ascii?Q?QJVKrDUQxPDQB+XuUwyjegH1AY904/9TGEbjiGjydWs0b6hxMIe7Asd2/w3S?=
- =?us-ascii?Q?omtaT7zWPclvbusXdCczyrks8cT0pDBqPzmMfAQThkIdV0DCzv1Aa5H5QNkY?=
- =?us-ascii?Q?Bam3MH9HCcA5j0ys+HpFD2XnyIRZhwEXTfFaCP9pcyMtSFniQZrWvudiQHVG?=
- =?us-ascii?Q?9dakIspweANl7iP1R6ubspxqO4Pk+lfuWlgX4yMqqBZWQiKN9zEHoaRMkOla?=
- =?us-ascii?Q?+7T1m8+MD99u7EHX0LkS0aWXG3DA5yBA/47iYf2efOChoaqJ3Nk3j9YP0ug2?=
- =?us-ascii?Q?DLUYX01U8MKjkk/LIEjIKinqdaEUwl4Wr/QjEU8L5FQl8a28X/U6wTZjx3IN?=
- =?us-ascii?Q?o+bUwjpK6VuMfBVY4Kp5g14alNJMdEgKfKYsZo3btVHG/iBa/PaE2UUVj6Iu?=
- =?us-ascii?Q?1R0yr+jOnsi6sxdt2Qah1uHtu1rDOdZYcMGFhOQOxIrK5leDm+IwjcE9eyB/?=
- =?us-ascii?Q?7ZBqRhW3ZktiEuORg58l2ORAGDVUdunr2TmdcMqxxYwx4CPR0ouIlGD1ImJo?=
- =?us-ascii?Q?fpx5Ia+CenME5V0Jon7cRn8OU6MrCjKcPdrCZiaoVzv4+UTZtFNKhvajynbk?=
- =?us-ascii?Q?e/BTYOZtaALG2rPfkFYxy3EKC3rKYCPc7Tq1iqx64a4S8TvKRTM2bN1MQXNV?=
- =?us-ascii?Q?meTlfIdUoh7572jrsHxdZasgzsrk6eRb8r3qGBiW5jxvb745yQ1WxZMi7VVk?=
- =?us-ascii?Q?XtsDTvmG8e1O1W2DsUYaAStDmzs74DX3hrz3Wc7AVnKwDm+rCQUvLm7hoS2q?=
- =?us-ascii?Q?DqfvhbYtTXx7obZeKTCz1S9FLCuzM4OFmi90MYll0eYFRnOgl6k2x/0qEgZa?=
- =?us-ascii?Q?wg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	CysA0FZwNxBBgjuez1Kw9aH5ZhCOffxyHF/b6fFuhz4KoYXQocLLbLeqG+V+YWFMvjjReVS+4ONgBGZ4JJS6UkJ9zgdmxFysBDRH/9aaAXwI3gif0nphJ8jBEmW/uH0eD9AkSqGZsMpCPZsO3pBTC2R91tSOxDQAggDBLswkJbQgHN353tCA3Jqu4t/Zn5D4DZwRtT62vGeYPzAF7a2O8pOVCYNyBse+/sMTN/g5Shrajt00y/3TAy4fW4rKLpfN5hZX0Ce63++hnQj+j0rozNX7FbIZp9ktUE7wCn7ZFOICnfZJ3NXg26LumUxVkSJF5lZbIv1knEgBJDNX8q5uMJ9JCL1OlQYsDzlXi0T8S7Y3MRtmJ/xE8PAdGLgs331VxIvWFICvYgKLZ+sTwzEXPWnWtT2FdUPbEH3e64gs09HP6ZAPe+efujNosDo8Q5d0e2Ct9XHTgeKE6MtqWqCfPM/2OYot6aSgacwdMT2VcL3W/K20JfbV/CBdyJ2/TGJjVsw3tHT6glX7i8oyhHcyA6MeLrNyNqR5NCamOibDwQnrMGkhCzo3e0BaTxpdqplJidRThdyAtx+tv+ZQTZGy/WeIFTlwJaZu68K3ABwXQu8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f524396a-d06c-49b8-3f19-08dc84cd5f0d
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2024 19:34:37.8466
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rprMWALVspGy+cZCTNk12dyQ7B71QNnNzIlTu8ziSiXvJaHL3RtbKlkj2VSUimiAavIbH3FxWXbxYoCMAEIpzA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6042
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_09,2024-06-04_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406040157
-X-Proofpoint-ORIG-GUID: -eWVeXr26t2Oguao0N5eRuNy8WR2m7_g
-X-Proofpoint-GUID: -eWVeXr26t2Oguao0N5eRuNy8WR2m7_g
+Mime-Version: 1.0
+References: <20240602115444.1863364-1-kirill.shutemov@linux.intel.com>
+ <8992921e-7343-4279-9953-0c042d8baf90@intel.com> <crv2ak76xudopm7xnbg6zp2ntw4t2gni3vlowm7otl7xyu72oz@rt2ncbmodsth>
+Message-ID: <Zl9sXGj890yerBPJ@google.com>
+Subject: Re: [PATCH] x86/tdx: Enhance code generation for TDCALL and SEAMCALL wrappers
+From: Sean Christopherson <seanjc@google.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-* Sidhartha Kumar <sidhartha.kumar@oracle.com> [240604 13:42]:
-> Use mas->store_type to simplify the logic of identifying the type of
-> write.
+On Tue, Jun 04, 2024, Kirill A. Shutemov wrote:
+> On Mon, Jun 03, 2024 at 06:37:45AM -0700, Dave Hansen wrote:
+> > On 6/2/24 04:54, Kirill A. Shutemov wrote:
+> > > Sean observed that the compiler is generating inefficient code to clear
+> > > the tdx_module_args struct for TDCALL and SEAMCALL wrappers. The
+> > > compiler is generating numerous instructions at each call site to clear
+> > > the unused fields of the structure.
+> > > 
+> > > To address this issue, avoid using C99-initializer and instead
+> > > explicitly use string instructions to clear the struct.
+> > > 
+> > > With Clang, this change results in a savings of approximately 3K with my
+> > > configuration:
+> > > 
+> > > add/remove: 0/0 grow/shrink: 0/21 up/down: 0/-3187 (-3187)
+> > > 
+> > > With GCC, the savings are less significant at around 300 bytes:
+> > > 
+> > > add/remove: 0/0 grow/shrink: 3/22 up/down: 17/-313 (-296)
+> > > 
+> > > GCC tends to generate string instructions more frequently to clear the
+> > > struct.
+> > 
+> > <shrug>
+> > 
+> > I don't think moving away from perfectly normal C struct initialization
+> > is worth it for 300 bytes of text in couple of slow paths.
+> > 
+> > If someone out there is using clang, is confident that it is doing the
+> > right thing and not just being silly, _and_ is horribly bothered by its
+> > code generation, then please speak up.
+> 
+> Conceptually, I like my previous attempt more. But it is much more
+> intrusive and I am not sure it is worth the risk.
+> 
+> This patch feels like hack around compiler.
+> 
+> Sean, do you have any comments?
 
-Since b_type is now only used in one location, we can use
-mas_new_ma_node() instead of mt_mk_node() and remove b_type entirely
-from this function.  This is also true of the maple_node *node pointer.
+Yes :-)
 
-old_enode and b_end could also be moved below all the returns as they
-are only used after all the other options.
+1. Y'all *really* need to actually look at the generated code, because this is
+   amusingly broken.
 
->=20
-> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-> ---
->  lib/maple_tree.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/lib/maple_tree.c b/lib/maple_tree.c
-> index 314691fd1c67..faadddbe2086 100644
-> --- a/lib/maple_tree.c
-> +++ b/lib/maple_tree.c
-> @@ -3437,12 +3437,10 @@ static noinline_for_kasan int mas_commit_b_node(s=
-truct ma_wr_state *wr_mas,
->  	enum maple_type b_type =3D b_node->type;
-> =20
->  	old_enode =3D wr_mas->mas->node;
-> -	if ((b_end < mt_min_slots[b_type]) &&
-> -	    (!mte_is_root(old_enode)) &&
-> -	    (mas_mt_height(wr_mas->mas) > 1))
-> +	if (wr_mas->mas->store_type =3D=3D wr_rebalance)
->  		return mas_rebalance(wr_mas->mas, b_node);
-> =20
-> -	if (b_end >=3D mt_slots[b_type])
-> +	if (wr_mas->mas->store_type =3D=3D wr_split_store)
->  		return mas_split(wr_mas->mas, b_node);
-> =20
->  	if (mas_reuse_node(wr_mas, b_node, end))
-> --=20
-> 2.45.1
->=20
+diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
+index 0519dd7cbb92..575cc54670ef 100644
+--- a/arch/x86/include/asm/shared/tdx.h
++++ b/arch/x86/include/asm/shared/tdx.h
+@@ -91,7 +91,7 @@ struct tdx_module_args {
+ 
+ static __always_inline void tdx_arg_init(struct tdx_module_args *args)
+ {
+-       asm ("rep stosb"
++       asm volatile ("rep stosb"
+             : "+D" (args)
+             : "c" (sizeof(*args)), "a" (0)
+             : "memory");
+
+2. Look at *all* the code generation, because the code generation for TDX-as-a-guest
+   as a whole is bad/confusing.  E.g. switching on ve->exit_reason in ve_instr_len()
+   after doing the same in virt_exception_kernel() _could_ be optimized away, but
+   in part because tdx_module_args generates so much code, gcc-13 at least tends
+   to not inline the individual handlers, which in turn means ve_instr_len() doesn't
+   get inlined because the compiler doesn't know that e.g. handle_cpuid() will
+   only ever call ve_instr_len() with ve->exit_reason == EXIT_REASON_CPUID.
+
+3. As Paolo pointed out[*], passing arguments vs. explicitly filling operands
+   have different tradeoffs.  Explicitly filling operands is *visually* pleasing,
+   but it's also prone to typos, and as evidenced by a data leak in mmio_read(),
+   being able to easily audit the code doesn't mean squat unless someone actually
+   does the audit (usually in response to a bug).
+
+   static bool mmio_read(int size, unsigned long addr, unsigned long *val)
+   {
+	struct tdx_module_args args = {
+		.r10 = TDX_HYPERCALL_STANDARD,
+		.r11 = hcall_func(EXIT_REASON_EPT_VIOLATION),
+		.r12 = size,
+		.r13 = EPT_READ,
+		.r14 = addr,
+		.r15 = *val,    <==== data leak
+	};
+
+	if (__tdx_hypercall(&args))
+		return false;
+
+	*val = args.r11;
+	return true;
+   }
+
+   [*] https://lore.kernel.org/all/611a387b-ba7e-46d7-b6bf-84dc6c037d33@redhat.com
+
+3. Pick _one_ approach for the majority of TDVMCALLs.  The existing code is a mix
+   of passing arguments (e.g. mmio_write()) and explicit operands (e.g. mmio_read()).
+   There will inevitably be special snowflakes, e.g. for some asinine reason, CPUID
+   skips r11 as an output.  But AFAICT, most TDVMCALLs conform to a standard
+   pattern.
+
+4. Using a trampoline probably isn't worth the marginal reduction in *written*
+   code.  The generated code is almost as weird as the tdx_module_args code.
+   E.g. each callsite generates a pile of MOV instructions to registers that
+   *don't* match the GHCI, and so I doubt the end result would be any easier to
+   debug for unsuspecting users.
+
+If we're willing to suffer a few gnarly macros, I think we get a satisfactory mix
+of standardized arguments and explicit operands, and generate vastly better code.
+
+The macros are beyond ugly and are also error prone to some extent, but having to
+add new macros should be quite rare, and much of the boilerplate could be stripped
+away with even more macros.
+
+And while the macros are ugly, the advantage of having to specify the number of
+input and output operands reduces the probability of a data leak, e.g. the mmio_read()
+bug wouldn't escape compilation because TDVMCALL_4_1() would be unhappy, and
+TDVMCALL_5_1() doesn't need to exist.
+
+Dump of assembler code for function tdx_handle_virt_exception:
+   0xffffffff81003220 <+0>:	call   0xffffffff810577d0 <__fentry__>
+   0xffffffff81003225 <+5>:	push   %r13
+   0xffffffff81003227 <+7>:	push   %r12
+   0xffffffff81003229 <+9>:	push   %rbp
+   0xffffffff8100322a <+10>:	push   %rbx
+   0xffffffff8100322b <+11>:	mov    %rdi,%rbx
+   0xffffffff8100322e <+14>:	sub    $0x8,%rsp
+   0xffffffff81003232 <+18>:	testb  $0x3,0x88(%rdi)
+   0xffffffff81003239 <+25>:	mov    (%rsi),%rax
+   0xffffffff8100323c <+28>:	je     0xffffffff81003269 <tdx_handle_virt_exception+73>
+   0xffffffff8100323e <+30>:	cmp    $0xa,%rax
+   0xffffffff81003242 <+34>:	jne    0xffffffff8100327a <tdx_handle_virt_exception+90>
+   0xffffffff81003244 <+36>:	mov    %rbx,%rdi
+   0xffffffff81003247 <+39>:	call   0xffffffff81002820 <handle_cpuid>
+   0xffffffff8100324c <+44>:	test   %eax,%eax
+   0xffffffff8100324e <+46>:	js     0xffffffff81003289 <tdx_handle_virt_exception+105>
+   0xffffffff81003250 <+48>:	cltq
+   0xffffffff81003252 <+50>:	add    %rax,0x80(%rbx)
+   0xffffffff81003259 <+57>:	mov    $0x1,%eax
+   0xffffffff8100325e <+62>:	add    $0x8,%rsp
+   0xffffffff81003262 <+66>:	pop    %rbx
+   0xffffffff81003263 <+67>:	pop    %rbp
+   0xffffffff81003264 <+68>:	pop    %r12
+   0xffffffff81003266 <+70>:	pop    %r13
+   0xffffffff81003268 <+72>:	ret
+   0xffffffff81003269 <+73>:	lea    -0xa(%rax),%rdx
+   0xffffffff8100326d <+77>:	cmp    $0x26,%rdx
+   0xffffffff81003271 <+81>:	ja     0xffffffff8100327a <tdx_handle_virt_exception+90>
+   0xffffffff81003273 <+83>:	jmp    *-0x7e3ffd88(,%rdx,8)
+   0xffffffff8100327a <+90>:	mov    %rax,%rsi
+   0xffffffff8100327d <+93>:	mov    $0xffffffff81e6b0b6,%rdi
+   0xffffffff81003284 <+100>:	call   0xffffffff810eb170 <_printk>
+   0xffffffff81003289 <+105>:	xor    %eax,%eax
+   0xffffffff8100328b <+107>:	jmp    0xffffffff8100325e <tdx_handle_virt_exception+62>
+   0xffffffff8100328d <+109>:	mov    0x18(%rsi),%rbp
+   0xffffffff81003291 <+113>:	mov    %rsi,(%rsp)
+   0xffffffff81003295 <+117>:	mov    %rbp,%rdi
+   0xffffffff81003298 <+120>:	call   0xffffffff81002700 <cc_mkenc>
+   0xffffffff8100329d <+125>:	mov    (%rsp),%rsi
+   0xffffffff810032a1 <+129>:	cmp    %rax,%rbp
+   0xffffffff810032a4 <+132>:	je     0xffffffff81003376 <tdx_handle_virt_exception+342>
+   0xffffffff810032aa <+138>:	mov    %rbx,%rdi
+   0xffffffff810032ad <+141>:	call   0xffffffff81002e20 <handle_mmio>
+   0xffffffff810032b2 <+146>:	jmp    0xffffffff8100324c <tdx_handle_virt_exception+44>
+   0xffffffff810032b4 <+148>:	mov    0x60(%rdi),%rdx
+   0xffffffff810032b8 <+152>:	xor    %eax,%eax
+   0xffffffff810032ba <+154>:	mov    $0x3c00,%ecx
+   0xffffffff810032bf <+159>:	shl    $0x20,%rdx
+   0xffffffff810032c3 <+163>:	or     0x50(%rdi),%rdx
+   0xffffffff810032c7 <+167>:	mov    $0x20,%r11
+   0xffffffff810032ce <+174>:	mov    0x58(%rdi),%r12
+   0xffffffff810032d2 <+178>:	mov    %rdx,%r13
+   0xffffffff810032d5 <+181>:	xor    %r10d,%r10d
+   0xffffffff810032d8 <+184>:	tdcall
+   0xffffffff810032dc <+188>:	mov    %r10,%rcx
+   0xffffffff810032df <+191>:	test   %rax,%rax
+   0xffffffff810032e2 <+194>:	jne    0xffffffff81003371 <tdx_handle_virt_exception+337>
+   0xffffffff810032e8 <+200>:	test   %rcx,%rcx
+   0xffffffff810032eb <+203>:	jne    0xffffffff81003289 <tdx_handle_virt_exception+105>
+   0xffffffff810032ed <+205>:	mov    0x20(%rsi),%eax
+   0xffffffff810032f0 <+208>:	jmp    0xffffffff8100324c <tdx_handle_virt_exception+44>
+   0xffffffff810032f5 <+213>:	xor    %eax,%eax
+   0xffffffff810032f7 <+215>:	mov    $0x1c00,%ecx
+   0xffffffff810032fc <+220>:	mov    $0x1f,%r11
+   0xffffffff81003303 <+227>:	mov    0x58(%rdi),%r12
+   0xffffffff81003307 <+231>:	xor    %r10d,%r10d
+   0xffffffff8100330a <+234>:	tdcall
+   0xffffffff8100330e <+238>:	mov    %r10,%rcx
+   0xffffffff81003311 <+241>:	mov    %r11,%rdx
+   0xffffffff81003314 <+244>:	test   %rax,%rax
+   0xffffffff81003317 <+247>:	jne    0xffffffff81003371 <tdx_handle_virt_exception+337>
+   0xffffffff81003319 <+249>:	test   %rcx,%rcx
+   0xffffffff8100331c <+252>:	jne    0xffffffff81003289 <tdx_handle_virt_exception+105>
+   0xffffffff81003322 <+258>:	movq   $0x0,0x50(%rdi)
+   0xffffffff8100332a <+266>:	movq   $0x0,0x60(%rdi)
+   0xffffffff81003332 <+274>:	cmpq   $0x1f,(%rsi)
+   0xffffffff81003336 <+278>:	je     0xffffffff810032ed <tdx_handle_virt_exception+205>
+   0xffffffff81003338 <+280>:	ud2
+   0xffffffff8100333a <+282>:	jmp    0xffffffff810032ed <tdx_handle_virt_exception+205>
+   0xffffffff8100333c <+284>:	mov    %rsi,(%rsp)
+   0xffffffff81003340 <+288>:	pushf
+   0xffffffff81003341 <+289>:	pop    %rdi
+   0xffffffff81003342 <+290>:	shr    $0x9,%rdi
+   0xffffffff81003346 <+294>:	xor    $0x1,%rdi
+   0xffffffff8100334a <+298>:	and    $0x1,%edi
+   0xffffffff8100334d <+301>:	call   0xffffffff81949c00 <__halt>
+   0xffffffff81003352 <+306>:	test   %rax,%rax
+   0xffffffff81003355 <+309>:	jne    0xffffffff81003289 <tdx_handle_virt_exception+105>
+   0xffffffff8100335b <+315>:	mov    (%rsp),%rsi
+   0xffffffff8100335f <+319>:	cmpq   $0xc,(%rsi)
+   0xffffffff81003363 <+323>:	je     0xffffffff810032ed <tdx_handle_virt_exception+205>
+   0xffffffff81003365 <+325>:	jmp    0xffffffff81003338 <tdx_handle_virt_exception+280>
+   0xffffffff81003367 <+327>:	call   0xffffffff81002d20 <handle_io>
+   0xffffffff8100336c <+332>:	jmp    0xffffffff8100324c <tdx_handle_virt_exception+44>
+   0xffffffff81003371 <+337>:	call   0xffffffff81944440 <__tdx_hypercall_failed>
+   0xffffffff81003376 <+342>:	mov    $0xffffffff81eab098,%rdi
+   0xffffffff8100337d <+349>:	call   0xffffffff81080cf0 <panic>
+End of assembler dump.
+
+---
+ arch/x86/boot/compressed/tdx.c    |  31 ++---
+ arch/x86/coco/tdx/tdx.c           | 136 +++++++++-----------
+ arch/x86/hyperv/ivm.c             |  26 +---
+ arch/x86/include/asm/shared/tdx.h | 204 +++++++++++++++++++++++++++---
+ 4 files changed, 262 insertions(+), 135 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/tdx.c b/arch/x86/boot/compressed/tdx.c
+index 8451d6a1030c..5a94cab412ed 100644
+--- a/arch/x86/boot/compressed/tdx.c
++++ b/arch/x86/boot/compressed/tdx.c
+@@ -18,32 +18,25 @@ void __tdx_hypercall_failed(void)
+ 
+ static inline unsigned int tdx_io_in(int size, u16 port)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
+-		.r12 = size,
+-		.r13 = 0,
+-		.r14 = port,
+-	};
++	unsigned int val;
+ 
+-	if (__tdx_hypercall(&args))
++	if (TDVMCALL_4_1(r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
++			     r12 = size,
++			     r13 = 0,
++			     r14 = port,
++			     TDX_ON_SUCCESS(val = out_r11)))
+ 		return UINT_MAX;
+ 
+-	return args.r11;
++	return val;
+ }
+ 
+ static inline void tdx_io_out(int size, u16 port, u32 value)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
+-		.r12 = size,
+-		.r13 = 1,
+-		.r14 = port,
+-		.r15 = value,
+-	};
+-
+-	__tdx_hypercall(&args);
++	TDVMCALL_5_0(r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
++		     r12 = size,
++		     r13 = 1,
++		     r14 = port,
++		     r15 = value);
+ }
+ 
+ static inline u8 tdx_inb(u16 port)
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index c1cb90369915..b9f76445419c 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -124,7 +124,10 @@ EXPORT_SYMBOL_GPL(tdx_mcall_get_report0);
+ u64 tdx_hcall_get_quote(u8 *buf, size_t size)
+ {
+ 	/* Since buf is a shared memory, set the shared (decrypted) bits */
+-	return _tdx_hypercall(TDVMCALL_GET_QUOTE, cc_mkdec(virt_to_phys(buf)), size, 0, 0);
++	return TDVMCALL_3_0(r11 = TDVMCALL_GET_QUOTE,
++			    r12 = cc_mkdec(virt_to_phys(buf)),
++			    r13 = size);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tdx_hcall_get_quote);
+ 
+@@ -226,9 +229,11 @@ static void tdx_parse_tdinfo(u64 *cc_mask)
+  * information if #VE occurred due to instruction execution, but not for EPT
+  * violations.
+  */
+-static int ve_instr_len(struct ve_info *ve)
++static int ve_instr_len(u32 exit_reason, struct ve_info *ve)
+ {
+-	switch (ve->exit_reason) {
++	WARN_ON_ONCE(ve->exit_reason != exit_reason);
++
++	switch (exit_reason) {
+ 	case EXIT_REASON_HLT:
+ 	case EXIT_REASON_MSR_READ:
+ 	case EXIT_REASON_MSR_WRITE:
+@@ -252,12 +257,6 @@ static int ve_instr_len(struct ve_info *ve)
+ 
+ static u64 __cpuidle __halt(const bool irq_disabled)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_HLT),
+-		.r12 = irq_disabled,
+-	};
+-
+ 	/*
+ 	 * Emulate HLT operation via hypercall. More info about ABI
+ 	 * can be found in TDX Guest-Host-Communication Interface
+@@ -270,7 +269,8 @@ static u64 __cpuidle __halt(const bool irq_disabled)
+ 	 * can keep the vCPU in virtual HLT, even if an IRQ is
+ 	 * pending, without hanging/breaking the guest.
+ 	 */
+-	return __tdx_hypercall(&args);
++	return TDVMCALL_2_0(r11 = hcall_func(EXIT_REASON_HLT),
++			    r12 = irq_disabled);
+ }
+ 
+ static int handle_halt(struct ve_info *ve)
+@@ -280,7 +280,7 @@ static int handle_halt(struct ve_info *ve)
+ 	if (__halt(irq_disabled))
+ 		return -EIO;
+ 
+-	return ve_instr_len(ve);
++	return ve_instr_len(EXIT_REASON_HLT, ve);
+ }
+ 
+ void __cpuidle tdx_safe_halt(void)
+@@ -296,43 +296,37 @@ void __cpuidle tdx_safe_halt(void)
+ 
+ static int read_msr(struct pt_regs *regs, struct ve_info *ve)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_MSR_READ),
+-		.r12 = regs->cx,
+-	};
++	u64 val = 0;
+ 
+ 	/*
+ 	 * Emulate the MSR read via hypercall. More info about ABI
+ 	 * can be found in TDX Guest-Host-Communication Interface
+ 	 * (GHCI), section titled "TDG.VP.VMCALL<Instruction.RDMSR>".
+ 	 */
+-	if (__tdx_hypercall(&args))
++	if (TDVMCALL_2_1(r11 = hcall_func(EXIT_REASON_MSR_READ),
++			 r12 = regs->cx,
++			 TDX_ON_SUCCESS(val = out_r11)))
+ 		return -EIO;
+ 
+-	regs->ax = lower_32_bits(args.r11);
+-	regs->dx = upper_32_bits(args.r11);
+-	return ve_instr_len(ve);
++	regs->ax = lower_32_bits(val);
++	regs->dx = upper_32_bits(val);
++
++	return ve_instr_len(EXIT_REASON_MSR_READ, ve);
+ }
+ 
+ static int write_msr(struct pt_regs *regs, struct ve_info *ve)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_MSR_WRITE),
+-		.r12 = regs->cx,
+-		.r13 = (u64)regs->dx << 32 | regs->ax,
+-	};
+-
+ 	/*
+ 	 * Emulate the MSR write via hypercall. More info about ABI
+ 	 * can be found in TDX Guest-Host-Communication Interface
+ 	 * (GHCI) section titled "TDG.VP.VMCALL<Instruction.WRMSR>".
+ 	 */
+-	if (__tdx_hypercall(&args))
++	if (TDVMCALL_3_0(r11 = hcall_func(EXIT_REASON_MSR_WRITE),
++			 r12 = regs->cx,
++			 r13 = (u64)regs->dx << 32 | regs->ax))
+ 		return -EIO;
+ 
+-	return ve_instr_len(ve);
++	return ve_instr_len(EXIT_REASON_MSR_WRITE, ve);
+ }
+ 
+ static int handle_cpuid(struct pt_regs *regs, struct ve_info *ve)
+@@ -353,7 +347,7 @@ static int handle_cpuid(struct pt_regs *regs, struct ve_info *ve)
+ 	 */
+ 	if (regs->ax < 0x40000000 || regs->ax > 0x4FFFFFFF) {
+ 		regs->ax = regs->bx = regs->cx = regs->dx = 0;
+-		return ve_instr_len(ve);
++		return ve_instr_len(EXIT_REASON_CPUID, ve);
+ 	}
+ 
+ 	/*
+@@ -374,31 +368,26 @@ static int handle_cpuid(struct pt_regs *regs, struct ve_info *ve)
+ 	regs->cx = args.r14;
+ 	regs->dx = args.r15;
+ 
+-	return ve_instr_len(ve);
++	return ve_instr_len(EXIT_REASON_CPUID, ve);
+ }
+ 
+ static bool mmio_read(int size, unsigned long addr, unsigned long *val)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_EPT_VIOLATION),
+-		.r12 = size,
+-		.r13 = EPT_READ,
+-		.r14 = addr,
+-		.r15 = *val,
+-	};
+-
+-	if (__tdx_hypercall(&args))
+-		return false;
+-
+-	*val = args.r11;
+-	return true;
++	return !TDVMCALL_4_1(r11 = hcall_func(EXIT_REASON_EPT_VIOLATION),
++			     r12 = size,
++			     r13 = EPT_READ,
++			     r14 = addr,
++			     TDX_ON_SUCCESS(*val = out_r11));
++	return false;
+ }
+ 
+ static bool mmio_write(int size, unsigned long addr, unsigned long val)
+ {
+-	return !_tdx_hypercall(hcall_func(EXIT_REASON_EPT_VIOLATION), size,
+-			       EPT_WRITE, addr, val);
++	return !TDVMCALL_5_0(r11 = hcall_func(EXIT_REASON_EPT_VIOLATION),
++			     r12 = size,
++			     r13 = EPT_WRITE,
++			     r14 = addr,
++			     r15 = val);
+ }
+ 
+ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
+@@ -508,42 +497,37 @@ static int handle_mmio(struct pt_regs *regs, struct ve_info *ve)
+ 
+ static bool handle_in(struct pt_regs *regs, int size, int port)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
+-		.r12 = size,
+-		.r13 = PORT_READ,
+-		.r14 = port,
+-	};
+-	u64 mask = GENMASK(BITS_PER_BYTE * size, 0);
+-	bool success;
+-
+-	/*
+-	 * Emulate the I/O read via hypercall. More info about ABI can be found
+-	 * in TDX Guest-Host-Communication Interface (GHCI) section titled
+-	 * "TDG.VP.VMCALL<Instruction.IO>".
+-	 */
+-	success = !__tdx_hypercall(&args);
++	const u64 mask = GENMASK(BITS_PER_BYTE * size, 0);
+ 
+ 	/* Update part of the register affected by the emulated instruction */
+ 	regs->ax &= ~mask;
+-	if (success)
+-		regs->ax |= args.r11 & mask;
+ 
+-	return success;
++	/*
++	 * Emulate the I/O read via hypercall. More info about ABI can be found
++	 * in TDX Guest-Host-Communication Interface (GHCI) section titled
++	 * "TDG.VP.VMCALL<Instruction.IO>".
++	 */
++	return !TDVMCALL_4_1(r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
++			     r12 = size,
++			     r13 = PORT_READ,
++			     r14 = port,
++			     TDX_ON_SUCCESS(regs->ax |= out_r11 & mask));
+ }
+ 
+ static bool handle_out(struct pt_regs *regs, int size, int port)
+ {
+-	u64 mask = GENMASK(BITS_PER_BYTE * size, 0);
++	const u64 mask = GENMASK(BITS_PER_BYTE * size, 0);
+ 
+ 	/*
+ 	 * Emulate the I/O write via hypercall. More info about ABI can be found
+ 	 * in TDX Guest-Host-Communication Interface (GHCI) section titled
+ 	 * "TDG.VP.VMCALL<Instruction.IO>".
+ 	 */
+-	return !_tdx_hypercall(hcall_func(EXIT_REASON_IO_INSTRUCTION), size,
+-			       PORT_WRITE, port, regs->ax & mask);
++	return !TDVMCALL_5_0(r11 = hcall_func(EXIT_REASON_IO_INSTRUCTION),
++			     r12 = size,
++			     r13 = PORT_WRITE,
++			     r14 = port,
++			     r15 = regs->ax & mask);
+ }
+ 
+ /*
+@@ -575,7 +559,7 @@ static int handle_io(struct pt_regs *regs, struct ve_info *ve)
+ 	if (!ret)
+ 		return -EIO;
+ 
+-	return ve_instr_len(ve);
++	return ve_instr_len(EXIT_REASON_IO_INSTRUCTION, ve);
+ }
+ 
+ /*
+@@ -745,14 +729,11 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
+ 	}
+ 
+ 	while (retry_count < max_retries_per_page) {
+-		struct tdx_module_args args = {
+-			.r10 = TDX_HYPERCALL_STANDARD,
+-			.r11 = TDVMCALL_MAP_GPA,
+-			.r12 = start,
+-			.r13 = end - start };
+-
+ 		u64 map_fail_paddr;
+-		u64 ret = __tdx_hypercall(&args);
++		u64 ret = TDVMCALL_3_1(r11 = TDVMCALL_MAP_GPA,
++				       r12 = start,
++				       r13 = end - start,
++				       map_fail_paddr = out_r11);
+ 
+ 		if (ret != TDVMCALL_STATUS_RETRY)
+ 			return !ret;
+@@ -761,7 +742,6 @@ static bool tdx_map_gpa(phys_addr_t start, phys_addr_t end, bool enc)
+ 		 * region starting at the GPA specified in R11. R11 comes
+ 		 * from the untrusted VMM. Sanity check it.
+ 		 */
+-		map_fail_paddr = args.r11;
+ 		if (map_fail_paddr < start || map_fail_paddr >= end)
+ 			return false;
+ 
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index 768d73de0d09..4d51b8fde6b1 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -385,32 +385,20 @@ static inline void hv_ghcb_msr_read(u64 msr, u64 *value) {}
+ #ifdef CONFIG_INTEL_TDX_GUEST
+ static void hv_tdx_msr_write(u64 msr, u64 val)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = EXIT_REASON_MSR_WRITE,
+-		.r12 = msr,
+-		.r13 = val,
+-	};
+-
+-	u64 ret = __tdx_hypercall(&args);
++	u64 ret = TDVMCALL_3_0(r11 = EXIT_REASON_MSR_WRITE,
++			       r12 = msr,
++			       r13 = val);
+ 
+ 	WARN_ONCE(ret, "Failed to emulate MSR write: %lld\n", ret);
+ }
+ 
+ static void hv_tdx_msr_read(u64 msr, u64 *val)
+ {
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = EXIT_REASON_MSR_READ,
+-		.r12 = msr,
+-	};
++	u64 ret = TDVMCALL_2_1(r11 = hcall_func(EXIT_REASON_MSR_READ),
++			       r12 = msr,
++			       *val = out_r11);
+ 
+-	u64 ret = __tdx_hypercall(&args);
+-
+-	if (WARN_ONCE(ret, "Failed to emulate MSR read: %lld\n", ret))
+-		*val = 0;
+-	else
+-		*val = args.r11;
++	WARN_ONCE(ret, "Failed to emulate MSR read: %lld\n", ret);
+ }
+ 
+ u64 hv_tdx_hypercall(u64 control, u64 param1, u64 param2)
+diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
+index fdfd41511b02..c1354054f144 100644
+--- a/arch/x86/include/asm/shared/tdx.h
++++ b/arch/x86/include/asm/shared/tdx.h
+@@ -65,6 +65,191 @@
+ 
+ #include <linux/compiler_attributes.h>
+ 
++#define TDVMCALL_BUG_ON(ret)							\
++do {										\
++	if (unlikely(ret))							\
++		__tdx_hypercall_failed();					\
++} while (0)
++
++#define TDX_ON_SUCCESS(x) if (__ret) (x)
++
++#define TDVMCALL_2_0(__in_r11, __in_r12)					\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12;							\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12),				\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12)						\
++		: "r10", "r11", "r12"						\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__ret;									\
++})
++
++#define TDVMCALL_2_1(__in_r11, __in_r12, __out_r11)				\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12;							\
++	u64 out_r11;								\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		"movq	%%r11, %[r11_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret),					\
++		  [r11_out] "=rm" (out_r11)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12),				\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12)						\
++		: "r10", "r11", "r12"						\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__out_r11;								\
++	__ret;									\
++})
++
++#define TDVMCALL_3_0(__in_r11, __in_r12, __in_r13)				\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12, __in_r13;					\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"movq	%[r13_in], %%r13\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12 | TDX_R13),			\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12),						\
++		  [r13_in] "irm" (r13)						\
++		: "r10", "r11", "r12", "r13"					\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__ret;									\
++})
++
++#define TDVMCALL_3_1(__in_r11, __in_r12, __in_r13, __out_r11)			\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12, __in_r13;					\
++	u64 out_r11;								\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"movq	%[r13_in], %%r13\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		"movq	%%r11, %[r11_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret),					\
++		  [r11_out] "=rm" (out_r11)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12 | TDX_R13),			\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12),						\
++		  [r13_in] "irm" (r13)						\
++		: "r10", "r11", "r12", "r13"					\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__out_r11;								\
++	__ret;									\
++})
++
++#define TDVMCALL_4_1(__in_r11, __in_r12, __in_r13, __in_r14, __out_r11)		\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12, __in_r13, __in_r14;				\
++	u64 out_r11;								\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"movq	%[r13_in], %%r13\n\t"					\
++		"movq	%[r14_in], %%r14\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		"movq	%%r11, %[r11_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret),					\
++		  [r11_out] "=rm" (out_r11)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12 | TDX_R13 | TDX_R14),	\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12),						\
++		  [r13_in] "irm" (r13),						\
++		  [r14_in] "irm" (r14)						\
++		: "r10", "r11", "r12", "r13", "r14"				\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__out_r11;								\
++	__ret;									\
++})
++
++
++#define TDVMCALL_5_0(__in_r11, __in_r12, __in_r13, __in_r14, __in_r15)		\
++({										\
++	u64 vmcall_ret = TDG_VP_VMCALL;						\
++	u64 __in_r11, __in_r12, __in_r13, __in_r14, __in_r15;			\
++	u64 __ret;								\
++										\
++	asm volatile (								\
++		"movq	%[r11_in], %%r11\n\t"					\
++		"movq	%[r12_in], %%r12\n\t"					\
++		"movq	%[r13_in], %%r13\n\t"					\
++		"movq	%[r14_in], %%r14\n\t"					\
++		"movq	%[r15_in], %%r15\n\t"					\
++		"xor    %%r10d, %%r10d\n\t"					\
++		".byte 0x66,0x0f,0x01,0xcc\n\t"					\
++		"movq	%%r10, %[r10_out]\n\t"					\
++		: "+a"(vmcall_ret),						\
++		  [r10_out] "=rm" (__ret)					\
++		: "c" (TDX_R10 | TDX_R11 | TDX_R12 | TDX_R13 | TDX_R14 | TDX_R15),\
++		  [r11_in] "irm" (r11),						\
++		  [r12_in] "irm" (r12),						\
++		  [r13_in] "irm" (r13),						\
++		  [r14_in] "irm" (r14),						\
++		  [r15_in] "irm" (r15)						\
++		: "r10", "r11", "r12", "r13", "r14", "r15"			\
++	);									\
++										\
++	TDVMCALL_BUG_ON(vmcall_ret);						\
++										\
++	__ret;									\
++})
++
+ /*
+  * Used in __tdcall*() to gather the input/output registers' values of the
+  * TDCALL instruction when requesting services from the TDX module. This is a
+@@ -97,25 +282,6 @@ u64 __tdcall_saved_ret(u64 fn, struct tdx_module_args *args);
+ /* Used to request services from the VMM */
+ u64 __tdx_hypercall(struct tdx_module_args *args);
+ 
+-/*
+- * Wrapper for standard use of __tdx_hypercall with no output aside from
+- * return code.
+- */
+-static inline u64 _tdx_hypercall(u64 fn, u64 r12, u64 r13, u64 r14, u64 r15)
+-{
+-	struct tdx_module_args args = {
+-		.r10 = TDX_HYPERCALL_STANDARD,
+-		.r11 = fn,
+-		.r12 = r12,
+-		.r13 = r13,
+-		.r14 = r14,
+-		.r15 = r15,
+-	};
+-
+-	return __tdx_hypercall(&args);
+-}
+-
+-
+ /* Called from __tdx_hypercall() for unrecoverable failure */
+ void __noreturn __tdx_hypercall_failed(void);
+ 
+
+base-commit: 2ab79514109578fc4b6df90633d500cf281eb689
+-- 
+
