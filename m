@@ -1,108 +1,246 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04933A5F;
-	Tue,  4 Jun 2024 06:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40281385;
+	Tue,  4 Jun 2024 06:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717480873; cv=none; b=kINz3Xn1tKa2Eat9OFuS05/CfDStVrMaSvO9hvUqKxHrDwTWG4DVPmUB/GGdWFQbIUEt4kFOw0f9yYK+Q5wn+jeZIXqrHPK/NsgpmV+z3NME/Wb4diFgS0kOg81qFspZPOyG584CA4ejdUIRVKiXjhWsQtfrTr7LbWU/HSviHcQ=
+	t=1717481048; cv=none; b=dVbvbK/KyaR/YDSzA8p73BHri4GerLZL19vZgbJbArbVR8AbhQDGEMGXyVGRnru7gBhRWwyeenYNim+qJ1wek4oDc/W3TT7muQOWo6Nvf2noM994f4oUoQP4MPKZUAIgvYTNgp55rgGyxiBPF/E6ZZ22qsGNbmz7LuQnhntVkks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717480873; c=relaxed/simple;
-	bh=Jd4fUlb0i7EadQ2VxIkjPkJAQ7Q9m454Ry4odrQcn3g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=SfEA5PNcvLm2u7CPj2z7SGUjIqz+mSXQwIF8xXBX9vmPJr3BTofZldRK5p+bkSp4sElDYCsy09d9C+A7J8C05i+iuIIX3esD47miop/uN+RrecUqwC2prAzs3kwkmurfSZkiaq+LNjOTjC11yrqjB4MsM0lYh1a9hP7b2ac7PwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o5ocVEPq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717481048; c=relaxed/simple;
+	bh=M4B30GIS1d4lGziHl2ETRAmpCx3XEZtVoNK45XulINE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OVxUc/6kYtGLCmRRid8K5zzUQMX1tHDTe5l5lCe4EpdtGlTfNyZG3p6YvRsmo1fRwS0xVZZTIhRP0taoyfTpVJ2Kr6YWWtemx2dAj3gSyH7FfyUFxmtyf+IfCoj9Npc7Gcsim7/kiXOONFodPKJTxoT0d+GFDzpEOgBjaiTDIG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9YONRBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o5ocVEPq"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 453K0tDG005301;
-	Tue, 4 Jun 2024 06:01:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=51ZA9OiJpjlX0ruhcneVre
-	O/iIJUTw0mzhQfZaG+KDA=; b=o5ocVEPqNyxdwR7hpCdb3JcV5OAxJyVGHVbuEc
-	4SYSTBQnKhRLiMDc0YK57BzgT51IviK1Nd1ialbWU5LEehsaa71IdZrM5xOZZUBP
-	zvL8Q29X8FPBDmIL/EnkG7bPQWVdpfIJYD0INa/DYFhd2qwwTsMWC4WSGvnV52Zn
-	Q/5/wmCKm0Wbd9i8o/4sJ/ooh5xqsJdydJp+/rLDA+E7x/S/6gNTwFyUbwUc88/o
-	W5CTUuerxdTw2V5e4x05eQhezQu3CxJx6FOJ9doccISmEjsDCfBKMkyUspVPSGhR
-	kl6toRsh+mwYOB5SFY4fEu/i2qtBIn+N8sz+07RR3kUebGBw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yfw5kp2my-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 06:01:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 454610HC003914
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 4 Jun 2024 06:01:00 GMT
-Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 3 Jun 2024
- 23:01:00 -0700
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Date: Mon, 3 Jun 2024 23:00:59 -0700
-Subject: [PATCH] HID: logitech-hidpp: add missing MODULE_DESCRIPTION()
- macro
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9YONRBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD7AC4AF08;
+	Tue,  4 Jun 2024 06:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717481047;
+	bh=M4B30GIS1d4lGziHl2ETRAmpCx3XEZtVoNK45XulINE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=L9YONRBBvOyMLNAxTKGyxKrbkg5yDz5lKVyT/qK/teTXo3O/Coa90mwmoDF6gldfZ
+	 549bZ0rtqFr0xSJEK9zQrls4yBpqvFYw2RCRynJvUIt7ZclNHyzPMACWbx5NuC0yk4
+	 H9zlo4T0NwCR0H4F6tNNurbKzj7bHbBqnMngubuq+bs1YYwpsORpVtyf1vSV0ANwj0
+	 2cnTDPxIQ5iitlGxygFMoAL+PvyR5NarSWwqa9h3MRnlgF7NwNvsqrt6bes2Z/vlz5
+	 gp1FJrx31sV2EszXnZPxcOhZIADgRLMe0TcIdkmVyOE8Two0WsFw7u1f3FX5mM8sd3
+	 0I1s/FHoLPH3g==
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2e724bc46c4so58332501fa.2;
+        Mon, 03 Jun 2024 23:04:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXA1Hpir+JcHdu5N4N5A0brijcysvcdAxzT0vAnhC29dtpJYdt0FFBIBC+4vhEvux1/2G50XVj29Pp6OKIeZjmE+8/Eed/sjO8ydgzoMHcpC+NzRe1MVztCgCEUjxApCVl01BE++jIaYvax0gWlDfN24UDl
+X-Gm-Message-State: AOJu0YzNTOsyvedsSEr469u3KRqZRCgjf1TpHkpmO/XJBCNF8O+03S7u
+	FwHb1Aiy0+uW9E9w/ZpXEB5r1l+ldiYUyhlBgKj/0HXRV8uw7PCcKFa6vUP6Y30WWvpRNjfQPuJ
+	RQE3rOMhvxxmrycK6+oFtpzP12WE=
+X-Google-Smtp-Source: AGHT+IHVlviNMyuiDTy8BXSpmmQsquH1nttnEqb9GRM155e1DzpJqqQMSfDQX+2d+pZK5cfpuPeWpv6RYnrY2Ix/7UU=
+X-Received: by 2002:a2e:980d:0:b0:2d8:67a0:61b2 with SMTP id
+ 38308e7fff4ca-2ea9512c01dmr60165791fa.20.1717481045999; Mon, 03 Jun 2024
+ 23:04:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240603-md-hid-logitech-hidpp-v1-1-060f06e4529f@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAJqtXmYC/x3MwQqDMAyA4VeRnBfoqgjbq4wdYprZgNbSuCGI7
- 27d8Tv8/w4mRcXg2exQ5KemS6q43xrgSGkU1FAN3vnO9a7FOWDUgNMy6iocL+SM3j1Yeib2roX
- a5iIf3f7f17t6IBMcCiWO123S9N1wJlulwHGclIMc9oYAAAA=
-To: =?utf-8?q?Filipe_La=C3=ADns?= <lains@riseup.net>,
-        Bastien Nocera
-	<hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires
-	<bentiss@kernel.org>
-CC: <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>,
-        Jeff Johnson <quic_jjohnson@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: i3oyWRPZ8PX9b7siS9EgUDdGUjiZ2Eex
-X-Proofpoint-ORIG-GUID: i3oyWRPZ8PX9b7siS9EgUDdGUjiZ2Eex
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.12.28.16
- definitions=2024-06-04_02,2024-05-30_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1011 phishscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0
- mlxlogscore=934 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406040047
+References: <20240603233330.801075898@goodmis.org> <20240603233631.452433539@goodmis.org>
+In-Reply-To: <20240603233631.452433539@goodmis.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 4 Jun 2024 08:03:54 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFoNT25+ZTFaqF8zj4VkN6FFbtX5Fntf+J-c33tW3TPUA@mail.gmail.com>
+Message-ID: <CAMj1kXFoNT25+ZTFaqF8zj4VkN6FFbtX5Fntf+J-c33tW3TPUA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/memblock: Add "reserve_mem" to reserved named
+ memory at boot up
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Kees Cook <keescook@chromium.org>, 
+	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, 
+	Ross Zwisler <zwisler@google.com>, wklin@google.com, 
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Suleiman Souhlal <suleiman@google.com>, Linus Torvalds <torvalds@linuxfoundation.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-make allmodconfig && make W=1 C=1 reports:
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hid/hid-logitech-hidpp.o
+On Tue, 4 Jun 2024 at 01:35, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> In order to allow for requesting a memory region that can be used for
+> things like pstore on multiple machines where the memory layout is not the
+> same, add a new option to the kernel command line called "reserve_mem".
+>
+> The format is:  reserve_mem=nn:align:name
+>
+> Where it will find nn amount of memory at the given alignment of align.
+> The name field is to allow another subsystem to retrieve where the memory
+> was found. For example:
+>
+>   reserve_mem=12M:4096:oops ramoops.mem_name=oops
+>
+> Where ramoops.mem_name will tell ramoops that memory was reserved for it
+> via the reserve_mem option and it can find it by calling:
+>
+>   if (reserve_mem_find_by_name("oops", &start, &size)) {
+>         // start holds the start address and size holds the size given
+>
+> Link: https://lore.kernel.org/all/ZjJVnZUX3NZiGW6q@kernel.org/
+>
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Add the missing invocation of the MODULE_DESCRIPTION() macro.
+You failed to point out in the commit message that the assumption here
+is that this memory will retain its contents across a soft reboot. Or
+am I misunderstanding this?
 
-Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
----
- drivers/hid/hid-logitech-hidpp.c | 1 +
- 1 file changed, 1 insertion(+)
+In any case, as I pointed out before, playing these games unilaterally
+from the kernel side, i.e., without any awareness whatsoever from the
+firmware and bootloader (which will not attempt to preserve RAM
+contents), is likely to have a rather disappointing success ratio in
+the general case. I understand this may be different for vertically
+integrated software stacks like ChromeOS so perhaps it should live
+there as a feature.
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index b81d5bcc76a7..400d70e6dbe2 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -27,6 +27,7 @@
- #include "usbhid/usbhid.h"
- #include "hid-ids.h"
- 
-+MODULE_DESCRIPTION("Support for Logitech devices relying on the HID++ specification");
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Benjamin Tissoires <benjamin.tissoires@gmail.com>");
- MODULE_AUTHOR("Nestor Lopez Casado <nlopezcasad@logitech.com>");
+Then, as Kees points out, there is also the risk that the kernel
+itself may be stepping on this memory before having realized that it
+is reserved. At least ARM and x86 have decompressors with a
+substantial amount of non-trivial placement logic that would need to
+be made aware of this reservation. Note that EFI vs. non-EFI boot also
+makes a difference here.
 
----
-base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
-change-id: 20240603-md-hid-logitech-hidpp-209ce6cac203
 
+> ---
+>  include/linux/mm.h |  2 +
+>  mm/memblock.c      | 97 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 99 insertions(+)
+>
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 9849dfda44d4..b4455cc02f2c 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4263,4 +4263,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
+>  void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+>  void vma_pgtable_walk_end(struct vm_area_struct *vma);
+>
+> +int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size);
+> +
+>  #endif /* _LINUX_MM_H */
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index d09136e040d3..a8bf0ee9e2b4 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -2244,6 +2244,103 @@ void __init memblock_free_all(void)
+>         totalram_pages_add(pages);
+>  }
+>
+> +/* Keep a table to reserve named memory */
+> +#define RESERVE_MEM_MAX_ENTRIES                8
+> +#define RESERVE_MEM_NAME_SIZE          16
+> +struct reserve_mem_table {
+> +       char                    name[RESERVE_MEM_NAME_SIZE];
+> +       unsigned long           start;
+> +       unsigned long           size;
+> +};
+> +static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+> +static int reserved_mem_count;
+> +
+> +/* Add wildcard region with a lookup name */
+> +static int __init reserved_mem_add(unsigned long start, unsigned long size,
+> +                                  const char *name)
+> +{
+> +       struct reserve_mem_table *map;
+> +
+> +       if (!name || !name[0] || strlen(name) >= RESERVE_MEM_NAME_SIZE)
+> +               return -EINVAL;
+> +
+> +       if (reserved_mem_count >= RESERVE_MEM_MAX_ENTRIES)
+> +               return -1;
+> +
+> +       map = &reserved_mem_table[reserved_mem_count++];
+> +       map->start = start;
+> +       map->size = size;
+> +       strscpy(map->name, name);
+> +       return 0;
+> +}
+> +
+> +/**
+> + * reserve_mem_find_by_name - Find reserved memory region with a given name
+> + * @name: The name that is attached to a reserved memory region
+> + * @start: If found, holds the start address
+> + * @size: If found, holds the size of the address.
+> + *
+> + * Returns: 1 if found or 0 if not found.
+> + */
+> +int reserve_mem_find_by_name(const char *name, unsigned long *start, unsigned long *size)
+> +{
+> +       struct reserve_mem_table *map;
+> +       int i;
+> +
+> +       for (i = 0; i < reserved_mem_count; i++) {
+> +               map = &reserved_mem_table[i];
+> +               if (!map->size)
+> +                       continue;
+> +               if (strcmp(name, map->name) == 0) {
+> +                       *start = map->start;
+> +                       *size = map->size;
+> +                       return 1;
+> +               }
+> +       }
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Parse early_reserve_mem=nn:align:name
+> + */
+> +static int __init reserve_mem(char *p)
+> +{
+> +       phys_addr_t start, size, align;
+> +       char *oldp;
+> +       int err;
+> +
+> +       if (!p)
+> +               return -EINVAL;
+> +
+> +       oldp = p;
+> +       size = memparse(p, &p);
+> +       if (p == oldp)
+> +               return -EINVAL;
+> +
+> +       if (*p != ':')
+> +               return -EINVAL;
+> +
+> +       align = memparse(p+1, &p);
+> +       if (*p != ':')
+> +               return -EINVAL;
+> +
+> +       start = memblock_phys_alloc(size, align);
+> +       if (!start)
+> +               return -ENOMEM;
+> +
+> +       p++;
+> +       err = reserved_mem_add(start, size, p);
+> +       if (err) {
+> +               memblock_phys_free(start, size);
+> +               return err;
+> +       }
+> +
+> +       p += strlen(p);
+> +
+> +       return *p == '\0' ? 0: -EINVAL;
+> +}
+> +__setup("reserve_mem=", reserve_mem);
+> +
+>  #if defined(CONFIG_DEBUG_FS) && defined(CONFIG_ARCH_KEEP_MEMBLOCK)
+>  static const char * const flagname[] = {
+>         [ilog2(MEMBLOCK_HOTPLUG)] = "HOTPLUG",
+> --
+> 2.43.0
+>
+>
+>
