@@ -1,101 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBE8C13B;
-	Tue,  4 Jun 2024 14:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4279113C8F3;
+	Tue,  4 Jun 2024 14:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717511422; cv=none; b=PtFMcL1ibl7LJGJB6/ftv4jCNlCssVfKn7AJuu2X3pUZ/4t/vrwpLURIxMfhrVlC1SWciBMMyXwojU03uh/aqeZNDmaQpsvukkND5if4jnhXBaYFMB2GVoVBoHR0uvJQk0TmMtnYlHjVedCmWQiXeIHty0PdjMCpqZ3IZzMXiIA=
+	t=1717511425; cv=none; b=VeMY8G5nUac3Qy6xc54Yje/v/KFSOvhOYi9n/uWHzcH1FiTuBSTK4NWlYpkxIDrBZIrvLaQ1FTu1PBcex7urBVLqiPpzeoq94vq4cwo6Lub0QK0CDPkxUtUa2XBojRj9H0Vjd6z409Y5qVCxIZDTI61WrVyvKs5HV6xpTeBut2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717511422; c=relaxed/simple;
-	bh=pb5O3feP9MBcD9HFqOeYqFq6wpe3pb56Wi1DLNCgN6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ewLDbEtHWMldCxlQwODz/FmXMSerBEIYgVym3sI0A7zh2KzaqZeCNCbcxIndtyVuKPkfsF5FnNMCBx54DhRnu/fy5R0iPl7b4A/zvL2s7aVT6hRFXbpVQPeVpB1dSFr+UTeGXUcKUMbWC+yby5OSAgEkyCec06BIFfu7w9jQut4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RmSUYrp7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RmSUYrp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717511421; x=1749047421;
-  h=date:from:to:cc:subject:message-id:reply-to:mime-version:
-   in-reply-to;
-  bh=pb5O3feP9MBcD9HFqOeYqFq6wpe3pb56Wi1DLNCgN6g=;
-  b=RmSUYrp7Cax6e961lFnaka5V8YpCJbk4wjhFt0olNdxdDafyNyiCF8Mq
-   yIqQs26hpb9R9SSwVF2vPXlOhP+wqcoWvCUNG/j0IOw/tfk2kwglz9W5J
-   bq2vnZrRyJw5o3qgVckaBxqgIwVJRpf9suFtNmtWoG5oxjss+PpU5tXhs
-   rw5IpEmX3TbObmgKIztKyKLQ9h6bJBLDATo2jZYf9g31/WTVzhDU6bP1w
-   8jlSXAkSTOoXOLsarA+OrksMDO78NFJASGIADV9X4y1vYdSt3UDkecF8F
-   hTyIjxSiblytuVDoeq4VwgFmMXkn78vx/fRktRHlZS47iLwfXcq+PGCrr
-   w==;
-X-CSE-ConnectionGUID: NSrcU4NdRFWHxOUCYzR9pA==
-X-CSE-MsgGUID: HzmxIyLsTmmttmRVVNXcSA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13903401"
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="13903401"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 07:30:20 -0700
-X-CSE-ConnectionGUID: wXjjIbI8TRKlbEio1BhF6Q==
-X-CSE-MsgGUID: BTDdzXZPTXyO9p7u4zWRxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="42219615"
-Received: from ideak-desk.fi.intel.com ([10.237.72.78])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 07:30:18 -0700
-Date: Tue, 4 Jun 2024 17:30:23 +0300
-From: Imre Deak <imre.deak@intel.com>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, Gal Pressman <gal@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	RDMA mailing list <linux-rdma@vger.kernel.org>,
-	Hillf Danton <hdanton@sina.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -rc] workqueue: Reimplement UAF fix to avoid lockdep
- worning
-Message-ID: <Zl8k/8/yQLnZcGd3@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
+	s=arc-20240116; t=1717511425; c=relaxed/simple;
+	bh=u8mZLdWoedrnzExV0JCjvhf7ZvbOFMTaDcB0r32i1SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kHd5lM17PcaJhvb2HQUQ87+L2sV2I6JdfkNhuE+EoKnRPWwnuFWcz6HIgiPgc9GuqsAmkaUVgzR1sqNjyHsBrMwGhNLBN6b7N3kYD03OeNseGVEEKIs+jtaH5uzuyvnGHINGkTOCIpGpIl1eVe3ZrX+IXc5kZmz6b3SzKozXI30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05867C2BBFC;
+	Tue,  4 Jun 2024 14:30:22 +0000 (UTC)
+Date: Tue, 4 Jun 2024 10:30:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/3] tracing: Fix some selftest issues
+Message-ID: <20240604103021.43bae1da@gandalf.local.home>
+In-Reply-To: <20240604231829.16b49c8868d310bcdcd78cab@kernel.org>
+References: <171671825710.39694.6859036369216249956.stgit@devnote2>
+	<20240527192907.49c9220f@rorschach.local.home>
+	<20240529014640.3a04f7301f12eb44738f9f2d@kernel.org>
+	<20240529083818.b7835de167191d4567405ce6@kernel.org>
+	<3a7e679712fb47b6c75af84163b5d3ea252f4da9.camel@linux.intel.com>
+	<20240531113721.c0314e0cdb3beb70c1a6ba7d@kernel.org>
+	<20240531032425.3635dc93@rorschach.local.home>
+	<20240531232047.fca5712a98e360d4a27fd92c@kernel.org>
+	<20240604095746.1bbb003c@gandalf.local.home>
+	<20240604231829.16b49c8868d310bcdcd78cab@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c4f1fb769a609a61010cb6d884ab2841ef716d3.1716885172.git.leon@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On Tue, 4 Jun 2024 23:18:29 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-[Sorry for the previous message, resending it now
- with proper In-reply-to: header added.]
+> BTW, some these bootup tests can be ported on KUnit. Do you have a plan to
+> use KUnit?
 
-I see a similar issue, a corruption in the lock_keys_hash while
-alloc_workqueue()->lockdep_register_key() iterates it, see [1] for the
-stacktrace.
+I haven't thought about that. If someone else wants to do it, I will
+happily review it ;-)
 
-Not sure if related or even will solve [1], but [2] will revert
-
-commit 7e89efc6e9e4 ("PCI: Lock upstream bridge for pci_reset_function()")
-
-which does
-
-lockdep_register_key(&dev->cfg_access_key);
-
-in pci_device_add() and doesn't unregister the key when the pci device is
-removed (and potentially freed); so basically 7e89efc6e9e4 was missing a
-
-lockdep_unregister_key();
-
-in pci_destroy_dev().
-
-Based on the above I wonder if 7e89efc6e9e4 could also lead to the
-corruption of lock_keys_hash after a pci device is removed.
-
---Imre
-
-[1] https://intel-gfx-ci.01.org/tree/drm-tip/IGT_7875/bat-atsm-1/dmesg0.txt
-[2] https://lore.kernel.org/all/171711746402.1628941.14575335981264103013.stgit@dwillia2-xfh.jf.intel.com/
-
+-- Steve
