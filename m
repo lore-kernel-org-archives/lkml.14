@@ -1,122 +1,62 @@
-Received: from mail-pj1-f68.google.com (mail-pj1-f68.google.com [209.85.216.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3465D2119;
-	Tue,  4 Jun 2024 01:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E24A04
+	for <linux-kernel@vger.kernel.org>; Tue,  4 Jun 2024 01:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717465470; cv=none; b=qRJPyZuZLM/cODbgxrQPlMoHoWoeCB7b55vbVubrOLql69Hg2539DSYWM61d4wTspcSg4EkLHFUnKSNpBvi0aczXj7MAeEgD4UWj17ZmkzVrC8actyKaNSgap/rzcO6pBfCEPibFfV/qXMsa4OfKSAj1no4EqJ8fKCxT3jmoCMY=
+	t=1717465582; cv=none; b=m8o9KUaHp8SXG7XsYSVd214L07z5ga7/7QPmmSvh2wuATDppLrNnh0flz0D2shComFpX67UBeEt3dFinby3bH/hkS0G3oVhBdDqsCr9G3GpssZP0VMuDUKtgMtnQsuvSFb0qMkWU+yrQ3eQNC3PKFkJoSUfVQUMehU9OdAAWO3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717465470; c=relaxed/simple;
-	bh=y28s+nLNO1bWcxjBQjbsD7eMNMx5eUTUY2NVePXeVQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iUNtZgNLngahbUdkRfVmBZFJHmeM+VhAxr5GCju8z2UY7ylmuCSr1YpXS98DQB3quFyEv02tF395GzXr/4cvdDNWMs7snfn87Gv63Fv5wwiPVwYy8c7u9qATomYzLv8tglYYIlrZH1yNGInBc7Nc1lIPTHZwwcLfnn4JEMCjFU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aHelUyMW; arc=none smtp.client-ip=209.85.216.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717465582; c=relaxed/simple;
+	bh=Kr64VTbx4fuENMluaNdpiqWjuGc1bcsbOj4ozALLLP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZnJYbf6ouT516PV76Tz8/xkQRyLNR3CGXvKndyhs4jFjDB5Htp4glHw2lPWzSryJFadRrRdIc5ioHWVkc0GKc0PsGCrwWctj4xFiPKuY1ibvA+5MIrS3XnAJhyT+BM2cQ8xZDJSgTMLL//BlB+zlyBacbHYFE0EtUM+WcOZYDvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uQxzwiTe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHelUyMW"
-Received: by mail-pj1-f68.google.com with SMTP id 98e67ed59e1d1-2bfdae7997aso4034251a91.2;
-        Mon, 03 Jun 2024 18:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717465467; x=1718070267; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jvi35CutHOvk8L4T40KqLdLme+seQz75uz8K1IuqiKI=;
-        b=aHelUyMWQyADuTUIye83vyWjgQ6E1BSs6FwHuPI21oRt+pzwpBc4tR9qo1ti3jybN9
-         W8HotAtC13w81GylMYoCxiHxJLFnYYlJVbyQfxgiH1C5h5qi+cc05wRBZ78tm33QwJhI
-         DDHA2SYpTyfrIOrATE7rLPCJrdaRsmIJWnK00xsbgtAmZjGcKBLCZc7TcKVwesbvyhsD
-         eLrEQKhLY+XD6cTZUol+Fz4LHq+1oajpii0jhp4xFeP8Oe9zRX/pxisbHP+IIJAKgrLL
-         UpJK6PEdLVlDhbwdqCwvl+z0y4swUllfU59CkOyyfmUPeU5tQZXvlr6u2OxsZQBsM/bE
-         IFlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717465467; x=1718070267;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jvi35CutHOvk8L4T40KqLdLme+seQz75uz8K1IuqiKI=;
-        b=KEhVJy4RvlQbTHYOnkqocUe1zPvBGoDx3qtAlWl2GX59zvOMF2gZOVdPSInwJdeVjJ
-         DCULxa2HL+HXNoYfI3hm/EjkeUazVRLR8OysOFbwHCrc9te+ZkOGUDtf/7CwFqmeLm3F
-         xwVcCwuVgoHWPk4ASOhbqFJr69pW+3rDT5FaIL17M0KLJfaEwFnRWZ1A0S15jI4SZPFH
-         h7iu/W+xWdVS24Vp1JJYiGIcbe1cemDYTr6KhBqUVb2ydLiTXfi+wLY8IWzhekuYxMh8
-         5CnAlemM3edbaFt3n/eh24IXD2CyulYjadzG7Gdr7Pje2gBoHSeYUPZaIxJc1WwoYVC+
-         4Jjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvsBwk47ML7DAhzovVC49PubG23iIwBu8dDHjzcye0v2Wcc5eB5AynUEhFa2jZtdSasAArMEs8Wh0tI3pcX+/vHgWL28B8sLJcOPrkVFWGEQhiSwArAfVwYU4xeDdZVBEB7Et2
-X-Gm-Message-State: AOJu0YxOx9xXnJ4XJsmjJUOy5kn5jbftmlV10lPHyFXPjCH/sVWMcKwh
-	oSxpDyvLGiCo8cs4SQQD9713uFcDDmoRw+R7PHdsHGF9hlCV1NBxPk4dG72qOJlcV20Hmo4yBjO
-	6dmEhGeRKaY4+PRJn2aGLOHgLVCw=
-X-Google-Smtp-Source: AGHT+IFhp4rKoM4tYI0AmyHbd1SD0L7TWWRFvRLc+IzUN28sOCydRuy8wSF9EeCiqZdTdg6jyPw9gvpqW/SsAaML6jY=
-X-Received: by 2002:a17:90a:530c:b0:2c2:4106:1ada with SMTP id
- 98e67ed59e1d1-2c241064fc5mr3042177a91.16.1717465467248; Mon, 03 Jun 2024
- 18:44:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uQxzwiTe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3132EC2BD10;
+	Tue,  4 Jun 2024 01:46:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717465581;
+	bh=Kr64VTbx4fuENMluaNdpiqWjuGc1bcsbOj4ozALLLP4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uQxzwiTezo5rYVqKnfPuWeCcOZuf9H0P1W2Xp3HZSz91IlE1rt84UMYJLNF8/UMsx
+	 8Iz9/glKOiQnQAIBt0B9D4tHaf5KW7l/XGQVFCiCPzpCDnuPIY37MFbzANxeSVYssA
+	 KMifXL71STfa8xDqx352PDxrSokCMSMvP1UVsvPoTXidJ7OEu9kK6w8OwylUbzUdV0
+	 3cj4HgJrKaw9LeouXb/SCBP/4YZ4DQAb45salKr6f5w6mCKbC6DFsjhplmuHX02dQT
+	 WWi/CmBvofzL8zmLn1fyddH61vv3nKILax85Y0rm49yFyB1b9QN/jnclkY4rDVfbBR
+	 8okvWEfgqSOhw==
+Message-ID: <04c4b93a-fcd7-4f42-a7cc-1cc3ed4019e1@kernel.org>
+Date: Tue, 4 Jun 2024 09:46:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603073953.16399-1-linchengming884@gmail.com> <2024060337-relatable-ozone-510e@gregkh>
-In-Reply-To: <2024060337-relatable-ozone-510e@gregkh>
-From: Cheng Ming Lin <linchengming884@gmail.com>
-Date: Tue, 4 Jun 2024 09:44:01 +0800
-Message-ID: <CAAyq3SYg3Qr08DguhPbC8Bb89_KS_AAG-Z8SNG_A7H_v4YNrDA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: mtd: spinand: macronix: Add support for
- serial NAND flash
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: miquel.raynal@bootlin.com, dwmw2@infradead.org, 
-	computersforpeace@gmail.com, marek.vasut@gmail.com, vigneshr@ti.com, 
-	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, richard@nod.at, alvinzhou@mxic.com.tw, 
-	leoyu@mxic.com.tw, Cheng Ming Lin <chengminglin@mxic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] f2fs: use new ioprio Macro to get ckpt thread ioprio
+ level
+To: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+ niuzhiguo84@gmail.com, ke.wang@unisoc.com
+References: <1717414526-19658-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <1717414526-19658-1-git-send-email-zhiguo.niu@unisoc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 2024/6/3 19:35, Zhiguo Niu wrote:
+> IOPRIO_PRIO_DATA in the new kernel version includes level and hint,
+> So Macro IOPRIO_PRIO_LEVEL is more accurate to get ckpt thread
+> ioprio data/level, and it is also consisten with the way setting
+> ckpt thread ioprio by IOPRIO_PRIO_VALUE(class, data/level).
+> 
+> Besides, change variable name from "data" to "level" for more readable.
+> 
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
 
-Greg KH <gregkh@linuxfoundation.org> =E6=96=BC 2024=E5=B9=B46=E6=9C=883=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=883:58=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Mon, Jun 03, 2024 at 03:39:53PM +0800, Cheng Ming Lin wrote:
-> > From: Cheng Ming Lin <chengminglin@mxic.com.tw>
-> >
-> > MX35UF{1,2,4}GE4AD and MX35UF{1,2}GE4AC have been merge into
-> > Linux kernel mainline.
->
-> Trailing whitespace :(
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-Sorry, we will fix it in the next version.
-
->
-> > Commit ID: "c374839f9b4475173e536d1eaddff45cb481dbdf".
->
-> See the kernel documentation for how to properly reference commits in
-> changelog messages.
-
-Sure, this will also be fixed in the next version.
-
->
-> > For SPI-NAND flash support on Linux kernel LTS v5.4.y,
-> > add SPI-NAND flash MX35UF{1,2,4}GE4AD and MX35UF{1,2}GE4AC in id tables=
-.
-> >
-> > Those five flashes have been validate on Xilinx zynq-picozed board and
-> > Linux kernel LTS v5.4.y.
->
-> What does 5.4.y have to do with the latest mainline tree?  Is this
-> tested on our latest tree?
-
-We have requirements specific to the 5.4.y, and these five flashes
-have been adapted for the latest mainline tree.
-Additionally, they have been patched on LTS 5.14.y, and we have
-tested them on LTS 5.4.y.
-Given these circumstances, we are hopeful for approval to backport
-these five flash IDs on 5.4.y.
-
->
-> thanks,
->
-> greg k-h
-
-Regards,
-Cheng Ming
+Thanks,
