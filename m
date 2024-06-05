@@ -1,63 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5C019005E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E7E194A7F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575402; cv=none; b=qOYD+QWD5otFx7cJBK+7Kc1W+ZogHEzzEi7nRZGjj7GpkFc0k/hxWURsMd3dcEMtvI4PTo2ArNOJ8Y224QYS/YUKdOPTKcDQA2zi3XcwTgy+neJlOvgjB8sCC6dqN9pKTEesMfXX0HUlcCgKgJOngf3W+yC7HdcTUQmbxfSUS3s=
+	t=1717575404; cv=none; b=BOLa0ZstZjp/+VKGxrTcJI6e3XPbOfHYqePA3Z3pIDqkYOKzwjdDn/aUshCFLbYglXqf45JcFl70ieFT5uTaLY/g1TztoXyZsYaz6J98XUPZvnGW0WONTuQdEAfFsLqk903+OZMfkbZxzdNpPf7wAyToFhqNeDBI6HDACPcVd7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575402; c=relaxed/simple;
-	bh=tV49a5+qMkVnfBuVcqqm88/YXQEYCtYEpLyZHAId3eI=;
+	s=arc-20240116; t=1717575404; c=relaxed/simple;
+	bh=iGO9d2tDV8jgMXAb9ljo4BmxYhAXls7ncq8pchC9GTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a0tDQOS4fF9et/f10uvW7+igkV6Kcs3/Gb2lSOecz4XJq8Zjb6lsRmBcHCQ+ihjgF0IKG+XJoHsOQMhG0wYu3swEebwN6aKas8n14Mc2sK1Ce6eSAHbpbTmt5DSoyh9xROnQ79oGqZ8TLJU8hy4v4Q7TkRE7UP8amy3cEXYIfpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IcATQzJ3; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=ZzU0RZsfRmWFr6YznLY8R9/WmMcEdJkjtbzCVN5FJTT7xMAcl2G2z4LD0F7/b24U+hxFVE1jdas/24Zq0t2Tk/voeCpbfvB2y8b69mshe7/goBooYEPsByj5LMwXoIiZy7+AWxFt84Bseh+ch/5GLmEckqy8jrIdV4Ys8UZDcEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOz+EZaY; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IcATQzJ3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOz+EZaY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717575400;
+	s=mimecast20190719; t=1717575401;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FprLruSafewJCGyfXmuQwDL1Jg/OKDGH6ODfzThcTic=;
-	b=IcATQzJ38ppLBxal9GgpUxwy3M6wOu/dOQgOaZhpBIjXqfcGGhsFBME2uvGfw6I1aZDJDm
-	ZpuTulessRW0CIzTHEbUnQ2ZiaouEYg1XnfxSAFtKSmzA4LG5vmK5WVTUqdyaME3oURJJt
-	KFGQIseBiLeNOil3iDLsY/8upy46Sb4=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
+	b=YOz+EZaYyJaKa7N3Lt+aqkaavE0iz6ZxxyV3TSxSLeO+O0w1neesXovQjaGjfX+5oqt5Hy
+	uQ3GVL/ULBV8RXvMgSGRdkgcHRq1pOSObI64NYMUdSFigZf8QGSEUOcJve16hD0IZ4Bub4
+	xpjAqbz2eccGdwv5ItvAj+zIoJBc39k=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-240-1AQwBByBNyiGHy7cOxeRkA-1; Wed, 05 Jun 2024 04:16:39 -0400
-X-MC-Unique: 1AQwBByBNyiGHy7cOxeRkA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a68b839d30fso15033666b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:39 -0700 (PDT)
+ us-mta-665-dszJv2-aP5-CLUybHHshCw-1; Wed, 05 Jun 2024 04:16:30 -0400
+X-MC-Unique: dszJv2-aP5-CLUybHHshCw-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42133136397so6120005e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575398; x=1718180198;
+        d=1e100.net; s=20230601; t=1717575390; x=1718180190;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FprLruSafewJCGyfXmuQwDL1Jg/OKDGH6ODfzThcTic=;
-        b=QuWc6JXb4kTB7BnoLEA3l/nbaoh50W/HrnVktjaEC7xOTMQbMGyeoNHYETFOizmyAK
-         er4sEnU1cHqpSb6YajjolzcR/vy4vvSpqVC++dK1kEhaazCg1d4VfExLBDH9weyj54SX
-         QZlcVGR5S/Indq5+K61WzmU2aSIKXII0LZskzfCcJ8NfPxuiRqpTDkzuBSw0XwDe2HZD
-         3desoiGfeae3ZrA72mCNTc6gU8ErHBVU8tF204Ol6Vc55r1H0apAMlI1IQsok4BpGo+5
-         vA5brpULBpx8y62l1FwW55BT1w1H0F4xxSq4HuKu7JSvScO8Sa87+Uk16GT9WYwO1/r6
-         EqCg==
-X-Forwarded-Encrypted: i=1; AJvYcCW1kxOJw2KevrC2GujmqYeLYYK2/7HG+eSc7kRhMo6dGYTr2v1W6nOi+WPAb12e0Jv0HKxIKoxsIheSnBF8ZjRVaMji1EMMrWF0jkWO
-X-Gm-Message-State: AOJu0YyyKhg8nmYgnChrkKvvnVSDY1mPlF4CYy/tDtnmyVlNV+ziwD/Z
-	e2p6KHxUHRrby1KbkmgOdhueGHIb8/VdObAq64MlSq6ET72kwOspYhHQrMNLodhECOf7BwNXwTB
-	KN3YeOi7PwSB2Opx4sMBYds1JU63VIMkFvxLN3BXZMk/NhUvrew268Gi/TkMH04EeCsD2FQ==
-X-Received: by 2002:a17:906:fccf:b0:a59:bfab:b24f with SMTP id a640c23a62f3a-a69a023e515mr111477666b.3.1717575397914;
-        Wed, 05 Jun 2024 01:16:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGH01zzkiwwO2rlaNoVMW4xlWaRAMHnpBHn33IIaKEoTGFWWRSfd/BTk6G3QT5BqGH8wLV82w==
-X-Received: by 2002:a5d:404d:0:b0:35e:83dc:e6ed with SMTP id ffacd0b85a97d-35e83fcb079mr1241057f8f.0.1717575377322;
-        Wed, 05 Jun 2024 01:16:17 -0700 (PDT)
+        bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
+        b=CFqTg0+YB6PoSZWrY9DpcMUpPZG0yeQD19E/6QAyri52Z+4upPoBG9Uxcmt89XqSAD
+         SbzG7mslpI19BbklFNxG5hq1drfwdF3sGQebKnZuCyTvtg6D5xVudGLY3vCEsr/IVYpb
+         HIcaFX5mx6YN5asY0cRS1WWxeWa0Dd2kpyRjTThrAl5ieQ4qa1iHTTzJUBcpDO8dxATD
+         1ZbhYfsO4gksjFAWDsufeU9dpLMVk6DZfm4G4DrxCgE+nFeVJHDmbmCBZe2mFzWOEQ87
+         ch8G8rmzy4ZM3DHJR15wusluffZ+yqoIAa4RP/wDJXVwQvtTCmhCQmUod7bixRbRSqhG
+         dUog==
+X-Forwarded-Encrypted: i=1; AJvYcCVPXTOTOq+NbH9ynxGGziCBnz1ccMPwlh36KwfKJPnIMP6zOzhYqONPjAzwY/+ZLT1+DP2797qX5/HTxVlfHWzMcPgBtsTHOeokLTrs
+X-Gm-Message-State: AOJu0YxDPNYlaBhWvFMt19uWY7YCNsxAXhjzo3Rk0mmw0+qL9zOHxx+L
+	8CaZTf9rM9tzywfn6hMjfEuc9wepvKxT1e1NR6QNdDnD8lQBEjoJ223+LVvRgdqR2bBc89qLl3g
+	lPCFQ2L/CWe34l9DV3FVLYsWTCsJifHsQ5Y78/GqdVbrbPIUsHPb0IR+/ZRpK8g==
+X-Received: by 2002:a5d:404d:0:b0:35e:83dc:e6ed with SMTP id ffacd0b85a97d-35e83fcb079mr1241478f8f.0.1717575389876;
+        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjXIQcWcnmum91rBphrXn5QVRVx0JrE+Ei0yMho9Onfe+TO5zfd469TFQpM4baXxySxHqFTA==
+X-Received: by 2002:a5d:404d:0:b0:35e:83dc:e6ed with SMTP id ffacd0b85a97d-35e83fcb079mr1241464f8f.0.1717575389558;
+        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
 Received: from pstanner-thinkpadt14sgen1.fritz.box ([2001:9e8:32e6:e600:c901:4daf:2476:80ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.16
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:16:16 -0700 (PDT)
+        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -72,9 +72,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v7 01/13] PCI: Add and use devres helper for bit masks
-Date: Wed,  5 Jun 2024 10:15:53 +0200
-Message-ID: <20240605081605.18769-3-pstanner@redhat.com>
+Subject: [PATCH v7 13/13] drm/vboxvideo: fix mapping leaks
+Date: Wed,  5 Jun 2024 10:16:05 +0200
+Message-ID: <20240605081605.18769-15-pstanner@redhat.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240605081605.18769-2-pstanner@redhat.com>
 References: <20240605081605.18769-2-pstanner@redhat.com>
@@ -86,68 +86,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current derves implementation uses manual shift operations to check
-whether a bit in a mask is set. The code can be made more readable by
-writing a small helper function for that.
+When the PCI devres API was introduced to this driver, it was wrongly
+assumed that initializing the device with pcim_enable_device() instead
+of pci_enable_device() will make all PCI functions managed.
 
-Implement mask_contains_bar() and use it where applicable.
+This is wrong and was caused by the quite confusing PCI devres API in
+which some, but not all, functions become managed that way.
 
+The function pci_iomap_range() is never managed.
+
+Replace pci_iomap_range() with the actually managed function
+pcim_iomap_range().
+
+Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/pci/devres.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 2c562b9eaf80..f13edd4a3873 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -161,6 +161,10 @@ int pcim_set_mwi(struct pci_dev *dev)
- }
- EXPORT_SYMBOL(pcim_set_mwi);
+diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
+index 42c2d8a99509..d4ade9325401 100644
+--- a/drivers/gpu/drm/vboxvideo/vbox_main.c
++++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
+@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
+ 	/* Take a command buffer for each screen from the end of usable VRAM. */
+ 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
  
-+static inline bool mask_contains_bar(int mask, int bar)
-+{
-+	return mask & BIT(bar);
-+}
+-	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
+-					     vbox->available_vram_size,
+-					     vbox->num_crtcs *
+-					     VBVA_MIN_BUFFER_SIZE);
+-	if (!vbox->vbva_buffers)
+-		return -ENOMEM;
++	vbox->vbva_buffers = pcim_iomap_range(
++			pdev, 0, vbox->available_vram_size,
++			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
++	if (IS_ERR(vbox->vbva_buffers))
++		return PTR_ERR(vbox->vbva_buffers);
  
- static void pcim_release(struct device *gendev, void *res)
- {
-@@ -169,7 +173,7 @@ static void pcim_release(struct device *gendev, void *res)
- 	int i;
+ 	for (i = 0; i < vbox->num_crtcs; ++i) {
+ 		vbva_setup_buffer_context(&vbox->vbva_info[i],
+@@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
+ 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
  
- 	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++)
--		if (this->region_mask & (1 << i))
-+		if (mask_contains_bar(this->region_mask, i))
- 			pci_release_region(dev, i);
+ 	/* Map guest-heap at end of vram */
+-	vbox->guest_heap =
+-	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
+-			    GUEST_HEAP_SIZE);
+-	if (!vbox->guest_heap)
+-		return -ENOMEM;
++	vbox->guest_heap = pcim_iomap_range(pdev, 0,
++			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
++	if (IS_ERR(vbox->guest_heap))
++		return PTR_ERR(vbox->guest_heap);
  
- 	if (this->mwi)
-@@ -363,7 +367,7 @@ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name)
- 	for (i = 0; i < DEVICE_COUNT_RESOURCE; i++) {
- 		unsigned long len;
- 
--		if (!(mask & (1 << i)))
-+		if (!mask_contains_bar(mask, i))
- 			continue;
- 
- 		rc = -EINVAL;
-@@ -386,7 +390,7 @@ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name)
- 	pci_release_region(pdev, i);
-  err_inval:
- 	while (--i >= 0) {
--		if (!(mask & (1 << i)))
-+		if (!mask_contains_bar(mask, i))
- 			continue;
- 		pcim_iounmap(pdev, iomap[i]);
- 		pci_release_region(pdev, i);
-@@ -438,7 +442,7 @@ void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
- 		return;
- 
- 	for (i = 0; i < PCIM_IOMAP_MAX; i++) {
--		if (!(mask & (1 << i)))
-+		if (!mask_contains_bar(mask, i))
- 			continue;
- 
- 		pcim_iounmap(pdev, iomap[i]);
+ 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
+ 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
 -- 
 2.45.0
 
