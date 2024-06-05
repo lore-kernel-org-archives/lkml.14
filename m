@@ -1,30 +1,33 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 367D21922FC;
-	Wed,  5 Jun 2024 08:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7B21922FC;
+	Wed,  5 Jun 2024 08:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717574764; cv=none; b=hDFc8RRYiYCYpgDKoLPllbbZtuz7tqto0DWaa2fAwdv7rPgwgtm/g9ZFh1Ap17wUGklYQLPJPYOik0qqzyw5DA5IgvmRvM8iHW+2ZxDmC7fnlX+9fgD1rwewsGZ4EIid8EVgbkkBmiawOKUBz9RRvUus8GnpkxmopMV2Suae4+0=
+	t=1717574853; cv=none; b=Xtgp1Wiv1d+VX2xgb/hhHmETiqbWJjkQSjxamV87K2xjxCVBvJFrY0ktLtGBqZdnlRfs4sWH/JmYYxOIvaxOcusgwd/vjXV87g/YGyPNmIMMtDShTHotPqttxFyrSiyvm7GBDvQwEbq6Jec/T1E/yzlEBTvYCnd6OBWHvJU/tuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717574764; c=relaxed/simple;
-	bh=MEkf72hbkHlFJhXcMR6uH2GgppBTzzZuYu9Bj9tZ+aw=;
+	s=arc-20240116; t=1717574853; c=relaxed/simple;
+	bh=uGi3IfjB+sz5WIuF8mXPls+BVIXDBOXagFr28P1m0/M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SNzUIPk/ZfACMY9o5V75530YjATtiiOBvSSmKvqiSIOq7Prh8xJP62fTBxppiY7RrVXtfRKA4EBk7wbOcqqQfGFVDljAzDwDdRKOCsuqdxVL0aljjCdyxwTpVTJeGPygiFsF4yJtx39cn52uaQqEMA5zYr0omXKSZUwQq8od6Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EsVF6wF+; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=CvkRQmaXaai2KVBn+NAewwUH2qGe0e3BVIIKSt2oWUAswF7lxPlSvk8vqOE+7Vqjicc03+QbUNaFQoZTvL68W52Nexw0E1tyM0tuuE+fOq9d8rtGApI2X9YQxijiekaNa0uViGByFpHZi1Ak1kHHx80j1ZO46fp7KXe1b19F5oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HewE2DkR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EsVF6wF+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=PVpxHacadX3v1Jpi8ge1wxLL0LsNrEZCAoTEQu6/AwY=;
-	b=EsVF6wF+sJPffZeWM1rhAChqEu4bITXYoFmrAnqS0mK4VKkvs9LSkCLg8f5DEH
-	8eNfxwJKTS/K/4ilGTCFTHukBib8y1BS23Pqlv1f77nLI0IeWH7X9261vp3HbVPZ
-	uwK43GaO4pVRvrK/XVhrjIhFKzEPMkILQvX/jZ3pT/85Q=
-Received: from [10.0.2.15] (unknown [111.205.43.230])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD3f6gCHGBmGz6GBw--.28481S2;
-	Wed, 05 Jun 2024 16:04:19 +0800 (CST)
-Message-ID: <ddfb1619-22bc-40f7-a595-f7600608da8a@163.com>
-Date: Wed, 5 Jun 2024 16:04:18 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HewE2DkR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFF7C3277B;
+	Wed,  5 Jun 2024 08:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717574852;
+	bh=uGi3IfjB+sz5WIuF8mXPls+BVIXDBOXagFr28P1m0/M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HewE2DkRUkY+2UEkDd0gAn8LU1vO3kJ6UO9ELYeHPtxtuPtLZ1V9wSUsH/qw9dwYc
+	 wOKXC1swB/23G4OSoiT0oIJ1AFNV4yyKD/4Z/i7LakvcRdWlWHal+zk6qFaqTdw6QH
+	 x79P10dliKWPh3e5up49i60lLd64Tux2VfvhOCni+Pm3qeA5WvpYl/TqwQvkKflNBK
+	 JfZiL7W1C2w4oI5ghEJyKNY21xDwECl6CW/+fC3UAlrUDCHx2ymtxtE9JtyR5MCIVH
+	 Oig0hSTaScpH2RSAR0KZaUVjeDsIJYRAIsVmj9RKYqMi/o298h/nR/lxz8gLnkXD2b
+	 pe7v+5ZVtl8pA==
+Message-ID: <3386003c-a92c-408b-8dfe-290b79fb8f25@kernel.org>
+Date: Wed, 5 Jun 2024 10:07:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,126 +35,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: vmd: Create domain symlink before
- pci_bus_add_devices()
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: ad7192: Fix clock config
+To: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Alisa-Dariana Roman <alisa.roman@analog.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Michael Hennerich <michael.hennerich@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Alexandru Tachici <alexandru.tachici@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+References: <20240605075154.625123-1-alisa.roman@analog.com>
+ <20240605075154.625123-2-alisa.roman@analog.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Paul M Stillwell Jr <paul.m.stillwell.jr@intel.com>,
- nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, sunjw10@lenovo.com, ahuang12@lenovo.com
-References: <20240604135153.9182-1-sjiwei@163.com>
- <c1885394-9edf-47a7-a4f8-1e456ba52316@intel.com>
-From: Jiwei Sun <sjiwei@163.com>
-In-Reply-To: <c1885394-9edf-47a7-a4f8-1e456ba52316@intel.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240605075154.625123-2-alisa.roman@analog.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3f6gCHGBmGz6GBw--.28481S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWftr1DKF17Gw47Wr47XFb_yoWrJFWrpF
-	WrWa1jvFW7Gr47XayDZ3W8WryYvw4vv34UJ3sxK347Z34DAFy09FW0gFs8ArWqvF1q93W2
-	vwsrXF1S9wn5KaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UYD7-UUUUU=
-X-CM-SenderInfo: 5vml4vrl6rljoofrz/1tbiWwb0mWV4JSWaTQAAs6
+Content-Transfer-Encoding: 7bit
 
-
-
-On 6/5/24 02:00, Paul M Stillwell Jr wrote:
-> On 6/4/2024 6:51 AM, Jiwei Sun wrote:
->> From: Jiwei Sun <sunjw10@lenovo.com>
->>
->> During booting into the kernel, the following error message appears:
->>
->>    (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: Unable to get real path for '/sys/bus/pci/drivers/vmd/0000:c7:00.5/domain/device''
->>    (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: /dev/nvme1n1 is not attached to Intel(R) RAID controller.'
->>    (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: No OROM/EFI properties for /dev/nvme1n1'
->>    (udev-worker)[2149]: nvme1n1: '/sbin/mdadm -I /dev/nvme1n1'(err) 'mdadm: no RAID superblock on /dev/nvme1n1.'
->>    (udev-worker)[2149]: nvme1n1: Process '/sbin/mdadm -I /dev/nvme1n1' failed with exit code 1.
->>
->> This symptom prevents the OS from booting successfully.
->>
->> After a NVMe disk is probed/added by the nvme driver, the udevd executes
->> some rule scripts by invoking mdadm command to detect if there is a
->> mdraid associated with this NVMe disk. The mdadm determines if one
->> NVMe devce is connected to a particular VMD domain by checking the
->> domain symlink. Here is the root cause:
->>
->> Thread A                   Thread B             Thread mdadm
->> vmd_enable_domain
->>    pci_bus_add_devices
->>      __driver_probe_device
->>       ...
->>       work_on_cpu
->>         schedule_work_on
->>         : wakeup Thread B
->>                             nvme_probe
->>                             : wakeup scan_work
->>                               to scan nvme disk
->>                               and add nvme disk
->>                               then wakeup udevd
->>                                                  : udevd executes
->>                                                    mdadm command
->>         flush_work                               main
->>         : wait for nvme_probe done                ...
->>      __driver_probe_device                        find_driver_devices
->>      : probe next nvme device                     : 1) Detect the domain
->>      ...                                            symlink; 2) Find the
->>      ...                                            domain symlink from
->>      ...                                            vmd sysfs; 3) The
->>      ...                                            domain symlink is not
->>      ...                                            created yet, failed
->>    sysfs_create_link
->>    : create domain symlink
->>
->> sysfs_create_link() is invoked at the end of vmd_enable_domain().
->> However, this implementation introduces a timing issue, where mdadm
->> might fail to retrieve the vmd symlink path because the symlink has not
->> been created yet.
->>
->> Fix the issue by creating VMD domain symlinks before invoking
->> pci_bus_add_devices().
->>
->> Signed-off-by: Jiwei Sun <sunjw10@lenovo.com>
->> Suggested-by: Adrian Huang <ahuang12@lenovo.com>
->> ---
->> v2 changes:
->>   - Add "()" after function names in subject and commit log
->>   - Move sysfs_create_link() after vmd_attach_resources()
->>
->> ---
->>   drivers/pci/controller/vmd.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->> index 87b7856f375a..d0e33e798bb9 100644
->> --- a/drivers/pci/controller/vmd.c
->> +++ b/drivers/pci/controller/vmd.c
->> @@ -925,6 +925,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>           dev_set_msi_domain(&vmd->bus->dev,
->>                      dev_get_msi_domain(&vmd->dev->dev));
->>   +    WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
->> +                   "domain"), "Can't create symlink to domain\n");
->> +
+On 05/06/2024 09:51, Alisa-Dariana Roman wrote:
+> There are actually 4 configuration modes of clock source for AD719X
+> devices. Either a crystal can be attached externally between MCLK1 and
+> MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
+> pin. The other 2 modes make use of the 4.92MHz internal clock, which can
+> be made available on the MCLK2 pin.
 > 
-> I think you should move the sysfs_remove_link() line in vmd_remove() down as well.
+> The presence of an external clock is optional, not required.
 
-Indeed, thanks for your suggestion. I will modify it in v3 patch.
-
-Thanks,
-Regards,
-Jiwei
+Why?
 
 > 
-> Paul
+> Fixes: f7356e47032c ("dt-bindings: iio: adc: ad7192: Add binding documentation for AD7192")
+> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7192.yaml          | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
->>       vmd_acpi_begin();
->>         pci_scan_child_bus(vmd->bus);
->> @@ -964,9 +967,6 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->>       pci_bus_add_devices(vmd->bus);
->>         vmd_acpi_end();
->> -
->> -    WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
->> -                   "domain"), "Can't create symlink to domain\n");
->>       return 0;
->>   }
->>   
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> index a03da9489ed9..c5a4219a9388 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
+> @@ -39,11 +39,16 @@ properties:
+>  
+>    clocks:
+>      maxItems: 1
+> -    description: phandle to the master clock (mclk)
+> +    description: |
+> +      Optionally, either a crystal can be attached externally between MCLK1 and
+> +      MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
+> +      pin. If absent, internal 4.92MHz clock is used which can be made available
+> +      on MCLK2.
+>  
+>    clock-names:
+> -    items:
+> -      - const: mclk
+> +    enum:
+> +      - xtal
+> +      - clk
+
+This mclk->clk breaks the users.
+
+
+Best regards,
+Krzysztof
 
