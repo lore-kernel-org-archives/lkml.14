@@ -1,138 +1,134 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCA714A4F4;
-	Wed,  5 Jun 2024 10:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1997918FC6F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 10:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717582435; cv=none; b=pPfSoLw2PtFkamRxTdfC829Wi4d5aSJMXD0l++IcJdXM1KOULIYN92mg6D3rrGmTyDWZxleiyLSFS66vAYpbumPiBepz5t86kbcFTx6KhdpZ1cdFVmyIQTFt7bEQlUUs58Q9VDeA4irO4lYGR2wGdY8YFuBq17+ao49DKQPFVQc=
+	t=1717582454; cv=none; b=r3Lr0esCbkKl23hcp+gH+lnlgnxOvFbXL4QFR0XYC7SemsBZ5k9WyiBtSkAOrPds+mSRr9t8srk7/mbCQx9PPcqwof804yYMS0tzaDNAxgaMxtQ+NUpG/RJSX9C2zbOrvg/bfaVIbeB8mLFQNZkPfssLdKZzyN42AFGFY5Gcv+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717582435; c=relaxed/simple;
-	bh=ik7O5D1/zfrU5PaNGdXm7WqPHSu6IAEY0lgHj8rkt14=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M9uOVym77G5N4FX5s7BtMRjF4/cQQOy2KPlSmuAzeNXylBgv3LWNV/kgBIts6DMJf/f4ZkmrlV67LE0xGUWBLNlIGSTQssiSvMzEr41s4o5roRygUiASoLL9TJJbYHNZwHqAVDwEwhaPk1xiaGmHor3iFOjKyeRq+1QmureoHRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=S7eWnebj; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="S7eWnebj"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 97472100003;
-	Wed,  5 Jun 2024 13:13:24 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1717582404; bh=0/SSnP2FmJDTn4D/XDM1bjJhKm4OlkcBcXnMVeCu4GU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=S7eWnebj243qAdwLvX/2889sWAI05xibP/b6g+UGGNXeb1Vhia9+L058lm2o5z9qJ
-	 2WwDEj5su5BMfpHf1/jnm3NYEoNNC/4E50DYgGgBfgFfSuZiD36jCvpumIhUOlBSml
-	 PRmufnT2JVUr/yjU7OPibisWWPl047oAhYakJEYhOCrAS71uFYA35o6v4ISb4kq6Lc
-	 Uf7IT7y4kZJyF6Tc7MFxkVT+mJzWyTkb0WOUOd3Z8HgM6sSS8j79HF/CoQRVAV6B5A
-	 ebPMHHEYnIh+5ro8qF+lfEAF0doNqiTu5u7s73K2HSIbVXbF/ivJUGandRh7f7/acD
-	 MMP++fzDP/vJw==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Wed,  5 Jun 2024 13:12:03 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
- 13:11:42 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: "David S. Miller" <davem@davemloft.net>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Simon Horman <horms@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>, Justin Stitt
-	<justinstitt@google.com>, Felix Manlunas <felix.manlunas@cavium.com>,
-	Satanand Burla <satananda.burla@cavium.com>, Raghu Vatsavayi
-	<raghu.vatsavayi@cavium.com>, Vijaya Mohan Guvva <vijaya.guvva@cavium.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net v3] liquidio: Adjust a NULL pointer handling path in lio_vf_rep_copy_packet
-Date: Wed, 5 Jun 2024 13:11:35 +0300
-Message-ID: <20240605101135.11199-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1717582454; c=relaxed/simple;
+	bh=NND9Bq19l6tIThaJCmjP0foh63weKcb1C19vc9ckFao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K5afU8sKuWA7mCU1QkqMlXIwpS/kXOxx/nR0MYefYjeyZp/ApH44bqgwDk5T9QV6HacvC7w6GdhVpeKxSkX0eZuD8xyBZ12JO0qGyFITmVsRhWezgMYaD/J5/hkDnxD+DneN8GeHtH/pXK7nutCdsM9/mmqQUvVAvUEjcqBo3JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VvMgT6qG2z9v7JM
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:32:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 286811404F5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:54:33 +0800 (CST)
+Received: from [10.81.200.103] (unknown [10.81.200.103])
+	by APP2 (Coremail) with SMTP id GxC2BwC3oyfKNWBmNTWTCQ--.2480S2;
+	Wed, 05 Jun 2024 10:54:32 +0100 (CET)
+Message-ID: <879ee1b3-46eb-40c8-9b2a-3f215e527f53@huaweicloud.com>
+Date: Wed, 5 Jun 2024 11:54:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185735 [Jun 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/06/05 09:22:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/06/05 07:06:00 #25449783
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 2/4] tools/memory-model: Define applicable tags on
+ operation in tools/...
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: paulmck@kernel.org, stern@rowland.harvard.edu, parri.andrea@gmail.com,
+ will@kernel.org, peterz@infradead.org, npiggin@gmail.com,
+ dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
+ akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
+ urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
+ <20240604160409.498190-1-jonas.oberhauser@huaweicloud.com>
+ <Zl_oxj9-ypX0U2HZ@Boquns-Mac-mini.home>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <Zl_oxj9-ypX0U2HZ@Boquns-Mac-mini.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:GxC2BwC3oyfKNWBmNTWTCQ--.2480S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr17urWxtFyxArWrtryftFb_yoW8tF1Dpr
+	ykXayrKr9rtr1Sk397Xw1ruFW5Wa1rGFy5Jr9ag3s5Zryqgr1Iya1DWanxWF93JrWfJa1j
+	vw4jqFyDGa1UArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-In lio_vf_rep_copy_packet() pg_info->page is compared to a NULL value,
-but then it is unconditionally passed to skb_add_rx_frag() which looks
-strange and could lead to null pointer dereference.
 
-lio_vf_rep_copy_packet() call trace looks like:
-	octeon_droq_process_packets
-	 octeon_droq_fast_process_packets
-	  octeon_droq_dispatch_pkt
-	   octeon_create_recv_info
-	    ...search in the dispatch_list...
-	     ->disp_fn(rdisp->rinfo, ...)
-	      lio_vf_rep_pkt_recv(struct octeon_recv_info *recv_info, ...)
-In this path there is no code which sets pg_info->page to NULL.
-So this check looks unneeded and doesn't solve potential problem.
-But I guess the author had reason to add a check and I have no such card
-and can't do real test.
-In addition, the code in the function liquidio_push_packet() in
-liquidio/lio_core.c does exactly the same.
 
-Based on this, I consider the most acceptable compromise solution to
-adjust this issue by moving skb_add_rx_frag() into conditional scope.
+Am 6/5/2024 um 6:25 AM schrieb Boqun Feng:
+> On Tue, Jun 04, 2024 at 06:04:09PM +0200, Jonas Oberhauser wrote:
+>> Herd7 transforms reads, writes, and read-modify-writes by eliminating
+>> 'acquire tags from writes, 'release tags from reads, and 'acquire,
+>> 'release, and 'mb tags from failed read-modify-writes. We emulate this
+>> behavior by redefining Acquire, Release, and Mb sets in linux-kernel.bell
+>> to explicitly exclude those combinations.
+>>
+>> Herd7 furthermore adds 'noreturn tag to certain reads. Currently herd7
+>> does not allow specifying the 'noreturn tag manually, but such manual
+>> declaration (e.g., through a syntax __atomic_op{noreturn}) would add
+>> invalid 'noreturn tags to writes; in preparation, we already also exclude
+>> this combination.
+>>
+>> Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+>> ---
+>>   tools/memory-model/linux-kernel.bell | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
+>> index dba6b5b6dee0..2f49993644ed 100644
+>> --- a/tools/memory-model/linux-kernel.bell
+>> +++ b/tools/memory-model/linux-kernel.bell
+>> @@ -36,6 +36,13 @@ enum Barriers = 'wmb (*smp_wmb*) ||
+>>   		'after-srcu-read-unlock (*smp_mb__after_srcu_read_unlock*)
+>>   instructions F[Barriers]
+>>   
+>> +(* Remove impossible tags, such as Acquire on a store or failed RMW *)
+> 
+> This comment needs a bit help, "failed RMW"s still exist, they just
+> don't provide ordering. How about:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Fixes: 1f233f327913 ("liquidio: switchdev support for LiquidIO NIC")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v1->v2: Fix incorrect 'Fixes' tag format
-v2->v3: Add explanation why this should be fixed,
- add Reviewed-by: Simon Horman <horms@kernel.org>
- (https://lore.kernel.org/all/20240308201911.GB603911@kernel.org/)
+Oh, I see how the comment can be misread. A smaller fix would be
 
- drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+"Acquire on a store or on a failed RMW"
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-index aa6c0dfb6f1c..e26b4ed33dc8 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
-@@ -272,13 +272,12 @@ lio_vf_rep_copy_packet(struct octeon_device *oct,
- 				pg_info->page_offset;
- 			memcpy(skb->data, va, MIN_SKB_SIZE);
- 			skb_put(skb, MIN_SKB_SIZE);
-+			skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-+					pg_info->page,
-+					pg_info->page_offset + MIN_SKB_SIZE,
-+					len - MIN_SKB_SIZE,
-+					LIO_RXBUFFER_SZ);
- 		}
--
--		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
--				pg_info->page,
--				pg_info->page_offset + MIN_SKB_SIZE,
--				len - MIN_SKB_SIZE,
--				LIO_RXBUFFER_SZ);
- 	} else {
- 		struct octeon_skb_page_info *pg_info =
- 			((struct octeon_skb_page_info *)(skb->cb));
--- 
-2.30.2
+but I actually like your longer explanation better, so I think I'll go 
+with that.
+
+> 
+> (*
+>   * Filter out syntactic annotations that don't provide the corresponding
+>   * semantic ordering, such as Acquire on a store or Mb on a failed RMW.
+>   *)
+> 
+> ?
+> 
+> Regards,
+> Boqun
+> 
+>> +let FailedRMW = RMW \ (domain(rmw) | range(rmw))
+>> +let Acquire = Acquire \ W \ FailedRMW
+>> +let Release = Release \ R \ FailedRMW
+>> +let Mb = Mb \ FailedRMW
+>> +let Noreturn = Noreturn \ W
+>> +
+>>   (* SRCU *)
+>>   enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
+>>   instructions SRCU[SRCU]
+>> -- 
+>> 2.34.1
+>>
 
