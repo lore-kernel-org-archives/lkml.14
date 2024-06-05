@@ -1,63 +1,68 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1490315FA6E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 23:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F3E167DB8
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 23:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717629564; cv=none; b=Iitnfj+HUtzI1J1U6Vg5WMSYBUvVPSNQf1KJR2FyFPpQLEAeB67bn1hmk0o4rqAvJNFKWhq7azM0j5matrm2HuRSLBHl2KOSqwg4d5+YB0A3Ghpddh99TMZ24hs/Uy92FlRHNqnyRaALI0AmyIyybA4eQuEdGepZPdcLTgENme0=
+	t=1717629568; cv=none; b=EMj1XFd2zB/LHT5Q8yaGmZjLQBNPeRl8D0Mm4tQdy4Ob9F2UpHB5BYTFVKDE3vUXRVr4pauwfUMjLw0V8jepoWJnwBhGe3fAKRYzKe/GgaZpSjEvRS1riIrnzARZNTIzJ4rF0z+inYIrc0CLbX3ptgSWBPB2ko4gnYrYQD+kJiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717629564; c=relaxed/simple;
-	bh=bPYpKaFffVT7czraRt/cDjH6Nr8d+yMIXoAp76YawnI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sHXddQGn9m46EHTNu8JzD/S/uY2tojhJC19U6CU/b3EllgYYFDU7XymMOqzD6gwLodu+mEGuWSzXLSXrETqoRCwHKWN8jZooED0AEfXxvljdMkT0LtE3XDEh5S3jibwyvJQgVgHDBtu0XpMmRy1TN3t+W4TT0qMgPck82TpAMUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c9RrZyN1; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1717629568; c=relaxed/simple;
+	bh=OT9vjFDhZJe+JrrZnAEYUNwBDJu9CJaj1NqYkfGoeo8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lvAfamaMJSyIGGeR9q+p8s1RmEMLcSUvw9B2gFaf6BEp5HXEWzIoHzhnuXXBn5COCbnR5XOdWf4CmnsKSU7MEyx1zlT0ZPOPobvdOHk/TqPrxjD8saa9jvhbVG2QUYxLVrj2D5if9bPv7wJgABikDiXNJzvZSz6mKkhv79F/4UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eOWx6Wky; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c9RrZyN1"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a1e9807c0so3939677b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 16:19:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eOWx6Wky"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c1bb32d87eso310194a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 16:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717629562; x=1718234362; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hI7a+TyPUatLlBqya9hLDCAQBrkIObBfpV8d3FDL4ek=;
-        b=c9RrZyN1hItO/rOqh/IOH/V25NUi3P3XLrsPIupk5t009sr0UJB88ekNYW2YQT+1GR
-         K+fOe2wb7exwgSk07n93VzqZHCinfcP8L9n7/o1JNx1ukptqwaes5FhDNe9GTK/Wa+Zq
-         zDsIoUvXyOFHlDDYcFNZyBAeg5HSOYEZRU1Z2FGTnR0EqPv6+uAwEt/y+Bx6N4UhecCo
-         EtbXooikuns1R8sBz3EMNLss3uA5ZmYhhzxaJOIfRDVYkzTA5e5JuU6R0jqvuoyxmAB6
-         N+LOaWBXkGLtriUDghrXv4c09Dc6kPQOFAmT2lEFlWhGHx1Uk1fpa/zR43V/8nd6uMMR
-         4zMg==
+        d=google.com; s=20230601; t=1717629566; x=1718234366; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=ARgGaSqi8KoE1rzp74nNuwJdH1oic2zBLvAnQFTt+74=;
+        b=eOWx6WkyZB64F2yv50KrVKWPQvvZnN0dBJ5ZFInZ1FCho1RMgsYnShdf9aW0nZE3uM
+         TZWP/QNw+/19J2nQuhYrtoK/Wkqr7USxQhVx5p9pAA+ue5d90agnTSj+lvpzqCHJVgaM
+         Wlkhvu/5HEIinP4DqQz5mM0F8tu46i0mz55lfoTzUzsB66mU+8hjmN9R7Jk17B1SXT8K
+         +jv92+tEjUlLcc3KjncSkXCWfdFzwcmfpoWjAFC0c8AbVakzH8f8enyaoH3GS3DYa+d1
+         wOET/Dt5ycFfbo9SqKlkMI1QWbpojzZk3C6pHVkQP1dpKv3vn+XDNlmzSIN2Wa0gV+P4
+         9W2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717629562; x=1718234362;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hI7a+TyPUatLlBqya9hLDCAQBrkIObBfpV8d3FDL4ek=;
-        b=iob0bVmrrkLNLkx+Xk2lwaajgmewwaAGSHjUR8QTM9Nq6DBm8/Ut92+K5osRlTtWxV
-         fdd3UIHqlczPoCBTVv76rraenNil/aPbLVX8uSFCW85GTicqxW9xe8cpWPUP76qgy3Po
-         9GFkGQudI7x93pF/UAZzF/QOiInXfaMPor4/Iy7AcdmhExI028aPI9tvpRJvZA+PxG2n
-         tEVMBMP8DMiQmPM9k9cMfom/el7fj2n4tfe3+Z8DMxeLgaf2VbMvQQ0OJikg6JSQfV2n
-         Tzz0SSmqEqpr4pp9XfSxRHPywpnOuQ5fx7k7BFC9DLR0XNN+7dyqdWXSQDmuu6mLsyPG
-         5hWA==
-X-Gm-Message-State: AOJu0Yw7KAvOGO4jk+wLhJQkSoXXjJwNUqpPp7rFEX8F4nqquyxO0uzp
-	YGZPT9/SCyMXL1b/lPzIaod8yjfaNK48/+n0CpQMDM8f56FhF4Bo1zQzAJ1RxK3qx2U6WfuhWsm
-	x8A==
-X-Google-Smtp-Source: AGHT+IFo05Hsu0bhH6GHB6K49InVKQvcRCX8vVk+2uKwLe/Cco1GZvM1/9WzUfOV4FHMu2bPNVtzCr8y6Fo=
+        d=1e100.net; s=20230601; t=1717629566; x=1718234366;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ARgGaSqi8KoE1rzp74nNuwJdH1oic2zBLvAnQFTt+74=;
+        b=k3cC7wqVABgfz3Yb9JSsyvLPRtLyUF42aGVpsjAEFYxeatBVgfluTPBby7C6xTIeUN
+         vdFwTExC0eX0xmWQG18MRRQgH8v5XU8bSsmpMNK7o7NGzbt1q2pSS1cfcUOOfz1qvgvN
+         OfmyWGcUNfOt7rv8n9xbmSLQ/QOg6bFX0C3GQP58wGgBXtKc18aQzfEy8d3fIJhsGNJg
+         uHPmgmzE13fJyn5a6ceG4BPUxi8mPov8vjaYPLblZOydQkdv0Z5VgoTdwnusQS9k+J2v
+         yFoyDz/Mb6uF+IadtFBJIEmbIM1v2T8KrQw8Y1pD2T1Ixmxsl4XwqL74f5m7GWYZ2vvs
+         UNAw==
+X-Gm-Message-State: AOJu0Yw2oopJbrA5feOpl0lYxtIXc56jbITnd/VEtLZSMOwsdjzAV1zq
+	UQW9XU0+5R8Vs3sJxGCAVPgOLTgTO5NhhrYlkibw73PECgGsDLGcX7k06Q2wWWzR+04dvpUd8gX
+	Wbg==
+X-Google-Smtp-Source: AGHT+IEUS/On3FFj7eNLgO/pl33ogfTV3slv6hjA3hktSVZ/uIH5U0G8J1CqwLnY4uPln+tauIKBhcln4jg=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:dcf:b0:61b:e53e:c7ae with SMTP id
- 00721157ae682-62cc709c399mr2965957b3.2.1717629562002; Wed, 05 Jun 2024
- 16:19:22 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a17:90b:347:b0:2c2:128:47af with SMTP id
+ 98e67ed59e1d1-2c27db6810cmr14869a91.7.1717629565921; Wed, 05 Jun 2024
+ 16:19:25 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed,  5 Jun 2024 16:19:08 -0700
+Date: Wed,  5 Jun 2024 16:19:10 -0700
+In-Reply-To: <20240605231918.2915961-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240605231918.2915961-1-seanjc@google.com>
 X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-Message-ID: <20240605231918.2915961-1-seanjc@google.com>
-Subject: [PATCH v8 00/10] x86/cpu: KVM: Clean up PAT and VMX macros
+Message-ID: <20240605231918.2915961-3-seanjc@google.com>
+Subject: [PATCH v8 02/10] x86/cpu: KVM: Move macro to encode PAT value to
+ common header
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -69,114 +74,102 @@ Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
 	Zhao Liu <zhao1.liu@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The primary goal of this series is to clean up the VMX MSR macros and their
-usage in KVM.
+Move pat/memtype.c's PAT() macro to msr-index.h as PAT_VALUE(), and use it
+in KVM to define the default (Power-On / RESET) PAT value instead of open
+coding an inscrutable magic number.
 
-The first half of the series touches memtype code that (obviously) impacts
-areas well outside of KVM, in order to address several warts:
+No functional change intended.
 
-  (a) KVM is defining VMX specific macros for the architectural memtypes
-  (b) the PAT and MTRR code define similar, yet different macros
-  (c) that the PAT code not only has macros for the types (well, enums),
-      it also has macros for encoding the entire PAT MSR that can be used
-      by KVM.
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/msr-index.h |  6 ++++++
+ arch/x86/kvm/x86.h               |  3 ++-
+ arch/x86/mm/pat/memtype.c        | 13 +++----------
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-The memtype changes aren't strictly required for the KVM-focused changes in
-the second half of the series, but splitting this into two series would
-generating a number of conflicts that would be cumbersome to resolve after
-the fact.
-
-I would like to take this through the KVM tree, as I don't expect the PAT/MTRR
-code to see much change in the near future, and IIRC the original motiviation
-of the VMX MSR cleanups was to prepare for KVM feature enabling (FRED maybe?).
-
-Based on:
-
-  https://github.com/kvm-x86/linux next
-
-v8:
- - Collect more reviews.
- - Call out opportunistic change in patch 4. [Xiaoyao]
- - Hopefully actually Cc the x86 maintainers to get Acks on the PAT changes.
-
-v7:
- - https://lore.kernel.org/all/20240520175925.1217334-1-seanjc@google.com
- - Collect reviews.
- - Fix an Author misattribution issue. [Xiaoyao]
- - Add vmx_basic_encode_vmcs_info() to avoid ending up with a mix of open-coded
-   shift/masks and #defined shift/masks. [Xiaoyao]
- - Remove an "#undef PAT" that got left behind. [Kai]
-
-v6:
- - https://lore.kernel.org/all/20240309012725.1409949-1-seanjc@google.com
- - Add all the PAT/memtype patches.
- - Split the VMX changes into more appropriately sized chunks.
- - Multiple minor modifications to make the macro mess more maintainable
-   (and yes, I edited that sentence to use "modifications" specifically
-   for alliteration purposes).
-
-v5:
-* https://lore.kernel.org/all/20240206182032.1596-1-xin3.li@intel.com
-* Do not split VMX_BASIC bit definitions across multiple files (Kai
-  Huang).
-* Put some words to the changelog to justify changes around memory
-  type macros (Kai Huang).
-* Remove a leftover ';' (Kai Huang).
-
-v4:
-* Remove vmx_basic_vmcs_basic_cap() (Kai Huang).
-* Add 2 macros VMX_BASIC_VMCS12_SIZE and VMX_BASIC_MEM_TYPE_WB to
-  avoid keeping 2 their bit shift macros (Kai Huang).
-
-v3:
-* Simply save the full/raw value of MSR_IA32_VMX_BASIC in the global
-  vmcs_config, and then use the helpers to extract info from it as
-  needed (Sean Christopherson).
-* Move all VMX_MISC related changes to the second patch (Kai Huang).
-* Commonize memory type definitions used in the VMX files, as memory
-  types are architectural.
-
-v2:
-* Don't add field shift macros unless it's really needed, extra layer
-  of indirect makes it harder to read (Sean Christopherson).
-* Add a static_assert() to ensure that VMX_BASIC_FEATURES_MASK doesn't
-  overlap with VMX_BASIC_RESERVED_BITS (Sean Christopherson).
-* read MSR_IA32_VMX_BASIC into an u64 rather than 2 u32 (Sean
-  Christopherson).
-* Add 2 new functions for extracting fields from VMX basic (Sean
-  Christopherson).
-* Drop the tools header update (Sean Christopherson).
-* Move VMX basic field macros to arch/x86/include/asm/vmx.h.
-
-Sean Christopherson (5):
-  x86/cpu: KVM: Add common defines for architectural memory types (PAT,
-    MTRRs, etc.)
-  x86/cpu: KVM: Move macro to encode PAT value to common header
-  KVM: x86: Stuff vCPU's PAT with default value at RESET, not creation
-  KVM: nVMX: Add a helper to encode VMCS info in MSR_IA32_VMX_BASIC
-  KVM VMX: Move MSR_IA32_VMX_MISC bit defines to asm/vmx.h
-
-Xin Li (5):
-  KVM: VMX: Move MSR_IA32_VMX_BASIC bit defines to asm/vmx.h
-  KVM: VMX: Track CPU's MSR_IA32_VMX_BASIC as a single 64-bit value
-  KVM: nVMX: Use macros and #defines in vmx_restore_vmx_basic()
-  KVM: VMX: Open code VMX preemption timer rate mask in its accessor
-  KVM: nVMX: Use macros and #defines in vmx_restore_vmx_misc()
-
- arch/x86/include/asm/msr-index.h | 34 ++++++++++--------
- arch/x86/include/asm/vmx.h       | 40 +++++++++++++++------
- arch/x86/kernel/cpu/mtrr/mtrr.c  |  6 ++++
- arch/x86/kvm/vmx/capabilities.h  | 10 +++---
- arch/x86/kvm/vmx/nested.c        | 62 +++++++++++++++++++++-----------
- arch/x86/kvm/vmx/nested.h        |  2 +-
- arch/x86/kvm/vmx/vmx.c           | 30 ++++++++--------
- arch/x86/kvm/x86.c               |  4 +--
- arch/x86/kvm/x86.h               |  3 +-
- arch/x86/mm/pat/memtype.c        | 36 ++++++-------------
- 10 files changed, 132 insertions(+), 95 deletions(-)
-
-
-base-commit: af0903ab52ee6d6f0f63af67fa73d5eb00f79b9a
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 1978ba0adb49..d93b73476583 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -377,6 +377,12 @@
+ 
+ #define MSR_IA32_CR_PAT			0x00000277
+ 
++#define PAT_VALUE(p0, p1, p2, p3, p4, p5, p6, p7)			\
++	((X86_MEMTYPE_ ## p0)      | (X86_MEMTYPE_ ## p1 << 8)  |	\
++	(X86_MEMTYPE_ ## p2 << 16) | (X86_MEMTYPE_ ## p3 << 24) |	\
++	(X86_MEMTYPE_ ## p4 << 32) | (X86_MEMTYPE_ ## p5 << 40) |	\
++	(X86_MEMTYPE_ ## p6 << 48) | (X86_MEMTYPE_ ## p7 << 56))
++
+ #define MSR_IA32_DEBUGCTLMSR		0x000001d9
+ #define MSR_IA32_LASTBRANCHFROMIP	0x000001db
+ #define MSR_IA32_LASTBRANCHTOIP		0x000001dc
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 5da5b869a991..056cc4a12e56 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -103,7 +103,8 @@ static inline unsigned int __shrink_ple_window(unsigned int val,
+ 	return max(val, min);
+ }
+ 
+-#define MSR_IA32_CR_PAT_DEFAULT  0x0007040600070406ULL
++#define MSR_IA32_CR_PAT_DEFAULT	\
++	PAT_VALUE(WB, WT, UC_MINUS, UC, WB, WT, UC_MINUS, UC)
+ 
+ void kvm_service_local_tlb_flush_requests(struct kvm_vcpu *vcpu);
+ int kvm_check_nested_events(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index 15b888ebaf17..6c4e29457c10 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -248,12 +248,6 @@ void pat_cpu_init(void)
+ void __init pat_bp_init(void)
+ {
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+-#define PAT(p0, p1, p2, p3, p4, p5, p6, p7)				\
+-	((X86_MEMTYPE_ ## p0)      | (X86_MEMTYPE_ ## p1 << 8)  |	\
+-	(X86_MEMTYPE_ ## p2 << 16) | (X86_MEMTYPE_ ## p3 << 24) |	\
+-	(X86_MEMTYPE_ ## p4 << 32) | (X86_MEMTYPE_ ## p5 << 40) |	\
+-	(X86_MEMTYPE_ ## p6 << 48) | (X86_MEMTYPE_ ## p7 << 56))
+-
+ 
+ 	if (!IS_ENABLED(CONFIG_X86_PAT))
+ 		pr_info_once("x86/PAT: PAT support disabled because CONFIG_X86_PAT is disabled in the kernel.\n");
+@@ -284,7 +278,7 @@ void __init pat_bp_init(void)
+ 		 * NOTE: When WC or WP is used, it is redirected to UC- per
+ 		 * the default setup in __cachemode2pte_tbl[].
+ 		 */
+-		pat_msr_val = PAT(WB, WT, UC_MINUS, UC, WB, WT, UC_MINUS, UC);
++		pat_msr_val = PAT_VALUE(WB, WT, UC_MINUS, UC, WB, WT, UC_MINUS, UC);
+ 	}
+ 
+ 	/*
+@@ -319,7 +313,7 @@ void __init pat_bp_init(void)
+ 		 * NOTE: When WT or WP is used, it is redirected to UC- per
+ 		 * the default setup in __cachemode2pte_tbl[].
+ 		 */
+-		pat_msr_val = PAT(WB, WC, UC_MINUS, UC, WB, WC, UC_MINUS, UC);
++		pat_msr_val = PAT_VALUE(WB, WC, UC_MINUS, UC, WB, WC, UC_MINUS, UC);
+ 	} else {
+ 		/*
+ 		 * Full PAT support.  We put WT in slot 7 to improve
+@@ -347,13 +341,12 @@ void __init pat_bp_init(void)
+ 		 * The reserved slots are unused, but mapped to their
+ 		 * corresponding types in the presence of PAT errata.
+ 		 */
+-		pat_msr_val = PAT(WB, WC, UC_MINUS, UC, WB, WP, UC_MINUS, WT);
++		pat_msr_val = PAT_VALUE(WB, WC, UC_MINUS, UC, WB, WP, UC_MINUS, WT);
+ 	}
+ 
+ 	memory_caching_control |= CACHE_PAT;
+ 
+ 	init_cache_modes(pat_msr_val);
+-#undef PAT
+ }
+ 
+ static DEFINE_SPINLOCK(memtype_lock);	/* protects memtype accesses */
 -- 
 2.45.1.467.gbab1589fc0-goog
 
