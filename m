@@ -1,139 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963A71AF6C9;
-	Wed,  5 Jun 2024 11:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274E31B0117;
+	Wed,  5 Jun 2024 11:53:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588396; cv=none; b=ZeuyufSHykiVErYLG4O2MhfKVl3et2HUZASY9rCmKRF7FwLs2vjEgqLV+f+kKKuwQ+ZUpOR5hD0cLfDJSJZwL/aPamndMZTC/pMEBjKcGovWxeTD0ysaWU6/Werle1hvHfx7UhgkATjWDeCb0oggzQAuNU8+5+T/h1eoUNARrtA=
+	t=1717588402; cv=none; b=AMJi8JnDmXPxBoEqdnDNoqCJpNVAlLcymlSkvXlEXGvZGloSge1fHZmRK0gzmTya6NZEb6rkoZuS3yZ5fpRCuOBtxY0+5XgjJl6VxRyxs5AegxyrzEPydVIWQW0J3eX97BJ4YtqL6CNhuK0YHkoAR86ukVqVVKKOn6Fj2TIaMBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588396; c=relaxed/simple;
-	bh=KnKHWBqMNsixSFYLmeVcY+L/MoRxXzbFNwqyHThKhU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AK6zQ52cZAnEPJZ2FAZT/EsXAg0I7RJeNPrmAN4/9bp5gOyaEB857zGU6UVNk7Iq0HxgkxQoHDwaCvKkM+OXA0bS9Evn2LZ5NL0sDvc1kMrLGZIEEt6M2vvAfnwIbkVlKuuHYlHYelAmi3iXW5xOCpGw3kLbx/mTn4SsX+IvJQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsseMGOC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588402; c=relaxed/simple;
+	bh=JUFUBLSPCoj+I9mnYkjmtKDkiyT83/kvukVxvmt/7KE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbacEDhPzx4W4kNZuHhvuGjqQnjI8ll/hpenXMPmm3YrOsd4WO8IE1GLeYt88m3uqVeIfZ8ncKuTBKO/FAWOhae8KXKh8nrPLlPxw4Lg+VnBWZjv6FJ26WV8Sc7zGB46dAJqteYn4kQSvPVoVAC9EvUQfAcuGxgIkM5peycoO5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gta6f3D6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsseMGOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54225C3277B;
-	Wed,  5 Jun 2024 11:53:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gta6f3D6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6F6C3277B;
+	Wed,  5 Jun 2024 11:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588396;
-	bh=KnKHWBqMNsixSFYLmeVcY+L/MoRxXzbFNwqyHThKhU0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nsseMGOCRMWDxmVQ6WkTdNHS+TuzYM/9bgjj6BaAY0mEC6aUiXv9G91/p5Oc1GsYT
-	 VbpdQacsWdMoi2i0UrY3M2rs4NI68POn+pzKEJ1p4JTofmCBvERNWBOU5yNcBCDYwY
-	 PygW/SpCMX2tm6b66tO2WtidlKJExsQwz7jsdCSvbiA2RqfesGO4QC+UXZ8GRo23lb
-	 z1t/B5cS6CP2qKSFnXGafycYl+K1MOYgom4z2a8WQF5EUUiT6bn/w+VixfFAiBVIlg
-	 WFHln9nWOP42JGFSi1Ste90mVIZTibC5gfYuY1rS1b6ep3Z7IctRYCGC6zI2sO0iN3
-	 YfAe8VCFJLcZA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 20/20] PCI: Do not wait for disconnected devices when resuming
-Date: Wed,  5 Jun 2024 07:52:03 -0400
-Message-ID: <20240605115225.2963242-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115225.2963242-1-sashal@kernel.org>
-References: <20240605115225.2963242-1-sashal@kernel.org>
+	s=k20201202; t=1717588401;
+	bh=JUFUBLSPCoj+I9mnYkjmtKDkiyT83/kvukVxvmt/7KE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gta6f3D6odVBdNeiHvZRcRfIvNLsNrzMCuubTl/PJpa2q44HECwEPD8iRL7h8cyK0
+	 l2tIOd0fPJgef+aOJbUd39PEUf1xaS0DfFYNMWBqtQxV/r1r6phaJOKlC8ECu1eNIe
+	 LHFJyNvsPFtW0kWRPD1kSGHWLQP+UXYlDwbulW4cVV//Pgyc+LHtd1H3eDFGT7m2h7
+	 F4SwouJwQdzDbTSK5mmUqThEaNTQRvawXIF7atrxDFq7md9f073RxNhpAg2ZlngJ/y
+	 zeEWcDEn2aV9J5DfEZdQ2boFJ2Qg6f06EovcOY2jauA6j3PZFGGOtbH+nQMdgvVWKc
+	 Sa0CNswms8GBA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sEpCk-000000000wA-2ky3;
+	Wed, 05 Jun 2024 13:53:23 +0200
+Date: Wed, 5 Jun 2024 13:53:22 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Krishna Kurapati <quic_kriskura@quicinc.com>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.9 16/28] usb: dwc3: core: Access XHCI address
+ space temporarily to read port info
+Message-ID: <ZmBRsqiexF9-sHpk@hovoldconsulting.com>
+References: <20240605114927.2961639-1-sashal@kernel.org>
+ <20240605114927.2961639-16-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.32
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240605114927.2961639-16-sashal@kernel.org>
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Wed, Jun 05, 2024 at 07:48:45AM -0400, Sasha Levin wrote:
+> From: Krishna Kurapati <quic_kriskura@quicinc.com>
+> 
+> [ Upstream commit 921e109c6200741499ad0136e41cca9d16431c92 ]
+> 
+> All DWC3 Multi Port controllers that exist today only support host mode.
+> Temporarily map XHCI address space for host-only controllers and parse
+> XHCI Extended Capabilities registers to read number of usb2 ports and
+> usb3 ports present on multiport controller. Each USB Port is at least HS
+> capable.
+> 
+> The port info for usb2 and usb3 phy are identified as num_usb2_ports
+> and num_usb3_ports and these are used as iterators for phy operations
+> and for modifying GUSB2PHYCFG/ GUSB3PIPECTL registers accordingly.
+> 
+> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+> Reviewed-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> Link: https://lore.kernel.org/r/20240420044901.884098-3-quic_kriskura@quicinc.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-[ Upstream commit 6613443ffc49d03e27f0404978f685c4eac43fba ]
+This is not a fix. Please drop.
 
-On runtime resume, pci_dev_wait() is called:
-
-  pci_pm_runtime_resume()
-    pci_pm_bridge_power_up_actions()
-      pci_bridge_wait_for_secondary_bus()
-        pci_dev_wait()
-
-While a device is runtime suspended along with its PCI hierarchy, the
-device could get disconnected. In such case, the link will not come up no
-matter how long pci_dev_wait() waits for it.
-
-Besides the above mentioned case, there could be other ways to get the
-device disconnected while pci_dev_wait() is waiting for the link to come
-up.
-
-Make pci_dev_wait() exit if the device is already disconnected to avoid
-unnecessary delay.
-
-The use cases of pci_dev_wait() boil down to two:
-
-  1. Waiting for the device after reset
-  2. pci_bridge_wait_for_secondary_bus()
-
-The callers in both cases seem to benefit from propagating the
-disconnection as error even if device disconnection would be more
-analoguous to the case where there is no device in the first place which
-return 0 from pci_dev_wait(). In the case 2, it results in unnecessary
-marking of the devices disconnected again but that is just harmless extra
-work.
-
-Also make sure compiler does not become too clever with dev->error_state
-and use READ_ONCE() to force a fetch for the up-to-date value.
-
-Link: https://lore.kernel.org/r/20240208132322.4811-1-ilpo.jarvinen@linux.intel.com
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pci.c   | 5 +++++
- include/linux/pci.h | 7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 26c9d16cb60c3..bb5a1d8bdfbd8 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1190,6 +1190,11 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- 	for (;;) {
- 		u32 id;
- 
-+		if (pci_dev_is_disconnected(dev)) {
-+			pci_dbg(dev, "disconnected; not waiting\n");
-+			return -ENOTTY;
-+		}
-+
- 		pci_read_config_dword(dev, PCI_COMMAND, &id);
- 		if (!PCI_POSSIBLE_ERROR(id))
- 			break;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index ee89a69817aaf..512cb40150dfe 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2484,7 +2484,12 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
- 
- static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- {
--	return dev->error_state == pci_channel_io_perm_failure;
-+	/*
-+	 * error_state is set in pci_dev_set_io_state() using xchg/cmpxchg()
-+	 * and read w/o common lock. READ_ONCE() ensures compiler cannot cache
-+	 * the value (e.g. inside the loop in pci_dev_wait()).
-+	 */
-+	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
- }
- 
- void pci_request_acs(void);
--- 
-2.43.0
-
+Johan
