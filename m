@@ -1,106 +1,91 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988C118C343
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D062318C336
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571718; cv=none; b=QeOJEoiEbDK7lMZW2yweJdlOkgrv9/b8jInf9Iccs76TWV36nifNhboRGKfVfoUbyMei5aQOjjiUeVXw/xXO+JNjCgAq6fLaTt5xad2CTEPuvTuN3NaL+TpAXLlqHccJ9mhRFb0j/wo9ay8kL5AW5hu466MzQXVHwxdH0hN+etI=
+	t=1717571721; cv=none; b=aMHneuQt/rSwB+FzNK//Q6oyXOuLrlj+ddIn6lkUMAnZ85qxhPBJqtTZtUagUF2k1klRZivMWCXEwsiWcceJfz414kWUuTrl9uatntcQReHq3hcTvyzKT5x7DPyYRcW2OJbLbBIpKc2dYlhQj7bZ8b4hZx+e1o2fj+halKAuHK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571718; c=relaxed/simple;
-	bh=NUq4hUMFyN/6UPuWAGO3h695blPsgWsaqsOr34MSY/E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=l9gt7J5FRFTlM75r6qZazZNxTPz0ensdRrZ69JTGZ/cgff3yvOw9JqfkXOEzQ5dE1ChAKY3YqIPmBiSDHBmtw3n4UNatM5kR5B/BjFC5nILfp6Yahg6eV4oWcaUFtmYA1tuEhH+1jfUT/O4dX0D23dRBWLZHjpc8vxOZRBrfR3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NKUe4OPq; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NKUe4OPq"
-X-Envelope-To: linux-mm@kvack.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717571710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=MgQ54wqpPyu/de/IC92RsymjWefuXxvvmWin5jNjSXQ=;
-	b=NKUe4OPqpSUR+OR0Mazu4CTFXw74QR/uNWe4nUmch5P9NkbUpRewOT9h9o33Kzh/vMMUcy
-	grwy/JjedJmanJJ0m11fEWNiw1JJjOlIyRuA2rqQQ1wI3ojtkWashhBWUdjVg2FG2YRAVt
-	kH7g5Bkga45BiE7fUFm/+FSm6ubcSpM=
-X-Envelope-To: penberg@kernel.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Envelope-To: feng.tang@intel.com
-X-Envelope-To: zhouchengming@bytedance.com
-X-Envelope-To: rientjes@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: iamjoonsoo.kim@lge.com
-X-Envelope-To: vbabka@suse.cz
-X-Envelope-To: chengming.zhou@linux.dev
-X-Envelope-To: cl@linux.com
-X-Envelope-To: 42.hyeyoo@gmail.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Subject: [PATCH v2 0/3] slab: fix and cleanup of slub_debug
-Date: Wed, 05 Jun 2024 15:13:53 +0800
-Message-Id: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
+	s=arc-20240116; t=1717571721; c=relaxed/simple;
+	bh=zuHsmG2l54lzUFiaM1B5Ld/DwoAs3onN3TyvEE8C2QU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=h7fcoFPw0YWOAw9TowJrFSBvaIW+OZiHLFZLiIE09DOfU9/WEP26Wr1zlDlfP0aNyIMfo0NVt570phRdvgZa1KbvAH6Wa0DUpjIQIrILY6L2vvf5poSKR814s63QpIjGjJmV/i7IVeuMcSAPWiVW9gymtc8C8R00g1HWyinGGK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3746147204eso68295395ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:15:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717571719; x=1718176519;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zuHsmG2l54lzUFiaM1B5Ld/DwoAs3onN3TyvEE8C2QU=;
+        b=R+Glko43A9/+d7BGTxKXnziNolpkkWywLChfsxEBqUSQ8gCPs2mrrpqU8RMu/Q+PON
+         xEkf+aL+E9i2bwkE9yyBSdfye7RxZYAEj8iTlPJfs8+1jnH5okNCxfUgyg7cZnlWjgMv
+         gterGxurj471U3E+DhHgEoJHre7tjNNg4dq0+dmq8WOtoEBFbHS9/i9bJLs7167qAxKm
+         epGtlCWdF/vLYGcjvLxJx2y21bXFImuMWO5nUKlCJ1srHluUOUVtanHgV9gGg78wnFLP
+         yiUY25THsDS/3XCiph9bL+CB+0LFwgFk8znbbPTXX/aL/Xamp7TkmqfFrxs3OZLMhW/y
+         lv+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtKLdNjq609XSuuGEeaoDQmlZkcoI7IC09D02+r2KM9OB5WVMhc2HKyG1CjJ6rY+5maf40eiTFsGUNL+Ay8ebLxLMFWHHgiG4LCLWU
+X-Gm-Message-State: AOJu0YzdVU6PZKBNlxtVsHHoG3QLQCvPhMGsKsqpJ36P7LsJ49M8jLBQ
+	Z/6keOrLv4mmuPzsGkuxROTdBdWBov0TJkxhISr/YfBWVcPGhIKea5hZcNKr9Xf5Tbvvg6jgzE3
+	e8JRPz+G0q1EyQZs6wI+PjgtnI3knRbKDriXz33pIhZcDlr3RD3ym87Y=
+X-Google-Smtp-Source: AGHT+IEXUYB9yPdeAKPB5kS6y9F3dWejMcY+PLrrOr1cr9rP+smavalbHIGbQYB6JccbQRBN3EioxR6Ty4lMAVOTE6s+agrv5VAx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADEQYGYC/3XMQQ6DIBCF4auYWXcaINRCV96jcSEy6CRGG6jEx
- nj3Uvdd/i953w6JIlOCR7VDpMyJl7mEulTQj908ELIvDUooLW7KoNOYps6hJ7cOKL2Rdxt6a+s
- OyucVKfB2es+29MjpvcTPyWf5W/9JWaJAU1tNQRuhfGgmntft6ilDexzHF2LHNJSqAAAA
-To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717571705; l=1377;
- i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
- bh=NUq4hUMFyN/6UPuWAGO3h695blPsgWsaqsOr34MSY/E=;
- b=+ms+kPaOg2SJvqKFwZFq2Vqt+ZOIoeYlDeMC/ug+gvORklv4nOem+bSIiRiBIk3E8HfRT1/WW
- RHu6lPGP1vxBwtz3hvdDs+7HMG9DQAe/q1avhaeuD7WC4Hx7rDdnC1I
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:168c:b0:374:9c23:a043 with SMTP id
+ e9e14a558f8ab-374b1e0bb47mr1047315ab.0.1717571718590; Wed, 05 Jun 2024
+ 00:15:18 -0700 (PDT)
+Date: Wed, 05 Jun 2024 00:15:18 -0700
+In-Reply-To: <PN2PR01MB48914D23BDE5FC72CD96A469FCF92@PN2PR01MB4891.INDPRD01.PROD.OUTLOOK.COM>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000029c3f3061a1f54dd@google.com>
+Subject: Re: 000000000000fcfa6406141cc8ac@google.com
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: wojciech.gladysz@infogain.com
+Cc: wojciech.gladysz@infogain.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
-- Change check_object() to do all the checks without skipping, report
-  their specific error findings in check_bytes_and_report() but not
-  print_trailer(). Once all checks were done, if any found an error,
-  print the trailer once from check_object(), suggested by Vlastimil.
-- Consolidate the two cases with flags & SLAB_RED_ZONE and make the
-  complex conditional expressions a little prettier and add comments
-  about extending right redzone, per Vlastimil.
-- Add Reviewed-by from Feng Tang.
-- Link to v1: https://lore.kernel.org/r/20240528-b4-slab-debug-v1-0-8694ef4802df@linux.dev
+> #syz testhttps://github.com/torvalds/linux.gite377d803b65ee4130213b3c041f=
+c25fdfec1bd90
 
-Hello,
+unknown command "testhttps://github.com/torvalds/linux.gite377d803b65ee4130=
+213b3c041fc25fdfec1bd90"
 
-This series includes minor fix and cleanup of slub_debug, please see
-the commits for details.
-
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
----
-Chengming Zhou (3):
-      slab: make check_object() more consistent
-      slab: don't put freepointer outside of object if only orig_size
-      slab: delete useless RED_INACTIVE and RED_ACTIVE
-
- include/linux/poison.h       |  7 ++----
- mm/slub.c                    | 60 +++++++++++++++++++++++---------------------
- tools/include/linux/poison.h |  7 ++----
- 3 files changed, 36 insertions(+), 38 deletions(-)
----
-base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
-change-id: 20240528-b4-slab-debug-1d8179fc996a
-
-Best regards,
--- 
-Chengming Zhou <chengming.zhou@linux.dev>
-
+> ________________________________
+> From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+> Sent: Wednesday, June 5, 2024 09:06
+> To: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>
+> Cc: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>; linux-kernel@vger.k=
+ernel.org <linux-kernel@vger.kernel.org>; syzkaller-bugs@googlegroups.com <=
+syzkaller-bugs@googlegroups.com>
+> Subject: Re: 000000000000fcfa6406141cc8ac@google.com
+>
+> EXTERNAL: This message was sent from outside of Infogain. Please do not c=
+lick links or open attachments unless you know the content is safe.
+>
+>> #syz test https://linux.googlesource.com/linux/kernel/git/torvalds/linux=
+<https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://lin=
+ux.googlesource.com/linux/kernel/git/torvalds/linux>> e377d803b65ee4130213b=
+3c041fc25fdfec1bd90
+>
+> "https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://l=
+inux.googlesource.com/linux/kernel/git/torvalds/linux<https://linux.googles=
+ource.com/linux/kernel/git/torvalds/linux>>" does not look like a valid git=
+ repo address.
+>
+>>
+>> The information in this email is confidential and may be legally privile=
+ged. It is intended solely for the addressee and access to it by anyone els=
+e is unauthorized. If you are not the intended recipient, any disclosure, c=
+opying, distribution or any action taken or omitted to be taken based on it=
+, is strictly prohibited and may be unlawful.
