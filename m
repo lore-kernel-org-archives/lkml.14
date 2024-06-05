@@ -1,105 +1,127 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C717514B974;
-	Wed,  5 Jun 2024 11:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A050319148B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717586156; cv=none; b=tI5qNrbKzzEr1IS5CLGnDht1AlolBma0XptRx36nA8HeMw6MjEgaVC/kSH88cMyZlyU0PiMby/t+SvwAryzJBw7G8EDjSk5S3rKCuTPZvr3n17XfKm7djCgOJATPFMKFLrFTjaDDJNHkH+U6PByB6su6En92LTLLWB9wFgG5DDA=
+	t=1717586166; cv=none; b=lcAo+HXzLYorUIZOW5RyZvDfdjpck4gjNVDIGxQzwPnwYF1EGv0+2LrQCaXP+0x550AlszC7ZGR+qEcqEvvJLTQy2WGWAHJCtI5KB33XEXEqySltq7QG8eZSs08hEhJ3We2gO4S2/MixesxXi+kXjSQVQA17GW6uXQjgQELRDgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717586156; c=relaxed/simple;
-	bh=j23cpuGAemJTmamOXD92cbvxQHnwkWvNJTIkvGKjv2U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EyyjgJFXVDVkY9ihX+6uxmb4JnUuA1oDV5my9RE1oeJ8x/I8BeszBU4phpwUPSvoNsa2Y9hVBObALJKOt/rnzH53k1XJhxfFkZHFHDUzJvreyt1jXD7fRGLni0YVnbyb2CS5smlFBRuy0A9K9e/Qe/cLUcB2joMR/f8gQU0kCnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=fnNXiWCz; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1717586166; c=relaxed/simple;
+	bh=OB4bbDHOpovQgbK+NjxUZFEWt16fgvGMy+LZiN5kFCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxkLYdNolBfNivhXELwm4fM7w65NAS5Y9UcOhfMZVc6xEfcbrcw1SzmuA2/xEtedxDSC612vtyqV6m07aWivQpIlToPEyQ//M2W2pIGcSLM0LiOR9RYAp2qPl5bksH951mgnDCWyQy/s1PzfNzcd6xLN1Xxpuxp6H4N3YEPbvLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=asNtDGm0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fnNXiWCz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1717585738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lbF3Hr41nIth/kjABYAo6ELsT9zfo9W62/2gY+j3W6A=;
-	b=fnNXiWCz+piHjs3cCFKX5GI5TCn9Y2prcen/ET7kh9pye5qm+pIgUBf/O3bV3BnNT1h/2u
-	NyMwYH4qGWbWGr1IYazRbY6rtGSVJoiMLXi/3PHX/GFa4ahJSbYFIZ5go1Y3p1tTrpunF0
-	gFAQsaj5oi/revV7EdeAexrsKXH2qHg=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 0/6] iio: new DMABUF based API v10
-Date: Wed,  5 Jun 2024 13:08:39 +0200
-Message-ID: <20240605110845.86740-1-paul@crapouillou.net>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="asNtDGm0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5CC1E40E0191;
+	Wed,  5 Jun 2024 11:16:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 2MM_uH0b_vZ5; Wed,  5 Jun 2024 11:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717586158; bh=MyNP/8A3mneC0TU0vkHmFz9QbD6ZPJz2lnq7g0nJwME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=asNtDGm0aWrqbbyqfz8gB/pIkAwBrS0jW1fszHDBAAE73YTZ1RXmITordyLpNuAhX
+	 tUz7P7b7vWLs+JLMUA35+eo4pHvEJXdcODIEuYvYcNEAP7586+vjckHFwuDboH1ljM
+	 OE5XYQzs1qvsg5G4qWvi5TqHshLp5wFVV/fBxmdsChG0uOrJSWAxt17BAD+0TRbTWy
+	 ye+MDYoA+c3o8gUTX9RQqa19pNy62l6UKhx+TT1AWuKyorUWYwmnhHQ5sCDFTyxMpV
+	 UQwfYaQTey+ui3KYvP+gHOXsKX/n2Nc62GvrjxlA2Y+DEqRE9zk+iPtEZTBnI6SSIt
+	 ZGQFLFMOp6qDBWAadS70VF9O8UUJIlmRQ1lFlZybAyEYnhkd5CBWvrtSI3nAHZ/gzm
+	 4Sr/r0cb7UGb/VMo/3bBRtYjavnG1zO6gfSR02K9obmsBgFXoUSziNzeTJJNRER5aX
+	 Py1DQa6A1lYwmXiw6mFSSky198TDK0p7NWndsTKW9JDo9+RkmCerytU3W94k7rDZQg
+	 IxoiUgrhUHgJDTBSiMzkXxnNyGUSU0v723hRw990dEOJUGPu4JYGi8mta1rgJ6FzXn
+	 4FkfWdMKfAdj5xWNC3fq9Nyno77B4x1ZMMiPutVhTMC5YVy+u5Pk78y9vfPKQ+jSUK
+	 xiThwe6cbzf+amDt7WH8S3Ys=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2559440E016E;
+	Wed,  5 Jun 2024 11:15:29 +0000 (UTC)
+Date: Wed, 5 Jun 2024 13:15:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org,
+	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+	jun.nakajima@intel.com, rick.p.edgecombe@intel.com,
+	thomas.lendacky@amd.com, michael.roth@amd.com, seanjc@google.com,
+	kai.huang@intel.com, bhe@redhat.com,
+	kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <20240605111527.GEZmBIzwpsrai31qWT@fat_crate.local>
+References: <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
+ <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
+ <Zl3hwYL2GDiyUfGo@kernel.org>
+ <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
+ <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local>
+ <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
+ <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local>
+ <CALu+AoRqNmsWXi+HXYNYTY=pXJ3sLTLKyXNeJz9EoxEsHzFdQA@mail.gmail.com>
+ <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
+ <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
 
-Hi Jonathan,
+On Wed, Jun 05, 2024 at 10:17:22AM +0200, Ard Biesheuvel wrote:
+> I'd argue for the opposite: ideally, the difference between the first
+> boot and not-the-first-boot should be abstracted away by the
+> 'bootloader' side of kexec as much as possible, so that the tricky
+> early startup code doesn't have to be riddled with different code
+> paths depending on !kexec vs kexec.
 
-Here is a revised (and hopefully final?) version of my DMABUF patchset.
+Well, off and on we end up needing to be able to ask whether the current
+kernel is kexec-ed. So you need to be able to access that aspect in
+kernel code - not in the bootloader. Perhaps read it from the
+bootloader, sure.
 
-This v10 removes the extra "flags" parameter of
-dmaengine_prep_peripheral_dma_vec(), and adds kernel doc to the function
-as Vinod requested.
+But see my other mail from just now - it might end up not needing it
+after all and I'd prefer if we never ever have to ask that question but
+just from staring at EFI code it reminded me that we do need to ask that
+question already:
 
-As Nuno upstreamed support for output buffers, I (slightly) modified
-patch 5/6 and now output buffers are supported with the DMABUF API.
-All I did was remove a "fail if output" check really.
+        if (efi_setup)
+                kexec_enter_virtual_mode();
+        else
+                __efi_enter_virtual_mode();
 
-This was based on next-20240605.
+*exactly* because of EFI and that virtual_map call nonsense of allowing
+it only once.
 
-Changelog:
-- [1/6]:
-  - Add kernel doc to dmaengine_prep_peripheral_dma_vec()
-  - Remove extra flags parameter
-- [2/6]:
-  - Use the new function prototype (without the extra prep_flags).
-- [5/6]:
-  - Remove extra flags parameter to dmaengine_prep_peripheral_dma_vec()
-  - Add support for TX transfers
+And we check efi_setup here because that works. But you can't use that
+globally. And so on...
 
-Cheers,
--Paul
+> TDX is a good case in point here: rather than add more conditionals,
+> I'd urge to remove them so the TDX startup code doesn't have to care
+> about the difference at all. If there is anything special that needs
+> to be done, it belongs in the kexec implementation of the previous
+> kernel.
 
-Paul Cercueil (6):
-  dmaengine: Add API function dmaengine_prep_peripheral_dma_vec()
-  dmaengine: dma-axi-dmac: Implement device_prep_peripheral_dma_vec
-  iio: core: Add new DMABUF interface infrastructure
-  iio: buffer-dma: Enable support for DMABUFs
-  iio: buffer-dmaengine: Support new DMABUF based userspace API
-  Documentation: iio: Document high-speed DMABUF based API
+Sure, but reality is not as easy sometimes.
 
- Documentation/iio/iio_dmabuf_api.rst          |  54 ++
- Documentation/iio/index.rst                   |   1 +
- drivers/dma/dma-axi-dmac.c                    |  40 ++
- drivers/iio/Kconfig                           |   1 +
- drivers/iio/buffer/industrialio-buffer-dma.c  | 180 ++++++-
- .../buffer/industrialio-buffer-dmaengine.c    |  62 ++-
- drivers/iio/industrialio-buffer.c             | 462 ++++++++++++++++++
- include/linux/dmaengine.h                     |  33 ++
- include/linux/iio/buffer-dma.h                |  31 ++
- include/linux/iio/buffer_impl.h               |  30 ++
- include/uapi/linux/iio/buffer.h               |  22 +
- 11 files changed, 896 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/iio/iio_dmabuf_api.rst
+Thx.
 
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
