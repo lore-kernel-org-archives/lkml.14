@@ -1,407 +1,136 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFD1190463
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 06:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AC6190463;
+	Wed,  5 Jun 2024 06:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717569516; cv=none; b=gx3Cv0aAnFpbsvX3ABn/Gur2TgYwgiTxL/Kito4eCwgjrHLgCoYpse7Wo5ze31Y9DhfaZITuuNvRWnURvyWX4olXC06edgWSIYbyNfZ3X6C57W8CsZgRkE5NMDEf950c/06nLu59DHRRaETw9vm1mUK9J7QRbRBmXQ7yAcLlis8=
+	t=1717569626; cv=none; b=hlqdHEOTj01NL8UDsVbjqySpyrYzVpn8XBwpSHVXI9+nvvNlut7iBGq1/w778SZZRKz3qdUonfmrvIdSIRwpDuipFssjGrBeQ5xqLjQv5h6hhEKilYDDTVt7xoGJyD9o7Jw5f6MbQHoY5EzhB7bN6SjSn2oiodXtvV7ZUBLjFmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717569516; c=relaxed/simple;
-	bh=C/gqpNsPW6X9AgnD3SWjLERM0lEWOMKoVOsDhhAN66M=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=s68xwkr9tgAqeR/1yu/hoY8N3g2mLbQSbbd/KmKR6aqub7OKdTC0UyHAHEUwWIUVxQYGTkIvWM6rv98waZe8e1U3odW2uJounkpHtrkDNbtsO8NcHahuTFBCYyX7d+lA6Fy94P855At87DGqwSTF+gDbhk4ef9xQM5QFdKfcNcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uBoAWrJu; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1717569626; c=relaxed/simple;
+	bh=HUmZC+X+gSvZ5AqCY61GMZk0M/Jpdo8sLUH0vmNpxGI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hfZqS1Pw5s08U5sEBA9IUl1MAPxMfchYSvmk4AGjY2BmKXIfNp9Z3XBvAGIAjV9dwyx55UVs+y4tdwTECtvXoZS7ab9r6Au06iTLJxT1UtA09F4Rl+0tNiEPdWsNTjvVBRmH2PumsZEbID43jSY39UjkPI3VhW9s9uBDh3Fj3Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EhOZWKe9; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uBoAWrJu"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a083e617aso114358307b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 23:38:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhOZWKe9"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso2473590a12.0;
+        Tue, 04 Jun 2024 23:40:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717569514; x=1718174314; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q+PpR1gGIbojHkt37dr2HX8fPNt5afUg8N/f8kUSgZ4=;
-        b=uBoAWrJun4MWHQ+xmWFVacuCOeGsAoop3sd+wArrOyOuJaEOmDv81wp2xYKn9GHekn
-         Rcoc+N1ovAZoBrUCSjqbr5jmcAsabaSvZirw94LTzgC/Ja26mybIE8+eBw8ko9a15uci
-         OBLIlQ80/8/bJIQ4CbLx7ezRNYqndVBdJx17cxEEpQO7gST8e+HxucJAai2mNr7mcYFC
-         NbrHWRLTOUdHPBiRw8EVZFyb5MSlaWX0plQ0GP+6B7vMGiohTN7lJIGQxYBK3qu8Jums
-         igBfOaI9kczlvDM5KvPFybrzzfrymm4vmASWyUku7xKpyPkYzPN8o9nIcABdwUB/keT4
-         r2rg==
+        d=gmail.com; s=20230601; t=1717569623; x=1718174423; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gHQSaCky/f1AkfcDoHbC9p7wCP5m6j70LxPNgz93GEs=;
+        b=EhOZWKe9YkZExHivKXNAEryVohdmm2ogClpa3rNa7AWb8Zyk5Rw01COivkUpF6tdT2
+         3sWipdUpmP9uFvwRz6J0I+SIgFU1BGZeVzDeNmGjo0lojYm/ojIkwOOTllY620RHRJAQ
+         aLJKBWCV0Uc6uK/Y37npFDFR3K/Bqyeplv/3hZ2AkyyzxreT1JZu624cJQfYHplZypUR
+         SesSl/g+Gz9fcrI3OrSzRUw/CjpfdnP4XImkfNLbMGgrm9rB5iuUWH8Adc/mp049YS/M
+         XzZzEu2VqaB7QeyTTSawQivUEIvmYXd/btBRWXXu+pB8Jv6AT/KetnS0kmKrjSnToSDx
+         ZL9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717569514; x=1718174314;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+PpR1gGIbojHkt37dr2HX8fPNt5afUg8N/f8kUSgZ4=;
-        b=lof/VGFSRfjCj9f3HsFdc467ugl/Rk/WV7wL3iQK9W8vbpJ1D5+c3wG8OmNMm7jWRP
-         QwvyA4C5tQjXc+2VHwTbijaJ3FqkmVWPA8A6kRHdF9+p/jVMHn4x3JKZqJYMxeCx+mz9
-         dT4NjIP4BMgis2h3QDwRMoto88y+LnhyjJmyisLZsHJ3cwSB+xyrGKi0+c0JdkBBHEZD
-         go2A7R/Iw0P8Of8iot3JjdglpFUT+hEJFJoRyUjwtQmfMMUtJP6ZMEywcmYVqj4NkFm9
-         AnYTLCezEsqGPPLWLTwkTNS9QbHplLW3/KTfGV/D5EK9m1FLtu0HlrDs6+0/bsfksXKO
-         9K/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUO+95zOtLsfT7cd4/ht666T2y79qeKaMNR3helON/TVUdL3zGwnmCtLJw7yZaECEvBAHS82D6m08kleZRxy5yMExfyf5W2AQvPQmN8
-X-Gm-Message-State: AOJu0YwIUPu9+9VNZhKUJuXp6/y7+u6HwQVkc5djEx96MGFApD6TBojt
-	Ir0J4ilTBqNJW1mlsieYxiHAePKEETcJR2lMwDyVrqIh+0IBceZTtp9BuBcF2WCWlUfj92SkpkC
-	/78mtUA==
-X-Google-Smtp-Source: AGHT+IET95r1UUZLR/FCgKAwLafvauszpYRfROWKh9xsLEESFUplMNArj2C7155zVTfI8yKt1OfgIRUnDxs/
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:42c2:ffc7:ca9b:501f])
- (user=irogers job=sendgmr) by 2002:a05:690c:dc1:b0:627:cc70:be02 with SMTP id
- 00721157ae682-62cbb4c30b8mr4425467b3.4.1717569513812; Tue, 04 Jun 2024
- 23:38:33 -0700 (PDT)
-Date: Tue,  4 Jun 2024 23:38:27 -0700
-Message-Id: <20240605063828.195700-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1717569623; x=1718174423;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gHQSaCky/f1AkfcDoHbC9p7wCP5m6j70LxPNgz93GEs=;
+        b=evgUa5EBw/EWjYaXSWvHHhrwpSfF3/CT9SQlC0qnnJHtoBBNWBpI8ORhjoDfpt/889
+         QBzCWArvRGXJCq9LxPjH707HQgEDhgwxOK9FxoEBnEK6m9e+xALfh2oVSdS3soRagXVG
+         Av1YK+bR5qfvP+c25e/XvX5umTsE+5zoPqaH6Oa8gPQVGK5mE6cxgCXkNnDKm7SF3Bm5
+         f4UZsFDgTFtykuxd2suUx4UpVsf0zUn8+apocMAA2CECPTQs7OGOd33fU1Grj96PSt4I
+         Ae3cijZxD0Du7j6dmX9hr7r3NgXIJ5V5gqqyMkqqDphjL1v0pppEqLuSEuxYtUA8cq+M
+         m2hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxiUc0dsRxL0MBZ270ynur4ywVHYMuEXuJjyOyCHLoM+LTGlDImjFECmfgf5Deap7UVBWS5jZFP8MuIO5ZeJ1lwYKq3PAbSRrYh3P0WtiQO8pl5kLSsfz1TmAmz1fFj6CjwhqulpWbLQ==
+X-Gm-Message-State: AOJu0Yz0C6RDgs9EbUvmhSfCrOmDwPqkePVyoNRcO2sOBN6oK2MXZ9HL
+	Z0tuepdaW/XW6KAnqcFZ2ledeJsU1igkumKOr42w4hIcx9Oik2qz
+X-Google-Smtp-Source: AGHT+IFBIMS6vkz0iVSVx1CRPA3R9CNPTJew2oQiC4UzE9eGj9fN4Cxwfgw2HMmCfC3PB4GWaIidtw==
+X-Received: by 2002:a50:d49b:0:b0:57a:2fa2:8b99 with SMTP id 4fb4d7f45d1cf-57a8b7c61f9mr1234625a12.29.1717569622846;
+        Tue, 04 Jun 2024 23:40:22 -0700 (PDT)
+Received: from hex.my.domain (83.8.128.191.ipv4.supernova.orange.pl. [83.8.128.191])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b99445sm8665505a12.18.2024.06.04.23.40.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 23:40:22 -0700 (PDT)
+From: Artur Weber <aweber.kernel@gmail.com>
+Subject: [PATCH 0/2] ARM: dts: bcm-mobile: Split out nodes used by both
+ BCM21664 and BCM23550
+Date: Wed, 05 Jun 2024 08:40:11 +0200
+Message-Id: <20240605-bcm21664-common-v1-0-6386e9141eb6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Subject: [RFC PATCH v1 1/2] perf stat: Make options local
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEsIYGYC/x3MQQqAIBBA0avErBNUJouuEi3MppqFGgoRiHdPW
+ r7F/wUyJaYMc1cg0cOZY2hQfQfusuEkwXszaKlRDnoSm/NaGYPCRe9jEAqlwcmgRTtCq+5EB7/
+ /cVlr/QB0VC+QYQAAAA==
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Stanislav Jakubek <stano.jakubek@gmail.com>, 
+ ~postmarketos/upstreaming@lists.sr.ht, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Artur Weber <aweber.kernel@gmail.com>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717569621; l=2315;
+ i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
+ bh=HUmZC+X+gSvZ5AqCY61GMZk0M/Jpdo8sLUH0vmNpxGI=;
+ b=3ZQ3nIGatAyX+FXgVC/jZDU7XBK+W7jMk8bN1v2GBcYR4q+AKCAxJL3K1ZZ16TFMEGQPFa2Au
+ Q0IWcwheBEEAoPRlR9ml3t0atWa//LV15tXcMKeDcF0NGs6Oyo4zDfo
+X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
+ pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Reduce the scope of stat_options to cmd_stat, and pass as an argument
-to __cmd_record. This is done to make more localized changes to the
-options in later patches. A side-effect of the change is to reduce the
-size of a stripped PIE perf binary by 5952 bytes. The savings come
-mainly in the dynamic relocation section.
+The BCM21664 and BCM23550 are nearly identical to each other in terms
+of register layout. This was verified against a downstream kernel[1] -
+Broadcom's kernel has "RDB" directories which includes headers with
+the full register maps for the included hardware. Running:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+  diff --recursive arch/arm/mach-{hawaii,java}/include/mach/rdb
+
+reveals that the differences are minuscule - some things related to
+ISP and H264 decoding. Most of the other differences are related to
+the different CPUs in the two chipsets - the BCM21664 has 2x Cortex-A9
+cores, and the BCM23550 has 4x Cortex-A7 cores.
+
+In mainline, most drivers are also re-used between the two.
+
+To make development for both platforms easier, split out the common
+nodes into a separate DTSI, bcm21664-common.dtsi. This only leaves
+the device-specific nodes - so, CPU and related things - in the SoC-
+specific DTSIs (bcm21664.dtsi and bcm23550.dtsi).
+
+The new DTSI is based off the bcm23550.dtsi, with its split into
+busses. Since it's pretty much 99% identical, I kept the licensing
+of the original file (BSD 3-clause). The license for the bcm21664.dtsi
+file remains GPL 2.0 as it originally was.
+
+make CHECK_DTBS=y on bcm21664-garnet.dtb and bcm23550-sparrow.dtb
+seem to pass fine for me (thanks to Stanislav Jakubek for converting
+the bindings to YAML format!). It's worth noting though that some
+bcm23550 compatibles now go unused, since the bcm21664-common.dtsi
+file uses bcm21664 compatibles.
+
+[1] https://github.com/knuxdroid/android_kernel_samsung_baffinlite
+
+Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
- tools/perf/builtin-stat.c | 291 +++++++++++++++++++-------------------
- 1 file changed, 145 insertions(+), 146 deletions(-)
+Artur Weber (2):
+      ARM: dts: broadcom: bcm21664: Move chosen node into bcm21664-garnet DTS
+      ARM: dts: bcm-mobile: Split out nodes used by both BCM21664 and BCM23550
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 35f79b48e8dc..6227b25d1446 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1140,150 +1140,6 @@ static int parse_cache_level(const struct option *opt,
- 	return 0;
- }
- 
--static struct option stat_options[] = {
--	OPT_BOOLEAN('T', "transaction", &transaction_run,
--		    "hardware transaction statistics"),
--	OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
--		     "event selector. use 'perf list' to list available events",
--		     parse_events_option),
--	OPT_CALLBACK(0, "filter", &evsel_list, "filter",
--		     "event filter", parse_filter),
--	OPT_BOOLEAN('i', "no-inherit", &stat_config.no_inherit,
--		    "child tasks do not inherit counters"),
--	OPT_STRING('p', "pid", &target.pid, "pid",
--		   "stat events on existing process id"),
--	OPT_STRING('t', "tid", &target.tid, "tid",
--		   "stat events on existing thread id"),
--#ifdef HAVE_BPF_SKEL
--	OPT_STRING('b', "bpf-prog", &target.bpf_str, "bpf-prog-id",
--		   "stat events on existing bpf program id"),
--	OPT_BOOLEAN(0, "bpf-counters", &target.use_bpf,
--		    "use bpf program to count events"),
--	OPT_STRING(0, "bpf-attr-map", &target.attr_map, "attr-map-path",
--		   "path to perf_event_attr map"),
--#endif
--	OPT_BOOLEAN('a', "all-cpus", &target.system_wide,
--		    "system-wide collection from all CPUs"),
--	OPT_BOOLEAN(0, "scale", &stat_config.scale,
--		    "Use --no-scale to disable counter scaling for multiplexing"),
--	OPT_INCR('v', "verbose", &verbose,
--		    "be more verbose (show counter open errors, etc)"),
--	OPT_INTEGER('r', "repeat", &stat_config.run_count,
--		    "repeat command and print average + stddev (max: 100, forever: 0)"),
--	OPT_BOOLEAN(0, "table", &stat_config.walltime_run_table,
--		    "display details about each run (only with -r option)"),
--	OPT_BOOLEAN('n', "null", &stat_config.null_run,
--		    "null run - dont start any counters"),
--	OPT_INCR('d', "detailed", &detailed_run,
--		    "detailed run - start a lot of events"),
--	OPT_BOOLEAN('S', "sync", &sync_run,
--		    "call sync() before starting a run"),
--	OPT_CALLBACK_NOOPT('B', "big-num", NULL, NULL,
--			   "print large numbers with thousands\' separators",
--			   stat__set_big_num),
--	OPT_STRING('C', "cpu", &target.cpu_list, "cpu",
--		    "list of cpus to monitor in system-wide"),
--	OPT_SET_UINT('A', "no-aggr", &stat_config.aggr_mode,
--		    "disable aggregation across CPUs or PMUs", AGGR_NONE),
--	OPT_SET_UINT(0, "no-merge", &stat_config.aggr_mode,
--		    "disable aggregation the same as -A or -no-aggr", AGGR_NONE),
--	OPT_BOOLEAN(0, "hybrid-merge", &stat_config.hybrid_merge,
--		    "Merge identical named hybrid events"),
--	OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
--		   "print counts with custom separator"),
--	OPT_BOOLEAN('j', "json-output", &stat_config.json_output,
--		   "print counts in JSON format"),
--	OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
--		     "monitor event in cgroup name only", parse_stat_cgroups),
--	OPT_STRING(0, "for-each-cgroup", &stat_config.cgroup_list, "name",
--		    "expand events for each cgroup"),
--	OPT_STRING('o', "output", &output_name, "file", "output file name"),
--	OPT_BOOLEAN(0, "append", &append_file, "append to the output file"),
--	OPT_INTEGER(0, "log-fd", &output_fd,
--		    "log output to fd, instead of stderr"),
--	OPT_STRING(0, "pre", &pre_cmd, "command",
--			"command to run prior to the measured command"),
--	OPT_STRING(0, "post", &post_cmd, "command",
--			"command to run after to the measured command"),
--	OPT_UINTEGER('I', "interval-print", &stat_config.interval,
--		    "print counts at regular interval in ms "
--		    "(overhead is possible for values <= 100ms)"),
--	OPT_INTEGER(0, "interval-count", &stat_config.times,
--		    "print counts for fixed number of times"),
--	OPT_BOOLEAN(0, "interval-clear", &stat_config.interval_clear,
--		    "clear screen in between new interval"),
--	OPT_UINTEGER(0, "timeout", &stat_config.timeout,
--		    "stop workload and print counts after a timeout period in ms (>= 10ms)"),
--	OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
--		     "aggregate counts per processor socket", AGGR_SOCKET),
--	OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
--		     "aggregate counts per processor die", AGGR_DIE),
--	OPT_SET_UINT(0, "per-cluster", &stat_config.aggr_mode,
--		     "aggregate counts per processor cluster", AGGR_CLUSTER),
--	OPT_CALLBACK_OPTARG(0, "per-cache", &stat_config.aggr_mode, &stat_config.aggr_level,
--			    "cache level", "aggregate count at this cache level (Default: LLC)",
--			    parse_cache_level),
--	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
--		     "aggregate counts per physical processor core", AGGR_CORE),
--	OPT_SET_UINT(0, "per-thread", &stat_config.aggr_mode,
--		     "aggregate counts per thread", AGGR_THREAD),
--	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
--		     "aggregate counts per numa node", AGGR_NODE),
--	OPT_INTEGER('D', "delay", &target.initial_delay,
--		    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
--	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
--			"Only print computed metrics. No raw values", enable_metric_only),
--	OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
--		       "don't group metric events, impacts multiplexing"),
--	OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
--		       "don't try to share events between metrics in a group"),
--	OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
--		       "disable adding events for the metric threshold calculation"),
--	OPT_BOOLEAN(0, "topdown", &topdown_run,
--			"measure top-down statistics"),
--	OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
--			"Set the metrics level for the top-down statistics (0: max level)"),
--	OPT_BOOLEAN(0, "smi-cost", &smi_cost,
--			"measure SMI cost"),
--	OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
--		     "monitor specified metrics or metric groups (separated by ,)",
--		     append_metric_groups),
--	OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
--			 "Configure all used events to run in kernel space.",
--			 PARSE_OPT_EXCLUSIVE),
--	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
--			 "Configure all used events to run in user space.",
--			 PARSE_OPT_EXCLUSIVE),
--	OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
--		    "Use with 'percore' event qualifier to show the event "
--		    "counts of one hardware thread by sum up total hardware "
--		    "threads of same physical core"),
--	OPT_BOOLEAN(0, "summary", &stat_config.summary,
--		       "print summary for interval mode"),
--	OPT_BOOLEAN(0, "no-csv-summary", &stat_config.no_csv_summary,
--		       "don't print 'summary' for CSV summary output"),
--	OPT_BOOLEAN(0, "quiet", &quiet,
--			"don't print any output, messages or warnings (useful with record)"),
--	OPT_CALLBACK(0, "cputype", &evsel_list, "hybrid cpu type",
--		     "Only enable events on applying cpu with this type "
--		     "for hybrid platform (e.g. core or atom)",
--		     parse_cputype),
--#ifdef HAVE_LIBPFM
--	OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
--		"libpfm4 event selector. use 'perf list' to list available events",
--		parse_libpfm_events_option),
--#endif
--	OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
--		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
--		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
--		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
--		      parse_control_option),
--	OPT_CALLBACK_OPTARG(0, "iostat", &evsel_list, &stat_config, "default",
--			    "measure I/O performance metrics provided by arch/platform",
--			    iostat_parse),
--	OPT_END()
--};
--
- /**
-  * Calculate the cache instance ID from the map in
-  * /sys/devices/system/cpu/cpuX/cache/indexY/shared_cpu_list
-@@ -2245,7 +2101,7 @@ static void init_features(struct perf_session *session)
- 	perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
- }
- 
--static int __cmd_record(int argc, const char **argv)
-+static int __cmd_record(const struct option stat_options[], int argc, const char **argv)
- {
- 	struct perf_session *session;
- 	struct perf_data *data = &perf_stat.data;
-@@ -2494,6 +2350,149 @@ static void setup_system_wide(int forks)
- 
- int cmd_stat(int argc, const char **argv)
- {
-+	struct option stat_options[] = {
-+		OPT_BOOLEAN('T', "transaction", &transaction_run,
-+			"hardware transaction statistics"),
-+		OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
-+			"event selector. use 'perf list' to list available events",
-+			parse_events_option),
-+		OPT_CALLBACK(0, "filter", &evsel_list, "filter",
-+			"event filter", parse_filter),
-+		OPT_BOOLEAN('i', "no-inherit", &stat_config.no_inherit,
-+			"child tasks do not inherit counters"),
-+		OPT_STRING('p', "pid", &target.pid, "pid",
-+			"stat events on existing process id"),
-+		OPT_STRING('t', "tid", &target.tid, "tid",
-+			"stat events on existing thread id"),
-+#ifdef HAVE_BPF_SKEL
-+		OPT_STRING('b', "bpf-prog", &target.bpf_str, "bpf-prog-id",
-+			"stat events on existing bpf program id"),
-+		OPT_BOOLEAN(0, "bpf-counters", &target.use_bpf,
-+			"use bpf program to count events"),
-+		OPT_STRING(0, "bpf-attr-map", &target.attr_map, "attr-map-path",
-+			"path to perf_event_attr map"),
-+#endif
-+		OPT_BOOLEAN('a', "all-cpus", &target.system_wide,
-+			"system-wide collection from all CPUs"),
-+		OPT_BOOLEAN(0, "scale", &stat_config.scale,
-+			"Use --no-scale to disable counter scaling for multiplexing"),
-+		OPT_INCR('v', "verbose", &verbose,
-+			"be more verbose (show counter open errors, etc)"),
-+		OPT_INTEGER('r', "repeat", &stat_config.run_count,
-+			"repeat command and print average + stddev (max: 100, forever: 0)"),
-+		OPT_BOOLEAN(0, "table", &stat_config.walltime_run_table,
-+			"display details about each run (only with -r option)"),
-+		OPT_BOOLEAN('n', "null", &stat_config.null_run,
-+			"null run - dont start any counters"),
-+		OPT_INCR('d', "detailed", &detailed_run,
-+			"detailed run - start a lot of events"),
-+		OPT_BOOLEAN('S', "sync", &sync_run,
-+			"call sync() before starting a run"),
-+		OPT_CALLBACK_NOOPT('B', "big-num", NULL, NULL,
-+				"print large numbers with thousands\' separators",
-+				stat__set_big_num),
-+		OPT_STRING('C', "cpu", &target.cpu_list, "cpu",
-+			"list of cpus to monitor in system-wide"),
-+		OPT_SET_UINT('A', "no-aggr", &stat_config.aggr_mode,
-+			"disable aggregation across CPUs or PMUs", AGGR_NONE),
-+		OPT_SET_UINT(0, "no-merge", &stat_config.aggr_mode,
-+			"disable aggregation the same as -A or -no-aggr", AGGR_NONE),
-+		OPT_BOOLEAN(0, "hybrid-merge", &stat_config.hybrid_merge,
-+			"Merge identical named hybrid events"),
-+		OPT_STRING('x', "field-separator", &stat_config.csv_sep, "separator",
-+			"print counts with custom separator"),
-+		OPT_BOOLEAN('j', "json-output", &stat_config.json_output,
-+			"print counts in JSON format"),
-+		OPT_CALLBACK('G', "cgroup", &evsel_list, "name",
-+			"monitor event in cgroup name only", parse_stat_cgroups),
-+		OPT_STRING(0, "for-each-cgroup", &stat_config.cgroup_list, "name",
-+			"expand events for each cgroup"),
-+		OPT_STRING('o', "output", &output_name, "file", "output file name"),
-+		OPT_BOOLEAN(0, "append", &append_file, "append to the output file"),
-+		OPT_INTEGER(0, "log-fd", &output_fd,
-+			"log output to fd, instead of stderr"),
-+		OPT_STRING(0, "pre", &pre_cmd, "command",
-+			"command to run prior to the measured command"),
-+		OPT_STRING(0, "post", &post_cmd, "command",
-+			"command to run after to the measured command"),
-+		OPT_UINTEGER('I', "interval-print", &stat_config.interval,
-+			"print counts at regular interval in ms "
-+			"(overhead is possible for values <= 100ms)"),
-+		OPT_INTEGER(0, "interval-count", &stat_config.times,
-+			"print counts for fixed number of times"),
-+		OPT_BOOLEAN(0, "interval-clear", &stat_config.interval_clear,
-+			"clear screen in between new interval"),
-+		OPT_UINTEGER(0, "timeout", &stat_config.timeout,
-+			"stop workload and print counts after a timeout period in ms (>= 10ms)"),
-+		OPT_SET_UINT(0, "per-socket", &stat_config.aggr_mode,
-+			"aggregate counts per processor socket", AGGR_SOCKET),
-+		OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
-+			"aggregate counts per processor die", AGGR_DIE),
-+		OPT_SET_UINT(0, "per-cluster", &stat_config.aggr_mode,
-+			"aggregate counts per processor cluster", AGGR_CLUSTER),
-+		OPT_CALLBACK_OPTARG(0, "per-cache", &stat_config.aggr_mode, &stat_config.aggr_level,
-+				"cache level", "aggregate count at this cache level (Default: LLC)",
-+				parse_cache_level),
-+		OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
-+			"aggregate counts per physical processor core", AGGR_CORE),
-+		OPT_SET_UINT(0, "per-thread", &stat_config.aggr_mode,
-+			"aggregate counts per thread", AGGR_THREAD),
-+		OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
-+			"aggregate counts per numa node", AGGR_NODE),
-+		OPT_INTEGER('D', "delay", &target.initial_delay,
-+			"ms to wait before starting measurement after program start (-1: start with events disabled)"),
-+		OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
-+				"Only print computed metrics. No raw values", enable_metric_only),
-+		OPT_BOOLEAN(0, "metric-no-group", &stat_config.metric_no_group,
-+			"don't group metric events, impacts multiplexing"),
-+		OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
-+			"don't try to share events between metrics in a group"),
-+		OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
-+			"disable adding events for the metric threshold calculation"),
-+		OPT_BOOLEAN(0, "topdown", &topdown_run,
-+			"measure top-down statistics"),
-+		OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
-+			"Set the metrics level for the top-down statistics (0: max level)"),
-+		OPT_BOOLEAN(0, "smi-cost", &smi_cost,
-+			"measure SMI cost"),
-+		OPT_CALLBACK('M', "metrics", &evsel_list, "metric/metric group list",
-+			"monitor specified metrics or metric groups (separated by ,)",
-+			append_metric_groups),
-+		OPT_BOOLEAN_FLAG(0, "all-kernel", &stat_config.all_kernel,
-+				"Configure all used events to run in kernel space.",
-+				PARSE_OPT_EXCLUSIVE),
-+		OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
-+				"Configure all used events to run in user space.",
-+				PARSE_OPT_EXCLUSIVE),
-+		OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
-+			"Use with 'percore' event qualifier to show the event "
-+			"counts of one hardware thread by sum up total hardware "
-+			"threads of same physical core"),
-+		OPT_BOOLEAN(0, "summary", &stat_config.summary,
-+			"print summary for interval mode"),
-+		OPT_BOOLEAN(0, "no-csv-summary", &stat_config.no_csv_summary,
-+			"don't print 'summary' for CSV summary output"),
-+		OPT_BOOLEAN(0, "quiet", &quiet,
-+			"don't print any output, messages or warnings (useful with record)"),
-+		OPT_CALLBACK(0, "cputype", &evsel_list, "hybrid cpu type",
-+			"Only enable events on applying cpu with this type "
-+			"for hybrid platform (e.g. core or atom)",
-+			parse_cputype),
-+#ifdef HAVE_LIBPFM
-+		OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
-+			"libpfm4 event selector. use 'perf list' to list available events",
-+			parse_libpfm_events_option),
-+#endif
-+		OPT_CALLBACK(0, "control", &stat_config, "fd:ctl-fd[,ack-fd] or fifo:ctl-fifo[,ack-fifo]",
-+			"Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
-+			"\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
-+			"\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
-+			parse_control_option),
-+		OPT_CALLBACK_OPTARG(0, "iostat", &evsel_list, &stat_config, "default",
-+				"measure I/O performance metrics provided by arch/platform",
-+				iostat_parse),
-+		OPT_END()
-+	};
- 	const char * const stat_usage[] = {
- 		"perf stat [<options>] [<command>]",
- 		NULL
-@@ -2530,7 +2529,7 @@ int cmd_stat(int argc, const char **argv)
- 		stat_config.csv_sep = DEFAULT_SEPARATOR;
- 
- 	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
--		argc = __cmd_record(argc, argv);
-+		argc = __cmd_record(stat_options, argc, argv);
- 		if (argc < 0)
- 			return -1;
- 	} else if (argc && strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+ arch/arm/boot/dts/broadcom/bcm21664-common.dtsi | 334 ++++++++++++++++++++++
+ arch/arm/boot/dts/broadcom/bcm21664-garnet.dts  |   4 +
+ arch/arm/boot/dts/broadcom/bcm21664.dtsi        | 326 +---------------------
+ arch/arm/boot/dts/broadcom/bcm23550.dtsi        | 354 +-----------------------
+ 4 files changed, 357 insertions(+), 661 deletions(-)
+---
+base-commit: a38297e3fb012ddfa7ce0321a7e5a8daeb1872b6
+change-id: 20240528-bcm21664-common-14064864a4a7
+
+Best regards,
 -- 
-2.45.1.288.g0e0cd299f1-goog
+Artur Weber <aweber.kernel@gmail.com>
 
