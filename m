@@ -1,124 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577EC1BF90D;
-	Wed,  5 Jun 2024 11:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A6319CCF0;
+	Wed,  5 Jun 2024 11:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588624; cv=none; b=V5z0HprLtFEe4wuO/OfhImf/OJY4hYv/X02URB7K5XocY1DWzhd/heZc3pINzqgjxCxnsRmXNw+sLy6nyYIKHYlgQnJ+CtmXJR0JIge7HgF6bwf6BLF8ErYj1nGSjzu/VAJNbWdCMmydvFQib5W2ad4SMRNMwGI5TlGbUqLM8g8=
+	t=1717588728; cv=none; b=oWjMy0k/wvkOcoabIAgfXKt5vdw/k8CWqJlaxfS7q+Df+9ypgrnHdTeJK2BtvfHnDpgmWD9WHNv452X1uBnu307MPZfN/eFn/i26WCtXg/iC9FOjzbGrWWZqOwM/evpcpWL0i52lFxUGecnDEjVMjGbBWZInrnYohm8SklRE+Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588624; c=relaxed/simple;
-	bh=vMDKIc6lLj1EO9UYlCbUb/5oXBZKBAl4dXREvt/KAd4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SGSt2GoB/M4YwWeKyioRPX198BrCUd26dAnf1CBj8JXSk6ROdOEySH8qrckBaJN/2rZ2fGsceZ4BmQxHijhFYbVtuRXU51AwISK2Tjo1lY9tLN2YYkJU+HeBPjtPwOKvTufvhrAnTG3Fg1lIyRCqXbUrS0jGqTidwhr/FCMDEH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qu7DhHYG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588728; c=relaxed/simple;
+	bh=7Ef0ncgscO0OD6Dn8yPg3403dMb6KQsV93tFgcfzA0s=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=YB1asd3vk1A0TQqZ8oDYFyt/u0ZGSIK/0R7tQM7sWdx6jPQxjnpbd0uGon7ikmwVw9HWRj868GqHtfRGx/KLLhOvK1nEjuc7lqYWDmWa0gbDN/ZjGYb5CNnA7wpEm2eCheM0ivLegj8Txf8YbZ4e5eYXuZV3UM6xXvu1RiWCXZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KhwchRSR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/KDG7WEp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qu7DhHYG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0665C3277B;
-	Wed,  5 Jun 2024 11:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588624;
-	bh=vMDKIc6lLj1EO9UYlCbUb/5oXBZKBAl4dXREvt/KAd4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qu7DhHYG628qEo6baKNOhR9F3PGPT9kyb2QoDYSDUqe62+Hz2QoXZeLodkVGrQqc6
-	 HK2x3izib4BqXmf3bb2Ed+AB8RQWgNE8JHeTUp8NGaAElffLfuHeAblRDQvqXDEoOp
-	 oEABpWpp9QRopiJM+Qo5nn47D/5fmLw10daD7lD7jJDnirOdbksg5Py2A7ildSSRoY
-	 /xs2EYqilIXZ1sWBkhdqwQnDFSJziKDu/L9cSXpl16kw/uUYLuBp4d+dvRmZLTu96a
-	 Kr9628FrOQmaDtlE7yB8pEWIMXJsuI9KYonOAqcRyRZOt81MsgXLf0xbozXPSLLJxG
-	 6HF4bpE85C3lw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Jian-Hong Pan <jhp@endlessos.org>,
-	Takashi Iwai <tiwai@suse.de>,
-	Sasha Levin <sashal@kernel.org>,
-	perex@perex.cz,
-	tiwai@suse.com,
-	sbinding@opensource.cirrus.com,
-	kailang@realtek.com,
-	luke@ljones.dev,
-	shenghao-ding@ti.com,
-	simont@opensource.cirrus.com,
-	foss@athaariq.my.id,
-	rf@opensource.cirrus.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4] ALSA: hda/realtek: Enable headset mic of JP-IK LEAP W502 with ALC897
-Date: Wed,  5 Jun 2024 07:56:56 -0400
-Message-ID: <20240605115701.2965523-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KhwchRSR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/KDG7WEp"
+Date: Wed, 05 Jun 2024 11:58:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717588725;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=j8VKAxipfG7b8cYFeMCVG/fbpeVomP6m0v3OqHxz7hQ=;
+	b=KhwchRSRuCUHa5oaVsT3bObDjCyEmxk5gDFo+siyvlxDthYCypSm6UM9crReNqoSzfsWQl
+	KemfmKSuhLwZBn89cdEr8xlDVX4wn7JmpBAcUqBtiv5C5wWWokcFIzSvXAGE+ism5eLjpy
+	/kLmO4FW76Q2SBfrHS1JXDpfPhp684dBGk4kvbG8M2RCYG1ulCxJrZiY3MpWXXqKt6fEHV
+	7t12ll8O0M7iJBgPzatUJYx+brX5q7hc61hVN7ZkIVEjCG8AZw8k8RHHjIrbEYXC8rKYX7
+	bDxdWz5XBfiyMcxSgMDw63xaeVBfnJNtmO8owkS/CbM4mvcRn7L0wGA+E8h2Aw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717588725;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=j8VKAxipfG7b8cYFeMCVG/fbpeVomP6m0v3OqHxz7hQ=;
+	b=/KDG7WEpyFb5Fq+I1Vyu2q2v97YQD/XTZgCbfW+iilL9UYx2MvG40TkQ2+vFML15OFqmV7
+	rymkZ1KwgsdUHkBQ==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/headers: Move struct pre-declarations to the
+ beginning of the header
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ linux-kernel@vger.kernel.org, x86@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.277
-Content-Transfer-Encoding: 8bit
+Message-ID: <171758872489.10875.7704825011213776196.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Jian-Hong Pan <jhp@endlessos.org>
+The following commit has been merged into the sched/core branch of tip:
 
-[ Upstream commit 45e37f9ce28d248470bab4376df2687a215d1b22 ]
+Commit-ID:     3cd7271987ffd89c2d5eaeea85d3e9a16aec6894
+Gitweb:        https://git.kernel.org/tip/3cd7271987ffd89c2d5eaeea85d3e9a16aec6894
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Wed, 05 Jun 2024 13:44:28 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 05 Jun 2024 13:52:25 +02:00
 
-JP-IK LEAP W502 laptop's headset mic is not enabled until
-ALC897_FIXUP_HEADSET_MIC_PIN3 quirk is applied.
+sched/headers: Move struct pre-declarations to the beginning of the header
 
-Here is the original pin node values:
+There's a random number of structure pre-declaration lines in
+kernel/sched/sched.h, some of which are unnecessary duplicates.
 
-0x11 0x40000000
-0x12 0xb7a60130
-0x14 0x90170110
-0x15 0x411111f0
-0x16 0x411111f0
-0x17 0x411111f0
-0x18 0x411111f0
-0x19 0x411111f0
-0x1a 0x411111f0
-0x1b 0x03211020
-0x1c 0x411111f0
-0x1d 0x4026892d
-0x1e 0x411111f0
-0x1f 0x411111f0
+Move them to the head & order them a bit for readability.
 
-Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
-Link: https://lore.kernel.org/r/20240520055008.7083-2-jhp@endlessos.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org
 ---
- sound/pci/hda/patch_realtek.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/sched/sched.h | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index bf9a4d5f8555d..2c0bfdfcf6410 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -9909,6 +9909,7 @@ enum {
- 	ALC897_FIXUP_LENOVO_HEADSET_MODE,
- 	ALC897_FIXUP_HEADSET_MIC_PIN2,
- 	ALC897_FIXUP_UNIS_H3C_X500S,
-+	ALC897_FIXUP_HEADSET_MIC_PIN3,
- };
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 078241d..62fd8bc 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -74,6 +74,12 @@
  
- static const struct hda_fixup alc662_fixups[] = {
-@@ -10355,10 +10356,18 @@ static const struct hda_fixup alc662_fixups[] = {
- 			{}
- 		},
- 	},
-+	[ALC897_FIXUP_HEADSET_MIC_PIN3] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11050 }, /* use as headset mic */
-+			{ }
-+		},
-+	},
- };
+ #include "../workqueue_internal.h"
  
- static const struct snd_pci_quirk alc662_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1019, 0x9087, "ECS", ALC662_FIXUP_ASUS_MODE2),
-+	SND_PCI_QUIRK(0x1019, 0x9859, "JP-IK LEAP W502", ALC897_FIXUP_HEADSET_MIC_PIN3),
- 	SND_PCI_QUIRK(0x1025, 0x022f, "Acer Aspire One", ALC662_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x1025, 0x0241, "Packard Bell DOTS", ALC662_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x1025, 0x0308, "Acer Aspire 8942G", ALC662_FIXUP_ASPIRE),
--- 
-2.43.0
-
++struct rq;
++struct cfs_rq;
++struct rt_rq;
++struct sched_group;
++struct cpuidle_state;
++
+ #ifdef CONFIG_PARAVIRT
+ # include <asm/paravirt.h>
+ # include <asm/paravirt_api_clock.h>
+@@ -90,9 +96,6 @@
+ # define SCHED_WARN_ON(x)      ({ (void)(x), 0; })
+ #endif
+ 
+-struct rq;
+-struct cpuidle_state;
+-
+ /* task_struct::on_rq states: */
+ #define TASK_ON_RQ_QUEUED	1
+ #define TASK_ON_RQ_MIGRATING	2
+@@ -362,9 +365,6 @@ extern void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+ 
+-struct cfs_rq;
+-struct rt_rq;
+-
+ extern struct list_head task_groups;
+ 
+ struct cfs_bandwidth {
+@@ -996,8 +996,6 @@ struct uclamp_rq {
+ DECLARE_STATIC_KEY_FALSE(sched_uclamp_used);
+ #endif /* CONFIG_UCLAMP_TASK */
+ 
+-struct rq;
+-
+ struct balance_callback {
+ 	struct balance_callback *next;
+ 	void (*func)(struct rq *rq);
+@@ -1255,8 +1253,6 @@ DECLARE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ #define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
+ #define raw_rq()		raw_cpu_ptr(&runqueues)
+ 
+-struct sched_group;
+-
+ #ifdef CONFIG_SCHED_CORE
+ static inline struct cpumask *sched_group_span(struct sched_group *sg);
+ 
