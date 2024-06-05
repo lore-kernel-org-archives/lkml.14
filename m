@@ -1,165 +1,103 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42C863D;
-	Wed,  5 Jun 2024 14:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B7417BBF
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 14:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717596406; cv=none; b=ff/KOvYa5dvRPtBXt1cmJS1yqQfCKbfEi39o2OXsrJ+suu/vlytfgZrp8om6vIIaRgYyPMULRGTY/Q9t7uLDJrtN9xlh2Id5n6JwSCct7HJ65dpG/awtLO5ksJPJLv4Kc1qixw0P8vk1/+Z5fiz+BVkIyWBryson6gkbpJhmK7c=
+	t=1717596410; cv=none; b=AcSWyeZFWYqOwINTki33NTTfrU2lL/ghRO20hXbo1YdU0NrSVAXZaZcESMcDja3hH5rYP+TfDBRn8EnUA+V7aqjx+TceDUFgCMGhRlfjTjfiIcy/og3GiBPBDOqtYNbdOba3cRZNWuanxaQpaxD0h3cKfbrCD8dhDIvuWXCMdSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717596406; c=relaxed/simple;
-	bh=5L3ycicBDAFMTgbU2z0VnBgN5rrFT5CqYmGZGAK1Yfc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hBqMV3WknZNkcIFtwcPYaXLT54qzVQu8jNQ4JTUkp3MDQHw8VqLFjFbMUAsk+BrkeMZeoRqLcQDlZmC5xRE8Bp/hvi3ZgDpPr+SARm+CYjdjZxA7QWU3a3c5zJTz+8N5wuQcUMnE9YtaAkUMi8ctGMh5PQfomdJ7LKN+Wzk70Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FKCYUlxA; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1717596410; c=relaxed/simple;
+	bh=RLigTN6QlgfnN8MmaEOoLfcZ90fDVBpjgvMkiBaFCMo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ev/0BDtBKjYDtbPKlaTDww53TBuZwJiZXH57blAUGScsOpBqFQImfXA162vPRvizEysNR/HU1w006BzJth6KtcApAhzCjliPy9ULEwNFYG9oeDxp7TAsWCf9Nb/Lps5EgfcSFGIL9Xa45fv77bcdhh/2kwEQlD4okBxzzXeotu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jR5JlSHx; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FKCYUlxA"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455Bop5o018601;
-	Wed, 5 Jun 2024 16:06:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=RywoIJl3pKPsvFCUc8QGsg
-	MMilGIvPLCqmf45EgL15g=; b=FKCYUlxAmd3u6c3p/LCT9rjUoCMJnWdLzHpT2T
-	JceHQQz9WxwEw24VKeO35gErNtf2bOLpf2jcaBAJmMM5Ho+nr7jkuSpMiGC8hhXO
-	bWpK4SdG58ZWjaFHEHAPSRZ5mg6tkAJ62MnuYFIGN9WLn7yaSJLB0/3l4fXIB61m
-	L3nsAyaoZpF7BoBJspa2yMF8WGb793yGxaBjNqeNVuJ3BZnELLrOqh+IRvVDYxaW
-	ZNEzpJtaBNiBwaYo2m3Qd5BP1hRlWA7Tp6YQx/nce1Bc4shz8u1In7irXaMZgrDZ
-	WkBx6anbiVppfcoSplXW0JfrcNqKC3r2EBWr3/COUNmQ9kEg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3ygekhyn5m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 16:06:07 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2D15640044;
-	Wed,  5 Jun 2024 16:05:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 05D7C21A90C;
-	Wed,  5 Jun 2024 16:05:01 +0200 (CEST)
-Received: from localhost (10.48.86.107) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 5 Jun
- 2024 16:04:58 +0200
-From: =?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?= <clement.legoffic@foss.st.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim
-	<namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        John Garry
-	<john.g.garry@oracle.com>,
-        James Clark <james.clark@arm.com>
-CC: =?UTF-8?q?Cl=C3=A9ment=20Le=20Goffic?= <clement.legoffic@foss.st.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] perf: parse-events: Fix compilation error while defining DEBUG_PARSER
-Date: Wed, 5 Jun 2024 16:04:53 +0200
-Message-ID: <20240605140453.614862-1-clement.legoffic@foss.st.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jR5JlSHx"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627f20cff42so114353587b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 07:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717596407; x=1718201207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BL138jN66e7d4oRS9LVO/0u1phYBQ+x8xQzsbL5QTlo=;
+        b=jR5JlSHxwJBVnwKlYd2q3dAIa5VvoPsvGkmI7dq5336WqvGRPa64jtwoiKusLudxNJ
+         wRo6BlVYYk/5rzubjsIrmZXk9ewEG5JJ8BCTLVgJyzNQVlxLFVx/Akc4vA8p8Scjkqje
+         puvdvN1viiVX/5foJxJ/sxvUZJJBJfd0JjxM0U77CePNn9PXsNeYLXejZdc6FQWJXThA
+         84V7lPg0nLvtcwdAv7S1eSLnmZgdT+BP/cKPuKUfXA4IbPibkh+ajfitxR1t0Mk9KKBb
+         Oty/o87QsZbZiWrjRlx/5FMzvMkOP3s1ZAOVenNUNnCYIK+pDB1DRFHCMXxiIyTPrsca
+         Nj5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717596407; x=1718201207;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BL138jN66e7d4oRS9LVO/0u1phYBQ+x8xQzsbL5QTlo=;
+        b=G6hzd1bzazVnXDJsStv59DyeVw9EEOy3xkkAy+Tvs1ZOhcW2HtBnc4r2vXWyfOEJoy
+         7j/+CYvJhrxgCTs4IaOVVj6DdByEAH29FU2GoFS9NuAIXpYg5B9OVB+LLVf/ZGiKXgam
+         xUMUkyAeZbswlgupdUHeSm+yY+9yYGjZX8vX/T5/roS1omkkSHVNXuRegBhEHyPOwFCW
+         wl1mpP0cS9rYB5viHicZI6wKZL0bBY0lLHN3nUVeW/vBqQwwitx+chkVQWsjIxqLMda7
+         cg5SgzIe/cjKzyd8Nxc7/I6QXhqoueI6fBCLwDztie16weeIIRpe7Y964ny1AdvXSfI9
+         bWXA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+/dXhbsWu+XBBh7ylb6amTSqDoXvR3IF2H+teF391BNcQyTGWFgIJxGMMDxH0lMJAzTihWmR/4j1vpTb56LQ24Fuo6Tw7w/6OhzbL
+X-Gm-Message-State: AOJu0YwOt2Uwroy4ZhHdL27QwyzCJb+Y/rN7cZm3ytkGJQSw3By0IbpX
+	+x4fHSLXV0fFIbt/a8l15LPGi4c7c5qmt9iFayD0twd5WCMsCX4COg+f3kw487hc3B11Vj3/gpu
+	ROw==
+X-Google-Smtp-Source: AGHT+IG1hc4iMUkWuc2pTjAvNhhnxyv7afMIRBSIBUolkARKLQQrvnWjgIFzBdhrmfAcjl+qpvy1b4ZNUi0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2991:b0:dfa:4b20:bdaf with SMTP id
+ 3f1490d57ef6-dfacad0f465mr254997276.13.1717596407332; Wed, 05 Jun 2024
+ 07:06:47 -0700 (PDT)
+Date: Wed, 5 Jun 2024 07:06:45 -0700
+In-Reply-To: <171754361450.2780320.9936421038178572773.b4-ty@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
+Mime-Version: 1.0
+References: <cover.1714081725.git.reinette.chatre@intel.com> <171754361450.2780320.9936421038178572773.b4-ty@google.com>
+Message-ID: <ZmBw9R_jkNLYXkJh@google.com>
+Subject: Re: [PATCH V5 0/4] KVM: x86: Make bus clock frequency for vAPIC timer configurable
+From: Sean Christopherson <seanjc@google.com>
+To: isaku.yamahata@intel.com, pbonzini@redhat.com, erdemaktas@google.com, 
+	vkuznets@redhat.com, vannapurve@google.com, jmattson@google.com, 
+	mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com, 
+	rick.p.edgecombe@intel.com, Reinette Chatre <reinette.chatre@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Compiling perf tool with 'DEBUG_PARSER=1' leads to errors:
+On Tue, Jun 04, 2024, Sean Christopherson wrote:
+> On Thu, 25 Apr 2024 15:06:58 -0700, Reinette Chatre wrote:
+> > Changes from v4:
+> > - v4: https://lore.kernel.org/lkml/cover.1711035400.git.reinette.chatre@intel.com/
+> > - Rename capability from KVM_CAP_X86_APIC_BUS_FREQUENCY to
+> >   KVM_CAP_X86_APIC_BUS_CYCLES_NS. (Xiaoyao Li).
+> > - Include "Testing" section in cover letter.
+> > - Add Rick's Reviewed-by tags.
+> > - Rebased on latest of "next" branch of https://github.com/kvm-x86/linux.git
+> > 
+> > [...]
+> 
+> Applied the KVM changes to kvm-x86 misc (I'm feeling lucky).  Please prioritize
+> refreshing the selftests patch, I'd like to get it applied sooner than later
+> for obvious reasons (I'm not feeling _that_ lucky).
+> 
+> [1/4] KVM: x86: hyper-v: Calculate APIC bus frequency for Hyper-V
+>       https://github.com/kvm-x86/linux/commit/41c7b1bb656c
+> [2/4] KVM: x86: Make nsec per APIC bus cycle a VM variable
+>       https://github.com/kvm-x86/linux/commit/01de6ce03b1e
+> [3/4] KVM: x86: Add a capability to configure bus frequency for APIC timer
+>       https://github.com/kvm-x86/linux/commit/937296fd3deb
+> [4/4] KVM: selftests: Add test for configure of x86 APIC bus frequency
+>       (not applied)
 
-$> make -C tools/perf PARSER_DEBUG=1 NO_LIBTRACEEVENT=1
-...
-  CC      util/expr-flex.o
-  CC      util/expr.o
-util/parse-events.c:33:12: error: redundant redeclaration of ‘parse_events_debug’ [-Werror=redundant-decls]
-   33 | extern int parse_events_debug;
-      |            ^~~~~~~~~~~~~~~~~~
-In file included from util/parse-events.c:18:
-util/parse-events-bison.h:43:12: note: previous declaration of ‘parse_events_debug’ with type ‘int’
-   43 | extern int parse_events_debug;
-      |            ^~~~~~~~~~~~~~~~~~
-util/expr.c:27:12: error: redundant redeclaration of ‘expr_debug’ [-Werror=redundant-decls]
-   27 | extern int expr_debug;
-      |            ^~~~~~~~~~
-In file included from util/expr.c:11:
-util/expr-bison.h:43:12: note: previous declaration of ‘expr_debug’ with type ‘int’
-   43 | extern int expr_debug;
-      |            ^~~~~~~~~~
-cc-1: all warnings being treated as errors
+FYI, the hashes changed as I had to drop an unrelated commit.
 
-Remove extern declaration from the parse-envents.c file as there is a
-conflict with the ones generated using bison and yacc tools from the file
-parse-events.[ly].
-
-Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
----
-I don't know how bison and yacc work together.
-To me if those symbols are already generated (I don't know how), we
-should get rid of them in the source file `parse-events.c`.
-For my knowledge, if someone has the explanation of how they are
-generated, I am interested as I didn't find any link to some part of
-parse-events.[yl] files.
-
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Jiri Olsa <jolsa@kernel.org>
-To: Ian Rogers <irogers@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-To: John Garry <john.g.garry@oracle.com>
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- tools/perf/util/expr.c         | 4 ----
- tools/perf/util/parse-events.c | 3 ---
- 2 files changed, 7 deletions(-)
-
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index b8875aac8f87..b2536a59c44e 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -25,10 +25,6 @@
- #include <math.h>
- #include "pmu.h"
-
--#ifdef PARSER_DEBUG
--extern int expr_debug;
--#endif
--
- struct expr_id_data {
- 	union {
- 		struct {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6ed0f9c5581d..8d5fb05f20c2 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -31,9 +31,6 @@
-
- #define MAX_NAME_LEN 100
-
--#ifdef PARSER_DEBUG
--extern int parse_events_debug;
--#endif
- static int get_config_terms(const struct parse_events_terms *head_config,
- 			    struct list_head *head_terms);
- static int parse_events_terms__copy(const struct parse_events_terms *src,
-
-base-commit: c3f38fa61af77b49866b006939479069cd451173
---
-2.34.1
-
+[1/3] KVM: x86: hyper-v: Calculate APIC bus frequency for Hyper-V
+      https://github.com/kvm-x86/linux/commit/f9e1cbf1805e
+[2/3] KVM: x86: Make nanoseconds per APIC bus cycle a VM variable
+      https://github.com/kvm-x86/linux/commit/b460256b162d
+[3/3] KVM: x86: Add a capability to configure bus frequency for APIC timer
+      https://github.com/kvm-x86/linux/commit/6fef518594bc
