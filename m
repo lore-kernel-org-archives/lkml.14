@@ -1,132 +1,132 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F75619006C;
-	Wed,  5 Jun 2024 08:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E984962C;
+	Wed,  5 Jun 2024 08:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575757; cv=none; b=Svb7S9U1Gt0GDivA9qLNge/kNHCzKDReY4lkif58GllP2ziyoh+1An4Ky8IkfDkUJaSN57YVc0xvxdOjYH7Jv/pyaBJt45MOu3m6839gQ3eKkNqkujoE5b6gj4qePcf9apPXA0mt4EHr0rxIceaaALhyjvVioQAwEH6ST2AWCgQ=
+	t=1717575823; cv=none; b=sASmmRyDBQgL7wVQbK/zMkKLl5Ar2cdiHC8V+dZflx2AKRkFZhd1yEh2WDQWbwrsFN/cE8x4Uhp5+Sun2xhb6bVzgjK7kdLCrpb5pgWhxalZXn8A2vZqxmRgwbqBW96HhInEsGZYAYxEsIqIIP1YqAf1n6+1vbhq6jmyIfPwe+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575757; c=relaxed/simple;
-	bh=b5n7KdQZMcBanjfHL40woh+5PQIBJq9kn+ZjlhARkK0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QmGhGUua3sZOZgK9KzWM07I/9YWGYFPRHduIokIsfvOvdGAX3bUpAJHubOv03F1s5BQg0/ItUgku5JzwxbhOQeDboCNoMiXbw+/hb0gPG7mpMXMQj1P7yONSelwy47D7/x1RWP4cZYgQQqYTjEKeinwgGWw5UMWUfWakRbdoa+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mJy9LTzo; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717575823; c=relaxed/simple;
+	bh=+6qBXpM4CAtIHbKGm8U2EPi2QBj6ZSNnA68LJ18zkas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RD7KuGWeu+K/As377jJhqHGKZ7/O9sr5Qxd8qNKjJf/ccaNyVG4nc9hEAP2NayB8iIFuLHc1j2t/Qws+CttLzqFtZ8syBLzfNieQ51GEaG+CCW3iG9UhjejDTExvtRc2mRMS8RbuKx6NEmJ112xtqAhGoFegBdVeI+k2VydCumc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=P1ixOcqM; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mJy9LTzo"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-57a6985ab58so1666549a12.2;
-        Wed, 05 Jun 2024 01:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717575754; x=1718180554; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b5n7KdQZMcBanjfHL40woh+5PQIBJq9kn+ZjlhARkK0=;
-        b=mJy9LTzo9g+rT6pbwShOi7SocjIqNl4lwIH34i4lIxrogEHljefyTrkHatIw6bEe+f
-         MNf+mUpRHtTmzIqb2O4TTrnZQxgdX1mNWJBVH5u3AimET7NXA3Nt6CqsxSvrHJxzhOBv
-         WgiV7ZNpl3AM/SHrsSXL8vuf20gJjO1w18irfetRHarq6r/YZluNEEUfOxrvXQmJZmTy
-         I05VQXBVTuAL+MpRTXr41pRFWAKXdwi5Iz2WgKcdw5QOte2mpQUxYYBGdT3sFvoIwW2S
-         4+Gn0qaDGj7bb+Rf+WO0zQVQBSKwY4q5NOxWMVM7B9GT9aLt9GdGUD5eEB4eUL/yEghz
-         3Img==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575754; x=1718180554;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b5n7KdQZMcBanjfHL40woh+5PQIBJq9kn+ZjlhARkK0=;
-        b=FUl2oQNLv7mv10lkjRHrIuHxp38gRT8RtA4zynUkuewQS6O1R1YRGUZDQ9iGMPXa8y
-         n4g2bhhKZd6Pbh2njG3vuAWwxJvavxa/7+EXYBkJ326z8BW9DTxLlt8gxXflNGfxcqZJ
-         mxWUGtX62URrU3aq/sUuJEAWmlNO4eBby4zMO1CAVnrxF5N1eoxJV9uHah4yf7pX7kk6
-         A+T9Ae5rdCH+xoj0bljdSYdAUjGDK6eJKrJGpRxZGICH12bVaC7fVEVQUKnRlo6N6pnH
-         q4yD7YJKFXfqXzxFk/DDkLcq3Diwp2fV+iZUlYF4h/8nh0FOtM9IjLDrFtIaLt4fBNWt
-         BZAw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrSMR2gc50whL5sr9D3gW4+JameV4qdgg4HzPRtwbzsPpIaHz757TPAS/cy+idICEH/6oD8mq/kfjOOPyiqJc3LFktr2ZJOCq2fQc4qYfdidHGDJfkfERpATsmitYPXbRjUUlCaEOBF6hXgqyOW8kiqDbyov1lL3Oa7BYOpnSyrMi3qQ==
-X-Gm-Message-State: AOJu0YxjURRoviIqxNjY7CsHfBkX18NRljoQgehvVz8yQ+GLrMqC89Gs
-	R1WMJs7ihG/Be4wNPlacUjQC+TpeW438xTNy4bStO7NcH9FvLQ6O
-X-Google-Smtp-Source: AGHT+IGF9ZlwicG+VylkHEpngevqNQnxECBfr+6sO6YTiHWqFVMyOLXh48+ipvxpj7HpE+n5R6BrlQ==
-X-Received: by 2002:a50:9ee2:0:b0:57a:2e6c:c089 with SMTP id 4fb4d7f45d1cf-57a8b6f23e0mr1661477a12.19.1717575754127;
-        Wed, 05 Jun 2024 01:22:34 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a873a1aa0sm2038004a12.38.2024.06.05.01.22.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:22:33 -0700 (PDT)
-Message-ID: <8dcac591e5dc9d4cc1a6cf89512d08ef12457474.camel@gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: ad7192: Fix clock config
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Alisa-Dariana Roman <alisadariana@gmail.com>, Alisa-Dariana Roman
- <alisa.roman@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Michael Hennerich <michael.hennerich@analog.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Alexandru Tachici
- <alexandru.tachici@analog.com>, Jonathan Cameron <jic23@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>
-Date: Wed, 05 Jun 2024 10:26:20 +0200
-In-Reply-To: <20240605075154.625123-2-alisa.roman@analog.com>
-References: <20240605075154.625123-1-alisa.roman@analog.com>
-	 <20240605075154.625123-2-alisa.roman@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P1ixOcqM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=7xhPdfPc2smXf6F7HsxZ8sv5bz75m1tU4HsrWy1Cu+4=; b=P1ixOcqMYBL1qNqoRQQlMNBcnO
+	cJczue4oUfXvh/G4zstXTx292PLJhGaQv23TkAd4cXeR9h8E7cvo2TJC+0SHMai9QBHndQ8hZLSTc
+	0xw66kP3ze14ks9DdH6S+RPoyBybl6k/w0BakZRcP3JhTtO1Rbgl1uiOE7yuJ5sW/Wvh6s1wZHVcv
+	AEMzPhyWgdqcKSbzV3/PAyCLrKF1l1wsuGU4ZMULxbQuYrL6RKDrJCdn1M3WQkm1oA5sshSZQBPOc
+	Q06JS4sW51P1TfL7UaM6Cdr8ZP7QEo9pg7z+entRzmuY6z8rDrtSKtNr+anTt1+bR/0zNSiXcX0y8
+	zeYEKWZA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sElvi-00000005BX0-0Tmg;
+	Wed, 05 Jun 2024 08:23:34 +0000
+Date: Wed, 5 Jun 2024 01:23:34 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Pavel Begunkov <asml.silence@gmail.com>, David Wei <dw@davidwei.uk>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [PATCH net-next v10 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZmAghrRrj_KGgSQR@infradead.org>
+References: <20240530201616.1316526-1-almasrymina@google.com>
+ <20240530201616.1316526-3-almasrymina@google.com>
+ <ZlqzER_ufrhlB28v@infradead.org>
+ <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izMU_nMEr04J9kXiX6rJqK4nQKA+W-enKLhNxvK7=H2pgA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Wed, 2024-06-05 at 10:51 +0300, Alisa-Dariana Roman wrote:
-> There are actually 4 configuration modes of clock source for AD719X
-> devices. Either a crystal can be attached externally between MCLK1 and
-> MCLK2 pins, or an external CMOS-compatible clock can drive the MCLK2
-> pin. The other 2 modes make use of the 4.92MHz internal clock, which can
-> be made available on the MCLK2 pin.
->=20
-> The presence of an external clock is optional, not required.
->=20
-> Fixes: f7356e47032c ("dt-bindings: iio: adc: ad7192: Add binding document=
-ation
-> for AD7192")
-> Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
-> ---
-> =C2=A0.../bindings/iio/adc/adi,ad7192.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 19 ++++++++++---------
-> =C2=A01 file changed, 10 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> index a03da9489ed9..c5a4219a9388 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> @@ -39,11 +39,16 @@ properties:
-> =C2=A0
-> =C2=A0=C2=A0 clocks:
-> =C2=A0=C2=A0=C2=A0=C2=A0 maxItems: 1
-> -=C2=A0=C2=A0=C2=A0 description: phandle to the master clock (mclk)
-> +=C2=A0=C2=A0=C2=A0 description: |
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Optionally, either a crystal can be attac=
-hed externally between MCLK1
-> and
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MCLK2 pins, or an external CMOS-compatibl=
-e clock can drive the MCLK2
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pin. If absent, internal 4.92MHz clock is=
- used which can be made
-> available
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 on MCLK2.
-> =C2=A0
-> =C2=A0=C2=A0 clock-names:
-> -=C2=A0=C2=A0=C2=A0 items:
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - const: mclk
-> +=C2=A0=C2=A0=C2=A0 enum:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - xtal
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - clk
+On Mon, Jun 03, 2024 at 07:17:05AM -0700, Mina Almasry wrote:
+> On Fri, May 31, 2024 at 10:35 PM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Thu, May 30, 2024 at 08:16:01PM +0000, Mina Almasry wrote:
+> > > I'm unsure if the discussion has been resolved yet. Sending the series
+> > > anyway to get reviews/feedback on the (unrelated) rest of the series.
+> >
+> > As far as I'm concerned it is not.  I've not seen any convincing
+> > argument for more than page/folio allocator including larger order /
+> > huge page and dmabuf.
+> >
+> 
+> Thanks Christoph, this particular patch series adds dmabuf, so I
+> assume no objection there. I assume the objection is that you want the
+> generic, extensible hooks removed.
 
-Not sure about changing the name of the clock... Isn't this breaking ABI?
+Exactly!  Note that this isn't a review of the dmabuf bits as there
+are people more qualified with me.
 
-- Nuno S=C3=A1
+> To be honest, I don't think the hooks are an integral part of the
+> design, and at this point I think we've argued for them enough. I
+> think we can easily achieve the same thing with just raw if statements
+> in a couple of places. We can always add the hooks if and only if we
+> actually justify many memory providers.
+> 
+> Any objections to me removing the hooks and directing to memory
+> allocations via simple if statements? Something like (very rough
+> draft, doesn't compile):
 
+I like this approach, thanks! 
 
+You might still want to keep the static key, though.
