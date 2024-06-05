@@ -1,53 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDD81CD25;
-	Wed,  5 Jun 2024 16:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07771CD25;
+	Wed,  5 Jun 2024 16:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717606565; cv=none; b=pnMMoWWStge6OF4wwzBy5uZUPIo1DsO+DHSC8qNmrwl3zIUIT4tf30YhSd2IK9fYIjrtSU/43wTiWHb2bMJqfzR6aongFnS2HViyeH4rlowu4vq0N9lZ4o5+tfd4Cn2urNzxBxLlFh2jHh2MiEYuXPgvxYnhFPciBsWssctP7tU=
+	t=1717606617; cv=none; b=gT2P1aS6I7KVqCwZXFiF368+e8kiahHFoM1Eq77eLG2po5MMwAxEBsJSOe+ZGO1NQT8Ok8fzkHQlJWyKcDmlkQV9BwtkRCWIGIktvdbcEV+Uki7nnWG2+oYqkOJKA9kpjLSX1Hksr/3wFPQ0VpOBJHCkR43eoEC44Bgt3+b/8x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717606565; c=relaxed/simple;
-	bh=DY2nt+yBAcKyIj1DY6uk3CsThucW/03Qo/Lo9LSgM1E=;
+	s=arc-20240116; t=1717606617; c=relaxed/simple;
+	bh=pfI35ozd31OmX9/buzkdSci9env3fD1wc7ou55XdvNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aXb3Px24/rmhNO7Pr6P2DHUGbPP0IXdclru7y8d6RDcUNP9RvVMWfrOR0c4JvfY8t3nidNqM43nxkfh//shLYIsGr3V7M/a0f20ySWA6iEiaxbZxUILT0icfMyZRdnwhavaSRaemVt6wlXhJBH2l9noy3tjo+Nr+sxsfO7aRkiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnIbfvXz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XUFPp2taj5bHoB/2aTOL4mEiTxJo9a5x9P/EdZweDPC3S3L9SdVr3RAHIgh792dDUOytnU5aD8mDoM5mfXdh7kfjdFFLu5KFWabQA41tRsYucj+lzAPwVoW/U2k5LgTbsQG7RkG3mgZr6Mm7RzTiyKFxOUNv/s1bWdU7/ApNW70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkD/rJZ1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnIbfvXz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FFA2C2BD11;
-	Wed,  5 Jun 2024 16:56:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkD/rJZ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B03C2BD11;
+	Wed,  5 Jun 2024 16:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717606565;
-	bh=DY2nt+yBAcKyIj1DY6uk3CsThucW/03Qo/Lo9LSgM1E=;
+	s=k20201202; t=1717606616;
+	bh=pfI35ozd31OmX9/buzkdSci9env3fD1wc7ou55XdvNg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UnIbfvXzPkP/kZ49+TPd7h9bSGyyF6qc+IZppDOt7SYp4aPPsN0fNiLA/uc0eg4m2
-	 x2QanzgKHq4fl6UJsFobyTqveNEw1kP8IU+uQcEshNTgiUEGdho29tEIGm8azVqCBQ
-	 TSsHlrov+912usOc4wDUIy0URbHcPgzvn79Ej9JHhPjGRSYUPaeDSS3SxhUMrPCg51
-	 h0ilW7gVXLZq41jkxzF1tEE2aPBsQ07YgWfGhdhta6fIMKXb03kIS/pAYayzlQDrTl
-	 n2ZbTVXrAkI4NU8pxyz85cy03/e+fVpgVcquTc7EDmBXwFRuawOmG5uonBNGh6L5c8
-	 EKWm8ypMYQS7A==
-Date: Wed, 5 Jun 2024 17:55:59 +0100
+	b=dkD/rJZ1r2NSj0HqtJDUzVvwrKiMLXW1x2aFiHk5bFJKQUgowYJcz1pm2VCYpOlWV
+	 NRB3l4/+K30HUfYZhf2OMIPH3x5yOzMb+sbhSv8GF00qfhpK9urSDe0XlqvbSH+8bP
+	 CRRcf8RqFH2TpKq/mvZ0KZNYAKqQTsYOwprw9H/tHVG9aSxZf9wyzO472reIyda4+9
+	 ePEfsboVO3NqGBgzBYJmlSWBhWY2A9Ak0fm/QVAUsekctM0aTLFbKnv4NS6xLo+jYU
+	 w34BQVBa3GdxvwMy/Q6YxB8bM5XSoqyJd+EBN6E1V0sSD0a8cFDQOSt8ltgUFUiFZq
+	 3E5HbNkQ5UN7A==
+Date: Wed, 5 Jun 2024 17:56:51 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>,
-	Caleb Connolly <caleb.connolly@linaro.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Wronek <david@mainlining.org>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: display: panel: constrain 'reg' in DSI
- panels (part two)
-Message-ID: <20240605-onyx-gloomily-835e383c7be7@spud>
-References: <20240605105659.27433-1-krzysztof.kozlowski@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: add i.MX93 9x9 QSB board
+Message-ID: <20240605-envious-herbal-55c8279c675e@spud>
+References: <20240605094812.1074027-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,41 +44,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LcKx6aW3d2vGZ/ji"
+	protocol="application/pgp-signature"; boundary="jbtzMG4BItgVRYPO"
 Content-Disposition: inline
-In-Reply-To: <20240605105659.27433-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240605094812.1074027-1-peng.fan@oss.nxp.com>
 
 
---LcKx6aW3d2vGZ/ji
+--jbtzMG4BItgVRYPO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 12:56:59PM +0200, Krzysztof Kozlowski wrote:
-> DSI-attached devices could respond to more than one virtual channel
-> number, thus their bindings are supposed to constrain the 'reg' property
-> to match hardware.  Add missing 'reg' constrain for DSI-attached display
-> panels, based on DTS sources in Linux kernel (assume all devices take
-> only one channel number).
+On Wed, Jun 05, 2024 at 05:48:11PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 >=20
-> Few bindings missed previous fixup: LG SW43408 and Raydium RM69380.
+> Add compatible string for i.MX93 9x9 Quick Start Board.
 >=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
 Thanks,
 Conor.
 
---LcKx6aW3d2vGZ/ji
+--jbtzMG4BItgVRYPO
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmCYnwAKCRB4tDGHoIJi
-0i4wAQDQf0XShqF8XmyalzFwEDtX/8sM8MP1yBrYStOZ0Cxs2AEA0uIX9W82pvO5
-S2c0+9zOWtJ0bnh5sC8u7nNIqxhMVQI=
-=zN4v
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmCY0wAKCRB4tDGHoIJi
+0sO9AQCNYcHSKIguSI5llLEoRsll74SaFTE12Ue0XRqS+AXc6QEA+NiFXcOHNhvQ
+jzkxE4kLsiXYGzWgjG4oWgRcz3vYqwM=
+=e5Ny
 -----END PGP SIGNATURE-----
 
---LcKx6aW3d2vGZ/ji--
+--jbtzMG4BItgVRYPO--
