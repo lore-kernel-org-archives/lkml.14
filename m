@@ -1,196 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BAA719E7F8;
-	Wed,  5 Jun 2024 12:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCC71957E3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591195; cv=none; b=afJpjQMSU+Wo4urlig1soTmlwTtafRuBXwGqIvbut/wI74MqmWVTsa/STfcI1wLBc4esdVO1x3VQ4+RacvAZ5e/k9zpCtBq2WFLz7CcJRm70w3GKNXd9XZS/erH4e3NUH6Bk77uPlH6fgAKras8fCENQmYciVB6cdPmn0JTv3XY=
+	t=1717591229; cv=none; b=TCjPDdta17beJLTO03Qv2Z8VU6fOhPS2gR38wT1o7ifT/Q4NOcN72BN1FSClEo1ObxUuItdXlu1mgX/hWi2601JhjjYYE34/3wud00pdVSEn5SS+SS6o5+As0oMSti4o7CVffLItOec5mqD+Ar6B9nHPssZI9FN/EH2MM3DqmEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717591195; c=relaxed/simple;
-	bh=otSmJ0pkdmSbTtHg9x3aGkUGNLGMhSXxt63d9ZAtoAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uTvpCNt/AzPdRnRKx/0eHwrDg33JqiH+msMRcpLuDXQuGAWhFwaydxx1DF35xsoy4+B8GtjnSKI8i2bNepono7SHQ55/v+JDwzS9EhdUd6lOPChgircSoyoRW5GBVen9VBh9rj5ZO0eIOyvPxyLcLXuVJ/93Gr4Mvbjz6Exu2+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3BB9339;
-	Wed,  5 Jun 2024 05:40:16 -0700 (PDT)
-Received: from [10.57.39.129] (unknown [10.57.39.129])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39FE93F762;
-	Wed,  5 Jun 2024 05:39:48 -0700 (PDT)
-Message-ID: <b7f7403b-142a-4914-a787-f92292069d6d@arm.com>
-Date: Wed, 5 Jun 2024 13:39:51 +0100
+	s=arc-20240116; t=1717591229; c=relaxed/simple;
+	bh=fTj8oqzixDOnw98MMc7gAnO1TsJrNYBGRMd8QpqOvpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HX62Z6JeLyajNePD8Fc4XAQn1y42n6jcIKbSKXq/hOjzscNXtfk5DxkHzc9bLmw+8Ty6wiETNtAS34IF6nJl0kORJXAggR8fX/6SBduk1DZ3Z0rcDpKu7XNvJwy1OCPYfMdATSFF27I+bBmX5O0mySr2LgSLys1kV/MTXfXslf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHUw4hyj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHUw4hyj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDBD9C4AF0C;
+	Wed,  5 Jun 2024 12:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717591228;
+	bh=fTj8oqzixDOnw98MMc7gAnO1TsJrNYBGRMd8QpqOvpU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FHUw4hyjTzdGTrr31aRBhvPcUxxIQB+CF4oSvRyygdllkwSV0/Lqc5Qz/NZ/DOytM
+	 TItnS8yTMEZ/RbnOqau8lVCSPY22r0zPT5TnvZ7suoL43ZhVW/XvDqSxkglbvosDHw
+	 rHaJqwxNK4crqamkt4ZYgV5G1k3UDkpdjj5W/D5pE/vPE2xXdEGJr753HhUBeT0HXg
+	 51jCig/hOWr58WCHUhC1zNP54LLMjCI+OVk/r4rUQvITFt/K0xPRcFFDwPkc+xMlO4
+	 62RT7HMopxKSL8uEWZWpI3Hr32UOOx/495D/5MYudyl434/48i1Ahc3DOTO8szJYiw
+	 NCjPblmn5rcPw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1sEpwM-000000007gp-0z0r;
+	Wed, 05 Jun 2024 14:40:30 +0200
+Date: Wed, 5 Jun 2024 14:40:30 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/2] mfd: lm3533: Hide legacy platform data in the
+ driver
+Message-ID: <ZmBcvtLCzllQDWVX@hovoldconsulting.com>
+References: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
+ <20240508104848.846580-2-andriy.shevchenko@linux.intel.com>
+ <20240531150048.GO1005600@google.com>
+ <Zlnn89KPSHSCp3Bh@smile.fi.intel.com>
+ <20240531155445.GS1005600@google.com>
+ <Zln9lRvKJYwlSM3l@smile.fi.intel.com>
+ <20240531165834.GA1204315@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] drm/panfrost: Add support for Mali on the MT8188
- SoC
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- boris.brezillon@collabora.com
-Cc: maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-References: <20240604123922.331469-1-angelogioacchino.delregno@collabora.com>
- <20240604123922.331469-3-angelogioacchino.delregno@collabora.com>
- <f44611fd-523a-4b4d-accd-20fdfbac178a@arm.com>
- <6dee4870-3ca2-46d7-a30b-014a7d34135a@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <6dee4870-3ca2-46d7-a30b-014a7d34135a@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531165834.GA1204315@google.com>
 
-On 05/06/2024 12:43, AngeloGioacchino Del Regno wrote:
-> Il 05/06/24 11:18, Steven Price ha scritto:
->> On 04/06/2024 13:39, AngeloGioacchino Del Regno wrote:
->>> MediaTek MT8188 has a Mali-G57 MC3 (Valhall-JM): add a new
->>> compatible and platform data using the same supplies and the
->>> same power domain lists as MT8183 (one regulator, three power
->>> domains).
->>>
->>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>> ---
->>>   drivers/gpu/drm/panfrost/panfrost_drv.c | 9 +++++++++
->>>   1 file changed, 9 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> index ef9f6c0716d5..4e2d9f671a0d 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> @@ -777,6 +777,14 @@ static const struct panfrost_compatible mediatek_mt8186_data = {
->>>   	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
->>>   };
->>>   
->>> +static const struct panfrost_compatible mediatek_mt8188_data = {
->>> +	.num_supplies = ARRAY_SIZE(mediatek_mt8183_b_supplies) - 1,
->>> +	.supply_names = mediatek_mt8183_b_supplies,
->>
->> I think this is a little confusing. Ideally we'd drop the existing
->> mediatek_xxx_supplies which are the same as default_supplies and just
->> use that instead.
->>
->>> +	.num_pm_domains = ARRAY_SIZE(mediatek_mt8183_pm_domains),
->>> +	.pm_domain_names = mediatek_mt8183_pm_domains,
->>
->> We'd want at least a comment explaining that this isn't a typo (i.e. /*
->> mt8188 uses the same pm domains as mt8183 */). But I'm also wondering if
->> it would be sensible to simply have one domain list, something like:
->>
->> --->8---
->> static const char * const mediatek_pm_domains[] = { "core0", "core1",
->> 						    "core2", "core3",
->> 						    "core4" };
->>
->> static const struct panfrost_compatible mediatek_mt8183_data = {
->> 	...
->> 	.num_pm_domains = 3,
->> 	.pm_domain_names = mediatek_pm_domains,
->> };
->> ...
->> static const struct panfrost_compatible mediatek_mt8186_data = {
->> 	...
->> 	.num_pm_domains = 2,
->> 	.pm_domain_names = mediatek_pm_domains,
->> };
->> ...
->> static const struct panfrost_compatible mediatek_mt8188_data = {
->> 	...
->> 	.num_pm_domains = 3,
->> 	.pm_domain_names = mediatek_pm_domains,
->> };
->> ...
->> static const struct panfrost_compatible mediatek_mt8192_data = {
->> 	...
->> 	.num_pm_domains = 5,
->> 	.pm_domain_names = mediatek_pm_domains,
->> };
->> --->8---
->>
->> OTOH what you've got it no worse than what we already had, so it's up to
->> you whether you want to tidy this up or just add a comment so it doesn't
->> look like there's a typo.
->>
+On Fri, May 31, 2024 at 05:58:34PM +0100, Lee Jones wrote:
+> On Fri, 31 May 2024, Andy Shevchenko wrote:
 > 
-> I didn't disclose my plan, but you've already shown part of it, so seeing that
-> you preventively agree with at least part of that is fun :-)
+> > On Fri, May 31, 2024 at 04:54:45PM +0100, Lee Jones wrote:
+> > > On Fri, 31 May 2024, Andy Shevchenko wrote:
+> > > > On Fri, May 31, 2024 at 04:00:48PM +0100, Lee Jones wrote:
+> > > > > On Wed, 08 May 2024, Andy Shevchenko wrote:
+> > > > > 
+> > > > > > First of all, there is no user for the platform data in the kernel.
+> > > > > > Second, it needs a lot of updates to follow the modern standards
+> > > > > > of the kernel, including proper Device Tree bindings and device
+> > > > > > property handling.
+> > > > > > 
+> > > > > > For now, just hide the legacy platform data in the driver's code.
+> > > > > 
+> > > > > Why not just rip it out entirely?
+> > > > 
+> > > > You mean the driver?
+> > > 
+> > > The unused platform data.
+> > 
+> > Good question. In any case these drivers are non-functional anyway without OOT
+> > board code. If we rip out the main platform data completely, the logical following
+> > question arises: why do we need the per-device platform data? If we rip that out,
+> > we basically make non-functional driver a 100% dead code. Hence what you propose
+> > mostly equals to ripping out the drivers completely.
+> > 
+> > TL;DR: with the main platform data being ripped out the driver code will be in
+> > inconsistent state.
 > 
-> I surely won't be able to do what I want to do for *this* cycle as I'm mostly
-> sure that I won't have time for this in the next 3 weeks - but anyway....
-> 
-> What I was thinking is that we should either look for a number of power domains
-> limited by a max power domains definition (that should already be present somewhere
-> in panfrost if I recall correctly) without even caring about the actual power
-> domain names, or we should look for a number of PDs having any name matching,
-> in a for loop, snprintf(*something, sizeof(something), "core%d", i).
-> 
-> This means that, with the snprintf idea, we don't even have to set any
-> pm_domain_names list anymore, at all, and we can either reuse num_pm_domains
-> or just get the number of PDs limited by the binding - but that's a problem for
-> the future me/us I guess...
-> 
-> But since we're there...
-> 
-> Please, I'd like to hear your opinion about the core%d idea :-)
+> What do you think Johan?  Do you see any reason to keep it around?
 
-I was tempted to suggest something like it... ;) But two things made me
-wary:
+Yeah, I'd prefer to keep it around. This device is used in a bunch of
+Sony phones and Bjorn A posted a series adding devicetree bindings a few
+years ago which I believe was more or less acked and ready go.
 
- * It's a bigger change, and I didn't want to suggest such a large
-refactor - let's get this patch in first.
+I'll try to find some time to look at that myself as I think I may
+favour a less verbose binding (e.g. similar to pm8008 that I'm working
+on).
 
- * There is no technical reason why designs will have a power domain per
-core. In particular there is the concept of 'stacks' added in later GPUs
-(so for these GPUs it should be "stack%d"). We also don't want the
-bindings being decided based on the driver, so if there's an integration
-which has e.g. "core01", "core23", etc we should support that rather
-than encouraging people to invent different names just to make the
-bindings easier.
+For now I suggest keeping the platform data where it is and just convert
+the single gpio lookup to look for a "hwen" gpio that can be provided by
+lookup tables and soon devicetree.
 
-Having said that, we could have special handling for
-pm_domain_names==NULL where "core%d" is assumed, leaving the current
-approach for any 'weird' GPU integrations that might crop up in the future.
-
-> Anyway, I think that for now I'm choosing the "comment shortcut" for this patch.
-
-Agreed - there's no point holding up adding support for a new GPU for
-this clean up.
-
-> P.S.: Thanks for the feedback!
-
-No problem.
-
-Thanks,
-
-Steve
-
-> Cheers,
-> Angelo
-> 
->> Steve
->>
->>> +	.pm_features = BIT(GPU_PM_CLK_DIS) | BIT(GPU_PM_VREG_OFF),
->>> +};
->>> +
->>>   static const char * const mediatek_mt8192_supplies[] = { "mali", NULL };
->>>   static const char * const mediatek_mt8192_pm_domains[] = { "core0", "core1", "core2",
->>>   							   "core3", "core4" };
->>> @@ -808,6 +816,7 @@ static const struct of_device_id dt_match[] = {
->>>   	{ .compatible = "mediatek,mt8183-mali", .data = &mediatek_mt8183_data },
->>>   	{ .compatible = "mediatek,mt8183b-mali", .data = &mediatek_mt8183_b_data },
->>>   	{ .compatible = "mediatek,mt8186-mali", .data = &mediatek_mt8186_data },
->>> +	{ .compatible = "mediatek,mt8188-mali", .data = &mediatek_mt8188_data },
->>>   	{ .compatible = "mediatek,mt8192-mali", .data = &mediatek_mt8192_data },
->>>   	{}
->>>   };
->>
-> 
-> 
-> 
-
+Johan
