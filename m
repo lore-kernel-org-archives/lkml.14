@@ -1,116 +1,149 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738381993AE;
-	Wed,  5 Jun 2024 13:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9101E19924D;
+	Wed,  5 Jun 2024 13:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717593482; cv=none; b=D1Eynh5e8BazLnsqcO1E1mNFnIrmauN24k7hLiTaaUH6Cx1vEAmLhKu2oL1sZ1HRt/CPLBJzfEmqKNjgXRrT5VD08CilkCtK2BZnxaXb8rPlxpDgiARa1WXiYooXEVdTvOsaphZpMFDSQVxShnQTYawrusHglzx42pqQ1AOJwgM=
+	t=1717593480; cv=none; b=iQuaTiuivbi2pvte2LeKGB+Bcl/LpMK9CwwlRoO2PMME2eOBGtJ1nCjby2MfGU/X2KpZogK0gRMa4i9PdlsIoP2HAYEW2Kzzy+FwSFPeQxIq7P5+3NJrBKAnoIPuajXKcUBBcUSrlmw7FVxRWoqzLWgMcLnlIrF6yK1cQ9Isf3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717593482; c=relaxed/simple;
-	bh=zKvIhxSqqT9FqJeBjcPR8uWxWYQnQKPGnUrKxRgCKQE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l7TzNSH37vEXUo4CDsMnFKKQrW+LI6WurxEdjkGh223jUqkhqr1bm3Q9pLl/TUZEalhT2yRRxuc41/4pdmxpwjpRRundNZm5ZV7bDDzce4vEOgvyeztKuJUsPe0lzu0YWjpxdVrc7UzGn06W61t4aosJIA/R0HpaR8WjaDaNk2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-57a31d63b6bso3086204a12.0;
-        Wed, 05 Jun 2024 06:18:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717593479; x=1718198279;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z0UO6kXD+1YYvRaIqQUVf1oJgFoVApkH9Bfb2EMD7Mg=;
-        b=AoGy4C3U8T1aheX6q7BW0ypDRHcM/crKpyr2k70c4H4ECodhBqAzeNw16dFJs5XgWw
-         zzwE+cLHqxQKlALtM6RmBe33avL76dI3Qfaf7NNx5+MaxdqsT4BnqoqfZ8uV2tDdJMau
-         DK8AG/tgMUvuCH3eteXZoZ/D/a1BZx8AbtEfILjaj6VwTUZxTgVrBbGek+OAqKEqLAXy
-         x3SjGIc2OTDV7F3otV2syW89wmju7e7BlnzE9kinS9d+AwZBbs/xPWZppXKv1PPTPx2X
-         11yNONKevExXsDx27vT/FV8qjM35n4PLOGnGKiVFQFoCDzXlbFSEYgTbX5uDxB862yEw
-         H08Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUXqwmR8MHf2vvEjycyRFbDyFSuuxaUp2CIzMYv6HD/ZL05BBdeuyPs3t0UzjLyEc94Daf9B1M71ZTpSlVK3BUDozm/U/WR2JbiuuZe
-X-Gm-Message-State: AOJu0Yx0zapQYX436hc2ClQpRrLSbRxd8K/CdUhvTp2zWlfZtVuMMDNV
-	ogm1GEZ11ttWH6tFbdy1EAMBwRpAOKto0FuWVfHPeVrt5bkmaNsL
-X-Google-Smtp-Source: AGHT+IHg3k02UXOhdyZHB6aIK2ubKiZI0k4sBYhtcpPHPogQwpj9d5yc9KJK7KzgGw+S0sIJfca1bA==
-X-Received: by 2002:a50:875c:0:b0:57a:4af6:319e with SMTP id 4fb4d7f45d1cf-57a8b69d02amr1739160a12.1.1717593478760;
-        Wed, 05 Jun 2024 06:17:58 -0700 (PDT)
-Received: from [127.0.0.1] (p200300f6f7253800fa633ffffe02074c.dip0.t-ipconnect.de. [2003:f6:f725:3800:fa63:3fff:fe02:74c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31b99a3fsm9266913a12.9.2024.06.05.06.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 06:17:58 -0700 (PDT)
-From: Johannes Thumshirn <jth@kernel.org>
-Date: Wed, 05 Jun 2024 15:17:52 +0200
-Subject: [PATCH 4/4] btrfs: don't pass fs_info to describe_relocation
+	s=arc-20240116; t=1717593480; c=relaxed/simple;
+	bh=78/x5XUPo5xusPgNw/FNUoT8dnpyBDLoUYTIoTMbIkI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=r3VwWDCF5y/GJmcclUZclWQRIn9R/KZq63CKxPBSGP887luioE2SRdEHI8Ej/N8ABigeNyOVh7kSDDHlrfK/tQ05F7xXVCgBpM2PpNp6Lf/jF4Wbfd7ddegs+CvpWFDl8c7eVTa/VjohKSjQ/YChXHF0Nbt8ivu520TGDwu9OjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=b+tDXKHS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XhxRBfMk; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="b+tDXKHS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XhxRBfMk"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 9AB20138008D;
+	Wed,  5 Jun 2024 09:17:57 -0400 (EDT)
+Received: from imap44 ([10.202.2.94])
+  by compute3.internal (MEProxy); Wed, 05 Jun 2024 09:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1717593477;
+	 x=1717679877; bh=N2eL8RwybwiJUKVprjaoTWy+fNNjx5dXfQ7CD829ifE=; b=
+	b+tDXKHSZUiRtQKPGC5EZY89buxGvF7wJQIfNACRZgkiqnL5kS/TiYkw9na32eWc
+	UnMp7+r6j7nyE773712+a570z3NAUG0ygd38JI1fydRKHn2EWA4ds1aWQ+KzyT5A
+	xsIdYrOvoyjjTYvMWQq/oztPCun0CZV0YpfeIU+rN4xiMlSfRk4EjyNygK9oRm4i
+	HZkQG0TNeXHI/Gu0hG1IZRe9irjAIzZ4BcQwXvR7SU9FxfkqCTDvN1GoH3bqxOD8
+	KirLCtXgZb6vORHR7qZbTJm5wtkJklT2b6StSPo4iapD7RLjN8u9ADnFJNA0Smk3
+	GGnRq2eymrEFophjm84dTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717593477; x=
+	1717679877; bh=N2eL8RwybwiJUKVprjaoTWy+fNNjx5dXfQ7CD829ifE=; b=X
+	hxRBfMkDblW4U9mMyDka2s4QLmNQMLA+rGZP97Q5uoEF6vuShzzIxHGyosgvmca8
+	WCuc+6+zj0vQIgoxCq6bgZy3pZkemtvzfSpo/zxoZlQtIoZuEezgSTLyRhe6siE4
+	SQOxlMpMUHBFTNSU07WwRQvJn9rkyAh106QS+gSfqLRb/DpVmGh/tYpu0uk8x3/Z
+	6GtekL9c+iy4293mzELBWmnt7W8CnTi0q+x+eZkdZWqai3LyZyQbpYO08B/cPGRO
+	G9fdoL9Z/FMB39uM7Cy71wZHookk8rQdpeOi4PqlfQIGn/qnL57dI+BYcqFBqy4h
+	JkJmg+2gQ3sFTgmdgrQdw==
+X-ME-Sender: <xms:hWVgZmEypVF6k5cR8kWOtCsFwHhwP6RO7gpEZGcYOeusDnxwCH6KlA>
+    <xme:hWVgZnW1-wUrGbleNw1caKLCqkRvLSF_h0djxwCL6GRGldZFfitLVNRBLoAQjn1mD
+    qQbZk5qNLKXV_XCtDI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeliedgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
+    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
+    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:hWVgZgK5b2ZajJ0AU_NIHnmXE5-iHYiKbihSIHArIRcCR4vPjaZ_oQ>
+    <xmx:hWVgZgH-hIy5j8d0ADNgQ1Iov5Vc7Y4tcaE4o2qrfO8JmsegiNYytA>
+    <xmx:hWVgZsXQBJTwjVJKMwXGEfdGmF5ofNYtseWUtW9NtZqAaXbAFGE_Qg>
+    <xmx:hWVgZjN-ICa2Z_GMP_ffklLYyz6SPb0iEm-6dQPh1IdmBaaDUFNRHA>
+    <xmx:hWVgZmffpLUpXM1Q80stXS9u3zFhQR1pTkwhiAWWUfVioDvqpAhrHOFG>
+Feedback-ID: ifd894703:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E7DE336A0074; Wed,  5 Jun 2024 09:17:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-497-g97f96844c-fm-20240526.001-g97f96844
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-reloc-cleanups-v1-4-9e4a4c47e067@kernel.org>
-References: <20240605-reloc-cleanups-v1-0-9e4a4c47e067@kernel.org>
-In-Reply-To: <20240605-reloc-cleanups-v1-0-9e4a4c47e067@kernel.org>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Johannes Thumshirn <johannes.thumshirn@wdc.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1487; i=jth@kernel.org;
- h=from:subject:message-id; bh=2s+AQcPtYn/L37Kl21F6nhewozdhJbQniXadYahR2ws=;
- b=owGbwMvMwCV2ad4npfVdsu8YT6slMaQlpDbM97wqVr6wgoft2a4XLjvMxJWMt4bJ8D69dFCN8
- eYkn9XpHaUsDGJcDLJiiizHQ233S5geYZ9y6LUZzBxWJpAhDFycAjCRWUqMDFP6l8iZfGZqnmV4
- 7VCFhkiwmTvHoiA+j8fWe+Ye5Gtdmszw35F5VhMfQ0NycRBvi1bmm3nW13bvaGWNVY5dsojncNt
- tVgA=
-X-Developer-Key: i=jth@kernel.org; a=openpgp;
- fpr=EC389CABC2C4F25D8600D0D00393969D2D760850
+Message-Id: <310c2bce-e6cb-4268-858b-8466c92266dd@app.fastmail.com>
+In-Reply-To: <878qztbvb4.ffs@tglx>
+References: <20240517-loongson_nodecnt-v2-1-5bd0bb20ff5f@flygoat.com>
+ <87sey3b6de.ffs@tglx> <9947f7a5-1a95-48f2-b0eb-0385eb2b3d55@app.fastmail.com>
+ <558b1d58-08a5-410d-97b8-e77def7c1cf8@app.fastmail.com> <878qztbvb4.ffs@tglx>
+Date: Wed, 05 Jun 2024 14:17:38 +0100
+From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
+To: "Thomas Gleixner" <tglx@linutronix.de>,
+ "Huacai Chen" <chenhuacai@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Daniel Lezcano" <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH v2] clocksource: Add node counter timer driver for MIPS/Loongson64
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-In describe_relocation() the fs_info is only needed for printing
-information via btrfs_info() and can easily be accessed via the passed
-in 'struct btrfs_block_group'.
 
-So we can savely remove the fs_info parameter.
+=E5=9C=A82024=E5=B9=B45=E6=9C=8828=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=E5=
+=8D=888:17=EF=BC=8CThomas Gleixner=E5=86=99=E9=81=93=EF=BC=9A
+> On Tue, May 28 2024 at 15:31, Jiaxun Yang wrote:
+>> =E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=
+=E5=8D=885:32=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
+>>> =E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=
+=8B=E5=8D=884:51=EF=BC=8CThomas Gleixner=E5=86=99=E9=81=93=EF=BC=9A
+>>>> Jiaxun!
+>>>>
+>>> Hi Thomas,
+>>> [...]
+>>>>
+>>>> What's this indirection for? Why dont you update=20
+>>> [...]
+>>>>
+>>>>> +static struct clocksource nodecnt_clocksource =3D {
+>>>>> +	.name	=3D "nodecnt",
+>>>>> +	.read	=3D nodecnt_clocksource_read,
+>>>>
+>>>> the read function pointer here and spare the indirection?
+>>> Smart! sched_clock takes slightly different function pointer argumen=
+t type
+>>> but as we don't use the argument anyway, it should be safe to relax =
+this
+>>> indirection.
+>>
+>> Sadly, I'm unable to remove it with force type catsing :-/
+>>
+>> drivers/clocksource/loongson-nodecnt.c: In function =E2=80=98nodecnt_=
+clocksource_init=E2=80=99:
+>> drivers/clocksource/loongson-nodecnt.c:89:36: warning: cast between i=
+ncompatible function types from =E2=80=98u64 (*)(void)=E2=80=99 {aka =E2=
+=80=98long long unsigned int (*)(void)=E2=80=99} to =E2=80=98u64 (*)(str=
+uct clocksource *)=E2=80=99 {aka =E2=80=98long long unsigned int (*)(str=
+uct clocksource *)=E2=80=99} [-Wcast-function-type]
+>>    89 |         nodecnt_clocksource.read =3D (u64 (*)(struct clocksou=
+rce *))nodecnt_read_fn;
+>>
+>
+> What about making the actual read functions have the required function
+> signature? The clocksource argument is not used in those real function=
+s.
 
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- fs/btrfs/relocation.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Sadly sched_clock requires another signature :-/
 
-diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
-index a43118a70916..df3f7c11cfce 100644
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -4005,15 +4005,13 @@ static void free_reloc_control(struct reloc_control *rc)
- /*
-  * Print the block group being relocated
-  */
--static void describe_relocation(struct btrfs_fs_info *fs_info,
--				struct btrfs_block_group *block_group)
-+static void describe_relocation(struct btrfs_block_group *block_group)
- {
- 	char buf[128] = {'\0'};
- 
- 	btrfs_describe_block_groups(block_group->flags, buf, sizeof(buf));
- 
--	btrfs_info(fs_info,
--		   "relocating block group %llu flags %s",
-+	btrfs_info(block_group->fs_info, "relocating block group %llu flags %s",
- 		   block_group->start, buf);
- }
- 
-@@ -4121,7 +4119,7 @@ int btrfs_relocate_block_group(struct btrfs_fs_info *fs_info, u64 group_start)
- 		goto out;
- 	}
- 
--	describe_relocation(fs_info, rc->block_group);
-+	describe_relocation(rc->block_group);
- 
- 	btrfs_wait_block_group_reservations(rc->block_group);
- 	btrfs_wait_nocow_writers(rc->block_group);
+I can see timer-clint hit into the same pitfall.
 
--- 
-2.43.0
+Thanks
+>
+> Thanks,
+>
+>         tglx
 
+--=20
+- Jiaxun
