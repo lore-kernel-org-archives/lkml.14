@@ -1,45 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426AA1B3F02;
-	Wed,  5 Jun 2024 11:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249681B3F31;
+	Wed,  5 Jun 2024 11:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588476; cv=none; b=WbE1vdNZ90pLbGQYCZbvVhEo1jKhkApONS0TBwFuY2ILQByhkV/tyw3zQ+5a7pH8Bn2SsQqjBAinD0IdlUrTJXqP0O7/tbhbFLjeJec4T61e0/oamgTH4i8QORA+LNNfcSHTBynsKZlScbXqeMrDGGnCBSwC2sp3HfYMK1nZYHk=
+	t=1717588485; cv=none; b=CvFkoXtxjSUV0gNJjmxvyKOXOZOK70Hr/oDlhL4SyRau0uQ4omoE/KFkRJ/fBz4hiWKkCEmmMSiarSkohIIeKgkN0UZJW2Wn1SKIsS+31V6W8zApdyX0cMdq0kf72uT0W650t7k6kM+LjKl9PpCZCdyKHqwXHryFvJ5TWlLiJJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588476; c=relaxed/simple;
-	bh=kiI/Lw2TK9Xytq4SD7omgBRD9aRnbSVuuUnrkQXDmf0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JzBtoIG+/hdbsEaoqpfsHNuiAZX0NnmPXfc63C0AV5Iurq/wJGelweERXvX7gvEic207iahnemrLZ4BlZKSx1LBFDVcK55s//iAY+JhoW/JfuFW8cSNk2bOKzX5aUSzXoRqhInPk+adTy87rRrU/wbAAPtShHbHAdtUKsrO4I+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLe24bYS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588485; c=relaxed/simple;
+	bh=fjvJY+jDj+VRWLNeYheSJjo7RC0CvRgYbsQoviL+v/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gFqWz3zXx3IznJG3EYYIdALNWabxmqS0GFVRVvcjk+VKwM+jvyCf+AgseNt1q59PbH/C5DuO+m4jFZQD2W7ftlJSbnoN4afnRDCkyIU83ut4QV/+nLU8ccCsctbWFr94xK7nHZqgGqZaktRDWqNdNbMTPj5/0i7cx5eON6dYPy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQLonXI3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLe24bYS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0467AC32786;
-	Wed,  5 Jun 2024 11:54:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQLonXI3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC6CC3277B;
+	Wed,  5 Jun 2024 11:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588475;
-	bh=kiI/Lw2TK9Xytq4SD7omgBRD9aRnbSVuuUnrkQXDmf0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QLe24bYSdcfmJDbCPzc/hF+j7IBASzBXfhtkoO1m5K0YcvHAYttvAXP1XsHDVI/lZ
-	 J5KEvd0y4qVAMyJaKm5gaiFatnP7+gP8sMYhGOCuRe9umu18ozg9eK1Zqh8ywSFbRI
-	 olvrFI5mo2YNg22Pwj0TNGd4ghbM8RlIqRgmCHW52hJHtmYW9Rqju+up/y6glO9HfC
-	 YhQWY1WRw0Qre20flUWHjTZM3ZMRvgUZGveUdb3iLyBSPh8/s/uEK25J4vBtBVA0Tv
-	 kdwgjZyN4SXg6kbrRRLaj/uAp54mnC2jjQEaVwf35pyNqvNfz0VW81pmbwb28zHfaI
-	 GmmISXAKn4Q1A==
+	s=k20201202; t=1717588484;
+	bh=fjvJY+jDj+VRWLNeYheSJjo7RC0CvRgYbsQoviL+v/Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AQLonXI3VgSkp404filO/yP6DHcjq+pL2U6Euv+2kAMH8X2Zq7qL4CgwP6AW7zb5w
+	 Hsdi3XXBkTLXlWyRz+eFkZjWoj4MHgcSL31tSPuvNwTVxZk0OZ6MQjp/ehXenSNman
+	 2QVQ5Hl6WQoqtlNxnENoJOgBT+jSN0pzIAB9JYCBeBzSrSzOP0aWBZONxQfyuFZTUc
+	 nWcoxgusWD5/YewxlT5+MHEwvbJg6X+Co85B9kxG2RhzqyufkodjHm8sQ1tnxGZ4Lb
+	 VNCQmVaWV0hFnqrDPe/iiVzLnqkUmILko4ovEmhrR8XT3U+L6wi7wI770Xcb+ya3ca
+	 iGF4y3BZ33z1w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sicong Huang <congei42@163.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Yunlei He <heyunlei@oppo.com>,
+	Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	johan@kernel.org,
-	greybus-dev@lists.linaro.org
-Subject: [PATCH AUTOSEL 5.15 9/9] greybus: Fix use-after-free bug in gb_interface_release due to race condition.
-Date: Wed,  5 Jun 2024 07:54:07 -0400
-Message-ID: <20240605115415.2964165-9-sashal@kernel.org>
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.10 1/7] f2fs: remove clear SB_INLINECRYPT flag in default_options
+Date: Wed,  5 Jun 2024 07:54:30 -0400
+Message-ID: <20240605115442.2964376-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115415.2964165-1-sashal@kernel.org>
-References: <20240605115415.2964165-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,58 +45,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.160
+X-stable-base: Linux 5.10.218
 Content-Transfer-Encoding: 8bit
 
-From: Sicong Huang <congei42@163.com>
+From: Yunlei He <heyunlei@oppo.com>
 
-[ Upstream commit 5c9c5d7f26acc2c669c1dcf57d1bb43ee99220ce ]
+[ Upstream commit ac5eecf481c29942eb9a862e758c0c8b68090c33 ]
 
-In gb_interface_create, &intf->mode_switch_completion is bound with
-gb_interface_mode_switch_work. Then it will be started by
-gb_interface_request_mode_switch. Here is the relevant code.
-if (!queue_work(system_long_wq, &intf->mode_switch_work)) {
-	...
-}
+In f2fs_remount, SB_INLINECRYPT flag will be clear and re-set.
+If create new file or open file during this gap, these files
+will not use inlinecrypt. Worse case, it may lead to data
+corruption if wrappedkey_v0 is enable.
 
-If we call gb_interface_release to make cleanup, there may be an
-unfinished work. This function will call kfree to free the object
-"intf". However, if gb_interface_mode_switch_work is scheduled to
-run after kfree, it may cause use-after-free error as
-gb_interface_mode_switch_work will use the object "intf".
-The possible execution flow that may lead to the issue is as follows:
+Thread A:                               Thread B:
 
-CPU0                            CPU1
+-f2fs_remount				-f2fs_file_open or f2fs_new_inode
+  -default_options
+	<- clear SB_INLINECRYPT flag
 
-                            |   gb_interface_create
-                            |   gb_interface_request_mode_switch
-gb_interface_release        |
-kfree(intf) (free)          |
-                            |   gb_interface_mode_switch_work
-                            |   mutex_lock(&intf->mutex) (use)
+                                          -fscrypt_select_encryption_impl
 
-Fix it by canceling the work before kfree.
+  -parse_options
+	<- set SB_INLINECRYPT again
 
-Signed-off-by: Sicong Huang <congei42@163.com>
-Link: https://lore.kernel.org/r/20240416080313.92306-1-congei42@163.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Yunlei He <heyunlei@oppo.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/greybus/interface.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/f2fs/super.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
-index 9ec949a438ef6..52ef6be9d4499 100644
---- a/drivers/greybus/interface.c
-+++ b/drivers/greybus/interface.c
-@@ -694,6 +694,7 @@ static void gb_interface_release(struct device *dev)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 9a74d60f61dba..f73b2b9445acd 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1713,8 +1713,6 @@ static void default_options(struct f2fs_sb_info *sbi)
+ 	F2FS_OPTION(sbi).compress_ext_cnt = 0;
+ 	F2FS_OPTION(sbi).bggc_mode = BGGC_MODE_ON;
  
- 	trace_gb_interface_release(intf);
- 
-+	cancel_work_sync(&intf->mode_switch_work);
- 	kfree(intf);
- }
- 
+-	sbi->sb->s_flags &= ~SB_INLINECRYPT;
+-
+ 	set_opt(sbi, INLINE_XATTR);
+ 	set_opt(sbi, INLINE_DATA);
+ 	set_opt(sbi, INLINE_DENTRY);
 -- 
 2.43.0
 
