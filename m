@@ -1,70 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0642056470;
-	Wed,  5 Jun 2024 03:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A8F79DE;
+	Wed,  5 Jun 2024 03:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717557933; cv=none; b=X1X2IcEU3VW7Pjlh9IBNFQlGqAK6TJiQopRT7qDazw9v+unG0ttM26RJNgdaUOv6cdtah7ZQtihiYHy2kngAF5nvGyrhaIPYwp0tl+bCJpn33aitg+YQ6kpz/EUW8oTFYVs//DTMRjDXmoW5JftbsL3+UGpmwzqspCeR0WUoQ1o=
+	t=1717557937; cv=none; b=jERCPHxKChtxbjd6Ydfm/NF5z8mNcwTvGp7RL53VKtSxnjUKO/0EA2Vw3CPPMIEpG2YA97eamWhO84U8Zi8lgK4lZ7KXYulHYcutjyBAe5hmTb3ajk7KYZg7AV9BAIuDUHrOPWtRFB8fsFQzU/ytS2EBTeBNRif4rsGh1LAlKUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717557933; c=relaxed/simple;
-	bh=kSrIVEn5+ULziH4lIqSRZBF9y1SbsW1rFOIKZRGUYMY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Pa+/GZZ0invzHaUlBADMPdIUoh+riZ7zELqbwbDNlIZ+phRBN5mww8Ub8PfhvQ7JyWg0Yi34M/3TAY4K+W5olmbCZa8tUNzmuEgHVw623302gWojHm0+fODTD0jfdOb5ReuvhmXxwnRHalWUwHA3GwHDPlx38ThGEXVuydiwpCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qqk+zrTb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qqk+zrTb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB8BC32781;
-	Wed,  5 Jun 2024 03:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1717557932;
-	bh=kSrIVEn5+ULziH4lIqSRZBF9y1SbsW1rFOIKZRGUYMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qqk+zrTb3qN0u7nr+Ltb8BGII6GpqS9r3xPSvfVItICcFbPgKyQdNoxG25i7GOTg8
-	 aS+pj1Ao1N1lbuNg24jqF+JAEi/vN4E+gsPVlAUMF6t2DjeVFQ1oY1v/nxzdpxSBJu
-	 W8lxcEcDUrdIu5pH0BiEVOB4oHcVD/m3+rkLB2v4=
-Date: Tue, 4 Jun 2024 20:25:31 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Amer Al Shanawany <amer.shanawany@gmail.com>, Shuah Khan
- <shuah@kernel.org>, Swarup Laxman Kotiaklapudi
- <swarupkotikalapudi@gmail.com>, Hugh Dickins <hughd@google.com>,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] selftests: proc: remove unreached code and fix build
- warning
-Message-Id: <20240604202531.5d559ec4daed484a7a23592c@linux-foundation.org>
-In-Reply-To: <14f55053-2ff8-4086-8aac-b8ee2d50a427@p183>
-References: <202404010211.ygidvMwa-lkp@intel.com>
-	<20240603124220.33778-1-amer.shanawany@gmail.com>
-	<14f55053-2ff8-4086-8aac-b8ee2d50a427@p183>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1717557937; c=relaxed/simple;
+	bh=iar+ScYHyGbSpwqZk7GsbhYJzP4tfyU039xANgAKi8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NMOJ9LsrOQDMrN/BZVdd4ui+d8ssYXgzeQhFeSqso1kjHZCts38lzJPbWI8ZC9RuT7qF3tfhrtOqPi978YYW1I2Aem3LrIWbTU44f3o/aQoH36/+Lm23QtRt8fo484EhPjN0s3dyOTv+xhBD6AErctwrq/nvZXM6T991l+uQ9yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowADHzJA52V9mURJCDw--.61166S2;
+	Wed, 05 Jun 2024 11:19:21 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: giovanni.cabiddu@intel.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	markas.rapoportas@intel.com,
+	ahsan.atta@intel.com,
+	mun.chun.yep@intel.com,
+	xin.zeng@intel.com
+Cc: qat-linux@intel.com,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] crypto: qat - add check for adf_cfg_add_key_value_param
+Date: Wed,  5 Jun 2024 11:18:35 +0800
+Message-Id: <20240605031835.2916052-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADHzJA52V9mURJCDw--.61166S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrW3Jr15CFy7WrW5tw17Awb_yoWDWwb_Cr
+	Z09ayaqryDCFn5Wrn8trWavrWj93s09ryruF1vvF4akasrGrsrKFykZr1DZF1Sqr1kWrn8
+	u3Zayr1kAw47XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+	8cxan2IY04v7MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbV
+	WUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF
+	67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42
+	IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF
+	0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUk3ktUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, 3 Jun 2024 17:24:47 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+Add check for the return value of adf_cfg_add_key_value_param() and
+return the error if it fails in order to catch the error.
 
-> On Mon, Jun 03, 2024 at 02:42:20PM +0200, Amer Al Shanawany wrote:
-> > fix the following warning:
-> > proc-empty-vm.c:385:17: warning: ignoring return value of ‘write’
-> 
-> > --- a/tools/testing/selftests/proc/proc-empty-vm.c
-> > +++ b/tools/testing/selftests/proc/proc-empty-vm.c
-> > @@ -381,9 +381,6 @@ static int test_proc_pid_statm(pid_t pid)
-> 
-> > -	if (0) {
-> > -		write(1, buf, rv);
-> > -	}
-> 
-> no thanks
+Fixes: 4469f9b23468 ("crypto: qat - re-enable sriov after pf reset")
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/crypto/intel/qat/qat_common/adf_sriov.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Why not?
+diff --git a/drivers/crypto/intel/qat/qat_common/adf_sriov.c b/drivers/crypto/intel/qat/qat_common/adf_sriov.c
+index 8d645e7e04aa..30ff9097f527 100644
+--- a/drivers/crypto/intel/qat/qat_common/adf_sriov.c
++++ b/drivers/crypto/intel/qat/qat_common/adf_sriov.c
+@@ -228,8 +228,10 @@ int adf_sriov_configure(struct pci_dev *pdev, int numvfs)
+ 		return ret;
+ 
+ 	val = 1;
+-	adf_cfg_add_key_value_param(accel_dev, ADF_GENERAL_SEC, ADF_SRIOV_ENABLED,
++	ret = adf_cfg_add_key_value_param(accel_dev, ADF_GENERAL_SEC, ADF_SRIOV_ENABLED,
+ 				    &val, ADF_DEC);
++	if (ret)
++		return ret;
+ 
+ 	return numvfs;
+ }
+-- 
+2.25.1
 
-Why does that code exist anyway?  It at least needs a comment.
