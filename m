@@ -1,173 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9022575A;
-	Wed,  5 Jun 2024 17:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01D479DE;
+	Wed,  5 Jun 2024 17:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717607679; cv=none; b=q+o4axCIML9sV88JVM1i0MISo6xY4yqIMSUgGFEUFZvaQ2uVtE4fiUrc+OYBG1R7Q+UiWnEPWGI8ROqTZ+pYb3z5uFxBZh3QnPkPI+QQeMXbeSxTJEDWP6I+S/pibBKCcQ0lwTvctl8XWsQ909ns+Shy2VRd+SRlEZwcmL0TVDs=
+	t=1717607932; cv=none; b=E72XI37a8O+5tRSh63rTS32pbTxk0aYqCwBjyCdCkKIo8lRwHEVF1pkibRBTl0Kds2I5jo8bMYwWF4FVoMO6C/HM2UOZwi8ezFiPaFu1GycrDqAetbCespXW3HSjir35yV7CvrB+zDOJKA4Wjc+rO5mD+ngUzIKS+7HDlV0crZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717607679; c=relaxed/simple;
-	bh=xbm4/YzVfLN2iM3EWSGBH8ZyZKLCsErFhi94mPM6aO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oAWzQxuMcVdXNonRdPzWGo73HcYKkFSNYHsmwkJ/tXLGifkCxn/J49IHpR5Ba0guybj1P9HWQqo8tvZBREaODxSw0dxSB6622r6poLfXPa4EQoP6JYmFDiuf1I3KIib+2Z0BcXm6OGVQ1vLw5lpbpkS+wjWR1XkWcSOYy92SpNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsWaI9Tg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsWaI9Tg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D064BC2BD11;
-	Wed,  5 Jun 2024 17:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717607678;
-	bh=xbm4/YzVfLN2iM3EWSGBH8ZyZKLCsErFhi94mPM6aO8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsWaI9Tg+jOffHs91J+u2B0joNQl6OXwv4w6dRHJdO1zqKQXlCcKEGrZbLlUaH+fH
-	 1lFOr+TUc7pFkAgO+aeDkVnzgFeYEeVKff2WgRGsngzlcp6qJ8aBmheGq+ZFaBw8Vr
-	 UXwKPYDyi598g130CPm3f9mcJG22IWpG8ETia+25TSLb7ESKViFTz6AhNQANzvSrU8
-	 TrwWkmonq1jlBQjyknDqleyd7X2FpjG7TwVU0SKICryTWaiyJPGECYnOGREBkFqjEj
-	 y5QBKpXKcV+6Mf0Ky6Z/jKZsP0CwZT0nJrn+lBKPFMx0SIhABjE4V0VFc4ocIxfAv0
-	 UHkuq2LyJDc5g==
-Date: Wed, 5 Jun 2024 18:14:33 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: broonie@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-	jic23@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	nuno.sa@analog.com, dlechner@baylibre.com,
-	marcelo.schmitt1@gmail.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] dt-bindings: iio: adc: Add AD4000
-Message-ID: <20240605-tables-pectin-66d4d4dd12b5@spud>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
- <b8a211e09c17f5a9f0a6aa6e11d6375ff398c918.1717539384.git.marcelo.schmitt@analog.com>
+	s=arc-20240116; t=1717607932; c=relaxed/simple;
+	bh=CfOaJg5zpEDxXsvOH7x53ahefWZN6KU6Mu/FJ8+Hmjw=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=tsgnMawKfX5dskO9YPQeLRJmJyslkK8zLJw1A8u3bXoCftUY9ra2hg7NyZe1XdBOKU/cpWPw33efSIYJDjfR/yWhpTOIPZYBXWunJ6AoBkm35vNWfSuIe1QjCU3TqDmyQv1gm5PLSqyplXY/Ov7SSz+/GmdgLJna4aMxQynd324=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (31.173.84.195) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 5 Jun
+ 2024 20:18:38 +0300
+Subject: Re: [net-next PATCH v4 7/7] net: ravb: Allocate RX buffers via page
+ pool
+To: Paul Barker <paul.barker.ct@bp.renesas.com>, Simon Horman
+	<horms@kernel.org>
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?=
+	<niklas.soderlund+renesas@ragnatech.se>, Biju Das
+	<biju.das.jz@bp.renesas.com>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>, Yoshihiro Shimoda
+	<yoshihiro.shimoda.uh@renesas.com>, <netdev@vger.kernel.org>,
+	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240528150339.6791-1-paul.barker.ct@bp.renesas.com>
+ <20240528150339.6791-8-paul.barker.ct@bp.renesas.com>
+ <20240601101300.GA491852@kernel.org>
+ <6165a9a3-15ec-4a40-901a-17c2be64daf1@bp.renesas.com>
+ <20240603120757.GX491852@kernel.org>
+ <3eeff8ed-231c-4810-ba99-371524db2f90@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <444f035e-cd07-842d-aacd-b8f720c172da@omp.ru>
+Date: Wed, 5 Jun 2024 20:18:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DJx7WiAB+sjuOmGe"
-Content-Disposition: inline
-In-Reply-To: <b8a211e09c17f5a9f0a6aa6e11d6375ff398c918.1717539384.git.marcelo.schmitt@analog.com>
+In-Reply-To: <3eeff8ed-231c-4810-ba99-371524db2f90@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 06/05/2024 16:56:56
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 185750 [Jun 05 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 20 0.3.20
+ 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.84.195 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	31.173.84.195:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;www.kernel.org:7.1.1;127.0.0.199:7.1.2;patchwork.kernel.org:7.1.1;omp.ru:7.1.1;lore.kernel.org:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.84.195
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 06/05/2024 17:00:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 6/5/2024 11:45:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
+On 6/3/24 3:15 PM, Paul Barker wrote:
+[...]
 
---DJx7WiAB+sjuOmGe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>>> @@ -298,13 +269,14 @@ static void ravb_ring_free(struct net_device *ndev, int q)
+>>>>>  		priv->tx_ring[q] = NULL;
+>>>>>  	}
+>>>>>  
+>>>>> -	/* Free RX skb ringbuffer */
+>>>>> -	if (priv->rx_skb[q]) {
+>>>>> -		for (i = 0; i < priv->num_rx_ring[q]; i++)
+>>>>> -			dev_kfree_skb(priv->rx_skb[q][i]);
+>>>>> +	/* Free RX buffers */
+>>>>> +	for (i = 0; i < priv->num_rx_ring[q]; i++) {
+>>>>> +		if (priv->rx_buffers[q][i].page)
+>>>>> +			page_pool_put_page(priv->rx_pool[q], priv->rx_buffers[q][i].page, 0, true);
+>>>>
+>>>> nit: Networking still prefers code to be 80 columns wide or less.
+>>>>      It looks like that can be trivially achieved here.
+>>>>
+>>>>      Flagged by checkpatch.pl --max-line-length=80
+>>>
+>>> Sergey has asked me to wrap to 100 cols [1]. I can only find a reference
+>>> to 80 in the docs though [2], so I guess you may be right.
+>>>
+>>> [1]: https://lore.kernel.org/all/611a49b8-ecdb-6b91-9d3e-262bf3851f5b@omp.ru/
+>>> [2]: https://www.kernel.org/doc/html/latest/process/coding-style.html
+>>
+>> Hi Paul,
+>>
+>> If Sergey prefers 100 then I won't argue :)
+>>
+>> FWIIW, think what has happened here relates to the Kernel, at some point,
+>> going from 80 to 100 columns as the preferred maximum width, while Networking
+>> stuck with 80.
+> 
+> I saw that netdevbpf patchwork is configured for 80 cols and it has
+> warnings for v4 of this patch [1], so I've already re-wrapped the
+> changes in this series to 80 cols (excluding a couple of lines where
+> using slightly more than 80 cols significantly improves readability).
+> I'm planning to send that in the next hour or so, assuming my tests
+> pass.
+> 
+> [1]: https://patchwork.kernel.org/project/netdevbpf/patch/20240528150339.6791-8-paul.barker.ct@bp.renesas.com/
 
-On Tue, Jun 04, 2024 at 07:43:53PM -0300, Marcelo Schmitt wrote:
-> Add device tree documentation for AD4000 series of ADC devices.
->=20
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/ad4000-4004-4008.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/ad4001-4005.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/ad4002-4006-4010.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/ad4003-4007-4011.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/ad4020-4021-4022.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/adaq4001.pdf
-> Datasheet: https://www.analog.com/media/en/technical-documentation/data-s=
-heets/adaq4003.pdf
->=20
-> Suggested-by: David Lechner <dlechner@baylibre.com>
+   Sorry for misinforming you about 100 coulmns -- I had no idea netdev stuck
+to 80! :-)
 
-A suggested-by on a binding? That's unusual...
-
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> Even though didn't pick all suggestions to the dt-bindings, I did pick mo=
-st them
-> so kept David's Suggested-by tag.
->=20
->  .../bindings/iio/adc/adi,ad4000.yaml          | 207 ++++++++++++++++++
->  MAINTAINERS                                   |   7 +
->  2 files changed, 214 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4000.=
-yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
-> new file mode 100644
-> index 000000000000..7470d386906b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4000.yaml
-> @@ -0,0 +1,207 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD4000 and similar Analog to Digital Converters
-> +
-> +maintainers:
-> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD4000 family of Analog to Digital Converters with SPI =
-support.
-> +  Specifications can be found at:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-ad4000-4004-4008.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-ad4001-4005.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-ad4002-4006-4010.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-ad4003-4007-4011.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-ad4020-4021-4022.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-adaq4001.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-adaq4003.pdf
-> +
-> +$ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad4000
-> +      - adi,ad4001
-> +      - adi,ad4002
-> +      - adi,ad4003
-> +      - adi,ad4004
-> +      - adi,ad4005
-> +      - adi,ad4006
-> +      - adi,ad4007
-> +      - adi,ad4008
-> +      - adi,ad4010
-> +      - adi,ad4011
-> +      - adi,ad4020
-> +      - adi,ad4021
-> +      - adi,ad4022
-> +      - adi,adaq4001
-> +      - adi,adaq4003
-
-Are all these actually incompatible? I'd like a note in the commit
-message as to why that's the case. A quick look at the driver showed
-that the differences in the driver between the ad402{0,1,2} are limited
-to the "dev_name". Same went for some other devices, like the
-ad40{02,06,10}.
-
-Thanks,
-Conor.
-
---DJx7WiAB+sjuOmGe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZmCc+QAKCRB4tDGHoIJi
-0tYLAQClUT+CgwIyyshiteGnaNVLzxkrRS6CHgEq3C9VUci5MgD7BctHVCI69sVX
-ZXRyV7r4lmR290oWiMA3qh627lefdAA=
-=FtyO
------END PGP SIGNATURE-----
-
---DJx7WiAB+sjuOmGe--
+MBR, Sergey
