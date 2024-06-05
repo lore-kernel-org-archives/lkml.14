@@ -1,133 +1,364 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A784190042;
-	Wed,  5 Jun 2024 09:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F09E19004A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579347; cv=none; b=PXOfXimfQNqQxmGYg1gYF4hVE8WSRuWgAzlE+T9ORMUECOi1CiR16zJ4X3b9Zq1+LCg8PU7W7vyZn++toz/pyvEEFyr3hZlT0+Pj5s6fo67/3acfwf+KC+2gJXbdomit8XRbZJ62S0yxu+MuARCMiHN+YejK4FbqrbAJI6lMICQ=
+	t=1717579351; cv=none; b=iFJBv3aN9N9dTPO08K0ebhOPSPNVrz3G4t7x6/XrJ+2SqvQ1SHfJFs7pUng3rdXQYUwhtcIJW+/HpWY2OUUiTi3mSBAR5z6EyOWm3QzA2Ql2Tep60y9C+yCzhAPR9FjVFrKzkNhPgFQWXez+FJz3X/yG16zTjYdcT/QPvbsQqK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579347; c=relaxed/simple;
-	bh=7s6t1Mnf8SbzZuVJD1mxOTK+vEECHY45ZPjTcNlLR8o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ASsX+7zbAiYxm9rZc7tflTk7odvria6ElkwL7hEyNC3QYHVnm2xfoQmZw4ZBCSeGmgdTjsY5/Ep9KI4COp2iqMDhnWg8FJVx9iZVeZpbZXMam9Pk2hlanY2C2zv2N067p8MK/NtcJNRpLXtdd4/SyT9DB/HdimqRzKJ86++sySg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGVgWQRw; arc=none smtp.client-ip=209.85.167.43
+	s=arc-20240116; t=1717579351; c=relaxed/simple;
+	bh=1YtaV0rlft0FwF0RnhQp6pXzXNMnsqwUp71/8fdJWYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6WwfO8wnXI44AubEwvTMetTWPMProhs4YpjZunsH/JoYQzYbUCUpc22IEFMya41uFhBLPwgT/oAaV4TjGpNenQqZEDN+GLdVINYkKeEGHqluiHxVxgoKq2afdYFG7POZMhtWI2ozeWvXZEXBWZ6srfiSEDzTQ/GKb0VGkLjFfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JeHE8zzm; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGVgWQRw"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52b94ad88cbso5593343e87.0;
-        Wed, 05 Jun 2024 02:22:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JeHE8zzm"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2eaccc0979eso3049591fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717579344; x=1718184144; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=twGgOCLKhNQgk0EX+r3D2ZUgLeCpTZK046ZKeffQQRs=;
-        b=BGVgWQRw3EoUxdzEC80/jZeuLQnIi+FwwTbW3Rk6G0Zngb3/KhkYjJuTI4BDNvONP5
-         SA/5o9QmQRgGffcbJykkXS5TW2CTLrcEVYsIQc02YpWUm+rcuucZXH5J68xZZnWuuMCn
-         zNPCxe77RmvBTChypbbJB0HKN8bVs58lRHV7S7e7inE0UmYebL7q1uruJFxXtxfdQEc9
-         pDcP6lcG/6UNo0xjCSR26fdA2euMX5lmpPxnJVoUaqeOTCA65HHkIEav6+UHQ2z+26ox
-         +6MWdCvfHUiQRQG/kx57Z4J/KtoKiNpx1p34gvbR8TqEfGHjR3jTrVISGi28OzWMPexD
-         tRdw==
+        d=gmail.com; s=20230601; t=1717579348; x=1718184148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7VMsO98g6T+rFoaq3isAVnjASq1OTBZpOaxNXgac48g=;
+        b=JeHE8zzmutzeamngTpHuLt522oIJJmKfm3SHMzXO4sczeCIZLjOhmOcd9Pw+twmTEJ
+         qjR3X4Qr50Sfw/H1qMv6LCp6tqX02PshBYvzxWuy7/LWma9TLZNSqnldET56yZGhLeR0
+         WVbBkdeZ/IdcUAsr6mXVnT9pRfJQZMvkD72lTc0DXZDr2gkFEWLOiOaXsfnyT0hW4Y+e
+         vtUOcXXMvR08Pc8tcG2CxXh8R8OGuSzpGGCdcQor92FBXfYNjUboVfLjoGh7OorqI+yn
+         tXsXK41Qcdw5I+BXctYfw98phY3Uz/0736beGKNqGBd6ZhMa9Z5SalCFd/lwN7CbD2Tp
+         X5BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717579344; x=1718184144;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=twGgOCLKhNQgk0EX+r3D2ZUgLeCpTZK046ZKeffQQRs=;
-        b=L3qZxxQb6ZTAMCJIqY8kAB3Gpuz+m4v2xsCrDb0zbhDs+koJVmYMZWkwoToIXCHiSE
-         poJ8YM9fD9lW6mUeqnYJ0XtiLvpPljYJtMFxCDWe57xBZRjT0O7oFsk5O4trjNgDGcSX
-         CcEyDvCh1QylOg22K3V02Cq6aLYJtqFoeFvRYaRPwzmhdtbt+RkJeshRyflGX/yGWSMq
-         8FSX/eSH4FMgv73N/G2rDR0DXKGlq9+z4fb5lUZZ+BBqBdJj55Soq7lmlwqhbr4MsSGY
-         ISOVg6kvIxV2lG1YjcG//cXKYFm43v8IKypLzyGswWdG6aAYIrkc/ZACXS41kMBuxLzA
-         46XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVg/6pGRP3yQyNABnN9CVvyLGg1zOi38KcdhzEa/GYo9WEbsgk2iRSXggfejN//ow3KpUNAQT9KkGFzI6vnzXcp2WLZVvYo9qhrBPa7wV4jkzelqQEtGmxe8+q/BbRBbNA23OTMqhlTPUZ8fX7p6szXraf3Q7Su0ntPJr/Aw2kCBj+0ZA==
-X-Gm-Message-State: AOJu0YxfsaJzhfcZOc4XtVaxE4rnpAEgNReUv3qEwDsFpHSAFAphAH6d
-	nW7Gd3zn1/Nvv6mPPL/cn4S45kHh3aKwUu1YcEX08NVXDGq9kZbJ
-X-Google-Smtp-Source: AGHT+IEOSN3eOE6QTScDMEugLdJr/Qsk0h/HBGjFFfNTZIUO5vTuVaWsW0uqFg0hkRGfKw62h3H/WQ==
-X-Received: by 2002:a05:6512:3194:b0:52b:9964:9dae with SMTP id 2adb3069b0e04-52bab50b1abmr1657988e87.57.1717579343365;
-        Wed, 05 Jun 2024 02:22:23 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a685b935b5csm709003866b.206.2024.06.05.02.22.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 02:22:23 -0700 (PDT)
-Message-ID: <996a88c057dd2b6b4d960fbe9f8e35bd69270e86.camel@gmail.com>
-Subject: Re: [PATCH v3 3/6] spi: spi-gpio: Add support for MOSI idle state
- configuration
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org, 
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-  nuno.sa@analog.com, dlechner@baylibre.com, marcelo.schmitt1@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 05 Jun 2024 11:26:09 +0200
-In-Reply-To: <8dcce41a69a89cb8ace2587ca7ddb1c665f2d1cb.1717539384.git.marcelo.schmitt@analog.com>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
-	 <8dcce41a69a89cb8ace2587ca7ddb1c665f2d1cb.1717539384.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1717579348; x=1718184148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7VMsO98g6T+rFoaq3isAVnjASq1OTBZpOaxNXgac48g=;
+        b=nbjIhuZqGH5D9XMOmg+FYtFT5V2tFZDC4k0XfKDndpDFV0POqhmLfjzTdIQ0ccxa3Z
+         RHUGlV6glZWh9CtqFbsoDswuddkBzv6gP/h69RKKhKJKb900T18worc7oa8zvzEoREZf
+         09Wo9hXpLv2f6Kx/c1wPX3WLYqKVWFL6O5l57UwMvFj7MpASe0qVFoKse2m6NqotOC9f
+         QrMd0FuZ+t+8m0rJKcsz1u/QfvhO5vPONcFqeQ6I6H0B/ZB2gd4Qdy2+sgQdCsQts7ek
+         lut56GcT2kpOtmFUPNB8hM79NM1+UpCl3BW0+BPPUH6/j+WeR2a2EZdsBZ4BEtBCcb8w
+         35vw==
+X-Gm-Message-State: AOJu0Yx5XMa5kdl2KP4K+A6pNSpwWfxqY4IyJ5Bug6bHoodzIjZLzASg
+	N0RFTufjIMVJ1HF1k7KQSbRnNI3TrVt6Dz5NZn1M7MO8ptOsK9eIQmVOFsfYYwzuwv3DfNjh/gc
+	neJUdNsxezQapTmMCpMuEFWAyMJ0=
+X-Google-Smtp-Source: AGHT+IHqHTdbgQjlDQRgE5s43tJfb+esbUo0eviuUGiP6JNHiOuTWS7nads1ksv3fHGAiGsZ3qOkVo7oebCk06UJtww=
+X-Received: by 2002:ac2:42cf:0:b0:52b:798e:74e8 with SMTP id
+ 2adb3069b0e04-52bab4e5540mr995815e87.39.1717579347414; Wed, 05 Jun 2024
+ 02:22:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240605091710.38961-1-david@redhat.com>
+In-Reply-To: <20240605091710.38961-1-david@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Wed, 5 Jun 2024 17:22:13 +0800
+Message-ID: <CAK1f24k5dLX_jTJZR+bBPGN812fQXx85YbcAya+84LgnEscbBg@mail.gmail.com>
+Subject: Re: [PATCH v1] Revert "mm: init_mlocked_on_free_v3"
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	David Wang <00107082@163.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	York Jasper Niebuhr <yjnworkstation@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
+	Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-06-04 at 19:42 -0300, Marcelo Schmitt wrote:
-> Implement MOSI idle low and MOSI idle high to better support peripherals
-> that request specific MOSI behavior.
->=20
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+On Wed, Jun 5, 2024 at 5:17=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> There was insufficient review and no agreement that this is the right
+> approach.
+>
+> There are serious flaws with the implementation that make processes using
+> mlock() not even work with simple fork() [1] and we get reliable crashes
+> when rebooting.
+>
+> Further, simply because we might be unmapping a single PTE of a large
+> mlocked folio, we shouldn't zero out the whole folio.
+>
+> ... especially because the code can also *corrupt* urelated memory becaus=
+e
+>         kernel_init_pages(page, folio_nr_pages(folio));
+>
+> Could end up writing outside of the actual folio if we work with a
+> tail page.
+>
+> Let's revert it. Once there is agreement that this is the right approach,
+> the issues were fixed and there was reasonable review and proper
+> testing, we can consider it again.
+>
+> [1] https://lkml.kernel.org/r/4da9da2f-73e4-45fd-b62f-a8a513314057@redhat=
+.com
+>
+> Fixes: ba42b524a040 ("mm: init_mlocked_on_free_v3")
+> Reported-by: David Wang <00107082@163.com>
+> Closes: https://lore.kernel.org/lkml/20240528151340.4282-1-00107082@163.c=
+om/
+> Reported-by: Lance Yang <ioworker0@gmail.com>
+> Closes: https://lkml.kernel.org/r/20240601140917.43562-1-ioworker0@gmail.=
+com
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: York Jasper Niebuhr <yjnworkstation@gmail.com>
+> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+LGTM.
+
+Acked-by: Lance Yang <ioworker0@gmail.com>
+
+Thanks,
+Lance
+
 > ---
-
-Acked-by: Nuno Sa <nuno.sa@analog.com>
-
-> =C2=A0drivers/spi/spi-gpio.c | 12 +++++++++++-
-> =C2=A01 file changed, 11 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-> index 909cce109bba..d3b8c99f0cb4 100644
-> --- a/drivers/spi/spi-gpio.c
-> +++ b/drivers/spi/spi-gpio.c
-> @@ -236,6 +236,14 @@ static void spi_gpio_chipselect(struct spi_device *s=
-pi,
-> int is_active)
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> +static void spi_gpio_set_mosi_idle(struct spi_device *spi)
-> +{
-> +	struct spi_gpio *spi_gpio =3D spi_to_spi_gpio(spi);
-> +
-> +	gpiod_set_value_cansleep(spi_gpio->mosi,
-> +				 !!(spi->mode & SPI_MOSI_IDLE_HIGH));
-> +}
-> +
-> =C2=A0static int spi_gpio_setup(struct spi_device *spi)
-> =C2=A0{
-> =C2=A0	struct gpio_desc	*cs;
-> @@ -411,7 +419,8 @@ static int spi_gpio_probe(struct platform_device *pde=
-v)
-> =C2=A0
-> =C2=A0	host->bits_per_word_mask =3D SPI_BPW_RANGE_MASK(1, 32);
-> =C2=A0	host->mode_bits =3D SPI_3WIRE | SPI_3WIRE_HIZ | SPI_CPHA | SPI_CPO=
-L |
-> -			=C2=A0=C2=A0=C2=A0 SPI_CS_HIGH | SPI_LSB_FIRST;
-> +			=C2=A0 SPI_CS_HIGH | SPI_LSB_FIRST | SPI_MOSI_IDLE_LOW |
-> +			=C2=A0 SPI_MOSI_IDLE_HIGH;
-> =C2=A0	if (!spi_gpio->mosi) {
-> =C2=A0		/* HW configuration without MOSI pin
-> =C2=A0		 *
-> @@ -436,6 +445,7 @@ static int spi_gpio_probe(struct platform_device *pde=
-v)
-> =C2=A0	host->flags |=3D SPI_CONTROLLER_GPIO_SS;
-> =C2=A0	bb->chipselect =3D spi_gpio_chipselect;
-> =C2=A0	bb->set_line_direction =3D spi_gpio_set_direction;
-> +	bb->set_mosi_idle =3D spi_gpio_set_mosi_idle;
-> =C2=A0
-> =C2=A0	if (host->flags & SPI_CONTROLLER_NO_TX) {
-> =C2=A0		bb->txrx_word[SPI_MODE_0] =3D spi_gpio_spec_txrx_word_mode0;
-
+>  .../admin-guide/kernel-parameters.txt         |  6 ---
+>  include/linux/mm.h                            |  9 +---
+>  mm/internal.h                                 |  1 -
+>  mm/memory.c                                   |  6 ---
+>  mm/mm_init.c                                  | 43 +++----------------
+>  mm/page_alloc.c                               |  2 +-
+>  security/Kconfig.hardening                    | 15 -------
+>  7 files changed, 9 insertions(+), 73 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index b600df82669db..11e57ba2985cc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2192,12 +2192,6 @@
+>                         Format: 0 | 1
+>                         Default set by CONFIG_INIT_ON_FREE_DEFAULT_ON.
+>
+> -       init_mlocked_on_free=3D   [MM] Fill freed userspace memory with z=
+eroes if
+> -                               it was mlock'ed and not explicitly munloc=
+k'ed
+> -                               afterwards.
+> -                               Format: 0 | 1
+> -                               Default set by CONFIG_INIT_MLOCKED_ON_FRE=
+E_DEFAULT_ON
+> -
+>         init_pkru=3D      [X86] Specify the default memory protection key=
+s rights
+>                         register contents for all processes.  0x55555554 =
+by
+>                         default (disallow access to all but pkey 0).  Can
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 9849dfda44d43..9a5652c5fadd5 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3776,14 +3776,7 @@ DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_FREE_DEFAU=
+LT_ON, init_on_free);
+>  static inline bool want_init_on_free(void)
+>  {
+>         return static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
+> -                               &init_on_free);
+> -}
+> -
+> -DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON, init_ml=
+ocked_on_free);
+> -static inline bool want_init_mlocked_on_free(void)
+> -{
+> -       return static_branch_maybe(CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON=
+,
+> -                               &init_mlocked_on_free);
+> +                                  &init_on_free);
+>  }
+>
+>  extern bool _debug_pagealloc_enabled_early;
+> diff --git a/mm/internal.h b/mm/internal.h
+> index b2c75b12014e7..c72c306761a48 100644
+> --- a/mm/internal.h
+> +++ b/mm/internal.h
+> @@ -588,7 +588,6 @@ extern void __putback_isolated_page(struct page *page=
+, unsigned int order,
+>  extern void memblock_free_pages(struct page *page, unsigned long pfn,
+>                                         unsigned int order);
+>  extern void __free_pages_core(struct page *page, unsigned int order);
+> -extern void kernel_init_pages(struct page *page, int numpages);
+>
+>  /*
+>   * This will have no effect, other than possibly generating a warning, i=
+f the
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 0f47a533014e4..2bc8032a30a2f 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1507,12 +1507,6 @@ static __always_inline void zap_present_folio_ptes=
+(struct mmu_gather *tlb,
+>                 if (unlikely(folio_mapcount(folio) < 0))
+>                         print_bad_pte(vma, addr, ptent, page);
+>         }
+> -
+> -       if (want_init_mlocked_on_free() && folio_test_mlocked(folio) &&
+> -           !delay_rmap && folio_test_anon(folio)) {
+> -               kernel_init_pages(page, folio_nr_pages(folio));
+> -       }
+> -
+>         if (unlikely(__tlb_remove_folio_pages(tlb, page, nr, delay_rmap))=
+) {
+>                 *force_flush =3D true;
+>                 *force_break =3D true;
+> diff --git a/mm/mm_init.c b/mm/mm_init.c
+> index f72b852bd5b8e..3ec04933f7fd8 100644
+> --- a/mm/mm_init.c
+> +++ b/mm/mm_init.c
+> @@ -2523,9 +2523,6 @@ EXPORT_SYMBOL(init_on_alloc);
+>  DEFINE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_FREE_DEFAULT_ON, init_on_free);
+>  EXPORT_SYMBOL(init_on_free);
+>
+> -DEFINE_STATIC_KEY_MAYBE(CONFIG_INIT_MLOCKED_ON_FREE_DEFAULT_ON, init_mlo=
+cked_on_free);
+> -EXPORT_SYMBOL(init_mlocked_on_free);
+> -
+>  static bool _init_on_alloc_enabled_early __read_mostly
+>                                 =3D IS_ENABLED(CONFIG_INIT_ON_ALLOC_DEFAU=
+LT_ON);
+>  static int __init early_init_on_alloc(char *buf)
+> @@ -2543,14 +2540,6 @@ static int __init early_init_on_free(char *buf)
+>  }
+>  early_param("init_on_free", early_init_on_free);
+>
+> -static bool _init_mlocked_on_free_enabled_early __read_mostly
+> -                               =3D IS_ENABLED(CONFIG_INIT_MLOCKED_ON_FRE=
+E_DEFAULT_ON);
+> -static int __init early_init_mlocked_on_free(char *buf)
+> -{
+> -       return kstrtobool(buf, &_init_mlocked_on_free_enabled_early);
+> -}
+> -early_param("init_mlocked_on_free", early_init_mlocked_on_free);
+> -
+>  DEFINE_STATIC_KEY_MAYBE(CONFIG_DEBUG_VM, check_pages_enabled);
+>
+>  /*
+> @@ -2578,21 +2567,12 @@ static void __init mem_debugging_and_hardening_in=
+it(void)
+>         }
+>  #endif
+>
+> -       if ((_init_on_alloc_enabled_early || _init_on_free_enabled_early =
+||
+> -           _init_mlocked_on_free_enabled_early) &&
+> +       if ((_init_on_alloc_enabled_early || _init_on_free_enabled_early)=
+ &&
+>             page_poisoning_requested) {
+>                 pr_info("mem auto-init: CONFIG_PAGE_POISONING is on, "
+> -                       "will take precedence over init_on_alloc, init_on=
+_free "
+> -                       "and init_mlocked_on_free\n");
+> +                       "will take precedence over init_on_alloc and init=
+_on_free\n");
+>                 _init_on_alloc_enabled_early =3D false;
+>                 _init_on_free_enabled_early =3D false;
+> -               _init_mlocked_on_free_enabled_early =3D false;
+> -       }
+> -
+> -       if (_init_mlocked_on_free_enabled_early && _init_on_free_enabled_=
+early) {
+> -               pr_info("mem auto-init: init_on_free is on, "
+> -                       "will take precedence over init_mlocked_on_free\n=
+");
+> -               _init_mlocked_on_free_enabled_early =3D false;
+>         }
+>
+>         if (_init_on_alloc_enabled_early) {
+> @@ -2609,17 +2589,9 @@ static void __init mem_debugging_and_hardening_ini=
+t(void)
+>                 static_branch_disable(&init_on_free);
+>         }
+>
+> -       if (_init_mlocked_on_free_enabled_early) {
+> -               want_check_pages =3D true;
+> -               static_branch_enable(&init_mlocked_on_free);
+> -       } else {
+> -               static_branch_disable(&init_mlocked_on_free);
+> -       }
+> -
+> -       if (IS_ENABLED(CONFIG_KMSAN) && (_init_on_alloc_enabled_early ||
+> -           _init_on_free_enabled_early || _init_mlocked_on_free_enabled_=
+early))
+> -               pr_info("mem auto-init: please make sure init_on_alloc, i=
+nit_on_free and "
+> -                       "init_mlocked_on_free are disabled when running K=
+MSAN\n");
+> +       if (IS_ENABLED(CONFIG_KMSAN) &&
+> +           (_init_on_alloc_enabled_early || _init_on_free_enabled_early)=
+)
+> +               pr_info("mem auto-init: please make sure init_on_alloc an=
+d init_on_free are disabled when running KMSAN\n");
+>
+>  #ifdef CONFIG_DEBUG_PAGEALLOC
+>         if (debug_pagealloc_enabled()) {
+> @@ -2658,10 +2630,9 @@ static void __init report_meminit(void)
+>         else
+>                 stack =3D "off";
+>
+> -       pr_info("mem auto-init: stack:%s, heap alloc:%s, heap free:%s, ml=
+ocked free:%s\n",
+> +       pr_info("mem auto-init: stack:%s, heap alloc:%s, heap free:%s\n",
+>                 stack, want_init_on_alloc(GFP_KERNEL) ? "on" : "off",
+> -               want_init_on_free() ? "on" : "off",
+> -               want_init_mlocked_on_free() ? "on" : "off");
+> +               want_init_on_free() ? "on" : "off");
+>         if (want_init_on_free())
+>                 pr_info("mem auto-init: clearing system memory may take s=
+ome time...\n");
+>  }
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 2e22ce5675ca1..a264eac20d1de 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1016,7 +1016,7 @@ static inline bool should_skip_kasan_poison(struct =
+page *page)
+>         return page_kasan_tag(page) =3D=3D KASAN_TAG_KERNEL;
+>  }
+>
+> -void kernel_init_pages(struct page *page, int numpages)
+> +static void kernel_init_pages(struct page *page, int numpages)
+>  {
+>         int i;
+>
+> diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> index effbf5982be10..2cff851ebfd7e 100644
+> --- a/security/Kconfig.hardening
+> +++ b/security/Kconfig.hardening
+> @@ -255,21 +255,6 @@ config INIT_ON_FREE_DEFAULT_ON
+>           touching "cold" memory areas. Most cases see 3-5% impact. Some
+>           synthetic workloads have measured as high as 8%.
+>
+> -config INIT_MLOCKED_ON_FREE_DEFAULT_ON
+> -       bool "Enable mlocked memory zeroing on free"
+> -       depends on !KMSAN
+> -       help
+> -         This config has the effect of setting "init_mlocked_on_free=3D1=
+"
+> -         on the kernel command line. If it is enabled, all mlocked proce=
+ss
+> -         memory is zeroed when freed. This restriction to mlocked memory
+> -         improves performance over "init_on_free" but can still be used =
+to
+> -         protect confidential data like key material from content exposu=
+res
+> -         to other processes, as well as live forensics and cold boot att=
+acks.
+> -         Any non-mlocked memory is not cleared before it is reassigned. =
+This
+> -         configuration can be overwritten by setting "init_mlocked_on_fr=
+ee=3D0"
+> -         on the command line. The "init_on_free" boot option takes
+> -         precedence over "init_mlocked_on_free".
+> -
+>  config CC_HAS_ZERO_CALL_USED_REGS
+>         def_bool $(cc-option,-fzero-call-used-regs=3Dused-gpr)
+>         # https://github.com/ClangBuiltLinux/linux/issues/1766
+>
+> base-commit: 32f88d65f01bf6f45476d7edbe675e44fb9e1d58
+> --
+> 2.45.1
+>
