@@ -1,48 +1,35 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83161946CB;
-	Wed,  5 Jun 2024 09:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE0F190078;
+	Wed,  5 Jun 2024 09:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579830; cv=none; b=aQuB1AZjCyh4zOz54bsn+6AZUy4jKgwhTvYnCQxF9fGV4egGAo1O51KRJoLWYG82VzNDljb3KNkhs1CAyRkHea35RPIiWmAD23HuoLXUhFE9kegbS1BiLjgs2UcyXSne5qzmKoIzxNvLyDxZaukX1eW9Hw7mECCD7BN0tezrfFI=
+	t=1717579830; cv=none; b=m8ddJdwtIjP74EN5pqSK8zQZqNj5LA5JkwzVxr5G3QPy6iE3dAp/bCeFKuuCUN4/qezALGc/Mo8eKAkqkRGQi55csX1L+BpyEF8r8TMW9r3nV3A7tDBjwM8sbFFgm3tow2b5I4U4ir+Fn9tovi2gSbtktcF56b2N9+n9Riinim0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717579830; c=relaxed/simple;
-	bh=SDyUn4kx6hDKzj28ha22l3vD1vbdQvyJPCpcxph6WH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X8Om+OOiJSVcQJrKzIIBGALJF29kLsB/zz1vAL4x3VY6pfXU4tvCks75vAItG0zKFEp+FAMQ/X/ftK6CAR8MBhPw0nncu/WLGRaBDSqZzR/F4FfDoAODlUJT3DG+vLQ3JDS4HNsJ+iWMIc/Nbd7g8ow31sJtpN/fsy/V15pbxwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C67321063;
-	Wed,  5 Jun 2024 02:30:51 -0700 (PDT)
-Received: from e122027.arm.com (unknown [10.57.39.129])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7DC5A3F792;
-	Wed,  5 Jun 2024 02:30:23 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Steven Price <steven.price@arm.com>
-Subject: [PATCH v3 02/14] arm64: Detect if in a realm and set RIPAS RAM
-Date: Wed,  5 Jun 2024 10:29:54 +0100
-Message-Id: <20240605093006.145492-3-steven.price@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240605093006.145492-1-steven.price@arm.com>
-References: <20240605093006.145492-1-steven.price@arm.com>
+	bh=omvsGsm3VpH9I17E4mg2XxTtOxQUZz1UHTdriaN1Co8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=OPWOtSa+Ini35aTtoRMfWCEENb0YDOfVkPqMyUXbYtWLV7hPTRMhsIJzWyP0q3xf5Ifs30FG3bqS0e9I9fmsH+T2HcaHP+TD/RDYc/As0sbt/PDuTais2395AqGQ4E9F/3Dk1DSQJD7Am28zqocI+qUGjIPmUZ4jMvFv4FgFUGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdolMbhg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdolMbhg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 09B90C4AF08;
+	Wed,  5 Jun 2024 09:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717579830;
+	bh=omvsGsm3VpH9I17E4mg2XxTtOxQUZz1UHTdriaN1Co8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RdolMbhguQ9T19A+eueofKuufSDjOp+f9t3ODFi/1lk9/+JyEKz5O72HIYVxrqBSK
+	 Q2ABouDwiXW25Fw+2DF00yVElgvohdN+F6BIQE/6/+iumPWt2NnYjXi9/Ab5FbZY4R
+	 /C7fO0BSgDxlgvQPu2OPOwdLncaD33mvGS3CrhR6JOw7cgDGYWjKUe1QonfHDoZcvl
+	 vIBU3zxSwXTyRkOn2AOzo3INOlDd4tA25egSprPJhRNq5wAGZarCOudx2T5MpiccSJ
+	 YQM9EkljuNRsFCd52NFpR0ZdmmIJ5owDeJf984vLGqhjpcTPlO3aFB6HoavGSVnaaw
+	 6V4gUJFYOnxFw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7CB4D3E99A;
+	Wed,  5 Jun 2024 09:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,270 +37,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [net-next PATCH v3 1/2] net: phy: aquantia: move priv and hw stat to
+ header
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171757982994.5772.18334468085942264665.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Jun 2024 09:30:29 +0000
+References: <20240531233505.24903-1-ansuelsmth@gmail.com>
+In-Reply-To: <20240531233505.24903-1-ansuelsmth@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ robimarko@gmail.com, daniel@makrotopia.org, rmk+kernel@armlinux.org.uk,
+ frut3k7@gmail.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Hello:
 
-Detect that the VM is a realm guest by the presence of the RSI
-interface.
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-If in a realm then all memory needs to be marked as RIPAS RAM initially,
-the loader may or may not have done this for us. To be sure iterate over
-all RAM and mark it as such. Any failure is fatal as that implies the
-RAM regions passed to Linux are incorrect - which would mean failing
-later when attempting to access non-existent RAM.
+On Sat,  1 Jun 2024 01:35:02 +0200 you wrote:
+> In preparation for LEDs support, move priv and hw stat to header to
+> reference priv struct also in other .c outside aquantia.main
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+> Changes v2:
+> - Out of RFC
+> 
+> [...]
 
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Co-developed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-Changes since v2:
- * Use DECLARE_STATIC_KEY_FALSE rather than "extern struct
-   static_key_false".
- * Rename set_memory_range() to rsi_set_memory_range().
- * Downgrade some BUG()s to WARN()s and handle the condition by
-   propagating up the stack. Comment the remaining case that ends in a
-   BUG() to explain why.
- * Rely on the return from rsi_request_version() rather than checking
-   the version the RMM claims to support.
- * Rename the generic sounding arm64_setup_memory() to
-   arm64_rsi_setup_memory() and move the call site to setup_arch().
----
- arch/arm64/include/asm/rsi.h      | 48 +++++++++++++++++++++
- arch/arm64/include/asm/rsi_cmds.h | 22 ++++++++++
- arch/arm64/kernel/Makefile        |  3 +-
- arch/arm64/kernel/rsi.c           | 69 +++++++++++++++++++++++++++++++
- arch/arm64/kernel/setup.c         |  8 ++++
- arch/arm64/mm/init.c              |  1 +
- 6 files changed, 150 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/include/asm/rsi.h
- create mode 100644 arch/arm64/kernel/rsi.c
+Here is the summary with links:
+  - [net-next,v3,1/2] net: phy: aquantia: move priv and hw stat to header
+    https://git.kernel.org/netdev/net-next/c/c11d5dbbe73f
+  - [net-next,v3,2/2] net: phy: aquantia: add support for PHY LEDs
+    https://git.kernel.org/netdev/net-next/c/61578f679378
 
-diff --git a/arch/arm64/include/asm/rsi.h b/arch/arm64/include/asm/rsi.h
-new file mode 100644
-index 000000000000..ce2cdb501d84
---- /dev/null
-+++ b/arch/arm64/include/asm/rsi.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 ARM Ltd.
-+ */
-+
-+#ifndef __ASM_RSI_H_
-+#define __ASM_RSI_H_
-+
-+#include <linux/jump_label.h>
-+#include <asm/rsi_cmds.h>
-+
-+DECLARE_STATIC_KEY_FALSE(rsi_present);
-+
-+void __init arm64_rsi_init(void);
-+void __init arm64_rsi_setup_memory(void);
-+static inline bool is_realm_world(void)
-+{
-+	return static_branch_unlikely(&rsi_present);
-+}
-+
-+static inline int rsi_set_memory_range(phys_addr_t start, phys_addr_t end,
-+				       enum ripas state)
-+{
-+	unsigned long ret;
-+	phys_addr_t top;
-+
-+	while (start != end) {
-+		ret = rsi_set_addr_range_state(start, end, state, &top);
-+		if (WARN_ON(ret || top < start || top > end))
-+			return -EINVAL;
-+		start = top;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline int rsi_set_memory_range_protected(phys_addr_t start,
-+						 phys_addr_t end)
-+{
-+	return rsi_set_memory_range(start, end, RSI_RIPAS_RAM);
-+}
-+
-+static inline int rsi_set_memory_range_shared(phys_addr_t start,
-+					      phys_addr_t end)
-+{
-+	return rsi_set_memory_range(start, end, RSI_RIPAS_EMPTY);
-+}
-+#endif
-diff --git a/arch/arm64/include/asm/rsi_cmds.h b/arch/arm64/include/asm/rsi_cmds.h
-index ad425c5d6f1b..ab8ad435f10e 100644
---- a/arch/arm64/include/asm/rsi_cmds.h
-+++ b/arch/arm64/include/asm/rsi_cmds.h
-@@ -10,6 +10,11 @@
- 
- #include <asm/rsi_smc.h>
- 
-+enum ripas {
-+	RSI_RIPAS_EMPTY,
-+	RSI_RIPAS_RAM,
-+};
-+
- static inline void invoke_rsi_fn_smc_with_res(unsigned long function_id,
- 					      unsigned long arg0,
- 					      unsigned long arg1,
-@@ -44,4 +49,21 @@ static inline unsigned long rsi_get_realm_config(struct realm_config *cfg)
- 	return res.a0;
- }
- 
-+static inline unsigned long rsi_set_addr_range_state(phys_addr_t start,
-+						     phys_addr_t end,
-+						     enum ripas state,
-+						     phys_addr_t *top)
-+{
-+	struct arm_smccc_res res;
-+
-+	invoke_rsi_fn_smc_with_res(SMC_RSI_IPA_STATE_SET,
-+				   start, end, state, RSI_NO_CHANGE_DESTROYED,
-+				   &res);
-+
-+	if (top)
-+		*top = res.a1;
-+
-+	return res.a0;
-+}
-+
- #endif
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 763824963ed1..a483b916ed11 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -33,7 +33,8 @@ obj-y			:= debug-monitors.o entry.o irq.o fpsimd.o		\
- 			   return_address.o cpuinfo.o cpu_errata.o		\
- 			   cpufeature.o alternative.o cacheinfo.o		\
- 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
--			   syscall.o proton-pack.o idle.o patching.o pi/
-+			   syscall.o proton-pack.o idle.o patching.o pi/	\
-+			   rsi.o
- 
- obj-$(CONFIG_COMPAT)			+= sys32.o signal32.o			\
- 					   sys_compat.o
-diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
-new file mode 100644
-index 000000000000..3a992bdfd6bb
---- /dev/null
-+++ b/arch/arm64/kernel/rsi.c
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2023 ARM Ltd.
-+ */
-+
-+#include <linux/jump_label.h>
-+#include <linux/memblock.h>
-+#include <asm/rsi.h>
-+
-+DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
-+EXPORT_SYMBOL(rsi_present);
-+
-+static bool rsi_version_matches(void)
-+{
-+	unsigned long ver_lower, ver_higher;
-+	unsigned long ret = rsi_request_version(RSI_ABI_VERSION,
-+						&ver_lower,
-+						&ver_higher);
-+
-+	if (ret == SMCCC_RET_NOT_SUPPORTED)
-+		return false;
-+
-+	if (ret != RSI_SUCCESS) {
-+		pr_err("RME: RMM doesn't support RSI version %u.%u. Supported range: %lu.%lu-%lu.%lu\n",
-+		       RSI_ABI_VERSION_MAJOR, RSI_ABI_VERSION_MINOR,
-+		       RSI_ABI_VERSION_GET_MAJOR(ver_lower),
-+		       RSI_ABI_VERSION_GET_MINOR(ver_lower),
-+		       RSI_ABI_VERSION_GET_MAJOR(ver_higher),
-+		       RSI_ABI_VERSION_GET_MINOR(ver_higher));
-+		return false;
-+	}
-+
-+	pr_info("RME: Using RSI version %lu.%lu\n",
-+		RSI_ABI_VERSION_GET_MAJOR(ver_lower),
-+		RSI_ABI_VERSION_GET_MINOR(ver_lower));
-+
-+	return true;
-+}
-+
-+void __init arm64_rsi_setup_memory(void)
-+{
-+	u64 i;
-+	phys_addr_t start, end;
-+
-+	if (!is_realm_world())
-+		return;
-+
-+	/*
-+	 * Iterate over the available memory ranges
-+	 * and convert the state to protected memory.
-+	 *
-+	 * BUG_ON is used because if the attempt to switch the memory to
-+	 * protected has failed here, then future accesses to the memory are
-+	 * simply going to be reflected as a fault which we can't handle.
-+	 * Bailing out early prevents the guest limping on and dieing later.
-+	 */
-+	for_each_mem_range(i, &start, &end) {
-+		BUG_ON(rsi_set_memory_range_protected(start, end));
-+	}
-+}
-+
-+void __init arm64_rsi_init(void)
-+{
-+	if (!rsi_version_matches())
-+		return;
-+
-+	static_branch_enable(&rsi_present);
-+}
-+
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index a096e2451044..143f87615af0 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -43,6 +43,7 @@
- #include <asm/cpu_ops.h>
- #include <asm/kasan.h>
- #include <asm/numa.h>
-+#include <asm/rsi.h>
- #include <asm/scs.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
-@@ -293,6 +294,11 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
- 	 * cpufeature code and early parameters.
- 	 */
- 	jump_label_init();
-+	/*
-+	 * Init RSI before early param so that "earlycon" console uses the
-+	 * shared alias when in a realm
-+	 */
-+	arm64_rsi_init();
- 	parse_early_param();
- 
- 	dynamic_scs_init();
-@@ -328,6 +334,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
- 
- 	arm64_memblock_init();
- 
-+	arm64_rsi_setup_memory();
-+
- 	paging_init();
- 
- 	acpi_table_upgrade();
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 9b5ab6818f7f..9d8d38e3bee2 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -41,6 +41,7 @@
- #include <asm/kvm_host.h>
- #include <asm/memory.h>
- #include <asm/numa.h>
-+#include <asm/rsi.h>
- #include <asm/sections.h>
- #include <asm/setup.h>
- #include <linux/sizes.h>
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
