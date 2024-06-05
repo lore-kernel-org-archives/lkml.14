@@ -1,120 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D0371946D5;
-	Wed,  5 Jun 2024 10:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51411946D5;
+	Wed,  5 Jun 2024 10:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717582658; cv=none; b=P21PrgSqRcqe+ToaI9byHO7dO0iQsY/I9BRoqVkx+/7fdUHZYjqK21BCPLXe7NYZfPuqOJytrcoVReotrPn7pVvDkdIRxHucpc5rhh7eQ5dnlxd5BVaHmcYsj3RL5kUuL0xmRNYxGvfv3ILbM621iRlbLGkTFSCM02EVZybSUCM=
+	t=1717582752; cv=none; b=dQSxav63ONYbd4rw3bB7/VFhJftL+PvhUdyJSuxiR+QQw42r7skyGm2i2Mr4Grynq1TpVUnCq13O5LvlpcHDid0nHFHQbjmNdXnRBIOE0hDuPFe3adWbfiDP34sdmmgXitjRLa7isP9BRl9Wq9N9ZTEYC91aztaDjWlMgWasJkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717582658; c=relaxed/simple;
-	bh=vUJv8L+3IefnszZ1AcCTOOyf8R37J+f44bfYO2qfp7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MJ4M+OPv6SL9V1bR6UUB8atQbskuX9ObV7vay96uxIj/b7FFhkkMFpqCa5oTHElGWLHKlIQGKD4e1++XpGVn6sb1PkIWKhjvwES7itTwRkVi0Eeh6a0Cn+lVADo/QWl56YidnsozMnR1TfWdyvatza6g95CfyxnXxwYvVO5cD9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA54A339;
-	Wed,  5 Jun 2024 03:17:59 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D2293F792;
-	Wed,  5 Jun 2024 03:17:34 -0700 (PDT)
-Date: Wed, 5 Jun 2024 11:17:31 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/5] ftrace: Remove "filter_hash" parameter from
- ftrace_hash_rec_disable/enable()
-Message-ID: <ZmA7OwmLw4QSt5uf@J2N7QTR9R3>
-References: <20240604212817.384103202@goodmis.org>
- <20240604212854.883675803@goodmis.org>
+	s=arc-20240116; t=1717582752; c=relaxed/simple;
+	bh=IcBGzd2i5NFVkQBmEfgL5JoXdygRuf51+9PaFU0XsSo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GVQMpwQ0BtusDR6Iwbsrf/VaXs9V6sf31ko3jiRaxj7tKDDE31Lx25BxzlrG8ZMBYN+APq9FdE1asDDefYM3s8N5UWNgVfsLgHk7wpNSOGEnIduiB/n5A1THdSDuxtFIhePgLNPDrxfQxnOOezLHuhjOFUpU0VD6+CIXiC6GYZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=w/vYexpZ; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="w/vYexpZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1717582750; x=1749118750;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IcBGzd2i5NFVkQBmEfgL5JoXdygRuf51+9PaFU0XsSo=;
+  b=w/vYexpZ7CtbN5MUSAVugJKW1MUghTcKhnwa5yzWTKJc7XgEnxuDLB+p
+   2Vp06hb919w+AuqdS7VDN7VRjCndUK+jWaF+K1KJD7LTK9ncWqMi3EUoc
+   co9DFW8UgrciHGPUkDXbCOJnJX8fMNWseC5OpgoCSo25XZEDH+xnHw1Eu
+   XDECI0+nrYROZQhVloVG3EO2nb+j8BjIpio21KjA60xHaanSspBwNqzpQ
+   sIM1xCCtkc+xSTgMdaXjsZ//9qn1KHPgXGuLmR3L25I7Aw4JPUErZDaS0
+   0LCyfqkw5WYVyJroZa6Y2ZEwsLyJ5l2YWkixxG68sxLCikV+PIXJ8BsT5
+   g==;
+X-CSE-ConnectionGUID: t/O8Z945TGity0AczrxMxw==
+X-CSE-MsgGUID: UybH7n7aSKGF62NtQNBxuQ==
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="29396149"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Jun 2024 03:19:04 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 5 Jun 2024 03:19:00 -0700
+Received: from HYD-DK-UNGSW21.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 5 Jun 2024 03:18:56 -0700
+From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
+To: <netdev@vger.kernel.org>
+CC: <davem@davemloft.net>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bryan.whitehead@microchip.com>, <andrew@lunn.ch>, <linux@armlinux.org.uk>,
+	<sbauer@blackbox.su>, <hmehrtens@maxlinear.com>, <lxu@maxlinear.com>,
+	<hkallweit1@gmail.com>, <edumazet@google.com>, <pabeni@redhat.com>,
+	<UNGLinuxDriver@microchip.com>
+Subject: [PATCH net V3 0/3] net: lan743x: Fixes for multiple WOL related issues
+Date: Wed, 5 Jun 2024 15:46:08 +0530
+Message-ID: <20240605101611.18791-1-Raju.Lakkaraju@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604212854.883675803@goodmis.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Jun 04, 2024 at 05:28:20PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The functions ftrace_hash_rec_disable() and ftrace_hash_rec_enable()
-> always has 1 passed to its "ftrace_hash" parameter. Remove the parameter
-> and pass in true to __ftrace_hash_rec_update().
-> 
-> Also add some comments to both those functions explaining what they do.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+This patch series implement the following fixes:
+1. Disable WOL upon resume in order to restore full data path operation
+2. Support WOL at both the PHY and MAC appropriately 
+3. Remove interrupt mask clearing from config_init 
 
-Looks good to me.
+Patch-3 was sent seperately earlier. Review comments in link: 
+https://lore.kernel.org/lkml/4a565d54-f468-4e32-8a2c-102c1203f72c@lunn.ch/T/
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Raju Lakkaraju (3):
+  net: lan743x: disable WOL upon resume to restore full data path
+    operation
+  net: lan743x: Support WOL at both the PHY and MAC appropriately
+  net: phy: mxl-gpy: Remove interrupt mask clearing from config_init
 
-Mark.
+ .../net/ethernet/microchip/lan743x_ethtool.c  | 44 ++++++++++++--
+ drivers/net/ethernet/microchip/lan743x_main.c | 46 ++++++++++++---
+ drivers/net/ethernet/microchip/lan743x_main.h | 28 +++++++++
+ drivers/net/phy/mxl-gpy.c                     | 58 ++++++++++++-------
+ 4 files changed, 144 insertions(+), 32 deletions(-)
 
-> ---
->  kernel/trace/ftrace.c | 24 ++++++++++++++++--------
->  1 file changed, 16 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 93c7c5fd4249..de652201c86c 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1895,16 +1895,24 @@ static bool __ftrace_hash_rec_update(struct ftrace_ops *ops,
->  	return update;
->  }
->  
-> -static bool ftrace_hash_rec_disable(struct ftrace_ops *ops,
-> -				    int filter_hash)
-> +/*
-> + * This is called when an ops is removed from tracing. It will decrement
-> + * the counters of the dyn_ftrace records for all the functions that
-> + * the @ops attached to.
-> + */
-> +static bool ftrace_hash_rec_disable(struct ftrace_ops *ops)
->  {
-> -	return __ftrace_hash_rec_update(ops, filter_hash, 0);
-> +	return __ftrace_hash_rec_update(ops, true, 0);
->  }
->  
-> -static bool ftrace_hash_rec_enable(struct ftrace_ops *ops,
-> -				   int filter_hash)
-> +/*
-> + * This is called when an ops is added to tracing. It will increment
-> + * the counters of the dyn_ftrace records for all the functions that
-> + * the @ops attached to.
-> + */
-> +static bool ftrace_hash_rec_enable(struct ftrace_ops *ops)
->  {
-> -	return __ftrace_hash_rec_update(ops, filter_hash, 1);
-> +	return __ftrace_hash_rec_update(ops, true, 1);
->  }
->  
->  static void ftrace_hash_rec_update_modify(struct ftrace_ops *ops,
-> @@ -3062,7 +3070,7 @@ int ftrace_startup(struct ftrace_ops *ops, int command)
->  		return ret;
->  	}
->  
-> -	if (ftrace_hash_rec_enable(ops, 1))
-> +	if (ftrace_hash_rec_enable(ops))
->  		command |= FTRACE_UPDATE_CALLS;
->  
->  	ftrace_startup_enable(command);
-> @@ -3104,7 +3112,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->  	/* Disabling ipmodify never fails */
->  	ftrace_hash_ipmodify_disable(ops);
->  
-> -	if (ftrace_hash_rec_disable(ops, 1))
-> +	if (ftrace_hash_rec_disable(ops))
->  		command |= FTRACE_UPDATE_CALLS;
->  
->  	ops->flags &= ~FTRACE_OPS_FL_ENABLED;
-> -- 
-> 2.43.0
-> 
-> 
+-- 
+2.34.1
+
