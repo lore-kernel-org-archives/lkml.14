@@ -1,148 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E7E194A7F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96BD27459;
+	Wed,  5 Jun 2024 08:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575404; cv=none; b=BOLa0ZstZjp/+VKGxrTcJI6e3XPbOfHYqePA3Z3pIDqkYOKzwjdDn/aUshCFLbYglXqf45JcFl70ieFT5uTaLY/g1TztoXyZsYaz6J98XUPZvnGW0WONTuQdEAfFsLqk903+OZMfkbZxzdNpPf7wAyToFhqNeDBI6HDACPcVd7E=
+	t=1717575410; cv=none; b=YZPV4RB/U1veeMkzth8HyHAksUtqkaaT6XzCgd6styNA/RVZFsaWacbmHEi2AusMvcJHNcFbb+AOwrdF1/BEfkyKp7SINuqhyY28qfXRJm7Wej4ZBNgzF/KjauEPgkyJH84PEAOlCNi/t1Q6va12AEYKREpvNjhazTOaZbwlGQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575404; c=relaxed/simple;
-	bh=iGO9d2tDV8jgMXAb9ljo4BmxYhAXls7ncq8pchC9GTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZzU0RZsfRmWFr6YznLY8R9/WmMcEdJkjtbzCVN5FJTT7xMAcl2G2z4LD0F7/b24U+hxFVE1jdas/24Zq0t2Tk/voeCpbfvB2y8b69mshe7/goBooYEPsByj5LMwXoIiZy7+AWxFt84Bseh+ch/5GLmEckqy8jrIdV4Ys8UZDcEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YOz+EZaY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717575410; c=relaxed/simple;
+	bh=yCSdZ3e1lx6LRcrOcgQB1vKvA0MJ3E7WilX5VXlznxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AYdoEItbmW+tfZDNI/Ucyaeb2OzmJdWc/glUG900WwNZuT2H4dZMra11uiOIOQWETbUh/+3mhmB/T/g5mgmczxJZ/OYEXw99vOm1uBv6Rafdy/4tb9T2JQnf4u5RpQ911eP+vx4E7/D13kgHsZUbY37WIyi3AJoN41csvVzyuY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoQGzsfj; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YOz+EZaY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717575401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-	b=YOz+EZaYyJaKa7N3Lt+aqkaavE0iz6ZxxyV3TSxSLeO+O0w1neesXovQjaGjfX+5oqt5Hy
-	uQ3GVL/ULBV8RXvMgSGRdkgcHRq1pOSObI64NYMUdSFigZf8QGSEUOcJve16hD0IZ4Bub4
-	xpjAqbz2eccGdwv5ItvAj+zIoJBc39k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-dszJv2-aP5-CLUybHHshCw-1; Wed, 05 Jun 2024 04:16:30 -0400
-X-MC-Unique: dszJv2-aP5-CLUybHHshCw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-42133136397so6120005e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoQGzsfj"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f44b42d1caso50423985ad.0;
+        Wed, 05 Jun 2024 01:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717575408; x=1718180208; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ks4bjHSkxWEPP4w44oJVtH18y9jG6kQAaBpxs/Egxp4=;
+        b=OoQGzsfjebCs0LuDyopWnSf6rekq4IYlBFHQyQ8nLWaHfHLI52RZuOW5cQQr0mufO8
+         xmEkkINmqO6umI4E9U2738Zc9DaHzv4F3dIQoG+cMOw/6WBb1B4zlm7O0iZfNmz2fnZp
+         yoHKDBia7kbLfGh1GIYd0IDAr/PSLvHKZiu1qcbv/1s4z8HVhEUSObeCxi/+bVwXGY5Q
+         CgjhPsuZyBzz1d3vcxO5Yvdvf90IzTsvfeyxzESI3CX479kzHBrLgSsU5Zrvv5eURKkj
+         oG4qBxr+mHTrMV7x1gIk0wDCxyKRNuUc0gLy2NEmX3TdbdiCs7Bbhw/GVyBZtqvN3xHb
+         l7iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575390; x=1718180190;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9WQJKGGQ63IpYpwAqks0j3zwgngy8EFW/hBQkkDLpOw=;
-        b=CFqTg0+YB6PoSZWrY9DpcMUpPZG0yeQD19E/6QAyri52Z+4upPoBG9Uxcmt89XqSAD
-         SbzG7mslpI19BbklFNxG5hq1drfwdF3sGQebKnZuCyTvtg6D5xVudGLY3vCEsr/IVYpb
-         HIcaFX5mx6YN5asY0cRS1WWxeWa0Dd2kpyRjTThrAl5ieQ4qa1iHTTzJUBcpDO8dxATD
-         1ZbhYfsO4gksjFAWDsufeU9dpLMVk6DZfm4G4DrxCgE+nFeVJHDmbmCBZe2mFzWOEQ87
-         ch8G8rmzy4ZM3DHJR15wusluffZ+yqoIAa4RP/wDJXVwQvtTCmhCQmUod7bixRbRSqhG
-         dUog==
-X-Forwarded-Encrypted: i=1; AJvYcCVPXTOTOq+NbH9ynxGGziCBnz1ccMPwlh36KwfKJPnIMP6zOzhYqONPjAzwY/+ZLT1+DP2797qX5/HTxVlfHWzMcPgBtsTHOeokLTrs
-X-Gm-Message-State: AOJu0YxDPNYlaBhWvFMt19uWY7YCNsxAXhjzo3Rk0mmw0+qL9zOHxx+L
-	8CaZTf9rM9tzywfn6hMjfEuc9wepvKxT1e1NR6QNdDnD8lQBEjoJ223+LVvRgdqR2bBc89qLl3g
-	lPCFQ2L/CWe34l9DV3FVLYsWTCsJifHsQ5Y78/GqdVbrbPIUsHPb0IR+/ZRpK8g==
-X-Received: by 2002:a5d:404d:0:b0:35e:83dc:e6ed with SMTP id ffacd0b85a97d-35e83fcb079mr1241478f8f.0.1717575389876;
-        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjXIQcWcnmum91rBphrXn5QVRVx0JrE+Ei0yMho9Onfe+TO5zfd469TFQpM4baXxySxHqFTA==
-X-Received: by 2002:a5d:404d:0:b0:35e:83dc:e6ed with SMTP id ffacd0b85a97d-35e83fcb079mr1241464f8f.0.1717575389558;
-        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.fritz.box ([2001:9e8:32e6:e600:c901:4daf:2476:80ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.28
+        d=1e100.net; s=20230601; t=1717575408; x=1718180208;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ks4bjHSkxWEPP4w44oJVtH18y9jG6kQAaBpxs/Egxp4=;
+        b=O17ljHy9zHTidEBEfShfAYNOiQ9o722gGYZGP/7OTvyGZcT3y56kD5EcoZP1f+GMMP
+         Xn5iBIYN2sW8r5XHAO31iiyQvNW4uMc8YPQpH/sDwxrmLtFD5DrBQ+6Ai1wd4iQ4sdeN
+         cZoileign4bHavZ6+KaLTAY2eEJ1UOGzufy2CD2Va1w0U/F+dUr6Z1nD7+zG4cWo/5cl
+         aspNtkyXF72HUU9mX+MPMAIxye0p8sTFJE8GluronHg4xoAxq372d00tRTvODW4oIUVP
+         0VjbXkHsfj6BIlD6t0ezsjfwBvNxVcF4in2y7QkiXpmNkA7f3QdDRgOT5BdCulzUTUBk
+         B/1w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5w83lsQt8YiW0H5PYPuT9ex2+cqHfy6S+aw2AdGh3mPWz3ZU3KaEqbbSjmdZN+OWGHdVYIvl74R/mnIwMdTFd29FOwaXdS2OFR/b9r9L2BE94k7LVOYiuXCK6JOPYbtjmSw383YrdQqg=
+X-Gm-Message-State: AOJu0YwHTo7IFYcNEq/d63wCid5DF7vND0rkF5bz3E7C/YNiwwMeAndp
+	p0MAZa5HAvoLXbvM+4yfQU4nxeZWxDOtva5KMXm+CAEfkqhzvb/K
+X-Google-Smtp-Source: AGHT+IEeBtjRwxg5oj/gMslQXcacvva+WVK1OlqtetmA5BQlnmJXgo3X94l9iqYLqhpsEJyvH3F6Jg==
+X-Received: by 2002:a17:902:fa4f:b0:1f6:7955:5c94 with SMTP id d9443c01a7336-1f6a5a8419amr16906855ad.58.1717575407974;
+        Wed, 05 Jun 2024 01:16:47 -0700 (PDT)
+Received: from ux-UP-WHL01 ([120.237.109.178])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f66dc963e2sm58908675ad.115.2024.06.05.01.16.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v7 13/13] drm/vboxvideo: fix mapping leaks
-Date: Wed,  5 Jun 2024 10:16:05 +0200
-Message-ID: <20240605081605.18769-15-pstanner@redhat.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240605081605.18769-2-pstanner@redhat.com>
-References: <20240605081605.18769-2-pstanner@redhat.com>
+        Wed, 05 Jun 2024 01:16:47 -0700 (PDT)
+Date: Wed, 5 Jun 2024 16:16:41 +0800
+From: Charles Wang <charles.goodix@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: jikos@kernel.org, bentiss@kernel.org, hbarnor@chromium.org,
+	dianders@chromium.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] HID: hid-goodix: Add Goodix HID-over-SPI driver
+Message-ID: <ZmAe6fNolzw244ft@ux-UP-WHL01>
+References: <20240527042945.57054-1-charles.goodix@gmail.com>
+ <Zl5kz_S4FJaGzfiW@google.com>
+ <Zl75T3ioNqsofyQd@ux-UP-WHL01>
+ <Zl9eUVpojZI2Z3ur@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zl9eUVpojZI2Z3ur@google.com>
 
-When the PCI devres API was introduced to this driver, it was wrongly
-assumed that initializing the device with pcim_enable_device() instead
-of pci_enable_device() will make all PCI functions managed.
+On Tue, Jun 04, 2024 at 11:34:57AM -0700, Dmitry Torokhov wrote:
+> On Tue, Jun 04, 2024 at 07:23:59PM +0800, Charles Wang wrote:
+> > Hi Dmitry,
+> > 
+> > On Mon, Jun 03, 2024 at 05:50:23PM -0700, Dmitry Torokhov wrote:
+> > > Hi Charles,
+> > > 
+> ...
+> > > > +};
+> > > > +
+> > > > +static int goodix_spi_read(struct goodix_ts_data *ts, u32 addr,
+> > > > +			   u8 *data, unsigned int len)
+> > > > +{
+> > > > +	struct spi_device *spi = to_spi_device(&ts->spi->dev);
+> > > > +	struct spi_transfer xfers;
+> > > > +	struct spi_message spi_msg;
+> > > > +	u8 *buf;
+> > > > +	int error;
+> > > > +
+> > > > +	buf = kzalloc(GOODIX_SPI_READ_PREFIX_LEN + len, GFP_KERNEL);
+> > > > +	if (!buf)
+> > > > +		return -ENOMEM;
+> > > 
+> > > Can you try using ts->xfer_buf without making allocations and copies?
+> > > Maybe have goodix_spi_read() have data as u8 **data, and do
+> > > 
+> > > 	*data = buf + GOODIX_SPI_READ_PREFIX_LEN;
+> > > 	return 0;
+> > > 
+> > > at the end. I.e. callers do not supply buffer but rather are given one.
+> > > Of course you need to make sure there are no concurrent calls to
+> > > goodix_spi_read(), but I do not think you have them anyways.
+> > >
+> > 
+> > Unfortunately, there are concurrent calls to goodix_spi_read(). The functions
+> > goodix_hid_get_raw_report() and goodix_hid_irq() may execute concurrently.
+> > 
+> > Anyways, I will try to optimize this part and reduce the malloc operations
+> > where possible.
+> 
+> I think you will need to serialize this anyway, as (AFAICS) you write to
+> report address, and then perform the read. There is nothing in the upper
+> layers that says that several report requests can not be sent at once,
+> and I think the device may also raise interrupt at the same time.
+> Without serializing/locking you may mix up the data.
+> 
 
-This is wrong and was caused by the quite confusing PCI devres API in
-which some, but not all, functions become managed that way.
+Thank you for pointing out this issue. You are correct that
+serialization is required to ensure the integrity of report requests.
 
-The function pci_iomap_range() is never managed.
+> 
+> > > > +
+> > > > +/* Empty callbacks with success return code */
+> > > 
+> > > Hmm, I see you are using falling edge interrupt. Don't you have concern
+> > > of having it "stuck" here? I do not think all these should be stubs...
+> > >
+> > Thank you for pointing this out. The trigger method shouldn't be fixed
+> > within the driver. As for "stuck", I believe this issue does not exit.
+> > The firmware won't wait for the host's response.
+> 
+> It is not the touch controller that will get stuck. The host interrupt
+> controller will not repeat signalling the interrupt that is configured
+> as edge and it was asserted earlier.
+> 
+> Or are you saying that the touch controller will de-assert and re-assert
+> the interrupt line if it is not serviced within given time?
+> 
 
-Replace pci_iomap_range() with the actually managed function
-pcim_iomap_range().
+Yes, to ensure that critical events are not missed by the host, such as the
+touch up event, the firmware is designed to re-assert the interrupt line if
+it is not serviced within a given time.
 
-Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/vboxvideo/vbox_main.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+Charles
 
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 42c2d8a99509..d4ade9325401 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
- 	/* Take a command buffer for each screen from the end of usable VRAM. */
- 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
- 
--	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
--					     vbox->available_vram_size,
--					     vbox->num_crtcs *
--					     VBVA_MIN_BUFFER_SIZE);
--	if (!vbox->vbva_buffers)
--		return -ENOMEM;
-+	vbox->vbva_buffers = pcim_iomap_range(
-+			pdev, 0, vbox->available_vram_size,
-+			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-+	if (IS_ERR(vbox->vbva_buffers))
-+		return PTR_ERR(vbox->vbva_buffers);
- 
- 	for (i = 0; i < vbox->num_crtcs; ++i) {
- 		vbva_setup_buffer_context(&vbox->vbva_info[i],
-@@ -116,11 +115,10 @@ int vbox_hw_init(struct vbox_private *vbox)
- 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
- 
- 	/* Map guest-heap at end of vram */
--	vbox->guest_heap =
--	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
--			    GUEST_HEAP_SIZE);
--	if (!vbox->guest_heap)
--		return -ENOMEM;
-+	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-+			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-+	if (IS_ERR(vbox->guest_heap))
-+		return PTR_ERR(vbox->guest_heap);
- 
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
--- 
-2.45.0
-
+Thanks
