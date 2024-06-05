@@ -1,167 +1,111 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2786963D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 01:50:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395A541E22
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 01:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717552234; cv=none; b=hm6Ii4Sro8XYwYNMEkenDksPu6/7xDK3hgxGHJQRWwhGnd+XyY1m1Jb/pnbW0kQ8xlf/NjzfUJIjxmW6MriNazKi8mZY/jHG5o9Mhj8Nwdbl9GF3X/Ncmy+UmLoaL8OXW8nVa+0y2fY5blBCRGtIetcm1r6WNUbgqPe/x83vaSE=
+	t=1717552315; cv=none; b=kVXySFMgIgsU7nZCaekXWQT5AhlsZ5UA3PN6cnS3vhTXeS5qw6UnlKnHG+dbj41iP5bPIBrFQGGgeMmuRhiRdmh49TATpARpRadcGp93KCeI2a6wZsZIQWslH5dBs/bVoT4GYnzwFXHrWBlEACgs1m0qugHqmQJf7aPUTTNLW48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717552234; c=relaxed/simple;
-	bh=+/WW9mo1VUWRrsh667APns4YfcJSzJ17CdWhqAAm26w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=he1Hro2CbAit5HiPnio5rcl0SV83dFFR3rsI8JV0ccVaiyuamSsyMevfa49eyUxV+2ltLZFxupBK6Odeh1jkmNtDLu7g5r4XbMIVjj0SXrMaE7laJ/0MxozQ16lNFhsTlNIWXSmX7CFfkqJXj0Z3PxTbCdPTKhd42al5qBYEP88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-33-665fc46277e5
-Date: Wed, 5 Jun 2024 10:50:21 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, hannes@cmpxchg.org,
-	iamjoonsoo.kim@lge.com, rientjes@google.com
-Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
- hopeless but may not now
-Message-ID: <20240605015021.GB75311@system.software.com>
-References: <20240604072323.10886-1-byungchul@sk.com>
- <87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <20240604084533.GA68919@system.software.com>
- <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	s=arc-20240116; t=1717552315; c=relaxed/simple;
+	bh=OmK2gI8hdD5XbePH08Wp+6onT/YKAAFKoajQb9RoVTs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bz4jGJnlMDU29maifUvSXwVq/4E6QjPPXpwS7B+urYfU3xwKk+h2fHqgUGcUjrRzjj7zY4nUOQo4mG+OFKomKe8EN8veFsunfMd1U+EyZbxvrUOnNKeWcSY0z96rl6jqBoraUHeL9ptmEl/i5QlShbCbFusWDqbm0TwDchlyi3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VY1uqhLu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VY1uqhLu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717552313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=upN2cK+0+gJo/KqGs9LW3KxpT5YmqhfYJXwjAOS8ygY=;
+	b=VY1uqhLu6QsfvtUU/cjVzyYv7J/Ldb6zRFLbrk/tvpv5pZo59dx8lpRD55AuJ9M0Tlm8O0
+	mbqsUbq9qzdt+rOQPtT+XxW4zaUP+X9YL8qJAEIfBxBPmEDn64rqw5ExWWNG2VYHtOClzi
+	RlKmKdK/OHuS9SvxH1gyPBOcQsFzsN8=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-412-HgWkWbDlNI2Aa7pp1sbsFw-1; Tue, 04 Jun 2024 21:51:51 -0400
+X-MC-Unique: HgWkWbDlNI2Aa7pp1sbsFw-1
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-374ae94e856so2120025ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 18:51:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717552311; x=1718157111;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=upN2cK+0+gJo/KqGs9LW3KxpT5YmqhfYJXwjAOS8ygY=;
+        b=X/sPg6hmKhyKvvpZlD72wmK5Ntn5gzB7CLqJmmNogC2TyPW0ZJqx8owz+7ctI2CICo
+         /nO3qLZvz+5oDSBsOdkQRXvSoo8uW+UuUYOR+43aKWDjmtS94xSryLaz7UHC11HJmbwg
+         6Ixttn2sm6xs5n9MQzXPWosFBzNMNsBw08OsLRfr+4Jz6l3Lo3HHBQnRtZZ+oYFdL0ut
+         rUh9Mnpk+Ou9gf9j0didzqynDRYPHs8jhwrqXWDPc/G8UwtKj6BOKdt8BxhKobN3w+Ps
+         OsOnRUr2m12sZKlztSrFWWCOKCjLywTdxXb73aSIWAy68MBpzUcPjcJI6HFLJyPV1+aQ
+         rs9g==
+X-Forwarded-Encrypted: i=1; AJvYcCXdllG3rGmMYHNvDe5SB3FRdpjARR+8xlj1pgMx3rO0EbRHV3H/VVmDvz6wNWXRGPBhUu7lMl9n8/byqs5xTjuZFQ2WRQVnF4VLCN8X
+X-Gm-Message-State: AOJu0YwyFPVOMqZmW1YMnzpA2yPWSPUE7+o0P+l0VG3DsXlT1rrnlLuA
+	KEZy6rsU5YNRgcfdSW188W64UAvt+lXGqtM8N42Mf99Q+rz5RSt01U859WJ4oVJdOOjsp+fKocb
+	X5OWqzc7j4QEiMCm6FXAG0ssGfo+NvxW1ouVrouBVUScntL7anKJDj1Z3IQVcAHM2FP24sFqqa2
+	PzonBtgdbx3wWsisR4PJnSTc+wTW/DDTdCvmKB
+X-Received: by 2002:a92:cda2:0:b0:374:aedb:1607 with SMTP id e9e14a558f8ab-374b1e108e4mr11917305ab.0.1717552310722;
+        Tue, 04 Jun 2024 18:51:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFoAvumzWTEo5FkJ6C3OMbCpE5l3j5iU8XrNVp3YfRyiPEFNZA2Dhz1INdK+vIULCPwAJeNIpjtYyclX4eHIb4=
+X-Received: by 2002:a92:cda2:0:b0:374:aedb:1607 with SMTP id
+ e9e14a558f8ab-374b1e108e4mr11916935ab.0.1717552310203; Tue, 04 Jun 2024
+ 18:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC9ZZnoW7Skfg0g0Wr5SzmrF/DZrF6k6/F
-	yu5mNovLu+awWdxb85/Vom3JRiaLk7Mmsziwexx+857ZY8GmUo/Fe14yeWz6NIndo+vtFSaP
-	EzN+s3h83iQXwB7FZZOSmpNZllqkb5fAlfHpZjdzQa9KRfuKC8wNjEtkuhg5OSQETCQunX7F
-	2sXIAWZ/nOgEEmYRUJG4+GMRE4jNJqAucePGT2YQW0RAQ+LTwuXsXYxcHMwCaxkljlxtAesV
-	FkiVOL49AKSGV8BC4u6fy6wgNUICZxglehvWM0EkBCVOznzCAmIzC2hJ3Pj3kgmkl1lAWmL5
-	Pw6QMKeAnUTvovuMILaogLLEgW3HmUDmSAgcYJP42fmSBeJmSYmDK26wTGAUmIVk7CwkY2ch
-	jF3AyLyKUSgzryw3MTPHRC+jMi+zQi85P3cTIzDUl9X+id7B+OlC8CFGAQ5GJR7eHb/i0oRY
-	E8uKK3MPMUpwMCuJ8PoVx6cJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKanZpa
-	kFoEk2Xi4JRqYLSf+HVKXWucWu72S4axYu/eROhN/jqJ+Xrm0UMGE41Ts7TPRL9SXcKtccRf
-	bQ+rObP19n8bZkre0/Zeve9OddmNu+5X+jTe9RoGcnKffFG7Tm2ZZtCxNWWvHL/5KRes87m0
-	auuU/dGF31mlXnHlbm5Zq6t0aK5CyvXHtVuPWF00OXn00esrzVlKLMUZiYZazEXFiQBD4Uny
-	cQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsXC5WfdrJt0JD7N4EiHsMWc9WvYLFZv8rVY
-	2d3MZnF47klWi8u75rBZ3Fvzn9WibclGJouTsyazOHB4HH7zntljwaZSj8V7XjJ5bPo0id2j
-	6+0VJo8TM36zeCx+8YHJ4/MmuQCOKC6blNSczLLUIn27BK6MTze7mQt6VSraV1xgbmBcItPF
-	yMEhIWAi8XGiUxcjJweLgIrExR+LmEBsNgF1iRs3fjKD2CICGhKfFi5n72Lk4mAWWMsoceRq
-	CytIr7BAqsTx7QEgNbwCFhJ3/1xmBakREjjDKNHbsJ4JIiEocXLmExYQm1lAS+LGv5dMIL3M
-	AtISy/9xgIQ5BewkehfdZwSxRQWUJQ5sO840gZF3FpLuWUi6ZyF0L2BkXsUokplXlpuYmWOq
-	V5ydUZmXWaGXnJ+7iREYuMtq/0zcwfjlsvshRgEORiUe3h2/4tKEWBPLiitzDzFKcDArifD6
-	FcenCfGmJFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTDe8QvY
-	4TPl75OMkwuPCDYU2P2eLCR0eDKv6ssjn+Or3cOitbWWBP0pn/zp/o5H7G5TbcIPn7YvcSv1
-	TGxbvbhS7MIDkR/Kn7emaUxbaCvnU1s6/XjZF+PLB1R4HHQfzzvWvEOVX3h+5VuZPP/VqxJu
-	sSnqOmkYsot3bjsWE9Vi91n58BO2fgUlluKMREMt5qLiRABdMdU8WAIAAA==
-X-CFilter-Loop: Reflected
+References: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local> <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
+ <Zl3HfiQ6oHdTdOdA@kernel.org> <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
+ <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local> <Zl3hwYL2GDiyUfGo@kernel.org>
+ <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com> <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
+ <2343889c-887a-49ce-86df-343737d70d37@amd.com> <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
+ <ff28e3ea-c492-4db6-8781-abaec6320756@amd.com> <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
+In-Reply-To: <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Wed, 5 Jun 2024 09:52:09 +0800
+Message-ID: <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org, hpa@zytor.com, 
+	peterz@infradead.org, adrian.hunter@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com, 
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
+	seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
+	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
+	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, ardb@kernel.org, 
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 04, 2024 at 04:57:17PM +0800, Huang, Ying wrote:
-> Byungchul Park <byungchul@sk.com> writes:
-> 
-> > On Tue, Jun 04, 2024 at 03:57:54PM +0800, Huang, Ying wrote:
-> >> Byungchul Park <byungchul@sk.com> writes:
-> >> 
-> >> > Changes from v1:
-> >> > 	1. Don't allow to resume kswapd if the system is under memory
-> >> > 	   pressure that might affect direct reclaim by any chance, like
-> >> > 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
-> >> >
-> >> > --->8---
-> >> > From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
-> >> > From: Byungchul Park <byungchul@sk.com>
-> >> > Date: Tue, 4 Jun 2024 15:27:56 +0900
-> >> > Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
-> >> >
-> >> > A system should run with kswapd running in background when under memory
-> >> > pressure, such as when the available memory level is below the low water
-> >> > mark and there are reclaimable folios.
-> >> >
-> >> > However, the current code let the system run with kswapd stopped if
-> >> > kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
-> >> > until direct reclaim will do for that, even if there are reclaimable
-> >> > folios that can be reclaimed by kswapd.  This case was observed in the
-> >> > following scenario:
-> >> >
-> >> >    CONFIG_NUMA_BALANCING enabled
-> >> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
-> >> >    numa node0 (500GB local DRAM, 128 CPUs)
-> >> >    numa node1 (100GB CXL memory, no CPUs)
-> >> >    swap off
-> >> >
-> >> >    1) Run a workload with big anon pages e.g. mmap(200GB).
-> >> >    2) Continue adding the same workload to the system.
-> >> >    3) The anon pages are placed in node0 by promotion/demotion.
-> >> >    4) kswapd0 stops because of the unreclaimable anon pages in node0.
-> >> >    5) Kill the memory hoggers to restore the system.
-> >> >
-> >> > After restoring the system at 5), the system starts to run without
-> >> > kswapd.  Even worse, tiering mechanism is no longer able to work since
-> >> > the mechanism relies on kswapd for demotion.
-> >> 
-> >> We have run into the situation that kswapd is kept in failure state for
-> >> long in a multiple tiers system.  I think that your solution is too
-> >
-> > My solution just gives a chance for kswapd to work again even if
-> > kswapd_failures >= MAX_RECLAIM_RETRIES, if there are potential
-> > reclaimable folios.  That's it.
-> >
-> >> limited, because OOM killing may not happen, while the access pattern of
-> >
-> > I don't get this.  OOM will happen as is, through direct reclaim.
-> 
-> A system that fails to reclaim via kswapd may succeed to reclaim via
-> direct reclaim, because more CPUs are used to scanning the page tables.
+> >         ...
+> >         if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB)) {
+> >                 __efi_memmap_free(efi.memmap.phys_map,
+> >                                 efi.memmap.desc_size * efi.memmap.nr_map, efi.memmap.flags);
+> >         }
+>
+> From your debugging the memmap should not be freed.  This piece of
+> code was added in below commit,  added Dan Williams in cc list:
+> commit f0ef6523475f18ccd213e22ee593dfd131a2c5ea
+> Author: Dan Williams <dan.j.williams@intel.com>
+> Date:   Mon Jan 13 18:22:44 2020 +0100
+>
+>     efi: Fix efi_memmap_alloc() leaks
+>
+>     With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
+>     updated and replaced multiple times. When that happens a previous
+>     dynamically allocated efi memory map can be garbage collected. Use the
+>     new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
+>     allocated memory map is being replaced.
+>
 
-Honestly, I don't think so with this description.
+Dan, probably those regions should be freed only for "fake" memmap?
 
-The fact that the system hit MAX_RECLAIM_RETRIES means the system is
-currently hopeless unless reclaiming folios in a stronger way by *direct
-reclaim*.  The solution for this situation should not be about letting
-more CPUs particiated in reclaiming, again, *at least in this situation*.
-
-What you described here is true only in a normal state where the more
-CPUs work on reclaiming, the more reclaimable folios can be reclaimed.
-kswapd can be a helper *only* when there are kswapd-reclaimable folios.
-
-	Byungchul
-
-> In a system with NUMA balancing based page promotion and page demotion
-> enabled, page promotion will wake up kswapd, but kswapd may fail in some
-> situations.  But page promotion will no trigger direct reclaim or OOM.
-> 
-> >> the workloads may change.  We have a preliminary and simple solution for
-> >> this as follows,
-> >> 
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
-> >
-> > Whether tiering is involved or not, the same problem can arise if
-> > kswapd gets stopped due to kswapd_failures >= MAX_RECLAIM_RETRIES.
-> 
-> Your description is about tiering too.  Can you describe a situation
-> without tiering?
-> 
-> --
-> Best Regards,
-> Huang, Ying
-> 
-> > 	Byungchul
-> >
-> >> where we will try to wake up kswapd to check every 10 seconds if kswapd
-> >> is in failure state.  This is another possible solution.
-> >> 
-> >> > However, the node0 has pages newly allocated after 5), that might or
-> >> > might not be reclaimable.  Since those are potentially reclaimable, it's
-> >> > worth hopefully trying reclaim by allowing kswapd to work again.
-> >> >
-> >> 
-> >> [snip]
-> >> 
-> >> --
-> >> Best Regards,
-> >> Huang, Ying
