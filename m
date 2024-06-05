@@ -1,120 +1,141 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CEB3A1BA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D59879F0;
+	Wed,  5 Jun 2024 18:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717611286; cv=none; b=Hxt6QRwoKX3Z8oJUtus7laL5DtGVe4s3KBDCji36rA9qznXFrptZ4c5bvjdk9Mbtzo7iGru5Q1Qfu/kOzk1Y+X8MLXYOhRuw2IXfpWD/Vww4bf7hP6i6G+0IR0KZ6B14OXpP910qnhsJO0+6/UZr9U2iJEzuiTYh/H9Zgqmgxyo=
+	t=1717611507; cv=none; b=IkXkP7svfrhesnW6puCNVlvlfBA7bLPLbD1n0YaRlKrflks8wh3KhayNTkcSLVUpR7IX4QSIiB2kLOrvy/s/+/LiWFq0VG8VUX8MpE6GTWt8PYRjZGMHRSK4n01n/gOaieOTwpkpeSzXVsy4vz8NFjiihCA0evxQWpzr1whQRvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717611286; c=relaxed/simple;
-	bh=5QY5pCKyodXCSWYUDdOpsPjnRNF7cN6ofBZZxKuLfzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bi58wQ0WG44PAhFxfn0HUdy3ksAGhOZYkbe3lL+9zFFcH66kqOd19p8G4hmRqfPjw58/SQfEju04zeadZmumkAX9IPwFqrEpkSmslC0zbDM935IUjZaodr3UUxDjlPmqoxc59He/0wzKN/ZVy9GnABp0v9EzOrfXWIgz0n5wFZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMnWXaOi; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717611507; c=relaxed/simple;
+	bh=8sTJIVQ52+X8F++jmSiEhrEDb4f6AaeHfQHDVk5yDVo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=MTO9e2YquS380Bhg+j3aOZp5rsEedu+8EBPNmfp6X96hVeooWzz6OIM7XA8VlXTm+5Xb+XGVDduS07iHSJ+aQ6ApDz1XUBCARYHyn9NWAsCPFBkg+Ymp52gwdzeqFFyQKly7oJ8ZE1eHDNP/rqXDP191/jrNxq9JKef1JZe/Bh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Cl6cyqJR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMnWXaOi"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-57a68b0fbd0so127355a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717611283; x=1718216083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HLHG6dPtj3Cex6vJDN4EiASkGZtmU8H4G5lGm1pnEKs=;
-        b=eMnWXaOiMrPCO9Iq7AOhWt3Gr2p9IkVIf0cIiYsFm3B+QsPx+8ZWcAqw27DcwFUF4K
-         915+uioQbQn7H3Tlc8Ifrk+Vr7JjhsnLxEGZ7rkdfrTgvdM63bMj564gShy+1Cu0X081
-         WZJNWWAUNjYd3/BpX2NQUgEEgmZTqHWQYBaHBwctbIOmYSioJcapQGclVs7DMt3Li7yK
-         Huky3tDHD4UjOXF4B+8EWVyCu180KZG6kHAswxoH9wwwYRoMkObAhbLMDOYo+rl4MIPS
-         Tx0BLexr1qjp0Gv8sjM77lEoJxOn5r4CO6SzuhflFnRHY/eaVL6yDcUOqHDPrTfvAmQP
-         FV4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717611283; x=1718216083;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HLHG6dPtj3Cex6vJDN4EiASkGZtmU8H4G5lGm1pnEKs=;
-        b=QkauCR/DlzqhjkPjv91/4Gsla8wuEvQRQIwO2FVZSMHMnlHJgK1U9HyFULIRwQjH4O
-         SrAw9OMZMtoPBw06WnOlWHNdhKG6qIJOWL3J2XPwPzVs+XAU988zCAVx6CeWOe5W+8py
-         0nzd6C03/3Z+/fpvMHLw3mFYnJiZ+BpQXTfTJdZ5j6nuODryQVCfMBwvR2rqAIVMZFmu
-         dKoknMXF6I5LAqTclC14iVgVbfwT5XVqw5LRGpaNhxpOTngcD2VnZc1IJYg4v9cKQJxV
-         dbC6N8p2003CFS63qGnTvgLi0yRCy7L6lpk36eGRwApZgr1xUGCAWtuUM6fSqz3vgwoI
-         KYnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUExeB1vFhsaWFOHFWJQpHZaMkGsltIonG1Z8ppUWMMWMNL2awn/GwcpS2FodNvrgB4uEeLRpFGQ/xtjJMxcuGp5979xXESQIAMf/k
-X-Gm-Message-State: AOJu0YwfHGmt+8xWKKCCN2Pddtax2gFQ6Sqjabh95Yi0uv9OlkHEjiGJ
-	cy2pIOk5xbfqNCNcF2IYEQ9gLQw4H3TiIb/cETmlm1nNs8ziz2qX
-X-Google-Smtp-Source: AGHT+IGVVINLDZYUIOh+utafT1srdWnNvqtOZx4SMWvhHPPhcUvUZy8qs/WiL/TVwhUzu8G0CmPmKw==
-X-Received: by 2002:a50:a6d5:0:b0:575:954:7ef with SMTP id 4fb4d7f45d1cf-57a8b6740f4mr2629050a12.3.1717611283297;
-        Wed, 05 Jun 2024 11:14:43 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a5b1f9855sm6976233a12.70.2024.06.05.11.14.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 11:14:41 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH RESEND -tip 2/2] locking/atomic/x86: Redeclare x86_32 arch_atomic64_{add,sub}() as void
-Date: Wed,  5 Jun 2024 20:13:16 +0200
-Message-ID: <20240605181424.3228-2-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240605181424.3228-1-ubizjak@gmail.com>
-References: <20240605181424.3228-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cl6cyqJR"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455B1Pqf024220;
+	Wed, 5 Jun 2024 18:18:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EeAIyYy7hus9zRleyPaibC
+	zwpRLBWIZ4rIY8qiJkg18=; b=Cl6cyqJRetsMZb2UWYwXUFIdiLOG7dVF9ZTlNY
+	Tsrp1y6daBJ6KeVttPW8PoHojVojBLzIjvihDaYzNkc+ikrYb7vdhwlk0gWZnmm6
+	IkXQKiMuOcXoJpJKDt1vkkUIj+EOZ3dF2L0MAh2r9Z8nk0RVOPTku/VtXRAJgI1m
+	g86kR972KjKXRfrwV/X8gX6vgRJznwYI+nqyVazn/rluQHCiW/4vWkFxo6wN88E/
+	zN0gqGZC3LVtRxgePR/oLgyUc2sAxCmkjil8u1RcaIpHU52FtIhw8XliKrK3POpK
+	akkRwc2qNoc1LWs2hKGUFabX2pVNwCbQfBfjxrsEqCc9GuZg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjabgtkyr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 18:18:21 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455IIJFL006684
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Jun 2024 18:18:19 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
+ 11:18:19 -0700
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Wed, 5 Jun 2024 11:18:18 -0700
+Subject: [PATCH] PM/devfreq: governor: add missing MODULE_DESCRIPTION()
+ macros
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240605-md-drivers-devfreq-v1-1-d01ae91b907e@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAOmrYGYC/x3MwQrCMAyA4VcZORtoSyfMVxEP6Zq5gKuazDIYe
+ 3erx+/w/zsYq7DBpdtBuYrJszT4UwfjTOXOKLkZggvRnV2PS8asUlkNM9dJ+Y0xJD+k0A+RPLT
+ wpTzJ9p9eb82JjDEplXH+rR5SPhsuZCsrHMcXe1dECIMAAAA=
+To: MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park
+	<kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Jeff Johnson <quic_jjohnson@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: KcYaJ_w0HbtbxK4_OpQHrGGMyWwV-842
+X-Proofpoint-ORIG-GUID: KcYaJ_w0HbtbxK4_OpQHrGGMyWwV-842
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 clxscore=1011 adultscore=0
+ priorityscore=1501 mlxlogscore=924 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406050138
 
-Correct the return type of x86_32 arch_atomic64_add() and
-arch_atomic64_sub() functions to void and remove redundant return.
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_simpleondemand.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_performance.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_powersave.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/devfreq/governor_userspace.o
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Add all missing invocations of the MODULE_DESCRIPTION() macro.
+
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 ---
- arch/x86/include/asm/atomic64_32.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/devfreq/governor_performance.c    | 1 +
+ drivers/devfreq/governor_powersave.c      | 1 +
+ drivers/devfreq/governor_simpleondemand.c | 1 +
+ drivers/devfreq/governor_userspace.c      | 1 +
+ 4 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
-index 8db2ec4d6cda..1f650b4dde50 100644
---- a/arch/x86/include/asm/atomic64_32.h
-+++ b/arch/x86/include/asm/atomic64_32.h
-@@ -163,20 +163,18 @@ static __always_inline s64 arch_atomic64_dec_return(atomic64_t *v)
+diff --git a/drivers/devfreq/governor_performance.c b/drivers/devfreq/governor_performance.c
+index 5dbc1e56ec08..2e4e981446fa 100644
+--- a/drivers/devfreq/governor_performance.c
++++ b/drivers/devfreq/governor_performance.c
+@@ -58,4 +58,5 @@ static void __exit devfreq_performance_exit(void)
+ 	return;
  }
- #define arch_atomic64_dec_return arch_atomic64_dec_return
- 
--static __always_inline s64 arch_atomic64_add(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_add(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(add, add_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
- 			       ASM_NO_INPUT_CLOBBER("memory"));
--	return i;
+ module_exit(devfreq_performance_exit);
++MODULE_DESCRIPTION("DEVFREQ Performance governor");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/devfreq/governor_powersave.c b/drivers/devfreq/governor_powersave.c
+index 4746af2435b0..f059e8814804 100644
+--- a/drivers/devfreq/governor_powersave.c
++++ b/drivers/devfreq/governor_powersave.c
+@@ -58,4 +58,5 @@ static void __exit devfreq_powersave_exit(void)
+ 	return;
  }
- 
--static __always_inline s64 arch_atomic64_sub(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(sub, sub_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
- 			       ASM_NO_INPUT_CLOBBER("memory"));
--	return i;
+ module_exit(devfreq_powersave_exit);
++MODULE_DESCRIPTION("DEVFREQ Powersave governor");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/devfreq/governor_simpleondemand.c b/drivers/devfreq/governor_simpleondemand.c
+index d57b82a2b570..c23435736367 100644
+--- a/drivers/devfreq/governor_simpleondemand.c
++++ b/drivers/devfreq/governor_simpleondemand.c
+@@ -140,4 +140,5 @@ static void __exit devfreq_simple_ondemand_exit(void)
+ 	return;
  }
- 
- static __always_inline void arch_atomic64_inc(atomic64_t *v)
--- 
-2.42.0
+ module_exit(devfreq_simple_ondemand_exit);
++MODULE_DESCRIPTION("DEVFREQ Simple On-demand governor");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/devfreq/governor_userspace.c b/drivers/devfreq/governor_userspace.c
+index d69672ccacc4..d1aa6806b683 100644
+--- a/drivers/devfreq/governor_userspace.c
++++ b/drivers/devfreq/governor_userspace.c
+@@ -153,4 +153,5 @@ static void __exit devfreq_userspace_exit(void)
+ 	return;
+ }
+ module_exit(devfreq_userspace_exit);
++MODULE_DESCRIPTION("DEVFREQ Userspace governor");
+ MODULE_LICENSE("GPL");
+
+---
+base-commit: a693b9c95abd4947c2d06e05733de5d470ab6586
+change-id: 20240605-md-drivers-devfreq-42b19b2594a1
 
