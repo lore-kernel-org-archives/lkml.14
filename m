@@ -1,147 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F28195F17;
-	Wed,  5 Jun 2024 11:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CDC195F3F;
+	Wed,  5 Jun 2024 11:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588206; cv=none; b=c6tsKfce2hHuJPxxZEKGDdOfaZrsr6ywXFZy2EUaYA/DOIK8ILuen0MM+OQL1BN4fEx/M2k9lWq4/OCc1iCpuAtVCULEwtgwVkNoFIZDZd/UAlPz+YZ8/yd19umbS530EfKfCD91Sl1ucnqAew8JMSoXYfE8AO+usSN3S9sZWcI=
+	t=1717588207; cv=none; b=C2FCOZsjZZtId1o7X81i4zbrywxkn1QEcAmQHDxUJODbwGVXqmGbnFVXh/w9v7OpthohglplPmtmJtGQ6p5TANb5i/Ea3h4N9NGlI80otcbo5u5aYzEVesOFtgx5hcQRSy8sYU0zKbyz+pu6R+qzTNEkRMSWEkCrO/pY/QXTof0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588206; c=relaxed/simple;
-	bh=ZPF7T9kuWu/BZfONDXqgsMzLC8AUBVBAEKzU6hLpZ9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HDB7CAkFec78+Hv6/+0ynDbN5WDKye73LjAm9i6dcnF17kUyM6sVDZXiB3cD078lvpg8uBf0cDYrXCUQRQdTiacZXMrPGVLFRPR/KFz6RZvB2Z/Ku0E2KncK7Aj/8lb55AYwQUQRX/Purz6Ha4HOm7hzkgZ7xx3liTIHsRDvU7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOvP9frr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588207; c=relaxed/simple;
+	bh=Aa17kOoXpX/HoXHXzofiE99MuhIDY6p0rI+xW1GTtrQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=npW5daJsUotxYKqNW7Jlmwa+JjHd7i2GYlaUHs9fnC2oND/5b8AYXMOm/ah0pc5LuyBd5WOkQMHkMlqEyFt2ROsDR6xcCuomLQV7YKqG5kq5kmZ51MEnJSmcG9DipPKwb6wPh57mxy/6moUsVXrqfH6WO8P5D18HowYaIBPmyv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVCBHKWh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOvP9frr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AE6C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVCBHKWh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F53C4AF09;
 	Wed,  5 Jun 2024 11:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588205;
-	bh=ZPF7T9kuWu/BZfONDXqgsMzLC8AUBVBAEKzU6hLpZ9k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JOvP9frrfx/hc2OqJQZKPWRjbatq/8CQjKQCh2azbBJDLd4PWfoVNRrDKksy2TPEM
-	 Um6Ibm8j8FalbXL9Au+6ax65APYATHCCnnORzP1nPF5/U88TgM8qkCLHGngQpuo6gJ
-	 CopUwfybgV+WnTzJCaUSQ5Fz+n65XJ+sjn1K3p+JkNXC/dCqFIzF1ovnxw6EnPp3hi
-	 k7856AzFZqQJOe6SjQryT5fb6TfRH7gNWVCrwcEzLNuBTvcykIA4IYG9BLbnPR6hI7
-	 txXtA9wBhpeRaN1TwvFzEk/8sZhXYRQYSfmFdHYTupimKI2beh51XYLhzk0Mos5TnU
-	 OmmohAwtxR9Lw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	aladyshev22@gmail.com,
-	ivan.orlov0322@gmail.com,
-	azeemshaikh38@gmail.com,
-	linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 15/28] usb: gadget: function: Remove usage of the deprecated ida_simple_xx() API
-Date: Wed,  5 Jun 2024 07:48:44 -0400
-Message-ID: <20240605114927.2961639-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
-References: <20240605114927.2961639-1-sashal@kernel.org>
+	s=k20201202; t=1717588207;
+	bh=Aa17kOoXpX/HoXHXzofiE99MuhIDY6p0rI+xW1GTtrQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=rVCBHKWhHA237EB6RPwpSILVDLYPNE8KqNzQsXy07/6G4MO60f7LdDvSId8e3ewyB
+	 sCb7rF95UCszxwUW6VUZhAGczzdeUQymomZohA7uaO3jo3CBpZ/PBO5j2YlxbDbNed
+	 ezgjrg3H++OknfISav5F19mA+IklAr8wStlaRHGzBXnokhHbg9MQJwhma7tfWXom47
+	 UMJ57499EtmomkSD0euqqYZ7Ry7kcDuQvkvf5u6dFrAzlVUT7d+G/06afLdT6J6ql9
+	 1YiEiV/+kYSDprMf2qUIAU51c/U8VTnjU/fMFj3pR6LVCYepfxOkA3YZsQ7c9D5hLV
+	 FBkDxotBeVopg==
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 05 Jun 2024 12:41:27 +0100
+Subject: [PATCH 1/4] arm64/fpsimd: Introduce __bit_to_vl() helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-1-680d6b43b4c1@kernel.org>
+References: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org>
+In-Reply-To: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Fuad Tabba <tabba@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3011; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=Aa17kOoXpX/HoXHXzofiE99MuhIDY6p0rI+xW1GTtrQ=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmYFDmUQYv4GiElk8lqZoB3sQBV0ApYQH/AfmNeizO
+ 1sflt5KJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZmBQ5gAKCRAk1otyXVSH0HqICA
+ CDvBoq6AwiNa+cnUxr9ztBR/u4A5iQIk71gQXuIzvTwZTDP9PwOfqkmq/W/xeYVHxnJNJc5NVRJ2p8
+ dhrOBC3DxAlnEFw/pLhSxU6XsARczaz3CnNE3X6ulv9PypAG6sOy+auofHZPMKS9dfvnVdskiZ60Hs
+ 1NeDFb+OlRuqY5+2LCYtkDWWZDE7UyWHuedBoK+KJZ/SGJ5VpLWG7Z0WNihx4bR4NRjBdSwELH63eT
+ 0wqlTPMOd3TxdzTSL8M5nyX3QUR4tEW0ApLJyDAxtMdUa/1xDV6Ada/mZjQnwNFKpbL+w/O+q85KMJ
+ B7PhUoXwIlZzexuq4cAtwl1hQzM9lP
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In all cases where we use the existing __bit_to_vq() helper we immediately
+convert the result into a VL. Provide and use __bit_to_vl() doing this
+directly.
 
-[ Upstream commit 920e7522e3bab5ebc2fb0cc1a034f4470c87fa97 ]
-
-ida_alloc() and ida_free() should be preferred to the deprecated
-ida_simple_get() and ida_simple_remove().
-
-Note that the upper limit of ida_simple_get() is exclusive, but the one of
-ida_alloc_max() is inclusive. So a -1 has been added when needed.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/7cd361e2b377a5373968fa7deee4169229992a1e.1713107386.git.christophe.jaillet@wanadoo.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/usb/gadget/function/f_hid.c     | 6 +++---
- drivers/usb/gadget/function/f_printer.c | 6 +++---
- drivers/usb/gadget/function/rndis.c     | 4 ++--
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ arch/arm64/include/asm/fpsimd.h |  4 ++++
+ arch/arm64/kernel/fpsimd.c      | 12 ++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
-index 3c8a9dd585c09..2db01e03bfbf0 100644
---- a/drivers/usb/gadget/function/f_hid.c
-+++ b/drivers/usb/gadget/function/f_hid.c
-@@ -1029,9 +1029,9 @@ static inline int hidg_get_minor(void)
- {
- 	int ret;
- 
--	ret = ida_simple_get(&hidg_ida, 0, 0, GFP_KERNEL);
-+	ret = ida_alloc(&hidg_ida, GFP_KERNEL);
- 	if (ret >= HIDG_MINORS) {
--		ida_simple_remove(&hidg_ida, ret);
-+		ida_free(&hidg_ida, ret);
- 		ret = -ENODEV;
- 	}
- 
-@@ -1176,7 +1176,7 @@ static const struct config_item_type hid_func_type = {
- 
- static inline void hidg_put_minor(int minor)
- {
--	ida_simple_remove(&hidg_ida, minor);
-+	ida_free(&hidg_ida, minor);
+diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
+index bc69ac368d73..51c21265b4fa 100644
+--- a/arch/arm64/include/asm/fpsimd.h
++++ b/arch/arm64/include/asm/fpsimd.h
+@@ -172,6 +172,10 @@ static inline unsigned int __bit_to_vq(unsigned int bit)
+ 	return SVE_VQ_MAX - bit;
  }
  
- static void hidg_free_inst(struct usb_function_instance *f)
-diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-index 076dd4c1be96c..ba7d180cc9e6d 100644
---- a/drivers/usb/gadget/function/f_printer.c
-+++ b/drivers/usb/gadget/function/f_printer.c
-@@ -1312,9 +1312,9 @@ static inline int gprinter_get_minor(void)
- {
- 	int ret;
++static inline unsigned int __bit_to_vl(unsigned int bit)
++{
++	return sve_vl_from_vq(__bit_to_vq(bit));
++}
  
--	ret = ida_simple_get(&printer_ida, 0, 0, GFP_KERNEL);
-+	ret = ida_alloc(&printer_ida, GFP_KERNEL);
- 	if (ret >= PRINTER_MINORS) {
--		ida_simple_remove(&printer_ida, ret);
-+		ida_free(&printer_ida, ret);
- 		ret = -ENODEV;
- 	}
+ struct vl_info {
+ 	enum vec_type type;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index 82e8a6017382..22542fb81812 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -530,7 +530,7 @@ static unsigned int find_supported_vector_length(enum vec_type type,
  
-@@ -1323,7 +1323,7 @@ static inline int gprinter_get_minor(void)
- 
- static inline void gprinter_put_minor(int minor)
- {
--	ida_simple_remove(&printer_ida, minor);
-+	ida_free(&printer_ida, minor);
+ 	bit = find_next_bit(info->vq_map, SVE_VQ_MAX,
+ 			    __vq_to_bit(sve_vq_from_vl(vl)));
+-	return sve_vl_from_vq(__bit_to_vq(bit));
++	return __bit_to_vl(bit);
  }
  
- static int gprinter_setup(int);
-diff --git a/drivers/usb/gadget/function/rndis.c b/drivers/usb/gadget/function/rndis.c
-index 29bf8664bf582..12c5d9cf450c1 100644
---- a/drivers/usb/gadget/function/rndis.c
-+++ b/drivers/usb/gadget/function/rndis.c
-@@ -869,12 +869,12 @@ EXPORT_SYMBOL_GPL(rndis_msg_parser);
+ #if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
+@@ -1103,7 +1103,7 @@ int vec_verify_vq_map(enum vec_type type)
+ 	 * Mismatches above sve_max_virtualisable_vl are fine, since
+ 	 * no guest is allowed to configure ZCR_EL2.LEN to exceed this:
+ 	 */
+-	if (sve_vl_from_vq(__bit_to_vq(b)) <= info->max_virtualisable_vl) {
++	if (__bit_to_vl(b) <= info->max_virtualisable_vl) {
+ 		pr_warn("%s: cpu%d: Unsupported vector length(s) present\n",
+ 			info->name, smp_processor_id());
+ 		return -EINVAL;
+@@ -1169,7 +1169,7 @@ void __init sve_setup(void)
+ 		set_bit(__vq_to_bit(SVE_VQ_MIN), info->vq_map);
  
- static inline int rndis_get_nr(void)
- {
--	return ida_simple_get(&rndis_ida, 0, 1000, GFP_KERNEL);
-+	return ida_alloc_max(&rndis_ida, 999, GFP_KERNEL);
- }
+ 	max_bit = find_first_bit(info->vq_map, SVE_VQ_MAX);
+-	info->max_vl = sve_vl_from_vq(__bit_to_vq(max_bit));
++	info->max_vl = __bit_to_vl(max_bit);
  
- static inline void rndis_put_nr(int nr)
- {
--	ida_simple_remove(&rndis_ida, nr);
-+	ida_free(&rndis_ida, nr);
- }
+ 	/*
+ 	 * For the default VL, pick the maximum supported value <= 64.
+@@ -1188,7 +1188,7 @@ void __init sve_setup(void)
+ 		/* No virtualisable VLs?  This is architecturally forbidden. */
+ 		info->max_virtualisable_vl = SVE_VQ_MIN;
+ 	else /* b + 1 < SVE_VQ_MAX */
+-		info->max_virtualisable_vl = sve_vl_from_vq(__bit_to_vq(b + 1));
++		info->max_virtualisable_vl = __bit_to_vl(b + 1);
  
- struct rndis_params *rndis_register(void (*resp_avail)(void *v), void *v)
+ 	if (info->max_virtualisable_vl > info->max_vl)
+ 		info->max_virtualisable_vl = info->max_vl;
+@@ -1305,10 +1305,10 @@ void __init sme_setup(void)
+ 	WARN_ON(bitmap_empty(info->vq_map, SVE_VQ_MAX));
+ 
+ 	min_bit = find_last_bit(info->vq_map, SVE_VQ_MAX);
+-	info->min_vl = sve_vl_from_vq(__bit_to_vq(min_bit));
++	info->min_vl = __bit_to_vl(min_bit);
+ 
+ 	max_bit = find_first_bit(info->vq_map, SVE_VQ_MAX);
+-	info->max_vl = sve_vl_from_vq(__bit_to_vq(max_bit));
++	info->max_vl = __bit_to_vl(max_bit);
+ 
+ 	WARN_ON(info->min_vl > info->max_vl);
+ 
+
 -- 
-2.43.0
+2.39.2
 
