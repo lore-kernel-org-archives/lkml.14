@@ -1,85 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mail.infoupdaters.club (88-209-210-239.pool.panelnet.hu [88.209.210.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4A0194AC7;
-	Wed,  5 Jun 2024 13:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC52194AC7
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=88.209.210.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717593364; cv=none; b=JfW2HJ5ukf4OOXYID7I9wNBHxqdSLcdEgjGe38511qJY9j5PCzCPjQsFNdlGaymxijQlVjaAmMjW4dT8QInlhPuUiMCrKlQR+Azt2Hu0p1Oc2Vd+wx/AflqP/xuzvuyFjzVn8iinskSvqilR8YZziZnipuU/MeuC6qkYPEdbKZE=
+	t=1717593379; cv=none; b=eeDmVA9CQsfOS5r4t37XpbPIjJ5oLyFSyXvRYZaEh7SPhhZq9Vv1Up406hZDpo9MkLttC7QjWi5inwXAde5bEawVxAATn30yPX7XFulVjAXzoWjfJyyVrChZiXMcIlGEvMHGH9sUm58pvSX3+6TX0vzSbeJoUBkSv0Ez5KXkMn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717593364; c=relaxed/simple;
-	bh=wvZt6kF9E4Zi2ofY87AAmrFmQ/4Dipo37U8X3H8nyNs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZTN92OTGg1J9/78ZyxNpm1tveXOVMEGtQNqV8NeDMzruaBEPFACZn9uGxjsUN0LuloAaUp6X/ksEe+v0Dv24RjBv20qk1oNja+H1DMj9majC+bJim1NIgogjpmQFdr7PFGp9ilLl7xEhoHF4dDWwYOuogr4ZCEwEQM5PGpIl3YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mttoQBd0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mttoQBd0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717593362; x=1749129362;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wvZt6kF9E4Zi2ofY87AAmrFmQ/4Dipo37U8X3H8nyNs=;
-  b=mttoQBd00AX4rQ81GiQ85Z1LCXvrORBh/4fOHiw8P2YPaqU0601SaHJN
-   gaRKBFZ1tcL4IsEfiJSUgdZCqEcLyL6NgmY2tjgNqitrAErKlTEHCcOwf
-   iba38G4fMf35g56eVfgqpkl68y/W4SSFxBOXh/G0UHkfiij8nSCjxLZ3i
-   k+YB82TVnR6KVe6NoSqMjYVbnGmmkcpT+w/285z1mj7tLuZUsQ7soa/FD
-   wfKrcGqKoLP0stsfG96ASEFmroi5DytL6DbSkP+LXGXKjNjFhmtzYyvws
-   UO86CIvw/3mfYU03MD7KYXFQyVbV1NQkMKv2HJi/dVi4XmlqMHdVtfvjl
-   w==;
-X-CSE-ConnectionGUID: 4fTF3MhcQsCdJ8/qYMMIRA==
-X-CSE-MsgGUID: 1Li51909QlSsewU8cvZ3FQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="18048164"
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="18048164"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 06:15:52 -0700
-X-CSE-ConnectionGUID: 9bINq45JTxWFir6fDvMQYA==
-X-CSE-MsgGUID: Pg7hOZHUQgqOEW4MFE1YGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="42549306"
-Received: from inesxmail01.iind.intel.com ([10.223.57.40])
-  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2024 06:15:50 -0700
-Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
-	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 652BD19AFC;
-	Wed,  5 Jun 2024 18:45:48 +0530 (IST)
-Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
-	id 5FC501600107; Wed,  5 Jun 2024 18:45:48 +0530 (IST)
-From: Raag Jadav <raag.jadav@intel.com>
-To: ukleinek@kernel.org,
-	jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v2 0/2] LPSS PWM cleanups
-Date: Wed,  5 Jun 2024 18:45:31 +0530
-Message-Id: <20240605131533.20037-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.35.3
+	s=arc-20240116; t=1717593379; c=relaxed/simple;
+	bh=9hm3fRZR2ds9nhUS0SsivqkZwxdadnRLn/uy3Nj82cU=;
+	h=From:Subject:To:Content-Type:Date:Message-Id; b=gl/rA6CaJ5jeICjiqqWANOV0CJY8U9IVTLXgDgPVXkUfptj4emL1nqR9gsNZ5QnYo8AYQDp7POH8KSfUj+TAgsbt3aRB/101Zdmqd3v/2z5t5WhKcKe8c9CB5BxmIy2orGCHis50LBNnUQXDjH8WZlC7JC3/fu6prE4AdXN40FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infoupdaters.club; spf=fail smtp.mailfrom=infoupdaters.club; arc=none smtp.client-ip=88.209.210.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infoupdaters.club
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=infoupdaters.club
+Received: from HY-62885 (184.170.252.231) by mail.infoupdaters.club for <linux-kernel@vger.kernel.org>; Wed, 5 Jun 2024 15:16:04 +0200 (envelope-from <admin@infoupdaters.club>)
+From: "Srisawad Corp. PCL" <admin@infoupdaters.club>
+Subject: New opportunity for your establishment
+To: <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Reply-To: <doungchai@sawadscorpsocl.com>
+Date: Wed, 5 Jun 2024 06:16:11 -0700
+Message-Id: <051020240616061A6E3D1D12-202E5C17FD@infoupdaters.club>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This series implements minor cleanups for LPSS PWM driver.
+Attention,
 
-Changes since v1:
-- Update commit message
+I am writing from Srisawad Corp. PCL. We would like to invest in your 
+project, we have the capacity to fund your project and we are open to 
+discuss on any of these three types of investment plans. We can invest 
+either as a debt/loan finance, equity venture or a combination of debt/loan 
+and equity venture, likewise known as convertible note depending on the 
+investment plan most suitable for your project.
 
-Raag Jadav (2):
-  pwm: lpss: use devm_pm_runtime_enable() helper
-  pwm: lpss: drop redundant runtime PM handles
+We are majorly interested in projects with high profit value. Projects that 
+fall within our interest can be funded completely with very considerable 
+and workable terms. Should you be interested please get back to me through 
+the below email for more information. 
 
- drivers/pwm/pwm-lpss-pci.c      | 22 ----------------------
- drivers/pwm/pwm-lpss-platform.c | 10 +---------
- 2 files changed, 1 insertion(+), 31 deletions(-)
+Email: doungchai@sawadscorpsocl.com
 
--- 
-2.35.3
+Kindly let us know what your ideas are.
+
+Doungchai Kaewbootta
+Executive Director/Managing Director
+Srisawad Corp. PCL
+99/392 Srisawad Building, 4th, 6th floor,
+Soi Chaengwattana 10 Intersection 3 (Benjamitr)
+Chaengwattana Road, Thung Song Hong Subdistrict
+Lak Si District, Bangkok 10210
 
