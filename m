@@ -1,283 +1,314 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C230219D889;
-	Wed,  5 Jun 2024 14:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3CB1863C;
+	Wed,  5 Jun 2024 14:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717597066; cv=none; b=H/aYyp3D9bsGBXwbZQo6qfvKl55pqufClvXIggqltCWiDo2dK/JD9WrNkxE0ei8aV/xoOMqSFfBs39oJiWGgbILfSDEI/SjQqi7wPhPLHpzFBot4B9hz9mgHJrepYlgc3tu87zWqKO80YBlkl6obM6/Gs5PxphTZwQcXvmK5fU4=
+	t=1717597078; cv=none; b=UDyFZs5vxzUgN1a7veDWm4wLnmyPITJKKGIjYPcVIokNO5B1+DSbIup16Yd40rriqc399OLaMBX3XDrd92q+IpAGPwuZ86X0o/WLCMQm4ZecAEuxu7zJBRwU1VC46sZRN9D1wpfdEkAa7n3LkCXNT9tFWmOJqMKwEpa/UkHzdDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717597066; c=relaxed/simple;
-	bh=XEx/RmLIAYzNyNyRLPZfdvmzntgVOQycajzJ1rdomLo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=leO6HSKmax8X/6KjeU8FRozdFp//xZq1V3leg0C/bgvFz4urJQTAL/2y1LzHeCV4PbAxoDDASOyIgHGeYgJKVCzu5hahdi1nloJCjoJBu7LXzHpbaLu+ukoCLoEtDEHTtpNQ5BAvuZ+1xyxR16is+L4YgM4JTSos7/zjHY0dVqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IItoganz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717597078; c=relaxed/simple;
+	bh=s3hsBHfHGSb76vwMZy3nEFVmXNXGEjEkilscDvM66vU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XG8WwwhSx/2RJYy0nDWfJoqnKK/R0b3Y4jgisBYRM6JPGvQAelBtzJeGcBfb8l33DmF+8SaLpLr6woAYCyPLMUMPNUbsHfMpkdVFmaa025u+3tstKPaiVj9mRx3IDYMnGuxU24EgsOK3TWNVkLr7nqKtym2X3of9lB67HtLIomE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FdQtT2yD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h0pcncrc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IItoganz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F0EC32782;
-	Wed,  5 Jun 2024 14:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717597066;
-	bh=XEx/RmLIAYzNyNyRLPZfdvmzntgVOQycajzJ1rdomLo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IItoganzLnx0lSwTSZIHuhQhh9O5JJ0bM1Bsa8/zvIK1CJb/oftCjbeBNCPDaBnbP
-	 KEzP7mM7r2ThKIKnYWXAHR7m6RCdj9mhakmpBTif8brruizBiJpiJC/02N2Q+nk13h
-	 OK/gnO7gOLQ6/EXHHDyzXJsnfn3ZXawD9oyfHJigMWU5eHacEYHM4q+ptgc5jhxKwm
-	 stHox8ATBR4qHK9fIoLHPOgJlfbU88Czk5JH6BGUn/b2mzHHkjZuUbjaNEluygb4ZS
-	 guYBQ92b0jm6f4XOKVP2CXrO8owT1sr7aLJ8GOBM68pdDudVnCnSvzNhwxnI8zqwjc
-	 Ef6uIAPZg6zrA==
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5ba8e1b9018so18225eaf.0;
-        Wed, 05 Jun 2024 07:17:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWLMHaBf4+2j0qKO1cRSanQqR8u+IZ+Tvl6I1vBgW7JFBEQ6P/4VxVWpfZ9F5B5iwB1u0nKttXBzQIO4Q0lU3CMryxIS9RU/bAJfj8UTv6nXXie48O07n+sC8fOrENmHQxG34ZWd9E=
-X-Gm-Message-State: AOJu0Yw7aMw8R0JEjOcQWJeyPyNNpLocp1hozhDwWTKVHxcni7T5vff4
-	REoHpnixSHSgtPbdRZkA5pnD0ydKZ8HQ6P8l/YjkNh6xgiuXIx/wKxXwutOynGyU2dpa0+8RRpc
-	MCTlh7KvWl/NHBYqbzFJjZkkrGdI=
-X-Google-Smtp-Source: AGHT+IGDu6kwEQ0DTB9/+Bnljb2JjaovmKHQ6zpd9xLNAkVHUxl1PjvZohg0OWijUcexk+5pWFxsv909XanZ1RZ5Czw=
-X-Received: by 2002:a4a:a7c9:0:b0:5ba:6669:ba6e with SMTP id
- 006d021491bc7-5ba78ff8903mr2780302eaf.1.1717597065543; Wed, 05 Jun 2024
- 07:17:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FdQtT2yD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h0pcncrc"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717597074;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n04KYCuxF/d4GeXP4Wu2hdUNiAxVocZIZGoARupszWA=;
+	b=FdQtT2yDVgjr7iJyRlkteEqbXa73u24p0cdcvjcM7lv4L6l/Pccu5G4WV5pAmh0E4SbJjR
+	mhW1SKXlkwarDSWWUKyTAnJm2yKOZk5vmUeCb0s/ifaDtklQ0O6I34O4ofjoie8Oim5luf
+	0b8qFJwaTUBYv1zqgPSxCeo+kzF6jgeT5g24mXFklxbbY6r7LYbXA+1osLNVqDBFhI7UKi
+	Oe4dS+MR2QWUOXHs6QZJK3/FZvmc+agjLRfisu9VdynmcBtSEFXLp1n4O1GNG4RwvFZRIc
+	AYcKCdV7t5xwEgMuTy7lXDBiFmxZNlxX9TfhfkGmfF5c8pJJL34xwPgnfYYjYg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717597074;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n04KYCuxF/d4GeXP4Wu2hdUNiAxVocZIZGoARupszWA=;
+	b=h0pcncrcJMKv0Oz6gYvi5gHNG5E4DWuOjpeI4WUt5kg06KSE57hQUeJ5yoXrQ/t9Vh27IB
+	2Oo4K14xZE/sPKAQ==
+To: Herve Codina <herve.codina@bootlin.com>, Simon Horman
+ <horms@kernel.org>, Sai Krishna Gajula <saikrishnag@marvell.com>, Herve
+ Codina <herve.codina@bootlin.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Lee Jones <lee@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Horatiu Vultur <horatiu.vultur@microchip.com>,
+ UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas
+ <bhelgaas@google.com>, Philipp Zabel <p.zabel@pengutronix.de>, Lars
+ Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
+ <Steen.Hegelund@microchip.com>, Daniel Machon
+ <daniel.machon@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 11/19] irqchip: Add support for LAN966x OIC
+In-Reply-To: <20240527161450.326615-12-herve.codina@bootlin.com>
+References: <20240527161450.326615-1-herve.codina@bootlin.com>
+ <20240527161450.326615-12-herve.codina@bootlin.com>
+Date: Wed, 05 Jun 2024 16:17:53 +0200
+Message-ID: <87frtr4goe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240603081331.3829278-1-beata.michalska@arm.com>
- <20240603081331.3829278-2-beata.michalska@arm.com> <20240603114811.oio3uemniib5uaa2@vireshk-i7>
- <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com> <ZmAjfyGWtti17WiO@arm.com>
-In-Reply-To: <ZmAjfyGWtti17WiO@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 5 Jun 2024 16:17:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jyYZh45tngb176yhvWdS+KEurNM7=scF6HArU54_u0Fw@mail.gmail.com>
-Message-ID: <CAJZ5v0jyYZh45tngb176yhvWdS+KEurNM7=scF6HArU54_u0Fw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] cpufreq: Rewire arch specific feedback for cpuinfo/scaling_cur_freq
-To: Beata Michalska <beata.michalska@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, len.brown@intel.com, 
-	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com, 
-	sumitg@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jun 5, 2024 at 10:36=E2=80=AFAM Beata Michalska <beata.michalska@ar=
-m.com> wrote:
->
-> On Mon, Jun 03, 2024 at 03:43:12PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Jun 3, 2024 at 1:48=E2=80=AFPM Viresh Kumar <viresh.kumar@linar=
-o.org> wrote:
-> > >
-> > > Hi Beata,
-> > >
-> > > Thanks for taking this forward.
-> > >
-> > > On 03-06-24, 09:13, Beata Michalska wrote:
-> > > > Some architectures provide a way to determine an average frequency =
-over
-> > > > a certain period of time, based on available performance monitors (=
-AMU on
-> > > > ARM or APERF/MPERf on x86). With those at hand, enroll arch_freq_ge=
-t_on_cpu
-> > > > into cpuinfo_cur_freq policy sysfs attribute handler, which is expe=
-cted to
-> > > > represent the current frequency of a given CPU,as obtained by the h=
-ardware.
-> > > > This is the type of feedback that counters do provide.
-> > >
-> > > Please add blank line between paragraphs, it makes it easier to read
-> > > them.
-> > >
-> > > > At the same time, keep the scaling_cur_freq attribute align with th=
-e docs
-> > > > and make it provide most recently requested frequency, still allowi=
-ng to
-> > > > fallback to using arch_freq_get_on_cpu for cases when cpuinfo_cur_f=
-req is
-> > > > not available.
-> > >
-> > > Please split this patch into two parts, they are very distinct change=
-s
-> > > and should be kept separate.
-> > >
-> > > > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > > > ---
-> > > >  drivers/cpufreq/cpufreq.c | 8 ++++++--
-> > > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > > index a45aac17c20f..3b0eabe4a983 100644
-> > > > --- a/drivers/cpufreq/cpufreq.c
-> > > > +++ b/drivers/cpufreq/cpufreq.c
-> > > > @@ -758,7 +758,8 @@ static ssize_t show_scaling_cur_freq(struct cpu=
-freq_policy *policy, char *buf)
-> > > >       ssize_t ret;
-> > > >       unsigned int freq;
-> > > >
-> > > > -     freq =3D arch_freq_get_on_cpu(policy->cpu);
-> > > > +     freq =3D !cpufreq_driver->get ? arch_freq_get_on_cpu(policy->=
-cpu)
-> > > > +                                 : 0;
-> > >
-> > > This is getting trickier than I thought as I dived into more details
-> > > of all the changes to the file.
-> > >
-> > > Rafael,
-> > >
-> > > We probably need to decide on a policy for these two files, it is
-> > > getting a bit confusing.
-> > >
-> > > cpuinfo_cur_freq:
-> > >
-> > > The purpose of this file is abundantly clear. This returns the best
-> > > possible guess of the current hardware frequency. It should rely on
-> > > arch_freq_get_on_cpu() or ->get() to get the value.
-> >
-> > Let me quote the documentation:
-> >
-> > "This is expected to be the frequency the hardware actually runs at.
-> > If that frequency cannot be determined, this attribute should not be
-> > present."
-> >
-> > In my reading, this has nothing to do with arch_freq_get_on_cpu(), at
-> > least on x86.
-> My reading on this (and I might be wrong) is that for x86,
-> arch_freq_get_on_cpu() is utilizing the APERF/MPERF registers to get
-> a rough/average frequency and as such it does, in a way, get a hw feedbac=
-k
-> and it does somewhat fall under "frequency the hardware actually runs at"=
-.
+On Mon, May 27 2024 at 18:14, Herve Codina wrote:
+> +struct lan966x_oic_data {
+> +	struct irq_domain *domain;
+> +	void __iomem *regs;
+> +	int irq;
+> +};
 
-But it is not expected to somewhat fall under that definition, it is
-expected to be exactly the frequency the CPU is running at when the
-file is accessed.
+Please read Documentation/process/maintainers-tip.rst
 
-In the past, there was hardware that could provide that information.
+> +static int lan966x_oic_irq_set_type(struct irq_data *data,
+> +				    unsigned int flow_type)
 
-> Because it is an average value, it might not provide an instant view on
-> current frequency, but either way, the value provided here migh be a bit =
-off
-> anyway.
+Please use the 100 character limit
 
-Well, not just a bit.  It may be off completely.
+> +static struct lan966x_oic_chip_regs lan966x_oic_chip_regs[3] = {
+> +	{
+> +		.reg_off_ena_set = LAN966X_OIC_INTR_ENA_SET,
+> +		.reg_off_ena_clr = LAN966X_OIC_INTR_ENA_CLR,
+> +		.reg_off_sticky = LAN966X_OIC_INTR_STICKY,
+> +		.reg_off_ident = LAN966X_OIC_DST_INTR_IDENT(0),
+> +		.reg_off_map = LAN966X_OIC_DST_INTR_MAP(0),
 
-> But then, we could adjust the timewidnow being used to make it more
-> accurate.
+Please make this tabular. See doc.
 
-Not on x86 AFAICS because the time window is the scheduler tick period.
+> +static void lan966x_oic_chip_init(struct lan966x_oic_data *lan966x_oic,
+> +				  struct irq_chip_generic *gc,
+> +				  struct lan966x_oic_chip_regs *chip_regs)
+> +{
+> +	gc->reg_base = lan966x_oic->regs;
+> +	gc->chip_types[0].regs.enable = chip_regs->reg_off_ena_set;
+> +	gc->chip_types[0].regs.disable = chip_regs->reg_off_ena_clr;
+> +	gc->chip_types[0].regs.ack = chip_regs->reg_off_sticky;
+> +	gc->chip_types[0].chip.irq_startup = lan966x_oic_irq_startup;
+> +	gc->chip_types[0].chip.irq_shutdown = lan966x_oic_irq_shutdown;
+> +	gc->chip_types[0].chip.irq_set_type = lan966x_oic_irq_set_type;
+> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
+> +	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
+> +	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
+> +	gc->private = chip_regs;
+> +
+> +	/* Disable all interrupts handled by this chip */
+> +	irq_reg_writel(gc, ~0, chip_regs->reg_off_ena_clr);
+> +}
+> +
+> +static void lan966x_oic_chip_exit(struct irq_chip_generic *gc)
+> +{
+> +	/* Disable and ack all interrupts handled by this chip */
+> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
 
-On x86 it is better to use a utility like turbostat to measure
-frequency instead of the cpufreq sysfs (or /proc/cpuinfo for that
-matter).
+~0U
+  
+> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
+> +}
+> +
+> +static int lan966x_oic_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct lan966x_oic_data *lan966x_oic;
+> +	struct device *dev = &pdev->dev;
+> +	struct irq_chip_generic *gc;
+> +	int ret;
+> +	int i;
 
-> I might be looking at it the wrong way though.
-> >
-> > > Perhaps we can
-> > > make this available all the time, instead of conditionally on ->get()
-> > > callback (which isn't present for intel-pstate for example).
-> >
-> > We could, but then on x86 there is no expectation that this file will
-> > be present and changing this may introduce significant confusion
-> > because of the way it is documented (which would need to be changed,
-> > but people might be forgiven for failing to notice the change of
-> > interpretation of this file).
-> >
-> > > scaling_cur_freq:
-> > >
-> > > This should better reflect the last requested frequency, but since a
-> > > significant time now it is trying to show what cpuinfo_cur_freq shows=
-.
-> >
-> > Well, not really.
-> >
-> > > commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file for=
- set_policy() drivers")
-> > > commit f8475cef9008 ("x86: use common aperfmperf_khz_on_cpu() to calc=
-ulate KHz using APERF/MPERF")
-> >
-> > "In the majority of cases, this is the frequency of the last P-state
-> > requested by the scaling driver from the hardware using the scaling
-> > interface provided by it, which may or may not reflect the frequency
-> > the CPU is actually running at (due to hardware design and other
-> > limitations).
-> >
-> > Some architectures (e.g. x86) may attempt to provide information more
-> > precisely reflecting the current CPU frequency through this attribute,
-> > but that still may not be the exact current CPU frequency as seen by
-> > the hardware at the moment."
-> >
-> > So the problem is that on Intel x86 with HWP and intel_pstate in the
-> > active mode, say, "the frequency of the last P-state requested by the
-> > scaling driver from the hardware" is actually never known, so exposing
-> > it via scaling_cur_freq is not possible.
-> >
-> > Moreover, because cpuinfo_cur_freq is not present at all in that case,
-> > scaling_cur_freq is the only way to allow user space to get an idea
-> > about the CPU current frequency.  I don't think it can be changed now
-> > without confusing users.
-> >
-> What's your take on leaving the scaling_cur_freq to resolve to
-> arch_freq_get_on_cpu() when cpuinfo_cur_freq is not present ?
+int ret, i;
 
-IIUC that's what happens right now on x86 and I don't see major
-problems with it.
+> +
+> +	lan966x_oic = devm_kmalloc(dev, sizeof(*lan966x_oic), GFP_KERNEL);
+> +	if (!lan966x_oic)
+> +		return -ENOMEM;
+> +
+> +	lan966x_oic->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(lan966x_oic->regs))
+> +		return dev_err_probe(dev, PTR_ERR(lan966x_oic->regs),
+> +				     "failed to map resource\n");
+> +
+> +	lan966x_oic->domain = irq_domain_alloc_linear(of_node_to_fwnode(node),
+> +						      LAN966X_OIC_NR_IRQ,
+> +						      &irq_generic_chip_ops,
+> +						      NULL);
+> +	if (!lan966x_oic->domain) {
+> +		dev_err(dev, "failed to create an IRQ domain\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	lan966x_oic->irq = platform_get_irq(pdev, 0);
+> +	if (lan966x_oic->irq < 0) {
+> +		ret = dev_err_probe(dev, lan966x_oic->irq,
+> +				    "failed to get the IRQ\n");
+> +		goto err_domain_free;
+> +	}
+> +
+> +	ret = irq_alloc_domain_generic_chips(lan966x_oic->domain, 32, 1,
+> +					     "lan966x-oic", handle_level_irq, 0,
+> +					     0, 0);
+> +	if (ret) {
+> +		dev_err_probe(dev, ret, "failed to alloc irq domain gc\n");
+> +		goto err_domain_free;
+> +	}
+> +
+> +	/* Init chips */
+> +	BUILD_BUG_ON(DIV_ROUND_UP(LAN966X_OIC_NR_IRQ, 32) !=
+> +		     ARRAY_SIZE(lan966x_oic_chip_regs));
+> +	for (i = 0; i < ARRAY_SIZE(lan966x_oic_chip_regs); i++) {
+> +		gc = irq_get_domain_generic_chip(lan966x_oic->domain, i * 32);
+> +		lan966x_oic_chip_init(lan966x_oic, gc,
+> +				      &lan966x_oic_chip_regs[i]);
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(lan966x_oic->irq,
+> +					 lan966x_oic_irq_handler,
+> +					 lan966x_oic->domain);
+> +
+> +	irq_domain_publish(lan966x_oic->domain);
+> +	platform_set_drvdata(pdev, lan966x_oic);
+> +	return 0;
 
-> This way nothing will change for the intel_pstate + HWP
-> but it will allow using the info provided by arch_freq_get_on_cpu() for
-> cpuinfo_cur_freq if one is provided and it will automatically ignore it f=
-or
-> scaling_cur_freq ? Though I guess it falls under "making all confused" th=
-at you
-> have described donw the line.
+This is exactly what can be avoided.
 
-Well, it does.
+> +
+> +err_domain_free:
+> +	irq_domain_free(lan966x_oic->domain);
+> +	return ret;
+> +}
+> +
+> +static void lan966x_oic_remove(struct platform_device *pdev)
+> +{
+> +	struct lan966x_oic_data *lan966x_oic = platform_get_drvdata(pdev);
+> +	struct irq_chip_generic *gc;
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(lan966x_oic_chip_regs); i++) {
+> +		gc = irq_get_domain_generic_chip(lan966x_oic->domain, i * 32);
+> +		lan966x_oic_chip_exit(gc);
+> +	}
+> +
+> +	irq_set_chained_handler_and_data(lan966x_oic->irq, NULL, NULL);
+> +
+> +	for (i = 0; i < LAN966X_OIC_NR_IRQ; i++)
+> +		irq_dispose_mapping(irq_find_mapping(lan966x_oic->domain, i));
 
-> > > What should we do ? I wonder if we will break some userspace tools
-> > > (which may have started relying on these changes).
-> >
-> > We will.
-> >
-> > IIUC, it is desirable to expose "the frequency of the last P-state
-> > requested by the scaling driver from the hardware" via
-> > scaling_cur_freq on ARM, but it is also desirable to expose an
-> > approximation of the actual current CPU frequency, so the only way to
-> > do that without confusing the heck out of everybody downstream would
-> > be to introduce a new attribute for this purpose and document it
-> > precisely.
->
-> What would introducing new attribute mean for scaling_cur_freq on x86 the=
-n ?
+This is just wrong. You cannot remove the chip when there are still interrupts
+mapped.
 
-Nothing to start with, but later it might be possible to make it only
-work for drivers that don't implement ->setpolicy(), ie. when
-policy->cur is well defined, so scaling_cur_freq, if it were present,
-would only return the last frequency requested by the driver.
+I just did a quick conversion to the template approach. Unsurprisingly
+it removes 30 lines of boiler plate code:
 
-> I do assume we would leave cpuinfo_cur_freq untouched without calling
-> arch_freq_get_on_cpu() (as it is now). Then keeping scaling_cur_freq to a=
-ctually
-> use it - what would be the 3rd attribute meaning, if:
-> - cpuinfo_cur_freq -> actual freq as seen by the hardware (but not the
->   counters?)
++static void lan966x_oic_chip_init(struct irq_chip_generic *gc)
++{
++	struct lan966x_oic_data *lan966x_oic = gc->domain->host_data;
++	struct lan966x_oic_chip_regs *chip_regs;
++
++	gc->reg_base = lan966x_oic->regs;
++
++	chip_regs = lan966x_oic_chip_regs + gc->irq_base / 32;
++	gc->chip_types[0].regs.enable = chip_regs->reg_off_ena_set;
++	gc->chip_types[0].regs.disable = chip_regs->reg_off_ena_clr;
++	gc->chip_types[0].regs.ack = chip_regs->reg_off_sticky;
++
++	gc->chip_types[0].chip.irq_startup = lan966x_oic_irq_startup;
++	gc->chip_types[0].chip.irq_shutdown = lan966x_oic_irq_shutdown;
++	gc->chip_types[0].chip.irq_set_type = lan966x_oic_irq_set_type;
++	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
++	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
++	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
++	gc->private = chip_regs;
++
++	/* Disable all interrupts handled by this chip */
++	irq_reg_writel(gc, ~0, chip_regs->reg_off_ena_clr);
++}
++
++static void lan966x_oic_chip_exit(struct irq_chip_generic *gc)
++{
++	/* Disable and ack all interrupts handled by this chip */
++	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
++	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
++}
++
++static void lan966x_oic_domain_init(struct irq_domain *d)
++{
++	struct lan966x_oic_data *lan966x_oic = d->host_data;
++
++	irq_set_chained_handler_and_data(lan966x_oic->irq, lan966x_oic_irq_handler, d);
++}
++
++static int lan966x_oic_probe(struct platform_device *pdev)
++{
++	struct irq_domain_chip_generic_info gc_info = {
++		.irqs_per_chip		= 32,
++		.num_chips		= 1,
++		.name			= "lan966x-oic"
++		.handler		= handle_level_irq,
++		.init			= lan966x_oic_chip_init,
++		.destroy		= lan966x_oic_chip_exit,
++	};
++
++	struct irq_domain_info info = {
++		.fwnode			= of_node_to_fwnode(pdev->dev.of_node),
++		.size			= LAN966X_OIC_NR_IRQ,
++		.hwirq_max		= LAN966X_OIC_NR_IRQ,
++		.ops			= &irq_generic_chip_ops,
++		.gc_info		= &gc_info,
++		.init			= lan966x_oic_domain_init,
++	};
++	struct lan966x_oic_data *lan966x_oic;
++	struct device *dev = &pdev->dev;
++
++	lan966x_oic = devm_kmalloc(dev, sizeof(*lan966x_oic), GFP_KERNEL);
++	if (!lan966x_oic)
++		return -ENOMEM;
++
++	lan966x_oic->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(lan966x_oic->regs))
++		return dev_err_probe(dev, PTR_ERR(lan966x_oic->regs), "failed to map resource\n");
++
++	lan966x_oic->irq = platform_get_irq(pdev, 0);
++	if (lan966x_oic->irq < 0)
++		return dev_err_probe(dev, lan966x_oic->irq, "failed to get the IRQ\n");
++
++	lan966x_oic->domain = irq_domain_instantiate(&info);
++	if (!lan966x_oic->domain)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, lan966x_oic);
++	return 0;
++}
++
++static void lan966x_oic_remove(struct platform_device *pdev)
++{
++	struct lan966x_oic_data *lan966x_oic = platform_get_drvdata(pdev);
++
++	irq_set_chained_handler_and_data(lan966x_oic->irq, NULL, NULL);
++	irq_domain_remove(lan966x_oic->domain);
++}
 
-This is to be used only when the hardware can tell what frequency the
-CPU is running at when it is asked for that value.
+See?
 
-> - scaling_cur_freq -> last requested frequency and for some cases, feedba=
-ck from
->   counters
+Thanks,
 
-Yes, but see above - I would prefer to limit it to the last requested
-frequency in the future.
-
-> - whatever_name_we_will_come_with -> average frequency based on counters =
-?
-
-Yes.
-
->   not always available
-
-None of them would be always present, but at least one of them would
-be present on any system.
-
->  It is still bit confusing.
-
-Fair enough.
+        tglx
