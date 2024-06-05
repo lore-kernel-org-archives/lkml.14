@@ -1,77 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CABE91BD4EC;
-	Wed,  5 Jun 2024 11:56:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCF51BD4E7;
+	Wed,  5 Jun 2024 11:56:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588581; cv=none; b=cDp4VjD23JVgKffN+jdrjhV3tcMRMU9Geu7A1mI7IgQNxjVu/o4EGcNwUyR6veX87zTYgIdfPAEJPGrs7LPlq9HXFLzp2jFqTkEMHh04ES7i/IYw1bTIqO777dVv0CyImz32KaFEab7EevFwzm5TgbVH12hWXKwsIIfxoJGsi+c=
+	t=1717588581; cv=none; b=KmcczOm7780XLTe5E4uPEomHCT7GKt3O3ogGr2yMqLAgh5Iaof+N3c9QycR4CPPA71uyb84V3BLYmqMgpcj1T0BDm7B4AhKxVlWjzGfYR4XhdmxNJ+Ah5GJOo2MYbF8bBZ6Yy8PqIwKpFdDN7yOCarO0CPbUAjgIOYmNBCSClEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717588581; c=relaxed/simple;
-	bh=Zy9IzQB3ejrKR2POqOn3wcMgHH1MCGBVI1V+s+78v5U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PcN3o1WtBX1hrvpfeUvrXizyfoig3yzhTRkpMw1g3ociTeEP2cbqT4lctnmNVP2SlGvGr4/bTpbd1cxdIp46FBrZwLXc2JBuq2oO/lU5BV3OEI35ueB3848inTNetYbXiWgXDpIpeC/nncMRH0h2AwU0y9tHKojBvoFqPNkp6Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37701339;
-	Wed,  5 Jun 2024 04:56:42 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.40.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 625493F762;
-	Wed,  5 Jun 2024 04:56:14 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	shuah@kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	broonie@kernel.org,
-	suzuki.poulose@arm.com,
-	Anshuman.Khandual@arm.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] selftests: arm64: Fix redundancy of a testcase
-Date: Wed,  5 Jun 2024 17:24:48 +0530
-Message-Id: <20240605115448.640717-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.34.1
+	bh=ceeJCzGk3tRd6y45nGAz6nA6y/fUYC7C7+ndgPabfS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XY3KJKhNLF1R5XiPoIxigNSAMI2ZO6l5c2/N6oPx3zDcGOR9lgH4otIbm86CZ9i2iNkVClHDMOd5PJHMUVIsy6WV8x4J9N3drIyW/AwKa3/iZiI8CCgqMIFBaTI8YZLG+RFrqpO0tgiu4edIFAYfpk9drcOT4hSEub1KdDiynY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxhBIwf2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxhBIwf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF0FC32786;
+	Wed,  5 Jun 2024 11:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717588580;
+	bh=ceeJCzGk3tRd6y45nGAz6nA6y/fUYC7C7+ndgPabfS4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HxhBIwf2Ie+qS69nc5uUBUbnI0LESNbnRHW6sxC2zvUWyjydl6axttB/9IPUMSgDe
+	 Uefn4pCTQHd9rTLTJGgCsRhACrzW/1HTaFpNJapRyFhvS989odvF1MGM3HarB+dsPQ
+	 36iNao+2UtrTvQ4HTQgpOvTiU88JHbc5R0myZW+IFd5IMMn0PzM4SGxbKbk6BNieKQ
+	 y9te0+j0+N5j6r0luORRsirVfET+PaRHkHfRm8f0QV3Al8hFDpE1dUTR0d1EMtuTcA
+	 7WzIOgfaeS4jLNYfrKUOlAfYJn9k5iL7ALuFjD6MIxKmQ1f5vu6gmsJUsSz2nW1Eh8
+	 3de4zUH/nEeMQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Sasha Levin <sashal@kernel.org>,
+	ntfs3@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.6 1/4] fs/ntfs3: Mark volume as dirty if xattr is broken
+Date: Wed,  5 Jun 2024 07:56:13 -0400
+Message-ID: <20240605115619.2965224-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
 
-Currently, we are writing the same value as we read, into the TLS
-register; hence, we cannot confirm updation of the register, making the
-testcase "verify_tpidr_one" redundant. Fix this; while at it, do a style
-change.
+From: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+[ Upstream commit 24f6f5020b0b2c89c2cba5ec224547be95f753ee ]
+
+Mark a volume as corrupted if the name length exceeds the space
+occupied by ea.
+
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/arm64/abi/ptrace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ntfs3/xattr.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/arm64/abi/ptrace.c b/tools/testing/selftests/arm64/abi/ptrace.c
-index abe4d58d731d..c105703442f9 100644
---- a/tools/testing/selftests/arm64/abi/ptrace.c
-+++ b/tools/testing/selftests/arm64/abi/ptrace.c
-@@ -47,7 +47,7 @@ static void test_tpidr(pid_t child)
+diff --git a/fs/ntfs3/xattr.c b/fs/ntfs3/xattr.c
+index b50010494e6d0..72bceb8cd164b 100644
+--- a/fs/ntfs3/xattr.c
++++ b/fs/ntfs3/xattr.c
+@@ -219,8 +219,11 @@ static ssize_t ntfs_list_ea(struct ntfs_inode *ni, char *buffer,
+ 		if (!ea->name_len)
+ 			break;
  
- 	/* ...write a new value.. */
- 	write_iov.iov_len = sizeof(uint64_t);
--	write_val[0] = read_val[0]++;
-+	write_val[0] = read_val[0] + 1;
- 	ret = ptrace(PTRACE_SETREGSET, child, NT_ARM_TLS, &write_iov);
- 	ksft_test_result(ret == 0, "write_tpidr_one\n");
+-		if (ea->name_len > ea_size)
++		if (ea->name_len > ea_size) {
++			ntfs_set_state(ni->mi.sbi, NTFS_DIRTY_ERROR);
++			err = -EINVAL; /* corrupted fs */
+ 			break;
++		}
  
-@@ -108,7 +108,7 @@ static void test_tpidr(pid_t child)
- 		/* Writing only TPIDR... */
- 		write_iov.iov_len = sizeof(uint64_t);
- 		memcpy(write_val, read_val, sizeof(read_val));
--		write_val[0] += 1;
-+		++write_val[0];
- 		ret = ptrace(PTRACE_SETREGSET, child, NT_ARM_TLS, &write_iov);
- 
- 		if (ret == 0) {
+ 		if (buffer) {
+ 			/* Check if we can use field ea->name */
 -- 
-2.39.2
+2.43.0
 
