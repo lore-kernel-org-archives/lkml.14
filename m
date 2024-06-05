@@ -1,187 +1,238 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECDB61FD6;
-	Wed,  5 Jun 2024 03:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C2F79DE;
+	Wed,  5 Jun 2024 03:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717557396; cv=none; b=CwyCkLKnibylpZNoxJUgYU83t/4I+z14QqmUTrykh44txiD45EDtjUkWclf3FHS1CL1DyDE+ljgoa1SZmRsT6Vv01GLT+73jbbjcbthj/Yrb0jsYKn4reIlNoZ/A60ZPfVnJq7abKxDqkykItd2v4JiyRlKeEWaMI/go5HpmS20=
+	t=1717557714; cv=none; b=bMket+WSnFYquo1L2uVS1VJXdvD5kkvrRHRXxQkQ6MjlssPOYhpc5KXD5bsx7LGGeTDNdiA0Yx/U6y9Wca7Vw0wORxnKfYwj6co1bApy8sJdOrJ9BdzvRvDPV5fADLdhokKEdDhO1QBnPRhzlNKlV0wGkkIs8QUOWVBEtq7LW98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717557396; c=relaxed/simple;
-	bh=v7bqHyIO4iVfIbMVo+iH1Ip0qC3Cf0C2y0KTaHyA00s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pCYRjHMEnwUuCHgwGfb1xbY2wpSsImSSfahivPsNEMhpiaA/yEy3gxSasOm1DS64qx3MlQGN4uCE9DnFmuN/fZyYJ67uEnWB5Ibs14ayva2ZY4yptdLYhxy6hn4A1VUFh9U7Lw6KoUIgtti4fSqRxXY1XtEW4kCOFWohtPfQuKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cmNEdt4k; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717557714; c=relaxed/simple;
+	bh=XXmGYhr/asAtu28FiZdJhn7l0dn1aN/YIqMkca+f7JE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OYb1KLB+4vOUJw4bZyrgCev+Yb2b2uXTZiZzYcI9RbHybrsKAkIVAm3rQlZOyLkRt8EhElZG6e2b7gAqFkBMQ9xQHcxzMXwvqlN8xvjlQIa1Dxboxfy5mi5qlTQrj81eGOrjHRXvul9I6IWV0eUvBqOGS5TPYx8b32hMlj2JBvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTH+VKDo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmNEdt4k"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-250671a1bc7so2390200fac.3;
-        Tue, 04 Jun 2024 20:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717557394; x=1718162194; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JqWWhco0dPRwv8s9y+uizWbrW3o5dwpgbW/xuzuerC0=;
-        b=cmNEdt4kEsuUA6mErsmB4tHHI5otb7eDFPhHKzozNByspCo4MTz+5/qJJmvLVwjO1Q
-         LLs9o+8aJ1JWdENSH0AM4z5U7WWCdNf/m5EooMsuM61SOvtdHABoPSOgVxHmMh+RuY/3
-         E20TTN2Z3BJV5AzPugibiCANerJUxZP/IYrqqY4sDK679mrnzE2amf46u2d97PotV0yp
-         q5DkyBEX2CDAj80xR4cxm4g0Ow/N58ovt83JUaz/d+uq6wY/T9MAmd1J0r7xdW9D31LN
-         kAo5PETiENk4apA2c+z2wv5zbUjLqIgII7/3SRSFtqUi0J5vOYVSvupTS//N3YVVjhuo
-         KPag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717557394; x=1718162194;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JqWWhco0dPRwv8s9y+uizWbrW3o5dwpgbW/xuzuerC0=;
-        b=RxMbpZjFHC7mwf2zgWxyupVzYcFym3T8a+fAGIldECWWS4SJII0lyfmb6f2Kf3kUZf
-         evr52VYtpkBlaBLstZXH1iMgiDO7/MM/xbVEKfoKxMVS/4bxvYhGRC885KlWTlTiNkjN
-         s/1bX/YqGboA1rdA+ujiI5gHBSyij6ONzu8ReAeXN7jVgNMKCOYnvbKX7SPQrfYQ4AJJ
-         v7AyQnIqcTC2WVVH9JAdWy8ZT7/KIPy1GVeEAMQLaRD01YdZ6XxPFx6bDDrF+UFYn0UM
-         vetKaVzXvF+LRKRHUFMG9sMji2y6VxJ5sfOjTw4zMZLQfgdtrEztbUiTku/s7jGVr9Rz
-         M8WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcP51Vrp19QzMqi+GvdniCj8/tM80/YCMKsO5BnOJrtLQ8a8b667YsIoEjvqMSLA8LRHmE61yUAkpSoWc9UtVSJrwBEXP2lLvOjr8NqArCcA9wy34J4x93yhnDGuL+yKLzD6Kgc27PAGXCYdN6
-X-Gm-Message-State: AOJu0YxIAOJ8+SfoH5iLJfVYlbAwZtDlBvEWRVm0r0AVC9Q7DjqCqL5Q
-	I7bvJxaNWFf2XKEYFBIGgxWgcuSViBhHncLbIMHTLv2xOpA6U3wodb5ji3rW3gOW2CECEeyRZrz
-	eo+7HyEhvV94JmV1WI2OmQSkM1OMVLlRUC8W+yEqpfM0=
-X-Google-Smtp-Source: AGHT+IEHL9qjg96yTYs5We9NBxT8bnCI7iGbvahqXdWMGzraqAlM+xrRYh96re2aL4desQqMc+FeHrpWBEGRYXtaJ78=
-X-Received: by 2002:a05:6870:a446:b0:24f:c715:a4d4 with SMTP id
- 586e51a60fabf-25121fec152mr1756596fac.40.1717557394043; Tue, 04 Jun 2024
- 20:16:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTH+VKDo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5ECBC32781;
+	Wed,  5 Jun 2024 03:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717557714;
+	bh=XXmGYhr/asAtu28FiZdJhn7l0dn1aN/YIqMkca+f7JE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uTH+VKDo86rqriq+2tGeiI7GDLHqZyU6gpJv5Gb4oh4x147MTH9CRncEJcUS16Im1
+	 zwY3xS9Se9/6NRsglKZufswbeuKwXEDxXgDxkGNGfYDwaBV6wPEe4QgyL48vfpkOzX
+	 BxUyxVysug7fAW36wbeAYeEO9eGuybI3K+lQiuuB86UeupXkzYcUr3TfXcjasB1tvu
+	 pWWTZFxpKomQcMqR+4tj4Xe2fpD9lmNOYH3TaH5G3caDqm7WYMVdYJyifthaainz87
+	 0+acwJhNxXYQq19ZQXGnggDddTePod1+kZv7Qd37SGugKvHkrFxBr3RrSN8tvnQcoy
+	 hBTZKDds+cyew==
+From: Song Liu <song@kernel.org>
+To: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	nathan@kernel.org,
+	morbo@google.com,
+	justinstitt@google.com,
+	mcgrof@kernel.org,
+	thunder.leizhen@huawei.com,
+	kees@kernel.org,
+	kernel-team@meta.com,
+	Song Liu <song@kernel.org>
+Subject: [PATCH] kallsyms, livepatch: Fix livepatch with CONFIG_LTO_CLANG
+Date: Tue,  4 Jun 2024 20:21:20 -0700
+Message-ID: <20240605032120.3179157-1-song@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <TYSPR04MB708410A11D944F4553DB55A08AEB2@TYSPR04MB7084.apcprd04.prod.outlook.com>
-In-Reply-To: <TYSPR04MB708410A11D944F4553DB55A08AEB2@TYSPR04MB7084.apcprd04.prod.outlook.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Wed, 5 Jun 2024 11:15:59 +0800
-Message-ID: <CAAfSe-tDX-2VTJJFpZ8fF+BLbbiOCdHX1+6A9c224KwVaGC_CA@mail.gmail.com>
-Subject: Re: [PATCH] clocksource/drivers/sprd: Enable register for timer
- counter from 32 bit to 64 bit
-To: Enlin Mu <enlin.mu@outlook.com>
-Cc: orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, tglx@linutronix.de, 
-	enlin.mu@unisoc.com, enlinmu@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Enlin,
+With CONFIG_LTO_CLANG, the compiler may postfix symbols with .llvm.<hash>
+to avoid symbol duplication. scripts/kallsyms.c sorted the symbols
+without these postfixes. The default symbol lookup also removes these
+postfixes before comparing symbols.
 
-On Wed, 22 May 2024 at 16:15, Enlin Mu <enlin.mu@outlook.com> wrote:
->
-> From: Enlin Mu <enlin.mu@unisoc.com>
->
-> Using 32 bit for suspend compensation, the max compensation time is 36
-> hours(working clock is 32k).In some IOT devices, the suspend time may
-> be long, even exceeding 36 hours. Therefore, a 64 bit timer counter
-> is needed for counting.
->
-> Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
-> ---
->  drivers/clocksource/timer-sprd.c | 29 ++++++++++++++++++++---------
->  1 file changed, 20 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/clocksource/timer-sprd.c b/drivers/clocksource/timer-sprd.c
-> index 430cb99d8d79..936691e27f8b 100644
-> --- a/drivers/clocksource/timer-sprd.c
-> +++ b/drivers/clocksource/timer-sprd.c
-> @@ -30,6 +30,7 @@
->  #define TIMER_VALUE_SHDW_HI    0x1c
->
->  #define TIMER_VALUE_LO_MASK    GENMASK(31, 0)
-> +#define TIMER_VALUE_HI_MASK    GENMASK(31, 0)
->
->  static void sprd_timer_enable(void __iomem *base, u32 flag)
->  {
-> @@ -57,10 +58,11 @@ static void sprd_timer_disable(void __iomem *base)
->         writel_relaxed(val, base + TIMER_CTL);
->  }
->
-> -static void sprd_timer_update_counter(void __iomem *base, unsigned long cycles)
-> +static void sprd_timer_update_counter(void __iomem *base, unsigned long cycles_lo,
-> +                                       unsigned long cycles_hi)
+On the other hand, livepatch need to look up symbols with the full names.
+However, calling kallsyms_on_each_match_symbol with full name (with the
+postfix) cannot find the symbol(s). As a result, we cannot livepatch
+kernel functions with .llvm.<hash> postfix or kernel functions that use
+relocation information to symbols with .llvm.<hash> postfixes.
 
-I would suggest using u64 rather than adding a new parameter. In this
-way we can avoid some of the changes below.
->  {
-> -       writel_relaxed(cycles & TIMER_VALUE_LO_MASK, base + TIMER_LOAD_LO);
-> -       writel_relaxed(0, base + TIMER_LOAD_HI);
-> +       writel_relaxed(cycles_lo & TIMER_VALUE_LO_MASK, base + TIMER_LOAD_LO);
-> +       writel_relaxed(cycles_hi, base + TIMER_LOAD_HI);
->  }
->
->  static void sprd_timer_enable_interrupt(void __iomem *base)
-> @@ -82,7 +84,8 @@ static int sprd_timer_set_next_event(unsigned long cycles,
->         struct timer_of *to = to_timer_of(ce);
->
->         sprd_timer_disable(timer_of_base(to));
-> -       sprd_timer_update_counter(timer_of_base(to), cycles);
-> +       sprd_timer_update_counter(timer_of_base(to), cycles,
-> +                               (u64)cycles >> 32);
+Fix this by calling kallsyms_on_each_match_symbol without the postfix;
+and then match the full name (with postfix) in klp_match_callback.
 
-On 32-bit systems, TIMER_LOAD_HI is still 0.
+Signed-off-by: Song Liu <song@kernel.org>
+---
+ include/linux/kallsyms.h | 13 +++++++++++++
+ kernel/kallsyms.c        | 21 ++++++++++++++++-----
+ kernel/livepatch/core.c  | 32 +++++++++++++++++++++++++++++++-
+ 3 files changed, 60 insertions(+), 6 deletions(-)
 
->         sprd_timer_enable(timer_of_base(to), 0);
->
->         return 0;
-> @@ -93,7 +96,8 @@ static int sprd_timer_set_periodic(struct clock_event_device *ce)
->         struct timer_of *to = to_timer_of(ce);
->
->         sprd_timer_disable(timer_of_base(to));
-> -       sprd_timer_update_counter(timer_of_base(to), timer_of_period(to));
-> +       sprd_timer_update_counter(timer_of_base(to), timer_of_period(to),
-> +                               (u64)timer_of_period(to) >> 32);
+diff --git a/include/linux/kallsyms.h b/include/linux/kallsyms.h
+index c3f075e8f60c..d7d07a134ae4 100644
+--- a/include/linux/kallsyms.h
++++ b/include/linux/kallsyms.h
+@@ -97,6 +97,10 @@ extern int sprint_backtrace_build_id(char *buffer, unsigned long address);
+ 
+ int lookup_symbol_name(unsigned long addr, char *symname);
+ 
++int kallsyms_lookup_symbol_full_name(unsigned long addr, char *symname);
++
++void kallsyms_cleanup_symbol_name(char *s);
++
+ #else /* !CONFIG_KALLSYMS */
+ 
+ static inline unsigned long kallsyms_lookup_name(const char *name)
+@@ -165,6 +169,15 @@ static inline int kallsyms_on_each_match_symbol(int (*fn)(void *, unsigned long)
+ {
+ 	return -EOPNOTSUPP;
+ }
++
++static inline int kallsyms_lookup_symbol_full_name(unsigned long addr, char *symname)
++{
++	return -ERANGE;
++}
++
++static inline void kallsyms_cleanup_symbol_name(char *s)
++{
++}
+ #endif /*CONFIG_KALLSYMS*/
+ 
+ static inline void print_ip_sym(const char *loglvl, unsigned long ip)
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 22ea19a36e6e..f0d04fa1bbb4 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -163,7 +163,7 @@ unsigned long kallsyms_sym_address(int idx)
+ 	return kallsyms_relative_base - 1 - kallsyms_offsets[idx];
+ }
+ 
+-static void cleanup_symbol_name(char *s)
++void kallsyms_cleanup_symbol_name(char *s)
+ {
+ 	char *res;
+ 
+@@ -191,7 +191,7 @@ static int compare_symbol_name(const char *name, char *namebuf)
+ 	 * To ensure correct bisection in kallsyms_lookup_names(), do
+ 	 * cleanup_symbol_name(namebuf) before comparing name and namebuf.
+ 	 */
+-	cleanup_symbol_name(namebuf);
++	kallsyms_cleanup_symbol_name(namebuf);
+ 	return strcmp(name, namebuf);
+ }
+ 
+@@ -426,7 +426,7 @@ static const char *kallsyms_lookup_buildid(unsigned long addr,
+ 						offset, modname, namebuf);
+ 
+ found:
+-	cleanup_symbol_name(namebuf);
++	kallsyms_cleanup_symbol_name(namebuf);
+ 	return ret;
+ }
+ 
+@@ -446,7 +446,7 @@ const char *kallsyms_lookup(unsigned long addr,
+ 				       NULL, namebuf);
+ }
+ 
+-int lookup_symbol_name(unsigned long addr, char *symname)
++static int __lookup_symbol_name(unsigned long addr, char *symname, bool cleanup)
+ {
+ 	int res;
+ 
+@@ -468,10 +468,21 @@ int lookup_symbol_name(unsigned long addr, char *symname)
+ 		return res;
+ 
+ found:
+-	cleanup_symbol_name(symname);
++	if (cleanup)
++		kallsyms_cleanup_symbol_name(symname);
+ 	return 0;
+ }
+ 
++int lookup_symbol_name(unsigned long addr, char *symname)
++{
++	return __lookup_symbol_name(addr, symname, true);
++}
++
++int kallsyms_lookup_symbol_full_name(unsigned long addr, char *symname)
++{
++	return __lookup_symbol_name(addr, symname, false);
++}
++
+ /* Look up a kernel symbol and return it in a text buffer. */
+ static int __sprint_symbol(char *buffer, unsigned long address,
+ 			   int symbol_offset, int add_offset, int add_buildid)
+diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+index 52426665eecc..284220e04801 100644
+--- a/kernel/livepatch/core.c
++++ b/kernel/livepatch/core.c
+@@ -128,6 +128,19 @@ struct klp_find_arg {
+ static int klp_match_callback(void *data, unsigned long addr)
+ {
+ 	struct klp_find_arg *args = data;
++#ifdef CONFIG_LTO_CLANG
++	char full_name[KSYM_NAME_LEN];
++
++	/*
++	 * With CONFIG_LTO_CLANG, we need to compare the full name of the
++	 * symbol (with .llvm.<hash> postfix).
++	 */
++	if (kallsyms_lookup_symbol_full_name(addr, full_name))
++		return 0;
++
++	if (strcmp(args->name, full_name))
++		return 0;
++#endif
+ 
+ 	args->addr = addr;
+ 	args->count++;
+@@ -145,10 +158,12 @@ static int klp_match_callback(void *data, unsigned long addr)
+ 
+ static int klp_find_callback(void *data, const char *name, unsigned long addr)
+ {
++#ifndef CONFIG_LTO_CLANG
+ 	struct klp_find_arg *args = data;
+ 
+ 	if (strcmp(args->name, name))
+ 		return 0;
++#endif
+ 
+ 	return klp_match_callback(data, addr);
+ }
+@@ -162,11 +177,26 @@ static int klp_find_object_symbol(const char *objname, const char *name,
+ 		.count = 0,
+ 		.pos = sympos,
+ 	};
++	const char *lookup_name = name;
++#ifdef CONFIG_LTO_CLANG
++	char short_name[KSYM_NAME_LEN];
++
++	/*
++	 * With CONFIG_LTO_CLANG, the symbol name make have .llvm.<hash>
++	 * postfix, e.g. show_cpuinfo.llvm.12345.
++	 * Call kallsyms_on_each_match_symbol with short_name, e.g.
++	 * show_cpuinfo, args->name is still the full name, which is used
++	 * checked in klp_match_callback.
++	 */
++	strscpy(short_name, name, sizeof(short_name));
++	kallsyms_cleanup_symbol_name(short_name);
++	lookup_name = short_name;
++#endif
+ 
+ 	if (objname)
+ 		module_kallsyms_on_each_symbol(objname, klp_find_callback, &args);
+ 	else
+-		kallsyms_on_each_match_symbol(klp_match_callback, name, &args);
++		kallsyms_on_each_match_symbol(klp_match_callback, lookup_name, &args);
+ 
+ 	/*
+ 	 * Ensure an address was found. If sympos is 0, ensure symbol is unique;
+-- 
+2.43.0
 
-Same here, so do you need to consider 32-bit systems?
-
->         sprd_timer_enable(timer_of_base(to), TIMER_CTL_PERIOD_MODE);
->
->         return 0;
-> @@ -162,14 +166,21 @@ static struct timer_of suspend_to = {
->
->  static u64 sprd_suspend_timer_read(struct clocksource *cs)
->  {
-> -       return ~(u64)readl_relaxed(timer_of_base(&suspend_to) +
-> -                                  TIMER_VALUE_SHDW_LO) & cs->mask;
-> +       u32 hi, lo;
-> +
-> +       lo = readl_relaxed(timer_of_base(&suspend_to) +
-> +                                  TIMER_VALUE_SHDW_LO);
-> +       hi = readl_relaxed(timer_of_base(&suspend_to) +
-> +                                  TIMER_VALUE_SHDW_HI);
-> +
-> +       return ~((u64)hi << 32 | lo);
->  }
->
->  static int sprd_suspend_timer_enable(struct clocksource *cs)
->  {
->         sprd_timer_update_counter(timer_of_base(&suspend_to),
-> -                                 TIMER_VALUE_LO_MASK);
-> +                                 TIMER_VALUE_LO_MASK,
-> +                                 TIMER_VALUE_HI_MASK);
-
-Like I suggested above, not add a new parameter, then pass
-CLOCKSOURCE_MASK(64) as the cycles, that would avoid wrongly setting
-TIMER_LOAD_HI for 32-bit systems based on the current implementations.
-
-Thanks,
-Chunyan
-
->         sprd_timer_enable(timer_of_base(&suspend_to), TIMER_CTL_PERIOD_MODE);
->
->         return 0;
-> @@ -186,7 +197,7 @@ static struct clocksource suspend_clocksource = {
->         .read   = sprd_suspend_timer_read,
->         .enable = sprd_suspend_timer_enable,
->         .disable = sprd_suspend_timer_disable,
-> -       .mask   = CLOCKSOURCE_MASK(32),
-> +       .mask   = CLOCKSOURCE_MASK(64),
->         .flags  = CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
->  };
->
-> --
-> 2.39.2
->
