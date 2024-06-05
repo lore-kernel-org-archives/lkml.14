@@ -1,91 +1,127 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C9C19006D;
-	Wed,  5 Jun 2024 09:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EDC19006D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717580212; cv=none; b=s0NCjbaLvYEFvipxrBbccxTGBFpI7Dp30wCNDtqllns8M8sTeAfz8YMja8POw6dxFBGQ9s3M/X/vQQfdDNsdUJr56nYtMzco1OXdahqo4Mx1tUZiAo4KtjNfu8GEJvQXqr4vp+LV3mymU61OgOvlq0gpGhfHMe2SSLUE98Pb/Ts=
+	t=1717580233; cv=none; b=uhS8foHmnnCuuBLmt9VCiwFAWo+ePXHeWks1k3iphE8VMGlpAAieKEAsHFr101zxpNSlZLN9e2vm/3rzMrwt20acvyl1DddkCs3nxM3vf+A+6C3dMVTpnxygblL84O2I8uCGArCfZSJeLXj2LUkg9sK2NUvM2KSADpKJnqr0llA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717580212; c=relaxed/simple;
-	bh=M77RrYoGQJJU2kRPKFShDM2HV1XAifjZT53RIOfzF74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FaOKHFSKOWlbv0LyrSSRUd3ge5crTY5Ndmzp2tiaBwvxU2g+OKucbUA4rP99TaQF9Ywy17KEKkmCy7/KHBjsnWYqve0XYkBAAWC7oYUbAV4utj92fQH8OCEwda6ZEV3J5tLiITAxleO0ycI5tRjfMNoD1BYIdDhXLKgqcYHlBKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ewFF97Ps; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717580233; c=relaxed/simple;
+	bh=oi2WvBkcuibAfXOROdiAwxHovEGXU0w54vU+XEWreVY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qwkQ8GnMv1C/uqLxs833Rxejj1I9SDg0uCfRW2i1kqpVwhvfsMhlfORvYIA2JovCBIeJlAywjoFNc06jSjG8isHdusXRb1IEGu6e1Vtrf7YnupKQ8u1GmRYVT4wkOraHL/PxJcxdzR82JC3RMimuYFLdr49sT/fCBNcEgPkGmW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s/jZCjkL; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ewFF97Ps"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9889E40E016C;
-	Wed,  5 Jun 2024 09:36:42 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TrvBtMIroWna; Wed,  5 Jun 2024 09:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717580198; bh=sVAlGknADMTqq51pEmOH4pigiZZfPcaq6bynh+gDEbg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ewFF97Ps2admHqn0lwLWa440X4PnYGLeGoYNYX4dcK9Ffj0KHRdbkYsE/JaDALfLD
-	 CefvwQjM3WilXIaxwbfCdVG8ggK1za/38BRiA1TSgoBVcly0o03sN86gAolqs0ks5I
-	 mK4+MzugY7Mn153ID+uwVxKwNuO7ykSNoaBNxd2qKQseNE0oipQ9IYrPs4sbKr+sVj
-	 pZfGUppgHKl96FoMYPv+TgdJKn5tBTKh/9hIUWXpQU5rBcNALVg+sijB0EHqQepK6n
-	 9R8QkNU4qWht3/JgSil5iNxwHqP9wL2PtH0ZHGBhzScpoC5Lv1TxhFv66eGZ9Qb2o2
-	 PsZi276qQDkPlv5FYKVwNj4cBo+iABFcSh05SNsIp6YRDHd3Lz5fi7XiPzs5pP9rpc
-	 nMD6G006T+1vANZ9tEzttPUiFXlrXFhBrnABKBEtc8oT6kjvXZPJm8SNrjvE0XbwDP
-	 a4eYsTCmwx6TX4Kwa1u8FhBg0Nb12ARLZNuwxigMCCmZBzFe9SA92Vk8v7qExtpqcG
-	 7kl9SMDpg5FqpA9jl9iCWlqd1DRDsbhVOu+YthBIuZjUUsIt4ui7zS/MTpVaO1RFmp
-	 AranekvnxE5O06adlOeQ6k9SruS9M4coSTXwhIlewMZe47lI7Pf3wHceDoOwUeHKQ/
-	 eSmujPG6Fr2RL8s6c1iWpPSk=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21B8C40E016A;
-	Wed,  5 Jun 2024 09:36:15 +0000 (UTC)
-Date: Wed, 5 Jun 2024 11:36:09 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Dave Hansen <dave.hansen@intel.com>, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	mat.jonczyk@o2.pl, rdunlap@infradead.org,
-	alexandre.belloni@bootlin.com, mario.limonciello@amd.com,
-	yaolu@kylinos.cn, bhelgaas@google.com, justinstitt@google.com,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com
-Subject: Re: [PATCH] x86/hpet: Read HPET directly if panic in progress
-Message-ID: <20240605093609.GCZmAxidNIBP5bkDcX@fat_crate.local>
-References: <20240528063836.5248-1-TonyWWang-oc@zhaoxin.com>
- <50fc1bd3-909e-41c4-a991-9d81e32ef92c@intel.com>
- <87wmnda8mc.ffs@tglx>
- <CAHk-=wgMoeOTL1V3wTO=o=U1OXn7xF8OWv2hB9NF9Z=G4KotfQ@mail.gmail.com>
- <87le3t9i8c.ffs@tglx>
- <0aff3f62-a8a5-4358-ae3f-2ded339aface@zhaoxin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s/jZCjkL"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-421208c97a2so57895705e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717580230; x=1718185030; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSZI+79Ozf+tLjEjjKM/vl02OsbKzTxtYkNCBqG2m2s=;
+        b=s/jZCjkLvjppfLVmWxBbvPvDbbCeP7nj2Uv3zFcpRXEg3crW/ZUsi/OC3WEV6l0iNO
+         8dNqn7SASjwiLEoBt5IQzymgz+YYvg+Y0j/d4Bn7buuB3/eUIAMuNc58t04ooRQTxybE
+         UFhOzYIg5wpEmpQTB7goav+A0uSZaXzsfIt+/oifyacwIHAqy+fnJriwTl4zDm21e3go
+         /hVe1k/kNtqkqkgnWAKbh/4fF5BiMTHWgp9RNJBNDAhgcwOaMt+JO9I4cFOvZvQiYMch
+         qFr8SP4MdDKAUyh6RYk4pqLDE10ozi/XFfphpcRHedNN02pjEfazSpDPkaaIcJdU4SV8
+         mHzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717580230; x=1718185030;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LSZI+79Ozf+tLjEjjKM/vl02OsbKzTxtYkNCBqG2m2s=;
+        b=g/duW810LrIKu++wcia40b9L+O9YL/3pg3il6HH5hXDCUw8d9ocSe/2T0xXzSTPt8N
+         7EIScX9POwoY/s8k03HtGsT84xabMMWbUx4FisBqPwvvWLJLOIkAHKZxxiQ5UdepxlN4
+         /YRbHVzm9sVP+zgxbrotvEAZNWDlm1nq8pFfazMMFCks9FO+gylCDz/pzKGLPSKPFPnL
+         6lPMdzIL2EaHruGkkRE6IhcJP9G+85BAmrAPQZEgYbB1f2gPX3TKL6B6vMAt4lI/ncp/
+         2nq7OG8fClZuTAkFOP2ps5tqx+krXOnJVjYjzx6Z9VHbAM5pRDoiBmJdmXl3pHzQGgto
+         9D1w==
+X-Forwarded-Encrypted: i=1; AJvYcCV2RzlvzKgCIv3jaOlF3hPbkbdyb+FX8ClfSbIGz8kQBqI9qoCoGnmk4e7uS+CZY+PfVpaVhITj8bRoHqC0ri0xKu+i5vb1Db8bnzYd
+X-Gm-Message-State: AOJu0Yz6TzZrbjqOI9RNOHtIlKlA7mfHDDQSRECJNy67wykJuuBt27BU
+	Sd+ukARibfngrhdLVudAl9XK1w+v94L/PgcqwZ1asmQjapBk7ldk6IJe1qaxFrizNUuqakCTcH8
+	R
+X-Google-Smtp-Source: AGHT+IGAjFy2U1Sr+dNT5Lezmn24SCXAPKGBu2lzxTmKU5abNAvO1losuUJ7PfnTYXCgDx0HUW4r9A==
+X-Received: by 2002:a05:600c:46d3:b0:421:2adb:dd5d with SMTP id 5b1f17b1804b1-421562c7fa6mr15583975e9.8.1717580230396;
+        Wed, 05 Jun 2024 02:37:10 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421581016c6sm14510245e9.3.2024.06.05.02.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 02:37:10 -0700 (PDT)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Wed, 05 Jun 2024 11:37:08 +0200
+Subject: [PATCH] dt-bindings: iio: adc: amlogic,meson-saradc: add optional
+ power-domains
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0aff3f62-a8a5-4358-ae3f-2ded339aface@zhaoxin.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-topic-amlogic-upstream-bindings-fixes-power-domains-sardac-v1-1-40a8de6baa59@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAMMxYGYC/x2NSQrDMAxFrxK0rsA1daerlCzUWHEF9YCUDhBy9
+ 5quHg8e/69grMIG12EF5beY1NJlvxtgelBJjBK7g3f+4I4u4FKbTEj5WVPnq9miTBnvUqKUZDj
+ Llw1b/bBirJmkGBpppAndfIne84lDOEM/aMr/uu/fxm37AUJHyVSMAAAA
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1007;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=oi2WvBkcuibAfXOROdiAwxHovEGXU0w54vU+XEWreVY=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmYDHFLxSezg6MSIqYHnt3c+yfTVn70mG8pfNZ2oUF
+ kJzSJT6JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZmAxxQAKCRB33NvayMhJ0bRND/
+ 9VWdftl4+ZipFhnGlqNjNwYhnqAPXR3Z0dbtvuMA7h/YrhUWK7oCzAcQM/xI+XK/HfPi9D1TKdstU3
+ KL2F2FexCIHybxIBX76TWWAdT7C/hN8/Y9zXPj80wZLln4S2POzcAjiRRQ89IjZB3C+8LVDApKR/uC
+ fozYKf3ofRX8YJXg5yojKqoBcB2wH2JOysdHma+e6i1JlQs6GSa7SS6iBwyZhFena7sh+hqTu+N3NV
+ ezXtvolX/8fA5N7H4u0q2se2jxPsxqo4jc5awmDyLlcO86DSh2q8rK5E+fqB6I+hN4Jta2oj5WQ6fO
+ WrIU1IzJXu9q84bFBPfeOIRXOaRI4UT/D7oC3NysuOYVNKHFinu6hshbdTcyQMsrICWcodXvAia8zp
+ rfrdHW+tgck335MYJ7X3uTJXztALrOhB48enyC/8pk/eTzV+VyIJ3vf4pMm1CUToJEihZET5y/qshi
+ 7OWOZHGeOQSt7HQusRVZTAkmHx7tktOa0IPSKZd6essrqWBLamjpSD6D7BN/RJegC040YlSBV4Hc4C
+ 2/lrsFupoKccNtpaMrOb8djrXYpMF62TNkmRA5cCP/uUg51FfU9tZVl0IzeLwi14VwKLBkwFJLHg0j
+ i8AcF8M73dcI7L/LbXTxXYzGYrLXDueA0365BDHWLs3FGCdHKCVkuyqzZvow==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-On Wed, Jun 05, 2024 at 02:23:32PM +0800, Tony W Wang-oc wrote:
-> After MCE has occurred, it is possible for the MCE handler to execute the
-> add_taint() function without panic. For example, the fake_panic is
-> configured.
+On newer SoCs, the SAR ADC hardware can require a power-domain to operate,
+add it as optional.
 
-fake_panic is an ancient debugging leftover. If you set it, you get what
-you deserve.
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
+index 7e8328e9ce13..f748f3a60b35 100644
+--- a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml
+@@ -66,6 +66,9 @@ properties:
+   nvmem-cell-names:
+     const: temperature_calib
+ 
++  power-domains:
++    maxItems: 1
++
+ allOf:
+   - if:
+       properties:
+
+---
+base-commit: c3f38fa61af77b49866b006939479069cd451173
+change-id: 20240605-topic-amlogic-upstream-bindings-fixes-power-domains-sardac-0f9d22e7e558
+
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+Neil Armstrong <neil.armstrong@linaro.org>
 
-https://people.kernel.org/tglx/notes-about-netiquette
