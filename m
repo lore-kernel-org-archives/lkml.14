@@ -1,66 +1,66 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF87660DFA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 04:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374852C95
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 04:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717561548; cv=none; b=SfcqFfm0aaZIUxJY4jrZR15ZbnT/It4XjcEd7bWvlQ/IR93OCMs2Wj1NDUVomwzabyHEZmN8xwf0Hv2mv+lB7RhFmvfUDdpCebbN6mkEdODZ8AU+7gwoNFra3X7driLOiWa/mDYoIINF0aOQSEnQ6EJC761sSU2PQJuib6OmvFE=
+	t=1717561727; cv=none; b=A1TT+fVaztgcSfkP2RKLP3ROyLizQKVa7Na6DZbHzv9ly5/ZEgZxqTZ/zbcD+aFUR1Mvl2lyAezPODHvHfLAF9AkwyUQnf6zA3XT0KAgagabfjzzVtS8Kq2cX6AW230gGpJOwI90Iv8F8Ih5WWEHquUEpzaxd5dEGUiFdO5srB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717561548; c=relaxed/simple;
-	bh=g/5YMCb42qtGxp7osr6jvhFln2vqs6thuDpQEioZH94=;
+	s=arc-20240116; t=1717561727; c=relaxed/simple;
+	bh=O3GEJtKtOPg6m1xawLvY0IBJ5ZINCMAPlcV9uv29TEk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uA5aimz9X4UAAGzT7e5BgOgCpYPMbAzXpDuX5fhJ1iaQuHm1wXlulcZceEXy/2AThvam3KKhEB81y8/+RELOFXIiXkitFqkthuaShfOXPj47m5fFfVAF5O/EhuO9uC3B/vnK4ptiWxLMdzWGwpDr2Wutb1mudLpmbrP/986+beY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nUZVK7tI; arc=none smtp.client-ip=209.85.219.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGMOzAjNzWShIBE9y7sadAHv8ZSCEbXmjsnUcuUgclDfhsykRl8E2ecaxxhTY9paMrDgqC5+J6jXHz1WTU6Hf3JA45McBvbiGDeUP49jPggumCfUdJvns7Oa0vco/ExppsLZ2ZgVpfAlPPQIj3xMarkOS2K8J5pB2HJ4fOh3MDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ez6IBs6M; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nUZVK7tI"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dfa48f505dfso6423204276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 21:25:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez6IBs6M"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6af6c2bee7bso4369606d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 21:28:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717561546; x=1718166346; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1717561725; x=1718166525; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VEbQ1d4r/s6evsOJRL2N+n6Aljt6mp5bELQcUaKfVp4=;
-        b=nUZVK7tIkCttMQXjBFq1p327Sw2hzfkGiqR5inY9rLvilPOBXwdu673xOjCcLE3muj
-         fiIJ3y+xBsG9wAOQgGywrrjb3GQiTgt8K8GoH09MoV9TlLtNJ6ZFGimPCEO0KAvIQUIq
-         iF6Bp/hKuzmOsntcdbVB1Q476y1x8u8sP54OVnddnphgBqq9ED0EaWL7jga9rpI4efBD
-         7dPd6QgYX3eDuj6z3XQMXdv/jLRRn2ZUN33b05CssaIf1k/QMQkiXOI6iupf/WzzoOQE
-         /llkGdcEwiZ/Ef5sbhAp8gz2nERCNexmuQZiamdEwaMvFWoWly06vYETtSPUlf75hv66
-         7XJw==
+        bh=cDTcjcU9MKKWpRko2f3j4zKs/GNT628iQNRsdFkihSo=;
+        b=ez6IBs6MdeyaqgcEw5usec19KmwfkHaodOTWQr0+dbXkohiJKQe653JUR4kDgnYLQ5
+         EEo/9g7JTHx7+5CWw1Y36NFPrGSh/fVxBBwAkymM9YRB+pcMdlNCmPuItsn5oKgW2Nnu
+         Db32oElshEpwPHdfETTWwt6WhikKORe8Fa/nAOflGLOZGXVE6wjv/A2DPfHQlTDVgs5W
+         rHBJrRgZ5ZHhwRv13o7/pdPg48DpGNuInfNAboYqK1rCYwRetSRLXretWvNTBtQqOTOC
+         OEqSvpsepIHswOOYpYsPg6Lv8GivCPvadxmNJnjEJAo3rYcfVINcU15HkUe8WvZQ4iaP
+         47eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717561546; x=1718166346;
+        d=1e100.net; s=20230601; t=1717561725; x=1718166525;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VEbQ1d4r/s6evsOJRL2N+n6Aljt6mp5bELQcUaKfVp4=;
-        b=sQ3nWI/5/PxWwqo3Lx81hvMSIHoxRVHwCbtgdUhn3QMWgS0eLogVPWwIMFONDg5QfO
-         gxbFap5mCdO3aj28OLnWKPTX5q0uxSCmt0RsIo6fEIUaM3XLfCp58HBY/7ghCyk72w4X
-         eze3HZHY4gVOX/rT79zm/pu1vczOWILOsjIUdEyHvJTeNGAwreyxuvH264C6jMxOGSLx
-         oIS8AsZ3sziG/wfQ6NEr96cxXDJIoIbGGKOXVdDvAFN3zO5S7RQ91T1tPQfnfnLY1NIV
-         111NwEbaEcuU24lmsGoZdaJN1I9RrmdcoqqGSdAOcjK3UexF6lqUKIpb8jP1To7dqbt7
-         8NdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMxd08PAjHLKfJ913LXD2mjbMruTQ39fLgGr07FquMjrHUVX45nfjLK05FLQ7OEL/YJuLiX+MkHslYUi34Hx1UcvvkzGoXkju2pgyb
-X-Gm-Message-State: AOJu0YxUz4rDVFHAu6oTWLjYqIlIKlvu23UqML3Oo5Mn8tPfLZCq1DRR
-	x/Az3XQURCqxbhMpRw1KRdaJGXIdwmrzatV8FylUc1E2xw5nLhIk
-X-Google-Smtp-Source: AGHT+IGDx5f7VSHu8fYhbh4q9nBJtTrC0pCqjf9wS1OEJ/KEcEN279iY/nt7NkpxeR/7e0bLzLSSRg==
-X-Received: by 2002:a05:6902:248f:b0:de5:5506:5213 with SMTP id 3f1490d57ef6-dfacab2a23dmr1639410276.11.1717561545749;
-        Tue, 04 Jun 2024 21:25:45 -0700 (PDT)
+        bh=cDTcjcU9MKKWpRko2f3j4zKs/GNT628iQNRsdFkihSo=;
+        b=FPiYElRvibUlf9Bc/pFDIT1Iwuv7wmou+BtgKDQD4yrwHdadsgEAlzuQunYxU+PCjd
+         X9EDfKRJkuDrltg9MRO3/RZhP0skBa8gMhNhPX2Wjcnj+1QfksY4tqojP9e/8bDjdddE
+         X/CE4ps7UyazFYwi4SBQIPggzVtH3FVeAji5wGlB4aVCua5H5cVi/cvgpMXI2SKXLLwm
+         jUp8udkTHa0fLZ3cKyiTEfhAnK7t06csle/nizWTCH2uOR3NYik//XFCGix5beY083+p
+         OQj7A6kDWxP+ezyMXU62jde0iJiK0zLXEZYGWpMkRqHbei0CBVzIHNeeJ39aDptO91pj
+         fulw==
+X-Forwarded-Encrypted: i=1; AJvYcCVH2ijmf2OiKbZ5NO32UkxGC0+tco5K1WlHproKjRztAvMbWFjrSQMQKlH2r1XOHkpI3Lm2ESZ3iC0O6GQa99dX4IFF2AyP618qf+v8
+X-Gm-Message-State: AOJu0YwqY6gUHuGFPFzgGh2slDrCKDKwl1uuA1II7ngop1ekRRsdMnaE
+	Bq4YGKHCRsBTUJ4KdGCts04NaxSMEOPw7zSd3j+g/PERUHgwb6OR
+X-Google-Smtp-Source: AGHT+IHTMOrJvMeH0+oC4MQKZVVYnLqSbXOaayur3J4twi/8Z4nilffTJ5y6IJKoaS01NhCGAE0uVQ==
+X-Received: by 2002:a05:6214:2aa7:b0:6af:45d7:fc8 with SMTP id 6a1803df08f44-6aff72c1584mr75663436d6.17.1717561724986;
+        Tue, 04 Jun 2024 21:28:44 -0700 (PDT)
 Received: from fauth2-smtp.messagingengine.com (fauth2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ae4a74ffc0sm44671916d6.58.2024.06.04.21.25.44
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43ff2595290sm56200471cf.89.2024.06.04.21.28.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 21:25:45 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id A50921200066;
-	Wed,  5 Jun 2024 00:25:44 -0400 (EDT)
+        Tue, 04 Jun 2024 21:28:44 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id A963A1200043;
+	Wed,  5 Jun 2024 00:28:43 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 05 Jun 2024 00:25:44 -0400
-X-ME-Sender: <xms:yOhfZob7GI7k8K-oIpZ9rWNySdOGHCPeATtr30Tjfva7sqmm9d0FVQ>
-    <xme:yOhfZjaYG07tDnHYbSalvwdeUrJtKxj6dmQEbTheTqLBnD0m5IQRfY8KdBqrRmt0w
-    Efnf3v0_477ZvaqMw>
-X-ME-Received: <xmr:yOhfZi-rqCnExYcoNUbbdtfTceHgp6jthvizDZPCbevV-mn7XtP2HObsKg>
+  by compute5.internal (MEProxy); Wed, 05 Jun 2024 00:28:43 -0400
+X-ME-Sender: <xms:e-lfZu0q7KxnQgyvrHylLcr5oj0_G4xqJ1gRLl7jEsyNPhThWrLW7A>
+    <xme:e-lfZhFRkS86VUYBeVtNtKbpS7sjoP1xGRXrEc6fPlq3IooDQf2u63P-bL4RZj_WI
+    Q76lgne9yij6x7mag>
+X-ME-Received: <xmr:e-lfZm4iwUBuLjA9sJM44xKdq0qFUvU46Zs9XFMlz_6hMl78tUVa4NfCbA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelhedgkeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -71,15 +71,15 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdelhedgkeefucetufdoteggod
     gsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdei
     gedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfih
     igmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:yOhfZiqJ1BwM8G70ErsKspBx1-R4YBH_nuyCDPIqlBdU0ax4S8llDQ>
-    <xmx:yOhfZjrntVSw39qzqK8k2d5lsYgtdB2cnxORgERtrlOMGNaNity27w>
-    <xmx:yOhfZgQskHVs2DwxO-BOL9uKCkl1OYohJF_u5AqkHagFGoWsJaB_gw>
-    <xmx:yOhfZjrnOxRrRfQCOV6XprAzRgBUJuBnMWwB4pFEpZqepJq8x7EF4Q>
-    <xmx:yOhfZo5caO0--mQQWrqS7sdcNRCKz6q_IyDDqculrFzTN18wjRKUU9Mu>
+X-ME-Proxy: <xmx:e-lfZv3odX2RNJcd5MhSWpM5TEcoMpKay3DdHUxDk6kihAnpHAqnKA>
+    <xmx:e-lfZhFGB8afRk2UfOuJiDWYJBYLt8rmq4StHllC5161hEX3JnBj7Q>
+    <xmx:e-lfZo-3nrDak5QqUmS-4noSzkYvNPX-Vq9BZcnX0hqqVNMuIwemFw>
+    <xmx:e-lfZmkz8HgT2lfYBVIBIq9GT3ueOATH_vZmgun7AkocfbhzNRjJgg>
+    <xmx:e-lfZpEG88dNf5HB5C8g3I_LkueDSfvEumWByAbsEjI9-jbbJXbEirDE>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Jun 2024 00:25:44 -0400 (EDT)
-Date: Tue, 4 Jun 2024 21:25:42 -0700
+ 5 Jun 2024 00:28:42 -0400 (EDT)
+Date: Tue, 4 Jun 2024 21:28:42 -0700
 From: Boqun Feng <boqun.feng@gmail.com>
 To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
 Cc: paulmck@kernel.org, stern@rowland.harvard.edu, parri.andrea@gmail.com,
@@ -87,12 +87,12 @@ Cc: paulmck@kernel.org, stern@rowland.harvard.edu, parri.andrea@gmail.com,
 	dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
 	akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
 	urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 2/4] tools/memory-model: Define applicable tags on
- operation in tools/...
-Message-ID: <Zl_oxj9-ypX0U2HZ@Boquns-Mac-mini.home>
+	linux-kernel@vger.kernel.org, Viktor Vafeiadis <viktor@mpi-sws.org>
+Subject: Re: [PATCHv2 3/4] tools/memory-model: Define effect of Mb tags on
+ RMWs in tools/...
+Message-ID: <Zl_pehpjHVt2z95p@Boquns-Mac-mini.home>
 References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
- <20240604160409.498190-1-jonas.oberhauser@huaweicloud.com>
+ <20240604160440.498332-1-jonas.oberhauser@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -101,58 +101,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240604160409.498190-1-jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <20240604160440.498332-1-jonas.oberhauser@huaweicloud.com>
 
-On Tue, Jun 04, 2024 at 06:04:09PM +0200, Jonas Oberhauser wrote:
-> Herd7 transforms reads, writes, and read-modify-writes by eliminating
-> 'acquire tags from writes, 'release tags from reads, and 'acquire,
-> 'release, and 'mb tags from failed read-modify-writes. We emulate this
-> behavior by redefining Acquire, Release, and Mb sets in linux-kernel.bell
-> to explicitly exclude those combinations.
+On Tue, Jun 04, 2024 at 06:04:40PM +0200, Jonas Oberhauser wrote:
+> Herd7 transforms successful RMW with Mb tags by inserting smp_mb() fences
+> around them. We emulate this by considering imaginary po-edges before the
+> RMW read and before the RMW write, and extending the smp_mb() ordering
+> rule, which currently only applies to real po edges that would be found
+> around a really inserted smp_mb(), also to cases of the only imagined po
+> edges.
 > 
-> Herd7 furthermore adds 'noreturn tag to certain reads. Currently herd7
-> does not allow specifying the 'noreturn tag manually, but such manual
-> declaration (e.g., through a syntax __atomic_op{noreturn}) would add
-> invalid 'noreturn tags to writes; in preparation, we already also exclude
-> this combination.
-> 
+> Reported-by: Viktor Vafeiadis <viktor@mpi-sws.org>
+> Suggested-by: Alan Stern <stern@rowland.harvard.edu>
 > Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
 > ---
->  tools/memory-model/linux-kernel.bell | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  tools/memory-model/linux-kernel.cat | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
-> index dba6b5b6dee0..2f49993644ed 100644
-> --- a/tools/memory-model/linux-kernel.bell
-> +++ b/tools/memory-model/linux-kernel.bell
-> @@ -36,6 +36,13 @@ enum Barriers = 'wmb (*smp_wmb*) ||
->  		'after-srcu-read-unlock (*smp_mb__after_srcu_read_unlock*)
->  instructions F[Barriers]
->  
-> +(* Remove impossible tags, such as Acquire on a store or failed RMW *)
+> diff --git a/tools/memory-model/linux-kernel.cat b/tools/memory-model/linux-kernel.cat
+> index adf3c4f41229..d7e7bf13c831 100644
+> --- a/tools/memory-model/linux-kernel.cat
+> +++ b/tools/memory-model/linux-kernel.cat
+> @@ -34,6 +34,16 @@ let R4rmb = R \ Noreturn	(* Reads for which rmb works *)
+>  let rmb = [R4rmb] ; fencerel(Rmb) ; [R4rmb]
+>  let wmb = [W] ; fencerel(Wmb) ; [W]
+>  let mb = ([M] ; fencerel(Mb) ; [M]) |
+> +	(*
+> +	 * full-barrier RMWs (successful cmpxchg(), xchg(), etc.) act as
+> +	 * though there were enclosed by smp_mb().
+> +	 * The effect of these virtual smp_mb() is formalized by adding
+> +	 * Mb tags to the read and write of the operation, and providing
+> +	 * the same ordering as though there were additional po edges
+> +	 * between the Mb tag and the read resp. write.
+> +	 *)
+> +	([M] ; po ; [Mb & R]) |
+> +	([Mb & W] ; po ; [M]) |
 
-This comment needs a bit help, "failed RMW"s still exist, they just
-don't provide ordering. How about:
+I couldn't help suggestting:
 
-(*
- * Filter out syntactic annotations that don't provide the corresponding
- * semantic ordering, such as Acquire on a store or Mb on a failed RMW.
- *)
+	([M] ; po ; [Mb & domain(rmw)]) |
+	([Mb & range(rmw)] ; po ; [M]) |
 
-?
+, it's a bit more clear to me, but maybe the comment above is good
+enough?
 
 Regards,
 Boqun
 
-> +let FailedRMW = RMW \ (domain(rmw) | range(rmw))
-> +let Acquire = Acquire \ W \ FailedRMW
-> +let Release = Release \ R \ FailedRMW
-> +let Mb = Mb \ FailedRMW
-> +let Noreturn = Noreturn \ W
-> +
->  (* SRCU *)
->  enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
->  instructions SRCU[SRCU]
+>  	([M] ; fencerel(Before-atomic) ; [RMW] ; po? ; [M]) |
+>  	([M] ; po? ; [RMW] ; fencerel(After-atomic) ; [M]) |
+>  	([M] ; po? ; [LKW] ; fencerel(After-spinlock) ; [M]) |
 > -- 
 > 2.34.1
 > 
