@@ -1,325 +1,341 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163F2BD0D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 06:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717568215; cv=none; b=Q1/btzdsFhUP+/yMI2wEoBvI6cubCTPriB1kQLpM4P5KLAFbm10prn8yShkxpmkyVMwisa72XMIEO0PAzFIkY5xqkgcJp0XRIuy9sD5mWkxkLEnV5wUx+3g8pEiPY4KOAoZVjIoMOfz2DAFk8pyXnh+WVrlexFt7evopVE7llfM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717568215; c=relaxed/simple;
-	bh=CjMSUzegv17drsCk39vqlkWEL3OD456iy+JDHMJpID8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j0T2qZCnnKR7P46Rt1+dqTpDwVXAmPGrs5zG3YmlElCDCY7F1Cpk7gK0aHKCzps5R1z5pDGlvBMhqk6PM64BcfAeoYyfwmP+ICrzxBwZStUuxn0nK50yMbpW7/tMBTa94FWvxvo8vyGAoZlbCKktTjjIVECHCiesK5MJ3RRu3dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avbaxKhe; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB612BD0D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 06:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717568416; cv=fail; b=F9PWBhLCGAViY4fZTF/wOu1QwwUvTlvGuKwB4j1XT7DMt1thYrc+fPgwyor97X57QYujPDnL1rycimTXGfMIXuQbm9TFpBjHL5T9uS9rbXAjVHMKJIiDmgbgsNMR53FCu435WzHddr7WE4+2uhKy2hpXhA5Jo9c8s6/svoua6ck=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717568416; c=relaxed/simple;
+	bh=e9B7+pxe0ivM7d1+E9GQfvIclz9hiPkszIfz5BHDecE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=em4X2/lM8FdOAzGVDrbdO1DQ4FfWzofOhnfkXUdvl/OrYXVzBQAccf5DcNYUmwFDLGvpm+EyJYduIw7zdv/MDzKvxRQQRz7lIMs2DPkHHOKx+dOYQmNMfiwXB+sfKDFEMTnkCTOuGyy3ZAfUJETQDxb6Z3uTFQzy/84hFCq5csI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WKtJTDu5; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avbaxKhe"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35b6467754cso1326648f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 23:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717568211; x=1718173011; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DwGm8rESyWh/j9N7TP3XclxhQKKbAqP/4YUVHI40L1M=;
-        b=avbaxKheWPLKz6BX1gqSFx1iInhdB9My5U8y5IQGxwBB2pr67otAhkYJQ33Caloez4
-         xWe9dM1S+MPj5LMc9S94kad98qhV+dNgTjBoDXmAh4HnPl/eWwKcPC86LFqxLzfE/g6b
-         lI077wYyT3ZuXHJ4Xp+JN84REyUoZKWtU77a2ksVrmDe4jxnhqZGo9h7hB1HjwJp7KTL
-         ijN+f1b21pYvrpxyq39xPqE3SkYLz4SduRtVTPgXVYAivCgFSVcXZZ4mX6KttrtRraQ6
-         UJSGAbs/MRoS9aZrLt3kiVZQRuTiqWB4pBv3+Kz0iGK3pcjBbvnNzmt5/S8mx8uC3FR+
-         1ltw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717568211; x=1718173011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DwGm8rESyWh/j9N7TP3XclxhQKKbAqP/4YUVHI40L1M=;
-        b=rYDjEnil46wGrIdKKx7s4dUupn4NFv8xdMnyYALE1LdGw3DVPwuPmbtEDYXJ9JZoN1
-         xXzXbgPXEgMWi2EIglPy+04UW0GLHKnCj9lKY+ebBmEtBhQpDl2hJhPgr/5EYflRLhIQ
-         5fmUM5kozNZQcpLP5OMWQMPC/UY+ISYVlDkrX8uMKXOWS25yekJjog5aQH/MtL1pI8tJ
-         8Jc6vfijibwLsi7YXzq6jRvKJ5EfHU6SdBnWEyEs3yeqRFuj/D31kolCYorH3XPW15Br
-         8PKuShTJ+e9p3kBsie9f8AbdHlPGHqy4BVyKXlLv3OB+yohO0foH33ua2zfr+93r29j1
-         xbuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUwiEhxcgk34ZLFl2MjrUJRw10qnym5YPF25JmCFqjenlTtnAcWU7nI45XiZzW3D4ktnqOhozQ15nfTf2Y8uNjWnwOYeKgECJJRoH6
-X-Gm-Message-State: AOJu0Yw70cCc2AINjscrgPXI+HYn/+NtRCbCn0SaFhFwA6VNgyAR5JTm
-	j3cPE0rswsiZXdg7kIbfc1M5VpyCTxXMOYTwY1SCE6WypUWxCJh+F2AlcOLX1iUAn/YCBasv9dY
-	n0j+yAzpd0iEx0Fwa3Dmh3VQL64U=
-X-Google-Smtp-Source: AGHT+IHvLDn3WWDRIgiBb8xegCJSb9c/zQHxf2WkNfJ5iZcm6MyyQdSm7iuIni8OEHC+yMg0pvFFNUMJsFjTx3TDHb4=
-X-Received: by 2002:a5d:54c9:0:b0:354:f622:fc5b with SMTP id
- ffacd0b85a97d-35e88338622mr1177547f8f.23.1717568211177; Tue, 04 Jun 2024
- 23:16:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WKtJTDu5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717568415; x=1749104415;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=e9B7+pxe0ivM7d1+E9GQfvIclz9hiPkszIfz5BHDecE=;
+  b=WKtJTDu5Jzab7Y/ZXrde3HeVZQE/vcOyQKr/UKgx5jekvegv1LIvWGrn
+   VvVf3iexPnBJBfpbIJFh2n+HTD78Dv+jb4Feyp5Omby0Y77XXe4DSeFrw
+   NZtddFPHSRz3e3kk8rotShwGMiNIhOKzzOVYbgbGayeXKC+MJNzrqalxk
+   QLuwUSQCcmfJEJX+3lN1/BXTTbdx92QFvmiL4QgVaj+KByEbafx/qM7Or
+   0stEfnkluOUshb0TWISQleHbrXBlEvY0TrGXJ074K98J2X/U63zablMC7
+   CBkkTBgHRqfR2tnwct59AXrxmVInrQIVPqWDB0ZiqQMzgAaSWLq7evfa9
+   Q==;
+X-CSE-ConnectionGUID: hAg+O0v6S2OyQSlt8zHG6w==
+X-CSE-MsgGUID: SmuSZ+6YT7alJByzNCRi9Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="36673373"
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="36673373"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 23:20:14 -0700
+X-CSE-ConnectionGUID: F2q6EDUpRjCGIeks7k7VEg==
+X-CSE-MsgGUID: eazLnQKnTvyQOJ5hjBmaJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="37409025"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa010.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 04 Jun 2024 23:20:13 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Tue, 4 Jun 2024 23:20:13 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Tue, 4 Jun 2024 23:20:13 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.101)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 4 Jun 2024 23:20:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PlDb3yOGVrCTlBB+WqacqwU/xTTp9vod8zYedbZydnG8bUf5Hcx6HTDDFXDR6va+t+lD43AR7IzisjY7qLA7p+GI9L4HQoyjm3EgkszxTc1DSOWU5i40psoSf7J2tHXmXvyH8oATCsScVnrLq43O+hZor2gpwzJqGLUvsHvLalSxxhyX/m8e8ehIWzVrxUehTf+xZQoA+4bOQuV2BmMj5r/S8m8ErR+TehI2y6Eupw2oN4rryBj+RR/oD125vKuyoxPv2MJI63TegBxNCFsFN0l3kkF3ZKpnNhN/XVKSR/SIiwCDupBaSfclJciAxCcdLRwGkh18InhcOUKiuZ1xrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NDS3kiMkTEiBSxJGfD2R1DtoiTWSysgMgDhoc2nBxP8=;
+ b=K6T38lGPly3hwaVDhRe2EZmGA+rglnYAe6VCJ+jy5wW1atmvSwvgqJtOEoE0IYhGXpafBzKeRLm0v+UT0IWbV9ZjeITynVzMzEZ4rpM9bJjr/TBv/NbVrqYBcq1P7EDxY0kccyGUmCQ2CIhGj09ez5fAjLcfLhabMd3cD1Xn2m8tTKW96NKP7III4lun2N2rOrHTQ57mrwjtlkfopxZpX5ufyayIYbHpKpkprDKZx/E+11sB6iPTP+BukeDBqDEqUvRxTdyXO9tlREMfcCl3CtOTW7PprkO9ObNlx+GSYhBHePqWuJe88/NMRzKolsxpyzn9iYCQh4HdYmgMJQzMaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by SN7PR11MB6994.namprd11.prod.outlook.com (2603:10b6:806:2ad::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.25; Wed, 5 Jun
+ 2024 06:20:01 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::d244:15cd:1060:941a%7]) with mapi id 15.20.7633.018; Wed, 5 Jun 2024
+ 06:20:01 +0000
+Message-ID: <b205bcfb-9972-4e03-9994-62419117d76f@intel.com>
+Date: Wed, 5 Jun 2024 14:23:56 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/22] iommu: Add iommu_user_domain_alloc() interface
+To: Baolu Lu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
+CC: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, "Kalle
+ Valo" <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, "Mathieu
+ Poirier" <mathieu.poirier@linaro.org>, Alex Williamson
+	<alex.williamson@redhat.com>, <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>, "Jonathan
+ Hunter" <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>,
+	<iommu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+ <20240604015134.164206-2-baolu.lu@linux.intel.com>
+ <445fae9f-ea1e-4864-9f0e-f348c51146a1@intel.com>
+ <91a42f46-060a-4430-a10a-7bfded67c4a9@linux.intel.com>
+Content-Language: en-US
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <91a42f46-060a-4430-a10a-7bfded67c4a9@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYBP286CA0043.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:404:10a::31) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1716204978-29455-1-git-send-email-zhiguo.niu@unisoc.com>
- <446c7e4a-2a1e-402d-8238-2eee7cdfd5c2@kernel.org> <CAHJ8P3J2NkSfVTEcpxR+n3CjtywMxxEDMg4cLSL=8UOX8KcM+Q@mail.gmail.com>
- <8b841ec1-cb43-462a-9e87-aecdb0755318@kernel.org> <CAHJ8P3K_u=ZmXaMF5jUu_MPSJPAhKmEx4hyaTinMQ=nnLQ9aRA@mail.gmail.com>
-In-Reply-To: <CAHJ8P3K_u=ZmXaMF5jUu_MPSJPAhKmEx4hyaTinMQ=nnLQ9aRA@mail.gmail.com>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Wed, 5 Jun 2024 14:16:40 +0800
-Message-ID: <CAHJ8P3LgbpLZhP3+maGXpuwsSzn20Kw5Rgdwsb7y1q5BfTyrwQ@mail.gmail.com>
-Subject: Re: [PATCH] f2fs: enable atgc if atgc_age_threshold from user is less
- than elapsed_time
-To: Chao Yu <chao@kernel.org>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|SN7PR11MB6994:EE_
+X-MS-Office365-Filtering-Correlation-Id: a2bf3d0c-a711-4d61-c698-08dc85278826
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015|7416005;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Mk5hQWNoOG9JSG1aa2tmWXQ0enZOVGY1K2VjNnFHSURTWWJKMVVTa1FPNm1i?=
+ =?utf-8?B?SExpalYrYnoxOE5oRmpEaHkvVkl3VjVKdC8ycXpJMndYWFhQVVlmbDFGTWpT?=
+ =?utf-8?B?ZEtjbTFiOUYwSVI1WE04VFluS1VLUGE5ek5lNmhxbGlYdVAySEJwWGtiYW1v?=
+ =?utf-8?B?TTl4RGRCOVQxaEdFTXR3Y0dsWW9jeEszaTZTeTllU2hmZnZ4THdNbGtOYzMx?=
+ =?utf-8?B?bmxIZVdmVDhHczRaL0ZCT0J4WGtUcW95Ri95YUxFQ29tSmd1R08xS2Y2NFl5?=
+ =?utf-8?B?aUZQQ3RTMGlUS3lhMThlZDRXSzk0UjRqSTVBZHVYRE9lTVR1QWxEZkh4NmR1?=
+ =?utf-8?B?dnNSL3BsZm1PNHBsOThPT29DSkVKY0NORC9LM2lMcSsrYzAyQVB6eTk0Q2lT?=
+ =?utf-8?B?VW5TY2tDa2NkYUpjakdGL2J3R053RklnT0pMZUFPK2wrSG5aQUo2Qkt6RTVH?=
+ =?utf-8?B?OHZxbkhtSm9Bd1lRTWlOb1U2N093bnV0VFIwcTVBckV6T242ZUVQQis5VXlW?=
+ =?utf-8?B?eVdQK2JJbEMyamhEbG1tZDBuSll2WWRSRkNjdEl4c2RVejNkREpNOXg2WVNo?=
+ =?utf-8?B?c0s3MnUzOUh0T2F4a3EzeGQ2clR3MEZlWGJzT2RSZzZjQ3o3eHgzVVA4Szg4?=
+ =?utf-8?B?ZGkweU81aldNOENIcE9XMHYrZ3V0TTh2REw4UHJvazNETFA2cGFqaEdxd2Vu?=
+ =?utf-8?B?Z1VUYzZLYjFCcURGZEM3NDhEeXVLOFVVRithNmZpbUlnaDcwOS9GM2F1UWZK?=
+ =?utf-8?B?czRUM3dKOWpSbVcreUtNUmZ0RUlTUTlFR3VESUpOWGIzMGE4NUlXdWtGeTMx?=
+ =?utf-8?B?c3VVM0xWcHRPSFNnUVhBU1FZc0twQ0Qxa0JoWEk3emx5OS9xVy9QeitPeFJG?=
+ =?utf-8?B?S1BxTWozWUpFU0UwY283SWMrTUhVZWQzWWF2UTZ2dnVML2F5N3RaS2NEcHNF?=
+ =?utf-8?B?WXF1WFErWGMxYmhwcFhXMDh6em4xSGw4ZGpBOTdBOWdCOFY5TGFFUlZHalNY?=
+ =?utf-8?B?d1JpeTJUNkdsWHBVL3BGTXl1dUlFQS9FSjEvYTRweW1JanVZaTBnNnNHVXZS?=
+ =?utf-8?B?VzNvQytTbkRJL3FTa3VhYmdJZ2RNcWRTdXpmd3MwUFRWVnd0bjRRMEFiOENq?=
+ =?utf-8?B?UDRaakpQZjBEWWsybENrYjdRYnVLV29GaFBjai9Fd1BGcUY3bzIrOE1TTzRT?=
+ =?utf-8?B?UjNtbDVFZG5KdnFtQlBreXFaYndUWUx2UjdYSzdydm8wbFFiQUFvNy93WVpk?=
+ =?utf-8?B?YWQ2TVVrNTdnZGltRE5nTmwvL0FRT3A0dTdNRlREdVlHSTZYcEE0NGdDd2NI?=
+ =?utf-8?B?Q0dFV3p0MjR2MjZUek1SVmVQaG5QYi9OTFVHell3VFlCMWxRalI0aXkvZ29L?=
+ =?utf-8?B?aklEbTBhWWM0MFhpaDZVRzVWSVdBQU9URURvTkhYNFNVa0g5eGJjeUNSaU1G?=
+ =?utf-8?B?WDRtZjdJejlhWUtRWTVhNDA5L1VSS2N5L2xyTkZmUmZlUUp3WWl2Nyt6QzFO?=
+ =?utf-8?B?NEdKMURxTmo1ekd5TTVwN0JjUUVpUUdXSWZpdHVmOTI2VjRNaWhSZnFVMkpE?=
+ =?utf-8?B?T05DeGZiclI5UHNyY1A0amljeUFnTEtqUzVSbDBHc3RNVWVUZzZCN0tSVFJu?=
+ =?utf-8?B?QTdDNkF3MlhBcExDUTRLVXNLY21icVNxZitIcVVMSkJ0NVF6UE0ycnJyVTFV?=
+ =?utf-8?B?RXJCVGdpOVMyVlk5anhKMjgyWW1JT2FhaUJPbmphcGhtYUtoZDl3d2FBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NzVmZlVTU09GZjBXdis4K0VWaTNhYWF1RUplVUtwTVdIUHh5Z0xYYjdLMFk3?=
+ =?utf-8?B?ekFQVlV3MElOTUYwSzFvcGYyQnVpbW5aYnlUYlFCY2tyUnhHNjhMZG1GMFEz?=
+ =?utf-8?B?akEvLzNaeU0vM284MWxJNWh3T0s4YmlWZFJaaG42azFKanp4dE5mWkF0UjhX?=
+ =?utf-8?B?ZEJpUCtNeGk4VTl3dDVHUmxUbWJxTXNDZk1GWGVxNUllTDIrWjVuOGp2elJE?=
+ =?utf-8?B?VG9QQWZ4Y2NYL0t1bXNrUytRTmVXQ3hZMFJSc0ZaMUdOSmdNU2JGOVJUd0JT?=
+ =?utf-8?B?TW1Fd1FmSFFCdWIxem1sTG9WeGdBMHJiUlFCUjc1NUxNVkJaTE9QeWtqWkRS?=
+ =?utf-8?B?THREbGFqNVVuQ2JuN3hCVmdDeEpaaXBVL0pIMDlEWlltWitoNjJROHBwYzho?=
+ =?utf-8?B?aGQ5cFBZQ2V6UEU4cHF4dlA0QjRJYzJlblRvZUc0MS9ZTVhoM01rZWJhTVVD?=
+ =?utf-8?B?NEthMnRoK1h2OWRqdzdNSGhtMm9FUnJERU1lUWdUcEdYMEM2TDd0OERXMjRh?=
+ =?utf-8?B?RjF4RlM4bmJiMWpsUFFHNE1vcWJyS1lmSmlLYzBJNnBJT2h5RnUrZ255YW41?=
+ =?utf-8?B?ZFcwaEFyOVl1MDBDblhYRUkwaGY2Nk1meFg3Mm02SXlDY212N28ySmlwNFc1?=
+ =?utf-8?B?SUNCSFRraXNRb0xUNTBrZzd6YXNLUlZBSXYxcmt1UU9mNlEyU3lidlZGaDJS?=
+ =?utf-8?B?dTdRbjBEdFc1MjVuMWo2dyt3SzJMNllVM2Npa0NlcWxWN25KamNuZVd2Z0Nm?=
+ =?utf-8?B?RS9OZElxUnNWWmxKVnpWWTVPWlpXV1BUYXJzemxNd0pSKzliR2J6aWF5ZURQ?=
+ =?utf-8?B?ekRkSHpuTWkrckpiZVp1MnAybnJFVlFTbEUvNkQ0eDhxbk1FVXpHdUdKK1g3?=
+ =?utf-8?B?ZXNlVCtsRDV4cGY1YVJHdDZneEhUNXVkMGNmSWZnTDN1WHAxa3lTN2N4eWNn?=
+ =?utf-8?B?YzQ5SjM1cVg5ZmgyZldWWEwyRFJDVzNMUmk5eWRNTFZDWHh4SWxmZ1dZOFpE?=
+ =?utf-8?B?dDR0RVNsT29mUlZEc040QWtmeGROUW5UczJFdGxDM2pVenJyMi9TczVxaXps?=
+ =?utf-8?B?VUFacDAyZnZiRjA3Y2RkWVRiU0xwaTdhZllOYzNVWVplRG5rTDZjekxKNlA0?=
+ =?utf-8?B?MDdOUjhHbjlrR3RtekZPQXNKaCtTMVQrMTRQd1JuMHlIYlRCK0dnbmp4Q0Nx?=
+ =?utf-8?B?d0xOc3NoQlBOaVVnc0NMMlIrT0JkZmtYbzhoenNrdEExMDhUNDRXU2w4T3Z3?=
+ =?utf-8?B?cXIzNFppVmRjY1VaMFhoOFFGbkMwVy9tUWpBeVMwbU9vZ2dadmZkQzFyVlZw?=
+ =?utf-8?B?ZmM0S3R1cnJmNVJDUzFPWHllTDd2WTBlbGt4cm53a1ZYVDNnUFdNK2d3a293?=
+ =?utf-8?B?Mmp0SjNvVE84b3l3Y0FvZ0E1TTFWL2RGTXNGWFd6SElvQ3M2ckl0MWUzaXVh?=
+ =?utf-8?B?eUJwdlR0ZktVcGowRGtxNzV0ZFY2cDFpQjFEclZ2QldLRWlvY2o1QklRSlFP?=
+ =?utf-8?B?N3VHS0xuVitnY1RYVUNsM1M5VmpGK1pmOWtDZFpTQ29pZzlnQXlKRlhmcVFq?=
+ =?utf-8?B?S3Fud2h4b2IxNzhYMWI2bDdSV3dlczlaYUVBR1Ztc09sQTlsK3FVVzl2QURq?=
+ =?utf-8?B?UVBrbHhTYzMwaFJDZ1VlTTRzTHJzNm45TXNzWFphSkhHSkJMajVvMUhSL0p6?=
+ =?utf-8?B?b2xhak9GVVVlQWFxVmRlWmFIUFY5cDRVWEV2dVhpR0ExaUxNeVFrSzdVaEI3?=
+ =?utf-8?B?SHIrc0tJNHhHWTFCSFZFSGIyVjNwMmozSkhDWCtsN0U0T1pXaWdoWERTM2JT?=
+ =?utf-8?B?TU9BZ0Z0am82dWVBTE1ndVgraTdZaXd1VWlqSnprZHdPUjZ6enRYcGlVZ0tI?=
+ =?utf-8?B?MHlLMHNacEsrMUYwN2ZtU0xqM0U3eXlTdU11SEFmSUx5b1h4b3R3Wk8xZHZ1?=
+ =?utf-8?B?LzRoN1g3QnR3MVhvemVmTDVzazZyWVcrd245bjVlVHk2ZlN1aXZBMEdMaU5D?=
+ =?utf-8?B?TlZveHBJamN4THVyelVZVWhqQ2swSjVpNjk3eFFaMDJlWExyRktYeVhOaUs1?=
+ =?utf-8?B?VGNJeEVmYXAyV2RjTEJTK2RNWEpDNEdsT1MybnV3UTg3VnBXOUhHdEdkUGdT?=
+ =?utf-8?Q?SJ3OTv/gPGYnv9khpv8s6fpn6?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2bf3d0c-a711-4d61-c698-08dc85278826
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 06:20:01.6772
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jff8HfHOYDCc49ShrrPFeqcJcaIJabOLkBzND+PYQ91CGZQRgB6Cz/poQRYEzPS/O7dNanSUuTBCgr2VU7a5WQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6994
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 5, 2024 at 1:59=E2=80=AFPM Zhiguo Niu <niuzhiguo84@gmail.com> w=
-rote:
->
-> On Wed, Jun 5, 2024 at 11:48=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
-> >
-> > On 2024/6/3 17:05, Zhiguo Niu wrote:
-> > > On Mon, Jun 3, 2024 at 3:41=E2=80=AFPM Chao Yu <chao@kernel.org> wrot=
-e:
-> > >>
-> > >> On 2024/5/20 19:36, Zhiguo Niu wrote:
-> > >>> Now atgc can be enabled based on the following conditions:
-> > >>> -ATGC mount option is set
-> > >>> -elapsed_time is more than atgc_age_threshold already
-> > >>> but these conditions are check when umounted->mounted device again.
-> > >>> If the device has not be umounted->mounted for a long time, atgc ca=
-n
-> > >>> not work even the above conditions met.
-> > >>>
-> > >>> It is better to enable atgc dynamiclly when user change atgc_age_th=
-reshold
-> > >>> meanwhile this vale is less than elapsed_time and ATGC mount option=
- is on.
-> > >>>
-> > >>> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> > >>> ---
-> > >>>    fs/f2fs/f2fs.h    |  1 +
-> > >>>    fs/f2fs/segment.c |  9 ++++-----
-> > >>>    fs/f2fs/sysfs.c   | 16 ++++++++++++++++
-> > >>>    3 files changed, 21 insertions(+), 5 deletions(-)
-> > >>>
-> > >>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > >>> index 1974b6a..e441d2d 100644
-> > >>> --- a/fs/f2fs/f2fs.h
-> > >>> +++ b/fs/f2fs/f2fs.h
-> > >>> @@ -3694,6 +3694,7 @@ void f2fs_clear_prefree_segments(struct f2fs_=
-sb_info *sbi,
-> > >>>    int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi);
-> > >>>    void f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi);
-> > >>>    void f2fs_restore_inmem_curseg(struct f2fs_sb_info *sbi);
-> > >>> +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi);
-> > >>>    int f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, i=
-nt type,
-> > >>>                                        unsigned int start, unsigned=
- int end);
-> > >>>    int f2fs_allocate_new_section(struct f2fs_sb_info *sbi, int type=
-, bool force);
-> > >>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > >>> index 71dc8042..44923d4 100644
-> > >>> --- a/fs/f2fs/segment.c
-> > >>> +++ b/fs/f2fs/segment.c
-> > >>> @@ -2931,14 +2931,11 @@ static int get_atssr_segment(struct f2fs_sb=
-_info *sbi, int type,
-> > >>>        return ret;
-> > >>>    }
-> > >>>
-> > >>> -static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> > >>> +int f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> > >>>    {
-> > >>>        struct curseg_info *curseg =3D CURSEG_I(sbi, CURSEG_ALL_DATA=
-_ATGC);
-> > >>>        int ret =3D 0;
-> > >>>
-> > >>> -     if (!sbi->am.atgc_enabled)
-> > >>> -             return 0;
-> > >>> -
-> > >>>        f2fs_down_read(&SM_I(sbi)->curseg_lock);
-> > >>>
-> > >>>        mutex_lock(&curseg->curseg_mutex);
-> > >>> @@ -2955,7 +2952,9 @@ static int __f2fs_init_atgc_curseg(struct f2f=
-s_sb_info *sbi)
-> > >>>    }
-> > >>>    int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi)
-> > >>>    {
-> > >>> -     return __f2fs_init_atgc_curseg(sbi);
-> > >>> +     if (!sbi->am.atgc_enabled)
-> > >>> +             return 0;
-> > >>> +     return f2fs_init_atgc_curseg(sbi);
-> > >>>    }
-> > >>>
-> > >>>    static void __f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi, i=
-nt type)
-> > >>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-> > >>> index 09d3ecf..72676c5 100644
-> > >>> --- a/fs/f2fs/sysfs.c
-> > >>> +++ b/fs/f2fs/sysfs.c
-> > >>> @@ -673,6 +673,22 @@ static ssize_t __sbi_store(struct f2fs_attr *a=
-,
-> > >>>                return count;
-> > >>>        }
-> > >>>
-> > >>> +     if (!strcmp(a->attr.name, "atgc_age_threshold")) {
-> > >>> +             if (t < 0)
-> > >>> +                     return -EINVAL;
-> > >>> +             sbi->am.age_threshold =3D t;
-> > >>> +             if (sbi->am.atgc_enabled)
-> > >>> +                     return count;
-> > >>> +
-> > >>> +             if (test_opt(sbi, ATGC) &&
-> > >>> +                     le64_to_cpu(sbi->ckpt->elapsed_time) >=3D t) =
-{
-> > >>
-> > > Hi Chao,
-> > >> Oh, I guess you want to fix this:
-> > > Yes,  Sorry for not making it clear before.
-> > >>
-> > >> static void init_atgc_management(struct f2fs_sb_info *sbi)
-> > >> {
-> > >> ...
-> > >>          if (test_opt(sbi, ATGC) &&
-> > >>                  SIT_I(sbi)->elapsed_time >=3D DEF_GC_THREAD_AGE_THR=
-ESHOLD)
-> > >>                  am->atgc_enabled =3D true;
-> > >>
-> > >> What about enabling atgc_enabled during checkpoint once elapsed time=
- is
-> > >> satisfed w/ the condition? I guess this can give another chance when=
-ever
-> > >> CP is been triggered, and it can avoid the racing condition as well.
-> > > 1. I'm not sure if this will increase checkpoint time consumption?
-> >
-> > Since it won't increase any IO time, I guess it's fine tolerate time co=
-nsumed
-> > by initialization of atgc curseg.
-> >
-> > > 2. dynamically enabling atgc may have other problems. Is this confirm=
-ed?
-> >
-> > I think so, checkpoint has avoided most race cases.
-> >
-> > So, how do you think of below diff:
-> Hi Chao,
->  I think flow is ok,  some details need to be discussed.
-> >
-> > ---
-> >   fs/f2fs/checkpoint.c |  2 ++
-> >   fs/f2fs/f2fs.h       |  1 +
-> >   fs/f2fs/segment.c    | 26 +++++++++++++++++++++++---
-> >   3 files changed, 26 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> > index 55d444bec5c0..4a73bd481a25 100644
-> > --- a/fs/f2fs/checkpoint.c
-> > +++ b/fs/f2fs/checkpoint.c
-> > @@ -1718,6 +1718,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sb=
-i, struct cp_control *cpc)
-> >         }
-> >
-> >         f2fs_restore_inmem_curseg(sbi);
-> > +       f2fs_reinit_atgc_curseg(sbi);
-> > +
-> >         stat_inc_cp_count(sbi);
-> >   stop:
-> >         unblock_operations(sbi);
-> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > index 9688df332147..8d385a1c75ad 100644
-> > --- a/fs/f2fs/f2fs.h
-> > +++ b/fs/f2fs/f2fs.h
-> > @@ -3693,6 +3693,7 @@ void f2fs_release_discard_addrs(struct f2fs_sb_in=
-fo *sbi);
-> >   int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_=
-ra);
-> >   bool f2fs_segment_has_free_slot(struct f2fs_sb_info *sbi, int segno);
-> >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi);
-> > +int f2fs_reinit_atgc_curseg(struct f2fs_sb_info *sbi);
-> >   void f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi);
-> >   void f2fs_restore_inmem_curseg(struct f2fs_sb_info *sbi);
-> >   int f2fs_allocate_segment_for_resize(struct f2fs_sb_info *sbi, int ty=
-pe,
-> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > index bdc2247387e8..6d4273faf061 100644
-> > --- a/fs/f2fs/segment.c
-> > +++ b/fs/f2fs/segment.c
-> > @@ -2949,12 +2949,12 @@ static int get_atssr_segment(struct f2fs_sb_inf=
-o *sbi, int type,
-> >         return ret;
-> >   }
-> >
-> > -static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi)
-> > +static int __f2fs_init_atgc_curseg(struct f2fs_sb_info *sbi, bool forc=
-e)
-> >   {
-> >         struct curseg_info *curseg =3D CURSEG_I(sbi, CURSEG_ALL_DATA_AT=
-GC);
-> >         int ret =3D 0;
-> >
-> > -       if (!sbi->am.atgc_enabled)
-> > +       if (!sbi->am.atgc_enabled && !force)
-> Is this parameter  "force" unnecessary?
-> in mount flow, even atgc enable conditions are all met, it is not
-> enabled because of force=3Dfalse.
-> Or am I missing something?
-hi Chao,
-sorry, I read && as || ,  Please ignore the above comment,
-but Is it still OK without the  "force"  parameter?
-thanks=EF=BC=81
-> >                 return 0;
-> >
-> >         f2fs_down_read(&SM_I(sbi)->curseg_lock);
-> > @@ -2971,9 +2971,29 @@ static int __f2fs_init_atgc_curseg(struct f2fs_s=
-b_info *sbi)
-> >         f2fs_up_read(&SM_I(sbi)->curseg_lock);
-> >         return ret;
-> >   }
-> > +
-> >   int f2fs_init_inmem_curseg(struct f2fs_sb_info *sbi)
-> >   {
-> > -       return __f2fs_init_atgc_curseg(sbi);
-> > +       return __f2fs_init_atgc_curseg(sbi, false);
-> > +}
-> > +
-> > +int f2fs_reinit_atgc_curseg(struct f2fs_sb_info *sbi)
-> > +{
-> > +       int ret;
-> > +
-> > +       if (!test_opt(sbi, ATGC))
-> > +               return 0;
-> > +       if (sbi->am.atgc_enabled)
-> > +               return 0;
-> > +       if (SIT_I(sbi)->elapsed_time < sbi->am.age_threshold)
-> SIT(sbi)->elapsed_time is just updated in mount flow, so
-> ckpt->elapsed_time is  more suitable here?
-> thanks!
-> > +               return 0;
-> > +
-> > +       ret =3D __f2fs_init_atgc_curseg(sbi, true);
-> > +       if (!ret) {
-> > +               sbi->am.atgc_enabled =3D true;
-> > +               f2fs_info(sbi, "reenabled age threshold GC");
-> > +       }
-> > +       return ret;
-> >   }
-> >
-> >   static void __f2fs_save_inmem_curseg(struct f2fs_sb_info *sbi, int ty=
-pe)
-> > --
-> > 2.40.1
-> >
-> > > thanks=EF=BC=81
-> > >>
-> > >> Thanks,
-> > >>
-> > >>> +                     if (f2fs_init_atgc_curseg(sbi))
-> > >>> +                             return -EINVAL;
-> > >>> +                     sbi->am.atgc_enabled =3D true;
-> > >>> +             }
-> > >>> +             return count;
-> > >>> +     }
-> > >>> +
-> > >>>        if (!strcmp(a->attr.name, "gc_segment_mode")) {
-> > >>>                if (t < MAX_GC_MODE)
-> > >>>                        sbi->gc_segment_mode =3D t;
+On 2024/6/5 10:00, Baolu Lu wrote:
+> On 6/4/24 4:03 PM, Yi Liu wrote:
+>> On 2024/6/4 09:51, Lu Baolu wrote:
+>>> Commit <909f4abd1097> ("iommu: Add new iommu op to create domains owned
+>>> by userspace") added a dedicated iommu op to allocate a user domain.
+>>> While IOMMUFD has already made use of this callback, other frameworks
+>>> like vfio/type1 and vDPA still use the paging domain allocation interface.
+>>>
+>>> Add a new interface named iommu_user_domain_alloc(), which indicates the
+>>> allocation of a domain for device DMA managed by user space driver. All
+>>> device passthrough frameworks could use this interface for their domain
+>>> allocation.
+>>>
+>>> Although it is expected that all iommu drivers could implement their own
+>>> domain_alloc_user ops, most drivers haven't implemented it yet. Rollback
+>>> to the paging domain allocation interface if the iommu driver hasn't
+>>> implemented this op yet.
+>>>
+>>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>>> ---
+>>>   include/linux/iommu.h |  6 ++++++
+>>>   drivers/iommu/iommu.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+>>>   2 files changed, 48 insertions(+)
+>>>
+>>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>>> index 7bc8dff7cf6d..6648b2415474 100644
+>>> --- a/include/linux/iommu.h
+>>> +++ b/include/linux/iommu.h
+>>> @@ -780,6 +780,7 @@ extern bool iommu_present(const struct bus_type *bus);
+>>>   extern bool device_iommu_capable(struct device *dev, enum iommu_cap cap);
+>>>   extern bool iommu_group_has_isolated_msi(struct iommu_group *group);
+>>>   extern struct iommu_domain *iommu_domain_alloc(const struct bus_type 
+>>> *bus);
+>>> +struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 
+>>> flags);
+>>>   extern void iommu_domain_free(struct iommu_domain *domain);
+>>>   extern int iommu_attach_device(struct iommu_domain *domain,
+>>>                      struct device *dev);
+>>> @@ -1086,6 +1087,11 @@ static inline struct iommu_domain 
+>>> *iommu_domain_alloc(const struct bus_type *bus
+>>>       return NULL;
+>>>   }
+>>> +static inline struct iommu_domain *iommu_user_domain_alloc(struct 
+>>> device *dev, u32 flags)
+>>> +{
+>>> +    return ERR_PTR(-ENODEV);
+>>> +}
+>>> +
+>>>   static inline void iommu_domain_free(struct iommu_domain *domain)
+>>>   {
+>>>   }
+>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>> index 9df7cc75c1bc..f1416892ef8e 100644
+>>> --- a/drivers/iommu/iommu.c
+>>> +++ b/drivers/iommu/iommu.c
+>>> @@ -2032,6 +2032,48 @@ struct iommu_domain *iommu_domain_alloc(const 
+>>> struct bus_type *bus)
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(iommu_domain_alloc);
+>>> +/**
+>>> + * iommu_user_domain_alloc() - Allocate a user domain
+>>> + * @dev: device for which the domain is allocated
+>>> + * @flags: iommufd_hwpt_alloc_flags defined in uapi/linux/iommufd.h
+>>> + *
+>>> + * Allocate a user domain which will be managed by a userspace driver. 
+>>> Return
+>>> + * allocated domain if successful, or a ERR pointer for failure.
+>>
+>> do you want to mention that this is for paging domain allocation?
+> 
+> You are worrying about its confusion with nesting domain allocation,
+> right?
+
+yes. As I replied in last version, user_domain is a bit confusing since
+nested domain is also a user_domain. That's why we introduced the
+alloc_domain_user op.
+
+> My understanding is that if we want a common interface for
+> nesting domain allocation, we should make it in another interface. Here,
+> the user domain is a paging domain for GVA->HPA mapping, which is common
+> across iommufd, vfio, and vdpa.
+
+do you mean user_domain only includes paging domain?
+
+>>
+>>> + */
+>>> +struct iommu_domain *iommu_user_domain_alloc(struct device *dev, u32 
+>>> flags)
+>>> +{
+>>> +    struct iommu_domain *domain;
+>>> +    const struct iommu_ops *ops;
+>>> +
+>>> +    if (!dev_has_iommu(dev))
+>>> +        return ERR_PTR(-ENODEV);
+>>> +
+>>> +    ops = dev_iommu_ops(dev);
+>>> +    if (ops->domain_alloc_user) {
+>>> +        domain = ops->domain_alloc_user(dev, flags, NULL, NULL);
+>>> +        if (IS_ERR(domain))
+>>> +            return domain;
+>>> +
+>>> +        domain->type = IOMMU_DOMAIN_UNMANAGED;
+>>> +        domain->owner = ops;
+>>> +        domain->pgsize_bitmap = ops->pgsize_bitmap;
+>>
+>> this seems to break the iommufd selftest as the mock driver sets extra
+>> bits in the domain->pgsize_bitmap in allocation. Override it may fail
+>> something in the testing. you may need to check if domain->pgsize_bitmap
+>> is set or use &=.
+>>
+>> static struct iommu_domain *mock_domain_alloc_paging(struct device *dev)
+>> {
+>>      struct mock_dev *mdev = container_of(dev, struct mock_dev, dev);
+>>      struct mock_iommu_domain *mock;
+>>
+>>      mock = kzalloc(sizeof(*mock), GFP_KERNEL);
+>>      if (!mock)
+>>          return NULL;
+>>      mock->domain.geometry.aperture_start = MOCK_APERTURE_START;
+>>      mock->domain.geometry.aperture_end = MOCK_APERTURE_LAST;
+>>      mock->domain.pgsize_bitmap = MOCK_IO_PAGE_SIZE;
+>>      if (dev && mdev->flags & MOCK_FLAGS_DEVICE_HUGE_IOVA)
+>>          mock->domain.pgsize_bitmap |= MOCK_HUGE_PAGE_SIZE;
+>>      mock->domain.ops = mock_ops.default_domain_ops;
+>>      mock->domain.type = IOMMU_DOMAIN_UNMANAGED;
+>>      xa_init(&mock->pfns);
+>>      return &mock->domain;
+>> }
+> 
+> You are right. I should follow the code in __iommu_domain_alloc()
+> 
+>          /*
+>           * If not already set, assume all sizes by default; the driver
+>           * may override this later
+>           */
+>          if (!domain->pgsize_bitmap)
+>                  domain->pgsize_bitmap = ops->pgsize_bitmap;
+> 
+> Does it work?
+
+I think so. This should work.
+
+-- 
+Regards,
+Yi Liu
