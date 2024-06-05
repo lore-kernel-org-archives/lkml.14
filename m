@@ -1,114 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1361B4D5A2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 16:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D8343AB5;
+	Wed,  5 Jun 2024 16:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717603381; cv=none; b=cH8Grxhmc89UVUmXnvYB5x9U4KnB1JFRhYNfQK0xgh4ACEvAZOo+FpJ+qMkQgFTSQNoOUxh4GEADZuxVJG9liFy/yDhrn5JOaJj4kQt8mR5l4GLztQsKPxN1BIq79k49Zh3tinwCcRiSRvrkpt6RaWX4o/3W/PrggwhnGmLDB4U=
+	t=1717603513; cv=none; b=nynpgpsp/ioGH3ZS8a0Z1ZkjfniYZ7blRFHnpKhLiVdXHmxdySYsa+/60riW4BPSfhJDzCO1YKuQZw0YzN66kz0OTPxblv2KcfJzOCro7BkQscnb74r71BUI8cLmVPZZD4IJ/0ymfr620PfIZn5XABupTPfwVH69xSIa4+Yux84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717603381; c=relaxed/simple;
-	bh=D8OoY3T7mGC4YRUW2RtL5a4Fc9lBZAegGqyZz35xuZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fHeB8BhLY72LDvn67eWtMaIjq0o9GoJwAsGnTn4G+jaqARif7UJ/OTES1dvZWvPTh8K+FDME+UUpyWkNtMhzJwpcl9eEHq+0mANfAp7KE4VDu9oo2bEGZYwttv1d5PLpPYJdFet0JyNeCFWAWd5m7B3ooW/t3BEH4suVGf/TDws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GNq/XgZF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717603513; c=relaxed/simple;
+	bh=ZITd+YnlFTNOqNMfjwuMKsulMYwfRwq92CEZ79xeIsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gR74VxfGan3/RVbHTMhgbkwdafDDRoRZL0gnNwp99wLfha3iD6bN7oklB98iC8NsaIOCnu0xpK2AGRRUEz7qHVjDkYOZvZNreAv2PkcsrIaIVlnyqVknT3a/odDzYD8Ul6ruwveML6S+lpxKGCikUDkMh33u1LBdhlN19CFd1rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fY27YPeo; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GNq/XgZF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717603379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mJuDy+kWLrp9AKixbMmEZ9fbIkmFKDgFWSJ9YOKhB7k=;
-	b=GNq/XgZFOpMvwGLVAEjnvZKHBf2Ncw6UuK60Ur76LkgBgcx1g7sG3bp/xtTk7NPyKi+odj
-	n+J6YL6wnBGRHLz2Vw3wukDGqEXPWVpTDcCJa/4KFuzjb07bTnpAvWbCTw5zDhNLedFEZd
-	O6O9+rraf7fdzn1VbfXWwOyGtwi2wnY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-BxGYqY-ePeC5n4RfYyv9PQ-1; Wed,
- 05 Jun 2024 12:02:53 -0400
-X-MC-Unique: BxGYqY-ePeC5n4RfYyv9PQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3BCCB3806702;
-	Wed,  5 Jun 2024 16:02:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 6FF23492BFA;
-	Wed,  5 Jun 2024 16:02:47 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 18:01:23 +0200 (CEST)
-Date: Wed, 5 Jun 2024 18:01:17 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
- uprobe_consumer
-Message-ID: <20240605160117.GE25006@redhat.com>
-References: <20240604200221.377848-1-jolsa@kernel.org>
- <20240604200221.377848-2-jolsa@kernel.org>
- <20240605152457.GD25006@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fY27YPeo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717603513; x=1749139513;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZITd+YnlFTNOqNMfjwuMKsulMYwfRwq92CEZ79xeIsU=;
+  b=fY27YPeoeMNAecy+cFwn0oGFCQXNQonwuYn3d5n5Gb9E0hJOHvOKzN9W
+   sYDJYfRJleACZQ/vr6Cf1CYHi5u8AGd3tAbY79jGHWbX0A3TDYmnhbw31
+   nbVLk41E7xaDg566bdzUs4LHrVpdMU02TpfZVoDEmNbD3Qp8BN67ff3D7
+   Ryk8ydW0DCxDB0AoH9DAt4eSu09F4uKwSfIXR/vpEII8baEvrwHHifEja
+   0Q9pBTsaM9O8nghZihE4l8ckxr1pqPEtSqstTmsxIRRONhuXe8/NxQGoM
+   d1+056Y5c5NA6Tu8K8xqqQ49IDJzPmp5l6GyDGo1+8dlFVH8lp63DJ9Og
+   A==;
+X-CSE-ConnectionGUID: yrqrKtiJTTS/fru5UJ7Vkw==
+X-CSE-MsgGUID: Ix2T8WBESZ+/LSaF04TjzQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14066671"
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="14066671"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 09:05:12 -0700
+X-CSE-ConnectionGUID: kaP5ti2bR+GsL8p2Mg75Kg==
+X-CSE-MsgGUID: WkZSUujWTOS4Nxci4kbGoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="38208201"
+Received: from unknown (HELO [10.125.109.64]) ([10.125.109.64])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 09:05:06 -0700
+Message-ID: <82303136-0894-40ff-b9e0-d0753b243a14@intel.com>
+Date: Wed, 5 Jun 2024 09:05:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605152457.GD25006@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv11 11/19] x86/tdx: Convert shared memory back to private
+ on kexec
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Liu <ltao@redhat.com>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-12-kirill.shutemov@linux.intel.com>
+ <68943e0b-8d82-42de-8f09-058e97d9a392@intel.com>
+ <ass6d7jqmjmttnyfzpdfid6dymqriors2awdtyedwvc7ft4zhg@qzj637lzmjt6>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <ass6d7jqmjmttnyfzpdfid6dymqriors2awdtyedwvc7ft4zhg@qzj637lzmjt6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 06/05, Oleg Nesterov wrote:
->
-> > +/*
-> > + * Make sure all the uprobe consumers have only one type of entry
-> > + * callback registered (either handler or handler_session) due to
-> > + * different return value actions.
-> > + */
-> > +static int consumer_check(struct uprobe_consumer *curr, struct uprobe_consumer *uc)
-> > +{
-> > +	if (!curr)
-> > +		return 0;
-> > +	if (curr->handler_session || uc->handler_session)
-> > +		return -EBUSY;
-> > +	return 0;
-> > +}
->
-> Hmm, I don't understand this code, it doesn't match the comment...
->
-> The comment says "all the uprobe consumers have only one type" but
-> consumer_check() will always fail if the the 1st or 2nd consumer has
-> ->handler_session != NULL ?
->
-> Perhaps you meant
->
-> 	if (!!curr->handler != !!uc->handler)
-> 		return -EBUSY;
->
-> ?
+On 6/5/24 05:43, Kirill A. Shutemov wrote:
+> Okay fair enough. Check out the fixup below. Is it what you mean?
 
-OK, the changelog says
+Yes.  Much better.
 
-	Which means that there can be only single user of a uprobe (inode +
-	offset) when session consumer is registered to it.
+> One other thing I realized is that these callback are dead code if kernel
+> compiled without kexec support. Do we want them to be wrapped with
+> #ifdef COFNIG_KEXEC_CORE everywhere? It is going to be ugly.
+> 
+> Any better ideas?
 
-so the code is correct. But I still think the comment is misleading.
+The other callbacks don't have #ifdefs either and they're dependent on
+memory encryption as far as I can tell.
 
-Oleg.
+I think a simple:
 
+	if (IS_ENABLED(COFNIG_KEXEC_CORE))
+		return;
+
+in the top of the callbacks will result in a tiny little stub function
+when kexec is disabled.  So the bloat will be limited to kernels that
+have TDX compiled in but kexec compiled out (probably never).  The bloat
+will be two callback pointer, one tiny stub function, and a quick
+call/return in a slow path.
+
+I think that probably ends up being a few dozen bytes of bloat in kernel
+text for a "probably never" config.
