@@ -1,117 +1,226 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D98861FC6;
-	Wed,  5 Jun 2024 04:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973C212F5A6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 04:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717563071; cv=none; b=HxqK/jhO5IUyOR4j3xLM8+KNh94PKRpex8KTVVC/dm8mqfFIeYhim1BYS6N/SefcDh/DIimSAiS11ysKjsahwaHu9U90Z5ksVqUjpU483+IusFfATyGepjQ0XKRhG/7EkHOMS5a6Fiq9kaIf5dZIimIn6c0KNLSs+N3FYHXEOtU=
+	t=1717563100; cv=none; b=ITNwyl6lVQ9tVqAMy6qRnFqKB0/IaiGhRSDpwfk73UV7NA6EUwSFquoRMoO1BGOlzRNitXAdj7sZNEpHOYoS+egsjC6A9fWwR4CMamnVgmX+/samqEXCcGdvRAp3TaGOl3vzHNYccKzNoYCPc7OFGArgFV1JkPvAdZGNuy86UCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717563071; c=relaxed/simple;
-	bh=IDc6ujVuOTHOaHdN/xtBa1iDkOFL97kXwy4RC0H8QRQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHui0dFnMVP2moD1ATOFIqM3yax95kI/zFN8lrkDx9AQRQSnf/tabPQvwvHVGE5J4wiRlmc5bPSoKNee5Fgjte/4r+8tu7XW2cTbLFxPMaCOJAkaRJe7PTpT7SwXImLe3GFuUpLWqtrW2Hv/Abh1b0+IXTOl9zbhJZYBOOZcXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=kwrZnMqW; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1717563100; c=relaxed/simple;
+	bh=fRj/9daOi684S1CjP8+/OFf16Zh4BiNKACL519r/dhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UI8H+8jnnc1cdCvmXZZZyEWKgvKIiWaoFl4ep0W+VCe9w2wrP3yVOFpNlXEsjwX7bUSgRf68BizGaa7YxrrIKbsYpEyit5HkGUAVgF5vqR0KmsrTuny4CmIvwjfB5lxZgq+imv83CLCXND677QjosZ7mqEVHhxD5X0y3iCwqI4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=MCx/TvRP; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kwrZnMqW"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454KXfJ9003930;
-	Tue, 4 Jun 2024 21:44:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=OKNIK6PQn1SUEDYPQ/4MC5ygM
-	mYXQNZukQIA+FsOkDc=; b=kwrZnMqWrvwVKrucKc6RKSWiZfEU9gx4dyqkPN9rJ
-	5aXlgh7Ub43U16sepdDCYwm7WiaQyLgNvlludMmNgSReH27HtRp8pv6Fvj47WDu5
-	N/xy8R5CymSRAK4DdRm/6C+FO10qgU9mL45YaWfuHmc8AgbFrUYsBaFMiel3y5i5
-	v8OcaH4Vwg6egSl/QEAY5o5S26+hGDMmGHHfDY60kIkLAYRyUedV635AT97LLymZ
-	QuRyM0uHZD/uo6OcA5Qzt434M0paVA7az1h0R/i3KgEUsIOCQCqtBBJYWdSlVxmZ
-	dAqSob5466SHHAh/xL51oqOz+KSlvV0PMgpN19lxMrajQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yj167bw8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 21:44:48 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 4 Jun 2024 21:44:47 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 4 Jun 2024 21:44:47 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id EE0DB3F7040;
-	Tue,  4 Jun 2024 21:44:42 -0700 (PDT)
-Date: Wed, 5 Jun 2024 10:14:41 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: <0x7f454c46@gmail.com>
-CC: Eric Dumazet <edumazet@google.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>,
-        David Ahern <dsahern@kernel.org>,
-        Steven Rostedt
-	<rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 1/6] net/tcp: Use static_branch_tcp_{md5,ao}
- to drop ifdefs
-Message-ID: <20240605044441.GA3452034@maili.marvell.com>
-References: <20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com>
- <20240605-tcp_ao-tracepoints-v2-1-e91e161282ef@gmail.com>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MCx/TvRP"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7e1f984312cso262889039f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 21:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1717563097; x=1718167897; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f+9KIC2ZMxoi+KaQ4+bun3D6PF4buG3kzbZsU0iekQA=;
+        b=MCx/TvRPnOGXYgjiFoHSXxbwPHz81PL5kLtlfNa46l0dMmMmeiRbvYLkGz+ZmM4nIp
+         UlUFPQGS8u/v5Sjr3G2wAQ0C9L/qRcCRtB+JxMFYLFurL2K0vqHFTMuRFvm3u+UT8QpH
+         05JrU9avzjvoANS/q7OExYHOQ7pMHjcrKfaD1TmW3ikP6tTFzddfoBgqcznYnJymBDFQ
+         GqZd62A61gL5wKfgwGDxGK+7F6ab2RG6ZU5QaN+kkP8m3tiOXkux8oJjm40foZnkfAxY
+         j4fIBeNdUq4RKN1hiBszQzEtWBGKo83xEPp3gMwu4oqCYclAjCEy1TjcxqxDKfma+7er
+         d55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717563097; x=1718167897;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f+9KIC2ZMxoi+KaQ4+bun3D6PF4buG3kzbZsU0iekQA=;
+        b=VkduO3NG171NXzS5CLPmXhsfaMLug8S3RltBNzpq3GCQqyMp5XV199hxzlX3kwgahH
+         Vk3eAlB9yRW7LUrR6AtmqI+5g1yo4Y8whdQfKHOiUFGi+oC05mWiLY8u0VNU3GSyPwb0
+         4oXqSf6PoxCX8RlYTUoUprt6MufANbU2OtbnI0kqHEz686pS45V51lWatkgQqMeRZlW5
+         x82bw8Xt9w/UkAS6rzL+Ux7I91oCtxuZwPRLncQBX+cQiBEjX7add4S+DqsTfDjpXCNB
+         MnPk+oKiOLQF8SfvBczT8rzLwiLbCo0dE/rQqOZmjVMTpNqzz4LLH5+o/qE+/iFR+LN3
+         D2rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJLUZdlW1Bya6zB9vtoG7C04wgHkla2o3kzxPaNxKiQyC/LkS+4RCMWhdMedTxYLC8Mn0b++M8Ite0i8wL5m2gl5UehkFf9aDVV0Rd
+X-Gm-Message-State: AOJu0YxfnedIcL9EzJNPHdbweHKLGCt9SH7BMQCKEi7jbtJhr8p0jcE4
+	be5yceOjpKdjAYpM30zyFhtZJyE3zkNjaIVsAnSSXMwjKXaZHmheD8PSfzL/qJ32UDpyqFhAFAK
+	9PjmkfoKvHr7883uug3LjpnLicZYY9AeW4rV8yg==
+X-Google-Smtp-Source: AGHT+IHDdgM5M7Aerg3GufHIekxnMW6S0tnaUVXZfbMHW9u3OV196yASyKEW6+bqR469jIOGILXJOClrDiM+GwbYUwk=
+X-Received: by 2002:a05:6602:3fc7:b0:7e1:85a5:36c0 with SMTP id
+ ca18e2360f4ac-7eb3c8b52edmr187420039f.9.1717563097575; Tue, 04 Jun 2024
+ 21:51:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240605-tcp_ao-tracepoints-v2-1-e91e161282ef@gmail.com>
-X-Proofpoint-ORIG-GUID: gFkNoHKrv-1PWaojsDgW1P09mPHzPUGV
-X-Proofpoint-GUID: gFkNoHKrv-1PWaojsDgW1P09mPHzPUGV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
+References: <20240531162327.2436962-1-jesse@rivosinc.com>
+In-Reply-To: <20240531162327.2436962-1-jesse@rivosinc.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Wed, 5 Jun 2024 12:51:26 +0800
+Message-ID: <CANXhq0pYNWvMxkkNPpYW4OrOXK19Rehdy3yO8u1sforyVjdTZg@mail.gmail.com>
+Subject: Re: [PATCH v0] RISC-V: Use Zkr to seed KASLR base address
+To: Jesse Taube <jesse@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	=?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Masahiro Yamada <masahiroy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-06-05 at 07:50:02, Dmitry Safonov via B4 Relay (devnull+0x7f454c46.gmail.com@kernel.org) wrote:
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
+On Sat, Jun 1, 2024 at 12:23=E2=80=AFAM Jesse Taube <jesse@rivosinc.com> wr=
+ote:
 >
-> It's possible to clean-up some ifdefs by hiding that
-> tcp_{md5,ao}_needed static branch is defined and compiled only
-> under related configs, since commit 4c8530dc7d7d ("net/tcp: Only produce
-> AO/MD5 logs if there are any keys").
+> Dectect the Zkr extension and use it to seed the kernel base address.
 >
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+> Detection of the extension can not be done in the typical fashion, as
+> this is very early in the boot process. Instead, add a trap handler
+> and run it to see if the extension is present.
+>
+> Signed-off-by: Jesse Taube <jesse@rivosinc.com>
 > ---
->  include/net/tcp.h   | 14 ++++----------
->  net/ipv4/tcp_ipv4.c |  8 ++------
->  2 files changed, 6 insertions(+), 16 deletions(-)
+>  arch/riscv/kernel/pi/Makefile           |  2 +-
+>  arch/riscv/kernel/pi/archrandom_early.c | 71 +++++++++++++++++++++++++
+>  arch/riscv/mm/init.c                    |  3 ++
+>  3 files changed, 75 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/riscv/kernel/pi/archrandom_early.c
 >
-> diff --git a/include/net/tcp.h b/include/net/tcp.h
-> index 08c3b99501cf..f6dd035e0fa9 100644
-> --- a/include/net/tcp.h
-> +++ b/include/net/tcp.h
-> @@ -2386,21 +2386,15 @@ static inline void tcp_get_current_key(const struct sock *sk,
+> diff --git a/arch/riscv/kernel/pi/Makefile b/arch/riscv/kernel/pi/Makefil=
+e
+> index 50bc5ef7dd2f..9025eb52945a 100644
+> --- a/arch/riscv/kernel/pi/Makefile
+> +++ b/arch/riscv/kernel/pi/Makefile
+> @@ -32,5 +32,5 @@ $(obj)/string.o: $(srctree)/lib/string.c FORCE
+>  $(obj)/ctype.o: $(srctree)/lib/ctype.c FORCE
+>         $(call if_changed_rule,cc_o_c)
 >
->  static inline bool tcp_key_is_md5(const struct tcp_key *key)
+> -obj-y          :=3D cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.=
+pi.o lib-fdt.pi.o lib-fdt_ro.pi.o
+> +obj-y          :=3D cmdline_early.pi.o fdt_early.pi.o string.pi.o ctype.=
+pi.o lib-fdt.pi.o lib-fdt_ro.pi.o archrandom_early.pi.o
+>  extra-y                :=3D $(patsubst %.pi.o,%.o,$(obj-y))
+> diff --git a/arch/riscv/kernel/pi/archrandom_early.c b/arch/riscv/kernel/=
+pi/archrandom_early.c
+> new file mode 100644
+> index 000000000000..311be9388b5c
+> --- /dev/null
+> +++ b/arch/riscv/kernel/pi/archrandom_early.c
+> @@ -0,0 +1,71 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +/*
+> + * To avoid rewriteing code include asm/archrandom.h and create macros
+> + * for the functions that won't be included.
+> + */
+> +
+> +#define riscv_has_extension_likely(...) false
+> +#define pr_err_once(...)
+> +
+> +#include <linux/types.h>
+> +#include <asm/hwcap.h>
+> +#include <asm/archrandom.h>
+> +
+> +/*
+> + * Asm goto is needed so that the compiler does not remove the label.
+> + */
+> +
+> +#define csr_goto_swap(csr, val)                                         =
+       \
+> +({                                                                     \
+> +       unsigned long __v;                                              \
+> +       __asm__ __volatile__ goto("csrrw %0, " __ASM_STR(csr) ", %1"    \
+> +                                 : "=3Dr" (__v) : "rK" (&&val)          =
+ \
+> +                                 : "memory" : val);                    \
+> +       __v;                                                            \
+> +})
+> +
+> +/*
+> + * Declare the functions that are exported (but prefixed) here so that L=
+LVM
+> + * does not complain it lacks the 'static' keyword (which, if added, mak=
+es
+> + * LLVM complain because the function is actually unused in this file).
+> + */
+> +
+> +u64 get_kaslr_seed_zkr(void);
+> +
+> +/*
+> + * This function is called by setup_vm to check if the kernel has the ZK=
+R.
+> + * Traps haven't been set up yet, but save and restore the TVEC to avoid
+> + * any side effects.
+> + */
+> +
+> +static inline bool __must_check riscv_has_zkr(void)
+> +{
+> +       unsigned long tvec;
+> +
+> +       tvec =3D csr_goto_swap(CSR_TVEC, not_zkr);
+> +       csr_swap(CSR_SEED, 0);
+> +       csr_write(CSR_TVEC, tvec);
+> +       return true;
+> +not_zkr:
+> +       csr_write(CSR_TVEC, tvec);
+> +       return false;
+> +}
+> +
+> +u64 get_kaslr_seed_zkr(void)
+> +{
+> +       const int needed_seeds =3D sizeof(u64) / sizeof(long);
+> +       int i =3D 0;
+> +       u64 seed =3D 0;
+> +       long *entropy =3D (long *)(&seed);
+> +
+> +       if (!riscv_has_zkr())
+> +               return 0;
+> +
+> +       for (i =3D 0; i < needed_seeds; i++) {
+> +               if (!csr_seed_long(&entropy[i]))
+> +                       return 0;
+> +       }
+> +
+> +       return seed;
+> +}
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 9940171c79f0..8ef1edd2cddd 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1025,6 +1025,7 @@ static void __init pt_ops_set_late(void)
+>  #ifdef CONFIG_RANDOMIZE_BASE
+>  extern bool __init __pi_set_nokaslr_from_cmdline(uintptr_t dtb_pa);
+>  extern u64 __init __pi_get_kaslr_seed(uintptr_t dtb_pa);
+> +extern u64 __init __pi_get_kaslr_seed_zkr(void);
+>
+>  static int __init print_nokaslr(char *p)
 >  {
-> -#ifdef CONFIG_TCP_MD5SIG
-> -	if (static_branch_unlikely(&tcp_md5_needed.key) &&
-> -	    key->type == TCP_KEY_MD5)
-> -		return true;
-> -#endif
-> +	if (static_branch_tcp_md5())
-Seems that we lost unlikely hint. Dont we add that as well-> unlikely()
-> +		return key->type == TCP_KEY_MD5;
->  	return false;
->  }
+> @@ -1049,6 +1050,8 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+>                 u32 kernel_size =3D (uintptr_t)(&_end) - (uintptr_t)(&_st=
+art);
+>                 u32 nr_pos;
+>
+> +               if (kaslr_seed =3D=3D 0)
+> +                       kaslr_seed =3D __pi_get_kaslr_seed_zkr();
+
+Could you elaborate on why we try to get the seed from DT first,
+rather than from ZKR? Also, I was wondering if, by any chance, it can
+leverage arch_get_random_seed_longs() to get the seed instead of
+__pi_get_kasler_seed_zkr()? Thanks
+
+>                 /*
+>                  * Compute the number of positions available: we are limi=
+ted
+>                  * by the early page table that only has one PUD and we m=
+ust
+> --
+> 2.43.0
 >
 >
->
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
