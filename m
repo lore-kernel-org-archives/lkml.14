@@ -1,378 +1,220 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB462195979;
-	Wed,  5 Jun 2024 12:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C49A1A01BB
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591575; cv=none; b=A3aR7KtNV+JeSGPBIqHikU+DXxCddZcXI1SDC/M/vS6zxmLVuQwm5Qg6csJGkD6aTypBecf/T8HrpiRPlhkgUhrWtD0tQZc1gNFzljr1MfgfdBml//+mXvs8UxMQXb2yQ+u5kXdIEXnBx3CxP5OuJaKDhIdWJFUkbxvfRQDk4nM=
+	t=1717591580; cv=none; b=DApCkGkYzk9/UbWMengSO4/inWiHUMtEGv0yFCYfluvEUASycROrUjzfdkwsmssLNvirUQ+f4dL9u8StX+L1UrhRxA1qckgCQxxiOX0hPaECQAmrsiyH30RB/jvtYrq2qOp9cqxa3fKe+mjiLkiWGaEplzLfYI0MkcTA6c3y7kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717591575; c=relaxed/simple;
-	bh=BGLHv4xpzk0UNA/mNHCdUqELp2BxvV/rdGcf5ulqilM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k/s6IurpbWtJ6FwtOGkOYm3TMPofftLDMMFd1If4sHyD6uZ/xeyTst0WOopCuAzeidbmZ3KeGMDR/pKbcUe5RB/wEluWWvmxYOC9vq+WWdkiJBn2w5HmmRMQU0qhZXMtFpRfnQFbVnsdhEKB9r0Lys60BPxdFZQjxN9qmZFCaLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VA3wO0Y/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717591580; c=relaxed/simple;
+	bh=kDUETpSBAWsF9j0EnGxGEOMh3sd+k5taRZdlC2W5Oew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d3ZWjzSw2ijqSVs5tvsFIdUDkMmL0CzkBJps0yje5SP4y0ceeuK4L/mX2Rx+dzGVfCZ2elby5ntDhiBYnnkv+r0USVBMWAj///xi+teZxEfFKc3KJYqZ75jfuj68JgUYB2BKCOowmyI5s9PW66EYI28XDRe1bNSawdZiEDKKQ2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B15RnFdj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VA3wO0Y/"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455B1M9W031654;
-	Wed, 5 Jun 2024 12:46:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MtRQw8ew8a5XIxUZQ8THrk/sDYTFfTJEdKKytbieSYE=; b=VA3wO0Y/hbgh1sP8
-	txGE72cWiNkPS0Wo8x9L//FoOMukIfl7o2itIKMzK1E++XwGMJ2rhSMtXUcP/9pB
-	fnb5vFy6YF+CcTndWq3AQ8uETR4aDGUIIKRDKVYA+AzYDJv81T6/0bc628Z//MpZ
-	kZ5ZXz04xJ48QqLjzyF3/t1lsMHU6x0u9OjCl+5iiYyFNjPhh2eJh4K476SUFrsv
-	yIEFcQDosX7P1Sln9if4XJqqms+jnMzuR5Iu5kEBrwqZEPVWJZ+Cr623rpM4HXiJ
-	yASZ8z78SaUHg2FkikOMDAfT6XWMHr8xUUAie9RLM6SHEjGNTxgCKrQgdCEZ5xsB
-	kfuEdg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjk898ttv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 12:46:05 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455Ck4S8024567
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Jun 2024 12:46:04 GMT
-Received: from luoj-gv.qualcomm.com (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
- 05:46:01 -0700
-From: Luo Jie <quic_luoj@quicinc.com>
-To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <p.zabel@pengutronix.de>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_srichara@quicinc.com>
-Subject: [PATCH v15 2/4] dt-bindings: clock: add qca8386/qca8084 clock and reset definitions
-Date: Wed, 5 Jun 2024 20:45:39 +0800
-Message-ID: <20240605124541.2711467-3-quic_luoj@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240605124541.2711467-1-quic_luoj@quicinc.com>
-References: <20240605124541.2711467-1-quic_luoj@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B15RnFdj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717591578;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=VyHoStZqSfdBy+2Shj9AhCmSSEwdABGvBZ2EWf4zWmk=;
+	b=B15RnFdjoUkwVQWmtZlrmPS30NkEcWzpyJhvC1s0WqSMV+YU545DG1ULMVa/Ils9v1ueDR
+	hyy3mQ95p2TdeBuB2jViM+bEqldyGhPZF0WHZHup8nEE/vYnBlKnZkVnF17njhkx+l5Vpc
+	FJy3O3JoaqCR36aEPO94LbGfW/ASs+I=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-427-kfvgHlRdOAivHsPEKJZIBQ-1; Wed, 05 Jun 2024 08:46:15 -0400
+X-MC-Unique: kfvgHlRdOAivHsPEKJZIBQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4212a3ddb6bso43711675e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:46:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717591574; x=1718196374;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VyHoStZqSfdBy+2Shj9AhCmSSEwdABGvBZ2EWf4zWmk=;
+        b=OcJEki/BAV6anmUoSyc4lp5nJIaum1XbA6dr12NWQGQIbb59iyHppgRzdZzLOvYWOD
+         bEx/J83D8uPF5dnSvIWwkUGiNWCjXMKQEfdqPQdUg5MK2/E0zErpCQ1+pawQkGSljEAH
+         Y2iXDrQW1jpDyGfv1lRk/QovjqQv62jvdWwgGEHiWH7Wxy1rMOVlYGP+ry3fJlaevDP/
+         2/OwjBCqzqpp6wK3n1U73ku79pUyOi4FDs7ip/9G5P1+naquixWwlQZFkopVwsaDyPJn
+         Bf33cbndBinCraFnsE8YdwyJFJwTVHuQbZfYZldWd1gRbO++dz+UllQu+8GCh9wXdiey
+         qP5w==
+X-Forwarded-Encrypted: i=1; AJvYcCW0zqhNjSM8j8g7C7XGkyVdioEwbLfY85iS2lb1VYBkaYykg+m647fUH/aUu2fatutirbsrzsKcPdLhpYbF1uo6x+0TiskPhMaclL2C
+X-Gm-Message-State: AOJu0YwS/LQGPc5HVjO60rU5BDpu5qfy9C0YNvkXa2Sglnz34TWIQ8oJ
+	Rx10MpcqB89UZI+qsJBbGb9gWxvbMiYkRImRZm+zA+CTjt/Rv2VJOPe0ZbSj4Z0+2RX25KS0gWQ
+	mLdvw0zNyEOP8f8fnl1Kgprwaasz4uccG27GFjHOi4tc4W/wFwSqb8TrwhIkvKA==
+X-Received: by 2002:a05:600c:1da7:b0:420:fb99:ed02 with SMTP id 5b1f17b1804b1-421562cff37mr19118565e9.6.1717591574634;
+        Wed, 05 Jun 2024 05:46:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAUUXUZ9zpr3NnCgXBiYoowM25vzGrezs+WUrDR8FtJQdSeRWt8ZUzZYjO15IoEPVTCrrSGQ==
+X-Received: by 2002:a05:600c:1da7:b0:420:fb99:ed02 with SMTP id 5b1f17b1804b1-421562cff37mr19118185e9.6.1717591574153;
+        Wed, 05 Jun 2024 05:46:14 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c706:3100:19a8:d898:8e69:6aff? (p200300cbc706310019a8d8988e696aff.dip0.t-ipconnect.de. [2003:cb:c706:3100:19a8:d898:8e69:6aff])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158148f66sm22162595e9.32.2024.06.05.05.46.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 05:46:13 -0700 (PDT)
+Message-ID: <fd16b219-bc46-484a-8581-a21240440fa6@redhat.com>
+Date: Wed, 5 Jun 2024 14:46:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] mm/rmap: integrate PMD-mapped folio splitting into
+ pagewalk loop
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: willy@infradead.org, sj@kernel.org, baolin.wang@linux.alibaba.com,
+ maskray@google.com, ziy@nvidia.com, ryan.roberts@arm.com, 21cnbao@gmail.com,
+ mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com,
+ shy828301@gmail.com, xiehuan09@gmail.com, libang.li@antgroup.com,
+ wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com,
+ minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240521040244.48760-1-ioworker0@gmail.com>
+ <20240521040244.48760-3-ioworker0@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240521040244.48760-3-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PH_fiQCMIGAB50YogJGy5gCwZtsQCaJB
-X-Proofpoint-ORIG-GUID: PH_fiQCMIGAB50YogJGy5gCwZtsQCaJB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405170001 definitions=main-2406050096
 
-QCA8386/QCA8084 includes the clock & reset controller that is
-accessed by MDIO bus. Two work modes are supported, qca8386 works
-as switch mode, qca8084 works as PHY mode.
+On 21.05.24 06:02, Lance Yang wrote:
+> In preparation for supporting try_to_unmap_one() to unmap PMD-mapped
+> folios, start the pagewalk first, then call split_huge_pmd_address() to
+> split the folio.
+> 
+> Since TTU_SPLIT_HUGE_PMD will no longer perform immediately, we might
+> encounter a PMD-mapped THP missing the mlock in the VM_LOCKED range during
+> the page walk. It’s probably necessary to mlock this THP to prevent it from
+> being picked up during page reclaim.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> ---
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
----
- .../bindings/clock/qcom,qca8k-nsscc.yaml      |  86 +++++++++++++++
- include/dt-bindings/clock/qcom,qca8k-nsscc.h  | 101 ++++++++++++++++++
- include/dt-bindings/reset/qcom,qca8k-nsscc.h  |  76 +++++++++++++
- 3 files changed, 263 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,qca8k-nsscc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,qca8k-nsscc.h
- create mode 100644 include/dt-bindings/reset/qcom,qca8k-nsscc.h
+[...] again, sorry for the late review.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,qca8k-nsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,qca8k-nsscc.yaml
-new file mode 100644
-index 000000000000..61473385da2d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,qca8k-nsscc.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,qca8k-nsscc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm NSS Clock & Reset Controller on QCA8386/QCA8084
-+
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+  - Luo Jie <quic_luoj@quicinc.com>
-+
-+description: |
-+  Qualcomm NSS clock control module provides the clocks and resets
-+  on QCA8386(switch mode)/QCA8084(PHY mode)
-+
-+  See also::
-+    include/dt-bindings/clock/qcom,qca8k-nsscc.h
-+    include/dt-bindings/reset/qcom,qca8k-nsscc.h
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: qcom,qca8084-nsscc
-+      - items:
-+          - enum:
-+              - qcom,qca8082-nsscc
-+              - qcom,qca8085-nsscc
-+              - qcom,qca8384-nsscc
-+              - qcom,qca8385-nsscc
-+              - qcom,qca8386-nsscc
-+          - const: qcom,qca8084-nsscc
-+
-+  clocks:
-+    items:
-+      - description: Chip reference clock source
-+      - description: UNIPHY0 RX 312P5M/125M clock source
-+      - description: UNIPHY0 TX 312P5M/125M clock source
-+      - description: UNIPHY1 RX 312P5M/125M clock source
-+      - description: UNIPHY1 TX 312P5M/125M clock source
-+      - description: UNIPHY1 RX 312P5M clock source
-+      - description: UNIPHY1 TX 312P5M clock source
-+
-+  reg:
-+    items:
-+      - description: MDIO bus address for Clock & Reset Controller register
-+
-+  reset-gpios:
-+    description: GPIO connected to the chip
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - reset-gpios
-+
-+allOf:
-+  - $ref: qcom,gcc.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    mdio {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      clock-controller@18 {
-+        compatible = "qcom,qca8084-nsscc";
-+        reg = <0x18>;
-+        reset-gpios = <&tlmm 51 GPIO_ACTIVE_LOW>;
-+        clocks = <&pcs0_pll>,
-+                 <&qca8k_uniphy0_rx>,
-+                 <&qca8k_uniphy0_tx>,
-+                 <&qca8k_uniphy1_rx>,
-+                 <&qca8k_uniphy1_tx>,
-+                 <&qca8k_uniphy1_rx312p5m>,
-+                 <&qca8k_uniphy1_tx312p5m>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+        #power-domain-cells = <1>;
-+      };
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,qca8k-nsscc.h b/include/dt-bindings/clock/qcom,qca8k-nsscc.h
-new file mode 100644
-index 000000000000..0ac3e4c69a1a
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,qca8k-nsscc.h
-@@ -0,0 +1,101 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_QCA8K_NSS_CC_H
-+#define _DT_BINDINGS_CLK_QCOM_QCA8K_NSS_CC_H
-+
-+#define NSS_CC_SWITCH_CORE_CLK_SRC				0
-+#define NSS_CC_SWITCH_CORE_CLK					1
-+#define NSS_CC_APB_BRIDGE_CLK					2
-+#define NSS_CC_MAC0_TX_CLK_SRC					3
-+#define NSS_CC_MAC0_TX_DIV_CLK_SRC				4
-+#define NSS_CC_MAC0_TX_CLK					5
-+#define NSS_CC_MAC0_TX_SRDS1_CLK				6
-+#define NSS_CC_MAC0_RX_CLK_SRC					7
-+#define NSS_CC_MAC0_RX_DIV_CLK_SRC				8
-+#define NSS_CC_MAC0_RX_CLK					9
-+#define NSS_CC_MAC0_RX_SRDS1_CLK				10
-+#define NSS_CC_MAC1_TX_CLK_SRC					11
-+#define NSS_CC_MAC1_TX_DIV_CLK_SRC				12
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_RX_DIV_CLK_SRC		13
-+#define NSS_CC_MAC1_SRDS1_CH0_RX_CLK				14
-+#define NSS_CC_MAC1_TX_CLK					15
-+#define NSS_CC_MAC1_GEPHY0_TX_CLK				16
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_RX_CLK			17
-+#define NSS_CC_MAC1_RX_CLK_SRC					18
-+#define NSS_CC_MAC1_RX_DIV_CLK_SRC				19
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_TX_DIV_CLK_SRC		20
-+#define NSS_CC_MAC1_SRDS1_CH0_TX_CLK				21
-+#define NSS_CC_MAC1_RX_CLK					22
-+#define NSS_CC_MAC1_GEPHY0_RX_CLK				23
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_TX_CLK			24
-+#define NSS_CC_MAC2_TX_CLK_SRC					25
-+#define NSS_CC_MAC2_TX_DIV_CLK_SRC				26
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_RX_DIV_CLK_SRC		27
-+#define NSS_CC_MAC2_SRDS1_CH1_RX_CLK				28
-+#define NSS_CC_MAC2_TX_CLK					29
-+#define NSS_CC_MAC2_GEPHY1_TX_CLK				30
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_RX_CLK			31
-+#define NSS_CC_MAC2_RX_CLK_SRC					32
-+#define NSS_CC_MAC2_RX_DIV_CLK_SRC				33
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_TX_DIV_CLK_SRC		34
-+#define NSS_CC_MAC2_SRDS1_CH1_TX_CLK				35
-+#define NSS_CC_MAC2_RX_CLK					36
-+#define NSS_CC_MAC2_GEPHY1_RX_CLK				37
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_TX_CLK			38
-+#define NSS_CC_MAC3_TX_CLK_SRC					39
-+#define NSS_CC_MAC3_TX_DIV_CLK_SRC				40
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_RX_DIV_CLK_SRC		41
-+#define NSS_CC_MAC3_SRDS1_CH2_RX_CLK				42
-+#define NSS_CC_MAC3_TX_CLK					43
-+#define NSS_CC_MAC3_GEPHY2_TX_CLK				44
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_RX_CLK			45
-+#define NSS_CC_MAC3_RX_CLK_SRC					46
-+#define NSS_CC_MAC3_RX_DIV_CLK_SRC				47
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_TX_DIV_CLK_SRC		48
-+#define NSS_CC_MAC3_SRDS1_CH2_TX_CLK				49
-+#define NSS_CC_MAC3_RX_CLK					50
-+#define NSS_CC_MAC3_GEPHY2_RX_CLK				51
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_TX_CLK			52
-+#define NSS_CC_MAC4_TX_CLK_SRC					53
-+#define NSS_CC_MAC4_TX_DIV_CLK_SRC				54
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_RX_DIV_CLK_SRC		55
-+#define NSS_CC_MAC4_SRDS1_CH3_RX_CLK				56
-+#define NSS_CC_MAC4_TX_CLK					57
-+#define NSS_CC_MAC4_GEPHY3_TX_CLK				58
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_RX_CLK			59
-+#define NSS_CC_MAC4_RX_CLK_SRC					60
-+#define NSS_CC_MAC4_RX_DIV_CLK_SRC				61
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_TX_DIV_CLK_SRC		62
-+#define NSS_CC_MAC4_SRDS1_CH3_TX_CLK				63
-+#define NSS_CC_MAC4_RX_CLK					64
-+#define NSS_CC_MAC4_GEPHY3_RX_CLK				65
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_TX_CLK			66
-+#define NSS_CC_MAC5_TX_CLK_SRC					67
-+#define NSS_CC_MAC5_TX_DIV_CLK_SRC				68
-+#define NSS_CC_MAC5_TX_SRDS0_CLK				69
-+#define NSS_CC_MAC5_TX_CLK					70
-+#define NSS_CC_MAC5_RX_CLK_SRC					71
-+#define NSS_CC_MAC5_RX_DIV_CLK_SRC				72
-+#define NSS_CC_MAC5_RX_SRDS0_CLK				73
-+#define NSS_CC_MAC5_RX_CLK					74
-+#define NSS_CC_MAC5_TX_SRDS0_CLK_SRC				75
-+#define NSS_CC_MAC5_RX_SRDS0_CLK_SRC				76
-+#define NSS_CC_AHB_CLK_SRC					77
-+#define NSS_CC_AHB_CLK						78
-+#define NSS_CC_SEC_CTRL_AHB_CLK					79
-+#define NSS_CC_TLMM_CLK						80
-+#define NSS_CC_TLMM_AHB_CLK					81
-+#define NSS_CC_CNOC_AHB_CLK					82
-+#define NSS_CC_MDIO_AHB_CLK					83
-+#define NSS_CC_MDIO_MASTER_AHB_CLK				84
-+#define NSS_CC_SYS_CLK_SRC					85
-+#define NSS_CC_SRDS0_SYS_CLK					86
-+#define NSS_CC_SRDS1_SYS_CLK					87
-+#define NSS_CC_GEPHY0_SYS_CLK					88
-+#define NSS_CC_GEPHY1_SYS_CLK					89
-+#define NSS_CC_GEPHY2_SYS_CLK					90
-+#define NSS_CC_GEPHY3_SYS_CLK					91
-+#endif
-diff --git a/include/dt-bindings/reset/qcom,qca8k-nsscc.h b/include/dt-bindings/reset/qcom,qca8k-nsscc.h
-new file mode 100644
-index 000000000000..c71167a3bd41
---- /dev/null
-+++ b/include/dt-bindings/reset/qcom,qca8k-nsscc.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_RESET_QCOM_QCA8K_NSS_CC_H
-+#define _DT_BINDINGS_RESET_QCOM_QCA8K_NSS_CC_H
-+
-+#define NSS_CC_SWITCH_CORE_ARES				1
-+#define NSS_CC_APB_BRIDGE_ARES				2
-+#define NSS_CC_MAC0_TX_ARES				3
-+#define NSS_CC_MAC0_TX_SRDS1_ARES			4
-+#define NSS_CC_MAC0_RX_ARES				5
-+#define NSS_CC_MAC0_RX_SRDS1_ARES			6
-+#define NSS_CC_MAC1_SRDS1_CH0_RX_ARES			7
-+#define NSS_CC_MAC1_TX_ARES				8
-+#define NSS_CC_MAC1_GEPHY0_TX_ARES			9
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_RX_ARES		10
-+#define NSS_CC_MAC1_SRDS1_CH0_TX_ARES			11
-+#define NSS_CC_MAC1_RX_ARES				12
-+#define NSS_CC_MAC1_GEPHY0_RX_ARES			13
-+#define NSS_CC_MAC1_SRDS1_CH0_XGMII_TX_ARES		14
-+#define NSS_CC_MAC2_SRDS1_CH1_RX_ARES			15
-+#define NSS_CC_MAC2_TX_ARES				16
-+#define NSS_CC_MAC2_GEPHY1_TX_ARES			17
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_RX_ARES		18
-+#define NSS_CC_MAC2_SRDS1_CH1_TX_ARES			19
-+#define NSS_CC_MAC2_RX_ARES				20
-+#define NSS_CC_MAC2_GEPHY1_RX_ARES			21
-+#define NSS_CC_MAC2_SRDS1_CH1_XGMII_TX_ARES		22
-+#define NSS_CC_MAC3_SRDS1_CH2_RX_ARES			23
-+#define NSS_CC_MAC3_TX_ARES				24
-+#define NSS_CC_MAC3_GEPHY2_TX_ARES			25
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_RX_ARES		26
-+#define NSS_CC_MAC3_SRDS1_CH2_TX_ARES			27
-+#define NSS_CC_MAC3_RX_ARES				28
-+#define NSS_CC_MAC3_GEPHY2_RX_ARES			29
-+#define NSS_CC_MAC3_SRDS1_CH2_XGMII_TX_ARES		30
-+#define NSS_CC_MAC4_SRDS1_CH3_RX_ARES			31
-+#define NSS_CC_MAC4_TX_ARES				32
-+#define NSS_CC_MAC4_GEPHY3_TX_ARES			33
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_RX_ARES		34
-+#define NSS_CC_MAC4_SRDS1_CH3_TX_ARES			35
-+#define NSS_CC_MAC4_RX_ARES				36
-+#define NSS_CC_MAC4_GEPHY3_RX_ARES			37
-+#define NSS_CC_MAC4_SRDS1_CH3_XGMII_TX_ARES		38
-+#define NSS_CC_MAC5_TX_ARES				39
-+#define NSS_CC_MAC5_TX_SRDS0_ARES			40
-+#define NSS_CC_MAC5_RX_ARES				41
-+#define NSS_CC_MAC5_RX_SRDS0_ARES			42
-+#define NSS_CC_AHB_ARES					43
-+#define NSS_CC_SEC_CTRL_AHB_ARES			44
-+#define NSS_CC_TLMM_ARES				45
-+#define NSS_CC_TLMM_AHB_ARES				46
-+#define NSS_CC_CNOC_AHB_ARES				47
-+#define NSS_CC_MDIO_AHB_ARES				48
-+#define NSS_CC_MDIO_MASTER_AHB_ARES			49
-+#define NSS_CC_SRDS0_SYS_ARES				50
-+#define NSS_CC_SRDS1_SYS_ARES				51
-+#define NSS_CC_GEPHY0_SYS_ARES				52
-+#define NSS_CC_GEPHY1_SYS_ARES				53
-+#define NSS_CC_GEPHY2_SYS_ARES				54
-+#define NSS_CC_GEPHY3_SYS_ARES				55
-+#define NSS_CC_SEC_CTRL_ARES				56
-+#define NSS_CC_SEC_CTRL_SENSE_ARES			57
-+#define NSS_CC_SLEEP_ARES				58
-+#define NSS_CC_DEBUG_ARES				59
-+#define NSS_CC_GEPHY0_ARES				60
-+#define NSS_CC_GEPHY1_ARES				61
-+#define NSS_CC_GEPHY2_ARES				62
-+#define NSS_CC_GEPHY3_ARES				63
-+#define NSS_CC_DSP_ARES					64
-+#define NSS_CC_GEPHY_FULL_ARES				65
-+#define NSS_CC_GLOBAL_ARES				66
-+#define NSS_CC_XPCS_ARES				67
-+#endif
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index ddffa30c79fb..08a93347f283 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1640,9 +1640,6 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   	if (flags & TTU_SYNC)
+>   		pvmw.flags = PVMW_SYNC;
+>   
+> -	if (flags & TTU_SPLIT_HUGE_PMD)
+> -		split_huge_pmd_address(vma, address, false, folio);
+> -
+>   	/*
+>   	 * For THP, we have to assume the worse case ie pmd for invalidation.
+>   	 * For hugetlb, it could be much worse if we need to do pud
+> @@ -1668,20 +1665,35 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
+>   	mmu_notifier_invalidate_range_start(&range);
+>   
+>   	while (page_vma_mapped_walk(&pvmw)) {
+> -		/* Unexpected PMD-mapped THP? */
+> -		VM_BUG_ON_FOLIO(!pvmw.pte, folio);
+> -
+>   		/*
+>   		 * If the folio is in an mlock()d vma, we must not swap it out.
+>   		 */
+>   		if (!(flags & TTU_IGNORE_MLOCK) &&
+>   		    (vma->vm_flags & VM_LOCKED)) {
+>   			/* Restore the mlock which got missed */
+> -			if (!folio_test_large(folio))
+> +			if (!folio_test_large(folio) ||
+> +			    (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)))
+>   				mlock_vma_folio(folio, vma);
+
+Can you elaborate why you think this would be required? If we would have 
+performed the  split_huge_pmd_address() beforehand, we would still be 
+left with a large folio, no?
+
+>   			goto walk_done_err;
+>   		}
+>   
+> +		if (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)) {
+> +			/*
+> +			 * We temporarily have to drop the PTL and start once
+> +			 * again from that now-PTE-mapped page table.
+> +			 */
+> +			split_huge_pmd_locked(vma, range.start, pvmw.pmd, false,
+> +					      folio);
+
+Using range.start here is a bit weird. Wouldn't this be pvmw.address? 
+[did not check]
+
+> +			pvmw.pmd = NULL;
+> +			spin_unlock(pvmw.ptl);
+> +			pvmw.ptl = NULL;
+
+
+Would we want a
+
+page_vma_mapped_walk_restart() that is exactly for that purpose?
+
+> +			flags &= ~TTU_SPLIT_HUGE_PMD;
+> +			continue;
+> +		}
+> +
+> +		/* Unexpected PMD-mapped THP? */
+> +		VM_BUG_ON_FOLIO(!pvmw.pte, folio);
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
