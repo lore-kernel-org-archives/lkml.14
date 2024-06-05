@@ -1,105 +1,210 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B472218FDBD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DE5190069;
+	Wed,  5 Jun 2024 09:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717581485; cv=none; b=fyoLCfs3xLW1iH3t3384lMe3HHeDIpy0TyXDQPlHjIU3HatDZkcPlW7RrS3SzmQ2A1dQfZMo6YZboSu7CyVLYzQ9wXZcl8i+Y9D6aWclnezJG/Q+YqV6kXwC87+4UQY60f8TI+ySPPdAuE6klM/Ucqp8XOnFiKjhQXcZMLFO69Y=
+	t=1717581491; cv=none; b=PVX7hztzqmHfR99Ss/P2AhgZg3gsZ9f2ns6X6AGAptVRhT99Bp0/FEOBCV3Yqhy8j6Gl4zgbYTBNM9/ccIZQ31cm8Jw6qKAxYDsGfZAFSdr1157jnHGqnZ7Zbo/jUJNHcDBLFO6371kMj4u6R5vslFJ+QWg3FM04hbXT1SHkKn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717581485; c=relaxed/simple;
-	bh=RQc4Y5JzCyPSexPf3Wi3TLrBGuonQNYkM259jWz7/zM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IU28TxJYvdh5wN9M+dSIGS3gwnZCZK/M9eWUeUmzxJfrjfheUdPQiuVxGlQK1wx+0W/6+isoATVs8fQ5j9l92YS1DnRpzm1CInrMc5uk/Qa6MB2KrDxjpgB0+IIik9IAYDdyBMD1XkATem0wgu4hM4g0JvlxR4Zu677qMF6UX2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b78bhk65; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717581491; c=relaxed/simple;
+	bh=xZQz7fJmDvWNQhqSTZkcIXCIAoM0eFHSuZHUQfg57Po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ZYCbS9pkALFIgTQmOYuojp4xM0xp9Oys9kr6WlABJQzWPY38GIAd/dDbZU0JxNRizjQAtYb85eJ5o78KVBvzBz35mUn8Nj1Z81H/wNx6KsrCMr6DgVGn79XlS0jHmNkChiBRog9MamiXwKcizecyszH0z/XPExK+XUMbcZO5lrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=J+wKxVzL; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b78bhk65"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-62a088f80f6so6158737b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717581483; x=1718186283; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5mAYD1Avt8pq2XcOOEM7xebLX9m2RKKIBoR9HWmP6lo=;
-        b=b78bhk651qsOiAqBWWtYLgJE6cEi7LziBQvDru8GAH5ehAuqt8uz9dr0Ru+MwLWiRA
-         cyNzA1TmHVCVP0joDMkVTHHa+crH80E0YDZlVMibNBCGynMRQtHxwqfyIc4g68b/q14O
-         /amQO9VI2phVL35uwcLkgHsg4dJFOiTeA4T+O5lXWrYMEWYgn5Ipu8NfWJUew/RasbXR
-         EVQ8AsY/vOx93PRaa0I/JVnCfqxmtyl+qf7GxMerO5jADOKxk9HXGEUjD3dxBidhxDhA
-         2nKCkweikV4Mj7ICVCe6XYo/TYaR1o6sBjvZI3ZTPu4fW97yRphkUM++Y+J3ynfY8vxW
-         iKxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717581483; x=1718186283;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5mAYD1Avt8pq2XcOOEM7xebLX9m2RKKIBoR9HWmP6lo=;
-        b=gjOpM4e9M9NL2rT9jZBsQGEFcNXu42+qjFOdDOWp6rL62SpTEcEEsqZn+GeZgfqr3u
-         qVToMy2fhWb/keWTImsOfcFfvWx2+FnnYdf8DSvP6CMwP3XoanfkHCsJYzgSL9QmDdPd
-         PwCENIofJXmutc1rLNP4sQS46KQfI03HL5u6B3iu6BIvkbv+JC4dEwodlr/Ivl2HDBWr
-         tzCqN9oplVYVjPTy7uncSMYATuaovnWgOMEz4/dXd6xwEz8+qRXtjVU8SSP1wQZnMzQm
-         lb0HoGCpRy9wDdNtzDaowoXiTIGbu8s85tTcA1HMqZiThP52ZK6IWqtzr+rC6HVa9h40
-         TWSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoYT1zO/kl/1JxXoV9kmP+dlcdnzOWSzmObjx+ZMHO5GAu2WoTghB4ahgCyfkcCW7YYj6Qxvj7RPHcNcGw8jISNSTB3gmZtgtW8y6K
-X-Gm-Message-State: AOJu0Yx2PRAKaT1wWvbplaiECoNRlvx4RefFq4DyJphtmRyHfbpltUZp
-	VzxuGNonkBdv5xvRfC5XDd0v/HdWM1mWDHXMuZKjAslba9oTU91XSAvRI5ApKImyTtraEApguJR
-	dulLyv35/ZSmMy7zAmpvQt6PYViEZwlVMaPEx1A==
-X-Google-Smtp-Source: AGHT+IF2R/aghDc5IVYeX1rVhBtT3A6VAsaeguTPhS6sYRA62wpiuZD2zzzvBra0tS6pu+Cqh5RE9zZsadl70OemW/g=
-X-Received: by 2002:a25:b88:0:b0:de5:8427:d66f with SMTP id
- 3f1490d57ef6-dfac96febfemr1772988276.4.1717581482636; Wed, 05 Jun 2024
- 02:58:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="J+wKxVzL"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4557cvlj013276;
+	Wed, 5 Jun 2024 11:57:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	Yl2/1DvIUCdB1SM68YD06QoDvfl+b4umSa+Pr8mxF0I=; b=J+wKxVzLNClyM69E
+	gk71rArZ3dSR5WmkoQd7MZ+Nvn1ZWNMZ/SJm5io0n+Oj8HGLwsvCuMKf7nqnNx5g
+	lz6SpMVUuI9sZ6bc2Y7XHnBLMYWzvcfPNjkmGnS5GSEa18LgBSIimYZttnaMgwaN
+	xiDedlp7ZRxXq1s0rUFqVpEjQDIH5+20m6vjdHwMn5hqAmDBbQcdT1AqFYlu0y2Y
+	an+GGTuGiUKjJgHa9tM83eFJtvVeD54ZnQPobyLu5Q3Q2YFEwkIpokYSsI0sVvtx
+	3pl4hwNmOU/Ii81M9GlEKRV85jpZwChNGnzf4KmM9+C3wf90CsxoJQxXVJuX5DVW
+	+LEWOw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3yfw30fyq6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 11:57:20 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 78A3540047;
+	Wed,  5 Jun 2024 11:57:13 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B05D1214D37;
+	Wed,  5 Jun 2024 11:55:48 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 5 Jun
+ 2024 11:55:47 +0200
+Message-ID: <70b66190-2c55-4228-8c31-f58a05829d8b@foss.st.com>
+Date: Wed, 5 Jun 2024 11:55:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240529-a4_secpowerdomain-v2-0-47502fc0eaf3@amlogic.com>
-In-Reply-To: <20240529-a4_secpowerdomain-v2-0-47502fc0eaf3@amlogic.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 5 Jun 2024 11:57:26 +0200
-Message-ID: <CAPDyKFo-V4aNKWQn2r61_Q5d9R2Lhj8d5Ri_b-zW7VMsVBHARw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Power: A4: add power domain driver
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jianxin Pan <jianxin.pan@amlogic.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/11] dt-bindings: net: add STM32MP13 compatible in
+ documentation for stm32
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "David S . Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark
+ Brown <broonie@kernel.org>, Marek Vasut <marex@denx.de>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240604143502.154463-1-christophe.roullier@foss.st.com>
+ <20240604143502.154463-2-christophe.roullier@foss.st.com>
+ <067d41e5-89cf-45eb-8cfa-b6c3cd434f76@linaro.org>
+Content-Language: en-US
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <067d41e5-89cf-45eb-8cfa-b6c3cd434f76@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_11,2024-06-05_02,2024-05-17_01
 
-On Wed, 29 May 2024 at 05:10, Xianwei Zhao via B4 Relay
-<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
->
-> Add power controller driver support for Amlogic A4 SoC.
->
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
-> Changes in v2:
-> - dts: Move power-controller node to be a child of secure-monitor.
-> - dts: Include power head file.
-> - Link to v1: https://lore.kernel.org/r/20240528-a4_secpowerdomain-v1-0-2a9d7df9b128@amlogic.com
->
-> ---
-> Xianwei Zhao (3):
->       dt-bindings: power: add Amlogic A4 power domains
->       pmdomain: amlogic: Add support for A4 power domains controller
->       arm64: dts: amlogic: a4: add power domain controller node
->
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     |  1 +
->  arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 10 ++++++++
->  drivers/pmdomain/amlogic/meson-secure-pwrc.c       | 28 ++++++++++++++++++++++
->  include/dt-bindings/power/amlogic,a4-pwrc.h        | 21 ++++++++++++++++
->  4 files changed, 60 insertions(+)
-> ---
 
-Patch 1 and 2 applied for next, thanks!
+On 6/5/24 10:14, Krzysztof Kozlowski wrote:
+> On 04/06/2024 16:34, Christophe Roullier wrote:
+>> New STM32 SOC have 2 GMACs instances.
+>> GMAC IP version is SNPS 4.20.
+>>
+>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+>> ---
+>>   .../devicetree/bindings/net/stm32-dwmac.yaml  | 41 +++++++++++++++----
+>>   1 file changed, 34 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>> index 7ccf75676b6d5..ecbed9a7aaf6d 100644
+>> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>> @@ -22,18 +22,17 @@ select:
+>>           enum:
+>>             - st,stm32-dwmac
+>>             - st,stm32mp1-dwmac
+>> +          - st,stm32mp13-dwmac
+>>     required:
+>>       - compatible
+>>   
+>> -allOf:
+>> -  - $ref: snps,dwmac.yaml#
+>> -
+>>   properties:
+>>     compatible:
+>>       oneOf:
+>>         - items:
+>>             - enum:
+>>                 - st,stm32mp1-dwmac
+>> +              - st,stm32mp13-dwmac
+>>             - const: snps,dwmac-4.20a
+>>         - items:
+>>             - enum:
+>> @@ -75,12 +74,15 @@ properties:
+>>     st,syscon:
+>>       $ref: /schemas/types.yaml#/definitions/phandle-array
+>>       items:
+>> -      - items:
+>> +      - minItems: 2
+>> +        items:
+>>             - description: phandle to the syscon node which encompases the glue register
+>>             - description: offset of the control register
+>> +          - description: field to set mask in register
+>>       description:
+>>         Should be phandle/offset pair. The phandle to the syscon node which
+>> -      encompases the glue register, and the offset of the control register
+>> +      encompases the glue register, the offset of the control register and
+>> +      the mask to set bitfield in control register
+>>   
+>>     st,ext-phyclk:
+>>       description:
+>> @@ -112,12 +114,37 @@ required:
+>>   
+>>   unevaluatedProperties: false
+>>   
+>> +allOf:
+>> +  - $ref: snps,dwmac.yaml#
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - st,stm32mp1-dwmac
+>> +              - st,stm32-dwmac
+>> +    then:
+>> +      properties:
+>> +        st,syscon:
+>> +          items:
+>> +            maxItems: 2
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - st,stm32mp13-dwmac
+>> +    then:
+>> +      properties:
+>> +        st,syscon:
+>> +          items:
+>> +            minItems: 3
+> I don't think this works. You now constrain the first dimension which
+> had only one item before.
+>
+> Make your example complete and test it.
+>
+> Best regards,
+> Krzysztof
 
-Note that the DT patch (patch1) is also available on the immutable dt branch.
+Hi Krzysztof,
 
-Kind regards
-Uffe
+"Official" bindings for MP15: st,syscon = <&syscfg 0x4>;
+"Official" bindings for MP13: st,syscon = <&syscfg 0x4 0xff0000>; or 
+st,syscon = <&syscfg 0x4 0xff000000>;
+
+If I execute make dt_binding_check 
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/net/stm32-dwmac.yaml with:
+
+    For MP15: st,syscon = <&syscfg>; 
+=>bindings/net/stm32-dwmac.example.dtb: ethernet@40027000: st,syscon:0: 
+[4294967295] is too short
+
+    For MP15: st,syscon = <&syscfg 0x4 0xff0000>; 
+=>devicetree/bindings/net/stm32-dwmac.example.dtb: ethernet@40027000: 
+st,syscon:0: [4294967295, 4, 16711680] is too long
+
+    For MP13: st,syscon = <&syscfg 0x4>; => 
+devicetree/bindings/net/stm32-dwmac.example.dtb: ethernet@5800a000: 
+st,syscon:0: [4294967295, 4] is too short
+
+    For MP13: st,syscon = <&syscfg 0x4 0xff0000 0xff>; => 
+devicetree/bindings/net/stm32-dwmac.example.dtb: ethernet@5800a000: 
+st,syscon:0: [4294967295, 4, 16711680, 255] is too long
+
+So it is seems good :-)
+
+>
