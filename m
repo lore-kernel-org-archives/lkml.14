@@ -1,230 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9375ED266
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 02:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E080F1EB36
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 02:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717553797; cv=none; b=OA1905mEpHyvDrpDdBQJmQmqJ/+errGLEx/XI7vhsTnSGHN2HNA/sejph2vZQUc36Heb5DC5CWJVmd+giE4DF9CY1bf3NytuGADFJcqx9/m97FNPdtNKQpsh5RiQOzXfkFchI6g9gXp1R7zttN735U2bYZj7RXN3YGr8jyz9dgA=
+	t=1717553828; cv=none; b=roM8sEtFDz04ePjICoe9AA1GZRHZ47gNlW7rVH+ZOUCWyd2zAAvwjUn3i6iswiESuvXJpT5mwo9tcfmaRbcld7GM58YhAhwgVQZl2Ge2HN8q6G58xD17XVyBCaNddOypEwqwgFrBJYk/cPqepgkmEengpqg5AJq6Nuhgyfgxi/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717553797; c=relaxed/simple;
-	bh=iTshI2+OpSiVkEKiYrGh8IzDkfFT++7Je5S7wqZu3nE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ve+Y8shyxpmOfgOxluJweEOkme+R1W6GgVCJb9X99qYUEOWipJYFCaPgwGgrkErQdJpdz4sabZn94wxDempD+APMZXrt5n9XAbgXUXEWSz5pxetm1feNo1Ah22ztlFWEWuky8r26RPj8FQXG2ZmnNxr7kb4jT3xLC1dory1h4n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAIu2qyX; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717553828; c=relaxed/simple;
+	bh=MLfPfaoRWzUtkJbb03QMNFwwSc4Jj5l8BHZun+Zm9tA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=npLqqPBHAY1IUPfPrCokFniXzWA0DewAVi96j1zVoKl3j47WZbgsib8VKx2ipqduiGe9zyQPx/rGh/A1CWEn3z7F3qzcotzr0qmghLwsQSe4Pw0r1J3XV5VeXzCszjTooTCVWlC+PUBahjxXeqfTDhzftc5MKd79HQtb1k3CvYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l87G/C95; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAIu2qyX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717553795; x=1749089795;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=iTshI2+OpSiVkEKiYrGh8IzDkfFT++7Je5S7wqZu3nE=;
-  b=lAIu2qyXhbj354i/h8jA5vj8XN/MG7GHS4XgJZcUGdONQjCG2ppSJAWR
-   qJ+gDX7UYmxEVblIVPhp9aBpkMPWSx7Ekts6wS8EUAkAnM+TAt+Il/9GQ
-   7ynlXbB0670eL2cfv7qzezZI06k9sRymMg6AqVQuv+i3Z6MHT1M+1BrKa
-   gaOXs9bUD2UsqU3EvwDmO45ahkd8LvBF/9ctd5W6uTqWrKA2gIuoylQQr
-   XJ+bGbQHKpXJ5KCR70c9UJffKrCE3ZZZdZHekDb7GNWvwIEpnik7PMwPL
-   o/UsVHzoc4U7/pGmOsy5cJHw5npKTUIXaSKCycthUdWYGT9KY8PCRhmz4
-   w==;
-X-CSE-ConnectionGUID: SKDvVB2HSwyG/31PjSf4KA==
-X-CSE-MsgGUID: gc61V0ToQEC6HyPb62JaNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13887110"
-X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
-   d="scan'208";a="13887110"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 19:16:19 -0700
-X-CSE-ConnectionGUID: OyG7tzCeSteeJKEouJNjAA==
-X-CSE-MsgGUID: Fs7wXbBOSx2P3DTutfPCdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
-   d="scan'208";a="37996371"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 19:16:16 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Byungchul Park <byungchul@sk.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,  <akpm@linux-foundation.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
-  <kernel_team@skhynix.com>,  <iamjoonsoo.kim@lge.com>,
-  <rientjes@google.com>
-Subject: Re: [PATCH v2] mm: let kswapd work again for node that used to be
- hopeless but may not now
-In-Reply-To: <20240605012412.GA75311@system.software.com> (Byungchul Park's
-	message of "Wed, 5 Jun 2024 10:24:12 +0900")
-References: <20240604072323.10886-1-byungchul@sk.com>
-	<87bk4hcf7h.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240604084533.GA68919@system.software.com>
-	<8734ptccgi.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240604091221.GA28034@system.software.com>
-	<20240604102516.GB28034@system.software.com>
-	<20240604122927.GA1992@cmpxchg.org>
-	<20240605002114.GA23651@system.software.com>
-	<87y17kb3xm.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240605012412.GA75311@system.software.com>
-Date: Wed, 05 Jun 2024 10:14:24 +0800
-Message-ID: <87plswb0fz.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l87G/C95"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-6c5a6151ff8so1403804a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 19:17:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1717553826; x=1718158626; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mmUqGT6R1ALyKLT05MMVBNync2sESvjPRIFmm8CcRyI=;
+        b=l87G/C95InJSUvSyfWONXhMOKgPY/3LUnMn8iG52nRdPrWeh+ARSF1VSbfSNCFT1/S
+         gIPepG8JpCNsj48tbNFpAgjGmUBQso9lm7GWVEImNo5F/9dMmXw2wVE4x/etSsle4yav
+         lx3o/PG/pSefS5pAHoxt0iXnDh4qRMowT8nUA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717553826; x=1718158626;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mmUqGT6R1ALyKLT05MMVBNync2sESvjPRIFmm8CcRyI=;
+        b=DWCTYDyCyV9qSSIm5U/D9dEyHQ0iN5CotRg+p0EofVRTiCLTavR7298GoQV5WDpnPb
+         X+ysKbH+6f+oPT8aIzVb740ZQaIpjD+hL7bau5p7jLTYdMuN+55LlY+u2Id2R0aUFpn3
+         XKVcMwhkbXoKcjYKUQhFVZAD7zrlde8m639wYmdMlcqGuhhge6SzTEVriD18NYbusp09
+         cZGQZ6uo/8yb4/AdZId7bpMZ4GC4o6mfabcxo+MjH68qZuleh2p44qr4cNKc7vmiDsOf
+         tNFL7RFJ9WpHTUZqB2vUVUozm5waODYj4O5roUQiaYkSFGR+le3Vn0A5pNs63iuqweI1
+         qKTw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJY+YdOLFLbT2POtPkn02hAZBBLZKdOJcOOYGOkZINfxP0ygDz2nbJuG+JMvMu4ugCltPBtduWSXwO5L/eIAmgaip+ragkmjHnTxJn
+X-Gm-Message-State: AOJu0YxlRFZc3raRAFpTOSO0g5/lBjWSnyt5USdvxSHv6vfH0DNw+/S+
+	X0JLxtKoGr71wSodY3O7+3QjhrxIu3BWSXZQ0XiuR5KgWd32DSN1rcxNOzW+zg==
+X-Google-Smtp-Source: AGHT+IHMmAk8/qxOtTT8yRi3dQLozZNnAXY3KVFXiLbMylIWGljhiXvbuvAbtK5cf8CRLuS4ZWveRQ==
+X-Received: by 2002:a05:6a20:7348:b0:1af:f8e7:76d4 with SMTP id adf61e73a8af0-1b2b6ed9cbemr1830288637.18.1717553826123;
+        Tue, 04 Jun 2024 19:17:06 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:72fe:f923:2f3c:6cd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dd73esm90373315ad.158.2024.06.04.19.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 19:17:05 -0700 (PDT)
+Date: Wed, 5 Jun 2024 11:17:01 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	David Rientjes <rientjes@google.com>,
+	Christoph Lameter <cl@linux.com>,
+	Erhard Furtner <erhard_f@mailbox.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: zsmalloc: share slab caches for all zsmalloc zpools
+Message-ID: <20240605021701.GB11718@google.com>
+References: <20240604175340.218175-1-yosryahmed@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240604175340.218175-1-yosryahmed@google.com>
 
-Byungchul Park <byungchul@sk.com> writes:
+On (24/06/04 17:53), Yosry Ahmed wrote:
+> Zswap creates multiple zpools to improve concurrency. Each zsmalloc
+> zpool creates its own 'zs_handle' and 'zspage' slab caches. Currently we
+> end up with 32 slab caches of each type.
+> 
+> Since each slab cache holds some free objects, we end up with a lot of
+> free objects distributed among the separate zpool caches. Slab caches
+> are designed to handle concurrent allocations by using percpu
+> structures, so having a single instance of each cache should be enough,
+> and avoids wasting more memory than needed due to fragmentation.
+> 
+> Additionally, having more slab caches than needed unnecessarily slows
+> down code paths that iterate slab_caches.
+> 
+> In the results reported by Eric in [1], the amount of unused slab memory
+> in these caches goes down from 242808 bytes to 29216 bytes (-88%). This
+> is calculated by (num_objs - active_objs) * objsize for each 'zs_handle'
+> and 'zspage' cache. Although this patch did not help with the allocation
+> failure reported by Eric with zswap + zsmalloc, I think it is still
+> worth merging on its own.
+> 
+> [1]https://lore.kernel.org/lkml/20240604134458.3ae4396a@yea/
+> 
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
 
-> On Wed, Jun 05, 2024 at 08:59:01AM +0800, Huang, Ying wrote:
->> Byungchul Park <byungchul@sk.com> writes:
->> 
->> > On Tue, Jun 04, 2024 at 08:29:27AM -0400, Johannes Weiner wrote:
->> >> On Tue, Jun 04, 2024 at 07:25:16PM +0900, Byungchul Park wrote:
->> >> > On Tue, Jun 04, 2024 at 06:12:22PM +0900, Byungchul Park wrote:
->> >> > > On Tue, Jun 04, 2024 at 04:57:17PM +0800, Huang, Ying wrote:
->> >> > > > Byungchul Park <byungchul@sk.com> writes:
->> >> > > > 
->> >> > > > > On Tue, Jun 04, 2024 at 03:57:54PM +0800, Huang, Ying wrote:
->> >> > > > >> Byungchul Park <byungchul@sk.com> writes:
->> >> > > > >> 
->> >> > > > >> > Changes from v1:
->> >> > > > >> > 	1. Don't allow to resume kswapd if the system is under memory
->> >> > > > >> > 	   pressure that might affect direct reclaim by any chance, like
->> >> > > > >> > 	   if NR_FREE_PAGES is less than (low wmark + min wmark)/2.
->> >> > > > >> >
->> >> > > > >> > --->8---
->> >> > > > >> > From 6c73fc16b75907f5da9e6b33aff86bf7d7c9dd64 Mon Sep 17 00:00:00 2001
->> >> > > > >> > From: Byungchul Park <byungchul@sk.com>
->> >> > > > >> > Date: Tue, 4 Jun 2024 15:27:56 +0900
->> >> > > > >> > Subject: [PATCH v2] mm: let kswapd work again for node that used to be hopeless but may not now
->> >> > > > >> >
->> >> > > > >> > A system should run with kswapd running in background when under memory
->> >> > > > >> > pressure, such as when the available memory level is below the low water
->> >> > > > >> > mark and there are reclaimable folios.
->> >> > > > >> >
->> >> > > > >> > However, the current code let the system run with kswapd stopped if
->> >> > > > >> > kswapd has been stopped due to more than MAX_RECLAIM_RETRIES failures
->> >> > > > >> > until direct reclaim will do for that, even if there are reclaimable
->> >> > > > >> > folios that can be reclaimed by kswapd.  This case was observed in the
->> >> > > > >> > following scenario:
->> >> > > > >> >
->> >> > > > >> >    CONFIG_NUMA_BALANCING enabled
->> >> > > > >> >    sysctl_numa_balancing_mode set to NUMA_BALANCING_MEMORY_TIERING
->> >> > > > >> >    numa node0 (500GB local DRAM, 128 CPUs)
->> >> > > > >> >    numa node1 (100GB CXL memory, no CPUs)
->> >> > > > >> >    swap off
->> >> > > > >> >
->> >> > > > >> >    1) Run a workload with big anon pages e.g. mmap(200GB).
->> >> > > > >> >    2) Continue adding the same workload to the system.
->> >> > > > >> >    3) The anon pages are placed in node0 by promotion/demotion.
->> >> > > > >> >    4) kswapd0 stops because of the unreclaimable anon pages in node0.
->> >> > > > >> >    5) Kill the memory hoggers to restore the system.
->> >> > > > >> >
->> >> > > > >> > After restoring the system at 5), the system starts to run without
->> >> > > > >> > kswapd.  Even worse, tiering mechanism is no longer able to work since
->> >> > > > >> > the mechanism relies on kswapd for demotion.
->> >> > > > >> 
->> >> > > > >> We have run into the situation that kswapd is kept in failure state for
->> >> > > > >> long in a multiple tiers system.  I think that your solution is too
->> >> > > > >
->> >> > > > > My solution just gives a chance for kswapd to work again even if
->> >> > > > > kswapd_failures >= MAX_RECLAIM_RETRIES, if there are potential
->> >> > > > > reclaimable folios.  That's it.
->> >> > > > >
->> >> > > > >> limited, because OOM killing may not happen, while the access pattern of
->> >> > > > >
->> >> > > > > I don't get this.  OOM will happen as is, through direct reclaim.
->> >> > > > 
->> >> > > > A system that fails to reclaim via kswapd may succeed to reclaim via
->> >> > > > direct reclaim, because more CPUs are used to scanning the page tables.
->> >> > > > 
->> >> > > > In a system with NUMA balancing based page promotion and page demotion
->> >> > > > enabled, page promotion will wake up kswapd, but kswapd may fail in some
->> >> > > > situations.  But page promotion will no trigger direct reclaim or OOM.
->> >> > > > 
->> >> > > > >> the workloads may change.  We have a preliminary and simple solution for
->> >> > > > >> this as follows,
->> >> > > > >> 
->> >> > > > >> https://git.kernel.org/pub/scm/linux/kernel/git/vishal/tiering.git/commit/?h=tiering-0.8&id=17a24a354e12d4d4675d78481b358f668d5a6866
->> >> > > > >
->> >> > > > > Whether tiering is involved or not, the same problem can arise if
->> >> > > > > kswapd gets stopped due to kswapd_failures >= MAX_RECLAIM_RETRIES.
->> >> > > > 
->> >> > > > Your description is about tiering too.  Can you describe a situation
->> >> > > 
->> >> > > I mentioned "tiering" while I described how to reproduce because I ran
->> >> > > into the situation while testing with tiering system but I don't think
->> >> > > it's the necessary condition.
->> >> > > 
->> >> > > Let me ask you back, why the logic to stop kswapd was considered in the
->> >> > > first place?  That's because the problem was already observed anyway
->> >> > 
->> >> > To be clear..
->> >> > 
->> >> > The problem, kswapd_failures >= MAX_RECLAIM_RETRIES, can happen whether
->> >> > tiering is involved not not.  Once kswapd stops, the system should run
->> >> > without kswapd even after recovered e.g. by killing the hoggers.  *Even
->> >> > worse*, tiering mechanism doesn't work in this situation.
->> >> 
->> >> But like Ying said, in other situations it's direct reclaim that kicks
->> >> in and clears the flag.
->> >
->> > I already described it in the commit message.
->> >
->> >> The failure-sleep and direct reclaim triggered recovery have been in
->> >
->> > Sure.  It's better than nothing.
->> >
->> >> place since 2017. Both parties who observed an issue with it recently
->> >> did so in tiering scenarios. IMO a tiering-specific solution makes the
->> >> most sense.
->> >
->> > So..  Is the follow situation in a non-tiering system okay?  Really?
->> >
->> >    A system runs with kswapd disabled unless hitting min water mark,
->> >    even if there might be something that kswapd can work on.
->> >
->> > I don't undertand why it's okay.  Could you explain more?  Then why do
->> > we use kswapd in background?
->> 
->> IIUC, it's okey.  One direct reclaiming will be triggered, then kswapd
->> reclaiming will be recovered.  So, the performance will not be
->> influenced much.
->
-> So is it because the performance will not be influenced much?  Hm..  the
-> system would get impacted at the moment when direct reclaim gets
-> triggerred, even though kswapd can mitigate the impact proactively.
->
-> However, I don't want to insist strongly if you all consider it's okay.
->
-> Changing the topic to tiering, which one looks better between two
-> appoaches to solve the issue that tiering doens't work once the failures
-> hit MAX_RECLAIM_RETRIES:
->
->    1) periodically run kswapd
->    2) run kswapd if there might be reclaimable folios as this patch does
+Makes perfect sense, thanks.
 
-It's hard to capture all situations.  Folios may become reclaimable in
-various ways, some folios become cold, swap devices are added, munlock,
-folios freeing/allocating, etc.  It's hard to detect them all without
-trying.
-
-It may be not necessary to run kswapd periodically.  So, another
-possibility is to allow wakeup kswapd after some timeout even if
-kswapd_failures >= MAX_RECLAIM_RETRIES.
-
---
-Best Regards,
-Huang, Ying
-
-> For 2), this patch should be modified a lil bit tho.
->
-> 	Byungchul
->
->> Do you think that this will impact performance?  If so, please try to
->> prove it with test results.
->> 
->> --
->> Best Regards,
->> Huang, Ying
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
