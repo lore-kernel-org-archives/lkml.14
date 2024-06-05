@@ -1,93 +1,131 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4296A125BA;
-	Wed,  5 Jun 2024 14:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7118819D8AB;
+	Wed,  5 Jun 2024 14:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717598855; cv=none; b=fK2KJS/zGrEqHmY1xh2zP94EnBa5b5cjmdHYb2XBcSbgmFAVlFcca9/C1Y4eXw5fNoWOlt3LzgF3jL0VW1sX3s5QzbB0PW0aj0fmyXaHiAAeQBriX94o6J/fgN/dRB7yrgcH4vL8IBAvLHor5t72PKl2YU3KCs0uW8kWeTZA0Oo=
+	t=1717598959; cv=none; b=Viz0eS0sdXqQouCVeAekZjZeyQX0RNKSWaLd3k5OonsFz/Ix+GlV5z9lFiTabDzgSgcFAFObUFY7cGzHWShhcBQ4oXvLOk1aNBJOyskHLEvAPQkC4HuIXkr82YKYwpOM6kvS+IfE/nE3g8H6L2i1/yy+bZW2GPJdZw4MAvW7D1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717598855; c=relaxed/simple;
-	bh=PXB2GCAHy4AXeES+/s42eyr/C+ckbgTV2vZzTuEb1/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sQOQQ99byzt1HFGOgp/u4EFkX0RhheQQz8GxDgL6c007X8ABYAHIyQpC3cMeExK7k3/ay0C4N3e1q7l9XIUTblrL0177AfdRvancAXOZPwc36gfjVnrn86zwMqBYeJhcFKkJiQOyDnkBrHVUwkIjR8abzQNGkSFrHchxp0Rk9Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=tcfuyKhV; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1717598959; c=relaxed/simple;
+	bh=JI51xCKNXfnxhURIX3KOj0rmwuTxLiCCiq0F7SuZDxU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CNwMferZ7yLEuMkVAKVBoiV5QvQPnGsFu76ES2ta0WA5OhsMu1qEXbRonDz8nlF/WJ9cSRVfIetYNhRgPKdQljUBy2dItrDYghk45ft5CVcXPn4wIRmAaGL89WbHTLi+0YNHe5eSsWDl5Z+sUVGzBGTuY94+gTDcQuQ3Bfc02Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e6yTzOYM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hBMB+v/s; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e6yTzOYM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hBMB+v/s; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="tcfuyKhV"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id E87A5A0790;
-	Wed,  5 Jun 2024 16:47:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=yHugVKhDEFMDE/eZEfLI
-	Bc5qQ57hrk9iNIoSwhUNJLk=; b=tcfuyKhVcRguuQNo46SAlaD0FlIQvRDrF7ZK
-	vIFiROmjYHioynBcUn9Cfy07HvZf/457e1G/sky+RcyneEqP76d0oGDE9qjmC47/
-	Rokdx6uAahKDAjhnFPbxXyJO11FGRElI+p7UFaw1GX4rsvqTkzIVlJmGynOTn/kp
-	q6Mn4e5puJtbfcgH+N3NC1apXtbrU94OQhlGxOw4aKUf035bgdO0bYR60VwjqJuC
-	kBh9VdVCVt+RF6FJO8ObX6pwDWJqnmHcvrqmBdnE7ETp2zbD+TXXJFECrCqt4g0Q
-	BddyZyfT0Xs5JgIsGSOzKIxKmjPl3nXWv30fM4SbVgLpj29AKnGx+Gz7bRIlzEl+
-	yG7UDiyHzjD6rhOMXcOeZp6aMkCjM2hNhkBpySLcbSrqLo59oHh27C3K3O7dV4S+
-	ew/YM5ZpzyE/ad6tlY+og8qBLZlVDleSjeBA25vZrWkw1IQFTNQYicmsHxum4I3w
-	eT4fEE/zfIGZZ6VIVc+rwhJGHtGe93ujoWvBsT0Jvra/QlvJd81YQaqadcX0X3BA
-	gsaLJV3tdfiereYCQG/acn5NvfvZEj1MDnofbamKcHcqCheAAK4nV3O4kurBB8d4
-	FhTKt8Iy/BtkU9eeZFMFjHre41XVicR7anoPEn584rGcX97v+XPLldA1FcU5Lczo
-	yDzFzxk=
-Message-ID: <52b9e3f4-8dd4-4696-9a47-0dc4eb59c013@prolan.hu>
-Date: Wed, 5 Jun 2024 16:47:27 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e6yTzOYM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hBMB+v/s";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e6yTzOYM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hBMB+v/s"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A907F1F824;
+	Wed,  5 Jun 2024 14:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717598956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVugGptPtD6OX0Z91XnGX144xvMk6jvqh7BpCH/CGOY=;
+	b=e6yTzOYMATV04amdTKq5lOqJCSPzNblm7dCqMOpUvqzZP1e5RceXSmkL8duaZ5uhvfbkEj
+	AeZxxdNbTsH3ZiSYuKqkAHf0pXkIZi2Gh9QmVxjmQ76zxeTpxXD6va5BcTD36z0KOM7W6R
+	P000yrbEgHG4Ofo2jsXG5m0ESIXBjcI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717598956;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVugGptPtD6OX0Z91XnGX144xvMk6jvqh7BpCH/CGOY=;
+	b=hBMB+v/srXEq2KFa9faLmmk1x9bcRZgbZyARhWo5kmvSLdbpnBClVihE6YR0pJj06ruI0a
+	NQz8Iyvi9NarbAAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1717598956; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVugGptPtD6OX0Z91XnGX144xvMk6jvqh7BpCH/CGOY=;
+	b=e6yTzOYMATV04amdTKq5lOqJCSPzNblm7dCqMOpUvqzZP1e5RceXSmkL8duaZ5uhvfbkEj
+	AeZxxdNbTsH3ZiSYuKqkAHf0pXkIZi2Gh9QmVxjmQ76zxeTpxXD6va5BcTD36z0KOM7W6R
+	P000yrbEgHG4Ofo2jsXG5m0ESIXBjcI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1717598956;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dVugGptPtD6OX0Z91XnGX144xvMk6jvqh7BpCH/CGOY=;
+	b=hBMB+v/srXEq2KFa9faLmmk1x9bcRZgbZyARhWo5kmvSLdbpnBClVihE6YR0pJj06ruI0a
+	NQz8Iyvi9NarbAAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5B2C713A42;
+	Wed,  5 Jun 2024 14:49:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id B1agE+x6YGYOOgAAD6G6ig
+	(envelope-from <iivanov@suse.de>); Wed, 05 Jun 2024 14:49:16 +0000
+From: "Ivan T. Ivanov" <iivanov@suse.de>
+To: gregkh@linuxfoundation.org
+Cc: cve@kernel.org,
+	linux-cve-announce@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: RE: iio: adc: stm32-adc: harden against NULL pointer deref in stm32_adc_probe()
+Date: Wed,  5 Jun 2024 17:51:23 +0300
+Message-Id: <20240605145123.78220-1-iivanov@suse.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <2024052159-CVE-2023-52802-81ce@gregkh>
+References: <2024052159-CVE-2023-52802-81ce@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] net: include: mii: Refactor: Use BIT() for
- ADVERTISE_* bits
-To: Vladimir Oltean <olteanv@gmail.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<trivial@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
-	<hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>
-References: <20240605121648.69779-1-csokas.bence@prolan.hu>
- <20240605121648.69779-1-csokas.bence@prolan.hu>
- <20240605121648.69779-2-csokas.bence@prolan.hu>
- <20240605121648.69779-2-csokas.bence@prolan.hu>
- <20240605141342.262wgddrf4xjbbeu@skbuf>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <20240605141342.262wgddrf4xjbbeu@skbuf>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2945A12957627661
+X-Spam-Flag: NO
+X-Spam-Score: 0.10
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.10 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	BAYES_HAM(-0.10)[65.70%];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_NONE(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
 
-Hi!
+Hi,
 
-On 6/5/24 16:13, Vladimir Oltean wrote:
-> On Wed, Jun 05, 2024 at 02:16:49PM +0200, Csókás, Bence wrote:
->> Replace hex values with BIT() and GENMASK() for readability
->>
->> Cc: trivial@kernel.org
->>
->> Signed-off-by: "Csókás, Bence" <csokas.bence@prolan.hu>
->> ---
-> 
-> You can't use BIT() and GENMASK() in headers exported to user space.
-> 
-> I mean you can, but the BIT() and GENMASK() macros themselves aren't
-> exported to user space, and you would break any application which used
-> values dependent on them.
-> 
+I could we drop this CVE? 
 
-I thought the vDSO headers (which currently hold the definition for 
-`BIT()`) *are* exported. Though `GENMASK()`, and the headers which would 
-normally include vdso/bits.h, might not be... But then again, is 
-uapi/linux/mii.h itself even exported? And if so, why aren't these 
-macros? Is there any reason _not_ to export the entire linux/bits.h?
+of_match_device() can not return NULL in this case.
 
-Bence
+Even commit message agree on this:
+
+" ... In practice there is no known reasonable way to trigger this, but
+in case one is added in future, harden the code by adding the check ..."
+
+Regards,
+Ivan
 
