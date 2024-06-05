@@ -1,101 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BB414D449
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 19:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06EEC13A890
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 19:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717616666; cv=none; b=OVLdckULq35pHbX5dOzrSjHX86mmti4T9uhFIlHKL2LXiKJcGoddMKjuOCFs+3nbKzZkCRdbscwld0qduu4JDiu64tjxUHwBDU2uvLXfyweLQDnBJgd9RXftcHaJLQp0gflTet4DfUnU7IkfsWE3kSxIPq5+oCF21mzF55DvTBk=
+	t=1717616805; cv=none; b=B+det4gLQ1p7EqDvGzHqLJusfmNZ14NK7ZmBTe9Ouf4g3/Si2WczNYN+2UCB/CGfqsGsmhsARGMtepO9/BtyA1kIaevENZ+FPO2KoCUB1K187uYqqNMvnmuk1KH5izxd4lFQBVpmdsWPYoBSWup6tT8gvTAvZZ6nAVooZZ6YyG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717616666; c=relaxed/simple;
-	bh=KCeniOHRFpzzTdyjs5MfcwvZY4RL5vqjprwOVtavYh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K/uXkeFKWadInAFcfttcXswDXh00jgj+fMVjzrpZkqgSLaUH/thZCbSSyZMPBOIA+ocjBROw7gya5FYufZK15lg9ryss2kByDxy/xwxWDr9qJ6Mp4eV708Ja+ttiHzuEjP+nu4BnAbR+2HTAl5ktUypGk64ZqAJaw6Ha2iT5AxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q99Quntj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717616805; c=relaxed/simple;
+	bh=byixAgaiWPDCvx3+6gMlnQeEWY61IM2nOM4M0algh8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XkOWLfKIPN4tnPXNeySrpPMcPW3aqFQFXA5Sqz9noqPgMNEB0c9bUblIEMWdhQFsbI82Qs28pqjZBf+G3YAwvbW3AEKWVA26CP+X6Tham7+VqO8hCfptJ3hurB5r7dabq8ZxbmT0SnSiPBX6jYLu3M0n3z8KVkSyCuMg6KGlepI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eAmVbb/u; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q99Quntj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16F8AC2BD11;
-	Wed,  5 Jun 2024 19:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717616666;
-	bh=KCeniOHRFpzzTdyjs5MfcwvZY4RL5vqjprwOVtavYh0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q99QuntjdVygG3DhQZamPejzmR6f+mOuMZNvYp8uFdB6vyiHK3Uzycwz/kai+au5G
-	 FneKlFLCF/YFhm48Vktvcyfb1LmkZj0Ik5BEA751K28ticZOMufwLBMnCl7m/+Yx5I
-	 qehPbHDDiY84ljRwFMzplxPBFU96E0Vhm5V+WbbR8XZYf9Bl1Y7jA1j/HI7v/2zHgz
-	 +/CFWreAfygAHhYyES+ZmLd32fGevD7QEv5bRrQvqSTiQdm6z7ENGSXKJtV78AjoHH
-	 o3CdYIpBtWI8s8p9KBWz2zPDpSRl+A0HokZGeAWQ1ehLdM73hIG7dUDMD/rZvaMNgq
-	 alXGzaJqC6awQ==
-Received: by pali.im (Postfix)
-	id D0085A2F; Wed,  5 Jun 2024 21:44:22 +0200 (CEST)
-Date: Wed, 5 Jun 2024 21:44:22 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Benjamin Schneider <bschnei@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Benjamin Schneider <ben@bens.haus>
-Subject: Re: [PATCH] cpufreq: enable 1200Mhz clock speed for armada-37xx
-Message-ID: <20240605194422.klxtxgyljrrllkzy@pali>
-References: <20240603012804.122215-1-ben@bens.haus>
- <20240603012804.122215-2-ben@bens.haus>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eAmVbb/u"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-35dceef4227so174577f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 12:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1717616800; x=1718221600; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=stehcdZI/Gy2nyTFG+72BIbqVjW6HF+HXyMXn/9m6NA=;
+        b=eAmVbb/uZieR5W/RdimcRNCRnGGtKIaXtVTwTNt4fWo/UfaAqc7YdC8A/cOQ+Sc893
+         Nqd2/AQunRApZPkmEjJ9bXdAyOg0o/FTHvUZIcc1wGcg0mPvL3gP7oibbRf1Ky/fA2R2
+         SrV2IYOv+OEJKofoDMcsNhe8tAPcKX8UHDUEMuF/cKN5fiDZitGsDtvpUaTy2+syCt/J
+         akAF5d9Oi7sZjqQHeV9841/zyhGt4Zkgreue29bzEin7GSqobTvngLw0gW2lHUHpbBEC
+         /tJ+iXNISSndzJkj8XyvdHvsRNGsNf4hM+2V0CPUIMEGbyf3eWczLDvkdH51mGXYYQxa
+         FVoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717616800; x=1718221600;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=stehcdZI/Gy2nyTFG+72BIbqVjW6HF+HXyMXn/9m6NA=;
+        b=R67/OVKC4y5O5TGizNkqhPXMexPvVsgGjNCwkrCxzSmzBrERz7wzYjaZwAH7ts5Npl
+         pk+JUv1IFbuvY0RRbwW10P2H9lLNV1/3sYvWGYoWM2qBMU3scxtv1OX/zdceyowQODSl
+         6irmaUU1ejAmflqf8iiPc3GwoFCyX6S49HozBtye+IC5tU6ILx3O8a29X49HhkGbrKBl
+         9vFEFan0e914fafQLtwc2pmw0gH9J94KX6X4YjcS2z3J44D8kRPsdH1zwzdIQH8OAQMW
+         ZjUdhBJS/sXnkV+RZ2gnmFfQMOfJVZMTMGDYTAJu+Cj88AdyfRfVw87TPjC/6HjWmZiI
+         Iq4A==
+X-Gm-Message-State: AOJu0YzXRkW5CJQWqvhsyyJCipVqKbhonh3UDGzvCd0pca9KtH38Afbd
+	EsT5sncaoSxeVYHdtGM1WAweJScrsAJo5o5kml+xZRHrfxKBKIvkPtqOl1I64w==
+X-Google-Smtp-Source: AGHT+IE/Wv+E0oUSRgXqf2NyYcYZed8RbYVFvLdlchKRe+KXCE/QWMz5FQEw2UcXBwdufl5Zm/iubQ==
+X-Received: by 2002:a5d:4cd1:0:b0:35e:7d29:cb6e with SMTP id ffacd0b85a97d-35e8ef5f882mr2628239f8f.54.1717616800268;
+        Wed, 05 Jun 2024 12:46:40 -0700 (PDT)
+Received: from [172.31.7.231] ([62.48.184.126])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35eee5ad98dsm1435174f8f.11.2024.06.05.12.46.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 12:46:40 -0700 (PDT)
+Message-ID: <7d55b65e-331a-4ce2-8f72-d3c5c9e6eae0@suse.com>
+Date: Wed, 5 Jun 2024 21:46:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240603012804.122215-2-ben@bens.haus>
-User-Agent: NeoMutt/20180716
+User-Agent: Mozilla Thunderbird
+Subject: Re: x86: WARNING: at mm/memblock.c:1339 memblock_set_node - Usage of
+ MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead
+To: paulmck@kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ lkft-triage@lists.linaro.org, Andrew Morton <akpm@linux-foundation.org>,
+ Mike Rapoport <rppt@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>
+References: <CA+G9fYsGFerOtoxwpKLOYcRtyJkmgjdP=qg4Y5iP5q-4Lt17Lg@mail.gmail.com>
+ <315d6873-d618-4126-b67a-de62502d7ee2@paulmck-laptop>
+Content-Language: en-US
+From: Jan Beulich <jbeulich@suse.com>
+In-Reply-To: <315d6873-d618-4126-b67a-de62502d7ee2@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sunday 02 June 2024 18:26:38 Benjamin Schneider wrote:
-> This frequency was disabled because of unresolved stability problems.
-> However, based on several months of testing, the source of the
-> stability problems seems to be the bootloader, not the kernel.
-> Marvell has recently merged changes to their bootloader source that
-> addresses the stability issues when frequency scaling is enabled at
-> all frequencies including 1.2Ghz.
+On 05.06.2024 21:07, Paul E. McKenney wrote:
+> On Mon, Jun 03, 2024 at 07:19:21PM +0530, Naresh Kamboju wrote:
+>> The following kernel warnings are noticed on x86 devices while booting
+>> the Linux next-20240603 tag and looks like it is expected to warn users to
+>> use NUMA_NO_NODE instead.
+>>
+>> Usage of MAX_NUMNODES is deprecated. Use NUMA_NO_NODE instead
+>>
+>> The following config is enabled
+>> CONFIG_NUMA=y
 > 
-> Signed-off-by: Benjamin Schneider <ben@bens.haus>
-> ---
->  drivers/cpufreq/armada-37xx-cpufreq.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+> I am seeing this as well.  Is the following commit premature?
 > 
-> diff --git a/drivers/cpufreq/armada-37xx-cpufreq.c b/drivers/cpufreq/armada-37xx-cpufreq.c
-> index bea41ccab..f28a4435f 100644
-> --- a/drivers/cpufreq/armada-37xx-cpufreq.c
-> +++ b/drivers/cpufreq/armada-37xx-cpufreq.c
-> @@ -102,11 +102,7 @@ struct armada_37xx_dvfs {
->  };
->  
->  static struct armada_37xx_dvfs armada_37xx_dvfs[] = {
-> -	/*
-> -	 * The cpufreq scaling for 1.2 GHz variant of the SOC is currently
-> -	 * unstable because we do not know how to configure it properly.
-> -	 */
-> -	/* {.cpu_freq_max = 1200*1000*1000, .divider = {1, 2, 4, 6} }, */
-> +	{.cpu_freq_max = 1200*1000*1000, .divider = {1, 2, 4, 6} },
->  	{.cpu_freq_max = 1000*1000*1000, .divider = {1, 2, 4, 5} },
->  	{.cpu_freq_max = 800*1000*1000,  .divider = {1, 2, 3, 4} },
->  	{.cpu_freq_max = 600*1000*1000,  .divider = {2, 4, 5, 6} },
-> -- 
-> 2.45.1
+> e0eec24e2e19 ("memblock: make memblock_set_node() also warn about use of MAX_NUMNODES")
+> 
+> Maybe old ACPI tables and device trees need to catch up?
+> 
+> Left to myself, I would simply remove the WARN_ON_ONCE() from the above
+> commit, but I would guess that there is a better way.
 
-As without the updated firmware on 1.2 GHz variant of the SoC is kernel
-already crashing, even with commented line for .cpu_freq_max = 1200,
-this change makes sense.
+Well, the warning is issued precisely to make clear that call
+sites need to change. A patch to do so for the two instances
+on x86 that I'm aware of is already pending maintainer approval.
 
-There is no reason to have 1.2 GHz line disabled as it does not solve
-any issue (as was originally thought) and just prevent people with
-updated firmware to use non-performance governor on that SoC.
-(When cpufreq driver is not loaded then CPU frequency of the SoC is
-locked at the max speed, which has observed behavior same as performance
-cpufreq governor).
-
-So, go ahead with this change with my
-
-Reviewed-by: Pali Rohár <pali@kernel.org>
+Jan
