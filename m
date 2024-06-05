@@ -1,62 +1,39 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE651990D9
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD0319D08B;
+	Wed,  5 Jun 2024 13:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717594600; cv=none; b=jUxkKzQjCmi1Od3Ye7gk2mdV8rIjFMs3Eu9PLwkNJNH+OlyN1ktXRnUvBucWc2BtY10HjdOzI/rKYks5bRoA8jqPvKDoinLT4IdIKZj7HKJxHGYIokmB845CR1rBTtIQ7yUJv+SnB7f72hrgZcY2fFY4u0c7SWKL+t/QWkG3F2c=
+	t=1717594602; cv=none; b=lvM03gmsogpcRLKxZ+Iq57lAn9obVd6ZXpasZborSpgnjYrNXRsvz5JaisZt8liKwpLL36qZHcpW7kSEYYc87JFL/CAFUqAdJjn76g1lUboIvLX/TCTf9jm2oUafn0eGEK0ma9QPV0qEwK5OInlaM/HZ5EhbJW+oSbiXpHmabps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717594600; c=relaxed/simple;
-	bh=AMGDh5gB31KKjo78UTuKU/rfo74RxSemaf7ku6dSHpo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m36c6TaUEbwPMWMJTTroKBfb7qeYTzerakrOuQYPjFah6OIJT7fh8Pft3QM7SRTtopQTegEl3arbr6mF4mQCGQ6dFtLThTvwXHybOyaHAvHQ2Lgnj1lwl0uXk/wJlaRCh/g+5Wvx6GmfI0LMU1Gs6h6gQw2MjaNCceaDfvmXlA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qjgi2YWg; arc=none smtp.client-ip=95.215.58.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qjgi2YWg"
-X-Envelope-To: mingo@redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717594597;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pdq+/qHHpUB/C0eIIEKLyIhJ7ATCqVUoFBhHCKfFrD8=;
-	b=Qjgi2YWgWWvwB3tN5Zfie3XWfdYOtPRtM5tmuPYjcrpmW7gSpB+/Ue9JHWdAN3y9oL8r8g
-	fYhxe7OA2jYm6Cse93teJEVhizn+SSvkBlD941EucPXlY49U39xoByKSjrunI9Ke2YfSSh
-	okYZUYDEEbLao4nn09GKzsIY+5AbVAM=
-X-Envelope-To: peterz@infradead.org
-X-Envelope-To: juri.lelli@redhat.com
-X-Envelope-To: vincent.guittot@linaro.org
-X-Envelope-To: dietmar.eggemann@arm.com
-X-Envelope-To: rostedt@goodmis.org
-X-Envelope-To: bsegall@google.com
-X-Envelope-To: mgorman@suse.de
-X-Envelope-To: bristot@redhat.com
-X-Envelope-To: vschneid@redhat.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: yajun.deng@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	Yajun Deng <yajun.deng@linux.dev>
-Subject: [PATCH v2 2/2] sched/headers: Move sched_rt_entity::back to under the CONFIG_RT_GROUP_SCHED block
-Date: Wed,  5 Jun 2024 21:35:57 +0800
-Message-Id: <20240605133557.2984-3-yajun.deng@linux.dev>
-In-Reply-To: <20240605133557.2984-1-yajun.deng@linux.dev>
-References: <20240605133557.2984-1-yajun.deng@linux.dev>
+	s=arc-20240116; t=1717594602; c=relaxed/simple;
+	bh=6EwSfbEh0H1kuJai2tJ7JkQgGY5jSFOoFUJo9k9Tko4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XE7+knJAXw28i6vmw4e2a90C57LmNwIosFApyUO5NJb+57vPZl0DJtISY74zqKLtA8gRumqkINkPNfApuyNKr4ksbC3qIKnC+esywxm+WwW49vi1YWELxQdkixrdx2tUZKmqhHStHmsrazuRlfuB2lh1pmEV29GpSwqjqn1S+70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VvT0n6wVsz1S8XV;
+	Wed,  5 Jun 2024 21:32:41 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 94E9F180085;
+	Wed,  5 Jun 2024 21:36:38 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 5 Jun 2024 21:36:38 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>
+Subject: [PATCH net-next v6 15/15] mm: page_frag: add a entry in MAINTAINERS for page_frag
+Date: Wed, 5 Jun 2024 21:33:05 +0800
+Message-ID: <20240605133306.11272-16-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20240605133306.11272-1-linyunsheng@huawei.com>
+References: <20240605133306.11272-1-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,33 +41,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-We already remove the call to the 'back' member when CONFIG_RT_GROUP_SCHED
-is disabled.
+After this patchset, page_frag is a small subsystem/library
+on its own, so add a entry in MAINTAINERS for to indicate
+the new subsystem/library's maintainer, maillist, status and
+file lists of page_frag.
 
-It's safe to move sched_rt_entity::back to under the
-CONFIG_RT_GROUP_SCHED block, it would save a few bytes.
+Alexander is the orginal author of page_frag, add him in the
+MAINTAINERS too.
 
-Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- include/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f2f907ef1389..79d3bdda9463 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -582,8 +582,8 @@ struct sched_rt_entity {
- 	unsigned short			on_rq;
- 	unsigned short			on_list;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 27367ad339ea..bdc2cb1cdf5e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16953,6 +16953,17 @@ F:	mm/page-writeback.c
+ F:	mm/readahead.c
+ F:	mm/truncate.c
  
--	struct sched_rt_entity		*back;
- #ifdef CONFIG_RT_GROUP_SCHED
-+	struct sched_rt_entity		*back;
- 	struct sched_rt_entity		*parent;
- 	/* rq on which this entity is (to be) queued: */
- 	struct rt_rq			*rt_rq;
++PAGE FRAG
++M:	Alexander Duyck <alexander.duyck@gmail.com>
++M:	Yunsheng Lin <linyunsheng@huawei.com>
++L:	linux-mm@kvack.org
++L:	netdev@vger.kernel.org
++S:	Supported
++F:	Documentation/mm/page_frags.rst
++F:	include/linux/page_frag_cache.h
++F:	mm/page_frag_cache.c
++F:	mm/page_frag_test.c
++
+ PAGE POOL
+ M:	Jesper Dangaard Brouer <hawk@kernel.org>
+ M:	Ilias Apalodimas <ilias.apalodimas@linaro.org>
 -- 
-2.25.1
+2.30.0
 
