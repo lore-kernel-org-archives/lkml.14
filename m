@@ -1,55 +1,55 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4016B3D9E
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD5013AA4F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610437; cv=none; b=UjzJ2w69/6mbM0qGSchNSrsSfJxBDU3zYXcmY5/1UlY9T5gI+umzn5aHrqZVGVP23l4rb2m0JkHlR/gC+xRyJxcWPdE/IwjAOqOwmZoosJY98+c/3WfMsBWTmh49ZYokErHjKWmYQncqkx5bhG1+Q9PjSsFMdUpyphJ0aUB9Lao=
+	t=1717610442; cv=none; b=BYcIT+DabenbIhP/2Ad93P6Ga6IMlCxSgXPdcefKDrSWaLQ5Qs/qvzJegVkjluzMIcCmG08CmqrwhjhxreyPRUdBycIWNH7PS7EBHYKs+c69aXaS0irXjlnBVYUQGWO1NJyi/8p4qxDSMD6Ny6FNPkZmYSi3xcx3JDyp4GRrGis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610437; c=relaxed/simple;
-	bh=1Nr1idmwpwCu952z8yg01gYhGFCoooIcYkAZZCQGY7A=;
+	s=arc-20240116; t=1717610442; c=relaxed/simple;
+	bh=W5M28gmX2P2bsv2kzALbrb00qFmArQmOjGRUC+k0KS4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tR42IhF4LIGnKhW71oQFiM1Lh1IJV2dj6+45iFMem65/PLnxxx1fmqaRUNVf7uLPtfGOMwsNIxLvqq0UiVyqVSsBin+aVcvwYNMiXhZx5erK9v0cAEM+uO39OXsz78rQNjfLyAayx/WV3DAWJezPQzcpBJZN1I2W35x7EUGPDCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c1tBtF+y; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=SW1+HTmKe/Ky0awDZp1qIW7NqdWBcDNb65Od2JYyuom0MD2I74d5OLIFrDRZoMQpIbNbqFIVin6psj+rmP+5Vk4fv6lQ53KVtl7N2iySDzlaDo2VZ/j9tBzNyOT0+t5Ru5qKRBsk6oIjY0KUR1M83KRvAP42nV16sC6CfibQMy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BoWahOKK; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c1tBtF+y"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-627eb3fb46cso266947b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:00:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BoWahOKK"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a50486746so206427b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:00:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717610434; x=1718215234; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1717610439; x=1718215239; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MVw14u+NFBf2FJ7HWAHlLpDDoc6dqDnKHHZFCo9Dzmo=;
-        b=c1tBtF+yJ8uoGUqKF3NY2+DNv0U+YbN7XP5vEddV+WJ7paLKxOEOglfOFz182dQWhI
-         TpkluWnQxtAvQfp05jLsz4zT9dm3xfsdzDHh1yzr8/nmaSz10c9q8p1TSIS4ycb9XjL4
-         +kZT3Co4WBmgkH8T5xB5TRVYwTeQD9Vt+Y49WRFALEILqv0lqjfHvGNKs5cdrawGsQq0
-         zlcEIgFN0D27pd2iV8Hc8uPpS6COn5E86LdPT12ToZhOr4ISvKhsf5WLKdzwsRexu4qm
-         8nydig+D2wj90/ixelEJDLBX4o3t/wkbBmdzYkGeDePYPMVOnQXT2td5EkySC3qAkgu1
-         qPIg==
+        bh=+5/Bg969zZ0eVFu5myprHh5fQqxMXbek8nDgGOBzWoA=;
+        b=BoWahOKKkJ1D7kfGtrnP0cUxpIrNaZ2suLddLewzR2oz4u7CWziBpzwFHQ+ftzncIs
+         eFtpB/1H9zyQlzicoMJtoEWPK3DPjQzpefAzkEwD6qaiDFV3B0gWZlDhSKPFv0kyzLES
+         mK3VwWf9UebiINpOs4Y5YKaafb1YFVHMwQk3QrRe8v5CIiNxI1jeF5dttXUDVWoM7CnG
+         Marjrxai/k2CObkQx8B/L/3vNKpz1bxj4bvREXGRI3sEGkj1WJCLGHIzNySao6ORHqDb
+         qzF5yPhaXQSrvk1jdn3p9DrUhYQfLvZ2MNZglt0siqP5RZkjDQWbJGwgpmIA/iYYcKMP
+         XYxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717610434; x=1718215234;
+        d=1e100.net; s=20230601; t=1717610439; x=1718215239;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MVw14u+NFBf2FJ7HWAHlLpDDoc6dqDnKHHZFCo9Dzmo=;
-        b=lGr/AznFSCCdADOKGlWOP6WqyKJNEmvS+NScwKfpBc90NKSnvReais3xshVacSsjcD
-         8eVLqsPPC2MnV+j9AnSYemdaXMMbuw6Shn6dG42JKU3szTtqGyECl/RHYFPFq+h9FT3q
-         VvXYGw0LyYpkSh8/1TrBGuN9kuHjrbzbxtG+3JZ7NI+fmzEK9/HNlnS3MUtiwZ80Wn93
-         bOqSBFNJ0s2OizZYwUMByfG8o/e3o2lihUuu4Mxqtu0PHU0LYFcjpyP+Rs05zkVZRNha
-         +J29vKE5LtqP3HWNx2+3cWUi4JK5puDZwC714xZ/jCpbFsRr+Im+FZUVaPL6O+4ie2cK
-         XyOg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1++Mbocz+BHqKfIiThEEPeGSX7VGewq95jdYKV8ZZvbiqWg+QHVX68UEuPpRNabqr55mXCFXMEcY8eQH0mPMFJL458ScSg6wTXAR4
-X-Gm-Message-State: AOJu0YzbGXNaO0kpjRwqX2qChFP/7Qkr7v79hGbIFBZDwoWDwJM+bbf3
-	KpRgEKPbkFxtH5RQhS457JV6Su+V8W+awuJak5NZFvHtVswkYFiPl9iO5mdLTJvMMI+DXGpuvR6
-	2enrKY6Nmxg==
-X-Google-Smtp-Source: AGHT+IFNKfAUW4OMaL9qXpdep3tJtwg2SPr15+NfVtMPZB9WLEiwmeB7gCF1Z3uW4GFYC8/zL1lL4yiz6W2izA==
+        bh=+5/Bg969zZ0eVFu5myprHh5fQqxMXbek8nDgGOBzWoA=;
+        b=lxgXnVeh43G008e+mTQ3EGOOGO9kQFkP2zV58jHS1aWRUInAsxqO2lN5Yxh7wOppUX
+         4N5jQ6z9dU3qbW6wObHtX0Ss/pqZHrjj4cZ/MIYSensXVnOGdiX0Lg116RMY+87gUjkf
+         zrEv7VHF4HT5bZLo7fGCXzXTlDrswm3Z+P4mwIpc2G0CX075X2pXasTz5E5usTqUNywh
+         BW0g275aRI/sW92nBxiSNg7a4fZZ1g1xxwwdw73e8VHJ5tXHi1QsUWIz1/8HBaIqVHlE
+         2yETkVzFKnN6BCVeHN+34SZst7S0IOtyJpoDA8m9SpKK72Emj3A6AonqTc/F504Y+z2N
+         gY2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVxvqkEg9cVFJwbSKB6+/nMmF256Qa4O1xE3MXLNeBxlbkTXqyDaSCyb8SiOo0AuxiWiu0o6WYByZJR1K/9/h5Uh7uKBKkaiI9lD6z7
+X-Gm-Message-State: AOJu0Yw1wvjEzoxkm/svYc4/9Jh62cQvpOqQ0aSr2uCy+V6IsvhRKktk
+	fBu+Tujj0LqX8X3uW/ndNAsXYyckiVAFZAqcZdTXj0fUl8HYWn6IR/h3p/yiO/Pxceog8xulfKH
+	bQFjkrQfSEA==
+X-Google-Smtp-Source: AGHT+IFfzGEzBdG0mJIzkY83NzFi7HVUzu/maRQ4zPj2TdB+TSZFtwNCtZCm0+GEQSlNaviP1mxKnEiXfVn+VQ==
 X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
- (user=joychakr job=sendgmr) by 2002:a05:690c:39c:b0:627:96bd:b2b with SMTP id
- 00721157ae682-62cbb596fc6mr8752147b3.6.1717610434368; Wed, 05 Jun 2024
- 11:00:34 -0700 (PDT)
-Date: Wed,  5 Jun 2024 17:59:52 +0000
+ (user=joychakr job=sendgmr) by 2002:a05:690c:d90:b0:62c:efc:38b7 with SMTP id
+ 00721157ae682-62cbb4a22a0mr7561267b3.1.1717610438615; Wed, 05 Jun 2024
+ 11:00:38 -0700 (PDT)
+Date: Wed,  5 Jun 2024 17:59:53 +0000
 In-Reply-To: <20240605175953.2613260-1-joychakr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240605175953.2613260-1-joychakr@google.com>
 X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-Message-ID: <20240605175953.2613260-9-joychakr@google.com>
-Subject: [PATCH v1 08/17] misc: eeprom: 93xx46: Change nvmem reg_read/write
+Message-ID: <20240605175953.2613260-10-joychakr@google.com>
+Subject: [PATCH v1 09/17] misc: mchp_pci1xxxx: Change nvmem reg_read/write
  return type
 From: Joy Chakraborty <joychakr@google.com>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
@@ -84,60 +84,57 @@ Change nvmem read/write function definition return type to ssize_t.
 
 Signed-off-by: Joy Chakraborty <joychakr@google.com>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c    | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index 45c8ae0db8f9..5d618a13fe5a 100644
---- a/drivers/misc/eeprom/eeprom_93xx46.c
-+++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -79,10 +79,11 @@ static inline bool has_quirk_extra_read_cycle(struct eeprom_93xx46_dev *edev)
- 	return edev->pdata->quirks & EEPROM_93XX46_QUIRK_EXTRA_READ_CYCLE;
+diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
+index 16695cb5e69c..817382c342d3 100644
+--- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
++++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c
+@@ -117,8 +117,8 @@ static bool is_eeprom_responsive(struct pci1xxxx_otp_eeprom_device *priv)
+ 	return true;
  }
  
--static int eeprom_93xx46_read(void *priv, unsigned int off,
--			      void *val, size_t count)
-+static ssize_t eeprom_93xx46_read(void *priv, unsigned int off,
-+				  void *val, size_t count)
+-static int pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
+-				void *buf_t, size_t count)
++static ssize_t pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
++				    void *buf_t, size_t count)
  {
- 	struct eeprom_93xx46_dev *edev = priv;
-+	size_t bytes_read = count;
- 	char *buf = val;
- 	int err = 0;
- 	int bits;
-@@ -158,7 +159,7 @@ static int eeprom_93xx46_read(void *priv, unsigned int off,
- 
- 	mutex_unlock(&edev->lock);
- 
--	return err;
-+	return err < 0 ? err : bytes_read;
- }
- 
- static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
-@@ -258,12 +259,13 @@ eeprom_93xx46_write_word(struct eeprom_93xx46_dev *edev,
+ 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
+ 	void __iomem *rb = priv->reg_base;
+@@ -159,8 +159,8 @@ static int pci1xxxx_eeprom_read(void *priv_t, unsigned int off,
  	return ret;
  }
  
--static int eeprom_93xx46_write(void *priv, unsigned int off,
-+static ssize_t eeprom_93xx46_write(void *priv, unsigned int off,
- 				   void *val, size_t count)
+-static int pci1xxxx_eeprom_write(void *priv_t, unsigned int off,
+-				 void *value_t, size_t count)
++static ssize_t pci1xxxx_eeprom_write(void *priv_t, unsigned int off,
++				     void *value_t, size_t count)
  {
- 	struct eeprom_93xx46_dev *edev = priv;
- 	char *buf = val;
- 	int i, ret, step = 1;
-+	size_t bytes_written = count;
- 
- 	if (unlikely(off >= edev->size))
- 		return -EFBIG;
-@@ -304,7 +306,7 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
- 
- 	/* erase/write disable */
- 	eeprom_93xx46_ew(edev, 0);
--	return ret;
-+	return ret < 0 ? ret : bytes_written;
+ 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
+ 	void __iomem *rb = priv->reg_base;
+@@ -214,8 +214,8 @@ static void otp_device_set_address(struct pci1xxxx_otp_eeprom_device *priv,
+ 	writew(hi, priv->reg_base + MMAP_OTP_OFFSET(OTP_ADDR_HIGH_OFFSET));
  }
  
- static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
+-static int pci1xxxx_otp_read(void *priv_t, unsigned int off,
+-			     void *buf_t, size_t count)
++static ssize_t pci1xxxx_otp_read(void *priv_t, unsigned int off,
++				 void *buf_t, size_t count)
+ {
+ 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
+ 	void __iomem *rb = priv->reg_base;
+@@ -264,8 +264,8 @@ static int pci1xxxx_otp_read(void *priv_t, unsigned int off,
+ 	return ret;
+ }
+ 
+-static int pci1xxxx_otp_write(void *priv_t, unsigned int off,
+-			      void *value_t, size_t count)
++static ssize_t pci1xxxx_otp_write(void *priv_t, unsigned int off,
++				  void *value_t, size_t count)
+ {
+ 	struct pci1xxxx_otp_eeprom_device *priv = priv_t;
+ 	void __iomem *rb = priv->reg_base;
 -- 
 2.45.1.467.gbab1589fc0-goog
 
