@@ -1,117 +1,191 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7F21586C7;
-	Wed,  5 Jun 2024 20:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68F19D895
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 20:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717618274; cv=none; b=dpqBKnAncgihZtVVqm9HNtVF4seYOR3geE0AdvJQWPFziZnYeWtYaw/Ne6htClEbynH6A58qfd3nGn5mdGB38brzuge5wMDmSE7pwrNNvgEnWynQWp7wS5FVcfaY9xLwws+iDu0i0SP/v6l9HHAmFcmjmDApeB5Lc3MjfmdFRt4=
+	t=1717618470; cv=none; b=MCAtrwYIXiYGvCKo+63eSMQZKn31hSBd4P+UtH2GKivdlZcIhOC8EHbVTUaloIts4AfohOYrP7qf2/GU/IGiFu+e/FInVBv+yUlsqMNzKF4Iu3Z36eJLA25b0F7310tk+lxPG24LjQ2weAHgE7R6QjYLDgBuEDvanhq1S+LbrL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717618274; c=relaxed/simple;
-	bh=FAe5RBSeVUQvSoNMovSUxUr4BZQMUMsViBXF99Eg278=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sBlfTutLsg2O8MnYRhiRevgddy5YPEcNTH5RqxlUzpXdvZCGemFnAzDYcpaAKVq88FyPGSybuA/z/B7aJYE+RE6+UT6n19/CCZJpFb1adMbYCYbFhiecHMBhkkZ8v11wt4NIo+/5Tpc9J1G4qNhd4tFyQVBA4BWBpUek6MPWOps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IesPMI9q; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IesPMI9q"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f6b0a40721so2144015ad.2;
-        Wed, 05 Jun 2024 13:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717618272; x=1718223072; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBj9aeVGLx9lk0+gvee4j7l4tMQJNLmoyqkeXTYVawA=;
-        b=IesPMI9qop3z5oa+1hM9U9pWVhZR8+EuRU3qJeeAt3QvwGkLtL4XzB6YFx7xUwUJQf
-         qlHSa5CQLB1H5SjlmaBuysdxjDEoa3gz1wQShbo7za2dyXVLQqNqAPeYKd1Xg2/pdqDe
-         XWGjx0BhccnSCohXTOc/5yJgV8rE/NHZfWPGPTRSFaSXhOl5Efbok0F3LfFfiPz0hCgT
-         8Moidpdk6URZCgYzquETJsJXG4jo0q3aA3XlrF56rs55rzddSSBSFnTWrrCzCkiXVRN9
-         mVeGIgs7QOJoyqQlXUASUQIf0+dmvqkdsRUCs0lNldTKOL4ZvVf4Ifdh1bz8wwHhxlwj
-         Ijfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717618272; x=1718223072;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XBj9aeVGLx9lk0+gvee4j7l4tMQJNLmoyqkeXTYVawA=;
-        b=Qu9L2GVsu1ikYDDuQhVR9yShIXmWvqCIE7QifHFl/AGRiU8nu+ohPwYHgpS6TxYPrb
-         88DaffymPqSjhciGxhY9jW3wAO/xen0/v76SoipNaTy+GTnj+l76h/97PKYIPCSnvzjy
-         S3KWGAU7v81ktl4ZQCDQmqY93gMmc0Ou4LZ5SqrmSBZ2LoHHHm0xobLeImTqnHg6puNp
-         MzSFB7oSNRn49oOZghaBBEcT5CHqVdbNMwS5FdgYh0K4ajQNminlLJi28189TNjYG8ey
-         8kGZHW2favKUI8vP73IPUb4GfUSHw0Qpdi+9Nkow1szs4erJ6ZCAUBMsvi6jl4MwV4m3
-         I0Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0biwhAl6+eILDAZNyCm9MP3YXoqUwhaT/NkdUPvQMAOJ0KuEfjnWhhFmV3WBb2brAeXYPjPLEA3joo67GlHru5djEleaw7PtKzqTvRikDBwy2HJ3XZKJgd3UvLip41tO7awjtgTujoZO6jZA=
-X-Gm-Message-State: AOJu0YxHBv1h20fI8QE2gP5oq9RZZZovAa8kZoC4S6JTXs4VWQ0cjGZU
-	D0lRpCJMKUO4h6DtXb6ic20BN7+uUmj7OV+CfXoUm18IX3rGhE1L
-X-Google-Smtp-Source: AGHT+IEGu5ShaAHzYkwyBq4xYwcioUEVZUexCPqMcpakJMWRGFjg+Bo4DSNwD23lkoPdDBjRtp+M6g==
-X-Received: by 2002:a17:902:c40a:b0:1f6:73a9:ec9a with SMTP id d9443c01a7336-1f6a5a023f2mr49103245ad.12.1717618271758;
-        Wed, 05 Jun 2024 13:11:11 -0700 (PDT)
-Received: from localhost.localdomain ([177.21.143.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323dfe3bsm109428335ad.135.2024.06.05.13.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 13:11:11 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: miriam.rachel.korenblit@intel.com,
-	kvalo@kernel.org,
-	rafael.j.wysocki@intel.com,
-	daniel.lezcano@linaro.org,
-	johannes.berg@intel.com,
-	dmantipov@yandex.ru
-Cc: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] iwlwifi: mvm: adding check if the thermal firmware is running
-Date: Wed,  5 Jun 2024 17:10:48 -0300
-Message-ID: <20240605201049.94826-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1717618470; c=relaxed/simple;
+	bh=5ikd2Wl8Mt4PURlz0CKwt6V4jaq9p2pUPjHsY9KDFlw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ud2OUGMmhk4y3Oqwmab/xITH9Fsw6J6qUehmSmpgkxnSbH6H/KmB89mf76nWfQZ0yESJvVzgTaeGwf5kXLo8Mlewd/TV1bgV3v7nfs/kXob8rIfmq3B8xMrYIWfFbpFqiajxBjrh8y6zIonnb7033hCvCqqy7m6EvsJF6OGmoDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-230.elisa-laajakaista.fi [88.113.26.230])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 31968b91-2378-11ef-80de-005056bdfda7;
+	Wed, 05 Jun 2024 23:14:20 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 5 Jun 2024 23:14:20 +0300
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Herve Codina <herve.codina@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Sai Krishna Gajula <saikrishnag@marvell.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lee Jones <lee@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 11/19] irqchip: Add support for LAN966x OIC
+Message-ID: <ZmDHHFF-qD2UBkMT@surfacebook.localdomain>
+References: <20240527161450.326615-1-herve.codina@bootlin.com>
+ <20240527161450.326615-12-herve.codina@bootlin.com>
+ <87frtr4goe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87frtr4goe.ffs@tglx>
 
-In the dmesg is showing the message "failed to read out thermal zone"
-as if the temperature read is failed by don't find the thermal zone.
+Wed, Jun 05, 2024 at 04:17:53PM +0200, Thomas Gleixner kirjoitti:
+> On Mon, May 27 2024 at 18:14, Herve Codina wrote:
 
-After researching and debugging, I see that this specific error is
-occurrenced because the thermal try read the temperature when is started,
-but the firmware is not running yet.
+...
 
-For more legibiliti i change the tt.c for return EAGAIN when this was occurrence.
-After this change, in my computer I compile and install kernel in /boot
-and in my dmesg the message "failed to read out thermal zone" is not show
-any more.
+> > +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
+> 
+> ~0U
+>   
+> > +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
 
-I would like to thanks for Rafael Wysocki <refael.j.wysocki@intel.com> ,
-Kalle Valo <kvalo@kernel.org> and Johannes Berg <johannes@sipsolutions.net>
-for your suggestions in my previous patch.
+...
 
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Below just to annoy people a bit :)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-index 8083c4b2ab6b..d1dd334b5049 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
-@@ -620,8 +620,12 @@ static int iwl_mvm_tzone_get_temp(struct thermal_zone_device *device,
- 
- 	mutex_lock(&mvm->mutex);
- 
--	if (!iwl_mvm_firmware_running(mvm) ||
--	    mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
-+	if (!iwl_mvm_firmware_running(mvm)) {
-+		ret = -EAGAIN;
-+		goto out;
-+	}
-+
-+	if (mvm->fwrt.cur_fw_img != IWL_UCODE_REGULAR) {
- 		ret = -ENODATA;
- 		goto out;
- 	}
+(Yes, I understand that this is a prototype, it's just a pre-review in case one
+want to blindly copy'n'paste it).
+
+Other than that, I like the result!
+
+> I just did a quick conversion to the template approach. Unsurprisingly
+> it removes 30 lines of boiler plate code:
+> 
+> +static void lan966x_oic_chip_init(struct irq_chip_generic *gc)
+> +{
+> +	struct lan966x_oic_data *lan966x_oic = gc->domain->host_data;
+> +	struct lan966x_oic_chip_regs *chip_regs;
+> +
+> +	gc->reg_base = lan966x_oic->regs;
+> +
+> +	chip_regs = lan966x_oic_chip_regs + gc->irq_base / 32;
+> +	gc->chip_types[0].regs.enable = chip_regs->reg_off_ena_set;
+> +	gc->chip_types[0].regs.disable = chip_regs->reg_off_ena_clr;
+> +	gc->chip_types[0].regs.ack = chip_regs->reg_off_sticky;
+> +
+> +	gc->chip_types[0].chip.irq_startup = lan966x_oic_irq_startup;
+> +	gc->chip_types[0].chip.irq_shutdown = lan966x_oic_irq_shutdown;
+> +	gc->chip_types[0].chip.irq_set_type = lan966x_oic_irq_set_type;
+> +	gc->chip_types[0].chip.irq_mask = irq_gc_mask_disable_reg;
+> +	gc->chip_types[0].chip.irq_unmask = irq_gc_unmask_enable_reg;
+> +	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
+> +	gc->private = chip_regs;
+> +
+> +	/* Disable all interrupts handled by this chip */
+> +	irq_reg_writel(gc, ~0, chip_regs->reg_off_ena_clr);
+> +}
+> +
+> +static void lan966x_oic_chip_exit(struct irq_chip_generic *gc)
+> +{
+> +	/* Disable and ack all interrupts handled by this chip */
+> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.disable);
+> +	irq_reg_writel(gc, ~0, gc->chip_types[0].regs.ack);
+
+~0U :-)
+
+But I, for example, think that GENMASK() even better as it shows exactly what
+bits we set for the HW writes.
+
+> +}
+> +
+> +static void lan966x_oic_domain_init(struct irq_domain *d)
+> +{
+> +	struct lan966x_oic_data *lan966x_oic = d->host_data;
+> +
+> +	irq_set_chained_handler_and_data(lan966x_oic->irq, lan966x_oic_irq_handler, d);
+> +}
+> +
+> +static int lan966x_oic_probe(struct platform_device *pdev)
+> +{
+> +	struct irq_domain_chip_generic_info gc_info = {
+> +		.irqs_per_chip		= 32,
+> +		.num_chips		= 1,
+> +		.name			= "lan966x-oic"
+> +		.handler		= handle_level_irq,
+> +		.init			= lan966x_oic_chip_init,
+> +		.destroy		= lan966x_oic_chip_exit,
+> +	};
+> +
+> +	struct irq_domain_info info = {
+
+> +		.fwnode			= of_node_to_fwnode(pdev->dev.of_node),
+
+It's as simple as dev_fwnode()
+
+> +		.size			= LAN966X_OIC_NR_IRQ,
+> +		.hwirq_max		= LAN966X_OIC_NR_IRQ,
+> +		.ops			= &irq_generic_chip_ops,
+> +		.gc_info		= &gc_info,
+> +		.init			= lan966x_oic_domain_init,
+> +	};
+> +	struct lan966x_oic_data *lan966x_oic;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	lan966x_oic = devm_kmalloc(dev, sizeof(*lan966x_oic), GFP_KERNEL);
+> +	if (!lan966x_oic)
+> +		return -ENOMEM;
+> +
+> +	lan966x_oic->regs = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(lan966x_oic->regs))
+> +		return dev_err_probe(dev, PTR_ERR(lan966x_oic->regs), "failed to map resource\n");
+> +
+> +	lan966x_oic->irq = platform_get_irq(pdev, 0);
+> +	if (lan966x_oic->irq < 0)
+> +		return dev_err_probe(dev, lan966x_oic->irq, "failed to get the IRQ\n");
+> +
+> +	lan966x_oic->domain = irq_domain_instantiate(&info);
+> +	if (!lan966x_oic->domain)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, lan966x_oic);
+> +	return 0;
+> +}
+> +
+> +static void lan966x_oic_remove(struct platform_device *pdev)
+> +{
+> +	struct lan966x_oic_data *lan966x_oic = platform_get_drvdata(pdev);
+> +
+> +	irq_set_chained_handler_and_data(lan966x_oic->irq, NULL, NULL);
+> +	irq_domain_remove(lan966x_oic->domain);
+> +}
+
 -- 
-2.45.2
+With Best Regards,
+Andy Shevchenko
+
 
