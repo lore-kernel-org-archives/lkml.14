@@ -1,92 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF6015351A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 16:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD731155C9E;
+	Wed,  5 Jun 2024 16:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717604872; cv=none; b=ahTaqAKQlcrGiCY13AnM7GuZfBkueCo+TwKTTbzQAqb/eCxyuXDAy/HIZgETSNFxzSILL497FHCl7+BzDANkm6ZQfiQd31iktZSK09bQiCMB2tdwPpcQJaRJpcnJXp71dHWjzvLd2VhXB4LOGaI6TPbnPmNvNRTXxdDLof/t/xM=
+	t=1717605006; cv=none; b=Ww/JQ0MR0ellWAkdQUka9yAS8vic682ueCh7tVJABeYQGS82hB3xhm5z0+QcEn7geEH9er4PS7xs4H6v7mF8IK+OurRZf/mISKc9yYpYVggFF8be6UDyRiTyrL7v+995LvgSoH0vI0Iqoz5kVJ3el37IHjESYwXwqyAkawah6Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717604872; c=relaxed/simple;
-	bh=WDicw8rzDSRTNRCMmdH3Lin6iM8oFn63Wzr/O2sLyt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OrSDbJ4wDSpMGgaqgzyXH4mZVBGWnyzx51wnptLp3d51U3390UQA7BlOGteKSBPOn/D20lznCD71hk8bNgYDwdr8dRJoUFztpyl43B6fQfzl0xWKdfUpO/y8HvaHOn/qcRoH/Z5E8WUzmpcUNJGMw0bw9VJ4ZnMzD0K7fHGHcgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z/W7OJSq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717605006; c=relaxed/simple;
+	bh=Uk4F6huVa5XVCebhX4m3GtY249tQ2fZnfXToD3W0gNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=czcznLr9hxEcU7X1aqnIBXX2YA6qF10ADMd//AACqYP6uaFxjJGwc5YEOJhUSenacIuTugSN1IWsy8ASW/4s89yuH7pVl4uOxrbvmumpY3p032dHKwG3icdR9A8lEFlIy6zteYMb9ORSPOE9L3iyccqWfQMPUg8j6dGvNS7Ywek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pbbDkeVD; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/W7OJSq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717604870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDicw8rzDSRTNRCMmdH3Lin6iM8oFn63Wzr/O2sLyt0=;
-	b=Z/W7OJSqXnuoiMxjKt/3wo39YoFulM9UoqAdwrpssXjiIy5LFo0gSxQa6GivYtXWEvh2c3
-	ah1bbmCivbEK1qi5w4zWA0sEoVMNMuO+r7nTE678Ofe3CadTpSGcSQ2L+70tA/zls0OTNH
-	RUch8tjTBzMs2h6C5bW2PN04DXg2NoQ=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-1-k_m2iCmHN9OQCeUFZNm0ew-1; Wed,
- 05 Jun 2024 12:27:48 -0400
-X-MC-Unique: k_m2iCmHN9OQCeUFZNm0ew-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D71931954236;
-	Wed,  5 Jun 2024 16:27:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6DF2119560A2;
-	Wed,  5 Jun 2024 16:27:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 18:26:16 +0200 (CEST)
-Date: Wed, 5 Jun 2024 18:26:11 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-	Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 3/3] x86/fpu: Remove init_task FPU state dependencies,
- add debugging warning
-Message-ID: <20240605162610.GF25006@redhat.com>
-References: <20240605083557.2051480-1-mingo@kernel.org>
- <20240605083557.2051480-4-mingo@kernel.org>
- <20240605141733.GC25006@redhat.com>
- <CAHk-=wi4773Ls82kqVbPmM1deghS2NXkHNCCzWPc270kcByXPA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pbbDkeVD"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 455GPYHc026406;
+	Wed, 5 Jun 2024 16:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=jZInZY8/J56xPzD+Z72XOMl6Q8n4CzYCLULVHfxks0w=;
+ b=pbbDkeVDYnQOEC4YIE+adlpvOqtfdXDg/TMoGt/vWCfFN/KuJ/8WIF2qb5frsliAnzsJ
+ CGmq4h+zrcgmUvoKKUmP0Siajdl/UGIiCRHvnjN2ko54e+lw51XjWJKtDBguqLIttMBf
+ REDhEsdLU8OJ8QQqZAW5kp0Rx2nQJzBr3Y4KAXipBI3qV5HQ9WeO5MRd+jvlrIXfx0g3
+ CqjQpBMpzEX0D1UpswkZBPoGpb8nCDq0j3DDw3CbLCZnroZZC+RMG7943qJniUpZf0JS
+ rNR7Wh1i0cLN0InMzpmjDlTDvg6IVBVtTk13bjd1GimxjjBuWjvc3LHT662teFyqRvkp Qw== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yju1j84c1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 16:29:47 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 455GMbRF026899;
+	Wed, 5 Jun 2024 16:29:46 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygffn53su-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 16:29:46 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 455GThAo59441408
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Jun 2024 16:29:45 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7AB5858045;
+	Wed,  5 Jun 2024 16:29:43 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E18CD58054;
+	Wed,  5 Jun 2024 16:29:42 +0000 (GMT)
+Received: from [9.61.121.242] (unknown [9.61.121.242])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Jun 2024 16:29:42 +0000 (GMT)
+Message-ID: <4c0eddbf-5397-490c-8c70-a581c7949b49@linux.ibm.com>
+Date: Wed, 5 Jun 2024 11:29:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi4773Ls82kqVbPmM1deghS2NXkHNCCzWPc270kcByXPA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ARM: dts: aspeed: System1: Updates to BMC board
+To: Ninad Palsule <ninad@linux.ibm.com>, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20240605160604.2135840-1-ninad@linux.ibm.com>
+Content-Language: en-US
+From: Eddie James <eajames@linux.ibm.com>
+In-Reply-To: <20240605160604.2135840-1-ninad@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: DWBAAnD3eDYp6YEr3NCd0y8b3QDf_7B-
+X-Proofpoint-ORIG-GUID: DWBAAnD3eDYp6YEr3NCd0y8b3QDf_7B-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
+ impostorscore=0 priorityscore=1501 phishscore=0 mlxlogscore=809
+ suspectscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406050124
 
-On 06/05, Linus Torvalds wrote:
+
+On 6/5/24 11:06, Ninad Palsule wrote:
+> - Changed temperature sensor monitor chip from tmp423 to tmp432
+
+
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
+
+
 >
-> On Wed, 5 Jun 2024 at 07:19, Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 06/05, Ingo Molnar wrote:
-> > >
-> > > But the init task isn't supposed to be using the FPU in any case,
-> >
-> > Afaics, the same is true for any PF_KTHREAD/USER_WORKER thread?
+> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> ---
+>   arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> I don't think so. We have various users of kernel_fpu_begin()/end()
-> that are very much about things like crypto and RAID xor memory copies
-> etc that will be used by kernel worker threads.
-
-Yes, but kernel_fpu_begin() never does save_fpregs_to_fpstate() if
-current->flags & PF_KTHREAD ?
-
-Oleg.
-
+> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+> index dcbc16308ab50..f3efecc7eb8d0 100644
+> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+> @@ -1138,7 +1138,7 @@ i2c8mux0chn6: i2c@6 {
+>   			reg = <6>;
+>   
+>   			temperature-sensor@4c {
+> -				compatible = "ti,tmp423";
+> +				compatible = "ti,tmp432";
+>   				reg = <0x4c>;
+>   			};
+>   		};
+> @@ -1599,7 +1599,7 @@ i2c15mux0chn6: i2c@6 {
+>   			reg = <6>;
+>   
+>   			temperature-sensor@4c {
+> -				compatible = "ti,tmp423";
+> +				compatible = "ti,tmp432";
+>   				reg = <0x4c>;
+>   			};
+>   		};
+> @@ -1615,7 +1615,7 @@ regulator@40 {
+>   			};
+>   
+>   			temperature-sensor@4c {
+> -				compatible = "ti,tmp423";
+> +				compatible = "ti,tmp432";
+>   				reg = <0x4c>;
+>   			};
+>   		};
