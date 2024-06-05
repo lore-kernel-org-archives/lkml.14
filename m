@@ -1,128 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECD1192B6A;
-	Wed,  5 Jun 2024 11:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CB3195F0C;
+	Wed,  5 Jun 2024 11:50:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588199; cv=none; b=MNESlqt5NCejaknp8O/Wl4McXIBV78ERfS+pZmNsyltSh+m4OgzqAf3HZHg3aeLthFktL5mhHIj05lVwo6arIOzZVFW4d39bZohWieEe6sTioi8SDzNxE3xZSsqkpt+aC6+WSveR6ZYmtqnpL4JKryEThKUME1MffYsfUPnFMUw=
+	t=1717588205; cv=none; b=pq6+7ezT4tlVZQsRJa3IgLMD/YH6K7tLbf7kPhua2NYGeVztUOvGwUhaZhGAWoByJkA2+xiXsW6dIx2yW8y74RxdCVJP1TFKu5+GUUi5FkwDLcuLeMf2Emck7wFJxqZy0YFQ/llnihuX5jvZdvcOEKx1/rQP+iEy0tyXsc/6Ma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588199; c=relaxed/simple;
-	bh=PA03ICMifFQi7hAOsFYMtCFwyHUJlSWnycc7wgnoZuw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vGEZGFcgmUJUCgEmJ+eCvLPZd8dm8lSOksf3glWFH7W+99dYzi1x6pM3QlAnbL8Wz2r8xtW4psPvMS3dziPZ0npKYt3RKXfVHeerXhRMzQam4aSs6uPBfqn4m0fjdTzHmYUoA11RNGClnaO/D9WmDj291sa+estA9KItPTxqKTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOq2h/ku; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588205; c=relaxed/simple;
+	bh=SBQCKZifEPOxIOTgbUM/XODaGoNdobSf2QES1yw7iAA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EO++8lOSC004RVn7e8vXDeOzgFBKzBBfC0A4cmnODY4218cTrmPzmFziymKpVp3srH3v0pIQ4Uy7THgbVfU9hL2UDvBdwO7UJlH0qa92eZp5HjN8t5VlGAHhucxfU9pm2FPjb6rJ7Sqo81jnPmYbQ/VY0r0HeoYYYAu5IaY3B44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Keh9xRST; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOq2h/ku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFF53C3277B;
-	Wed,  5 Jun 2024 11:49:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Keh9xRST"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A1A4C32786;
+	Wed,  5 Jun 2024 11:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588199;
-	bh=PA03ICMifFQi7hAOsFYMtCFwyHUJlSWnycc7wgnoZuw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OOq2h/kuhzBFpbY+IZHBCj6UYtLYHuzGsX+QYmBBebCIXHhZ5QUw8Cu2EW5cR6Nlf
-	 +CmQcYwMXcJ7b3pxeLxvtkvMuMdMlq045A/GRSQ88UP3VHe3e6mj1oTZL8RAmQPhkq
-	 xAK57UmxusgfA647I7pSysZF38Og8c5URXOmfkV4bY/HhYrmMw5nuZ7Af1sY8ah1mr
-	 zaHhFWTVm2m+mzNZH94xB1eKt217n+tq5CQHtIWKjlAckJxfawfCOU7PLmHg/ZYRnz
-	 54frz2uOFXtRlmDfhiholXrzK3HmR8JRpp1+X75VC6OGdenGqv8djGusvW6ZK+s/H8
-	 RU45+ejlUlStQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Parker Newman <pnewman@connecttech.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	jirislaby@kernel.org,
-	andriy.shevchenko@linux.intel.com,
-	matthew.howell@sealevel.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 14/28] serial: exar: adding missing CTI and Exar PCI ids
-Date: Wed,  5 Jun 2024 07:48:43 -0400
-Message-ID: <20240605114927.2961639-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
-References: <20240605114927.2961639-1-sashal@kernel.org>
+	s=k20201202; t=1717588204;
+	bh=SBQCKZifEPOxIOTgbUM/XODaGoNdobSf2QES1yw7iAA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Keh9xRST+Rj9UveGAcphGxlIbytEGvAKf2tTEbsoLlQaSP+AAoKYPqRrgCmMPe4fh
+	 CfWxq8d6wIzS/I8AhgK2lJnaMBtoP9+O9JUzkAeEq1DurTwsXwplNLZCcW6nJxJtNl
+	 PJ2fCjhd2FD5CDrjIZvXqMC+naEPhGr/TT2JzAsafNVdu1hpSe5p/o0uHusoNcWeYU
+	 cHs+t7SLNj6wTzERdP5pm5jlunM/RyaYM8x4nfHYCBbQQz3TyXEeOzozOjuORdyWSt
+	 2v/b/aICBkJJP8Yc+5KFaaPoDnbjwi1U+VmAJAHFwMBNvLHltubSoLFUGdNzCuoUeG
+	 CtJI9PDr/Hf7A==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/4] KVM: arm64: Fix underallocation of storage for SVE
+ state
+Date: Wed, 05 Jun 2024 12:41:26 +0100
+Message-Id: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.3
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOdOYGYC/x3MQQqAIBCF4avIrBvQkoSuEi0qpxrKEgUJpLtnL
+ T/438sQKTBF6ESGQIkjX2eBqgTM23iuhGyLoZa1lq3UuCeHY3CtxoVv9B9jIkwHqma2Ri3W2El
+ C2ftAJfm/++F5Xi6OVr1rAAAA
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Fuad Tabba <tabba@google.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev-d4707
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1401; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=SBQCKZifEPOxIOTgbUM/XODaGoNdobSf2QES1yw7iAA=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmYFDm6hO8bPCS7tdj//OV90xJulySV0nlZRmUoVx7
+ atNp/EeJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZmBQ5gAKCRAk1otyXVSH0NmEB/
+ 9kIzl7JVowupzSHv5DNrF6MZgboFE8vKIcWYpcWQXTx0AJb/cC+D0KcIPrxQM0CnuFeUaxA3Lh8ni4
+ wxwSqyA302Vwl35F3cIRN6dXsWtbVz4U9ztR3Kz6N0EufvQL5ipNOkWhvnDcwX7aCIfJl0cfDqB1qW
+ asqTC8yHBCNu627cZ9MzeWhPJlDuw4PrfdyhT7jdpWXJA2X9JpylQ33MOvlkge9YxYpIyoN/8i7Cw0
+ vOMkjv5ONz3Rb9KWQJUFfLhLXy5Brmvr7Uq5kBvifKOMwgRgQjlUtXpucOoyJx6V8ocDBkn+LXQvjw
+ q/Wk6CiY3L0mvlRycBEvI0Y0T7a0nI
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-From: Parker Newman <pnewman@connecttech.com>
+As observed during review the pKVM support for saving host SVE state is
+broken if an asymmetric system has VLs larger than the maximum shared
+VL, fix this by discovering then using the maximum VL for allocations
+and using RDVL during the save/restore process.
 
-[ Upstream commit b86ae40ffcf5a16b9569b1016da4a08c4f352ca2 ]
-
-- Added Connect Tech and Exar IDs not already in pci_ids.h
-
-Signed-off-by: Parker Newman <pnewman@connecttech.com>
-Link: https://lore.kernel.org/r/7c3d8e795a864dd9b0a00353b722060dc27c4e09.1713270624.git.pnewman@connecttech.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/tty/serial/8250/8250_exar.c | 42 +++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Mark Brown (4):
+      arm64/fpsimd: Introduce __bit_to_vl() helper
+      arm64/fpsimd: Discover maximum vector length implemented by any CPU
+      KVM: arm64: Fix FFR offset calculation for pKVM host state save and restore
+      KVM: arm64: Avoid underallocating storage for host SVE state
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index 0440df7de1ed7..4d1e07343d0bb 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -46,8 +46,50 @@
- #define PCI_DEVICE_ID_COMMTECH_4228PCIE		0x0021
- #define PCI_DEVICE_ID_COMMTECH_4222PCIE		0x0022
- 
-+#define PCI_VENDOR_ID_CONNECT_TECH				0x12c4
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_SP_OPTO        0x0340
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_A      0x0341
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_B      0x0342
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS           0x0350
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_A         0x0351
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_B         0x0352
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS           0x0353
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_A        0x0354
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_B        0x0355
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS_OPTO      0x0360
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_A    0x0361
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_B    0x0362
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP             0x0370
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232         0x0371
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_485         0x0372
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP           0x0373
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP           0x0374
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP           0x0375
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232_NS      0x0376
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_LEFT   0x0380
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_RIGHT  0x0381
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XP_OPTO        0x0382
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_XPRS_OPTO    0x0392
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP        0x03A0
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232    0x03A1
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_485    0x03A2
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232_NS 0x03A3
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XEG001               0x0602
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_BASE           0x1000
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_2              0x1002
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_4              0x1004
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_8              0x1008
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_12             0x100C
-+#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_16             0x1010
-+#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X          0x110c
-+#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X          0x110d
-+#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16                 0x1110
-+
- #define PCI_DEVICE_ID_EXAR_XR17V4358		0x4358
- #define PCI_DEVICE_ID_EXAR_XR17V8358		0x8358
-+#define PCI_DEVICE_ID_EXAR_XR17V252		0x0252
-+#define PCI_DEVICE_ID_EXAR_XR17V254		0x0254
-+#define PCI_DEVICE_ID_EXAR_XR17V258		0x0258
- 
- #define PCI_SUBDEVICE_ID_USR_2980		0x0128
- #define PCI_SUBDEVICE_ID_USR_2981		0x0129
+ arch/arm64/include/asm/fpsimd.h         | 17 +++++++++++++++
+ arch/arm64/include/asm/kvm_host.h       |  2 +-
+ arch/arm64/include/asm/kvm_hyp.h        |  3 ++-
+ arch/arm64/include/asm/kvm_pkvm.h       |  2 +-
+ arch/arm64/kernel/fpsimd.c              | 38 +++++++++++++++++++++++++++------
+ arch/arm64/kvm/hyp/fpsimd.S             |  5 +++++
+ arch/arm64/kvm/hyp/include/hyp/switch.h |  2 +-
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c      |  6 +++---
+ arch/arm64/kvm/hyp/nvhe/pkvm.c          |  2 +-
+ arch/arm64/kvm/reset.c                  |  6 +++---
+ 10 files changed, 65 insertions(+), 18 deletions(-)
+---
+base-commit: afb91f5f8ad7af172d993a34fde1947892408f53
+change-id: 20240604-kvm-arm64-fix-pkvm-sve-vl-13cd71fd7db0
+
+Best regards,
 -- 
-2.43.0
+Mark Brown <broonie@kernel.org>
 
