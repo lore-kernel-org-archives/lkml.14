@@ -1,142 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0753A224D6;
-	Wed,  5 Jun 2024 18:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AF13A404
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610696; cv=none; b=Ugo3X8VhiaklWw+Cq1xXLfmcIDXlIm2vCtnEdKM1QtukGozJ6G2gKCi40fnXybK+6Z2d1ur085fWEO9DoRlO/D3PtE+a2ftdoQcoU9jSBwqab9dcVzLpAYPSqTDTLbhCWq8FTuiyYE/+YQQoAym1+1q4vY/KNJSsCnOiSWK4u8Q=
+	t=1717610720; cv=none; b=DrpjWjTZ7HsjWDIAufmW/9GdjEpFY6DDq5BRt23K9Yu7Ir8ZHsM7TDxeXSsBvXy5UaLeIoxMGfFtS37Ml5v05n7OGUmztCX1OioIFT4/b0xJ6pjrmpdmK2qL8zCJa9MkJ+E9VrDJ2a88sevCovS0eUDKQFvlntchWS8Q5kPlMzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610696; c=relaxed/simple;
-	bh=kAZnQpDfGBLr/hv5kBKen/wUM1vO4PpdyH0MaGPkuks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q44fmcPm1Z1MI3G9czEjSylUKfWX5lxOIK/kTHbihxwHhkfMgGPO0OmvVs3VRg3p4SNtTqDK3hL6w17+JmlczwSDKs6ye0Ml9qBu6ln6Xac4puSGVcQEV2jIcRvZIYv7rkRJV+LsGQEdMA0jWiB5zZ+OYz11gTRr/fhgoikuML4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OsJT28Pd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LoeGAhX/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zZIXDOGc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PP9aUR4i; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1717610720; c=relaxed/simple;
+	bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LEevp0cG4Z4kapFUl72osgx8A6YRGTKuncNiQcI+nMRf+v/oH1Q/pTGBy4Bim0YAnch4OR5xgUrJdi5u0roDh8W+ki+bX1dbM/12nHfLWdDefVWx1JlzZA8SvOOmG+luorIAV1WvF3fgI8DRKbUwfRcAShikWyduKitDLKkufoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SMJgtHlt; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OsJT28Pd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LoeGAhX/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zZIXDOGc";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PP9aUR4i"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EA65E21A9F;
-	Wed,  5 Jun 2024 18:04:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717610693;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cCLmp5LMr/Q4r7oEA9biEivh7X/2CnsTC+6PiNZPOlQ=;
-	b=OsJT28PdeUY86FzCFJMeKYR0xsN7C4sUjl1pyHMp5TDUBCIuU4rJVAxkWyQXymmVh+qjL0
-	eMJ2U8Dg6z+co0DKCr07b8kWKc9QCzgftaJImTwqpelGLa16hXBEiFOtQulQg3CNVLe0c3
-	/RMKZQTIi8NT2t2LYrnsSFxS8e/DyCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717610693;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cCLmp5LMr/Q4r7oEA9biEivh7X/2CnsTC+6PiNZPOlQ=;
-	b=LoeGAhX/yFkcOW57XkkhxYlJGgN/WdGigqJSpviIdYyflsa6dtEqN3A7GWpeaVcVlhNnsO
-	AdmxR3PzG2SO+IBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=zZIXDOGc;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=PP9aUR4i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1717610692;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cCLmp5LMr/Q4r7oEA9biEivh7X/2CnsTC+6PiNZPOlQ=;
-	b=zZIXDOGcaAd5T/ThfMvGOPXLvkXLFj/fxXtNOfohk6oZBpj+nTshqG79F2HlBvbOAFTzKl
-	NvcOFEl9uN19mszmat0yoaDNagw++chXoPWAs1SCk+Tc7BQ4wBtw6VkTdfF3rkfPDwDzZn
-	BIrebS9yU6h9sRdcoeXMED37gJx1tHM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1717610692;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cCLmp5LMr/Q4r7oEA9biEivh7X/2CnsTC+6PiNZPOlQ=;
-	b=PP9aUR4iDZCfhcUBtslekk5mQRV5tIMAasUwPvW2EkcYffahPp4sBx/LNMYVKdsO9N8kRQ
-	d4yHaSsEu80lUICQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC52613A24;
-	Wed,  5 Jun 2024 18:04:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K+VwMcSoYGaqeAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 05 Jun 2024 18:04:52 +0000
-Date: Wed, 5 Jun 2024 20:04:47 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Johannes Thumshirn <jth@kernel.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH 0/4] btrfs: small cleanups for relocation code
-Message-ID: <20240605180447.GE18508@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20240605-reloc-cleanups-v1-0-9e4a4c47e067@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SMJgtHlt"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so1383681fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717610717; x=1718215517; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
+        b=SMJgtHlt2LGtNcSZCCzuhH9s41bIEasVQOrci0q7Wwj0yI/V2ivyG8GToNhXIDXKhV
+         ZjdCkwYsEt9sUiAwh+ZAsHrUO5/EAbz+rKGb1puZPf1eMO7pUTfvbQArr7gAQeBJz5JH
+         trSG2pVugSkXnBWxicYxEncMf/9Ua6o8rZVEAJIx0jzHpPnR0FG3r7qftXozBQM+hZs0
+         MS9WjOaBjvhAYAR9vHiOulTu++lgLp68vqs/Ma4Adt7lgOiQjwL+gkiVYakFvp3PBiy0
+         0K2Hrs7HKfrIlBkMk4+AiyjHsJXTxE7Z76wLJb86ic65tY3q4kc+zfe8EdhFLWlNiY6l
+         1aJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717610717; x=1718215517;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
+        b=B9UJDtNi4PTh+bem5Jic3R5RCQiuuaob+2vJj3N0rbZs802MLRGLVDXND9XqGt1B59
+         2J00LjNLKAFiVSavyHbI7ksuX6UxrE/gT9JvbYBOm43styO/O91qLY1xixG6eg+Cclds
+         C952avp93+hHc05ZXJNhtTJ1YLOh/XDta1WIGXAtNWEaCga4cU6YdYu2dPH+1NUKMEP1
+         tB9YsUuDqMIBHYcJNG8w9EmSLZmLd4B/2QNJ/ob5zXllrDdZVqTm3yhg/WhcgTZhRJww
+         9FyTAnmlLkPuT9xeTUkx6O6RF2ItzHKLlwZ8pNuAvWgx+w+XGC4OMOvUtqznA4YtQeRj
+         3D4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWpUYPkJvP/KXeWZLcnk21z0pc1B3ufKkRP/wnjnfeEz2ofyqsenusspqNKDbGo1SSb1BHXvZxRsvKA73F+FTRHj1Vi8BX/RKUX7Ksd
+X-Gm-Message-State: AOJu0Yzt/9hakzgz8BVAG4Rx50ZR05RN2PRs5To1hoMNOv9C9C1EWOju
+	VlcQ11kZFIMOFS8qpGDZNPHi+t/lC9qhJTv+5JAf9NOMOryIMRDW56wBxMhKyC4XhDcyjnAE6Ra
+	wU5vqRjuCgcRt9rp58HVTBAFe3GvWLNcEMrtT9A==
+X-Google-Smtp-Source: AGHT+IGPHvJeLayk3efrcKgO1Obiv1k65fgMPOv7p9k5Kuf3j8UsHmQHvC67KCL/2EfjazgzdJtjTyy7e7G17peXDnE=
+X-Received: by 2002:a2e:8ed4:0:b0:2ea:7f57:5a74 with SMTP id
+ 38308e7fff4ca-2eac7a6c3ccmr18672681fa.42.1717610716971; Wed, 05 Jun 2024
+ 11:05:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605-reloc-cleanups-v1-0-9e4a4c47e067@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: EA65E21A9F
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
+References: <20240528-pwrseq-v8-15-d354d52b763c@linaro.org> <20240605175757.GA733809@bhelgaas>
+In-Reply-To: <20240605175757.GA733809@bhelgaas>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 5 Jun 2024 20:05:06 +0200
+Message-ID: <CAMRc=McKD=ZhGzRUeLezT3oKfreDWQeKBvuousf8zsQjJb1QMA@mail.gmail.com>
+Subject: Re: [PATCH v8 15/17] PCI/pwrctl: add PCI power control core code
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
+	Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Elliot Berman <quic_eberman@quicinc.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
+	Jeff Johnson <quic_jjohnson@quicinc.com>, ath12k@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
+	Amit Pundir <amit.pundir@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 03:17:48PM +0200, Johannes Thumshirn wrote:
-> Here is a small series of cleanups I came across when debugging
-> relocation related problems on RAID stripe tree.
-> 
-> None of them imposes a functional change.
-> 
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
-> Johannes Thumshirn (4):
->       btrfs: pass reloc_control to relocate_data_extent
->       btrfs: pass a reloc_control to relocate_file_extent_cluster
->       btrfs: pass a reloc_control to relocate_one_folio
->       btrfs: don't pass fs_info to describe_relocation
+On Wed, Jun 5, 2024 at 7:58=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> On Tue, May 28, 2024 at 09:03:23PM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Some PCI devices must be powered-on before they can be detected on the
+> > bus. Introduce a simple framework reusing the existing PCI OF
+> > infrastructure.
+> >
+> > The way this works is: a DT node representing a PCI device connected to
+> > the port can be matched against its power control platform driver. If
+> > the match succeeds, the driver is responsible for powering-up the devic=
+e
+> > and calling pcie_pwrctl_device_set_ready() which will trigger a PCI bus
+>
+> s/pcie_pwrctl_device_set_ready/pci_pwrctl_device_set_ready/
+>
 
-Reviewed-by: David Sterba <dsterba@suse.com>
+Ah that's a leftover from when it was PCIe specific. Thanks.
+
+Bart
+
+> > rescan as well as subscribe to PCI bus notifications.
+> >
+> > When the device is detected and created, we'll make it consume the same
+> > DT node that the platform device did. When the device is bound, we'll
+> > create a device link between it and the parent power control device.
