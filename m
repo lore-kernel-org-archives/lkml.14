@@ -1,177 +1,81 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54D8196C8A;
-	Wed,  5 Jun 2024 12:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC0197527;
+	Wed,  5 Jun 2024 12:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589584; cv=none; b=KAEffpeJHubC2Mqn8KEeZikMyfJwbmBwj5f9zGwpJBBVIvL+y1FGwG2ZHgMSw2SsgfLsIeUNda5YuZTILi7xu9ifpalNsgZZr4/pAOtkIyWEeWyCLffS5wqQU9YhBhXeMYNI+HsK9mAYXRI9AU2VlY8KZinhw2MyY9krUewv2ZE=
+	t=1717589594; cv=none; b=dQiLlvtKGhfLvyZb5eoLsSGae/VV+X68fzTRLMoPmEkNYW/PNnr8+TXq1FoXbj/iiiqK8WSO7a8Av9cThqY1nulfPx84SW9yh1hwUTMh69uE3so51cw5JowjCRTIQtq0D9biCuIL1C5f3mJw9Jn94wZyvGa+owE1Sf8i+8r+E9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589584; c=relaxed/simple;
-	bh=E+8fa5QckyNs0rg+CMmCRno+rSlQBw+/aLFaSLV9R3k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hFy/4NE0HoIb9qdJnjHHibtDpJp7LpB95TmqFd10RO3mnPvbP7mbfm80u3NrodXYyT0o1slzGVhx97YjkkAlWbkM+LkkMciM+idWangch7Q1C9s37MLbcACSAqX0gzXx8V28K0XI2HLxD7/6DknMnjGc1jUG5VFaEaXJm6h8bv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=j5HwE2dp; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1717589594; c=relaxed/simple;
+	bh=KquR/qVX3Bfj67P/WWEDL2CtUe6KxjKA4k3e1DojbFU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XlxWDxyluOB5Lz58BtXzhq/plOdLTbu7pU2f/TBdf44MblE3zfAuTO66bT5SdF5Mm6Lw/Z/qbi2wMpI4sQ0bB6rtRf3dEWIXxwDYowN2oOXJNU8z4wIzu6gD/V33XcJsIz4Xhseth/wRftcSeACzJsr/ufvYVnFuu6m9B9dDJ7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=H27FA7rG; arc=none smtp.client-ip=192.19.144.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="j5HwE2dp"
-Received: from p-infra-ksmg-sc-msk02.sberdevices.ru (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id D8ECE120004;
-	Wed,  5 Jun 2024 15:12:55 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru D8ECE120004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1717589575;
-	bh=2z/5jcit4ED6/bQSchswwiQ4yyjb3x0SPW6la7FZmUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=j5HwE2dpDC/pSgVsdScU1ekDN807PhqvrNu1REDKtH+TW7clPibaT17Gun/hBAlDs
-	 Ms8njuKLPRJT/oi70O7elwLn5sqGBgRrM4InJY5JddC/1wZf0ZIlLpoNP5poOF+wqU
-	 04GnkPpYkoUp+0PkJgJ9A/vlYqeKgM2pK+qy5nPuZYSsMAghI4JQPU08Uqfgyya34o
-	 +3uyK3HCXaXIQEQEaW0l2cN54GTo/BvDPWEmALJiaDdqDTw23LTOSJwHa2HvH835ac
-	 mqugrFffhEICPsiajuaTuFB2/Ra7KA1xfGfRwYxKQjl0Xvks860w90TxAWXSlquyI9
-	 Bd+snRZaT2IEA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="H27FA7rG"
+Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A9D8FC0000F5;
+	Wed,  5 Jun 2024 05:07:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A9D8FC0000F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1717589233;
+	bh=KquR/qVX3Bfj67P/WWEDL2CtUe6KxjKA4k3e1DojbFU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H27FA7rG4T0cLUUFumTG7nIsUW2aH5Gz0fqTkaW5+lWjherjlJc+2tSsCvN169o80
+	 r8N8hDvh3KkEMs/N5XkSNeRwHlq5B3rxwO9IEGAuMSDa7OMhSdS96X27QWKAvZYfIM
+	 5R3ln8YOavuc6GHch3wybngblyEQgzUaJmWcHadA=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed,  5 Jun 2024 15:12:55 +0300 (MSK)
-Received: from [172.28.65.20] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 5 Jun 2024 15:12:55 +0300
-Message-ID: <ce3c2772-8e91-4fd3-b52e-2a35d5759664@salutedevices.com>
-Date: Wed, 5 Jun 2024 15:12:54 +0300
+	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 796E718041CAC4;
+	Wed,  5 Jun 2024 05:07:11 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kamal Dasu <kamal.dasu@broadcom.com>,
+	Al Cooper <alcooperx@gmail.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 4/4] arm64: dts: broadcom: Add minimal support for Raspberry Pi 5
+Date: Wed,  5 Jun 2024 05:07:12 -0700
+Message-Id: <20240605120712.3523290-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <874589f6c621036620cca944986e5be7238b4784.1717061147.git.andrea.porta@suse.com>
+References: <cover.1717061147.git.andrea.porta@suse.com> <874589f6c621036620cca944986e5be7238b4784.1717061147.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DMARC error][DKIM error] [PATCH v7 1/2] pwm: meson: Add support
- for Amlogic S4 PWM
-To: <kelvin.zhang@amlogic.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet
-	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>, Conor Dooley <conor+dt@kernel.org>,
-	<linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, Junyi Zhao <junyi.zhao@amlogic.com>
-References: <20240605-s4-pwm-v7-0-e822b271d7b0@amlogic.com>
- <20240605-s4-pwm-v7-1-e822b271d7b0@amlogic.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <20240605-s4-pwm-v7-1-e822b271d7b0@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185739 [Jun 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 20 0.3.20 743589a8af6ec90b529f2124c2bbfc3ce1d2f20f, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/06/05 08:34:00 #25451662
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: 8bit
 
-Hello Kelvin, Junyi
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-On 6/5/24 05:44, Kelvin Zhang via B4 Relay wrote:
-> From: Junyi Zhao <junyi.zhao@amlogic.com>
+On Thu, 30 May 2024 12:12:01 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
+> The BCM2712 SoC family can be found on Raspberry Pi 5.
+> Add minimal SoC and board (Rpi5 specific) dts file to be able to
+> boot from SD card and use console on debug UART.
 > 
-> Add support for Amlogic S4 PWM.
-> 
-> Signed-off-by: Junyi Zhao <junyi.zhao@amlogic.com>
-> Signed-off-by: Kelvin Zhang <kelvin.zhang@amlogic.com>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > ---
->   drivers/pwm/pwm-meson.c | 36 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index b2f97dfb01bb..4f01847525b2 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -460,6 +460,34 @@ static int meson_pwm_init_channels_meson8b_v2(struct pwm_chip *chip)
->   	return meson_pwm_init_clocks_meson8b(chip, mux_parent_data);
->   }
->   
-> +static void meson_pwm_s4_put_clk(void *data)
-> +{
-> +	struct clk *clk = data;
-> +
-> +	clk_put(clk);
-> +}
-> +
-> +static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-> +{
-> +	struct device *dev = pwmchip_parent(chip);
-> +	struct device_node *np = dev->of_node;
-> +	struct meson_pwm *meson = to_meson_pwm(chip);
-> +	int i, ret;
-> +
-> +	for (i = 0; i < MESON_NUM_PWMS; i++) {
-> +		meson->channels[i].clk = of_clk_get(np, i);
-> +		if (IS_ERR(meson->channels[i].clk)) {
-> +			ret = PTR_ERR(meson->channels[i].clk);
-> +			dev_err_probe(dev, ret, "Failed to get clk\n");
-> +			return ret;
-> +		}
-> +		devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
-> +					 meson->channels[i].clk);
 
-devm_add_action_or_reset() result should be checked
-
-> +	}
-> +
-> +	return 0;
-> +}
-
-You can rewrite it a bit to always have a single allocation for devm node:
-
-static void meson_pwm_s4_put_clk(void *data)
-{
-	struct meson_pwm *meson = data;
-	int i;
-
-	for (i = 0; i < MESON_NUM_PWMS; i++)
-		clk_put(meson->channels[i].clk);
-}
-
-static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
-{
-	struct device *dev = pwmchip_parent(chip);
-	struct device_node *np = dev->of_node;
-	struct meson_pwm *meson = to_meson_pwm(chip);
-	int i, ret;
-
-	ret = devm_add_action(dev, meson_pwm_s4_put_clk, meson);
-	if (ret)
-		return ret;
-
-	for (i = 0; i < MESON_NUM_PWMS; i++) {
-		meson->channels[i].clk = of_clk_get(np, i);
-		if (IS_ERR(meson->channels[i].clk)) {
-			ret = PTR_ERR(meson->channels[i].clk);
-			dev_err_probe(dev, ret, "Failed to get clk\n");
-			return ret;
-		}
-	}
-
-	return 0;
-}
-
-
--- 
-Best regards
-George
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
+--
+Florian
