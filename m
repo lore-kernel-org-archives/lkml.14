@@ -1,133 +1,193 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e2i411.smtp2go.com (e2i411.smtp2go.com [103.2.141.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB44154445;
-	Wed,  5 Jun 2024 20:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF4515EFAA
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 20:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.141.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717619356; cv=none; b=s7IgMZ/QFM7wrISWMuB6vTOXr9t66IW+b6kNIKmBINfXN3iuz5UonZtNI5Nqthnh0TV1UXJsMGc9XTdjAHa/fmmo+zt5lrHEF/BWA1VMVGjdzvEqTJ1Bdo/ERwK6m582K7mA5tTPKsxCu+BqXik98zlrq3q+/mlt6ptLEsZf7ZA=
+	t=1717619448; cv=none; b=W3C0MUACTYFJDIuETqvIRMIzu2eCDNG9Dr0yPPBZ6+DvFbBudu8xccWr5hndUm7t8h7EF7LzeXT4/BJGc8F3i8r6Wntq4whFnXOKVtFKdYFNEF7aONMZkJKQB7Vowvz9U7YOjbMba6Ii+Ot+TMqIhsuIg6TFl2RxvkZO+1zlFqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717619356; c=relaxed/simple;
-	bh=DSPArV6Z2a+KiBRCJYvaAfEOU6EEf7btH5Yz6Tj4aFc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SU8Kmtx5/+k/m/7dSjVRADAQq1kCr5SmFLHYNR9yyhNwq0CJsGcz57szzkjxzQExI2hT6KeL/6UqmYc3xrzdqjG/8ifwNXHAfVIyX/PAQwo6nNkEX49jqrNAkDUnjThpigBGT3iMXNHXu/JwtXvHrbVPYZQI/l8Y7pWcnUNzfGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-6ce533b6409so146370a12.1;
-        Wed, 05 Jun 2024 13:29:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717619354; x=1718224154;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nhdufPka7d0xOyoq7UULW75JegC/mKKmmURDvjgZle0=;
-        b=Ed40CuwPZbkqzGqWq0qg/FkNwzRt6F/yJQQvvsfgjkWgCN2GvqtsDStWcQUpIraUh/
-         HrPMnEPkXDTQfrs8kFMolVTZ4fdMnf7OyuMlq5EaPNxtB8Y3zmjdoZkctTwOEkRxhaXA
-         6Z+JngW/fpVE1zGehI8AToO3WEpiskF3v2MLyddBD9zdOgPVJ0kz9oLWoAp0KBcy9y4Q
-         W6Dld3RRFQY84V+MKBCe5TNl3Nq6yFI6/mvCYRjHp3gQllpb0CKMiFi/dXc6AuY66rdN
-         xx5IxZao1Y3JAFzW9CsOE6r704Cs2J+btrKv0DYVkk5GMEPr0dKSJijDYTK6xh/6JY1c
-         Q/QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTYA8lhX0W2IinltRvOnlSrnlqVEeZKwa7gfEV63KZ0YXKjeokG7SPswswlEpI+ZK4qq+AGDtwY9mpKk/bOLFPXXRIxcJ3UrurpMYOj/Biim3Tn3uW4JR+qvTsfcbLYI5kG+W7vR8aFtZQhJ9D5A==
-X-Gm-Message-State: AOJu0YxtBhhF4wpzQZg0LQimgjhq3ZlGBsDcIdNb8oHz3Mi28KHMa18l
-	gfwtrnvV5HBGPsXNtnaiQCi1mUmM7zpWRQx52E+t6vlzmAhrUEB097pTqU1vFd5vfSznCzj5E/J
-	kW7SsJv3ARks9uEWsfCUfMxiBxa8=
-X-Google-Smtp-Source: AGHT+IH5uNmAxDcdzsCFM4a/9AobJg9GTU5KIYQ+XRPCpQ5Xi3Rpiz98QpzyR58SjaHzzjs7RXCTqegJDsGySG127kM=
-X-Received: by 2002:a17:90a:3489:b0:2b5:6e92:1096 with SMTP id
- 98e67ed59e1d1-2c27db19e2amr3616189a91.28.1717619353917; Wed, 05 Jun 2024
- 13:29:13 -0700 (PDT)
+	s=arc-20240116; t=1717619448; c=relaxed/simple;
+	bh=mdrU7IXXPrTDsyZxMk5347kg6bKIJX6oSNzN/UsIxz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubx49kYQiBwuo4BcmaYLnpwW//j5YFrn3Bv86brTWrJP0F+l+EPZCohCOPvKT5H5SKewNpAs+PvVA3KTC1QDngqSoCdLnsJcbTqYs52IhJYM8LULKQb9bCNrsyp68VbjtndO20nQn+Z1tfj/JD4W0pyQJ7L283K4UnYvC+d/hAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=jYJ0bS7F reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=KoFkL2S0; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=Ebj0numf; arc=none smtp.client-ip=103.2.141.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="jYJ0bS7F";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="KoFkL2S0";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="Ebj0numf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1717620341; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=l3p98x5jJGF8A39qDI7zM5bqnbdS9m3RepjjSWwE1i0=; b=jYJ0bS7FkJrzlo6OrMCaW55NGf
+	s0BhHeoHX5LC5fEusmbuESP9fQdKqRQ01rtpDDyxFs3g2dKOfrPG50zFMb3jZsDC2qVp+8mrYvg/n
+	0idwvfy5dNTGZNmzbK0HsSb6agU0+TMoDQmKMH0fCUWKLjnpK1Jj5pVPFGrSPLV7IQ4m3pv/2ciOH
+	8rZGKOCSBTnjkEZs44VJeKg+NIMqgx31bKa2GpiXjZUZ4XgjumOATPIzsEwN6k8PcvOTnyfu8/7Pv
+	xjbW2UvOS3uA+VScBP3XF9Cn+pH+pwKPyONiLgzCDMyjb3J4rF3ySZR+jeJG6PLQLXgAGdMfGIgO0
+	11dgWpbg==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1717619441; h=from : subject :
+ to : message-id : date;
+ bh=l3p98x5jJGF8A39qDI7zM5bqnbdS9m3RepjjSWwE1i0=;
+ b=KoFkL2S0F6QmTtneETM3CTDjD9/7sw0hCiOHMivDEygqUhTDeXSnBIRuhA/sAasDg+aPE
+ eeoEb2EWELM7gkw0l76wD9lg3t7E4DGmSIOgLA7gbmu1V2LxkpMP95h8UXs5mIZgb1s84T7
+ DCPFM8/hu1rcUrG15yFcUGylW4bjicgDRmVFNS+Li+bQlB0YT1tzXgfnykrZy7aQKercRZG
+ oMNwhR7kjRxSi7jPtcnnqhva4g9JIzoZOTa1pTw6lTLoVBp0jKN+ARFxYN272fT91S2XqyG
+ tcexwBBupiy5wkUw2mjg63WfpsY3Hn6nvpnN7l0vttYMlMOj+u8mCKWnRPZw==
+Received: from [10.176.58.103] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sExGy-TRjx8l-Gw; Wed, 05 Jun 2024 20:30:16 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1sExGx-4o5NDgrgOol-sOb6; Wed, 05 Jun 2024 20:30:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1717619414; bh=mdrU7IXXPrTDsyZxMk5347kg6bKIJX6oSNzN/UsIxz8=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=Ebj0numflf5PFOF+vCHwFrP+z6qd9hYad1YcWXXNzlGoFTtW/GA2jL91z4JTQ/Lr2
+ hCZm9xQthuX9qfNWenw4NhXopd87QccM9luPYfC8NfVJJH1gXkl7BN/ApCjNE0eFQW
+ PAI2VL5ThSDs7XNpBB+RPbZJntVFzXaZPsDGdkJo=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id D2D13449F3; Wed,  5 Jun 2024 22:30:14 +0200 (CEST)
+Date: Wed, 5 Jun 2024 22:30:14 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] kconfig: refactor conf_write_defconfig() to reduce
+ indentation level
+Message-ID: <ZmDK1lCE8VRdWmWU@fjasle.eu>
+References: <20240602125416.976336-1-masahiroy@kernel.org>
+ <20240602125416.976336-3-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240527105842.GB33806@debian-dev> <CAP-5=fXfidyF_e=yMNi26ScgY-VbJPfxN8M7OiK9ELa3qTfXPQ@mail.gmail.com>
- <ZlY0F_lmB37g10OK@x1> <CAP-5=fWM8LxrcR4Nf+e2jRtJ-jC0Sa-HYPf56pU5GW8ySdX1CQ@mail.gmail.com>
- <d79b18d7-6930-41fd-8157-eaa55b52df86@arm.com> <Zld3dlJHjFMFG02v@x1>
- <CAP-5=fXKnQzfwDSr3zVeo6ChJe3+xwpBfyAi0ExmPEdhcde4ww@mail.gmail.com>
- <CAM9d7chV8YOCj8=SGs0f60UGtf+N2+X=U+Brg246bFoPXBXS+g@mail.gmail.com>
- <aee9254e-81c1-464a-8a28-f971615baffc@arm.com> <CAP-5=fVynt-8cH6Jc5VyfBLBOqkF+v_7kknHdUPZBM1r3WwhTQ@mail.gmail.com>
- <ZlkC_Tm6kKIL3Phc@google.com>
-In-Reply-To: <ZlkC_Tm6kKIL3Phc@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 5 Jun 2024 13:29:02 -0700
-Message-ID: <CAM9d7ciTbHngfimDNsXS_adR7xg4ZHvSHzVhAzuQ6o-nQ2nsMQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf evlist: Force adding default events only to core PMUs
-To: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linux.dev>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature"; boundary="hQIwDeXNxeCl02bX"
+Content-Disposition: inline
+In-Reply-To: <20240602125416.976336-3-masahiroy@kernel.org>
+X-Smtpcorp-Track: A9QiPRM17qaP.frfTRJgCMcHy.VgCe5Ql-pd8
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286sd201zyaj4
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
+
+
+--hQIwDeXNxeCl02bX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 30, 2024 at 3:52=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, May 30, 2024 at 06:46:08AM -0700, Ian Rogers wrote:
-> > On Thu, May 30, 2024 at 5:48=E2=80=AFAM James Clark <james.clark@arm.co=
-m> wrote:
-> > >
-> > > On 30/05/2024 06:35, Namhyung Kim wrote:
-> > > > It might not be a perfect solution but it could be a simple one.
-> > > > Ideally I think it'd be nice if the kernel exports more information
-> > > > about the PMUs like sampling and exclude capabilities.
-> > > > > Thanks,
-> > > > Namhyung
-> > >
-> > > That seems like a much better suggestion. Especially with the ever
-> > > expanding retry/fallback mechanism that can never really take into
-> > > account every combination of event attributes that can fail.
-> >
-> > I think this approach can work but we may break PMUs.
-> >
-> > Rather than use `is_core` on `struct pmu` we could have say a
-> > `supports_sampling` and we pass to parse_events an option to exclude
-> > any PMU that doesn't have that flag. Now obviously more than just core
-> > PMUs support sampling. All software PMUs, tracepoints, probes. We have
-> > an imprecise list of these in perf_pmu__is_software. So we can set
-> > supports_sampling for perf_pmu__is_software and is_core.
->
-> Yep, we can do that if the kernel provides the info.  But before that
-> I think it's practical to skip uncore PMUs and hope other PMUs don't
-> have event aliases clashing with the legacy names. :)
->
-> >
-> > I think the problem comes for things like the AMD IBS PMUs, intel_bts
-> > and intel_pt. Often these only support sampling but aren't core. There
-> > may be IBM S390 PMUs or other vendor PMUs that are similar. If we can
-> > make a list of all these PMU names then we can use that to set
-> > supports_sampling and not break event parsing for these PMUs.
-> >
-> > The name list sounds somewhat impractical, let's say we lazily compute
-> > the supports_sampling on a PMU. We need the sampling equivalent of
-> > is_event_supported:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/print-events.c?h=3Dperf-tools-next#n242
-> > is_event_supported has had bugs, look at the exclude_guest workaround
-> > for Apple PMUs. It also isn't clear to me how we choose the event
-> > config that we're going to probe to determine whether sampling works.
-> > The perf_event_open may reject the test because of a bad config and
-> > not because sampling isn't supported.
-> >
-> > So I think we can make the approach work if we had either:
-> > 1) a list of PMUs that support sampling,
-> > 2) a reliable "is_sampling_supported" test.
-> >
-> > I'm not sure of the advantages of doing (2) rather than just creating
-> > the set of evsels and ignoring those that fail to open. Ignoring
-> > evsels that fail to open seems more unlikely to break anything as the
-> > user is giving the events/config values for the PMUs they care about.
->
-> Yep, that's also possible.  I'm ok if you want to go that direction.
+On Sun, Jun 02, 2024 at 09:54:16PM +0900 Masahiro Yamada wrote:
+> Reduce the indentation level by continue'ing the loop earlier
+> if (!sym || sym_is_choice(sym)).
+>=20
+> No functional change intended.
+>=20
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>=20
+>  scripts/kconfig/confdata.c | 47 ++++++++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+> index 25c327ae3c5c..1ac7fc9ad756 100644
+> --- a/scripts/kconfig/confdata.c
+> +++ b/scripts/kconfig/confdata.c
+> @@ -774,34 +774,31 @@ int conf_write_defconfig(const char *filename)
+>  		struct menu *choice;
+> =20
+>  		sym =3D menu->sym;
+> -		if (sym && !sym_is_choice(sym)) {
+> -			sym_calc_value(sym);
+> -			if (!(sym->flags & SYMBOL_WRITE))
+> -				continue;
+> -			sym->flags &=3D ~SYMBOL_WRITE;
+> -			/* If we cannot change the symbol - skip */
+> -			if (!sym_is_changeable(sym))
+> -				continue;
+> -			/* If symbol equals to default value - skip */
+> -			if (strcmp(sym_get_string_value(sym), sym_get_string_default(sym)) =
+=3D=3D 0)
+> -				continue;
+> =20
+> -			/*
+> -			 * If symbol is a choice value and equals to the
+> -			 * default for a choice - skip.
+> -			 */
+> -			choice =3D sym_get_choice_menu(sym);
+> -			if (choice) {
+> -				struct symbol *ds;
+> +		if (!sym || sym_is_choice(sym))
+> +			continue;
+> =20
+> -				ds =3D sym_choice_default(choice->sym);
+> -				if (sym =3D=3D ds) {
+> -					if (sym_get_tristate_value(sym) =3D=3D yes)
+> -						continue;
+> -				}
+> -			}
+> -			print_symbol_for_dotconfig(out, sym);
+> +		sym_calc_value(sym);
+> +		if (!(sym->flags & SYMBOL_WRITE))
+> +			continue;
+> +		sym->flags &=3D ~SYMBOL_WRITE;
+> +		/* Skip unchangeable symbols */
+> +		if (!sym_is_changeable(sym))
+> +			continue;
+> +		/* Skip symbols that are equal to the default */
+> +		if (!strcmp(sym_get_string_value(sym), sym_get_string_default(sym)))
+> +			continue;
+> +
+> +		/* Skip choice values that are equal to the default */
+> +		choice =3D sym_get_choice_menu(sym);
+> +		if (choice) {
+> +			struct symbol *ds;
+> +
+> +			ds =3D sym_choice_default(choice->sym);
+> +			if (sym =3D=3D ds && sym_get_tristate_value(sym) =3D=3D yes)
+> +				continue;
+>  		}
+> +		print_symbol_for_dotconfig(out, sym);
+>  	}
+>  	fclose(out);
+>  	return 0;
+> --=20
+> 2.40.1
+>=20
+>=20
 
-Hmm.. I thought about this again.  But it can be a problem if we ignore
-any failures as it can be a real error due to other reason - e.g. not
-supported configuration or other user mistakes.
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
 
-Thanks,
-Namhyung
+--=20
+epost|xmpp: nicolas@fjasle.eu          irc://oftc.net/nsc
+=E2=86=B3 gpg: 18ed 52db e34f 860e e9fb  c82b 7d97 0932 55a0 ce7f
+     -- frykten for herren er opphav til kunnskap --
+
+--hQIwDeXNxeCl02bX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmZgytYACgkQB1IKcBYm
+EmnPeRAAnUmonbGlYZfpAdixUvrePoFIE5BKpovbtT+Zt9L37gAXWNqpT5qEA4mY
+LbeCsSlHeckJXoSCbDI008J4zm7dGhXVRw7aukQWDMqEfVLtZ7jdOD9CwDQzVMGh
+tL/hI5HtJqSJtZHGW41cSFlmPG9We2CeP97zbuUCeY/6aiwyIgRYWsAqhTzL/Klz
+mxUEaeQLQQ3BC3RuFZnY9uBMqd2rHY+d03eEgTUaQl7ouGiCdH6vTXBxcAdFURDi
+b4olF87uZ8WekGCuycRWcisIylhWIS3PXfljkh57Wl7Hn/ItJC+5rSEaE01ZAmb4
+ukk9DUBSmDOKydcDyMlbCnL0yxd8ZAiAXakzyYHRxmayVSQkPUEB0c2OMIqAO6C9
+7Mm7720MYd44TpLIdDiAmN7OAPNdJrKlmIeIIVkaGR2QSa9pDoQVfQBhVanZxjrh
+GlN4WDPaiM+RBKDUmSwd6m/F+3/Wea60HsQqHwoKVWwAEUnuNhFmYKaus9ItZ7H5
+0bh7hnRP6m6qsfNzVpyEhMR1NZse0/xfZRtPd3iwleEDv0qR8gsbfQAnTyN8WIDF
+QLcQmsIaKAkwBb1oU/z7qVOs/a+CH9R9BucH50itPQLA40PK5Xo30hofY5ZQOZ2F
+/dny5wW2hLOSY/o9rzqeMx2ORDvm3mWOrHSVrq+VW4S5yALkRgo=
+=ikzb
+-----END PGP SIGNATURE-----
+
+--hQIwDeXNxeCl02bX--
