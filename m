@@ -1,85 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E814D435
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:42:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2017E1922E0;
+	Wed,  5 Jun 2024 11:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717587727; cv=none; b=QmoQd7aap5e+9XyBGD1sDQdLlafIF4mpzQL1SXQsygzVNzC4AXDcb6uUbFwVApW3PbbUONXzENWLfKehZeQiyJNrqr9o8VvWY+kK2EcCiqiVWnwrPAYGsQSWzG6kMwOfC1tXrvyKzs/jwvl9bPRDuESZw3I/KqZITqJCSFEofgY=
+	t=1717587738; cv=none; b=FEW9ABQCPVRr7UyGMbCixHO0FpUF8ES3pF/68cNz2W2kkg6HCoWEmsb2ZotNkKOZG7wbXz6ONmVSvaDRpYTuHIt698q9G8FldyZ++ppx/0VaBYs0RdV/IwzfLEIC2LKuAu32/ayqA5UJ03YG0sQDA3902ttkswtd6XVcVvx5KU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717587727; c=relaxed/simple;
-	bh=cXaL8X5xkqjru4qZvhtnJBNQd1jrCsGud/RraJezK+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p+wDtC8nUsOoW1BdIMTtOEvPDHYwQpdNyVt+i7lvvzRs1Z14EYlj7Leq8waK+N/2kUE2P/u2lw7430ScuWAhEpTFi+vqf64vPgtspdwJaARgbZdrBWT5bzY8OkvZsjumhPryo9DYMlkNo1fIv21RoL8xr4nJJ3R7povJW0o3+iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P49tYTr8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717587738; c=relaxed/simple;
+	bh=/+ns6Sioj6d4ZKKRmDu/3wsP7X0hLThY8uABuPywhqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tBGR4p3DkUCt/09MiBRuCt5ZeF0/q7wn6CwCIzt0sllruyc85VZ7LmSEn2bxILU2AJMLbp1+emQGJv4ujZKdUw4uFyjNWRNMxLnQ1i+ZdlQhTOg0ll0xohjwl+xVOhf9USckgVYxsN7wFBmE2Bk/CCZe6tBl0BgTOeAS5VCBcoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwaVkB/Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P49tYTr8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C49EC3277B;
-	Wed,  5 Jun 2024 11:42:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwaVkB/Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8F4C3277B;
+	Wed,  5 Jun 2024 11:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717587727;
-	bh=cXaL8X5xkqjru4qZvhtnJBNQd1jrCsGud/RraJezK+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P49tYTr8ENggo5fZvyKqZ4PxM1peSbHLq3cEfJefvxO26qq3VgrbD44w7SPHT1HkT
-	 yLZk4KJTmkXb4xi7nmVa9vtoQcspd+KSp86VRVE/N0ToZjrv8UmR3sqged4GllPn5h
-	 5GvPvVSfGAeMGH24F5yZwuJ5PcsphzNqUIcASKCOtwEetL+b7w0teYBp/8DvVDy4KI
-	 evrzh5rO0PqNeq9Kf+oHWL+Lp3xUwlwdEzkfvR/QO6nuFAWCLeW2D2MUCFok7kI/s0
-	 /y+gLAedifYQI5N+imnHHGNoDFCQrHDR/jrIIAKKecSFW6RBDuu4j+4/Tyl4w1ABwV
-	 fsHibJ697J1KA==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	David Hildenbrand <david@redhat.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-riscv@lists.infradead.org,
-	Oscar Salvador <osalvador@suse.de>
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	Andrew Bresticker <abrestic@rivosinc.com>,
-	Chethan Seshadri <Chethan.Seshadri@catalinasystems.io>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Santosh Mamila <santosh.mamila@catalinasystems.io>,
-	Sivakumar Munnangi <siva.munnangi@catalinasystems.io>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 11/11] riscv: Enable DAX VMEMMAP optimization
-Date: Wed,  5 Jun 2024 13:40:54 +0200
-Message-ID: <20240605114100.315918-12-bjorn@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605114100.315918-1-bjorn@kernel.org>
-References: <20240605114100.315918-1-bjorn@kernel.org>
+	s=k20201202; t=1717587738;
+	bh=/+ns6Sioj6d4ZKKRmDu/3wsP7X0hLThY8uABuPywhqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dwaVkB/QV0sfslrUNSauMvygURi9SxO5NHd1vfQpMk40EuQ9rVOvDOsOSQhH1YGb8
+	 69tP+fWhzyDrNN5npoYh8WQ5g0IQnbkpXKXRNb9Xo1hY1drF4KSyik21mHDtzsO9aO
+	 Y+R4j2PjMjyfcO2hZhOzddzqGEWnsz6OujUawEEqypnZz5WRrWAvh7Oqdfrl5p01II
+	 pNQYMozYul90QnwMwM7qFJBxvQl/UddnoDK+/tuFjaTNAerMXIomlNt9zAnyi/AiV3
+	 IWVw2HaJdA/qZzpY6Spu7DJ9pbW6lmDPzpQwO9+80wI4xoO60ldQ67E7YWfQTBzVy1
+	 tH1EIsX/gKxmw==
+Date: Wed, 5 Jun 2024 13:42:15 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH rcu 1/2] doc: Update Tasks RCU and Tasks Rude RCU
+ description in Requirements.rst
+Message-ID: <ZmBPF-a-qPk_bLbG@localhost.localdomain>
+References: <e5dc5f14-04c1-494b-9044-e837279a7bcd@paulmck-laptop>
+ <20240604222155.2370541-1-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604222155.2370541-1-paulmck@kernel.org>
 
-From: Björn Töpel <bjorn@rivosinc.com>
+Le Tue, Jun 04, 2024 at 03:21:54PM -0700, Paul E. McKenney a �crit :
+> This commit adds more detail to the Tasks RCU and Tasks Rude RCU
+> descriptions in Requirements.rst.  While in the area, add Tasks Trace
+> RCU to the Tasks-RCU table of contents.
+> 
+> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-Now that DAX is usable, enable the DAX VMEMMAP optimization as well.
-
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 8a49b5f4c017..1631bf568158 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -73,6 +73,7 @@ config RISCV
- 	select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select ARCH_WANT_LD_ORPHAN_WARN if !XIP_KERNEL
-+	select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP
- 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANTS_THP_SWAP if HAVE_ARCH_TRANSPARENT_HUGEPAGE
--- 
-2.43.0
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
