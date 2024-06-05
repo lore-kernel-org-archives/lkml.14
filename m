@@ -1,158 +1,183 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC8F21C192;
-	Wed,  5 Jun 2024 05:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6074B3DABEC;
+	Wed,  5 Jun 2024 05:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717566608; cv=none; b=jY6iJ0JW2C5yBXyMtbO+3G0RGWrgZgoILPGV6DPMNcwjdL1oWWSELGccvXBIs491hC3b+UNfB9QsBdIfVZmUIQOAfAz7U8RRffIXi76biPMWlWxtRtjeyqkudgLz2dOdib3Auw81/YVt4N/VdVpM7J8f02q2IJESlXIcenAmrts=
+	t=1717566613; cv=none; b=jn5bTVUkCkaPdZ9gsBQWiW2Qmr1OD17PbFcryVkO6WV2xYNodZTiwGHzaqm7cxzjl11mEYVP3QGNse8Q7I61TPugA8ObKwb5CRbhqL7uf0LOfgr88emrxLBy6sS268hIvZwlstIfrV5a7lvY0H3yxoo9dMlEOK127ssypipOoMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717566608; c=relaxed/simple;
-	bh=yJx99h/vrjH/otsUg9XNdPVe5/820krM6rs9eRejcgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Yeg9d8C18Klh7Eg/MCSsv7JACMkEKDKTkWT7YyOlk5ZYAnLREsg8J0kXPfoB4hI4EooBDnsMBngxRRpYY2pDtN9xxjnxa1XX0mTQK4c9Y7+srf0Xcj3XxwpTquMO6hh5LZpbXI/wEL2+7Wp516OhFTgjkYX8ga1OEcct81A68IQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EVs8/kU2; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717566613; c=relaxed/simple;
+	bh=C6DHcioBtZO8Ft6NCOTxg1IFxOjJNDjKMUw66WUpIkE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YQb3tJXwvcZofoQDzDx71ZmoG2rdEKqO12W2xOOuQAy+gxGjMSepyzqQJLUAvwTH+c9CY2rapqgjIhf6i82bnYJGpstluD9nTS1ytyfk5FzkZ9O5LsIItGQkDGA8kByrVjt35ZnsA+jVr3dRS/to+eRo7qy520+JEVdS6kLCtfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=EwG+dJZe; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVs8/kU2"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3747e9f7cceso21879195ab.1;
-        Tue, 04 Jun 2024 22:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717566605; x=1718171405; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OXXx+G8S3LAOXSoSSC7Exyjxb+cKriQft0ZkCAiNSTo=;
-        b=EVs8/kU2QK11zUmd3iXKLlgjD3NC1s71p4VF9HfE5WiF+RcYiSVb5/l/YdNwHhVbnP
-         IvrszawkzBv3qbwxCiDzMuF73S03yXuGL1Q3wkTBO4Hy/VHQndYupyboyTZO8ErQON8X
-         9DyaGC4+FofpmFvLp35M2YZdRpRIpDZCwQYvML/JXs9wcfnS7uGdp5+ZZkd3Ut5NLPTZ
-         sXYV2fF/rKgrQI+EbhraytC5HmHWk7ZeHcUi6U4X1Fjqn9gZDAxgBbjlJaAQO99XqV1/
-         0GCuhqzKxonx4nsr/RSSTGZRhVUCh/jeqDkLpxBo6564ifGVqYcAZ9EGSU3UM3IVw39G
-         aaAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717566605; x=1718171405;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OXXx+G8S3LAOXSoSSC7Exyjxb+cKriQft0ZkCAiNSTo=;
-        b=ZpvmYai4rgoC2uaLMip2ZQHeXHojy+f5YVefDnT1t61ldIbmboJCjkC9q09iOM1pbs
-         Q6NwUzN7UmzEslZU4KRIIZyPmL7RCaYCiQd9qW9iObp56VOz3B5fKXaYtB0OjF4R6VNp
-         l9l+xkdNWcQocHKFac2v11KLq3Y7D7TP54sfUbxMIs1rJpZCdhL/oIXXGMl719YLjoqi
-         0+LiNbKEkap+2otYsz9re6dziG6/7WPgfG2RAhKJUFck6IIsvpvTq99tIyVDBGOB3HAN
-         hC1N1ZMTcjTm05xcqHZpBYtqlrKfnF8FXx5AcWO08dDDmxcKSnjdbvGfPQWmcXmIIX9V
-         iGgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIg8/CO1bEIsTsdoFTNKmI+uIXSTKfjrAJiAajxYVqXU/8l48cXHa5rNIgvvE3wAs/0qTgdi7A01le1kWM6jN2uH7ny71q0wGg1DAlw0mRADl70DIGNuYVj1djXjMEHrYvYLmf
-X-Gm-Message-State: AOJu0Yzme4kZ7aau/9lsyESuCrCq76z8P7vElLrUOH3NnmVyqBtESwz4
-	rfLZww3QLRHoSw/41DJL8jqc6aT/uHBFfciQ9w/o1a/Xg5DORMzg
-X-Google-Smtp-Source: AGHT+IG38HU/vMh5r37/64xeKQTWdknfeAX9UDHPB1tG+qQoA83kVSKVnVC84EjBIYaGa+AdYwOc5w==
-X-Received: by 2002:a05:6e02:1d05:b0:374:9af0:5f38 with SMTP id e9e14a558f8ab-374b1f55db6mr14629265ab.32.1717566605527;
-        Tue, 04 Jun 2024 22:50:05 -0700 (PDT)
-Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6c3598487d9sm7845318a12.70.2024.06.04.22.50.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 22:50:05 -0700 (PDT)
-Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
-	by twhmp6px (Postfix) with ESMTPS id 3FBDD80587;
-	Wed,  5 Jun 2024 13:52:59 +0800 (CST)
-From: Cheng Ming Lin <linchengming884@gmail.com>
-To: miquel.raynal@bootlin.com,
-	dwmw2@infradead.org,
-	computersforpeace@gmail.com,
-	marek.vasut@gmail.com,
-	vigneshr@ti.com,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: richard@nod.at,
-	alvinzhou@mxic.com.tw,
-	leoyu@mxic.com.tw,
-	Cheng Ming Lin <chengminglin@mxic.com.tw>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] mtd: spinand: macronix: Add support for serial NAND flash
-Date: Wed,  5 Jun 2024 13:48:58 +0800
-Message-Id: <20240605054858.37560-1-linchengming884@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="EwG+dJZe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1717566595; x=1718171395; i=wahrenst@gmx.net;
+	bh=LhDKqxW6L1Ssz9fZh25QjqFX4bDiK3gZ9H644lacdlk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=EwG+dJZe9AZ8h4sOdTiiUqUb55MqpyVLJfoA0J3dr9CUdsHX3lK6crSLJ0PpA4lW
+	 a4+z+XAvfGdI+FG2jiPR4gNNNf397tPCfNT9Q7yD/5JzKXo42+av1YZvFPMgzyFkv
+	 4OODgLQvOmav+jl7vvWhtcoQk16XOzqqFz2/Wc4fevAxMb1w6hvkpE9/5t2U66e0c
+	 8DPkUlyM0Ft7ycaK99psgv6mYE7+lClCrbWGTK89XPAmvJWO/fiWc4g7a9QxA5kpw
+	 Jq7KXsOEPNSzlNbsejneRH71v+1P9z45K518cvNSmqjUpKIUl2OtvezaxADssFhus
+	 HSXz+fOyGmeiBisAcA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mnps0-1spNwf1BN4-00pKfz; Wed, 05
+ Jun 2024 07:49:55 +0200
+From: Stefan Wahren <wahrenst@gmx.net>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christoph Fritz <chf.fritz@googlemail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH RFC] qca_spi: Make interrupt remembering atomic
+Date: Wed,  5 Jun 2024 07:49:39 +0200
+Message-Id: <20240605054939.34870-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TuT0o4Osg9B9GIit4JJq9P9z292nEkgMNJiZFqaUKEvnfZERxhP
+ HAHXOkS05v0XhlJYA6wim8PmXErup3tIbb1RApsMpkPAuxpexH9DtB872zV1XtRk6qOBL0G
+ /Tj7+zesEquAkos5OYHqqjkU7qif8YgLA+AUjLORAQ9QOboLZaHqw+Ft3HBzTqC+2voC6uA
+ VoBvQl21p8jVDefFHVg9g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3jhrT1xqADA=;mMaBq+QuCjkH2Ph8NfOyx7ednTR
+ 56IF8YgBZxwgTRnyCDIJLjn/YmsyoeMatMlafB71XASkaoPDgqhXKk9pqMqEtvXBVAQH9My3o
+ 70wqfDMoeTom6xgy5Fe30d5KWLhRVZk5cZg7TOv93Gf2mX6aVJJ8tAaqCUGbYOcooJIF3gFBW
+ 0kAspYCU5MAMC50jUF/xVoWxbz/yuEq7kWb6j2QT4bRUr/5UW6KNkUyo/e9qYKzZpU2LSjPx3
+ 2huG8Ur96AmsRA9Hf8rbKaxqeEHznA6NzSO5Fygx5UDC3xZzRJOn8bT2THwafvIMblIPcKdQL
+ k7kAF2wPUDQyFJ0wyyBKn79GxQ3UFFIXWRGdqPqFgA9nsXdvPLAR6/tKasA/yJi3hjyCoxE8Q
+ thxXc6qWcxzMOaBhfo9OnI36o+jSN1vzef06uhJvgUqmPc0ZYixir2vtpKef71HPnqRp4L70T
+ D2fcHHuOTD+U8IvoV9liwXjYYYfOYzHW37jQo6g0Tsm4o0ZQjmhht5he90L8l2lOSx87MEdiu
+ t9tYjc813plOy2DMrp+cr92gVvGhiG4R7DMHdFmejPYnlcRDSG3XBq5OSv1GOLYxfqtdqHqHm
+ /ZP3ZQ0csrOM3cdhsBJ7cvbxjM8QYsuNT1no2nFyjKdYRGsRz82jOAZ+dCGOMDf9ZRD1IPXPz
+ 4OzrkVGS0KXpDVd4UFvkxVo7b9Vb1j0balFTUJAvvoXnoCSkXTmjQcsKk7F0lFFw6hja3mcjC
+ 5MrxIKPHZc1Hhwd7/ANQq5i2Fu0RlEYief0/tPVlcUw1n+bJpRuSk/kd+UPQinBT7Svr0Satb
+ JJhx45mpFb0rSo7a3w2P5+z3QA305CiwOgGhfh+F6osto=
 
-From: Cheng Ming Lin <chengminglin@mxic.com.tw>
+The whole mechanism to remember occurred SPI interrupts is not atomic,
+which could lead to unexpected behavior. So fix this by using atomic bit
+operations instead.
 
-commit c374839f9b4475173e536d1eaddff45cb481dbdf upstream.
+Fixes: 291ab06ecf67 ("net: qualcomm: new Ethernet over SPI driver for QCA7=
+000")
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/net/ethernet/qualcomm/qca_debug.c |  6 ++----
+ drivers/net/ethernet/qualcomm/qca_spi.c   | 16 ++++++++--------
+ drivers/net/ethernet/qualcomm/qca_spi.h   |  3 +--
+ 3 files changed, 11 insertions(+), 14 deletions(-)
 
-MX35UF{1,2,4}GE4AD and MX35UF{1,2}GE4AC have been
-merged into Linux kernel mainline through upstream commit.
+diff --git a/drivers/net/ethernet/qualcomm/qca_debug.c b/drivers/net/ether=
+net/qualcomm/qca_debug.c
+index ff3b89e9028e..ad06da0fdaa0 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_debug.c
++++ b/drivers/net/ethernet/qualcomm/qca_debug.c
+@@ -98,10 +98,8 @@ qcaspi_info_show(struct seq_file *s, void *what)
 
-For SPI-NAND flash support on Linux kernel LTS v5.4.y,
-add SPI-NAND flash MX35UF{1,2,4}GE4AD and MX35UF{1,2}GE4AC in id tables.
+ 	seq_printf(s, "IRQ              : %d\n",
+ 		   qca->spi_dev->irq);
+-	seq_printf(s, "INTR REQ         : %u\n",
+-		   qca->intr_req);
+-	seq_printf(s, "INTR SVC         : %u\n",
+-		   qca->intr_svc);
++	seq_printf(s, "INTR             : %lx\n",
++		   qca->intr);
 
-Those five flashes have been validated on Xilinx zynq-picozed board and
-Linux kernel LTS v5.4.y.
+ 	seq_printf(s, "SPI max speed    : %lu\n",
+ 		   (unsigned long)qca->spi_dev->max_speed_hz);
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index 5799ecc88a87..8f7ce6b51a1c 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -35,6 +35,8 @@
 
-Cc: stable@vger.kernel.org # 5.4.y
-Signed-off-by: Cheng Ming Lin <chengminglin@mxic.com.tw>
----
- drivers/mtd/nand/spi/macronix.c | 45 +++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ #define MAX_DMA_BURST_LEN 5000
 
-diff --git a/drivers/mtd/nand/spi/macronix.c b/drivers/mtd/nand/spi/macronix.c
-index f18c6cfe8ff5..e1446798bfb3 100644
---- a/drivers/mtd/nand/spi/macronix.c
-+++ b/drivers/mtd/nand/spi/macronix.c
-@@ -132,6 +132,51 @@ static const struct spinand_info macronix_spinand_table[] = {
- 					      &update_cache_variants),
- 		     SPINAND_HAS_QE_BIT,
- 		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout, NULL)),
-+	SPINAND_INFO("MX35UF4GE4AD", 0xb7,
-+		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2GE4AD", 0xa6,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF2GE4AC", 0xa2,
-+		     NAND_MEMORG(1, 2048, 64, 64, 2048, 40, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1GE4AD", 0x96,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
-+	SPINAND_INFO("MX35UF1GE4AC", 0x92,
-+		     NAND_MEMORG(1, 2048, 64, 64, 1024, 20, 1, 1, 1),
-+		     NAND_ECCREQ(4, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     SPINAND_HAS_QE_BIT,
-+		     SPINAND_ECCINFO(&mx35lfxge4ab_ooblayout,
-+				     mx35lf1ge4ab_ecc_get_status)),
- };
- 
- static int macronix_spinand_detect(struct spinand_device *spinand)
--- 
-2.25.1
++#define SPI_INTR 0
++
+ /*   Modules parameters     */
+ #define QCASPI_CLK_SPEED_MIN 1000000
+ #define QCASPI_CLK_SPEED_MAX 16000000
+@@ -579,14 +581,14 @@ qcaspi_spi_thread(void *data)
+ 			continue;
+ 		}
+
+-		if ((qca->intr_req =3D=3D qca->intr_svc) &&
++		if (!test_bit(SPI_INTR, &qca->intr) &&
+ 		    !qca->txr.skb[qca->txr.head])
+ 			schedule();
+
+ 		set_current_state(TASK_RUNNING);
+
+-		netdev_dbg(qca->net_dev, "have work to do. int: %d, tx_skb: %p\n",
+-			   qca->intr_req - qca->intr_svc,
++		netdev_dbg(qca->net_dev, "have work to do. int: %lu, tx_skb: %p\n",
++			   qca->intr,
+ 			   qca->txr.skb[qca->txr.head]);
+
+ 		qcaspi_qca7k_sync(qca, QCASPI_EVENT_UPDATE);
+@@ -600,8 +602,7 @@ qcaspi_spi_thread(void *data)
+ 			msleep(QCASPI_QCA7K_REBOOT_TIME_MS);
+ 		}
+
+-		if (qca->intr_svc !=3D qca->intr_req) {
+-			qca->intr_svc =3D qca->intr_req;
++		if (test_and_clear_bit(SPI_INTR, &qca->intr)) {
+ 			start_spi_intr_handling(qca, &intr_cause);
+
+ 			if (intr_cause & SPI_INT_CPU_ON) {
+@@ -663,7 +664,7 @@ qcaspi_intr_handler(int irq, void *data)
+ {
+ 	struct qcaspi *qca =3D data;
+
+-	qca->intr_req++;
++	set_bit(SPI_INTR, &qca->intr);
+ 	if (qca->spi_thread)
+ 		wake_up_process(qca->spi_thread);
+
+@@ -679,8 +680,7 @@ qcaspi_netdev_open(struct net_device *dev)
+ 	if (!qca)
+ 		return -EINVAL;
+
+-	qca->intr_req =3D 1;
+-	qca->intr_svc =3D 0;
++	set_bit(SPI_INTR, &qca->intr);
+ 	qca->sync =3D QCASPI_SYNC_UNKNOWN;
+ 	qcafrm_fsm_init_spi(&qca->frm_handle);
+
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/etherne=
+t/qualcomm/qca_spi.h
+index d59cb2352cee..8f4808695e82 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.h
++++ b/drivers/net/ethernet/qualcomm/qca_spi.h
+@@ -81,8 +81,7 @@ struct qcaspi {
+ 	struct qcafrm_handle frm_handle;
+ 	struct sk_buff *rx_skb;
+
+-	unsigned int intr_req;
+-	unsigned int intr_svc;
++	unsigned long intr;
+ 	u16 reset_count;
+
+ #ifdef CONFIG_DEBUG_FS
+=2D-
+2.34.1
 
