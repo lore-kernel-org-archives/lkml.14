@@ -1,112 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ABE27450;
-	Wed,  5 Jun 2024 16:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834FE2575A;
+	Wed,  5 Jun 2024 16:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717603821; cv=none; b=Ks7Z7GN+UQ1FUqoX9cnJ7tTA6UuJb7ljmbtOIVeI8RmbxQ3DLcZXOOLYhMV1mKKdjILcDiskEPDwawLEMpl6/HiBb/rVqPSKeMC+P9LmDuGVrkICPyh+0ucKDHCpUBVXgYFJibg7WSh8isXbQQrs44oWrjTcIkjWtQpD3a49ktg=
+	t=1717603972; cv=none; b=TgOVefNKcUfjjJrMW9h/1c0P/nJdyfDPnrkqMxqOoLIjBKNRuJ3Jx5i3RWils2PdVFJXOyPWDICea6vXZxP5Vp5ahgDXrWk5BqcVDwlFGxOgiCzpFAp/saKz9JDz61Lgrz5L9pwTtgVX9ZuiFmtrdq77DQjLF+xqY8Brwgm3aUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717603821; c=relaxed/simple;
-	bh=3klxGnG3GkyhrDKSmcnlThuDuIl/9pv+mo2n6zzAz+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FXXblESjcOO6Q7pTqJgneNvxGokUEJG1/aJ/bauFtPqfNdqzphNp7H3J9oK1p0Idd+votHPGJZyFvtu5MGNiS+5DKyncfdHljOzP1sPB1WT3BY5uoemUa3W0jb+wvZ30xSqM/lR4E9hxIPTKUi8Z/Q53zdfAKsodqC5D6lJ4ccI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RvwX/4Si; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717603972; c=relaxed/simple;
+	bh=bb6R/wccxuh3haaibej5fK5MnrC4BlHZGVvR9Fjaymg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A3zaJ3pOYIDKnFKOlLLAXah9Pep69CDyxBo1Bm/vW9ApUnSHrKrqODozWGlP4pMlVnheQSLDIShMa594/RFF2WIOIXYs0NbHz15YYjva3iotv1iHPClAbxVujDQATdY3pbTfkWM86QGv7lvlautLxlKBG0PRoReepnAu50ays3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dXOfWivM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RvwX/4Si"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717603820; x=1749139820;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3klxGnG3GkyhrDKSmcnlThuDuIl/9pv+mo2n6zzAz+o=;
-  b=RvwX/4Si+wYPxv9mzyj/ZkLyOvwOL+Wo3fpj49FcGY0UdqR52WiQcAem
-   NVSf6a3JlyVVxOm4WZ7KhVjwm/FcnhQzo/iQD69TUWO0mYQlxkHbrjAwd
-   r2m717NAAc4SkemvLzK7oWfras5Tr/jUYqq26Ia3qv72ZOdoVbGhMFQF4
-   QpgfsHZVrT5kwt73IWM1mEVvFdF3/pXE0+LlY+IMxNT//l6cuG7J3gh5b
-   S25I3ZNVvhUW162ZVmmT6kDccGk8gASVlgw2puZZSUQAaIlbDqQVYevrQ
-   Dcl1CfpDCqij3GROs0HxlOEZhSxoZfyDoNSg6MtWfiTS1rrIiQRG+0oZW
-   g==;
-X-CSE-ConnectionGUID: XXmzOSDpSMWr8JYqkntMMg==
-X-CSE-MsgGUID: +X2XEUlVTe6UC1VhwRlGRQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="25633485"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="25633485"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 09:10:03 -0700
-X-CSE-ConnectionGUID: KMwrIFJPSKubjbNif9H/mg==
-X-CSE-MsgGUID: EyQtD6qpQxGjOaC/hL9sVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="38300791"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa007.jf.intel.com with ESMTP; 05 Jun 2024 09:10:03 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	"Khalil, Amiri" <amiri.khalil@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf stat: Fix the hard-coded metrics calculation on the hybrid
-Date: Wed,  5 Jun 2024 09:08:48 -0700
-Message-Id: <20240605160848.4116061-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dXOfWivM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 380F740E0176;
+	Wed,  5 Jun 2024 16:12:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0-nu29L-4QBm; Wed,  5 Jun 2024 16:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717603964; bh=XZqop4oMhiyVdjTRe+jU0w8Ay/gg4CSzZsEjcgKQyDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dXOfWivMHgTCg1qBrOBgTs6JX5f0uNJG+RCaE5LY1isDuQWivYpQu7tdQdXGuWMHu
+	 Zv7PYO9DYUPD2swPx5Eq2UvT9VYZFATFn9QBxSaWRrqeQ4aQrRAllp1iL1szVOCPc0
+	 ueUHTSQ3dGAl6q/vfkyUl9OjtrWvVTgHTGXc8iNgOGcS3lmUdgO34tUsydS820ar1x
+	 4oo14IGphA9XaP58BsqojGUBqXQKu5uXyVeJttFJO9pfdlXjW1eKDA8MznP5guzcly
+	 +KdeI6X8GttcE6J9vQ/WmMnCCUST4vw8JPFrdato+u51keAe+tzRxuIgfNZCjonMLK
+	 TxoHqY/3RzxKr+iV/AfMA/3CrTSJwJU26e/8ctOK6fdLOUt/yXNS30V03YQvjNtocm
+	 CX6/R/HSUXHoztMgVl3qTvuTj7nxQ5DKPKhcuCNR4Pj/TSNDNBKaMX6vo0VkBCrk+L
+	 K/Eh0fS1S3aOVvBFnxBWplD3sB5a18k8Pj8KMf0muqiVVIADMTiwo6MbgM4BWRqqDV
+	 a179ZB9bMELiOlSjwdn0OC8meNyS01qHQ+WQj2zDJY2crEk9lFzKsadyd6xhoLx/Pm
+	 ETB+s4ZN6sTe7gOxbqGtfSXL0lf0csnQlGANRzwbDHDe62UzHqCBR54afqWiDNUB5J
+	 iOOtJdEmDW2pa70QICwXKvsA=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5A03640E016A;
+	Wed,  5 Jun 2024 16:12:37 +0000 (UTC)
+Date: Wed, 5 Jun 2024 18:12:36 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3 3/8] hwmon: (k10temp) Check return value of
+ amd_smn_read()
+Message-ID: <20240605161236.GIZmCOdP-CRPJ8-3sY@fat_crate.local>
+References: <20240523-fix-smn-bad-read-v3-0-aa44c622de39@amd.com>
+ <20240523-fix-smn-bad-read-v3-3-aa44c622de39@amd.com>
+ <20240605122012.GXZmBX_KFQArXB9Lar@fat_crate.local>
+ <7a7c2f41-1608-4348-9183-d99aaa51398e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <7a7c2f41-1608-4348-9183-d99aaa51398e@amd.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Wed, Jun 05, 2024 at 09:41:51AM -0400, Yazen Ghannam wrote:
+> I agree that patches 1-3 are not stable-worthy on their own. But I think
+> patch 4 is, and it requires 1-3 to avoid build errors.
 
-The hard-coded metrics is wrongly calculated on the hybrid machine.
+Which of the rules in the first section of
+Documentation/process/stable-kernel-rules.rst apply for patch 4?
 
-$ perf stat -e cycles,instructions -a sleep 1
+Because I don't see it.
 
- Performance counter stats for 'system wide':
-
-        18,205,487      cpu_atom/cycles/
-         9,733,603      cpu_core/cycles/
-         9,423,111      cpu_atom/instructions/     #  0.52  insn per cycle
-         4,268,965      cpu_core/instructions/     #  0.23  insn per cycle
-
-The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 = 0.44.
-
-When finding the metric events, the find_stat() doesn't take the PMU
-type into account. The cpu_atom/cycles/ is wrongly used to calculate
-the IPC of the cpu_core.
-
-Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
-Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- tools/perf/util/stat-shadow.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 3466aa952442..4d0edc061f1a 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -176,6 +176,10 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
- 		if (type != evsel__stat_type(cur))
- 			continue;
- 
-+		/* Ignore if not the PMU we're looking for. */
-+		if (evsel->pmu != cur->pmu)
-+			continue;
-+
- 		aggr = &cur->stats->aggr[aggr_idx];
- 		if (type == STAT_NSECS)
- 			return aggr->counts.val;
 -- 
-2.35.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
