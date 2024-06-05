@@ -1,99 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A1D17BCD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 14:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504EC17BCD;
+	Wed,  5 Jun 2024 14:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717597156; cv=none; b=Dt6l32YeAQWomfN6X+qlkt3r4kgsw6J2U9rBuXY2Amhk1zjkxTxzRK5n/CTboXJDGA6S9tYvoEZiBEfLdxyovMmhMbcLbObPbHJ530VrvuUjEMfA/ywyHCK5PaJ02VNPFEZuBJFV03TcGEAZmFO3YHL6UMMtsPeOEdfMxtZ3HXI=
+	t=1717597178; cv=none; b=Bdex5Ceng0E8YD5ZsrKGEAiPSkB6MQi6nXKCHisVgdTQhx2O24FVptlPM7vGy1qD6iah3BnpTr411okE/lXQUnyc05Xye/mna8ECruF8G42+7pvvIbJZiQ7I9hXggpgB1CWs41s1+cP7cmchrHBhoGV75QIQLMqxBqHgkB11td0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717597156; c=relaxed/simple;
-	bh=r1W5V48P8us/oKRdqlb5UGa1+dmQCutjwcz0nQAc8oA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pG0odshqEbTWPPIJqYhvHjtSVeboQ9nidr+Lvs1YskHSjCYLDqDGWYXl3FwNVi2QEIAATSL1HZS85fb6lyHV1UfOo8TdSk3n7KlcK3d16g8uC5VXhlfGw5h5bwUR1is+GPGjbLAlMc3G5DS5DlRJ1FPHRAhxnsIxXqelU33NpeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EKU2cmfz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717597178; c=relaxed/simple;
+	bh=6URTEerfkdzLvqFcLf0HfIhwY4ccOG/H9zSR0R5rh18=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dPEy1dPagDxBJFAHkpfS7Q0Go1WecIkwpL5Xxi7ULTto2SXNJEyTd0EJ5expvW1KtBR2/eACgkMcVQT07q0b6PPhzUfjhYqB470j09PXjmxJu9GyhN71e8kZFKc5/lnJbiS7MPE1lqV5ZLvG3wBtgE2dhPH9BLmr/SncEpzmOXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2inVvOWu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1hc7ph2l; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EKU2cmfz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717597153;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2inVvOWu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1hc7ph2l"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717597173;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dwI8FIOILkq/9/seZsMfaaMjELj3eDiG4Kw43Y0phXk=;
-	b=EKU2cmfzPSATZ0bM2r+1GCkbCKBr7B76Rs48cwoSDEpZsy2Y93Q+UguEgEQq3Yv+bFgVR1
-	CafrElZYdaJWqmuFYlktKfWgQLVv75XUDN6ZLKYdzm6rQfG5l0BkeqLp9ZtucmcAVfU+ZU
-	Dwp0nNupHD0XL3t/aIEc3PgHxFbZsJY=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-620-3AYg_4XUMVuwoKfQnTfmFA-1; Wed,
- 05 Jun 2024 10:19:10 -0400
-X-MC-Unique: 3AYg_4XUMVuwoKfQnTfmFA-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C17A19541BB;
-	Wed,  5 Jun 2024 14:19:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A217419560A2;
-	Wed,  5 Jun 2024 14:19:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 16:17:38 +0200 (CEST)
-Date: Wed, 5 Jun 2024 16:17:33 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>, Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: Re: [PATCH 3/3] x86/fpu: Remove init_task FPU state dependencies,
- add debugging warning
-Message-ID: <20240605141733.GC25006@redhat.com>
-References: <20240605083557.2051480-1-mingo@kernel.org>
- <20240605083557.2051480-4-mingo@kernel.org>
+	bh=t0o5pyoMUAS+Hj4ypHyiKCTLmAk7b8HOBNFgUfxaG+0=;
+	b=2inVvOWu3HafMPDKsb+qpF7AzcwPeqf+JH+8bF9kRSdqDzzaaku3ordzvLSUIWDvdfcEoj
+	SPaeek8iNZF8xz/3ZfaME/ZUVxpuqcaypIs1CzrRizlEU/i02qTJYH0S8XcDTLiu+JbCHq
+	ZrrPyEn1xY3N0QsZJxMPeIPTySHdC1M/7eiTpZIBCNM92mz3kqIs6ZcPqQP4ep6XPDEG/9
+	RykbrOlFQtdrI+tl3ju5PWpdJW8JQ8psPivXVdTF6lsxdYKKTTTt6FUk0Ahr4oxW1ySkSI
+	ocetbrzCRqfAO0gHv1rWrvd4iwKcyiFCMTZn6ZjbXbcDz5BvnGT6IE77Ej4S/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717597173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t0o5pyoMUAS+Hj4ypHyiKCTLmAk7b8HOBNFgUfxaG+0=;
+	b=1hc7ph2lzRvvkR/40ZQ5c0U6Xp36HKvb3qaHbKRSkMdKXAKUOWynQr6Xh4YfQxYICLEVyg
+	nsrwj93w2GG5ZmCQ==
+To: Michael Kelley <mhklinux@outlook.com>, "kys@microsoft.com"
+ <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com"
+ <decui@microsoft.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "bp@alien8.de" <bp@alien8.de>, "dave.hansen@linux.intel.com"
+ <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
+ "hpa@zytor.com" <hpa@zytor.com>, "lpieralisi@kernel.org"
+ <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, "robh@kernel.org"
+ <robh@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>, "martin.petersen@oracle.com"
+ <martin.petersen@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Cc: "maz@kernel.org" <maz@kernel.org>, "den@valinux.co.jp"
+ <den@valinux.co.jp>, "jgowans@amazon.com" <jgowans@amazon.com>,
+ "dawei.li@shingroup.cn" <dawei.li@shingroup.cn>
+Subject: RE: [RFC 06/12] genirq: Add per-cpu flow handler with conditional
+ IRQ stats
+In-Reply-To: <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240604050940.859909-1-mhklinux@outlook.com>
+ <20240604050940.859909-7-mhklinux@outlook.com> <87h6e860f8.ffs@tglx>
+ <SN6PR02MB415737FF6F7B40A1CD20C4A9D4F82@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <87zfrz4jce.ffs@tglx>
+ <SN6PR02MB415706390CB0E8FD599B6494D4F92@SN6PR02MB4157.namprd02.prod.outlook.com>
+Date: Wed, 05 Jun 2024 16:19:33 +0200
+Message-ID: <87cyov4glm.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605083557.2051480-4-mingo@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain
 
-On 06/05, Ingo Molnar wrote:
+On Wed, Jun 05 2024 at 13:45, Michael Kelley wrote:
+> From: Thomas Gleixner <tglx@linutronix.de> Sent: Wednesday, June 5, 2024 6:20 AM
 >
-> But the init task isn't supposed to be using the FPU in any case,
+> In /proc/interrupts, the double-counting isn't a problem, and is
+> potentially helpful as you say. But /proc/stat, for example, shows a total
+> interrupt count, which will be roughly double what it was before. That
+> /proc/stat value then shows up in user space in vmstat, for example.
+> That's what I was concerned about, though it's not a huge problem in
+> the grand scheme of things.
 
-Afaics, the same is true for any PF_KTHREAD/USER_WORKER thread?
+That's trivial to solve. We can mark interrupts to be excluded from
+/proc/stat accounting.
 
-> +#ifdef CONFIG_X86_DEBUG_FPU
-> +struct fpu *x86_task_fpu(struct task_struct *task)
-> +{
-> +	WARN_ON_ONCE(task == &init_task);
-> +
-> +	return (void *)task + sizeof(*task);
-> +}
+Thanks,
 
-So perhaps WARN_ON_ONCE(task->flags & PF_KTHREAD) makes more sense?
-
-Although in this case fpu_clone() can't use x86_task_fpu(dst) as I tried
-to suggest in reply to 2/3.
-
-
-
-
-This is offtopic right now, but I am wondering if it makes any sense to
-make arch_task_struct_size depend on PF_KTHREAD... I mean, create another
-task_struct_kthread_cachep used by alloc_task_struct_node() if PF_KTHREAD.
-
-Oleg.
-
+        tglx
