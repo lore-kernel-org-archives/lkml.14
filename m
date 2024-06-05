@@ -1,96 +1,110 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84351922DD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA281922C6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717572177; cv=none; b=e7T6GC8xJslOvaPP8rXQ+YBh+3oBb97UwrIZmZ5hIwSqD+RMyuPTrVR5u538hKdKQBL9H/xwniWZQ3ezBdF2bDkB6nGV6h+3eHefK3Cefa87p5gaOa1Qn4yv9vaPrDnL9+1lmeyXXbS+wPcjbdMqABp/rEwebZgiSO+TJNU6fHY=
+	t=1717572341; cv=none; b=qF3sbxFRsBPskAJZfeJFHYS5h0V8bE6TpiYqfcDzLP66uZ+BwACDNnyb8NSiatIEeQiWVtE7dMoFOq4hWdUpZeucd+eHtwz5Ougzt18JXx02koV7cy4Sad81uenFxvY/zL1JS0EU/NuUmeRa57dbJGuFwRQSpcBzh3v+gy2AQqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717572177; c=relaxed/simple;
-	bh=R4YKIM6OKd1WIlOGsM6YjhBav9nZ9U9MhpDx2XiXALo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9ZZfYUAnfQs6jG8+PYNBd6aAUnYUhTziM19nbO9pbJYH2GCU+setlm37YezLG/GviHKc1e27JQUyP/phzRuG6UocHjg6Yz1QINK4uxfly2SqW0RkQs1s1YhFBInqDeGNfDMvxX6nCE71wZdqMqiJcz47IBctkmM+PSnHTbILDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YD55qfcj; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YD55qfcj"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52b950aa47bso2644220e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717572174; x=1718176974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RqnZdFgvboe7tX2UKgOGW0Pa1N7zuJuJPg9c9wyxQMg=;
-        b=YD55qfcjDfOPWxSNsWWoCc7hMBzAWe+akRiI8lzSH8z/iGpBGcYp0JFqNsj3je+ItV
-         P1V6WizYoA/H0X5EsVo03D2uWwuj3nt648KNBkko/8+xZIHTi8NF35GhdFEJgMBHAfwA
-         0CrWixDkKgPJjXRXdHIMPsc90/VuMNk7X8HX+5nSzmTUidkjHs91TPIXzvSIjxkU+w31
-         EqRBBlF6p50NGZAYwFW9USrK5daTHT+T9/NihUkPrJ0F03W5KiGZMVQJXz9beozjj7Bz
-         V5QfTpO/kxaiEqr04mcE7etRSEon+zfE4F+aVLK6p70w5phZf57JmDX41BEjFlSOLlqh
-         pDJQ==
+	s=arc-20240116; t=1717572341; c=relaxed/simple;
+	bh=5jVZ+F8iul/MXl68OT3lB4bL7dKSLhQPN3ZL10GpPas=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Z2JryncsrBQ2GXUJCM9ZjZJ2zMVgxXkuCWhef2INAT2SA92YfgmPd6sunkXv24eDSmZ+e+vxr60DLDec44NdHSoA+fsG1OTOToSPxAhAhef4cy1IMwWndxHNgNcllvlEiZqPd1ev0+2MiKrncpR//Oth3KDbC7bwtDjmnJHpbzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-374b033db7dso11294235ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:25:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717572174; x=1718176974;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1717572339; x=1718177139;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RqnZdFgvboe7tX2UKgOGW0Pa1N7zuJuJPg9c9wyxQMg=;
-        b=sls2MaRPkIK+KHxELOgsmC+aVdFKHJBjdTVSJoiwE1k42rI9PZoiRZnRPLDiymdhyB
-         3J9r1oelklftObCQbFWzZoxzxPfdoM/fHv3kfJs/QriJoBAnLbRtAvOo/APQ84nU7Zzg
-         HGwcJIsLEidCvsMSCpWe6NwIongVuypHPOxjDFxGMl22jxlLlAdZnecjj7pn9km+kniw
-         7JtUcX0QT8YjW0ahHUG84T4zD5wyDjQhRTzWOr8S7oXQyif9WREy1B8ZnaZ669VZRCPi
-         HHgVxlIb01zEftrRYWyL2WShdFl/NVX7/7Q5kFD/aDOLkzFWdSJfdUK8eNSQIWsS+5tl
-         67pQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNzNTnb7zFFox6VS6anZn3obgRVwYtGd3Tk0/YrnLJ1KqvU0IiQcVjIFks0TchDr/6sGKLE4hCfRVDZudftr7jpB/0ZodfrnLIb44k
-X-Gm-Message-State: AOJu0Yz503iOGpMvesCBBVYQz+6fUP7ztW90THxr9RT6Lzduglqawo6a
-	93FY+AbjiVgNB0L0oxhkf9FULEhEHFiAGsKy0bi6F7d1VOm5Ib1D3qRrYxeKP6g=
-X-Google-Smtp-Source: AGHT+IGrEUTIRlHebCjYcSxaWnRyULJcyEIEq/vcwbc8wOASvTCW7s5vwhOA3Z/T5Q0VVe7HxptVtw==
-X-Received: by 2002:a05:6512:2308:b0:52b:83d5:34 with SMTP id 2adb3069b0e04-52bab2843eemr1239519e87.0.1717572173579;
-        Wed, 05 Jun 2024 00:22:53 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68519892c8sm695071366b.65.2024.06.05.00.22.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 00:22:53 -0700 (PDT)
-Date: Wed, 5 Jun 2024 10:22:49 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dmitry Yashin <dmt.yashin@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman <jonas@kwiboo.se>,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] pinctrl: rockchip: add rk3308b SoC support
-Message-ID: <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
-References: <20240604141020.21725-1-dmt.yashin@gmail.com>
- <20240604141020.21725-3-dmt.yashin@gmail.com>
+        bh=5jVZ+F8iul/MXl68OT3lB4bL7dKSLhQPN3ZL10GpPas=;
+        b=afk26ETAcP2J/ysYifmFOuUjdWJNqxo8w4r0jTH9MEm+52wdc+C9s07sbUj7rjITj0
+         T7ykqtOjw4U9TLFHI/vpymQ5RKmZvfdG7lmhqBk8m/Ayb/YBME0+ZQYMU9k0BCd/p5OO
+         mGeQ+YvPBGs2XO1a1oiFFfrfKNoqhQz+HNLXrJmjI0TWMTpwFtxdt6HODjVk8Hd9m3Uc
+         UafiqlKqgQ8HktFA37nqUSDqgIuGanjudH1PBXSXrm+WTDCpE2LDhkl3mABPLyKux+c/
+         a8kMN5vUNAo09AxnlCJlKNrSMb0GQHGhipqgJ+Fl5rNBqFV7OHQqLpHCg4NFR252+ACZ
+         Pr4w==
+X-Gm-Message-State: AOJu0YzVuBjUoNv7Y2ttvWSsxixnkNYPF6a907ZO2oDz7jT5v6bK3nIx
+	5/vwyaJv8HmU0woqTlHwp+fY00drDXJehV2LtmfY9t2le1I8tPBLEO9ae1ORoYCYmGwPAdtt9Qw
+	UM4N1SNS3a8srXrNRdN5GrXHHJBVpPatCSBubS9JOb9Nq8Ti7kWMzUic=
+X-Google-Smtp-Source: AGHT+IEJifPXDqaUYsOLA3EmvPsi16Hd2X+UACfaGI7/1tCY+z16N5rF1Fv0RKPwW9dP/i4IGWNQ+TdHoYBIuoXLBTo5oahenfcd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604141020.21725-3-dmt.yashin@gmail.com>
+X-Received: by 2002:a05:6e02:1a24:b0:374:9af0:5f5a with SMTP id
+ e9e14a558f8ab-374b1f88226mr955115ab.6.1717572339724; Wed, 05 Jun 2024
+ 00:25:39 -0700 (PDT)
+Date: Wed, 05 Jun 2024 00:25:39 -0700
+In-Reply-To: <000000000000adb08b061413919e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002f8558061a1f7902@google.com>
+Subject: Re: [syzbot] Re: 000000000000fcfa6406141cc8ac@google.com
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 04, 2024 at 07:10:20PM +0500, Dmitry Yashin wrote:
-> Add pinctrl support for rk3308b. This pin controller much the same as
-> rk3308's, but with additional iomux routes and 3bit iomuxes selected
-> via gpio##_sel_src_ctrl registers. Set them up in the function
-> rk3308b_soc_sel_src_init to use new 3bit iomuxes over some 2bit old
-> ones and update iomux_recalced and iomux_routes for the new SoC's.
-> 
-> Fixes: 1f3e25a06883 ("pinctrl: rockchip: fix RK3308 pinmux bits")
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Why does this one have a Fixes tag?  Isn't this new hardware support?
-Possibly patch 1/2 was not actually a fix but just preparation for this
-patch?
+***
 
-regards,
-dan carpenter
+Subject: Re: 000000000000fcfa6406141cc8ac@google.com
+Author: wojciech.gladysz@infogain.com
 
-> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+#syz test https://linux.googlesource.com/linux/kernel/git/torvalds/linux e3=
+77d803b65ee4130213b3c041fc25fdfec1bd90
+________________________________
+From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+Sent: Wednesday, June 5, 2024 09:15
+To: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>
+Cc: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>; linux-kernel@vger.ker=
+nel.org <linux-kernel@vger.kernel.org>; syzkaller-bugs@googlegroups.com <sy=
+zkaller-bugs@googlegroups.com>
+Subject: Re: 000000000000fcfa6406141cc8ac@google.com
 
+EXTERNAL: This message was sent from outside of Infogain. Please do not cli=
+ck links or open attachments unless you know the content is safe.
+
+> #syz testhttps://github.com/torvalds/linux.gite377d803b65ee4130213b3c041f=
+c25fdfec1bd90
+
+unknown command "testhttps://github.com/torvalds/linux.gite377d803b65ee4130=
+213b3c041fc25fdfec1bd90"
+
+> ________________________________
+> From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
+> Sent: Wednesday, June 5, 2024 09:06
+> To: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>
+> Cc: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>; linux-kernel@vger.k=
+ernel.org <linux-kernel@vger.kernel.org>; syzkaller-bugs@googlegroups.com <=
+syzkaller-bugs@googlegroups.com>
+> Subject: Re: 000000000000fcfa6406141cc8ac@google.com
+>
+> EXTERNAL: This message was sent from outside of Infogain. Please do not c=
+lick links or open attachments unless you know the content is safe.
+>
+>> #syz test https://linux.googlesource.com/linux/kernel/git/torvalds/linux=
+<https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://lin=
+ux.googlesource.com/linux/kernel/git/torvalds/linux>> e377d803b65ee4130213b=
+3c041fc25fdfec1bd90
+>
+> "https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://l=
+inux.googlesource.com/linux/kernel/git/torvalds/linux<https://linux.googles=
+ource.com/linux/kernel/git/torvalds/linux>>" does not look like a valid git=
+ repo address.
+>
+>>
+>> The information in this email is confidential and may be legally privile=
+ged. It is intended solely for the addressee and access to it by anyone els=
+e is unauthorized. If you are not the intended recipient, any disclosure, c=
+opying, distribution or any action taken or omitted to be taken based on it=
+, is strictly prohibited and may be unlawful.
