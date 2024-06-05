@@ -1,101 +1,132 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8611946AE;
-	Wed,  5 Jun 2024 08:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35EC1946AD;
+	Wed,  5 Jun 2024 08:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717576797; cv=none; b=JCf4x2Bj1YtikhstIL/jQQrZt85B5nb5IlYV+JC3UcPk++Sfim7Mq7iXOHJ9Kfw7W30QgYM2ZKgHooGe2DErD2zqGo9XpC7CBItVDMNLDYhfBvsxRf+nVA8okcIo7z4JUjOMyKgTsOOwBiFR7uGvb8+7OO85exQq72w1cNRnhvE=
+	t=1717576837; cv=none; b=RQtbxKCXygHkK1G2wK7QnpBw23JfZuSuwAQVGDe4B8CvnAa5m3UhL7mXKJPoFVWXfCHKzlIox/Smv65o3gzUoVLqMfURp9jBRT0I68Ch07zzPrxTXPpGgudM25AwHTgTLbEQFi4SbEDDp2A7thVk6w6RgelbXLqV0S7gGcWOdnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717576797; c=relaxed/simple;
-	bh=22MaBtZi5AInBLEVS80SS3Joqf+eQ6RctsUOZeLFvmo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mo1ux9NnpE/L0gU+UddKifgXJciezGbWtCWYaZNmRiSWlvZ6tvscVh0htlsN2RNQjiC/v+fugj+F4wUBVrOCATJc8e71Yh2KgttoLzGunMHnr55ecUC5ZIgyG5/r9FbHEwsOg/xmUMokQZEq1iGGZ1Ycy5IJl/TtO57Py6hEjLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=n/Tx3AfR; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1717576837; c=relaxed/simple;
+	bh=SSuUeQbO2I34BDzHIPG6kv2UTPDB/m4P39TM9c87s7U=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=gFr4KAVAo69vEJEsk1kc4/rCvbYj2Awxg1pybNS+YrXKxVu2d03MBICfRVkNgAFVQvb2IlMC3hHbWMiLQhGyqN3Udrc80eSz1IDLvLXpNbQtWOWUhk/BWww5scBRf+tXzifGGWNorWsfjqiGskz8Jy9jGIgGLFYnkzmYgPCY5V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8Ol6eQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="n/Tx3AfR"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sEmBU-008sYN-2y;
-	Wed, 05 Jun 2024 10:39:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=s1Dqt3Ik0d9VyS97+X6CEVzkr11OOcW3uaWdRrpb+wA=; b=n/Tx3AfR+zPH2/oex4MrmkIDxk
-	0IYxBvtJwLGL9XVkk1xxuyW7Fxx+CbgsgTNVmAw7osMA2ax7ylm28WkA+AanzstKLs3HOudHJNUN1
-	OdhGDCPU/07SZqr7oaUmzVNtiY5bdM8iJcH1JHJD+k/kZR4KDCseoR8kazkxPD8Fru+5unrQ+JDjj
-	5i1c49w2kSQvdaGzVbeINuvf+EHQGK5SF9HxPto1uvVphpoUaOqS60VqrkBfjf6VN279kcGkuLfzc
-	UiItU4Dgv9Pj21vxjo+SawsB9acFUrvXrd6uUZ9ogcF/zNdhGdAD7aR8lWlgdO+oKCA4/7IH5Kpex
-	LDokabzw==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sEmBT-002fSw-2J;
-	Wed, 05 Jun 2024 10:39:52 +0200
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sEmBU-000YzE-2N;
-	Wed, 05 Jun 2024 10:39:52 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] ARM: dts: e60k02: fix aliases for mmc
-Date: Wed,  5 Jun 2024 10:39:50 +0200
-Message-Id: <20240605083950.134479-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8Ol6eQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6F8C4AF07;
+	Wed,  5 Jun 2024 08:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717576836;
+	bh=SSuUeQbO2I34BDzHIPG6kv2UTPDB/m4P39TM9c87s7U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M8Ol6eQ8uwNDtxC0NQ5T5LtnOoyj9T/kgJ15LXylZws9yVCogCgIqt1iRnAu70HqR
+	 EKgizvqOq80Myld4yIAl2s2Qc3lBefOF0J+opuYC/n2F3LB+uM7GER6A3GSLZsFEFq
+	 GL0BcmY1L79oanQSiOMW3z6Y655VQCxMElhWuH+ctMhXdj7cAzzeVsvc54z9WxTsT/
+	 8GxqXFvo6yzQKV7qYAa0y7xP4v1RbLnYbRyCcikOuuZcvlZrqTsmXwcCDE3LD2VHsD
+	 DEf3GYbh7jo0TmM/Hq2dZwwo4K3lLH0r6xS5cbaOmhnEfdVL7xpnkeqY7Zqj9Euoft
+	 2ED/w2eiEXVSA==
+Received: from disco-boy.misterjones.org ([217.182.43.188] helo=www.loen.fr)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sEmCA-000r52-Af;
+	Wed, 05 Jun 2024 09:40:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Wed, 05 Jun 2024 09:40:34 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, Fang Xiang <fangxiang3@xiaomi.com>, Robert
+ Moore <robert.moore@intel.com>
+Subject: Re: [PATCH v5 1/1] irqchip/gic-v3: Enable non-coherent
+ redistributors/ITSes ACPI probing
+In-Reply-To: <ZmAQQVR+inUJpJ7z@lpieralisi>
+References: <20240123110332.112797-1-lpieralisi@kernel.org>
+ <20240123110332.112797-2-lpieralisi@kernel.org>
+ <ZiYi64/VBWkfM2E2@lpieralisi> <ZmAQQVR+inUJpJ7z@lpieralisi>
+User-Agent: Roundcube Webmail/1.4.15
+Message-ID: <eefc3a76d6cfb3400a3d6e39e8887177@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 217.182.43.188
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org, robin.murphy@arm.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, fangxiang3@xiaomi.com, robert.moore@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Since commit fa2d0aa96941
-("mmc: core: Allow setting slot index via device tree alias")
-mmc numbering are changed, confusing boot scripts. Fix that by adding
-proper aliases
+On 2024-06-05 08:14, Lorenzo Pieralisi wrote:
+> On Mon, Apr 22, 2024 at 10:42:19AM +0200, Lorenzo Pieralisi wrote:
+>> On Tue, Jan 23, 2024 at 12:03:32PM +0100, Lorenzo Pieralisi wrote:
+>> > The GIC architecture specification defines a set of registers for
+>> > redistributors and ITSes that control the sharebility and cacheability
+>> > attributes of redistributors/ITSes initiator ports on the interconnect
+>> > (GICR_[V]PROPBASER, GICR_[V]PENDBASER, GITS_BASER<n>).
+>> >
+>> > Architecturally the GIC provides a means to drive shareability and
+>> > cacheability attributes signals but it is not mandatory for designs to
+>> > wire up the corresponding interconnect signals that control the
+>> > cacheability/shareability of transactions.
+>> >
+>> > Redistributors and ITSes interconnect ports can be connected to
+>> > non-coherent interconnects that are not able to manage the
+>> > shareability/cacheability attributes; this implicitly makes the
+>> > redistributors and ITSes non-coherent observers.
+>> >
+>> > To enable non-coherent GIC designs on ACPI based systems, parse the MADT
+>> > GICC/GICR/ITS subtables non-coherent flags to determine whether the
+>> > respective components are non-coherent observers and force the
+>> > shareability attributes to be programmed into the redistributors and
+>> > ITSes registers.
+>> >
+>> > An ACPI global function (acpi_get_madt_revision()) is added to retrieve
+>> > the MADT revision, in that it is essential to check the MADT revision
+>> > before checking for flags that were added with MADT revision 7 so that
+>> > if the kernel is booted with an ACPI MADT table with revision < 7 it
+>> > skips parsing the newly added flags (that should be zeroed reserved
+>> > values for MADT versions < 7 but they could turn out to be buggy and
+>> > should be ignored).
+>> >
+>> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+>> > Cc: Robin Murphy <robin.murphy@arm.com>
+>> > Cc: Mark Rutland <mark.rutland@arm.com>
+>> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> > Cc: Marc Zyngier <maz@kernel.org>
+>> > ---
+>> >  drivers/acpi/processor_core.c    | 15 +++++++++++++++
+>> >  drivers/irqchip/irq-gic-v3-its.c |  4 ++++
+>> >  drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
+>> >  include/linux/acpi.h             |  3 +++
+>> >  4 files changed, 31 insertions(+)
+>> 
+>> Hi Marc, Rafael,
+>> 
+>> I would kindly ask you please what to do with this patch, it still
+>> applies to v6.9-rc5 - I can resend it if needed, ACPICA changes
+>> are already merged as-per the cover letter.
+> 
+> Hi Marc, Rafael,
+> 
+> I would kindly ask please what to do with this patch, rebased to 
+> v6.10-rc1,
+> I can resend it if that's preferred, please let me know.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Well, this has lingered around a long time in my branches and probably
-used by virtually everyone using this devicetree.
+Please resend it with my:
 
- arch/arm/boot/dts/nxp/imx/e60k02.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-diff --git a/arch/arm/boot/dts/nxp/imx/e60k02.dtsi b/arch/arm/boot/dts/nxp/imx/e60k02.dtsi
-index 13756d39fb7b..0029c12f16c8 100644
---- a/arch/arm/boot/dts/nxp/imx/e60k02.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/e60k02.dtsi
-@@ -14,6 +14,10 @@
- #include <dt-bindings/input/input.h>
- 
- / {
-+	aliases {
-+		mmc0 = &usdhc2;
-+		mmc1 = &usdhc3;
-+	};
- 
- 	chosen {
- 		stdout-path = &uart1;
+and Cc'ing Thomas Gleixner.
+
+Thanks,
+
+         M.
 -- 
-2.39.2
-
+Jazz is not dead. It just smells funny...
