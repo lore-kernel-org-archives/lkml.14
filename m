@@ -1,91 +1,205 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D062318C336
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3168418F2E6
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571721; cv=none; b=aMHneuQt/rSwB+FzNK//Q6oyXOuLrlj+ddIn6lkUMAnZ85qxhPBJqtTZtUagUF2k1klRZivMWCXEwsiWcceJfz414kWUuTrl9uatntcQReHq3hcTvyzKT5x7DPyYRcW2OJbLbBIpKc2dYlhQj7bZ8b4hZx+e1o2fj+halKAuHK8=
+	t=1717571719; cv=none; b=Kc16hnBpVBqDpdGhNDYPV+lbrHrKcY4vJKrGlRylUGoeG571mT5kmRq9i6MwAajzzapulqZHfWTQgkVsi76ql/7AaOpV71Db5nm41C37QA6w+DRKyHcXIhf01Al3FELCEsxZxdDxoM3T3p6KA6WdkeAkfk+JHysa6bs4HYr+rO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571721; c=relaxed/simple;
-	bh=zuHsmG2l54lzUFiaM1B5Ld/DwoAs3onN3TyvEE8C2QU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=h7fcoFPw0YWOAw9TowJrFSBvaIW+OZiHLFZLiIE09DOfU9/WEP26Wr1zlDlfP0aNyIMfo0NVt570phRdvgZa1KbvAH6Wa0DUpjIQIrILY6L2vvf5poSKR814s63QpIjGjJmV/i7IVeuMcSAPWiVW9gymtc8C8R00g1HWyinGGK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3746147204eso68295395ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:15:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717571719; x=1718176519;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zuHsmG2l54lzUFiaM1B5Ld/DwoAs3onN3TyvEE8C2QU=;
-        b=R+Glko43A9/+d7BGTxKXnziNolpkkWywLChfsxEBqUSQ8gCPs2mrrpqU8RMu/Q+PON
-         xEkf+aL+E9i2bwkE9yyBSdfye7RxZYAEj8iTlPJfs8+1jnH5okNCxfUgyg7cZnlWjgMv
-         gterGxurj471U3E+DhHgEoJHre7tjNNg4dq0+dmq8WOtoEBFbHS9/i9bJLs7167qAxKm
-         epGtlCWdF/vLYGcjvLxJx2y21bXFImuMWO5nUKlCJ1srHluUOUVtanHgV9gGg78wnFLP
-         yiUY25THsDS/3XCiph9bL+CB+0LFwgFk8znbbPTXX/aL/Xamp7TkmqfFrxs3OZLMhW/y
-         lv+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUtKLdNjq609XSuuGEeaoDQmlZkcoI7IC09D02+r2KM9OB5WVMhc2HKyG1CjJ6rY+5maf40eiTFsGUNL+Ay8ebLxLMFWHHgiG4LCLWU
-X-Gm-Message-State: AOJu0YzdVU6PZKBNlxtVsHHoG3QLQCvPhMGsKsqpJ36P7LsJ49M8jLBQ
-	Z/6keOrLv4mmuPzsGkuxROTdBdWBov0TJkxhISr/YfBWVcPGhIKea5hZcNKr9Xf5Tbvvg6jgzE3
-	e8JRPz+G0q1EyQZs6wI+PjgtnI3knRbKDriXz33pIhZcDlr3RD3ym87Y=
-X-Google-Smtp-Source: AGHT+IEXUYB9yPdeAKPB5kS6y9F3dWejMcY+PLrrOr1cr9rP+smavalbHIGbQYB6JccbQRBN3EioxR6Ty4lMAVOTE6s+agrv5VAx
+	s=arc-20240116; t=1717571719; c=relaxed/simple;
+	bh=3cTrYeTDe9+jjlLFE6XBms49kHUBVAiJ7qH4E3ODf64=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iQdnRJ6AjfFBZsyWhAvYr7Bqi0Zy5TmikmXp57/220HhWfLOSjDz89dnQHSduZ/OkN/mRhlwQYvW/FJR1ca3FniWri7vi/CaSAu/FJxNR/BiwePI8ekH+z5SVNIIZ5eJiCboQUgpjJZoy7ryqbPDpa+Ltly2oXj6GYRXEgpTWEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hhHWEWVF; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hhHWEWVF"
+X-Envelope-To: linux-mm@kvack.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717571714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2D+pNylnFjf5RG+qfCtOObjK/w47If89gLDNwIIJVTc=;
+	b=hhHWEWVF9i+5tyUIHca/gW8RdqsCWpblWwJQnToMHatTd8h4pcxUN1YuhUvXBbREOpNnm+
+	CaKmK2Pznxt7Avi8g2Hl9oaY7jAajLkDwXzifia3Vo2DNtzgqEppM/UbR3dUJaqh/1t7WU
+	O302CuBLMisFIbutmrMhjbbFv5YyN2s=
+X-Envelope-To: penberg@kernel.org
+X-Envelope-To: roman.gushchin@linux.dev
+X-Envelope-To: feng.tang@intel.com
+X-Envelope-To: zhouchengming@bytedance.com
+X-Envelope-To: rientjes@google.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: akpm@linux-foundation.org
+X-Envelope-To: iamjoonsoo.kim@lge.com
+X-Envelope-To: vbabka@suse.cz
+X-Envelope-To: chengming.zhou@linux.dev
+X-Envelope-To: cl@linux.com
+X-Envelope-To: 42.hyeyoo@gmail.com
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+Date: Wed, 05 Jun 2024 15:13:54 +0800
+Subject: [PATCH v2 1/3] slab: make check_object() more consistent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:168c:b0:374:9c23:a043 with SMTP id
- e9e14a558f8ab-374b1e0bb47mr1047315ab.0.1717571718590; Wed, 05 Jun 2024
- 00:15:18 -0700 (PDT)
-Date: Wed, 05 Jun 2024 00:15:18 -0700
-In-Reply-To: <PN2PR01MB48914D23BDE5FC72CD96A469FCF92@PN2PR01MB4891.INDPRD01.PROD.OUTLOOK.COM>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000029c3f3061a1f54dd@google.com>
-Subject: Re: 000000000000fcfa6406141cc8ac@google.com
-From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
-To: wojciech.gladysz@infogain.com
-Cc: wojciech.gladysz@infogain.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-b4-slab-debug-v2-1-c535b9cd361c@linux.dev>
+References: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
+In-Reply-To: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
+To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1717571706; l=4614;
+ i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
+ bh=3cTrYeTDe9+jjlLFE6XBms49kHUBVAiJ7qH4E3ODf64=;
+ b=NGXpVPgGWULyXod3B7d12LvFUNBu+MBjXZjftR3heWmAb8bzcA1Sl0+XZPCvnewHGl93bJ6g4
+ ahzgjdKSLyxDAA5uw4eIFV6hJ25w/L0b/lGmdcZ4IpjpiOAEOrP+CvS
+X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
+ pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
+X-Migadu-Flow: FLOW_OUT
 
-> #syz testhttps://github.com/torvalds/linux.gite377d803b65ee4130213b3c041f=
-c25fdfec1bd90
+Now check_object() calls check_bytes_and_report() multiple times to
+check every section of the object it cares about, like left and right
+redzones, object poison, paddings poison and freepointer. It will
+abort the checking process and return 0 once it finds an error.
 
-unknown command "testhttps://github.com/torvalds/linux.gite377d803b65ee4130=
-213b3c041fc25fdfec1bd90"
+There are two inconsistencies in check_object(), which are alignment
+padding checking and object padding checking. We only print the error
+messages but don't return 0 to tell callers that something is wrong
+and needs to be handled. Please see alloc_debug_processing() and
+free_debug_processing() for details.
 
-> ________________________________
-> From: syzbot <syzbot+9d95beb2a3c260622518@syzkaller.appspotmail.com>
-> Sent: Wednesday, June 5, 2024 09:06
-> To: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>
-> Cc: Wojciech Gladysz <Wojciech.Gladysz@infogain.com>; linux-kernel@vger.k=
-ernel.org <linux-kernel@vger.kernel.org>; syzkaller-bugs@googlegroups.com <=
-syzkaller-bugs@googlegroups.com>
-> Subject: Re: 000000000000fcfa6406141cc8ac@google.com
->
-> EXTERNAL: This message was sent from outside of Infogain. Please do not c=
-lick links or open attachments unless you know the content is safe.
->
->> #syz test https://linux.googlesource.com/linux/kernel/git/torvalds/linux=
-<https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://lin=
-ux.googlesource.com/linux/kernel/git/torvalds/linux>> e377d803b65ee4130213b=
-3c041fc25fdfec1bd90
->
-> "https://linux.googlesource.com/linux/kernel/git/torvalds/linux<https://l=
-inux.googlesource.com/linux/kernel/git/torvalds/linux<https://linux.googles=
-ource.com/linux/kernel/git/torvalds/linux>>" does not look like a valid git=
- repo address.
->
->>
->> The information in this email is confidential and may be legally privile=
-ged. It is intended solely for the addressee and access to it by anyone els=
-e is unauthorized. If you are not the intended recipient, any disclosure, c=
-opying, distribution or any action taken or omitted to be taken based on it=
-, is strictly prohibited and may be unlawful.
+If the above inconsistencies are not intentional, we should fix it.
+And we want to do all checks without skipping, so use a local variable
+"ret" to save each check result and change check_bytes_and_report() to
+only report specific error findings. Then at end of check_object(),
+print the trailer once if any found an error.
+
+Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
+---
+ mm/slub.c | 45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 0809760cf789..7fbd5ce4320a 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1192,8 +1192,6 @@ static int check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
+ 	pr_err("0x%p-0x%p @offset=%tu. First byte 0x%x instead of 0x%x\n",
+ 					fault, end - 1, fault - addr,
+ 					fault[0], value);
+-	print_trailer(s, slab, object);
+-	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 
+ skip_bug_print:
+ 	restore_bytes(s, what, value, fault, end);
+@@ -1302,15 +1300,16 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+ 	u8 *p = object;
+ 	u8 *endobject = object + s->object_size;
+ 	unsigned int orig_size, kasan_meta_size;
++	int ret = 1;
+ 
+ 	if (s->flags & SLAB_RED_ZONE) {
+ 		if (!check_bytes_and_report(s, slab, object, "Left Redzone",
+ 			object - s->red_left_pad, val, s->red_left_pad))
+-			return 0;
++			ret = 0;
+ 
+ 		if (!check_bytes_and_report(s, slab, object, "Right Redzone",
+ 			endobject, val, s->inuse - s->object_size))
+-			return 0;
++			ret = 0;
+ 
+ 		if (slub_debug_orig_size(s) && val == SLUB_RED_ACTIVE) {
+ 			orig_size = get_orig_size(s, object);
+@@ -1319,14 +1318,15 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+ 				!check_bytes_and_report(s, slab, object,
+ 					"kmalloc Redzone", p + orig_size,
+ 					val, s->object_size - orig_size)) {
+-				return 0;
++				ret = 0;
+ 			}
+ 		}
+ 	} else {
+ 		if ((s->flags & SLAB_POISON) && s->object_size < s->inuse) {
+-			check_bytes_and_report(s, slab, p, "Alignment padding",
++			if (!check_bytes_and_report(s, slab, p, "Alignment padding",
+ 				endobject, POISON_INUSE,
+-				s->inuse - s->object_size);
++				s->inuse - s->object_size))
++				ret = 0;
+ 		}
+ 	}
+ 
+@@ -1342,27 +1342,25 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+ 			    !check_bytes_and_report(s, slab, p, "Poison",
+ 					p + kasan_meta_size, POISON_FREE,
+ 					s->object_size - kasan_meta_size - 1))
+-				return 0;
++				ret = 0;
+ 			if (kasan_meta_size < s->object_size &&
+ 			    !check_bytes_and_report(s, slab, p, "End Poison",
+ 					p + s->object_size - 1, POISON_END, 1))
+-				return 0;
++				ret = 0;
+ 		}
+ 		/*
+ 		 * check_pad_bytes cleans up on its own.
+ 		 */
+-		check_pad_bytes(s, slab, p);
++		if (!check_pad_bytes(s, slab, p))
++			ret = 0;
+ 	}
+ 
+-	if (!freeptr_outside_object(s) && val == SLUB_RED_ACTIVE)
+-		/*
+-		 * Object and freepointer overlap. Cannot check
+-		 * freepointer while object is allocated.
+-		 */
+-		return 1;
+-
+-	/* Check free pointer validity */
+-	if (!check_valid_pointer(s, slab, get_freepointer(s, p))) {
++	/*
++	 * Cannot check freepointer while object is allocated if
++	 * object and freepointer overlap.
++	 */
++	if (!freeptr_outside_object(s) && val == SLUB_RED_ACTIVE &&
++	    !check_valid_pointer(s, slab, get_freepointer(s, p))) {
+ 		object_err(s, slab, p, "Freepointer corrupt");
+ 		/*
+ 		 * No choice but to zap it and thus lose the remainder
+@@ -1370,9 +1368,14 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
+ 		 * another error because the object count is now wrong.
+ 		 */
+ 		set_freepointer(s, p, NULL);
+-		return 0;
+ 	}
+-	return 1;
++
++	if (!ret && !slab_add_kunit_errors()) {
++		print_trailer(s, slab, object);
++		add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
++	}
++
++	return ret;
+ }
+ 
+ static int check_slab(struct kmem_cache *s, struct slab *slab)
+
+-- 
+2.45.1
+
