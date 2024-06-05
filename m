@@ -1,439 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424CB2F2B;
-	Wed,  5 Jun 2024 01:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A8F33F7;
+	Wed,  5 Jun 2024 01:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717549849; cv=none; b=D8HEJrIYJCdehg5wJoqKl9nw1BIj5cYvAACm/M3ohZg3l618Wb66/SZahKfWwxcCuVUuooeBLGGcNk0aq4kjO6m4u6uEKoK6Cv4yU8padSuNO7LAnoum1ea7dPBEsu9vsI4qYZOJxQDiw7CU4nsWxnxYgH3XoxpqrChX9mqtGh4=
+	t=1717550003; cv=none; b=fL5wRXeGaJ4g8AOfnZkj9Yu1qQDoYM66RoI2N50oJ2v3EYmLuJDIpcuwZvxl98XxMrjCfTAe+j2XIYTwtQGzNAQiwCC9SSZP8RxWBlGGKnWAbqhJ7ysHnScLkgSx127kXbZoh1+dao+0Le8a5mMrt0Y+3+siSKl4xJbNX6muFHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717549849; c=relaxed/simple;
-	bh=cHc/0ZdmuHo5jRwZHm5Alo/p/rjYM9Aw1Ngf1OY3QAU=;
+	s=arc-20240116; t=1717550003; c=relaxed/simple;
+	bh=ZnhpO+SaaVe7SfQ18lvTRbjoL1A+aSktVBV4/zdfVPo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XqldClQ8d9bhr8ayTUF8GSo5HFKWtIoVKt6Ta+m3u8E3vd8S2THV09OCVzoKjBKT9Xgztf10s3zaIwkXlWPGE6DsWxvt/UPVUQ+QkBycNZv7GcbolBzmr419aYwa6l+2SfT6qHZjyfOCYgiDEREHD4SPNIvbmTNNk+le7+ygD1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxPmb3aH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=od8GbttWhKcDTMiCrKpUl45D6pmmtLEMw5fyk6LQJZmzj9D+jEIHwFrrF5dBP5t8/3Qu1Jh0nv9zYPI2Pbp4IoF6lWF1n3lR2zpaBhYpBtaaQdFYJk+lcXJFVi6X0yLTkn2vK4cniMRYCR2UvtU2uY4hTmK/yXMNetNZ+VybNew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fw16AuQv; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxPmb3aH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EACC2BBFC;
-	Wed,  5 Jun 2024 01:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717549848;
-	bh=cHc/0ZdmuHo5jRwZHm5Alo/p/rjYM9Aw1Ngf1OY3QAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RxPmb3aHfNTlO+izjpeTjqxODioDyba6worXTsVmVPja7m7QDJ7v/vJmwwTqZsDPD
-	 uximD3cjydeoB7GwsKIdRn0SaOX/Qmp6f5+PtIBEPsAytaEoseoxirMAOgsHAiftHG
-	 YF1a7OvovnsMD4AxvX/UtcYtsZdd62gn+mvjRw1rbYJcd9U83na20x1pDy2NvMdISZ
-	 qQY4r4LeBoVJ9Iu9IQaiTH969cD290OZ2NaLzhTCld9WvSKgvUHHsLgVEFsHX2vBcK
-	 OXd7deQzXtMpg5IZcwF3nGoSmYbCS63Y0tcVMMAB4BRHFGW2lHKSyrXq8KkUL3k2xY
-	 cfE/cp/hJpu9A==
-Date: Tue, 4 Jun 2024 18:10:47 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Steinar H. Gunderson" <sesse@google.com>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, irogers@google.com
-Subject: Re: [PATCH v8 3/3] perf annotate: LLVM-based disassembler
-Message-ID: <Zl-7F4amEqiTj4mw@google.com>
-References: <20240602204208.735793-1-sesse@google.com>
- <20240602204208.735793-3-sesse@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fw16AuQv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717550003; x=1749086003;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZnhpO+SaaVe7SfQ18lvTRbjoL1A+aSktVBV4/zdfVPo=;
+  b=fw16AuQvcKzQUPd84L5kdSB4eCqOFW3cNvXR7Y6Egg3bseltOixnIUrK
+   i43VpBWDHaN0yBvlK+htKUGOIghcoJtSUJXo6yZac3TTNIDnaM+ddpQ5/
+   cCwv21qxHFJXzIQi0ibd3fYr0ezGW52UZAo7rfVjRBJ48GAPuhAYAmiZL
+   iGxQqrHUbxVMh3LLZrEwFZjRhiYpar1VW8fPEOlWGhyroXFK/9gZUvV6Q
+   cxVV5R2up8KHO8zvw7DerLlrYholHmNcNrelIdaAAZSeNzFgjWv4jFMNm
+   Z9lJRcc09Uf2wG09pOMFCIA/32W95qlc48ObgGizg9NliCQLujoeHoocw
+   Q==;
+X-CSE-ConnectionGUID: UIe7S29dRySJUFVzqAx+nw==
+X-CSE-MsgGUID: SlJoQhqNSeudELlwSLXzOg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13972687"
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="13972687"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 18:13:22 -0700
+X-CSE-ConnectionGUID: /ryimpufTHep+SAbhphPnQ==
+X-CSE-MsgGUID: yLBGF5lvSpK5r9LkbsI3ZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="42363945"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 04 Jun 2024 18:13:18 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEfDH-0000k3-0x;
+	Wed, 05 Jun 2024 01:13:15 +0000
+Date: Wed, 5 Jun 2024 09:12:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH 4/5] ftrace: Convert "filter_hash" and "inc" to bool in
+ ftrace_hash_rec_update_modify()
+Message-ID: <202406050838.7r32JzDI-lkp@intel.com>
+References: <20240604212855.046127611@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240602204208.735793-3-sesse@google.com>
+In-Reply-To: <20240604212855.046127611@goodmis.org>
 
-Hello,
+Hi Steven,
 
-On Sun, Jun 02, 2024 at 10:42:08PM +0200, Steinar H. Gunderson wrote:
-> Support using LLVM as a disassembler method, allowing helperless
-> annotation in non-distro builds. (It is also much faster than
-> using libbfd or bfd objdump on binaries with a lot of debug
-> information.)
-> 
-> This is nearly identical to the output of llvm-objdump; there are
-> some very rare whitespace differences, some minor changes to demangling
-> (since we use perf's regular demangling and not LLVM's own) and
-> the occasional case where llvm-objdump makes a different choice
-> when multiple symbols share the same address. It should work across
-> all of LLVM's supported architectures, although I've only tested 64-bit
-> x86, and finding the right triple from perf's idea of machine
-> architecture can sometimes be a bit tricky. Ideally, we should have
-> some way of finding the triplet just from the file itself.
-> 
-> Signed-off-by: Steinar H. Gunderson <sesse@google.com>
+kernel test robot noticed the following build errors:
 
-I got a build error like this:
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on linus/master v6.10-rc2 next-20240604]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-    CC      util/disasm.o
-  util/disasm.c:1615:10: fatal error: llvm-c/Disassembler.h: No such file or directory
-   1615 | #include <llvm-c/Disassembler.h>
-        |          ^~~~~~~~~~~~~~~~~~~~~~~
-  compilation terminated.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Rename-dup_hash-and-comment-it/20240605-053138
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240604212855.046127611%40goodmis.org
+patch subject: [PATCH 4/5] ftrace: Convert "filter_hash" and "inc" to bool in ftrace_hash_rec_update_modify()
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20240605/202406050838.7r32JzDI-lkp@intel.com/config)
+compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project d7d2d4f53fc79b4b58e8d8d08151b577c3699d4a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240605/202406050838.7r32JzDI-lkp@intel.com/reproduce)
 
-My LLVM version is 16.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406050838.7r32JzDI-lkp@intel.com/
 
-  $ llvm-config --version
-  16.0.6
+All errors (new ones prefixed by >>):
 
-Thanks,
-Namhyung
+   In file included from kernel/trace/ftrace.c:17:
+   In file included from include/linux/stop_machine.h:5:
+   In file included from include/linux/cpu.h:17:
+   In file included from include/linux/node.h:18:
+   In file included from include/linux/device.h:32:
+   In file included from include/linux/device/driver.h:21:
+   In file included from include/linux/module.h:19:
+   In file included from include/linux/elf.h:6:
+   In file included from arch/s390/include/asm/elf.h:173:
+   In file included from arch/s390/include/asm/mmu_context.h:11:
+   In file included from arch/s390/include/asm/pgalloc.h:18:
+   In file included from include/linux/mm.h:2245:
+   include/linux/vmstat.h:484:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     484 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     485 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:491:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     491 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     492 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:498:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     498 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+   include/linux/vmstat.h:503:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     503 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     504 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:512:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     512 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     513 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   In file included from kernel/trace/ftrace.c:18:
+   In file included from include/linux/clocksource.h:22:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:548:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     548 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:561:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     561 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+         |                                                      ^
+   In file included from kernel/trace/ftrace.c:18:
+   In file included from include/linux/clocksource.h:22:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:574:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     574 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+         |                                                           ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+         |                                                      ^
+   In file included from kernel/trace/ftrace.c:18:
+   In file included from include/linux/clocksource.h:22:
+   In file included from arch/s390/include/asm/io.h:93:
+   include/asm-generic/io.h:585:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     585 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:595:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     595 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:605:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     605 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:693:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     693 |         readsb(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:701:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     701 |         readsw(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:709:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     709 |         readsl(PCI_IOBASE + addr, buffer, count);
+         |                ~~~~~~~~~~ ^
+   include/asm-generic/io.h:718:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     718 |         writesb(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:727:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     727 |         writesw(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+   include/asm-generic/io.h:736:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     736 |         writesl(PCI_IOBASE + addr, buffer, count);
+         |                 ~~~~~~~~~~ ^
+>> kernel/trace/ftrace.c:1961:13: error: conflicting types for 'ftrace_hash_rec_disable_modify'
+    1961 | static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
+         |             ^
+   kernel/trace/ftrace.c:1384:1: note: previous declaration is here
+    1384 | ftrace_hash_rec_disable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^
+>> kernel/trace/ftrace.c:1967:13: error: conflicting types for 'ftrace_hash_rec_enable_modify'
+    1967 | static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
+         |             ^
+   kernel/trace/ftrace.c:1386:1: note: previous declaration is here
+    1386 | ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+         | ^
+   17 warnings and 2 errors generated.
 
-> ---
->  tools/perf/util/disasm.c           | 193 +++++++++++++++++++++++++++++
->  tools/perf/util/llvm-c-helpers.cpp |  62 +++++++++
->  tools/perf/util/llvm-c-helpers.h   |  11 ++
->  3 files changed, 266 insertions(+)
-> 
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index c0dbb955e61a..4946e9ccf93b 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -43,6 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
->  
->  static void ins__sort(struct arch *arch);
->  static int disasm_line__parse(char *line, const char **namep, char **rawp);
-> +static char *expand_tabs(char *line, char **storage, size_t *storage_len);
->  
->  static __attribute__((constructor)) void symbol__init_regexpr(void)
->  {
-> @@ -1378,7 +1379,9 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
->  
->  	return 0;
->  }
-> +#endif
->  
-> +#if defined(HAVE_LIBCAPSTONE_SUPPORT) || defined(HAVE_LIBLLVM_SUPPORT)
->  struct find_file_offset_data {
->  	u64 ip;
->  	u64 offset;
-> @@ -1442,7 +1445,9 @@ read_symbol(const char *filename, struct map *map, struct symbol *sym,
->  	free(buf);
->  	return NULL;
->  }
-> +#endif
->  
-> +#ifdef HAVE_LIBCAPSTONE_SUPPORT
->  static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
->  				  struct annotate_args *args, u64 addr)
->  {
-> @@ -1606,6 +1611,189 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
->  }
->  #endif
->  
-> +#ifdef HAVE_LIBLLVM_SUPPORT
-> +#include <llvm-c/Disassembler.h>
-> +#include <llvm-c/Target.h>
-> +#include "util/llvm-c-helpers.h"
-> +
-> +struct symbol_lookup_storage {
-> +	u64 branch_addr;
-> +	u64 pcrel_load_addr;
-> +};
-> +
-> +/*
-> + * Whenever LLVM wants to resolve an address into a symbol, it calls this
-> + * callback. We don't ever actually _return_ anything (in particular, because
-> + * it puts quotation marks around what we return), but we use this as a hint
-> + * that there is a branch or PC-relative address in the expression that we
-> + * should add some textual annotation for after the instruction. The caller
-> + * will use this information to add the actual annotation.
-> + */
-> +static const char *
-> +symbol_lookup_callback(void *disinfo, uint64_t value,
-> +		       uint64_t *ref_type,
-> +		       uint64_t address __maybe_unused,
-> +		       const char **ref __maybe_unused)
-> +{
-> +	struct symbol_lookup_storage *storage = disinfo;
-> +
-> +	if (*ref_type == LLVMDisassembler_ReferenceType_In_Branch)
-> +		storage->branch_addr = value;
-> +	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
-> +		storage->pcrel_load_addr = value;
-> +	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
-> +	return NULL;
-> +}
-> +
-> +static int symbol__disassemble_llvm(char *filename, struct symbol *sym,
-> +				    struct annotate_args *args)
-> +{
-> +	struct annotation *notes = symbol__annotation(sym);
-> +	struct map *map = args->ms.map;
-> +	struct dso *dso = map__dso(map);
-> +	u64 start = map__rip_2objdump(map, sym->start);
-> +	u8 *buf;
-> +	u64 len;
-> +	u64 pc;
-> +	bool is_64bit;
-> +	char triplet[64];
-> +	char disasm_buf[2048];
-> +	size_t disasm_len;
-> +	struct disasm_line *dl;
-> +	LLVMDisasmContextRef disasm = NULL;
-> +	struct symbol_lookup_storage storage;
-> +	char *line_storage = NULL;
-> +	size_t line_storage_len = 0;
-> +	int ret = -1;
-> +
-> +	if (args->options->objdump_path)
-> +		return -1;
-> +
-> +	LLVMInitializeAllTargetInfos();
-> +	LLVMInitializeAllTargetMCs();
-> +	LLVMInitializeAllDisassemblers();
-> +
-> +	buf = read_symbol(filename, map, sym, &len, &is_64bit);
-> +	if (buf == NULL)
-> +		return -1;
-> +
-> +	if (arch__is(args->arch, "x86")) {
-> +		if (is_64bit)
-> +			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
-> +		else
-> +			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
-> +	} else {
-> +		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
-> +			  args->arch->name);
-> +	}
-> +
-> +	disasm = LLVMCreateDisasm(triplet, &storage, 0, NULL,
-> +				  symbol_lookup_callback);
-> +	if (disasm == NULL)
-> +		goto err;
-> +
-> +	if (args->options->disassembler_style &&
-> +	    !strcmp(args->options->disassembler_style, "intel"))
-> +		LLVMSetDisasmOptions(disasm,
-> +				     LLVMDisassembler_Option_AsmPrinterVariant);
-> +
-> +	/*
-> +	 * This needs to be set after AsmPrinterVariant, due to a bug in LLVM;
-> +	 * setting AsmPrinterVariant makes a new instruction printer, making it
-> +	 * forget about the PrintImmHex flag (which is applied before if both
-> +	 * are given to the same call).
-> +	 */
-> +	LLVMSetDisasmOptions(disasm, LLVMDisassembler_Option_PrintImmHex);
-> +
-> +	/* add the function address and name */
-> +	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-> +		  start, sym->name);
-> +
-> +	args->offset = -1;
-> +	args->line = disasm_buf;
-> +	args->line_nr = 0;
-> +	args->fileloc = NULL;
-> +	args->ms.sym = sym;
-> +
-> +	dl = disasm_line__new(args);
-> +	if (dl == NULL)
-> +		goto err;
-> +
-> +	annotation_line__add(&dl->al, &notes->src->source);
-> +
-> +	pc = start;
-> +	for (u64 offset = 0; offset < len; ) {
-> +		unsigned int ins_len;
-> +
-> +		storage.branch_addr = 0;
-> +		storage.pcrel_load_addr = 0;
-> +
-> +		ins_len = LLVMDisasmInstruction(disasm, buf + offset,
-> +						len - offset, pc,
-> +						disasm_buf, sizeof(disasm_buf));
-> +		if (ins_len == 0)
-> +			goto err;
-> +		disasm_len = strlen(disasm_buf);
-> +
-> +		if (storage.branch_addr != 0) {
-> +			char *name = llvm_name_for_code(dso, filename,
-> +							storage.branch_addr);
-> +			if (name != NULL) {
-> +				disasm_len += scnprintf(disasm_buf + disasm_len,
-> +							sizeof(disasm_buf) -
-> +								disasm_len,
-> +							" <%s>", name);
-> +				free(name);
-> +			}
-> +		}
-> +		if (storage.pcrel_load_addr != 0) {
-> +			char *name = llvm_name_for_data(dso, filename,
-> +							storage.pcrel_load_addr);
-> +			disasm_len += scnprintf(disasm_buf + disasm_len,
-> +						sizeof(disasm_buf) - disasm_len,
-> +						"  # %#"PRIx64,
-> +						storage.pcrel_load_addr);
-> +			if (name) {
-> +				disasm_len += scnprintf(disasm_buf + disasm_len,
-> +							sizeof(disasm_buf) -
-> +							disasm_len,
-> +							" <%s>", name);
-> +				free(name);
-> +			}
-> +		}
-> +
-> +		args->offset = offset;
-> +		args->line = expand_tabs(disasm_buf, &line_storage,
-> +					 &line_storage_len);
-> +		args->line_nr = 0;
-> +		args->fileloc = NULL;
-> +		args->ms.sym = sym;
-> +
-> +		llvm_addr2line(filename, pc, &args->fileloc,
-> +			       (unsigned int *)&args->line_nr, false, NULL);
-> +
-> +		dl = disasm_line__new(args);
-> +		if (dl == NULL)
-> +			goto err;
-> +
-> +		annotation_line__add(&dl->al, &notes->src->source);
-> +
-> +		free(args->fileloc);
-> +		pc += ins_len;
-> +		offset += ins_len;
-> +	}
-> +
-> +	ret = 0;
-> +
-> +err:
-> +	LLVMDisasmDispose(disasm);
-> +	free(buf);
-> +	free(line_storage);
-> +	return ret;
-> +}
-> +#endif
-> +
-> +
->  /*
->   * Possibly create a new version of line with tabs expanded. Returns the
->   * existing or new line, storage is updated if a new line is allocated. If
-> @@ -1730,6 +1918,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
->  		strcpy(symfs_filename, tmp);
->  	}
->  
-> +#ifdef HAVE_LIBLLVM_SUPPORT
-> +	err = symbol__disassemble_llvm(symfs_filename, sym, args);
-> +	if (err == 0)
-> +		goto out_remove_tmp;
-> +#endif
->  #ifdef HAVE_LIBCAPSTONE_SUPPORT
->  	err = symbol__disassemble_capstone(symfs_filename, sym, args);
->  	if (err == 0)
-> diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-> index 3cc967ec6f28..4070e2d5682f 100644
-> --- a/tools/perf/util/llvm-c-helpers.cpp
-> +++ b/tools/perf/util/llvm-c-helpers.cpp
-> @@ -8,6 +8,7 @@
->  #pragma GCC diagnostic push
->  #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
->  #include <llvm/DebugInfo/Symbolize/Symbolize.h>
-> +#include <llvm/Support/TargetSelect.h>
->  #pragma GCC diagnostic pop
->  
->  #include <stdio.h>
-> @@ -19,6 +20,9 @@ extern "C" {
->  #include "symbol_conf.h"
->  #include "llvm-c-helpers.h"
->  
-> +extern "C"
-> +char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
-> +
->  using namespace llvm;
->  using llvm::symbolize::LLVMSymbolizer;
->  
-> @@ -132,3 +136,61 @@ int llvm_addr2line(const char *dso_name, u64 addr,
->  		return extract_file_and_line(*res_or_err, file, line);
->  	}
->  }
-> +
-> +static char *
-> +make_symbol_relative_string(struct dso *dso, const char *sym_name,
-> +			    u64 addr, u64 base_addr)
-> +{
-> +	if (!strcmp(sym_name, "<invalid>"))
-> +		return NULL;
-> +
-> +	char *demangled = dso__demangle_sym(dso, 0, sym_name);
-> +	if (base_addr && base_addr != addr) {
-> +		char buf[256];
-> +		snprintf(buf, sizeof(buf), "%s+0x%lx",
-> +			 demangled ? demangled : sym_name, addr - base_addr);
-> +		free(demangled);
-> +		return strdup(buf);
-> +	} else {
-> +		if (demangled)
-> +			return demangled;
-> +		else
-> +			return strdup(sym_name);
-> +	}
-> +}
-> +
-> +extern "C"
-> +char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr)
-> +{
-> +	LLVMSymbolizer *symbolizer = get_symbolizer();
-> +	object::SectionedAddress sectioned_addr = {
-> +		addr,
-> +		object::SectionedAddress::UndefSection
-> +	};
-> +	Expected<DILineInfo> res_or_err =
-> +		symbolizer->symbolizeCode(dso_name, sectioned_addr);
-> +	if (!res_or_err) {
-> +		return NULL;
-> +	}
-> +	return make_symbol_relative_string(
-> +		dso, res_or_err->FunctionName.c_str(),
-> +		addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
-> +}
-> +
-> +extern "C"
-> +char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
-> +{
-> +	LLVMSymbolizer *symbolizer = get_symbolizer();
-> +	object::SectionedAddress sectioned_addr = {
-> +		addr,
-> +		object::SectionedAddress::UndefSection
-> +	};
-> +	Expected<DIGlobal> res_or_err =
-> +		symbolizer->symbolizeData(dso_name, sectioned_addr);
-> +	if (!res_or_err) {
-> +		return NULL;
-> +	}
-> +	return make_symbol_relative_string(
-> +		dso, res_or_err->Name.c_str(),
-> +		addr, res_or_err->Start);
-> +}
-> diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-> index 19332dd98e14..d2b99637a28a 100644
-> --- a/tools/perf/util/llvm-c-helpers.h
-> +++ b/tools/perf/util/llvm-c-helpers.h
-> @@ -13,6 +13,8 @@
->  extern "C" {
->  #endif
->  
-> +struct dso;
-> +
->  struct llvm_a2l_frame {
->    char* filename;
->    char* funcname;
-> @@ -42,6 +44,15 @@ int llvm_addr2line(const char* dso_name,
->                     bool unwind_inlines,
->                     struct llvm_a2l_frame** inline_frames);
->  
-> +/*
-> + * Simple symbolizers for addresses; will convert something like
-> + * 0x12345 to "func+0x123". Will return NULL if no symbol was found.
-> + *
-> + * The returned value must be freed by the caller, with free().
-> + */
-> +char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
-> +char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
-> +
->  #ifdef __cplusplus
->  }
->  #endif
-> -- 
-> 2.45.1
-> 
+
+vim +/ftrace_hash_rec_disable_modify +1961 kernel/trace/ftrace.c
+
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1960) 
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18 @1961) static void ftrace_hash_rec_disable_modify(struct ftrace_ops *ops,
+5177364f840058a Steven Rostedt (Google   2024-06-04  1962) 					   bool filter_hash)
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1963) {
+5177364f840058a Steven Rostedt (Google   2024-06-04  1964) 	ftrace_hash_rec_update_modify(ops, filter_hash, false);
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1965) }
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1966) 
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18 @1967) static void ftrace_hash_rec_enable_modify(struct ftrace_ops *ops,
+5177364f840058a Steven Rostedt (Google   2024-06-04  1968) 					  bool filter_hash)
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1969) {
+5177364f840058a Steven Rostedt (Google   2024-06-04  1970) 	ftrace_hash_rec_update_modify(ops, filter_hash, true);
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1971) }
+84261912ebee412 Steven Rostedt (Red Hat  2014-08-18  1972) 
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
