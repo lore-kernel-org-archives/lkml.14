@@ -1,149 +1,160 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E070200CD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619D5200CD;
+	Wed,  5 Jun 2024 09:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579527; cv=none; b=EHvXPY3SHGneeHmmtoxbmZRaHRmRrbwf7eiE2rWXmBXhQICooV7M6/7kIhhtoMxIJq3oXd0n2OyJrm1rLYG3ONMicRTPVlDUeBnZRc9tqjhiWTqyC7i7XE9Dxrht95l6KmAqTijRk+MxLUg6w6UztjzjBezUgPYKWEK7Fk0dJwA=
+	t=1717579613; cv=none; b=cWaJ4qhkaHEP9VWM7c3Va+KhjprwgFUbJTOcOIL0Dc2Cy1g5JQoKJ7dU+lhpGrUCp/fYJQ0uU8W5c+K9+gMZZWmICqEdU78n4stNuvEqbHhvItOV3P/KBTP5oGujI5N5hRbQ+pHJsUdn9r9L3qMqIEBkv1MhNYc3+duJUoxcKmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579527; c=relaxed/simple;
-	bh=jDIMASg0bbSoa59nEMmcvY5ZQPMiGKrt21tWciEt5bQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GDHaROiNvGaBYNvy7x53BNc3nOBl0l71zWV0eYvRJ/ROFpnHnT3lNVvqv99b7JU1OJNLFz5yMwtsUzmtN/TGXDPQoHOBg0a030dYkAImtHfmjDjhACEqUIwqlS/2Q9KW0ywpvbm5s5PaDhvWUU4/vG+3Wo7YFCKFWro09iycYNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F/P1LCHk; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717579613; c=relaxed/simple;
+	bh=Y7dorVYxePR9VWygFujvcqMnB0Us5J/pvoyDgyJ/vhQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gps3AOWJWNdOj56ndAbjsyQyNcu0nv5JxrDbOuayWefHLRFZ4ANLgqjH/Ha0RdODFHheYxR33dENIv42B2z++x3dCMSso6aPi9Gf1v37BherzCxdvlAw8026tFhvkZEtHcUlU4IqCYMlEL38XQwBq5g2jtGjzIFJMedfV65P31E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPSSQDl5; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F/P1LCHk"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-57a6985ab58so1710291a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPSSQDl5"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42139c66027so19066805e9.3;
+        Wed, 05 Jun 2024 02:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717579523; x=1718184323; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EoJWhO/kN/nIDMel5oucInBCEkvezehjU4YBYZFp3Zg=;
-        b=F/P1LCHk0wJMEW2LFzaxw6AYQPJWyEM4G27vsBD/rcfdTLk90iSH7KjdPqZSAU0fRp
-         Ib0BQgQmywaOI9OzqmXD7W7gEW0d4Ypr5G7GAYFmpGim250B93t6QHCN4IzYyioxI41k
-         W0jKttazCsbX28q6S4Q6t2Fka1v5IZ61zAHWVLDQ4lYx1fj00OnEu/adafn2jCXY6B/N
-         4FuxGB7koP/iSyyXbKHrqCTUIh71flTAwXGLdL6Vue2mE65zaKhkjBrfPYYlxLS/ugqu
-         WAh9zkLjGP5zqofN8iWiKUt3s1psGgqfyRiTSsskucxOWtYoObfwGWc7uUr9DKjCI1Db
-         vJxg==
+        d=gmail.com; s=20230601; t=1717579610; x=1718184410; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1UmSXewXk4xoFkR0JLkcRp552PFqHFEUhSIEEN2KqQc=;
+        b=fPSSQDl5gHxGN6DQi99Som9P/HOASwgUOkZeE1bJJ1RRVAtqtpycintEu8UXXOA/8e
+         pGXK4BNJlXcHUno7jwBJxCKF5QXOdcUpjlQMVC3FwziRbfLEIHwFKYmjnxUCx5eca59s
+         8cxA09RQnEGB1aUMxrzYjX2DiSNI6JjnBIn/55NIArTvtjG0WPoPNUU3sYWpjbr7V3le
+         tFVguuLc+bQ4tRaXSSpOd+39drjLEGz7Fqh5Hj3V3ZNQN6jgkGiXe2SuM2PUJgDqaTSv
+         wr14iV4uIR98zEIEy47Fwa17i2cv6p7AOs9/MMpARKzlndWEfNs5oSZzALDCZZ/7j3xa
+         nreA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717579523; x=1718184323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EoJWhO/kN/nIDMel5oucInBCEkvezehjU4YBYZFp3Zg=;
-        b=UAGIfocEsXLB2ybjTwojNG9yNc6rOaEmyVJxH6jdyW97YQnKGInHoZtHW5Zc3Hg2m8
-         eigSTwt9RS7ZUWSEibrL+7uaEr4/heMCL1qIFZIfZPMdkTXZrnf+/hEl6uKWHx14tmq7
-         GYBqV/iOqkFBAqJM8cnGBVogHxL8/Bevg6m4RMRbG9o0oaaDT+cL5XYtYJUEMNI4UdtJ
-         FWdo3mhaJkAW375GxgPcrnbrtBRlZNHXjf+dXgXLlfKaP1+Zz6JZ++HFllMHDepnkoUe
-         iVRhcmhwvtqEaqsQgTxnoaCEWgbWb85ydPhguxlXEfCLBcoyXmclogj+UBGc0xkqkbqV
-         nHxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTen5WCyyCsv90yRI7cPV52gS2w+0p8Z6MF+ZVAS5VhfdjibVAGx81lwXJNPagMs/0egF902p7RmOC9hNZZY856zFjor9T4kdS8sE9
-X-Gm-Message-State: AOJu0Yw7dYalK1FfXREjh5XRNme7FlK66xYTt8Qzr1g/Gg1WnDXpFP4D
-	pK8p5BxXgaBV177zaaEfRmUry2xQSstvJg/hGJ+cek0LrpUBgsc6LGRx3X397xinnOBpZ3TVrZW
-	J0iTXC+sGzp56TQUZPTuCJvnO3s8cVwPC9YVIuw==
-X-Google-Smtp-Source: AGHT+IFiP2ByR690BX/p3xTWlgJRgSVR/t1BSJlG5eKWmT1URJ9DvEySnKdhmO6+OqTKFLDZLb8znMZmfpCG8k6SisY=
-X-Received: by 2002:a50:ab56:0:b0:57a:9159:df05 with SMTP id
- 4fb4d7f45d1cf-57a9159df5fmr1279266a12.36.1717579522861; Wed, 05 Jun 2024
- 02:25:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717579610; x=1718184410;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1UmSXewXk4xoFkR0JLkcRp552PFqHFEUhSIEEN2KqQc=;
+        b=t8BYVZUBGKIqSViUaX0GEBYuiAh1LSN8/4AF1c1xPrLKKOwqNiS4Z2Az/YDoADXtBv
+         7ZN17y0X6CmNwbVMPw/srvddi9EM3SQPAXJNyT2N3e4a21CGXLkSeNrDxKoIwsuQuHSg
+         uyw0oNfBH4kaJNHtd/UqlpZwtauIOr9aYRgHhAthVzCJmAO2FLBpjTy0fxudCrphYmcA
+         ncqjOzM/H3tY3MlRAvMQruna72o2MivdFYErb6QM4sx8XDzuU0kbiJ3E1ob9my1TX2Di
+         P8E6uyOGGXw5DjAe5aQrPTIHMMndUD4TchsfEJsaJHsacrvr43XSVcSTnBIjGN6joEFR
+         vyRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrFdjIWOS72wmrT/UAVNX5bg3r7BdVXoOMal2f5YDgoq37Zjd0My9ickDx2RrEAHObREtW35qpv5Rc9LGfHyRsy2BmUMmwYi+N8DfMKgPaHHiLaJD5CiunM4y2v715NWjzOiotkA6Hsv7JaV5nmJ9PDFCxTq0BYDEPcez5BMPfyc/3KQ==
+X-Gm-Message-State: AOJu0YyDlN6c6UhnJFnamGbQpnFBbrpwO3HkRJ+3wWXD3PQWQR/7gryD
+	F5EgqfTKRk3KiPjFj0PbeHcoIX+nwcBnwH6c5JgqIryKcBwwusxV
+X-Google-Smtp-Source: AGHT+IFH3qEuzhvOzWCxD89pSr5V0K6ubhue4nZnUzWyz+9pwcFpeOSdH2c41hWlgEUOrw3l/ZQVoQ==
+X-Received: by 2002:a05:600c:4ed2:b0:421:565b:e71c with SMTP id 5b1f17b1804b1-421565be9ecmr14133675e9.14.1717579609319;
+        Wed, 05 Jun 2024 02:26:49 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421581490c2sm13780065e9.37.2024.06.05.02.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 02:26:49 -0700 (PDT)
+Message-ID: <0c0d1b2030960cdc2840d84645538fe3a9c8b9a6.camel@gmail.com>
+Subject: Re: [PATCH v3 2/6] spi: bitbang: Implement support for MOSI idle
+ state configuration
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org, 
+ lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+  nuno.sa@analog.com, dlechner@baylibre.com, marcelo.schmitt1@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 05 Jun 2024 11:30:35 +0200
+In-Reply-To: <811a2771d93c16b48fb37286e648a03171c8d2bc.1717539384.git.marcelo.schmitt@analog.com>
+References: <cover.1717539384.git.marcelo.schmitt@analog.com>
+	 <811a2771d93c16b48fb37286e648a03171c8d2bc.1717539384.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605012605.5341-1-21cnbao@gmail.com>
-In-Reply-To: <20240605012605.5341-1-21cnbao@gmail.com>
-From: Sumit Semwal <sumit.semwal@linaro.org>
-Date: Wed, 5 Jun 2024 14:55:11 +0530
-Message-ID: <CAO_48GFq0Cd6rkWidN-=irT4kW9pEOqu_YxY9vd2nRRKcEy-tw@mail.gmail.com>
-Subject: Re: [PATCH v2] dma-buf: align fd_flags and heap_flags with dma_heap_allocation_data
-To: Barry Song <21cnbao@gmail.com>
-Cc: linaro-mm-sig@lists.linaro.org, linux-media@vger.kernel.org, 
-	Brian.Starkey@arm.com, benjamin.gaignard@collabora.com, 
-	christian.koenig@amd.com, dri-devel@lists.freedesktop.org, jstultz@google.com, 
-	linux-kernel@vger.kernel.org, tjmercier@google.com, v-songbaohua@oppo.com, 
-	hailong.liu@oppo.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello Barry,
-
-
-On Wed, 5 Jun 2024 at 06:56, Barry Song <21cnbao@gmail.com> wrote:
->
-> From: Barry Song <v-songbaohua@oppo.com>
->
-> dma_heap_allocation_data defines the UAPI as follows:
->
->  struct dma_heap_allocation_data {
->         __u64 len;
->         __u32 fd;
->         __u32 fd_flags;
->         __u64 heap_flags;
->  };
->
-> However, dma_heap_buffer_alloc() casts both fd_flags and heap_flags
-> into unsigned int. We're inconsistent with types in the non UAPI
-> arguments. This patch fixes it.
-
-Thank you for your patch; I've pushed it to drm-misc-next.
-
-Best,
-Sumit.
->
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-> Acked-by: John Stultz <jstultz@google.com>
+On Tue, 2024-06-04 at 19:42 -0300, Marcelo Schmitt wrote:
+> Some SPI peripherals may require strict MOSI line state when the controll=
+er
+> is not clocking out data.
+> Implement support for MOSI idle state configuration (low or high) by
+> setting the data output line level on controller setup and after transfer=
+s.
+> Bitbang operations now call controller specific set_mosi_idle() call back
+> to set MOSI to its idle state.
+> The MOSI line is kept at its idle state if no tx buffer is provided.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 > ---
->  -v2:
->  collect ack of John, thanks!
->  refine commit message;
->
->  drivers/dma-buf/dma-heap.c    | 4 ++--
->  include/uapi/linux/dma-heap.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> index 84ae708fafe7..2298ca5e112e 100644
-> --- a/drivers/dma-buf/dma-heap.c
-> +++ b/drivers/dma-buf/dma-heap.c
-> @@ -50,8 +50,8 @@ static struct class *dma_heap_class;
->  static DEFINE_XARRAY_ALLOC(dma_heap_minors);
->
->  static int dma_heap_buffer_alloc(struct dma_heap *heap, size_t len,
-> -                                unsigned int fd_flags,
-> -                                unsigned int heap_flags)
-> +                                u32 fd_flags,
-> +                                u64 heap_flags)
->  {
->         struct dma_buf *dmabuf;
->         int fd;
-> diff --git a/include/uapi/linux/dma-heap.h b/include/uapi/linux/dma-heap.=
-h
-> index 6f84fa08e074..a4cf716a49fa 100644
-> --- a/include/uapi/linux/dma-heap.h
-> +++ b/include/uapi/linux/dma-heap.h
-> @@ -19,7 +19,7 @@
->  #define DMA_HEAP_VALID_FD_FLAGS (O_CLOEXEC | O_ACCMODE)
->
->  /* Currently no heap flags */
-> -#define DMA_HEAP_VALID_HEAP_FLAGS (0)
-> +#define DMA_HEAP_VALID_HEAP_FLAGS (0ULL)
->
->  /**
->   * struct dma_heap_allocation_data - metadata passed from userspace for
-> --
-> 2.34.1
->
+
+Some minor nit below in case a re-spin is needed. Anyways,
+
+Acked-by: Nuno Sa <nuno.sa@analog.com>
+
+> =C2=A0drivers/spi/spi-bitbang.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 24 =
+++++++++++++++++++++++++
+> =C2=A0include/linux/spi/spi_bitbang.h |=C2=A0 1 +
+> =C2=A02 files changed, 25 insertions(+)
+>=20
+> diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
+> index ca5cc67555c5..3dee085d3570 100644
+> --- a/drivers/spi/spi-bitbang.c
+> +++ b/drivers/spi/spi-bitbang.c
+> @@ -63,21 +63,28 @@ static unsigned bitbang_txrx_8(
+> =C2=A0	unsigned flags
+> =C2=A0)
+> =C2=A0{
+> +	struct spi_bitbang	*bitbang;
+> =C2=A0	unsigned		bits =3D t->bits_per_word;
+> =C2=A0	unsigned		count =3D t->len;
+> =C2=A0	const u8		*tx =3D t->tx_buf;
+> =C2=A0	u8			*rx =3D t->rx_buf;
+> =C2=A0
+> +	bitbang =3D spi_controller_get_devdata(spi->controller);
+> =C2=A0	while (likely(count > 0)) {
+> =C2=A0		u8		word =3D 0;
+> =C2=A0
+> =C2=A0		if (tx)
+> =C2=A0			word =3D *tx++;
+> +		else
+> +			word =3D (spi->mode & SPI_MOSI_IDLE_HIGH) ? 0xFF : 0;
+
+no need for ()
+
+> =C2=A0		word =3D txrx_word(spi, ns, word, bits, flags);
+> =C2=A0		if (rx)
+> =C2=A0			*rx++ =3D word;
+> =C2=A0		count -=3D 1;
+> =C2=A0	}
+> +	if (bitbang->set_mosi_idle)
+> +		bitbang->set_mosi_idle(spi);
+> +
+> =C2=A0	return t->len - count;
+> =C2=A0}
+> =C2=A0
+> @@ -92,21 +99,28 @@ static unsigned bitbang_txrx_16(
+> =C2=A0	unsigned flags
+> =C2=A0)
+> =C2=A0{
+> +	struct spi_bitbang	*bitbang;
+> =C2=A0	unsigned		bits =3D t->bits_per_word;
+> =C2=A0	unsigned		count =3D t->len;
+> =C2=A0	const u16		*tx =3D t->tx_buf;
+> =C2=A0	u16			*rx =3D t->rx_buf;
+> =C2=A0
+> +	bitbang =3D spi_controller_get_devdata(spi->controller);
+> =C2=A0	while (likely(count > 1)) {
+> =C2=A0		u16		word =3D 0;
+> =C2=A0
+> =C2=A0		if (tx)
+> =C2=A0			word =3D *tx++;
+> +		else
+> +			word =3D (spi->mode & SPI_MOSI_IDLE_HIGH) ? 0xFFFF : 0;
+
+ditto (and for the txrx8 function)
 
 
---=20
-Thanks and regards,
-
-Sumit Semwal (he / him)
-Tech Lead - LCG, Vertical Technologies
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+- Nuno S=C3=A1
