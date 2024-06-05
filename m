@@ -1,122 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD1E194120;
-	Wed,  5 Jun 2024 11:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323021AD9D9;
+	Wed,  5 Jun 2024 11:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588382; cv=none; b=DrC1gT61ANYog2EnbAXEORws5CoeZl7eY0WhK8/tnsoKbANwirINNMW58VIr+3bVOCp84Ej8Z4+k8nwfCAjMRFchVKeM7JVNhK097ubtAv9PDy2Tz0D2AV9OjHr87dIrdLvVyeZ1UGdIRLI3vQKzPYqCsMvGfLNLhKkm/VnaZV0=
+	t=1717588386; cv=none; b=tm0D9mBtd/buAfhy0utojSJ6RWAXfCm417fMSGVWVkwJgdtgrvVFiP4ZQEjTMfCZ9t+LIu17DcT/BLzRCVzB+wAPgY7vivMSa7Q2hkC60ERliLC2i51yVNidLgNIJuCuJqxxjqXaS5sHcvrz+030C1xH6n2ca1IcsZLoUu5oHX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588382; c=relaxed/simple;
-	bh=RRQkgtyusECkJBoYg3oUy7UVIQQ61c3d9foSQSMCJhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FpkbwSoyWDuacd0Lpyx/pcPjyexGC2G1vBFUKkcGua22ZY4+Rvkp9RaH7tKMrcvwPdDD7PE8YsmmvF1qUgzIQGFaYNNVPJ9Sg0FqZlBNId+tXineW4Kkzf9NP6QiY2bMcf2Bs1ntDV0RsX48aeXa9HWL7d5gNoSy5U/Iac6ZsdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ohpeP1jn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ohpeP1jn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1BB6C4AF07;
-	Wed,  5 Jun 2024 11:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588382;
-	bh=RRQkgtyusECkJBoYg3oUy7UVIQQ61c3d9foSQSMCJhU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ohpeP1jnjr+wxg8HbxQAxD0Tn9DVX0A1sBJO1pkJqKsukoAKWRIsWCKGHEnn8Xs/L
-	 GxINbgceAgU53d6KOn7KI6ke7mwc0buwjee5c2zb/23O105CtKmDKvzhRQmT3JaBK3
-	 4UhYJ3yp+nRFK0hWV+lH3w2FgeC9tghMRn/dIjNQJ/W9oF0EeYE1tCZBCQ05HYUyel
-	 w/1UkZM6cuQrMKlOTFs72eMP6khaWw2jmEZISs7hGAMTr9y78y107JtKiymoE0te/H
-	 Q/7oKwDuX+rQXGrjVTQWOV3MaI/fEV6MddiYB/JFTuseF69Bw+JuDSRE/E7hypNODs
-	 f8oNCqWo1D8pw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Chao Yu <chao@kernel.org>,
-	syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.6 14/20] f2fs: fix to do sanity check on i_xattr_nid in sanity_check_inode()
-Date: Wed,  5 Jun 2024 07:51:57 -0400
-Message-ID: <20240605115225.2963242-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115225.2963242-1-sashal@kernel.org>
-References: <20240605115225.2963242-1-sashal@kernel.org>
+	s=arc-20240116; t=1717588386; c=relaxed/simple;
+	bh=mOTddhvoIT8wiG4yUHyU53/TGeJ/YCSolJbafPJ+9hc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q0pFnAe0DieRGpOeC1skadAKt/W5yaTCscnSiQJcpJr+XieIhFhnTl2ffd/9WQjOZ56fZ11CdTAEkPG4qmxTeZmZAx/tyCTlUNwzDf2duTKhn765fUsYtcbzq/+44TCTxoOgIO4Ueph7/oCz13XvHL7dsjc4d+Uoba1i0snVIFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-62a0c011d53so66615147b3.0;
+        Wed, 05 Jun 2024 04:53:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717588383; x=1718193183;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JvsArExPEXHFssWhjY92c/ZACw/tmf496Y0sek86XvQ=;
+        b=J6X6O9PLgcVmou5i43j+oU0TpCd0JsH9kciW5EicuLmeFnV7IMieCZW5yiA5lurhbg
+         1zwkOp0OZST1n8WRHTuojyzd2HLrMh01+LwgeC35TgDna/r8uj5h6QAl37hlHK5FnacC
+         m0N/BxWgIENHg/77mTpBjE/aLeq4U37mZVWsjFx0mvhwYUrRs+j+gz3uA3WmzhQ0qdwi
+         BCnCqkaiXeLroaMKx5cbd/+o1FYGmdpRknwq+zZhn0ipf/CM7m7gKmssC+r0h+8MtRF7
+         Njb8y0+PSGRZIks36Z/H9dvhNydPvgCheSKI9GcuaiMQNYKOd3IK2JMhGdvLhroazY9A
+         T/Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCVXmZGEzVtJ0pVooAfxV1yLk0H0eW4Ypx2bHOzuYVH3hzIYjzloDLPFuKTU7GRGn8Lg66h8RY7zYbbzfe1Af1gtaX2sCqC/fHg/OOumW+wgsKVg05AWDmY5Xc7v5IW3EtIt3MLq5hPq2Ipom4o7RFFrXmj1PSnjroJ21o0UlHEeLG7wJvuj00E+cJTl2npvp4MaqVN22Mkvxqpxi8q8eNeGTFQnTbgRuw==
+X-Gm-Message-State: AOJu0Yzm3TlN9X07slgeJRX52DkzgcF6z2U4jbCaztxkgi5DeAyyq63h
+	BKxcTXndTg2/JNFk7MhhNpJhE0wkyB4zFgQAn+BKdZtRndGgb59Um0wOTTwA
+X-Google-Smtp-Source: AGHT+IHNI9uwSohrVqRAJve/+ajVyEz/IrZGm+1MpwFZu7/JDpaYwUeEJEdALHh0+09W0W8e8W0uyw==
+X-Received: by 2002:a25:3c42:0:b0:df7:8dca:1ef4 with SMTP id 3f1490d57ef6-dfacac3a472mr2231445276.21.1717588383408;
+        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfa72956a8asm2546650276.18.2024.06.05.04.53.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dfab4779d95so2569777276.0;
+        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXHlkvl7NAOXssnhWBdrXd0sizsZVey4PLAFJHL/w9ETXuzkHZgUj3cOqfYL+sUapKn/1gB+M/pSzMjesD2tEYHq7aDQZZMWE8KCU22s9uAaoOwB1lBwXqjjJVhL0jU/C2A9RbgZq7jRwOqEO2fD2LVi6ZTkg90WTLAN37DSx3GA9l79ziy5/K445gZEMgZ2STrCVGmOjjaTF8+2dyWf2xdjIxkMbampw==
+X-Received: by 2002:a25:aa31:0:b0:df7:8b9f:8188 with SMTP id
+ 3f1490d57ef6-dfacac5f750mr2508080276.37.1717588382994; Wed, 05 Jun 2024
+ 04:53:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.32
-Content-Transfer-Encoding: 8bit
+References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240530173857.164073-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Jun 2024 13:52:51 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX-rrGNQgTnPjG+NSiGD_NmAxeNqgzKCB8p4W6s12VMKA@mail.gmail.com>
+Message-ID: <CAMuHMdX-rrGNQgTnPjG+NSiGD_NmAxeNqgzKCB8p4W6s12VMKA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/15] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointer for locking/unlocking the PFC register
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Paul Barker <paul.barker.ct@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chao Yu <chao@kernel.org>
+Hi Prabhakar,
 
-[ Upstream commit 20faaf30e55522bba2b56d9c46689233205d7717 ]
+On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> On the RZ/G2L SoC, the PFCWE bit controls writing to PFC registers.
+> However, on the RZ/V2H(P) SoC, the PFCWE (REGWE_A on RZ/V2H) bit controls
+> writing to both PFC and PMC registers. Additionally, BIT(7) B0WI is
+> undocumented for the PWPR register on RZ/V2H(P) SoC. To accommodate these
+> differences across SoC variants, introduce the pwpr_pfc_lock_unlock()
+> function pointer.
+>
+> Note, in rzg2l_pinctrl_set_pfc_mode() the pwpr_pfc_lock_unlock(.., false)
+> is now called before PMC read/write and pwpr_pfc_lock_unlock(.., true) is
+> now called after PMC read/write this is to keep changes minimal for
+> RZ/V2H(P) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3
+> - Introduced single function pointer to (un)lock
+> - Updated commit message
 
-syzbot reports a kernel bug as below:
+Thanks for the update!
 
-F2FS-fs (loop0): Mounted with checkpoint version = 48b305e4
-==================================================================
-BUG: KASAN: slab-out-of-bounds in f2fs_test_bit fs/f2fs/f2fs.h:2933 [inline]
-BUG: KASAN: slab-out-of-bounds in current_nat_addr fs/f2fs/node.h:213 [inline]
-BUG: KASAN: slab-out-of-bounds in f2fs_get_node_info+0xece/0x1200 fs/f2fs/node.c:600
-Read of size 1 at addr ffff88807a58c76c by task syz-executor280/5076
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-CPU: 1 PID: 5076 Comm: syz-executor280 Not tainted 6.9.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:488
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- f2fs_test_bit fs/f2fs/f2fs.h:2933 [inline]
- current_nat_addr fs/f2fs/node.h:213 [inline]
- f2fs_get_node_info+0xece/0x1200 fs/f2fs/node.c:600
- f2fs_xattr_fiemap fs/f2fs/data.c:1848 [inline]
- f2fs_fiemap+0x55d/0x1ee0 fs/f2fs/data.c:1925
- ioctl_fiemap fs/ioctl.c:220 [inline]
- do_vfs_ioctl+0x1c07/0x2e50 fs/ioctl.c:838
- __do_sys_ioctl fs/ioctl.c:902 [inline]
- __se_sys_ioctl+0x81/0x170 fs/ioctl.c:890
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Gr{oetje,eeting}s,
 
-The root cause is we missed to do sanity check on i_xattr_nid during
-f2fs_iget(), so that in fiemap() path, current_nat_addr() will access
-nat_bitmap w/ offset from invalid i_xattr_nid, result in triggering
-kasan bug report, fix it.
+                        Geert
 
-Reported-and-tested-by: syzbot+3694e283cf5c40df6d14@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-f2fs-devel/00000000000094036c0616e72a1d@google.com
-Signed-off-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/inode.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index dd61449f05b85..ab2eecd986ec5 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -361,6 +361,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
- 		return false;
- 	}
- 
-+	if (fi->i_xattr_nid && f2fs_check_nid_range(sbi, fi->i_xattr_nid)) {
-+		f2fs_warn(sbi, "%s: inode (ino=%lx) has corrupted i_xattr_nid: %u, run fsck to fix.",
-+			  __func__, inode->i_ino, fi->i_xattr_nid);
-+		return false;
-+	}
-+
- 	return true;
- }
- 
--- 
-2.43.0
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
