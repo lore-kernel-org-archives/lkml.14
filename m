@@ -1,136 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDAE15F3EC;
-	Wed,  5 Jun 2024 22:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DDF15FD08;
+	Wed,  5 Jun 2024 22:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717625700; cv=none; b=nfo7zfvRIyBl2Bkv/8KmSZe3QtrPnIPjOL+0XnpaGE2buMCCSCpOKkrztGnMz/XxLvxbvJ/Xt7Hw4gumcpXEe9ZfvNR1vqU2ORJlOmuMuD9byZeuemOZeOESmGNszYApyxlozg9fMwwRoTLvuB1G8vW20/jpY51HxzMBl9I3Y2M=
+	t=1717625701; cv=none; b=KsQcjOoOtkPsEBTpE/erlXLZzg6MfKalgoVrQQKowvIHqxneFiGNbRt8f3+z0HfRBLjwxaoBxcLIx0K+p8NnCX+qr54bQBmrWyNBC3mQ5rIpzCHEKKFtTKinRzhx1H6cCvnt9fexQ7Cy+3c7olT0hkFXCPNEISnT+1MnHu5uYnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717625700; c=relaxed/simple;
-	bh=81hqptQlE/LEM/MdYuEb48YnMieQd2hcNEosrso0DUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mn3GplMxnWIG5eRMNXTKdikVVAwBFr14agrIMb6sSw4IcnW9Bcz0Ur60JlNmEB1GeGMQTCtAnfbZDkOKI6wNmTtI8O9JeTBivh2CBGQJzR4WFQqIfjzdajkhVGE8ZrLrgc4YgZv1bB6ja7yOY4l/9i1aChhA2T9gazElMS1HzaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NV6Skl5Q; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717625701; c=relaxed/simple;
+	bh=OygkjoyZ/s/fhSyNEsLEuxpSBom9wgFRfnLr2OQNNS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5b55MwIWwyn5D6JD2sFP4SU5+Z5oX6mS/rdO+hp2f0umQ1Dg/zNU7dJSo8U/Yr2rQ01f4o6zJ/xHsIxRhWGGfkaLA58kyEQKtciBoIpwNZUHaP1E1m4U1PQupAahlDeMTkMbCOE3oWOBqNpv/y3yIu/Dsv+mpepNS3yT+vzf3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MA+prhi9; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NV6Skl5Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717625700; x=1749161700;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=81hqptQlE/LEM/MdYuEb48YnMieQd2hcNEosrso0DUw=;
-  b=NV6Skl5QMjBlcCNrZRhl6abZDyz9WbYrT4IpyRhVqFicJJltxDS80d7Z
-   MkcdYVH0/QxLjyyMAxbqwICV3kROBKCa4nBmfDLM1xzkeCqJKyiU2SlS2
-   opV0N0vee7kUM4GiLuLndBw3t9v1KuV2UBDep7vLbqDV03aGznkNC17Bp
-   dah32Dm4IDBCwtOYXXerY7UVOzq1VQ340z3LGsZdwhLVGjfL9m4xhb5Bz
-   YLGSVO0fOYoWQLUXrVrPVL6945DZCpOzqeVTSRtftBDTCeFZnaRQo/1wp
-   F3eJ4kXmutfXmabH6SZJMPAsrtFpKsHeEkScQ11mZczGjdK+bWRepV3gp
-   Q==;
-X-CSE-ConnectionGUID: 0wIRGxX6TDy1SOJ4oNrciQ==
-X-CSE-MsgGUID: hyE9oKytR82jkSLcI8sgYA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="14218716"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="14218716"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 15:14:58 -0700
-X-CSE-ConnectionGUID: t3Uw16VJSqWd0O8yE01ocw==
-X-CSE-MsgGUID: G+RGTNK3RGqRQhdhfEVyug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="37621428"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 05 Jun 2024 15:14:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C9DEC44F; Thu, 06 Jun 2024 01:14:47 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Rob Herring <robh@kernel.org>,
-	Weidong Wang <wangweidong.a@awinic.com>,
-	Mark Brown <broonie@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Shenghao Ding <shenghao-ding@ti.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	Chancel Liu <chancel.liu@nxp.com>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linux-arm-msm@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Kevin Lu <kevin-lu@ti.com>,
-	Baojun Xu <baojun.xu@ti.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Shengjiu Wang <shengjiu.wang@gmail.com>,
-	Xiubo Li <Xiubo.Lee@gmail.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Nicolin Chen <nicoleotsuka@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 3/6] ASoC: rockchip: Remove unused of_gpio.h
-Date: Thu,  6 Jun 2024 00:27:26 +0300
-Message-ID: <20240605221446.2624964-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
-In-Reply-To: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
-References: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MA+prhi9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1717625698;
+	bh=OygkjoyZ/s/fhSyNEsLEuxpSBom9wgFRfnLr2OQNNS8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MA+prhi9PA33gVVpvWbDWL7TSkaXaCNX8TRebfcjMbykXj0D5vEhyBeZU3wY3eP3E
+	 n0Us9VxBRKtWBmpuJxsR/Npdsqtgh+MTIWcJs59zZ5sxpzhXSyvWOGMQ9KlqpqER1P
+	 anppjJCt/fgvGuf7SuylOF/003VqRRbVmOUAUFg1JFn1UrNL8kuGrDZHLuRKERWk3W
+	 7c1oD9AQWxH6+1IJ+EuA+4q49goTWmvdzFF3d8ioYxZrAmKN10VECzHHfzVWGwTPNt
+	 gjrg7FsKDt2M537R3jQO0t1M0vMo9LD7ZV8zh9IJ2pN2qwh+MIdpQTF+WnuM4TYhKc
+	 yb9H6+ljN7k0g==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3927F378061A;
+	Wed,  5 Jun 2024 22:14:58 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id BE2DF1060501; Thu, 06 Jun 2024 00:14:57 +0200 (CEST)
+Date: Thu, 6 Jun 2024 00:14:57 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>, chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+	Dustin Howett <dustin@howett.net>, Stephen Horvath <s.horvath@outlook.com.au>, 
+	Rajas Paranjpe <paranjperajas@gmail.com>
+Subject: Re: [PATCH v2 2/3] power: supply: add ChromeOS EC based charge
+ control driver
+Message-ID: <ksot2xs4vecqpjrx36z3zbpoasukor2bzh7gzwtbf7in3sudjk@pdmjlr4ythve>
+References: <20240528-cros_ec-charge-control-v2-0-81fb27e1cff4@weissschuh.net>
+ <20240528-cros_ec-charge-control-v2-2-81fb27e1cff4@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ybg7jici7744px53"
+Content-Disposition: inline
+In-Reply-To: <20240528-cros_ec-charge-control-v2-2-81fb27e1cff4@weissschuh.net>
 
-of_gpio.h is deprecated and subject to remove. The drivers in question
-don't use it, simply remove the unused header.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- sound/soc/rockchip/rockchip_i2s.c   | 1 -
- sound/soc/rockchip/rockchip_spdif.c | 1 -
- 2 files changed, 2 deletions(-)
+--ybg7jici7744px53
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index b0c3ef030e06..b378f870b3ad 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -11,7 +11,6 @@
- #include <linux/mfd/syscon.h>
- #include <linux/delay.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
- #include <linux/clk.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/pm_runtime.h>
-diff --git a/sound/soc/rockchip/rockchip_spdif.c b/sound/soc/rockchip/rockchip_spdif.c
-index 1a24b78e9e02..eb9d5dee196e 100644
---- a/sound/soc/rockchip/rockchip_spdif.c
-+++ b/sound/soc/rockchip/rockchip_spdif.c
-@@ -11,7 +11,6 @@
- 
- #include <linux/module.h>
- #include <linux/delay.h>
--#include <linux/of_gpio.h>
- #include <linux/clk.h>
- #include <linux/pm_runtime.h>
- #include <linux/mfd/syscon.h>
--- 
-2.43.0.rc1.1336.g36b5255a03ac
+Hi,
 
+On Tue, May 28, 2024 at 10:04:11PM +0200, Thomas Wei=DFschuh wrote:
+> +	battery_hook_register(&priv->battery_hook);
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cros_chctl_remove(struct platform_device *pdev)
+> +{
+> +	struct cros_chctl_priv *priv =3D platform_get_drvdata(pdev);
+> +
+> +	battery_hook_unregister(&priv->battery_hook);
+> +
+> +	return 0;
+> +}
+
+Please use devm_add_action_or_reset() or introduce
+devm_battery_hook_register(), which could also be used by
+dell-wmi-ddv. Otherwise LGTM.
+
+-- Sebastian
+
+> +
+> +static const struct platform_device_id cros_chctl_id[] =3D {
+> +	{ DRV_NAME, 0 },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver cros_chctl_driver =3D {
+> +	.driver.name	=3D DRV_NAME,
+> +	.probe		=3D cros_chctl_probe,
+> +	.remove		=3D cros_chctl_remove,
+> +	.id_table	=3D cros_chctl_id,
+> +};
+> +module_platform_driver(cros_chctl_driver);
+> +
+> +MODULE_DEVICE_TABLE(platform, cros_chctl_id);
+> +MODULE_DESCRIPTION("ChromeOS EC charge control");
+> +MODULE_AUTHOR("Thomas Wei=DFschuh <linux@weissschuh.net>");
+> +MODULE_LICENSE("GPL");
+>=20
+> --=20
+> 2.45.1
+>=20
+
+--ybg7jici7744px53
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZg41oACgkQ2O7X88g7
++ppHWg/6Akqc7xPbe8vn0c7y32Lsm9lNoiZc6+Kchd2odRljHmxUOWBSDPJaDPI7
+YZnAQbojBkkacytDImu202P4kz0DOVKtIpU7QOMM2aBEuZIPzwWXfIyDhARnvzZo
+VIfGo1tJT9KZZyMQ3kSNUJ66Sm6zKVhbAVjgro9IfSnGgbwvv5Mh0E1rEMMr54mk
+lFkeqH6uWyItHKpEc/BuhtXaDQg8Im5KorFAVfBdr8UWfvtCBRFvDV1NJw03Dt6l
+615ZZRDma0YB5cpJpeXX0xHgTCynFzEVLXTnuESVpKHvoFEWUi201wvbfg5e+wg3
+Dsye4X3+rLjh7uceXmSfccskgFQpjpMO071k3E210hfCC09cD9O2lJVGgZXFuEY3
+oRwNmiKIPEbE54phxmXBAYuBys9Q5qthQ7geZgK7Yh2GDHogvFtMMAf7epTkGZEF
+jMsn/rSuVKL7drtI2l4+IYT4cf0BSDdasbSPZHv/Rmil/TqoSEd70LkL1eZHy3Nd
+GfDhOOd1vm+HlNS2VIj5ihSoLcp4PFh0jM+ktP9vuK/CZ5Tz+h7brJ9oMHF315Fh
+7XJ3PzlVm4w5m5Rb3L9nKwRTWM+FMQi1vZabAINoyWTBK0KjPHSBLTaniPmsGcbW
+F8TJ2O86gj96uBtK+GIrqMb+d1d2oPuz3LqtZPYXJ9LEZaBDPeo=
+=AhyB
+-----END PGP SIGNATURE-----
+
+--ybg7jici7744px53--
