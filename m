@@ -1,137 +1,138 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DDF15FD08;
-	Wed,  5 Jun 2024 22:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF0615FA85;
+	Wed,  5 Jun 2024 22:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717625701; cv=none; b=KsQcjOoOtkPsEBTpE/erlXLZzg6MfKalgoVrQQKowvIHqxneFiGNbRt8f3+z0HfRBLjwxaoBxcLIx0K+p8NnCX+qr54bQBmrWyNBC3mQ5rIpzCHEKKFtTKinRzhx1H6cCvnt9fexQ7Cy+3c7olT0hkFXCPNEISnT+1MnHu5uYnI=
+	t=1717625701; cv=none; b=SwB0mb21ugExCKHawiwOJn8YApN/R1130Baxsnb7/fchR4y+m8oX/CFU7VY3DK9xj9ctYWUZD3epw+CKVBoym5rPU30sLKXMEHuhH5enY7ndcpnGKdqS5Ithqq6GBN8Y7oisf863VD3XWnUAf6eo+oa/isUf42N7es6JKffuFyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717625701; c=relaxed/simple;
-	bh=OygkjoyZ/s/fhSyNEsLEuxpSBom9wgFRfnLr2OQNNS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z5b55MwIWwyn5D6JD2sFP4SU5+Z5oX6mS/rdO+hp2f0umQ1Dg/zNU7dJSo8U/Yr2rQ01f4o6zJ/xHsIxRhWGGfkaLA58kyEQKtciBoIpwNZUHaP1E1m4U1PQupAahlDeMTkMbCOE3oWOBqNpv/y3yIu/Dsv+mpepNS3yT+vzf3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MA+prhi9; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=j//q7PxjjHf16S9qzs6ZEZBUjOL4lL+BxQBw8TkTaeo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RmQodKs5wNbitjJr3vA0Q1yRLI1cgnTX1AP5M8fFArSR/Fmd2NAJW2RUuxrUrcYSKQj1z7MSx07CL+gwYy43wBV+lst0OACUkYd38tKgqfmwYfTxzGGWqxlwjcs+lNy5yrBhLv7DXBrsmN5tnFe23Qh7LWlzJybS3f+gcT0mwic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lIw/vnGT; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MA+prhi9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1717625698;
-	bh=OygkjoyZ/s/fhSyNEsLEuxpSBom9wgFRfnLr2OQNNS8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MA+prhi9PA33gVVpvWbDWL7TSkaXaCNX8TRebfcjMbykXj0D5vEhyBeZU3wY3eP3E
-	 n0Us9VxBRKtWBmpuJxsR/Npdsqtgh+MTIWcJs59zZ5sxpzhXSyvWOGMQ9KlqpqER1P
-	 anppjJCt/fgvGuf7SuylOF/003VqRRbVmOUAUFg1JFn1UrNL8kuGrDZHLuRKERWk3W
-	 7c1oD9AQWxH6+1IJ+EuA+4q49goTWmvdzFF3d8ioYxZrAmKN10VECzHHfzVWGwTPNt
-	 gjrg7FsKDt2M537R3jQO0t1M0vMo9LD7ZV8zh9IJ2pN2qwh+MIdpQTF+WnuM4TYhKc
-	 yb9H6+ljN7k0g==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3927F378061A;
-	Wed,  5 Jun 2024 22:14:58 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id BE2DF1060501; Thu, 06 Jun 2024 00:14:57 +0200 (CEST)
-Date: Thu, 6 Jun 2024 00:14:57 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Lee Jones <lee@kernel.org>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@weissschuh.net>, chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
-	Dustin Howett <dustin@howett.net>, Stephen Horvath <s.horvath@outlook.com.au>, 
-	Rajas Paranjpe <paranjperajas@gmail.com>
-Subject: Re: [PATCH v2 2/3] power: supply: add ChromeOS EC based charge
- control driver
-Message-ID: <ksot2xs4vecqpjrx36z3zbpoasukor2bzh7gzwtbf7in3sudjk@pdmjlr4ythve>
-References: <20240528-cros_ec-charge-control-v2-0-81fb27e1cff4@weissschuh.net>
- <20240528-cros_ec-charge-control-v2-2-81fb27e1cff4@weissschuh.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lIw/vnGT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717625699; x=1749161699;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=j//q7PxjjHf16S9qzs6ZEZBUjOL4lL+BxQBw8TkTaeo=;
+  b=lIw/vnGToKR/853h/Gm3TogWiJGKqVyNkFmetSnm7D5+vm1Xre99sWG7
+   ZEeFfLGufQat7zRQBUVrkLz1INIzf2NAfQiCL+isPxzqzwuDbPePqT0BB
+   hcuemyCB+1AD+F/xvJoa24kia1kOc2eNyVMYXbmZUAiftuJ0FyqTgZjSy
+   MvMPtfDJ5DioU3UAsuAhRWnByfPoUDcZDoBbGEvFo8tSZQXC8ZGl9j3yu
+   Eh0TrijJQuCb3sPoCMEy0KyfuA4m4K/E0C+60hxeHmOkBtSmBIBIhHo7p
+   d3+bPYa5Gr8S1CUVe6eYcj4dcCQ7DCFjxLqRm+q8y3US8HWFQLqJw/oqd
+   g==;
+X-CSE-ConnectionGUID: GaKxbOemRXWPt1PTS1lK/g==
+X-CSE-MsgGUID: Oe8jT9J5S4CcJoKA05Y1Gw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="24895453"
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="24895453"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 15:14:58 -0700
+X-CSE-ConnectionGUID: HzH0miWtQ1OXdvC2WG594w==
+X-CSE-MsgGUID: 8j0hPRi+QvK0cEgtvL2Q3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="38168540"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa006.jf.intel.com with ESMTP; 05 Jun 2024 15:14:49 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id B9E0434B; Thu, 06 Jun 2024 01:14:47 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Rob Herring <robh@kernel.org>,
+	Weidong Wang <wangweidong.a@awinic.com>,
+	Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Shenghao Ding <shenghao-ding@ti.com>,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
+	Chancel Liu <chancel.liu@nxp.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	patches@opensource.cirrus.com,
+	linux-arm-msm@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Kevin Lu <kevin-lu@ti.com>,
+	Baojun Xu <baojun.xu@ti.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v2 2/6] ASoC: fsl: Remove unused of_gpio.h
+Date: Thu,  6 Jun 2024 00:27:25 +0300
+Message-ID: <20240605221446.2624964-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
+References: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ybg7jici7744px53"
-Content-Disposition: inline
-In-Reply-To: <20240528-cros_ec-charge-control-v2-2-81fb27e1cff4@weissschuh.net>
+Content-Transfer-Encoding: 8bit
 
+of_gpio.h is deprecated and subject to remove. The drivers in question
+don't use it, simply remove the unused header.
 
---ybg7jici7744px53
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ sound/soc/fsl/imx-es8328.c | 1 -
+ sound/soc/fsl/imx-rpmsg.c  | 2 --
+ 2 files changed, 3 deletions(-)
 
-Hi,
+diff --git a/sound/soc/fsl/imx-es8328.c b/sound/soc/fsl/imx-es8328.c
+index 5b9648f3b087..3ef92f6dfc6b 100644
+--- a/sound/soc/fsl/imx-es8328.c
++++ b/sound/soc/fsl/imx-es8328.c
+@@ -8,7 +8,6 @@
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/i2c.h>
+-#include <linux/of_gpio.h>
+ #include <sound/soc.h>
+ #include <sound/jack.h>
+ 
+diff --git a/sound/soc/fsl/imx-rpmsg.c b/sound/soc/fsl/imx-rpmsg.c
+index 0f1ad7ad7d27..ce98d2288193 100644
+--- a/sound/soc/fsl/imx-rpmsg.c
++++ b/sound/soc/fsl/imx-rpmsg.c
+@@ -5,9 +5,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/i2c.h>
+-#include <linux/of_gpio.h>
+ #include <linux/slab.h>
+-#include <linux/gpio.h>
+ #include <linux/clk.h>
+ #include <sound/soc.h>
+ #include <sound/jack.h>
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
-On Tue, May 28, 2024 at 10:04:11PM +0200, Thomas Wei=DFschuh wrote:
-> +	battery_hook_register(&priv->battery_hook);
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_chctl_remove(struct platform_device *pdev)
-> +{
-> +	struct cros_chctl_priv *priv =3D platform_get_drvdata(pdev);
-> +
-> +	battery_hook_unregister(&priv->battery_hook);
-> +
-> +	return 0;
-> +}
-
-Please use devm_add_action_or_reset() or introduce
-devm_battery_hook_register(), which could also be used by
-dell-wmi-ddv. Otherwise LGTM.
-
--- Sebastian
-
-> +
-> +static const struct platform_device_id cros_chctl_id[] =3D {
-> +	{ DRV_NAME, 0 },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver cros_chctl_driver =3D {
-> +	.driver.name	=3D DRV_NAME,
-> +	.probe		=3D cros_chctl_probe,
-> +	.remove		=3D cros_chctl_remove,
-> +	.id_table	=3D cros_chctl_id,
-> +};
-> +module_platform_driver(cros_chctl_driver);
-> +
-> +MODULE_DEVICE_TABLE(platform, cros_chctl_id);
-> +MODULE_DESCRIPTION("ChromeOS EC charge control");
-> +MODULE_AUTHOR("Thomas Wei=DFschuh <linux@weissschuh.net>");
-> +MODULE_LICENSE("GPL");
->=20
-> --=20
-> 2.45.1
->=20
-
---ybg7jici7744px53
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmZg41oACgkQ2O7X88g7
-+ppHWg/6Akqc7xPbe8vn0c7y32Lsm9lNoiZc6+Kchd2odRljHmxUOWBSDPJaDPI7
-YZnAQbojBkkacytDImu202P4kz0DOVKtIpU7QOMM2aBEuZIPzwWXfIyDhARnvzZo
-VIfGo1tJT9KZZyMQ3kSNUJ66Sm6zKVhbAVjgro9IfSnGgbwvv5Mh0E1rEMMr54mk
-lFkeqH6uWyItHKpEc/BuhtXaDQg8Im5KorFAVfBdr8UWfvtCBRFvDV1NJw03Dt6l
-615ZZRDma0YB5cpJpeXX0xHgTCynFzEVLXTnuESVpKHvoFEWUi201wvbfg5e+wg3
-Dsye4X3+rLjh7uceXmSfccskgFQpjpMO071k3E210hfCC09cD9O2lJVGgZXFuEY3
-oRwNmiKIPEbE54phxmXBAYuBys9Q5qthQ7geZgK7Yh2GDHogvFtMMAf7epTkGZEF
-jMsn/rSuVKL7drtI2l4+IYT4cf0BSDdasbSPZHv/Rmil/TqoSEd70LkL1eZHy3Nd
-GfDhOOd1vm+HlNS2VIj5ihSoLcp4PFh0jM+ktP9vuK/CZ5Tz+h7brJ9oMHF315Fh
-7XJ3PzlVm4w5m5Rb3L9nKwRTWM+FMQi1vZabAINoyWTBK0KjPHSBLTaniPmsGcbW
-F8TJ2O86gj96uBtK+GIrqMb+d1d2oPuz3LqtZPYXJ9LEZaBDPeo=
-=AhyB
------END PGP SIGNATURE-----
-
---ybg7jici7744px53--
