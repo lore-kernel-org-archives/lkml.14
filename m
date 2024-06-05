@@ -1,114 +1,163 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323021AD9D9;
-	Wed,  5 Jun 2024 11:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5466C1AD9D2;
+	Wed,  5 Jun 2024 11:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588386; cv=none; b=tm0D9mBtd/buAfhy0utojSJ6RWAXfCm417fMSGVWVkwJgdtgrvVFiP4ZQEjTMfCZ9t+LIu17DcT/BLzRCVzB+wAPgY7vivMSa7Q2hkC60ERliLC2i51yVNidLgNIJuCuJqxxjqXaS5sHcvrz+030C1xH6n2ca1IcsZLoUu5oHX0=
+	t=1717588386; cv=none; b=VMh6tkkdrjtvd2/0ktT3WFqxhpW7izo/njL7RByOGv7XslR2hqDAb1eNrwQJtaaxR/bXUs7vDk1IqJDYhr3We7Q10jnjsZTnWxlm7XsIG7H0j3PKHMKUucr0csslhmHYYlsGAPss5gd/1HFPwTd7yod/goGgAA+uLz2feLvs/8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717588386; c=relaxed/simple;
-	bh=mOTddhvoIT8wiG4yUHyU53/TGeJ/YCSolJbafPJ+9hc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q0pFnAe0DieRGpOeC1skadAKt/W5yaTCscnSiQJcpJr+XieIhFhnTl2ffd/9WQjOZ56fZ11CdTAEkPG4qmxTeZmZAx/tyCTlUNwzDf2duTKhn765fUsYtcbzq/+44TCTxoOgIO4Ueph7/oCz13XvHL7dsjc4d+Uoba1i0snVIFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-62a0c011d53so66615147b3.0;
-        Wed, 05 Jun 2024 04:53:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717588383; x=1718193183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JvsArExPEXHFssWhjY92c/ZACw/tmf496Y0sek86XvQ=;
-        b=J6X6O9PLgcVmou5i43j+oU0TpCd0JsH9kciW5EicuLmeFnV7IMieCZW5yiA5lurhbg
-         1zwkOp0OZST1n8WRHTuojyzd2HLrMh01+LwgeC35TgDna/r8uj5h6QAl37hlHK5FnacC
-         m0N/BxWgIENHg/77mTpBjE/aLeq4U37mZVWsjFx0mvhwYUrRs+j+gz3uA3WmzhQ0qdwi
-         BCnCqkaiXeLroaMKx5cbd/+o1FYGmdpRknwq+zZhn0ipf/CM7m7gKmssC+r0h+8MtRF7
-         Njb8y0+PSGRZIks36Z/H9dvhNydPvgCheSKI9GcuaiMQNYKOd3IK2JMhGdvLhroazY9A
-         T/Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXmZGEzVtJ0pVooAfxV1yLk0H0eW4Ypx2bHOzuYVH3hzIYjzloDLPFuKTU7GRGn8Lg66h8RY7zYbbzfe1Af1gtaX2sCqC/fHg/OOumW+wgsKVg05AWDmY5Xc7v5IW3EtIt3MLq5hPq2Ipom4o7RFFrXmj1PSnjroJ21o0UlHEeLG7wJvuj00E+cJTl2npvp4MaqVN22Mkvxqpxi8q8eNeGTFQnTbgRuw==
-X-Gm-Message-State: AOJu0Yzm3TlN9X07slgeJRX52DkzgcF6z2U4jbCaztxkgi5DeAyyq63h
-	BKxcTXndTg2/JNFk7MhhNpJhE0wkyB4zFgQAn+BKdZtRndGgb59Um0wOTTwA
-X-Google-Smtp-Source: AGHT+IHNI9uwSohrVqRAJve/+ajVyEz/IrZGm+1MpwFZu7/JDpaYwUeEJEdALHh0+09W0W8e8W0uyw==
-X-Received: by 2002:a25:3c42:0:b0:df7:8dca:1ef4 with SMTP id 3f1490d57ef6-dfacac3a472mr2231445276.21.1717588383408;
-        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dfa72956a8asm2546650276.18.2024.06.05.04.53.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dfab4779d95so2569777276.0;
-        Wed, 05 Jun 2024 04:53:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXHlkvl7NAOXssnhWBdrXd0sizsZVey4PLAFJHL/w9ETXuzkHZgUj3cOqfYL+sUapKn/1gB+M/pSzMjesD2tEYHq7aDQZZMWE8KCU22s9uAaoOwB1lBwXqjjJVhL0jU/C2A9RbgZq7jRwOqEO2fD2LVi6ZTkg90WTLAN37DSx3GA9l79ziy5/K445gZEMgZ2STrCVGmOjjaTF8+2dyWf2xdjIxkMbampw==
-X-Received: by 2002:a25:aa31:0:b0:df7:8b9f:8188 with SMTP id
- 3f1490d57ef6-dfacac5f750mr2508080276.37.1717588382994; Wed, 05 Jun 2024
- 04:53:02 -0700 (PDT)
+	bh=GZAfX1pB/cqgkoEcGeuRbxZPy9aoOmxX1hqFvvr3+Fg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cGIp8DUpr4KNy+nAnCndiu0qe0y6+0zhrI0BW+Iv5k1X/MHCD1Dzi42ePlf2UceFEm9+P8vhtKpRt7Mr8y4dkt/B9xM74KUpTrrxHUnb+bxn2ePlCMT0HN539uUOGQIPZMGJ6IRYGF2EskBcoBXn6TjDld1wBWxxXVHgjijBqkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mx8oRjbx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mx8oRjbx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A839C32781;
+	Wed,  5 Jun 2024 11:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717588386;
+	bh=GZAfX1pB/cqgkoEcGeuRbxZPy9aoOmxX1hqFvvr3+Fg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Mx8oRjbxpgwJ4kauMx+qPdRy6C6Y2KcqyipCv+036IuUg0AOZGjTnOaYjKgE32t21
+	 Ja7kN+DyjAVq4yhBtS32C8RJ9l/NQa1x0AqCIZFTPl310C5ixwFol9nHPtKftTODRW
+	 3JkeG7ywV7Ogks1ItUXC4DYNxJGgJ7I0plJkg9pkC2OYfOCumyEqwX3rdPu0I+vRWZ
+	 I0NWih1lb8SLuDbSS8lPwboQjl4908x8joHo+Nx7XXf10+yW4H4hUScITHkN3GHFwP
+	 LuPv1jonfX/AooknS7x9gCiLdZD7acQ7h52XyCXPHcK7bMrywLVVWPZfLruEEQuVnM
+	 pMyT4Bze3WA6A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Daniel Starke <daniel.starke@siemens.com>,
+	syzbot <syzbot+dbac96d8e73b61aa559c@syzkaller.appspotmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 15/20] tty: add the option to have a tty reject a new ldisc
+Date: Wed,  5 Jun 2024 07:51:58 -0400
+Message-ID: <20240605115225.2963242-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240605115225.2963242-1-sashal@kernel.org>
+References: <20240605115225.2963242-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240530173857.164073-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Jun 2024 13:52:51 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX-rrGNQgTnPjG+NSiGD_NmAxeNqgzKCB8p4W6s12VMKA@mail.gmail.com>
-Message-ID: <CAMuHMdX-rrGNQgTnPjG+NSiGD_NmAxeNqgzKCB8p4W6s12VMKA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/15] pinctrl: renesas: pinctrl-rzg2l: Add function
- pointer for locking/unlocking the PFC register
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.32
+Content-Transfer-Encoding: 8bit
 
-Hi Prabhakar,
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> On the RZ/G2L SoC, the PFCWE bit controls writing to PFC registers.
-> However, on the RZ/V2H(P) SoC, the PFCWE (REGWE_A on RZ/V2H) bit controls
-> writing to both PFC and PMC registers. Additionally, BIT(7) B0WI is
-> undocumented for the PWPR register on RZ/V2H(P) SoC. To accommodate these
-> differences across SoC variants, introduce the pwpr_pfc_lock_unlock()
-> function pointer.
->
-> Note, in rzg2l_pinctrl_set_pfc_mode() the pwpr_pfc_lock_unlock(.., false)
-> is now called before PMC read/write and pwpr_pfc_lock_unlock(.., true) is
-> now called after PMC read/write this is to keep changes minimal for
-> RZ/V2H(P) SoC.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v2->v3
-> - Introduced single function pointer to (un)lock
-> - Updated commit message
+[ Upstream commit 6bd23e0c2bb6c65d4f5754d1456bc9a4427fc59b ]
 
-Thanks for the update!
+... and use it to limit the virtual terminals to just N_TTY.  They are
+kind of special, and in particular, the "con_write()" routine violates
+the "writes cannot sleep" rule that some ldiscs rely on.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This avoids the
 
-Gr{oetje,eeting}s,
+   BUG: sleeping function called from invalid context at kernel/printk/printk.c:2659
 
-                        Geert
+when N_GSM has been attached to a virtual console, and gsmld_write()
+calls con_write() while holding a spinlock, and con_write() then tries
+to get the console lock.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Tested-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Daniel Starke <daniel.starke@siemens.com>
+Reported-by: syzbot <syzbot+dbac96d8e73b61aa559c@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=dbac96d8e73b61aa559c
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20240423163339.59780-1-torvalds@linux-foundation.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/tty_ldisc.c    |  6 ++++++
+ drivers/tty/vt/vt.c        | 10 ++++++++++
+ include/linux/tty_driver.h |  8 ++++++++
+ 3 files changed, 24 insertions(+)
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index 3f68e213df1f7..d80e9d4c974b4 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -545,6 +545,12 @@ int tty_set_ldisc(struct tty_struct *tty, int disc)
+ 		goto out;
+ 	}
+ 
++	if (tty->ops->ldisc_ok) {
++		retval = tty->ops->ldisc_ok(tty, disc);
++		if (retval)
++			goto out;
++	}
++
+ 	old_ldisc = tty->ldisc;
+ 
+ 	/* Shutdown the old discipline. */
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index e66ff9c11dade..a22da757ca6d1 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3390,6 +3390,15 @@ static void con_cleanup(struct tty_struct *tty)
+ 	tty_port_put(&vc->port);
+ }
+ 
++/*
++ * We can't deal with anything but the N_TTY ldisc,
++ * because we can sleep in our write() routine.
++ */
++static int con_ldisc_ok(struct tty_struct *tty, int ldisc)
++{
++	return ldisc == N_TTY ? 0 : -EINVAL;
++}
++
+ static int default_color           = 7; /* white */
+ static int default_italic_color    = 2; // green (ASCII)
+ static int default_underline_color = 3; // cyan (ASCII)
+@@ -3509,6 +3518,7 @@ static const struct tty_operations con_ops = {
+ 	.resize = vt_resize,
+ 	.shutdown = con_shutdown,
+ 	.cleanup = con_cleanup,
++	.ldisc_ok = con_ldisc_ok,
+ };
+ 
+ static struct cdev vc0_cdev;
+diff --git a/include/linux/tty_driver.h b/include/linux/tty_driver.h
+index 18beff0cec1ab..b4f99f6a5385a 100644
+--- a/include/linux/tty_driver.h
++++ b/include/linux/tty_driver.h
+@@ -155,6 +155,13 @@ struct serial_struct;
+  *
+  *	Optional. Called under the @tty->termios_rwsem. May sleep.
+  *
++ * @ldisc_ok: ``int ()(struct tty_struct *tty, int ldisc)``
++ *
++ *	This routine allows the @tty driver to decide if it can deal
++ *	with a particular @ldisc.
++ *
++ *	Optional. Called under the @tty->ldisc_sem and @tty->termios_rwsem.
++ *
+  * @set_ldisc: ``void ()(struct tty_struct *tty)``
+  *
+  *	This routine allows the @tty driver to be notified when the device's
+@@ -373,6 +380,7 @@ struct tty_operations {
+ 	void (*hangup)(struct tty_struct *tty);
+ 	int (*break_ctl)(struct tty_struct *tty, int state);
+ 	void (*flush_buffer)(struct tty_struct *tty);
++	int (*ldisc_ok)(struct tty_struct *tty, int ldisc);
+ 	void (*set_ldisc)(struct tty_struct *tty);
+ 	void (*wait_until_sent)(struct tty_struct *tty, int timeout);
+ 	void (*send_xchar)(struct tty_struct *tty, char ch);
+-- 
+2.43.0
+
