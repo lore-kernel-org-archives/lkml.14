@@ -1,192 +1,153 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ED01946A2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FDF1946B2
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575959; cv=none; b=kboalkhSEe5YkITMC1h3tgFvlyljukzuGo4QuNR5+y21MD6e8y2vWvaQMMJHyuMGvOp6c41fyXW3DJGlG75fC/zUD2B9bsp2T0MVzhCl32n/E+BB5yuOgCUe9jxgEutKe8+SGYtrhBthzI/OpPNNV/fy9k1M/32/bw9glCjGFhg=
+	t=1717576002; cv=none; b=DzaIFxTDgeIJ7xbEtS5QZorJ/5cKRKKiXDLd6vZUZ/GiUAC8aowGEAeadzBIrVCVJCcX5Yao8NTrAQkLEOmRQPBFdDW3W8TIR+h8fBwN/AlBYr8ui8S6ap/7ceg2JgH9rRw3MWl7nId/8z/4OO4Q1toiDPLyW1ecXqTO/Nt5f+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575959; c=relaxed/simple;
-	bh=ZGckZDXYZoBdYKxgR4JQZaNiWYJn8XxdnxbJ0v6qLEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oUZmOO5UztCnwIPim0EIKqXZHSkEWCPiDNHmonudeJeFA81sfTMXKG0FihBS8pcFQn5bzbT4XenaIZMXm+eIoqxSTOXyC9XnTvdXTcW9Fcyg1btACaH/7GneZb1vVf+VdFRgWEyC6kv/PCxil/Ymu8AuXgWYvUWfA3swTvm136c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kr+LCE5W; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1717576002; c=relaxed/simple;
+	bh=+cl6rgudeiiLBUD63PbZLMpUnEG+QiOIGc+pelJ3+I8=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=bYUQqE+ghn3dxlg+YTw5vTEFd/D0GVoCf8QxzpzMTXkj7zj88WKZ2ZrxsV1fJPggBUKdwjMQnpv3syxd2kQ06iXSKpG5XyDxEWna0fsDXO1CMZE7zvuNibbhuhgQGuc2LLwy1CjtKQsp05kI4pOQbY9xLbKex1wZWIGeEJkuJBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Ebrizkpz; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kr+LCE5W"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52b8d483a08so5602766e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717575956; x=1718180756; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KTYgiHqEKqI6DY4xUoSYEerbolGYT7sqcHeeQXdfKvE=;
-        b=kr+LCE5W69vzIYoovALFjPU8M1t/n5j3jHw9QFGk/3yW0p4L1MyF2/+K6I8H2m+FkC
-         8E4NLY9fx9gzwwIrfZ6/eBkGGbCLiPldR6BYqXeDpdMfID7VGjbWc8d23Gm6Sj3bio4U
-         7XeORRdpkId5UFFNIwZSle5Rt9gbX5q8qeqsA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575956; x=1718180756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KTYgiHqEKqI6DY4xUoSYEerbolGYT7sqcHeeQXdfKvE=;
-        b=UvK9f/tXJgU7Z2Nap6Vha5cIxQCrLHbgz8AZnVMhZPBk3f16cXguffgtpVoma9FZuF
-         s1XbvBVKinedY3KoJB3vVizAx0YnIxHDBMhYX9f1NnVUenOPlNFn2BaOzTC46iTn/pnV
-         wBann6J4H9d2jrRwTRumxL+gsLG3DEBa3MUeKDMTtPKk9ii/21lkEcgRfTHCONrmBATC
-         CUu+mFA6FgXUb9V19joQNQy2ozWdwHTt14SA1SGA+BNK7DNhprSOKALMsvyubtHapZ+1
-         xTiGR2t4F5E8FtkYTLD35BQulHqkORihn8cjNkeGVuzXLq0Cv/UUK2+x4ARpqQT2ai90
-         tMZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFzBBiOOtj6o+3B9n/hI0kFSc1TqgyQsuVMA0bD5OiVvVRCBQGOC4bLWDRtGSt0q3xoRTHXqC6ntlzmYRkA7LDseEqqbXMUf7xR1kv
-X-Gm-Message-State: AOJu0YwMcs8FDP1r7tgVdLZ2De87Izw+CLX/0zJaAkTcMIBwGoCeToZA
-	LhD2FYeV4D2TOXOISjfJxmE6CS1tF6nKk5j+boiwvaKb6OrV7XA1eJX1GTf5fhG8qpJPLl8NqfE
-	LP9EnvIRIyO3NEyUAO/sj7ZeZmRrlx/DeQ7w4
-X-Google-Smtp-Source: AGHT+IEz6cLO0SYpIuAYgl0GIp5y8JoS82uXIYv/gjnD7flwuduPkyTGJYNwDh582C9DE0cOUwen7uBXY5qAmo/W3wY=
-X-Received: by 2002:a05:6512:3082:b0:52b:423b:ade2 with SMTP id
- 2adb3069b0e04-52bab4b85b8mr1349765e87.3.1717575955882; Wed, 05 Jun 2024
- 01:25:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ebrizkpz"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240605082631euoutp01c9095ae6dd83fabb1ce560f0c706e39e~WDkOzgxt51194711947euoutp01e
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:26:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240605082631euoutp01c9095ae6dd83fabb1ce560f0c706e39e~WDkOzgxt51194711947euoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717575991;
+	bh=+YzdbY3Eo7YidevssvYDgo7A4uBztMQmdrWcxxE5wSw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=EbrizkpzGXZX4V46d4cv6tD+uy3QptDZe6S8o64iiewnSN57mFYGPF6rJfM595u5U
+	 KosDLyG6ZlR5/a9fiJs3FcSA8ao8CG/4497N06ghKoozs3mgrYMsiNEZqoKjsZjwqF
+	 175c3CzjmP/2aniM0TNykn1/TQwUxBAcQ8+f76oU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240605082631eucas1p28fe06b75a172e67e34b8020e4c22837c~WDkOo5V2P2093620936eucas1p2m;
+	Wed,  5 Jun 2024 08:26:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 78.F5.09875.73120666; Wed,  5
+	Jun 2024 09:26:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240605082631eucas1p245e3ce3d1c696eaf29e6fbfe62057824~WDkOQx5TQ2102821028eucas1p2l;
+	Wed,  5 Jun 2024 08:26:31 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240605082631eusmtrp2f8fdfce5f7861c3260c568edce874f3c~WDkOQI1NI2841128411eusmtrp2W;
+	Wed,  5 Jun 2024 08:26:31 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-19-6660213794af
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 1C.32.09010.73120666; Wed,  5
+	Jun 2024 09:26:31 +0100 (BST)
+Received: from CAMSVWEXC01.scsc.local (unknown [106.1.227.71]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240605082631eusmtip16a83b7a2d895970c5e800c07b151d521~WDkOGIxrw2282322823eusmtip1d;
+	Wed,  5 Jun 2024 08:26:31 +0000 (GMT)
+Received: from localhost (106.110.32.44) by CAMSVWEXC01.scsc.local
+	(2002:6a01:e347::6a01:e347) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 5 Jun 2024 09:26:30 +0100
+Date: Wed, 5 Jun 2024 10:26:25 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Kees Cook <kees@kernel.org>
+CC: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, Luis Chamberlain
+	<mcgrof@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Current state of the sysctl constification effort
+Message-ID: <20240605082625.6hwdc3haim66rr7v@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240530083513.4135052-1-wenst@chromium.org> <20240530083513.4135052-6-wenst@chromium.org>
- <4f20f130-c9ab-43ea-a758-e29d7be10db0@collabora.com>
-In-Reply-To: <4f20f130-c9ab-43ea-a758-e29d7be10db0@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Wed, 5 Jun 2024 16:25:44 +0800
-Message-ID: <CAGXv+5GuGz-KahcbKtuyUA1-59sMWSL0QucOdp8FPoQWrc9YUQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] arm64: dts: mediatek: mt8173: Fix MFG_ASYNC power
- domain clock
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202405310930.5E2728A@keescook>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleLIzCtJLcpLzFFi42LZduzneV1zxYQ0g54tyhbr3p5ntbi8aw6b
+	xY0JTxktDr2dzubA4rFpVSebx+wlN1g8Pm+SC2CO4rJJSc3JLEst0rdL4MpoOdbIXtDLVdGy
+	6xdLA+Md9i5GTg4JAROJt/sWsnQxcnEICaxglGh9/YsJwvnCKHFy6ywo5zOjROPaWYwwLVeW
+	XoRKLGeUmLZmBStc1csN36Eymxgljl46ADSZg4NFQEXi7FFFkG42AR2J82/uMIPYIgLyEjvm
+	fQGzmQXqJV43/WQCsYUF7CT2bFgOdiCvgINEQ+dEZghbUOLkzCcsEPWaEq3bf7ODjGcWkJZY
+	/o8DIiwv0bx1Nlg5J9CqWRc/MkMcrSjxdfE9Fgi7VmLtsTPsIGdKCFzgkNg89yXUZy4SL/qf
+	QdnCEq+Ob4EGkozE/53zmSAaJjNK7P/3Aap7NaPEssavTBBV1hItV55AdThKzFi5jxXkOgkB
+	PokbbwUhruOTmLRtOjNEmFeio01oAqPKLCSvzULy2iyE12YheW0BI8sqRvHU0uLc9NRio7zU
+	cr3ixNzi0rx0veT83E2MwKRy+t/xLzsYl7/6qHeIkYmD8RCjBAezkgivX3F8mhBvSmJlVWpR
+	fnxRaU5q8SFGaQ4WJXFe1RT5VCGB9MSS1OzU1ILUIpgsEwenVAOTgE/Y6xW1a52Obz66Sf7L
+	3diWFwemLvwi/19y+jXBD8u9ps9d88x4gTvL5nu9zfvuxS6Leu2+qHWXxue2mQ8O6/9QPuv6
+	ojFLdP76sjM6jP9UbVcWfbs2IdfWcu7VHq8naxcWCuXoq/Fz6Clv5p5WsGOXhZnvkrx1rVdm
+	nuk82ZJ+4AILm3TPWhP+zQu25YR8mTPtSfPMtpwqPiPnO8rpfz8zcRq+r9o38bRFd8su48WK
+	v2vP8dYISQXcvN92bHKuyZ7ZbjYHXjlFSzJE74ow3cUmfyBpz73p1rFtFy/rfNA3aN6fynZJ
+	do6t9xV9zmPxWy+2sTNZ1z1SWdIcqTo3I/mup+d8ttnhQTJPr5iuUWIpzkg01GIuKk4EAMVe
+	lKuZAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHIsWRmVeSWpSXmKPExsVy+t/xu7rmiglpBn0PuSzWvT3PanF51xw2
+	ixsTnjJaHHo7nc2BxWPTqk42j9lLbrB4fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFn
+	ZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRcqyRvaCXq6Jl1y+WBsY77F2MnBwSAiYSV5Ze
+	ZOpi5OIQEljKKLHn4TVGiISMxMYvV1khbGGJP9e62CCKPjJKvL30nxHC2cQo0XuiF6iKg4NF
+	QEXi7FFFkAY2AR2J82/uMIPYIgLyEjvmfQGzmQXqJV43/WQCsYUF7CT2bFgOdgWvgINEQ+dE
+	ZoiZGxklps87ygKREJQ4OfMJC0SzpkTr9t/sILuYBaQllv/jgAjLSzRvnQ02nxNo76yLH5kh
+	jlaU+Lr4HguEXSvx6v5uxgmMIrOQTJ2FZOoshKmzkExdwMiyilEktbQ4Nz232EivODG3uDQv
+	XS85P3cTIzDith37uWUH48pXH/UOMTJxMB5ilOBgVhLh9SuOTxPiTUmsrEotyo8vKs1JLT7E
+	aAoMoYnMUqLJ+cCYzyuJNzQzMDU0MbM0MLU0M1YS5/Us6EgUEkhPLEnNTk0tSC2C6WPi4JRq
+	YGqUW/Hj7srwd1quHxxOzyu5aWZ688z3AMnSY31XryeErOe63LbyV6jvKSuTzXXMB11TziQq
+	6nq9qP9QssU19tvmn9UXtv2NcWf8dkl96Y/atOpMsYoC3d3aC2YxWt5lmMe1aUeQ+sLGqRqc
+	tb0HZx9oe397jpMxT5OJ2dcD5tL3FU+p/c9xYvDRvSe4IJklPX7VBO+D8uGrm93Ljhc/Yt4g
+	qHSUOfjpGaEzK0+V5nRuUD6wtjrrXvpGD/eYOyvM1i6Ie8YkyZn39YGr9I/7Ru374uPmHOo+
+	3VoksjFKTuDK3AlNO2NkY+7GLTJ61q7xx+H3lbnL9mlveLo/d3pW9p2DJ2vt/yidLjwXPsPJ
+	8r4SS3FGoqEWc1FxIgDiVArEQQMAAA==
+X-CMS-MailID: 20240605082631eucas1p245e3ce3d1c696eaf29e6fbfe62057824
+X-Msg-Generator: CA
+X-RootMTR: 20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4
+References: <7823ff95-1490-4c1b-b489-a9c05adad645@t-8ch.de>
+	<CGME20240531163128eucas1p20976d08e829373bfa8aa04fda1c7bec4@eucas1p2.samsung.com>
+	<202405310930.5E2728A@keescook>
 
-On Thu, May 30, 2024 at 6:03=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 30/05/24 10:35, Chen-Yu Tsai ha scritto:
-> > The MFG_ASYNC domain, which is likely associated to the whole MFG block=
-,
-> > currently specifies clk26m as its domain clock. This is bogus, since th=
-e
-> > clock is an external crystal with no controls. Also, the MFG block has
-> > a independent CLK_TOP_AXI_MFG_IN_SEL clock, which according to the bloc=
-k
-> > diagram, gates access to the hardware registers. Having this one as the
-> > domain clock makes much more sense. This also fixes access to the MFGTO=
-P
-> > registers.
-> >
-> > Change the MFG_ASYNC domain clock to CLK_TOP_AXI_MFG_IN_SEL.
-> >
-> > Fixes: 8b6562644df9 ("arm64: dts: mediatek: Add mt8173 power domain con=
-troller")
-> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
->
-> Just one question... what happens if there's no GPU support at all and th=
-is
-> power domain gets powered off?
->
-> I expect the answer to be "nothing", so I'm preventively giving you my
+On Fri, May 31, 2024 at 09:31:24AM -0700, Kees Cook wrote:
+> On Fri, May 31, 2024 at 12:50:32PM +0200, Thomas Weißschuh wrote:
+> > Hi Joel, Hi Luis,
+> > 
+> > most of the sysctl handler preparation patches have been picked up by
+> > the subsystem maintainers and are available in -next.
+> > 
+> > Only two are missing:
+> > 
+> > * utsname: constify ctl_table arguments of utility function [0]
+> > * sysctl: constify ctl_table arguments of utility function [1]
+> > 
+> > Both of them are going through the sysctl tree anyways.
+> 
+> This is great! Is the target v6.11 or v6.10 for these?
+> 
+> -Kees
+> 
+> > With this done it should be possible to also queue up 
+> > sysctl: treewide: constify the ctl_table argument of handlers [2]
+> > for the bots to chew on in -next.
+@kees: Since you have probably done these before, I'll ask you the
+questions:
 
-Well it's powered off by default. Just double checked, and without the fina=
-l
-patch:
+1. The idea is to send Linus the treewide-constify patch on its own at
+   the end of the merge window for 6.11. Right?
 
-# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
-domain                          status          children
-            performance
-    /device                                             runtime status
----------------------------------------------------------------------------=
--------------------
-mfg                             off-0
-            0
-mfg_2d                          off-0
-            0
-                                                mfg
-mfg_async                       off-0
-            0
-                                                mfg_2d
+2. Is there a special way to send these treewide patches? Or is it just
+   a regular PR with an explanation on why it is being done?
 
-And with the last patch but with the powervr removed:
+3. Can you please send (if there are any) me any examples where this has
+   been done in the past. Maybe some lore.kernel.org links?
 
-# cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
-domain                          status          children
-            performance
-    /device                                             runtime status
----------------------------------------------------------------------------=
--------------------
-mfg_apm                         off-0
-            0
-mfg                             off-0
-            0
-                                                mfg_apm
-    /devices/platform/soc/13fff000.clock-controller     suspended
-            0
-mfg_2d                          off-0
-            0
-                                                mfg
-mfg_async                       off-0
-            0
-                                                mfg_2d
+Best
 
-Things seem to work OK. I can SSH in, and the framebuffer console on the sc=
-reen
-works fine.
+-- 
 
-
-Note that accessing the regmap through debugfs doesn't do much good. regmap
-doesn't handle runtime PM. And the syscon regmap isn't even tied to a
-struct device. Dumping the regmap through debugfs while the power domain
-is off gives all zeroes, likely due to bus isolation.
-
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-
-Thanks!
-
-ChenYu
-
-> ....but if I'm wrong and the answer isn't exactly "nothing", then I still=
- agree
-> with this commit, but only after removing the Fixes tag.
->
-> Cheers,
-> Angelo
->
-> > ---
-> >   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot=
-/dts/mediatek/mt8173.dtsi
-> > index 3458be7f7f61..136b28f80cc2 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> > @@ -497,7 +497,7 @@ power-domain@MT8173_POWER_DOMAIN_USB {
-> >                               };
-> >                               mfg_async: power-domain@MT8173_POWER_DOMA=
-IN_MFG_ASYNC {
-> >                                       reg =3D <MT8173_POWER_DOMAIN_MFG_=
-ASYNC>;
-> > -                                     clocks =3D <&clk26m>;
-> > +                                     clocks =3D <&topckgen CLK_TOP_AXI=
-_MFG_IN_SEL>;
-> >                                       clock-names =3D "mfg";
-> >                                       #address-cells =3D <1>;
-> >                                       #size-cells =3D <0>;
->
->
+Joel Granados
