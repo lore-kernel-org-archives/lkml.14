@@ -1,88 +1,110 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7072518F2E4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAFC18C34D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717574882; cv=none; b=TetOEVrgezTqwSvASMIa1YZSsslqN4DfaqYGxhsnjSs7R7tBePsCOz/vhiGBBi7P/vYAo+c/pwNm+OUBW3yjLzYcEipQsWCpnpbsGYI2YhRv5RoSQ1ZoTQJJPrmzAPMMiok7fG+SDn+2fKGf1+pIIw+EI4NjjS6Aogy/DN46xnY=
+	t=1717574910; cv=none; b=SNCJwYR2Xnnix3emXb0a4H3MPKQ/RDeZxYjmZzoZXZehBISU225mfKQQYwHXidhiVYHlFppUHMTWswyfvKZt0IsxZeuofeoteneULdQq9abxc0PczTpktsYHi4ICyW2ol5RRapj+FQoHjAqHvZ/ia5r10Qy52yxHug5GAxPwlxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717574882; c=relaxed/simple;
-	bh=PaE7mEZfJxLBb2yt2DAyS73D75IvOfORiK3X0XZJW+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aW2cfb9qnT15m+FVr2KtJidk7Tmz7dr53EzHJqV/p7dKcaW5y5rNFbrVsBk0aXlreL3/NP2cPXlJxNgnr81zDAOsmOxDg0MW+60zz1rOHiFJkXUQEW+flx8Zb8p2nw3YYrdZWjxLrmGDNyuA6JWEPfdxrtovQA1pe1Yqo7qHsQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eKb9SgiM; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1717574910; c=relaxed/simple;
+	bh=2V6xeoSGk1ub4DiXjTFFRTD5i1/BCv57Wy1KYqhsyFU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=swA6+Qa0vaXYUPZPNTCo/0EmAZJVCltwYkiP4ueSvdk5oT7oKT8OWKcNByEQ0+Z9n4ltILeVSEUkOMp1H10dlMSSxzE3nxdCn91V96PhhbwHqvOmaHXBxiupFqBnM24tXHZbsicxBVGXtMy4QX2UfjZ6hprE81Qhz5i+uAotqP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cylr0XoT; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eKb9SgiM"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4213a2acc59so45255e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717574879; x=1718179679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mrCOiRPfrbF8KgkjXf2+OjTb6u3WQ9a+GX9ZNmr2TUc=;
-        b=eKb9SgiM1Ywd2b2fjnigch5afjE0A0sA+5Y+7Kxa2Ik6GFQm6MkPKA79Jf6P449FLk
-         wkY5C2oA4Okd3khdhVjQ4RhEhINz8LklGcuS5CSfFJfMdOfHhPxEK/TnzPk3p7N7KVei
-         6P0nm/NjadEW9M5E9wJBsIbZGCbSuL0K/Dpgo54/+8521YoHQ03NS8S12V7PQGJH0uEp
-         q7R4HJeIWQ02V3hIgr7kl+rS2tJeDipyE837GUaoJmxzsvx2WwXKn+jj4ShMW3xe+4Oa
-         YN1AfOk6ku8bO7ZqiOQireFUzTDZPPl9Ccl8J+9kwWddNwsIIhS8JYop0nV0X7iOuNqI
-         +1CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717574879; x=1718179679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mrCOiRPfrbF8KgkjXf2+OjTb6u3WQ9a+GX9ZNmr2TUc=;
-        b=tJjuImwTwVqzfWDGewRrBRz4dOjFHVXXM2Qmxn6OzEX/SI+jLaVumv9/pyLT+bF87K
-         wdlC9rbNTIKPBR6Z49Xgcw95bnPFndWMylgO6kudWjeHOvQLE9D8Qa477wJzna8AVtxd
-         r4ZMnm3LVPbWzXNAQQqtW7k9MHtiE7fFmTl0lGRbu57kL7QMTJHWtNDjByuJtpn3q3L5
-         BlN/ahJiaRXSLMyThQuZYfhZer0zlrPpvfrA/VX/Q3l0U4HlPXdiZpmyG8mu6I0cxOFH
-         zSTzoCAIbTjofX2vq+bKax3U6nYhsKZO6g7MfZk9fuzpEq8sbGom4Ks/M2IQnNxFmc2/
-         ooIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjMcGo/pLwZ3nEBAkhHnheyrCSxcyEkPe+HNd9NHzzmUArLf784l7BjdjPaBqe0++sb3btU1WqZcxEKGLrhp0gTygTgK8pzD5Qcukb
-X-Gm-Message-State: AOJu0YyHywlupm1PNVe25BdVSBLNt1t3BR4ofjPZKRcE9kswt86sbZbT
-	WD2O7lUaxHX9KgqBGsBox8IDFCtsq1Dv4hlNJoNsGmy4HGVVwA1OPWxRcoRdP38JtSr96yLq6bb
-	ysYMR6EA+7kTZxwK3Hp+uY3Qa8PQLhDrD76g/
-X-Google-Smtp-Source: AGHT+IE+9uivXSD5/gDpelbCKai6RvbBA7yxMmFIucAYEXrjABgLZaNA9/zk6SuWHQzcKrc0ReHGu9NE100jrq+FnwY=
-X-Received: by 2002:a05:600c:2942:b0:418:97c6:188d with SMTP id
- 5b1f17b1804b1-42157e4cd5cmr1243755e9.7.1717574878367; Wed, 05 Jun 2024
- 01:07:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cylr0XoT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717574909; x=1749110909;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=2V6xeoSGk1ub4DiXjTFFRTD5i1/BCv57Wy1KYqhsyFU=;
+  b=cylr0XoT5P0qPJtYBu0K2eIirfAJnBtLQpq4JEofxBtrKRGn4CkHW2PD
+   oc7DPgWfQwzq8wk96m9I9zIKfy4RG9TI3M8s5P7nvWFbFb5od+NM7/EUj
+   eXVVyFDEQRN9hRy7dlH4A3KItV2qYGiNLbSpFkPqUhUcaNzUCxBC3vqV/
+   zLVxoFmgz54PuMmyja2/X/Gntl9RCe4OGXkXKwc501YHW9bID63Jg0gFs
+   sc9IpjU9KNG1VTTRyE8q1bDu1DiIvtiVYgDL1XW074AthOEyY5Df3B4ld
+   u+vdtILFThtudkli3RqhL2cUeCtk5/VTdffWct3CgMzoCyFGnKvAfl9wu
+   A==;
+X-CSE-ConnectionGUID: WloDFkA5QXqd2iIJoKcmjw==
+X-CSE-MsgGUID: qyz2Uu7qTVSuxbnQBuMWUw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="25276044"
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="25276044"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 01:08:28 -0700
+X-CSE-ConnectionGUID: JiJLu5YeQACz341zrcmUwQ==
+X-CSE-MsgGUID: S5EEev3ASfm6RchQitZp2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="38151310"
+Received: from sbutnari-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.204])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 01:08:26 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ intel-xe@lists.freedesktop.org
+Cc: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] MAINTAINERS: Update Xe driver maintainers
+In-Reply-To: <20240602190959.2981-1-thomas.hellstrom@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240602190959.2981-1-thomas.hellstrom@linux.intel.com>
+Date: Wed, 05 Jun 2024 11:08:20 +0300
+Message-ID: <875xundd6z.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605-tcp_ao-tracepoints-v2-0-e91e161282ef@gmail.com> <20240605-tcp_ao-tracepoints-v2-3-e91e161282ef@gmail.com>
-In-Reply-To: <20240605-tcp_ao-tracepoints-v2-3-e91e161282ef@gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 5 Jun 2024 10:07:47 +0200
-Message-ID: <CANn89iLHGimJWRNcM8c=Ymec-+A3UG9rGy9Va_n7+eZ2WGHDiw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 3/6] net/tcp: Move tcp_inbound_hash() from headers
-To: 0x7f454c46@gmail.com
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Mohammad Nassiri <mnassiri@ciena.com>, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 5, 2024 at 4:20=E2=80=AFAM Dmitry Safonov via B4 Relay
-<devnull+0x7f454c46.gmail.com@kernel.org> wrote:
+On Sun, 02 Jun 2024, Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.co=
+m> wrote:
+> Add Rodrigo Vivi as an Xe driver maintainer.
 >
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
+> v2:
+> - Cc also Lucas De Marchi (Rodrigo vivi)
+> - Remove a blank line in commit the commit message (Lucas De Marchi)
 >
-> Two reasons:
-> 1. It's grown up enough
-> 2. In order to not do header spaghetti by including
->    <trace/events/tcp.h>, which is necessary for TCP tracepoints.
->
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Lucas De Marchi <lucas.demarchi@intel.com>
 
-Then we probably do not need EXPORT_SYMBOL(tcp_inbound_md5_hash); anymore ?
+Already acked on irc, but FWIW,
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 572be0546e21..8f9982c99257 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11037,6 +11037,7 @@ F:	include/uapi/drm/i915_drm.h
+>  INTEL DRM XE DRIVER (Lunar Lake and newer)
+>  M:	Lucas De Marchi <lucas.demarchi@intel.com>
+>  M:	Thomas Hellstr=C3=B6m <thomas.hellstrom@linux.intel.com>
+> +M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
+>  L:	intel-xe@lists.freedesktop.org
+>  S:	Supported
+>  W:	https://drm.pages.freedesktop.org/intel-docs/
+
+--=20
+Jani Nikula, Intel
