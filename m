@@ -1,140 +1,143 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C8B1946A0;
-	Wed,  5 Jun 2024 08:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E8018C348
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717577742; cv=none; b=Lqfd58dDAVhgbnyAsVdZbe/C1h63bTChw/xDATO86zNey9SbH/5UUDGZpMkJwctoUljpJB8N38OfoPe48W2K5QCPYZUecKYmwyc1PYyMukxt7wCuqYZqtEk9bQMgvRZ2bmZtudAXWPxihKkY9h/jb4Kygj35XT78oQKLVwtsyRw=
+	t=1717577767; cv=none; b=rOw91EfDUdc1E8/Jt6tARryS+rkoiJBprNDLXTi7KCSmh36SxRPlUo/hOb30fWxij7lIVh80a9x27VfW3urzeeaJ06u7LYkc4hrbp9I15sdvLCqeOJ2bGlIUbg7m1BUjF9ssYcSDAhetKprZO+aMuAMSffv71HKlZUxdeJSGYKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717577742; c=relaxed/simple;
-	bh=kRzNAa8ifqgPiAlP+LdgUdhEdsW90Wn9qtcCwDi2Bgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G/F0GNakpl3NkY2lea46jwNy6Mni4fcL2Jba3WBUn7samhjbMXUIP64vynegpZHHBVYBvXLQralCbWhNs0tzyty2tP5qEOb/YDFtjJ5w/B/Z1cuYIzpjdlKpLGTKa3N+4qhR1mToAO7m1iDtGIx4ca5OogeUYx9xHUrczyMRHyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a6265d48ec3so682940766b.0;
-        Wed, 05 Jun 2024 01:55:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717577739; x=1718182539;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+	s=arc-20240116; t=1717577767; c=relaxed/simple;
+	bh=+RccpUJwmpU1LzXIIE+Z5WpSTFsSjxa720tthk/FtD0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=U+Sfzp8wIMasx53vXRRZw+gatWtseszlFdGASPCei0oWiGU5eHVYS1EW3ZBj3tdhifCUuRjCDHe9aD2RI7Bx0A7Off/RR75TBcphdYWM5AbYmmyOcZ5802aBI0kYR8qKLlQADMZRG9pOGMIjTP3yeh1jYORClkSgu9W9uYLzmvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PY5JUB7x; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PY5JUB7x"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52b91f655d1so688316e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:56:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717577764; x=1718182564; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8mZLzzmdpglmrMP4ykS0Ib91Fc1S3Euiv7w/Hx29HPo=;
-        b=j5HD8okTuqkQTg1VYHLfy7XMt2ELOwgPL3+fCtVRjZXmn67M1rC1qA8oF8CYzOmJHb
-         q6J6iMNYLdM1jgPcF6Xxi/bkYXIb1S1SpbtG3Q0qQseZqqG8mDVePY95zhQdltxE6TeC
-         QsKkq18vDKqyIGu90kCJXKvUb/tAKqNMnYgKzlozT899JoXUnT4yhdhWymVBkC0b+hQ5
-         H8xfu2c98zzB33w1iVBdQV99sk/i6qqssr/XSdkP6c8RlpJGib3s0D4jvBKFdPKdAuaQ
-         Gr5z5Kc6WrCmNHelsxyeic5rXNP+zTK6Ep36qUJ5i815Quxp7RDqi2XrxZYnq5hoWKou
-         tX9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWgTyRQ3BDPT2akXxMXrF7AhF3hMtC16UnZZ4fOkCAVg9dk1rGjQcLWRVWTvB06Ex28IiXxqsEfEFkkN98s9K85k8hEkftkWbIJ+WcV5TnFEIy8CJ3SWBFcec4ch8f/C6V5F95q50mfOAnE3KE8odXlklxqB0ymYUaElwUoNWEjBQ==
-X-Gm-Message-State: AOJu0Yya1rmXiMDE2dRozRKBJUnpsBubPCAtaWa8UkAaqwdDex41C1xn
-	04ADdKECPjEgcjvLOg4ZNzEEjlf6JYN5nNaoMuUMfX5a5nR7sME+
-X-Google-Smtp-Source: AGHT+IGOXhLphl0UTY9qe9qNOOk/fo1YS4xAchj9MN7d2TWhBIViph2c7YlDJZS+48x8SljmDafb+A==
-X-Received: by 2002:a17:906:69a:b0:a68:e322:2996 with SMTP id a640c23a62f3a-a699fcf09bemr119498766b.36.1717577738929;
-        Wed, 05 Jun 2024 01:55:38 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-002.fbsv.net. [2a03:2880:30ff:2::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa8035adsm473879666b.185.2024.06.05.01.55.38
+        bh=+kpQnqqqSVuejJPJABBKqggJwaHgc93uYPHXdAev6mI=;
+        b=PY5JUB7xejCk8FNt/8+pM3g2fFoceqqnmolQTBbgtHJguBp+ZsJ+fhTBjcBXmNkEq+
+         gJju2E8RwVqQDOUchkRYUiaJ8Vz7VTsLgrDzEZjtgShuKm46+Hu2BnjMTf0SgGwoJmIf
+         Zg9zN1biZny0m+gxiAO4pUKVd47LMq5jdxpuB7J7PStEtYOdWi3BWCZBAnr7fkAep8Kg
+         U5AxidvWTx9Nyxnzopse/Yn+3otQm/5F+29Z163bEDm1WS44I0qW/pArt3N2WD6gf3gM
+         hjPsnqMzRemI4jxo72t1Or9Q8hTMh+67Khhj5PzENdc7hWOeMjx+pwoVHPphxkKyxCSS
+         dLAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717577764; x=1718182564;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+kpQnqqqSVuejJPJABBKqggJwaHgc93uYPHXdAev6mI=;
+        b=GJoAbmCkAnaXQhWh55VLyHpO0ZCmgltyNP/hMkCprN+6fDuiT1DbmqM1YfqDx8YJlf
+         LVluj9X3W7n8pphYyC9Gi1AdmTT/lqgOI2jsfYcr5APKNYBDj+WawtQWwfq6G1COp5ZG
+         S7TKJUXbecDagKwBuRxed7D9l0LFYZQJcIJFiDeP7fL7HeTnBO+1ShqlqlgXQFLHkDZm
+         nmRqKPLIM2QWNE5Z/i18HezT+WitvGcrICsJuK69k55VHkoyBD6Tfk8JYx9jsM527G51
+         wTXI2MybdgcPAoA/dmx7SHux+B2a6ViAah+9hNtKg1aZKTXSFxVeoOiYpralOjsGcd9X
+         pOvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAr89qe9ojfGAiog7e7ZxxXeB76fWXTqq4pW8ajdZrgI81VUA3BSWmFdHAB37zy0W7tuoI9cOGu9gL5gAdsIEbwh6KNw30mYrE9FME
+X-Gm-Message-State: AOJu0YxUhszYiNYSbd9itO042JfCtolJivnj8IU8h0tv9oKB+ZA0KY7G
+	xmNh41RLVeWVaMbONGxjzjJLGgqpPq0AtscY3RmgxGKByDeC6WojtrIcCUi0BBw=
+X-Google-Smtp-Source: AGHT+IFDReirRdjjKGPG5ks0aGxVAJHaEgtt9C0ix5ER6U6cIzBhxTbGupz9iH+hYUY6Qm8Vpe7Zug==
+X-Received: by 2002:a05:6512:3c9c:b0:52b:94f1:6115 with SMTP id 2adb3069b0e04-52ba229b2dfmr1827078e87.25.1717577763804;
+        Wed, 05 Jun 2024 01:56:03 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d3f55dsm1715321e87.72.2024.06.05.01.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:55:38 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Chaitra P B <chaitra.basappa@broadcom.com>
-Cc: leit@meta.com,
-	stable@vger.kernel.org,
-	Keith Busch <kbusch@kernel.org>,
-	MPT-FusionLinux.pdl@broadcom.com (open list:LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)),
-	linux-scsi@vger.kernel.org (open list:LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] mpt3sas: Avoid test/set_bit() operating in non-allocated memory
-Date: Wed,  5 Jun 2024 01:55:29 -0700
-Message-ID: <20240605085530.499432-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+        Wed, 05 Jun 2024 01:56:03 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 05 Jun 2024 11:55:56 +0300
+Subject: [PATCH v2 1/2] arm64: dts: qcom: qrb2210-rb1: switch I2C2 to
+ i2c-gpio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-rb12-i2c2g-pio-v2-1-946f5d6b6948@linaro.org>
+References: <20240605-rb12-i2c2g-pio-v2-0-946f5d6b6948@linaro.org>
+In-Reply-To: <20240605-rb12-i2c2g-pio-v2-0-946f5d6b6948@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Caleb Connolly <caleb.connolly@linaro.org>, 
+ Alexey Klimov <alexey.klimov@linaro.org>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, stable@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1512;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=+RccpUJwmpU1LzXIIE+Z5WpSTFsSjxa720tthk/FtD0=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmYCgis+/VKxDqB8zWqxyQONbpETW/6Otdc520y
+ t/JSEqJ7kuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZmAoIgAKCRCLPIo+Aiko
+ 1WzvCACxWQwjy6Y1HEw34Nq/jHm0FQPEq7DB5kpZtlaCtNTGX1h+F6lm9acHSt9goc2DzP/vT60
+ qusJWxBa09VZQWZMdI1GP1x0YZZrfXQmhtKO5WV1FwrgXEiAVHfZPX9UFK0JfsBCRZFSASmqQBc
+ dMPrFeacZrGdrWjwIo53MMFvyIIdTXD9MaxTOX08PIH11UnHl11AKC4bUD4vGS49ztCLUeizOHZ
+ t62hy4JK/I+1PVvdJbGtKojLz2fXTirx6OdSoLfvMD7LrBKbsOUCwGjatfb8UEt4mY/igMCTF9C
+ oDTeci0yTEEv0f7Du8rtyOD3UTEBdeequCUrtjdt4vRaqud9
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-There is a potential out-of-bounds access when using test_bit() on a
-single word. The test_bit() and set_bit() functions operate on long
-values, and when testing or setting a single word, they can exceed the
-word boundary. KASAN detects this issue and produces a dump:
+On the Qualcomm RB1 platform the I2C bus connected to the LT9611UXC
+bridge under some circumstances can go into a state when all transfers
+timeout. This causes both issues with fetching of EDID and with
+updating of the bridge's firmware. While we are debugging the issue,
+switch corresponding I2C bus to use i2c-gpio driver. While using
+i2c-gpio no communication issues are observed.
 
-	 BUG: KASAN: slab-out-of-bounds in _scsih_add_device.constprop.0 (./arch/x86/include/asm/bitops.h:60 ./include/asm-generic/bitops/instrumented-atomic.h:29 drivers/scsi/mpt3sas/mpt3sas_scsih.c:7331) mpt3sas
+This patch is asusmed to be a temporary fix, so it is implemented in a
+non-intrusive manner to simply reverting it later.
 
-	 Write of size 8 at addr ffff8881d26e3c60 by task kworker/u1536:2/2965
-
-For full log, please look at [1].
-
-Make the allocation at least the size of sizeof(unsigned long) so that
-set_bit() and test_bit() have sufficient room for read/write operations
-without overwriting unallocated memory.
-
-[1] Link: https://lore.kernel.org/all/ZkNcALr3W3KGYYJG@gmail.com/
-
-Fixes: c696f7b83ede ("scsi: mpt3sas: Implement device_remove_in_progress check in IOCTL path")
+Fixes: 616eda24edd4 ("arm64: dts: qcom: qrb2210-rb1: Set up HDMI")
 Cc: stable@vger.kernel.org
-Suggested-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changelog:
+ arch/arm64/boot/dts/qcom/qrb2210-rb1.dts | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-v2:
-	* Do the same protection in krealloc() in
-	  _base_check_ioc_facts_changes, as suggested by Keith.
----
- drivers/scsi/mpt3sas/mpt3sas_base.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 258647fc6bdd..cc17204721c2 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -8512,6 +8512,12 @@ mpt3sas_base_attach(struct MPT3SAS_ADAPTER *ioc)
- 	ioc->pd_handles_sz = (ioc->facts.MaxDevHandle / 8);
- 	if (ioc->facts.MaxDevHandle % 8)
- 		ioc->pd_handles_sz++;
-+	/* pd_handles_sz should have, at least, the minimal room
-+	 * for set_bit()/test_bit(), otherwise out-of-memory touch
-+	 * may occur
-+	 */
-+	ioc->pd_handles_sz = ALIGN(ioc->pd_handles_sz, sizeof(unsigned long));
-+
- 	ioc->pd_handles = kzalloc(ioc->pd_handles_sz,
- 	    GFP_KERNEL);
- 	if (!ioc->pd_handles) {
-@@ -8529,6 +8535,12 @@ mpt3sas_base_attach(struct MPT3SAS_ADAPTER *ioc)
- 	ioc->pend_os_device_add_sz = (ioc->facts.MaxDevHandle / 8);
- 	if (ioc->facts.MaxDevHandle % 8)
- 		ioc->pend_os_device_add_sz++;
-+
-+	/* pend_os_device_add_sz should have, at least, the minimal room
-+	 * for set_bit()/test_bit(), otherwise out-of-memory may occur
-+	 */
-+	ioc->pend_os_device_add_sz = ALIGN(ioc->pend_os_device_add_sz,
-+					   sizeof(unsigned long));
- 	ioc->pend_os_device_add = kzalloc(ioc->pend_os_device_add_sz,
- 	    GFP_KERNEL);
- 	if (!ioc->pend_os_device_add) {
-@@ -8820,6 +8832,11 @@ _base_check_ioc_facts_changes(struct MPT3SAS_ADAPTER *ioc)
- 		if (ioc->facts.MaxDevHandle % 8)
- 			pd_handles_sz++;
+diff --git a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
+index bb5191422660..8c27d52139a1 100644
+--- a/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
++++ b/arch/arm64/boot/dts/qcom/qrb2210-rb1.dts
+@@ -59,6 +59,17 @@ hdmi_con: endpoint {
+ 		};
+ 	};
  
-+		/* pd_handles should have, at least, the minimal room
-+		 * for set_bit()/test_bit(), otherwise out-of-memory touch
-+		 * may occur
-+		 */
-+		pd_handles_sz = ALIGN(pd_handles_sz, sizeof(unsigned long));
- 		pd_handles = krealloc(ioc->pd_handles, pd_handles_sz,
- 		    GFP_KERNEL);
- 		if (!pd_handles) {
++	i2c2_gpio: i2c {
++		compatible = "i2c-gpio";
++
++		sda-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
++		scl-gpios = <&tlmm 7 GPIO_ACTIVE_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		status = "disabled";
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -199,7 +210,7 @@ &gpi_dma0 {
+ 	status = "okay";
+ };
+ 
+-&i2c2 {
++&i2c2_gpio {
+ 	clock-frequency = <400000>;
+ 	status = "okay";
+ 
+
 -- 
-2.43.0
+2.39.2
 
