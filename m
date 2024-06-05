@@ -1,249 +1,266 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2100.outbound.protection.partner.outlook.cn [139.219.146.100])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE1218F2F3
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 10:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717584719; cv=fail; b=fO/Aacn9JqIIFaEx/a5+Dqtr343jpC7a1BbOYfLmCnyweLuBOBqVTIo4nfJwsh3qfSpj80x2SYjfDeFN3/KfMf2Xkxi1UyHxmvWuetR7dpacmjHcrtGtyUo19YBSBNiP6pKe4mwgQ9GHTYmdgExbL9+cGwrNMIWowXFyNoNSFMU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717584719; c=relaxed/simple;
-	bh=X8mU+BFJVhzadKrxAiTWr+j2iubxqf8A9NkTmK5zLqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=s6yB6eqpXH07gLdr7MQYwUFC0kCiYLFoXo/kup9lXM+dqIX0ggmh8+gIibSyD407xyq5XWHHr1Yh4rwoj3Oj1vsyQ1I4d9mxt3ekvjbbYPCfID1dmb5gSktR+gRO6WnQfbsqflqZDmJMtKrcrpfjn2ZuWwXTJUug4qrDl207oPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OSNeJ9fJBfpuvny2TpB+5yWsFBxvfG4xfH+2io/7qIt5V5d/LVF0cCU9EUq2jUV+HiZfv2DpCkWWjqIWSSGSg/UDyoDC6gSmKfqyacAue24U0Gm/g8+54ZF/JeTn9oYm3ISb4bXgTyaAv1q0KAdnrGTrImp2VX6p7zX3TWtUkzjLz0FF5KmxfiTWk+A1LB4mV2i6t3Mudwh5YFlOYxzkiHhDz/zq3w6ui7uYoiZTICZcOWvWCJWNFZTQSPY78iVTp9vlSBHKp/zm/62exNKt7pHlI1BbzATf4Vawzal9MC0kR5wB4OmYodjFCwowRc5f5/xFnMipOjKQgBVipIf6Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pXD+ynwrgiwMFwhjM0g/3kxVIaoYegfEqya7687XTBE=;
- b=ClLuu4XdQjDxnemOLoXcvh+UDTIGW6mcr131Uf7TzpLWLQ9j2g2hW5xsF5rEaOeiCKsiCCqLUIGkz6f9yqklSoylfEOs+GYr1IumEfass5u/peewqPgiym7LZ1Q7T8t3/ZYdffdO12YDD2M/JMWfDPEFHPUbiR0fMzR56L6AkimUvxFVQcaDKBA0cvLgL+dy/8o1FcPDpNmflrFM+Nj2TnCZcimeNdiW9EdwnCdvcSKu/kGYMHalTwPMs33dc247USy9dsELWzmxywfpIA8TcsucbzI484Sy84rq70C3vI66afEGQRbdR8nBK5UuVIunMtPPiGMdK8pPRug9yhWOsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14) by ZQ2PR01MB1322.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:11::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.43; Wed, 5 Jun
- 2024 07:17:08 +0000
-Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- ([fe80::61c0:a8fc:1462:bc54]) by
- ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn ([fe80::61c0:a8fc:1462:bc54%6])
- with mapi id 15.20.7587.043; Wed, 5 Jun 2024 07:17:08 +0000
-From: Hal Feng <hal.feng@starfivetech.com>
-To: Palmer Dabbelt <palmer@dabbelt.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Hal Feng <hal.feng@starfivetech.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] riscv: defconfig: Enable StarFive JH7110 drivers
-Date: Wed,  5 Jun 2024 15:17:01 +0800
-Message-ID: <20240605071701.13737-1-hal.feng@starfivetech.com>
-X-Mailer: git-send-email 2.43.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZQ0PR01CA0021.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:2::14) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:7::14)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374541946D3;
+	Wed,  5 Jun 2024 10:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717584772; cv=none; b=eKmw6yqx3guhfqnF5r2eiARz5L4m0KAYgI6V/BsF7UZpOR47r44pNoAaepe6d2lDDQxzZnpplu+Pr/h04yhyDIf13L4qtjSTD9XKley3K3AHWAblx2XOtv1uZh6ZPsKcGy1ZviUyeqszsLBH/9Tx62Zuwa9LWLP3lIcAdUUPuXI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717584772; c=relaxed/simple;
+	bh=7htvEWCotUmbZeaXgqHfgnS0af7cxO3nra+5pZMCWzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hDvrp9M4lwfni9iueq3bIuw2CbdnkMTlSU0aNx09wNnslZk3gz1IbwVVRNnpIc2RT60fMeDHzmK7KDuMTP6TTUMZaxXxPkC+hXakWCV75ppszUMG2nn7Yut5j+/XKYQA64RuiwgJFFWI1aidMjIcLqJtnkPFsVe66KgtU6p0lrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R38xGkup; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R38xGkup"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4555S25B030335;
+	Wed, 5 Jun 2024 10:52:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9EhPoHnYt237zWZ8cAWGIZLoyRyox/Qg3D+1HOJedcw=; b=R38xGkupZfm734jG
+	ADuVCYpu36X3HwanG8jmL3qQ5uQX19nGgcWbihQhk9ny0LwO8nZoi7JlPIenXm+u
+	BqVt4nMHzEh42CEAwJBWrob5ZY85s2yAfhDO06Eb5EzSXJzlN7nkBReY8KcnYpEr
+	rpbSDdrnnDpScJRysIMbIYa1pI4QU1TcflKp7D7rEQ5NvO/JgDGTnSzWiD4ThT9v
+	eaxLQyaveKA/+gNZJMrwAf8BD+FT1mTWx/RuLn4eKB3f6nq1tZpaq97xpgiLy1uE
+	LOQS5vpgqY4fTek5wNxLLSRZH9xyxG96K8KsckfAm7gB9dcHbqdhVMYFvWZZmBeT
+	0PCnpw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjhw0rrrd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 10:52:16 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455AqEe6004196
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 5 Jun 2024 10:52:14 GMT
+Received: from [10.214.66.253] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
+ 03:52:08 -0700
+Message-ID: <afb0698e-68a1-47b8-ba37-c9e413ca3ee3@quicinc.com>
+Date: Wed, 5 Jun 2024 16:22:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1322:EE_
-X-MS-Office365-Filtering-Correlation-Id: d25c8b3d-50ff-4f73-63b7-08dc852f82ed
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|366007|1800799015|52116005|41320700004|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	rSpLgzsf5hXzS1ef2wgrNGMYJN+FLOUD8aSRSw5BqxD2rKJGeXQ4ts4JgS5yt3ZiCsZk0JMvOQCKA06Y9paObl/HIvWG+O3NR9A8xGILk2k2qCJjpZCFg2oUq+t5ayRNLDTS9d3fOKE4k4fMi4iED7btrwEknfqzuH8/ZjSKXsDxtrh2v3AdLOeGTXfBKPMn1I0eQo8AVwMmY0eN5p+bBQtiwUKIUabRDbSXRzKb76TCQIuk1xRBEdBqMAkcb+5fm7QalgkClbaUDN5Fs5QNS9GWb71shv9M5X4TZTQkquLCxWiYgAxZi6Su35LhoIJ9VBe3esfUqpxnQYlol9hRzLoh1YDqCXTd9L8ARtQdTrjmt8IAamMRIjBVB76r367Pspo6ZS9wr9Pe67AeGYZ3pfkBljGUD6JvQmsvO2eXViRtLM2SpjN104+Zg/w+I2btTAz3NS53+dx+sS7G4E6C66OKaI7wzyU+3i17HBHVvPYSNKKRqyR3YPWlZfQDSfc2rSndbwPRPrCDexDmPRNfqOwLAwYTSudA2px03vMUSbtS7BLIiYBtTE0ONLAmO2u13eC5G3bo7fefcKUSsOYKNSd5mKzppEkuRE97qaHW6GAGxO9MFmJ5ZN0LXn4hNe/u
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(41320700004)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mx7qbCIsgFDWpxnGGsfwFNrFhEZErPdX9MsK3MA0rBSPucdEdeFI7enn6QAo?=
- =?us-ascii?Q?3vGAS59ut8AYIpky3gSOTF7G85VQ9tk+0vxlUP4y8dE5DYOdny1k5MK/o58n?=
- =?us-ascii?Q?5+foQFSuCyPM8dc/1KdjdtpEv+AAMwBddMrhHCjw/ZlvtfRfHeKSLbiwmtL9?=
- =?us-ascii?Q?/QvD9R79KIpCjmux5GyX1HwcQKssOmYkHmX0CGXBOU1nCfRsAUgTKfQms4LD?=
- =?us-ascii?Q?uEF1BMwqrAfI80UDbjHl9JOR820BYo3IcelVtF8Ys2WjLpBlaUBjcGqfgQ6E?=
- =?us-ascii?Q?Uttmn/dN0Ml7CXFeapb6BYTrOoD7RF7Z/xgGcDCm9Hl7IXmc+WPv13EXJVSu?=
- =?us-ascii?Q?idfVinojmgoYoUrzZrsrvatuUAZuI7ba3JFxRjPGb+L5R6vBDpPVAWmr/Lkz?=
- =?us-ascii?Q?stb8vRzWGbwMoQM8cXxFLB5gFhLJL0SNlf7mdHuZbNCsvLhnJGw+D4pX0qpz?=
- =?us-ascii?Q?I0w39t+D+TUtdJc1Neg5NZRS/frJsNPgln5ZwwAk6JOWqcHR2+HtpQ/kDzcb?=
- =?us-ascii?Q?UzccVy84l2BuXr3qoUY7lUqAE7CiJM7g9iHYf0MsvRPnNbmU4FYW2+pQcctr?=
- =?us-ascii?Q?5cVuU+5iOBIOYUKCm3338BQJBIrgZl/irFhoJopdPYRYmJRWlBrpVJ4+PjhG?=
- =?us-ascii?Q?lx+mbpgt6jBU7UN9Nf/AHh9sdTejKk4u940LwWwjZw2vLMhoxw7yRAlwAGUH?=
- =?us-ascii?Q?bcwdyhVTxr45+HRL4iWx/XN2Q+1pQa033v9eAQUrfY9EOH4yboLi7do6XaAU?=
- =?us-ascii?Q?s3XJt7ngArSuSZioy26oGt4zmlD72a4QuNdB2Sng7k/NWBuJqe+JCbjM9kgM?=
- =?us-ascii?Q?173ljemGmAwAbma3kJJirX9C5ZdL5rkTDezVGCNJ98sN3E2AJTEU7fbqbJUn?=
- =?us-ascii?Q?pC1pLaLRZ8EMLGMZu+ubm5TVba0Oija/xHAItZEwhOQJrYpdQgxhxi2fh1Ax?=
- =?us-ascii?Q?UXrXLDRl5i2z9z3HLqG1VyGv274f4HVwpmDbr9VHG/Zy9gsvCbiUJy0IY7B9?=
- =?us-ascii?Q?2/5U2KPHG5PRsEbKhJ5g2TcegjbPBmY6+VEjUK0w+PSytxkLsxlUfxe0XeRH?=
- =?us-ascii?Q?SILClVa9mfk54jLDejRzIBT8nEkkBtBuqCc5GfxoTt3jKozlAY9pMVXTchZ1?=
- =?us-ascii?Q?7U6RGz33FvW0Bo3BmJfmeCKhw/a/ciKYd5L6cqh7to2m+xC+1/gckzyE6GDH?=
- =?us-ascii?Q?VuXWNYEVtEpgHcdHt6ugmk7cpWJa74/LVX/Na7564QwU2U9j/DEc0BKWCmgG?=
- =?us-ascii?Q?uxI/PPE3hN/PGBgW7wetNXJkpSdf7onf28lRcVlBCJqHI+lzk5nZGIpEM2QX?=
- =?us-ascii?Q?DlKAtt8TFUNXryVw4/TT9qwUDtYg0FlHob48vFd9M4dvrkOf22MdmYax+ZxC?=
- =?us-ascii?Q?yz0f9qixw9QQxbfwZvV6PbaEGC4ItDbaVBg1ziuW3nEfDD+iMem+COerdnx0?=
- =?us-ascii?Q?27MA1275WmjEgtAlVDW2SwPHywqgteRK0jRZwgezmV61XPmDNlazMqnbVk6z?=
- =?us-ascii?Q?Qh55JUOuXCMZJ/oigNIJNj4xbdA2gzLCpXwSXB/gwpoVcgHf9dYHug/q8rbu?=
- =?us-ascii?Q?YY+ezzt7Qfi1lmOtIfCaQvU6rp3XkdzfTcrbjGzeiKZ9Ae2mEwBCTLrFG0TC?=
- =?us-ascii?Q?ZA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d25c8b3d-50ff-4f73-63b7-08dc852f82ed
-X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 07:17:08.7316
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jKVw9ISFhDkEHWvlLIiGVke+xFCs0sXG47qz2A7VB+3YsaTlYD4GzM6n94e9tmAgK9y6hntX8Gkhw5PBKjged2MiGAcSM+NucdiBwtPtUSk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1322
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 3/5] iommu/arm-smmu: introduction of ACTLR for custom
+ prefetcher settings
+To: Rob Clark <robdclark@gmail.com>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>, <will@kernel.org>,
+        <robin.murphy@arm.com>, <joro@8bytes.org>, <jsnitsel@redhat.com>,
+        <quic_bjorande@quicinc.com>, <mani@kernel.org>,
+        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
+        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
+        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
+        <quic_molvera@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>
+References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
+ <20240123144543.9405-4-quic_bibekkum@quicinc.com>
+ <CAF6AEGs3_wBNo58EbGicFoQuq8--fDohTGv1JSFgoViygLS5Lg@mail.gmail.com>
+ <f2222714-1e00-424e-946d-c314d55541b8@quicinc.com>
+ <51b2bd40-888d-4ee4-956f-c5239c5be9e9@linaro.org>
+ <0a867cd1-8d99-495e-ae7e-a097fc9c00e9@quicinc.com>
+ <7140cdb8-eda4-4dcd-b5e3-c4acdd01befb@linaro.org>
+ <omswcicgc2kqd6gp4bebd43sklfs2wqyaorhfyb2wumoeo6v74@gaay3p5m46xi>
+ <CAF6AEGub2b5SRw7kDUGfKQQ35VSsMkQ9LNExSkyHHczdFa2T4Q@mail.gmail.com>
+ <9992067e-51c5-4a55-8d66-55a102a001b6@quicinc.com>
+ <CAF6AEGsxKwzX6it4vipggOdGqNVzPbwMj6a0h871a=GfwUp0Cg@mail.gmail.com>
+Content-Language: en-US
+From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+In-Reply-To: <CAF6AEGsxKwzX6it4vipggOdGqNVzPbwMj6a0h871a=GfwUp0Cg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: r6LXRxUn4HzyQNKmltphAen89s29Q2oI
+X-Proofpoint-GUID: r6LXRxUn4HzyQNKmltphAen89s29Q2oI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-05_01,2024-06-05_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
+ definitions=main-2406050082
 
-Add support for StarFive JH7110 SoC and VisionFive 2 board.
-- Cache
-- Temperature sensor
-- PMIC (AXP15060)
-- Ethernet PHY (YT8531)
-- Restart GPIO
-- RNG
-- I2C
-- SPI
-- Quad SPI
-- PCIe
-- USB & USB 2.0 PHY & PCIe 2.0/USB 3.0 PHY
-- Audio (I2S / TDM / PWM-DAC)
-- MIPI-CSI2 RX & D-PHY RX
+On 6/5/2024 12:19 AM, Rob Clark wrote:
+> On Thu, May 30, 2024 at 2:22 AM Bibek Kumar Patro
+> <quic_bibekkum@quicinc.com> wrote:
+>>
+>>
+>>
+>> On 5/28/2024 9:38 PM, Rob Clark wrote:
+>>> On Tue, May 28, 2024 at 6:06 AM Dmitry Baryshkov
+>>> <dmitry.baryshkov@linaro.org> wrote:
+>>>>
+>>>> On Tue, May 28, 2024 at 02:59:51PM +0200, Konrad Dybcio wrote:
+>>>>>
+>>>>>
+>>>>> On 5/15/24 15:59, Bibek Kumar Patro wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 5/10/2024 6:32 PM, Konrad Dybcio wrote:
+>>>>>>> On 10.05.2024 2:52 PM, Bibek Kumar Patro wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 5/1/2024 12:30 AM, Rob Clark wrote:
+>>>>>>>>> On Tue, Jan 23, 2024 at 7:00 AM Bibek Kumar Patro
+>>>>>>>>> <quic_bibekkum@quicinc.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> Currently in Qualcomm  SoCs the default prefetch is set to 1 which allows
+>>>>>>>>>> the TLB to fetch just the next page table. MMU-500 features ACTLR
+>>>>>>>>>> register which is implementation defined and is used for Qualcomm SoCs
+>>>>>>>>>> to have a custom prefetch setting enabling TLB to prefetch the next set
+>>>>>>>>>> of page tables accordingly allowing for faster translations.
+>>>>>>>>>>
+>>>>>>>>>> ACTLR value is unique for each SMR (Stream matching register) and stored
+>>>>>>>>>> in a pre-populated table. This value is set to the register during
+>>>>>>>>>> context bank initialisation.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+>>>>>>>>>> ---
+>>>>>>>
+>>>>>>> [...]
+>>>>>>>
+>>>>>>>>>> +
+>>>>>>>>>> +               for_each_cfg_sme(cfg, fwspec, j, idx) {
+>>>>>>>>>> +                       smr = &smmu->smrs[idx];
+>>>>>>>>>> +                       if (smr_is_subset(smr, id, mask)) {
+>>>>>>>>>> +                               arm_smmu_cb_write(smmu, cbndx, ARM_SMMU_CB_ACTLR,
+>>>>>>>>>> +                                               actlrcfg[i].actlr);
+>>>>>>>>>
+>>>>>>>>> So, this makes ACTLR look like kind of a FIFO.  But I'm looking at
+>>>>>>>>> downstream kgsl's PRR thing (which we'll need to implement vulkan
+>>>>>>>>> sparse residency), and it appears to be wanting to set BIT(5) in ACTLR
+>>>>>>>>> to enable PRR.
+>>>>>>>>>
+>>>>>>>>>             val = KGSL_IOMMU_GET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR);
+>>>>>>>>>             val |= FIELD_PREP(KGSL_IOMMU_ACTLR_PRR_ENABLE, 1);
+>>>>>>>>>             KGSL_IOMMU_SET_CTX_REG(ctx, KGSL_IOMMU_CTX_ACTLR, val);
+>>>>>>>>>
+>>>>>>>>> Any idea how this works?  And does it need to be done before or after
+>>>>>>>>> the ACTLR programming done in this patch?
+>>>>>>>>>
+>>>>>>>>> BR,
+>>>>>>>>> -R
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Hi Rob,
+>>>>>>>>
+>>>>>>>> Can you please help provide some more clarification on the FIFO part? By FIFO are you referring to the storing of ACTLR data in the table?
+>>>>>>>>
+>>>>>>>> Thanks for pointing to the downstream implementation of kgsl driver for
+>>>>>>>> the PRR bit. Since kgsl driver is already handling this PRR bit's
+>>>>>>>> setting, this makes setting the PRR BIT(5) by SMMU driver redundant.
+>>>>>>>
+>>>>>>> The kgsl driver is not present upstream.
+>>>>>>>
+>>>>>>
+>>>>>> Right kgsl is not present upstream, it would be better to avoid configuring the PRR bit and can be handled by kgsl directly in downstream.
+>>>>>
+>>>>> No! Upstream is not a dumping ground to reduce your technical debt.
+>>>>>
+>>>>> There is no kgsl driver upstream, so this ought to be handled here, in
+>>>>> the iommu driver (as poking at hardware A from driver B is usually not good
+>>>>> practice).
+>>>>
+>>>> I'd second the request here. If another driver has to control the
+>>>> behaviour of another driver, please add corresponding API for that.
+>>>
+>>> We have adreno_smmu_priv for this purpose ;-)
+>>>
+>>
+>> Thanks Rob for pointing to this private interface structure between smmu
+>> and gpu. I think it's similar to what you're trying to implement here
+>> https://lore.kernel.org/all/CAF6AEGtm-KweFdMFvahH1pWmpOq7dW_p0Xe_13aHGWt0jSbg8w@mail.gmail.com/#t
+>> I can add an api "set_actlr_prr()" with smmu_domain cookie, page pointer
+>> as two parameters. This api then can be used by drm/msm driver to carry
+>> out the prr implementation by simply calling this.
+>> Would this be okay Rob,Konrad,Dmitry?
+>> Let me know if any other suggestions you have in mind as well regarding
+>> parameters and placement.
+> 
+> Hey Bibek, quick question.. is ACTLR preserved across a suspend/resume
+> cycle?  Or does it need to be reprogrammed on resume?  And same
+> question for these two PRR related regs:
+> 
+>    /* Global SMMU register offsets */
+>    #define KGSL_IOMMU_PRR_CFG_LADDR        0x6008
+>    #define KGSL_IOMMU_PRR_CFG_UADDR        0x600c
+> 
+> (ie. high/low 32b of the PRR page)
+> 
 
-Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
----
+Hey Rob, In suspend/resume, the register space power rails are not in
+disabled state, so it won't go back to reset values and should retain
+it's value. Only in hibernation cycle the registers' value would get reset.
 
-As more drivers of StarFive JH7110 VisionFive 2 board are upstream,
-add support for them in riscv defconfig.
+So the hi/low address bit register for PRR page would also retain it's 
+value along with the ACTLR registers.
 
-Changes since v2:
-- As the JH7110 PCIe driver was accepted, add CONFIG_PCIE_STARFIVE_HOST=m.
-- Add CONFIG_MOTORCOMM_PHY=m, which supports the ethernet phy chips
-  on the board.
-- Rebase on the -next branch. 
+> I was starting to type up a patch to add PRR configuration, but
+> depending on whether it interacts with suspend/resume, it might be
+> better form arm-smmu-qcom.c to just always enable and configure PRR
+> (including allocating a page to have an address to program into
+> PRR_CFG_LADDR/UADDR), and instead add an interface to return the PRR
+> page?  I think there is no harm in unconditionally configuring PRR for
+> gpu smmu.
 
-Changes since v1:
-- Drop CONFIG_STAGING=y, CONFIG_STAGING_MEDIA=y,
-  CONFIG_V4L_PLATFORM_DRIVERS=y, CONFIG_VIDEO_STARFIVE_CAMSS=m.
-- Change CONFIG_SENSORS_SFCTEMP as a module.
-- Drop CONFIG_CLK_STARFIVE_JH7110_*=y, because they are not critical to boot.
-- Update the commit message.
+Sounds okay though since this would not interact with suspend/resume path.
+But I think, suppose in-case this page would have some other references 
+as well before configuring the address to the registers for PRR 
+configuration, then  GPU would be dependent on arm-smmu-qcom for this page.
+So Instead an endpoint api in arm-smmu-qcom.c can recieve the just the 
+page-address, and bit set status from drm/msm driver and can set/reset 
+the bit along with any page-address they want ?
+It would mean the interface will be smmu's , but the choice of 
+configuration data to the registers' will be still with gpu.
 
-History:
-v2: https://lore.kernel.org/all/20240506034627.66765-1-hal.feng@starfivetech.com/
-v1: https://lore.kernel.org/all/20240403060902.42834-1-hal.feng@starfivetech.com/
+I wrote up a small patch with this implementation, would you like to 
+review that?
+Will send it in this v11 series as new patch.
 
----
- arch/riscv/configs/defconfig | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Thanks & regards,
+Bibek
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 12dc8c73a8ac..6e10039c5c42 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -110,8 +110,10 @@ CONFIG_PCIEPORTBUS=y
- CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCIE_XILINX=y
- CONFIG_PCIE_FU740=y
-+CONFIG_PCIE_STARFIVE_HOST=m
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_SIFIVE_CCACHE=y
- CONFIG_MTD=y
- CONFIG_MTD_BLOCK=y
- CONFIG_MTD_CFI=y
-@@ -143,6 +145,7 @@ CONFIG_RAVB=y
- CONFIG_STMMAC_ETH=m
- CONFIG_MICREL_PHY=y
- CONFIG_MICROSEMI_PHY=y
-+CONFIG_MOTORCOMM_PHY=m
- CONFIG_CAN_RCAR_CANFD=m
- CONFIG_INPUT_MOUSEDEV=y
- CONFIG_KEYBOARD_SUN4I_LRADC=m
-@@ -155,24 +158,35 @@ CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_HW_RANDOM=y
- CONFIG_HW_RANDOM_VIRTIO=y
-+CONFIG_HW_RANDOM_JH7110=m
-+CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=m
-+CONFIG_I2C_DESIGNWARE_PLATFORM=y
- CONFIG_I2C_MV64XXX=m
- CONFIG_I2C_RIIC=y
- CONFIG_SPI=y
-+CONFIG_SPI_CADENCE_QUADSPI=m
-+CONFIG_SPI_PL022=m
- CONFIG_SPI_RSPI=m
- CONFIG_SPI_SIFIVE=y
- CONFIG_SPI_SUN6I=y
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_GPIO_SIFIVE=y
-+CONFIG_POWER_RESET_GPIO_RESTART=y
-+CONFIG_SENSORS_SFCTEMP=m
- CONFIG_CPU_THERMAL=y
- CONFIG_DEVFREQ_THERMAL=y
- CONFIG_RZG2L_THERMAL=y
- CONFIG_WATCHDOG=y
- CONFIG_SUNXI_WATCHDOG=y
- CONFIG_RENESAS_RZG2LWDT=y
-+CONFIG_MFD_AXP20X_I2C=y
- CONFIG_REGULATOR=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-+CONFIG_REGULATOR_AXP20X=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_MEDIA_SUPPORT=m
-+CONFIG_VIDEO_CADENCE_CSI2RX=m
- CONFIG_DRM=m
- CONFIG_DRM_RADEON=m
- CONFIG_DRM_NOUVEAU=m
-@@ -184,6 +198,10 @@ CONFIG_SOUND=y
- CONFIG_SND=y
- CONFIG_SND_SOC=y
- CONFIG_SND_SOC_RZ=m
-+CONFIG_SND_DESIGNWARE_I2S=m
-+CONFIG_SND_SOC_STARFIVE=m
-+CONFIG_SND_SOC_JH7110_PWMDAC=m
-+CONFIG_SND_SOC_JH7110_TDM=m
- CONFIG_SND_SOC_WM8978=m
- CONFIG_SND_SIMPLE_CARD=m
- CONFIG_USB=y
-@@ -197,6 +215,11 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
- CONFIG_USB_RENESAS_USBHS=m
- CONFIG_USB_STORAGE=y
- CONFIG_USB_UAS=y
-+CONFIG_USB_CDNS_SUPPORT=m
-+CONFIG_USB_CDNS3=m
-+CONFIG_USB_CDNS3_GADGET=y
-+CONFIG_USB_CDNS3_HOST=y
-+CONFIG_USB_CDNS3_STARFIVE=m
- CONFIG_USB_MUSB_HDRC=m
- CONFIG_USB_MUSB_SUNXI=m
- CONFIG_NOP_USB_XCEIV=m
-@@ -246,6 +269,9 @@ CONFIG_RZG2L_ADC=m
- CONFIG_RESET_RZG2L_USBPHY_CTRL=y
- CONFIG_PHY_SUN4I_USB=m
- CONFIG_PHY_RCAR_GEN3_USB2=y
-+CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
-+CONFIG_PHY_STARFIVE_JH7110_PCIE=m
-+CONFIG_PHY_STARFIVE_JH7110_USB=m
- CONFIG_LIBNVDIMM=y
- CONFIG_NVMEM_SUNXI_SID=y
- CONFIG_EXT4_FS=y
--- 
-2.43.2
-
+> 
+> BR,
+> -R
+> 
+>> Thanks & regards,
+>> Bibek
+>>
+>>> BR,
+>>> -R
+>>>
+>>>>>
+>>>>>>
+>>>>>>>> Thanks for bringing up this point.
+>>>>>>>> I will send v10 patch series removing this BIT(5) setting from the ACTLR
+>>>>>>>> table.
+>>>>>>>
+>>>>>>> I think it's generally saner to configure the SMMU from the SMMU driver..
+>>>>>>
+>>>>>> Yes, agree on this. But since PRR bit is not directly related to SMMU
+>>>>>> configuration so I think it would be better to remove this PRR bit
+>>>>>> setting from SMMU driver based on my understanding.
+>>>>>
+>>>>> Why is it not related? We still don't know what it does.
+>>>>>
+>>>>> Konrad
+>>>>
+>>>> --
+>>>> With best wishes
+>>>> Dmitry
