@@ -1,59 +1,70 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B6B1922CA
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84351922DD
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717572161; cv=none; b=akqQx8pH00GOSAuFqCzSOHLB/wGQcyUFe/vcbSRP3p310zfXydBQolZvfPDoa+hre+wHKajUCvwFOG4/yvYfzHrqY5IgoO8BvhhxVm1M0R7WEsKskQErM/RIU30/9hJ/yjMdyw9Zw3ivKmB5thQS5GNxXmT1II2aNRYdWUuD4LQ=
+	t=1717572177; cv=none; b=e7T6GC8xJslOvaPP8rXQ+YBh+3oBb97UwrIZmZ5hIwSqD+RMyuPTrVR5u538hKdKQBL9H/xwniWZQ3ezBdF2bDkB6nGV6h+3eHefK3Cefa87p5gaOa1Qn4yv9vaPrDnL9+1lmeyXXbS+wPcjbdMqABp/rEwebZgiSO+TJNU6fHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717572161; c=relaxed/simple;
-	bh=qPGwC7HGbWgPLBtWVHtHAymAsmQlkK7RgCtJb9BIm4o=;
+	s=arc-20240116; t=1717572177; c=relaxed/simple;
+	bh=R4YKIM6OKd1WIlOGsM6YjhBav9nZ9U9MhpDx2XiXALo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZOHPM8yzyme+D2lM/NZ6SWYyTdpBPtsZxlqsYitxUFiwFv6U9GILzquL3r5iNT0NQvPGC6pTuNzmHR4dYLNffhEsU2rOvz8VkrsWEDg//vKJndUW2/ex8qHvBcDcF5pBEQp6NcJ5b17xXyBNROBhcjo1KcUUTLcsaThlrkaaCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DD7GC1V7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9ZZfYUAnfQs6jG8+PYNBd6aAUnYUhTziM19nbO9pbJYH2GCU+setlm37YezLG/GviHKc1e27JQUyP/phzRuG6UocHjg6Yz1QINK4uxfly2SqW0RkQs1s1YhFBInqDeGNfDMvxX6nCE71wZdqMqiJcz47IBctkmM+PSnHTbILDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YD55qfcj; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DD7GC1V7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hahZNk18IXIh7Vd2j2tgth9wPADAG2KPuz9e9/5LimA=; b=DD7GC1V7JoVstDsD3rNCi4X5ek
-	AEEKVCB9RhHpdJ4LW0Ivjn6qTgcQtAN8xNrWUXyv3yNBDgnLfiN9NmjyoecoFAI3UGBFB1+z3cGvQ
-	aaNZ2cwGXDzb1a4eGZuIEG/SUeJKo4j81B2e6MVafuN9IBAi2gcu/gRtnPfii4bUJ7z96uORZQ1U5
-	MkTNQC343ZHiBTBRxXZAKjX0mQ0sfn0hwAYda7xC3rAACa4cY9Iq1at3KS1JNbB+4fNBsmc1+UxVv
-	we8yzcJl60IJY0OyMyq5DSDDWYJ+aR6JOm+rMSj3u+KTub8fXzDQ2A3QZisJxO18ONIqvWVx/MACH
-	Bi+oLquw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEkyZ-0000000FR1o-1Dm8;
-	Wed, 05 Jun 2024 07:22:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D14AC30068B; Wed,  5 Jun 2024 09:22:25 +0200 (CEST)
-Date: Wed, 5 Jun 2024 09:22:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Luis Machado <luis.machado@arm.com>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
-	wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de,
-	nd <nd@arm.com>, John Stultz <jstultz@google.com>,
-	Hongyan.Xia2@arm.com
-Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
-Message-ID: <20240605072225.GR12673@noisy.programming.kicks-ass.net>
-References: <20240425104220.GE21980@noisy.programming.kicks-ass.net>
- <20240425114949.GH12673@noisy.programming.kicks-ass.net>
- <20240426093241.GI12673@noisy.programming.kicks-ass.net>
- <c6152855-ef92-4c24-a3f5-64d4256b6789@arm.com>
- <2fba04b0-e55e-41f4-8b7a-723734fe1ad2@arm.com>
- <20240529225036.GN40213@noisy.programming.kicks-ass.net>
- <7eac0774-0f9d-487c-97b6-ab0e85f0ae3a@arm.com>
- <20240604101107.GO26599@noisy.programming.kicks-ass.net>
- <24e09046-74ee-4ebb-ac1a-bdc84568e825@arm.com>
- <20240604191220.GP40213@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YD55qfcj"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52b950aa47bso2644220e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717572174; x=1718176974; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RqnZdFgvboe7tX2UKgOGW0Pa1N7zuJuJPg9c9wyxQMg=;
+        b=YD55qfcjDfOPWxSNsWWoCc7hMBzAWe+akRiI8lzSH8z/iGpBGcYp0JFqNsj3je+ItV
+         P1V6WizYoA/H0X5EsVo03D2uWwuj3nt648KNBkko/8+xZIHTi8NF35GhdFEJgMBHAfwA
+         0CrWixDkKgPJjXRXdHIMPsc90/VuMNk7X8HX+5nSzmTUidkjHs91TPIXzvSIjxkU+w31
+         EqRBBlF6p50NGZAYwFW9USrK5daTHT+T9/NihUkPrJ0F03W5KiGZMVQJXz9beozjj7Bz
+         V5QfTpO/kxaiEqr04mcE7etRSEon+zfE4F+aVLK6p70w5phZf57JmDX41BEjFlSOLlqh
+         pDJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717572174; x=1718176974;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RqnZdFgvboe7tX2UKgOGW0Pa1N7zuJuJPg9c9wyxQMg=;
+        b=sls2MaRPkIK+KHxELOgsmC+aVdFKHJBjdTVSJoiwE1k42rI9PZoiRZnRPLDiymdhyB
+         3J9r1oelklftObCQbFWzZoxzxPfdoM/fHv3kfJs/QriJoBAnLbRtAvOo/APQ84nU7Zzg
+         HGwcJIsLEidCvsMSCpWe6NwIongVuypHPOxjDFxGMl22jxlLlAdZnecjj7pn9km+kniw
+         7JtUcX0QT8YjW0ahHUG84T4zD5wyDjQhRTzWOr8S7oXQyif9WREy1B8ZnaZ669VZRCPi
+         HHgVxlIb01zEftrRYWyL2WShdFl/NVX7/7Q5kFD/aDOLkzFWdSJfdUK8eNSQIWsS+5tl
+         67pQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVNzNTnb7zFFox6VS6anZn3obgRVwYtGd3Tk0/YrnLJ1KqvU0IiQcVjIFks0TchDr/6sGKLE4hCfRVDZudftr7jpB/0ZodfrnLIb44k
+X-Gm-Message-State: AOJu0Yz503iOGpMvesCBBVYQz+6fUP7ztW90THxr9RT6Lzduglqawo6a
+	93FY+AbjiVgNB0L0oxhkf9FULEhEHFiAGsKy0bi6F7d1VOm5Ib1D3qRrYxeKP6g=
+X-Google-Smtp-Source: AGHT+IGrEUTIRlHebCjYcSxaWnRyULJcyEIEq/vcwbc8wOASvTCW7s5vwhOA3Z/T5Q0VVe7HxptVtw==
+X-Received: by 2002:a05:6512:2308:b0:52b:83d5:34 with SMTP id 2adb3069b0e04-52bab2843eemr1239519e87.0.1717572173579;
+        Wed, 05 Jun 2024 00:22:53 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68519892c8sm695071366b.65.2024.06.05.00.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 00:22:53 -0700 (PDT)
+Date: Wed, 5 Jun 2024 10:22:49 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Dmitry Yashin <dmt.yashin@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman <jonas@kwiboo.se>,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] pinctrl: rockchip: add rk3308b SoC support
+Message-ID: <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
+References: <20240604141020.21725-1-dmt.yashin@gmail.com>
+ <20240604141020.21725-3-dmt.yashin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,79 +73,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240604191220.GP40213@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240604141020.21725-3-dmt.yashin@gmail.com>
 
-On Tue, Jun 04, 2024 at 09:12:20PM +0200, Peter Zijlstra wrote:
-
-> But with the above, you skip inc for sched_delayed, but dequeue_task()
-> will have done the dec, so isn't it then still unbalanced?
+On Tue, Jun 04, 2024 at 07:10:20PM +0500, Dmitry Yashin wrote:
+> Add pinctrl support for rk3308b. This pin controller much the same as
+> rk3308's, but with additional iomux routes and 3bit iomuxes selected
+> via gpio##_sel_src_ctrl registers. Set them up in the function
+> rk3308b_soc_sel_src_init to use new 3bit iomuxes over some 2bit old
+> ones and update iomux_recalced and iomux_routes for the new SoC's.
 > 
-> Oh well, I'll go stare at this in tomorrow.
+> Fixes: 1f3e25a06883 ("pinctrl: rockchip: fix RK3308 pinmux bits")
 
-OK, just before I went to play in my giant hamster wheel it hit me.
+Why does this one have a Fixes tag?  Isn't this new hardware support?
+Possibly patch 1/2 was not actually a fix but just preparation for this
+patch?
 
-When dequeue_task() 'fails' and sets sched_delayed, we'll have done
-uclamp_rq_dec().
+regards,
+dan carpenter
 
-Then, since the delayed task is still on the rq -- per the failure -- it
-can be migrated, this will again do dequeue_task() which will *agian* do
-a uclamp_rq_dec().
+> Signed-off-by: Dmitry Yashin <dmt.yashin@gmail.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-So now we have a double dequeue -- *FAIL*.
-
-Worse, the migration will then do an enqueue_task() on the new rq
-causing uclamp_rq_inc(). If you then get a ttwu() / ENQUEUE_DELAYED, you
-can tickle yet another uclamp_rq_inc() for another fail.
-
-Something like the below avoids uclamp_rq_{inc,dec}() when
-->sched_delayed, and moves it post class->enqueue_task() such that for
-the ENQUEUE_DELAYED case, we *will* do the inc after ->sched_delayed
-gets cleared.
-
-Hmm?
-
----
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9ac1054c2a4bb..965e6464e68e9 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1676,6 +1676,9 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
-+	if (p->se.sched_delayed)
-+		return;
-+
- 	for_each_clamp_id(clamp_id)
- 		uclamp_rq_inc_id(rq, p, clamp_id);
- 
-@@ -1700,6 +1703,9 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
- 	if (unlikely(!p->sched_class->uclamp_enabled))
- 		return;
- 
-+	if (p->se.sched_delayed)
-+		return;
-+
- 	for_each_clamp_id(clamp_id)
- 		uclamp_rq_dec_id(rq, p, clamp_id);
- }
-@@ -1979,9 +1985,10 @@ void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 		psi_enqueue(p, (flags & ENQUEUE_WAKEUP) && !(flags & ENQUEUE_MIGRATED));
- 	}
- 
--	uclamp_rq_inc(rq, p);
- 	p->sched_class->enqueue_task(rq, p, flags);
- 
-+	uclamp_rq_inc(rq, p);
-+
- 	if (sched_core_enabled(rq))
- 		sched_core_enqueue(rq, p);
- }
-@@ -2003,6 +2010,7 @@ bool dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- 	}
- 
- 	uclamp_rq_dec(rq, p);
-+
- 	return p->sched_class->dequeue_task(rq, p, flags);
- }
- 
