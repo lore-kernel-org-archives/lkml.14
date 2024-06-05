@@ -1,120 +1,140 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F5418F2D6;
-	Wed,  5 Jun 2024 09:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3689518FC89
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717578650; cv=none; b=i8c8PMO6bSiQwSka2BFiek17s4VRPRISO+JNdQtOQEpFRiTNxi6ggAGYRK80+RP6mt3xy+2nI05lGEDn6m7cD+v78bWbivjCQZzk4WKMIBhV/cQeIZQH4OAoJyJ/5MlaYyc3qaQz4otdiZms/klmMks3hw/OpUFFGxgX2re0i2o=
+	t=1717578658; cv=none; b=eDzjZEwl0NVADwditoAwtZ0x3pBY0Q+xAoTTpe5sSdxUZw4AE3Aw+Dk+qHBZeUezouwbxeWE6SdmDymSEJuuVPjlo7gz8qjSH9p+Sew5gWSGAHnkM9QPBlGUDVfiPt7NO1uJMbmTZ8qbjxXTd/rblhjEeM0m1o2OQVk3meeldwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717578650; c=relaxed/simple;
-	bh=E9mlxVsAtpUB6nBVoigmMF3884x4F+KavP/gsSdjtCg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E8TmNeHue1r0f/K+HJX7kOLoD5O5nNmD6oqViRrUgG6bUOaMy3oFsfytIkWGepJDo0vUyktQjuZkuGGSJ1pSLjyIXqhXGDE8EUC9IejlsMqnl23+arHZdhwRWCn/X1Y/K76dnVJI1YxMLTj/kNO+8QO/I2DBp9If1+Tf03pe1dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RzA0KhH9; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1717578658; c=relaxed/simple;
+	bh=Ohf6oZ+oO2donfb/cODscDFAkvMhq+OmdtbGC2dDQx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ypx2vzqzfB1M+6KBREc+XN62t30UKw3hlFejARifoCcMRva90nQgJYVxgSnKU1Dzx9YsrKgfGhl74QPcQ9D9JsDaJh3GoTKy4lnNqpGvUIkniqoigg2imojcJFfS18LI30biSr/6lqyAGUT6NMIYxw7M1VWEsKBviIONOzLEd8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCiHKnN6; arc=none smtp.client-ip=209.85.160.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RzA0KhH9"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-57a32b0211aso2419938a12.2;
-        Wed, 05 Jun 2024 02:10:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCiHKnN6"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-24c9f892aeaso3637352fac.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717578647; x=1718183447; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4lR+1WqnhXPwMU9kwsa4y1gv6xK1HO88u8DJnvuwCmw=;
-        b=RzA0KhH9Sn/qhN8pZ+rk2lRp1OxR8XhwonmH+uznhWA7xh4EpFHUrQ4Bk+41lmlaA6
-         ith7NoIbyT/xupAbuLGAhG3YKh4kH4tq+lGG1LDtk94+bFhSJKsmIY43ahq3G4BDQNdV
-         nSOYe48g2C6/E6iiLGJODK2bVMexSh2OUauOJ+wfNK+DgEHDzn7joCG7Gi0QVadWx11r
-         +vhz60jlw6RagfwnNN9WNNsiPRyYCBJ9g0sJFSdsAZILCe8EC7cCB+y8U2ymAp3sXkaJ
-         61qhGtIyQflX11Cpe0EHjqlD9CLJxXXyIrPC3Fhcgy4UkmVqmq++/eubRwVvaaiY5zOa
-         OxEA==
+        d=gmail.com; s=20230601; t=1717578656; x=1718183456; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lTG6BM2D9pwAMXwuJmppHUX0zuuxDgXItlRkB2F6Whw=;
+        b=jCiHKnN63Af5aOgE6SLbJEzjFFmMY56psVg5tXC0H5aeCNKz203x6kboXnkE/pH2UW
+         6kmwdG7lpR2ln4vrgiVp18lx8fjf4YmeOxT0FWFzmmNCgqdsQzKTNojW5d1KuhsnA2YU
+         vndDE6ThwQxlOd6iQ0iPxTKgF/bJsDPqwWBciBLm+ipfWwObfBiCshmLwe03ftRq6FNj
+         G2PAHGXBxnRrQrqDhXnGAu+XRk2d/euJImGJ0zKaE5xcPjlbB2InYIetH97FfRDbObiP
+         7Dxhfhpap5YtebdFDsW4HqDWdEAnmb5RawbCwvxGQ9q3oOxIy3A85xjzGnEIV3Ouv6iq
+         h5Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717578647; x=1718183447;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4lR+1WqnhXPwMU9kwsa4y1gv6xK1HO88u8DJnvuwCmw=;
-        b=mksHaR2VkQftCg9PueAaCoRlQuIl2TCaDEtYRc29KP5JehiOsAz+g6AuAWxZZd0fMd
-         1iFaOxRlkV1jrXOTTHV6F+Pfd4Cu7pO+jJMXarX0rXNZ9oxevxVYoJl+nPw5unNjxRqM
-         jof4SXJD9rZamfQ/he9PEnqfSv+hz5DYpFo8OCGcELINN+IhWY6r5krVClWAc2WA2ZTG
-         kl9K24J8nge+zfeOpGRFR9EvEKpRC1Zz6NV69S4CJzxbx4CIMwjmCYr0LSskNuuoBGsT
-         vDZsbA7ItZtvdaBis/ePo5eDQ/qr5JBGdj5I5fdtyUjtR0SrPFEx7tBpzGcpbgMcY19q
-         3Gbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUP76OQqvbPqkj/35QbhSSrMhlbBUj1bx3mexJQxk1ExoA2a+N5KE7bJaonCAtVuZG0y7XpVyFX3Zs/sRwgCuly6sKjLVHw84qO/6ooFmikOMUd1wpYjcBWJMIrtRGbaVC/3k0Luf4KeEC+X9Vo0oyIGcI/bAyim5rH1gn6C+se3Nv27A==
-X-Gm-Message-State: AOJu0YzxGz/56nDqFWIZglBJLt1fMbQZVZlfuvc9npK/vechHXSKuToo
-	TKqSGxH5sxDi/22NZWrkTCjIleYFLpX5/LNzPTG2z/8PsX2I2WDH
-X-Google-Smtp-Source: AGHT+IEb+qa5wkz90x6hesV6mbtTRlnjCiHuPlt5a2o9TbchPKLNYP/jjd0I2dqLYdG8x8YgIN12UQ==
-X-Received: by 2002:a50:aa93:0:b0:57a:4ff8:2f11 with SMTP id 4fb4d7f45d1cf-57a8b674ac2mr1261245a12.5.1717578647241;
-        Wed, 05 Jun 2024 02:10:47 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a31be52b5sm8981542a12.49.2024.06.05.02.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 02:10:46 -0700 (PDT)
-Message-ID: <21d3314355b43ecd6acc42f9dfedec501418332d.camel@gmail.com>
-Subject: Re: [PATCH v3 1/6] spi: Add SPI mode bit for MOSI idle state
- configuration
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org, 
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-  nuno.sa@analog.com, dlechner@baylibre.com, marcelo.schmitt1@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 05 Jun 2024 11:14:33 +0200
-In-Reply-To: <e1d5d57f7a7481c84f64a764f9898122e278739b.1717539384.git.marcelo.schmitt@analog.com>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
-	 <e1d5d57f7a7481c84f64a764f9898122e278739b.1717539384.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+        d=1e100.net; s=20230601; t=1717578656; x=1718183456;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lTG6BM2D9pwAMXwuJmppHUX0zuuxDgXItlRkB2F6Whw=;
+        b=Jh0by8787pjvdvTl1QgNQ2sviHxpV1IuXHcs/z22waPRXJClnphe9rsXVhEX7pEqHt
+         KCQmB9abzDH1D+9d4+yG5zOs2jz1zeG9HSwfNzPZsNz0xARExwtXOzTB8/4UC5YtScyb
+         UHNe0oEvowgsQ98U9P7UmAiSi10gjbE3Zz+caw5GA6iuNVFlpPrYC64tOvQyKtnJj1nQ
+         KdBG69DEYGwXYBoIf1G+JiYEuMEhfZyAHm0FqiezI1leIibkRqN5KDTKQ34eF3ICUoNa
+         d2HjOOeIuzyVDx2sLl2i/rbfhFyWVaO2dpbFh+XBHAhE4XsOiPhpPfm5wY/SRCRoKGEL
+         9e2A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3sJ9SXub4eDytLYmU6zdoc0hEhfQsYo4ciHfoBrO+RHOietZPEQSKR75RU29RZSf1QMzWaHZAHZJAO/rMQyMtvfzbpSoAZD07Hliv
+X-Gm-Message-State: AOJu0Yx2Sb2Mmo32kVy1afCWJSULTK/b1NkypVR8RMQidQ37Wlqkr2sH
+	FPHNLgKfXknIoVBMNocYiHhv1vNsLWuSvSZp3f298+4e4O4wUFpc
+X-Google-Smtp-Source: AGHT+IGFVtRgof2Vr7XnnRzUy5kTO/s4QSnWyIEEWJVSWOqsNKgzwT8cHzfUyKrMnHJALyfjycu/iQ==
+X-Received: by 2002:a05:6870:7006:b0:24f:e:b110 with SMTP id 586e51a60fabf-25121e3aed8mr2366720fac.35.1717578655520;
+        Wed, 05 Jun 2024 02:10:55 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b2e143sm8247886b3a.198.2024.06.05.02.10.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 02:10:55 -0700 (PDT)
+Message-ID: <a3942479-764f-4e19-8b90-682fa56c8e20@gmail.com>
+Date: Wed, 5 Jun 2024 17:10:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/10] mm/ksm: reduce the flush action for ksm merging
+ page
+To: David Hildenbrand <david@redhat.com>, alexs@kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, izik.eidus@ravellosystems.com,
+ willy@infradead.org, aarcange@redhat.com, chrisw@sous-sol.org,
+ hughd@google.com
+References: <20240604042454.2012091-1-alexs@kernel.org>
+ <20240604042454.2012091-2-alexs@kernel.org>
+ <9ca730ce-2b2f-42d2-8c7a-78735a995c64@redhat.com>
+ <4d299245-3166-4810-b22b-2a5b4f54a049@gmail.com>
+ <7c6ae2a3-8ec3-4c9b-81c3-125f6973f0f3@redhat.com>
+ <d059e397-beea-43dc-8c58-d7833b1d8bd4@gmail.com>
+ <59921e08-d0f1-4bc8-acee-368a978286a4@redhat.com>
+Content-Language: en-US
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <59921e08-d0f1-4bc8-acee-368a978286a4@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2024-06-04 at 19:41 -0300, Marcelo Schmitt wrote:
-> The behavior of an SPI controller data output line (SDO or MOSI or COPI
-> (Controller Output Peripheral Input) for disambiguation) is not specified
-> when the controller is not clocking out data on SCLK edges. However, ther=
-e
-> exist SPI peripherals that require specific COPI line state when data is
-> not being clocked out of the controller.
-> Add SPI mode bit to allow pheripherals to request explicit COPI idle
-> behavior when needed.
->=20
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> =C2=A0drivers/spi/spi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 6 ++++++
-> =C2=A0include/uapi/linux/spi/spi.h | 3 ++-
-> =C2=A02 files changed, 8 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 289feccca376..6072b6e93bef 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -3921,6 +3921,12 @@ int spi_setup(struct spi_device *spi)
-> =C2=A0		(SPI_TX_DUAL | SPI_TX_QUAD | SPI_TX_OCTAL |
-> =C2=A0		 SPI_RX_DUAL | SPI_RX_QUAD | SPI_RX_OCTAL)))
-> =C2=A0		return -EINVAL;
-> +	/* Check against conflicting MOSI idle configuration */
-> +	if ((spi->mode & SPI_MOSI_IDLE_LOW) && (spi->mode &
-> SPI_MOSI_IDLE_HIGH)) {
-> +		dev_warn(&spi->dev,
-> +			 "setup: erratic MOSI idle configuration. Set to idle
-> low\n");
-> +		spi->mode &=3D ~SPI_MOSI_IDLE_HIGH;
-> +	}
 
-Should we assume such a thing? IOW, should this be treated as a warning or =
-a
-real error? I would assume this should be a configuration error and return =
--
-EINVAL but...
 
-- Nuno S=C3=A1
+On 6/5/24 3:26 PM, David Hildenbrand wrote:
+> On 04.06.24 15:02, Alex Shi wrote:
+>>
+>>
+>> On 6/4/24 6:45 PM, David Hildenbrand wrote:
+>>> On 04.06.24 12:26, Alex Shi wrote:
+>>>>
+>>>>
+>>>> On 6/4/24 4:07 PM, David Hildenbrand wrote:
+>>>>> On 04.06.24 06:24, alexs@kernel.org wrote:
+>>>>>> From: "Alex Shi (tencent)" <alexs@kernel.org>
+>>>>>>
+>>>>>> We can put off the flush action util a merging is realy coming. That
+>>>>>> could reduce some unmerge page flushing.
+>>>>>> BTW, flushing only do at arm, mips and few other archs.
+>>>>>>
+>>>>>
+>>>>> I'm no expert on that flushing, but I thought we would have to do the flushing before accessing page content -- before calculating the checksum etc.
+>>>>>
+>>>>> Now you would only do it before the pages_identical() check, but not when calculating the checksum.
+>>>>>
+>>>>
+>>>> Hi David,
+>>>>
+>>>> Thanks a lot for comments!
+>>>>
+>>>> If calc_checksum() is wrong before pages_idential(), (that's just after page was write_protected, that's a real guarantee for page context secured) pages_identical could recheck and make thing right.
+>>>>
+>>>
+>>> Yes, but you would get more wrong checksums, resulting in more unnecessary pages_identical() checks.
+>>>
+>>> That is missing from the description, and why we want to change that behavior.
+>>>
+>>> What's the net win?
+>>>
+>>>> And as to 2 flush functions here, I didn't see the guarantee for other writer from any other place. So maybe we should remove these flush action?
+>>>
+>>> "I didn't see the guarantee for other writer from any other place" can you rephrase your comment?
+>>>
+>>> If you mean "the process could modify that page concurrently", then you are right. But that's different than "the process modified the page in the past and we are reading stale content because we missed a flush".
+>>
+>>
+>> Maybe moving the flush before checksum could relief some worries. :)
+>> But still no one knows what flush really help, since if page content only syncs to memory by the flush, the kernel or process can't be work with current code.
+> 
+> Please explain to me why we care about moving the flushs at all :)
+> 
+> If they are NOP on most architectures either way, why not simply leave them there and call it a day?
+Uh, 2 reasons:
+1, it uses page and can't convert to folio now.
+2, as you pointed, flush action w/o page reading seems just waste time.
 
+Thanks
+Alex
+> 
