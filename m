@@ -1,48 +1,34 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FBC191468
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E67619148A;
+	Wed,  5 Jun 2024 07:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571726; cv=none; b=hx0ClWn2KU9BaPYmSrEVdVv2IGQTa7crWZT8vs3n6vupTa6Q3P63elCOTTvU98zdBrGE1PDfqg0egvDR1l4iKf7EdeDIdSwwpfbkt75A+ZrxvWmWzWABmJ9qP2/TmAgy2dYAbeRWOGOA8YDhSz21nnM/JzZu/HIoD69Ex8McSsQ=
+	t=1717571775; cv=none; b=AfELpcC5le71iCkl/zyr26ys0WvQ4YO+723n2E+smsSubpurS6lKzyFFcpVQk8xZFcGB8kb+5oOn8GuPLjzxDBeYksqGYmxyTCIUaqrJYuWhS6z7nlRdN7W8vNu7QPtEnOxVZvDWXvh1pXD02zoCa2x6uxOwNOvjHa4fCLNEuhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571726; c=relaxed/simple;
-	bh=SCxsTfzjMuX8t1U69VOCpqhjoMDtoIBWEPozyzP8bk8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=axVkz1POcl7VlO7SDKPjMOEjvMOSAuW+3UeUpCqpRmBWwS97tz4/xocWxH1JRbgIsHocIvOYfgWez2FoeaAhF8Tned0rmpdIuvJAkoq5OxOOFXB1Xnx2/vpvhsvfi4YjbttPUyhP0nFQRDLpSx5ebLQv3TqatStu2zcRXpdia14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qxcFtNtf; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1717571775; c=relaxed/simple;
+	bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OeHAFntMnq1MRQERN276JbOPkFftW+D4ownchITo7nrXoRAG1bM7RE4p8sovvrB0lxfuyigz+Q6GxUFculQ6vHpLOJx83JlmWLvV6TubxjO/+ZJbRwBFmZwLUheQwZbdSvJkmH/eMXF8phYkXQ7KtuHlyg9IqVUFANHAQ6gFSys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHXojvJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qxcFtNtf"
-X-Envelope-To: linux-mm@kvack.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717571722;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3wNm3c6yJSA1CzslM5yifCdzkMkcRenHHavbaO4mwKI=;
-	b=qxcFtNtfh4XOLj5fbDe7x94gskzCrv0IXECAZOYe8WkE/kUdaphkQyLX9x1/bqPGakkm66
-	qG1VyQRnpT+1yOvZwfIhsDcbUEWqmRY6lsTkfvhHku8VVhUmFlm5BsntZc0p1brvBYdsi/
-	mZa9huwlffIJu06AxUx8R5lzWOHx8gY=
-X-Envelope-To: penberg@kernel.org
-X-Envelope-To: roman.gushchin@linux.dev
-X-Envelope-To: feng.tang@intel.com
-X-Envelope-To: zhouchengming@bytedance.com
-X-Envelope-To: rientjes@google.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: akpm@linux-foundation.org
-X-Envelope-To: iamjoonsoo.kim@lge.com
-X-Envelope-To: vbabka@suse.cz
-X-Envelope-To: chengming.zhou@linux.dev
-X-Envelope-To: cl@linux.com
-X-Envelope-To: 42.hyeyoo@gmail.com
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Date: Wed, 05 Jun 2024 15:13:56 +0800
-Subject: [PATCH v2 3/3] slab: delete useless RED_INACTIVE and RED_ACTIVE
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHXojvJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE72C3277B;
+	Wed,  5 Jun 2024 07:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717571774;
+	bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=sHXojvJFueOpYA7pqNWbErqcw7UPxoVixwaVF3YSLX6K36eiZpYkVD4dYLzty8ic6
+	 qpCHT5aOSxhZPZWexNWNiVp3rSD8fOdb4L8phiuhYJPPcDFQ/BEj1Sm/HJAwdxgIc6
+	 lFfc4YYnXBRNIK0Q7KUs4U36jqap77Em+y61cMrHGaEbmdbIQ3EoSvZtIG4FEIYhq8
+	 BBFzKrNY2HLRIff7tOjfIxcAcgEzfmW8GdtFET3p+poZyMQ4C6NZBzQlHHdyIewROy
+	 OwOUefuMuumXaXit3hjW4CzbEir9DNZ4FH8cGACDboLshpTrqshUXwAfSBSnifKO0Z
+	 gLXXng/Ud7ZHQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/3] mptcp: misc. cleanups
+Date: Wed, 05 Jun 2024 09:15:39 +0200
+Message-Id: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,87 +37,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-b4-slab-debug-v2-3-c535b9cd361c@linux.dev>
-References: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
-In-Reply-To: <20240605-b4-slab-debug-v2-0-c535b9cd361c@linux.dev>
-To: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
- David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
- Roman Gushchin <roman.gushchin@linux.dev>, 
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, Feng Tang <feng.tang@intel.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1717571706; l=2445;
- i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
- bh=SCxsTfzjMuX8t1U69VOCpqhjoMDtoIBWEPozyzP8bk8=;
- b=xtPX9vMkwqmgUtdfVNek9BrOPkMLYsFLuZn30jqV0CJbb33baarp75iix+PtgEHMEQeAQoOPI
- CStzNIZCp8bBqhAhH4N5hrLMahSHW2KmmCWFcqj/P1yTkpDMDZxFsYn
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
-X-Migadu-Flow: FLOW_OUT
+X-B4-Tracking: v=1; b=H4sIAJsQYGYC/z2NwQqDMBBEf0X27EKMptL+ingIcW0XahqyiQjiv
+ xsEe5jDY3gzOwhFJoFXtUOklYV/vkBTV+A+1r8JeSoMWulOPVSHOUiKZBf0lEq2hP9qYXHovmR
+ 9Dtj3U6tN+3TGzFDWQqSZt+tpgNuF8ThOOh9DJ4MAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <tanggeliang@kylinos.cn>, Davide Caratti <dcaratti@redhat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=909; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYBC6giU7OqsLP9SRwngKz2nv8EwB1jWpW1LWI
+ UyWeEluJi2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmAQugAKCRD2t4JPQmmg
+ c5r3D/956rKFPfpm81mshDeIjhsjILlIJ+4T7jRszasXEwrmD1FFfM9zzRsHuLuhaGEKIqJGnZq
+ qUt+2FwXyKXJlOWHcXOiQGczmHFfiSuSTk6QldvdZSqYziGVdqk7BgLboLDgf61Ncx5WE5K/hyf
+ u9+3yVvgYlQMnNa+a8xhMwRHIy9cbhESkcDOdEbOfTPgc+/4g7ibMCeO9EdQiY9Fp82O3EU/DiQ
+ +NrXgChZGwQgjPoiIuOcHNiw9TeWFJ9E1gVQyKKxLEgiVWkJokTrQWTo2eGLz0Lrni6nhrLpoUg
+ Mt2hknqe+UdbXKvG6DuJfwNGc8apwZ7Oev5ZRmvAbmPqjCWze7X08+WYf6b7R/QJC0jx/QhAhYQ
+ aOJighLrS/f+I8kBimeKb9ovX+ZGwxyX9lA3wZR3CAM9WV9583Kx1qqne6SErBkteYzQkEIFU0G
+ bItoGG6aKBNHerCzESGOCEqLJmr4+SoYgi+rU+kIRG8cFN9CYv5qndTezY5OfwOqewKJiPvqkwW
+ pqUebbmdEG7Sxte2aVC6f37RRP9Ky12kADxcoVcKHR5py9CtjbBtNZS5XMYFtTdoeukSdpV+53c
+ 85Yv7G35rLLKlD4xonMQuuzMNAdA4Bn3nYmsQivRnhxLNPallUY5epqiJ/uVYhB5E6VEZv0jWXj
+ gf8NDtpwtOdIRJQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These seem useless since we use the SLUB_RED_INACTIVE and SLUB_RED_ACTIVE,
-so just delete them, no functional change.
+Here is a small collection of miscellaneous cleanups:
 
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
+- Patch 1 uses an MPTCP helper, instead of a TCP one, to do the same
+  thing.
+
+- Patch 2 adds a similar MPTCP helper, instead of using a TCP one
+  directly.
+
+- Patch 3 uses more appropriated terms in comments.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- include/linux/poison.h       | 7 ++-----
- mm/slub.c                    | 4 ++--
- tools/include/linux/poison.h | 7 ++-----
- 3 files changed, 6 insertions(+), 12 deletions(-)
+Davide Caratti (1):
+      mptcp: refer to 'MPTCP' socket in comments
 
-diff --git a/include/linux/poison.h b/include/linux/poison.h
-index 1f0ee2459f2a..9c1a035af97c 100644
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -38,11 +38,8 @@
-  * Magic nums for obj red zoning.
-  * Placed in the first word before and the first word after an obj.
-  */
--#define	RED_INACTIVE	0x09F911029D74E35BULL	/* when obj is inactive */
--#define	RED_ACTIVE	0xD84156C5635688C0ULL	/* when obj is active */
--
--#define SLUB_RED_INACTIVE	0xbb
--#define SLUB_RED_ACTIVE		0xcc
-+#define SLUB_RED_INACTIVE	0xbb	/* when obj is inactive */
-+#define SLUB_RED_ACTIVE		0xcc	/* when obj is active */
- 
- /* ...and for poisoning */
- #define	POISON_INUSE	0x5a	/* for use-uninitialised poisoning */
-diff --git a/mm/slub.c b/mm/slub.c
-index 704c662227e6..0bab0f041ab2 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1214,8 +1214,8 @@ static int check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
-  * 	Padding is extended by another word if Redzoning is enabled and
-  * 	object_size == inuse.
-  *
-- * 	We fill with 0xbb (RED_INACTIVE) for inactive objects and with
-- * 	0xcc (RED_ACTIVE) for objects in use.
-+ * 	We fill with 0xbb (SLUB_RED_INACTIVE) for inactive objects and with
-+ * 	0xcc (SLUB_RED_ACTIVE) for objects in use.
-  *
-  * object + s->inuse
-  * 	Meta data starts here.
-diff --git a/tools/include/linux/poison.h b/tools/include/linux/poison.h
-index 2e6338ac5eed..e530e54046c9 100644
---- a/tools/include/linux/poison.h
-+++ b/tools/include/linux/poison.h
-@@ -47,11 +47,8 @@
-  * Magic nums for obj red zoning.
-  * Placed in the first word before and the first word after an obj.
-  */
--#define	RED_INACTIVE	0x09F911029D74E35BULL	/* when obj is inactive */
--#define	RED_ACTIVE	0xD84156C5635688C0ULL	/* when obj is active */
--
--#define SLUB_RED_INACTIVE	0xbb
--#define SLUB_RED_ACTIVE		0xcc
-+#define SLUB_RED_INACTIVE	0xbb	/* when obj is inactive */
-+#define SLUB_RED_ACTIVE		0xcc	/* when obj is active */
- 
- /* ...and for poisoning */
- #define	POISON_INUSE	0x5a	/* for use-uninitialised poisoning */
+Geliang Tang (2):
+      mptcp: use mptcp_win_from_space helper
+      mptcp: add mptcp_space_from_win helper
 
+ net/mptcp/protocol.c | 8 ++++----
+ net/mptcp/protocol.h | 5 +++++
+ net/mptcp/sockopt.c  | 2 +-
+ net/mptcp/subflow.c  | 2 +-
+ 4 files changed, 11 insertions(+), 6 deletions(-)
+---
+base-commit: a6ba5125f10bd7307e775e585ad21a8f7eda1b59
+change-id: 20240604-upstream-net-next-20240604-misc-cleanup-77d32539c55f
+
+Best regards,
 -- 
-2.45.1
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
