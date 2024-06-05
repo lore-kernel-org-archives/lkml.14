@@ -1,145 +1,114 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B30197518
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCE01B1409
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589720; cv=none; b=Bp4wrJdpTImpQMHOStTprP+Gpp25rYsV3VasF7M1nde0sBoXkaCJkd5ZUQm2j2z1+DScFzvsn/Y97n5szhmrbeuZErbxDvTsAxIzggnvF/OodBAFnsMBXu4eYDRXlaTqxQ/IJRr0WnFf9QO4AjgXlky0Pz8aiIVatxylHjhgFFk=
+	t=1717589737; cv=none; b=p9qYg04o3rVC92GoaxydXpiMH/FgJuQ4O39IejEDjP8UkplTAgrIVUYJYedhhdH1oA8K2yF4HS0KDoxKEhXxEfPnNBreHop8CtwWBv1T9U6QOGx0NO+zZ9tMshf5PMJUSt6A5aAGcJImYAZnP5sVx8t7QTaIU/ELM5dsoEs9Hjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589720; c=relaxed/simple;
-	bh=x0ytsCbviekBEjjLge1IWFvc2zY+68XMN37JrAm8Nrs=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=ZwvPZ9ZTurVbmciQDUZeJKtfFRlnYqFNIcR8SLjYmMVIafdWrhoTd+qBA9DUxlBszL+cRQDk5JN/cSr6TpcnqSPVMno9m4KxIXqxCzWkXzt49keE75vGH73yWceYaa/c1zCFU50WbLVIVfZ2sqn+fUUnagpKWS1oKejAsOLJgRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=dknwMVeg; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1717589737; c=relaxed/simple;
+	bh=aBH7ZGzhHtOrFlhInedXq6fvNVbijOKk0r2q29+BYaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SlU0wY1KnkO4oS3GWoq3KfWMwmpLa6244CfKGbGwJpMzFeqDXaRGaixefGJqYiYADpcWYpGptbKo0dOTXWofAh9yppFqU6Cu+lXpqnEH2SXyP0blK0BGrFt0orFJypwdGEQnV1lBLet6xteCj57czBuuWGsRkEBm398KH8fKlXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QBJpB1n4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dknwMVeg"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7025ca8bebcso3353747b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1717589718; x=1718194518; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5DXKLGOuzK7Mq9/TKsjijP76CNhcAYfch9wR/ZqBgRU=;
-        b=dknwMVegqLrP6LEpTNCXP/amPBCTjdzD6ltz8cEhEoJIceRrRpac9YBlDVzspZn/vN
-         08LeKVlokWY62yKSv6U7MxsJTCR38FDX0gWPNAv0XxFgX91i4veRM5JbT2Ezef1Pqg23
-         mbeJMX8XNZqopZhABVGAuyK9hhbDg+T5kGRDWtQDktPxgrZq4TEH0W4p1W06cqRXQygR
-         phDFuVRK0an9X7iwwzWzRNCrgPtrFqjeEqS9GPIS+xQ6veUTnVDdz583mDBbrCHDbkMj
-         UKqEfwLZXGTuZ+0ceVBVSGnz6ARmxfacwDOgRrY9dUMNL22dc5NIS+Df9v0cD6NFji6B
-         KPDA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBJpB1n4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717589734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FX3I2i3kNCLrNugmkBn/vfBWlVnprvDuDoaVhXjiOw4=;
+	b=QBJpB1n4uFbLkEfrmt6/6uBbFgNJkp/hGEqn4cvZqMOnQbTlUvV2VCf0Npg2h8MG8RE/z/
+	Nr3cmV0l4/WyPDmvQA1CxUuUdGKhLQxigwnIzAjEAhXpasy6Jn/QTCce4n7PsA1JwAoCer
+	AOEXOoVvlbPtb3ydboIhfFYtH7Lr3iw=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-7-KUHP3BDGP3KFzxHz-X1CwA-1; Wed, 05 Jun 2024 08:15:33 -0400
+X-MC-Unique: KUHP3BDGP3KFzxHz-X1CwA-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-794b02ec662so266188585a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:15:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717589718; x=1718194518;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5DXKLGOuzK7Mq9/TKsjijP76CNhcAYfch9wR/ZqBgRU=;
-        b=RhNCgZOJBnPL45OfhLAfO4zAXw4x6wWRI3KAh+EMBwqBmhGA/SpI5WXZnvhShVtXhB
-         NYXhqFvK0HsujBLI/jqaIvY1OBAa/uWosRDgQ6yV90KtWfNw9U2pXwmLBh2OjXP7rJae
-         1r/rdpEmr+AC8SE4F1AbR+c447QmZXVqPhzYzlm6hEjOg+iDEvDYsrBpjF07FzxlwePl
-         vjt+ZSh7PilKhlixzqskLhyeGX2UxDJ2YyvZ0yuW8nAQEbdWWdTYLfSeXQ5meDbxhebK
-         UStFWZoNIfvHSf4uCG/8OTIj8wuPviCPqg7gklxA/vbJQX2DDKjF+aMFkPZftn8fYthy
-         0K6w==
-X-Gm-Message-State: AOJu0YylWKbfOHDozJWFm37KPV6obKvCCQJkxCtXZYdHsoCUikMDDr72
-	iMY7otv13DYVC6bkFV1mkwPJCVSXJHjRAVnYoeGAGJZpqqcuBrby1/ztKZM9m12hHnTPsaXvFsu
-	2utr1GMj2yAHH5s/qjR1k3GMdE4p0Ru16CJYc+stEU/+LRJ+p2ZDpNoa3sBGGWc5rgfqD4ZHWKU
-	A/XZlcn6Z+kn74zzVuFPbhIhf0wJ7gQf9of/KtXRmaUd83pm3pbMiZUw==
-X-Google-Smtp-Source: AGHT+IFXmN1NTFby9QdaZWN6LCrZn10MZA93JJFtVVzaU83zYNY/GJ3zV52JcTW07LpaJw14DF1JKw==
-X-Received: by 2002:a05:6a00:2e1b:b0:6eb:6:6b72 with SMTP id d2e1a72fcca58-703e5a7c2e5mr2473376b3a.25.1717589718025;
-        Wed, 05 Jun 2024 05:15:18 -0700 (PDT)
-Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703ee672fb3sm885379b3a.216.2024.06.05.05.15.15
+        d=1e100.net; s=20230601; t=1717589732; x=1718194532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FX3I2i3kNCLrNugmkBn/vfBWlVnprvDuDoaVhXjiOw4=;
+        b=QrehCwT1Fk6yRvaPoMszfyzlS+ergwcrfhTzZuI2B3fNw8Un/tPtMIaHQUXZrA6g9H
+         0uvWWYIi7QlXBJU44oz6mr/ti8+UJi++k53ZhPjpCfzuwAWrncPalsWz4bKb/M5wTSfX
+         klfQiQ1KjyZ3CfvTLeeJKmUkZHBcxk/hwSY7BuvcCqsbjwix5cqqYELrW4fcBAj0BTZ5
+         uZtXrfFvaA+D/+uKxOaHIX5N9R42rZCu8UtHBSHbucgpQ6l54x6iXZZeXH/udz8CYbGa
+         lbn+GVjpEWLByWka0SayTzNM5FY4RfX4O1QDjBn4CBjBMO2iG+TnZmIj3/Kgv+VNMSQA
+         BMpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPPPDGh99HSj27l/sHkRvUqe8URm36NU3Fw7JfGGGHTdSiGp8kW/KYs2slb/SP2r5CjVsjWOgZQg2MPfAhP2le8MbWPLhZby0JAD+q
+X-Gm-Message-State: AOJu0YzrgrCx1crQlS22dc3xLBGNi1FQS4tLbRWjjqEjz2e7AderzAgx
+	hVCI8WZs3pkJtA0pCY1VGpnBfecbYh7SBp+/SmWQ4leH4brMgq1G3xorfSoqnLaN43cOr+P9cm1
+	QtEAn1HFr8DdKUSx6ePcmg7qKRnpHRm9FwON34F9SMEIrBMi7R4Y9pFDCbV5l8CB9X9gg+g==
+X-Received: by 2002:a05:620a:4953:b0:795:1b03:c595 with SMTP id af79cd13be357-79523fd637bmr212229085a.69.1717589731936;
+        Wed, 05 Jun 2024 05:15:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdRf4S8UBCyuSDbfrKO5AKfrzX/7ifuufee10AyBqFng+4PBUkSJ05UPf2W093ZP6faibyzQ==
+X-Received: by 2002:a05:620a:4953:b0:795:1b03:c595 with SMTP id af79cd13be357-79523fd637bmr212227585a.69.1717589731572;
+        Wed, 05 Jun 2024 05:15:31 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.3.168])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-794f317073fsm439471085a.112.2024.06.05.05.15.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 05:15:17 -0700 (PDT)
-From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org
-Cc: apatel@ventanamicro.com,
-	alex@ghiti.fr,
-	ajones@ventanamicro.com,
-	greentime.hu@sifive.com,
-	vincent.chen@sifive.com,
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH v5 0/4] Add Svade and Svadu Extensions Support
-Date: Wed,  5 Jun 2024 20:15:06 +0800
-Message-Id: <20240605121512.32083-1-yongxuan.wang@sifive.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 05 Jun 2024 05:15:31 -0700 (PDT)
+Date: Wed, 5 Jun 2024 14:15:27 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH linux-next] printk: nbcon: Fix
+ nbcon_cpu_emergency_flush() when preemptible
+Message-ID: <ZmBW3-j2f-pNdIzT@jlelli-thinkpadt14gen4.remote.csb>
+References: <87zfrzvhsp.fsf@jogness.linutronix.de>
+ <ZmA5oIkImclKM0vx@pathway.suse.cz>
+ <ZmA6oGrO1YVF-IYj@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmA6oGrO1YVF-IYj@pathway.suse.cz>
 
-Svade and Svadu extensions represent two schemes for managing the PTE A/D
-bit. When the PTE A/D bits need to be set, Svade extension intdicates that
-a related page fault will be raised. In contrast, the Svadu extension
-supports hardware updating of PTE A/D bits. This series enables Svade and
-Svadu extensions for both host and guest OS.
+On 05/06/24 12:14, Petr Mladek wrote:
+> On Wed 2024-06-05 12:10:50, Petr Mladek wrote:
+> > On Wed 2024-06-05 11:57:34, John Ogness wrote:
+> > > nbcon_cpu_emergency_flush() can be called in a preemptible
+> > > context. In that case the CPU is not in an emergency state.
+> > > However, in order to see that the CPU is not in an emergency
+> > > state (accessing the per-cpu variable), preemption must be
+> > > disabled.
+> > > 
+> > > Disable preemption when checking the CPU state.
+> > > 
+> > > Reported-by: Juri Lelli <juri.lelli@redhat.com>
+> > > Closes: https://lore.kernel.org/aqkcpca4vgadxc3yzcu74xwq3grslj5m43f3eb5fcs23yo2gy4@gcsnqcts5tos
+> > > Fixes: 46a1379208b7 ("printk: nbcon: Implement emergency sections")
+> > > Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> > 
+> > Great catch!
+> > 
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > 
+> > I am going to push it...
+> 
+> Juri, should/could I add your Tested-by ?
 
-Regrading the mailing thread[1], we have 4 possible combinations of
-these extensions in the device tree, the default hardware behavior for
-these possibilities are:
+A yes please if you like. Thanks!
 
-1. Neither svade nor svadu in DT: default to svade.
-2. Only svade in DT: use svade.
-3. Only svadu in DT: use svadu.
-4. Both svade and svadu in DT: default to svade.
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
 
-The Svade extension is mandatory and the Svadu extension is optional in
-RVA23 profile. Platforms want to take the advantage of Svadu can choose
-3. Those are aware of the profile can choose 4, and Linux won't get the
-benefit of svadu until the SBI FWFT extension is available.
+You guys were so quick to act on it! :)
 
-[1] https://lore.kernel.org/linux-kernel/20240527-e9845c06619bca5cd285098c@orel/T/#m29644eb88e241ec282df4ccd5199514e913b06ee
-
----
-v5:
-- remove all Acked-by and Reviewed-by (Conor, Andrew)
-- add Svade support
-- update the arch_has_hw_pte_young() in PATCH1
-- update the dtbinding in PATCH2 (Alexandre, Andrew)
-- check the availibility of Svadu for Guest/VM based on
-  arch_has_hw_pte_young() in PATCH3
-
-v4:
-- fix 32bit kernel build error in PATCH1 (Conor)
-- update the status of Svadu extension to ratified in PATCH2
-- add the PATCH4 to suporrt SBI_FWFT_PTE_AD_HW_UPDATING for guest OS
-- update the PATCH1 and PATCH3 to integrate with FWFT extension
-- rebase PATCH5 on the lastest get-reg-list test (Andrew)
-
-v3:
-- fix the control bit name to ADUE in PATCH1 and PATCH3
-- update get-reg-list in PATCH4
-
-v2:
-- add Co-developed-by: in PATCH1
-- use riscv_has_extension_unlikely() to runtime patch the branch in PATCH1
-- update dt-binding
-
-Yong-Xuan Wang (4):
-  RISC-V: Add Svade and Svadu Extensions Support
-  dt-bindings: riscv: Add Svade and Svadu Entries
-  RISC-V: KVM: Add Svade and Svadu Extensions Support for Guest/VM
-  KVM: riscv: selftests: Add Svade and Svadu Extension to get-reg-list
-    test
-
- .../devicetree/bindings/riscv/extensions.yaml | 30 +++++++++++++++++++
- arch/riscv/Kconfig                            |  1 +
- arch/riscv/include/asm/csr.h                  |  1 +
- arch/riscv/include/asm/hwcap.h                |  2 ++
- arch/riscv/include/asm/pgtable.h              | 14 ++++++++-
- arch/riscv/include/uapi/asm/kvm.h             |  2 ++
- arch/riscv/kernel/cpufeature.c                |  2 ++
- arch/riscv/kvm/vcpu.c                         |  6 ++++
- arch/riscv/kvm/vcpu_onereg.c                  |  6 ++++
- .../selftests/kvm/riscv/get-reg-list.c        |  8 +++++
- 10 files changed, 71 insertions(+), 1 deletion(-)
-
--- 
-2.17.1
+Best,
+Juri
 
