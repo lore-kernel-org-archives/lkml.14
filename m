@@ -1,101 +1,128 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171A8C15D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5214B2E401
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717611261; cv=none; b=mGPz0HE6IJjemtaxo6SYI/albxtaG9QsASntpOOG62DTXVznnlKxwtFaAXuDjtVPy6kt35vzo/n7xgx/c+RgpcHzf5xB7QuBYsQiq3afYX18mBmeMOSdEB5FJbTX2uQAwnUwmTMB2Z5QaFOZPVYXWYLqkRKy4wkz8ipGSAbVsC4=
+	t=1717611284; cv=none; b=aPoy5yGLBAVoDE/pX/y7eI19oz+e/ZF99REnZ0TNVexAAxj2HJuIXgZgWmNdTQejzLCqauKZojlx4liSQNNpZ3AJ+7OQF8ee6Gjd6jkgDd9at0mU2C0/Phhnysf6FMh1QCeQJQsZNdDPH4a77kQdyDXXEzBqvHy8ZIfc6ddfH98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717611261; c=relaxed/simple;
-	bh=XlaBgIk03gwg9hXViHjBnESCujBmUxLENhKIfLNL8Xw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UOsPpRl5SgdxsG19C9R5iYYolkhMqM39qRaSXD4oHz6EXX+HCnZuK7IpQDtzD9EPaxmXt0udZJIQzofdxGL52Aq6eLz5xrGRSxqmSMUwXaXL9KSB/l96rWThaiY15LYeYJG5h3S+XDMuD9mjHty0P9E56o/Fn94C5BzzY5sYwUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ZqwD01Hy; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1717611284; c=relaxed/simple;
+	bh=lD/VvV5cQNmX9lBlY4Rg/253A8Uo2p6wQBL/wkK5+Xw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tS11FM4weOFRKNNmsNlf4a4zNCLWgil3ax9I5uo5ThqRNUs2t0F+GeLksxACHZiTvryP5gT1HRuPKxLpu/WASbuibPRXYv54g72l2njJK4R/csPa9y8HVo63EiXMLP1R0okkrFgTcPWRxDUSSxIbFSSDambDpLuqGX1z8eBR0Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OGsi/nBM; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ZqwD01Hy"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-250932751b9so4104fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:14:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGsi/nBM"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a690c8e64bdso6240266b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1717611258; x=1718216058; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oSVIp5tH0Fdf6LZyEl2CHXsReyyORLHTvKvZ7WJfPCg=;
-        b=ZqwD01HypASHFhJ+pcja4rsJC4HnYDvOeViMjtHeSwl0sAeVMno/reK2nUKaUGK2YW
-         3qT/KG2R+F8YLIK1ifGcw1GuJTx6YZSYurxRkYi1UFQrIhK11bHoWzcTHFvoIRdVYGdK
-         yFrAK1OeHW82H7d5TcwdiNWxu698TGXIaG1dHHaWZV5h9sCG+lzlZPXHIHxAUR1fMezY
-         YKaLUIYj0ew+1NVNPbE1/zCJ3K4SQKXNkS4aSk6w1O5fZJJfdxD2c+5SOBKxnwn5RPsD
-         iW9MFPkf4YrpTEYQY4VREf1C0cKrpalFgKOBWBVtzWAkuKZjaLf8TBVXMWDPuzGvPDsl
-         Kx0Q==
+        d=gmail.com; s=20230601; t=1717611281; x=1718216081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TeellwoKZ0zlrV7V+ziWlsye10PSNVrXFNVzLtw7K9I=;
+        b=OGsi/nBMjKrWvfF++9e4FK0fs0GpLfsB8Sa+AhxBCGPciSaGLKAHHbef2aVEnsJJtE
+         I4aATLbOG9T1x7V8+79msUPiY/hXQE8XTEcUKNls5VCXTyjgeNDUv7ZqZb01fcPQB1n7
+         qtlkHqvzD7hYvidPHkNQMImGMcVqqppliDviYF+TLiQ2gt5rleAEfU0BlAiQI1dpEQZ8
+         4mI1bVHvzaUwLw6YMiC/q1OjLR6ugpXWwlBpwOfB7D/06F8Ejgf4YpPnqk3zY0B9yZEk
+         ENMLSOCUaA4yZmx/kiX/6AdgkZCN9Cy6VtlAcrq7pm4lLDggglkDCeQ81ek97otBG0HW
+         pJcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717611258; x=1718216058;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oSVIp5tH0Fdf6LZyEl2CHXsReyyORLHTvKvZ7WJfPCg=;
-        b=oh63rvXntG2dJG+h7cBy6YBjzgAuzvhRm9HkDrmoOIg1GN+rh/cAump1LJhZ8weFck
-         0JAqF4byNnOnvCyC4MeB6Zy8oCXob02ViZuS5kLzlPoa8NNw/EGpbgMh0LoHHYScytef
-         sFJPoKc84/ntatC+DGKezR/XMc5N5Qe7MbfFWqc3euhTwdW44rpPRAbxPSXnQJdZh7gS
-         zvK3PHjhvk+JwBsFhM5Zyn8an220gSb/5EsJT03b6NGG728RACAOBVshrY0jVqYqDquD
-         Jyuhr5wg35ikysGFa9OhYaPMpqtD/H+BsHkkByEztM06+9IzcOc7Eslq1QL0Q07/Dh05
-         SIdA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7GsEGofgDqXzLhTunBkX5ePTQThEa0NbgQ7y7XcYNlPa9haTkJ+veaLqlVwjDZo7BzSp1fNgThwu7vNHs7MvkE3bp3IEHdMfuZXSs
-X-Gm-Message-State: AOJu0YwdApUJ8iO/MmVXX/dqo5rJO3kVqWNSt0bRTg2L4ehVx0OHR1Yc
-	wm9iwfONLQidE/gCYX63RQDMrb5nRLH4l8dKLYI577Bl+u7VzXvBTpPlI3FO6io=
-X-Google-Smtp-Source: AGHT+IH3rTwst3rxHfabtcaxMo9YJRolfNWPOCLPBsmQkznjrFlkHCCWS0vObDUTUJlxOHzHgjR8hA==
-X-Received: by 2002:a05:6870:ec94:b0:250:7928:6550 with SMTP id 586e51a60fabf-2512236d536mr3634384fac.3.1717611258005;
-        Wed, 05 Jun 2024 11:14:18 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-250852250fdsm4082020fac.44.2024.06.05.11.14.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 11:14:17 -0700 (PDT)
-Message-ID: <cc2bd808-194e-431d-b733-4aa7bd410da3@kernel.dk>
-Date: Wed, 5 Jun 2024 12:14:16 -0600
+        d=1e100.net; s=20230601; t=1717611281; x=1718216081;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TeellwoKZ0zlrV7V+ziWlsye10PSNVrXFNVzLtw7K9I=;
+        b=wfNuJzRW4lMEWKoKH7KFt5wR45wBKw8aIb+A4TlFre2AeQMEQvYohOWDGMxQ9guCxY
+         jlRcqo50D6po6S8vK4FZp+dH1V//VgpFIDsjd25cpbp7aBbhruNwvossXmszb4Nw/mV3
+         S7Ajk0dOKpy842iGUMbi6aJ8fZQFCRBzjlPexMIcy4DGEBNr+Sx0s7t71oAbnBMmsN3N
+         BlKPwHZ2Npo2OVo0BN9tK8trNA65az/xqk7/Nn1LlmdJWRTeGyMrKCR4UiLGCpZlSCTT
+         izlMYUKTw1E65mTOWJ/AYr5PlMN36a0RGFjJZ7AoN+hG+Uc/IJQivVCNCNRt1Y7M4bbk
+         8G4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU507pPQLXueWHWbwCQpm6GF6TO/QXnz0GT4hmIf2ktOY+w3gH/vgm0F/sm4qijz8eLqR+qTC5nS3S0OGfRcZ9O3qYx5MNJydr9GdcG
+X-Gm-Message-State: AOJu0Yw//1ty7Eg34XB00SSyT0XoQ4vYLIJgaFFIPkMv91nwySJpWzE9
+	MbWfvw2mt5p4lKqXmjglzS7Ded0dpMynmaKaCuNtXvZC/kUoF13y
+X-Google-Smtp-Source: AGHT+IFshboOpbXSNKsVJUe8rLz1NDL9dBjXIKe5/vK1GfJE3zESFgUK/J18gpObGjsT92BMONcIBw==
+X-Received: by 2002:a50:bb2c:0:b0:57a:4c22:b3 with SMTP id 4fb4d7f45d1cf-57a8b69751fmr2430327a12.1.1717611281358;
+        Wed, 05 Jun 2024 11:14:41 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57a5b1f9855sm6976233a12.70.2024.06.05.11.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 11:14:41 -0700 (PDT)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH RESEND -tip 1/2] locking/atomic/x86: Introduce read64_nonatomic macro to x86_32 with cx8
+Date: Wed,  5 Jun 2024 20:13:15 +0200
+Message-ID: <20240605181424.3228-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: fix request.queuelist usage in flush
-From: Jens Axboe <axboe@kernel.dk>
-To: ming.lei@redhat.com, hch@lst.de, f.weber@proxmox.com, bvanassche@acm.org,
- Chengming Zhou <chengming.zhou@linux.dev>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhouchengming@bytedance.com
-References: <20240604064745.808610-1-chengming.zhou@linux.dev>
- <171751063844.375344.3358896610081062168.b4-ty@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <171751063844.375344.3358896610081062168.b4-ty@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/4/24 8:17 AM, Jens Axboe wrote:
-> 
-> On Tue, 04 Jun 2024 14:47:45 +0800, Chengming Zhou wrote:
->> Friedrich Weber reported a kernel crash problem and bisected to commit
->> 81ada09cc25e ("blk-flush: reuse rq queuelist in flush state machine").
->>
->> The root cause is that we use "list_move_tail(&rq->queuelist, pending)"
->> in the PREFLUSH/POSTFLUSH sequences. But rq->queuelist.next == xxx since
->> it's popped out from plug->cached_rq in __blk_mq_alloc_requests_batch().
->> We don't initialize its queuelist just for this first request, although
->> the queuelist of all later popped requests will be initialized.
->>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/1] block: fix request.queuelist usage in flush
->       commit: a315b96155e4c0362742aa3c3b3aebe2ec3844bd
+As described in:
 
-Given the pending investigation into crashes potentially caused by this
-patch, I've dropped it from the 6.10 tree for now.
+  commit e73c4e34a0e9 ("locking/atomic/x86: Introduce arch_atomic64_read_nonatomic() to x86_32")
 
+the value preload before the cmpxchg loop does not need to be atomic.
+Introduce read64_nonatomic macro to load the value from atomic_t
+location in a faster non-atomic way and use it in atomic64_cx8_32.S.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/lib/atomic64_cx8_32.S | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/lib/atomic64_cx8_32.S b/arch/x86/lib/atomic64_cx8_32.S
+index 90afb488b396..b2eff07d65e4 100644
+--- a/arch/x86/lib/atomic64_cx8_32.S
++++ b/arch/x86/lib/atomic64_cx8_32.S
+@@ -16,6 +16,11 @@
+ 	cmpxchg8b (\reg)
+ .endm
+ 
++.macro read64_nonatomic reg
++	movl (\reg), %eax
++	movl 4(\reg), %edx
++.endm
++
+ SYM_FUNC_START(atomic64_read_cx8)
+ 	read64 %ecx
+ 	RET
+@@ -51,7 +56,7 @@ SYM_FUNC_START(atomic64_\func\()_return_cx8)
+ 	movl %edx, %edi
+ 	movl %ecx, %ebp
+ 
+-	read64 %ecx
++	read64_nonatomic %ecx
+ 1:
+ 	movl %eax, %ebx
+ 	movl %edx, %ecx
+@@ -79,7 +84,7 @@ addsub_return sub sub sbb
+ SYM_FUNC_START(atomic64_\func\()_return_cx8)
+ 	pushl %ebx
+ 
+-	read64 %esi
++	read64_nonatomic %esi
+ 1:
+ 	movl %eax, %ebx
+ 	movl %edx, %ecx
 -- 
-Jens Axboe
+2.42.0
 
