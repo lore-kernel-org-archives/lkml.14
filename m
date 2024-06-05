@@ -1,219 +1,131 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8878D19D88A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 14:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4432319D8A3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 14:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717597255; cv=none; b=nILH3VmiMuIsrqlHcmwWcKqgNE++U+6caKyQxXD71aZvfzmKCCX8sCuVDgel3eilzRx9pepv3DMuthbaVp66DDqQH5BpcMJh2CDqYh1EjjquVQ81KzAyI5r/428/9kr0cbYX/F4/5fcsr0AWb+pF7sj3vk24sqx2eN3uqDZ+sY4=
+	t=1717597367; cv=none; b=fq9oA6Q7qodrpBun8qg41ySaDjJ+tpgW4PNWkjDBJ4/hr/lzSk6EYDHk3ggI1M4bPzGK2aTnQc/89Wt7OEfblXU0HAeOkqeo9jvoZF38Hi30XTec2V9lrhRBWauw0AZ1JZBic7wkkt4xRpFHM538vQPEzgJsNE2QDj8ozZVrleI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717597255; c=relaxed/simple;
-	bh=rwzRMqBnuvWkjZ3Mx6xR3M/0Dew3Q2Uw/R41CRqfrw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G5+eHNDpYp3eCpj2CCvTPgSGAztO4C9yxb6h9UQ7Z/JcPgN3CPws52WnPZeoo9vEE0+o/BobhT1bZlGaSm27sBeNckxWgg4yJ5DxDo+PLz/qWnYG19oJdAlCbkky36O/ijhWHHYG8jemWuQZPr62O3L8CnANDPbjytz4mwSH/YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dd3MNYXs; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717597367; c=relaxed/simple;
+	bh=OaxfX57DdLiPPMZLsvwQEjhvOkJKa+3clCY0xOaO3zo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eXiUpBRTyheVGjHUFOiylyR4DWEEyAJqPHgCSNLA9Sd3XW6MDbAafr3amZwO50qaLy/O+ic0eweC8ItZPMPGYX/xhHjq4xSp/yjm1t6fu8WmZYLrhzSZky3sTBVFGUUHNJ217Ulvz6KqBm11aK6TCsa8f0dkfEpD+3uLmWmNnDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vdL2Efv+; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dd3MNYXs"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52b83225088so6769445e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 07:20:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vdL2Efv+"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-62a089511f9so12549017b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 07:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717597252; x=1718202052; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f6/nFcvo4Plib4eYfTDh6OIq6sf+MB/iDA/4kpOYR+k=;
-        b=Dd3MNYXscgN49lUo+2+UCsdOMpyEyaLMFcWoz9Giz4ROJDEzoSDdfR+tEMggqtcfbq
-         SKQXj6cAnunJS6Huo3IQylSW/9TzQ/YNyyErV+p1YUvdmFjuNsoQP2hEyM0tBg6lIH5C
-         LwMq3Bp8zx4K1ycbBsWdcvbgISErhz7U4WgjxG3q0OpEnAxBhgTw2JvcTYdVYcN5rIYD
-         SAGMyQvO4QnvQhLfbaDw1FRpgABKGiFJ6uOOPTMtiBKvQsk6sZQruQ9I2PkaytkJdr7Y
-         QWRjg5vsjOu9FjZzk0/aPWl9gnjt1UiojWl7AeWUQRUNSQBSdJQSyjmkrwUIjWMsRH5g
-         F2rg==
+        d=google.com; s=20230601; t=1717597365; x=1718202165; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LvVshO+KN4NNrct7o6V84rhHGa2nQ4U5rvJJ0qDRFtI=;
+        b=vdL2Efv+ZXfVhSj5TrphVGbH8MdNP5SLAXrnFZrPzzSrJlb48cbzsqdyIIfOjnm4If
+         w2uWnp5VV0r3+IFMs32pqVdayQ3CWNs1iofdBtW9ynZYQol/LQbA4XvHlcyG+KxfuQ5W
+         KBmGGtxm6Uc0mirsshQkw7DfaiMxHbrJ6QPgv8JTi63cn1nWS22tkhcLt3rodOKePpRV
+         jfTBseZY1AHPu5RwHU/GH1YrTyC33UpXBrqwFcYwoeiuZnIOqfQ7esW5y46NHkPVu1tN
+         7OYRmccq8+CFdvVkS/hkDhS9zzmOXkCZ+tGTxfQpGI/WJwKFHXdnNKB0towjGk5vyVeU
+         ipVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717597252; x=1718202052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f6/nFcvo4Plib4eYfTDh6OIq6sf+MB/iDA/4kpOYR+k=;
-        b=LCe1XFE3nGuqfgVwPcCwcFo0d9u/sYGtNS9xA4JShuaZ/v+zbYX33zAn9aBCVeN47b
-         uw3SUquNdBo1p1f12DbW8DG+RUUxhMzU06ecl8OY2EnWzmEd+APsyWnRmnTU91jNIxkL
-         lALsPMGYekgyLRMcy6ucaqlsohs4nXKSmG4URoVAWAPybzkqmLvSwLj2UDuODW8r3zlq
-         17DKspfMYq8baTCFx+It0Fv5f8QDyOwTjo8qZh+LB6PK8C/xgS/z3OhuHm9xgT7RjUTy
-         +7PZLT+BK50PrKuGHz4aLaR7+Qlc44H3DZJ8MQr8gNDJnWZMGn0RkUulPATDZ9Dpov+Q
-         4Peg==
-X-Forwarded-Encrypted: i=1; AJvYcCVc5ckc6aaC5/jsanRV6rJ3/d5cAV+ZR4tD1LP/txd7pG/qtPROligN5JrNfV5DV5KeeyEjl0Byy1/zl1PGjwPdyQNo0ooGsqgxD4db
-X-Gm-Message-State: AOJu0Yye43cwg5hjsXDqmjAxFDl/xFUiUu8h00ZxJvZnAwFB3SFmnAWp
-	NsJ3izXpXUfKupw9NLK8KemhRKI1Phe7LYNoqouRVGZs8mEPmEpNyamWDgkYOhMyUoAZnJ+ew70
-	icEn88Y2l9UPZ+ZaGmffRnS9kaOY=
-X-Google-Smtp-Source: AGHT+IEclwAhv2Gs76M218qecK/f9MCwW8rrRU378XIhtJLYeZe+NoqxXepfOxLbW0F6m2D9FYleT8L7sWbciSpknMc=
-X-Received: by 2002:a05:6512:4891:b0:52b:af6b:7b4c with SMTP id
- 2adb3069b0e04-52baf6b7bffmr1031490e87.30.1717597251361; Wed, 05 Jun 2024
- 07:20:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1717597365; x=1718202165;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LvVshO+KN4NNrct7o6V84rhHGa2nQ4U5rvJJ0qDRFtI=;
+        b=kPFznxXZi74X6RyFA+Zbm5wt5i7eEvUmPAgoO596rbIvNlcxLIqDYltUla+R/BImsc
+         krUZNLpu4la3QeoD0/aEL6tYCK7/gecKNgeG0z2wdXvbGIZ4rQnnVqQeRWuCq1BcmE4n
+         3FBmWXstIUU0SJdfq9Vt31ND+TqHcEgHmqg/gwiT3meQBXBPNLQ8cihe8F/8C1qT+YqV
+         ynPKTrP0D8o4gZvXuEOiyQg11LUo46d5XoCvxO3MqCuGzYoRMM+h7ECdTt959+a/kx7G
+         as6bd+2OWoi+avNrjKtbb03w9k1Vi8nWEYesR+xe/R32YZd5L5SIDoydjICIZRoMAGq0
+         04tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJdojm+A1LXbQQ7tkWgZJevXZWauyG17NMdGxVedsdBH01A10l6gzOqjhEn6GrJCiIPAGPIUcC6Sluj5IV+ON5aO+klN7BTbhEs2g7
+X-Gm-Message-State: AOJu0YyQdpwHtBSL6PP+KAToHU2Bm/8A6Kkdg1E5krVZR9tCX6W7maJy
+	ZIRg3hFLX+mVBdadHMixXaSHnMHQ6tb65KrQ8KTi71zTm2Sl7z6Ql46Y/pso8h+J/Hq///tn2ES
+	JYQ==
+X-Google-Smtp-Source: AGHT+IGYOrXGN+zi1ebLRYuhCKpTEfY6qm6f+nqEgaR+yJ/7gwSGrmcMVrxvLY9w6YKVxPj0Sq7/w40QmU0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:690c:d89:b0:61b:32dc:881d with SMTP id
+ 00721157ae682-62cba666c6fmr7877257b3.3.1717597365293; Wed, 05 Jun 2024
+ 07:22:45 -0700 (PDT)
+Date: Wed, 5 Jun 2024 07:22:43 -0700
+In-Reply-To: <d2d64211-bd70-4212-811f-c039d2d8dabd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240521040244.48760-1-ioworker0@gmail.com> <20240521040244.48760-3-ioworker0@gmail.com>
- <fd16b219-bc46-484a-8581-a21240440fa6@redhat.com>
-In-Reply-To: <fd16b219-bc46-484a-8581-a21240440fa6@redhat.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Wed, 5 Jun 2024 22:20:39 +0800
-Message-ID: <CAK1f24kwf4gDwK=8X4z1bM9-H6_M9QKy6-ko9pTUZij-W=40wg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] mm/rmap: integrate PMD-mapped folio splitting into
- pagewalk loop
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org, 
-	baolin.wang@linux.alibaba.com, maskray@google.com, ziy@nvidia.com, 
-	ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com, 
-	fengwei.yin@intel.com, zokeefe@google.com, shy828301@gmail.com, 
-	xiehuan09@gmail.com, libang.li@antgroup.com, wangkefeng.wang@huawei.com, 
-	songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <cover.1714081725.git.reinette.chatre@intel.com>
+ <eac8c5e0431529282e7887aad0ba66506df28e9e.1714081726.git.reinette.chatre@intel.com>
+ <Zl38b3lxLpoBj7pZ@google.com> <d2d64211-bd70-4212-811f-c039d2d8dabd@intel.com>
+Message-ID: <ZmB0s7UsfSe90kqr@google.com>
+Subject: Re: [PATCH V5 4/4] KVM: selftests: Add test for configure of x86 APIC
+ bus frequency
+From: Sean Christopherson <seanjc@google.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: isaku.yamahata@intel.com, pbonzini@redhat.com, erdemaktas@google.com, 
+	vkuznets@redhat.com, vannapurve@google.com, jmattson@google.com, 
+	mlevitsk@redhat.com, xiaoyao.li@intel.com, chao.gao@intel.com, 
+	rick.p.edgecombe@intel.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Hi David,
+On Tue, Jun 04, 2024, Reinette Chatre wrote:
+> > > +/*
+> > > + * Pick one convenient value, 1.5GHz. No special meaning and different from
+> > > + * the default value, 1GHz.
+> > 
+> > I have no idea where the 1GHz comes from.  KVM doesn't force a default TSC, KVM
+> > uses the underlying CPU's frequency.  Peeking further ahead, I don't understand
+> > why this test sets KVM_SET_TSC_KHZ.  That brings in a whole different set of
+> > behavior, and that behavior is already verified by tsc_scaling_sync.c.
+> > 
+> > I suspect/assume this test forces a frequency so that it can hardcode the math,
+> > but (a) that's odd and (b) x86 selftests really should provide a udelay() so that
+> > goofy stuff like this doesn't end up in random tests.
+> 
+> I believe the "default 1GHz" actually refers to the default APIC bus frequency and
+> the goal was indeed to (a) make the TSC frequency different from APIC bus frequency,
+> and (b) make math easier.
+> 
+> Yes, there is no need to use KVM_SET_TSC_KHZ. An implementation of udelay() would
+> require calibration and to make this simple for KVM I think we can just use
+> KVM_GET_TSC_KHZ. For now I continue to open code this (see later) since I did not
+> notice similar patterns in existing tests that may need a utility. I'd be happy
+> to add a utility if the needed usage pattern is clear since the closest candidate
+> I could find was xapic_ipi_test.c that does not have a nop loop.
 
-On Wed, Jun 5, 2024 at 8:46=E2=80=AFPM David Hildenbrand <david@redhat.com>=
- wrote:
->
-> On 21.05.24 06:02, Lance Yang wrote:
-> > In preparation for supporting try_to_unmap_one() to unmap PMD-mapped
-> > folios, start the pagewalk first, then call split_huge_pmd_address() to
-> > split the folio.
-> >
-> > Since TTU_SPLIT_HUGE_PMD will no longer perform immediately, we might
-> > encounter a PMD-mapped THP missing the mlock in the VM_LOCKED range dur=
-ing
-> > the page walk. It=E2=80=99s probably necessary to mlock this THP to pre=
-vent it from
-> > being picked up during page reclaim.
-> >
-> > Suggested-by: David Hildenbrand <david@redhat.com>
-> > Suggested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> > ---
->
-> [...] again, sorry for the late review.
+Please add a utility.  ARM and RISC-V already implement udelay(), and this isn't
+the first test that's wanted udelay() functionality.  At the very least, it'd be
+nice to have for debug, e.g. to be able to insert artificial delay if a test is
+failing due to a suspected race suspected.  I.e. this is likely an "if you build
+it, they will come" situations.
 
-No worries at all, thanks for taking time to review!
+> > Unless I'm misremembering, the timer still counts when the LVT entry is masked
+> > so just mask the IRQ in the LVT. Or rather, keep the entry masked in the LVT.
+> 
+> hmmm ... I do not think this is specific to LVT entry but instead an attempt
+> to ignore all maskable external interrupt that may interfere with the test.
 
->
-> > diff --git a/mm/rmap.c b/mm/rmap.c
-> > index ddffa30c79fb..08a93347f283 100644
-> > --- a/mm/rmap.c
-> > +++ b/mm/rmap.c
-> > @@ -1640,9 +1640,6 @@ static bool try_to_unmap_one(struct folio *folio,=
- struct vm_area_struct *vma,
-> >       if (flags & TTU_SYNC)
-> >               pvmw.flags =3D PVMW_SYNC;
-> >
-> > -     if (flags & TTU_SPLIT_HUGE_PMD)
-> > -             split_huge_pmd_address(vma, address, false, folio);
-> > -
-> >       /*
-> >        * For THP, we have to assume the worse case ie pmd for invalidat=
-ion.
-> >        * For hugetlb, it could be much worse if we need to do pud
-> > @@ -1668,20 +1665,35 @@ static bool try_to_unmap_one(struct folio *foli=
-o, struct vm_area_struct *vma,
-> >       mmu_notifier_invalidate_range_start(&range);
-> >
-> >       while (page_vma_mapped_walk(&pvmw)) {
-> > -             /* Unexpected PMD-mapped THP? */
-> > -             VM_BUG_ON_FOLIO(!pvmw.pte, folio);
-> > -
-> >               /*
-> >                * If the folio is in an mlock()d vma, we must not swap i=
-t out.
-> >                */
-> >               if (!(flags & TTU_IGNORE_MLOCK) &&
-> >                   (vma->vm_flags & VM_LOCKED)) {
-> >                       /* Restore the mlock which got missed */
-> > -                     if (!folio_test_large(folio))
-> > +                     if (!folio_test_large(folio) ||
-> > +                         (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)))
-> >                               mlock_vma_folio(folio, vma);
->
-> Can you elaborate why you think this would be required? If we would have
-> performed the  split_huge_pmd_address() beforehand, we would still be
-> left with a large folio, no?
+I doubt it.  And if that really is the motiviation, that's a fools errand.  This
+is _guest_ code.  Disabling IRQs in the guest doesn't prevent host IRQs from being
+delivered, it only blocks virtual IRQs.  And KVM selftests guests should never
+receive virtual IRQs unless the test itself explicitly sends them.
 
-Yep, there would still be a large folio, but it wouldn't be PMD-mapped.
+> LVT entry is prevented from triggering because if the large configuration value.
 
-After Weifeng's series[1], the kernel supports mlock for PTE-mapped large
-folio, but there are a few scenarios where we don't mlock a large folio, su=
-ch
-as when it crosses a VM_LOCKed VMA boundary.
+Yes and no.  A large configuration value _should_ avoid a timer IRQ, but the
+entire point of this test is to verify KVM correctly emulates the timer.  If this
+test does its job and finds a KVM bug that causes the timer to prematurely expire,
+then unmasking the LVT entry will generate an unexpected IRQ.
 
- -                     if (!folio_test_large(folio))
- +                     if (!folio_test_large(folio) ||
- +                         (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)))
+Of course, the test doesn't configure a legal vector so the IRQ will never be
+delivered.  We could fix that problem, but then a test failure would manifest as
+a hard-to-triage unexpected event, compared to an explicit TEST_ASSERT() on the
+timer value.
 
-And this check is just future-proofing and likely unnecessary. If encounter=
-ing a
-PMD-mapped THP missing the mlock for some reason, we can mlock this
-THP to prevent it from being picked up during page reclaim, since it is ful=
-ly
-mapped and doesn't cross the VMA boundary, IIUC.
-
-What do you think?
-I would appreciate any suggestions regarding this check ;)
-
-[1] https://lore.kernel.org/all/20230918073318.1181104-3-fengwei.yin@intel.=
-com/T/#mdab40248cf3705581d8bfb64e1ebf2d9cd81c095
-
->
-> >                       goto walk_done_err;
-> >               }
-> >
-> > +             if (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)) {
-> > +                     /*
-> > +                      * We temporarily have to drop the PTL and start =
-once
-> > +                      * again from that now-PTE-mapped page table.
-> > +                      */
-> > +                     split_huge_pmd_locked(vma, range.start, pvmw.pmd,=
- false,
-> > +                                           folio);
->
-> Using range.start here is a bit weird. Wouldn't this be pvmw.address?
-> [did not check]
-
-Hmm... we may adjust range.start before the page walk, but pvmw.address
-does not.
-
-At least for now, pvmw.address seems better. Will adjust as you suggested.
-
->
-> > +                     pvmw.pmd =3D NULL;
-> > +                     spin_unlock(pvmw.ptl);
-> > +                     pvmw.ptl =3D NULL;
->
->
-> Would we want a
->
-> page_vma_mapped_walk_restart() that is exactly for that purpose?
-
-Nice, let's add page_vma_mapped_walk_restart() for that purpose :)
-
-Thanks again for your time!
-
-Lance
-
->
-> > +                     flags &=3D ~TTU_SPLIT_HUGE_PMD;
-> > +                     continue;
-> > +             }
-> > +
-> > +             /* Unexpected PMD-mapped THP? */
-> > +             VM_BUG_ON_FOLIO(!pvmw.pte, folio);
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+That said, I'm not totally pposed to letting the guest die if KVM unexpectedly
+injects a timer IRQ, e.g. if all is well, it's a cheap way to provide a bit of
+extra coverage.  On the other hand, masking the interrupt is even simpler, and
+the odds of false pass are low.
