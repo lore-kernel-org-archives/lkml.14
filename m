@@ -1,45 +1,45 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F9F14C5A0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF1E188CA4;
 	Wed,  5 Jun 2024 12:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591750; cv=none; b=A2xHe03CUzdfeCpMVZQlJkIz+z9I3+/Vjdhl3YBB05bbsfokj3juzpNALQNKnu7XgEjM9qMoKBPH/Qxf8jXePg7UwpGTGhjIYTJBRF1mkau2if8JdLPdZYusIK71F/XXpFChdJytJ+UfjQElBJ8K3m7m2q2ApUlc+nmvM3llrUE=
+	t=1717591750; cv=none; b=qpa/bjyrE7GHhkit/rJRKkmNTIgq5fhsge/SHZrPrVPLF2B+g3906WVnW3S4z0RpolW38Roz7cGqKddf6uEDrwTwXaN+DcH4U99TL/w9G1e70hz0vrijBHtN3jQgMBUGdOwO2zGTOoXCJym0D2vEz+UmCSWseTCZuBndvB3Oy4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717591750; c=relaxed/simple;
-	bh=nUXk44SUrve2K3riCF7WjXRkrJxv71w75MVvkGApdyc=;
+	bh=I6p66dNXgWuYF0sjf76h4FVqcCSW0xhy5njB8QURPwg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FhcVqDB7mIuV2U1Sno82gpQtEyvLFVIwabz7Jkqm4NyHFwLfx78bMIeBXE81Tt4TyMQ6R45ezCPEc3wwH1VxyM/CgYZUs0KWHWuz/fazaPrtjemxuEKxBR0YogLBT70KXs6pcL3ghotZLQx8zkBHAa62ivmsfM8I2i4pr0NIB9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=b1jF7VGc; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=FKI2NazpnsBv672vgybqFD8vepkdWpfD2rA3+KVsGOEArayfr7r99GQdb8w+GDnJSNSw4xTwDzAOBP/cSRuFxY8QLMROkSbakLhcGfK+DanVkPT26XDyIKFsSnGpWLAqb/eur0yhErgXwzUUUp42QfXgrbbf/YkXJLO1EO/By1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=MVdWRqOf; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b1jF7VGc"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 455Cn0X7118487;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MVdWRqOf"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 455Cn0pb006029;
 	Wed, 5 Jun 2024 07:49:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1717591740;
-	bh=/gB6Hxh1nGHkIpwIHX3B27Yb0rgbrqYFEQID8PRSnT8=;
+	bh=WbdIYS/knOJHqyX7310+VXzxm1AWii1EXvlI4FnfTaU=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=b1jF7VGcWhe437LdrGCq8/G25mYwbL8hysJJ3sYXD2A515SFnfUY/Rkxzkz6j5fd0
-	 c1wqfCSonVUr1TtTM2XyA12A9D0i4ySR80ShbCq+Sk3SwcUhKQYwFQscjr4Nz6pWHN
-	 QVtheJTUZB3TKVAnaCVxZ/GZdd3f3WDRDfWRxvDM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 455Cn0lR065971
+	b=MVdWRqOfZxXrJK9LsZ7fbKBiKLpAOyk4f1tNXmveXZOeQQv0D5FlCy7oPSvTHgUwS
+	 Q0onLgR0ZxoVE3DneGTqvTNMOutd2p/pjUNIhMz6zoAexfExNll3JOoBGaZyWYZfpC
+	 xg6Pe64+CiYp5rZ+cksjQk3tl4wOqJV1yYqVlmeg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 455Cn0Qs006777
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Wed, 5 Jun 2024 07:49:00 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 5
  Jun 2024 07:49:00 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Wed, 5 Jun 2024 07:49:00 -0500
 Received: from localhost ([10.249.48.175])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 455Cn0ha058472;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 455Cn0kJ108867;
 	Wed, 5 Jun 2024 07:49:00 -0500
 From: Hari Nagalla <hnagalla@ti.com>
 To: <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
@@ -47,9 +47,9 @@ To: <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
         <nm@ti.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>
-Subject: [PATCH v3 3/4] arm64: dts: k3-am62a-wakeup: Add R5F device node
-Date: Wed, 5 Jun 2024 07:48:58 -0500
-Message-ID: <20240605124859.3034-4-hnagalla@ti.com>
+Subject: [PATCH v3 1/4] arm64: dts: k3-am62a-main: Add C7xv device node
+Date: Wed, 5 Jun 2024 07:48:56 -0500
+Message-ID: <20240605124859.3034-2-hnagalla@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240605124859.3034-1-hnagalla@ti.com>
 References: <20240605124859.3034-1-hnagalla@ti.com>
@@ -62,51 +62,38 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Devarsh Thakkar <devarsht@ti.com>
+From: Jai Luthra <j-luthra@ti.com>
 
-AM62A SoCs have a single R5F core in waekup domain. This core is also
-used as a device manager for the SoC.
+AM62A SoCs have a C7xv DSP subsystem with Analytics engine capability.
+This subsystem is intended for deep learning purposes. Define the
+device node for C7xv DSP.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Signed-off-by: Jai Luthra <j-luthra@ti.com>
 Signed-off-by: Hari Nagalla <hnagalla@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi | 23 +++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-index 98043e9aa316..70471d969aa6 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
-@@ -73,6 +73,29 @@ wkup_rti0: watchdog@2b000000 {
- 		status = "reserved";
+diff --git a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+index bf9c2d9c6439..0912cc31329c 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62a-main.dtsi
+@@ -1062,4 +1062,15 @@ vpu: video-codec@30210000 {
+ 		clocks = <&k3_clks 204 2>;
+ 		power-domains = <&k3_pds 204 TI_SCI_PD_EXCLUSIVE>;
  	};
- 
-+	wkup_r5fss0: r5fss@78000000 {
-+		compatible = "ti,am62-r5fss";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x78000000 0x00 0x78000000 0x8000>,
-+			 <0x78100000 0x00 0x78100000 0x8000>;
-+		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
-+		wkup_r5fss0_core0: r5f@78000000 {
-+			compatible = "ti,am62-r5f";
-+			reg = <0x78000000 0x00008000>,
-+				<0x78100000 0x00008000>;
-+			reg-names = "atcm", "btcm";
-+			ti,sci = <&dmsc>;
-+			ti,sci-dev-id = <121>;
-+			ti,sci-proc-ids = <0x01 0xff>;
-+			resets = <&k3_reset 121 1>;
-+			firmware-name = "am62-wkup-r5f0_0-fw";
-+			ti,atcm-enable = <1>;
-+			ti,btcm-enable = <1>;
-+			ti,loczrama = <1>;
-+		};
-+	};
 +
- 	wkup_vtm0: temperature-sensor@b00000 {
- 		compatible = "ti,j7200-vtm";
- 		reg = <0x00 0xb00000 0x00 0x400>,
++	c7x_0: dsp@7e000000 {
++		compatible = "ti,am62a-c7xv-dsp";
++		reg = <0x00 0x7e000000 0x00 0x00100000>;
++		reg-names = "l2sram";
++		ti,sci = <&dmsc>;
++		ti,sci-dev-id = <208>;
++		ti,sci-proc-ids = <0x04 0xff>;
++		resets = <&k3_reset 208 1>;
++		firmware-name = "am62a-c71_0-fw";
++	};
+ };
 -- 
 2.34.1
 
