@@ -1,124 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BF76BB26
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 02:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDD0F4F5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 02:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717556015; cv=none; b=q84/Een//T23LX2on0Wpv25IiRaNjwfbfog37rXsxAfZLQSP9xMv/FMHEeI2BN/wBpCOBsW8WrPTVUrPnugGGJgTtKSgAAD3zEIrt0Xbbzt38ct8ypagzG+GYmzU1d+6DyDiXqYbPjSF6iB+O5ILFZGaSQdlgIgbo8hYWfuqsz8=
+	t=1717556252; cv=none; b=ZK/i5/rinXs6EUaKi17yreEqhCRoV7Wv3wKaLNiTZ+2EVYk0vALYwe4CZ70AVuG1iZl9DDe9Oc2yf3bGI+8IXbcDWeQFpZM48pElIKHD7njAZnhQGWZXl+OFr9isCWIla8T/3GC2WEw9eWEpYLYiy+PVRhAsKLjaGZm3z78bPBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717556015; c=relaxed/simple;
-	bh=NTjW41dpCDe5qmDI1+6+nnZ1GyVkcO85lhkVK0Nd+uk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WEmZ2+4ct4Kkn+2Znr1BLk265Jj14tUpxrWYKVz84TO0LbB2xnzYLgS5S/RwEux4GvBseNamBQ5PEIvECv/pCf7x04HC1arxinhB484vAxBIncapXNmemCyVsJ9FjeCGqClTU2ML3x6Q2hmUAHhCxGcLxTQcvd6irn5IjO97LgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SSEJVtb4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717556252; c=relaxed/simple;
+	bh=zqIYO9BzSN1LDae0aTBf7tpRJ8j6uIDWU51OwWoWq6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dqL19+oHT3rtS28xvUdmXA+VO6dxaLikEw7uXyxIu+IYjk4Xf5LqI3wPQ30miElgQ3SzPH+Es1FkZSfDjx6/gXSRUDoqUfjAub1w6iBQWTqI+DFXuu6QSFVWl7yMs3dv1bxxPbf5D4FyB584gS7zpWeYAoYcNkFNmvSLM6Qd7tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1IO6QpY; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SSEJVtb4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717556012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3FTX+9rZeC4z0llUfSKTY9Loz4suuB0WymmiOnqwlu0=;
-	b=SSEJVtb4g4H3gpOYspQA/IIBOg/Ivlo3nIhHRTzNOWzxGk2ovKlhIk/7kSQGCVvhk0gf5S
-	Wm+39Cwtm7vFlO1zCxNgldCN+AlCaakLoTnqnImki+5T2PqzRARj+7F7PaKkw4IA5ncovA
-	WjtUozHawq6asJnQySfMA6FWwDZ4QQ0=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-o7K6kHLjNjCJ1X3HKdEwDA-1; Tue, 04 Jun 2024 22:53:30 -0400
-X-MC-Unique: o7K6kHLjNjCJ1X3HKdEwDA-1
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3748a9f55ebso6506025ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 19:53:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717556010; x=1718160810;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3FTX+9rZeC4z0llUfSKTY9Loz4suuB0WymmiOnqwlu0=;
-        b=R2xcPIjbVTo5MiuuTuR+9su3NuuP09Zzs3XZ3HrTp2UvJjY9Pyb0qBaX5FgIc2jKbz
-         U+YJbgOrHWuXn60Qi/5szwFUe9hOos08OEDcUhuaZfXW4zMKp3xH2G8BLNiNIK7JmYQF
-         yqn7RU8Zt1PwUSZcSsu2Klu1M44q3nA69jIwWwjiitQc62h10hssfainQVGADfhj+a5j
-         Qg6izRZ/G4f6Udo89yPs/jx1wgcL/8Vc2Q36He5LXkcWkTYEzYVB1QyDD7yegeklkTG7
-         FeaoAMvNurYeX9n/Bak1HQEZOEkKRWfyeDnpPMw0kwqdwMVGsNefOf+Zn+Ay50GdmlIK
-         ebcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkRFhm6+U0XW3OrV5TIn6mzaLgavt80WO0djNnmAp55CMOVGLGyHsGwGxhzQdwDH1w8eCCDXcxFX0jZCraDZLDKwKmmRlQA3E/LDqM
-X-Gm-Message-State: AOJu0YxiBuzaig51sXZj1DbPhK+AopRt8BepiZB5nqNSi0qWHch0bw3m
-	o+p3XLablF3oAxKM9Uo+MlOiJjE0DzlrOlt1jY5SfvXa/8zDQK8EoKds179cBtSofiqjQ1OKKm9
-	tpdKESxq4OeqT/bhLFwglaFsxCZmb6UiAcqt2KTbgnzcshEtHfehA0SpPICiituk1AJ6UDaMVKX
-	PTDAKbk2FzNta7hk21eC6KmaQQhZSFP1n3nuIS
-X-Received: by 2002:a92:c262:0:b0:374:6545:5546 with SMTP id e9e14a558f8ab-374b1f3e5ddmr14071945ab.2.1717556009935;
-        Tue, 04 Jun 2024 19:53:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFBBqBjje1/Rae28nzKbAjV9C7xlZjBxKlW7978XbuE4RsH8R8NhNUkzBWIWBCLsBy3RsdRYMvU/X86zSTOyEs=
-X-Received: by 2002:a92:c262:0:b0:374:6545:5546 with SMTP id
- e9e14a558f8ab-374b1f3e5ddmr14071685ab.2.1717556009574; Tue, 04 Jun 2024
- 19:53:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1IO6QpY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717556251; x=1749092251;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=zqIYO9BzSN1LDae0aTBf7tpRJ8j6uIDWU51OwWoWq6Q=;
+  b=b1IO6QpYI+oIFZdUr6XzAFYIxhscGVEwbUneWvaJ73QGWWJAawq1JwZT
+   2wDWNAfW7somx0sqGzyrurlC+gRwy1I4i3WYBDbG3n2wzUVVS8eb2rm0D
+   ICEeJnjBPwVpqeRs8Yb0Reg73Iwd2r2wCKKKS8DDGa6AmUBu6fSJXT52y
+   2gPloF0CwkA8Ob8XQNSa2aELO7aFAbA3VQX6/ZzUqthmm/oGqvFHrHAR6
+   Kuhl3wDNzfl101mQGn7p14bl9moXMKkyrSV11qE7pqDfeu1W56OLucMkE
+   DdTQNIOdAsvVAWrK7YqpMne37S57HxLhzBec/4BYYsXcMq9N/GGQ0/Zf2
+   g==;
+X-CSE-ConnectionGUID: yJdku6q0Soud51EZtFmSeQ==
+X-CSE-MsgGUID: yzTOoVkmSDyQtz2PS8bQHw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="36656334"
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="36656334"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 19:57:29 -0700
+X-CSE-ConnectionGUID: y5LYIWfTTJC3PAdfgLiwsQ==
+X-CSE-MsgGUID: R07tjbPHS2ulXBQqilhlEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="41878495"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 04 Jun 2024 19:57:27 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sEgq5-0000q5-0R;
+	Wed, 05 Jun 2024 02:57:25 +0000
+Date: Wed, 5 Jun 2024 10:57:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: riscv32-linux-ld: section .pci_fixup VMA [c24ca560,c24cce0f]
+ overlaps section .bss VMA [c24ca000,c28db687]
+Message-ID: <202406051002.tzOkENbg-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
- <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local> <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
- <Zl3HfiQ6oHdTdOdA@kernel.org> <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local> <Zl3hwYL2GDiyUfGo@kernel.org>
- <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
- <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local> <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
- <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local>
-In-Reply-To: <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local>
-From: Dave Young <dyoung@redhat.com>
-Date: Wed, 5 Jun 2024 10:53:44 +0800
-Message-ID: <CALu+AoRqNmsWXi+HXYNYTY=pXJ3sLTLKyXNeJz9EoxEsHzFdQA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mike Rapoport <rppt@kernel.org>, "Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org, 
-	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
-	jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, ardb@kernel.org, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 5 Jun 2024 at 02:03, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Jun 04, 2024 at 07:09:56PM +0800, Dave Young wrote:
-> > Anyway there is not such a helper for all cases.
->
-> But maybe there should be...
->
-> This is not the first case where the need arises to be able to say:
->
->         if (am I a kexeced kernel)
->
-> in code.
->
-> Perhaps we should have a global var kexeced or so which gets incremented
-> on each kexec-ed kernel, somewhere in very early boot of the kexec-ed
-> kernel we do
->
->         kexeced++;
->
-> and then other code can query it and know whether this is a kexec-ed
-> kernel and how many times it got kexec-ed...
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   32f88d65f01bf6f45476d7edbe675e44fb9e1d58
+commit: 54e47eade73046e860634736d2651ddc118ca694 Add Renesas PMIC RAA215300 and built-in RTC
+date:   12 months ago
+config: riscv-randconfig-r035-20230728 (https://download.01.org/0day-ci/archive/20240605/202406051002.tzOkENbg-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240605/202406051002.tzOkENbg-lkp@intel.com/reproduce)
 
-It's something good to have but not must for the time being,  also no
-idea how to save the status across boot, for EFI boot case probably a
-EFI var can be used, but how can it be cleared in case of physical
-boot.    Otherwise probably injecting some kernel parameters, anyway
-this needs more thinking.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406051002.tzOkENbg-lkp@intel.com/
 
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
->
+All errors (new ones prefixed by >>):
 
+   riscv32-linux-ld: section .data LMA [00550000,009c697f] overlaps section .text LMA [0008ba9c,01eff1bb]
+>> riscv32-linux-ld: section .pci_fixup VMA [c24ca560,c24cce0f] overlaps section .bss VMA [c24ca000,c28db687]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
