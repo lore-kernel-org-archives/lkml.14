@@ -1,395 +1,157 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B206C1946BA;
-	Wed,  5 Jun 2024 08:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F3D19004E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575579; cv=none; b=tbogx/FJK4YevF5OJBYuNvIcVNb8U3gNVn4MsXH0Y9fnHEdevJxXQ8yAqGXZJMCLGYnm3Ljna8XZ49pWGyW33JWhliZ0BDTjwdn7UDnsxYmBrpu4qaoz4UpFNyynmVin4QSJ4ECQVhR0nBpaIyKqyx8yZSihzn7C7wC724z7VTo=
+	t=1717575618; cv=none; b=s8JSliilkMggSsq2uLVnT07j9onZqli8uVwn/oWKtBWEtd63Hb6xzQ2zKAv2sWbLsyYGB+AiUcRooYAQgy6W1lcwx+nAQ9Iw1/LmwCKutwoVonHjUIDlrtjp4LJm/5m3dvvRVVn48SdOj0f8sxIddtzbG64At+9Rw45rJg4apvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575579; c=relaxed/simple;
-	bh=awnecWctzKrmH2Q9F9eUI1sO1/cE+Y+MWy1YkQh6Tsk=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=PtkVCKDSwCApTcYv83qaBO2Kxq8SnTs9Y7jPJozMlFIWh1up39z1kAV2Mz8wbHQ0/jZHbgHqkvcP0Crrc3+rH7OT4bWO3PN6Z56beZs8JWjxzi972Fd2RRimQHQhwMNY+mVDAvRyHPAeQpy8J6vZIukMq2ze1ncrSJD5922aqfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=w2Ixvx7h; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1717575618; c=relaxed/simple;
+	bh=+OFnrtct+6Jh1m3HUOU1dJvIRQW+Zy16YnzZISP0e20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gdGcyXAXwonEWD7asjoZFL59eLfZu8UiaDV6UV6DG23vtm1ih0GjVv9J3VPOY/qLjDofaXOul15aZzpUy57QwVwj0ntkjWr5QYawdUeoKw2PusAIU1nYOw2DTm88xlkFOMqTDYAuIyHMtE5+wVBc+2eIbexbqgAnFvRuSPyFezM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c4IaQfkB; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="w2Ixvx7h"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sElrk-008sMe-13;
-	Wed, 05 Jun 2024 10:19:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RJv1sYTRVMr7FTjeuQa/7/Qu+8HkgnWrXnXH071JoWo=; b=w2Ixvx7hYXXkVD6thSD6tSLEs1
-	rJdMaawDNbgs3OH72we4bzwon+ObclyH4Ay+4yjIuBxtSDjEFymuCZ2KXqbAG6M7MYtZDO6Yf9tC0
-	ncAwIjDbEsv5ZQRby+GLgjsvPNUjxfTMQVrOuJaqDzlIAo6JfV2+WFAotorvwgxjqHb45I2Q4HPu6
-	RCg5/x8fW6611ncgQL9Xa8zoVHBgCQ5NeRZaW1f4ysj/kIMfIoA1RlonD1lnwys2BJpygkbjhn1y6
-	ZFaYUaxv1C2fWtFwHO58mQaXjrtwGLwpfLLGwA4OHcr4mGSmzSlwuCVyL8OINyTr8SAHmur22kyfv
-	uD6YV8nA==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sElri-002fQU-2Q;
-	Wed, 05 Jun 2024 10:19:28 +0200
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1sElrj-000Ytt-20;
-	Wed, 05 Jun 2024 10:19:27 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: lee@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	andreas@kemnade.info,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: regulator: twl-regulator: convert to yaml
-Date: Wed,  5 Jun 2024 10:19:06 +0200
-Message-Id: <20240605081906.134141-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4IaQfkB"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42148c0cb1aso18210085e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717575615; x=1718180415; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=t/ukQ7pNwhkOnaJKJ/7vc4Ysf3b6tU3d9oPac9GH6KU=;
+        b=c4IaQfkBnRRUZOeYapSrD7FzOv8Fo66G7vKjNVzwSU3/Ggd8w8l1Pbc3v23e9P4ti9
+         +uLx84HERKFQhr+6PwAJJhMeOkP84fmB6hlcy+HXHICdk4RLzLSz6ZSQMZd2IY/l/nOm
+         w069YuY8DqxZTnoR5DDXAc4lBpS6oEvELYLc2dVO2xCFhrn51qqQe2MRqZJzsdVCQANt
+         0CxSxii4pwwhP7ZFw6uDbFVnezRZaavLKV2J2Qcxo2oZ9+VBy92atVnNJ+VfTx2eqkNf
+         +E49kchJyb13+PoOBDR3ra9oQalKm/uES2ZPbuMAFIZhGvxZYNpAvXuY1+cfPGLZJ+rQ
+         0x4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717575615; x=1718180415;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t/ukQ7pNwhkOnaJKJ/7vc4Ysf3b6tU3d9oPac9GH6KU=;
+        b=CNoUXeWmKRjcfYLtayWj7rCg4qKnz80LJ7hMaBZv0CIJ/dbkqc6xYK41NPrEZkp8et
+         ahqEd8C1IQe0fB2u1OmJIxhOPC8XTwsFATgzHDJHKEf96jMQHLrNb5o92G8W+pXXnv3Q
+         sy3/ThPKcpxvrhEA/RERYG/KVY4yss7pbJy7GsMAZyGbijls9Wk8PIYj1ubbK1WBn6pX
+         fBDhFuRtBlYDym7smMuCEIkxIvZeRUQ4Jk9elXrbobSP4ZS7bwRNqJq58JvfhQRYdPJX
+         WbF+UQepVGwlDHrJiHsBlumTQhGOzUA2GR+40JbPZe8+c51Qqflv1/ZhKKMb+u33lZ14
+         lXpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUevxtu6/8Ma5ixEEpTHTXvGPOeWq8vRl6+aT+KpjmbvSJFdULwG6imbRAtnTNz4sXpBrBBk15q9nTTnsLE/v/Gqp/n5aE+nJ+/c9Bn
+X-Gm-Message-State: AOJu0Yxmjv6tkxS6cULwopc0K8qXHRw8ErUTzRI5XIaSWnkDCIjQTt+N
+	FnaETyl3l12UHSipA9AzRZwZGftrlaMKIKyF6jcperOusoJZOU68aLKpvCW+mRE=
+X-Google-Smtp-Source: AGHT+IE9Xk+c7bpN1C5GhN6JB4vjSC6gsPpzByJkJO7AW72MkIBmGroCsjgw65bD+gxG0lJQdVtzJQ==
+X-Received: by 2002:a05:600c:3b1d:b0:421:2b33:2522 with SMTP id 5b1f17b1804b1-421563388bdmr13924625e9.34.1717575614896;
+        Wed, 05 Jun 2024 01:20:14 -0700 (PDT)
+Received: from [192.168.2.24] ([110.93.11.116])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0f47sm13647749f8f.8.2024.06.05.01.20.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 01:20:14 -0700 (PDT)
+Message-ID: <72f12c41-1d35-4600-ba66-6404896fa502@linaro.org>
+Date: Wed, 5 Jun 2024 10:20:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 8/9] arm64: boot: dts: qcom: sm8550: Split into
+ overlays
+To: Elliot Berman <quic_eberman@quicinc.com>, Rob Herring
+ <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Amrit Anand <quic_amrianan@quicinc.com>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ Caleb Connolly <caleb.connolly@linaro.org>, Andy Gross <agross@kernel.org>,
+ Doug Anderson <dianders@chromium.org>, Simon Glass <sjg@chromium.org>,
+ Chen-Yu Tsai <wenst@chromium.org>, Julius Werner <jwerner@chromium.org>,
+ "Humphreys, Jonathan" <j-humphreys@ti.com>,
+ Sumit Garg <sumit.garg@linaro.org>, Jon Hunter <jonathanh@nvidia.org>,
+ Michal Simek <michal.simek@amd.com>, boot-architecture@lists.linaro.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
+ <20240521-board-ids-v3-8-e6c71d05f4d2@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240521-board-ids-v3-8-e6c71d05f4d2@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Convert the regulator bindings to yaml files. To allow only the regulator
-compatible corresponding to the toplevel mfd compatible, split the file
-into one per device.
+On 21/05/2024 20:38, Elliot Berman wrote:
+>  
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/arm/qcom,ids.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/clock/qcom,sm8450-videocc.h>
+>  #include <dt-bindings/clock/qcom,sm8550-camcc.h>
+> @@ -32,6 +35,11 @@ / {
+>  
+>  	chosen { };
+>  
+> +	board_id: board-id {
+> +		qcom,soc-version = <QCOM_ID_SM8550 QCOM_SOC_REVISION(1)>,
+> +				   <QCOM_ID_SM8550 QCOM_SOC_REVISION(2)>;
+> +	};
 
-Drop one twl5030 compatible due to no documentation on mfd side and no
-users of the twl5030.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v3:
-- define regulator stuff in toplevel
-- simplified regulator-inital-mode
-- extended example to contain both regulator-initial-mode and
-  retain-on-reset
+I don't see how does it help to understand usage of board-id. You list
+all possible revisions, right? So this is entirely redundant.
 
-Changes in v2:
-- add regulators directly to ti,twl.yaml
-- less restrictions on regulator node name
-
- .../devicetree/bindings/mfd/ti,twl.yaml       | 167 +++++++++++++++++-
- .../bindings/regulator/twl-regulator.txt      |  80 ---------
- 2 files changed, 165 insertions(+), 82 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/twl-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-index c2357fecb56c..e4a9bc97e597 100644
---- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-+++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-@@ -22,6 +22,32 @@ allOf:
-           contains:
-             const: ti,twl4030
-     then:
-+      patternProperties:
-+        "^regulator-":
-+          properties:
-+            compatible:
-+              enum:
-+                - ti,twl4030-vaux1
-+                - ti,twl4030-vaux2
-+                - ti,twl4030-vaux3
-+                - ti,twl4030-vaux4
-+                - ti,twl4030-vmmc1
-+                - ti,twl4030-vmmc2
-+                - ti,twl4030-vpll1
-+                - ti,twl4030-vpll2
-+                - ti,twl4030-vsim
-+                - ti,twl4030-vdac
-+                - ti,twl4030-vintana2
-+                - ti,twl4030-vio
-+                - ti,twl4030-vdd1
-+                - ti,twl4030-vdd2
-+                - ti,twl4030-vintana1
-+                - ti,twl4030-vintdig
-+                - ti,twl4030-vusb1v5
-+                - ti,twl4030-vusb1v8
-+                - ti,twl4030-vusb3v1
-+            ti,retain-on-reset: false
-+
-       properties:
-         madc:
-           type: object
-@@ -50,13 +76,34 @@ allOf:
-           properties:
-             compatible:
-               const: ti,twl4030-wdt
--
-   - if:
-       properties:
-         compatible:
-           contains:
-             const: ti,twl6030
-     then:
-+      patternProperties:
-+        "^regulator-":
-+          properties:
-+            compatible:
-+              enum:
-+                - ti,twl6030-vaux1
-+                - ti,twl6030-vaux2
-+                - ti,twl6030-vaux3
-+                - ti,twl6030-vmmc
-+                - ti,twl6030-vpp
-+                - ti,twl6030-vusim
-+                - ti,twl6030-vana
-+                - ti,twl6030-vcxio
-+                - ti,twl6030-vdac
-+                - ti,twl6030-vusb
-+                - ti,twl6030-v1v8
-+                - ti,twl6030-v2v1
-+                - ti,twl6030-vdd1
-+                - ti,twl6030-vdd2
-+                - ti,twl6030-vdd3
-+            regulator-initial-mode: false
-+
-       properties:
-         gpadc:
-           type: object
-@@ -69,6 +116,26 @@ allOf:
-           contains:
-             const: ti,twl6032
-     then:
-+      patternProperties:
-+        "^regulator-":
-+          unevaluatedProperties: false
-+          properties:
-+            compatible:
-+              enum:
-+                - ti,twl6032-ldo1
-+                - ti,twl6032-ldo2
-+                - ti,twl6032-ldo3
-+                - ti,twl6032-ldo4
-+                - ti,twl6032-ldo5
-+                - ti,twl6032-ldo6
-+                - ti,twl6032-ldo7
-+                - ti,twl6032-ldoln
-+                - ti,twl6032-ldousb
-+                - ti,twl6032-smps3
-+                - ti,twl6032-smps4
-+                - ti,twl6032-vio
-+            regulator-initial-mode: false
-+
-       properties:
-         gpadc:
-           type: object
-@@ -112,6 +179,27 @@ properties:
-       interrupts:
-         maxItems: 1
- 
-+patternProperties:
-+  "^regulator-":
-+    type: object
-+    unevaluatedProperties: false
-+    $ref: /schemas/regulator/regulator.yaml
-+    properties:
-+      compatible: true
-+      regulator-initial-mode:
-+        enum:
-+          - 0x08 # Sleep mode, the nominal output voltage is maintained
-+                 # with low power consumption with low load current capability
-+          - 0x0e # Active mode, the regulator can deliver its nominal output
-+                 # voltage with full-load current capability
-+      ti,retain-on-reset:
-+        description:
-+          Does not turn off the supplies during warm
-+          reset. Could be needed for VMMC, as TWL6030
-+          reset sequence for this signal does not comply
-+          with the SD specification.
-+        type: boolean
-+
- unevaluatedProperties: false
- 
- required:
-@@ -131,9 +219,84 @@ examples:
-         compatible = "ti,twl6030";
-         reg = <0x48>;
-         interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
-+        interrupt-parent = <&gic>;
-         interrupt-controller;
-         #interrupt-cells = <1>;
--        interrupt-parent = <&gic>;
-+
-+        gpadc {
-+          compatible = "ti,twl6030-gpadc";
-+          interrupts = <6>;
-+        };
-+
-+        rtc {
-+          compatible = "ti,twl4030-rtc";
-+          interrupts = <8>;
-+        };
-+
-+        regulator-vaux1 {
-+          compatible = "ti,twl6030-vaux1";
-+          regulator-min-microvolt = <1000000>;
-+          regulator-max-microvolt = <3000000>;
-+        };
-+
-+        regulator-vmmc1 {
-+          compatible = "ti,twl6030-vmmc";
-+          ti,retain-on-reset;
-+        };
-       };
-     };
- 
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      pmic@48 {
-+        compatible = "ti,twl4030";
-+        reg = <0x48>;
-+        interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+        interrupt-parent = <&intc>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+
-+        bci {
-+          compatible = "ti,twl4030-bci";
-+          interrupts = <9>, <2>;
-+          bci3v1-supply = <&vusb3v1>;
-+          io-channels = <&twl_madc 11>;
-+          io-channel-names = "vac";
-+        };
-+
-+        twl_madc: madc {
-+          compatible = "ti,twl4030-madc";
-+          interrupts = <3>;
-+          #io-channel-cells = <1>;
-+        };
-+
-+        pwrbutton {
-+          compatible = "ti,twl4030-pwrbutton";
-+          interrupts = <8>;
-+        };
-+
-+        rtc {
-+          compatible = "ti,twl4030-rtc";
-+          interrupts = <11>;
-+        };
-+
-+        regulator-vaux1 {
-+          compatible = "ti,twl4030-vaux1";
-+          regulator-min-microvolt = <1000000>;
-+          regulator-max-microvolt = <3000000>;
-+          regulator-initial-mode = <0xe>;
-+        };
-+
-+        vusb3v1: regulator-vusb3v1 {
-+          compatible = "ti,twl4030-vusb3v1";
-+        };
-+
-+        watchdog {
-+          compatible = "ti,twl4030-wdt";
-+        };
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/regulator/twl-regulator.txt b/Documentation/devicetree/bindings/regulator/twl-regulator.txt
-deleted file mode 100644
-index 549f80436deb..000000000000
---- a/Documentation/devicetree/bindings/regulator/twl-regulator.txt
-+++ /dev/null
-@@ -1,80 +0,0 @@
--TWL family of regulators
--
--Required properties:
--For twl6030 regulators/LDOs
--- compatible:
--  - "ti,twl6030-vaux1" for VAUX1 LDO
--  - "ti,twl6030-vaux2" for VAUX2 LDO
--  - "ti,twl6030-vaux3" for VAUX3 LDO
--  - "ti,twl6030-vmmc" for VMMC LDO
--  - "ti,twl6030-vpp" for VPP LDO
--  - "ti,twl6030-vusim" for VUSIM LDO
--  - "ti,twl6030-vana" for VANA LDO
--  - "ti,twl6030-vcxio" for VCXIO LDO
--  - "ti,twl6030-vdac" for VDAC LDO
--  - "ti,twl6030-vusb" for VUSB LDO
--  - "ti,twl6030-v1v8" for V1V8 LDO
--  - "ti,twl6030-v2v1" for V2V1 LDO
--  - "ti,twl6030-vdd1" for VDD1 SMPS
--  - "ti,twl6030-vdd2" for VDD2 SMPS
--  - "ti,twl6030-vdd3" for VDD3 SMPS
--For twl6032 regulators/LDOs
--- compatible:
--  - "ti,twl6032-ldo1" for LDO1 LDO
--  - "ti,twl6032-ldo2" for LDO2 LDO
--  - "ti,twl6032-ldo3" for LDO3 LDO
--  - "ti,twl6032-ldo4" for LDO4 LDO
--  - "ti,twl6032-ldo5" for LDO5 LDO
--  - "ti,twl6032-ldo6" for LDO6 LDO
--  - "ti,twl6032-ldo7" for LDO7 LDO
--  - "ti,twl6032-ldoln" for LDOLN LDO
--  - "ti,twl6032-ldousb" for LDOUSB LDO
--  - "ti,twl6032-smps3" for SMPS3 SMPS
--  - "ti,twl6032-smps4" for SMPS4 SMPS
--  - "ti,twl6032-vio" for VIO SMPS
--For twl4030 regulators/LDOs
--- compatible:
--  - "ti,twl4030-vaux1" for VAUX1 LDO
--  - "ti,twl4030-vaux2" for VAUX2 LDO
--  - "ti,twl5030-vaux2" for VAUX2 LDO
--  - "ti,twl4030-vaux3" for VAUX3 LDO
--  - "ti,twl4030-vaux4" for VAUX4 LDO
--  - "ti,twl4030-vmmc1" for VMMC1 LDO
--  - "ti,twl4030-vmmc2" for VMMC2 LDO
--  - "ti,twl4030-vpll1" for VPLL1 LDO
--  - "ti,twl4030-vpll2" for VPLL2 LDO
--  - "ti,twl4030-vsim" for VSIM LDO
--  - "ti,twl4030-vdac" for VDAC LDO
--  - "ti,twl4030-vintana2" for VINTANA2 LDO
--  - "ti,twl4030-vio" for VIO LDO
--  - "ti,twl4030-vdd1" for VDD1 SMPS
--  - "ti,twl4030-vdd2" for VDD2 SMPS
--  - "ti,twl4030-vintana1" for VINTANA1 LDO
--  - "ti,twl4030-vintdig" for VINTDIG LDO
--  - "ti,twl4030-vusb1v5" for VUSB1V5 LDO
--  - "ti,twl4030-vusb1v8" for VUSB1V8 LDO
--  - "ti,twl4030-vusb3v1" for VUSB3V1 LDO
--
--Optional properties:
--- Any optional property defined in bindings/regulator/regulator.txt
--For twl4030 regulators/LDOs:
-- - regulator-initial-mode:
--  - 0x08 - Sleep mode, the nominal output voltage is maintained with low power
--           consumption with low load current capability.
--  - 0x0e - Active mode, the regulator can deliver its nominal output voltage
--           with full-load current capability.
--
--Example:
--
--	xyz: regulator@0 {
--		compatible = "ti,twl6030-vaux1";
--		regulator-min-microvolt  = <1000000>;
--		regulator-max-microvolt  = <3000000>;
--	};
--
--For twl6030 regulators/LDOs:
--
-- - ti,retain-on-reset: Does not turn off the supplies during warm
--                       reset. Could be needed for VMMC, as TWL6030
--                       reset sequence for this signal does not comply
--                       with the SD specification.
--- 
-2.39.2
+Best regards,
+Krzysztof
 
