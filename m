@@ -1,96 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B38D19AD4D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D2B19AD50;
 	Wed,  5 Jun 2024 11:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588586; cv=none; b=e7Q8L3M9H+zk2jcd2xs22/SOR+g66NI7hx0AUDw28FxFvIid5DyLbQCJXkQPNUrcNRULMPjhkd91fsXstwMIGm5Pydc0dByK4qdiy/zOnwX9sbb1AB98x9f0d+0mN34nC62LhT6jKb5hp0vyAoBjTb9+mBINhkJC4+T5Wck1MbA=
+	t=1717588586; cv=none; b=dCU2WGJC1K62EJpmLaiNs8+/vgIz1woykfTOwWcZ/GMsALaEqO1NGjrUk99QLiRmw5I7r5YCE1J+U+lRK8HJSjxe3bmzpzcwicIPRkK2bCgvo08MCU/ABLmNXU9pMY2j7i0WgTB7RxNpXR5t9uuMR3i59upjxLt8peRmNsKYUYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717588586; c=relaxed/simple;
-	bh=MQYsWFBeAynMryk/Gyt9yTWjflv1cv5n6aWLBDe/SFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUveI+6hrT8Z94EVHuFdujwJjuhTFnxzcH1p9rwyHM2ZssiJVo/HZnNkQ2koZ+YHOZM0fN7zHmMMGK6FSgmTiJuQVBTbLCAp596vvBXLrPjNnkQm0E20JdWlYSbriS2oVS7AbgzI7YoG+NymKVYeeBT8dxYpFmUqDCZMR8ZkgtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+nQWdQr; arc=none smtp.client-ip=10.30.226.201
+	bh=AgC8t1bH71gJClga1+YVxhKXREwCLrjqi6MxdEj0f68=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lA2C5LcFQYVySglPo/Wcs5h0WRbZBE8mjIT8abvKH47PFeG7dXNcxPHzkn2HAvIPWcJIS3/pwQDVkM+bTuLprRSij516yzfBwBAGD+5nSMD6GiTFgnQDHXz9mTnZ7yZoVHUKLZldqXtvEPUGaYiHdcNysLmMjzeYsuyMHUNFWN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Id9ZnfoJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+nQWdQr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA128C4AF07;
-	Wed,  5 Jun 2024 11:56:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Id9ZnfoJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF689C3277B;
+	Wed,  5 Jun 2024 11:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717588586;
-	bh=MQYsWFBeAynMryk/Gyt9yTWjflv1cv5n6aWLBDe/SFo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m+nQWdQr5oGfrnskMQzLWboTz7AK+E6POtbk0O+zGu+62bG5UD8QbtKGVRg8SrsMG
-	 8oUBjkoDi9aPSNdSAGyuN6IMtpMrdgxhrVF+zFWmAbW42Dagp/BQn55I20stO6VNZG
-	 sKAx599Yi08sXUjeA12P1rtkK82FidRX7NCo15Et0ia1HBXkssWHPVEdCjuM/ALe/0
-	 V/Oik0M6CLAbwNfEeazAtG+3mhXOyaVXj5zy54ZjzZtdEPOYgUz7mXz+0O9/cGW/UN
-	 zmun4M84sFxBvam+MYlG6P07r0Ornk+V7FPmDUjO1MmrLmjEQG5ODYP8dLSafi7Nvt
-	 BI1g4IRc0pomg==
-Date: Wed, 5 Jun 2024 13:56:23 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org, Rao Shoaib <rao.shoaib@oracle.com>
-Subject: Re: [PATCH rcu 2/2] doc: Clarify rcu_assign_pointer() and
- rcu_dereference() ordering
-Message-ID: <ZmBSZ3AAp9TN5YaP@localhost.localdomain>
-References: <e5dc5f14-04c1-494b-9044-e837279a7bcd@paulmck-laptop>
- <20240604222155.2370541-2-paulmck@kernel.org>
+	bh=AgC8t1bH71gJClga1+YVxhKXREwCLrjqi6MxdEj0f68=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Id9ZnfoJnD+52pY5DMqkKvKl4AIowpsCgRQlZzLKUmNC4/cK08m5RcSpc9SJBQ5l0
+	 vruH7Ke6K4Y43RpFs4CKIvbJ4PxSnlIRYWzplKSyz4o/QWGF8KmgQskIvsISX1LWqv
+	 +YrcSmKOGFor/OU8/0RO3IHF4TH5/g5WGAJItaTmCLJe0ws+HqjjmESkgvkwplXVPI
+	 wkJgHiyJ3q4cUK+la7FtkfGTAMzEMGODAiEMHI6QsGFWbApy/PZZAHXnaEXXumo0Mf
+	 +VNCf9DBTb6X2O7HPkWcIBSdgD/nZ3Wz0U35zA+cZb7awb8Eyu1K/QRj1OI0JyvIqU
+	 MlLhHS3zRIxqA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jian-Hong Pan <jhp@endlessos.org>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	sbinding@opensource.cirrus.com,
+	kailang@realtek.com,
+	luke@ljones.dev,
+	shenghao-ding@ti.com,
+	simont@opensource.cirrus.com,
+	foss@athaariq.my.id,
+	rf@opensource.cirrus.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 3/4] ALSA: hda/realtek: Enable headset mic of JP-IK LEAP W502 with ALC897
+Date: Wed,  5 Jun 2024 07:56:15 -0400
+Message-ID: <20240605115619.2965224-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240605115619.2965224-1-sashal@kernel.org>
+References: <20240605115619.2965224-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240604222155.2370541-2-paulmck@kernel.org>
 
-Le Tue, Jun 04, 2024 at 03:21:55PM -0700, Paul E. McKenney a écrit :
-> This commit expands on the ordering properties of rcu_assign_pointer()
-> and rcu_dereference(), outlining their constraints on CPUs and compilers.
-> 
-> Reported-by: Rao Shoaib <rao.shoaib@oracle.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  Documentation/RCU/whatisRCU.rst | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
-> index 94838c65c7d97..d585a5490aeec 100644
-> --- a/Documentation/RCU/whatisRCU.rst
-> +++ b/Documentation/RCU/whatisRCU.rst
-> @@ -250,21 +250,25 @@ rcu_assign_pointer()
->  ^^^^^^^^^^^^^^^^^^^^
->  	void rcu_assign_pointer(p, typeof(p) v);
->  
-> -	Yes, rcu_assign_pointer() **is** implemented as a macro, though it
-> -	would be cool to be able to declare a function in this manner.
-> -	(Compiler experts will no doubt disagree.)
-> +	Yes, rcu_assign_pointer() **is** implemented as a macro, though
-> +	it would be cool to be able to declare a function in this manner.
-> +	(And there has been some discussion of adding overloaded functions
-> +	to the C language, so who knows?)
->  
->  	The updater uses this spatial macro to assign a new value to an
->  	RCU-protected pointer, in order to safely communicate the change
->  	in value from the updater to the reader.  This is a spatial (as
->  	opposed to temporal) macro.  It does not evaluate to an rvalue,
-> -	but it does execute any memory-barrier instructions required
-> -	for a given CPU architecture.  Its ordering properties are that
-> -	of a store-release operation.
-> -
-> -	Perhaps just as important, it serves to document (1) which
-> -	pointers are protected by RCU and (2) the point at which a
-> -	given structure becomes accessible to other CPUs.  That said,
-> +	but it does provide any compiler directives and memory-barrier
-> +	instructions required for a given compile or CPU architecture.
-> +	Its ordering properties are that of a store-release operation,
-> +	that is, any prior loads and stores required to initialize the
-> +	structure are ordered before the store that publishes the pointer
-> +	to that structure.
+From: Jian-Hong Pan <jhp@endlessos.org>
 
-About that, why rcu_dereference() isn't a matching load-acquire?
+[ Upstream commit 45e37f9ce28d248470bab4376df2687a215d1b22 ]
 
-Thanks.
+JP-IK LEAP W502 laptop's headset mic is not enabled until
+ALC897_FIXUP_HEADSET_MIC_PIN3 quirk is applied.
+
+Here is the original pin node values:
+
+0x11 0x40000000
+0x12 0xb7a60130
+0x14 0x90170110
+0x15 0x411111f0
+0x16 0x411111f0
+0x17 0x411111f0
+0x18 0x411111f0
+0x19 0x411111f0
+0x1a 0x411111f0
+0x1b 0x03211020
+0x1c 0x411111f0
+0x1d 0x4026892d
+0x1e 0x411111f0
+0x1f 0x411111f0
+
+Signed-off-by: Jian-Hong Pan <jhp@endlessos.org>
+Link: https://lore.kernel.org/r/20240520055008.7083-2-jhp@endlessos.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/pci/hda/patch_realtek.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 47e404bde4241..41a86c050745e 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -11760,6 +11760,7 @@ enum {
+ 	ALC897_FIXUP_LENOVO_HEADSET_MODE,
+ 	ALC897_FIXUP_HEADSET_MIC_PIN2,
+ 	ALC897_FIXUP_UNIS_H3C_X500S,
++	ALC897_FIXUP_HEADSET_MIC_PIN3,
+ };
+ 
+ static const struct hda_fixup alc662_fixups[] = {
+@@ -12206,10 +12207,18 @@ static const struct hda_fixup alc662_fixups[] = {
+ 			{}
+ 		},
+ 	},
++	[ALC897_FIXUP_HEADSET_MIC_PIN3] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11050 }, /* use as headset mic */
++			{ }
++		},
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc662_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1019, 0x9087, "ECS", ALC662_FIXUP_ASUS_MODE2),
++	SND_PCI_QUIRK(0x1019, 0x9859, "JP-IK LEAP W502", ALC897_FIXUP_HEADSET_MIC_PIN3),
+ 	SND_PCI_QUIRK(0x1025, 0x022f, "Acer Aspire One", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x0241, "Packard Bell DOTS", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x0308, "Acer Aspire 8942G", ALC662_FIXUP_ASPIRE),
+-- 
+2.43.0
+
