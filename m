@@ -1,166 +1,207 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F9F257B;
-	Wed,  5 Jun 2024 09:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9153F18FC6B;
+	Wed,  5 Jun 2024 09:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579814; cv=none; b=ihuAk49HSCm7RVfjpsHmVUSRDMrz2wxGOHaZadYQN2Ej3EWsnk3IWSb7Id+vslIlE5U/9eZmd0lI+/jNNOwPJRrrlTXTiUnmILgBoqghtvqTHV9cvznSbRCDhdrBoGnfmBnxg6kwAa70lUaaK6ENiqmkplUTLUPjin+yBT457XE=
+	t=1717579821; cv=none; b=T+URD0XhLFQ5Mpna4AZ4fCPh4DwmxT15WQbQTchIWipTViyoh8UamTlPP63tqVMW81WLqzzThEGWmsDbVW//GjO2Gb7lgZtBkHkPTW5wv2KyjvE6C0at6rK1qk7VItKWpCoTaaozZ2srbCPXkqfODiDe0iV0Mplw2JD6KtI9M20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579814; c=relaxed/simple;
-	bh=ZWvr410IHWWuYNKsLYoYrO07ijJE2egibpZ67QmYtTc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=krs7oVkZ4Rq3yLIUDLeokZ9XMxq8P0LvcMaH+aP9nNbl2EHccbEFf9ejR4xBoZpdKUqBOTHEKmbuI29sfByyK74zRvoLLogsg1Nu2K0ExRJ35GX/8OpFPwnX8zhsh+ihDDR4xlU1oef23e+JMFn8DnKC5raqssqXujnorSAtBKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QO2Hhg8y; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QO2Hhg8y"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6266ffdba8so203349166b.1;
-        Wed, 05 Jun 2024 02:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717579811; x=1718184611; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cV7zf1J5GVnNvj6COOcqVNCjZ7NVt5RFiRgF7yuHnLw=;
-        b=QO2Hhg8yJyKpMsyqyKsHAsEW6nt3Fv6C7gOmfqIk9wo67V4WHdeddR1yIRxyVGymKh
-         KomdKfI9AAAf88YhnL6+MZKgvI2C67ESvMuSrMp3mWmhz1AX4lYruCMZe6BO2nSM6tC4
-         UntleTKxsMwAff4u4Xhc65VK6+3sDBGWEGmvMq/GbkRjaYRAU+0IBg1XcizmD3o4sugj
-         jCT0Z95n0G5chVSdk/lisYe6v5prdMPYPX7oJXqoPqMC5cGHaoAVX3fT3q7k73LDznKh
-         D5HtaxDhpsex2wqmgWET1brb2AU4qfr9auiMDagh8AAFDahVeWfV67Eh1LBwcuqiGvEA
-         AKzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717579811; x=1718184611;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cV7zf1J5GVnNvj6COOcqVNCjZ7NVt5RFiRgF7yuHnLw=;
-        b=mvE9kRtFNNNnq90J8Pd4+B/8Sf8ra9L8CaviG5jHiOKme0tx0NqHLj++wShSTn6KPQ
-         hJ8ESF6+t5DUbQ9hU3ZY8LT8OIB93SrJxZbZMPBcp3ak1OFsunMcnyXX/cU6DD3BnNPL
-         ijjPpX3xJdfyTAspoSkGawPpBmNsrMm9GKPqyhzcnAPj27UUlUrOQ2LI6+wZTcTm9t52
-         LuREbiqoWFGSZJ3Z6RwnBAAqW4OeyfCNTtVnUaay9FYsaP87d4Scu+hSUgr9egYE85L/
-         6I8/NMBThf/gQSZ/tWhzrelcxkR+qYj+V5CR1LRUIzufj2ndYueidYzh565RZncWVMe5
-         yQiA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+Z0KE7AHcF/rMnFbGKfTvXjQItrYQcSnPt2Q4QVRqkvFB/ANV5aBUmG917HRZAUNEhfCKXu+dw5gYiqOHHDBhmcpLcRONUVmKC7R4Z6Mn7DMrONva0BjlVIOhTIwr4NCGmHfQjDBW
-X-Gm-Message-State: AOJu0YwnfP3XAfaaNAcS0W+0DqcRKcdcaNFkr9BWg4e+MGSgZ2JXn5jD
-	8YDdwzqXq/SJdJJ72khcWCQ33R38o/NMwnTmn4nNDNMQnvbCCBoG
-X-Google-Smtp-Source: AGHT+IFKIjzxbZK6itJudm8hiuq5NtiQaTOtj73xdFoRpvF9XLCXllH0gTRohuA0C8uI4HqbKUV/pw==
-X-Received: by 2002:a17:906:1c11:b0:a66:e009:eb53 with SMTP id a640c23a62f3a-a699f34d9c8mr131390866b.13.1717579810959;
-        Wed, 05 Jun 2024 02:30:10 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6922c59fc1sm347149766b.175.2024.06.05.02.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 02:30:10 -0700 (PDT)
-Message-ID: <aac3acb3f02642fd9aa0ec922f7b02bb9f32435a.camel@gmail.com>
-Subject: Re: [PATCH 2/5] iio: adc: ad7266: use
- devm_regulator_get_enable_read_voltage
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
- <jic23@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
- Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- linux-iio@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Wed, 05 Jun 2024 11:33:57 +0200
-In-Reply-To: <57a60f5c-a989-4187-ab4f-1f6a15578578@baylibre.com>
-References: 
-	<20240531-iio-adc-ref-supply-refactor-v1-0-4b313c0615ad@baylibre.com>
-	 <20240531-iio-adc-ref-supply-refactor-v1-2-4b313c0615ad@baylibre.com>
-	 <edb66fe8c2722e600179b1f9a0d81242d84582a0.camel@gmail.com>
-	 <57a60f5c-a989-4187-ab4f-1f6a15578578@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	s=arc-20240116; t=1717579821; c=relaxed/simple;
+	bh=JHCT0Euro1lWgzGGxzXMk+qWvf8J+z8utOGTvZkOZH4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k49MlXpgQk8x7iXwS1xV5TZYCATuxb6Zuhf9iQZdxSyYwipYoelJU8QMEejYqZOcxXtBgXZasTnw82QeVIzk0Mep4GzOr1zxhIc23ZpcAXBaEXi2dKaDkIxMdbqFvYgoy3Znu1os/oya0GO8pQtlX6LMpHmHG5aNbxF1E6SlQ6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3665ADA7;
+	Wed,  5 Jun 2024 02:30:43 -0700 (PDT)
+Received: from e122027.arm.com (unknown [10.57.39.129])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D08213F792;
+	Wed,  5 Jun 2024 02:30:14 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: [PATCH v3 00/14] arm64: Support for running as a guest in Arm CCA
+Date: Wed,  5 Jun 2024 10:29:52 +0100
+Message-Id: <20240605093006.145492-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-06-04 at 09:10 -0500, David Lechner wrote:
-> On 6/4/24 6:19 AM, Nuno S=C3=A1 wrote:
-> > On Fri, 2024-05-31 at 16:19 -0500, David Lechner wrote:
-> > > This makes use of the new devm_regulator_get_enable_read_voltage()
-> > > function to reduce boilerplate code.
-> > >=20
-> > > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> > > ---
-> > > =C2=A0drivers/iio/adc/ad7266.c | 37 ++++++++++-----------------------=
-----
-> > > =C2=A01 file changed, 10 insertions(+), 27 deletions(-)
-> > >=20
-> > > diff --git a/drivers/iio/adc/ad7266.c b/drivers/iio/adc/ad7266.c
-> > > index 353a97f9c086..026db1bedc0a 100644
-> > > --- a/drivers/iio/adc/ad7266.c
-> > > +++ b/drivers/iio/adc/ad7266.c
-> > > @@ -25,7 +25,6 @@
-> > > =C2=A0
-> > > =C2=A0struct ad7266_state {
-> > > =C2=A0	struct spi_device	*spi;
-> > > -	struct regulator	*reg;
-> > > =C2=A0	unsigned long		vref_mv;
-> > > =C2=A0
-> > > =C2=A0	struct spi_transfer	single_xfer[3];
-> > > @@ -377,11 +376,6 @@ static const char * const ad7266_gpio_labels[] =
-=3D {
-> > > =C2=A0	"ad0", "ad1", "ad2",
-> > > =C2=A0};
-> > > =C2=A0
-> > > -static void ad7266_reg_disable(void *reg)
-> > > -{
-> > > -	regulator_disable(reg);
-> > > -}
-> > > -
-> > > =C2=A0static int ad7266_probe(struct spi_device *spi)
-> > > =C2=A0{
-> > > =C2=A0	struct ad7266_platform_data *pdata =3D spi->dev.platform_data;
-> > > @@ -396,28 +390,17 @@ static int ad7266_probe(struct spi_device *spi)
-> > > =C2=A0
-> > > =C2=A0	st =3D iio_priv(indio_dev);
-> > > =C2=A0
-> > > -	st->reg =3D devm_regulator_get_optional(&spi->dev, "vref");
-> > > -	if (!IS_ERR(st->reg)) {
-> > > -		ret =3D regulator_enable(st->reg);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -
-> > > -		ret =3D devm_add_action_or_reset(&spi->dev,
-> > > ad7266_reg_disable, st-
-> > > > reg);
-> > > -		if (ret)
-> > > -			return ret;
-> > > -
-> > > -		ret =3D regulator_get_voltage(st->reg);
-> > > -		if (ret < 0)
-> > > -			return ret;
-> > > -
-> > > -		st->vref_mv =3D ret / 1000;
-> > > -	} else {
-> > > -		/* Any other error indicates that the regulator does
-> > > exist */
-> > > -		if (PTR_ERR(st->reg) !=3D -ENODEV)
-> > > -			return PTR_ERR(st->reg);
-> > > -		/* Use internal reference */
-> > > +	/*
-> > > +	 * Use external reference from vref if present, otherwise use
-> > > 2.5V
-> > > +	 * internal reference.
-> > > +	 */
-> >=20
-> > Not sure the comment brings any added value. The code is fairly self
-> > explanatory
-> > IMO...
->=20
-> Well, you do this every day. :-)
+This series adds support for running Linux in a protected VM under the
+Arm Confidential Compute Architecture (CCA). This has been updated
+following the feedback from the v2 posting[1]. Thanks for the feedback!
+Individual patches have a change log for v3.
 
-I guess... still not an excuse :)
+The biggest change from v2 is fixing set_memory_{en,de}crypted() to
+perform a break-before-make sequence. Note that only the virtual address
+supplied is flipped between shared and protected, so if e.g. a vmalloc()
+address is passed the linear map will still point to the (now invalid)
+previous IPA. Attempts to access the wrong address may trigger a
+Synchronous External Abort. However any code which attempts to access
+the 'encrypted' alias after set_memory_decrypted() is already likely to
+be broken on platforms that implement memory encryption, so I don't
+expect problems.
 
->=20
-> For someone who never wrote an IIO driver, it could be helpful.
+The ABI to the RMM from a realm (the RSI) is based on the final RMM v1.0
+(EAC 5) specification[2]. Future RMM specifications will be backwards
+compatible so a guest using the v1.0 specification (i.e. this series)
+will be able to run on future versions of the RMM without modification.
 
-Still dunno but no strong feelings anyways...
+Arm plans to set up a CI system to perform at a minimum boot testing of
+Linux as a guest within a realm.
 
-- Nuno S=C3=A1
+This series is based on v6.10-rc1. It is also available as a git
+repository:
+
+https://gitlab.arm.com/linux-arm/linux-cca cca-guest/v3
+
+This series (the guest side) should be in a good state so please review
+with the intention that this could be merged soon. The host side (KVM
+changes) is likely to require some more iteration and I'll post that as
+a separate series shortly - note that there is no tie between the series
+(i.e. you can mix and match v2 and v3 postings of the host and guest).
+
+Introduction (unchanged from v2 posting)
+============
+A more general introduction to Arm CCA is available on the Arm
+website[3], and links to the other components involved are available in
+the overall cover letter.
+
+Arm Confidential Compute Architecture adds two new 'worlds' to the
+architecture: Root and Realm. A new software component known as the RMM
+(Realm Management Monitor) runs in Realm EL2 and is trusted by both the
+Normal World and VMs running within Realms. This enables mutual
+distrust between the Realm VMs and the Normal World.
+
+Virtual machines running within a Realm can decide on a (4k)
+page-by-page granularity whether to share a page with the (Normal World)
+host or to keep it private (protected). This protection is provided by
+the hardware and attempts to access a page which isn't shared by the
+Normal World will trigger a Granule Protection Fault.
+
+Realm VMs can communicate with the RMM via another SMC interface known
+as RSI (Realm Services Interface). This series adds wrappers for the
+full set of RSI commands and uses them to manage the Realm IPA State
+(RIPAS) and to discover the configuration of the realm.
+
+The VM running within the Realm needs to ensure that memory that is
+going to use is marked as 'RIPAS_RAM' (i.e. protected memory accessible
+only to the guest). This could be provided by the VMM (and subject to
+measurement to ensure it is setup correctly) or the VM can set it
+itself.  This series includes a patch which will iterate over all
+described RAM and set the RIPAS. This is a relatively cheap operation,
+and doesn't require memory donation from the host. Instead, memory can
+be dynamically provided by the host on fault. An alternative would be to
+update booting.rst and state this as a requirement, but this would
+reduce the flexibility of the VMM to manage the available memory to the
+guest (as the initial RIPAS state is part of the guest's measurement).
+
+Within the Realm the most-significant active bit of the IPA is used to
+select whether the access is to protected memory or to memory shared
+with the host. This series treats this bit as if it is attribute bit in
+the page tables and will modify it when sharing/unsharing memory with
+the host.
+
+This top bit usage also necessitates that the IPA width is made more
+dynamic in the guest. The VMM will choose a width (and therefore which
+bit controls the shared flag) and the guest must be able to identify
+this bit to mask it out when necessary. PHYS_MASK_SHIFT/PHYS_MASK are
+therefore made dynamic.
+
+To allow virtio to communicate with the host the shared buffers must be
+placed in memory which has this top IPA bit set. This is achieved by
+implementing the set_memory_{encrypted,decrypted} APIs for arm64 and
+forcing the use of bounce buffers. For now all device access is
+considered to required the memory to be shared, at this stage there is
+no support for real devices to be assigned to a realm guest - obviously
+if device assignment is added this will have to change.
+
+Finally the GIC is (largely) emulated by the (untrusted) host. The RMM
+provides some management (including register save/restore) but the
+ITS buffers must be placed into shared memory for the host to emulate.
+There is likely to be future work to harden the GIC driver against a
+malicious host (along with any other drivers used within a Realm guest).
+
+[1] https://lore.kernel.org/r/20240412084213.1733764-1-steven.price%40arm.com
+[2] https://developer.arm.com/documentation/den0137/1-0eac5/
+[3] https://www.arm.com/architecture/security-features/arm-confidential-compute-architecture
+
+Sami Mujawar (2):
+  arm64: rsi: Interfaces to query attestation token
+  virt: arm-cca-guest: TSM_REPORT support for realms
+
+Steven Price (5):
+  arm64: realm: Query IPA size from the RMM
+  arm64: Mark all I/O as non-secure shared
+  arm64: Make the PHYS_MASK_SHIFT dynamic
+  arm64: Enforce bounce buffers for realm DMA
+  arm64: realm: Support nonsecure ITS emulation shared
+
+Suzuki K Poulose (7):
+  arm64: rsi: Add RSI definitions
+  arm64: Detect if in a realm and set RIPAS RAM
+  fixmap: Allow architecture overriding set_fixmap_io
+  arm64: Override set_fixmap_io
+  arm64: Enable memory encrypt for Realms
+  arm64: Force device mappings to be non-secure shared
+  efi: arm64: Map Device with Prot Shared
+
+ arch/arm64/Kconfig                            |   3 +
+ arch/arm64/include/asm/fixmap.h               |   4 +-
+ arch/arm64/include/asm/io.h                   |   6 +-
+ arch/arm64/include/asm/mem_encrypt.h          |  17 ++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   6 -
+ arch/arm64/include/asm/pgtable-prot.h         |   3 +
+ arch/arm64/include/asm/pgtable.h              |   7 +-
+ arch/arm64/include/asm/rsi.h                  |  48 ++++
+ arch/arm64/include/asm/rsi_cmds.h             | 143 ++++++++++++
+ arch/arm64/include/asm/rsi_smc.h              | 142 ++++++++++++
+ arch/arm64/include/asm/set_memory.h           |   3 +
+ arch/arm64/kernel/Makefile                    |   3 +-
+ arch/arm64/kernel/efi.c                       |   2 +-
+ arch/arm64/kernel/rsi.c                       |  96 ++++++++
+ arch/arm64/kernel/setup.c                     |   8 +
+ arch/arm64/mm/init.c                          |  10 +-
+ arch/arm64/mm/mmu.c                           |  13 ++
+ arch/arm64/mm/pageattr.c                      |  65 +++++-
+ drivers/irqchip/irq-gic-v3-its.c              |  90 ++++++--
+ drivers/virt/coco/Kconfig                     |   2 +
+ drivers/virt/coco/Makefile                    |   1 +
+ drivers/virt/coco/arm-cca-guest/Kconfig       |  11 +
+ drivers/virt/coco/arm-cca-guest/Makefile      |   2 +
+ .../virt/coco/arm-cca-guest/arm-cca-guest.c   | 211 ++++++++++++++++++
+ include/asm-generic/fixmap.h                  |   2 +
+ 25 files changed, 858 insertions(+), 40 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mem_encrypt.h
+ create mode 100644 arch/arm64/include/asm/rsi.h
+ create mode 100644 arch/arm64/include/asm/rsi_cmds.h
+ create mode 100644 arch/arm64/include/asm/rsi_smc.h
+ create mode 100644 arch/arm64/kernel/rsi.c
+ create mode 100644 drivers/virt/coco/arm-cca-guest/Kconfig
+ create mode 100644 drivers/virt/coco/arm-cca-guest/Makefile
+ create mode 100644 drivers/virt/coco/arm-cca-guest/arm-cca-guest.c
+
+-- 
+2.34.1
 
