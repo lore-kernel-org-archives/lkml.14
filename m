@@ -1,185 +1,128 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD2819D882;
-	Wed,  5 Jun 2024 13:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07F019D881;
+	Wed,  5 Jun 2024 13:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717593281; cv=none; b=T01My87usW90LUr0mvY0bWr+VepGJjuQ5bn3hlvQa1QRpg3PmeA+9ZHU8XxnhST6cI5/JTyI1HtU+L3h6ylJlnsIGCLnpzrjKsOHlEYRuZggJgleBKTueuniufqx5VdOq6sWdrVZXHXM0r2F2VUfidFj8SEUuWAwB7EL4/hCxEE=
+	t=1717593361; cv=none; b=X00ppwhq3Xxge/U8t7LB4qzRLh7qM3SxEONjNWlaCx/d7uNZ/ONDIieq+qexgiV5meOmZOFNNZzSkTW96BJCT7ghwGDXAEzZfwlXngbDbZTzsU18zF53AUGFOWrL/5ISoHhdMJiOWxlAlNrm/ywkXJWh6g4ir6YgLnssLiewIFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717593281; c=relaxed/simple;
-	bh=5pdMw9c8CM5TOI103CE+TSpoykEhfXjwqMN8A21B6a4=;
-	h=Subject:From:To:Cc:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWkGPS3guTXw+6jGJOlc7poh3ek/ginZPqqSA9QJuQ9ErJnqSfP6ga6mePel3mjBy2X5adxQLcSr120TSZ3cJl7wKxHmdNZGUJJcU6wSd2Ry4xfXV3qCxDd5enGQmaxDWiQke4e47QKSIRGV+xUKWLz4ioYpNupnhvs0OH3euTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JX5nIzzx; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1717593361; c=relaxed/simple;
+	bh=g20FrGbDTGnz16POZhJm2IR0qbqxVdd8fkLY18CrcWI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TqKvjZXelyo4+B/R1VhfseYyKml9ulNiCtzZTeAGz9mAqNxFBsMubzLIv3zziBuyGYO/Flk0bgz6IA0Ot4dq0gjt7i1OsJUMCzMNmKZLcR0taVUTAxR2p7YFimVrkpm88YnPt1j1U5tkRwghV/rN2DI2FF1g3SWRTjgSy/Zj6E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=none smtp.mailfrom=ecsmtp.iind.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dxkZGs/5; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecsmtp.iind.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JX5nIzzx"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 455CvKUE032704;
-	Wed, 5 Jun 2024 13:14:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pp1;
- bh=Xga+hzafZul/I4cN9R3CYrFOSDKXjPSht/bEB2nEBOE=;
- b=JX5nIzzxuaqksWll/roMxk+eS4fzUPPGCWLkO2BAtlEwElCqMhrKJwUQRiQbPZ6XPid+
- hNRZoEY0BF1gv+A0WIEu8i7nRMzr/VputdSHrJJU3KTuw4Nm3qIqk5RDGBbanF68JAII
- i9JazUU52yiH1f87FQrHEUo1XRagEcDhhrProA4jBSM6MVEHlA1oIqQU7IPqp913LFMN
- 0XEu4jk7MBZrhv7f5mi8j06svuHb6ZopBo3wsqq/gLp3VdhH1vuCN9YHYQCCXKDzBgzt
- DCFjl5qLimPCQoPWNidShB4OzHWcrjvQodozgrkZWK/UHTdu1qJZvCu8GbuiEQNiBMwC 0A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjrfn81pd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 13:14:29 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 455DET4f030325;
-	Wed, 5 Jun 2024 13:14:29 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjrfn81p7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 13:14:29 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 455B68HB022835;
-	Wed, 5 Jun 2024 13:06:51 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ygg6mbxte-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 13:06:50 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 455D6jsS13107690
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Jun 2024 13:06:47 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 55B922004E;
-	Wed,  5 Jun 2024 13:06:45 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6118F2004B;
-	Wed,  5 Jun 2024 13:06:43 +0000 (GMT)
-Received: from [172.17.0.2] (unknown [9.3.101.175])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Jun 2024 13:06:43 +0000 (GMT)
-Subject: [PATCH v2 3/8] KVM: PPC: Book3S HV: Add one-reg interface for DEXCR
- register
-From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-To: kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: pbonzini@redhat.com, naveen.n.rao@linux.ibm.com,
-        christophe.leroy@csgroup.eu, corbet@lwn.net, mpe@ellerman.id.au,
-        namhyung@kernel.org, npiggin@gmail.com, pbonzini@redhat.com,
-        sbhat@linux.ibm.com, jniethe5@gmail.com, atrajeev@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org
-Date: Wed, 05 Jun 2024 13:06:42 +0000
-Message-ID: <171759279613.1480.12873911783530175699.stgit@linux.ibm.com>
-In-Reply-To: <171759276071.1480.9356137231993600304.stgit@linux.ibm.com>
-References: <171759276071.1480.9356137231993600304.stgit@linux.ibm.com>
-User-Agent: StGit/1.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dxkZGs/5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717593360; x=1749129360;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g20FrGbDTGnz16POZhJm2IR0qbqxVdd8fkLY18CrcWI=;
+  b=dxkZGs/5CpCGXyEWtCGbUH9DtWn21aPZ8i+ILdmncfJBY6kSbMf1U+X3
+   70RCjEO7CadLQMwWne7WDTjW3/zJUzlkfGkD15ARSkc1QFcw1ha2UK3en
+   S63tcxd9lu9BMk4xZyf8F/KOdWqrGuMl/qJoN9u7iUNplqdxq/TUDrNFx
+   HznT+9B7zx+rOHxLLzyJEtGX9wmQJ/IszneyO0e/NAgA2dpPchtANVsZw
+   yEp/pO4w6MgznODkTlwOoVV92eY7Y5EUpdxGUAOQa5H3Au6drF34nwdgZ
+   5VucPDbX+TQypzTttwPRVY9ngE9gNx85Tsfyut1nC/RuTLuI+ju6XehQ5
+   w==;
+X-CSE-ConnectionGUID: IqbgSj0fRTiYHWedFRLidw==
+X-CSE-MsgGUID: WgnMd6vBSw2aaTRXfCS/bA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="18048159"
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="18048159"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 06:15:51 -0700
+X-CSE-ConnectionGUID: ccaxZxC0QXe0jSnmUw+xpw==
+X-CSE-MsgGUID: tQprvkH7TO6ZBRd9agHn8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="42549302"
+Received: from inesxmail01.iind.intel.com ([10.223.57.40])
+  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2024 06:15:50 -0700
+Received: from inlubt0316.iind.intel.com (inlubt0316.iind.intel.com [10.191.20.213])
+	by inesxmail01.iind.intel.com (Postfix) with ESMTP id 666CB19B02;
+	Wed,  5 Jun 2024 18:45:48 +0530 (IST)
+Received: by inlubt0316.iind.intel.com (Postfix, from userid 12101951)
+	id 616491600109; Wed,  5 Jun 2024 18:45:48 +0530 (IST)
+From: Raag Jadav <raag.jadav@intel.com>
+To: ukleinek@kernel.org,
+	jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v2 2/2] pwm: lpss: drop redundant runtime PM handles
+Date: Wed,  5 Jun 2024 18:45:33 +0530
+Message-Id: <20240605131533.20037-3-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20240605131533.20037-1-raag.jadav@intel.com>
+References: <20240605131533.20037-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: v-NVf2zAtbNeLeCUt5Oh3yizY-m3foJM
-X-Proofpoint-GUID: sXHXdPE-CxedLgFxffR8h3aa_-EjiWgT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 bulkscore=0 adultscore=0 mlxlogscore=655
- mlxscore=0 impostorscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2406050100
+Content-Transfer-Encoding: 8bit
 
-The patch adds a one-reg register identifier which can be used to
-read and set the DEXCR for the guest during enter/exit with
-KVM_REG_PPC_DEXCR. The specific SPR KVM API documentation
-too updated.
+We no longer need empty runtime PM handles for PCI devices after
+commits [1] and [2]. Drop them and let PCI core take care of power
+state transitions.
 
-Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+[1] c5eb1190074c ("PCI / PM: Allow runtime PM without callback functions")
+[2] fa885b06ec7e ("PCI/PM: Allow runtime PM with no PM callbacks at all")
+
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/virt/kvm/api.rst      |    1 +
- arch/powerpc/include/asm/kvm_host.h |    1 +
- arch/powerpc/include/uapi/asm/kvm.h |    1 +
- arch/powerpc/kvm/book3s_hv.c        |    6 ++++++
- arch/powerpc/kvm/book3s_hv.h        |    1 +
- 5 files changed, 10 insertions(+)
+ drivers/pwm/pwm-lpss-pci.c | 22 ----------------------
+ 1 file changed, 22 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index a71d91978d9e..81077c654281 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -2441,6 +2441,7 @@ registers, find a list below:
-   PPC     KVM_REG_PPC_PTCR                64
-   PPC     KVM_REG_PPC_DAWR1               64
-   PPC     KVM_REG_PPC_DAWRX1              64
-+  PPC     KVM_REG_PPC_DEXCR               64
-   PPC     KVM_REG_PPC_TM_GPR0             64
-   ...
-   PPC     KVM_REG_PPC_TM_GPR31            64
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 8abac532146e..1e2fdcbecffd 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -599,6 +599,7 @@ struct kvm_vcpu_arch {
- 	ulong dawrx0;
- 	ulong dawr1;
- 	ulong dawrx1;
-+	ulong dexcr;
- 	ulong ciabr;
- 	ulong cfar;
- 	ulong ppr;
-diff --git a/arch/powerpc/include/uapi/asm/kvm.h b/arch/powerpc/include/uapi/asm/kvm.h
-index 1691297a766a..fcb947f65667 100644
---- a/arch/powerpc/include/uapi/asm/kvm.h
-+++ b/arch/powerpc/include/uapi/asm/kvm.h
-@@ -645,6 +645,7 @@ struct kvm_ppc_cpu_char {
- #define KVM_REG_PPC_SIER3	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc3)
- #define KVM_REG_PPC_DAWR1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc4)
- #define KVM_REG_PPC_DAWRX1	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc5)
-+#define KVM_REG_PPC_DEXCR	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0xc6)
+diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
+index 25045c229520..f7ece2809e6b 100644
+--- a/drivers/pwm/pwm-lpss-pci.c
++++ b/drivers/pwm/pwm-lpss-pci.c
+@@ -46,25 +46,6 @@ static void pwm_lpss_remove_pci(struct pci_dev *pdev)
+ 	pm_runtime_get_sync(&pdev->dev);
+ }
  
- /* Transactional Memory checkpointed state:
-  * This is all GPRs, all VSX regs and a subset of SPRs
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index b576781d58d5..1294c6839d37 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2349,6 +2349,9 @@ static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_DAWRX1:
- 		*val = get_reg_val(id, kvmppc_get_dawrx1_hv(vcpu));
- 		break;
-+	case KVM_REG_PPC_DEXCR:
-+		*val = get_reg_val(id, kvmppc_get_dexcr_hv(vcpu));
-+		break;
- 	case KVM_REG_PPC_CIABR:
- 		*val = get_reg_val(id, kvmppc_get_ciabr_hv(vcpu));
- 		break;
-@@ -2592,6 +2595,9 @@ static int kvmppc_set_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
- 	case KVM_REG_PPC_DAWRX1:
- 		kvmppc_set_dawrx1_hv(vcpu, set_reg_val(id, *val) & ~DAWRX_HYP);
- 		break;
-+	case KVM_REG_PPC_DEXCR:
-+		kvmppc_set_dexcr_hv(vcpu, set_reg_val(id, *val));
-+		break;
- 	case KVM_REG_PPC_CIABR:
- 		kvmppc_set_ciabr_hv(vcpu, set_reg_val(id, *val));
- 		/* Don't allow setting breakpoints in hypervisor code */
-diff --git a/arch/powerpc/kvm/book3s_hv.h b/arch/powerpc/kvm/book3s_hv.h
-index 47b2c815641e..7b0fd282fe95 100644
---- a/arch/powerpc/kvm/book3s_hv.h
-+++ b/arch/powerpc/kvm/book3s_hv.h
-@@ -116,6 +116,7 @@ KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(dawr0, 64, KVMPPC_GSID_DAWR0)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(dawr1, 64, KVMPPC_GSID_DAWR1)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(dawrx0, 64, KVMPPC_GSID_DAWRX0)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(dawrx1, 64, KVMPPC_GSID_DAWRX1)
-+KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(dexcr, 64, KVMPPC_GSID_DEXCR)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(ciabr, 64, KVMPPC_GSID_CIABR)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(wort, 64, KVMPPC_GSID_WORT)
- KVMPPC_BOOK3S_HV_VCPU_ACCESSOR(ppr, 64, KVMPPC_GSID_PPR)
-
+-static int pwm_lpss_runtime_suspend_pci(struct device *dev)
+-{
+-	/*
+-	 * The PCI core will handle transition to D3 automatically. We only
+-	 * need to provide runtime PM hooks for that to happen.
+-	 */
+-	return 0;
+-}
+-
+-static int pwm_lpss_runtime_resume_pci(struct device *dev)
+-{
+-	return 0;
+-}
+-
+-static DEFINE_RUNTIME_DEV_PM_OPS(pwm_lpss_pci_pm,
+-				 pwm_lpss_runtime_suspend_pci,
+-				 pwm_lpss_runtime_resume_pci,
+-				 NULL);
+-
+ static const struct pci_device_id pwm_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x0ac8), (unsigned long)&pwm_lpss_bxt_info},
+ 	{ PCI_VDEVICE(INTEL, 0x0f08), (unsigned long)&pwm_lpss_byt_info},
+@@ -84,9 +65,6 @@ static struct pci_driver pwm_lpss_driver_pci = {
+ 	.id_table = pwm_lpss_pci_ids,
+ 	.probe = pwm_lpss_probe_pci,
+ 	.remove = pwm_lpss_remove_pci,
+-	.driver = {
+-		.pm = pm_ptr(&pwm_lpss_pci_pm),
+-	},
+ };
+ module_pci_driver(pwm_lpss_driver_pci);
+ 
+-- 
+2.35.3
 
