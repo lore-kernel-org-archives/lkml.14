@@ -1,62 +1,40 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF3119AD7A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FBA19ADBA;
+	Wed,  5 Jun 2024 13:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717594591; cv=none; b=K2sTj0w0k5CSh646wggchODVkZ+uoih6wglGh473dP3uM373kdhNTcKtwJu64rpi6IRwHb6uJVmrnUpPtxO+3ohSlwZWCy/wtsEumLufeaO7f3liFfxpGIvYEkT63s/LnAhcnmZT5drXIZeb17WqhPBWPii5sXmD8ef1o6CTlro=
+	t=1717594591; cv=none; b=bA1gPYCjjCPG91OkdR2yUTPtjUmZmeaLAU7KNmU3awb0FvN+JZQDXZMuoDfOiSfmVOGqnLL2LJ8DsdL4p+NBjMII5hb3Odw1rIxgDdL3QZJ2C5ebCjavUBO+sKh71c511unIdr9lHXuKYtQ6bpf2Deu2ZGsKXoT/xIr+FF1viqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717594591; c=relaxed/simple;
-	bh=Q+yKb3UoyyFzRRfAW+NzEGFhCqBmF4Gfe38PmpDlfNw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mSE12aZUQ84MUe5C31jU0nBSzq4hMC9vo/QVef5fy+BOO89wrY6h2MLAPdQ2ioLpwqtoD9B7oKEuw5XBhJUePrkknUhbXQdw1Fv9qsAYIrYaO2Ku2TrVnjOwfCR+Fwu2cUJfxOtARsxH9wo9tCUFl2zEldurMgD/nZcAcn5/UwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UfXa0Mgm; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UfXa0Mgm"
-X-Envelope-To: mingo@redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1717594586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8yb3nN64g5IVJqtCKRjk27NnlVJOOQo5LzCqk+WIDbk=;
-	b=UfXa0MgmXPfC5cQp4mFTQ5w4AnRjbsA95G4WA0FZbE5DR+O6chpusfCAqAbL+FuZb47rOc
-	zpLXONsIfCQG0Klze82g5vLHVwrSOew/FU/9O5wgq2N8rZop34kYzbd36xHwEyAN7NpoBx
-	H0w0IY0ARwcIbyTWWaIo4gSGEOgO0x0=
-X-Envelope-To: peterz@infradead.org
-X-Envelope-To: juri.lelli@redhat.com
-X-Envelope-To: vincent.guittot@linaro.org
-X-Envelope-To: dietmar.eggemann@arm.com
-X-Envelope-To: rostedt@goodmis.org
-X-Envelope-To: bsegall@google.com
-X-Envelope-To: mgorman@suse.de
-X-Envelope-To: bristot@redhat.com
-X-Envelope-To: vschneid@redhat.com
-X-Envelope-To: linux-kernel@vger.kernel.org
-X-Envelope-To: yajun.deng@linux.dev
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-To: mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com
-Cc: linux-kernel@vger.kernel.org,
-	Yajun Deng <yajun.deng@linux.dev>
-Subject: [PATCH v2 1/2] sched/rt: Use 'back' only if CONFIG_RT_GROUP_SCHED is enabled
-Date: Wed,  5 Jun 2024 21:35:56 +0800
-Message-Id: <20240605133557.2984-2-yajun.deng@linux.dev>
-In-Reply-To: <20240605133557.2984-1-yajun.deng@linux.dev>
-References: <20240605133557.2984-1-yajun.deng@linux.dev>
+	bh=koKXP6xg67ygGfuj3kYoe8zfvum0YQDhg13CFU9k5CI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q6cviAiqhN5YLh74tarzfCp0gsne4d3cTxBHt4LPWAn4m5wjTI54IzuQ7erpbXLt4E6ZzqX3jNOJ4k73Cfmw/4MMtGQQeVPxiiucCAePls/46OpLIC5VuhmyZmo3uUiNxv5/zgKOI340X46jpl5GjUQLk4d/Ewby9zlnJsN5p1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VvT0b3ZhCzwRrf;
+	Wed,  5 Jun 2024 21:32:31 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4A84118007A;
+	Wed,  5 Jun 2024 21:36:28 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 5 Jun 2024 21:36:28 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Andrew
+ Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+Subject: [PATCH net-next v6 12/15] mm: page_frag: introduce prepare/probe/commit API
+Date: Wed, 5 Jun 2024 21:33:02 +0800
+Message-ID: <20240605133306.11272-13-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20240605133306.11272-1-linyunsheng@huawei.com>
+References: <20240605133306.11272-1-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,79 +42,281 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-The 'back' member in struct sched_rt_entity only related to
-CONFIG_RT_GROUP_SCHED, so there is no need to init it in dequeue_rt_stack.
+There are many use cases that need minimum memory in order
+for forward progress, but more performant if more memory is
+available or need to probe the cache info to use any memory
+available for frag caoleasing reason.
 
-Init the 'back' member in init_tg_rt_entry and use it only if
-CONFIG_RT_GROUP_SCHED is enabled.
+Currently skb_page_frag_refill() API is used to solve the
+above use cases, but caller needs to know about the internal
+detail and access the data field of 'struct page_frag' to
+meet the requirement of the above use cases and its
+implementation is similar to the one in mm subsystem.
 
-Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+To unify those two page_frag implementations, introduce a
+prepare API to ensure minimum memory is satisfied and return
+how much the actual memory is available to the caller and a
+probe API to report the current available memory to caller
+without doing cache refilling. The caller needs to either call
+the commit API to report how much memory it actually uses, or
+not do so if deciding to not use any memory.
+
+As next patch is about to replace 'struct page_frag' with
+'struct page_frag_cache' in linux/sched.h, which is included
+by the asm-offsets.s, using the virt_to_page() in the inline
+helper of page_frag_cache.h cause a "'vmemmap' undeclared"
+compiling error for asm-offsets.s, use a macro for probe API
+to avoid that compiling error.
+
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- kernel/sched/rt.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ include/linux/page_frag_cache.h |  82 +++++++++++++++++++++++
+ mm/page_frag_cache.c            | 114 ++++++++++++++++++++++++++++++++
+ 2 files changed, 196 insertions(+)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 63e49c8ffc4d..842a2cfd6dcc 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -230,10 +230,12 @@ void init_tg_rt_entry(struct task_group *tg, struct rt_rq *rt_rq,
- 	if (!rt_se)
- 		return;
+diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
+index b33904d4494f..e95d44a36ec9 100644
+--- a/include/linux/page_frag_cache.h
++++ b/include/linux/page_frag_cache.h
+@@ -4,6 +4,7 @@
+ #define _LINUX_PAGE_FRAG_CACHE_H
  
--	if (!parent)
-+	if (!parent) {
- 		rt_se->rt_rq = &rq->rt;
--	else
-+	} else {
- 		rt_se->rt_rq = parent->my_q;
-+		parent->back = rt_se;
+ #include <linux/gfp_types.h>
++#include <linux/mmdebug.h>
+ 
+ #define PAGE_FRAG_CACHE_MAX_SIZE	__ALIGN_MASK(32768, ~PAGE_MASK)
+ #define PAGE_FRAG_CACHE_MAX_ORDER	get_order(PAGE_FRAG_CACHE_MAX_SIZE)
+@@ -87,6 +88,9 @@ static inline unsigned int page_frag_cache_page_size(struct encoded_va *encoded_
+ 
+ void page_frag_cache_drain(struct page_frag_cache *nc);
+ void __page_frag_cache_drain(struct page *page, unsigned int count);
++struct page *page_frag_alloc_pg(struct page_frag_cache *nc,
++				unsigned int *offset, unsigned int fragsz,
++				gfp_t gfp);
+ void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+ 				 unsigned int fragsz, gfp_t gfp_mask,
+ 				 unsigned int align_mask);
+@@ -99,12 +103,90 @@ static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
+ 	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, -align);
+ }
+ 
++static inline unsigned int page_frag_cache_page_offset(const struct page_frag_cache *nc)
++{
++	return page_frag_cache_page_size(nc->encoded_va) - nc->remaining;
++}
++
+ static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
+ 				       unsigned int fragsz, gfp_t gfp_mask)
+ {
+ 	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, ~0u);
+ }
+ 
++void *page_frag_alloc_va_prepare(struct page_frag_cache *nc, unsigned int *fragsz,
++				 gfp_t gfp);
++
++static inline void *page_frag_alloc_va_prepare_align(struct page_frag_cache *nc,
++						     unsigned int *fragsz,
++						     gfp_t gfp,
++						     unsigned int align)
++{
++	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
++	nc->remaining = nc->remaining & -align;
++	return page_frag_alloc_va_prepare(nc, fragsz, gfp);
++}
++
++struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
++					unsigned int *offset,
++					unsigned int *fragsz, gfp_t gfp);
++
++struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
++				     unsigned int *offset,
++				     unsigned int *fragsz,
++				     void **va, gfp_t gfp);
++
++static inline struct encoded_va *__page_frag_alloc_probe(struct page_frag_cache *nc,
++							 unsigned int *offset,
++							 unsigned int *fragsz,
++							 void **va)
++{
++	struct encoded_va *encoded_va;
++
++	*fragsz = nc->remaining;
++	encoded_va = nc->encoded_va;
++	*offset = page_frag_cache_page_size(encoded_va) - *fragsz;
++	*va = encoded_page_address(encoded_va) + *offset;
++
++	return encoded_va;
++}
++
++#define page_frag_alloc_probe(nc, offset, fragsz, va)			\
++({									\
++	struct page *__page = NULL;					\
++									\
++	VM_BUG_ON(!*(fragsz));						\
++	if (likely((nc)->remaining >= *(fragsz)))			\
++		__page = virt_to_page(__page_frag_alloc_probe(nc,	\
++							      offset,	\
++							      fragsz,	\
++							      va));	\
++									\
++	__page;								\
++})
++
++static inline void page_frag_alloc_commit(struct page_frag_cache *nc,
++					  unsigned int fragsz)
++{
++	VM_BUG_ON(fragsz > nc->remaining || !nc->pagecnt_bias);
++	nc->pagecnt_bias--;
++	nc->remaining -= fragsz;
++}
++
++static inline void page_frag_alloc_commit_noref(struct page_frag_cache *nc,
++						unsigned int fragsz)
++{
++	VM_BUG_ON(fragsz > nc->remaining);
++	nc->remaining -= fragsz;
++}
++
++static inline void page_frag_alloc_abort(struct page_frag_cache *nc,
++					 unsigned int fragsz)
++{
++	nc->pagecnt_bias++;
++	nc->remaining += fragsz;
++}
++
+ void page_frag_free_va(void *addr);
+ 
+ #endif
+diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+index 525b577b03a9..9f86aa15bbeb 100644
+--- a/mm/page_frag_cache.c
++++ b/mm/page_frag_cache.c
+@@ -94,6 +94,120 @@ static struct page *__page_frag_cache_refill(struct page_frag_cache *nc,
+ 	return page;
+ }
+ 
++void *page_frag_alloc_va_prepare(struct page_frag_cache *nc,
++				 unsigned int *fragsz, gfp_t gfp)
++{
++	struct encoded_va *encoded_va;
++	unsigned int remaining;
++
++	remaining = nc->remaining;
++	if (unlikely(*fragsz > remaining)) {
++		if (unlikely(!__page_frag_cache_refill(nc, gfp) ||
++			     *fragsz > PAGE_SIZE))
++			return NULL;
++
++		remaining = nc->remaining;
 +	}
- 
- 	rt_se->my_q = rt_rq;
- 	rt_se->parent = parent;
-@@ -604,6 +606,11 @@ static inline struct rt_bandwidth *sched_rt_bandwidth(struct rt_rq *rt_rq)
- 	return &rt_rq->tg->rt_bandwidth;
- }
- 
-+static struct sched_rt_entity *rt_se_back(struct sched_rt_entity *se)
-+{
-+	return se->back;
-+}
 +
- #else /* !CONFIG_RT_GROUP_SCHED */
- 
- static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
-@@ -666,6 +673,11 @@ static inline struct rt_bandwidth *sched_rt_bandwidth(struct rt_rq *rt_rq)
- 	return &def_rt_bandwidth;
- }
- 
-+static inline struct sched_rt_entity *rt_se_back(struct sched_rt_entity *se)
-+{
-+	return NULL;
++	encoded_va = nc->encoded_va;
++	*fragsz = remaining;
++	return encoded_page_address(encoded_va) +
++			page_frag_cache_page_size(encoded_va) - remaining;
 +}
++EXPORT_SYMBOL(page_frag_alloc_va_prepare);
 +
- #endif /* CONFIG_RT_GROUP_SCHED */
- 
- bool sched_rt_bandwidth_account(struct rt_rq *rt_rq)
-@@ -1428,14 +1440,12 @@ static void dequeue_rt_stack(struct sched_rt_entity *rt_se, unsigned int flags)
- 	struct sched_rt_entity *back = NULL;
- 	unsigned int rt_nr_running;
- 
--	for_each_sched_rt_entity(rt_se) {
--		rt_se->back = back;
-+	for_each_sched_rt_entity(rt_se)
- 		back = rt_se;
--	}
- 
- 	rt_nr_running = rt_rq_of_se(back)->rt_nr_running;
- 
--	for (rt_se = back; rt_se; rt_se = rt_se->back) {
-+	for (rt_se = back; rt_se; rt_se = rt_se_back(rt_se)) {
- 		if (on_rt_rq(rt_se))
- 			__dequeue_rt_entity(rt_se, flags);
- 	}
++struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
++					unsigned int *offset,
++					unsigned int *fragsz, gfp_t gfp)
++{
++	struct encoded_va *encoded_va;
++	unsigned int remaining;
++	struct page *page;
++
++	remaining = nc->remaining;
++	if (unlikely(*fragsz > remaining)) {
++		if (unlikely(*fragsz > PAGE_SIZE)) {
++			*fragsz = 0;
++			return NULL;
++		}
++
++		page = __page_frag_cache_refill(nc, gfp);
++		remaining = nc->remaining;
++		encoded_va = nc->encoded_va;
++	} else {
++		encoded_va = nc->encoded_va;
++		page = virt_to_page(encoded_va);
++	}
++
++	*offset = page_frag_cache_page_size(encoded_va) - remaining;
++	*fragsz = remaining;
++
++	return page;
++}
++EXPORT_SYMBOL(page_frag_alloc_pg_prepare);
++
++struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
++				     unsigned int *offset,
++				     unsigned int *fragsz,
++				     void **va, gfp_t gfp)
++{
++	struct encoded_va *encoded_va;
++	unsigned int remaining;
++	struct page *page;
++
++	remaining = nc->remaining;
++	if (unlikely(*fragsz > remaining)) {
++		if (unlikely(*fragsz > PAGE_SIZE)) {
++			*fragsz = 0;
++			return NULL;
++		}
++
++		page = __page_frag_cache_refill(nc, gfp);
++		remaining = nc->remaining;
++		encoded_va = nc->encoded_va;
++	} else {
++		encoded_va = nc->encoded_va;
++		page = virt_to_page(encoded_va);
++	}
++
++	*offset = page_frag_cache_page_size(encoded_va) - remaining;
++	*fragsz = remaining;
++	*va = encoded_page_address(encoded_va) + *offset;
++
++	return page;
++}
++EXPORT_SYMBOL(page_frag_alloc_prepare);
++
++struct page *page_frag_alloc_pg(struct page_frag_cache *nc,
++				unsigned int *offset, unsigned int fragsz,
++				gfp_t gfp)
++{
++	struct page *page;
++
++	if (unlikely(fragsz > nc->remaining)) {
++		if (unlikely(fragsz > PAGE_SIZE))
++			return NULL;
++
++		page = __page_frag_cache_refill(nc, gfp);
++		if (unlikely(!page))
++			return NULL;
++
++		*offset = 0;
++	} else {
++		struct encoded_va *encoded_va = nc->encoded_va;
++
++		page = virt_to_page(encoded_va);
++		*offset = page_frag_cache_page_size(encoded_va) -
++					nc->remaining;
++	}
++
++	nc->remaining -= fragsz;
++	nc->pagecnt_bias--;
++
++	return page;
++}
++EXPORT_SYMBOL(page_frag_alloc_pg);
++
+ void page_frag_cache_drain(struct page_frag_cache *nc)
+ {
+ 	if (!nc->encoded_va)
 -- 
-2.25.1
+2.30.0
 
