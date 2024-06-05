@@ -1,81 +1,174 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC0197527;
-	Wed,  5 Jun 2024 12:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921F4197533
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589594; cv=none; b=dQiLlvtKGhfLvyZb5eoLsSGae/VV+X68fzTRLMoPmEkNYW/PNnr8+TXq1FoXbj/iiiqK8WSO7a8Av9cThqY1nulfPx84SW9yh1hwUTMh69uE3so51cw5JowjCRTIQtq0D9biCuIL1C5f3mJw9Jn94wZyvGa+owE1Sf8i+8r+E9I=
+	t=1717589595; cv=none; b=JvP7CVnZuoPISCv1XwF9BOER07VrY430XRbarFrycD7gWlHPEx9Ft0hx0Dql4MfdBSW2/Mgr8CtljwbmmH1AnQo1mm1CXTlGt+sOMQ3zoHYgB7Ay1m6eLjvhF6XpJmZ+ZYem8tM4rFod0gKK2IU+1WHxc919/WWHZlsxw9bnglA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589594; c=relaxed/simple;
-	bh=KquR/qVX3Bfj67P/WWEDL2CtUe6KxjKA4k3e1DojbFU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XlxWDxyluOB5Lz58BtXzhq/plOdLTbu7pU2f/TBdf44MblE3zfAuTO66bT5SdF5Mm6Lw/Z/qbi2wMpI4sQ0bB6rtRf3dEWIXxwDYowN2oOXJNU8z4wIzu6gD/V33XcJsIz4Xhseth/wRftcSeACzJsr/ufvYVnFuu6m9B9dDJ7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=H27FA7rG; arc=none smtp.client-ip=192.19.144.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1717589595; c=relaxed/simple;
+	bh=oNENrc6D4XwwwZI6By/y92Euehfjzy0JVbr//ofqX7Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CnjSfwYoigr172OYUJQFb2u7RottpNTvpTdzlNjJ2Fn8ehJvSqkv8YCwGBIoUSOMjdCsVm+hTWwYN0GK76+dpoVTqCHPGdtLbGeTr9XpoxL30CzGiZitaBzlDDgLokilXggdC/mmvL8+vJvj2Pdqwn53eavrSjnkCkTU6BOjTXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hgdgZBP0; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="H27FA7rG"
-Received: from mail-lvn-it-01.lvn.broadcom.net (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A9D8FC0000F5;
-	Wed,  5 Jun 2024 05:07:13 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A9D8FC0000F5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1717589233;
-	bh=KquR/qVX3Bfj67P/WWEDL2CtUe6KxjKA4k3e1DojbFU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H27FA7rG4T0cLUUFumTG7nIsUW2aH5Gz0fqTkaW5+lWjherjlJc+2tSsCvN169o80
-	 r8N8hDvh3KkEMs/N5XkSNeRwHlq5B3rxwO9IEGAuMSDa7OMhSdS96X27QWKAvZYfIM
-	 5R3ln8YOavuc6GHch3wybngblyEQgzUaJmWcHadA=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail-lvn-it-01.lvn.broadcom.net (Postfix) with ESMTPSA id 796E718041CAC4;
-	Wed,  5 Jun 2024 05:07:11 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: bcm-kernel-feedback-list@broadcom.com,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kamal Dasu <kamal.dasu@broadcom.com>,
-	Al Cooper <alcooperx@gmail.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 4/4] arm64: dts: broadcom: Add minimal support for Raspberry Pi 5
-Date: Wed,  5 Jun 2024 05:07:12 -0700
-Message-Id: <20240605120712.3523290-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <874589f6c621036620cca944986e5be7238b4784.1717061147.git.andrea.porta@suse.com>
-References: <cover.1717061147.git.andrea.porta@suse.com> <874589f6c621036620cca944986e5be7238b4784.1717061147.git.andrea.porta@suse.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hgdgZBP0"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3d1fd55081fso1096032b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717589591; x=1718194391; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vv6aPAuNaYZlDMSXJn51nV9wTtfWkMjnR+7Ws6E03wA=;
+        b=hgdgZBP0OnNoJ7BMAIlcgNpwYdtQ+nXtbBZjbSgG3IDYo89qtffXYjqk6HWmG6b3WB
+         OTPG0bTy/ttRTKyAGbqWEYa69gNw9dSIaBWopLDnWePgcSkbTyk/14lbiFvt4xPFsmcN
+         sdof5FkkvghIdELmMbesgN3MdnSumCBL9zL44i5/Sa5J97K67s8Lb75KmSm6Wr+NX/5k
+         dU0owgbnajzlXQYfX14HDogJljs1eB4SPagvDfAKNvhMbedchYYnw7BWp3/MhpvX70+3
+         LLmYaSdUxTFb39pCQk56c3K9UqSi8TeMfN0dFzETLAnNdiJFJT+v0ZcMoN3WnEZCEEz2
+         lWlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717589591; x=1718194391;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vv6aPAuNaYZlDMSXJn51nV9wTtfWkMjnR+7Ws6E03wA=;
+        b=DIQdQVOwUiIznza7es1/0vrCAg1e6hXAKnV5AW3PjpZiRjgyfdywvVA1pHZ5Sst9yx
+         ya0MuCejZtlgEakh03aU3hbJuxAsX3qDZigJUHmCVCTAvb51Q8SYJx88iGzcNulgW5eF
+         lGePUtQTrN3LuFTQapDccuRE6TvTFYHci7RmEYLynpI+gtDiBxoRMh86mxcNfEyCMv9l
+         xTat+TxerqWUBPwsskzWST6g+4YxLVevEOrcLtcKHMLeBmUT/0s5DkmgySM9pVoasW/H
+         lNeqvEvDKiDcxKniq/YB/5OBxk6EZk2Gsc1LQtMmZBclDthnE7SOozdVmh5EzL7KM0JD
+         DKrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcnBeQtQdWv3cBE7HLvuiSNRPfVHIeEKYc2tBY6RUoMIlhwAqO3NoUgHSWkltvVYF8+VYZTGhJZNQysbpUPN7z0VppB2gpM5Fs+fpz
+X-Gm-Message-State: AOJu0YwFG52QyPwnuuy3Vv0K7e79OBUXIcrRM2waT3AAH9SlTOhv/ECr
+	HGrxj4XZOfe42z2iOWUtem3LsXGY7epP/ZtRWCpnX+PqbNPECf4uT6rKnZxZ5pAk+XxBtirWeyY
+	/B0eyXAVM4qHcUYk9Ia2lbWY6j0BQCMdKviLH
+X-Google-Smtp-Source: AGHT+IGtZqhTfCbUt9zM3f3XIcPwffh8lxbIKMBjvEjq+FRLVr9q1hYV69f7Jkej1TuC5cCI0H3t53Vjep/wzK915pI=
+X-Received: by 2002:a05:6808:b35:b0:3c9:7aef:403 with SMTP id
+ 5614622812f47-3d20439b1bcmr2294917b6e.26.1717589591268; Wed, 05 Jun 2024
+ 05:13:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org> <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-3-680d6b43b4c1@kernel.org>
+In-Reply-To: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-3-680d6b43b4c1@kernel.org>
+From: Fuad Tabba <tabba@google.com>
+Date: Wed, 5 Jun 2024 13:12:34 +0100
+Message-ID: <CA+EHjTxrCOv44T8uq1e2Vvm0SooRKix1zwhFqQF6=GN2H1iB2g@mail.gmail.com>
+Subject: Re: [PATCH 3/4] KVM: arm64: Fix FFR offset calculation for pKVM host
+ state save and restore
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Hi Mark,
 
-On Thu, 30 May 2024 12:12:01 +0200, Andrea della Porta <andrea.porta@suse.com> wrote:
-> The BCM2712 SoC family can be found on Raspberry Pi 5.
-> Add minimal SoC and board (Rpi5 specific) dts file to be able to
-> boot from SD card and use console on debug UART.
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+On Wed, Jun 5, 2024 at 12:50=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> When saving and restoring the SVE state for the host we configure the
+> hardware for the maximum VL it supports, but when calculating offsets in
+> memory we use the maximum usable VL for the host. Since these two values
+> may not be the same this may result in data corruption.  We can just
+> read the current VL from the hardware with an instruction so do that
+> instead of a saved value.
+>
+> Fixes: b5b9955617bc ("KVM: arm64: Eagerly restore host fpsimd/sve state i=
+n pKVM")
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
+>  arch/arm64/include/asm/kvm_hyp.h        | 1 +
+>  arch/arm64/kvm/hyp/fpsimd.S             | 5 +++++
+>  arch/arm64/kvm/hyp/include/hyp/switch.h | 2 +-
+>  arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 2 +-
+>  4 files changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kv=
+m_hyp.h
+> index b05bceca3385..7510383d78a6 100644
+> --- a/arch/arm64/include/asm/kvm_hyp.h
+> +++ b/arch/arm64/include/asm/kvm_hyp.h
+> @@ -113,6 +113,7 @@ void __fpsimd_save_state(struct user_fpsimd_state *fp=
+_regs);
+>  void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
+>  void __sve_save_state(void *sve_pffr, u32 *fpsr, int save_ffr);
+>  void __sve_restore_state(void *sve_pffr, u32 *fpsr, int restore_ffr);
+> +int __sve_get_vl(void);
+>
+>  u64 __guest_enter(struct kvm_vcpu *vcpu);
+>
+> diff --git a/arch/arm64/kvm/hyp/fpsimd.S b/arch/arm64/kvm/hyp/fpsimd.S
+> index e950875e31ce..d272dbf36da8 100644
+> --- a/arch/arm64/kvm/hyp/fpsimd.S
+> +++ b/arch/arm64/kvm/hyp/fpsimd.S
+> @@ -31,3 +31,8 @@ SYM_FUNC_START(__sve_save_state)
+>         sve_save 0, x1, x2, 3
+>         ret
+>  SYM_FUNC_END(__sve_save_state)
+> +
+> +SYM_FUNC_START(__sve_get_vl)
+> +       _sve_rdvl       0, 1
+> +       ret
+> +SYM_FUNC_END(__sve_get_vl)
+> diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp=
+/include/hyp/switch.h
+> index 0c4de44534b7..06efcca765cc 100644
+> --- a/arch/arm64/kvm/hyp/include/hyp/switch.h
+> +++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
+> @@ -327,7 +327,7 @@ static inline void __hyp_sve_save_host(void)
+>
+>         sve_state->zcr_el1 =3D read_sysreg_el1(SYS_ZCR);
+>         write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
+> -       __sve_save_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sv=
+e_max_vl),
+> +       __sve_save_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_v=
+l()),
+>                          &sve_state->fpsr,
+>                          true);
+>  }
 
-Applied to https://github.com/Broadcom/stblinux/commits/devicetree-arm64/next, thanks!
---
-Florian
+If my understanding of the spec is correct (which more often than not
+it isn't), I don't think we have an issue as long as we use the same
+value in the offset on saving/restoring, and that that value
+represents the maximum possible value.
+
+On the other hand, if my understanding is wrong, then we might need to
+also fix __efi_fpsimd_begin()/__efi_fpsimd_end() in
+arch/arm64/kernel/fpsimd.c, as well as vcpu_sve_pffr() in
+arch/arm64/include/asm/kvm_host.h
+
+What do you think?
+/fuad
+
+
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe=
+/hyp-main.c
+> index f43d845f3c4e..bd8f671e848c 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -49,7 +49,7 @@ static void __hyp_sve_restore_host(void)
+>          * supported by the system (or limited at EL3).
+>          */
+>         write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
+> -       __sve_restore_state(sve_state->sve_regs + sve_ffr_offset(kvm_host=
+_sve_max_vl),
+> +       __sve_restore_state(sve_state->sve_regs + sve_ffr_offset(__sve_ge=
+t_vl()),
+>                             &sve_state->fpsr,
+>                             true);
+>         write_sysreg_el1(sve_state->zcr_el1, SYS_ZCR);
+>
+> --
+> 2.39.2
+>
