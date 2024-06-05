@@ -1,63 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFF816078D;
-	Wed,  5 Jun 2024 22:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E22136E1F
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 22:36:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717626931; cv=none; b=G33yFnc/0q1Idby1CBKo4R0eop5WxIowU8pswLiWQLTBMoEJ0bNHPmPKjFZSyDNduSsl5KCGWtkWxQpebTkkIwM35onqB9JzP1XK3aWt5UCMK7KvcBGGBhBAXb0i4Dy6B2j7Max2vUhrARXY338z5PeHde3nIksUvb9PJluv+zA=
+	t=1717627010; cv=none; b=pEDIIyw8aO0y4h9s1FktwSXsQM/dHpQNXY3s3GwsjTlyMd12L8ZbRkxZglNnvQjIIKmp0OxqQzo/O7usrRYnqEqT1Hq6GvtfvjlK1hvUzW86exB2fq9tPIrJXvy+FLLN9HLOpNjZmTI6llMJGWS6kNvkA03h5dSZ3+KMRXOAltA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717626931; c=relaxed/simple;
-	bh=yT6sfjO0qQ420JtoQYJhmwpOwp3a3B4AOsBJ5nSvz6Y=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dF+GIrjjOtaj9oOiDSbbkjuSpI0Iq5agTe+MfNtZcTP1dAekqVPVSaaEJKiOCLOZPIlaH6L7G7XYAPPzyAOwUkdhrhGtg1TSbMSpxo0ha1ydNSKGhrF/8Ux7WtIGpSqm6wtfgVsds+aCmeV7OVvViTg2HzTvQj49/Qw/hxOPnx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qxSJmzxs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717627010; c=relaxed/simple;
+	bh=FAxq/WJA3jAwur4ufatkzAyl90jSZN079xQn1B8hIQo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sD61TkOrqrf/38R0xoGmHN4RnjDZy4BgSG8v4+WooUaiiBM7T0pmF4DX8bsRJ+2f1V3zFNYjypG+VZSGxwUhWWs+obvASGa69tWzt315KSQxnECLIfzcETROMQV4ej8PGWR/2zFV//olnROp9+PU2q8IfY0hFn9O9eEuqIYZFvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dgme9dCS; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qxSJmzxs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 92DA3C32786;
-	Wed,  5 Jun 2024 22:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717626930;
-	bh=yT6sfjO0qQ420JtoQYJhmwpOwp3a3B4AOsBJ5nSvz6Y=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=qxSJmzxsbBJN9SnbcOxERvP33F1cvD6BjJXqjI0NQehA9v+/8yR3yQpYBTCCSILkY
-	 6JrgEdxq6FpqWOaAflre0N+Z/w12BTpLsqleB6BzPwMzNCwGdAiONDjq9JI/oJH91H
-	 5Kc07Ni70FI1AIPrV51/fa+eY32E9MuWmF0wAek2fZqVLeKkCf9D+Ikie/Y9KhIIV7
-	 Sezre3BJSnTPXeayIEzWRzfw6sET4tmZhQorkPdzgOmgFRHvmip4s2ZgexDFo33Sim
-	 +h8z4kS2YP2qOBybbR99rah2CZrUGNJBYLzKuAEUHLB9cCgSjSzaI+5QFEULzCpFa1
-	 CUcEKGOsjXMjQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8014EC4332C;
-	Wed,  5 Jun 2024 22:35:30 +0000 (UTC)
-Subject: Re: [GIT PULL] ACPI fixes for v6.10-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0hkHRB-obYEnYzVAy9u9wVUKwu=FTCn5rMKtAwf1HGMjA@mail.gmail.com>
-References: <CAJZ5v0hkHRB-obYEnYzVAy9u9wVUKwu=FTCn5rMKtAwf1HGMjA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0hkHRB-obYEnYzVAy9u9wVUKwu=FTCn5rMKtAwf1HGMjA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.10-rc3
-X-PR-Tracked-Commit-Id: 1bfc0835d40c8b4f19f8c1db8c42edddb265df5f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 553352597d1c975ba7f734051f7946bffb3464c6
-Message-Id: <171762693051.28636.2337710197039154838.pr-tracker-bot@kernel.org>
-Date: Wed, 05 Jun 2024 22:35:30 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dgme9dCS"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a08273919so4280147b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 15:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717627008; x=1718231808; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UDMXqeIeVKqn4Qjsv0IGaXMAVsD6Gi7Ax4kHrxCoB1Q=;
+        b=dgme9dCS7bxFo79XggJO1kNtpxaKsww73MwHScbgnSVRhbu+P6wHnFe5TJcY6QpNIt
+         WMnNKSwrveL3ZNJC8WT5mIR5cBhzN/a7Z+wGiR7zRM+HuH5/0iRqJozcUUqnmrun6pPq
+         FRjWM3YpziB1wzNcAjNbLqHf9/nHr7p74CNDogTCBWtX102Ui564OqPWNLz6lpP0+CIy
+         XrWm0IdBAJTLMsAgE7suGqH+uFx270W26lQBjWR0mepLDJLdZArHw75hgZoD6xMuoNP5
+         jgvWQM5SRNLxcBFgf7c5EmXcVR+csM2PMY4UmaOwz2ddwxxB5cHnYtHqvwDkwqmMjQin
+         ceTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717627008; x=1718231808;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UDMXqeIeVKqn4Qjsv0IGaXMAVsD6Gi7Ax4kHrxCoB1Q=;
+        b=h+TZxXT0JJMcugGzfWJ0o6nrgSR1Jf2RSGeM5UnH4OLdd3Euuh3uF/tmoXl2zSTyTj
+         Uu4VqbZqAvWRBVQC6ZkHIPqOExgxHJMdjtBk6Rd/lhlo1GO/2842pAMjSC9OQ9C90v/E
+         p6Q0OjDwnnN7wHi13RRp4ArWmSFKccugykgtPCgt2Uxu7aJIKKXKFu/12GdT3PcmpPqn
+         FkEdSBwI4zYei8jc30oe59LUIosQIOS27vnMIPwTsMJbJcC6XofYxJWe+ilu6/gNGwuh
+         YktHkK7U1zwOwUz7Rnp7timahlcNzD8WjYyAmnve6lFqtyif8C0deO3SkoQP6zjfD0/a
+         wWRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXP8GM/9CUAZKB7lfZUEodKGWDhK4Nai9+foOA9Bavxi3j5/78pAnJCGEhUWd0JrA/gFJJ8KEDL+gvUcu7OwnCNfcMZggoYtGHBciQO
+X-Gm-Message-State: AOJu0Yx99fD+3WHBleL4Bq3lmdrhH0rRHWnuzBHolFLVcQt0y7CvSiFD
+	+UY0ODrM3grE7U4AcI1T0MHl+810hWBscN3G/7ntO+BM4d2/tsadDtLlICtWlzKpGmBhNe90AxJ
+	hiA==
+X-Google-Smtp-Source: AGHT+IFVehH9WFewQGik+Dl0yz205/vF46via66nugJeD3HwTwVLDF4W27JfIYCAwQuhN1N8YQzQilb3Kio=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:690c:38c:b0:627:a961:caee with SMTP id
+ 00721157ae682-62cbb4cd151mr5405207b3.4.1717627008528; Wed, 05 Jun 2024
+ 15:36:48 -0700 (PDT)
+Date: Wed,  5 Jun 2024 22:36:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
+Message-ID: <20240605223637.1374969-1-edliaw@google.com>
+Subject: [PATCH v1 0/2] selftests/mm: thuge-gen defines
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>
+Cc: cmllamas@google.com, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kernel-team@android.com, 
+	Edward Liaw <edliaw@google.com>, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Wed, 5 Jun 2024 19:58:47 +0200:
+When compiling with Android bionic, the MAP_HUGE_* and SHM_HUGE_* macros
+are redefined because they are included from the uapi by sys/mman.h and
+sys/shm.h:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git acpi-6.10-rc3
+INFO: From Compiling common/tools/testing/selftests/mm/thuge-gen.c:
+common/tools/testing/selftests/mm/thuge-gen.c:32:9: warning: 'MAP_HUGE_2MB' macro redefined [-Wmacro-redefined]
+   32 | #define MAP_HUGE_2MB    (21 << MAP_HUGE_SHIFT)
+      |         ^
+external/_main~_repo_rules~prebuilt_ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux/mman.h:38:9: note: previous definition is here
+   38 | #define MAP_HUGE_2MB HUGETLB_FLAG_ENCODE_2MB
+      |         ^
+common/tools/testing/selftests/mm/thuge-gen.c:33:9: warning: 'MAP_HUGE_1GB' macro redefined [-Wmacro-redefined]
+   33 | #define MAP_HUGE_1GB    (30 << MAP_HUGE_SHIFT)
+      |         ^
+external/_main~_repo_rules~prebuilt_ndk/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/linux/mman.h:44:9: note: previous definition is here
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/553352597d1c975ba7f734051f7946bffb3464c6
+This test should probably use the uapi definitions instead of redefining
+them.  However, glibc gets struct redefinitions when including sys/shm.h
+and linux/shm.h together.  So, add guards for the SHM_HUGE_* macros
+instead.
 
-Thank you!
+Edward Liaw (2):
+  selftests/mm: Include linux/mman.h
+  selftests/mm: Guard defines from shm
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+ tools/testing/selftests/mm/thuge-gen.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+--
+2.45.1.467.gbab1589fc0-goog
+
