@@ -1,115 +1,184 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B292152DEB;
-	Wed,  5 Jun 2024 16:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84877801;
+	Wed,  5 Jun 2024 16:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717604701; cv=none; b=WEwPMXzumsX0WN3+qfMKv71UG1tw2cArbRCeKmfSog2sPEObZi1lhTpW4m9LRPomoJmnzPBHuk2m6HYmE0+XhwZeUk5UwAXLIF5iydPKltgIwcCuwqCf+ttrLm+WLbWYOoNkGgEmGUhcf9CMCkWfaZGFtcrS7InduOOc5D6pZdk=
+	t=1717604848; cv=none; b=aORBT/ymjzwYYJngfcyYMTDWFkkMOzRw0jqnw87Ugqdkr9DKEHvkE0iaOcXIIVZB0tq9/ZrtbmQ3ktJgESt/o5CQDSOeziybI9wt3QdlKYufF7bTvyXHvFiMi0TILqKXMlXAoV18u95xKV1KsAIGXiywH7aEuoEE6ePxwvhanGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717604701; c=relaxed/simple;
-	bh=8QP0rrFoFQ1UPGucB0nlQFL9aHNUIOsoOxuy8YlZVao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZLWfprd0pb76kN9/krIC9hwspJOSdqx57pMtWa/5vW4pl/4Ge0yaNJmKYfiAOICxe8uldD4p2AmKET0dqV8QSA+8/62/zGf3ctASWEn2iQJ27j6+R7+X1JtJ/4Ph3wn59o0siLEPOoSWMf05VazCzCxp4Znq7AimjkiHVnqBR/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eRN1VmHn; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717604848; c=relaxed/simple;
+	bh=kEJJT7vPcgrPtfSwhgERL/7FGdm5mHT2kO+xtNLBeHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=XRRotvWjVujOV4zStTJFT3MJGruPM6l8+hYPlga1yh5xf7L2abak4HKNupJ/9MpfJFXuPKGP3MgqaKxayvXhHZ65hgu6w4Y0Lc5ZD2RBw4c27xPv+EdxoynmPG4CimTPLq5DUEJWNRGk6taToSSNm2UY8ycM3Xob7fd1dCa2bqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7Nk+Agu; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eRN1VmHn"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1085140E016A;
-	Wed,  5 Jun 2024 16:24:57 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NKcdbJr_y2wU; Wed,  5 Jun 2024 16:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717604693; bh=es2T3xUJ//5xyaKB1XndAP8uqqdLOgfFIhPCGmC/CDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRN1VmHnofXkhGbMAgrYH2Qk/XhZLkNNY5mvJhNCQVUDK2oKst2OKufJHPZHki19j
-	 HXRRnxH9jrI9cGFwAQZL+0DzxPkofD/fHw8ZnDFrL2ll7iM/yL9LHcp0mA0i5sJpbD
-	 3ylwHa3HpncMb2v+ZW2n+cRyZNAzlsVOvEkly3X0yb4jkjUlFEUFmtAtkT7fE5MU+T
-	 wN3aWpxstOWhJgOunWnyxYduYZWWBBCyjxmf1rQM/r3OVAk1TTqvA92IHop0+DNb71
-	 mwI1Y0xIBnG89A4gQSaTpXZ5QRFWF49WdtuQ69vt8sjE6xolMG562jnsWa1pj0H3lf
-	 fhtmx3RwEatiztWu1GrxrpXph6arL2U9EVO8TJN9I0JL7e1A+filxFr/8PS99z0ibH
-	 0T4mtQ70vtFGiXwxEzcQFQCWGUUSkbqeMt2+rfQzijo6sHd+b6MDwqXn+mlf9CiLL+
-	 G2Lmg++PwW/y+Isb8OcvW2TiuXkyXUKzX72RgL0wRIpHm27BPgN9c0tYQVZK3jAOOJ
-	 zBMeewlGislpLpoSwEFvCoz4oS1To6U+1vl4uq6b4dX50aL0OLeoGc9uCZeyQXHAzc
-	 5PVp3Wv+OslihQmk0W4zzv2gLhf4FBzqEFS7byBrvi6537gyCuWzQojV2fn98LE3cn
-	 1B3BeEv74sKj4rarohbtsP4M=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2F7C140E0177;
-	Wed,  5 Jun 2024 16:24:25 +0000 (UTC)
-Date: Wed, 5 Jun 2024 18:24:19 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, adrian.hunter@intel.com,
-	ardb@kernel.org, ashish.kalra@amd.com, bhe@redhat.com,
-	dave.hansen@linux.intel.com, elena.reshetova@intel.com,
-	haiyangz@microsoft.com, hpa@zytor.com, jun.nakajima@intel.com,
-	kai.huang@intel.com, kexec@lists.infradead.org, kys@microsoft.com,
-	linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ltao@redhat.com, mingo@redhat.com, peterz@infradead.org,
-	rafael@kernel.org, rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, x86@kernel.org
-Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
- private on kexec
-Message-ID: <20240605162419.GJZmCRM8V6xooyvm9H@fat_crate.local>
-References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
- <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
- <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
- <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
- <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
- <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
- <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
- <alkew673cceojzmhsp3wj43yv76cek5ydh2iosfcphuv6ro26q@pj6whxcoetht>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7Nk+Agu"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1f658800344so479985ad.0;
+        Wed, 05 Jun 2024 09:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717604847; x=1718209647; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dlqYX7CZRXcik8grmUTE6vS1byeP3eeXqYE/oo9qiFo=;
+        b=D7Nk+Aguz6qIIPjud+opJpLo0Nt1kqfr1O28wEVnwCsJ57b26fVk61Mkkwg1FpWCx8
+         IGqJK0P60uKw043dH/C8I03wQ0SkZIXGGZKLd2svjNQ6WVLlGwia/nlGwfFopJd8HDDP
+         Woz0YpO7Oz5FI9B/s/mEf+K6wVPYxdCuByUr19nOnWEepFje8I9uTbf10UgFHeZcDP29
+         AyvU4HBkZgskeeaAO1uvM+6ighHUA+HXWgOP8U9FUMwJ/JlV/BNTmpmy8nhaFrLVeZbo
+         ZxPY3n+g41T/ZnYfGLwzz/N5S51bi+3Z/Bi4c8OXsSc7389XXdG8LfD5hF8K0nNpu2FF
+         op+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717604847; x=1718209647;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dlqYX7CZRXcik8grmUTE6vS1byeP3eeXqYE/oo9qiFo=;
+        b=i7OFT66B7PEFVB7MeW52qAFdIfjiCq/PFO5gOtWyGfsh49fDR6hioYCE9u8yumdFRM
+         K6In+dL9+8JmybzcHAyFwH55q4HR1t7zUuZPmCL7V4Jo/gRgYfi/UwIR69fiSW8frxR3
+         xaNf5kuE4wsKqBvPbvgS/joRFe0pOj+N0woQtQmFszlFEInmGdqTRm5w+fGq2MqCNb6x
+         w08C28BGepcAz3JT7CJOe0Y3tQayzaP3LzXLRuJq8sQpCTeipW6Nrx5BjIAy8E9SEklf
+         6REb/TI3G9Qg/pS8h+o/dofQXNGBApPMhrjFoJydCPGGVU8Iyk0YADB///hmrRxxdy1F
+         tHGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+/gcFlWABvd7n+x4n7x71wSUP7CD1nbxlbRV9QDU2+VeBWeoz7FfoHuYiNjmcipKDwpfY9HrrqycZ5GOffLgbztfcBARtxUm0AXBMbQ5xAdxhJye1N4J7OPIewd29Z6SDg6gEhVc40VW8L0dIWIOTPP6VD/TcbhWu1IS5tXESjg==
+X-Gm-Message-State: AOJu0YxDRDeFbpdAj2nV3NOH4wxY+WZiMOEnZLovajbHFOS4aK9Xiiu7
+	sCoUFiC/CgEdtbF4MNJBR9/x60iLlEcWPN2OsainY+9P/e39Oki05uP3rKgwJdW/vJZDbMkRaRr
+	iMgyuUJmL08R2ER3Lt+vTLNQCvVc4Ku8/
+X-Google-Smtp-Source: AGHT+IFm0S5xOg68BNRVacZTRtX3OMveoYFGLEWlIQvH25K+sH/ZnawuSmmeabnbH099N3GydWsGDSWHpu0ibWhLLZA=
+X-Received: by 2002:a17:90a:f6c8:b0:2c1:a9a2:256e with SMTP id
+ 98e67ed59e1d1-2c27db4faddmr3612067a91.31.1717604846834; Wed, 05 Jun 2024
+ 09:27:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alkew673cceojzmhsp3wj43yv76cek5ydh2iosfcphuv6ro26q@pj6whxcoetht>
+References: <20240605002459.4091285-1-andrii@kernel.org> <20240605002459.4091285-2-andrii@kernel.org>
+ <Zl-38XrUw9entlFR@casper.infradead.org> <uevtozlryyqw5vj2duuzowupknfynmreruiw6m7bcxryjppqpm@7g766emooxfh>
+ <CAEf4BzZFpidjJzRMWboZYY03U8M22Yo1sqXconi36V11XA-ZfA@mail.gmail.com> <CAEf4BzYDhtkYt=qn2YgrnRkZ0tpa3EPAiCUcBkdUa-9DKN22dQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzYDhtkYt=qn2YgrnRkZ0tpa3EPAiCUcBkdUa-9DKN22dQ@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 5 Jun 2024 09:27:14 -0700
+Message-ID: <CAEf4Bzbzj55LfgTom9KiM1Xe8pfXvpWBd6ETjXQCh7M===G5aw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] mm: add find_vma()-like API but RCU protected and
+ taking VMA lock
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
+	linux-mm@kvack.org, surenb@google.com, rppt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 03:21:42PM +0300, Kirill A. Shutemov wrote:
-> If a page can be accessed via private mapping is determined by the
-> presence in Secure EPT. This state persist across kexec.
+On Wed, Jun 5, 2024 at 9:24=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Wed, Jun 5, 2024 at 9:13=E2=80=AFAM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Wed, Jun 5, 2024 at 6:33=E2=80=AFAM Liam R. Howlett <Liam.Howlett@or=
+acle.com> wrote:
+> > >
+> > > * Matthew Wilcox <willy@infradead.org> [240604 20:57]:
+> > > > On Tue, Jun 04, 2024 at 05:24:46PM -0700, Andrii Nakryiko wrote:
+> > > > > +/*
+> > > > > + * find_and_lock_vma_rcu() - Find and lock the VMA for a given a=
+ddress, or the
+> > > > > + * next VMA. Search is done under RCU protection, without taking=
+ or assuming
+> > > > > + * mmap_lock. Returned VMA is guaranteed to be stable and not is=
+olated.
+> > > >
+> > > > You know this is supposed to be the _short_ description, right?
+> > > > Three lines is way too long.  The full description goes between the
+> > > > arguments and the Return: line.
+> >
+> > Sure, I'll adjust.
+> >
+> > > >
+> > > > > + * @mm: The mm_struct to check
+> > > > > + * @addr: The address
+> > > > > + *
+> > > > > + * Returns: The VMA associated with addr, or the next VMA.
+> > > > > + * May return %NULL in the case of no VMA at addr or above.
+> > > > > + * If the VMA is being modified and can't be locked, -EBUSY is r=
+eturned.
+> > > > > + */
+> > > > > +struct vm_area_struct *find_and_lock_vma_rcu(struct mm_struct *m=
+m,
+> > > > > +                                        unsigned long address)
+> > > > > +{
+> > > > > +   MA_STATE(mas, &mm->mm_mt, address, address);
+> > > > > +   struct vm_area_struct *vma;
+> > > > > +   int err;
+> > > > > +
+> > > > > +   rcu_read_lock();
+> > > > > +retry:
+> > > > > +   vma =3D mas_find(&mas, ULONG_MAX);
+> > > > > +   if (!vma) {
+> > > > > +           err =3D 0; /* no VMA, return NULL */
+> > > > > +           goto inval;
+> > > > > +   }
+> > > > > +
+> > > > > +   if (!vma_start_read(vma)) {
+> > > > > +           err =3D -EBUSY;
+> > > > > +           goto inval;
+> > > > > +   }
+> > > > > +
+> > > > > +   /*
+> > > > > +    * Check since vm_start/vm_end might change before we lock th=
+e VMA.
+> > > > > +    * Note, unlike lock_vma_under_rcu() we are searching for VMA=
+ covering
+> > > > > +    * address or the next one, so we only make sure VMA wasn't u=
+pdated to
+> > > > > +    * end before the address.
+> > > > > +    */
+> > > > > +   if (unlikely(vma->vm_end <=3D address)) {
+> > > > > +           err =3D -EBUSY;
+> > > > > +           goto inval_end_read;
+> > > > > +   }
+> > > > > +
+> > > > > +   /* Check if the VMA got isolated after we found it */
+> > > > > +   if (vma->detached) {
+> > > > > +           vma_end_read(vma);
+> > > > > +           count_vm_vma_lock_event(VMA_LOCK_MISS);
+> > > > > +           /* The area was replaced with another one */
+> > > >
+> > > > Surely you need to mas_reset() before you goto retry?
+> > >
+> > > Probably more than that.  We've found and may have adjusted the
+> > > index/last; we should reconfigure the maple state.  You should probab=
+ly
+> > > use mas_set(), which will reset the maple state and set the index and
+> > > long to address.
+> >
+> > Yep, makes sense, thanks. As for the `unlikely(vma->vm_end <=3D
+> > address)` case, I presume we want to do the same, right? Basically, on
+> > each retry start from the `address` unconditionally, no matter what's
+> > the reason for retry.
+>
+> ah, never mind, we don't retry in that situation, I'll just put
+> `mas_set(&mas, address);` right before `goto retry;`. Unless we should
+> actually retry in the case when VMA got moved before the requested
+> address, not sure, let me know what you think. Presumably retrying
+> will allow us to get the correct VMA without the need to fall back to
+> mmap_lock?
 
-I just love it how I tickle out details each time I touch this comment
-because we three can't write a single concise and self-contained
-explanation. :-(
+sorry, one more question as I look some more around this (unfamiliar
+to me) piece of code. I see that lock_vma_under_rcu counts
+VMA_LOCK_MISS on retry, but I see that there is actually a
+VMA_LOCK_RETRY stat as well. Any reason it's a MISS instead of RETRY?
+Should I use MISS as well, or actually count a RETRY?
 
-Ok, next version:
-
-"Private mappings persist across kexec. If tdx_enc_status_changed() fails
-in the first kernel, it leaves memory in an unknown state.
-
-If that memory remains shared, accessing it in the *next* kernel through
-a private mapping will result in an unrecoverable guest shutdown.
-
-The kdump kernel boot is not impacted as it uses a pre-reserved memory
-range that is always private.  However, gathering crash information
-could lead to a crash if it accesses unconverted memory through
-a private mapping which is possible when accessing that memory through
-/proc/vmcore, for example.
-
-In all cases, print error info in order to leave enough bread crumbs for
-debugging."
-
-I think this is getting in the right direction as it actually makes
-sense now.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>
+> >
+> > >
+> > >
+> > > >
+> > > > > +           goto retry;
+> > > > > +   }
+> > > >
