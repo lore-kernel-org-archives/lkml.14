@@ -1,493 +1,136 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F39192B85;
-	Wed,  5 Jun 2024 11:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF2219412A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717585783; cv=none; b=BZLoi8eMKuORcQl83QSlb6477D0grdv+ywjGUc8wtJqol5l3Qn2rdu5D41NFT4qxB3sk6HxoRvjg8A79njaNUeQzvds+++sLMcmTQy7Gjl+uxLx2ur/TkDE3XCAwbuTWYdl62symvTuWHfmlDsn6u1QMPkIBjiSIdGWF8MqnlKU=
+	t=1717585790; cv=none; b=sPMEhFVHxZk3NGfF3hpGhQfxwCQyRwH0NM/QeciyCHohgVNRAcYlMtA1iyqKsiD8h6Y67jK5L+KbiwIJhgNZhYnF7cCG6+IFf5k8Zew5hGuJI4LD1HqKDI8Pav3+G7dXO2jIWb84fUHxvrs395Gj1adTM5qMmT5v0iPjY49jP3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717585783; c=relaxed/simple;
-	bh=16uI3cLb3pcHVw83Hi7ctbwXiqXrN2WbpjiY88Koy6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i1JcW36nnbBdtDGTjcSH9CnXYv8zKgRyeAp18x7HWretd8PPSZOIBVM+fnPoLM++iBiIhzIBN2+xm4jg656U0Q7W8nzCodSIuF/oeHG4YXjyURMgSWK84mq7uxxWXAHktc8njgWa3JBrG4XMXu0Gz9SyA4fVH+U6wzs8z1TTozI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=AWOKCeAH; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1717585790; c=relaxed/simple;
+	bh=gHYwV3ZcigYKcTefauABwPWAEb9vyy0l/uk5Qsnin7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I8Pzg1HaLYUa/7G80AuK6ri3TFjww5lyPLOMIIcYMawW2wXync9z6GuTDkHL2hhOZsYq/luvjcPAab0HIbGXVikX9EKUYr7Mbltikqib9PyBsTGysLx0RyGguAMEm1tvhtOuo0CMOTMvjKc1xFhxJwmnhM+MeZCXPAumgjEISqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aWYDBVHB; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AWOKCeAH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1717585742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HUITwsgpnmyzkTGG2h35kqwAWsIVfnhDMvKk1OjrJYY=;
-	b=AWOKCeAHhNij99G9o5TLHTxHb637JVMA+qEDg6c3Q1Artgqo9POjsoc8Zlw66kEYmdb84E
-	a8dqrncs6zVZ92v0ac/O3EmVvSYO/l7MHxeRq1Zs3pdIBlg9XQvIkE/znSuppZ75sCePr3
-	ZLNr6njjKkvvCzWRk8Chy+cDnwXp1yU=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 4/6] iio: buffer-dma: Enable support for DMABUFs
-Date: Wed,  5 Jun 2024 13:08:43 +0200
-Message-ID: <20240605110845.86740-5-paul@crapouillou.net>
-In-Reply-To: <20240605110845.86740-1-paul@crapouillou.net>
-References: <20240605110845.86740-1-paul@crapouillou.net>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aWYDBVHB"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E13B640E0176;
+	Wed,  5 Jun 2024 11:09:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id iJf5bq__s4gN; Wed,  5 Jun 2024 11:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717585781; bh=u8G7LlOZuSGdMErqsnXyAGVosfE3DwlKRA2nP23l5K8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aWYDBVHBUclEEG1gDdbe+IdXFSR610ZcoZ15fdD8wx7IG52P3H1YvEhtTtsD9nONn
+	 EgachKPplm43FJBaLMC5cc6CvfKV8MA6SbwzeUu688pecrXXCwz7NgHD2A/vpnmyDI
+	 RyJkAcnNA1Bcw8f8SHu++1GS8A9sSmpx7KeGtYLbr9WzqlMvWymSdqGrctv/FnXRUI
+	 /v4rEcLYOYGvvAJI8FsNk9w9gkIU13OJMJIrqITMCtL4fQMOJdLywG351jw+GburS3
+	 bBcRign7gnvOvXogKGlvpwebk/wxjW+WltpUQFOHnmWjW7jokjkP0FCJ6m/EvuLDTe
+	 BbqVHmANcg2kg0cCHJdFwMhlxCE6azl8xwW2RkRPsTxwRItOuqsMhQDYruReg6HJyR
+	 6sUhmNdlZGoCqckVBNJY7ipHisko8EqoNU/rhHcBqsr6g313/KLk9HxSbdYRTdPm8l
+	 QEZSleJvDkkR2JwNGSKsLLkuvNMWSJaGpvKCmbqrVHmzI08iJxzauhUwV4ccvI/Zqr
+	 hfGKSO2De6TDGnPBS6+11FvEK0QNVZDFIWT6waY8YUuOVx+tr/qnezVh6BEbypjMNU
+	 E1DdG2C1jyw2gnmyh3zRSpfjkQ0ZIaHNe1mOzFZIIGKdj2pZQ1JRAAcBC7k+puZ9nn
+	 A1smz3yi1mW/YVlSH/e7KPoI=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5225D40E016A;
+	Wed,  5 Jun 2024 11:09:11 +0000 (UTC)
+Date: Wed, 5 Jun 2024 13:09:04 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dave Young <dyoung@redhat.com>, ardb@kernel.org,
+	dan.j.williams@intel.com
+Cc: "Kalra, Ashish" <ashish.kalra@amd.com>, Mike Rapoport <rppt@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <20240605110904.GWZmBHUHSqCJVQYajF@fat_crate.local>
+References: <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
+ <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
+ <2343889c-887a-49ce-86df-343737d70d37@amd.com>
+ <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
+ <ff28e3ea-c492-4db6-8781-abaec6320756@amd.com>
+ <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
+ <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
+ <CALu+AoSESmasAHqWdCGgQNbsTXfwbfhERBkaqSeaX881zqKtFg@mail.gmail.com>
+ <41e085b8-2b45-40ab-9a6f-f4ad975a0b06@amd.com>
+ <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
 
-Implement iio_dma_buffer_attach_dmabuf(), iio_dma_buffer_detach_dmabuf()
-and iio_dma_buffer_transfer_dmabuf(), which can then be used by the IIO
-DMA buffer implementations.
+Moving Ard and Dan to To:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+On Wed, Jun 05, 2024 at 10:28:18AM +0800, Dave Young wrote:
+> Ok, thanks!  I think the right way is creating two patches,  one to
+> remove the __efi_memmap_free,
 
----
-v3: Update code to provide the functions that will be used as callbacks
-    for the new IOCTLs.
+Yap, that 
 
-v6: - Update iio_dma_buffer_enqueue_dmabuf() to take a dma_fence pointer
-    - Pass that dma_fence pointer along to
-      iio_buffer_signal_dmabuf_done()
-    - Add iio_dma_buffer_lock_queue() / iio_dma_buffer_unlock_queue()
-    - Do not lock the queue in iio_dma_buffer_enqueue_dmabuf().
-      The caller will ensure that it has been locked already.
-    - Replace "int += bool;" by "if (bool) int++;"
-    - Use dma_fence_begin/end_signalling in the dma_fence critical
-      sections
-    - Use one "num_dmabufs" fields instead of one "num_blocks" and one
-      "num_fileio_blocks". Make it an atomic_t, which makes it possible
-      to decrement it atomically in iio_buffer_block_release() without
-      having to lock the queue mutex; and in turn, it means that we
-      don't need to use iio_buffer_block_put_atomic() everywhere to
-      avoid locking the queue mutex twice.
-    - Use cleanup.h guard(mutex) when possible
-    - Explicitely list all states in the switch in
-      iio_dma_can_enqueue_block()
-    - Rename iio_dma_buffer_fileio_mode() to
-      iio_dma_buffer_can_use_fileio(), and add a comment explaining why
-      it cannot race vs. DMABUF.
----
- drivers/iio/buffer/industrialio-buffer-dma.c | 180 +++++++++++++++++--
- include/linux/iio/buffer-dma.h               |  31 ++++
- 2 files changed, 200 insertions(+), 11 deletions(-)
+  f0ef6523475f ("efi: Fix efi_memmap_alloc() leaks")
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c b/drivers/iio/buffer/industrialio-buffer-dma.c
-index 13b1a858969e..21d2feaee923 100644
---- a/drivers/iio/buffer/industrialio-buffer-dma.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dma.c
-@@ -4,6 +4,8 @@
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
- 
-+#include <linux/atomic.h>
-+#include <linux/cleanup.h>
- #include <linux/slab.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -14,6 +16,8 @@
- #include <linux/poll.h>
- #include <linux/iio/buffer_impl.h>
- #include <linux/iio/buffer-dma.h>
-+#include <linux/dma-buf.h>
-+#include <linux/dma-fence.h>
- #include <linux/dma-mapping.h>
- #include <linux/sizes.h>
- 
-@@ -94,13 +98,18 @@ static void iio_buffer_block_release(struct kref *kref)
- {
- 	struct iio_dma_buffer_block *block = container_of(kref,
- 		struct iio_dma_buffer_block, kref);
-+	struct iio_dma_buffer_queue *queue = block->queue;
- 
--	WARN_ON(block->state != IIO_BLOCK_STATE_DEAD);
-+	WARN_ON(block->fileio && block->state != IIO_BLOCK_STATE_DEAD);
- 
--	dma_free_coherent(block->queue->dev, PAGE_ALIGN(block->size),
--					block->vaddr, block->phys_addr);
-+	if (block->fileio) {
-+		dma_free_coherent(queue->dev, PAGE_ALIGN(block->size),
-+				  block->vaddr, block->phys_addr);
-+	} else {
-+		atomic_dec(&queue->num_dmabufs);
-+	}
- 
--	iio_buffer_put(&block->queue->buffer);
-+	iio_buffer_put(&queue->buffer);
- 	kfree(block);
- }
- 
-@@ -163,7 +172,7 @@ static struct iio_dma_buffer_queue *iio_buffer_to_queue(struct iio_buffer *buf)
- }
- 
- static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
--	struct iio_dma_buffer_queue *queue, size_t size)
-+	struct iio_dma_buffer_queue *queue, size_t size, bool fileio)
- {
- 	struct iio_dma_buffer_block *block;
- 
-@@ -171,13 +180,16 @@ static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
- 	if (!block)
- 		return NULL;
- 
--	block->vaddr = dma_alloc_coherent(queue->dev, PAGE_ALIGN(size),
--		&block->phys_addr, GFP_KERNEL);
--	if (!block->vaddr) {
--		kfree(block);
--		return NULL;
-+	if (fileio) {
-+		block->vaddr = dma_alloc_coherent(queue->dev, PAGE_ALIGN(size),
-+						  &block->phys_addr, GFP_KERNEL);
-+		if (!block->vaddr) {
-+			kfree(block);
-+			return NULL;
-+		}
- 	}
- 
-+	block->fileio = fileio;
- 	block->size = size;
- 	block->state = IIO_BLOCK_STATE_DONE;
- 	block->queue = queue;
-@@ -186,6 +198,9 @@ static struct iio_dma_buffer_block *iio_dma_buffer_alloc_block(
- 
- 	iio_buffer_get(&queue->buffer);
- 
-+	if (!fileio)
-+		atomic_inc(&queue->num_dmabufs);
-+
- 	return block;
- }
- 
-@@ -218,13 +233,20 @@ void iio_dma_buffer_block_done(struct iio_dma_buffer_block *block)
- {
- 	struct iio_dma_buffer_queue *queue = block->queue;
- 	unsigned long flags;
-+	bool cookie;
-+
-+	cookie = dma_fence_begin_signalling();
- 
- 	spin_lock_irqsave(&queue->list_lock, flags);
- 	_iio_dma_buffer_block_done(block);
- 	spin_unlock_irqrestore(&queue->list_lock, flags);
- 
-+	if (!block->fileio)
-+		iio_buffer_signal_dmabuf_done(block->fence, 0);
-+
- 	iio_buffer_block_put_atomic(block);
- 	iio_dma_buffer_queue_wake(queue);
-+	dma_fence_end_signalling(cookie);
- }
- EXPORT_SYMBOL_GPL(iio_dma_buffer_block_done);
- 
-@@ -243,17 +265,27 @@ void iio_dma_buffer_block_list_abort(struct iio_dma_buffer_queue *queue,
- {
- 	struct iio_dma_buffer_block *block, *_block;
- 	unsigned long flags;
-+	bool cookie;
-+
-+	cookie = dma_fence_begin_signalling();
- 
- 	spin_lock_irqsave(&queue->list_lock, flags);
- 	list_for_each_entry_safe(block, _block, list, head) {
- 		list_del(&block->head);
- 		block->bytes_used = 0;
- 		_iio_dma_buffer_block_done(block);
-+
-+		if (!block->fileio)
-+			iio_buffer_signal_dmabuf_done(block->fence, -EINTR);
- 		iio_buffer_block_put_atomic(block);
- 	}
- 	spin_unlock_irqrestore(&queue->list_lock, flags);
- 
-+	if (queue->fileio.enabled)
-+		queue->fileio.enabled = false;
-+
- 	iio_dma_buffer_queue_wake(queue);
-+	dma_fence_end_signalling(cookie);
- }
- EXPORT_SYMBOL_GPL(iio_dma_buffer_block_list_abort);
- 
-@@ -273,6 +305,16 @@ static bool iio_dma_block_reusable(struct iio_dma_buffer_block *block)
- 	}
- }
- 
-+static bool iio_dma_buffer_can_use_fileio(struct iio_dma_buffer_queue *queue)
-+{
-+	/*
-+	 * Note that queue->num_dmabufs cannot increase while the queue is
-+	 * locked, it can only decrease, so it does not race against
-+	 * iio_dma_buffer_alloc_block().
-+	 */
-+	return queue->fileio.enabled || !atomic_read(&queue->num_dmabufs);
-+}
-+
- /**
-  * iio_dma_buffer_request_update() - DMA buffer request_update callback
-  * @buffer: The buffer which to request an update
-@@ -299,6 +341,12 @@ int iio_dma_buffer_request_update(struct iio_buffer *buffer)
- 
- 	mutex_lock(&queue->lock);
- 
-+	queue->fileio.enabled = iio_dma_buffer_can_use_fileio(queue);
-+
-+	/* If DMABUFs were created, disable fileio interface */
-+	if (!queue->fileio.enabled)
-+		goto out_unlock;
-+
- 	/* Allocations are page aligned */
- 	if (PAGE_ALIGN(queue->fileio.block_size) == PAGE_ALIGN(size))
- 		try_reuse = true;
-@@ -339,7 +387,7 @@ int iio_dma_buffer_request_update(struct iio_buffer *buffer)
- 		}
- 
- 		if (!block) {
--			block = iio_dma_buffer_alloc_block(queue, size);
-+			block = iio_dma_buffer_alloc_block(queue, size, true);
- 			if (!block) {
- 				ret = -ENOMEM;
- 				goto out_unlock;
-@@ -412,8 +460,12 @@ static void iio_dma_buffer_submit_block(struct iio_dma_buffer_queue *queue,
- 
- 	block->state = IIO_BLOCK_STATE_ACTIVE;
- 	iio_buffer_block_get(block);
-+
- 	ret = queue->ops->submit(queue, block);
- 	if (ret) {
-+		if (!block->fileio)
-+			iio_buffer_signal_dmabuf_done(block->fence, ret);
-+
- 		/*
- 		 * This is a bit of a problem and there is not much we can do
- 		 * other then wait for the buffer to be disabled and re-enabled
-@@ -646,6 +698,112 @@ size_t iio_dma_buffer_usage(struct iio_buffer *buf)
- }
- EXPORT_SYMBOL_GPL(iio_dma_buffer_usage);
- 
-+struct iio_dma_buffer_block *
-+iio_dma_buffer_attach_dmabuf(struct iio_buffer *buffer,
-+			     struct dma_buf_attachment *attach)
-+{
-+	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
-+	struct iio_dma_buffer_block *block;
-+
-+	guard(mutex)(&queue->lock);
-+
-+	/*
-+	 * If the buffer is enabled and in fileio mode new blocks can't be
-+	 * allocated.
-+	 */
-+	if (queue->fileio.enabled)
-+		return ERR_PTR(-EBUSY);
-+
-+	block = iio_dma_buffer_alloc_block(queue, attach->dmabuf->size, false);
-+	if (!block)
-+		return ERR_PTR(-ENOMEM);
-+
-+	block->attach = attach;
-+
-+	/* Free memory that might be in use for fileio mode */
-+	iio_dma_buffer_fileio_free(queue);
-+
-+	return block;
-+}
-+EXPORT_SYMBOL_GPL(iio_dma_buffer_attach_dmabuf);
-+
-+void iio_dma_buffer_detach_dmabuf(struct iio_buffer *buffer,
-+				  struct iio_dma_buffer_block *block)
-+{
-+	block->state = IIO_BLOCK_STATE_DEAD;
-+	iio_buffer_block_put_atomic(block);
-+}
-+EXPORT_SYMBOL_GPL(iio_dma_buffer_detach_dmabuf);
-+
-+static int iio_dma_can_enqueue_block(struct iio_dma_buffer_block *block)
-+{
-+	struct iio_dma_buffer_queue *queue = block->queue;
-+
-+	/* If in fileio mode buffers can't be enqueued. */
-+	if (queue->fileio.enabled)
-+		return -EBUSY;
-+
-+	switch (block->state) {
-+	case IIO_BLOCK_STATE_QUEUED:
-+		return -EPERM;
-+	case IIO_BLOCK_STATE_ACTIVE:
-+	case IIO_BLOCK_STATE_DEAD:
-+		return -EBUSY;
-+	case IIO_BLOCK_STATE_DONE:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+int iio_dma_buffer_enqueue_dmabuf(struct iio_buffer *buffer,
-+				  struct iio_dma_buffer_block *block,
-+				  struct dma_fence *fence,
-+				  struct sg_table *sgt,
-+				  size_t size, bool cyclic)
-+{
-+	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
-+	bool cookie;
-+	int ret;
-+
-+	WARN_ON(!mutex_is_locked(&queue->lock));
-+
-+	cookie = dma_fence_begin_signalling();
-+
-+	ret = iio_dma_can_enqueue_block(block);
-+	if (ret < 0)
-+		goto out_end_signalling;
-+
-+	block->bytes_used = size;
-+	block->cyclic = cyclic;
-+	block->sg_table = sgt;
-+	block->fence = fence;
-+
-+	iio_dma_buffer_enqueue(queue, block);
-+
-+out_end_signalling:
-+	dma_fence_end_signalling(cookie);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iio_dma_buffer_enqueue_dmabuf);
-+
-+void iio_dma_buffer_lock_queue(struct iio_buffer *buffer)
-+{
-+	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
-+
-+	mutex_lock(&queue->lock);
-+}
-+EXPORT_SYMBOL_GPL(iio_dma_buffer_lock_queue);
-+
-+void iio_dma_buffer_unlock_queue(struct iio_buffer *buffer)
-+{
-+	struct iio_dma_buffer_queue *queue = iio_buffer_to_queue(buffer);
-+
-+	mutex_unlock(&queue->lock);
-+}
-+EXPORT_SYMBOL_GPL(iio_dma_buffer_unlock_queue);
-+
- /**
-  * iio_dma_buffer_set_bytes_per_datum() - DMA buffer set_bytes_per_datum callback
-  * @buffer: Buffer to set the bytes-per-datum for
-diff --git a/include/linux/iio/buffer-dma.h b/include/linux/iio/buffer-dma.h
-index 6e27e47077d5..e54158e53fd6 100644
---- a/include/linux/iio/buffer-dma.h
-+++ b/include/linux/iio/buffer-dma.h
-@@ -7,6 +7,7 @@
- #ifndef __INDUSTRIALIO_DMA_BUFFER_H__
- #define __INDUSTRIALIO_DMA_BUFFER_H__
- 
-+#include <linux/atomic.h>
- #include <linux/list.h>
- #include <linux/kref.h>
- #include <linux/spinlock.h>
-@@ -16,6 +17,9 @@
- struct iio_dma_buffer_queue;
- struct iio_dma_buffer_ops;
- struct device;
-+struct dma_buf_attachment;
-+struct dma_fence;
-+struct sg_table;
- 
- /**
-  * enum iio_block_state - State of a struct iio_dma_buffer_block
-@@ -41,6 +45,8 @@ enum iio_block_state {
-  * @queue: Parent DMA buffer queue
-  * @kref: kref used to manage the lifetime of block
-  * @state: Current state of the block
-+ * @cyclic: True if this is a cyclic buffer
-+ * @fileio: True if this buffer is used for fileio mode
-  */
- struct iio_dma_buffer_block {
- 	/* May only be accessed by the owner of the block */
-@@ -63,6 +69,14 @@ struct iio_dma_buffer_block {
- 	 * queue->list_lock if the block is not owned by the core.
- 	 */
- 	enum iio_block_state state;
-+
-+	bool cyclic;
-+	bool fileio;
-+
-+	struct dma_buf_attachment *attach;
-+	struct sg_table *sg_table;
-+
-+	struct dma_fence *fence;
- };
- 
- /**
-@@ -72,6 +86,7 @@ struct iio_dma_buffer_block {
-  * @pos: Read offset in the active block
-  * @block_size: Size of each block
-  * @next_dequeue: index of next block that will be dequeued
-+ * @enabled: Whether the buffer is operating in fileio mode
-  */
- struct iio_dma_buffer_queue_fileio {
- 	struct iio_dma_buffer_block *blocks[2];
-@@ -80,6 +95,7 @@ struct iio_dma_buffer_queue_fileio {
- 	size_t block_size;
- 
- 	unsigned int next_dequeue;
-+	bool enabled;
- };
- 
- /**
-@@ -95,6 +111,7 @@ struct iio_dma_buffer_queue_fileio {
-  *   the DMA controller
-  * @incoming: List of buffers on the incoming queue
-  * @active: Whether the buffer is currently active
-+ * @num_dmabufs: Total number of DMABUFs attached to this queue
-  * @fileio: FileIO state
-  */
- struct iio_dma_buffer_queue {
-@@ -107,6 +124,7 @@ struct iio_dma_buffer_queue {
- 	struct list_head incoming;
- 
- 	bool active;
-+	atomic_t num_dmabufs;
- 
- 	struct iio_dma_buffer_queue_fileio fileio;
- };
-@@ -144,4 +162,17 @@ int iio_dma_buffer_init(struct iio_dma_buffer_queue *queue,
- void iio_dma_buffer_exit(struct iio_dma_buffer_queue *queue);
- void iio_dma_buffer_release(struct iio_dma_buffer_queue *queue);
- 
-+struct iio_dma_buffer_block *
-+iio_dma_buffer_attach_dmabuf(struct iio_buffer *buffer,
-+			     struct dma_buf_attachment *attach);
-+void iio_dma_buffer_detach_dmabuf(struct iio_buffer *buffer,
-+				  struct iio_dma_buffer_block *block);
-+int iio_dma_buffer_enqueue_dmabuf(struct iio_buffer *buffer,
-+				  struct iio_dma_buffer_block *block,
-+				  struct dma_fence *fence,
-+				  struct sg_table *sgt,
-+				  size_t size, bool cyclic);
-+void iio_dma_buffer_lock_queue(struct iio_buffer *buffer);
-+void iio_dma_buffer_unlock_queue(struct iio_buffer *buffer);
-+
- #endif
+needs revisiting.
+
+So AFAIU, the flow is this:
+
+In a kexec-ed kernel:
+
+1. efi_arch_mem_reserve() gets called by bgrt, erst, mokvar... whatever
+   to hold on to boot services regions for longer otherwise EFI
+   "implementations" explode.
+
+2. On same kexec-ed kernel, we call into kexec_enter_virtual_mode()
+   because it needs to get the runtime services regions from the first
+   kernel
+
+3. As part of that call, it'll do
+   efi_memmap_init_late->__efi_memmap_init():
+
+        if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB))
+                __efi_memmap_free(efi.memmap.phys_map,
+
+and the memory which got allocated in step 1 is gone, thus reverting
+what efi_arch_mem_reserve() is trying to fix.
+
+IOW, we need a
+
+	EFI_MEMMAP_DO_NOT_TOUCH_MY_MEMORY
+
+flag which'll stop this from happening. But I'd prefer it if Ard decides
+what the right thing to do here is.
+
+> another is  skip efi_arch_mem_reserve when the EFI_MEMORY_RUNTIME bit
+> was set already.
+
+Can that even happen?
+
+Thx.
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
