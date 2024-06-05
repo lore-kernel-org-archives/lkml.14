@@ -1,126 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C177148FF8
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1D0482C3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717601203; cv=none; b=T0Em4iOGpUPvsH4rf1fnWPBVgJdRe9QBUO174kTn4n55i3uOPU3B0NuIJL7MpOsdqNkJTjX0NCJGghfJVhE46XekvhepRqaFxEk245jHZv4zOgULM2A3gkV6wgdn/G6T8FXJxG232FFITm1XmM7bYSu4iprfFaJy2UuOxwheWRA=
+	t=1717601368; cv=none; b=dGqoGb1MYxUagEA6RDaiuRAq8J2L54U46u8zGfK0Z9O8wj81G/umMwAUc2HI8fDzUHM0rv2+n1BN1haPGfoYgk1EanAw+Bm/herEqGy+wJXB8C1Ed/coIvbQpuo/ep/c0iYQtNSXGcCTP7gwlLUxQJqdtJ+UNk8dT9DoAjm24f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717601203; c=relaxed/simple;
-	bh=bNuWGrfh+H7Fav06wVfQOoCuk0r6nLVCkcxz3VrlPag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EaVx2zf9Bbv9h2Cax7KfVWudYwoPxz3YzafXPfqjni6qTJzkZzbg4JtBNr5W6+6/pTo0kx93J4g/2ckVz58z1nx6E6TOFGuZB69pTVxQaBnBv0OGvY0GQKHQzoBuVRkPE0Dkg+iEzBQyYMwQ0gXC5UA9GdcwAhmbZXUtqXkjk8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y6GHnbDM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717601368; c=relaxed/simple;
+	bh=lYE4mLW4/3gTTTeblhA4fcedkm6JVBcKv/nqj5RQWbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tB44SQ3S6whyB583pBQZ2HBkrFjZc4sDLmlyprWus3vuFOBghNU1uayXDArE7b4i3nCdtnUxwN5OiyyYFDrvYrU1SGLHQEp5YrX94Bx0f7lAm4RYWYmg7ojrZpRo+mt+uoZZssBKLtnHMGbMa4yI01H7qWW21PXaR/rK3aXUHVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=c7/xBj9Q; arc=none smtp.client-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y6GHnbDM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717601201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JBCoiHutLk0vWvVe2jPtxGY0YZJBt3gZWD7D6OcdQ4I=;
-	b=Y6GHnbDMW/pcifhH9pwuCpUD52p/BLEQCvMu9Ho35lR9PrncezBaQlVWtTtE0HJxKrSO9m
-	Zq4TiQFUF6IEeXC7LUHjeOdy7zBicsZ2XmatVI4WdrSzfBUK+EERNvaHObufCHtL/Sub3N
-	1TdXFWlSn8xkBhtO1UXdhZyNM5WE/p4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-513-1Nq6HuAwPg6NLiDZHQWiFg-1; Wed, 05 Jun 2024 11:26:35 -0400
-X-MC-Unique: 1Nq6HuAwPg6NLiDZHQWiFg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A5878032F8;
-	Wed,  5 Jun 2024 15:26:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.50])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 32B02C15970;
-	Wed,  5 Jun 2024 15:26:26 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  5 Jun 2024 17:25:01 +0200 (CEST)
-Date: Wed, 5 Jun 2024 17:24:57 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@chromium.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC bpf-next 01/10] uprobe: Add session callbacks to
- uprobe_consumer
-Message-ID: <20240605152457.GD25006@redhat.com>
-References: <20240604200221.377848-1-jolsa@kernel.org>
- <20240604200221.377848-2-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="c7/xBj9Q"
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 202406051529129795a9720fa52be546
+        for <linux-kernel@vger.kernel.org>;
+        Wed, 05 Jun 2024 17:29:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
+ d=siemens.com; i=diogo.ivo@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=lYE4mLW4/3gTTTeblhA4fcedkm6JVBcKv/nqj5RQWbM=;
+ b=c7/xBj9Q3Nu7BlSuOm5AYocnULLKZkmuIpnYSMKe5F5wn173MbfZ++XL1/Jo1Cex6Qw9gZ
+ Us1Ti3LM6Md+P2m3NvOFWLtN0Vbibkek3Cp+XwcW/rbtNX2gv02Gq5uOsuLPfdPdQ3sR5GXf
+ BhEO/fzyNUeaE2arihgxYyQ1+/K/8=;
+From: Diogo Ivo <diogo.ivo@siemens.com>
+To: mpearson-lenovo@squebb.ca
+Cc: gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: treat get_pdos not supported condition as info instead of error
+Date: Wed,  5 Jun 2024 16:29:11 +0100
+Message-ID: <20240605152911.167179-1-diogo.ivo@siemens.com>
+In-Reply-To: <20240604194056.16625-1-mpearson-lenovo@squebb.ca>
+References: <20240604194056.16625-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240604200221.377848-2-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-1320519:519-21489:flowmailer
 
-I'll try to read this code tomorrow, right now I don't really understand
-what does it do and why.
+Just realized Dmitry said literally the same thing as me. Sorry for the
+extra noise, please ignore my comment.
 
-However,
-
-On 06/04, Jiri Olsa wrote:
->
->  struct uprobe_consumer {
-> +	/*
-> +	 * The handler callback return value controls removal of the uprobe.
-> +	 *  0 on success, uprobe stays
-> +	 *  1 on failure, remove the uprobe
-> +	 *    console warning for anything else
-> +	 */
->  	int (*handler)(struct uprobe_consumer *self, struct pt_regs *regs);
-
-This is misleading. It is not about success/failure, it is about filtering.
-
-consumer->handler() returns UPROBE_HANDLER_REMOVE if this consumer is not
-interested in this task, so this uprobe can be removed (unless another
-consumer returns 0).
-
-> +/*
-> + * Make sure all the uprobe consumers have only one type of entry
-> + * callback registered (either handler or handler_session) due to
-> + * different return value actions.
-> + */
-> +static int consumer_check(struct uprobe_consumer *curr, struct uprobe_consumer *uc)
-> +{
-> +	if (!curr)
-> +		return 0;
-> +	if (curr->handler_session || uc->handler_session)
-> +		return -EBUSY;
-> +	return 0;
-> +}
-
-Hmm, I don't understand this code, it doesn't match the comment...
-
-The comment says "all the uprobe consumers have only one type" but
-consumer_check() will always fail if the the 1st or 2nd consumer has
-->handler_session != NULL ?
-
-Perhaps you meant
-
-	if (!!curr->handler != !!uc->handler)
-		return -EBUSY;
-
-?
-
-Oleg.
-
+Best regards,
+Diogo
