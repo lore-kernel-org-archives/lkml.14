@@ -1,183 +1,143 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6074B3DABEC;
-	Wed,  5 Jun 2024 05:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96F4D529
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 05:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717566613; cv=none; b=jn5bTVUkCkaPdZ9gsBQWiW2Qmr1OD17PbFcryVkO6WV2xYNodZTiwGHzaqm7cxzjl11mEYVP3QGNse8Q7I61TPugA8ObKwb5CRbhqL7uf0LOfgr88emrxLBy6sS268hIvZwlstIfrV5a7lvY0H3yxoo9dMlEOK127ssypipOoMM=
+	t=1717566678; cv=none; b=mbnT+wj9L9vijtRnDoAfziq5XEUdqSx6YJ8JvOLoafQRgx+AVbjvRgBi6AEfbzdInDWBrln2oQyY/okkPMtRZMgVFyokPK343eHj1FC7UQfPNX/Xt49No1sSjiytAarVaWTr9k6gPKp8r9JXBRz8tLns7L5EUuqCPZN3pS41m8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717566613; c=relaxed/simple;
-	bh=C6DHcioBtZO8Ft6NCOTxg1IFxOjJNDjKMUw66WUpIkE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YQb3tJXwvcZofoQDzDx71ZmoG2rdEKqO12W2xOOuQAy+gxGjMSepyzqQJLUAvwTH+c9CY2rapqgjIhf6i82bnYJGpstluD9nTS1ytyfk5FzkZ9O5LsIItGQkDGA8kByrVjt35ZnsA+jVr3dRS/to+eRo7qy520+JEVdS6kLCtfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=EwG+dJZe; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1717566678; c=relaxed/simple;
+	bh=ITeDx0OqlgB7NiL0mf7tKEd1JYGKzgJ1DJzTY6KYISc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eyUeapdVZ2a0y329aR6FVgC5tWNpVMUNcvEcRLfTkCw+qoho+FWMwZDxWpmw08kwNWXDoero+NCddO8X0NFQqWs+bRoj7nGK1IUGhRUGv6UhYHZ9UPMEBUzS4gm+P/VDevRSQbLIoqAyL6PFTsda+FZSSZafcGM/NAISIR4cpe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U1FltmsK; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="EwG+dJZe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1717566595; x=1718171395; i=wahrenst@gmx.net;
-	bh=LhDKqxW6L1Ssz9fZh25QjqFX4bDiK3gZ9H644lacdlk=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=EwG+dJZe9AZ8h4sOdTiiUqUb55MqpyVLJfoA0J3dr9CUdsHX3lK6crSLJ0PpA4lW
-	 a4+z+XAvfGdI+FG2jiPR4gNNNf397tPCfNT9Q7yD/5JzKXo42+av1YZvFPMgzyFkv
-	 4OODgLQvOmav+jl7vvWhtcoQk16XOzqqFz2/Wc4fevAxMb1w6hvkpE9/5t2U66e0c
-	 8DPkUlyM0Ft7ycaK99psgv6mYE7+lClCrbWGTK89XPAmvJWO/fiWc4g7a9QxA5kpw
-	 Jq7KXsOEPNSzlNbsejneRH71v+1P9z45K518cvNSmqjUpKIUl2OtvezaxADssFhus
-	 HSXz+fOyGmeiBisAcA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mnps0-1spNwf1BN4-00pKfz; Wed, 05
- Jun 2024 07:49:55 +0200
-From: Stefan Wahren <wahrenst@gmx.net>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christoph Fritz <chf.fritz@googlemail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH RFC] qca_spi: Make interrupt remembering atomic
-Date: Wed,  5 Jun 2024 07:49:39 +0200
-Message-Id: <20240605054939.34870-1-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U1FltmsK"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f658800344so27679135ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Jun 2024 22:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717566675; x=1718171475; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rCWSUQImHGilToURCyAOpdWvaa8ql6HejyzXJyuEZoo=;
+        b=U1FltmsKqAmHOcgos8Ff6I6BwrczuMCgFtZVJYkqFM9ibIk2N7/kQFu4pYcKfk2+3i
+         H7FCeH274i4PM1PKonsO6gPw3HxA9LgTNo0RSWoph5OVrdTcE1O5ciY6igTcBGU7/oGK
+         q3L7bBA5tbiTFHA7gsdikMCfRGRlkqGRPzAeHu126y0D0QB8NZVaSt/X0JKMMwvpr+yq
+         JnNaokH5JFnbWKJ46XV519AxD1drzrg4pQldYkXBnNS0kOLJNe9DmAagqfllXAuC51JD
+         zRz7Pd59I1EG9EM5x4g/zFns079mo+0OC2t0jep79kfzPIP8GetknuR/eDNH4YT5xF6R
+         enZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717566675; x=1718171475;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCWSUQImHGilToURCyAOpdWvaa8ql6HejyzXJyuEZoo=;
+        b=NdmIF+2+K/BuEcj53UboeWnndL3uvl20wUni5nfDROsoFl8k/83zOgvEoLzgW0H/u1
+         v8532DL6zVhm9cm5vxTprwnXRc1PYszFUBiBwEeetdFI7A/Nnwwf2Daqlr3zRow1kI35
+         6ZspDq7yQqshZ39k3bcE+FsrpA1qYqpRJfVKnMUt13lRI8o6I5MJqTyENSGUQok5+5np
+         abYhVnDndBAXpAkLqaovuxUVqlXyUMzQ34jM7iS235UdowxtUoR3wonI6Agt0FVV+jTL
+         deBrj39PYT1jnGz1O/rVIHgXp6XbhGDItbVjtQIsaUHiFro88jr2x1lWsdBV/djOA+Mi
+         nD4g==
+X-Forwarded-Encrypted: i=1; AJvYcCU3QQRPk1WrSzIT0Pw9/J7FTjIKCzXPelHGZi2QVhQUV6JYRSAPAY5nqz7WzaAUAhPHb22UKxj5uZI3iyxEzZb7xecXnwa32E09JdeA
+X-Gm-Message-State: AOJu0YxURWY/JQYw/OZRGsKjhnTap7mZg10pNXwzS3YNERlu93POsGiZ
+	NFNS6cToaprkAYxdcdaIDbgySJHJx8bi315jVLPojlnPJKEMs02O2hZv8j6vxAtaj6RJX8JVk7A
+	=
+X-Google-Smtp-Source: AGHT+IGV/MUBr4KlZCCtOhFeci3Ojt9DYoBNyrDOC3FmQoMHqR7+aHEIhtbKxi29Rzfm8hP/wXa/IQ==
+X-Received: by 2002:a17:902:9896:b0:1f6:3750:527f with SMTP id d9443c01a7336-1f6a5a20654mr17233275ad.31.1717566674957;
+        Tue, 04 Jun 2024 22:51:14 -0700 (PDT)
+Received: from thinkpad ([120.60.137.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6a5060788sm9513775ad.130.2024.06.04.22.51.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 22:51:14 -0700 (PDT)
+Date: Wed, 5 Jun 2024 11:21:09 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: qcom: x1e80100: Fix PCIe 6a reg offsets
+ and add MHI
+Message-ID: <20240605055109.GC2417@thinkpad>
+References: <20240604-x1e80100-dts-fixes-pcie6a-v2-1-0b4d8c6256e5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TuT0o4Osg9B9GIit4JJq9P9z292nEkgMNJiZFqaUKEvnfZERxhP
- HAHXOkS05v0XhlJYA6wim8PmXErup3tIbb1RApsMpkPAuxpexH9DtB872zV1XtRk6qOBL0G
- /Tj7+zesEquAkos5OYHqqjkU7qif8YgLA+AUjLORAQ9QOboLZaHqw+Ft3HBzTqC+2voC6uA
- VoBvQl21p8jVDefFHVg9g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3jhrT1xqADA=;mMaBq+QuCjkH2Ph8NfOyx7ednTR
- 56IF8YgBZxwgTRnyCDIJLjn/YmsyoeMatMlafB71XASkaoPDgqhXKk9pqMqEtvXBVAQH9My3o
- 70wqfDMoeTom6xgy5Fe30d5KWLhRVZk5cZg7TOv93Gf2mX6aVJJ8tAaqCUGbYOcooJIF3gFBW
- 0kAspYCU5MAMC50jUF/xVoWxbz/yuEq7kWb6j2QT4bRUr/5UW6KNkUyo/e9qYKzZpU2LSjPx3
- 2huG8Ur96AmsRA9Hf8rbKaxqeEHznA6NzSO5Fygx5UDC3xZzRJOn8bT2THwafvIMblIPcKdQL
- k7kAF2wPUDQyFJ0wyyBKn79GxQ3UFFIXWRGdqPqFgA9nsXdvPLAR6/tKasA/yJi3hjyCoxE8Q
- thxXc6qWcxzMOaBhfo9OnI36o+jSN1vzef06uhJvgUqmPc0ZYixir2vtpKef71HPnqRp4L70T
- D2fcHHuOTD+U8IvoV9liwXjYYYfOYzHW37jQo6g0Tsm4o0ZQjmhht5he90L8l2lOSx87MEdiu
- t9tYjc813plOy2DMrp+cr92gVvGhiG4R7DMHdFmejPYnlcRDSG3XBq5OSv1GOLYxfqtdqHqHm
- /ZP3ZQ0csrOM3cdhsBJ7cvbxjM8QYsuNT1no2nFyjKdYRGsRz82jOAZ+dCGOMDf9ZRD1IPXPz
- 4OzrkVGS0KXpDVd4UFvkxVo7b9Vb1j0balFTUJAvvoXnoCSkXTmjQcsKk7F0lFFw6hja3mcjC
- 5MrxIKPHZc1Hhwd7/ANQq5i2Fu0RlEYief0/tPVlcUw1n+bJpRuSk/kd+UPQinBT7Svr0Satb
- JJhx45mpFb0rSo7a3w2P5+z3QA305CiwOgGhfh+F6osto=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604-x1e80100-dts-fixes-pcie6a-v2-1-0b4d8c6256e5@linaro.org>
 
-The whole mechanism to remember occurred SPI interrupts is not atomic,
-which could lead to unexpected behavior. So fix this by using atomic bit
-operations instead.
+On Tue, Jun 04, 2024 at 06:20:24PM +0300, Abel Vesa wrote:
+> The actual size of the DBI region is 0xf20 and the start of the
+> ELBI region is 0xf40, according to the documentation. So fix them.
+> While at it, add the MHI region as well.
+> 
+> Fixes: 5eb83fc10289 ("arm64: dts: qcom: x1e80100: Add PCIe nodes")
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 
-Fixes: 291ab06ecf67 ("net: qualcomm: new Ethernet over SPI driver for QCA7=
-000")
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/net/ethernet/qualcomm/qca_debug.c |  6 ++----
- drivers/net/ethernet/qualcomm/qca_spi.c   | 16 ++++++++--------
- drivers/net/ethernet/qualcomm/qca_spi.h   |  3 +--
- 3 files changed, 11 insertions(+), 14 deletions(-)
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_debug.c b/drivers/net/ether=
-net/qualcomm/qca_debug.c
-index ff3b89e9028e..ad06da0fdaa0 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_debug.c
-+++ b/drivers/net/ethernet/qualcomm/qca_debug.c
-@@ -98,10 +98,8 @@ qcaspi_info_show(struct seq_file *s, void *what)
+- Mani
 
- 	seq_printf(s, "IRQ              : %d\n",
- 		   qca->spi_dev->irq);
--	seq_printf(s, "INTR REQ         : %u\n",
--		   qca->intr_req);
--	seq_printf(s, "INTR SVC         : %u\n",
--		   qca->intr_svc);
-+	seq_printf(s, "INTR             : %lx\n",
-+		   qca->intr);
+> ---
+> Changes in v2:
+> - Dropped the 4-lane mode switch patch entire.
+> - Fetched Konrad's R-b tag
+> - Link to v1: https://lore.kernel.org/r/20240531-x1e80100-dts-fixes-pcie6a-v1-0-1573ebcae1e8@linaro.org
+> ---
+>  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> index cf8d8d5b1870..fe7ca2a73f9d 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+> @@ -2818,15 +2818,17 @@ pcie6a: pci@1bf8000 {
+>  			device_type = "pci";
+>  			compatible = "qcom,pcie-x1e80100";
+>  			reg = <0 0x01bf8000 0 0x3000>,
+> -			      <0 0x70000000 0 0xf1d>,
+> -			      <0 0x70000f20 0 0xa8>,
+> +			      <0 0x70000000 0 0xf20>,
+> +			      <0 0x70000f40 0 0xa8>,
+>  			      <0 0x70001000 0 0x1000>,
+> -			      <0 0x70100000 0 0x100000>;
+> +			      <0 0x70100000 0 0x100000>,
+> +			      <0 0x01bfb000 0 0x1000>;
+>  			reg-names = "parf",
+>  				    "dbi",
+>  				    "elbi",
+>  				    "atu",
+> -				    "config";
+> +				    "config",
+> +				    "mhi";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			ranges = <0x01000000 0 0x00000000 0 0x70200000 0 0x100000>,
+> 
+> ---
+> base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
+> change-id: 20240531-x1e80100-dts-fixes-pcie6a-0cf5b75a818e
+> 
+> Best regards,
+> -- 
+> Abel Vesa <abel.vesa@linaro.org>
+> 
+> 
 
- 	seq_printf(s, "SPI max speed    : %lu\n",
- 		   (unsigned long)qca->spi_dev->max_speed_hz);
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
-t/qualcomm/qca_spi.c
-index 5799ecc88a87..8f7ce6b51a1c 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -35,6 +35,8 @@
-
- #define MAX_DMA_BURST_LEN 5000
-
-+#define SPI_INTR 0
-+
- /*   Modules parameters     */
- #define QCASPI_CLK_SPEED_MIN 1000000
- #define QCASPI_CLK_SPEED_MAX 16000000
-@@ -579,14 +581,14 @@ qcaspi_spi_thread(void *data)
- 			continue;
- 		}
-
--		if ((qca->intr_req =3D=3D qca->intr_svc) &&
-+		if (!test_bit(SPI_INTR, &qca->intr) &&
- 		    !qca->txr.skb[qca->txr.head])
- 			schedule();
-
- 		set_current_state(TASK_RUNNING);
-
--		netdev_dbg(qca->net_dev, "have work to do. int: %d, tx_skb: %p\n",
--			   qca->intr_req - qca->intr_svc,
-+		netdev_dbg(qca->net_dev, "have work to do. int: %lu, tx_skb: %p\n",
-+			   qca->intr,
- 			   qca->txr.skb[qca->txr.head]);
-
- 		qcaspi_qca7k_sync(qca, QCASPI_EVENT_UPDATE);
-@@ -600,8 +602,7 @@ qcaspi_spi_thread(void *data)
- 			msleep(QCASPI_QCA7K_REBOOT_TIME_MS);
- 		}
-
--		if (qca->intr_svc !=3D qca->intr_req) {
--			qca->intr_svc =3D qca->intr_req;
-+		if (test_and_clear_bit(SPI_INTR, &qca->intr)) {
- 			start_spi_intr_handling(qca, &intr_cause);
-
- 			if (intr_cause & SPI_INT_CPU_ON) {
-@@ -663,7 +664,7 @@ qcaspi_intr_handler(int irq, void *data)
- {
- 	struct qcaspi *qca =3D data;
-
--	qca->intr_req++;
-+	set_bit(SPI_INTR, &qca->intr);
- 	if (qca->spi_thread)
- 		wake_up_process(qca->spi_thread);
-
-@@ -679,8 +680,7 @@ qcaspi_netdev_open(struct net_device *dev)
- 	if (!qca)
- 		return -EINVAL;
-
--	qca->intr_req =3D 1;
--	qca->intr_svc =3D 0;
-+	set_bit(SPI_INTR, &qca->intr);
- 	qca->sync =3D QCASPI_SYNC_UNKNOWN;
- 	qcafrm_fsm_init_spi(&qca->frm_handle);
-
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.h b/drivers/net/etherne=
-t/qualcomm/qca_spi.h
-index d59cb2352cee..8f4808695e82 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.h
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.h
-@@ -81,8 +81,7 @@ struct qcaspi {
- 	struct qcafrm_handle frm_handle;
- 	struct sk_buff *rx_skb;
-
--	unsigned int intr_req;
--	unsigned int intr_svc;
-+	unsigned long intr;
- 	u16 reset_count;
-
- #ifdef CONFIG_DEBUG_FS
-=2D-
-2.34.1
-
+-- 
+மணிவண்ணன் சதாசிவம்
