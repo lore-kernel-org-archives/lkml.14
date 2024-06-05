@@ -1,59 +1,58 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682BD195FE1;
-	Wed,  5 Jun 2024 08:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CAA18FC73;
+	Wed,  5 Jun 2024 08:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575489; cv=none; b=TOTO+HMtj2lqdz3BUSHSDzYVw1gOAj8xlvVmFBEWcfe9Ye4PXiLhAvG464fqLcaZp8awykWtylXNFM2w89u2gzOMVt5PzJ0fbj1zBrfPMJcDhWqkiUmYBQBrsKZSAxDE0AWlxCidDD4FhwVJa8DOpQqYS7IMcH+SbnterDarrYU=
+	t=1717575492; cv=none; b=U26+BIR/sIof/dnR3KUXCUWRwhi3MNfA/VTNy0Ed0PZ099k7HCa8MCFUuJ6kPZlLhTKVLzDqKxfbTOkiAISupfAxmK/A2iXgHxH178PKLnmkv48B3emYQhe5yNflVTw460MeqjE97T3xy1UtnYg1c4KLkc26+DZu+edZ4VYNHis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575489; c=relaxed/simple;
-	bh=MXIzVq0dIhtRg32LkPd8K+sI/KI97awMjyylhz3JFG4=;
+	s=arc-20240116; t=1717575492; c=relaxed/simple;
+	bh=T1jNIimVvsNXToVe+C7OSqugb5fDRJsa8cix4PcvxFw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uN5vSn7VQPeQvXeoWNtsCOw9BF6aPivFaL3YU7aWyDtLDAFP83tROOu1Nd85LvJvMCOUvUrodE7K2fvWxBfWb+iVNoejMurGkbr/NCk3x25gfVbM5nngDSls6T0MIT5RFgbqwLYOnfUtdUVidf1yFyq/OaHGoswEHCPiIj3iEkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=ZR8pn+jh; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=u9DOwo9DnmjW8FINTYUp1AAPcpoJ1ptb0BxMsc1YDintEzuW52QwWUIzNSLccGtumqSAUcGwTKiwTlt2WiOFT8A08Yau0p5Wp6HKw1OlpJh4DZBGCsLCDF54txZHPsPfiTOEsbaYtorhaAP551puXLx5hwGdjoViIwBURb1czWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=lHou2wMJ; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ZR8pn+jh"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="lHou2wMJ"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4554s7PF013525;
-	Wed, 5 Jun 2024 01:17:47 -0700
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4554rxtv013268;
+	Wed, 5 Jun 2024 01:17:56 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=h
-	hicOWMHKa1J/H/XNJ6E6RZzHWAH/BnUWB/xcC7KnOc=; b=ZR8pn+jhoI1eVkcah
-	PpG1U09V2tyiTjdErMgY4Uq2fLHslZdeVl5PQWnRwlI83H7kmyfhLp/NrKcLVW8S
-	PL4nHisFV56DMVFgYhEShxtOGyNwuALT9I4vlDiXIl8p4UN0v6qyDmnqUirvNij4
-	yOmcuL1oRq/tCCtjfTdu7kyRmkAZoSfwQ5Rg2P3hLg1MkmYcjQUYB26mfBRjmJz2
-	VUoXfIEVIFAW7P30UHb/jGX11K6/r5MgplXhuOQsryE2kUkrrMN7zdb1S6o++BcS
-	TducNysVvQ6Qx1cxT5MAxpUIXDajv1Xpw+gM0bf2i2n520+6HklZd/YEVDjtx/2L
-	HBxHA==
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=C
+	9VVWICHZY5iZTSdEFRzo0dPB84R3sF5ECSXEN0geOM=; b=lHou2wMJfW8qYjYtL
+	a2dcCuFSbjLMy8JHTWU605oWhNRO92yMcQXuCxGw4ihtLz4De94MvaAHfhp4tPml
+	plGnJu+wDbbZV9bazVLH7BdiNPiKVpa9O/3bk6NCClT7bYhbHmwFX5tOZrBnSzIb
+	0Isl5yP95MECpy6ivLDAeo/jtBIrNR1vgngA831F6WcsPLEjqDesH3r2xVrQkKST
+	WO0QE2odwZuiUiA6D/1yuCrfpUetBDEeLih0oYB7gU6NMnOEg7x/vgxIAQHZ94OA
+	ovqiJHJsOV2kQBfIpwD4brJETsykEiwxmw+RSS5N/S9uf3rEldbV4+Qw5q+wMcnK
+	NrYKA==
 Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yjhd1gjbr-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3yjhd1gjc8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 01:17:46 -0700 (PDT)
+	Wed, 05 Jun 2024 01:17:55 -0700 (PDT)
 Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 5 Jun 2024 01:17:45 -0700
+ 15.2.1544.4; Wed, 5 Jun 2024 01:17:54 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
  (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 5 Jun 2024 01:17:45 -0700
+ Transport; Wed, 5 Jun 2024 01:17:54 -0700
 Received: from virtx40.. (unknown [10.28.34.196])
-	by maili.marvell.com (Postfix) with ESMTP id 619903F706A;
-	Wed,  5 Jun 2024 01:17:41 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 8CA533F706A;
+	Wed,  5 Jun 2024 01:17:50 -0700 (PDT)
 From: Linu Cherian <lcherian@marvell.com>
 To: <suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@arm.com>
 CC: <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
         <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <sgoutham@marvell.com>,
-        <gcherian@marvell.com>, Linu Cherian <lcherian@marvell.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v9 1/7] dt-bindings: arm: coresight-tmc: Add "memory-region" property
-Date: Wed, 5 Jun 2024 13:47:19 +0530
-Message-ID: <20240605081725.622953-2-lcherian@marvell.com>
+        <gcherian@marvell.com>, Linu Cherian <lcherian@marvell.com>
+Subject: [PATCH v9 3/7] coresight: core: Add provision for panic callbacks
+Date: Wed, 5 Jun 2024 13:47:21 +0530
+Message-ID: <20240605081725.622953-4-lcherian@marvell.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240605081725.622953-1-lcherian@marvell.com>
 References: <20240605081725.622953-1-lcherian@marvell.com>
@@ -65,78 +64,131 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: OBUKmdaCOjmLhyGCWyHN4pJ5-DQmKPfL
-X-Proofpoint-GUID: OBUKmdaCOjmLhyGCWyHN4pJ5-DQmKPfL
+X-Proofpoint-ORIG-GUID: lI2gk7hfc3MNsIuirRIi_ui1_8HosW0l
+X-Proofpoint-GUID: lI2gk7hfc3MNsIuirRIi_ui1_8HosW0l
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-04_11,2024-06-05_01,2024-05-17_01
 
-memory-region 0: Reserved trace buffer memory
+Panic callback handlers allows coresight device drivers to sync
+relevant trace data and trace metadata to reserved memory
+regions so that they can be retrieved later in the subsequent
+boot or in the crashdump kernel.
 
-  TMC ETR: When available, use this reserved memory region for
-  trace data capture. Same region is used for trace data
-  retention after a panic or watchdog reset.
-
-  TMC ETF: When available, use this reserved memory region for
-  trace data retention synced from internal SRAM after a panic or
-  watchdog reset.
-
-memory-region 1: Reserved meta data memory
-
-  TMC ETR, ETF: When available, use this memory for register
-  snapshot retention synced from hardware registers after a panic
-  or watchdog reset.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Linu Cherian <lcherian@marvell.com>
+Reviewed-by: James Clark <james.clark@arm.com>
 ---
- .../bindings/arm/arm,coresight-tmc.yaml       | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changelog from v8:
+Added Reviewed-by tag.
 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-index cb8dceaca70e..4787d7c6bac2 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-@@ -101,6 +101,29 @@ properties:
-           and ETF configurations.
-         $ref: /schemas/graph.yaml#/properties/port
+ drivers/hwtracing/coresight/coresight-core.c | 37 ++++++++++++++++++++
+ include/linux/coresight.h                    | 12 +++++++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index 9fc6f6b863e0..c30b9f00d77b 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -19,6 +19,7 @@
+ #include <linux/property.h>
+ #include <linux/delay.h>
+ #include <linux/pm_runtime.h>
++#include <linux/panic_notifier.h>
  
-+  memory-region:
-+    items:
-+      - description: Reserved trace buffer memory for ETR and ETF sinks.
-+          For ETR, this reserved memory region is used for trace data capture.
-+          Same region is used for trace data retention as well after a panic
-+          or watchdog reset.
-+          This reserved memory region is used as trace buffer or used for trace
-+          data retention only if specifically selected by the user in sysfs
-+          interface.
-+          The default memory usage models for ETR in sysfs/perf modes are
-+          otherwise unaltered.
-+
-+          For ETF, this reserved memory region is used by default for
-+          retention of trace data synced from internal SRAM after a panic
-+          or watchdog reset.
-+      - description: Reserved meta data memory. Used for ETR and ETF sinks
-+          for storing metadata.
-+
-+  memory-region-names:
-+    items:
-+      - const: tracedata
-+      - const: metadata
-+
- required:
-   - compatible
-   - reg
-@@ -115,6 +138,9 @@ examples:
-     etr@20070000 {
-         compatible = "arm,coresight-tmc", "arm,primecell";
-         reg = <0x20070000 0x1000>;
-+        memory-region = <&etr_trace_mem_reserved>,
-+                       <&etr_mdata_mem_reserved>;
-+        memory-region-names = "tracedata", "metadata";
+ #include "coresight-etm-perf.h"
+ #include "coresight-priv.h"
+@@ -1365,6 +1366,36 @@ const struct bus_type coresight_bustype = {
+ 	.name	= "coresight",
+ };
  
-         clocks = <&oscclk6a>;
-         clock-names = "apb_pclk";
++static int coresight_panic_sync(struct device *dev, void *data)
++{
++	int mode;
++	struct coresight_device *csdev;
++
++	/* Run through panic sync handlers for all enabled devices */
++	csdev = container_of(dev, struct coresight_device, dev);
++	mode = coresight_get_mode(csdev);
++
++	if ((mode == CS_MODE_SYSFS) || (mode == CS_MODE_PERF)) {
++		if (panic_ops(csdev))
++			panic_ops(csdev)->sync(csdev);
++	}
++
++	return 0;
++}
++
++static int coresight_panic_cb(struct notifier_block *self,
++			       unsigned long v, void *p)
++{
++	bus_for_each_dev(&coresight_bustype, NULL, NULL,
++				 coresight_panic_sync);
++
++	return 0;
++}
++
++static struct notifier_block coresight_notifier = {
++	.notifier_call = coresight_panic_cb,
++};
++
+ static int __init coresight_init(void)
+ {
+ 	int ret;
+@@ -1377,6 +1408,10 @@ static int __init coresight_init(void)
+ 	if (ret)
+ 		goto exit_bus_unregister;
+ 
++	/* Register function to be called for panic */
++	ret = atomic_notifier_chain_register(&panic_notifier_list,
++					     &coresight_notifier);
++
+ 	/* initialise the coresight syscfg API */
+ 	ret = cscfg_init();
+ 	if (!ret)
+@@ -1391,6 +1426,8 @@ static int __init coresight_init(void)
+ static void __exit coresight_exit(void)
+ {
+ 	cscfg_exit();
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					     &coresight_notifier);
+ 	etm_perf_exit();
+ 	bus_unregister(&coresight_bustype);
+ }
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index f09ace92176e..6aa54cdb66a2 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -316,6 +316,7 @@ enum cs_mode {
+ #define link_ops(csdev)		csdev->ops->link_ops
+ #define helper_ops(csdev)	csdev->ops->helper_ops
+ #define ect_ops(csdev)		csdev->ops->ect_ops
++#define panic_ops(csdev)	csdev->ops->panic_ops
+ 
+ /**
+  * struct coresight_ops_sink - basic operations for a sink
+@@ -385,11 +386,22 @@ struct coresight_ops_helper {
+ 	int (*disable)(struct coresight_device *csdev, void *data);
+ };
+ 
++
++/**
++ * struct coresight_ops_panic - Generic device ops for panic handing
++ *
++ * @sync	: Sync the device register state/trace data
++ */
++struct coresight_ops_panic {
++	int (*sync)(struct coresight_device *csdev);
++};
++
+ struct coresight_ops {
+ 	const struct coresight_ops_sink *sink_ops;
+ 	const struct coresight_ops_link *link_ops;
+ 	const struct coresight_ops_source *source_ops;
+ 	const struct coresight_ops_helper *helper_ops;
++	const struct coresight_ops_panic *panic_ops;
+ };
+ 
+ static inline u32 csdev_access_relaxed_read32(struct csdev_access *csa,
 -- 
 2.34.1
 
