@@ -1,138 +1,196 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839704962C
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 219F31946CD;
+	Wed,  5 Jun 2024 08:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717576579; cv=none; b=VzbjaQ9i+474uYNFJe2K6PfFCvAtOwHJEnp0rk3dnS19WbIce9zkluVXA3DzkhBq3RyQ/BDzUzUpKhS1u6gpUEZA2vQK/eOeoBT3kFB1jbkSIg3Wy84rHWc4IywugDM8gg3gawskEKS0ozWK70y7c+w3yIV3S22xZ0acUDxuw7s=
+	t=1717576583; cv=none; b=s47MoA4PJ6DchIuNntPs0S8qNXOPCxb/Ynw9NrC/CbsdSnvHJwTXJJZKRwNY/bFtnlL5wdXMlzW7hiEzFOScDhlEc3Rzi9inDJPicVy5cjAkm9r2kTaMG1nZPxfH3OqvwjAM1H7E2RDDIE1vq8xMbgn73czodllaeXlX/WZdUqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717576579; c=relaxed/simple;
-	bh=muohkQHM4xGVqaMFOC4b3LZBXk6gCJb0TTTyktpFYFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SvMMfgBmEN3brRx5Fth8HavIN0vyANQ4t45ANjKpJ+bALuXjGszFjGuFMU+6HC6gIePHhjG0mR04oXqNEyk1IO+2rq/RjKu6YuK48kxxHkCV/XchOOCWDePjKAAcQTmA1iL0CwKYMTsKyN0jEjM+xWnr5bsCljOxT9nWWZbhDDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTutUWFX; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTutUWFX"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52b8e0e98adso2917015e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:36:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717576576; x=1718181376; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=74218/qTlQX5R13IzjLgr2DOxfv8K30mXmcKDFS7i+o=;
-        b=cTutUWFXBOoXO08SV3iZI6rcqzY5hG0zYNzq4ARdxqo6suLp16S0QYp7D5kwIjU2Wz
-         Sma/GmH/aP49AOR+m9LR0Vi/jOko5AUTRNxLIke+XN14O48PT86Egwf6DvSnsh1QeS7v
-         WIYXVw6D7APO0hex7qr+jCwf/OJGG3jZlSqdmJq39q/qjCUK6MmMfb/Dp3J0HOk+zecD
-         STqGTYLb6WjC6jCT9i7fl+74flEqaaDGr7DhMs7B2MrvIsAjGw/xzSCG+ajSPmHY9/Ov
-         5jJfSpI2ogGzkIKBT/mLyQs3ZMsuq4R6MJJQEXybTnrO73Yn6mdt4lEbGCZfJPCmm+9I
-         IJTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717576576; x=1718181376;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=74218/qTlQX5R13IzjLgr2DOxfv8K30mXmcKDFS7i+o=;
-        b=LtIu3GT530vZTOKgnV+uwBXzd8CkIzxzfSPwu/Span2qUKVnJO+1ZW4W2PKlHS6ZKP
-         6mZDZNBcJv0km0OgPz26L/YhaK8wjIPGOyY3bAFDfikIO8EvXuxG7I6rsZa7ur6DHELv
-         UgtPYpVBRLfGVfo9xxw2lqQCD7iTj1/QEhNZ1oFpkd9D3G7soJ9PHM3Fn8/Qy0XzScYZ
-         M9gwQg8lYEDqwf4YTAk75HypVdYe8eiGSrg8np1ehgLaxyXY6ZuA3ywS+8N2g1xwBabK
-         /k9AUmiu3xk3AKpvwT8tq0TucNXMsLTPw+jqIbIUb7CItYz8Px+qCwOmBVuVjsK7o5Lo
-         lHPg==
-X-Gm-Message-State: AOJu0YyJokVJNuaeoaXFqedz0sTs4/aP76tNQbdkZIVJGTOPrULMbFbS
-	IS4K3WxHOq1jAcSuMqWj+IJlPneBcc6g4uo/7BzkXkklr5I1Zmx2QvClQLlX
-X-Google-Smtp-Source: AGHT+IG07th/gojxw6KZAyaItF2AJx1hysTGqzHVTJ/6Q9zucdsggjvd3hTpqHOKYVgTdchNzOKlQA==
-X-Received: by 2002:a05:6512:6c7:b0:52b:7c3a:423e with SMTP id 2adb3069b0e04-52bab4d470dmr1325612e87.20.1717576575327;
-        Wed, 05 Jun 2024 01:36:15 -0700 (PDT)
-Received: from kepler.. (1F2EF2F4.nat.pool.telekom.hu. [31.46.242.244])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68b3eaeb69sm611933766b.92.2024.06.05.01.36.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:36:14 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave@sr71.net>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH 0/3, v3] x86/fpu: Remove the thread::fpu pointer
-Date: Wed,  5 Jun 2024 10:35:54 +0200
-Message-ID: <20240605083557.2051480-1-mingo@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1717576583; c=relaxed/simple;
+	bh=+bHUNQ5M5IR38v2t2j7DBP43t3xuf9K3LOgjqNKeaZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BQ0lvaXg2CwsioAUnrYEuHdo70P9A3O0VM1Fhg7lbD3V21+NoW1fwYDk0BR/UhXzk7CfvL8S7Ch5+eXrAL+fhBmVtb7KugEwtC+4CrfSGtpvPloMTd6HEUV95oyF2FK6LvxdhblehtCn6GKCT6fP/mRMD6x9QcN9lrU6PFBF/Ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCE2DDA7;
+	Wed,  5 Jun 2024 01:36:44 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31BA53F762;
+	Wed,  5 Jun 2024 01:36:18 -0700 (PDT)
+Date: Wed, 5 Jun 2024 10:36:15 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, len.brown@intel.com,
+	ionela.voinescu@arm.com, vanshikonda@os.amperecomputing.com,
+	sumitg@nvidia.com
+Subject: Re: [PATCH 1/1] cpufreq: Rewire arch specific feedback for
+ cpuinfo/scaling_cur_freq
+Message-ID: <ZmAjfyGWtti17WiO@arm.com>
+References: <20240603081331.3829278-1-beata.michalska@arm.com>
+ <20240603081331.3829278-2-beata.michalska@arm.com>
+ <20240603114811.oio3uemniib5uaa2@vireshk-i7>
+ <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0j1bqhmKrJirw+WgEVDdszZ9xQSgmfazVKMVa8H6_5TSw@mail.gmail.com>
 
-This series is one of the dependencies of the fast-headers work,
-which aims to reduce header complexity by removing <asm/processor.h>
-from the <linux/sched.h> dependency chain, which headers are headers
-are fat enough already even if we do not combine them.
+On Mon, Jun 03, 2024 at 03:43:12PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Jun 3, 2024 at 1:48 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Hi Beata,
+> >
+> > Thanks for taking this forward.
+> >
+> > On 03-06-24, 09:13, Beata Michalska wrote:
+> > > Some architectures provide a way to determine an average frequency over
+> > > a certain period of time, based on available performance monitors (AMU on
+> > > ARM or APERF/MPERf on x86). With those at hand, enroll arch_freq_get_on_cpu
+> > > into cpuinfo_cur_freq policy sysfs attribute handler, which is expected to
+> > > represent the current frequency of a given CPU,as obtained by the hardware.
+> > > This is the type of feedback that counters do provide.
+> >
+> > Please add blank line between paragraphs, it makes it easier to read
+> > them.
+> >
+> > > At the same time, keep the scaling_cur_freq attribute align with the docs
+> > > and make it provide most recently requested frequency, still allowing to
+> > > fallback to using arch_freq_get_on_cpu for cases when cpuinfo_cur_freq is
+> > > not available.
+> >
+> > Please split this patch into two parts, they are very distinct changes
+> > and should be kept separate.
+> >
+> > > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
+> > > ---
+> > >  drivers/cpufreq/cpufreq.c | 8 ++++++--
+> > >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > index a45aac17c20f..3b0eabe4a983 100644
+> > > --- a/drivers/cpufreq/cpufreq.c
+> > > +++ b/drivers/cpufreq/cpufreq.c
+> > > @@ -758,7 +758,8 @@ static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
+> > >       ssize_t ret;
+> > >       unsigned int freq;
+> > >
+> > > -     freq = arch_freq_get_on_cpu(policy->cpu);
+> > > +     freq = !cpufreq_driver->get ? arch_freq_get_on_cpu(policy->cpu)
+> > > +                                 : 0;
+> >
+> > This is getting trickier than I thought as I dived into more details
+> > of all the changes to the file.
+> >
+> > Rafael,
+> >
+> > We probably need to decide on a policy for these two files, it is
+> > getting a bit confusing.
+> >
+> > cpuinfo_cur_freq:
+> >
+> > The purpose of this file is abundantly clear. This returns the best
+> > possible guess of the current hardware frequency. It should rely on
+> > arch_freq_get_on_cpu() or ->get() to get the value.
+> 
+> Let me quote the documentation:
+> 
+> "This is expected to be the frequency the hardware actually runs at.
+> If that frequency cannot be determined, this attribute should not be
+> present."
+> 
+> In my reading, this has nothing to do with arch_freq_get_on_cpu(), at
+> least on x86.
+My reading on this (and I might be wrong) is that for x86,
+arch_freq_get_on_cpu() is utilizing the APERF/MPERF registers to get
+a rough/average frequency and as such it does, in a way, get a hw feedback
+and it does somewhat fall under "frequency the hardware actually runs at".
+Because it is an average value, it might not provide an instant view on
+current frequency, but either way, the value provided here migh be a bit off
+anyway. But then, we could adjust the timewidnow being used to make it more
+accurate. I might be looking at it the wrong way though.
+> 
+> > Perhaps we can
+> > make this available all the time, instead of conditionally on ->get()
+> > callback (which isn't present for intel-pstate for example).
+> 
+> We could, but then on x86 there is no expectation that this file will
+> be present and changing this may introduce significant confusion
+> because of the way it is documented (which would need to be changed,
+> but people might be forgiven for failing to notice the change of
+> interpretation of this file).
+> 
+> > scaling_cur_freq:
+> >
+> > This should better reflect the last requested frequency, but since a
+> > significant time now it is trying to show what cpuinfo_cur_freq shows.
+> 
+> Well, not really.
+> 
+> > commit c034b02e213d ("cpufreq: expose scaling_cur_freq sysfs file for set_policy() drivers")
+> > commit f8475cef9008 ("x86: use common aperfmperf_khz_on_cpu() to calculate KHz using APERF/MPERF")
+> 
+> "In the majority of cases, this is the frequency of the last P-state
+> requested by the scaling driver from the hardware using the scaling
+> interface provided by it, which may or may not reflect the frequency
+> the CPU is actually running at (due to hardware design and other
+> limitations).
+> 
+> Some architectures (e.g. x86) may attempt to provide information more
+> precisely reflecting the current CPU frequency through this attribute,
+> but that still may not be the exact current CPU frequency as seen by
+> the hardware at the moment."
+> 
+> So the problem is that on Intel x86 with HWP and intel_pstate in the
+> active mode, say, "the frequency of the last P-state requested by the
+> scaling driver from the hardware" is actually never known, so exposing
+> it via scaling_cur_freq is not possible.
+> 
+> Moreover, because cpuinfo_cur_freq is not present at all in that case,
+> scaling_cur_freq is the only way to allow user space to get an idea
+> about the CPU current frequency.  I don't think it can be changed now
+> without confusing users.
+> 
+What's your take on leaving the scaling_cur_freq to resolve to
+arch_freq_get_on_cpu() when cpuinfo_cur_freq is not present ?
+This way nothing will change for the intel_pstate + HWP
+but it will allow using the info provided by arch_freq_get_on_cpu() for
+cpuinfo_cur_freq if one is provided and it will automatically ignore it for
+scaling_cur_freq ? Though I guess it falls under "making all confused" that you
+have described donw the line.
 
-To achieve that decoupling, one of the key steps is to not embedd any
-C types from <asm/processor.h> into task_struct.
+> > What should we do ? I wonder if we will break some userspace tools
+> > (which may have started relying on these changes).
+> 
+> We will.
+> 
+> IIUC, it is desirable to expose "the frequency of the last P-state
+> requested by the scaling driver from the hardware" via
+> scaling_cur_freq on ARM, but it is also desirable to expose an
+> approximation of the actual current CPU frequency, so the only way to
+> do that without confusing the heck out of everybody downstream would
+> be to introduce a new attribute for this purpose and document it
+> precisely.
+What would introducing new attribute mean for scaling_cur_freq on x86 then ?
+I do assume we would leave cpuinfo_cur_freq untouched without calling
+arch_freq_get_on_cpu() (as it is now). Then keeping scaling_cur_freq to actually
+use it - what would be the 3rd attribute meaning, if:
+- cpuinfo_cur_freq -> actual freq as seen by the hardware (but not the
+  counters?)
+- scaling_cur_freq -> last requested frequency and for some cases, feedback from
+  counters
+- whatever_name_we_will_come_with -> average frequency based on counters ?
+  not always available
 
-The only architecture that relies on that in a serious fashion is x86,
-via 'struct thread::fpu', and the series below attempts to resolve it
-by using a calculated &task->thread.fpu value via the x86_task_fpu()
-helper.
+ It is still bit confusing.
 
-Code generation: without CONFIG_X86_DEBUG_FPU=y we get a small reduction:
-
-   text        data        bss        dec         hex        filename
-   26475783    10439082    1740804    38655669    24dd6b5    vmlinux.before
-   26475601    10435146    1740804    38651551    24dc69f    vmlinux.after
-
-With the new debug code - which I think we'll remove soon-ish, there's an
-expected increase:
-
-   text        data        bss        dec         hex        filename
-   26476198    10439286    1740804    38656288    24dd920    vmlinux.CONFIG_X86_DEBUG_FPU.before
-   26477000    10435458    1740804    38653262    24dcd4e    vmlinux.CONFIG_X86_DEBUG_FPU.after
-
-The Git tree can be found at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/fpu
-
-Thanks,
-
-    Ingo
-
-===============>
-Ingo Molnar (3):
-  x86/fpu: Make task_struct::thread constant size
-  x86/fpu: Remove the thread::fpu pointer
-  x86/fpu: Remove init_task FPU state dependencies, add debugging warning
-
- arch/x86/include/asm/fpu/sched.h |  2 +-
- arch/x86/include/asm/processor.h | 19 ++++++++++---------
- arch/x86/kernel/fpu/context.h    |  4 ++--
- arch/x86/kernel/fpu/core.c       | 57 +++++++++++++++++++++++++++++++--------------------------
- arch/x86/kernel/fpu/init.c       | 23 +++++++++++++----------
- arch/x86/kernel/fpu/regset.c     | 22 +++++++++++-----------
- arch/x86/kernel/fpu/signal.c     | 18 +++++++++---------
- arch/x86/kernel/fpu/xstate.c     | 23 ++++++++++-------------
- arch/x86/kernel/fpu/xstate.h     |  6 +++---
- arch/x86/kernel/process.c        |  6 ++----
- arch/x86/kernel/signal.c         |  6 +++---
- arch/x86/kernel/traps.c          |  2 +-
- arch/x86/math-emu/fpu_aux.c      |  2 +-
- arch/x86/math-emu/fpu_entry.c    |  4 ++--
- arch/x86/math-emu/fpu_system.h   |  2 +-
- arch/x86/mm/extable.c            |  2 +-
- include/linux/sched.h            | 13 +++----------
- 17 files changed, 104 insertions(+), 107 deletions(-)
-
--- 
-2.43.0
-
+ ---
+ BR
+ Beata
