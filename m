@@ -1,80 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C53EDE;
-	Wed,  5 Jun 2024 14:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D8F53BE;
+	Wed,  5 Jun 2024 14:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717596110; cv=none; b=coWqj92kuFLWlf5jEglE4Y7zZ5EPfeLsoh87MeJdfCKN+2h0rAfdYYrYH0M7cmdEa3awAWI2CPIwzK7qLOOgi2U/hWqIy9mc7LnKwPrL/ifg+fqdZbyfANlrVHe7Hs8MMSKa1zF2edWJjbQiT5H4kZdevopFzFuKTWxN9NZURDA=
+	t=1717596162; cv=none; b=bNKNikUKwUG9R4UYT8wC7iABafZciS1fOD6RW6EWIYG90JPwbhmJh54yuqpppxLJrC1pScR8I4DSVePWgLTek8bnWcrMh/LeclzwVHrPffUNNzMaNHewlmUzD1sma5a3FJoCJnloRA/iE/F+D6NZhegRHSv0i2YPrTMbMrWz0AU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717596110; c=relaxed/simple;
-	bh=jriMY1eGjZZJGc7/fbBZnLvt2Ng1NGbn0bR4NnYeCJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqg7d3rTJYvccs2+PhuWrwhqiQEXva7CBJyK1/yB7+RjnDW5PuPgok9HNAlfcjF0AVl5BiuZfR4hnLFGB2wx2494txhiydUo+sMtZ/H9HsZd8OIU6xjXCAMB+7pn8CPAa9/qADfHTH4RHE0G6Ri/WVfKSzImWGweXTzCRp9Sx64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKZCc/ii; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717596162; c=relaxed/simple;
+	bh=4tC7k/l/xaI7nEusPHODhnaab9GGYBzhfIcMqHGnSBw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rHNVbpyAjtZx79G3YWoLiK46xE9+kE63H57kYoltZLG0s/Vq7ny5CFoYvOcL9pP6uuBUdftM5eZLpe8Pvu0zg6c8MJF+GF7pW2ReWUyd+Kc3ZxlGpMLpZ7D7JyfnS4aFcBaVTtIKtcSKKV9FTTuKk2kXiFODVzhFAXesPXngsi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=cXg/Qwk3; arc=none smtp.client-ip=194.87.146.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKZCc/ii"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC3DC3277B;
-	Wed,  5 Jun 2024 14:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717596109;
-	bh=jriMY1eGjZZJGc7/fbBZnLvt2Ng1NGbn0bR4NnYeCJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SKZCc/iiM6SihAawkOdZ7jQ0z8niwdvkaRmntAd44zO4nq1J5A/yYqBfCBxHcxv5C
-	 AZsGKNhFpLlUUq2uDwZgjusUxTcXRMt0G/6paETr+Ti1LQcjFMGhnuUZ068iUPhvDh
-	 KZoyRB0jsf426zCPtladva3yDG4khGSrsiHawGuyE6V5zWwULnkF/Ls/lxNI6+ACEY
-	 5zX4VGFGGgp/ZPz5a9CtcqRovDuHibOK/5WWnSzXGSkHyFOBNiXvl2H9vrHdXW49Ns
-	 qdSgPOVfVBz20VS6CP7BAymNG7zjbcqcqdJGJN4/4s2qk+8zzdK990oSrbizsYt68d
-	 agFVz79Mn3ZPw==
-Date: Wed, 5 Jun 2024 08:01:47 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pci@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: PCI: qcom: x1e80100: Make the MHI reg
- region mandatory
-Message-ID: <171759610335.2612101.16286259446773159357.robh@kernel.org>
-References: <20240605-x1e80100-pci-bindings-fix-v2-1-c465e87966fc@linaro.org>
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="cXg/Qwk3"
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by box.trvn.ru (Postfix) with ESMTPSA id 9DD8A403AB;
+	Wed,  5 Jun 2024 18:54:08 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+	t=1717595649; bh=4tC7k/l/xaI7nEusPHODhnaab9GGYBzhfIcMqHGnSBw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=cXg/Qwk3EzhoriIdpzqlP9fr/j5w5TSKi2y+BLTN05Yb1R66oancKd2aVtZfLAPNE
+	 RIh+pmYIZzlpds+8Y4nnlJbGEJ9kKmIk9/5YeCznbE3CMbJTFe/Q4dtikUaeBfFo2A
+	 2A/DB/m91qECmc99dZRBM2P0H5+wTgLnLBSwuQ7D/mtixWENP1lADWn1r53wK21Zda
+	 LlNOY/nP9e0CoC/tHxQmOGNf4BDsDtsOg7SYMhvZXEcIn3A56URDThQw3FPQEg8TRY
+	 eW8EGidml8b/3lsFFsNblFnR9UoYfJiHi+jGFwxVHpJ4BmmZyBg/1Sjy839Snm+0GA
+	 /4x29iZnZG4rg==
+From: Nikita Travkin <nikita@trvn.ru>
+Date: Wed, 05 Jun 2024 18:53:27 +0500
+Subject: [PATCH] power: supply: rt5033: Bring back i2c_set_clientdata
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605-x1e80100-pci-bindings-fix-v2-1-c465e87966fc@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-rt5033-null-clientdata-v1-1-558d710eeb4d@trvn.ru>
+X-B4-Tracking: v=1; b=H4sIANZtYGYC/x3MwQqFIBBA0V+JWb+BKbWiX3m0kJxqQCzUIoj+P
+ Wl5FvfekDgKJxiqGyKfkmQLBfWvgmm1YWEUVwwNNZpaMhizIaUwHN7j5IVDdjZbVJ1Wru2dIW2
+ hxHvkWa5v/B+f5wXkdU1kaAAAAA==
+To: Sebastian Reichel <sre@kernel.org>, Andrew Davis <afd@ti.com>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Raymond Hackley <raymondhackley@protonmail.com>, 
+ Nikita Travkin <nikita@trvn.ru>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1247; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=4tC7k/l/xaI7nEusPHODhnaab9GGYBzhfIcMqHGnSBw=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBmYG39B7ZCwIhVYTdCPuf4mGkF+mxAOWBxH+Xz5
+ zozxiJIb0SJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZmBt/QAKCRBDHOzuKBm/
+ dY2VD/41zDgPzecjjbDCgZ5DKznW8U4I9X1N6D5K3rzsr+HvrUS5xcLURkwj57tgGHSrN0u6mLa
+ GXMzKqPPrOukvnPoflzrDgEUy18eSOYJBELjQeRL+MEJkZRfnKRr7F4E9JaL5bgrCEwpJLFNIaS
+ GDa7iS1QT7klCd9kmh0unlIsvgDMlL5q3us/VwciXD6DaqJFirU/psUcU+LN3tDtMu/W+niGwWz
+ htRoNwP4oS7Gs5g8NFc/CMxGHmYglsDFIwwBo7Ksl31njzyC7UWVxKDvKo1k6NU+diuF4hysVI2
+ rZhXk2y4/0EfIMrAdN0YEpq0JoJzqotCXhDheeDhnOAsmWoWDhepGJYP3wxEKGwxM06O1IrTipf
+ LW+/ZpS+bLlId89jNrNeC0DbiWF0LyIgMfXCZxilEIiZHYpjhTJFDPqpAFWRaRoCWT9oLquwxi3
+ SD2ir2YTniNnQAPLAf6ynZiWu6dDzylzOAor4EoXdq0mWUd6Atv1bshu6Cx6iBiKWZMMp97oVau
+ xYyTflXOd32lzHyadKJLspIlPwJXDiRf0alXW3lJ4scgtDx1TYCtSUOAvZjqy1tLX9a2CiCGF/n
+ hXUBokUhtb6h33M+jG7hWjaFfh2OHF4lHez8r2jPkMLQRv9IjnjaHHmfHR17SXMzO17WW44NJQh
+ EUm5pB2cbPckL7g==
+X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
+ fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
+Commit 3a93da231c12 ("power: supply: rt5033: Use devm_power_supply_register() helper")
+reworked the driver to use devm. While at it, the i2c_set_clientdata
+was dropped along with the remove callback. Unfortunately other parts
+of the driver also rely on i2c clientdata so this causes kernel oops.
 
-On Wed, 05 Jun 2024 11:19:01 +0300, Abel Vesa wrote:
-> All PCIe controllers found on X1E80100 have MHI register region.
-> So change the schema to reflect that.
-> 
-> Fixes: 692eadd51698 ("dt-bindings: PCI: qcom: Document the X1E80100 PCIe Controller")
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
-> Note that this patch will trigger an MHI reg region
-> warning until the following patch will also be merged:
-> 
-> https://lore.kernel.org/all/20240604-x1e80100-dts-fixes-pcie6a-v2-1-0b4d8c6256e5@linaro.org/
-> ---
-> Changes in v2:
-> - Dropped the vddpe supply change as that will have to be reworked
->   in a different way, maybe on multiple platforms.
-> - Added SoC name to the subject line
-> - Link to v1: https://lore.kernel.org/r/20240604-x1e80100-pci-bindings-fix-v1-1-f4e20251b3d0@linaro.org
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
+Bring the call back to fix the driver.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Fixes: 3a93da231c12 ("power: supply: rt5033: Use devm_power_supply_register() helper")
+Tested-by: Raymond Hackley <raymondhackley@protonmail.com>
+Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+---
+ drivers/power/supply/rt5033_battery.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/power/supply/rt5033_battery.c b/drivers/power/supply/rt5033_battery.c
+index 32eafe2c00af..7a27b262fb84 100644
+--- a/drivers/power/supply/rt5033_battery.c
++++ b/drivers/power/supply/rt5033_battery.c
+@@ -159,6 +159,7 @@ static int rt5033_battery_probe(struct i2c_client *client)
+ 		return -EINVAL;
+ 	}
+ 
++	i2c_set_clientdata(client, battery);
+ 	psy_cfg.of_node = client->dev.of_node;
+ 	psy_cfg.drv_data = battery;
+ 
+
+---
+base-commit: 234cb065ad82915ff8d06ce01e01c3e640b674d2
+change-id: 20240605-rt5033-null-clientdata-3743d68d504a
+
+Best regards,
+-- 
+Nikita Travkin <nikita@trvn.ru>
 
