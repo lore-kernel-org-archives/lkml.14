@@ -1,193 +1,115 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAF818C34D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FCA18C33A;
+	Wed,  5 Jun 2024 07:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717573398; cv=none; b=hkzGfTq/xg2ra3NPHy7iRoARqYkEuudoibsiUGWhJ9fI92TQV8M3h3uZVBLBetUfiuzH8oPoZkgoJWSn1BfKuZ7cA+rMvggEkGrrda5xaWN3lZ1/jb8cwlfOymQ80L1BcDF2ak0cojjsWYgl9HwFkg8w8dKJiY11ePGWe09YDD8=
+	t=1717573411; cv=none; b=hV8NLAuXXN/MxWE0V7t00cvamOM5VcZfeFYZaoBUX/fvc4d6ZYLGYDMAHOl05iJikpaWPArngaJpIW20yom9XCI2tjnPsT0XpyCHHmHDHCS7X86rbDncRG1OJbcnZlWvrF1QauzsoIdBGS0pQ1tzcrYqyV27DyJfhJk8PfL+mhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717573398; c=relaxed/simple;
-	bh=l9sh3+D2x2FynAmR7WZMbPzPELRCyU/6nGYVYGh1LAE=;
+	s=arc-20240116; t=1717573411; c=relaxed/simple;
+	bh=+FTWFdpSh0xb+XUZG7stTNYKFWL76P/rABOHxgYBS+c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N6kR0e1t5fkEtPC1qcfx3RYCPuh2hF4ah4R3cmKURtDhL9e1uDpAPxaKowagW6tD2fwznROOGD0b2lLXEoD6YJvaS0U6PZ43zGRNpX+33aN4Xx5H+tfJx2ojza8+20b1cGGPo3jlJGT+bERk3XgLIumAlawMxLKmbpclhS4pSoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HTV5YG13; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HTV5YG13"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2ea9386cde0so65802591fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717573393; x=1718178193; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iyjciw8omyqWPArx3sDq7VVjOnmIsURoasHM7cx8Qy0=;
-        b=HTV5YG13McBHbauqZYCInJNrmgXetedB/PCKdKjY1kwXtdxdhowEOQgO0OOL9hlmjr
-         4+pGWrjna1UZBZNtSeq7WeEXK7B7yTitBmw6kECgsoTbz+cQQW6ZCBYF68d1qLG6CZZs
-         jO75kBaem+6XdTzgXNDI1X6BXzrELrACMU9qrgvheHimU2tTxX8sT90uoRoXxlteL+4i
-         n8hcmdH7ucs8Ynob6uMB3S+C4fxMie6q4C6OUDUfUM/tlaMd+JzSVJw4tg3NYmK+Lea8
-         +/UqJAX/37Gf9VTavnoRp+j3OI2b8/zQ0h7IGLmR11cHRskxd6FyuJOjRxabrsKL74eq
-         3daQ==
+	 To:Cc:Content-Type; b=ZpdJ2PkTiTKz+CfmMiAVdTLna58yXYcIDWulQppJQv++wZgTCmydzNw9erlpbGgRJnmkEPhyqceynmCwNywdmh6/hxqH+8/upUeujx+/p6+wGQhuL+VIW12InAtdYKa9Rga8kju65yHm8anOKBnvn1a7QSl/N/R+g70l20QM4vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-62a2424ec39so23063797b3.1;
+        Wed, 05 Jun 2024 00:43:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717573393; x=1718178193;
+        d=1e100.net; s=20230601; t=1717573408; x=1718178208;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iyjciw8omyqWPArx3sDq7VVjOnmIsURoasHM7cx8Qy0=;
-        b=e9dMR7ttBTL+H3x4/hV7tbm0cNb/9xM+Q/bczTvDFd3xmo6A0VPF1q0u7pmIkhOrFN
-         p1uiJVpM8/x0D5DZ6VDQ7KaQm7CuyXpxCQQAaG5BRl/PZwvbRQENfZIbTmWJrtkZIlar
-         4gFlI89vKxdoXQh7srKirVqnlmK8sgNgUFrJWTs9mOtihE8EcHDLOSvwfSt7IcHbL2o3
-         5pQTHcOkw6qL/rBh5BL5pn7LRmM3eWZm6bnhnD8t8raC8oM7WI1mHKDtEPUV6mf8DTLW
-         Ne3A3O7bv6YtQl75Y8BxbSs18Cy/vsaNo1gGh8VlS7a9lkpANe8cKmA5eI8IIIaDIxCp
-         tNDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVt6GdqlT3xZqfqB+npsb4+Ykwt1pZmxiD8YmWgrrFN0LGummdOHYpyna0DJVdfNNfsgNWWBEaewj+VEX7Gnf3QtMxyj0kzUrvBaB0Z
-X-Gm-Message-State: AOJu0YxlaPYYpPd54/J6P3e/TDOtPXSZPAdBKdPaluLSmCDzOuAjk6ee
-	Leoy0p3RyyuO7eD1mvBVdumoU7yLE4Q71HDhXDGZ1/twjWH1yEgQlsWgFBEri06CZnKLpwV/flG
-	euvGzyTwZWvWFn4EuCwjd1caMTArM1fDIlNGIKg==
-X-Google-Smtp-Source: AGHT+IFiHKKNVWneGGr50WzFkObsQ9oUM8GSCkWSrf/BaWFo5gFPEh8dKnIHSJrU2YjGwU9b3MU7THwqkd1DB3CAvSE=
-X-Received: by 2002:a2e:2416:0:b0:2e2:72a7:843c with SMTP id
- 38308e7fff4ca-2eac7a54169mr9164901fa.36.1717573393470; Wed, 05 Jun 2024
- 00:43:13 -0700 (PDT)
+        bh=7vQZDoJfLyMtGBiDy8dB7EZ7YY/MgJ790HADWXwqrJ4=;
+        b=omFrj+gxFV6/lgFZmEE/Qqjw2O0/9R45yvyEL8uW45823EMAxV6jdJoceJeV8O+xkC
+         LzCx4n8ahfMPLSmVMw2fFNOobwJfi6+wtwGYBE/FQ2hhw7g+QWlfL56jNs7bXpqUfqvZ
+         dojR5FhNrfaBQcL/MvSCqSO5yREb+oy/3s/O2d3NrfxMsq7U1H8D+smZkKFnC5h0s/4A
+         b5bNE/VLsDqPs8OsB+RPhGTaS+bf5w508kn/3r7QdEFy44k/V/PlRWMDLp5LVh+JK0ef
+         5D0yGtV0z+1dH9YTGtxJSd5vp8crguG7UrOgchpioqfQt6nQCA7ufjY0BTJ53FthkHBO
+         U0jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXk+QJ0H1zDcboI1Uu4gCpfrXG5L+75c16Q3aimwm9vnRdxZii//asrrqkRShANpV6l+w0tq7kfR7N7JRHedvMgnz4bTzTZ9FzwpqYjW01URByShlwJGcQICrw9EHGJESQ1AfcRaYbIJpC/cWI6zswMpk6o8+aAsD1gS5IJHwk8urzYPQ3xq5QHPdrx
+X-Gm-Message-State: AOJu0Yxa87O52+fq4UkNY8cLEZQU8aBZ/24F9WbJVL3U67qlKU6dwHnq
+	fZ4zF1hDhCJWqjaloraL86KRFTKUZWahyihHyEsLFhBkYvVwme3LmzjlKfd2
+X-Google-Smtp-Source: AGHT+IGSjnZpyNA9CITWEWP+VC3rlCmEwOTurbJt+tvwrK5/IJdcLgpF/kgQ002pw7ZzBCke4pfXgg==
+X-Received: by 2002:a81:fe02:0:b0:61d:fcf7:3377 with SMTP id 00721157ae682-62cbb5ce7f6mr16278657b3.44.1717573408520;
+        Wed, 05 Jun 2024 00:43:28 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c766b5410sm21438697b3.123.2024.06.05.00.43.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 00:43:28 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-df78b040314so2055842276.0;
+        Wed, 05 Jun 2024 00:43:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXx+3svPW7PRZDHDPHFjs6L0Ss7vUMgL/DVUDbYfJGsp/uUWMBIltQSy+Fzlm3qKYyJjSD3gWMEVjJSIs9QyV2O4/0qhUp/phkqJPRwyQUnDF8oYuf5H87xDCDmxvYn6M0p5S7ptrwQ8O3cNZT7myyXta1eS2Fq5CT9rXNc/cL5taG+H19rIGnHXQA6
+X-Received: by 2002:a25:2e02:0:b0:dc6:ff32:aae2 with SMTP id
+ 3f1490d57ef6-dfacad0d872mr1549271276.63.1717573408106; Wed, 05 Jun 2024
+ 00:43:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528-pwrseq-v8-0-d354d52b763c@linaro.org> <20240528-pwrseq-v8-10-d354d52b763c@linaro.org>
- <20240605065245.GB3452034@maili.marvell.com>
-In-Reply-To: <20240605065245.GB3452034@maili.marvell.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 5 Jun 2024 09:43:02 +0200
-Message-ID: <CAMRc=MfyCJgOCBSh7AY4jEujWXGqZBB7Tnkq0VRrAKKCcJ9hAQ@mail.gmail.com>
-Subject: Re: [PATCH v8 10/17] power: sequencing: implement the pwrseq core
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
-	Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Elliot Berman <quic_eberman@quicinc.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	Jeff Johnson <quic_jjohnson@quicinc.com>, ath12k@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
-	Amit Pundir <amit.pundir@linaro.org>
+References: <20240604173710.534132-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240604173710.534132-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240604173710.534132-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Jun 2024 09:43:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdX+6_iNQq9x42tmTTEx1DNcT9pEbpMy=UcmSgZtoFgS8Q@mail.gmail.com>
+Message-ID: <CAMuHMdX+6_iNQq9x42tmTTEx1DNcT9pEbpMy=UcmSgZtoFgS8Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] irqchip/renesas-rzg2l: Add support for RZ/Five SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 5, 2024 at 8:52=E2=80=AFAM Ratheesh Kannoth <rkannoth@marvell.c=
-om> wrote:
+Hi Prabhakar,
+
+On Tue, Jun 4, 2024 at 7:37=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> On 2024-05-29 at 00:33:18, Bartosz Golaszewski (brgl@bgdev.pl) wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Implement the power sequencing subsystem allowing devices to share
-> > complex powering-up and down procedures. It's split into the consumer
-> > and provider parts but does not implement any new DT bindings so that
-> > the actual power sequencing is never revealed in the DT representation.
-> >
-> > Tested-by: Amit Pundir <amit.pundir@linaro.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> > +
-> > +static struct pwrseq_unit_dep *pwrseq_unit_dep_new(struct pwrseq_unit =
-*unit)
-> nit. pwrseq_unit_dep_alloc/create rhymes well with pwrseq_unit_dep_free()=
-,
-
-So what?
-
-> > +static void pwrseq_unit_free_deps(struct list_head *list)
-> > +{
-> > +     struct pwrseq_unit_dep *dep, *next;
-> > +
-> > +     list_for_each_entry_safe(dep, next, list, list) {
-> no need of 'locks' to protect against simutaneous 'add' ?
-
-No, this only happens once during release.
-
-> > +
-> > +static int pwrseq_unit_setup_deps(const struct pwrseq_unit_data **data=
-,
-> > +                               struct list_head *dep_list,
-> > +                               struct list_head *unit_list,
-> > +                               struct radix_tree_root *processed_units=
-)
-> > +{
-> > +     const struct pwrseq_unit_data *pos;
-> > +     struct pwrseq_unit_dep *dep;
-> > +     struct pwrseq_unit *unit;
-> > +     int i;
-> > +
-> > +     for (i =3D 0; data[i]; i++) {
-> Can we add range for i ? just depending on data[i] to be zero looks to be=
- risky.
+> The IX45 block has additional mask registers (NMSK/IMSK/TMSK) compared
+> to the RZ/G2L (family) SoC.
 >
+> A new rzfive_irqc_chip irq_chip is introduced for RZ/Five, where function
+> pointers for irq_(un)mask and irq_(dis/en)able handle the (un)masking
+> of the interrupts. The irq_chip pointer is now passed as an init callback
+> and stored in the priv pointer to differentiate between RZ/G2L and RZ/Fiv=
+e.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Hi Geert, I've restored your RB tag with v5 change (hope that's OK)
 
-Why? It's perfectly normal to expect users to end the array with a
-NULL pointer. The docs say these arrays must be NULL-terminated.
+Thanks, LGTM!
 
-> > +             pos =3D data[i];
-> > +
-> > +             unit =3D pwrseq_unit_setup(pos, unit_list, processed_unit=
-s);
-> > +             if (IS_ERR(unit))
-> > +                     return PTR_ERR(unit);
-> > +
-> > +             dep =3D pwrseq_unit_dep_new(unit);
-> > +             if (!dep) {
-> > +                     pwrseq_unit_decref(unit);
-> This frees only one 'unit'. is there any chance for multiple 'unit', then=
- better clean
-> up here ?
+>
+> Cheers, Prabhakar
+>
+> v4->v5
+> - Reversed the operations in rzfive_irqc_irq_disable().
 
-The references to those will be dropped in pwrseq_release().
+I assume you will send a patch to fix the order in
+rzg2l_irqc_irq_disable(), too?
 
-> > +
-> > +     /*
-> > +      * From this point onwards the device's release() callback is
-> > +      * responsible for freeing resources.
-> > +      */
-> > +     device_initialize(&pwrseq->dev);
-> > +
-> > +     ret =3D dev_set_name(&pwrseq->dev, "pwrseq.%d", pwrseq->id);
-> > +     if (ret)
-> > +             goto err_put_pwrseq;
-> > +
-> > +     pwrseq->owner =3D config->owner ?: THIS_MODULE;
-> > +     pwrseq->match =3D config->match;
-> > +
-> > +     init_rwsem(&pwrseq->rw_lock);
-> > +     mutex_init(&pwrseq->state_lock);
-> > +     INIT_LIST_HEAD(&pwrseq->targets);
-> > +     INIT_LIST_HEAD(&pwrseq->units);
-> > +
-> > +     ret =3D pwrseq_setup_targets(config->targets, pwrseq);
-> > +     if (ret)
-> > +             goto err_put_pwrseq;
-> > +
-> > +     scoped_guard(rwsem_write, &pwrseq_sem) {
-> > +             ret =3D device_add(&pwrseq->dev);
-> > +             if (ret)
-> > +                     goto err_put_pwrseq;
-> > +     }
-> > +
-> > +     return pwrseq;
-> > +
-> > +err_put_pwrseq:
-> no need to kfree(pwrseq) ?
+"git grep -wW irq_chip_[a-z]*able_parent" reveals a few more offenders...
 
-It's literally put on the next line?
+Gr{oetje,eeting}s,
 
-Bart
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
