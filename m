@@ -1,103 +1,110 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE3C1953AD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9399190050;
+	Wed,  5 Jun 2024 11:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588245; cv=none; b=IR47cPiKkfhIycrCqjE9r8jJwUpFgyIayKi65r59hxUEOupgkY1Xt68RQNFO3WNied+RnlrAXcuL28aqflLawa3MROwL1Vlc3BcHtheBH7u73NhkCrpnpWOk1vxd3nFOAjS3tud3PcaN5TNBzyOvbpw13N7K9BUGKregaKmd1KA=
+	t=1717588263; cv=none; b=U6FgOpqJu1CND+XUEBXAJsRrJ5fmxFEU/vsPGyeAni6cKW8K4wCjrIlH7znoEQsBKo2U3QKLI1961m0Lsydl7HhZognmJqvQSjgtFuskkz5AzbZ50IEh7+zJRAEGRN4P1+zI5nDFJ2oyyzD0w6obOQAOxRp/BW31DNGfeGCcx0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588245; c=relaxed/simple;
-	bh=SntghWWYXHpvUMrfmeO17O9aa2fOgBu9KzWTKtKy24s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FQVE69DwM19Y//XB2M/aQJc7FsiaGJ7fo7XOKtdc3jvb5FP8DPp43At8aXITl+C8mjx6yTH6JYkGy8BlvfCKuawhR6CkVCPSEQZG1zCOSso5tceuN+0fINKDra5Pr3frU1RbKdmtGKrAhWOhI5bBlRPW7aPeIDC6B10lHr7A8+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=QcTx6qP1; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1717588263; c=relaxed/simple;
+	bh=JJbEb6Be+uGFHcPPviUGo9V6PlBpgcCgy8HtnK62XBI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i2c+Kskl/vZXKX4a6sPiopPTHPp2ZYtzX+LxkmHkeZXV86hF+KtBYTrCF5j79I/SngmBstypfFQ7twU9ibXGOvvmJ+s2N0nVWMO/Cb+xOAI6xKQ0uEmtPa0wPxr9GVa24TkoM3A2YJU3i440+OY3zjdtzyTSNAawrYtGicgZVzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+wO1efP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="QcTx6qP1"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a691bbb7031so402590866b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 04:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1717588242; x=1718193042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=si8jm3GzWRqXx1IokxC0CnOeeKfkWKdxlqw96jlz8gE=;
-        b=QcTx6qP1n4/ppMGehliHrJVBy2bqfvrhK0l+0CKw8gpZUjZ79T6pGYEp7XYKmI3SPZ
-         M/Un12dljeP9EJrEp8exDl54B3MlwZ09NDCtqxGxgE+Ka32MruPLSNzlsix+v6kks3kO
-         k9HvIZWXiP5b6hFFrEt//Fyub5xTyAQy6ejGM2GfMORracV7TSF7hNDqPApECOylNNXE
-         17XsHmynaXDRxyXyW3KR3hm6ex+/tqMw4XXnBbUphx/74WZM2Xi9pky76gBIkKgwR0S3
-         vU1N58X0FLoVgXii3yWQAl9xc+sCJo0x8UbPhKauSqWz/20rBwWwtbpM9e3NnraFafMz
-         vOjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717588242; x=1718193042;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=si8jm3GzWRqXx1IokxC0CnOeeKfkWKdxlqw96jlz8gE=;
-        b=b5EcywTnB/6aWcu1Dvfwcb53gTIQE+kZYE2ASUKI4Z+YYrmy6j2UXZHC/4dLzq+z1b
-         zpgl+G1IOfEUXNF0xyv/A3QYfokoDUEX3jRqG9umPv6C1UHPS5Iu5BfZ7B691bWoZG5+
-         /2PBwgDM3+J/g9OhsWdIxFYWja5+xdKVAnwrkZYfB2Ylulx7Nlnf4xWSt/4YlBqLtW9Q
-         2O1SWOK6c+64ZMSdURtkg9ZMXdLpKoddC2zeCDOXYQoI0vy29F5qv14Au2hKD7evsedM
-         lAJaVsIczWN8nG4+RVwEuN2NErGcSPJgjlcvxW54yO33M0Huno3JqnE0d0RJ0C3GepCS
-         R/AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVChm9tx4oGVPuwx/FHEH4+svwmMdes4PmCgeXmVdJS9owcl+NSBzFOyXHQzsDz3AceATp94NzoyDjz/GdkH0Mc5F//RKwj0pzkY4gd
-X-Gm-Message-State: AOJu0YzEFlTgSbUVyB5baN19Ij0/mv1wBnpXoiGLSGehRip1irCOyN3p
-	Ae4QQu/ta//Sw1TcsiZPHC8qi/u2PORYoeTPfw8W6OlWd0oMk1P7Qf8fB1HuRFU=
-X-Google-Smtp-Source: AGHT+IF5ti3wzThIx0McGMRIE3AiHKcPjjsf3XWSmVpmGVH/jBbxJzXHej+rEPhsvqWN+HUoB9bqsQ==
-X-Received: by 2002:a17:907:770c:b0:a67:7649:3c3c with SMTP id a640c23a62f3a-a69a000e966mr187050066b.56.1717588242051;
-        Wed, 05 Jun 2024 04:50:42 -0700 (PDT)
-Received: from debian.fritz.box. (aftr-82-135-80-164.dynamic.mnet-online.de. [82.135.80.164])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68ed879eacsm533329966b.99.2024.06.05.04.50.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 04:50:41 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] drm/managed: Simplify if condition
-Date: Wed,  5 Jun 2024 13:50:01 +0200
-Message-Id: <20240605115000.83102-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+wO1efP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5C3C3277B;
+	Wed,  5 Jun 2024 11:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717588263;
+	bh=JJbEb6Be+uGFHcPPviUGo9V6PlBpgcCgy8HtnK62XBI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=o+wO1efPfxvK/Uh8oxtOIQcboHQZT4ExRolhdUTiWfMdE7816GfxhYkdlcfpdEUUj
+	 fYoTHPYV87Uah2g8un0yfa8p8W0imo/CSCgOcZtE8Je/EZU8FvhHAddNt925Hfoqwl
+	 CwfgROB4wYPL/mfeS4vjBWDvK23uGcuiYr7of7OBhkvzRoEh2LSJajSdSwKFOn5no3
+	 lBqJnmKDykorJVj8JBB60sro5wRh72GImfLFfo2jxE3Qh2XWJ0bVX1deiXjG599wb2
+	 REqEZTX8BYZQxyhqM1UmQNoUK0k0qJ14ybjbddln/7//oRA73mKYRGofdh7IDHjG++
+	 wHAorx9WSs3qA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	laurent.pinchart@ideasonboard.com,
+	dan.scally@ideasonboard.com,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 01/24] usb: gadget: uvc: configfs: ensure guid to be valid before set
+Date: Wed,  5 Jun 2024 07:50:11 -0400
+Message-ID: <20240605115101.2962372-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.12
 Content-Transfer-Encoding: 8bit
 
-The if condition !A || A && B can be simplified to !A || B.
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-Fixes the following Coccinelle/coccicheck warning reported by
-excluded_middle.cocci:
+[ Upstream commit f7a7f80ccc8df017507e2b1e1dd652361374d25b ]
 
-	WARNING !A || A && B is equivalent to !A || B
+When setting the guid via configfs it is possible to test if
+its value is one of the kernel supported ones by calling
+uvc_format_by_guid on it. If the result is NULL, we know the
+guid is unsupported and can be ignored.
 
-Compile-tested only.
-
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Link: https://lore.kernel.org/r/20240221-uvc-gadget-configfs-guid-v1-1-f0678ca62ebb@pengutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_managed.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/function/uvc_configfs.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_managed.c b/drivers/gpu/drm/drm_managed.c
-index 7646f67bda4e..79ce86a5bd67 100644
---- a/drivers/gpu/drm/drm_managed.c
-+++ b/drivers/gpu/drm/drm_managed.c
-@@ -197,7 +197,7 @@ void drmm_release_action(struct drm_device *dev,
- 	spin_lock_irqsave(&dev->managed.lock, flags);
- 	list_for_each_entry_reverse(dr, &dev->managed.resources, node.entry) {
- 		if (dr->node.release == action) {
--			if (!data || (data && *(void **)dr->data == data)) {
-+			if (!data || *(void **)dr->data == data) {
- 				dr_match = dr;
- 				del_dr(dev, dr_match);
- 				break;
+diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
+index a4377df612f51..6fac696ea8463 100644
+--- a/drivers/usb/gadget/function/uvc_configfs.c
++++ b/drivers/usb/gadget/function/uvc_configfs.c
+@@ -13,6 +13,7 @@
+ #include "uvc_configfs.h"
+ 
+ #include <linux/sort.h>
++#include <linux/usb/uvc.h>
+ #include <linux/usb/video.h>
+ 
+ /* -----------------------------------------------------------------------------
+@@ -2260,6 +2261,8 @@ static ssize_t uvcg_uncompressed_guid_format_store(struct config_item *item,
+ 	struct f_uvc_opts *opts;
+ 	struct config_item *opts_item;
+ 	struct mutex *su_mutex = &ch->fmt.group.cg_subsys->su_mutex;
++	const struct uvc_format_desc *format;
++	u8 tmpguidFormat[sizeof(ch->desc.guidFormat)];
+ 	int ret;
+ 
+ 	mutex_lock(su_mutex); /* for navigating configfs hierarchy */
+@@ -2273,7 +2276,16 @@ static ssize_t uvcg_uncompressed_guid_format_store(struct config_item *item,
+ 		goto end;
+ 	}
+ 
+-	memcpy(ch->desc.guidFormat, page,
++	memcpy(tmpguidFormat, page,
++	       min(sizeof(tmpguidFormat), len));
++
++	format = uvc_format_by_guid(tmpguidFormat);
++	if (!format) {
++		ret = -EINVAL;
++		goto end;
++	}
++
++	memcpy(ch->desc.guidFormat, tmpguidFormat,
+ 	       min(sizeof(ch->desc.guidFormat), len));
+ 	ret = sizeof(ch->desc.guidFormat);
+ 
 -- 
-2.39.2
+2.43.0
 
