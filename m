@@ -1,105 +1,116 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6060E1586F1
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 20:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96720158875;
+	Wed,  5 Jun 2024 20:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717618497; cv=none; b=R3Ai6YhLBxiyqRFl95aaHuxaozu0UNLb8IKTSaUFuRVpDMDEJnDGtRGOaJSw+PM38ikJRCUMdgYKdZSnJPb0C+UfxDR5/nsNkXjFOZ0a9/MaU2BOEkgtM/7TkwEg7Z5bwDo3NlsUJb2nRTVeC1EaWxEYVzRaHPtqagRhBAj25So=
+	t=1717618536; cv=none; b=Z9dVlmBtMJO9c2N1aQyRN/qGkWVZArTfgeJ2dBsr1/d3k1ExYORnpL8l2qrDqko3qz+5JS4t6lfieitTY78K2m/89ejNwlXtSUHjp2lZnn4oTdw32On32bYqDt6KVNrUuo5sq5nggCMR8HmzmgemA0RYAeiZCpdBJivVF//NC5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717618497; c=relaxed/simple;
-	bh=MJpZTQzGpoT56odaKR7gLwW9Mb39tmJgeXmBqYhefKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SswmRcBU5onVmvJi/DPBBrrrpGE8uFp71ZkT7U5wpn1WT2aAVDHFqnm6QmGrmMNADKFkt6GkRJXpBFTbx360rWu2J66ljY2YrcKaJkVFHay4gxFXQ2hE6h65SdMQMxI0EHKNJm1KrBmts53mBVo1FOfVQ4D5E8B+YdGry/yUR2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V4qtiawH; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1717618536; c=relaxed/simple;
+	bh=zxD1cwFWyYIiwsBdznmwI88r68Qo758+nAqPtOAaj9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EzP6P8vpbOPZlMnJh+bFOByWNeDUChSn8QTYqJugp3IZ1zqwxoXSwDf/lcpI+p2wCba0Y8P7EACNk2D5mIFhP1IN3hZayioMTPFS/vfVAbBaMGB+VigZ4oK/KgNB6WXtStteSHeVareRlh9G8JaXVj3ZbmFGpf7AlmCqOd/X6MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=OwFWNGlh reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V4qtiawH"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8BCA240E0177;
-	Wed,  5 Jun 2024 20:14:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 8zifVUZdnrvr; Wed,  5 Jun 2024 20:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717618488; bh=qZG3f/DmbJHa7xvgS2GeAG2D5DGmpu+ILLLLB6UEuR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V4qtiawH2MYeOTIyka2HhiqpEQ+lB3CFYPtNRKcpHzU/RDvOw/XNmRxkzDndptqSV
-	 Qs9mArBgjw/IFCrKmtUZyCCuX3UErjmfR8qMCaffGEHdYKDGd49sy5GgoCdonecEIZ
-	 DuoejzzWW4AHjQaYPEPzWke4YeahLqyTcYz7VECSLJdSClODpi9Y7VI2hmzKVwkCKZ
-	 i7SC42+21K5NfMJsEl6n/B+HgDzL0hH2WlZ7j8fsb92RdbhrAi5cSLBCHlKqEhMAC2
-	 j0l4IxoxAigb9mrsc9AsdpEjALw8ENQKQPXUKXWeUOWNyG4qq/FCjMTFPS3gzp5hEq
-	 Lz8nDpS6ADk6Bs/wjlTsc+uteKumWWaljQ1sDtFkRO8Jg0ZI8/srdNLxRybzCOzukz
-	 Yri5q7Lc3oLN3yrAiQGA2lrsAJR+SRn0L2seHkhWSGzq1SA2xT+QO5Gt5r/mcSrWTN
-	 D/dUp4Wtylc3+i6I3nISnzmKhX/IigvhLZ+mBW6lqFoTgTS7Agqif+JZ+dDVYxe0ET
-	 RAv72qvNA1GkyrmYpdoEOQZjqU5dVj/JxMhYuWnDSBBQ8x9TpxilYemPu4v/r4ZXJw
-	 wW1irkVmMk0XT4leNy7sAec1uJ5n2SKSA3vx0R939WXMoVh2skr6SlFG2MHnl/1+xP
-	 Meqs6haSXEfuBHXivleOsbzU=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="OwFWNGlh"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.1.0)
+ id 54c4fb9e1115c09a; Wed, 5 Jun 2024 21:15:29 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 52C6440E016A;
-	Wed,  5 Jun 2024 20:14:21 +0000 (UTC)
-Date: Wed, 5 Jun 2024 22:14:15 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] x86/boot/compressed: Skip Video Memory access in
- Decompressor for SEV-ES/SNP.
-Message-ID: <20240605201415.GZZmDHF9-lThZ6XQOz@fat_crate.local>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com>
- <75a313a44bfaf3f97027393665d625be2f881e66.1717111180.git.ashish.kalra@amd.com>
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 3FD77D503F3;
+	Wed,  5 Jun 2024 21:15:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1717614928;
+	bh=zxD1cwFWyYIiwsBdznmwI88r68Qo758+nAqPtOAaj9s=;
+	h=From:To:Cc:Subject:Date;
+	b=OwFWNGlhDNnwJ8Gkk+PMkrpaaukYQm1FN/qCMHbEyNAMbb92BAQgfi6+JXWHxiMB8
+	 yj0FDzGSfK6zUoLcT9j/GygxUzOpHw6PVDFeufjSoXQKLYd5LtvyozD9ghn2F7e62p
+	 G/H6l5LiIH8CtQ8vk/UY62UyzD7znJTfHeqRnhTAZiGLkMlsXw+/lpnAowymYbv4cu
+	 GKKT4odam/PFALihFWrbUHF9PxNY2Nq5A6YHFNRUkKevQVFKOOmCHylpliUJOXRTGo
+	 ulgj09rwvhGDdrBitVWTgDQK4Z8DNLpcLXUiK9ctkbmdaXEOi8/sEZvAx6yPlY+QOf
+	 OelU0Sasewnug==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: Tibor Billes <tbilles@gmx.com>, Doug Smythies <dsmythies@telus.net>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>
+Subject:
+ [PATCH v1] thermal: ACPI: Invalidate trip points with temperature of 0 or
+ below
+Date: Wed, 05 Jun 2024 21:15:10 +0200
+Message-ID: <5784853.DvuYhMxLoT@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <75a313a44bfaf3f97027393665d625be2f881e66.1717111180.git.ashish.kalra@amd.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdeliedgudefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqedpnhgspghrtghpthhtohepledprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehtsghilhhlvghssehgmhigrdgtohhmpdhrtghpthhtohepughsmhihthhhihgvshesthgvlhhushdrnhgvthdprhgtphhtthhopehlihhnuhigqdgrtghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhg
+X-DCC--Metrics: v370.home.net.pl 1024; Body=9 Fuz1=9 Fuz2=9
 
-On Thu, May 30, 2024 at 11:37:14PM +0000, Ashish Kalra wrote:
-> -	lines = boot_params_ptr->screen_info.orig_video_lines;
-> -	cols = boot_params_ptr->screen_info.orig_video_cols;
-> +	if (!(sev_status & MSR_AMD64_SEV_ES_ENABLED)) {
-> +		lines = boot_params_ptr->screen_info.orig_video_lines;
-> +		cols = boot_params_ptr->screen_info.orig_video_cols;
-> +	}
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-By now I get an allergic reaction from this sprinkling of "if sev..."
-everywhere in the code.
+It is reported that commit 950210887670 ("thermal: core: Drop
+trips_disabled bitmask") causes the maximum frequency of CPUs to drop
+further down with every system sleep-wake cycle on Intel Core i7-4710HQ.
 
->  	init_default_io_ops();
+This turns out to be due to a trip point whose temperature is equal to 0
+degrees Celsius which is acted on every time the system wakes from sleep.
 
-<--- right here there's a call to
+Before commit 950210887670 this trip point would be disabled wia the
+trips_disabled bitmask, but now it is treated as a valid one.
 
-	early_tdx_detect();
+Since ACPI thermal control is generally about protection against
+overheating, trip points with temperature of 0 centigrade or below are
+not particularly useful there, so initialize them all as invalid which
+fixes the problem at hand.
 
-You can add a early_sev_detect() counterpart here and clear lines and
-cols in it along with an explanation why it is being done.
+Fixes: 950210887670 ("thermal: core: Drop trips_disabled bitmask")
+Closes: https://lore.kernel.org/linux-pm/3f71747b-f852-4ee0-b384-cf46b2aefa3f@gmx.com
+Reported-by: Tibor Billes <tbilles@gmx.com>
+Tested-by: Tibor Billes <tbilles@gmx.com>
+Cc: 6.7+ <stable@vger.kernel.org> # 6.7+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/thermal.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-This is at least a bit cleaner than this.
+Index: linux-pm/drivers/acpi/thermal.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/thermal.c
++++ linux-pm/drivers/acpi/thermal.c
+@@ -168,11 +168,17 @@ static int acpi_thermal_get_polling_freq
+ 
+ static int acpi_thermal_temp(struct acpi_thermal *tz, int temp_deci_k)
+ {
++	int temp;
++
+ 	if (temp_deci_k == THERMAL_TEMP_INVALID)
+ 		return THERMAL_TEMP_INVALID;
+ 
+-	return deci_kelvin_to_millicelsius_with_offset(temp_deci_k,
++	temp = deci_kelvin_to_millicelsius_with_offset(temp_deci_k,
+ 						       tz->kelvin_offset);
++	if (temp <= 0)
++		return THERMAL_TEMP_INVALID;
++
++	return temp;
+ }
+ 
+ static bool acpi_thermal_trip_valid(struct acpi_thermal_trip *acpi_trip)
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
