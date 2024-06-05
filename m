@@ -1,133 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD5D198823;
-	Wed,  5 Jun 2024 11:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B8819883E;
+	Wed,  5 Jun 2024 11:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588213; cv=none; b=oYe8zCcuig7ueut/y0lYFBNuLRFKNeoUEy1XTrUMvvZlwlj/hzJWmv9Cu8pikkGy5cZ+tuZFL+Z+h6Qdmlbu5LVRAy/cgGJssbaWd8IHyUzhdYBnnciCD+Ae3MUfZQtLhsA3fk/fnY86JCYGj4PZD6HoJjwH+uYC6xpb+5IR3E0=
+	t=1717588214; cv=none; b=Te6qDwlyRqphcEr0P+SydJCNGkZBzFCvoz0yylLsY2jxbokxVXDyIJj6MF4X9BRp2EE+wgtWkdJBOzQOCr+SAWlMwIBJLxhVKVaknUgHcVkVNtkZIWsqBWZLUONFInwnMmtgcPqb3GnnyRTTttfXHVuhrmQDzpichE7mOnlVR7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588213; c=relaxed/simple;
-	bh=6c1J1xU5lj/uDWDKMELN0USooXuGEwyYBBdoSr9IN5k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AKarUDlZjsxHgEu/KPvvVTrcEan7eX+UmNUEbJb7cm0iJZzXm1rxagIFmpm5QILWNUdHdBx3sLxl5ZAoE4uqxYBz04Mg+FnehT3zqgebYFuzMuTxG9iNIb29SfhoqNZuQ/69y7zAVitR7ZGweFA77tOsjq6D53CrITSiIqv3C4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpzyHpVZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588214; c=relaxed/simple;
+	bh=fleVN7ISfaghh035pXo3iOZUVpDnya1Sga8sZg6qgrQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fcp885tovOp7O795uQHQUY0SPzMwBC/5R2PlHhogaTT7SaouQ1GFeGGobFS8cakQ+cMiybxabSDz/Q5+71vUKM1UUdIthH2CxQsWSrJT0kgnMjWy+tv1xRVpqILAiFn7W3ezlM2k5TXW+9OOra8MWZaKWnHCqZMfL2vPZlhvUSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRy0mk/k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpzyHpVZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E766C3277B;
-	Wed,  5 Jun 2024 11:50:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRy0mk/k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D1BC32781;
+	Wed,  5 Jun 2024 11:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588212;
-	bh=6c1J1xU5lj/uDWDKMELN0USooXuGEwyYBBdoSr9IN5k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kpzyHpVZUc2cTuibhG56v9GllJK173FJzG3r6TeFWkRGAYVtW2e9xDXplXbVGsKVa
-	 92wrW67uFQBubZkx6H6Ix0dnnC+N7VpxYRe6jEBw3l9RfgnNwB/Hnd9GzC6c2sgIll
-	 WGAPzU4yawFn0cUCVfNeVABJv3VvMO4jOR0JvKBb0YSji8iU4U95cEac8CDc75BFUw
-	 ZtZuaZneMOfCi6EZeOtOgiioD7GIV0o6z6O8aQKn60PHUzuLxBtBOd461WGRjM2q7R
-	 Bwtx/ah62/GxMbMe/QMI96UFKb5KQ+WZ+I77Uxb9UrTkasGbhVnBK9ehWx3Rr0flP7
-	 UHEo4IGhJH2fA==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 05 Jun 2024 12:41:29 +0100
-Subject: [PATCH 3/4] KVM: arm64: Fix FFR offset calculation for pKVM host
- state save and restore
+	s=k20201202; t=1717588214;
+	bh=fleVN7ISfaghh035pXo3iOZUVpDnya1Sga8sZg6qgrQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dRy0mk/ktghfoSlSMGs+kUPzp3HMMat0TWK1ola6up1bfQqRtFVZ/iFx7mZhAzRFI
+	 S13R/OW3pbsH4zIxEJWEYWqyqv0ObnXNPwAmTmdUIN2MoTqCtms6ni1F8QROy4UENf
+	 Dmy1wMKD9Jc1qbUm81ERDFkbvdYCpslhBoaRSGAmxw/TbTxPOf76WafiP3Ozh1TmbY
+	 u6omzwwNfI99ZAk36e3IvrhftAC8ws0UaRvKKcyJ0sRmmzY6MMUqjPy6sFc4hxNFX8
+	 4phc7ehfwWXZPSoAK4kDEO+HcqnmZ0tlgwDYqB3yTwwWPAbrW+jWajzxHimH0arTO+
+	 GdQL00RyEwdwg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Daniel Starke <daniel.starke@siemens.com>,
+	syzbot <syzbot+dbac96d8e73b61aa559c@syzkaller.appspotmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 19/28] tty: add the option to have a tty reject a new ldisc
+Date: Wed,  5 Jun 2024 07:48:48 -0400
+Message-ID: <20240605114927.2961639-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
+References: <20240605114927.2961639-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-3-680d6b43b4c1@kernel.org>
-References: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org>
-In-Reply-To: <20240605-kvm-arm64-fix-pkvm-sve-vl-v1-0-680d6b43b4c1@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Fuad Tabba <tabba@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- kvmarm@lists.linux.dev, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev-d4707
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2968; i=broonie@kernel.org;
- h=from:subject:message-id; bh=6c1J1xU5lj/uDWDKMELN0USooXuGEwyYBBdoSr9IN5k=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmYFDoS+tQMHD3gju9xsmaBv3OV04ouECGRPwHWpXn
- FW5Cn7OJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZmBQ6AAKCRAk1otyXVSH0JjbB/
- 4wVrMIkRIgpQYuRW+a+2JfCt54xdzClYfx+fQf+SGGIjsHUnHvOEMSO2msR5qAC+tQ1JCEFvIliLWt
- TFjxCf4X8WrQtcqJvT+1ToflMa2Ib9zeEeP2OQ3ETsOdmbWUjZBhq9cBt1SxOkPSEOAGXRdiCPGNBO
- /4qBks58qe38BvrN6HbU0rIoYCOGjSGasUw/j0BCCPrE+kgPjpXgt8attTusyAjhwCMYtWYatoNF1Q
- /MvzeLeVT3eiyCiK5aQxv9YAA8NQynz8pe+SA3T1trQldGnoEtfmS1tlmaIEzoatn5rSJQ30TRmV1Z
- 6zhHdyz+542bvrleMcCzWoVL0dZjiI
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.3
+Content-Transfer-Encoding: 8bit
 
-When saving and restoring the SVE state for the host we configure the
-hardware for the maximum VL it supports, but when calculating offsets in
-memory we use the maximum usable VL for the host. Since these two values
-may not be the same this may result in data corruption.  We can just
-read the current VL from the hardware with an instruction so do that
-instead of a saved value.
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-Fixes: b5b9955617bc ("KVM: arm64: Eagerly restore host fpsimd/sve state in pKVM")
-Signed-off-by: Mark Brown <broonie@kernel.org>
+[ Upstream commit 6bd23e0c2bb6c65d4f5754d1456bc9a4427fc59b ]
+
+... and use it to limit the virtual terminals to just N_TTY.  They are
+kind of special, and in particular, the "con_write()" routine violates
+the "writes cannot sleep" rule that some ldiscs rely on.
+
+This avoids the
+
+   BUG: sleeping function called from invalid context at kernel/printk/printk.c:2659
+
+when N_GSM has been attached to a virtual console, and gsmld_write()
+calls con_write() while holding a spinlock, and con_write() then tries
+to get the console lock.
+
+Tested-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Daniel Starke <daniel.starke@siemens.com>
+Reported-by: syzbot <syzbot+dbac96d8e73b61aa559c@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=dbac96d8e73b61aa559c
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20240423163339.59780-1-torvalds@linux-foundation.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/kvm_hyp.h        | 1 +
- arch/arm64/kvm/hyp/fpsimd.S             | 5 +++++
- arch/arm64/kvm/hyp/include/hyp/switch.h | 2 +-
- arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 2 +-
- 4 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/tty/tty_ldisc.c    |  6 ++++++
+ drivers/tty/vt/vt.c        | 10 ++++++++++
+ include/linux/tty_driver.h |  8 ++++++++
+ 3 files changed, 24 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-index b05bceca3385..7510383d78a6 100644
---- a/arch/arm64/include/asm/kvm_hyp.h
-+++ b/arch/arm64/include/asm/kvm_hyp.h
-@@ -113,6 +113,7 @@ void __fpsimd_save_state(struct user_fpsimd_state *fp_regs);
- void __fpsimd_restore_state(struct user_fpsimd_state *fp_regs);
- void __sve_save_state(void *sve_pffr, u32 *fpsr, int save_ffr);
- void __sve_restore_state(void *sve_pffr, u32 *fpsr, int restore_ffr);
-+int __sve_get_vl(void);
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index 3f68e213df1f7..d80e9d4c974b4 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -545,6 +545,12 @@ int tty_set_ldisc(struct tty_struct *tty, int disc)
+ 		goto out;
+ 	}
  
- u64 __guest_enter(struct kvm_vcpu *vcpu);
- 
-diff --git a/arch/arm64/kvm/hyp/fpsimd.S b/arch/arm64/kvm/hyp/fpsimd.S
-index e950875e31ce..d272dbf36da8 100644
---- a/arch/arm64/kvm/hyp/fpsimd.S
-+++ b/arch/arm64/kvm/hyp/fpsimd.S
-@@ -31,3 +31,8 @@ SYM_FUNC_START(__sve_save_state)
- 	sve_save 0, x1, x2, 3
- 	ret
- SYM_FUNC_END(__sve_save_state)
++	if (tty->ops->ldisc_ok) {
++		retval = tty->ops->ldisc_ok(tty, disc);
++		if (retval)
++			goto out;
++	}
 +
-+SYM_FUNC_START(__sve_get_vl)
-+	_sve_rdvl	0, 1
-+	ret
-+SYM_FUNC_END(__sve_get_vl)
-diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-index 0c4de44534b7..06efcca765cc 100644
---- a/arch/arm64/kvm/hyp/include/hyp/switch.h
-+++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-@@ -327,7 +327,7 @@ static inline void __hyp_sve_save_host(void)
+ 	old_ldisc = tty->ldisc;
  
- 	sve_state->zcr_el1 = read_sysreg_el1(SYS_ZCR);
- 	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
--	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
-+	__sve_save_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
- 			 &sve_state->fpsr,
- 			 true);
+ 	/* Shutdown the old discipline. */
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 9b5b98dfc8b40..cd87e3d1291ed 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -3576,6 +3576,15 @@ static void con_cleanup(struct tty_struct *tty)
+ 	tty_port_put(&vc->port);
  }
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index f43d845f3c4e..bd8f671e848c 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -49,7 +49,7 @@ static void __hyp_sve_restore_host(void)
- 	 * supported by the system (or limited at EL3).
- 	 */
- 	write_sysreg_s(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
--	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(kvm_host_sve_max_vl),
-+	__sve_restore_state(sve_state->sve_regs + sve_ffr_offset(__sve_get_vl()),
- 			    &sve_state->fpsr,
- 			    true);
- 	write_sysreg_el1(sve_state->zcr_el1, SYS_ZCR);
-
+ 
++/*
++ * We can't deal with anything but the N_TTY ldisc,
++ * because we can sleep in our write() routine.
++ */
++static int con_ldisc_ok(struct tty_struct *tty, int ldisc)
++{
++	return ldisc == N_TTY ? 0 : -EINVAL;
++}
++
+ static int default_color           = 7; /* white */
+ static int default_italic_color    = 2; // green (ASCII)
+ static int default_underline_color = 3; // cyan (ASCII)
+@@ -3695,6 +3704,7 @@ static const struct tty_operations con_ops = {
+ 	.resize = vt_resize,
+ 	.shutdown = con_shutdown,
+ 	.cleanup = con_cleanup,
++	.ldisc_ok = con_ldisc_ok,
+ };
+ 
+ static struct cdev vc0_cdev;
+diff --git a/include/linux/tty_driver.h b/include/linux/tty_driver.h
+index 7372124fbf90b..dd4b31ce6d5d4 100644
+--- a/include/linux/tty_driver.h
++++ b/include/linux/tty_driver.h
+@@ -154,6 +154,13 @@ struct serial_struct;
+  *
+  *	Optional. Called under the @tty->termios_rwsem. May sleep.
+  *
++ * @ldisc_ok: ``int ()(struct tty_struct *tty, int ldisc)``
++ *
++ *	This routine allows the @tty driver to decide if it can deal
++ *	with a particular @ldisc.
++ *
++ *	Optional. Called under the @tty->ldisc_sem and @tty->termios_rwsem.
++ *
+  * @set_ldisc: ``void ()(struct tty_struct *tty)``
+  *
+  *	This routine allows the @tty driver to be notified when the device's
+@@ -372,6 +379,7 @@ struct tty_operations {
+ 	void (*hangup)(struct tty_struct *tty);
+ 	int (*break_ctl)(struct tty_struct *tty, int state);
+ 	void (*flush_buffer)(struct tty_struct *tty);
++	int (*ldisc_ok)(struct tty_struct *tty, int ldisc);
+ 	void (*set_ldisc)(struct tty_struct *tty);
+ 	void (*wait_until_sent)(struct tty_struct *tty, int timeout);
+ 	void (*send_xchar)(struct tty_struct *tty, u8 ch);
 -- 
-2.39.2
+2.43.0
 
