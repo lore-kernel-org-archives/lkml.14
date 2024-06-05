@@ -1,101 +1,62 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B664CFC08;
-	Wed,  5 Jun 2024 13:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9777ABA27;
+	Wed,  5 Jun 2024 13:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717595308; cv=none; b=rt2KI7VHocxlmFX1kDSqHD0S2SZDiG4AJ0cdXUTPDuvDmfb7lDgdZ5zkEA5mobEmVR6sd89jsdn7LAS5B+Sqz0XiGizf6XvcwxXX8KJAR3dxmQw7Pcvh9E9GZxKf0nPQOrqh+MZ2C2Y81lsq7trW8vB8qgAVxnqwHgMn3eUVX94=
+	t=1717595359; cv=none; b=OFQOUiPenOIMb57/g3HOIcOP3N+dnz3HoXT043sLvlGxIUfQdSQGVOX83+ZB3RnY6v6CbalG+EHENR2KgNEFYhgFHTK7daLzoK1Zb3yrkmpBwgrt9mfAqMf8KOqvvAFVU+Re0m1bjXLwaHwN/dxrOueEPsHqeqlIPVKPY8RFAQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717595308; c=relaxed/simple;
-	bh=KLGoXYEyiKiVioiSy1o4l3JrW+RVHuBQRMY6ey0/uJo=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=Eq74OavQcj/pqO5zDAtLSyL0gxL83wyaHkdJ8SwHQQwY+mwPZ2M4+wFNE7IBnwf4lin1WaTBUirB7seuUwZ7j/ud73LYVRToux1xOYAUtB6cXwIHl0f3i5IQjG3eOXeTdKWqSMtGd44v04WM4tQq7zbJU31db9a3STwjz5Xbcn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bD/3uUx9; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1717595359; c=relaxed/simple;
+	bh=HxJyKDcwxKVpZkWRLhPVC9seiRNb7oUVJSRcKq1ZMvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nui6+LuRZMNP6C5odVxR7wBOGoRFiMcov2M6Godd8FGKatMJoSXJI5DEMasiwjXVENxlbuZciH+mqZFY4+myr46DC3z9IrngR6WH7wVfwo5Z97Z3O1QdIpQI0VDDIeY7N0v8DdmIIhivlBh1wubBEsX2devss6RU+UnlFcgGzMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5CKeyuf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bD/3uUx9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8E6B1E0003;
-	Wed,  5 Jun 2024 13:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717595301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9oYspSAh9r3LxQwguONvXuvtQjqwAdO7gA+8g9Aaz40=;
-	b=bD/3uUx9uNS8Q2paK6zhQj2kqPrtdKE9R0wdIsPo7euw/mz67MJIP07wTvBfxgcKJycS/B
-	L0ZdYyRLPLyPYHjduis6xmkB5WmIwCHkBAhuuy1mZiR/M5sl1j0v16xVRr/V1+6Bk5+4rA
-	YJPIu6BrFwJ9/tlaeMs3TLf1StCSHxRroYkO6mxUqGMhURLPvlNsgVDycfQN+dvW7dNRZ8
-	yw7lL2CT+AZBN0eFnFgkKhXCSgqlbk5yGyObxGUhf2uMufD44kBnGGzcaLAs3wOOvz+/Il
-	6/uUee4evNcg72vs2/b1r7L/b4uZ6Cs6xiTw5XpnE2Oh/CJr6JwMlGO6Xz+plQ==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5CKeyuf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7CCC2BD11;
+	Wed,  5 Jun 2024 13:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717595359;
+	bh=HxJyKDcwxKVpZkWRLhPVC9seiRNb7oUVJSRcKq1ZMvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J5CKeyuftLREi/fwCykuRbnMB2KwEGVOfLjLs1Sr2+ONi1u3tXcqPbV0pivM4ihbh
+	 ibgIo8P7fFqw5nXi6xRqFrfpxyA+SLjl/J1dSR0xlrsYc7jV7rAB10lWmNtz1xcnQI
+	 LqTSe8ptm4DR68SuYO9o6J/nSh4ahxeUiD4kjtFMROs404WJlvQg8HBfPUSBLVk3f+
+	 C+xyGyRkfx8UOUKifUeSH/kMZvsucpFlYIUSXXke6PvrJyp/9at9fiF2hQ+FeeMqIm
+	 o8lyD0vqF91KzmoxCou4wavGn+MJsv52p7w0epFNC/FUocEwkK/1GxROOHUQMdh0vs
+	 mDVMXK0JIeGJw==
+Date: Wed, 5 Jun 2024 14:49:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: netdev@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 net-next 1/4] vmxnet3: prepare for version 9 changes
+Message-ID: <20240605134914.GL791188@kernel.org>
+References: <20240531193050.4132-1-ronak.doshi@broadcom.com>
+ <20240531193050.4132-2-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 05 Jun 2024 15:48:20 +0200
-From: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Henrik Rydberg <rydberg@bitmath.org>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Marco Felsch
- <m.felsch@pengutronix.de>, Jeff LaBundy <jeff@labundy.com>,
- catalin.popescu@leica-geosystems.com, mark.satterthwaite@touchnetix.com,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gregory Clement
- <gregory.clement@bootlin.com>, bsp-development.geo@leica-geosystems.com
-Subject: Re: [PATCH v13 3/3] Input: Add TouchNetix axiom i2c touchscreen
- driver
-In-Reply-To: <20240605124746.GA57733@tpx1.home>
-References: <20240603153929.29218-1-kamel.bouhara@bootlin.com>
- <20240603153929.29218-4-kamel.bouhara@bootlin.com>
- <Zl5ZmYyntq7OJOvZ@google.com> <20240605124746.GA57733@tpx1.home>
-Message-ID: <7ca4a22f903313128de5c0f65a49b319@bootlin.com>
-X-Sender: kamel.bouhara@bootlin.com
-Organization: Bootlin
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: kamel.bouhara@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531193050.4132-2-ronak.doshi@broadcom.com>
 
-[...]
-
->> > +
->> > +	error = devm_request_threaded_irq(dev, client->irq, NULL,
->> > +					  axiom_irq, IRQF_ONESHOT, dev_name(dev), ts);
->> > +	if (error) {
->> > +		dev_info(dev, "Request irq failed, falling back to polling mode");
->> 
->> I do not think you should fall back to polling mode if you fail to get
->> interrupt. If it was not specified (client->irq) then I can see that 
->> we
->> might want to fall back, but if the system configured for using
->> interrupt and you can not get it you should bail out.
->> 
+On Fri, May 31, 2024 at 12:30:46PM -0700, Ronak Doshi wrote:
+> vmxnet3 is currently at version 7 and this patch initiates the
+> preparation to accommodate changes for up to version 9. Introduced
+> utility macros for vmxnet3 version 9 comparison and update Copyright
+> information.
 > 
-> Yes, clear, the polling mode can be decorrelated to the irq not 
-> provided
-> case.
+> Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+> Acked-by: Guolin Yang <guolin.yang@broadcom.com>
 
-Just to make sure I understood, is this what you propose ?
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-if (client->irq) {
-         error = devm_request_threaded_irq(...)
-         if (error) {
-		dev_warn(dev, "failed to request IRQ\n");
-		client->irq = 0;
-          }
-}
-
-if(!client->irq) {
-     // setup polling stuff
-     ...
-}
-
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
