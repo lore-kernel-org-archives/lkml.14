@@ -1,108 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06959196D8E;
-	Wed,  5 Jun 2024 13:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F4A19408A;
+	Wed,  5 Jun 2024 13:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717592585; cv=none; b=E7+ZUp+B0227lOwYzE8DwizQns8s6ItNl2h5NkrkBnJNF7Qq984PNEDFzFnivxbShu4/xd9QvLOVc1cqDYlGxiyKjeuL3GLlTLrOSfy5hUdD1g1J8/XobwY3f6FRCu73kmK2PX1O9+U4/PnDzZZxbEmDwt4CSLVOVU1ULyoEuRI=
+	t=1717592787; cv=none; b=gMfRZQEdHaEOt8u3vBRADlL7XP18+Typ10vWWnq/hp75d65dwaRKVEvBUuIr2Og2yit1aRWOAeiFvanK5DeJGlPaks0fMkCkfWysU22/ILzo1BBLINKDM+Vjzev4QBn84p0GXYRLBwKdTWt2b0LXrpHQv4/5G6ZZzr1hcIb/hfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717592585; c=relaxed/simple;
-	bh=pIUH1SYvl+n4ux5la4H2jH7ufg2H8fTYXd0fOPLDrwM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R/Vss9IGi884OpTNjaj6hIOAOxz3hdoXs6FsQlyqrrsKdtLLoADZsv1kN6+OxtX/KX9GuqHfCdfN/3LGV8AFfm3H2SdwNbdjS90RjP80VkLuFv1ipuglLmn7LsBX/hrDwAwbtQkjXXtVgkzXRWwV6taePLKa2LBwJAgvvgTUhmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Trv5KrF0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717592787; c=relaxed/simple;
+	bh=jR+CbMI3Ukgr5lwIwmEEJFvYHkEZZKhx6zW6IaMlfD0=;
+	h=Subject:From:To:Cc:Date:Message-ID:Content-Type:MIME-Version; b=G2bMg3220qcak1Mref42mAcTEwN/5vJxmzt2NRMP5DW9iNn6V1/SYrs+Rlo8fPiUw1hViiOakApBJtpQJGGLlagz6/AeBqAxVRd8+ppkzMM8RC+wm/H3Ge23yIJXJpf+FWgpscLADOPkr7Lpye1jzJUItwpMiBSM42YURC6zCq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WACDZTdS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Trv5KrF0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DC39C3277B;
-	Wed,  5 Jun 2024 13:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717592584;
-	bh=pIUH1SYvl+n4ux5la4H2jH7ufg2H8fTYXd0fOPLDrwM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Trv5KrF0HSWm4vFjCYIfnKXseYSgsO2MzXGCQY6/UvDZWuH9+V2XeludFFsjXZ4sz
-	 6DolXtJ6tJeshWdopwX3sM80s1d02Jhcv4HAHFVxJaqALsQqNa/dqYZJ2T3HFmHAk9
-	 n92nxvZ5v27J0WfxQvdiAjzjPC3OAoPZZsDQBTgdy5SAr6SiFME0vxlE8tB8cDAKC9
-	 r12NCEvRNvgY4pbXWArY8etKUF8V7OMYVG91FuMgH1/a3B/Q5zgxehgyCellvZTF+A
-	 Xx47uXpKQdaVYmVZ/TQtSBaoUr+4fkUrijCbB80m7Lkx1nwCZK03mVkYFoSpUjUoLa
-	 6Ve9Na9iNoXVA==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2eabd22d404so23738441fa.2;
-        Wed, 05 Jun 2024 06:03:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWK1cXI9XFeSmenA/uXYTqS5sy2weGro8nuBgqngIu3YGx2Vu2XIUTE+iCjJHmzGVbNz9rcI/cktSTcz9LemDaBjdtoXltBXO841b+eXm+An3nifHBiGgXqBp2uv/Kk+SMtnHepAwkENwnlQwabcRypTYz8eOtBtgkjd9EP3pZ+hy3Xt24avH8=
-X-Gm-Message-State: AOJu0YyMGb7kVbVwuaL6edl0vN/94w4Fs9a1nzzOE6U0cwxlmWmR2/UK
-	iqo73tAthyPGpxZnRakoB8JU6XRBWIJq36pBX1J/LBGyrQgYTh5wL8LHROs2So7VgmzC/xDmrtA
-	SPFNrQe+vHrCvaucoiIsSgmKpWLE=
-X-Google-Smtp-Source: AGHT+IGwVpOkLFoOkP5TWr3HYPGM/66qLz3qCtA6eyNoWR3THWuiWL+/KltVE6krHcyFH65a/ekDvjBJJ1fzlnrqR0E=
-X-Received: by 2002:a2e:804b:0:b0:2e5:685a:cd24 with SMTP id
- 38308e7fff4ca-2eac798a96dmr14243171fa.6.1717592583355; Wed, 05 Jun 2024
- 06:03:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WACDZTdS"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4559rSvJ022091;
+	Wed, 5 Jun 2024 13:06:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : message-id :
+ mime-version : subject : to; s=pp1;
+ bh=rNaqCrZ8VkCrTSUz1srEIHGfpxPqUW/VbEDWIXQIZg0=;
+ b=WACDZTdSFDX5LXI4qxLk9CM6jOrOmxvKoFCfOqINcGbdQesjJm2lw40duw0sQvJlBs0V
+ U/05v80Zbl4Iy7yA37hGAof0NuPOh0NL+qWhpvq2k+1cWa9tpYFw3arY+Jusr7neahQb
+ 328KP9Xf+7BJPO6ZsHJgOdKSZLM+TByV4x+Lfpd7A1sPvEsWoaw5C7g/gkJCjm/MSvYs
+ mi/rod3lsZ52Bd/AL93F5eLvLWIh/P2dNfRUdvqn6lsajsl/bAbM6ZKXZ0U1Ob8MTCuf
+ gglu6iTvRNCmD1d8uoJRzKysYJgDPnN4OgiAU3KSEaoaR7SR/LaZ/kADh3P8JUBBgkn8 ew== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjns38ehm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 13:06:10 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 455D69ba021172;
+	Wed, 5 Jun 2024 13:06:09 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjns38ehf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 13:06:09 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4559YkrW031147;
+	Wed, 5 Jun 2024 13:06:09 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ygeypm7v6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 13:06:08 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 455D63mX53150180
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Jun 2024 13:06:05 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3169F2004B;
+	Wed,  5 Jun 2024 13:06:03 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3F39C2005A;
+	Wed,  5 Jun 2024 13:06:01 +0000 (GMT)
+Received: from [172.17.0.2] (unknown [9.3.101.175])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Jun 2024 13:06:01 +0000 (GMT)
+Subject: [PATCH v2 0/8] KVM: PPC: Book3S HV: Nested guest migration fixes
+From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+To: kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: pbonzini@redhat.com, naveen.n.rao@linux.ibm.com,
+        christophe.leroy@csgroup.eu, corbet@lwn.net, mpe@ellerman.id.au,
+        namhyung@kernel.org, npiggin@gmail.com, pbonzini@redhat.com,
+        sbhat@linux.ibm.com, jniethe5@gmail.com, atrajeev@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org
+Date: Wed, 05 Jun 2024 13:06:00 +0000
+Message-ID: <171759276071.1480.9356137231993600304.stgit@linux.ibm.com>
+User-Agent: StGit/1.5
+Content-Type: text/plain; charset="utf-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: usujUYPXPSZC1j1m1N83Obvb62lwIZV-
+X-Proofpoint-ORIG-GUID: vi58BNYDMLwa3X9OeEw_8w-YXSJNnj-z
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <21cdf8ef-e2fe-4247-9390-4b3d975f80a3@nvidia.com> <2b6llsqhqvsc3qrtsqlv2b6353kvuldwrp3xs5v6jistuskzeh@hnlhxbzpvwzh>
-In-Reply-To: <2b6llsqhqvsc3qrtsqlv2b6353kvuldwrp3xs5v6jistuskzeh@hnlhxbzpvwzh>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 5 Jun 2024 22:02:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR5fYTzJLtRDSob2TuL0Lt0bxCayY8sx0_1+UEuu1Hz9A@mail.gmail.com>
-Message-ID: <CAK7LNAR5fYTzJLtRDSob2TuL0Lt0bxCayY8sx0_1+UEuu1Hz9A@mail.gmail.com>
-Subject: Re: kbuild: mksysmap: Build regression for next-20240604
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Jon Hunter <jonathanh@nvidia.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 impostorscore=0 mlxlogscore=807 malwarescore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406050099
 
-On Wed, Jun 5, 2024 at 9:56=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Wed, Jun 05, 2024 at 09:14:23AM +0100, Jon Hunter wrote:
-> > Hi Kent,
-> >
-> > Since next-20240604 I noticed a build regression in our farm builders
-> > and I am seeing the following error ...
-> >
-> > /usr/bin/env: invalid option -- 'S'
-> > Try '/usr/bin/env --help' for more information.
-> >
-> > These builders have an older version of 'env' that do not support the
-> > '-S' argument and so your change [0] is breaking the for these
-> > machines. I did not see your patch on any list and found it on your
-> > bcachefs tree [1]. So not clear if this has been reviewed and if this
-> > is trying to fix some related to Masahiro change [2]?
-> >
-> > It is also not clear what the minimum version of 'env' is supported
-> > for building the linux kernel, but these builders have been building
-> > the kernel fine for years.
-> >
-> > Thanks
-> > Jon
-> >
-> > [0] https://evilpiepirate.org/git/bcachefs.git/commit/?h=3Dfor-next&id=
-=3D973eca8db5570dd0c3f2b3190867138cc446eb3b
-> > [1] https://evilpiepirate.org/git/bcachefs.git/log/?h=3Dfor-next
-> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbu=
-ild.git/commit/?h=3Dkbuild&id=3Db18b047002b7d3b19d9fb905c1bd2a214016c153
->
-> I'll drop it, but we need a real fix then, my CI builders are broken
-> without it...
+The series fixes the issues exposed by the kvm-unit-tests[1]
+sprs-migration test.
+
+The SDAR, MMCR3 were seen to have some typo/refactoring bugs.
+The first two patches fix them.
+
+The remaining patches take care of save-restoring the guest
+state elements for DEXCR, HASHKEYR and HASHPKEYR SPRs with PHYP
+during entry-exit. The KVM_PPC_REG too for them are missing which
+are added for use by the QEMU.
+
+References:
+[1]: https://github.com/kvm-unit-tests/kvm-unit-tests
+
+---
+
+Changelog:
+v1: https://lore.kernel.org/kvm/171741555734.11675.17428208097186191736.stgit@c0c876608f2d/
+ - Reordered the patches in a way to introduce the SPRs first as
+   suggested.
+ - Added Reviewed-bys to the reviewed ones.
+ - Added 2 more patches to handle the hashpkeyr state
+
+Shivaprasad G Bhat (8):
+      KVM: PPC: Book3S HV: Fix the set_one_reg for MMCR3
+      KVM: PPC: Book3S HV: Fix the get_one_reg of SDAR
+      KVM: PPC: Book3S HV: Add one-reg interface for DEXCR register
+      KVM: PPC: Book3S HV nestedv2: Keep nested guest DEXCR in sync
+      KVM: PPC: Book3S HV: Add one-reg interface for HASHKEYR register
+      KVM: PPC: Book3S HV nestedv2: Keep nested guest HASHKEYR in sync
+      KVM: PPC: Book3S HV: Add one-reg interface for HASHPKEYR register
+      KVM: PPC: Book3S HV nestedv2: Keep nested guest HASHPKEYR in sync
 
 
+ Documentation/virt/kvm/api.rst        |  3 +++
+ arch/powerpc/include/asm/kvm_host.h   |  3 +++
+ arch/powerpc/include/uapi/asm/kvm.h   |  3 +++
+ arch/powerpc/kvm/book3s_hv.c          | 22 ++++++++++++++++++++--
+ arch/powerpc/kvm/book3s_hv.h          |  3 +++
+ arch/powerpc/kvm/book3s_hv_nestedv2.c | 18 ++++++++++++++++++
+ 6 files changed, 50 insertions(+), 2 deletions(-)
 
+--
+Signature
 
-I will apply Richard's patch instead and send a pull request for -rc3.
-
-https://lore.kernel.org/linux-kbuild/CAK7LNASx_iSWZ14W5dpTOM87kB8A-Paq8fM_3=
-nKH5tdfJQ7+ZQ@mail.gmail.com/T/#mfa8b89c64a6a14a764338e9398d40be9bc48cdf1
-
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
