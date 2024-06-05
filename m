@@ -1,100 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DE5192B93
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485349634;
+	Wed,  5 Jun 2024 08:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575455; cv=none; b=jg0OCyM9zUnh18GrsuQJRBF8cutkgTvGoBOtYKs8aKB+ZiXifa1pCnxhod9v5nXFZCru4e0evmcMDGMc6lrJCAVIGVs1thHhpIQ5GidIs97KcBTVF5QWdKHYdo+pq+LwyovvuMYc/Bk9YVJE2E/oph1ayMm1kNCXNRvbw/MN+Rk=
+	t=1717575476; cv=none; b=ftawZmBADdiBOi0QjBSdm3UBIWvhquVk5XvnjzdAkfKFjsmnyzWxtUduJWdcRR2uVDqCZ4hCuVifQdE8x0s5HQd8vjH45fJ9Fia3Jl9+jOUjahXIjPOWEw5qUXt8c/waFG4nA8eX8dGkbHjF+9eHuFAI19VEcbJixps4W94p3Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575455; c=relaxed/simple;
-	bh=SyrCABOxfzWFSovPG3pWSF6TsrdkmMeE5mrN2ab0BuI=;
+	s=arc-20240116; t=1717575476; c=relaxed/simple;
+	bh=1wdjcsi5xleRe7XanjwsWQ4TJLqfHy+eOuRnTIm772k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=STBfw4FzzjeuYnvLJIVBEMzj9yB7Z7qC6MzHdy/BKeUG4Q38nak1L0Y7osX4Qp6y+VtHT4RzfsYqrA8cUejqdgvHnmEV+RZyLbMI2KtLcMmszrJwozLnk9LX9jvAr0bwoR7KxdbVw/MF5cshJZInASf5dvngkgU26H72BnPlxjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOYwMeyt; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=MTWAXJHEUw1cJge6JvJBWzhLbZUEc2f5wfVRFueo18XVcKpTTzFRtt8WgySpqyBQNMTX0K57G/JZ27Ecw7LAiKSe2KzuHNbJfaIBYJYKC72Q+MlpHHTQTI4UoZYmpwMbjj/qbVmXmJ6M3WDlUn49PQPk13fjX1I9OdjAqD9fCDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bS4hrRpu; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOYwMeyt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA92C4AF12
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717575455;
-	bh=SyrCABOxfzWFSovPG3pWSF6TsrdkmMeE5mrN2ab0BuI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hOYwMeyt6KjHJb7oSVPiIx5+HiDOtXQJqB7D9+ZexeaHGSC5KMoYs+c2N/wJLvTN5
-	 quDQeGSSixVbR402ue2n0pm5yYNYEhDAEAXUIZcitDkcDT/BESBDtTxBj47TB4PnMw
-	 jFUtgVow+fsyxLmkshuMrTDl4kfhE23F2bmjpNGpkUUPCYiDdSLH7E4ci8QJOeOYCD
-	 eJElqYGf9Ov/JxKkyklucUnk5QW9t7sKotGUXeTJ+45QIgfiECyZ3gZDQlO7fEXCTd
-	 D7CNI84EVS92oDzwdgWDsecEDMTt0X5Ouur4WD6ocV2A+GvMMIgopWbjprJdI5EOfn
-	 8bV4rZqb2PWAg==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52b992fd796so2305670e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:17:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWoTe0yImRkQSAlxTJeG8DbNlMNSKsg0CqE8yD4KWiuhBO6SqQDSfjEvCENZ5SQWu+B7oYX1+fGnHTwxEf5b2HfN3x22wM/KTi58Zw+
-X-Gm-Message-State: AOJu0Yy0guV+COVm3rlmg/TdCjYUUQQrEyw7ehIcBAigWIsVM9EI+B56
-	Rr9bMtEkGK0Qc2KA+71/N4RWI0IQm1TWoTVUuDcamKXQezDYp+FSNLCRTUZ0pL2y5URCOFJh8Av
-	aiy5Ol8ZkWtJKuHWbiVPJt5cCUMI=
-X-Google-Smtp-Source: AGHT+IGlZ8B/8qUP04+W16z855ba/YXAp1EIwaPL434uTzFqdW4tr39B39lzlfhSYchjCrvswDx/zghAaOFUls5LZKc=
-X-Received: by 2002:a2e:a173:0:b0:2e1:e33d:67f6 with SMTP id
- 38308e7fff4ca-2eac79e9d52mr8409391fa.28.1717575453266; Wed, 05 Jun 2024
- 01:17:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bS4hrRpu"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c1a4192d55so1535099a91.2;
+        Wed, 05 Jun 2024 01:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717575474; x=1718180274; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wdjcsi5xleRe7XanjwsWQ4TJLqfHy+eOuRnTIm772k=;
+        b=bS4hrRpuGAxAEw55xc4AmlOjSfjjpYdFeqpZ28b2NqM5WEPhuqArPU2Eyop0y/8oGI
+         ILFthvtZgXM78/m3jBg/daXIeeI3w7J71uBj0TcVJouj9LEyRj8AuLTf/ZwgSTm8CV7r
+         +ylNXufQnECZQsQ2C/v1p1++rSFsp+/TuL7D9HV7pKXTVHSNH860ZTOMrPRmNk4aTXo7
+         9TQPwFe95U8GR1+JPwH6Ezb5wuRGJTAtXlliZOdIqDPuonr+zuURgshhcMkoSKZ9MGvk
+         59iGkTWfuPuqaXZLZhaAwtMbZzz00DeEi/dy7b1B28ctnx6Uh4UcicDc1oLoESgodm6/
+         GrHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717575474; x=1718180274;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1wdjcsi5xleRe7XanjwsWQ4TJLqfHy+eOuRnTIm772k=;
+        b=hyowaw/3Uk/xhr00aUP3RKS4FN9PFsa6oE00+rACpbSg6kNa3tASoE77smOmZCXNX2
+         XwkQtJtBQHIq5gjz3LDiSyQvMSLudhmGDccZ/1tUaov9vj5qKe6eYH7lDNbbPkZcNJtS
+         q8CpO4y7u+CgQZ8MyOcBGCP748fewu9algpGMHDtwji0VHiwNPctlMKXrkcQlscMqTEC
+         z0DNvlxBlpAeoi1MewhsO0LXWw+hPWZpkTJ0DPR6XFsgb5t5BRgktGYVa7GMbwZ18JM0
+         CNGOsj1RhR1BZ4U+saLgDN8Y8Q9bOOiQnE/sgvzw+TWVTxYn9Gs/8RNDyguVvnb+LJFp
+         Vq0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXHaWHvA+LCbCkRVhoidQmgnTQABlW2eaDq2C223p1MBjdQikJNj5LDrdRUmWWtJ3cnV++oM5IPxbLJmdbSAbhN3e6lGPaCD+bWG6BK7mGwIcHSh1RhoJFA3Ktn98QeRVCIclYz3KrBRNM=
+X-Gm-Message-State: AOJu0Yy2s/H/BeNWF+Q9m0MPegS2KK13+lafT95AmL0feQYgFL5JGeiM
+	i1bjUIoFjyJfTS1wzPyfHKICXumgba04vVaKh9hw55c+FWdrS46KUOf5zLW/KDBXXG+sr3+av++
+	gbpWoopBnmwYdJH3qYpTwbn7eiII=
+X-Google-Smtp-Source: AGHT+IF5rnwycoV3ChyFzp5X8uVGQNRRATu+t23uSYtVBEuKZlPG9wBAsfpHV+Aq+lH+0feC0OG1t1qZ7ZXypMaKk7Y=
+X-Received: by 2002:a17:90a:c085:b0:2b8:f5f1:10d9 with SMTP id
+ 98e67ed59e1d1-2c27da22604mr2277848a91.0.1717575474188; Wed, 05 Jun 2024
+ 01:17:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com> <Zl3HfiQ6oHdTdOdA@kernel.org>
- <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com> <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
- <Zl3hwYL2GDiyUfGo@kernel.org> <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
- <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local> <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
- <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local> <CALu+AoRqNmsWXi+HXYNYTY=pXJ3sLTLKyXNeJz9EoxEsHzFdQA@mail.gmail.com>
- <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
-In-Reply-To: <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 5 Jun 2024 10:17:22 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
-Message-ID: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-	"Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org, hpa@zytor.com, 
-	peterz@infradead.org, adrian.hunter@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com, 
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
-	seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
+References: <20240604184752.697313-1-a1ba.omarov@gmail.com> <20240605101323.60d7abbc@booty>
+In-Reply-To: <20240605101323.60d7abbc@booty>
+From: Alibek Omarov <a1ba.omarov@gmail.com>
+Date: Wed, 5 Jun 2024 11:17:42 +0300
+Message-ID: <CAKyg=SV9HhMAU0cVDxvZjMx-KBc=2BTqgr1J4Wyx7z77vRTRhw@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rockchip: i2s-tdm: Fix trcm mode by setting clock
+ on right mclk
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, 
+	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 5 Jun 2024 at 09:43, Borislav Petkov <bp@alien8.de> wrote:
 >
-> On Wed, Jun 05, 2024 at 10:53:44AM +0800, Dave Young wrote:
-> > It's something good to have but not must for the time being,  also no
-> > idea how to save the status across boot, for EFI boot case probably a
-> > EFI var can be used;
+> I cannot test right now, but it definitely looks correct.
 >
-> Yes.
->
-> > but how can it be cleared in case of physical boot.  Otherwise
-> > probably injecting some kernel parameters, anyway this needs more
-> > thinking.
->
-> Yeah, this'll need proper analysis whether we can even do that reliably.
->
-> We need to increment it only on the kexec reboot paths and clear it on
-> the normal reboot paths.
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 >
 
-I'd argue for the opposite: ideally, the difference between the first
-boot and not-the-first-boot should be abstracted away by the
-'bootloader' side of kexec as much as possible, so that the tricky
-early startup code doesn't have to be riddled with different code
-paths depending on !kexec vs kexec.
-
-TDX is a good case in point here: rather than add more conditionals,
-I'd urge to remove them so the TDX startup code doesn't have to care
-about the difference at all. If there is anything special that needs
-to be done, it belongs in the kexec implementation of the previous
-kernel.
+Thank you very much!
