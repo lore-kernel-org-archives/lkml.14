@@ -1,115 +1,78 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AF13A404
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540EF155C98;
+	Wed,  5 Jun 2024 18:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610720; cv=none; b=DrpjWjTZ7HsjWDIAufmW/9GdjEpFY6DDq5BRt23K9Yu7Ir8ZHsM7TDxeXSsBvXy5UaLeIoxMGfFtS37Ml5v05n7OGUmztCX1OioIFT4/b0xJ6pjrmpdmK2qL8zCJa9MkJ+E9VrDJ2a88sevCovS0eUDKQFvlntchWS8Q5kPlMzk=
+	t=1717610723; cv=none; b=IarnCvEzPIlE6v+nPQsJudxgNKKZseft8bTgQRFgwhelH1uZttoW2lKSxJvao7kqP3l+nLAZA/nywqDbs+lnwRIUuWkT5V51e88CN3r53aJx0IGYSRNg7WjD/xCwn24ddwOuKqd/d4eBduzF00vWY5ZbC52UC3mtvrCKfmttFTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610720; c=relaxed/simple;
-	bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LEevp0cG4Z4kapFUl72osgx8A6YRGTKuncNiQcI+nMRf+v/oH1Q/pTGBy4Bim0YAnch4OR5xgUrJdi5u0roDh8W+ki+bX1dbM/12nHfLWdDefVWx1JlzZA8SvOOmG+luorIAV1WvF3fgI8DRKbUwfRcAShikWyduKitDLKkufoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SMJgtHlt; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1717610723; c=relaxed/simple;
+	bh=UUt/b2AZAbP2bHw0Kt5bQRKY/gANQoV5gU6Fp4AYwpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tN/8fgoV3QLCXIx8dw8fSt3sVMZdXnBGq079i0APtnv6IffwDi2IeQb3DGw2V6+Aukzqg3jw3deb6XWr+JwUHaDS3J6Edve2guu7chxAuwsw7+iQ7ANNydq4kB1FJPZIcjRc5/cF39jkSB5Nn1YLXInhzoGjj/yXGRq0XVxvOPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQ6XkXN+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SMJgtHlt"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2eabd22d3f4so1383681fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717610717; x=1718215517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
-        b=SMJgtHlt2LGtNcSZCCzuhH9s41bIEasVQOrci0q7Wwj0yI/V2ivyG8GToNhXIDXKhV
-         ZjdCkwYsEt9sUiAwh+ZAsHrUO5/EAbz+rKGb1puZPf1eMO7pUTfvbQArr7gAQeBJz5JH
-         trSG2pVugSkXnBWxicYxEncMf/9Ua6o8rZVEAJIx0jzHpPnR0FG3r7qftXozBQM+hZs0
-         MS9WjOaBjvhAYAR9vHiOulTu++lgLp68vqs/Ma4Adt7lgOiQjwL+gkiVYakFvp3PBiy0
-         0K2Hrs7HKfrIlBkMk4+AiyjHsJXTxE7Z76wLJb86ic65tY3q4kc+zfe8EdhFLWlNiY6l
-         1aJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717610717; x=1718215517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LNBfOsZV2m+6msPbBCsAxl6hJfnlMOUzddiwLhwfpe8=;
-        b=B9UJDtNi4PTh+bem5Jic3R5RCQiuuaob+2vJj3N0rbZs802MLRGLVDXND9XqGt1B59
-         2J00LjNLKAFiVSavyHbI7ksuX6UxrE/gT9JvbYBOm43styO/O91qLY1xixG6eg+Cclds
-         C952avp93+hHc05ZXJNhtTJ1YLOh/XDta1WIGXAtNWEaCga4cU6YdYu2dPH+1NUKMEP1
-         tB9YsUuDqMIBHYcJNG8w9EmSLZmLd4B/2QNJ/ob5zXllrDdZVqTm3yhg/WhcgTZhRJww
-         9FyTAnmlLkPuT9xeTUkx6O6RF2ItzHKLlwZ8pNuAvWgx+w+XGC4OMOvUtqznA4YtQeRj
-         3D4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWpUYPkJvP/KXeWZLcnk21z0pc1B3ufKkRP/wnjnfeEz2ofyqsenusspqNKDbGo1SSb1BHXvZxRsvKA73F+FTRHj1Vi8BX/RKUX7Ksd
-X-Gm-Message-State: AOJu0Yzt/9hakzgz8BVAG4Rx50ZR05RN2PRs5To1hoMNOv9C9C1EWOju
-	VlcQ11kZFIMOFS8qpGDZNPHi+t/lC9qhJTv+5JAf9NOMOryIMRDW56wBxMhKyC4XhDcyjnAE6Ra
-	wU5vqRjuCgcRt9rp58HVTBAFe3GvWLNcEMrtT9A==
-X-Google-Smtp-Source: AGHT+IGPHvJeLayk3efrcKgO1Obiv1k65fgMPOv7p9k5Kuf3j8UsHmQHvC67KCL/2EfjazgzdJtjTyy7e7G17peXDnE=
-X-Received: by 2002:a2e:8ed4:0:b0:2ea:7f57:5a74 with SMTP id
- 38308e7fff4ca-2eac7a6c3ccmr18672681fa.42.1717610716971; Wed, 05 Jun 2024
- 11:05:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQ6XkXN+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1981C2BD11;
+	Wed,  5 Jun 2024 18:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717610722;
+	bh=UUt/b2AZAbP2bHw0Kt5bQRKY/gANQoV5gU6Fp4AYwpg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=JQ6XkXN+sLx/LPKeHP7XRefg2ZOk/egCkFe9Zr9MZw/JRGYpC0932zOyDZJxQ1Xby
+	 mKBv1Phn1REeUURvL4MRZI4H/P8EMsf+jNfFgPArkMYOsLm4JdVJvN6lTKWgMn0Htl
+	 zO9/tvQeR5h+lV9c6VqHnJ0HY4JrdQZO3NdPb2n+KvN9cKAMuKzStOnDcphhGq7CT2
+	 CJtW/ZpuvBPZBsvPQEp5WMzyO561FijopJUIILric3JBip0u9pzx4VjmUExahhGrGs
+	 4tWUSxSpEOhkpNGYLOOgFeEp+COZyZuCFfrAvSzUamnifiaoP28COpvjImnbjRXnvh
+	 pnqObZFbvt3fg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 8152FCE0A73; Wed,  5 Jun 2024 11:05:22 -0700 (PDT)
+Date: Wed, 5 Jun 2024 11:05:22 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, elver@google.com, akpm@linux-foundation.org,
+	tglx@linutronix.de, peterz@infradead.org, dianders@chromium.org,
+	pmladek@suse.com, torvalds@linux-foundation.org, arnd@arndb.de,
+	Mark Brown <broonie@kernel.org>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Andrew Davis <afd@ti.com>, Eric DeVolder <eric.devolder@oracle.com>,
+	Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 cmpxchg 4/4] ARM: Emulate one-byte cmpxchg
+Message-ID: <6526c3fb-f4d9-458f-ae8b-6555dcb3b807@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <1dee481f-d584-41d6-a5f1-d84375be5fe8@paulmck-laptop>
+ <20240604170437.2362545-4-paulmck@kernel.org>
+ <CACRpkdaYQWGsjtDPzbJS4C9Y9z8JGv=3ihQrVKvegJf8ujqSmA@mail.gmail.com>
+ <2fbe86b7-70f0-46cd-b7b7-9d67e78d72f3@paulmck-laptop>
+ <CACRpkdYMiaMFmUoXyHdR9kLyAZma-24-m7cofztxd=n_Fr+GYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240528-pwrseq-v8-15-d354d52b763c@linaro.org> <20240605175757.GA733809@bhelgaas>
-In-Reply-To: <20240605175757.GA733809@bhelgaas>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 5 Jun 2024 20:05:06 +0200
-Message-ID: <CAMRc=McKD=ZhGzRUeLezT3oKfreDWQeKBvuousf8zsQjJb1QMA@mail.gmail.com>
-Subject: Re: [PATCH v8 15/17] PCI/pwrctl: add PCI power control core code
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Balakrishna Godavarthi <quic_bgodavar@quicinc.com>, Rocky Liao <quic_rjliao@quicinc.com>, 
-	Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Elliot Berman <quic_eberman@quicinc.com>, Caleb Connolly <caleb.connolly@linaro.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Alex Elder <elder@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org, 
-	Jeff Johnson <quic_jjohnson@quicinc.com>, ath12k@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel@quicinc.com, 
-	Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYMiaMFmUoXyHdR9kLyAZma-24-m7cofztxd=n_Fr+GYQ@mail.gmail.com>
 
-On Wed, Jun 5, 2024 at 7:58=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> On Tue, May 28, 2024 at 09:03:23PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Some PCI devices must be powered-on before they can be detected on the
-> > bus. Introduce a simple framework reusing the existing PCI OF
-> > infrastructure.
-> >
-> > The way this works is: a DT node representing a PCI device connected to
-> > the port can be matched against its power control platform driver. If
-> > the match succeeds, the driver is responsible for powering-up the devic=
-e
-> > and calling pcie_pwrctl_device_set_ready() which will trigger a PCI bus
->
-> s/pcie_pwrctl_device_set_ready/pci_pwrctl_device_set_ready/
->
+On Wed, Jun 05, 2024 at 10:38:07AM +0200, Linus Walleij wrote:
+> On Tue, Jun 4, 2024 at 11:14 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> 
+> > Thank you for looking this over!  Does the following patch (to be merged
+> > into the original) capture it properly?
+> 
+> Yup, also fix the commit message to be == CPU_V6,
+> with that:
 
-Ah that's a leftover from when it was PCIe specific. Thanks.
+Good catch, and will fix.
 
-Bart
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> > rescan as well as subscribe to PCI bus notifications.
-> >
-> > When the device is detected and created, we'll make it consume the same
-> > DT node that the platform device did. When the device is bound, we'll
-> > create a device link between it and the parent power control device.
+Thank you!  I will apply these on my next rebase.
+
+							Thanx, Paul
