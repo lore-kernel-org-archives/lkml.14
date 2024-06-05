@@ -1,39 +1,39 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C71AA19046F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 06:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE5F18C32B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 06:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717569254; cv=none; b=vDeL0rBDoLmwMRdEyCsKxrvUWGcrBKBrM8JIepcHrKXYJ8ldPdwe8WRMQkJ/YIftuTxmVHqYpzk+KDjKnmNtOwzhjZPZMNe4g/eQ5OZ3YBrNXxcZhQqRXvSkJffZl/CpYkQOzIyVFB35H5p6b+MBI6ymaSmaC2as1qf30aVfj2s=
+	t=1717569259; cv=none; b=d5E/1ll2XjEJMF3nX1tFGPiwZf2a7mQqEYK73O3VtYipnEuGD6Lre1tCMOXskmrrUHNsWqT47xFPCwaOd76vD88AmBjOibEIsEt5xpeKMC+4l5rkrzZuN9oEfAB7soRlnX6pPbgvzvjSuEHkX6N81i2udIooQJtRgke+gbPQ/pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717569254; c=relaxed/simple;
-	bh=PQEeKXfOM51bNYl7DoVRfJl+cIvwgdZuLjkHjzjiMPQ=;
+	s=arc-20240116; t=1717569259; c=relaxed/simple;
+	bh=ruqDG+QNwILXYDQjZdx8DjPIl7jOpAZrddO/qf+cPow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=diFFdwp7MZ3H9pmlMGssfZEikrMndMo5RL7MUQoMgtFQydQUalAn4Pout91QqLLSuboh1jzuWj7xGgUgZGtfKDR7WI1Xj+QYT4vplK9yoKKozF/fd9q3OmlZb1c8WV5y5HoIE/DdZx0hl2KV8AtWWv8fZjvVzt6NbA7RZ313Tdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=x3XEhvDE; arc=none smtp.client-ip=80.241.56.171
+	 MIME-Version; b=mkhyNJz3XwO+skK/XIAD0mP1zgm2L+c+PVAQoEGDb1YFfZPQIT59DTe7rrOVycaxNQDoqyhJDWqi+TSeR847edXHtsOYfDooRqOR8CFDFUkRUYA+YpnDvkQx8UtiurFvq6eYRHdqSUz39q+Q1W05dTD10+Ty77vz+Gp2DZPlmA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com; spf=pass smtp.mailfrom=jubnut.com; dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b=OD9Cp+j+; arc=none smtp.client-ip=80.241.56.161
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jubnut.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jubnut.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="x3XEhvDE"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	dkim=pass (2048-bit key) header.d=jubnut.com header.i=@jubnut.com header.b="OD9Cp+j+"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4VvHjs3sWDz9sv0;
-	Wed,  5 Jun 2024 08:34:09 +0200 (CEST)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4VvHjx1G4bz9snn;
+	Wed,  5 Jun 2024 08:34:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jubnut.com; s=MBO0001;
-	t=1717569249;
+	t=1717569253;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T3J2wtEYzEfGFdjBljjkZ5VjfAdF2JeuvVcugebR2hw=;
-	b=x3XEhvDE3Z9VBTvEa82RCRhGxqgqB5GabcJ8Cf/rCXmI0MBJHq7+oCyUURqojwSRTMTmVi
-	zHO3xsSdHO9arDxzRBao76ax6KU+xMhYSK0y6tC79qtinFPV4UNMyKWg5JmGUmgu3vCWYi
-	rJPrYRgQZ9iAA7IbM8g53QAbCfaA5GZe5It2MCKrYnuftoBEWvvgnOa67iyxhJ+QhZts8L
-	uYsNZ8quJ05z9YYH+e0b9NPLes6dC6JwEVez85bLo2Nw1K/B6LMFEXrqsrdn+G0ka3YCGE
-	7Xp402+E39nxkZVWaMXGqExf6WecsBQivmRtV7vhvc2Wj/MHxul6jOwpw62YiA==
+	bh=QVWT4o4RJN6rHBWyrxsihWMYRQAtby4mFTEOZmR9bZ8=;
+	b=OD9Cp+j+oYiI1npLa2sF9fA/R/eLbxx1cOSREITVCBCUUfp+T2KK9Vi8W7JzDNMpqmDF7Z
+	evQ8iQSRvDne9UR39Pqjqnuc4oXX2vDbjqgbHl3Mxv15zNos3oTNouIAvjmhyAIZIcA9JW
+	M/I0cDMFNvpNISrIE3skRPbVthuS8PbzZWykupAmKgj0UxAUpYnmLNoOn0QQ6pCnNR4Y8l
+	1gX0iNm1A/hz/yYWyJHwZotrWYZ0SRycklaGMDZyN9/cUkWSS2Yjh+0hMGC4G1vmFt3w++
+	I0EaQEJhNqyz2Iya8lcArailk830RT9RpPkdPryC9riJgMVWY2OwUhwmADmA2w==
 From: Ben Walsh <ben@jubnut.com>
 To: Benson Leung <bleung@chromium.org>,
 	Tzung-Bi Shih <tzungbi@kernel.org>,
@@ -45,9 +45,9 @@ To: Benson Leung <bleung@chromium.org>,
 	chrome-platform@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: Ben Walsh <ben@jubnut.com>
-Subject: [PATCH v3 3/5] platform/chrome: cros_ec_lpc: Add a new quirk for ACPI id
-Date: Wed,  5 Jun 2024 07:33:49 +0100
-Message-ID: <20240605063351.14836-4-ben@jubnut.com>
+Subject: [PATCH v3 5/5] platform/chrome: cros_ec_lpc: Add quirks for Framework Laptop
+Date: Wed,  5 Jun 2024 07:33:51 +0100
+Message-ID: <20240605063351.14836-6-ben@jubnut.com>
 In-Reply-To: <20240605063351.14836-1-ben@jubnut.com>
 References: <20240605063351.14836-1-ben@jubnut.com>
 Precedence: bulk
@@ -57,122 +57,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4VvHjs3sWDz9sv0
 
-Framework Laptops' ACPI exposes the EC with id "PNP0C09". But
-"PNP0C09" is part of the ACPI standard; there are lots of computers
-with EC chips with this id, and most of them don't support the cros_ec
-protocol.
-
-The driver could find the ACPI device by having "PNP0C09" in the
-acpi_match_table, but this would match devices which don't support the
-cros_ec protocol. Instead, add a new quirk "CROS_EC_LPC_QUIRK_ACPI_ID"
-which allows the id to be specified. This quirk is applied after the
-DMI check shows that the device is supported.
+For Framework Laptops with Microchip EC (MEC), use the ACPI id
+"PNP0C09" to find the ACPI device, and AML mutex "ECMT" to protect EC
+memory access.
 
 Signed-off-by: Ben Walsh <ben@jubnut.com>
 ---
- drivers/platform/chrome/cros_ec_lpc.c | 50 ++++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 12 deletions(-)
+ drivers/platform/chrome/cros_ec_lpc.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/platform/chrome/cros_ec_lpc.c b/drivers/platform/chrome/cros_ec_lpc.c
-index 7bf13c1d2c67..fa6606da802a 100644
+index 5d9cc8df208b..ebe9fb143840 100644
 --- a/drivers/platform/chrome/cros_ec_lpc.c
 +++ b/drivers/platform/chrome/cros_ec_lpc.c
-@@ -39,6 +39,11 @@ static bool cros_ec_lpc_acpi_device_found;
-  * be used as the base port for EC mapped memory.
-  */
- #define CROS_EC_LPC_QUIRK_REMAP_MEMORY              BIT(0)
-+/*
-+ * Indicates that lpc_driver_data.quirk_acpi_id should be used to find
-+ * the ACPI device.
-+ */
-+#define CROS_EC_LPC_QUIRK_ACPI_ID                   BIT(1)
- 
- /**
-  * struct lpc_driver_data - driver data attached to a DMI device ID to indicate
-@@ -46,10 +51,12 @@ static bool cros_ec_lpc_acpi_device_found;
-  * @quirks: a bitfield composed of quirks from CROS_EC_LPC_QUIRK_*
-  * @quirk_mmio_memory_base: The first I/O port addressing EC mapped memory (used
-  *                          when quirk ...REMAP_MEMORY is set.)
-+ * @quirk_acpi_id: An ACPI HID to be used to find the ACPI device.
-  */
- struct lpc_driver_data {
- 	u32 quirks;
- 	u16 quirk_mmio_memory_base;
-+	const char *quirk_acpi_id;
+@@ -636,6 +636,12 @@ static const struct lpc_driver_data framework_laptop_amd_lpc_driver_data __initc
+ 	.quirk_mmio_memory_base = 0xE00,
  };
  
- /**
-@@ -418,6 +425,26 @@ static void cros_ec_lpc_acpi_notify(acpi_handle device, u32 value, void *data)
- 		pm_system_wakeup();
- }
- 
-+static acpi_status cros_ec_lpc_parse_device(acpi_handle handle, u32 level,
-+					    void *context, void **retval)
-+{
-+	*(struct acpi_device **)context = acpi_fetch_acpi_dev(handle);
-+	return AE_CTRL_TERMINATE;
-+}
++static const struct lpc_driver_data framework_laptop_11_lpc_driver_data __initconst = {
++	.quirks = CROS_EC_LPC_QUIRK_ACPI_ID|CROS_EC_LPC_QUIRK_AML_MUTEX,
++	.quirk_acpi_id = "PNP0C09",
++	.quirk_aml_mutex_name = "ECMT",
++};
 +
-+static struct acpi_device *cros_ec_lpc_get_device(const char *id)
-+{
-+	struct acpi_device *adev = NULL;
-+	acpi_status status = acpi_get_devices(id, cros_ec_lpc_parse_device,
-+					      &adev, NULL);
-+	if (ACPI_FAILURE(status)) {
-+		pr_warn(DRV_NAME ": Looking for %s failed\n", id);
-+		return NULL;
-+	}
-+
-+	return adev;
-+}
-+
- static int cros_ec_lpc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -445,6 +472,16 @@ static int cros_ec_lpc_probe(struct platform_device *pdev)
- 
- 		if (quirks & CROS_EC_LPC_QUIRK_REMAP_MEMORY)
- 			ec_lpc->mmio_memory_base = driver_data->quirk_mmio_memory_base;
-+
-+		if (quirks & CROS_EC_LPC_QUIRK_ACPI_ID) {
-+			adev = cros_ec_lpc_get_device(driver_data->quirk_acpi_id);
-+			if (!adev) {
-+				dev_err(dev, "failed to get ACPI device '%s'",
-+					driver_data->quirk_acpi_id);
-+				return -ENODEV;
-+			}
-+			ACPI_COMPANION_SET(dev, adev);
-+		}
- 	}
- 
- 	/*
-@@ -709,23 +746,12 @@ static struct platform_device cros_ec_lpc_device = {
- 	.name = DRV_NAME
+ static const struct dmi_system_id cros_ec_lpc_dmi_table[] __initconst = {
+ 	{
+ 		/*
+@@ -704,6 +710,7 @@ static const struct dmi_system_id cros_ec_lpc_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Framework"),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Laptop"),
+ 		},
++		.driver_data = (void *)&framework_laptop_11_lpc_driver_data,
+ 	},
+ 	{ /* sentinel */ }
  };
- 
--static acpi_status cros_ec_lpc_parse_device(acpi_handle handle, u32 level,
--					    void *context, void **retval)
--{
--	*(bool *)context = true;
--	return AE_CTRL_TERMINATE;
--}
--
- static int __init cros_ec_lpc_init(void)
- {
- 	int ret;
--	acpi_status status;
- 	const struct dmi_system_id *dmi_match;
- 
--	status = acpi_get_devices(ACPI_DRV_NAME, cros_ec_lpc_parse_device,
--				  &cros_ec_lpc_acpi_device_found, NULL);
--	if (ACPI_FAILURE(status))
--		pr_warn(DRV_NAME ": Looking for %s failed\n", ACPI_DRV_NAME);
-+	cros_ec_lpc_acpi_device_found = !!cros_ec_lpc_get_device(ACPI_DRV_NAME);
- 
- 	dmi_match = dmi_first_match(cros_ec_lpc_dmi_table);
- 
 -- 
 2.45.1
 
