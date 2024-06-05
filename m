@@ -1,89 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899C72AE7F;
-	Wed,  5 Jun 2024 23:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8986ABA38;
+	Wed,  5 Jun 2024 23:01:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717628434; cv=none; b=CACwqdyAA/wYy+xGqQqoyUvyIP0FJZXEj7OCpmp1KbQtOIg/SSfOP1CfJph6PzU7KQ54h8Gry9O/Oxk5PGddI5+KsLkWxIZriijfq3slB68wBCThIZ6f5N3gZFHNp6nzeBNaOfOZlA7CKR0645WBDhhdWA/gnJNmAezIdjZ3u/A=
+	t=1717628511; cv=none; b=GIMd7IwcUqY89iTJQVYwue+AGnFZleZCkPcjKS+WS3XSco5LTV8KEEE+RVNA41V991Oc5ZzT1QRr5WwL7+vFY3LlGUrBFOMxPT7ExVJnIcoWtOMqYo6XJIaLHII+83IWzIgfwNLxe4BcvkLcvPkaUIJxBtb32cCnRhtQZRHzfDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717628434; c=relaxed/simple;
-	bh=ys29AEGN9uxjRgj/gkWHJXNJ6X/W127GxKx1D0A7x8g=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UoFD5+dzFq+G4+SMyV8vHMbHiZGKi0ynlbJ1u3QhKBOGVfeNZ/O0rvINF7iSe/qOGmTxoia2XUy2QbYI8bC2IZsx7fm/9Join60hG9bk64nn+u7SXaKCs32dMDQel96M+bn+EnicJ55G2rmrh1Wb+X9u4NPVyA7lvmklzQBpRr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0V99Rfl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717628511; c=relaxed/simple;
+	bh=Z3h4+PdKb5fP3a2f7pP8Dpq2lfsZWnsIkrMrgnK1Kh0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YEV+3yXUoH0UItul4GOhenc/21PtVhOjpInFUiUCrLwhhPx7ggL9Dnk9m+q0ty3GKBsKy1+BP3vmWKyx5kXy2dZovYOLTsCrpktLs5MfOMeBm7h6vrGaThDkFXK5Ew3f5iKhGdH1IwjvtZsR9fbec9sg/t1RZ0RohAPm2jrhAMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4RsB/q3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0V99Rfl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2B640C4AF07;
-	Wed,  5 Jun 2024 23:00:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4RsB/q3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B99C2BD11;
+	Wed,  5 Jun 2024 23:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717628434;
-	bh=ys29AEGN9uxjRgj/gkWHJXNJ6X/W127GxKx1D0A7x8g=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=J0V99RflyizU0HCTYjaujZPlESm6zu7Ck7LKCuT/xSFk9fo23Ug9PCWKiBh4Ps7RZ
-	 c7EdiWlr2ysLBRGF4wqsuVvdISJFkZ1rSgvl7vq6lue9xw7pYb9YBhJ503tcTrPu0/
-	 Gqw9tGsZCVvGRrw2EUZ8+2IGdympm/lJCkuh9xuiR4UfDTMztd53tJfzkskkSVv0Xi
-	 ZPqp/hcyyGgvt8/wBB/4TnHjmz7kB6Wxek7/v08hKCGJ3iMNebVersi8XpHSt3V+MK
-	 wIQntM1ivpXInb24/0+za0zH+C2Vb5grg3fRBxvN2FV5TLEdUpsxYihqmEpRVaIw5c
-	 G8+o5hyq3E4Kg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 16DBAD3E998;
-	Wed,  5 Jun 2024 23:00:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1717628511;
+	bh=Z3h4+PdKb5fP3a2f7pP8Dpq2lfsZWnsIkrMrgnK1Kh0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=W4RsB/q3OYPNHyBjNwIrXJ5dhDMNo6c02n9hk6NVTKxJ0bSLyqmcUwHReqNUoRGfg
+	 2nci0Plb0Fgme8sZon/sMkLNdX4EFxEcR+D7LaINo6uZlVg1J42M2X8N1tBN/pmsRw
+	 roBMeBSGyPXybUABfd4eqGbl7u17n09UeMt46qvuM+4LV7BX/4jazpell3cSb2isPZ
+	 A2poSOkc7g2OFiN28VbXSuG5DIg2W7D8vThNv2fWI8ED6FXhyt9AGYZyo/F0ZWf7xo
+	 pIh6bCqiujZu0u5fgzW8uYJeBD6+HTjc93u6xM1MvZYD7UPvYQx9sn8WSIWcfuK6Ji
+	 bycyargZHq88A==
+Date: Thu, 6 Jun 2024 08:01:47 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 1/5] ftrace: Rename dup_hash() and comment it
+Message-Id: <20240606080147.99c20cd5a638eda8307dc7a7@kernel.org>
+In-Reply-To: <20240605180408.537723591@goodmis.org>
+References: <20240605180334.090848865@goodmis.org>
+	<20240605180408.537723591@goodmis.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net-next 0/4] vmxnet3: upgrade to version 9
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171762843408.9199.15628895489607695720.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Jun 2024 23:00:34 +0000
-References: <20240531193050.4132-1-ronak.doshi@broadcom.com>
-In-Reply-To: <20240531193050.4132-1-ronak.doshi@broadcom.com>
-To: Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Wed, 05 Jun 2024 14:03:35 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 31 May 2024 12:30:45 -0700 you wrote:
-> vmxnet3 emulation has recently added timestamping feature which allows the
-> hypervisor (ESXi) to calculate latency from guest virtual NIC driver to all
-> the way up to the physical NIC. This patch series extends vmxnet3 driver
-> to leverage these new feature.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Compatibility is maintained using existing vmxnet3 versioning mechanism as
-> follows:
-> - new features added to vmxnet3 emulation are associated with new vmxnet3
->    version viz. vmxnet3 version 9.
-> - emulation advertises all the versions it supports to the driver.
-> - during initialization, vmxnet3 driver picks the highest version number
-> supported by both the emulation and the driver and configures emulation
-> to run at that version.
+> The name "dup_hash()" is a misnomer as it does not duplicate the hash that
+> is passed in, but instead moves its entities from that hash to a newly
+> allocated one. Rename it to "__move_hash()" (using starting underscores as
+> it is an internal function), and add some comments about what it does.
 > 
-> [...]
 
-Here is the summary with links:
-  - [v2,net-next,1/4] vmxnet3: prepare for version 9 changes
-    https://git.kernel.org/netdev/net-next/c/4978478a6888
-  - [v2,net-next,2/4] vmxnet3: add latency measurement support in vmxnet3
-    https://git.kernel.org/netdev/net-next/c/4c22fad70256
-  - [v2,net-next,3/4] vmxnet3: add command to allow disabling of offloads
-    https://git.kernel.org/netdev/net-next/c/2e5010fd0c43
-  - [v2,net-next,4/4] vmxnet3: update to version 9
-    https://git.kernel.org/netdev/net-next/c/63587234d42a
+Looks good to me.
 
-You are awesome, thank you!
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ftrace.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index da7e6abf48b4..9dcdefe9d1aa 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1391,7 +1391,11 @@ ftrace_hash_rec_enable_modify(struct ftrace_ops *ops, int filter_hash);
+>  static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
+>  				       struct ftrace_hash *new_hash);
+>  
+> -static struct ftrace_hash *dup_hash(struct ftrace_hash *src, int size)
+> +/*
+> + * Allocate a new hash and remove entries from @src and move them to the new hash.
+> + * On success, the @src hash will be empty and should be freed.
+> + */
+> +static struct ftrace_hash *__move_hash(struct ftrace_hash *src, int size)
+>  {
+>  	struct ftrace_func_entry *entry;
+>  	struct ftrace_hash *new_hash;
+> @@ -1438,7 +1442,7 @@ __ftrace_hash_move(struct ftrace_hash *src)
+>  	if (ftrace_hash_empty(src))
+>  		return EMPTY_HASH;
+>  
+> -	return dup_hash(src, size);
+> +	return __move_hash(src, size);
+>  }
+>  
+>  static int
+> -- 
+> 2.43.0
+> 
+> 
+
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
