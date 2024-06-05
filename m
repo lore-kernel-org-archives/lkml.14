@@ -1,88 +1,115 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F388F145322;
-	Wed,  5 Jun 2024 18:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D378B149C63
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610570; cv=none; b=hrIbskc4yfL7OuuyfrQAtXZTBEeRa0Vn23EShfglt46x18vgkE/LinLiwF4zJfgiL5YL1ks5OD1fM6k86eQpa3eLNxifhW9OHWGoHJLfNND75NuB2+f7YWleMbMMUvHlZ4JzDKS+8ANk7lanyFCTvaXguGN0hWaaRQQGqNwRAaM=
+	t=1717610571; cv=none; b=S18uwpW4JnorA2FpMdp/MVVKmiraCYIxUaYAKnqyQFypCLJD0RAqlB6V3Qp8NRZ9Xcxuz8U9vocG5Hf5o5Qn2G63PXdNSaLmbSZMi+8FIv7r3htJEOcMq4nj/Ad+MzjuHVboN5Uym0T1mmzFzJTW7e7YCyOBZUu3X9N9+YeLaRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610570; c=relaxed/simple;
-	bh=uwUrfu/yzS/YNseKipCZSPaE2sZQzojPJmfSYmfQ2II=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=McuLFB9mc4G5a+VyT6iLFMyTo+Eoqrh/WmluKPjeeBvr+aSV9xs0GSCqZQ4YqejDW/H6ANwnznJ/JVxZFAA8CA8NWQi8yNMIRqAf9k1++Vxra0BCozVMxyFrC3Gcn7I1OneDFVPIabJLfrXKgAPPUxorEXTzLPZSr+xcyDHDK1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=BH3LY5Bs; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1717610571; c=relaxed/simple;
+	bh=L6k+G2m+3j3md7/zl4VB2q4oF1PIwiQxOqm6LYJmtKc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=gerZw+tV+pyDVUhP8FnahWSkndWs7h2ZL97XMSCoYTJ7w99MZ6ZPJXZRGneec6DsCSMchkJoDoy7mEGJMTx0sFnfsSqGusuBcWcoyjUzR3Fa3T9KmZbpOphKRhzHfC3S6cDPlE28lEGsfmt7WoM+7V8Gj1M6ShKjwcvokRp9OAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=u2X6l/Cn; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="BH3LY5Bs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=uwUrfu/yzS/YNseKipCZSPaE2sZQzojPJmfSYmfQ2II=;
-	t=1717610568; x=1718820168; b=BH3LY5Bsae9vIWyOsa/qXHUk7LcIgC3yavKg8JyM+FPTk2E
-	JguRCm6uYy3EvBeXqtsmuVgDehf5zk5cHYlV84elBBcRuaF2NwCz5KEOGtpjZj3//kHccqA2vbKlc
-	qKrUC+/GNb+NiTFvs2gEdOLMmYJoRg54EKctmsEmxKNsXexWvVJhmjsijnrALB+OS4HM6uBePOL3u
-	7J19mdPD146PGqGlM+EkbbmOdrlZy/GSpfCnynK7yTWfN1iHBe636xh3QfyN4djFTbzyhw1bTZulR
-	lVfUEifRRRKQ2mukbi8mP9aE70jaJetG16zmlNGgiezxT0oQfBzkwahewv/jJ9aw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1sEuxm-0000000ErED-3wIf;
-	Wed, 05 Jun 2024 20:02:19 +0200
-Message-ID: <b46fd359f62fc7c50790fb19a8814c89a10a7c1c.camel@sipsolutions.net>
-Subject: Re: [PATCH] arch: um: rust: Add i386 support for Rust
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-Cc: David Gow <davidgow@google.com>, Brendan Higgins
- <brendan.higgins@linux.dev>,  Rae Moar <rmoar@google.com>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,  Miguel Ojeda
- <ojeda@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Masahiro Yamada
- <masahiroy@kernel.org>,  Richard Weinberger <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>,  kunit-dev@googlegroups.com,
- linux-kernel@vger.kernel.org,  linux-um@lists.infradead.org,
- rust-for-linux@vger.kernel.org, x86@kernel.org,  Wedson Almeida Filho
- <wedsonaf@gmail.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun
- Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin
- <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice
- Ryhl <aliceryhl@google.com>, linux-doc@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
-Date: Wed, 05 Jun 2024 20:02:17 +0200
-In-Reply-To: <CAMj1kXHa58Zcq3extXw4VXGnpVHbd5urzCGnh_oCo-BLMxMrJQ@mail.gmail.com>
-References: <20240604224052.3138504-1-davidgow@google.com>
-	 <20240605062234.GE279426@thelio-3990X>
-	 <CAMj1kXHa58Zcq3extXw4VXGnpVHbd5urzCGnh_oCo-BLMxMrJQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u2X6l/Cn"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a0841402aso266267b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717610569; x=1718215369; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUTCTG4PiwJpsjy0QKETkEiNDEwH04EYXsIQhajeZMg=;
+        b=u2X6l/CnJHRqsHZ+uqWAuBZR2EDxEE7VQOHBGEJWO82zvjwXqD7qJxXBn9P3wlYn/S
+         P4vKe/yG01XKq16yIxYARa/A+s6Mv7WqHlVYjACiA/gDL9Faq/QdOyj9IOzHvlkSJJ+o
+         503leGdALXnNTEdpjvOLYNt/GC44iG3fAc0ebZGxR12mgtPkH0ZXYmeFilrL6GAE64+0
+         8KFTsXahDn8y7qdHAv9bIAnBQMMV288ZcMOQh+ZTq5vbDThXjxT0KVce2mqe2CIc/nK4
+         BIUj+z4Ox71qKxUxvQTViK8c80aQX7iytCFYkqYku39TU847AsFpxldfDH73MxlqBpSi
+         gEng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717610569; x=1718215369;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IUTCTG4PiwJpsjy0QKETkEiNDEwH04EYXsIQhajeZMg=;
+        b=jFljwgAktXKfQw+fIpQWkhGuurKPH0dZLgsSsRG7rf1hYYTKDiUkZBjmbh71vL7yfa
+         kg6a7RHz1FafjnP9r+5CIovYcr4XihGkJrZ0F647YUyIU4Zxzu4VKXrPYOi9r2uUy8+b
+         dUzdrq5q6aT+oyYujtdHSMJZXJ50h8y9WWquDKiO2XAXdC3Vm8oS7t+4Jx7NpbecoEwO
+         D2Aiypx29cqMrga4M5pU17QJfc1idh8+UUdsmIuzVkjZblcKZmT1a2cORxOZMuRX+DQp
+         XqpkLMEt4x7GclSVmZ64wYUhwLaK6SWVo8ExX+StGiKeDgo3S0I7kHUGRxuJE/xnmHox
+         iY2w==
+X-Forwarded-Encrypted: i=1; AJvYcCWzTR0cOJrXDHU0daqlNM2UJRh3IBBFOwMUvhbyqzkVPd3T/G7XfoyrNibbYnvGYsKodDLWkTwnaHGSTV0GLk1BjOg7nRYdOTP2/VH1
+X-Gm-Message-State: AOJu0Yw9+qa4F7uqnH3iEOhT2Y5H7J2Aa1vD7M9rsf7T7Q7K7QrN53xZ
+	X5/a2oqyOMBmYedaalF5/1QWjNnw3uZo0NU0El/Z6Zsunkpay2UMYdu0xnSJXO1fIfTVuAB5KDM
+	2U+ckP6HXAQ==
+X-Google-Smtp-Source: AGHT+IGRE1l9odt4GG6RaI8M/uHdLkQEjh5Taz0VKgQ269YOTeE9TiCNJPVhuqv1Ry405YEIQ6hIdx0yWPVe/Q==
+X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
+ (user=joychakr job=sendgmr) by 2002:a81:4c07:0:b0:62a:415b:a137 with SMTP id
+ 00721157ae682-62cbb4a2295mr5047937b3.1.1717610568813; Wed, 05 Jun 2024
+ 11:02:48 -0700 (PDT)
+Date: Wed,  5 Jun 2024 18:02:32 +0000
+In-Reply-To: <20240605180238.2617808-1-joychakr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Mime-Version: 1.0
+References: <20240605180238.2617808-1-joychakr@google.com>
+X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
+Message-ID: <20240605180238.2617808-2-joychakr@google.com>
+Subject: [PATCH v1 11/17] mtd: ubi: nvmem: Change nvmem reg_read/write return type
+From: Joy Chakraborty <joychakr@google.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
+	linux-usb@vger.kernel.org, manugautam@google.com, 
+	Joy Chakraborty <joychakr@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2024-06-05 at 19:59 +0200, Ard Biesheuvel wrote:
->=20
-> > > -ifdef CONFIG_X86_64
-> > > +ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
-> >=20
-> > These configurations are mutually exclusive, so would it look more
-> > readable to have it be:
-> >=20
-> >=20
-> > ifeq ($(CONFIG_X86_32)$(CONFIG_X86_64),y)
-> >=20
->=20
-> Or simply
->=20
-> ifdef CONFIG_X86
+Change nvmem read/write function definition return type to ssize_t.
 
-No, we're talking about ARCH=3Dum, so CONFIG_X86 isn't set, but
-CONFIG_X86_{32,64} are set as the "sub" or "host" arch. :)
+Signed-off-by: Joy Chakraborty <joychakr@google.com>
+---
+ drivers/mtd/ubi/nvmem.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-johannes
+diff --git a/drivers/mtd/ubi/nvmem.c b/drivers/mtd/ubi/nvmem.c
+index 8aeb9c428e51..eab14821343d 100644
+--- a/drivers/mtd/ubi/nvmem.c
++++ b/drivers/mtd/ubi/nvmem.c
+@@ -20,8 +20,8 @@ struct ubi_nvmem {
+ 	struct list_head list;
+ };
+ 
+-static int ubi_nvmem_reg_read(void *priv, unsigned int from,
+-			      void *val, size_t bytes)
++static ssize_t ubi_nvmem_reg_read(void *priv, unsigned int from,
++				  void *val, size_t bytes)
+ {
+ 	size_t to_read, bytes_left = bytes;
+ 	struct ubi_nvmem *unv = priv;
+@@ -55,7 +55,7 @@ static int ubi_nvmem_reg_read(void *priv, unsigned int from,
+ 	if (err)
+ 		return err;
+ 
+-	return bytes_left == 0 ? 0 : -EIO;
++	return bytes - bytes_left;
+ }
+ 
+ static int ubi_nvmem_add(struct ubi_volume_info *vi)
+-- 
+2.45.1.467.gbab1589fc0-goog
+
