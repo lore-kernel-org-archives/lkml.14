@@ -1,232 +1,144 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207919925A;
-	Wed,  5 Jun 2024 08:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D7A19004B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575542; cv=none; b=FlQgvpr5epLyarK0QH4JeNGgHii/mCSIpUN3uKnlcHSBtrmjI/JwOK3bIXkSXiW2sdNFWQWS4Y4Jbhx7dnkLsfxsElqWyuXn+dtLEgBQG+gYxnvqOm8bD3bwNFdHeyQxBbf2PCXw+txBkghxAYdsEx7bfJ4vSgBDb/q0IKVSKw8=
+	t=1717575552; cv=none; b=AEB3M/fKtvjtvvGPV/lEdSauqhuJmbNcXN6jP7IqZYbEX77PaOAG+PMpWAeET2jDwGMDbgPCr1SnLE91IXQ+DZPUsvmebGpxu5VOVRSGG4XwmNeUIdUrEshR+7MWbdgojszO5MGcSQ2YNwZTdVVVuYz68M5CvoD6Thpnzz/mWhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575542; c=relaxed/simple;
-	bh=dE020p3x7ejjd5Ua7MTWxIrOjmUH897gLahJpmGZrC4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k+r/SKScQG9GIkJ60YVoYbNwAset5jjOy/XsjgGMamc0zt4jEE/8za1gLJSsZS84fbD8lrfeEAgiGeo7sbd1asBkBp/a+ib2OYNrK7ms2f3ptKkZ/YstQ/+lghfO3WiycEKwLHO6xcX58/SuG/j9FqKlmJo4rQFPrlUxYEb7DUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=f1UkljDM; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1717575552; c=relaxed/simple;
+	bh=vp7Qm2xgCaJ7DquW3IpHfBp1L88l0NedFhQPYw7bLkc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VhOKClJw1iccpDdwwxOK+DEpDsFs/z2sjgYKpHowby6Qv3DyD/9ZXTYXaHYrSIxhHyesBacLT94zyHyrS7UdaUkeGDLfZJDy8jI//K6rHLasDAoMJRKFMlh2retD4ttmGco7t9BUpBWUBY5qcIxJULAqxG0bQcJqTvKc8u66KdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fu1u8YCU; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="f1UkljDM"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454KRqZb004139;
-	Wed, 5 Jun 2024 01:18:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=P
-	L44a3oSwg6fW7HWjjUgbuaM6mDQwdDuzi6m1DlIqrY=; b=f1UkljDMgFwZypwIK
-	2ovCZFR98hYt6lirD+IVezvhwZ7Wsb5DjWiVcODeK2XtHB8sBHbk+yNWPDcKVZ/F
-	ajWmYfuO/qnB35DfVqUvFmnaqcQKljGzl5jdM58fCivKT73HxyWHD3pmaXZrK2Tb
-	a4haiWzmSUEh9r3kPfP8qh29E5GU//crYTYS/gFKW7i/+l+mGu7W6zQEW3P6rBsI
-	REaPnb2Qgxwkp0+5ru8O9qngLi8U+HspSYr2BGvoydS4dVmWjQnhhag5BjIib1fp
-	gmKz4DJB1L4uWZI62p5edDgG/19bI+jkKAJ6T9rGFR92QmXwhhRbYW0HKGjaAqcn
-	bFflw==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yj167cf60-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 01:18:21 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 5 Jun 2024 01:18:12 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 5 Jun 2024 01:18:12 -0700
-Received: from virtx40.. (unknown [10.28.34.196])
-	by maili.marvell.com (Postfix) with ESMTP id 6A1253F70A5;
-	Wed,  5 Jun 2024 01:18:08 -0700 (PDT)
-From: Linu Cherian <lcherian@marvell.com>
-To: <suzuki.poulose@arm.com>, <mike.leach@linaro.org>, <james.clark@arm.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <sgoutham@marvell.com>,
-        <gcherian@marvell.com>, Linu Cherian <lcherian@marvell.com>
-Subject: [PATCH v9 7/7] coresight: config: Add preloaded configuration
-Date: Wed, 5 Jun 2024 13:47:25 +0530
-Message-ID: <20240605081725.622953-8-lcherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240605081725.622953-1-lcherian@marvell.com>
-References: <20240605081725.622953-1-lcherian@marvell.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fu1u8YCU"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a696cde86a4so152930366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:19:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717575549; x=1718180349; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ENqVUKHdwy0O5lgnMAW326XCMPTN57QKxIlzQHh9wB0=;
+        b=Fu1u8YCUH3xVmntVjFlf9XP82vgIeO1tzd/q+2IuNXDzZpPGBfhC44e1OmX1arLikj
+         eKf9FBpiIZ8XTSWW3tNLhEbTdfj5Pevwn2QWIsNMub8H6dAP07WjzNzBHdj0fqvrz07+
+         fipErxUQHuf22xdtJvYfC49uUzsPvinzpFIdBIXTbnjAGQ9veC2NHbis7YFqsf7sVdrY
+         dAsecyR3/Ipr8uVuDIFpPQhyXt/n8eLGDZkA2ieSP5Wj9Y1USPDUAwjyqFc0aPK45RTD
+         sJJxqRqHZ0Z2/C4KZAwxjRQ//jgyqnv3ZOZTpHoaw+y9/mnGBngEDVPsX+5xLIaYYCES
+         pDfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717575549; x=1718180349;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ENqVUKHdwy0O5lgnMAW326XCMPTN57QKxIlzQHh9wB0=;
+        b=TlNVpOGx5/IyBwwwDlDUJzn+gu0P0YHBe1LCSZDPSgA7jN/3lROyH4sV/E9io7rId6
+         JA2CLq11j0B/8QHXA0kYBRV9Ve8hHHRPOdJ8X+BVdgDTgdu05GlJDpH8TiQEKJKUzMW9
+         +JtRUeNIbwAXFLXx561vZp75glnhXDB1q89WCMEsszFTyt2Z/psgYYXK322eFi04Mzr0
+         zeCmVv6B5EZW6uiEV/0JYb7Yskoho9HWCO+vLgdN+w4f/vQun4I31uuYE4m0+gt67GIY
+         sU/oT3bSw/YP6xqJeQJ3iWsGsyRjGRnO9WSEpb4fZaYX0ldUmTF0LnM7lEr2jY+cX6PX
+         9qYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHHPz9LhtdC/OHieObakxim+Fompxzypn4rsmvtj/+1HNeAW0/9uP4sMm52L1cIhS8ryLZ3tMw/VHuJ0hXzsi6MY1W6prgc+eYW1+F
+X-Gm-Message-State: AOJu0YxYYdyy1y2tOahXdHjkI24UgFSGI3Nu8C5KaLwuY0M2DeSCi8Tt
+	NIcyJNOPWmFZa90RqaXiAEh9dOqUrPdIWZNgU497N3JSLe118WeRbIs9b8y5rZ0=
+X-Google-Smtp-Source: AGHT+IH/wDmaXDvfueqvjYO5BfZm427ahsbQZq0Pgceh1jGEgF4E+jD66gFd8ABdQXpQZbngPeuoJg==
+X-Received: by 2002:a17:906:852:b0:a69:906c:9005 with SMTP id a640c23a62f3a-a699fcdfbaamr113842366b.57.1717575548908;
+        Wed, 05 Jun 2024 01:19:08 -0700 (PDT)
+Received: from [127.0.1.1] ([188.27.161.69])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a408ef12sm635274166b.183.2024.06.05.01.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 01:19:08 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Wed, 05 Jun 2024 11:19:01 +0300
+Subject: [PATCH v2] dt-bindings: PCI: qcom: x1e80100: Make the MHI reg
+ region mandatory
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: npJ9hCOgm7I8QKd1cl4qG0-h5X64wRoG
-X-Proofpoint-GUID: npJ9hCOgm7I8QKd1cl4qG0-h5X64wRoG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-05_01,2024-05-17_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240605-x1e80100-pci-bindings-fix-v2-1-c465e87966fc@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHUfYGYC/42NTQqDMBBGryKz7pSZVKV25T2KCzWjDpREkiIWy
+ d2beoIu3+P7OSBKUInwKA4IsmlU7zKYSwHj0rtZUG1mMGRKqqnEneVOTITrqDios+rmiJPuyE3
+ dmMpyZWqC3F+DZH1uP7vMi8a3D5/zauOf/Wd1Y2ScSsnRioebpfalrg/+6sMMXUrpC4AUCojDA
+ AAA
+To: Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=vp7Qm2xgCaJ7DquW3IpHfBp1L88l0NedFhQPYw7bLkc=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmYB92tZXyy+MsIwrx4sdQ8/yrKeESlOReZHYqM
+ G/PtJRDdrSJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZmAfdgAKCRAbX0TJAJUV
+ Vru2EADISn6YapQADX1ufRGp317ooagXO9Ej9Rv2DW9xvgVBDM5WEvW+HzS/0pjkAXT/K7X3hfE
+ 3ubM02RH35OyguBiYwsjIYOVRYKcStSAr5I7S3k+xxWtCA9+7VvlWqnKuc9O1Ehr8+tkh9yBHY5
+ 6fV+K9C/qcrXOjwymJkj2Hgy1xYmuARVFMUiFtMzNGQh9jCCsLU0QDRQOz7cj/tOV7M2mfM3zB4
+ xe+Bd52lMyRmV+X/HD6fwDzBXrPzCG0Aoh1zjVkFDrdDwK0cgL+LI2HoVEEj70YgOyr+d1f7lPL
+ 1zzTbZmfKFwUyfeCt0u6q7QRgDipR0DVpXyVWDmDEoPFLSlSMJaG1iPTx/Ve4n2hRzj0GGm+hYu
+ oMuSn/oTXdtCf5XY8sXmwAC+4kBl9l+oRpUkoazCj7Unxb2Feh2XeWew9TNGk7tzI12Byis8w/9
+ xSXyHZrklJQHXg+dUPi+xqQJOt0mUNKeiHeji1ZOimdfQz1hsXD7WqjbEHi7KqKVbNcVf4l6Zoi
+ pHHgwzdrXGSN+Pmk8Hgkm7cz5Bk2yyAWdSc6E1VzEUVGztidrW1lgoQTQj53zAzrZgYVxAeNCHF
+ cNcv1oy5/QuJ+3eWy/58U2nRHVDFvzyL9HHJL7MphDZxWwvRPQ7S8Wfiwa8RIBRw8l3U9jjGCzn
+ Dg+uyLKjbpiIJmA==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Add a preloaded configuration for generating
-external trigger on address match. This can be
-used by CTI and ETR blocks to stop trace capture
-on kernel panic.
+All PCIe controllers found on X1E80100 have MHI register region.
+So change the schema to reflect that.
 
-Kernel address for "panic" function is used as the
-default trigger address.
-
-This new configuration is available as,
-/sys/kernel/config/cs-syscfg/configurations/panicstop
-
-Signed-off-by: Linu Cherian <lcherian@marvell.com>
-Reviewed-by: James Clark <james.clark@arm.com>
+Fixes: 692eadd51698 ("dt-bindings: PCI: qcom: Document the X1E80100 PCIe Controller")
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
-Changelog from v8:
-Added Reviewed-by tag.
+Note that this patch will trigger an MHI reg region
+warning until the following patch will also be merged:
 
- drivers/hwtracing/coresight/Makefile          |  2 +-
- .../coresight/coresight-cfg-preload.c         |  2 +
- .../coresight/coresight-cfg-preload.h         |  2 +
- .../hwtracing/coresight/coresight-cfg-pstop.c | 83 +++++++++++++++++++
- 4 files changed, 88 insertions(+), 1 deletion(-)
- create mode 100644 drivers/hwtracing/coresight/coresight-cfg-pstop.c
+https://lore.kernel.org/all/20240604-x1e80100-dts-fixes-pcie6a-v2-1-0b4d8c6256e5@linaro.org/
+---
+Changes in v2:
+- Dropped the vddpe supply change as that will have to be reworked
+  in a different way, maybe on multiple platforms.
+- Added SoC name to the subject line
+- Link to v1: https://lore.kernel.org/r/20240604-x1e80100-pci-bindings-fix-v1-1-f4e20251b3d0@linaro.org
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 4ba478211b31..46ce7f39d05f 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -25,7 +25,7 @@ subdir-ccflags-y += $(condflags)
- obj-$(CONFIG_CORESIGHT) += coresight.o
- coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
- 		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
--		coresight-cfg-preload.o coresight-cfg-afdo.o \
-+		coresight-cfg-preload.o coresight-cfg-afdo.o coresight-cfg-pstop.o \
- 		coresight-syscfg-configfs.o coresight-trace-id.o
- obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
- coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
-diff --git a/drivers/hwtracing/coresight/coresight-cfg-preload.c b/drivers/hwtracing/coresight/coresight-cfg-preload.c
-index e237a4edfa09..4980e68483c5 100644
---- a/drivers/hwtracing/coresight/coresight-cfg-preload.c
-+++ b/drivers/hwtracing/coresight/coresight-cfg-preload.c
-@@ -13,6 +13,7 @@
- static struct cscfg_feature_desc *preload_feats[] = {
- #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
- 	&strobe_etm4x,
-+	&gen_etrig_etm4x,
- #endif
- 	NULL
- };
-@@ -20,6 +21,7 @@ static struct cscfg_feature_desc *preload_feats[] = {
- static struct cscfg_config_desc *preload_cfgs[] = {
- #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
- 	&afdo_etm4x,
-+	&pstop_etm4x,
- #endif
- 	NULL
- };
-diff --git a/drivers/hwtracing/coresight/coresight-cfg-preload.h b/drivers/hwtracing/coresight/coresight-cfg-preload.h
-index 21299e175477..291ba530a6a5 100644
---- a/drivers/hwtracing/coresight/coresight-cfg-preload.h
-+++ b/drivers/hwtracing/coresight/coresight-cfg-preload.h
-@@ -10,4 +10,6 @@
- #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
- extern struct cscfg_feature_desc strobe_etm4x;
- extern struct cscfg_config_desc afdo_etm4x;
-+extern struct cscfg_feature_desc gen_etrig_etm4x;
-+extern struct cscfg_config_desc pstop_etm4x;
- #endif
-diff --git a/drivers/hwtracing/coresight/coresight-cfg-pstop.c b/drivers/hwtracing/coresight/coresight-cfg-pstop.c
-new file mode 100644
-index 000000000000..c2bfbd07bfaf
---- /dev/null
-+++ b/drivers/hwtracing/coresight/coresight-cfg-pstop.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright(C) 2023  Marvell.
-+ * Based on coresight-cfg-afdo.c
-+ */
-+
-+#include "coresight-config.h"
-+
-+/* ETMv4 includes and features */
-+#if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X)
-+#include "coresight-etm4x-cfg.h"
-+
-+/* preload configurations and features */
-+
-+/* preload in features for ETMv4 */
-+
-+/* panic_stop feature */
-+static struct cscfg_parameter_desc gen_etrig_params[] = {
-+	{
-+		.name = "address",
-+		.value = (u64)panic,
-+	},
-+};
-+
-+static struct cscfg_regval_desc gen_etrig_regs[] = {
-+	/* resource selector */
-+	{
-+		.type = CS_CFG_REG_TYPE_RESOURCE,
-+		.offset = TRCRSCTLRn(2),
-+		.hw_info = ETM4_CFG_RES_SEL,
-+		.val32 = 0x40001,
-+	},
-+	/* single address comparator */
-+	{
-+		.type = CS_CFG_REG_TYPE_RESOURCE | CS_CFG_REG_TYPE_VAL_64BIT |
-+			CS_CFG_REG_TYPE_VAL_PARAM,
-+		.offset =  TRCACVRn(0),
-+		.val32 = 0x0,
-+	},
-+	{
-+		.type = CS_CFG_REG_TYPE_RESOURCE,
-+		.offset = TRCACATRn(0),
-+		.val64 = 0xf00,
-+	},
-+	/* Driver external output[0] with comparator out */
-+	{
-+		.type = CS_CFG_REG_TYPE_RESOURCE,
-+		.offset = TRCEVENTCTL0R,
-+		.val32 = 0x2,
-+	},
-+	/* end of regs */
-+};
-+
-+struct cscfg_feature_desc gen_etrig_etm4x = {
-+	.name = "gen_etrig",
-+	.description = "Generate external trigger on address match\n"
-+		       "parameter \'address\': address of kernel address\n",
-+	.match_flags = CS_CFG_MATCH_CLASS_SRC_ETM4,
-+	.nr_params = ARRAY_SIZE(gen_etrig_params),
-+	.params_desc = gen_etrig_params,
-+	.nr_regs = ARRAY_SIZE(gen_etrig_regs),
-+	.regs_desc = gen_etrig_regs,
-+};
-+
-+/* create a panic stop configuration */
-+
-+/* the total number of parameters in used features */
-+#define PSTOP_NR_PARAMS	ARRAY_SIZE(gen_etrig_params)
-+
-+static const char *pstop_ref_names[] = {
-+	"gen_etrig",
-+};
-+
-+struct cscfg_config_desc pstop_etm4x = {
-+	.name = "panicstop",
-+	.description = "Stop ETM on kernel panic\n",
-+	.nr_feat_refs = ARRAY_SIZE(pstop_ref_names),
-+	.feat_ref_names = pstop_ref_names,
-+	.nr_total_params = PSTOP_NR_PARAMS,
-+};
-+
-+/* end of ETM4x configurations */
-+#endif	/* IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM4X) */
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
+index 1074310a8e7a..a9db0a231563 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
+@@ -19,11 +19,10 @@ properties:
+     const: qcom,pcie-x1e80100
+ 
+   reg:
+-    minItems: 5
++    minItems: 6
+     maxItems: 6
+ 
+   reg-names:
+-    minItems: 5
+     items:
+       - const: parf # Qualcomm specific registers
+       - const: dbi # DesignWare PCIe registers
+
+---
+base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
+change-id: 20240604-x1e80100-pci-bindings-fix-196925d15260
+
+Best regards,
 -- 
-2.34.1
+Abel Vesa <abel.vesa@linaro.org>
 
