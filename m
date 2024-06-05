@@ -1,153 +1,146 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F8B190062
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA8549621;
+	Wed,  5 Jun 2024 08:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575028; cv=none; b=lUFq5XriNx9J5ok7i0Fkts1w9+94q1IXuNmbipYVzoqiSTn4Rn23K8hqDHgD/1GUu/lFkifKfeKm5AlbuR23GK1Ov9HoOcKENWZNxHV5F9QjlnUA0ANJUh3P7cXc59KslSKgpoAGZYDGF2Dr6R1v8+f4bieKXTT6GxwBEewlJ50=
+	t=1717575131; cv=none; b=NBghpLYUP4v614mUMU/grpoOo7TMcrWYFvMcJqlef+/VNwZnClBy50zE419H+Bok5xhTaOLom4/5Roi2RMtwppFqnmd2UtCy310045ec5ceLahr2O4IUhguaPFcHY6UJ+3cZl338xO807kLbaqjyrcVWQs0o9spZ606aZFc2X0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575028; c=relaxed/simple;
-	bh=nsR6l/0/B6xYQQFHlCZ2yhKiqAZOkBEEg5wvKHodqjs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j2v/ojs/EFUbyrEccS1siSEhKQWIDFvurIHs8V2dIBg76wEDhKRP/d6GIXgOv9x8EuE0R5XCI0dqiHgcH1RHoyfrshOFc0mTxPCApa1lPftzc7bcANQQtKlXTbiEMGz/TwuTuWBosFgPzbnfpXDV63XdZpJU9z1Crq/sNGmH/0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VT8YSouR; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717575131; c=relaxed/simple;
+	bh=3Cu0rGtiUDZ4fe7lgTvZx3NuR8q2z0tMfYhv6hfQR1A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sJyUT4VN9jrtuTwXr0nZfrwfg9Q9Tu7w4vkFCCPxJ6KfDmCWhf0UWA4G2+oVlb+tGbK58bM7TE728inze2iRrQezZDMrw2N2wJFhtS49/RRe/Bycv7UlguEmb/lNouVRviQwdIptSNUKy01/3b5vKGUYXstdPDLrqYe+H4XWQKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBSAVBjB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VT8YSouR"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-421392b8156so19000915e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717575025; x=1718179825; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tktvwkodnfoo7jHza+oqKcz/NOSezkzfoVMTLKM1blE=;
-        b=VT8YSouRUjIEFpSAB4ZnZcL2qy/5EEoo8VfnnVe+Io/n1Q1x0A1kHCM4RBs/5JVUVy
-         aqO3FBWUUHIn2Y4NP37Lyy7hZGIzUKCRfE0LREtUfCUw3f0b3x0hwOxDOoOzzBnFG45j
-         05eTEep9Hn8Divcr54CsC+ggMGNTKGHjdb7MWqrNY9Au3E1sItWdRutNtM9wzp6sB+/+
-         g5NGeZZREWrhE2BkzeBZQTfpq5G1YjlM6dt90V2bCoSi66T1KKIeJ/Hcix9o3a6ln/sE
-         CwdvluMfS7TC14zLJ0IXQO7oc7E/P9xejf/ScXjpyKQxo0b0Xa+lc3sxnzwPnxYJJtBm
-         DYgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575025; x=1718179825;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tktvwkodnfoo7jHza+oqKcz/NOSezkzfoVMTLKM1blE=;
-        b=Jqgf5JiWv0lSoVAZaN+J5xrmEFLDDpCO9ife0WSNI3FuGsZF2qx3bVveQ1Rx4tzNMM
-         Oq/jSRmLPt0OTvGUDmvXul0erJb0P0f14auoVV5MNA+HZMpC4PtEB7EUsXKBGhw2KqYI
-         +SEiHocC6ovp6w+pLzK0I2HFZekUB9jv7qtOtkJoKQfOVROQZ6F0Pp9s4D9aE4fpgabq
-         qRooHLegLkqssyptD8BJyBkrNNct4Tw6q/PCFCQnrk4BzItZ8WJ8Hd0kT7VDm/2aJ3iU
-         dDuKLRCVnCK+X7pQlgiet2H7P1fLBXd+tgYHyI3sJp7POIoR91tN2Q/M0ZJMJ0/DnZuN
-         RgwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgkuOR+s4E5x7TocHWWMl7M3w8S3V6itWv6qfcl9OJtLAz3TPcKohTyRwsuT15adhT2kaXUwLlg0JmoDfVSD5ft/Y/UDQj0Yxk6Ypk
-X-Gm-Message-State: AOJu0YySw8m4fIX1CVJ2WFMPUdftAyX/pQ2Ju24ghZ6zPHgelGNSGR6x
-	QrpKuSWUvkDBGHXasbOusaeh9kbK+fk80m1+5KtIep/lDw+2i/ZWvrQKhMsCvv4=
-X-Google-Smtp-Source: AGHT+IFmTFR25RmX9aKQEVbpuL5IS21Fn7ULIHZumM3f9lZ7DYSF3RS8uqCv8ZEEdz2J0MIXJoog9Q==
-X-Received: by 2002:a05:600c:4f49:b0:421:7ad:daab with SMTP id 5b1f17b1804b1-421562c2768mr15066875e9.7.1717575025234;
-        Wed, 05 Jun 2024 01:10:25 -0700 (PDT)
-Received: from [127.0.1.1] ([110.93.11.116])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421581490e5sm11025585e9.34.2024.06.05.01.10.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:10:24 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 05 Jun 2024 10:09:43 +0200
-Subject: [PATCH v2 16/16] dt-bindings: clock: qcom,sm8450-gpucc: reference
- qcom,gcc.yaml
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBSAVBjB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB93BC3277B;
+	Wed,  5 Jun 2024 08:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717575130;
+	bh=3Cu0rGtiUDZ4fe7lgTvZx3NuR8q2z0tMfYhv6hfQR1A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aBSAVBjBUYdLHnP+vCQwiEZhgY4g/CEfaZniAi4hhhR4+NFSoB02G4s4iKtajQ60E
+	 RFNe2gvjezxf1c9KzEzBS9EI0arIbJezZBqDwXDZcI1ntAFcm1Zybc48OGOS4IJpje
+	 SfpSa0kUUIpSL2Vi3bxvcEvp4NtcEPJfOr6ID0EXADsj5jNnXBIvhxYEAcF//BkTHG
+	 /5yZaQqtO+lWh5XxZk5nH3B9jRtIX90c8834SuL3VtboV0djtrJefvXURKAmWdY7UG
+	 xnrUMTAzLsYqEnbaGEI00FtXIG4mfxiHmKiZpwdviKYmm0kryUzYYrRlpnowiAE3xp
+	 xlCBaTQlVRZuQ==
+Message-ID: <75c27bf0-4cc1-41ec-86ed-5c7f3d38f5d8@kernel.org>
+Date: Wed, 5 Jun 2024 10:12:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-dt-bindings-qcom-gcc-v2-16-f947b24f1283@linaro.org>
-References: <20240605-dt-bindings-qcom-gcc-v2-0-f947b24f1283@linaro.org>
-In-Reply-To: <20240605-dt-bindings-qcom-gcc-v2-0-f947b24f1283@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
- Konrad Dybcio <konrad.dybcio@somainline.org>, 
- Jonathan Marek <jonathan@marek.ca>, 
- Del Regno <angelogioacchino.delregno@somainline.org>, 
- Loic Poulain <loic.poulain@linaro.org>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1324;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=nsR6l/0/B6xYQQFHlCZ2yhKiqAZOkBEEg5wvKHodqjs=;
- b=kA0DAAoBwTdm5oaLg9cByyZiAGZgHVbIX0Hyn2i7cxLhVk0/SZ6M/pZylFTZHj5WQlu3Df8Ud
- IkCMwQAAQoAHRYhBN3SYig9ERsjO264qME3ZuaGi4PXBQJmYB1WAAoJEME3ZuaGi4PXs5gP/RZz
- zkZUFrdG4RC+jmqRby437SF1Yt6bs+iXLE77wQKCx2ta8PqH7KGFOSmhTt/ioFKi9HAzcYYX+cS
- Dc3ulj6cWn/t7nyw78iAxn3HHLOsSJtfKGNMssliMeobQDl1HV1+2NNkJsYcvWtHRcTclTGrpwU
- CCJ/Omlj8S1AwZO6WrygAAtnEyur1+sFza1mSLs3Ze6b1+9o9bNpwS388VLSjET6oRYXvfT9KZm
- b0Ca25afA81PaCIw+cxSxhFHbuKj1nivhN8NpjOkTIH8fPvUNbeOpCKOxAB86/dHRpzT02KuTVG
- XUoI9mV3LQSRC7fwT+HCivUGT7c3RJfNvFh7lyxH9T6VS3ciVURJym+qcJ5w2GnCzF70GL2Z6Fk
- fFVqDwVEUJEmuC/hE1A2bFBmIbNL0ft7exCp+gcDvQ2fiqZJm/A7+JD5h9/vXCXFwpQWlDlLg7x
- vKyCijcdh3NcJghoQ3LYesiBnD4tlA0pRdJJSJC99IcuRiFgo6YUTp8Re/HdgEyARABpyBbk7iT
- 3bW+WJS8YWpjoOwntmTJdvhTb+/TALYOaQnk6cy5LCvouGb9DGv4duZmbolWeQT3vCoOQF1c6vQ
- f2Ojn1O8Ru34xaplkruD3dExJJsrwFncGDT5iUlCRorqefehvRbSOIhXntVYgqjyal+OGxz3p5p
- ZoW7O
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] dt-bindings: clock: Add i.MX91 clock support
+To: Pengfei Li <pengfei.li_1@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: krzk+dt@kernel.org, conor+dt@kernel.org, abelvesa@kernel.org,
+ mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ ping.bai@nxp.com, ye.li@nxp.com, peng.fan@nxp.com, aisheng.dong@nxp.com,
+ frank.li@nxp.com, tharvey@gateworks.com, alexander.stein@ew.tq-group.com,
+ gregor.herburger@ew.tq-group.com, hiago.franco@toradex.com,
+ joao.goncalves@toradex.com, hvilleneuve@dimonoff.com,
+ Markus.Niebel@ew.tq-group.com, m.felsch@pengutronix.de,
+ m.othacehe@gmail.com, bhelgaas@google.com, leoyang.li@nxp.com,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org
+References: <20240530022634.2062084-1-pengfei.li_1@nxp.com>
+ <20240530022634.2062084-2-pengfei.li_1@nxp.com>
+ <20240604150306.GA596314-robh@kernel.org>
+ <ZmD76mp2dPVv6HeA@pengfei-OptiPlex-Tower-Plus-7010>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <ZmD76mp2dPVv6HeA@pengfei-OptiPlex-Tower-Plus-7010>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Just like most of Qualcomm clock controllers, we can reference common
-qcom,gcc.yaml schema to unify the common parts of the binding.
+On 06/06/2024 01:59, Pengfei Li wrote:
+> On Tue, Jun 04, 2024 at 10:03:06AM -0500, Rob Herring wrote:
+>> On Wed, May 29, 2024 at 07:26:30PM -0700, Pengfei Li wrote:
+>>> i.MX91 has similar Clock Control Module(CCM) design as i.MX93.
+>>> Add a new compatible string for i.MX91.
+>>>
+>>> Signed-off-by: Pengfei Li <pengfei.li_1@nxp.com>
+>>> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/clock/imx93-clock.yaml | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/imx93-clock.yaml b/Documentation/devicetree/bindings/clock/imx93-clock.yaml
+>>> index ccb53c6b96c1..98c0800732ef 100644
+>>> --- a/Documentation/devicetree/bindings/clock/imx93-clock.yaml
+>>> +++ b/Documentation/devicetree/bindings/clock/imx93-clock.yaml
+>>> @@ -16,6 +16,7 @@ description: |
+>>>  properties:
+>>>    compatible:
+>>>      enum:
+>>> +      - fsl,imx91-ccm
+>>>        - fsl,imx93-ccm
+>>
+>> Should fallback to fsl,imx93-ccm? Being a superset should be ok because 
+>> your DT should never use the non-existent clocks. If not, where is the 
+>> driver change?
+>>
+>> Rob
+>>
+> 
+> Hi Rob Herring,
+> ﻿
+> Due to the different maintainers of the CCM framework and DTS, I have separated 
+> the CCM driver patch and plan to send the DTS patch first before sending the 
+> CCM driver patch. If that's possible, could you help merge this patch first? If 
+> this is not allowed, I can also send out the CCM driver patch at the same time.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/clock/qcom,sm8450-gpucc.yaml | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+Binding goes with the driver, not DTS.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
-index 36974309cf69..3c2cac14e6c3 100644
---- a/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-gpucc.yaml
-@@ -34,27 +34,15 @@ properties:
-       - description: GPLL0 main branch source
-       - description: GPLL0 div branch source
- 
--  '#clock-cells':
--    const: 1
--
--  '#reset-cells':
--    const: 1
--
--  '#power-domain-cells':
--    const: 1
--
--  reg:
--    maxItems: 1
--
- required:
-   - compatible
--  - reg
-   - clocks
--  - '#clock-cells'
--  - '#reset-cells'
-   - '#power-domain-cells'
- 
--additionalProperties: false
-+allOf:
-+  - $ref: qcom,gcc.yaml#
-+
-+unevaluatedProperties: false
- 
- examples:
-   - |
-
--- 
-2.43.0
+Best regards,
+Krzysztof
 
