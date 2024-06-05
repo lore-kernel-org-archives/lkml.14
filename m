@@ -1,136 +1,183 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF2219412A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A7B192B85;
+	Wed,  5 Jun 2024 11:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717585790; cv=none; b=sPMEhFVHxZk3NGfF3hpGhQfxwCQyRwH0NM/QeciyCHohgVNRAcYlMtA1iyqKsiD8h6Y67jK5L+KbiwIJhgNZhYnF7cCG6+IFf5k8Zew5hGuJI4LD1HqKDI8Pav3+G7dXO2jIWb84fUHxvrs395Gj1adTM5qMmT5v0iPjY49jP3s=
+	t=1717585790; cv=none; b=fKfdPWHG0hgGiwq+gBXYSy2z/kELGiRAun6Tr11UNqQT6PNror4sUyTickjObndN+3lzrK91zknyamj/nIanB9kbyBQwVgzTd4fj4qsIi19I89zoZmdyru9n6eVnuC15WAWmYWwgyn13+aJkHdHABJjtCxd6JimIAHIi68VR9Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717585790; c=relaxed/simple;
-	bh=gHYwV3ZcigYKcTefauABwPWAEb9vyy0l/uk5Qsnin7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I8Pzg1HaLYUa/7G80AuK6ri3TFjww5lyPLOMIIcYMawW2wXync9z6GuTDkHL2hhOZsYq/luvjcPAab0HIbGXVikX9EKUYr7Mbltikqib9PyBsTGysLx0RyGguAMEm1tvhtOuo0CMOTMvjKc1xFhxJwmnhM+MeZCXPAumgjEISqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aWYDBVHB; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	bh=u9+c6wVNF78e6GyDk+6bMnAW0JBJDD1opDEfpOd/3VM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tdv9J3juYQm1SYc06T5xBNBkTdnqpR6gI4LuCxpzqRU7eKXRhWXYuRB7if6y0oS1GjoqONrxIAV1aj/pxDLUWTonUQaiUIvievIEdRfgNbj1gYjCGH+VSt3LKZsRV6RNMVxWkjDc/VwIHBZxcpMKLtSnLiNQ+bLkm4FgthBaeqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=WtNPhX1v; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aWYDBVHB"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E13B640E0176;
-	Wed,  5 Jun 2024 11:09:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id iJf5bq__s4gN; Wed,  5 Jun 2024 11:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717585781; bh=u8G7LlOZuSGdMErqsnXyAGVosfE3DwlKRA2nP23l5K8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aWYDBVHBUclEEG1gDdbe+IdXFSR610ZcoZ15fdD8wx7IG52P3H1YvEhtTtsD9nONn
-	 EgachKPplm43FJBaLMC5cc6CvfKV8MA6SbwzeUu688pecrXXCwz7NgHD2A/vpnmyDI
-	 RyJkAcnNA1Bcw8f8SHu++1GS8A9sSmpx7KeGtYLbr9WzqlMvWymSdqGrctv/FnXRUI
-	 /v4rEcLYOYGvvAJI8FsNk9w9gkIU13OJMJIrqITMCtL4fQMOJdLywG351jw+GburS3
-	 bBcRign7gnvOvXogKGlvpwebk/wxjW+WltpUQFOHnmWjW7jokjkP0FCJ6m/EvuLDTe
-	 BbqVHmANcg2kg0cCHJdFwMhlxCE6azl8xwW2RkRPsTxwRItOuqsMhQDYruReg6HJyR
-	 6sUhmNdlZGoCqckVBNJY7ipHisko8EqoNU/rhHcBqsr6g313/KLk9HxSbdYRTdPm8l
-	 QEZSleJvDkkR2JwNGSKsLLkuvNMWSJaGpvKCmbqrVHmzI08iJxzauhUwV4ccvI/Zqr
-	 hfGKSO2De6TDGnPBS6+11FvEK0QNVZDFIWT6waY8YUuOVx+tr/qnezVh6BEbypjMNU
-	 E1DdG2C1jyw2gnmyh3zRSpfjkQ0ZIaHNe1mOzFZIIGKdj2pZQ1JRAAcBC7k+puZ9nn
-	 A1smz3yi1mW/YVlSH/e7KPoI=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5225D40E016A;
-	Wed,  5 Jun 2024 11:09:11 +0000 (UTC)
-Date: Wed, 5 Jun 2024 13:09:04 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Dave Young <dyoung@redhat.com>, ardb@kernel.org,
-	dan.j.williams@intel.com
-Cc: "Kalra, Ashish" <ashish.kalra@amd.com>, Mike Rapoport <rppt@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Message-ID: <20240605110904.GWZmBHUHSqCJVQYajF@fat_crate.local>
-References: <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
- <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
- <2343889c-887a-49ce-86df-343737d70d37@amd.com>
- <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
- <ff28e3ea-c492-4db6-8781-abaec6320756@amd.com>
- <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
- <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
- <CALu+AoSESmasAHqWdCGgQNbsTXfwbfhERBkaqSeaX881zqKtFg@mail.gmail.com>
- <41e085b8-2b45-40ab-9a6f-f4ad975a0b06@amd.com>
- <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WtNPhX1v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1717585743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QSABxmTqsywGV191EjxiHZ1qFDB0JGwtzve6lD4D3Pk=;
+	b=WtNPhX1vq75wIUQwfWJmsw1rDYwhrWW/nFT5oO/gsR3cHbt/KhMQtfBnSN09LW9DoDX4Jk
+	sOU44k5Es2Ms8IrSi01TmErzJHbt6oXkcS+4IYr4257kWgug9iYGr8uMQk2flYp34KDCD7
+	he3axQR5MD4AHKtPp0xoqmFNHWtLrdk=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Nuno Sa <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v10 5/6] iio: buffer-dmaengine: Support new DMABUF based userspace API
+Date: Wed,  5 Jun 2024 13:08:44 +0200
+Message-ID: <20240605110845.86740-6-paul@crapouillou.net>
+In-Reply-To: <20240605110845.86740-1-paul@crapouillou.net>
+References: <20240605110845.86740-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Moving Ard and Dan to To:
+Use the functions provided by the buffer-dma core to implement the
+DMABUF userspace API in the buffer-dmaengine IIO buffer implementation.
 
-On Wed, Jun 05, 2024 at 10:28:18AM +0800, Dave Young wrote:
-> Ok, thanks!  I think the right way is creating two patches,  one to
-> remove the __efi_memmap_free,
+Since we want to be able to transfer an arbitrary number of bytes and
+not necesarily the full DMABUF, the associated scatterlist is converted
+to an array of DMA addresses + lengths, which is then passed to
+dmaengine_prep_slave_dma_array().
 
-Yap, that 
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Nuno Sa <nuno.sa@analog.com>
 
-  f0ef6523475f ("efi: Fix efi_memmap_alloc() leaks")
+---
+v3: Use the new dmaengine_prep_slave_dma_array(), and adapt the code to
+    work with the new functions introduced in industrialio-buffer-dma.c.
 
-needs revisiting.
+v5: - Use the new dmaengine_prep_slave_dma_vec().
+    - Restrict to input buffers, since output buffers are not yet
+      supported by IIO buffers.
 
-So AFAIU, the flow is this:
+v6: - Populate .lock_queue / .unlock_queue callbacks
+    - Switch to atomic memory allocations in .submit_queue, because of
+      the dma_fence critical section
+    - Make sure that the size of the scatterlist is enough
 
-In a kexec-ed kernel:
+v7: Adapted patch for the changes made in patch 1.
 
-1. efi_arch_mem_reserve() gets called by bgrt, erst, mokvar... whatever
-   to hold on to boot services regions for longer otherwise EFI
-   "implementations" explode.
+v10:
+  - Remove extra flags parameter to dmaengine_prep_peripheral_dma_vec()
+  - Add support for TX transfers
+---
+ .../buffer/industrialio-buffer-dmaengine.c    | 62 ++++++++++++++++---
+ 1 file changed, 53 insertions(+), 9 deletions(-)
 
-2. On same kexec-ed kernel, we call into kexec_enter_virtual_mode()
-   because it needs to get the runtime services regions from the first
-   kernel
-
-3. As part of that call, it'll do
-   efi_memmap_init_late->__efi_memmap_init():
-
-        if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB))
-                __efi_memmap_free(efi.memmap.phys_map,
-
-and the memory which got allocated in step 1 is gone, thus reverting
-what efi_arch_mem_reserve() is trying to fix.
-
-IOW, we need a
-
-	EFI_MEMMAP_DO_NOT_TOUCH_MY_MEMORY
-
-flag which'll stop this from happening. But I'd prefer it if Ard decides
-what the right thing to do here is.
-
-> another is  skip efi_arch_mem_reserve when the EFI_MEMORY_RUNTIME bit
-> was set already.
-
-Can that even happen?
-
-Thx.
-
+diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+index 918f6f8d65b6..12aa1412dfa0 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
++++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+@@ -65,25 +65,62 @@ static int iio_dmaengine_buffer_submit_block(struct iio_dma_buffer_queue *queue,
+ 		iio_buffer_to_dmaengine_buffer(&queue->buffer);
+ 	struct dma_async_tx_descriptor *desc;
+ 	enum dma_transfer_direction dma_dir;
++	struct scatterlist *sgl;
++	struct dma_vec *vecs;
+ 	size_t max_size;
+ 	dma_cookie_t cookie;
++	size_t len_total;
++	unsigned int i;
++	int nents;
+ 
+ 	max_size = min(block->size, dmaengine_buffer->max_size);
+ 	max_size = round_down(max_size, dmaengine_buffer->align);
+ 
+-	if (queue->buffer.direction == IIO_BUFFER_DIRECTION_IN) {
+-		block->bytes_used = max_size;
++	if (queue->buffer.direction == IIO_BUFFER_DIRECTION_IN)
+ 		dma_dir = DMA_DEV_TO_MEM;
+-	} else {
++	else
+ 		dma_dir = DMA_MEM_TO_DEV;
+-	}
+ 
+-	if (!block->bytes_used || block->bytes_used > max_size)
+-		return -EINVAL;
++	if (block->sg_table) {
++		sgl = block->sg_table->sgl;
++		nents = sg_nents_for_len(sgl, block->bytes_used);
++		if (nents < 0)
++			return nents;
++
++		vecs = kmalloc_array(nents, sizeof(*vecs), GFP_ATOMIC);
++		if (!vecs)
++			return -ENOMEM;
++
++		len_total = block->bytes_used;
++
++		for (i = 0; i < nents; i++) {
++			vecs[i].addr = sg_dma_address(sgl);
++			vecs[i].len = min(sg_dma_len(sgl), len_total);
++			len_total -= vecs[i].len;
++
++			sgl = sg_next(sgl);
++		}
+ 
+-	desc = dmaengine_prep_slave_single(dmaengine_buffer->chan,
+-		block->phys_addr, block->bytes_used, dma_dir,
+-		DMA_PREP_INTERRUPT);
++		desc = dmaengine_prep_peripheral_dma_vec(dmaengine_buffer->chan,
++							 vecs, nents, dma_dir,
++							 DMA_PREP_INTERRUPT);
++		kfree(vecs);
++	} else {
++		max_size = min(block->size, dmaengine_buffer->max_size);
++		max_size = round_down(max_size, dmaengine_buffer->align);
++
++		if (queue->buffer.direction == IIO_BUFFER_DIRECTION_IN)
++			block->bytes_used = max_size;
++
++		if (!block->bytes_used || block->bytes_used > max_size)
++			return -EINVAL;
++
++		desc = dmaengine_prep_slave_single(dmaengine_buffer->chan,
++						   block->phys_addr,
++						   block->bytes_used,
++						   dma_dir,
++						   DMA_PREP_INTERRUPT);
++	}
+ 	if (!desc)
+ 		return -ENOMEM;
+ 
+@@ -133,6 +170,13 @@ static const struct iio_buffer_access_funcs iio_dmaengine_buffer_ops = {
+ 	.space_available = iio_dma_buffer_usage,
+ 	.release = iio_dmaengine_buffer_release,
+ 
++	.enqueue_dmabuf = iio_dma_buffer_enqueue_dmabuf,
++	.attach_dmabuf = iio_dma_buffer_attach_dmabuf,
++	.detach_dmabuf = iio_dma_buffer_detach_dmabuf,
++
++	.lock_queue = iio_dma_buffer_lock_queue,
++	.unlock_queue = iio_dma_buffer_unlock_queue,
++
+ 	.modes = INDIO_BUFFER_HARDWARE,
+ 	.flags = INDIO_BUFFER_FLAG_FIXED_WATERMARK,
+ };
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
