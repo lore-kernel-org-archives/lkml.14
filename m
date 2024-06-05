@@ -1,102 +1,60 @@
-Received: from forward204b.mail.yandex.net (forward204b.mail.yandex.net [178.154.239.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CCF15F3FF;
-	Wed,  5 Jun 2024 21:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51480944D;
+	Wed,  5 Jun 2024 21:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717623441; cv=none; b=ZBGaXM0907G1wkSt6gaeoHpmvW4bdEHRngrTEsObmGlkvmCtdV3leSEoeuzAe/dtMsqVUmp2qU8l/RGPueKF2xS2EvxeUDHRWGGxSa7J4TN3YbWwVRgQTXk/cRkjNRUY4Ti7C7ZHd0SZz246yWkRtgEPezvY/mineK+0ahUi774=
+	t=1717623491; cv=none; b=n4TH3vVD46jTuWbrXYJ5rkhtb6ViYKY4/C9MBB6VdbCmAEHOkK2aX+xCPRFf+nM3sZCmLBD4nZHHIdieBx9jIZWYyI4vZTdzlODuZBULjtRqLavvxNzAnKUzzNo+DJXbWah3QmOsSmaehyQaLI8ZhNpKaFVt2H6TStfUJUOZpO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717623441; c=relaxed/simple;
-	bh=I1MC/J9J5wZTsyCTVV7/Js6exyl5QJIVotMGCkz7gHE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gCysgjTVeTLTHcxCvECj/7+XNDkwmVdsc5Hjh9iZPlJfn0rZ12RsIPDZGvXzwYInCObAxnM0yYbUmHlmvW/fs2gY4UFoPLqhRnMeKXXnEuJYFtTFh8iI3J8y5Q5jDq5dJcR2RfEBL8mJtVoGx4oKJHVl1fwYPtcqwYyMSiOg120=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=eEGbfY6F; arc=none smtp.client-ip=178.154.239.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="eEGbfY6F"
-Received: from forward103c.mail.yandex.net (forward103c.mail.yandex.net [IPv6:2a02:6b8:c03:500:1:45:d181:d103])
-	by forward204b.mail.yandex.net (Yandex) with ESMTPS id A7FF36677C;
-	Thu,  6 Jun 2024 00:34:42 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:4486:0:640:b366:0])
-	by forward103c.mail.yandex.net (Yandex) with ESMTPS id 56F26608E1;
-	Thu,  6 Jun 2024 00:34:34 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id VYgH11SMo8c0-8YgXmBOX;
-	Thu, 06 Jun 2024 00:34:33 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1717623273; bh=JvVC7BaTilq9Ww7g4mw3O5T4PPv3xf2DesSD7h+cHxQ=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=eEGbfY6FDHA/a4AYVa9egz65CoedLqMAD0KicAFtGcohEDS7vLrVtcIBYSa1d/o64
-	 KYw/NwsCGJzEocE9uqbi4vYJRCUoFJYqt6F7edcUSidRwinI52zL3WLD3gh3BOtjL3
-	 +tEI8vrLVZ81XoHSrRIfr4Gh262osk7RrVhiZ71s=
-Authentication-Results: mail-nwsmtp-smtp-production-main-90.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Mikhail Ukhin <mish.uxin2012@yandex.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
-	stable@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pavel Koshutin <koshutin.pavel@yandex.ru>,
-	lvc-project@linuxtesting.org,
-	Artem Sadovnikov <ancowi69@gmail.com>,
-	Mikhail Ivanov <iwanov-23@bk.ru>
-Subject: [PATCH v3 5.10/5.15] ata: libata-scsi: check cdb length for VARIABLE_LENGTH_CMD commands
-Date: Thu,  6 Jun 2024 00:34:28 +0300
-Message-Id: <20240605213428.4040-1-mish.uxin2012@yandex.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1717623491; c=relaxed/simple;
+	bh=f2DG9QdFofJhj1dXNMPCljWpJHmHcwO6RpXhGmD+fE0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Iq/dGSrpKjdfAnZSRuugxTmN3xWb4qdbCSAVG5snb0bwENnof8QVYmePj9DtGWvxpC4DrzQDnkta/UFrarBs3NZfpNFydqJ7Xl6NFseBQ7N629BC6mSeks6qAkwt4k9WsiUhVVlY0a0ei7ou0uLn88o/X5SD9hjodRog9NZHEec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8F4C2BD11;
+	Wed,  5 Jun 2024 21:38:10 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id F2860106066C; Wed, 05 Jun 2024 23:38:07 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: linus.walleij@linaro.org, mazziesaccount@gmail.com, sre@kernel.org, 
+ linux@treblig.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240528000634.196707-1-linux@treblig.org>
+References: <20240528000634.196707-1-linux@treblig.org>
+Subject: Re: [PATCH 0/2] power: dead struct removal
+Message-Id: <171762348797.363491.16712112134214134918.b4-ty@collabora.com>
+Date: Wed, 05 Jun 2024 23:38:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-No upstream commit exists for this patch.
 
-Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
-ata_scsi_pass_thru.
+On Tue, 28 May 2024 01:06:32 +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> A couple of dead struct removals in drivers/power
+> 
+> Build tested.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> 
+> [...]
 
-The error is fixed in 5.18 by commit ce70fd9a551a ("scsi: core: Remove the
-cmd field from struct scsi_request") upstream.
-Backporting this commit would require significant changes to the code so
-it is bettter to use a simple fix for that particular error.
+Applied, thanks!
 
-The problem is that the length of the received SCSI command is not
-validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
-reading if the user sends a request with SCSI command of length less than
-32.
+[1/2] power: supply: bd99954: remove unused struct 'battery_data'
+      commit: ef1f6783fe03bee6acc15ef7084ab8b64c38d769
+[2/2] power: supply: ab8500: remove unused struct 'inst_curr_result_list'
+      commit: a5dd84f3bde0252cb39a3ecebbe71d7c2b405194
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
-Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
-Signed-off-by: Mikhail Ukhin <mish.uxin2012@yandex.ru>
----
- v2: The new addresses were added and the text was updated.
- v3: Checking has been moved to the function ata_scsi_var_len_cdb_xlat at
- the request of Damien Le Moal
- drivers/ata/libata-scsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index dfa090ccd21c..38488bd813d1 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -3948,7 +3948,11 @@ static unsigned int ata_scsi_var_len_cdb_xlat(struct ata_queued_cmd *qc)
- 	struct scsi_cmnd *scmd = qc->scsicmd;
- 	const u8 *cdb = scmd->cmnd;
- 	const u16 sa = get_unaligned_be16(&cdb[8]);
-+	u8 scsi_op = scmd->cmnd[0];
- 
-+	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
-+        	return 1;
-+	
- 	/*
- 	 * if service action represents a ata pass-thru(32) command,
- 	 * then pass it to ata_scsi_pass_thru handler.
+Best regards,
 -- 
-2.25.1
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
