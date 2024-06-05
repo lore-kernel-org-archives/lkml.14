@@ -1,88 +1,98 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D4618FC6B;
-	Wed,  5 Jun 2024 09:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE6529401;
+	Wed,  5 Jun 2024 09:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579285; cv=none; b=FPGHCIgX3ZjV3Arv3+eR1YxZ3OlS7voqIj3fhQUPylGWjb3s3nRTqA9uGha9rBDZKX5ZoFDOsCuGceq4EB+ofr9OOsTrqzb/Ru4igeV7+mHHA7Ruv1thInLGFVr47w7KFcrGW3aMZq7w+97cz6C+WzOUpnCz/vJE65ekD+PQrPs=
+	t=1717579307; cv=none; b=S8Wd21jYAzt912+ZRPuFCpkOucB9tCAeRkC5bwY6iS4DonbFL8lrymmM7tjDe5XcqPwTw++F6/INDZ+nmFe0URM7WE8yA7KT6SlHPJQrkFfIZm45/qwn+fjj3D0MWXMOtnAPq8/tclTesnq8HGpVCgZzROOTRg5GggtP5GtkZ04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579285; c=relaxed/simple;
-	bh=YC1B3wPrxH44Qv3/FzjZDKdMsMYzzw947ljVqmDXmGE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l6eqFCI2IU2xzXC22f0Snwv0kRY2nbqFwh7INU9R4PatxRvfIpcd9pUmo9B6pK5JOPBFheDidxceh82XS0CmvGDrz03bqWkoNISHf6rBlSdkqPMWjuL2s7Oeq5H8REFhIMadduSf8LCWsMVQGikvTJee/d4mpt9Bi1qYVGDtiPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wq+W9KoI; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717579307; c=relaxed/simple;
+	bh=YDtGg4BsHnCEn4QlYTR6VNrpbrmF3vkmv9Jip9H54PY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nlGhK2Vp04yUn7+B1dR1T6B5NvU7WWAQC0qs5v1uvAhxD7Gh8Dro8w7xk3j2PR0HANwRQzRZK1X3zOVfMuVLZUE5nCMwfndwpASVRVc4hIKQAlBWrFHFUhVeZ2AvJtm3g+sO1R5Ca/R8mnzt4VQJE5jbYBOLohBl6mxUt//O3cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xd4Bwxh7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wq+W9KoI"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a68f1017170so215777066b.0;
-        Wed, 05 Jun 2024 02:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717579282; x=1718184082; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YC1B3wPrxH44Qv3/FzjZDKdMsMYzzw947ljVqmDXmGE=;
-        b=Wq+W9KoIG+xRVQePuiNr4nKN5ubZKwv52J3zAXZKRhQTg6SCipaW9c/IwnTxf/ckdL
-         33LgGNCnhbyEoUZE8taIvKydhICbDwbQNtZi1CUUcNGqu47W96eZVj5KLZs54z9UkQuN
-         i15GjIBUyXDDb8SL84LJuv9dwYQ7mwAju5+pm/SyvNFo1txPvY86kNF9zkL6J2vqWUmL
-         3IjprKe8gxC+lAC4mNKcV9/ZaqMkvKXqXD6NhgUTnt5AefAJU3UMzqX5ZPsAILqKvXjS
-         Asg0PBk4HPkD1BqbGxYGEPMQOtjMWEvn3q58wx+FadioFYj6A2zceqtKGy67xyPySdev
-         jTFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717579282; x=1718184082;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YC1B3wPrxH44Qv3/FzjZDKdMsMYzzw947ljVqmDXmGE=;
-        b=liS+MhQU78nnS1dt4ksFovoaZHdn1146t92m1J5z2xH/mODUMQ6oWMNCYMMMngN8CU
-         rMyUwaZvRog3aWAYiwbUbe658H9fdJq1Ape8YoE2OEuNneYERX4g9KeBQvwdHfIBoBVo
-         eAoZJmHwrK073S+CDmyIy4b9AtCDoEzC+WTfYTCg/PVijW2CIxLU17f7Medu5nFzzmfY
-         vLF04mzLROCyD11M0nqKF1rA7UcxdevXCzsF1Cszw3HvjTCfIs5iNBNNvtf1rexVO7I9
-         1sOV++7FufGsTKhPkWdA62qsDsW69NHlAhbOPgynbUnqYHnrL0K6MRiYntSNvJJ1+4ZI
-         gIEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJZ3SKoTmlx33tzpe3zMqsrNHv1pZFHb4ZpwHxzToPemSQgjY63fYpf1qg8nCP61TNiEaTZbfZSRDPlO7wj4tpAC5y6g4WA3jvlo7A0lsyUP+Sh6h/gqRZ1k/N0pTTVRrDtY3aRMIHLk5u0/bVm+ajpLaxHZU+lEk6ekOrp96K3p82dw==
-X-Gm-Message-State: AOJu0Yw4WJzMAtzbFvQH9azPwhvp/vPM+lp3F8CBdqoFfUQGC4LIs/0g
-	vmj4Ju74ikp9mQrboBEb19kLf7PSVeK0IIaLbOKSzhsTaaxsK+2o
-X-Google-Smtp-Source: AGHT+IGjSTBxzg1IcxrQz/2E6TezH4x7x+rmpivUcXztnDUfyYi574dAFjqDOnzL6fgC/zJ37bqzxA==
-X-Received: by 2002:a17:906:5f81:b0:a59:a532:ed58 with SMTP id a640c23a62f3a-a699f562146mr116220066b.28.1717579281523;
-        Wed, 05 Jun 2024 02:21:21 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68fa49e66fsm473502066b.129.2024.06.05.02.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 02:21:21 -0700 (PDT)
-Message-ID: <c4a2344a6530f96ba17a634001d4aee244070978.camel@gmail.com>
-Subject: Re: [PATCH v3 4/6] spi: spi-axi-spi-engine: Add support for MOSI
- idle configuration
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, broonie@kernel.org, 
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-  nuno.sa@analog.com, dlechner@baylibre.com, marcelo.schmitt1@gmail.com
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 05 Jun 2024 11:25:08 +0200
-In-Reply-To: <a6b00e84325bbe44919cc49509e837f2555367d0.1717539384.git.marcelo.schmitt@analog.com>
-References: <cover.1717539384.git.marcelo.schmitt@analog.com>
-	 <a6b00e84325bbe44919cc49509e837f2555367d0.1717539384.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xd4Bwxh7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13080C3277B;
+	Wed,  5 Jun 2024 09:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717579306;
+	bh=YDtGg4BsHnCEn4QlYTR6VNrpbrmF3vkmv9Jip9H54PY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Xd4Bwxh7y1HwvCsqCswFzc2PGPq2iJ5KRAvYZiD+IMiBgnT/PU0fMnF464WGnVfNI
+	 2SfiCOXZbAQsv6A67ROLOchznEpXoaMGuuF2s/KnrpOkszHqYjGCncotQ1nlbMMvcY
+	 1wFDK5wGD9hwZQuOsV8h4NkdyGgjqQgBbSEBtQwOtY+1Nz7QEQmJw2/NTTxaFHWoav
+	 AurLhilKb57r8DK4TPzFkYZibvw6n5+7hE8F8Mm116YVWmkWFvtWBNP6gxo6pklCZK
+	 bEssBanKlXQtkD1pvEdKY90NoSUEwdqhcffD3JVXGaQ7yxjhjjJXAiH+2/fDGOlBDY
+	 f7soPdq9yJsNg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/3] selftests: net: lib: small fixes
+Date: Wed, 05 Jun 2024 11:21:15 +0200
+Message-Id: <20240605-upstream-net-20240605-selftests-net-lib-fixes-v1-0-b3afadd368c9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAsuYGYC/z2MSwrCQBAFrxJ6bcNk8BevIi46zos2xDFMjxIIu
+ btNFi6r3qMWMhSF0aVZqOCrpu/s0O4auj8lP8CanCmGuA/HcODPZLVAXpxR+W8N41Bh1TY9as+
+ DzjA+SReklXPqUiRvTgXb4Mkr+ZVu6/oDDD89RIQAAAA=
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Petr Machata <petrm@nvidia.com>, Hangbin Liu <liuhangbin@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ stable@vger.kernel.org, Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1212; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=YDtGg4BsHnCEn4QlYTR6VNrpbrmF3vkmv9Jip9H54PY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYC4nf467TLY3VysPNrU7384YestbUI6ojFOUW
+ lX8boAo69yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmAuJwAKCRD2t4JPQmmg
+ c9KmEACYZIpFdTBLEq6/z6VmOlhbroGK12DfHAvehxba+bDCodQjzBVce/XxINeCru+4c6AJQ27
+ hdx7K1uoOxQmmgTYRh4rQwdgLpUojU9feq2XrCQ1A5KIF9BNXMhrCOGfeJ5ro1prxN1wug/8jzV
+ 3ZgD2vowfjLMXl3XfVAEnP+oHGKLjlwLtb0HHEb/PRZqrbAQO1e264LbgIBURcIHRRE6PIVB1Oj
+ kWXhmhICnDwg0Tl1YHhMkAind6bndDBk6itzGM2xcDv/SwH6wkZprZ8rMxFR9VqbHkZ316WDuQN
+ 20/M4cuLWdYfFZzg0YeMIqvjXebQcqEDoFk3q5Oo5KQBKn1aWnCUVNWcY2uQFkHXmdZHtjc7n6y
+ fzmOmyXxlRcJiCewkYE68/Dn1kahooXJrKR9rw07cKifFGNhRzP6qF4bsfYqAPZ62pznis0RbdK
+ lxUlcWp3TMGXnnn3o5cg4rNsvnltokbX3LHZefvqjuhKLWSmjoyLsZZdDbiQbZIzevZFXh0qR2e
+ YlUUTupD5iChNzyrOcokyUj+thWPdmf9TviwvFFAGEdk1L3/N9mFCR9rBJfOkdajRKVRlML5br1
+ 5OjHNzUC4pL9p0cgkX0Y4tgDjBYOSs8mXSG/u5Mdxib3XWD6NuStPK6NeXrmoQ5K3M8/ZECsW+7
+ muNt92yjDxZ3vEA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Tue, 2024-06-04 at 19:43 -0300, Marcelo Schmitt wrote:
-> Implement MOSI idle low and MOSI idle high to better support peripherals
-> that request specific MOSI behavior.
->=20
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
+While looking at using 'lib.sh' for the MPTCP selftests [1], we found
+some small issues with 'lib.sh'. Here they are:
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+- Patch 1: fix 'errexit' (set -e) support with busywait. 'errexit' is
+  supported in some functions, not all. A fix for v6.8+.
 
+- Patch 2: avoid confusing error messages linked to the cleaning part
+  when the netns setup fails. A fix for v6.8+.
+
+- Patch 3: set a variable as local to avoid accidentally changing the
+  value of a another one with the same name on the caller side. A fix
+  for v6.10-rc1+.
+
+Link: https://lore.kernel.org/mptcp/5f4615c3-0621-43c5-ad25-55747a4350ce@kernel.org/T/ [1]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (3):
+      selftests: net: lib: support errexit with busywait
+      selftests: net: lib: avoid error removing empty netns name
+      selftests: net: lib: set 'i' as local
+
+ tools/testing/selftests/net/lib.sh | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+---
+base-commit: a535d59432370343058755100ee75ab03c0e3f91
+change-id: 20240605-upstream-net-20240605-selftests-net-lib-fixes-7a90a1a8d9d2
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
