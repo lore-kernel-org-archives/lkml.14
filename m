@@ -1,106 +1,88 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDB9194A65;
-	Wed,  5 Jun 2024 13:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7718018FDBF
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717594680; cv=none; b=ZP2RP5B/s9qBrz6I6kGVnQ24hIWO7WQsr4Nb+s3036LHaV5OxAgGsVG/66/7+nU62TC7s1LQqcrjtoA+DiP5/PMnThNCKvp956dinl+4JGF8MU34P7hgSWEuh7ydu0IZ/kq3h6MC6O4X41hKxs1MP1YJjX9t2wVqcMLdf0UgS+I=
+	t=1717594717; cv=none; b=cEkwJoxuINdsePk0r4L7Q/iRI7qSYmzpXgOsZkDXg+ya+qJIgSLsSZZ9EK03COuh6CztY7BXXzaRwePz5qROry2tqugLcxbdFZDCuxp+wi0epaXvODTUkM52NlgR6deLQ6k3B4rkw9brsZVQbc5FKO0QeNlet9fu2tZfQbYWYBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717594680; c=relaxed/simple;
-	bh=HpQsgsyp5lfIf8J9S9f8ea/9SbGsXblH8vUfH669E8k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rONJ4pAd51eNBBodsyaXuVkvZl/AfNMyx08cXsVrH/4UqfQw0YilPmIqtuQwHkvTyCdPHEvk8RHMRvCdJtiFQQmeHCSZrxumD2+Ld+Lz2uMQuhWqlNquwYNF/NSrGtROjLm2WlZkUhY8x4WzPFL17nEvxAYprGqolp7ekkn4Rug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=mbxf/831; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1717594717; c=relaxed/simple;
+	bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KJsm/qWECToxuJYZo5zxFoCiLjzuPShIkZcCJxsSNikLFhK7143qvuGvg9SAk/mz5b2HErVTU/5fgwYpLhqrDlHnwqfR3B3XKEPtuUfTbKs/VSTuubNy4Jj1HHx5Fmyya/fVywIspkemGwgI5M3Oy7gpg1ESiGeDb6Jgs6NS6Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=AUH34lJS; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="mbxf/831"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 0CB1CA0771;
-	Wed,  5 Jun 2024 15:37:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=So/Ya7Og+X+sYxPIpOm9
-	KuvI4HQUxRWAE6tooiOs/d8=; b=mbxf/831nm3FzwIp+Wkrz7bP/zpqAo7/1AQU
-	0L9VwdKd6zCQ1elsiQGTn6QN0GtLgexEVZzmthhlhfkb6lpZIiHvlW9xJDfrJkv2
-	1pM/h5iuJcKsBJS9jpMxxBIgQgcfonjExLIE1YF/iAVqdtwfVEAD0x2TaZpviv4U
-	qXkXRRskqCv32TU0jH17GLUTRc3xB5PP+WNDtvG3+MDbuKQnKa6POPzyiikY2O3z
-	2dNYfrgfcDOCRbevXzNiMCEHZf3dr/iy1+bEaATIAxBmKFiB4887UQRGrlIA08RZ
-	Ms6ugZfhhFwzvwvJA9SZf6LgOWoXlnVDrFjj3lQfPon9IzmrPUEw4wnO7L6h3cw+
-	4K0Ow8A0UgDdMZd8UmcyhEo3aXcLvHzgIjVCqMLX8oGvFEK54IP4hgnTbiLUTyGk
-	uOX42xmtV0WJsBw+Vj8n/rN7t0T46X8KMq1IrsFirIDGGPQ8AAMu+5Fke+HFaepY
-	9n8F/0fi/WSJkEZNI4bVAkqZYBHjSl6VhizyGzF/jAuz3C9nlGlBe7RDqCzRnvsn
-	Do+aRw9+yUPBSL0CQ/IOGLCPt/WypLqHnENWti6wOQ3ao/2oB8JcGDamCgVEnnXr
-	k5dENtmHqZjNAhuezHx18vKs49sdW7E6yD4BD83A/Yp+prl48garEEPx/5CNa63L
-	f+s/rAg=
-Message-ID: <3f9b6129-e81e-4cc1-93ff-9d4cc6ffc035@prolan.hu>
-Date: Wed, 5 Jun 2024 15:37:51 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="AUH34lJS"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-421396e3918so48144455e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 06:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717594714; x=1718199514; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+        b=AUH34lJSHF1jmKLrzgVUddSsKCND91OwylcvYopEsudkJI9VrjsLp7Mket5FQ6NCAK
+         +bhBPjP5gj+u9a3pX2pHCpy/xTsyECtunF/ogJEwWnfF1XFIhIkvF7kK/m3GJsztd1CG
+         tm+Qixqbjhif2OlUGdQCNJAinA6QtoXclkKE9POoJD+yP8bQ0WC2mbAlZRX64QHoaFiU
+         MMHJyuAc5FQpS4ucRbhd/qz880dAmHVx68nWaekLhs6YibBZnbjGEF/un28MehTJFwkY
+         /6kjzZtrS1Kri/wdZfcFzOM7LIJnQ++bH87xmBa9XQTSG2kWdtS84CNsHgg8gWdocUUG
+         E62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717594714; x=1718199514;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mlhApMpG5WU395YtWwS9QPBflIL0rJC4v8OyN6FnRbc=;
+        b=YqNyIzZmx6qSdbP75at3q0K92IaEYf4EtaHJ3bLV8msNlDXsWWKrE23AhPmcFlj7oT
+         LAT31GDmyMmnCCD3yN0eotgy4wsL2E/7945HexAt0be5HZsoGsdqD8AH3TuFNPb03Nww
+         98JtUd8cOIhbrF19G/RPIbXWq4ZMPUsQJ1BD8a7K7fka5VgbAjbhtVmqnwcQsA5lOmGa
+         alSNm77NX6lrKrVw9DKb9c0w5PQmzTPyRDU6fIyNll1YkaLHpfw+VI55YfE2uIDVB/LB
+         Su0SHHckwM26DdgS0jQQdc13wMRUEeQkAPT0MhUqgSNsCS8RIciPk/e/tm101UwWb67A
+         569Q==
+X-Gm-Message-State: AOJu0Yy9IuCtE5JBxeQ4lG4zE4InDGUzdbPWn9P3oxASn9WseDeJAjOZ
+	C+WWatbYETg7wHwdNTEx4p15gZmiv5pwc7Sy0cS0zrKRLz6eDqzk77ZXnLPL1dg=
+X-Google-Smtp-Source: AGHT+IHjkretuS1fTFtZei6hChIG2kgCEQtxhJThqCOKkNHqb6TBqHMder8dhApLzt0DEjaMW0SbBQ==
+X-Received: by 2002:a05:600c:46cd:b0:421:1fb1:fe00 with SMTP id 5b1f17b1804b1-421562d4a37mr26359565e9.17.1717594713675;
+        Wed, 05 Jun 2024 06:38:33 -0700 (PDT)
+Received: from localhost (p200300f65f283b00ca876ee5dd3d1e3b.dip0.t-ipconnect.de. [2003:f6:5f28:3b00:ca87:6ee5:dd3d:1e3b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215814fc11sm22296825e9.48.2024.06.05.06.38.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 06:38:33 -0700 (PDT)
+From: "Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=" <ukleinek@baylibre.com>
+X-Google-Original-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Date: Wed, 5 Jun 2024 15:38:31 +0200
+To: Hironori KIKUCHI <kikuchan98@gmail.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Aleksandr Shubin <privatesub2@gmail.com>, Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH 0/5] Add support for Allwinner H616 PWM
+Message-ID: <d5mr73yc7l6w6uvgqb4ymyc5267do4zirnnorkpi5s6qa5vckk@owayit4mexk2>
+References: <20240531141152.327592-1-kikuchan98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/2] net: include: mii: Refactor: Define LPA_* in
- terms of ADVERTISE_*
-To: Andrew Lunn <andrew@lunn.ch>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<trivial@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
-	<linux@armlinux.org.uk>
-References: <20240605121648.69779-1-csokas.bence@prolan.hu>
- <331930db-f5a1-4ad7-947f-7aaf5618c646@lunn.ch>
-Content-Language: en-US
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <331930db-f5a1-4ad7-947f-7aaf5618c646@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2945A12957627661
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240531141152.327592-1-kikuchan98@gmail.com>
 
-Hi!
+On Fri, May 31, 2024 at 11:11:32PM +0900, Hironori KIKUCHI wrote:
+> Add support for the Allwinner H616 PWM, building on top of Aleksandr's
+> Allwinner D1 PWM driver v9.
 
-On 6/5/24 14:51, Andrew Lunn wrote:
-> On Wed, Jun 05, 2024 at 02:16:47PM +0200, Csókás, Bence wrote:
->> Ethernet specification mandates that these bits will be equal.
->> To reduce the amount of magix hex'es in the code, just define
->> them in terms of each other.
-> 
-> Are magic hexes in this context actually bad?
+It would be great if you could arrange with Aleksandr to maybe put your
+efforts into a single series. I think this would simplify reviewing and
+overall handling of your series to me.
 
-Yes, as if it ever needs to be changed (for instance in the 2/2 of the 
-series, when I replaced them with BIT() macros), it needs to be changed 
-twice in the file.
+Your first patch should for sure be squashed into Aleksandr's patch #2.
 
-> In .c files i would
-> agree. But what you have in effect done is force me into jump another
-> hoop to find the actual hex value so i can manually decode a register
-> value.
-
-True. I expected this concern, hence why I tagged this as RFC. However, 
-I believe that from a maintainability perspective, it's best to only 
-have one definition, and since these #define's are right under one 
-another, the "jumping around" is minimal anyways.
-
-> And you have made the compile slightly slower.
-
-C'mon, that's negligible. The time it takes to load the header file from 
-disk will probably take longer than it does to resolve an extra layer of 
-simple #define's.
-
-> These defines have been like this since the beginning of the git
-> history. Is there a good reason to change them after all that time?
-
-Just because something was "always like this" doesn't mean that it 
-cannot be changed. Especially since this patch is 100% 
-backwards-compatible, just maybe slightly more future-proof.
-
-> 	Andrew
-> 
-
-Bence
-
+Best regards
+Uwe
