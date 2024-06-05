@@ -1,249 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA25519D882;
-	Wed,  5 Jun 2024 15:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C1347F41
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717601611; cv=none; b=HgMVstidtbPOVbcRN/1VeU7fkL8gfGwY23BXRlznR6hj0wvLLQIk3Cjy6D1oAa0efeKGVuUtCuKJpwbNLtOz/7fdsa5KnXUtd/dVXGcZ090jPP7zMgxAbJntc6RgmIDFzuigOF9epcvuUIj9TRFdI3LwzDxJLJd+ue5KlYmaiOk=
+	t=1717601757; cv=none; b=ejueW2eSvtGS1Lj1/7/2C/o6qAQXkOSSHd1dZYTvlz1ZHKT6LAxrLMRIkrt+n8EYgol5S6XXBDnmtJhAFPV5BXUFrKhoz4GlWIOQn8Sz6XBbicdRvNQY4tbpwU5hmMV6TFLxit2DhquJM8LknbE2Kc0K3B7lL9NbYqH2Bz7bH7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717601611; c=relaxed/simple;
-	bh=6GytrU5w6+5lg5eOj3jMDTc2t7dk1XqZMyo8YPVX0Kg=;
-	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
-	 Message-ID:In-Reply-To; b=i0+Sxcwqegz39H7tdDEbtNoHLFOawfEhR936/7krtqjooQAacozYtMBHI+jsZVKF8bI2agS0ONnYtziHlxG47zx+ejdUCVjXqmRMKGqLwqtGckcBpgCZccUCPI0naaPHsKmlmUob1bsbjebcFg9bgQs9VsGKk9Wf8UBidOldMdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i05QGcAn; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717601757; c=relaxed/simple;
+	bh=+OZm5/y3/uFdNftvyg7ho7vFKppQZBuz2dYEwop/gSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ts0b309w4tTstk6II5XU1qZXrd7REUZlRGFncU1olzKNKqmkeqx2ivobnYtnj71OL2q8fIAe+8itpDxom3qud3G8637BeFo8H09JzaFsNhbtBcMANBk13nE+1bjgedjE/bPcxnEk67wzQdmC6Wrt9Eo1TTFSPxqvV5o/0E1ReKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=ypV8qNl2; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i05QGcAn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717601610; x=1749137610;
-  h=to:cc:subject:references:date:mime-version:
-   content-transfer-encoding:from:message-id:in-reply-to;
-  bh=6GytrU5w6+5lg5eOj3jMDTc2t7dk1XqZMyo8YPVX0Kg=;
-  b=i05QGcAnz4nGbGss96sse1v8rcmAeQrDguNRc64hgWdk+Nl0XSuf6Ra7
-   h2LFskqQn7XI6kReWo7LccHyMUqmP4XIm3MgxHvy/R+O/GnLEzEkno+lz
-   FZI3nN/e9S1Avh+KMDLHmSi/zN9CsRj8/chPIiyYMWtmAhLfFdELDIbso
-   y79RPG/wpxIcHGCwfMGC/EU6/bgBsG6djqYnIDwLfz/GkLuHvehWMrPRV
-   4Q2Qraken5nAedP6g5m7zg48bzUoRe3BSCf1wc01bfKsGMJVF+FHIxJJG
-   9NqDNOVtflXRHZb3SSYdXJWIkzkPElBSxXcj3LCdgunuFSd3rhwnaErP9
-   A==;
-X-CSE-ConnectionGUID: epyN2NhtQ764cuNWs43+Aw==
-X-CSE-MsgGUID: tZRMeRVqSmiKxsJsxklkvg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="17161464"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="17161464"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 08:33:29 -0700
-X-CSE-ConnectionGUID: pUxwn1/USCW354vROyvRLQ==
-X-CSE-MsgGUID: 6ce3Ag8+R3qDB+Xmjf9TMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="68781243"
-Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
-  by smtpauth.intel.com with ESMTP/TLS/AES256-SHA; 05 Jun 2024 08:33:27 -0700
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To: dave.hansen@linux.intel.com, kai.huang@intel.com, tj@kernel.org,
- mkoutny@suse.com, linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
- x86@kernel.org, cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, sohil.mehta@intel.com,
- tim.c.chen@linux.intel.com, "Jarkko Sakkinen" <jarkko@kernel.org>
-Cc: zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
- zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
- yangjie@microsoft.com, chrisyan@microsoft.com
-Subject: Re: [PATCH v14 14/14] selftests/sgx: Add scripts for EPC cgroup
- testing
-References: <20240531222630.4634-1-haitao.huang@linux.intel.com>
- <20240531222630.4634-15-haitao.huang@linux.intel.com>
- <D1RKK8CENNXI.1KMNDADV9C1YM@kernel.org>
-Date: Wed, 05 Jun 2024 10:33:23 -0500
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="ypV8qNl2"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f44b42d1caso54167155ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 08:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1717601755; x=1718206555; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nAk75/rNTsxI/8Vj4jK+Zvdo2XN9iI9bePNHVmD2D10=;
+        b=ypV8qNl24BWzflq56OYyGSsH/4P2yxkb18K91z3/fDdt+mY0Ie7ee2LgReVSsoBVZ4
+         FKbHDnGvYPC0ZKNb99Rjnu6Mb5MnRhALqUvZ5XVymdRXWoi7IsOMsamqERT1nhoC8PyJ
+         75KCy7WnGLPODVnLXKv7iT7g3Pc0H9RmK8XxSN9Ta9Xhdca4XzzQwvv3TLlOoPxr92fx
+         KoWK5qxGjJ8FPrrUPcKReTHP6Do4zWiQ7uZg3T6Dm8jJOpp9wjekB7y4mBcY1NZCXqHo
+         dv8FFIUWrv1xmKwXfL+YLq7vEMw+yC9lAgD/5NeDU8KF/QEBneZpwadwQYiHZI/eBpTs
+         paMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717601755; x=1718206555;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nAk75/rNTsxI/8Vj4jK+Zvdo2XN9iI9bePNHVmD2D10=;
+        b=gJtwywKWZEglROLkBHkGjH8kvlEVDCSY42/LIZKqxaaeD52ycLtz1PzQBugXt8cx1k
+         fzh4QPDJrFgkKFvizjqoibVYCSwFSW7RdtNV1afUsnb7p0K/XRyxeRPUgsoP9V3khUpU
+         +Kyex0W2HxBI36WvTIET2dF1reIKzMYOVenoyOgOhu3ZBDp3LFWmn7jc0P2HVJx93eap
+         xazrbXdZX7aHTfP5xS7HEZDglT4d5KDuUbChDB1FinL/umHCLp54VML7k5wkAtzBYZZJ
+         Qp6iTsB/10jdbJ8HU8k7DM/5qYhdj8PpRdd5BmbjJBVR26gb9CojHWb6DMt+w/9nqlJW
+         nDRg==
+X-Forwarded-Encrypted: i=1; AJvYcCVA9ygiOqDtTi3tbAO7NgMGHDrC9lCILilwVRbIYe+hsLoiBfCcKw2A9KmlHk5bc5cDYNNnNyCApBahXINCdiICZkkPL+p6UXMgy1OK
+X-Gm-Message-State: AOJu0YxFPBfY7d5dQOKGJb4mB2eqk1FqShN0sHrHOchTCZha4jzTO5Dj
+	bKFV+fgg3TFQYt7IMusfDCC+SJ/PowYsstd4KVOlaiteGDigt/ax5lBPQxc2CYU=
+X-Google-Smtp-Source: AGHT+IGDBGJ8ZJCOCV4o7bc6YmUIzOf8ghMtygf47Fad9OJyRtHeX7zioK4Rcra76/1jvDQUwhrw+w==
+X-Received: by 2002:a17:902:da8d:b0:1f3:4d2:7025 with SMTP id d9443c01a7336-1f6a5a6ab9cmr36668345ad.49.1717601754632;
+        Wed, 05 Jun 2024 08:35:54 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:600::1:eaa0])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f6323570f5sm103535245ad.75.2024.06.05.08.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 08:35:54 -0700 (PDT)
+Date: Wed, 5 Jun 2024 11:35:52 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Bernd Schubert <bernd.schubert@fastmail.fm>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	lege.wang@jaguarmicro.com,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [HELP] FUSE writeback performance bottleneck
+Message-ID: <20240605153552.GB21567@localhost.localdomain>
+References: <bd49fcba-3eb6-4e84-a0f0-e73bce31ddb2@linux.alibaba.com>
+ <CAJfpegsfF77SV96wvaxn9VnRkNt5FKCnA4mJ0ieFsZtwFeRuYw@mail.gmail.com>
+ <ffca9534-cb75-4dc6-9830-fe8e84db2413@linux.alibaba.com>
+ <2f834b5c-d591-43c5-86ba-18509d77a865@fastmail.fm>
+ <CAJfpegt_mEYOeeTo2bWS3iJfC38t5bf29mzrxK68dhMptrgamg@mail.gmail.com>
+ <21741978-a604-4054-8af9-793085925c82@fastmail.fm>
+ <20240604165319.GG3413@localhost.localdomain>
+ <6853a389-031b-4bd6-a300-dea878979d8c@fastmail.fm>
+ <20240604221654.GA17503@localhost.localdomain>
+ <CAOQ4uxjTb=ja-fe6qqKjEo96m_AU6ikpERh1putSM9e_-6Y01g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From: "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel
-Message-ID: <op.2owf5xiwwjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <D1RKK8CENNXI.1KMNDADV9C1YM@kernel.org>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxjTb=ja-fe6qqKjEo96m_AU6ikpERh1putSM9e_-6Y01g@mail.gmail.com>
 
-Hi Jarkko
+On Wed, Jun 05, 2024 at 08:49:48AM +0300, Amir Goldstein wrote:
+> On Wed, Jun 5, 2024 at 1:17 AM Josef Bacik <josef@toxicpanda.com> wrote:
+> >
+> > On Tue, Jun 04, 2024 at 11:39:17PM +0200, Bernd Schubert wrote:
+> > >
+> > >
+> > > On 6/4/24 18:53, Josef Bacik wrote:
+> > > > On Tue, Jun 04, 2024 at 04:13:25PM +0200, Bernd Schubert wrote:
+> > > >>
+> > > >>
+> > > >> On 6/4/24 12:02, Miklos Szeredi wrote:
+> > > >>> On Tue, 4 Jun 2024 at 11:32, Bernd Schubert <bernd.schubert@fastmail.fm> wrote:
+> > > >>>
+> > > >>>> Back to the background for the copy, so it copies pages to avoid
+> > > >>>> blocking on memory reclaim. With that allocation it in fact increases
+> > > >>>> memory pressure even more. Isn't the right solution to mark those pages
+> > > >>>> as not reclaimable and to avoid blocking on it? Which is what the tmp
+> > > >>>> pages do, just not in beautiful way.
+> > > >>>
+> > > >>> Copying to the tmp page is the same as marking the pages as
+> > > >>> non-reclaimable and non-syncable.
+> > > >>>
+> > > >>> Conceptually it would be nice to only copy when there's something
+> > > >>> actually waiting for writeback on the page.
+> > > >>>
+> > > >>> Note: normally the WRITE request would be copied to userspace along
+> > > >>> with the contents of the pages very soon after starting writeback.
+> > > >>> After this the contents of the page no longer matter, and we can just
+> > > >>> clear writeback without doing the copy.
+> > > >>>
+> > > >>> But if the request gets stuck in the input queue before being copied
+> > > >>> to userspace, then deadlock can still happen if the server blocks on
+> > > >>> direct reclaim and won't continue with processing the queue.   And
+> > > >>> sync(2) will also block in that case.>
+> > > >>> So we'd somehow need to handle stuck WRITE requests.   I don't see an
+> > > >>> easy way to do this "on demand", when something actually starts
+> > > >>> waiting on PG_writeback.  Alternatively the page copy could be done
+> > > >>> after a timeout, which is ugly, but much easier to implement.
+> > > >>
+> > > >> I think the timeout method would only work if we have already allocated
+> > > >> the pages, under memory pressure page allocation might not work well.
+> > > >> But then this still seems to be a workaround, because we don't take any
+> > > >> less memory with these copied pages.
+> > > >> I'm going to look into mm/ if there isn't a better solution.
+> > > >
+> > > > I've thought a bit about this, and I still don't have a good solution, so I'm
+> > > > going to throw out my random thoughts and see if it helps us get to a good spot.
+> > > >
+> > > > 1. Generally we are moving away from GFP_NOFS/GFP_NOIO to instead use
+> > > >    memalloc_*_save/memalloc_*_restore, so instead the process is marked being in
+> > > >    these contexts.  We could do something similar for FUSE, tho this gets hairy
+> > > >    with things that async off request handling to other threads (which is all of
+> > > >    the FUSE file systems we have internally).  We'd need to have some way to
+> > > >    apply this to an entire process group, but this could be a workable solution.
+> > > >
+> > >
+> > > I'm not sure how either of of both (GFP_ and memalloc_) would work for
+> > > userspace allocations.
+> > > Wouldn't we basically need to have a feature to disable memory
+> > > allocations for fuse userspace tasks? Hmm, maybe through mem_cgroup.
+> > > Although even then, the file system might depend on other kernel
+> > > resources (backend file system or block device or even network) that
+> > > might do allocations on their own without the knowledge of the fuse server.
+> > >
+> >
+> > Basically that only in the case that we're handling a request from memory
+> > pressure we would invoke this, and then any allocation would automatically have
+> > gfp_nofs protection because it's flagged at the task level.
+> >
+> > Again there's a lot of problems with this, like how do we set it for the task,
+> > how does it work for threads etc.
+> >
+> > > > 2. Per-request timeouts.  This is something we're planning on tackling for other
+> > > >    reasons, but it could fit nicely here to say "if this fuse fs has a
+> > > >    per-request timeout, skip the copy".  That way we at least know we're upper
+> > > >    bound on how long we would be "deadlocked".  I don't love this approach
+> > > >    because it's still a deadlock until the timeout elapsed, but it's an idea.
+> > >
+> > > Hmm, how do we know "this fuse fs has a per-request timeout"? I don't
+> > > think we could trust initialization flags set by userspace.
+> > >
+> >
+> > It would be controlled by the kernel.  So at init time the fuse file system says
+> > "my command timeout is 30 minutes."  Then the kernel enforces this by having a
+> > per-request timeout, and once that 30 minutes elapses we cancel the request and
+> > EIO it.  User space doesn't do anything beyond telling the kernel what it's
+> > timeout is, so this would be safe.
+> >
+> 
+> Maybe that would be better to configure by mounter, similar to nfs -otimeo
+> and maybe consider opt-in to returning ETIMEDOUT in this case.
+> At least nfsd will pass that error to nfs client and nfs client will retry.
+> 
+> Different applications (or network protocols) handle timeouts differently,
+> so the timeout and error seems like a decision for the admin/mounter not
+> for the fuse server, although there may be a fuse fs that would want to
+> set the default timeout, as if to request the kernel to be its watchdog
+> (i.e. do not expect me to take more than 30 min to handle any request).
 
-Thanks for your review.
+Oh yeah for sure, I'm just saying for the purposes of allowing the FUSE daemon
+to be a little riskier with system resources we base it off of wether it opts in
+to command timeouts.
 
-On Tue, 04 Jun 2024 17:00:34 -0500, Jarkko Sakkinen <jarkko@kernel.org>  
-wrote:
+My plans are to have it be able to be set by the fuse daemon, or externally by a
+sysadmin via sysfs.  Thanks,
 
-> On Sat Jun 1, 2024 at 1:26 AM EEST, Haitao Huang wrote:
->> With different cgroups, the script starts one or multiple concurrent SGX
->> selftests (test_sgx), each to run the unclobbered_vdso_oversubscribed
->> test case, which loads an enclave of EPC size equal to the EPC capacity
->> available on the platform. The script checks results against the
->> expectation set for each cgroup and reports success or failure.
->>
->> The script creates 3 different cgroups at the beginning with following
->> expectations:
->>
->> 1) small - intentionally small enough to fail the test loading an
->> enclave of size equal to the capacity.
->> 2) large - large enough to run up to 4 concurrent tests but fail some if
->> more than 4 concurrent tests are run. The script starts 4 expecting at
->> least one test to pass, and then starts 5 expecting at least one test
->> to fail.
->> 3) larger - limit is the same as the capacity, large enough to run lots  
->> of
->> concurrent tests. The script starts 8 of them and expects all pass.
->> Then it reruns the same test with one process randomly killed and
->> usage checked to be zero after all processes exit.
->>
->> The script also includes a test with low mem_cg limit and large sgx_epc
->> limit to verify that the RAM used for per-cgroup reclamation is charged
->> to a proper mem_cg. For this test, it turns off swapping before start,
->> and turns swapping back on afterwards.
->>
->> Add README to document how to run the tests.
->>
->> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
->> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
->> Tested-by: Jarkko Sakkinen <jarkko@kernel.org>
->
-> Reorg:
->
-> void sgx_cgroup_init(void)
-> {
-> 	struct workqueue_struct *wq;
->
-> 	/* eagerly allocate the workqueue: */
-> 	wq = alloc_workqueue("sgx_cg_wq", wq_unbound | wq_freezable,  
-> wq_unbound_max_active);
-> 	if (!wq) {
-> 		pr_warn("sgx_cg_wq creation failed\n");
-> 		return;
-
-sgx_cgroup_try_charge() expects sgx_cg_wq, so it would break unless we  
-check and return 0 which was the initially implemented in v12. But then  
-Kai had some concern on that we expose all the interface files to allow  
-user to set limits but we don't enforce. To keep it simple we settled down  
-back to BUG_ON(). This would only happen rarely and user can add  
-command-line to disable SGX if s/he really wants to start kernel in this  
-case, just can't do SGX.
-
-Another thought we could just guard queue_work() with a null check for  
-sgx_cg_wq, but I thought that's also not good for user as it basically  
-disables all async global and per-cgroup reclamation. If user needs run  
-SGX in such a case, better have async anyways.
-
-See previous discusion:  
-https://lore.kernel.org/linux-sgx/e56216ee4d5f7ef6d97c70f56243a5ddc8dea19d.camel@intel.com/
-
-> 	}
->
-> 	misc_cg_set_ops(MISC_CG_RES_SGX_EPC, &sgx_cgroup_ops);
-> 	sgx_cgroup_misc_init(misc_cg_root(), &sgx_cg_root);
->
-> 	/* Depending on misc state, keep or destory the workqueue: */
-> 	if (cgroup_subsys_enabled(misc_cgrp_subsys))
-> 		sgx_cg_wq = wq;
-> 	else
-> 		destroy_workqueue(wq);
-> }
->
-> BTW, why two previous operations are performed if subsystem is not
-> enabled?
->
-
-Note this file is conditionally compiled on CGROUP_MISC KConfig. Even  
-though subsystem can be 'disabled' from the command line when CGROUP_MISC  
-is on, we still need initialize the misc root node which is static for  
-below reason.
-
-All process will be assigned to misc root if misc is disabled and  
-get_current_misc_cg() will return the root. So we need initialize ->lru  
-and ->reclaim_work for the root sgx cgroup.
-
-> I.e. why not instead:
->
-> void sgx_cgroup_init(void)
-> {
-> 	struct workqueue_struct *wq;
->
-> 	/* Eagerly allocate the workqueue: */
-> 	wq = alloc_workqueue("sgx_cg_wq", wq_unbound | wq_freezable,  
-> wq_unbound_max_active);
-> 	if (!wq) {
-> 		pr_warn("sgx_cg_wq creation failed\n");
-> 		return;
-> 	}
->
-
-Same comment as above
-
-> 	if (!cgroup_subsys_enabled(misc_cgrp_subsys)) {
-> 		destroy_workqueue(wq);
-> 		return;
-> 	}
->
-> 	misc_cg_set_ops(MISC_CG_RES_SGX_EPC, &sgx_cgroup_ops);
-> 	sgx_cgroup_misc_init(misc_cg_root(), &sgx_cg_root);
-> 	sgx_cg_wq = wq;
-> }
->
-> Finally, why this does not have __init?
-
-This was my misunderstanding that __init only applies to the main init  
-function. After looking at some actual usages, I tend to agree __init is  
-appropriate. Thanks for catching this.
-
-> And neither sgx_cgroup_misc_init().
-
-This one is called when a specific misc cgroup is created (a new  
-sub-folder in sysfs paraent in which misc is enabled), by the callback  
-sgx_cgroup_alloc(). Not necessarily when subsys init.
-
->
-> The names for these are also somewhat confusing, maybe something like:
->
-> * __sgx_cgroups_misc_init()
-> * sgx_cgroups_misc_init()
->
-> And both with __init.
->
-sgx_cgroup_init() is for the whole sgx cgroup support so original name is  
-OK?
-similar to sgx_drv_init(), sgx_vepc_init()?
-
-I'm fine to rename the other one and add __init for sgx_cgroup().
-
-> I just made a trivial checkpatch run as a final check, and spotted the
-> warning on BUG_ON(), and noticed that this can't be right as it is but
-> please comment and correct where I might have gotten something wrong.
->
-
-See above
-
-> With "--strict" flag I also catched these:
->
-> CHECK: spinlock_t definition without comment
-> #1308: FILE: arch/x86/kernel/cpu/sgx/sgx.h:122:
-> +	spinlock_t lock;
->
-Yes I had a comment but Kai thought it was too obvious and I can't think  
-of a better one that's not obvious so I removed:
-
-https://lore.kernel.org/linux-sgx/9ffb02a3344807f2c173fe8c7cb000cd6c7843b6.camel@intel.com/
-
-
-> CHECK: multiple assignments should be avoided
-> #444: FILE: kernel/cgroup/misc.c:450:
-> +		parent_cg = cg = &root_cg;
->
-
-This was also suggested by Kai a few versions back:
-https://lore.kernel.org/linux-sgx/8f08f0b0f2b04b90d7cdb7b628f16f9080687c43.camel@intel.com/
-
-Thanks
-Haitao
+Josef
