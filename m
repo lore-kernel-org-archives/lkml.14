@@ -1,262 +1,174 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8891922D2
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB0C138C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717572505; cv=none; b=GDjqBXqGd/1vhz9NjRDZhWgTGQqrbtsaPAVOd8G/h8bE1+YEvJIzClxhIGg6WFYizgIwl1blOTUGjBLFoawxKo0/j86fEBWtKOrCf87hfqvb89j+OL0WLg9h51JB6WFsjhbfn5cCeLLXZTTbBlv1OALgO+9Y0lTZSesRaYVm8Xw=
+	t=1717572652; cv=none; b=KI5ws9eDsikMSY4d+2LRCdaUnGO/xIPBh4GiBW8Y33fkv6WQEBtfDftyuu/1s57qZv5XLjeGZjBoUyJICPVW4tNmdaTAGO8XvsA1CxoCy5yCRf+aHmI80fYAcrEDgCANaCau/qwl63T9WcWmW40l84h8+5vvm/obGGovuMcyr5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717572505; c=relaxed/simple;
-	bh=9ntpR1TzKr3JrONGpvZxLgE5SWDnEqFoqOQchJ7+nRQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dbmBTrjpZDDzLF0z04+9l0isGu7oEPCJ/h2Tyx6NwUDx3cRM1Xlt53rWsyIf5H+Fa2U4s6y2IXD1L7/1qCAb4twe6O6y1rsqkMEosVEsZTjtoZd/h+oE4Y731+SjhXsIMfSMJEYMzkwgoYWdhHCnH34mZ5eyMe8lN1rVRDAkWmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VvJQ001tBz355cs;
-	Wed,  5 Jun 2024 15:05:28 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 16EC11A016C;
-	Wed,  5 Jun 2024 15:09:09 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 5 Jun 2024 15:09:08 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <akpm@linux-foundation.org>, <muchun.song@linux.dev>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next 2/3] mm/hugetlb_cgroup: prepare cftypes based on template
-Date: Wed, 5 Jun 2024 07:01:32 +0000
-Message-ID: <20240605070133.1941677-3-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240605070133.1941677-1-xiujianfeng@huawei.com>
-References: <20240605070133.1941677-1-xiujianfeng@huawei.com>
+	s=arc-20240116; t=1717572652; c=relaxed/simple;
+	bh=tdIONejAFRv3sLvBPf3dAK2F1P60MyFWiaakQY+FOwQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qpC/JhhEPtm9LGUtHyqnrNRFwWHm9Ttl+5NnqXOE1u7VxZwYIGqFoq8wvJJnXb45T+nBAwTJtpbgu8bwlTXkfP8ccm+dnAE3nXkk0ZUcsnMhXZE3vLKBJWGMWCz1gjBh1ld/rHzuF5P83A5pe9RBew7KRGlLbxZVJeu+b4kHcA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUtd4ISU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUtd4ISU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A064C4AF09
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717572651;
+	bh=tdIONejAFRv3sLvBPf3dAK2F1P60MyFWiaakQY+FOwQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RUtd4ISUT256nXOttcIgVu/VCrb6d/J7ndGWGQ9bUrGAg4cgmHGzNsY0UBUWmEOeK
+	 9wPZ9+Nw9VIAXQ9Bna61pY5f9d8Avq1kW4pIISOwKPbBAtMx8ApMT6qGsNu9Moon0A
+	 JzqGlX5Y8lIuHIUTLublS6y3vFR4MOODGJ3SnN30efY/tKdykENudKRAQqC2d91mCw
+	 na0CWq7bttPRvoIgwS/QmIf6ZMJlQ4tv2IdVFm/VKexF5ctfSIAvw1q/k/QdqSHIiI
+	 gRscZdJvMVv0G72mGPf3JU4MWMjSi3VQbIw47Z0HbBLFeoWGuwUgw0rxxukq1vSvwr
+	 aTnqvNYHgrOWQ==
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-374a817a13bso7725705ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:30:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX88qSTfuOmz7gwewoBAOZtYuyf3HDUIIIxMsQ08Qtsoy+0l/HeyVIRyGgJZtFRfHXNwpdhLk7np0EodU55VgmTeBNszwvFj0v47fHo
+X-Gm-Message-State: AOJu0YzsJ7/jnNGXUVN2axvX9TOxqi95vp7wjP5xoI8+AdChDvzHAqym
+	T+LDDEFpJWdNpcrbFALW/8mZv7ic7r2BQ2cR7HLRvq9qD6270mgpTdXNr6Za8I8VU5cbdkfzVsT
+	BsRprJi4bFlm/7waxCVoH7LyeOJBz3inLKPxB
+X-Google-Smtp-Source: AGHT+IHR7m8/Ne/rtH9M3WCRRPGTHSXaba3NqVYuxhimwk/JGC16tbocBQWOfRNiQLoA6xPNUAhuPGKbmZ16PnQ4ISQ=
+X-Received: by 2002:a05:6e02:1fee:b0:374:a422:baf with SMTP id
+ e9e14a558f8ab-374b1ef3102mr19251655ab.12.1717572650560; Wed, 05 Jun 2024
+ 00:30:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+References: <20240524-swap-allocator-v1-0-47861b423b26@kernel.org>
+ <CANeU7QkmQ+bJoFnr-ca-xp_dP1XgEKNSwb489MYVqynP_Q8Ddw@mail.gmail.com>
+ <87cyp5575y.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAF8kJuN8HWLpv7=abVM2=M247KGZ92HLDxfgxWZD6JS47iZwZA@mail.gmail.com>
+ <875xuw1062.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAF8kJuMc3sXKarq3hMPYGFfeqyo81Q63HrE0XtztK9uQkcZacA@mail.gmail.com>
+ <87o78mzp24.fsf@yhuang6-desk2.ccr.corp.intel.com> <CAMgjq7C+rtbbnH+utGkUmwaTzB82zrO8qvotPx9Z6A4fMiO_4A@mail.gmail.com>
+In-Reply-To: <CAMgjq7C+rtbbnH+utGkUmwaTzB82zrO8qvotPx9Z6A4fMiO_4A@mail.gmail.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Wed, 5 Jun 2024 00:30:38 -0700
+X-Gmail-Original-Message-ID: <CAF8kJuNv06nCpxuvOt50rr4h1cco9Sk+g3nS_ximJFdo54f31Q@mail.gmail.com>
+Message-ID: <CAF8kJuNv06nCpxuvOt50rr4h1cco9Sk+g3nS_ximJFdo54f31Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] mm: swap: mTHP swap allocator base on swap cluster order
+To: Kairui Song <ryncsn@gmail.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Barry Song <baohua@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Unlike other cgroup subsystems, the hugetlb cgroup does not provide
-a static array of cftype that explicitly displays the properties,
-handling functions, etc., of each file. Instead, it dynamically creates
-the attribute of cftypes based on the hstate during the startup
-procedure. This reduces the readability of the code.
+On Fri, May 31, 2024 at 5:40=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Fri, May 31, 2024 at 10:37=E2=80=AFAM Huang, Ying <ying.huang@intel.co=
+m> wrote:
 
-To fix this issue, introduce two templates of cftypes, and rebuild the
-attributes according to the hstate to make it ready to be added to
-cgroup framework.
+> >
+> > For specific configuration, I believe that we can get reasonable
+> > high-order swap entry allocation success rate for specific use cases.
+> > For example, if we only do limited maximum number order-0 swap entries
+> > allocation, can we keep high-order clusters?
+>
+> Isn't limiting order-0 allocation breaks the bottom line that order-0
+> allocation is the first class citizen, and should not fail if there is
+> space?
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- mm/hugetlb_cgroup.c | 155 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 155 insertions(+)
+We need to have high order and low order swap allocation working. Able
+to recover from the swapfile full case.
 
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 45f94a869776..56876b61027d 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -27,7 +27,16 @@
- #define MEMFILE_IDX(val)	(((val) >> 16) & 0xffff)
- #define MEMFILE_ATTR(val)	((val) & 0xffff)
- 
-+#define MEMFILE_OFFSET(t, m)	(((offsetof(t, m) << 16) | sizeof_field(t, m)))
-+#define MEMFILE_OFFSET0(val)	(((val) >> 16) & 0xffff)
-+#define MEMFILE_FIELD_SIZE(val)	((val) & 0xffff)
-+
-+#define DFL_TMPL_SIZE		ARRAY_SIZE(hugetlb_dfl_tmpl)
-+#define LEGACY_TMPL_SIZE	ARRAY_SIZE(hugetlb_legacy_tmpl)
-+
- static struct hugetlb_cgroup *root_h_cgroup __read_mostly;
-+static struct cftype *dfl_files;
-+static struct cftype *legacy_files;
- 
- static inline struct page_counter *
- __hugetlb_cgroup_counter_from_cgroup(struct hugetlb_cgroup *h_cg, int idx,
-@@ -702,12 +711,142 @@ static int hugetlb_events_local_show(struct seq_file *seq, void *v)
- 	return __hugetlb_events_show(seq, true);
- }
- 
-+static struct cftype hugetlb_dfl_tmpl[] = {
-+	{
-+		.name = "max",
-+		.private = RES_LIMIT,
-+		.seq_show = hugetlb_cgroup_read_u64_max,
-+		.write = hugetlb_cgroup_write_dfl,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "rsvd.max",
-+		.private = RES_RSVD_LIMIT,
-+		.seq_show = hugetlb_cgroup_read_u64_max,
-+		.write = hugetlb_cgroup_write_dfl,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "current",
-+		.private = RES_USAGE,
-+		.seq_show = hugetlb_cgroup_read_u64_max,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "rsvd.current",
-+		.private = RES_RSVD_USAGE,
-+		.seq_show = hugetlb_cgroup_read_u64_max,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "events",
-+		.seq_show = hugetlb_events_show,
-+		.file_offset = MEMFILE_OFFSET(struct hugetlb_cgroup, events_file[0]),
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "events.local",
-+		.seq_show = hugetlb_events_local_show,
-+		.file_offset = MEMFILE_OFFSET(struct hugetlb_cgroup, events_local_file[0]),
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	{
-+		.name = "numa_stat",
-+		.seq_show = hugetlb_cgroup_read_numa_stat,
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+	},
-+	/* don't need terminator here */
-+};
-+
-+static struct cftype hugetlb_legacy_tmpl[] = {
-+	{
-+		.name = "limit_in_bytes",
-+		.private = RES_LIMIT,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+		.write = hugetlb_cgroup_write_legacy,
-+	},
-+	{
-+		.name = "rsvd.limit_in_bytes",
-+		.private = RES_RSVD_LIMIT,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+		.write = hugetlb_cgroup_write_legacy,
-+	},
-+	{
-+		.name = "usage_in_bytes",
-+		.private = RES_USAGE,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "rsvd.usage_in_bytes",
-+		.private = RES_RSVD_USAGE,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "max_usage_in_bytes",
-+		.private = RES_MAX_USAGE,
-+		.write = hugetlb_cgroup_reset,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "rsvd.max_usage_in_bytes",
-+		.private = RES_RSVD_MAX_USAGE,
-+		.write = hugetlb_cgroup_reset,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "failcnt",
-+		.private = RES_FAILCNT,
-+		.write = hugetlb_cgroup_reset,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "rsvd.failcnt",
-+		.private = RES_RSVD_FAILCNT,
-+		.write = hugetlb_cgroup_reset,
-+		.read_u64 = hugetlb_cgroup_read_u64,
-+	},
-+	{
-+		.name = "numa_stat",
-+		.seq_show = hugetlb_cgroup_read_numa_stat,
-+	},
-+	/* don't need terminator here */
-+};
-+
-+static void __init
-+hugetlb_cgroup_cfttypes_init(struct hstate *h, struct cftype *cft,
-+			     struct cftype *tmpl, int tmpl_size)
-+{
-+	char buf[32];
-+	int i, idx = hstate_index(h);
-+
-+	/* format the size */
-+	mem_fmt(buf, sizeof(buf), huge_page_size(h));
-+
-+	for (i = 0; i < tmpl_size; cft++, tmpl++, i++) {
-+		*cft = *tmpl;
-+		/* rebuild the name */
-+		snprintf(cft->name, MAX_CFTYPE_NAME, "%s.%s", buf, tmpl->name);
-+		/* rebuild the private */
-+		if (tmpl->private)
-+			cft->private = MEMFILE_PRIVATE(idx, tmpl->private);
-+		/* rebuild the file_offset */
-+		if (tmpl->file_offset) {
-+			unsigned int offset = tmpl->file_offset;
-+			cft->file_offset = MEMFILE_OFFSET0(offset) +
-+					   MEMFILE_FIELD_SIZE(offset) * idx;
-+		}
-+	}
-+}
-+
- static void __init __hugetlb_cgroup_file_dfl_init(int idx)
- {
- 	char buf[32];
- 	struct cftype *cft;
- 	struct hstate *h = &hstates[idx];
- 
-+	hugetlb_cgroup_cfttypes_init(h, dfl_files + idx * DFL_TMPL_SIZE,
-+				     hugetlb_dfl_tmpl, DFL_TMPL_SIZE);
-+
- 	/* format the size */
- 	mem_fmt(buf, sizeof(buf), huge_page_size(h));
- 
-@@ -779,6 +918,9 @@ static void __init __hugetlb_cgroup_file_legacy_init(int idx)
- 	struct cftype *cft;
- 	struct hstate *h = &hstates[idx];
- 
-+	hugetlb_cgroup_cfttypes_init(h, legacy_files + idx * LEGACY_TMPL_SIZE,
-+				     hugetlb_legacy_tmpl, LEGACY_TMPL_SIZE);
-+
- 	/* format the size */
- 	mem_fmt(buf, sizeof(buf), huge_page_size(h));
- 
-@@ -856,10 +998,23 @@ static void __init __hugetlb_cgroup_file_init(int idx)
- 	__hugetlb_cgroup_file_legacy_init(idx);
- }
- 
-+static void __init __hugetlb_cgroup_file_pre_init(void)
-+{
-+	int cft_count;
-+
-+	cft_count = hugetlb_max_hstate * DFL_TMPL_SIZE + 1; /* add terminator */
-+	dfl_files = kcalloc(cft_count, sizeof(struct cftype), GFP_KERNEL);
-+	BUG_ON(!dfl_files);
-+	cft_count = hugetlb_max_hstate * LEGACY_TMPL_SIZE + 1; /* add terminator */
-+	legacy_files = kcalloc(cft_count, sizeof(struct cftype), GFP_KERNEL);
-+	BUG_ON(!legacy_files);
-+}
-+
- void __init hugetlb_cgroup_file_init(void)
- {
- 	struct hstate *h;
- 
-+	__hugetlb_cgroup_file_pre_init();
- 	for_each_hstate(h)
- 		__hugetlb_cgroup_file_init(hstate_index(h));
- }
--- 
-2.34.1
+>
+> Just my two cents...
+>
+> I had a try locally based on Chris's work, allowing order 0 to use
+> nonfull_clusters as Ying has suggested, and starting with low order
+> and increase the order until nonfull_cluster[order] is not empty, that
+> way higher order is just better protected, because unless we ran out
+> of free_cluster and nonfull_cluster, direct scan won't happen.
 
+That does not help the Android test case Barry is running because
+Android tries to keep the swapfile full.
+It will hit the case both empty and nonfull list all used up.
+When it performs the low memory kill. There will be a big change in
+the ratio of low vs high order swap.
+Allocating high order swap entries should be able to recover from that.
+
+>
+> More concretely, I applied the following changes, which didn't change
+> the code much:
+> - In scan_swap_map_try_ssd_cluster, check nonfull_cluster first, then
+> free_clusters, then discard_cluster.
+
+I consider high the nonfull list before the empty list. The current
+allocation tries to make the HAS_CACHE only swap entry stay in the
+disk for a longer time before recycling it. If the folio is still in
+swap cache and not dirty, it can skip the write out and directly reuse
+the swap slot during reclaim. I am not sure this code path is
+important now, it seems when the swap slot is free, it will remove the
+HAS_CACHE as well. BTW, I noticed that the discard cluster doesn't
+check if the swap cache has a folio point to it. After discarding it
+just set the swap_map to 0. I wonder if swap cache has a folio in that
+discarded slot that would hit the skip writeback logic. If that is
+triggerable, it would be a corruption bug.
+
+The current SSD allocation also has some command said old SSD can
+benefit from not writing to the same block too many times to help the
+wear leveling. I don't think that is a big deal now, even cheap SD
+cards have wear leveling nowadays.
+
+> - If it's order 0, also check for (int i =3D 0; i < SWAP_NR_ORDERS; ++i)
+> nonfull_clusters[i] cluster before scan_swap_map_try_ssd_cluster
+> returns false.
+
+Ideally to have some option to reserve some high order swap space so
+order 0 can't pollute high order clusters.
+
+
+Chris
+
+>
+> A quick test still using the memtier test, but decreased the swap
+> device size from 10G to 8g for higher pressure.
+>
+> Before:
+> hugepages-32kB/stats/swpout:34013
+> hugepages-32kB/stats/swpout_fallback:266
+> hugepages-512kB/stats/swpout:0
+> hugepages-512kB/stats/swpout_fallback:77
+> hugepages-2048kB/stats/swpout:0
+> hugepages-2048kB/stats/swpout_fallback:1
+> hugepages-1024kB/stats/swpout:0
+> hugepages-1024kB/stats/swpout_fallback:0
+> hugepages-64kB/stats/swpout:35088
+> hugepages-64kB/stats/swpout_fallback:66
+> hugepages-16kB/stats/swpout:31848
+> hugepages-16kB/stats/swpout_fallback:402
+> hugepages-256kB/stats/swpout:390
+> hugepages-256kB/stats/swpout_fallback:7244
+> hugepages-128kB/stats/swpout:28573
+> hugepages-128kB/stats/swpout_fallback:474
+>
+> After:
+> hugepages-32kB/stats/swpout:31448
+> hugepages-32kB/stats/swpout_fallback:3354
+> hugepages-512kB/stats/swpout:30
+> hugepages-512kB/stats/swpout_fallback:33
+> hugepages-2048kB/stats/swpout:2
+> hugepages-2048kB/stats/swpout_fallback:0
+> hugepages-1024kB/stats/swpout:0
+> hugepages-1024kB/stats/swpout_fallback:0
+> hugepages-64kB/stats/swpout:31255
+> hugepages-64kB/stats/swpout_fallback:3112
+> hugepages-16kB/stats/swpout:29931
+> hugepages-16kB/stats/swpout_fallback:3397
+> hugepages-256kB/stats/swpout:5223
+> hugepages-256kB/stats/swpout_fallback:2351
+> hugepages-128kB/stats/swpout:25600
+> hugepages-128kB/stats/swpout_fallback:2194
+>
+> High order (256k) swapout rate are significantly higher, 512k is now
+> possible, which indicate high orders are better protected, lower
+> orders are sacrificed but seems worth it.
+>
