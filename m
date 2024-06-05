@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF0615FA85;
-	Wed,  5 Jun 2024 22:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C97161330;
+	Wed,  5 Jun 2024 22:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717625701; cv=none; b=SwB0mb21ugExCKHawiwOJn8YApN/R1130Baxsnb7/fchR4y+m8oX/CFU7VY3DK9xj9ctYWUZD3epw+CKVBoym5rPU30sLKXMEHuhH5enY7ndcpnGKdqS5Ithqq6GBN8Y7oisf863VD3XWnUAf6eo+oa/isUf42N7es6JKffuFyg=
+	t=1717625704; cv=none; b=DwqbC1CZ2Qi2fqIU9tP8xKs9suDwZZ+V3l7whqx0Mlr+HjOPY+IV7xXdQMbzPVgcKlsJswoS2btkWNAB9vlLXg9oF189YBmNOsUxYdWPzJ2Ssio6HFFrBuFn//xwLPUUxz5mfQFuU34kSEtUGvHm/6da1j9/jacsy+uHyN18sIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717625701; c=relaxed/simple;
-	bh=j//q7PxjjHf16S9qzs6ZEZBUjOL4lL+BxQBw8TkTaeo=;
+	s=arc-20240116; t=1717625704; c=relaxed/simple;
+	bh=wn+WM6bIVhW767mtc2MZ19cATq9dvFlmfYEDJLezjxw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RmQodKs5wNbitjJr3vA0Q1yRLI1cgnTX1AP5M8fFArSR/Fmd2NAJW2RUuxrUrcYSKQj1z7MSx07CL+gwYy43wBV+lst0OACUkYd38tKgqfmwYfTxzGGWqxlwjcs+lNy5yrBhLv7DXBrsmN5tnFe23Qh7LWlzJybS3f+gcT0mwic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lIw/vnGT; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=obadeFnlzKvfJGqjj8OLmh8BLJCo4yZNnNJQf0YKsyddBvsjL2ZxS/2RkHXQ5QJaPGE1YZ+q+1U5tNaCuCi6WQ85ikOwjuE6r3hz17rUbaG+Ucii88zky6qFwu+rB7w/4b7MaqksYvwEoWPhWwut0+ejGpiU0EGzyg4nNsVnJOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lk6g1PW9; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lIw/vnGT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lk6g1PW9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717625699; x=1749161699;
+  t=1717625702; x=1749161702;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=j//q7PxjjHf16S9qzs6ZEZBUjOL4lL+BxQBw8TkTaeo=;
-  b=lIw/vnGToKR/853h/Gm3TogWiJGKqVyNkFmetSnm7D5+vm1Xre99sWG7
-   ZEeFfLGufQat7zRQBUVrkLz1INIzf2NAfQiCL+isPxzqzwuDbPePqT0BB
-   hcuemyCB+1AD+F/xvJoa24kia1kOc2eNyVMYXbmZUAiftuJ0FyqTgZjSy
-   MvMPtfDJ5DioU3UAsuAhRWnByfPoUDcZDoBbGEvFo8tSZQXC8ZGl9j3yu
-   Eh0TrijJQuCb3sPoCMEy0KyfuA4m4K/E0C+60hxeHmOkBtSmBIBIhHo7p
-   d3+bPYa5Gr8S1CUVe6eYcj4dcCQ7DCFjxLqRm+q8y3US8HWFQLqJw/oqd
-   g==;
-X-CSE-ConnectionGUID: GaKxbOemRXWPt1PTS1lK/g==
-X-CSE-MsgGUID: Oe8jT9J5S4CcJoKA05Y1Gw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="24895453"
+  bh=wn+WM6bIVhW767mtc2MZ19cATq9dvFlmfYEDJLezjxw=;
+  b=Lk6g1PW9aokiAw8ON/ivuB61tRSmEY/WjUE65tL2BzdITbH2BMoP1gbN
+   9lAbvghbeG9RBEZwoV4BEsK8q6Pp6ZrQhoT4Uz97yPFZV6fwZU9GpgcHm
+   8h7SC5ZqytdopVT5SMjLb2Tn7oGDZRlgU52TEsG5k+j9w6gTCUYuQZl+M
+   0w7LDUmXdwrnSCuFXWn35dR4vreSJQFWYNFjP/cJ/T1Az1GI/3wJkngP5
+   +4xlaFyuKfc4m9/zpHwUU20h/bUCSi6umDJMBnncoCS9GRSPqkW4LyZiN
+   +7aDzg7a8binTP876WgIXgFq9OnkDa/BkgNOnw5N2MqFjTtbhBZLE7fnW
+   Q==;
+X-CSE-ConnectionGUID: XgxQd+1/TFGuOjM+R069Kg==
+X-CSE-MsgGUID: SStWdSFNQgOV4ol2jTpNMw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="24895498"
 X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="24895453"
+   d="scan'208";a="24895498"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 15:14:58 -0700
-X-CSE-ConnectionGUID: HzH0miWtQ1OXdvC2WG594w==
-X-CSE-MsgGUID: 8j0hPRi+QvK0cEgtvL2Q3Q==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 15:15:01 -0700
+X-CSE-ConnectionGUID: vDuyce6qQEmb/WWiwbWzNg==
+X-CSE-MsgGUID: D4oVJiRMQfCTDAoI5HxSPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="38168540"
+   d="scan'208";a="38168542"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orviesa006.jf.intel.com with ESMTP; 05 Jun 2024 15:14:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id B9E0434B; Thu, 06 Jun 2024 01:14:47 +0300 (EEST)
+	id DB91D56E; Thu, 06 Jun 2024 01:14:47 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Charles Keepax <ckeepax@opensource.cirrus.com>,
 	Rob Herring <robh@kernel.org>,
@@ -84,9 +84,9 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Heiko Stuebner <heiko@sntech.de>,
 	Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 2/6] ASoC: fsl: Remove unused of_gpio.h
-Date: Thu,  6 Jun 2024 00:27:25 +0300
-Message-ID: <20240605221446.2624964-3-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 4/6] ASoC: codecs: Replace of_gpio.h by proper one
+Date: Thu,  6 Jun 2024 00:27:27 +0300
+Message-ID: <20240605221446.2624964-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
 References: <20240605221446.2624964-1-andriy.shevchenko@linux.intel.com>
@@ -98,41 +98,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-of_gpio.h is deprecated and subject to remove. The drivers in question
-don't use it, simply remove the unused header.
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it directly, replace it
+with what is really being used.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- sound/soc/fsl/imx-es8328.c | 1 -
- sound/soc/fsl/imx-rpmsg.c  | 2 --
- 2 files changed, 3 deletions(-)
+ sound/soc/codecs/aw88395/aw88395.c | 2 +-
+ sound/soc/codecs/aw88399.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/fsl/imx-es8328.c b/sound/soc/fsl/imx-es8328.c
-index 5b9648f3b087..3ef92f6dfc6b 100644
---- a/sound/soc/fsl/imx-es8328.c
-+++ b/sound/soc/fsl/imx-es8328.c
-@@ -8,7 +8,6 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/i2c.h>
--#include <linux/of_gpio.h>
- #include <sound/soc.h>
- #include <sound/jack.h>
+diff --git a/sound/soc/codecs/aw88395/aw88395.c b/sound/soc/codecs/aw88395/aw88395.c
+index 3c459a67ad0c..be6ebcb51cca 100644
+--- a/sound/soc/codecs/aw88395/aw88395.c
++++ b/sound/soc/codecs/aw88395/aw88395.c
+@@ -8,9 +8,9 @@
+ // Author: Weidong Wang <wangweidong.a@awinic.com>
+ //
  
-diff --git a/sound/soc/fsl/imx-rpmsg.c b/sound/soc/fsl/imx-rpmsg.c
-index 0f1ad7ad7d27..ce98d2288193 100644
---- a/sound/soc/fsl/imx-rpmsg.c
-+++ b/sound/soc/fsl/imx-rpmsg.c
-@@ -5,9 +5,7 @@
- #include <linux/of_platform.h>
- #include <linux/of_reserved_mem.h>
++#include <linux/gpio/consumer.h>
  #include <linux/i2c.h>
+ #include <linux/firmware.h>
 -#include <linux/of_gpio.h>
- #include <linux/slab.h>
--#include <linux/gpio.h>
- #include <linux/clk.h>
+ #include <linux/regmap.h>
  #include <sound/soc.h>
- #include <sound/jack.h>
+ #include "aw88395.h"
+diff --git a/sound/soc/codecs/aw88399.c b/sound/soc/codecs/aw88399.c
+index df6d52a1cfef..5d8481612eab 100644
+--- a/sound/soc/codecs/aw88399.c
++++ b/sound/soc/codecs/aw88399.c
+@@ -8,9 +8,9 @@
+ //
+ 
+ #include <linux/crc32.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/firmware.h>
+-#include <linux/of_gpio.h> 
+ #include <linux/regmap.h>
+ #include <sound/soc.h>
+ #include "aw88399.h"
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
