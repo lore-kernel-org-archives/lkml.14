@@ -1,90 +1,106 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C3F25774;
-	Wed,  5 Jun 2024 14:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33FA262BE;
+	Wed,  5 Jun 2024 14:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717599179; cv=none; b=YuGkl7T5JZQqtgW9ZJXIcZy+yVVbplCK1rEoPSWnEUeimWL5rOD6cWHwoL/Wcb+EchK4/d4lMsy9WHd3W/bYehf1U64B+5U4fS7Yf1Y8ourBIZSDkQePiZT86xsojkUMlxr5k/3935tjmo7tLBSSSvhugGCjgDun+E10U/UtAcM=
+	t=1717599277; cv=none; b=tP5MwQh/kk+DNGS8I4U6QkiIfUnZqu6sqB5lC3OkvCy8Bei4wmI3WS5KyeEsCm7YvJSH2Tec2P/bFul393kjozpHOD6LxkyK/FebB5iJ+rjgqCzDhe3t8Tca06pPPMm+isSGCE7HXa6thUOtaaFsr+PGHvf5W2/bJpPYFrQqEMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717599179; c=relaxed/simple;
-	bh=yRIHKxkExUCcCNbOOTqd0FldNUHY9LI103BRj3sfAFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JypRuyRDDq5iw/rBC9dBvCOKffB+LBnvKwSB9N4+glqPswQLO2YL1PNcyRmNnHVxZP2+LcQLQIjqy1Jn5vJ9vdU/7c51sRERAilDdA5bSI8oay2O2vBMQrSEHy6d1Iqw9VC5cyXex8Wx5LtuGp7kEJuP1vIkRDcAvQRX2T/Uw2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Date: Wed, 5 Jun 2024 10:52:53 -0400
-From: Kenton Groombridge <concord@gentoo.org>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] wifi: mac80211: Avoid address calculations via out of
- bounds array indexing
-Message-ID: <dbqrrkkitwhvmcpgcpapdw7a7zjgdkidr4cyyjxyr7mwiihygo@pqzstp2nl7zg>
-Mail-Followup-To: Johannes Berg <johannes@sipsolutions.net>, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <20240517145420.8891-1-concord@gentoo.org>
- <d1fea590e53cb1b00dc64f4f8a4c8aec84610401.camel@sipsolutions.net>
- <cx2oet5b5lavjywcbf7u4c32krtoglvt3xbe2sxac55e36iibw@lrd5iuhtxz2g>
- <ab59089feac4cfbc1d681fcaa4a828ca13088ce1.camel@sipsolutions.net>
+	s=arc-20240116; t=1717599277; c=relaxed/simple;
+	bh=vEAm8XW4A4JCAVr1Njf+fvAe/H3oq73qrPOokg531pE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FPcm2pGO98UX4WhJTWgB4fWYd9eqRZ2TNi0zTh+s/7sN/6YSqhLb/OEj7gxGjlCR5PFTups08v8Fs0nP0UbgdhsS/MtpVGSsMS46Q+sJgx/qeDpoqB77ycitB21OIDm2NHZf78FGvGIp6m2PWAEzx06EYguv0/SeRSx0W6EVOOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nM/ELYqC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9JF+QV1y; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nM/ELYqC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9JF+QV1y"
+Date: Wed, 05 Jun 2024 14:54:33 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717599273;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nabDAdkeXLpiGcP4YJdk7saSMZT0JJB2s6uiC+hHzDE=;
+	b=nM/ELYqCgJQRkG5V+oEE4toaC0xcVofpE8NwzW+fKhx/XT9w5+ZPQNKgUulLKzjbj23++2
+	pNhh91OpmY0ktFQJWK8syhQVQemLec1IEAIOfwFLAwepjtuWjGi8+Q0cmrAyNNEh2c+vqq
+	MHYkS2iSc2/SMJjY9rF1ests9jvrmTsqF2Br/bLUhORrrKG3PnYyd0ExDiF8dsxWxA9tGk
+	imHjkkzM+oZgm5esoO3JWlQD3/JQnXxuOFV7Ok3OzsQ+rXYsjviJrYC/alGElLClY29ihu
+	U3mR+5Aoaqc/Pr7J2TXas0bq2Jqz/skZ0isVtSVXnXt7BfvHZrH7ybnmO6ZDtA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717599273;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nabDAdkeXLpiGcP4YJdk7saSMZT0JJB2s6uiC+hHzDE=;
+	b=9JF+QV1y/hu+ezbU7P5YrNthKDO8LeiRPnDZXIQxKlJhKMYGXgza3Gj0OWq0tpYJLboQZK
+	u7jAW75bs0bqPcAQ==
+From: "tip-bot2 for Christian Loehle" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] idle: Remove stale RCU comment
+Cc: Christian Loehle <christian.loehle@arm.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <5b936388-47df-4050-9229-6617a6c2bba5@arm.com>
+References: <5b936388-47df-4050-9229-6617a6c2bba5@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6uvcipftoi6mlx2a"
-Content-Disposition: inline
-In-Reply-To: <ab59089feac4cfbc1d681fcaa4a828ca13088ce1.camel@sipsolutions.net>
+Message-ID: <171759927337.10875.6268868204666848368.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the sched/core branch of tip:
 
---6uvcipftoi6mlx2a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     764d5fcc2a58d789629f6800451975fc93f25822
+Gitweb:        https://git.kernel.org/tip/764d5fcc2a58d789629f6800451975fc93f25822
+Author:        Christian Loehle <christian.loehle@arm.com>
+AuthorDate:    Mon, 03 Jun 2024 16:30:39 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 05 Jun 2024 15:52:35 +02:00
 
-On 24/06/04 09:29PM, Johannes Berg wrote:
-> Looking at your patch again, this seems wrong?
->=20
-> > +				local->hw_scan_req->req.channels[*n_chans++] =3D
-> >  							req->channels[i];
-> >=20
->=20
-> This will increment n_chans rather than *n_chans, no?
->=20
+idle: Remove stale RCU comment
 
-Ah ha! A silly mistake that I missed. V3 to follow soon.
+The call of rcu_idle_enter() from within cpuidle_idle_call() was
+removed in commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle deeper
+into the idle path") which makes the comment out of place.
 
---=20
-Kenton Groombridge
-Gentoo Linux Developer, SELinux Project
+Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/5b936388-47df-4050-9229-6617a6c2bba5@arm.com
+---
+ kernel/sched/idle.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
---6uvcipftoi6mlx2a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQKTBAABCgB9FiEEP+u3AkfbrORB/inCFt7v5V9Ft54FAmZge8BfFIAAAAAALgAo
-aXNzdWVyLWZwckBub3RhdGlvbnMub3BlbnBncC5maWZ0aGhvcnNlbWFuLm5ldDNG
-RUJCNzAyNDdEQkFDRTQ0MUZFMjlDMjE2REVFRkU1NUY0NUI3OUUACgkQFt7v5V9F
-t57bKhAAynN8R9v+lYN7ApnatMLAGRD244uYlzCDJPmBILAbfKcrg2vgm+qPJusl
-4Cwkwho370rRdRtaDqsgC9eWwRGQpJ1UZ/aq55KAI0PPtphAdXx5MqEmX7Od1aUb
-m9Nj9LLEZhL+zdIkNIP3bDRomHDCBaywzJ/mZZg+r2Edr2PUEPYsNhBM2zemvQ08
-s17K9eQooclY+fMxDGj08Em462cZ6vv5zHO4nEtTvThv+S1dPpCG9vFXreAnEckM
-sVzLDGLII97RlXIHgNKyIIN660fuIfc7O6si1W++KaDxd6j+x0NBovGwOkTPA5hM
-IDYLIt+1OG2MY4QlG32NQl3UvfsNtCjjraQcwyU5ZhT45r3W/eL6tD7JcBvLRb/4
-OKmO+sSzTAiXZ5sXOdTkIWbiqZno6vkLOsLNnxAwofHUcj0JKv8lvIHGdaxxvqhN
-yMDmKye1XdDviSggWn2cAyiovXHrcvZYYQP5LPc72DYmtXtbrIRZEKp+HmOksWBN
-ncr5VCfbcBjqeTYCUwoWU8dLE5bHR4pMZCDHUtLYAordXEB2YHavhLNKyB+QZ1m+
-s1ZyYZoz7mS6jKxphRaVrwLrQZaCn9hm9zbYx2LN6tfz3NCsV1AHoacoOUfLz/ah
-j1Av1LZFwOTw+pMmryTt/NI+kJvdGIp4yfEUSB8JCos3+m3zsJk=
-=6g5W
------END PGP SIGNATURE-----
-
---6uvcipftoi6mlx2a--
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 770e698..6e78d07 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -179,12 +179,6 @@ static void cpuidle_idle_call(void)
+ 		return;
+ 	}
+ 
+-	/*
+-	 * The RCU framework needs to be told that we are entering an idle
+-	 * section, so no more RCU read side critical sections and one more
+-	 * step to the grace period
+-	 */
+-
+ 	if (cpuidle_not_available(drv, dev)) {
+ 		tick_nohz_idle_stop_tick();
+ 
