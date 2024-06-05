@@ -1,139 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0464C19306F;
-	Wed,  5 Jun 2024 11:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65D519B59A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 11:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588231; cv=none; b=nJHRkoKgowrHia6H6UwDbqWIHiZupBdNWOG82Akl6JhFBRJI/PoLaNHJWYInBUwOsG2SaDammLf4/sNeStoINvGzWDbNGUi3sdz4tb+Xl1ndUmgjIJI8mQbkYfwocT7AHYKRZTpnfdN+p0IEwYOVEnzoJDE7FKrjRF4XXsJhCWY=
+	t=1717588231; cv=none; b=Ur2PEeG7UQ5wN8hTkDU6YnwchrCWUYzUWNxT4qlmE4KUTHU9RhEm5/ukjfPcdWUZ3ZIF1gOslWBF0GrDc6gZUr3nXF/6K/nbpYg8wuxSqw9oKagDYzO7PDJWWB6Ggn6/9ABvwCvvrK45twSRGWS2i5sahWsLglP1ZyNnnauyHXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717588231; c=relaxed/simple;
-	bh=aC+/Y54qUVztX75gE0DEGfzevRZNm3ROGdCzSSWZZIc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LYPhgmpV2vOMiqg4OIrtCZqgEhhT3s0X/F3kqiPiDlRtmPpSpFFopFe6m11rZr10qzr0zBWwkXAJslm//znvzZtJUPfSwGywOoFxKx7Xg1wRWX0W+EptxnDZCvXLQ3Wsr7NKyHI0v0IlnECBPZYf94v5OCeocFCS7+X70tDsjDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnEUqpuJ; arc=none smtp.client-ip=10.30.226.201
+	bh=ONrEo9FNO/9LJSKku7iv/BrnTzWIK6mPQb5zmZ6p3ug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KshFD54WNUTeT1pyl3lOyqFHlakZkjOcaId1HKaLAJKIbKCkr1g2Nqz0aA/2+u/1YW0IRVnG804kLkkpT3J/RuWmBK/xHKAtT1WN6z7Z5E/j0BC+E8KNnp//InRs3JIRrIG3XUisAWRbLoEgqbeHUUKOLwq238UrsUelJ0KjVFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XV4ZEjJD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnEUqpuJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16548C4AF07;
-	Wed,  5 Jun 2024 11:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588230;
-	bh=aC+/Y54qUVztX75gE0DEGfzevRZNm3ROGdCzSSWZZIc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XnEUqpuJoqt7wetHW5PqvFm3cMh6Qwy14k/xXE3N0DPU+4uYr5VzWJ7LzLtto1MoV
-	 u/Y/FACidrlKF66mXwEDdjfhpzI1j0R8pnqZk0hcZMaJcEIZvEkvJBvK/jdqePYa7g
-	 qJTxnwpNdXNzHzY0roCcx2KCBKGv5tw7wE6Fbq/KTJN7GCAy6B8IqTMH5yBvvYsnIr
-	 E1ZUVuV7k4z3EMhJG6oVAfEGQp+3OeFeNi3DETvZUaNaumZoFxioqVkpbFyQXH3Ylm
-	 1J3D3/AukTgkEPP8CM6tRP7h+EMu1CRveU7Q9jlYoNQUn8HpNp2kxALUgat3rTzm/u
-	 3/fcsDSK3A9PQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.9 27/28] PCI: Do not wait for disconnected devices when resuming
-Date: Wed,  5 Jun 2024 07:48:56 -0400
-Message-ID: <20240605114927.2961639-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605114927.2961639-1-sashal@kernel.org>
-References: <20240605114927.2961639-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XV4ZEjJD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717588228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3YlG1Bw2xgnk32skP33PtoFJXnD9dZT+4APyJtar36o=;
+	b=XV4ZEjJDtVytXVP8hBBdvTjkH+UJu9X41whX+bl77q7PSqAkgh+AWyKpJb8ay3PYDYdg3D
+	ZkMrA9xdzC0ZxK41moTm2Pzdx3N9Vz22HJk2LQeNtkAsLwBfcEhlraNM/Dmnf1aJJjDYoK
+	7zOmMKclP2e3Xm9HKiUSxQCoK258fDs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-111-I6IbGtpPMeqKEZzly2yRTQ-1; Wed, 05 Jun 2024 07:50:24 -0400
+X-MC-Unique: I6IbGtpPMeqKEZzly2yRTQ-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42155e1f0aaso9373825e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 04:50:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717588223; x=1718193023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3YlG1Bw2xgnk32skP33PtoFJXnD9dZT+4APyJtar36o=;
+        b=M6IefWo6TmM2kGYNmyv4UkPxx8v/2WVM7AE+UglefehKkpU02gmwL3c3gfjAgpliGU
+         wP5htKrGCMxu9gVZV9CeeSxyZ2EAnybT05RISdrCa/qnc5NhFnEOe16IFCYE3LJh4N0k
+         MMe9GC5DrFUlkDwRGYqWgNY/EchLu5MVNBt8maPnvK9JBEHisiv8KfowXis4HoQ9G3ob
+         3vE9zPn5MVC+omAlQ/2DVeq/tgsaFsiRYNjA4DhrtTTHBlI4XjtHQNntFZVbk7tRoMRw
+         tt1FHn+017Sr7nE+9/GObyLRvNC8vOcsvyQ61dVY1v7ml9pp7FKoNvpv2yZlx1IBJoVQ
+         zQ4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUZgKubqjmh1Yec5KMOlPuWeeA3CZDM0c+K+epbfEilBkmDvgsscId6qp5DF1gjoFegmxoGE7uWKWU8TY0RMA//6bXJKZh6gjy58vsR
+X-Gm-Message-State: AOJu0YxhhfSF1yXBvus8cmpbe7nBpUs4lS6RmBQmqvposxDwgewpP0zJ
+	7JO9RdVNIwnQ65ItZzYys03N37aI06+RGfwk9pe9Mt0I+Qtb7X23TiXFrRZ/cnULABMAQ7aQ2t3
+	9S+7ohWhCpuUF/fIZ0uUrVp82Y5oBrweP3bZxA5czu/8b068PPC/oyeWG5dnOVSITq3AwwMWEb6
+	ldOalAcoYh22R/oIfkRrRw/VNaIvEB9MEInaNF
+X-Received: by 2002:a05:6000:e8c:b0:35a:62e3:7103 with SMTP id ffacd0b85a97d-35e8406df3fmr2232090f8f.2.1717588223659;
+        Wed, 05 Jun 2024 04:50:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE1hBpVkwUAsy5NCJn3bUgFRhVOdiW5gUbZZW6lmADP3rMiS2Grtmju2yHiy1M7tLme7GF6GfKPF6kT8CkEllU=
+X-Received: by 2002:a05:6000:e8c:b0:35a:62e3:7103 with SMTP id
+ ffacd0b85a97d-35e8406df3fmr2232070f8f.2.1717588223353; Wed, 05 Jun 2024
+ 04:50:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.9.3
-Content-Transfer-Encoding: 8bit
+References: <20240531044644.768-4-ravi.bangoria@amd.com> <20240605114810.1304-1-ravi.bangoria@amd.com>
+In-Reply-To: <20240605114810.1304-1-ravi.bangoria@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Wed, 5 Jun 2024 13:50:11 +0200
+Message-ID: <CABgObfbq2sZ9U=8650EJq4FqiO=Dz2_mivOj_GponeNn2KyAVQ@mail.gmail.com>
+Subject: Re: [PATCH] KVM: SNP: Fix LBR Virtualization for SNP guest
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: seanjc@google.com, nikunj.dadhania@amd.com, sraithal@amd.com, 
+	thomas.lendacky@amd.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	michael.roth@amd.com, pankaj.gupta@amd.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Wed, Jun 5, 2024 at 1:49=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> SEV-ES and thus SNP guest mandates LBR Virtualization to be _always_ ON.
+> Although commit b7e4be0a224f ("KVM: SEV-ES: Delegate LBR virtualization
+> to the processor") did the correct change for SEV-ES guests, it missed
+> the SNP. Fix it.
+>
+> Reported-by: Srikanth Aithal <sraithal@amd.com>
+> Fixes: b7e4be0a224f ("KVM: SEV-ES: Delegate LBR virtualization to the pro=
+cessor")
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+> - SNP support was not present while I prepared the original patches and
+>   that lead to this confusion. Sorry about that.
 
-[ Upstream commit 6613443ffc49d03e27f0404978f685c4eac43fba ]
+No problem, this is a semantic conflict and your original patches will
+go in 6.10. Applied to kvm/next.
 
-On runtime resume, pci_dev_wait() is called:
+Paolo
 
-  pci_pm_runtime_resume()
-    pci_pm_bridge_power_up_actions()
-      pci_bridge_wait_for_secondary_bus()
-        pci_dev_wait()
-
-While a device is runtime suspended along with its PCI hierarchy, the
-device could get disconnected. In such case, the link will not come up no
-matter how long pci_dev_wait() waits for it.
-
-Besides the above mentioned case, there could be other ways to get the
-device disconnected while pci_dev_wait() is waiting for the link to come
-up.
-
-Make pci_dev_wait() exit if the device is already disconnected to avoid
-unnecessary delay.
-
-The use cases of pci_dev_wait() boil down to two:
-
-  1. Waiting for the device after reset
-  2. pci_bridge_wait_for_secondary_bus()
-
-The callers in both cases seem to benefit from propagating the
-disconnection as error even if device disconnection would be more
-analoguous to the case where there is no device in the first place which
-return 0 from pci_dev_wait(). In the case 2, it results in unnecessary
-marking of the devices disconnected again but that is just harmless extra
-work.
-
-Also make sure compiler does not become too clever with dev->error_state
-and use READ_ONCE() to force a fetch for the up-to-date value.
-
-Link: https://lore.kernel.org/r/20240208132322.4811-1-ilpo.jarvinen@linux.intel.com
-Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/pci.c   | 5 +++++
- include/linux/pci.h | 7 ++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4028717ec2cea..f6e321a0ce74c 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1277,6 +1277,11 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- 	for (;;) {
- 		u32 id;
- 
-+		if (pci_dev_is_disconnected(dev)) {
-+			pci_dbg(dev, "disconnected; not waiting\n");
-+			return -ENOTTY;
-+		}
-+
- 		pci_read_config_dword(dev, PCI_COMMAND, &id);
- 		if (!PCI_POSSIBLE_ERROR(id))
- 			break;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 16493426a04ff..6f9c5ed5eb3ba 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2519,7 +2519,12 @@ static inline struct pci_dev *pcie_find_root_port(struct pci_dev *dev)
- 
- static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
- {
--	return dev->error_state == pci_channel_io_perm_failure;
-+	/*
-+	 * error_state is set in pci_dev_set_io_state() using xchg/cmpxchg()
-+	 * and read w/o common lock. READ_ONCE() ensures compiler cannot cache
-+	 * the value (e.g. inside the loop in pci_dev_wait()).
-+	 */
-+	return READ_ONCE(dev->error_state) == pci_channel_io_perm_failure;
- }
- 
- void pci_request_acs(void);
--- 
-2.43.0
+>  arch/x86/kvm/svm/sev.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 7d401f8a3001..57291525e084 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2395,6 +2395,14 @@ static int snp_launch_update_vmsa(struct kvm *kvm,=
+ struct kvm_sev_cmd *argp)
+>                 }
+>
+>                 svm->vcpu.arch.guest_state_protected =3D true;
+> +               /*
+> +                * SEV-ES (and thus SNP) guest mandates LBR Virtualizatio=
+n to
+> +                * be _always_ ON. Enable it only after setting
+> +                * guest_state_protected because KVM_SET_MSRS allows dyna=
+mic
+> +                * toggling of LBRV (for performance reason) on write acc=
+ess to
+> +                * MSR_IA32_DEBUGCTLMSR when guest_state_protected is not=
+ set.
+> +                */
+> +               svm_enable_lbrv(vcpu);
+>         }
+>
+>         return 0;
+> --
+> 2.45.1
+>
 
