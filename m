@@ -1,253 +1,166 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C24B18F2CD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F9F257B;
+	Wed,  5 Jun 2024 09:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579726; cv=none; b=miARDGDQzhmikpkYPfsdnz80U29l2LhBewfdB78dku0RLDevCbmIc+5aY/aKvJU1TrL4ov2xjvBXNWp1wV0QW1iykkljUIA9AbZ2cQRk8JDJfkEACvGjAtEwQmHCY3U7nLDZBAni0GyFQF3d2/Z53cr59/GrmTtr9jNWnF+XyDE=
+	t=1717579814; cv=none; b=ihuAk49HSCm7RVfjpsHmVUSRDMrz2wxGOHaZadYQN2Ej3EWsnk3IWSb7Id+vslIlE5U/9eZmd0lI+/jNNOwPJRrrlTXTiUnmILgBoqghtvqTHV9cvznSbRCDhdrBoGnfmBnxg6kwAa70lUaaK6ENiqmkplUTLUPjin+yBT457XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579726; c=relaxed/simple;
-	bh=EJXpSOgGuoa4/HZZtSlGPirWM12RV8lC1Y/RC/F9HFA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QuNwX5nCYepwCvE5xd7kwzslUBBfGpe5yEEXCe1iGfco/cudCpPqH/iRvVVRtP0rlimEFozAwjlVm0KrjFZdAN3g0JljhyiKQwIltZQgv4OoOwhcgpKiEn4MvtuR+A/CPtwnOPXI+MxUvMsONaIB6sIx8vNJhpTtNHmCkTGV9Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m9IE8tc/; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1717579814; c=relaxed/simple;
+	bh=ZWvr410IHWWuYNKsLYoYrO07ijJE2egibpZ67QmYtTc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=krs7oVkZ4Rq3yLIUDLeokZ9XMxq8P0LvcMaH+aP9nNbl2EHccbEFf9ejR4xBoZpdKUqBOTHEKmbuI29sfByyK74zRvoLLogsg1Nu2K0ExRJ35GX/8OpFPwnX8zhsh+ihDDR4xlU1oef23e+JMFn8DnKC5raqssqXujnorSAtBKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QO2Hhg8y; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m9IE8tc/"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-35dce6102f4so1771562f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:28:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QO2Hhg8y"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a6266ffdba8so203349166b.1;
+        Wed, 05 Jun 2024 02:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717579723; x=1718184523; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9aZp3wyE5ekzsTIWHpWbrt8XuH/G5p0iFSTouqyj9Bg=;
-        b=m9IE8tc/NFb2SKk7qGjGfeM1h8dMjii4qwJD6iqfFI8kPwz4Tt1y+D3vt+UdRfZOJ4
-         KNfXylTfayfO6nQ3jRBcQy9nqsAfxymAQii7nzQbh/AYlH2cI5XWojU1sG2Ibe62iznR
-         l9fcWs0QmdGYFndXt7zBgT+4zSb7RuR1ElYFVmNZ6mOzTnnuA0FcYqfcbZqd5mLyMBMg
-         hWCVnKNoUPWnD2njoR7ldWGPrn/UxM+6Avh/FRy8bdn0VIoaM4WF8gijF6cEgYqecEVl
-         AF60XLDOeppD+LcjxYY1uRipnljV1c4avCl+8jjB42PrvH+60IPRk/f3pwllJuhTxPhS
-         aT4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717579723; x=1718184523;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+        d=gmail.com; s=20230601; t=1717579811; x=1718184611; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=9aZp3wyE5ekzsTIWHpWbrt8XuH/G5p0iFSTouqyj9Bg=;
-        b=u3G/y41FCvGESCkXBlpOxBYM1rDDPZzi3UGkaJZsQIZNOaxmr9ZXdYBpgbBa7PPuNp
-         2i7ZCkHwsT+MwtQ0/EN6q/30P8eR2F+6uliObNJK0w0Y4XiOFz5HpuwvbQnuG+GKy9Gp
-         OtVGnKXAVqcpTbROti83lvNilhE9EknUUokEC92HuEsD9mJUwcVmsiqVt5fOcNNaIthC
-         FNBKAqy83kFTV6qGTaDFlONZqa6ehQ8BwK1qWzvaIMP+jluP5JS90Jz+xeJgC8RY+9Vy
-         duBq9rpPYXzefH570+oEon2k1OLwGac3GNBXhN1seR1ThrEUMCiXQxQVZ/6g2UE5MHb7
-         5luw==
-X-Forwarded-Encrypted: i=1; AJvYcCXb3tu0kgk+mB3NynqdegYCTH2cJQnAipOJQrGffbo0fQcqF1xDqbaELMZBGwZ+IAAcnOpLQUbOhkLhodsb+BOPGMXldYY3SxzC2Pna
-X-Gm-Message-State: AOJu0YzQ4rLed3R+UbkRAXRwriK5ERPnbC/AMia1nq+pO5KXfSL27f5e
-	OVH3BUR8zSI75TFcyLVyJw7N7W17XUV04W5PVZTexT3Gw+Zh0EHqMTuhsobO+Wg=
-X-Google-Smtp-Source: AGHT+IG4DNIDSVe9T92rRq3LMxr5LieWsgduZLuBSwgYLoAnxR2RRrOizcT2CkEWD5xDDP8HNuZKsg==
-X-Received: by 2002:a5d:4645:0:b0:35d:ca3b:4d11 with SMTP id ffacd0b85a97d-35e8ef97043mr1413209f8f.61.1717579723202;
-        Wed, 05 Jun 2024 02:28:43 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:c7ce:7756:462d:a8bd? ([2a01:e0a:982:cbb0:c7ce:7756:462d:a8bd])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd064aa6csm13842822f8f.93.2024.06.05.02.28.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 02:28:42 -0700 (PDT)
-Message-ID: <01bde68a-88a7-46eb-860c-1375aa730bec@linaro.org>
-Date: Wed, 5 Jun 2024 11:28:41 +0200
+        bh=cV7zf1J5GVnNvj6COOcqVNCjZ7NVt5RFiRgF7yuHnLw=;
+        b=QO2Hhg8yJyKpMsyqyKsHAsEW6nt3Fv6C7gOmfqIk9wo67V4WHdeddR1yIRxyVGymKh
+         KomdKfI9AAAf88YhnL6+MZKgvI2C67ESvMuSrMp3mWmhz1AX4lYruCMZe6BO2nSM6tC4
+         UntleTKxsMwAff4u4Xhc65VK6+3sDBGWEGmvMq/GbkRjaYRAU+0IBg1XcizmD3o4sugj
+         jCT0Z95n0G5chVSdk/lisYe6v5prdMPYPX7oJXqoPqMC5cGHaoAVX3fT3q7k73LDznKh
+         D5HtaxDhpsex2wqmgWET1brb2AU4qfr9auiMDagh8AAFDahVeWfV67Eh1LBwcuqiGvEA
+         AKzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717579811; x=1718184611;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cV7zf1J5GVnNvj6COOcqVNCjZ7NVt5RFiRgF7yuHnLw=;
+        b=mvE9kRtFNNNnq90J8Pd4+B/8Sf8ra9L8CaviG5jHiOKme0tx0NqHLj++wShSTn6KPQ
+         hJ8ESF6+t5DUbQ9hU3ZY8LT8OIB93SrJxZbZMPBcp3ak1OFsunMcnyXX/cU6DD3BnNPL
+         ijjPpX3xJdfyTAspoSkGawPpBmNsrMm9GKPqyhzcnAPj27UUlUrOQ2LI6+wZTcTm9t52
+         LuREbiqoWFGSZJ3Z6RwnBAAqW4OeyfCNTtVnUaay9FYsaP87d4Scu+hSUgr9egYE85L/
+         6I8/NMBThf/gQSZ/tWhzrelcxkR+qYj+V5CR1LRUIzufj2ndYueidYzh565RZncWVMe5
+         yQiA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+Z0KE7AHcF/rMnFbGKfTvXjQItrYQcSnPt2Q4QVRqkvFB/ANV5aBUmG917HRZAUNEhfCKXu+dw5gYiqOHHDBhmcpLcRONUVmKC7R4Z6Mn7DMrONva0BjlVIOhTIwr4NCGmHfQjDBW
+X-Gm-Message-State: AOJu0YwnfP3XAfaaNAcS0W+0DqcRKcdcaNFkr9BWg4e+MGSgZ2JXn5jD
+	8YDdwzqXq/SJdJJ72khcWCQ33R38o/NMwnTmn4nNDNMQnvbCCBoG
+X-Google-Smtp-Source: AGHT+IFKIjzxbZK6itJudm8hiuq5NtiQaTOtj73xdFoRpvF9XLCXllH0gTRohuA0C8uI4HqbKUV/pw==
+X-Received: by 2002:a17:906:1c11:b0:a66:e009:eb53 with SMTP id a640c23a62f3a-a699f34d9c8mr131390866b.13.1717579810959;
+        Wed, 05 Jun 2024 02:30:10 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6922c59fc1sm347149766b.175.2024.06.05.02.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 02:30:10 -0700 (PDT)
+Message-ID: <aac3acb3f02642fd9aa0ec922f7b02bb9f32435a.camel@gmail.com>
+Subject: Re: [PATCH 2/5] iio: adc: ad7266: use
+ devm_regulator_get_enable_read_voltage
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>
+Cc: Marcelo Schmitt <marcelo.schmitt1@gmail.com>, Nuno =?ISO-8859-1?Q?S=E1?=
+ <nuno.sa@analog.com>, Michael Hennerich <Michael.Hennerich@analog.com>,
+ Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-iio@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Wed, 05 Jun 2024 11:33:57 +0200
+In-Reply-To: <57a60f5c-a989-4187-ab4f-1f6a15578578@baylibre.com>
+References: 
+	<20240531-iio-adc-ref-supply-refactor-v1-0-4b313c0615ad@baylibre.com>
+	 <20240531-iio-adc-ref-supply-refactor-v1-2-4b313c0615ad@baylibre.com>
+	 <edb66fe8c2722e600179b1f9a0d81242d84582a0.camel@gmail.com>
+	 <57a60f5c-a989-4187-ab4f-1f6a15578578@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 00/14] Add initial support for the Rockchip RK3588 HDMI TX
- Controller
-To: Andy Yan <andyshrk@163.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Sandy Huang <hjc@rock-chips.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mark Yao <markyao0591@gmail.com>,
- Andy Yan <andy.yan@rock-chips.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
- kernel@collabora.com, Alexandre ARNOUD <aarnoud@me.com>,
- Luis de Arquer <ldearquer@gmail.com>, Algea Cao <algea.cao@rock-chips.com>
-References: <20240601-b4-rk3588-bridge-upstream-v1-0-f6203753232b@collabora.com>
- <a4b22708-e85d-448a-8145-244b49bca053@linaro.org>
- <ab0a6372-091b-4293-8907-a4b3ff4845c0@rock-chips.com>
- <11359776.NyiUUSuA9g@phil> <ef60403f-078f-411a-867b-9b551e863f56@linaro.org>
- <b8066150-c147-4eb6-9f7a-2bd0268c274e@collabora.com>
- <4456bc5a.9b2d.18fe7b76790.Coremail.andyshrk@163.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <4456bc5a.9b2d.18fe7b76790.Coremail.andyshrk@163.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi,
+On Tue, 2024-06-04 at 09:10 -0500, David Lechner wrote:
+> On 6/4/24 6:19 AM, Nuno S=C3=A1 wrote:
+> > On Fri, 2024-05-31 at 16:19 -0500, David Lechner wrote:
+> > > This makes use of the new devm_regulator_get_enable_read_voltage()
+> > > function to reduce boilerplate code.
+> > >=20
+> > > Signed-off-by: David Lechner <dlechner@baylibre.com>
+> > > ---
+> > > =C2=A0drivers/iio/adc/ad7266.c | 37 ++++++++++-----------------------=
+----
+> > > =C2=A01 file changed, 10 insertions(+), 27 deletions(-)
+> > >=20
+> > > diff --git a/drivers/iio/adc/ad7266.c b/drivers/iio/adc/ad7266.c
+> > > index 353a97f9c086..026db1bedc0a 100644
+> > > --- a/drivers/iio/adc/ad7266.c
+> > > +++ b/drivers/iio/adc/ad7266.c
+> > > @@ -25,7 +25,6 @@
+> > > =C2=A0
+> > > =C2=A0struct ad7266_state {
+> > > =C2=A0	struct spi_device	*spi;
+> > > -	struct regulator	*reg;
+> > > =C2=A0	unsigned long		vref_mv;
+> > > =C2=A0
+> > > =C2=A0	struct spi_transfer	single_xfer[3];
+> > > @@ -377,11 +376,6 @@ static const char * const ad7266_gpio_labels[] =
+=3D {
+> > > =C2=A0	"ad0", "ad1", "ad2",
+> > > =C2=A0};
+> > > =C2=A0
+> > > -static void ad7266_reg_disable(void *reg)
+> > > -{
+> > > -	regulator_disable(reg);
+> > > -}
+> > > -
+> > > =C2=A0static int ad7266_probe(struct spi_device *spi)
+> > > =C2=A0{
+> > > =C2=A0	struct ad7266_platform_data *pdata =3D spi->dev.platform_data;
+> > > @@ -396,28 +390,17 @@ static int ad7266_probe(struct spi_device *spi)
+> > > =C2=A0
+> > > =C2=A0	st =3D iio_priv(indio_dev);
+> > > =C2=A0
+> > > -	st->reg =3D devm_regulator_get_optional(&spi->dev, "vref");
+> > > -	if (!IS_ERR(st->reg)) {
+> > > -		ret =3D regulator_enable(st->reg);
+> > > -		if (ret)
+> > > -			return ret;
+> > > -
+> > > -		ret =3D devm_add_action_or_reset(&spi->dev,
+> > > ad7266_reg_disable, st-
+> > > > reg);
+> > > -		if (ret)
+> > > -			return ret;
+> > > -
+> > > -		ret =3D regulator_get_voltage(st->reg);
+> > > -		if (ret < 0)
+> > > -			return ret;
+> > > -
+> > > -		st->vref_mv =3D ret / 1000;
+> > > -	} else {
+> > > -		/* Any other error indicates that the regulator does
+> > > exist */
+> > > -		if (PTR_ERR(st->reg) !=3D -ENODEV)
+> > > -			return PTR_ERR(st->reg);
+> > > -		/* Use internal reference */
+> > > +	/*
+> > > +	 * Use external reference from vref if present, otherwise use
+> > > 2.5V
+> > > +	 * internal reference.
+> > > +	 */
+> >=20
+> > Not sure the comment brings any added value. The code is fairly self
+> > explanatory
+> > IMO...
+>=20
+> Well, you do this every day. :-)
 
-On 05/06/2024 11:25, Andy Yan wrote:
-> 
-> Hi,
-> 
-> At 2024-06-05 04:33:57, "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com> wrote:
->> On 6/3/24 4:08 PM, neil.armstrong@linaro.org wrote:
->>> Hi,
->>>
->>> On 03/06/2024 15:03, Heiko Stuebner wrote:
->>>> Am Montag, 3. Juni 2024, 14:14:17 CEST schrieb Andy Yan:
->>>>> Hi Neil:
->>>>>
->>>>> On 6/3/24 16:55, Neil Armstrong wrote:
->>>>>> Hi Christian,
->>>>>>
->>>>>> On 01/06/2024 15:12, Cristian Ciocaltea wrote:
->>>>>>> The RK3588 SoC family integrates a Quad-Pixel (QP) variant of the
->>>>>>> Synopsys DesignWare HDMI TX controller used in the previous SoCs.
->>>>>>>
->>>>>>> It is HDMI 2.1 compliant and supports the following features, among
->>>>>>> others:
->>>>>>>
->>>>>> .
->>>>>>
->>>>>> ..
->>>>>>
->>>>>>> * SCDC I2C DDC access
->>>>>>> * TMDS Scrambler enabling 2160p@60Hz with RGB/YCbCr4:4:4
->>>>>>> * YCbCr4:2:0 enabling 2160p@60Hz at lower HDMI link speeds
->>>>>>> * Multi-stream audio
->>>>>>> * Enhanced Audio Return Channel (EARC)
->>>>>> -> Those features were already supported by the HDMI 2.0a compliant
->>>>>> HW, just
->>>>>> list the _new_ features for HDMI 2.1
->>>>>>
->>>>>> I did a quick review of your patchset and I don't understand why you
->>>>>> need
->>>>>> to add a separate dw-hdmi-qp.c since you only need simple variants
->>>>>> of the I2C
->>>>>> bus, infoframe and bridge setup.
->>>>>>
->>>>>> Can you elaborate further ? isn't this Quad-Pixel (QP) TX controller
->>>>>> version
->>>>>> detectable at runtime ?
->>>>>>
->>>>>> I would prefer to keep a single dw-hdmi driver if possible.
->>>>>
->>>>>
->>>>>
->>>>> The QP HDMI controller is a completely different variant with totally
->>>>> different
->>>>> registers layout, see PATCH 13/14.
->>>>> I think make it a separate driver will be easier for development and
->>>>> maintenance.
->>>>
->>>> I'm with Andy here. Trying to navigate a driver for two IP blocks really
->>>> sounds taxing especially when both are so different.
->>
->> Thank you all for the valuable feedback!
->>
->>> I agree, I just wanted more details than "variant of the
->>> Synopsys DesignWare HDMI TX controller", if the register mapping is 100%
->>> different, and does not match at all with the old IP, then it's indeed time
->>> to make a brand new driver, but instead of doing a mix up, it's time to
->>> extract
->>> the dw-hdmi code that could be common helpers into a dw-hdmi-common module
->>> and use them.
->>
->> Sounds good, will handle this in v2.
->>
->>> As I see, no "driver" code can be shared, only DRM plumbings, so perhaps
->>> those
->>> plumbing code should go into the DRM core ?
->>>
->>> In any case, please add more details on the cover letter, including the
->>> detailed
->>> HW differrence and the design you chose so support this new IP.
->>
->> Andy, could you please help with a summary of the HW changes?
->> The information I could provide is rather limited, since I don't have
->> access to any DW IP datasheets and I'm also not familiar enough with the
->> old variant.
->>
->   Accurately, we should refer to it as an entirely new IP，it has nothing in common with
-> the current mainline dw-hdmi。 The only  commonality is that they both come from
-> Synopsys DesignWare：
-> （1）It has a 100% different register mapping
-> （2）It supports FRL and DSC
-> （3）different configuration flow in many places。
-> 
-> So I have the same feeling with Heiko and Maxime：
-> The DW_HDMI_QP should have a  separate driver and with it's  own CONFIG  such as DRM_DW_HDMI_QP  in Kconfig.
-> and the rockchip part should also be split from dw_hdmi-rockchip.c.
-> I am sorry we mixed them in dw_hdmi-rockchip.c when we develop the bsp driver，but we really regretted this decision
-> when  we repeatedly broke compatibility with dw-hdmi on other socs。
+I guess... still not an excuse :)
 
-Yes please, and as I say, if there's code common with the old dw-hdmi, please add a common
-module if this code can't be moved in core bridge helpers.
+>=20
+> For someone who never wrote an IIO driver, it could be helpful.
 
-Neil
+Still dunno but no strong feelings anyways...
 
-> 
-> 
-> 
->>> Neil
->>>
->>>>
->>>> Synopsis also created a new dsi controller for the DSI2 standard, with
->>>> a vastly different registers layout.
->>>>
->>>> I guess at some point there is time to say this really is a new IP ;-) .
->>>>
->>>>
->>>> Though while on that thought, I don't fully understand why both a
->>>> compiled
->>>> under the dw_hdmi kconfig symbol. People going for a minimal kernel might
->>>> want one or the other, but not both for their specific board.
->>
->> Indeed, it makes sense to have a dedicated Kconfig option. This is
->> mostly a leftover from downstream implementation, will fix in v2.
->>
->> Thanks again,
->> Cristian
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+- Nuno S=C3=A1
 
