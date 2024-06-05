@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90548194122;
-	Wed,  5 Jun 2024 11:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 679821AED35;
+	Wed,  5 Jun 2024 11:53:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588387; cv=none; b=H96ZhgksrFSVjaqXtEj46PRGJP1oDRwzOkwgZNzMUNIhJa3eNLxdlS0eIwU1bbWGty63VYjVnl3Z5idrEm00BoJ6f+x8hMafPsHQkIqgAExskWUAby7qkePol7rK/Ffk6UxtgzyXXiDwv3XCYY6675OpLVkUKPRQqopK1dlXI1Q=
+	t=1717588393; cv=none; b=gfl4Wh4ztEBejIc9Bc67jbcMY27ZQJm/Nz5zhE0jle4uzALv3HjlLIoIsYh2CY+g7GolIYSxFZb8WMFMNQD8gdCuoHAST1WTC0jKOdrf3oiLqkuxKgqin2jMUr3cENliRX22b+GpxSxtj28HUPOngO04uIUWA8/aJs7MQYc3MeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588387; c=relaxed/simple;
-	bh=kiI/Lw2TK9Xytq4SD7omgBRD9aRnbSVuuUnrkQXDmf0=;
+	s=arc-20240116; t=1717588393; c=relaxed/simple;
+	bh=kjeZ8UHJFxHkLku+pSLI36o1lVjKiKC7NzUYHLFjFwg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FqSqyCf6GByONZ7U4rEwO46appL8nIpfqsEEMWRrt2ws1VtUBH/ib3EAzEDrk5JO/ngYfjjaSJuUqX+7Q59jIVQBXrrU3V5B7A3Decw4ChznhQpAJCyVjcTICwO+xi4aHDQ5wJYJnVIJnWapnaQ5pBnyf+PLuVQPHBZYdFvhyRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubZtm4p8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=nFXrwrrpjxqdi1TBT9vLFGj3mTPzOwis59jnaK+mcpHdmtpc4dGTwq7CtExIaAZHTCuPumSNwwAPYEUsh32U3iY6tsGEsje1EbDnpp6Ujboqbj96ptsRLy8KSVKhsptvFoSZNRAAsP/6qfpcL783PjbFhy2vLrS62ryW+O404KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DaNjv8WU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubZtm4p8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A276AC4AF07;
-	Wed,  5 Jun 2024 11:53:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DaNjv8WU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA60BC32786;
+	Wed,  5 Jun 2024 11:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588387;
-	bh=kiI/Lw2TK9Xytq4SD7omgBRD9aRnbSVuuUnrkQXDmf0=;
+	s=k20201202; t=1717588393;
+	bh=kjeZ8UHJFxHkLku+pSLI36o1lVjKiKC7NzUYHLFjFwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ubZtm4p8c1PCKM6veZi9iLgDWg9WCuFRFNVdTQ7vnDy3yBnB+tC7jVYrbFxAffm46
-	 V6MfTFDbqVlu7fDx8n2RGQoqibYlNP9sv8yA/tMltngfMoYX0De+NkFeJ9ksdOCQNP
-	 xBfz/VfjQWGd8dH7miX/aSpD51ZMheZDSpWKa56EpBPw21Sgt5GpZdqJps7xqYE0e5
-	 NAHxdVOeV9ieVE2N26L6pAEyN+ub3jp9SZgr/LvcxjfI7ov3h+2o6QrX2C3Bwv28qN
-	 qfMJ+JRYo6Wa0CIDabM2puKQoPLoMLk7vdUD9WJ4b52S7vqLRR8ZChLXJaT1DaL/vj
-	 b8bFkK1Il86hg==
+	b=DaNjv8WUUoFpH8zQnv3qw29go/H00oUOUI5/ephyztejr9cjJ1s+e67d46aRAo+GT
+	 XbZXbYvUhD4O4k8lTCtpUeQ8YtGLMWVQIePOvT+aaGDwX4FjebXVU+27axc66L2/kv
+	 CisKPhFjsfb3v1glsCL9XLUG0s2nV+TBAHQ7dzZ0tSKSpQYMSAuNlSAqK264a99Zk8
+	 D+MdqFezoFlcJ3mZ6wehegJ+mCQtvtMqTPZJlZ6VYnPZ4D2nf19s9xIocrAnhTxa4b
+	 iAwpq4odji81MM6At353QUnshC1RPt+hx2KUW9PeGhXF0dY80aZ5am0UDjW6TzLGQe
+	 P3g6bxrIw9cRw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Sicong Huang <congei42@163.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc: Peng Ma <andypma@tencent.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	johan@kernel.org,
-	greybus-dev@lists.linaro.org
-Subject: [PATCH AUTOSEL 6.6 16/20] greybus: Fix use-after-free bug in gb_interface_release due to race condition.
-Date: Wed,  5 Jun 2024 07:51:59 -0400
-Message-ID: <20240605115225.2963242-16-sashal@kernel.org>
+	ray.huang@amd.com,
+	gautham.shenoy@amd.com,
+	rafael@kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 18/20] cpufreq: amd-pstate: fix memory leak on CPU EPP exit
+Date: Wed,  5 Jun 2024 07:52:01 -0400
+Message-ID: <20240605115225.2963242-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240605115225.2963242-1-sashal@kernel.org>
 References: <20240605115225.2963242-1-sashal@kernel.org>
@@ -51,55 +55,41 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.32
 Content-Transfer-Encoding: 8bit
 
-From: Sicong Huang <congei42@163.com>
+From: Peng Ma <andypma@tencent.com>
 
-[ Upstream commit 5c9c5d7f26acc2c669c1dcf57d1bb43ee99220ce ]
+[ Upstream commit cea04f3d9aeebda9d9c063c0dfa71e739c322c81 ]
 
-In gb_interface_create, &intf->mode_switch_completion is bound with
-gb_interface_mode_switch_work. Then it will be started by
-gb_interface_request_mode_switch. Here is the relevant code.
-if (!queue_work(system_long_wq, &intf->mode_switch_work)) {
-	...
-}
+The cpudata memory from kzalloc() in amd_pstate_epp_cpu_init() is
+not freed in the analogous exit function, so fix that.
 
-If we call gb_interface_release to make cleanup, there may be an
-unfinished work. This function will call kfree to free the object
-"intf". However, if gb_interface_mode_switch_work is scheduled to
-run after kfree, it may cause use-after-free error as
-gb_interface_mode_switch_work will use the object "intf".
-The possible execution flow that may lead to the issue is as follows:
-
-CPU0                            CPU1
-
-                            |   gb_interface_create
-                            |   gb_interface_request_mode_switch
-gb_interface_release        |
-kfree(intf) (free)          |
-                            |   gb_interface_mode_switch_work
-                            |   mutex_lock(&intf->mutex) (use)
-
-Fix it by canceling the work before kfree.
-
-Signed-off-by: Sicong Huang <congei42@163.com>
-Link: https://lore.kernel.org/r/20240416080313.92306-1-congei42@163.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Peng Ma <andypma@tencent.com>
+Acked-by: Mario Limonciello <mario.limonciello@amd.com>
+Reviewed-by: Perry Yuan <Perry.Yuan@amd.com>
+[ rjw: Subject and changelog edits ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/greybus/interface.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpufreq/amd-pstate.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/greybus/interface.c b/drivers/greybus/interface.c
-index 9ec949a438ef6..52ef6be9d4499 100644
---- a/drivers/greybus/interface.c
-+++ b/drivers/greybus/interface.c
-@@ -694,6 +694,7 @@ static void gb_interface_release(struct device *dev)
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index 07f3419954396..3efc2aef31ce4 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -1216,6 +1216,13 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
  
- 	trace_gb_interface_release(intf);
- 
-+	cancel_work_sync(&intf->mode_switch_work);
- 	kfree(intf);
+ static int amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)
+ {
++	struct amd_cpudata *cpudata = policy->driver_data;
++
++	if (cpudata) {
++		kfree(cpudata);
++		policy->driver_data = NULL;
++	}
++
+ 	pr_debug("CPU %d exiting\n", policy->cpu);
+ 	return 0;
  }
- 
 -- 
 2.43.0
 
