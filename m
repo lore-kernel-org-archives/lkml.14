@@ -1,175 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E7E14EC75
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ED118C33F;
+	Wed,  5 Jun 2024 07:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717573846; cv=none; b=nT9hQPTpdto/ckq+KUCCxV2t2aGRv3z4S9kAfe7Kiu0bfaF2CnpNnYdslEdJgF5LpT0/UaUrGDkCitjOkMjtILsgSYXQKoIGitRoKE+fTzzVRu1L8vq6wCQWEcaBQ9tlxB1fOD9PRQ0G1IO3la54BcoivS8KqcygY9Iy+bcjLao=
+	t=1717573959; cv=none; b=B4AseeUQnwxbKjl9uB/kE8SwDd4/aU7KKqrrIXSQyuqY/iK1VHMLaQ07Dk+/Wz7SRTvwA1ED7HptVHFK/otTjw/tWkpVwfK6ldejsY82P+ZBlJ5YQklqnSXf+tu3texQsf4m47GOts5YEAH1A47lfMMUsH9YO61ZCis6NEI/tC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717573846; c=relaxed/simple;
-	bh=3I5LZhSbqNX/QtV/uPg/+RPJGW4N+cDUUbMDJWeg2c8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rU69fVrLaxA+l0vU717Pac3ZPe6n/HaXpku/6+QqvrN8SeF58D4gZoud3Th3r5Mmagnb9FdZVkSv1LcE1kz/osBPxn1p0oryVPUZ1TNGfWrfmQKZRIPxMhYWX1OB2oL7gbsjbFJNpkh3CFqG/+7DCsxwN9NfJq8UteNQaqOvaJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EuBItsH7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717573959; c=relaxed/simple;
+	bh=XnCCa8SVtULSuNqyntOQ3y8A67k3ygOWbMFbkiP94k0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fEqaQkrJLVH6uJBBS02CH2YoweoZLw/2tK3c20zkAT+/Nj5By156Gz1iMRhmi4faH9yvd7SARZlsVBqNf9JT9/59OItxcA20RJErNnSWu8zXcYXkEwMQ4ocY8aiBFbLYV/hpdiC7yWh76ojsyITX94X5jB63UnObkNCNKmwl1A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WH2pmLaC; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EuBItsH7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717573844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Sp/TPmj4gCyL+99ZYYAO/l58UJA5aZi2Ueydu1EQa4w=;
-	b=EuBItsH7E8tqSduDo5Lb3Yhvzg5dHNaaFRMBBlrb7Zl5BBnygX1uiPm1fC0vqOmJDzBYgm
-	nADUJFCiVuhRi1xmKXU/tX20kWU2Ti2M8CIUxpRKIwOYtMjEsQTacyPtbLuC/2M8Lewoqu
-	LxBj5m0EQ/APpwekJd5qiCDdYe7K2bw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-wmr5febDOXaNuYmG5lvd-A-1; Wed, 05 Jun 2024 03:50:41 -0400
-X-MC-Unique: wmr5febDOXaNuYmG5lvd-A-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42129affd18so31790075e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:50:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH2pmLaC"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-354f3f6c3b1so1777184f8f.2;
+        Wed, 05 Jun 2024 00:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717573956; x=1718178756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q9GmxwYP+jlkVfu6yreaC7OABxu9rOG6xWbTi39hosQ=;
+        b=WH2pmLaCn0Mbc+5ol4+IRkAZDJimy8iND4d0a2PYunGoZOrzSneXbXd7tcJNKr0zAZ
+         L8httKwkiYSGvR4c1muLxttLS+2W3n3mvkeF4/MlqvTPOlN7UYeYIC2LBzKJj7nqYxE7
+         4UzJ8XSLVDAOhz5JYGWC9paGKgY/WCuo24xpFwKeGcgmHg6Lhroc/ao90ksMlYeTLrRX
+         PMwWmBtwQIbbOysrioOqLKJCrE4co4shOHJ/7Fw0TXdCtctG56j4jKHjdvnSlw/GTAMM
+         hSqaFa6zXraCllnAXhNV8h71ztGgHN+qybSOZ0AYWZNdivgm+bXGCX9P4pfJepziGv4q
+         gaAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717573840; x=1718178640;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Sp/TPmj4gCyL+99ZYYAO/l58UJA5aZi2Ueydu1EQa4w=;
-        b=LeUtjpu3tlrEpeInd9vC35le389mNkyqwVk4XMnLUMzElB8gndeqhUVPaPX5kFkU8H
-         iTsNlKPYBdYZMP+iFOjPNpD8K/ChGr9QUbEHy+U2nPwDrOdTjduP+HR2pQMR6PPQm1Yr
-         uMCPpExMZDtw8yaKJUveOxr8A6auD7B9SrXWOXnMfL8VTtgafnxJJFv3c3PriE/Wj+Cq
-         S1MarjZ+MrgODWf7TqMVjYvzQCuSKal9rP1JySltPR3K8Zk16Wp3y6uGCNENCM6auWA4
-         hz+no8hgDjU7+e/ZsFvZ6p2o6DB1nNgPwAYTGHSUw9aqptqhmOmbikfkul2A3o97cZwe
-         /o1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOkJIy/08Lf+M1vY4WWBt+3EGq8R2sZhdlqvaxmWtXvxzvfjr8zkn7+G1MoN6VfHpSbY4T6S/SgBAwElyzWQx/fyZl7DIDmKk3YogL
-X-Gm-Message-State: AOJu0YxVfniHwHATfYzvjRseKvnJOSl5/jIQQG4PdLazKECB3m5AHcMA
-	+Ccq9yI6HdkS+4xOtK0BAgF71pHCmwjxxlWQdawIA+ZbIeFBKPz+VDZw4t2f7FhMlB7HxpdmWWA
-	oTmkx/S3o2FXqJvvpDCzNnnzseJDomDWhZOMLaX6mtoZaKerLJlEotXtSRwoSMA==
-X-Received: by 2002:a05:600c:3c94:b0:420:78f:3f87 with SMTP id 5b1f17b1804b1-421562dd26emr16250815e9.11.1717573840533;
-        Wed, 05 Jun 2024 00:50:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFMWRiMiuljMfIWttm/qOea9hgxv9ucbwEzofHXngrWZJaJZmu2nJR1X8vDogrHGmdtGYwoZw==
-X-Received: by 2002:a05:600c:3c94:b0:420:78f:3f87 with SMTP id 5b1f17b1804b1-421562dd26emr16250685e9.11.1717573840138;
-        Wed, 05 Jun 2024 00:50:40 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:3100:19a8:d898:8e69:6aff? (p200300cbc706310019a8d8988e696aff.dip0.t-ipconnect.de. [2003:cb:c706:3100:19a8:d898:8e69:6aff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215810826csm10594355e9.17.2024.06.05.00.50.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 00:50:39 -0700 (PDT)
-Message-ID: <f21b037b-07f4-41dc-acfc-1bd4de634511@redhat.com>
-Date: Wed, 5 Jun 2024 09:50:38 +0200
+        d=1e100.net; s=20230601; t=1717573956; x=1718178756;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q9GmxwYP+jlkVfu6yreaC7OABxu9rOG6xWbTi39hosQ=;
+        b=M2tcz9PNN5fhM9dUZ/2WtSOByoRkLFtc3Zav5eqApGl2+eMDk6YgXVVmOvuYC9T/gM
+         akQ3yE2LL2LAgLMETUXeunq3QvgolbJnLi/8PfJ9EOkz3rF3iz+PEmqKTyQ+g+JlanJv
+         BT+FGNVnJKC5kJU5CENCz2DqRPovsOmkzFugXAN5xFjixHaQuc8kCkHcFRVeBc8+4I3j
+         cUVyeidizwXZbEx6wZw4vP6q5l9e6/q4ZvypsQHmBLwMBFoRTjaR24FMs7QEGLVIiQQ7
+         Y3vRKTwuTUdILfahmoa3c3GW2wam2X2YCWWOsUsxJAfU6+5E04IdG4ch+bGtkohEMA4H
+         0zdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVp0oMbVTmNUXt63tKcyekXVssb8T3y/ie2oAwI+Xnr7qTurBgr2YJ6c1GXv7N0RTQGzLzJ09SKBytiKJJxjiYgGflXAlIax81ADgJH/97WT7ZV17vnvPeAboU1gXH6awXgRRho8nOdCfv1mhPU+2jfTu7AoC2GnJbRPMGWG0KN3CJwfA==
+X-Gm-Message-State: AOJu0Yw7Fm9Capqs8H39fg/FLwyrVM2HA6C+4e9WsRCYgTyLZ2huK4xN
+	xJCikYS9Rql09j+5nW57jm+Dzs1eokWQQsARhqJFBT6zTOWbPJ6P
+X-Google-Smtp-Source: AGHT+IEq3f3SYgIJL/MSjzmnaxzs5xFdpvzFSrvr7D74Pb/GW1+0Hnl6QXuL7PYliKVyBO4z7CeNiA==
+X-Received: by 2002:a05:6000:92:b0:35e:e87e:6b33 with SMTP id ffacd0b85a97d-35ee87e6c90mr836485f8f.51.1717573955446;
+        Wed, 05 Jun 2024 00:52:35 -0700 (PDT)
+Received: from spiri.. ([2a02:2f08:a10a:2300:8e59:f160:bdc8:6311])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04c0839sm13760638f8f.23.2024.06.05.00.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 00:52:35 -0700 (PDT)
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+X-Google-Original-From: Alisa-Dariana Roman <alisa.roman@analog.com>
+To: Alisa-Dariana Roman <alisa.roman@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Alexandru Tachici <alexandru.tachici@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2 1/3] iio: adc: ad7192: Clean up dev
+Date: Wed,  5 Jun 2024 10:51:52 +0300
+Message-Id: <20240605075154.625123-1-alisa.roman@analog.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/10] mm/ksm: use folio in try_to_merge_one_page
-To: Alex Shi <seakeel@gmail.com>, alexs@kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, izik.eidus@ravellosystems.com,
- willy@infradead.org, aarcange@redhat.com, chrisw@sous-sol.org,
- hughd@google.com
-References: <20240604042454.2012091-1-alexs@kernel.org>
- <20240604042454.2012091-4-alexs@kernel.org>
- <8a4d048c-0764-442a-aa70-48518068f163@redhat.com>
- <2b2e209d-863a-4c21-b7a5-2d328866cd0e@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <2b2e209d-863a-4c21-b7a5-2d328866cd0e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 05.06.24 05:38, Alex Shi wrote:
-> 
-> 
-> On 6/4/24 4:19 PM, David Hildenbrand wrote:
->>>
->>> @@ -1489,11 +1494,11 @@ static int try_to_merge_one_page(struct vm_area_struct *vma, struct page *page,
->>>         * prefer to continue scanning and merging different pages,
->>>         * then come back to this page when it is unlocked.
->>>         */
->>> -    if (!trylock_page(page))
->>> +    if (!folio_trylock(folio))
->>>            goto out;
->>>    -    if (PageTransCompound(page)) {
->>> -        if (split_huge_page(page))
->>> +    if (folio_test_large(folio)) {
->>> +        if (split_folio(folio))
->>>                goto out_unlock;
->>>        }
->>
->> Careful: there is a subtle change:
->>
->> In the old code, after split_huge_page() succeeded, you would have a ref on *page* that you have to drop.
->>
->> Now, you would have a ref on *folio* -- IOW the head page that calling code has to drop.
->>
->> Is that handled accordingly? IOW, is there no code that would assume it would drop the reference on the *page* instead of on the *folio* (that, after split succeeds, would be an order-0 folio)
->>
->> If so, worth spelling out in the description (you say "So in the calling path to try_to_merge_one_page() parameter pages are actually folios", but I am not sure if that means that all page refcounting code was changed to folio refcounting code).
-> 
-> Hi David,
-> 
-> Thanks a lot for comments. Yes, the ref on folio was handled. I will mention it again in commit log.
-> The 2nd patch in this series would just pass folios into next step, tail page will be warned, so the ref on 'page' here is also the ref on folio. they are same.
+Clean up by using a local variable struct device *dev.
 
-Okay, but the 2nd patch is wrong and should be dropped. We can easily 
-end up with tail pages here.
+Signed-off-by: Alisa-Dariana Roman <alisa.roman@analog.com>
+---
+ drivers/iio/adc/ad7192.c | 45 ++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-We have to be a bit careful here.
-
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index 0789121236d6..f06cb7ac4b42 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -1196,17 +1196,18 @@ static void ad7192_reg_disable(void *reg)
+ 
+ static int ad7192_probe(struct spi_device *spi)
+ {
++	struct device *dev = &spi->dev;
+ 	struct ad7192_state *st;
+ 	struct iio_dev *indio_dev;
+ 	struct regulator *aincom;
+ 	int ret;
+ 
+ 	if (!spi->irq) {
+-		dev_err(&spi->dev, "no IRQ?\n");
++		dev_err(dev, "no IRQ?\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+ 	if (!indio_dev)
+ 		return -ENOMEM;
+ 
+@@ -1219,71 +1220,71 @@ static int ad7192_probe(struct spi_device *spi)
+ 	 * Newer firmware should provide a zero volt fixed supply if wired to
+ 	 * ground.
+ 	 */
+-	aincom = devm_regulator_get_optional(&spi->dev, "aincom");
++	aincom = devm_regulator_get_optional(dev, "aincom");
+ 	if (IS_ERR(aincom)) {
+ 		if (PTR_ERR(aincom) != -ENODEV)
+-			return dev_err_probe(&spi->dev, PTR_ERR(aincom),
++			return dev_err_probe(dev, PTR_ERR(aincom),
+ 					     "Failed to get AINCOM supply\n");
+ 
+ 		st->aincom_mv = 0;
+ 	} else {
+ 		ret = regulator_enable(aincom);
+ 		if (ret)
+-			return dev_err_probe(&spi->dev, ret,
++			return dev_err_probe(dev, ret,
+ 					     "Failed to enable specified AINCOM supply\n");
+ 
+-		ret = devm_add_action_or_reset(&spi->dev, ad7192_reg_disable, aincom);
++		ret = devm_add_action_or_reset(dev, ad7192_reg_disable, aincom);
+ 		if (ret)
+ 			return ret;
+ 
+ 		ret = regulator_get_voltage(aincom);
+ 		if (ret < 0)
+-			return dev_err_probe(&spi->dev, ret,
++			return dev_err_probe(dev, ret,
+ 					     "Device tree error, AINCOM voltage undefined\n");
+ 		st->aincom_mv = ret / MILLI;
+ 	}
+ 
+-	st->avdd = devm_regulator_get(&spi->dev, "avdd");
++	st->avdd = devm_regulator_get(dev, "avdd");
+ 	if (IS_ERR(st->avdd))
+ 		return PTR_ERR(st->avdd);
+ 
+ 	ret = regulator_enable(st->avdd);
+ 	if (ret) {
+-		dev_err(&spi->dev, "Failed to enable specified AVdd supply\n");
++		dev_err(dev, "Failed to enable specified AVdd supply\n");
+ 		return ret;
+ 	}
+ 
+-	ret = devm_add_action_or_reset(&spi->dev, ad7192_reg_disable, st->avdd);
++	ret = devm_add_action_or_reset(dev, ad7192_reg_disable, st->avdd);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_regulator_get_enable(&spi->dev, "dvdd");
++	ret = devm_regulator_get_enable(dev, "dvdd");
+ 	if (ret)
+-		return dev_err_probe(&spi->dev, ret, "Failed to enable specified DVdd supply\n");
++		return dev_err_probe(dev, ret, "Failed to enable specified DVdd supply\n");
+ 
+-	st->vref = devm_regulator_get_optional(&spi->dev, "vref");
++	st->vref = devm_regulator_get_optional(dev, "vref");
+ 	if (IS_ERR(st->vref)) {
+ 		if (PTR_ERR(st->vref) != -ENODEV)
+ 			return PTR_ERR(st->vref);
+ 
+ 		ret = regulator_get_voltage(st->avdd);
+ 		if (ret < 0)
+-			return dev_err_probe(&spi->dev, ret,
++			return dev_err_probe(dev, ret,
+ 					     "Device tree error, AVdd voltage undefined\n");
+ 	} else {
+ 		ret = regulator_enable(st->vref);
+ 		if (ret) {
+-			dev_err(&spi->dev, "Failed to enable specified Vref supply\n");
++			dev_err(dev, "Failed to enable specified Vref supply\n");
+ 			return ret;
+ 		}
+ 
+-		ret = devm_add_action_or_reset(&spi->dev, ad7192_reg_disable, st->vref);
++		ret = devm_add_action_or_reset(dev, ad7192_reg_disable, st->vref);
+ 		if (ret)
+ 			return ret;
+ 
+ 		ret = regulator_get_voltage(st->vref);
+ 		if (ret < 0)
+-			return dev_err_probe(&spi->dev, ret,
++			return dev_err_probe(dev, ret,
+ 					     "Device tree error, Vref voltage undefined\n");
+ 	}
+ 	st->int_vref_mv = ret / 1000;
+@@ -1305,13 +1306,13 @@ static int ad7192_probe(struct spi_device *spi)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = devm_ad_sd_setup_buffer_and_trigger(&spi->dev, indio_dev);
++	ret = devm_ad_sd_setup_buffer_and_trigger(dev, indio_dev);
+ 	if (ret)
+ 		return ret;
+ 
+ 	st->fclk = AD7192_INT_FREQ_MHZ;
+ 
+-	st->mclk = devm_clk_get_optional_enabled(&spi->dev, "mclk");
++	st->mclk = devm_clk_get_optional_enabled(dev, "mclk");
+ 	if (IS_ERR(st->mclk))
+ 		return PTR_ERR(st->mclk);
+ 
+@@ -1321,17 +1322,17 @@ static int ad7192_probe(struct spi_device *spi)
+ 	    st->clock_sel == AD7192_CLK_EXT_MCLK2) {
+ 		st->fclk = clk_get_rate(st->mclk);
+ 		if (!ad7192_valid_external_frequency(st->fclk)) {
+-			dev_err(&spi->dev,
++			dev_err(dev,
+ 				"External clock frequency out of bounds\n");
+ 			return -EINVAL;
+ 		}
+ 	}
+ 
+-	ret = ad7192_setup(indio_dev, &spi->dev);
++	ret = ad7192_setup(indio_dev, dev);
+ 	if (ret)
+ 		return ret;
+ 
+-	return devm_iio_device_register(&spi->dev, indio_dev);
++	return devm_iio_device_register(dev, indio_dev);
+ }
+ 
+ static const struct of_device_id ad7192_of_match[] = {
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
