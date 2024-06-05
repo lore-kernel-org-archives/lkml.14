@@ -1,115 +1,172 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6C619A2AC;
-	Wed,  5 Jun 2024 12:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAA11BC09B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717590165; cv=none; b=BNCLUxjGR/A3prG7S0KDCqG0vpg8k11KhsW77YrzjUjtS+4BvZGb/JAYBNOmHus2+nPuq5Rwk2TrC6hjlHrM8yUHLUmPzKPnAwEX/j1tbc4wbAE12LbKt0KsFh8bTSyZ2yAYyzVVTbbDJJSu5yoC33KchvQPRQrw7HVWUpA4eXs=
+	t=1717590172; cv=none; b=bfMpC9MD/LPNzaVOWmZz3RXcCQwdR6OgjUV/ySBY8zXePX+SI6tJB6LIwisSLAd1ZqxAQcczXmiZd5Ky3Dt7Cj110OW8a6N5I+OBcvSRl0UPCsA51UjriAEGxjJH79hxaom4PZQPvSOWv1ZlUYnjckF9pXwsUWJXETllYxpEfqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717590165; c=relaxed/simple;
-	bh=hRjmhe9Ngf0wmEAJSQe3o0q7qinQYcgJZNR83dg0CPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IVT3m58Bf/FK0HAQQZYSVSAJ/XfogoyvfMpW7E2HDjcpyLlIh/MwmShKivm01yhcDT//Q4yAm/T4Ems1+dhnnIBpny6dMwnPBDbbX1iLcE8amSk3M62Sb60T+31T0X4iu8VrSdmh8xgS7dUvBDZHSLSPs0i3MoUnhvpT1IY0KYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 91EE561E5FE05;
-	Wed,  5 Jun 2024 14:21:51 +0200 (CEST)
-Message-ID: <a5aa120d-8497-4ca8-9752-7d800240b999@molgen.mpg.de>
-Date: Wed, 5 Jun 2024 14:21:50 +0200
+	s=arc-20240116; t=1717590172; c=relaxed/simple;
+	bh=rN6D+drnQ7oIKFqqWdEs/XbcUPdcu5n1hFir82M3sUk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P2rkwG4K1SOoqONyqQQLGNAzNuj+Q+IziO2OQ6osoHANOvCtjFBXAeHF1R+1lyI+awaPHvLYGmBCWkS47xWAm343ZG2idTMZW9XaGmWyf+DMgk7jEHnuX2JFc/C56rDqvPZbP1fMuigAmIXTWLp025YkRfKKqBavxIXjMMZRwmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jQY4ivix; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jQY4ivix"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7025b253f64so3103825b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717590170; x=1718194970; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UN3odDsXiwuGQcA+cVOrXxYKDZzyHlwRnZKVdXaRoNc=;
+        b=jQY4ivixelA+dkDYVxEkJX8/sgAJnR7vvnXlQNWm7F+30DAVEl/DMZc083kINGgsq0
+         aVWjG8sOF0FIaHjQZW4GKCTr38+FxjN5rEbTY6upb7XQY0im5ou3wTi3wsPwzGz+OgkN
+         hxjNI6XPFsX/kR9dAeeFF7POAPuID8ChN01H9uO6IAJqTWbB2ww9YrJN2kmHZu07+/Qd
+         hxGL8/oV9c7zBAAB2QJ+gqJ1hn1biAxtEoMBt6mvMVLeoq1AODAIgD5CDcng2EjZmfZ3
+         0ExBktGIKsI4r2fdenaD7uJUKD2VXvFGwcZZ1xk7JN2T4P94Aju2D5/qJVZPjd5WFoM3
+         UAZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717590170; x=1718194970;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UN3odDsXiwuGQcA+cVOrXxYKDZzyHlwRnZKVdXaRoNc=;
+        b=lg86kJlmGk1/cpuoGqDMnuIRbydHWiFUUJCDWSKab1nsjOJUn4N21aQHEHVMYS+aeS
+         f9g/PDMRHlERcpnlq2ZEx1uUt1dsgx6bhIiES19LIkQfoOzVlVg09EFdvDGRuMwPvHMc
+         sJOTh3RLzLTg/HlHWIA5pZyriO6MoMQbnkE4kUlWkXGO3f0i0wyFsANDusD8nnXCTzoH
+         MqLUqWdEEsGyvE/3qBtLhtADObq0j6/PymXHc4OLQCk8L+PPX2+DHGW4w4yn+unnBjor
+         ZLRHMKnEt/E2/Ovfr//JOnm/ugKyZlNklJ0dOmKFGy218i1nr11pHjkZNoFhw84S2T7Z
+         jcjA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIheDA1WKn5YfecuOD8G3Pribs2Zksqg4C4y1ED/nWgoNm9/OAIHgDLhwOlYjvvHfyfq0IELUbI1YdcVu+rpBcRu2rB6jzZ2495fzq
+X-Gm-Message-State: AOJu0Yxh0VO/mD+oDd4HHdLt9o3GwwgY2nI4ebT3ARdRgyipMM/sE/nV
+	/wIGVcPaLv3HH3dWwPuPKreagnvPIy2iUyS+9ytGoR0m+swygCMz5GWASzdVC8HvSybv/rgVrF3
+	IZ7WFdzzRAjCAIeah/Oi8Yr35U20o6bhwLvmbBg==
+X-Google-Smtp-Source: AGHT+IEFuUkk7iV72uQp4EundUO1FNdJF6F+FGJKyAiU13YGj/6ybXK1CzgZlE6WDBW9tzU/j1RoXJwims62rqAHYpM=
+X-Received: by 2002:a05:6a21:99a7:b0:1b2:3fc:9ab2 with SMTP id
+ adf61e73a8af0-1b2b6e5999emr2911157637.1.1717590169870; Wed, 05 Jun 2024
+ 05:22:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 5/6] i2c: smbus: Support DDR5 SPD EEPROMs
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- =?UTF-8?Q?Ren=C3=A9_Rebe?= <rene@exactcode.de>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Armin Wolf <W_Armin@gmx.de>, Stephen Horvath <s.horvath@outlook.com.au>
-References: <20240604040237.1064024-1-linux@roeck-us.net>
- <20240604040237.1064024-6-linux@roeck-us.net>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240604040237.1064024-6-linux@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240530104653.1234004-1-qyousef@layalina.io> <20240601224017.qku2mhbaz4vsh3a3@airbuntu>
+In-Reply-To: <20240601224017.qku2mhbaz4vsh3a3@airbuntu>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 5 Jun 2024 14:22:38 +0200
+Message-ID: <CAKfTPtCHfnDAD-p_ScqHh7cZ=7AXDTw3fE0+ynMHNvCjuG8ogw@mail.gmail.com>
+Subject: Re: [PATCH v5] sched: Consolidate cpufreq updates
+To: Qais Yousef <qyousef@layalina.io>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
+	Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, 
+	Hongyan Xia <hongyan.xia2@arm.com>, John Stultz <jstultz@google.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Dear Guenter,
+Hi Qais,
 
+On Sun, 2 Jun 2024 at 00:40, Qais Yousef <qyousef@layalina.io> wrote:
+>
+> On 05/30/24 11:46, Qais Yousef wrote:
+>
+> > +static __always_inline void
+> > +__update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
+> > +{
+>
+> I found a problem here. We should check if prev was sugov task. I hit a
+> corner case where we were constantly switching between RT task and sugov.
+>
+>         if (prev && prev->dl.flags & SCHED_FLAG_SUGOV) {
+>                 /* Sugov just did an update, don't be too aggressive */
+>                 return;
+>         }
+>
 
-Thank you so much for taking this on.
+I reran my test with this v5 and the fix above but the problem is
+still there, it waits for the next tick to update the frequency
+whereas the cpu was idle.
 
-Am 04.06.24 um 06:02 schrieb Guenter Roeck:
-> Detect DDR5 memory and instantiate the SPD5118 driver automatically.
-> 
-> Suggested-by: Thomas Weißschuh <linux@weissschuh.net>
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v5: New patch
-> 
->   drivers/i2c/i2c-smbus.c | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
-> index 97f338b123b1..8a0dab835761 100644
-> --- a/drivers/i2c/i2c-smbus.c
-> +++ b/drivers/i2c/i2c-smbus.c
-> @@ -382,6 +382,10 @@ void i2c_register_spd(struct i2c_adapter *adap)
->   	case 0x1E:	/* LPDDR4 */
->   		name = "ee1004";
->   		break;
-> +	case 0x22:	/* DDR5 */
-> +	case 0x23:	/* LPDDR5 */
-> +		name = "spd5118";
-> +		break;
->   	default:
->   		dev_info(&adap->dev,
->   			 "Memory type 0x%02x not supported yet, not instantiating SPD\n",
+Also continuing here the discussion started on v2:
 
-Testing this on top of 6.10-rc2+ on a Supermicro X13SAE, Linux logs:
+I agree that in the current implementation we are probably calling way
+too much cpufreq_update, we can optimize some sequences and using the
+context switch is a good way to get a better sampling but this is not
+enough and we still need to call cpufreq_update in some other case
+involving enqueue. The delay of waiting for the next tick is not
+acceptable nor sustainable especially with 250 and lower HZ but I'm
+pretty sure it would be the same for some system using 1000HZ. IIUC
+new HW is becoming much more efficient at updating the frequency so it
+would not be a problem for this new system to update performance more
+frequently especially when it ends up being as simple as writing a
+value in a memory region without waiting for it to be applied (like
+cpufreq fast_switch methods). All this to say that always/only waiting
+for context switch or tick might be suitable for your case but it
+doesn't look like the right solution for all devices and systems
 
-     $ dmesg | grep -e "DMI:" -e "Linux version" -e i2c-0
-     [    0.000000] Linux version 
-6.10.0-rc2.mx64.461-00036-g151dfab265df 
-(pmenzel@foreveralone.molgen.mpg.de) (gcc (GCC) 12.3.0, GNU ld (GNU 
-Binutils) 2.41) #74 SMP PREEMPT_DYNAMIC Wed Jun  5 08:24:59 CEST 2024
-     [    0.000000] DMI: Supermicro Super Server/X13SAE, BIOS 2.0 10/17/2022
-     [    0.000000] DMI: Memory slots populated: 4/4
-     [    5.434488] i2c i2c-0: Successfully instantiated SPD at 0x50
-     [    5.443848] i2c i2c-0: Successfully instantiated SPD at 0x51
-     [    5.450033] i2c i2c-0: Successfully instantiated SPD at 0x52
-     [    5.459378] i2c i2c-0: Successfully instantiated SPD at 0x53
-
-Then with `sudo modprobe at24` and `sudo modprobe ee1004`, 
-`decode-dimms` shows:
-
-     $ sudo ./eeprom/decode-dimms
-     # decode-dimms version 4.3
-
-     Memory Serial Presence Detect Decoder
-     By Philip Edelbrock, Christian Zuckschwerdt, Burkart Lingner,
-     Jean Delvare, Trent Piepho and others
-
-
-     Number of SDRAM DIMMs detected and decoded: 0
-
-This might be expected, and `decode-dimms` also needs to be updated.
-
-
-Kind regards and thank you again for these patches,
-
-Paul
+> > +#ifdef CONFIG_CPU_FREQ
+> > +     /*
+> > +      * RT and DL should always send a freq update. But we can do some
+> > +      * simple checks to avoid it when we know it's not necessary.
+> > +      *
+> > +      * iowait_boost will always trigger a freq update too.
+> > +      *
+> > +      * Fair tasks will only trigger an update if the root cfs_rq has
+> > +      * decayed.
+> > +      *
+> > +      * Everything else should do nothing.
+> > +      */
+> > +     switch (current->policy) {
+> > +     case SCHED_NORMAL:
+> > +     case SCHED_BATCH:
+> > +             if (unlikely(current->in_iowait)) {
+> > +                     cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT | SCHED_CPUFREQ_FORCE_UPDATE);
+> > +                     return;
+> > +             }
+> > +
+> > +#ifdef CONFIG_SMP
+> > +             if (unlikely(rq->cfs.decayed)) {
+> > +                     rq->cfs.decayed = false;
+> > +                     cpufreq_update_util(rq, 0);
+> > +                     return;
+> > +             }
+> > +#endif
+> > +             return;
+> > +     case SCHED_FIFO:
+> > +     case SCHED_RR:
+> > +             if (prev && rt_policy(prev->policy)) {
+> > +#ifdef CONFIG_UCLAMP_TASK
+> > +                     unsigned long curr_uclamp_min = uclamp_eff_value(current, UCLAMP_MIN);
+> > +                     unsigned long prev_uclamp_min = uclamp_eff_value(prev, UCLAMP_MIN);
+> > +
+> > +                     if (curr_uclamp_min == prev_uclamp_min)
+> > +#endif
+> > +                             return;
+> > +             }
+> > +#ifdef CONFIG_SMP
+> > +             /* Stopper task masquerades as RT */
+> > +             if (unlikely(current->sched_class == &stop_sched_class))
+> > +                     return;
+> > +#endif
+> > +             cpufreq_update_util(rq, SCHED_CPUFREQ_FORCE_UPDATE);
+> > +             return;
+> > +     case SCHED_DEADLINE:
+> > +             if (current->dl.flags & SCHED_FLAG_SUGOV) {
+> > +                     /* Ignore sugov kthreads, they're responding to our requests */
+> > +                     return;
+> > +             }
+> > +             cpufreq_update_util(rq, SCHED_CPUFREQ_FORCE_UPDATE);
+> > +             return;
+> > +     default:
+> > +             return;
+> > +     }
+> > +#endif
+> > +}
