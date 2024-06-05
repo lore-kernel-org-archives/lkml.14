@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E22261FFE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CC16A008;
 	Wed,  5 Jun 2024 02:40:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717555232; cv=none; b=uQNCRyq1uvJENpxaPbfEHBEQwsYLDsNTKnor8bjLmx4gW72W5e41DAW+4DKcDs2K9gaXTYINf/lUfxF0Q76cWlltqRAI+k9GDW1nSJv/sgo7BQ8Md3iwy/poUWn74FPBHkh9S1n/IpQQtjaMPC6FuDSeAkcIDDoRgV0vRAz/2y4=
+	t=1717555232; cv=none; b=uQoyY4FNKmOqpUEJi55S0ACvuRLo8S5bnXRo7HpBV522TUK1p/hgMHeZQLN0eJiyFL+2wwTwSMfnLDCNbAafG2EWuSUIDAxferYSRlwG8cubjmIm93tdwZGZJH5b+9G8I33t2ZPevdoHepJswyxuYNZWC0pyp8vvhAVUV9fbvik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717555232; c=relaxed/simple;
-	bh=ScFLDPbQl8TSKcjWLoWFCNH7yaUUfxLQ3FXYwb8F5lg=;
+	bh=TLe44Hr5WqeQyDO4vxCFTXDPLS7g3Gj+ESzImneXZNg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MPBdDzV8B1CC0AUOMerblDE874vj++nWwb0RYd4chxHEqrtxE4AMZsmyhsM5TeLSd1FQbqWHySJpq2l2QHcStmjdzTKg8Y7otNziD9ZE9b7++jSZ/8pu1Bv7FMj5ejdNOWsCqdUJpzSgwI26eWYeJPYmvCAsvx7JYrnXOwt3rpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cV2I7aXL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YfyWjB0Cmp8gk3E1Mx5dItstcP2DHBEl//t9JZl9JprS1My3EkkeMv6Vd72/kfj+FRqGhL9EMn3ow2K1UTR7zhS9JMMHhpOFquu8dqDzCWPdSiJAz60ekG5ncQZjXsz+8aZ630+eRuHytMMkCyg97PbRdoYIJ3CuWGCXOUq+FFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbdIbsRC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cV2I7aXL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 17F72C4AF0C;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbdIbsRC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C9F4C4AF0A;
 	Wed,  5 Jun 2024 02:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1717555232;
-	bh=ScFLDPbQl8TSKcjWLoWFCNH7yaUUfxLQ3FXYwb8F5lg=;
+	bh=TLe44Hr5WqeQyDO4vxCFTXDPLS7g3Gj+ESzImneXZNg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cV2I7aXLGiqh8To4mwHWIqymxFqGY+dcqxIG1eMLXcthW1Zskm+v9Pz1eMt6Yf3Df
-	 3bXEJd6qE13wNPKvMJMoXAg6YXqOesd+N0TebR4Zp2CElzbHOiuMjzYE0yL2LpddEH
-	 3BiYKHTpU3Nw7waW9yHXuwnCsM7FJ+C/eREpIcFzqbC3lSGOGWchKJUr9LgmKqBxe1
-	 3dHF1ZYUOtDZH0qdccxP3vTBlTmkHssoRnmHS1IA/A3ArClL6yIu4AFtVzRKv4gFLJ
-	 DTXKjukiV7wRMyIcSOWw+fZ/mZIsItPZaV2O3iGoyqQzy3uu/Rsi4kW5nCFJgnn/88
-	 OG1O6312e2U2g==
+	b=IbdIbsRCBE2x3GNfOjPZJJcqpjWdy/b5/lStTwHR4TMauqlBAwDHdlnX8JXAui3gT
+	 uKNDEOwtUApPzJZ8DDTcINiQ1gy5DQs+A/xp2DdUZyxiJu2d4kpxU3ajTf52HDUUyS
+	 G8pJcYgHUntocdKHK3pPixdL+M5I+D+jVl6scnmROuBaV1zlYSOMHTUMaKBFlwVxZS
+	 I5j7poUPXDMcL8/NDJ9nxf4QtnfwApOaZ8lnklz3hwefkcc8F6rveklxs5kRTDq1ih
+	 TMJE9NIlwoRF4lZ0ruytWhvQ6KXUlY+R9SuoajUAvvjNnTyEWQkmcHMl6dBG538RcE
+	 AQaECZW0cHehw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0A11FDEFB91;
-	Wed,  5 Jun 2024 02:40:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F4157DEFB90;
+	Wed,  5 Jun 2024 02:40:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,14 +40,14 @@ Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH 1/3] platform/chrome: Add struct ec_response_get_next_event_v3
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171755523203.3149.11797786419541321356.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Jun 2024 02:40:32 +0000
-References: <20240604230742.2878452-1-dnojiri@chromium.org>
-In-Reply-To: <20240604230742.2878452-1-dnojiri@chromium.org>
+ <171755523199.3149.3028217991036780038.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Jun 2024 02:40:31 +0000
+References: <20240604170552.2517189-1-dnojiri@chromium.org>
+In-Reply-To: <20240604170552.2517189-1-dnojiri@chromium.org>
 To: Daisuke Nojiri <dnojiri@chromium.org>
-Cc: bleung@chromium.org, groeck@chromium.org, rekanorman@chromium.org,
- hverkuil-cisco@xs4all.nl, tzungbi@chromium.org, gwendal@chromium.org,
- abhishekpandit@google.com, pholla@chromium.org, chingkang@chromium.org,
+Cc: bleung@chromium.org, groeck@chromium.org, hverkuil-cisco@xs4all.nl,
+ rekanorman@chromium.org, tzungbi@chromium.org, abhishekpandit@google.com,
+ gwendal@chromium.org, pholla@chromium.org, chingkang@chromium.org,
  lma@chromium.org, chrome-platform@lists.linux.dev,
  linux-kernel@vger.kernel.org
 
@@ -56,12 +56,11 @@ Hello:
 This patch was applied to chrome-platform/linux.git (for-next)
 by Tzung-Bi Shih <tzungbi@kernel.org>:
 
-On Tue,  4 Jun 2024 16:07:29 -0700 you wrote:
+On Tue,  4 Jun 2024 10:01:48 -0700 you wrote:
 > Add struct ec_response_get_next_event_v3 to upgrade
 > EC_CMD_GET_NEXT_EVENT to version 3.
 > 
 > Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
-> Change-Id: I69ac374fd88c3d3ef294f8e81443a2fea588bbce
 > ---
 >  .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
 >  1 file changed, 34 insertions(+)
