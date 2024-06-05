@@ -1,63 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5083F190045
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB3B1922F1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575390; cv=none; b=ongRaisnr1Mf9mm4fSDJybPgJVP4YfQxLUec0xTREOO7nPshJ93W2ZvFM1VWdD9GATwVow6GshWB5XzRrx/6xdU2JYQxvcsR3HdkQCkpESfgUhDhSmdfjk6yt8fNWgcS//q2FvyitI8AaUFHBg/c/H2jpVssm/B6RpmL263W/Kc=
+	t=1717575393; cv=none; b=TW4Ey57cSQm0TQCHy4HiG3O6OaAwSorFVpAQM7JIeZeo/lq5hUAG3UuIhh65W6tXK517C81Rm/GOdMHN6GaUhYI8CUG0ZN5EixS/5nI3ecWshQ7X4n9pHXCARW5iUsX3p9Rf4AtKmf254noWL5HBHPZvGFMm2195MD/ZBnqdjFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575390; c=relaxed/simple;
-	bh=xl9J8hI645BO4dJlrgq+iFLF1dby15q/VE4JCvZfbaU=;
+	s=arc-20240116; t=1717575393; c=relaxed/simple;
+	bh=LIhWjlBnujZsrqNrxIabQocrBEUnZjpD1itpnCtbE8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mGG9e6tKKJZCEp8sdk0lNsHX+X7HyIzKe8GMm4h8X9jIBBz5dpnBq4HS0VQlvercE9EBtSjilJU3dIO+zZiAjpi49iRZ9d+Hs6e7Lvvz0Q4vBjozahw0jE6GOJyM34d7u7oXRmukrhjVNZtKI7nW0BF94B3UbnTH4AKHq2UHUEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hgz8oD+R; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=tvh37jeyyBBmobxOcXw410ipVF4bnbPb2JDY4KDQRE6tEI8gwqXF9gDq44hyGlbE4TM09Ks95gu7u5BFj0tA732decQYh/ThQgrJjV+I+ZGB2puOto+9L9TRnHS7eEYfr1FhHwmywSjgsCTwkqXonFOyvNQklP3JTa2+NEBnaQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PifHaezX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hgz8oD+R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PifHaezX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717575387;
+	s=mimecast20190719; t=1717575390;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ADSvqA1AO3nQbqjqWDmd4LNpBLOwxbzjerhA1UP/7Ik=;
-	b=Hgz8oD+RKFLss3YnHpzDmPSc5vv5+/WVDTilLt7g3rQSNZqlaYeYhRxbIvWBxqkdlasgd1
-	lVN+aBGrUTqmx6W2D/L39w/34MOejhepJwv0RCTqqJ93S5IonqMX077q+trBs1F8eYWv1L
-	JUgZ3W0RRdtrot10gNWrwXY9e9fa1Qw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Ieun1xthf8lb2oACtUs9qte0ySrDx5Lfq1im4lgm338=;
+	b=PifHaezXt5PsYA07ooFD+ArZGZaqy1zEWWH2jdZyC4TohLEcJQNVbGpuEQQok2hQIpbGKB
+	DN1h42fX4kWPX0W6xq0czUthi/oPrzJRVgAz1MZ9b2lYudWcfbCEQvwHMwnYkUvdb5uV6m
+	OSU2YhIwtIjz2hztjiyW5CovszrHu+Y=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-0wnIqw-RPguA2OqWd-f6vg-1; Wed, 05 Jun 2024 04:16:25 -0400
-X-MC-Unique: 0wnIqw-RPguA2OqWd-f6vg-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-354dfd4971dso300787f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:25 -0700 (PDT)
+ us-mta-496-Hhgx8YJSMUe82krD-s2Xqg-1; Wed, 05 Jun 2024 04:16:28 -0400
+X-MC-Unique: Hhgx8YJSMUe82krD-s2Xqg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42159aeaf59so30895e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575384; x=1718180184;
+        d=1e100.net; s=20230601; t=1717575388; x=1718180188;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ADSvqA1AO3nQbqjqWDmd4LNpBLOwxbzjerhA1UP/7Ik=;
-        b=DVXrhv1GXuo64GkdAzGS/tpEGmPq5HRJHvOg/VB9reXl5Q+ZfYFQwUmovtuvw6Gb5L
-         PtqrMw5xXzIPPJRmF2wpUGupwOAZkYlN8n4lkhPL7gSeom69mhEjJPQBGFc0DJ6ILjG/
-         bk8wekuflUQaDQvbjZuuZKSYHci43/9n4mcTzOMsTQpuLEPqP59jgiwKzVmolm201UEe
-         W0oONtk9+Z1g2VAUvN3TO61sf4hQSQirdc9vHnYqmP8PeXVgPB6tKMFD8L2AmZuw48TQ
-         HKFvO37EGQE91LQwk6Ot46JL5cJqzf+IzJZGMtvOAuM4YG6SpJR5vHDOyUy7+sOjl/8W
-         jgTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWHd5MWAiLMFdgHa6DCF3rnuiw8sJVrtLDN+cL/vk9cQLAIYD225Y4DggEYLIrz9rKaL2Sl86jFOzTWuW8pWTUY8pLK4xoNBqSs6mj+
-X-Gm-Message-State: AOJu0YzvtY9odMIEmrveY0D5iGXFQ5nSZbVAKr/UXv8W1ehA9SV6kmJa
-	CT10FT2zGVx9R+7DIkUq9jomyYrroi4Uik/V9LRIUJ4e1KpxmTYoMi5Uxlfxa13zWoePrnBXe/f
-	FSvCts/4gHw3rk0XMdzVfGfk/FuK9HUD6arEIkWgYicTlGU2e4kyJ3IWtRlQgtw==
-X-Received: by 2002:a5d:4a8f:0:b0:354:fa0d:1423 with SMTP id ffacd0b85a97d-35e840559afmr1138376f8f.2.1717575384546;
-        Wed, 05 Jun 2024 01:16:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHeYXXYRwMmc/wItTwuhNim5zt2S5LTm7hN7b8qr/oaCOGVDkg9BBwyql/IirFuwik1TYGpeQ==
-X-Received: by 2002:a5d:4a8f:0:b0:354:fa0d:1423 with SMTP id ffacd0b85a97d-35e840559afmr1138356f8f.2.1717575384289;
-        Wed, 05 Jun 2024 01:16:24 -0700 (PDT)
+        bh=Ieun1xthf8lb2oACtUs9qte0ySrDx5Lfq1im4lgm338=;
+        b=oA2WDEQYufpdbTk+h6QODThtSZ6+uWeIzmo8NyaOyJ65aw089VdTxwkS/YbHYXkpCz
+         PvqQYjvqFGaPnzWZoqeyXpcWi9oz8v+AiYiqz1Ld0mrpOA3tMeWERmNt5lbDmw0xKK9s
+         qAz4N8+mhWHH3iurv5fVQk836anKMzx34iqUwgVNFHW3JUpXLTkGk4WRtzEn3Cory4QU
+         /OqdZBs9kpa4TvR8P0fk95hNlecK53SOZnqTd22DkpmwXlvwB2HwqKX9+4keEY2Zv20p
+         Ym0QK2Y0EKi66wSnC2NAT3LQteNnmlXBh+UjlWu+b+DmGw8zabDKWcgQ1dx8LawcE/5l
+         0gaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWY05V9tqNLVHjLFY9wqqwwyHhU/ymrUVBQyRCcqG7L6P6Vv1RT5devhbYHtZcKjVjdJJm7zUEVkdqZrdLLYoXunp04ZXYygahbDPQ0
+X-Gm-Message-State: AOJu0YzxcYOB4Lo75MZYT/1ZNbSjOEVVFr6ur2nKg7l/kB7Qd0IihkWS
+	rHWZAtgyBCJgVCDkCB0U5/+6Nc7VLlt0PDJyXsy5b2ZqjJPJgyeBoDGPpFP9DBjm/UVZWFKnpXd
+	qUubxj+z5+f8ZSElicdKXp3oFjBraL7tl+XJVm5pWsKHKUYmUG4Bf7Te14NVaAQ==
+X-Received: by 2002:a5d:49c5:0:b0:354:f768:aa00 with SMTP id ffacd0b85a97d-35e8ef8f11amr1107251f8f.4.1717575387786;
+        Wed, 05 Jun 2024 01:16:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7QWZ+wzLRj89HwPmCo4cwm181tYKPOfVL2iFfJrmO0D+uX56tjbvKzLXtnA0YMX0uy5FvKA==
+X-Received: by 2002:a5d:49c5:0:b0:354:f768:aa00 with SMTP id ffacd0b85a97d-35e8ef8f11amr1107226f8f.4.1717575387480;
+        Wed, 05 Jun 2024 01:16:27 -0700 (PDT)
 Received: from pstanner-thinkpadt14sgen1.fritz.box ([2001:9e8:32e6:e600:c901:4daf:2476:80ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.23
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:16:23 -0700 (PDT)
+        Wed, 05 Jun 2024 01:16:27 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -72,9 +72,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v7 08/13] PCI: Move pinned status bit to struct pci_dev
-Date: Wed,  5 Jun 2024 10:16:00 +0200
-Message-ID: <20240605081605.18769-10-pstanner@redhat.com>
+Subject: [PATCH v7 11/13] PCI: Remove legacy pcim_release()
+Date: Wed,  5 Jun 2024 10:16:03 +0200
+Message-ID: <20240605081605.18769-13-pstanner@redhat.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240605081605.18769-2-pstanner@redhat.com>
 References: <20240605081605.18769-2-pstanner@redhat.com>
@@ -86,90 +86,130 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The bit describing whether the PCI device is currently pinned is stored
-in struct pci_devres. To clean up and simplify the PCI devres API, it's
-better if this information is stored in struct pci_dev.
+Thanks to preceding cleanup steps, pcim_release() is now not needed
+anymore and can be replaced by pcim_disable_device(), which is the exact
+counterpart to pcim_enable_device().
 
-This will later permit simplifying pcim_enable_device().
+This permits removing further parts of the old PCI devres implementation.
 
-Move the 'pinned' boolean bit to struct pci_dev.
-
-Restructure bits in struct pci_dev so the pm / pme fields are next to
-each other.
+Replace pcim_release() with pcim_disable_device().
+Remove the now surplus function get_pci_dr().
+Remove the struct pci_devres from pci.h.
+Remove the now surplus function find_pci_dr().
 
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/pci/devres.c | 14 ++++----------
- drivers/pci/pci.h    |  1 -
- include/linux/pci.h  |  5 +++--
- 3 files changed, 7 insertions(+), 13 deletions(-)
+ drivers/pci/devres.c | 53 +++++++++++++++++++++-----------------------
+ drivers/pci/pci.h    | 18 ---------------
+ 2 files changed, 25 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index ea590caf8995..936369face4b 100644
+index 9a997de280df..271ffd1aaf47 100644
 --- a/drivers/pci/devres.c
 +++ b/drivers/pci/devres.c
-@@ -398,7 +398,7 @@ static void pcim_release(struct device *gendev, void *res)
- 	if (this->restore_intx)
- 		pci_intx(dev, this->orig_intx);
- 
--	if (!this->pinned)
-+	if (!dev->pinned)
- 		pci_disable_device(dev);
+@@ -460,48 +460,45 @@ int pcim_intx(struct pci_dev *pdev, int enable)
+ 	return 0;
  }
  
-@@ -454,18 +454,12 @@ EXPORT_SYMBOL(pcim_enable_device);
-  * pcim_pin_device - Pin managed PCI device
-  * @pdev: PCI device to pin
+-static void pcim_release(struct device *gendev, void *res)
++static void pcim_disable_device(void *pdev_raw)
+ {
+-	struct pci_dev *dev = to_pci_dev(gendev);
+-
+-	if (!dev->pinned)
+-		pci_disable_device(dev);
+-}
+-
+-static struct pci_devres *get_pci_dr(struct pci_dev *pdev)
+-{
+-	struct pci_devres *dr, *new_dr;
+-
+-	dr = devres_find(&pdev->dev, pcim_release, NULL, NULL);
+-	if (dr)
+-		return dr;
++	struct pci_dev *pdev = pdev_raw;
+ 
+-	new_dr = devres_alloc(pcim_release, sizeof(*new_dr), GFP_KERNEL);
+-	if (!new_dr)
+-		return NULL;
+-	return devres_get(&pdev->dev, new_dr, NULL, NULL);
++	if (!pdev->pinned)
++		pci_disable_device(pdev);
+ }
+ 
+ /**
+  * pcim_enable_device - Managed pci_enable_device()
+  * @pdev: PCI device to be initialized
   *
-- * Pin managed PCI device @pdev.  Pinned device won't be disabled on
-- * driver detach.  @pdev must have been enabled with
-- * pcim_enable_device().
-+ * Pin managed PCI device @pdev. Pinned device won't be disabled on driver
-+ * detach. @pdev must have been enabled with pcim_enable_device().
+- * Managed pci_enable_device().
++ * Returns: 0 on success, negative error code on failure.
++ *
++ * Managed pci_enable_device(). Device will automatically be disabled on
++ * driver detach.
   */
- void pcim_pin_device(struct pci_dev *pdev)
+ int pcim_enable_device(struct pci_dev *pdev)
  {
 -	struct pci_devres *dr;
--
--	dr = find_pci_dr(pdev);
--	WARN_ON(!dr || !pdev->enabled);
--	if (dr)
--		dr->pinned = 1;
-+	pdev->pinned = true;
+-	int rc;
++	int ret;
+ 
+-	dr = get_pci_dr(pdev);
+-	if (unlikely(!dr))
+-		return -ENOMEM;
++	ret = devm_add_action(&pdev->dev, pcim_disable_device, pdev);
++	if (ret != 0)
++		return ret;
+ 
+-	rc = pci_enable_device(pdev);
+-	if (!rc)
+-		pdev->is_managed = 1;
++	/*
++	 * We prefer removing the action in case of an error over
++	 * devm_add_action_or_reset() because the later could theoretically be
++	 * disturbed by users having pinned the device too soon.
++	 */
++	ret = pci_enable_device(pdev);
++	if (ret != 0) {
++		devm_remove_action(&pdev->dev, pcim_disable_device, pdev);
++		return ret;
++	}
+ 
+-	return rc;
++	pdev->is_managed = true;
++
++	return ret;
  }
- EXPORT_SYMBOL(pcim_pin_device);
+ EXPORT_SYMBOL(pcim_enable_device);
  
 diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index e223e0f7dada..ff439dd05200 100644
+index 3aa57cd8b3e5..6a9c4dd77d68 100644
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -823,7 +823,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
-  * then remove them from here.
-  */
- struct pci_devres {
--	unsigned int pinned:1;
- 	unsigned int orig_intx:1;
- 	unsigned int restore_intx:1;
- 	unsigned int mwi:1;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 110548f00b3b..3104c0238a42 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -367,11 +367,12 @@ struct pci_dev {
- 					   this is D0-D3, D0 being fully
- 					   functional, and D3 being off. */
- 	u8		pm_cap;		/* PM capability offset */
--	unsigned int	enabled:1;	/* Whether this dev is enabled */
--	unsigned int	imm_ready:1;	/* Supports Immediate Readiness */
- 	unsigned int	pme_support:5;	/* Bitmask of states from which PME#
- 					   can be generated */
- 	unsigned int	pme_poll:1;	/* Poll device's PME status bit */
-+	unsigned int	enabled:1;	/* Whether this dev is enabled */
-+	unsigned int	pinned:1;	/* Whether this dev is pinned */
-+	unsigned int	imm_ready:1;	/* Supports Immediate Readiness */
- 	unsigned int	d1_support:1;	/* Low power state D1 is supported */
- 	unsigned int	d2_support:1;	/* Low power state D2 is supported */
- 	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
+@@ -812,24 +812,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+ }
+ #endif
+ 
+-/*
+- * Managed PCI resources.  This manages device on/off, INTx/MSI/MSI-X
+- * on/off and BAR regions.  pci_dev itself records MSI/MSI-X status, so
+- * there's no need to track it separately.  pci_devres is initialized
+- * when a device is enabled using managed PCI device enable interface.
+- *
+- * TODO: Struct pci_devres and find_pci_dr() only need to be here because
+- * they're used in pci.c.  Port or move these functions to devres.c and
+- * then remove them from here.
+- */
+-struct pci_devres {
+-	/*
+-	 * TODO:
+-	 * This struct is now surplus. Remove it by refactoring pci/devres.c
+-	 */
+-};
+-
+-struct pci_devres *find_pci_dr(struct pci_dev *pdev);
+ int pcim_intx(struct pci_dev *dev, int enable);
+ 
+ int pcim_request_region(struct pci_dev *pdev, int bar, const char *name);
 -- 
 2.45.0
 
