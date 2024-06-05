@@ -1,35 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9BB190077;
-	Wed,  5 Jun 2024 09:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 455751922C3;
+	Wed,  5 Jun 2024 09:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717579830; cv=none; b=Z5fOxh2No6K2jSKsOwR7PU4zYXaAMm0rFhBBWnrWqSVm5dCSYoobSiO6cWxdYAekk52dJgIVhdJUxul4n+FBhqUE63tMMI535O/iF3OEh4k9Q9QRqVLC8xtEKe89WbP+K8b7d8lmZ5f0MsE5NqvzlvBJ2LVKeKSMjeXIzyBHHds=
+	t=1717579833; cv=none; b=bXoIHbTfX4trEvPw6U2jGZvw0mPdtOqfUNlvUlse20QWAPKbQwGuT6yGF6HjpomAemb8HnxFhI+uoOTd/4TJT8wfa/A7VwSPbmIFlKZbrUFr/5C3mD/qc7gLwtw3Ny7utgRIHpEAF7leLva9jlEJtmkMaPeWeRfIcuxxOhx5IWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717579830; c=relaxed/simple;
-	bh=3ExdHi2EcPAbhVh+fX0Mk2fCc1d7uB5HSpw7KZhqE1E=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=fafhpZ/G9ajoJ895XVIbPr/agPRyQfSHOoRFFJ/q8dpZxE0NzLiWltTs2ixhX0UHJ7Zb7jb2OfkIvgwbaQMefOc/YbqQ6KWMnvYSfLHC4hzGNoCeONDWZhTdM+pzpkChi9EFuiMUM491p5JDLYh82XFjptsRWBQ5mpvpZnJ+WZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f71U6wE9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f71U6wE9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EA23CC32781;
-	Wed,  5 Jun 2024 09:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717579830;
-	bh=3ExdHi2EcPAbhVh+fX0Mk2fCc1d7uB5HSpw7KZhqE1E=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=f71U6wE9155145erk8/yM3e1rctd/naNfyyofN2BvO+2b28Kor25wngFsDapBuKpa
-	 swnkNIX+d7VV/G3wYjkZHQ9HGYNUBqgXe0qkzcXarB1AiG23r0wZIoKLGVVuJrUtSA
-	 Oom0H1hVAqtAb6rUqTiET5A2NsN8Ts3uK9gVJIdpfwI5gNw9B8XRzuKHzrEv1MujVB
-	 9piMrbcv5AtGm9W4o2dBjOSE+swUKpf1Ib/HWAXaWJ/T5BwDRQcr5/O74OZAc7fk6K
-	 Aic+Nx+2X7nCSPm6E4FMMYR5VDzTAHZRwvtoqRJsOPijbquttH/sa0NgJbH3KxNLVv
-	 RxOwXNsqV23dQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DE508C4332C;
-	Wed,  5 Jun 2024 09:30:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1717579833; c=relaxed/simple;
+	bh=wza1+sttapH4jBfrntlsthBBKVE0WRMaK45u5krWryo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WBnOoCqGSDhrh2ASY+951oyRhy5ACN+utstGI8ghJQ/RMVTYJzI0iJpbWAndYbnta6ddmchHlR5JW9J9vU1XRdD5uf5i724e99L/LNzSbB/3wC5DpSZ4OJV3PWJovy5dijE1oFqxSkLEZwbrTM3GXfDbBW1OCKTiMQ+0otSEJY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35386DA7;
+	Wed,  5 Jun 2024 02:30:56 -0700 (PDT)
+Received: from e122027.arm.com (unknown [10.57.39.129])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0D763F792;
+	Wed,  5 Jun 2024 02:30:27 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: [PATCH v3 03/14] arm64: realm: Query IPA size from the RMM
+Date: Wed,  5 Jun 2024 10:29:55 +0100
+Message-Id: <20240605093006.145492-4-steven.price@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240605093006.145492-1-steven.price@arm.com>
+References: <20240605093006.145492-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,43 +50,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/2 net-next] devlink: Constify struct devlink_dpipe_table_ops
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171757982990.5772.13409397728959786812.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Jun 2024 09:30:29 +0000
-References: <cover.1717337525.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <cover.1717337525.git.christophe.jaillet@wanadoo.fr>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: idosch@nvidia.com, petrm@nvidia.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, jiri@resnulli.us,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
 
-Hello:
+The top bit of the configured IPA size is used as an attribute to
+control whether the address is protected or shared. Query the
+configuration from the RMM to assertain which bit this is.
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+Changes since v2:
+ * Drop unneeded extra brackets from PROT_NS_SHARED.
+ * Drop the explicit alignment from 'config' as struct realm_config now
+   specifies the alignment.
+---
+ arch/arm64/include/asm/pgtable-prot.h | 3 +++
+ arch/arm64/kernel/rsi.c               | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-On Sun,  2 Jun 2024 16:18:51 +0200 you wrote:
-> Patch 1 updates devl_dpipe_table_register() and struct
-> devlink_dpipe_table to accept "const struct devlink_dpipe_table_ops".
-> 
-> Then patch 2 updates the only user of this function.
-> 
-> This is compile tested only.
-> 
-> [...]
-
-Here is the summary with links:
-  - [1/2,net-next] devlink: Constify the 'table_ops' parameter of devl_dpipe_table_register()
-    https://git.kernel.org/netdev/net-next/c/82dc29b9737e
-  - [2/2,net-next] mlxsw: spectrum_router: Constify struct devlink_dpipe_table_ops
-    https://git.kernel.org/netdev/net-next/c/b072aa789918
-
-You are awesome, thank you!
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index b11cfb9fdd37..6c29f3b32eba 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -70,6 +70,9 @@
+ #include <asm/pgtable-types.h>
+ 
+ extern bool arm64_use_ng_mappings;
++extern unsigned long prot_ns_shared;
++
++#define PROT_NS_SHARED		(prot_ns_shared)
+ 
+ #define PTE_MAYBE_NG		(arm64_use_ng_mappings ? PTE_NG : 0)
+ #define PMD_MAYBE_NG		(arm64_use_ng_mappings ? PMD_SECT_NG : 0)
+diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+index 3a992bdfd6bb..d34e05b339ae 100644
+--- a/arch/arm64/kernel/rsi.c
++++ b/arch/arm64/kernel/rsi.c
+@@ -7,6 +7,11 @@
+ #include <linux/memblock.h>
+ #include <asm/rsi.h>
+ 
++struct realm_config config;
++
++unsigned long prot_ns_shared;
++EXPORT_SYMBOL(prot_ns_shared);
++
+ DEFINE_STATIC_KEY_FALSE_RO(rsi_present);
+ EXPORT_SYMBOL(rsi_present);
+ 
+@@ -63,6 +68,9 @@ void __init arm64_rsi_init(void)
+ {
+ 	if (!rsi_version_matches())
+ 		return;
++	if (rsi_get_realm_config(&config))
++		return;
++	prot_ns_shared = BIT(config.ipa_bits - 1);
+ 
+ 	static_branch_enable(&rsi_present);
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
