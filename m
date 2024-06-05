@@ -1,195 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD6D18C32F;
-	Wed,  5 Jun 2024 07:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE4213AD26
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571656; cv=none; b=qRtLUg1e3kme2HF1VCna6b6EsWrSah6kJc2i5zr9jkfEbJkWYaVIjmFubroWAWYfM1gcFlsKa/xfRLMMpdb6dSBLAXRWGNxSohhqZRv0tCCCbnVVIfCwLBHeJyaL3iXWEwYpaOXbZdnD0pVkiK3D1TT4ock49WUe4HFBqmVvuts=
+	t=1717571713; cv=none; b=hpQFBUtlAVLN9IoKGEQsNtzFRNcai+HHzHk49sGb+Wz0MWkaEfLjM6VS5f9SN38Tz89R4NzMuiPl+1xInmB6jCbx+jqnDAQt08pRUP4d6Tzu8dXchhU0d8A3orW9cSKpcjP8V9GoGB5eyi5u8noKvUwc2a1Tp5iyHFX8QK6+3cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571656; c=relaxed/simple;
-	bh=wUDOuDfSC1HxmhvTFKKgu/XL42Af+d6HJyAA09eVNxU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhjLAYYKuPM9UnqMaan2n89WDH8a66VKfEfyyOk+qbA/HG3ySmJp0zDdtzcgTjpUYTB2MMupQii5tDKciqsKXJHJPfYhIpEBE5Iw5oHXskugOarjDz9y9nKg4GHKN6iCSvYB4ws1HK51coDEPSRihAIYtg9R70t5f41w2yPAN/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUB1c9gX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717571713; c=relaxed/simple;
+	bh=858OyPmM75H2D7QTuvWzLji7fKApckbz5DLDsL1HIyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A5OdzIpaAwmgPqlQBkq5ty0splweoj1YIq4HHmzkL/8EYjSJMlWflphByx6Mz1ShAAI9BO6HDHSSvW3HDKFgQWh/DReymey+KNkmluvYq5v+qjHA4ukBWKFdAJwTcrNUTkncf8vTVGrBpnFacMKRxmWLO974mapVOm+9usBj/5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r8LqxX8Q; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUB1c9gX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA483C3277B;
-	Wed,  5 Jun 2024 07:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717571655;
-	bh=wUDOuDfSC1HxmhvTFKKgu/XL42Af+d6HJyAA09eVNxU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oUB1c9gXUTYywqYfJKSzAx5YO4wNPdp2dpNaN0sSw68gZgqh+v86hfGOOvN5mUhql
-	 o709wqr0xyx+M5a10ybVVEVX8eQpjsi3ebNfzRZ2OrI3o+5GvCELWuWwPCSJBmqXYL
-	 Xq0x5Iq+sGhd0gZqcV8JyVndXe7o6Ozlb9dnS3tVsotIomXGiM9idAR7fq7ptHSQPR
-	 4w1iKicGjcTDxRqE7ztjgZ6L5HzfYdYjI4p4XVIJwck4+YkSA3WYCxCxdeRuqQ/IYj
-	 jHtm1hwhmvT+9cFcGBaCgIVVms8wzKLCyC/XHqMn1UgbnI7kxe6uUueN5tvSxIY0ON
-	 wwMIKx5AFPXKQ==
-Date: Wed, 5 Jun 2024 09:14:09 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: linux-kernel@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev, Fang Xiang <fangxiang3@xiaomi.com>,
-	Robert Moore <robert.moore@intel.com>
-Subject: Re: [PATCH v5 1/1] irqchip/gic-v3: Enable non-coherent
- redistributors/ITSes ACPI probing
-Message-ID: <ZmAQQVR+inUJpJ7z@lpieralisi>
-References: <20240123110332.112797-1-lpieralisi@kernel.org>
- <20240123110332.112797-2-lpieralisi@kernel.org>
- <ZiYi64/VBWkfM2E2@lpieralisi>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r8LqxX8Q"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-35e5c6600f0so2743479f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1717571710; x=1718176510; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FMC0+4pQET5/c7lWcOuUFJhOgUx2a3ondaZTGx3PBJs=;
+        b=r8LqxX8Q+fxuBOhu7ZRc8A7IMCA7pQCmYpSVn7ZdtpPvJSHY9NNbv6rn1Y320F2G73
+         dA7Xp+LFO9tDfscodlkirNxkwSF+JuEwArdRyRxI4eTkG1BtsaYIOvpCJ0NINzyVhAml
+         D3jogn0v4IxsCVf35V7q8bk3ObAy8zWhPGas6brbTLhtNbnRgUKPKyuGnLUDn3QOx5ud
+         wuypeSruaKTZyq5slJsEa7ecO+YXNyWTYjtubywb0VsJfwhDMJTiG9vO9B3C9uHrx1hV
+         qp4L2rMk6DCozEr4yLF+1/TrQrzG7PLSCiwccckwlElvD/KiKHrHN5dHgCN3wk/+LF9K
+         sNYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717571710; x=1718176510;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FMC0+4pQET5/c7lWcOuUFJhOgUx2a3ondaZTGx3PBJs=;
+        b=TksMRh7oFCNJPKvZglXF36KbVQdIiQvPXy3ZX9kTWQ1rbtdAXrGDqtm5HyNVQtuEdn
+         UsXFXxNsgZkbyDCQ1V9tQJoPv/J8SLypVtuXEwPMNJtFjpxibztvCcshYg/nmCCBcROL
+         TloWmeQg1/nAI2YtCaY19yeiOFQqfBmba4gUE+Lh4OPeS4vSfsPXSniVAtgzONUiiQ3t
+         OJ9GjaM5bIqDs4x+cg+cpW6eoJ4oKXxzRDPhNb0LloTPVmMvOwVm3wKwY2xb2zojMECe
+         ykiqFvrowvGZsdbbs52lB49bsYZnF7JPuDmiIIXiSjAMp3YprIUCUh5eNjIiIfbxS/Uo
+         8yMg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1e3gf1BXcOFKoclw2qG97v6avbv5WNOpTOZL8h/3iVO4/3lqa0Y4OqlrwaOztsW5V6o6TvSXd9wH4sPblmVY1qh+2CtE6uxcoVQ6
+X-Gm-Message-State: AOJu0Ywdk63BufLSHl2kejl7MCMyA69YcYBxQrqvIJ5hwfgZ5DKy3KxI
+	5opmq+ts8cwPKfY+Ii8Lb0Q8W59PoGJJ/vWqZ/1ukggE4vZSclKLiOg8BTK2HQ8=
+X-Google-Smtp-Source: AGHT+IEqTyNmKpZaS0kck5QcTQjNceczLCf1Wu0f9iUbY6veNVMUlZNzwAXN5TETBlbKBRDObvbAPQ==
+X-Received: by 2002:adf:b195:0:b0:355:3dc:1f26 with SMTP id ffacd0b85a97d-35e85a35edcmr1160246f8f.37.1717571709821;
+        Wed, 05 Jun 2024 00:15:09 -0700 (PDT)
+Received: from [192.168.2.24] ([110.93.11.116])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd04cafb8sm13416666f8f.37.2024.06.05.00.15.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 00:15:09 -0700 (PDT)
+Message-ID: <1bc38042-7034-4937-a2e6-2dcfd8c2d609@linaro.org>
+Date: Wed, 5 Jun 2024 09:15:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiYi64/VBWkfM2E2@lpieralisi>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: defconfig: Enable TI LP873X PMIC
+To: Nathan Morrisson <nmorrisson@phytec.com>, catalin.marinas@arm.com,
+ will@kernel.org, quic_bjorande@quicinc.com, geert+renesas@glider.be,
+ konrad.dybcio@linaro.org, shawnguo@kernel.org, neil.armstrong@linaro.org,
+ arnd@arndb.de, m.szyprowski@samsung.com, nfraprado@collabora.com,
+ u-kumar1@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ upstream@lists.phytec.de, w.egorov@phytec.de
+References: <20240604233836.3628063-1-nmorrisson@phytec.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240604233836.3628063-1-nmorrisson@phytec.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 22, 2024 at 10:42:19AM +0200, Lorenzo Pieralisi wrote:
-> On Tue, Jan 23, 2024 at 12:03:32PM +0100, Lorenzo Pieralisi wrote:
-> > The GIC architecture specification defines a set of registers for
-> > redistributors and ITSes that control the sharebility and cacheability
-> > attributes of redistributors/ITSes initiator ports on the interconnect
-> > (GICR_[V]PROPBASER, GICR_[V]PENDBASER, GITS_BASER<n>).
-> > 
-> > Architecturally the GIC provides a means to drive shareability and
-> > cacheability attributes signals but it is not mandatory for designs to
-> > wire up the corresponding interconnect signals that control the
-> > cacheability/shareability of transactions.
-> > 
-> > Redistributors and ITSes interconnect ports can be connected to
-> > non-coherent interconnects that are not able to manage the
-> > shareability/cacheability attributes; this implicitly makes the
-> > redistributors and ITSes non-coherent observers.
-> > 
-> > To enable non-coherent GIC designs on ACPI based systems, parse the MADT
-> > GICC/GICR/ITS subtables non-coherent flags to determine whether the
-> > respective components are non-coherent observers and force the
-> > shareability attributes to be programmed into the redistributors and
-> > ITSes registers.
-> > 
-> > An ACPI global function (acpi_get_madt_revision()) is added to retrieve
-> > the MADT revision, in that it is essential to check the MADT revision
-> > before checking for flags that were added with MADT revision 7 so that
-> > if the kernel is booted with an ACPI MADT table with revision < 7 it
-> > skips parsing the newly added flags (that should be zeroed reserved
-> > values for MADT versions < 7 but they could turn out to be buggy and
-> > should be ignored).
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  drivers/acpi/processor_core.c    | 15 +++++++++++++++
-> >  drivers/irqchip/irq-gic-v3-its.c |  4 ++++
-> >  drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
-> >  include/linux/acpi.h             |  3 +++
-> >  4 files changed, 31 insertions(+)
+On 05/06/2024 01:38, Nathan Morrisson wrote:
+> Enable the TI LP873X PMIC configs.
+
+Why? No user of this, sorry. Please explain in commit msg why this
+should be done, e.g. which upstream user needs it.
+
 > 
-> Hi Marc, Rafael,
+> Signed-off-by: Nathan Morrisson <nmorrisson@phytec.com>
+> ---
+>  arch/arm64/configs/defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I would kindly ask you please what to do with this patch, it still
-> applies to v6.9-rc5 - I can resend it if needed, ACPICA changes
-> are already merged as-per the cover letter.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 57a9abe78ee4..24ea62a8fdbf 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -745,6 +745,7 @@ CONFIG_MFD_SEC_CORE=y
+>  CONFIG_MFD_SL28CPLD=y
+>  CONFIG_RZ_MTU3=y
+>  CONFIG_MFD_TI_AM335X_TSCADC=m
+> +CONFIG_MFD_TI_LP873X=y
 
-Hi Marc, Rafael,
+Why this cannot be m?
 
-I would kindly ask please what to do with this patch, rebased to v6.10-rc1,
-I can resend it if that's preferred, please let me know.
+>  CONFIG_MFD_TPS65219=y
+>  CONFIG_MFD_TPS6594_I2C=m
+>  CONFIG_MFD_ROHM_BD718XX=y
+> @@ -760,6 +761,7 @@ CONFIG_REGULATOR_FAN53555=y
+>  CONFIG_REGULATOR_GPIO=y
+>  CONFIG_REGULATOR_HI6421V530=y
+>  CONFIG_REGULATOR_HI655X=y
+> +CONFIG_REGULATOR_LP873X=y
 
-Thanks,
-Lorenzo
+Why this cannot be m?
 
-> > diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
-> > index b203cfe28550..915713c0e9b7 100644
-> > --- a/drivers/acpi/processor_core.c
-> > +++ b/drivers/acpi/processor_core.c
-> > @@ -215,6 +215,21 @@ phys_cpuid_t __init acpi_map_madt_entry(u32 acpi_id)
-> >  	return rv;
-> >  }
-> >  
-> > +int __init acpi_get_madt_revision(void)
-> > +{
-> > +	struct acpi_table_header *madt = NULL;
-> > +	int revision;
-> > +
-> > +	if (ACPI_FAILURE(acpi_get_table(ACPI_SIG_MADT, 0, &madt)))
-> > +		return -EINVAL;
-> > +
-> > +	revision = madt->revision;
-> > +
-> > +	acpi_put_table(madt);
-> > +
-> > +	return revision;
-> > +}
-> > +
-> >  static phys_cpuid_t map_mat_entry(acpi_handle handle, int type, u32 acpi_id)
-> >  {
-> >  	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-> > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> > index fec1b58470df..a60c560ce891 100644
-> > --- a/drivers/irqchip/irq-gic-v3-its.c
-> > +++ b/drivers/irqchip/irq-gic-v3-its.c
-> > @@ -5591,6 +5591,10 @@ static int __init gic_acpi_parse_madt_its(union acpi_subtable_headers *header,
-> >  		goto node_err;
-> >  	}
-> >  
-> > +	if (acpi_get_madt_revision() >= 7 &&
-> > +	    (its_entry->flags & ACPI_MADT_ITS_NON_COHERENT))
-> > +		its->flags |= ITS_FLAGS_FORCE_NON_SHAREABLE;
-> > +
-> >  	err = its_probe_one(its);
-> >  	if (!err)
-> >  		return 0;
-> > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-> > index 98b0329b7154..8cb8dff86c12 100644
-> > --- a/drivers/irqchip/irq-gic-v3.c
-> > +++ b/drivers/irqchip/irq-gic-v3.c
-> > @@ -2356,6 +2356,11 @@ gic_acpi_parse_madt_redist(union acpi_subtable_headers *header,
-> >  		pr_err("Couldn't map GICR region @%llx\n", redist->base_address);
-> >  		return -ENOMEM;
-> >  	}
-> > +
-> > +	if (acpi_get_madt_revision() >= 7 &&
-> > +	    (redist->flags & ACPI_MADT_GICR_NON_COHERENT))
-> > +		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-> > +
-> >  	gic_request_region(redist->base_address, redist->length, "GICR");
-> >  
-> >  	gic_acpi_register_redist(redist->base_address, redist_base);
-> > @@ -2380,6 +2385,10 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
-> >  		return -ENOMEM;
-> >  	gic_request_region(gicc->gicr_base_address, size, "GICR");
-> >  
-> > +	if (acpi_get_madt_revision() >= 7 &&
-> > +	    (gicc->flags & ACPI_MADT_GICC_NON_COHERENT))
-> > +		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-> > +
-> >  	gic_acpi_register_redist(gicc->gicr_base_address, redist_base);
-> >  	return 0;
-> >  }
-> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> > index b7165e52b3c6..4eedab0e51c3 100644
-> > --- a/include/linux/acpi.h
-> > +++ b/include/linux/acpi.h
-> > @@ -284,6 +284,9 @@ static inline bool invalid_phys_cpuid(phys_cpuid_t phys_id)
-> >  	return phys_id == PHYS_CPUID_INVALID;
-> >  }
-> >  
-> > +
-> > +int __init acpi_get_madt_revision(void);
-> > +
-> >  /* Validate the processor object's proc_id */
-> >  bool acpi_duplicate_processor_id(int proc_id);
-> >  /* Processor _CTS control */
-> > -- 
-> > 2.34.1
-> > 
+>  CONFIG_REGULATOR_MAX77620=y
+>  CONFIG_REGULATOR_MAX8973=y
+>  CONFIG_REGULATOR_MAX20411=m
+
+Best regards,
+Krzysztof
+
