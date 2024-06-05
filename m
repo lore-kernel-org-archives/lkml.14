@@ -1,55 +1,55 @@
 Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C4D16EBE4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 23:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2DD17167B
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 23:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717631538; cv=none; b=kMD3N1Jn6Bcz32T7z1XvqCrJ3RxTDzGIaOx2bwnlPNssvjA3u3uN/4acyWp48XQGS1oalCOt2UKU9sLvJ0nZmP+r1B06fQbnEoGjMwUTebhIdYMCJV947/956RfZ/QJ8X7DIfa0bo++igwO2O85JoYaHZCs5VWkYNnKK5CY7pM4=
+	t=1717631542; cv=none; b=dIVcMGgCKUKJdobgmMLiazd7Q3CAggdPDucFJSSKFdLdoZIf/mbqUFlEMZdOVHzpe0w4QmsjMhCaj36ijNTdbormRfiJxRbvX6eplGDAXhLqXFSV1eSLT+XTZwQt8aFfK4UQ/McyEdERt3BUN08+NqbrpcnuF3z6iMM9dTVJjgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717631538; c=relaxed/simple;
-	bh=NTRt9E+C5xRQqaC/Uvbn6Ytg1QV2WuULGzLYg+a1XAk=;
+	s=arc-20240116; t=1717631542; c=relaxed/simple;
+	bh=uk9h3Wx0jSORRrHDHQSRvVeuJxvNL1Zwsnc30WAZZ4A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GVHomjkP92Oc9BeMTLKeRucABOPQmcbnZfSz1mNZiaxOkeRctdb7GOgRFKnzjBn5+4CYnzztgitb4O8DldtL4BqJvxrZ6fyEygkFnG1HLlN7bnfV9xa+nld0Wwflh37IXU6wpbEkjDOjhUhiOb/7W9ewGLhwqhfoyO5HKYAdj+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=R7M5gYwq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bSxvLFpG; arc=none smtp.client-ip=64.147.123.145
+	 MIME-Version; b=M6ZdftETMsWX+AlYmPpsBIVmi6cw2ziEsEc8n34s0iPGL8kQj20KQJGapW6TKACqthd9WkHN9xM0x1OkmijCxox2RfVuujs/TJfJaOuZYYFw/iZyFcGsiK5rvap7VAXGqcWO+WZ0VnLlQ95c9BN5pKv95v54NHY+5SJFRu6wkk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=eOSSw3/R; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z2L7dX6F; arc=none smtp.client-ip=64.147.123.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="R7M5gYwq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bSxvLFpG"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.west.internal (Postfix) with ESMTP id 7E6F61C000A2;
-	Wed,  5 Jun 2024 19:52:15 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="eOSSw3/R";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z2L7dX6F"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id 9731C1C000FB;
+	Wed,  5 Jun 2024 19:52:19 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 05 Jun 2024 19:52:15 -0400
+  by compute1.internal (MEProxy); Wed, 05 Jun 2024 19:52:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
 	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1717631535; x=
-	1717717935; bh=vHlq0ZKzEwlpJxFJg/r2e4RZVzz0LGqjE3vNcaSDf6M=; b=R
-	7M5gYwqjghTO2SeAknk+HjnMK3FvZ/UqBGEALdYLdGJwxVpCHDhCP0KTAo668244
-	HBt4XdLRtb/vZ02F37TYel0xrzzBXLLLcoSQPoSv2Ipe4EYnBL+4CGPKTNFgJ22g
-	sB6Ekyk0PAXj5jiNAiSZuMSXk+tpss7tQENC6q8IjWXte8iAH2ei89FQ3Uv5TsEM
-	shlcL06P79TfMvaTvshGGzbL87x3/59BLR0Va6vYCuyDs8kKbQyisWItPxxLEt0P
-	YyXApzfLyJ4vsQPbMMKkHPoIglmAfGpiAQGS6aXHcoR4D5eVKENCC0BOn7TyeO5z
-	jIlscl83gHYFEmhfesYzg==
+	:reply-to:subject:subject:to:to; s=fm1; t=1717631539; x=
+	1717717939; bh=AB80wdRifDotWyffJuTSQTTcEEsAJXA4WZpWq0bUy8E=; b=e
+	OSSw3/RpFGMk4leo2UEieIUx2A3danNKIDOUPtq8OSI4N2pGkTAw7WXRtS0isezo
+	bpTixwOo1VuF1Iv/mXn9MfcLT5ke3lAVCvGrZFB06m85BFFbLwh7JBJ6hspIay/7
+	L1Jgy1AMVkVIeVf0B+9Cj8rq3nxFdFga/5GicrfK/rxs+2Nzj9Z/4xczpjA3LV4y
+	zX8Be6ZlBXgdf1+hFqorhYnCeBTvihgwBlMR0mTQRURDrK5TozZQBJps1LdKV+hO
+	yOigwBQHFIOQZwaEmGTyjas85JMcJPvQbC048M4Wk9Mqq4MYwDI4YG6hIkdlmmw6
+	JX9tBzOL2MT7UdywLYRdA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717631535; x=
-	1717717935; bh=vHlq0ZKzEwlpJxFJg/r2e4RZVzz0LGqjE3vNcaSDf6M=; b=b
-	SxvLFpGHZOfnrDrwnLcjexBQsHHkOhInBLKG1ghAa2D2ZriPeODKE2zawm8dURMy
-	JbhWoicUNMRtyObK3q7evyIdIk6J4hYajo+cAeG3lQq/YEjzYuttnywksk+3AoOn
-	nJe7pqKBVwCSLnj8RpP/n2DFPftH8sFHLQ9ikVfUI3HlXhki4Z3KNttSKYZ7ZhEq
-	9r823wm2G1k/t1vjnq7YmHblpXiaNimUN5iEY5FUBNOifGBhiwt4N4frMKrn9ZHo
-	GCZTdw4nZZEr0drnio18K/JFskTsQmygKlE6EhJRxypICEkPmuynAu8IZmNeL9sx
-	hmLwchuw0vOTOrRxIKFQQ==
-X-ME-Sender: <xms:LvpgZiyhHJbX2c0TFti40hM8eRX3CynECO3PfTmzT8oGZIG91HR-Sg>
-    <xme:LvpgZuRDhKeh0AhBjzIrXIGe48rF_8Xoz6f0WziidPBfsnN_C7ZzYxpGrkQcgiRho
-    L_viWzpBCY9LItVDUQ>
-X-ME-Received: <xmr:LvpgZkUY4G0g9zBzgyOogUpg3Km3Kom0P7aAe7t-JEsVy9u3PdjEx07IFikAGJLOpOBTdix-01SLn2ou-LfpgPssbugMyBQqnCb1aKZvHcOjxQ>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717631539; x=
+	1717717939; bh=AB80wdRifDotWyffJuTSQTTcEEsAJXA4WZpWq0bUy8E=; b=Z
+	2L7dX6F732FA7CZWTNDbwSkFoEQXYHgYnPHhLP8VvfjUxzVrbLbs9ctWM7rtFtnu
+	tmN85I4A46F5yiwmj+qM/fa9IYlq/ndvPL2WTFzy3IUrCloLaazWylMqNAyQ9NeE
+	+IwFpydXfqZnqnaYQtessBsycjW5tHtSNPVTYJQL6kh33+LxgUNzwA4NHT+eX6qC
+	ZcXlMN6cdHRMCeh6NC/6RfzLHJRvZezuGvCiUi/ZRw8d3yQM4fzPP7i3e+UW6Ska
+	LBVpmgUhmtREEzrdi27Zqux+cfzxuUcTq7MP13JmV512MCJq3O7FqA1u8qT7hCCP
+	VGcEpj+GuJa0GPJV6rCtg==
+X-ME-Sender: <xms:M_pgZl7X8HfI1dvjGtlmdg0U-4Yai-t1i7tMcHOml9sY3g1txRE1zw>
+    <xme:M_pgZi5DqMlRyx-KAh-IkA3CnCXI-oPlyJxXwowgLxdv2pa1v1iMtqrUb9WBlhjqK
+    80zQ5adebBHavTNhvo>
+X-ME-Received: <xmr:M_pgZsdGyNLYb_LlyFM-27FBhw5ssVzT4bDFVZjN_wPncMV3bCOiWHnjj0dJqhPb5zz6aZZmiamgzG-MeDwOFWiAEp4gJoDE6cl0p6u0C8v8cg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeljedgvdejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
@@ -58,20 +58,20 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeljedgvdejucetufdoteggod
     euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
     vghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
     hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:LvpgZoi_t5hPSGRweuHwlthrScAIR3ROkWDsa6-jIBRvvlXa1TVmuA>
-    <xmx:L_pgZkCB9NktWuifyr-FQzQZnpk_hgJvnpiwRhbSrXuxk2zTEU6_sg>
-    <xmx:L_pgZpIkIaEOlTaAYc8fS-hPq5ECb8QF5K7JrCQy-6AlZA7xhjV0zw>
-    <xmx:L_pgZrBPLSf0ibUCXjA_jLMflFV0Vb-Q4oPCY7iBn7iPVzikEjLzfQ>
-    <xmx:L_pgZnN21h9RlZfQpHpTjPONT6jQWvRDESRzMKY45HzHzgPxF7ycoUuS>
+X-ME-Proxy: <xmx:M_pgZuJYNMWm1xw6mOjOSjA8bsiwKGB8IKIdfLcsTpBAZQx9o1bLdg>
+    <xmx:M_pgZpKowCdfyQFGlmb9oH_1nR4IIhRcqO2LfIkMpuuX3c2PBjrALg>
+    <xmx:M_pgZnyO-YfnJN9TLwK4sfRLd0J4_Uc6NG5nD6bTe2Hsh1rGImCXZg>
+    <xmx:M_pgZlKkMnDtMkMaCRwN7npgNdUo2-4joitMLk85Y0GK9ieqShdwnw>
+    <xmx:M_pgZgV2bZAynlzrTUYn8tNCuZMS_GxFkTcg1vF7xzzM5MNNkVOJa_gB>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Jun 2024 19:52:13 -0400 (EDT)
+ 5 Jun 2024 19:52:18 -0400 (EDT)
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: linux1394-devel@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] firewire: core: add common inline functions to serialize/deserialize self ID packet
-Date: Thu,  6 Jun 2024 08:51:51 +0900
-Message-ID: <20240605235155.116468-8-o-takashi@sakamocchi.jp>
+Subject: [PATCH 09/11] firewire: ohci: use helper inline functions to serialize/deserialize self ID packet
+Date: Thu,  6 Jun 2024 08:51:53 +0900
+Message-ID: <20240605235155.116468-10-o-takashi@sakamocchi.jp>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240605235155.116468-1-o-takashi@sakamocchi.jp>
 References: <20240605235155.116468-1-o-takashi@sakamocchi.jp>
@@ -83,469 +83,166 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Within FireWire subsystem, the serializations and deserializations of phy
-packet are implemented in several parts. They includes some redundancies.
-
-This commit adds a series of helper functions for the serializations and
-deserializations of self ID packet with a Kunit test suite.
+This commit replaces the existing implementation with the helper
+functions for self ID packet.
 
 Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- drivers/firewire/packet-serdes-test.c     | 255 ++++++++++++++++++++++
- drivers/firewire/phy-packet-definitions.h | 126 +++++++++++
- 2 files changed, 381 insertions(+)
+ drivers/firewire/ohci.c | 69 +++++++++++++++++++++++++++--------------
+ 1 file changed, 45 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/firewire/packet-serdes-test.c b/drivers/firewire/packet-serdes-test.c
-index e83b1fece780..c56199e84f91 100644
---- a/drivers/firewire/packet-serdes-test.c
-+++ b/drivers/firewire/packet-serdes-test.c
-@@ -10,6 +10,7 @@
- #include <linux/firewire-constants.h>
- 
- #include "packet-header-definitions.h"
-+#include "phy-packet-definitions.h"
- 
- static void serialize_async_header_common(u32 header[ASYNC_HEADER_QUADLET_COUNT],
- 					  unsigned int dst_id, unsigned int tlabel,
-@@ -187,6 +188,66 @@ static void deserialize_isoc_header(u32 header, unsigned int *data_length, unsig
- 	*sy = isoc_header_get_sy(header);
+diff --git a/drivers/firewire/ohci.c b/drivers/firewire/ohci.c
+index 342407d8bc9b..1f6097a6366c 100644
+--- a/drivers/firewire/ohci.c
++++ b/drivers/firewire/ohci.c
+@@ -477,7 +477,7 @@ static void log_selfids(struct fw_ohci *ohci, int generation, int self_id_count)
+ 		ohci_notice(ohci,
+ 		    "selfID 0: %08x, phy %d [%c%c%c] %s gc=%d %s %s%s%s\n",
+ 		    *s,
+-		    *s >> 24 & 63,
++		    phy_packet_self_id_get_phy_id(*s),
+ 		    port[self_id_sequence_get_port_status(s, quadlet_count, 0)],
+ 		    port[self_id_sequence_get_port_status(s, quadlet_count, 1)],
+ 		    port[self_id_sequence_get_port_status(s, quadlet_count, 2)],
+@@ -490,7 +490,7 @@ static void log_selfids(struct fw_ohci *ohci, int generation, int self_id_count)
+ 			ohci_notice(ohci,
+ 			    "selfID n: %08x, phy %d [%c%c%c%c%c%c%c%c]\n",
+ 			    s[i],
+-			    s[i] >> 24 & 63,
++			    phy_packet_self_id_get_phy_id(s[i]),
+ 			    port[self_id_sequence_get_port_status(s, quadlet_count, port_index)],
+ 			    port[self_id_sequence_get_port_status(s, quadlet_count, port_index + 1)],
+ 			    port[self_id_sequence_get_port_status(s, quadlet_count, port_index + 2)],
+@@ -1846,7 +1846,8 @@ static u32 update_bus_time(struct fw_ohci *ohci)
+ 	return ohci->bus_time | cycle_time_seconds;
  }
  
-+static void serialize_phy_packet_self_id_zero(u32 *quadlet, unsigned int packet_identifier,
-+					      unsigned int phy_id, bool extended,
-+					      bool link_is_active, unsigned int gap_count,
-+					      unsigned int scode, bool is_contender,
-+					      unsigned int power_class, bool is_initiated_reset,
-+					      bool has_more_packets)
-+{
-+	phy_packet_set_packet_identifier(quadlet, packet_identifier);
-+	phy_packet_self_id_set_phy_id(quadlet, phy_id);
-+	phy_packet_self_id_set_extended(quadlet, extended);
-+	phy_packet_self_id_zero_set_link_active(quadlet, link_is_active);
-+	phy_packet_self_id_zero_set_gap_count(quadlet, gap_count);
-+	phy_packet_self_id_zero_set_scode(quadlet, scode);
-+	phy_packet_self_id_zero_set_contender(quadlet, is_contender);
-+	phy_packet_self_id_zero_set_power_class(quadlet, power_class);
-+	phy_packet_self_id_zero_set_initiated_reset(quadlet, is_initiated_reset);
-+	phy_packet_self_id_set_more_packets(quadlet, has_more_packets);
-+}
-+
-+static void deserialize_phy_packet_self_id_zero(u32 quadlet, unsigned int *packet_identifier,
-+						unsigned int *phy_id, bool *extended,
-+						bool *link_is_active, unsigned int *gap_count,
-+						unsigned int *scode, bool *is_contender,
-+						unsigned int *power_class,
-+						bool *is_initiated_reset, bool *has_more_packets)
-+{
-+	*packet_identifier = phy_packet_get_packet_identifier(quadlet);
-+	*phy_id = phy_packet_self_id_get_phy_id(quadlet);
-+	*extended = phy_packet_self_id_get_extended(quadlet);
-+	*link_is_active = phy_packet_self_id_zero_get_link_active(quadlet);
-+	*gap_count = phy_packet_self_id_zero_get_gap_count(quadlet);
-+	*scode = phy_packet_self_id_zero_get_scode(quadlet);
-+	*is_contender = phy_packet_self_id_zero_get_contender(quadlet);
-+	*power_class = phy_packet_self_id_zero_get_power_class(quadlet);
-+	*is_initiated_reset = phy_packet_self_id_zero_get_initiated_reset(quadlet);
-+	*has_more_packets = phy_packet_self_id_get_more_packets(quadlet);
-+}
-+
-+static void serialize_phy_packet_self_id_extended(u32 *quadlet, unsigned int packet_identifier,
-+						  unsigned int phy_id, bool extended,
-+						  unsigned int sequence, bool has_more_packets)
-+{
-+	phy_packet_set_packet_identifier(quadlet, packet_identifier);
-+	phy_packet_self_id_set_phy_id(quadlet, phy_id);
-+	phy_packet_self_id_set_extended(quadlet, extended);
-+	phy_packet_self_id_extended_set_sequence(quadlet, sequence);
-+	phy_packet_self_id_set_more_packets(quadlet, has_more_packets);
-+}
-+
-+static void deserialize_phy_packet_self_id_extended(u32 quadlet, unsigned int *packet_identifier,
-+						    unsigned int *phy_id, bool *extended,
-+						    unsigned int *sequence, bool *has_more_packets)
-+{
-+	*packet_identifier = phy_packet_get_packet_identifier(quadlet);
-+	*phy_id = phy_packet_self_id_get_phy_id(quadlet);
-+	*extended = phy_packet_self_id_get_extended(quadlet);
-+	*sequence = phy_packet_self_id_extended_get_sequence(quadlet);
-+	*has_more_packets = phy_packet_self_id_get_more_packets(quadlet);
-+}
-+
- static void test_async_header_write_quadlet_request(struct kunit *test)
+-static int get_status_for_port(struct fw_ohci *ohci, int port_index)
++static int get_status_for_port(struct fw_ohci *ohci, int port_index,
++			       enum phy_packet_self_id_port_status *status)
  {
- 	static const u32 expected[ASYNC_HEADER_QUADLET_COUNT] = {
-@@ -559,6 +620,197 @@ static void test_isoc_header(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, header, expected);
+ 	int reg;
+ 
+@@ -1860,33 +1861,44 @@ static int get_status_for_port(struct fw_ohci *ohci, int port_index)
+ 
+ 	switch (reg & 0x0f) {
+ 	case 0x06:
+-		return 2;	/* is child node (connected to parent node) */
++		// is child node (connected to parent node)
++		*status = PHY_PACKET_SELF_ID_PORT_STATUS_PARENT;
++		break;
+ 	case 0x0e:
+-		return 3;	/* is parent node (connected to child node) */
++		// is parent node (connected to child node)
++		*status = PHY_PACKET_SELF_ID_PORT_STATUS_CHILD;
++		break;
++	default:
++		// not connected
++		*status = PHY_PACKET_SELF_ID_PORT_STATUS_NCONN;
++		break;
+ 	}
+-	return 1;		/* not connected */
++
++	return 0;
  }
  
-+static void test_phy_packet_self_id_zero_case0(struct kunit *test)
-+{
-+	// TSB41AB1/2 with 1 port.
-+	const u32 expected[] = {0x80458c80};
-+	u32 quadlets[] = {0};
-+
-+	unsigned int packet_identifier;
-+	unsigned int phy_id;
-+	bool extended;
-+	bool link_is_active;
-+	unsigned int gap_count;
-+	unsigned int scode;
-+	bool is_contender;
-+	unsigned int power_class;
-+	enum phy_packet_self_id_port_status port_status[3];
-+	bool is_initiated_reset;
-+	bool has_more_packets;
-+	unsigned int port_index;
-+
-+	deserialize_phy_packet_self_id_zero(expected[0], &packet_identifier, &phy_id, &extended,
-+					    &link_is_active, &gap_count, &scode, &is_contender,
-+					    &power_class, &is_initiated_reset, &has_more_packets);
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_PACKET_IDENTIFIER_SELF_ID, packet_identifier);
-+	KUNIT_EXPECT_EQ(test, 0, phy_id);
-+	KUNIT_EXPECT_FALSE(test, extended);
-+	KUNIT_EXPECT_TRUE(test, link_is_active);
-+	KUNIT_EXPECT_EQ(test, 0x05, gap_count);
-+	KUNIT_EXPECT_EQ(test, SCODE_400, scode);
-+	KUNIT_EXPECT_TRUE(test, is_contender);
-+	KUNIT_EXPECT_EQ(test, 0x4, power_class);
-+	KUNIT_EXPECT_FALSE(test, is_initiated_reset);
-+	KUNIT_EXPECT_FALSE(test, has_more_packets);
-+
-+	serialize_phy_packet_self_id_zero(quadlets, packet_identifier, phy_id, extended,
-+					  link_is_active, gap_count, scode, is_contender,
-+					  power_class, is_initiated_reset, has_more_packets);
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		port_status[port_index] =
-+			self_id_sequence_get_port_status(expected, ARRAY_SIZE(expected), port_index);
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_PARENT, port_status[0]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[1]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[2]);
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		self_id_sequence_set_port_status(quadlets, ARRAY_SIZE(quadlets), port_index,
-+						 port_status[port_index]);
-+	}
-+
-+	KUNIT_EXPECT_MEMEQ(test, quadlets, expected, sizeof(expected));
-+}
-+
-+static void test_phy_packet_self_id_zero_case1(struct kunit *test)
-+{
-+	// XIO2213 and TSB81BA3E with 3 ports.
-+	const u32 expected[] = {0x817fcc5e};
-+	u32 quadlets[] = {0};
-+
-+	unsigned int packet_identifier;
-+	unsigned int phy_id;
-+	bool extended;
-+	bool link_is_active;
-+	unsigned int gap_count;
-+	unsigned int scode;
-+	bool is_contender;
-+	unsigned int power_class;
-+	enum phy_packet_self_id_port_status port_status[3];
-+	bool is_initiated_reset;
-+	bool has_more_packets;
-+	unsigned int port_index;
-+
-+	deserialize_phy_packet_self_id_zero(expected[0], &packet_identifier, &phy_id, &extended,
-+					    &link_is_active, &gap_count, &scode, &is_contender,
-+					    &power_class, &is_initiated_reset, &has_more_packets);
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_PACKET_IDENTIFIER_SELF_ID, packet_identifier);
-+	KUNIT_EXPECT_EQ(test, 1, phy_id);
-+	KUNIT_EXPECT_FALSE(test, extended);
-+	KUNIT_EXPECT_TRUE(test, link_is_active);
-+	KUNIT_EXPECT_EQ(test, 0x3f, gap_count);
-+	KUNIT_EXPECT_EQ(test, SCODE_800, scode);
-+	KUNIT_EXPECT_TRUE(test, is_contender);
-+	KUNIT_EXPECT_EQ(test, 0x4, power_class);
-+	KUNIT_EXPECT_TRUE(test, is_initiated_reset);
-+	KUNIT_EXPECT_FALSE(test, has_more_packets);
-+
-+	serialize_phy_packet_self_id_zero(quadlets, packet_identifier, phy_id, extended,
-+					  link_is_active, gap_count, scode, is_contender,
-+					  power_class, is_initiated_reset, has_more_packets);
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		port_status[port_index] =
-+			self_id_sequence_get_port_status(expected, ARRAY_SIZE(expected), port_index);
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[0]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[1]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_CHILD, port_status[2]);
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		self_id_sequence_set_port_status(quadlets, ARRAY_SIZE(quadlets), port_index,
-+						 port_status[port_index]);
-+	}
-+
-+	KUNIT_EXPECT_MEMEQ(test, quadlets, expected, sizeof(expected));
-+}
-+
-+static void test_phy_packet_self_id_zero_and_one(struct kunit *test)
-+{
-+	// TSB41LV06A with 6 ports.
-+	const u32 expected[] = {
-+		0x803f8459,
-+		0x80815000,
-+	};
-+	u32 quadlets[] = {0, 0};
-+
-+	unsigned int packet_identifier;
-+	unsigned int phy_id;
-+	bool extended;
-+	bool link_is_active;
-+	unsigned int gap_count;
-+	unsigned int scode;
-+	bool is_contender;
-+	unsigned int power_class;
-+	enum phy_packet_self_id_port_status port_status[11];
-+	bool is_initiated_reset;
-+	bool has_more_packets;
-+
-+	unsigned int sequence;
-+	unsigned int port_index;
-+
-+	deserialize_phy_packet_self_id_zero(expected[0], &packet_identifier, &phy_id, &extended,
-+					    &link_is_active, &gap_count, &scode, &is_contender,
-+					    &power_class, &is_initiated_reset, &has_more_packets);
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_PACKET_IDENTIFIER_SELF_ID, packet_identifier);
-+	KUNIT_EXPECT_EQ(test, 0, phy_id);
-+	KUNIT_EXPECT_FALSE(test, extended);
-+	KUNIT_EXPECT_FALSE(test, link_is_active);
-+	KUNIT_EXPECT_EQ(test, 0x3f, gap_count);
-+	KUNIT_EXPECT_EQ(test, SCODE_400, scode);
-+	KUNIT_EXPECT_FALSE(test, is_contender);
-+	KUNIT_EXPECT_EQ(test, 0x4, power_class);
-+	KUNIT_EXPECT_FALSE(test, is_initiated_reset);
-+	KUNIT_EXPECT_TRUE(test, has_more_packets);
-+
-+	serialize_phy_packet_self_id_zero(quadlets, packet_identifier, phy_id, extended,
-+					  link_is_active, gap_count, scode, is_contender,
-+					  power_class, is_initiated_reset, has_more_packets);
-+
-+	deserialize_phy_packet_self_id_extended(expected[1], &packet_identifier, &phy_id, &extended,
-+						&sequence, &has_more_packets);
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_PACKET_IDENTIFIER_SELF_ID, packet_identifier);
-+	KUNIT_EXPECT_EQ(test, 0, phy_id);
-+	KUNIT_EXPECT_TRUE(test, extended);
-+	KUNIT_EXPECT_EQ(test, 0, sequence);
-+	KUNIT_EXPECT_FALSE(test, has_more_packets);
-+
-+	serialize_phy_packet_self_id_extended(&quadlets[1], packet_identifier, phy_id, extended,
-+					      sequence, has_more_packets);
-+
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		port_status[port_index] =
-+			self_id_sequence_get_port_status(expected, ARRAY_SIZE(expected), port_index);
-+	}
-+
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[0]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[1]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_PARENT, port_status[2]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[3]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[4]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NCONN, port_status[5]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[6]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[7]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[8]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[9]);
-+	KUNIT_EXPECT_EQ(test, PHY_PACKET_SELF_ID_PORT_STATUS_NONE, port_status[10]);
-+
-+	for (port_index = 0; port_index < ARRAY_SIZE(port_status); ++port_index) {
-+		self_id_sequence_set_port_status(quadlets, ARRAY_SIZE(quadlets), port_index,
-+						 port_status[port_index]);
-+	}
-+
-+	KUNIT_EXPECT_MEMEQ(test, quadlets, expected, sizeof(expected));
-+}
-+
- static struct kunit_case packet_serdes_test_cases[] = {
- 	KUNIT_CASE(test_async_header_write_quadlet_request),
- 	KUNIT_CASE(test_async_header_write_block_request),
-@@ -570,6 +822,9 @@ static struct kunit_case packet_serdes_test_cases[] = {
- 	KUNIT_CASE(test_async_header_lock_request),
- 	KUNIT_CASE(test_async_header_lock_response),
- 	KUNIT_CASE(test_isoc_header),
-+	KUNIT_CASE(test_phy_packet_self_id_zero_case0),
-+	KUNIT_CASE(test_phy_packet_self_id_zero_case1),
-+	KUNIT_CASE(test_phy_packet_self_id_zero_and_one),
- 	{}
- };
- 
-diff --git a/drivers/firewire/phy-packet-definitions.h b/drivers/firewire/phy-packet-definitions.h
-index 4ba8b18aa993..8f78494ad371 100644
---- a/drivers/firewire/phy-packet-definitions.h
-+++ b/drivers/firewire/phy-packet-definitions.h
-@@ -7,11 +7,42 @@
- #ifndef _FIREWIRE_PHY_PACKET_DEFINITIONS_H
- #define _FIREWIRE_PHY_PACKET_DEFINITIONS_H
- 
-+#define PACKET_IDENTIFIER_MASK				0xc0000000
-+#define PACKET_IDENTIFIER_SHIFT				30
-+
-+static inline unsigned int phy_packet_get_packet_identifier(u32 quadlet)
-+{
-+	return (quadlet & PACKET_IDENTIFIER_MASK) >> PACKET_IDENTIFIER_SHIFT;
-+}
-+
-+static inline void phy_packet_set_packet_identifier(u32 *quadlet, unsigned int packet_identifier)
-+{
-+	*quadlet &= ~PACKET_IDENTIFIER_MASK;
-+	*quadlet |= (packet_identifier << PACKET_IDENTIFIER_SHIFT) & PACKET_IDENTIFIER_MASK;
-+}
-+
-+#define PHY_PACKET_PACKET_IDENTIFIER_SELF_ID		2
-+
-+#define SELF_ID_PHY_ID_MASK				0x3f000000
-+#define SELF_ID_PHY_ID_SHIFT				24
- #define SELF_ID_EXTENDED_MASK				0x00800000
- #define SELF_ID_EXTENDED_SHIFT				23
- #define SELF_ID_MORE_PACKETS_MASK			0x00000001
- #define SELF_ID_MORE_PACKETS_SHIFT			0
- 
-+#define SELF_ID_ZERO_LINK_ACTIVE_MASK			0x00400000
-+#define SELF_ID_ZERO_LINK_ACTIVE_SHIFT			22
-+#define SELF_ID_ZERO_GAP_COUNT_MASK			0x003f0000
-+#define SELF_ID_ZERO_GAP_COUNT_SHIFT			16
-+#define SELF_ID_ZERO_SCODE_MASK				0x0000c000
-+#define SELF_ID_ZERO_SCODE_SHIFT			14
-+#define SELF_ID_ZERO_CONTENDER_MASK			0x00000800
-+#define SELF_ID_ZERO_CONTENDER_SHIFT			11
-+#define SELF_ID_ZERO_POWER_CLASS_MASK			0x00000700
-+#define SELF_ID_ZERO_POWER_CLASS_SHIFT			8
-+#define SELF_ID_ZERO_INITIATED_RESET_MASK		0x00000002
-+#define SELF_ID_ZERO_INITIATED_RESET_SHIFT		1
-+
- #define SELF_ID_EXTENDED_SEQUENCE_MASK			0x00700000
- #define SELF_ID_EXTENDED_SEQUENCE_SHIFT			20
- 
-@@ -19,21 +50,116 @@
- 
- #define SELF_ID_SEQUENCE_MAXIMUM_QUADLET_COUNT		4
- 
-+static inline unsigned int phy_packet_self_id_get_phy_id(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_PHY_ID_MASK)  >> SELF_ID_PHY_ID_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_set_phy_id(u32 *quadlet, unsigned int phy_id)
-+{
-+	*quadlet &= ~SELF_ID_PHY_ID_MASK;
-+	*quadlet |= (phy_id << SELF_ID_PHY_ID_SHIFT) & SELF_ID_PHY_ID_MASK;
-+}
-+
- static inline bool phy_packet_self_id_get_extended(u32 quadlet)
+ static int get_self_id_pos(struct fw_ohci *ohci, u32 self_id,
+ 	int self_id_count)
  {
- 	return (quadlet & SELF_ID_EXTENDED_MASK) >> SELF_ID_EXTENDED_SHIFT;
++	unsigned int left_phy_id = phy_packet_self_id_get_phy_id(self_id);
+ 	int i;
+-	u32 entry;
+ 
+ 	for (i = 0; i < self_id_count; i++) {
+-		entry = ohci->self_id_buffer[i];
+-		if ((self_id & 0xff000000) == (entry & 0xff000000))
++		u32 entry = ohci->self_id_buffer[i];
++		unsigned int right_phy_id = phy_packet_self_id_get_phy_id(entry);
++
++		if (left_phy_id == right_phy_id)
+ 			return -1;
+-		if ((self_id & 0xff000000) < (entry & 0xff000000))
++		if (left_phy_id < right_phy_id)
+ 			return i;
+ 	}
+ 	return i;
  }
  
-+static inline void phy_packet_self_id_set_extended(u32 *quadlet, bool extended)
-+{
-+	*quadlet &= ~SELF_ID_EXTENDED_MASK;
-+	*quadlet |= (extended << SELF_ID_EXTENDED_SHIFT) & SELF_ID_EXTENDED_MASK;
-+}
-+
-+static inline bool phy_packet_self_id_zero_get_link_active(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_LINK_ACTIVE_MASK) >> SELF_ID_ZERO_LINK_ACTIVE_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_link_active(u32 *quadlet, bool is_active)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_LINK_ACTIVE_MASK;
-+	*quadlet |= (is_active << SELF_ID_ZERO_LINK_ACTIVE_SHIFT) & SELF_ID_ZERO_LINK_ACTIVE_MASK;
-+}
-+
-+static inline unsigned int phy_packet_self_id_zero_get_gap_count(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_GAP_COUNT_MASK) >> SELF_ID_ZERO_GAP_COUNT_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_gap_count(u32 *quadlet, unsigned int gap_count)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_GAP_COUNT_MASK;
-+	*quadlet |= (gap_count << SELF_ID_ZERO_GAP_COUNT_SHIFT) & SELF_ID_ZERO_GAP_COUNT_MASK;
-+}
-+
-+static inline unsigned int phy_packet_self_id_zero_get_scode(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_SCODE_MASK) >> SELF_ID_ZERO_SCODE_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_scode(u32 *quadlet, unsigned int speed)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_SCODE_MASK;
-+	*quadlet |= (speed << SELF_ID_ZERO_SCODE_SHIFT) & SELF_ID_ZERO_SCODE_MASK;
-+}
-+
-+static inline bool phy_packet_self_id_zero_get_contender(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_CONTENDER_MASK) >> SELF_ID_ZERO_CONTENDER_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_contender(u32 *quadlet, bool is_contender)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_CONTENDER_MASK;
-+	*quadlet |= (is_contender << SELF_ID_ZERO_CONTENDER_SHIFT) & SELF_ID_ZERO_CONTENDER_MASK;
-+}
-+
-+static inline unsigned int phy_packet_self_id_zero_get_power_class(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_POWER_CLASS_MASK) >> SELF_ID_ZERO_POWER_CLASS_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_power_class(u32 *quadlet, unsigned int power_class)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_POWER_CLASS_MASK;
-+	*quadlet |= (power_class << SELF_ID_ZERO_POWER_CLASS_SHIFT) & SELF_ID_ZERO_POWER_CLASS_MASK;
-+}
-+
-+static inline bool phy_packet_self_id_zero_get_initiated_reset(u32 quadlet)
-+{
-+	return (quadlet & SELF_ID_ZERO_INITIATED_RESET_MASK) >> SELF_ID_ZERO_INITIATED_RESET_SHIFT;
-+}
-+
-+static inline void phy_packet_self_id_zero_set_initiated_reset(u32 *quadlet, bool is_initiated_reset)
-+{
-+	*quadlet &= ~SELF_ID_ZERO_INITIATED_RESET_MASK;
-+	*quadlet |= (is_initiated_reset << SELF_ID_ZERO_INITIATED_RESET_SHIFT) & SELF_ID_ZERO_INITIATED_RESET_MASK;
-+}
-+
- static inline bool phy_packet_self_id_get_more_packets(u32 quadlet)
+-static int initiated_reset(struct fw_ohci *ohci)
++static bool initiated_reset(struct fw_ohci *ohci)
  {
- 	return (quadlet & SELF_ID_MORE_PACKETS_MASK) >> SELF_ID_MORE_PACKETS_SHIFT;
- }
+ 	int reg;
+-	int ret = 0;
++	int ret = false;
  
-+static inline void phy_packet_self_id_set_more_packets(u32 *quadlet, bool is_more_packets)
-+{
-+	*quadlet &= ~SELF_ID_MORE_PACKETS_MASK;
-+	*quadlet |= (is_more_packets << SELF_ID_MORE_PACKETS_SHIFT) & SELF_ID_MORE_PACKETS_MASK;
-+}
-+
- static inline unsigned int phy_packet_self_id_extended_get_sequence(u32 quadlet)
+ 	mutex_lock(&ohci->phy_reg_mutex);
+ 	reg = write_phy_reg(ohci, 7, 0xe0); /* Select page 7 */
+@@ -1899,7 +1911,7 @@ static int initiated_reset(struct fw_ohci *ohci)
+ 			if (reg >= 0) {
+ 				if ((reg & 0x08) == 0x08) {
+ 					/* bit 3 indicates "initiated reset" */
+-					ret = 0x2;
++					ret = true;
+ 				}
+ 			}
+ 		}
+@@ -1915,9 +1927,14 @@ static int initiated_reset(struct fw_ohci *ohci)
+  */
+ static int find_and_insert_self_id(struct fw_ohci *ohci, int self_id_count)
  {
- 	return (quadlet & SELF_ID_EXTENDED_SEQUENCE_MASK) >> SELF_ID_EXTENDED_SEQUENCE_SHIFT;
- }
- 
-+static inline void phy_packet_self_id_extended_set_sequence(u32 *quadlet, unsigned int sequence)
-+{
-+	*quadlet &= ~SELF_ID_EXTENDED_SEQUENCE_MASK;
-+	*quadlet |= (sequence << SELF_ID_EXTENDED_SHIFT) & SELF_ID_EXTENDED_SEQUENCE_MASK;
-+}
+-	int reg, i, pos, status;
+-	/* link active 1, speed 3, bridge 0, contender 1, more packets 0 */
+-	u32 self_id = 0x8040c800;
++	int reg, i, pos;
++	u32 self_id = 0;
 +
- struct self_id_sequence_enumerator {
- 	const u32 *cursor;
- 	unsigned int quadlet_count;
++	// link active 1, speed 3, bridge 0, contender 1, more packets 0.
++	phy_packet_set_packet_identifier(&self_id, PHY_PACKET_PACKET_IDENTIFIER_SELF_ID);
++	phy_packet_self_id_zero_set_link_active(&self_id, true);
++	phy_packet_self_id_zero_set_scode(&self_id, SCODE_800);
++	phy_packet_self_id_zero_set_contender(&self_id, true);
+ 
+ 	reg = reg_read(ohci, OHCI1394_NodeID);
+ 	if (!(reg & OHCI1394_NodeID_idValid)) {
+@@ -1925,26 +1942,30 @@ static int find_and_insert_self_id(struct fw_ohci *ohci, int self_id_count)
+ 			    "node ID not valid, new bus reset in progress\n");
+ 		return -EBUSY;
+ 	}
+-	self_id |= ((reg & 0x3f) << 24); /* phy ID */
++	phy_packet_self_id_set_phy_id(&self_id, reg & 0x3f);
+ 
+ 	reg = ohci_read_phy_reg(&ohci->card, 4);
+ 	if (reg < 0)
+ 		return reg;
+-	self_id |= ((reg & 0x07) << 8); /* power class */
++	phy_packet_self_id_zero_set_power_class(&self_id, reg & 0x07);
+ 
+ 	reg = ohci_read_phy_reg(&ohci->card, 1);
+ 	if (reg < 0)
+ 		return reg;
+-	self_id |= ((reg & 0x3f) << 16); /* gap count */
++	phy_packet_self_id_zero_set_gap_count(&self_id, reg & 0x3f);
+ 
+ 	for (i = 0; i < 3; i++) {
+-		status = get_status_for_port(ohci, i);
+-		if (status < 0)
+-			return status;
+-		self_id |= ((status & 0x3) << (6 - (i * 2)));
++		enum phy_packet_self_id_port_status status;
++		int err;
++
++		err = get_status_for_port(ohci, i, &status);
++		if (err < 0)
++			return err;
++
++		self_id_sequence_set_port_status(&self_id, 1, i, status);
+ 	}
+ 
+-	self_id |= initiated_reset(ohci);
++	phy_packet_self_id_zero_set_initiated_reset(&self_id, initiated_reset(ohci));
+ 
+ 	pos = get_self_id_pos(ohci, self_id, self_id_count);
+ 	if (pos >= 0) {
 -- 
 2.43.0
 
