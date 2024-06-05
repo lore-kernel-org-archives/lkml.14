@@ -1,99 +1,106 @@
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 4F70D17BCD
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A6F27450;
+	Wed,  5 Jun 2024 15:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717601514; cv=none; b=DrYCTHCtRJSq9jOGmzXGUO4Fvux/tYzDaroBBeF6ZqWEljtJrtC5RDmw8QEyyiocAZ1uoUhFbBflsL1Ed/am52TG2ynu53a4ENC7iDGHok6zI7/VzAv0I4/1q84KMlHehtxk1WtSfuH4H97m7IP9oGuY43rVLwny6R547N1oNDY=
+	t=1717601611; cv=none; b=n5cZ8uAXV6MJlP+leHsBqYtfNi575e8cWP8n3VrWlGikRHd00r49dbdaq1ORnc4hy86XG9BC7MBtrW9r4mtVSibwnIoJS6utfaBB7Ykpl72Q4CfdWLq58F9GIwon9ivByNbbcCTs7jSPyZc+5fSA3SCold3y8PHUmLy9jCO/U98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717601514; c=relaxed/simple;
-	bh=iRlfwxeaSfwteupu42k4XO0pgXSHyGiyHXTbklvGMgc=;
+	s=arc-20240116; t=1717601611; c=relaxed/simple;
+	bh=4lLUXsn97faWP7+i+36tE5boR7rNlTYyLIxuiFPVPbU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4joUcwQgAXUh7mVglqT5K0DAWn2SdysejYpsyhEWoE3XtZvt9akR/y1jTUqtAOEj8LLI7McfdbkbBrgiB1m0MJhxDeUbxlnXCANVph/jab0NQ2IB/EmiqwnEbJ4tySj1ccyo9aBSgi0HHURxdzAE9uH5MS6fnXmWDPW2lF+E0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
-Received: (qmail 200282 invoked by uid 1000); 5 Jun 2024 11:31:51 -0400
-Date: Wed, 5 Jun 2024 11:31:51 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-  npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-  luc.maranget@inria.fr, paulmck@kernel.org, akiyks@gmail.com,
-  dlustig@nvidia.com, joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-  linux-arch@vger.kernel.org, hernan.poncedeleon@huaweicloud.com,
-  jonas.oberhauser@huaweicloud.com
-Subject: Re: [PATCH] tools/memory-model: Document herd7 (internal)
- representation
-Message-ID: <28bdcf4c-6903-4555-8cbc-a93704ec05f9@rowland.harvard.edu>
-References: <20240524151356.236071-1-parri.andrea@gmail.com>
- <ZlC0IkzpQdeGj+a3@andrea>
- <cf81a3c2-9754-4130-a67e-67d475678829@rowland.harvard.edu>
- <ZlQ/Ks3I2BYybykD@andrea>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQlPaxoJsyZqNweiDnRr9Z8NgHnszewDLep8moc4G81b7VvGlD8xCTuIcX2/MJDsLKC28vYRkAR6mtgiyK3eUT7gS0FPvoqKv9bGi0+11dPRLiqtgrnpf7vVYS0X4eyr/lTQ4E/X4ir2LzIRvLnnbFYsjdUGq1iJQgEM1vAtW3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY76XVen; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY76XVen"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03B7C2BD11;
+	Wed,  5 Jun 2024 15:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717601611;
+	bh=4lLUXsn97faWP7+i+36tE5boR7rNlTYyLIxuiFPVPbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZY76XVeneC2Z77c/01GHO8HLsz0kEw385P1BgievhO6xmP/qtnxze1wkQlv8UDCIY
+	 ShcZuqBij1k3Qox7WU9j5MA4mO+Myx9uXO3vZedaPWUlNLpRyHgurTXiB73OLFcjtA
+	 Aq3uVgnoayqmN/9Wr7Dw5bu+w9mOb3FLRLWPk/19aV0xVjnz5AV+iv7tK2iLn/7tLT
+	 AmnHJ05T4whYMhyuECaKBr52Ex7KLr03RHJdftlGfpryqkNGV8bd0hL7hvZ/l3gII5
+	 PHDN1iV1fQcNXGWDKDhRecNGcw5w85woaE/nP1q/TYZ+Jo2R2go2uj6MQ5zw9FGQ5k
+	 tX+0J21Ezk/GA==
+Date: Wed, 5 Jun 2024 17:33:26 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Eric Sandeen <sandeen@redhat.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] debugfs: ignore auto and noauto options if given
+Message-ID: <20240605-miterleben-empfunden-ee9efeded6d3@brauner>
+References: <20240522083851.37668-1-wsa+renesas@sang-engineering.com>
+ <20240524-glasfaser-gerede-fdff887f8ae2@brauner>
+ <20240527100618.np2wqiw5mz7as3vk@ninjato>
+ <20240527-pittoresk-kneipen-652000baed56@brauner>
+ <nr46caxz7tgxo6q6t2puoj36onat65pt7fcgsvjikyaid5x2lt@gnw5rkhq2p5r>
+ <20240603-holzschnitt-abwaschen-2f5261637ca8@brauner>
+ <7e8f8a6c-0f8e-4237-9048-a504c8174363@redhat.com>
+ <20240603-turnen-wagen-685f86730633@brauner>
+ <934aaad0-4c41-43d4-9ba2-bd15513b9527@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZlQ/Ks3I2BYybykD@andrea>
+In-Reply-To: <934aaad0-4c41-43d4-9ba2-bd15513b9527@redhat.com>
 
-On Mon, May 27, 2024 at 10:07:06AM +0200, Andrea Parri wrote:
-> > It turns out the problem lies in the way lock.cat tries to calculate the 
-> > rf relation for RU events (a spin_is_locked() that returns False).  The 
-> > method it uses amounts to requiring that such events must read from the 
-> > lock's initial value or an LU event (a spin_unlock()) in a different 
-> > thread.  This clearly is wrong, and glaringly so in this litmus test 
-> > since there are no other threads!
+On Mon, Jun 03, 2024 at 10:13:43AM -0500, Eric Sandeen wrote:
+> On 6/3/24 9:33 AM, Christian Brauner wrote:
+> > On Mon, Jun 03, 2024 at 09:17:10AM -0500, Eric Sandeen wrote:
+> >> On 6/3/24 8:31 AM, Christian Brauner wrote:
+> >>> On Mon, Jun 03, 2024 at 09:24:50AM +0200, Wolfram Sang wrote:
+> >>>>
+> >>>>>>> Does that fix it for you?
+> >>>>>>
+> >>>>>> Yes, it does, thank you.
+> >>>>>>
+> >>>>>> Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >>>>>> Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >>>>>
+> >>>>> Thanks, applied. Should be fixed by end of the week.
+> >>>>
+> >>>> It is in -next but not in rc2. rc3 then?
+> >>>
+> >>> Yes, it wasn't ready when I sent the fixes for -rc2 as I just put it in
+> >>> that day.
+> >>>
+> >>
+> >> See my other reply, are you sure we should make this change? From a
+> >> "keep the old behavior" POV maybe so, but this looks to me like a
+> >> bug in busybox, passing fstab hint "options" like "auto" as actual mount
+> >> options being the root cause of the problem. debugfs isn't uniquely
+> >> affected by this behavior.
+> >>
+> >> I'm not dead set against the change, just wanted to point this out.
 > > 
-> > A patch to fix the problem and reorganize the code a bit for greater 
-> > readability is below.  I'd appreciate it if people could try it out on 
-> > various locking litmus tests in our archives.
+> > Hm, it seems I forgot your other mail, sorry.
 > 
-> Thanks for the quick solution, Alan.  The results from our archives look
-> good.
+> No worries!
+> 
+> > So the issue is that we're breaking existing userspace and it doesn't
+> > seem like a situation where we can just ignore broken userspace. If
+> > busybox has been doing that for a long time we might just have to
+> > accommodate their brokenness. Thoughts?
+> 
+> Yep, I can totally see that POV.
+> 
+> It's just that surely every other strict-parsing filesystem is also
+> broken in this same way, so coding around the busybox bug only in debugfs
+> seems a little strange. (Surely we won't change every filesystem to accept
+> unknown options just for busybox's benefit.)
+> 
+> IOWS: why do we accomodate busybox brokenness only for debugfs, given that
+> "auto" can be used in fstab for any filesystem?
 
-Here's a much smaller patch, suitable for the -stable kernels.  It fixes 
-the bug without doing the larger code reorganization (which will go into 
-a separate patch).  Can you test this one?
-
-Alan
-
-
-
-Index: usb-devel/tools/memory-model/lock.cat
-===================================================================
---- usb-devel.orig/tools/memory-model/lock.cat
-+++ usb-devel/tools/memory-model/lock.cat
-@@ -102,19 +102,19 @@ let rf-lf = rfe-lf | rfi-lf
-  * within one of the lock's critical sections returns False.
-  *)
- 
--(* rfi for RU events: an RU may read from the last po-previous UL *)
--let rfi-ru = ([UL] ; po-loc ; [RU]) \ ([UL] ; po-loc ; [LKW] ; po-loc)
--
--(* rfe for RU events: an RU may read from an external UL or the initial write *)
--let all-possible-rfe-ru =
--	let possible-rfe-ru r =
-+(*
-+ * rf for RU events: an RU may read from an external UL or the initial write,
-+ * or from the last po-previous UL
-+ *)
-+let all-possible-rf-ru =
-+	let possible-rf-ru r =
- 		let pair-to-relation p = p ++ 0
--		in map pair-to-relation (((UL | IW) * {r}) & loc & ext)
--	in map possible-rfe-ru RU
-+		in map pair-to-relation ((((UL | IW) * {r}) & loc & ext) |
-+			(((UL * {r}) & po-loc) \ ([UL] ; po-loc ; [LKW] ; po-loc)))
-+	in map possible-rf-ru RU
- 
- (* Generate all rf relations for RU events *)
--with rfe-ru from cross(all-possible-rfe-ru)
--let rf-ru = rfe-ru | rfi-ru
-+with rf-ru from cross(all-possible-rf-ru)
- 
- (* Final rf relation *)
- let rf = rf | rf-lf | rf-ru
-
+I suspect that not that most filesystems aren't mounted from fstab which
+is why we've never saw reports.
