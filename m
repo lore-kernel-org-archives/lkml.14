@@ -1,171 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9503818C33A
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3BB4C6E;
+	Wed,  5 Jun 2024 07:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717573638; cv=none; b=NYqb6Jw+XZv9lzPQ+vxOZcUBvGnCmeWelnkUDwTK8+Gza13WG1jvVwBOho/kdum9Is5laA0mrOJxSWzn2lTr0SyFef3xTXjc8apIlW7y/72r8C0Tq1UhQ9innn9MUJ9bQlgU8Hvz6QiC0R0b2KrCW2a9853Ti/2viDnyo63Ix0c=
+	t=1717573786; cv=none; b=sB2tJlenRWYnAOJp/jU/42HpXNjSKv5jKkCuEe+ZCALL0ECE+J/HqjT1cjeSQCB6o7fVg5eh/ztxQcOOmYFDeURYijRHIVEYdK/BzHLuku4ple0/dyls5CDVE0OBI2m4ydX6JFatL8o7/vgawsGSw6T3L1h/5xdE6xbKid8hsr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717573638; c=relaxed/simple;
-	bh=m4NVfVxoshkfn9v6LGSs1QzxCl3juqSPRFVJVhsYNPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dIDB3Exk3JBct1VxA/Z+njM1gF/nysJqF5v/uwmxuUnG/t0sRTVsRqW3ixiaks93BVKgTlwJLP9n7iGVXRnF4S4JZ9XrB+w5HDE/PRZGr1gW5R0Assc/OfWOb6YYBsb1zedvXL5U6Vr+F0p22f/ZRig4L3n451LjwZmHYnpfmHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BRNbz3E1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717573786; c=relaxed/simple;
+	bh=Bbr9ojDjn6Q/tD7Am814Lo2Z76+y71pFnh1TCukvEXA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=E02kaDbTB3qTkPugX/3/EF4aeVU6X2Y7vpz0WIOxHMrxLJvLbb8Uz4mbvJGvLOzhkWs7tOhu3I/W7YkTTS232yDgbnA0SqJ5jF79h0EEIhcdG2z4OGrfz5G8RcVwsIdgpBF/z8RErOaP1HGBbYLg5Z8Jp57WS7fpZgRWFRiZh/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sK/TvxYk; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BRNbz3E1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717573635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PpPer5HDsHQEuYFwEstuKaB5aiI/RjnExa6+wFQamo8=;
-	b=BRNbz3E1SEkPFskV7xftNMzBw+F46nA4Cq5ue4qokkSwMFi/eNdw2nKsJFyDVBb+Q7bXUl
-	MhrkGL5HK/UTkiba2FDSHLI2e1wLoDLd6OSsOYEh90ARrhS0HutOQo23AY6aNYr6pXae0L
-	PI6ChodwBlqXcXzIbNpegBk20nD6pTs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-381-ksPh3QelMEWd0eX0IW11jA-1; Wed, 05 Jun 2024 03:47:13 -0400
-X-MC-Unique: ksPh3QelMEWd0eX0IW11jA-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42158c90cafso1712795e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:47:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717573633; x=1718178433;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PpPer5HDsHQEuYFwEstuKaB5aiI/RjnExa6+wFQamo8=;
-        b=Gpef3jEmuJY9wTqHT+eDCMPSZ7DWgMfP0XX7G9KX8XTy1g0I9nLuwl7TaniBs/IMRk
-         UdAMcpAZclOuctqO/COfIVVqbqWigkw3NRl6uKP0V/ZLy+dzNhwyaWt+MpvWbx3mGwbn
-         TLPbWv8hyKoVUJ2QgruH73JEmd/vk58BCK9HS01nhqM3K6EwofBh3IHiw0zFPFzWkB5p
-         Tzdae0AOE1cjdyanrCkgzWPdy8cVlIFV+R86afW8xXbY3y7gbjU7VdC9jaEMBCPWngMV
-         Khb48FYIUTKsysc2XuWSDAkxpzXgiGHVQwUPxPXLpMJcqi/D3xnRmMmWId5LeJWbPuOa
-         1CcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQezCVManAL5q7Vuo766BDkAVsuDCTZ41euArUQdz0DZlVgz1z7CpYh6afQ5WZ0uJfbZVjUHVNb0pY3VcZH7YdirrZflBur54fHwOK
-X-Gm-Message-State: AOJu0Yw1sh9PJPZmoXDi8J2W4Kg5FqKXyOTj2VTjgnM2JpFFdJHPgKPk
-	W37BoBfALEbUf2UiWlrzkAkVQ7TW1W5dnpR80NY09RWo2n6EUXXO9R59qE1cS8nV4fplHZM9d6p
-	C/uRO9KNChF+JdLYBhzzBmeIp0uIQsCQjDqnuVbktaD7x5RGBGdz1OIJqKAMsxQ==
-X-Received: by 2002:a05:600c:4928:b0:421:1f6f:3e15 with SMTP id 5b1f17b1804b1-421562e9506mr13100965e9.16.1717573632789;
-        Wed, 05 Jun 2024 00:47:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHpaCM44skKTGZ3djOclrWxKM7oM/OanykiAjTZmoCoWqjlod1zN2vRu0MXgPuT+hYNSuCkQ==
-X-Received: by 2002:a05:600c:4928:b0:421:1f6f:3e15 with SMTP id 5b1f17b1804b1-421562e9506mr13100695e9.16.1717573632337;
-        Wed, 05 Jun 2024 00:47:12 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:3100:19a8:d898:8e69:6aff? (p200300cbc706310019a8d8988e696aff.dip0.t-ipconnect.de. [2003:cb:c706:3100:19a8:d898:8e69:6aff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42158141104sm10487915e9.48.2024.06.05.00.47.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 00:47:11 -0700 (PDT)
-Message-ID: <8a614d01-191e-45d1-b6b6-c36ec0bd9e5a@redhat.com>
-Date: Wed, 5 Jun 2024 09:47:10 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sK/TvxYk"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 455768Mi030779;
+	Wed, 5 Jun 2024 07:49:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pp1;
+ bh=osj1gmjUJGCd9Px5Ix7W58M6PZiuhGojYTGdcscj2UM=;
+ b=sK/TvxYkr0mMeRjQpb5NlR3t7noAslZH0hkYd0Pcw8NfEz2oAz5O3q5hTdxAJQQnwNmX
+ jsHPoM29/p3MD5c/9wpquUxDRKoGPX5uG7BDJjtBoTnLm5VYd436L6arFOXcwJMDA9Ae
+ sDSrv9isxiYR/uxda+GPieQjkR3EXasF/AmmKq99hUsQWVzsZiqZ3rzPx2A8J6CLmyTO
+ WUqy6Rb9wSjw6fqasjY2H4IVsIvKvhGY2pw2JNRSViaOnubQh2nyrzrsGmRR3keoDtu5
+ fgvluAVpFQY3SzewGjgEl2Dy/KoQaytZgizolxWngX95pHzAtb+doCwBdTsoAhJT0wsc Og== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjjfm07cr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 07:49:42 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4557jkKR024702;
+	Wed, 5 Jun 2024 07:49:42 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yjjfm07cm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 07:49:42 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45575Ylu022840;
+	Wed, 5 Jun 2024 07:49:41 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ygg6mansf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Jun 2024 07:49:41 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4557nbWs3211914
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Jun 2024 07:49:40 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C74DD58052;
+	Wed,  5 Jun 2024 07:49:37 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1360158068;
+	Wed,  5 Jun 2024 07:49:36 +0000 (GMT)
+Received: from oc-fedora.boeblingen.de.ibm.com (unknown [9.152.212.216])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Jun 2024 07:49:35 +0000 (GMT)
+Message-ID: <8891a2fbc3b211ac4c3ab87ecf786214bd9b2a55.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 0/3] vfio/pci: s390: Fix issues preventing
+ VFIO_PCI_MMAP=y for s390 and enable it
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Gerald Schaefer
+ <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alex Williamson
+ <alex.williamson@redhat.com>,
+        Gerd Bayer <gbayer@linux.ibm.com>,
+        Matthew
+ Rosato <mjrosato@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Date: Wed, 05 Jun 2024 09:49:35 +0200
+In-Reply-To: <b816efd7dd3d5f6fead3433d8a800c7f4372a091.camel@linux.ibm.com>
+References: <20240529-vfio_pci_mmap-v3-0-cd217d019218@linux.ibm.com>
+	 <0a4622ce-3826-4b08-ab81-375887ab6a46@linux.ibm.com>
+	 <b816efd7dd3d5f6fead3433d8a800c7f4372a091.camel@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/10] mm/ksm: skip subpages of compound pages
-To: Alex Shi <seakeel@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- alexs@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, izik.eidus@ravellosystems.com,
- aarcange@redhat.com, chrisw@sous-sol.org, hughd@google.com
-References: <20240604042454.2012091-1-alexs@kernel.org>
- <20240604042454.2012091-3-alexs@kernel.org>
- <Zl_g7qmXAJDy4vKu@casper.infradead.org>
- <5bb3bbf6-6a22-449f-96f1-b9476357f284@gmail.com>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <5bb3bbf6-6a22-449f-96f1-b9476357f284@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _DaVfk06ESKHaR1KOTzz7tsByLTukEzK
+X-Proofpoint-ORIG-GUID: 6Q0PGbdLrdU6zW_cQLyUG0sJmT_bLCa2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-04_11,2024-06-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406050057
 
-On 05.06.24 08:14, Alex Shi wrote:
-> 
-> 
-> On 6/5/24 11:52 AM, Matthew Wilcox wrote:
->> On Tue, Jun 04, 2024 at 12:24:44PM +0800, alexs@kernel.org wrote:
->>> From: "Alex Shi (tencent)" <alexs@kernel.org>
->>>
->>> When a folio isn't fit for KSM, the subpages are unlikely to be good,
->>> So let's skip the rest page checking to save some actions.
->>
->> Why would you say that is true?  We have plenty of evidence that
->> userspace allocators can allocate large folios, then use only the first
->> few bytes, leaving many tail pages full of zeroes.
-> 
-> Um, that do need tail pages...
-> Is there some way to use more folio in ksm?
+On Tue, 2024-06-04 at 11:27 +0200, Niklas Schnelle wrote:
+> On Mon, 2024-06-03 at 17:50 +0200, Christian Borntraeger wrote:
+> > Am 29.05.24 um 13:36 schrieb Niklas Schnelle:
+> > > With the introduction of memory I/O (MIO) instructions enbaled in com=
+mit
+> > > 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
+> > > gained support for direct user-space access to mapped PCI resources.
+> > > Even without those however user-space can access mapped PCI resources
+> > > via the s390 specific MMIO syscalls. There is thus nothing fundamenta=
+lly
+> > > preventing s390 from supporting VFIO_PCI_MMAP allowing user-space dri=
+vers
+> > > to access PCI resources without going through the pread() interface.
+> > > To actually enable VFIO_PCI_MMAP a few issues need fixing however.
+> > >=20
+> > > Firstly the s390 MMIO syscalls do not cause a page fault when
+> > > follow_pte() fails due to the page not being present. This breaks
+> > > vfio-pci's mmap() handling which lazily maps on first access.
+> > >=20
+> > > Secondly on s390 there is a virtual PCI device called ISM which has
+> > > a few oddities. For one it claims to have a 256 TiB PCI BAR (not a ty=
+po)
+> > > which leads to any attempt to mmap() it fail with the following messa=
+ge:
+> > >=20
+> > >      vmap allocation for size 281474976714752 failed: use vmalloc=3D<=
+size> to increase size
+> > >=20
+> > > Even if one tried to map this BAR only partially the mapping would no=
+t
+> > > be usable on systems with MIO support enabled. So just block mapping
+> > > BARs which don't fit between IOREMAP_START and IOREMAP_END.
+> > >=20
+> > > Note:
+> > > For your convenience the code is also available in the tagged
+> > > b4/vfio_pci_mmap branch on my git.kernel.org site below:
+> > > https: //git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
+> >=20
+> >=20
+> > I guess its now mostly a question of who picks those patches? Alex?
+>=20
+> That matches my understanding as well.
+>=20
+> >=20
+> > Any patch suitable for stable?
+>=20
+> I'd almost say all but the last one may be candidates for stable. I
+> found it hard to pinpoint a specific commit they fix though, hence the
+> lack of Fixes tag. For the first one I'm actually not sure if e.g.
+> rdma-core users could also run into this problem when they get swapped
+> out as I'm not sure if the mapping is pinned there.
+>=20
 
-My take, and Willy can correct me if I am wrong:
-
-"struct page" is not going to away any time soon, but it might shrink at 
-some point.
-
-That is, we can use the "struct page" pointer to point at a page frame, 
-and use "struct folio" to lookup/manage the metadata.
-
-That is, use "struct page" when accessing the actual memory content 
-(checksum, testing for identical content), but use the folio part when 
-looking up metadata (folio_test_anon() etc). In the future we might want 
-to replace the "struct page" pointer by an index into the folio, but 
-that doesn't have to happen right now.
-
-For KSM, that would mean that you have a folio+page (late folio+index) 
-pair when possibly dealing with large folios, but you can use a folio 
-without a page when dealing with KSM folios, that are always small.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Was a bit unclear/wrong above. Obviously MMIO mappings can't be
+"swapped out" I should have said "are subject to page faults".
