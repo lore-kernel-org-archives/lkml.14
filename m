@@ -1,134 +1,115 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2FB1B29CF
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E240F198A17;
+	Wed,  5 Jun 2024 12:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717589757; cv=none; b=INoNDvDZmqbWMPkm/dAwDomCSNqMmZzKOiH9cgjrSJOPhw6HOH4afb7RAxti+L7PrsFtn8P1G2pn7BzsOGZuas3w8m3HqNXGGESYK7yG2XmpJOtDNJVsAUrMbNPMj2pLj68wWvih/b3y8lmnGLI3sADrArcny+bavks81fw0Gbo=
+	t=1717589802; cv=none; b=gN3w/zvnCO1zkHyLsz6Y1fpAlH2alqZ7ba0b0GUXWHXiHF65Btua3RkYTvQv1fJ8fjrHCgv+Xcn4pAiHn16bU2IZSRV0l1EyaMEzSS1IULCFu6IRAHIktLGoQWbMLb/yxzZEK6qkbC1dGrVV8srMKAT1jsXwbvXRXV8b7n8QCVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717589757; c=relaxed/simple;
-	bh=jTQnCjAYiOnyg83RQMSJJfcBlJdwMJJeulbs10TuFN0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=kB37lgirXrfC87J7nyspUe55yDzM5Xpzg6FTS8iUaD3cbmRSTydlRQC1LJfhlV6qkCaU2bvSiSTSw0AtWhqjv5VtCszdJO54+gUbzLfci4zLSEnDMzQkJlfAtFiJMO61UnjfXcpAOY/MHp3EBILgSdxDRX8ZILI46b7CPh4DhdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=CBitWUsR; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CBitWUsR"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-70260814b2dso757136b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1717589755; x=1718194555; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s1s067gNcLroY85Io7X9j2HhTsy4/JNlR/TnSjjDyVA=;
-        b=CBitWUsR33hB9HOopjBrDaBMynnxWxj9jsJptpQQEiMRYqcDTNOrzWqgU12T6nM/if
-         Js42uzlCtjQ54l343H/Qt6ze3cksIGBBpN3P85Eu9VQg8F3J8rkPF7wr3jdciHklWuN7
-         LpqsnFHlIKWARFzMcHv95e3qd5iT1U88MdTD19Noi6zqiitE6BJY+DzB8FVAQL17neoe
-         FHIV14Orizcq46ErCe3sEfnfdJwVLMbYHHHvcF/ZI684TX7hIvmosQNFCuTq0JQCKSPl
-         gu6lrE2kQfKaf0IHv1QfA94jGI9yeJQQSKzFsOj87i1oolHhpvndPscP647SKDNs4ol1
-         qcwA==
+	s=arc-20240116; t=1717589802; c=relaxed/simple;
+	bh=U0agN75JgNl8mVGLegBvB584SvOkbcwV93Nhzk4E5Dg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E3eYHm62aIeonAOyvDLpbD8Pz5cDyyjAkLd3Ih3lXFA/D6Uduc4fJ392SGCocwRsf4W9f1K4LkSj3r4uz/9dNbQTPOUihsy1WxNdE1VL5pxJjCmiV66cRh80yt9WkE/DqJ98Tr+J+CRPGroNLmxo7ANy351QoiCIuHb+xkn3qaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-62a0c011d53so66901217b3.0;
+        Wed, 05 Jun 2024 05:16:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717589755; x=1718194555;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1s067gNcLroY85Io7X9j2HhTsy4/JNlR/TnSjjDyVA=;
-        b=d9QmCMOWPXcFRjWYaju9Ay9oAVem+l0E9Rs37rl8NO+eRiZ6EpjzjVBEeHpHnBNKiz
-         W2OTQdOJOiu3d4Ix90WYLVsy86B3jVXtR9hTy43ZcEfjEd+wq2TFT1O6/Aed/KcewKCf
-         j3vmQhR1hrg7KxQIVlKwKRFFIYHYyVH76gsOtFQn8CWC6+HvHOD7mTdoz/4g9nnMKJNU
-         uj1spZqURYQiewyT1FKSuPPSmV6xvdL6AUfNy7+k5WmLiJk6yvncQ8ZFLKRDrn0A3if2
-         bmxvEaDDf5Yeyg5XG5V6vRKnBOpJUyKv4D8nHZ3aH5NcYC2CLrkDdRLC6wLBaRmxGbvm
-         4OfA==
-X-Gm-Message-State: AOJu0YxmuI633b5FCQutXWQ9vy2aaavjksSW5djQSTkYtPk3Wwgx/cJV
-	Z6qfcxCJ5H2njKf2OAFjpUw2YZCYPLyzo3En+1tidVfQS2lw/fchrVfb2yb3g8ST67OluR/jFhX
-	j3rfbWyyOxZFyrwA0WMZGQCAo1loy8qKcWq8R8XFoaIKFYXX2r+zqwerDu40Ld+y3XMo4lz51EB
-	elYzMGFI68sDNcrBhng25P+Zyfs7Wo4SeQX1OT40pDQG0InTq3QQ26hQ==
-X-Google-Smtp-Source: AGHT+IE2uyoTxe3pUNkQoaQt0ajX+GBn9F8zoOHdbUYCJhav/6GYlnkgU9F3LAFV0i5BxmNjeJ1V1Q==
-X-Received: by 2002:a05:6a00:6082:b0:702:5514:4cb8 with SMTP id d2e1a72fcca58-7027fba0d23mr6188351b3a.4.1717589754693;
-        Wed, 05 Jun 2024 05:15:54 -0700 (PDT)
-Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703ee672fb3sm885379b3a.216.2024.06.05.05.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 05:15:54 -0700 (PDT)
-From: Yong-Xuan Wang <yongxuan.wang@sifive.com>
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org
-Cc: apatel@ventanamicro.com,
-	alex@ghiti.fr,
-	ajones@ventanamicro.com,
-	greentime.hu@sifive.com,
-	vincent.chen@sifive.com,
-	Yong-Xuan Wang <yongxuan.wang@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v5 4/4] KVM: riscv: selftests: Add Svade and Svadu Extension to get-reg-list test
-Date: Wed,  5 Jun 2024 20:15:10 +0800
-Message-Id: <20240605121512.32083-5-yongxuan.wang@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240605121512.32083-1-yongxuan.wang@sifive.com>
-References: <20240605121512.32083-1-yongxuan.wang@sifive.com>
+        d=1e100.net; s=20230601; t=1717589798; x=1718194598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jNnNjMa9gaKBRLMlZIPM5UJYAylX5W6oIYoAGFp4mPs=;
+        b=crM0lnxXMXBjgrvsvPnXtyxHOp4xeZEf6A6bNGUPQdZxoESlyww3Df7UsZpTsX+d1n
+         EnMeeuQDwUJDAedKiAdhVGIITl1qYRNSxalkIpkJwKIc1WKTvuHmXLR9mTHkfvr7KDjz
+         V6pBDI6lVCvfpw6rv9x1mltKFI0Uq5o3uaLFJwBbmTzyK2Xh+R7wqZJui4ejfulPM5HC
+         x1LUGLHHit5kVez1of7zsjEeoh188wbm4nkJoc2xhjR7dshm2bxMXD79Ru2cyxfIRInK
+         muemaTgIm0GO//Z3QitunS1R41XiW4BU7Jk4dWrod6CSglGjSk/sfcL90qSdTPgE05mh
+         yGfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa0hFVFj2/69GHwFmEg4AKq+t1qK0qjUba7leKuERWD9RJ6SVvgMCDsW+GZnoLynsj6xJn1Wwkgb/V5HK59O+Gj72Z07duDHinaK8YlfjJwfjUlz3PWClszrJ6RhSy9jsJHXPlMNV7Wb2lAJW5t7MGaiJhMCc6mEEiz0RPyFk/T+U/JxSetfN7u5jVqoWBAH7xVc4SVPj+vGmBmYIp1Pb/HncAUYjWEw==
+X-Gm-Message-State: AOJu0Yz/iOOfNgMRNUVDabNN0+knrk3hqwtPpFFNSnAshWy6KQjIuaxa
+	P+5RTwDV+PGMQl1d/SIMOScrcNhdi2o/wOMqLLQN4GSM1myN3nFZJNhRk63L
+X-Google-Smtp-Source: AGHT+IHaSYkWjKvfeTsbhCk1pjzu703gDEeGPVkBxA/iHR3so5alPvKoBfehE+Crm4EnTUzo7iD7vQ==
+X-Received: by 2002:a81:ce0a:0:b0:61e:a3b:e473 with SMTP id 00721157ae682-62cbb4aa7c1mr27266217b3.7.1717589798016;
+        Wed, 05 Jun 2024 05:16:38 -0700 (PDT)
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-62c765b7ec1sm22065247b3.10.2024.06.05.05.16.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Jun 2024 05:16:37 -0700 (PDT)
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-df771b6cc9cso6730887276.3;
+        Wed, 05 Jun 2024 05:16:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWYO9BjJDumGzqV7FF4MUMIgAWRLYSJrvkJlH2xjNs2HVHjVjkDFeU37hPMVHcjU24TT1M4RpmsYUV/DUtcwo/a67UEgAvcHnHzZpzO2D7IONEezWZqaViEV7mhepiVUloVMYS/rrvZdYQIJIgTC6pYPivPn2a0eWcCnwYjYLe34DYSvdl0BBnOxGykfbtMQXQqX+0JzFFYI3r+xedO5wlKPNEvFhSK+g==
+X-Received: by 2002:a25:d683:0:b0:df7:83fc:639 with SMTP id
+ 3f1490d57ef6-dfacac56c3dmr2669884276.27.1717589797462; Wed, 05 Jun 2024
+ 05:16:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240530173857.164073-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240530173857.164073-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240530173857.164073-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Jun 2024 14:16:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUT4pfj7K1LorLc_g3vS4+3VV++TdympCxFmKg0dPoXbw@mail.gmail.com>
+Message-ID: <CAMuHMdUT4pfj7K1LorLc_g3vS4+3VV++TdympCxFmKg0dPoXbw@mail.gmail.com>
+Subject: Re: [PATCH v3 09/15] pinctrl: renesas: pinctrl-rzg2l: Add function
+ pointers for reading/writing OEN register
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Paul Barker <paul.barker.ct@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the get-reg-list test to test the Svade and Svadu Extensions are
-available for guest OS.
+On Thu, May 30, 2024 at 7:42=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch introduces function pointers, oen_read() and oen_write(), in t=
+he
+> struct rzg2l_pinctrl_data to facilitate reading and writing to the PFC_OE=
+N
+> register. On the RZ/V2H(P) SoC, unlocking the PWPR.REGWE_B bit before
+> writing to the PFC_OEN register is necessary, and the PFC_OEN register ha=
+s
+> more bits compared to the RZ/G2L family. To handle these differences
+> between RZ/G2L and RZ/V2H(P) and to reuse the existing code for RZ/V2H(P)=
+,
+> these function pointers are introduced.
+>
+> Additionally, this patch populates these function pointers with appropria=
+te
+> data for existing SoCs.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3
+> - Renamed read_oen->oen_read
+> - Renamed write_oen->oen_write
+> - Updated commit message
 
-Signed-off-by: Yong-Xuan Wang <yongxuan.wang@sifive.com>
----
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index 222198dd6d04..1d32351ad55e 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -45,6 +45,8 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SSAIA:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SSCOFPMF:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SSTC:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SVADE:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SVADU:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SVINVAL:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SVNAPOT:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_SVPBMT:
-@@ -411,6 +413,8 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(SSAIA),
- 		KVM_ISA_EXT_ARR(SSCOFPMF),
- 		KVM_ISA_EXT_ARR(SSTC),
-+		KVM_ISA_EXT_ARR(SVADE),
-+		KVM_ISA_EXT_ARR(SVADU),
- 		KVM_ISA_EXT_ARR(SVINVAL),
- 		KVM_ISA_EXT_ARR(SVNAPOT),
- 		KVM_ISA_EXT_ARR(SVPBMT),
-@@ -935,6 +939,8 @@ KVM_ISA_EXT_SIMPLE_CONFIG(h, H);
- KVM_ISA_EXT_SUBLIST_CONFIG(smstateen, SMSTATEEN);
- KVM_ISA_EXT_SIMPLE_CONFIG(sscofpmf, SSCOFPMF);
- KVM_ISA_EXT_SIMPLE_CONFIG(sstc, SSTC);
-+KVM_ISA_EXT_SIMPLE_CONFIG(svade, SVADE);
-+KVM_ISA_EXT_SIMPLE_CONFIG(svadu, SVADU);
- KVM_ISA_EXT_SIMPLE_CONFIG(svinval, SVINVAL);
- KVM_ISA_EXT_SIMPLE_CONFIG(svnapot, SVNAPOT);
- KVM_ISA_EXT_SIMPLE_CONFIG(svpbmt, SVPBMT);
-@@ -991,6 +997,8 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_smstateen,
- 	&config_sscofpmf,
- 	&config_sstc,
-+	&config_svade,
-+	&config_svadu,
- 	&config_svinval,
- 	&config_svnapot,
- 	&config_svpbmt,
--- 
-2.17.1
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
