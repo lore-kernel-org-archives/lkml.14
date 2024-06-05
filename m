@@ -1,109 +1,167 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F98B1755A;
-	Wed,  5 Jun 2024 14:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE8A6FB0;
+	Wed,  5 Jun 2024 14:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717596640; cv=none; b=QC0gzkSzvT3jdJVwcjSs3tqU6TijRPTtw2EL01qme1L5ahJE3y2rfjQ8gqti4JatLd1Oqwj81CLDioe2eVGbifFm8unOjSb2KrfbnKgIz8z1nSJtDWzmIeibEyYZiUMRidXzsPsz9eBF+FxMCqTth91UXnQkHUXp+/0pp8vnWTE=
+	t=1717596777; cv=none; b=V1jT3HnwDJ50oyh9P3myghYs+Vy7mY0GMBjVwujBQyP//TJF/IxzhYIT0BsikKvym3Pb/PNk9t3TeFQpCQPIWehBb+q9miKLGvbWmYb9aRHxofMujN1/pGWbsBTdD9g5BDLgp3VbkR1RTLFiqhrFXA/6k49rOWnW9/n6N0Aden0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717596640; c=relaxed/simple;
-	bh=DNMwsQB8F98x6tqx/Sd3jfGF8X/pT+TnKEfF4Ph/3Go=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hc6s+R6fstAmCLEdcK7wLdm0vSTEihkXp4zYxCHWXk6Rz99NXVJQvOvYsUAvKg5lzFcTXmnRTi4fATgYwEjObFfaT0MEoMEiLihbA6Bus4X2ID4761Lcz0H/A4G5auESsbgqvt5aWR7A6S55xYnJ02h0d/6ji3XQ/mnQAb+qo4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IpCHjkdt; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717596777; c=relaxed/simple;
+	bh=ozvkOGgUaxgxta5ytOJ2UVPWZSX57s6TLs8ldu0HwZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p+keQyTm2+TYerIlJK9WvtpawBYQNHkw4lSBWbsO/fDy5o5rl0niOwrAP1egzJLDiTqa50ynt/z9jyacoFdDXO7hXRd5pxvOnNdrO29F1kuuSfPLX05mJQTz3sY/ls/YCEBD3zlCUQNCymldbviLkskEhYEUvfmC7Zx8tG3RKC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrnsKbt+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IpCHjkdt"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455B1Mpf010904;
-	Wed, 5 Jun 2024 14:10:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	nIVqUesmc+zClgQPv4Z85quMTqlyKMrwi1D+BMYd2k0=; b=IpCHjkdtGZzK7XRe
-	X44QOQr7tlRnKw0YvvMvAhO+IdB9zg9paiKj4TzMi5GMcVlZnR4XtbYJp01/fLws
-	QdZ1PiJsBYPVjhoCY4QFg/KChW3ZZDn7l0iMmSJHghtL4gNCL3rJ9E1i/jb57dZi
-	iheedfBXOzdupvcK1wCBAAECwG1vi97BQI4A6mSgUcFgXlqTMxpJQ24CZYX74ytt
-	ZOgY9l4Zkx1f31OasVDE2XARa2LnREEEX+w9WsCKBzdECNJOXVxnpU1IS9bpVy9U
-	sPfuQrwH6mcuIT10WPgBu2kjpPbBPEExrT7CfKaINU4Yn0mmDnzeyXpkcEuCJs5h
-	JgjO1Q==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yjhw0s71h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 14:10:17 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455EAGrV015085
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Jun 2024 14:10:16 GMT
-Received: from [10.48.241.109] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 5 Jun 2024
- 07:10:15 -0700
-Message-ID: <1d9e1530-be63-4374-b952-e12b15cee9d3@quicinc.com>
-Date: Wed, 5 Jun 2024 07:10:14 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrnsKbt+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A920C2BD11;
+	Wed,  5 Jun 2024 14:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717596777;
+	bh=ozvkOGgUaxgxta5ytOJ2UVPWZSX57s6TLs8ldu0HwZQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UrnsKbt+4SxFIHs9D7s0CLZz9RiwVy9uaPxcmHYlp8AO7wBrkAnAsiSWkBqnR8rAr
+	 ZFHnnMzUWLEpGNnoqLbWVMHsZwOE2VMqe8ujTBVCDjFCbuCE+HeL45a6qALbWxQd2U
+	 CZ1yVJ4i9TkWCZlKp3z/5Op32xwZdUR0tYhxAJqPw5WdlyPTl9E4P2dX9VC1gss8cc
+	 gk3xXKvbR4FU3Khm8+yZmSsX1rHlVVLCBk3gKH1O+ZiV3DsDhhRnq5iTDcxzafjKb8
+	 d7/JDIa5zfAKyCvrM1fgwzje/2comJeg91ZR65SEOFYSLljurnqludiVTkQQf5LaLq
+	 HsMx4QCGUDvEw==
+Message-ID: <0f85551f-dd67-4d88-abc2-cdf80293a604@kernel.org>
+Date: Wed, 5 Jun 2024 16:12:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] RAS/AMD/ATL: add missing MODULE_DESCRIPTION() macro
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>
-CC: Yazen Ghannam <Yazen.Ghannam@amd.com>, Tony Luck <tony.luck@intel.com>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20240604-md-ras-amd-atl-v1-1-d4eb3cf3abe4@quicinc.com>
- <20240605094051.GDZmAyo1-j_uBri_YO@fat_crate.local>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240605094051.GDZmAyo1-j_uBri_YO@fat_crate.local>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net 2/3] selftests: net: lib: avoid error removing empty
+ netns name
+Content-Language: en-GB
+To: Petr Machata <petrm@nvidia.com>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Geliang Tang <geliang@kernel.org>
+References: <20240605-upstream-net-20240605-selftests-net-lib-fixes-v1-0-b3afadd368c9@kernel.org>
+ <20240605-upstream-net-20240605-selftests-net-lib-fixes-v1-2-b3afadd368c9@kernel.org>
+ <877cf38yg5.fsf@nvidia.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <877cf38yg5.fsf@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: X5EwgURkzbmpuGtjXlEQ4Plh2BvvSXO3
-X-Proofpoint-GUID: X5EwgURkzbmpuGtjXlEQ4Plh2BvvSXO3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406050107
 
-On 6/5/2024 2:40 AM, Borislav Petkov wrote:
-> Btw, I'd suggest instead of sending those piecemeal-wise, one per
-> driver, just group them all by subsystem and whatnot so that each
-> maintainer can pick it up and this new thing modpost decided to complain
-> about, can be taken care of without noodling through each driver
-> one-by-one.
+Hi Petr,
+
+Thank you for the review!
+
+On 05/06/2024 12:38, Petr Machata wrote:
 > 
-> Better yet: do a coccinelle patch and convert the whole tree.
+> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> writes:
+> 
+>> If there is an error to create the first netns with 'setup_ns()',
+>> 'cleanup_ns()' will be called with an empty string as first parameter.
+>>
+>> The consequences is that 'cleanup_ns()' will try to delete an invalid
+>> netns, and wait 20 seconds if the netns list is empty.
+>>
+>> Instead of just checking if the name is not empty, convert the string
+>> separated by spaces to an array. Manipulating the array is cleaner, and
+>> calling 'cleanup_ns()' with an empty array will be a no-op.
+>>
+>> Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
+>> Cc: stable@vger.kernel.org
+>> Acked-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/lib.sh | 13 +++++++------
+>>  1 file changed, 7 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
+>> index a422e10d3d3a..e2f51102d7e1 100644
+>> --- a/tools/testing/selftests/net/lib.sh
+>> +++ b/tools/testing/selftests/net/lib.sh
+>> @@ -15,7 +15,7 @@ ksft_xfail=2
+>>  ksft_skip=4
+>>  
+>>  # namespace list created by setup_ns
+>> -NS_LIST=""
+>> +NS_LIST=()
+>>  
+>>  ##############################################################################
+>>  # Helpers
+>> @@ -137,6 +137,7 @@ cleanup_ns()
+>>  	fi
+>>  
+>>  	for ns in "$@"; do
+>> +		[ -z "${ns}" ] && continue
+> 
+> I think this is now irrelevant though? Now cleanup_ns() will be called
+> with no arguments for an empty NS list, so the loop does not even kick in.
 
-I actually did use a simple script to do a conversion locally, but the hard
-part is determining what text to use for the description. So my local
-conversion just added:
-MODULE_DESCRIPTION("TBD");
+If you don't mind, I think it is "safer" to keep it: some selftests are
+using 'cleanup_ns()' directly, not via 'cleanup_all_ns()', e.g.
+netns-name.sh, cmsg-*.sh, fib-*.sh, etc. which can call it with the
+variables not set if 'setup_ns' failed during the init phase.
 
-Then, on a per-directory basis, I look at documentation in the .c files and
-the Kconfig to replace the TBD with an appropriate description. And I then
-create patches for that directory based upon MAINTAINERS entries.
+For the moment, all these selftests are calling 'cleanup_ns()' with
+parameters added without double quotes: so it is fine. Until someone
+changes that to please shellcheck, like we did on our side with MPTCP
+selftests. So this line will be useful soon when we will publish the
+rest of our patches to use 'lib.sh' [1] :)
 
-This was the only file in drivers/ras that had an issue.
+Link:
+https://lore.kernel.org/mptcp/5f4615c3-0621-43c5-ad25-55747a4350ce@kernel.org/T/
+[1]
 
-In drivers/hid there were a large number of issues.
-Some of the files had specific MAINTAINERS entries so I sent them separately:
-https://lore.kernel.org/all/20240604-md-hid-letsketch-v1-1-ff38ae7b4cb0@quicinc.com/
-https://lore.kernel.org/all/20240604-md-hid-lg-g15-v1-1-265b094db089@quicinc.com/
-https://lore.kernel.org/all/20240604-md-hid-logitech-dj-v1-1-560f6b3cb54b@quicinc.com/
-https://lore.kernel.org/all/20240603-md-hid-logitech-hidpp-v1-1-060f06e4529f@quicinc.com/
-
-I then sent a large patch for all of the remaining drivers/hid patches:
-https://lore.kernel.org/all/20240604-md-hid-misc-v1-1-4f9560796f3c@quicinc.com/
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
