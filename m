@@ -1,134 +1,128 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1997918FC6F
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 10:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8944719006E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 10:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717582454; cv=none; b=r3Lr0esCbkKl23hcp+gH+lnlgnxOvFbXL4QFR0XYC7SemsBZ5k9WyiBtSkAOrPds+mSRr9t8srk7/mbCQx9PPcqwof804yYMS0tzaDNAxgaMxtQ+NUpG/RJSX9C2zbOrvg/bfaVIbeB8mLFQNZkPfssLdKZzyN42AFGFY5Gcv+s=
+	t=1717582510; cv=none; b=EIxDVbTjPcVdnLT1kVdTEEGPeW/cZJdBH5CB/+5RvLuz21YPIfbFjqKeCabtpeAiSaFsQV9vHr2DeFJeS6QOPaGpQmBe+olOXOkCITsmy93HeL0YRyLqVINeywAmTGO/wJeFGtKijLz4PDywzdvLgSrN+9619KOdBAwq+cOfVvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717582454; c=relaxed/simple;
-	bh=NND9Bq19l6tIThaJCmjP0foh63weKcb1C19vc9ckFao=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K5afU8sKuWA7mCU1QkqMlXIwpS/kXOxx/nR0MYefYjeyZp/ApH44bqgwDk5T9QV6HacvC7w6GdhVpeKxSkX0eZuD8xyBZ12JO0qGyFITmVsRhWezgMYaD/J5/hkDnxD+DneN8GeHtH/pXK7nutCdsM9/mmqQUvVAvUEjcqBo3JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VvMgT6qG2z9v7JM
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:32:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 286811404F5
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:54:33 +0800 (CST)
-Received: from [10.81.200.103] (unknown [10.81.200.103])
-	by APP2 (Coremail) with SMTP id GxC2BwC3oyfKNWBmNTWTCQ--.2480S2;
-	Wed, 05 Jun 2024 10:54:32 +0100 (CET)
-Message-ID: <879ee1b3-46eb-40c8-9b2a-3f215e527f53@huaweicloud.com>
-Date: Wed, 5 Jun 2024 11:54:13 +0200
+	s=arc-20240116; t=1717582510; c=relaxed/simple;
+	bh=5FYlycc80OiaHBAK250WvdCEOOgG9oY85Bi0+i+GUhU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SxlzqzFNaSy0LkVfkZwUzpIftxZfcgn/Bm6ZRvjLX2C0EGWOqBllVH9IQ/U9noobwh8Bx0qOjCNSlpPmWVIAKwVL9lKnfvsTHOmrkzHrVwzjcLyhhFMOrZyHW5uSc0iO3V4lpCDyFlFfa0Y6z6RgPUJfq4HDf6dIihjTKoDHRwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pxVqLWi/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RWOe6OyL; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pxVqLWi/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RWOe6OyL"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1717582500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0AGW4NPcPgZ+kllaz1iPcGGi2RTc/mz6X+/BfY/cPz0=;
+	b=pxVqLWi/Yb7a/LrLOJggqlpcYlf6UrMtTLNLpDVqZg0QlLi+CTc0XfTb+/poAi/GcXDmkX
+	qvlJ3Yl5BQKDGI32Nd8o+YhOMGQ/XndHUKh+d2DYC5Pu2GwfbzVmYGTZ1WH3hyB7QB0iAY
+	S8nsQLC/dLKtYjn8fM5RsbSdkNV+bi+j53TIy4pom4FcmR5s+KU8rTKPzZRMijtjWMDru1
+	NmrFibIHB/mHOx/FWvEn/5kt43i0ysP+D3XfrkHsOfVA1thz/y5Ev/ksq+FgO+SeFb3gXa
+	cSSbbAxDmekJ2wvP/X8M96gzV828929XUtrHOrSKMh+1krLdObJGggLC+m5Vog==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1717582500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0AGW4NPcPgZ+kllaz1iPcGGi2RTc/mz6X+/BfY/cPz0=;
+	b=RWOe6OyLnPQkqmEDbUsgM6r2SGakTwisP2BQzYobq5K7UJMFKqbw24F9h3+s5zRwnAWpvp
+	b/FKYIujy4Of3oAA==
+To: Phil Chang <phil.chang@mediatek.com>, phil.chang@mediatek.com
+Cc: frederic@kernel.org, tglx@linutronix.de, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, jy.ho@mediatek.com,
+ alix.wu@mediatk.com
+Subject: Re: [PATCH] hrtimer: check hrtimer with a NULL function
+In-Reply-To: <20240605084149.6420-1-phil.chang@mediatek.com>
+References: <20240605084149.6420-1-phil.chang@mediatek.com>
+Date: Wed, 05 Jun 2024 12:15:00 +0200
+Message-ID: <87plsvvgpn.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 2/4] tools/memory-model: Define applicable tags on
- operation in tools/...
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: paulmck@kernel.org, stern@rowland.harvard.edu, parri.andrea@gmail.com,
- will@kernel.org, peterz@infradead.org, npiggin@gmail.com,
- dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
- akiyks@gmail.com, dlustig@nvidia.com, joel@joelfernandes.org,
- urezki@gmail.com, quic_neeraju@quicinc.com, frederic@kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240604152922.495908-1-jonas.oberhauser@huaweicloud.com>
- <20240604160409.498190-1-jonas.oberhauser@huaweicloud.com>
- <Zl_oxj9-ypX0U2HZ@Boquns-Mac-mini.home>
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-In-Reply-To: <Zl_oxj9-ypX0U2HZ@Boquns-Mac-mini.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:GxC2BwC3oyfKNWBmNTWTCQ--.2480S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr17urWxtFyxArWrtryftFb_yoW8tF1Dpr
-	ykXayrKr9rtr1Sk397Xw1ruFW5Wa1rGFy5Jr9ag3s5Zryqgr1Iya1DWanxWF93JrWfJa1j
-	vw4jqFyDGa1UArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Type: text/plain
+
+Hi,
+
+Phil Chang <phil.chang@mediatek.com> writes:
+
+> simillar with timers, check for timer->function == NULL.
+> If the pointer is NULL, discard the request silently.
+
+Can you please explain, why this change is required?
+
+The statement "similar to timers" is not a valid explaination as timer
+list timers and hrtimers are two different things. The function pointer
+for timer list timers is explicitly set to NULL in shutdown path to
+prevent unwanted rearming of the timer. For hrtimers there is no
+shutdown function implemented and function is never set to NULL by
+hrtimer code.
+
+> Signed-off-by: Phil Chang <phil.chang@mediatek.com>
+> ---
+>  kernel/time/hrtimer.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index 492c14aac642..72d6e7bc9cd9 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -1297,9 +1297,13 @@ void hrtimer_start_range_ns(struct hrtimer *timer, ktime_t tim,
+>  
+>  	base = lock_hrtimer_base(timer, &flags);
+>  
+> +	if (!timer->function)
+> +		goto out;
+
+When this happens, user of hrtimers do not follow the semantics of
+hrtimers which means this is a bug.
+
+> +
+>  	if (__hrtimer_start_range_ns(timer, tim, delta_ns, mode, base))
+>  		hrtimer_reprogram(timer, true);
+>  
+> +out:
+>  	unlock_hrtimer_base(timer, &flags);
+>  }
+>  EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
+> @@ -1667,6 +1671,11 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
+>  	__remove_hrtimer(timer, base, HRTIMER_STATE_INACTIVE, 0);
+>  	fn = timer->function;
+>  
+> +	if (WARN_ON_ONCE(!fn)) {
+> +		/* Should never happen. */
+
+...same as above...
+
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * Clear the 'is relative' flag for the TIME_LOW_RES case. If the
+>  	 * timer is restarted with a period then it becomes an absolute
+> @@ -1710,6 +1719,7 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
+>  	 * hrtimer_active() cannot observe base->running.timer == NULL &&
+>  	 * timer->state == INACTIVE.
+>  	 */
+> +out:
+>  	raw_write_seqcount_barrier(&base->seq);
+>  
+>  	WARN_ON_ONCE(base->running != timer);
 
 
+Thanks,
 
-Am 6/5/2024 um 6:25 AM schrieb Boqun Feng:
-> On Tue, Jun 04, 2024 at 06:04:09PM +0200, Jonas Oberhauser wrote:
->> Herd7 transforms reads, writes, and read-modify-writes by eliminating
->> 'acquire tags from writes, 'release tags from reads, and 'acquire,
->> 'release, and 'mb tags from failed read-modify-writes. We emulate this
->> behavior by redefining Acquire, Release, and Mb sets in linux-kernel.bell
->> to explicitly exclude those combinations.
->>
->> Herd7 furthermore adds 'noreturn tag to certain reads. Currently herd7
->> does not allow specifying the 'noreturn tag manually, but such manual
->> declaration (e.g., through a syntax __atomic_op{noreturn}) would add
->> invalid 'noreturn tags to writes; in preparation, we already also exclude
->> this combination.
->>
->> Signed-off-by: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
->> ---
->>   tools/memory-model/linux-kernel.bell | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/tools/memory-model/linux-kernel.bell b/tools/memory-model/linux-kernel.bell
->> index dba6b5b6dee0..2f49993644ed 100644
->> --- a/tools/memory-model/linux-kernel.bell
->> +++ b/tools/memory-model/linux-kernel.bell
->> @@ -36,6 +36,13 @@ enum Barriers = 'wmb (*smp_wmb*) ||
->>   		'after-srcu-read-unlock (*smp_mb__after_srcu_read_unlock*)
->>   instructions F[Barriers]
->>   
->> +(* Remove impossible tags, such as Acquire on a store or failed RMW *)
-> 
-> This comment needs a bit help, "failed RMW"s still exist, they just
-> don't provide ordering. How about:
-
-
-Oh, I see how the comment can be misread. A smaller fix would be
-
-"Acquire on a store or on a failed RMW"
-
-but I actually like your longer explanation better, so I think I'll go 
-with that.
-
-> 
-> (*
->   * Filter out syntactic annotations that don't provide the corresponding
->   * semantic ordering, such as Acquire on a store or Mb on a failed RMW.
->   *)
-> 
-> ?
-> 
-> Regards,
-> Boqun
-> 
->> +let FailedRMW = RMW \ (domain(rmw) | range(rmw))
->> +let Acquire = Acquire \ W \ FailedRMW
->> +let Release = Release \ R \ FailedRMW
->> +let Mb = Mb \ FailedRMW
->> +let Noreturn = Noreturn \ W
->> +
->>   (* SRCU *)
->>   enum SRCU = 'srcu-lock || 'srcu-unlock || 'sync-srcu
->>   instructions SRCU[SRCU]
->> -- 
->> 2.34.1
->>
-
+	Anna-Maria
