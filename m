@@ -1,193 +1,186 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA93313D262;
-	Wed,  5 Jun 2024 20:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6354C15ECCE
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 20:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717619679; cv=none; b=bMjHrFuiNQwXxyxukTAha0fTEIWtesg58BofBDrHJBXsh/S6gXpq/WyPJELX/Zg0DXDcPwTG3k1417aNd0J4D/9BoOnAtot88sSxBm9SNi6bWHXVj8yYBmzqqUgTC2f0wrxtbx7vA/jRlX+f17+U26ybjRi9esUHBma8q2qt/V8=
+	t=1717619721; cv=none; b=dHMTy94YZlgImAV+afQTXO0olhNVEDwlKKcVbWTNOjkstxJTRFJDW/IyAdx9XJus7KXiIsxg2UpLqCpr9ptLm429Q556gnTLTpQZkhe0ycQT4Os+WPg+0aRMMF9xdiMhmz3D3n9H8X5WKHlT247qBXsSguX354OQT9CQ0kn8J1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717619679; c=relaxed/simple;
-	bh=uKobMdssiBNVRXYbdWAN28ycziehwxzkQTvSknhr/oQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Fllq04NI5YQlxYO8H4QwbNc+3FZwLCt3UZZFI2NfGwChwf0/DBW5gP5R1oW2Upxk31Plds1L3LUCsswNgeKnlqwEZEVT//hMWA5EffjX0oXzv+dWHLnj23zMmgra1BmhCrONy/XQNYrRI7xbcfoMY9GdzVLsHggRm0xm/MIcxlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XBWdSVki; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1717619721; c=relaxed/simple;
+	bh=A8Z51WtEhjIdfd88NhvVep8DkTcf2oWydKIzJrAqSCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kzVOVXWE0hFVyfIZBGuEZ+e/VGmiIFDfl/+FdrA+Fi1QmA34urtPTBUf9/b6Tz1oJ/oKB3DZyQG99Ri+NcnzQCxTmzKeDDM5YFI4LUPtH9z9IerFKgVbxWNw9TxTkdbqK1oH1s8U0bRqKd8lgmTAdb2h7C7NTDz7KglRHws+Lb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=B2+wIEQ7; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XBWdSVki"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1717619674; x=1718224474; i=markus.elfring@web.de;
-	bh=K4LgTxaCEsSwrK2DaS4xTbm0mo17tA8sa1rtdFZaZSA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=XBWdSVkiAoYN9XG88XnQ0//cxLVvH4hNEIOSI7Y2jlOhIXWYLxA0U52cFzsm4R5U
-	 wqlymDVQIyFbxMbXMrrye3/kgkR+/hqCJOY5TGn2jwpX1p9bOXf9ZQeTfSRSF8maI
-	 9QEITUqVaN8LZvYr/oVeKtdmqMRkWMPdzuWZ4o7c1qakpHL3kEdFrRkRKcm9wEwrh
-	 vL++17BU5PFf9hMvYta16wctaY0OhZn4XiI0atfPWiS70hZ5qt5mm0gZdZS1hKKO3
-	 gaVnan8DrRAYcECB9JP06jpMV2TDrfooWMcO5/h/u643gMLznHlgxPRoB7yTmA0tR
-	 /9I6fzDNyppxCc+w/A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mv3US-1sWLTa1tWi-011U9e; Wed, 05
- Jun 2024 22:20:14 +0200
-Message-ID: <f2912116-93f2-437d-bb15-9b7d41ccda19@web.de>
-Date: Wed, 5 Jun 2024 22:20:10 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="B2+wIEQ7"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d1bc6e5f01so107711b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 13:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1717619718; x=1718224518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1vJjuSTFz/Nsj8mn2a+s4dFUk/0rqc2v8wfC3wlpVhk=;
+        b=B2+wIEQ7TlFGM5ZSRr5bkpq2V7KHSbEh3K28Sk8RdyTGkHMf/5mVwMYLLtTwjbi4ld
+         EDX1HacPMLvlyEIUz6Y1vaEiHr0cOCdBWNVveyNG1D0iLhdQ/+iEfbc8kfNcYa2g554x
+         iTVGVtYVeLu+xENyE8iRCfNByZ8Z7HAu7h9OOuyRL8u2QtFH/lCia9ApoYTINtfpghtP
+         Ays9yBgvXwbuRi/LQD9Al9UexrQZlzaKzEUsxtHleZyjaYYzOZQvPHv52a5LpBE5u4BY
+         ZJoN6iHZP/zwhqalyDFbCFSeAyFmHFp1eJvMI57UsdACh3eoaxik3sYOuKiePp6PiRTs
+         OC5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717619718; x=1718224518;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1vJjuSTFz/Nsj8mn2a+s4dFUk/0rqc2v8wfC3wlpVhk=;
+        b=GRnqW2M8GKAkbA5+W1qynV+cP518J3uVV4T+U0JMNgo2a5P3n2QPn1SPXKqCHR1f1b
+         2HsFOnlwdt0dWkAhg/M55W5ZshSUfd4vLsEyQ2oK1IGzlj++l5jtXXliYdgfAdX72LDQ
+         KVZcSwBm0DQ6/weAnzPds7es/kpTKvoE1w4LtHgFHYXvjsIEcuz2BXGmNLKAFh/B04h+
+         vzxaudliu6xbocR0EmRY/FCOtm/q1vbCTYm+FqnWGTkh8q19uKmizYj1VhU/Hmd+wjyE
+         3ps4U3YbvHuJ7hYhNDmOBrAzNLN7TFUtM2tkN61k/shsYe4bQNJRrm/9wPxAi9FPQzB4
+         0ooQ==
+X-Gm-Message-State: AOJu0YwfZNNS9tjJ/VJA9dO3soiPo3gREI0fYW91jgr6SF5pK5JBc+Tq
+	1RGZW0/r+cRVE65pm8gZ+UUfzXzuNColwHx08EtWKe+MLBF2t6D0Hy/RamrJOMQ=
+X-Google-Smtp-Source: AGHT+IG/Q5dm0XunXk8ISugNOrCX4l8Ka3GNq1v/BqR0c3/G2Yi18em/EdrAh0PsFwlWy9/2BwQrlw==
+X-Received: by 2002:aca:2104:0:b0:3c9:c2bc:6939 with SMTP id 5614622812f47-3d2044e7d00mr3533666b6e.57.1717619716846;
+        Wed, 05 Jun 2024 13:35:16 -0700 (PDT)
+Received: from localhost.localdomain (d24-150-219-207.home.cgocable.net. [24.150.219.207])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6afc72485f8sm25359866d6.5.2024.06.05.13.35.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 13:35:16 -0700 (PDT)
+From: Trevor Gamblin <tgamblin@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	ukleinek@baylibre.com,
+	ukleinek@kernel.org,
+	michael.hennerich@analog.com,
+	nuno.sa@analog.com,
+	tgamblin@baylibre.com,
+	dlechner@baylibre.com,
+	devicetree@vger.kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: [RESEND][PATCH 0/2 v6] pwm: add axi-pwm-gen driver
+Date: Wed,  5 Jun 2024 16:35:04 -0400
+Message-ID: <20240605203507.1934434-1-tgamblin@baylibre.com>
+X-Mailer: git-send-email 2.45.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, kernel-janitors@vger.kernel.org,
- David Rhodes <david.rhodes@cirrus.com>, Jaroslav Kysela <perex@perex.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Richard Fitzgerald <rf@opensource.cirrus.com>, Takashi Iwai <tiwai@suse.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bard Liao <yung-chuan.liao@linux.intel.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] ASoC: cs35l56: Use scope-based resource management in
- cs35l56_try_get_broken_sdca_spkid_gpio()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iiMvF75SG/hLXKOCRnOGm3xQbDMpR7dtnFbnQ9Xj6PHqB2eQQvy
- /VTBEhRwXj4Ql8Bkp1zH6MhJTVhN8IKwREbf2wYTCoxGKpxCn5tHQWeJC0UxJW0APqbyUWh
- 74QaReiEVNE0OBgn8QtlmCnnsmk9+/9OLLMayfGcwdUNLjI9YCVriOzULAXL8NwQAIKWmh/
- 3WoJ8iSyJ4ormopJEgkrA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Ur7g/hgP2Do=;E1jXlsG/dQA7JfHKHDxENaK1I+p
- MTbsn7g8AHoArGwlMIqI/VI2sMCq+T3V4NxwfFrXQZkx3SQJlkHnKlFqpmv69QmDFDWTiZ1f2
- WO3uQn0D5yVbZrZH7AD+ynEeCT43IKRAuD/J/fF8gywrQqMldSSdw1YaAwIYXA11F5SPG+RNN
- qPcQM2odmviSzjazAfUvGkW48jUdQ+CEHHE+m4Y3gl/a9egVoHvdOpbHWX9tuMeNj1K/8Mh98
- cOcr4u2HUGiyuYkHYv/fBY4hMesyUkilvuA41iK5DhDQBYSi+TYrUR5/Ha5fGLkUUjOV52yal
- woBOOZPAK+eg9503Z7DWMdD5r7xqz7xpr4gAWSSsfnuH3SsqaJxmr3ZpAshQCyJhQweKA6eOo
- GwpUCYroSbMaRE7+jbUcRQwRKwb2R0K3wLczRIyZmZgr0wHb54dvi2xMeadufNj1pfu7IApA+
- jQ/mTrVJegf7/QUGXFcnMliZDgybTdtKPyVTuL0IQQCfMwZDnvASDVXqwtcRqM79DPVRX0wbe
- 8KYxaK45CPQ0DLQV5ByqVlPImNX7sJ7L5HAOCQydzVXJmUC7ddrfV52Z3YfX+HXdC2Ti7mnP8
- Yo/gPrZCZChHteC7zHm2KOmU4RVmqMk0WJcj8tuYYYd76lLQi68rbGeDcs6/WV89O49oKMELu
- TxkejgfXld9wLshMMJAaNqWTyQlPbyFnpfPnFB8AwGlAk9IgmuZ+kqQ0HRopxpaQ2uhkMq7lC
- OOh7iG6jk7oxDhjhxJs1byjemMc8QkLHG/2ER+iCjVwkwJNWgiDMHpzNhYaAXojG0U0e/QmXM
- /+s+HWpIZW5rwIXb3r4qTmoHZzS+8omK56lh8Xd/bS7MY=
+Content-Transfer-Encoding: 8bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 5 Jun 2024 22:02:09 +0200
+Resending due to missing real name in "From:" line.
 
-Scope-based resource management became supported also for another
-programming interface by contributions of Jonathan Cameron on 2024-02-17.
-See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
-property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
+This series adds support for the AXI PWM GEN subsystem found on FPGA IP
+cores. It can be used to generate configurable PWM outputs, and includes
+options for external synchronization and clock signals.  The work is
+being done on behalf of, and therefore lists maintainers from Analog
+Devices, Inc.
 
-* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
+The series has been tested on actual hardware using an EVAL-AD7985FMCZ
+evaluation board. An oscilloscope was used to validate that the
+generated PWM signal matched the requested one.
 
-* Reduce the scope for the local variable =E2=80=9Caf01_fwnode=E2=80=9D.
+There was previously a follow-up series
+(https://lore.kernel.org/linux-pwm/20240314204722.1291993-1-tgamblin@baylibre.com/)
+that enabled support for two different versions of the AXI PWM GEN IP.
+Since issues were identified with the v1 IP functionality and v2's
+regmap is the one listed on the device wiki
+(https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html),
+the driver was changed to support only the v2 IP after squashing those
+additions. As a result, the overall driver is simpler as it no longer
+uses an axi_pwm_variant struct. Support for v1 IP can be added back
+later in the event that it is required.
 
-* Omit explicit fwnode_handle_put() calls accordingly.
+---
+v6 changes:
+* Address feedback for driver in v5:
+  * Add link to public device documentation in pwm-axi-pwmgen.c
+  * Remove unnecessary line split in axi_pwmgen_setup
+  * Remove unnecessary call to devm_add_action_or_reset() in
+    axi_pwmgen_probe
+* Update documentation link in driver and binding commit messages
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
+Link to v5: https://lore.kernel.org/linux-pwm/20240424125850.4189116-1-tgamblin@baylibre.com/
 
-See also the commit fbd741f0993203d07b2b6562d68d1e5e4745b59b ("ASoC: cs35l=
-56:
-fix usages of device_get_named_child_node()").
+v5 changes:
+* Address feedback for driver in v4:
+  * Clarify device behavior in frontmatter
+  * Include register name in bitfield definitions
+  * Use devm_clk_rate_exclusive_get() and handle error
+* Squash v2 IP patches into series from: https://lore.kernel.org/linux-pwm/20240314204722.1291993-1-tgamblin@baylibre.com/
+* Refactor driver code to support only v2 IP
+  * Issues were identified with v1 IP implementation, so only v2 will be
+    supported
+  * Remove axi_pwm_variant struct and usage
+  * Version check in axi_pwmgen_setup() left as-is to limit usage to
+  * only v2 IP
+* Adjust dt bindings to use adi,axi-pwmgen-2.00.a
 
+Link to v4: https://lore.kernel.org/linux-pwm/20240301173343.1086332-1-tgamblin@baylibre.com/
 
- sound/soc/codecs/cs35l56.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+v4 changes:
+* Address feedback for driver in v3:
+  * Update to use devm_pwmchip_alloc() function
+  * Simplify use of dev symbol in axi_pwmgen_probe
+  * Remove unnecessary axi_pwmgen_from_chip function and use
+    pwmchip_get_drvdata directly
 
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 758dfdf9d3ea..db41fc42dcac 100644
-=2D-- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -1345,13 +1345,13 @@ static void cs35l56_acpi_dev_release_driver_gpios(=
-void *adev)
+Link to v3: https://lore.kernel.org/linux-pwm/20240131214042.1335251-1-tgamblin@baylibre.com/
 
- static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private =
-*cs35l56)
- {
--	struct fwnode_handle *af01_fwnode;
- 	const union acpi_object *obj;
- 	struct gpio_desc *desc;
- 	int ret;
+v3 changes:
+* Address feedback for driver in v2:
+  * Remove unnecessary blank line in axi_pwmgen_apply
+  * Use macros already defined in <linux/fpga/adi-axi-common.h> for
+    version checking
 
- 	/* Find the SDCA node containing the GpioIo */
--	af01_fwnode =3D device_get_named_child_node(cs35l56->base.dev, "AF01");
-+	struct fwnode_handle *af01_fwnode __free(fwnode_handle)
-+					  =3D device_get_named_child_node(cs35l56->base.dev, "AF01");
- 	if (!af01_fwnode) {
- 		dev_dbg(cs35l56->base.dev, "No AF01 node\n");
- 		return -ENOENT;
-@@ -1361,7 +1361,6 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(st=
-ruct cs35l56_private *cs35l5
- 				    "spk-id-gpios", ACPI_TYPE_PACKAGE, &obj);
- 	if (ret) {
- 		dev_dbg(cs35l56->base.dev, "Could not get spk-id-gpios package: %d\n", =
-ret);
--		fwnode_handle_put(af01_fwnode);
- 		return -ENOENT;
- 	}
+Link to v2: https://lore.kernel.org/linux-pwm/20240123220515.279439-1-tgamblin@baylibre.com/
 
-@@ -1369,7 +1368,6 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(st=
-ruct cs35l56_private *cs35l5
- 	if (obj->package.count !=3D 4) {
- 		dev_warn(cs35l56->base.dev, "Unexpected spk-id element count %d\n",
- 			 obj->package.count);
--		fwnode_handle_put(af01_fwnode);
- 		return -ENOENT;
- 	}
+v2 changes:
+* Address feedback for driver and device tree in v1:
+  * Use more reasonable Kconfig approach
+  * Use common prefixes for all functions
+  * Rename axi_pwmgen struct to axi_pwmgen_ddata
+  * Change use of "pwm" to "ddata"
+  * Set and check state->polarity
+  * Multiply safely with mul_u64_u64_div_u64()
+  * Improve handling of max and zero periods
+  * Error if clk_rate_hz > NSEC_PER_SEC
+  * Add "Limitations" section at top of pwm-axi-pwmgen.c
+  * Don't disable outputs by default
+  * Remove unnecessary macros for period, duty, offset
+  * Fix axi_pwmgen_ddata alignment
+  * Don't artificially limit npwm to four
+  * Use clk_rate_exclusive_get(), balance with clk_rate_exclusive_put()
+  * Cache clk rate in axi_pwmgen_ddata
+  * Don't assign pwm->chip.base, do assign pwm->chip.atomic
+  * Relocate "unevaluatedProperties" in device tree binding
+* Remove redundant calls to clk_get_rate
+* Test contents of AXI_PWMGEN_REG_CORE_MAGIC instead of
+  arbitrary AXI_PWMGEN_TEST_DATA in AXI_PWMGEN_REG_SCRATCHPAD
+* Remove redundant clk struct from axi_pwmgen_ddata
+* Add self as module author
+* Add major version check for IP core
 
-@@ -1383,26 +1381,21 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(=
-struct cs35l56_private *cs35l5
- 		 * ACPI_COMPANION().
- 		 */
- 		ret =3D acpi_dev_add_driver_gpios(adev, cs35l56_af01_spkid_gpios_mappin=
-g);
--		if (ret) {
--			fwnode_handle_put(af01_fwnode);
-+		if (ret)
- 			return dev_err_probe(cs35l56->base.dev, ret,
- 					     "Failed to add gpio mapping to AF01\n");
--		}
+Link to v1: https://lore.kernel.org/linux-pwm/20240115201222.1423626-1-tgamblin@baylibre.com/
 
- 		ret =3D devm_add_action_or_reset(cs35l56->base.dev,
- 					       cs35l56_acpi_dev_release_driver_gpios,
- 					       adev);
--		if (ret) {
--			fwnode_handle_put(af01_fwnode);
-+		if (ret)
- 			return ret;
--		}
+Drew Fustini (2):
+  dt-bindings: pwm: Add AXI PWM generator
+  pwm: Add driver for AXI PWM generator
 
- 		dev_dbg(cs35l56->base.dev, "Added spk-id-gpios mapping to AF01\n");
- 	}
+ .../bindings/pwm/adi,axi-pwmgen.yaml          |  48 ++++
+ MAINTAINERS                                   |   9 +
+ drivers/pwm/Kconfig                           |  13 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-axi-pwmgen.c                  | 241 ++++++++++++++++++
+ 5 files changed, 312 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+ create mode 100644 drivers/pwm/pwm-axi-pwmgen.c
 
- 	desc =3D fwnode_gpiod_get_index(af01_fwnode, "spk-id", 0, GPIOD_IN, NULL=
-);
- 	if (IS_ERR(desc)) {
--		fwnode_handle_put(af01_fwnode);
- 		ret =3D PTR_ERR(desc);
- 		return dev_err_probe(cs35l56->base.dev, ret, "Get GPIO from AF01 failed=
-\n");
- 	}
-@@ -1411,13 +1404,10 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(=
-struct cs35l56_private *cs35l5
- 	gpiod_put(desc);
-
- 	if (ret < 0) {
--		fwnode_handle_put(af01_fwnode);
- 		dev_err_probe(cs35l56->base.dev, ret, "Error reading spk-id GPIO\n");
- 		return ret;
- 	}
-
--	fwnode_handle_put(af01_fwnode);
--
- 	dev_info(cs35l56->base.dev, "Got spk-id from AF01\n");
-
- 	return ret;
-=2D-
+-- 
 2.45.1
 
