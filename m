@@ -1,149 +1,88 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC5B14431B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F388F145322;
+	Wed,  5 Jun 2024 18:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610566; cv=none; b=lWiHoFZHYI0bz7A9f0IWMbEIsSGR8KoIOYwFytLbx0dMTZ/j0coIh8P0qN6TDvXlzhW16cmOdFTtDfnr1PHn1uLIlc1jB8Tlk0ltOJPs2uzSqfxObDdcWNLn9qLc8YJhrCn4ccgUVgxV9AtRHo3xzqSu15hN+0iTOWdoQKfIQfA=
+	t=1717610570; cv=none; b=hrIbskc4yfL7OuuyfrQAtXZTBEeRa0Vn23EShfglt46x18vgkE/LinLiwF4zJfgiL5YL1ks5OD1fM6k86eQpa3eLNxifhW9OHWGoHJLfNND75NuB2+f7YWleMbMMUvHlZ4JzDKS+8ANk7lanyFCTvaXguGN0hWaaRQQGqNwRAaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610566; c=relaxed/simple;
-	bh=eF30gjQEDuHJ/IYGm6d82rKPYlogi0y1Le1+CTBv8es=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qhCs5vzand8k//vsUV316OCCgLE3lgHN3tC0d3PRIJFqjE0rYgrwY7tzUbtRSqm9mo3tBbfR5yC4Q9GLsIRDrbSqwjttdgmA64VYrvAPUy6P2Ajnthe0QgQfW8G0M9EMCYXpgHdOejoHs5ztxbAfKy8UQQaJMzvtlBda959Jcro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bosRmD0V; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
+	s=arc-20240116; t=1717610570; c=relaxed/simple;
+	bh=uwUrfu/yzS/YNseKipCZSPaE2sZQzojPJmfSYmfQ2II=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=McuLFB9mc4G5a+VyT6iLFMyTo+Eoqrh/WmluKPjeeBvr+aSV9xs0GSCqZQ4YqejDW/H6ANwnznJ/JVxZFAA8CA8NWQi8yNMIRqAf9k1++Vxra0BCozVMxyFrC3Gcn7I1OneDFVPIabJLfrXKgAPPUxorEXTzLPZSr+xcyDHDK1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=BH3LY5Bs; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bosRmD0V"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-627f43bec13so708277b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1717610564; x=1718215364; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=y5YxZkBMx7xM0lBc97o2/iv7RwAsHr+ZFIuj4hushzk=;
-        b=bosRmD0VAZb+uNeHi7HIWEvwXg4aQpu6UokJkBAlLIP/mwUBkraTcuWQxK3I7oKf92
-         IUqNEgKeAor+QlQfrxVSX46Wr8qSmnre7Lod1wkkTeP1WiYmtzlXHsm6O3NcweNaf3ya
-         Qandj21eqkSssUvIpP1j/ByVvuTqh/97jqaJeYq3PTsSsF6edkETmP9wm72ftlMYpBuP
-         miYX+L6h9T7WRJYqPenCfll5CtFtSZIBP1XQjvu5Eg6N2CYzUGIsxekAXrrCObtum9/3
-         0mZb0apPgAHlNJwLvOjE2WR6cA9sNf2aU7/wo0Eq6mAi9yMTDLfZS5nu4m+yBkRZ20EB
-         ZVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717610564; x=1718215364;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y5YxZkBMx7xM0lBc97o2/iv7RwAsHr+ZFIuj4hushzk=;
-        b=GL35/ZeA32uSHpSoDdrlGq85pw+x9FIE5gyIKSW7n4RYTK63sJzPRRBsR3xqMBVuX1
-         hBXi10isRebO+30XPxW0ok7unped4EXckozUCvpl9UoEqCKC2mE2scBEPNnICbChm9Gf
-         hRJuGfYno3NJbEOIhhAh/N5dnDpbDrGHjK/YD2pW6sVZ1AGW+mcEtg1ygyOa1iz/0AIB
-         EIQRZ/nLGu5KM3euL5KBP7sVczPsUrL6gGJTUoTdvpeEaqXxP/rz9BL4Avj8Cx8lqfz0
-         GtzQqB1/gkhTkEKVmoo7FP9DM5WNBcnBMxdtdc0MggNLEdjuUR2QzPZNmG9ua5QMufBO
-         FHbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhzQyimB0YVN7mrAHeDt1pn7qt8CNKiSyQGgkAUyayr3oqU/RNi4GjEIeTHycOYYdWpwkBjkmbV4ey9gjSO2oMS86R01j+S1mZCDvS
-X-Gm-Message-State: AOJu0Yyh0vzY0LPeY5Hwzn7FsG9jHbhzyIHyhFuSvIpjGn6RVktYTWST
-	CTOi6D03c2mAW5e7pmETergNcCT/qgHYf2EnquUxTCxxGZfuX6L59CtknTuWq1VVvQc7jMeisUh
-	YgJiaIVda2A==
-X-Google-Smtp-Source: AGHT+IGCU+GmK3Rf3XT5eiVn8GBJTqffr6kRhdYR5C7W1ubGEWJe6ysf+n1fV0SHLE+oXrcbvgWtj6KwbrbfFQ==
-X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
- (user=joychakr job=sendgmr) by 2002:a05:690c:884:b0:61d:3304:c25e with SMTP
- id 00721157ae682-62cbb5b3bc3mr8573737b3.7.1717610564108; Wed, 05 Jun 2024
- 11:02:44 -0700 (PDT)
-Date: Wed,  5 Jun 2024 18:02:31 +0000
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="BH3LY5Bs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=uwUrfu/yzS/YNseKipCZSPaE2sZQzojPJmfSYmfQ2II=;
+	t=1717610568; x=1718820168; b=BH3LY5Bsae9vIWyOsa/qXHUk7LcIgC3yavKg8JyM+FPTk2E
+	JguRCm6uYy3EvBeXqtsmuVgDehf5zk5cHYlV84elBBcRuaF2NwCz5KEOGtpjZj3//kHccqA2vbKlc
+	qKrUC+/GNb+NiTFvs2gEdOLMmYJoRg54EKctmsEmxKNsXexWvVJhmjsijnrALB+OS4HM6uBePOL3u
+	7J19mdPD146PGqGlM+EkbbmOdrlZy/GSpfCnynK7yTWfN1iHBe636xh3QfyN4djFTbzyhw1bTZulR
+	lVfUEifRRRKQ2mukbi8mP9aE70jaJetG16zmlNGgiezxT0oQfBzkwahewv/jJ9aw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1sEuxm-0000000ErED-3wIf;
+	Wed, 05 Jun 2024 20:02:19 +0200
+Message-ID: <b46fd359f62fc7c50790fb19a8814c89a10a7c1c.camel@sipsolutions.net>
+Subject: Re: [PATCH] arch: um: rust: Add i386 support for Rust
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: David Gow <davidgow@google.com>, Brendan Higgins
+ <brendan.higgins@linux.dev>,  Rae Moar <rmoar@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,  Miguel Ojeda
+ <ojeda@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Masahiro Yamada
+ <masahiroy@kernel.org>,  Richard Weinberger <richard@nod.at>, Anton Ivanov
+ <anton.ivanov@cambridgegreys.com>,  kunit-dev@googlegroups.com,
+ linux-kernel@vger.kernel.org,  linux-um@lists.infradead.org,
+ rust-for-linux@vger.kernel.org, x86@kernel.org,  Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin
+ <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice
+ Ryhl <aliceryhl@google.com>, linux-doc@vger.kernel.org, 
+ linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
+Date: Wed, 05 Jun 2024 20:02:17 +0200
+In-Reply-To: <CAMj1kXHa58Zcq3extXw4VXGnpVHbd5urzCGnh_oCo-BLMxMrJQ@mail.gmail.com>
+References: <20240604224052.3138504-1-davidgow@google.com>
+	 <20240605062234.GE279426@thelio-3990X>
+	 <CAMj1kXHa58Zcq3extXw4VXGnpVHbd5urzCGnh_oCo-BLMxMrJQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-Message-ID: <20240605180238.2617808-1-joychakr@google.com>
-Subject: [PATCH v1 10/17] mtd: core: Change nvmem reg_read/write return type
-From: Joy Chakraborty <joychakr@google.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
-	linux-usb@vger.kernel.org, manugautam@google.com, 
-	Joy Chakraborty <joychakr@google.com>, kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-Change nvmem read/write function definition return type to ssize_t.
+On Wed, 2024-06-05 at 19:59 +0200, Ard Biesheuvel wrote:
+>=20
+> > > -ifdef CONFIG_X86_64
+> > > +ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
+> >=20
+> > These configurations are mutually exclusive, so would it look more
+> > readable to have it be:
+> >=20
+> >=20
+> > ifeq ($(CONFIG_X86_32)$(CONFIG_X86_64),y)
+> >=20
+>=20
+> Or simply
+>=20
+> ifdef CONFIG_X86
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202406050200.8BOdZUla-lkp@intel.com/
-Signed-off-by: Joy Chakraborty <joychakr@google.com>
----
- drivers/mtd/mtdcore.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+No, we're talking about ARCH=3Dum, so CONFIG_X86 isn't set, but
+CONFIG_X86_{32,64} are set as the "sub" or "host" arch. :)
 
-diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-index 724f917f91ba..b13752ec2f1c 100644
---- a/drivers/mtd/mtdcore.c
-+++ b/drivers/mtd/mtdcore.c
-@@ -530,8 +530,8 @@ int mtd_pairing_groups(struct mtd_info *mtd)
- }
- EXPORT_SYMBOL_GPL(mtd_pairing_groups);
- 
--static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
--			      void *val, size_t bytes)
-+static ssize_t mtd_nvmem_reg_read(void *priv, unsigned int offset,
-+				  void *val, size_t bytes)
- {
- 	struct mtd_info *mtd = priv;
- 	size_t retlen;
-@@ -541,7 +541,7 @@ static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
- 	if (err && err != -EUCLEAN)
- 		return err;
- 
--	return retlen == bytes ? 0 : -EIO;
-+	return retlen;
- }
- 
- static int mtd_nvmem_add(struct mtd_info *mtd)
-@@ -919,8 +919,8 @@ static struct nvmem_device *mtd_otp_nvmem_register(struct mtd_info *mtd,
- 	return nvmem;
- }
- 
--static int mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
--				       void *val, size_t bytes)
-+static ssize_t mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
-+					   void *val, size_t bytes)
- {
- 	struct mtd_info *mtd = priv;
- 	size_t retlen;
-@@ -930,11 +930,11 @@ static int mtd_nvmem_user_otp_reg_read(void *priv, unsigned int offset,
- 	if (ret)
- 		return ret;
- 
--	return retlen == bytes ? 0 : -EIO;
-+	return retlen;
- }
- 
--static int mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
--				       void *val, size_t bytes)
-+static ssize_t mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
-+					   void *val, size_t bytes)
- {
- 	struct mtd_info *mtd = priv;
- 	size_t retlen;
-@@ -944,7 +944,7 @@ static int mtd_nvmem_fact_otp_reg_read(void *priv, unsigned int offset,
- 	if (ret)
- 		return ret;
- 
--	return retlen == bytes ? 0 : -EIO;
-+	return retlen;
- }
- 
- static int mtd_otp_nvmem_add(struct mtd_info *mtd)
--- 
-2.45.1.467.gbab1589fc0-goog
-
+johannes
