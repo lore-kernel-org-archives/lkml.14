@@ -1,123 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D94E79DE;
-	Wed,  5 Jun 2024 17:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456BF2770E
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 17:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717607993; cv=none; b=eNv3BUvlgmKpGGv2N+x4PpIqeEvph5Lv+yetsKc2u3Hl47NA0RKFiDJABolnGaCdrS0sLETZ7/NWUB5pglzedSXIEUEfKrw1KdSHVPwanySKLbihHOsXH7nPMW4W3DNMkQaDFYVTdI803DmcGvkumRIZ5TRQcTQOG/no0pyIGEk=
+	t=1717608086; cv=none; b=Tu3+CB+gltaLrdcF8XnA3pO2YQtvZLs3RgsQ9c1wMwUOh9sDpOK9fPtVhGmpppjH+n8CA5urEqyJDadYZpmuM18pjh9o3NJ2nxTJ+mf0HwwAP9/9ebt0n8hS+hZnIwujhKoMBCCX1I/8EufJuSwAJj6VXGbbFmR8zTrk3/3/kHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717607993; c=relaxed/simple;
-	bh=KoPDujt1xMD1rMjbCLSpQKDTwNo7Sp1vSRZVeW5Uy6s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZLjJucrax6DGM4DN05f64Rz4EKSlZ1hkfLFtcEKWFJ/+YvQi2pekqwqDtCYMBnPjYNDTLnHzEQY/glfAX5p96WONUWD1qsuqQLBgBXfFDKC7L7XMFk2hwlWdYeZBre7pXmSt1r5dwQi690duELgxN0GJAXpZCffTX3dKErbnfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X65T6mVX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1717608086; c=relaxed/simple;
+	bh=Tcwq5dn9T53VXyu2UVdw5TjGv2V1CJsT9RFq6hlk9QE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Boi8sj6sMgzZfhBJb3UQW7vEm5X1oJs/4FZkHPZDFd+kn/9YZCRNqTaVtHHMisr6HwNt+0NpID6o0dX9Edui4pvG+OodwtmK1DA3QRB0RVT8XrmJH3FCYeI8U5Fr54gzVPynUjG6PlumBZiNBfCQzCU+aj5b5UglZ3PVsguuNuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nBhdOLxt; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X65T6mVX"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 455DGfD8014486;
-	Wed, 5 Jun 2024 17:17:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=sNJniB11qHa4cbo7LPak+xXf
-	Ula5GuPjPcZNiVZTXdQ=; b=X65T6mVXXXVOqXlwsjcwOBZpbijhV+XkQzQsQ5SR
-	p+BedcH67osUcAIBA3PcLM4lEvG6cVRmcLmbUaZ33bmofSAaVieupgsruwJtse+z
-	zGq2QBbr3uSnSDHLEInKj+0xgCg27JnjYiYPLgM1idQGP9i48nfjD3Y3QpBMAKOE
-	g7OC8B2I/Yj0ZArMuGtCJCsZyyYm1Rfv065sfCncU+l+ZlFFuXkOH1yuL9QZh/95
-	uGk2tunv1W/oDmoAREOTpmEtUbo2fr43U2n+JQ0FE+aoEKgkz+pwiu4y+k8Vz3EL
-	GjIDyvsM6jtwRJwBTgk2bZIb7SSZxEdAUEecpm8r8vhoTg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3yj7urasd5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Jun 2024 17:17:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 455HHNiC008319
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 5 Jun 2024 17:17:23 GMT
-Received: from hu-eberman-lv.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 5 Jun 2024 10:17:23 -0700
-Date: Wed, 5 Jun 2024 10:17:22 -0700
-From: Elliot Berman <quic_eberman@quicinc.com>
-To: Simon Glass <sjg@chromium.org>
-CC: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Amrit Anand <quic_amrianan@quicinc.com>,
-        "Peter
- Griffin" <peter.griffin@linaro.org>,
-        Caleb Connolly
-	<caleb.connolly@linaro.org>,
-        Andy Gross <agross@kernel.org>, Doug Anderson
-	<dianders@chromium.org>,
-        Chen-Yu Tsai <wenst@chromium.org>,
-        Julius Werner
-	<jwerner@chromium.org>,
-        "Humphreys, Jonathan" <j-humphreys@ti.com>,
-        "Sumit
- Garg" <sumit.garg@linaro.org>,
-        Jon Hunter <jonathanh@nvidia.org>,
-        Michal
- Simek <michal.simek@amd.com>,
-        <boot-architecture@lists.linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH RFC v3 0/9] dt-bindings: hwinfo: Introduce board-id
-Message-ID: <20240605100246481-0700.eberman@hu-eberman-lv.qualcomm.com>
-References: <20240521-board-ids-v3-0-e6c71d05f4d2@quicinc.com>
- <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nBhdOLxt"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ee5f3123d8so5965ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 10:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717608083; x=1718212883; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kYCo0S4v9XF6m0fRGRV3IsBGozW86ded8JzpR7EngjU=;
+        b=nBhdOLxtqLb/6IDbSQ7cbc5oFvALnCWkUFIjJpsMkQMjQOE7dXBUGCuCe0F70vOJTp
+         zhzuMjL9el0GaUd0i1WJEHri3+EanWtrRKxyHidjzQ/6xr2O0L2TViyOyN0qBsugfwTj
+         s7BOzVznQsc5gt6LIzggVG1PffrMGNOJQJA7unbUKbvQDovJqfLwcqst9FQsGz+3PSfe
+         TLQYIoltUHGQjUYDr/ayFtWklpnSuTK6pSXJNMna13LdoLTI7TJ2Yw72OMKZym5NiaFL
+         lh0TjaY3qEEj8VMMdZZwvnfvJTPGh3hKLdiDydhLBno8R8tW+5J4LyVpNlx4xBPGKOOW
+         /YPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717608083; x=1718212883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kYCo0S4v9XF6m0fRGRV3IsBGozW86ded8JzpR7EngjU=;
+        b=TsXglhq5nCB/JFI9WLAClvBaUAAAegfhxCq/vN9AMOMyji4Crxb9Ll0cyhITfkH4Zt
+         2dXZTV045S9VsnG+XfJYQ9HpujOkHVk5oxRwXc4Llbaus9LtkXSMWKDQtCz9IuJGf3TH
+         5ujdBDh4y6WzzVF1Q9VI9438oZz5m6h49MRI3WFgiL/l6QrQd91nny7ur8efSp6kCrqO
+         ZM4LLAg33ByVhGQe9pCP9I1pcS4fl4+ojUC4m2hvmSiFVE/bGH3rIlSYra6+sjVP3WG4
+         DSCSgQqlORBI8fCvRA+cOoiWbE3+VpWmJqxjlVWikeEcDwCziW3dRWBVeYEOkzIR+7xP
+         Rhcg==
+X-Forwarded-Encrypted: i=1; AJvYcCVenVpZkHA9HKZ9RUs/mL+qBCTMbjyKcZv/Y8JQ4yZ5usRj26efpItcs2ABEPWEajHdwC1wVr6jZQ+FV+buGUgvVkl7xU1J+wmAHBKj
+X-Gm-Message-State: AOJu0YxZcmQE5O63GX0uIqoytEqG0nP961KHkRw6S932kdFE90PjCx3Y
+	7k1M2+YnsTvGBDFARXIiVLgCK5GkIfxPOf0YSnJDjnAl2kRyuTFxKODXI9NT1+A0YvNOfn7cBk6
+	YxVhiTXWiVwwY7r1hzxE3LZjvAq86oTBy/qBz
+X-Google-Smtp-Source: AGHT+IE2SZkPszq0YruXeZgdwMZcRiyinGSYCRMCQ+02rAZyYrQw99myRkawq4RdPGWs6JBjFpE5FIBN0Whl5kn7mus=
+X-Received: by 2002:a17:902:ee8a:b0:1f6:5bba:8ea3 with SMTP id
+ d9443c01a7336-1f6a7b01893mr3570835ad.25.1717608083107; Wed, 05 Jun 2024
+ 10:21:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAFLszTjexpNEjo1sGVs67L0CAgGZLNkyn9RGfHRD7iHak_mtmg@mail.gmail.com>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: rUOAnfgLEEt-4ffMEwQQ78zA6aJnT_VQ
-X-Proofpoint-GUID: rUOAnfgLEEt-4ffMEwQQ78zA6aJnT_VQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-05_02,2024-06-05_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406050130
+References: <20240605160848.4116061-1-kan.liang@linux.intel.com>
+In-Reply-To: <20240605160848.4116061-1-kan.liang@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Jun 2024 10:21:10 -0700
+Message-ID: <CAP-5=fV+-ytA2st17Ar-jQ5xYqrWtxnF2TcADKrC5WoPyKz4wQ@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Fix the hard-coded metrics calculation on the hybrid
+To: kan.liang@linux.intel.com
+Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, 
+	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, "Khalil, Amiri" <amiri.khalil@intel.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 07:17:35AM -0600, Simon Glass wrote:
-> Hi Elliot,
-> 
-> I am just picking up the discussion here, which was started on another thread.
-> 
-> I can't see why this new feature is needed. We should be able to use
-> compatible strings, as we do now. I added a 'usage' section to the FIT
-> spec [1] which might help. I also incorporated the board revision and
-> variant information and some notes on how to add to the available
-> suffixes.
-> 
-> Does that handle your use case?
+On Wed, Jun 5, 2024 at 9:10=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The hard-coded metrics is wrongly calculated on the hybrid machine.
+>
+> $ perf stat -e cycles,instructions -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>         18,205,487      cpu_atom/cycles/
+>          9,733,603      cpu_core/cycles/
+>          9,423,111      cpu_atom/instructions/     #  0.52  insn per cycl=
+e
+>          4,268,965      cpu_core/instructions/     #  0.23  insn per cycl=
+e
+>
+> The insn per cycle for cpu_core should be 4,268,965 / 9,733,603 =3D 0.44.
+>
+> When finding the metric events, the find_stat() doesn't take the PMU
+> type into account. The cpu_atom/cycles/ is wrongly used to calculate
+> the IPC of the cpu_core.
+>
+> Fixes: 0a57b910807a ("perf stat: Use counts rather than saved_value")
+> Reported-by: "Khalil, Amiri" <amiri.khalil@intel.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
--rev and -sku don't fit the versioning scheme for QTI devices, so this
-isn't a generic enough approach. Patch 5 in this series describes the
-versioning scheme for us.
-
-In the other thread, we had talked about using some regex based approach
-for matching the root node compatible. I haven't had chance to work on
-that proposal and will try to get to it in the next couple weeks.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Elliot
+Ian
 
+> Cc: stable@vger.kernel.org
+> ---
+>  tools/perf/util/stat-shadow.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
+c
+> index 3466aa952442..4d0edc061f1a 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -176,6 +176,10 @@ static double find_stat(const struct evsel *evsel, i=
+nt aggr_idx, enum stat_type
+>                 if (type !=3D evsel__stat_type(cur))
+>                         continue;
+>
+> +               /* Ignore if not the PMU we're looking for. */
+> +               if (evsel->pmu !=3D cur->pmu)
+> +                       continue;
+> +
+>                 aggr =3D &cur->stats->aggr[aggr_idx];
+>                 if (type =3D=3D STAT_NSECS)
+>                         return aggr->counts.val;
+> --
+> 2.35.1
+>
