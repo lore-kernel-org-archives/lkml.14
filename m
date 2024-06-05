@@ -1,35 +1,35 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3511A3BCB;
-	Wed,  5 Jun 2024 12:49:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A1F1AB525;
+	Wed,  5 Jun 2024 12:49:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717591774; cv=none; b=LLeNZU1qpzt7PW8AsxaFcAiLILSslTu9MqOXIsmJM6674JD3ShTCHD62wPzNDu/N9grR1soKMXy0Y/4tO0Ck47DyeOTP3E4xruxvG1AGwDI0kwwuVybpgnceAWQSvgQ3nz+YWWUhVXGycBYJPHBOdNNeb9NqGuAH3QCD2c0byMY=
+	t=1717591776; cv=none; b=tCnIOHAwlcV+Ye8oODlJB5P7MzyeErAXBO5sPTvVdJbE0gc1sTv/jkbnwyeLyeZgxp5rVPT5nftnmPY0EmMhg8DeeADkr8o725FfHPw+rAbVaPaf9cTVR2sadMPFu9g/2Sln0w+86/x2r+8o0mMeuKDpuo2BNChASuiTMUzc0q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717591774; c=relaxed/simple;
-	bh=u1qRU4ASjZ/VuK0avyxtwNgcfu+/iBHDSUUQh5ULDNM=;
+	s=arc-20240116; t=1717591776; c=relaxed/simple;
+	bh=2T7vgBtP9Cb2AiCH6o6QPna6MiXtjpaL1MtwT504300=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rIXUSnDpzssm1YBZ4xt2UG8Ek6kIham3xiA4v/AiYFCiaLiM7EHtflrLOvQl0Ju8TJ26g6Yg/l5uBahc8RLoRZ3e9KV9XyEleB46qxeh4WSWjyruSWT4WyEnHgNiYwhXmhjFOcv8GPr5+KuizIRRv/rreaMAhAf/E+pLgCPhN4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ayPRaL4r; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=gICdF3ca5nTyIpQ7h6oHYeUU2hDCHppI6Db8eNV8c7MuimkbgkWV9z0BXeLUG/oq5qbQ+gkVYfM6M/nA3fEFAnrBNBlT8Y5hbV7PA258Mgbp9vYoB5zwCByepg9Yrq4mxTn2x485WTwdplAHfaGAA5EJhWmyOIvTRwX8HhWa22Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Z/jYmXRR; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ayPRaL4r"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 792F620009;
-	Wed,  5 Jun 2024 12:49:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Z/jYmXRR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9CFF02000B;
+	Wed,  5 Jun 2024 12:49:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1717591769;
+	t=1717591773;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qhXdwwFrBOf2sVggxdb3tThwYPj1bqviErEGv82K1dE=;
-	b=ayPRaL4rUZsQWoHRFPz28L8VNGjjMn5NwLC4vPtToZCvA4t7/6yGMBap0yzvs8kTet9Fc/
-	gIb2fVBWMAZbRVmrx+f6OFV2X6HvJ8TYQrmO/EhEyN2tRcvGrCq43veYZbYep3zHZ5VZIq
-	FHyMWam4tQICnPLkGXX5R/Oyh7mzJbQNNEtNn0BKG4C7tb8/9e8holkN/OsAfN7rKu/IMt
-	/ockXL9Te66ldVZgEuvc1oPF/ltCKvOYARmQBoncVHBWU1lRlPFtFlUqXYW5zMutgYUE29
-	dNKu8SK4Y8pQZ6Gm8vxi2ufRk04KKTL2sxl+6e2DBhOJwhe2ykE4YaEXHT8x5g==
+	bh=c4ub1Jx75psNg+iRCfgFDa3fvSwBGK98/B315W/o6fo=;
+	b=Z/jYmXRRhTOWOvylDLXEVQj5IubGbpW3iQdjTY2fJGG0NUg7nN1j67M7sAKGgLUC7rxkhv
+	uKPRMlk43dqtuPdoqbijsdjv5gsUNzYMhb610s1KP9c1AMeyRfRbfJJcLqbYyYZJdV0j6Y
+	Xf1CIeXxZk74iHbqTiL8OMw+RUBKlGAxXTPdv7hEjJ2xjxAacIm/Fj1ae4BDc4asKFuFwt
+	9DF0No0jEJCAi8H+DVQha7CG5LAaM1Bsr5/6lnbn3/hON6Uptmnm0fbIwT0lZzIQ6aARrp
+	LGdGXAvQRE9p4FsCCoBoc9Az29cCLUgtczqSqaT0H+iMt8qWPczKMuOXgBer3Q==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -57,9 +57,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	mwojtas@chromium.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Antoine Tenart <atenart@kernel.org>
-Subject: [PATCH net-next v12 03/13] net: phy: add helpers to handle sfp phy connect/disconnect
-Date: Wed,  5 Jun 2024 14:49:08 +0200
-Message-ID: <20240605124920.720690-4-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v12 05/13] net: ethtool: Allow passing a phy index for some commands
+Date: Wed,  5 Jun 2024 14:49:10 +0200
+Message-ID: <20240605124920.720690-6-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.45.1
 In-Reply-To: <20240605124920.720690-1-maxime.chevallier@bootlin.com>
 References: <20240605124920.720690-1-maxime.chevallier@bootlin.com>
@@ -72,155 +72,178 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-There are a few PHY drivers that can handle SFP modules through their
-sfp_upstream_ops. Introduce Phylib helpers to keep track of connected
-SFP PHYs in a netdevice's namespace, by adding the SFP PHY to the
-upstream PHY's netdev's namespace.
-
-By doing so, these SFP PHYs can be enumerated and exposed to users,
-which will be able to use their capabilities.
+Some netlink commands are target towards ethernet PHYs, to control some
+of their features. As there's several such commands, add the ability to
+pass a PHY index in the ethnl request, which will populate the generic
+ethnl_req_info with the relevant phydev when the command targets a PHY.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/marvell-88x2222.c |  2 ++
- drivers/net/phy/marvell.c         |  2 ++
- drivers/net/phy/marvell10g.c      |  2 ++
- drivers/net/phy/phy_device.c      | 40 +++++++++++++++++++++++++++++++
- drivers/net/phy/qcom/at803x.c     |  2 ++
- drivers/net/phy/qcom/qca807x.c    |  2 ++
- include/linux/phy.h               |  2 ++
- 7 files changed, 52 insertions(+)
+ Documentation/networking/ethtool-netlink.rst |  7 +++
+ include/uapi/linux/ethtool_netlink.h         |  1 +
+ net/ethtool/netlink.c                        | 48 +++++++++++++++++++-
+ net/ethtool/netlink.h                        |  5 ++
+ 4 files changed, 59 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/marvell-88x2222.c b/drivers/net/phy/marvell-88x2222.c
-index b88398e6872b..0b777cdd7078 100644
---- a/drivers/net/phy/marvell-88x2222.c
-+++ b/drivers/net/phy/marvell-88x2222.c
-@@ -553,6 +553,8 @@ static const struct sfp_upstream_ops sfp_phy_ops = {
- 	.link_down = mv2222_sfp_link_down,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
+diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
+index 160bfb0ae8ba..8bc71f249448 100644
+--- a/Documentation/networking/ethtool-netlink.rst
++++ b/Documentation/networking/ethtool-netlink.rst
+@@ -57,6 +57,7 @@ Structure of this header is
+   ``ETHTOOL_A_HEADER_DEV_INDEX``  u32     device ifindex
+   ``ETHTOOL_A_HEADER_DEV_NAME``   string  device name
+   ``ETHTOOL_A_HEADER_FLAGS``      u32     flags common for all requests
++  ``ETHTOOL_A_HEADER_PHY_INDEX``  u32     phy device index
+   ==============================  ======  =============================
+ 
+ ``ETHTOOL_A_HEADER_DEV_INDEX`` and ``ETHTOOL_A_HEADER_DEV_NAME`` identify the
+@@ -81,6 +82,12 @@ the behaviour is backward compatible, i.e. requests from old clients not aware
+ of the flag should be interpreted the way the client expects. A client must
+ not set flags it does not understand.
+ 
++``ETHTOOL_A_HEADER_PHY_INDEX`` identifies the Ethernet PHY the message relates to.
++As there are numerous commands that are related to PHY configuration, and because
++there may be more than one PHY on the link, the PHY index can be passed in the
++request for the commands that needs it. It is, however, not mandatory, and if it
++is not passed for commands that target a PHY, the net_device.phydev pointer
++is used.
+ 
+ Bit sets
+ ========
+diff --git a/include/uapi/linux/ethtool_netlink.h b/include/uapi/linux/ethtool_netlink.h
+index b49b804b9495..f17dbe54bf5e 100644
+--- a/include/uapi/linux/ethtool_netlink.h
++++ b/include/uapi/linux/ethtool_netlink.h
+@@ -132,6 +132,7 @@ enum {
+ 	ETHTOOL_A_HEADER_DEV_INDEX,		/* u32 */
+ 	ETHTOOL_A_HEADER_DEV_NAME,		/* string */
+ 	ETHTOOL_A_HEADER_FLAGS,			/* u32 - ETHTOOL_FLAG_* */
++	ETHTOOL_A_HEADER_PHY_INDEX,		/* u32 */
+ 
+ 	/* add new constants above here */
+ 	__ETHTOOL_A_HEADER_CNT,
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index bd04f28d5cf4..f5b4adf324bc 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -4,6 +4,7 @@
+ #include <linux/ethtool_netlink.h>
+ #include <linux/pm_runtime.h>
+ #include "netlink.h"
++#include <linux/phy_link_topology.h>
+ 
+ static struct genl_family ethtool_genl_family;
+ 
+@@ -30,6 +31,24 @@ const struct nla_policy ethnl_header_policy_stats[] = {
+ 							  ETHTOOL_FLAGS_STATS),
  };
  
- static int mv2222_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index b89fbffa6a93..9964bf3dea2f 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -3613,6 +3613,8 @@ static const struct sfp_upstream_ops m88e1510_sfp_ops = {
- 	.module_remove = m88e1510_sfp_remove,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
++const struct nla_policy ethnl_header_policy_phy[] = {
++	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
++	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
++					    .len = ALTIFNAMSIZ - 1 },
++	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
++							  ETHTOOL_FLAGS_BASIC),
++	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
++};
++
++const struct nla_policy ethnl_header_policy_phy_stats[] = {
++	[ETHTOOL_A_HEADER_DEV_INDEX]	= { .type = NLA_U32 },
++	[ETHTOOL_A_HEADER_DEV_NAME]	= { .type = NLA_NUL_STRING,
++					    .len = ALTIFNAMSIZ - 1 },
++	[ETHTOOL_A_HEADER_FLAGS]	= NLA_POLICY_MASK(NLA_U32,
++							  ETHTOOL_FLAGS_STATS),
++	[ETHTOOL_A_HEADER_PHY_INDEX]		= NLA_POLICY_MIN(NLA_U32, 1),
++};
++
+ int ethnl_ops_begin(struct net_device *dev)
+ {
+ 	int ret;
+@@ -89,8 +108,9 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 			       const struct nlattr *header, struct net *net,
+ 			       struct netlink_ext_ack *extack, bool require_dev)
+ {
+-	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy)];
++	struct nlattr *tb[ARRAY_SIZE(ethnl_header_policy_phy)];
+ 	const struct nlattr *devname_attr;
++	struct phy_device *phydev = NULL;
+ 	struct net_device *dev = NULL;
+ 	u32 flags = 0;
+ 	int ret;
+@@ -104,7 +124,7 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 	/* No validation here, command policy should have a nested policy set
+ 	 * for the header, therefore validation should have already been done.
+ 	 */
+-	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy) - 1, header,
++	ret = nla_parse_nested(tb, ARRAY_SIZE(ethnl_header_policy_phy) - 1, header,
+ 			       NULL, extack);
+ 	if (ret < 0)
+ 		return ret;
+@@ -145,6 +165,30 @@ int ethnl_parse_header_dev_get(struct ethnl_req_info *req_info,
+ 		return -EINVAL;
+ 	}
+ 
++	if (dev) {
++		if (tb[ETHTOOL_A_HEADER_PHY_INDEX]) {
++			struct nlattr *phy_id;
++
++			phy_id = tb[ETHTOOL_A_HEADER_PHY_INDEX];
++			phydev = phy_link_topo_get_phy(dev,
++						       nla_get_u32(phy_id));
++			if (!phydev) {
++				NL_SET_BAD_ATTR(extack, phy_id);
++				return -ENODEV;
++			}
++		} else {
++			/* If we need a PHY but no phy index is specified, fallback
++			 * to dev->phydev
++			 */
++			phydev = dev->phydev;
++		}
++	} else if (tb[ETHTOOL_A_HEADER_PHY_INDEX]) {
++		NL_SET_ERR_MSG_ATTR(extack, header,
++				    "can't target a PHY without a netdev");
++		return -EINVAL;
++	}
++
++	req_info->phydev = phydev;
+ 	req_info->dev = dev;
+ 	req_info->flags = flags;
+ 	return 0;
+diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
+index 9a333a8d04c1..d57a890b5d9e 100644
+--- a/net/ethtool/netlink.h
++++ b/net/ethtool/netlink.h
+@@ -250,6 +250,7 @@ static inline unsigned int ethnl_reply_header_size(void)
+  * @dev:   network device the request is for (may be null)
+  * @dev_tracker: refcount tracker for @dev reference
+  * @flags: request flags common for all request types
++ * @phydev: phy_device connected to @dev this request is for (may be null)
+  *
+  * This is a common base for request specific structures holding data from
+  * parsed userspace request. These always embed struct ethnl_req_info at
+@@ -259,6 +260,7 @@ struct ethnl_req_info {
+ 	struct net_device	*dev;
+ 	netdevice_tracker	dev_tracker;
+ 	u32			flags;
++	struct phy_device	*phydev;
  };
  
- static int m88e1510_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index ad43e280930c..6642eb642d4b 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -503,6 +503,8 @@ static int mv3310_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
- static const struct sfp_upstream_ops mv3310_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- 	.module_insert = mv3310_sfp_insert,
- };
+ static inline void ethnl_parse_header_dev_put(struct ethnl_req_info *req_info)
+@@ -395,9 +397,12 @@ extern const struct ethnl_request_ops ethnl_rss_request_ops;
+ extern const struct ethnl_request_ops ethnl_plca_cfg_request_ops;
+ extern const struct ethnl_request_ops ethnl_plca_status_request_ops;
+ extern const struct ethnl_request_ops ethnl_mm_request_ops;
++extern const struct ethnl_request_ops ethnl_phy_request_ops;
  
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 439d03f5774a..111434201545 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1370,6 +1370,46 @@ phy_standalone_show(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RO(phy_standalone);
- 
-+/**
-+ * phy_sfp_connect_phy - Connect the SFP module's PHY to the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It adds the
-+ * SFP module's phy to the phy namespace of the upstream phy
-+ */
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct net_device *dev = phydev->attached_dev;
-+
-+	if (dev)
-+		return phy_link_topo_add_phy(dev, phy, PHY_UPSTREAM_PHY, phydev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(phy_sfp_connect_phy);
-+
-+/**
-+ * phy_sfp_disconnect_phy - Disconnect the SFP module's PHY from the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It removes the
-+ * SFP module's phy to the phy namespace of the upstream phy. As the module phy
-+ * will be destroyed, re-inserting the same module will add a new phy with a
-+ * new index.
-+ */
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct net_device *dev = phydev->attached_dev;
-+
-+	if (dev)
-+		phy_link_topo_del_phy(dev, phy);
-+}
-+EXPORT_SYMBOL(phy_sfp_disconnect_phy);
-+
- /**
-  * phy_sfp_attach - attach the SFP bus to the PHY upstream network device
-  * @upstream: pointer to the phy device
-diff --git a/drivers/net/phy/qcom/at803x.c b/drivers/net/phy/qcom/at803x.c
-index c8f83e5f78ab..105602581a03 100644
---- a/drivers/net/phy/qcom/at803x.c
-+++ b/drivers/net/phy/qcom/at803x.c
-@@ -770,6 +770,8 @@ static const struct sfp_upstream_ops at8031_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
- 	.module_insert = at8031_sfp_insert,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
- 
- static int at8031_parse_dt(struct phy_device *phydev)
-diff --git a/drivers/net/phy/qcom/qca807x.c b/drivers/net/phy/qcom/qca807x.c
-index 672c6929119a..5eb0ab1cb70e 100644
---- a/drivers/net/phy/qcom/qca807x.c
-+++ b/drivers/net/phy/qcom/qca807x.c
-@@ -699,6 +699,8 @@ static const struct sfp_upstream_ops qca807x_sfp_ops = {
- 	.detach = phy_sfp_detach,
- 	.module_insert = qca807x_sfp_insert,
- 	.module_remove = qca807x_sfp_remove,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
- 
- static int qca807x_probe(struct phy_device *phydev)
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c848c79b1fd..3ddfe7fe781a 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1758,6 +1758,8 @@ int phy_suspend(struct phy_device *phydev);
- int phy_resume(struct phy_device *phydev);
- int __phy_resume(struct phy_device *phydev);
- int phy_loopback(struct phy_device *phydev, bool enable);
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy);
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy);
- void phy_sfp_attach(void *upstream, struct sfp_bus *bus);
- void phy_sfp_detach(void *upstream, struct sfp_bus *bus);
- int phy_sfp_probe(struct phy_device *phydev,
+ extern const struct nla_policy ethnl_header_policy[ETHTOOL_A_HEADER_FLAGS + 1];
+ extern const struct nla_policy ethnl_header_policy_stats[ETHTOOL_A_HEADER_FLAGS + 1];
++extern const struct nla_policy ethnl_header_policy_phy[ETHTOOL_A_HEADER_PHY_INDEX + 1];
++extern const struct nla_policy ethnl_header_policy_phy_stats[ETHTOOL_A_HEADER_PHY_INDEX + 1];
+ extern const struct nla_policy ethnl_strset_get_policy[ETHTOOL_A_STRSET_COUNTS_ONLY + 1];
+ extern const struct nla_policy ethnl_linkinfo_get_policy[ETHTOOL_A_LINKINFO_HEADER + 1];
+ extern const struct nla_policy ethnl_linkinfo_set_policy[ETHTOOL_A_LINKINFO_TP_MDIX_CTRL + 1];
 -- 
 2.45.1
 
