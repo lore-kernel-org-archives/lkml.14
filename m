@@ -1,96 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0A419D8B8;
-	Wed,  5 Jun 2024 18:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59D9194AF2
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 18:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717610401; cv=none; b=oJN2b15H6pXyD5DY731PAfCHJkynrbxyGu0OdDH4WMg4mLFzVj6Q/iEcWNMevxKByXt6dtnmiw7yGZVpcqmxlhcKnaLoz1cuBrv1vFzxfzleySezeT6S1noTr8MbazpJZo3IUs/1aHd6X+OrY08OmOS44xAiESXBlYmJAE7lUPA=
+	t=1717610404; cv=none; b=rLMt6ePhLZTUT0eBTEeoQmw9G6FzBl8upewnigvMCoHg+6WgMtMHQKtP0uLgUyqqKo1ZZbpXNebjN5ASHyQzpCVXJPwVviiOGnrN4t+MpnGoWhd9iioY/4No4RUciLdtXORv2581F8pN/fUl8LZHXUB5wzfT7aFzB8uAcZ9O2OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717610401; c=relaxed/simple;
-	bh=ZmEl4JWAj2FG1oQ1+kuvRgAe6HgB+Cyw6yp68j9Li64=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=GwdV62LkeFMlF2utbW+V9KBlLsfdDm1jkA4LfHyOVR5sE3mw4QqtjxiavPGoXpq5undVWaS8LFtkrLpkv0eM0GpeS1YxlK5X2W+Y8Ad0RACagIpziWxc+eJ3g5pU8t8P1xwV8s+VNdf+7ojYTjMFcXpIBfGp467DmkzsWEiZGUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ev+J06Sc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717610404; c=relaxed/simple;
+	bh=BxoABlKvJef+pUpKvjxVkdFoF53gAB3xVu8cHZaGBrk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GFc3GD9t6ylR6eFVFON0P6W+zu6bV8uoaqUTN16NSISNnLu6DoStT69P9uv7eHTQ6maoPuLqZ3WOpNeB+f58ngvXAeXGOjuGiQrAJCbS1lXSbP63EmxNKG50j2WZXLC0Iwu4OQymNvOJYcf0+KSnTqBUB5qKFaXpDQ1C5945TPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OyMmHgy1; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joychakr.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ev+J06Sc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1123CC32781;
-	Wed,  5 Jun 2024 18:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717610401;
-	bh=ZmEl4JWAj2FG1oQ1+kuvRgAe6HgB+Cyw6yp68j9Li64=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Ev+J06ScNqvBKONyjyxrUTTaoxb9g4GoVIG0CCsvQjwveFn6HbdM7YEJtoe6175cF
-	 h+ktGTjDwpokr7wZjOT62pjFtn+sr3mqcRPyl5Id6ekBD5/YhIjp/K0Z9CmC8e/+1E
-	 mtEv1dFFQjfD2Ob6cF164jgOMNYmhz0owUAg7MYuyVGvGL1mYATB4vFu3AsTWSpd3o
-	 jCMer9H5YQyZ289Iuox9GBzlP2yScg0EvneCF//i0d6hsqXBQyDBOj6GFpwS0BeCqN
-	 85lAE4phafSN7dHshFz3Dy5qMyDcj8NDg7yl9pV6NrOZkzlYgeEBTez9BSAB1KvpfC
-	 fWYLXZhfhCtHw==
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6f93fe6d11aso959a34.2;
-        Wed, 05 Jun 2024 11:00:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVO2vXt1ctFgcSTKEm895nvC+xqqlVDAM5lFHyM6B3+dpLg82dOpKUt3CXOAEaZXe7YRoIYoey0EiArjWChjy8hnklHHiqB3GtZsmcQ
-X-Gm-Message-State: AOJu0YycQ1FMnCpapkR1/3FywgwWpn/O+2m3udSyxbgzjX9+ODBprGHt
-	Sp6aSI4Hb43bNReYfI+q4uU+eI6VDH0H9lK7vWrIiLoy9YrHJuAgkNF/rk0+ijIVBQzUi9mm0Df
-	YCXXpH765Byk1zNtxoLCiL8+mUMk=
-X-Google-Smtp-Source: AGHT+IF2Pdi8fFZ2KKDRvw90LKYizodqyqQ5AFX2NWSjiEUg1yQhAuiF+e3Tx6x1KY7dDEtKpWd28Dd+wAtf7FD42H4=
-X-Received: by 2002:a05:6870:502:b0:24f:c164:2cd7 with SMTP id
- 586e51a60fabf-25122313e24mr3275078fac.4.1717610400331; Wed, 05 Jun 2024
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyMmHgy1"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-62a089511f9so15297937b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 11:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717610401; x=1718215201; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w5RPl7PD7LMs1k1njsQ/RXiUssQb7CTl+XBmOvI3R5A=;
+        b=OyMmHgy1OprhTZCk1PpY0KDM++WlQ1Edw2Mps1X0EgJF2iRBA3+tnZUd98ocPSXWN7
+         I5HJFrKZWoDLgPm7SDxl1bkWvzGz18zxNjGoXmNXX1/JRy6wFqUXPM4fg6njQ4saM2A8
+         yLMbKusUCgwnE0ITdDiMX3hsSX1dBE5GBbZOTqY8dwoA8iLHbnfmjPCwDmWjbzvPqRvX
+         jE0jfYNVECTVlFMrLnVd2AQ5Xmr6HOM3bKPb3xt0oUX/V9PhfG/3FV6uK6EMbBp8IkTk
+         9k2llsKW20VKa+QhtGVJt5Ip8/G/LiZr0xSkvjVn57gLonJE8lQKc2VUpPo0iQIWkuHq
+         QWrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717610401; x=1718215201;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w5RPl7PD7LMs1k1njsQ/RXiUssQb7CTl+XBmOvI3R5A=;
+        b=WAhzV4el03rgNAz/gd5FQGQxBeU8C8KoyMlCljiOPhJjEyRG51ksuob/I5RkEaXpUy
+         i7Ag+Jd5MfWS6r++PtQZrxZZZBql8BP8K3Zm//ypTsbWdWH+2OHHg1/AtUZ9LWHrnOrr
+         Z4+GhO+g6QCvDxd88QKrlBQdTPHaVnBhmArEhonE+7aQR6Lrubh2yJKQ1f61zwcFzVy3
+         azM+I44xqu5ZDKKVSeIdzhJkBAH+W/4uZn7n3hWZouBuSkfAJHpN3aKnKsov1Liqa+RW
+         Xe5EdYxkDX+eB2Gr/cKYi5bDPeQHUW6N2G4pv+reOKJMlsV88EoMD4hZV9Livfezz/XX
+         Jw4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVWRd3ye+94YgZtzwsKnK01IoAaafgh5lf5NoIJ+3IMg88MlbVfj8Jv2hhbdatUtlLNFbvGw9pvXdi8urwukUFt7bHxJZ4v12yHl6Dl
+X-Gm-Message-State: AOJu0YwFXawrsDbhUeGJuqnyPDCaWhxumKbFdJQgr+qXu2Y7sILTuchA
+	qxRoRIYYtr5HkcOudBkCHWhAoRIm0zl/fLeL0XRPHTu3jFQc2+SEyIKEI//k1paqiUSLwn7pnYP
+	bQ/3ZLXLS3A==
+X-Google-Smtp-Source: AGHT+IE3beT3+LJiyuyeey70O4vTmt9cNoEU8h7bwGC3fodiNqs+98CXh8Kyq/MReppn/4vWIwzPR7Cf0wAFHw==
+X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
+ (user=joychakr job=sendgmr) by 2002:a05:6902:987:b0:dfa:7552:e09e with SMTP
+ id 3f1490d57ef6-dfade7e34cbmr71646276.0.1717610400689; Wed, 05 Jun 2024
  11:00:00 -0700 (PDT)
+Date: Wed,  5 Jun 2024 17:59:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 5 Jun 2024 19:59:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jzcHmN-B3z1pajYi-NhD=igUi=RYrU9dkvBgoy6ZRdiQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jzcHmN-B3z1pajYi-NhD=igUi=RYrU9dkvBgoy6ZRdiQ@mail.gmail.com>
-Subject: [GIT PULL] Thermal control fixes for v6.10-rc3
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
+Message-ID: <20240605175953.2613260-1-joychakr@google.com>
+Subject: [PATCH v1 00/17] nvmem: Handle change of return type in
+ reg_read/write() definition
+From: Joy Chakraborty <joychakr@google.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Bingbu Cao <bingbu.cao@intel.com>, Zhihao Cheng <chengzhihao1@huawei.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org, 
+	linux-usb@vger.kernel.org, manugautam@google.com, 
+	Joy Chakraborty <joychakr@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+This patch series facilitates compilation post the change in definition
+of nvmem_reg_read_t and nvmem_reg_write_t callback in
+https://lore.kernel.org/all/171751721565.70889.16944298203785853489.b4-ty@linaro.org/
 
-Please pull from the tag
+Currently the nvmem core change is picked on
+https://git.kernel.org/pub/scm/linux/kernel/git/srini/nvmem.git/log/?h=for-next
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- thermal-6.10-rc3
+---
+V1 Changes : Change read/write return type to ssize_t and handle
+relevant logic changes
+---
 
-with top-most commit ae2170d6ea96e652c7fb5689f1980986bf48b7b8
+Joy Chakraborty (17):
+  hwmon: pmbus: adm1266: Change nvmem reg_read/write return type
+  media: i2c: ov2740: Change nvmem reg_read/write return type
+  media: i2c: video-i2c: Change nvmem reg_read/write return type
+  iio: pressure: bmp280: Change nvmem reg_read/write return type
+  misc: ds1682: Change nvmem reg_read/write return type
+  misc: eeprom: at24: Change nvmem reg_read/write return type
+  misc: eeprom: at25: Change nvmem reg_read/write return type
+  misc: eeprom: 93xx46: Change nvmem reg_read/write return type
+  misc: mchp_pci1xxxx: Change nvmem reg_read/write return type
+  mtd: core: Change nvmem reg_read/write return type
+  mtd: ubi: nvmem: Change nvmem reg_read/write return type
+  soc: atmel: sfr: Change nvmem reg_read/write return type
+  w1: slaves: w1_ds250x: Change nvmem reg_read/write return type
+  thunderbolt: switch: Change nvmem reg_read/write return type
+  thunderbolt: retimer: Change nvmem reg_read/write return type
+  soc: tegra: fuse: Change nvmem reg_read/write return type
+  rtc: Change nvmem reg_read/write return type
 
- thermal: trip: Trigger trip down notifications when trips involved in
-mitigation become invalid
+ drivers/hwmon/pmbus/adm1266.c                 |  4 +-
+ drivers/iio/pressure/bmp280-core.c            | 14 ++++---
+ drivers/media/i2c/ov2740.c                    |  6 +--
+ drivers/media/i2c/video-i2c.c                 |  9 +++--
+ drivers/misc/ds1682.c                         | 16 +++-----
+ drivers/misc/eeprom/at24.c                    | 10 +++--
+ drivers/misc/eeprom/at25.c                    | 11 +++---
+ drivers/misc/eeprom/eeprom_93xx46.c           | 12 +++---
+ .../misc/mchp_pci1xxxx/mchp_pci1xxxx_otpe2p.c | 16 ++++----
+ drivers/mtd/mtdcore.c                         | 18 ++++-----
+ drivers/mtd/ubi/nvmem.c                       |  6 +--
+ drivers/rtc/rtc-abx80x.c                      | 15 +++----
+ drivers/rtc/rtc-cmos.c                        |  8 ++--
+ drivers/rtc/rtc-ds1305.c                      | 18 ++++++---
+ drivers/rtc/rtc-ds1307.c                      | 22 +++++++----
+ drivers/rtc/rtc-ds1343.c                      | 18 ++++++---
+ drivers/rtc/rtc-ds1511.c                      | 12 +++---
+ drivers/rtc/rtc-ds1553.c                      | 14 ++++---
+ drivers/rtc/rtc-ds1685.c                      | 14 ++++---
+ drivers/rtc/rtc-ds1742.c                      | 14 ++++---
+ drivers/rtc/rtc-ds3232.c                      | 22 +++++++----
+ drivers/rtc/rtc-isl12026.c                    | 12 +++---
+ drivers/rtc/rtc-isl1208.c                     |  8 ++--
+ drivers/rtc/rtc-m48t59.c                      | 12 +++---
+ drivers/rtc/rtc-m48t86.c                      | 12 +++---
+ drivers/rtc/rtc-max31335.c                    | 18 ++++++---
+ drivers/rtc/rtc-meson.c                       | 18 ++++++---
+ drivers/rtc/rtc-omap.c                        | 12 +++---
+ drivers/rtc/rtc-pcf2127.c                     | 20 ++++++----
+ drivers/rtc/rtc-pcf85063.c                    | 20 +++++++---
+ drivers/rtc/rtc-pcf85363.c                    | 39 ++++++++++++-------
+ drivers/rtc/rtc-rp5c01.c                      | 14 ++++---
+ drivers/rtc/rtc-rv3028.c                      | 32 +++++++++------
+ drivers/rtc/rtc-rv3029c2.c                    | 20 +++++++---
+ drivers/rtc/rtc-rv3032.c                      | 24 ++++++++----
+ drivers/rtc/rtc-rv8803.c                      | 16 +++++---
+ drivers/rtc/rtc-rx8581.c                      | 39 ++++++++++++-------
+ drivers/rtc/rtc-stk17ta8.c                    | 14 ++++---
+ drivers/rtc/rtc-sun6i.c                       |  8 ++--
+ drivers/rtc/rtc-ti-k3.c                       | 16 +++++---
+ drivers/rtc/rtc-twl.c                         | 20 +++++++---
+ drivers/soc/atmel/sfr.c                       | 11 ++++--
+ drivers/soc/tegra/fuse/fuse-tegra.c           |  6 +--
+ drivers/thunderbolt/retimer.c                 |  8 ++--
+ drivers/thunderbolt/switch.c                  |  8 ++--
+ drivers/w1/slaves/w1_ds250x.c                 |  4 +-
+ 46 files changed, 408 insertions(+), 282 deletions(-)
 
-on top of commit 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+-- 
+2.45.1.467.gbab1589fc0-goog
 
- Linux 6.10-rc1
-
-to receive thermal control fixes for 6.10-rc3.
-
-These fix issues related to the handling of invalid trip points in the
-thermal core and in the thermal debug code that have been overlooked by
-some recent thermal control core changes.
-
-Thanks!
-
-
----------------
-
-Rafael J. Wysocki (4):
-      thermal/debugfs: Print initial trip temperature and hysteresis
-in tze_seq_show()
-      thermal/debugfs: Allow tze_seq_show() to print statistics for
-invalid trips
-      thermal: core: Introduce thermal_trip_crossed()
-      thermal: trip: Trigger trip down notifications when trips
-involved in mitigation become invalid
-
----------------
-
- drivers/thermal/thermal_core.c    | 35 +++++++++++++++++++++++++----------
- drivers/thermal/thermal_core.h    |  2 ++
- drivers/thermal/thermal_debugfs.c | 18 +++++++++++-------
- drivers/thermal/thermal_trip.c    | 20 ++++++++++++--------
- 4 files changed, 50 insertions(+), 25 deletions(-)
