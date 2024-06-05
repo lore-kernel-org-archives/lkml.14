@@ -1,149 +1,140 @@
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9101E19924D;
-	Wed,  5 Jun 2024 13:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5B719924D
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717593480; cv=none; b=iQuaTiuivbi2pvte2LeKGB+Bcl/LpMK9CwwlRoO2PMME2eOBGtJ1nCjby2MfGU/X2KpZogK0gRMa4i9PdlsIoP2HAYEW2Kzzy+FwSFPeQxIq7P5+3NJrBKAnoIPuajXKcUBBcUSrlmw7FVxRWoqzLWgMcLnlIrF6yK1cQ9Isf3U=
+	t=1717593500; cv=none; b=mqvaroFVInEoNinLmr3/3TRes5KcocWS/uGNk0LC9fMkJm59aXbjucOEYAaFyV0tqg/LaHdpyM6+Tq3R7Lxf+f4HJaJqzX7jYlnG5HPnRUgP4V/QtCikaoXulnUaxgRpJrGt7OfbHvxvLNnTQjK+cqSXhk6FJNPya3LoDaeXd78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717593480; c=relaxed/simple;
-	bh=78/x5XUPo5xusPgNw/FNUoT8dnpyBDLoUYTIoTMbIkI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=r3VwWDCF5y/GJmcclUZclWQRIn9R/KZq63CKxPBSGP887luioE2SRdEHI8Ej/N8ABigeNyOVh7kSDDHlrfK/tQ05F7xXVCgBpM2PpNp6Lf/jF4Wbfd7ddegs+CvpWFDl8c7eVTa/VjohKSjQ/YChXHF0Nbt8ivu520TGDwu9OjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=b+tDXKHS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XhxRBfMk; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1717593500; c=relaxed/simple;
+	bh=aSGeY//DKOc9pUfHYgBFU7c6uqdrSP0BOyUSG+ubbnc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eItNdB7BXDgUCq4kU9fi2ESslBlHzKd6GgPdnpBr8JUHLJaBk03bgW+ywjN9nBvzOo8ps79oFIZrruB/pP44g+lKK4KxxL8icW7cuCrRwaJ6khFSeBbhHtEYprG5f9ILuFOM3k+fNTkuxNwLw8TOpRHvibYMnaxBCNmaHT0lbZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=K/QYeyeS; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="b+tDXKHS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XhxRBfMk"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 9AB20138008D;
-	Wed,  5 Jun 2024 09:17:57 -0400 (EDT)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Wed, 05 Jun 2024 09:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1717593477;
-	 x=1717679877; bh=N2eL8RwybwiJUKVprjaoTWy+fNNjx5dXfQ7CD829ifE=; b=
-	b+tDXKHSZUiRtQKPGC5EZY89buxGvF7wJQIfNACRZgkiqnL5kS/TiYkw9na32eWc
-	UnMp7+r6j7nyE773712+a570z3NAUG0ygd38JI1fydRKHn2EWA4ds1aWQ+KzyT5A
-	xsIdYrOvoyjjTYvMWQq/oztPCun0CZV0YpfeIU+rN4xiMlSfRk4EjyNygK9oRm4i
-	HZkQG0TNeXHI/Gu0hG1IZRe9irjAIzZ4BcQwXvR7SU9FxfkqCTDvN1GoH3bqxOD8
-	KirLCtXgZb6vORHR7qZbTJm5wtkJklT2b6StSPo4iapD7RLjN8u9ADnFJNA0Smk3
-	GGnRq2eymrEFophjm84dTA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1717593477; x=
-	1717679877; bh=N2eL8RwybwiJUKVprjaoTWy+fNNjx5dXfQ7CD829ifE=; b=X
-	hxRBfMkDblW4U9mMyDka2s4QLmNQMLA+rGZP97Q5uoEF6vuShzzIxHGyosgvmca8
-	WCuc+6+zj0vQIgoxCq6bgZy3pZkemtvzfSpo/zxoZlQtIoZuEezgSTLyRhe6siE4
-	SQOxlMpMUHBFTNSU07WwRQvJn9rkyAh106QS+gSfqLRb/DpVmGh/tYpu0uk8x3/Z
-	6GtekL9c+iy4293mzELBWmnt7W8CnTi0q+x+eZkdZWqai3LyZyQbpYO08B/cPGRO
-	G9fdoL9Z/FMB39uM7Cy71wZHookk8rQdpeOi4PqlfQIGn/qnL57dI+BYcqFBqy4h
-	JkJmg+2gQ3sFTgmdgrQdw==
-X-ME-Sender: <xms:hWVgZmEypVF6k5cR8kWOtCsFwHhwP6RO7gpEZGcYOeusDnxwCH6KlA>
-    <xme:hWVgZnW1-wUrGbleNw1caKLCqkRvLSF_h0djxwCL6GRGldZFfitLVNRBLoAQjn1mD
-    qQbZk5qNLKXV_XCtDI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeliedgieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:hWVgZgK5b2ZajJ0AU_NIHnmXE5-iHYiKbihSIHArIRcCR4vPjaZ_oQ>
-    <xmx:hWVgZgH-hIy5j8d0ADNgQ1Iov5Vc7Y4tcaE4o2qrfO8JmsegiNYytA>
-    <xmx:hWVgZsXQBJTwjVJKMwXGEfdGmF5ofNYtseWUtW9NtZqAaXbAFGE_Qg>
-    <xmx:hWVgZjN-ICa2Z_GMP_ffklLYyz6SPb0iEm-6dQPh1IdmBaaDUFNRHA>
-    <xmx:hWVgZmffpLUpXM1Q80stXS9u3zFhQR1pTkwhiAWWUfVioDvqpAhrHOFG>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E7DE336A0074; Wed,  5 Jun 2024 09:17:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-497-g97f96844c-fm-20240526.001-g97f96844
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="K/QYeyeS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1717593493;
+	bh=aSGeY//DKOc9pUfHYgBFU7c6uqdrSP0BOyUSG+ubbnc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=K/QYeyeSpUarJlYgGgAyIAl4Fd+JhbABsGC8TCH2Hn4w42JBjAcm37/+UPyjiPAiS
+	 FXqo2AgIrAo3JpeegFXyKyanW+LLvUOsnxx66xVFVXJVJCEME/Rclz++AQPGIMeI5U
+	 CkSNEPqyletl8w4nPPNuC6JwFEfS5d5LgrHDLEpE=
+Received: from [192.168.124.13] (unknown [113.140.11.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id E912F6760C;
+	Wed,  5 Jun 2024 09:18:08 -0400 (EDT)
+Message-ID: <444ec2031ef6ca016cbfa8dfedc51bddc8529ba7.camel@xry111.site>
+Subject: Re: [PATCH] loongarch: Only select HAVE_OBJTOOL and allow ORC
+ unwinder if the inline assembler supports R_LARCH_{32,64}_PCREL
+From: Xi Ruoyao <xry111@xry111.site>
+To: Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, 
+ Tiezhu Yang <yangtiezhu@loongson.cn>, Nick Desaulniers
+ <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, Youling Tang <tangyouling@kylinos.cn>, Jinyang He
+ <hejinyang@loongson.cn>,  loongarch@lists.linux.dev,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ mengqinggang@loongson.cn, cailulu@loongson.cn, wanglei@loongson.cn, 
+ luweining@loongson.cn, Yujie Liu <yujie.liu@intel.com>, Heng Qi
+ <hengqi@linux.alibaba.com>, Tejun Heo <tj@kernel.org>
+Date: Wed, 05 Jun 2024 21:18:06 +0800
+In-Reply-To: <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
+References: <20240604150741.30252-1-xry111@xry111.site>
+	 <20240605054328.GA279426@thelio-3990X>
+	 <b55b8cb2c52f2c3701c83353586130b8dc237ee2.camel@xry111.site>
+	 <20240605062548.GF279426@thelio-3990X>
+	 <f8ef61773b0119b8573fc0fed9ad0a8b43061efd.camel@xry111.site>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <310c2bce-e6cb-4268-858b-8466c92266dd@app.fastmail.com>
-In-Reply-To: <878qztbvb4.ffs@tglx>
-References: <20240517-loongson_nodecnt-v2-1-5bd0bb20ff5f@flygoat.com>
- <87sey3b6de.ffs@tglx> <9947f7a5-1a95-48f2-b0eb-0385eb2b3d55@app.fastmail.com>
- <558b1d58-08a5-410d-97b8-e77def7c1cf8@app.fastmail.com> <878qztbvb4.ffs@tglx>
-Date: Wed, 05 Jun 2024 14:17:38 +0100
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Thomas Gleixner" <tglx@linutronix.de>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2] clocksource: Add node counter timer driver for MIPS/Loongson64
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
+On Wed, 2024-06-05 at 18:57 +0800, Xi Ruoyao wrote:
+> On Tue, 2024-06-04 at 23:25 -0700, Nathan Chancellor wrote:
+> > On Wed, Jun 05, 2024 at 01:54:24PM +0800, Xi Ruoyao wrote:
+> > > On Tue, 2024-06-04 at 22:43 -0700, Nathan Chancellor wrote:
+> > > > For what it's worth, I have noticed some warnings with clang that I
+> > > > don't see with GCC but I only filed an issue on our GitHub and neve=
+r
+> > > > followed up on the mailing list, so sorry about that.
+> > > >=20
+> > > > https://github.com/ClangBuiltLinux/linux/issues/2024
+> > > >=20
+> > > > Might be tangential to this patch though but I felt it was worth
+> > > > mentioning.
+> > >=20
+> > > The warnings in GCC build is definitely the issue handled by this pat=
+ch.
+> > > But the warnings in Clang build should be a different issue.=C2=A0 Ca=
+n you
+> > > attach the kernel/events/core.o file from the Clang build for analysi=
+s?
+> > > I guess we need to disable more optimization...
+> >=20
+> > Sure thing. Let me know if there are any issues with the attachment.
+>=20
+> Thanks!=C2=A0 I've simplified it and now even...
+>=20
+> .global test
+> .type test,@function
+> test:
+>=20
+> addi.d	$sp,$sp,-448
+> st.d	$ra,$sp,440
+> st.d	$fp,$sp,432
+> addi.d	$fp,$sp,448
+>=20
+> # do something
+>=20
+> addi.d	$sp,$fp,-448
+> ld.d	$fp,$sp,432
+> ld.d	$ra,$sp,440
+> addi.d	$sp,$sp,448
+> ret
+>=20
+> .size test,.-test
+>=20
+> is enough to trigger a objtool warning:
+>=20
+> /home/xry111/t1.o: warning: objtool: test+0x20: return with modified stac=
+k frame
+>=20
+> And to me this warning is bogus?
 
+Minimal C reproducer:
 
-=E5=9C=A82024=E5=B9=B45=E6=9C=8828=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=E5=
-=8D=888:17=EF=BC=8CThomas Gleixner=E5=86=99=E9=81=93=EF=BC=9A
-> On Tue, May 28 2024 at 15:31, Jiaxun Yang wrote:
->> =E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=8B=
-=E5=8D=885:32=EF=BC=8CJiaxun Yang=E5=86=99=E9=81=93=EF=BC=9A
->>> =E5=9C=A82024=E5=B9=B45=E6=9C=8827=E6=97=A5=E4=BA=94=E6=9C=88 =E4=B8=
-=8B=E5=8D=884:51=EF=BC=8CThomas Gleixner=E5=86=99=E9=81=93=EF=BC=9A
->>>> Jiaxun!
->>>>
->>> Hi Thomas,
->>> [...]
->>>>
->>>> What's this indirection for? Why dont you update=20
->>> [...]
->>>>
->>>>> +static struct clocksource nodecnt_clocksource =3D {
->>>>> +	.name	=3D "nodecnt",
->>>>> +	.read	=3D nodecnt_clocksource_read,
->>>>
->>>> the read function pointer here and spare the indirection?
->>> Smart! sched_clock takes slightly different function pointer argumen=
-t type
->>> but as we don't use the argument anyway, it should be safe to relax =
-this
->>> indirection.
->>
->> Sadly, I'm unable to remove it with force type catsing :-/
->>
->> drivers/clocksource/loongson-nodecnt.c: In function =E2=80=98nodecnt_=
-clocksource_init=E2=80=99:
->> drivers/clocksource/loongson-nodecnt.c:89:36: warning: cast between i=
-ncompatible function types from =E2=80=98u64 (*)(void)=E2=80=99 {aka =E2=
-=80=98long long unsigned int (*)(void)=E2=80=99} to =E2=80=98u64 (*)(str=
-uct clocksource *)=E2=80=99 {aka =E2=80=98long long unsigned int (*)(str=
-uct clocksource *)=E2=80=99} [-Wcast-function-type]
->>    89 |         nodecnt_clocksource.read =3D (u64 (*)(struct clocksou=
-rce *))nodecnt_read_fn;
->>
->
-> What about making the actual read functions have the required function
-> signature? The clocksource argument is not used in those real function=
-s.
+struct x { _Alignas(64) char buf[128]; };
 
-Sadly sched_clock requires another signature :-/
+void f(struct x *p);
+void g()
+{
+	struct x x =3D { .buf =3D "1145141919810" };
+	f(&x);
+}
 
-I can see timer-clint hit into the same pitfall.
+Then objtool is unhappy to the object file produced with "clang -c -O2"
+from this translation unit:
 
-Thanks
->
-> Thanks,
->
->         tglx
+/home/xry111/t2.o: warning: objtool: g+0x50: return with modified stack fra=
+me
+
+It seems CFI_BP has a very specific semantic in objtool and Clang does
+not operates $fp in the expected way.  I'm not sure about my conclusion
+though.  Maybe Peter can explain it better.
 
 --=20
-- Jiaxun
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
