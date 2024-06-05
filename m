@@ -1,95 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CFD4776A;
-	Wed,  5 Jun 2024 15:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DF710A0D;
+	Wed,  5 Jun 2024 15:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717603022; cv=none; b=uHTQ3BVmDu935qvqtwyN48dwXN7RYbyRCzrBfOw0R60qvbRv8rpGmVJKWkoLKj/H9gQecXVEw87r9YcAdecoT5cEAOsRMkzmVcruQ9BdgnOra56saGevvHQNeXKJJPa0qvCai1xyTe06o7DcXGY6Au2Cj9eo9amwYsnowYUWdRo=
+	t=1717603144; cv=none; b=TfauEGsOI52VIyiIgD0ttDD6XwMulEik+n9a4eBzdNYah79oD2sQ4v3Y6B3KHivBElaMBzFMyKB0kK/ie/UzfvK+2UIwAXYtntFhgUZk+ZG5YGSwMZZlu2DP998Ama6uzjuRcTIkKcsTsAWx6UjGh8TaQV3p6dz8SwhOhduxRtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717603022; c=relaxed/simple;
-	bh=TJBQFbquQu5uvJHiZ9IjxLrT98QIERfiUKcWcuRj8Ro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IkFbDNmUqqfVzJozOXzxCfauQjCedelw5/eSUx+IiCgRmZW+CGfXugCHiLMX3XtcxfzARvk9yRM6tf8GgVKDs9dCk+2fRXLeGeDaczHHI7yQCpQcY1lu1uLaaFFj7DW028mkHB24IOVYkSK6dOgZ4Idv0f5E65ZQCmZ+RoSyGlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETz7sn3C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717603144; c=relaxed/simple;
+	bh=GzBIWIv61sAJ9yFR55SxyqZ0swetgU0jo9y5+0368oE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jHJaJ5YYQxUNZhOmRtbBwZJZtZNfevitVsETQXJp8VDjKvxq5gLuc9E8tyVVbEFkYkKE8mubF/6bdDSGaSPNiHMAzfLFtPQAmx8cGkUzxyH7YBTHwSI2ocGIfoay19PC6Dh0MERE/vE2+40+qlQpklidiFTVom71sMvzGb/IFRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcI9E5s0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETz7sn3C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9EEFC3277B;
-	Wed,  5 Jun 2024 15:57:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcI9E5s0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 79235C3277B;
+	Wed,  5 Jun 2024 15:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717603022;
-	bh=TJBQFbquQu5uvJHiZ9IjxLrT98QIERfiUKcWcuRj8Ro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ETz7sn3Cng+vS2he2d3/2IMwQ7zgONHBjSbB7wT5DJkGtBE/GlhcBkUuS62PKrSSP
-	 Y7sQKnsBtaJpnZcETKEBiDdsFKrWW8GD2TrEDJcNIbX87D4ukKq6TKe2eEElwL8T+F
-	 TkozbxjadGc8iLDgq3dVCwkzyC4z1+UYEweDgNlR8tokX3w18jS7IV4sPmC1ZgZKwE
-	 JnTKUWgCLL1Q3TeAfERaJGxajYtIggMEBLZjSWJAxbK5PBb/kRO/aJeI1ecHR/CVvy
-	 H/PljK0k6m12XmaQjJxaewAsEVM9/AxNLJdNYkBL0z/bcARCbrChwdVUQeKgOp0+fg
-	 I/RTkTG1zBtFw==
-Date: Wed, 5 Jun 2024 09:56:59 -0600
-From: Rob Herring <robh@kernel.org>
-To: Udit Kumar <u-kumar1@ti.com>
-Cc: vigneshr@ti.com, nm@ti.com, tglx@linutronix.de, tpiepho@impinj.com,
-	w.egorov@phytec.de, andrew@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Kip Broadhurst <kbroadhurst@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: net: dp8386x: Add MIT license along with
- GPL-2.0
-Message-ID: <20240605155659.GA3213669-robh@kernel.org>
-References: <20240531165725.1815176-1-u-kumar1@ti.com>
+	s=k20201202; t=1717603144;
+	bh=GzBIWIv61sAJ9yFR55SxyqZ0swetgU0jo9y5+0368oE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=KcI9E5s0OPuqfeeawfx8aoocTriZ9hyDSr5JosVMF18RVJSI9OeAEMGOGyYHuaGgc
+	 JjiXZp2xIrJ0b+c9d/sLgj5XGL4wgYqle7kept83zP1XAsa0uhWItEUNhH5XkKMOgw
+	 ZrTDsSaL9qT+ao3zi2i5ogSkHMiFoeZBjm+9UpMmxCMbApdrP8kCO14IJ+EST3anos
+	 5NKkeKOE1SyiE0oGRLHQ+qn/xh/y88IGOUOlhg0RthJTfGbzsja4vnTEKgRTmGOq7Q
+	 8NPEw6r+S95mqO4vuB6UiULqw0264StSAUgRfBrC7SJX4hb4H904acxlJZNqmIEGfQ
+	 /jwyQXBuYK97w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 700C8D3E996;
+	Wed,  5 Jun 2024 15:59:04 +0000 (UTC)
+Subject: Re: [GIT PULL] Devicetree fixes for v6.10, part v1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240604203511.GA1345593-robh@kernel.org>
+References: <20240604203511.GA1345593-robh@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240604203511.GA1345593-robh@kernel.org>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.10-1
+X-PR-Tracked-Commit-Id: e7985f43609c782132f8f5794ee6cc4cdb66ca75
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 51214520ad62e6cd5ec216e9b840999b4aaceb5f
+Message-Id: <171760314444.19032.18335377332388477250.pr-tracker-bot@kernel.org>
+Date: Wed, 05 Jun 2024 15:59:04 +0000
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240531165725.1815176-1-u-kumar1@ti.com>
 
-On Fri, May 31, 2024 at 10:27:25PM +0530, Udit Kumar wrote:
-> Modify license to include dual licensing as GPL-2.0-only OR MIT
-> license for TI specific phy header files. This allows for Linux
-> kernel files to be used in other Operating System ecosystems
-> such as Zephyr or FreeBSD.
-> 
-> While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
-> with latest SPDX conventions (GPL-2.0 is deprecated).
-> 
-> While at this, update the TI copyright year to sync with current year
-> to indicate license change.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
+The pull request you sent on Tue, 4 Jun 2024 15:35:11 -0500:
 
-You don't need Thomas's ack for what was just boilerplate license text 
-to SPDX tag.
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.10-1
 
-> Cc: Trent Piepho <tpiepho@impinj.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/51214520ad62e6cd5ec216e9b840999b4aaceb5f
 
-IANAL, but 1 define doesn't make for copyrightable work.
+Thank you!
 
-> Cc: Wadim Egorov <w.egorov@phytec.de>
-> Cc: Kip Broadhurst <kbroadhurst@ti.com>
-> Signed-off-by: Udit Kumar <u-kumar1@ti.com>
-> ---
-> Changelog:
-> Changes in v2:
-> - Updated Copyright information as per review comments of v1
-> - Added all authors[0] in CC list of patch
-> - Extended patch to LAKML list
-> v1 link: https://lore.kernel.org/all/20240517104226.3395480-1-u-kumar1@ti.com/
-> 
-> [0] Patch cc list is based upon (I am representing @ti.com for this patch)
-> git log --no-merges --pretty="%ae" $files|grep -v "@ti.com"
-> 
-> Requesting Acked-by, from the CC list of patch at the earliest
-> 
-> 
->  include/dt-bindings/net/ti-dp83867.h | 4 ++--
->  include/dt-bindings/net/ti-dp83869.h | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
