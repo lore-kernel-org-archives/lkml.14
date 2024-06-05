@@ -1,160 +1,108 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCEF15351A;
-	Wed,  5 Jun 2024 16:14:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7FA1527B5
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 16:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717604051; cv=none; b=Nybfi8a/VOVczUngfTWMllrfP3wcckAyviw8tZjPB10AsVf66aZUUttSJc0lUPPYuCZREFeGiqr4XeG9modVCEKB1Cb9O0O0I3at7RKosZUDRFZRqCUpDsL6LEh6B7DJWGaZMp5EyXVn1nP5z86l+JmltrGQkOQGAmEdL+5rx6c=
+	t=1717604079; cv=none; b=ld02Jd7KQ12Ga2asXp5AUSir0ojEP87iOfsOug7U7sF3hHSplV7aOgca/JyNGiXgly0DyE+58sQSzrfqI3QAKtuIK1tWg1V6kgp0R8QAtideBUFwj/eYCanAiw7t3kHptYkQlfySyHqR+SAZAlUkTiHrQZ2V3hUeIeSKq08RqIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717604051; c=relaxed/simple;
-	bh=zHUNB3srC5m8VepwrOG7tIvrkNy+nREgWKumgaryJFI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=nKbXuFD9OA58x05gSXlP+1AWGbzUaVIG3CJqNptLEjSQHMYp2fBpgOslvstvSDm0KQCYip1eu2M8SzClFn4+3B7GvWxjjoRUQpTu69gsmnidpO9EZyF/KVi5aoe0mzzRu6V95RnF49WHzSq0E+5rqXi77ZutBt8QDShjEmXMHGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZaspJ99; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717604079; c=relaxed/simple;
+	bh=dYRxACWS2D/qY2OE5vaGsvS2+7L87gFzA2dBpDDdBzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+qVwfoCPMxu+Fpd+H1b/G/f/PCfvw1xXWfmveB0mnDHBiFfrl/GQ7PjK5YXINYcJHsZQbpuriH0eshID8x8yPLpcbGQboJFKLnQ46WnBza5Yak7300Hi8bZWmJK/HpCvi+aj2HRPlouAnlbfp2DsZilIO5HwLT4fB1ke8V8QFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ccCWP6S1; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZaspJ99"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2c21d7de619so3119684a91.2;
-        Wed, 05 Jun 2024 09:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717604049; x=1718208849; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xShohQaQijNVnGBy0vSCe1Lri84br3jamfs3+AUmWoU=;
-        b=FZaspJ99aJFRhnTL97eL342oafWr+34JBR9vA7wK1mfLkQYMuy9tDZkrOGNOHaE6Z+
-         EU65UlaXCoMYSq4g/veROU0MLEdM6cYKY9QguccNrHbvdOTzoxzw5RBZL1KDBjeXwOnm
-         iIASMUrsKYmKZvsA7hkMEL/xuo7bByy1Bm/mLohsktNlya7f09BO/UQ2cxhwAEAbpQ56
-         21T8LSR+h2yW7ouKI5I42ayuH6iAK/5rAgcafV3gf5XQFlwM4VpLrmEdBX4K0ZKkY4T9
-         RBDMVYHibWRnrSbPdrrW8omBUBxxlisg6pqTqak8+GVIGaOknIgkSbu/QLLPue8U9AZu
-         4YrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717604049; x=1718208849;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xShohQaQijNVnGBy0vSCe1Lri84br3jamfs3+AUmWoU=;
-        b=qOOPz8GgInkcxTEN3yzciFec/l0grX41ViShS8SHfNE606JCnEjmYkbdji4HmIsU70
-         eKBfH/aCKPmO4XRHHKm4aAVZvMZWO/omlwV9TO4hCyT3LceW1b2Lq+BP5/GYc+1TOO4G
-         6Ey+x53b5nFoVbP7wo6CTpKsSGzGDHogz9zh5BPbZBzjppb296YlaYbhQE5bouisGfpc
-         4EmwitFniBgYHnbbFaqC1dXt183H46eJ2bwF0WZa39wfhRE2CyQzi6/o7LDLyYyT/ofp
-         SBmPodgQUPeBh/rUnX7BEkPWygl/bVQVp5ST3i24VUcQ/I2QKLMotW/A0CU+8ArvzN00
-         lbaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCViF1i68iAFgYzkA8kjHerl1LKAVqcWNbt4qE6vpRpWQFKVu1b1O94BpBQtLhWA5P2/h7X2TshuF/lnbnCdA14MO6s5x5qdx/xWINibVsLZeFwYAyxoyX9quaRmF3CaauU9M+ayXazEokoR8mX8W6omRYrynSRrfKdrjIx1X3FoNw==
-X-Gm-Message-State: AOJu0Yw3qDy+AkWRprTf9tPG464TEPoQCxgJGKO7NoT3gpuWiZuL7Kf/
-	lu77lbe7Qlh/933fnDfNkJ6jSVLCZ6+77YQbpNFwsWU45VkWTwHC2XvSic/vBMLGnURx4l99dNz
-	DRGN1aNhR+l58TVU1WilenHmtPKg=
-X-Google-Smtp-Source: AGHT+IHDIZeudf9hp58R/vptexzs1Mrowe6BNsnF5Wlb/7372cK0lZMZTfKDqKmYcNXTjsWoONoUvuThHOfGib955fE=
-X-Received: by 2002:a17:90a:d512:b0:2c2:8a67:96e4 with SMTP id
- 98e67ed59e1d1-2c28a6797c7mr1470005a91.7.1717604048552; Wed, 05 Jun 2024
- 09:14:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ccCWP6S1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717604078; x=1749140078;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dYRxACWS2D/qY2OE5vaGsvS2+7L87gFzA2dBpDDdBzU=;
+  b=ccCWP6S1R/VqT+GiG0hnLNqXUbOsmd4CW8zieAd3bRI9qmzfpCnQZBrr
+   8ETZa7OPi3Fait4KGoA+RZv+vcE4+z5HB2iLNMEVlCPVv8EqP9UR+Ioon
+   GTrsnAi/+uJHwFrVMMhrqll8xoRnU11jhJS7meP4h6KmVxnQDi23Qkyj2
+   C7t055bpT2HmHseLdD8xeMUn1O/KZKMF4oToYxHdBSGzV29PdQ3zoz6ZW
+   LqTlVFOVsJRj/WFX3ArVc/JpaMU7oWZV7YLhu19uM7Mj0gWB1gCRiULzE
+   bysPXCpE/DXWUt8pD3cBVxFwhB2QuYlE5ji3eBC8UYMCsEmcGdE4Ce4Ku
+   w==;
+X-CSE-ConnectionGUID: 5q7kHWUlSHGOnec+UZVB4A==
+X-CSE-MsgGUID: UYcVV+liQO+QFTRin7bP2A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="31772285"
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="31772285"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 09:14:37 -0700
+X-CSE-ConnectionGUID: sk8BrQSVQNSDq1bvbPLcWA==
+X-CSE-MsgGUID: tqRHwGzOROaEp7oFlw07Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
+   d="scan'208";a="42581895"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 09:14:36 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	James Morse <james.morse@arm.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Drew Fustini <dfustini@baylibre.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v2 0/3] Add and use get_cpu_cacheinfo_level()
+Date: Wed,  5 Jun 2024 09:14:24 -0700
+Message-ID: <20240605161427.312994-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605002459.4091285-1-andrii@kernel.org> <20240605002459.4091285-2-andrii@kernel.org>
- <Zl-38XrUw9entlFR@casper.infradead.org> <uevtozlryyqw5vj2duuzowupknfynmreruiw6m7bcxryjppqpm@7g766emooxfh>
-In-Reply-To: <uevtozlryyqw5vj2duuzowupknfynmreruiw6m7bcxryjppqpm@7g766emooxfh>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Jun 2024 09:13:56 -0700
-Message-ID: <CAEf4BzZFpidjJzRMWboZYY03U8M22Yo1sqXconi36V11XA-ZfA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] mm: add find_vma()-like API but RCU protected and
- taking VMA lock
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, linux-fsdevel@vger.kernel.org, brauner@kernel.org, 
-	viro@zeniv.linux.org.uk, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, gregkh@linuxfoundation.org, 
-	linux-mm@kvack.org, surenb@google.com, rppt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 5, 2024 at 6:33=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> * Matthew Wilcox <willy@infradead.org> [240604 20:57]:
-> > On Tue, Jun 04, 2024 at 05:24:46PM -0700, Andrii Nakryiko wrote:
-> > > +/*
-> > > + * find_and_lock_vma_rcu() - Find and lock the VMA for a given addre=
-ss, or the
-> > > + * next VMA. Search is done under RCU protection, without taking or =
-assuming
-> > > + * mmap_lock. Returned VMA is guaranteed to be stable and not isolat=
-ed.
-> >
-> > You know this is supposed to be the _short_ description, right?
-> > Three lines is way too long.  The full description goes between the
-> > arguments and the Return: line.
+This helper function came up in discussion of the resctrl patches
+for Sub-NUMA Cluster (SNC) support. Reinette pointed out[1] that there
+are already two places where it would clean things up by avoiding
+open coding. The SNC patches will add two additional call sites.
 
-Sure, I'll adjust.
+So rather than have this jammed up as part of the SNC series, I'm
+posting it as a simple standalone cleanup.
 
-> >
-> > > + * @mm: The mm_struct to check
-> > > + * @addr: The address
-> > > + *
-> > > + * Returns: The VMA associated with addr, or the next VMA.
-> > > + * May return %NULL in the case of no VMA at addr or above.
-> > > + * If the VMA is being modified and can't be locked, -EBUSY is retur=
-ned.
-> > > + */
-> > > +struct vm_area_struct *find_and_lock_vma_rcu(struct mm_struct *mm,
-> > > +                                        unsigned long address)
-> > > +{
-> > > +   MA_STATE(mas, &mm->mm_mt, address, address);
-> > > +   struct vm_area_struct *vma;
-> > > +   int err;
-> > > +
-> > > +   rcu_read_lock();
-> > > +retry:
-> > > +   vma =3D mas_find(&mas, ULONG_MAX);
-> > > +   if (!vma) {
-> > > +           err =3D 0; /* no VMA, return NULL */
-> > > +           goto inval;
-> > > +   }
-> > > +
-> > > +   if (!vma_start_read(vma)) {
-> > > +           err =3D -EBUSY;
-> > > +           goto inval;
-> > > +   }
-> > > +
-> > > +   /*
-> > > +    * Check since vm_start/vm_end might change before we lock the VM=
-A.
-> > > +    * Note, unlike lock_vma_under_rcu() we are searching for VMA cov=
-ering
-> > > +    * address or the next one, so we only make sure VMA wasn't updat=
-ed to
-> > > +    * end before the address.
-> > > +    */
-> > > +   if (unlikely(vma->vm_end <=3D address)) {
-> > > +           err =3D -EBUSY;
-> > > +           goto inval_end_read;
-> > > +   }
-> > > +
-> > > +   /* Check if the VMA got isolated after we found it */
-> > > +   if (vma->detached) {
-> > > +           vma_end_read(vma);
-> > > +           count_vm_vma_lock_event(VMA_LOCK_MISS);
-> > > +           /* The area was replaced with another one */
-> >
-> > Surely you need to mas_reset() before you goto retry?
->
-> Probably more than that.  We've found and may have adjusted the
-> index/last; we should reconfigure the maple state.  You should probably
-> use mas_set(), which will reset the maple state and set the index and
-> long to address.
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-Yep, makes sense, thanks. As for the `unlikely(vma->vm_end <=3D
-address)` case, I presume we want to do the same, right? Basically, on
-each retry start from the `address` unconditionally, no matter what's
-the reason for retry.
+[1] https://lore.kernel.org/all/050c64b3-20b3-4db6-b782-f5124ebaab31@intel.com/
 
->
->
-> >
-> > > +           goto retry;
-> > > +   }
-> >
+---
+Changes since v1:
+
+1: s/for cache/for the cache/ in comment for get_cpu_cacheinfo_level()
+2: No change
+3: Fixed broken firtree declaration order in rdtgroup_cbm_to_size()
+
+Added Reinette's "Reviewed-by:" tag to all three.
+
+Tony Luck (3):
+  cacheinfo: Add function to get cacheinfo for a given (cpu, cachelevel)
+  x86/resctrl: Replace open code cacheinfo search in
+    pseudo_lock_region_init()
+  x86/resctrl: Replace open code cacheinfo search in
+    rdtgroup_cbm_to_size()
+
+ include/linux/cacheinfo.h                 | 22 +++++++++++++++++-----
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 17 ++++++-----------
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 14 +++++---------
+ 3 files changed, 28 insertions(+), 25 deletions(-)
+
+
+base-commit: c3f38fa61af77b49866b006939479069cd451173
+-- 
+2.45.0
+
