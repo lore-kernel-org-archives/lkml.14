@@ -1,73 +1,67 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF990EEC5
-	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 01:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E3FEAC7
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 01:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717636095; cv=none; b=QXADq1nnauODi7cVbkbSr1s+hI1fcewqgsAxZ90HmCvRVlVmYPCXm2z9dxjeQrHEDr7m2V2RuG5tkkRp9g7zTioI7RFMcDx3uJQHPL1Qt3aAlEYPUPOi3mTti2eYmd2tDVcsVxcqk0iqfYpdyAC+V+pex+kcqguX2H5nAJ8wfPQ=
+	t=1717636145; cv=none; b=NrWFe27/Dpf4WX9S+IO0SG7dMg1yfQjfpx22z74aPMgEjrF7J+UiPtW0CK6kdFRDSGYoPrkfkBDhcbx523Ly/Btr86CbCLURONya4GD+JFNJRPfwSagZgsX4awbRL/ALQiODDQgrraahevWLmEB1jDI4DecD+DtRsj0iqrqUjBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717636095; c=relaxed/simple;
-	bh=FdUGTn7E60U9mVrfNwiBBTHr4mXPhN4m20DVQeiCDtA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ua6wyMnoGGucQjxqcIIxBc7Jr4M5IAwRBKT9837Sv6aEGtxBNFVdrafAz9hDU1bXNJyTunKEDFSNXTtrIEs3AAJpN8MfVRmi+BBk3dHufcSOJ74yyps0kicsvSauI93zIUo4lxNOTPmrOIF5bZzBSBZM+FlPP3Hhe2oAUxSKvjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TrAqwHEe; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1717636145; c=relaxed/simple;
+	bh=WOwjFkABDSkF67Cfn91JPyWJhJHHMkC7rJpl1Vbtzug=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=iyKaakvgvK3SildhIA+uhpAsU1qzm6JnNbSAIxvX2QGoBBxLQGFhx+p5k16oEN1BsL3AK7kYojMBryjA7YefQvRi2qKF4quQUVJQrkbw8ovhrvNklcSjX7h7frkim6KBfSKFbpUGYk+qDQZAMKjfrucT3Iw9rPpeZ2XwPOnZfzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZIgN7cxN; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TrAqwHEe"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5b970e90ab8so209252eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 18:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1717636093; x=1718240893; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IAfEoh3LN14COjXOglCY4ucRHkZygl/xVI6d4vTPlIQ=;
-        b=TrAqwHEe+g/3UkwrtP1hKuraRzPTnUjrAilQKmxPrMK7VWQBDM0zhOiFc4sWMkn/Gs
-         rkt7Ut0mNJ5a6lcSpbcECngReBmKT7BYgvuCikzhrt0uY9+yK/bhEbV0FYt15cgfE5Gp
-         S2NgIHssSElTt4cIlW9m8xpmVqSVZIvVQhTow=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717636093; x=1718240893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IAfEoh3LN14COjXOglCY4ucRHkZygl/xVI6d4vTPlIQ=;
-        b=cF/w7gOZ/BW9Z4QRbfURX9IMzw7QN6uokg7dwkUJ2QERi45fDTbkFLyFq7jNhnHGJJ
-         8Plp0A2C9XlgKwp99TY4wkq/llEgZFvNbaEKapxNVKxm4cEE7ab0Puv9fcLOcug55Ccl
-         K9zho+PGH5kYGbv/cAnkrZ4lTw8FUC4t7ltpxP8DXlh0FNcRqc1trPHFulliNVS+VJ6N
-         zvSbdCUyjl1Zkj/dzBat9/WgFwszmjiwHhKA0pp4HdflkfCV9wTKTGZzg79RitBg2WdU
-         q2ZB4+H82+Z8U0qvuhi4EfisQ7sF1vmEusg82hIW4naUOs45aksJ4NcHmmEeRortEkfh
-         Kqcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ2/tOKayjH9vyAa3E4WwTREWs0RGVMaZLCubVB6AkOgqadUIODtbqU/BpAVfUqMyZYIk3ss0bpjNepRQjdJbm8EOCvRO465cUkSjt
-X-Gm-Message-State: AOJu0YzrzDD920ZRk5tQIl+OaDmW17c3aZiAYahWWv96IsBCWbGJXd8F
-	h6fB2YHdn7048xIKIDeNk2RhiPRQLJW+dGO2TfPppvyEdiMZwCx8YszGb4v3jQ==
-X-Google-Smtp-Source: AGHT+IHSjbXTe7hjbnqJqHf+umAtZglpbm8pt6ap9RzoS5sYamm7xsZMvad9OnY6FvW9Lge+U3QurA==
-X-Received: by 2002:a05:6358:63aa:b0:186:c06f:435c with SMTP id e5c5f4694b2df-19c6c9f3073mr554881755d.24.1717636092690;
-        Wed, 05 Jun 2024 18:08:12 -0700 (PDT)
-Received: from pc98uv11.mtv.corp.google.com ([2620:15c:9d:2:3fe9:f321:712c:442f])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-6de177eefd5sm109548a12.0.2024.06.05.18.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 18:08:11 -0700 (PDT)
-From: Daisuke Nojiri <dnojiri@chromium.org>
-To: 
-Cc: Daisuke Nojiri <dnojiri@chromium.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZIgN7cxN"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240606010854epoutp031831c9b99a6d7d838bced238689bfd07~WRPbKavHY0729507295epoutp03m
+	for <linux-kernel@vger.kernel.org>; Thu,  6 Jun 2024 01:08:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240606010854epoutp031831c9b99a6d7d838bced238689bfd07~WRPbKavHY0729507295epoutp03m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1717636134;
+	bh=DyJq680hs+B+mq6sTVl9ih/9wYgktdGjE6kStgD7w08=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZIgN7cxNkIAB3VLSBJ8SYZAQUfgaM6BtzYwZI8p8A1/KDD9Go5QIXPY3zqTeYmVuV
+	 NXAGKrKDfwKOx27VrSJB7KQv5fTctRmCSdkkByVDRSoUvmIhwPTHZOB7zxs0ud1CuR
+	 HpCi60T8AhkdSKDZtAB/8Mnh5rYdYmyLctpYq4gs=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20240606010854epcas5p20bf2fe2a5e44ed011503953503539e67~WRPasaZqh1759917599epcas5p2o;
+	Thu,  6 Jun 2024 01:08:54 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4VvmS441vyz4x9Q3; Thu,  6 Jun
+	2024 01:08:52 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	69.3C.10035.42C01666; Thu,  6 Jun 2024 10:08:52 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240605090147epcas5p243e0e3fa55f586adf5f6c2e539a6d9fc~WEDBbCZBd3227032270epcas5p2z;
+	Wed,  5 Jun 2024 09:01:47 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240605090147epsmtrp21f023cfc18084f69a4050032542406fb~WEDBaMj2t1583515835epsmtrp2h;
+	Wed,  5 Jun 2024 09:01:47 +0000 (GMT)
+X-AuditID: b6c32a4b-8afff70000002733-a0-66610c246d37
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8C.5B.08622.B7920666; Wed,  5 Jun 2024 18:01:47 +0900 (KST)
+Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240605090147epsmtip1f215549f44d48ac600e2f28f5332455d~WEDAudVSF2721427214epsmtip1i;
+	Wed,  5 Jun 2024 09:01:46 +0000 (GMT)
+From: hexue <xue01.he@samsung.com>
+To: hch@infradead.org
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: cros-ec-keyboard: Add keyboard matrix v3.0
-Date: Wed,  5 Jun 2024 18:08:06 -0700
-Message-ID: <20240606010808.27069-1-dnojiri@chromium.org>
-X-Mailer: git-send-email 2.45.1.467.gbab1589fc0-goog
-In-Reply-To: <20240604005354.2294468-1-dnojiri@chromium.org>
-References: <20240604005354.2294468-1-dnojiri@chromium.org>
+Subject: Re: Re: [PATCH] block: Avoid polling configuration errors
+Date: Wed,  5 Jun 2024 17:01:40 +0800
+Message-Id: <20240605090141.3873159-1-xue01.he@samsung.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <ZlrQCaR6xEaghWdQ@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,127 +69,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgk+LIzCtJLcpLzFFi42LZdlhTXVeFJzHNYMU0WYvVd/vZLE5PWMRk
+	8av7LqPF3lvaFpd3zWGzODvhA6sDm8fmFVoel8+WevRtWcXo8XmTXABLVLZNRmpiSmqRQmpe
+	cn5KZl66rZJ3cLxzvKmZgaGuoaWFuZJCXmJuqq2Si0+ArltmDtBmJYWyxJxSoFBAYnGxkr6d
+	TVF+aUmqQkZ+cYmtUmpBSk6BSYFecWJucWleul5eaomVoYGBkSlQYUJ2RucF1YLLnBVb535h
+	amC8x97FyMEhIWAicXqBXhcjF4eQwG5Giafrj7JAOJ8YJXZuXcgM4XxjlGj8f52pi5ETrGPL
+	671MEIm9jBL7/z1nhHB+MEp8332dBaSKTUBJYv+WD4wgtoiAqMS96VfAbGaBAImGzmdgNcIC
+	ThIv5hwHm8oioCrxaNFDsDivgLXE3TN3GSG2yUvc7NrPDGJzCuhKXDo9jw2iRlDi5MwnLBAz
+	5SWat85mhqi/xC7xcrIvxG8uEn9OlUKEhSVeHd/CDmFLSXx+t5cNws6XmPx9PdSqGol1m9+x
+	QNjWEv+u7GEBGcMsoCmxfpc+RFhWYuqpdUwQW/kken8/gYYJr8SOeTC2ksSSIyugRkpI/J6w
+	iBXC9pC40ruVHRJUDYwS82+/ZprAqDALyTezkHwzC2H1AkbmVYySqQXFuempxaYFxnmp5fAo
+	Ts7P3cQITopa3jsYHz34oHeIkYmD8RCjBAezkgivX3F8mhBvSmJlVWpRfnxRaU5q8SFGU2Bw
+	T2SWEk3OB6blvJJ4QxNLAxMzMzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUamHi8
+	I7/bcFxfErDy5+UqXZfvu2Zn68o+Tjm4walkwh7xDvEblltkalLdZrKG77J+3+1+tZ3pZPlR
+	mcuZh7Nu/tFovG13+x6f4kQzTv0LabIpKT9rQm7uW1XqUGanFuvWWvZHVCTHkWV/97KN0lYT
+	jRT884NuPPxtXr7Ff/uTD5d/d/Zt/lsdteuQUE/2xedNuS1NGx1+t36TeDFBMOBd4wYNJ0GP
+	k7p+XAufzj3noSb4/4e/wzZNrk8dctrNUfHreRYodllkzBS9cVN7f4KFxPblGr/e3phe4pX1
+	64TbITP/ZetMjiV4CQYsqVetm3BtkV+5p8Db/ZE+b4pZDnLtr9DL+uC9sbtr442iAvaLSizF
+	GYmGWsxFxYkArT51phMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsWy7bCSnG61ZkKawbKF6har7/azWZyesIjJ
+	4lf3XUaLvbe0LS7vmsNmcXbCB1YHNo/NK7Q8Lp8t9ejbsorR4/MmuQCWKC6blNSczLLUIn27
+	BK6MzguqBZc5K7bO/cLUwHiPvYuRk0NCwERiy+u9TF2MXBxCArsZJfbuOMUEkZCQ2PHoDyuE
+	LSyx8t9zsAYhgW+MEru2WYHYbAJKEvu3fGAEsUUERCXuTb8CZjMLBEl8WQgRFxZwkngx5zjY
+	TBYBVYlHix6ygNi8AtYSd8/cZYSYLy9xs2s/M4jNKaArcen0PLYuRg6gXToSvV94IMoFJU7O
+	fMICMV5eonnrbOYJjAKzkKRmIUktYGRaxSiZWlCcm55bbFhglJdarlecmFtcmpeul5yfu4kR
+	HLZaWjsY96z6oHeIkYmD8RCjBAezkgivX3F8mhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeb697
+	U4QE0hNLUrNTUwtSi2CyTBycUg1MfNUCy/S/15Xq+ipZfbu5RK78j85Cp9s/i8pfpKfca1MM
+	bv4jfSeupOD3X6G7yme6p6/xUwl93+q2WPdouG18hU+jotrOk8tfz3ycVHRsLiufiLIQk1Ji
+	ifK2B4/Z41R/9Dza6GcRfvW2Q+8Whb4H80Vr9t5YovX13I5PVsZBzQ/jpv9dGuVaWJjyVp1l
+	lrSY1D/v79yW3KEVb1bG9KuUTe+YxZwsdznBUc1yXdbam+vlpTz+i833vHLe6diTml/uH7ev
+	rai5+uYVr+vitT+u7Or12G2xnUWOT+LvBtGuL2Ff1nr45Won+L33cC4y+3g3bGbSQq3Hm5KO
+	bKlb/tPZLzo6syPm8vId156+YOJSYinOSDTUYi4qTgQAKdTRlsoCAAA=
+X-CMS-MailID: 20240605090147epcas5p243e0e3fa55f586adf5f6c2e539a6d9fc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240605090147epcas5p243e0e3fa55f586adf5f6c2e539a6d9fc
+References: <ZlrQCaR6xEaghWdQ@infradead.org>
+	<CGME20240605090147epcas5p243e0e3fa55f586adf5f6c2e539a6d9fc@epcas5p2.samsung.com>
 
-Add support for keyboard matrix version 3.0.
+On Sat, Jun 1, 2024 at 00:38:49 -0700, Christoph Hellwig wrote:
+>On Fri, May 31, 2024 at 05:10:15PM +0800, hexue wrote:
+>> Here's a misconfigured if application is doing polled IO
+>> for devices that don't have a poll queue, the process will
+>> continue to do syscall between user space and kernel space,
+>> as in normal poll IO, CPU utilization will be 100%. IO actually
+>> arrives through interruption.
+>> 
+>> This patch returns a signal that does not support the operation
+>> when the underlying device does not have a poll queue, avoiding
+>> performance and CPU simultaneous loss.
+>
+>This feels like the wrong place to check for this.
+>
+>As we've dropped synchronous polling we now only support
+>thead based polling, right now only through io_uring.
+>
+>So we need to ensure REQ_POLLED doesn't even get set for any
+>other I/O.
 
-Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
----
- include/dt-bindings/input/cros-ec-keyboard.h | 104 +++++++++++++++++++
- 1 file changed, 104 insertions(+)
+Sorry I'm not entirely clear on the impact of REQ_POLLED in this context.
+I searched that REQ_POLLED is set for request if polled in io_uring or
+io_uring_cmd, but here we just judge the state of request_queue.
 
-diff --git a/include/dt-bindings/input/cros-ec-keyboard.h b/include/dt-bindings/input/cros-ec-keyboard.h
-index f0ae03634a96..afc12f6aa642 100644
---- a/include/dt-bindings/input/cros-ec-keyboard.h
-+++ b/include/dt-bindings/input/cros-ec-keyboard.h
-@@ -100,4 +100,108 @@
- 	MATRIX_KEY(0x07, 0x0b, KEY_UP)		\
- 	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)
- 
-+/* No numpad */
-+#define CROS_TOP_ROW_KEYMAP_V30 \
-+	MATRIX_KEY(0x00, 0x01, KEY_F11)		/* T11 */	\
-+	MATRIX_KEY(0x00, 0x02, KEY_F1)		/* T1 */	\
-+	MATRIX_KEY(0x00, 0x04, KEY_F10)		/* T10 */	\
-+	MATRIX_KEY(0x00, 0x0b, KEY_F14)		/* T14 */	\
-+	MATRIX_KEY(0x00, 0x0c, KEY_F15)		/* T15 */	\
-+	MATRIX_KEY(0x01, 0x02, KEY_F4)		/* T4 */	\
-+	MATRIX_KEY(0x01, 0x04, KEY_F7)		/* T7 */	\
-+	MATRIX_KEY(0x01, 0x05, KEY_F12)		/* T12 */	\
-+	MATRIX_KEY(0x01, 0x09, KEY_F9)		/* T9 */	\
-+	MATRIX_KEY(0x02, 0x02, KEY_F3)		/* T3 */	\
-+	MATRIX_KEY(0x02, 0x04, KEY_F6)		/* T6 */	\
-+	MATRIX_KEY(0x02, 0x0b, KEY_F8)		/* T8 */	\
-+	MATRIX_KEY(0x03, 0x02, KEY_F2)		/* T2 */	\
-+	MATRIX_KEY(0x03, 0x05, KEY_F13)		/* T13 */	\
-+	MATRIX_KEY(0x04, 0x04, KEY_F5)		/* T5 */
-+
-+#define CROS_MAIN_KEYMAP_V30			/* Keycode */	\
-+	MATRIX_KEY(0x00, 0x03, KEY_B)		/* 50 */	\
-+	MATRIX_KEY(0x00, 0x05, KEY_N)		/* 51 */	\
-+	MATRIX_KEY(0x00, 0x06, KEY_RO)		/* 56 (JIS) */	\
-+	MATRIX_KEY(0x00, 0x08, KEY_EQUAL)	/* 13 */	\
-+	MATRIX_KEY(0x00, 0x09, KEY_HOME)	/* 80 (Numpad) */	\
-+	MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)	/* 62 */	\
-+	MATRIX_KEY(0x00, 0x10, KEY_FN)		/* 127 */	\
-+								\
-+	MATRIX_KEY(0x01, 0x01, KEY_ESC)		/* 110 */	\
-+	MATRIX_KEY(0x01, 0x03, KEY_G)		/* 35 */	\
-+	MATRIX_KEY(0x01, 0x06, KEY_H)		/* 36 */	\
-+	MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)	/* 41 */	\
-+	MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)	/* 15 */	\
-+	MATRIX_KEY(0x01, 0x0c, KEY_HENKAN)	/* 65 (JIS) */	\
-+	MATRIX_KEY(0x01, 0x0e, KEY_LEFTCTRL)	/* 58 */	\
-+								\
-+	MATRIX_KEY(0x02, 0x01, KEY_TAB)		/* 16 */	\
-+	MATRIX_KEY(0x02, 0x03, KEY_T)		/* 21 */	\
-+	MATRIX_KEY(0x02, 0x05, KEY_RIGHTBRACE)	/* 28 */	\
-+	MATRIX_KEY(0x02, 0x06, KEY_Y)		/* 22 */	\
-+	MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)	/* 27 */	\
-+	MATRIX_KEY(0x02, 0x09, KEY_DELETE)	/* 76 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x0c, KEY_PAGEUP)	/* 85 (Numpad) */	\
-+	MATRIX_KEY(0x02, 0x011, KEY_YEN)	/* 14 (JIS) */	\
-+								\
-+	MATRIX_KEY(0x03, 0x00, KEY_LEFTMETA)	/* Launcher */	\
-+	MATRIX_KEY(0x03, 0x01, KEY_GRAVE)	/* 1 */	\
-+	MATRIX_KEY(0x03, 0x03, KEY_5)		/* 6 */	\
-+	MATRIX_KEY(0x03, 0x04, KEY_S)		/* 32 */	\
-+	MATRIX_KEY(0x03, 0x06, KEY_MINUS)	/* 12 */	\
-+	MATRIX_KEY(0x03, 0x08, KEY_6)		/* 7 */		\
-+	MATRIX_KEY(0x03, 0x09, KEY_SLEEP)	/* Lock */	\
-+	MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)	/* 29 */	\
-+	MATRIX_KEY(0x03, 0x0c, KEY_MUHENKAN)	/* 63 (JIS) */	\
-+	MATRIX_KEY(0x03, 0x0e, KEY_RIGHTCTRL)	/* 64 */	\
-+								\
-+	MATRIX_KEY(0x04, 0x01, KEY_A)		/* 31 */	\
-+	MATRIX_KEY(0x04, 0x02, KEY_D)		/* 33 */	\
-+	MATRIX_KEY(0x04, 0x03, KEY_F)		/* 34 */	\
-+	MATRIX_KEY(0x04, 0x05, KEY_K)		/* 38 */	\
-+	MATRIX_KEY(0x04, 0x06, KEY_J)		/* 37 */	\
-+	MATRIX_KEY(0x04, 0x08, KEY_SEMICOLON)	/* 40 */	\
-+	MATRIX_KEY(0x04, 0x09, KEY_L)		/* 39 */	\
-+	MATRIX_KEY(0x04, 0x0b, KEY_ENTER)	/* 43 */	\
-+	MATRIX_KEY(0x04, 0x0c, KEY_END)		/* 81 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x05, 0x01, KEY_1)		/* 2 */	\
-+	MATRIX_KEY(0x05, 0x02, KEY_COMMA)	/* 53 */	\
-+	MATRIX_KEY(0x05, 0x03, KEY_DOT)		/* 54 */	\
-+	MATRIX_KEY(0x05, 0x04, KEY_SLASH)	/* 55 */	\
-+	MATRIX_KEY(0x05, 0x05, KEY_C)		/* 48 */	\
-+	MATRIX_KEY(0x05, 0x06, KEY_SPACE)	/* 61 */	\
-+	MATRIX_KEY(0x05, 0x07, KEY_LEFTSHIFT)	/* 44 */	\
-+	MATRIX_KEY(0x05, 0x08, KEY_X)		/* 47 */	\
-+	MATRIX_KEY(0x05, 0x09, KEY_V)		/* 49 */	\
-+	MATRIX_KEY(0x05, 0x0b, KEY_M)		/* 52 */	\
-+	MATRIX_KEY(0x05, 0x0c, KEY_PAGEDOWN)	/* 86 (Numpad) */	\
-+								\
-+	MATRIX_KEY(0x06, 0x01, KEY_Z)		/* 46 */	\
-+	MATRIX_KEY(0x06, 0x02, KEY_3)		/* 4 */		\
-+	MATRIX_KEY(0x06, 0x03, KEY_4)		/* 5 */		\
-+	MATRIX_KEY(0x06, 0x04, KEY_2)		/* 3 */		\
-+	MATRIX_KEY(0x06, 0x05, KEY_8)		/* 9 */		\
-+	MATRIX_KEY(0x06, 0x06, KEY_0)		/* 11 */	\
-+	MATRIX_KEY(0x06, 0x08, KEY_7)		/* 8 */		\
-+	MATRIX_KEY(0x06, 0x09, KEY_9)		/* 10 */	\
-+	MATRIX_KEY(0x06, 0x0b, KEY_DOWN)	/* 84 */	\
-+	MATRIX_KEY(0x06, 0x0c, KEY_RIGHT)	/* 89 */	\
-+	MATRIX_KEY(0x06, 0x0d, KEY_LEFTALT)	/* 60 */	\
-+	MATRIX_KEY(0x06, 0x0f, KEY_ASSISTANT)	/* 128 */	\
-+	MATRIX_KEY(0x06, 0x11, KEY_BACKSLASH)	/* 42 (JIS, ISO) */	\
-+								\
-+	MATRIX_KEY(0x07, 0x01, KEY_U)		/* 23 */	\
-+	MATRIX_KEY(0x07, 0x02, KEY_I)		/* 24 */	\
-+	MATRIX_KEY(0x07, 0x03, KEY_O)		/* 25 */	\
-+	MATRIX_KEY(0x07, 0x04, KEY_P)		/* 26 */	\
-+	MATRIX_KEY(0x07, 0x05, KEY_Q)		/* 17 */	\
-+	MATRIX_KEY(0x07, 0x06, KEY_W)		/* 18 */	\
-+	MATRIX_KEY(0x07, 0x07, KEY_RIGHTSHIFT)	/* 57 */	\
-+	MATRIX_KEY(0x07, 0x08, KEY_E)		/* 19 */	\
-+	MATRIX_KEY(0x07, 0x09, KEY_R)		/* 20 */	\
-+	MATRIX_KEY(0x07, 0x0b, KEY_UP)		/* 83 */	\
-+	MATRIX_KEY(0x07, 0x0c, KEY_LEFT)	/* 79 */	\
-+	MATRIX_KEY(0x07, 0x11, KEY_102ND)	/* 45 (ISO) */
-+
- #endif /* _CROS_EC_KEYBOARD_H */
--- 
-2.45.1.467.gbab1589fc0-goog
+Do you mean making this judgment here may not be a good choice, because
+it may affect other IO (by same path), and this change should be just
+targeted at io_uring?
 
