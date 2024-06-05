@@ -1,163 +1,151 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0516F2744E;
-	Wed,  5 Jun 2024 02:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BC6BB5C
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 02:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717553958; cv=none; b=kiPiB1c7oci+dwS3ysePw1FbjY/gxcIjOTzgx5tqLa+VnQFKo9XR0/s8wzaP6xJdKoxBGHkh4MFjg4CZ5efK0mhHqVZD0VSbUCWxGh3JyX2osl5GFvaCmUlhJpJCiOHs2izoMoRe8PIfW1/JAaNX/Iaqbt5WxObuQ+tOEkqAjjk=
+	t=1717553963; cv=none; b=JQfUUYumvlJDJ6rRjNoVpVDXex2TkwttUO8xr1YVVZlaxfnW5exawe/3WWmwp8OvvpLK+Yx+FbL0KBMkmXoA25zEbCsCpuAB6ogcyyVAB2BPMh2uQvF4n6Mm0i/Ze1VZmXBtydy6Wl97aKaqfb90d7jn+YUmyupovjNvC0HT7lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717553958; c=relaxed/simple;
-	bh=MN5QUhpveLtR3vzOpslL0uzm+4RYwh54UdoJyZVPeus=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mWJ+FcNupQGf43VOd8Q1sQ9F/gHL/ShgJRhvMD3WX6Fk17FbD0GGwkR+2Lkut9kUrqgkhNMBy2K24m/rv2+tmDbJJnRQHKiSG05vbxzw4mAWE1UeEjMxK8Ist+idyBxQyLgdW93P3k3u7USgnF0tKgGoHpz+uMhSDBnbwfOINCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+q5WxJl; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717553963; c=relaxed/simple;
+	bh=ltMu19Jhp3GbFGcA2fm3gdSE2xNB69BJvpou5y05Rk8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=a7MJVhAbengGfGu5jQSgZA5qWJC1BUlhQLiy/YT/uQztpuhSH8cX2JN1mE/xYJvq1fDQGF6eUcNzQNYftUKRwR4czubrSSXPu0KO5BDJFe1MXDy5BWmmqRfj3uqHPDKOT3ji17fggLNpXxxuwno89RQw/VYxJGzWPbA79CNPeVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EsY/6fza; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+q5WxJl"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-24c0dbd2866so2816730fac.0;
-        Tue, 04 Jun 2024 19:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717553955; x=1718158755; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yH7bfOUTp5Qehb6cDSUFa9U/OcV22YcwBdkqqYDC6kU=;
-        b=Z+q5WxJlbUwJmZJQu0guOdTkurXNX0fish8ULU+AlQQFsCzj5Flt6vYgzFqTfsrTQ7
-         pAGscVP8KNnTKZOARs/fhzdZlYhbqzXzlH3ABvNbc73qV84iki93CQEZy8knWGBBzut/
-         R0BAjEhPG1yWlRF7M9H8HNtIM20Kp3eapwRZ/4+10fVhJ9GOXHRO9LdlBOm8fdR7+r6Y
-         Ez+eNvBWZb7fCcmwQxHv3VKFrG/2o67evPqU7bgI27OqKZgqm7bUNQS/49sbNMbYIF5y
-         2Ks0ytEgcoony9i4Y3+WAtT6r+goukgGdaq5IYnpNPawa483dBpal/+fdE12zji0awuF
-         RuWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717553955; x=1718158755;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=yH7bfOUTp5Qehb6cDSUFa9U/OcV22YcwBdkqqYDC6kU=;
-        b=MfrrFzhc8cr6t0KAA46OLJEeqpw/Xajt2UPh+eyJ9sScOqLmLF7ojb+V360wZ6VCIm
-         DgmqjVbtcpqK1w4/V+SApOg0fG/G7rQtCrNC0Nx8SUbbrjdfMagZJjYxAQ89RzMd/IG2
-         W+jKIVmzqbklhXfkg2d9TFTJZterZ6RqQwx/NLrkIXooEV7bCkrf2sOFKM2rGEjpWeMG
-         ML+YulCDZncu1vsuH+bH0wE1WBstwy8ApnuH/uyS0zYlQCMx4rO7g8MnaK/Q4DX1lYJs
-         1NuQKeONfxkEuBxRpb3pA7iqn2E8F/uR/VbzxnpMtL5Svv/0jMvCval5urfYeOzcP9p6
-         emyw==
-X-Forwarded-Encrypted: i=1; AJvYcCWuNfWM8V68dE0R4rJnOEAQXuFC8TmsnwpN73v1HDb6kI/XYBBraQhnDdxVRqs5qhIFxdOzEnR++08HDSHMg7zGj3dsrsdRtxGSNNosDTGWdeetOJGTm+I/cnWrtFMEuZfxmDXAgZJz3A==
-X-Gm-Message-State: AOJu0YyhLcmnaQR7T3vcXfhJekAuQxf4SbfCva+ANfABwMzTXuuOTrzk
-	VmuqbfQk6IG60V5nszmxY24DUz51YrsjHXwzsH08nubKbgkYQhvSJq96JQ==
-X-Google-Smtp-Source: AGHT+IFQd51VLz90gjLy96kC0m145tkni8e7Yv5/EHoJYHDwUGJmrO9SydWBlbsdmzi73PVDj9GySQ==
-X-Received: by 2002:a05:6870:96a4:b0:24c:63b2:8a18 with SMTP id 586e51a60fabf-25121c7e095mr1577477fac.7.1717553955365;
-        Tue, 04 Jun 2024 19:19:15 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-702544e2e52sm5900559b3a.74.2024.06.04.19.19.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jun 2024 19:19:14 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: linux-hwmon@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	=?UTF-8?q?Ren=C3=A9=20Rebe?= <rene@exactcode.de>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Armin Wolf <W_Armin@gmx.de>,
-	Stephen Horvath <s.horvath@outlook.com.au>,
-	Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v4a 6/6] hwmon: (spd5118) Add configuration option for auto-detection
-Date: Tue,  4 Jun 2024 19:19:07 -0700
-Message-Id: <20240605021907.4125716-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240604040237.1064024-7-linux@roeck-us.net>
-References: <20240604040237.1064024-7-linux@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EsY/6fza"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717553962; x=1749089962;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ltMu19Jhp3GbFGcA2fm3gdSE2xNB69BJvpou5y05Rk8=;
+  b=EsY/6fzaMWkSmjhHdNv2B4XTAWVCCnUEWM9vq9n8PU+YekD29ejItSQI
+   dnF1EchuccLzHXMRrBwuhtJZ8nf32wCOwoVZdbkQc9eS09OywbM5WBaw1
+   oAbF1hurZo2Z/iJ8v9/XhCrqn3/Hg1CUvS0fRGb3FqAM5BACWGEl5VeQS
+   bvX5QB8g5tUYgWnz4K5sO/tOG3izWf8W6QzW5S0tUoZMhbNs5pjV8lgHk
+   zG4ViZW9B2ZRcL0kdOU36VvjA68ugRgrgUYcmDpIhgAjBvcJSsLdxc2l7
+   UBWeSd3E4tzhhhps2AkcmAu8BZWDavM5mcg426nvKVzKFDJ/GKnXj4gmW
+   Q==;
+X-CSE-ConnectionGUID: pCXJ6F5YSvOqYfEO2q8dMA==
+X-CSE-MsgGUID: R0yBtEzSTE2Qdb/XTDaBsw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13943658"
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="13943658"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 19:19:21 -0700
+X-CSE-ConnectionGUID: FGVrFuVIQBaxMHhZMYR1kQ==
+X-CSE-MsgGUID: graUDyw+RrSGOo9FPK/s4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,215,1712646000"; 
+   d="scan'208";a="42545124"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by orviesa004.jf.intel.com with ESMTP; 04 Jun 2024 19:19:16 -0700
+Message-ID: <02e88f89-a277-433d-9ccc-af4318a8e80f@linux.intel.com>
+Date: Wed, 5 Jun 2024 10:17:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alex Williamson <alex.williamson@redhat.com>, mst@redhat.com,
+ Jason Wang <jasowang@redhat.com>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>,
+ Mikko Perttunen <mperttunen@nvidia.com>, iommu@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/22] iommufd: Use iommu_user_domain_alloc()
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240604015134.164206-1-baolu.lu@linux.intel.com>
+ <20240604015134.164206-3-baolu.lu@linux.intel.com>
+ <20240604165145.GD21513@ziepe.ca>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240604165145.GD21513@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-With SPD5118 chip detection for the most part handled by the i2c-smbus
-core using DMI information, the spd5118 driver no longer needs to
-auto-detect spd5118 compliant chips.
+On 6/5/24 12:51 AM, Jason Gunthorpe wrote:
+> On Tue, Jun 04, 2024 at 09:51:14AM +0800, Lu Baolu wrote:
+>> Replace iommu_domain_alloc() with iommu_user_domain_alloc().
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/iommufd/hw_pagetable.c | 20 +++++---------------
+>>   1 file changed, 5 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommufd/hw_pagetable.c b/drivers/iommu/iommufd/hw_pagetable.c
+>> index 33d142f8057d..ada05fccb36a 100644
+>> --- a/drivers/iommu/iommufd/hw_pagetable.c
+>> +++ b/drivers/iommu/iommufd/hw_pagetable.c
+>> @@ -127,21 +127,11 @@ iommufd_hwpt_paging_alloc(struct iommufd_ctx *ictx, struct iommufd_ioas *ioas,
+>>   	hwpt_paging->ioas = ioas;
+>>   	hwpt_paging->nest_parent = flags & IOMMU_HWPT_ALLOC_NEST_PARENT;
+>>   
+>> -	if (ops->domain_alloc_user) {
+>> -		hwpt->domain = ops->domain_alloc_user(idev->dev, flags, NULL,
+>> -						      user_data);
+>                                                       ^^^^^^^^^^^^
+> 
+>> -		if (IS_ERR(hwpt->domain)) {
+>> -			rc = PTR_ERR(hwpt->domain);
+>> -			hwpt->domain = NULL;
+>> -			goto out_abort;
+>> -		}
+>> -		hwpt->domain->owner = ops;
+>> -	} else {
+>> -		hwpt->domain = iommu_domain_alloc(idev->dev->bus);
+>> -		if (!hwpt->domain) {
+>> -			rc = -ENOMEM;
+>> -			goto out_abort;
+>> -		}
+>> +	hwpt->domain = iommu_user_domain_alloc(idev->dev, flags);
+>> +	if (IS_ERR(hwpt->domain)) {
+> 
+> Where did the user_data go???
 
-Auto-detection by the driver is still needed on systems with no DMI support
-or on systems with more than eight DIMMs and can not be removed entirely.
-However, it affects boot time and introduces the risk of mis-identifying
-chips. Add configuration option to be able to disable it on systems where
-chip detection is handled outside the driver.
+The user_data is not used in allocating a paging user domain, so I
+skipped it.
 
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-Sent as v4a to avoid resending the entire series.
+> 
+> If you are going to wrapper the op function then all the args need to
+> be provided.
 
-v4a:
-    Do not auto-select SENSORS_SPD5118_DETECT if DMI is disabled
-    Modify help text of SENSORS_SPD5118_DETECT
-    Default SENSORS_SPD5118_DETECT to y if (!DMI || !X86)
-     
-v4: New patch
+Yes. Agreed.
 
- drivers/hwmon/Kconfig   | 19 +++++++++++++++++++
- drivers/hwmon/spd5118.c |  4 +++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
+> I'm not sure there is value in having vfio and vdpa call this
+> variation since they won't pass a user_data or flags?
+> 
+> Do you imagine there will ever be a difference between what
+> domain_alloc_user(dev, 0, NULL, NULL) returns from
+> domain_alloc_paging(dev) ?
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 7a84e7637b51..d5eced417fc3 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -2193,6 +2193,25 @@ config SENSORS_SPD5118
- 	  This driver can also be built as a module. If so, the module
- 	  will be called spd5118.
- 
-+config SENSORS_SPD5118_DETECT
-+	bool "Enable detect function"
-+	depends on SENSORS_SPD5118
-+	default (!DMI || !X86)
-+	help
-+	  If enabled, the driver auto-detects if a chip in the SPD address
-+	  range is compliant to the SPD51888 standard and auto-instantiates
-+	  if that is the case. If disabled, SPD5118 compliant devices have
-+	  to be instantiated by other means. On X86 systems with DMI support
-+	  this will typically be done from DMI DDR detection code in the
-+	  I2C SMBus subsystem. Devicetree based systems will instantiate
-+	  attached devices if the DIMMs are listed in the devicetree file.
-+
-+	  Disabling the detect function will speed up boot time and reduce
-+	  the risk of mis-detecting SPD5118 compliant devices. However, it
-+	  may result in missed DIMMs under some circumstances.
-+
-+	  If unsure, say Y.
-+
- config SENSORS_TC74
- 	tristate "Microchip TC74"
- 	depends on I2C
-diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
-index 5cb5e52c0a38..19d203283a21 100644
---- a/drivers/hwmon/spd5118.c
-+++ b/drivers/hwmon/spd5118.c
-@@ -313,7 +313,7 @@ static bool spd5118_vendor_valid(u8 bank, u8 id)
- }
- 
- /* Return 0 if detection is successful, -ENODEV otherwise */
--static int spd5118_detect(struct i2c_client *client, struct i2c_board_info *info)
-+static int __maybe_unused spd5118_detect(struct i2c_client *client, struct i2c_board_info *info)
- {
- 	struct i2c_adapter *adapter = client->adapter;
- 	int regval;
-@@ -647,7 +647,9 @@ static struct i2c_driver spd5118_driver = {
- 	},
- 	.probe		= spd5118_probe,
- 	.id_table	= spd5118_id,
-+#ifdef CONFIG_SENSORS_SPD5118_DETECT
- 	.detect		= spd5118_detect,
-+#endif
- 	.address_list	= normal_i2c,
- };
- 
--- 
-2.39.2
+No.
 
+> 
+> That seems like questionable driver behavior to me.
+
+In my first try, I simply replaced iommu_domain_alloc() with a new
+paging domain allocation interface. On second thought, it occurred to me
+why not use separate interfaces for different purposes? Even though from
+an iommu perspective, they both use paging domains.
+
+The @flags and @user_data are defined in uapi/linux/iommufd.h, which is
+specific to iommufd. Wrapping them in a common interface for broader use
+seems awkward.
+
+So, perhaps we could return to my original idea? Let's just expose one
+interface, iommu_paging_domain_alloc(), and replace iommu_domain_alloc()
+with it everywhere?
+
+Best regards,
+baolu
