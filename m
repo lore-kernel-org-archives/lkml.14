@@ -1,140 +1,190 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out28-195.mail.aliyun.com (out28-195.mail.aliyun.com [115.124.28.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3689518FC89
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 09:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCAC4964B;
+	Wed,  5 Jun 2024 09:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717578658; cv=none; b=eDzjZEwl0NVADwditoAwtZ0x3pBY0Q+xAoTTpe5sSdxUZw4AE3Aw+Dk+qHBZeUezouwbxeWE6SdmDymSEJuuVPjlo7gz8qjSH9p+Sew5gWSGAHnkM9QPBlGUDVfiPt7NO1uJMbmTZ8qbjxXTd/rblhjEeM0m1o2OQVk3meeldwU=
+	t=1717578727; cv=none; b=DNA20Rgck9kuhmAZB2CuNLiejg5KLpbCUT0dTQGljqzwnIslVbd08RJqapgpiiPruvvF510xS7XQXgwwhje/1sp/2csUBOCf7MCd1fR91qUwps0zJwPk4nixQljJkbP0g5BGSnsA0xBph+a+Tr2ioIPfDTD4eD3LfFIeuoW5jw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717578658; c=relaxed/simple;
-	bh=Ohf6oZ+oO2donfb/cODscDFAkvMhq+OmdtbGC2dDQx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ypx2vzqzfB1M+6KBREc+XN62t30UKw3hlFejARifoCcMRva90nQgJYVxgSnKU1Dzx9YsrKgfGhl74QPcQ9D9JsDaJh3GoTKy4lnNqpGvUIkniqoigg2imojcJFfS18LI30biSr/6lqyAGUT6NMIYxw7M1VWEsKBviIONOzLEd8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCiHKnN6; arc=none smtp.client-ip=209.85.160.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCiHKnN6"
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-24c9f892aeaso3637352fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 02:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717578656; x=1718183456; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lTG6BM2D9pwAMXwuJmppHUX0zuuxDgXItlRkB2F6Whw=;
-        b=jCiHKnN63Af5aOgE6SLbJEzjFFmMY56psVg5tXC0H5aeCNKz203x6kboXnkE/pH2UW
-         6kmwdG7lpR2ln4vrgiVp18lx8fjf4YmeOxT0FWFzmmNCgqdsQzKTNojW5d1KuhsnA2YU
-         vndDE6ThwQxlOd6iQ0iPxTKgF/bJsDPqwWBciBLm+ipfWwObfBiCshmLwe03ftRq6FNj
-         G2PAHGXBxnRrQrqDhXnGAu+XRk2d/euJImGJ0zKaE5xcPjlbB2InYIetH97FfRDbObiP
-         7Dxhfhpap5YtebdFDsW4HqDWdEAnmb5RawbCwvxGQ9q3oOxIy3A85xjzGnEIV3Ouv6iq
-         h5Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717578656; x=1718183456;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lTG6BM2D9pwAMXwuJmppHUX0zuuxDgXItlRkB2F6Whw=;
-        b=Jh0by8787pjvdvTl1QgNQ2sviHxpV1IuXHcs/z22waPRXJClnphe9rsXVhEX7pEqHt
-         KCQmB9abzDH1D+9d4+yG5zOs2jz1zeG9HSwfNzPZsNz0xARExwtXOzTB8/4UC5YtScyb
-         UHNe0oEvowgsQ98U9P7UmAiSi10gjbE3Zz+caw5GA6iuNVFlpPrYC64tOvQyKtnJj1nQ
-         KdBG69DEYGwXYBoIf1G+JiYEuMEhfZyAHm0FqiezI1leIibkRqN5KDTKQ34eF3ICUoNa
-         d2HjOOeIuzyVDx2sLl2i/rbfhFyWVaO2dpbFh+XBHAhE4XsOiPhpPfm5wY/SRCRoKGEL
-         9e2A==
-X-Forwarded-Encrypted: i=1; AJvYcCV3sJ9SXub4eDytLYmU6zdoc0hEhfQsYo4ciHfoBrO+RHOietZPEQSKR75RU29RZSf1QMzWaHZAHZJAO/rMQyMtvfzbpSoAZD07Hliv
-X-Gm-Message-State: AOJu0Yx2Sb2Mmo32kVy1afCWJSULTK/b1NkypVR8RMQidQ37Wlqkr2sH
-	FPHNLgKfXknIoVBMNocYiHhv1vNsLWuSvSZp3f298+4e4O4wUFpc
-X-Google-Smtp-Source: AGHT+IGFVtRgof2Vr7XnnRzUy5kTO/s4QSnWyIEEWJVSWOqsNKgzwT8cHzfUyKrMnHJALyfjycu/iQ==
-X-Received: by 2002:a05:6870:7006:b0:24f:e:b110 with SMTP id 586e51a60fabf-25121e3aed8mr2366720fac.35.1717578655520;
-        Wed, 05 Jun 2024 02:10:55 -0700 (PDT)
-Received: from [192.168.255.10] ([43.132.141.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70242b2e143sm8247886b3a.198.2024.06.05.02.10.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 02:10:55 -0700 (PDT)
-Message-ID: <a3942479-764f-4e19-8b90-682fa56c8e20@gmail.com>
-Date: Wed, 5 Jun 2024 17:10:51 +0800
+	s=arc-20240116; t=1717578727; c=relaxed/simple;
+	bh=rkfDndMG/r979OfNH4gi7CoeiwexgT2DZhuz3sszvXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bltqiBIwFBZG4mcKVi1pYKxP9xce6xXmMBe8GrHRdu46BweZXTuqaAD1TG4i96fd+uJNYXXGF504ezb3hVPiBUM34SFsnX8avfgimJ2VPXAj8jhgI6BlDUYT6kaWWSGFMkqBFsbP5cd0XL0lcjqsyoSmFJetAPjagFAQi32iuUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.0743626|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.339022-0.000654842-0.660323;FP=0|0|0|0|0|-1|-1|-1;HT=maildocker-contentspam033037136014;MF=wangshuaijie@awinic.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.XwdqTeF_1717578718;
+Received: from awinic..(mailfrom:wangshuaijie@awinic.com fp:SMTPD_---.XwdqTeF_1717578718)
+          by smtp.aliyun-inc.com;
+          Wed, 05 Jun 2024 17:12:01 +0800
+From: wangshuaijie@awinic.com
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	jeff@labundy.com,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: wangshuaijie@awinic.com,
+	liweilei@awinic.com,
+	kangjiajun@awinic.com
+Subject: [PATCH V2 1/5] dt-bindings: input: Add YAML to Awinic sar sensor.
+Date: Wed,  5 Jun 2024 09:11:39 +0000
+Message-ID: <20240605091143.163789-2-wangshuaijie@awinic.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240605091143.163789-1-wangshuaijie@awinic.com>
+References: <20240605091143.163789-1-wangshuaijie@awinic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] mm/ksm: reduce the flush action for ksm merging
- page
-To: David Hildenbrand <david@redhat.com>, alexs@kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, izik.eidus@ravellosystems.com,
- willy@infradead.org, aarcange@redhat.com, chrisw@sous-sol.org,
- hughd@google.com
-References: <20240604042454.2012091-1-alexs@kernel.org>
- <20240604042454.2012091-2-alexs@kernel.org>
- <9ca730ce-2b2f-42d2-8c7a-78735a995c64@redhat.com>
- <4d299245-3166-4810-b22b-2a5b4f54a049@gmail.com>
- <7c6ae2a3-8ec3-4c9b-81c3-125f6973f0f3@redhat.com>
- <d059e397-beea-43dc-8c58-d7833b1d8bd4@gmail.com>
- <59921e08-d0f1-4bc8-acee-368a978286a4@redhat.com>
-Content-Language: en-US
-From: Alex Shi <seakeel@gmail.com>
-In-Reply-To: <59921e08-d0f1-4bc8-acee-368a978286a4@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: shuaijie wang <wangshuaijie@awinic.com>
 
+Add the awinic,aw_sar.yaml file to adapt to the awinic sar sensor driver.
 
-On 6/5/24 3:26 PM, David Hildenbrand wrote:
-> On 04.06.24 15:02, Alex Shi wrote:
->>
->>
->> On 6/4/24 6:45 PM, David Hildenbrand wrote:
->>> On 04.06.24 12:26, Alex Shi wrote:
->>>>
->>>>
->>>> On 6/4/24 4:07 PM, David Hildenbrand wrote:
->>>>> On 04.06.24 06:24, alexs@kernel.org wrote:
->>>>>> From: "Alex Shi (tencent)" <alexs@kernel.org>
->>>>>>
->>>>>> We can put off the flush action util a merging is realy coming. That
->>>>>> could reduce some unmerge page flushing.
->>>>>> BTW, flushing only do at arm, mips and few other archs.
->>>>>>
->>>>>
->>>>> I'm no expert on that flushing, but I thought we would have to do the flushing before accessing page content -- before calculating the checksum etc.
->>>>>
->>>>> Now you would only do it before the pages_identical() check, but not when calculating the checksum.
->>>>>
->>>>
->>>> Hi David,
->>>>
->>>> Thanks a lot for comments!
->>>>
->>>> If calc_checksum() is wrong before pages_idential(), (that's just after page was write_protected, that's a real guarantee for page context secured) pages_identical could recheck and make thing right.
->>>>
->>>
->>> Yes, but you would get more wrong checksums, resulting in more unnecessary pages_identical() checks.
->>>
->>> That is missing from the description, and why we want to change that behavior.
->>>
->>> What's the net win?
->>>
->>>> And as to 2 flush functions here, I didn't see the guarantee for other writer from any other place. So maybe we should remove these flush action?
->>>
->>> "I didn't see the guarantee for other writer from any other place" can you rephrase your comment?
->>>
->>> If you mean "the process could modify that page concurrently", then you are right. But that's different than "the process modified the page in the past and we are reading stale content because we missed a flush".
->>
->>
->> Maybe moving the flush before checksum could relief some worries. :)
->> But still no one knows what flush really help, since if page content only syncs to memory by the flush, the kernel or process can't be work with current code.
-> 
-> Please explain to me why we care about moving the flushs at all :)
-> 
-> If they are NOP on most architectures either way, why not simply leave them there and call it a day?
-Uh, 2 reasons:
-1, it uses page and can't convert to folio now.
-2, as you pointed, flush action w/o page reading seems just waste time.
+Signed-off-by: shuaijie wang <wangshuaijie@awinic.com>
+---
+ .../bindings/input/awinic,aw_sar.yaml         | 125 ++++++++++++++++++
+ 1 file changed, 125 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
 
-Thanks
-Alex
-> 
+diff --git a/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+new file mode 100644
+index 000000000000..2560ef09d3d0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/awinic,aw_sar.yaml
+@@ -0,0 +1,125 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/awinic,aw_sar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Awinic sar sensor driver family
++
++maintainers:
++  - Shuaijie Wang <wangshuaijie@awinic.com>
++
++properties:
++  compatible:
++    enum:
++      - awinic,aw96103
++      - awinic,aw96105
++      - awinic,aw96303
++      - awinic,aw96305
++      - awinic,aw96308
++
++  reg:
++    maxItems: 1
++
++  irq-gpio:
++    maxItems: 1
++
++  awinic,sar-label:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Set the label of the SAR(Specific Absorption Rate) sensor.
++      It is set to 0 if one awinic sar chip is used.
++      If two awinic sar chips are used, awinic,sar-label in the first
++      awinic-sar should be set to 0 and awinic,sar-label in the second
++      awinic-sar should be set to 1.
++
++
++  awinic,regulator-power-supply:
++    description:
++      Choose if you want to use a regulator to power the chip. Then the
++      vccX-supply has to be set.
++
++  vcc0-supply:
++    description:
++      Optional regulator for chip, 1.7V-3.6V.
++      If two awinic sar chips are used, the first regulator
++      should set the ID to vcc0-supply and the second regulator
++      should set the ID to vcc1-supply.
++
++  awinic,channel-use-mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The mask of channels used.
++      Configure according to the specific chip channel used.
++      Bit[31:0] Each bit represents a channel.
++      If the customer uses ch0 and ch2, then channel_use_mask=<0x05>
++      For a 3-channel chip, the maximum value is 0x07;
++      For a 5-channel chip, the maximum value is 0x1F;
++      For a 8-channel chip, the maximum value is 0xFF;
++
++  awinic,update-fw:
++    type: boolean
++    description:
++      Choose if you want to update the firmware.
++
++  awinic,monitor-esd:
++    type: boolean
++    description:
++      Choose if you want to monitor ESD.
++
++  awinic,pin-set-inter-pull-up:
++    type: boolean
++    description:
++      Choose if you want to set the interrupt pin to internal pull-up.
++
++  awinic,using-pm-ops:
++    type: boolean
++    description:
++      Choose if you want to change the chip mode on suppend and resume.
++
++  awinic,use-plug-cail:
++    type: boolean
++    description:
++      Choose If you want to perform calibration when plugging and unplugging the charger.
++
++  awinic,start-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      You only need to set this configuration item if you are using AW963XX.
++      When connecting to AW963XX, select the location where the firmware starts.
++      Set 0 if start in rom.
++      Set 1 if start in ram
++
++  awinic,irq-mux:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      You only need to set this configuration item if you are using AW96308 adn AW96305BFOR.
++      If CS2 is used as the interrupt pin, this item should be set to 2.
++      If CS5 is used as the interrupt pin, this item should be set to 5.
++
++required:
++  - compatible
++  - reg
++  - irq-gpio
++  - awinic,sar-label
++  - awinic,channel-use-mask
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        awinic-sar@12 {
++            compatible = "awinic,aw96308";
++            reg = <0x12>;
++            irq-gpio = <&tlmm 72 0>;
++            awinic,sar-label = < 0 >;
++            awinic,channel-use-mask = <0xff>;
++            awinic,start-mode = < 0 >;
++            awinic,irq-mux = < 2 >;
++        };
++    };
+-- 
+2.45.1
+
