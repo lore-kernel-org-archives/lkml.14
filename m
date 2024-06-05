@@ -1,120 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537631BD515;
-	Wed,  5 Jun 2024 11:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B38D19AD4D;
+	Wed,  5 Jun 2024 11:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717588582; cv=none; b=D+O7XF9ELjTXrDffQKKGOc0GXJlohBQB/YYWo0T7IV3/mEIBTuJLM+SgH1aSeTK4fW8RwCNa9tOrhD2J8DR0qFXkf+qxtNtVSWBC4JNrShP68KNStKwvx4b2/X4i+AKsXBOqkCKutrgV8JbsbT4KqICP5Pb4R8h3AIt4oBYFwbY=
+	t=1717588586; cv=none; b=e7Q8L3M9H+zk2jcd2xs22/SOR+g66NI7hx0AUDw28FxFvIid5DyLbQCJXkQPNUrcNRULMPjhkd91fsXstwMIGm5Pydc0dByK4qdiy/zOnwX9sbb1AB98x9f0d+0mN34nC62LhT6jKb5hp0vyAoBjTb9+mBINhkJC4+T5Wck1MbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717588582; c=relaxed/simple;
-	bh=d40pCCEkuKjon/8B72AMqtYwBOiL7AlEvf0kD1jsMRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Juxmu0wrqh9AaGL3V4mzaOKpfisb2iSY6c2UiRRDolik1qttrOLMdOwPOaEgb4BZXi561KlmjvcUvVYnN2TJh9W6ttQ1zTR10/88zHa3UJIlDwr+tP4a50E37uQbcYdhifdPeQyz51bPyZdFh23fP7rq58tYGCxcQAgqrjkFXKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnhknYVA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717588586; c=relaxed/simple;
+	bh=MQYsWFBeAynMryk/Gyt9yTWjflv1cv5n6aWLBDe/SFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RUveI+6hrT8Z94EVHuFdujwJjuhTFnxzcH1p9rwyHM2ZssiJVo/HZnNkQ2koZ+YHOZM0fN7zHmMMGK6FSgmTiJuQVBTbLCAp596vvBXLrPjNnkQm0E20JdWlYSbriS2oVS7AbgzI7YoG+NymKVYeeBT8dxYpFmUqDCZMR8ZkgtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+nQWdQr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnhknYVA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34697C4AF08;
-	Wed,  5 Jun 2024 11:56:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+nQWdQr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA128C4AF07;
+	Wed,  5 Jun 2024 11:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717588582;
-	bh=d40pCCEkuKjon/8B72AMqtYwBOiL7AlEvf0kD1jsMRg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pnhknYVAV4g5ALYh+pgDCCR+I+blNhcqfgBjxcMEgan4+gJ3AS5tiTkFxdQKJshtK
-	 4wTFuKIqfeazNLvrSc0U5wzOd3cxZ+6K4bvTEHCbdySQDSKB6z9T/DVIrAZKOKkncb
-	 zVabeFswb5HSahpY+NeC2CQRVVVzUZvI4TWRDREItb72nic4G4eEifKVLYgVIDtk8r
-	 svznGIqwL+JKXroazaiC2tu012qJIJvMbkb9+SDiB+TtA8hhcp+01kS3pfcZkjEfdt
-	 1v+dQCJoLEp/VEs29ngvSKmHhzWQPKKGOHxIwfzRJrxI4suOYrQ4K7+FCEU3DeD76R
-	 YTGUrgl7w/NvQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	Phillip Potter <phil@philpotter.co.uk>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	nathan@kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.6 2/4] cdrom: rearrange last_media_change check to avoid unintentional overflow
-Date: Wed,  5 Jun 2024 07:56:14 -0400
-Message-ID: <20240605115619.2965224-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240605115619.2965224-1-sashal@kernel.org>
-References: <20240605115619.2965224-1-sashal@kernel.org>
+	s=k20201202; t=1717588586;
+	bh=MQYsWFBeAynMryk/Gyt9yTWjflv1cv5n6aWLBDe/SFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m+nQWdQr5oGfrnskMQzLWboTz7AK+E6POtbk0O+zGu+62bG5UD8QbtKGVRg8SrsMG
+	 8oUBjkoDi9aPSNdSAGyuN6IMtpMrdgxhrVF+zFWmAbW42Dagp/BQn55I20stO6VNZG
+	 sKAx599Yi08sXUjeA12P1rtkK82FidRX7NCo15Et0ia1HBXkssWHPVEdCjuM/ALe/0
+	 V/Oik0M6CLAbwNfEeazAtG+3mhXOyaVXj5zy54ZjzZtdEPOYgUz7mXz+0O9/cGW/UN
+	 zmun4M84sFxBvam+MYlG6P07r0Ornk+V7FPmDUjO1MmrLmjEQG5ODYP8dLSafi7Nvt
+	 BI1g4IRc0pomg==
+Date: Wed, 5 Jun 2024 13:56:23 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org, Rao Shoaib <rao.shoaib@oracle.com>
+Subject: Re: [PATCH rcu 2/2] doc: Clarify rcu_assign_pointer() and
+ rcu_dereference() ordering
+Message-ID: <ZmBSZ3AAp9TN5YaP@localhost.localdomain>
+References: <e5dc5f14-04c1-494b-9044-e837279a7bcd@paulmck-laptop>
+ <20240604222155.2370541-2-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.32
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604222155.2370541-2-paulmck@kernel.org>
 
-From: Justin Stitt <justinstitt@google.com>
+Le Tue, Jun 04, 2024 at 03:21:55PM -0700, Paul E. McKenney a écrit :
+> This commit expands on the ordering properties of rcu_assign_pointer()
+> and rcu_dereference(), outlining their constraints on CPUs and compilers.
+> 
+> Reported-by: Rao Shoaib <rao.shoaib@oracle.com>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  Documentation/RCU/whatisRCU.rst | 30 +++++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
+> index 94838c65c7d97..d585a5490aeec 100644
+> --- a/Documentation/RCU/whatisRCU.rst
+> +++ b/Documentation/RCU/whatisRCU.rst
+> @@ -250,21 +250,25 @@ rcu_assign_pointer()
+>  ^^^^^^^^^^^^^^^^^^^^
+>  	void rcu_assign_pointer(p, typeof(p) v);
+>  
+> -	Yes, rcu_assign_pointer() **is** implemented as a macro, though it
+> -	would be cool to be able to declare a function in this manner.
+> -	(Compiler experts will no doubt disagree.)
+> +	Yes, rcu_assign_pointer() **is** implemented as a macro, though
+> +	it would be cool to be able to declare a function in this manner.
+> +	(And there has been some discussion of adding overloaded functions
+> +	to the C language, so who knows?)
+>  
+>  	The updater uses this spatial macro to assign a new value to an
+>  	RCU-protected pointer, in order to safely communicate the change
+>  	in value from the updater to the reader.  This is a spatial (as
+>  	opposed to temporal) macro.  It does not evaluate to an rvalue,
+> -	but it does execute any memory-barrier instructions required
+> -	for a given CPU architecture.  Its ordering properties are that
+> -	of a store-release operation.
+> -
+> -	Perhaps just as important, it serves to document (1) which
+> -	pointers are protected by RCU and (2) the point at which a
+> -	given structure becomes accessible to other CPUs.  That said,
+> +	but it does provide any compiler directives and memory-barrier
+> +	instructions required for a given compile or CPU architecture.
+> +	Its ordering properties are that of a store-release operation,
+> +	that is, any prior loads and stores required to initialize the
+> +	structure are ordered before the store that publishes the pointer
+> +	to that structure.
 
-[ Upstream commit efb905aeb44b0e99c0e6b07865b1885ae0471ebf ]
+About that, why rcu_dereference() isn't a matching load-acquire?
 
-When running syzkaller with the newly reintroduced signed integer wrap
-sanitizer we encounter this splat:
-
-[  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33
-[  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')
-[  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO
-[  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-[  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[  366.027518] Call Trace:
-[  366.027523]  <TASK>
-[  366.027533]  dump_stack_lvl+0x93/0xd0
-[  366.027899]  handle_overflow+0x171/0x1b0
-[  366.038787] ata1.00: invalid multi_count 32 ignored
-[  366.043924]  cdrom_ioctl+0x2c3f/0x2d10
-[  366.063932]  ? __pm_runtime_resume+0xe6/0x130
-[  366.071923]  sr_block_ioctl+0x15d/0x1d0
-[  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10
-[  366.077642]  blkdev_ioctl+0x419/0x500
-[  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10
-...
-
-Historically, the signed integer overflow sanitizer did not work in the
-kernel due to its interaction with `-fwrapv` but this has since been
-changed [1] in the newest version of Clang. It was re-enabled in the
-kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-sanitizer").
-
-Let's rearrange the check to not perform any arithmetic, thus not
-tripping the sanitizer.
-
-Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-Closes: https://github.com/KSPP/linux/issues/354
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Link: https://lore.kernel.org/lkml/20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com
-Reviewed-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/lkml/ZjqU0fbzHrlnad8D@equinox
-Signed-off-by: Phillip Potter <phil@philpotter.co.uk>
-Link: https://lore.kernel.org/r/20240507222520.1445-2-phil@philpotter.co.uk
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/cdrom/cdrom.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index cc28398059833..01f46caf1f88b 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -2358,7 +2358,7 @@ static int cdrom_ioctl_timed_media_change(struct cdrom_device_info *cdi,
- 		return -EFAULT;
- 
- 	tmp_info.media_flags = 0;
--	if (tmp_info.last_media_change - cdi->last_media_change_ms < 0)
-+	if (cdi->last_media_change_ms > tmp_info.last_media_change)
- 		tmp_info.media_flags |= MEDIA_CHANGED_FLAG;
- 
- 	tmp_info.last_media_change = cdi->last_media_change_ms;
--- 
-2.43.0
-
+Thanks.
