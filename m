@@ -1,145 +1,100 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDF319D895
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 21:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576A415F3FF;
+	Wed,  5 Jun 2024 21:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717622510; cv=none; b=S7eXOxpBdcEKSbQEn9KRNWd9xVFPboIl65hSuw5FKi8pX5AbOoPOTWNSR9YQYhRHpTiqSO6Y3IAOeU3e22KJMoIJhHrJPjWcNwVviSNQn7Nz+dr9zLjKmPeCui/+/aSDtUMYJCC9Af9XPnRzjytiidhgV9luPt7iOUlLQ2iWyjQ=
+	t=1717622519; cv=none; b=poRYCmuiurHvucfMKEN0Iy5YvBnny3sFcXmX5NSZR8i6PXZuCkY81BAYKDsfv8IiHCI6DED1kuvwl2jpIWtUrJcrcBtuQ1B/3mZUveKysM/dZNtmLJyKGvgix0No1aaMVcRRkDDUBB0YqMlXd+VZWc3ZMQM/uaM65Og9QFfvLAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717622510; c=relaxed/simple;
-	bh=EqsVKyEcVPdVssyAnSUWWQH6de+AhVDwTiAoP+flfbs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d6ZYxA3ukbsFc9/MUU1ZQyeWSIQTz0jJWQ6ZqdGYkzY+8Dmvo4g3ijoDYGxQ+7fS+UnKD4gf/wQyiYN+TVEbqIf1jPcY1kYnFKbXdsYzsfqgqg4ASgAdymSJCHulBqxwJHS/SVtzmwLkzrV0eFO8WzE1oA8NsDSeOtIZrxhyHUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nInm2ApI; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717622519; c=relaxed/simple;
+	bh=SAxDOUUo9A/5W1+X4zneET1Rg60Ehfzp8xnstsBp7NI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WGzPwJWSoFE8u3DT5kfXSrX1Uvs3EjdduaDPUb1Yu0ntYWrE0tsqxgewd3MZueRYF1SHNN2koQygg9Wn14DKo4CvU2g4nUuofP/rpDW9bGST2Hfo2ZhaqYmQZFRvqT1LiWq9SqQ9h1pPCL4HFv/AXBxchVd0doXOO6+t86ztp0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOUGjncM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nInm2ApI"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52b8b638437so347013e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 14:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717622506; x=1718227306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BHWDjujLIHNJtgMnjtgIy2d3mqKEQ4RI39wDCXw+ApE=;
-        b=nInm2ApIBPuWA55Ljc/O37bypOCDIVMMa+QBy0O80z09m1XEPK7if2DwUSN7qFNdt0
-         RazaoAbO5k6bzJ8RYMEAiG9hzXP9wloX88lD5rjbGiUSkUJtktYcZ2tK+TME6NWq0XxW
-         zws9PpZvAk0ev5uOcVjCwousYuu0gHdswQ1pYE3BEhb2DkPUgV4MJZworwrTo2JA8QuQ
-         zo83d0bZCHQwm+izK0fColRxhS1u2gqoJc7WGkGx47PbllXwVEZFSZGbpUXxcSWtruSJ
-         VaQP5ivdBWGgnfyJJ9Z0YtAM5PBWXYoLOCWR2bh92KowfL4lhGwSLDpQVjOEFn9Oausv
-         F+Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717622506; x=1718227306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BHWDjujLIHNJtgMnjtgIy2d3mqKEQ4RI39wDCXw+ApE=;
-        b=cgduHEG9cayZorgepHeqVg388hUzxG8/sZhPzBXAejoJ2VdYK1tkon6Dc8x8dHXbns
-         zBB3ipRjUQNWvM5hXpbGEOIzDAtMp2UPOdq7MaqcqzgkjL+QTlzooP2QvyT3+HdzMMTW
-         Kf1VE5jqNu20HJzDCD9Mbobc0+yKITG3sPqLdYDpv5gyeQ6n4bk4/gfGUaTaVYci/+nF
-         nrOpBG8wtD0lDL0G0uYStFMbh7ATFj5GUxK8bnCrfuUmpFzOZw1Svn4GES6xLdDHhQXU
-         VT9zXNdoIZXMxMNU1Qp5/UCei0JSc+aFqPt6EqZDxNhpKKwEJb1wIEhzbAb5uL1Eant0
-         YFJA==
-X-Gm-Message-State: AOJu0YwiG1HzAiwzFWU1tZwuRXz5ZIB5xM3ZYzpO1S0K0kzG0Ub1HGDE
-	li2O5dQUaM3LqihIaNYpk2fiN1nxNOAqVuDdIJeJ0MqmLBCJv1x1TdcejL6JCaIgku3cV5I2GYq
-	71nlmKYHjEFTTZPOEWRqUj+Hjqg==
-X-Google-Smtp-Source: AGHT+IGfU4YGQuhOO9Bv26J/Ms+j7sAh164qumml7KuVabmx9a8E8CLcpExir3IdqsURTi9sTI6I0kbmDU5eOWvSc7M=
-X-Received: by 2002:a05:6512:3da3:b0:51f:5872:dd8c with SMTP id
- 2adb3069b0e04-52bab4e8a85mr2579083e87.39.1717622506251; Wed, 05 Jun 2024
- 14:21:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOUGjncM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD12C32782;
+	Wed,  5 Jun 2024 21:21:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717622518;
+	bh=SAxDOUUo9A/5W1+X4zneET1Rg60Ehfzp8xnstsBp7NI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZOUGjncMuz68FPp44Nv54A+nHg1HlqduA0CxbIUCR+3Ir4f82dQbC7H3u3G4a+nTk
+	 HfmyFyuEwXTTHvw30OrHtow45q+5KFuB7rpZ+spSHdCBJW0grGjNPdZW/LSIyX/EVx
+	 f/v25K/I+6tXflLcFJanLsFkIA+fKB0ikjOEIDp/6ruyvsq0sqLSbUkaWDQmA52n7J
+	 fsFLhNon99Ydt4fSNYZWSjZpjCA51yG5NKMwri0p+4TvUSMkqivpyXhcthE5H83wjC
+	 Dm0mHGqh1YKLwKbZhYxU7XHiQB/K9OCnmdS+ly8TVARD4RMa5O4xKGf3AdTSNbA7ZO
+	 rsVVhsMuDutLA==
+Date: Wed, 5 Jun 2024 22:21:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] spi: Refactor spi_stop_queue()
+Message-ID: <58c2f209-1553-46ec-a471-2f33afb20139@sirena.org.uk>
+References: <20240510204945.2581944-1-andriy.shevchenko@linux.intel.com>
+ <ZmDTuqMTR-KiUyVO@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240605083557.2051480-1-mingo@kernel.org>
-In-Reply-To: <20240605083557.2051480-1-mingo@kernel.org>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Wed, 5 Jun 2024 17:21:34 -0400
-Message-ID: <CAMzpN2hms-cpsaief4j_1LhXXznreE+it8nnsH2-8yoQ2Bn0Rw@mail.gmail.com>
-Subject: Re: [PATCH 0/3, v3] x86/fpu: Remove the thread::fpu pointer
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dave Hansen <dave@sr71.net>, 
-	Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Uros Bizjak <ubizjak@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="80nll8J08/D7fgTw"
+Content-Disposition: inline
+In-Reply-To: <ZmDTuqMTR-KiUyVO@smile.fi.intel.com>
+X-Cookie: Simulated picture.
+
+
+--80nll8J08/D7fgTw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 5, 2024 at 4:36=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
->
-> This series is one of the dependencies of the fast-headers work,
-> which aims to reduce header complexity by removing <asm/processor.h>
-> from the <linux/sched.h> dependency chain, which headers are headers
-> are fat enough already even if we do not combine them.
->
-> To achieve that decoupling, one of the key steps is to not embedd any
-> C types from <asm/processor.h> into task_struct.
->
-> The only architecture that relies on that in a serious fashion is x86,
-> via 'struct thread::fpu', and the series below attempts to resolve it
-> by using a calculated &task->thread.fpu value via the x86_task_fpu()
-> helper.
->
-> Code generation: without CONFIG_X86_DEBUG_FPU=3Dy we get a small reductio=
-n:
->
->    text        data        bss        dec         hex        filename
->    26475783    10439082    1740804    38655669    24dd6b5    vmlinux.befo=
-re
->    26475601    10435146    1740804    38651551    24dc69f    vmlinux.afte=
-r
->
-> With the new debug code - which I think we'll remove soon-ish, there's an
-> expected increase:
->
->    text        data        bss        dec         hex        filename
->    26476198    10439286    1740804    38656288    24dd920    vmlinux.CONF=
-IG_X86_DEBUG_FPU.before
->    26477000    10435458    1740804    38653262    24dcd4e    vmlinux.CONF=
-IG_X86_DEBUG_FPU.after
->
-> The Git tree can be found at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/fpu
->
-> Thanks,
->
->     Ingo
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D>
-> Ingo Molnar (3):
->   x86/fpu: Make task_struct::thread constant size
->   x86/fpu: Remove the thread::fpu pointer
->   x86/fpu: Remove init_task FPU state dependencies, add debugging warning
->
->  arch/x86/include/asm/fpu/sched.h |  2 +-
->  arch/x86/include/asm/processor.h | 19 ++++++++++---------
->  arch/x86/kernel/fpu/context.h    |  4 ++--
->  arch/x86/kernel/fpu/core.c       | 57 +++++++++++++++++++++++++++++++---=
------------------------
->  arch/x86/kernel/fpu/init.c       | 23 +++++++++++++----------
->  arch/x86/kernel/fpu/regset.c     | 22 +++++++++++-----------
->  arch/x86/kernel/fpu/signal.c     | 18 +++++++++---------
->  arch/x86/kernel/fpu/xstate.c     | 23 ++++++++++-------------
->  arch/x86/kernel/fpu/xstate.h     |  6 +++---
->  arch/x86/kernel/process.c        |  6 ++----
->  arch/x86/kernel/signal.c         |  6 +++---
->  arch/x86/kernel/traps.c          |  2 +-
->  arch/x86/math-emu/fpu_aux.c      |  2 +-
->  arch/x86/math-emu/fpu_entry.c    |  4 ++--
->  arch/x86/math-emu/fpu_system.h   |  2 +-
->  arch/x86/mm/extable.c            |  2 +-
->  include/linux/sched.h            | 13 +++----------
->  17 files changed, 104 insertions(+), 107 deletions(-)
+On Thu, Jun 06, 2024 at 12:08:10AM +0300, Andy Shevchenko wrote:
+> On Fri, May 10, 2024 at 11:49:45PM +0300, Andy Shevchenko wrote:
+> > The refactoring makes code less verbose and easier to read.
+> > Besides that the binary size is also reduced, which sounds
+> > like a win-win case:
+> >=20
+> >   add/remove: 0/1 grow/shrink: 2/2 up/down: 210/-226 (-16)
+> >   Function                            old     new   delta
+> >   spi_destroy_queue                    42     156    +114
+> >   spi_controller_suspend              101     197     +96
+> >   spi_unregister_controller           346     319     -27
+> >   spi_register_controller            1834    1794     -40
+> >   spi_stop_queue                      159       -    -159
+> >   Total: Before=3D49230, After=3D49214, chg -0.03%
+>=20
+> Hmm... Other more recent patches went through, is this lost in cracks?
 
-This series would be better if you added the x86_task_fpu() helper in
-an initial patch without any other changes.  That would make the
-actual changes more visible with less code churn.
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-Brian Gerst
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, so sending again is generally a better approach though there are
+some other maintainers who like them - if in doubt look at how patches
+for the subsystem are normally handled.
+
+--80nll8J08/D7fgTw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmZg1vIACgkQJNaLcl1U
+h9BmhQf/SpUO0aQmrEek0HgbtGMVEMYa6zSeboXhms8aRu6z9Nbvk/FSgnEjU7t5
+TLpko8Z6+wT3GhXvCB7QKZRV/MjvZm1UvXid5yi4tkYDkfcJfg1qirW3WVqffQSB
+4+epVyqsCGQxn8X3pJ9FVnd3JhX/ZY+biACE01rMIkK/LRyfqT3RSSyyj3So/W8n
+K9WodcjkouJeOQEdJmYXdV/u4jA0kHC9CcB8mUPRgU5Z2wEWkLkNRH6146q1h6d1
+2GwUeZJogLeXBqCV3shwGOp6cDMTXORPL9fJUge8lOYE9xv9mhavg3QqsNJrl82t
+1IxRSGh5Hou+MnBNJYmObhwfVAma/w==
+=VHhh
+-----END PGP SIGNATURE-----
+
+--80nll8J08/D7fgTw--
