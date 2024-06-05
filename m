@@ -1,409 +1,278 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2E62941B;
-	Wed,  5 Jun 2024 03:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717558480; cv=fail; b=UGBPqDJz6YUa5zgaduMOrROHRZxmx0Yp8i+HbNZ1Cbnu0Po76RFt/K/Y37AtjgZ0YvKyYKOYUO6D2F3708YoH47FAJxa6CTMFcPVxPRXdPsoO1XJHQz7MBLu5Zrioicgf8DOpU2vgp3lXZEtzBf2FiE+SKhnVeU+zKtU1sBMap0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717558480; c=relaxed/simple;
-	bh=R2SmfQd/LYPLa0+Kr8O8//dTc6ohiXydsvKjpAJpNk0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IVJyoyGMZEzfgobWehHSyrOGAiepp/8/HaJrxg6DK0UNJJI3EP1m2laIRgX6CDhmiQAPyV4UiH8RAlCz3QrUC5tyOd0pLLHqXbsTZ0fmdvW8n98bLTpv+yQH+mRYdm6CoGHzMIsslTol6nViUEI8KVhpjcKmYyydO+6Ld0ficNc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=e4bZc3JV; arc=fail smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="e4bZc3JV"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 454LBQ2n003926;
-	Tue, 4 Jun 2024 20:34:16 -0700
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2176.outbound.protection.outlook.com [104.47.58.176])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3yj167bqpb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 04 Jun 2024 20:34:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dA/RLrgw0e+I4Sy74zqHcfxBnpxggiwieoQ15YauuVbiTJlO6QJr8y4VHj0ewFk9ehRfegHYFIwk+VP6mn61rBo5p1OWD/mzpALinOu1kZRxWcXsGlsszhcEkHhJzmw5K1RLlIn0w4OeKfXxbpFkPCMdX4BtcrqLpv8TOtALhBf9ECuu9ZAoyRAnKUscZanGAyxOg3+KD2rGM4iKyF9iGX0FEPG+daw87afA44GDX8wdZEytnj+aXPk5Fk09dQAK0T2ZO8QFwttsGSmuoLzJ3QdONWHs/liYZxOpa/jdTTphYGeHH6Weq/Bl3SNQM5QLPEt5rHMzqmU/PH5KVHgisw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pz4vwSbcLTzS1yCx8c8E4T0ub0Jf+VuJzfJlWiTt0qo=;
- b=ATH1az0NkEUqkbpBWsmNozpc5JRwQGE2PW5bmGiuoOPZOY03DXnekFGiEkQEGMOgMeiWBQ5puGkuGb+rXSs3/BvVVodKoKkZXaftvkSlsC99pkO+Y+Ta4Er5JSwZOKnsC8x3KblKmORTrvOpfiaILLlT92Rz2X2d4RnVcceh0jS8uQmAvaqT7yyWJY7QLTDXdg/MK4o0osK+Ar2dBpcUI7tSb8eB3AsneqW7QGyzD9vMaAs/dBc2aSDk3FoBBRDJiCPz5WBb/v7nPK3AL8Qfoi0EqAvr0JsT8+6T2wnz3rSyWT5ApXqYRrh/oyvBUz8z3VU4oXFWgMBniTyCq6MwSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pz4vwSbcLTzS1yCx8c8E4T0ub0Jf+VuJzfJlWiTt0qo=;
- b=e4bZc3JV1wANpzGhuofh88KntICmsblCWthEyHsWtEXLm2hEpSpEDphGIuynR88dv21BugGQaMuPSigLKhk63RqeNtbyKRKjgb0e0BhsWNULL6EewCpA4tYmL67mIEx15+F4FDECeVDnNf62StlYwLDej9grPsubAafLdOhwbFs=
-Received: from MW4PR18MB5084.namprd18.prod.outlook.com (2603:10b6:303:1a7::8)
- by PH0PR18MB4574.namprd18.prod.outlook.com (2603:10b6:510:ac::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.29; Wed, 5 Jun
- 2024 03:34:11 +0000
-Received: from MW4PR18MB5084.namprd18.prod.outlook.com
- ([fe80::1fe2:3c84:eebf:a905]) by MW4PR18MB5084.namprd18.prod.outlook.com
- ([fe80::1fe2:3c84:eebf:a905%5]) with mapi id 15.20.7633.018; Wed, 5 Jun 2024
- 03:34:11 +0000
-Message-ID: <865cf85d-84df-454f-9cbd-83c91d3df85c@marvell.com>
-Date: Wed, 5 Jun 2024 09:04:01 +0530
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH v6 3/3] arm64: dts: freescale: add i.MX95 19x19 EVK minimal
- board dts
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Peng Fan <peng.fan@nxp.com>
-References: <20240605-imx95-dts-v3-v6-0-2ce275ed0e80@nxp.com>
- <20240605-imx95-dts-v3-v6-3-2ce275ed0e80@nxp.com>
-Content-Language: en-US
-From: Amit Singh Tomar <amitsinght@marvell.com>
-In-Reply-To: <20240605-imx95-dts-v3-v6-3-2ce275ed0e80@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0131.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::16) To MW4PR18MB5084.namprd18.prod.outlook.com
- (2603:10b6:303:1a7::8)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7292207A;
+	Wed,  5 Jun 2024 03:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1717558707; cv=none; b=d9fBOL9w15dsDO3R+vuF7SdjcuoeOKWm2IP3y4Gsjvz2leKedScSGigsneMcIysuNnI1G3jVmRBfuSLsSXdkArrM54XnxeJrK/qKJxT+k/ZLNBRLWxA2kRB5301heuTligEI+rSoaJXeJlOhrGBXGZne1aVRsyO1orU3wHCtDqo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1717558707; c=relaxed/simple;
+	bh=Kh/BhKlMN69BHMHjF2WDbTITZdz1qKhM7c02xREeMeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=abvlqgaPFBqRzjlr337PBqlJ5B1xlEyde18Zw4o6DI8T9HB6lcHtslphE72m/LpoExw0ftucAq/eCCSvb1PDzGVw6OJiCs6DwKEFabB0/z5JabznD3tPRy32tE+INqrUlwvnzw7/oHJ30QKHjUjwW0gsVymqHBvH4GvN/ko2Jhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VvCnM29byzclbT;
+	Wed,  5 Jun 2024 11:36:55 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 40D40180085;
+	Wed,  5 Jun 2024 11:38:19 +0800 (CST)
+Received: from [10.174.176.88] (10.174.176.88) by
+ canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 5 Jun 2024 11:38:18 +0800
+Message-ID: <f42d35b8-7c04-4d69-b6fe-07b9e149d262@huawei.com>
+Date: Wed, 5 Jun 2024 11:38:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR18MB5084:EE_|PH0PR18MB4574:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3502c646-aeca-4d4b-dd96-08dc85105d0d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|1800799015|7416005;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?MlNiVFcweXJCSUx0VGF2dUpNVUR2YUwvUG1RNVF5RHNxbXZXL1JaMjhFeUJs?=
- =?utf-8?B?K29FSlhqZElRNVpES1czbjhMRjg4Wkg5dlR2dVBrQm1qbFE2UisxdEhKNFNU?=
- =?utf-8?B?cFc1eVNDdlV1UjFkQVhWSXFBRkQ0RWhUS01ZZzY4TkswWnBDdnNWYVAvRzlp?=
- =?utf-8?B?Ynl2cXhBV1JKQXcwckVTN2RNOXhXVGQyRnVLOGdIOFhScVFVRjIxcGRieW1i?=
- =?utf-8?B?alptbUxOaE9pazhVUmJPd2hveGFVQjhzcktaS0dRb3VQZkMzYy9JTWVwMGMw?=
- =?utf-8?B?a08zMmZHUy9rMzNKNFpCeGdVV0xnd3h3ZGp4cDlvRHdrWkdZVUtMbFh5Qkln?=
- =?utf-8?B?SFV5eG45MGttZXN4aEp6RS9XTVA5c3JKYmtCTEdtdDdkSlpJbE5uT3EwK1ZM?=
- =?utf-8?B?N1ZCaE52dHQ4SEorWFN1ZGVVVko2dFJSUm9ka1h5K2VrbTBIcXk2ZGJ2K1JI?=
- =?utf-8?B?d0pRQnZaRHJpcTBYMWV6dG9JKzZ1UWNlL2VtdXFGK2hBdml5eVNtcTRqSTVp?=
- =?utf-8?B?Q0RUV2I3cEJoa0FweVY5MEZBck9hc1FING0yWWMrSFc0M1hEUU5sckNKY0dw?=
- =?utf-8?B?c2xCOHoxVVFaUEdKV2RHOU5kbkJnYUNpQTRJTTR0ZzRrckFMNzMraEM4T2FX?=
- =?utf-8?B?S21YSmtyQkQzN1VpQWF1KzV2NlhqNWthZVo2N3IvOGttMkM0S1hhRURvMlpo?=
- =?utf-8?B?T1JnMlNzMDdFa0t5SURIb0crWS96dkhWazdPMFo3a2I2Zll4Z0sxb2Y4N2lE?=
- =?utf-8?B?Sm00cjdmVWNZYVZHUmNyTHZGOURjODJlNzBVN2Q5ZXF3Z3RPYVh4bkR3VEZE?=
- =?utf-8?B?SHBWekl6Q21WZWVqYlBBbk9RMzFma0RDUUpmZFdYbVl6VmpqOWlKNS95aFk5?=
- =?utf-8?B?YTFXUVN1bzlpOUY4Wm9tL2wxdWdjbjBSVEpiVUNKUkN1aklxczdNZ0w5bTFG?=
- =?utf-8?B?OFBFY0xWcStFRS9HOHlyRU1MSC9yVS96blp4VW5kMW5mbndVSTNEZ3J0Ty9O?=
- =?utf-8?B?SXEvQ0lkUmNRSXpLczUyakNCTCtOWTA5bGh1R2FaemdNMXFGeEZrQklkOGpl?=
- =?utf-8?B?NDJwY3VQZDJNWnJMOG0vaXJZZGl3R2pnSWxQK3psTXZwQVhJYzlnNDA4YXhy?=
- =?utf-8?B?RWM0bEtwSm9YQkZuNHlNVDhETUFTZThtVWpZSjRnZGFxdU1RRlZuYkRhSnBF?=
- =?utf-8?B?aFlQMWtqVTZxTDVHZ3ZsR0pUek9QVXdheE5rZWV3VUY5NEFuYTZpcjZoMnNP?=
- =?utf-8?B?Wm1USkhFcHpQN01UeTZrcDVacWk4VjZWOVc2QmlaT2FMalpCdXNFMG1HcEVr?=
- =?utf-8?B?TCtvV0w4MU5Ja1N3ekIxeEdpa3ZyZEI1NXVLNHVrWjVCaHFDMGl5N05tVW5F?=
- =?utf-8?B?eEJ0OEtLT3JxY2l0VC9CNTdpamhReG5oU0lBOXNDK2VGK1I5Q3RBbmpCMVRn?=
- =?utf-8?B?Ymc4enh3UGd1MlU0TkxnTmk3cEtaeVRVRmxmU2NFSEd4a2FldjlnSUxuWHNS?=
- =?utf-8?B?d2J6aHZiTWpwT2xTbW15VVVmTWxPaVZLRENid0dvQkNxNnJTakhWcnloQlRJ?=
- =?utf-8?B?UUdkRXhZVUtzNDdwczB5dnZrRVFPU1llcDU2R2lXN3E1bitwTWN4UzJPZ1hP?=
- =?utf-8?B?N2Q3TUUzUEVvZS9GZFk3eHR5Y2dWbVNYRENlSS93WXk3MEgxcnhMVk81Tks1?=
- =?utf-8?B?cHNQbEM3NGFqb3NkakZMb095eE1hYmZqSXpXZTNySy9ZbWtMUVhIRkxNMGF5?=
- =?utf-8?Q?ZrlC5UJiGgQvY43zoST4rkmej/AAYQsbK9K0c5A?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5084.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?QVJoNE9rcDdndEl0b3dFNHdNMTFWTzNabDQ0Tlk5cFlBWnBWdURIbVZxdHFW?=
- =?utf-8?B?UmF1L2xVQTl0a1Z1UkM2U1VIcTVweU1FOUlSL0RuZHpONWNOVnprVXgyS0ky?=
- =?utf-8?B?SitRS3ZRelJHNmpIU0tWRXMwaWN2cVkwVVJzci9uK0U5VmlIQnJENVdGayth?=
- =?utf-8?B?TWhQY3RHSzBXZW9uV0lrdFpXTHBsQmlSZnpleTVHK3JYT1g5QlJQaDlDeGdh?=
- =?utf-8?B?YmJuaFUzeVBLbHVoOUpleDhjSi92UU12NHo3S3M1dnh0ZUdrcXBreFRjdFVa?=
- =?utf-8?B?b2dqcTBXVXFSalVpaVFRY3JxNWZaRGZzVW94ZnhOeXpJV1FLS2lXOER6L2s1?=
- =?utf-8?B?dTk2dzFQdFVVZ1dIL3JrdVVCWXdodTlubVF2YmtKUzk2cFFTYUtSSWNKQ0dN?=
- =?utf-8?B?SE5qK0xxSWN3d2JUbGh4RG90SkdHR05hNTF3RSt2d2VXMnRlMkN6ZlpwaHFh?=
- =?utf-8?B?SGlCSmdpUWV5YW93aGRDdnUwdTJGZklVNHZTbHVPUkdNMnFRSldkQjFDS1hN?=
- =?utf-8?B?YldkUzVyT1Rwc29xRDBRaS85VC9ZbE1qWVhNWlA2ZHlhOU53YjhCbDJaeEh3?=
- =?utf-8?B?dWZDc0RGQU1KZU5mZ2RwdENaZzd5cmx1dml6ZHFtYkdHYTd6QTBFeFkwTkRM?=
- =?utf-8?B?ODJQTFdEOS9LbUNpVmhNekhGRnFaczQ0ZisrR2NCUFl6eW8wdVIrMDZVNlA4?=
- =?utf-8?B?TXVwUGJhMnhadDhQcUhhci9OVU1kakJvSk1XeDNLMXNiNXR0dXRkZFZTVGJY?=
- =?utf-8?B?bFVrMHpRSzB3Y3Y0aU5QZzJsbGlGN2xFVkNtcy9uRDYwOVllamFteWxDWWpY?=
- =?utf-8?B?c3VIcGcrV05sbFhmdXVnck5FMWFKK0oyODhmcWVwTGNNMEE5bUFHVnRicklp?=
- =?utf-8?B?QTF5QkM5b2M4VE1HNCt2bitScENadU1pNHFHYVFOMEw5RWd3cGZFVVZBYS9v?=
- =?utf-8?B?N1htaHNtbkdxYmE1Ly9iRU5SRVI0OFlMT1ZjV3hhYjUzTmFXZTBZRTdJOTF0?=
- =?utf-8?B?ei9ZaGk2WC8xa2pLelRDTzVvMWVoUWdVS0pPc1pYYW9oQUtqY3g3VWRsdUgy?=
- =?utf-8?B?dnhEVEF1MHMxbmc2aXd5VUN4VDdjVllnL2R4TjJOY2RsTHdEZWdic29vbllB?=
- =?utf-8?B?aDhmVWQySmV4TDBidi9ZQ0ZIVUpzT1FvN2JORkprY3VnbU9QQmVobXplNlhI?=
- =?utf-8?B?REZxWUtVY1VyNXptTUJPbmgyT1JpZHF1Z2FDRFlZbDlPSFFKQWJkMllSMEdt?=
- =?utf-8?B?Q3c4NktVOWZsNE5FcTFNUFhyRkw0ZGIxbDR3RUZLQlQvb0VReHBnNWVmSGNW?=
- =?utf-8?B?dzFIUUhtUFNNTXpDQUI3WGlWZVZwRXZTb2dKWlcva3FFblJUY0Z6Y0tWNnlX?=
- =?utf-8?B?RmRBenRTZG1FMURRWjBXaG51WWhFdXoza3UxeGRIQ1JBOTNYSTNGMzhmYlV5?=
- =?utf-8?B?eXBwZ2lZRlo1NHN0TWxhUm5kSlhoMjFkc0JLWms0VGdEdEllTzh4UUtaK3JT?=
- =?utf-8?B?WUF0UGNuVGhwNE9iM3RYVGp6RkV6WGpQVmZCQWw0SHFNOEFCMk9SN3k3cDRy?=
- =?utf-8?B?Y0Vla2JJWnNMcDcvMXZQVVMwM2o5d0VBN2VZaUJnd1J3MmJESXdHZ1dGVWtJ?=
- =?utf-8?B?MmhVNURja0hVOWtUbFUwNUN2TlAyZzZ4UE9tanBQLzJsYnZvRzJxcGttczlr?=
- =?utf-8?B?amFwWWJRQ0ltSU1DZ2U5VDBuNVBWcWNjaEYyVUIzak9zWTcwUEpPdE0rK3dx?=
- =?utf-8?B?N3FxMk9HZ3B5aUt0VDNTd1ZJbWY5ekk2MVpkTy8wRjRVT2RDd2g4Q2RyUjBK?=
- =?utf-8?B?TkFCWUl1RDBGYzdzMVZjbE1vQ1BvYmRuSlJDSmJXWGEzS29uMEhLdzlmeHdP?=
- =?utf-8?B?ejlFZ2UwdWNiMDBiVVlWVmdWbHVwVTBFaTJwa3RzZXJzOW1waHhXbUQ3dE5H?=
- =?utf-8?B?c0crYUpUMTFILzlBbEYxTm9vUk4zSy9KNmcvc295bWRicWhDWE8rYURLMHlQ?=
- =?utf-8?B?c3dXakVTdmVWWkMvTVZ6UHdhdWJDWlNETjViR2xGdlY5TFVXWnZZcmhuU25O?=
- =?utf-8?B?NGRobGVsampEME9QM2tLNkFpc0lSOGRKY2FxSFZscDd2WENPMDBoUzY3NVNo?=
- =?utf-8?Q?ek4+KZUAzOaQDAoXjNtCu1DRb?=
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3502c646-aeca-4d4b-dd96-08dc85105d0d
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5084.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2024 03:34:10.9920
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qNdEpMoEzcMsuBRuYvSblx9e8TxL/245ipIvY7adGUc7V732g/dInACoEI1BOwOZLvfLZVFarfS4laiQyMNphg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR18MB4574
-X-Proofpoint-ORIG-GUID: 3ef9eT11OcWNKUJ35rpzi9wT-Ns-B2nX
-X-Proofpoint-GUID: 3ef9eT11OcWNKUJ35rpzi9wT-Ns-B2nX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-04_11,2024-06-04_02,2024-05-17_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xfs: Fix file creation failure
+To: "Darrick J. Wong" <djwong@kernel.org>
+CC: <chandan.babu@oracle.com>, <dchinner@redhat.com>,
+	<linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yangerkun@huawei.com>
+References: <20240604071121.3981686-1-wozizhi@huawei.com>
+ <20240604155648.GF52987@frogsfrogsfrogs>
+From: Zizhi Wo <wozizhi@huawei.com>
+In-Reply-To: <20240604155648.GF52987@frogsfrogsfrogs>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
 
-> From: Peng Fan <peng.fan@nxp.com>
+
+在 2024/6/4 23:56, Darrick J. Wong 写道:
+> On Tue, Jun 04, 2024 at 03:11:21PM +0800, Zizhi Wo wrote:
+>> We have an xfs image that contains only 2 AGs, the first AG is full and
+>> the second AG is empty, then a concurrent file creation and little writing
+>> could unexpectedly return -ENOSPC error since there is a race window that
+>> the allocator could get the wrong agf->agf_longest.
+>>
+>> Write file process steps:
+>> 1) Find the entry that best meets the conditions, then calculate the start
+>> address and length of the remaining part of the entry after allocation.
+>> 2) Delete this entry. Because the second AG is empty, the btree in its agf
+>> has only one record, and agf->agf_longest will be set to 0 after deletion.
+>> 3) Insert the remaining unused parts of this entry based on the
+>> calculations in 1), and update the agf->agf_longest.
+>>
+>> Create file process steps:
+>> 1) Check whether there are free inodes in the inode chunk.
+>> 2) If there is no free inode, check whether there has space for creating
+>> inode chunks, perform the no-lock judgment first.
+>> 3) If the judgment succeeds, the judgment is performed again with agf lock
+>> held. Otherwire, an error is returned directly.
+>>
+>> If the write process is in step 2) but not go to 3) yet, the create file
+>> process goes to 2) at this time, it will be mistaken for no space,
+>> resulting in the file system still has space but the file creation fails.
+>>
+>> 	Direct write				Create file
+>> xfs_file_write_iter
+>>   ...
+>>   xfs_direct_write_iomap_begin
+>>    xfs_iomap_write_direct
+>>     ...
+>>     xfs_alloc_ag_vextent_near
+>>      xfs_alloc_cur_finish
+>>       xfs_alloc_fixup_trees
+>>        xfs_btree_delete
+>>         xfs_btree_delrec
+>> 	xfs_allocbt_update_lastrec
+>> 	// longest = 0 because numrec == 0.
+>> 	 agf->agf_longest = len = 0
+>> 					   xfs_create
+>> 					    ...
+>> 					     xfs_dialloc
+>> 					      ...
+>> 					      xfs_alloc_fix_freelist
+>> 					       xfs_alloc_space_available
+>> 					-> as longest=0, it will return
+>> 					false, no space for inode alloc.
+>>
+>> Fix this issue by adding the bc_free_longest field to the xfs_btree_cur_t
+>> structure to store the potential longest count that will be updated. The
+>> assignment is done in xfs_alloc_fixup_trees() and xfs_free_ag_extent().
 > 
-> Add a minimal dts for i.MX95 19x19 EVK board:
->   - lpuart1 as console
->   - sdhc1/2 as storage
+> This is going to be a reverse-order review due to the way that diff
+> ordered the chunks, which means that the bulk of my questions are at the
+> end.
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->   arch/arm64/boot/dts/freescale/Makefile            |   1 +
->   arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts | 200 ++++++++++++++++++++++
->   2 files changed, 201 insertions(+)
+>> Reported by: Ye Bin <yebin10@huawei.com>
+>> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+>> ---
+>>   fs/xfs/libxfs/xfs_alloc.c       | 14 ++++++++++++++
+>>   fs/xfs/libxfs/xfs_alloc_btree.c |  9 ++++++++-
+>>   fs/xfs/libxfs/xfs_btree.h       |  1 +
+>>   3 files changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+>> index 6c55a6e88eba..86ba873d57a8 100644
+>> --- a/fs/xfs/libxfs/xfs_alloc.c
+>> +++ b/fs/xfs/libxfs/xfs_alloc.c
+>> @@ -577,6 +577,13 @@ xfs_alloc_fixup_trees(
+>>   		nfbno2 = rbno + rlen;
+>>   		nflen2 = (fbno + flen) - nfbno2;
+>>   	}
+>> +
+>> +	/*
+>> +	 * Record the potential maximum free length in advance.
+>> +	 */
+>> +	if (nfbno1 != NULLAGBLOCK || nfbno2 != NULLAGBLOCK)
+>> +		cnt_cur->bc_ag.bc_free_longest = XFS_EXTLEN_MAX(nflen1, nflen2);
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 1b1e4db02071..c3fef4e4d8dd 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -239,6 +239,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-evk.dtb
->   
->   imx8mm-venice-gw72xx-0x-imx219-dtbs	:= imx8mm-venice-gw72xx-0x.dtb imx8mm-venice-gw72xx-0x-imx219.dtbo
->   imx8mm-venice-gw72xx-0x-rpidsi-dtbs	:= imx8mm-venice-gw72xx-0x.dtb imx8mm-venice-gw72xx-0x-rpidsi.dtbo
-> diff --git a/arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts b/arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts
-> new file mode 100644
-> index 000000000000..2c2f3cfbe11a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts
-> @@ -0,0 +1,200 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright 2024 NXP
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx95.dtsi"
-> +
-> +/ {
-> +	model = "NXP i.MX95 19X19 board";
-> +	compatible = "fsl,imx95-19x19-evk", "fsl,imx95";
-> +
-> +	aliases {
-> +		mmc0 = &usdhc1;
-> +		mmc1 = &usdhc2;
-> +		serial0 = &lpuart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &lpuart1;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0 0x80000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		linux_cma: linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			alloc-ranges = <0 0x80000000 0 0x7F000000>;
-nitpick: Please use the lower case (0x7f...) for length parameter.
-> +			size = <0 0x3c000000>;
-> +			linux,cma-default;
-> +			reusable;
-> +		};
-> +	};
-> +
-> +	reg_usdhc2_vmmc: regulator-usdhc2 {
-> +		compatible = "regulator-fixed";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-> +		regulator-name = "VDD_SD2_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-> +		off-on-delay-us = <12000>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&lpuart1 {
-> +	/* console */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +&mu7 {
-> +	status = "okay";
-> +};
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-> +	pinctrl-3 = <&pinctrl_usdhc1>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	no-sdio;
-> +	no-sd;
-> +	status = "okay";
-> +};
-> +
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-> +	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-> +	pinctrl-3 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-> +	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-> +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> +	bus-width = <4>;
-> +	status = "okay";
-> +};
-> +
-> +&wdog3 {
-> +	fsl,ext-reset-output;
-> +	status = "okay";
-> +};
-> +
-> +&scmi_iomuxc {
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			IMX95_PAD_UART1_RXD__AONMIX_TOP_LPUART1_RX      0x31e
-> +			IMX95_PAD_UART1_TXD__AONMIX_TOP_LPUART1_TX      0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD1_CLK__USDHC1_CLK			0x158e
-> +			IMX95_PAD_SD1_CMD__USDHC1_CMD			0x138e
-> +			IMX95_PAD_SD1_DATA0__USDHC1_DATA0		0x138e
-> +			IMX95_PAD_SD1_DATA1__USDHC1_DATA1		0x138e
-> +			IMX95_PAD_SD1_DATA2__USDHC1_DATA2		0x138e
-> +			IMX95_PAD_SD1_DATA3__USDHC1_DATA3		0x138e
-> +			IMX95_PAD_SD1_DATA4__USDHC1_DATA4		0x138e
-> +			IMX95_PAD_SD1_DATA5__USDHC1_DATA5		0x138e
-> +			IMX95_PAD_SD1_DATA6__USDHC1_DATA6		0x138e
-> +			IMX95_PAD_SD1_DATA7__USDHC1_DATA7		0x138e
-> +			IMX95_PAD_SD1_STROBE__USDHC1_STROBE		0x158e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD1_CLK__USDHC1_CLK			0x158e
-> +			IMX95_PAD_SD1_CMD__USDHC1_CMD			0x138e
-> +			IMX95_PAD_SD1_DATA0__USDHC1_DATA0		0x138e
-> +			IMX95_PAD_SD1_DATA1__USDHC1_DATA1		0x138e
-> +			IMX95_PAD_SD1_DATA2__USDHC1_DATA2		0x138e
-> +			IMX95_PAD_SD1_DATA3__USDHC1_DATA3		0x138e
-> +			IMX95_PAD_SD1_DATA4__USDHC1_DATA4		0x138e
-> +			IMX95_PAD_SD1_DATA5__USDHC1_DATA5		0x138e
-> +			IMX95_PAD_SD1_DATA6__USDHC1_DATA6		0x138e
-> +			IMX95_PAD_SD1_DATA7__USDHC1_DATA7		0x138e
-> +			IMX95_PAD_SD1_STROBE__USDHC1_STROBE		0x158e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD1_CLK__USDHC1_CLK			0x15fe
-> +			IMX95_PAD_SD1_CMD__USDHC1_CMD			0x13fe
-> +			IMX95_PAD_SD1_DATA0__USDHC1_DATA0		0x13fe
-> +			IMX95_PAD_SD1_DATA1__USDHC1_DATA1		0x13fe
-> +			IMX95_PAD_SD1_DATA2__USDHC1_DATA2		0x13fe
-> +			IMX95_PAD_SD1_DATA3__USDHC1_DATA3		0x13fe
-> +			IMX95_PAD_SD1_DATA4__USDHC1_DATA4		0x13fe
-> +			IMX95_PAD_SD1_DATA5__USDHC1_DATA5		0x13fe
-> +			IMX95_PAD_SD1_DATA6__USDHC1_DATA6		0x13fe
-> +			IMX95_PAD_SD1_DATA7__USDHC1_DATA7		0x13fe
-> +			IMX95_PAD_SD1_STROBE__USDHC1_STROBE		0x15fe
-> +		>;
-> +	};
-> +
-> +	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD2_RESET_B__GPIO3_IO_BIT7		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD2_CD_B__GPIO3_IO_BIT0		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2: usdhc2grp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD2_CLK__USDHC2_CLK			0x158e
-> +			IMX95_PAD_SD2_CMD__USDHC2_CMD			0x138e
-> +			IMX95_PAD_SD2_DATA0__USDHC2_DATA0		0x138e
-> +			IMX95_PAD_SD2_DATA1__USDHC2_DATA1		0x138e
-> +			IMX95_PAD_SD2_DATA2__USDHC2_DATA2		0x138e
-> +			IMX95_PAD_SD2_DATA3__USDHC2_DATA3		0x138e
-> +			IMX95_PAD_SD2_VSELECT__USDHC2_VSELECT		0x51e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD2_CLK__USDHC2_CLK			0x158e
-> +			IMX95_PAD_SD2_CMD__USDHC2_CMD			0x138e
-> +			IMX95_PAD_SD2_DATA0__USDHC2_DATA0		0x138e
-> +			IMX95_PAD_SD2_DATA1__USDHC2_DATA1		0x138e
-> +			IMX95_PAD_SD2_DATA2__USDHC2_DATA2		0x138e
-> +			IMX95_PAD_SD2_DATA3__USDHC2_DATA3		0x138e
-> +			IMX95_PAD_SD2_VSELECT__USDHC2_VSELECT		0x51e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
-> +		fsl,pins = <
-> +			IMX95_PAD_SD2_CLK__USDHC2_CLK			0x15fe
-> +			IMX95_PAD_SD2_CMD__USDHC2_CMD			0x13fe
-> +			IMX95_PAD_SD2_DATA0__USDHC2_DATA0		0x13fe
-> +			IMX95_PAD_SD2_DATA1__USDHC2_DATA1		0x13fe
-> +			IMX95_PAD_SD2_DATA2__USDHC2_DATA2		0x13fe
-> +			IMX95_PAD_SD2_DATA3__USDHC2_DATA3		0x13fe
-> +			IMX95_PAD_SD2_VSELECT__USDHC2_VSELECT		0x51e
-> +		>;
-> +	};
-> +};
+> Ok, so if we're allocating space then this sets bc_free_longest to the
+> longer of the two remaining sections, if any.  But if we just allocated
+> the entirety of the longest extent in the cntbt, then we don't set
+> bc_free_longest, which means its zero, right?  I guess that's ok because
+> that implies there's zero space left in the AG, so the longest freespace
+> is indeed zero.
+> 
+> If we just allocated the entirety of a non-longest extent in the cntbt
+> then we don't call ->lastrec_update so the value of bc_free_longest
+> doesn't matter?
+
+Yes, absolutely right! Thank you!φ(゜▽゜*)♪
+
+> 
+>> +
+>>   	/*
+>>   	 * Delete the entry from the by-size btree.
+>>   	 */
+>> @@ -2044,6 +2051,13 @@ xfs_free_ag_extent(
+>>   	 * Now allocate and initialize a cursor for the by-size tree.
+>>   	 */
+>>   	cnt_cur = xfs_cntbt_init_cursor(mp, tp, agbp, pag);
+>> +	/*
+>> +	 * Record the potential maximum free length in advance.
+>> +	 */
+>> +	if (haveleft)
+>> +		cnt_cur->bc_ag.bc_free_longest = ltlen;
+>> +	if (haveright)
+>> +		cnt_cur->bc_ag.bc_free_longest = gtlen;
+> 
+> What happens in the haveleft && haveright case?  Shouldn't
+> bc_free_longest be set to ltlen + len + gtlen?  You could just push the
+> setting of bc_free_longest into the haveleft/haveright code below.
+
+Oh, as I wrote to Dave, the logic I considered here is that the record
+is less than or equal to the maximum value. And no need to worry about
+that because it will soon be updated in xfs_btree_insert in the problem
+triggering scenario.
+
+> 
+>>   	/*
+>>   	 * Have both left and right contiguous neighbors.
+>>   	 * Merge all three into a single free block.
+>> diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
+>> index 6ef5ddd89600..8e7d1e0f1a63 100644
+>> --- a/fs/xfs/libxfs/xfs_alloc_btree.c
+>> +++ b/fs/xfs/libxfs/xfs_alloc_btree.c
+>> @@ -161,7 +161,14 @@ xfs_allocbt_update_lastrec(
+>>   			rrp = XFS_ALLOC_REC_ADDR(cur->bc_mp, block, numrecs);
+>>   			len = rrp->ar_blockcount;
+>>   		} else {
+>> -			len = 0;
+>> +			/*
+>> +			 * Update in advance to prevent file creation failure
+>> +			 * for concurrent processes even though there is no
+>> +			 * numrec currently.
+>> +			 * And there's no need to worry as the value that no
+>> +			 * less than bc_free_longest will be inserted later.
+>> +			 */
+>> +			len = cpu_to_be32(cur->bc_ag.bc_free_longest);
+> 
+> Humm.  In this case, we've called ->update_lastrec on the cntbt cursor
+> having deleted all the records in this record block.  Presumably that
+> means that we're going to add rec->alloc.ar_blockcount blocks to the
+> rightmost record in the left sibling of @block?  Or already have?
 > 
 
+In normal delete operations, cntbt will have a balancing process, moving
+data from other nodes or merging to ensure that numrecs >= get_minrecs.
+In this scenario, the cntbt is already an -empty- tree, and is in a
+temporary state, new values will be inserted later.
+
+> Ahh, right, the pagf_longest checks are done without holding AGF lock.
+> The concurrent creat call sees this intermediate state (DELREC sets
+> pagf_longest to zero, a moment later INSREC/UPDATE set it to the correct
+> nonzero value) and decides to ENOSPC because "nobody" has sufficient
+> free space.
+> 
+> I think this phony zero never gets written to disk because although
+> we're logging zero into the ondisk and incore agf_longest here, the next
+> btree operation will reset it to the correct value.  Right?
+
+Yes, this phony zero will not be recorded to disk. It is just a
+temporary condition.
+
+> 
+> Would it be simpler to handle this case by duplicating the cntbt cursor
+> and walking one record leftward in the tree to find the longest extent,
+> rather than using this "bc_free_longest" variable?
+> 
+
+In my opinion, this does not solve the problem. As mentioned above, at
+this point the cntbt is an -empty- tree with no records.
+
+>>   		}
+>>   
+>>   		break;
+>> diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+>> index f93374278aa1..985b1885a643 100644
+>> --- a/fs/xfs/libxfs/xfs_btree.h
+>> +++ b/fs/xfs/libxfs/xfs_btree.h
+>> @@ -281,6 +281,7 @@ struct xfs_btree_cur
+>>   			struct xfs_perag	*pag;
+>>   			struct xfs_buf		*agbp;
+>>   			struct xbtree_afakeroot	*afake;	/* for staging cursor */
+>> +			xfs_extlen_t		bc_free_longest; /* potential longest free space */
+> 
+> This is only used for bnobt/cntbt trees, put it in the per-format
+> private data area, please.
+> 
+
+OK, I will modify it. More specifically, it is only used for cntbt,
+because currently only cntbt can set the XFS_BTGEO_LASTREC_UPDATE flag,
+and can call ->update_lastrec.
+
+> If the answer to the question about duplicating the btree cursor is "no"
+> then I think this deserves a much longer comment that captures the fact
+> that the variable exists to avoid setting pagf_longest to zero for
+> benefit of the code that does unlocked scanning of AGs for free space.
+> 
+> I also wonder if the unlocked ag scan should just note that it observed
+> a zero pagf_longest and if no space can be found across all the AGs, to
+> try again with locks?
+> 
+> --D
+
+Currently xfs checks the space using the "check-lock-check again"
+algorithm, which I understand to be more efficient. If there are a large
+number of AG's and there is no free space in front of them, the
+performance may be affected by checking the lock again. So I think
+targeting specific AG might be more effective. Although the current code
+process has a retry mechanism (in xfs_dialloc), it still can't
+completely solve the problem: for example, there is no space for the
+first scan, and the second scan has space but the longest is 0 in the
+temporary state and return -ENOSPC, etc...
+
+Thanks,
+Zizhi Wo
+
+> 
+>>   		} bc_ag;
+>>   		struct {
+>>   			struct xfbtree		*xfbtree;
+>> -- 
+>> 2.39.2
+>>
+>>
