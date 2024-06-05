@@ -1,132 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB0C1B5831;
-	Wed,  5 Jun 2024 12:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1CC1BA89A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 12:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717590076; cv=none; b=ek2RVcZT3/B26mcIkPqYRrnFDjs9XTk7Om+zMjcsfmmF1o+c7931w6PXFoYLFIJ2f7fh5iUnxQROHSD6fWlvBYZlwb/C8RLq7R21eP9MBF0vTNdEdUajl3sBByDzdosXRp0NF30HQNEFL/Ea0idCnXnFMsxyQBswqQVdnAPUl1Q=
+	t=1717590079; cv=none; b=f1R3PJvIlb27e285mmLbD9EWHhVptSQlUtVPUBLisIAdMGWtZLGQC8ovPspwe5cfnlCqhQNvargkD3eKaZNNXyMoYZpazdW9pCHrXtGdM2X6RRrDkOcw9kSCAJFA/8v3UWUFF4pyxhrnTuV+9IhLQqolTzGUpV0cSSFD23yxOVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717590076; c=relaxed/simple;
-	bh=KutjEnSy3mJvJZ4Xuim93whBGTiCDrdHPF7VN2LoQg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FLfdo23LUzmN2ReUBdCiSbcWytvU+AMuB0/r1KPk4Ov6/4ReH8hRIj121JkxqYziBumc4328/daq99YuzfP8/LJZPEQ6c91cIs23Qzfgkq4nGqkGVQwr1mCWd4RbzxmakbuSj8nqd4krhzHYgZuOpreA3oNtldSoAJGRAtRKnh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmenRmc5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717590079; c=relaxed/simple;
+	bh=ZuXkpQMdBYPnSjpL44UGNK9p02wpao3earR10+aZjbM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ev0MOL2bfl4dkc9ryPfj+Gc+K1WTzSfi+ts4z6OtzEgNUZN4nUqjVfgw5R3XiZMWDHLnVf3LT0l5qkGoUNS5rhBcICeUAQrfyM2IdnENybmc5tjtNXuLycEza7de6CD6xeGYLF2wVbibUOWUi5htZEuh6sZOhKgbpI0GqR8BxNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YzOtL8oh; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmenRmc5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C88C32782;
-	Wed,  5 Jun 2024 12:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717590075;
-	bh=KutjEnSy3mJvJZ4Xuim93whBGTiCDrdHPF7VN2LoQg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lmenRmc5Rf+Ivrn+8A3bJtENcGWcXPebIHvl+BrdcS+css08Cbwo37W7h+BsdMcdk
-	 fDT+t8Jhw+JY17mfZG4APC1a8XFNGfs2aJD8wq2iRKpC8yYGU6lcjDAMMRo9WmE4fk
-	 RoGdzFV7qKWuOzziU1P/SZOFdZicXN0ijlZse02R56abwJ1eyJe487/BoI8qUd6fOA
-	 o4btbQo3uw9DonLVhXYFcv7ka2nonOFKEUPvaAhFMoIEcPOYKCJMpS4CvatGK97rrM
-	 2xdcxd2akGsGSUcV4fa2epHHGiXqy+mQQ3UunVmBa9kMdQLJDIp6G51RfLskHHDlPw
-	 eZUky3BDSUF2Q==
-Date: Wed, 5 Jun 2024 14:21:13 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH rcu 1/6] rcu: Remove full ordering on second EQS snapshot
-Message-ID: <ZmBYOaQQQKapFGZo@localhost.localdomain>
-References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
- <20240604222652.2370998-1-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YzOtL8oh"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e6f2534e41so62243011fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 05:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1717590076; x=1718194876; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+Nvyhb30jMRTp5MAcBR0DPyo3QQwWDlaTstXDQ5DSE=;
+        b=YzOtL8ohU59o5as1AIFitfb6w+U9dD6UIwIj/xhsHVtC41atF0tb/ptgG0yKeLsWif
+         kVrN0AMc47QDp/69CjJTZjXMZPv4Y73bAWnhhuSI09q7rgpCEEXrPvfwFG0kUWqi6Y7I
+         cy9qMISWyU/BfhcAZq8Uw6D6kktoIEHyL+yeVLo1cQqNo5ilFoMeSE3Rb9iUcB8vndFq
+         +gj4eXTBbXm/PHabyx+L96a5uAlgYhdBnFmZyFgs+QdnPRdPBxftDnClvSa7Fz4ghH9v
+         kUmexT5zF9+YwRMeFv0T3m0qbbEWDcKS8z7hFuxVyZ6bWcrwO4BDInimdt5M68e/BwAj
+         zThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717590076; x=1718194876;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G+Nvyhb30jMRTp5MAcBR0DPyo3QQwWDlaTstXDQ5DSE=;
+        b=Esj9PTIIevoTTFCrFzy89Pr2lBHLFKmIP7O013mxBdDaOZrlFsGLGTLyjlTcYXqeHV
+         1nspibSBF9HYQGF8H8NIvW+xX+ufXxTXXPGk5KPEaQmwJ8+WWH7efOwdDtGF2gMmMDCk
+         nuV1Md1gSOOYpAmv5EbyLpAn0sOqIKL7+UKoKlUDTupNjYLYFkKGvrMJH+/HiIkWA7rY
+         m1EGasg2nOe2FjWyZyhRBNSeMHqYVehp6bHF0OkhGxQwHWvv07JNnqqVOWmyOHRTfagk
+         0ZL24j5/3cJSa+eqx9qUqjCi1eOfqJ8tzt+LZURA8LN+A9BNTBCHlAFJczG97QTCJ/jl
+         NYqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXcy4D1/2wWDDrNsPI8RBn3Fi1OzDJD4/Ou6KqzULBw5DK+20zBKTZefMzJC0t+vOk+rCUtPwOD0qdZMH/H1EUvpKTrpMT4BBKkrYBZ
+X-Gm-Message-State: AOJu0Yxz3MrteA7nZF/pagApK+yarJhsM5kMscaEm+feq2+71ZxkMSVu
+	DAJABG98nl8urCf9Auv+S8Tqo2p2i+WCOj9i5vfIaluoRDwlhD1qDAqTbmC5rJQ=
+X-Google-Smtp-Source: AGHT+IE21RURyt0kYC+Jz489gsL7lhhTmR21aXYTlyuWI/0yvyEIMAOFWs8jF25IHJtn2FVRLjKUsQ==
+X-Received: by 2002:a2e:7c0b:0:b0:2ea:772a:ddb4 with SMTP id 38308e7fff4ca-2eac7a526f0mr14280681fa.34.1717590075844;
+        Wed, 05 Jun 2024 05:21:15 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:d3dd:423:e1eb:d88b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4215813ce64sm19634485e9.44.2024.06.05.05.21.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jun 2024 05:21:15 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ath12k@lists.infradead.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v9 0/2] dt-bindings: describe the ath1X modules on QCom BT/WLAN chipsets
+Date: Wed,  5 Jun 2024 14:21:03 +0200
+Message-ID: <20240605122106.23818-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240604222652.2370998-1-paulmck@kernel.org>
 
-Le Tue, Jun 04, 2024 at 03:26:47PM -0700, Paul E. McKenney a écrit :
-> From: Frederic Weisbecker <frederic@kernel.org>
-> 
-> When the grace period kthread checks the extended quiescent state
-> counter of a CPU, full ordering is necessary to ensure that either:
-> 
-> * If the GP kthread observes the remote target in an extended quiescent
->   state, then that target must observe all accesses prior to the current
->   grace period, including the current grace period sequence number, once
->   it exits that extended quiescent state. Also the GP kthread must
->   observe all accesses performed by the target prior it entering in
->   EQS.
-> 
-> or:
-> 
-> * If the GP kthread observes the remote target NOT in an extended
->   quiescent state, then the target further entering in an extended
->   quiescent state must observe all accesses prior to the current
->   grace period, including the current grace period sequence number, once
->   it enters that extended quiescent state. Also the GP kthread later
->   observing that EQS must also observe all accesses performed by the
->   target prior it entering in EQS.
-> 
-> This ordering is explicitly performed both on the first EQS snapshot
-> and on the second one as well through the combination of a preceding
-> full barrier followed by an acquire read. However the second snapshot's
-> full memory barrier is redundant and not needed to enforce the above
-> guarantees:
-> 
->     GP kthread                  Remote target
->     ----                        -----
->     // Access prior GP
->     WRITE_ONCE(A, 1)
->     // first snapshot
->     smp_mb()
->     x = smp_load_acquire(EQS)
->                                // Access prior GP
->                                WRITE_ONCE(B, 1)
->                                // EQS enter
->                                // implied full barrier by atomic_add_return()
->                                atomic_add_return(RCU_DYNTICKS_IDX, EQS)
->                                // implied full barrier by atomic_add_return()
->                                READ_ONCE(A)
->     // second snapshot
->     y = smp_load_acquire(EQS)
->     z = READ_ONCE(B)
-> 
-> If the GP kthread above fails to observe the remote target in EQS
-> (x not in EQS), the remote target will observe A == 1 after further
-> entering in EQS. Then the second snapshot taken by the GP kthread only
-> need to be an acquire read in order to observe z == 1.
-> 
-> Therefore remove the needless full memory barrier on second snapshot.
-> 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  kernel/rcu/tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 28c7031711a3f..f07b8bff4621b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -321,7 +321,7 @@ static bool rcu_dynticks_in_eqs(int snap)
->   */
->  static bool rcu_dynticks_in_eqs_since(struct rcu_data *rdp, int snap)
->  {
-> -	return snap != rcu_dynticks_snap(rdp->cpu);
-> +	return snap != ct_dynticks_cpu_acquire(rdp->cpu);
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I guess I'm going to add a comment here to elaborate on the fact
-it relies on the ordering enforced before the first snapshot. Would
-you prefer a delta patch or an updated patch?
+Here are the two dt-binding patches from the power-sequencing series
+targeting the wireless subsystem. To keep the cover-letter short, I
+won't repeat all the details, they can be found in the cover-letter for
+v8. Please consider picking them up into your tree, they were reviewed
+by Krzysztof earlier.
 
-Thanks.
+Changelog:
 
->  }
->  
->  /*
-> -- 
-> 2.40.1
-> 
-> 
+Since v8:
+- split out the wireless bindings into their own series
+- Link to v8: https://lore.kernel.org/r/20240528-pwrseq-v8-0-d354d52b763c@linaro.org
+
+Since v7:
+- added DTS changes for sm8650-hdk
+- added circular dependency detection for pwrseq units
+- fixed a KASAN reported use-after-free error in remove path
+- improve Kconfig descriptions
+- fix typos in bindings and Kconfig
+- fixed issues reported by smatch
+- fix the unbind path in PCI pwrctl
+- lots of minor improvements to the pwrseq core
+
+Since v6:
+- kernel doc fixes
+- drop myself from the DT bindings maintainers list for ath12k
+- wait until the PCI bridge device is fully added before creating the
+  PCI pwrctl platform devices for its sub-nodes, otherwise we may see
+  sysfs and procfs attribute failures (due to duplication, we're
+  basically trying to probe the same device twice at the same time)
+- I kept the regulators for QCA6390's ath11k as required as they only
+  apply to this specific Qualcomm package
+
+Since v5:
+- unify the approach to modelling the WCN WLAN/BT chips by always exposing
+  the PMU node on the device tree and making the WLAN and BT nodes become
+  consumers of its power outputs; this includes a major rework of the DT
+  sources, bindings and driver code; there's no more a separate PCI
+  pwrctl driver for WCN7850, instead its power-up sequence was moved
+  into the pwrseq driver common for all WCN chips
+- don't set load_uA from new regulator consumers
+- fix reported kerneldoc issues
+- drop voltage ranges for PMU outputs from DT
+- many minor tweaks and reworks
+
+v1: Original RFC:
+
+https://lore.kernel.org/lkml/20240104130123.37115-1-brgl@bgdev.pl/T/
+
+v2: First real patch series (should have been PATCH v2) adding what I
+    referred to back then as PCI power sequencing:
+
+https://lore.kernel.org/linux-arm-kernel/2024021413-grumbling-unlivable-c145@gregkh/T/
+
+v3: RFC for the DT representation of the PMU supplying the WLAN and BT
+    modules inside the QCA6391 package (was largely separate from the
+    series but probably should have been called PATCH or RFC v3):
+
+https://lore.kernel.org/all/CAMRc=Mc+GNoi57eTQg71DXkQKjdaoAmCpB=h2ndEpGnmdhVV-Q@mail.gmail.com/T/
+
+v4: Second attempt at the full series with changed scope (introduction of
+    the pwrseq subsystem, should have been RFC v4)
+
+https://lore.kernel.org/lkml/20240201155532.49707-1-brgl@bgdev.pl/T/
+
+v5: Two different ways of handling QCA6390 and WCN7850:
+
+https://lore.kernel.org/lkml/20240216203215.40870-1-brgl@bgdev.pl/
+
+Bartosz Golaszewski (2):
+  dt-bindings: net: wireless: qcom,ath11k: describe the ath11k on
+    QCA6390
+  dt-bindings: net: wireless: describe the ath12k PCI module
+
+ .../net/wireless/qcom,ath11k-pci.yaml         | 46 +++++++++
+ .../bindings/net/wireless/qcom,ath12k.yaml    | 99 +++++++++++++++++++
+ 2 files changed, 145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k.yaml
+
+-- 
+2.40.1
+
