@@ -1,63 +1,63 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B56918F2F4
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B5A1922EC
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575393; cv=none; b=kxXKRch7V983n0ML/Dq6sJycU39JOnw1rhiXpWHemBo+vc82I7BH4zRBcU6yt2noMrCrelXWvyXNV2P8h4L3yFs6ZYh98yt7pFpNZeDJHzD2myExJEp91+9AdWJYReGt9pK0mOn2CxTv93VaCBtzhjF1wBA9oVxdG/4geJG9pi0=
+	t=1717575393; cv=none; b=Hial1CgLUvqIbabO1BLLV4J3SQZ5JAKHsUMXQ2MR5C5TfFUy79+PMbdduEcxQzchl0tcw4DBsSWwh0HgranU3BiGO0exiKOQKM7cJ+r+GcJOutAaVN1PIVg4B0EeDH/Olh9CtzYIaqY2TQbLnyiBcKixKfX29QBU9RTyj0HT608=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717575393; c=relaxed/simple;
-	bh=JMFvIAK97CVO0WYF9x4f5zI6n4vzeleom/TOQDaGhvo=;
+	bh=2mEh5RHmzkYaPBcMwiiWhHuqTZ5Dnp5rad7ZVzxAHNI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DGf3m+ejG7ozYRPRKzCiOUwP0TTLOgZbaV0J0yuFEPVuDezz/S1sjv0pL+ewI6eIHQjNIW4B/5j7BaKIocy8mykdepQmvZiFcy4o+6W73vnHluXy8iuLKGtueax+gyAmag3tajRsmEh0D5HdsbsWEt0wrVT4+CvQYBLfRI7BTo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JqAh+kbd; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=MNU9QEFTCqa2pS3ezlU2tGskaHcVI+KGFIju79fv5wb7z0MOcB7rfZuBTlZ00FcM8F6uLAigTRqSeQzk3u/2O4WKr9LggAmCcErDYNULWeb9iXFJTjNjAGKRuCVlfkO5JzZT5nQs6+08TMUYDWDZO/0TvYkGBf0KkZGlbgUuX40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJ0bE7tA; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqAh+kbd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJ0bE7tA"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717575391;
+	s=mimecast20190719; t=1717575390;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IEuAQpiyFkRTWU9yECucUjg03zi15bHltjbT7Mp+Diw=;
-	b=JqAh+kbd2mRqMVSSEDylIENeWpKxtoeF1frMvtjPru0J0LfUxOqvrHQM0deCn0xeg8dy5q
-	QD78NKr3uSFG+WxvEmK1+pPhPH2umv0bzJRCS893AYVC7+gLhsBOqyLsNpuM0Ty9I7LwRn
-	DZvJ0lrR5bSP9PQNFeJwIXe/WCfyPZE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=z8EKelm4Vr/z+BAYmppwUIfAU+aHPoZvlqPBVkyBuTo=;
+	b=TJ0bE7tAcq10VtKVgADA4P1GNmCYV0OFtJ8ktGw7vSuF4bzg+UKhceojgqRbKCCQ3JRoVj
+	fJhE+tP6Kx2KRSU3SZY+KI67x0hqGBxEMARfSaqIUvhSH3gxkneIiIX+h/8USfIc4k8buE
+	NIGfEJ4E2kqyQPLQlgt8PQM6nLenDVE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-eJXw631SONS1n37Uf0MPYQ-1; Wed, 05 Jun 2024 04:16:30 -0400
-X-MC-Unique: eJXw631SONS1n37Uf0MPYQ-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4210e98f8d7so5392655e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:29 -0700 (PDT)
+ us-mta-519-Gqxcuy8xM3q-icJk41GUSw-1; Wed, 05 Jun 2024 04:16:23 -0400
+X-MC-Unique: Gqxcuy8xM3q-icJk41GUSw-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-35e532f32d8so213640f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:16:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575389; x=1718180189;
+        d=1e100.net; s=20230601; t=1717575382; x=1718180182;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IEuAQpiyFkRTWU9yECucUjg03zi15bHltjbT7Mp+Diw=;
-        b=mzmCuSVnJElImCtTbxoqRJFKCxYAF6VrGklN3o2K+CjuTauNi6JeXgbwleDI+BZSVh
-         7lqPa1vZJdhoIzPKV275piv8RRCmUg+ET54XAaFU90gNJIRgoYKG1WNoNCxNBliRwlho
-         /3UrZuAyYCi6quTk1KJzymQ0u+VQGsZFtn/D96bt+FoNBYGzBKSbtyA5th/lx5zRLlgF
-         40EBsSiTmrHCszTLmIZtMaJHfrEEyfJ9b8zR2g+GLsZZ5K4pxcClVtdUsCD1puJayyrV
-         EIX9CrRbF8C5WCYU5US+RCGiOy1m8Ovs/kKkh7RSsws4faU8Le0T3/3sGwzhS60hwsnH
-         HVaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXHlHlb5poKymj15vWTBbAOtZB6FirRjmEXZcwtSR84hu68LlVisS7ZSQpDqog+0J2nazySP7p9ksdhvuaw2f3FsDy1pvrunEp9CDF
-X-Gm-Message-State: AOJu0YwmziPK57/8TSuTgXshdMv7doVCLA3b7etd7djwBNvlxz6MgK5b
-	DbpKX0LpY6wNHhP1uBYcbc1snSXApS4kTLTcKySPb7e7Inc25Iejpxvc5eTiM5CnVI2p9rWlFKa
-	0YisorVno2+aS4MDWYZqM6e5OWIEr4ElXppHwCMYIpQfQV+mEFnzO7J+VI+Sqzw==
-X-Received: by 2002:a5d:49c5:0:b0:354:f768:aa00 with SMTP id ffacd0b85a97d-35e8ef8f11amr1107300f8f.4.1717575388874;
-        Wed, 05 Jun 2024 01:16:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnjANmPeJW2fIkqitgTnO6d1I0TF2FhQLz3U4Vz0ir5jlCvF+wcPqPTc7AeKCFcFuNtzjdvA==
-X-Received: by 2002:a5d:49c5:0:b0:354:f768:aa00 with SMTP id ffacd0b85a97d-35e8ef8f11amr1107276f8f.4.1717575388585;
-        Wed, 05 Jun 2024 01:16:28 -0700 (PDT)
+        bh=z8EKelm4Vr/z+BAYmppwUIfAU+aHPoZvlqPBVkyBuTo=;
+        b=PJhblfqP+I47EzgOtNK8eOeMXnKi+CgU/5JSTDEuBb+7N2iy6NzQn6x6f0Uh14+A+i
+         3x3iydC4FmM0GMUt1xTeNQDJt7Thmtewf9xzuiKpM62oqW8MMblvtmPwLz/5A46BHJJ+
+         KGkytUXKnjfjpuSbJHdJIHOWI4AY8QZ0fU8QrGEK1ojsK9EmVb4QI+eUCH9BPdT9P57l
+         QUUVq7UVAhEyzEDksn+14zOsH/gvbdZZnbNCvRW/PVrcENgFbMSFRdLNr0rhip+Yd8wN
+         AB/gMqocT1erO911yav6rT05cfI5ekx0w7vi8L7DT7YpEEuoPPvEcxBDDb5dFHTdkl2O
+         CQ6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVrV+sFK0hDGaRFMrVa7KTai3LMUeua3rQiM9PgEorQ/V8cZ6aSUqkdaDm8O6BmKQzlcQT3LaSXVaKHpCo4EwyniWRckYYcukTM2zbZ
+X-Gm-Message-State: AOJu0YySqV1UpdO+HHWQww4VAJmYGBtG27fglo9qLVIpNnSG/wNpecIp
+	lXA5Uac+Exr8anMvxgW+1DUcLRrfWBABIZ+F/aNEkokAdBcSS+P59zdYwbEHt5Ypqmss+nRH5Q4
+	YCIlHu18cj23g0TPs/Tq0xC9yoMM36ApmUHsZlGnalqFHdpJyvxHKRCzBCwe2Aw==
+X-Received: by 2002:a5d:4a8f:0:b0:354:fa0d:1423 with SMTP id ffacd0b85a97d-35e840559afmr1138298f8f.2.1717575382444;
+        Wed, 05 Jun 2024 01:16:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUebdKcHHSvFhFyVCS++cJOWzefX/LKmBJWeBrOSXnXJYMyOYfKcerBpQ0n6FW3HDKgKUtbw==
+X-Received: by 2002:a5d:4a8f:0:b0:354:fa0d:1423 with SMTP id ffacd0b85a97d-35e840559afmr1138268f8f.2.1717575382085;
+        Wed, 05 Jun 2024 01:16:22 -0700 (PDT)
 Received: from pstanner-thinkpadt14sgen1.fritz.box ([2001:9e8:32e6:e600:c901:4daf:2476:80ad])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.27
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35dd0630010sm13739163f8f.76.2024.06.05.01.16.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:16:28 -0700 (PDT)
+        Wed, 05 Jun 2024 01:16:21 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -72,9 +72,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH v7 12/13] PCI: Add pcim_iomap_range()
-Date: Wed,  5 Jun 2024 10:16:04 +0200
-Message-ID: <20240605081605.18769-14-pstanner@redhat.com>
+Subject: [PATCH v7 06/13] PCI: Warn users about complicated devres nature
+Date: Wed,  5 Jun 2024 10:15:58 +0200
+Message-ID: <20240605081605.18769-8-pstanner@redhat.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240605081605.18769-2-pstanner@redhat.com>
 References: <20240605081605.18769-2-pstanner@redhat.com>
@@ -86,83 +86,182 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The only managed mapping function currently is pcim_iomap() which
-doesn't allow for mapping an area starting at a certain offset, which
-many drivers want.
+The PCI region-request functions become managed functions when
+pcim_enable_device() has been called previously instead of
+pci_enable_device().
 
-Add pcim_iomap_range() as an exported function.
+This has already caused a bug (in 8558de401b5f) by confusing users, who
+came to believe that all pci functions, such as pci_iomap_range(),
+suddenly are managed that way.
+
+This is not the case.
+
+Add comments to the relevant functions' docstrings that warn users about
+this behavior.
 
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/pci/devres.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pci.h  |  2 ++
- 2 files changed, 46 insertions(+)
+ drivers/pci/iomap.c | 16 ++++++++++++++++
+ drivers/pci/pci.c   | 42 +++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 57 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 271ffd1aaf47..5ddcfe001d08 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -1007,3 +1007,47 @@ void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
- 	}
+diff --git a/drivers/pci/iomap.c b/drivers/pci/iomap.c
+index c9725428e387..a715a4803c95 100644
+--- a/drivers/pci/iomap.c
++++ b/drivers/pci/iomap.c
+@@ -23,6 +23,10 @@
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR from offset to the end, pass %0 here.
++ *
++ * NOTE:
++ * This function is never managed, even if you initialized with
++ * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_range(struct pci_dev *dev,
+ 			      int bar,
+@@ -63,6 +67,10 @@ EXPORT_SYMBOL(pci_iomap_range);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR from offset to the end, pass %0 here.
++ *
++ * NOTE:
++ * This function is never managed, even if you initialized with
++ * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_wc_range(struct pci_dev *dev,
+ 				 int bar,
+@@ -106,6 +114,10 @@ EXPORT_SYMBOL_GPL(pci_iomap_wc_range);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR without checking for its length first, pass %0 here.
++ *
++ * NOTE:
++ * This function is never managed, even if you initialized with
++ * pcim_enable_device(). If you need automatic cleanup, use pcim_iomap().
+  * */
+ void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long maxlen)
+ {
+@@ -127,6 +139,10 @@ EXPORT_SYMBOL(pci_iomap);
+  *
+  * @maxlen specifies the maximum length to map. If you want to get access to
+  * the complete BAR without checking for its length first, pass %0 here.
++ *
++ * NOTE:
++ * This function is never managed, even if you initialized with
++ * pcim_enable_device().
+  * */
+ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
+ {
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e4feb093f097..8dd711b9a291 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3897,6 +3897,8 @@ EXPORT_SYMBOL(pci_release_region);
+  * @res_name: Name to be associated with resource.
+  * @exclusive: whether the region access is exclusive or not
+  *
++ * Returns: 0 on success, negative error code on failure.
++ *
+  * Mark the PCI region associated with PCI device @pdev BAR @bar as
+  * being reserved by owner @res_name.  Do not access any
+  * address inside the PCI regions unless this call returns
+@@ -3947,6 +3949,8 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
+  * @bar: BAR to be reserved
+  * @res_name: Name to be associated with resource
+  *
++ * Returns: 0 on success, negative error code on failure.
++ *
+  * Mark the PCI region associated with PCI device @pdev BAR @bar as
+  * being reserved by owner @res_name.  Do not access any
+  * address inside the PCI regions unless this call returns
+@@ -3954,6 +3958,11 @@ static int __pci_request_region(struct pci_dev *pdev, int bar,
+  *
+  * Returns 0 on success, or %EBUSY on error.  A warning
+  * message is also printed on failure.
++ *
++ * NOTE:
++ * This is a "hybrid" function: It's normally unmanaged, but becomes managed
++ * when pcim_enable_device() has been called in advance. This hybrid feature is
++ * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
+  */
+ int pci_request_region(struct pci_dev *pdev, int bar, const char *res_name)
+ {
+@@ -4004,6 +4013,13 @@ static int __pci_request_selected_regions(struct pci_dev *pdev, int bars,
+  * @pdev: PCI device whose resources are to be reserved
+  * @bars: Bitmask of BARs to be requested
+  * @res_name: Name to be associated with resource
++ *
++ * Returns: 0 on success, negative error code on failure.
++ *
++ * NOTE:
++ * This is a "hybrid" function: It's normally unmanaged, but becomes managed
++ * when pcim_enable_device() has been called in advance. This hybrid feature is
++ * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
+  */
+ int pci_request_selected_regions(struct pci_dev *pdev, int bars,
+ 				 const char *res_name)
+@@ -4012,6 +4028,19 @@ int pci_request_selected_regions(struct pci_dev *pdev, int bars,
  }
- EXPORT_SYMBOL(pcim_iounmap_regions);
-+
-+/**
-+ * pcim_iomap_range - Create a ranged __iomap mapping within a PCI BAR
-+ * @pdev: PCI device to map IO resources for
-+ * @bar: Index of the BAR
-+ * @offset: Offset from the begin of the BAR
-+ * @len: Length in bytes for the mapping
-+ *
-+ * Returns: __iomem pointer on success, an IOMEM_ERR_PTR on failure.
-+ *
-+ * Creates a new IO-Mapping within the specified @bar, ranging from @offset to
-+ * @offset + @len.
-+ *
-+ * The mapping will automatically get unmapped on driver detach. If desired,
-+ * release manually only with pcim_iounmap().
-+ */
-+void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
-+		unsigned long offset, unsigned long len)
-+{
-+	void __iomem *mapping;
-+	struct pcim_addr_devres *res;
-+
-+	res = pcim_addr_devres_alloc(pdev);
-+	if (!res)
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+
-+	mapping = pci_iomap_range(pdev, bar, offset, len);
-+	if (!mapping) {
-+		pcim_addr_devres_free(res);
-+		return IOMEM_ERR_PTR(-EINVAL);
-+	}
-+
-+	res->type = PCIM_ADDR_DEVRES_TYPE_MAPPING;
-+	res->baseaddr = mapping;
-+
-+	/*
-+	 * Ranged mappings don't get added to the legacy-table, since the table
-+	 * only ever keeps track of whole BARs.
-+	 */
-+
-+	devres_add(&pdev->dev, res);
-+	return mapping;
-+}
-+EXPORT_SYMBOL(pcim_iomap_range);
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3104c0238a42..f6918e49ea5f 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2329,6 +2329,8 @@ int pcim_iomap_regions(struct pci_dev *pdev, int mask, const char *name);
- int pcim_iomap_regions_request_all(struct pci_dev *pdev, int mask,
- 				   const char *name);
- void pcim_iounmap_regions(struct pci_dev *pdev, int mask);
-+void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
-+				unsigned long offset, unsigned long len);
+ EXPORT_SYMBOL(pci_request_selected_regions);
  
- extern int pci_pci_problems;
- #define PCIPCI_FAIL		1	/* No PCI PCI DMA */
++/**
++ * pci_request_selected_regions_exclusive - Request regions exclusively
++ * @pdev: PCI device to request regions from
++ * @bars: bit mask of bars to request
++ * @res_name: name to be associated with the requests
++ *
++ * Returns: 0 on success, negative error code on failure.
++ *
++ * NOTE:
++ * This is a "hybrid" function: It's normally unmanaged, but becomes managed
++ * when pcim_enable_device() has been called in advance. This hybrid feature is
++ * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
++ */
+ int pci_request_selected_regions_exclusive(struct pci_dev *pdev, int bars,
+ 					   const char *res_name)
+ {
+@@ -4029,7 +4058,6 @@ EXPORT_SYMBOL(pci_request_selected_regions_exclusive);
+  * successful call to pci_request_regions().  Call this function only
+  * after all use of the PCI regions has ceased.
+  */
+-
+ void pci_release_regions(struct pci_dev *pdev)
+ {
+ 	pci_release_selected_regions(pdev, (1 << PCI_STD_NUM_BARS) - 1);
+@@ -4061,6 +4089,8 @@ EXPORT_SYMBOL(pci_request_regions);
+  * @pdev: PCI device whose resources are to be reserved
+  * @res_name: Name to be associated with resource.
+  *
++ * Returns: 0 on success, negative error code on failure.
++ *
+  * Mark all PCI regions associated with PCI device @pdev as being reserved
+  * by owner @res_name.  Do not access any address inside the PCI regions
+  * unless this call returns successfully.
+@@ -4070,6 +4100,11 @@ EXPORT_SYMBOL(pci_request_regions);
+  *
+  * Returns 0 on success, or %EBUSY on error.  A warning message is also
+  * printed on failure.
++ *
++ * NOTE:
++ * This is a "hybrid" function: It's normally unmanaged, but becomes managed
++ * when pcim_enable_device() has been called in advance. This hybrid feature is
++ * DEPRECATED! If you want managed cleanup, use the pcim_* functions instead.
+  */
+ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
+ {
+@@ -4401,6 +4436,11 @@ void pci_disable_parity(struct pci_dev *dev)
+  * @enable: boolean: whether to enable or disable PCI INTx
+  *
+  * Enables/disables PCI INTx for device @pdev
++ *
++ * NOTE:
++ * This is a "hybrid" function: It's normally unmanaged, but becomes managed
++ * when pcim_enable_device() has been called in advance. This hybrid feature is
++ * DEPRECATED!
+  */
+ void pci_intx(struct pci_dev *pdev, int enable)
+ {
 -- 
 2.45.0
 
