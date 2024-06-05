@@ -1,108 +1,132 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7BE1990D3;
-	Wed,  5 Jun 2024 12:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB0C1B5831;
+	Wed,  5 Jun 2024 12:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717590044; cv=none; b=Vh8KgJYfwTy2jdJldNOnAKcp/PRorF9RSxBN9DQDvj+OLZGrOM+MjlwBD790BsR5HjPxBtPVR+WDDtlibsVltr1umJ59M9qusrUBjOvcC2c1D/83I5Vg5aix7oELT25jvbG8ys7M6kV7DSeK9PkAlTgLMYKHk4wtK3VUq7umT/8=
+	t=1717590076; cv=none; b=ek2RVcZT3/B26mcIkPqYRrnFDjs9XTk7Om+zMjcsfmmF1o+c7931w6PXFoYLFIJ2f7fh5iUnxQROHSD6fWlvBYZlwb/C8RLq7R21eP9MBF0vTNdEdUajl3sBByDzdosXRp0NF30HQNEFL/Ea0idCnXnFMsxyQBswqQVdnAPUl1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717590044; c=relaxed/simple;
-	bh=i3VLYMzKIaICAGV7f8C0S0h6QHeKK4+fALp3AGcGmaA=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VrF6v8CcJ14Z4ny3fb5Z/yXTA3MHPWaCiNmW04Isg+BYyPXNQnuNACxyVenytHl8Hz5VIXIMlIU1rq3NKnJkBnllVsLHhWRNiNwK4AeMkwB4z7+P4qXHqyAinN/NiZOxYpQtkijkpZZkn92vTTv8Rpum+4J3kDBwkNyNLFsu/qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dcql6x10; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717590076; c=relaxed/simple;
+	bh=KutjEnSy3mJvJZ4Xuim93whBGTiCDrdHPF7VN2LoQg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FLfdo23LUzmN2ReUBdCiSbcWytvU+AMuB0/r1KPk4Ov6/4ReH8hRIj121JkxqYziBumc4328/daq99YuzfP8/LJZPEQ6c91cIs23Qzfgkq4nGqkGVQwr1mCWd4RbzxmakbuSj8nqd4krhzHYgZuOpreA3oNtldSoAJGRAtRKnh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmenRmc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcql6x10"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eaafda3b5cso22430431fa.3;
-        Wed, 05 Jun 2024 05:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717590041; x=1718194841; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fzL5TdturJIplpKua1xxlH8v79ArVex/tipueVIZFrs=;
-        b=dcql6x10Q5rir5YB/spHn/DztfGdGsLom3Wn7vNWGsmDM7RVBJzxfQLLzD9p2XGTxa
-         ChaGzZ95Bff3vzjafVxJoN74uEEh8/KA6DQMUDXh59SEImMeD2lVWYydZjsouDzv1oqs
-         JpvsnFptsLqX7kbZpA3gEOFq5rE6y/A6mTa0oVYAJJZnPt8h/mrvlLcamswYOBH7IXcS
-         WRskHFf5I3jNdZl+ugaJTlmZq40HbFPbM6ryzz7JRRf9QwXq9z0ibtHYXrto3S++bXHK
-         Ng5XTfcw/sVeS1kSpAvaxOIW3IXh7ImS47V1VgYL0iAq1fA4okKRhjvr06ZHPAS0rFL6
-         qwmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717590041; x=1718194841;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fzL5TdturJIplpKua1xxlH8v79ArVex/tipueVIZFrs=;
-        b=ETHeog6XaZRzFROdEjlWO4MnMrGvjUOGnBabOKG/oGlP7F7Qt2qarsY+yAZDdZ6QIx
-         0jeeU7DZ1EaVYzk1EcOGVsJea662RwzEYpedBqMwtGC8skKFOr5kxgZ9OfjVGlvCLjfn
-         9j3eeMpTmpOznbdzHgj9ImvNI8kA7R8A6My0ZPXAWzeJzc4dQIY/A8g6JT0OqwuGaN7v
-         3Nd1DuItpKiqACWBmYFN+Hsmw0Z2H0HJiraVpO89NDUK31h0VC+qATdlAX699r/vhhb0
-         z5vWmKpsbT2fyeHsZhX2dS6xXWAFJhki7kh4uMr+jEP4CFv9OXCyk8hDhTZwOEKP4wMp
-         N4RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcFcWmvQZxTfXfKT03tMrCw7l7454Gv/2k/dkn/zJndn00Yui1ep0qOw+3oiAa8rIWiyHl9bOgrGKlMAJa346CRuVq+i70NYhCGmwbASsKeW7k+cv20PdCJYNzbP2hVSgIn/0nJLWg4LrLktQTHqn3ZCOVnW8jIqEMQrzek/YqoYza/2o=
-X-Gm-Message-State: AOJu0Yx76RsojtS+ArDo+moesr+5ZuKxq/6okS+SavDUvS9zdEWqL3U2
-	FRCTbhEyX0v+oNgbPdLvjzgExIcdzNo57Sh+tg/M3L2z48aRi4T6dmj56w==
-X-Google-Smtp-Source: AGHT+IE4hji9mQWX96BplfNb7FUkKIGLYY97JNL2eWEW7amoMmibpGvRa7KTdcjWH1WS3/HP0hIS3A==
-X-Received: by 2002:a2e:804b:0:b0:2e5:685a:cd24 with SMTP id 38308e7fff4ca-2eac798a96dmr13488171fa.6.1717590040880;
-        Wed, 05 Jun 2024 05:20:40 -0700 (PDT)
-Received: from [10.20.30.169] ([178.218.200.115])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ea91bb4c07sm17493291fa.45.2024.06.05.05.20.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jun 2024 05:20:40 -0700 (PDT)
-Message-ID: <8b2f681c-444a-4201-9004-e12b9482d1a7@gmail.com>
-Date: Wed, 5 Jun 2024 17:20:38 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmenRmc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C88C32782;
+	Wed,  5 Jun 2024 12:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717590075;
+	bh=KutjEnSy3mJvJZ4Xuim93whBGTiCDrdHPF7VN2LoQg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lmenRmc5Rf+Ivrn+8A3bJtENcGWcXPebIHvl+BrdcS+css08Cbwo37W7h+BsdMcdk
+	 fDT+t8Jhw+JY17mfZG4APC1a8XFNGfs2aJD8wq2iRKpC8yYGU6lcjDAMMRo9WmE4fk
+	 RoGdzFV7qKWuOzziU1P/SZOFdZicXN0ijlZse02R56abwJ1eyJe487/BoI8qUd6fOA
+	 o4btbQo3uw9DonLVhXYFcv7ka2nonOFKEUPvaAhFMoIEcPOYKCJMpS4CvatGK97rrM
+	 2xdcxd2akGsGSUcV4fa2epHHGiXqy+mQQ3UunVmBa9kMdQLJDIp6G51RfLskHHDlPw
+	 eZUky3BDSUF2Q==
+Date: Wed, 5 Jun 2024 14:21:13 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	rostedt@goodmis.org
+Subject: Re: [PATCH rcu 1/6] rcu: Remove full ordering on second EQS snapshot
+Message-ID: <ZmBYOaQQQKapFGZo@localhost.localdomain>
+References: <81f4e616-8125-4934-a8e2-fd5beae90995@paulmck-laptop>
+ <20240604222652.2370998-1-paulmck@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Dmitry Yashin <dmt.yashin@gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: rockchip: add rk3308b SoC support
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Jianqun Xu <jay.xu@rock-chips.com>, Jonas Karlman <jonas@kwiboo.se>,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Dmitry Yashin <dmt.yashin@gmail.com>
-References: <20240604141020.21725-1-dmt.yashin@gmail.com>
- <20240604141020.21725-3-dmt.yashin@gmail.com>
- <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
-Content-Language: en-US
-In-Reply-To: <b5d2d914-0c2b-4cd1-b894-f894a93a54f9@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240604222652.2370998-1-paulmck@kernel.org>
 
-Hi Dan,
+Le Tue, Jun 04, 2024 at 03:26:47PM -0700, Paul E. McKenney a écrit :
+> From: Frederic Weisbecker <frederic@kernel.org>
+> 
+> When the grace period kthread checks the extended quiescent state
+> counter of a CPU, full ordering is necessary to ensure that either:
+> 
+> * If the GP kthread observes the remote target in an extended quiescent
+>   state, then that target must observe all accesses prior to the current
+>   grace period, including the current grace period sequence number, once
+>   it exits that extended quiescent state. Also the GP kthread must
+>   observe all accesses performed by the target prior it entering in
+>   EQS.
+> 
+> or:
+> 
+> * If the GP kthread observes the remote target NOT in an extended
+>   quiescent state, then the target further entering in an extended
+>   quiescent state must observe all accesses prior to the current
+>   grace period, including the current grace period sequence number, once
+>   it enters that extended quiescent state. Also the GP kthread later
+>   observing that EQS must also observe all accesses performed by the
+>   target prior it entering in EQS.
+> 
+> This ordering is explicitly performed both on the first EQS snapshot
+> and on the second one as well through the combination of a preceding
+> full barrier followed by an acquire read. However the second snapshot's
+> full memory barrier is redundant and not needed to enforce the above
+> guarantees:
+> 
+>     GP kthread                  Remote target
+>     ----                        -----
+>     // Access prior GP
+>     WRITE_ONCE(A, 1)
+>     // first snapshot
+>     smp_mb()
+>     x = smp_load_acquire(EQS)
+>                                // Access prior GP
+>                                WRITE_ONCE(B, 1)
+>                                // EQS enter
+>                                // implied full barrier by atomic_add_return()
+>                                atomic_add_return(RCU_DYNTICKS_IDX, EQS)
+>                                // implied full barrier by atomic_add_return()
+>                                READ_ONCE(A)
+>     // second snapshot
+>     y = smp_load_acquire(EQS)
+>     z = READ_ONCE(B)
+> 
+> If the GP kthread above fails to observe the remote target in EQS
+> (x not in EQS), the remote target will observe A == 1 after further
+> entering in EQS. Then the second snapshot taken by the GP kthread only
+> need to be an acquire read in order to observe z == 1.
+> 
+> Therefore remove the needless full memory barrier on second snapshot.
+> 
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  kernel/rcu/tree.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 28c7031711a3f..f07b8bff4621b 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -321,7 +321,7 @@ static bool rcu_dynticks_in_eqs(int snap)
+>   */
+>  static bool rcu_dynticks_in_eqs_since(struct rcu_data *rdp, int snap)
+>  {
+> -	return snap != rcu_dynticks_snap(rdp->cpu);
+> +	return snap != ct_dynticks_cpu_acquire(rdp->cpu);
 
-On 6/5/24 12:22 PM, Dan Carpenter wrote:
-> On Tue, Jun 04, 2024 at 07:10:20PM +0500, Dmitry Yashin wrote:
-> Why does this one have a Fixes tag?  Isn't this new hardware support?
-> Possibly patch 1/2 was not actually a fix but just preparation for this
-> patch?
->
-> regards,
-> dan carpenter
+I guess I'm going to add a comment here to elaborate on the fact
+it relies on the ordering enforced before the first snapshot. Would
+you prefer a delta patch or an updated patch?
 
+Thanks.
 
-Initial pinctrl support for rk3308 included registers for rk3308b variant,
-which didn't work well with some pins of the first SoC and these reg's
-were fixed in the patch mentioned in the tag. So I added Fixes tag as this
-patch brings back proper setup for rk3308b and 1/2 indeed
-is the preparation.
-
-Thank you for taking your time on it. Perhaps I should describe such
-moments better next time.
-
-
-(resend without broken new line sorry)
-
--- 
-Thanks,
-Dmitry
-
+>  }
+>  
+>  /*
+> -- 
+> 2.40.1
+> 
+> 
