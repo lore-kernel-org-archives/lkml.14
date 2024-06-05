@@ -1,158 +1,108 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990BC190490;
-	Wed,  5 Jun 2024 11:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0964E192B60;
+	Wed,  5 Jun 2024 11:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717585799; cv=none; b=kYRzDQEy+7Pch36wHbpGK/BIFS/ein9n52QkmKK7ZY9tlioT8Kh0eFFoGExrINALjgmWLmHJQZTLDiwYrV7ZnxBP95pXnmXldddXfyWx6mtROWD0nDBYSlF4fljvrEaoVKcCCvHKn60m6Gaq3+SIlSTUC+nN4DvkUs1Gzdd6nK4=
+	t=1717585815; cv=none; b=XF42IJtIRGkI4bvr2vlYllKSy3BPsCRsNCo/S1KXdMp056DoKGDERwUrA0LqVjN/mMUBTUw5/thDSWg2BQuUonSIxhNHGPWbB3/V+0naoJ6vH6F7ISXHPPs8O+TWBIIgp3kKgtX2iEmuDnMCyk70phbsJ2/SMrjgqxTPSDlkVPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717585799; c=relaxed/simple;
-	bh=HzcPhbufi5cXlv2G7/7Dg+cEaQz53uXcRQczeDy0Lfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V2vLPM1TAoDjBRts65zdi47U5vdEHkDq0192jk8mRR7OcAm6HvqOCYc4vntgM1SASXbzmP5kxSkupdoK2DIzI2oHY5868Md2YRQj0yyL1sUiXB1phorH/TMWKFEsGjDqYXDSVY8OMueDJYBuaVo/wuZ+tNaiYYzJSoU3Q7KhjFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=XzmtI09r; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1717585815; c=relaxed/simple;
+	bh=WAf92JcWL9zU29AnQHI1Uxy5BLjHqcBVKQhaoL07mZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MHMSlyOix1x89IkP/Uq+LdJq7GM0/f/DsEjSD86E5oZTQ8Z7zszg/Tz7iqL0nG7wMJBFCUTGFrgQ+VaoIvcUsbmv5ovkt/wTiZ/3pxRh0qgiRpjiFf+9l1ZFgYOB+OvNSVQg5Prd8n/YpJgykiFtDvsQ02m+GScllIrZK1OKilQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MI84b9tH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XzmtI09r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1717585744;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zZ1Ob78ZjWlZgX+z9DrKajLPpBuBZCqRum8/eJrHWnI=;
-	b=XzmtI09rBY87MWojYhpPffNwV+tIMJP6oV+FTMNTTJFdgqd6aGorPN8QY9MEhjGs0p30GT
-	UDdqbOzhHbVGVhxE6bULS4PlV2hNYB8TNXt+MPSR3S/QMXX9ISC/bgsOfQE1l+Dn8t2dnY
-	BAIpk7/OcL7arzBDOyPGSrn5rpSGGuY=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Vinod Koul <vkoul@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v10 6/6] Documentation: iio: Document high-speed DMABUF based API
-Date: Wed,  5 Jun 2024 13:08:45 +0200
-Message-ID: <20240605110845.86740-7-paul@crapouillou.net>
-In-Reply-To: <20240605110845.86740-1-paul@crapouillou.net>
-References: <20240605110845.86740-1-paul@crapouillou.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MI84b9tH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4080C3277B;
+	Wed,  5 Jun 2024 11:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717585814;
+	bh=WAf92JcWL9zU29AnQHI1Uxy5BLjHqcBVKQhaoL07mZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MI84b9tHI/I/sI/UDJ9M4y7Lj6bLx5Ikk7ZrtqjcSUBrsuNUMcJzK/4edVNt4XHDS
+	 7cQdHEakeG7uzAFKUq8Zn6s+1Lp2GVE8Ntt9w1dhMal1gC8umbQrXuPy3A+KRFEINS
+	 mQdY8WJ9UcH8IDHu08sl15ouTSGl1P5n/hv9FN1vma8nbbeGPB1SOKS9nRQEaPjABm
+	 1MQK44Km9MYB21F3Y/O//jHmrXsuWegqeS9IGRtt5cSZcsUnu4AezVpiwFr27fgAeM
+	 IuzIIU3yodrb+wxiXGBU2AC2wGvnantTYkSqVh2UW9UCmediLMY0uIUIDYKM5bdwIB
+	 6G30OlwlVSjWw==
+Date: Wed, 5 Jun 2024 12:10:08 +0100
+From: Will Deacon <will@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] [v3] arm64/io: add constant-argument check
+Message-ID: <20240605111008.GA21651@willie-the-truck>
+References: <20240604210006.668912-1-arnd@kernel.org>
+ <ZmAsutGzL5_Kx8Pn@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZmAsutGzL5_Kx8Pn@J2N7QTR9R3>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Document the new DMABUF based API.
+On Wed, Jun 05, 2024 at 10:15:38AM +0100, Mark Rutland wrote:
+> On Tue, Jun 04, 2024 at 10:59:57PM +0200, Arnd Bergmann wrote:
+> > Move the check for constant arguments into the inline function to ensure
+> > it is still constant if the compiler decides against inlining it, and
+> > mark them as __always_inline to override the logic that sometimes leads
+> > to the compiler not producing the simplified output.
+> > 
+> > Note that either the __always_inline annotation or the check for a
+> > constant value are sufficient here, but combining the two looks cleaner
+> > as it also avoids the macro. With clang-8 and older, the macro was still
+> > needed, but all versions of gcc and clang can reliably perform constant
+> > folding here.
+> > 
+> > Fixes: ead79118dae6 ("arm64/io: Provide a WC friendly __iowriteXX_copy()")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> I have a trivial nit below, but either way this looks good to me, so
+> regardless of that:
+> 
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> > +static __always_inline void
+> > +__iowrite32_copy(void __iomem *to, const void *from, size_t count)
+> >  {
+> > -	if (count == 8 || count == 4 || count == 2 || count == 1) {
+> > +	if (__builtin_constant_p(count) &&
+> > +	    (count == 8 || count == 4 || count == 2 || count == 1)) {
+> >  		__const_memcpy_toio_aligned32(to, from, count);
+> >  		dgh();
+> >  	} else {
+> >  		__iowrite32_copy_full(to, from, count);
+> >  	}
+> >  }
+> > +#define __iowrite32_copy(to, from, count) __iowrite32_copy(to, from, count)
+> 
+> Normally we'd make this:
+> 
+> #define __iowrite32_copy __iowrite32_copy
+> 
+> ... so that it's clear it's just providing the preprocessor symbol, and
+> doesn't have to be updated if the prototype changes.
+> 
+> [...]
+> 
+> > +#define __iowrite64_copy(to, from, count) __iowrite64_copy(to, from, count)
+> 
+> Likewise here.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+I can fold these two changes in.
 
----
-v2: - Explicitly state that the new interface is optional and is
-      not implemented by all drivers.
-    - The IOCTLs can now only be called on the buffer FD returned by
-      IIO_BUFFER_GET_FD_IOCTL.
-    - Move the page up a bit in the index since it is core stuff and not
-      driver-specific.
-
-v3: Update the documentation to reflect the new API.
-
-v5: Use description lists for the documentation of the three new IOCTLs
-    instead of abusing subsections.
-
-v8: Renamed dmabuf_api.rst -> iio_dmabuf_api.rst, and updated index.rst
-    whose format changed in iio/togreg.
----
- Documentation/iio/iio_dmabuf_api.rst | 54 ++++++++++++++++++++++++++++
- Documentation/iio/index.rst          |  1 +
- 2 files changed, 55 insertions(+)
- create mode 100644 Documentation/iio/iio_dmabuf_api.rst
-
-diff --git a/Documentation/iio/iio_dmabuf_api.rst b/Documentation/iio/iio_dmabuf_api.rst
-new file mode 100644
-index 000000000000..1cd6cd51a582
---- /dev/null
-+++ b/Documentation/iio/iio_dmabuf_api.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+High-speed DMABUF interface for IIO
-+===================================
-+
-+1. Overview
-+===========
-+
-+The Industrial I/O subsystem supports access to buffers through a
-+file-based interface, with read() and write() access calls through the
-+IIO device's dev node.
-+
-+It additionally supports a DMABUF based interface, where the userspace
-+can attach DMABUF objects (externally created) to a IIO buffer, and
-+subsequently use them for data transfers.
-+
-+A userspace application can then use this interface to share DMABUF
-+objects between several interfaces, allowing it to transfer data in a
-+zero-copy fashion, for instance between IIO and the USB stack.
-+
-+The userspace application can also memory-map the DMABUF objects, and
-+access the sample data directly. The advantage of doing this vs. the
-+read() interface is that it avoids an extra copy of the data between the
-+kernel and userspace. This is particularly useful for high-speed devices
-+which produce several megabytes or even gigabytes of data per second.
-+It does however increase the userspace-kernelspace synchronization
-+overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs have to
-+be used for data integrity.
-+
-+2. User API
-+===========
-+
-+As part of this interface, three new IOCTLs have been added. These three
-+IOCTLs have to be performed on the IIO buffer's file descriptor,
-+obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-+
-+  ``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
-+    Attach the DMABUF object, identified by its file descriptor, to the
-+    IIO buffer. Returns zero on success, and a negative errno value on
-+    error.
-+
-+  ``IIO_BUFFER_DMABUF_DETACH_IOCTL(int)``
-+    Detach the given DMABUF object, identified by its file descriptor,
-+    from the IIO buffer. Returns zero on success, and a negative errno
-+    value on error.
-+
-+    Note that closing the IIO buffer's file descriptor will
-+    automatically detach all previously attached DMABUF objects.
-+
-+  ``IIO_BUFFER_DMABUF_ENQUEUE_IOCTL(struct iio_dmabuf *iio_dmabuf)``
-+    Enqueue a previously attached DMABUF object to the buffer queue.
-+    Enqueued DMABUFs will be read from (if output buffer) or written to
-+    (if input buffer) as long as the buffer is enabled.
-diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-index 4c13bfa2865c..9cb4c50cb20d 100644
---- a/Documentation/iio/index.rst
-+++ b/Documentation/iio/index.rst
-@@ -9,6 +9,7 @@ Industrial I/O
- 
-    iio_configfs
-    iio_devbuf
-+   iio_dmabuf_api
-    iio_tools
- 
- Industrial I/O Kernel Drivers
--- 
-2.43.0
-
+Will
