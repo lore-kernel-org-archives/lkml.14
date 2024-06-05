@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CC16A008;
-	Wed,  5 Jun 2024 02:40:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D1A6A325;
+	Wed,  5 Jun 2024 02:40:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717555232; cv=none; b=uQoyY4FNKmOqpUEJi55S0ACvuRLo8S5bnXRo7HpBV522TUK1p/hgMHeZQLN0eJiyFL+2wwTwSMfnLDCNbAafG2EWuSUIDAxferYSRlwG8cubjmIm93tdwZGZJH5b+9G8I33t2ZPevdoHepJswyxuYNZWC0pyp8vvhAVUV9fbvik=
+	t=1717555232; cv=none; b=SM+HJkb1h7/CBC7hNQ+WFi9nIxDA8djaGAMJJglsuWg07tASeZAz+sWhiII0X5EbhwFvDYoxspXUsc7NQKBvscQdDQqGgp27zk14fXihrv//xAPeWKHBLe0p+76CiPBES4/6p0+TQ5znF2yTcFbN+6OykeyQXlADLMHFjuftD8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1717555232; c=relaxed/simple;
-	bh=TLe44Hr5WqeQyDO4vxCFTXDPLS7g3Gj+ESzImneXZNg=;
+	bh=840XKDDyn63oAGMCbkcub5XCfPW/BOMnJw0kEG1uZVM=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=YfyWjB0Cmp8gk3E1Mx5dItstcP2DHBEl//t9JZl9JprS1My3EkkeMv6Vd72/kfj+FRqGhL9EMn3ow2K1UTR7zhS9JMMHhpOFquu8dqDzCWPdSiJAz60ekG5ncQZjXsz+8aZ630+eRuHytMMkCyg97PbRdoYIJ3CuWGCXOUq+FFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbdIbsRC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=fRni2jHBX3j8l39AsGWhmUAko1EBYLNhsXZhuVUVSJZi2MNKSzPxrO79yzBhYkkj3mfg+CNl28InHK1vyAHZ5QewRrNtt3riMPaoMCidx8zYo4qUWyr/R08nFPIlpctnFNMgouxkEPVB6YWQ2mwqG28CcJayl/PNXdZNQdoDuWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fh2GcuNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbdIbsRC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0C9F4C4AF0A;
-	Wed,  5 Jun 2024 02:40:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fh2GcuNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 92F55C32782;
+	Wed,  5 Jun 2024 02:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717555232;
-	bh=TLe44Hr5WqeQyDO4vxCFTXDPLS7g3Gj+ESzImneXZNg=;
+	s=k20201202; t=1717555231;
+	bh=840XKDDyn63oAGMCbkcub5XCfPW/BOMnJw0kEG1uZVM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=IbdIbsRCBE2x3GNfOjPZJJcqpjWdy/b5/lStTwHR4TMauqlBAwDHdlnX8JXAui3gT
-	 uKNDEOwtUApPzJZ8DDTcINiQ1gy5DQs+A/xp2DdUZyxiJu2d4kpxU3ajTf52HDUUyS
-	 G8pJcYgHUntocdKHK3pPixdL+M5I+D+jVl6scnmROuBaV1zlYSOMHTUMaKBFlwVxZS
-	 I5j7poUPXDMcL8/NDJ9nxf4QtnfwApOaZ8lnklz3hwefkcc8F6rveklxs5kRTDq1ih
-	 TMJE9NIlwoRF4lZ0ruytWhvQ6KXUlY+R9SuoajUAvvjNnTyEWQkmcHMl6dBG538RcE
-	 AQaECZW0cHehw==
+	b=fh2GcuNnwY96ZBRB+28SUQk2pRD67NdiY1NSMC4CMTm3EgTzKeQll6zqG14kUOWBI
+	 o2jlwkmVbxJD47w7duXqS91BDYZXlJcfsf700CqBjC/XEldc6qesvZB3RcMZ+Sz0Yh
+	 iUy3dCx5u9o4BSZajgPxQtYktSqoOkdPa6wDlzFGtw3+nhEnwK0F2Xa2bg+V67+Orb
+	 QNKouW2Cmn7OgAIGyV75aU7prbg8G72znvMDw80g0IyDh4xZQhyXYmsVxpeEzNDggc
+	 BUH4Jb4NsBrxaZyPuqfoWB/kduc8u24QhjJ4ZyUuZL8rjS0ozgQ5fZP6x7+Af0xL4V
+	 SkiLUxBx7gbcw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F4157DEFB90;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 83DE0DEFB90;
 	Wed,  5 Jun 2024 02:40:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 1/3] platform/chrome: Add struct ec_response_get_next_event_v3
+Subject: Re: [PATCH 2/3] platform/chrome: cros_ec_proto: Upgrade get_next_event to
+ v3
 From: patchwork-bot+chrome-platform@kernel.org
 Message-Id: 
- <171755523199.3149.3028217991036780038.git-patchwork-notify@kernel.org>
+ <171755523153.3149.14093963339315232636.git-patchwork-notify@kernel.org>
 Date: Wed, 05 Jun 2024 02:40:31 +0000
-References: <20240604170552.2517189-1-dnojiri@chromium.org>
-In-Reply-To: <20240604170552.2517189-1-dnojiri@chromium.org>
+References: <20240604230837.2878737-1-dnojiri@chromium.org>
+In-Reply-To: <20240604230837.2878737-1-dnojiri@chromium.org>
 To: Daisuke Nojiri <dnojiri@chromium.org>
-Cc: bleung@chromium.org, groeck@chromium.org, hverkuil-cisco@xs4all.nl,
- rekanorman@chromium.org, tzungbi@chromium.org, abhishekpandit@google.com,
- gwendal@chromium.org, pholla@chromium.org, chingkang@chromium.org,
- lma@chromium.org, chrome-platform@lists.linux.dev,
+Cc: bleung@chromium.org, tzungbi@kernel.org, groeck@chromium.org,
+ swboyd@chromium.org, pmalani@chromium.org, chrome-platform@lists.linux.dev,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to chrome-platform/linux.git (for-next)
+This patch was applied to chrome-platform/linux.git (for-kernelci)
 by Tzung-Bi Shih <tzungbi@kernel.org>:
 
-On Tue,  4 Jun 2024 10:01:48 -0700 you wrote:
-> Add struct ec_response_get_next_event_v3 to upgrade
-> EC_CMD_GET_NEXT_EVENT to version 3.
+On Tue,  4 Jun 2024 16:08:25 -0700 you wrote:
+> Upgrade EC_CMD_GET_NEXT_EVENT to version 3.
+> 
+> The max supported version will be v3. So, we speak v3 even if the EC
+> says it supports v4+.
 > 
 > Signed-off-by: Daisuke Nojiri <dnojiri@chromium.org>
-> ---
->  .../linux/platform_data/cros_ec_commands.h    | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
+> Change-Id: I3af4912c4f7bfdb24445dbbff5f1c6b7a4453de4
+> 
+> [...]
 
 Here is the summary with links:
-  - [1/3] platform/chrome: Add struct ec_response_get_next_event_v3
-    https://git.kernel.org/chrome-platform/c/ba098ed9829c
+  - [2/3] platform/chrome: cros_ec_proto: Upgrade get_next_event to v3
+    https://git.kernel.org/chrome-platform/c/db9b2f0fe681
 
 You are awesome, thank you!
 -- 
