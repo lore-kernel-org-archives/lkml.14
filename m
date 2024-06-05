@@ -1,144 +1,127 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D7A19004B
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 08:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44B0F1946BA;
+	Wed,  5 Jun 2024 08:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717575552; cv=none; b=AEB3M/fKtvjtvvGPV/lEdSauqhuJmbNcXN6jP7IqZYbEX77PaOAG+PMpWAeET2jDwGMDbgPCr1SnLE91IXQ+DZPUsvmebGpxu5VOVRSGG4XwmNeUIdUrEshR+7MWbdgojszO5MGcSQ2YNwZTdVVVuYz68M5CvoD6Thpnzz/mWhI=
+	t=1717575574; cv=none; b=gnw7OV0IXW7z/TmV3uO7iXe2ALoZBZZwgWdvhhQPSnDyrra06JA60QQu3zhtqEVTMOC6Z3BIg0ZiPn6xGvPHWorjLQSpAYIoVuTKLN64abXdSTuoMUaXcW5IK5LgifAvvoLqk2OigltbInOLnBpeod3wlnYtu/vX7wk6hpLp9VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717575552; c=relaxed/simple;
-	bh=vp7Qm2xgCaJ7DquW3IpHfBp1L88l0NedFhQPYw7bLkc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VhOKClJw1iccpDdwwxOK+DEpDsFs/z2sjgYKpHowby6Qv3DyD/9ZXTYXaHYrSIxhHyesBacLT94zyHyrS7UdaUkeGDLfZJDy8jI//K6rHLasDAoMJRKFMlh2retD4ttmGco7t9BUpBWUBY5qcIxJULAqxG0bQcJqTvKc8u66KdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fu1u8YCU; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fu1u8YCU"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a696cde86a4so152930366b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 01:19:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1717575549; x=1718180349; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ENqVUKHdwy0O5lgnMAW326XCMPTN57QKxIlzQHh9wB0=;
-        b=Fu1u8YCUH3xVmntVjFlf9XP82vgIeO1tzd/q+2IuNXDzZpPGBfhC44e1OmX1arLikj
-         eKf9FBpiIZ8XTSWW3tNLhEbTdfj5Pevwn2QWIsNMub8H6dAP07WjzNzBHdj0fqvrz07+
-         fipErxUQHuf22xdtJvYfC49uUzsPvinzpFIdBIXTbnjAGQ9veC2NHbis7YFqsf7sVdrY
-         dAsecyR3/Ipr8uVuDIFpPQhyXt/n8eLGDZkA2ieSP5Wj9Y1USPDUAwjyqFc0aPK45RTD
-         sJJxqRqHZ0Z2/C4KZAwxjRQ//jgyqnv3ZOZTpHoaw+y9/mnGBngEDVPsX+5xLIaYYCES
-         pDfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717575549; x=1718180349;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ENqVUKHdwy0O5lgnMAW326XCMPTN57QKxIlzQHh9wB0=;
-        b=TlNVpOGx5/IyBwwwDlDUJzn+gu0P0YHBe1LCSZDPSgA7jN/3lROyH4sV/E9io7rId6
-         JA2CLq11j0B/8QHXA0kYBRV9Ve8hHHRPOdJ8X+BVdgDTgdu05GlJDpH8TiQEKJKUzMW9
-         +JtRUeNIbwAXFLXx561vZp75glnhXDB1q89WCMEsszFTyt2Z/psgYYXK322eFi04Mzr0
-         zeCmVv6B5EZW6uiEV/0JYb7Yskoho9HWCO+vLgdN+w4f/vQun4I31uuYE4m0+gt67GIY
-         sU/oT3bSw/YP6xqJeQJ3iWsGsyRjGRnO9WSEpb4fZaYX0ldUmTF0LnM7lEr2jY+cX6PX
-         9qYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHHPz9LhtdC/OHieObakxim+Fompxzypn4rsmvtj/+1HNeAW0/9uP4sMm52L1cIhS8ryLZ3tMw/VHuJ0hXzsi6MY1W6prgc+eYW1+F
-X-Gm-Message-State: AOJu0YxYYdyy1y2tOahXdHjkI24UgFSGI3Nu8C5KaLwuY0M2DeSCi8Tt
-	NIcyJNOPWmFZa90RqaXiAEh9dOqUrPdIWZNgU497N3JSLe118WeRbIs9b8y5rZ0=
-X-Google-Smtp-Source: AGHT+IH/wDmaXDvfueqvjYO5BfZm427ahsbQZq0Pgceh1jGEgF4E+jD66gFd8ABdQXpQZbngPeuoJg==
-X-Received: by 2002:a17:906:852:b0:a69:906c:9005 with SMTP id a640c23a62f3a-a699fcdfbaamr113842366b.57.1717575548908;
-        Wed, 05 Jun 2024 01:19:08 -0700 (PDT)
-Received: from [127.0.1.1] ([188.27.161.69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a68a408ef12sm635274166b.183.2024.06.05.01.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jun 2024 01:19:08 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Wed, 05 Jun 2024 11:19:01 +0300
-Subject: [PATCH v2] dt-bindings: PCI: qcom: x1e80100: Make the MHI reg
- region mandatory
+	s=arc-20240116; t=1717575574; c=relaxed/simple;
+	bh=J11oghjLd2OL4EAzmLeais99j3IPznPLv+/4AFGSym4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f6+jb6bnzmr8amvd1eN8QuLxyg+Xdle7xbkVqQelMwORLL5d3GHKGzLgfPRg9sILEX+YhLToRHPMyfQ4spl5SsSNwi2pgOUQkitOWk3inpRBjg9uLwWlpq0yllR7nrBTnx2FDS8+krd/SLVec5l3pjhKSGHblASkdSFnu2IAQH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81375DA7;
+	Wed,  5 Jun 2024 01:19:55 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF1BF3F762;
+	Wed,  5 Jun 2024 01:19:26 -0700 (PDT)
+Message-ID: <e0434947-4fe9-43f8-87dd-91e6eb491341@arm.com>
+Date: Wed, 5 Jun 2024 09:19:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/16] perf auxtrace: Allow number of queues to be
+ specified
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org,
+ coresight@lists.linaro.org, suzuki.poulose@arm.com,
+ gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
+ leo.yan@linux.dev, anshuman.khandual@arm.com
+References: <20240604143030.519906-1-james.clark@arm.com>
+ <20240604143030.519906-3-james.clark@arm.com>
+ <12c09d40-788d-4af1-9eb6-0f5699875d70@intel.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <12c09d40-788d-4af1-9eb6-0f5699875d70@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-x1e80100-pci-bindings-fix-v2-1-c465e87966fc@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAHUfYGYC/42NTQqDMBBGryKz7pSZVKV25T2KCzWjDpREkiIWy
- d2beoIu3+P7OSBKUInwKA4IsmlU7zKYSwHj0rtZUG1mMGRKqqnEneVOTITrqDios+rmiJPuyE3
- dmMpyZWqC3F+DZH1uP7vMi8a3D5/zauOf/Wd1Y2ScSsnRioebpfalrg/+6sMMXUrpC4AUCojDA
- AAA
-To: Bjorn Helgaas <bhelgaas@google.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=vp7Qm2xgCaJ7DquW3IpHfBp1L88l0NedFhQPYw7bLkc=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmYB92tZXyy+MsIwrx4sdQ8/yrKeESlOReZHYqM
- G/PtJRDdrSJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZmAfdgAKCRAbX0TJAJUV
- Vru2EADISn6YapQADX1ufRGp317ooagXO9Ej9Rv2DW9xvgVBDM5WEvW+HzS/0pjkAXT/K7X3hfE
- 3ubM02RH35OyguBiYwsjIYOVRYKcStSAr5I7S3k+xxWtCA9+7VvlWqnKuc9O1Ehr8+tkh9yBHY5
- 6fV+K9C/qcrXOjwymJkj2Hgy1xYmuARVFMUiFtMzNGQh9jCCsLU0QDRQOz7cj/tOV7M2mfM3zB4
- xe+Bd52lMyRmV+X/HD6fwDzBXrPzCG0Aoh1zjVkFDrdDwK0cgL+LI2HoVEEj70YgOyr+d1f7lPL
- 1zzTbZmfKFwUyfeCt0u6q7QRgDipR0DVpXyVWDmDEoPFLSlSMJaG1iPTx/Ve4n2hRzj0GGm+hYu
- oMuSn/oTXdtCf5XY8sXmwAC+4kBl9l+oRpUkoazCj7Unxb2Feh2XeWew9TNGk7tzI12Byis8w/9
- xSXyHZrklJQHXg+dUPi+xqQJOt0mUNKeiHeji1ZOimdfQz1hsXD7WqjbEHi7KqKVbNcVf4l6Zoi
- pHHgwzdrXGSN+Pmk8Hgkm7cz5Bk2yyAWdSc6E1VzEUVGztidrW1lgoQTQj53zAzrZgYVxAeNCHF
- cNcv1oy5/QuJ+3eWy/58U2nRHVDFvzyL9HHJL7MphDZxWwvRPQ7S8Wfiwa8RIBRw8l3U9jjGCzn
- Dg+uyLKjbpiIJmA==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-All PCIe controllers found on X1E80100 have MHI register region.
-So change the schema to reflect that.
 
-Fixes: 692eadd51698 ("dt-bindings: PCI: qcom: Document the X1E80100 PCIe Controller")
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
-Note that this patch will trigger an MHI reg region
-warning until the following patch will also be merged:
 
-https://lore.kernel.org/all/20240604-x1e80100-dts-fixes-pcie6a-v2-1-0b4d8c6256e5@linaro.org/
----
-Changes in v2:
-- Dropped the vddpe supply change as that will have to be reworked
-  in a different way, maybe on multiple platforms.
-- Added SoC name to the subject line
-- Link to v1: https://lore.kernel.org/r/20240604-x1e80100-pci-bindings-fix-v1-1-f4e20251b3d0@linaro.org
----
- Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+On 05/06/2024 06:26, Adrian Hunter wrote:
+> On 4/06/24 17:30, James Clark wrote:
+>> Currently it's only possible to initialize with the default number of
+>> queues and then use auxtrace_queues__add_event() to grow the array. But
+>> that's problematic if you don't have a real event to pass into that
+>> function yet.
+>>
+>> The queues hold a void *priv member to store custom state, and for
+>> Coresight we want to create decoders upfront before receiving data, so
+>> add a new function that allows pre-allocating queues. One reason to do
+>> this is because we might need to store metadata (HW_ID events) that
+>> effects other queues, but never actually receive auxtrace data on that
+>> queue.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+> 
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> Again ;-)
+> 
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-index 1074310a8e7a..a9db0a231563 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-x1e80100.yaml
-@@ -19,11 +19,10 @@ properties:
-     const: qcom,pcie-x1e80100
- 
-   reg:
--    minItems: 5
-+    minItems: 6
-     maxItems: 6
- 
-   reg-names:
--    minItems: 5
-     items:
-       - const: parf # Qualcomm specific registers
-       - const: dbi # DesignWare PCIe registers
+Oops yeah I should have picked that up. This one was already applied to
+perf-tools-next as well.
 
----
-base-commit: d97496ca23a2d4ee80b7302849404859d9058bcd
-change-id: 20240604-x1e80100-pci-bindings-fix-196925d15260
+Thanks
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
-
+>> ---
+>>  tools/perf/util/auxtrace.c | 9 +++++++--
+>>  tools/perf/util/auxtrace.h | 1 +
+>>  2 files changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+>> index 3684e6009b63..563b6c4fca31 100644
+>> --- a/tools/perf/util/auxtrace.c
+>> +++ b/tools/perf/util/auxtrace.c
+>> @@ -218,15 +218,20 @@ static struct auxtrace_queue *auxtrace_alloc_queue_array(unsigned int nr_queues)
+>>  	return queue_array;
+>>  }
+>>  
+>> -int auxtrace_queues__init(struct auxtrace_queues *queues)
+>> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues)
+>>  {
+>> -	queues->nr_queues = AUXTRACE_INIT_NR_QUEUES;
+>> +	queues->nr_queues = nr_queues;
+>>  	queues->queue_array = auxtrace_alloc_queue_array(queues->nr_queues);
+>>  	if (!queues->queue_array)
+>>  		return -ENOMEM;
+>>  	return 0;
+>>  }
+>>  
+>> +int auxtrace_queues__init(struct auxtrace_queues *queues)
+>> +{
+>> +	return auxtrace_queues__init_nr(queues, AUXTRACE_INIT_NR_QUEUES);
+>> +}
+>> +
+>>  static int auxtrace_queues__grow(struct auxtrace_queues *queues,
+>>  				 unsigned int new_nr_queues)
+>>  {
+>> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+>> index 55702215a82d..8a6ec9565835 100644
+>> --- a/tools/perf/util/auxtrace.h
+>> +++ b/tools/perf/util/auxtrace.h
+>> @@ -521,6 +521,7 @@ int auxtrace_mmap__read_snapshot(struct mmap *map,
+>>  				 struct perf_tool *tool, process_auxtrace_t fn,
+>>  				 size_t snapshot_size);
+>>  
+>> +int auxtrace_queues__init_nr(struct auxtrace_queues *queues, int nr_queues);
+>>  int auxtrace_queues__init(struct auxtrace_queues *queues);
+>>  int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+>>  			       struct perf_session *session,
+> 
