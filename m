@@ -1,37 +1,37 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F83D196DB0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D977A1974E1;
 	Wed,  5 Jun 2024 13:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717594573; cv=none; b=Z5voNG8e1jmyWtgP5Bbob5Ylp2hEHNddzOZLPhdhExtcdAK/WQuA9N5jgL2hnW3uVcwDpSi+eg0Qvy8lA2R6tGUoebP+BkMjvTlzRdFUy/pGuOnTAIj2l9pjRG6YvQZlt3dM9aj4FgbKbJM33P/RWCaHsj+j095TAAdt10pyV+o=
+	t=1717594574; cv=none; b=lwCGIGfGxKv6XAk5gBAytMtjg5lQrOSLdQreZJ+ixOvr5IqSNCgObNgIBJHbz5oAK7URwIPMxiWwuGZpU9PhK7tpkOZMduxirSrZS2f33jwkt7PMmWj+GNg2vRNa4qG83Bx2Ol2FOlMuTEyx5yTdN1MhN8Ku68g3wA89r0x2uNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717594573; c=relaxed/simple;
-	bh=36NpWwXx8D6E47YyQKiLgOAahtbadz4JVG9fklkYBpU=;
+	s=arc-20240116; t=1717594574; c=relaxed/simple;
+	bh=k+ydPTPViUwZ/6wO+jQqKFCL5udwr7L2RuyOntvpiNk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vEXvcL/1z0rzYEPj1L0o3dStoTYMlCDfu3pQ+Ofk+jVPEICsc5HL6EsSQGkKiQBXfMFYjy6C7FQaTsiORdmwvOsqQfhjHbBmmvngIsTFRrPSIOh6N0G5TeshTvm5ZBj4sgMGG5NiUndYiOPnQEJeK+q3H5fBBogTry8x9Q98QI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+	 MIME-Version:Content-Type; b=B5gk/uR+P9eKUXr+qpt8eUJw7U9z67OxC0EvGqNqO628yIuiQf20l0cQ3OnS8zxw29AhXbtNdabQoO+6MC/2mNjmR1IRk+x1fuwlun6Su5iyYZA8zrzu6sjDmsXvK/00N8Xa3qFofoLm4huNW4mdbv4r6pKQL92L/lXSP2ZVIKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VvT061r96z1S9g8;
-	Wed,  5 Jun 2024 21:32:06 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VvT0F1TzXzsSlt;
+	Wed,  5 Jun 2024 21:32:13 +0800 (CST)
 Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id D97EA18007A;
-	Wed,  5 Jun 2024 21:36:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1D360180AA6;
+	Wed,  5 Jun 2024 21:36:10 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 5 Jun 2024 21:36:02 +0800
+ 15.1.2507.39; Wed, 5 Jun 2024 21:36:09 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Max
- Filippov <jcmvbkbc@gmail.com>, Chris Zankel <chris@zankel.net>
-Subject: [PATCH net-next v6 02/15] xtensa: remove the get_order() implementation
-Date: Wed, 5 Jun 2024 21:32:52 +0800
-Message-ID: <20240605133306.11272-3-linyunsheng@huawei.com>
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Andrew
+ Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
+Subject: [PATCH net-next v6 05/15] mm: page_frag: use initial zero offset for page_frag_alloc_align()
+Date: Wed, 5 Jun 2024 21:32:55 +0800
+Message-ID: <20240605133306.11272-6-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240605133306.11272-1-linyunsheng@huawei.com>
 References: <20240605133306.11272-1-linyunsheng@huawei.com>
@@ -46,56 +46,141 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemm500005.china.huawei.com (7.185.36.74)
 
-As the get_order() implemented by xtensa supporting 'nsau'
-instruction seems be the same as the generic implementation
-in include/asm-generic/getorder.h when size is not a constant
-value as the generic implementation calling the fls*() is also
-utilizing the 'nsau' instruction for xtensa.
+We are above to use page_frag_alloc_*() API to not just
+allocate memory for skb->data, but also use them to do
+the memory allocation for skb frag too. Currently the
+implementation of page_frag in mm subsystem is running
+the offset as a countdown rather than count-up value,
+there may have several advantages to that as mentioned
+in [1], but it may have some disadvantages, for example,
+it may disable skb frag coaleasing and more correct cache
+prefetching
 
-So remove the get_order() implemented by xtensa, as using the
-generic implementation may enable the compiler to do the
-computing when size is a constant value instead of runtime
-computing and enable the using of get_order() in BUILD_BUG_ON()
-macro.
+We have a trade-off to make in order to have a unified
+implementation and API for page_frag, so use a initial zero
+offset in this patch, and the following patch will try to
+make some optimization to aovid the disadvantages as much
+as possible.
+
+As offsets is added due to alignment requirement before
+actually checking if the cache is enough, which might make
+it exploitable if caller passes a align value bigger than
+32K mistakenly. As we are allowing order 3 page allocation
+to fail easily under low memory condition, align value bigger
+than PAGE_SIZE is not really allowed, so add a 'align >
+PAGE_SIZE' checking in page_frag_alloc_va_align() to catch
+that.
+
+1. https://lore.kernel.org/all/f4abe71b3439b39d17a6fb2d410180f367cadf5c.camel@gmail.com/
 
 CC: Alexander Duyck <alexander.duyck@gmail.com>
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Acked-by: Max Filippov <jcmvbkbc@gmail.com>
 ---
- arch/xtensa/include/asm/page.h | 18 ------------------
- 1 file changed, 18 deletions(-)
+ include/linux/page_frag_cache.h |  2 +-
+ include/linux/skbuff.h          |  4 ++--
+ mm/page_frag_cache.c            | 26 +++++++++++---------------
+ 3 files changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/arch/xtensa/include/asm/page.h b/arch/xtensa/include/asm/page.h
-index 4db56ef052d2..8665d57991dd 100644
---- a/arch/xtensa/include/asm/page.h
-+++ b/arch/xtensa/include/asm/page.h
-@@ -109,26 +109,8 @@ typedef struct page *pgtable_t;
- #define __pgd(x)	((pgd_t) { (x) } )
- #define __pgprot(x)	((pgprot_t) { (x) } )
+diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
+index 3a44bfc99750..b9411f0db25a 100644
+--- a/include/linux/page_frag_cache.h
++++ b/include/linux/page_frag_cache.h
+@@ -32,7 +32,7 @@ static inline void *page_frag_alloc_align(struct page_frag_cache *nc,
+ 					  unsigned int fragsz, gfp_t gfp_mask,
+ 					  unsigned int align)
+ {
+-	WARN_ON_ONCE(!is_power_of_2(align));
++	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
+ 	return __page_frag_alloc_align(nc, fragsz, gfp_mask, -align);
+ }
  
--/*
-- * Pure 2^n version of get_order
-- * Use 'nsau' instructions if supported by the processor or the generic version.
-- */
--
--#if XCHAL_HAVE_NSA
--
--static inline __attribute_const__ int get_order(unsigned long size)
--{
--	int lz;
--	asm ("nsau %0, %1" : "=r" (lz) : "r" ((size - 1) >> PAGE_SHIFT));
--	return 32 - lz;
--}
--
--#else
--
- # include <asm-generic/getorder.h>
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index bc1a64c6a436..fbff80a03224 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -3294,7 +3294,7 @@ static inline void *netdev_alloc_frag(unsigned int fragsz)
+ static inline void *netdev_alloc_frag_align(unsigned int fragsz,
+ 					    unsigned int align)
+ {
+-	WARN_ON_ONCE(!is_power_of_2(align));
++	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
+ 	return __netdev_alloc_frag_align(fragsz, -align);
+ }
  
+@@ -3365,7 +3365,7 @@ static inline void *napi_alloc_frag(unsigned int fragsz)
+ static inline void *napi_alloc_frag_align(unsigned int fragsz,
+ 					  unsigned int align)
+ {
+-	WARN_ON_ONCE(!is_power_of_2(align));
++	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
+ 	return __napi_alloc_frag_align(fragsz, -align);
+ }
+ 
+diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+index 64993b5d1243..d569021376d4 100644
+--- a/mm/page_frag_cache.c
++++ b/mm/page_frag_cache.c
+@@ -75,10 +75,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 		if (!page)
+ 			return NULL;
+ 
+-#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+-		/* if size can vary use size else just use PAGE_SIZE */
+-		size = nc->size;
 -#endif
--
- struct page;
- struct vm_area_struct;
- extern void clear_page(void *page);
+ 		/* Even if we own the page, we do not use atomic_set().
+ 		 * This would break get_page_unless_zero() users.
+ 		 */
+@@ -87,11 +83,16 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pfmemalloc = page_is_pfmemalloc(page);
+ 		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+-		nc->offset = size;
++		nc->offset = 0;
+ 	}
+ 
+-	offset = nc->offset - fragsz;
+-	if (unlikely(offset < 0)) {
++#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
++	/* if size can vary use size else just use PAGE_SIZE */
++	size = nc->size;
++#endif
++
++	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
++	if (unlikely(offset + fragsz > size)) {
+ 		page = virt_to_page(nc->va);
+ 
+ 		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+@@ -102,17 +103,13 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 			goto refill;
+ 		}
+ 
+-#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
+-		/* if size can vary use size else just use PAGE_SIZE */
+-		size = nc->size;
+-#endif
+ 		/* OK, page count is 0, we can safely set it */
+ 		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+ 
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
+-		offset = size - fragsz;
+-		if (unlikely(offset < 0)) {
++		offset = 0;
++		if (unlikely(fragsz > PAGE_SIZE)) {
+ 			/*
+ 			 * The caller is trying to allocate a fragment
+ 			 * with fragsz > PAGE_SIZE but the cache isn't big
+@@ -127,8 +124,7 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 	}
+ 
+ 	nc->pagecnt_bias--;
+-	offset &= align_mask;
+-	nc->offset = offset;
++	nc->offset = offset + fragsz;
+ 
+ 	return nc->va + offset;
+ }
 -- 
 2.30.0
 
