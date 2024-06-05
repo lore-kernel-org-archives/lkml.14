@@ -1,165 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E61119D89D
-	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 20:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA93313D262;
+	Wed,  5 Jun 2024 20:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717619619; cv=none; b=pNLkOBAy9nMoYmZiwo890VlKYyafcPX0wYVXj+hEWAwTiUa6OdaVP5gvRGS79XPX1U26/qq6j6ystnTtaMOtbP+jm20BQXEsZwi3DsvC/HkzIvgjeTGdA/J+1FGgfnd4hfC7lW/hw3EnHtWiMeYno/jm0Pr/wcfIRiHqicCbNvY=
+	t=1717619679; cv=none; b=bMjHrFuiNQwXxyxukTAha0fTEIWtesg58BofBDrHJBXsh/S6gXpq/WyPJELX/Zg0DXDcPwTG3k1417aNd0J4D/9BoOnAtot88sSxBm9SNi6bWHXVj8yYBmzqqUgTC2f0wrxtbx7vA/jRlX+f17+U26ybjRi9esUHBma8q2qt/V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717619619; c=relaxed/simple;
-	bh=0PsK40ZqXsyaPlDEAwJM8R2V+6h0/qS4beYU5xutNP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uaEtoM+z8VWwFxPyf4GlVd/KAJDiSqr9R6xcEx4Z/VwePT6Gfeye062pg8Ra7gQqMhl13Jo+s1Sce5F7KhX0ZkZSp/LZ29XXsCauH8ippIkTksT8r7ffZ9s8JO50nMgIWIW/MiOjxSnx2IhjQkqup7YB4wxqWoPSUA/VVErWAx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PCPj/JbC; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1717619679; c=relaxed/simple;
+	bh=uKobMdssiBNVRXYbdWAN28ycziehwxzkQTvSknhr/oQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Fllq04NI5YQlxYO8H4QwbNc+3FZwLCt3UZZFI2NfGwChwf0/DBW5gP5R1oW2Upxk31Plds1L3LUCsswNgeKnlqwEZEVT//hMWA5EffjX0oXzv+dWHLnj23zMmgra1BmhCrONy/XQNYrRI7xbcfoMY9GdzVLsHggRm0xm/MIcxlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XBWdSVki; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PCPj/JbC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717619617; x=1749155617;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0PsK40ZqXsyaPlDEAwJM8R2V+6h0/qS4beYU5xutNP0=;
-  b=PCPj/JbC2jDkf2ng6GiYfePV41wizo46Iy66HbF+751iGe3Htt74Ycwd
-   uajiMMHQWpfoXYRb8z/Ihxu4WdQz3YZdAzL7CZK5gn7wDuvUBC5fOXcNZ
-   gmxkoMXGkVLvhs9UmBd2d7SyshAthuRs9xzMMvgLeBfRR81fj0vwdQYbX
-   Svle1ttkZ/FJ63j5mXT/JnkN42tXo3SbeL++mtC0zhf7dZQomiCh0HxfY
-   Mc465mDtflmr2mtasZb9aTccNKLHqvgDfDYzgdcOnlQ2vAe3cj59C/PMp
-   q+UWhjMDFxKoyfEmsY1rQarTHmt/iARbRHvDXDJqtX5cdMudcrMXuw9jF
-   w==;
-X-CSE-ConnectionGUID: RiUQOqWSS7eihogKI1Kslg==
-X-CSE-MsgGUID: Pq7zJFtASlG4t2J5SOZogA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11094"; a="17190952"
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="17190952"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 13:33:36 -0700
-X-CSE-ConnectionGUID: +I7plNA1QeqMzTyeqRWALQ==
-X-CSE-MsgGUID: xy4A72KnSDOnkZFGZ6tOYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,217,1712646000"; 
-   d="scan'208";a="42677407"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 13:33:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1sExK7-0000000Dxap-30Op;
-	Wed, 05 Jun 2024 23:33:31 +0300
-Date: Wed, 5 Jun 2024 23:33:31 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Chia-I Wu <olvaffe@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Baoquan He <bhe@redhat.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] resource: add a simple test for walk_iomem_res_desc()
-Message-ID: <ZmDLm1xN68f_6Odg@smile.fi.intel.com>
-References: <20240605195324.3213954-1-olvaffe@gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XBWdSVki"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1717619674; x=1718224474; i=markus.elfring@web.de;
+	bh=K4LgTxaCEsSwrK2DaS4xTbm0mo17tA8sa1rtdFZaZSA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=XBWdSVkiAoYN9XG88XnQ0//cxLVvH4hNEIOSI7Y2jlOhIXWYLxA0U52cFzsm4R5U
+	 wqlymDVQIyFbxMbXMrrye3/kgkR+/hqCJOY5TGn2jwpX1p9bOXf9ZQeTfSRSF8maI
+	 9QEITUqVaN8LZvYr/oVeKtdmqMRkWMPdzuWZ4o7c1qakpHL3kEdFrRkRKcm9wEwrh
+	 vL++17BU5PFf9hMvYta16wctaY0OhZn4XiI0atfPWiS70hZ5qt5mm0gZdZS1hKKO3
+	 gaVnan8DrRAYcECB9JP06jpMV2TDrfooWMcO5/h/u643gMLznHlgxPRoB7yTmA0tR
+	 /9I6fzDNyppxCc+w/A==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mv3US-1sWLTa1tWi-011U9e; Wed, 05
+ Jun 2024 22:20:14 +0200
+Message-ID: <f2912116-93f2-437d-bb15-9b7d41ccda19@web.de>
+Date: Wed, 5 Jun 2024 22:20:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605195324.3213954-1-olvaffe@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+To: alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+ linux-sound@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ David Rhodes <david.rhodes@cirrus.com>, Jaroslav Kysela <perex@perex.cz>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>, Takashi Iwai <tiwai@suse.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ASoC: cs35l56: Use scope-based resource management in
+ cs35l56_try_get_broken_sdca_spkid_gpio()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iiMvF75SG/hLXKOCRnOGm3xQbDMpR7dtnFbnQ9Xj6PHqB2eQQvy
+ /VTBEhRwXj4Ql8Bkp1zH6MhJTVhN8IKwREbf2wYTCoxGKpxCn5tHQWeJC0UxJW0APqbyUWh
+ 74QaReiEVNE0OBgn8QtlmCnnsmk9+/9OLLMayfGcwdUNLjI9YCVriOzULAXL8NwQAIKWmh/
+ 3WoJ8iSyJ4ormopJEgkrA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Ur7g/hgP2Do=;E1jXlsG/dQA7JfHKHDxENaK1I+p
+ MTbsn7g8AHoArGwlMIqI/VI2sMCq+T3V4NxwfFrXQZkx3SQJlkHnKlFqpmv69QmDFDWTiZ1f2
+ WO3uQn0D5yVbZrZH7AD+ynEeCT43IKRAuD/J/fF8gywrQqMldSSdw1YaAwIYXA11F5SPG+RNN
+ qPcQM2odmviSzjazAfUvGkW48jUdQ+CEHHE+m4Y3gl/a9egVoHvdOpbHWX9tuMeNj1K/8Mh98
+ cOcr4u2HUGiyuYkHYv/fBY4hMesyUkilvuA41iK5DhDQBYSi+TYrUR5/Ha5fGLkUUjOV52yal
+ woBOOZPAK+eg9503Z7DWMdD5r7xqz7xpr4gAWSSsfnuH3SsqaJxmr3ZpAshQCyJhQweKA6eOo
+ GwpUCYroSbMaRE7+jbUcRQwRKwb2R0K3wLczRIyZmZgr0wHb54dvi2xMeadufNj1pfu7IApA+
+ jQ/mTrVJegf7/QUGXFcnMliZDgybTdtKPyVTuL0IQQCfMwZDnvASDVXqwtcRqM79DPVRX0wbe
+ 8KYxaK45CPQ0DLQV5ByqVlPImNX7sJ7L5HAOCQydzVXJmUC7ddrfV52Z3YfX+HXdC2Ti7mnP8
+ Yo/gPrZCZChHteC7zHm2KOmU4RVmqMk0WJcj8tuYYYd76lLQi68rbGeDcs6/WV89O49oKMELu
+ TxkejgfXld9wLshMMJAaNqWTyQlPbyFnpfPnFB8AwGlAk9IgmuZ+kqQ0HRopxpaQ2uhkMq7lC
+ OOh7iG6jk7oxDhjhxJs1byjemMc8QkLHG/2ER+iCjVwkwJNWgiDMHpzNhYaAXojG0U0e/QmXM
+ /+s+HWpIZW5rwIXb3r4qTmoHZzS+8omK56lh8Xd/bS7MY=
 
-On Wed, Jun 05, 2024 at 12:53:10PM -0700, Chia-I Wu wrote:
-> This mainly tests that find_next_iomem_res() does not miss resources.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 5 Jun 2024 22:02:09 +0200
 
-...
+Scope-based resource management became supported also for another
+programming interface by contributions of Jonathan Cameron on 2024-02-17.
+See also the commit 59ed5e2d505bf5f9b4af64d0021cd0c96aec1f7c ("device
+property: Add cleanup.h based fwnode_handle_put() scope based cleanup.").
 
-> v2: update subject, use DEFINE_RES_NAMED and hardcoded offsets
-> v3: really hardcode offsets
+* Thus use the attribute =E2=80=9C__free(fwnode_handle)=E2=80=9D.
 
-This doesn't explain why you multiplied previous values.
+* Reduce the scope for the local variable =E2=80=9Caf01_fwnode=E2=80=9D.
 
-...
+* Omit explicit fwnode_handle_put() calls accordingly.
 
-> +static int resource_walk_count(struct resource *res, void *data)
-> +{
-> +	int *count = data;
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
 
-+ Blank line.
+See also the commit fbd741f0993203d07b2b6562d68d1e5e4745b59b ("ASoC: cs35l=
+56:
+fix usages of device_get_named_child_node()").
 
-> +	(*count)++;
-> +	return 0;
-> +}
 
-...
+ sound/soc/codecs/cs35l56.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-> +static void resource_test_walk_iomem_res_desc(struct kunit *test)
-> +{
-> +	struct resource root = {
-> +		.name = "Resource Walk Test",
-> +	};
-> +	struct resource res[8];
-> +	int count;
-> +
-> +	KUNIT_ASSERT_EQ(test, 0,
-> +			allocate_resource(&iomem_resource, &root, 0x100000,
-> +				0, ~0, 0x100000, NULL, NULL));
+diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
+index 758dfdf9d3ea..db41fc42dcac 100644
+=2D-- a/sound/soc/codecs/cs35l56.c
++++ b/sound/soc/codecs/cs35l56.c
+@@ -1345,13 +1345,13 @@ static void cs35l56_acpi_dev_release_driver_gpios(=
+void *adev)
 
-Shouldn't this use RESOURCE_SIZE_MAX?
+ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private =
+*cs35l56)
+ {
+-	struct fwnode_handle *af01_fwnode;
+ 	const union acpi_object *obj;
+ 	struct gpio_desc *desc;
+ 	int ret;
 
-Please, split the assertion and allocate_resource() call, so it becomes
-readable what exactly you checked against.
+ 	/* Find the SDCA node containing the GpioIo */
+-	af01_fwnode =3D device_get_named_child_node(cs35l56->base.dev, "AF01");
++	struct fwnode_handle *af01_fwnode __free(fwnode_handle)
++					  =3D device_get_named_child_node(cs35l56->base.dev, "AF01");
+ 	if (!af01_fwnode) {
+ 		dev_dbg(cs35l56->base.dev, "No AF01 node\n");
+ 		return -ENOENT;
+@@ -1361,7 +1361,6 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(st=
+ruct cs35l56_private *cs35l5
+ 				    "spk-id-gpios", ACPI_TYPE_PACKAGE, &obj);
+ 	if (ret) {
+ 		dev_dbg(cs35l56->base.dev, "Could not get spk-id-gpios package: %d\n", =
+ret);
+-		fwnode_handle_put(af01_fwnode);
+ 		return -ENOENT;
+ 	}
 
-> +	/* build the resource tree */
-> +	res[0] = DEFINE_RES_NAMED(root.start + 0x0000, 0x1000, "SYSRAM 1",
-> +			IORESOURCE_SYSTEM_RAM);
-> +	res[1] = DEFINE_RES_NAMED(root.start + 0x1000, 0x1000, "OTHER", 0);
-> +
-> +	res[2] = DEFINE_RES_NAMED(root.start + 0x3000, 0x1000, "NESTED", 0);
-> +	res[3] = DEFINE_RES_NAMED(root.start + 0x3800, 0x0400, "SYSRAM 2",
-> +			IORESOURCE_SYSTEM_RAM);
-> +
-> +	res[4] = DEFINE_RES_NAMED(root.start + 0x4000, 0x1000, "SYSRAM 3",
-> +			IORESOURCE_SYSTEM_RAM);
-> +
-> +	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[0]));
-> +	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[1]));
-> +	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[2]));
-> +	KUNIT_EXPECT_EQ(test, 0, request_resource(&res[2], &res[3]));
-> +	KUNIT_EXPECT_EQ(test, 0, request_resource(&root, &res[4]));
-> +
-> +	/* walk the entire region */
-> +	count = 0;
-> +	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-> +			root.start, root.end, &count, resource_walk_count);
-> +	KUNIT_EXPECT_EQ(test, count, 3);
-> +
-> +	/* walk the region requested by res[1] */
-> +	count = 0;
-> +	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-> +			res[1].start, res[1].end, &count, resource_walk_count);
-> +	KUNIT_EXPECT_EQ(test, count, 0);
-> +
-> +	/* walk the region requested by res[2] */
-> +	count = 0;
-> +	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-> +			res[2].start, res[2].end, &count, resource_walk_count);
-> +	KUNIT_EXPECT_EQ(test, count, 1);
-> +
-> +	/* walk the region requested by res[4] */
-> +	count = 0;
-> +	walk_iomem_res_desc(IORES_DESC_NONE, IORESOURCE_SYSTEM_RAM,
-> +			res[4].start, res[4].end, &count, resource_walk_count);
-> +	KUNIT_EXPECT_EQ(test, count, 1);
-> +
-> +	release_resource(&root);
-> +}
+@@ -1369,7 +1368,6 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(st=
+ruct cs35l56_private *cs35l5
+ 	if (obj->package.count !=3D 4) {
+ 		dev_warn(cs35l56->base.dev, "Unexpected spk-id element count %d\n",
+ 			 obj->package.count);
+-		fwnode_handle_put(af01_fwnode);
+ 		return -ENOENT;
+ 	}
 
-Other than the above, LGTM. Hopefully next version will be ready to apply.
+@@ -1383,26 +1381,21 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(=
+struct cs35l56_private *cs35l5
+ 		 * ACPI_COMPANION().
+ 		 */
+ 		ret =3D acpi_dev_add_driver_gpios(adev, cs35l56_af01_spkid_gpios_mappin=
+g);
+-		if (ret) {
+-			fwnode_handle_put(af01_fwnode);
++		if (ret)
+ 			return dev_err_probe(cs35l56->base.dev, ret,
+ 					     "Failed to add gpio mapping to AF01\n");
+-		}
 
--- 
-With Best Regards,
-Andy Shevchenko
+ 		ret =3D devm_add_action_or_reset(cs35l56->base.dev,
+ 					       cs35l56_acpi_dev_release_driver_gpios,
+ 					       adev);
+-		if (ret) {
+-			fwnode_handle_put(af01_fwnode);
++		if (ret)
+ 			return ret;
+-		}
 
+ 		dev_dbg(cs35l56->base.dev, "Added spk-id-gpios mapping to AF01\n");
+ 	}
+
+ 	desc =3D fwnode_gpiod_get_index(af01_fwnode, "spk-id", 0, GPIOD_IN, NULL=
+);
+ 	if (IS_ERR(desc)) {
+-		fwnode_handle_put(af01_fwnode);
+ 		ret =3D PTR_ERR(desc);
+ 		return dev_err_probe(cs35l56->base.dev, ret, "Get GPIO from AF01 failed=
+\n");
+ 	}
+@@ -1411,13 +1404,10 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(=
+struct cs35l56_private *cs35l5
+ 	gpiod_put(desc);
+
+ 	if (ret < 0) {
+-		fwnode_handle_put(af01_fwnode);
+ 		dev_err_probe(cs35l56->base.dev, ret, "Error reading spk-id GPIO\n");
+ 		return ret;
+ 	}
+
+-	fwnode_handle_put(af01_fwnode);
+-
+ 	dev_info(cs35l56->base.dev, "Got spk-id from AF01\n");
+
+ 	return ret;
+=2D-
+2.45.1
 
