@@ -1,136 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CF318FDB2;
-	Wed,  5 Jun 2024 07:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7716118F2C1
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 07:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717573974; cv=none; b=BbjAXLrPoetyXiqM5Rj5Y1zHGOKGpRq/o6Q861/lkXa674GPtuiSrxWFpKQ3+RrVbl8ryqlrDXNRMekzHWkdIXVrxp/v/JiTeun3PqHSVCZHk3DVKLEXiTtdUvkcKRmgDs8gnsSInQoNFKNbf1cOL1UH6O8h052HVPVLhZ3B/HM=
+	t=1717574000; cv=none; b=V2Jkiu/KtPpIO4VrP8xLXB6QYMGzRhrYjqju3Y8TO/nCjFiWR8jImQNBmDUy/QTAf1PmXa8Cdqbw6b7FptVGOiP/ip2uhaWhxR16selgYk0Up5dj0RmCz2f366FKb9E0Yn0hRNNDQmCK1iCycBfd0H1xIuj//oBzv7wVO/y4hBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717573974; c=relaxed/simple;
-	bh=KXkHFTvA4lOgG3pg/FBDDKuVPwHLIbPjM+awDwG4e30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QBC/XiYH3ApXTx4F/vLnhxO2ayK+O1sdNGt+S7BKVV0yI2yjowJm9F3Ik9b5bCHazY7TuH26kyX2gA5JSDq9l57aNkPxhXfmG3hO19XKMTTURSxxClX1CtI0t5qTaknTkMkq9MxRf+3JmAJg3tlSPQR5859vq0WY5gZ4W0+fyjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W8OOAZNe; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1717574000; c=relaxed/simple;
+	bh=rc0+EnOjjlcqrlZBSxhgDHouHLknnPbYCYKcXR2MDhU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OyK9wwc+RZsbFgZICO9ez2BqV2JOOarPGRAd3bm2dPeF3SDMQ6ej5a/JXc/q27iBn5YeKfBR5pp4cCiSTO67TGhc+kEv9w4yGKoy25qgBmWk5gczRF1cVI6xv02+eUdEhVABMJiSSIwA+brEKwoTQVyiViohlNkYldmoMph8vAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3GSuJjCW; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W8OOAZNe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717573973; x=1749109973;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KXkHFTvA4lOgG3pg/FBDDKuVPwHLIbPjM+awDwG4e30=;
-  b=W8OOAZNeCAGpJZxU3gzjogl5MmVoRHEoJQJKSX/683Km461LuqmeggEk
-   5kFO8kVNP9BaRJQj73NhkSug/B5l9I1tgL+ZQEOqjXUCGg1d2QsCQzwlp
-   QHQgj0Mh5x17CemhDIoYsbDGfORda/XclvCP7Lj+g3GRYE0d4KC8gbDSt
-   pcF2JzcuU54d5ryII6hHHI3M3uKomuil3TTM+8aSSg3c7Mxt6XGW+Ze+q
-   1NeYSLg/sPCk6oVyT6pp6jIX8sdlge+90HBivEzfHUSnIVT6WpBdxSobG
-   qjOpH7FC0SfuEinJriWBhYPOKDftzKT+n1qCVlKOdWNPy8RjjdDi0TLsx
-   A==;
-X-CSE-ConnectionGUID: mivbCTQRR/mOmEkep8L8Yg==
-X-CSE-MsgGUID: AzhisaTYR/au4inJHwNS0w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="14380828"
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="14380828"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 00:52:52 -0700
-X-CSE-ConnectionGUID: NA5hmVSrQjmJkHBy/IUV3g==
-X-CSE-MsgGUID: gpswSGQ5RFK3VsV9fv9eNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
-   d="scan'208";a="42450715"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 05 Jun 2024 00:52:49 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sElRu-00015G-1K;
-	Wed, 05 Jun 2024 07:52:46 +0000
-Date: Wed, 5 Jun 2024 15:51:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mudit Sharma <muditsharma.info@gmail.com>, ivan.orlov0322@gmail.com,
-	jic23@kernel.org, lars@metafoo.de, krzk+dt@kernel.org,
-	conor+dt@kernel.org, robh@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Mudit Sharma <muditsharma.info@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] iio: light: ROHM BH1745 colour sensor
-Message-ID: <202406051506.orRmnC3s-lkp@intel.com>
-References: <20240603162122.165943-2-muditsharma.info@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3GSuJjCW"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4eaf67ad82dso1974647e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 00:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1717573997; x=1718178797; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dH9aFv02Wu6clD2z8MVw+PuL/jNAUoVwhNcfaDFd6Rg=;
+        b=3GSuJjCWZAdDUAsWB3hZtLo9nCNjkW6uFnNSOnyPUik3YrmS14a19V7FO2VNL7yqap
+         l54Q1NvpVLy7q/O8+7wcAPJf+vbq+PD5PxXgthWi/LJkMGcWQEhBvFmLeQeVWJjNRzZC
+         d1EaHRFYlcRHpExtwIraEm+73jl5V46QAvZ5fPmKdZQqaGRJKlA/qJUArUuH4CmWhEDZ
+         lf6cfjiN9/kKPzllFeWjWedRaFxGj2ZfkkYpyPkdiZ5XmBcYS8qB+/nILH8yqZOFA8Ho
+         tnIooks/9yujF0UzULihCnEanle8HowmkD/zcKS5CMZPenkcYDy0z7ZyfFWgNRruMdAl
+         x+Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717573997; x=1718178797;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dH9aFv02Wu6clD2z8MVw+PuL/jNAUoVwhNcfaDFd6Rg=;
+        b=aLFS3bj3pZTXV++MK0I3UFhrE4vMO9OPmzJXm476vTebNR+9kBb89QbvFg2yuKqJ9w
+         9tF9zBGAOOenh5K8y5A4bdWNOHNk0/OFkHSekl9oaFv/Osa1KY5QCDUmo0Yt3OZbznxa
+         cL52k4lnN+256R6A8L0vD5FtWDIc/H4/piWxOVWXPE9lZngAwgiInk6KEpYUFo+FWWxg
+         5tgTNI2TciWr3H5gF+3nyVimIU0Why6Y3wHR8FILUe3xrrq2MMl/mwilCjacMqzTxyU7
+         2rfeNh7PhnEBN9tL/ziAJTMYJ2b64C1Rvshf7vkSZhG9icRzfj/9r0rGP+F0cKlve8kU
+         8qpA==
+X-Gm-Message-State: AOJu0Yzrt/GR1jgAr+q5/QRqtV5IOJq/pn5ttTxtZiSSvsCrreAkOOBN
+	e4mSvkHqTTUqmniXwo0CrBYc2KYOtoeHOd/SjbmDcOeGGxxg8KRkAmXpybwkx4C0ux6QwEIGBph
+	As9XAqa0YKGxw9CoVeWyDpvvupNmWtV4oVDQ8
+X-Google-Smtp-Source: AGHT+IHw4sctzHvhh3i0frOqnT98DxfC219+bnTQ3By91zpdxKyoqnBwKXVmxQ5sf0WjrwPk3YhmlepYfomplHKzrIY=
+X-Received: by 2002:a05:6122:31a4:b0:4dc:b486:e4a5 with SMTP id
+ 71dfb90a1353d-4eb3a27fe04mr2565829e0c.0.1717573997139; Wed, 05 Jun 2024
+ 00:53:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603162122.165943-2-muditsharma.info@gmail.com>
+References: <b290acd5-074f-4e17-a8bf-b444e553d986@paulmck-laptop> <20240604221419.2370127-3-paulmck@kernel.org>
+In-Reply-To: <20240604221419.2370127-3-paulmck@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Wed, 5 Jun 2024 09:52:38 +0200
+Message-ID: <CANpmjNPPaqcHPowRSb=8u+rqykctRW_Mod5nO_0KTc68WdRLWw@mail.gmail.com>
+Subject: Re: [PATCH memory-model 3/3] tools/memory-model: Add KCSAN LF
+ mentorship session citation
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	kernel-team@meta.com, mingo@kernel.org, stern@rowland.harvard.edu, 
+	parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org, 
+	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com, 
+	j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com, 
+	Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mudit,
+On Wed, 5 Jun 2024 at 00:14, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> Add a citation to Marco's LF mentorship session presentation entitled
+> "The Kernel Concurrency Sanitizer"
+>
+> [ paulmck: Apply Marco Elver feedback. ]
+>
+> Reported-by: Marco Elver <elver@google.com>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-kernel test robot noticed the following build warnings:
+Acked-by: Marco Elver <elver@google.com>
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.10-rc2 next-20240605]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for adding.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mudit-Sharma/iio-light-ROHM-BH1745-colour-sensor/20240604-002405
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20240603162122.165943-2-muditsharma.info%40gmail.com
-patch subject: [PATCH v2 2/3] iio: light: ROHM BH1745 colour sensor
-config: csky-randconfig-r112-20240605 (https://download.01.org/0day-ci/archive/20240605/202406051506.orRmnC3s-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240605/202406051506.orRmnC3s-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406051506.orRmnC3s-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/iio/light/bh1745.c:99:3: sparse: sparse: symbol 'bh1745_int_source' was not declared. Should it be static?
->> drivers/iio/light/bh1745.c:105:3: sparse: sparse: symbol 'bh1745_gain' was not declared. Should it be static?
->> drivers/iio/light/bh1745.c:114:3: sparse: sparse: symbol 'bh1745_measurement_time' was not declared. Should it be static?
->> drivers/iio/light/bh1745.c:121:3: sparse: sparse: symbol 'bh1745_presistence_value' was not declared. Should it be static?
-
-vim +/bh1745_int_source +99 drivers/iio/light/bh1745.c
-
-    93	
-    94	enum {
-    95		BH1745_INT_SOURCE_RED,
-    96		BH1745_INT_SOURCE_GREEN,
-    97		BH1745_INT_SOURCE_BLUE,
-    98		BH1745_INT_SOURCE_CLEAR,
-  > 99	} bh1745_int_source;
-   100	
-   101	enum {
-   102		BH1745_ADC_GAIN_1X,
-   103		BH1745_ADC_GAIN_2X,
-   104		BH1745_ADC_GAIN_16X,
- > 105	} bh1745_gain;
-   106	
-   107	enum {
-   108		BH1745_MEASUREMENT_TIME_160MS,
-   109		BH1745_MEASUREMENT_TIME_320MS,
-   110		BH1745_MEASUREMENT_TIME_640MS,
-   111		BH1745_MEASUREMENT_TIME_1280MS,
-   112		BH1745_MEASUREMENT_TIME_2560MS,
-   113		BH1745_MEASUREMENT_TIME_5120MS,
- > 114	} bh1745_measurement_time;
-   115	
-   116	enum {
-   117		BH1745_PRESISTENCE_UPDATE_TOGGLE,
-   118		BH1745_PRESISTENCE_UPDATE_EACH_MEASUREMENT,
-   119		BH1745_PRESISTENCE_UPDATE_FOUR_MEASUREMENT,
-   120		BH1745_PRESISTENCE_UPDATE_EIGHT_MEASUREMENT,
- > 121	} bh1745_presistence_value;
-   122	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+> Cc: Andrea Parri <parri.andrea@gmail.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Jade Alglave <j.alglave@ucl.ac.uk>
+> Cc: Luc Maranget <luc.maranget@inria.fr>
+> Cc: Akira Yokosawa <akiyks@gmail.com>
+> Cc: Daniel Lustig <dlustig@nvidia.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: <linux-arch@vger.kernel.org>
+> ---
+>  tools/memory-model/Documentation/access-marking.txt | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/memory-model/Documentation/access-marking.txt b/tools/memory-model/Documentation/access-marking.txt
+> index 65778222183e3..f531b0837356b 100644
+> --- a/tools/memory-model/Documentation/access-marking.txt
+> +++ b/tools/memory-model/Documentation/access-marking.txt
+> @@ -6,7 +6,8 @@ normal accesses to shared memory, that is "normal" as in accesses that do
+>  not use read-modify-write atomic operations.  It also describes how to
+>  document these accesses, both with comments and with special assertions
+>  processed by the Kernel Concurrency Sanitizer (KCSAN).  This discussion
+> -builds on an earlier LWN article [1].
+> +builds on an earlier LWN article [1] and Linux Foundation mentorship
+> +session [2].
+>
+>
+>  ACCESS-MARKING OPTIONS
+> @@ -31,7 +32,7 @@ example:
+>         WRITE_ONCE(a, b + data_race(c + d) + READ_ONCE(e));
+>
+>  Neither plain C-language accesses nor data_race() (#1 and #2 above) place
+> -any sort of constraint on the compiler's choice of optimizations [2].
+> +any sort of constraint on the compiler's choice of optimizations [3].
+>  In contrast, READ_ONCE() and WRITE_ONCE() (#3 and #4 above) restrict the
+>  compiler's use of code-motion and common-subexpression optimizations.
+>  Therefore, if a given access is involved in an intentional data race,
+> @@ -594,5 +595,8 @@ REFERENCES
+>  [1] "Concurrency bugs should fear the big bad data-race detector (part 2)"
+>      https://lwn.net/Articles/816854/
+>
+> -[2] "Who's afraid of a big bad optimizing compiler?"
+> +[2] "The Kernel Concurrency Sanitizer"
+> +    https://www.linuxfoundation.org/webinars/the-kernel-concurrency-sanitizer
+> +
+> +[3] "Who's afraid of a big bad optimizing compiler?"
+>      https://lwn.net/Articles/793253/
+> --
+> 2.40.1
+>
