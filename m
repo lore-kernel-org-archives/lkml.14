@@ -1,82 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B0D19D891;
-	Wed,  5 Jun 2024 15:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5F34AEC3
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 15:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717602075; cv=none; b=h1veebhe2ioHlBi75InhRQw0sgV4F7LsNoLD6rcTKiNDUvxumCddahENnNEyZXpopE5VygOPTxdMU3ov3iNKqRf/64SEeVUpeEdjw5ckVynbqnBDNTCisuDFY4fDzDAvaGRpthJv8DyIBSPzAxZvD5+SHeCbnl9Mzw7QLdsjpT4=
+	t=1717602201; cv=none; b=fNmioRu4nso82nwnW2jBgZ4AiZ0jj3MyuUI/59Lrj1inJ7PpTXO/VYDBk5l+wQqiOGH1GCIDa5yO/cubpOa/6+FOQAT2/NRSv3eHDZ2GYHLAjsBPQvhx6bfN1Teq37nV3d0a7sBTmSsg3Rle+xEW25Q6eLN6NfaerLwPNuNDLuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717602075; c=relaxed/simple;
-	bh=+5xjWbK4wagRPFFLOdl1Jb03kxWLjGziaouuSjpqiBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J57Bir2+evWKyIhtktUl0Se+Oh6fBGhP7DJoxUPkbwjpVyIO5aCbhc0lBCSfl9Y9sGOJSJT6GDZiQrQOZbrXxvG6RHa/j8SIfu56LqLYueV0OUukOjNmF8/qqryLFkrR5Cu/JbEkOhF7UaetSmAxesTJV6JIjo2NeYV2eZ9eNEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TaLvBuJ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717602201; c=relaxed/simple;
+	bh=/mmScfAlwBmYOWDlO9gXjcFXVGjBKKxkRc3eZRFJ6sQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g1cVok2LQZARwnEHCz5YaU+w6XxxFuo7TYAm7+RTZYr/SE3KhJ8kmvC6XYulsaRhtiYzS+Rc2avMrU/iSCFoQkmXm9c6rbw1cXml0GWnpMROWlA5qQMGCOX0un/sceTYVsSmNYr/IW0i0abNNcpm0hKP52bbdPnSdYpTR7qm5ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QucvWz82; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TaLvBuJ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56CAC3277B;
-	Wed,  5 Jun 2024 15:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717602075;
-	bh=+5xjWbK4wagRPFFLOdl1Jb03kxWLjGziaouuSjpqiBI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TaLvBuJ0YemhiNjgKHdEbhunt+/E95Gn7MIOhYOcWyHEjWYQ2/vN/UBcYT28RgeJf
-	 U5dz/vJmj6r3N3jvt68BW7JzjeiFoKGy8uOBeOBYuZbxo1KTxQbLtmdQMjr/qeFM2T
-	 KVeK9TM/YvEA8ynKgH0H/dIcqTR9KmrLBt8vO6IJ4tkrvy+rdxEG/bP+1Ki4tjZRGV
-	 rwOi8qgI20KWJS7drePpxZARAnwgDP+HzWUI1QAgIANKdHM8RRpPgIOBlzQ8Q1azGr
-	 IRzc4mjk3x9+zVFCKqxTR6K30HzBc7LO8ix3z+1srY45iF+pkx0DGziY1cXidKRaWn
-	 CkHnKbG6I3x8A==
-Date: Wed, 5 Jun 2024 09:41:12 -0600
-From: Rob Herring <robh@kernel.org>
-To: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
-Cc: nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, linux@armlinux.org.uk,
-	vadim.fedorenko@linux.dev, andrew@lunn.ch, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	git@amd.com
-Subject: Re: [PATCH net-next v3 4/4] dt-bindings: net: cdns,macb: Deprecate
- magic-packet property
-Message-ID: <20240605154112.GA3197137-robh@kernel.org>
-References: <20240605102457.4050539-1-vineeth.karumanchi@amd.com>
- <20240605102457.4050539-5-vineeth.karumanchi@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QucvWz82"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52b992fd796so5646e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Jun 2024 08:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717602198; x=1718206998; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j6GplyPYFfVj4jtYuDkS7wQRYPUo9sDheI1XACPZzCg=;
+        b=QucvWz82HYsJz+hiqS66MHE94H3gFHPM/IHi10o/hLMj894oqq8NiSm1aBzRMBt9jN
+         9Ak+L40geUvoqkJwFPt9K5V9j/TwmQUvn1LFqZHVWmJsWAexWfiqXuI6Mj9xEvRiDTXX
+         bJdtXeF8iQl183/h9YuGEpufL1lfLrQo5OivRdNZvl/5KcGMGZVdpMCqwOjZx9iBx6SV
+         Hh6iRCW2EoBLQR0N4Ljm67dtZYbXjyH4oFQtNDIN3mIweanu7KxbomZGs/UYCmNp752v
+         sfzYUPAHqOBqoMUuUuCJwhRqSlJ3lYhrsSd05aMvRtSXcJYTf0+yl70sqRbD3ztuyA1A
+         FuGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717602198; x=1718206998;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j6GplyPYFfVj4jtYuDkS7wQRYPUo9sDheI1XACPZzCg=;
+        b=PG4j4oumY9+ccydJwEaEET2yGmrJ7CK+wjJoNhY9Df6A0+EUbCzLzbhBV+7QC1qeId
+         lMKdk+f2BgbePBUdubjoaTMqqRdogSKZVQ4U2I8Lm/9KFQGtV4xp2Dy8AAhqXdO7aiYw
+         Yy4ymNLuIXd1SuiILpB23Pjkhbr3Km1tesS9wBgvdtP/Pf62w2YWEzvLAV3GKnzKXun4
+         h+Z0NfrgrceFjGNm3JzzW1e/aCn1v7Zp01B2Ze/WLH3wDYhYI4C4Iy4NnRdmUDkcUXFE
+         0OXIsqNSpHQ3dBwpdCkMeaQe6oQ8Yz71wkaLPowdIqYbfN0zUjfoF5DFJ6BGASeY+WSC
+         GHiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFdaFO5zWA4fSlGXSfx2HLhQYpBvVP4SLTzCqQmQ1W2q1IbBcB1zeQ4muoEBrl8WuIeAh7lime5ZRAPTYbck5Jl6pzT3EhAQz83uMF
+X-Gm-Message-State: AOJu0YxCbQyMh0yh6C9f6OAyscRK0Z8QJPHjGmKhHayKaHmMhMfmbnax
+	ujSL7al8DZBk+13ioDo4v/JYzbBoDrV119S37tLogKlXCykhNOHEtaVWqLeJyMs0X6/GzpUjNzb
+	6gqCykmIixHJJtjwAu3+crDddE7Q=
+X-Google-Smtp-Source: AGHT+IHWouC1BpENc394vm09Ch5F+mJszVyyUsvh1OfUljLcY3TWFkFj8TrcIfx6ECmaNaWzAaKtz+k9Ca6bq5alAiM=
+X-Received: by 2002:a05:6512:1287:b0:523:91d1:12b2 with SMTP id
+ 2adb3069b0e04-52bab4cb83amr2142113e87.6.1717602197618; Wed, 05 Jun 2024
+ 08:43:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240605102457.4050539-5-vineeth.karumanchi@amd.com>
+References: <20240521040244.48760-1-ioworker0@gmail.com> <20240521040244.48760-3-ioworker0@gmail.com>
+ <fd16b219-bc46-484a-8581-a21240440fa6@redhat.com> <CAK1f24kwf4gDwK=8X4z1bM9-H6_M9QKy6-ko9pTUZij-W=40wg@mail.gmail.com>
+ <d319f00e-9dfb-43b1-ae81-a2e2afdf36c4@redhat.com> <8580a462-eadc-4fa5-b01a-c0b8c3ae644d@redhat.com>
+ <CAK1f24=7=QqDFoh=joC+o1eZfyJ8onyc9ELBZBzn1CFr4uPSwQ@mail.gmail.com> <7f2ab112-5916-422c-b29f-343cc0d6d754@redhat.com>
+In-Reply-To: <7f2ab112-5916-422c-b29f-343cc0d6d754@redhat.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Wed, 5 Jun 2024 23:43:06 +0800
+Message-ID: <CAK1f24nDH2UxCskNsFM84=5uGTUb_bAUivgmQJCcE+H1dJHDxw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] mm/rmap: integrate PMD-mapped folio splitting into
+ pagewalk loop
+To: David Hildenbrand <david@redhat.com>
+Cc: Yin Fengwei <fengwei.yin@intel.com>, akpm@linux-foundation.org, willy@infradead.org, 
+	sj@kernel.org, baolin.wang@linux.alibaba.com, maskray@google.com, 
+	ziy@nvidia.com, ryan.roberts@arm.com, 21cnbao@gmail.com, mhocko@suse.com, 
+	zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com, 
+	libang.li@antgroup.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
+	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 05, 2024 at 03:54:57PM +0530, Vineeth Karumanchi wrote:
-> WOL modes such as magic-packet should be an OS policy.
-> By default, advertise supported modes and use ethtool to activate
-> the required mode.
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Vineeth Karumanchi <vineeth.karumanchi@amd.com>
-> ---
->  Documentation/devicetree/bindings/net/cdns,macb.yaml | 1 +
->  1 file changed, 1 insertion(+)
+On Wed, Jun 5, 2024 at 11:03=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 05.06.24 16:57, Lance Yang wrote:
+> > On Wed, Jun 5, 2024 at 10:39=E2=80=AFPM David Hildenbrand <david@redhat=
+.com> wrote:
+> >>
+> >> On 05.06.24 16:28, David Hildenbrand wrote:
+> >>> On 05.06.24 16:20, Lance Yang wrote:
+> >>>> Hi David,
+> >>>>
+> >>>> On Wed, Jun 5, 2024 at 8:46=E2=80=AFPM David Hildenbrand <david@redh=
+at.com> wrote:
+> >>>>>
+> >>>>> On 21.05.24 06:02, Lance Yang wrote:
+> >>>>>> In preparation for supporting try_to_unmap_one() to unmap PMD-mapp=
+ed
+> >>>>>> folios, start the pagewalk first, then call split_huge_pmd_address=
+() to
+> >>>>>> split the folio.
+> >>>>>>
+> >>>>>> Since TTU_SPLIT_HUGE_PMD will no longer perform immediately, we mi=
+ght
+> >>>>>> encounter a PMD-mapped THP missing the mlock in the VM_LOCKED rang=
+e during
+> >>>>>> the page walk. It=E2=80=99s probably necessary to mlock this THP t=
+o prevent it from
+> >>>>>> being picked up during page reclaim.
+> >>>>>>
+> >>>>>> Suggested-by: David Hildenbrand <david@redhat.com>
+> >>>>>> Suggested-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> >>>>>> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> >>>>>> ---
+> >>>>>
+> >>>>> [...] again, sorry for the late review.
+> >>>>
+> >>>> No worries at all, thanks for taking time to review!
+> >>>>
+> >>>>>
+> >>>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+> >>>>>> index ddffa30c79fb..08a93347f283 100644
+> >>>>>> --- a/mm/rmap.c
+> >>>>>> +++ b/mm/rmap.c
+> >>>>>> @@ -1640,9 +1640,6 @@ static bool try_to_unmap_one(struct folio *f=
+olio, struct vm_area_struct *vma,
+> >>>>>>          if (flags & TTU_SYNC)
+> >>>>>>                  pvmw.flags =3D PVMW_SYNC;
+> >>>>>>
+> >>>>>> -     if (flags & TTU_SPLIT_HUGE_PMD)
+> >>>>>> -             split_huge_pmd_address(vma, address, false, folio);
+> >>>>>> -
+> >>>>>>          /*
+> >>>>>>           * For THP, we have to assume the worse case ie pmd for i=
+nvalidation.
+> >>>>>>           * For hugetlb, it could be much worse if we need to do p=
+ud
+> >>>>>> @@ -1668,20 +1665,35 @@ static bool try_to_unmap_one(struct folio =
+*folio, struct vm_area_struct *vma,
+> >>>>>>          mmu_notifier_invalidate_range_start(&range);
+> >>>>>>
+> >>>>>>          while (page_vma_mapped_walk(&pvmw)) {
+> >>>>>> -             /* Unexpected PMD-mapped THP? */
+> >>>>>> -             VM_BUG_ON_FOLIO(!pvmw.pte, folio);
+> >>>>>> -
+> >>>>>>                  /*
+> >>>>>>                   * If the folio is in an mlock()d vma, we must no=
+t swap it out.
+> >>>>>>                   */
+> >>>>>>                  if (!(flags & TTU_IGNORE_MLOCK) &&
+> >>>>>>                      (vma->vm_flags & VM_LOCKED)) {
+> >>>>>>                          /* Restore the mlock which got missed */
+> >>>>>> -                     if (!folio_test_large(folio))
+> >>>>>> +                     if (!folio_test_large(folio) ||
+> >>>>>> +                         (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PM=
+D)))
+> >>>>>>                                  mlock_vma_folio(folio, vma);
+> >>>>>
+> >>>>> Can you elaborate why you think this would be required? If we would=
+ have
+> >>>>> performed the  split_huge_pmd_address() beforehand, we would still =
+be
+> >>>>> left with a large folio, no?
+> >>>>
+> >>>> Yep, there would still be a large folio, but it wouldn't be PMD-mapp=
+ed.
+> >>>>
+> >>>> After Weifeng's series[1], the kernel supports mlock for PTE-mapped =
+large
+> >>>> folio, but there are a few scenarios where we don't mlock a large fo=
+lio, such
+> >>>> as when it crosses a VM_LOCKed VMA boundary.
+> >>>>
+> >>>>     -                     if (!folio_test_large(folio))
+> >>>>     +                     if (!folio_test_large(folio) ||
+> >>>>     +                         (!pvmw.pte && (flags & TTU_SPLIT_HUGE_=
+PMD)))
+> >>>>
+> >>>> And this check is just future-proofing and likely unnecessary. If en=
+countering a
+> >>>> PMD-mapped THP missing the mlock for some reason, we can mlock this
+> >>>> THP to prevent it from being picked up during page reclaim, since it=
+ is fully
+> >>>> mapped and doesn't cross the VMA boundary, IIUC.
+> >>>>
+> >>>> What do you think?
+> >>>> I would appreciate any suggestions regarding this check ;)
+> >>>
+> >>> Reading this patch only, I wonder if this change makes sense in the
+> >>> context here.
+> >>>
+> >>> Before this patch, we would have PTE-mapped the PMD-mapped THP before
+> >>> reaching this call and skipped it due to "!folio_test_large(folio)".
+> >>>
+> >>> After this patch, we either
+> >>>
+> >>> a) PTE-remap the THP after this check, but retry and end-up here agai=
+n,
+> >>> whereby we would skip it due to "!folio_test_large(folio)".
+> >>>
+> >>> b) Discard the PMD-mapped THP due to lazyfree directly. Can that
+> >>> co-exist with mlock and what would be the problem here with mlock?
+> >>>
+> >>>
+> >
+> > Thanks a lot for clarifying!
+> >
+> >>> So if the check is required in this patch, we really have to understa=
+nd
+> >>> why. If not, we should better drop it from this patch.
+> >>>
+> >>> At least my opinion, still struggling to understand why it would be
+> >>> required (I have 0 knowledge about mlock interaction with large folio=
+s :) ).
+> >>>
+> >>
+> >> Looking at that series, in folio_references_one(), we do
+> >>
+> >>                          if (!folio_test_large(folio) || !pvmw.pte) {
+> >>                                  /* Restore the mlock which got missed=
+ */
+> >>                                  mlock_vma_folio(folio, vma);
+> >>                                  page_vma_mapped_walk_done(&pvmw);
+> >>                                  pra->vm_flags |=3D VM_LOCKED;
+> >>                                  return false; /* To break the loop */
+> >>                          }
+> >>
+> >> I wonder if we want that here as well now: in case of lazyfree we
+> >> would not back off, right?
+> >>
+> >> But I'm not sure if lazyfree in mlocked areas are even possible.
+> >>
+> >> Adding the "!pvmw.pte" would be much clearer to me than the flag check=
+.
+> >
+> > Hmm... How about we drop it from this patch for now, and add it back if=
+ needed
+> > in the future?
+>
+> If we can rule out that MADV_FREE + mlock() keeps working as expected in
+> the PMD-mapped case, we're good.
+>
+> Can we rule that out? (especially for MADV_FREE followed by mlock())
 
-You forgot Krzysztof's ack.
+Perhaps we don't worry about that.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/net/cdns,macb.yaml b/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> index 2c71e2cf3a2f..3c30dd23cd4e 100644
-> --- a/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> +++ b/Documentation/devicetree/bindings/net/cdns,macb.yaml
-> @@ -146,6 +146,7 @@ patternProperties:
->  
->        magic-packet:
->          type: boolean
-> +        deprecated: true
->          description:
->            Indicates that the hardware supports waking up via magic packet.
->  
-> -- 
-> 2.34.1
-> 
+IIUC, without that check, MADV_FREE + mlock() still works as expected in
+the PMD-mapped case, since if encountering a large folio in a VM_LOCKED
+VMA range, we will stop the page walk immediately.
+
+Thanks,
+Lance
+
+
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
