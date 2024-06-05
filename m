@@ -1,102 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2274B199226;
-	Wed,  5 Jun 2024 12:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174A9194AD2;
+	Wed,  5 Jun 2024 12:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717590883; cv=none; b=iYFW6mEo3AC0wcljevNWuJdttZVibWbyaLJx+vPTqCrlkdsuLlBbiky1k1VyeyemNwBsiHP46aWYbPOnOZxfR/YRsbWCFxUXemjsY3eJ45rngn+L99PEIHoHeXMi8iLBQPCfUx/lsRO1eKPIKdqZPxu06wgjM5Vl3n6SKstMJ7Y=
+	t=1717591113; cv=none; b=KENiydhrZkxIUz6Yexc7Wwplwt50y+Qiggt5RDEH7kCLRuPLniNUz7gOBfZPC4kbyCqhrZwmm70Gf0UJd0qgYNqaDE+ls9DYy9itchztna+9ZxUFeh/JGYNr0B2czdIsumXcFQzKJYW7xABX2utcHfYE7RbDuTYNZ/RUvEM0eNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717590883; c=relaxed/simple;
-	bh=pNDoDNrZ3B1jVzbxPDtsTQTkg5Yf7y5alzwsLd7nATY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XI/E+/+94QdzfVeam34nJU73WvFmgO0q2Qo3X5tMFOQa/A4jLTgQRBXTRw0tZ/uGtuW72pfurmi4bsAy/CTKjjHuWvJuixeFAVB91VDSynk4fvgtoC4t9olqSAyiXxYKtoHAYv3nZMB4407WjDAUHrq6YrQvQzIWd5msV1N4/fA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VjHeks8r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717591113; c=relaxed/simple;
+	bh=OZqt79NIznVK5rDUjkXmFWcs7qa57I4kBdPkWA3QT98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jyb/MqSKpUgYXFCx7/h9bW0L1M0YMOnCsxfBTRS00iemcFc8m9WzH2GL4fEoOZgM7wH+4T29MakHOA2sWekvBHx1m0ayR/2J/H21mcXQ6tF6LYenEiYB/DwUu0vTo63Ylu0FR1Q4bg2o5RvH4zTYxNoJ3LGHqL0HtKsf+zZ5Ays=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OA9DBeUF; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VjHeks8r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A994FC3277B;
-	Wed,  5 Jun 2024 12:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717590882;
-	bh=pNDoDNrZ3B1jVzbxPDtsTQTkg5Yf7y5alzwsLd7nATY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VjHeks8rM0Vyb1HBC3lHJS7ZDLtV9+7yyNju/hRuQoRjaNfgMnSeEWcKm0moeHdkv
-	 gVE9ViubqElB+28i+G/Fwh3L1fYZBpYJjXCmbkWX7V0ibSY0q8dBlXkqLwm0a0S2cf
-	 XVJtrQVtzYhXt+2jTu4V9exwQzPLSAbFy30bfFOQ2gNb6Izun9or3RcxcAys+KEyuO
-	 Ueg1or2myKmucEc80obTYj1WY+EHhylIPU8UcmyL0TI244VlpfwDM+Z+HVGDKC8K0V
-	 tf9q+2NLKh3OAWWUKYEoPgytoR8A6b/gr7lhAFgh23P+xQ9dDDXWxr4QfKFKEolBec
-	 tEyEsmCOyLBzQ==
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Arnd Bergmann <arnd@kernel.org>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] [v3] arm64/io: add constant-argument check
-Date: Wed,  5 Jun 2024 13:34:32 +0100
-Message-Id: <171758272445.3626757.4886694115081361174.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20240604210006.668912-1-arnd@kernel.org>
-References: <20240604210006.668912-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OA9DBeUF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 522D040005;
+	Wed,  5 Jun 2024 12:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1717591108;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HC2LJJX8rGplsD63NKz4WoTxZkBCqV9UIbb2yiQeS1A=;
+	b=OA9DBeUFNvchW82o8Mm8XZx60vtOdpgRftwE5EnTEr4jw8aVzW1Rq+eMXDJ1E1UINRAeRF
+	2yODc0kF+I4ZqmNu9IP5E1mZx1YVI1oCxBMZGaDk/qxF7s5m7AIMFnLAKA0DPmLQ6tXiaK
+	qeQ1zM0s0VwAV8tUKdlbDtVYqTISafzLTT4be2xTzq5WidwlYMEFz+RhNqVRj3Ge68ReAc
+	DNWFyHQ9nmKvDcY1+d4rXEB2SMWq96d1MdEytN10KMNpKXm5MvD9jMGbTc08BD2l4BXZM2
+	dBnyI5m9py8xMQkhTpPi7OqaXKjvqAPeaFyMS5kb59zOpf9w0U1+9XNBUJjhOg==
+Message-ID: <ca4dfe4f-a375-4905-b0bd-c4dddb507c23@bootlin.com>
+Date: Wed, 5 Jun 2024 14:38:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] leds: pca9532: Use PWM1 for hardware blinking
+To: Lee Jones <lee@kernel.org>
+Cc: Riku Voipio <riku.voipio@iki.fi>, Pavel Machek <pavel@ucw.cz>,
+ linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240527125940.155260-1-bastien.curutchet@bootlin.com>
+ <20240527125940.155260-2-bastien.curutchet@bootlin.com>
+ <20240531145523.GN1005600@google.com>
+Content-Language: en-US
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+In-Reply-To: <20240531145523.GN1005600@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-On Tue, 04 Jun 2024 22:59:57 +0200, Arnd Bergmann wrote:
-> In some configurations __const_iowrite32_copy() does not get inlined
-> and gcc runs into the BUILD_BUG():
+Hi Lee,
+
+Thank you for the feedback, I'll send a V2 iteration that corrects all 
+the points you mentioned.
+
+Best regards,
+Bastien
+
+On 5/31/24 16:55, Lee Jones wrote:
+> On Mon, 27 May 2024, Bastien Curutchet wrote:
 > 
-> In file included from <command-line>:
-> In function '__const_memcpy_toio_aligned32',
->     inlined from '__const_iowrite32_copy' at arch/arm64/include/asm/io.h:203:3,
->     inlined from '__const_iowrite32_copy' at arch/arm64/include/asm/io.h:199:20:
-> include/linux/compiler_types.h:487:45: error: call to '__compiletime_assert_538' declared with attribute error: BUILD_BUG failed
->   487 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->       |                                             ^
-> include/linux/compiler_types.h:468:25: note: in definition of macro '__compiletime_assert'
->   468 |                         prefix ## suffix();                             \
->       |                         ^~~~~~
-> include/linux/compiler_types.h:487:9: note: in expansion of macro '_compiletime_assert'
->   487 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
->       |         ^~~~~~~~~~~~~~~~~~~
-> include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
->    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->       |                                     ^~~~~~~~~~~~~~~~~~
-> include/linux/build_bug.h:59:21: note: in expansion of macro 'BUILD_BUG_ON_MSG'
->    59 | #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->       |                     ^~~~~~~~~~~~~~~~
-> arch/arm64/include/asm/io.h:193:17: note: in expansion of macro 'BUILD_BUG'
->   193 |                 BUILD_BUG();
->       |                 ^~~~~~~~~
+>> PSC0/PWM0 are used by all leds for brightness and blinking. This causes
 > 
-> [...]
-
-Applied to arm64 (for-next/fixes), thanks!
-
-[1/1] arm64/io: add constant-argument check
-      https://git.kernel.org/arm64/c/5c40e428aea6
-
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+> LEDs everywhere please.
+> 
+>> conflicts when you set a brightness of a new led while an other one is
+>> already using PWM0 for blinking.
+>>
+>> Use PSC1/PWM1 for blinking.
+>> Check that no other led is already blinking with a different PSC1/PWM1
+>> configuration to avoid conflict.
+>>
+>> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+>> ---
+>>   drivers/leds/leds-pca9532.c | 49 ++++++++++++++++++++++++++++++-------
+>>   1 file changed, 40 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+>> index bf8bb8fc007c..c210608ad336 100644
+>> --- a/drivers/leds/leds-pca9532.c
+>> +++ b/drivers/leds/leds-pca9532.c
+>> @@ -191,29 +191,60 @@ static int pca9532_set_brightness(struct led_classdev *led_cdev,
+>>   	return err;
+>>   }
+>>   
+>> +static int pca9532_update_hw_blink(struct pca9532_led *led,
+>> +				   unsigned long delay_on, unsigned long delay_off)
+>> +{
+>> +	struct pca9532_data *data = i2c_get_clientdata(led->client);
+>> +	unsigned int psc;
+>> +	int i;
+>> +
+>> +	/* Look for others leds that already use PWM1 */
+>> +	for (i = 0; i < data->chip_info->num_leds; i++) {
+>> +		struct pca9532_led *other = &data->leds[i];
+>> +
+>> +		if (other == led)
+>> +			continue;
+> 
+> Don't bunch things up please - new line here.
+> 
+>> +		if (other->state == PCA9532_PWM1) {
+>> +			if (other->ldev.blink_delay_on != delay_on ||
+>> +			    other->ldev.blink_delay_off != delay_off) {
+>> +				dev_dbg(&led->client->dev,
+>> +					"HW can handle only one blink configuration at a time\n");
+>> +				return -EINVAL;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	psc = ((delay_on + delay_off) * 152 - 1) / 1000;
+> 
+> What are these funny magic numbers?  Define them please.
+> 
+>> +	if (psc > 255) {
+> 
+> And this.
+> 
+>> +		dev_dbg(&led->client->dev, "Blink period too long to be handled by hardware\n");
+> 
+> If you're returning an error, this should be dev_err().
+> 
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	data->psc[1] = psc;
+> 
+> Can we define these indexes please?
+> 
+>> +	data->pwm[1] = (delay_on * 255) / (delay_on + delay_off);
+>> +
+>> +	return pca9532_setpwm(data->client, 1);
+>> +}
+>> +
+>>   static int pca9532_set_blink(struct led_classdev *led_cdev,
+>>   	unsigned long *delay_on, unsigned long *delay_off)
+>>   {
+>>   	struct pca9532_led *led = ldev_to_led(led_cdev);
+>>   	struct i2c_client *client = led->client;
+>> -	int psc;
+>> -	int err = 0;
+>> +	struct pca9532_data *data = i2c_get_clientdata(client);
+> 
+> Did you build this with W=1?  This looks unused.
+> 
+>> +	int err;
+>>   
+>>   	if (*delay_on == 0 && *delay_off == 0) {
+>>   		/* led subsystem ask us for a blink rate */
+>>   		*delay_on = 1000;
+>>   		*delay_off = 1000;
+>>   	}
+>> -	if (*delay_on != *delay_off || *delay_on > 1690 || *delay_on < 6)
+>> -		return -EINVAL;
+>>   
+>> -	/* Thecus specific: only use PSC/PWM 0 */
+>> -	psc = (*delay_on * 152-1)/1000;
+>> -	err = pca9532_calcpwm(client, 0, psc, led_cdev->brightness);
+>> +	led->state = PCA9532_PWM1;
+>> +	err = pca9532_update_hw_blink(led, *delay_on, *delay_off);
+>>   	if (err)
+>>   		return err;
+>> -	if (led->state == PCA9532_PWM0)
+>> -		pca9532_setpwm(led->client, 0);
+>> +
+>>   	pca9532_setled(led);
+>>   
+>>   	return 0;
+>> -- 
+>> 2.44.0
+>>
+> 
