@@ -1,50 +1,62 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEF219AD7B;
-	Wed,  5 Jun 2024 13:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF3119AD7A
+	for <linux-kernel@vger.kernel.org>; Wed,  5 Jun 2024 13:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717594589; cv=none; b=gmuw8nYjnId7LqWs7KIeFCKAvwNYIhHOmSKo8HHMi6ZJoEVsDUCfmEu7LgGDi26Z+y9ict2xq3qgVH2dLyd2ys+87EPeVCMHJHk13GsTy3vpX510eplX6chzgCt8e5kz4ej66WlMHwRlLPcNT13IrqRRda3z3sYKfUsUmV3CO/I=
+	t=1717594591; cv=none; b=K2sTj0w0k5CSh646wggchODVkZ+uoih6wglGh473dP3uM373kdhNTcKtwJu64rpi6IRwHb6uJVmrnUpPtxO+3ohSlwZWCy/wtsEumLufeaO7f3liFfxpGIvYEkT63s/LnAhcnmZT5drXIZeb17WqhPBWPii5sXmD8ef1o6CTlro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717594589; c=relaxed/simple;
-	bh=p6Y3TJpkwI9iQmcO8trrlOonjlFRWhWdw9QMJKLhT8s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tcswSXEJ1lwFc1SfGDKooDbknNlF/36Dxq+NxUeHSTebW3whNzSXDeEQBOim4C59iAcvs5pNrIPdGmxsVpUlOqapKnnrjIxqDQ9iSPE7GhOHhFhBf8FUdNvYHB6B+bwEZuLXx7tmjOTfolJ1CP8szx1f+bvxaOZWq6K2uXOBG9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VvT194Sh5zPnsm;
-	Wed,  5 Jun 2024 21:33:01 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 26CD618007A;
-	Wed,  5 Jun 2024 21:36:19 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 5 Jun 2024 21:36:18 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Eric Dumazet <edumazet@google.com>, David
- Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, Chuck
- Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust
-	<trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>,
-	<kvm@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-mm@kvack.org>, <linux-afs@lists.infradead.org>,
-	<linux-nfs@vger.kernel.org>
-Subject: [PATCH net-next v6 07/15] mm: page_frag: avoid caller accessing 'page_frag_cache' directly
-Date: Wed, 5 Jun 2024 21:32:57 +0800
-Message-ID: <20240605133306.11272-8-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240605133306.11272-1-linyunsheng@huawei.com>
-References: <20240605133306.11272-1-linyunsheng@huawei.com>
+	s=arc-20240116; t=1717594591; c=relaxed/simple;
+	bh=Q+yKb3UoyyFzRRfAW+NzEGFhCqBmF4Gfe38PmpDlfNw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mSE12aZUQ84MUe5C31jU0nBSzq4hMC9vo/QVef5fy+BOO89wrY6h2MLAPdQ2ioLpwqtoD9B7oKEuw5XBhJUePrkknUhbXQdw1Fv9qsAYIrYaO2Ku2TrVnjOwfCR+Fwu2cUJfxOtARsxH9wo9tCUFl2zEldurMgD/nZcAcn5/UwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UfXa0Mgm; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UfXa0Mgm"
+X-Envelope-To: mingo@redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1717594586;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8yb3nN64g5IVJqtCKRjk27NnlVJOOQo5LzCqk+WIDbk=;
+	b=UfXa0MgmXPfC5cQp4mFTQ5w4AnRjbsA95G4WA0FZbE5DR+O6chpusfCAqAbL+FuZb47rOc
+	zpLXONsIfCQG0Klze82g5vLHVwrSOew/FU/9O5wgq2N8rZop34kYzbd36xHwEyAN7NpoBx
+	H0w0IY0ARwcIbyTWWaIo4gSGEOgO0x0=
+X-Envelope-To: peterz@infradead.org
+X-Envelope-To: juri.lelli@redhat.com
+X-Envelope-To: vincent.guittot@linaro.org
+X-Envelope-To: dietmar.eggemann@arm.com
+X-Envelope-To: rostedt@goodmis.org
+X-Envelope-To: bsegall@google.com
+X-Envelope-To: mgorman@suse.de
+X-Envelope-To: bristot@redhat.com
+X-Envelope-To: vschneid@redhat.com
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: yajun.deng@linux.dev
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yajun Deng <yajun.deng@linux.dev>
+To: mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH v2 1/2] sched/rt: Use 'back' only if CONFIG_RT_GROUP_SCHED is enabled
+Date: Wed,  5 Jun 2024 21:35:56 +0800
+Message-Id: <20240605133557.2984-2-yajun.deng@linux.dev>
+In-Reply-To: <20240605133557.2984-1-yajun.deng@linux.dev>
+References: <20240605133557.2984-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,153 +64,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-Migadu-Flow: FLOW_OUT
 
-Use appropriate frag_page API instead of caller accessing
-'page_frag_cache' directly.
+The 'back' member in struct sched_rt_entity only related to
+CONFIG_RT_GROUP_SCHED, so there is no need to init it in dequeue_rt_stack.
 
-CC: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Init the 'back' member in init_tg_rt_entry and use it only if
+CONFIG_RT_GROUP_SCHED is enabled.
+
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 ---
- drivers/vhost/net.c             |  2 +-
- include/linux/page_frag_cache.h | 10 ++++++++++
- mm/page_frag_test.c             |  2 +-
- net/core/skbuff.c               |  6 +++---
- net/rxrpc/conn_object.c         |  4 +---
- net/rxrpc/local_object.c        |  4 +---
- net/sunrpc/svcsock.c            |  6 ++----
- 7 files changed, 19 insertions(+), 15 deletions(-)
+ kernel/sched/rt.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 6691fac01e0d..b2737dc0dc50 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1325,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
- 			vqs[VHOST_NET_VQ_RX]);
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 63e49c8ffc4d..842a2cfd6dcc 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -230,10 +230,12 @@ void init_tg_rt_entry(struct task_group *tg, struct rt_rq *rt_rq,
+ 	if (!rt_se)
+ 		return;
  
- 	f->private_data = n;
--	n->pf_cache.va = NULL;
-+	page_frag_cache_init(&n->pf_cache);
+-	if (!parent)
++	if (!parent) {
+ 		rt_se->rt_rq = &rq->rt;
+-	else
++	} else {
+ 		rt_se->rt_rq = parent->my_q;
++		parent->back = rt_se;
++	}
  
- 	return 0;
+ 	rt_se->my_q = rt_rq;
+ 	rt_se->parent = parent;
+@@ -604,6 +606,11 @@ static inline struct rt_bandwidth *sched_rt_bandwidth(struct rt_rq *rt_rq)
+ 	return &rt_rq->tg->rt_bandwidth;
  }
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index c6fde197a6eb..6ac3a25089d1 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -23,6 +23,16 @@ struct page_frag_cache {
- 	bool pfmemalloc;
- };
  
-+static inline void page_frag_cache_init(struct page_frag_cache *nc)
++static struct sched_rt_entity *rt_se_back(struct sched_rt_entity *se)
 +{
-+	nc->va = NULL;
++	return se->back;
 +}
 +
-+static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
+ #else /* !CONFIG_RT_GROUP_SCHED */
+ 
+ static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
+@@ -666,6 +673,11 @@ static inline struct rt_bandwidth *sched_rt_bandwidth(struct rt_rq *rt_rq)
+ 	return &def_rt_bandwidth;
+ }
+ 
++static inline struct sched_rt_entity *rt_se_back(struct sched_rt_entity *se)
 +{
-+	return !!nc->pfmemalloc;
++	return NULL;
 +}
 +
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
- void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
-diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
-index c3cfce87fbbf..8b259e422fae 100644
---- a/mm/page_frag_test.c
-+++ b/mm/page_frag_test.c
-@@ -341,7 +341,7 @@ static int __init page_frag_test_init(void)
- 	u64 duration;
- 	int ret;
+ #endif /* CONFIG_RT_GROUP_SCHED */
  
--	test_frag.va = NULL;
-+	page_frag_cache_init(&test_frag);
- 	atomic_set(&nthreads, 2);
- 	init_completion(&wait);
+ bool sched_rt_bandwidth_account(struct rt_rq *rt_rq)
+@@ -1428,14 +1440,12 @@ static void dequeue_rt_stack(struct sched_rt_entity *rt_se, unsigned int flags)
+ 	struct sched_rt_entity *back = NULL;
+ 	unsigned int rt_nr_running;
  
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index dca4e7445348..caee22db1cc7 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -741,12 +741,12 @@ struct sk_buff *__netdev_alloc_skb(struct net_device *dev, unsigned int len,
- 	if (in_hardirq() || irqs_disabled()) {
- 		nc = this_cpu_ptr(&netdev_alloc_cache);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 	} else {
- 		local_bh_disable();
- 		nc = this_cpu_ptr(&napi_alloc_cache.page);
- 		data = page_frag_alloc_va(nc, len, gfp_mask);
--		pfmemalloc = nc->pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(nc);
- 		local_bh_enable();
+-	for_each_sched_rt_entity(rt_se) {
+-		rt_se->back = back;
++	for_each_sched_rt_entity(rt_se)
+ 		back = rt_se;
+-	}
+ 
+ 	rt_nr_running = rt_rq_of_se(back)->rt_nr_running;
+ 
+-	for (rt_se = back; rt_se; rt_se = rt_se->back) {
++	for (rt_se = back; rt_se; rt_se = rt_se_back(rt_se)) {
+ 		if (on_rt_rq(rt_se))
+ 			__dequeue_rt_entity(rt_se, flags);
  	}
- 
-@@ -834,7 +834,7 @@ struct sk_buff *napi_alloc_skb(struct napi_struct *napi, unsigned int len)
- 		len = SKB_HEAD_ALIGN(len);
- 
- 		data = page_frag_alloc_va(&nc->page, len, gfp_mask);
--		pfmemalloc = nc->page.pfmemalloc;
-+		pfmemalloc = page_frag_cache_is_pfmemalloc(&nc->page);
- 	}
- 
- 	if (unlikely(!data))
-diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
-index 1539d315afe7..694c4df7a1a3 100644
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -337,9 +337,7 @@ static void rxrpc_clean_up_connection(struct work_struct *work)
- 	 */
- 	rxrpc_purge_queue(&conn->rx_queue);
- 
--	if (conn->tx_data_alloc.va)
--		__page_frag_cache_drain(virt_to_page(conn->tx_data_alloc.va),
--					conn->tx_data_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&conn->tx_data_alloc);
- 	call_rcu(&conn->rcu, rxrpc_rcu_free_connection);
- }
- 
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 504453c688d7..a8cffe47cf01 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -452,9 +452,7 @@ void rxrpc_destroy_local(struct rxrpc_local *local)
- #endif
- 	rxrpc_purge_queue(&local->rx_queue);
- 	rxrpc_purge_client_connections(local);
--	if (local->tx_alloc.va)
--		__page_frag_cache_drain(virt_to_page(local->tx_alloc.va),
--					local->tx_alloc.pagecnt_bias);
-+	page_frag_cache_drain(&local->tx_alloc);
- }
- 
- /*
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 42d20412c1c3..4b1e87187614 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1609,7 +1609,6 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
--	struct page_frag_cache *pfc = &svsk->sk_frag_cache;
- 	struct socket *sock = svsk->sk_sock;
- 
- 	trace_svcsock_free(svsk, sock);
-@@ -1619,8 +1618,7 @@ static void svc_sock_free(struct svc_xprt *xprt)
- 		sockfd_put(sock);
- 	else
- 		sock_release(sock);
--	if (pfc->va)
--		__page_frag_cache_drain(virt_to_head_page(pfc->va),
--					pfc->pagecnt_bias);
-+
-+	page_frag_cache_drain(&svsk->sk_frag_cache);
- 	kfree(svsk);
- }
 -- 
-2.30.0
+2.25.1
 
